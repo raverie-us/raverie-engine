@@ -14,8 +14,7 @@ ZilchDefineType(Orientation, builder, type)
   ZilchBindMethod(DebugDrawBases);
 
   ZilchBindGetterSetterProperty(DefaultOrientationBases);
-  ZilchBindGetterSetterProperty(LocalOrientationBasis)
-      ->Add(new EditorRotationBasis("OrientationBasisGizmo"));
+  ZilchBindGetterSetterProperty(LocalOrientationBasis)->Add(new EditorRotationBasis("OrientationBasisGizmo"));
 
   ZilchBindGetter(OrientationRight);
   ZilchBindGetter(OrientationUp);
@@ -61,8 +60,7 @@ void Orientation::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mGlobalUp, Vec3::cYAxis);
   SerializeNameDefault(mLocalOrientationBasis, Quat::cIdentity);
-  SerializeEnumNameDefault(
-      OrientationBases, mDefaultBases, OrientationBases::ForwardNegativeZUpY);
+  SerializeEnumNameDefault(OrientationBases, mDefaultBases, OrientationBases::ForwardNegativeZUpY);
 }
 
 void Orientation::Initialize(CogInitializer& initializer)
@@ -85,12 +83,9 @@ void Orientation::DebugDrawBases()
   Vec3 worldUp = GetWorldUp();
   Vec3 worldForward = GetWorldForward();
 
-  gDebugDraw->Add(
-      Debug::Line(pos, pos + worldRight).HeadSize(0.1f).Color(Color::Red));
-  gDebugDraw->Add(
-      Debug::Line(pos, pos + worldUp).HeadSize(0.1f).Color(Color::Green));
-  gDebugDraw->Add(
-      Debug::Line(pos, pos + worldForward).HeadSize(0.1f).Color(Color::Blue));
+  gDebugDraw->Add(Debug::Line(pos, pos + worldRight).HeadSize(0.1f).Color(Color::Red));
+  gDebugDraw->Add(Debug::Line(pos, pos + worldUp).HeadSize(0.1f).Color(Color::Green));
+  gDebugDraw->Add(Debug::Line(pos, pos + worldForward).HeadSize(0.1f).Color(Color::Blue));
 }
 
 OrientationBases::Enum Orientation::GetDefaultOrientationBases()
@@ -153,8 +148,7 @@ void Orientation::SetLocalOrientationBasis(QuatParam localOrientationBasis)
 {
   // Register side-effect properties
   if (OperationQueue::IsListeningForSideEffects())
-    OperationQueue::RegisterSideEffect(
-        this, "DefaultOrientationBases", GetDefaultOrientationBases());
+    OperationQueue::RegisterSideEffect(this, "DefaultOrientationBases", GetDefaultOrientationBases());
 
   mLocalOrientationBasis = localOrientationBasis;
   mDefaultBases = OrientationBases::Custom;
@@ -252,8 +246,7 @@ void Orientation::SetGlobalUp(Vec3Param globalUp)
 {
   if (globalUp == Vec3::cZero)
   {
-    DoNotifyWarning("Invalid Global Up",
-                    "The global up cannot be the zero vector");
+    DoNotifyWarning("Invalid Global Up", "The global up cannot be the zero vector");
     return;
   }
   mGlobalUp = globalUp;
@@ -289,8 +282,7 @@ void Orientation::LookAtPointWithUp(Vec3Param lookPoint, Vec3Param up)
   LookAtDirectionWithUp(lookPoint - worldPos, up);
 }
 
-Quat Orientation::GetLookAtPointWithUpRotation(Vec3Param lookPoint,
-                                               Vec3Param up)
+Quat Orientation::GetLookAtPointWithUpRotation(Vec3Param lookPoint, Vec3Param up)
 {
   Vec3 worldPos = mTransform->GetWorldTranslation();
   return GetLookAtDirectionWithUpRotation(lookPoint - worldPos, up);
@@ -317,8 +309,7 @@ void Orientation::LookAtDirectionWithUp(Vec3Param lookDir, Vec3Param up)
   mTransform->SetWorldRotation(destRot);
 }
 
-Quat Orientation::GetLookAtDirectionWithUpRotation(Vec3Param lookDir,
-                                                   Vec3Param up)
+Quat Orientation::GetLookAtDirectionWithUpRotation(Vec3Param lookDir, Vec3Param up)
 {
   // Deal with bad values (lookDir can easily be 0 if the user is specifying a
   // movement direction and chooses not to move that frame, hence no rotation
@@ -352,16 +343,12 @@ float Orientation::GetAbsoluteAngle()
   return AbsoluteAngle(this->GetOwner());
 }
 
-float Orientation::ComputeSignedAngle(Vec3Param up,
-                                      Vec3Param forward,
-                                      Vec3Param newVector)
+float Orientation::ComputeSignedAngle(Vec3Param up, Vec3Param forward, Vec3Param newVector)
 {
   return SignedAngle(up, forward, newVector);
 }
 
-void Orientation::GetLocalBasisVectors(Vec3& localRight,
-                                       Vec3& localUp,
-                                       Vec3& localForward)
+void Orientation::GetLocalBasisVectors(Vec3& localRight, Vec3& localUp, Vec3& localForward)
 {
   Quat orientationToLocal = GetOrientationToLocalRotation();
   // Transform all vectors at the same time, this avoids re-calculating the
@@ -371,9 +358,7 @@ void Orientation::GetLocalBasisVectors(Vec3& localRight,
   localForward = Math::Multiply(orientationToLocal, GetOrientationForward());
 }
 
-void Orientation::GetWorldBasisVectors(Vec3& worldRight,
-                                       Vec3& worldUp,
-                                       Vec3& worldForward)
+void Orientation::GetWorldBasisVectors(Vec3& worldRight, Vec3& worldUp, Vec3& worldForward)
 {
   Quat orientationToWorld = GetOrientationToWorldRotation();
   // Transform all vectors at the same time, this avoids re-calculating the
@@ -399,9 +384,7 @@ Vec3 Orientation::ComputeNormalizedWorldVector(Vec3Param orientationVector)
   return worldVector;
 }
 
-float Orientation::SignedAngle(Vec3Param up,
-                               Vec3Param forward,
-                               Vec3Param newVector)
+float Orientation::SignedAngle(Vec3Param up, Vec3Param forward, Vec3Param newVector)
 {
   // Get the right vector
   Vec3 right = Math::Cross(forward, up);
@@ -426,9 +409,7 @@ float Orientation::SignedAngle(Vec3Param up,
   return finalAngle;
 }
 
-float Orientation::AbsoluteAngle(Vec3Param up,
-                                 Vec3Param forward,
-                                 Vec3Param newVector)
+float Orientation::AbsoluteAngle(Vec3Param up, Vec3Param forward, Vec3Param newVector)
 {
   // Get the right vector
   Vec3 right = Math::Cross(forward, up);

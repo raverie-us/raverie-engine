@@ -39,11 +39,7 @@ PixelBuffer::PixelBuffer(ByteColor clearColor, uint width, uint height) :
 {
   Clear(clearColor);
 
-  Image->Upload(width,
-                height,
-                TextureFormat::RGBA8,
-                (byte*)Data,
-                Total * sizeof(ByteColor));
+  Image->Upload(width, height, TextureFormat::RGBA8, (byte*)Data, Total * sizeof(ByteColor));
 }
 
 PixelBuffer::~PixelBuffer()
@@ -52,12 +48,8 @@ PixelBuffer::~PixelBuffer()
   Data = nullptr;
 }
 
-void PixelBuffer::Resize(uint width,
-                         uint height,
-                         bool copyOldContents,
-                         bool clearNewContents,
-                         ByteColor clearColor,
-                         bool Upload)
+void PixelBuffer::Resize(
+    uint width, uint height, bool copyOldContents, bool clearNewContents, ByteColor clearColor, bool Upload)
 {
   Total = width * height;
   ByteColor* oldData = Data;
@@ -132,8 +124,7 @@ void PixelBuffer::Resize(uint width,
   if (Upload)
   {
     uint dataSize = width * height * sizeof(ByteColor);
-    Image->Upload(
-        width, height, TextureFormat::RGBA8, (byte*)newData, dataSize);
+    Image->Upload(width, height, TextureFormat::RGBA8, (byte*)newData, dataSize);
   }
 }
 
@@ -158,16 +149,13 @@ void PixelBuffer::Clear(byte grayScaleColor)
 }
 
 // Set a color on an area of pixels in the buffer.
-void PixelBuffer::FillRect(Vec2Param topLeft,
-                           Vec2Param bottomRight,
-                           ByteColor color)
+void PixelBuffer::FillRect(Vec2Param topLeft, Vec2Param bottomRight, ByteColor color)
 {
   uint index = Width * (uint)topLeft.y + (uint)topLeft.x;
   ReturnIf(index >= Total, , "TopLeft coordinate out of PixelBuffer bounds.");
 
   index = Width * (uint)bottomRight.y + (uint)bottomRight.x;
-  ReturnIf(
-      index >= Total, , "BottomRight coordinate out of PixelBuffer bounds.");
+  ReturnIf(index >= Total, , "BottomRight coordinate out of PixelBuffer bounds.");
 
   for (int y = (int)topLeft.y; y <= bottomRight.y; ++y)
   {
@@ -230,11 +218,7 @@ void PixelBuffer::GetCoordinates(uint index, uint* x, uint* y)
 // Upload the image data
 void PixelBuffer::Upload()
 {
-  Image->Upload(Width,
-                Height,
-                TextureFormat::RGBA8,
-                (byte*)Data,
-                Total * sizeof(ByteColor));
+  Image->Upload(Width, Height, TextureFormat::RGBA8, (byte*)Data, Total * sizeof(ByteColor));
 }
 
 void PixelBuffer::SetAll(byte* data)

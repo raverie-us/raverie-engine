@@ -71,8 +71,7 @@ bool ZilchShaderIRImageType::IsStorageImage()
 int ZilchShaderIRImageType::GetIntegerConstantParameterValue(int parameterIndex)
 {
   IZilchShaderIR* parameter = mIRType->mParameters[parameterIndex];
-  ZilchShaderIRConstantLiteral* constantLiteral =
-      parameter->As<ZilchShaderIRConstantLiteral>();
+  ZilchShaderIRConstantLiteral* constantLiteral = parameter->As<ZilchShaderIRConstantLiteral>();
   if (constantLiteral == nullptr)
     return -1;
   int value = constantLiteral->mValue.Get<int>();

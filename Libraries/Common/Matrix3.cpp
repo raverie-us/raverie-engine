@@ -4,25 +4,10 @@
 namespace Math
 {
 
-const Matrix3 Matrix3::cIdentity(real(1.0),
-                                 real(0.0),
-                                 real(0.0),
-                                 real(0.0),
-                                 real(1.0),
-                                 real(0.0),
-                                 real(0.0),
-                                 real(0.0),
-                                 real(1.0));
+const Matrix3 Matrix3::cIdentity(
+    real(1.0), real(0.0), real(0.0), real(0.0), real(1.0), real(0.0), real(0.0), real(0.0), real(1.0));
 
-Matrix3::Matrix3(real p00,
-                 real p01,
-                 real p02,
-                 real p10,
-                 real p11,
-                 real p12,
-                 real p20,
-                 real p21,
-                 real p22)
+Matrix3::Matrix3(real p00, real p01, real p02, real p10, real p11, real p12, real p20, real p21, real p22)
 {
   m00 = p00;
   m01 = p01;
@@ -234,8 +219,7 @@ bool Matrix3::Valid() const
 
 real Matrix3::Determinant() const
 {
-  return (m00 * m11 * m22 + m10 * m21 * m02 + m01 * m12 * m20) -
-         (m02 * m11 * m20 + m10 * m01 * m22 + m00 * m21 * m12);
+  return (m00 * m11 * m22 + m10 * m21 * m02 + m01 * m12 * m20) - (m02 * m11 * m20 + m10 * m01 * m22 + m00 * m21 * m12);
 }
 
 void Matrix3::InvertInternal(real invDeterminant)
@@ -421,9 +405,7 @@ Matrix3 Matrix3::GenerateTranslation(Vec2Param translation)
   return result;
 }
 
-Matrix3 Matrix3::GenerateTransform(Vec2Param translation,
-                                   real rotationRadians,
-                                   Vec2Param scale)
+Matrix3 Matrix3::GenerateTransform(Vec2Param translation, real rotationRadians, Vec2Param scale)
 {
   Matrix3 result;
 
@@ -520,16 +502,11 @@ Matrix3 Matrix3::GenerateTransform(Mat3Param rotation, Vec3Param scale)
   return result;
 }
 
-void Matrix3::Decompose(Mat3Param transform,
-                        Vec2Ref translation,
-                        real& rotationRadians,
-                        Vec2Ref scale)
+void Matrix3::Decompose(Mat3Param transform, Vec2Ref translation, real& rotationRadians, Vec2Ref scale)
 {
 }
 
-void Matrix3::Decompose(Mat3Param transform,
-                        Mat3Ref rotationRadians,
-                        Vec3Ref scale)
+void Matrix3::Decompose(Mat3Param transform, Mat3Ref rotationRadians, Vec3Ref scale)
 {
 }
 

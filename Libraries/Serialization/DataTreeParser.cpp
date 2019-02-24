@@ -5,18 +5,13 @@ namespace Zero
 {
 
 // Data Tree Parser
-bool DataTreeParser::BuildTree(DataTreeContext& context,
-                               StringRange data,
-                               DataNode* fileRoot)
+bool DataTreeParser::BuildTree(DataTreeContext& context, StringRange data, DataNode* fileRoot)
 {
   DataTreeParser parser(context);
   return parser.Parse(data, fileRoot);
 }
 
-DataTreeParser::DataTreeParser(DataTreeContext& context) :
-    mLastPoppedNode(nullptr),
-    mCurrentIndex(0),
-    mContext(context)
+DataTreeParser::DataTreeParser(DataTreeContext& context) : mLastPoppedNode(nullptr), mCurrentIndex(0), mContext(context)
 {
 }
 
@@ -99,8 +94,7 @@ bool DataTreeParser::Object()
 
     // We're considered an array if we have non-property values as children
     bool lastNodeIsValue = mLastPoppedNode->mNodeType == DataNodeType::Value;
-    if (lastNodeIsValue &&
-        !mLastPoppedNode->mFlags.IsSet(DataNodeFlags::Property))
+    if (lastNodeIsValue && !mLastPoppedNode->mFlags.IsSet(DataNodeFlags::Property))
       node->mFlags.SetFlag(DataNodeFlags::Array);
 
     // We're adding an optional comma between each value to handle separated
@@ -129,8 +123,7 @@ bool DataTreeParser::Attribute()
   if (Accept(DataTokenType::OpenBracket) == false)
     return false;
 
-  Expect(DataTokenType::Identifier,
-         "Attributes must have an identifier after '['");
+  Expect(DataTokenType::Identifier, "Attributes must have an identifier after '['");
 
   StringRange attributeName = GetLastAcceptedToken().mText;
   StringRange attributeValue;
@@ -177,12 +170,10 @@ bool DataTreeParser::Attribute()
   else
   {
     // Add it to the root attributes
-    mContext.Loader->mRootAttributes.PushBack(
-        DataAttribute(attributeName, attributeValue));
+    mContext.Loader->mRootAttributes.PushBack(DataAttribute(attributeName, attributeValue));
   }
 
-  return Expect(DataTokenType::CloseBracket,
-                "Attributes must be closed with ']'");
+  return Expect(DataTokenType::CloseBracket, "Attributes must be closed with ']'");
 }
 
 bool DataTreeParser::Property()
@@ -198,13 +189,11 @@ bool DataTreeParser::Property()
   if (!Accept(DataTokenType::Var))
     return false;
 
-  Expect(DataTokenType::Identifier,
-         "Incomplete property. An identifier must come after 'var' ");
+  Expect(DataTokenType::Identifier, "Incomplete property. An identifier must come after 'var' ");
 
   String propertyName = GetLastAcceptedToken().mText;
 
-  Expect(DataTokenType::Assignment,
-         "A property must be assigned a value with '='");
+  Expect(DataTokenType::Assignment, "A property must be assigned a value with '='");
 
   // Properties can only be values or objects
   if (!Value() && !Object())
@@ -225,12 +214,9 @@ bool DataTreeParser::Value(bool createNode)
 {
   // Value |= P("Value", P(Integer) | P(Float) | P(Hex) | P(StringLiteral) |
   // P(Enum) | P(True) | P(False));
-  return AcceptValue(createNode, DataTokenType::Integer) ||
-         AcceptValue(createNode, DataTokenType::Float) ||
-         AcceptValue(createNode, DataTokenType::Hex) ||
-         AcceptValue(createNode, DataTokenType::StringLiteral) ||
-         AcceptValue(createNode, DataTokenType::Enumeration) ||
-         AcceptValue(createNode, DataTokenType::True) ||
+  return AcceptValue(createNode, DataTokenType::Integer) || AcceptValue(createNode, DataTokenType::Float) ||
+         AcceptValue(createNode, DataTokenType::Hex) || AcceptValue(createNode, DataTokenType::StringLiteral) ||
+         AcceptValue(createNode, DataTokenType::Enumeration) || AcceptValue(createNode, DataTokenType::True) ||
          AcceptValue(createNode, DataTokenType::False);
 }
 
@@ -292,8 +278,7 @@ bool DataTreeParser::AcceptValue(bool createNode, DataTokenType::Enum tokenType)
     node->mTypeName = Serialization::Trait<float>::TypeName();
   }
   // Boolean
-  else if (token.mType == DataTokenType::True ||
-           token.mType == DataTokenType::False)
+  else if (token.mType == DataTokenType::True || token.mType == DataTokenType::False)
   {
     node->mTypeName = Serialization::Trait<bool>::TypeName();
   }
@@ -358,9 +343,7 @@ DataNode* DataTreeParser::CreateNewNode(DataNodeType::Enum nodeType)
   DataNode* newNode = new DataNode(nodeType, parent);
   mNodeStack.PushBack(newNode);
 
-  ErrorIf(
-      parent == nullptr,
-      "Invalid node stack. The file root node should always be on the stack");
+  ErrorIf(parent == nullptr, "Invalid node stack. The file root node should always be on the stack");
 
   return newNode;
 }

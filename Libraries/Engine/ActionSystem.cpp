@@ -35,8 +35,7 @@ void ActionSpace::OnActionLogicUpdate(UpdateEvent* updateEvent)
   UpdateActions(updateEvent, ActionExecuteMode::LogicUpdate);
 }
 
-void ActionSpace::UpdateActions(UpdateEvent* updateEvent,
-                                ActionExecuteMode::Enum mode)
+void ActionSpace::UpdateActions(UpdateEvent* updateEvent, ActionExecuteMode::Enum mode)
 {
   float dt = updateEvent->Dt;
   float rDt = updateEvent->RealDt;

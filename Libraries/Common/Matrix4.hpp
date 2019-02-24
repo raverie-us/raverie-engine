@@ -53,10 +53,7 @@ public:
           real p31,
           real p32,
           real p33);
-  Matrix4(Vec4Param basisX,
-          Vec4Param basisY,
-          Vec4Param basisZ,
-          Vec4Param basisW);
+  Matrix4(Vec4Param basisX, Vec4Param basisY, Vec4Param basisZ, Vec4Param basisW);
   Matrix4(ConstRealPointer data_);
 
   const Vector4& operator[](uint index) const;
@@ -139,27 +136,16 @@ public:
   /// Generates a three dimensional translation matrix.
   static Matrix4 GenerateTranslation(Vec3Param translation);
   /// Generates a transformation matrix.
-  static Matrix4 GenerateTransform(Vec3Param translation,
-                                   QuatParam rotatation,
-                                   Vec3Param scale);
+  static Matrix4 GenerateTransform(Vec3Param translation, QuatParam rotatation, Vec3Param scale);
   /// Generates a transformation matrix.
-  static Matrix4 GenerateTransform(Vec3Param translation,
-                                   Mat3Param rotatation,
-                                   Vec3Param scale);
+  static Matrix4 GenerateTransform(Vec3Param translation, Mat3Param rotatation, Vec3Param scale);
   /// Decompose the given matrix into translation, rotation, and scale
-  static void Decompose(Mat4Param transform,
-                        Vec3Ref translation,
-                        Mat3Ref rotation,
-                        Vec3Ref scale);
+  static void Decompose(Mat4Param transform, Vec3Ref translation, Mat3Ref rotation, Vec3Ref scale);
   /// Attempts to decompose this matrix into a scale, rotation, and
   /// translational component while removing shear. The "original" matrix is not
   /// necessarily recovered, though the resulting matrix is orthonormal among
   /// its components.
-  static void Decompose(Mat4Param transform,
-                        Vec3Ref translation,
-                        Mat3Ref rotation,
-                        Vec3Ref shear,
-                        Vec3Ref scale);
+  static void Decompose(Mat4Param transform, Vec3Ref translation, Mat3Ref rotation, Vec3Ref shear, Vec3Ref scale);
 
   //-------------------------------------------------------------------Legacy
 
@@ -204,10 +190,7 @@ public:
   /// translational component while removing shear. The "original" matrix is not
   /// necessarily recovered, though the resulting matrix is orthonormal among
   /// its components.
-  void Decompose(Vec3Ptr scale,
-                 Vec3Ptr shear,
-                 Mat3Ptr rotate,
-                 Vec3Ptr translate) const;
+  void Decompose(Vec3Ptr scale, Vec3Ptr shear, Mat3Ptr rotate, Vec3Ptr translate) const;
 
   /// Accesses the elements in the "x-axis" of the matrix, with the "x-axis"
   /// defined as the x-axis of a pure rotation matrix.
@@ -235,11 +218,9 @@ public:
     struct
     {
 #if ColumnBasis == 1
-      real m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31,
-          m32, m33;
+      real m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33;
 #else
-      real m00, m10, m20, m30, m01, m11, m21, m31, m02, m12, m22, m32, m03, m13,
-          m23, m33;
+      real m00, m10, m20, m30, m01, m11, m21, m31, m02, m12, m22, m32, m03, m13, m23, m33;
 #endif
     };
 
@@ -273,18 +254,11 @@ ZeroShared Vector3 TransformNormal(Mat4Param matrix, Vec3Param normal);
 ZeroShared Vector3 TransformPointProjected(Mat4Param matrix, Vec3Param point);
 ZeroShared Vector3 TransformNormalCol(Mat4Param matrix, Vec3Param normal);
 ZeroShared Vector3 TransformPointCol(Mat4Param matrix, Vec3Param point);
-ZeroShared Vector3 TransformPointProjectedCol(Mat4Param matrix,
-                                              Vec3Param point);
-ZeroShared Vector3 TransformPointProjectedCol(Mat4Param matrix,
-                                              Vec3Param point,
-                                              real* w);
+ZeroShared Vector3 TransformPointProjectedCol(Mat4Param matrix, Vec3Param point);
+ZeroShared Vector3 TransformPointProjectedCol(Mat4Param matrix, Vec3Param point, real* w);
 
-ZeroShared Matrix4 BuildTransform(Vec3Param translate,
-                                  QuatParam rotate,
-                                  Vec3Param scale);
-ZeroShared Matrix4 BuildTransform(Vec3Param translate,
-                                  Mat3Param rotate,
-                                  Vec3Param scale);
+ZeroShared Matrix4 BuildTransform(Vec3Param translate, QuatParam rotate, Vec3Param scale);
+ZeroShared Matrix4 BuildTransform(Vec3Param translate, Mat3Param rotate, Vec3Param scale);
 
 ZeroShared real Trace(Mat4Param matrix);
 

@@ -47,109 +47,97 @@ public:
 
 // Declare
 // Call within the class definition
-#define DeclareReferenceCountedHandle()                                        \
-  DeclareReferenceCountedHandleInternals() typedef u32 HandleIdType;
+#define DeclareReferenceCountedHandle() DeclareReferenceCountedHandleInternals() typedef u32 HandleIdType;
 
 // The reason for adding this internals version was so that we could avoid two
 // HandleIdType typedefs. This should never be called outside this file.
-#define DeclareReferenceCountedHandleInternals()                               \
-  ReferenceCountData mZeroHandleReferenceCount;                                \
-  void AddReference()                                                          \
-  {                                                                            \
-    ++mZeroHandleReferenceCount.mCount;                                        \
-  }                                                                            \
-  int Release()                                                                \
-  {                                                                            \
-    ErrorIf(mZeroHandleReferenceCount.mCount == 0,                             \
-            "Invalid Release. ReferenceCount is zero.");                       \
-    int referenceCount = --mZeroHandleReferenceCount.mCount;                   \
-    if (referenceCount == 0)                                                   \
-      delete this;                                                             \
-    return referenceCount;                                                     \
+#define DeclareReferenceCountedHandleInternals()                                                                       \
+  ReferenceCountData mZeroHandleReferenceCount;                                                                        \
+  void AddReference()                                                                                                  \
+  {                                                                                                                    \
+    ++mZeroHandleReferenceCount.mCount;                                                                                \
+  }                                                                                                                    \
+  int Release()                                                                                                        \
+  {                                                                                                                    \
+    ErrorIf(mZeroHandleReferenceCount.mCount == 0, "Invalid Release. ReferenceCount is zero.");                        \
+    int referenceCount = --mZeroHandleReferenceCount.mCount;                                                           \
+    if (referenceCount == 0)                                                                                           \
+      delete this;                                                                                                     \
+    return referenceCount;                                                                                             \
   }
 
-#define DeclareSafeIdHandle(idType)                                            \
-  typedef idType HandleIdType;                                                 \
-  HandleIdData<HandleIdType> mZeroHandleId;                                    \
-  static HandleIdType mZeroHandleCurrentId;                                    \
+#define DeclareSafeIdHandle(idType)                                                                                    \
+  typedef idType HandleIdType;                                                                                         \
+  HandleIdData<HandleIdType> mZeroHandleId;                                                                            \
+  static HandleIdType mZeroHandleCurrentId;                                                                            \
   static HashMap<HandleIdType, ZilchSelf*> mZeroHandleLiveObjects;
 
-#define DeclareThreadSafeIdHandle(idType)                                      \
-  DeclareSafeIdHandle(idType) static ThreadLock mZeroHandleLock;
+#define DeclareThreadSafeIdHandle(idType) DeclareSafeIdHandle(idType) static ThreadLock mZeroHandleLock;
 
-#define DeclareReferenceCountedSafeIdHandle(idType)                            \
-  DeclareReferenceCountedHandleInternals() DeclareSafeIdHandle(idType)
+#define DeclareReferenceCountedSafeIdHandle(idType) DeclareReferenceCountedHandleInternals() DeclareSafeIdHandle(idType)
 
-#define DeclareReferenceCountedThreadSafeIdHandle(idType)                      \
+#define DeclareReferenceCountedThreadSafeIdHandle(idType)                                                              \
   DeclareReferenceCountedHandleInternals() DeclareThreadSafeIdHandle(idType)
 
 // Define
-#define DefineSafeIdHandle(type)                                               \
-  type::HandleIdType type::mZeroHandleCurrentId = 1;                           \
+#define DefineSafeIdHandle(type)                                                                                       \
+  type::HandleIdType type::mZeroHandleCurrentId = 1;                                                                   \
   HashMap<type::HandleIdType, type*> type::mZeroHandleLiveObjects;
 
-#define DefineThreadSafeIdHandle(type)                                         \
-  DefineSafeIdHandle(type) ThreadLock type::mZeroHandleLock;
+#define DefineThreadSafeIdHandle(type) DefineSafeIdHandle(type) ThreadLock type::mZeroHandleLock;
 
-#define DefineReferenceCountedSafeIdHandle(type)                               \
-  DefineReferenceCountedHandle(type) DefineSafeIdHandle(type)
+#define DefineReferenceCountedSafeIdHandle(type) DefineReferenceCountedHandle(type) DefineSafeIdHandle(type)
 
-#define DefineReferenceCountedThreadSafeIdHandle(type)                         \
-  DefineReferenceCountedHandle(type) DefineThreadSafeIdHandle(type)
+#define DefineReferenceCountedThreadSafeIdHandle(type) DefineReferenceCountedHandle(type) DefineThreadSafeIdHandle(type)
 
 // Constructor
 // Call in the constructor and copy constructor of the object
 #define ConstructReferenceCountedHandle() mZeroHandleReferenceCount.mCount = 0;
 
-#define ConstructSafeIdHandle()                                                \
-  mZeroHandleId.mId = mZeroHandleCurrentId++;                                  \
+#define ConstructSafeIdHandle()                                                                                        \
+  mZeroHandleId.mId = mZeroHandleCurrentId++;                                                                          \
   mZeroHandleLiveObjects.Insert(mZeroHandleId.mId, this);
 
-#define ConstructThreadSafeIdHandle()                                          \
-  mZeroHandleLock.Lock();                                                      \
-  ConstructSafeIdHandle();                                                     \
+#define ConstructThreadSafeIdHandle()                                                                                  \
+  mZeroHandleLock.Lock();                                                                                              \
+  ConstructSafeIdHandle();                                                                                             \
   mZeroHandleLock.Unlock();
 
-#define ConstructReferenceCountedSafeIdHandle()                                \
-  ConstructReferenceCountedHandle();                                           \
+#define ConstructReferenceCountedSafeIdHandle()                                                                        \
+  ConstructReferenceCountedHandle();                                                                                   \
   ConstructSafeIdHandle();
 
-#define ConstructReferenceCountedThreadSafeIdHandle()                          \
-  ConstructReferenceCountedHandle();                                           \
+#define ConstructReferenceCountedThreadSafeIdHandle()                                                                  \
+  ConstructReferenceCountedHandle();                                                                                   \
   ConstructThreadSafeIdHandle();
 
 // Destructor
 // Call in the destructor of the object
-#define DestructReferenceCountedHandle()                                       \
-  ErrorIf(mZeroHandleReferenceCount.mCount != 0,                               \
-          "Bad reference Count. Object is being deleted with references!");
+#define DestructReferenceCountedHandle()                                                                               \
+  ErrorIf(mZeroHandleReferenceCount.mCount != 0, "Bad reference Count. Object is being deleted with references!");
 
-#define DestructSafeIdHandle()                                                 \
-  bool isErased = mZeroHandleLiveObjects.Erase(mZeroHandleId.mId);             \
-  ErrorIf(!isErased,                                                           \
-          "The handle was not in the live objects map, but should have been");
+#define DestructSafeIdHandle()                                                                                         \
+  bool isErased = mZeroHandleLiveObjects.Erase(mZeroHandleId.mId);                                                     \
+  ErrorIf(!isErased, "The handle was not in the live objects map, but should have been");
 
-#define DestructThreadSafeIdHandle()                                           \
-  mZeroHandleLock.Lock();                                                      \
-  DestructSafeIdHandle();                                                      \
+#define DestructThreadSafeIdHandle()                                                                                   \
+  mZeroHandleLock.Lock();                                                                                              \
+  DestructSafeIdHandle();                                                                                              \
   mZeroHandleLock.Unlock();
 
 // For the last two, we don't want to call 'DestructReferenceCountedHandle'
 // because it's safe to delete the object even if it still has references
 #define DestructReferenceCountedSafeIdHandle() DestructSafeIdHandle();
 
-#define DestructReferenceCountedThreadSafeIdHandle()                           \
-  DestructThreadSafeIdHandle();
+#define DestructReferenceCountedThreadSafeIdHandle() DestructThreadSafeIdHandle();
 
 // Bind Manager
 // Call in the meta initialization of the class type
-#define ZeroBindHandle()                                                       \
-  type->HandleManager = ZilchManagerId(ZeroHandleManager<ZilchSelf>);
+#define ZeroBindHandle() type->HandleManager = ZilchManagerId(ZeroHandleManager<ZilchSelf>);
 
 // Register Manager
 // Call in the meta initialization of the library
-#define ZeroRegisterHandleManager(type)                                        \
-  ZilchRegisterSharedHandleManager(ZeroHandleManager<type>);
+#define ZeroRegisterHandleManager(type) ZilchRegisterSharedHandleManager(ZeroHandleManager<type>);
 
 // Handle Manager
 template <typename T>
@@ -175,9 +163,7 @@ public:
   };
 
   //************************************************************************************************
-  void Allocate(BoundType* type,
-                Handle& handleToInitialize,
-                size_t customFlags) override
+  void Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags) override
   {
     if (IsReferenceCounted<T>::value)
       handleToInitialize.Flags |= HandleFlags::NoReferenceCounting;
@@ -195,9 +181,7 @@ public:
   }
 
   //************************************************************************************************
-  void ObjectToHandle(const byte* object,
-                      BoundType* type,
-                      Handle& handleToInitialize) override
+  void ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize) override
   {
     ObjectToHandleInternal(object, type, handleToInitialize);
   }
@@ -233,8 +217,7 @@ public:
   void ObjectToHandleInternal(const byte* object,
                               BoundType* type,
                               Handle& handleToInitialize,
-                              P_ENABLE_IF(IsReferenceCounted<U>::value &&
-                                          !IsSafeId<U>::value))
+                              P_ENABLE_IF(IsReferenceCounted<U>::value && !IsSafeId<U>::value))
   {
     T* instance = (T*)object;
 
@@ -250,8 +233,7 @@ public:
   void ObjectToHandleInternal(const byte* object,
                               BoundType* type,
                               Handle& handleToInitialize,
-                              P_ENABLE_IF(!IsReferenceCounted<U>::value &&
-                                          IsSafeId<U>::value))
+                              P_ENABLE_IF(!IsReferenceCounted<U>::value && IsSafeId<U>::value))
   {
     T* instance = (T*)object;
 
@@ -263,11 +245,10 @@ public:
   //************************************************************************************************
   // Reference counted and safe id
   template <typename U = T>
-  void ObjectToHandleInternal(
-      const byte* object,
-      BoundType* type,
-      Handle& handleToInitialize,
-      P_ENABLE_IF(IsReferenceCounted<U>::value&& IsSafeId<U>::value))
+  void ObjectToHandleInternal(const byte* object,
+                              BoundType* type,
+                              Handle& handleToInitialize,
+                              P_ENABLE_IF(IsReferenceCounted<U>::value&& IsSafeId<U>::value))
   {
     T* instance = (T*)object;
 
@@ -286,9 +267,7 @@ public:
   //************************************************************************************************
   // Only reference counted
   template <typename U = T>
-  byte* HandleToObjectInternal(const Handle& handle,
-                               P_ENABLE_IF(IsReferenceCounted<U>::value &&
-                                           !IsSafeId<U>::value))
+  byte* HandleToObjectInternal(const Handle& handle, P_ENABLE_IF(IsReferenceCounted<U>::value && !IsSafeId<U>::value))
   {
     return (byte*)handle.HandlePointer;
   }
@@ -296,9 +275,7 @@ public:
   //************************************************************************************************
   // Only safe id
   template <typename U = T>
-  byte* HandleToObjectInternal(const Handle& handle,
-                               P_ENABLE_IF(IsSafeId<U>::value &&
-                                           !IsThreadSafe<U>::value))
+  byte* HandleToObjectInternal(const Handle& handle, P_ENABLE_IF(IsSafeId<U>::value && !IsThreadSafe<U>::value))
   {
     HandleData& data = *(HandleData*)(handle.Data);
 
@@ -312,9 +289,7 @@ public:
   //************************************************************************************************
   // Thread safe id
   template <typename U = T>
-  byte* HandleToObjectInternal(
-      const Handle& handle,
-      P_ENABLE_IF(IsSafeId<U>::value&& IsThreadSafe<U>::value))
+  byte* HandleToObjectInternal(const Handle& handle, P_ENABLE_IF(IsSafeId<U>::value&& IsThreadSafe<U>::value))
   {
     HandleData& data = *(HandleData*)(handle.Data);
 
@@ -331,8 +306,7 @@ public:
   // AddReference
   //************************************************************************************************
   template <typename U = T>
-  void AddReferenceInternal(const Handle& handle,
-                            P_ENABLE_IF(IsReferenceCounted<U>::value))
+  void AddReferenceInternal(const Handle& handle, P_ENABLE_IF(IsReferenceCounted<U>::value))
   {
     T* instance = (T*)HandleToObject(handle);
     instance->AddReference();
@@ -340,8 +314,7 @@ public:
 
   //************************************************************************************************
   template <typename U = T>
-  void AddReferenceInternal(const Handle& handle,
-                            P_DISABLE_IF(IsReferenceCounted<U>::value))
+  void AddReferenceInternal(const Handle& handle, P_DISABLE_IF(IsReferenceCounted<U>::value))
   {
   }
 
@@ -349,8 +322,7 @@ public:
   // ReleaseReference
   //************************************************************************************************
   template <typename U = T>
-  ReleaseResult::Enum ReleaseReferenceInternal(
-      const Handle& handle, P_ENABLE_IF(IsReferenceCounted<U>::value))
+  ReleaseResult::Enum ReleaseReferenceInternal(const Handle& handle, P_ENABLE_IF(IsReferenceCounted<U>::value))
   {
     T* instance = (T*)HandleToObject(handle);
     instance->Release();
@@ -363,8 +335,7 @@ public:
 
   //************************************************************************************************
   template <typename U = T>
-  ReleaseResult::Enum ReleaseReferenceInternal(
-      const Handle& handle, P_DISABLE_IF(IsReferenceCounted<U>::value))
+  ReleaseResult::Enum ReleaseReferenceInternal(const Handle& handle, P_DISABLE_IF(IsReferenceCounted<U>::value))
   {
     return ReleaseResult::TakeNoAction;
   }
@@ -404,8 +375,7 @@ public:
 };
 
 template <typename Base>
-void ReferenceCounted<Base>::ZilchSetupType(ZZ::LibraryBuilder& builder,
-                                            ZZ::BoundType* type)
+void ReferenceCounted<Base>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
 {
   ZeroBindHandle();
 }
@@ -444,15 +414,13 @@ public:
 };
 
 template <typename idType, typename Base>
-typename SafeId<idType, Base>::HandleIdType
-    SafeId<idType, Base>::mZeroHandleCurrentId = 1;
+typename SafeId<idType, Base>::HandleIdType SafeId<idType, Base>::mZeroHandleCurrentId = 1;
 template <typename idType, typename Base>
 HashMap<typename SafeId<idType, Base>::HandleIdType, SafeId<idType, Base>*>
     SafeId<idType, Base>::mZeroHandleLiveObjects;
 
 template <typename idType, typename Base>
-void SafeId<idType, Base>::ZilchSetupType(ZZ::LibraryBuilder& builder,
-                                          ZZ::BoundType* type)
+void SafeId<idType, Base>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
 {
   ZeroBindHandle();
 }
@@ -491,18 +459,15 @@ public:
 };
 
 template <typename idType, typename Base>
-typename ThreadSafeId<idType, Base>::HandleIdType
-    ThreadSafeId<idType, Base>::mZeroHandleCurrentId = 1;
+typename ThreadSafeId<idType, Base>::HandleIdType ThreadSafeId<idType, Base>::mZeroHandleCurrentId = 1;
 template <typename idType, typename Base>
-HashMap<typename ThreadSafeId<idType, Base>::HandleIdType,
-        ThreadSafeId<idType, Base>*>
+HashMap<typename ThreadSafeId<idType, Base>::HandleIdType, ThreadSafeId<idType, Base>*>
     ThreadSafeId<idType, Base>::mZeroHandleLiveObjects;
 template <typename idType, typename Base>
 ThreadLock ThreadSafeId<idType, Base>::mZeroHandleLock;
 
 template <typename idType, typename Base>
-void ThreadSafeId<idType, Base>::ZilchSetupType(ZZ::LibraryBuilder& builder,
-                                                ZZ::BoundType* type)
+void ThreadSafeId<idType, Base>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
 {
   ZeroBindHandle();
 }
@@ -540,16 +505,14 @@ public:
 };
 
 template <typename idType, typename Base>
-typename ReferenceCountedSafeId<idType, Base>::HandleIdType
-    ReferenceCountedSafeId<idType, Base>::mZeroHandleCurrentId = 1;
+typename ReferenceCountedSafeId<idType, Base>::HandleIdType ReferenceCountedSafeId<idType, Base>::mZeroHandleCurrentId =
+    1;
 template <typename idType, typename Base>
-HashMap<typename ReferenceCountedSafeId<idType, Base>::HandleIdType,
-        ReferenceCountedSafeId<idType, Base>*>
+HashMap<typename ReferenceCountedSafeId<idType, Base>::HandleIdType, ReferenceCountedSafeId<idType, Base>*>
     ReferenceCountedSafeId<idType, Base>::mZeroHandleLiveObjects;
 
 template <typename idType, typename Base>
-void ReferenceCountedSafeId<idType, Base>::ZilchSetupType(
-    ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
+void ReferenceCountedSafeId<idType, Base>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
 {
   ZeroBindHandle();
 }
@@ -580,8 +543,7 @@ public:
   }
 
   //************************************************************************************************
-  ReferenceCountedThreadSafeId&
-  operator=(const ReferenceCountedThreadSafeId& rhs)
+  ReferenceCountedThreadSafeId& operator=(const ReferenceCountedThreadSafeId& rhs)
   {
     return *this;
   }
@@ -591,15 +553,13 @@ template <typename idType, typename Base>
 typename ReferenceCountedThreadSafeId<idType, Base>::HandleIdType
     ReferenceCountedThreadSafeId<idType, Base>::mZeroHandleCurrentId = 1;
 template <typename idType, typename Base>
-HashMap<typename ReferenceCountedThreadSafeId<idType, Base>::HandleIdType,
-        ReferenceCountedThreadSafeId<idType, Base>*>
+HashMap<typename ReferenceCountedThreadSafeId<idType, Base>::HandleIdType, ReferenceCountedThreadSafeId<idType, Base>*>
     ReferenceCountedThreadSafeId<idType, Base>::mZeroHandleLiveObjects;
 template <typename idType, typename Base>
 ThreadLock ReferenceCountedThreadSafeId<idType, Base>::mZeroHandleLock;
 
 template <typename idType, typename Base>
-void ReferenceCountedThreadSafeId<idType, Base>::ZilchSetupType(
-    ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
+void ReferenceCountedThreadSafeId<idType, Base>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
 {
   ZeroBindHandle();
 }

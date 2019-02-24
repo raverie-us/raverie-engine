@@ -169,14 +169,10 @@ void TextEditorConfig::Serialize(Serializer& stream)
   // pulled from the incorrectly saved data Eventually when we roll a new
   // config, these should be changed back to just SerializeNameDefault
   stream.SerializeFieldDefault("ShowWhiteSpace2", ShowWhiteSpace, true);
-  stream.SerializeFieldDefault(
-      "ConfidentAutoCompleteOnSymbols6", ConfidentAutoCompleteOnSymbols, true);
-  stream.SerializeFieldDefault(
-      "LocalWordCompletion", LocalWordCompletion, true);
-  stream.SerializeFieldDefault(
-      "KeywordAndTypeCompletion", KeywordAndTypeCompletion, true);
-  stream.SerializeFieldDefault(
-      "AutoCompleteOnEnter6", AutoCompleteOnEnter, true);
+  stream.SerializeFieldDefault("ConfidentAutoCompleteOnSymbols6", ConfidentAutoCompleteOnSymbols, true);
+  stream.SerializeFieldDefault("LocalWordCompletion", LocalWordCompletion, true);
+  stream.SerializeFieldDefault("KeywordAndTypeCompletion", KeywordAndTypeCompletion, true);
+  stream.SerializeFieldDefault("AutoCompleteOnEnter6", AutoCompleteOnEnter, true);
   SerializeNameDefault(FontSize, uint(13));
   SerializeNameDefault(ColorScheme, String("DarkZero"));
   SerializeNameDefault(LineNumbers, true);
@@ -228,8 +224,7 @@ void RecentProjects::AddRecentProject(StringParam file, bool sendsEvent)
   }
 }
 
-void RecentProjects::RemoveRecentProject(StringParam projectFile,
-                                         bool sendsEvent)
+void RecentProjects::RemoveRecentProject(StringParam projectFile, bool sendsEvent)
 {
   mRecentProjects.Erase(projectFile);
 
@@ -256,7 +251,7 @@ void RecentProjects::GetProjectsByDate(Array<String>& projects)
 
   projects.Reserve(mRecentProjects.Size());
 
-  forRange(String location, mRecentProjects.All())
+  forRange (String location, mRecentProjects.All())
   {
     projects.PushBack(location);
   }
@@ -284,7 +279,7 @@ String RecentProjects::GetOldestProject()
 {
   String oldestProject;
   TimeType time = cTimeMax;
-  forRange(String currProjectPath, mRecentProjects.All())
+  forRange (String currProjectPath, mRecentProjects.All())
   {
     TimeType currTime = 0;
 
@@ -302,8 +297,7 @@ String RecentProjects::GetOldestProject()
   return oldestProject;
 }
 
-void RecentProjects::UpdateMaxNumberOfProjects(uint maxRecentProjects,
-                                               bool sendsEvent)
+void RecentProjects::UpdateMaxNumberOfProjects(uint maxRecentProjects, bool sendsEvent)
 {
   mMaxRecentProjects = maxRecentProjects;
 
@@ -326,19 +320,16 @@ void RecentProjects::RemoveMissingProjects()
   HashSet<String> recentProjects(mRecentProjects);
   mRecentProjects.Clear();
 
-  forRange(String project, recentProjects.All())
+  forRange (String project, recentProjects.All())
   {
     if (FileExists(project))
       mRecentProjects.Insert(project);
   }
 }
 
-
 String GetRemoteConfigDirectory(StringParam organization, StringParam applicationName)
 {
-  return FilePath::Combine(
-      GetUserDocumentsDirectory(),
-                           BuildString(organization, applicationName));
+  return FilePath::Combine(GetUserDocumentsDirectory(), BuildString(organization, applicationName));
 }
 
 String GetConfigDirectory()
@@ -351,12 +342,9 @@ String GetConfigFileName()
   return String::Format("ConfigurationV%d.data", GetConfigVersion());
 }
 
-String GetRemoteConfigFilePath(StringParam organization,
-                               StringParam applicationName)
+String GetRemoteConfigFilePath(StringParam organization, StringParam applicationName)
 {
-  return FilePath::Combine(
-      GetRemoteConfigDirectory(organization, applicationName),
-                           GetConfigFileName());
+  return FilePath::Combine(GetRemoteConfigDirectory(organization, applicationName), GetConfigFileName());
 }
 
 String GetConfigFilePath()
@@ -409,8 +397,7 @@ Cog* LoadConfig(ModifyConfigFn modifier, void* userData)
   String configFile = GetConfigFilePath();
   String sourceDirectory = FindSourceDirectory();
   String dataDirectory = FilePath::Combine(sourceDirectory, cDataDirectoryName);
-  const String defaultConfigFile = String::Format(
-      "Default%sConfiguration.data", GetApplicationName().c_str());
+  const String defaultConfigFile = String::Format("Default%sConfiguration.data", GetApplicationName().c_str());
 
   Cog* configCog = nullptr;
   bool userConfigExists = false;
@@ -427,22 +414,19 @@ Cog* LoadConfig(ModifyConfigFn modifier, void* userData)
     searchConfigPaths.PushBack(configFile);
   }
   // In the source's Data directory.
-  searchConfigPaths.PushBack(
-      FilePath::Combine(dataDirectory, defaultConfigFile));
+  searchConfigPaths.PushBack(FilePath::Combine(dataDirectory, defaultConfigFile));
 
-  forRange(StringParam path, searchConfigPaths)
+  forRange (StringParam path, searchConfigPaths)
   {
     if (FileExists(path))
     {
-      configCog =
-          Z::gFactory->Create(Z::gEngine->GetEngineSpace(), path, 0, nullptr);
+      configCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), path, 0, nullptr);
 
       // Make sure we successfully created the config Cog from the data file.
       if (configCog != nullptr)
       {
         userConfigExists = (path == configFile);
-        ZPrintFilter(
-            Filter::DefaultFilter, "Using config '%s'.\n", path.c_str());
+        ZPrintFilter(Filter::DefaultFilter, "Using config '%s'.\n", path.c_str());
         break;
       }
     }
@@ -492,7 +476,7 @@ String FindSourceDirectory()
 {
   static const String cRoot(".welder");
   String dir;
-  
+
   dir = FindDirectoryFromRootFile(GetWorkingDirectory(), cRoot);
   if (!dir.Empty())
     return dir;

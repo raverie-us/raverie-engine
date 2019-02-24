@@ -80,8 +80,7 @@ public:
 DeclareEnum4(TranslationDisplayMode, Pixel, Geometry, Vertex, Full);
 // Translates the zilch script of a material. As long as this editor is open
 // on save/modification of the fragment the script editor will be updated.
-class TranslatedZilchCompositorScriptEditor
-    : public TranslatedShaderScriptEditor
+class TranslatedZilchCompositorScriptEditor : public TranslatedShaderScriptEditor
 {
 public:
   typedef TranslatedZilchCompositorScriptEditor self_type;

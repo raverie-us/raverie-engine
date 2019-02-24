@@ -37,14 +37,10 @@ public:
   virtual void Remove(Status& status, StringParam filePath) = 0;
 
   /// Rename / Move a file keeping it's history.
-  virtual void Rename(Status& status,
-                      StringParam sourceFilePath,
-                      StringParam destFilePath) = 0;
+  virtual void Rename(Status& status, StringParam sourceFilePath, StringParam destFilePath) = 0;
 
   /// Get revisions of this file
-  virtual void GetRevisions(Status& status,
-                            StringParam filePath,
-                            Array<Revision>& revisions) = 0;
+  virtual void GetRevisions(Status& status, StringParam filePath, Array<Revision>& revisions) = 0;
 };
 
 int RunSimpleCommandLine(Status& status, StringParam commandLine);

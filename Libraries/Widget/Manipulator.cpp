@@ -104,10 +104,7 @@ void MouseManipulation::OnMouseUp(MouseEvent* event)
 
 const String GripperElement = "Gripper";
 
-Gripper::Gripper(Composite* parent,
-                 Widget* target,
-                 DockMode::Enum gripDirection) :
-    Widget(parent, AttachType::Direct)
+Gripper::Gripper(Composite* parent, Widget* target, DockMode::Enum gripDirection) : Widget(parent, AttachType::Direct)
 {
   mDefSet = parent->GetDefinitionSet();
 
@@ -182,41 +179,26 @@ void Gripper::OnOsWindowBorderHitTest(OsWindowBorderHitTest* event)
   Widget* target = mTarget;
   if (Docker* docker = target->GetDocker())
   {
-    WindowBorderArea::Enum area =
-        docker->GetWindowBorderArea(target, mGripDirection);
+    WindowBorderArea::Enum area = docker->GetWindowBorderArea(target, mGripDirection);
 
     if (area != WindowBorderArea::None)
       event->mWindowBorderArea = area;
   }
 }
 
-GripZones::GripZones(Composite* owner, Widget* sizeTarget) :
-    Composite(owner, AttachType::Direct)
+GripZones::GripZones(Composite* owner, Widget* sizeTarget) : Composite(owner, AttachType::Direct)
 {
   SetLayout(CreateEdgeDockLayout());
 
   mGripper[SlicesIndex::Top] = new Gripper(this, sizeTarget, DockMode::DockTop);
-  mGripper[SlicesIndex::Left] =
-      new Gripper(this, sizeTarget, DockMode::DockLeft);
-  mGripper[SlicesIndex::Bottom] =
-      new Gripper(this, sizeTarget, DockMode::DockBottom);
-  mGripper[SlicesIndex::Right] =
-      new Gripper(this, sizeTarget, DockMode::DockRight);
+  mGripper[SlicesIndex::Left] = new Gripper(this, sizeTarget, DockMode::DockLeft);
+  mGripper[SlicesIndex::Bottom] = new Gripper(this, sizeTarget, DockMode::DockBottom);
+  mGripper[SlicesIndex::Right] = new Gripper(this, sizeTarget, DockMode::DockRight);
 
-  mCornerGripper[0] = new Gripper(
-      this, sizeTarget, DockMode::Enum(DockMode::DockTop | DockMode::DockLeft));
-  mCornerGripper[1] =
-      new Gripper(this,
-                  sizeTarget,
-                  DockMode::Enum(DockMode::DockTop | DockMode::DockRight));
-  mCornerGripper[2] =
-      new Gripper(this,
-                  sizeTarget,
-                  DockMode::Enum(DockMode::DockBottom | DockMode::DockLeft));
-  mCornerGripper[3] =
-      new Gripper(this,
-                  sizeTarget,
-                  DockMode::Enum(DockMode::DockBottom | DockMode::DockRight));
+  mCornerGripper[0] = new Gripper(this, sizeTarget, DockMode::Enum(DockMode::DockTop | DockMode::DockLeft));
+  mCornerGripper[1] = new Gripper(this, sizeTarget, DockMode::Enum(DockMode::DockTop | DockMode::DockRight));
+  mCornerGripper[2] = new Gripper(this, sizeTarget, DockMode::Enum(DockMode::DockBottom | DockMode::DockLeft));
+  mCornerGripper[3] = new Gripper(this, sizeTarget, DockMode::Enum(DockMode::DockBottom | DockMode::DockRight));
 }
 
 void GripZones::UpdateTransform()
@@ -239,11 +221,7 @@ void GripZones::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-void MoveUpperAxis(int a,
-                   Vec3& newObjectPos,
-                   Vec2& newObjectSize,
-                   Vec2Param minSize,
-                   Vec2Param movement)
+void MoveUpperAxis(int a, Vec3& newObjectPos, Vec2& newObjectSize, Vec2Param minSize, Vec2Param movement)
 {
   // The max change is limited by the minimum size to
   // prevent shrinking the object to small
@@ -260,20 +238,14 @@ void MoveUpperAxis(int a,
   newObjectSize[a] -= moveAxis;
 }
 
-void MoveLowerAxis(int a,
-                   Vec3& newObjectPos,
-                   Vec2& newObjectSize,
-                   Vec2Param minSize,
-                   Vec2Param maxSize,
-                   Vec2Param movement)
+void MoveLowerAxis(
+    int a, Vec3& newObjectPos, Vec2& newObjectSize, Vec2Param minSize, Vec2Param maxSize, Vec2Param movement)
 {
   newObjectSize[a] += movement[a];
   newObjectSize[a] = Math::Clamp(newObjectSize[a], minSize[a], maxSize[a]);
 }
 
-SizingManipulation::SizingManipulation(Mouse* mouse,
-                                       Widget* toBeSized,
-                                       DockMode::Enum mode) :
+SizingManipulation::SizingManipulation(Mouse* mouse, Widget* toBeSized, DockMode::Enum mode) :
     MouseManipulation(mouse, toBeSized->GetParent())
 {
   mBeingSized = toBeSized;

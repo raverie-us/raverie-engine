@@ -73,21 +73,13 @@ void WebRequest(Status& status,
   status.SetFailed("WebRequest not implemented");
 }
 
-bool SystemOpenFile(Status& status,
-                    cstr file,
-                    uint verb,
-                    cstr parameters,
-                    cstr workingDirectory)
+bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
   status.SetFailed("SystemOpenFile not implemented");
   return false;
 }
 
-bool SystemOpenNetworkFile(Status& status,
-                           cstr file,
-                           uint verb,
-                           cstr parameters,
-                           cstr workingDirectory)
+bool SystemOpenNetworkFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
   status.SetFailed("SystemOpenNetworkFile not implemented");
   return false;

@@ -4,25 +4,18 @@
 namespace Zero
 {
 
-DirectoryWatcher::DirectoryWatcher(cstr directoryToWatch,
-                                   CallbackFunction callback,
-                                   void* callbackInstance)
+DirectoryWatcher::DirectoryWatcher(cstr directoryToWatch, CallbackFunction callback, void* callbackInstance)
 {
-  ZeroCStringCopy(mDirectoryToWatch,
-                  File::MaxPath,
-                  directoryToWatch,
-                  strlen(directoryToWatch));
+  ZeroCStringCopy(mDirectoryToWatch, File::MaxPath, directoryToWatch, strlen(directoryToWatch));
 
   mCallbackInstance = callbackInstance;
   mCallback = callback;
 
   if (ThreadingEnabled)
   {
-    mWorkThread.Initialize(
-        Thread::ObjectEntryCreator<DirectoryWatcher,
-                                   &DirectoryWatcher::RunThreadEntryPoint>,
-        this,
-        "DirectoryWatcherWorker");
+    mWorkThread.Initialize(Thread::ObjectEntryCreator<DirectoryWatcher, &DirectoryWatcher::RunThreadEntryPoint>,
+                           this,
+                           "DirectoryWatcherWorker");
     mCancelEvent.Initialize(true, false);
   }
 }

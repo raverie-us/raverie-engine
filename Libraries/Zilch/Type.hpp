@@ -354,8 +354,7 @@ typedef String (*ToStringFn)(const BoundType* type, const byte* data);
 
 // Retrieves the event handler for an object (or null if this object cannot
 // send/receive events)
-typedef EventHandler* (*GetEventHandlerFn)(const BoundType* type,
-                                           const byte* data);
+typedef EventHandler* (*GetEventHandlerFn)(const BoundType* type, const byte* data);
 
 // Get the virtual type of a direct object pointer
 typedef BoundType* (*BindingVirtualTypeFn)(const byte* memory);
@@ -430,11 +429,8 @@ public:
   {
   }
 
-  MemberRange(BoundType* type,
-              StringParam name,
-              Type* declaredType,
-              Members::Enum options,
-              BoundType* memberKind = nullptr) :
+  MemberRange(
+      BoundType* type, StringParam name, Type* declaredType, Members::Enum options, BoundType* memberKind = nullptr) :
       IteratingType(type),
       DerivedType(type),
       Name(name),
@@ -564,13 +560,10 @@ public:
                          FindMemberOptions::Flags options) const;
 
   // Finds a function given a delegate type
-  Function* FindFunction(StringParam name,
-                         DelegateType* type,
-                         FindMemberOptions::Flags options) const;
+  Function* FindFunction(StringParam name, DelegateType* type, FindMemberOptions::Flags options) const;
 
   // Finds a property or field by a name (can be static or instance)
-  Property* FindProperty(StringParam name,
-                         FindMemberOptions::Flags options) const;
+  Property* FindProperty(StringParam name, FindMemberOptions::Flags options) const;
 
   // Get an array of overloaded instance functions under the same name.
   // Returning null or an empty array will signal that the function does not
@@ -688,27 +681,19 @@ public:
   // first!
   GetterSetter* GetGetterSetter(StringParam name);
   GetterSetter* GetGetterSetter(StringParam name, Members::Enum options);
-  GetterSetter* GetGetterSetter(StringParam name,
-                                Type* declaredType,
-                                Members::Enum options);
+  GetterSetter* GetGetterSetter(StringParam name, Type* declaredType, Members::Enum options);
   Property* GetProperty(StringParam name);
   Property* GetProperty(StringParam name, Members::Enum options);
-  Property* GetProperty(StringParam name,
-                        Type* declaredType,
-                        Members::Enum options);
+  Property* GetProperty(StringParam name, Type* declaredType, Members::Enum options);
   Field* GetField(StringParam name);
   Field* GetField(StringParam name, Members::Enum options);
   Field* GetField(StringParam name, Type* declaredType, Members::Enum options);
   Function* GetFunction(StringParam name);
   Function* GetFunction(StringParam name, Members::Enum options);
-  Function* GetFunction(StringParam name,
-                        DelegateType* type,
-                        Members::Enum options);
+  Function* GetFunction(StringParam name, DelegateType* type, Members::Enum options);
   Member* GetMember(StringParam name);
   Member* GetMember(StringParam name, Members::Enum options);
-  Member* GetMember(StringParam name,
-                    Type* declaredType,
-                    Members::Enum options);
+  Member* GetMember(StringParam name, Type* declaredType, Members::Enum options);
 
   Function* GetDefaultConstructor();
   Function* GetDefaultConstructor(bool inherited);
@@ -926,12 +911,10 @@ public:
 
   // Builds the just the parameter part of the string (used in overload
   // resolving)
-  void BuildParameterString(StringBuilder& builder,
-                            bool declaredNames = true) const;
+  void BuildParameterString(StringBuilder& builder, bool declaredNames = true) const;
 
   // Builds the entire signature string, without the name
-  void BuildSignatureString(StringBuilder& builder,
-                            bool declaredNames = true) const;
+  void BuildSignatureString(StringBuilder& builder, bool declaredNames = true) const;
 
   // Gets the entire parameter string, without the function name (includes
   // parameter names)
@@ -992,10 +975,9 @@ BoundType*& TypeBinding::StaticTypeId<T>::GetType()
   static BoundType* instance = new BoundType(AssertBadType);
   if (instance->IsInitialized() == false)
   {
-    ErrorIf(
-        NativeBindingList::IsBuildingLibrary() == false,
-        "You can only get a type with ZilchTypeId if the type is initialized, "
-        "or if you're in the middle of building a library");
+    ErrorIf(NativeBindingList::IsBuildingLibrary() == false,
+            "You can only get a type with ZilchTypeId if the type is initialized, "
+            "or if you're in the middle of building a library");
   }
 
   return instance;
@@ -1062,15 +1044,13 @@ void MemberRange<MemberType>::PopFront()
         continue;
 
       // Check if the user is attempting to filter by members of a specific type
-      if (this->DeclaredType != nullptr &&
-          !Type::IsRawSame(member->GetTypeOrNull(), this->DeclaredType))
+      if (this->DeclaredType != nullptr && !Type::IsRawSame(member->GetTypeOrNull(), this->DeclaredType))
         continue;
 
       // The user might specifically want a Field, GetterSetter, Function, or
       // even a base type such as Property or Member (which is everything)
       BoundType* derivedType = ZilchVirtualTypeId(member);
-      if (this->MemberKind != nullptr &&
-          derivedType->IsA(this->MemberKind) == false)
+      if (this->MemberKind != nullptr && derivedType->IsA(this->MemberKind) == false)
         continue;
 
       bool optionsStatic = (this->Options & Members::Static) != 0;

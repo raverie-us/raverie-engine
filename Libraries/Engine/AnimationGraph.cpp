@@ -88,8 +88,7 @@ void AnimationGraph::Initialize(CogInitializer& initializer)
   if (mOnGraphCreated && !GetSpace()->IsEditorMode())
     mOnGraphCreated(this);
 
-  ConnectThisTo(
-      MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
+  ConnectThisTo(MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
 }
 
 void AnimationGraph::SetDefaults()
@@ -116,7 +115,7 @@ void AnimationGraph::Update(float dt)
       ApplyFrame(mActiveNode->mFrameData);
 
     // Dispatch all events from the animation graph
-    forRange(AnimationGraphEvent * eventToSend, eventsToSend.All())
+    forRange (AnimationGraphEvent* eventToSend, eventsToSend.All())
     {
       GetOwner()->DispatchEvent(eventToSend->EventId, eventToSend);
       delete eventToSend;
@@ -141,7 +140,7 @@ void AnimationGraph::OnUpdate(UpdateEvent* e)
 
 void AnimationGraph::ApplyFrame(AnimationFrame& frame)
 {
-  forRange(BlendTrack * blendTrack, mBlendTracks.Values())
+  forRange (BlendTrack* blendTrack, mBlendTracks.Values())
   {
     ErrorIf(blendTrack->Index >= frame.Tracks.Size(), "Frame error");
     if (blendTrack->Index < frame.Tracks.Size())
@@ -242,7 +241,7 @@ void AnimationGraph::SetUpPlayData(Animation* animation, PlayData& playData)
   playData.Resize(animation->mNumberOfTracks);
 
   // Find all objects this track references
-  forRange(ObjectTrack & track, animation->ObjectTracks.All())
+  forRange (ObjectTrack& track, animation->ObjectTracks.All())
   {
     ObjectTrackPlayData& objectData = playData[track.ObjectTrackId];
     Cog* currentObject = objectData.ObjectHandle;
@@ -255,22 +254,17 @@ void AnimationGraph::SetUpPlayData(Animation* animation, PlayData& playData)
       // Find all objects for each sub track of each track
       objectData.mSubTrackPlayData.Clear();
 
-      forRange(PropertyTrack & subTrack, track.PropertyTracks.All())
+      forRange (PropertyTrack& subTrack, track.PropertyTracks.All())
       {
-        PropertyTrackPlayData& subTrackData =
-            objectData.mSubTrackPlayData.PushBack();
+        PropertyTrackPlayData& subTrackData = objectData.mSubTrackPlayData.PushBack();
         subTrackData.mComponent = NULL;
         subTrackData.mKeyframeIndex = 0;
-        subTrack.LinkInstance(objectData.mSubTrackPlayData.Back(),
-                              mBlendTracks,
-                              track.GetFullPath(),
-                              object);
+        subTrack.LinkInstance(objectData.mSubTrackPlayData.Back(), mBlendTracks, track.GetFullPath(), object);
       }
     }
     else
     {
-      DebugPrint("Failed to find object in animation track. %s\n",
-                 track.GetFullPath().c_str());
+      DebugPrint("Failed to find object in animation track. %s\n", track.GetFullPath().c_str());
     }
   }
 }
@@ -299,8 +293,7 @@ void AnimationGraph::PrintGraph()
     mActiveNode->PrintNode(0);
 }
 
-BasicAnimation* AnimationGraph::CreateBasicNode(Animation* animation,
-                                                AnimationPlayMode::Enum mode)
+BasicAnimation* AnimationGraph::CreateBasicNode(Animation* animation, AnimationPlayMode::Enum mode)
 {
   if (animation == NULL)
     DoNotifyException("Null Animation",
@@ -348,8 +341,7 @@ ZilchDefineType(SimpleAnimation, builder, type)
 void SimpleAnimation::Serialize(Serializer& stream)
 {
   SerializeResourceName(mAnimation, AnimationManager);
-  SerializeEnumNameDefault(
-      AnimationPlayMode, mPlayMode, AnimationPlayMode::Loop);
+  SerializeEnumNameDefault(AnimationPlayMode, mPlayMode, AnimationPlayMode::Loop);
 }
 
 void SimpleAnimation::Initialize(CogInitializer& initializer)
@@ -383,8 +375,7 @@ void SimpleAnimation::SetPlayMode(AnimationPlayMode::Enum mode)
   mPlayMode = mode;
 }
 
-AnimationNode* SimpleAnimation::PlaySingle(Animation* animation,
-                                           AnimationPlayMode::Enum playMode)
+AnimationNode* SimpleAnimation::PlaySingle(Animation* animation, AnimationPlayMode::Enum playMode)
 {
   ReturnIf(animation == NULL, NULL, "Invalid animation given.");
   AnimationNode* node = BuildBasic(mAnimGraph, animation, 0, playMode);
@@ -409,9 +400,7 @@ AnimationNode* SimpleAnimation::DirectBlend(Animation* animation,
   return NULL;
 }
 
-AnimationNode* SimpleAnimation::CrossBlend(Animation* animation,
-                                           float transitionTime,
-                                           AnimationPlayMode::Enum playMode)
+AnimationNode* SimpleAnimation::CrossBlend(Animation* animation, float transitionTime, AnimationPlayMode::Enum playMode)
 {
   AnimationNode* activeNode = mAnimGraph->GetActiveNode();
 
@@ -426,18 +415,17 @@ AnimationNode* SimpleAnimation::CrossBlend(Animation* animation,
   return NULL;
 }
 
-AnimationNode* SimpleAnimation::PlayIsolatedAnimation(
-    Animation* animation, Cog* rootBone, AnimationPlayMode::Enum playMode)
+AnimationNode* SimpleAnimation::PlayIsolatedAnimation(Animation* animation,
+                                                      Cog* rootBone,
+                                                      AnimationPlayMode::Enum playMode)
 {
   AnimationNode* activeNode = mAnimGraph->GetActiveNode();
 
   if (activeNode && animation)
   {
     AnimationNode* isolated = BuildBasic(mAnimGraph, animation, 0.0f, playMode);
-    AnimationNode* blendingTo =
-        BuildDirectBlend(mAnimGraph, activeNode->Clone(), isolated, 0.15f);
-    activeNode =
-        BuildSelectiveNode(mAnimGraph, activeNode, blendingTo, rootBone);
+    AnimationNode* blendingTo = BuildDirectBlend(mAnimGraph, activeNode->Clone(), isolated, 0.15f);
+    activeNode = BuildSelectiveNode(mAnimGraph, activeNode, blendingTo, rootBone);
     mAnimGraph->SetActiveNode(activeNode);
     return activeNode;
   }
@@ -445,8 +433,7 @@ AnimationNode* SimpleAnimation::PlayIsolatedAnimation(
   return NULL;
 }
 
-AnimationNode* SimpleAnimation::ChainAnimation(Animation* animation,
-                                               AnimationPlayMode::Enum playMode)
+AnimationNode* SimpleAnimation::ChainAnimation(Animation* animation, AnimationPlayMode::Enum playMode)
 {
   AnimationNode* activeNode = mAnimGraph->GetActiveNode();
 

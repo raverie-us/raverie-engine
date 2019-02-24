@@ -108,8 +108,8 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
     if (lastWidget)
     {
       areaPos = Vec2(area[SlicesIndex::Left], area[SlicesIndex::Top]);
-      areaSize = Vec2(area[SlicesIndex::Right] - area[SlicesIndex::Left],
-                      area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
+      areaSize =
+          Vec2(area[SlicesIndex::Right] - area[SlicesIndex::Left], area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
     }
     else
     {
@@ -128,8 +128,7 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
         float moveY = size.y;
         areaPos = Vec2(area[SlicesIndex::Left], area[SlicesIndex::Top]);
         area[SlicesIndex::Top] += moveY + mSpacing[Axis::Y];
-        areaSize =
-            Vec2(area[SlicesIndex::Right] - area[SlicesIndex::Left], moveY);
+        areaSize = Vec2(area[SlicesIndex::Right] - area[SlicesIndex::Left], moveY);
       }
       break;
 
@@ -144,11 +143,9 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
         }
 
         float moveY = size.y;
-        areaPos =
-            Vec2(area[SlicesIndex::Left], area[SlicesIndex::Bottom] - moveY);
+        areaPos = Vec2(area[SlicesIndex::Left], area[SlicesIndex::Bottom] - moveY);
         area[SlicesIndex::Bottom] -= moveY + mSpacing[Axis::Y];
-        areaSize =
-            Vec2(area[SlicesIndex::Right] - area[SlicesIndex::Left], moveY);
+        areaSize = Vec2(area[SlicesIndex::Right] - area[SlicesIndex::Left], moveY);
       }
       break;
 
@@ -164,8 +161,7 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
         float moveX = size.x;
         areaPos = Vec2(area[SlicesIndex::Left], area[SlicesIndex::Top]);
         area[SlicesIndex::Left] += moveX + mSpacing[Axis::X];
-        areaSize =
-            Vec2(moveX, area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
+        areaSize = Vec2(moveX, area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
       }
       break;
 
@@ -179,11 +175,9 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
           size.x = CalculateFlexedSize(child, flexSize, totalSize);
         }
         float moveX = size.x;
-        areaPos =
-            Vec2(area[SlicesIndex::Right] - moveX, area[SlicesIndex::Top]);
+        areaPos = Vec2(area[SlicesIndex::Right] - moveX, area[SlicesIndex::Top]);
         area[SlicesIndex::Right] -= moveX + mSpacing[Axis::X];
-        areaSize =
-            Vec2(moveX, area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
+        areaSize = Vec2(moveX, area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
       }
       break;
       }
@@ -200,12 +194,7 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
     {
       if (child->GetSizePolicyX() == UiSizePolicy::Fixed)
         childSize.x = child->GetSize().x;
-      CalculateAlignment(Axis::X,
-                         child->GetHorizontalAlignment(),
-                         areaSize,
-                         areaPos,
-                         childSize,
-                         childPos);
+      CalculateAlignment(Axis::X, child->GetHorizontalAlignment(), areaSize, areaPos, childSize, childPos);
     }
 
     if (child->GetSizePolicyY() == UiSizePolicy::Flex)
@@ -216,12 +205,7 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
     {
       if (child->GetSizePolicyY() == UiSizePolicy::Fixed)
         childSize.y = child->GetSize().y;
-      CalculateAlignment(Axis::Y,
-                         child->GetVerticalAlignment(),
-                         areaSize,
-                         areaPos,
-                         childSize,
-                         childPos);
+      CalculateAlignment(Axis::Y, child->GetVerticalAlignment(), areaSize, areaPos, childSize, childPos);
     }
 
     child->SetSize(childSize);

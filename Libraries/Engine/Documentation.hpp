@@ -22,8 +22,7 @@ typedef ArrayMap<String, String> TypeReplacementMap;
 
 /// Find the method doc in a list that has the same parameters as the meta
 /// method passed in
-MethodDoc* MethodDocWithSameParams(Array<MethodDoc*>& methodList,
-                                   Zilch::Function* metaMeth);
+MethodDoc* MethodDocWithSameParams(Array<MethodDoc*>& methodList, Zilch::Function* metaMeth);
 
 /// Loads from zilch, saves to data file, then safe deletes
 /// Note: Ignoring save unbound for now until feature re-added that used it
@@ -270,14 +269,10 @@ public:
   void CreateEventDocFromBoundType(SendsEvent* eventSent);
 
   /// Helper for CreateClassDocFromBoundType to load methods
-  void CreateMethodDocFromBoundType(Zilch::Function* method,
-                                    TypeReplacementMap* replacements,
-                                    bool exportDoc);
+  void CreateMethodDocFromBoundType(Zilch::Function* method, TypeReplacementMap* replacements, bool exportDoc);
 
   /// Helper for CreateClassDocFromBoundType to load properties
-  void CreatePropertyDocFromBoundType(Property* metaProperty,
-                                      TypeReplacementMap* replacements,
-                                      bool exportDoc);
+  void CreatePropertyDocFromBoundType(Property* metaProperty, TypeReplacementMap* replacements, bool exportDoc);
 
   HashMap<String, PropertyDoc*> mPropertiesMap;
 
@@ -327,8 +322,7 @@ public:
 
 /// Contains list of documented classes, unlike Raw Documentation this is all
 /// saved to one file
-class DocumentationLibrary
-    : public LazySingleton<DocumentationLibrary, EventObject>
+class DocumentationLibrary : public LazySingleton<DocumentationLibrary, EventObject>
 {
 public:
   ZilchDeclareType(DocumentationLibrary, TypeCopyMode::ReferenceType);
@@ -347,16 +341,14 @@ public:
   void CreateFlagOrEnumDocFromBoundType(BoundType* type, bool exportDoc);
 
   /// Helper for LoadFromMeta, checks if a type is in the replacements map
-  ClassDoc* CreateClassDocFromBoundType(BoundType* type,
-                                        TypeReplacementMap* replacements);
+  ClassDoc* CreateClassDocFromBoundType(BoundType* type, TypeReplacementMap* replacements);
 
   /// Helper for LoadFromMeta, loop for instantiating and loading information
   /// from templated types
-  void GetDocumentationFromTemplateHandler(
-      StringParam libName,
-      InstantiateTemplateInfo& templateHandler,
-      LibraryBuilder& builder,
-      ArrayMap<String, String>& allTemplateReplacements);
+  void GetDocumentationFromTemplateHandler(StringParam libName,
+                                           InstantiateTemplateInfo& templateHandler,
+                                           LibraryBuilder& builder,
+                                           ArrayMap<String, String>& allTemplateReplacements);
 
   /// Load list of classes from the Meta Database
   void LoadFromMeta();

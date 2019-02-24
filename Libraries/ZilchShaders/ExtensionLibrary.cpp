@@ -9,8 +9,8 @@ SpirVExtensionInstruction::SpirVExtensionInstruction()
   mResolverFn = nullptr;
 }
 
-SpirVExtensionInstruction* SpirVExtensionLibrary::CreateExtInst(
-    Zilch::Function* zilchFn, SpirVExtensionInstructionResolverFn resolverFn)
+SpirVExtensionInstruction* SpirVExtensionLibrary::CreateExtInst(Zilch::Function* zilchFn,
+                                                                SpirVExtensionInstructionResolverFn resolverFn)
 {
   ErrorIf(zilchFn == nullptr, "Invalid zilch function");
   ErrorIf(mExtensions.ContainsKey(zilchFn), "Extension already exists");

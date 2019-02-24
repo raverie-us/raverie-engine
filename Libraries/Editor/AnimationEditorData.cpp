@@ -113,7 +113,7 @@ void AnimationEditorData::AddToSelection(TrackNode* track)
   if (track->Type == TrackType::Property && !track->Children.Empty())
   {
     // Add all children to the visible tracks
-    forRange(TrackNode * child, track->Children.All())
+    forRange (TrackNode* child, track->Children.All())
     {
       mVisiblePropertyTracks.Insert(child);
     }
@@ -168,8 +168,7 @@ void LinearizeTrack(TrackNode* track)
       if (previous)
       {
         Vec2 previousValue = previous->GetGraphPosition();
-        current->SetTangentIn((previousValue - currentValue).Normalized() *
-                              0.03f);
+        current->SetTangentIn((previousValue - currentValue).Normalized() * 0.03f);
       }
 
       // Update the out tangent
@@ -182,7 +181,7 @@ void LinearizeTrack(TrackNode* track)
   }
 
   // Linearize all children
-  forRange(TrackNode * child, track->Children.All())
+  forRange (TrackNode* child, track->Children.All())
   {
     LinearizeTrack(child);
   }
@@ -212,21 +211,16 @@ RichAnimation* ConvertToRichAnimation(Animation* animation)
   richAnim->mDuration = animation->GetDuration();
 
   // Create the root node
-  richAnim->mRoot = new TrackNode(
-      "Root", String(), TrackType::Object, nullptr, nullptr, richAnim);
+  richAnim->mRoot = new TrackNode("Root", String(), TrackType::Object, nullptr, nullptr, richAnim);
 
   HashMap<String, TrackNode*> objectTracks;
   // Create a node for each object track
-  forRange(ObjectTrack & objectTrack, animation->ObjectTracks.All())
+  forRange (ObjectTrack& objectTrack, animation->ObjectTracks.All())
   {
     // Create the object node
     String objectName = GetObjectNameFromPath(objectTrack.GetFullPath());
-    TrackNode* objectNode = new TrackNode(objectName,
-                                          objectTrack.GetFullPath(),
-                                          TrackType::Object,
-                                          nullptr,
-                                          nullptr,
-                                          richAnim);
+    TrackNode* objectNode =
+        new TrackNode(objectName, objectTrack.GetFullPath(), TrackType::Object, nullptr, nullptr, richAnim);
     objectTracks.Insert(objectNode->Path, objectNode);
 
     // Used to store all the property tracks for each unique component
@@ -234,16 +228,14 @@ RichAnimation* ConvertToRichAnimation(Animation* animation)
     ComponentTrackMap componentTracks;
 
     // We want to group all property tracks under the same component
-    forRange(PropertyTrack & propertyTrack, objectTrack.PropertyTracks.All())
+    forRange (PropertyTrack& propertyTrack, objectTrack.PropertyTracks.All())
     {
       // The name of the component
       String componentName = ComponentNameFromPath(propertyTrack.Name);
-      ErrorIf(componentName.Empty(),
-              "Invalid component name for property track.");
+      ErrorIf(componentName.Empty(), "Invalid component name for property track.");
 
       // Attempt to find the array
-      Array<PropertyTrack*>* tracks =
-          componentTracks.FindPointer(componentName);
+      Array<PropertyTrack*>* tracks = componentTracks.FindPointer(componentName);
 
       // If it wasn't inserted, we want to Insert it
       if (tracks == nullptr)
@@ -263,12 +255,8 @@ RichAnimation* ConvertToRichAnimation(Animation* animation)
       // Create the component node
       String componentName = r.Front().first;
       String componentPath = componentName;
-      TrackNode* componentNode = new TrackNode(componentName,
-                                               componentPath,
-                                               TrackType::Component,
-                                               nullptr,
-                                               objectNode,
-                                               richAnim);
+      TrackNode* componentNode =
+          new TrackNode(componentName, componentPath, TrackType::Component, nullptr, objectNode, richAnim);
 
       // Add each property track
       Array<PropertyTrack*>& propertyTracks = r.Front().second;
@@ -279,14 +267,9 @@ RichAnimation* ConvertToRichAnimation(Animation* animation)
         // Create the property node
         String propertyName = PropertyNameFromPath(propertyTrack->Name);
         String propertyPath = BuildString(componentName, ".", propertyName);
-        BoundType* targetMeta =
-            MetaDatabase::GetInstance()->FindType(componentNode->Name);
-        TrackNode* propertyNode = new TrackNode(propertyName,
-                                                propertyPath,
-                                                TrackType::Property,
-                                                targetMeta,
-                                                componentNode,
-                                                richAnim);
+        BoundType* targetMeta = MetaDatabase::GetInstance()->FindType(componentNode->Name);
+        TrackNode* propertyNode =
+            new TrackNode(propertyName, propertyPath, TrackType::Property, targetMeta, componentNode, richAnim);
         LoadKeyFramesIntoTrack(propertyNode, propertyTrack);
       }
 
@@ -295,7 +278,7 @@ RichAnimation* ConvertToRichAnimation(Animation* animation)
   }
 
   typedef Pair<String, TrackNode*> TrackPair;
-  forRange(TrackPair & currTrackPair, objectTracks.All())
+  forRange (TrackPair& currTrackPair, objectTracks.All())
   {
     TrackNode* currTrack = currTrackPair.second;
     if (currTrack->Name == currTrack->Path)
@@ -306,8 +289,7 @@ RichAnimation* ConvertToRichAnimation(Animation* animation)
 
     char delimiter = cAnimationPathDelimiter;
 
-    Pair<StringRange, StringRange> splitPath =
-        SplitOnLast(currTrack->Path, delimiter);
+    Pair<StringRange, StringRange> splitPath = SplitOnLast(currTrack->Path, delimiter);
 
     // Is there a parent part in the path?
     if (!splitPath.second.Empty())

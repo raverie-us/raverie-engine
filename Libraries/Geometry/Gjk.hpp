@@ -10,10 +10,8 @@ class Gjk
 public:
   static const float sEpsilon;
 
-  Type Test(const SupportShape* shapeA,
-            const SupportShape* shapeB,
-            Manifold* manifold = nullptr,
-            unsigned maxIter = 20);
+  Type
+  Test(const SupportShape* shapeA, const SupportShape* shapeB, Manifold* manifold = nullptr, unsigned maxIter = 20);
   Type TestDebug(const SupportShape* shapeA,
                  const SupportShape* shapeB,
                  Manifold* manifold = nullptr,
@@ -31,9 +29,7 @@ private:
   void Initialize(const SupportShape* shapeA, const SupportShape* shapeB);
   CSOVertex ComputeSupport(Vec3 supportVector);
   void ComputeCSO(void);
-  bool ComputeContactData(Manifold* manifold,
-                          unsigned maxExpands = 20,
-                          bool debug = false);
+  bool ComputeContactData(Manifold* manifold, unsigned maxExpands = 20, bool debug = false);
   void CompleteSimplex(void);
 
   const SupportShape* mShapeA;

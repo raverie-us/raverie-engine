@@ -34,8 +34,8 @@ Manifold::Manifold()
   Restitution = real(0.0);
 }
 
-Memory::Pool* Manifold::sManifoldPool = new Memory::Pool(
-    "Manifolds", Memory::GetNamedHeap("Physics"), sizeof(Manifold), 2000);
+Memory::Pool* Manifold::sManifoldPool =
+    new Memory::Pool("Manifolds", Memory::GetNamedHeap("Physics"), sizeof(Manifold), 2000);
 
 void* Manifold::operator new(size_t size)
 {
@@ -75,8 +75,7 @@ real Manifold::GetSeparatingVelocity(uint contactIndex)
 {
   ManifoldPoint& point = Contacts[contactIndex];
   Vec3Ref worldPointA = point.WorldPoints[0];
-  return Math::Dot(point.Normal,
-                   Objects.GetPointSeperatingVelocity(worldPointA));
+  return Math::Dot(point.Normal, Objects.GetPointSeperatingVelocity(worldPointA));
 }
 
 Vec3 Manifold::GetSeparatingTangentVelocity(uint contactIndex)
@@ -84,14 +83,10 @@ Vec3 Manifold::GetSeparatingTangentVelocity(uint contactIndex)
   ManifoldPoint& point = Contacts[contactIndex];
   Vec3Ref worldPointA = point.WorldPoints[0];
   Vec3 separatingVelocity = Objects.GetPointSeperatingVelocity(worldPointA);
-  return separatingVelocity -
-         Dot(separatingVelocity, point.Normal) * point.Normal;
+  return separatingVelocity - Dot(separatingVelocity, point.Normal) * point.Normal;
 }
 
-void Manifold::GetTangents(PhysicsSolverConfig* config,
-                           uint contactIndex,
-                           Vec3Ref t1,
-                           Vec3Ref t2)
+void Manifold::GetTangents(PhysicsSolverConfig* config, uint contactIndex, Vec3Ref t1, Vec3Ref t2)
 {
   ManifoldPoint& point = Contacts[contactIndex];
   if (config->mTangentType == PhysicsContactTangentTypes::OrthonormalTangents)
@@ -115,8 +110,7 @@ void Manifold::GetTangents(PhysicsSolverConfig* config,
   {
     do
     {
-      Vec3 randVec(
-          gRandom.Float() - .5f, gRandom.Float() - .5f, gRandom.Float() - .5f);
+      Vec3 randVec(gRandom.Float() - .5f, gRandom.Float() - .5f, gRandom.Float() - .5f);
       t1 = Math::Cross(randVec, point.Normal);
     } while (!t1.Length());
 
@@ -181,18 +175,15 @@ void TestWorldToBodyToWorld(Vec3Param point, Collider* collider)
 {
   Vec3 bodyPoint = JointHelpers::WorldPointToBodyR(collider, point);
   Vec3 worldPoint = JointHelpers::BodyRToWorldPoint(collider, bodyPoint);
-  ErrorIf((worldPoint - point).LengthSq() > real(.01),
-          "World to body to world transform failed.");
+  ErrorIf((worldPoint - point).LengthSq() > real(.01), "World to body to world transform failed.");
 }
 
 void Manifold::AddPoints(ManifoldPoint* points, uint count)
 {
   for (uint i = 0; i < count; ++i)
   {
-    points[i].BodyPoints[0] =
-        JointHelpers::WorldPointToBodyR(Objects[0], points[i].WorldPoints[0]);
-    points[i].BodyPoints[1] =
-        JointHelpers::WorldPointToBodyR(Objects[1], points[i].WorldPoints[1]);
+    points[i].BodyPoints[0] = JointHelpers::WorldPointToBodyR(Objects[0], points[i].WorldPoints[0]);
+    points[i].BodyPoints[1] = JointHelpers::WorldPointToBodyR(Objects[1], points[i].WorldPoints[1]);
   }
 
   if (ManifoldPolicy == AddingPolicy::NormalManifold)
@@ -210,8 +201,7 @@ bool Manifold::GetSendsMessages() const
 
 void Manifold::ReplaceNormal(uint contactIndex, Vec3Param normal)
 {
-  Vec3 offset =
-      Objects[1]->GetWorldTranslation() - Objects[0]->GetWorldTranslation();
+  Vec3 offset = Objects[1]->GetWorldTranslation() - Objects[0]->GetWorldTranslation();
   Vec3 alteredNormal = normal;
   if (Math::Dot(offset, normal) < real(0.0))
     alteredNormal *= -1;
@@ -232,8 +222,7 @@ bool Manifold::CorrectFor2D()
 
   // we want to correct the normal between two objects if they are both
   // 2d or one of them is 2d and the other is not dynamic.
-  if ((collider1->Is2D() && collider2->Is2D()) ||
-      (collider1->Is2D() && !collider2->IsDynamic()) ||
+  if ((collider1->Is2D() && collider2->Is2D()) || (collider1->Is2D() && !collider2->IsDynamic()) ||
       (collider2->Is2D() && !collider1->IsDynamic()))
   {
     // now loop through all of the contacts
@@ -317,10 +306,7 @@ void Manifold::RemovePoint(uint index)
   --ContactCount;
 }
 
-real Manifold::ComputeQuadArea(Vec3Param point1,
-                               Vec3Param point2,
-                               Vec3Param point3,
-                               Vec3Param point4)
+real Manifold::ComputeQuadArea(Vec3Param point1, Vec3Param point2, Vec3Param point3, Vec3Param point4)
 {
   Vec3 A = point1;
   Vec3 B = point2;
@@ -363,31 +349,23 @@ uint Manifold::SortCachedPoints(Vec3Param bodyPointA)
   // calculate the areas of each quad to determine which points to keep
   if (maxPenetrationIndex != 0)
   {
-    areas[0] = ComputeQuadArea(bodyPointA,
-                               Contacts[1].BodyPoints[0],
-                               Contacts[2].BodyPoints[0],
-                               Contacts[3].BodyPoints[0]);
+    areas[0] =
+        ComputeQuadArea(bodyPointA, Contacts[1].BodyPoints[0], Contacts[2].BodyPoints[0], Contacts[3].BodyPoints[0]);
   }
   if (maxPenetrationIndex != 1)
   {
-    areas[1] = ComputeQuadArea(bodyPointA,
-                               Contacts[0].BodyPoints[0],
-                               Contacts[2].BodyPoints[0],
-                               Contacts[3].BodyPoints[0]);
+    areas[1] =
+        ComputeQuadArea(bodyPointA, Contacts[0].BodyPoints[0], Contacts[2].BodyPoints[0], Contacts[3].BodyPoints[0]);
   }
   if (maxPenetrationIndex != 2)
   {
-    areas[2] = ComputeQuadArea(bodyPointA,
-                               Contacts[0].BodyPoints[0],
-                               Contacts[1].BodyPoints[0],
-                               Contacts[3].BodyPoints[0]);
+    areas[2] =
+        ComputeQuadArea(bodyPointA, Contacts[0].BodyPoints[0], Contacts[1].BodyPoints[0], Contacts[3].BodyPoints[0]);
   }
   if (maxPenetrationIndex != 3)
   {
-    areas[3] = ComputeQuadArea(bodyPointA,
-                               Contacts[0].BodyPoints[0],
-                               Contacts[1].BodyPoints[0],
-                               Contacts[2].BodyPoints[0]);
+    areas[3] =
+        ComputeQuadArea(bodyPointA, Contacts[0].BodyPoints[0], Contacts[1].BodyPoints[0], Contacts[2].BodyPoints[0]);
   }
 
   uint index;
@@ -424,19 +402,15 @@ void Manifold::RefreshPoints()
   for (int i = ContactCount - 1; i >= 0; --i)
   {
     ManifoldPoint& point = Contacts[i];
-    point.WorldPoints[0] =
-        JointHelpers::BodyRToWorldPoint(Objects[0], point.BodyPoints[0]);
-    point.WorldPoints[1] =
-        JointHelpers::BodyRToWorldPoint(Objects[1], point.BodyPoints[1]);
-    point.Penetration =
-        Math::Dot(point.WorldPoints[0] - point.WorldPoints[1], point.Normal);
+    point.WorldPoints[0] = JointHelpers::BodyRToWorldPoint(Objects[0], point.BodyPoints[0]);
+    point.WorldPoints[1] = JointHelpers::BodyRToWorldPoint(Objects[1], point.BodyPoints[1]);
+    point.Penetration = Math::Dot(point.WorldPoints[0] - point.WorldPoints[1], point.Normal);
 
     if (point.Penetration < -contactBreakingThreshold)
       RemovePoint(i);
     else
     {
-      Vec3 projectedPoint =
-          point.WorldPoints[0] - point.Normal * point.Penetration;
+      Vec3 projectedPoint = point.WorldPoints[0] - point.Normal * point.Penetration;
       Vec3 projectedDist = projectedPoint - point.WorldPoints[1];
       real perpDist = projectedDist.LengthSq();
       if (perpDist > contactBreakingThreshold * contactBreakingThreshold)
@@ -481,9 +455,7 @@ void Manifold::FullAdd(ManifoldPoint* points, uint count)
       ManifoldPoint& cachedPoint = cachedPoints[cachedId];
       // if the new point equals the cached point
 
-      real distanceSq =
-          (cachedPoint.WorldPoints[0] - manifoldPoint.WorldPoints[0])
-              .LengthSq();
+      real distanceSq = (cachedPoint.WorldPoints[0] - manifoldPoint.WorldPoints[0]).LengthSq();
 
       if (distanceSq < real(.005))
       {

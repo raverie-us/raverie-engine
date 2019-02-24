@@ -21,8 +21,7 @@ ZilchDefineType(GraphicsSpace, builder, type)
   ZeroBindDependency(Space);
 
   ZilchBindFieldProperty(mActive);
-  ZilchBindFieldProperty(mRandomSeed)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindFieldProperty(mRandomSeed)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindFieldProperty(mSeed)->ZeroFilterEquality(mRandomSeed, bool, false);
 }
 
@@ -109,7 +108,7 @@ void GraphicsSpace::OnFrameUpdate(float frameDt)
 
   mFrameTime += frameDt;
 
-  ZeroForRangeVar(Graphical & graphical, graphicalRange, mGraphicalsToAdd.All())
+  ZeroForRangeVar (Graphical& graphical, graphicalRange, mGraphicalsToAdd.All())
   {
     GraphicalList::Unlink(&graphical);
 
@@ -133,11 +132,10 @@ void GraphicsSpace::OnFrameUpdate(float frameDt)
   uint lastIndex = 0;
 
   uint renderGroupCount = mGraphicsEngine->GetRenderGroupCount();
-  ErrorIf(renderGroupCount == 0,
-          "No render groups, core resources must be missing.");
+  ErrorIf(renderGroupCount == 0, "No render groups, core resources must be missing.");
 
   // for each view object in use
-  forRange(Camera & camera, mCameras.All())
+  forRange (Camera& camera, mCameras.All())
   {
     // Ranges must be cleared from the last this camera was used
     // Must be cleared before RenderTasks event is sent out
@@ -153,21 +151,19 @@ void GraphicsSpace::OnFrameUpdate(float frameDt)
     Mat3 rotation = Math::ToMatrix3(camera.mTransform->GetWorldRotation());
     Vec3 cameraDir = -rotation.BasisZ();
 
-    Frustum frustum =
-        camera.GetFrustum(camera.mViewportInterface->GetAspectRatio());
+    Frustum frustum = camera.GetFrustum(camera.mViewportInterface->GetAspectRatio());
 
     // Visibility culled graphicals
     forRangeBroadphaseTree(GraphicsBroadPhase, mBroadPhase, Frustum, frustum)
-        AddToVisibleGraphicals(
-            *range.Front(), camera, cameraPos, cameraDir, &frustum);
+        AddToVisibleGraphicals(*range.Front(), camera, cameraPos, cameraDir, &frustum);
 
     // Not culled
-    forRange(Graphical & graphical, mGraphicalsNeverCulled.All())
-        AddToVisibleGraphicals(graphical, camera, cameraPos, cameraDir);
+    forRange (Graphical& graphical, mGraphicalsNeverCulled.All())
+      AddToVisibleGraphicals(graphical, camera, cameraPos, cameraDir);
 
     // Get DebugGraphical entries, not broadphased
     // DebugGraphicals exist for one frame and are not placed in broadphase
-    forRange(Graphical & graphical, mDebugGraphicals.All())
+    forRange (Graphical& graphical, mDebugGraphicals.All())
     {
       DebugGraphical* debugGraphical = (DebugGraphical*)&graphical;
       if (debugGraphical->mDebugObjects.Size() == 0)
@@ -197,13 +193,11 @@ void GraphicsSpace::OnFrameUpdate(float frameDt)
     {
       uint rangeEnd = rangeStart + camera.mRenderGroupCounts[i];
 
-      RenderGroup* renderGroup =
-          (RenderGroup*)mGraphicsEngine->mRenderGroups[i];
+      RenderGroup* renderGroup = (RenderGroup*)mGraphicsEngine->mRenderGroups[i];
       if (renderGroup->mGraphicalSortMethod == GraphicalSortMethod::SortEvent)
       {
         GraphicalSortEvent sortEvent;
-        sortEvent.mGraphicalEntries =
-            mVisibleGraphicals.SubRange(rangeStart, rangeEnd - rangeStart);
+        sortEvent.mGraphicalEntries = mVisibleGraphicals.SubRange(rangeStart, rangeEnd - rangeStart);
         sortEvent.mRenderGroup = renderGroup;
         camera.mViewportInterface->SendSortEvent(&sortEvent);
         Sort(mVisibleGraphicals.SubRange(rangeStart, rangeEnd - rangeStart));
@@ -222,8 +216,7 @@ void GraphicsSpace::RenderTasksUpdate(RenderTasks& renderTasks)
   DispatchEvent(Events::RenderTasksUpdateInternal, &event);
 }
 
-void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks,
-                                       RenderQueues& renderQueues)
+void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& renderQueues)
 {
   if (mRenderTaskRangeIndices.Size() == 0)
     return;
@@ -235,8 +228,7 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks,
   // link RenderTasks to FrameBlock
   uint frameBlockIndex = renderQueues.mFrameBlocks.Size() - 1;
   for (uint i = 0; i < mRenderTaskRangeIndices.Size(); ++i)
-    renderTasks.mRenderTaskRanges[mRenderTaskRangeIndices[i]].mFrameBlockIndex =
-        frameBlockIndex;
+    renderTasks.mRenderTaskRanges[mRenderTaskRangeIndices[i]].mFrameBlockIndex = frameBlockIndex;
   mRenderTaskRangeIndices.Clear();
 
   // get frame block data
@@ -246,7 +238,7 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks,
   uint viewBlockStartIndex = renderQueues.mViewBlocks.Size();
 
   // for each view object
-  forRange(Camera & camera, mCameras.All())
+  forRange (Camera& camera, mCameras.All())
   {
     // if no render tasks associated with this camera, do nothing
     if (!camera.mRenderQueuesDataNeeded)
@@ -259,8 +251,7 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks,
     // link RenderTasks to ViewBlock
     uint viewBlockIndex = renderQueues.mViewBlocks.Size() - 1;
     for (uint i = 0; i < camera.mRenderTaskRangeIndices.Size(); ++i)
-      renderTasks.mRenderTaskRanges[camera.mRenderTaskRangeIndices[i]]
-          .mViewBlockIndex = viewBlockIndex;
+      renderTasks.mRenderTaskRanges[camera.mRenderTaskRangeIndices[i]].mViewBlockIndex = viewBlockIndex;
     camera.mRenderTaskRangeIndices.Clear();
 
     // get view block data
@@ -309,8 +300,7 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks,
       {
         rangeEnd += groupCount;
         totalViewNodesNeeded += groupCount;
-        groupRanges.PushBack(
-            IndexRange(indexRange.start, indexRange.start + groupCount));
+        groupRanges.PushBack(IndexRange(indexRange.start, indexRange.start + groupCount));
       }
 
       indexRange.start += groupCount;
@@ -323,15 +313,14 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks,
     viewBlock.mViewNodes.Reserve(totalViewNodesNeeded);
 
     // make nodes for every graphical entry
-    forRange(IndexRange & indexRange, groupRanges.All())
+    forRange (IndexRange& indexRange, groupRanges.All())
     {
       uint start = indexRange.start;
       uint size = indexRange.end - indexRange.start;
-      Array<GraphicalEntry>::range graphicals =
-          mVisibleGraphicals.SubRange(start, size);
+      Array<GraphicalEntry>::range graphicals = mVisibleGraphicals.SubRange(start, size);
 
       // assign references to graphicals in view nodes
-      forRange(GraphicalEntry & entry, graphicals)
+      forRange (GraphicalEntry& entry, graphicals)
       {
         GraphicalEntryData* data = entry.mData;
         Graphical* graphical = data->mGraphical;
@@ -350,19 +339,15 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks,
           frameNode.mShaderInputRange.start = renderTasks.mShaderInputs.Size();
 
           // from meta properties
-          forRange(PropertyShaderInput & input,
-                   graphical->mPropertyShaderInputs.All())
+          forRange (PropertyShaderInput& input, graphical->mPropertyShaderInputs.All())
           {
-            ShaderInputSetValue(
-                input.mShaderInput,
-                input.mMetaProperty->GetValue(input.mComponent));
+            ShaderInputSetValue(input.mShaderInput, input.mMetaProperty->GetValue(input.mComponent));
             renderTasks.mShaderInputs.PushBack(input.mShaderInput);
           }
 
           // from the graphical interface
           if (ShaderInputs* shaderInputs = graphical->GetShaderInputs())
-            renderTasks.mShaderInputs.Append(
-                shaderInputs->mShaderInputs.Values());
+            renderTasks.mShaderInputs.Append(shaderInputs->mShaderInputs.Values());
 
           frameNode.mShaderInputRange.end = renderTasks.mShaderInputs.Size();
         }
@@ -374,10 +359,9 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks,
   }
 
   // extract frame node data
-  forRange(FrameNode & node, frameNodes.All())
+  forRange (FrameNode& node, frameNodes.All())
   {
-    ((GraphicalEntry*)node.mGraphicalEntry)
-        ->mData->mGraphical->ExtractFrameData(node, frameBlock);
+    ((GraphicalEntry*)node.mGraphicalEntry)->mData->mGraphical->ExtractFrameData(node, frameBlock);
   }
 
   // only process view blocks from this graphics space
@@ -385,10 +369,9 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks,
   {
     // extract view node data
     ViewBlock& viewBlock = renderQueues.mViewBlocks[i];
-    forRange(ViewNode & node, viewBlock.mViewNodes.All())
+    forRange (ViewNode& node, viewBlock.mViewNodes.All())
     {
-      ((GraphicalEntry*)node.mGraphicalEntry)
-          ->mData->mGraphical->ExtractViewData(node, viewBlock, frameBlock);
+      ((GraphicalEntry*)node.mGraphicalEntry)->mData->mGraphical->ExtractViewData(node, viewBlock, frameBlock);
     }
   }
 
@@ -402,14 +385,10 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks,
   SendVisibilityEvents();
 }
 
-void GraphicsSpace::AddToVisibleGraphicals(Graphical& graphical,
-                                           Camera& camera,
-                                           Vec3 cameraPos,
-                                           Vec3 cameraDir,
-                                           Frustum* frustum)
+void GraphicsSpace::AddToVisibleGraphicals(
+    Graphical& graphical, Camera& camera, Vec3 cameraPos, Vec3 cameraDir, Frustum* frustum)
 {
-  if (GetOwner()->IsEditorMode() &&
-      graphical.GetOwner()->GetEditorViewportHidden())
+  if (GetOwner()->IsEditorMode() && graphical.GetOwner()->GetEditorViewportHidden())
     return;
 
   if (graphical.GetOwner()->GetMarkedForDestruction())
@@ -419,13 +398,12 @@ void GraphicsSpace::AddToVisibleGraphicals(Graphical& graphical,
 
   Array<GraphicalEntry> entries;
   graphical.MidPhaseQuery(entries, camera, frustum);
-  forRange(GraphicalEntry & entry, entries.All())
+  forRange (GraphicalEntry& entry, entries.All())
   {
     Vec3 pos = entry.mData->mPosition;
     // Make entry for each RenderGroup associated with this Graphical's
     // Material.
-    forRange(RenderGroup * renderGroup,
-             graphical.mMaterial->mActiveResources.All())
+    forRange (RenderGroup* renderGroup, graphical.mMaterial->mActiveResources.All())
     {
       // Must be able to identify a sub RenderGroup on a ViewNode (created from
       // GraphicalEntries). For all entries made by the following loop, this id
@@ -444,11 +422,7 @@ void GraphicsSpace::AddToVisibleGraphicals(Graphical& graphical,
       {
         entry.SetRenderGroupSortValue(renderGroup->mSortId);
         s32 graphicalSortValue =
-            GetGraphicalSortValue(graphical,
-                                  renderGroup->mGraphicalSortMethod,
-                                  pos,
-                                  cameraPos,
-                                  cameraDir);
+            GetGraphicalSortValue(graphical, renderGroup->mGraphicalSortMethod, pos, cameraPos, cameraDir);
         entry.SetGraphicalSortValue(graphicalSortValue);
 
         // Materials will not refer to RenderGroups that have not been given an
@@ -478,10 +452,8 @@ void GraphicsSpace::CreateDebugGraphicals()
     //   - note: indexes 1, 3, 5, 7 are for on-top objects
     for (uint i = 0; i < 8; ++i)
     {
-      Cog* cog =
-          GetSpace()->Create(ArchetypeManager::Find(CoreArchetypes::Transform));
-      cog->mFlags.SetFlag(CogFlags::Transient | CogFlags::Persistent |
-                          CogFlags::ObjectViewHidden);
+      Cog* cog = GetSpace()->Create(ArchetypeManager::Find(CoreArchetypes::Transform));
+      cog->mFlags.SetFlag(CogFlags::Transient | CogFlags::Persistent | CogFlags::ObjectViewHidden);
       if (i < 4)
       {
         mDebugDrawGraphicals[i] = HasOrAdd<DebugGraphicalPrimitive>(cog);
@@ -504,17 +476,13 @@ void GraphicsSpace::CreateDebugGraphicals()
     }
 
     mDebugDrawGraphicals[0]->mMaterial = MaterialManager::Find("DebugDraw");
-    mDebugDrawGraphicals[1]->mMaterial =
-        MaterialManager::Find("DebugDrawOnTop");
+    mDebugDrawGraphicals[1]->mMaterial = MaterialManager::Find("DebugDrawOnTop");
     mDebugDrawGraphicals[2]->mMaterial = MaterialManager::Find("DebugDraw");
-    mDebugDrawGraphicals[3]->mMaterial =
-        MaterialManager::Find("DebugDrawOnTop");
+    mDebugDrawGraphicals[3]->mMaterial = MaterialManager::Find("DebugDrawOnTop");
     mDebugDrawGraphicals[4]->mMaterial = MaterialManager::Find("DebugDraw");
-    mDebugDrawGraphicals[5]->mMaterial =
-        MaterialManager::Find("DebugDrawOnTop");
+    mDebugDrawGraphicals[5]->mMaterial = MaterialManager::Find("DebugDrawOnTop");
     mDebugDrawGraphicals[6]->mMaterial = MaterialManager::Find("DebugDraw");
-    mDebugDrawGraphicals[7]->mMaterial =
-        MaterialManager::Find("DebugDrawOnTop");
+    mDebugDrawGraphicals[7]->mMaterial = MaterialManager::Find("DebugDrawOnTop");
 
     if (spaceModified == false)
       GetSpace()->MarkNotModified();
@@ -523,10 +491,9 @@ void GraphicsSpace::CreateDebugGraphicals()
   for (uint i = 0; i < 8; ++i)
     mDebugDrawGraphicals[i]->mDebugObjects.Clear();
 
-  Debug::DebugDrawObjectArray::range debugObjects =
-      gDebugDraw->GetDebugObjects(GetOwner()->GetId().Id);
+  Debug::DebugDrawObjectArray::range debugObjects = gDebugDraw->GetDebugObjects(GetOwner()->GetId().Id);
 
-  forRange(Debug::DebugDrawObjectAny & debugObject, debugObjects)
+  forRange (Debug::DebugDrawObjectAny& debugObject, debugObjects)
   {
     uint index = 0;
 
@@ -555,8 +522,7 @@ void GraphicsSpace::CreateDebugGraphicals()
 
 void GraphicsSpace::RegisterVisibility(Camera* camera)
 {
-  ErrorIf(camera->mVisibilityId <= VisibilityFlag::sMaxVisibilityId,
-          "Visibility is already registered");
+  ErrorIf(camera->mVisibilityId <= VisibilityFlag::sMaxVisibilityId, "Visibility is already registered");
 
   uint visibilityId = 0;
   while (visibilityId <= VisibilityFlag::sMaxVisibilityId)
@@ -580,8 +546,7 @@ void GraphicsSpace::UnregisterVisibility(Camera* camera)
 {
   uint visibilityId = camera->mVisibilityId;
 
-  ErrorIf(visibilityId > VisibilityFlag::sMaxVisibilityId,
-          "Camera was not registered for visibility");
+  ErrorIf(visibilityId > VisibilityFlag::sMaxVisibilityId, "Camera was not registered for visibility");
 
   // Manually queue events for removed cameras
   QueueVisibilityEvents(mGraphicals, camera);
@@ -618,8 +583,7 @@ void GraphicsSpace::QueueVisibilityEvents(Graphical& graphical)
     mVisibilityEvents.PushBack(event);
   }
 
-  forRange(uint visibilityId,
-           graphical.mVisibleFlags.GetChangeRange(graphical.mLastVisibleFlags))
+  forRange (uint visibilityId, graphical.mVisibleFlags.GetChangeRange(graphical.mLastVisibleFlags))
   {
     Camera* camera = mRegisteredVisibilityMap.FindValue(visibilityId, nullptr);
     if (!camera)
@@ -641,16 +605,15 @@ void GraphicsSpace::QueueVisibilityEvents(Graphical& graphical)
 
 void GraphicsSpace::QueueVisibilityEvents(GraphicalList& graphicals)
 {
-  forRange(Graphical & graphical, graphicals.All())
-      QueueVisibilityEvents(graphical);
+  forRange (Graphical& graphical, graphicals.All())
+    QueueVisibilityEvents(graphical);
 }
 
-void GraphicsSpace::QueueVisibilityEvents(GraphicalList& graphicals,
-                                          Camera* camera)
+void GraphicsSpace::QueueVisibilityEvents(GraphicalList& graphicals, Camera* camera)
 {
   uint visibilityId = camera->mVisibilityId;
 
-  forRange(Graphical & graphical, graphicals.All())
+  forRange (Graphical& graphical, graphicals.All())
   {
     if (graphical.mVisibilityEvents == false)
       continue;
@@ -677,7 +640,7 @@ void GraphicsSpace::SendVisibilityEvents()
 
   GraphicalEvent graphicalEvent;
 
-  forRange(VisibilityEvent & event, visibilityEvents.All())
+  forRange (VisibilityEvent& event, visibilityEvents.All())
   {
     graphicalEvent.mViewingObject = event.mViewingObject;
     event.mVisibleObject->DispatchEvent(event.mName, &graphicalEvent);

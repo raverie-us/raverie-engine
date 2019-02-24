@@ -80,8 +80,7 @@ typedef uint FamilyTreeId;
 struct ComponentPropertyInstanceData
 {
   /// Constructor.
-  ComponentPropertyInstanceData(String propertyName = String(),
-                                Component* component = nullptr);
+  ComponentPropertyInstanceData(String propertyName = String(), Component* component = nullptr);
 
   // Data
   String mPropertyName;
@@ -94,8 +93,7 @@ struct ComponentPropertyInstanceData
 
 // Serialized Data Type: Any (storing type Authority::Enum)
 Variant GetNetChannelAuthorityProperty(const Variant& propertyData);
-void SetNetChannelAuthorityProperty(const Variant& value,
-                                    Variant& propertyData);
+void SetNetChannelAuthorityProperty(const Variant& value, Variant& propertyData);
 
 //
 // NetObject Name Property Getter / Setter
@@ -155,13 +153,9 @@ bool HasNetPeerIdProperty(Event* event);
 void SetNetPeerIdProperties(Event* event, NetPeerId netPeerId);
 
 /// Sets the Cog net property as a NetObjectId, else nullptr.
-void SetNetPropertyCogAsNetObjectId(Property* property,
-                                    const Any& instance,
-                                    NetPeer* netPeer,
-                                    NetObjectId netObjectId);
+void SetNetPropertyCogAsNetObjectId(Property* property, const Any& instance, NetPeer* netPeer, NetObjectId netObjectId);
 /// Returns the Cog net property as a NetObjectId, else 0.
-NetObjectId GetNetPropertyCogAsNetObjectId(Property* property,
-                                           const Any& instance);
+NetObjectId GetNetPropertyCogAsNetObjectId(Property* property, const Any& instance);
 
 /// Network specification.
 DeclareEnum2(Network,
@@ -169,11 +163,7 @@ DeclareEnum2(Network,
              Internet); ///< The internet.
 
 /// Network refresh result.
-DeclareEnum4(NetRefreshResult,
-             NoResponse,
-             IndirectBasicHostInfo,
-             DirectBasicHostInfo,
-             ExtraHostInfo);
+DeclareEnum4(NetRefreshResult, NoResponse, IndirectBasicHostInfo, DirectBasicHostInfo, ExtraHostInfo);
 
 /// Network user add response.
 DeclareEnum2(NetUserAddResponse,
@@ -181,14 +171,11 @@ DeclareEnum2(NetUserAddResponse,
              Deny);  ///< User add request denied.
 
 /// Network user add response range.
-static const NetUserAddResponse::Type NetUserAddResponseMin =
-    NetUserAddResponse::Accept;
-static const NetUserAddResponse::Type NetUserAddResponseMax =
-    NetUserAddResponse::Deny;
+static const NetUserAddResponse::Type NetUserAddResponseMin = NetUserAddResponse::Accept;
+static const NetUserAddResponse::Type NetUserAddResponseMax = NetUserAddResponse::Deny;
 
 /// Network user add response bits.
-static const Bits NetUserAddResponseBits =
-    BITS_NEEDED_TO_REPRESENT(NetUserAddResponseMax);
+static const Bits NetUserAddResponseBits = BITS_NEEDED_TO_REPRESENT(NetUserAddResponseMax);
 
 /// NetPeer protocol message types.
 DeclareEnum12(NetPeerMessageType,
@@ -352,10 +339,9 @@ struct NetHostRefreshData
 /// Serializes network host record list data.
 /// Returns the number of bits serialized if successful, else 0.
 template <>
-Bits Serialize<NetHostRefreshData>(
-    SerializeDirection::Enum direction,
-    BitStream& bitStream,
-    NetHostRefreshData& netRequestHostRefreshData);
+Bits Serialize<NetHostRefreshData>(SerializeDirection::Enum direction,
+                                   BitStream& bitStream,
+                                   NetHostRefreshData& netRequestHostRefreshData);
 
 //                                 FamilyTree //
 
@@ -421,11 +407,10 @@ private:
                                         ///< net object ID).
   ReplicaType mAncestorReplicaType;     ///< Ancestor's replica type (archetype
                                         ///< resource ID).
-  ReplicaArray
-      mReplicas; ///< All net objects in the family tree.
-                 /// First the ancestor, then descendants in depth-first
-                 /// pre-order traversal order. Absent (destroyed/forgotten) net
-                 /// objects are represented with nullptrs.
+  ReplicaArray mReplicas;               ///< All net objects in the family tree.
+                                        /// First the ancestor, then descendants in depth-first
+                                        /// pre-order traversal order. Absent (destroyed/forgotten) net
+                                        /// objects are represented with nullptrs.
 };
 
 /// Typedefs.
@@ -439,10 +424,9 @@ typedef ArraySet<FamilyTreeId> FamilyTreeIdSet;
 
 //                             NetUserAddRequestData //
 template <>
-inline Bits
-Serialize<NetUserAddRequestData>(SerializeDirection::Enum direction,
-                                 BitStream& bitStream,
-                                 NetUserAddRequestData& netUserAddRequestData)
+inline Bits Serialize<NetUserAddRequestData>(SerializeDirection::Enum direction,
+                                             BitStream& bitStream,
+                                             NetUserAddRequestData& netUserAddRequestData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -481,10 +465,9 @@ Serialize<NetUserAddRequestData>(SerializeDirection::Enum direction,
 
 //                             NetUserAddResponseData //
 template <>
-inline Bits Serialize<NetUserAddResponseData>(
-    SerializeDirection::Enum direction,
-    BitStream& bitStream,
-    NetUserAddResponseData& netUserAddResponseData)
+inline Bits Serialize<NetUserAddResponseData>(SerializeDirection::Enum direction,
+                                              BitStream& bitStream,
+                                              NetUserAddResponseData& netUserAddResponseData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -492,9 +475,7 @@ inline Bits Serialize<NetUserAddResponseData>(
     const Bits bitsWrittenStart = bitStream.GetBitsWritten();
 
     // Write network user add response
-    bitStream.WriteQuantized(netUserAddResponseData.mAddResponse,
-                             NetUserAddResponseMin,
-                             NetUserAddResponseMax);
+    bitStream.WriteQuantized(netUserAddResponseData.mAddResponse, NetUserAddResponseMin, NetUserAddResponseMax);
 
     // Accepted?
     if (netUserAddResponseData.mAddResponse == NetUserAddResponse::Accept)
@@ -515,11 +496,10 @@ inline Bits Serialize<NetUserAddResponseData>(
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read network user add response
-    ReturnIf(!bitStream.ReadQuantized(netUserAddResponseData.mAddResponse,
-                                      NetUserAddResponseMin,
-                                      NetUserAddResponseMax),
-             0,
-             "");
+    ReturnIf(
+        !bitStream.ReadQuantized(netUserAddResponseData.mAddResponse, NetUserAddResponseMin, NetUserAddResponseMax),
+        0,
+        "");
 
     // Accepted?
     if (netUserAddResponseData.mAddResponse == NetUserAddResponse::Accept)
@@ -538,10 +518,9 @@ inline Bits Serialize<NetUserAddResponseData>(
 
 //                            NetUserRemoveRequestData //
 template <>
-inline Bits Serialize<NetUserRemoveRequestData>(
-    SerializeDirection::Enum direction,
-    BitStream& bitStream,
-    NetUserRemoveRequestData& netUserRemoveRequestData)
+inline Bits Serialize<NetUserRemoveRequestData>(SerializeDirection::Enum direction,
+                                                BitStream& bitStream,
+                                                NetUserRemoveRequestData& netUserRemoveRequestData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -575,10 +554,9 @@ inline Bits Serialize<NetUserRemoveRequestData>(
 
 //                            NetLevelLoadStartedData //
 template <>
-inline Bits Serialize<NetLevelLoadStartedData>(
-    SerializeDirection::Enum direction,
-    BitStream& bitStream,
-    NetLevelLoadStartedData& netLevelLoadStartedData)
+inline Bits Serialize<NetLevelLoadStartedData>(SerializeDirection::Enum direction,
+                                               BitStream& bitStream,
+                                               NetLevelLoadStartedData& netLevelLoadStartedData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -622,10 +600,9 @@ inline Bits Serialize<NetLevelLoadStartedData>(
 
 //                            NetLevelLoadFinishedData //
 template <>
-inline Bits Serialize<NetLevelLoadFinishedData>(
-    SerializeDirection::Enum direction,
-    BitStream& bitStream,
-    NetLevelLoadFinishedData& netLevelLoadFinishedData)
+inline Bits Serialize<NetLevelLoadFinishedData>(SerializeDirection::Enum direction,
+                                                BitStream& bitStream,
+                                                NetLevelLoadFinishedData& netLevelLoadFinishedData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -663,10 +640,9 @@ inline Bits Serialize<NetLevelLoadFinishedData>(
 
 //                              NetConnectRequestData //
 template <>
-inline Bits
-Serialize<NetConnectRequestData>(SerializeDirection::Enum direction,
-                                 BitStream& bitStream,
-                                 NetConnectRequestData& netConnectRequestData)
+inline Bits Serialize<NetConnectRequestData>(SerializeDirection::Enum direction,
+                                             BitStream& bitStream,
+                                             NetConnectRequestData& netConnectRequestData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -688,8 +664,7 @@ Serialize<NetConnectRequestData>(SerializeDirection::Enum direction,
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read pending user add request count
-    ReturnIf(
-        !bitStream.Read(netConnectRequestData.mAddUserRequestCount), 0, "");
+    ReturnIf(!bitStream.Read(netConnectRequestData.mAddUserRequestCount), 0, "");
 
     // Read event bundle data (if any)
     netConnectRequestData.mEventBundleData.AssignRemainder(bitStream);
@@ -809,10 +784,9 @@ inline Bits Serialize<NetHostPongData>(SerializeDirection::Enum direction,
 
 //                                NetHostRecordList //
 template <>
-inline Bits
-Serialize<NetHostRecordListData>(SerializeDirection::Enum direction,
-                                 BitStream& bitStream,
-                                 NetHostRecordListData& netHostRecordList)
+inline Bits Serialize<NetHostRecordListData>(SerializeDirection::Enum direction,
+                                             BitStream& bitStream,
+                                             NetHostRecordListData& netHostRecordList)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -830,7 +804,7 @@ Serialize<NetHostRecordListData>(SerializeDirection::Enum direction,
     // write how many elements there are.
     bitStream.Write(netHostRecordList.mNetHostRecords.Size());
 
-    forRange(NetHostRecord & record, netHostRecordList.mNetHostRecords.All())
+    forRange (NetHostRecord& record, netHostRecordList.mNetHostRecords.All())
     {
       // Serialize the IP address
       bitStream.Write(record.mIpAddress);
@@ -877,14 +851,10 @@ Serialize<NetHostRecordListData>(SerializeDirection::Enum direction,
       // Create a temp bitstream, and have Reserve enough space for it to read
       // the bitstream in.
       BitStream tempBitStream;
-      tempBitStream.Reserve(
-          bitsToRead /
-          8); // Reserve enough space to write the bits into the stream
-              // directly.
-              // Read in the bitstream containing the BasicHostInfo eventbundle.
-      ReturnIf(!bitStream.ReadBits(tempBitStream.GetDataExposed(), bitsToRead),
-               0,
-               "");
+      tempBitStream.Reserve(bitsToRead / 8); // Reserve enough space to write the bits into the stream
+                                             // directly.
+                                             // Read in the bitstream containing the BasicHostInfo eventbundle.
+      ReturnIf(!bitStream.ReadBits(tempBitStream.GetDataExposed(), bitsToRead), 0, "");
       // Set the number of bits we wrote into it (because we manually assigned
       // bit data into it)
       tempBitStream.SetBitsWritten(bitsToRead);
@@ -937,10 +907,9 @@ inline Bits Serialize<NetHostPublishData>(SerializeDirection::Enum direction,
 
 //                              NetRequestHostRefreshData //
 template <>
-inline Bits Serialize<NetRequestHostRefreshData>(
-    SerializeDirection::Enum direction,
-    BitStream& bitStream,
-    NetRequestHostRefreshData& netRequestHostRefreshData)
+inline Bits Serialize<NetRequestHostRefreshData>(SerializeDirection::Enum direction,
+                                                 BitStream& bitStream,
+                                                 NetRequestHostRefreshData& netRequestHostRefreshData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -962,8 +931,7 @@ inline Bits Serialize<NetRequestHostRefreshData>(
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read unique project identifier
-    ReturnIf(
-        !bitStream.Read((u64&)netRequestHostRefreshData.mProjectGuid), 0, "");
+    ReturnIf(!bitStream.Read((u64&)netRequestHostRefreshData.mProjectGuid), 0, "");
 
     // Read event bundle data (if any)
     ReturnIf(!bitStream.Read(netRequestHostRefreshData.mHostIp), 0, "");
@@ -975,10 +943,9 @@ inline Bits Serialize<NetRequestHostRefreshData>(
 
 //                              NetHostRefreshData //
 template <>
-inline Bits
-Serialize<NetHostRefreshData>(SerializeDirection::Enum direction,
-                              BitStream& bitStream,
-                              NetHostRefreshData& netHostRefreshData)
+inline Bits Serialize<NetHostRefreshData>(SerializeDirection::Enum direction,
+                                          BitStream& bitStream,
+                                          NetHostRefreshData& netHostRefreshData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)

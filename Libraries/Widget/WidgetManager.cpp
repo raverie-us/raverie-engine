@@ -33,7 +33,7 @@ void WidgetManager::OnEngineUpdate(UpdateEvent* event)
 
 void WidgetManager::OnShutdown(Event* event)
 {
-  forRange(Widget * widget, Widgets.Values())
+  forRange (Widget* widget, Widgets.Values())
   {
     if (widget->mParent == NULL)
       widget->Destroy();
@@ -51,7 +51,7 @@ void WidgetManager::CleanUp()
     Array<Widget*> templist;
     templist.Swap(DestroyList);
 
-    forRange(Widget * widget, templist.All())
+    forRange (Widget* widget, templist.All())
     {
       delete widget;
     }

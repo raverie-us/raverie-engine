@@ -14,29 +14,24 @@ class ZilchSpirVFrontEndContext;
 
 typedef Pair<ZilchShaderIRType*, Zilch::Any> ConstantOpKeyType;
 
-typedef void (*DefaultConstructorResolverFn)(
-    ZilchSpirVFrontEnd* translator,
-    Zilch::Type* resultType,
-    ZilchSpirVFrontEndContext* context);
-typedef void (*ConstructorCallResolverIRFn)(
-    ZilchSpirVFrontEnd* translator,
-    Zilch::FunctionCallNode* fnCallNode,
-    Zilch::StaticTypeNode* staticTypeNode,
-    ZilchSpirVFrontEndContext* context);
-typedef void (*MemberAccessResolverIRFn)(
-    ZilchSpirVFrontEnd* translator,
-    Zilch::MemberAccessNode* memberAccessNode,
-    ZilchSpirVFrontEndContext* context);
-typedef void (*MemberFunctionResolverIRFn)(
-    ZilchSpirVFrontEnd* translator,
-    Zilch::FunctionCallNode* functionCallNode,
-    Zilch::MemberAccessNode* memberAccessNode,
-    ZilchSpirVFrontEndContext* context);
-typedef void (*MemberPropertySetterResolverIRFn)(
-    ZilchSpirVFrontEnd* translator,
-    Zilch::MemberAccessNode* memberAccessNode,
-    ZilchShaderIROp* resultValue,
-    ZilchSpirVFrontEndContext* context);
+typedef void (*DefaultConstructorResolverFn)(ZilchSpirVFrontEnd* translator,
+                                             Zilch::Type* resultType,
+                                             ZilchSpirVFrontEndContext* context);
+typedef void (*ConstructorCallResolverIRFn)(ZilchSpirVFrontEnd* translator,
+                                            Zilch::FunctionCallNode* fnCallNode,
+                                            Zilch::StaticTypeNode* staticTypeNode,
+                                            ZilchSpirVFrontEndContext* context);
+typedef void (*MemberAccessResolverIRFn)(ZilchSpirVFrontEnd* translator,
+                                         Zilch::MemberAccessNode* memberAccessNode,
+                                         ZilchSpirVFrontEndContext* context);
+typedef void (*MemberFunctionResolverIRFn)(ZilchSpirVFrontEnd* translator,
+                                           Zilch::FunctionCallNode* functionCallNode,
+                                           Zilch::MemberAccessNode* memberAccessNode,
+                                           ZilchSpirVFrontEndContext* context);
+typedef void (*MemberPropertySetterResolverIRFn)(ZilchSpirVFrontEnd* translator,
+                                                 Zilch::MemberAccessNode* memberAccessNode,
+                                                 ZilchShaderIROp* resultValue,
+                                                 ZilchSpirVFrontEndContext* context);
 typedef void (*BinaryOpResolverIRFn)(ZilchSpirVFrontEnd* translator,
                                      Zilch::BinaryOperatorNode* binaryOpNode,
                                      ZilchSpirVFrontEndContext* context);
@@ -46,12 +41,10 @@ typedef void (*UnaryOpResolverIRFn)(ZilchSpirVFrontEnd* translator,
 typedef void (*TypeCastResolverIRFn)(ZilchSpirVFrontEnd* translator,
                                      Zilch::TypeCastNode* binaryOpNode,
                                      ZilchSpirVFrontEndContext* context);
-typedef void (*TemplateTypeIRResloverFn)(ZilchSpirVFrontEnd* translator,
-                                         Zilch::BoundType* boundType);
-typedef void (*ExpressionInitializerIRResolverFn)(
-    ZilchSpirVFrontEnd* translator,
-    Zilch::ExpressionInitializerNode*& node,
-    ZilchSpirVFrontEndContext* context);
+typedef void (*TemplateTypeIRResloverFn)(ZilchSpirVFrontEnd* translator, Zilch::BoundType* boundType);
+typedef void (*ExpressionInitializerIRResolverFn)(ZilchSpirVFrontEnd* translator,
+                                                  Zilch::ExpressionInitializerNode*& node,
+                                                  ZilchSpirVFrontEndContext* context);
 
 /// A collection of member/function/etc... resolvers for specific library
 /// translations. Some examples include Math.Dot and samplers.
@@ -61,8 +54,7 @@ public:
   TypeResolvers();
 
   /// Register a resolver for a field.
-  void RegisterFieldResolver(Zilch::Field* field,
-                             MemberAccessResolverIRFn fieldResolver);
+  void RegisterFieldResolver(Zilch::Field* field, MemberAccessResolverIRFn fieldResolver);
   /// Register a resolver to use when a field-specific resolver isn't found.
   /// Used to handle things like swizzles.
   void RegisterBackupFieldResolver(MemberAccessResolverIRFn backupResolver);
@@ -70,24 +62,17 @@ public:
   /// match is found.
   MemberAccessResolverIRFn FindFieldResolver(Zilch::Field* field);
 
-  void RegisterConstructorResolver(Zilch::Function* zilchFunction,
-                                   ConstructorCallResolverIRFn resolverFn);
-  ConstructorCallResolverIRFn
-  FindConstructorResolver(Zilch::Function* zilchFunction);
+  void RegisterConstructorResolver(Zilch::Function* zilchFunction, ConstructorCallResolverIRFn resolverFn);
+  ConstructorCallResolverIRFn FindConstructorResolver(Zilch::Function* zilchFunction);
 
   /// Register a resolver for a function call.
-  void RegisterFunctionResolver(Zilch::Function* function,
-                                MemberFunctionResolverIRFn functionResolver);
+  void RegisterFunctionResolver(Zilch::Function* function, MemberFunctionResolverIRFn functionResolver);
   MemberFunctionResolverIRFn FindFunctionResolver(Zilch::Function* function);
 
   /// Register a resolver for a setter function call.
-  void
-  RegisterSetterResolver(Zilch::Function* function,
-                         MemberPropertySetterResolverIRFn functionResolver);
-  void
-  RegisterBackupSetterResolver(MemberPropertySetterResolverIRFn backupResolver);
-  MemberPropertySetterResolverIRFn
-  FindSetterResolver(Zilch::Function* function);
+  void RegisterSetterResolver(Zilch::Function* function, MemberPropertySetterResolverIRFn functionResolver);
+  void RegisterBackupSetterResolver(MemberPropertySetterResolverIRFn backupResolver);
+  MemberPropertySetterResolverIRFn FindSetterResolver(Zilch::Function* function);
 
   HashMap<Zilch::Field*, MemberAccessResolverIRFn> mFieldResolvers;
   MemberAccessResolverIRFn mBackupFieldResolver;
@@ -119,15 +104,11 @@ public:
   BinaryOpResolverIRFn FindOpResolver(BinaryOperatorKey& opId);
 
   /// Unary operators
-  void RegisterUnaryOpResolver(Zilch::Type* type,
-                               Zilch::Grammar::Enum op,
-                               UnaryOpResolverIRFn resolver);
+  void RegisterUnaryOpResolver(Zilch::Type* type, Zilch::Grammar::Enum op, UnaryOpResolverIRFn resolver);
   UnaryOpResolverIRFn FindOpResolver(UnaryOperatorKey& opId);
 
   /// Type Cast operators
-  void RegisterTypeCastOpResolver(Zilch::Type* fromType,
-                                  Zilch::Type* toType,
-                                  TypeCastResolverIRFn resolver);
+  void RegisterTypeCastOpResolver(Zilch::Type* fromType, Zilch::Type* toType, TypeCastResolverIRFn resolver);
   TypeCastResolverIRFn FindOpResolver(TypeCastKey& opId);
 
 private:
@@ -160,9 +141,7 @@ struct StageRequirementsData
   /// Merges the given dependency into this object. Only updates the dependency
   /// and location if this is the first time a non-empty stage requirement is
   /// being set.
-  void Combine(Zilch::Member* dependency,
-               const Zilch::CodeLocation& location,
-               ShaderStage::Enum requiredStage);
+  void Combine(Zilch::Member* dependency, const Zilch::CodeLocation& location, ShaderStage::Enum requiredStage);
 
   /// What stage this symbol requires.
   ShaderStage::Enum mRequiredStages;
@@ -180,39 +159,29 @@ class ZilchShaderIRModule : public Array<ZilchShaderIRLibraryRef>
 {
 public:
   /// Find a type in any of the contained libraries
-  ZilchShaderIRType* FindType(const String& typeName,
-                              bool checkDependencies = true);
+  ZilchShaderIRType* FindType(const String& typeName, bool checkDependencies = true);
 
   /// Find the global variable data associate with the given zilch field.
-  GlobalVariableData* FindGlobalVariable(Zilch::Field* zilchField,
-                                         bool checkDependencies = true);
+  GlobalVariableData* FindGlobalVariable(Zilch::Field* zilchField, bool checkDependencies = true);
   /// Find the global variable data associate with the given instance variable
   /// op.
-  GlobalVariableData* FindGlobalVariable(ZilchShaderIROp* globalInstance,
-                                         bool checkDependencies = true);
+  GlobalVariableData* FindGlobalVariable(ZilchShaderIROp* globalInstance, bool checkDependencies = true);
 
   /// Find a resolver for a template type
-  TemplateTypeIRResloverFn FindTemplateResolver(
-      const TemplateTypeKey& templateKey, bool checkDependencies = true);
+  TemplateTypeIRResloverFn FindTemplateResolver(const TemplateTypeKey& templateKey, bool checkDependencies = true);
 
-  TypeResolvers* FindTypeResolver(Zilch::Type* zilchType,
-                                  bool checkDependencies = true);
+  TypeResolvers* FindTypeResolver(Zilch::Type* zilchType, bool checkDependencies = true);
 
   // Constructor library replacements
-  ZilchShaderIRFunction* FindFunction(Zilch::Function* zilchFunction,
-                                      bool checkDependencies = true);
-  SpirVExtensionInstruction* FindExtensionInstruction(
-      Zilch::Function* zilchFunction, bool checkDependencies = true);
-  ZilchShaderExtensionImport* FindExtensionLibraryImport(
-      SpirVExtensionLibrary* extensionLibrary, bool checkDependencies = true);
+  ZilchShaderIRFunction* FindFunction(Zilch::Function* zilchFunction, bool checkDependencies = true);
+  SpirVExtensionInstruction* FindExtensionInstruction(Zilch::Function* zilchFunction, bool checkDependencies = true);
+  ZilchShaderExtensionImport* FindExtensionLibraryImport(SpirVExtensionLibrary* extensionLibrary,
+                                                         bool checkDependencies = true);
 
-  ZilchShaderIRConstantLiteral*
-  FindConstantLiteral(Zilch::Any& literalValue, bool checkDependencies = true);
-  ZilchShaderIROp* FindConstantOp(ConstantOpKeyType& key,
-                                  bool checkDependencies = true);
+  ZilchShaderIRConstantLiteral* FindConstantLiteral(Zilch::Any& literalValue, bool checkDependencies = true);
+  ZilchShaderIROp* FindConstantOp(ConstantOpKeyType& key, bool checkDependencies = true);
   ZilchShaderIROp* FindEnumConstantOp(void* key, bool checkDependencies = true);
-  ZilchShaderIROp* FindSpecializationConstantOp(void* key,
-                                                bool checkDependencies = true);
+  ZilchShaderIROp* FindSpecializationConstantOp(void* key, bool checkDependencies = true);
 
   // An intrusive reference count for memory handling
   ZilchRefLink(ZilchShaderIRModule);
@@ -222,8 +191,7 @@ private:
 
   // Helper template to make finding operators easier
   template <typename OpIdType, typename OpResolverType>
-  OpResolverType FindOperatorResolverTemplate(OpIdType& opId,
-                                              bool checkDependencies);
+  OpResolverType FindOperatorResolverTemplate(OpIdType& opId, bool checkDependencies);
 };
 
 /// A library built during shader translation. Mostly an internal type that
@@ -236,77 +204,58 @@ public:
   ~ZilchShaderIRLibrary();
 
   void AddType(StringParam typeName, ZilchShaderIRType* shaderType);
-  ZilchShaderIRType* FindType(const String& typeName,
-                              bool checkDependencies = true);
-  ZilchShaderIRType* FindType(Zilch::Type* zilchType,
-                              bool checkDependencies = true);
+  ZilchShaderIRType* FindType(const String& typeName, bool checkDependencies = true);
+  ZilchShaderIRType* FindType(Zilch::Type* zilchType, bool checkDependencies = true);
 
   /// Find the global variable data associate with the given zilch field.
-  GlobalVariableData* FindGlobalVariable(Zilch::Field* zilchField,
-                                         bool checkDependencies = true);
+  GlobalVariableData* FindGlobalVariable(Zilch::Field* zilchField, bool checkDependencies = true);
   /// Find the global variable data associate with the given instance variable
   /// op.
-  GlobalVariableData* FindGlobalVariable(ZilchShaderIROp* globalInstance,
-                                         bool checkDependencies = true);
+  GlobalVariableData* FindGlobalVariable(ZilchShaderIROp* globalInstance, bool checkDependencies = true);
 
   // Resolvers for template types (e.g. FixedArray)
-  void RegisterTemplateResolver(const TemplateTypeKey& templateKey,
-                                TemplateTypeIRResloverFn resolver);
-  TemplateTypeIRResloverFn FindTemplateResolver(
-      const TemplateTypeKey& templateKey, bool checkDependencies = true);
+  void RegisterTemplateResolver(const TemplateTypeKey& templateKey, TemplateTypeIRResloverFn resolver);
+  TemplateTypeIRResloverFn FindTemplateResolver(const TemplateTypeKey& templateKey, bool checkDependencies = true);
 
   /// Pulls all reverse dependencies from all the dependent modules into this
   /// library (flattens the list)
   void FlattenModuleDependents();
   /// Fills out a list of all types that depend on the given type
-  void GetAllDependents(ZilchShaderIRType* shaderType,
-                        HashSet<ZilchShaderIRType*>& finalDependents);
+  void GetAllDependents(ZilchShaderIRType* shaderType, HashSet<ZilchShaderIRType*>& finalDependents);
 
   // Library replacements on a type
-  TypeResolvers* FindTypeResolver(Zilch::Type* zilchType,
-                                  bool checkDependencies = true);
+  TypeResolvers* FindTypeResolver(Zilch::Type* zilchType, bool checkDependencies = true);
 
   // Operator resolvers
-  BinaryOpResolverIRFn FindOperatorResolver(BinaryOperatorKey& opId,
-                                            bool checkDependencies = true);
-  UnaryOpResolverIRFn FindOperatorResolver(UnaryOperatorKey& opId,
-                                           bool checkDependencies = true);
-  TypeCastResolverIRFn FindOperatorResolver(TypeCastKey& opId,
-                                            bool checkDependencies = true);
+  BinaryOpResolverIRFn FindOperatorResolver(BinaryOperatorKey& opId, bool checkDependencies = true);
+  UnaryOpResolverIRFn FindOperatorResolver(UnaryOperatorKey& opId, bool checkDependencies = true);
+  TypeCastResolverIRFn FindOperatorResolver(TypeCastKey& opId, bool checkDependencies = true);
 
   MemberAccessResolverIRFn FindFieldResolver(Zilch::Type* zilchType,
                                              Zilch::Field* zilchField,
                                              bool checkDependencies = true);
-  MemberFunctionResolverIRFn
-  FindFunctionResolver(Zilch::Type* zilchType,
-                       Zilch::Function* zilchFunction,
-                       bool checkDependencies = true);
-  MemberPropertySetterResolverIRFn
-  FindSetterResolver(Zilch::Type* zilchType,
-                     Zilch::Function* zilchFunction,
-                     bool checkDependencies = true);
-  ConstructorCallResolverIRFn
-  FindConstructorResolver(Zilch::Type* zilchType,
-                          Zilch::Function* zilchFunction,
-                          bool checkDependencies = true);
+  MemberFunctionResolverIRFn FindFunctionResolver(Zilch::Type* zilchType,
+                                                  Zilch::Function* zilchFunction,
+                                                  bool checkDependencies = true);
+  MemberPropertySetterResolverIRFn FindSetterResolver(Zilch::Type* zilchType,
+                                                      Zilch::Function* zilchFunction,
+                                                      bool checkDependencies = true);
+  ConstructorCallResolverIRFn FindConstructorResolver(Zilch::Type* zilchType,
+                                                      Zilch::Function* zilchFunction,
+                                                      bool checkDependencies = true);
 
-  ZilchShaderIRFunction* FindFunction(Zilch::Function* zilchFunction,
-                                      bool checkDependencies = true);
-  SpirVExtensionInstruction* FindExtensionInstruction(
-      Zilch::Function* zilchFunction, bool checkDependencies = true);
-  ZilchShaderExtensionImport* FindExtensionLibraryImport(
-      SpirVExtensionLibrary* extensionLibrary, bool checkDependencies = true);
+  ZilchShaderIRFunction* FindFunction(Zilch::Function* zilchFunction, bool checkDependencies = true);
+  SpirVExtensionInstruction* FindExtensionInstruction(Zilch::Function* zilchFunction, bool checkDependencies = true);
+  ZilchShaderExtensionImport* FindExtensionLibraryImport(SpirVExtensionLibrary* extensionLibrary,
+                                                         bool checkDependencies = true);
 
-  ZilchShaderIRConstantLiteral*
-  FindConstantLiteral(Zilch::Any& literalValue, bool checkDependencies = true);
+  ZilchShaderIRConstantLiteral* FindConstantLiteral(Zilch::Any& literalValue, bool checkDependencies = true);
 
-  ZilchShaderIROp* FindConstantOp(ConstantOpKeyType& key,
-                                  bool checkDependencies = true);
+  ZilchShaderIROp* FindConstantOp(ConstantOpKeyType& key, bool checkDependencies = true);
   ZilchShaderIROp* FindEnumConstantOp(void* key, bool checkDependencies = true);
   /// Finds a specialization constant given a key. The key is normally a zilch
   /// field, but can also be special global keys (like languageId).
-  ZilchShaderIROp* FindSpecializationConstantOp(void* key,
-                                                bool checkDependencies = true);
+  ZilchShaderIROp* FindSpecializationConstantOp(void* key, bool checkDependencies = true);
 
   Zilch::LibraryRef mZilchLibrary;
   ZilchShaderIRModuleRef mDependencies;
@@ -348,8 +297,7 @@ public:
 
   Array<SpirVExtensionLibrary*> mExtensionLibraries;
   HashMap<Zilch::Function*, SpirVExtensionInstruction*> mExtensionInstructions;
-  HashMap<SpirVExtensionLibrary*, ZilchShaderExtensionImport*>
-      mExtensionLibraryImports;
+  HashMap<SpirVExtensionLibrary*, ZilchShaderExtensionImport*> mExtensionLibraryImports;
   HashMap<TemplateTypeKey, TemplateTypeIRResloverFn> mTemplateResolvers;
 
   /// Stores cached information about symbols in this library that have
@@ -360,21 +308,18 @@ public:
 
   // A multi-map of all types to their dependents for this library (flattened to
   // include all module dependency data)
-  typedef HashMap<ZilchShaderIRType*, HashSet<ZilchShaderIRType*>>
-      TypeDependentMultiMap;
+  typedef HashMap<ZilchShaderIRType*, HashSet<ZilchShaderIRType*>> TypeDependentMultiMap;
   TypeDependentMultiMap mTypeDependents;
 
 private:
   // Helper template to make finding operators easier
   template <typename OpIdType, typename OpResolverType>
-  OpResolverType FindOperatorResolverTemplate(OpIdType& opId,
-                                              bool checkDependencies);
+  OpResolverType FindOperatorResolverTemplate(OpIdType& opId, bool checkDependencies);
 };
 
 // Due to a bug in ANGLE, we can't rely on WebGL GLSL overloads on samplers.
 // To fix this, we append the hash of the function signature to the name
 // (different per overload).
-String GetOverloadedName(StringParam functionName,
-                         Zilch::Function* zilchFunction);
+String GetOverloadedName(StringParam functionName, Zilch::Function* zilchFunction);
 
 } // namespace Zero

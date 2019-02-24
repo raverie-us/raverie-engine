@@ -13,10 +13,7 @@ class Editor;
 struct Aabb;
 
 void DeleteSelectedObjects(Editor* editor, Space* space);
-void AddToSelection(Space* space,
-                    MetaSelection* selection,
-                    BoundType* boundType,
-                    SelectComponentMode::Enum mode);
+void AddToSelection(Space* space, MetaSelection* selection, BoundType* boundType, SelectComponentMode::Enum mode);
 void SaveSelectionToClipboard(Editor* editor, Space* space);
 void LoadObjectFromClipboard(Editor* editor, Space* space);
 Cog* SelectTopOfTree(Editor* editor, Space* cog);
@@ -44,10 +41,7 @@ void CameraFocusSpace(Space* space);
 DeclareEnum3(EditFocusMode, AutoTime, Center, Frame);
 
 void CameraFocusSpace(Space* space, Cog* camera, EditFocusMode::Enum mode);
-void CameraFocusSpace(Space* space,
-                      Cog* camera,
-                      const Aabb& focusAabb,
-                      EditFocusMode::Enum mode);
+void CameraFocusSpace(Space* space, Cog* camera, const Aabb& focusAabb, EditFocusMode::Enum mode);
 
 /// Allows you to edit the game while it is running.
 void EditInGame(Editor* editor);

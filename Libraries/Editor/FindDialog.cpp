@@ -39,15 +39,13 @@ DeclareEnum4(SearchMode, FindNext, FindAll, ReplaceNext, ReplaceAll);
 DeclareEnum3(CharacterMode, Normal, Extended, Regex);
 // DeclareEnum4(LookIn, CurrentDocument, AllOpenDocuments, EntireProject,
 // SelectedText);
-DeclareEnum4(
-    LookIn, CurrentDocument, AllOpenDocuments, EntireProject, CurrentScope);
+DeclareEnum4(LookIn, CurrentDocument, AllOpenDocuments, EntireProject, CurrentScope);
 
 // Constructor
 FindTextDialog::FindTextDialog(Composite* parent) : Composite(parent)
 {
   // Finally, set this to be a stacking layout
-  this->SetLayout(CreateStackLayout(
-      LayoutDirection::TopToBottom, Vec2(0, 2), Thickness::cZero));
+  this->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2(0, 2), Thickness::cZero));
 
   // Looks better at least 250 pixels wide
   mMinSize = Pixels(250, 352);
@@ -102,8 +100,7 @@ FindTextDialog::FindTextDialog(Composite* parent) : Composite(parent)
 
   // Populate the char-mode array
   mCharacterModeArray.Strings.PushBack("Normal");
-  mCharacterModeArray.Strings.PushBack(
-      "Extended (\\r, \\n, \\t, \\0, \\x, wildcard*)");
+  mCharacterModeArray.Strings.PushBack("Extended (\\r, \\n, \\t, \\0, \\x, wildcard*)");
   mCharacterModeArray.Strings.PushBack("Regular Expressions");
 
   // Create a char-mode combo box
@@ -188,10 +185,7 @@ void FindTextDialog::UpdateTransform()
   {
     ToolTipPlacement placement;
     placement.SetScreenRect(mFind->GetScreenRect());
-    placement.SetPriority(IndicatorSide::Right,
-                          IndicatorSide::Left,
-                          IndicatorSide::Bottom,
-                          IndicatorSide::Top);
+    placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Bottom, IndicatorSide::Top);
     toolTip->SetArrowTipTranslation(placement);
   }
 
@@ -340,11 +334,8 @@ void FindTextDialog::SplitActiveCursorRegion()
       // Get the two split string ranges
       StringParam regionString = region->RegionText.mOriginalString;
       cstr regionBegin = region->RegionText.mBegin;
-      StringRange topSplit(
-          regionString, regionBegin, regionBegin + region->CursorPos);
-      StringRange bottomSplit(regionString,
-                              regionBegin + region->CursorPos,
-                              region->RegionText.mEnd);
+      StringRange topSplit(regionString, regionBegin, regionBegin + region->CursorPos);
+      StringRange bottomSplit(regionString, regionBegin + region->CursorPos, region->RegionText.mEnd);
 
       // Validate both of the ranges.
       if (!topSplit.ValidateRange() || !bottomSplit.ValidateRange())
@@ -411,8 +402,7 @@ void FindTextDialog::SplitActiveCursorRegion()
 }
 
 // Check if a cursor position is valid within a region
-size_t FindTextDialog::ValidCursorPos(StringRange regionText,
-                                      DocumentEditor* editor)
+size_t FindTextDialog::ValidCursorPos(StringRange regionText, DocumentEditor* editor)
 {
   // Store the position of the cursor (relative to the start of the region)
   int cursorPos;
@@ -424,8 +414,7 @@ size_t FindTextDialog::ValidCursorPos(StringRange regionText,
   int regionOffset = regionText.Data() - all.Data();
 
   // If we're searching downward... (or we don't care about search direction)
-  if (mDirection->GetActive() == false ||
-      mDirection->GetSelectedItem() == Direction::Down)
+  if (mDirection->GetActive() == false || mDirection->GetSelectedItem() == Direction::Down)
   {
     cursorPos = editor->GetSelectionEnd();
   }
@@ -458,9 +447,7 @@ bool FindTextDialog::GetCurrentDocumentRegions()
   else
   {
     // Show an warning and return that we failed
-    DoNotifyWarning(
-        "Find/Replace Warning",
-        "No document is in focus. Click inside the document to search in it.");
+    DoNotifyWarning("Find/Replace Warning", "No document is in focus. Click inside the document to search in it.");
     return false;
   }
 }
@@ -541,8 +528,7 @@ bool FindTextDialog::GetAllOpenDocumentRegions()
   if (mContext->Regions.Empty())
   {
     // Show an warning and return that we failed
-    DoNotifyWarning("Find/Replace Warning",
-                    "No documents are open to be searched.");
+    DoNotifyWarning("Find/Replace Warning", "No documents are open to be searched.");
     return false;
   }
 
@@ -560,16 +546,14 @@ bool FindTextDialog::GetEntireProjectRegions()
 
   // Get a range of all the document resources
   ResourceSystem* resourceSystem = Z::gResources;
-  ResourceSystem::TextResourceMap::valuerange range =
-      resourceSystem->TextResources.Values();
+  ResourceSystem::TextResourceMap::valuerange range = resourceSystem->TextResources.Values();
 
   // Loop through all the instances of document resources
   for (; !range.Empty(); range.PopFront())
   {
     // Get the current resource
     ResourceId id = range.Front();
-    DocumentResource* current =
-        (DocumentResource*)Z::gResources->GetResource(id);
+    DocumentResource* current = (DocumentResource*)Z::gResources->GetResource(id);
 
     // Resource has been erased
     if (current == NULL)
@@ -593,8 +577,7 @@ bool FindTextDialog::GetEntireProjectRegions()
     region->Resource = current;
 
     // Is their a document with an editor for this resource?
-    Document* document =
-        docManager->Documents.FindValue((u64)current->mResourceId, NULL);
+    Document* document = docManager->Documents.FindValue((u64)current->mResourceId, NULL);
     if (document && document->mEditor)
     {
       region->WholeText = document->mEditor->GetAllText();
@@ -615,8 +598,7 @@ bool FindTextDialog::GetEntireProjectRegions()
   if (mContext->Regions.Empty())
   {
     // Show an warning and return that we failed
-    DoNotifyWarning("Find/Replace Warning",
-                    "No script files exist in the project.");
+    DoNotifyWarning("Find/Replace Warning", "No script files exist in the project.");
     return false;
   }
 
@@ -722,8 +704,7 @@ bool FindTextDialog::GetCurrentScopeRegions()
     }
     // Walk up the lines until we hit one that's of a lesser scope then the
     // current
-    while (temp.LeadingWhitespace >= lineScope.LeadingWhitespace ||
-           temp.IsAllWhitespace);
+    while (temp.LeadingWhitespace >= lineScope.LeadingWhitespace || temp.IsAllWhitespace);
 
     // Figure out the bottom line
     do
@@ -743,8 +724,7 @@ bool FindTextDialog::GetCurrentScopeRegions()
     }
     // Walk up the lines until we hit one that's of a lesser scope then the
     // current
-    while (temp.LeadingWhitespace >= lineScope.LeadingWhitespace ||
-           temp.IsAllWhitespace);
+    while (temp.LeadingWhitespace >= lineScope.LeadingWhitespace || temp.IsAllWhitespace);
 
     // Note: Even though the bottom line points one past the actual block scope,
     // its ok since we use the function GetPositionFromLine, which always gets
@@ -756,12 +736,8 @@ bool FindTextDialog::GetCurrentScopeRegions()
     region->Editor = currentEditor;
 
     // Compute the text region based off the lines
-    StringIterator regionStart =
-        region->WholeText.Begin() +
-        currentEditor->GetPositionFromLine(topLineNumber);
-    StringIterator regionEnd =
-        region->WholeText.Begin() +
-        currentEditor->GetPositionFromLine(bottomLineNumber);
+    StringIterator regionStart = region->WholeText.Begin() + currentEditor->GetPositionFromLine(topLineNumber);
+    StringIterator regionEnd = region->WholeText.Begin() + currentEditor->GetPositionFromLine(bottomLineNumber);
     region->RegionText = StringRange(regionStart, regionEnd);
 
     // The cursor is in the middle of block typically, so we have to get the
@@ -817,9 +793,7 @@ bool FindTextDialog::GetSelectedTextRegions()
   if (mContext->Regions.Empty())
   {
     // Show an warning and return that we failed
-    DoNotifyWarning(
-        "Find/Replace Warning",
-        "No selections were found, or the document was not in focus.");
+    DoNotifyWarning("Find/Replace Warning", "No selections were found, or the document was not in focus.");
     return false;
   }
 
@@ -846,8 +820,8 @@ const char* FindTextDialog::MoveToEol(StringRange wholeString,
   const char* lastPosition = currentPosition;
 
   // While we haven't hit the end of the line (or entire string)
-  while (wholeString.Contains(currentPosition) && *currentPosition != '\r' &&
-         *currentPosition != '\n' && *currentPosition != '\0')
+  while (wholeString.Contains(currentPosition) && *currentPosition != '\r' && *currentPosition != '\n' &&
+         *currentPosition != '\0')
   {
     // Store the last position
     lastPosition = currentPosition;
@@ -861,13 +835,10 @@ const char* FindTextDialog::MoveToEol(StringRange wholeString,
 }
 
 // Get the entire line as a string range
-StringRange FindTextDialog::GetWholeLine(StringRange wholeString,
-                                         const char* currentPosition)
+StringRange FindTextDialog::GetWholeLine(StringRange wholeString, const char* currentPosition)
 {
-  cstr beginByte =
-      MoveToEol(wholeString, currentPosition, EolDirection::Backwards);
-  cstr endByte =
-      MoveToEol(wholeString, currentPosition, EolDirection::Forwards) + 1;
+  cstr beginByte = MoveToEol(wholeString, currentPosition, EolDirection::Backwards);
+  cstr endByte = MoveToEol(wholeString, currentPosition, EolDirection::Forwards) + 1;
   StringRange output(wholeString.mOriginalString, beginByte, endByte);
   return output.Trim();
 }
@@ -1054,8 +1025,7 @@ void FindTextDialog::DoSearchAndGetContext()
   }
 
   // If the find regex is not valid...
-  if (Regex::Validate(findRegex, regexFlavor, mMatchCase->GetChecked()) ==
-      false)
+  if (Regex::Validate(findRegex, regexFlavor, mMatchCase->GetChecked()) == false)
   {
     // Error notification and return early
     DoNotifyError("Find/Replace Error",
@@ -1065,8 +1035,7 @@ void FindTextDialog::DoSearchAndGetContext()
   }
 
   // Set the find regex
-  mContext->FindRegex =
-      Regex(GetFindRegex(), regexFlavor, mMatchCase->GetChecked());
+  mContext->FindRegex = Regex(GetFindRegex(), regexFlavor, mMatchCase->GetChecked());
 
   // Get a range of the regions so we can iterate through it
   InList<SearchRegion>::range regions = mContext->Regions.All();
@@ -1099,14 +1068,10 @@ void FindTextDialog::DoSearchAndGetContext()
         // The search result
         SearchResult* result = new SearchResult();
         StringRange matchSub = subRegion.FindFirstOf(matches.Front());
-        ReturnIf(matchSub.Empty() || !matchSub.IsValid(),
-                 ,
-                 "Unable to find sub-match in the sub-region");
+        ReturnIf(matchSub.Empty() || !matchSub.IsValid(), , "Unable to find sub-match in the sub-region");
         // Count the number of lines until the text that we found (+1 since line
         // numbers are actually 0 based)
-        result->Line = CountLines(StringRange(region->WholeText.Begin(),
-                                              matchSub.Begin())) +
-                       1;
+        result->Line = CountLines(StringRange(region->WholeText.Begin(), matchSub.Begin())) + 1;
 
         // Get the entire line of text
         result->WholeLine = GetWholeLine(region->WholeText, matchSub.Data());
@@ -1187,12 +1152,11 @@ void Zero::FindTextDialog::CheckForInvalidInput(ObjectEvent* event)
 {
   String text = mFind->GetText();
 
-  forRange(Rune ch, text.All())
+  forRange (Rune ch, text.All())
   {
     if (ch > 255 || ch < 0)
     {
-      mFindTextBoxStatus.SetFailed(
-          "Only ASCII characters are supported by Find/Replace.");
+      mFindTextBoxStatus.SetFailed("Only ASCII characters are supported by Find/Replace.");
 
       CreateErrorToolTipAtTextbox(mFindTextBoxStatus.Message, mFind);
 
@@ -1234,8 +1198,7 @@ ConsoleUi* GetConsoleTextBox()
   if (consoleWidget == NULL)
   {
     // Use the ui-automator to find the widget
-    consoleWidget = FindWidgetByName(
-        "Console", UiTraversal::DepthFirst, 0, Z::gEditor->GetRootWidget());
+    consoleWidget = FindWidgetByName("Console", UiTraversal::DepthFirst, 0, Z::gEditor->GetRootWidget());
   }
 
   // Cast the widget and return it (not safe :/)
@@ -1265,8 +1228,7 @@ DocumentEditor* FindTextDialog::GetEditorForRegion(SearchRegion* region)
   return editor;
 }
 
-void FindTextDialog::CreateErrorToolTipAtTextbox(StringParam message,
-                                                 TextBox* textBox)
+void FindTextDialog::CreateErrorToolTipAtTextbox(StringParam message, TextBox* textBox)
 {
   mErrorToolTip.SafeDestroy();
   ToolTip* toolTip = new ToolTip(mParent);
@@ -1276,10 +1238,7 @@ void FindTextDialog::CreateErrorToolTipAtTextbox(StringParam message,
 
   ToolTipPlacement placement;
   placement.SetScreenRect(textBox->GetScreenRect());
-  placement.SetPriority(IndicatorSide::Right,
-                        IndicatorSide::Left,
-                        IndicatorSide::Bottom,
-                        IndicatorSide::Top);
+  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Bottom, IndicatorSide::Top);
   toolTip->SetArrowTipTranslation(placement);
 
   mErrorToolTip = toolTip;
@@ -1371,8 +1330,7 @@ void FindTextDialog::ProcessResults()
 
       // Print out to the console
       console->ClearAllReadOnly();
-      console->AddLine(
-          String::Format("Search - %d Found", mContext->TotalResults));
+      console->AddLine(String::Format("Search - %d Found", mContext->TotalResults));
       console->AddBlock(consoleStr);
     }
 
@@ -1434,26 +1392,22 @@ void FindTextDialog::ProcessResults()
 }
 
 // Do the replacement given a DocumentEditor
-void FindTextDialog::DoReplacements(DocumentEditor* documentEditor,
-                                    SearchResult* toReplace)
+void FindTextDialog::DoReplacements(DocumentEditor* documentEditor, SearchResult* toReplace)
 {
   // Get the start of the text in the editor
   StringIterator start = documentEditor->GetAllText().Begin();
 
   // Get the replace area
-  StringRange replaceArea(start + toReplace->PositionBegin,
-                          start + toReplace->PositionEnd);
+  StringRange replaceArea(start + toReplace->PositionBegin, start + toReplace->PositionEnd);
 
   // Get the replaced text
-  String replacedText =
-      mContext->FindRegex.Replace(replaceArea, mReplace->GetText());
+  String replacedText = mContext->FindRegex.Replace(replaceArea, mReplace->GetText());
 
   // Replace the current selection
   documentEditor->ReplaceSelection(replacedText, false);
 
   // Always reselect the replaced text to show the user what was changed
-  documentEditor->SetSelectionStartAndLength(toReplace->PositionBegin,
-                                             replacedText.ComputeRuneCount());
+  documentEditor->SetSelectionStartAndLength(toReplace->PositionBegin, replacedText.ComputeRuneCount());
 
   // Get a range of all the regions
   InList<SearchRegion>::range regions = mContext->Regions.All();
@@ -1483,18 +1437,15 @@ void FindTextDialog::DoReplacements(DocumentEditor* documentEditor,
         {
           // Get the difference in size between the replaced area and the
           // replaced text
-          int sizeDifference =
-              replacedText.ComputeRuneCount() - replaceArea.ComputeRuneCount();
+          int sizeDifference = replacedText.ComputeRuneCount() - replaceArea.ComputeRuneCount();
 
           // Update the positions
           result->PositionBegin += sizeDifference;
           result->PositionEnd += sizeDifference;
 
           // Update the line too (used in replace all cases)
-          result->Line = CountLines(StringRange(region->WholeText.Begin(),
-                                                region->WholeText.Begin() +
-                                                    result->PositionBegin)) +
-                         1;
+          result->Line =
+              CountLines(StringRange(region->WholeText.Begin(), region->WholeText.Begin() + result->PositionBegin)) + 1;
         }
 
         // Iterate to the next result

@@ -11,9 +11,7 @@ namespace Zero
 /// Contains a sorted set of unique objects in a contiguous dynamic array
 /// Search, insertion, and removal operations have O(log n) complexity
 /// Functionality is similar to std::set but with better performance
-template <typename ValueType,
-          typename Sorter = SortPolicy<ValueType>,
-          typename Allocator = DefaultAllocator>
+template <typename ValueType, typename Sorter = SortPolicy<ValueType>, typename Allocator = DefaultAllocator>
 class ArraySet : public SortedArray<ValueType, Sorter, Allocator>
 {
 public:
@@ -52,8 +50,7 @@ public:
   }
 
   /// Move Constructor
-  ArraySet(MoveReference<this_type> rhs) :
-      base_type(ZeroMove(static_cast<base_type&>(*rhs)))
+  ArraySet(MoveReference<this_type> rhs) : base_type(ZeroMove(static_cast<base_type&>(*rhs)))
   {
   }
 
@@ -80,10 +77,8 @@ public:
   reference FindOrInsert(const_reference value)
   {
     // Get lower bound
-    iterator position =
-        LowerBound(base_type::All(), value, base_type::mSorter).Begin();
-    if (position != base_type::End() &&
-        base_type::mSorter.Equal(*position, value)) // Found?
+    iterator position = LowerBound(base_type::All(), value, base_type::mSorter).Begin();
+    if (position != base_type::End() && base_type::mSorter.Equal(*position, value)) // Found?
       return *position;
     else
     {
@@ -96,10 +91,8 @@ public:
   reference FindOrInsert(MoveReference<value_type> value)
   {
     // Get lower bound
-    iterator position =
-        LowerBound(base_type::All(), *value, base_type::mSorter).Begin();
-    if (position != base_type::End() &&
-        base_type::mSorter.Equal(*position, *value)) // Found?
+    iterator position = LowerBound(base_type::All(), *value, base_type::mSorter).Begin();
+    if (position != base_type::End() && base_type::mSorter.Equal(*position, *value)) // Found?
       return *position;
     else
     {
@@ -117,10 +110,8 @@ public:
   pointer_bool_pair Insert(const_reference value)
   {
     // Get lower bound
-    iterator position =
-        LowerBound(base_type::All(), value, base_type::mSorter).Begin();
-    if (position != base_type::End() &&
-        base_type::mSorter.Equal(*position, value)) // Found?
+    iterator position = LowerBound(base_type::All(), value, base_type::mSorter).Begin();
+    if (position != base_type::End() && base_type::mSorter.Equal(*position, value)) // Found?
       return pointer_bool_pair(position, false);
     else
     {
@@ -133,10 +124,8 @@ public:
   pointer_bool_pair Insert(MoveReference<value_type> value)
   {
     // Get lower bound
-    iterator position =
-        LowerBound(base_type::All(), *value, base_type::mSorter).Begin();
-    if (position != base_type::End() &&
-        base_type::mSorter.Equal(*position, *value)) // Found?
+    iterator position = LowerBound(base_type::All(), *value, base_type::mSorter).Begin();
+    if (position != base_type::End() && base_type::mSorter.Equal(*position, *value)) // Found?
       return pointer_bool_pair(position, false);
     else
     {
@@ -155,10 +144,8 @@ public:
   pointer_bool_pair InsertOrAssign(const_reference value)
   {
     // Get lower bound
-    iterator position =
-        LowerBound(base_type::All(), value, base_type::mSorter).Begin();
-    if (position != base_type::End() &&
-        base_type::mSorter.Equal(*position, value)) // Found?
+    iterator position = LowerBound(base_type::All(), value, base_type::mSorter).Begin();
+    if (position != base_type::End() && base_type::mSorter.Equal(*position, value)) // Found?
     {
       // Assign over equivalent element
       *position = value;
@@ -175,10 +162,8 @@ public:
   pointer_bool_pair InsertOrAssign(MoveReference<value_type> value)
   {
     // Get lower bound
-    iterator position =
-        LowerBound(base_type::All(), *value, base_type::mSorter).Begin();
-    if (position != base_type::End() &&
-        base_type::mSorter.Equal(*position, *value)) // Found?
+    iterator position = LowerBound(base_type::All(), *value, base_type::mSorter).Begin();
+    if (position != base_type::End() && base_type::mSorter.Equal(*position, *value)) // Found?
     {
       // Assign over equivalent element
       *position = ZeroMove(value);

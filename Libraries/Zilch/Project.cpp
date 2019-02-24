@@ -15,11 +15,7 @@ ZilchDefineType(ParseEvent, builder, type)
 {
 }
 
-ParseEvent::ParseEvent() :
-    Builder(nullptr),
-    Type(nullptr),
-    Location(nullptr),
-    BuildingProject(nullptr)
+ParseEvent::ParseEvent() : Builder(nullptr), Type(nullptr), Location(nullptr), BuildingProject(nullptr)
 {
 }
 
@@ -206,17 +202,12 @@ CodeDefinition::CodeDefinition() :
 {
 }
 
-Project::Project() :
-    UserData(nullptr),
-    VariableUniqueIdCounter(0),
-    CursorPosition(NoCursor)
+Project::Project() : UserData(nullptr), VariableUniqueIdCounter(0), CursorPosition(NoCursor)
 {
   ZilchErrorIfNotStarted(Project);
 }
 
-void Project::AddCodeFromString(StringParam code,
-                                StringParam origin,
-                                void* codeUserData)
+void Project::AddCodeFromString(StringParam code, StringParam origin, void* codeUserData)
 {
   // Add an entry to the list of all entries
   CodeEntry& entry = this->Entries.PushBack();
@@ -229,11 +220,7 @@ String Project::ReadTextFile(Status& status, StringParam fileName)
 {
   // Attempt to open the file for text reading
   File file;
-  file.Open(fileName,
-            Zero::FileMode::Read,
-            Zero::FileAccessPattern::Random,
-            Zero::FileShare::Read,
-            &status);
+  file.Open(fileName, Zero::FileMode::Read, Zero::FileAccessPattern::Random, Zero::FileShare::Read, &status);
 
   // Create a string builder to concatenate all read in chunks together
   StringBuilder builder;
@@ -284,8 +271,7 @@ void Project::Clear()
   this->Entries.Clear();
 }
 
-bool Project::Tokenize(Array<UserToken>& tokensOut,
-                       Array<UserToken>& commentsOut)
+bool Project::Tokenize(Array<UserToken>& tokensOut, Array<UserToken>& commentsOut)
 {
   // Reset whether there was an error or not
   this->WasError = false;
@@ -359,8 +345,7 @@ void MapLinesToNodes(HashMap<String, OriginInfo>& info, SyntaxNode* node)
   }
 }
 
-void Project::AttachCommentsToNodes(SyntaxTree& syntaxTree,
-                                    Array<UserToken>& comments)
+void Project::AttachCommentsToNodes(SyntaxTree& syntaxTree, Array<UserToken>& comments)
 {
   // Setup the map that we use to associate lines with nodes
   HashMap<String, OriginInfo> info;
@@ -381,9 +366,7 @@ void Project::AttachCommentsToNodes(SyntaxTree& syntaxTree,
     // Check only if it's on the same line or the next line (don't attach
     // comments if they have one line space in between)
     size_t endLine = comment.Location.EndLine + 1;
-    for (size_t line = comment.Location.StartLine;
-         line <= origin.MaxLine && line <= endLine;
-         ++line)
+    for (size_t line = comment.Location.StartLine; line <= origin.MaxLine && line <= endLine; ++line)
     {
       // Attempt to find a node at the current line
       SyntaxNode* node = origin.LineToNode.FindValue(line, nullptr);
@@ -394,8 +377,7 @@ void Project::AttachCommentsToNodes(SyntaxTree& syntaxTree,
       {
         // If this is an attribute, then instead attach it to the parent of the
         // attribute (class, function, property, etc)
-        if (AttributeNode* attributeNode =
-                node->FindParentOrSelf<AttributeNode>())
+        if (AttributeNode* attributeNode = node->FindParentOrSelf<AttributeNode>())
           node = attributeNode->Parent;
 
         // Append the comment to the node
@@ -407,14 +389,13 @@ void Project::AttachCommentsToNodes(SyntaxTree& syntaxTree,
         // node
         NodeChildren children;
         node->PopulateChildren(children);
-        ZilchForEach(SyntaxNode * *childPtr, children)
+        ZilchForEach (SyntaxNode** childPtr, children)
         {
           SyntaxNode* child = *childPtr;
 
           // Append the comment to the child also if the child has the same
           // primary line and start position
-          if (child->Location.StartPosition == node->Location.StartPosition &&
-              child->Location.PrimaryLine == line)
+          if (child->Location.StartPosition == node->Location.StartPosition && child->Location.PrimaryLine == line)
             child->Comments.PushBack(comment.Token);
         }
 
@@ -486,8 +467,7 @@ bool Project::CompileCheckedSyntaxTree(SyntaxTree& syntaxTreeOut,
   Syntaxer syntaxer(*this);
 
   // Start by compiling the code into an unchecked tree
-  if (this->CompileUncheckedSyntaxTree(syntaxTreeOut, tokensOut, evaluation) ==
-      false)
+  if (this->CompileUncheckedSyntaxTree(syntaxTreeOut, tokensOut, evaluation) == false)
     return false;
 
   // Collect all the types, Assign types where they are needed, and perform
@@ -523,8 +503,7 @@ LibraryRef Project::Compile(StringParam libraryName,
   builder.SetEntries(this->Entries);
 
   // Compile the code into a checked syntax tree
-  if (this->CompileCheckedSyntaxTree(
-          treeOut, builder, tokensOut, dependencies, evaluation) == false)
+  if (this->CompileCheckedSyntaxTree(treeOut, builder, tokensOut, dependencies, evaluation) == false)
     return nullptr;
 
   // Let the user know the library finished running the syntaxer (the user may
@@ -544,8 +523,7 @@ LibraryRef Project::Compile(StringParam libraryName,
     LibraryRef library = codeGenerator.Generate(treeOut, builder);
 
     // Check that the library was valid
-    ErrorIf(library == nullptr,
-            "Somehow the library returned from code generation was not valid!");
+    ErrorIf(library == nullptr, "Somehow the library returned from code generation was not valid!");
     return library;
   }
   else
@@ -555,20 +533,16 @@ LibraryRef Project::Compile(StringParam libraryName,
   }
 }
 
-LibraryRef Project::Compile(StringParam libraryName,
-                            Module& dependencies,
-                            EvaluationMode::Enum evaluation)
+LibraryRef Project::Compile(StringParam libraryName, Module& dependencies, EvaluationMode::Enum evaluation)
 {
   // The syntax tree holds a more intuitive representation of the parsed program
   // and is easy to traverse
   SyntaxTree syntaxTree;
   Array<UserToken> tokens;
-  return this->Compile(
-      libraryName, dependencies, evaluation, syntaxTree, tokens);
+  return this->Compile(libraryName, dependencies, evaluation, syntaxTree, tokens);
 }
 
-CompletionOverload& Project::AddAutoCompleteOverload(AutoCompleteInfo& info,
-                                                     DelegateType* delegateType)
+CompletionOverload& Project::AddAutoCompleteOverload(AutoCompleteInfo& info, DelegateType* delegateType)
 {
   // Create a new overload that we'll return to the user
   CompletionOverload& overload = info.CompletionOverloads.PushBack();
@@ -580,8 +554,7 @@ CompletionOverload& Project::AddAutoCompleteOverload(AutoCompleteInfo& info,
   if (Zilch::Type::IsSame(ZilchTypeId(void), delegateType->Return) == false)
   {
     overload.ReturnType = delegateType->Return->ToString();
-    overload.ReturnShortType =
-        AutoCompleteInfo::GetShortTypeName(overload.ReturnType);
+    overload.ReturnShortType = AutoCompleteInfo::GetShortTypeName(overload.ReturnType);
   }
 
   // Walk through all the delegate parameters and add them as completion
@@ -593,8 +566,7 @@ CompletionOverload& Project::AddAutoCompleteOverload(AutoCompleteInfo& info,
     DelegateParameter& delegateParam = delegateType->Parameters[i];
     CompletionParameter& completionParam = overload.Parameters.PushBack();
     completionParam.Type = delegateParam.ParameterType->ToString();
-    completionParam.ShortType =
-        AutoCompleteInfo::GetShortTypeName(completionParam.Type);
+    completionParam.ShortType = AutoCompleteInfo::GetShortTypeName(completionParam.Type);
     completionParam.Name = delegateParam.Name;
   }
 
@@ -649,8 +621,7 @@ public:
   }
 };
 
-void Project::InitializeDefinitionInfo(CodeDefinition& resultOut,
-                                       ReflectionObject* object)
+void Project::InitializeDefinitionInfo(CodeDefinition& resultOut, ReflectionObject* object)
 {
   // Get the type of the documented object (could be a property type, function
   // type, class/struct type, etc)
@@ -681,13 +652,11 @@ String Project::GetFriendlyTypeName(Type* type)
   {
     if (boundType->CopyMode == TypeCopyMode::ReferenceType)
     {
-      name =
-          BuildString(Grammar::GetKeywordOrSymbol(Grammar::Class), " ", name);
+      name = BuildString(Grammar::GetKeywordOrSymbol(Grammar::Class), " ", name);
     }
     else
     {
-      name =
-          BuildString(Grammar::GetKeywordOrSymbol(Grammar::Struct), " ", name);
+      name = BuildString(Grammar::GetKeywordOrSymbol(Grammar::Struct), " ", name);
     }
   }
 
@@ -699,8 +668,7 @@ void Project::GetDefinitionInfo(Module& dependencies,
                                 StringParam cursorOrigin,
                                 CodeDefinition& resultOut)
 {
-  GetDefinitionInfoInternal(
-      dependencies, cursorPosition, cursorOrigin, resultOut);
+  GetDefinitionInfoInternal(dependencies, cursorPosition, cursorOrigin, resultOut);
 
   if (resultOut.ToolTip.Empty())
   {
@@ -711,8 +679,7 @@ void Project::GetDefinitionInfo(Module& dependencies,
       // the end with a ':'
       if (resultOut.ResolvedType != nullptr)
       {
-        resultOut.ToolTip = BuildString(
-            resultOut.Name, " : ", GetFriendlyTypeName(resultOut.ResolvedType));
+        resultOut.ToolTip = BuildString(resultOut.Name, " : ", GetFriendlyTypeName(resultOut.ResolvedType));
       }
       // If we didn't get a type somehow, our tooltip is just the name
       else
@@ -733,8 +700,7 @@ void Project::GetDefinitionInfo(Module& dependencies,
     {
       String name = ZilchVirtualTypeId(resultOut.DefinedObject)->ToString();
 
-      if (GetterSetter* getterSetter =
-              Type::DynamicCast<GetterSetter*>(resultOut.DefinedObject))
+      if (GetterSetter* getterSetter = Type::DynamicCast<GetterSetter*>(resultOut.DefinedObject))
       {
         if (getterSetter->Get != nullptr && getterSetter->Set != nullptr)
           name = BuildString(name, " (get/set)");
@@ -751,8 +717,7 @@ void Project::GetDefinitionInfo(Module& dependencies,
       // end
       if (!resultOut.DefinedObject->Description.Empty())
       {
-        resultOut.ToolTip = BuildString(
-            resultOut.ToolTip, "\n", resultOut.DefinedObject->Description);
+        resultOut.ToolTip = BuildString(resultOut.ToolTip, "\n", resultOut.DefinedObject->Description);
       }
     }
   }
@@ -765,18 +730,14 @@ void Project::GetDefinitionInfoInternal(Module& dependencies,
 {
   // Temporary set tolerant mode to true (recall it on any exiting of this
   // function)
-  Zero::SetAndRecallOnDestruction<bool> changeTolerantMode(&this->TolerantMode,
-                                                           true);
+  Zero::SetAndRecallOnDestruction<bool> changeTolerantMode(&this->TolerantMode, true);
 
   // Compile the entirety of the project and get the syntax tree out of it
   // We MUST store the library or all the resources will be released
   SyntaxTree syntaxTree;
   Array<UserToken> tokens;
-  resultOut.IncompleteLibrary = this->Compile(DefaultLibraryName,
-                                              dependencies,
-                                              EvaluationMode::Project,
-                                              syntaxTree,
-                                              tokens);
+  resultOut.IncompleteLibrary =
+      this->Compile(DefaultLibraryName, dependencies, EvaluationMode::Project, syntaxTree, tokens);
 
   // Get all the syntax nodes under the cursor
   Array<SyntaxNode*> nodes;
@@ -797,15 +758,13 @@ void Project::GetDefinitionInfoInternal(Module& dependencies,
       continue;
 
     // If we found the token that our cursor is over...
-    if (cursorPosition >= token.Location.StartPosition &&
-        cursorPosition <= token.Location.EndPosition)
+    if (cursorPosition >= token.Location.StartPosition && cursorPosition <= token.Location.EndPosition)
     {
       Grammar::Enum id = token.TokenId;
 
-      isValidToken = id != Grammar::Invalid && id != Grammar::End &&
-                     id != Grammar::Error && id != Grammar::Whitespace &&
-                     id != Grammar::CommentStart &&
-                     id != Grammar::CommentLine && id != Grammar::CommentEnd;
+      isValidToken = id != Grammar::Invalid && id != Grammar::End && id != Grammar::Error &&
+                     id != Grammar::Whitespace && id != Grammar::CommentStart && id != Grammar::CommentLine &&
+                     id != Grammar::CommentEnd;
       break;
     }
   }
@@ -850,8 +809,7 @@ void Project::GetDefinitionInfoInternal(Module& dependencies,
         return;
       }
     }
-    else if (MemberVariableNode* typedNode =
-                 Type::DynamicCast<MemberVariableNode*>(node))
+    else if (MemberVariableNode* typedNode = Type::DynamicCast<MemberVariableNode*>(node))
     {
       Property* property = typedNode->CreatedProperty;
       if (property != nullptr)
@@ -864,8 +822,7 @@ void Project::GetDefinitionInfoInternal(Module& dependencies,
         return;
       }
     }
-    else if (SendsEventNode* typedNode =
-                 Type::DynamicCast<SendsEventNode*>(node))
+    else if (SendsEventNode* typedNode = Type::DynamicCast<SendsEventNode*>(node))
     {
       Property* property = typedNode->EventProperty;
       if (property != nullptr)
@@ -876,8 +833,7 @@ void Project::GetDefinitionInfoInternal(Module& dependencies,
         return;
       }
     }
-    else if (LocalVariableNode* typedNode =
-                 Type::DynamicCast<LocalVariableNode*>(node))
+    else if (LocalVariableNode* typedNode = Type::DynamicCast<LocalVariableNode*>(node))
     {
       Variable* variable = typedNode->CreatedVariable;
       if (variable != nullptr)
@@ -889,8 +845,7 @@ void Project::GetDefinitionInfoInternal(Module& dependencies,
       }
     }
     // Usages
-    else if (LocalVariableReferenceNode* typedNode =
-                 Type::DynamicCast<LocalVariableReferenceNode*>(node))
+    else if (LocalVariableReferenceNode* typedNode = Type::DynamicCast<LocalVariableReferenceNode*>(node))
     {
       Variable* variable = typedNode->AccessedVariable;
       if (variable != nullptr)
@@ -901,8 +856,7 @@ void Project::GetDefinitionInfoInternal(Module& dependencies,
         return;
       }
     }
-    else if (MemberAccessNode* typedNode =
-                 Type::DynamicCast<MemberAccessNode*>(node))
+    else if (MemberAccessNode* typedNode = Type::DynamicCast<MemberAccessNode*>(node))
     {
       if (typedNode->AccessedMember != nullptr)
       {
@@ -915,8 +869,7 @@ void Project::GetDefinitionInfoInternal(Module& dependencies,
         return;
       }
 
-      if (typedNode->OverloadedFunctions != nullptr &&
-          typedNode->OverloadedFunctions->Empty() == false)
+      if (typedNode->OverloadedFunctions != nullptr && typedNode->OverloadedFunctions->Empty() == false)
       {
         Function* function = typedNode->OverloadedFunctions->Front();
         this->InitializeDefinitionInfo(resultOut, function);
@@ -934,8 +887,7 @@ void Project::GetDefinitionInfoInternal(Module& dependencies,
         return;
       }
     }
-    else if (ExpressionNode* typedNode =
-                 Type::DynamicCast<ExpressionNode*>(node))
+    else if (ExpressionNode* typedNode = Type::DynamicCast<ExpressionNode*>(node))
     {
       Type* resultType = typedNode->ResultType;
       if (resultType != nullptr)
@@ -983,11 +935,9 @@ void Project::GetDefinitionInfoInternal(Module& dependencies,
           }
         }
 
-        if (!code.Empty() && startPosition != (size_t)-1 &&
-            endPosition != (size_t)-1 && startPosition != endPosition)
+        if (!code.Empty() && startPosition != (size_t)-1 && endPosition != (size_t)-1 && startPosition != endPosition)
         {
-          String line =
-              code.SubStringFromByteIndices(startPosition, endPosition);
+          String line = code.SubStringFromByteIndices(startPosition, endPosition);
           resultOut.ToolTip = line;
         }
         else
@@ -996,8 +946,8 @@ void Project::GetDefinitionInfoInternal(Module& dependencies,
           static const size_t NodeStringByteCount = Node.SizeInBytes();
 
           if (nodeType->Name.EndsWith(Node))
-            resultOut.ToolTip = nodeType->Name.SubStringFromByteIndices(
-                0, nodeType->Name.SizeInBytes() - NodeStringByteCount);
+            resultOut.ToolTip =
+                nodeType->Name.SubStringFromByteIndices(0, nodeType->Name.SizeInBytes() - NodeStringByteCount);
           else
             resultOut.ToolTip = nodeType->Name;
         }
@@ -1019,26 +969,21 @@ void Project::GetAutoCompleteInfo(Module& dependencies,
                                   AutoCompleteInfo& resultOut)
 {
   // First query auto complete type and function information
-  this->GetAutoCompleteInfoInternal(
-      dependencies, cursorPosition, cursorOrigin, resultOut);
+  this->GetAutoCompleteInfoInternal(dependencies, cursorPosition, cursorOrigin, resultOut);
 
   // We basically consider the auto complete a success if it found anything that
   // wasn't the error type (and not null)
-  resultOut.Success = (resultOut.NearestType != nullptr &&
-                       resultOut.NearestType != Core::GetInstance().ErrorType);
+  resultOut.Success = (resultOut.NearestType != nullptr && resultOut.NearestType != Core::GetInstance().ErrorType);
 
   // If we're trying to access a bound type...
-  Zilch::BoundType* boundType =
-      Zilch::Type::DynamicCast<Zilch::BoundType*>(resultOut.NearestType);
+  Zilch::BoundType* boundType = Zilch::Type::DynamicCast<Zilch::BoundType*>(resultOut.NearestType);
 
   // If this wasn't a bound type, check first if its an indirect type
   if (boundType == nullptr)
   {
     // In general we can access indirect types exactly like how we access bound
     // types...
-    Zilch::IndirectionType* indirectType =
-        Zilch::Type::DynamicCast<Zilch::IndirectionType*>(
-            resultOut.NearestType);
+    Zilch::IndirectionType* indirectType = Zilch::Type::DynamicCast<Zilch::IndirectionType*>(resultOut.NearestType);
 
     // Just set the bound type to be the reference type and continue on
     if (indirectType != nullptr)
@@ -1054,8 +999,7 @@ void Project::GetAutoCompleteInfo(Module& dependencies,
     AutoCompletePropertyFunctionQuery queryFunctor;
     queryFunctor.Info = &resultOut;
     queryFunctor.CursorOrigin = cursorOrigin;
-    ForEachGetterSetter(
-        resultOut.IsStatic, dependencies, boundType, queryFunctor);
+    ForEachGetterSetter(resultOut.IsStatic, dependencies, boundType, queryFunctor);
     ForEachFunction(resultOut.IsStatic, dependencies, boundType, queryFunctor);
   }
 
@@ -1066,8 +1010,7 @@ void Project::GetAutoCompleteInfo(Module& dependencies,
     // If the expression is a delegate type then generate an overload for the
     // delegate call (we technically won't know descriptions or, in the future,
     // parameter names...)
-    DelegateType* delegateType =
-        Type::DynamicCast<DelegateType*>(resultOut.NearestType);
+    DelegateType* delegateType = Type::DynamicCast<DelegateType*>(resultOut.NearestType);
     if (delegateType != nullptr)
       this->AddAutoCompleteOverload(resultOut, delegateType);
 
@@ -1086,8 +1029,7 @@ void Project::GetAutoCompleteInfo(Module& dependencies,
 
       // Create a completion overload for it (filling out return type and
       // parameters/names)
-      CompletionOverload& overload =
-          this->AddAutoCompleteOverload(resultOut, function->FunctionType);
+      CompletionOverload& overload = this->AddAutoCompleteOverload(resultOut, function->FunctionType);
 
       // Set the description (this could be an inherited description)
       overload.Description = function->Description;
@@ -1097,14 +1039,12 @@ void Project::GetAutoCompleteInfo(Module& dependencies,
       {
         // Show a special name for constructors
         if (function->Name == ConstructorName)
-          resultOut.FunctionName =
-              Grammar::GetKeywordOrSymbol(Grammar::Constructor);
+          resultOut.FunctionName = Grammar::GetKeywordOrSymbol(Grammar::Constructor);
         else
           resultOut.FunctionName = function->Name;
       }
 
-      ErrorIf(function->Name != resultOut.FunctionName &&
-                  function->Name != ConstructorName,
+      ErrorIf(function->Name != resultOut.FunctionName && function->Name != ConstructorName,
               "All function names in the overload list should match");
     }
   }
@@ -1128,8 +1068,7 @@ void Project::GetAutoCompleteInfo(Module& dependencies,
       // We only consider overloads tha have a description, then we look for the
       // one with the most parameters
       int parameterCount = (int)overload.Parameters.Size();
-      if (overload.Description.Empty() == false &&
-          parameterCount > bestParameterCount)
+      if (overload.Description.Empty() == false && parameterCount > bestParameterCount)
       {
         // This one is now the 'best', but we need to keep looking
         bestParameterCount = parameterCount;
@@ -1205,8 +1144,7 @@ void Project::GetAutoCompleteInfoInternal(Module& dependencies,
 {
   // Temporary set tolerant mode to true (recall it on any exiting of this
   // function)
-  Zero::SetAndRecallOnDestruction<bool> changeTolerantMode(&this->TolerantMode,
-                                                           true);
+  Zero::SetAndRecallOnDestruction<bool> changeTolerantMode(&this->TolerantMode, true);
 
   // Always assume we're parsing an instance/expression
   // Later on if we fail, we'll try to parse a type and therefore it may be a
@@ -1217,11 +1155,8 @@ void Project::GetAutoCompleteInfoInternal(Module& dependencies,
   // We MUST store the library or all the resources will be released
   SyntaxTree syntaxTree;
   Array<UserToken> tokens;
-  resultOut.IncompleteLibrary = this->Compile(DefaultLibraryName,
-                                              dependencies,
-                                              EvaluationMode::Project,
-                                              syntaxTree,
-                                              tokens);
+  resultOut.IncompleteLibrary =
+      this->Compile(DefaultLibraryName, dependencies, EvaluationMode::Project, syntaxTree, tokens);
 
   // Get all the syntax nodes under the cursor
   Array<SyntaxNode*> nodes;
@@ -1241,14 +1176,12 @@ void Project::GetAutoCompleteInfoInternal(Module& dependencies,
 
     ExpressionNode* expression = nullptr;
 
-    if (MemberAccessNode* memberAccess =
-            Type::DynamicCast<MemberAccessNode*>(node))
+    if (MemberAccessNode* memberAccess = Type::DynamicCast<MemberAccessNode*>(node))
     {
       expression = memberAccess->LeftOperand;
       resultOut.PartialMemberName = memberAccess->Name;
     }
-    else if (FunctionCallNode* call =
-                 Type::DynamicCast<FunctionCallNode*>(node))
+    else if (FunctionCallNode* call = Type::DynamicCast<FunctionCallNode*>(node))
     {
       expression = call->LeftOperand;
 
@@ -1277,24 +1210,21 @@ void Project::GetAutoCompleteInfoInternal(Module& dependencies,
     // If the value we're accessing is a value node specifically, then it's a
     // literal (note that LocalVariableReferenceNode inherits from ValueNode and
     // is NOT a literal, hence the ZilchGetDerivedType == check).
-    resultOut.IsLiteral =
-        (expression->ZilchGetDerivedType() == ZilchTypeId(ValueNode));
+    resultOut.IsLiteral = (expression->ZilchGetDerivedType() == ZilchTypeId(ValueNode));
 
     // Look to see if we're accessing a single function or a bunch of overloads
     const FunctionArray* overloads = nullptr;
     Function* singleFunction = nullptr;
 
     // If the expression is a member access...
-    if (MemberAccessNode* memberAccess =
-            Type::DynamicCast<MemberAccessNode*>(expression))
+    if (MemberAccessNode* memberAccess = Type::DynamicCast<MemberAccessNode*>(expression))
     {
       overloads = memberAccess->OverloadedFunctions;
       singleFunction = memberAccess->AccessedFunction;
     }
     // If this is a creation call, we also want to pull out constructor
     // overloads
-    else if (StaticTypeNode* staticType =
-                 Type::DynamicCast<StaticTypeNode*>(expression))
+    else if (StaticTypeNode* staticType = Type::DynamicCast<StaticTypeNode*>(expression))
     {
       resultOut.IsStatic = true;
       overloads = staticType->OverloadedConstructors;

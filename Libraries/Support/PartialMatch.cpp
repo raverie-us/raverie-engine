@@ -62,8 +62,7 @@ bool MatchesPartial(StringParam text, StringParam partial, RuneComparer compare)
   for (StringIterator textCur = text.Begin(); textCur < textEnd; ++textCur)
   {
     StringIterator textTemp = textCur;
-    for (StringIterator partialCur = partial.Begin(); partialCur <= partialEnd;
-         ++partialCur, ++textTemp)
+    for (StringIterator partialCur = partial.Begin(); partialCur <= partialEnd; ++partialCur, ++textTemp)
     {
       // If we reached the end of the partial string, then we match!
       if (partialCur == partialEnd)

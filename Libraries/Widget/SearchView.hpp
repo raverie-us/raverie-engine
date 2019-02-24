@@ -103,9 +103,7 @@ public:
 class SearchProvider : public EventObject
 {
 public:
-  SearchProvider(StringParam providerType = "TypeInvalid") :
-      mFilter(nullptr),
-      mProviderType(providerType)
+  SearchProvider(StringParam providerType = "TypeInvalid") : mFilter(nullptr), mProviderType(providerType)
   {
   }
 
@@ -145,8 +143,7 @@ public:
     return nullptr;
   }
   // Add a widget to the SearchView's TextBox preview widget stack.
-  virtual bool AddToAlternatePreview(SearchData* search,
-                                     Composite* searchPreviewWidget)
+  virtual bool AddToAlternatePreview(SearchData* search, Composite* searchPreviewWidget)
   {
     return false;
   }
@@ -160,9 +157,7 @@ public:
   // Get an element's display name with its provider's display type
   String GetElementNameAndSearchType(SearchViewResult& element)
   {
-    ReturnIf(mProviderType == "TypeInvalid",
-             mProviderType,
-             "Provider type must be specified.");
+    ReturnIf(mProviderType == "TypeInvalid", mProviderType, "Provider type must be specified.");
     return BuildString(GetElementName(element), "(", mProviderType, ")");
   }
 
@@ -216,8 +211,7 @@ public:
   SearchViewElement(Composite* parent);
   void OnMouseUp(MouseEvent* event);
   void OnMouseMove(MouseEvent* event);
-  void
-  Setup(SearchView* view, uint index, bool selected, SearchViewResult& element);
+  void Setup(SearchView* view, uint index, bool selected, SearchViewResult& element);
   void UpdateTransform() override;
 
   SearchView* mView;
@@ -320,7 +314,7 @@ bool CheckTags(HashSet<String>& testTags, StringContainer& tags)
   // this object
   uint foundTags = 0;
 
-  forRange(String str, tags.All())
+  forRange (String str, tags.All())
   {
     if (testTags.Contains(str))
       ++foundTags;
@@ -335,7 +329,8 @@ bool CheckAndAddTags(SearchData& search, StringContainer& tags)
 {
   if (CheckTags<StringContainer>(search.ActiveTags, tags))
   {
-    forRange(String & tag, tags.All()) search.AvailableTags.Insert(tag);
+    forRange (String& tag, tags.All())
+      search.AvailableTags.Insert(tag);
     return true;
   }
   else

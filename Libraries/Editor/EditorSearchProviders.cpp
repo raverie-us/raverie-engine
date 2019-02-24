@@ -6,9 +6,7 @@ namespace Zero
 
 static const String cResourcesTag = "Resources";
 
-ResourceSearchProvider::ResourceSearchProvider(ResourceLibrary* library,
-                                               bool showHidden,
-                                               ResourceLibrary* defaultLib) :
+ResourceSearchProvider::ResourceSearchProvider(ResourceLibrary* library, bool showHidden, ResourceLibrary* defaultLib) :
     SearchProvider("Resource"),
     mDefaultLibrary(defaultLib),
     mResourceLibrary(library),
@@ -16,8 +14,7 @@ ResourceSearchProvider::ResourceSearchProvider(ResourceLibrary* library,
 {
 }
 
-void ResourceSearchProvider::RunCommand(SearchView* searchView,
-                                        SearchViewResult& element)
+void ResourceSearchProvider::RunCommand(SearchView* searchView, SearchViewResult& element)
 {
   // When selected edit the resource
   Resource* resource = (Resource*)element.Data;
@@ -43,8 +40,7 @@ void ResourceSearchProvider::Search(SearchData& search)
     search.AvailableTags.Insert(cResourcesTag);
 
   // For every resource manager
-  ResourceSystem::ManagerMapType::valuerange r =
-      Z::gResources->Managers.Values();
+  ResourceSystem::ManagerMapType::valuerange r = Z::gResources->Managers.Values();
   for (; !r.Empty(); r.PopFront())
   {
     ResourceManager* resourceManager = r.Front();
@@ -61,7 +57,7 @@ void ResourceSearchProvider::Search(SearchData& search)
     {
       bool metaMatch = false;
       BoundType* resourceType = resourceManager->mResourceType;
-      forRange(BoundType * meta, search.ActiveMeta.All())
+      forRange (BoundType* meta, search.ActiveMeta.All())
       {
         if (resourceType->IsA(meta))
           metaMatch = true;
@@ -75,7 +71,7 @@ void ResourceSearchProvider::Search(SearchData& search)
     if (resourcesTag || globalSearchable)
     {
       // For every resource in the manager
-      forRange(Resource * resource, resourceManager->ResourceIdMap.Values())
+      forRange (Resource* resource, resourceManager->ResourceIdMap.Values())
       {
         AttemptAddResource(search, localTags, resource);
       }
@@ -83,12 +79,9 @@ void ResourceSearchProvider::Search(SearchData& search)
   }
 }
 
-void ResourceSearchProvider::AttemptAddResource(SearchData& search,
-                                                HashSet<String>& localTags,
-                                                Resource* resource)
+void ResourceSearchProvider::AttemptAddResource(SearchData& search, HashSet<String>& localTags, Resource* resource)
 {
-  if (mResourceLibrary != nullptr &&
-      resource->mResourceLibrary != mResourceLibrary)
+  if (mResourceLibrary != nullptr && resource->mResourceLibrary != mResourceLibrary)
     return;
 
   if (resource->mContentItem == nullptr)
@@ -121,9 +114,7 @@ void ResourceSearchProvider::AttemptAddResource(SearchData& search,
     resource->AddTags(search.AvailableTags);
 
     // Match on the name
-    int priority = PartialMatch(search.SearchString.All(),
-                                resource->Name.All(),
-                                CaseInsensitiveCompare);
+    int priority = PartialMatch(search.SearchString.All(), resource->Name.All(), CaseInsensitiveCompare);
     if (priority != cNoMatch)
     {
       // Add a result
@@ -139,13 +130,12 @@ void ResourceSearchProvider::AttemptAddResource(SearchData& search,
   }
 }
 
-Composite* ResourceSearchProvider::CreatePreview(Composite* parent,
-                                                 SearchViewResult& element)
+Composite* ResourceSearchProvider::CreatePreview(Composite* parent, SearchViewResult& element)
 {
   // Use the general resource preview
   Resource* resource = (Resource*)element.Data;
-  PreviewWidget* preview = ResourcePreview::CreatePreviewWidget(
-      parent, resource->Name, resource, PreviewImportance::High);
+  PreviewWidget* preview =
+      ResourcePreview::CreatePreviewWidget(parent, resource->Name, resource, PreviewImportance::High);
 
   if (preview)
   {
@@ -158,8 +148,7 @@ Composite* ResourceSearchProvider::CreatePreview(Composite* parent,
       group->SetLayout(CreateStackLayout());
 
       // Create the error text on top
-      MultiLineText* text =
-          (MultiLineText*)CreateTextPreview(group, element.mStatus.Message);
+      MultiLineText* text = (MultiLineText*)CreateTextPreview(group, element.mStatus.Message);
 
       // Defer border-display to the parent's border
       if (text != nullptr)
@@ -186,8 +175,7 @@ String ResourceSearchProvider::GetElementType(SearchViewResult& element)
   return resource->GetManager()->GetResourceType()->Name;
 }
 
-LibrarySearchProvider::LibrarySearchProvider(bool canReturnResources,
-                                             ResourceLibrary* defaultLibrary) :
+LibrarySearchProvider::LibrarySearchProvider(bool canReturnResources, ResourceLibrary* defaultLibrary) :
     SearchProvider("Library"),
     mCanReturnResources(canReturnResources),
     mDefaultLibrary(defaultLibrary),
@@ -196,8 +184,7 @@ LibrarySearchProvider::LibrarySearchProvider(bool canReturnResources,
 {
 }
 
-bool LibrarySearchProvider::OnMatch(SearchView* searchView,
-                                    SearchViewResult& element)
+bool LibrarySearchProvider::OnMatch(SearchView* searchView, SearchViewResult& element)
 {
   ResourceLibrary* library = (ResourceLibrary*)element.Data;
   mTargetResourceProvider.mResourceLibrary = library;
@@ -218,8 +205,7 @@ bool LibrarySearchProvider::OnMatch(SearchView* searchView,
   return false;
 }
 
-void LibrarySearchProvider::RunCommand(SearchView* searchView,
-                                       SearchViewResult& element)
+void LibrarySearchProvider::RunCommand(SearchView* searchView, SearchViewResult& element)
 {
   mTargetResourceProvider.RunCommand(searchView, element);
 }
@@ -241,15 +227,14 @@ void LibrarySearchProvider::Search(SearchData& search)
   if (libraryActive)
     return;
 
-  forRange(ContentLibrary * library, mLibraries.Values())
+  forRange (ContentLibrary* library, mLibraries.Values())
   {
     String& name = library->Name;
     if (name == "ZeroLauncherResources")
       continue;
 
     // Match on the name
-    int priority = PartialMatch(
-        search.SearchString.All(), name.All(), CaseInsensitiveCompare);
+    int priority = PartialMatch(search.SearchString.All(), name.All(), CaseInsensitiveCompare);
     if (priority != cNoMatch)
     {
       // Add a result
@@ -272,8 +257,7 @@ ObjectSearchProvider::ObjectSearchProvider() : SearchProvider("Object")
 {
 }
 
-void ObjectSearchProvider::RunCommand(SearchView* searchView,
-                                      SearchViewResult& element)
+void ObjectSearchProvider::RunCommand(SearchView* searchView, SearchViewResult& element)
 {
   // Focus on the object when selected
   if (Cog* cog = element.ObjectHandle.Get<Cog*>())
@@ -292,8 +276,7 @@ void ObjectSearchProvider::AddObject(Cog& object, SearchData& search)
   if (!name.Empty())
   {
     // Filter the name
-    int priority = PartialMatch(
-        search.SearchString.All(), name.All(), CaseInsensitiveCompare);
+    int priority = PartialMatch(search.SearchString.All(), name.All(), CaseInsensitiveCompare);
     if (priority != cNoMatch)
     {
       // Add a result
@@ -319,15 +302,14 @@ void ObjectSearchProvider::Search(SearchData& search)
   {
     AddObject(*space, search);
 
-    forRange(Cog & object, space->AllObjects())
+    forRange (Cog& object, space->AllObjects())
     {
       AddObject(object, search);
     }
   }
 }
 
-Composite* ObjectSearchProvider::CreatePreview(Composite* parent,
-                                               SearchViewResult& element)
+Composite* ObjectSearchProvider::CreatePreview(Composite* parent, SearchViewResult& element)
 {
   // Commented out for the time being as creating a preview for cogs in the
   // scene when using general search moves the object and creates a new camera
@@ -348,8 +330,7 @@ String ObjectSearchProvider::GetElementType(SearchViewResult& element)
   return ObjectName;
 }
 
-ComponentSearchProvider::ComponentSearchProvider(
-    HandleParam object, HandleOf<MetaComposition>& composition) :
+ComponentSearchProvider::ComponentSearchProvider(HandleParam object, HandleOf<MetaComposition>& composition) :
     SearchProvider("Component"),
     mObject(object),
     mComposition(composition)
@@ -369,13 +350,11 @@ void ComponentSearchProvider::Search(SearchData& search)
   Array<BoundType*> types;
   mComposition->Enumerate(types, EnumerateAction::All, mObject);
 
-  forRange(BoundType * boundType, types.All())
+  forRange (BoundType* boundType, types.All())
   {
     if (CheckAndAddTags(search, boundType))
     {
-      int priority = PartialMatch(search.SearchString.All(),
-                                  boundType->Name.All(),
-                                  CaseInsensitiveCompare);
+      int priority = PartialMatch(search.SearchString.All(), boundType->Name.All(), CaseInsensitiveCompare);
       if (priority != cNoMatch)
       {
         mResultsContainExactMatch |= (priority == cExactMatch);
@@ -388,8 +367,7 @@ void ComponentSearchProvider::Search(SearchData& search)
         result.Priority = priority;
 
         AddInfo addInfo;
-        if (mComposition->CanAddComponent(mObject, boundType, &addInfo) ==
-            false)
+        if (mComposition->CanAddComponent(mObject, boundType, &addInfo) == false)
           result.mStatus.SetFailed(addInfo.Reason);
       }
     }
@@ -401,13 +379,11 @@ String ComponentSearchProvider::GetElementType(SearchViewResult& element)
   return String();
 }
 
-Composite* ComponentSearchProvider::CreatePreview(Composite* parent,
-                                                  SearchViewResult& element)
+Composite* ComponentSearchProvider::CreatePreview(Composite* parent, SearchViewResult& element)
 {
   // For preview attempt to look up class description from documentation system.
   BoundType* boundType = (BoundType*)element.Data;
-  ClassDoc* classDoc =
-      Z::gDocumentation->mClassMap.FindValue(boundType->Name, NULL);
+  ClassDoc* classDoc = Z::gDocumentation->mClassMap.FindValue(boundType->Name, NULL);
 
   // Try to include class documentation in the preview.
   if (classDoc)
@@ -421,8 +397,7 @@ Composite* ComponentSearchProvider::CreatePreview(Composite* parent,
       group->SetLayout(CreateStackLayout());
 
       // Create the error text on top
-      MultiLineText* text =
-          (MultiLineText*)CreateTextPreview(group, element.mStatus.Message);
+      MultiLineText* text = (MultiLineText*)CreateTextPreview(group, element.mStatus.Message);
       // Defer border-display to the parent's border.
       if (text != nullptr)
         text->mBorder->SetVisible(false);
@@ -453,8 +428,7 @@ Composite* ComponentSearchProvider::CreatePreview(Composite* parent,
   return nullptr;
 }
 
-bool ComponentSearchProvider::AddToAlternatePreview(
-    SearchData* search, Composite* searchPreviewWidget)
+bool ComponentSearchProvider::AddToAlternatePreview(SearchData* search, Composite* searchPreviewWidget)
 {
   mSearchType.Clear();
 
@@ -465,12 +439,8 @@ bool ComponentSearchProvider::AddToAlternatePreview(
 
   mSearchType = search->SearchString;
 
-  String message =
-      BuildString("Component '",
-                  mSearchType,
-                  "' could not be found. Press Alt + Enter to create it.");
-  MultiLineText* text =
-      (MultiLineText*)CreateTextPreview(searchPreviewWidget, message);
+  String message = BuildString("Component '", mSearchType, "' could not be found. Press Alt + Enter to create it.");
+  MultiLineText* text = (MultiLineText*)CreateTextPreview(searchPreviewWidget, message);
 
   // Defer border-display to the parent's border.
   if (text != nullptr)
@@ -500,8 +470,7 @@ void ComponentSearchProvider::AttemptAlternateSearchCompleted()
   DispatchEvent(Events::AlternateSearchCompleted, &eventToSend);
 }
 
-SearchProvider* GetLibrarySearchProvider(bool canReturnResources,
-                                         ResourceLibrary* defaultLibrary)
+SearchProvider* GetLibrarySearchProvider(bool canReturnResources, ResourceLibrary* defaultLibrary)
 {
   return new LibrarySearchProvider(canReturnResources, defaultLibrary);
 }
@@ -511,22 +480,19 @@ SearchProvider* GetObjectSearchProvider()
   return new ObjectSearchProvider();
 }
 
-SearchProvider* GetResourceSearchProvider(ResourceLibrary* resourceLibrary,
-                                          bool showHidden)
+SearchProvider* GetResourceSearchProvider(ResourceLibrary* resourceLibrary, bool showHidden)
 {
   return new ResourceSearchProvider(resourceLibrary, showHidden);
 }
 
-SearchProvider* GetFactoryProvider(HandleParam object,
-                                   HandleOf<MetaComposition>& composition)
+SearchProvider* GetFactoryProvider(HandleParam object, HandleOf<MetaComposition>& composition)
 {
   return new ComponentSearchProvider(object, composition);
 }
 
 void AddEditorProviders(SearchData& search)
 {
-  ResourceLibrary* library =
-      Z::gResources->GetResourceLibrary(Z::gEditor->mProjectLibrary->Name);
+  ResourceLibrary* library = Z::gResources->GetResourceLibrary(Z::gEditor->mProjectLibrary->Name);
   search.SearchProviders.PushBack(GetLibrarySearchProvider(true, library));
 
   search.SearchProviders.PushBack(GetObjectSearchProvider());

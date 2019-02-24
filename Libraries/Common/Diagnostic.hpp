@@ -66,13 +66,7 @@ public:
     return sActiveErrorHandler;
   }
 
-  static bool SignalError(SignalErrorType erroType,
-                          cstr exp,
-                          cstr file,
-                          int line,
-                          bool& ignore,
-                          cstr msg = 0,
-                          ...);
+  static bool SignalError(SignalErrorType erroType, cstr exp, cstr file, int line, bool& ignore, cstr msg = 0, ...);
 
 private:
   static ErrorHandler sActiveErrorHandler;
@@ -94,86 +88,60 @@ static int gConditionalFalseConstant = 0;
 
 #  define UnusedParameter(param) (void)param
 
-#  define WarnIf(Expression, ...)                                              \
-    do                                                                         \
-    {                                                                          \
-      static bool __ignore = false;                                            \
-      if ((Expression) &&                                                      \
-          ::Zero::ErrorSignaler::SignalError(::Zero::ErrorSignaler::Warning,   \
-                                             #Expression,                      \
-                                             __FILE__,                         \
-                                             __LINE__,                         \
-                                             __ignore,                         \
-                                             ##__VA_ARGS__))                   \
-        ZeroDebugBreak();                                                      \
+#  define WarnIf(Expression, ...)                                                                                      \
+    do                                                                                                                 \
+    {                                                                                                                  \
+      static bool __ignore = false;                                                                                    \
+      if ((Expression) &&                                                                                              \
+          ::Zero::ErrorSignaler::SignalError(                                                                          \
+              ::Zero::ErrorSignaler::Warning, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__))               \
+        ZeroDebugBreak();                                                                                              \
     } while (gConditionalFalseConstant)
 
-#  define ErrorIf(Expression, ...)                                             \
-    do                                                                         \
-    {                                                                          \
-      static bool __ignore = false;                                            \
-      if ((Expression) &&                                                      \
-          ::Zero::ErrorSignaler::SignalError(::Zero::ErrorSignaler::Error,     \
-                                             #Expression,                      \
-                                             __FILE__,                         \
-                                             __LINE__,                         \
-                                             __ignore,                         \
-                                             ##__VA_ARGS__))                   \
-        ZeroDebugBreak();                                                      \
+#  define ErrorIf(Expression, ...)                                                                                     \
+    do                                                                                                                 \
+    {                                                                                                                  \
+      static bool __ignore = false;                                                                                    \
+      if ((Expression) && ::Zero::ErrorSignaler::SignalError(                                                          \
+                              ::Zero::ErrorSignaler::Error, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__)) \
+        ZeroDebugBreak();                                                                                              \
     } while (gConditionalFalseConstant)
 
-#  define Assert(Expression, ...)                                              \
-    do                                                                         \
-    {                                                                          \
-      static bool __ignore = false;                                            \
-      if (!(Expression) &&                                                     \
-          ::Zero::ErrorSignaler::SignalError(::Zero::ErrorSignaler::Error,     \
-                                             #Expression,                      \
-                                             __FILE__,                         \
-                                             __LINE__,                         \
-                                             __ignore,                         \
-                                             ##__VA_ARGS__))                   \
-        ZeroDebugBreak();                                                      \
+#  define Assert(Expression, ...)                                                                                      \
+    do                                                                                                                 \
+    {                                                                                                                  \
+      static bool __ignore = false;                                                                                    \
+      if (!(Expression) &&                                                                                             \
+          ::Zero::ErrorSignaler::SignalError(                                                                          \
+              ::Zero::ErrorSignaler::Error, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                 \
+        ZeroDebugBreak();                                                                                              \
     } while (gConditionalFalseConstant)
 
-#  define Error(...)                                                           \
-    do                                                                         \
-    {                                                                          \
-      static bool __ignore = false;                                            \
-      if (::Zero::ErrorSignaler::SignalError(::Zero::ErrorSignaler::Error,     \
-                                             "",                               \
-                                             __FILE__,                         \
-                                             __LINE__,                         \
-                                             __ignore,                         \
-                                             ##__VA_ARGS__))                   \
-        ZeroDebugBreak();                                                      \
+#  define Error(...)                                                                                                   \
+    do                                                                                                                 \
+    {                                                                                                                  \
+      static bool __ignore = false;                                                                                    \
+      if (::Zero::ErrorSignaler::SignalError(                                                                          \
+              ::Zero::ErrorSignaler::Error, "", __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                          \
+        ZeroDebugBreak();                                                                                              \
     } while (gConditionalFalseConstant)
 
-#  define Warn(...)                                                            \
-    do                                                                         \
-    {                                                                          \
-      static bool __ignore = false;                                            \
-      if (::Zero::ErrorSignaler::SignalError(::Zero::ErrorSignaler::Warning,   \
-                                             "",                               \
-                                             __FILE__,                         \
-                                             __LINE__,                         \
-                                             __ignore,                         \
-                                             ##__VA_ARGS__))                   \
-        ZeroDebugBreak();                                                      \
+#  define Warn(...)                                                                                                    \
+    do                                                                                                                 \
+    {                                                                                                                  \
+      static bool __ignore = false;                                                                                    \
+      if (::Zero::ErrorSignaler::SignalError(                                                                          \
+              ::Zero::ErrorSignaler::Warning, "", __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                        \
+        ZeroDebugBreak();                                                                                              \
     } while (gConditionalFalseConstant)
 
-#  define FileErrorIf(Expression, file, Line, ...)                             \
-    do                                                                         \
-    {                                                                          \
-      static bool __ignore = false;                                            \
-      if ((Expression) &&                                                      \
-          ::Zero::ErrorSignaler::SignalError(::Zero::ErrorSignaler::FileError, \
-                                             #Expression,                      \
-                                             file,                             \
-                                             Line,                             \
-                                             __ignore,                         \
-                                             ##__VA_ARGS__))                   \
-        ZeroDebugBreak();                                                      \
+#  define FileErrorIf(Expression, file, Line, ...)                                                                     \
+    do                                                                                                                 \
+    {                                                                                                                  \
+      static bool __ignore = false;                                                                                    \
+      if ((Expression) && ::Zero::ErrorSignaler::SignalError(                                                          \
+                              ::Zero::ErrorSignaler::FileError, #Expression, file, Line, __ignore, ##__VA_ARGS__))     \
+        ZeroDebugBreak();                                                                                              \
     } while (gConditionalConstant)
 
 #  define Verify(funccall) ErrorIf(funcall != 0);
@@ -191,47 +159,46 @@ static int gConditionalFalseConstant = 0;
 
 #endif
 
-#define ReturnIf(Expression, whatToReturn, ...)                                \
-  do                                                                           \
-  {                                                                            \
-    if (Expression)                                                            \
-    {                                                                          \
-      WarnIf(Expression, __VA_ARGS__);                                         \
-      return whatToReturn;                                                     \
-    }                                                                          \
+#define ReturnIf(Expression, whatToReturn, ...)                                                                        \
+  do                                                                                                                   \
+  {                                                                                                                    \
+    if (Expression)                                                                                                    \
+    {                                                                                                                  \
+      WarnIf(Expression, __VA_ARGS__);                                                                                 \
+      return whatToReturn;                                                                                             \
+    }                                                                                                                  \
   } while (gConditionalFalseConstant)
 
-#define ContinueIf(Expression, ...)                                            \
-  {                                                                            \
-    if (Expression)                                                            \
-    {                                                                          \
-      WarnIf(Expression, __VA_ARGS__);                                         \
-      continue;                                                                \
-    }                                                                          \
+#define ContinueIf(Expression, ...)                                                                                    \
+  {                                                                                                                    \
+    if (Expression)                                                                                                    \
+    {                                                                                                                  \
+      WarnIf(Expression, __VA_ARGS__);                                                                                 \
+      continue;                                                                                                        \
+    }                                                                                                                  \
   }
 
-#define BreakIf(Expression, ...)                                               \
-  {                                                                            \
-    if (Expression)                                                            \
-    {                                                                          \
-      WarnIf(Expression, __VA_ARGS__);                                         \
-      break;                                                                   \
-    }                                                                          \
+#define BreakIf(Expression, ...)                                                                                       \
+  {                                                                                                                    \
+    if (Expression)                                                                                                    \
+    {                                                                                                                  \
+      WarnIf(Expression, __VA_ARGS__);                                                                                 \
+      break;                                                                                                           \
+    }                                                                                                                  \
   }
 
-#define ReturnFileErrorIf(Expression, whatToReturn, file, Line, ...)           \
-  do                                                                           \
-  {                                                                            \
-    if (Expression)                                                            \
-    {                                                                          \
-      FileErrorIf(Expression, file, Line, __VA_ARGS__);                        \
-      return whatToReturn;                                                     \
-    }                                                                          \
+#define ReturnFileErrorIf(Expression, whatToReturn, file, Line, ...)                                                   \
+  do                                                                                                                   \
+  {                                                                                                                    \
+    if (Expression)                                                                                                    \
+    {                                                                                                                  \
+      FileErrorIf(Expression, file, Line, __VA_ARGS__);                                                                \
+      return whatToReturn;                                                                                             \
+    }                                                                                                                  \
   } while (gConditionalFalseConstant)
 
 /// Asserts value is within [min, max]
-#define AssertWithinRange(value, min, max)                                     \
-  Assert((min) <= (value) && (value) <= (max))
+#define AssertWithinRange(value, min, max) Assert((min) <= (value) && (value) <= (max))
 /// Statically asserts value is within [min, max]
-#define StaticAssertWithinRange(name, value, min, max)                         \
+#define StaticAssertWithinRange(name, value, min, max)                                                                 \
   static_assert((min) <= (value) && (value) <= (max), "Value outside range")

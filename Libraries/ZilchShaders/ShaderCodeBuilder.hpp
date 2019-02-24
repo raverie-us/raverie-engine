@@ -37,16 +37,14 @@ public:
   String EmitSpace();
   String EmitIndent();
 
-  ShaderCodeBuilder& WriteMemberVariableDeclaration(
-      StringParam variableName, StringParam variableTypeName);
+  ShaderCodeBuilder& WriteMemberVariableDeclaration(StringParam variableName, StringParam variableTypeName);
   ShaderCodeBuilder& WriteVariableDeclaration(ShaderIRAttributeList& attributes,
                                               StringParam variableName,
                                               StringParam variableTypeName);
   ShaderCodeBuilder& WriteVariableDeclaration(ShaderIRAttribute& attribute,
                                               StringParam variableName,
                                               StringParam variableTypeName);
-  ShaderCodeBuilder& WriteLocalVariableDefaultConstruction(
-      StringParam variableName, StringParam variableTypeName);
+  ShaderCodeBuilder& WriteLocalVariableDefaultConstruction(StringParam variableName, StringParam variableTypeName);
   ShaderCodeBuilder& DeclareAttribute(ShaderIRAttribute& attribute);
   ShaderCodeBuilder& DeclareAttribute(StringParam attributeName);
   ShaderCodeBuilder& DeclareAttributeParams(ShaderIRAttribute& attribute);

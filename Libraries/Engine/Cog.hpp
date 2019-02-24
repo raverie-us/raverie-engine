@@ -21,33 +21,32 @@ struct TransformUpdateInfo;
 // Type define for a range
 typedef ConditionalRange<HierarchyRange, NameCondition> HierarchyNameRange;
 
-DeclareBitField12(
-    CogFlags,
-    // Object cannot be destroyed be the user
-    Protected,
-    // Object will not be destroy on level change or clear
-    Persistent,
-    // Object is not saved in a level (Temporary objects from particles systems
-    // etc)
-    Transient,
-    // Object has been initialized
-    Initialized,
-    // Object has been destroyed
-    Destroyed,
-    // Object was loaded from a level file
-    CreatedFromLevel,
-    // Hidden from view used for editor
-    EditorViewportHidden,
-    // If the object needs to not show up in the object view
-    ObjectViewHidden,
-    // Not able to be modified or selected in the viewport
-    Locked,
-    // Cannot add or remove non-native Components
-    ScriptComponentsLocked,
-    // Can only be selected by SelectionIcon
-    SelectionLimited,
-    // Is the Cog representing the Archetype definition (data file)?
-    ArchetypeDefinitionMode);
+DeclareBitField12(CogFlags,
+                  // Object cannot be destroyed be the user
+                  Protected,
+                  // Object will not be destroy on level change or clear
+                  Persistent,
+                  // Object is not saved in a level (Temporary objects from particles systems
+                  // etc)
+                  Transient,
+                  // Object has been initialized
+                  Initialized,
+                  // Object has been destroyed
+                  Destroyed,
+                  // Object was loaded from a level file
+                  CreatedFromLevel,
+                  // Hidden from view used for editor
+                  EditorViewportHidden,
+                  // If the object needs to not show up in the object view
+                  ObjectViewHidden,
+                  // Not able to be modified or selected in the viewport
+                  Locked,
+                  // Cannot add or remove non-native Components
+                  ScriptComponentsLocked,
+                  // Can only be selected by SelectionIcon
+                  SelectionLimited,
+                  // Is the Cog representing the Archetype definition (data file)?
+                  ArchetypeDefinitionMode);
 
 // Base Cog
 /// Base class used for the intrusive link.
@@ -61,8 +60,7 @@ typedef BaseInList<BaseCog, Cog, &BaseCog::HierarchyLink> HierarchyList;
 
 /// A range that only iterates over diret children and checks for specific
 /// names.
-typedef ConditionalRange<HierarchyList::range, NameCondition>
-    HierarchyListNameRange;
+typedef ConditionalRange<HierarchyList::range, NameCondition> HierarchyListNameRange;
 
 // Cog
 /// Game Object Composition class. This class is the foundational object for all
@@ -202,9 +200,7 @@ public:
   /// we know dependency checking is not required.
   void AddComponentInterface(BoundType* alternateType, Component* component);
   /// Add component to internal map used mostly during construction
-  void AddComponentInternal(BoundType* typeId,
-                            Component* component,
-                            int index = -1);
+  void AddComponentInternal(BoundType* typeId, Component* component, int index = -1);
   /// Removes the component from the internal map and deletes the component.
   void RemoveComponentInternal(Component* component);
   /// Checks for
@@ -522,12 +518,8 @@ public:
   }
 
   /// HandleManager interface.
-  void Allocate(BoundType* type,
-                Handle& handleToInitialize,
-                size_t customFlags) override;
-  void ObjectToHandle(const byte* object,
-                      BoundType* type,
-                      Handle& handleToInitialize) override;
+  void Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags) override;
+  void ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize) override;
   byte* HandleToObject(const Handle& handle) override;
   void Delete(const Handle& handle) override;
   bool CanDelete(const Handle& handle) override;

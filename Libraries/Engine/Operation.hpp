@@ -59,12 +59,9 @@ public:
 class Operation : public SafeId32EventObject, public OperationLink
 {
 public:
-  ZilchDeclareDerivedTypeExplicit(Operation,
-                                  SafeId32EventObject,
-                                  TypeCopyMode::ReferenceType);
+  ZilchDeclareDerivedTypeExplicit(Operation, SafeId32EventObject, TypeCopyMode::ReferenceType);
 
-  typedef BaseInList<OperationLink, Operation, &OperationLink::link>
-      OperationList;
+  typedef BaseInList<OperationLink, Operation, &OperationLink::link> OperationList;
   typedef OperationList::range OperationRange;
 
   Operation() : mParent(nullptr), mQueue(nullptr)
@@ -243,12 +240,8 @@ public:
   // Side Effects
   static void StartListeningForSideEffects();
   static bool IsListeningForSideEffects();
-  static void RegisterSideEffect(HandleParam object,
-                                 PropertyPathParam propertyPath,
-                                 const Any& oldValue);
-  static void RegisterSideEffectProperty(HandleParam object,
-                                         StringParam propertyName,
-                                         const Any& oldValue);
+  static void RegisterSideEffect(HandleParam object, PropertyPathParam propertyPath, const Any& oldValue);
+  static void RegisterSideEffectProperty(HandleParam object, StringParam propertyName, const Any& oldValue);
   void QueueRegisteredSideEffects();
 
   /// The ObjectLink Component has the property 'ObjectAPath' of type CogPath.
@@ -272,8 +265,7 @@ public:
   /// pushed onto the stack is the instance of ObjectLink and "ObjectAPath",
   /// allowing the 'Path' side effect to be added to the end of the stored path
   /// on the stack.
-  static void PushSubPropertyContext(HandleParam object,
-                                     PropertyPathParam contextPath);
+  static void PushSubPropertyContext(HandleParam object, PropertyPathParam contextPath);
   static void PopSubPropertyContext();
 
   struct SideEffectContext

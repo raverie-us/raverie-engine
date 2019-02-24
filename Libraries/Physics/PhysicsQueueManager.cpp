@@ -232,8 +232,7 @@ void PhysicsNodeManager::BroadPhaseUpdate(BroadPhasePackage* package)
     package->CreateProxies(BroadPhase::Dynamic, dynamicBatch.inserts);
 
   // if any static changes happened, reconstruct the static BroadPhase
-  if (!staticBatch.inserts.Empty() || !staticBatch.removals.Empty() ||
-      !staticBatch.updates.Empty())
+  if (!staticBatch.inserts.Empty() || !staticBatch.removals.Empty() || !staticBatch.updates.Empty())
   {
     package->Construct();
   }

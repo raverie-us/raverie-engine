@@ -213,8 +213,7 @@ bool SafeFMod(real dividend, real divisor, real& result)
 
 real GetSign(real val)
 {
-  return (*reinterpret_cast<uint*>(&val) & cSignBit) != 0 ? cNegative
-                                                          : cPositive;
+  return (*reinterpret_cast<uint*>(&val) & cSignBit) != 0 ? cNegative : cPositive;
   // return lhs >= real(0.0) ? real(1.0) : real(-1.0);
 }
 

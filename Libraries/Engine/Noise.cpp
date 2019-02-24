@@ -10,8 +10,7 @@ namespace Zero
 float Noise(int x)
 {
   x = (x << 13) ^ x;
-  return (1.0f - ((x * (x * x * 15731 + 789221) + 1376312589) & 0x7fffffff) /
-                     1073741824.0f);
+  return (1.0f - ((x * (x * x * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0f);
 }
 
 // 2d Noise [-1, 1]
@@ -20,9 +19,7 @@ float Noise(int x, int y)
   int n;
   n = x + y * 57;
   n = (n << 13) ^ n;
-  float res =
-      (float)(1.0 - ((n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) /
-                        1073741824.0);
+  float res = (float)(1.0 - ((n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0);
   return res;
 }
 
@@ -35,12 +32,8 @@ float SmoothNoise(int x)
 // 2d Smooth Noise [-1, 1]
 float SmoothNoise(int x, int y)
 {
-  float corners = (Noise(x - 1, y - 1) + Noise(x + 1, y - 1) +
-                   Noise(x - 1, y + 1) + Noise(x + 1, y + 1)) /
-                  16;
-  float sides =
-      (Noise(x - 1, y) + Noise(x + 1, y) + Noise(x, y - 1) + Noise(x, y + 1)) /
-      8;
+  float corners = (Noise(x - 1, y - 1) + Noise(x + 1, y - 1) + Noise(x - 1, y + 1) + Noise(x + 1, y + 1)) / 16;
+  float sides = (Noise(x - 1, y) + Noise(x + 1, y) + Noise(x, y - 1) + Noise(x, y + 1)) / 8;
   float center = Noise(x, y) / 4.0f;
   return corners + sides + center;
 }
@@ -116,8 +109,7 @@ float PerlinNoise(float persistence, float frequency, float limit, float x)
   return total;
 }
 
-float PerlinNoise(
-    float persistence, float frequency, float limit, float x, float y)
+float PerlinNoise(float persistence, float frequency, float limit, float x, float y)
 {
   float total = 0;
   for (int i = 0; i < cOctaves; ++i)
@@ -125,8 +117,7 @@ float PerlinNoise(
     float fi = float(i);
     float f = Math::Pow(2.0f, fi) * frequency;
     float amplitude = Math::Pow(persistence, fi);
-    total +=
-        InterpolatedNoise(limit * i + x * f, limit * i + y * f) * amplitude;
+    total += InterpolatedNoise(limit * i + x * f, limit * i + y * f) * amplitude;
   }
   return total;
 }
@@ -157,8 +148,7 @@ float PerlinNoise(float x, float y)
     float dx = int(random.Next()) * 0.1f;
     float dy = int(random.Next()) * 0.1f;
 
-    total +=
-        InterpolatedNoise(x * frequency + dx, y * frequency + dy) * amplitude;
+    total += InterpolatedNoise(x * frequency + dx, y * frequency + dy) * amplitude;
   }
   return total;
 }

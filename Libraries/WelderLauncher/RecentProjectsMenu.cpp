@@ -20,8 +20,7 @@ Tweakable(Vec4, Remove, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(Vec4, RemoveHover, Vec4(1, 1, 1, 1), cLocation);
 } // namespace RecentProjectUi
 
-NoScreenshotAvailable::NoScreenshotAvailable(Composite* parent) :
-    Composite(parent)
+NoScreenshotAvailable::NoScreenshotAvailable(Composite* parent) : Composite(parent)
 {
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetColor(RecentProjectUi::NoScreenshotBg);
@@ -56,8 +55,7 @@ RecentProjectItem::RecentProjectItem(Composite* parent,
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetColor(RecentProjectUi::ProjectColor);
 
-  VersionSelector* versionSelector =
-      mRecentProjectsMenu->mLauncher->mVersionSelector;
+  VersionSelector* versionSelector = mRecentProjectsMenu->mLauncher->mVersionSelector;
   SetLayout(CreateDockLayout(Thickness::All(Pixels(2))));
 
   // Create a composite to store the screenshot and the no-screenshot available
@@ -86,9 +84,7 @@ RecentProjectItem::RecentProjectItem(Composite* parent,
 
   Composite* buttonArea = new Composite(this);
   buttonArea->SetDockMode(DockMode::DockRight);
-  buttonArea->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom,
-                                          Vec2::cZero,
-                                          Thickness(Pixels(0, 11, 5, 9))));
+  buttonArea->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness(Pixels(0, 11, 5, 9))));
   {
     bool showFavoriteIcon = false;
     if (showFavoriteIcon)
@@ -98,14 +94,10 @@ RecentProjectItem::RecentProjectItem(Composite* parent,
       mFavoriteIcon->SetDisabledIcon("FavoriteIcon");
       mFavoriteIcon->mBackground->SetVisible(false);
       mFavoriteIcon->mBorder->SetVisible(false);
-      mFavoriteIcon->mIconColor =
-          ToByteColor(RecentProjectUi::FavoriteSelected);
-      mFavoriteIcon->mIconHoverColor =
-          ToByteColor(RecentProjectUi::FavoriteSelectedHover);
-      mFavoriteIcon->mIconDisabledColor =
-          ToByteColor(RecentProjectUi::Favorite);
-      mFavoriteIcon->mIconDisabledHoverColor =
-          ToByteColor(RecentProjectUi::FavoriteHover);
+      mFavoriteIcon->mIconColor = ToByteColor(RecentProjectUi::FavoriteSelected);
+      mFavoriteIcon->mIconHoverColor = ToByteColor(RecentProjectUi::FavoriteSelectedHover);
+      mFavoriteIcon->mIconDisabledColor = ToByteColor(RecentProjectUi::Favorite);
+      mFavoriteIcon->mIconDisabledHoverColor = ToByteColor(RecentProjectUi::FavoriteHover);
       mFavoriteIcon->SetEnabled(false);
       mFavoriteIcon->SizeToContents();
     }
@@ -126,8 +118,7 @@ RecentProjectItem::RecentProjectItem(Composite* parent,
 
   // If we aren't displaying the build this project is running in,
   // we're going to layout slightly different
-  bool showBuild =
-      projectsMenu->mLauncher->GetConfig()->mDisplayBuildOnProjects;
+  bool showBuild = projectsMenu->mLauncher->GetConfig()->mDisplayBuildOnProjects;
   bool showTags = true;
 
   Spacer* padding = new Spacer(this, SizePolicy::Fixed, Vec2(12, 1));
@@ -135,9 +126,7 @@ RecentProjectItem::RecentProjectItem(Composite* parent,
 
   Composite* rightSide = new Composite(this);
   rightSide->SetDockMode(DockMode::DockFill);
-  rightSide->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom,
-                                         Vec2::cZero,
-                                         Thickness(Pixels(0, 9, 0, 9))));
+  rightSide->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness(Pixels(0, 9, 0, 9))));
   {
     mProjectName = new Text(rightSide, "ProjectNameText");
     mProjectName->SetColor(RecentProjectUi::TextColor);
@@ -148,10 +137,7 @@ RecentProjectItem::RecentProjectItem(Composite* parent,
     mDate->SetColor(RecentProjectUi::TextColor);
     CalendarDateTime projectDateTime;
     GetFileDateTime(mCachedProject->GetProjectPath(), projectDateTime);
-    mDate->SetText(String::Format("%d-%d-%d",
-                                  projectDateTime.Month,
-                                  projectDateTime.Day,
-                                  projectDateTime.Year));
+    mDate->SetText(String::Format("%d-%d-%d", projectDateTime.Month, projectDateTime.Day, projectDateTime.Year));
     mDate->mAlign = TextAlign::Right;
 
     mBuild = nullptr;
@@ -201,8 +187,7 @@ void RecentProjectItem::UpdateScreenshot()
     mProjectImage->SetActive(true);
     mNoScreenshotImage->SetActive(false);
 
-    float aspect =
-        mProjectImage->mParent->mSize.x / mProjectImage->mParent->mSize.y;
+    float aspect = mProjectImage->mParent->mSize.x / mProjectImage->mParent->mSize.y;
     mProjectImage->ClipUvToAspectRatio(aspect);
   }
   // Otherwise switch back to the no-screenshot image
@@ -252,8 +237,7 @@ void RecentProjectItem::UpdateConnections()
     DisconnectAll(mCurrentVersion, this);
   }
 
-  VersionSelector* versionSelector =
-      mRecentProjectsMenu->mLauncher->mVersionSelector;
+  VersionSelector* versionSelector = mRecentProjectsMenu->mLauncher->mVersionSelector;
   mCurrentVersion = versionSelector->FindExactVersion(mCachedProject);
 
   // Connect to the new version
@@ -263,8 +247,7 @@ void RecentProjectItem::UpdateConnections()
 
 void RecentProjectItem::OnRemovePressed(Event*)
 {
-  Modal* modal = new ModalConfirmAction(mRecentProjectsMenu,
-                                        "REMOVE FROM RECENT PROJECTS");
+  Modal* modal = new ModalConfirmAction(mRecentProjectsMenu, "REMOVE FROM RECENT PROJECTS");
   mRecentProjectsMenu->mRemoveModal = modal;
   mRecentProjectsMenu->mLauncher->mActiveModal = modal;
   ConnectThisTo(modal, Events::ModalConfirmResult, OnRemoveModalResult);
@@ -280,33 +263,26 @@ void RecentProjectItem::OnRemoveModalResult(ModalConfirmEvent* e)
     ZPrint("Removing project '%s' from recent projects\n", projectPath.c_str());
 
     // Remove build from recent
-    RecentProjects* recentProjects =
-        Z::gEngine->GetConfigCog()->has(RecentProjects);
+    RecentProjects* recentProjects = Z::gEngine->GetConfigCog()->has(RecentProjects);
     recentProjects->RemoveRecentProject(projectPath, true);
     SaveConfig();
   }
 }
 
-RecentProjectsMenu::RecentProjectsMenu(Composite* parent,
-                                       LauncherWindow* launcher) :
+RecentProjectsMenu::RecentProjectsMenu(Composite* parent, LauncherWindow* launcher) :
     Composite(parent),
     mLauncher(launcher)
 {
-  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom,
-                              Vec2::cZero,
-                              Thickness(Pixels(0, 0, 10, 0))));
+  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness(Pixels(0, 0, 10, 0))));
   mScrollArea = new ScrollArea(this);
   mScrollArea->SetSizing(SizePolicy::Flex, 1);
 
   UpdateRecentProjects();
 
   VersionSelector* versionSelector = mLauncher->mVersionSelector;
-  ConnectThisTo(
-      versionSelector, Events::VersionListLoaded, OnVersionListLoaded);
+  ConnectThisTo(versionSelector, Events::VersionListLoaded, OnVersionListLoaded);
 
-  ConnectThisTo(Z::gEngine->GetConfigCog(),
-                Events::RecentProjectsUpdated,
-                OnRecentProjectsUpdated);
+  ConnectThisTo(Z::gEngine->GetConfigCog(), Events::RecentProjectsUpdated, OnRecentProjectsUpdated);
   ConnectThisTo(this, Events::MenuDisplayed, OnMenuDisplayed);
   ConnectThisTo(this, Events::MenuHidden, OnMenuHidden);
 }
@@ -361,8 +337,7 @@ void RecentProjectsMenu::UpdateTransform()
 
 void RecentProjectsMenu::AddProject(CachedProject* cachedProject)
 {
-  RecentProjectItem* projectItem =
-      new RecentProjectItem(mScrollArea, this, cachedProject);
+  RecentProjectItem* projectItem = new RecentProjectItem(mScrollArea, this, cachedProject);
   projectItem->SetSize(RecentProjectUi::ProjectSize);
   mProjects.PushBack(projectItem);
 }
@@ -396,8 +371,7 @@ void RecentProjectsMenu::UpdateRecentProjects()
       info.mCachedProject = mLoadedProjects.FindValue(filePath, nullptr);
       if (info.mCachedProject == nullptr)
       {
-        info.mCachedProject =
-            mLauncher->mProjectCache->LoadProjectFile(projects[i]);
+        info.mCachedProject = mLauncher->mProjectCache->LoadProjectFile(projects[i]);
         if (info.mCachedProject == nullptr)
         {
           // Failed to open the project for some reason, just skip it for now
@@ -417,13 +391,7 @@ void RecentProjectsMenu::UpdateRecentProjects()
     ProjectPolicy policy;
     String searchText = mLauncher->mSearch->GetText();
     HashSet<String> legacyTags;
-    FilterDataSetWithTags(legacyTags,
-                          rejectionTags,
-                          searchText,
-                          projectList,
-                          results,
-                          resultTags,
-                          policy);
+    FilterDataSetWithTags(legacyTags, rejectionTags, searchText, projectList, results, resultTags, policy);
 
     for (uint i = 0; i < results.Size(); ++i)
     {

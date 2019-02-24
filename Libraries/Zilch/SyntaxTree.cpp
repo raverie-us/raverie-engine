@@ -246,9 +246,7 @@ ZilchDefineType(EnumNode, builder, type)
 {
 }
 
-SyntaxTree::SyntaxTree() :
-    SingleExpressionScope(nullptr),
-    SingleExpressionIndex((size_t)-1)
+SyntaxTree::SyntaxTree() : SingleExpressionScope(nullptr), SingleExpressionIndex((size_t)-1)
 {
   // Create the root node
   this->Root = new RootNode();
@@ -258,7 +256,8 @@ SyntaxTree::~SyntaxTree()
 {
   delete this->Root;
 
-  ZilchForEach(const UserToken* token, this->InvalidTokens) delete token;
+  ZilchForEach (const UserToken* token, this->InvalidTokens)
+    delete token;
 }
 
 SyntaxType::SyntaxType() : ResolvedType(nullptr)
@@ -342,9 +341,7 @@ void BoundSyntaxType::PopulateChildren(NodeChildren& childrenOut)
   this->TemplateArguments.Populate(childrenOut);
 }
 
-DelegateSyntaxParameter::DelegateSyntaxParameter() :
-    Name(nullptr),
-    Type(nullptr)
+DelegateSyntaxParameter::DelegateSyntaxParameter() : Name(nullptr), Type(nullptr)
 {
 }
 
@@ -434,9 +431,7 @@ void SyntaxNode::DestroyChildren()
   }
 }
 
-SyntaxNode::SyntaxNode(const SyntaxNode& toCopy) :
-    Parent(nullptr),
-    Location(toCopy.Location)
+SyntaxNode::SyntaxNode(const SyntaxNode& toCopy) : Parent(nullptr), Location(toCopy.Location)
 {
   // We never copy the parent from other nodes
 }
@@ -508,7 +503,7 @@ String SyntaxNode::GetMergedComments()
     // Get the current comment
     String& comment = this->Comments[i];
 
-    ZilchForEach(String line, comment.Split("\n"))
+    ZilchForEach (String line, comment.Split("\n"))
     {
       // Append the string range for the comment
       builder.Append(line.Trim());
@@ -555,9 +550,7 @@ String GetEnd()
   return ending;
 }
 
-int GetGraphVizNodeRepresentation(StringBuilder& outString,
-                                  int nodeID,
-                                  SyntaxNode* node)
+int GetGraphVizNodeRepresentation(StringBuilder& outString, int nodeID, SyntaxNode* node)
 {
   outString += GetStart(nodeID);
   outString += node->ToString();
@@ -579,9 +572,7 @@ int GetGraphVizNodeRepresentation(StringBuilder& outString,
   return childNodeID + 1;
 }
 
-void SyntaxTree::GetNodesAtCursor(size_t cursorPosition,
-                                  StringParam cursorOrigin,
-                                  Array<SyntaxNode*>& nodesOut)
+void SyntaxTree::GetNodesAtCursor(size_t cursorPosition, StringParam cursorOrigin, Array<SyntaxNode*>& nodesOut)
 {
   // Start at the root and walk down looking for nodes that our cursor is within
   nodesOut.Reserve(10);
@@ -595,8 +586,7 @@ void SyntaxTree::GetNodesAtCursorRecursive(SyntaxNode* node,
 {
   // Check if the cursor is within the location of this node
   CodeLocation& location = node->Location;
-  if (location.Origin == cursorOrigin &&
-      cursorPosition >= location.StartPosition &&
+  if (location.Origin == cursorOrigin && cursorPosition >= location.StartPosition &&
       cursorPosition <= location.EndPosition)
     nodesOut.PushBack(node);
 
@@ -663,8 +653,7 @@ bool StatementNode::IsNodeUsedAsStatement(SyntaxNode* node)
 
   // If the node is a function or class node... which, because it's a scope
   // node, is considered a statement (and should probably not be!)
-  if (Type::DynamicCast<GenericFunctionNode*>(node) != nullptr ||
-      Type::DynamicCast<ClassNode*>(node) != nullptr)
+  if (Type::DynamicCast<GenericFunctionNode*>(node) != nullptr || Type::DynamicCast<ClassNode*>(node) != nullptr)
   {
     return false;
   }
@@ -698,10 +687,7 @@ ExpressionNode::ExpressionNode() :
 {
 }
 
-BinaryOperatorNode::BinaryOperatorNode() :
-    LeftOperand(nullptr),
-    RightOperand(nullptr),
-    Operator(nullptr)
+BinaryOperatorNode::BinaryOperatorNode() : LeftOperand(nullptr), RightOperand(nullptr), Operator(nullptr)
 {
 }
 
@@ -732,8 +718,7 @@ void UnaryOperatorNode::PopulateChildren(NodeChildren& childrenOut)
   childrenOut.Add(this->Operand);
 }
 
-PropertyDelegateOperatorNode::PropertyDelegateOperatorNode() :
-    AccessedProperty(nullptr)
+PropertyDelegateOperatorNode::PropertyDelegateOperatorNode() : AccessedProperty(nullptr)
 {
 }
 
@@ -801,8 +786,7 @@ void FunctionCallNode::PopulateChildren(NodeChildren& childrenOut)
 StaticTypeNode* FunctionCallNode::FindCreationCall()
 {
   // If the left operand itself is the static type, then just return it directly
-  if (StaticTypeNode* staticType =
-          Type::DynamicCast<StaticTypeNode*>(this->LeftOperand))
+  if (StaticTypeNode* staticType = Type::DynamicCast<StaticTypeNode*>(this->LeftOperand))
     return staticType;
 
   // If this function call node is being used to invoke a constructor, we'll
@@ -810,14 +794,12 @@ StaticTypeNode* FunctionCallNode::FindCreationCall()
   // initial value is a CreationCallNode This is a bit complicated and maybe
   // should be refactored, but this works for now
   StaticTypeNode* creationNode = nullptr;
-  LocalVariableNode* creationLocalVariable =
-      Type::DynamicCast<LocalVariableNode*>(this->LeftOperand);
+  LocalVariableNode* creationLocalVariable = Type::DynamicCast<LocalVariableNode*>(this->LeftOperand);
 
   // If the left operand was indeed a local variable, then look for a direct
   // reference to the CreationCallNode as the initial value
   if (creationLocalVariable != nullptr)
-    return Type::DynamicCast<StaticTypeNode*>(
-        creationLocalVariable->InitialValue);
+    return Type::DynamicCast<StaticTypeNode*>(creationLocalVariable->InitialValue);
 
   // We didn't find anything
   return nullptr;
@@ -881,13 +863,11 @@ void StaticTypeNode::PopulateChildren(NodeChildren& childrenOut)
   childrenOut.Add(this->ReferencedSyntaxType);
 }
 
-ExpressionInitializerMemberNode::ExpressionInitializerMemberNode() :
-    Value(nullptr)
+ExpressionInitializerMemberNode::ExpressionInitializerMemberNode() : Value(nullptr)
 {
 }
 
-void ExpressionInitializerMemberNode::PopulateChildren(
-    NodeChildren& childrenOut)
+void ExpressionInitializerMemberNode::PopulateChildren(NodeChildren& childrenOut)
 {
   ZilchBase::PopulateChildren(childrenOut);
   childrenOut.Add(this->Value);
@@ -911,8 +891,7 @@ void ExpressionInitializerNode::PopulateChildren(NodeChildren& childrenOut)
   this->InitializerStatements.Populate(childrenOut);
 }
 
-MultiExpressionNode::MultiExpressionNode() :
-    YieldChildExpressionIndex(InvalidIndex)
+MultiExpressionNode::MultiExpressionNode() : YieldChildExpressionIndex(InvalidIndex)
 {
 }
 
@@ -922,10 +901,7 @@ void MultiExpressionNode::PopulateChildren(NodeChildren& childrenOut)
   this->Expressions.Populate(childrenOut);
 }
 
-VariableNode::VariableNode() :
-    InitialValue(nullptr),
-    IsStatic(false),
-    ResultSyntaxType(nullptr)
+VariableNode::VariableNode() : InitialValue(nullptr), IsStatic(false), ResultSyntaxType(nullptr)
 {
   // All variables can be both read from and written to
   this->Io = (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue);
@@ -943,9 +919,7 @@ bool VariableNode::IsInferred() const
   return this->ResultSyntaxType == nullptr;
 }
 
-LocalVariableNode::LocalVariableNode() :
-    CreatedVariable(nullptr),
-    ForwardLocalAccessIfPossible(false)
+LocalVariableNode::LocalVariableNode() : CreatedVariable(nullptr), ForwardLocalAccessIfPossible(false)
 {
 }
 
@@ -960,10 +934,8 @@ LocalVariableNode::LocalVariableNode(StringParam baseName,
   // user cannot type the name in via the parser)
   if (optionalInitialValue != nullptr)
     this->Name.Location = optionalInitialValue->Location;
-  this->Name.Token = String::Format(
-      "[%s%llu]",
-      baseName.c_str(),
-      (unsigned long long)parentProject->VariableUniqueIdCounter);
+  this->Name.Token =
+      String::Format("[%s%llu]", baseName.c_str(), (unsigned long long)parentProject->VariableUniqueIdCounter);
   ++parentProject->VariableUniqueIdCounter;
 
   // This is entirely just to avoid a redudant copy into a local variable,
@@ -1118,10 +1090,7 @@ void IfRootNode::PopulateChildren(NodeChildren& childrenOut)
   this->IfParts.Populate(childrenOut);
 }
 
-SendsEventNode::SendsEventNode() :
-    EventType(nullptr),
-    Name(nullptr),
-    EventProperty(nullptr)
+SendsEventNode::SendsEventNode() : EventType(nullptr), Name(nullptr), EventProperty(nullptr)
 {
 }
 
@@ -1132,16 +1101,11 @@ void SendsEventNode::PopulateChildren(NodeChildren& childrenOut)
   this->Attributes.Populate(childrenOut);
 }
 
-BreakNode::BreakNode() :
-    ScopeCount(0),
-    InstructionIndex(InvalidOpcodeLocation),
-    JumpOpcode(nullptr)
+BreakNode::BreakNode() : ScopeCount(0), InstructionIndex(InvalidOpcodeLocation), JumpOpcode(nullptr)
 {
 }
 
-ContinueNode::ContinueNode() :
-    InstructionIndex(InvalidOpcodeLocation),
-    JumpOpcode(nullptr)
+ContinueNode::ContinueNode() : InstructionIndex(InvalidOpcodeLocation), JumpOpcode(nullptr)
 {
 }
 
@@ -1162,9 +1126,7 @@ LoopScopeNode::LoopScopeNode()
 LoopScopeNode::LoopScopeNode(const LoopScopeNode& toCopy) : ScopeNode(toCopy)
 {
   // Error checking
-  ErrorIf(
-      toCopy.Breaks.Empty() == false,
-      "You cannot copy a loop scope node with pointers to other break nodes");
+  ErrorIf(toCopy.Breaks.Empty() == false, "You cannot copy a loop scope node with pointers to other break nodes");
 
   // Error checking
   ErrorIf(toCopy.Continues.Empty() == false,
@@ -1182,11 +1144,7 @@ void ConditionalLoopNode::PopulateChildren(NodeChildren& childrenOut)
   childrenOut.Add(this->Condition);
 }
 
-ForNode::ForNode() :
-    ValueVariable(nullptr),
-    RangeVariable(nullptr),
-    Initialization(nullptr),
-    Iterator(nullptr)
+ForNode::ForNode() : ValueVariable(nullptr), RangeVariable(nullptr), Initialization(nullptr), Iterator(nullptr)
 {
 }
 
@@ -1199,9 +1157,7 @@ void ForNode::PopulateChildren(NodeChildren& childrenOut)
   childrenOut.Add(this->Iterator);
 }
 
-ForEachNode::ForEachNode() :
-    NonTraversedVariable(nullptr),
-    NonTraversedRange(nullptr)
+ForEachNode::ForEachNode() : NonTraversedVariable(nullptr), NonTraversedRange(nullptr)
 {
 }
 
@@ -1212,9 +1168,7 @@ void ForEachNode::PopulateNonTraversedChildren(NodeChildren& childrenOut)
   childrenOut.Add(this->NonTraversedRange);
 }
 
-GenericFunctionNode::GenericFunctionNode() :
-    Type(Core::GetInstance().ErrorDelegateType),
-    DefinedFunction(nullptr)
+GenericFunctionNode::GenericFunctionNode() : Type(Core::GetInstance().ErrorDelegateType), DefinedFunction(nullptr)
 {
 }
 
@@ -1245,15 +1199,11 @@ void FunctionNode::PopulateChildren(NodeChildren& childrenOut)
   childrenOut.Add(this->ExtensionOwner);
 }
 
-InitializerNode::InitializerNode() :
-    InitializerType(nullptr),
-    InitializerFunction(nullptr)
+InitializerNode::InitializerNode() : InitializerType(nullptr), InitializerFunction(nullptr)
 {
 }
 
-ConstructorNode::ConstructorNode() :
-    BaseInitializer(nullptr),
-    ThisInitializer(nullptr)
+ConstructorNode::ConstructorNode() : BaseInitializer(nullptr), ThisInitializer(nullptr)
 {
 }
 
@@ -1288,10 +1238,7 @@ void ClassNode::PopulateChildren(NodeChildren& childrenOut)
   this->Inheritance.Populate(childrenOut);
 }
 
-EnumValueNode::EnumValueNode() :
-    Value(nullptr),
-    IntegralValue(0),
-    IntegralProperty(nullptr)
+EnumValueNode::EnumValueNode() : Value(nullptr), IntegralValue(0), IntegralProperty(nullptr)
 {
 }
 
@@ -1333,8 +1280,7 @@ void TypeDefineNode::PopulateChildren(NodeChildren& childrenOut)
   childrenOut.Add(this->Type);
 }
 
-LocalVariableReferenceNode::LocalVariableReferenceNode() :
-    AccessedVariable(nullptr)
+LocalVariableReferenceNode::LocalVariableReferenceNode() : AccessedVariable(nullptr)
 {
 }
 

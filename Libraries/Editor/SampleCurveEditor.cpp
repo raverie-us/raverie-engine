@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-SampleCurveEditor::SampleCurveEditor(Composite* parent, GraphWidget* graph) :
-    CurveEditor(parent)
+SampleCurveEditor::SampleCurveEditor(Composite* parent, GraphWidget* graph) : CurveEditor(parent)
 {
   mGraph = graph;
 }
@@ -25,9 +24,7 @@ Vec2 SampleCurveEditor::ClampPixelPosition(Vec2 pixelPos)
   return mGraph->ClampPos(pixelPos);
 }
 
-SampleCurveObject::SampleCurveObject(SampleCurveEditor* editor,
-                                     SampleCurve* curve) :
-    CurveObject(editor)
+SampleCurveObject::SampleCurveObject(SampleCurveEditor* editor, SampleCurve* curve) : CurveObject(editor)
 {
   mIgnoreCurveEditorEvents = false;
 
@@ -63,9 +60,7 @@ void SampleCurveObject::RemoveControlPoint(ControlPoint* controlPoint)
 {
   if (mControlPoints.Size() == 2)
   {
-    DoNotifyWarning(
-        "Cannot delete",
-        "There must be at least 2 control points in a SampleCurve.");
+    DoNotifyWarning("Cannot delete", "There must be at least 2 control points in a SampleCurve.");
     return;
   }
 
@@ -120,7 +115,7 @@ void SampleCurveObject::BakeToCurve(SampleCurve* curve)
   controlPoints.Clear();
 
   // Walk each control point in the editor and add them to the SampleCurve
-  forRange(auto point, GetControlPoints())
+  forRange (auto point, GetControlPoints())
   {
     Vec2 pos = point->mGraphPosition;
     Vec2 in = point->mTangentIn->GetGraphDirection();
@@ -141,7 +136,7 @@ void SampleCurveObject::OnCurveModified(Event* e)
     return;
 
   curve->Clear();
-  forRange(CurveEditor::ControlPoint * cp, mControlPoints.All())
+  forRange (CurveEditor::ControlPoint* cp, mControlPoints.All())
   {
     Vec2 pos = cp->mGraphPosition;
     Vec2 tanIn = cp->GetTangentIn();
@@ -180,7 +175,7 @@ void SampleCurveObject::OnPushDebugSamples(Event* e)
 {
   if (SampleCurve* curve = GetSampleCurve())
   {
-    forRange(auto curveSample, curve->DebugSamples.All())
+    forRange (auto curveSample, curve->DebugSamples.All())
     {
       // Pull the data from the sample curve
       String sampleName = curveSample.first;
@@ -211,19 +206,16 @@ void SampleCurveObject::OnSave(Event* e)
   mEditor->DispatchBubble(Events::TabModified, &eventToSend);
 }
 
-MultiSampleCurveEditor::MultiSampleCurveEditor(Composite* parent) :
-    Composite(parent)
+MultiSampleCurveEditor::MultiSampleCurveEditor(Composite* parent) : Composite(parent)
 {
-  SetLayout(CreateStackLayout(
-      LayoutDirection::TopToBottom, Pixels(0, 0), Thickness::cZero));
+  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 0), Thickness::cZero));
   CurveEditing::CurveEditorToolbar* toolBar;
   IconButton* linearTangents;
   IconButton* splitTangents;
   IconButton* weightedTangents;
 
   Composite* toolBarArea = new Composite(this);
-  toolBarArea->SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Pixels(4, 0), Thickness::cZero));
+  toolBarArea->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(4, 0), Thickness::cZero));
   {
     toolBar = new CurveEditing::CurveEditorToolbar(toolBarArea, Pixels(40));
 
@@ -286,8 +278,7 @@ MultiSampleCurveEditor::MultiSampleCurveEditor(Composite* parent) :
 void MultiSampleCurveEditor::UpdateTransform()
 {
   Thickness margins(Pixels(40), Pixels(11), Pixels(20), Pixels(30));
-  WidgetRect graphRect =
-      WidgetRect::PointAndSize(Vec2::cZero, mGraphArea->GetSize());
+  WidgetRect graphRect = WidgetRect::PointAndSize(Vec2::cZero, mGraphArea->GetSize());
   graphRect.RemoveThickness(margins);
 
   PlaceWithRect(graphRect, mGraph);
@@ -334,7 +325,7 @@ void MultiSampleCurveEditor::OnHeightChange(Event*)
   float val;
   ToValue(mHeightTextBox->GetText().All(), val);
 
-  forRange(CurveObject * curveObject, mCurveEditor->GetCurveObjects())
+  forRange (CurveObject* curveObject, mCurveEditor->GetCurveObjects())
   {
     SampleCurveObject* sampleCurveObject = (SampleCurveObject*)curveObject;
 
@@ -357,7 +348,7 @@ void MultiSampleCurveEditor::OnWidthChange(Event*)
   float val;
   ToValue(mWidthTextBox->GetText().All(), val);
 
-  forRange(CurveObject * curveObject, mCurveEditor->mCurves.All())
+  forRange (CurveObject* curveObject, mCurveEditor->mCurves.All())
   {
     SampleCurveObject* sampleCurveObject = (SampleCurveObject*)curveObject;
 

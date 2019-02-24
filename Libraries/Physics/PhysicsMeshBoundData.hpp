@@ -6,19 +6,19 @@ namespace Zero
 
 class GenericPhysicsMesh;
 
-#define DefinePhysicsRuntimeClone(ResourceType)                                \
-  HandleOf<Resource> ResourceType::Clone()                                     \
-  {                                                                            \
-    return RuntimeClone();                                                     \
-  }                                                                            \
-                                                                               \
-  HandleOf<ResourceType> ResourceType::RuntimeClone()                          \
-  {                                                                            \
-    AutoDeclare(manager, GetManager());                                        \
-    HandleOf<ResourceType> cloneHandle(manager->CreateRuntimeInternal());      \
-    ResourceType* clone = *cloneHandle;                                        \
-    CopyTo(clone);                                                             \
-    return cloneHandle;                                                        \
+#define DefinePhysicsRuntimeClone(ResourceType)                                                                        \
+  HandleOf<Resource> ResourceType::Clone()                                                                             \
+  {                                                                                                                    \
+    return RuntimeClone();                                                                                             \
+  }                                                                                                                    \
+                                                                                                                       \
+  HandleOf<ResourceType> ResourceType::RuntimeClone()                                                                  \
+  {                                                                                                                    \
+    AutoDeclare(manager, GetManager());                                                                                \
+    HandleOf<ResourceType> cloneHandle(manager->CreateRuntimeInternal());                                              \
+    ResourceType* clone = *cloneHandle;                                                                                \
+    CopyTo(clone);                                                                                                     \
+    return cloneHandle;                                                                                                \
   }
 
 template <typename ArrayType>
@@ -108,10 +108,7 @@ public:
     int count = GetCount();
     if (arrayIndex >= count)
     {
-      String msg = String::Format(
-          "Index %d is invalid. Array only contains %d element(s).",
-          arrayIndex,
-          count);
+      String msg = String::Format("Index %d is invalid. Array only contains %d element(s).", arrayIndex, count);
       DoNotifyException("Invalid index", msg);
       return false;
     }
@@ -153,9 +150,7 @@ public:
     ArrayType* array = mArray;
     if (array == nullptr)
     {
-      DoNotifyException(
-          "Range is invalid",
-          "The array this range is referencing has been destroyed.");
+      DoNotifyException("Range is invalid", "The array this range is referencing has been destroyed.");
       return true;
     }
 
@@ -168,8 +163,7 @@ public:
     // exception.
     if (Empty())
     {
-      DoNotifyException("Invalid Range Operation",
-                        "Cannot access an item in an empty range.");
+      DoNotifyException("Invalid Range Operation", "Cannot access an item in an empty range.");
       return FrontResult();
     }
     return mArray->Get(mIndex);
@@ -202,17 +196,17 @@ public:
   ZilchDeclareType(PhysicsMeshIndexData, TypeCopyMode::ReferenceType);
 };
 
-#define PhysicsDefineArrayType(arrayType)                                      \
-  ZilchDefineType(arrayType, builder, type)                                    \
-  {                                                                            \
-    ZeroBindDocumented();                                                      \
-                                                                               \
-    ZilchBindMethod(Get);                                                      \
-    ZilchBindMethod(Set);                                                      \
-    ZilchBindMethod(Add);                                                      \
-    ZilchBindMethod(Clear);                                                    \
-    ZilchBindGetter(All);                                                      \
-    ZilchBindGetterProperty(Count);                                            \
+#define PhysicsDefineArrayType(arrayType)                                                                              \
+  ZilchDefineType(arrayType, builder, type)                                                                            \
+  {                                                                                                                    \
+    ZeroBindDocumented();                                                                                              \
+                                                                                                                       \
+    ZilchBindMethod(Get);                                                                                              \
+    ZilchBindMethod(Set);                                                                                              \
+    ZilchBindMethod(Add);                                                                                              \
+    ZilchBindMethod(Clear);                                                                                            \
+    ZilchBindGetter(All);                                                                                              \
+    ZilchBindGetterProperty(Count);                                                                                    \
   }
 
 } // namespace Zero

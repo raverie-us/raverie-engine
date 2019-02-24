@@ -19,8 +19,7 @@ public:
   HandleOf<ReactiveViewport> mViewport;
 
   //****************************************************************************
-  MouseCaptureDrag(ViewportMouseEvent* e, Cog* captureObject) :
-      MouseManipulation(e->GetMouse(), e->GetViewport())
+  MouseCaptureDrag(ViewportMouseEvent* e, Cog* captureObject) : MouseManipulation(e->GetMouse(), e->GetViewport())
   {
     mViewport = e->GetViewport();
     mMouseCaptureObject = captureObject;
@@ -189,8 +188,7 @@ ZilchDefineType(MouseCapture, builder, type)
 
   ZilchBindMethod(Capture);
   ZilchBindOverloadedMethod(ReleaseCapture, ZilchInstanceOverload(void));
-  ZilchBindOverloadedMethod(ReleaseCapture,
-                            ZilchInstanceOverload(void, ViewportMouseEvent*));
+  ZilchBindOverloadedMethod(ReleaseCapture, ZilchInstanceOverload(void, ViewportMouseEvent*));
   ZilchBindGetter(IsCaptured);
 
   ZeroBindEvent(Events::MouseDragStart, ViewportMouseEvent);

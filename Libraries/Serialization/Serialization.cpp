@@ -14,9 +14,7 @@ DefineStringConstant(LocallyAdded);
 DefineStringConstant(LocallyRemoved);
 } // namespace SerializationAttributes
 
-DataAttribute::DataAttribute(StringParam name, StringParam value) :
-    mName(name),
-    mValue(value)
+DataAttribute::DataAttribute(StringParam name, StringParam value) : mName(name), mValue(value)
 {
 }
 
@@ -77,8 +75,7 @@ void Serializer::StartPolymorphic(cstr typeName)
   StartPolymorphicInternal(info);
 }
 
-void Serializer::StartPolymorphic(cstr typeName,
-                                  PolymorphicSaveFlags::Enum flags)
+void Serializer::StartPolymorphic(cstr typeName, PolymorphicSaveFlags::Enum flags)
 {
   PolymorphicInfo info;
   info.mTypeName = typeName;
@@ -101,8 +98,7 @@ void Serializer::StartPolymorphic(HandleParam object)
   StartPolymorphicInternal(info);
 }
 
-void Serializer::StartPolymorphicInheritence(cstr typeName,
-                                             cstr dataInheritanceId)
+void Serializer::StartPolymorphicInheritence(cstr typeName, cstr dataInheritanceId)
 {
   PolymorphicInfo info;
   info.mTypeName = typeName;
@@ -110,9 +106,7 @@ void Serializer::StartPolymorphicInheritence(cstr typeName,
   StartPolymorphicInternal(info);
 }
 
-void Serializer::StartPolymorphicInheritence(cstr typeName,
-                                             cstr dataInheritanceId,
-                                             PolymorphicSaveFlags::Enum flags)
+void Serializer::StartPolymorphicInheritence(cstr typeName, cstr dataInheritanceId, PolymorphicSaveFlags::Enum flags)
 {
   PolymorphicInfo info;
   info.mTypeName = typeName;
@@ -126,15 +120,12 @@ void Serializer::StartPolymorphicInternal(const PolymorphicInfo& info)
   Error(cPolymorphicSerializationError);
 }
 
-void Serializer::AddSubtractivePolymorphicNode(BoundType* boundType,
-                                               Guid nodeId)
+void Serializer::AddSubtractivePolymorphicNode(BoundType* boundType, Guid nodeId)
 {
   AddSubtractivePolymorphicNode(boundType->Name.c_str(), nodeId);
 }
 
-bool Serializer::SimpleField(cstr typeName,
-                             cstr fieldName,
-                             StringRange& stringRange)
+bool Serializer::SimpleField(cstr typeName, cstr fieldName, StringRange& stringRange)
 {
   DoNotifyError("Unimplemented function", "SimpleField not implemented");
   return true;

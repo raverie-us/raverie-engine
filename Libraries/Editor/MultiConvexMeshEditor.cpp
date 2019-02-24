@@ -8,19 +8,10 @@ namespace ConvexMeshEditorUi
 {
 const cstr cLocation = "EditorUi/ConvexMeshEditor";
 Tweakable(Vec4, ControlPointColor, Vec4(0.995f, 0.995f, 0.995f, 1), cLocation);
-Tweakable(Vec4,
-          ControlPointHighlightColor,
-          Vec4(0.75f, 0.75f, 0.75f, 1),
-          cLocation);
-Tweakable(Vec4,
-          ControlPointSelectionColor,
-          Vec4(0, 0.760784f, 1, 1),
-          cLocation);
+Tweakable(Vec4, ControlPointHighlightColor, Vec4(0.75f, 0.75f, 0.75f, 1), cLocation);
+Tweakable(Vec4, ControlPointSelectionColor, Vec4(0, 0.760784f, 1, 1), cLocation);
 Tweakable(Vec4, OuterContourColor, Vec4(0.85f, 0.85f, 0.85f, 1), cLocation);
-Tweakable(Vec4,
-          OuterContourHighlightColor,
-          Vec4(0.685f, 0.67815f, 0.67815f, 1),
-          cLocation);
+Tweakable(Vec4, OuterContourHighlightColor, Vec4(0.685f, 0.67815f, 0.67815f, 1), cLocation);
 Tweakable(Vec4, OuterContourInvalidColor, Vec4(1, 0, 0, 1), cLocation);
 Tweakable(float, OuterContourWidth, 0.1f, cLocation);
 Tweakable(Vec4, ConvexMeshColor, Vec4(0, 0, 1, 0.5f), cLocation);
@@ -31,18 +22,13 @@ Tweakable(float, ControlPointSnappingSize, Pixels(10), cLocation);
 Tweakable(bool, DebuggingMode, false, cLocation);
 } // namespace ConvexMeshEditorUi
 
-MultiConvexMeshDrawer::MultiConvexMeshDrawer(Composite* parent,
-                                             MultiConvexMeshEditor* editor) :
-    Widget(parent)
+MultiConvexMeshDrawer::MultiConvexMeshDrawer(Composite* parent, MultiConvexMeshEditor* editor) : Widget(parent)
 {
   mEditor = editor;
 }
 
-void MultiConvexMeshDrawer::RenderUpdate(ViewBlock& viewBlock,
-                                         FrameBlock& frameBlock,
-                                         Mat4Param parentTx,
-                                         ColorTransform colorTx,
-                                         WidgetRect clipRect)
+void MultiConvexMeshDrawer::RenderUpdate(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -63,9 +49,7 @@ void MultiConvexMeshDrawer::RenderUpdate(ViewBlock& viewBlock,
   DrawAutoComputedContours(viewBlock, frameBlock, clipRect);
 }
 
-void MultiConvexMeshDrawer::DrawOuterContour(ViewBlock& viewBlock,
-                                             FrameBlock& frameBlock,
-                                             WidgetRect clipRect)
+void MultiConvexMeshDrawer::DrawOuterContour(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   Array<StreamedVertex> lines;
 
@@ -93,14 +77,11 @@ void MultiConvexMeshDrawer::DrawOuterContour(ViewBlock& viewBlock,
     MultiConvexMeshPoint* currPoint = mEditor->mPoints[i];
     MultiConvexMeshPoint* nextPoint = mEditor->mPoints[(i + 1) % size];
 
-    lines.PushBack(
-        StreamedVertex(currPoint->mViewportPoint, Vec2(0, 0), color));
-    lines.PushBack(
-        StreamedVertex(nextPoint->mViewportPoint, Vec2(0, 0), color));
+    lines.PushBack(StreamedVertex(currPoint->mViewportPoint, Vec2(0, 0), color));
+    lines.PushBack(StreamedVertex(nextPoint->mViewportPoint, Vec2(0, 0), color));
   }
 
-  CreateRenderData(
-      viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
+  CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
 
   // Debug drawing
   bool debugging = ConvexMeshEditorUi::DebuggingMode;
@@ -108,12 +89,9 @@ void MultiConvexMeshDrawer::DrawOuterContour(ViewBlock& viewBlock,
     return;
 
   static Texture* white = TextureManager::FindOrNull("White");
-  static RenderFont* font =
-      FontManager::Instance->GetRenderFont("NotoSans-Regular", 11, 0);
-  ViewNode& viewNodeText =
-      AddRenderNodes(viewBlock, frameBlock, clipRect, white);
-  FontProcessor fontProcessor(
-      frameBlock.mRenderQueues, &viewNodeText, ToFloatColor(Color::White));
+  static RenderFont* font = FontManager::Instance->GetRenderFont("NotoSans-Regular", 11, 0);
+  ViewNode& viewNodeText = AddRenderNodes(viewBlock, frameBlock, clipRect, white);
+  FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNodeText, ToFloatColor(Color::White));
 
   // draw text in the center of each line for which line number it is
   for (uint i = 0; i < size; ++i)
@@ -122,19 +100,12 @@ void MultiConvexMeshDrawer::DrawOuterContour(ViewBlock& viewBlock,
     MultiConvexMeshPoint* nextPoint = mEditor->mPoints[(i + 1) % size];
 
     Vec3 pos = (currPoint->mViewportPoint + nextPoint->mViewportPoint) * 0.5f;
-    ProcessTextRange(fontProcessor,
-                     font,
-                     String::Format("%d", i),
-                     ToVector2(pos),
-                     TextAlign::Left,
-                     Vec2(1, 1),
-                     Vec2(1, 1));
+    ProcessTextRange(
+        fontProcessor, font, String::Format("%d", i), ToVector2(pos), TextAlign::Left, Vec2(1, 1), Vec2(1, 1));
   }
 }
 
-void MultiConvexMeshDrawer::DrawPoints(ViewBlock& viewBlock,
-                                       FrameBlock& frameBlock,
-                                       WidgetRect clipRect)
+void MultiConvexMeshDrawer::DrawPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   static Texture* white = TextureManager::FindOrNull("White");
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, white);
@@ -155,64 +126,50 @@ void MultiConvexMeshDrawer::DrawPoints(ViewBlock& viewBlock,
     if (point->mMouseOver)
       color *= ConvexMeshEditorUi::ControlPointHighlightColor;
 
-    Vec3 halfWidth =
-        Vec3(0.5f, 0.5f, 0.0f) * ConvexMeshEditorUi::ControlPointSize;
+    Vec3 halfWidth = Vec3(0.5f, 0.5f, 0.0f) * ConvexMeshEditorUi::ControlPointSize;
     Vec3 p0 = viewportPoint - halfWidth;
     Vec3 p1 = viewportPoint + halfWidth;
 
-    frameBlock.mRenderQueues->AddStreamedQuad(
-        viewNode, p0, p1, Vec2(0, 0), Vec2(1, 1), color);
+    frameBlock.mRenderQueues->AddStreamedQuad(viewNode, p0, p1, Vec2(0, 0), Vec2(1, 1), color);
   }
 }
 
-void MultiConvexMeshDrawer::DrawClosestPointOnEdge(ViewBlock& viewBlock,
-                                                   FrameBlock& frameBlock,
-                                                   WidgetRect clipRect)
+void MultiConvexMeshDrawer::DrawClosestPointOnEdge(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   // debug! shows the closest point on the closest edge (where just adding a new
   // point will go to)
   Keyboard* keyboard = Keyboard::GetInstance();
-  if (mEditor->mClosestEdgeInfo.mClosestEdge <= mEditor->mPoints.Size() &&
-      keyboard->KeyIsDown(Keys::Control))
+  if (mEditor->mClosestEdgeInfo.mClosestEdge <= mEditor->mPoints.Size() && keyboard->KeyIsDown(Keys::Control))
   {
     Vec3 viewportPoint = mEditor->mClosestEdgeInfo.mClosestViewportPoint;
     Vec4 color = ConvexMeshEditorUi::ControlPointColor;
 
-    Vec3 halfWidth =
-        Vec3(0.5f, 0.5f, 0.0f) * ConvexMeshEditorUi::ControlPointSize;
+    Vec3 halfWidth = Vec3(0.5f, 0.5f, 0.0f) * ConvexMeshEditorUi::ControlPointSize;
     Vec3 p0 = viewportPoint - halfWidth;
     Vec3 p1 = viewportPoint + halfWidth;
 
     static Texture* white = TextureManager::FindOrNull("White");
     ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, white);
-    frameBlock.mRenderQueues->AddStreamedQuad(
-        viewNode, p0, p1, Vec2(0, 0), Vec2(1, 1), color);
+    frameBlock.mRenderQueues->AddStreamedQuad(viewNode, p0, p1, Vec2(0, 0), Vec2(1, 1), color);
   }
 }
 
-void MultiConvexMeshDrawer::DrawAutoComputedContours(ViewBlock& viewBlock,
-                                                     FrameBlock& frameBlock,
-                                                     WidgetRect clipRect)
+void MultiConvexMeshDrawer::DrawAutoComputedContours(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   bool debugging = ConvexMeshEditorUi::DebuggingMode;
   if (debugging == false)
     return;
 
   static Texture* white = TextureManager::FindOrNull("White");
-  static RenderFont* font =
-      FontManager::Instance->GetRenderFont("NotoSans-Regular", 11, 0);
-  ViewNode& viewNodeText =
-      AddRenderNodes(viewBlock, frameBlock, clipRect, white);
-  FontProcessor fontProcessor(
-      frameBlock.mRenderQueues, &viewNodeText, ToFloatColor(Color::White));
+  static RenderFont* font = FontManager::Instance->GetRenderFont("NotoSans-Regular", 11, 0);
+  ViewNode& viewNodeText = AddRenderNodes(viewBlock, frameBlock, clipRect, white);
+  FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNodeText, ToFloatColor(Color::White));
 
   Array<StreamedVertex> lines;
 
-  for (uint index = 0; index < mEditor->mMarchingSquares.mContours.Size();
-       ++index)
+  for (uint index = 0; index < mEditor->mMarchingSquares.mContours.Size(); ++index)
   {
-    MarchingSquares::Contour& contour =
-        mEditor->mMarchingSquares.mContours[index];
+    MarchingSquares::Contour& contour = mEditor->mMarchingSquares.mContours[index];
 
     // render the index number at the vertex
     for (uint i = 0; i < contour.Size(); ++i)
@@ -220,17 +177,10 @@ void MultiConvexMeshDrawer::DrawAutoComputedContours(ViewBlock& viewBlock,
       Vec2Param start = contour[i];
       // Vec2Param end = contour[(i + 1) % contour.Size()];
 
-      Vec2 screenPoint =
-          mEditor->mViewport->WorldToScreen(Vec3(start.x, start.y, 0));
+      Vec2 screenPoint = mEditor->mViewport->WorldToScreen(Vec3(start.x, start.y, 0));
       Vec2 p0 = mEditor->mViewport->ScreenToViewport(screenPoint);
 
-      ProcessTextRange(fontProcessor,
-                       font,
-                       String::Format("%d", i),
-                       p0,
-                       TextAlign::Left,
-                       Vec2(1, 1),
-                       Vec2(1, 1));
+      ProcessTextRange(fontProcessor, font, String::Format("%d", i), p0, TextAlign::Left, Vec2(1, 1), Vec2(1, 1));
     }
 
     // render all of the lines of the auto-computed contours
@@ -240,8 +190,7 @@ void MultiConvexMeshDrawer::DrawAutoComputedContours(ViewBlock& viewBlock,
       Vec2Param start = contour[i];
       Vec2Param end = contour[(i + 1) % contour.Size()];
 
-      Vec2 screenPoint =
-          mEditor->mViewport->WorldToScreen(Vec3(start.x, start.y, 0));
+      Vec2 screenPoint = mEditor->mViewport->WorldToScreen(Vec3(start.x, start.y, 0));
       Vec3 p0 = Vec3(mEditor->mViewport->ScreenToViewport(screenPoint));
       screenPoint = mEditor->mViewport->WorldToScreen(Vec3(end.x, end.y, 0));
       Vec3 p1 = Vec3(mEditor->mViewport->ScreenToViewport(screenPoint));
@@ -251,8 +200,7 @@ void MultiConvexMeshDrawer::DrawAutoComputedContours(ViewBlock& viewBlock,
     }
   }
 
-  CreateRenderData(
-      viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
+  CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
 }
 
 class MultiConvexMeshDragManipulator : public MouseManipulation
@@ -287,8 +235,7 @@ public:
 
     // grab the current selection and the offset of every point in the
     // selection from the primary point (the one that was dragged from)
-    MultiConvexMeshEditor::SelectionSet::range range =
-        mEditor->mSelection.All();
+    MultiConvexMeshEditor::SelectionSet::range range = mEditor->mSelection.All();
     for (; !range.Empty(); range.PopFront())
       mOffsets.PushBack(PointData(range.Front(), mStartPosition));
   }
@@ -358,23 +305,18 @@ ZilchDefineType(MultiConvexMeshPoint, builder, type)
 {
 }
 
-MultiConvexMeshPoint::MultiConvexMeshPoint(Composite* parent,
-                                           MultiConvexMeshEditor* editor) :
-    Widget(parent)
+MultiConvexMeshPoint::MultiConvexMeshPoint(Composite* parent, MultiConvexMeshEditor* editor) : Widget(parent)
 {
   Setup(editor, Vec3::cZero);
 }
 
-MultiConvexMeshPoint::MultiConvexMeshPoint(Composite* parent,
-                                           MultiConvexMeshEditor* editor,
-                                           Vec3Param worldPoint) :
+MultiConvexMeshPoint::MultiConvexMeshPoint(Composite* parent, MultiConvexMeshEditor* editor, Vec3Param worldPoint) :
     Widget(parent)
 {
   Setup(editor, worldPoint);
 }
 
-void MultiConvexMeshPoint::Setup(MultiConvexMeshEditor* editor,
-                                 Vec3Param worldPoint)
+void MultiConvexMeshPoint::Setup(MultiConvexMeshEditor* editor, Vec3Param worldPoint)
 {
   mWorldPoint = worldPoint;
   mMouseOver = false;
@@ -498,8 +440,7 @@ void MultiConvexMeshPoint::StartDrag(Mouse* mouse)
   new MultiConvexMeshDragManipulator(mouse, mEditor->mViewport, mEditor, this);
 }
 
-PointMovementOp::PointMovementOp(MultiConvexMeshPoint* point,
-                                 Vec3Param startPosition)
+PointMovementOp::PointMovementOp(MultiConvexMeshPoint* point, Vec3Param startPosition)
 {
   mName = "MultiConvexMeshPoint Movement";
   // String display(netObject->GetMeta( )->Display(netObject->GetMeta( ),
@@ -568,15 +509,12 @@ void PointAddRemoveOp::PerformOp(bool add)
 class MultiSelectionManipulator : public MouseManipulation
 {
 public:
-  MultiSelectionManipulator(MouseDragEvent* dragEvent,
-                            Composite* parent,
-                            MultiConvexMeshEditor* editor) :
+  MultiSelectionManipulator(MouseDragEvent* dragEvent, Composite* parent, MultiConvexMeshEditor* editor) :
       MouseManipulation(dragEvent->GetMouse(), parent)
   {
     mEditor = editor;
 
-    mViewportStartPosition =
-        mEditor->mViewport->ScreenToViewport(dragEvent->Position);
+    mViewportStartPosition = mEditor->mViewport->ScreenToViewport(dragEvent->Position);
 
     mSelectBox = mEditor->CreateAttached<Element>(cDragBox);
     mSelectBox->SetVisible(true);
@@ -611,8 +549,7 @@ public:
   WidgetRect GetSelectionRect(Vec2Param screenEndPosition)
   {
     Viewport* viewport = mEditor->mViewport;
-    Vec2 startPosition =
-        mEditor->ToLocal(viewport->ViewportToScreen(mViewportStartPosition));
+    Vec2 startPosition = mEditor->ToLocal(viewport->ViewportToScreen(mViewportStartPosition));
     Vec2 currPosition = mEditor->ToLocal(screenEndPosition);
 
     // the start point might be the max or the min, same for the current
@@ -630,8 +567,7 @@ public:
     //(so we can't select things outside the current viewport window)
     Viewport* viewport = mEditor->mViewport;
     Vec2 viewportEndPosition = viewport->ScreenToViewport(e->Position);
-    viewportEndPosition =
-        Math::Clamp(viewportEndPosition, Vec2::cZero, viewport->GetSize());
+    viewportEndPosition = Math::Clamp(viewportEndPosition, Vec2::cZero, viewport->GetSize());
 
     // get the selection rect to raw
     Vec2 screenEndPosition = viewport->ViewportToScreen(viewportEndPosition);
@@ -672,8 +608,7 @@ ZilchDefineType(MultiConvexMeshPropertyViewInfo, builder, type)
   ZilchBindFieldProperty(mDrawMode);
   ZilchBindMethodProperty(AutoCompute);
   ZilchBindFieldProperty(mAutoComputeMode);
-  ZilchBindFieldProperty(mSurfaceLevelThreshold)
-      ->Add(new EditorSlider(0, 1, 0.05f));
+  ZilchBindFieldProperty(mSurfaceLevelThreshold)->Add(new EditorSlider(0, 1, 0.05f));
   ZilchBindFieldProperty(mAutoComputeMethod);
   ZilchBindFieldProperty(mSimplificationThreshold);
 }
@@ -746,10 +681,7 @@ ZilchDefineType(MultiConvexMeshEditor, builder, type)
 {
 }
 
-MultiConvexMeshEditor::MultiConvexMeshEditor(Composite* parent,
-                                             MultiConvexMesh* mesh) :
-    Composite(parent),
-    mMesh(mesh)
+MultiConvexMeshEditor::MultiConvexMeshEditor(Composite* parent, MultiConvexMesh* mesh) : Composite(parent), mMesh(mesh)
 {
   SetLayout(CreateRowLayout());
   mPropertyViewInfo.mEditor = this;
@@ -825,9 +757,8 @@ void MultiConvexMeshEditor::OnDestroy()
 void MultiConvexMeshEditor::SetupPreviewSpace()
 {
   // create the preview space
-  mPreviewSpace = Z::gFactory->CreateSpace(CoreArchetypes::DefaultSpace,
-                                           CreationFlags::Editing,
-                                           Z::gEditor->GetEditGameSession());
+  mPreviewSpace =
+      Z::gFactory->CreateSpace(CoreArchetypes::DefaultSpace, CreationFlags::Editing, Z::gEditor->GetEditGameSession());
   mPreviewSpace->mGameWidgetOverride = mGameWidget;
   mPreviewSpace->SetName("MultiConvexMeshEditorPreview");
   // pause the time space (so that physics doesn't run, etc...)
@@ -835,8 +766,7 @@ void MultiConvexMeshEditor::SetupPreviewSpace()
   if (time != NULL)
     time->SetPaused(true);
 
-  Level* editorLevel =
-      LevelManager::GetInstance()->Find("MultiConvexMeshEditorLevel");
+  Level* editorLevel = LevelManager::GetInstance()->Find("MultiConvexMeshEditorLevel");
   mPreviewSpace->LoadLevel(editorLevel);
 
   // now find the editor camera and set it to be orthographic
@@ -855,14 +785,8 @@ void MultiConvexMeshEditor::SetupPreviewSpace()
     mCameraController->mMaxCameraSize = 50.0f;
 
     // have the camera controller listed for keyboard events on the viewport
-    Zero::Connect(mViewport,
-                  Events::KeyDown,
-                  mCameraController,
-                  &EditorCameraController::ProcessKeyboardEvent);
-    Zero::Connect(mViewport,
-                  Events::KeyUp,
-                  mCameraController,
-                  &EditorCameraController::ProcessKeyboardEvent);
+    Zero::Connect(mViewport, Events::KeyDown, mCameraController, &EditorCameraController::ProcessKeyboardEvent);
+    Zero::Connect(mViewport, Events::KeyUp, mCameraController, &EditorCameraController::ProcessKeyboardEvent);
   }
 
   // Set the renderer's clear color
@@ -873,10 +797,8 @@ void MultiConvexMeshEditor::SetupPreviewSpace()
 
   // create the preview mesh cog, this is the one that we
   // put the multi-convex mesh collider on to render the mesh
-  Cog* previewMeshCog =
-      mPreviewSpace->CreateAt(CoreArchetypes::Transform, Vec3::cZero);
-  previewMeshCog->AddComponentByName(
-      ZilchTypeId(MultiConvexMeshCollider)->Name);
+  Cog* previewMeshCog = mPreviewSpace->CreateAt(CoreArchetypes::Transform, Vec3::cZero);
+  previewMeshCog->AddComponentByName(ZilchTypeId(MultiConvexMeshCollider)->Name);
   mPreviewMesh = previewMeshCog->has(MultiConvexMeshCollider);
   SetMultiConvexMesh(mMesh);
 
@@ -903,8 +825,7 @@ void MultiConvexMeshEditor::CreateToolbar(Composite* toolbarParent)
   mSelectedPointX = new TextBox(topToolbar);
   mSelectedPointX->SetSizing(SizeAxis::X, SizePolicy::Fixed, 80);
   mSelectedPointX->SetEditable(false);
-  ConnectThisTo(
-      mSelectedPointX, Events::TextBoxChanged, OnSelectedPointXChanged);
+  ConnectThisTo(mSelectedPointX, Events::TextBoxChanged, OnSelectedPointXChanged);
 
   spacer = new Spacer(topToolbar);
   spacer->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(4));
@@ -916,8 +837,7 @@ void MultiConvexMeshEditor::CreateToolbar(Composite* toolbarParent)
   mSelectedPointY = new TextBox(topToolbar);
   mSelectedPointY->SetSizing(SizeAxis::X, SizePolicy::Fixed, 80);
   mSelectedPointY->SetEditable(false);
-  ConnectThisTo(
-      mSelectedPointY, Events::TextBoxChanged, OnSelectedPointYChanged);
+  ConnectThisTo(mSelectedPointY, Events::TextBoxChanged, OnSelectedPointYChanged);
 
   spacer = new Spacer(topToolbar);
   spacer->SetSizing(SizeAxis::X, SizePolicy::Fixed, 10);
@@ -938,8 +858,7 @@ void MultiConvexMeshEditor::CreateToolbar(Composite* toolbarParent)
   mGridCellSizeTextBox->SetSizing(SizeAxis::X, SizePolicy::Fixed, 80);
   mGridCellSizeTextBox->SetText(String::Format("%f", mGridCellSize));
   mGridCellSizeTextBox->SetEditable(true);
-  ConnectThisTo(
-      mGridCellSizeTextBox, Events::TextSubmit, OnGridCellSizeChanged);
+  ConnectThisTo(mGridCellSizeTextBox, Events::TextSubmit, OnGridCellSizeChanged);
 
   spacer = new Spacer(topToolbar);
   spacer->SetSizing(SizeAxis::X, SizePolicy::Fixed, 5);
@@ -949,11 +868,9 @@ void MultiConvexMeshEditor::CreateToolbar(Composite* toolbarParent)
   TextButton* setGridSizeToPixelsButton = new TextButton(topToolbar);
   setGridSizeToPixelsButton->SetSizing(SizeAxis::X, SizePolicy::Fixed, 180);
   setGridSizeToPixelsButton->SetText("SetGridSizeToPixels");
-  setGridSizeToPixelsButton->SetToolTip(
-      "Sets the size of the grid to be the same as the pixels of the current "
-      "sprite");
-  ConnectThisTo(
-      setGridSizeToPixelsButton, Events::ButtonPressed, OnSetGridSizeToPixels);
+  setGridSizeToPixelsButton->SetToolTip("Sets the size of the grid to be the same as the pixels of the current "
+                                        "sprite");
+  ConnectThisTo(setGridSizeToPixelsButton, Events::ButtonPressed, OnSetGridSizeToPixels);
 
   spacer = new Spacer(topToolbar);
   spacer->SetSizing(SizeAxis::X, SizePolicy::Fixed, 14);
@@ -969,8 +886,7 @@ void MultiConvexMeshEditor::CreateToolbar(Composite* toolbarParent)
   // to make the icon line up nicely (and not stretch) create another composite
   // to attach the element to
   Composite* iconComposite = new Composite(snappingDummy);
-  Element* element =
-      iconComposite->CreateAttached<Element>("AnimatorSnappingDisabled");
+  Element* element = iconComposite->CreateAttached<Element>("AnimatorSnappingDisabled");
 
   // create a combo box for the user to choose snapping options
   mSnappingModeComboBox = new ComboBox(topToolbar);
@@ -980,12 +896,10 @@ void MultiConvexMeshEditor::CreateToolbar(Composite* toolbarParent)
   mSnappingModeComboBox->SetListSource(&mSnappingModeSource);
   mSnappingModeComboBox->SetSizing(SizeAxis::X, SizePolicy::Fixed, 70);
   mSnappingModeComboBox->SetText("IfClose");
-  ConnectThisTo(
-      mSnappingModeComboBox, Events::ItemSelected, OnChangeSnappingMode);
+  ConnectThisTo(mSnappingModeComboBox, Events::ItemSelected, OnChangeSnappingMode);
 }
 
-MultiConvexMeshPoint*
-MultiConvexMeshEditor::FindPointAtScreenPosition(Vec2Param screenPosition)
+MultiConvexMeshPoint* MultiConvexMeshEditor::FindPointAtScreenPosition(Vec2Param screenPosition)
 {
   Vec3 worldPoint = ScreenPointToSnappedWorldPoint(screenPosition);
   for (uint i = 0; i < mPoints.Size(); ++i)
@@ -1022,11 +936,9 @@ void MultiConvexMeshEditor::AddPointAtScreenPosition(Vec2Param screenPosition)
   {
     // if we were close to an edge then choose the point on the edge instead of
     // where we clicked
-    if (closestEdgeInfo.mClosestDistance <
-        ConvexMeshEditorUi::OuterContourWidth)
+    if (closestEdgeInfo.mClosestDistance < ConvexMeshEditorUi::OuterContourWidth)
     {
-      Vec2 screenPoint = mViewport->ViewportToScreen(
-          Math::ToVector2(closestEdgeInfo.mClosestViewportPoint));
+      Vec2 screenPoint = mViewport->ViewportToScreen(Math::ToVector2(closestEdgeInfo.mClosestViewportPoint));
       worldPoint = mViewport->ScreenToWorldZPlane(screenPoint, 0);
     }
   }
@@ -1036,21 +948,17 @@ void MultiConvexMeshEditor::AddPointAtScreenPosition(Vec2Param screenPosition)
 
   // have to Insert at edge index + 1 (since edge 0 means we want to be after
   // the current point 0)
-  MultiConvexMeshPoint* newPoint =
-      AddPointAt(closestEdgeInfo.mClosestEdge + 1, worldPoint);
+  MultiConvexMeshPoint* newPoint = AddPointAt(closestEdgeInfo.mClosestEdge + 1, worldPoint);
   AddToSelection(newPoint);
 
   // see if this was a valid mesh
   TestConvexMeshes();
 }
 
-MultiConvexMeshPoint* MultiConvexMeshEditor::AddPointAt(uint index,
-                                                        Vec3Param worldPosition,
-                                                        bool queueUndo,
-                                                        bool testMesh)
+MultiConvexMeshPoint*
+MultiConvexMeshEditor::AddPointAt(uint index, Vec3Param worldPosition, bool queueUndo, bool testMesh)
 {
-  MultiConvexMeshPoint* point =
-      new MultiConvexMeshPoint(mViewport, this, worldPosition);
+  MultiConvexMeshPoint* point = new MultiConvexMeshPoint(mViewport, this, worldPosition);
   mPoints.InsertAt(index, point);
 
   if (queueUndo)
@@ -1066,9 +974,7 @@ MultiConvexMeshPoint* MultiConvexMeshEditor::AddPointAt(uint index,
   return point;
 }
 
-void MultiConvexMeshEditor::RemovePoint(MultiConvexMeshPoint* point,
-                                        bool queueUndo,
-                                        bool testMesh)
+void MultiConvexMeshEditor::RemovePoint(MultiConvexMeshPoint* point, bool queueUndo, bool testMesh)
 {
   if (queueUndo)
     mQueue.Queue(new PointAddRemoveOp(point, false));
@@ -1132,14 +1038,11 @@ void MultiConvexMeshEditor::AutoCompute()
   SourceData sourceData = {spriteSource, &sourceImage};
 
   mMarchingSquares = MarchingSquares();
-  mMarchingSquares.mDensitySurfaceLevel =
-      mPropertyViewInfo.mSurfaceLevelThreshold;
+  mMarchingSquares.mDensitySurfaceLevel = mPropertyViewInfo.mSurfaceLevelThreshold;
   // setup the density sampler function (by default sample alpha)
   mMarchingSquares.mDensitySampler = &MultiConvexMeshEditor::SamplePixelAlpha;
-  if (mPropertyViewInfo.mAutoComputeMode ==
-      MultiConvexMeshAutoComputeMode::Intensity)
-    mMarchingSquares.mDensitySampler =
-        &MultiConvexMeshEditor::SamplePixelIntensity;
+  if (mPropertyViewInfo.mAutoComputeMode == MultiConvexMeshAutoComputeMode::Intensity)
+    mMarchingSquares.mDensitySampler = &MultiConvexMeshEditor::SamplePixelIntensity;
 
   // the threshold of simplification is 1 pixel's triangle area
   //(the half area of the pixel) at 0 and a 5x5 triangle area at 1
@@ -1147,28 +1050,22 @@ void MultiConvexMeshEditor::AutoCompute()
   threshold = threshold * threshold * 0.5f;
   threshold += threshold * 25 * mPropertyViewInfo.mSimplificationThreshold;
 
-  Vec2 size =
-      Vec2((real)spriteSource->FrameSizeX, (real)spriteSource->FrameSizeY);
+  Vec2 size = Vec2((real)spriteSource->FrameSizeX, (real)spriteSource->FrameSizeY);
   Vec2 sampleFrequency = Vec2(1, 1);
 
   // sample based upon our computation method
-  if (mPropertyViewInfo.mAutoComputeMethod ==
-      MultiConvexMeshAutoComputeMethod::Pixels)
+  if (mPropertyViewInfo.mAutoComputeMethod == MultiConvexMeshAutoComputeMethod::Pixels)
   {
     // sample with the pixel boundary positions and the pixel sampling method
-    mMarchingSquares.mPositionSampler =
-        &MultiConvexMeshEditor::SamplePixelWorldPosition;
-    mMarchingSquares.SamplePixels(
-        Vec2(-1, -1), size + Vec2(2, 2), sampleFrequency, &sourceData);
+    mMarchingSquares.mPositionSampler = &MultiConvexMeshEditor::SamplePixelWorldPosition;
+    mMarchingSquares.SamplePixels(Vec2(-1, -1), size + Vec2(2, 2), sampleFrequency, &sourceData);
   }
   else
   {
     // sample with the center of a pixel's position plus the regular marching
     // cubes method
-    mMarchingSquares.mPositionSampler =
-        &MultiConvexMeshEditor::SamplePixelWorldPositionAtCenter;
-    mMarchingSquares.Sample(
-        Vec2(-1, -1), size + Vec2(2, 2), sampleFrequency, &sourceData);
+    mMarchingSquares.mPositionSampler = &MultiConvexMeshEditor::SamplePixelWorldPositionAtCenter;
+    mMarchingSquares.Sample(Vec2(-1, -1), size + Vec2(2, 2), sampleFrequency, &sourceData);
   }
 
   mMarchingSquares.BuildAndSimplifyContours(threshold);
@@ -1189,8 +1086,7 @@ void MultiConvexMeshEditor::AutoCompute()
   TestConvexMeshes();
 }
 
-Vec3 MultiConvexMeshEditor::ScreenPointToSnappedWorldPoint(
-    Vec2Param screenPosition)
+Vec3 MultiConvexMeshEditor::ScreenPointToSnappedWorldPoint(Vec2Param screenPosition)
 {
   Vec3 worldPoint = mViewport->ScreenToWorldZPlane(screenPosition, 0);
 
@@ -1213,8 +1109,7 @@ Vec3 MultiConvexMeshEditor::ScreenPointToSnappedWorldPoint(
   Vec2 viewportPoint = mViewport->ScreenToViewport(screenPosition);
   // compute the corner of a control point with our snapping size and bring that
   // to world space
-  Vec2 selectionCorner =
-      viewportPoint + Vec2(ConvexMeshEditorUi::ControlPointSnappingSize * 0.5f);
+  Vec2 selectionCorner = viewportPoint + Vec2(ConvexMeshEditorUi::ControlPointSnappingSize * 0.5f);
   Vec2 cornerScreen = mViewport->ViewportToScreen(selectionCorner);
   Vec3 cornerWorld = mViewport->ScreenToWorldZPlane(cornerScreen, 0.0f);
 
@@ -1412,8 +1307,7 @@ void MultiConvexMeshEditor::OnMetaDrop(MetaDropEvent* e)
   {
     if (e->Testing)
     {
-      e->Result =
-          String::Format("Display Sprite: %s", spriteSource->Name.c_str());
+      e->Result = String::Format("Display Sprite: %s", spriteSource->Name.c_str());
       return;
     }
 
@@ -1439,8 +1333,7 @@ void MultiConvexMeshEditor::OnMetaDrop(MetaDropEvent* e)
   {
     if (e->Testing)
     {
-      e->Result =
-          String::Format("Display Archetype: %s", archetype->Name.c_str());
+      e->Result = String::Format("Display Archetype: %s", archetype->Name.c_str());
       return;
     }
 
@@ -1459,8 +1352,7 @@ void MultiConvexMeshEditor::OnSelectedPointYChanged(Event* e)
   OnSelectedPointChangedGeneric(mSelectedPointY, 1);
 }
 
-void MultiConvexMeshEditor::OnSelectedPointChangedGeneric(
-    TextBox* changedTextBox, uint axisChanged)
+void MultiConvexMeshEditor::OnSelectedPointChangedGeneric(TextBox* changedTextBox, uint axisChanged)
 {
   // There was no selection so how did the text even change?
   if (mSelection.Empty())
@@ -1494,8 +1386,7 @@ void MultiConvexMeshEditor::OnSelectedPointChangedGeneric(
   TestConvexMeshes();
 }
 
-void MultiConvexMeshEditor::FindClosestEdge(Vec2Param testScreenPoint,
-                                            ClosestEdgeInfo& info)
+void MultiConvexMeshEditor::FindClosestEdge(Vec2Param testScreenPoint, ClosestEdgeInfo& info)
 {
   info.mClosestDistance = Math::PositiveMax();
   info.mClosestEdge = (uint)-1;
@@ -1538,8 +1429,7 @@ void MultiConvexMeshEditor::AddToSelection(MultiConvexMeshPoint* selectedPoint)
   UpdateSelectedPointText();
 }
 
-void MultiConvexMeshEditor::RemoveFromSelection(
-    MultiConvexMeshPoint* selectedPoint)
+void MultiConvexMeshEditor::RemoveFromSelection(MultiConvexMeshPoint* selectedPoint)
 {
   mSelection.Erase(selectedPoint);
   UpdateSelectedPointText();
@@ -1626,8 +1516,7 @@ void MultiConvexMeshEditor::UpdateSelectedPointText()
   }
 }
 
-real MultiConvexMeshEditor::SamplePixelAlpha(Vec2Param pixelCoord,
-                                             void* userData)
+real MultiConvexMeshEditor::SamplePixelAlpha(Vec2Param pixelCoord, void* userData)
 {
   int x = (int)pixelCoord.x;
   int y = (int)pixelCoord.y;
@@ -1644,8 +1533,7 @@ real MultiConvexMeshEditor::SamplePixelAlpha(Vec2Param pixelCoord,
   return ToFloatColor(sourceImage->GetPixel(x, y)).w;
 }
 
-real MultiConvexMeshEditor::SamplePixelIntensity(Vec2Param pixelCoord,
-                                                 void* userData)
+real MultiConvexMeshEditor::SamplePixelIntensity(Vec2Param pixelCoord, void* userData)
 {
   int x = (int)pixelCoord.x;
   int y = (int)pixelCoord.y;
@@ -1663,17 +1551,14 @@ real MultiConvexMeshEditor::SamplePixelIntensity(Vec2Param pixelCoord,
   return (color.x + color.y + color.z) / real(3.0) * color.w;
 }
 
-Vec2 MultiConvexMeshEditor::SamplePixelWorldPosition(Vec2Param pixelCoord,
-                                                     void* userData)
+Vec2 MultiConvexMeshEditor::SamplePixelWorldPosition(Vec2Param pixelCoord, void* userData)
 {
   SourceData* sourceData = (SourceData*)userData;
   SpriteSource* spriteSource = sourceData->mSpriteSource;
 
-  Vec2 size =
-      Vec2((real)spriteSource->FrameSizeX, (real)spriteSource->FrameSizeY);
+  Vec2 size = Vec2((real)spriteSource->FrameSizeX, (real)spriteSource->FrameSizeY);
   Vec2 flippedPixels = Vec2(pixelCoord.x, size.y - pixelCoord.y);
-  Vec2 flippedOrigin =
-      Vec2(spriteSource->OriginX, size.y - spriteSource->OriginY);
+  Vec2 flippedOrigin = Vec2(spriteSource->OriginX, size.y - spriteSource->OriginY);
   Vec2 temp = flippedPixels - flippedOrigin;
   temp /= size;
 
@@ -1683,8 +1568,7 @@ Vec2 MultiConvexMeshEditor::SamplePixelWorldPosition(Vec2Param pixelCoord,
   return temp;
 }
 
-Vec2 MultiConvexMeshEditor::SamplePixelWorldPositionAtCenter(
-    Vec2Param pixelCoord, void* userData)
+Vec2 MultiConvexMeshEditor::SamplePixelWorldPositionAtCenter(Vec2Param pixelCoord, void* userData)
 {
   return SamplePixelWorldPosition(pixelCoord + Vec2(0.5f, 0.5f), userData);
 }
@@ -1707,24 +1591,21 @@ void MultiConvexMeshEditor::SetMultiConvexMesh(MultiConvexMesh* multiConvexMesh)
     Vec3 pos = multiConvexMesh->mVertices[i];
     pos.z = 0;
 
-    MultiConvexMeshPoint* newPoint =
-        new MultiConvexMeshPoint(mViewport, this, pos);
+    MultiConvexMeshPoint* newPoint = new MultiConvexMeshPoint(mViewport, this, pos);
     mPoints.PushBack(newPoint);
   }
 
   // recompute the thickness of the mesh
   if (multiConvexMesh->mVertices.Size() > 1)
   {
-    real thickness = Math::Length(multiConvexMesh->mVertices[0] -
-                                  multiConvexMesh->mVertices[halfVertexCount]);
+    real thickness = Math::Length(multiConvexMesh->mVertices[0] - multiConvexMesh->mVertices[halfVertexCount]);
     mPropertyViewInfo.mMeshThickness = thickness;
   }
 
   BuildConvexMeshes();
 }
 
-void MultiConvexMeshEditor::UpdatePreview(SpriteSource* spriteSource,
-                                          Archetype* archetype)
+void MultiConvexMeshEditor::UpdatePreview(SpriteSource* spriteSource, Archetype* archetype)
 {
   // since we don't know if the old preview was a sprite or an archetype it's
   // easier to just destroy and create it every time we set it to something new
@@ -1763,10 +1644,7 @@ void MultiConvexMeshEditor::FocusOnPreviewCog()
     aabb.Combine(previewCogAabb);
   }
 
-  CameraFocusSpace(mPreviewSpace,
-                   mCameraController->GetOwner(),
-                   aabb,
-                   EditFocusMode::AutoTime);
+  CameraFocusSpace(mPreviewSpace, mCameraController->GetOwner(), aabb, EditFocusMode::AutoTime);
 }
 
 bool MultiConvexMeshEditor::GetDrawGrid()
@@ -1818,10 +1696,8 @@ void MultiConvexMeshEditor::UpdateGridDrawing()
 {
   if (mGridDraw != NULL)
   {
-    Vec3 viewCenterInWorld = mViewport->ScreenToWorldZPlane(
-        mViewport->ViewportToScreen(mViewport->GetSize() / 2), 0);
-    Vec3 viewCornerInWorld = mViewport->ScreenToWorldZPlane(
-        mViewport->ViewportToScreen(Vec2::cZero), 0);
+    Vec3 viewCenterInWorld = mViewport->ScreenToWorldZPlane(mViewport->ViewportToScreen(mViewport->GetSize() / 2), 0);
+    Vec3 viewCornerInWorld = mViewport->ScreenToWorldZPlane(mViewport->ViewportToScreen(Vec2::cZero), 0);
     Vec3 worldSize = viewCornerInWorld - viewCenterInWorld;
 
     float xCells = Math::Ceil(Math::Abs(worldSize.x) / GetGridCellSize());
@@ -1871,10 +1747,7 @@ bool MultiConvexMeshEditor::BuildConvexMeshes()
 
   // decompose into convex meshes (for now use the triangulator)
   ConvexDecomposition::SubShapeArray meshes;
-  mIsValid = Create2dMeshes(
-      vertices,
-      ConvexDecomposition::ConvexMeshDecompositionMode::Triangulator,
-      meshes);
+  mIsValid = Create2dMeshes(vertices, ConvexDecomposition::ConvexMeshDecompositionMode::Triangulator, meshes);
   // if we failed to do convex decomposition then don't do anything
   if (mIsValid == false)
     return false;

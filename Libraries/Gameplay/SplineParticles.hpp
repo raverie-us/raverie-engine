@@ -18,11 +18,8 @@ public:
   void FindSpline();
 
   /// ParticleEmitter Interface.
-  int EmitParticles(ParticleList* particleList,
-                    float dt,
-                    Mat4Ref transform,
-                    Vec3Param velocity,
-                    float timeAlive) override;
+  int EmitParticles(
+      ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param velocity, float timeAlive) override;
 
   /// The current spline being emitted along
   Spline* GetSpline() const;
@@ -53,9 +50,7 @@ public:
   void Initialize(CogInitializer& initializer) override;
 
   /// ParticleAnimator Interface.
-  void Animate(ParticleList* particleList,
-               float dt,
-               Mat4Ref transform) override;
+  void Animate(ParticleList* particleList, float dt, Mat4Ref transform) override;
 
   /// Speed setter / getter.
   void SetSpeed(float speed);

@@ -6,9 +6,7 @@ using namespace Zero;
 namespace Zero
 {
 
-void CreateEditor(OsWindow* mainWindow,
-                  StringParam project,
-                  StringParam newProjectName);
+void CreateEditor(OsWindow* mainWindow, StringParam project, StringParam newProjectName);
 void CreateGame(OsWindow* mainWindow, Cog* projectCog, StringParam projectFile);
 
 } // namespace Zero
@@ -46,8 +44,7 @@ extern "C" int main(int argc, char* argv[])
   if (mainConfig && projectFile.Empty() && newProject.Empty() &&
       (editorConfig == nullptr || editorConfig->EditingProject.Empty()))
   {
-    projectFile = FilePath::Combine(
-        mainConfig->DataDirectory, "Fallback", "Fallback.zeroproj");
+    projectFile = FilePath::Combine(mainConfig->DataDirectory, "Fallback", "Fallback.zeroproj");
   }
 
   // The options defaults are already tailored to the Editor.
@@ -58,8 +55,7 @@ extern "C" int main(int argc, char* argv[])
   Cog* projectCog = nullptr;
   if (playGame)
   {
-    projectCog = Z::gFactory->Create(
-        Z::gEngine->GetEngineSpace(), projectFile, 0, nullptr);
+    projectCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), projectFile, 0, nullptr);
     if (projectCog == nullptr)
     {
       FatalEngineError("Failed load project '%s'", projectFile.c_str());
@@ -68,8 +64,7 @@ extern "C" int main(int argc, char* argv[])
 
     // Since we don't create a resiziable wigdet/close button, etc.
     // for the game, then we want the typical OS border to appear.
-    options.mWindowStyle = (WindowStyleFlags::Enum)(
-        options.mWindowStyle & ~WindowStyleFlags::ClientOnly);
+    options.mWindowStyle = (WindowStyleFlags::Enum)(options.mWindowStyle & ~WindowStyleFlags::ClientOnly);
   }
 
   options.mLoadContent = !playGame;

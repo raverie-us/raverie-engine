@@ -161,11 +161,10 @@ struct ShaderInterfaceType
   virtual ShaderInterfaceField* GetField(const ShaderFieldKey& fieldKey) = 0;
   // Returns a pointer to the field at the given index. If needed, instructions
   // will be written to the given block.
-  virtual ZilchShaderIROp*
-  GetFieldPointerByIndex(size_t index,
-                         EntryPointGeneration* entryPointGeneration,
-                         BasicBlock* block,
-                         spv::StorageClass storageClass) = 0;
+  virtual ZilchShaderIROp* GetFieldPointerByIndex(size_t index,
+                                                  EntryPointGeneration* entryPointGeneration,
+                                                  BasicBlock* block,
+                                                  spv::StorageClass storageClass) = 0;
 
   // Declare an interface struct type to contain the given interface group
   // variables.
@@ -183,11 +182,10 @@ struct ShaderInterfaceType
                                    EntryPointInfo* entryPointInfo){};
   // Copies the given interface type instance to/from the copyHelper's self type
   // (based upon the storage class).
-  virtual void
-  CopyInterfaceType(EntryPointGeneration* entryPointGeneration,
-                    InterfaceInfoGroup& interfaceGroup,
-                    EntryPointInfo* entryPointInfo,
-                    EntryPointHelperFunctionData& copyHelperData){};
+  virtual void CopyInterfaceType(EntryPointGeneration* entryPointGeneration,
+                                 InterfaceInfoGroup& interfaceGroup,
+                                 EntryPointInfo* entryPointInfo,
+                                 EntryPointHelperFunctionData& copyHelperData){};
 };
 
 struct ShaderInterfaceStruct : public ShaderInterfaceType
@@ -199,20 +197,18 @@ struct ShaderInterfaceStruct : public ShaderInterfaceType
   size_t GetFieldCount() override;
   ShaderInterfaceField* GetFieldAtIndex(size_t index) override;
   ShaderInterfaceField* GetField(const ShaderFieldKey& fieldKey) override;
-  ZilchShaderIROp*
-  GetFieldPointerByIndex(size_t index,
-                         EntryPointGeneration* entryPointGeneration,
-                         BasicBlock* block,
-                         spv::StorageClass storageClass) override;
+  ZilchShaderIROp* GetFieldPointerByIndex(size_t index,
+                                          EntryPointGeneration* entryPointGeneration,
+                                          BasicBlock* block,
+                                          spv::StorageClass storageClass) override;
 
   // Get the field by index off of the given instance. Used internally and when
   // this is a sub-type in an array.
-  ZilchShaderIROp*
-  GetFieldPointerByIndex(ZilchShaderIROp* instance,
-                         size_t index,
-                         EntryPointGeneration* entryPointGeneration,
-                         BasicBlock* block,
-                         spv::StorageClass storageClass);
+  ZilchShaderIROp* GetFieldPointerByIndex(ZilchShaderIROp* instance,
+                                          size_t index,
+                                          EntryPointGeneration* entryPointGeneration,
+                                          BasicBlock* block,
+                                          spv::StorageClass storageClass);
 
   void DeclareInterfaceType(EntryPointGeneration* entryPointGeneration,
                             InterfaceInfoGroup& interfaceGroup,
@@ -243,11 +239,10 @@ struct ShaderInterfaceGlobals : public ShaderInterfaceType
   size_t GetFieldCount() override;
   ShaderInterfaceField* GetFieldAtIndex(size_t index) override;
   ShaderInterfaceField* GetField(const ShaderFieldKey& fieldKey) override;
-  ZilchShaderIROp*
-  GetFieldPointerByIndex(size_t index,
-                         EntryPointGeneration* entryPointGeneration,
-                         BasicBlock* block,
-                         spv::StorageClass storageClass) override;
+  ZilchShaderIROp* GetFieldPointerByIndex(size_t index,
+                                          EntryPointGeneration* entryPointGeneration,
+                                          BasicBlock* block,
+                                          spv::StorageClass storageClass) override;
 
   // Declare an interface struct type to contain the given interface group
   // variables.
@@ -298,9 +293,7 @@ struct ShaderInterfaceStructArray : public ShaderInterfaceStruct
 /// Common information needed about the input/output types for a geometry shader
 struct GeometryStageInfo
 {
-  GeometryStageInfo(ZilchSpirVFrontEnd* translator,
-                    ZilchShaderIRType* shaderType,
-                    Zilch::GenericFunctionNode* node);
+  GeometryStageInfo(ZilchSpirVFrontEnd* translator, ZilchShaderIRType* shaderType, Zilch::GenericFunctionNode* node);
 
   ZilchShaderIRType* mShaderType;
   ZilchShaderIRType* mInputStreamType;
@@ -387,63 +380,53 @@ public:
                             ZilchShaderIRFunction* function,
                             ZilchShaderIRFunction* copyInputsFn,
                             ZilchShaderIRFunction* copyOutputsFn);
-  ZilchShaderIRFunction*
-  CreateGlobalsInitializerFunction(Zilch::GenericFunctionNode* node);
-  EntryPointHelperFunctionData
-  GenerateCopyHelper(ZilchShaderIRFunction* userMainFn, StringParam name);
+  ZilchShaderIRFunction* CreateGlobalsInitializerFunction(Zilch::GenericFunctionNode* node);
+  EntryPointHelperFunctionData GenerateCopyHelper(ZilchShaderIRFunction* userMainFn, StringParam name);
 
   // Geometry Shader Stage helpers
-  EntryPointHelperFunctionData
-  GenerateGeometryCopyHelper(ZilchShaderIRFunction* userMainFn,
-                             StringParam name,
-                             ZilchShaderIRType* inputStreamType,
-                             ZilchShaderIROp*& inputStreamVar);
+  EntryPointHelperFunctionData GenerateGeometryCopyHelper(ZilchShaderIRFunction* userMainFn,
+                                                          StringParam name,
+                                                          ZilchShaderIRType* inputStreamType,
+                                                          ZilchShaderIROp*& inputStreamVar);
   void WriteGeometryStageInterface(ZilchShaderIRFunction* function,
                                    GeometryStageInfo& stageInfo,
                                    EntryPointInfo* entryPointInfo,
                                    EntryPointHelperFunctionData& copyInputsData,
                                    ZilchShaderIROp* copyInputsStreamVar);
-  void CollectGeometryStreamTypes(ZilchShaderIRFunction* function,
-                                  GeometryStageInfo& stageInfo);
-  void DeclareGeometryVertexInputs(
-      GeometryStageInfo& stageInfo,
-      EntryPointInfo* entryPointInfo,
-      ShaderInterfaceInfo& vertexInputInterfaceInfo,
-      EntryPointHelperFunctionData& copyInputsData,
-      ZilchShaderIROp* copyInputsStreamVar,
-      Array<ShaderInterfaceType*>& inputStreamInterfaceTypes,
-      Array<ShaderInterfaceType*>& inputVertexInterfaceTypes);
-  ShaderInterfaceStructArray* DeclareGeometryVertexInput(
-      InterfaceInfoGroup& interfaceGroup,
-      EntryPointInfo* entryPointInfo,
-      GeometryInOutTypeInfo& info,
-      Array<ShaderInterfaceType*>& inputStreamInterfaceTypes,
-      Array<ShaderInterfaceType*>& inputVertexInterfaceTypes);
-  void DeclareGeometryVertexOutputs(
-      GeometryStageInfo& stageInfo,
-      EntryPointInfo* entryPointInfo,
-      ShaderInterfaceInfo& vertexOutputInterfaceInfo,
-      Array<ShaderInterfaceType*>& inputStreamInterfaceTypes);
-  void
-  WriteGeometryInterfaceOutput(InterfaceInfoGroup& interfaceGroup,
-                               EntryPointInfo* entryPointInfo,
-                               Array<ShaderInterfaceType*>& interfaceTypes);
-  void WriteGeometryAppendFunctions(
-      GeometryStageInfo& stageInfo,
-      EntryPointInfo* entryPointInfo,
-      Array<ShaderInterfaceType*>& outputVertexInterfaceTypes,
-      Array<ShaderInterfaceType*>& inputStreamInterfaceTypes);
+  void CollectGeometryStreamTypes(ZilchShaderIRFunction* function, GeometryStageInfo& stageInfo);
+  void DeclareGeometryVertexInputs(GeometryStageInfo& stageInfo,
+                                   EntryPointInfo* entryPointInfo,
+                                   ShaderInterfaceInfo& vertexInputInterfaceInfo,
+                                   EntryPointHelperFunctionData& copyInputsData,
+                                   ZilchShaderIROp* copyInputsStreamVar,
+                                   Array<ShaderInterfaceType*>& inputStreamInterfaceTypes,
+                                   Array<ShaderInterfaceType*>& inputVertexInterfaceTypes);
+  ShaderInterfaceStructArray* DeclareGeometryVertexInput(InterfaceInfoGroup& interfaceGroup,
+                                                         EntryPointInfo* entryPointInfo,
+                                                         GeometryInOutTypeInfo& info,
+                                                         Array<ShaderInterfaceType*>& inputStreamInterfaceTypes,
+                                                         Array<ShaderInterfaceType*>& inputVertexInterfaceTypes);
+  void DeclareGeometryVertexOutputs(GeometryStageInfo& stageInfo,
+                                    EntryPointInfo* entryPointInfo,
+                                    ShaderInterfaceInfo& vertexOutputInterfaceInfo,
+                                    Array<ShaderInterfaceType*>& inputStreamInterfaceTypes);
+  void WriteGeometryInterfaceOutput(InterfaceInfoGroup& interfaceGroup,
+                                    EntryPointInfo* entryPointInfo,
+                                    Array<ShaderInterfaceType*>& interfaceTypes);
+  void WriteGeometryAppendFunctions(GeometryStageInfo& stageInfo,
+                                    EntryPointInfo* entryPointInfo,
+                                    Array<ShaderInterfaceType*>& outputVertexInterfaceTypes,
+                                    Array<ShaderInterfaceType*>& inputStreamInterfaceTypes);
   void GenerateProvokingVertexAppend(GeometryStageInfo& stageInfo,
                                      EntryPointInfo* entryPointInfo,
                                      GeometryAppendFunctionData& appendFnData,
                                      ZilchShaderIRType* outputStreamType);
   ZilchShaderIRFunction* CloneAppendFn(ZilchShaderIRFunction* originalAppendFn);
-  void CopyGeometryOutputInterface(
-      GeometryStageInfo& stageInfo,
-      EntryPointInfo* entryPointInfo,
-      GeometryAppendFunctionData& appendFnData,
-      ShaderInterfaceType& interfaceType,
-      Array<ShaderInterfaceType*>& inputStreamInterfaceTypes);
+  void CopyGeometryOutputInterface(GeometryStageInfo& stageInfo,
+                                   EntryPointInfo* entryPointInfo,
+                                   GeometryAppendFunctionData& appendFnData,
+                                   ShaderInterfaceType& interfaceType,
+                                   Array<ShaderInterfaceType*>& inputStreamInterfaceTypes);
 
   void CollectInterfaceVariables(ZilchShaderIRFunction* function,
                                  ShaderInterfaceInfo& interfaceInfo,
@@ -461,9 +444,8 @@ public:
                                         ZilchShaderIRType* type,
                                         ShaderStage::Enum shaderStage);
 
-  void ProcessUniformBlockSettings(
-      ShaderStage::Enum stageToProcess,
-      HashMap<ShaderFieldKey, UniformBufferDescription*>& mapping);
+  void ProcessUniformBlockSettings(ShaderStage::Enum stageToProcess,
+                                   HashMap<ShaderFieldKey, UniformBufferDescription*>& mapping);
   InterfaceInfoGroup* ProcessBuiltIn(ZilchShaderIRFunction* function,
                                      ShaderInterfaceInfo& interfaceInfo,
                                      ShaderStage::Enum shaderStage,
@@ -471,23 +453,21 @@ public:
                                      ShaderIRAttribute* attribute,
                                      spv::StorageClass storageClass,
                                      StringParam name);
-  InterfaceInfoGroup* ProcessUniformBlock(
-      ZilchShaderIRFunction* function,
-      ShaderInterfaceInfo& interfaceInfo,
-      ShaderIRFieldMeta* fieldMeta,
-      ShaderIRAttribute* attribute,
-      HashMap<ShaderFieldKey, UniformBufferDescription*>& mapping);
+  InterfaceInfoGroup* ProcessUniformBlock(ZilchShaderIRFunction* function,
+                                          ShaderInterfaceInfo& interfaceInfo,
+                                          ShaderIRFieldMeta* fieldMeta,
+                                          ShaderIRAttribute* attribute,
+                                          HashMap<ShaderFieldKey, UniformBufferDescription*>& mapping);
 
   void DeclareStageBlocks(ShaderInterfaceInfo& interfaceInfo,
                           EntryPointInfo* entryPointInfo,
                           EntryPointHelperFunctionData& copyInputsData,
                           EntryPointHelperFunctionData& copyOutputsData);
-  void
-  DeclareGroupBlocks(ShaderInterfaceInfo::InterfaceGroupMap& interfaceGroups,
-                     EntryPointInfo* entryPointInfo,
-                     EntryPointHelperFunctionData& copyInputsData,
-                     EntryPointHelperFunctionData& copyOutputsData,
-                     Array<ShaderInterfaceType*>& outArray);
+  void DeclareGroupBlocks(ShaderInterfaceInfo::InterfaceGroupMap& interfaceGroups,
+                          EntryPointInfo* entryPointInfo,
+                          EntryPointHelperFunctionData& copyInputsData,
+                          EntryPointHelperFunctionData& copyOutputsData,
+                          Array<ShaderInterfaceType*>& outArray);
   void DeclareBlock(InterfaceInfoGroup& interfaceGroup,
                     EntryPointInfo* entryPointInfo,
                     EntryPointHelperFunctionData& copyHelperData,
@@ -515,16 +495,14 @@ public:
                                          ZilchShaderIROp* source,
                                          int sourceOffset,
                                          spv::StorageClass sourceStorageClass);
-  ZilchShaderIROp*
-  GetNamedMemberInstanceFrom(BasicBlock* block,
-                             ZilchShaderIROp* source,
-                             StringParam memberName,
-                             spv::StorageClass sourceStorageClass);
-  ZilchShaderIROp*
-  GetNamedMemberInstanceFrom(BasicBlock* block,
-                             ZilchShaderIROp* source,
-                             const ShaderFieldKey& fieldKey,
-                             spv::StorageClass sourceStorageClass);
+  ZilchShaderIROp* GetNamedMemberInstanceFrom(BasicBlock* block,
+                                              ZilchShaderIROp* source,
+                                              StringParam memberName,
+                                              spv::StorageClass sourceStorageClass);
+  ZilchShaderIROp* GetNamedMemberInstanceFrom(BasicBlock* block,
+                                              ZilchShaderIROp* source,
+                                              const ShaderFieldKey& fieldKey,
+                                              spv::StorageClass sourceStorageClass);
 
   void DecorateUniformGroups(ShaderInterfaceInfo& interfaceInfo);
   void DecorateUniformGroup(InterfaceInfoGroup& infoGroup);
@@ -534,21 +512,16 @@ public:
                                 ShaderResourceReflectionData& memberReflection);
   void AddVertexLocationDecorations(InterfaceInfoGroup& infoGroup);
   void AddFlatDecorations(InterfaceInfoGroup& infoGroup);
-  void
-  WriteTypeDecorations(Array<InterfaceInfoGroup::DecorationParam>& decorations,
-                       BasicBlock* decorationBlock,
-                       IZilchShaderIR* toDecorate);
-  void WriteMemberDecorations(
-      Array<InterfaceInfoGroup::DecorationParam>& decorations,
-      BasicBlock* decorationBlock,
-      IZilchShaderIR* toDecorate,
-      ZilchShaderIRConstantLiteral* memberIndexLiteral);
-  void FindAndDecorateGlobals(ZilchShaderIRType* currentType,
-                              EntryPointInfo* entryPointInfo);
-  void DecorateImagesAndSamplers(TypeDependencyCollector& collector,
-                                 EntryPointInfo* entryPointInfo);
-  void DecorateRuntimeArrays(TypeDependencyCollector& collector,
-                             EntryPointInfo* entryPointInfo);
+  void WriteTypeDecorations(Array<InterfaceInfoGroup::DecorationParam>& decorations,
+                            BasicBlock* decorationBlock,
+                            IZilchShaderIR* toDecorate);
+  void WriteMemberDecorations(Array<InterfaceInfoGroup::DecorationParam>& decorations,
+                              BasicBlock* decorationBlock,
+                              IZilchShaderIR* toDecorate,
+                              ZilchShaderIRConstantLiteral* memberIndexLiteral);
+  void FindAndDecorateGlobals(ZilchShaderIRType* currentType, EntryPointInfo* entryPointInfo);
+  void DecorateImagesAndSamplers(TypeDependencyCollector& collector, EntryPointInfo* entryPointInfo);
+  void DecorateRuntimeArrays(TypeDependencyCollector& collector, EntryPointInfo* entryPointInfo);
   /// Add decorations for a runtime array struct.
   void AddRuntimeArrayDecorations(BasicBlock* decorationBlock,
                                   ZilchShaderIRType* zilchRuntimeArrayType,
@@ -564,8 +537,7 @@ public:
   int FindBindingId(HashSet<int>& usedIds1, HashSet<int>& usedIds2);
 
   // Copy reflection data from the internal interface info to the entry point
-  void CopyReflectionDataToEntryPoint(EntryPointInfo* entryPointInfo,
-                                      ShaderInterfaceInfo& interfaceInfo);
+  void CopyReflectionDataToEntryPoint(EntryPointInfo* entryPointInfo, ShaderInterfaceInfo& interfaceInfo);
   void CopyReflectionData(Array<ShaderStageResource>& resourceList,
                           ShaderInterfaceInfo& interfaceInfo,
                           InterfaceInfoGroup& group);
@@ -578,9 +550,7 @@ public:
 
   // Create a shader interface field from the interface group and the field
   // index.
-  void CreateShaderInterfaceField(ShaderInterfaceField& interfaceField,
-                                  InterfaceInfoGroup& interfaceGroup,
-                                  int index);
+  void CreateShaderInterfaceField(ShaderInterfaceField& interfaceField, InterfaceInfoGroup& interfaceGroup, int index);
 
   // Some types aren't allowed in any interface declarations (uniform/in/out).
   // This function converts them to the next best thing (e.g. bool -> int)
@@ -603,8 +573,7 @@ public:
                                            StringParam attributeName,
                                            ShaderFieldKey& fieldKey);
   // Default callback zero uses for api perspective position.
-  static void PerspectiveTransformAppendVertexCallback(
-      AppendCallbackData& callbackData, void* userData);
+  static void PerspectiveTransformAppendVertexCallback(AppendCallbackData& callbackData, void* userData);
 
   ZilchSpirVFrontEnd* mTranslator;
   ZilchSpirVFrontEndContext* mContext;

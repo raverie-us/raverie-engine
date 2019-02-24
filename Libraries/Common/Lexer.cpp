@@ -154,13 +154,7 @@ bool Character::operator>=(const Character& rhs) const
   return this->mCharacter >= rhs.mCharacter;
 }
 
-Token::Token() :
-    mEnd(true),
-    mError(false),
-    mRule(nullptr),
-    mStartInclusive(0),
-    mEndExclusive(0),
-    mStream(nullptr)
+Token::Token() : mEnd(true), mError(false), mRule(nullptr), mStartInclusive(0), mEndExclusive(0), mStream(nullptr)
 {
 }
 
@@ -285,9 +279,7 @@ ReplacementNode& R(CaptureExpressionNode& capture, ReplacementNode& replaceEach)
   return node;
 }
 
-ReplacementNode& R(CaptureExpressionNode& capture,
-                   StringParam name,
-                   ReplacementNode& replaceEach)
+ReplacementNode& R(CaptureExpressionNode& capture, StringParam name, ReplacementNode& replaceEach)
 {
   ReplacementNode& node = *new ReplacementNode();
   node.mType = ReplacementNodeType::ForeachCapture;
@@ -388,8 +380,7 @@ GrammarNode<Character>& T(int startInclusive, int endInclusive)
   return node;
 }
 
-GrammarNode<Character>& T(StringParam captureName,
-                          GrammarNode<Character>& capture)
+GrammarNode<Character>& T(StringParam captureName, GrammarNode<Character>& capture)
 {
   GrammarNode<Character>& node = *new GrammarNode<Character>();
   node.mType = GrammarNodeType::Capture;
@@ -436,12 +427,9 @@ StringRange CharacterStream::GetText(size_t startInclusive, size_t endExclusive)
   return subString;
 }
 
-void CharacterStream::Replace(StringParam text,
-                              size_t startInclusive,
-                              size_t endExclusive)
+void CharacterStream::Replace(StringParam text, size_t startInclusive, size_t endExclusive)
 {
-  this->mText =
-      String::ReplaceSub(this->mText, text, startInclusive, endExclusive);
+  this->mText = String::ReplaceSub(this->mText, text, startInclusive, endExclusive);
 }
 
 AutoIncrement::AutoIncrement(size_t* increment) : mIncrement(increment)
@@ -469,8 +457,7 @@ CaptureExpressionNode::~CaptureExpressionNode()
   delete this->mRhs;
 }
 
-CaptureExpressionNode& CaptureExpressionNode::
-operator+(CaptureExpressionNode& rhs)
+CaptureExpressionNode& CaptureExpressionNode::operator+(CaptureExpressionNode& rhs)
 {
   CaptureExpressionNode& node = *new CaptureExpressionNode();
   node.mType = CaptureExpressionNodeType::Union;
@@ -489,8 +476,7 @@ CaptureExpressionNode& CaptureExpressionNode::operator[](int index)
   return node;
 }
 
-CaptureExpressionNode& CaptureExpressionNode::
-operator[](StringParam nestedCaptureName)
+CaptureExpressionNode& CaptureExpressionNode::operator[](StringParam nestedCaptureName)
 {
   CaptureExpressionNode& node = *new CaptureExpressionNode();
   node.mType = CaptureExpressionNodeType::NestedCapture;
@@ -523,9 +509,7 @@ CaptureExpressionNode& C(StringParam captureName)
   return node;
 }
 
-CaptureExpressionNode& C(CaptureExpressionNode& parent,
-                         int startIndexInclusive,
-                         int endIndexInclusive)
+CaptureExpressionNode& C(CaptureExpressionNode& parent, int startIndexInclusive, int endIndexInclusive)
 {
   CaptureExpressionNode& node = *new CaptureExpressionNode();
   node.mType = CaptureExpressionNodeType::IndexRange;
@@ -539,9 +523,7 @@ CharacterLocation::CharacterLocation() : mLine(0), mCharacter(0)
 {
 }
 
-CharacterLocation::CharacterLocation(size_t line, size_t character) :
-    mLine(line),
-    mCharacter(character)
+CharacterLocation::CharacterLocation(size_t line, size_t character) : mLine(line), mCharacter(character)
 {
 }
 
@@ -559,10 +541,7 @@ size_t CharacterLocation::ToIndex(StringRange input, CharacterLocation location)
   return index;
 }
 
-void CharacterLocation::Compute(StringRange input,
-                                CharacterLocation* outLocation,
-                                size_t* outIndex,
-                                bool computeIndex)
+void CharacterLocation::Compute(StringRange input, CharacterLocation* outLocation, size_t* outIndex, bool computeIndex)
 {
   CharacterLocation location;
   size_t currentIndex = 0;
@@ -601,8 +580,7 @@ void CharacterLocation::Compute(StringRange input,
 
     // If we're computing the index from the location, then check if the line
     // and character matches
-    if (computeIndex && location.mLine == outLocation->mLine &&
-        location.mCharacter == outLocation->mCharacter)
+    if (computeIndex && location.mLine == outLocation->mLine && location.mCharacter == outLocation->mCharacter)
       break;
 
     ++currentIndex;

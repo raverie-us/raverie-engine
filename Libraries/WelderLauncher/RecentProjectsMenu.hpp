@@ -24,9 +24,7 @@ public:
   typedef RecentProjectItem ZilchSelf;
 
   /// Constructor.
-  RecentProjectItem(Composite* parent,
-                    RecentProjectsMenu* projectsMenu,
-                    CachedProject* cachedProject);
+  RecentProjectItem(Composite* parent, RecentProjectsMenu* projectsMenu, CachedProject* cachedProject);
 
   /// Composite Interface.
   void UpdateTransform() override;

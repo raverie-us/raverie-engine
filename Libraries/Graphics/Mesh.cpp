@@ -10,8 +10,7 @@ const float cMinMeshThickness = 0.025f;
 namespace Zero
 {
 
-VertexSemanticRange::VertexSemanticRange(
-    const FixedVertexDescription& fixedDesc) :
+VertexSemanticRange::VertexSemanticRange(const FixedVertexDescription& fixedDesc) :
     mFixedDesc(fixedDesc),
     mCurrentIndex(0)
 {
@@ -22,8 +21,7 @@ bool VertexSemanticRange::Empty()
   if (mCurrentIndex >= mFixedDesc.sMaxElements)
     return true;
   else
-    return mFixedDesc.mAttributes[mCurrentIndex].mSemantic ==
-           VertexSemantic::None;
+    return mFixedDesc.mAttributes[mCurrentIndex].mSemantic == VertexSemantic::None;
 }
 
 VertexSemantic::Enum VertexSemanticRange::Front()
@@ -55,12 +53,9 @@ ZilchDefineType(VertexBuffer, builder, type)
   ZilchBindOverloadedMethod(AddReal, ZilchInstanceOverload(void, Vec2));
   ZilchBindOverloadedMethod(AddReal, ZilchInstanceOverload(void, Vec3));
   ZilchBindOverloadedMethod(AddReal, ZilchInstanceOverload(void, Vec4));
-  ZilchBindOverloadedMethod(
-      GetVertexData, ZilchInstanceOverload(Vec4, uint, VertexSemantic::Enum));
-  ZilchBindOverloadedMethod(
-      GetVertexData,
-      ZilchInstanceOverload(
-          Vec4, uint, VertexSemantic::Enum, VertexElementType::Enum, uint));
+  ZilchBindOverloadedMethod(GetVertexData, ZilchInstanceOverload(Vec4, uint, VertexSemantic::Enum));
+  ZilchBindOverloadedMethod(GetVertexData,
+                            ZilchInstanceOverload(Vec4, uint, VertexSemantic::Enum, VertexElementType::Enum, uint));
   ZilchBindMethod(IsValidVertexData);
 
   ZilchBindMethod(ClearAttributes);
@@ -85,22 +80,17 @@ VertexBuffer::~VertexBuffer()
   delete[] mData;
 }
 
-void VertexBuffer::AddAttribute(VertexSemantic::Enum semantic,
-                                VertexElementType::Enum elementType,
-                                uint elementCount)
+void VertexBuffer::AddAttribute(VertexSemantic::Enum semantic, VertexElementType::Enum elementType, uint elementCount)
 {
   if (elementCount < 1 || elementCount > 4)
-    DoNotifyException(
-        "Invalid Element Count",
-        "Vertex attributes must be between 1 and 4 total elements.");
+    DoNotifyException("Invalid Element Count", "Vertex attributes must be between 1 and 4 total elements.");
 
   for (uint i = 0; i < mFixedDesc.sMaxElements; ++i)
   {
     VertexAttribute& attr = mFixedDesc.mAttributes[i];
     if (attr.mSemantic == semantic)
     {
-      DoNotifyException("Invalid Semantic",
-                        "Semantic given has already been specified.");
+      DoNotifyException("Invalid Semantic", "Semantic given has already been specified.");
     }
     else if (attr.mSemantic == VertexSemantic::None)
     {
@@ -221,8 +211,7 @@ void VertexBuffer::AddReal(Vec4 value)
   WriteData(value);
 }
 
-Vec4 VertexBuffer::GetVertexData(uint vertexIndex,
-                                 VertexSemantic::Enum semantic)
+Vec4 VertexBuffer::GetVertexData(uint vertexIndex, VertexSemantic::Enum semantic)
 {
   Vec4 value = Vec4::cZero;
 
@@ -231,8 +220,7 @@ Vec4 VertexBuffer::GetVertexData(uint vertexIndex,
     return value;
 
   uint elementSize = GetElementSize(attribute.mType);
-  uint vertexOffset =
-      (mFixedDesc.mVertexSize * vertexIndex) + attribute.mOffset;
+  uint vertexOffset = (mFixedDesc.mVertexSize * vertexIndex) + attribute.mOffset;
   if (vertexOffset + elementSize * attribute.mCount > mDataSize)
     return value;
 
@@ -269,8 +257,7 @@ Vec4 VertexBuffer::GetVertexData(uint vertexIndex,
   }
 
   uint elementSize = GetElementSize(attribute.mType);
-  uint vertexOffset =
-      (mFixedDesc.mVertexSize * vertexIndex) + attribute.mOffset;
+  uint vertexOffset = (mFixedDesc.mVertexSize * vertexIndex) + attribute.mOffset;
   if (vertexOffset + elementSize * attribute.mCount > mDataSize)
   {
     DoNotifyException("Invalid Read", "No vertex data at index.");
@@ -299,8 +286,7 @@ bool VertexBuffer::IsValidVertexData(uint vertexIndex,
     return false;
 
   uint elementSize = GetElementSize(attribute.mType);
-  uint vertexOffset =
-      (mFixedDesc.mVertexSize * vertexIndex) + attribute.mOffset;
+  uint vertexOffset = (mFixedDesc.mVertexSize * vertexIndex) + attribute.mOffset;
   if (vertexOffset + elementSize * attribute.mCount > mDataSize)
     return false;
 
@@ -318,8 +304,7 @@ void VertexBuffer::ClearData()
   mDataSize = 0;
 }
 
-VertexElementType::Enum
-VertexBuffer::GetElementType(VertexSemantic::Enum semantic)
+VertexElementType::Enum VertexBuffer::GetElementType(VertexSemantic::Enum semantic)
 {
   VertexAttribute attribute = GetAttribute(semantic);
   if (attribute.mSemantic == VertexSemantic::None)
@@ -393,9 +378,7 @@ uint VertexBuffer::GetElementSize(VertexElementType::Enum type)
   }
 }
 
-void VertexBuffer::ReadVertexData(byte* vertexData,
-                                  VertexAttribute& attribute,
-                                  Vec4& output)
+void VertexBuffer::ReadVertexData(byte* vertexData, VertexAttribute& attribute, Vec4& output)
 {
   for (uint i = 0; i < attribute.mCount; ++i)
   {
@@ -620,8 +603,7 @@ void Mesh::BuildAabbAndTree()
   for (uint i = 0; i < primitiveCount; ++i)
   {
     Vec3 points[3];
-    bool hasPositions = GetPrimitiveData(
-        i, VertexSemantic::Position, VertexElementType::Real, 3, points);
+    bool hasPositions = GetPrimitiveData(i, VertexSemantic::Position, VertexElementType::Real, 3, points);
     if (hasPositions == false)
       continue;
 
@@ -668,11 +650,7 @@ bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
     uint primitiveIndex = range.Front();
 
     Vec3 points[3];
-    bool hasPositions = GetPrimitiveData(primitiveIndex,
-                                         VertexSemantic::Position,
-                                         VertexElementType::Real,
-                                         3,
-                                         points);
+    bool hasPositions = GetPrimitiveData(primitiveIndex, VertexSemantic::Position, VertexElementType::Real, 3, points);
     if (hasPositions == false)
       continue;
 
@@ -682,27 +660,14 @@ bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
     switch (mPrimitiveType)
     {
     case Zero::PrimitiveType::Triangles:
-      result = Intersection::RayTriangle(localRay.Start,
-                                         localRay.Direction,
-                                         points[0],
-                                         points[1],
-                                         points[2],
-                                         &point);
+      result = Intersection::RayTriangle(localRay.Start, localRay.Direction, points[0], points[1], points[2], &point);
       break;
     case Zero::PrimitiveType::Lines:
-      result = Intersection::RayCapsule(localRay.Start,
-                                        localRay.Direction,
-                                        points[0],
-                                        points[1],
-                                        cMinMeshThickness,
-                                        &point);
+      result =
+          Intersection::RayCapsule(localRay.Start, localRay.Direction, points[0], points[1], cMinMeshThickness, &point);
       break;
     case Zero::PrimitiveType::Points:
-      result = Intersection::RaySphere(localRay.Start,
-                                       localRay.Direction,
-                                       points[0],
-                                       cMinMeshThickness,
-                                       &point);
+      result = Intersection::RaySphere(localRay.Start, localRay.Direction, points[0], cMinMeshThickness, &point);
       break;
     }
 
@@ -724,19 +689,14 @@ bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
   raycast.mT = closestPoint.T;
 
   Vec3 points[3];
-  GetPrimitiveData(closestPrimitive,
-                   VertexSemantic::Position,
-                   VertexElementType::Real,
-                   3,
-                   points);
+  GetPrimitiveData(closestPrimitive, VertexSemantic::Position, VertexElementType::Real, 3, points);
 
   // Compute weights to get interpolated normal and uv at point of intersection
   Vec3 weights = Vec3::cZero;
   switch (mPrimitiveType)
   {
   case Zero::PrimitiveType::Triangles:
-    Geometry::BarycentricTriangle(
-        point, points[0], points[1], points[2], &weights);
+    Geometry::BarycentricTriangle(point, points[0], points[1], points[2], &weights);
     break;
   case Zero::PrimitiveType::Lines:
   {
@@ -755,15 +715,10 @@ bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
   }
 
   Vec3 normals[3];
-  bool hasNormals = GetPrimitiveData(closestPrimitive,
-                                     VertexSemantic::Normal,
-                                     VertexElementType::Real,
-                                     3,
-                                     normals);
+  bool hasNormals = GetPrimitiveData(closestPrimitive, VertexSemantic::Normal, VertexElementType::Real, 3, normals);
   if (hasNormals)
   {
-    raycast.mNormal = normals[0] * weights.x + normals[1] * weights.y +
-                      normals[2] * weights.z;
+    raycast.mNormal = normals[0] * weights.x + normals[1] * weights.y + normals[2] * weights.z;
     Math::AttemptNormalize(raycast.mNormal);
   }
   else if (mPrimitiveType == PrimitiveType::Triangles)
@@ -777,8 +732,7 @@ bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
     raycast.mNormal = Vec3::cZero;
 
   Vec2 uvs[3];
-  bool hasUvs = GetPrimitiveData(
-      closestPrimitive, VertexSemantic::Uv, VertexElementType::Real, 2, uvs);
+  bool hasUvs = GetPrimitiveData(closestPrimitive, VertexSemantic::Uv, VertexElementType::Real, 2, uvs);
   if (hasUvs)
     raycast.mUv = uvs[0] * weights.x + uvs[1] * weights.y + uvs[2] * weights.z;
   else
@@ -794,11 +748,7 @@ bool Mesh::TestFrustum(const Frustum& frustum)
     uint primitiveIndex = range.Front();
 
     Vec3 points[3];
-    bool hasPositions = GetPrimitiveData(primitiveIndex,
-                                         VertexSemantic::Position,
-                                         VertexElementType::Real,
-                                         3,
-                                         points);
+    bool hasPositions = GetPrimitiveData(primitiveIndex, VertexSemantic::Position, VertexElementType::Real, 3, points);
     if (hasPositions == false)
       continue;
 
@@ -837,9 +787,7 @@ uint GetIndexSize(IndexElementType::Enum indexType)
 }
 
 template <typename T>
-void FillIndexBuffer(IndexBuffer* indexBuffer,
-                     byte* indexBufferData,
-                     uint indexCount)
+void FillIndexBuffer(IndexBuffer* indexBuffer, byte* indexBufferData, uint indexCount)
 {
   T* indexData = (T*)indexBufferData;
   for (uint i = 0; i < indexCount; ++i)
@@ -910,7 +858,7 @@ void LoadSkeletonChunk(Mesh& mesh, streamType& file)
   file.Read(count);
 
   mesh.mBones.Resize(count);
-  forRange(MeshBone & bone, mesh.mBones.All())
+  forRange (MeshBone& bone, mesh.mBones.All())
   {
     file.ReadString(bone.mName);
     file.Read(bone.mBindTransform);
@@ -971,8 +919,7 @@ struct MeshLoadPattern
 
 ImplementResourceManager(MeshManager, Mesh);
 
-MeshManager::MeshManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+MeshManager::MeshManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   AddLoader("Mesh", new ChunkFileLoader<MeshManager, MeshLoadPattern>());
   mCategory = "Graphics";

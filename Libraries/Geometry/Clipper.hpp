@@ -85,8 +85,7 @@ struct LinkedVertex
 // Given two sets of contours, computes all the intersection points between
 // every edge pair and inserts them into the original contours
 void Subdivide(Array<Vec2_t>* contourA, Array<Vec2_t>* contourB);
-void Subdivide(HighPrecisionContourArray* contoursA,
-               HighPrecisionContourArray* contoursB);
+void Subdivide(HighPrecisionContourArray* contoursA, HighPrecisionContourArray* contoursB);
 
 // Converts a set of contours into a simplical chain
 void Build(const Array<Vec2_t>& contour, Array<Simplex>* chain);
@@ -100,13 +99,9 @@ void Select(Operation::Enum operation,
             Array<Simplex>* selectedB);
 
 // Merges two sets of partial simplical chains into a set of contours
-bool Merge(const Array<Simplex>& selectedA,
-           const Array<Simplex>& selectedB,
-           ContourArray* results);
+bool Merge(const Array<Simplex>& selectedA, const Array<Simplex>& selectedB, ContourArray* results);
 
-void Clean(ContourArray* contours,
-           f32 angleTolerance = 0.f,
-           f32 distanceTolerance = 0.f);
+void Clean(ContourArray* contours, f32 angleTolerance = 0.f, f32 distanceTolerance = 0.f);
 
 void Convert(const ContourArray& input, HighPrecisionContourArray* output);
 

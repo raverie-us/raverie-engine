@@ -65,10 +65,7 @@ CustomConstraintInfo::CustomConstraintInfo()
   mSolvePosition = false;
 }
 
-void CustomConstraintInfo::SetJacobian(Vec3Param linear0,
-                                       Vec3Param angular0,
-                                       Vec3Param linear1,
-                                       Vec3Param angular1)
+void CustomConstraintInfo::SetJacobian(Vec3Param linear0, Vec3Param angular0, Vec3Param linear1, Vec3Param angular1)
 {
   mLinear0 = linear0;
   mAngular0 = angular0;
@@ -107,14 +104,7 @@ void CustomConstraintInfo::ComputeSpring(float frequencyHz, float dampRatio)
     dt = joint->mSpace->mIterationDt;
 
   // Update the mass, bias, and gamma
-  SoftConstraintFragment(mInvEffectiveMass,
-                         mError,
-                         mBias,
-                         mGamma,
-                         frequencyHz,
-                         dampRatio,
-                         mBaumgarte,
-                         dt);
+  SoftConstraintFragment(mInvEffectiveMass, mError, mBias, mGamma, frequencyHz, dampRatio, mBaumgarte, dt);
   // Re-compute the effective mass afterwards (in case someone wants to read and
   // mutate it)
   if (mInvEffectiveMass < Math::PositiveMin())
@@ -125,9 +115,7 @@ void CustomConstraintInfo::ComputeSpring(float frequencyHz, float dampRatio)
   // We can't solve position anymore
   mSolvePosition = false;
 }
-void CustomConstraintInfo::ComputeMotor(float targetSpeed,
-                                        float minImpulse,
-                                        float maxImpulse)
+void CustomConstraintInfo::ComputeMotor(float targetSpeed, float minImpulse, float maxImpulse)
 {
   mMinImpulse = minImpulse;
   mMaxImpulse = maxImpulse;
@@ -338,8 +326,7 @@ void CustomJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   }
 }
 
-uint CustomJoint::GetAtomIndexFilter(uint atomIndex,
-                                     real& desiredConstraintValue) const
+uint CustomJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   // Not used
   return 0;
@@ -364,10 +351,9 @@ void CustomJoint::AddConstraint(CustomConstraintInfo* constraint)
 {
   if (constraint == nullptr)
   {
-    DoNotifyException(
-        "Invalid constraint info",
-        "Constraint info was null. A constraint "
-        "must be allocated through CustomJoint.CreateConstraint() first.");
+    DoNotifyException("Invalid constraint info",
+                      "Constraint info was null. A constraint "
+                      "must be allocated through CustomJoint.CreateConstraint() first.");
     return;
   }
 
@@ -379,8 +365,7 @@ void CustomJoint::AddConstraint(CustomConstraintInfo* constraint)
     Cog* cogOwner = owner->GetOwner();
 
     String cogDescription = cogOwner->GetDescription();
-    msg = String::Format("Constraint already is owned by cog '%s'",
-                         cogDescription.c_str());
+    msg = String::Format("Constraint already is owned by cog '%s'", cogDescription.c_str());
     DoNotifyException("Invalid Constraint Add", msg);
     return;
   }
@@ -394,8 +379,7 @@ void CustomJoint::RemoveConstraint(CustomConstraintInfo* constraint)
 {
   // Find the constraint's index
   HandleOf<CustomConstraintInfo> constraintHandle = constraint;
-  Array<ConstraintInfoReference>::size_type index =
-      mConstraints.FindIndex(constraintHandle);
+  Array<ConstraintInfoReference>::size_type index = mConstraints.FindIndex(constraintHandle);
   if (index == Array<ConstraintInfoReference>::InvalidIndex)
     return;
 
@@ -420,20 +404,17 @@ CustomConstraintInfo* CustomJoint::GetConstraint(size_t index)
   // Verify the index
   if (index >= mConstraints.Size())
   {
-    DoNotifyException(
-        "Invalid Index",
-        String::Format(
-            "Index '%d' is invalid. There are only '%d' constraints available.",
-            index,
-            mConstraints.Size()));
+    DoNotifyException("Invalid Index",
+                      String::Format("Index '%d' is invalid. There are only '%d' constraints available.",
+                                     index,
+                                     mConstraints.Size()));
     return nullptr;
   }
 
   return mConstraints[index];
 }
 
-void CustomJoint::ConstraintInfoToMolecule(CustomConstraintInfo* constraint,
-                                           ConstraintMolecule& molecule)
+void CustomJoint::ConstraintInfoToMolecule(CustomConstraintInfo* constraint, ConstraintMolecule& molecule)
 {
   molecule.mJacobian.Linear[0] = constraint->mLinear0;
   molecule.mJacobian.Linear[1] = constraint->mLinear1;

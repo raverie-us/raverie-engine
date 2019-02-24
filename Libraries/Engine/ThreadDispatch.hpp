@@ -26,10 +26,7 @@ public:
     DispatchOn(object, object->GetDispatcher(), eventId, event);
   }
 
-  void DispatchOn(HandleParam object,
-                  EventDispatcher* eventDispatcher,
-                  StringParam eventId,
-                  Event* event);
+  void DispatchOn(HandleParam object, EventDispatcher* eventDispatcher, StringParam eventId, Event* event);
   void DispatchEvents();
   void ClearEvents();
 
@@ -83,8 +80,7 @@ void ShutdownThreadSystem();
 
 inline void SendBlockingTaskStart(StringParam taskName)
 {
-  Z::gDispatch->Dispatch(
-      Z::gEngine, Events::BlockingTaskStart, new BlockingTaskEvent(taskName));
+  Z::gDispatch->Dispatch(Z::gEngine, Events::BlockingTaskStart, new BlockingTaskEvent(taskName));
 }
 
 inline void SendBlockingTaskFinish()

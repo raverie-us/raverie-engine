@@ -37,8 +37,7 @@ Vec3 GetObjectTextPosition(Cog* cog)
       Aabb aabb = collider->mAabb;
 
       // Use it's upper position as the offset
-      return aabb.GetCenter() + Vec3(0.0f, aabb.GetHalfExtents().y, 0.0f) +
-             OffsetUp;
+      return aabb.GetCenter() + Vec3(0.0f, aabb.GetHalfExtents().y, 0.0f) + OffsetUp;
     }
 
     // Attempt to get the object's transform component
@@ -64,13 +63,11 @@ float GetViewDistance(Aabb& aabb)
 void DisplayCodeDefinition(CodeDefinition& definition)
 {
   // Check that the code definition is valid otherwise return
-  if (!definition.NameLocation.IsValid() &&
-      !definition.NameLocation.CodeUserData)
+  if (!definition.NameLocation.IsValid() && !definition.NameLocation.CodeUserData)
     return;
 
   Resource* resource = (Resource*)definition.NameLocation.CodeUserData;
-  DocumentResource* documentResource =
-      Type::DynamicCast<DocumentResource*>(resource);
+  DocumentResource* documentResource = Type::DynamicCast<DocumentResource*>(resource);
 
   Editor* editor = Z::gEditor;
 
@@ -88,17 +85,14 @@ void DisplayCodeDefinition(CodeDefinition& definition)
   DocumentEditor* definitionDocument = nullptr;
 
   // If we have a resource where the definition lives
-  if (DocumentResource* documentResource =
-          Type::DynamicCast<DocumentResource*>(resource))
+  if (DocumentResource* documentResource = Type::DynamicCast<DocumentResource*>(resource))
     definitionDocument = editor->OpenDocumentResource(documentResource);
   // This might be a generated stub code / document
   else if (resource == nullptr && definition.NameLocation.IsNative)
   {
-    String extension = FileExtensionManager::GetZilchScriptTypeEntry()
-                           ->GetDefaultExtensionNoDot();
-    definitionDocument = editor->OpenTextString(definition.NameLocation.Origin,
-                                                definition.NameLocation.Code,
-                                                extension);
+    String extension = FileExtensionManager::GetZilchScriptTypeEntry()->GetDefaultExtensionNoDot();
+    definitionDocument =
+        editor->OpenTextString(definition.NameLocation.Origin, definition.NameLocation.Code, extension);
   }
 
   if (definitionDocument)
@@ -107,8 +101,7 @@ void DisplayCodeDefinition(CodeDefinition& definition)
     // the name
     definitionDocument->GoToPosition(definition.ElementLocation.EndPosition);
     definitionDocument->GoToPosition(definition.ElementLocation.StartPosition);
-    definitionDocument->GotoAndSelect(definition.NameLocation.StartPosition,
-                                      definition.NameLocation.EndPosition);
+    definitionDocument->GotoAndSelect(definition.NameLocation.StartPosition, definition.NameLocation.EndPosition);
   }
 }
 
@@ -138,11 +131,9 @@ Aabb GetAabb(HandleParam instance, IncludeMode::Type includeMode, bool world)
 
   Vec3 center = Vec3::cZero;
 
-  if (MetaTransform* metaTransform =
-          instance.StoredType->HasInherited<MetaTransform>())
+  if (MetaTransform* metaTransform = instance.StoredType->HasInherited<MetaTransform>())
   {
-    MetaTransformInstance transformInstance =
-        metaTransform->GetInstance(instance);
+    MetaTransformInstance transformInstance = metaTransform->GetInstance(instance);
     center = transformInstance.GetWorldTranslation();
   }
 
@@ -166,12 +157,7 @@ Aabb GetAabb(MetaSelection* selection, IncludeMode::Type includeMode)
   return GetAabbFromObjects(selection->All(), includeMode);
 }
 
-void ExpandAabb(Cog* cog,
-                Aabb& aabb,
-                IncludeMode::Type includeMode,
-                bool world,
-                bool toParent,
-                bool expandTransform)
+void ExpandAabb(Cog* cog, Aabb& aabb, IncludeMode::Type includeMode, bool world, bool toParent, bool expandTransform)
 {
   Transform* tx = cog->has(Transform);
   if (tx == nullptr)
@@ -235,8 +221,7 @@ void ExpandAabb(Cog* cog,
     if (world)
       aabb.Expand(tx->GetWorldTranslation());
     else if (toParent && tx->TransformParent != nullptr)
-      aabb.Expand(Math::TransformPoint(tx->TransformParent->GetLocalMatrix(),
-                                       tx->GetLocalTranslation()));
+      aabb.Expand(Math::TransformPoint(tx->TransformParent->GetLocalMatrix(), tx->GetLocalTranslation()));
     else
       aabb.Expand(tx->GetLocalTranslation());
   }
@@ -244,16 +229,12 @@ void ExpandAabb(Cog* cog,
   if (includeMode != IncludeMode::Children)
     return;
 
-  forRange(Cog & child, cog->GetChildren())
-      ExpandAabb(&child, aabb, includeMode, world, !world);
+  forRange (Cog& child, cog->GetChildren())
+    ExpandAabb(&child, aabb, includeMode, world, !world);
 }
 
-void ExpandAabb(HandleParam instance,
-                Aabb& aabb,
-                IncludeMode::Type includeMode,
-                bool world,
-                bool toParent,
-                bool expandTransform)
+void ExpandAabb(
+    HandleParam instance, Aabb& aabb, IncludeMode::Type includeMode, bool world, bool toParent, bool expandTransform)
 {
   Cog* cog = instance.Get<Cog*>();
 
@@ -284,17 +265,14 @@ void ExpandAabb(HandleParam instance,
   ExpandAabb(cog, aabb, includeMode, world, toParent, expandTransform);
 }
 
-void ExpandAabbChildrenOnly(HandleParam instance,
-                            Aabb& aabb,
-                            bool world,
-                            bool expandTransform)
+void ExpandAabbChildrenOnly(HandleParam instance, Aabb& aabb, bool world, bool expandTransform)
 {
   Cog* cog = instance.Get<Cog*>();
   if (cog == nullptr)
     return;
 
-  forRange(Cog & child, cog->GetChildren()) ExpandAabb(
-      &child, aabb, IncludeMode::Children, world, !world, expandTransform);
+  forRange (Cog& child, cog->GetChildren())
+    ExpandAabb(&child, aabb, IncludeMode::Children, world, !world, expandTransform);
 }
 
 } // namespace Zero

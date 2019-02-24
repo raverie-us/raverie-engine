@@ -5,10 +5,8 @@ namespace Zero
 {
 String GetDocumentationLocation()
 {
-  String sourceDir =
-      Z::gEngine->GetConfigCog()->has(MainConfig)->SourceDirectory;
-  String documentationLocation =
-      FilePath::Combine(sourceDir.All(), "BuildOutput", "Documentation");
+  String sourceDir = Z::gEngine->GetConfigCog()->has(MainConfig)->SourceDirectory;
+  String documentationLocation = FilePath::Combine(sourceDir.All(), "BuildOutput", "Documentation");
 
   CreateDirectoryAndParents(documentationLocation);
   return documentationLocation;
@@ -22,9 +20,7 @@ void SaveNonZilchMetaDocumentation()
   // saves in source directory
   String documentationLocation = GetDocumentationLocation();
 
-  String fileName =
-      FilePath::Combine(documentationLocation.All(),
-                        "UnboundMetaTypesDocumentationSkeleton.data");
+  String fileName = FilePath::Combine(documentationLocation.All(), "UnboundMetaTypesDocumentationSkeleton.data");
   SaveInfoFromMetaToFile(fileName, true);
   Z::gEngine->Terminate();
 }
@@ -33,8 +29,7 @@ void SaveListOfCommandsToDataFile()
 {
   String documentationLocation = GetDocumentationLocation();
 
-  String fileName =
-      FilePath::Combine(documentationLocation.All(), "CommandList.data");
+  String fileName = FilePath::Combine(documentationLocation.All(), "CommandList.data");
 
   Array<Command*>& commandList = CommandManager::GetInstance()->mCommands;
 
@@ -57,7 +52,7 @@ void SaveListOfCommandsToDataFile()
     currDoc->mDescription = currCommand->Description;
     currDoc->mShortcut = currCommand->Shortcut;
 
-    forRange(StringParam tag, currCommand->TagList.All())
+    forRange (StringParam tag, currCommand->TagList.All())
     {
       currDoc->mTags.PushBack(tag);
     }
@@ -96,11 +91,9 @@ void SaveEventListToDataFile()
 {
   String documentationLocation = GetDocumentationLocation();
 
-  String fileName =
-      FilePath::Combine(documentationLocation.All(), "EventList.data");
+  String fileName = FilePath::Combine(documentationLocation.All(), "EventList.data");
 
-  MetaDatabase::StringToTypeMap::range eventRange =
-      MetaDatabase::GetInstance()->mEventMap.All();
+  MetaDatabase::StringToTypeMap::range eventRange = MetaDatabase::GetInstance()->mEventMap.All();
   EventDocList allTheEvents;
   while (!eventRange.Empty())
   {
@@ -148,31 +141,27 @@ void SaveUserAttributeListToFile()
 
   typedef Pair<String, AttributeExtension*> AttribPairType;
   // object attributes
-  forRange(AttribPairType & attrib, userExtensions->mClassExtensions.All())
+  forRange (AttribPairType& attrib, userExtensions->mClassExtensions.All())
   {
-    attribDocumentation.mObjectAttributes.PushBack(
-        new AttributeDoc(attrib.second));
+    attribDocumentation.mObjectAttributes.PushBack(new AttributeDoc(attrib.second));
   }
 
   // function attributes
-  forRange(AttribPairType & attrib, userExtensions->mFunctionExtensions.All())
+  forRange (AttribPairType& attrib, userExtensions->mFunctionExtensions.All())
   {
-    attribDocumentation.mFunctionAttributes.PushBack(
-        new AttributeDoc(attrib.second));
+    attribDocumentation.mFunctionAttributes.PushBack(new AttributeDoc(attrib.second));
   }
 
   // property attributes
-  forRange(AttribPairType & attrib, userExtensions->mPropertyExtensions.All())
+  forRange (AttribPairType& attrib, userExtensions->mPropertyExtensions.All())
   {
-    attribDocumentation.mPropertyAttributes.PushBack(
-        new AttributeDoc(attrib.second));
+    attribDocumentation.mPropertyAttributes.PushBack(new AttributeDoc(attrib.second));
   }
 
   // file creation and opening
   String documentationLocation = GetDocumentationLocation();
 
-  String fileName =
-      FilePath::Combine(documentationLocation.All(), "UserAttributeList.data");
+  String fileName = FilePath::Combine(documentationLocation.All(), "UserAttributeList.data");
 
   attribDocumentation.SaveToFile(fileName);
 }
@@ -181,16 +170,13 @@ void SaveUserAttributeListToFile()
 /// for commands and events
 void SaveDocumentation()
 {
-  String sourceDir =
-      Z::gEngine->GetConfigCog()->has(MainConfig)->SourceDirectory;
-  String documentationLocation =
-      FilePath::Combine(sourceDir.All(), "Projects", "Editor");
+  String sourceDir = Z::gEngine->GetConfigCog()->has(MainConfig)->SourceDirectory;
+  String documentationLocation = FilePath::Combine(sourceDir.All(), "Projects", "Editor");
 
   if (!FileExists(documentationLocation))
     CreateDirectoryAndParents(documentationLocation);
 
-  String fileName = FilePath::Combine(documentationLocation.All(),
-                                      "DocumentationSkeleton.data");
+  String fileName = FilePath::Combine(documentationLocation.All(), "DocumentationSkeleton.data");
   SaveInfoFromMetaToFile(fileName, false);
 
   SaveListOfCommandsToDataFile();
@@ -208,19 +194,11 @@ void BindDocumentationCommands(Cog* config, CommandManager* commands)
 {
   if (Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
   {
-    commands
-        ->AddCommand("SaveDocumentation",
-                     BindCommandFunction(SaveDocumentation))
-        ->DevOnly = true;
-    commands
-        ->AddCommand("SaveNonZilchDocumentation",
-                     BindCommandFunction(SaveNonZilchMetaDocumentation))
-        ->DevOnly = true;
-    commands->AddCommand("SaveEventList", BindCommandFunction(SaveEventList))
-        ->DevOnly = true;
-    commands
-        ->AddCommand("SaveCommandList", BindCommandFunction(SaveListOfCommands))
-        ->DevOnly = true;
+    commands->AddCommand("SaveDocumentation", BindCommandFunction(SaveDocumentation))->DevOnly = true;
+    commands->AddCommand("SaveNonZilchDocumentation", BindCommandFunction(SaveNonZilchMetaDocumentation))->DevOnly =
+        true;
+    commands->AddCommand("SaveEventList", BindCommandFunction(SaveEventList))->DevOnly = true;
+    commands->AddCommand("SaveCommandList", BindCommandFunction(SaveListOfCommands))->DevOnly = true;
   }
 }
 

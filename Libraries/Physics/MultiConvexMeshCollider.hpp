@@ -22,8 +22,7 @@ struct MultiConvexMeshRange
     MultiConvexMeshCollider* mCollider;
   };
 
-  MultiConvexMeshRange(MultiConvexMeshCollider* collider,
-                       const Aabb& worldAabb);
+  MultiConvexMeshRange(MultiConvexMeshCollider* collider, const Aabb& worldAabb);
 
   // Range Interface
   ConvexMeshObject& Front();
@@ -61,8 +60,7 @@ public:
   // Collider Interface
   void ComputeWorldAabbInternal() override;
   real ComputeWorldVolumeInternal() override;
-  void ComputeLocalInverseInertiaTensor(real mass,
-                                        Mat3Ref localInvInertia) override;
+  void ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia) override;
   Vec3 GetColliderLocalCenterOfMass() const override;
   void RebuildModifiedResources() override;
 

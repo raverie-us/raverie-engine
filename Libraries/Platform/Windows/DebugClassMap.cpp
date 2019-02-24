@@ -33,8 +33,7 @@ public:
   String GetSymbolName(uint classIndex)
   {
     wchar_t* text = L"";
-    VerifyWin(SymGetTypeInfo(
-        mProcess, mModuleBase, (ULONG)classIndex, TI_GET_SYMNAME, &text));
+    VerifyWin(SymGetTypeInfo(mProcess, mModuleBase, (ULONG)classIndex, TI_GET_SYMNAME, &text));
 
     char* asciiText = (char*)alloca(MAX_SYM_NAME);
     ConvertUnicodeToAscii(asciiText, MAX_SYM_NAME, text, wcslen(text));
@@ -45,59 +44,49 @@ public:
   uint GetDataKind(uint classIndex)
   {
     DWORD dataKind = 0;
-    VerifyWin(SymGetTypeInfo(
-        mProcess, mModuleBase, (ULONG)classIndex, TI_GET_DATAKIND, &dataKind));
+    VerifyWin(SymGetTypeInfo(mProcess, mModuleBase, (ULONG)classIndex, TI_GET_DATAKIND, &dataKind));
     return dataKind;
   }
 
   uint GetTag(uint classIndex)
   {
     DWORD tag = 0;
-    SymGetTypeInfo(
-        mProcess, mModuleBase, (ULONG)classIndex, TI_GET_SYMTAG, &tag);
+    SymGetTypeInfo(mProcess, mModuleBase, (ULONG)classIndex, TI_GET_SYMTAG, &tag);
     return tag;
   }
 
   uint GetOffset(uint index)
   {
     DWORD offset;
-    VerifyWin(SymGetTypeInfo(
-        mProcess, mModuleBase, (ULONG)index, TI_GET_OFFSET, &offset));
+    VerifyWin(SymGetTypeInfo(mProcess, mModuleBase, (ULONG)index, TI_GET_OFFSET, &offset));
     return offset;
   }
 
   uint GetClassParent(uint index)
   {
     DWORD classIndex = 0;
-    VerifyWin(SymGetTypeInfo(mProcess,
-                             mModuleBase,
-                             (ULONG)index,
-                             TI_GET_CLASSPARENTID,
-                             &classIndex));
+    VerifyWin(SymGetTypeInfo(mProcess, mModuleBase, (ULONG)index, TI_GET_CLASSPARENTID, &classIndex));
     return classIndex;
   }
 
   uint GetSize(uint index)
   {
     DWORD size;
-    VerifyWin(SymGetTypeInfo(
-        mProcess, mModuleBase, (ULONG)index, TI_GET_LENGTH, &size));
+    VerifyWin(SymGetTypeInfo(mProcess, mModuleBase, (ULONG)index, TI_GET_LENGTH, &size));
     return size;
   }
 
   uint GetType(uint index)
   {
     DWORD typeId;
-    VerifyWin(SymGetTypeInfo(
-        mProcess, mModuleBase, (ULONG)index, TI_GET_TYPEID, &typeId));
+    VerifyWin(SymGetTypeInfo(mProcess, mModuleBase, (ULONG)index, TI_GET_TYPEID, &typeId));
     return typeId;
   }
 
   uint GetChildCount(uint index)
   {
     DWORD count;
-    VerifyWin(SymGetTypeInfo(
-        mProcess, mModuleBase, (ULONG)index, TI_GET_CHILDRENCOUNT, &count));
+    VerifyWin(SymGetTypeInfo(mProcess, mModuleBase, (ULONG)index, TI_GET_CHILDRENCOUNT, &count));
     return count;
   }
 };
@@ -169,21 +158,15 @@ ClassMap* BuildMap(TypeModule& types, uint typeIndex)
 
   DWORD childCount = (DWORD)types.GetChildCount(typeIndex);
 
-  DWORD findChildrenSize =
-      sizeof(TI_FINDCHILDREN_PARAMS) + childCount * sizeof(ULONG);
+  DWORD findChildrenSize = sizeof(TI_FINDCHILDREN_PARAMS) + childCount * sizeof(ULONG);
 
-  TI_FINDCHILDREN_PARAMS* findChildren =
-      (TI_FINDCHILDREN_PARAMS*)alloca(findChildrenSize);
+  TI_FINDCHILDREN_PARAMS* findChildren = (TI_FINDCHILDREN_PARAMS*)alloca(findChildrenSize);
 
   memset(findChildren, 0, findChildrenSize);
 
   findChildren->Count = childCount;
 
-  VerifyWin(SymGetTypeInfo(types.mProcess,
-                           types.mModuleBase,
-                           (ULONG)typeIndex,
-                           TI_FINDCHILDREN,
-                           findChildren));
+  VerifyWin(SymGetTypeInfo(types.mProcess, types.mModuleBase, (ULONG)typeIndex, TI_FINDCHILDREN, findChildren));
 
   for (uint i = 0; i < childCount; ++i)
   {
@@ -219,17 +202,14 @@ ClassMap* BuildMap(TypeModule& types, uint typeIndex)
   return classMap;
 }
 
-void Check(TypeModule& typeModule,
-           cstr className,
-           byte* classMemory,
-           uint typeIndex)
+void Check(TypeModule& typeModule, cstr className, byte* classMemory, uint typeIndex)
 {
 
   // Get the class map
   ClassMap* classMap = BuildMap(typeModule, typeIndex);
 
   // Check all member variables for uninitialized memory
-  forRange(MemberVariable & var, classMap->mVariables.All())
+  forRange (MemberVariable& var, classMap->mVariables.All())
   {
     const byte DebugByte = 0xCD;
     bool good = false;
@@ -286,10 +266,8 @@ void CheckClassMemory(cstr className, byte* classMemory)
 
   TypeModule typeModule;
 
-  String fullClassName =
-      BuildString(Zero::String("Zero::"), Zero::String(className));
-  String constructorFunc =
-      BuildString(fullClassName, Zero::String("::"), Zero::String(className));
+  String fullClassName = BuildString(Zero::String("Zero::"), Zero::String(className));
+  String constructorFunc = BuildString(fullClassName, Zero::String("::"), Zero::String(className));
   uint moduleBase = 0;
 
   uint totalSize = sizeof(SYMBOL_INFO) + (MAX_SYM_NAME - 1) * sizeof(CHAR);
@@ -315,16 +293,13 @@ void CheckClassMemory(cstr className, byte* classMemory)
   if (!success)
   {
     gClassStorage.AddInvalid(fullClassName);
-    ErrorIf(true,
-            "Could not find class %s. This causes a stall on load.",
-            fullClassName.c_str());
+    ErrorIf(true, "Could not find class %s. This causes a stall on load.", fullClassName.c_str());
     SymCleanup(process);
     return;
   }
 
   DWORD typeId = 0;
-  BOOL test = SymGetTypeInfo(
-      process, moduleBase, symbolInfo->TypeIndex, TI_GET_TYPE, &typeId);
+  BOOL test = SymGetTypeInfo(process, moduleBase, symbolInfo->TypeIndex, TI_GET_TYPE, &typeId);
 
   // It seems that many versions of dbghelp do not work need to investigate why
   if (!test)
@@ -336,11 +311,7 @@ void CheckClassMemory(cstr className, byte* classMemory)
 
   // With the index of the constructor use the parent id to find is class id;
   DWORD typeIndex = 0;
-  VerifyWin(SymGetTypeInfo(process,
-                           moduleBase,
-                           symbolInfo->TypeIndex,
-                           TI_GET_CLASSPARENTID,
-                           &typeIndex));
+  VerifyWin(SymGetTypeInfo(process, moduleBase, symbolInfo->TypeIndex, TI_GET_CLASSPARENTID, &typeIndex));
 
   String foundClassName = typeModule.GetSymbolName(typeIndex);
   // Now check the classes memory

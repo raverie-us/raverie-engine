@@ -58,9 +58,7 @@ public:
 
   void Serialize(Serializer& stream);
 
-  void UpdateFrame(PlayData& playData,
-                   TrackParams& params,
-                   AnimationFrame& frame);
+  void UpdateFrame(PlayData& playData, TrackParams& params, AnimationFrame& frame);
 
   /// Name will be "Transform.Translation" or "Light.Color"
   PropertyTrack* GetPropertyTrack(StringParam name);
@@ -117,9 +115,7 @@ public:
   }
 
   ObjectTrackList ObjectTracks;
-  void UpdateFrame(PlayData& playData,
-                   TrackParams& params,
-                   AnimationFrame& frame);
+  void UpdateFrame(PlayData& playData, TrackParams& params, AnimationFrame& frame);
   ObjectTrack* GetObjectTrack(StringParam fullPath);
   float mDuration;
   uint mNumberOfTracks;

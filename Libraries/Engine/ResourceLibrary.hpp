@@ -145,9 +145,7 @@ public:
 class ResourceLibrary : public SafeId32EventObject, public EventHandler
 {
 public:
-  ZilchDeclareDerivedTypeExplicit(ResourceLibrary,
-                                  SafeId32EventObject,
-                                  TypeCopyMode::ReferenceType);
+  ZilchDeclareDerivedTypeExplicit(ResourceLibrary, SafeId32EventObject, TypeCopyMode::ReferenceType);
 
   ResourceLibrary();
   ~ResourceLibrary();

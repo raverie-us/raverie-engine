@@ -11,9 +11,7 @@ public:
   }
 
   // HandleManager Interface
-  void ObjectToHandle(const byte* object,
-                      BoundType* type,
-                      Handle& handleToInitialize) override;
+  void ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize) override;
   byte* HandleToObject(const Handle& handle) override;
 };
 

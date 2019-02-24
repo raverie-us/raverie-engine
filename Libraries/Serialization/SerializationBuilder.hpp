@@ -29,22 +29,19 @@ public:
   template <typename type>
   inline bool FundamentalFieldType(cstr fieldName, type& value)
   {
-    if (Base()->InnerStart(Serialization::Trait<type>::TypeName(),
-                           fieldName,
-                           StructureType::Value))
+    if (Base()->InnerStart(Serialization::Trait<type>::TypeName(), fieldName, StructureType::Value))
     {
       Base()->FundamentalType(value);
-      Base()->InnerEnd(Serialization::Trait<type>::TypeName(),
-                       StructureType::Value);
+      Base()->InnerEnd(Serialization::Trait<type>::TypeName(), StructureType::Value);
       return true;
     }
     return false;
   }
 
-#define FUNDAMENTAL(type)                                                      \
-  bool FundamentalField(cstr fieldName, type& value) override                  \
-  {                                                                            \
-    return FundamentalFieldType(fieldName, value);                             \
+#define FUNDAMENTAL(type)                                                                                              \
+  bool FundamentalField(cstr fieldName, type& value) override                                                          \
+  {                                                                                                                    \
+    return FundamentalFieldType(fieldName, value);                                                                     \
   }
 #include "FundamentalTypes.hpp"
 #undef FUNDAMENTAL

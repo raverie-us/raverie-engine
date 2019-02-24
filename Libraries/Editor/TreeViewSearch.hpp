@@ -10,9 +10,7 @@ class TreeViewSearch : public Composite
 {
 public:
   typedef TreeViewSearch ZilchSelf;
-  TreeViewSearch(Composite* parent,
-                 TreeView* treeView,
-                 DataSourceFilter* filter);
+  TreeViewSearch(Composite* parent, TreeView* treeView, DataSourceFilter* filter);
   ~TreeViewSearch();
 
   TreeView* mTreeView;

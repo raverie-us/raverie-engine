@@ -118,9 +118,7 @@ public:
   /// Convert the screen point to a position on the view plane at a given depth.
   Vec3 ScreenToWorldViewPlane(Vec2Param screenPoint, float viewDepth);
   /// Convert the screen point to a position on a given plane.
-  Vec3 ScreenToWorldPlane(Vec2Param screenPoint,
-                          Vec3Param worldPlaneNormal,
-                          Vec3Param worldPlanePosition);
+  Vec3 ScreenToWorldPlane(Vec2Param screenPoint, Vec3Param worldPlaneNormal, Vec3Param worldPlanePosition);
   /// Convert a world point to a screen point.
   Vec2 WorldToScreen(Vec3Param worldPoint);
   /// Convert a screen point to a point relative to the viewport

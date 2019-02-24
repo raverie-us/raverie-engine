@@ -35,8 +35,7 @@ void EllipsoidCollider::DebugDraw()
   Vec3 worldRadii = GetWorldRadii();
 
   // Draw only one disc on the xz plane
-  DebugDrawDisc(
-      pos, rotation.BasisX(), rotation.BasisZ(), worldRadii.x, worldRadii.z);
+  DebugDrawDisc(pos, rotation.BasisX(), rotation.BasisZ(), worldRadii.x, worldRadii.z);
 
   // To help visualize, draw 6 rings around the y-axis. To do this we
   // interpolate across the x-z ellipse to get an axis and radius.
@@ -62,12 +61,10 @@ void EllipsoidCollider::ComputeWorldAabbInternal()
 real EllipsoidCollider::ComputeWorldVolumeInternal()
 {
   Vec3 worldRadii = GetWorldRadii();
-  return real(4.0 / 3.0) * Math::cPi * worldRadii.x * worldRadii.y *
-         worldRadii.z;
+  return real(4.0 / 3.0) * Math::cPi * worldRadii.x * worldRadii.y * worldRadii.z;
 }
 
-void EllipsoidCollider::ComputeLocalInverseInertiaTensor(
-    real mass, Mat3Ref localInvInertia)
+void EllipsoidCollider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia)
 {
   Vec3 radii = GetWorldRadii();
   real xSquared = radii.x * radii.x;
@@ -84,19 +81,14 @@ void EllipsoidCollider::ComputeWorldBoundingSphereInternal()
 {
   // Get the maximum of the radii
   Vec3 worldRadii = GetWorldRadii();
-  real maxRadius =
-      Math::Max(Math::Max(worldRadii.x, worldRadii.y), worldRadii.z);
+  real maxRadius = Math::Max(Math::Max(worldRadii.x, worldRadii.y), worldRadii.z);
   mBoundingSphere.mCenter = GetWorldTranslation();
   mBoundingSphere.mRadius = maxRadius;
 }
 
 void EllipsoidCollider::Support(Vec3Param direction, Vec3Ptr support) const
 {
-  Geometry::SupportEllipsoid(direction,
-                             GetWorldTranslation(),
-                             GetWorldRadii(),
-                             GetWorldRotation(),
-                             support);
+  Geometry::SupportEllipsoid(direction, GetWorldTranslation(), GetWorldRadii(), GetWorldRotation(), support);
 }
 
 Vec3 EllipsoidCollider::GetRadii(void) const

@@ -21,8 +21,7 @@ NotificationPopup::NotifyData::NotifyData(NotifyEvent* event)
   Icon = event->Icon;
 }
 
-NotificationPopup::NotificationPopup(Composite* composite, NotifyEvent* event) :
-    Composite(composite)
+NotificationPopup::NotificationPopup(Composite* composite, NotifyEvent* event) : Composite(composite)
 {
   mMouseOver = false;
   mNotifyData.PushBack(NotifyData(event));
@@ -48,8 +47,7 @@ NotificationPopup::NotificationPopup(Composite* composite, NotifyEvent* event) :
   mClose = CreateAttached<Element>("Close");
 
   mBottomBar = new ColoredComposite(this, FloatColorRGBA(8, 8, 8, 255));
-  mBottomBar->SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Vec2::cZero, Thickness(1, 1, 12, 0)));
+  mBottomBar->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness(1, 1, 12, 0)));
   {
     IconButton* leftButton = new IconButton(mBottomBar);
     leftButton->SetIcon("PreviousObject");
@@ -113,8 +111,7 @@ void NotificationPopup::AddNotifyEvent(NotifyEvent* event)
   }
   else if (newErrType == NotifyType::Warning)
   {
-    if (currErrType == NotifyType::General ||
-        (currErrType == NotifyType::Warning && mMouseOver == false))
+    if (currErrType == NotifyType::General || (currErrType == NotifyType::Warning && mMouseOver == false))
     {
       mCurrentNotifyIndex = newIndex;
       ReadCurrentNotifyData();
@@ -142,8 +139,7 @@ void NotificationPopup::UpdateTransform()
   mBottomBar->SetTranslation(Vec3(0, mSize.y - barHeight, 0));
   mBottomBar->SetSize(Vec2(mSize.x, barHeight));
 
-  mNumberOfNotificationsText->SetText(String::Format(
-      "(%d of %d)", mCurrentNotifyIndex + 1, mNotifyData.Size()));
+  mNumberOfNotificationsText->SetText(String::Format("(%d of %d)", mCurrentNotifyIndex + 1, mNotifyData.Size()));
 
   float xStart = sizeIcon.y + Pixels(10) + Pixels(10);
   mTitleText->SetTranslation(Vec3(xStart, Pixels(10), 0));

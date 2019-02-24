@@ -55,18 +55,14 @@ RelativeVelocityJoint* DynamicMotor::CreateJoint()
 {
   // Create the velocity joint
   JointCreator jointCreator;
-  Cog* jointCog =
-      jointCreator.CreateWorldPoints(mSpace->mWorldCollider->GetOwner(),
-                                     GetOwner(),
-                                     CoreArchetypes::ObjectLink,
-                                     Vec3::cZero);
+  Cog* jointCog = jointCreator.CreateWorldPoints(
+      mSpace->mWorldCollider->GetOwner(), GetOwner(), CoreArchetypes::ObjectLink, Vec3::cZero);
   if (jointCog == nullptr)
     return nullptr;
 
   jointCog->SetEditorOnly();
   jointCog->AddComponentByName("RelativeVelocityJoint");
-  jointCog->SetName(
-      String::Format("%s%s", GetOwner()->GetName().c_str(), "MotorJoint"));
+  jointCog->SetName(String::Format("%s%s", GetOwner()->GetName().c_str(), "MotorJoint"));
   // Store the CogId to the joint
   mVelJointCog = jointCog->GetId();
 
@@ -149,8 +145,7 @@ void DynamicMotor::MoveInDirection(Vec3Param direction, Vec3Param up)
     // could prevent gravity from affecting us. Because of this project
     // out the new up from the old right and forward.
     Vec3 oldForward = velJoint->GetAxis(0);
-    Vec3 forward =
-        oldForward - Math::Dot(normalizedUp, oldForward) * normalizedUp;
+    Vec3 forward = oldForward - Math::Dot(normalizedUp, oldForward) * normalizedUp;
     forward.AttemptNormalize();
     velJoint->SetAxis(0, forward);
 

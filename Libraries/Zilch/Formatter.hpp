@@ -213,9 +213,7 @@ public:
   void WriteKeywordOrSymbol(Grammar::Enum token);
 
   // Writes out a keyword with spacing rules
-  void WriteKeywordOrSymbolSpaceStyle(Grammar::Enum token,
-                                      SpaceStyle::Enum specific,
-                                      SpaceStyle::Enum globalDefault);
+  void WriteKeywordOrSymbolSpaceStyle(Grammar::Enum token, SpaceStyle::Enum specific, SpaceStyle::Enum globalDefault);
 
   // Add a scope to the builder, which typically will indent the contents and
   // emit a 'begin scope' token
@@ -274,16 +272,13 @@ public:
 
 private:
   // Get the preferred line rule
-  static LineStyle::Enum GetLineStyle(LineStyle::Enum specific,
-                                      LineStyle::Enum globalDefault);
+  static LineStyle::Enum GetLineStyle(LineStyle::Enum specific, LineStyle::Enum globalDefault);
 
   // Get the preferred indent rule
-  static IndentStyle::Enum GetIndentStyle(IndentStyle::Enum specific,
-                                          IndentStyle::Enum globalDefault);
+  static IndentStyle::Enum GetIndentStyle(IndentStyle::Enum specific, IndentStyle::Enum globalDefault);
 
   // Get the preferred space rule
-  static SpaceStyle::Enum GetSpaceStyle(SpaceStyle::Enum specific,
-                                        SpaceStyle::Enum globalDefault);
+  static SpaceStyle::Enum GetSpaceStyle(SpaceStyle::Enum specific, SpaceStyle::Enum globalDefault);
 
 public:
   // The format we emit the code in
@@ -330,8 +325,7 @@ public:
 };
 
 // The context we use to generate code
-class ZeroShared CodeFormatterContext
-    : public WalkerContext<CodeFormatter, CodeFormatterContext>
+class ZeroShared CodeFormatterContext : public WalkerContext<CodeFormatter, CodeFormatterContext>
 {
 public:
   // Constructor
@@ -392,39 +386,28 @@ private:
   void FormatThrow(ThrowNode*& node, CodeFormatterContext* context);
 
   // Expressions (do not require emitting newline in front)
-  void FormatBinaryOperator(BinaryOperatorNode*& node,
-                            CodeFormatterContext* context);
-  void FormatUnaryOperator(UnaryOperatorNode*& node,
-                           CodeFormatterContext* context);
+  void FormatBinaryOperator(BinaryOperatorNode*& node, CodeFormatterContext* context);
+  void FormatUnaryOperator(UnaryOperatorNode*& node, CodeFormatterContext* context);
   void FormatTypeCast(TypeCastNode*& node, CodeFormatterContext* context);
   void FormatIndexerCall(IndexerCallNode*& node, CodeFormatterContext* context);
-  void FormatFunctionCall(FunctionCallNode*& node,
-                          CodeFormatterContext* context);
-  void FormatMemberAccess(MemberAccessNode*& node,
-                          CodeFormatterContext* context);
-  void FormatLocalVariable(LocalVariableNode*& node,
-                           CodeFormatterContext* context);
+  void FormatFunctionCall(FunctionCallNode*& node, CodeFormatterContext* context);
+  void FormatMemberAccess(MemberAccessNode*& node, CodeFormatterContext* context);
+  void FormatLocalVariable(LocalVariableNode*& node, CodeFormatterContext* context);
   void FormatParameter(ParameterNode*& node, CodeFormatterContext* context);
-  void FormatStaticTypeNode(StaticTypeNode*& node,
-                            CodeFormatterContext* context);
+  void FormatStaticTypeNode(StaticTypeNode*& node, CodeFormatterContext* context);
   void FormatValue(ValueNode*& node, CodeFormatterContext* context);
-  void FormatStringInterpolant(StringInterpolantNode*& node,
-                               CodeFormatterContext* context);
+  void FormatStringInterpolant(StringInterpolantNode*& node, CodeFormatterContext* context);
   void FormatTypeId(TypeIdNode*& node, CodeFormatterContext* context);
 
   // Format a class back into Zilch format
-  void FormatAttributes(NodeList<AttributeNode>& attributes,
-                        ZilchCodeBuilder& builder);
+  void FormatAttributes(NodeList<AttributeNode>& attributes, ZilchCodeBuilder& builder);
   void FormatEnum(EnumNode*& node, CodeFormatterContext* context);
   void FormatEnumValue(EnumValueNode*& node, CodeFormatterContext* context);
   void FormatClass(ClassNode*& node, CodeFormatterContext* context);
   void FormatSendsEvent(SendsEventNode*& node, CodeFormatterContext* context);
-  void FormatMemberVariable(MemberVariableNode*& node,
-                            CodeFormatterContext* context);
+  void FormatMemberVariable(MemberVariableNode*& node, CodeFormatterContext* context);
   template <typename NodeType, typename FunctionType>
-  void FormatGenericFunctionHelper(NodeType* node,
-                                   CodeFormatterContext* context,
-                                   FunctionType emitPostArgs);
+  void FormatGenericFunctionHelper(NodeType* node, CodeFormatterContext* context, FunctionType emitPostArgs);
   void FormatFunction(FunctionNode*& node, CodeFormatterContext* context);
   void FormatConstructor(ConstructorNode*& node, CodeFormatterContext* context);
   void FormatDestructor(DestructorNode*& node, CodeFormatterContext* context);

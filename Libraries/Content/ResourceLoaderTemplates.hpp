@@ -134,15 +134,13 @@ public:
 };
 
 template <typename ResourceMananger>
-class TextDataFileLoader
-    : public GenericDataLoader<ResourceMananger, DataFileFormat::Text>
+class TextDataFileLoader : public GenericDataLoader<ResourceMananger, DataFileFormat::Text>
 {
 public:
 };
 
 template <typename ResourceMananger>
-class BinaryDataFileLoader
-    : public GenericDataLoader<ResourceMananger, DataFileFormat::Binary>
+class BinaryDataFileLoader : public GenericDataLoader<ResourceMananger, DataFileFormat::Binary>
 {
 public:
 };

@@ -78,16 +78,12 @@ ZeroNoInline bool LinkerEquals(const Any& a, const Any& b)
 {
   return a == b;
 }
-ZeroNoInline bool LinkerEquals(const HandleOf<String>& a,
-                               const HandleOf<String>& b)
+ZeroNoInline bool LinkerEquals(const HandleOf<String>& a, const HandleOf<String>& b)
 {
   return a == b;
 }
 
-ArrayUserData::ArrayUserData() :
-    ContainedType(nullptr),
-    RangeType(nullptr),
-    SelfType(nullptr)
+ArrayUserData::ArrayUserData() : ContainedType(nullptr), RangeType(nullptr), SelfType(nullptr)
 {
 }
 
@@ -116,8 +112,7 @@ public:
   static String ArrayToString(const BoundType* type, const byte* data)
   {
     // Read the element size from the current function's user-data
-    ArrayUserData& userData =
-        type->ComplexUserData.ReadObject<ArrayUserData>(0);
+    ArrayUserData& userData = type->ComplexUserData.ReadObject<ArrayUserData>(0);
 
     // Create a string builder to generate the array entries
     StringBuilder builder;
@@ -133,8 +128,7 @@ public:
       byte* valuePointer = (byte*)&self->NativeArray[i];
 
       // Convert that value to a string generically
-      String valueString =
-          userData.ContainedType->GenericToString(valuePointer);
+      String valueString = userData.ContainedType->GenericToString(valuePointer);
 
       // Append the stringified value to the builder
       builder.Append(valueString);
@@ -171,8 +165,7 @@ public:
   static T ArrayReadValue(Call& call, ArrayTemplate* self, Integer parameter)
   {
     // Read the element size from the current function's user-data
-    ArrayUserData& userData =
-        call.GetFunction()->ComplexUserData.ReadObject<ArrayUserData>(0);
+    ArrayUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<ArrayUserData>(0);
 
     // Get the value
     byte* valueData = call.GetParameterUnchecked(parameter);
@@ -186,8 +179,7 @@ public:
   static void ArrayGet(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Read the array index
     Integer index = call.Get<Integer>(0);
@@ -207,8 +199,7 @@ public:
   static void ArraySet(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Read the array index
     Integer index = call.Get<Integer>(0);
@@ -229,8 +220,7 @@ public:
   static void ArrayPush(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Place in array
     self->NativeArray.PushBack(ArrayReadValue(call, self, 0));
@@ -241,8 +231,7 @@ public:
   static void ArrayInsert(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Read the array index
     Integer index = call.Get<Integer>(0);
@@ -263,8 +252,7 @@ public:
   static void ArrayPop(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Check that the array has elements
     if (self->GetCount() == 0)
@@ -286,8 +274,7 @@ public:
   static void ArrayRemoveAt(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Get the index we're trying to remove at
     Integer index = call.Get<Integer>(0);
@@ -308,8 +295,7 @@ public:
   static void ArrayRemoveSwap(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Get the index we're trying to remove at
     Integer index = call.Get<Integer>(0);
@@ -329,8 +315,7 @@ public:
   static void ArrayClear(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     self->NativeArray.Clear();
     self->Modified();
@@ -340,15 +325,13 @@ public:
   static void ArrayCopy(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
-    ArrayUserData& userData =
-        call.GetFunction()->ComplexUserData.ReadObject<ArrayUserData>(0);
+    ArrayUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<ArrayUserData>(0);
 
     // Create the new array
-    Handle arrayHandle = call.GetState()->AllocateDefaultConstructedHeapObject(
-        userData.SelfType, report, HeapFlags::ReferenceCounted);
+    Handle arrayHandle =
+        call.GetState()->AllocateDefaultConstructedHeapObject(userData.SelfType, report, HeapFlags::ReferenceCounted);
 
     // If we threw an exception, we need to early out and let the stack unroll
     if (report.HasThrownExceptions())
@@ -368,8 +351,7 @@ public:
   static void ArrayCount(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Write out the count
     call.Set(Call::Return, self->GetCount());
@@ -379,8 +361,7 @@ public:
   static void ArrayCapacity(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Write out the capacity
     call.Set(Call::Return, (Integer)self->NativeArray.capacity());
@@ -390,8 +371,7 @@ public:
   static void ArrayReserve(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Get the first argument, capacity
     Integer capacity = call.Get<Integer>(0);
@@ -402,17 +382,13 @@ public:
   }
 
   //***************************************************************************
-  static void ArrayResizeHelper(Call& call,
-                                ExceptionReport& report,
-                                byte* defaultValue)
+  static void ArrayResizeHelper(Call& call, ExceptionReport& report, byte* defaultValue)
   {
     // Get the user data, because we need to know the template types
-    ArrayUserData& userData =
-        call.GetFunction()->ComplexUserData.ReadObject<ArrayUserData>(0);
+    ArrayUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<ArrayUserData>(0);
 
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Get the new size of the array (first argument)
     Integer newSize = call.Get<Integer>(0);
@@ -420,8 +396,7 @@ public:
     // If the user attempted to pass in a negative value...
     if (newSize < 0)
     {
-      call.GetState()->ThrowException(
-          report, "Cannot resize the array to a negative size");
+      call.GetState()->ThrowException(report, "Cannot resize the array to a negative size");
       return;
     }
 
@@ -442,8 +417,7 @@ public:
 
         // If no default value was provided, use default construction (otherwise
         // use the given default value)
-        element =
-            CopyToAnyOrActualType<T>(defaultValue, userData.ContainedType);
+        element = CopyToAnyOrActualType<T>(defaultValue, userData.ContainedType);
       }
     }
     else
@@ -454,9 +428,7 @@ public:
   }
 
   //***************************************************************************
-  static void ArrayResizeConstructorHelper(Call& call,
-                                           ExceptionReport& report,
-                                           byte* defaultValue)
+  static void ArrayResizeConstructorHelper(Call& call, ExceptionReport& report, byte* defaultValue)
   {
     // Get ourselves (the array)
     byte* memory = call.GetHandle(Call::This).Dereference();
@@ -510,8 +482,7 @@ public:
   static void ArrayLastIndex(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Write out the count
     call.Set(Call::Return, self->GetCount() - 1);
@@ -521,8 +492,7 @@ public:
   static void ArrayFindFirstIndex(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Read value to find
     T value = ArrayReadValue(call, self, 0);
@@ -548,8 +518,7 @@ public:
   static void ArrayRemoveFirst(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Read the value to find
     T value = ArrayReadValue(call, self, 0);
@@ -578,15 +547,13 @@ public:
   static void ArrayRemoveAll(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Read the value that we want to remove
     T testValue = ArrayReadValue(call, self, 0);
 
     // Remove all the elements if they are equal, and get how many were removed
-    size_t removeCount =
-        RemoveAll(self->NativeArray, Zero::EqualTo<T>(testValue));
+    size_t removeCount = RemoveAll(self->NativeArray, Zero::EqualTo<T>(testValue));
 
     // Return the amount we removed
     call.Set<Integer>(Call::Return, (Integer)removeCount);
@@ -604,9 +571,7 @@ public:
   class DelegateCompare
   {
   public:
-    DelegateCompare(ExecutableState* state,
-                    ExceptionReport& report,
-                    Delegate& comparer) :
+    DelegateCompare(ExecutableState* state, ExceptionReport& report, Delegate& comparer) :
         State(state),
         Report(&report),
         Comparer(&comparer)
@@ -651,46 +616,35 @@ public:
   static void ArraySortDelegate(Call& call, ExceptionReport& report)
   {
     Delegate& comparer = call.GetDelegate(0);
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
-    Sort(self->NativeArray.All(),
-         DelegateCompare<ComparisonMode::BoolMode>(
-             call.GetState(), report, comparer));
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    Sort(self->NativeArray.All(), DelegateCompare<ComparisonMode::BoolMode>(call.GetState(), report, comparer));
   }
 
   //***************************************************************************
   static void ArraySortCompareToDelegate(Call& call, ExceptionReport& report)
   {
     Delegate& comparer = call.GetDelegate(0);
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
-    Sort(self->NativeArray.All(),
-         DelegateCompare<ComparisonMode::CompareMode>(
-             call.GetState(), report, comparer));
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    Sort(self->NativeArray.All(), DelegateCompare<ComparisonMode::CompareMode>(call.GetState(), report, comparer));
   }
 
   //***************************************************************************
-  static void ArrayReturnIndexedRange(Call& call,
-                                      ExceptionReport& report,
-                                      ArrayTemplate* self,
-                                      Integer start,
-                                      Integer count)
+  static void
+  ArrayReturnIndexedRange(Call& call, ExceptionReport& report, ArrayTemplate* self, Integer start, Integer count)
   {
     // Read the element size from the current function's user-data
-    ArrayUserData& userData =
-        call.GetFunction()->ComplexUserData.ReadObject<ArrayUserData>(0);
+    ArrayUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<ArrayUserData>(0);
 
     // Create the range type that we will return
-    Handle rangeHandle = call.GetState()->AllocateDefaultConstructedHeapObject(
-        userData.RangeType, report, HeapFlags::ReferenceCounted);
+    Handle rangeHandle =
+        call.GetState()->AllocateDefaultConstructedHeapObject(userData.RangeType, report, HeapFlags::ReferenceCounted);
 
     // If we threw an exception, we need to early out and let the stack unroll
     if (report.HasThrownExceptions())
       return;
 
     // Get the range's data (should have been constructed!)
-    ArrayRangeTemplate<T>* range =
-        (ArrayRangeTemplate<T>*)rangeHandle.Dereference();
+    ArrayRangeTemplate<T>* range = (ArrayRangeTemplate<T>*)rangeHandle.Dereference();
 
     // Setup the range to be returned
     range->Array = call.GetHandle(Call::This);
@@ -707,8 +661,7 @@ public:
   static void ArrayAll(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Range of all elements
     ArrayReturnIndexedRange(call, report, self, 0, self->GetCount());
@@ -718,8 +671,7 @@ public:
   static void ArrayRange(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
-    ArrayTemplate* self =
-        (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Get the index we're trying to remove at
     Integer begin = call.Get<Integer>(0);
@@ -796,8 +748,7 @@ public:
   static void ArrayRangeDestructor(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the range)
-    ArrayRangeTemplate* self =
-        (ArrayRangeTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayRangeTemplate* self = (ArrayRangeTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Directly invoke the destructor
     self->~ArrayRangeTemplate();
@@ -807,8 +758,7 @@ public:
   static void ArrayRangeReset(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the range)
-    ArrayRangeTemplate* self =
-        (ArrayRangeTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayRangeTemplate* self = (ArrayRangeTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Move the range back to the start
     self->Current = self->Start;
@@ -818,17 +768,15 @@ public:
   static void ArrayRangeMoveNext(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the range)
-    ArrayRangeTemplate* self =
-        (ArrayRangeTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayRangeTemplate* self = (ArrayRangeTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Check if the difference (how much we've gone forward) is past the count
     if (self->IsEmpty())
     {
       // Throw an exception since the range was empty and we called MoveNext
-      call.GetState()->ThrowException(
-          report,
-          "The range reached the end, but then an attempt was made to make it "
-          "iterate forward more");
+      call.GetState()->ThrowException(report,
+                                      "The range reached the end, but then an attempt was made to make it "
+                                      "iterate forward more");
       return;
     }
     else
@@ -842,8 +790,7 @@ public:
   static void ArrayRangeIsEmpty(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the range)
-    ArrayRangeTemplate* self =
-        (ArrayRangeTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayRangeTemplate* self = (ArrayRangeTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Compute and return whether or not he range is empty
     Boolean isEmpty = self->IsEmpty();
@@ -854,8 +801,7 @@ public:
   static void ArrayRangeIsNotEmpty(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the range)
-    ArrayRangeTemplate* self =
-        (ArrayRangeTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayRangeTemplate* self = (ArrayRangeTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Compute and return whether or not he range is empty
     Boolean isNotEmpty = self->IsNotEmpty();
@@ -874,8 +820,7 @@ public:
   static void ArrayRangeCurrent(Call& call, ExceptionReport& report)
   {
     // Get this object
-    ArrayRangeTemplate* self =
-        (ArrayRangeTemplate*)call.GetHandle(Call::This).Dereference();
+    ArrayRangeTemplate* self = (ArrayRangeTemplate*)call.GetHandle(Call::This).Dereference();
 
     // Get the array that we look at
     ArrayTemplate<T>* array = (ArrayTemplate<T>*)self->Array.Dereference();
@@ -884,9 +829,7 @@ public:
     if (array == nullptr || self->ModifyId != array->ModifyId)
     {
       // It was modified, so throw an exception and early out
-      call.GetState()->ThrowException(
-          report,
-          "The collection was modified and therefore the range cannot be used");
+      call.GetState()->ThrowException(report, "The collection was modified and therefore the range cannot be used");
       return;
     }
 
@@ -894,10 +837,9 @@ public:
     if (self->IsEmpty())
     {
       // Throw an exception since the range was empty and we called Current
-      call.GetState()->ThrowException(
-          report,
-          "The range reached the end and an attempt was made to get the "
-          "current value");
+      call.GetState()->ThrowException(report,
+                                      "The range reached the end and an attempt was made to get the "
+                                      "current value");
       return;
     }
     else
@@ -976,8 +918,7 @@ BoundType* InstantiateArray(LibraryBuilder& builder,
                             const void* userData)
 {
   // Error checking
-  ErrorIf(templateTypes.Size() != 1,
-          "The Array template should only take one template argument");
+  ErrorIf(templateTypes.Size() != 1, "The Array template should only take one template argument");
 
   // Get the type we're instantiating
   Type* containedType = templateTypes.Front().TypeValue;
@@ -994,19 +935,15 @@ BoundType* InstantiateArray(LibraryBuilder& builder,
 
   ZeroTodo("The range type must have a valid destructor the decrements the "
            "reference count on the 'array' handle");
-  BoundType* rangeType = builder.AddBoundType("ArrayRange",
-                                              fullyQualifiedRangeName,
-                                              TypeCopyMode::ReferenceType,
-                                              sizeof(ArrayRangeTemplate<T>));
+  BoundType* rangeType = builder.AddBoundType(
+      "ArrayRange", fullyQualifiedRangeName, TypeCopyMode::ReferenceType, sizeof(ArrayRangeTemplate<T>));
 
   rangeType->ToStringFunction = ArrayRangeTemplate<T>::ArrayRangeToString;
 
   // Create the array type instance (arrays and any other containers should be
   // reference types!)
-  BoundType* arrayType = builder.AddBoundType(baseName,
-                                              fullyQualifiedName,
-                                              TypeCopyMode::ReferenceType,
-                                              sizeof(ArrayTemplate<T>));
+  BoundType* arrayType =
+      builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(ArrayTemplate<T>));
 
   arrayType->ToStringFunction = ArrayTemplate<T>::ArrayToString;
 
@@ -1025,15 +962,13 @@ BoundType* InstantiateArray(LibraryBuilder& builder,
   ZilchFullBindDestructor(builder, arrayType, ArrayTemplate<T>);
   ZilchFullBindConstructor(builder, arrayType, ArrayTemplate<T>, ZilchNoNames);
 
-  f = builder.AddBoundConstructor(arrayType,
-                                  ArrayTemplate<T>::ArrayConstructorResize,
-                                  OneParameter(core.IntegerType, "size"));
+  f = builder.AddBoundConstructor(
+      arrayType, ArrayTemplate<T>::ArrayConstructorResize, OneParameter(core.IntegerType, "size"));
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundConstructor(
-      arrayType,
-      ArrayTemplate<T>::ArrayConstructorResizeDefault,
-      TwoParameters(core.IntegerType, "size", containedType, "defaultValue"));
+  f = builder.AddBoundConstructor(arrayType,
+                                  ArrayTemplate<T>::ArrayConstructorResizeDefault,
+                                  TwoParameters(core.IntegerType, "size", containedType, "defaultValue"));
   f->ComplexUserData.WriteObject(arrayUserData);
 
   f = builder.AddBoundFunction(arrayType,
@@ -1044,13 +979,12 @@ BoundType* InstantiateArray(LibraryBuilder& builder,
                                FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(
-      arrayType,
-      OperatorSet,
-      ArrayTemplate<T>::ArraySet,
-      TwoParameters(core.IntegerType, "index", containedType, "value"),
-      core.VoidType,
-      FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType,
+                               OperatorSet,
+                               ArrayTemplate<T>::ArraySet,
+                               TwoParameters(core.IntegerType, "index", containedType, "value"),
+                               core.VoidType,
+                               FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
   f = builder.AddBoundFunction(arrayType,
@@ -1077,13 +1011,12 @@ BoundType* InstantiateArray(LibraryBuilder& builder,
                                FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(
-      arrayType,
-      "Resize",
-      ArrayTemplate<T>::ArrayResizeDefault,
-      TwoParameters(core.IntegerType, "size", containedType, "defaultValue"),
-      core.VoidType,
-      FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType,
+                               "Resize",
+                               ArrayTemplate<T>::ArrayResizeDefault,
+                               TwoParameters(core.IntegerType, "size", containedType, "defaultValue"),
+                               core.VoidType,
+                               FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
   f = builder.AddBoundFunction(arrayType,
@@ -1094,21 +1027,16 @@ BoundType* InstantiateArray(LibraryBuilder& builder,
                                FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(arrayType,
-                               "Pop",
-                               ArrayTemplate<T>::ArrayPop,
-                               ParameterArray(),
-                               containedType,
-                               FunctionOptions::None);
+  f = builder.AddBoundFunction(
+      arrayType, "Pop", ArrayTemplate<T>::ArrayPop, ParameterArray(), containedType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(
-      arrayType,
-      "Insert",
-      ArrayTemplate<T>::ArrayInsert,
-      TwoParameters(core.IntegerType, "index", containedType, "value"),
-      core.VoidType,
-      FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType,
+                               "Insert",
+                               ArrayTemplate<T>::ArrayInsert,
+                               TwoParameters(core.IntegerType, "index", containedType, "value"),
+                               core.VoidType,
+                               FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
   f = builder.AddBoundFunction(arrayType,
@@ -1143,29 +1071,20 @@ BoundType* InstantiateArray(LibraryBuilder& builder,
                                FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
+  f = builder.AddBoundFunction(arrayType,
+                               "Range",
+                               ArrayTemplate<T>::ArrayRange,
+                               TwoParameters(core.IntegerType, "start", core.IntegerType, "count"),
+                               rangeType,
+                               FunctionOptions::None);
+  f->ComplexUserData.WriteObject(arrayUserData);
+
   f = builder.AddBoundFunction(
-      arrayType,
-      "Range",
-      ArrayTemplate<T>::ArrayRange,
-      TwoParameters(core.IntegerType, "start", core.IntegerType, "count"),
-      rangeType,
-      FunctionOptions::None);
+      arrayType, "Copy", ArrayTemplate<T>::ArrayCopy, ParameterArray(), arrayType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(arrayType,
-                               "Copy",
-                               ArrayTemplate<T>::ArrayCopy,
-                               ParameterArray(),
-                               arrayType,
-                               FunctionOptions::None);
-  f->ComplexUserData.WriteObject(arrayUserData);
-
-  f = builder.AddBoundFunction(arrayType,
-                               "Clear",
-                               ArrayTemplate<T>::ArrayClear,
-                               ParameterArray(),
-                               core.VoidType,
-                               FunctionOptions::None);
+  f = builder.AddBoundFunction(
+      arrayType, "Clear", ArrayTemplate<T>::ArrayClear, ParameterArray(), core.VoidType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
   f = builder.AddBoundFunction(arrayType,
@@ -1176,9 +1095,8 @@ BoundType* InstantiateArray(LibraryBuilder& builder,
                                FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  DelegateType* binaryCompare = builder.GetDelegateType(
-      TwoParameters(containedType, "left", containedType, "right"),
-      core.BooleanType);
+  DelegateType* binaryCompare =
+      builder.GetDelegateType(TwoParameters(containedType, "left", containedType, "right"), core.BooleanType);
   f = builder.AddBoundFunction(arrayType,
                                "Sort",
                                ArrayTemplate<T>::ArraySortDelegate,
@@ -1187,9 +1105,8 @@ BoundType* InstantiateArray(LibraryBuilder& builder,
                                FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  DelegateType* binaryCompareTo = builder.GetDelegateType(
-      TwoParameters(containedType, "left", containedType, "right"),
-      core.IntegerType);
+  DelegateType* binaryCompareTo =
+      builder.GetDelegateType(TwoParameters(containedType, "left", containedType, "right"), core.IntegerType);
   f = builder.AddBoundFunction(arrayType,
                                "Sort",
                                ArrayTemplate<T>::ArraySortCompareToDelegate,
@@ -1198,38 +1115,19 @@ BoundType* InstantiateArray(LibraryBuilder& builder,
                                FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  builder.AddBoundGetterSetter(arrayType,
-                               "Count",
-                               core.IntegerType,
-                               nullptr,
-                               ArrayTemplate<T>::ArrayCount,
-                               MemberOptions::None);
-  builder.AddBoundGetterSetter(arrayType,
-                               "Capacity",
-                               core.IntegerType,
-                               nullptr,
-                               ArrayTemplate<T>::ArrayCapacity,
-                               MemberOptions::None);
-  builder.AddBoundGetterSetter(arrayType,
-                               "LastIndex",
-                               core.IntegerType,
-                               nullptr,
-                               ArrayTemplate<T>::ArrayLastIndex,
-                               MemberOptions::None);
+  builder.AddBoundGetterSetter(
+      arrayType, "Count", core.IntegerType, nullptr, ArrayTemplate<T>::ArrayCount, MemberOptions::None);
+  builder.AddBoundGetterSetter(
+      arrayType, "Capacity", core.IntegerType, nullptr, ArrayTemplate<T>::ArrayCapacity, MemberOptions::None);
+  builder.AddBoundGetterSetter(
+      arrayType, "LastIndex", core.IntegerType, nullptr, ArrayTemplate<T>::ArrayLastIndex, MemberOptions::None);
 
-  p = builder.AddBoundGetterSetter(arrayType,
-                                   "All",
-                                   rangeType,
-                                   nullptr,
-                                   ArrayTemplate<T>::ArrayAll,
-                                   MemberOptions::None);
+  p = builder.AddBoundGetterSetter(
+      arrayType, "All", rangeType, nullptr, ArrayTemplate<T>::ArrayAll, MemberOptions::None);
   p->Get->ComplexUserData.WriteObject(arrayUserData);
 
-  builder.AddBoundConstructor(rangeType,
-                              ArrayRangeTemplate<T>::ArrayRangeConstructor,
-                              ParameterArray());
-  builder.AddBoundDestructor(rangeType,
-                             ArrayRangeTemplate<T>::ArrayRangeDestructor);
+  builder.AddBoundConstructor(rangeType, ArrayRangeTemplate<T>::ArrayRangeConstructor, ParameterArray());
+  builder.AddBoundDestructor(rangeType, ArrayRangeTemplate<T>::ArrayRangeDestructor);
 
   builder.AddBoundFunction(rangeType,
                            "MoveNext",
@@ -1244,32 +1142,20 @@ BoundType* InstantiateArray(LibraryBuilder& builder,
                            core.VoidType,
                            FunctionOptions::None);
 
-  p = builder.AddBoundGetterSetter(rangeType,
-                                   "Current",
-                                   containedType,
-                                   nullptr,
-                                   ArrayRangeTemplate<T>::ArrayRangeCurrent,
-                                   MemberOptions::None);
+  p = builder.AddBoundGetterSetter(
+      rangeType, "Current", containedType, nullptr, ArrayRangeTemplate<T>::ArrayRangeCurrent, MemberOptions::None);
   p->Get->ComplexUserData.WriteObject(arrayUserData);
 
-  builder.AddBoundGetterSetter(rangeType,
-                               "IsEmpty",
-                               core.BooleanType,
-                               nullptr,
-                               ArrayRangeTemplate<T>::ArrayRangeIsEmpty,
-                               MemberOptions::None);
+  builder.AddBoundGetterSetter(
+      rangeType, "IsEmpty", core.BooleanType, nullptr, ArrayRangeTemplate<T>::ArrayRangeIsEmpty, MemberOptions::None);
   builder.AddBoundGetterSetter(rangeType,
                                "IsNotEmpty",
                                core.BooleanType,
                                nullptr,
                                ArrayRangeTemplate<T>::ArrayRangeIsNotEmpty,
                                MemberOptions::None);
-  builder.AddBoundGetterSetter(rangeType,
-                               "All",
-                               rangeType,
-                               nullptr,
-                               ArrayRangeTemplate<T>::ArrayRangeAll,
-                               MemberOptions::None);
+  builder.AddBoundGetterSetter(
+      rangeType, "All", rangeType, nullptr, ArrayRangeTemplate<T>::ArrayRangeAll, MemberOptions::None);
 
   // Return the array type we instantiated
   return arrayType;
@@ -1286,99 +1172,79 @@ BoundType* InstantiateArray(LibraryBuilder& builder,
 
   if (Type::IsHandleType(containedType))
   {
-    return InstantiateArray<Handle>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Handle>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else if (Type::IsDelegateType(containedType))
   {
-    return InstantiateArray<Delegate>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Delegate>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else if (Type::IsSame(containedType, ZilchTypeId(Boolean)))
   {
-    return InstantiateArray<Boolean>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Boolean>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else if (Type::IsSame(containedType, ZilchTypeId(Boolean2)))
   {
-    return InstantiateArray<Boolean2>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Boolean2>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else if (Type::IsSame(containedType, ZilchTypeId(Boolean3)))
   {
-    return InstantiateArray<Boolean3>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Boolean3>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else if (Type::IsSame(containedType, ZilchTypeId(Boolean4)))
   {
-    return InstantiateArray<Boolean4>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Boolean4>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else if (Type::IsSame(containedType, ZilchTypeId(Byte)))
   {
-    return InstantiateArray<Byte>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Byte>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
-  else if (Type::IsSame(containedType, ZilchTypeId(Integer)) ||
-           Type::IsEnumOrFlagsType(containedType))
+  else if (Type::IsSame(containedType, ZilchTypeId(Integer)) || Type::IsEnumOrFlagsType(containedType))
   {
-    return InstantiateArray<Integer>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Integer>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else if (Type::IsSame(containedType, ZilchTypeId(Integer2)))
   {
-    return InstantiateArray<Integer2>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Integer2>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else if (Type::IsSame(containedType, ZilchTypeId(Integer3)))
   {
-    return InstantiateArray<Integer3>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Integer3>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else if (Type::IsSame(containedType, ZilchTypeId(Integer4)))
   {
-    return InstantiateArray<Integer4>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Integer4>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else if (Type::IsSame(containedType, ZilchTypeId(Real)))
   {
-    return InstantiateArray<Real>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Real>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else if (Type::IsSame(containedType, ZilchTypeId(Real2)))
   {
-    return InstantiateArray<Real2>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Real2>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else if (Type::IsSame(containedType, ZilchTypeId(Real3)))
   {
-    return InstantiateArray<Real3>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Real3>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else if (Type::IsSame(containedType, ZilchTypeId(Real4)))
   {
-    return InstantiateArray<Real4>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Real4>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else if (Type::IsSame(containedType, ZilchTypeId(Quaternion)))
   {
-    return InstantiateArray<Quaternion>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Quaternion>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else if (Type::IsSame(containedType, ZilchTypeId(DoubleInteger)))
   {
-    return InstantiateArray<DoubleInteger>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<DoubleInteger>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else if (Type::IsSame(containedType, ZilchTypeId(DoubleReal)))
   {
-    return InstantiateArray<DoubleReal>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<DoubleReal>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
   else
   {
-    return InstantiateArray<Any>(
-        builder, baseName, fullyQualifiedName, templateTypes, userData);
+    return InstantiateArray<Any>(builder, baseName, fullyQualifiedName, templateTypes, userData);
   }
 }
 

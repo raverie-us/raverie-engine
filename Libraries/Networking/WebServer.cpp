@@ -14,8 +14,7 @@ DefineEvent(WebServerUnhandledRequest);
 static const String cHttpNewline("\r\n");
 
 // These values must correspond with the enum values in WebServerRequestMethod.
-static const String cMethods[] = {
-    "OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT"};
+static const String cMethods[] = {"OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT"};
 
 ZilchDefineType(WebServerRequestEvent, builder, type)
 {
@@ -29,13 +28,8 @@ ZilchDefineType(WebServerRequestEvent, builder, type)
   ZilchBindMethod(HasHeader);
   ZilchBindMethod(GetHeaderValue);
   ZilchBindMethod(GetHeaderNames);
-  ZilchBindOverloadedMethod(
-      Respond,
-      ZilchInstanceOverload(
-          void, WebResponseCode::Enum, StringParam, StringParam));
-  ZilchBindOverloadedMethod(
-      Respond,
-      ZilchInstanceOverload(void, StringParam, StringParam, StringParam));
+  ZilchBindOverloadedMethod(Respond, ZilchInstanceOverload(void, WebResponseCode::Enum, StringParam, StringParam));
+  ZilchBindOverloadedMethod(Respond, ZilchInstanceOverload(void, StringParam, StringParam, StringParam));
   ZilchBindOverloadedMethod(Respond, ZilchInstanceOverload(void, StringParam));
 }
 
@@ -51,10 +45,8 @@ WebServerRequestEvent::~WebServerRequestEvent()
   if (!mConnection)
     return;
 
-  String contents =
-      String::Format("404 Not Found (Timestamp: %lld, Clock: %lld)",
-                     (long long)Time::GetTime(),
-                     (long long)Time::Clock());
+  String contents = String::Format(
+      "404 Not Found (Timestamp: %lld, Clock: %lld)", (long long)Time::GetTime(), (long long)Time::Clock());
   Respond(WebResponseCode::NotFound, String(), contents);
 }
 
@@ -73,31 +65,22 @@ OrderedHashMap<String, String>::KeyRange WebServerRequestEvent::GetHeaderNames()
   return mHeaders.Keys();
 }
 
-void WebServerRequestEvent::Respond(WebResponseCode::Enum code,
-                                    StringParam extraHeaders,
-                                    StringParam contents)
+void WebServerRequestEvent::Respond(WebResponseCode::Enum code, StringParam extraHeaders, StringParam contents)
 {
-  return Respond(
-      WebServer::GetWebResponseCodeString(code), extraHeaders, contents);
+  return Respond(WebServer::GetWebResponseCodeString(code), extraHeaders, contents);
 }
 
-void WebServerRequestEvent::Respond(StringParam code,
-                                    StringParam extraHeaders,
-                                    StringParam contents)
+void WebServerRequestEvent::Respond(StringParam code, StringParam extraHeaders, StringParam contents)
 {
   if (code.Empty())
   {
-    DoNotifyException(
-        "WebServerRequestEvent",
-        "A web response code was not provided (string was empty).");
+    DoNotifyException("WebServerRequestEvent", "A web response code was not provided (string was empty).");
     return;
   }
 
   if (!extraHeaders.Empty() && !extraHeaders.EndsWith(cHttpNewline))
   {
-    DoNotifyException(
-        "WebServerRequestEvent",
-        "The 'extraHeaders' was non-empty and must end with '\\r\\n'.");
+    DoNotifyException("WebServerRequestEvent", "The 'extraHeaders' was non-empty and must end with '\\r\\n'.");
     return;
   }
 
@@ -128,14 +111,12 @@ void WebServerRequestEvent::Respond(StringParam response)
 {
   if (!mConnection)
   {
-    DoNotifyException("WebServerRequestEvent",
-                      "Cannot send multiple responses to a WebServer request");
+    DoNotifyException("WebServerRequestEvent", "Cannot send multiple responses to a WebServer request");
     return;
   }
 
   mConnection->mWriteLock.Lock();
-  mConnection->mWriteData.Insert(
-      mConnection->mWriteData.Begin(), response.Data(), response.EndData());
+  mConnection->mWriteData.Insert(mConnection->mWriteData.Begin(), response.Data(), response.EndData());
   mConnection->mWriteComplete = true;
   mConnection->mWriteLock.Unlock();
   mConnection->mWriteSignal.Signal();
@@ -143,9 +124,7 @@ void WebServerRequestEvent::Respond(StringParam response)
   mConnection = nullptr;
 }
 
-WebServerConnection::WebServerConnection(WebServer* server) :
-    mWebServer(server),
-    mWriteComplete(false)
+WebServerConnection::WebServerConnection(WebServer* server) : mWebServer(server), mWriteComplete(false)
 {
   mWriteSignal.Initialize();
 }
@@ -170,8 +149,7 @@ OsInt WebServerConnection::ReadWriteThread(void* userData)
 
   // Look for the request method line, such as "GET /index.htm HTTP/1.1\r\n"
   static const size_t cMethodMatchCount = 4;
-  static const Regex cMethodRegex(
-      "^([A-Z]+)\\s+(.*)\\s+HTTP/[0-9\\.]+\r\n(\r\n)?");
+  static const Regex cMethodRegex("^([A-Z]+)\\s+(.*)\\s+HTTP/[0-9\\.]+\r\n(\r\n)?");
 
   // Look for the headers, such as "Accept-Language: en-us\r\n"
   static const size_t cHeaderMatchCount = 4;
@@ -214,8 +192,7 @@ OsInt WebServerConnection::ReadWriteThread(void* userData)
 
     // This isn't the most efficient way of doing this,
     // but the performance of the web server isn't critical.
-    unparsedContent =
-        BuildString(unparsedContent, String((cstr)buffer, amount));
+    unparsedContent = BuildString(unparsedContent, String((cstr)buffer, amount));
 
     Matches matches;
 
@@ -248,8 +225,7 @@ OsInt WebServerConnection::ReadWriteThread(void* userData)
         else
           stage = ReadStage::Headers;
 
-        unparsedContent =
-            unparsedContent.SubString(matches[0].End(), unparsedContent.End());
+        unparsedContent = unparsedContent.SubString(matches[0].End(), unparsedContent.End());
       }
     }
 
@@ -275,8 +251,7 @@ OsInt WebServerConnection::ReadWriteThread(void* userData)
           if (!matches[3].Empty())
             stage = ReadStage::Content;
 
-          unparsedContent = unparsedContent.SubString(matches[0].End(),
-                                                      unparsedContent.End());
+          unparsedContent = unparsedContent.SubString(matches[0].End(), unparsedContent.End());
         }
         else
         {
@@ -326,8 +301,7 @@ OsInt WebServerConnection::ReadWriteThread(void* userData)
     }
   }
 
-  ErrorIf(toSend != nullptr,
-          "We should have sent or deleted the event by this point");
+  ErrorIf(toSend != nullptr, "We should have sent or deleted the event by this point");
 
   if (running)
   {
@@ -425,16 +399,12 @@ bool WebServer::Host(uint port)
   Close();
 
   Status status;
-  mAcceptSocket.Open(status,
-                     SocketAddressFamily::InternetworkV4,
-                     SocketType::Stream,
-                     SocketProtocol::Tcp);
+  mAcceptSocket.Open(status, SocketAddressFamily::InternetworkV4, SocketType::Stream, SocketProtocol::Tcp);
   if (status.Failed())
     return false;
 
   SocketAddress address;
-  address.SetIpv4(
-      status, String(), port, SocketAddressResolutionFlags::AnyAddress);
+  address.SetIpv4(status, String(), port, SocketAddressResolutionFlags::AnyAddress);
   if (status.Failed())
     return false;
 
@@ -462,7 +432,7 @@ void WebServer::Close()
   mAcceptThread.Close();
 
   mConnectionsLock.Lock();
-  forRange(WebServerConnection * connection, mConnections)
+  forRange (WebServerConnection* connection, mConnections)
   {
     // Close the socket to resume from any blocking reads.
     connection->mSocket.Close();
@@ -572,8 +542,7 @@ String StripDotFromExtension(StringParam extension)
   return extension;
 }
 
-void WebServer::MapExtensionToMimeType(StringParam extension,
-                                       StringParam mimeType)
+void WebServer::MapExtensionToMimeType(StringParam extension, StringParam mimeType)
 {
   String extensionWithoutDot = StripDotFromExtension(extension);
   mExtensionToMimeType[extensionWithoutDot] = mimeType;
@@ -593,7 +562,7 @@ void WebServer::ClearMimeTypes()
 String WebServer::SanitizeForHtml(StringParam text)
 {
   StringBuilder builder;
-  forRange(Rune rune, text)
+  forRange (Rune rune, text)
   {
     switch (rune.value)
     {
@@ -637,8 +606,7 @@ void WebServer::OnWebServerRequestRaw(WebServerRequestEvent* event)
   {
     // Turn the URI into a relative file path by using an un-rooted URI and
     // replacing the slashes with our os path separator.
-    String localPath =
-        FilePath::Normalize(FilePath::Combine(mPath, event->mDecodedUri));
+    String localPath = FilePath::Normalize(FilePath::Combine(mPath, event->mDecodedUri));
 
     // If we have a file on disk, attempt to open it so we can send it.
     if (FileExists(localPath))
@@ -647,8 +615,7 @@ void WebServer::OnWebServerRequestRaw(WebServerRequestEvent* event)
       String headers;
 
       // If we have a MIME type for the file, then let the requester know.
-      String mimeType =
-          GetMimeTypeFromExtension(FilePath::GetExtension(localPath));
+      String mimeType = GetMimeTypeFromExtension(FilePath::GetExtension(localPath));
       if (!mimeType.Empty())
         headers = BuildString("Content-Type: ", mimeType, "\r\n");
 
@@ -676,13 +643,12 @@ void WebServer::OnWebServerRequestRaw(WebServerRequestEvent* event)
       // Add this so users can go back one directory.
       sortedFileNames.PushBack("..");
 
-      for (FileRange fileRange(localPath); !fileRange.Empty();
-           fileRange.PopFront())
+      for (FileRange fileRange(localPath); !fileRange.Empty(); fileRange.PopFront())
         sortedFileNames.PushBack(fileRange.Front());
       Sort(sortedFileNames.All());
 
       // Build the listing for each file in sorted order.
-      forRange(StringParam fileName, sortedFileNames)
+      forRange (StringParam fileName, sortedFileNames)
       {
         String serverPath = BuildString(uriWithSlash, fileName);
 
@@ -708,9 +674,7 @@ void WebServer::OnWebServerRequestRaw(WebServerRequestEvent* event)
   DispatchEvent(Events::WebServerUnhandledRequest, event);
 }
 
-void WebServer::DoNotifyExceptionOnFail(StringParam message,
-                                        const u32& context,
-                                        void* userData)
+void WebServer::DoNotifyExceptionOnFail(StringParam message, const u32& context, void* userData)
 {
   DoNotifyException("WebServer", message);
 }
@@ -734,9 +698,7 @@ OsInt WebServer::AcceptThread(void* userData)
       connection->mSocket = ZeroMove(acceptedSocket);
 
       connection->mReadWriteThread.Initialize(
-          &WebServerConnection::ReadWriteThread,
-          connection,
-          "WebServerConnectionReadWrite");
+          &WebServerConnection::ReadWriteThread, connection, "WebServerConnectionReadWrite");
 
       self->mConnectionsLock.Lock();
       self->mConnections.PushBack(connection);

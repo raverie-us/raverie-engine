@@ -19,8 +19,7 @@ ZilchDefineTemplateType(StaticBroadphasePropertyExtension, builder, type)
 
 BroadPhaseLibrary::BroadPhaseLibrary()
 {
-  ErrorIf(Z::gBroadPhaseLibrary != nullptr,
-          "Cannot instantiate two Libraries.");
+  ErrorIf(Z::gBroadPhaseLibrary != nullptr, "Cannot instantiate two Libraries.");
   Z::gBroadPhaseLibrary = this;
 
   // Register all broad phases
@@ -40,9 +39,7 @@ BroadPhaseLibrary::~BroadPhaseLibrary()
   Z::gBroadPhaseLibrary = nullptr;
 }
 
-void BroadPhaseLibrary::RegisterBroadPhaseCreator(BoundType* type,
-                                                  BroadPhaseCreator* creator,
-                                                  u32 canBeUsedAs)
+void BroadPhaseLibrary::RegisterBroadPhaseCreator(BoundType* type, BroadPhaseCreator* creator, u32 canBeUsedAs)
 {
   BroadPhaseMapType::range range = mBroadPhaseMap.Find(type->Name);
 
@@ -66,14 +63,12 @@ void BroadPhaseLibrary::RegisterBroadPhaseCreator(BoundType* type,
   }
 }
 
-BroadPhaseCreator*
-BroadPhaseLibrary::GetCreatorBy(PolymorphicNode& broadPhaseNode)
+BroadPhaseCreator* BroadPhaseLibrary::GetCreatorBy(PolymorphicNode& broadPhaseNode)
 {
   if (broadPhaseNode.RuntimeType == nullptr)
   {
     // Find the component's creator using the string typename
-    BroadPhaseMapType::range range =
-        mBroadPhaseMap.Find(broadPhaseNode.TypeName);
+    BroadPhaseMapType::range range = mBroadPhaseMap.Find(broadPhaseNode.TypeName);
     ErrorIf(range.Empty(),
             "Could not find broad phase creator with name '%s'."
             "Bad file? Bad broad phase name? BroadPhase not registered?",
@@ -87,8 +82,7 @@ BroadPhaseLibrary::GetCreatorBy(PolymorphicNode& broadPhaseNode)
   else
   {
     // Find the component's creator using the TypeId
-    BroadPhaseIdMapType::range range =
-        mBroadPhaseTypeMap.Find(broadPhaseNode.RuntimeType);
+    BroadPhaseIdMapType::range range = mBroadPhaseTypeMap.Find(broadPhaseNode.RuntimeType);
     ErrorIf(range.Empty(),
             "Could not find broad phase creator for '%s'. Bad file?",
             broadPhaseNode.RuntimeType->Name.c_str());
@@ -133,8 +127,7 @@ void BroadPhaseLibrary::EnumerateNames(Array<String>& names)
   }
 }
 
-void BroadPhaseLibrary::EnumerateNamesOfType(BroadPhase::Type type,
-                                             Array<String>& names)
+void BroadPhaseLibrary::EnumerateNamesOfType(BroadPhase::Type type, Array<String>& names)
 {
   names.Assign(mBroadPhaseNames[type].All());
 }

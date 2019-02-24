@@ -44,8 +44,7 @@ public:
 
   // Get a formatted message that includes this location (may include newlines
   // depending on the format)
-  String GetFormattedStringWithMessage(MessageFormat::Enum format,
-                                       StringParam message) const;
+  String GetFormattedStringWithMessage(MessageFormat::Enum format, StringParam message) const;
 
   // Get this location formatted in different styles (does not include newlines)
   String GetFormattedString(MessageFormat::Enum format) const;
@@ -145,8 +144,7 @@ namespace Zero
 template <>
 struct ZeroShared MoveWithoutDestructionOperator<Zilch::CodeLocation>
 {
-  static inline void MoveWithoutDestruction(Zilch::CodeLocation* dest,
-                                            Zilch::CodeLocation* source)
+  static inline void MoveWithoutDestruction(Zilch::CodeLocation* dest, Zilch::CodeLocation* source)
   {
     memcpy(dest, source, sizeof(*source));
   }

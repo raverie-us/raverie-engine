@@ -11,9 +11,7 @@ public:
   typedef TemplateProjectItem ZilchSelf;
 
   /// Constructor.
-  TemplateProjectItem(Composite* parent,
-                      NewProjectMenu* newProjectMenu,
-                      TemplateProject* project);
+  TemplateProjectItem(Composite* parent, NewProjectMenu* newProjectMenu, TemplateProject* project);
 
   /// Composite Interface.
   void UpdateTransform();

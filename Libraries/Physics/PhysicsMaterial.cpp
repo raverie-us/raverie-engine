@@ -18,8 +18,7 @@ ZilchDefineType(PhysicsMaterial, builder, type)
   ZilchBindMethod(RuntimeClone);
 
   ZilchBindGetterSetterProperty(Density);
-  ZilchBindFieldProperty(mRestitution)
-      ->Add(new EditorSlider(0, 1, real(0.001f)));
+  ZilchBindFieldProperty(mRestitution)->Add(new EditorSlider(0, 1, real(0.001f)));
   ZilchBindGetterSetterProperty(Friction);
   ZilchBindFieldProperty(mRestitutionImportance);
   ZilchBindFieldProperty(mFrictionImportance);
@@ -42,8 +41,7 @@ void PhysicsMaterial::Serialize(Serializer& stream)
   SerializeNameDefault(mFrictionImportance, 0.0f);
 
   // Legacy loading for the high-priority bool (only affected restitution)
-  if (stream.GetType() != SerializerType::Binary &&
-      stream.GetMode() == SerializerMode::Loading)
+  if (stream.GetType() != SerializerType::Binary && stream.GetMode() == SerializerMode::Loading)
   {
     bool highPriority;
     stream.SerializeFieldDefault("HighPriority", highPriority, false);
@@ -147,11 +145,10 @@ void PhysicsMaterial::SetDensityInternal(real density, bool markModified)
   else if (density < real(.001f))
   {
     density = real(.001f);
-    DoNotifyWarning(
-        "Too small of a density.",
-        "The density being set is too small and "
-        "will likely result in floating point inaccuracies. If you would like "
-        "to make the object massless, please set the density to 0.");
+    DoNotifyWarning("Too small of a density.",
+                    "The density being set is too small and "
+                    "will likely result in floating point inaccuracies. If you would like "
+                    "to make the object massless, please set the density to 0.");
   }
   else if (density > real(1e+9))
   {
@@ -169,11 +166,9 @@ void PhysicsMaterial::SetDensityInternal(real density, bool markModified)
 // PhysicsMaterialManager
 ImplementResourceManager(PhysicsMaterialManager, PhysicsMaterial);
 
-PhysicsMaterialManager::PhysicsMaterialManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+PhysicsMaterialManager::PhysicsMaterialManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
-  AddLoader("PhysicsMaterial",
-            new TextDataFileLoader<PhysicsMaterialManager>());
+  AddLoader("PhysicsMaterial", new TextDataFileLoader<PhysicsMaterialManager>());
   mCategory = "Physics";
   mCanAddFile = true;
   mOpenFileFilters.PushBack(FileDialogFilter("*.PhysicsMaterial.data"));

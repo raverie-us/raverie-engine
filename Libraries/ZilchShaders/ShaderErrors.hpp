@@ -45,9 +45,7 @@ public:
   ShaderCompilationErrors();
 
   void SendTranslationError(Zilch::CodeLocation& location, StringParam message);
-  void SendTranslationError(Zilch::CodeLocation& location,
-                            StringParam shortMsg,
-                            StringParam fullMsg);
+  void SendTranslationError(Zilch::CodeLocation& location, StringParam shortMsg, StringParam fullMsg);
 
   void ListenForZilchErrors(Zilch::CompilationErrors& zilchErrors);
   void ListenForTypeParsed(Zilch::CompilationErrors& zilchErrors);

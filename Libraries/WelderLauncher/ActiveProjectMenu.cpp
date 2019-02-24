@@ -11,9 +11,7 @@ Tweakable(Vec4, TextColor, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(Vec4, BackgroundColor, Vec4(1, 1, 1, 1), cLocation);
 } // namespace ActiveProjectUi
 
-Modal* ActiveProjectMenu::OpenProject(Composite* modalParent,
-                                      CachedProject* cachedProject,
-                                      LauncherWindow* launcher)
+Modal* ActiveProjectMenu::OpenProject(Composite* modalParent, CachedProject* cachedProject, LauncherWindow* launcher)
 {
   ModalStrip* modal = new ModalStrip(modalParent, 0.3f);
   modal->SetStripHeight(ModalSizeMode::Percentage, 0.789f);
@@ -26,8 +24,7 @@ Modal* ActiveProjectMenu::OpenProject(Composite* modalParent,
   return modal;
 }
 
-ActiveProjectMenu::ActiveProjectMenu(Composite* parent,
-                                     LauncherWindow* launcher) :
+ActiveProjectMenu::ActiveProjectMenu(Composite* parent, LauncherWindow* launcher) :
     Composite(parent),
     mLauncher(launcher)
 {
@@ -36,18 +33,15 @@ ActiveProjectMenu::ActiveProjectMenu(Composite* parent,
   launcher->mSearch->SetVisible(false);
 
   Thickness padding(Pixels(32, 14, 32, 14));
-  SetLayout(
-      CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, padding));
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, padding));
 
   Composite* textArea = new Composite(this);
-  textArea->SetLayout(CreateStackLayout(
-      LayoutDirection::TopToBottom, Pixels(0, 5), Thickness::cZero));
+  textArea->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 5), Thickness::cZero));
   textArea->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(429));
   {
     // Create an area to store the back button and project name
     Composite* topArea = new Composite(textArea);
-    topArea->SetLayout(CreateStackLayout(
-        LayoutDirection::LeftToRight, Pixels(0, 0), Thickness::cZero));
+    topArea->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(0, 0), Thickness::cZero));
 
     // Add the back button (to close the modal)
     mBackButton = new IconButton(topArea);
@@ -64,8 +58,7 @@ ActiveProjectMenu::ActiveProjectMenu(Composite* parent,
     new Spacer(topArea, SizePolicy::Fixed, Pixels(6, 0));
 
     Composite* projectNameArea = new Composite(topArea);
-    projectNameArea->SetLayout(CreateStackLayout(
-        LayoutDirection::RightToLeft, Pixels(0, 0), Thickness::cZero));
+    projectNameArea->SetLayout(CreateStackLayout(LayoutDirection::RightToLeft, Pixels(0, 0), Thickness::cZero));
     projectNameArea->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
 
     mEditProjectNameIconButton = new IconButton(projectNameArea);
@@ -73,22 +66,18 @@ ActiveProjectMenu::ActiveProjectMenu(Composite* parent,
     mEditProjectNameIconButton->SetSizing(SizeAxis::X, SizePolicy::Fixed, 32);
     mEditProjectNameIconButton->mBackground->SetVisible(false);
     mEditProjectNameIconButton->mBorder->SetVisible(false);
-    mEditProjectNameIconButton->mIconColor =
-        ToByteColor(Vec4(0.8, 0.8, 0.8, 1));
+    mEditProjectNameIconButton->mIconColor = ToByteColor(Vec4(0.8, 0.8, 0.8, 1));
     mEditProjectNameIconButton->mIconHoverColor = Color::White;
-    mEditProjectNameIconButton->mIconClickedColor =
-        ToByteColor(Vec4(0.6, 0.6, 0.6, 1));
+    mEditProjectNameIconButton->mIconClickedColor = ToByteColor(Vec4(0.6, 0.6, 0.6, 1));
     mEditProjectNameIconButton->SetToolTip("Rename Project");
     mEditProjectNameIconButton->SizeToContents();
-    ConnectThisTo(
-        mEditProjectNameIconButton, Events::ButtonPressed, OnEditProjectName);
+    ConnectThisTo(mEditProjectNameIconButton, Events::ButtonPressed, OnEditProjectName);
 
     mProjectName = new TextBox(projectNameArea, "ActiveProjectName");
     mProjectName->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(300));
     // Text box doesn't properly take the font definition from the provided
     // style, forcibly override the font for now...
-    mProjectName->mEditTextField->mFont =
-        FontManager::GetInstance()->GetRenderFont(mLauncherRegularFont, 24, 0);
+    mProjectName->mEditTextField->mFont = FontManager::GetInstance()->GetRenderFont(mLauncherRegularFont, 24, 0);
     mProjectName->SetTextClipping(true);
     mProjectName->HideBackground(true);
     mProjectName->SetColor(ActiveProjectUi::TextColor);
@@ -96,8 +85,7 @@ ActiveProjectMenu::ActiveProjectMenu(Composite* parent,
     // Listen for the text changing on the project name so the user can rename
     // their project
     ConnectThisTo(mProjectName, Events::TextSubmit, OnProjectNameTextSubmit);
-    ConnectThisTo(
-        mProjectName, Events::FocusLostHierarchy, OnProjectNameFocusLost);
+    ConnectThisTo(mProjectName, Events::FocusLostHierarchy, OnProjectNameFocusLost);
 
     Element* e = textArea->CreateAttached<Element>(cWhiteSquare);
     e->SetNotInLayout(false);
@@ -151,12 +139,9 @@ ActiveProjectMenu::ActiveProjectMenu(Composite* parent,
       mBackupProjectButton->SetStyle(TextButtonStyle::Modern);
       mBackupProjectButton->SetText("Backup Project");
       mBackupProjectButton->mTextColor = Vec4(0.5f, 0.5f, 0.5f, 1);
-      mBackupProjectButton->mTextHoverColor =
-          Vec4(0.660000026f, 0.660000026f, 0.660000026f, 1);
-      mBackupProjectButton->mTextClickedColor =
-          Vec4(0.330000013f, 0.330000013f, 0.330000013f, 1);
-      ConnectThisTo(
-          mBackupProjectButton, Events::ButtonPressed, OnBackupProject);
+      mBackupProjectButton->mTextHoverColor = Vec4(0.660000026f, 0.660000026f, 0.660000026f, 1);
+      mBackupProjectButton->mTextClickedColor = Vec4(0.330000013f, 0.330000013f, 0.330000013f, 1);
+      ConnectThisTo(mBackupProjectButton, Events::ButtonPressed, OnBackupProject);
 
       new Spacer(buildRow, SizePolicy::Flex, Vec2(1));
 
@@ -167,8 +152,7 @@ ActiveProjectMenu::ActiveProjectMenu(Composite* parent,
       {
         mRunWithDebugger = new TextButton(buildRow);
         mRunWithDebugger->SetText("Run In Active Debugger");
-        ConnectThisTo(
-            mRunWithDebugger, Events::ButtonPressed, OnRunWithDebugger);
+        ConnectThisTo(mRunWithDebugger, Events::ButtonPressed, OnRunWithDebugger);
       }
 
       // Download button
@@ -232,13 +216,9 @@ ActiveProjectMenu::ActiveProjectMenu(Composite* parent,
   ConnectThisTo(button, Events::ButtonPressed, OnLaunchProject);
   // Listen for when the build selector changes the state of the current build
   // (it's listening to whichever build we care about)
-  ConnectThisTo(mBuildSelector->mCurrentBuild,
-                Events::BuildStateChanged,
-                OnBuildStateChanged);
+  ConnectThisTo(mBuildSelector->mCurrentBuild, Events::BuildStateChanged, OnBuildStateChanged);
   ConnectThisTo(parent, Events::ModalClosed, OnModalClosed);
-  ConnectThisTo(mLauncher->mVersionSelector,
-                Events::VersionListLoaded,
-                OnVersionListLoaded);
+  ConnectThisTo(mLauncher->mVersionSelector, Events::VersionListLoaded, OnVersionListLoaded);
 }
 
 void ActiveProjectMenu::UpdateTransform()
@@ -330,8 +310,7 @@ void ActiveProjectMenu::SelectProject(CachedProject* cachedProject)
   mCachedProject = cachedProject;
   // The project file could've changed out from underneath us (version control
   // for example)
-  bool successfulReload =
-      mLauncher->mProjectCache->ReloadProjectFile(mCachedProject, false);
+  bool successfulReload = mLauncher->mProjectCache->ReloadProjectFile(mCachedProject, false);
   // The project was deleted out from under us so close the modal.
   if (!successfulReload)
   {
@@ -349,10 +328,7 @@ void ActiveProjectMenu::SelectProject(CachedProject* cachedProject)
 
   CalendarDateTime modifiedTime;
   GetFileDateTime(projectPath, modifiedTime);
-  mDate->SetText(String::Format("MODIFIED %d-%d-%d",
-                                modifiedTime.Month,
-                                modifiedTime.Day,
-                                modifiedTime.Year));
+  mDate->SetText(String::Format("MODIFIED %d-%d-%d", modifiedTime.Month, modifiedTime.Day, modifiedTime.Year));
 
   // Update the tag text
   mTags->SetText(mCachedProject->GetTagsDisplayString());
@@ -362,18 +338,14 @@ void ActiveProjectMenu::SelectProject(CachedProject* cachedProject)
     mActiveSizeTask->Cancel();
 
   // Create a job to compute the size of the project folder
-  DirectorySizeJob* job =
-      new DirectorySizeJob(mCachedProject->GetProjectFolder());
+  DirectorySizeJob* job = new DirectorySizeJob(mCachedProject->GetProjectFolder());
   mActiveSizeTask = Z::gBackgroundTasks->CreateTask(job);
   mActiveSizeTask->mName = "ComputeSize";
-  ConnectThisTo(
-      mActiveSizeTask, Events::BackgroundTaskUpdated, OnSizeTaskUpdate);
-  ConnectThisTo(
-      mActiveSizeTask, Events::BackgroundTaskCompleted, OnSizeTaskUpdate);
+  ConnectThisTo(mActiveSizeTask, Events::BackgroundTaskUpdated, OnSizeTaskUpdate);
+  ConnectThisTo(mActiveSizeTask, Events::BackgroundTaskCompleted, OnSizeTaskUpdate);
   mActiveSizeTask->Execute();
 
-  ZeroBuild* build =
-      mLauncher->mVersionSelector->FindExactVersion(mCachedProject);
+  ZeroBuild* build = mLauncher->mVersionSelector->FindExactVersion(mCachedProject);
 
   mLauncher->mMainButton->SetEnabled(false);
   mInstallBuild->SetVisible(false);
@@ -440,11 +412,9 @@ void ActiveProjectMenu::OnProjectNameTextSubmit(Event* e)
     return;
 
   String projectFolder = mCachedProject->GetProjectFolder();
-  String oldProjectFolderName =
-      FilePath::GetDirectoryName(mCachedProject->GetProjectPath());
+  String oldProjectFolderName = FilePath::GetDirectoryName(mCachedProject->GetProjectPath());
   String projectParentPath = FilePath::GetDirectoryPath(projectFolder);
-  String newProjectFolder =
-      FilePath::Combine(projectParentPath, newProjectName);
+  String newProjectFolder = FilePath::Combine(projectParentPath, newProjectName);
   String newProjectFolderName = newProjectName;
 
   // If this project already exists then let the user know we can't rename to
@@ -453,8 +423,7 @@ void ActiveProjectMenu::OnProjectNameTextSubmit(Event* e)
   {
     String msg = "Project already exists";
     String extraMsg = "Please choose a different name";
-    ModalButtonsAction* modal = new ModalButtonsAction(
-        this, msg.ToUpper(), "CLOSE", extraMsg.ToUpper());
+    ModalButtonsAction* modal = new ModalButtonsAction(this, msg.ToUpper(), "CLOSE", extraMsg.ToUpper());
     mLauncher->mActiveModal = modal;
     SelectProject(mCachedProject);
     return;
@@ -472,14 +441,12 @@ void ActiveProjectMenu::OnProjectNameTextSubmit(Event* e)
   Array<String> buttonNames;
   buttonNames.PushBack("CONFIRM");
   buttonNames.PushBack("CANCEL");
-  String confirmMsg =
-      String::Format("Rename '%s/%s.zeroproj' to '%s/%s.zeroproj'?",
-                     oldProjectFolderName.c_str(),
-                     oldProjectName.c_str(),
-                     newProjectFolderName.c_str(),
-                     newProjectName.c_str());
-  ModalButtonsAction* modal = new ModalButtonsAction(
-      this, "RENAME PROJECT?", buttonNames, confirmMsg.ToUpper());
+  String confirmMsg = String::Format("Rename '%s/%s.zeroproj' to '%s/%s.zeroproj'?",
+                                     oldProjectFolderName.c_str(),
+                                     oldProjectName.c_str(),
+                                     newProjectFolderName.c_str(),
+                                     newProjectName.c_str());
+  ModalButtonsAction* modal = new ModalButtonsAction(this, "RENAME PROJECT?", buttonNames, confirmMsg.ToUpper());
   mLauncher->mActiveModal = modal;
   ConnectThisTo(modal, Events::ModalClosed, OnProjectRenameCanceled);
   ConnectThisTo(modal, Events::ModalButtonPressed, OnProjectRenameConfirmed);
@@ -520,10 +487,8 @@ void ActiveProjectMenu::OnProjectRenameConfirmed(ModalButtonEvent* e)
   {
     // Ideally this should use the status' error message, but there's word-wrap
     // issues with modals right now.
-    String msg =
-        String::Format("Cannot rename project to '%s'", newProjectName.c_str());
-    ModalButtonsAction* modal =
-        new ModalButtonsAction(mLauncher, "Invalid Rename", "Close", msg);
+    String msg = String::Format("Cannot rename project to '%s'", newProjectName.c_str());
+    ModalButtonsAction* modal = new ModalButtonsAction(mLauncher, "Invalid Rename", "Close", msg);
     mLauncher->mActiveModal = modal;
   }
 
@@ -539,30 +504,24 @@ void ActiveProjectMenu::OnBackupProject(Event* e)
 
   // Build the backup's file path based upon the project name and the current
   // time date stamp.
-  String backupDirectory =
-      FilePath::Combine(GetUserDocumentsDirectory(), "ZeroProjects", "Backups");
+  String backupDirectory = FilePath::Combine(GetUserDocumentsDirectory(), "ZeroProjects", "Backups");
   String timeStamp = GetTimeAndDateStamp();
   String backupName = BuildString(projectName, timeStamp);
-  String backupFilePath =
-      FilePath::CombineWithExtension(backupDirectory, backupName, ".zip");
+  String backupFilePath = FilePath::CombineWithExtension(backupDirectory, backupName, ".zip");
 
   // Create the task to backup the project (this can take
   // a while in large projects, mainly with dll plugins)
-  BackupProjectJob* job =
-      new BackupProjectJob(projectDirectory, backupFilePath);
+  BackupProjectJob* job = new BackupProjectJob(projectDirectory, backupFilePath);
   job->mOpenDirectoryOnCompletion = true;
   BackgroundTask* task = Z::gBackgroundTasks->CreateTask(job);
   task->mName = "Backup Project";
 
   // Create a modal to notify the user of progress
-  ModalBackgroundTaskProgessBar* modal =
-      new ModalBackgroundTaskProgessBar(GetRootWidget(), "Archiving", task);
+  ModalBackgroundTaskProgessBar* modal = new ModalBackgroundTaskProgessBar(GetRootWidget(), "Archiving", task);
   modal->mCloseOnBackgroundClicked = false;
   mLauncher->mActiveModal = modal;
 
-  ZPrint("Backing up project '%s' to location '%s'.",
-         projectDirectory.c_str(),
-         backupFilePath.c_str());
+  ZPrint("Backing up project '%s' to location '%s'.", projectDirectory.c_str(), backupFilePath.c_str());
 
   task->Execute();
 }
@@ -584,8 +543,7 @@ void ActiveProjectMenu::OnBuildStateChanged(Event* e)
     // Check the warning for changing versions (for now don't warn for upgrades,
     // except to broken builds)
     WarningLevel::Enum result =
-        mLauncher->mVersionSelector->CheckVersionForProject(
-            activeBuild, mCachedProject, primaryMsg, false);
+        mLauncher->mVersionSelector->CheckVersionForProject(activeBuild, mCachedProject, primaryMsg, false);
     // If this is a sever warning add a second message to double check
     if (result == WarningLevel::Severe)
       secondMsg = "Are you absolutely sure?";
@@ -594,15 +552,13 @@ void ActiveProjectMenu::OnBuildStateChanged(Event* e)
     // before changing the version number
     if (!primaryMsg.Empty())
     {
-      ModalConfirmAction* modal =
-          new ModalConfirmAction(this, primaryMsg.ToUpper());
+      ModalConfirmAction* modal = new ModalConfirmAction(this, primaryMsg.ToUpper());
       // Save the new build version on the modal's user data (so we can change
       // if they confirm)
       modal->mUserData = activeBuild;
       modal->mStringUserData = secondMsg;
       mLauncher->mActiveModal = modal;
-      ConnectThisTo(
-          modal, Events::ModalConfirmResult, OnConfirmBuildVersionChange);
+      ConnectThisTo(modal, Events::ModalConfirmResult, OnConfirmBuildVersionChange);
       return;
     }
 
@@ -623,9 +579,7 @@ void ActiveProjectMenu::OnBuildStateChanged(Event* e)
     mLauncher->mMainButton->SetEnabled(installed);
 
     // Only show the install button if the build can be installed
-    if (activeBuild != nullptr &&
-        activeBuild->mInstallState == InstallState::NotInstalled &&
-        activeBuild->mOnServer)
+    if (activeBuild != nullptr && activeBuild->mInstallState == InstallState::NotInstalled && activeBuild->mOnServer)
       mInstallBuild->SetVisible(true);
   }
 }
@@ -640,12 +594,10 @@ void ActiveProjectMenu::OnConfirmBuildVersionChange(ModalConfirmEvent* e)
     // sure?") then open a second modal to double check their response.
     if (!e->mStringUserData.Empty())
     {
-      ModalConfirmAction* modal =
-          new ModalConfirmAction(this, e->mStringUserData.ToUpper());
+      ModalConfirmAction* modal = new ModalConfirmAction(this, e->mStringUserData.ToUpper());
       modal->mUserData = e->mUserData;
       mLauncher->mActiveModal = modal;
-      ConnectThisTo(
-          modal, Events::ModalConfirmResult, OnConfirmBuildVersionChange);
+      ConnectThisTo(modal, Events::ModalConfirmResult, OnConfirmBuildVersionChange);
       return;
     }
 
@@ -672,13 +624,11 @@ void ActiveProjectMenu::OnConfirmBuildVersionChange(ModalConfirmEvent* e)
   // back to the previous version
   else
   {
-    ZeroBuild* build =
-        mLauncher->mVersionSelector->FindExactVersion(mCachedProject);
+    ZeroBuild* build = mLauncher->mVersionSelector->FindExactVersion(mCachedProject);
     mBuildSelector->SetBuild(build);
 
     // Only show the install button if the build can be installed
-    if (build != nullptr &&
-        build->mInstallState == InstallState::NotInstalled && build->mOnServer)
+    if (build != nullptr && build->mInstallState == InstallState::NotInstalled && build->mOnServer)
       mInstallBuild->SetVisible(true);
   }
 }
@@ -737,8 +687,7 @@ void ActiveProjectMenu::OnRunWithDebugger(Event* e)
 {
   // This will currently leak, but it's tricky to deal with the tcp socket
   // destruction (this shouldn't happen too often so whatever for now)
-  LauncherDebuggerCommunication* debugCommunication =
-      new LauncherDebuggerCommunication();
+  LauncherDebuggerCommunication* debugCommunication = new LauncherDebuggerCommunication();
   mLauncher->mDummyCommunicators.PushBack(debugCommunication);
   debugCommunication->SendOpenProject(mCachedProject->GetProjectPath());
 }

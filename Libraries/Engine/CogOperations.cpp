@@ -4,10 +4,7 @@
 namespace Zero
 {
 
-void AttachObject(OperationQueue* queue,
-                  Cog* object,
-                  Cog* parent,
-                  bool relative)
+void AttachObject(OperationQueue* queue, Cog* object, Cog* parent, bool relative)
 {
   // Do not queue protected
   if (object->mFlags.IsSet(CogFlags::Protected))
@@ -21,15 +18,10 @@ void AttachObject(OperationQueue* queue,
     return;
   }
 
-  ErrorIf(object == nullptr || parent == nullptr,
-          "Invalid objects given to AttachObject");
+  ErrorIf(object == nullptr || parent == nullptr, "Invalid objects given to AttachObject");
 
   queue->BeginBatch();
-  queue->SetActiveBatchName(BuildString("'",
-                                        CogDisplayName(object),
-                                        "' attached to '",
-                                        CogDisplayName(parent),
-                                        "'"));
+  queue->SetActiveBatchName(BuildString("'", CogDisplayName(object), "' attached to '", CogDisplayName(parent), "'"));
 
   // If it already has a parent, detach it first
   if (object->GetParent())
@@ -64,11 +56,7 @@ void MoveObjectIndex(OperationQueue* queue, Cog* objectToMove, uint index)
   queue->Queue(op);
 }
 
-void MoveObject(OperationQueue* queue,
-                Cog* objectToMove,
-                Cog* newParent,
-                uint indexInNewParent,
-                bool relativeAttach)
+void MoveObject(OperationQueue* queue, Cog* objectToMove, Cog* newParent, uint indexInNewParent, bool relativeAttach)
 {
   ErrorIf(objectToMove == nullptr, "Invalid object given to MoveObject");
 
@@ -76,11 +64,9 @@ void MoveObject(OperationQueue* queue,
 
   String objectName = CogDisplayName(objectToMove);
   // Get the name of the parent cog (could be null).
-  String parentName =
-      (newParent == nullptr) ? "Root" : CogDisplayName(newParent);
+  String parentName = (newParent == nullptr) ? "Root" : CogDisplayName(newParent);
 
-  queue->SetActiveBatchName(
-      BuildString("'", objectName, "' moved to '", parentName, "'"));
+  queue->SetActiveBatchName(BuildString("'", objectName, "' moved to '", parentName, "'"));
 
   // If the object isn't already a child of the given parent, we have to attach
   // it If the new parent is NULL, we need to detach it
@@ -104,8 +90,7 @@ void DestroyObject(OperationQueue* queue, Cog* object)
   if (object->mFlags.IsSet(CogFlags::Protected))
     return;
 
-  CreateDestroyOperation* op =
-      new CreateDestroyOperation(object, ObjectOperationMode::Destroy);
+  CreateDestroyOperation* op = new CreateDestroyOperation(object, ObjectOperationMode::Destroy);
   op->Redo();
   queue->Queue(op);
 }
@@ -116,8 +101,7 @@ void ObjectCreated(OperationQueue* queue, Cog* object)
   if (object->mFlags.IsSet(CogFlags::Protected))
     return;
 
-  CreateDestroyOperation* op =
-      new CreateDestroyOperation(object, ObjectOperationMode::Create);
+  CreateDestroyOperation* op = new CreateDestroyOperation(object, ObjectOperationMode::Create);
 
   // Mark the space as modified
   if (Space* space = object->GetSpace())
@@ -141,13 +125,12 @@ Cog* CreateFromArchetype(OperationQueue* queue,
   // Only cog archetypes work with undo
   if (archetype->mStoredType != ZilchTypeId(Cog))
   {
-    DoNotifyError("Invalid archetype",
-                  "Can not create this type of archetype in a space");
+    DoNotifyError("Invalid archetype", "Can not create this type of archetype in a space");
     return NULL;
   }
 
-  CreateFromArchetypeOperation* create = new CreateFromArchetypeOperation(
-      space, archetype, translation, rotation, scale);
+  CreateFromArchetypeOperation* create =
+      new CreateFromArchetypeOperation(space, archetype, translation, rotation, scale);
 
   Cog* newObject = create->DoCreation();
 
@@ -156,26 +139,20 @@ Cog* CreateFromArchetype(OperationQueue* queue,
   return newObject;
 }
 
-Cog* CreateFromArchetype(OperationQueue* queue,
-                         Space* space,
-                         StringParam source,
-                         Vec3Param translation,
-                         QuatParam rotation,
-                         Vec3Param scale)
+Cog* CreateFromArchetype(
+    OperationQueue* queue, Space* space, StringParam source, Vec3Param translation, QuatParam rotation, Vec3Param scale)
 {
   Archetype* archetype = ArchetypeManager::FindOrNull(source);
   if (archetype == NULL)
     return NULL;
-  return CreateFromArchetype(
-      queue, space, archetype, translation, rotation, scale);
+  return CreateFromArchetype(queue, space, archetype, translation, rotation, scale);
 }
 
 void UploadToArchetype(OperationQueue* queue, Cog* cog)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Archetype",
-                    "Cannot upload to archetype while in read-only mode");
+    DoNotifyWarning("Archetype", "Cannot upload to archetype while in read-only mode");
     return;
   }
 
@@ -185,15 +162,11 @@ void UploadToArchetype(OperationQueue* queue, Cog* cog)
   queue->Queue(op);
 }
 
-Archetype* UploadToArchetype(OperationQueue* queue,
-                             Cog* cog,
-                             StringParam archetypeName,
-                             Archetype* baseArchetype)
+Archetype* UploadToArchetype(OperationQueue* queue, Cog* cog, StringParam archetypeName, Archetype* baseArchetype)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Archetype",
-                    "Cannot upload to archetype while in read-only mode");
+    DoNotifyWarning("Archetype", "Cannot upload to archetype while in read-only mode");
     return nullptr;
   }
 
@@ -207,8 +180,7 @@ Archetype* UploadToArchetype(OperationQueue* queue,
   if (archetype == nullptr)
   {
     // Create a new Archetype if it didn't exist
-    archetype =
-        manager->MakeNewArchetypeWith(cog, archetypeName, 0, baseArchetype);
+    archetype = manager->MakeNewArchetypeWith(cog, archetypeName, 0, baseArchetype);
 
     // If we didn't create a new archetype, then it failed
     // and in most cases already emitted an error message.
@@ -290,11 +262,8 @@ void ClearArchetype(OperationQueue* queue, Cog* cog)
   queue->Queue(op);
 }
 
-CreateFromArchetypeOperation::CreateFromArchetypeOperation(Space* space,
-                                                           Archetype* archetype,
-                                                           Vec3Param location,
-                                                           QuatParam rotation,
-                                                           Vec3Param scale)
+CreateFromArchetypeOperation::CreateFromArchetypeOperation(
+    Space* space, Archetype* archetype, Vec3Param location, QuatParam rotation, Vec3Param scale)
 {
   mSpace = space;
   mSpaceWasModified = space->GetModified();
@@ -338,8 +307,7 @@ Cog* CreateFromArchetypeOperation::DoCreation()
   if (mScale.LengthSq() == 0.0f)
     object = space->CreateAt(archetype->ResourceIdName, mLocation, mRotation);
   else
-    object = space->CreateAt(
-        archetype->ResourceIdName, mLocation, mRotation, mScale);
+    object = space->CreateAt(archetype->ResourceIdName, mLocation, mRotation, mScale);
 
   if (object == NULL)
   {
@@ -361,30 +329,22 @@ Cog* CreateFromArchetypeOperation::DoCreation()
   for (uint i = 0; i < componentCount; ++i)
   {
     Component* component = object->GetComponentByIndex(i);
-    mComponentHandles[i] =
-        Z::gUndoMap->UpdateUndoId(mComponentHandles[i], component);
+    mComponentHandles[i] = Z::gUndoMap->UpdateUndoId(mComponentHandles[i], component);
   }
 
   return object;
 }
 
 // Attach Operation
-AttachOperation::AttachOperation(Cog* object,
-                                 Cog* newParent,
-                                 bool relativeAttach) :
+AttachOperation::AttachOperation(Cog* object, Cog* newParent, bool relativeAttach) :
     mNewChildId(PolymorphicNode::cInvalidUniqueNodeId),
     mRelativeAttach(relativeAttach),
     mObject(object),
     mParent(newParent)
 {
-  ErrorIf(object == nullptr || newParent == nullptr,
-          "Invalid objects given to AttachOperation");
+  ErrorIf(object == nullptr || newParent == nullptr, "Invalid objects given to AttachOperation");
 
-  mName = BuildString("'",
-                      CogDisplayName(object),
-                      "' attached to '",
-                      CogDisplayName(newParent),
-                      "'");
+  mName = BuildString("'", CogDisplayName(object), "' attached to '", CogDisplayName(newParent), "'");
 
   mOldObjectLocation = object->GetHierarchyIndex();
 
@@ -403,8 +363,7 @@ void AttachOperation::Undo()
 
   // Record that the object was removed before detaching it (detaching will
   // invalidate the child id)
-  LocalModifications::GetInstance()->ChildRemoved(parent->has(Hierarchy),
-                                                  object);
+  LocalModifications::GetInstance()->ChildRemoved(parent->has(Hierarchy), object);
 
   // Detach the object
   if (mRelativeAttach)
@@ -461,14 +420,9 @@ DetachOperation::DetachOperation(Cog* object, bool relativeDetach) :
     mObjectUndoHandle(object)
 {
   Cog* parent = object->GetParent();
-  ErrorIf(object == nullptr || parent == nullptr,
-          "Invalid object given to DetachOperation");
+  ErrorIf(object == nullptr || parent == nullptr, "Invalid object given to DetachOperation");
 
-  mName = BuildString("'",
-                      CogDisplayName(object),
-                      "' detached from '",
-                      CogDisplayName(parent),
-                      "'");
+  mName = BuildString("'", CogDisplayName(object), "' detached from '", CogDisplayName(parent), "'");
 
   mParentUndoHandle = parent;
 
@@ -563,11 +517,11 @@ void ClearModificationsUntilArchetype(Cog* cog)
 
   // Modifications are stored on Components as well as Cogs, so we need to clear
   // both
-  forRange(Component * component, cog->GetComponents())
-      localModifications->ClearModifications(component, false, false);
+  forRange (Component* component, cog->GetComponents())
+    localModifications->ClearModifications(component, false, false);
 
-  forRange(Cog & child, cog->GetChildren())
-      ClearModificationsUntilArchetype(&child);
+  forRange (Cog& child, cog->GetChildren())
+    ClearModificationsUntilArchetype(&child);
 }
 
 void DetachOperation::Redo()
@@ -587,14 +541,12 @@ void DetachOperation::Redo()
   if (mStoreModifications)
   {
     Archetype* archetype = archetypeCog->GetArchetype();
-    archetype->GetAllCachedModifications().ApplyModificationsToChildObject(
-        archetypeCog, object, true);
+    archetype->GetAllCachedModifications().ApplyModificationsToChildObject(archetypeCog, object, true);
   }
 
   // Record that the object was removed before actually detaching it (this is
   // because detaching will invalidate the child id)
-  LocalModifications::GetInstance()->ChildRemoved(parent->has(Hierarchy),
-                                                  object);
+  LocalModifications::GetInstance()->ChildRemoved(parent->has(Hierarchy), object);
 
   // Detach the object
   if (mRelativeDetach)
@@ -632,8 +584,7 @@ ReorderOperation::ReorderOperation(Cog* movingObject, uint movingToIndex) :
   LocalModifications* modifications = LocalModifications::GetInstance();
   Cog* parent = movingObject->GetParent();
   if (parent)
-    mWasParentChildOrderLocallyModified =
-        modifications->IsChildOrderModified(parent->has(Hierarchy));
+    mWasParentChildOrderLocallyModified = modifications->IsChildOrderModified(parent->has(Hierarchy));
 
   if (Space* space = movingObject->GetSpace())
     mSpaceWasModified = space->GetModified();
@@ -649,8 +600,7 @@ void ReorderOperation::Undo()
     {
       // Restore the overridden state
       LocalModifications* modifications = LocalModifications::GetInstance();
-      modifications->SetChildOrderModified(parent->has(Hierarchy),
-                                           mWasParentChildOrderLocallyModified);
+      modifications->SetChildOrderModified(parent->has(Hierarchy), mWasParentChildOrderLocallyModified);
     }
 
     Space* space = object->GetSpace();
@@ -677,8 +627,7 @@ void ReorderOperation::Redo()
   }
 }
 
-CreateDestroyOperation::CreateDestroyOperation(Cog* object,
-                                               ObjectOperationMode::Enum mode)
+CreateDestroyOperation::CreateDestroyOperation(Cog* object, ObjectOperationMode::Enum mode)
 {
   ErrorIf(object == nullptr, "Invalid object given to CreateDestroyOperation");
 
@@ -783,8 +732,8 @@ void UploadToArchetypeOperation::Undo()
   mRestoreState.RestoreObject();
 
   // Restore all rebuilt cogs
-  forRange(CogRestoreState * restoreState, mRebuiltCogs.All())
-      restoreState->RestoreObject();
+  forRange (CogRestoreState* restoreState, mRebuiltCogs.All())
+    restoreState->RestoreObject();
 }
 
 void UploadToArchetypeOperation::Redo()
@@ -805,8 +754,7 @@ void UploadToArchetypeOperation::RebuildArchetypes(Cog* cog)
 {
   // Rebuild all objects. Only create restore states the first time
   if (mRebuiltCogs.Empty())
-    ArchetypeRebuilder::RebuildArchetypes(
-        cog->GetArchetype(), cog, &mRebuiltCogs);
+    ArchetypeRebuilder::RebuildArchetypes(cog->GetArchetype(), cog, &mRebuiltCogs);
   else
     ArchetypeRebuilder::RebuildArchetypes(cog->GetArchetype(), cog);
 
@@ -824,8 +772,7 @@ UploadToNewArchetypeOperation::UploadToNewArchetypeOperation(Cog* object) :
 
   mParentWasChildOrderModified = false;
   if (Cog* parent = object->GetParent())
-    mParentWasChildOrderModified =
-        modifications->IsChildOrderModified(parent->has(Hierarchy));
+    mParentWasChildOrderModified = modifications->IsChildOrderModified(parent->has(Hierarchy));
 }
 
 void UploadToNewArchetypeOperation::Undo()
@@ -856,8 +803,7 @@ void UploadToNewArchetypeOperation::Undo()
     {
       Hierarchy* hierarchy = parent->has(Hierarchy);
       modifications->ChildAdded(hierarchy, restoredCog);
-      modifications->SetChildOrderModified(hierarchy,
-                                           mParentWasChildOrderModified);
+      modifications->SetChildOrderModified(hierarchy, mParentWasChildOrderModified);
     }
   }
 }
@@ -911,19 +857,13 @@ void UploadToNewArchetypeOperation::Redo()
 RevertToArchetypeOperation::RevertToArchetypeOperation(Cog* object)
 {
   Cog* archetypeContextCog = object->FindNearestArchetypeContext();
-  ReturnIf(archetypeContextCog == nullptr,
-           ,
-           "Cannot revert object with no archetype");
+  ReturnIf(archetypeContextCog == nullptr, , "Cannot revert object with no archetype");
 
   Archetype* archetype = archetypeContextCog->GetArchetype();
 
   ErrorIf(archetype == nullptr, "Object doesn't have an Archetype");
 
-  mName = BuildString("Reverted '",
-                      CogDisplayName(object),
-                      "' to '",
-                      archetype->Name,
-                      "' Archetype");
+  mName = BuildString("Reverted '", CogDisplayName(object), "' to '", archetype->Name, "' Archetype");
 
   mRestoreState.StoreObjectState(object);
 }
@@ -948,14 +888,9 @@ void RevertToArchetypeOperation::Redo()
 
 ClearArchetypeOperation::ClearArchetypeOperation(Cog* object)
 {
-  ErrorIf(object->GetArchetype() == nullptr,
-          "Object doesn't have an Archetype");
+  ErrorIf(object->GetArchetype() == nullptr, "Object doesn't have an Archetype");
 
-  mName = BuildString("Clear '",
-                      object->GetArchetype()->Name,
-                      "' Archetype from '",
-                      CogDisplayName(object),
-                      "'");
+  mName = BuildString("Clear '", object->GetArchetype()->Name, "' Archetype from '", CogDisplayName(object), "'");
 
   mRestoreState.StoreObjectState(object);
 
@@ -965,8 +900,7 @@ ClearArchetypeOperation::ClearArchetypeOperation(Cog* object)
 
   mParentWasChildOrderModified = false;
   if (Cog* parent = object->GetParent())
-    mParentWasChildOrderModified =
-        modifications->IsChildOrderModified(parent->has(Hierarchy));
+    mParentWasChildOrderModified = modifications->IsChildOrderModified(parent->has(Hierarchy));
 }
 
 void ClearArchetypeOperation::Undo()
@@ -983,8 +917,7 @@ void ClearArchetypeOperation::Undo()
     Hierarchy* hierarchy = parent->has(Hierarchy);
     ObjectState::ChildId childId(ZilchTypeId(Cog), mNewChildId);
     modifications->ChildRemoved(hierarchy, childId);
-    modifications->SetChildOrderModified(hierarchy,
-                                         mParentWasChildOrderModified);
+    modifications->SetChildOrderModified(hierarchy, mParentWasChildOrderModified);
   }
 
   // Replace it with the restored object

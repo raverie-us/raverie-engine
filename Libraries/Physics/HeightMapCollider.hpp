@@ -24,8 +24,7 @@ public:
   void CacheWorldValues() override;
   void ComputeWorldAabbInternal() override;
   real ComputeWorldVolumeInternal() override;
-  void ComputeLocalInverseInertiaTensor(real mass,
-                                        Mat3Ref localInvInertia) override;
+  void ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia) override;
   void RebuildModifiedResources() override;
 
   /// How thick the surface of the height map is. Used to avoid tunneling
@@ -89,12 +88,8 @@ public:
 
   // Helpers to transform back and forth between they height map's key and the
   // cast id
-  static void TriangleIndexToKey(const AbsoluteIndex& absolueIndex,
-                                 uint triIndex,
-                                 uint& key);
-  static void KeyToTriangleIndex(uint key,
-                                 AbsoluteIndex& absolueIndex,
-                                 uint& triIndex);
+  static void TriangleIndexToKey(const AbsoluteIndex& absolueIndex, uint triIndex, uint& key);
+  static void KeyToTriangleIndex(uint key, AbsoluteIndex& absolueIndex, uint& triIndex);
 
 private:
   typedef HashMap<PatchIndex, Aabb> PatchAabbMap;

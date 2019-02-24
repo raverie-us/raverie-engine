@@ -17,10 +17,7 @@ public:
   uint mIndex;
   bool mAddOp;
 
-  ResourceListOperation(HandleParam object,
-                        StringParam resourceIdName,
-                        uint index = -1,
-                        bool addOp = true) :
+  ResourceListOperation(HandleParam object, StringParam resourceIdName, uint index = -1, bool addOp = true) :
       mResourceIdName(resourceIdName),
       mIndex(index),
       mAddOp(addOp),

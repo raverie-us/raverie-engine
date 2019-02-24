@@ -7,7 +7,8 @@ namespace Zero
 // Meta Creation Context
 CogMetaCreationContext::~CogMetaCreationContext()
 {
-  forRange(CogInitializer * init, mInitializers.Values()) delete init;
+  forRange (CogInitializer* init, mInitializers.Values())
+    delete init;
 }
 
 CogInitializer* CogMetaCreationContext::GetInitializer(Space* space)
@@ -27,8 +28,7 @@ ZilchDefineType(CogMetaComposition, builder, type)
 {
 }
 
-CogMetaComposition::CogMetaComposition() :
-    MetaComposition(ZilchTypeId(Component))
+CogMetaComposition::CogMetaComposition() : MetaComposition(ZilchTypeId(Component))
 {
 }
 
@@ -53,9 +53,7 @@ Handle CogMetaComposition::GetComponentAt(HandleParam owner, uint index)
   return cog->mComponents[index];
 }
 
-bool CogMetaComposition::CanAddComponent(HandleParam owner,
-                                         BoundType* typeToAdd,
-                                         AddInfo* info)
+bool CogMetaComposition::CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info)
 {
   Cog* cog = owner.Get<Cog*>(GetOptions::AssertOnNull);
   if (cog->mFlags.IsSet(CogFlags::ScriptComponentsLocked) && !typeToAdd->Native)
@@ -90,8 +88,7 @@ Handle CogMetaComposition::MakeObject(BoundType* typeToCreate)
   return component;
 }
 
-BoundType* CogMetaComposition::MakeProxy(StringParam typeName,
-                                         ProxyReason::Enum reason)
+BoundType* CogMetaComposition::MakeProxy(StringParam typeName, ProxyReason::Enum reason)
 {
   return ProxyObject<Component>::CreateProxyType(typeName, reason);
 }
@@ -132,8 +129,7 @@ void CogMetaComposition::AddComponent(HandleParam owner,
   CogInitializer* init = &defaultInit;
   if (creationContext)
   {
-    CogMetaCreationContext* cogCreationContext =
-        (CogMetaCreationContext*)creationContext;
+    CogMetaCreationContext* cogCreationContext = (CogMetaCreationContext*)creationContext;
     init = cogCreationContext->GetInitializer(cog->GetSpace());
   }
 
@@ -155,14 +151,11 @@ void CogMetaComposition::AddComponent(HandleParam owner,
 void CogMetaComposition::FinalizeCreation(MetaCreationContext* context)
 {
   CogMetaCreationContext* cogCreationContext = (CogMetaCreationContext*)context;
-  forRange(CogInitializer * initializer,
-           cogCreationContext->mInitializers.Values())
-      initializer->SendAllObjectsInitialized();
+  forRange (CogInitializer* initializer, cogCreationContext->mInitializers.Values())
+    initializer->SendAllObjectsInitialized();
 }
 
-bool CogMetaComposition::CanRemoveComponent(HandleParam owner,
-                                            HandleParam component,
-                                            String& reason)
+bool CogMetaComposition::CanRemoveComponent(HandleParam owner, HandleParam component, String& reason)
 {
   BoundType* typeToRemove = component.StoredType;
 
@@ -173,7 +166,7 @@ bool CogMetaComposition::CanRemoveComponent(HandleParam owner,
   if (typeToRemove->IsA(ZilchTypeId(Transform)))
   {
     // Can only remove it if we have no children with a Transform
-    forRange(Cog & child, cog->GetChildren())
+    forRange (Cog& child, cog->GetChildren())
     {
       if (child.has(Transform))
       {
@@ -187,21 +180,16 @@ bool CogMetaComposition::CanRemoveComponent(HandleParam owner,
   return MetaComposition::CanRemoveComponent(owner, component, reason);
 }
 
-void CogMetaComposition::RemoveComponent(HandleParam owner,
-                                         HandleParam component,
-                                         bool ignoreDependencies)
+void CogMetaComposition::RemoveComponent(HandleParam owner, HandleParam component, bool ignoreDependencies)
 {
   String reason;
-  ErrorIf(CanRemoveComponent(owner, component, reason) == false,
-          reason.c_str());
+  ErrorIf(CanRemoveComponent(owner, component, reason) == false, reason.c_str());
 
   // Remove the component
   Cog* cog = owner.Get<Cog*>(GetOptions::AssertOnNull);
-  Component* componentToRemove =
-      component.Get<Component*>(GetOptions::AssertOnNull);
+  Component* componentToRemove = component.Get<Component*>(GetOptions::AssertOnNull);
 
-  ErrorIf(componentToRemove->GetOwner() != cog,
-          "Component is not on the given Cog");
+  ErrorIf(componentToRemove->GetOwner() != cog, "Component is not on the given Cog");
 
   if (ignoreDependencies)
     cog->ForceRemoveComponent(componentToRemove);
@@ -209,15 +197,11 @@ void CogMetaComposition::RemoveComponent(HandleParam owner,
     cog->RemoveComponent(componentToRemove);
 };
 
-void CogMetaComposition::MoveComponent(HandleParam owner,
-                                       HandleParam component,
-                                       uint destination)
+void CogMetaComposition::MoveComponent(HandleParam owner, HandleParam component, uint destination)
 {
   String reason;
   Handle blocking;
-  ErrorIf(CanMoveComponent(owner, component, destination, blocking, reason) ==
-              false,
-          reason.c_str());
+  ErrorIf(CanMoveComponent(owner, component, destination, blocking, reason) == false, reason.c_str());
 
   uint componentIndex = GetComponentIndex(owner, component);
   Cog* cog = owner.Get<Cog*>(GetOptions::AssertOnNull);

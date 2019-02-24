@@ -33,10 +33,7 @@ struct ZeroShared EulerAngles
 {
   EulerAngles(EulerOrderParam order);
   EulerAngles(Vec3Param xyzRotation, EulerOrderParam order);
-  EulerAngles(real xRotation,
-              real yRotation,
-              real zRotation,
-              EulerOrderParam order);
+  EulerAngles(real xRotation, real yRotation, real zRotation, EulerOrderParam order);
   EulerAngles(Mat3Param matrix, EulerOrderParam order);
   EulerAngles(Mat4Param matrix, EulerOrderParam order);
   EulerAngles(QuatParam quaternion, EulerOrderParam order);

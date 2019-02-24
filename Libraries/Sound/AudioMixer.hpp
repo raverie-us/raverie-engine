@@ -218,9 +218,7 @@ private:
   float mSamples[AudioConstants::cMaxChannels];
   float mCopiedSamples[AudioConstants::cMaxChannels];
 
-  static void CopySamples(const float* source,
-                          float* destination,
-                          const unsigned channels);
+  static void CopySamples(const float* source, float* destination, const unsigned channels);
 };
 
 } // namespace Zero

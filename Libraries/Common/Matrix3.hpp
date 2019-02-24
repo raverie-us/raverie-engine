@@ -37,15 +37,7 @@ struct ZeroShared Matrix3
 
 public:
   Matrix3(void){};
-  explicit Matrix3(real p00,
-                   real p01,
-                   real p02,
-                   real p10,
-                   real p11,
-                   real p12,
-                   real p20,
-                   real p21,
-                   real p22);
+  explicit Matrix3(real p00, real p01, real p02, real p10, real p11, real p12, real p20, real p21, real p22);
   explicit Matrix3(ConstRealPointer data_);
 
   Vector3& operator[](uint index);
@@ -129,22 +121,15 @@ public:
   /// Generates a two dimensional translation matrix.
   static Matrix3 GenerateTranslation(Vec2Param translation);
   /// Generates a two-dimensions transform.
-  static Matrix3 GenerateTransform(Vec2Param translation,
-                                   real rotationRadians,
-                                   Vec2Param scale);
+  static Matrix3 GenerateTransform(Vec2Param translation, real rotationRadians, Vec2Param scale);
   /// Generates a three-dimensions transform.
   static Matrix3 GenerateTransform(QuatParam rotation, Vec3Param scale);
   /// Generates a three-dimensions transform.
   static Matrix3 GenerateTransform(Mat3Param rotation, Vec3Param scale);
   /// Decompose the given two-dimensional transform.
-  static void Decompose(Mat3Param transform,
-                        Vec2Ref translation,
-                        real& rotationRadians,
-                        Vec2Ref scale);
+  static void Decompose(Mat3Param transform, Vec2Ref translation, real& rotationRadians, Vec2Ref scale);
   /// Decompose the given three-dimensional transform.
-  static void Decompose(Mat3Param transform,
-                        Mat3Ref rotationRadians,
-                        Vec3Ref scale);
+  static void Decompose(Mat3Param transform, Mat3Ref rotationRadians, Vec3Ref scale);
 
   //-------------------------------------------------------------------Legacy
   /// Returns a copy of this matrix with its elements transposed.
@@ -241,9 +226,7 @@ ZeroShared Vector2 MultiplyPoint(Mat3Param lhs, Vec2Param rhs);
 ZeroShared Vector2 MultiplyNormal(Mat3Param lhs, Vec2Param rhs);
 
 /// This builds a matrix that should be used on 2D points/vectors
-ZeroShared Matrix3 BuildTransform(Vec2Param translate,
-                                  real radians,
-                                  Vec2Param scale);
+ZeroShared Matrix3 BuildTransform(Vec2Param translate, real radians, Vec2Param scale);
 
 /// This builds a matrix that should be used on 3D points/vectors
 ZeroShared Matrix3 BuildTransform(QuatParam rotate, Vec3Param scale);

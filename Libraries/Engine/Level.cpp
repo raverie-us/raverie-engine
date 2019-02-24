@@ -60,8 +60,7 @@ void Level::SaveSpace(Space* space)
   // If the space has a level load pending do not save.
   if (Level* pending = space->mPendingLevel)
   {
-    DoNotifyError("Saving Error",
-                  "Attempted to save level file while loading.");
+    DoNotifyError("Saving Error", "Attempted to save level file while loading.");
     return;
   }
 
@@ -88,14 +87,12 @@ void Level::SaveSpace(Space* space)
   }
 
   // Auto back up level files
-  BackUpFile(Z::gContentSystem->GetHistoryPath(mContentItem->mLibrary),
-             mContentItem->GetFullPath());
+  BackUpFile(Z::gContentSystem->GetHistoryPath(mContentItem->mLibrary), mContentItem->GetFullPath());
 
   // Save level to file
   space->SaveLevelFile(this->LoadPath);
 
-  ZPrintFilter(
-      Filter::ResourceFilter, "Saved level file '%s'.\n", Name.c_str());
+  ZPrintFilter(Filter::ResourceFilter, "Saved level file '%s'.\n", Name.c_str());
 
   // No longer modified
   space->MarkNotModified();
@@ -108,8 +105,7 @@ void Level::LoadSpace(Space* space)
 
 ImplementResourceManager(LevelManager, Level);
 
-LevelManager::LevelManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+LevelManager::LevelManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   AddLoader("Level", new LevelLoader());
   mCanCreateNew = true;
@@ -123,7 +119,7 @@ LevelManager::LevelManager(BoundType* resourceType) :
 void LevelManager::ClearCachedLevels()
 {
   LevelManager* manager = LevelManager::GetInstance();
-  forRange(Resource * resource, manager->AllResources())
+  forRange (Resource* resource, manager->AllResources())
   {
     Level* level = static_cast<Level*>(resource);
     SafeDelete(level->mCacheTree);

@@ -148,10 +148,7 @@ int RandomContext::RangeInclusiveMax(int min, int max)
 {
   if (min > max)
   {
-    String msg = String::Format(
-        "The min value '%d' must be less than or equal to the max value '%d'",
-        min,
-        max);
+    String msg = String::Format("The min value '%d' must be less than or equal to the max value '%d'", min, max);
     DoNotifyException("Invalid range", msg);
     return min;
   }
@@ -162,8 +159,7 @@ int RandomContext::RangeExclusiveMax(int min, int max)
 {
   if (min >= max)
   {
-    String msg = String::Format(
-        "The min value '%d' must be less than the max value '%d'", min, max);
+    String msg = String::Format("The min value '%d' must be less than the max value '%d'", min, max);
     DoNotifyException("Invalid range", msg);
     return min;
   }
@@ -174,8 +170,7 @@ int RandomContext::IntVariance(int base, int variance)
 {
   if (variance < 0)
   {
-    String msg =
-        String::Format("The variance value '%d' cannot be negative.", variance);
+    String msg = String::Format("The variance value '%d' cannot be negative.", variance);
     DoNotifyException("Invalid variance", msg);
     return base;
   }
@@ -243,9 +238,7 @@ float RandomContext::BellCurveRange(float center, float range)
   return mRandom.BellCurve(center, range, 1.0f);
 }
 
-float RandomContext::BellCurveDistribution(float center,
-                                           float range,
-                                           float standardDeviation)
+float RandomContext::BellCurveDistribution(float center, float range, float standardDeviation)
 {
   return mRandom.BellCurve(center, range, standardDeviation);
 }

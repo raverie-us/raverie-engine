@@ -7,9 +7,7 @@ namespace Zero
 class GeometryImporter
 {
 public:
-  GeometryImporter(StringParam inputFile,
-                   StringParam outputPath,
-                   StringParam metaFile);
+  GeometryImporter(StringParam inputFile, StringParam outputPath, StringParam metaFile);
   ~GeometryImporter();
 
   uint SetupAssimpPostProcess();
@@ -22,8 +20,7 @@ public:
   // nodes with the same name.
   String ExtractDataFromNodesRescursive(aiNode* node, String parentName);
   void SingleMeshHierarchyEntry(HierarchyData& hierarchyData, uint meshIndex);
-  void MultipleMeshsHierarchicalEntry(HierarchyData& hierarchyData,
-                                      aiNode* node);
+  void MultipleMeshsHierarchicalEntry(HierarchyData& hierarchyData, aiNode* node);
   void FindAnimationNodes();
 
   void ComputeMeshTransforms();

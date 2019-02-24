@@ -35,19 +35,16 @@ void PropertyToUndo::ChangeProperty(HandleParam object,
     Any oldValue = property.GetValue(object);
     property.SetValue(object, state.Value);
 
-    MetaOperations::NotifyPropertyModified(
-        object, property, oldValue, state.Value, true);
+    MetaOperations::NotifyPropertyModified(object, property, oldValue, state.Value, true);
   }
 }
 
-void PropertyToUndo::MarkPropertyModified(HandleParam object,
-                                          PropertyPathParam property)
+void PropertyToUndo::MarkPropertyModified(HandleParam object, PropertyPathParam property)
 {
   MarkPropertyAsModified(mOperationQueue, object, property);
 }
 
-void PropertyToUndo::RevertProperty(HandleParam object,
-                                    PropertyPathParam property)
+void PropertyToUndo::RevertProperty(HandleParam object, PropertyPathParam property)
 {
   Zero::RevertProperty(mOperationQueue, object, property);
 }
@@ -59,13 +56,11 @@ void PropertyToUndo::InvokeFunction(HandleParam object, Function* function)
   mOperationQueue->QueueRegisteredSideEffects();
 }
 
-HandleOf<MetaComposition>
-PropertyToUndo::GetMetaComposition(BoundType* objectType)
+HandleOf<MetaComposition> PropertyToUndo::GetMetaComposition(BoundType* objectType)
 {
   // If the object itself doesn't have a meta composition, we don't want to
   // return our custom one
-  if (MetaComposition* objectComposition =
-          objectType->HasInherited<MetaComposition>())
+  if (MetaComposition* objectComposition = objectType->HasInherited<MetaComposition>())
     return new UndoMetaComposition(this, objectType, mOperationQueue);
   return nullptr;
 }
@@ -89,27 +84,20 @@ UndoMetaComposition::UndoMetaComposition(PropertyInterface* propertyInterface,
 {
 }
 
-void UndoMetaComposition::AddComponent(HandleParam owner,
-                                       BoundType* typeToAdd,
-                                       int index,
-                                       bool ignoreDependencies,
-                                       MetaCreationContext* creationContext)
+void UndoMetaComposition::AddComponent(
+    HandleParam owner, BoundType* typeToAdd, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   QueueAddComponent(mOperationQueue, owner, typeToAdd);
   mPropertyInterface->SendComponentsModifiedOnGrid(owner);
 }
 
-void UndoMetaComposition::RemoveComponent(HandleParam owner,
-                                          HandleParam component,
-                                          bool ignoreDependencies)
+void UndoMetaComposition::RemoveComponent(HandleParam owner, HandleParam component, bool ignoreDependencies)
 {
   QueueRemoveComponent(mOperationQueue, owner, component.StoredType);
   mPropertyInterface->SendComponentsModifiedOnGrid(owner);
 }
 
-void UndoMetaComposition::MoveComponent(HandleParam owner,
-                                        HandleParam component,
-                                        uint destination)
+void UndoMetaComposition::MoveComponent(HandleParam owner, HandleParam component, uint destination)
 {
   QueueMoveComponent(mOperationQueue, owner, component, destination);
   mPropertyInterface->SendComponentsModifiedOnGrid(owner);

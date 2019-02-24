@@ -68,10 +68,7 @@ public:
   u64 ToId();
   static u64 ToId(Cog* parent, Guid childId);
   String GetRemovedChildName();
-  DataNode* FindRemovedCogNode(DataNode* dataTree,
-                               Cog* currParent,
-                               Guid childGuid,
-                               Cog* archetypeRoot);
+  DataNode* FindRemovedCogNode(DataNode* dataTree, Cog* currParent, Guid childGuid, Cog* archetypeRoot);
   String GetNameFromCogNode(DataNode* cogNode);
 
   Cog* mParent;

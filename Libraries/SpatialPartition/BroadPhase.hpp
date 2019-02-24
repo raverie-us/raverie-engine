@@ -89,14 +89,8 @@ public:
     return mWorldAabb;
   }
 
-  typedef bool (*RayCastCallBack)(void*,
-                                  CastDataParam,
-                                  ProxyResult&,
-                                  BaseCastFilter&);
-  typedef bool (*VolumeCastCallBack)(void*,
-                                     CastDataParam,
-                                     ProxyResult&,
-                                     BaseCastFilter&);
+  typedef bool (*RayCastCallBack)(void*, CastDataParam, ProxyResult&, BaseCastFilter&);
+  typedef bool (*VolumeCastCallBack)(void*, CastDataParam, ProxyResult&, BaseCastFilter&);
 
   /// Sets the ray cast callback for checking if a ray collided with an object.
   static void SetCastRayCallBack(RayCastCallBack callback)
@@ -123,25 +117,13 @@ public:
   uint GetType();
 
   /// Tests Ray against Aabb.
-  static bool TestRayVsAabb(const Aabb& aabb,
-                            Vec3Param start,
-                            Vec3Param direction,
-                            real& time);
+  static bool TestRayVsAabb(const Aabb& aabb, Vec3Param start, Vec3Param direction, real& time);
   /// Tests Segment against Aabb.
-  static bool TestSegmentVsAabb(const Aabb& aabb,
-                                Vec3Param start,
-                                Vec3Param end,
-                                real& time);
+  static bool TestSegmentVsAabb(const Aabb& aabb, Vec3Param start, Vec3Param end, real& time);
   /// Tests Ray against Sphere.
-  static bool TestRayVsSphere(const Sphere& sphere,
-                              Vec3Param start,
-                              Vec3Param direction,
-                              real& time);
+  static bool TestRayVsSphere(const Sphere& sphere, Vec3Param start, Vec3Param direction, real& time);
   /// Tests Segment against Sphere.
-  static bool TestSegmentVsSphere(const Sphere& sphere,
-                                  Vec3Param start,
-                                  Vec3Param end,
-                                  real& time);
+  static bool TestSegmentVsSphere(const Sphere& sphere, Vec3Param start, Vec3Param end, real& time);
 
 protected:
   /// Callback for checking ray collisions.

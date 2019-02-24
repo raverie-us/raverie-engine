@@ -40,8 +40,7 @@ ZilchDefineType(SplineParticleEmitter, builder, type)
 
   ZilchBindFieldProperty(mEmitRadius);
   ZilchBindFieldProperty(mSpawnT)->Add(new EditorSlider(0, 1, 0.001f));
-  ZilchBindFieldProperty(mSpawnTVariance)
-      ->Add(new EditorSlider(0, 0.5f, 0.001f));
+  ZilchBindFieldProperty(mSpawnTVariance)->Add(new EditorSlider(0, 0.5f, 0.001f));
   ZilchBindFieldProperty(mClampT);
   ZilchBindFieldProperty(mTargetSplineCog);
   ZilchBindGetterSetterProperty(Spline);
@@ -64,9 +63,7 @@ void SplineParticleEmitter::Serialize(Serializer& stream)
 void SplineParticleEmitter::Initialize(CogInitializer& initializer)
 {
   ParticleEmitter::Initialize(initializer);
-  ConnectThisTo(&mTargetSplineCog,
-                Events::CogPathCogChanged,
-                OnTargetSplineCogPathChanged);
+  ConnectThisTo(&mTargetSplineCog, Events::CogPathCogChanged, OnTargetSplineCogPathChanged);
 }
 
 void SplineParticleEmitter::OnAllObjectsCreated(CogInitializer& initializer)
@@ -93,11 +90,8 @@ void SplineParticleEmitter::FindSpline()
   }
 }
 
-int SplineParticleEmitter::EmitParticles(ParticleList* particleList,
-                                         float dt,
-                                         Mat4Ref transform,
-                                         Vec3Param emitterVelocity,
-                                         float timeAlive)
+int SplineParticleEmitter::EmitParticles(
+    ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param emitterVelocity, float timeAlive)
 {
   // If there are no particles to emit, no need to do anything
   int particlesToEmit = GetParticleEmissionCount(particleList, dt, timeAlive);
@@ -136,8 +130,7 @@ int SplineParticleEmitter::EmitParticles(ParticleList* particleList,
     Vec3 startingPoint = trans->TransformPointInverse(sample.mPoint);
 
     // Random velocity
-    Vec3 velocity =
-        mStartVelocity + gRandom.PointOnUnitSphere() * mRandomVelocity;
+    Vec3 velocity = mStartVelocity + gRandom.PointOnUnitSphere() * mRandomVelocity;
 
     // No need to generate an orthonormal basis if it won't be used
     if (mTangentVelocity.LengthSq() > 0.0f || mEmitRadius > 0.0f)
@@ -156,15 +149,13 @@ int SplineParticleEmitter::EmitParticles(ParticleList* particleList,
       startingPoint += dir * mEmitRadius * fill;
 
       // Add tangent velocity
-      velocity += tangent * mTangentVelocity.z + crossA * mTangentVelocity.y +
-                  normal * mTangentVelocity.x;
+      velocity += tangent * mTangentVelocity.z + crossA * mTangentVelocity.y + normal * mTangentVelocity.x;
     }
 
     newParticle->Time = 0;
     newParticle->Size = gRandom.FloatVariance(mSize, mSizeVariance);
 
-    newParticle->Velocity = Math::TransformNormal(transform, velocity) +
-                            emitterVelocity * mEmitterVelocityPercent;
+    newParticle->Velocity = Math::TransformNormal(transform, velocity) + emitterVelocity * mEmitterVelocityPercent;
 
     newParticle->Position = Math::TransformPoint(transform, startingPoint);
 
@@ -184,8 +175,7 @@ int SplineParticleEmitter::EmitParticles(ParticleList* particleList,
     else
       newParticle->Rotation = 0;
 
-    newParticle->RotationalVelocity = gRandom.FloatVariance(
-        Math::DegToRad(mSpin), Math::DegToRad(mSpinVariance));
+    newParticle->RotationalVelocity = gRandom.FloatVariance(Math::DegToRad(mSpin), Math::DegToRad(mSpinVariance));
 
     particleList->AddParticle(newParticle);
   }
@@ -215,20 +205,16 @@ ZilchDefineType(SplineParticleAnimator, builder, type)
   ZilchBindGetterSetterProperty(Speed);
   ZilchBindFieldProperty(mAutoCalculateLifetime);
 
-  ZilchBindFieldProperty(mHelix)->AddAttribute(
-      PropertyAttributes::cInvalidatesObject);
+  ZilchBindFieldProperty(mHelix)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindFieldProperty(mHelixRadius)->ZeroFilterBool(mHelix);
   ZilchBindFieldProperty(mHelixWaveLength)->ZeroFilterBool(mHelix);
   ZilchBindFieldProperty(mHelixOffset)->ZeroFilterBool(mHelix);
 
-  ZilchBindFieldProperty(mMode)->AddAttribute(
-      PropertyAttributes::cInvalidatesObject);
+  ZilchBindFieldProperty(mMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindFieldProperty(mSpringFrequencyHz)
-      ->ZeroFilterEquality(
-          mMode, SplineAnimatorMode::Enum, SplineAnimatorMode::Spring);
+      ->ZeroFilterEquality(mMode, SplineAnimatorMode::Enum, SplineAnimatorMode::Spring);
   ZilchBindFieldProperty(mSpringDampingRatio)
-      ->ZeroFilterEquality(
-          mMode, SplineAnimatorMode::Enum, SplineAnimatorMode::Spring);
+      ->ZeroFilterEquality(mMode, SplineAnimatorMode::Enum, SplineAnimatorMode::Spring);
 }
 
 SplineParticleAnimator::~SplineParticleAnimator()
@@ -246,8 +232,7 @@ void SplineParticleAnimator::Serialize(Serializer& stream)
   SerializeNameDefault(mHelixWaveLength, 3.0f);
   SerializeNameDefault(mHelixOffset, 0.0f);
 
-  SerializeEnumNameDefault(
-      SplineAnimatorMode, mMode, SplineAnimatorMode::Exact);
+  SerializeEnumNameDefault(SplineAnimatorMode, mMode, SplineAnimatorMode::Exact);
   SerializeNameDefault(mSpringFrequencyHz, 6.0f);
   SerializeNameDefault(mSpringDampingRatio, 0.2f);
 }
@@ -258,9 +243,7 @@ void SplineParticleAnimator::Initialize(CogInitializer& initializer)
   mEmitter = GetOwner()->has(SplineParticleEmitter);
 }
 
-void SplineParticleAnimator::Animate(ParticleList* particleList,
-                                     float dt,
-                                     Mat4Ref transform)
+void SplineParticleAnimator::Animate(ParticleList* particleList, float dt, Mat4Ref transform)
 {
   // Spring constants
   const float f = 1.0f + 2.0f * dt * mSpringDampingRatio * mSpringFrequencyHz;
@@ -302,7 +285,7 @@ void SplineParticleAnimator::Animate(ParticleList* particleList,
   Vec3 crossA, previousNormal;
   GenerateOrthonormalBasis(startTangent, &crossA, &previousNormal);
 
-  forRange(Particle * p, particleList->All())
+  forRange (Particle* p, particleList->All())
   {
     // How far (in meters) the particle has traveled
     float distanceTraveled = p->Time * mSpeed;
@@ -381,7 +364,7 @@ void SplineParticleAnimator::SetSpeed(float speed)
   float timeToFinish = curveLength / speed;
 
   // Re-base each particles lifetime so that
-  forRange(Particle * p, data->AllParticles())
+  forRange (Particle* p, data->AllParticles())
   {
     float percentAlive = p->Time / p->Lifetime;
 

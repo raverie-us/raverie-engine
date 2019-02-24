@@ -19,10 +19,9 @@ ZilchDefineType(CustomCollisionEventTracker, builder, type)
   ZilchBindMethod(SendEvents);
 }
 
-void CustomCollisionEventTracker::AddCollision(
-    Collider* otherCollider,
-    Vec3Param worldPoint,
-    Vec3Param worldNormalTowardsOther)
+void CustomCollisionEventTracker::AddCollision(Collider* otherCollider,
+                                               Vec3Param worldPoint,
+                                               Vec3Param worldNormalTowardsOther)
 {
   if (otherCollider == nullptr)
   {
@@ -61,8 +60,7 @@ void CustomCollisionEventTracker::SendEvents(StringParam eventPrefix)
 
     // If we weren't in contact last frame then this is a collision started
     // event
-    CollisionData* previousData =
-        mPreviousCollisions.FindPointer(data.mOtherCog);
+    CollisionData* previousData = mPreviousCollisions.FindPointer(data.mOtherCog);
     if (previousData == nullptr)
       collisionsStarted.PushBack(data);
     else
@@ -95,9 +93,7 @@ void CustomCollisionEventTracker::SendEvents(StringParam eventPrefix)
   mCollisions.Clear();
 }
 
-void CustomCollisionEventTracker::FilloutEvent(CollisionData& data,
-                                               Physics::Manifold* manifold,
-                                               CollisionEvent* toSend)
+void CustomCollisionEventTracker::FilloutEvent(CollisionData& data, Physics::Manifold* manifold, CollisionEvent* toSend)
 {
   // Set the other collider for the manifold (we were set already outside of
   // this function)
@@ -109,10 +105,8 @@ void CustomCollisionEventTracker::FilloutEvent(CollisionData& data,
 
   point.WorldPoints[0] = point.WorldPoints[1] = data.mWorldPoint;
   // Have to update the body points from the world points
-  point.BodyPoints[0] = Physics::JointHelpers::WorldPointToBodyR(
-      manifold->Objects[0], point.WorldPoints[0]);
-  point.BodyPoints[1] = Physics::JointHelpers::WorldPointToBodyR(
-      manifold->Objects[1], point.WorldPoints[1]);
+  point.BodyPoints[0] = Physics::JointHelpers::WorldPointToBodyR(manifold->Objects[0], point.WorldPoints[0]);
+  point.BodyPoints[1] = Physics::JointHelpers::WorldPointToBodyR(manifold->Objects[1], point.WorldPoints[1]);
   point.Normal = data.mWorldNormalTowardsOther;
   // Hardcoded for now, should this be exposed?
   point.Penetration = 0;
@@ -123,8 +117,7 @@ void CustomCollisionEventTracker::FilloutEvent(CollisionData& data,
   toSend->mContactPoint = point;
 }
 
-void CustomCollisionEventTracker::SendEventList(Array<CollisionData>& events,
-                                                StringParam eventName)
+void CustomCollisionEventTracker::SendEventList(Array<CollisionData>& events, StringParam eventName)
 {
   Physics::Manifold tempManifold;
   tempManifold.Objects[0] = GetOwner()->has(Collider);

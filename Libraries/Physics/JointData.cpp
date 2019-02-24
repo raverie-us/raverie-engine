@@ -32,10 +32,7 @@ JointVelocity::JointVelocity(Joint* joint)
   JointHelpers::GetVelocities(joint, *this);
 }
 
-JointVelocity::JointVelocity(Vec3Param v0,
-                             Vec3Param w0,
-                             Vec3Param v1,
-                             Vec3Param w1)
+JointVelocity::JointVelocity(Vec3Param v0, Vec3Param w0, Vec3Param v1, Vec3Param w1)
 {
   Linear[0] = v0;
   Angular[0] = w0;
@@ -62,10 +59,7 @@ Jacobian::Jacobian()
   Angular[1].ZeroOut();
 };
 
-Jacobian::Jacobian(Vec3Param linear0,
-                   Vec3Param angular0,
-                   Vec3Param linear1,
-                   Vec3Param angular1)
+Jacobian::Jacobian(Vec3Param linear0, Vec3Param angular0, Vec3Param linear1, Vec3Param angular1)
 {
   Linear[0] = linear0;
   Angular[0] = angular0;
@@ -73,10 +67,7 @@ Jacobian::Jacobian(Vec3Param linear0,
   Angular[1] = angular1;
 }
 
-void Jacobian::Set(Vec3Param linear0,
-                   Vec3Param angular0,
-                   Vec3Param linear1,
-                   Vec3Param angular1)
+void Jacobian::Set(Vec3Param linear0, Vec3Param angular0, Vec3Param linear1, Vec3Param angular1)
 {
   Linear[0] = linear0;
   Angular[0] = angular0;
@@ -96,27 +87,17 @@ real Jacobian::ComputeMass(Mass M0, Mat3Param I0, Mass M1, Mat3Param I1) const
 
 real Jacobian::ComputeMass(JointMass& masses)
 {
-  return ComputeMass(masses.mInvMass[0],
-                     masses.InverseInertia[0],
-                     masses.mInvMass[1],
-                     masses.InverseInertia[1]);
+  return ComputeMass(masses.mInvMass[0], masses.InverseInertia[0], masses.mInvMass[1], masses.InverseInertia[1]);
 }
 
-real Jacobian::ComputeJV(Vec3Param v0,
-                         Vec3Param w0,
-                         Vec3Param v1,
-                         Vec3Param w1) const
+real Jacobian::ComputeJV(Vec3Param v0, Vec3Param w0, Vec3Param v1, Vec3Param w1) const
 {
-  return Math::Dot(Linear[0], v0) + Math::Dot(Angular[0], w0) +
-         Math::Dot(Linear[1], v1) + Math::Dot(Angular[1], w1);
+  return Math::Dot(Linear[0], v0) + Math::Dot(Angular[0], w0) + Math::Dot(Linear[1], v1) + Math::Dot(Angular[1], w1);
 }
 
 real Jacobian::ComputeJV(const JointVelocity& velocities)
 {
-  return ComputeJV(velocities.Linear[0],
-                   velocities.Angular[0],
-                   velocities.Linear[1],
-                   velocities.Angular[1]);
+  return ComputeJV(velocities.Linear[0], velocities.Angular[0], velocities.Linear[1], velocities.Angular[1]);
 }
 
 Jacobian Jacobian::operator-() const

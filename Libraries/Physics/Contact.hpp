@@ -16,8 +16,7 @@ class Contact;
 class ContactManager;
 class IConstraintSolver;
 
-DeclareBitField6(
-    ContactFlags, OnIsland, Ghost, SkipsResolution, Valid, NewContact, Active);
+DeclareBitField6(ContactFlags, OnIsland, Ghost, SkipsResolution, Valid, NewContact, Active);
 
 /// A constraint specifically for solving a non-penetration constraint.
 /// This should not be created anywhere but in the constraint solver.
@@ -68,8 +67,7 @@ public:
   void ComputePositionMolecules(MoleculeWalker& fragments);
 
   virtual void DebugDraw();
-  virtual uint GetAtomIndexFilter(uint atomIndex,
-                                  real& desiredConstraintValue) const;
+  virtual uint GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const;
 
   bool GetShouldBaumgarteBeUsed() const;
   real GetLinearBaumgarte() const;

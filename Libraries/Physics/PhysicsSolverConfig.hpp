@@ -14,18 +14,12 @@ DeclareEnum2(PhysicsSolverPositionCorrection, Baumgarte, PostStabilization);
 /// force.</param> <param name="PostStabilization">Directly fix position errors
 /// via translation.</param> <param name="Inherit">Use the global position
 /// correction method.</param>
-DeclareEnum3(ConstraintPositionCorrection,
-             Baumgarte,
-             PostStabilization,
-             Inherit);
+DeclareEnum3(ConstraintPositionCorrection, Baumgarte, PostStabilization, Inherit);
 /// What kind of solver technique to use for position correction. Mainly for
 /// testing.
 DeclareEnum2(PhysicsSolverSubType, BasicSolving, BlockSolving);
 /// How to compute the tangents for a contact point. Mainly for testing.
-DeclareEnum3(PhysicsContactTangentTypes,
-             OrthonormalTangents,
-             VelocityTangents,
-             RandomTangents);
+DeclareEnum3(PhysicsContactTangentTypes, OrthonormalTangents, VelocityTangents, RandomTangents);
 
 /// A block of information for solving a joint (or constraint) type.
 /// This is used to configure how one joint is solved independently of another
@@ -64,8 +58,7 @@ struct ConstraintConfigBlock : public SafeId32Object
   void SetAngularErrorCorrection(real maxError);
   /// What method should be used to fix errors in joints.
   ConstraintPositionCorrection::Enum GetPositionCorrectionType();
-  void
-  SetPositionCorrectionType(ConstraintPositionCorrection::Enum correctionType);
+  void SetPositionCorrectionType(ConstraintPositionCorrection::Enum correctionType);
 
   //-------------------------------------------------------------------Internal
   /// Reset the default values of this constraint block
@@ -97,14 +90,14 @@ struct ContactBlock : public ConstraintConfigBlock
 };
 
 /// Use the define/include trick to create a named block for each joint type
-#define JointType(jointType)                                                   \
-  struct jointType##Block : public ConstraintConfigBlock                       \
-  {                                                                            \
-    ZilchDeclareType(jointType##Block, TypeCopyMode::ReferenceType);           \
-    jointType##Block()                                                         \
-    {                                                                          \
-      mJointId = Zero::JointEnums::jointType##Type;                            \
-    }                                                                          \
+#define JointType(jointType)                                                                                           \
+  struct jointType##Block : public ConstraintConfigBlock                                                               \
+  {                                                                                                                    \
+    ZilchDeclareType(jointType##Block, TypeCopyMode::ReferenceType);                                                   \
+    jointType##Block()                                                                                                 \
+    {                                                                                                                  \
+      mJointId = Zero::JointEnums::jointType##Type;                                                                    \
+    }                                                                                                                  \
   };
 #include "JointList.hpp"
 #undef JointType
@@ -151,8 +144,7 @@ public:
   /// Stabilization fixes errors by directly modifying position but can behave
   /// worse in unsolvable configurations.
   PhysicsSolverPositionCorrection::Enum GetPositionCorrectionType();
-  void SetPositionCorrectionType(
-      PhysicsSolverPositionCorrection::Enum correctionType);
+  void SetPositionCorrectionType(PhysicsSolverPositionCorrection::Enum correctionType);
   /// What kind of solver to use for post stabilization. Mostly for testing.
   PhysicsSolverSubType::Enum GetSubCorrectionType();
   void SetSubCorrectionType(PhysicsSolverSubType::Enum subType);
@@ -189,8 +181,7 @@ public:
   ConstraintConfigBlock mContactBlock;
 };
 
-typedef SimpleResourceFactory<PhysicsSolverConfig, ConstraintConfigBlock>
-    PhysicsSolverConfigMetaComposition;
+typedef SimpleResourceFactory<PhysicsSolverConfig, ConstraintConfigBlock> PhysicsSolverConfigMetaComposition;
 
 class PhysicsSolverConfigManager : public ResourceManager
 {

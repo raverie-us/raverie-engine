@@ -11,9 +11,7 @@ class ModalBackgroundTaskProgessBar : public ModalStrip
 public:
   typedef ModalBackgroundTaskProgessBar ZilchSelf;
   /// Constructor.
-  ModalBackgroundTaskProgessBar(Composite* parent,
-                                StringParam title,
-                                BackgroundTask* progressListener = nullptr);
+  ModalBackgroundTaskProgessBar(Composite* parent, StringParam title, BackgroundTask* progressListener = nullptr);
 
   void OnProgressUpdated(BackgroundTaskEvent* e);
   void OnTaskEnded(BackgroundTaskEvent* e);

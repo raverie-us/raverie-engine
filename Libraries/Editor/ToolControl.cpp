@@ -59,10 +59,9 @@ public:
   }
 
   //****************************************************************************
-  ObjectPropertyNode*
-  BuildObjectTree(ObjectPropertyNode* parent,
-                  HandleParam object,
-                  Property* objectProperty = nullptr) override
+  ObjectPropertyNode* BuildObjectTree(ObjectPropertyNode* parent,
+                                      HandleParam object,
+                                      Property* objectProperty = nullptr) override
   {
     BoundType* objectType = object.StoredType;
     if (objectType->IsA(ZilchTypeId(Cog)))
@@ -71,8 +70,7 @@ public:
       static Array<uint> sValidComponentIndices;
       sValidComponentIndices.Clear();
 
-      MetaComposition* cogComposition =
-          objectType->HasInherited<MetaComposition>();
+      MetaComposition* cogComposition = objectType->HasInherited<MetaComposition>();
       // The amount of components we have contained
       uint objectCount = cogComposition->GetComponentCount(object);
 
@@ -81,8 +79,7 @@ public:
       {
         Handle subInstance = cogComposition->GetComponentAt(object, i);
 
-        if (subInstance.StoredType->HasAttributeInherited(
-                ObjectAttributes::cTool))
+        if (subInstance.StoredType->HasAttributeInherited(ObjectAttributes::cTool))
         {
           sValidComponentIndices.PushBack(i);
           break;
@@ -92,24 +89,20 @@ public:
       if (sValidComponentIndices.Size() == 1)
       {
         uint componentIndex = sValidComponentIndices.Front();
-        Handle subInstance =
-            cogComposition->GetComponentAt(object, componentIndex);
+        Handle subInstance = cogComposition->GetComponentAt(object, componentIndex);
         return BuildObjectTree(parent, subInstance);
       }
       else
       {
-        ObjectPropertyNode* node =
-            new ObjectPropertyNode(parent, object, objectProperty);
+        ObjectPropertyNode* node = new ObjectPropertyNode(parent, object, objectProperty);
 
         // Loop through and add each one
         for (uint i = 0; i < sValidComponentIndices.Size(); ++i)
         {
           uint componentIndex = sValidComponentIndices[i];
-          Handle subInstance =
-              cogComposition->GetComponentAt(object, componentIndex);
+          Handle subInstance = cogComposition->GetComponentAt(object, componentIndex);
           BoundType* componentType = subInstance.StoredType;
-          ErrorIf(componentType == nullptr,
-                  "Contained object does not have meta initialized.");
+          ErrorIf(componentType == nullptr, "Contained object does not have meta initialized.");
 
           // Don't show hidden sub objects
           if (componentType->HasAttribute(ObjectAttributes::cHidden))
@@ -124,8 +117,7 @@ public:
       }
     }
 
-    ObjectPropertyNode* node =
-        PropertyInterface::BuildObjectTree(parent, object, objectProperty);
+    ObjectPropertyNode* node = PropertyInterface::BuildObjectTree(parent, object, objectProperty);
     RemoveScriptSourceProperties(node);
     return node;
   }
@@ -133,7 +125,7 @@ public:
   //****************************************************************************
   void RemoveScriptSourceProperties(ObjectPropertyNode* node)
   {
-    forRange(ObjectPropertyNode * propertyNode, node->mProperties.All())
+    forRange (ObjectPropertyNode* propertyNode, node->mProperties.All())
     {
       if (!propertyNode->mProperty)
         continue;
@@ -159,14 +151,11 @@ public:
   */
 };
 
-ToolData::ToolData(Archetype* archetype) :
-    mArchetype(archetype),
-    mScriptComponentType(nullptr)
+ToolData::ToolData(Archetype* archetype) : mArchetype(archetype), mScriptComponentType(nullptr)
 {
 }
 
-ToolData::ToolData(BoundType* componentMeta) :
-    mScriptComponentType(componentMeta)
+ToolData::ToolData(BoundType* componentMeta) : mScriptComponentType(componentMeta)
 {
 }
 
@@ -196,22 +185,19 @@ Space* ToolData::GetSpace()
 
     if (gameSession)
     {
-      Archetype* spaceArchetype =
-          ArchetypeManager::Find(CoreArchetypes::DefaultSpace);
+      Archetype* spaceArchetype = ArchetypeManager::Find(CoreArchetypes::DefaultSpace);
       mSpace = gameSession->CreateSpace(spaceArchetype);
     }
     else
     {
-      mSpace = Z::gFactory->CreateSpace(
-          CoreArchetypes::DefaultSpace, CreationFlags::Default, nullptr);
+      mSpace = Z::gFactory->CreateSpace(CoreArchetypes::DefaultSpace, CreationFlags::Default, nullptr);
     }
   }
 
   return mSpace;
 }
 
-ToolObjectManager::ToolObjectManager(ToolControl* toolControl) :
-    EditorScriptObjects<ToolData>(ObjectAttributes::cTool)
+ToolObjectManager::ToolObjectManager(ToolControl* toolControl) : EditorScriptObjects<ToolData>(ObjectAttributes::cTool)
 {
   mToolControl = toolControl;
 }
@@ -239,7 +225,7 @@ void ToolObjectManager::RemoveObject(ToolData* object)
 
 ToolData* ToolObjectManager::GetObject(StringParam objectName)
 {
-  forRange(ToolData * tool, mToolArray.All())
+  forRange (ToolData* tool, mToolArray.All())
   {
     if (tool->GetName() == objectName)
       return tool;
@@ -273,8 +259,7 @@ void ToolObjectManager::CreateOrUpdateCog(ToolData* object)
   EditorScriptObjects<ToolData>::CreateOrUpdateCog(object);
 
   // Re-select the active tool
-  mToolControl->SelectToolInternal(mToolControl->mActiveTool,
-                                   ShowToolProperties::Auto);
+  mToolControl->SelectToolInternal(mToolControl->mActiveTool, ShowToolProperties::Auto);
 }
 
 ZilchDefineType(ToolControl, builder, type)
@@ -282,10 +267,7 @@ ZilchDefineType(ToolControl, builder, type)
   ZeroBindEvent(Events::GetToolInfo, ToolUiEvent);
 }
 
-ToolControl::ToolControl(Composite* parent) :
-    Composite(parent),
-    mTools(this),
-    mCustomUi(nullptr)
+ToolControl::ToolControl(Composite* parent) : Composite(parent), mTools(this), mCustomUi(nullptr)
 {
   mEditor = Z::gEditor;
   mActiveTool = nullptr;
@@ -294,19 +276,15 @@ ToolControl::ToolControl(Composite* parent) :
   SetName("Tools");
 
   // METAREFACTOR (also, find anywhere else people could be doing this!)
-  MetaDatabase::GetInstance()->mEventMap[Events::ToolActivate] =
-      ZilchTypeId(Event);
-  MetaDatabase::GetInstance()->mEventMap[Events::ToolDeactivate] =
-      ZilchTypeId(Event);
+  MetaDatabase::GetInstance()->mEventMap[Events::ToolActivate] = ZilchTypeId(Event);
+  MetaDatabase::GetInstance()->mEventMap[Events::ToolDeactivate] = ZilchTypeId(Event);
   MetaDatabase::GetInstance()->mEventMap[Events::ToolDraw] = ZilchTypeId(Event);
 
   Composite* toolRow = new Composite(this);
-  toolRow->SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Vec2(6, 0), Thickness(6, 0, 0, 0)));
+  toolRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2(6, 0), Thickness(6, 0, 0, 0)));
   {
     Composite* iconLayout = new Composite(toolRow);
-    iconLayout->SetLayout(
-        CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero));
+    iconLayout->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero));
     {
       Spacer* spacer = new Spacer(iconLayout);
       spacer->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
@@ -343,8 +321,7 @@ ToolControl::ToolControl(Composite* parent) :
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
 
   ZilchScriptManager* zilchManager = ZilchScriptManager::GetInstance();
-  ConnectThisTo(
-      zilchManager, Events::ScriptsCompiledPostPatch, OnScriptsCompiled);
+  ConnectThisTo(zilchManager, Events::ScriptsCompiledPostPatch, OnScriptsCompiled);
 }
 
 ToolControl::~ToolControl()
@@ -419,8 +396,7 @@ void ToolControl::SelectToolIndex(uint index, ShowToolProperties::Enum showTool)
     SelectToolInternal(mTools.mToolArray[index], showTool);
 }
 
-void ToolControl::SelectToolName(StringParam toolName,
-                                 ShowToolProperties::Enum showTool)
+void ToolControl::SelectToolName(StringParam toolName, ShowToolProperties::Enum showTool)
 {
   ToolData* tool = mTools.GetObject(toolName);
   if (tool)
@@ -439,7 +415,7 @@ void ToolControl::OnInfoMouseEnter(MouseEvent*)
 
   ShortcutSet entries;
   // Get the shortcuts documentation for all components of the tool.
-  forRange(Component * component, mActiveTool->mCog->GetComponents())
+  forRange (Component* component, mActiveTool->mCog->GetComponents())
   {
     BoundType* type = ZilchVirtualTypeId(component);
     const ShortcutSet* shortcuts = Z::gShortcutsDoc->FindSet(type->Name);
@@ -457,16 +433,12 @@ void ToolControl::OnInfoMouseEnter(MouseEvent*)
   if (entries.Empty())
   {
     ToolTip* toolTip = mShortcutsTip = new ToolTip(mToolBox);
-    toolTip->SetText(
-        "Current tool does not have any mouse/keyboard shortcuts.");
+    toolTip->SetText("Current tool does not have any mouse/keyboard shortcuts.");
     toolTip->SetDestroyOnMouseExit(false);
 
     ToolTipPlacement placement;
     placement.SetScreenRect(mToolBox->GetScreenRect());
-    placement.SetPriority(IndicatorSide::Right,
-                          IndicatorSide::Left,
-                          IndicatorSide::Bottom,
-                          IndicatorSide::Top);
+    placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Bottom, IndicatorSide::Top);
 
     // Move arrow outside of the tool's property grid.
     if (toolTip->mSide == IndicatorSide::Right)
@@ -513,8 +485,7 @@ void ToolControl::OnScriptsCompiled(Event*)
   SelectToolInternal(mActiveTool, ShowToolProperties::Auto);
 }
 
-void ToolControl::SelectToolInternal(ToolData* tool,
-                                     ShowToolProperties::Enum showTool)
+void ToolControl::SelectToolInternal(ToolData* tool, ShowToolProperties::Enum showTool)
 {
   if (tool == nullptr)
     return;
@@ -600,10 +571,7 @@ void ToolControl::BuildShortcutsToolTip(const ShortcutSet* entries)
 
   ToolTipPlacement placement;
   placement.SetScreenRect(mToolBox->GetScreenRect());
-  placement.SetPriority(IndicatorSide::Right,
-                        IndicatorSide::Left,
-                        IndicatorSide::Bottom,
-                        IndicatorSide::Top);
+  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Bottom, IndicatorSide::Top);
 
   toolTip->mBackgroundColor = FloatColorRGBA(30, 30, 30, 255);
   toolTip->mBorderColor = FloatColorRGBA(10, 10, 10, 255);

@@ -172,8 +172,7 @@ void Simplex::HandleTetrahedron(void)
   // Closest geometry is tetrahedron
 }
 
-bool Simplex::TestTriangle(
-    uint i0, uint i1, uint i2, bool& leftEdge, bool& rightEdge)
+bool Simplex::TestTriangle(uint i0, uint i1, uint i2, bool& leftEdge, bool& rightEdge)
 {
   Vec3 p0 = mPoints[i0].cso;
   Vec3 p1 = mPoints[i1].cso;

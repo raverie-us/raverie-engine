@@ -51,10 +51,8 @@ struct EdgeHashingPolicy
   {
     // the edges are equal if they are between the same two points (even if the
     // order is flipped)
-    return (left->mPoint0Index == right->mPoint0Index &&
-            left->mPoint1Index == right->mPoint1Index) ||
-           (left->mPoint0Index == right->mPoint1Index &&
-            left->mPoint1Index == right->mPoint0Index);
+    return (left->mPoint0Index == right->mPoint0Index && left->mPoint1Index == right->mPoint1Index) ||
+           (left->mPoint0Index == right->mPoint1Index && left->mPoint1Index == right->mPoint0Index);
   }
 
   static const uint LargePrime = 75372313;
@@ -71,10 +69,8 @@ struct EdgeGreaterThanSorter
 
   bool operator()(const Edge& lhs, const Edge& rhs)
   {
-    float lengthLhs = Math::Length((*mVertices)[lhs.mPoint1Index] -
-                                   (*mVertices)[lhs.mPoint0Index]);
-    float lengthRhs = Math::Length((*mVertices)[rhs.mPoint1Index] -
-                                   (*mVertices)[rhs.mPoint0Index]);
+    float lengthLhs = Math::Length((*mVertices)[lhs.mPoint1Index] - (*mVertices)[lhs.mPoint0Index]);
+    float lengthRhs = Math::Length((*mVertices)[rhs.mPoint1Index] - (*mVertices)[rhs.mPoint0Index]);
 
     return lengthLhs > lengthRhs;
   }
@@ -82,9 +78,7 @@ struct EdgeGreaterThanSorter
   const Array<Vec2>* mVertices;
 };
 
-void Combine2dConvexMeshes(const Array<Vec2>& vertices,
-                           SubShapeArray& shapes,
-                           SubShapeArray& newShapes)
+void Combine2dConvexMeshes(const Array<Vec2>& vertices, SubShapeArray& shapes, SubShapeArray& newShapes)
 {
   // count how many edges and shapes we have (so we can allocate all the memory
   // we need up front)
@@ -255,9 +249,7 @@ void Combine2dConvexMeshes(const Array<Vec2>& vertices,
   }
 }
 
-void BuildShapesFromTriangulation(const Array<Vec2>& vertices,
-                                  Array<uint>& indices,
-                                  SubShapeArray& shapes)
+void BuildShapesFromTriangulation(const Array<Vec2>& vertices, Array<uint>& indices, SubShapeArray& shapes)
 {
   shapes.Resize(indices.Size() / 3);
   for (uint i = 0; i < indices.Size(); i += 3)
@@ -280,8 +272,7 @@ void BuildShapesFromTriangulation(const Array<Vec2>& vertices,
   }
 }
 
-bool Create2dMeshesWithTriangulator(const Array<Vec2>& vertices,
-                                    SubShapeArray& meshes)
+bool Create2dMeshesWithTriangulator(const Array<Vec2>& vertices, SubShapeArray& meshes)
 {
   Array<uint> indices;
   if (Geometry::Triangulate(vertices, &indices) == false)

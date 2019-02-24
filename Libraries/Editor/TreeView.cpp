@@ -62,8 +62,7 @@ ZilchDefineType(TreeViewHeaderAddedEvent, builder, type)
 {
 }
 
-TreeViewHeaderAddedEvent::TreeViewHeaderAddedEvent(uint headerIndex,
-                                                   ColumnHeader* newHeader) :
+TreeViewHeaderAddedEvent::TreeViewHeaderAddedEvent(uint headerIndex, ColumnHeader* newHeader) :
     mHeaderIndex(headerIndex),
     mNewHeader(newHeader)
 {
@@ -81,9 +80,7 @@ public:
   /// Displays the drag selection
   Element* mSelectBox;
 
-  RowSelector(MouseDragEvent* dragEvent, TreeView* tree) :
-      MouseManipulation(dragEvent->GetMouse(), tree),
-      mTree(tree)
+  RowSelector(MouseDragEvent* dragEvent, TreeView* tree) : MouseManipulation(dragEvent->GetMouse(), tree), mTree(tree)
   {
     mClientArea = tree->mArea->GetClientWidget();
 
@@ -165,8 +162,7 @@ ZilchDefineType(TreeRow, builder, type)
 {
 }
 
-TreeRow::TreeRow(TreeView* treeView, TreeRow* rowparent, DataEntry* entry) :
-    TreeBase(treeView->mArea)
+TreeRow::TreeRow(TreeView* treeView, TreeRow* rowparent, DataEntry* entry) : TreeBase(treeView->mArea)
 {
   mExpanded = false;
   mTree = treeView;
@@ -217,10 +213,8 @@ TreeRow::TreeRow(TreeView* treeView, TreeRow* rowparent, DataEntry* entry) :
     ColumnFormat& format = formatting->Columns[i];
 
     String customEditor = format.CustomEditor;
-    String editorType =
-        (customEditor == String()) ? cDefaultValueEditor : customEditor;
-    ValueEditor* valueEditor = factory->GetEditor(
-        editorType, this, format.CustomEditorData, format.Flags);
+    String editorType = (customEditor == String()) ? cDefaultValueEditor : customEditor;
+    ValueEditor* valueEditor = factory->GetEditor(editorType, this, format.CustomEditorData, format.Flags);
     valueEditor->Editable = format.Editable;
 
     valueEditor->Name = format.Name;
@@ -234,8 +228,8 @@ TreeRow::TreeRow(TreeView* treeView, TreeRow* rowparent, DataEntry* entry) :
 
     Array<Widget*> dragWidgets;
     valueEditor->GetDragWidgets(dragWidgets);
-    forRange(Widget * dragWidget, dragWidgets.All())
-        ConnectThisTo(dragWidget, Events::LeftMouseDrag, OnMouseDragRow);
+    forRange (Widget* dragWidget, dragWidgets.All())
+      ConnectThisTo(dragWidget, Events::LeftMouseDrag, OnMouseDragRow);
   }
 
   // Connect all needed events
@@ -328,8 +322,7 @@ void TreeRow::OnTextChanged(TextUpdatedEvent* event)
     editor->GetEditTextVariant(newTextValue);
 
     // Apply the value to the data source
-    event->mChangeAccepted =
-        mTree->mDataSource->SetData(entry, newTextValue, editor->Name);
+    event->mChangeAccepted = mTree->mDataSource->SetData(entry, newTextValue, editor->Name);
   }
 
   if (mTree->mRefreshOnValueChange)
@@ -524,7 +517,7 @@ void TreeRow::OnDestroy()
 
 void TreeRow::DestroyChildren()
 {
-  forRange(TreeRow & child, mChildren.All())
+  forRange (TreeRow& child, mChildren.All())
   {
     child.RecursiveDestroy();
   }
@@ -898,10 +891,7 @@ void TreeRow::OnMouseEnter(MouseEvent* event)
     // Position the tooltip
     ToolTipPlacement placement;
     placement.SetScreenRect(GetScreenRect());
-    placement.SetPriority(IndicatorSide::Right,
-                          IndicatorSide::Left,
-                          IndicatorSide::Top,
-                          IndicatorSide::Bottom);
+    placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Top, IndicatorSide::Bottom);
     toolTip->SetArrowTipTranslation(placement);
 
     mToolTip.SafeDestroy();
@@ -917,8 +907,7 @@ void TreeRow::OnMouseExit(MouseEvent* event)
   mTree->DispatchEvent(Events::MouseExitRow, &e);
 }
 
-InsertMode::Enum TreeRow::GetInsertPosition(DataEntry* entry,
-                                            Vec2Param screenPos)
+InsertMode::Enum TreeRow::GetInsertPosition(DataEntry* entry, Vec2Param screenPos)
 {
   Vec2 localPos = mBackground->ToLocal(screenPos);
   if (localPos.y < TreeViewUi::DragInsertSize)
@@ -928,10 +917,7 @@ InsertMode::Enum TreeRow::GetInsertPosition(DataEntry* entry,
   return InsertMode::On;
 }
 
-void TreeRow::GetInsertMode(Status& status,
-                            DataEntry* movingEntry,
-                            Vec2Param screenPos,
-                            InsertMode::Type& mode)
+void TreeRow::GetInsertMode(Status& status, DataEntry* movingEntry, Vec2Param screenPos, InsertMode::Type& mode)
 {
   // Determine where we're moving to
   // If the mouse is near the top or bottom of the row, we want to Insert
@@ -957,12 +943,9 @@ void TreeRow::GetInsertMode(Status& status,
 
   do
   {
-    bool beforeSupported =
-        results[InsertMode::Before].Context != InsertError::NotSupported;
-    bool onSupported =
-        results[InsertMode::On].Context != InsertError::NotSupported;
-    bool afterSupported =
-        results[InsertMode::After].Context != InsertError::NotSupported;
+    bool beforeSupported = results[InsertMode::Before].Context != InsertError::NotSupported;
+    bool onSupported = results[InsertMode::On].Context != InsertError::NotSupported;
+    bool afterSupported = results[InsertMode::After].Context != InsertError::NotSupported;
 
     // Check to move before
     if (beforeSupported)
@@ -1018,9 +1001,7 @@ void TreeRow::GetInsertMode(Status& status,
   status = results[mode];
 }
 
-void UpdateToolTipPlacement(TreeRow* row,
-                            InsertMode::Type mode,
-                            MetaDropEvent* e)
+void UpdateToolTipPlacement(TreeRow* row, InsertMode::Type mode, MetaDropEvent* e)
 {
   if (row->IsRoot())
     return;
@@ -1040,10 +1021,7 @@ void UpdateToolTipPlacement(TreeRow* row,
   else if (mode == InsertMode::After)
     placement.mHotSpot = rect.BottomLeft();
 
-  placement.SetPriority(IndicatorSide::Right,
-                        IndicatorSide::Left,
-                        IndicatorSide::Top,
-                        IndicatorSide::Bottom);
+  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Top, IndicatorSide::Bottom);
 }
 
 void TreeRow::OnMetaDrop(MetaDropEvent* event)
@@ -1161,7 +1139,7 @@ void TreeRow::Fill(Array<TreeRow*>& nodes, uint depth)
   nodes.PushBack(this);
   this->mDepth = depth;
   this->mVisibleRowIndex = nodes.Size() - 1;
-  forRange(TreeRow & child, mChildren.All())
+  forRange (TreeRow& child, mChildren.All())
   {
     child.Fill(nodes, depth + 1);
   }
@@ -1198,10 +1176,7 @@ void TreeRow::OnKeyUp(KeyboardEvent* event)
   mTree->DispatchEvent(Events::TreeKeyPress, &e);
 }
 
-ColumnHeader::ColumnHeader(TreeView* tree, ColumnFormat* format) :
-    Composite(tree),
-    mFormat(format),
-    mTree(tree)
+ColumnHeader::ColumnHeader(TreeView* tree, ColumnFormat* format) : Composite(tree), mFormat(format), mTree(tree)
 {
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetColor(TreeViewUi::HeaderColor);
@@ -1290,8 +1265,7 @@ class ColumnResizerManipulator : public MouseManipulation
 public:
   ColumnResizer* mResizer;
 
-  ColumnResizerManipulator(Mouse* mouse, ColumnResizer* resizer) :
-      MouseManipulation(mouse, resizer)
+  ColumnResizerManipulator(Mouse* mouse, ColumnResizer* resizer) : MouseManipulation(mouse, resizer)
   {
     mResizer = resizer;
   }
@@ -1309,10 +1283,7 @@ public:
   }
 };
 
-ColumnResizer::ColumnResizer(Composite* parent,
-                             ColumnFormat* left,
-                             ColumnFormat* right) :
-    Composite(parent)
+ColumnResizer::ColumnResizer(Composite* parent, ColumnFormat* left, ColumnFormat* right) : Composite(parent)
 {
   mSpacer = new Spacer(this);
   mLeftFormat = left;
@@ -1333,8 +1304,7 @@ void ColumnResizer::ResizeHeaders(float pos)
 {
   // Clamp the position into the movable range
   float leftBound = (mLeftFormat->StartX + mLeftFormat->MinWidth);
-  float rightBound = (mRightFormat->StartX + mRightFormat->CurrSize.x -
-                      mRightFormat->MinWidth);
+  float rightBound = (mRightFormat->StartX + mRightFormat->CurrSize.x - mRightFormat->MinWidth);
   pos = Math::Clamp(pos, leftBound, rightBound);
 
   // The size (in pixels) of the left column
@@ -1372,8 +1342,7 @@ void ColumnResizer::ResizeHeaders(float pos)
     else
     {
       // Apply the difference in scale in pixels to the flex size
-      float newSizeRight =
-          mRightFormat->StartX + mRightFormat->CurrSize.x - pos;
+      float newSizeRight = mRightFormat->StartX + mRightFormat->CurrSize.x - pos;
       float scaleDifference = (newSizeRight / mRightFormat->CurrSize.x);
       mRightFormat->FlexSize *= scaleDifference;
     }
@@ -1595,8 +1564,7 @@ void TreeView::ShowRow(DataIndex& index)
   {
     uint rowIndex = dataRow->mVisibleRowIndex;
     float yPos = rowIndex * mRowHeight;
-    mArea->ScrollAreaToView(Vec2(0, yPos - mRowHeight),
-                            Vec2(0, yPos + mRowHeight));
+    mArea->ScrollAreaToView(Vec2(0, yPos - mRowHeight), Vec2(0, yPos + mRowHeight));
   }
 
   MarkAsNeedsUpdate();
@@ -1871,7 +1839,7 @@ TreeRow* TreeView::FindRowByColumnValue(StringParam column, StringParam value)
   // Which column to search in
   ColumnFormat& format = GetColumn(column);
 
-  forRange(TreeRow * row, mRows.All())
+  forRange (TreeRow* row, mRows.All())
   {
     // Get the value of the column
     Any var;
@@ -2019,8 +1987,7 @@ void TreeView::DragScroll(Vec2Param screenPosition)
     }
     else if (local.y > (mSize.y - TreeViewUi::DragScrollSize))
     {
-      float percentage =
-          1.0f - (mSize.y - local.y) / TreeViewUi::DragScrollSize;
+      float percentage = 1.0f - (mSize.y - local.y) / TreeViewUi::DragScrollSize;
       scrollSpeed = percentage * maxSpeed;
     }
   }
@@ -2093,8 +2060,7 @@ void TreeView::UpdateTransform()
   }
 
   // Compute the end of the visible rows
-  uint endVisible =
-      Math::Min((size_t)mRows.Size(), (size_t)(startVisible + visibleRows));
+  uint endVisible = Math::Min((size_t)mRows.Size(), (size_t)(startVisible + visibleRows));
 
   // Deactivate all rows before the first visible
   for (uint i = 0; i < startVisible; ++i)
@@ -2157,7 +2123,7 @@ void TreeView::UpdateColumnTransforms()
 
   float totalFlex = 0.0f;
 
-  forRange(ColumnFormat & column, mFormatting.Columns.All())
+  forRange (ColumnFormat& column, mFormatting.Columns.All())
   {
     // If it's fixed, subtract its size
     if (column.ColumnType != ColumnType::Flex)
@@ -2171,7 +2137,7 @@ void TreeView::UpdateColumnTransforms()
   float currentX = cHeaderRowIndent;
 
   // Walk through each column and set its size and translation
-  forRange(ColumnFormat & column, mFormatting.Columns.All())
+  forRange (ColumnFormat& column, mFormatting.Columns.All())
   {
     // The starting position doesn't rely on the column type
     column.StartX = currentX;
@@ -2289,7 +2255,7 @@ void TreeView::UpdateHeaders()
   // Move all the resizers to the front of the headers so that they get hit
   // first with ray casts
   typedef Pair<ColumnHeader*, ColumnResizer*> ResizerPair;
-  forRange(ResizerPair & entry, mHeaderResizers.All())
+  forRange (ResizerPair& entry, mHeaderResizers.All())
   {
     ColumnResizer* resizer = entry.second;
     resizer->MoveToFront();

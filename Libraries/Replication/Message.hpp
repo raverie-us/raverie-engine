@@ -130,9 +130,7 @@ protected:
   friend class LinkPlugin;
 
   template <typename Message>
-  friend Bits Serialize(SerializeDirection::Enum direction,
-                        BitStream& bitStream,
-                        Message& message);
+  friend Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Message& message);
 };
 
 /// Typedefs
@@ -151,9 +149,7 @@ struct MoveWithoutDestructionOperator<Message>
 /// Serializes a message
 /// Returns the number of bits serialized if successful, else 0
 template <>
-Bits Serialize<Message>(SerializeDirection::Enum direction,
-                        BitStream& bitStream,
-                        Message& message);
+Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream, Message& message);
 
 //                                 OutMessage //
 
@@ -174,8 +170,7 @@ public:
              TimeMs creationTime = 0);
 
   /// Copy Constructors
-  OutMessage(const OutMessage& rhs,
-             MoveReference<Message> takeThisMessageInstead);
+  OutMessage(const OutMessage& rhs, MoveReference<Message> takeThisMessageInstead);
   OutMessage(const OutMessage& rhs);
 
   /// Move Constructor
@@ -239,8 +234,7 @@ typedef UniquePointer<OutMessage> OutMessagePtr;
 template <>
 struct MoveWithoutDestructionOperator<OutMessage>
 {
-  static inline void MoveWithoutDestruction(OutMessage* dest,
-                                            OutMessage* source)
+  static inline void MoveWithoutDestruction(OutMessage* dest, OutMessage* source)
   {
     new (dest) OutMessage(ZeroMove(*source));
   }
@@ -329,8 +323,7 @@ private:
 template <>
 struct MoveWithoutDestructionOperator<FragmentedMessage>
 {
-  static inline void MoveWithoutDestruction(FragmentedMessage* dest,
-                                            FragmentedMessage* source)
+  static inline void MoveWithoutDestruction(FragmentedMessage* dest, FragmentedMessage* source)
   {
     new (dest) FragmentedMessage(ZeroMove(*source));
   }

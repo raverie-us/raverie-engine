@@ -47,10 +47,7 @@ public:
   void Clear();
 
   // Internally used by all the overloads.
-  void Add(String fragmentName,
-           String inputName,
-           ShaderInputType::Enum type,
-           AnyParam value);
+  void Add(String fragmentName, String inputName, ShaderInputType::Enum type, AnyParam value);
 
   // Map of fragmentName and inputName to inputs.
   typedef Pair<String, String> StringPair;
@@ -141,8 +138,7 @@ class ColorTargetMrt : public ThreadSafeReferenceCounted
 public:
   ZilchDeclareType(ColorTargetMrt, TypeCopyMode::ReferenceType);
 
-  ColorTargetMrt(HandleOf<GraphicsRenderSettings> renderSettings) :
-      mRenderSettings(renderSettings)
+  ColorTargetMrt(HandleOf<GraphicsRenderSettings> renderSettings) : mRenderSettings(renderSettings)
   {
   }
 
@@ -158,8 +154,7 @@ class BlendSettingsMrt : public ThreadSafeReferenceCounted
 public:
   ZilchDeclareType(BlendSettingsMrt, TypeCopyMode::ReferenceType);
 
-  BlendSettingsMrt(HandleOf<GraphicsRenderSettings> renderSettings) :
-      mRenderSettings(renderSettings)
+  BlendSettingsMrt(HandleOf<GraphicsRenderSettings> renderSettings) : mRenderSettings(renderSettings)
   {
   }
 
@@ -190,24 +185,23 @@ public:
     return &mBlendSettingsMrt;
   }
 
-#define Getter(type, name, index)                                              \
-  type* Get##name##index()                                                     \
-  {                                                                            \
-    if (mRenderSettings.IsNull())                                              \
-    {                                                                          \
-      DoNotifyException("Error", "Attempting to call member on null object."); \
-      return nullptr;                                                          \
-    }                                                                          \
-    return mRenderSettings->Get##name##Mrt(index);                             \
+#define Getter(type, name, index)                                                                                      \
+  type* Get##name##index()                                                                                             \
+  {                                                                                                                    \
+    if (mRenderSettings.IsNull())                                                                                      \
+    {                                                                                                                  \
+      DoNotifyException("Error", "Attempting to call member on null object.");                                         \
+      return nullptr;                                                                                                  \
+    }                                                                                                                  \
+    return mRenderSettings->Get##name##Mrt(index);                                                                     \
   }
 
-#define Setter(type, name, index)                                              \
-  void Set##name##index(type* value)                                           \
-  {                                                                            \
-    if (mRenderSettings.IsNull())                                              \
-      return DoNotifyException("Error",                                        \
-                               "Attempting to call member on null object.");   \
-    mRenderSettings->Set##name##Mrt(value, index);                             \
+#define Setter(type, name, index)                                                                                      \
+  void Set##name##index(type* value)                                                                                   \
+  {                                                                                                                    \
+    if (mRenderSettings.IsNull())                                                                                      \
+      return DoNotifyException("Error", "Attempting to call member on null object.");                                  \
+    mRenderSettings->Set##name##Mrt(value, index);                                                                     \
   }
 
   // TODO: Macro comments for auto-doc

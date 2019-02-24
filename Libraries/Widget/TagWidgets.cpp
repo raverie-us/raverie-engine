@@ -29,8 +29,7 @@ ZilchDefineType(TagEvent, builder, type)
 {
 }
 
-TagLabel::TagLabel(Composite* parent, StringParam name, bool removeable) :
-    Composite(parent)
+TagLabel::TagLabel(Composite* parent, StringParam name, bool removeable) : Composite(parent)
 {
   mBackground = CreateAttached<Element>(cWhiteSquare);
 
@@ -123,9 +122,7 @@ struct SortTag
   }
 };
 
-bool TagChainBase::AddTag(StringParam tagName,
-                          bool removeable,
-                          bool sendsEvents)
+bool TagChainBase::AddTag(StringParam tagName, bool removeable, bool sendsEvents)
 {
   if (ContainsTag(tagName))
     return false;
@@ -157,7 +154,7 @@ void TagChainBase::GetTags(Array<String>& tags, bool includeNonRemoveable)
 
 void TagChainBase::GetTags(HashSet<String>& tags, bool includeNonRemoveable)
 {
-  forRange(TagLabel * tag, mTags.All())
+  forRange (TagLabel* tag, mTags.All())
   {
     if (includeNonRemoveable || tag->mRemoveable)
       tags.Insert(tag->GetName());
@@ -166,7 +163,7 @@ void TagChainBase::GetTags(HashSet<String>& tags, bool includeNonRemoveable)
 
 void TagChainBase::ClearTags()
 {
-  forRange(TagLabel * label, mTags.All())
+  forRange (TagLabel* label, mTags.All())
   {
     label->Destroy();
   }
@@ -176,7 +173,7 @@ void TagChainBase::ClearTags()
 
 bool TagChainBase::ContainsTag(StringParam tag)
 {
-  forRange(TagLabel * label, mTags.All())
+  forRange (TagLabel* label, mTags.All())
   {
     if (label->GetName() == tag)
       return true;
@@ -341,9 +338,7 @@ Vec2 TagChainTextBox::GetMinSize()
   return Vec2(20, 20);
 }
 
-bool TagChainTextBox::AddTag(StringParam tagName,
-                             bool removeable,
-                             bool sendsEvents)
+bool TagChainTextBox::AddTag(StringParam tagName, bool removeable, bool sendsEvents)
 {
   // do not add Root tags to search
   if (tagName == "Root")
@@ -377,7 +372,7 @@ void TagChainTextBox::ClearSearch()
 void TagChainTextBox::ClearTags()
 {
   // Remove all tags from the active search tags
-  forRange(TagLabel * label, mTags.All())
+  forRange (TagLabel* label, mTags.All())
   {
     mSearch.ActiveTags.Erase(label->GetName());
   }
@@ -449,8 +444,7 @@ void TagChainTextBox::OnSearchBoxKeyPreview(KeyboardEvent* e)
   }
   // If backspace is pressed and there are no characters, attempt
   // to delete the last tag in the chain
-  else if (e->Key == Keys::Back && mLastSearchText.Empty() &&
-           e->State == KeyState::Down)
+  else if (e->Key == Keys::Back && mLastSearchText.Empty() && e->State == KeyState::Down)
   {
     if (mTags.Size() > 0)
     {
@@ -545,8 +539,7 @@ Vec2 TagEditor::Measure(LayoutArea& data)
 float TagEditor::GetDesiredHeight(Vec2Param& sizeConstraint)
 {
   // Add height for the search-box and for padding.
-  return mTagChain->GetDesiredHeight(sizeConstraint) + cTextBoxHeight +
-         cTextBoxPaddingY;
+  return mTagChain->GetDesiredHeight(sizeConstraint) + cTextBoxHeight + cTextBoxPaddingY;
 }
 
 TagChain* TagEditor::GetTagChain()
@@ -623,7 +616,7 @@ void ResourceTagEditor::EditResources(Array<Resource*>& resources)
   HashMap<String, TagEntry> tagEntries;
 
   // We want to find tags that are shared by all of the given tags
-  forRange(Resource * resource, resources.All())
+  forRange (Resource* resource, resources.All())
   {
     // Add the resource
     mResources.PushBack(resource);
@@ -633,7 +626,7 @@ void ResourceTagEditor::EditResources(Array<Resource*>& resources)
     resource->GetTags(coreTags, userTags);
 
     // Create core tags
-    forRange(String & coreTag, coreTags.All())
+    forRange (String& coreTag, coreTags.All())
     {
       TagEntry* entry = tagEntries.FindPointer(coreTag);
       // Increase the counter if it exists, otherwise Insert it
@@ -644,7 +637,7 @@ void ResourceTagEditor::EditResources(Array<Resource*>& resources)
     }
 
     // Create core tags
-    forRange(String & userTag, userTags.All())
+    forRange (String& userTag, userTags.All())
     {
       TagEntry* entry = tagEntries.FindPointer(userTag);
       // Increase the counter if it exists, otherwise Insert it
@@ -656,7 +649,7 @@ void ResourceTagEditor::EditResources(Array<Resource*>& resources)
   }
 
   typedef HashMap<String, TagEntry>::pair PairType;
-  forRange(PairType tagEntry, tagEntries.All())
+  forRange (PairType tagEntry, tagEntries.All())
   {
     TagEntry& entry = tagEntry.second;
 

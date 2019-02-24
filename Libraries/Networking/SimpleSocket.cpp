@@ -12,8 +12,7 @@ ZilchDefineType(SimpleSocket, builder, type)
   ZilchBindGetterProperty(Socket);
 }
 
-SimpleSocket::SimpleSocket() :
-    mSocket(Protocol::Chunks | Protocol::Events, "SimpleSocket")
+SimpleSocket::SimpleSocket() : mSocket(Protocol::Chunks | Protocol::Events, "SimpleSocket")
 {
 }
 

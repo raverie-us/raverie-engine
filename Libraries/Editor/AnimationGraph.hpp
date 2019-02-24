@@ -107,9 +107,7 @@ public:
   typedef AnimationGraphEditor ZilchSelf;
 
   /// Constructor.
-  AnimationGraphEditor(Composite* parent,
-                       AnimationEditor* editor,
-                       ScrollingGraph* graphData);
+  AnimationGraphEditor(Composite* parent, AnimationEditor* editor, ScrollingGraph* graphData);
 
   void SetScrubber(AnimationScrubber* scrubber);
 
@@ -145,9 +143,7 @@ private:
   friend class AnimationCurveObject;
 
   /// Finds a color for the given track.
-  ByteColor GetTrackColor(TrackNode* track,
-                          HashSet<ByteColor>& takenColors,
-                          uint& colorIndex);
+  ByteColor GetTrackColor(TrackNode* track, HashSet<ByteColor>& takenColors, uint& colorIndex);
 
   /// Rebuilds all curve editors based on the visible property tracks.
   void RebuildCurves();

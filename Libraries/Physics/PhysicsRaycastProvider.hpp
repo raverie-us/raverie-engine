@@ -12,12 +12,8 @@ public:
 
   PhysicsRaycastProvider();
 
-  void RayCast(Ray& ray,
-               CastInfo& castInfo,
-               RaycastResultList& results) override;
-  void FrustumCast(Frustum& frustum,
-                   CastInfo& castInfo,
-                   RaycastResultList& results) override;
+  void RayCast(Ray& ray, CastInfo& castInfo, RaycastResultList& results) override;
+  void FrustumCast(Frustum& frustum, CastInfo& castInfo, RaycastResultList& results) override;
 
   /// Should dynamic colliders (those with rigid bodies) be selected?
   bool mDynamicColliders;

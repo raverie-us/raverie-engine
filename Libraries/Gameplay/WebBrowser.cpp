@@ -200,9 +200,7 @@ ZilchDefineType(WebBrowser, builder, type)
   ZeroBindEvent(Events::WebBrowserDownloadUpdated, WebBrowserDownloadEvent);
 
   ZilchBindOverloadedMethod(Create, ZilchStaticOverload(HandleOf<WebBrowser>));
-  ZilchBindOverloadedMethod(
-      Create,
-      ZilchStaticOverload(HandleOf<WebBrowser>, const WebBrowserSetup&));
+  ZilchBindOverloadedMethod(Create, ZilchStaticOverload(HandleOf<WebBrowser>, const WebBrowserSetup&));
 
   ZilchBindGetterSetterProperty(Size);
   ZilchBindGetterSetterProperty(ClientPosition);
@@ -246,8 +244,7 @@ WebBrowser::WebBrowser() : WebBrowser(WebBrowserSetup())
 {
 }
 
-BrowserSetup
-ConvertSetupAndEnsurePlatformInitialized(const WebBrowserSetup& setup)
+BrowserSetup ConvertSetupAndEnsurePlatformInitialized(const WebBrowserSetup& setup)
 {
   WebBrowserManager::GetInstance()->EnsurePlatformInitailized();
 
@@ -261,8 +258,7 @@ ConvertSetupAndEnsurePlatformInitialized(const WebBrowserSetup& setup)
   return browserSetup;
 }
 
-WebBrowser::WebBrowser(const WebBrowserSetup& setup) :
-    mBrowser(ConvertSetupAndEnsurePlatformInitialized(setup))
+WebBrowser::WebBrowser(const WebBrowserSetup& setup) : mBrowser(ConvertSetupAndEnsurePlatformInitialized(setup))
 {
   mBrowser.mUserData = this;
 
@@ -277,11 +273,7 @@ WebBrowser::WebBrowser(const WebBrowserSetup& setup) :
   mBrowser.mOnDownloadStarted = &OnDownloadStarted;
   mBrowser.mOnDownloadUpdated = &OnDownloadUpdated;
 
-  mBuffer.Resize(setup.mSize.x,
-                 setup.mSize.y,
-                 true,
-                 true,
-                 ToByteColor(mBrowser.GetBackgroundColor()));
+  mBuffer.Resize(setup.mSize.x, setup.mSize.y, true, true, ToByteColor(mBrowser.GetBackgroundColor()));
 }
 
 HandleOf<WebBrowser> WebBrowser::Create()
@@ -324,8 +316,7 @@ void WebBrowser::SetSize(IntVec2Param size)
   if (size == GetSize())
     return;
 
-  mBuffer.Resize(
-      size.x, size.y, true, true, ToByteColor(mBrowser.GetBackgroundColor()));
+  mBuffer.Resize(size.x, size.y, true, true, ToByteColor(mBrowser.GetBackgroundColor()));
 
   mBrowser.SetSize(size);
 }
@@ -464,28 +455,22 @@ bool WebBrowser::GetVisible()
   return mBrowser.GetVisible();
 }
 
-void WebBrowser::ExecuteScriptFromLocation(StringParam script,
-                                           StringParam url,
-                                           int line)
+void WebBrowser::ExecuteScriptFromLocation(StringParam script, StringParam url, int line)
 {
   return mBrowser.ExecuteScriptFromLocation(script, url, line);
 }
 
-void WebBrowser::SimulateKey(int key,
-                             bool down,
-                             BrowserModifiers::Enum modifiers)
+void WebBrowser::SimulateKey(int key, bool down, BrowserModifiers::Enum modifiers)
 {
   return mBrowser.SimulateKey(key, down, modifiers);
 }
 
-void WebBrowser::SimulateTextTyped(int character,
-                                   BrowserModifiers::Enum modifiers)
+void WebBrowser::SimulateTextTyped(int character, BrowserModifiers::Enum modifiers)
 {
   return mBrowser.SimulateTextTyped(character, modifiers);
 }
 
-void WebBrowser::SimulateMouseMove(IntVec2Param localPosition,
-                                   BrowserModifiers::Enum modifiers)
+void WebBrowser::SimulateMouseMove(IntVec2Param localPosition, BrowserModifiers::Enum modifiers)
 {
   return mBrowser.SimulateMouseMove(localPosition, modifiers);
 }
@@ -505,9 +490,7 @@ void WebBrowser::SimulateMouseDoubleClick(IntVec2Param localPosition,
   return mBrowser.SimulateMouseDoubleClick(localPosition, button, modifiers);
 }
 
-void WebBrowser::SimulateMouseScroll(IntVec2Param localPosition,
-                                     Vec2Param delta,
-                                     BrowserModifiers::Enum modifiers)
+void WebBrowser::SimulateMouseScroll(IntVec2Param localPosition, Vec2Param delta, BrowserModifiers::Enum modifiers)
 {
   return mBrowser.SimulateMouseScroll(localPosition, delta, modifiers);
 }
@@ -529,8 +512,7 @@ void WebBrowser::OnPaint(BrowserColorFormat::Enum format,
   int minX = Math::Min(srcX, dstX);
   int minY = Math::Min(srcY, dstY);
 
-  ErrorIf(format != BrowserColorFormat::BGRA8,
-          "This was only coded for BGRA8 at the moment");
+  ErrorIf(format != BrowserColorFormat::BGRA8, "This was only coded for BGRA8 at the moment");
 
   ByteColor* dst = webBrowser->mBuffer.Data;
   ByteColor* src = (ByteColor*)data;
@@ -586,11 +568,7 @@ void WebBrowser::OnPointQuery(Math::IntVec2Param browserPixelPosition,
   *monitorPixelPositionOut = toSend.mMonitorPixelPosition;
 }
 
-void WebBrowser::OnConsoleMessage(StringParam message,
-                                  StringParam source,
-                                  int line,
-                                  bool* handledOut,
-                                  Browser* browser)
+void WebBrowser::OnConsoleMessage(StringParam message, StringParam source, int line, bool* handledOut, Browser* browser)
 {
   WebBrowser* webBrowser = (WebBrowser*)browser->mUserData;
 
@@ -623,9 +601,7 @@ void WebBrowser::OnTitleChanged(StringParam text, Browser* browser)
   webBrowser->DispatchEvent(Events::WebBrowserTitleChanged, &toSend);
 }
 
-void WebBrowser::OnUrlChanged(StringParam url,
-                              bool* handledOut,
-                              Browser* browser)
+void WebBrowser::OnUrlChanged(StringParam url, bool* handledOut, Browser* browser)
 {
   WebBrowser* webBrowser = (WebBrowser*)browser->mUserData;
 
@@ -646,9 +622,7 @@ void WebBrowser::OnCursorChanged(Cursor::Enum cursor, Browser* browser)
   webBrowser->DispatchEvent(Events::WebBrowserCursorChanged, &toSend);
 }
 
-void WebBrowser::OnDownloadStarted(BrowserDownload& download,
-                                   bool* cancelOut,
-                                   Browser* browser)
+void WebBrowser::OnDownloadStarted(BrowserDownload& download, bool* cancelOut, Browser* browser)
 {
   WebBrowser* webBrowser = (WebBrowser*)browser->mUserData;
 
@@ -674,9 +648,7 @@ void WebBrowser::OnDownloadStarted(BrowserDownload& download,
   *cancelOut = toSend.mCancel;
 }
 
-void WebBrowser::OnDownloadUpdated(const BrowserDownload& download,
-                                   bool* cancelOut,
-                                   Browser* browser)
+void WebBrowser::OnDownloadUpdated(const BrowserDownload& download, bool* cancelOut, Browser* browser)
 {
   WebBrowser* webBrowser = (WebBrowser*)browser->mUserData;
 

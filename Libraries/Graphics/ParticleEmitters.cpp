@@ -30,11 +30,8 @@ SphericalParticleEmitter::~SphericalParticleEmitter()
 {
 }
 
-int SphericalParticleEmitter::EmitParticles(ParticleList* particleList,
-                                            float dt,
-                                            Mat4Ref transform,
-                                            Vec3Param emitterVelocity,
-                                            float timeAlive)
+int SphericalParticleEmitter::EmitParticles(
+    ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param emitterVelocity, float timeAlive)
 {
   int particlesToEmit = GetParticleEmissionCount(particleList, dt, timeAlive);
 
@@ -67,8 +64,7 @@ int SphericalParticleEmitter::EmitParticles(ParticleList* particleList,
     startingPoint *= random.FloatRange(mFill, 1.0f);
     startingPoint *= mEmitterSize;
 
-    Vec3 velocity =
-        mStartVelocity + random.PointOnUnitSphere() * mRandomVelocity;
+    Vec3 velocity = mStartVelocity + random.PointOnUnitSphere() * mRandomVelocity;
 
     if (mTangentVelocity.LengthSq() > 0.0f)
     {
@@ -76,15 +72,13 @@ int SphericalParticleEmitter::EmitParticles(ParticleList* particleList,
       dirNorm.AttemptNormalize();
       Vec3 crossA = Cross(dirNorm, Vec3(0, 1, 0));
       Vec3 crossB = Cross(crossA, dirNorm);
-      velocity += dirNorm * mTangentVelocity.z + crossA * mTangentVelocity.y +
-                  crossB * mTangentVelocity.x;
+      velocity += dirNorm * mTangentVelocity.z + crossA * mTangentVelocity.y + crossB * mTangentVelocity.x;
     }
 
     newParticle->Time = 0;
     newParticle->Size = random.FloatVariance(mSize, mSizeVariance);
 
-    newParticle->Velocity = Math::TransformNormal(transform, velocity) +
-                            emitterVelocity * mEmitterVelocityPercent;
+    newParticle->Velocity = Math::TransformNormal(transform, velocity) + emitterVelocity * mEmitterVelocityPercent;
 
     newParticle->Position = Math::TransformPoint(transform, startingPoint);
 
@@ -104,8 +98,7 @@ int SphericalParticleEmitter::EmitParticles(ParticleList* particleList,
     else
       newParticle->Rotation = 0;
 
-    newParticle->RotationalVelocity = random.FloatVariance(
-        Math::DegToRad(mSpin), Math::DegToRad(mSpinVariance));
+    newParticle->RotationalVelocity = random.FloatVariance(Math::DegToRad(mSpin), Math::DegToRad(mSpinVariance));
 
     particleList->AddParticle(newParticle);
   }
@@ -139,11 +132,8 @@ BoxParticleEmitter::~BoxParticleEmitter()
 {
 }
 
-int BoxParticleEmitter::EmitParticles(ParticleList* particleList,
-                                      float dt,
-                                      Mat4Ref transform,
-                                      Vec3Param emitterVelocity,
-                                      float timeAlive)
+int BoxParticleEmitter::EmitParticles(
+    ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param emitterVelocity, float timeAlive)
 {
   int particlesToEmit = GetParticleEmissionCount(particleList, dt, timeAlive);
   if (particlesToEmit == 0)
@@ -166,8 +156,7 @@ int BoxParticleEmitter::EmitParticles(ParticleList* particleList,
     startingPoint.y = random.FloatVariance(0.0f, halfExtents.y);
     startingPoint.z = random.FloatVariance(0.0f, halfExtents.z);
 
-    Vec3 velocity =
-        mStartVelocity + random.PointOnUnitSphere() * mRandomVelocity;
+    Vec3 velocity = mStartVelocity + random.PointOnUnitSphere() * mRandomVelocity;
 
     if (mTangentVelocity.LengthSq() > 0.0f)
     {
@@ -175,15 +164,13 @@ int BoxParticleEmitter::EmitParticles(ParticleList* particleList,
       dirNorm.AttemptNormalize();
       Vec3 crossA = Cross(dirNorm, Vec3(0, 1, 0));
       Vec3 crossB = Cross(crossA, dirNorm);
-      velocity += dirNorm * mTangentVelocity.z + crossA * mTangentVelocity.y +
-                  crossB * mTangentVelocity.x;
+      velocity += dirNorm * mTangentVelocity.z + crossA * mTangentVelocity.y + crossB * mTangentVelocity.x;
     }
 
     newParticle->Time = 0;
     newParticle->Size = random.FloatVariance(mSize, mSizeVariance);
 
-    newParticle->Velocity = Math::TransformNormal(transform, velocity) +
-                            emitterVelocity * mEmitterVelocityPercent;
+    newParticle->Velocity = Math::TransformNormal(transform, velocity) + emitterVelocity * mEmitterVelocityPercent;
 
     newParticle->Position = Math::TransformPoint(transform, startingPoint);
 
@@ -203,8 +190,7 @@ int BoxParticleEmitter::EmitParticles(ParticleList* particleList,
     else
       newParticle->Rotation = 0;
 
-    newParticle->RotationalVelocity = random.FloatVariance(
-        Math::DegToRad(mSpin), Math::DegToRad(mSpinVariance));
+    newParticle->RotationalVelocity = random.FloatVariance(Math::DegToRad(mSpin), Math::DegToRad(mSpinVariance));
 
     particleList->AddParticle(newParticle);
   }
@@ -277,12 +263,9 @@ void MeshParticleEmitter::SetupEdgeTable()
     uint index1 = indices.Get(i + 1);
     uint index2 = indices.Get(i + 2);
 
-    Vec3 p0 = Math::ToVector3(
-        vertices.GetVertexData(index0, VertexSemantic::Position));
-    Vec3 p1 = Math::ToVector3(
-        vertices.GetVertexData(index1, VertexSemantic::Position));
-    Vec3 p2 = Math::ToVector3(
-        vertices.GetVertexData(index2, VertexSemantic::Position));
+    Vec3 p0 = Math::ToVector3(vertices.GetVertexData(index0, VertexSemantic::Position));
+    Vec3 p1 = Math::ToVector3(vertices.GetVertexData(index1, VertexSemantic::Position));
+    Vec3 p2 = Math::ToVector3(vertices.GetVertexData(index2, VertexSemantic::Position));
 
     // Insert each edge based off of the length of the edge
     mEdgeTable.AddItem(Edge(i, i + 1), (p0 - p1).LengthSq());
@@ -307,12 +290,9 @@ void MeshParticleEmitter::SetupFaceTable()
     uint index1 = indices.Get(i + 1);
     uint index2 = indices.Get(i + 2);
 
-    Vec3 p0 = Math::ToVector3(
-        vertices.GetVertexData(index0, VertexSemantic::Position));
-    Vec3 p1 = Math::ToVector3(
-        vertices.GetVertexData(index1, VertexSemantic::Position));
-    Vec3 p2 = Math::ToVector3(
-        vertices.GetVertexData(index2, VertexSemantic::Position));
+    Vec3 p0 = Math::ToVector3(vertices.GetVertexData(index0, VertexSemantic::Position));
+    Vec3 p1 = Math::ToVector3(vertices.GetVertexData(index1, VertexSemantic::Position));
+    Vec3 p2 = Math::ToVector3(vertices.GetVertexData(index2, VertexSemantic::Position));
 
     Triangle tri(p0, p1, p2);
     float area = tri.GetArea();
@@ -330,11 +310,8 @@ MeshParticleEmitter::~MeshParticleEmitter()
 {
 }
 
-int MeshParticleEmitter::EmitParticles(ParticleList* particleList,
-                                       float dt,
-                                       Mat4Ref transform,
-                                       Vec3Param emitterVelocity,
-                                       float timeAlive)
+int MeshParticleEmitter::EmitParticles(
+    ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param emitterVelocity, float timeAlive)
 {
   if (!mActive)
     return 0;
@@ -353,8 +330,7 @@ int MeshParticleEmitter::EmitParticles(ParticleList* particleList,
 
     Vec3 startingPoint = position + normal * mNormalExtrude;
 
-    Vec3 velocity =
-        mStartVelocity + random.PointOnUnitSphere() * mRandomVelocity;
+    Vec3 velocity = mStartVelocity + random.PointOnUnitSphere() * mRandomVelocity;
 
     if (mTangentVelocity.LengthSq() > 0.0f)
     {
@@ -362,15 +338,13 @@ int MeshParticleEmitter::EmitParticles(ParticleList* particleList,
       dirNorm.AttemptNormalize();
       Vec3 crossA = Cross(dirNorm, Vec3(0, 1, 0));
       Vec3 crossB = Cross(crossA, dirNorm);
-      velocity += dirNorm * mTangentVelocity.z + crossA * mTangentVelocity.y +
-                  crossB * mTangentVelocity.x;
+      velocity += dirNorm * mTangentVelocity.z + crossA * mTangentVelocity.y + crossB * mTangentVelocity.x;
     }
 
     newParticle->Time = 0;
     newParticle->Size = random.FloatVariance(mSize, mSizeVariance);
 
-    newParticle->Velocity = Math::TransformNormal(transform, velocity) +
-                            emitterVelocity * mEmitterVelocityPercent;
+    newParticle->Velocity = Math::TransformNormal(transform, velocity) + emitterVelocity * mEmitterVelocityPercent;
     newParticle->Position = Math::TransformPoint(transform, startingPoint);
     newParticle->Lifetime = random.FloatVariance(mLifetime, mLifetimeVariance);
 
@@ -383,8 +357,7 @@ int MeshParticleEmitter::EmitParticles(ParticleList* particleList,
     else
       newParticle->Rotation = 0;
 
-    newParticle->RotationalVelocity = random.FloatVariance(
-        Math::DegToRad(mSpin), Math::DegToRad(mSpinVariance));
+    newParticle->RotationalVelocity = random.FloatVariance(Math::DegToRad(mSpin), Math::DegToRad(mSpinVariance));
 
     particleList->AddParticle(newParticle);
   }
@@ -407,19 +380,15 @@ void MeshParticleEmitter::GetNextEmitPoint(Vec3Ptr position, Vec3Ptr normal)
   {
     int randomIndex = random.IntRangeInIn(0, vertices.GetVertexCount() - 1);
 
-    *position = Math::ToVector3(
-        vertices.GetVertexData(randomIndex, VertexSemantic::Position));
-    *normal = Math::ToVector3(
-        vertices.GetVertexData(randomIndex, VertexSemantic::Normal));
+    *position = Math::ToVector3(vertices.GetVertexData(randomIndex, VertexSemantic::Position));
+    *normal = Math::ToVector3(vertices.GetVertexData(randomIndex, VertexSemantic::Normal));
   }
   else if (mMeshEmitMode == MeshEmitMode::Edge)
   {
     Edge edge = mEdgeTable.Sample(random);
 
-    Vec3 p0 = Math::ToVector3(
-        vertices.GetVertexData(edge.first, VertexSemantic::Position));
-    Vec3 p1 = Math::ToVector3(
-        vertices.GetVertexData(edge.second, VertexSemantic::Position));
+    Vec3 p0 = Math::ToVector3(vertices.GetVertexData(edge.first, VertexSemantic::Position));
+    Vec3 p1 = Math::ToVector3(vertices.GetVertexData(edge.second, VertexSemantic::Position));
 
     float a = random.FloatRange(0.0f, 1.0f);
     *position = p0 + (p1 - p0) * a;
@@ -435,17 +404,13 @@ void MeshParticleEmitter::GetNextEmitPoint(Vec3Ptr position, Vec3Ptr normal)
     uint index1 = indices.Get(triIndex + 1);
     uint index2 = indices.Get(triIndex + 2);
 
-    Vec3 p0 = Math::ToVector3(
-        vertices.GetVertexData(index0, VertexSemantic::Position));
-    Vec3 p1 = Math::ToVector3(
-        vertices.GetVertexData(index1, VertexSemantic::Position));
-    Vec3 p2 = Math::ToVector3(
-        vertices.GetVertexData(index2, VertexSemantic::Position));
+    Vec3 p0 = Math::ToVector3(vertices.GetVertexData(index0, VertexSemantic::Position));
+    Vec3 p1 = Math::ToVector3(vertices.GetVertexData(index1, VertexSemantic::Position));
+    Vec3 p2 = Math::ToVector3(vertices.GetVertexData(index2, VertexSemantic::Position));
 
     float r1 = random.FloatRange(0.0f, 1.0f);
     float r2 = random.FloatRange(0.0f, 1.0f);
-    *position = (1 - Math::Sqrt(r1)) * p0 + (Math::Sqrt(r1) * (1 - r2)) * p1 +
-                (Math::Sqrt(r1) * r2) * p2;
+    *position = (1 - Math::Sqrt(r1)) * p0 + (Math::Sqrt(r1) * (1 - r2)) * p1 + (Math::Sqrt(r1) * r2) * p2;
     *normal = Math::Cross(p1 - p0, p2 - p0).Normalized();
   }
 }

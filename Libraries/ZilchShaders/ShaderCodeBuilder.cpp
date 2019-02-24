@@ -4,10 +4,7 @@
 namespace Zero
 {
 
-ShaderCodeBuilder::ShaderCodeBuilder() :
-    LineReturn("\n"),
-    Space(" "),
-    SingleIndentation("  ")
+ShaderCodeBuilder::ShaderCodeBuilder() : LineReturn("\n"), Space(" "), SingleIndentation("  ")
 {
   mScopes = 0;
 }
@@ -78,18 +75,16 @@ String ShaderCodeBuilder::EmitIndent()
   return builder.ToString();
 }
 
-ShaderCodeBuilder& ShaderCodeBuilder::WriteMemberVariableDeclaration(
-    StringParam variableName, StringParam variableTypeName)
+ShaderCodeBuilder& ShaderCodeBuilder::WriteMemberVariableDeclaration(StringParam variableName,
+                                                                     StringParam variableTypeName)
 {
-  (*this) << "var " << variableName << " : " << variableTypeName << ";"
-          << this->EmitLineReturn();
+  (*this) << "var " << variableName << " : " << variableTypeName << ";" << this->EmitLineReturn();
   return *this;
 }
 
-ShaderCodeBuilder&
-ShaderCodeBuilder::WriteVariableDeclaration(ShaderIRAttributeList& attributes,
-                                            StringParam variableName,
-                                            StringParam variableTypeName)
+ShaderCodeBuilder& ShaderCodeBuilder::WriteVariableDeclaration(ShaderIRAttributeList& attributes,
+                                                               StringParam variableName,
+                                                               StringParam variableTypeName)
 {
   ShaderCodeBuilder& builder = *this;
   builder << builder.EmitIndent();
@@ -107,10 +102,9 @@ ShaderCodeBuilder::WriteVariableDeclaration(ShaderIRAttributeList& attributes,
   return builder;
 }
 
-ShaderCodeBuilder&
-ShaderCodeBuilder::WriteVariableDeclaration(ShaderIRAttribute& attribute,
-                                            StringParam variableName,
-                                            StringParam variableTypeName)
+ShaderCodeBuilder& ShaderCodeBuilder::WriteVariableDeclaration(ShaderIRAttribute& attribute,
+                                                               StringParam variableName,
+                                                               StringParam variableTypeName)
 {
   ShaderCodeBuilder& builder = *this;
   builder << builder.EmitIndent();
@@ -121,16 +115,15 @@ ShaderCodeBuilder::WriteVariableDeclaration(ShaderIRAttribute& attribute,
   return builder;
 }
 
-ShaderCodeBuilder& ShaderCodeBuilder::WriteLocalVariableDefaultConstruction(
-    StringParam variableName, StringParam variableTypeName)
+ShaderCodeBuilder& ShaderCodeBuilder::WriteLocalVariableDefaultConstruction(StringParam variableName,
+                                                                            StringParam variableTypeName)
 {
-  (*this) << this->EmitIndent() << "var " << variableName << " = "
-          << variableTypeName << "();" << this->EmitLineReturn();
+  (*this) << this->EmitIndent() << "var " << variableName << " = " << variableTypeName << "();"
+          << this->EmitLineReturn();
   return *this;
 }
 
-ShaderCodeBuilder&
-ShaderCodeBuilder::DeclareAttribute(ShaderIRAttribute& attribute)
+ShaderCodeBuilder& ShaderCodeBuilder::DeclareAttribute(ShaderIRAttribute& attribute)
 {
   ShaderCodeBuilder& builder = *this;
   // Add all attributes
@@ -141,8 +134,7 @@ ShaderCodeBuilder::DeclareAttribute(ShaderIRAttribute& attribute)
   return builder;
 }
 
-ShaderCodeBuilder&
-ShaderCodeBuilder::DeclareAttribute(StringParam attributeName)
+ShaderCodeBuilder& ShaderCodeBuilder::DeclareAttribute(StringParam attributeName)
 {
   ShaderCodeBuilder& builder = *this;
   // Add all attributes
@@ -150,8 +142,7 @@ ShaderCodeBuilder::DeclareAttribute(StringParam attributeName)
   return builder;
 }
 
-ShaderCodeBuilder&
-ShaderCodeBuilder::DeclareAttributeParams(ShaderIRAttribute& attribute)
+ShaderCodeBuilder& ShaderCodeBuilder::DeclareAttributeParams(ShaderIRAttribute& attribute)
 {
   ShaderCodeBuilder& builder = *this;
   size_t paramCount = attribute.mParameters.Size();

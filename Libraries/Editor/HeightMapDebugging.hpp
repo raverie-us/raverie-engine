@@ -21,9 +21,7 @@ public:
   void DebugDraw() override;
 
   void DrawPatch(IntVec2Param patchIndex);
-  void DrawCell(IntVec2Param patchIndex,
-                IntVec2Param cellIndex,
-                bool skippedCell);
+  void DrawCell(IntVec2Param patchIndex, IntVec2Param cellIndex, bool skippedCell);
   void DrawRayProjection(Vec3Param start, Vec3Param dir, float maxT);
   void DrawAabbProjection(const Aabb& aabb);
 

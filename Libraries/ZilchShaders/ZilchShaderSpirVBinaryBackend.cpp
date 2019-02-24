@@ -24,8 +24,7 @@ void ZilchShaderToSpirVContext::GenerateId(IZilchShaderIR* ir)
     mGeneratedId[ir] = GetAndAdvanceId();
 }
 
-int ZilchShaderToSpirVContext::FindId(IZilchShaderIR* instruction,
-                                      bool assertOnZero)
+int ZilchShaderToSpirVContext::FindId(IZilchShaderIR* instruction, bool assertOnZero)
 {
   int id = mGeneratedId.FindValue(instruction, 0);
   ErrorIf(id == 0 && assertOnZero, "Invalid instruction");
@@ -37,17 +36,15 @@ ZilchShaderSpirVBinaryBackend::~ZilchShaderSpirVBinaryBackend()
   Clear();
 }
 
-void ZilchShaderSpirVBinaryBackend::TranslateType(ZilchShaderIRType* type,
-                                                  ShaderStreamWriter& writer)
+void ZilchShaderSpirVBinaryBackend::TranslateType(ZilchShaderIRType* type, ShaderStreamWriter& writer)
 {
   ShaderStageInterfaceReflection reflectionData;
   TranslateType(type, writer, reflectionData);
 }
 
-void ZilchShaderSpirVBinaryBackend::TranslateType(
-    ZilchShaderIRType* type,
-    ShaderStreamWriter& writer,
-    ShaderStageInterfaceReflection& reflectionData)
+void ZilchShaderSpirVBinaryBackend::TranslateType(ZilchShaderIRType* type,
+                                                  ShaderStreamWriter& writer,
+                                                  ShaderStageInterfaceReflection& reflectionData)
 {
   if (type->mMeta == nullptr)
     return;
@@ -78,8 +75,7 @@ void ZilchShaderSpirVBinaryBackend::TranslateType(
   {
     EntryPointInfo* entryPoint = context.mEntryPoints[i];
     reflectionData = entryPoint->mStageReflectionData;
-    RegisterLateBoundFunctions(
-        entryPoint->mLateBoundFunctions, collector, &context);
+    RegisterLateBoundFunctions(entryPoint->mLateBoundFunctions, collector, &context);
   }
   RegisterLateBoundFunctions(mExtraLateBoundFunctions, collector, &context);
 
@@ -88,10 +84,9 @@ void ZilchShaderSpirVBinaryBackend::TranslateType(
   EmitSpirvBinary(collector, &context);
 }
 
-void ZilchShaderSpirVBinaryBackend::TranslateLibrary(
-    ZilchShaderIRLibrary* library,
-    ShaderStreamWriter& writer,
-    ShaderStageInterfaceReflection& reflectionData)
+void ZilchShaderSpirVBinaryBackend::TranslateLibrary(ZilchShaderIRLibrary* library,
+                                                     ShaderStreamWriter& writer,
+                                                     ShaderStageInterfaceReflection& reflectionData)
 {
   Clear();
   mLastLibrary = library;
@@ -122,8 +117,7 @@ void ZilchShaderSpirVBinaryBackend::TranslateLibrary(
   {
     EntryPointInfo* entryPoint = context.mEntryPoints[i];
     reflectionData = entryPoint->mStageReflectionData;
-    RegisterLateBoundFunctions(
-        entryPoint->mLateBoundFunctions, collector, &context);
+    RegisterLateBoundFunctions(entryPoint->mLateBoundFunctions, collector, &context);
   }
   RegisterLateBoundFunctions(mExtraLateBoundFunctions, collector, &context);
 
@@ -132,18 +126,16 @@ void ZilchShaderSpirVBinaryBackend::TranslateLibrary(
   EmitSpirvBinary(collector, &context);
 }
 
-void ZilchShaderSpirVBinaryBackend::ValidateIdMap(
-    ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::ValidateIdMap(ZilchShaderToSpirVContext* context)
 {
-  for (auto range = context->mGeneratedId.All(); !range.Empty();
-       range.PopFront())
+  for (auto range = context->mGeneratedId.All(); !range.Empty(); range.PopFront())
   {
     ErrorIf(range.Front().second == 0, "Invalid Id?");
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::EmitSpirvBinary(
-    TypeDependencyCollector& collector, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::EmitSpirvBinary(TypeDependencyCollector& collector,
+                                                    ZilchShaderToSpirVContext* context)
 {
   // Shouldn't need to go over these since the copy inputs/outputs functions
   // should contain these, but leave these in in case generation changes
@@ -156,8 +148,7 @@ void ZilchShaderSpirVBinaryBackend::EmitSpirvBinary(
     {
       IZilchShaderIR* varIR = entryPoint->mVariables.mLines[i];
       ZilchShaderIROp* varOp = varIR->As<ZilchShaderIROp>();
-      ErrorIf(!collector.mReferencedGlobals.ContainsKey(varOp),
-              "Entry point variable wasn't added to globals");
+      ErrorIf(!collector.mReferencedGlobals.ContainsKey(varOp), "Entry point variable wasn't added to globals");
     }
   }
 
@@ -189,11 +180,10 @@ void ZilchShaderSpirVBinaryBackend::EmitSpirvBinary(
   WriteFunctions(collector.mReferencedFunctions, context);
 }
 
-void ZilchShaderSpirVBinaryBackend::GenerateDummyMain(
-    ZilchShaderIRType* type,
-    ZilchShaderIRLibrary* library,
-    TypeDependencyCollector& collector,
-    ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::GenerateDummyMain(ZilchShaderIRType* type,
+                                                      ZilchShaderIRLibrary* library,
+                                                      TypeDependencyCollector& collector,
+                                                      ZilchShaderToSpirVContext* context)
 {
   if (type->mEntryPoint != nullptr)
   {
@@ -232,8 +222,7 @@ void ZilchShaderSpirVBinaryBackend::GenerateDummyMain(
   entryPointInfo->mEntryPointFn = main;
 
   // Force add the execution mode for the dummy entry point
-  ZilchShaderIROp* executionModeOp =
-      new ZilchShaderIROp(OpType::OpExecutionMode);
+  ZilchShaderIROp* executionModeOp = new ZilchShaderIROp(OpType::OpExecutionMode);
   ZilchShaderIRConstantLiteral* executionModeLiteral =
       new ZilchShaderIRConstantLiteral((int)spv::ExecutionModeOriginUpperLeft);
   executionModeOp->mResultType = nullptr;
@@ -251,8 +240,8 @@ void ZilchShaderSpirVBinaryBackend::GenerateDummyMain(
   mOwnedEntryPoints.PushBack(entryPointInfo);
 }
 
-void ZilchShaderSpirVBinaryBackend::GenerateGlobalsInitializerFunction(
-    TypeDependencyCollector& collector, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::GenerateGlobalsInitializerFunction(TypeDependencyCollector& collector,
+                                                                       ZilchShaderToSpirVContext* context)
 {
   for (size_t i = 0; i < context->mEntryPoints.Size(); ++i)
   {
@@ -297,10 +286,9 @@ void ZilchShaderSpirVBinaryBackend::GenerateGlobalsInitializerFunction(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::RegisterLateBoundFunctions(
-    LateBoundFunctionMap& lateBoundFunctionMap,
-    TypeDependencyCollector& collector,
-    ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::RegisterLateBoundFunctions(LateBoundFunctionMap& lateBoundFunctionMap,
+                                                               TypeDependencyCollector& collector,
+                                                               ZilchShaderToSpirVContext* context)
 {
   AutoDeclare(range, lateBoundFunctionMap.All());
   for (; !range.Empty(); range.PopFront())
@@ -336,8 +324,8 @@ void ZilchShaderSpirVBinaryBackend::Clear()
   mExtraLateBoundFunctions.Clear();
 }
 
-void ZilchShaderSpirVBinaryBackend::AddDecorationCapabilities(
-    TypeDependencyCollector& collector, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::AddDecorationCapabilities(TypeDependencyCollector& collector,
+                                                              ZilchShaderToSpirVContext* context)
 {
   for (size_t i = 0; i < context->mEntryPoints.Size(); ++i)
   {
@@ -346,10 +334,9 @@ void ZilchShaderSpirVBinaryBackend::AddDecorationCapabilities(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::AddDecorationCapabilities(
-    EntryPointInfo* entryPoint,
-    TypeDependencyCollector& collector,
-    ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::AddDecorationCapabilities(EntryPointInfo* entryPoint,
+                                                              TypeDependencyCollector& collector,
+                                                              ZilchShaderToSpirVContext* context)
 {
   for (size_t j = 0; j < entryPoint->mDecorations.mLines.Size(); ++j)
   {
@@ -362,18 +349,15 @@ void ZilchShaderSpirVBinaryBackend::AddDecorationCapabilities(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::AddDecorationCapabilities(
-    ZilchShaderIROp* decorationOp,
-    TypeDependencyCollector& collector,
-    ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::AddDecorationCapabilities(ZilchShaderIROp* decorationOp,
+                                                              TypeDependencyCollector& collector,
+                                                              ZilchShaderToSpirVContext* context)
 {
-  ZilchShaderIRConstantLiteral* literal =
-      decorationOp->mArguments[1]->As<ZilchShaderIRConstantLiteral>();
+  ZilchShaderIRConstantLiteral* literal = decorationOp->mArguments[1]->As<ZilchShaderIRConstantLiteral>();
   int decorationType = literal->mValue.Get<int>();
   if (decorationType == spv::DecorationBuiltIn)
   {
-    ZilchShaderIRConstantLiteral* builtInIdLiteral =
-        decorationOp->mArguments[2]->As<ZilchShaderIRConstantLiteral>();
+    ZilchShaderIRConstantLiteral* builtInIdLiteral = decorationOp->mArguments[2]->As<ZilchShaderIRConstantLiteral>();
     int builtInId = builtInIdLiteral->mValue.Get<int>();
 
     if (builtInId == spv::BuiltInClipDistance)
@@ -387,17 +371,15 @@ void ZilchShaderSpirVBinaryBackend::AddDecorationCapabilities(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::AddMemberDecorationCapabilities(
-    ZilchShaderIROp* memberDecorationOp,
-    TypeDependencyCollector& collector,
-    ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::AddMemberDecorationCapabilities(ZilchShaderIROp* memberDecorationOp,
+                                                                    TypeDependencyCollector& collector,
+                                                                    ZilchShaderToSpirVContext* context)
 {
   // @JoshD: Figure out what to do here later
 }
 
 template <typename T>
-void ZilchShaderSpirVBinaryBackend::GenerateListIds(
-    OrderedHashSet<T>& input, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::GenerateListIds(OrderedHashSet<T>& input, ZilchShaderToSpirVContext* context)
 {
   AutoDeclare(range, input.All());
   for (; !range.Empty(); range.PopFront())
@@ -407,8 +389,7 @@ void ZilchShaderSpirVBinaryBackend::GenerateListIds(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::GenerateFunctionIds(
-    FunctionList& functions, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::GenerateFunctionIds(FunctionList& functions, ZilchShaderToSpirVContext* context)
 {
   AutoDeclare(range, functions.All());
   for (; !range.Empty(); range.PopFront())
@@ -418,8 +399,8 @@ void ZilchShaderSpirVBinaryBackend::GenerateFunctionIds(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::GenerateFunctionBlockIds(
-    ZilchShaderIRFunction* function, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::GenerateFunctionBlockIds(ZilchShaderIRFunction* function,
+                                                             ZilchShaderToSpirVContext* context)
 {
   context->GenerateId(function);
 
@@ -434,8 +415,7 @@ void ZilchShaderSpirVBinaryBackend::GenerateFunctionBlockIds(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::GenerateBlockLineIds(
-    BasicBlock* block, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::GenerateBlockLineIds(BasicBlock* block, ZilchShaderToSpirVContext* context)
 {
   for (size_t i = 0; i < block->mLocalVariables.Size(); ++i)
   {
@@ -465,8 +445,8 @@ void ZilchShaderSpirVBinaryBackend::GenerateBlockLineIds(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteHeader(
-    ZilchShaderToSpirVContext* context, TypeDependencyCollector& typeCollector)
+void ZilchShaderSpirVBinaryBackend::WriteHeader(ZilchShaderToSpirVContext* context,
+                                                TypeDependencyCollector& typeCollector)
 {
   ShaderStreamWriter& streamWriter = *context->mStreamWriter;
 
@@ -493,8 +473,7 @@ void ZilchShaderSpirVBinaryBackend::WriteHeader(
   AutoDeclare(capabilitiesRange, typeCollector.mCapabilities.All());
   for (; !capabilitiesRange.Empty(); capabilitiesRange.PopFront())
   {
-    streamWriter.WriteInstruction(
-        2, OpType::OpCapability, capabilitiesRange.Front());
+    streamWriter.WriteInstruction(2, OpType::OpCapability, capabilitiesRange.Front());
   }
 
   // Imports
@@ -506,10 +485,7 @@ void ZilchShaderSpirVBinaryBackend::WriteHeader(
   }
 
   // Memory Model
-  streamWriter.WriteInstruction(3,
-                                OpType::OpMemoryModel,
-                                spv::AddressingModelLogical,
-                                spv::MemoryModelGLSL450);
+  streamWriter.WriteInstruction(3, OpType::OpMemoryModel, spv::AddressingModelLogical, spv::MemoryModelGLSL450);
 
   // EntryPoints
   for (size_t i = 0; i < context->mEntryPoints.Size(); ++i)
@@ -537,8 +513,7 @@ void ZilchShaderSpirVBinaryBackend::WriteHeader(
     // else
     //  __debugbreak();
 
-    streamWriter.WriteInstruction(
-        totalSize, OpType::OpEntryPoint, executionModel, entryPointId);
+    streamWriter.WriteInstruction(totalSize, OpType::OpEntryPoint, executionModel, entryPointId);
     streamWriter.Write(entryPointName);
     for (size_t i = 0; i < entryPoint->mInterface.Size(); ++i)
     {
@@ -555,18 +530,14 @@ void ZilchShaderSpirVBinaryBackend::WriteHeader(
     EntryPointInfo* entryPoint = context->mEntryPoints[i];
     ZilchShaderIRFunction* entryPointFn = entryPoint->mEntryPointFn;
     // Write out any extra execution mode instructions
-    WriteBlockInstructions(&entryPoint->mExecutionModes,
-                           entryPoint->mExecutionModes.mLines,
-                           context);
+    WriteBlockInstructions(&entryPoint->mExecutionModes, entryPoint->mExecutionModes.mLines, context);
   }
 
   // Source
-  streamWriter.WriteInstruction(
-      3, OpType::OpSource, 0, 100); // Source language unknown, Version 100
+  streamWriter.WriteInstruction(3, OpType::OpSource, 0, 100); // Source language unknown, Version 100
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteDebug(
-    TypeList& types, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteDebug(TypeList& types, ZilchShaderToSpirVContext* context)
 {
   AutoDeclare(range, types.All());
   for (; !range.Empty(); range.PopFront())
@@ -576,8 +547,7 @@ void ZilchShaderSpirVBinaryBackend::WriteDebug(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteDebug(
-    ZilchShaderIRType* type, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteDebug(ZilchShaderIRType* type, ZilchShaderToSpirVContext* context)
 {
   WriteDebugName(type, type->mDebugResultName, context);
 
@@ -599,8 +569,7 @@ void ZilchShaderSpirVBinaryBackend::WriteDebug(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteDebug(
-    FunctionList& functions, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteDebug(FunctionList& functions, ZilchShaderToSpirVContext* context)
 {
   AutoDeclare(range, functions.All());
   for (; !range.Empty(); range.PopFront())
@@ -610,8 +579,7 @@ void ZilchShaderSpirVBinaryBackend::WriteDebug(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteDebug(
-    ZilchShaderIRFunction* function, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteDebug(ZilchShaderIRFunction* function, ZilchShaderToSpirVContext* context)
 {
   WriteDebugName(function, function->mDebugResultName, context);
 
@@ -623,8 +591,7 @@ void ZilchShaderSpirVBinaryBackend::WriteDebug(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteDebug(
-    BasicBlock* block, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteDebug(BasicBlock* block, ZilchShaderToSpirVContext* context)
 {
   WriteDebugName(block, block->mDebugResultName, context);
   for (size_t i = 0; i < block->mLocalVariables.Size(); ++i)
@@ -640,8 +607,7 @@ void ZilchShaderSpirVBinaryBackend::WriteDebug(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteDebug(
-    OpList& ops, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteDebug(OpList& ops, ZilchShaderToSpirVContext* context)
 {
   AutoDeclare(opRange, ops.All());
   for (; !opRange.Empty(); opRange.PopFront())
@@ -651,10 +617,9 @@ void ZilchShaderSpirVBinaryBackend::WriteDebug(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteDebugName(
-    IZilchShaderIR* resultIR,
-    StringParam debugName,
-    ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteDebugName(IZilchShaderIR* resultIR,
+                                                   StringParam debugName,
+                                                   ZilchShaderToSpirVContext* context)
 {
   if (debugName.Empty())
     return;
@@ -670,27 +635,22 @@ void ZilchShaderSpirVBinaryBackend::WriteDebugName(
   streamWriter.Write(debugName);
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteDecorations(
-    ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteDecorations(ZilchShaderToSpirVContext* context)
 {
   // Write out all of the annotation instructions in each entry point
   for (size_t i = 0; i < context->mEntryPoints.Size(); ++i)
   {
     EntryPointInfo* entryPoint = context->mEntryPoints[i];
-    WriteBlockInstructions(
-        &entryPoint->mDecorations, entryPoint->mDecorations.mLines, context);
+    WriteBlockInstructions(&entryPoint->mDecorations, entryPoint->mDecorations.mLines, context);
   }
 }
-void ZilchShaderSpirVBinaryBackend::
-    WriteSpecializationConstantBindingDecorations(
-        TypeDependencyCollector& typeCollector,
-        ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteSpecializationConstantBindingDecorations(
+    TypeDependencyCollector& typeCollector, ZilchShaderToSpirVContext* context)
 {
   int specId = 1;
   ShaderStageInterfaceReflection& reflectionData = *context->mReflectionData;
   // Find all specialization constants so we can assign ids
-  for (auto range = typeCollector.mReferencedConstants.All(); !range.Empty();
-       range.PopFront())
+  for (auto range = typeCollector.mReferencedConstants.All(); !range.Empty(); range.PopFront())
   {
     ZilchShaderIROp* op = range.Front();
     // If this is a spec constant (a scalar) then assign an id.
@@ -698,8 +658,7 @@ void ZilchShaderSpirVBinaryBackend::
     if (op->mOpType == OpType::OpSpecConstant)
     {
       int opId = context->FindId(op);
-      context->mStreamWriter->WriteInstruction(
-          4, OpType::OpDecorate, opId, spv::DecorationSpecId, specId);
+      context->mStreamWriter->WriteInstruction(4, OpType::OpDecorate, opId, spv::DecorationSpecId, specId);
 
       reflectionData.mSpecializationConstants[op->mDebugResultName] = specId;
       ++specId;
@@ -712,19 +671,14 @@ void ZilchShaderSpirVBinaryBackend::
     // upon the member count) all belong to this composite.
     else if (op->mOpType == OpType::OpSpecConstantComposite)
     {
-      ZilchShaderIROp* leafConstituent =
-          FindSpecialiationConstantCompositeId(op);
-      int leafId =
-          reflectionData
-              .mSpecializationConstants[leafConstituent->mDebugResultName];
+      ZilchShaderIROp* leafConstituent = FindSpecialiationConstantCompositeId(op);
+      int leafId = reflectionData.mSpecializationConstants[leafConstituent->mDebugResultName];
       reflectionData.mSpecializationConstants[op->mDebugResultName] = leafId;
     }
   }
 }
 
-ZilchShaderIROp*
-ZilchShaderSpirVBinaryBackend::FindSpecialiationConstantCompositeId(
-    ZilchShaderIROp* op)
+ZilchShaderIROp* ZilchShaderSpirVBinaryBackend::FindSpecialiationConstantCompositeId(ZilchShaderIROp* op)
 {
   // If we reached an OpSpecConstant then we found the leaf constituent and can
   // terminate
@@ -736,8 +690,8 @@ ZilchShaderSpirVBinaryBackend::FindSpecialiationConstantCompositeId(
   return FindSpecialiationConstantCompositeId(firstConstituent);
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteTypesGlobalsAndConstants(
-    IRList& typesGlobalsAndConstants, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteTypesGlobalsAndConstants(IRList& typesGlobalsAndConstants,
+                                                                  ZilchShaderToSpirVContext* context)
 {
   // Now spirv requires we write all types then all constants then all functions
   AutoDeclare(range, typesGlobalsAndConstants.All());
@@ -770,8 +724,7 @@ void ZilchShaderSpirVBinaryBackend::WriteTypesGlobalsAndConstants(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteType(
-    ZilchShaderIRType* type, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteType(ZilchShaderIRType* type, ZilchShaderToSpirVContext* context)
 {
   ShaderStreamWriter& streamWriter = *context->mStreamWriter;
 
@@ -780,56 +733,37 @@ void ZilchShaderSpirVBinaryBackend::WriteType(
   else if (type->mBaseType == ShaderIRTypeBaseType::Bool)
     streamWriter.WriteInstruction(2, OpType::OpTypeBool, context->FindId(type));
   else if (type->mBaseType == ShaderIRTypeBaseType::Int)
-    streamWriter.WriteInstruction(
-        4, OpType::OpTypeInt, context->FindId(type), 32, 1);
+    streamWriter.WriteInstruction(4, OpType::OpTypeInt, context->FindId(type), 32, 1);
   else if (type->mBaseType == ShaderIRTypeBaseType::Float)
-    streamWriter.WriteInstruction(
-        3, OpType::OpTypeFloat, context->FindId(type), 32);
+    streamWriter.WriteInstruction(3, OpType::OpTypeFloat, context->FindId(type), 32);
   else if (type->mBaseType == ShaderIRTypeBaseType::Vector)
   {
     ZilchShaderIRType* componentType = GetComponentType(type);
     int componentTypeId = context->FindId(componentType);
-    streamWriter.WriteInstruction(4,
-                                  OpType::OpTypeVector,
-                                  context->FindId(type),
-                                  componentTypeId,
-                                  type->mComponents);
+    streamWriter.WriteInstruction(4, OpType::OpTypeVector, context->FindId(type), componentTypeId, type->mComponents);
   }
   else if (type->mBaseType == ShaderIRTypeBaseType::Matrix)
   {
     ZilchShaderIRType* componentType = GetComponentType(type);
     int componentTypeId = context->FindId(componentType);
-    streamWriter.WriteInstruction(4,
-                                  OpType::OpTypeMatrix,
-                                  context->FindId(type),
-                                  componentTypeId,
-                                  type->mComponents);
+    streamWriter.WriteInstruction(4, OpType::OpTypeMatrix, context->FindId(type), componentTypeId, type->mComponents);
   }
   else if (type->mBaseType == ShaderIRTypeBaseType::FixedArray)
   {
-    ZilchShaderIRType* componentType =
-        type->mParameters[0]->As<ZilchShaderIRType>();
+    ZilchShaderIRType* componentType = type->mParameters[0]->As<ZilchShaderIRType>();
     int componentTypeId = context->FindId(componentType);
     int lengthId = context->FindId(type->mParameters[1]);
-    streamWriter.WriteInstruction(4,
-                                  OpType::OpTypeArray,
-                                  context->FindId(type),
-                                  componentTypeId,
-                                  lengthId);
+    streamWriter.WriteInstruction(4, OpType::OpTypeArray, context->FindId(type), componentTypeId, lengthId);
   }
   else if (type->mBaseType == ShaderIRTypeBaseType::RuntimeArray)
   {
-    ZilchShaderIRType* componentType =
-        type->mParameters[0]->As<ZilchShaderIRType>();
+    ZilchShaderIRType* componentType = type->mParameters[0]->As<ZilchShaderIRType>();
     int componentTypeId = context->FindId(componentType);
-    streamWriter.WriteInstruction(
-        3, OpType::OpTypeRuntimeArray, context->FindId(type), componentTypeId);
+    streamWriter.WriteInstruction(3, OpType::OpTypeRuntimeArray, context->FindId(type), componentTypeId);
   }
   else if (type->mBaseType == ShaderIRTypeBaseType::Struct)
   {
-    streamWriter.WriteInstruction(2 + (int16)type->mParameters.Size(),
-                                  OpType::OpTypeStruct,
-                                  context->FindId(type));
+    streamWriter.WriteInstruction(2 + (int16)type->mParameters.Size(), OpType::OpTypeStruct, context->FindId(type));
 
     for (size_t i = 0; i < type->mParameters.Size(); ++i)
     {
@@ -840,8 +774,7 @@ void ZilchShaderSpirVBinaryBackend::WriteType(
   else if (type->mBaseType == ShaderIRTypeBaseType::Function)
   {
     int typeId = context->FindId(type);
-    streamWriter.WriteInstruction(
-        2 + (int16)type->mParameters.Size(), OpType::OpTypeFunction, typeId);
+    streamWriter.WriteInstruction(2 + (int16)type->mParameters.Size(), OpType::OpTypeFunction, typeId);
     for (size_t i = 0; i < type->mParameters.Size(); ++i)
     {
       int subId = context->FindId(type->mParameters[i]);
@@ -851,68 +784,54 @@ void ZilchShaderSpirVBinaryBackend::WriteType(
   else if (type->mBaseType == ShaderIRTypeBaseType::Pointer)
   {
     int dereferenceTypeId = context->FindId(type->mDereferenceType);
-    streamWriter.WriteInstruction(4,
-                                  OpType::OpTypePointer,
-                                  context->FindId(type),
-                                  type->mStorageClass,
-                                  dereferenceTypeId);
+    streamWriter.WriteInstruction(
+        4, OpType::OpTypePointer, context->FindId(type), type->mStorageClass, dereferenceTypeId);
   }
   else if (type->mBaseType == ShaderIRTypeBaseType::Image)
   {
     int16 size = 2 + (int16)type->mParameters.Size();
-    streamWriter.WriteInstruction(
-        size, OpType::OpTypeImage, context->FindId(type));
+    streamWriter.WriteInstruction(size, OpType::OpTypeImage, context->FindId(type));
     WriteIRArguments(type->mParameters, context);
   }
   else if (type->mBaseType == ShaderIRTypeBaseType::SampledImage)
   {
     int imageTypeId = context->FindId(type->mParameters[0]);
-    streamWriter.WriteInstruction(
-        3, OpType::OpTypeSampledImage, context->FindId(type), imageTypeId);
+    streamWriter.WriteInstruction(3, OpType::OpTypeSampledImage, context->FindId(type), imageTypeId);
   }
   else if (type->mBaseType == ShaderIRTypeBaseType::Sampler)
   {
-    streamWriter.WriteInstruction(
-        2, OpType::OpTypeSampler, context->FindId(type));
+    streamWriter.WriteInstruction(2, OpType::OpTypeSampler, context->FindId(type));
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteConstant(
-    ZilchShaderIROp* constantOp, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteConstant(ZilchShaderIROp* constantOp, ZilchShaderToSpirVContext* context)
 {
   ShaderStreamWriter& streamWriter = *context->mStreamWriter;
 
-  ZilchShaderIRConstantLiteral* argConstant =
-      (ZilchShaderIRConstantLiteral*)constantOp->mArguments[0];
+  ZilchShaderIRConstantLiteral* argConstant = (ZilchShaderIRConstantLiteral*)constantOp->mArguments[0];
   if (constantOp->mResultType->mBaseType == ShaderIRTypeBaseType::Bool)
   {
     bool value = argConstant->mValue.Get<bool>();
     if (value)
-      streamWriter.WriteInstruction(3,
-                                    OpType::OpConstantTrue,
-                                    context->FindId(constantOp->mResultType),
-                                    context->FindId(constantOp));
+      streamWriter.WriteInstruction(
+          3, OpType::OpConstantTrue, context->FindId(constantOp->mResultType), context->FindId(constantOp));
     else
-      streamWriter.WriteInstruction(3,
-                                    OpType::OpConstantFalse,
-                                    context->FindId(constantOp->mResultType),
-                                    context->FindId(constantOp));
+      streamWriter.WriteInstruction(
+          3, OpType::OpConstantFalse, context->FindId(constantOp->mResultType), context->FindId(constantOp));
   }
   else if (constantOp->mResultType->mBaseType == ShaderIRTypeBaseType::Int)
   {
     int value = argConstant->mValue.Get<int>();
     int resultId = context->FindId(constantOp->mResultType);
     int constantId = context->FindId(constantOp);
-    streamWriter.WriteInstruction(
-        4, OpType::OpConstant, resultId, constantId, value);
+    streamWriter.WriteInstruction(4, OpType::OpConstant, resultId, constantId, value);
   }
   else if (constantOp->mResultType->mBaseType == ShaderIRTypeBaseType::Float)
   {
     float value = argConstant->mValue.Get<float>();
     int resultId = context->FindId(constantOp->mResultType);
     int constantId = context->FindId(constantOp);
-    streamWriter.WriteInstruction(
-        4, OpType::OpConstant, resultId, constantId, *(int*)&value);
+    streamWriter.WriteInstruction(4, OpType::OpConstant, resultId, constantId, *(int*)&value);
   }
   else if (constantOp->mResultType->mBaseType == ShaderIRTypeBaseType::Vector)
   {
@@ -938,8 +857,7 @@ void ZilchShaderSpirVBinaryBackend::WriteConstant(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteSpecConstant(
-    ZilchShaderIROp* constantOp, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteSpecConstant(ZilchShaderIROp* constantOp, ZilchShaderToSpirVContext* context)
 {
   ShaderStreamWriter& streamWriter = *context->mStreamWriter;
 
@@ -948,8 +866,7 @@ void ZilchShaderSpirVBinaryBackend::WriteSpecConstant(
   // instructions
   if (constantOp->mResultType->mBaseType == ShaderIRTypeBaseType::Bool)
   {
-    ZilchShaderIRConstantLiteral* argConstant =
-        (ZilchShaderIRConstantLiteral*)constantOp->mArguments[0];
+    ZilchShaderIRConstantLiteral* argConstant = (ZilchShaderIRConstantLiteral*)constantOp->mArguments[0];
     bool value = argConstant->mValue.Get<bool>();
     OpType opType = OpType::OpSpecConstantFalse;
     if (value)
@@ -965,14 +882,12 @@ void ZilchShaderSpirVBinaryBackend::WriteSpecConstant(
   WriteIROpGeneric(constantOp, context);
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteGlobal(
-    ZilchShaderIROp* globalVarOp, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteGlobal(ZilchShaderIROp* globalVarOp, ZilchShaderToSpirVContext* context)
 {
   WriteIROp(nullptr, globalVarOp, context);
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteFunctions(
-    FunctionList& functions, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteFunctions(FunctionList& functions, ZilchShaderToSpirVContext* context)
 {
   AutoDeclare(range, functions.All());
   for (; !range.Empty(); range.PopFront())
@@ -982,8 +897,7 @@ void ZilchShaderSpirVBinaryBackend::WriteFunctions(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteFunction(
-    ZilchShaderIRFunction* function, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteFunction(ZilchShaderIRFunction* function, ZilchShaderToSpirVContext* context)
 {
   ShaderStreamWriter& streamWriter = *context->mStreamWriter;
 
@@ -1002,8 +916,7 @@ void ZilchShaderSpirVBinaryBackend::WriteFunction(
   // Write function args
   for (size_t i = 0; i < function->mParameterBlock.mLines.Size(); ++i)
   {
-    ZilchShaderIROp* paramOp =
-        function->mParameterBlock.mLines[i]->As<ZilchShaderIROp>();
+    ZilchShaderIROp* paramOp = function->mParameterBlock.mLines[i]->As<ZilchShaderIROp>();
     WriteIROp(&function->mParameterBlock, paramOp, context);
   }
 
@@ -1015,14 +928,12 @@ void ZilchShaderSpirVBinaryBackend::WriteFunction(
   streamWriter.WriteInstruction(1, OpType::OpFunctionEnd);
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteBlock(
-    BasicBlock* block, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteBlock(BasicBlock* block, ZilchShaderToSpirVContext* context)
 {
   ShaderStreamWriter& streamWriter = *context->mStreamWriter;
 
   // Write the label for the block
-  streamWriter.WriteInstruction(
-      (int16)2, (int16)OpType::OpLabel, context->FindId(block));
+  streamWriter.WriteInstruction((int16)2, (int16)OpType::OpLabel, context->FindId(block));
 
   // All local variables must be declared first
   WriteBlockInstructions(block, block->mLocalVariables, context);
@@ -1030,10 +941,9 @@ void ZilchShaderSpirVBinaryBackend::WriteBlock(
   WriteBlockInstructions(block, block->mLines, context);
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteBlockInstructions(
-    BasicBlock* block,
-    Array<IZilchShaderIR*>& instructions,
-    ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteBlockInstructions(BasicBlock* block,
+                                                           Array<IZilchShaderIR*>& instructions,
+                                                           ZilchShaderToSpirVContext* context)
 {
   for (size_t i = 0; i < instructions.Size(); ++i)
   {
@@ -1044,8 +954,9 @@ void ZilchShaderSpirVBinaryBackend::WriteBlockInstructions(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteIROp(
-    BasicBlock* block, ZilchShaderIROp* op, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteIROp(BasicBlock* block,
+                                              ZilchShaderIROp* op,
+                                              ZilchShaderToSpirVContext* context)
 {
   ShaderStreamWriter& streamWriter = *context->mStreamWriter;
 
@@ -1175,8 +1086,7 @@ void ZilchShaderSpirVBinaryBackend::WriteIROp(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteIROpGeneric(
-    ZilchShaderIROp* op, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteIROpGeneric(ZilchShaderIROp* op, ZilchShaderToSpirVContext* context)
 {
   // Base size of an instruction is 3 (Size+Instruction, result type, id).
   int16 baseSize = 3;
@@ -1193,8 +1103,8 @@ void ZilchShaderSpirVBinaryBackend::WriteIROpGeneric(
   WriteIROpArguments(op, context);
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteIROpGenericNoReturnType(
-    ZilchShaderIROp* op, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteIROpGenericNoReturnType(ZilchShaderIROp* op,
+                                                                 ZilchShaderToSpirVContext* context)
 {
   // Base size of an instruction is 1 (Size+Instruction).
   int16 baseSize = 1;
@@ -1206,14 +1116,13 @@ void ZilchShaderSpirVBinaryBackend::WriteIROpGenericNoReturnType(
   WriteIROpArguments(op, context);
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteIROpArguments(
-    ZilchShaderIROp* op, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteIROpArguments(ZilchShaderIROp* op, ZilchShaderToSpirVContext* context)
 {
   WriteIRArguments(op->mArguments, context);
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteIRArguments(
-    Array<IZilchShaderIR*>& arguments, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteIRArguments(Array<IZilchShaderIR*>& arguments,
+                                                     ZilchShaderToSpirVContext* context)
 {
   for (size_t i = 0; i < arguments.Size(); ++i)
   {
@@ -1222,16 +1131,14 @@ void ZilchShaderSpirVBinaryBackend::WriteIRArguments(
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteIRId(
-    IZilchShaderIR* ir, ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteIRId(IZilchShaderIR* ir, ZilchShaderToSpirVContext* context)
 {
   int id;
   if (ir->mIRType == ZilchShaderIRBaseType::ConstantLiteral)
   {
     // We want the raw bytes of constant literals (limited to size of int for
     // now)
-    ZilchShaderIRConstantLiteral* constantLiteral =
-        ir->As<ZilchShaderIRConstantLiteral>();
+    ZilchShaderIRConstantLiteral* constantLiteral = ir->As<ZilchShaderIRConstantLiteral>();
     int* rawId = (int*)constantLiteral->mValue.GetData();
     id = *rawId;
   }
@@ -1241,9 +1148,8 @@ void ZilchShaderSpirVBinaryBackend::WriteIRId(
   streamWriter.Write(id);
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteImport(
-    ZilchShaderExtensionImport* importLibrary,
-    ZilchShaderToSpirVContext* context)
+void ZilchShaderSpirVBinaryBackend::WriteImport(ZilchShaderExtensionImport* importLibrary,
+                                                ZilchShaderToSpirVContext* context)
 {
   ShaderStreamWriter& streamWriter = *context->mStreamWriter;
 

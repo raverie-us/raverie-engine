@@ -35,10 +35,7 @@ public:
   }
 
   /// Copy constructor.
-  CyclicArray(const this_type& other) :
-      mArray(other.mArray),
-      mFront(other.mFront),
-      mSize(other.mSize)
+  CyclicArray(const this_type& other) : mArray(other.mArray), mFront(other.mFront), mSize(other.mSize)
   {
   }
 
@@ -193,10 +190,7 @@ public:
     range() : mArray(nullptr), mBegin(0), mEnd(0)
     {
     }
-    range(CyclicArray* array, uint begin, uint end) :
-        mArray(array),
-        mBegin(begin),
-        mEnd(end)
+    range(CyclicArray* array, uint begin, uint end) : mArray(array), mBegin(begin), mEnd(end)
     {
     }
 

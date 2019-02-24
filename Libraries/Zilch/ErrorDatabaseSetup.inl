@@ -35,9 +35,8 @@
 // BaseClassInitializerMustComeFirst
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "To make the order of operations very clear, the base class initializer "
-      "must come before any other initailizers (such as this).";
+  error.Error = "To make the order of operations very clear, the base class initializer "
+                "must come before any other initailizers (such as this).";
   error.Name = "BaseClassInitializerMustComeFirst";
   error.Reason = "Base classes are initialized before anything else, so it "
                  "makes sense that it should actually come first.";
@@ -55,10 +54,9 @@
 // BaseClassMemberSameName
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "The base class '%s' has a member of the same name '%s'. This is not "
-      "allowed because it creates confusion for users and often breaks "
-      "automated serialization patterns (fields and getter/setters only).";
+  error.Error = "The base class '%s' has a member of the same name '%s'. This is not "
+                "allowed because it creates confusion for users and often breaks "
+                "automated serialization patterns (fields and getter/setters only).";
   error.Name = "BaseClassMemberSameName";
   error.Reason = "";
 }
@@ -75,12 +73,10 @@
 // BinaryOperatorRightOperandNotFound
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "The right operand is invalid or not found for the '%s' operator '%s'.";
+  error.Error = "The right operand is invalid or not found for the '%s' operator '%s'.";
   error.Name = "BinaryOperatorRightOperandNotFound";
-  error.Reason =
-      "When an operator between two operands, such as the '+' operator, has a "
-      "left operand (e.g. '5 + ') it must have a right operand as well.";
+  error.Reason = "When an operator between two operands, such as the '+' operator, has a "
+                 "left operand (e.g. '5 + ') it must have a right operand as well.";
 
   {
     ErrorExample& example = error.Examples.PushBack();
@@ -96,10 +92,9 @@
   error.Error = "A block comment started wasn't properly closed when we "
                 "reached the end of the file.";
   error.Name = "BlockCommentNotComplete";
-  error.Reason =
-      "Commonly, users accidentally delete or mistype the end of a block "
-      "comment, which can cause code to be unnecessarily commented out. This "
-      "can be dangerous if it was unintentional, hence the error.";
+  error.Reason = "Commonly, users accidentally delete or mistype the end of a block "
+                 "comment, which can cause code to be unnecessarily commented out. This "
+                 "can be dangerous if it was unintentional, hence the error.";
 
   {
     ErrorExample& example = error.Examples.PushBack();
@@ -179,11 +174,10 @@
   error.Error = "The casting operator 'as' is missing a cast type declaration "
                 "(eg. x as Real).";
   error.Name = "CastTypeNotFound";
-  error.Reason =
-      "Casting allows us to convert one type to another. The 'as' operator was "
-      "chosen because it gets rid of many unnecessary parentheses (eg C-style "
-      "casts). The 'as' operator takes what we want to convert on the left and "
-      "the type we want to convert it to on the right.";
+  error.Reason = "Casting allows us to convert one type to another. The 'as' operator was "
+                 "chosen because it gets rid of many unnecessary parentheses (eg C-style "
+                 "casts). The 'as' operator takes what we want to convert on the left and "
+                 "the type we want to convert it to on the right.";
 
   {
     ErrorExample& example = error.Examples.PushBack();
@@ -200,24 +194,22 @@
   ErrorInfo& error = this->Errors.PushBack();
   error.Error = "Class declaration '%s' does not have a closing '}'.";
   error.Name = "ClassBodyNotComplete";
-  error.Reason =
-      "In order for the compiler to understand where a class definition starts "
-      "and ends, an opening ({) and closing (}) scope must be used. If the "
-      "scope was not closed, the compiler would be forced to assume that the "
-      "class encompasses all the code below it, which could be erroneous. "
-      "There are a few likely cases that this could happen: the closing scope "
-      "brace has been left off, a scope or parenthesis inside the class was "
-      "not properly closed, or a variable or function declaration was garbled "
-      "inside the class causing it to hault its parsing.";
+  error.Reason = "In order for the compiler to understand where a class definition starts "
+                 "and ends, an opening ({) and closing (}) scope must be used. If the "
+                 "scope was not closed, the compiler would be forced to assume that the "
+                 "class encompasses all the code below it, which could be erroneous. "
+                 "There are a few likely cases that this could happen: the closing scope "
+                 "brace has been left off, a scope or parenthesis inside the class was "
+                 "not properly closed, or a variable or function declaration was garbled "
+                 "inside the class causing it to hault its parsing.";
 
   {
     ErrorExample& example = error.Examples.PushBack();
     example.ErrorCode = "class Animal\r\n{\r\n";
     example.FixedCode = "class Animal\r\n{\r\n}\r\n";
-    example.ExplanationOfFix =
-        "In the error case, we started the definition of the class 'Animal' "
-        "but never closed the scope. We fixed it by simply adding a closing "
-        "scope (}) to the end of the class.";
+    example.ExplanationOfFix = "In the error case, we started the definition of the class 'Animal' "
+                               "but never closed the scope. We fixed it by simply adding a closing "
+                               "scope (}) to the end of the class.";
   }
 }
 
@@ -226,14 +218,13 @@
   ErrorInfo& error = this->Errors.PushBack();
   error.Error = "Class declaration '%s' does not have an opening '{'.";
   error.Name = "ClassBodyNotFound";
-  error.Reason =
-      "The compiler couldn't find the opening scope ({) for the class "
-      "declaration, and therefore the class has no body. Check to make sure "
-      "you added an opening scope and that the class name or inheritance list "
-      "wasn't garbled. If you come from languages like C or C++ and you were "
-      "trying to make a forward declaration, it is not required since the "
-      "language globally shares all type-definitions between different "
-      "scripts.";
+  error.Reason = "The compiler couldn't find the opening scope ({) for the class "
+                 "declaration, and therefore the class has no body. Check to make sure "
+                 "you added an opening scope and that the class name or inheritance list "
+                 "wasn't garbled. If you come from languages like C or C++ and you were "
+                 "trying to make a forward declaration, it is not required since the "
+                 "language globally shares all type-definitions between different "
+                 "scripts.";
 
   {
     ErrorExample& example = error.Examples.PushBack();
@@ -250,27 +241,24 @@
   error.Error = "Class declaration is missing or invalid (we were unable to "
                 "find the class name).";
   error.Name = "ClassNameNotFound";
-  error.Reason =
-      "Most likely the class name was invalid due to unnecessary symbols or to "
-      "using a keyword in its place, or the class name was missing.";
+  error.Reason = "Most likely the class name was invalid due to unnecessary symbols or to "
+                 "using a keyword in its place, or the class name was missing.";
 
   {
     ErrorExample& example = error.Examples.PushBack();
     example.ErrorCode = "class\r\n{\r\n}";
     example.FixedCode = "class Animal\r\n{\r\n}";
-    example.ExplanationOfFix =
-        "In the error case, we forgot to add the name of the class after the "
-        "'class' keyword. We fixed this by adding the name 'Animal' after the "
-        "class, thus giving the type a name.";
+    example.ExplanationOfFix = "In the error case, we forgot to add the name of the class after the "
+                               "'class' keyword. We fixed this by adding the name 'Animal' after the "
+                               "class, thus giving the type a name.";
   }
 }
 
 // CompositionCycleDetected
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "A cycle of composition was detected. Eg. Type A includes Type B, Type B "
-      "includes Type C, and Type C includes Type A (which is illegal).";
+  error.Error = "A cycle of composition was detected. Eg. Type A includes Type B, Type B "
+                "includes Type C, and Type C includes Type A (which is illegal).";
   error.Name = "CompositionCycleDetected";
   error.Reason = "";
 }
@@ -392,8 +380,7 @@
 // DoWhileConditionalExpressionNotComplete
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "Do while statement conditional expression is not properly closed.";
+  error.Error = "Do while statement conditional expression is not properly closed.";
   error.Name = "DoWhileConditionalExpressionNotComplete";
   error.Reason = "";
 }
@@ -498,8 +485,7 @@
 // ForEachRangeExpressionNotFound
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "The foreach loop expects a range expression after the 'in' keyword.";
+  error.Error = "The foreach loop expects a range expression after the 'in' keyword.";
   error.Name = "ForEachRangeExpressionNotFound";
   error.Reason = "";
 }
@@ -538,10 +524,8 @@
 
   {
     ErrorExample& example = error.Examples.PushBack();
-    example.ErrorCode =
-        "class Animal\r\n{\r\n  function TestFn(\r\n  {\r\n  }\r\n}";
-    example.FixedCode =
-        "class Animal\r\n{\r\n  function TestFn()\r\n  {\r\n  }\r\n}";
+    example.ErrorCode = "class Animal\r\n{\r\n  function TestFn(\r\n  {\r\n  }\r\n}";
+    example.FixedCode = "class Animal\r\n{\r\n  function TestFn()\r\n  {\r\n  }\r\n}";
     example.ExplanationOfFix = "Just adding a ')' finishes the argument list.";
   }
 }
@@ -549,20 +533,16 @@
 // FunctionArgumentListNotFound
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "Function declaration '%s' is missing the argument list opening '('.";
+  error.Error = "Function declaration '%s' is missing the argument list opening '('.";
   error.Name = "FunctionArgumentListNotFound";
   error.Reason = "Function declarations must contain an argument list opening "
                  "with '(' and ending with ')'.";
 
   {
     ErrorExample& example = error.Examples.PushBack();
-    example.ErrorCode =
-        "class Animal\r\n{\r\n  function TestFn\r\n  {\r\n  }\r\n}";
-    example.FixedCode =
-        "class Animal\r\n{\r\n  function TestFn()\r\n  {\r\n  }\r\n}";
-    example.ExplanationOfFix =
-        "Added an empty argument list, but an argument list nonetheless.";
+    example.ErrorCode = "class Animal\r\n{\r\n  function TestFn\r\n  {\r\n  }\r\n}";
+    example.FixedCode = "class Animal\r\n{\r\n  function TestFn()\r\n  {\r\n  }\r\n}";
+    example.ExplanationOfFix = "Added an empty argument list, but an argument list nonetheless.";
   }
 }
 
@@ -576,14 +556,12 @@
 
   {
     ErrorExample& example = error.Examples.PushBack();
-    example.ErrorCode =
-        "class Animal\r\n{\r\n  var Number : Integer := 9;\r\n\r\n  function "
-        "TestFn() : Real\r\n  {\r\n    return 1.0;\r\n\r\n  function "
-        "AnotherFn() : Real\r\n  {\r\n    return 1.0;\r\n  }\r\n}\r\n";
-    example.FixedCode =
-        "class Animal\r\n{\r\n  var Number : Integer := 9;\r\n\r\n  function "
-        "TestFn() : Real\r\n  {\r\n    return 1.0;\r\n  }\r\n  function "
-        "AnotherFn() : Real\r\n  {\r\n    return 1.0;\r\n  }\r\n}";
+    example.ErrorCode = "class Animal\r\n{\r\n  var Number : Integer := 9;\r\n\r\n  function "
+                        "TestFn() : Real\r\n  {\r\n    return 1.0;\r\n\r\n  function "
+                        "AnotherFn() : Real\r\n  {\r\n    return 1.0;\r\n  }\r\n}\r\n";
+    example.FixedCode = "class Animal\r\n{\r\n  var Number : Integer := 9;\r\n\r\n  function "
+                        "TestFn() : Real\r\n  {\r\n    return 1.0;\r\n  }\r\n  function "
+                        "AnotherFn() : Real\r\n  {\r\n    return 1.0;\r\n  }\r\n}";
     example.ExplanationOfFix = "The solution to this case is to add the "
                                "closing bracket to the TestFn.";
   }
@@ -594,20 +572,17 @@
   ErrorInfo& error = this->Errors.PushBack();
   error.Error = "Function declaration '%s' does not have an opening '{'.";
   error.Name = "FunctionBodyNotFound";
-  error.Reason =
-      "The compiler couldn't find the opening scope ({) for the function "
-      "definition. Functions consist of a series of statements and "
-      "expressions, and the compiler knows which of those belong to the "
-      "function by what's inside the curly braces.";
+  error.Reason = "The compiler couldn't find the opening scope ({) for the function "
+                 "definition. Functions consist of a series of statements and "
+                 "expressions, and the compiler knows which of those belong to the "
+                 "function by what's inside the curly braces.";
 
   {
     ErrorExample& example = error.Examples.PushBack();
-    example.ErrorCode =
-        "class Animal\r\n{\r\n  function TestFn() : Real\r\n}\r\n";
+    example.ErrorCode = "class Animal\r\n{\r\n  function TestFn() : Real\r\n}\r\n";
     example.FixedCode = "class Animal\r\n{\r\n  function TestFn() : Real\r\n  "
                         "{\r\n    return 1.0;\r\n  }\r\n}";
-    example.ExplanationOfFix =
-        "Adding the rest of the function, such as the braces and return call.";
+    example.ExplanationOfFix = "Adding the rest of the function, such as the braces and return call.";
   }
 }
 
@@ -623,8 +598,7 @@
 // FunctionCallNamedArgumentNotFound
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "The right hand side of a named argument '%s' is missing or invalid.";
+  error.Error = "The right hand side of a named argument '%s' is missing or invalid.";
   error.Name = "FunctionCallNamedArgumentNotFound";
   error.Reason = "";
 }
@@ -657,8 +631,7 @@
   {
     ErrorExample& example = error.Examples.PushBack();
     example.ErrorCode = "class Animal\r\n{\r\n  function ()\r\n  {\r\n  }\r\n}";
-    example.FixedCode =
-        "class Animal\r\n{\r\n  function Foo()\r\n  {\r\n  }\r\n}";
+    example.FixedCode = "class Animal\r\n{\r\n  function Foo()\r\n  {\r\n  }\r\n}";
     example.ExplanationOfFix = "test";
   }
 }
@@ -678,18 +651,16 @@
   error.Error = "Function declaration '%s' has a return type specifier ':' but "
                 "is missing the return type declaration.";
   error.Name = "FunctionReturnTypeNotFound";
-  error.Reason =
-      "':' was used after the parameter list, which signifies to the compiler "
-      "that the function will be returning an object. The ':' must be followed "
-      "by the type of object that will be returned. If you want nothing to be "
-      "returned (ex 'void'), omit the usage of the ':'.";
+  error.Reason = "':' was used after the parameter list, which signifies to the compiler "
+                 "that the function will be returning an object. The ':' must be followed "
+                 "by the type of object that will be returned. If you want nothing to be "
+                 "returned (ex 'void'), omit the usage of the ':'.";
 
   {
     ErrorExample& example = error.Examples.PushBack();
     example.ErrorCode = "function TestFn() :\r\n{\r\n}";
     example.FixedCode = "function TestFn()\r\n{\r\n}";
-    example.ExplanationOfFix =
-        "Fixed by removing the incomplete return type syntax.";
+    example.ExplanationOfFix = "Fixed by removing the incomplete return type syntax.";
   }
 }
 
@@ -747,8 +718,7 @@
 // IndexerNotComplete
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "An index operator was not closed with ']' or its contents were invalid.";
+  error.Error = "An index operator was not closed with ']' or its contents were invalid.";
   error.Name = "IndexerNotComplete";
   error.Reason = "";
 }
@@ -772,8 +742,7 @@
 // InvalidBinaryOperation
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "The binary '%s' operator '%s' is not valid with '%s' and '%s'.";
+  error.Error = "The binary '%s' operator '%s' is not valid with '%s' and '%s'.";
   error.Name = "InvalidBinaryOperation";
   error.Reason = "";
 }
@@ -781,8 +750,7 @@
 // InvalidEscapeInStringLiteral
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "An invalid escape sequence '\\%c' was used in a string literal.";
+  error.Error = "An invalid escape sequence '\\%c' was used in a string literal.";
   error.Name = "InvalidEscapeInStringLiteral";
   error.Reason = "";
 }
@@ -818,19 +786,17 @@
   error.Error = "The 'local' keyword can only be used to create value types "
                 "(primitives and 'struct' types). '%s' is not a value type.";
   error.Name = "LocalCreateMustBeValueType";
-  error.Reason =
-      "The keyword 'local' is used to differentiate whether we are allocating "
-      "something directly on the stack or on a class as a member. Locals must "
-      "be value types because when they are copied we memory-copy the entire "
-      "object (which isn't valid for reference types).";
+  error.Reason = "The keyword 'local' is used to differentiate whether we are allocating "
+                 "something directly on the stack or on a class as a member. Locals must "
+                 "be value types because when they are copied we memory-copy the entire "
+                 "object (which isn't valid for reference types).";
 }
 
 // LocalVariableReferenceNotFound
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "The variable '%s' could not be found. If the variable was defined "
-      "above, but is in a nested scope, then we cannot access it.";
+  error.Error = "The variable '%s' could not be found. If the variable was defined "
+                "above, but is in a nested scope, then we cannot access it.";
   error.Name = "LocalVariableReferenceNotFound";
   error.Reason = "";
 }
@@ -865,8 +831,7 @@
 // MemberIdMustBeUsedOnAMember
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "The expression passed to memberid(...) must be accessing a member.";
+  error.Error = "The expression passed to memberid(...) must be accessing a member.";
   error.Name = "MemberIdMustBeUsedOnAMember";
   error.Reason = "";
 }
@@ -892,9 +857,8 @@
 // MemberVariableTypesCannotBeInferred
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "The type of the member variable '%s' can only be inferred when being "
-      "initialized from constructor calls, literals, or type-casts.";
+  error.Error = "The type of the member variable '%s' can only be inferred when being "
+                "initialized from constructor calls, literals, or type-casts.";
   error.Name = "MemberVariableTypesCannotBeInferred";
   error.Reason = "";
 }
@@ -920,8 +884,7 @@
 // NativeTypesRequireConstructors
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "The native type '%s' has no constructors and cannot be created.";
+  error.Error = "The native type '%s' has no constructors and cannot be created.";
   error.Name = "NativeTypesRequireConstructors";
   error.Reason = "";
 }
@@ -972,12 +935,10 @@
 
   {
     ErrorExample& example = error.Examples.PushBack();
-    example.ErrorCode =
-        "class Animal\r\n{\r\n  function TestFn(count : )\r\n  {\r\n  }\r\n}";
+    example.ErrorCode = "class Animal\r\n{\r\n  function TestFn(count : )\r\n  {\r\n  }\r\n}";
     example.FixedCode = "class Animal\r\n{\r\n  function TestFn(count : "
                         "Int)\r\n  {\r\n  }\r\n}";
-    example.ExplanationOfFix =
-        "Simply add the type of the parameter and all is good.";
+    example.ExplanationOfFix = "Simply add the type of the parameter and all is good.";
   }
 }
 
@@ -992,21 +953,18 @@
 
   {
     ErrorExample& example = error.Examples.PushBack();
-    example.ErrorCode =
-        "class Animal\r\n{\r\n  function TestFn(count )\r\n  {\r\n  }\r\n}";
+    example.ErrorCode = "class Animal\r\n{\r\n  function TestFn(count )\r\n  {\r\n  }\r\n}";
     example.FixedCode = "class Animal\r\n{\r\n  function TestFn(count : "
                         "Int)\r\n  {\r\n  }\r\n}";
-    example.ExplanationOfFix =
-        "Adding the type specifier, ':', and a type to the parameter 'count'.";
+    example.ExplanationOfFix = "Adding the type specifier, ':', and a type to the parameter 'count'.";
   }
 }
 
 // ParsingNotComplete
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "Parsing could not be completed (we ran into something we didn't "
-      "understand). The token we hit was '%s' with token type '%s'.";
+  error.Error = "Parsing could not be completed (we ran into something we didn't "
+                "understand). The token we hit was '%s' with token type '%s'.";
   error.Name = "ParsingNotComplete";
   error.Reason = "";
 }
@@ -1022,8 +980,7 @@
 // PropertyDeclarationNotComplete
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "The declaration of the property '%s' must be closed by an ending '}'.";
+  error.Error = "The declaration of the property '%s' must be closed by an ending '}'.";
   error.Name = "PropertyDeclarationNotComplete";
   error.Reason = "";
 }
@@ -1040,9 +997,8 @@
 // PropertyDelegateRequiresGetOrSet
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "The property delegate operator '@' requires the property to have either "
-      "a 'get' or 'set' (or both). The property '%s' has neither.";
+  error.Error = "The property delegate operator '@' requires the property to have either "
+                "a 'get' or 'set' (or both). The property '%s' has neither.";
   error.Name = "PropertyDelegateRequiresGetOrSet";
   error.Reason = "";
 }
@@ -1076,10 +1032,9 @@
 // ReferenceToUndefinedTypeWithSimilarMember
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "It appears you are trying to reference the member '%s', and if so you "
-      "must use 'this.%s'. Saying the name alone implies you are referring to "
-      "a type, and the type '%s' could not be found.";
+  error.Error = "It appears you are trying to reference the member '%s', and if so you "
+                "must use 'this.%s'. Saying the name alone implies you are referring to "
+                "a type, and the type '%s' could not be found.";
   error.Name = "ReferenceToUndefinedTypeWithSimilarMember";
   error.Reason = "";
 }
@@ -1096,9 +1051,8 @@
 // ReturnValueNotFound
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "The return statement is expected to return a '%s' value, since the "
-      "function declares it so (the ':' at the end specifies the return type).";
+  error.Error = "The return statement is expected to return a '%s' value, since the "
+                "function declares it so (the ':' at the end specifies the return type).";
   error.Name = "ReturnValueNotFound";
   error.Reason = "";
 }
@@ -1140,9 +1094,8 @@
 // SendsEventStatementNotComplete
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "In a 'sends %s' statement, we expect to see 'sends EventName : "
-      "EventType;'. The statement was not complete (probably missing a ';').";
+  error.Error = "In a 'sends %s' statement, we expect to see 'sends EventName : "
+                "EventType;'. The statement was not complete (probably missing a ';').";
   error.Name = "SendsEventStatementNotComplete";
   error.Reason = "";
 }
@@ -1243,11 +1196,10 @@
   error.Error = "The struct '%s' can only contain value types (other structs "
                 "or primitive values). The member '%s' is not a value type.";
   error.Name = "StructsCanOnlyContainValueTypes";
-  error.Reason =
-      "A struct is a value type, which means it must be trivially copyable in "
-      "memory and must not have a destructor. Structs are typically used for "
-      "efficiency because they can be quickly copied around and stack "
-      "allocated, unlike classes which must be heap allocated.";
+  error.Reason = "A struct is a value type, which means it must be trivially copyable in "
+                 "memory and must not have a destructor. Structs are typically used for "
+                 "efficiency because they can be quickly copied around and stack "
+                 "allocated, unlike classes which must be heap allocated.";
 }
 
 // TemplateArgumentNotFound
@@ -1296,8 +1248,7 @@
 // ThrowTypeMustDeriveFromException
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "The exception we're throwing must derive from the 'Exception' type.";
+  error.Error = "The exception we're throwing must derive from the 'Exception' type.";
   error.Name = "ThrowTypeMustDeriveFromException";
   error.Reason = "";
 }
@@ -1321,8 +1272,7 @@
 // TimeoutSecondsExpectedIntegerLiteral
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "The timeout statement only accepts Integer literals for seconds.";
+  error.Error = "The timeout statement only accepts Integer literals for seconds.";
   error.Name = "TimeoutSecondsExpectedIntegerLiteral";
   error.Reason = "";
 }
@@ -1339,8 +1289,7 @@
 // TimeoutSecondsNotComplete
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "Timeout statement's seconds is not properly closed with a ')'.";
+  error.Error = "Timeout statement's seconds is not properly closed with a ')'.";
   error.Name = "TimeoutSecondsNotComplete";
   error.Reason = "";
 }
@@ -1387,9 +1336,8 @@
   ErrorInfo& error = this->Errors.PushBack();
   error.Error = "The operand was not found for the '%s' operator '%s'.";
   error.Name = "UnaryOperatorOperandNotFound";
-  error.Reason =
-      "The operators such as negation '-' and logical-not '!' must have an "
-      "operand on the right-hand side for them to be valid syntax.";
+  error.Reason = "The operators such as negation '-' and logical-not '!' must have an "
+                 "operand on the right-hand side for them to be valid syntax.";
 
   {
     ErrorExample& example = error.Examples.PushBack();
@@ -1411,14 +1359,11 @@
 
   {
     ErrorExample& example = error.Examples.PushBack();
-    example.ErrorCode =
-        "function #IsEmpty() : Bool32\r\n{\r\n  return mCount == 0;\r\n}";
-    example.FixedCode =
-        "function IsEmpty() : Bool32\r\n{\r\n  return mCount == 0;\r\n}";
-    example.ExplanationOfFix =
-        "In the error case, a # sign was introduced before the name of the "
-        "function. The tokenizer would reach this symbol and hault, not "
-        "knowing what it is.";
+    example.ErrorCode = "function #IsEmpty() : Bool32\r\n{\r\n  return mCount == 0;\r\n}";
+    example.FixedCode = "function IsEmpty() : Bool32\r\n{\r\n  return mCount == 0;\r\n}";
+    example.ExplanationOfFix = "In the error case, a # sign was introduced before the name of the "
+                               "function. The tokenizer would reach this symbol and hault, not "
+                               "knowing what it is.";
   }
 }
 
@@ -1437,28 +1382,24 @@
   error.Error = "Variable declaration '%s' is missing a semicolon or the "
                 "initialization expression is invalid.";
   error.Name = "VariableInitializationNotComplete";
-  error.Reason =
-      "This error occurred because the compiler was trying to parse a variable "
-      "declaration with initialization and expected to find a semicolon at the "
-      "end, but did not. The causes could be as simple as the semicolon is "
-      "missing, or that the semicolon is in fact there, but the initialization "
-      "expression was somehow garbled. If you're curious as to why a semicolon "
-      "is needed, they are necessary because they act as a separator and help "
-      "the parser to differentiate statements from each other, just like "
-      "periods in a sentence. Imagine if a period was missing from a sentance, "
-      "or worse yet if a sentance was so confusing to the point that you would "
-      "expected a period!";
+  error.Reason = "This error occurred because the compiler was trying to parse a variable "
+                 "declaration with initialization and expected to find a semicolon at the "
+                 "end, but did not. The causes could be as simple as the semicolon is "
+                 "missing, or that the semicolon is in fact there, but the initialization "
+                 "expression was somehow garbled. If you're curious as to why a semicolon "
+                 "is needed, they are necessary because they act as a separator and help "
+                 "the parser to differentiate statements from each other, just like "
+                 "periods in a sentence. Imagine if a period was missing from a sentance, "
+                 "or worse yet if a sentance was so confusing to the point that you would "
+                 "expected a period!";
 
   {
     ErrorExample& example = error.Examples.PushBack();
-    example.ErrorCode =
-        "var cat : Animal = new Cat()\r\nvar dog : Animal = new Dog();";
-    example.FixedCode =
-        "var cat : Animal = new Cat();\r\nvar dog : Animal = new Dog();";
-    example.ExplanationOfFix =
-        "In the error case, we forgot to put a semicolon (;) at the end of the "
-        "'cat' variable declaration. We fixed it by simply adding in a "
-        "semicolon.";
+    example.ErrorCode = "var cat : Animal = new Cat()\r\nvar dog : Animal = new Dog();";
+    example.FixedCode = "var cat : Animal = new Cat();\r\nvar dog : Animal = new Dog();";
+    example.ExplanationOfFix = "In the error case, we forgot to put a semicolon (;) at the end of the "
+                               "'cat' variable declaration. We fixed it by simply adding in a "
+                               "semicolon.";
   }
 }
 
@@ -1476,36 +1417,32 @@
     ErrorExample& example = error.Examples.PushBack();
     example.ErrorCode = "var lives : Int32 := ;";
     example.FixedCode = "var lives : Int32 := 9;";
-    example.ExplanationOfFix =
-        "In the error case, the variable 'lives' was going to be initialized, "
-        "but the value was left out. In the fixed case, we added a value (this "
-        "value is known as the initialization expression).";
+    example.ExplanationOfFix = "In the error case, the variable 'lives' was going to be initialized, "
+                               "but the value was left out. In the fixed case, we added a value (this "
+                               "value is known as the initialization expression).";
   }
 }
 
 // VariableMustBeInitialized
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "Variable declaration '%s' is missing the initializer expression.";
+  error.Error = "Variable declaration '%s' is missing the initializer expression.";
   error.Name = "VariableMustBeInitialized";
-  error.Reason =
-      "All variables must be initialized for safety, and rather than letting "
-      "the language decide some default value to initialize to, we forced the "
-      "users to initialize all of their variables. Safety is a key concern for "
-      "the language because it allows users to focus more on debugging logical "
-      "bugs rather than bugs caused by indeterminate factors (like "
-      "uninitialized variables).";
+  error.Reason = "All variables must be initialized for safety, and rather than letting "
+                 "the language decide some default value to initialize to, we forced the "
+                 "users to initialize all of their variables. Safety is a key concern for "
+                 "the language because it allows users to focus more on debugging logical "
+                 "bugs rather than bugs caused by indeterminate factors (like "
+                 "uninitialized variables).";
 
   {
     ErrorExample& example = error.Examples.PushBack();
     example.ErrorCode = "var lives : Int32;";
     example.FixedCode = "var lives : Int32 = 9;";
-    example.ExplanationOfFix =
-        "In the error case, the variable 'lives' did not have an initializer "
-        "after it, and therefore would have had an undefined value. We fixed "
-        "this by giving it an initialization expression so that we would "
-        "ultimately always be in control of its value.";
+    example.ExplanationOfFix = "In the error case, the variable 'lives' did not have an initializer "
+                               "after it, and therefore would have had an undefined value. We fixed "
+                               "this by giving it an initialization expression so that we would "
+                               "ultimately always be in control of its value.";
   }
 }
 
@@ -1514,22 +1451,20 @@
   ErrorInfo& error = this->Errors.PushBack();
   error.Error = "Variable declaration has a missing or invalid name.";
   error.Name = "VariableNameNotFound";
-  error.Reason =
-      "One of the most common reasons for this error is that a keyword was "
-      "used as a variable's name, which is not allowed because it could "
-      "confuse the compiler. Also look to see if the name was left off, or if "
-      "somehow the name was garbled with other symbols. If you're wondering "
-      "why a variable needs a name, the reason is because a name gives us a "
-      "way to refer to it in other parts of code, much like how people have "
-      "names so we can refer to them and differentiate them apart.";
+  error.Reason = "One of the most common reasons for this error is that a keyword was "
+                 "used as a variable's name, which is not allowed because it could "
+                 "confuse the compiler. Also look to see if the name was left off, or if "
+                 "somehow the name was garbled with other symbols. If you're wondering "
+                 "why a variable needs a name, the reason is because a name gives us a "
+                 "way to refer to it in other parts of code, much like how people have "
+                 "names so we can refer to them and differentiate them apart.";
 
   {
     ErrorExample& example = error.Examples.PushBack();
     example.ErrorCode = "var : Int32 := 9;";
     example.FixedCode = "var lives : Int32 := 9;";
-    example.ExplanationOfFix =
-        "In the error case, we forgot to name the variable. We fixed it simply "
-        "by adding the variable name 'lives' after the 'var' keyword.";
+    example.ExplanationOfFix = "In the error case, we forgot to name the variable. We fixed it simply "
+                               "by adding the variable name 'lives' after the 'var' keyword.";
   }
 }
 
@@ -1548,33 +1483,29 @@
   error.Error = "Variable declaration '%s' has a type specifier ':' but is "
                 "missing the type declaration.";
   error.Name = "VariableTypeNotFound";
-  error.Reason =
-      "Mosty likely the type was just left out or the type contained some "
-      "invalid keyword or symbol. If the type specifier (:) operator was "
-      "found, then the variable expects a type. If you actually meant to make "
-      "the variable an inferred type, then leave off the (:) and type "
-      "declaration altogether. Inferred variables are variables whose type is "
-      "gleaned by the initialization value (this feature is better known as "
-      "Type Inference).";
+  error.Reason = "Mosty likely the type was just left out or the type contained some "
+                 "invalid keyword or symbol. If the type specifier (:) operator was "
+                 "found, then the variable expects a type. If you actually meant to make "
+                 "the variable an inferred type, then leave off the (:) and type "
+                 "declaration altogether. Inferred variables are variables whose type is "
+                 "gleaned by the initialization value (this feature is better known as "
+                 "Type Inference).";
 
   {
     ErrorExample& example = error.Examples.PushBack();
     example.ErrorCode = "var lives : := 9;";
-    example.FixedCode =
-        "var lives : Int32 := 9;\r\n\r\n/* OR */\r\n\r\nvar lives := 9;";
-    example.ExplanationOfFix =
-        "In the error case, the type of lives was left out yet the type "
-        "qualifier (:) was specified. We can fix it in two ways, first by "
-        "actually specifying the type, and second by using type inference to "
-        "infer the type automatically.";
+    example.FixedCode = "var lives : Int32 := 9;\r\n\r\n/* OR */\r\n\r\nvar lives := 9;";
+    example.ExplanationOfFix = "In the error case, the type of lives was left out yet the type "
+                               "qualifier (:) was specified. We can fix it in two ways, first by "
+                               "actually specifying the type, and second by using type inference to "
+                               "infer the type automatically.";
   }
 }
 
 // WhileConditionalExpressionNotComplete
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error =
-      "While statement conditional expression is not properly closed.";
+  error.Error = "While statement conditional expression is not properly closed.";
   error.Name = "WhileConditionalExpressionNotComplete";
   error.Reason = "";
 }

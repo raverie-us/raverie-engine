@@ -19,16 +19,12 @@ ZilchDefineType(PreviewWidget, builder, type)
 {
 }
 
-PreviewWidget::PreviewWidget(Composite* parent) :
-    Composite(parent),
-    mBackground(nullptr),
-    mInteractive(false)
+PreviewWidget::PreviewWidget(Composite* parent) : Composite(parent), mBackground(nullptr), mInteractive(false)
 {
   mMinSize = PreviewWidgetUi::DefaultSize;
 }
 
-PreviewWidget::PreviewWidget(PreviewWidgetInitializer& initializer) :
-    Composite(initializer.Area)
+PreviewWidget::PreviewWidget(PreviewWidgetInitializer& initializer) : Composite(initializer.Area)
 {
   mObject = initializer.Object;
   mName = initializer.Name;
@@ -46,25 +42,21 @@ Vec2 PreviewWidget::GetHalfSize()
   return GetMinSize() * 0.5f;
 }
 
-PreviewWidgetGroup::PreviewWidgetGroup(Composite* parent) :
-    PreviewWidget(parent)
+PreviewWidgetGroup::PreviewWidgetGroup(Composite* parent) : PreviewWidget(parent)
 {
 }
 
-PreviewWidgetGroup::PreviewWidgetGroup(Composite* parent, StringParam name) :
-    PreviewWidget(parent)
+PreviewWidgetGroup::PreviewWidgetGroup(Composite* parent, StringParam name) : PreviewWidget(parent)
 {
   mName = name;
 }
 
-PreviewWidget*
-PreviewWidgetGroup::AddPreviewWidget(StringParam name,
-                                     HandleParam instance,
-                                     PreviewImportance::Enum minImportance)
+PreviewWidget* PreviewWidgetGroup::AddPreviewWidget(StringParam name,
+                                                    HandleParam instance,
+                                                    PreviewImportance::Enum minImportance)
 {
   // Create the preview
-  PreviewWidget* preview =
-      ResourcePreview::CreatePreviewWidget(this, name, instance, minImportance);
+  PreviewWidget* preview = ResourcePreview::CreatePreviewWidget(this, name, instance, minImportance);
 
   if (preview == nullptr)
     return nullptr;
@@ -77,7 +69,7 @@ PreviewWidgetGroup::AddPreviewWidget(StringParam name,
 
 void PreviewWidgetGroup::AnimatePreview(PreviewAnimate::Enum value)
 {
-  forRange(PreviewWidget * preview, mPreviewWidgets.All())
+  forRange (PreviewWidget* preview, mPreviewWidgets.All())
   {
     preview->AnimatePreview(value);
   }
@@ -99,8 +91,7 @@ void PreviewWidgetGroup::UpdateTransform()
   itemSize.x = Math::Floor(itemSize.x);
   itemSize.y = Math::Floor(itemSize.y);
 
-  Vec2 padding =
-      SnapToPixels((dimension - Vec2(1, 1)) * Vec2(cPadding, cPadding));
+  Vec2 padding = SnapToPixels((dimension - Vec2(1, 1)) * Vec2(cPadding, cPadding));
   itemSize -= SnapToPixels(padding / dimension);
 
   for (int x = 0; x < iDimensions.x; ++x)
@@ -113,8 +104,7 @@ void PreviewWidgetGroup::UpdateTransform()
 
       PreviewWidget* preview = mPreviewWidgets[index];
 
-      Vec2 translation = ToVec2(IntVec2(x, y)) * itemSize +
-                         ToVec2(IntVec2(x, y)) * Vec2(cPadding, cPadding);
+      Vec2 translation = ToVec2(IntVec2(x, y)) * itemSize + ToVec2(IntVec2(x, y)) * Vec2(cPadding, cPadding);
       preview->SetTranslation(ToVector3(translation));
       preview->SetSize(itemSize);
     }
@@ -128,8 +118,7 @@ Vec2 PreviewWidgetGroup::GetMinSize()
   Vec2 itemSize = GetMinTileSize();
   IntVec2 intDimensions = GetDimensions();
   Vec2 dimension = Math::ToVec2(intDimensions);
-  return itemSize * dimension +
-         Pixels(2, 2) * Math::ToVec2(intDimensions + IntVec2(1, 1));
+  return itemSize * dimension + Pixels(2, 2) * Math::ToVec2(intDimensions + IntVec2(1, 1));
 }
 
 IntVec2 PreviewWidgetGroup::GetDimensions()
@@ -163,7 +152,7 @@ IntVec2 PreviewWidgetGroup::GetDimensions()
 Vec2 PreviewWidgetGroup::GetMinTileSize()
 {
   Vec2 itemSize = Vec2::cZero;
-  forRange(PreviewWidget * preview, mPreviewWidgets.All())
+  forRange (PreviewWidget* preview, mPreviewWidgets.All())
   {
     Vec2 minSize = preview->GetHalfSize();
     itemSize = Math::Max(itemSize, minSize);
@@ -175,20 +164,16 @@ ZilchDefineType(PreviewWidgetFactory, builder, type)
 {
 }
 
-PreviewWidget*
-ResourcePreview::CreatePreviewWidget(Composite* parent,
-                                     StringParam name,
-                                     HandleParam instance,
-                                     PreviewImportance::Enum minImportance)
+PreviewWidget* ResourcePreview::CreatePreviewWidget(Composite* parent,
+                                                    StringParam name,
+                                                    HandleParam instance,
+                                                    PreviewImportance::Enum minImportance)
 {
   PreviewWidgetFactory* tileFactory = PreviewWidgetFactory::GetInstance();
 
   String itemType = instance.StoredType ? instance.StoredType->Name : String();
-  PreviewWidgetCreator defaultEntry(
-      PreviewImportance::None,
-      tileFactory->GetCreator(CoreArchetypes::EmptyTile));
-  PreviewWidgetCreator createTileWidget =
-      tileFactory->Creators.FindValue(itemType, defaultEntry);
+  PreviewWidgetCreator defaultEntry(PreviewImportance::None, tileFactory->GetCreator(CoreArchetypes::EmptyTile));
+  PreviewWidgetCreator createTileWidget = tileFactory->Creators.FindValue(itemType, defaultEntry);
   if (createTileWidget.Creator && createTileWidget.Importance >= minImportance)
   {
     PreviewWidgetInitializer initializer;
@@ -204,13 +189,10 @@ ResourcePreview::CreatePreviewWidget(Composite* parent,
   return nullptr;
 }
 
-PreviewImportance::Enum
-ResourcePreview::GetPreviewImportance(BoundType* resourceType)
+PreviewImportance::Enum ResourcePreview::GetPreviewImportance(BoundType* resourceType)
 {
-  PreviewWidgetFactory::CellEditorMapType& creators =
-      PreviewWidgetFactory::GetInstance()->Creators;
-  PreviewWidgetCreator* createTileWidget =
-      creators.FindPointer(resourceType->Name, nullptr);
+  PreviewWidgetFactory::CellEditorMapType& creators = PreviewWidgetFactory::GetInstance()->Creators;
+  PreviewWidgetCreator* createTileWidget = creators.FindPointer(resourceType->Name, nullptr);
 
   if (createTileWidget == nullptr)
     return PreviewImportance::None;

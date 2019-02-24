@@ -14,10 +14,7 @@ DeclareEnum2(AudioLatency, Low, High);
 class StreamInfo
 {
 public:
-  StreamInfo() :
-      mStatus(StreamStatus::Uninitialized),
-      mChannels(0),
-      mSampleRate(0)
+  StreamInfo() : mStatus(StreamStatus::Uninitialized), mChannels(0), mSampleRate(0)
   {
   }
 
@@ -27,10 +24,7 @@ public:
   unsigned mSampleRate;
 };
 
-void IOCallback(float* outputBuffer,
-                float* inputBuffer,
-                unsigned framesPerBuffer,
-                void* data);
+void IOCallback(float* outputBuffer, float* inputBuffer, unsigned framesPerBuffer, void* data);
 
 // Input Output Interface
 
@@ -109,9 +103,7 @@ private:
   // rate
   unsigned GetBufferSize(unsigned sampleRate, unsigned channels);
   // Initializes the specified RingBuffer at the specified size
-  void InitializeRingBuffer(RingBuffer& ringBuffer,
-                            float* buffer,
-                            unsigned size);
+  void InitializeRingBuffer(RingBuffer& ringBuffer, float* buffer, unsigned size);
 };
 
 } // namespace Zero

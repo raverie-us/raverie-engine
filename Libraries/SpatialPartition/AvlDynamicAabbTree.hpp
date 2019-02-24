@@ -48,8 +48,7 @@ struct AvlDynamicTreeNode
 /// Policy for the AvlDynamicAabbTree that determines
 /// how insertions and removals are handled.
 template <typename ClientDataType>
-struct AvlDynamicTreePolicy
-    : public BaseDynamicTreePolicy<AvlDynamicTreeNode<ClientDataType>>
+struct AvlDynamicTreePolicy : public BaseDynamicTreePolicy<AvlDynamicTreeNode<ClientDataType>>
 {
   typedef AvlDynamicTreeNode<ClientDataType> NodeType;
   typedef ClientDataType ClientDataTypeDef;
@@ -65,9 +64,7 @@ struct AvlDynamicTreePolicy
 
   // Takes the given node and performs an AVL rotation to balance it's children.
   static NodeType* Balance(NodeType*& root, NodeType* node);
-  static NodeType* RotateUp(NodeType*& root,
-                            NodeType* oldParent,
-                            uint childIndex);
+  static NodeType* RotateUp(NodeType*& root, NodeType* oldParent, uint childIndex);
   static void FixAabbAndHeight(NodeType* node);
 };
 
@@ -77,8 +74,7 @@ struct AvlDynamicTreePolicy
 /// normal update is decently fast.
 /// This tree uses Avl rotations to balance itself.
 template <typename ClientDataType>
-class AvlDynamicAabbTree
-    : public BaseDynamicAabbTree<AvlDynamicTreePolicy<ClientDataType>>
+class AvlDynamicAabbTree : public BaseDynamicAabbTree<AvlDynamicTreePolicy<ClientDataType>>
 {
 public:
   typedef AvlDynamicAabbTree<ClientDataType> TreeType;

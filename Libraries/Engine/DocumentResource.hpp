@@ -61,22 +61,18 @@ class ICodeEditor
 public:
   /// Tells the text editor to show an auto-complete dialog at the current
   /// cursor position
-  virtual void ShowAutoComplete(Array<Completion>& completions,
-                                CompletionConfidence::Enum confidence) = 0;
+  virtual void ShowAutoComplete(Array<Completion>& completions, CompletionConfidence::Enum confidence) = 0;
 
   /// If the option is enabled, we will add local word completions from the
   /// current document (or do nothing)
-  virtual void
-  AttemptAddLocalWordCompletions(Array<Completion>& completions) = 0;
+  virtual void AttemptAddLocalWordCompletions(Array<Completion>& completions) = 0;
 
   /// Tells the text editor to hide any auto-complete dialogs
   virtual void HideAutoComplete() = 0;
 
   /// Tells the text editor to show a call-tip at the current cursor position
   /// (supports overloads)
-  virtual void ShowCallTips(Array<CallTip>& tips,
-                            StringParam functionName,
-                            size_t parameterIndex) = 0;
+  virtual void ShowCallTips(Array<CallTip>& tips, StringParam functionName, size_t parameterIndex) = 0;
 
   /// Tells the text editor to hide any call-tips
   virtual void HideCallTips() = 0;
@@ -156,15 +152,11 @@ public:
 
   /// Attempts to go to the definition at the cursor position (type, member,
   /// variable, etc)
-  virtual void AttemptGetDefinition(ICodeEditor* editor,
-                                    size_t cursorPosition,
-                                    CodeDefinition& definition);
+  virtual void AttemptGetDefinition(ICodeEditor* editor, size_t cursorPosition, CodeDefinition& definition);
 
   /// When generating the Zero.Connect function, where should we put it?
   /// Set positionOut to -1 if you are unable to find a position
-  virtual void FindPositionToGenerateFunction(ICodeEditor* editor,
-                                              int& positionOut,
-                                              String& indent);
+  virtual void FindPositionToGenerateFunction(ICodeEditor* editor, int& positionOut, String& indent);
 
   /// Generate the definition of a function
   virtual String GenerateConnectCallEnd(StringParam functionName);
@@ -173,8 +165,7 @@ public:
   /// The cursor will be placed directly after this part
   /// Use the tab character to indicate indenting (will be replaced with the
   /// editor's settings)
-  virtual String GenerateConnectFunctionStart(StringParam functionName,
-                                              StringParam eventType);
+  virtual String GenerateConnectFunctionStart(StringParam functionName, StringParam eventType);
 
   /// Generate the last part of a definition of a function
   /// The cursor will be placed directly before this part
@@ -184,8 +175,7 @@ public:
 
   /// Queries an expressions current value if we're running in a debugger (may
   /// return an empty Any)
-  virtual Any QueryExpression(StringParam expression,
-                              Array<QueryResult>& results);
+  virtual Any QueryExpression(StringParam expression, Array<QueryResult>& results);
 
   /// Attempts to set a breakpoint (returns true if a breakpoint is set, false
   /// otherwise).
@@ -211,31 +201,25 @@ public:
 
   /// Indents if the last character matches
   /// Returns true if it's handled, false otherwise
-  static bool IndentOnNewlineWhenLastCharacterIs(ICodeEditor* editor,
-                                                 Rune added,
-                                                 Rune lookFor);
+  static bool IndentOnNewlineWhenLastCharacterIs(ICodeEditor* editor, Rune added, Rune lookFor);
 
   /// Unindents when we type a certain character
   /// Returns true if it's handled, false otherwise
-  static bool UnindentOnCharacter(ICodeEditor* editor,
-                                  Rune added,
-                                  Rune lookFor);
+  static bool UnindentOnCharacter(ICodeEditor* editor, Rune added, Rune lookFor);
 
   /// Takes a meta method and populates a call tip (always attempts to look for
   /// a DocMethod first)
-  static void AddCallTipFromMetaMethod(Array<CallTip>& tips,
-                                       BoundType* owner,
-                                       Zilch::Function* method);
+  static void AddCallTipFromMetaMethod(Array<CallTip>& tips, BoundType* owner, Zilch::Function* method);
 
   /// Takes a meta method and populates a call tip (always attempts to look for
   /// a DocMethod first)
-  static void AddCompletionsFromMetaType(Array<Completion>& completions,
-                                         BoundType* type);
+  static void AddCompletionsFromMetaType(Array<Completion>& completions, BoundType* type);
 
   /// Parses an argument list string into types and parameter names
   /// An argument list string takes the form of '(int lives, float speed)'
-  static void AddCallTipParametersFromArgumentString(
-      CallTip& tip, StringRange arguments, ArgumentOptions::Type options);
+  static void AddCallTipParametersFromArgumentString(CallTip& tip,
+                                                     StringRange arguments,
+                                                     ArgumentOptions::Type options);
 };
 
 /// Resource that can be edited as text and is searchable.

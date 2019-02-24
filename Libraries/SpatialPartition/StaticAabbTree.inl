@@ -30,8 +30,7 @@ void StaticAabbTree<ClientDataType>::Serialize(Serializer& stream)
 }
 
 template <typename ClientDataType>
-void StaticAabbTree<ClientDataType>::CreateProxy(BroadPhaseProxy& proxy,
-                                                 DataType& data)
+void StaticAabbTree<ClientDataType>::CreateProxy(BroadPhaseProxy& proxy, DataType& data)
 {
   // Allocate a new node and set the leaf to be the data passed in.
   // The proxy is a pointer to the node. Don't change the tree yet though,
@@ -53,8 +52,7 @@ void StaticAabbTree<ClientDataType>::RemoveProxy(BroadPhaseProxy& proxy)
 }
 
 template <typename ClientDataType>
-void StaticAabbTree<ClientDataType>::UpdateProxy(BroadPhaseProxy& proxy,
-                                                 DataType& data)
+void StaticAabbTree<ClientDataType>::UpdateProxy(BroadPhaseProxy& proxy, DataType& data)
 {
   // just set the new data on the node, a new construction has to take
   // place to update the tree though
@@ -66,8 +64,7 @@ void StaticAabbTree<ClientDataType>::UpdateProxy(BroadPhaseProxy& proxy,
 }
 
 template <typename ClientDataType>
-ClientDataType&
-StaticAabbTree<ClientDataType>::GetClientData(BroadPhaseProxy& proxy)
+ClientDataType& StaticAabbTree<ClientDataType>::GetClientData(BroadPhaseProxy& proxy)
 {
   NodePointer node = (NodePointer)proxy.ToVoidPointer();
   return node->mClientData;
@@ -181,9 +178,7 @@ void StaticAabbTree<ClientDataType>::Draw(int level, uint debugFlags)
 }
 
 template <typename ClientDataType>
-void StaticAabbTree<ClientDataType>::DrawLevel(NodePointer node,
-                                               uint currLevel,
-                                               uint level)
+void StaticAabbTree<ClientDataType>::DrawLevel(NodePointer node, uint currLevel, uint level)
 {
   if (node == nullptr)
     return;
@@ -199,8 +194,7 @@ void StaticAabbTree<ClientDataType>::DrawLevel(NodePointer node,
 }
 
 template <typename ClientDataType>
-void StaticAabbTree<ClientDataType>::SetPartitionMethod(
-    PartitionMethods::Enum method)
+void StaticAabbTree<ClientDataType>::SetPartitionMethod(PartitionMethods::Enum method)
 {
   mPartitionMethod = method;
   if (mPartitionMethod == PartitionMethods::MinimizeVolumeSum)
@@ -224,8 +218,7 @@ void StaticAabbTree<ClientDataType>::DrawTree(NodePointer node)
 }
 
 template <typename ClientDataType>
-void StaticAabbTree<ClientDataType>::DeleteInternalNodes(
-    Array<NodePointer>& leafNodes)
+void StaticAabbTree<ClientDataType>::DeleteInternalNodes(Array<NodePointer>& leafNodes)
 {
   if (mRoot == nullptr)
     return;

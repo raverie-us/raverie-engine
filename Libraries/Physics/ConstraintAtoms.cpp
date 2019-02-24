@@ -27,16 +27,12 @@ WorldAnchorAtom::WorldAnchorAtom(const AnchorAtom& anchor, Joint* joint)
   SetUp(anchor, joint->GetCollider(0), joint->GetCollider(1));
 }
 
-WorldAnchorAtom::WorldAnchorAtom(const AnchorAtom& anchor,
-                                 Collider* obj1,
-                                 Collider* obj2)
+WorldAnchorAtom::WorldAnchorAtom(const AnchorAtom& anchor, Collider* obj1, Collider* obj2)
 {
   SetUp(anchor, obj1, obj2);
 }
 
-void WorldAnchorAtom::SetUp(const AnchorAtom& anchor,
-                            Collider* obj1,
-                            Collider* obj2)
+void WorldAnchorAtom::SetUp(const AnchorAtom& anchor, Collider* obj1, Collider* obj2)
 {
   mWorldR[0] = JointHelpers::BodyRToCenterMassR(obj1, anchor.mBodyR[0]);
   mWorldR[1] = JointHelpers::BodyRToCenterMassR(obj2, anchor.mBodyR[1]);
@@ -50,9 +46,7 @@ Vec3 WorldAnchorAtom::GetPointDifference() const
   return mWorldPoints[1] - mWorldPoints[0];
 }
 
-WorldAxisAtom::WorldAxisAtom(const AxisAtom& axes,
-                             Collider* obj1,
-                             Collider* obj2)
+WorldAxisAtom::WorldAxisAtom(const AxisAtom& axes, Collider* obj1, Collider* obj2)
 {
   mWorldAxes[0] = JointHelpers::BodyToWorldR(obj1, axes.mBodyAxes[0]);
   mWorldAxes[1] = JointHelpers::BodyToWorldR(obj2, axes.mBodyAxes[1]);
@@ -73,9 +67,7 @@ WorldAngleAtom::WorldAngleAtom()
   mEulerAngles.ZeroOut();
 }
 
-WorldAngleAtom::WorldAngleAtom(const AngleAtom& refAngle,
-                               Collider* obj1,
-                               Collider* obj2)
+WorldAngleAtom::WorldAngleAtom(const AngleAtom& refAngle, Collider* obj1, Collider* obj2)
 {
   Quat obj1Rotation = Math::ToQuaternion(obj1->GetWorldRotation());
   Quat obj2Rotation = Math::ToQuaternion(obj2->GetWorldRotation());

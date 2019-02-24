@@ -55,15 +55,10 @@ public:
   /// How wide is the given string
   Vec2 MeasureText(StringRange text, float unitsPerPixel = 1.0f);
   /// How wide this the given string up to count
-  Vec2 MeasureText(StringRange text,
-                   uint charsToCount,
-                   float unitsPerPixel = 1.0f);
+  Vec2 MeasureText(StringRange text, uint charsToCount, float unitsPerPixel = 1.0f);
   /// How far in the string is the given position?
   /// The character found can be rounded up to nearest or last valid.
-  uint GetPosition(StringRange text,
-                   float offset,
-                   float unitsPerPixel,
-                   TextRounding::Enum rounding);
+  uint GetPosition(StringRange text, float offset, float unitsPerPixel, TextRounding::Enum rounding);
 
   // We need to keep track of what font is being used for at use loading of
   // symbols
@@ -127,8 +122,7 @@ public:
 
   RenderFont* RasterNewFont(int fontHeight);
   RenderFont* UpdateRasteredFont(RenderFont* existingFont, Rune newRuneCode);
-  RenderFont* UpdateRasteredFont(RenderFont* existingFont,
-                                 Array<int>& newRuneCodes);
+  RenderFont* UpdateRasteredFont(RenderFont* existingFont, Array<int>& newRuneCodes);
 
   // Must be called within RasterNewFont or UpdateReasteredFont before
   // additional calls this is better than constantly passing the RenderFont into

@@ -11,25 +11,10 @@ public:
   BitField<ShaderStage::Enum> mSupportedStages;
 };
 
-DeclareEnum7(CompositorShaderStage,
-             Cpu,
-             Vertex,
-             PreTesselation,
-             PostTesselation,
-             Geometry,
-             Pixel,
-             Gpu);
-DeclareEnum7(LinkedFieldType,
-             None,
-             Fragment,
-             Stage,
-             AppBuiltIn,
-             HardwareBuiltIn,
-             Property,
-             SpecConstant);
+DeclareEnum7(CompositorShaderStage, Cpu, Vertex, PreTesselation, PostTesselation, Geometry, Pixel, Gpu);
+DeclareEnum7(LinkedFieldType, None, Fragment, Stage, AppBuiltIn, HardwareBuiltIn, Property, SpecConstant);
 
-CompositorShaderStage::Enum
-FragmentTypeToCompostitorShaderStage(FragmentType::Enum fragmentType);
+CompositorShaderStage::Enum FragmentTypeToCompostitorShaderStage(FragmentType::Enum fragmentType);
 
 class CompositorCallbackData;
 
@@ -62,12 +47,10 @@ public:
     /// The fields that were resolved as inputs.
     /// @JoshD: Currently this doesn't include non-copyable types (samplers).
     /// Should this?
-    OrderedHashMap<ShaderIRFieldMeta*, ShaderFieldDescription>
-        mFieldDescriptions;
+    OrderedHashMap<ShaderIRFieldMeta*, ShaderFieldDescription> mFieldDescriptions;
   };
   /// A helper class that manages memory.
-  struct FragmentDescriptionMap
-      : public OrderedHashMap<ShaderIRTypeMeta*, ShaderFragmentDescription*>
+  struct FragmentDescriptionMap : public OrderedHashMap<ShaderIRTypeMeta*, ShaderFragmentDescription*>
   {
     // An intrusive reference count for memory handling
     ZilchRefLink(FragmentDescriptionMap);
@@ -132,16 +115,13 @@ public:
   struct FragmentLinkingInfo;
   struct ExpectedOutputData;
 
-  void CollectFragmentsPerStage(Array<ZilchShaderIRType*>& inputFragments,
-                                CompositedShaderInfo& compositeInfo);
+  void CollectFragmentsPerStage(Array<ZilchShaderIRType*>& inputFragments, CompositedShaderInfo& compositeInfo);
   bool ValidateStages(CompositedShaderInfo& compositeInfo);
   void CollectExpectedOutputs(CompositedShaderInfo& compositeInfo);
-  void CollectExpectedOutputs(Array<ZilchShaderIRType*>& fragmentTypes,
-                              StageAttachmentLinkingInfo& linkingInfo);
+  void CollectExpectedOutputs(Array<ZilchShaderIRType*>& fragmentTypes, StageAttachmentLinkingInfo& linkingInfo);
   void CreateCpuStage(CompositedShaderInfo& compositeInfo);
 
-  void ResolveInputs(StageLinkingInfo* previousStage,
-                     StageLinkingInfo* currentStage);
+  void ResolveInputs(StageLinkingInfo* previousStage, StageLinkingInfo* currentStage);
   void Link(StageAttachmentLinkingInfo& prevStageInfo,
             StageLinkingInfo* currentStage,
             Array<ZilchShaderIRType*>& fragmentTypes,
@@ -150,17 +130,12 @@ public:
                      StageAttachmentLinkingInfo* currentStage,
                      StringParam fieldVarName,
                      StringParam fieldAttributeName);
-  ShaderIRFieldMeta* FindUniform(ShaderFieldKey& fieldKey,
-                                 FragmentType::Enum fragmentType);
-  ShaderIRFieldMeta* FindHardwareBuiltInInput(ShaderFieldKey& fieldKey,
-                                              FragmentType::Enum fragmentType);
-  ShaderIRFieldMeta* FindHardwareBuiltInOutput(ShaderFieldKey& fieldKey,
-                                               FragmentType::Enum fragmentType);
-  ShaderFieldKey MakeFieldKey(ShaderIRFieldMeta* fieldMeta,
-                              ShaderIRAttribute* attribute);
+  ShaderIRFieldMeta* FindUniform(ShaderFieldKey& fieldKey, FragmentType::Enum fragmentType);
+  ShaderIRFieldMeta* FindHardwareBuiltInInput(ShaderFieldKey& fieldKey, FragmentType::Enum fragmentType);
+  ShaderIRFieldMeta* FindHardwareBuiltInOutput(ShaderFieldKey& fieldKey, FragmentType::Enum fragmentType);
+  ShaderFieldKey MakeFieldKey(ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* attribute);
   static String MakePropertyName(StringParam fieldName, StringParam ownerType);
-  static String GetFieldInOutName(ShaderIRFieldMeta* fieldMeta,
-                                  ShaderIRAttribute* attribute);
+  static String GetFieldInOutName(ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* attribute);
   static void GetStageFieldName(ShaderIRFieldMeta* fieldMeta,
                                 ShaderIRAttribute* attribute,
                                 String& fieldVarNameOut,
@@ -195,8 +170,7 @@ public:
                                   StringParam attributeName);
   String MakeFragmentVarName(ShaderIRTypeMeta* typeMeta);
 
-  void GenerateStageDescriptions(CompositedShaderInfo& compositeInfo,
-                                 ShaderDefinition& shaderDef);
+  void GenerateStageDescriptions(CompositedShaderInfo& compositeInfo, ShaderDefinition& shaderDef);
 
   ZilchShaderSpirVSettingsRef mSettings;
   ShaderCapabilities mCapabilities;
@@ -234,8 +208,7 @@ public:
   struct FragmentLinkingInfo
   {
     void CopyTo(ShaderFragmentDescription& fragDesc);
-    void CopyFieldTo(FieldLinkingInfo& fieldInfo,
-                     ShaderFragmentDescription& fragDesc);
+    void CopyFieldTo(FieldLinkingInfo& fieldInfo, ShaderFragmentDescription& fragDesc);
 
     ShaderIRTypeMeta* mMeta;
     HashMap<ShaderFieldKey, FieldLinkingInfo> mFieldMap;
@@ -268,8 +241,7 @@ public:
   struct ResolvedFieldOutputInfo
   {
     ResolvedFieldOutputInfo();
-    ResolvedFieldOutputInfo(StringParam fieldName,
-                            ShaderIRFieldMeta* outputDependency);
+    ResolvedFieldOutputInfo(StringParam fieldName, ShaderIRFieldMeta* outputDependency);
 
     String mFieldName;
     ShaderIRFieldMeta* mOutputFieldDependency;
@@ -302,10 +274,8 @@ public:
   {
     StageAttachmentLinkingInfo();
 
-    void AddResolvedField(ShaderIRFieldMeta* fieldMeta,
-                          StringParam attributeName);
-    void AddResolvedFieldProperty(ShaderIRFieldMeta* fieldMeta,
-                                  ShaderIRAttribute* attribute);
+    void AddResolvedField(ShaderIRFieldMeta* fieldMeta, StringParam attributeName);
+    void AddResolvedFieldProperty(ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* attribute);
     void AddResolvedStageField(SpirVNameSettings& nameSettings,
                                ShaderIRFieldMeta* fieldMeta,
                                StringParam fieldName,
@@ -313,15 +283,12 @@ public:
                                StringParam attributeParameter);
     // Create or return a field by the given name/type. Creates or finds the
     // attribute by the given name and returns it.
-    ShaderIRAttribute* AddResolvedField(StringParam fieldName,
-                                        StringParam fieldType,
-                                        StringParam attributeName);
+    ShaderIRAttribute* AddResolvedField(StringParam fieldName, StringParam fieldType, StringParam attributeName);
 
     // Internal helper that creates a resolved field by name and type.
     // Returns a pointer to the created field (should not be stored, the pointer
     // is not safe).
-    ResolvedFieldInfo* CreateResolvedField(StringParam fieldName,
-                                           StringParam fieldType);
+    ResolvedFieldInfo* CreateResolvedField(StringParam fieldName, StringParam fieldType);
 
     /// Potential output from a this stage. These may become outputs if a later
     /// stage inputs them.
@@ -391,8 +358,7 @@ public:
   };
 
   // Default callback zero uses for api perspective position.
-  static void ApiPerspectivePositionCallback(
-      CompositorCallbackData& callbackData, void* userData);
+  static void ApiPerspectivePositionCallback(CompositorCallbackData& callbackData, void* userData);
 };
 
 class CompositorCallbackData

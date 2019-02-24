@@ -39,8 +39,7 @@ DeclareEvent(CurveDoubleClicked);
 
 namespace CurveEditing
 {
-DeclareBitField4(
-    CurveEditorFlags, TangentsSplit, LinearIn, LinearOut, NonWeighted);
+DeclareBitField4(CurveEditorFlags, TangentsSplit, LinearIn, LinearOut, NonWeighted);
 class CurveEditorToolbar;
 class Draggable;
 class ControlPoint;
@@ -82,10 +81,8 @@ public:
   virtual void GetCurve(Vec3Array& curve);
 
   /// Creates a control point and adds it to the curve.
-  ControlPoint* CreateControlPoint(Vec2Param pos,
-                                   Vec2Param tanIn,
-                                   Vec2Param tanOut,
-                                   CurveEditing::CurveEditorFlags::Type flags);
+  ControlPoint*
+  CreateControlPoint(Vec2Param pos, Vec2Param tanIn, Vec2Param tanOut, CurveEditing::CurveEditorFlags::Type flags);
 
   /// Returns whether or not the mouse is over the curve.
   bool IsMouseOver(Vec2Param pixelPos);
@@ -108,8 +105,7 @@ public:
   float GetCurrentLineThickness();
 
   /// Dispatches an event of type CurveEvent.
-  void DispatchCurveEvent(StringParam eventName,
-                          ControlPoint* controlPoint = NULL);
+  void DispatchCurveEvent(StringParam eventName, ControlPoint* controlPoint = NULL);
 
   void Modified(ControlPoint* controlPoint);
 
@@ -376,11 +372,7 @@ public:
   ZilchDeclareType(ControlPoint, TypeCopyMode::ReferenceType);
 
   /// Constructor / destructor.
-  ControlPoint(CurveObject* parent,
-               Vec2Param pos,
-               Vec2Param tanIn,
-               Vec2Param tanOut,
-               uint editorFlags = 0);
+  ControlPoint(CurveObject* parent, Vec2Param pos, Vec2Param tanIn, Vec2Param tanOut, uint editorFlags = 0);
   ~ControlPoint();
 
   /// Widget Interface.
@@ -450,10 +442,7 @@ public:
   ZilchDeclareType(Tangent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
-  Tangent(CurveObject* curve,
-          ControlPoint* controlPoint,
-          Vec2Param direction,
-          TangentSide::Type side);
+  Tangent(CurveObject* curve, ControlPoint* controlPoint, Vec2Param direction, TangentSide::Type side);
 
   /// Position setting. Setting either pixel or graph position will properly
   /// Update both the graph and pixel directions based on the current mode.
@@ -505,14 +494,8 @@ public:
                     ColorTransform colorTx,
                     WidgetRect clipRect) override;
 
-  void AddCurve(ViewBlock& viewBlock,
-                FrameBlock& frameBlock,
-                WidgetRect clipRect,
-                CurveObject* curveObject);
-  void AddControlPoints(ViewBlock& viewBlock,
-                        FrameBlock& frameBlock,
-                        WidgetRect clipRect,
-                        CurveObject* curveObject);
+  void AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, CurveObject* curveObject);
+  void AddControlPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, CurveObject* curveObject);
   void AddPoint(Array<StreamedVertex>& lines,
                 Array<StreamedVertex>& triangles,
                 Vec3Param pos,

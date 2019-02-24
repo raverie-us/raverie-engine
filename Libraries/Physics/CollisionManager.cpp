@@ -17,16 +17,11 @@ struct InternalImplementation
   template <typename ColliderType>
   void OverrideCastsWithComplex(uint colliderType)
   {
-    mRayCastLookup.OverrideLookup(ComplexCastVsShape<Ray, ColliderType>,
-                                  colliderType);
-    mSegmentCastLookup.OverrideLookup(ComplexCastVsShape<Segment, ColliderType>,
-                                      colliderType);
-    mAabbCastLookup.OverrideLookup(ComplexCastVsShape<Aabb, ColliderType>,
-                                   colliderType);
-    mSphereCastLookup.OverrideLookup(ComplexCastVsShape<Sphere, ColliderType>,
-                                     colliderType);
-    mFrustumCastLookup.OverrideLookup(ComplexCastVsShape<Frustum, ColliderType>,
-                                      colliderType);
+    mRayCastLookup.OverrideLookup(ComplexCastVsShape<Ray, ColliderType>, colliderType);
+    mSegmentCastLookup.OverrideLookup(ComplexCastVsShape<Segment, ColliderType>, colliderType);
+    mAabbCastLookup.OverrideLookup(ComplexCastVsShape<Aabb, ColliderType>, colliderType);
+    mSphereCastLookup.OverrideLookup(ComplexCastVsShape<Sphere, ColliderType>, colliderType);
+    mFrustumCastLookup.OverrideLookup(ComplexCastVsShape<Frustum, ColliderType>, colliderType);
   }
 
   // testing a sub object of a collider (was used in complex colliders, not used
@@ -61,8 +56,7 @@ CollisionManager::CollisionManager()
   // selected.
   for (uint i = Collider::cCylinder; i < (uint)Collider::cSize; ++i)
   {
-    mInternals->mFrustumCastLookup.OverrideLookup(CastVsShape<Frustum, Aabb>,
-                                                  i);
+    mInternals->mFrustumCastLookup.OverrideLookup(CastVsShape<Frustum, Aabb>, i);
   }
 
   // replace the default of all complex shapes to aabb
@@ -70,38 +64,27 @@ CollisionManager::CollisionManager()
   for (uint i = Collider::cMesh; i < (uint)Collider::cSize; ++i)
   {
     mInternals->mRayCastLookup.OverrideLookup(CastVsShape<Ray, Aabb>, i);
-    mInternals->mSegmentCastLookup.OverrideLookup(CastVsShape<Segment, Aabb>,
-                                                  i);
+    mInternals->mSegmentCastLookup.OverrideLookup(CastVsShape<Segment, Aabb>, i);
     mInternals->mAabbCastLookup.OverrideLookup(CastVsShape<Aabb, Aabb>, i);
     mInternals->mSphereCastLookup.OverrideLookup(CastVsShape<Sphere, Aabb>, i);
   }
 
   // replace all of the cast functions for the complex shapes
-  mInternals->OverrideCastsWithComplex<ConvexMeshCollider>(
-      Collider::cConvexMesh);
-  mInternals->OverrideCastsWithComplex<MultiConvexMeshCollider>(
-      Collider::cMultiConvexMesh);
+  mInternals->OverrideCastsWithComplex<ConvexMeshCollider>(Collider::cConvexMesh);
+  mInternals->OverrideCastsWithComplex<MultiConvexMeshCollider>(Collider::cMultiConvexMesh);
   mInternals->OverrideCastsWithComplex<MeshCollider>(Collider::cMesh);
   mInternals->OverrideCastsWithComplex<HeightMapCollider>(Collider::cHeightMap);
   // special override so it goes through the mesh's midphase
-  mInternals->mRayCastLookup.OverrideLookup(
-      SpecialComplexCastVsShape<Ray, MultiConvexMeshCollider>,
-      Collider::cMultiConvexMesh);
-  mInternals->mRayCastLookup.OverrideLookup(
-      SpecialComplexCastVsShape<Ray, MeshCollider>, Collider::cMesh);
-  mInternals->mRayCastLookup.OverrideLookup(
-      SpecialComplexCastVsShape<Ray, HeightMapCollider>, Collider::cHeightMap);
+  mInternals->mRayCastLookup.OverrideLookup(SpecialComplexCastVsShape<Ray, MultiConvexMeshCollider>,
+                                            Collider::cMultiConvexMesh);
+  mInternals->mRayCastLookup.OverrideLookup(SpecialComplexCastVsShape<Ray, MeshCollider>, Collider::cMesh);
+  mInternals->mRayCastLookup.OverrideLookup(SpecialComplexCastVsShape<Ray, HeightMapCollider>, Collider::cHeightMap);
   // override the complex collision tests for the world mesh and multi collider
-  mInternals->mCollisionTable.OverrideComplexDefaults<MultiConvexMeshCollider>(
-      Collider::cMultiConvexMesh);
-  mInternals->mCollisionTable.OverrideComplexDefaults<MeshCollider>(
-      Collider::cMesh);
-  mInternals->mCollisionTable.OverrideComplexDefaults<HeightMapCollider>(
-      Collider::cHeightMap);
+  mInternals->mCollisionTable.OverrideComplexDefaults<MultiConvexMeshCollider>(Collider::cMultiConvexMesh);
+  mInternals->mCollisionTable.OverrideComplexDefaults<MeshCollider>(Collider::cMesh);
+  mInternals->mCollisionTable.OverrideComplexDefaults<HeightMapCollider>(Collider::cHeightMap);
   // override complex vs complex defaults
-  mInternals->mCollisionTable
-      .OverrideComplexComplexDefaults<MultiConvexMeshCollider>(
-          Collider::cMultiConvexMesh);
+  mInternals->mCollisionTable.OverrideComplexComplexDefaults<MultiConvexMeshCollider>(Collider::cMultiConvexMesh);
 }
 
 CollisionManager::~CollisionManager()
@@ -109,8 +92,7 @@ CollisionManager::~CollisionManager()
   SafeDelete(mInternals);
 }
 
-bool CollisionManager::TestCollision(ColliderPair& pair,
-                                     ManifoldArray& manifolds)
+bool CollisionManager::TestCollision(ColliderPair& pair, ManifoldArray& manifolds)
 {
   // make sure to determine if we even need to test these objects
   //(without this, composites that are in contact with their children will
@@ -121,28 +103,19 @@ bool CollisionManager::TestCollision(ColliderPair& pair,
   return mInternals->mCollisionTable.Collide(pair.Top, pair.Bot, &manifolds);
 }
 
-bool CollisionManager::ForceTestCollision(ColliderPair& pair,
-                                          ManifoldArray& manifolds)
+bool CollisionManager::ForceTestCollision(ColliderPair& pair, ManifoldArray& manifolds)
 {
   return mInternals->mCollisionTable.Collide(pair.Top, pair.Bot, &manifolds);
 }
 
-bool CollisionManager::CollideShapes(Aabb& aabb,
-                                     Collider* aabbCollider,
-                                     Collider* otherCollider,
-                                     Manifold* manifold)
+bool CollisionManager::CollideShapes(Aabb& aabb, Collider* aabbCollider, Collider* otherCollider, Manifold* manifold)
 {
-  return mInternals->mAabbLookups.Collide(
-      aabb, aabbCollider, otherCollider, manifold);
+  return mInternals->mAabbLookups.Collide(aabb, aabbCollider, otherCollider, manifold);
 }
 
-bool CollisionManager::CollideShapes(Triangle& tri,
-                                     Collider* triCollider,
-                                     Collider* otherCollider,
-                                     Manifold* manifold)
+bool CollisionManager::CollideShapes(Triangle& tri, Collider* triCollider, Collider* otherCollider, Manifold* manifold)
 {
-  return mInternals->mTriangleLookups.Collide(
-      tri, triCollider, otherCollider, manifold);
+  return mInternals->mTriangleLookups.Collide(tri, triCollider, otherCollider, manifold);
 }
 
 bool CollisionManager::TestIntersection(Collider* collider, Vec3Param point)
@@ -162,8 +135,7 @@ bool CollisionManager::TestRayVsObject(void* userData,
 {
   // Cast the data to a collider.
   Collider* collider = static_cast<Collider*>(userData);
-  return mInternals->mRayCastLookup.Cast(
-      castData.GetRay(), collider, &result, filter);
+  return mInternals->mRayCastLookup.Cast(castData.GetRay(), collider, &result, filter);
 }
 
 bool CollisionManager::TestSegmentVsObject(void* userData,
@@ -173,8 +145,7 @@ bool CollisionManager::TestSegmentVsObject(void* userData,
 {
   // Cast the data to a collider.
   Collider* collider = static_cast<Collider*>(userData);
-  return mInternals->mSegmentCastLookup.Cast(
-      castData.GetSegment(), collider, &result, filter);
+  return mInternals->mSegmentCastLookup.Cast(castData.GetSegment(), collider, &result, filter);
 }
 
 // Tests a given collider (userData) against an AABB.
@@ -185,8 +156,7 @@ bool CollisionManager::TestAabbVsObject(void* userData,
 {
   // Cast the data to a collider.
   Collider* collider = static_cast<Collider*>(userData);
-  return mInternals->mAabbCastLookup.Cast(
-      castData.GetAabb(), collider, &result, filter);
+  return mInternals->mAabbCastLookup.Cast(castData.GetAabb(), collider, &result, filter);
 }
 
 // Tests a given collider (userData) against a Sphere.
@@ -197,8 +167,7 @@ bool CollisionManager::TestSphereVsObject(void* userData,
 {
   // Cast the data to a collider.
   Collider* collider = static_cast<Collider*>(userData);
-  return mInternals->mSphereCastLookup.Cast(
-      castData.GetSphere(), collider, &result, filter);
+  return mInternals->mSphereCastLookup.Cast(castData.GetSphere(), collider, &result, filter);
 }
 
 // Casts a Frustum against an object. Distance is the distance to the first
@@ -210,8 +179,7 @@ bool CollisionManager::TestFrustumVsObject(void* userData,
 {
   // Cast the data to a collider.
   Collider* collider = static_cast<Collider*>(userData);
-  return mInternals->mFrustumCastLookup.Cast(
-      castData.GetFrustum(), collider, &result, filter);
+  return mInternals->mFrustumCastLookup.Cast(castData.GetFrustum(), collider, &result, filter);
 }
 
 } // namespace Physics

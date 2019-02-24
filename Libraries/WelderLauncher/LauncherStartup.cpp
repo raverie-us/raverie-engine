@@ -25,7 +25,7 @@ bool LoadLauncherContent()
   coreLibs.PushBack("ZeroCore");
   coreLibs.PushBack("ZeroLauncherResources");
 
-  forRange(String libraryName, coreLibs.All())
+  forRange (String libraryName, coreLibs.All())
   {
     coreContent = coreContent && LoadContentLibrary(libraryName, true);
   }

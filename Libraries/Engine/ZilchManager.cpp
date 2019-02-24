@@ -18,15 +18,14 @@ ZilchDefineType(ZilchCompileEvent, builder, type)
 {
 }
 
-ZilchCompileEvent::ZilchCompileEvent(
-    HashSet<ResourceLibrary*>& modifiedLibraries) :
+ZilchCompileEvent::ZilchCompileEvent(HashSet<ResourceLibrary*>& modifiedLibraries) :
     mModifiedLibraries(modifiedLibraries)
 {
 }
 
 bool ZilchCompileEvent::WasTypeModified(BoundType* type)
 {
-  forRange(ResourceLibrary * lib, mModifiedLibraries.All())
+  forRange (ResourceLibrary* lib, mModifiedLibraries.All())
   {
     if (lib->BuiltType(type))
       return true;
@@ -40,7 +39,7 @@ BoundType* ZilchCompileEvent::GetReplacingType(BoundType* oldType)
   if (!WasTypeModified(oldType))
     return nullptr;
 
-  forRange(ResourceLibrary * lib, mModifiedLibraries.All())
+  forRange (ResourceLibrary* lib, mModifiedLibraries.All())
   {
     if (BoundType* newType = lib->GetReplacingType(oldType))
       return newType;
@@ -57,26 +56,11 @@ ZilchManager::ZilchManager() :
 {
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
 
-  EventConnect(&mDebugger,
-               Zilch::Events::DebuggerPause,
-               &ZilchManager::OnDebuggerPause,
-               this,
-               &mDebugger);
-  EventConnect(&mDebugger,
-               Zilch::Events::DebuggerResume,
-               &ZilchManager::OnDebuggerResume,
-               this,
-               &mDebugger);
-  EventConnect(&mDebugger,
-               Zilch::Events::DebuggerPauseUpdate,
-               &ZilchManager::OnDebuggerPauseUpdate,
-               this,
-               &mDebugger);
-  EventConnect(&mDebugger,
-               Zilch::Events::DebuggerBreakNotAllowed,
-               &ZilchManager::OnDebuggerBreakNotAllowed,
-               this,
-               &mDebugger);
+  EventConnect(&mDebugger, Zilch::Events::DebuggerPause, &ZilchManager::OnDebuggerPause, this, &mDebugger);
+  EventConnect(&mDebugger, Zilch::Events::DebuggerResume, &ZilchManager::OnDebuggerResume, this, &mDebugger);
+  EventConnect(&mDebugger, Zilch::Events::DebuggerPauseUpdate, &ZilchManager::OnDebuggerPauseUpdate, this, &mDebugger);
+  EventConnect(
+      &mDebugger, Zilch::Events::DebuggerBreakNotAllowed, &ZilchManager::OnDebuggerBreakNotAllowed, this, &mDebugger);
 }
 
 void ZilchManager::TriggerCompileExternally()
@@ -92,8 +76,7 @@ void ZilchManager::InternalCompile()
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Zilch",
-                    "Cannot recompile scripts while in read-only mode.");
+    DoNotifyWarning("Zilch", "Cannot recompile scripts while in read-only mode.");
     return;
   }
 
@@ -101,8 +84,7 @@ void ZilchManager::InternalCompile()
     return;
   mShouldAttemptCompile = false;
 
-  forRange(ResourceLibrary * resourceLibrary,
-           Z::gResources->LoadedResourceLibraries.Values())
+  forRange (ResourceLibrary* resourceLibrary, Z::gResources->LoadedResourceLibraries.Values())
   {
     if (resourceLibrary->CompileScripts(mPendingLibraries) == false)
     {
@@ -136,12 +118,11 @@ void ZilchManager::InternalCompile()
   this->DispatchEvent(Events::ScriptsCompiledCommit, &compileEvent);
 
   // Unload ALL affected libraries before committing any of them.
-  forRange(ResourceLibrary * resourceLibrary,
-           compileEvent.mModifiedLibraries.All())
-      resourceLibrary->PreCommitUnload();
+  forRange (ResourceLibrary* resourceLibrary, compileEvent.mModifiedLibraries.All())
+    resourceLibrary->PreCommitUnload();
 
-  forRange(ResourceLibrary * resourceLibrary,
-           compileEvent.mModifiedLibraries.All()) resourceLibrary->Commit();
+  forRange (ResourceLibrary* resourceLibrary, compileEvent.mModifiedLibraries.All())
+    resourceLibrary->Commit();
 
   // @TrevorS: Refactor this to remove a global dependence on a single library.
   if (mPendingFragmentProjectLibrary)

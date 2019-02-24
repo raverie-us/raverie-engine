@@ -11,18 +11,10 @@ DeclareEvent(TemplateProjectPreviewUpdated);
 
 DeclareEnum4(InstallState, NotInstalled, Installing, Installed, Uninstalling);
 // How different two build ids are (typically for project to build)
-DeclareEnum6(BuildUpdateState,
-             DifferentBranch,
-             Older,
-             Newer,
-             NewerBreaking,
-             OlderBreaking,
-             Same);
+DeclareEnum6(BuildUpdateState, DifferentBranch, Older, Newer, NewerBreaking, OlderBreaking, Same);
 
 typedef HashSet<String> TagSet;
-void BuildTagSetFromTokenDelimitedList(StringParam tagData,
-                                       TagSet& tagSet,
-                                       char delimiter);
+void BuildTagSetFromTokenDelimitedList(StringParam tagData, TagSet& tagSet, char delimiter);
 
 /// Common storage and querying of a build's id. Allows easy searching,
 /// displaying, serialization, and updating of what the id of a build is (in
@@ -59,9 +51,7 @@ public:
   /// Returns the full unique id of a build. Parts of the id can be
   /// disabled for things like display names and whatnot. A shared helper
   /// function.
-  String GetFullId(bool showExperimentalBranch,
-                   bool showChangeset,
-                   bool showPlatform) const;
+  String GetFullId(bool showExperimentalBranch, bool showChangeset, bool showPlatform) const;
 
   // HashPolicy Interface
   size_t Hash() const;
@@ -123,11 +113,7 @@ public:
 
   // Given a legacy build name, parse out the date-time and revision id.
   // Returns false if the build's name didn't match the legacy pattern.
-  static bool ParseLegacyBuildName(StringParam buildName,
-                                   String& year,
-                                   String& month,
-                                   String& day,
-                                   String& revisionId);
+  static bool ParseLegacyBuildName(StringParam buildName, String& year, String& month, String& day, String& revisionId);
   void GetReleaseDate(String& year, String& month, String& day);
 
   bool IsBad();

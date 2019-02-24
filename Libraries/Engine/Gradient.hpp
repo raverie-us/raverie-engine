@@ -5,8 +5,7 @@ namespace Zero
 {
 
 /// Specifies a range of values that can be interpolated between.
-template <typename type,
-          type (*lerpFunc)(const type&, const type&, const float) = Math::Lerp>
+template <typename type, type (*lerpFunc)(const type&, const type&, const float) = Math::Lerp>
 class Gradient
 {
 public:
@@ -33,8 +32,7 @@ public:
     key.Interpolant = interpolant;
 
     // Check to make sure the interpolant is valid
-    ErrorIf(interpolant < 0.0f || interpolant > 1.0f,
-            "Interpolant value must be between [0,1].");
+    ErrorIf(interpolant < 0.0f || interpolant > 1.0f, "Interpolant value must be between [0,1].");
 
     uint count = mControlPoints.Size();
 
@@ -74,8 +72,7 @@ public:
   type Sample(float interpolant)
   {
     // Check to make sure the interpolant is valid
-    ErrorIf(interpolant < 0.0f || interpolant > 1.0f,
-            "Interpolant value must be between [0,1].");
+    ErrorIf(interpolant < 0.0f || interpolant > 1.0f, "Interpolant value must be between [0,1].");
 
     uint count = mControlPoints.Size();
 
@@ -127,8 +124,7 @@ public:
   void Sample(Array<type>& output, float sampleRate)
   {
     // Check to make sure the sampleRate is valid
-    ErrorIf(sampleRate < 0.0f || sampleRate > 1.0f,
-            "Sample Rate must be between [0,1].");
+    ErrorIf(sampleRate < 0.0f || sampleRate > 1.0f, "Sample Rate must be between [0,1].");
 
     // Make only one allocation
     uint size = uint(1.0f / sampleRate);

@@ -246,9 +246,7 @@ public:
   // The origin is the display name (typically the file name)
   // Any time any error occurs with compilation, or anything that references
   // this particular block of code will be linked up to the code user-data
-  void AddCodeFromString(StringParam code,
-                         StringParam origin = CodeString,
-                         void* codeUserData = nullptr);
+  void AddCodeFromString(StringParam code, StringParam origin = CodeString, void* codeUserData = nullptr);
 
   // Adds code from a file (see AddCode)
   // Returns true if it succeeded, false otherwise
@@ -265,8 +263,7 @@ public:
   bool Tokenize(Array<UserToken>& tokensOut, Array<UserToken>& commentsOut);
 
   // Attach all the parsed comments to the syntax tree nodes that are nearby
-  void AttachCommentsToNodes(SyntaxTree& syntaxTree,
-                             Array<UserToken>& comments);
+  void AttachCommentsToNodes(SyntaxTree& syntaxTree, Array<UserToken>& comments);
 
   // Compiles the project into an unchecked syntax tree (only parsed)
   bool CompileUncheckedSyntaxTree(SyntaxTree& syntaxTreeOut,
@@ -288,9 +285,7 @@ public:
                      Array<UserToken>& tokensOut);
 
   // Compiles the project into a single library
-  LibraryRef Compile(StringParam libraryName,
-                     Module& dependencies,
-                     EvaluationMode::Enum evaluation);
+  LibraryRef Compile(StringParam libraryName, Module& dependencies, EvaluationMode::Enum evaluation);
 
   // Attempt to compile the code in tolerant mode, and return the type nearest
   // to the left hand side of a given cursor This function is generally used for
@@ -309,10 +304,8 @@ public:
   // identifier (variable definiton, member, type, etc) This gets the definition
   // location (and the actual resulting definition object) of whatever is under
   // the cursor
-  void GetDefinitionInfo(Module& dependencies,
-                         size_t cursorPosition,
-                         StringParam cursorOrigin,
-                         CodeDefinition& resultOut);
+  void
+  GetDefinitionInfo(Module& dependencies, size_t cursorPosition, StringParam cursorOrigin, CodeDefinition& resultOut);
 
 public:
   // A pointer to any data the user wants to attach
@@ -329,8 +322,7 @@ public:
   size_t VariableUniqueIdCounter;
 
   // Setup the location and the name for a found definition
-  void InitializeDefinitionInfo(CodeDefinition& resultOut,
-                                ReflectionObject* object);
+  void InitializeDefinitionInfo(CodeDefinition& resultOut, ReflectionObject* object);
 
 private:
   // Returns the name of the type, but prepends 'class' or 'struct' for
@@ -351,8 +343,7 @@ private:
 
   // Creates a completion for an overload using only the delegate type
   // (generally used when performing a call)
-  CompletionOverload& AddAutoCompleteOverload(AutoCompleteInfo& info,
-                                              DelegateType* delegateType);
+  CompletionOverload& AddAutoCompleteOverload(AutoCompleteInfo& info, DelegateType* delegateType);
 
 private:
   // All the code that makes up this project

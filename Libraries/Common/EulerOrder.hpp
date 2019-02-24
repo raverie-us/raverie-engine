@@ -39,8 +39,7 @@ const uint Even = 0;
 const uint Odd = 1;
 
 /// CreateOrder creates an order value between 0 and 23 from 4-tuple choices.
-#define CreateOrder(axis, parity, repeated, frame)                             \
-  (((((((axis) << 1) + (parity)) << 1) + (repeated)) << 1) + (frame))
+#define CreateOrder(axis, parity, repeated, frame) (((((((axis) << 1) + (parity)) << 1) + (repeated)) << 1) + (frame))
 
 /// Bit fields to describe the different permutations of rotations, reference
 /// frames, repeated axes, and parity
@@ -120,14 +119,7 @@ struct ZeroShared EulerOrder
   bool OddParity(void) const;
 
   /// Unpacks all useful information about order simultaneously.
-  static void GetOrder(EulerOrder order,
-                       uint& i,
-                       uint& j,
-                       uint& k,
-                       uint& h,
-                       uint& parity,
-                       uint& repeated,
-                       uint& frame);
+  static void GetOrder(EulerOrder order, uint& i, uint& j, uint& k, uint& h, uint& parity, uint& repeated, uint& frame);
 
   EulerOrders::Enum Order;
 };

@@ -143,16 +143,11 @@ private:
   bool SendCompletedCacheResponse(bool ignoreTime);
 
   // Occurs when we receive http headers.
-  static void OnHeadersReceived(const Array<String>& headers,
-                                WebResponseCode::Enum code,
-                                WebRequest* request);
+  static void OnHeadersReceived(const Array<String>& headers, WebResponseCode::Enum code, WebRequest* request);
   void OnWebResponseHeadersInternal(WebResponseEvent* event);
 
   // Occurs when we receive data.
-  static void OnDataReceived(const byte* data,
-                             size_t size,
-                             u64 totalDownloaded,
-                             WebRequest* request);
+  static void OnDataReceived(const byte* data, size_t size, u64 totalDownloaded, WebRequest* request);
   void OnWebResponsePartialDataInternal(WebResponseEvent* event);
 
   // Occurs when the web request is complete (can be due to an error).

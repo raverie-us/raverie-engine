@@ -16,9 +16,7 @@ struct BaseDynamicTreePolicy
   static NodeType* SelectNode(NodeType* parent, NodeType* newLeaf);
   /// Creates a new internal node from the old parent and two new children.
   /// links all pointers and expands the aabb to deal with the children
-  static NodeType* CreateInternalNode(NodeType* oldParent,
-                                      NodeType* oldChild,
-                                      NodeType* newChild);
+  static NodeType* CreateInternalNode(NodeType* oldParent, NodeType* oldChild, NodeType* newChild);
   /// Deletes just one node in the tree. Does nothing but unlinks the children
   /// from the node. The children must still have their parent pointers fixed.
   static void DeleteNode(NodeType* node);
@@ -53,32 +51,18 @@ public:
   template <typename QueryType,
             typename ArrayType = Array<NodeType*>,
             typename QueryPolicyType = BroadPhasePolicy<QueryType, Aabb>>
-  struct BaseTreeRange : public BroadPhaseTreeRange<ClientDataType,
-                                                    NodeType,
-                                                    QueryType,
-                                                    QueryPolicyType,
-                                                    ArrayType>
+  struct BaseTreeRange : public BroadPhaseTreeRange<ClientDataType, NodeType, QueryType, QueryPolicyType, ArrayType>
   {
-    typedef BroadPhaseTreeRange<ClientDataType,
-                                NodeType,
-                                QueryType,
-                                QueryPolicyType,
-                                ArrayType>
-        BaseType;
+    typedef BroadPhaseTreeRange<ClientDataType, NodeType, QueryType, QueryPolicyType, ArrayType> BaseType;
 
     /// Constructs a range using the default Policy.
-    BaseTreeRange(ArrayType* scratchBuffer,
-                  NodeType* root,
-                  const QueryType& queryObj) :
+    BaseTreeRange(ArrayType* scratchBuffer, NodeType* root, const QueryType& queryObj) :
         BaseType(scratchBuffer, root, queryObj, QueryPolicyType())
     {
     }
 
     /// Constructs a range using the policy type passed in.
-    BaseTreeRange(ArrayType* scratchBuffer,
-                  NodeType* root,
-                  const QueryType& queryObj,
-                  QueryPolicyType policy) :
+    BaseTreeRange(ArrayType* scratchBuffer, NodeType* root, const QueryType& queryObj, QueryPolicyType policy) :
         BaseType(scratchBuffer, root, queryObj, policy)
     {
     }
@@ -88,16 +72,11 @@ public:
   /// Used to determine all potential overlaps within the tree itself.
   /// Note: this range will become completely invalidated if any operations are
   /// performed on the tree.
-  struct SelfQueryRange
-      : public BroadPhaseTreeSelfRange<BaseTreeType,
-                                       BoxQueryPairCheck<ClientDataType>>
+  struct SelfQueryRange : public BroadPhaseTreeSelfRange<BaseTreeType, BoxQueryPairCheck<ClientDataType>>
   {
-    typedef BroadPhaseTreeSelfRange<BaseTreeType,
-                                    BoxQueryPairCheck<ClientDataType>>
-        BaseType;
+    typedef BroadPhaseTreeSelfRange<BaseTreeType, BoxQueryPairCheck<ClientDataType>> BaseType;
 
-    SelfQueryRange(NodePairArray* scratchBuffer, NodeType* root) :
-        BaseType(scratchBuffer, root)
+    SelfQueryRange(NodePairArray* scratchBuffer, NodeType* root) : BaseType(scratchBuffer, root)
     {
     }
   };
@@ -136,8 +115,9 @@ public:
   /// should use the forRangeBroadphaseTreePolicy macro instead of calling this
   /// directly.
   template <typename QueryType, typename ArrayType, typename Policy>
-  BaseTreeRange<QueryType, ArrayType, Policy> QueryWithPolicy(
-      const QueryType& queryObj, ArrayType& scratchBuffer, Policy policy)
+  BaseTreeRange<QueryType, ArrayType, Policy> QueryWithPolicy(const QueryType& queryObj,
+                                                              ArrayType& scratchBuffer,
+                                                              Policy policy)
   {
     typedef BaseTreeRange<QueryType, ArrayType> RangeType;
 
@@ -149,8 +129,7 @@ public:
   /// defaulted to BroadPhasePolicy<QueryType,Aabb>. For general cases,
   /// use the forRangeBroadphaseTree macro instead of calling this directly.
   template <typename QueryType, typename ArrayType>
-  BaseTreeRange<QueryType, ArrayType> Query(const QueryType& queryObj,
-                                            ArrayType& scratchBuffer)
+  BaseTreeRange<QueryType, ArrayType> Query(const QueryType& queryObj, ArrayType& scratchBuffer)
   {
     typedef BaseTreeRange<QueryType, ArrayType> RangeType;
 

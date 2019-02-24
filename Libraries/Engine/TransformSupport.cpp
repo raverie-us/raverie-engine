@@ -40,10 +40,7 @@ Mat3 GenerateRotationMatrix(Vec3Param facing, Vec3Param up, Vec3Param right)
   return rotation;
 }
 
-void GenerateRotationMatrix(Vec3Param facing,
-                            Vec3Param up,
-                            Vec3Param right,
-                            Mat3Ptr matrix)
+void GenerateRotationMatrix(Vec3Param facing, Vec3Param up, Vec3Param right, Mat3Ptr matrix)
 {
   matrix->SetBasis(0, right);
   matrix->SetBasis(1, up);

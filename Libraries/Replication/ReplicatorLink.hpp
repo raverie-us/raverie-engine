@@ -52,8 +52,7 @@ public:
   Replica* GetReplica(ReplicaId replicaId) const;
   Replica* GetReplica(Replica* replica) const;
   /// Returns all replicas in the specified create context expected remotely
-  ReplicaSet
-  GetReplicasByCreateContext(const CreateContext& createContext) const;
+  ReplicaSet GetReplicasByCreateContext(const CreateContext& createContext) const;
   /// Returns all live replicas of the specified replica type expected remotely
   ReplicaSet GetReplicasByReplicaType(const ReplicaType& replicaType) const;
   /// Returns all live replicas expected remotely
@@ -61,8 +60,7 @@ public:
 
   /// Returns the number of replicas in the specified create context expected
   /// remotely
-  size_t
-  GetReplicaCountByCreateContext(const CreateContext& createContext) const;
+  size_t GetReplicaCountByCreateContext(const CreateContext& createContext) const;
   /// Returns the number of live replicas of the specified replica type expected
   /// remotely
   size_t GetReplicaCountByReplicaType(const ReplicaType& replicaType) const;
@@ -135,19 +133,13 @@ public:
 
   /// [Server] Serializes a spawn command
   /// Returns true if successful, else false
-  bool SerializeSpawn(const ReplicaArray& replicas,
-                      Message& message,
-                      TimeMs timestamp);
+  bool SerializeSpawn(const ReplicaArray& replicas, Message& message, TimeMs timestamp);
   /// [Client] Deserializes a spawn command
   /// Returns true if successful, else false
-  bool DeserializeSpawn(const Message& message,
-                        ReplicaArray& replicas,
-                        TimeMs timestamp);
+  bool DeserializeSpawn(const Message& message, ReplicaArray& replicas, TimeMs timestamp);
   /// Handles a spawn command
   /// Returns true if successful, else false
-  bool HandleSpawn(const ReplicaArray& replicas,
-                   TransmissionDirection::Enum direction,
-                   TimeMs timestamp);
+  bool HandleSpawn(const ReplicaArray& replicas, TransmissionDirection::Enum direction, TimeMs timestamp);
   /// [Server] Sends a spawn command
   /// Returns true if successful, else false
   bool SendSpawn(const ReplicaArray& replicas, TimeMs timestamp);
@@ -157,19 +149,13 @@ public:
 
   /// [Server] Serializes a clone command
   /// Returns true if successful, else false
-  bool SerializeClone(const ReplicaArray& replicas,
-                      Message& message,
-                      TimeMs timestamp);
+  bool SerializeClone(const ReplicaArray& replicas, Message& message, TimeMs timestamp);
   /// [Client] Deserializes a clone command
   /// Returns true if successful, else false
-  bool DeserializeClone(const Message& message,
-                        ReplicaArray& replicas,
-                        TimeMs timestamp);
+  bool DeserializeClone(const Message& message, ReplicaArray& replicas, TimeMs timestamp);
   /// Handles a clone command
   /// Returns true if successful, else false
-  bool HandleClone(const ReplicaArray& replicas,
-                   TransmissionDirection::Enum direction,
-                   TimeMs timestamp);
+  bool HandleClone(const ReplicaArray& replicas, TransmissionDirection::Enum direction, TimeMs timestamp);
   /// [Server] Sends a clone command
   /// Returns true if successful, else false
   bool SendClone(const ReplicaArray& replicas, TimeMs timestamp);
@@ -179,19 +165,13 @@ public:
 
   /// [Server] Serializes a forget command
   /// Returns true if successful, else false
-  bool SerializeForget(const ReplicaArray& replicas,
-                       Message& message,
-                       TimeMs timestamp);
+  bool SerializeForget(const ReplicaArray& replicas, Message& message, TimeMs timestamp);
   /// [Client] Deserializes a forget command
   /// Returns true if successful, else false
-  bool DeserializeForget(const Message& message,
-                         ReplicaArray& replicas,
-                         TimeMs timestamp);
+  bool DeserializeForget(const Message& message, ReplicaArray& replicas, TimeMs timestamp);
   /// Handles a forget command
   /// Returns true if successful, else false
-  bool HandleForget(const ReplicaArray& replicas,
-                    TransmissionDirection::Enum direction,
-                    TimeMs timestamp);
+  bool HandleForget(const ReplicaArray& replicas, TransmissionDirection::Enum direction, TimeMs timestamp);
   /// [Server] Sends a forget command
   /// Returns true if successful, else false
   bool SendForget(const ReplicaArray& replicas, TimeMs timestamp);
@@ -201,19 +181,13 @@ public:
 
   /// [Server] Serializes a destroy command
   /// Returns true if successful, else false
-  bool SerializeDestroy(const ReplicaArray& replicas,
-                        Message& message,
-                        TimeMs timestamp);
+  bool SerializeDestroy(const ReplicaArray& replicas, Message& message, TimeMs timestamp);
   /// [Client] Deserializes a destroy command
   /// Returns true if successful, else false
-  bool DeserializeDestroy(const Message& message,
-                          ReplicaArray& replicas,
-                          TimeMs timestamp);
+  bool DeserializeDestroy(const Message& message, ReplicaArray& replicas, TimeMs timestamp);
   /// Handles a destroy command
   /// Returns true if successful, else false
-  bool HandleDestroy(const ReplicaArray& replicas,
-                     TransmissionDirection::Enum direction,
-                     TimeMs timestamp);
+  bool HandleDestroy(const ReplicaArray& replicas, TransmissionDirection::Enum direction, TimeMs timestamp);
   /// [Server] Sends a destroy command
   /// Returns true if successful, else false
   bool SendDestroy(const ReplicaArray& replicas, TimeMs timestamp);
@@ -229,13 +203,10 @@ public:
                                        TimeMs timestamp);
   /// [Server] Deserializes reverse replica channels
   /// Returns true if successful, else false
-  bool DeserializeReverseReplicaChannels(const Message& message,
-                                         ReplicaArray& replicas,
-                                         TimeMs timestamp);
+  bool DeserializeReverseReplicaChannels(const Message& message, ReplicaArray& replicas, TimeMs timestamp);
   /// [Client] Sends reverse replica channels (as applicable)
   /// Returns true if successful, else false
-  bool SendReverseReplicaChannels(const ReplicaArray& replicas,
-                                  TimeMs timestamp);
+  bool SendReverseReplicaChannels(const ReplicaArray& replicas, TimeMs timestamp);
   /// [Server] Receives reverse replica channels (as applicable)
   /// Returns true if successful, else false
   bool ReceiveReverseReplicaChannels(const Message& message);
@@ -271,24 +242,20 @@ public:
   /// [Server] Opens and serializes all forward (outgoing) message channels
   /// corresponding to the given replica's channels Returns true if successful,
   /// else false
-  bool OpenAndSerializeForwardReplicaChannels(const Replica* replica,
-                                              BitStream& bitStream);
+  bool OpenAndSerializeForwardReplicaChannels(const Replica* replica, BitStream& bitStream);
   /// [Client] Deserializes and sets all forward (incoming) message channels
   /// corresponding to the given replica's channels Returns true if successful,
   /// else false
-  bool DeserializeAndSetForwardReplicaChannels(Replica* replica,
-                                               const BitStream& bitStream);
+  bool DeserializeAndSetForwardReplicaChannels(Replica* replica, const BitStream& bitStream);
 
   /// [Client] Opens and serializes all reverse (outgoing) message channels
   /// corresponding to the given replica's channels Returns true if successful,
   /// else false
-  bool OpenAndSerializeReverseReplicaChannels(const Replica* replica,
-                                              BitStream& bitStream);
+  bool OpenAndSerializeReverseReplicaChannels(const Replica* replica, BitStream& bitStream);
   /// [Server] Deserializes and sets all reverse (incoming) message channels
   /// corresponding to the given replica's channels Returns true if successful,
   /// else false
-  bool DeserializeAndSetReverseReplicaChannels(Replica* replica,
-                                               const BitStream& bitStream);
+  bool DeserializeAndSetReverseReplicaChannels(Replica* replica, const BitStream& bitStream);
 
   /// Returns the command channel ID
   MessageChannelId GetCommandChannelId() const;
@@ -306,13 +273,11 @@ public:
   void CloseOutgoingReplicaChannel(ReplicaChannel* replicaChannel);
   /// Returns the outgoing message channel corresponding to the specified
   /// replica channel, else 0
-  MessageChannelId
-  GetOutgoingReplicaChannel(ReplicaChannel* replicaChannel) const;
+  MessageChannelId GetOutgoingReplicaChannel(ReplicaChannel* replicaChannel) const;
 
   /// Sets the corresponding incoming message channel on the specified replica
   /// channel Returns true if successful, else false
-  bool SetIncomingReplicaChannel(MessageChannelId channelId,
-                                 ReplicaChannel* replicaChannel);
+  bool SetIncomingReplicaChannel(MessageChannelId channelId, ReplicaChannel* replicaChannel);
   /// Clears the corresponding incoming message channel on the specified replica
   /// channel (if any)
   void ClearIncomingReplicaChannel(ReplicaChannel* replicaChannel);
@@ -339,44 +304,35 @@ public:
   /// Called after a disconnect notice is received
   void OnDisconnectNoticeReceive(Message& message) override;
   /// Handles the disconnect notice
-  void HandleDisconnectNotice(Message& message,
-                              TransmissionDirection::Enum direction);
+  void HandleDisconnectNotice(Message& message, TransmissionDirection::Enum direction);
 
   /// Called after the link state is changed
   void OnStateChange(LinkState::Enum prevState) override;
 
   /// Called after a plugin message is received
-  void OnPluginMessageReceive(MoveReference<Message> message,
-                              bool& continueProcessingCustomMessages) override;
+  void OnPluginMessageReceive(MoveReference<Message> message, bool& continueProcessingCustomMessages) override;
 
   /// Data
-  Replicator* const mReplicator; /// Operating replicator
-  ReplicatorId mReplicatorId;    /// Their replicator ID
-  ReplicaSet mReplicaSet;        /// Remotely expected live replicas
-  CreateMap
-      mCreateMap; /// Remotely expected live replicas mapped by create context
-  ReplicaMap
-      mReplicaMap; /// Remotely expected live replicas mapped by replica type
-  MessageChannelId mCommandChannelId; /// Command channel ID
-  OutReplicaChannels
-      mOutReplicaChannels; /// Outgoing replica channel map (replica channel to
-                           /// message channel ID)
-  InReplicaChannels
-      mInReplicaChannels; /// Incoming replica channel map (message channel ID
-                          /// to replica channel)
-  InReplicaChannelsFlipped
-      mInReplicaChannelsFlipped; /// Incoming replica channel map flipped
-                                 /// (replica channel to message channel ID)
-  ConnectRequestData
-      mLastConnectRequestData; /// Last connect request data sent/received
-  ConnectResponseData
-      mLastConnectResponseData; /// Last connect response data sent/received
-  bool mShouldSkipChangeReplication; /// Should skip change replication?
-                                     /// (Updated at the start of every frame)
-  TimeMs mLastFrameFillSkipNotificationTime;    /// Last frame fill skip
-                                                /// notification time
-  TimeMs mLastFrameFillWarningNotificationTime; /// Last frame fill warning
-                                                /// notification time
+  Replicator* const mReplicator;                      /// Operating replicator
+  ReplicatorId mReplicatorId;                         /// Their replicator ID
+  ReplicaSet mReplicaSet;                             /// Remotely expected live replicas
+  CreateMap mCreateMap;                               /// Remotely expected live replicas mapped by create context
+  ReplicaMap mReplicaMap;                             /// Remotely expected live replicas mapped by replica type
+  MessageChannelId mCommandChannelId;                 /// Command channel ID
+  OutReplicaChannels mOutReplicaChannels;             /// Outgoing replica channel map (replica channel to
+                                                      /// message channel ID)
+  InReplicaChannels mInReplicaChannels;               /// Incoming replica channel map (message channel ID
+                                                      /// to replica channel)
+  InReplicaChannelsFlipped mInReplicaChannelsFlipped; /// Incoming replica channel map flipped
+                                                      /// (replica channel to message channel ID)
+  ConnectRequestData mLastConnectRequestData;         /// Last connect request data sent/received
+  ConnectResponseData mLastConnectResponseData;       /// Last connect response data sent/received
+  bool mShouldSkipChangeReplication;                  /// Should skip change replication?
+                                                      /// (Updated at the start of every frame)
+  TimeMs mLastFrameFillSkipNotificationTime;          /// Last frame fill skip
+                                                      /// notification time
+  TimeMs mLastFrameFillWarningNotificationTime;       /// Last frame fill warning
+                                                      /// notification time
 
 private:
   /// No copy constructor

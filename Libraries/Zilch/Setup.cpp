@@ -41,8 +41,7 @@ ZilchSetup::ZilchSetup(SetupFlags::Type flags)
 
   // If the user wants us to, we'll use our own custom error handler,
   // Otherwise we'll use our own error handler
-  bool useZilchErrorHandler =
-      !(flags & SetupFlags::CustomAssertHandlerOrNoAsserts);
+  bool useZilchErrorHandler = !(flags & SetupFlags::CustomAssertHandlerOrNoAsserts);
   if (useZilchErrorHandler)
   {
     ErrorSignaler::SetErrorHandler(Zero::Os::ErrorProcessHandler);
@@ -79,8 +78,7 @@ void ReconstructSingleton()
 {
   // Explicitly destructs a singleton then uses placement new to create it again
   // (should be reset)
-  ZeroTodo(
-      "Make singletons into pointers so we don't have to do this silly stuff");
+  ZeroTodo("Make singletons into pointers so we don't have to do this silly stuff");
   T* singleton = &T::GetInstance();
   singleton->~T();
   new (singleton) T();
@@ -150,9 +148,7 @@ Array<String>& MainArguments::GetCommandValues(StringParam command)
   return this->CommandToValues[command];
 }
 
-void ZilchParseMainArguments(int argc,
-                             char* argv[],
-                             MainArguments& argumentsOut)
+void ZilchParseMainArguments(int argc, char* argv[], MainArguments& argumentsOut)
 {
   static const String CommandDash('-');
   String lastCommand;
@@ -237,25 +233,19 @@ int ZilchMain(int argc, char* argv[])
   {
     String pluginDirectory = Zero::GetApplicationDirectory();
     Status status;
-    Plugin::LoadFromDirectory(
-        status, module, module, Zero::GetApplicationDirectory());
+    Plugin::LoadFromDirectory(status, module, module, Zero::GetApplicationDirectory());
     if (status.Failed())
-      printf("* Unable to load plugin from directory '%s': '%s'\n",
-             pluginDirectory.c_str(),
-             status.Message.c_str());
+      printf("* Unable to load plugin from directory '%s': '%s'\n", pluginDirectory.c_str(), status.Message.c_str());
   }
-  ZilchForEach(String & pluginDirectory,
-               arguments.GetCommandValues("-PluginDirectory"))
+  ZilchForEach (String& pluginDirectory, arguments.GetCommandValues("-PluginDirectory"))
   {
     Status status;
     Plugin::LoadFromDirectory(status, module, module, pluginDirectory);
     if (status.Failed())
-      printf("* Unable to load plugin from directory '%s': '%s'\n",
-             pluginDirectory.c_str(),
-             status.Message.c_str());
+      printf("* Unable to load plugin from directory '%s': '%s'\n", pluginDirectory.c_str(), status.Message.c_str());
   }
 
-  ZilchForEach(String & pluginFile, arguments.GetCommandValues("-Plugin"))
+  ZilchForEach (String& pluginFile, arguments.GetCommandValues("-Plugin"))
   {
     Status status;
     LibraryRef pluginLibrary = Plugin::LoadFromFile(status, module, pluginFile);
@@ -264,13 +254,11 @@ int ZilchMain(int argc, char* argv[])
       module.Append(pluginLibrary);
     }
     if (status.Failed())
-      printf("* Unable to load plugin '%s': '%s'\n",
-             pluginFile.c_str(),
-             status.Message.c_str());
+      printf("* Unable to load plugin '%s': '%s'\n", pluginFile.c_str(), status.Message.c_str());
   }
 
   // Treat all the stray input values as file names
-  ZilchForEach(String & fileName, arguments.InputValues)
+  ZilchForEach (String& fileName, arguments.InputValues)
   {
     // Load the code from a file (and if it fails, error out)
     if (project.AddCodeFromFile(fileName) == false)
@@ -291,8 +279,7 @@ int ZilchMain(int argc, char* argv[])
   bool run = arguments.HasCommand("-Run");
   if (compileAndReport || compileOnly || run)
   {
-    LibraryRef library =
-        project.Compile("Main", module, EvaluationMode::Project);
+    LibraryRef library = project.Compile("Main", module, EvaluationMode::Project);
 
     if (compileAndReport)
     {
@@ -336,40 +323,33 @@ int ZilchMain(int argc, char* argv[])
       if (library == nullptr)
       {
         // Print out the error message directly
-        String errorMessage =
-            errorEvent.GetFormattedMessage(MessageFormat::Zilch);
+        String errorMessage = errorEvent.GetFormattedMessage(MessageFormat::Zilch);
         printf("* %s\n", errorMessage.c_str());
         result = -1;
       }
       else if (run)
       {
-        ZilchForEach(LibraryRef library, module)
+        ZilchForEach (LibraryRef library, module)
         {
           if (library->Plugin)
             library->Plugin->InitializeSafe();
         }
 
-        BoundType* programType =
-            library->BoundTypes.FindValue("Program", nullptr);
+        BoundType* programType = library->BoundTypes.FindValue("Program", nullptr);
         if (programType != nullptr)
         {
           Function* mainFunction =
-              programType->FindFunction("Main",
-                                        Array<Type*>(),
-                                        ZilchTypeId(int),
-                                        FindMemberOptions::None);
+              programType->FindFunction("Main", Array<Type*>(), ZilchTypeId(int), FindMemberOptions::None);
           if (mainFunction != nullptr)
           {
             Module libraries;
             libraries.PushBack(library);
             ExecutableState* state = libraries.Link();
-            EventConnect(
-                state, Events::UnhandledException, DefaultExceptionCallback);
+            EventConnect(state, Events::UnhandledException, DefaultExceptionCallback);
             {
               ExceptionReport report;
               Handle programHandle =
-                  state->AllocateDefaultConstructedHeapObject(
-                      programType, report, HeapFlags::ReferenceCounted);
+                  state->AllocateDefaultConstructedHeapObject(programType, report, HeapFlags::ReferenceCounted);
 
               if (report.HasThrownExceptions())
               {
@@ -407,10 +387,8 @@ int ZilchMain(int argc, char* argv[])
   else
   {
     // If the user wants auto complete information...
-    String* autoCompleteCursor =
-        arguments.GetCommandValuePointer("-AutoCompleteCursor");
-    String* autoCompleteOrigin =
-        arguments.GetCommandValuePointer("-AutoCompleteOrigin");
+    String* autoCompleteCursor = arguments.GetCommandValuePointer("-AutoCompleteCursor");
+    String* autoCompleteOrigin = arguments.GetCommandValuePointer("-AutoCompleteOrigin");
     if (autoCompleteCursor != nullptr && autoCompleteOrigin != nullptr)
     {
       // Read the value the user specified for the cursor position
@@ -421,8 +399,7 @@ int ZilchMain(int argc, char* argv[])
       AutoCompleteInfo info;
       Module module;
       project.TolerantMode = true;
-      project.GetAutoCompleteInfo(
-          module, (size_t)cursorPosition, *autoCompleteOrigin, info);
+      project.GetAutoCompleteInfo(module, (size_t)cursorPosition, *autoCompleteOrigin, info);
 
       String json = info.GetJson();
       printf("%s\n", json.c_str());

@@ -35,10 +35,7 @@ ToolTipPlacement::ToolTipPlacement()
 {
   mScreenRect = WidgetRect::PointAndSize(Vec2::cZero, Vec2::cZero);
 
-  SetPriority(IndicatorSide::Left,
-              IndicatorSide::Right,
-              IndicatorSide::Top,
-              IndicatorSide::Bottom);
+  SetPriority(IndicatorSide::Left, IndicatorSide::Right, IndicatorSide::Top, IndicatorSide::Bottom);
 }
 
 void ToolTipPlacement::SetScreenRect(const WidgetRect& rect)
@@ -62,14 +59,12 @@ ZilchDefineType(ToolTip, builder, type)
 {
 }
 
-ToolTip::ToolTip(Widget* source) :
-    Composite(source->GetRootWidget()->GetPopUp())
+ToolTip::ToolTip(Widget* source) : Composite(source->GetRootWidget()->GetPopUp())
 {
   Initialize(source);
 }
 
-ToolTip::ToolTip(Widget* source, StringParam text) :
-    Composite(source->GetRootWidget()->GetPopUp())
+ToolTip::ToolTip(Widget* source, StringParam text) : Composite(source->GetRootWidget()->GetPopUp())
 {
   Initialize(source);
   SetText(text);
@@ -235,10 +230,9 @@ void ToolTip::ForceBestFitText(Composite* composite, Vec2 padding)
   if (Layout* layout = composite->GetLayout())
   {
     FilterLayoutChildren children(composite);
-    forRange(Widget & child, children)
+    forRange (Widget& child, children)
     {
-      ForceBestFitText(child.GetSelfAsComposite(),
-                       padding + layout->Padding.SizeX());
+      ForceBestFitText(child.GetSelfAsComposite(), padding + layout->Padding.SizeX());
     }
   }
 
@@ -301,15 +295,13 @@ Text* ToolTip::AddText(StringParam text, Vec4Param color)
     mContent = mTextStack;
   }
 
-  MultiLineText* textObject =
-      (MultiLineText*)CreateTextPreview(mTextStack, text);
+  MultiLineText* textObject = (MultiLineText*)CreateTextPreview(mTextStack, text);
   if (textObject != nullptr)
   {
     if (mBestFitText)
       ForceBestFitText(textObject, mContentPadding.SizeX());
     else
-      textObject->mTextField->FitToWidth(ToolTipUi::ToolTipWrapWidth,
-                                         Pixels(1000));
+      textObject->mTextField->FitToWidth(ToolTipUi::ToolTipWrapWidth, Pixels(1000));
 
     // Defer border-display to this tooltip's border.
     textObject->mBorder->SetVisible(false);
@@ -341,10 +333,7 @@ void ToolTip::SetTextAndPlace(StringParam text, RectParam placementRect)
   ToolTipPlacement placement;
   placement.SetScreenRect(placementRect);
 
-  placement.SetPriority(IndicatorSide::Right,
-                        IndicatorSide::Left,
-                        IndicatorSide::Bottom,
-                        IndicatorSide::Top);
+  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Bottom, IndicatorSide::Top);
 
   SetArrowTipTranslation(placement);
 }
@@ -434,9 +423,8 @@ bool ToolTip::SetArrowTipTranslation(Vec3Param screenPos)
 }
 
 void ToolTip::SetArrowTipTranslation(
-    ToolTipPlacement&
-        placement) // const Rect& rect, Vec2Param hotSpot,
-                   // const Thickness& margins, IndicatorSide::Type priority[4])
+    ToolTipPlacement& placement) // const Rect& rect, Vec2Param hotSpot,
+                                 // const Thickness& margins, IndicatorSide::Type priority[4])
 {
   WidgetRect& rect = placement.mScreenRect;
 
@@ -520,8 +508,7 @@ bool ToolTip::TranslateArrowOffset(Vec2Param translation)
   mArrowOffset += translation;
 
   // Either edge of the arrow must be inside the bounds of the ToolTip's size.
-  Vec2 offsetBounds =
-      Math::Ceil(0.5f * mSize) - Math::Ceil(0.5f * mArrow->mSize);
+  Vec2 offsetBounds = Math::Ceil(0.5f * mSize) - Math::Ceil(0.5f * mArrow->mSize);
   // Either edge of the arrow must also be within a minimum of two pixels
   // from the ToolTip rect's edges.
   offsetBounds -= Vec2(2.0f, 2.0f);

@@ -55,9 +55,7 @@ struct DefaultFragmentPolicy
       atom.mError = Math::Min(atom.mError + slop, real(0.0));
   }
 
-  void ErrorFragment(int atomIndex,
-                     JointType* joint,
-                     ImpulseLimitAtom& molLimit)
+  void ErrorFragment(int atomIndex, JointType* joint, ImpulseLimitAtom& molLimit)
   {
     uint flag = 1 << atomIndex;
     real desiredConstraintValue = 0;
@@ -66,18 +64,14 @@ struct DefaultFragmentPolicy
 
     // compute the error of this constraint. have to compute the error at this
     // time so that the limit values are known
-    bool wasLimited = ComputeError(
-        atom, molLimit, joint->mNode->mLimit, desiredConstraintValue, flag);
+    bool wasLimited = ComputeError(atom, molLimit, joint->mNode->mLimit, desiredConstraintValue, flag);
     // apply slop to the error
     if (wasLimited)
       ModifyErrorWithSlop(joint, atom);
   }
 
   // returns baumgarte
-  real AxisFragment(MoleculeData& data,
-                    int atomIndex,
-                    JointType* joint,
-                    ConstraintMolecule& mol)
+  real AxisFragment(MoleculeData& data, int atomIndex, JointType* joint, ConstraintMolecule& mol)
   {
     real baumgarte = 0.1f;
     uint axisIndex = atomIndex % 3;
@@ -96,10 +90,7 @@ struct DefaultFragmentPolicy
       baumgarte = joint->GetAngularBaumgarte();
     }
     else
-      ErrorIf(true,
-              "Joint %s of index %d returned an invalid index filter.",
-              joint->GetJointName(),
-              atomIndex);
+      ErrorIf(true, "Joint %s of index %d returned an invalid index filter.", joint->GetJointName(), atomIndex);
 
     return baumgarte;
   }
@@ -156,10 +147,7 @@ struct DefaultFragmentPolicy2d : public DefaultFragmentPolicy<JointType>
   }
 
   // returns baumgarte
-  real AxisFragment(MoleculeData& data,
-                    int atomIndex,
-                    JointType* joint,
-                    ConstraintMolecule& mol)
+  real AxisFragment(MoleculeData& data, int atomIndex, JointType* joint, ConstraintMolecule& mol)
   {
     real baumgarte = 0.1f;
     uint axisIndex = atomIndex % 2;
@@ -178,10 +166,7 @@ struct DefaultFragmentPolicy2d : public DefaultFragmentPolicy<JointType>
       baumgarte = joint->GetAngularBaumgarte();
     }
     else
-      ErrorIf(true,
-              "Joint %s of index %d returned an invalid index filter.",
-              joint->GetJointName(),
-              atomIndex);
+      ErrorIf(true, "Joint %s of index %d returned an invalid index filter.", joint->GetJointName(), atomIndex);
 
     return baumgarte;
   }
@@ -215,10 +200,7 @@ struct DefaultAngularLimitPolicy2d : public DefaultFragmentPolicy2d<JointType>
 };
 
 template <typename JointType, typename PolicyType>
-void UpdateAtomsFragment(JointType* joint,
-                         uint atomCount,
-                         MoleculeData& data,
-                         PolicyType policy)
+void UpdateAtomsFragment(JointType* joint, uint atomCount, MoleculeData& data, PolicyType policy)
 {
   // reset the filter for the constraint to be unaffected by limits
   joint->ResetFilter();
@@ -234,18 +216,14 @@ void UpdateAtomsFragment(JointType* joint,
   else
   {
     // determine which of these constraints are active after limits take affect
-    ComputeActiveAtoms(joint->mAtoms,
-                       atomCount,
-                       joint->mNode->mLimit,
-                       joint->mConstraintFilter);
+    ComputeActiveAtoms(joint->mAtoms, atomCount, joint->mNode->mLimit, joint->mConstraintFilter);
   }
 }
 
 template <typename JointType>
 void UpdateAtomsFragment(JointType* joint, uint atomCount, MoleculeData& data)
 {
-  UpdateAtomsFragment(
-      joint, atomCount, data, DefaultFragmentPolicy<JointType>());
+  UpdateAtomsFragment(joint, atomCount, data, DefaultFragmentPolicy<JointType>());
 }
 
 template <typename JointType>
@@ -257,8 +235,7 @@ uint GetMoleculeCount(JointType* joint, uint motorFilter)
   uint motorCount = 0;
   JointMotor* motor = joint->mNode->mMotor;
   if (motor && motor->GetActive())
-    motorCount =
-        GetNumberOfBitsSet(joint->mNode->mMotor->mAtomIds & motorFilter);
+    motorCount = GetNumberOfBitsSet(joint->mNode->mMotor->mAtomIds & motorFilter);
   // the number of fragments is the sum
   return count + motorCount;
 }
@@ -290,11 +267,8 @@ uint GetPositionMoleculeCount(JointType* joint)
 }
 
 template <typename JointType, typename PolicyType>
-void ComputeMoleculesFragment(JointType* joint,
-                              MoleculeWalker& mols,
-                              uint atomCount,
-                              MoleculeData& data,
-                              PolicyType policy)
+void ComputeMoleculesFragment(
+    JointType* joint, MoleculeWalker& mols, uint atomCount, MoleculeData& data, PolicyType policy)
 {
   // cache off the mass terms
   JointMass masses;
@@ -361,21 +335,14 @@ void ComputeMoleculesFragment(JointType* joint,
 }
 
 template <typename JointType>
-void ComputeMoleculesFragment(JointType* joint,
-                              MoleculeWalker& mols,
-                              uint atomCount,
-                              MoleculeData& data)
+void ComputeMoleculesFragment(JointType* joint, MoleculeWalker& mols, uint atomCount, MoleculeData& data)
 {
-  ComputeMoleculesFragment(
-      joint, mols, atomCount, data, DefaultFragmentPolicy<JointType>());
+  ComputeMoleculesFragment(joint, mols, atomCount, data, DefaultFragmentPolicy<JointType>());
 }
 
 template <typename JointType, typename PolicyType>
-void ComputePositionMoleculesFragment(JointType* joint,
-                                      MoleculeWalker& mols,
-                                      uint atomCount,
-                                      MoleculeData& data,
-                                      PolicyType policy)
+void ComputePositionMoleculesFragment(
+    JointType* joint, MoleculeWalker& mols, uint atomCount, MoleculeData& data, PolicyType policy)
 {
   // cache off the mass terms
   JointMass masses;
@@ -419,13 +386,9 @@ void ComputePositionMoleculesFragment(JointType* joint,
 }
 
 template <typename JointType>
-void ComputePositionMoleculesFragment(JointType* joint,
-                                      MoleculeWalker& mols,
-                                      uint atomCount,
-                                      MoleculeData& data)
+void ComputePositionMoleculesFragment(JointType* joint, MoleculeWalker& mols, uint atomCount, MoleculeData& data)
 {
-  ComputePositionMoleculesFragment(
-      joint, mols, atomCount, data, DefaultFragmentPolicy<JointType>());
+  ComputePositionMoleculesFragment(joint, mols, atomCount, data, DefaultFragmentPolicy<JointType>());
 }
 
 template <typename JointType>
@@ -436,8 +399,7 @@ void WarmStartFragment(JointType* joint, MoleculeWalker& mols, uint molCount)
 
   // cache the velocities and masses
   JointVelocity velocities;
-  JointHelpers::GetVelocities(
-      joint->GetCollider(0), joint->GetCollider(1), velocities);
+  JointHelpers::GetVelocities(joint->GetCollider(0), joint->GetCollider(1), velocities);
   JointMass masses;
   JointHelpers::GetMasses(joint->GetCollider(0), joint->GetCollider(1), masses);
 
@@ -445,15 +407,13 @@ void WarmStartFragment(JointType* joint, MoleculeWalker& mols, uint molCount)
   for (uint i = 0; i < molCount; ++i)
   {
     ConstraintMolecule& mol = mols[i];
-    JointHelpers::ApplyConstraintImpulse(
-        masses, velocities, mol.mJacobian, mol.mImpulse);
+    JointHelpers::ApplyConstraintImpulse(masses, velocities, mol.mJacobian, mol.mImpulse);
   }
 
   mols += molCount;
 
   // copy the velocities back out to the objects
-  JointHelpers::CommitVelocities(
-      joint->GetCollider(0), joint->GetCollider(1), velocities);
+  JointHelpers::CommitVelocities(joint->GetCollider(0), joint->GetCollider(1), velocities);
 }
 
 template <typename JointType>
@@ -464,8 +424,7 @@ void SolveFragment(JointType* joint, MoleculeWalker& mols, uint molCount)
 
   // cache the velocities and masses
   JointVelocity velocities;
-  JointHelpers::GetVelocities(
-      joint->GetCollider(0), joint->GetCollider(1), velocities);
+  JointHelpers::GetVelocities(joint->GetCollider(0), joint->GetCollider(1), velocities);
   JointMass masses;
   JointHelpers::GetMasses(joint->GetCollider(0), joint->GetCollider(1), masses);
 
@@ -474,15 +433,13 @@ void SolveFragment(JointType* joint, MoleculeWalker& mols, uint molCount)
   {
     ConstraintMolecule& mol = mols[i];
     real lambda = ComputeLambda(mol, velocities);
-    JointHelpers::ApplyConstraintImpulse(
-        masses, velocities, mol.mJacobian, lambda);
+    JointHelpers::ApplyConstraintImpulse(masses, velocities, mol.mJacobian, lambda);
   }
 
   mols += molCount;
 
   // copy the velocities back out to the objects
-  JointHelpers::CommitVelocities(
-      joint->GetCollider(0), joint->GetCollider(1), velocities);
+  JointHelpers::CommitVelocities(joint->GetCollider(0), joint->GetCollider(1), velocities);
 }
 
 template <typename JointType>
@@ -554,8 +511,7 @@ void CheckJointLimitEvents(JointType* joint)
     limit->SetWasAtLowerLimit(true);
   }
   // Check to see if we left the lower limit
-  else if (limit->GetAtLowerLimit() == false &&
-           limit->GetWasAtLowerLimit() == true)
+  else if (limit->GetAtLowerLimit() == false && limit->GetWasAtLowerLimit() == true)
     limit->SetWasAtLowerLimit(false);
 
   // same now for the upper limit
@@ -564,8 +520,7 @@ void CheckJointLimitEvents(JointType* joint)
     JointHelpers::CreateJointEvent(joint, Events::JointUpperLimitReached);
     limit->SetWasAtUpperLimit(true);
   }
-  else if (limit->GetAtUpperLimit() == false &&
-           limit->GetWasAtUpperLimit() == true)
+  else if (limit->GetAtUpperLimit() == false && limit->GetWasAtUpperLimit() == true)
     limit->SetWasAtUpperLimit(false);
 }
 
@@ -582,9 +537,7 @@ void BatchEventsFragment(JointType* joint, uint atomCount)
 }
 
 // Debug draw an anchor fragment (Colors are fixed)
-inline void DrawAnchorAtomFragment(const AnchorAtom& localAnchors,
-                                   Collider* obj0,
-                                   Collider* obj1)
+inline void DrawAnchorAtomFragment(const AnchorAtom& localAnchors, Collider* obj0, Collider* obj1)
 {
   // get the world anchor values
   WorldAnchorAtom anchors(localAnchors, obj0, obj1);
@@ -594,20 +547,15 @@ inline void DrawAnchorAtomFragment(const AnchorAtom& localAnchors,
   Vec3 obj1Pos = obj1->GetWorldTranslation();
 
   // draw lines from each object's center to its respective anchor
-  gDebugDraw->Add(
-      Debug::Line(obj0Pos, anchors.mWorldPoints[0]).Color(Color::White));
-  gDebugDraw->Add(
-      Debug::Line(obj1Pos, anchors.mWorldPoints[1]).Color(Color::Black));
+  gDebugDraw->Add(Debug::Line(obj0Pos, anchors.mWorldPoints[0]).Color(Color::White));
+  gDebugDraw->Add(Debug::Line(obj1Pos, anchors.mWorldPoints[1]).Color(Color::Black));
   // draw a line between the anchors
-  gDebugDraw->Add(Debug::Line(anchors.mWorldPoints[0], anchors.mWorldPoints[1])
-                      .Color(Color::Gray));
+  gDebugDraw->Add(Debug::Line(anchors.mWorldPoints[0], anchors.mWorldPoints[1]).Color(Color::Gray));
 }
 
 // Debug draw an axis fragment at the passed in anchor (Colors fixed)
-inline void DrawAxisAtomFragment(const AxisAtom& localAxes,
-                                 const AnchorAtom& localAnchors,
-                                 Collider* obj0,
-                                 Collider* obj1)
+inline void
+DrawAxisAtomFragment(const AxisAtom& localAxes, const AnchorAtom& localAnchors, Collider* obj0, Collider* obj1)
 {
   // get the world anchor and axis values
   WorldAxisAtom axes(localAxes, obj0, obj1);
@@ -618,10 +566,8 @@ inline void DrawAxisAtomFragment(const AxisAtom& localAxes,
   Vec3 obj1Pos = worldAnchors.mWorldPoints[1];
 
   // draw each axis at the object's anchor position
-  gDebugDraw->Add(
-      Debug::Line(obj0Pos, obj0Pos + axes.mWorldAxes[0]).Color(Color::Red));
-  gDebugDraw->Add(
-      Debug::Line(obj1Pos, obj1Pos + axes.mWorldAxes[1]).Color(Color::Blue));
+  gDebugDraw->Add(Debug::Line(obj0Pos, obj0Pos + axes.mWorldAxes[0]).Color(Color::Red));
+  gDebugDraw->Add(Debug::Line(obj1Pos, obj1Pos + axes.mWorldAxes[1]).Color(Color::Blue));
 }
 
 // Debug draw a the bases of a matrix (Color fixed)
@@ -630,18 +576,13 @@ inline void DrawBasisFragment(Collider* obj, Mat3Param objRot)
   Vec3 objPos = obj->GetWorldTranslation();
 
   // draw the bases at the object's position
-  gDebugDraw->Add(
-      Debug::Line(objPos, objPos + objRot.GetBasis(0)).Color(Color::Red));
-  gDebugDraw->Add(
-      Debug::Line(objPos, objPos + objRot.GetBasis(1)).Color(Color::Green));
-  gDebugDraw->Add(
-      Debug::Line(objPos, objPos + objRot.GetBasis(2)).Color(Color::Blue));
+  gDebugDraw->Add(Debug::Line(objPos, objPos + objRot.GetBasis(0)).Color(Color::Red));
+  gDebugDraw->Add(Debug::Line(objPos, objPos + objRot.GetBasis(1)).Color(Color::Green));
+  gDebugDraw->Add(Debug::Line(objPos, objPos + objRot.GetBasis(2)).Color(Color::Blue));
 }
 
 // Debug draw an angle fragment (Color fixed)
-inline void DrawAngleAtomFragment(const AngleAtom& localAngle,
-                                  Collider* obj0,
-                                  Collider* obj1)
+inline void DrawAngleAtomFragment(const AngleAtom& localAngle, Collider* obj0, Collider* obj1)
 {
   // get each object's current rotation
   Quat obj0CurrRot = Math::ToQuaternion(obj0->GetWorldRotation());
@@ -662,12 +603,9 @@ inline void DrawBasisFragment(Collider* obj)
   Vec3 objPos = obj->GetWorldTranslation();
   Mat3 objRot = obj->GetWorldRotation();
 
-  gDebugDraw->Add(
-      Debug::Line(objPos, objPos + objRot.GetBasis(0)).Color(Color::Red));
-  gDebugDraw->Add(
-      Debug::Line(objPos, objPos + objRot.GetBasis(1)).Color(Color::Green));
-  gDebugDraw->Add(
-      Debug::Line(objPos, objPos + objRot.GetBasis(2)).Color(Color::Blue));
+  gDebugDraw->Add(Debug::Line(objPos, objPos + objRot.GetBasis(0)).Color(Color::Red));
+  gDebugDraw->Add(Debug::Line(objPos, objPos + objRot.GetBasis(1)).Color(Color::Green));
+  gDebugDraw->Add(Debug::Line(objPos, objPos + objRot.GetBasis(2)).Color(Color::Blue));
 }
 
 } // namespace Physics

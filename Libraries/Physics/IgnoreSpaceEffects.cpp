@@ -179,8 +179,7 @@ bool IgnoreSpaceEffects::GetIgnoreState(PhysicsEffectType::Enum effectType)
   return mFlags.IsSet(effectType);
 }
 
-void IgnoreSpaceEffects::SetIgnoreState(PhysicsEffectType::Enum effectType,
-                                        bool ignore)
+void IgnoreSpaceEffects::SetIgnoreState(PhysicsEffectType::Enum effectType, bool ignore)
 {
   mFlags.SetState(effectType, ignore);
 }

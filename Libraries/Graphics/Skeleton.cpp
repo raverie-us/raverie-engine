@@ -80,8 +80,8 @@ void Bone::Detached(AttachmentInfo& info)
 void Bone::DebugDraw()
 {
   ParentSkeletonRange range(GetOwner());
-  forRange(Skeleton * skeleton, range)
-      skeleton->DebugDrawSkeleton(GetOwner()->mName);
+  forRange (Skeleton* skeleton, range)
+    skeleton->DebugDrawSkeleton(GetOwner()->mName);
 }
 
 void Bone::OnCogNameChanged(Event* event)
@@ -92,7 +92,8 @@ void Bone::OnCogNameChanged(Event* event)
 void Bone::NotifySkeletonModified()
 {
   ParentSkeletonRange range(GetOwner());
-  forRange(Skeleton * skeleton, range) skeleton->MarkModified();
+  forRange (Skeleton* skeleton, range)
+    skeleton->MarkModified();
 }
 
 Mat4 Bone::GetLocalTransform()
@@ -151,14 +152,14 @@ void Skeleton::DebugDraw()
 
 void Skeleton::DebugDrawSkeleton(StringParam boneName)
 {
-  forRange(BoneInfo & boneInfo, mBones.All())
-      DebugDrawBone(boneInfo, boneName == boneInfo.mCog->mName);
+  forRange (BoneInfo& boneInfo, mBones.All())
+    DebugDrawBone(boneInfo, boneName == boneInfo.mCog->mName);
 }
 
 void Skeleton::DebugDrawSkeleton(Array<String>& boneNames)
 {
-  forRange(BoneInfo & boneInfo, mBones.All())
-      DebugDrawBone(boneInfo, boneNames.Contains(boneInfo.mCog->mName));
+  forRange (BoneInfo& boneInfo, mBones.All())
+    DebugDrawBone(boneInfo, boneNames.Contains(boneInfo.mCog->mName));
 }
 
 void Skeleton::DebugDrawBone(BoneInfo& boneInfo, bool highlight)
@@ -170,13 +171,12 @@ void Skeleton::DebugDrawBone(BoneInfo& boneInfo, bool highlight)
 
   gDebugDraw->Add(Debug::Sphere(pos, rad).Color(color).OnTop(true));
 
-  forRange(Cog * child, boneInfo.mChildren.All())
+  forRange (Cog* child, boneInfo.mChildren.All())
   {
     Vec3 childPos = child->has(Transform)->GetWorldTranslation();
     Vec3 dir = pos - childPos;
     float len = dir.AttemptNormalize();
-    gDebugDraw->Add(
-        Debug::Cone(childPos, dir, len, rad).Color(color).OnTop(true));
+    gDebugDraw->Add(Debug::Cone(childPos, dir, len, rad).Color(color).OnTop(true));
   }
 }
 
@@ -185,12 +185,12 @@ bool Skeleton::TestRay(GraphicsRayCast& raycast)
   bool hitBone = false;
   raycast.mT = Math::PositiveMax();
 
-  forRange(BoneInfo & boneInfo, mBones.All())
+  forRange (BoneInfo& boneInfo, mBones.All())
   {
     Vec3 pos = boneInfo.mCog->has(Transform)->GetWorldTranslation();
     float rad = GetBoneRadius(boneInfo);
 
-    forRange(Cog * child, boneInfo.mChildren.All())
+    forRange (Cog* child, boneInfo.mChildren.All())
     {
       Vec3 childPos = child->has(Transform)->GetWorldTranslation();
       Vec3 dir = pos - childPos;
@@ -201,15 +201,9 @@ bool Skeleton::TestRay(GraphicsRayCast& raycast)
       Intersection::IntersectionPoint point;
       Intersection::Type result;
       if (len > Math::Epsilon())
-        result = Intersection::RayCapsule(raycast.mRay.Start,
-                                          raycast.mRay.Direction,
-                                          pos,
-                                          childPos,
-                                          rad,
-                                          &point);
+        result = Intersection::RayCapsule(raycast.mRay.Start, raycast.mRay.Direction, pos, childPos, rad, &point);
       else
-        result = Intersection::RaySphere(
-            raycast.mRay.Start, raycast.mRay.Direction, pos, rad, &point);
+        result = Intersection::RaySphere(raycast.mRay.Start, raycast.mRay.Direction, pos, rad, &point);
 
       if (result == Intersection::None)
         continue;
@@ -225,8 +219,7 @@ bool Skeleton::TestRay(GraphicsRayCast& raycast)
     if (boneInfo.mChildren.Empty())
     {
       Intersection::IntersectionPoint point;
-      Intersection::Type result = Intersection::RaySphere(
-          raycast.mRay.Start, raycast.mRay.Direction, pos, rad, &point);
+      Intersection::Type result = Intersection::RaySphere(raycast.mRay.Start, raycast.mRay.Direction, pos, rad, &point);
 
       if (result == Intersection::None)
         continue;
@@ -250,8 +243,7 @@ void Skeleton::MarkModified()
   ConnectThisTo(GetSpace(), Events::UpdateSkeletons, OnUpdateSkeletons);
 }
 
-IndexRange Skeleton::GetBoneTransforms(Array<Mat4>& skinningBuffer,
-                                       uint version)
+IndexRange Skeleton::GetBoneTransforms(Array<Mat4>& skinningBuffer, uint version)
 {
   if (mNeedsRebuild)
     BuildSkeleton();
@@ -265,8 +257,7 @@ IndexRange Skeleton::GetBoneTransforms(Array<Mat4>& skinningBuffer,
   // mBones[0] is this object and bone pointer may be null
   boneTransforms[0] = mBones[0].mCog->has(Transform)->GetParentRelativeMatrix();
   for (uint i = 1; i < mBones.Size(); ++i)
-    boneTransforms[i] = boneTransforms[mBones[i].mParentIndex] *
-                        mBones[i].mCog->has(Bone)->GetLocalTransform();
+    boneTransforms[i] = boneTransforms[mBones[i].mParentIndex] * mBones[i].mCog->has(Bone)->GetLocalTransform();
 
   mCachedTransformRange.start = skinningBuffer.Size();
   skinningBuffer.Append(boneTransforms.All());
@@ -313,8 +304,8 @@ void Skeleton::BuildSkeletonRecursive(Cog& cog, int parentIndex)
       mBones[parentIndex].mChildren.PushBack(&cog);
   }
 
-  forRange(Cog & child, cog.GetChildren())
-      BuildSkeletonRecursive(child, (int)index);
+  forRange (Cog& child, cog.GetChildren())
+    BuildSkeletonRecursive(child, (int)index);
 }
 
 float Skeleton::GetBoneRadius(BoneInfo& boneInfo)
@@ -325,7 +316,7 @@ float Skeleton::GetBoneRadius(BoneInfo& boneInfo)
   Vec3 pos = boneInfo.mCog->has(Transform)->GetWorldTranslation();
 
   float radius = 0.005f;
-  forRange(Cog * child, boneInfo.mChildren.All())
+  forRange (Cog* child, boneInfo.mChildren.All())
   {
     Vec3 childPos = child->has(Transform)->GetWorldTranslation();
     radius = Math::Max(radius, Math::Length(childPos - pos) * 0.05f);

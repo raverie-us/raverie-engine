@@ -23,9 +23,7 @@ Tweakable(Vec4, DownloadForeground, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(Vec4, DownloadBackground, Vec4(1, 1, 1, 1), cLocation);
 } // namespace BuildsUi
 
-BuildItem::BuildItem(Composite* parent,
-                     ZeroBuild* version,
-                     BuildsMenu* buildsMenu) :
+BuildItem::BuildItem(Composite* parent, ZeroBuild* version, BuildsMenu* buildsMenu) :
     Composite(parent),
     mVersion(version),
     mBuildsMenu(buildsMenu)
@@ -36,9 +34,7 @@ BuildItem::BuildItem(Composite* parent,
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetColor(Vec4::cZero);
 
-  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight,
-                              Vec2::cZero,
-                              Thickness(Pixels(0, 9, 10, 0)))); // 3
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness(Pixels(0, 9, 10, 0)))); // 3
   SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
   SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(46)); // 34
 
@@ -80,8 +76,7 @@ BuildItem::BuildItem(Composite* parent,
     version->GetReleaseDate(year, month, day);
 
     mReleaseDate = new Text(rightHalf, mLauncherBoldFont, 10);
-    mReleaseDate->SetText(
-        String::Format("%s-%s-%s", month.c_str(), day.c_str(), year.c_str()));
+    mReleaseDate->SetText(String::Format("%s-%s-%s", month.c_str(), day.c_str(), year.c_str()));
     mReleaseDate->mAlign = TextAlign::Right;
     mReleaseDate->SetColor(BuildsUi::ReleaseDate);
   }
@@ -248,16 +243,14 @@ void BuildItem::OnUninstallModalResult(ModalConfirmEvent* e)
 void BuildItem::CreateBuildsRunningModal()
 {
   // Warn the user that the build is currently running
-  String msg = String::Format("Build %s is currently running",
-                              mVersion->GetDisplayString().c_str());
+  String msg = String::Format("Build %s is currently running", mVersion->GetDisplayString().c_str());
   // Create the buttons that we will display and listen for responses from
   Array<String> buttons;
   buttons.PushBack("RETRY");
   buttons.PushBack("FORCE CLOSE");
   buttons.PushBack("CANCEL");
   // Create the modal and connect to whenever a button is pressed
-  ModalButtonsAction* modal =
-      new ModalButtonsAction(mBuildsMenu, msg.ToUpper(), buttons);
+  ModalButtonsAction* modal = new ModalButtonsAction(mBuildsMenu, msg.ToUpper(), buttons);
   ConnectThisTo(modal, Events::ModalButtonPressed, OnBuildRunningModalResult);
   modal->TakeFocus();
   // Make sure to set what the active modal is on the launcher window (so escape
@@ -406,13 +399,10 @@ void BuildItem::UpdateInstallState()
 
 ReleaseNotes::ReleaseNotes(Composite* parent) : Composite(parent)
 {
-  SetLayout(CreateStackLayout(
-      LayoutDirection::TopToBottom, Pixels(5, 5), Thickness::cZero));
+  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(5, 5), Thickness::cZero));
 
   Composite* headerText = new Composite(this);
-  headerText->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom,
-                                          Pixels(5, 0),
-                                          Thickness(Pixels(0, 0, 8, 0))));
+  headerText->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(5, 0), Thickness(Pixels(0, 0, 8, 0))));
   {
     Composite* topRow = new Composite(headerText);
     topRow->SetLayout(CreateRowLayout());
@@ -426,8 +416,7 @@ ReleaseNotes::ReleaseNotes(Composite* parent) : Composite(parent)
       mDownloadButton->SizeToContents();
       mDownloadButton->mIconColor = ToByteColor(Vec4(0.9f, 0.9f, 0.9f, 1));
       mDownloadButton->mIconHoverColor = Color::White;
-      mDownloadButton->mIconClickedColor =
-          ToByteColor(Vec4(0.7f, 0.7f, 0.7f, 1));
+      mDownloadButton->mIconClickedColor = ToByteColor(Vec4(0.7f, 0.7f, 0.7f, 1));
       mDownloadButton->SetToolTip("Install Build");
 
       mUninstallButton = new IconButton(topRow);
@@ -437,8 +426,7 @@ ReleaseNotes::ReleaseNotes(Composite* parent) : Composite(parent)
       mUninstallButton->SizeToContents();
       mUninstallButton->mIconColor = ToByteColor(Vec4(0.9f, 0.9f, 0.9f, 1));
       mUninstallButton->mIconHoverColor = Color::White;
-      mUninstallButton->mIconClickedColor =
-          ToByteColor(Vec4(0.7f, 0.7f, 0.7f, 1));
+      mUninstallButton->mIconClickedColor = ToByteColor(Vec4(0.7f, 0.7f, 0.7f, 1));
       mUninstallButton->SetToolTip("Uninstall Build");
 
       new Spacer(topRow, SizePolicy::Fixed, Pixels(10, 0));
@@ -535,22 +523,16 @@ void ReleaseNotes::UpdateBuildButtons()
     mUninstallButton->SetActive(true);
 }
 
-BuildsMenu::BuildsMenu(Composite* parent, LauncherWindow* launcher) :
-    Composite(parent),
-    mLauncher(launcher)
+BuildsMenu::BuildsMenu(Composite* parent, LauncherWindow* launcher) : Composite(parent), mLauncher(launcher)
 {
-  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight,
-                              Pixels(10, 0),
-                              Thickness(Pixels(0, 5, 24, 0))));
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(10, 0), Thickness(Pixels(0, 5, 24, 0))));
   SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
   SetSizing(SizeAxis::Y, SizePolicy::Flex, 1);
 
   mBuildList = new ScrollArea(this);
   mBuildList->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(400));
   mBuildList->GetClientWidget()->SetLayout(
-      CreateStackLayout(LayoutDirection::TopToBottom,
-                        Pixels(0, 0),
-                        Thickness(Pixels(32, 0, 0, 0))));
+      CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 0), Thickness(Pixels(32, 0, 0, 0))));
   mBuildList->mScrollSpeedScalar = 0.5f;
 
   Splitter* splitter = new Splitter(this);
@@ -559,27 +541,19 @@ BuildsMenu::BuildsMenu(Composite* parent, LauncherWindow* launcher) :
   mReleaseNotes = new ReleaseNotes(this);
   mReleaseNotes->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
 
-  ConnectThisTo(
-      mReleaseNotes->mDownloadButton, Events::ButtonPressed, OnInstallPressed);
-  ConnectThisTo(mReleaseNotes->mUninstallButton,
-                Events::ButtonPressed,
-                OnUninstallPressed);
+  ConnectThisTo(mReleaseNotes->mDownloadButton, Events::ButtonPressed, OnInstallPressed);
+  ConnectThisTo(mReleaseNotes->mUninstallButton, Events::ButtonPressed, OnUninstallPressed);
 
   VersionSelector* versionSelector = mLauncher->mVersionSelector;
-  ConnectThisTo(
-      versionSelector, Events::VersionListLoaded, OnVersionListLoaded);
+  ConnectThisTo(versionSelector, Events::VersionListLoaded, OnVersionListLoaded);
   ConnectThisTo(versionSelector, Events::BuildListUpdated, OnBuildListUpdated);
   ConnectThisTo(this, Events::MenuDisplayed, OnMenuDisplayed);
   ConnectThisTo(this, Events::MenuHidden, OnMenuHidden);
 
   // Listen for when the user tags change on the config (most likely from the
   // settings menu)
-  ConnectThisTo(Z::gEngine->GetConfigCog(),
-                Events::ShowDevelopChanged,
-                OnShowDevelopChanged);
-  ConnectThisTo(Z::gEngine->GetConfigCog(),
-                Events::ShowExperimentalBranchesChanged,
-                OnShowDevelopChanged);
+  ConnectThisTo(Z::gEngine->GetConfigCog(), Events::ShowDevelopChanged, OnShowDevelopChanged);
+  ConnectThisTo(Z::gEngine->GetConfigCog(), Events::ShowExperimentalBranchesChanged, OnShowDevelopChanged);
 
   // Create the initial build list (at this point it should be the locally
   // downloaded ones)
@@ -590,8 +564,7 @@ void BuildsMenu::UpdateTransform()
 {
   // Update the client size of the scroll area
   Widget* clientWidget = mBuildList->GetClientWidget();
-  clientWidget->mSize.x =
-      mBuildList->mSize.x - mBuildList->GetScrollBarSize() - Pixels(10);
+  clientWidget->mSize.x = mBuildList->mSize.x - mBuildList->GetScrollBarSize() - Pixels(10);
 
   Composite::UpdateTransform();
 }
@@ -618,8 +591,7 @@ void BuildsMenu::CreateBuildItems()
     rejections.Insert("Develop");
 
   // Check to see if we display legacy builds
-  LauncherLegacySettings* legacySettings =
-      launcherConfig->mOwner->has(LauncherLegacySettings);
+  LauncherLegacySettings* legacySettings = launcherConfig->mOwner->has(LauncherLegacySettings);
   if (legacySettings == nullptr || !legacySettings->mDisplayLegacyBuilds)
     rejections.Insert("Legacy");
 
@@ -628,19 +600,12 @@ void BuildsMenu::CreateBuildItems()
 
   ZeroBuildTagPolicy policy(launcherConfig);
   HashSet<String> legacyTags;
-  FilterDataSetWithTags(legacyTags,
-                        rejections,
-                        searchText,
-                        versionSelector->mVersions,
-                        results,
-                        tagResults,
-                        policy);
+  FilterDataSetWithTags(legacyTags, rejections, searchText, versionSelector->mVersions, results, tagResults, policy);
 
   uint index = 0;
   String currentPlatform = BuildId::GetCurrentLauncherId().mPlatform;
-  bool displayOnlyPreferredPlatform =
-      mLauncher->mVersionSelector->mConfig->mDisplayOnlyPreferredPlatform;
-  forRange(ZeroBuild * version, results.All())
+  bool displayOnlyPreferredPlatform = mLauncher->mVersionSelector->mConfig->mDisplayOnlyPreferredPlatform;
+  forRange (ZeroBuild* version, results.All())
   {
     BuildItem* item = new BuildItem(mBuildList, version, this);
     ConnectThisTo(item, Events::ButtonPressed, OnBuildSelected);

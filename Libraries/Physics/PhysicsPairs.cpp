@@ -23,8 +23,7 @@ ColliderPair::ColliderPair(Collider* a, Collider* b)
 
 Vec3 ColliderPair::GetPointSeperatingVelocity(Vec3Param point) const
 {
-  return Top->ComputePointVelocityInternal(point) -
-         Bot->ComputePointVelocityInternal(point);
+  return Top->ComputePointVelocityInternal(point) - Bot->ComputePointVelocityInternal(point);
 }
 
 real ColliderPair::GetMixedRestitution() const
@@ -46,8 +45,7 @@ real ColliderPair::GetMixedFriction() const
     return topMaterial->mDynamicFriction;
   if (botMaterial->mFrictionImportance > topMaterial->mFrictionImportance)
     return botMaterial->mDynamicFriction;
-  return Math::Sqrt(topMaterial->mDynamicFriction *
-                    botMaterial->mDynamicFriction);
+  return Math::Sqrt(topMaterial->mDynamicFriction * botMaterial->mDynamicFriction);
 }
 
 u64 ColliderPair::GetId() const

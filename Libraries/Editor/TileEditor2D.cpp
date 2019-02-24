@@ -6,10 +6,7 @@ namespace Zero
 
 namespace
 {
-void ComputeCorners(IntVec2 pos,
-                    IntVec2 scale,
-                    Transform* transform,
-                    Vec3 quad[4])
+void ComputeCorners(IntVec2 pos, IntVec2 scale, Transform* transform, Vec3 quad[4])
 {
   quad[0] = Vec3(real(pos.x), real(pos.y - scale.y + 1), 0.0);
   quad[1] = Vec3(real(pos.x + scale.x), real(pos.y - scale.y + 1), 0.0);
@@ -20,24 +17,16 @@ void ComputeCorners(IntVec2 pos,
     quad[i] = transform->TransformPoint(quad[i]);
 }
 
-void DebugDrawQuad(IntVec2 pos,
-                   IntVec2 scale,
-                   Transform* transform,
-                   ByteColor color)
+void DebugDrawQuad(IntVec2 pos, IntVec2 scale, Transform* transform, ByteColor color)
 {
   Vec3 quad[4];
   ComputeCorners(pos, scale, transform, quad);
 
-  gDebugDraw->Add(
-      Debug::Triangle(quad[0], quad[1], quad[2]).Color(color).Alpha(50));
-  gDebugDraw->Add(
-      Debug::Triangle(quad[0], quad[2], quad[3]).Color(color).Alpha(50));
+  gDebugDraw->Add(Debug::Triangle(quad[0], quad[1], quad[2]).Color(color).Alpha(50));
+  gDebugDraw->Add(Debug::Triangle(quad[0], quad[2], quad[3]).Color(color).Alpha(50));
 }
 
-void DebugDrawOutline(IntVec2 pos,
-                      IntVec2 scale,
-                      Transform* transform,
-                      ByteColor color)
+void DebugDrawOutline(IntVec2 pos, IntVec2 scale, Transform* transform, ByteColor color)
 {
   Vec3 quad[4];
   ComputeCorners(pos, scale, transform, quad);
@@ -46,10 +35,7 @@ void DebugDrawOutline(IntVec2 pos,
     gDebugDraw->Add(Debug::Line(quad[j], quad[i]).Color(color));
 }
 
-void DebugDrawCross(IntVec2 pos,
-                    IntVec2 scale,
-                    Transform* transform,
-                    ByteColor color)
+void DebugDrawCross(IntVec2 pos, IntVec2 scale, Transform* transform, ByteColor color)
 {
   Vec3 quad[4];
   ComputeCorners(pos, scale, transform, quad);
@@ -58,28 +44,21 @@ void DebugDrawCross(IntVec2 pos,
   gDebugDraw->Add(Debug::Line(quad[1], quad[3]).Color(color));
 }
 
-void DebugDrawTriangle(IntVec2 pos,
-                       Vec3 points[3],
-                       Transform* transform,
-                       ByteColor color)
+void DebugDrawTriangle(IntVec2 pos, Vec3 points[3], Transform* transform, ByteColor color)
 {
   for (uint i = 0; i < 3; ++i)
-    points[i] = transform->TransformPoint(Vec3(
-        real(points[i].x + pos.x + 0.5), real(points[i].y + pos.y + 0.5), 0.0));
+    points[i] = transform->TransformPoint(Vec3(real(points[i].x + pos.x + 0.5), real(points[i].y + pos.y + 0.5), 0.0));
 
-  gDebugDraw->Add(
-      Debug::Triangle(points[0], points[1], points[2]).Color(color).Alpha(50));
+  gDebugDraw->Add(Debug::Triangle(points[0], points[1], points[2]).Color(color).Alpha(50));
 }
 
-void DebugDrawCoordinates(
-    IntVec2 pos, int size, int width, Transform* transform, ByteColor color)
+void DebugDrawCoordinates(IntVec2 pos, int size, int width, Transform* transform, ByteColor color)
 {
   int height = size / width;
   IntVec2 min(pos.x, pos.y - height + 1);
   IntVec2 max(pos.x + width - 1, pos.y);
 
-  Vec3 textPos =
-      transform->TransformPoint(Vec3(min.x + width / 2.0f, max.y + 1.5f, 0.0f));
+  Vec3 textPos = transform->TransformPoint(Vec3(min.x + width / 2.0f, max.y + 1.5f, 0.0f));
   float textSize = 0.25f;
   String text;
   if (size == 1)
@@ -87,10 +66,7 @@ void DebugDrawCoordinates(
   else
     text = String::Format("[(%d, %d), (%d,%d)]", min.x, min.y, max.x, max.y);
 
-  gDebugDraw->Add(Debug::Text(textPos, textSize, text)
-                      .Color(color)
-                      .Centered(true)
-                      .ViewAligned(false));
+  gDebugDraw->Add(Debug::Text(textPos, textSize, text).Color(color).Centered(true).ViewAligned(false));
 }
 
 real RainbowColor(real value)
@@ -256,8 +232,7 @@ ZilchDefineType(TileEditor2DDrawTool, builder, type)
 {
 }
 
-TileEditor2DDrawTool::TileEditor2DDrawTool(TileEditor2D* owner) :
-    TileEditor2DSubTool(owner)
+TileEditor2DDrawTool::TileEditor2DDrawTool(TileEditor2D* owner) : TileEditor2DSubTool(owner)
 {
 }
 
@@ -269,8 +244,7 @@ void TileEditor2DDrawTool::Draw(TileMap* map)
   // not sure how this happened, but safeguard against a crash
   if (selection.Width == 0)
     return;
-  IntVec2 scale =
-      IntVec2(selection.Width, selection.Tiles.Size() / selection.Width);
+  IntVec2 scale = IntVec2(selection.Width, selection.Tiles.Size() / selection.Width);
 
   DebugDrawOutline(gridPos, scale, transform, Color::Red);
 
@@ -286,8 +260,7 @@ void TileEditor2DDrawTool::Draw(TileMap* map)
     if (mPrimaryActive)
     {
       for (uint i = 0; i < mChanges.Size(); ++i)
-        DebugDrawQuad(
-            mChanges[i].GridPos, IntVec2(1, 1), transform, Color::Red);
+        DebugDrawQuad(mChanges[i].GridPos, IntVec2(1, 1), transform, Color::Red);
     }
 
     for (int i = 0; i < size; ++i)
@@ -295,10 +268,7 @@ void TileEditor2DDrawTool::Draw(TileMap* map)
       if (selection.Tiles[i].GetArchetypeResource() == nullptr)
         continue;
 
-      DebugDrawQuad(gridPos + IntVec2(i % width, -i / width),
-                    IntVec2(1, 1),
-                    transform,
-                    Color::Red);
+      DebugDrawQuad(gridPos + IntVec2(i % width, -i / width), IntVec2(1, 1), transform, Color::Red);
     }
   }
 
@@ -357,9 +327,7 @@ void TileEditor2DDrawTool::DrawTile(TileMap* map)
         continue;
 
       TileMapChange change;
-      change.GridPos =
-          IntVec2(mGridPosition.x + i % width, mGridPosition.y - i / width) +
-          selection.Offset;
+      change.GridPos = IntVec2(mGridPosition.x + i % width, mGridPosition.y - i / width) + selection.Offset;
       change.NewTile = selection.Tiles[i];
       change.PrevTile = map->GetTile(change.GridPos);
 
@@ -388,8 +356,7 @@ void TileEditor2DDrawTool::EraseTile(TileMap* map)
     for (int i = 0; i < size; ++i)
     {
       TileMapChange change;
-      change.GridPos = IntVec2(gridPos.x + i % width, gridPos.y - i / width) +
-                       selection.Offset;
+      change.GridPos = IntVec2(gridPos.x + i % width, gridPos.y - i / width) + selection.Offset;
       change.NewTile = Tile();
       change.PrevTile = map->GetTile(change.GridPos);
 
@@ -419,8 +386,7 @@ void TileEditor2DDrawTool::ApplyChange(TileMap* map, TileMapChange& change)
   map->SetTile(change.GridPos, change.NewTile);
 }
 
-void TileEditor2DDrawTool::ApplyChanges(TileMap* map,
-                                        Array<TileMapChange>& changes)
+void TileEditor2DDrawTool::ApplyChanges(TileMap* map, Array<TileMapChange>& changes)
 {
   for (uint i = 0; i < changes.Size(); ++i)
     map->SetTile(changes[i].GridPos, changes[i].NewTile);
@@ -432,9 +398,7 @@ ZilchDefineType(TileEditor2DSelectTool, builder, type)
 {
 }
 
-TileEditor2DSelectTool::TileEditor2DSelectTool(TileEditor2D* owner) :
-    TileEditor2DSubTool(owner),
-    mHasSelection(false)
+TileEditor2DSelectTool::TileEditor2DSelectTool(TileEditor2D* owner) : TileEditor2DSubTool(owner), mHasSelection(false)
 {
 }
 
@@ -455,8 +419,7 @@ void TileEditor2DSelectTool::Draw(TileMap* map)
     DebugDrawQuad(gridPos, scale, transform, Color::Blue);
 
     if (mOwner->GetShowCoordinates())
-      DebugDrawCoordinates(
-          gridPos, scale.x * scale.y, scale.x, transform, Color::Blue);
+      DebugDrawCoordinates(gridPos, scale.x * scale.y, scale.x, transform, Color::Blue);
   }
   else
   {
@@ -495,8 +458,7 @@ void TileEditor2DSelectTool::SecondaryStart(TileMap* map)
   max.x = mStart.x > mEnd.x ? mStart.x : mEnd.x;
   max.y = mStart.y > mEnd.y ? mStart.y : mEnd.y;
 
-  if (gridPos.x < min.x || gridPos.x > max.x || gridPos.y < min.y ||
-      gridPos.y > max.y)
+  if (gridPos.x < min.x || gridPos.x > max.x || gridPos.y < min.y || gridPos.y > max.y)
     return;
 
   int width = max.x - min.x + 1;
@@ -576,8 +538,7 @@ void TileEditor2D::Initialize(CogInitializer& initializer)
   ConnectThisTo(GetOwner(), Events::GetToolInfo, OnGetToolInfo);
 }
 
-void TileEditor2D::GeneratePhysicsMeshResource(
-    const Array<Vec3>& originalPoints, StringParam name)
+void TileEditor2D::GeneratePhysicsMeshResource(const Array<Vec3>& originalPoints, StringParam name)
 {
   Array<Vec3> vertices = originalPoints;
   Array<uint> indices;
@@ -637,10 +598,9 @@ void TileEditor2D::OnSelectionFinal(SelectionChangedEvent* event)
     // This behavior currently relies on MainPropertyView connecting to this
     // event first
     Z::gEditor->ShowWindow("Tools");
-    TilePaletteSourceManager* manager =
-        (TilePaletteSourceManager*)TilePaletteSourceManager::GetInstance();
-    TilePaletteSource* palette = (TilePaletteSource*)manager->GetResource(
-        cog->has(TileMap)->GetPaletteName(), ResourceNotFound::ReturnNull);
+    TilePaletteSourceManager* manager = (TilePaletteSourceManager*)TilePaletteSourceManager::GetInstance();
+    TilePaletteSource* palette =
+        (TilePaletteSource*)manager->GetResource(cog->has(TileMap)->GetPaletteName(), ResourceNotFound::ReturnNull);
     mTilePalatte->SetTilePalette(palette);
   }
   else
@@ -719,8 +679,7 @@ void TileEditor2D::OnKeyDown(KeyboardEvent* e)
 void TileEditor2D::OnLeftMouseDown(ViewportMouseEvent* e)
 {
   Viewport* viewport = e->GetViewport();
-  if (viewport->GetTargetSpace() &&
-      viewport->GetTargetSpace()->IsEditorMode() == false)
+  if (viewport->GetTargetSpace() && viewport->GetTargetSpace()->IsEditorMode() == false)
     return;
 
   TileMap* tileMap = GetTileMap();
@@ -740,8 +699,7 @@ void TileEditor2D::OnLeftMouseDown(ViewportMouseEvent* e)
 void TileEditor2D::OnRightMouseDown(ViewportMouseEvent* e)
 {
   Viewport* viewport = e->GetViewport();
-  if (viewport->GetTargetSpace() &&
-      viewport->GetTargetSpace()->IsEditorMode() == false)
+  if (viewport->GetTargetSpace() && viewport->GetTargetSpace()->IsEditorMode() == false)
     return;
 
   TileMap* tileMap = GetTileMap();
@@ -758,8 +716,7 @@ void TileEditor2D::OnRightMouseDown(ViewportMouseEvent* e)
 void TileEditor2D::OnMouseMove(ViewportMouseEvent* e)
 {
   Viewport* viewport = e->GetViewport();
-  if (viewport->GetTargetSpace() &&
-      viewport->GetTargetSpace()->IsEditorMode() == false)
+  if (viewport->GetTargetSpace() && viewport->GetTargetSpace()->IsEditorMode() == false)
     return;
 
   TileMap* tileMap = GetTileMap();
@@ -769,15 +726,11 @@ void TileEditor2D::OnMouseMove(ViewportMouseEvent* e)
   Ray worldRay = viewport->ScreenToWorldRay(e->Position);
 
   Intersection::IntersectionPoint point;
-  Plane plane(
-      tileMap->GetOwner()->has(Transform)->TransformNormal(Vec3(0.0, 0.0, 1.0)),
-      tileMap->GetOwner()->has(Transform)->GetWorldTranslation());
+  Plane plane(tileMap->GetOwner()->has(Transform)->TransformNormal(Vec3(0.0, 0.0, 1.0)),
+              tileMap->GetOwner()->has(Transform)->GetWorldTranslation());
 
-  Intersection::Type type = Intersection::RayPlane(worldRay.Start,
-                                                   worldRay.Direction,
-                                                   plane.GetNormal(),
-                                                   plane.GetDistance(),
-                                                   &point);
+  Intersection::Type type =
+      Intersection::RayPlane(worldRay.Start, worldRay.Direction, plane.GetNormal(), plane.GetDistance(), &point);
   if (type == Intersection::None)
     return;
 
@@ -789,8 +742,7 @@ void TileEditor2D::OnMouseMove(ViewportMouseEvent* e)
 void TileEditor2D::OnMouseDragMove(ViewportMouseEvent* e)
 {
   Viewport* viewport = e->GetViewport();
-  if (viewport->GetTargetSpace() &&
-      viewport->GetTargetSpace()->IsEditorMode() == false)
+  if (viewport->GetTargetSpace() && viewport->GetTargetSpace()->IsEditorMode() == false)
     return;
 
   TileMap* tileMap = GetTileMap();
@@ -800,15 +752,11 @@ void TileEditor2D::OnMouseDragMove(ViewportMouseEvent* e)
   Ray worldRay = viewport->ScreenToWorldRay(e->Position);
 
   Intersection::IntersectionPoint point;
-  Plane plane(
-      tileMap->GetOwner()->has(Transform)->TransformNormal(Vec3(0.0, 0.0, 1.0)),
-      tileMap->GetOwner()->has(Transform)->GetWorldTranslation());
+  Plane plane(tileMap->GetOwner()->has(Transform)->TransformNormal(Vec3(0.0, 0.0, 1.0)),
+              tileMap->GetOwner()->has(Transform)->GetWorldTranslation());
 
-  Intersection::Type type = Intersection::RayPlane(worldRay.Start,
-                                                   worldRay.Direction,
-                                                   plane.GetNormal(),
-                                                   plane.GetDistance(),
-                                                   &point);
+  Intersection::Type type =
+      Intersection::RayPlane(worldRay.Start, worldRay.Direction, plane.GetNormal(), plane.GetDistance(), &point);
   if (type == Intersection::None)
     return;
 
@@ -849,19 +797,14 @@ void TileEditor2D::OnToolDraw(Event*)
     int gridSize = 64;
     for (int i = -gridSize; i <= gridSize + 1; ++i)
     {
-      gridLines.PushBack(mapTransform->TransformPoint(
-          Vec3(real(i + gridPos.x), real(-gridSize + gridPos.y), 0.0f)));
-      gridLines.PushBack(mapTransform->TransformPoint(
-          Vec3(real(i + gridPos.x), real(gridSize + gridPos.y + 1), 0.0f)));
-      gridLines.PushBack(mapTransform->TransformPoint(
-          Vec3(real(-gridSize + gridPos.x), real(i + gridPos.y), 0.0f)));
-      gridLines.PushBack(mapTransform->TransformPoint(
-          Vec3(real(gridSize + gridPos.x + 1), real(i + gridPos.y), 0.0f)));
+      gridLines.PushBack(mapTransform->TransformPoint(Vec3(real(i + gridPos.x), real(-gridSize + gridPos.y), 0.0f)));
+      gridLines.PushBack(mapTransform->TransformPoint(Vec3(real(i + gridPos.x), real(gridSize + gridPos.y + 1), 0.0f)));
+      gridLines.PushBack(mapTransform->TransformPoint(Vec3(real(-gridSize + gridPos.x), real(i + gridPos.y), 0.0f)));
+      gridLines.PushBack(mapTransform->TransformPoint(Vec3(real(gridSize + gridPos.x + 1), real(i + gridPos.y), 0.0f)));
     }
 
     for (uint i = 1; i < gridLines.Size(); i += 2)
-      Zero::gDebugDraw->Add(
-          Zero::Debug::Line(gridLines[i - 1], gridLines[i]).Color(Color::Gray));
+      Zero::gDebugDraw->Add(Zero::Debug::Line(gridLines[i - 1], gridLines[i]).Color(Color::Gray));
   }
 
   if (mShowCollision)
@@ -906,7 +849,7 @@ void TileEditor2D::OnToolDraw(Event*)
 
   if (mShowArchetype)
   {
-    forRange(auto pair, tileMap->GetTiles())
+    forRange (auto pair, tileMap->GetTiles())
     {
       IntVec2 gridPos = pair.first;
       Tile tile = pair.second;
@@ -917,16 +860,13 @@ void TileEditor2D::OnToolDraw(Event*)
 
       Archetype* archetype = tile.GetArchetypeResource();
       if (archetype)
-        Zero::gDebugDraw->Add(
-            Zero::Debug::Text(pos, real(0.15f), archetype->Name)
-                .Centered(true)
-                .Color(Color::Orange));
+        Zero::gDebugDraw->Add(Zero::Debug::Text(pos, real(0.15f), archetype->Name).Centered(true).Color(Color::Orange));
     }
   }
 
   if (mShowInvalid)
   {
-    forRange(auto pair, tileMap->GetTiles())
+    forRange (auto pair, tileMap->GetTiles())
     {
       IntVec2 gridPos = pair.first;
       Tile tile = pair.second;
@@ -998,24 +938,15 @@ void TileEditor2D::CreateTileMap()
 TileMap* TileEditor2D::GetTileMap()
 {
   // Disabled creation
-  TileMap* tileMap =
-      static_cast<TileMap*>(Tool::GetOrCreateEditComponent(ZilchTypeId(TileMap),
-                                                           cDefaultName,
-                                                           cDefaultArchetype,
-                                                           mLastEdited,
-                                                           false));
+  TileMap* tileMap = static_cast<TileMap*>(
+      Tool::GetOrCreateEditComponent(ZilchTypeId(TileMap), cDefaultName, cDefaultArchetype, mLastEdited, false));
   if (tileMap == NULL && mAddTileMapWidget.IsNull())
   {
-    mAddTileMapWidget =
-        Tool::CreateViewportTextWidget("No TileMap Object, Add New +");
+    mAddTileMapWidget = Tool::CreateViewportTextWidget("No TileMap Object, Add New +");
     if (mAddTileMapWidget != nullptr)
     {
-      ConnectThisTo((ViewportTextWidget*)mAddTileMapWidget,
-                    Events::LeftMouseDown,
-                    OnLeftMouseDownAddTileMapWidget);
-      ConnectThisTo((ViewportTextWidget*)mAddTileMapWidget,
-                    Events::LeftMouseUp,
-                    OnLeftClickAddTileMapWidget);
+      ConnectThisTo((ViewportTextWidget*)mAddTileMapWidget, Events::LeftMouseDown, OnLeftMouseDownAddTileMapWidget);
+      ConnectThisTo((ViewportTextWidget*)mAddTileMapWidget, Events::LeftMouseUp, OnLeftClickAddTileMapWidget);
     }
   }
   return tileMap;
@@ -1028,8 +959,7 @@ IntVec2 TileEditor2D::GridPositionFromWorld(Vec3 pos)
 
 IntVec2 TileEditor2D::GetMouseGridPosition(TileMap* map)
 {
-  Vec3 tileSpace =
-      map->GetOwner()->has(Transform)->TransformPointInverse(mMousePos);
+  Vec3 tileSpace = map->GetOwner()->has(Transform)->TransformPointInverse(mMousePos);
   return GridPositionFromWorld(tileSpace);
 }
 

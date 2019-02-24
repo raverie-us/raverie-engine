@@ -94,10 +94,7 @@ struct ZeroShared Vector4
   static Vector4 Clamp(Vec4Param value, Vec4Param minValue, Vec4Param maxValue);
   /// Same as clamp, however it fills out whether or not anything was clamped.
   /// Useful when an assert message should be shown if anything was clamped.
-  static Vector4 DebugClamp(Vec4Param value,
-                            Vec4Param minValue,
-                            Vec4Param maxValue,
-                            bool& wasClamped);
+  static Vector4 DebugClamp(Vec4Param value, Vec4Param minValue, Vec4Param maxValue, bool& wasClamped);
 
   /// Return a copy of this vector with each element has been floored.
   static Vector4 Floor(Vec4Param value);
@@ -116,15 +113,12 @@ struct ZeroShared Vector4
   /// Projects the input vector onto a plane (the normal must be normalized)
   static Vector4 ProjectOnPlane(Vec4Param input, Vec4Param planeNormal);
   /// Calculates the reflection vector across a given vector.
-  static Vector4 ReflectAcrossVector(Vec4Param input,
-                                     Vec4Param normalizedVector);
+  static Vector4 ReflectAcrossVector(Vec4Param input, Vec4Param normalizedVector);
   /// Calculates the reflection vector across a given plane.
   static Vector4 ReflectAcrossPlane(Vec4Param input, Vec4Param planeNormal);
   /// Calculates the refraction vector through a plane given a certain index of
   /// refraction.
-  static Vector4 Refract(Vec4Param input,
-                         Vec4Param planeNormal,
-                         real refractionIndex);
+  static Vector4 Refract(Vec4Param input, Vec4Param planeNormal, real refractionIndex);
   /// Get the angle between the two vectors in radians.
   static real AngleBetween(Vec4Param a, Vec4Param b);
 
@@ -209,15 +203,10 @@ ZeroShared Vector4 Min(Vec4Param lhs, Vec4Param rhs);
 /// Returns a vector with the component-wise max between two vectors.
 ZeroShared Vector4 Max(Vec4Param lhs, Vec4Param rhs);
 /// Returns a vector where each component is clamped between min and max.
-ZeroShared Vector4 Clamp(Vec4Param value,
-                         Vec4Param minValue,
-                         Vec4Param maxValue);
+ZeroShared Vector4 Clamp(Vec4Param value, Vec4Param minValue, Vec4Param maxValue);
 /// Same as clamp, however it fills out whether or not anything was clamped.
 /// Useful when an assert message should be shown if anything was clamped.
-ZeroShared Vector4 DebugClamp(Vec4Param value,
-                              Vec4Param minValue,
-                              Vec4Param maxValue,
-                              bool& wasClamped);
+ZeroShared Vector4 DebugClamp(Vec4Param value, Vec4Param minValue, Vec4Param maxValue, bool& wasClamped);
 
 /// Return a copy of this vector with each element has been floored.
 ZeroShared Vector4 Floor(Vec4Param value);
@@ -237,15 +226,12 @@ ZeroShared Vector4 ProjectOnVector(Vec4Param input, Vec4Param normalizedVector);
 /// Projects the input vector onto a plane (the normal must be normalized)
 ZeroShared Vector4 ProjectOnPlane(Vec4Param input, Vec4Param planeNormal);
 /// Calculates the reflection vector across a given vector.
-ZeroShared Vector4 ReflectAcrossVector(Vec4Param input,
-                                       Vec4Param normalizedVector);
+ZeroShared Vector4 ReflectAcrossVector(Vec4Param input, Vec4Param normalizedVector);
 /// Calculates the reflection vector across a given plane.
 ZeroShared Vector4 ReflectAcrossPlane(Vec4Param input, Vec4Param planeNormal);
 /// Calculates the refraction vector through a plane given a certain index of
 /// refraction.
-ZeroShared Vector4 Refract(Vec4Param input,
-                           Vec4Param planeNormal,
-                           real refractionIndex);
+ZeroShared Vector4 Refract(Vec4Param input, Vec4Param planeNormal, real refractionIndex);
 /// Get the angle between the two vectors in radians.
 ZeroShared real AngleBetween(Vec4Param a, Vec4Param b);
 

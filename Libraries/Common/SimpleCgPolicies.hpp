@@ -51,10 +51,7 @@ struct SimpleCgPolicy
 
   //-(mat * v1 - v2) = v2 - mat * v1
   // out is assumed to only ever be aliased as v2
-  void NegativeTransformSubtract(Mat3Param mat,
-                                 Vec3Param v1,
-                                 Vec3Param v2,
-                                 Vec3Ptr out)
+  void NegativeTransformSubtract(Mat3Param mat, Vec3Param v1, Vec3Param v2, Vec3Ptr out)
   {
     *out = v2 - Math::Transform(mat, v1);
   }

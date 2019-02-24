@@ -107,12 +107,9 @@ void WindEffect::ApplyEffect(Collider& collider, RigidBody* obj, real dt)
   Vec3 basisY = rot.BasisY();
   Vec3 basisZ = rot.BasisZ();
   // Approximate the surface area along each basis (bounding box approximation)
-  real forceX =
-      Math::Abs(Math::Dot(mWorldWindDirection, basisX)) * scale.y * scale.z;
-  real forceY =
-      Math::Abs(Math::Dot(mWorldWindDirection, basisY)) * scale.x * scale.z;
-  real forceZ =
-      Math::Abs(Math::Dot(mWorldWindDirection, basisZ)) * scale.x * scale.y;
+  real forceX = Math::Abs(Math::Dot(mWorldWindDirection, basisX)) * scale.y * scale.z;
+  real forceY = Math::Abs(Math::Dot(mWorldWindDirection, basisY)) * scale.x * scale.z;
+  real forceZ = Math::Abs(Math::Dot(mWorldWindDirection, basisZ)) * scale.x * scale.y;
 
   // Make sure each basis vector is in the same hemisphere as the wind direction
   if (Math::Dot(mWorldWindDirection, basisX) < real(0))

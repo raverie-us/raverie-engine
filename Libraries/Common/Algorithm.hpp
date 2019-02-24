@@ -20,14 +20,14 @@ struct binary_function
   typedef result result_type;
 };
 
-#define StandardFunctor(name, operation)                                       \
-  template <typename type>                                                     \
-  struct name : public binary_function<type, type, bool>                       \
-  {                                                                            \
-    bool operator()(const type& left, const type& right) const                 \
-    {                                                                          \
-      return (left operation right);                                           \
-    }                                                                          \
+#define StandardFunctor(name, operation)                                                                               \
+  template <typename type>                                                                                             \
+  struct name : public binary_function<type, type, bool>                                                               \
+  {                                                                                                                    \
+    bool operator()(const type& left, const type& right) const                                                         \
+    {                                                                                                                  \
+      return (left operation right);                                                                                   \
+    }                                                                                                                  \
   };
 
 StandardFunctor(equal_to, ==);
@@ -100,8 +100,7 @@ void ForEach(inputRange input, unaryOperator op)
 template <typename inputRange, typename outputRange, typename unaryOperator>
 void TransformRange(inputRange input, outputRange output, unaryOperator op)
 {
-  ErrorIf(output.Length() < input.Length(),
-          "Output range is smaller than input range.");
+  ErrorIf(output.Length() < input.Length(), "Output range is smaller than input range.");
   while (!input.Empty())
   {
     output.Front() = op(input.Front());
@@ -114,8 +113,7 @@ void TransformRange(inputRange input, outputRange output, unaryOperator op)
 template <typename inputRange, typename outputRange>
 void Copy(inputRange input, outputRange output)
 {
-  ErrorIf(output.Length() < input.Length(),
-          "Output range is smaller than input range.");
+  ErrorIf(output.Length() < input.Length(), "Output range is smaller than input range.");
   while (!input.Empty())
   {
     output.Front() = input.Front();
@@ -155,10 +153,7 @@ bool Equal(inputRange0 range0, inputRange1 range1)
 
 // Insertion sort
 template <typename iterator, typename Comparer, typename type>
-void InsertionSort(iterator begin,
-                   iterator end,
-                   Comparer comparer,
-                   type* /*dummy*/)
+void InsertionSort(iterator begin, iterator end, Comparer comparer, type* /*dummy*/)
 {
   if (begin != end)
   {
@@ -195,8 +190,7 @@ void InsertionSort(iterator begin,
 
 // partition used in quick sort
 template <typename iterator, typename Comparer, typename type>
-inline Pair<iterator, iterator>
-Partition(iterator first, iterator last, Comparer comparer, type* /*dummy*/)
+inline Pair<iterator, iterator> Partition(iterator first, iterator last, Comparer comparer, type* /*dummy*/)
 {
   size_t size = last - first;
 
@@ -275,8 +269,7 @@ void QuickSort(iterator begin, iterator end, type* dummy, Comparer comparer)
     // Use quick sort for larger arrays
     if (rangeSize > cSortLimit)
     {
-      Pair<iterator, iterator> division =
-          Partition(begin, end, comparer, dummy);
+      Pair<iterator, iterator> division = Partition(begin, end, comparer, dummy);
 
       // push the larger division for later
       // make the smaller division the current begin and end
@@ -386,9 +379,7 @@ bool IsSorted(rangeType range)
 }
 
 template <typename rangeType, typename searchType, typename valueType>
-valueType& BinarySearch(rangeType& range,
-                        const searchType& searchValue,
-                        valueType& valueIfNotFound)
+valueType& BinarySearch(rangeType& range, const searchType& searchValue, valueType& valueIfNotFound)
 {
   size_t begin = 0;
   size_t end = range.Size();
@@ -439,10 +430,7 @@ rangeType LowerBound(rangeType r, const valueType& value, predicate pred)
   return newRange;
 }
 template <typename iteratorType, typename valueType, typename predicate>
-iteratorType LowerBound(iteratorType begin,
-                        iteratorType end,
-                        const valueType& value,
-                        predicate pred)
+iteratorType LowerBound(iteratorType begin, iteratorType end, const valueType& value, predicate pred)
 {
   return LowerBound(BuildRange(begin, end), value, pred).Begin();
 }
@@ -470,22 +458,16 @@ rangeType UpperBound(rangeType r, const valueType& value, predicate pred)
   return newRange;
 }
 template <typename iteratorType, typename valueType, typename predicate>
-iteratorType UpperBound(iteratorType begin,
-                        iteratorType end,
-                        const valueType& value,
-                        predicate pred)
+iteratorType UpperBound(iteratorType begin, iteratorType end, const valueType& value, predicate pred)
 {
   return UpperBound(BuildRange(begin, end), value, pred).Begin();
 }
 
 /// Returns the lower and upper bound of the specified value in the range
 template <typename rangeType, typename valueType, typename predicate>
-rangeType LowerAndUpperBound(rangeType r,
-                             const valueType& value,
-                             predicate pred)
+rangeType LowerAndUpperBound(rangeType r, const valueType& value, predicate pred)
 {
-  return BuildRange(LowerBound(r, value, pred).Begin(),
-                    UpperBound(r, value, pred).Begin());
+  return BuildRange(LowerBound(r, value, pred).Begin(), UpperBound(r, value, pred).Begin());
 }
 
 template <typename rangeType, typename Predicate>
@@ -517,8 +499,7 @@ rangeType Search(rangeType searchRange, rangeType toFind, Predicate predicate)
 template <typename rangeType>
 rangeType Search(rangeType searchRange, rangeType toFind)
 {
-  return Search(
-      searchRange, toFind, equal_to<typename rangeType::value_type>());
+  return Search(searchRange, toFind, equal_to<typename rangeType::value_type>());
 }
 
 // Inserts a value into a sorted list

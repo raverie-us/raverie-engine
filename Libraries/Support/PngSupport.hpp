@@ -30,11 +30,6 @@ void LoadPng(Status& status,
              uint* height,
              TextureFormat::Enum* format,
              TextureFormat::Enum requireFormat = TextureFormat::None);
-void SavePng(Status& status,
-             Stream* stream,
-             const byte* image,
-             uint width,
-             uint height,
-             TextureFormat::Enum format);
+void SavePng(Status& status, Stream* stream, const byte* image, uint width, uint height, TextureFormat::Enum format);
 
 } // namespace Zero

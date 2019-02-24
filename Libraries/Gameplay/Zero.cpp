@@ -27,23 +27,19 @@ ZilchDefineType(ZeroStatic, builder, type)
 
 void ErrorOnConnect(Function* func)
 {
-  DoNotifyException(
-      "Zilch Error",
-      String::Format("Zero.Connect must take a delegate that has only one "
-                     "parameter (a reference / class Event type). Function %s "
-                     "has the signature: %s",
-                     func->Name.c_str(),
-                     func->FunctionType->ToString().c_str()));
+  DoNotifyException("Zilch Error",
+                    String::Format("Zero.Connect must take a delegate that has only one "
+                                   "parameter (a reference / class Event type). Function %s "
+                                   "has the signature: %s",
+                                   func->Name.c_str(),
+                                   func->FunctionType->ToString().c_str()));
 }
 
-void ZeroStatic::Connect(Object* target,
-                         StringParam eventId,
-                         DelegateParam delegate)
+void ZeroStatic::Connect(Object* target, StringParam eventId, DelegateParam delegate)
 {
   if (target == nullptr)
   {
-    DoNotifyException("The target object is null",
-                      "Cannot connect to a null object");
+    DoNotifyException("The target object is null", "Cannot connect to a null object");
     return;
   }
 
@@ -86,8 +82,7 @@ void ZeroStatic::Connect(Object* target,
 
   if (dispatcher == nullptr)
   {
-    DoNotifyException("The dispatcher is null",
-                      "Cannot connect a null dispatcher");
+    DoNotifyException("The dispatcher is null", "Cannot connect a null dispatcher");
     return;
   }
 
@@ -98,15 +93,12 @@ void ZeroStatic::Connect(Object* target,
   }
 
   // Create the connection
-  ZilchScriptConnection* connection =
-      new ZilchScriptConnection(dispatcher, eventId, delegate);
+  ZilchScriptConnection* connection = new ZilchScriptConnection(dispatcher, eventId, delegate);
   connection->EventType = eventType;
 
   if (!dispatcher->IsUniqueConnection(connection))
   {
-    String error = String::Format(
-        "The event id '%s' already has a connection to this event handler",
-        eventId.c_str());
+    String error = String::Format("The event id '%s' already has a connection to this event handler", eventId.c_str());
     DoNotifyException("Duplicate Event Connection", error);
     connection->Flags.SetFlag(ConnectionFlags::DoNotDisconnect);
     delete connection;
@@ -117,9 +109,7 @@ void ZeroStatic::Connect(Object* target,
   connection->ConnectToReceiverAndDispatcher(eventId, receiver, dispatcher);
 }
 
-void ZeroStatic::Disconnect(Object* sender,
-                            StringParam eventId,
-                            Object* receiver)
+void ZeroStatic::Disconnect(Object* sender, StringParam eventId, Object* receiver)
 {
   if (sender == nullptr)
   {
@@ -211,9 +201,7 @@ SoundSystem* ZeroStatic::GetAudio()
 }
 
 // ZilchScriptConnection
-ZilchScriptConnection::ZilchScriptConnection(EventDispatcher* dispatcher,
-                                             StringParam eventId,
-                                             DelegateParam delagate) :
+ZilchScriptConnection::ZilchScriptConnection(EventDispatcher* dispatcher, StringParam eventId, DelegateParam delagate) :
     EventConnection(dispatcher, eventId)
 {
   Flags.SetFlag(ConnectionFlags::Script);
@@ -242,21 +230,17 @@ void ZilchScriptConnection::RaiseError(StringParam message)
   }
 
   // Get the location of the first opcode
-  const CodeLocation* location =
-      function->OpcodeLocationToCodeLocation.FindPointer(0);
+  const CodeLocation* location = function->OpcodeLocationToCodeLocation.FindPointer(0);
   if (location)
   {
     String namedMessage = BuildString(function->Name, ": ", message);
-    String fullMessage = location->GetFormattedStringWithMessage(
-        MessageFormat::Python, namedMessage);
+    String fullMessage = location->GetFormattedStringWithMessage(MessageFormat::Python, namedMessage);
     ZilchScriptManager::GetInstance()->DispatchScriptError(
         Events::UnhandledException, namedMessage, fullMessage, *location);
     return;
   }
 
-  DoNotifyException(
-      "Event Connection",
-      String::Format("%s\nFunction: ", function->ToString().c_str()));
+  DoNotifyException("Event Connection", String::Format("%s\nFunction: ", function->ToString().c_str()));
 }
 
 void ZilchScriptConnection::Invoke(Event* e)

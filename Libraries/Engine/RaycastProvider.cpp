@@ -31,8 +31,7 @@ void RaycastResultList::SetCapacity(size_t capacity)
   // Handle a capacity of 0
   if (capacity == 0)
   {
-    ErrorIf(capacity == 0,
-            "Capacity cannot be set to 0. Setting capacity to 1.");
+    ErrorIf(capacity == 0, "Capacity cannot be set to 0. Setting capacity to 1.");
     capacity = 1;
   }
 
@@ -84,12 +83,8 @@ void RaycastResultList::AddItem(RayCastEntry& inputEntry)
   }
 }
 
-void RaycastResultList::AddItem(Cog* hitCog,
-                                float t,
-                                Vec3Param worldPosition,
-                                Vec3Param worldNormal,
-                                Vec2Param uv,
-                                bool uvProvided)
+void RaycastResultList::AddItem(
+    Cog* hitCog, float t, Vec3Param worldPosition, Vec3Param worldNormal, Vec2Param uv, bool uvProvided)
 {
   RayCastEntry entry;
   entry.HitCog = hitCog;
@@ -102,12 +97,8 @@ void RaycastResultList::AddItem(Cog* hitCog,
   AddItem(entry);
 }
 
-void RaycastResultList::AddMetaItem(HandleParam object,
-                                    float t,
-                                    Vec3Param worldPosition,
-                                    Vec3Param worldNormal,
-                                    Vec2Param uv,
-                                    bool uvProvided)
+void RaycastResultList::AddMetaItem(
+    HandleParam object, float t, Vec3Param worldPosition, Vec3Param worldNormal, Vec2Param uv, bool uvProvided)
 {
   RayCastEntry entry;
   entry.Instance = object;
@@ -183,18 +174,12 @@ CastInfo::CastInfo(Space* targetSpace, Cog* cameraCog, Vec2Param mousePosition)
   SetInfo(targetSpace, cameraCog, mousePosition, mousePosition);
 }
 
-CastInfo::CastInfo(Space* targetSpace,
-                   Cog* cameraCog,
-                   Vec2Param dragStart,
-                   Vec2Param dragEnd)
+CastInfo::CastInfo(Space* targetSpace, Cog* cameraCog, Vec2Param dragStart, Vec2Param dragEnd)
 {
   SetInfo(targetSpace, cameraCog, dragStart, dragEnd);
 }
 
-void CastInfo::SetInfo(Space* targetSpace,
-                       Cog* cameraCog,
-                       Vec2Param dragStart,
-                       Vec2Param dragEnd)
+void CastInfo::SetInfo(Space* targetSpace, Cog* cameraCog, Vec2Param dragStart, Vec2Param dragEnd)
 {
   mTargetSpace = targetSpace;
   mCameraCog = cameraCog;
@@ -292,8 +277,7 @@ void Raycaster::SerializeProviders(Serializer& stream)
         continue;
       }
 
-      RaycastProvider* provider =
-          AllocateBlock(type, false).Get<RaycastProvider*>();
+      RaycastProvider* provider = AllocateBlock(type, false).Get<RaycastProvider*>();
       if (provider)
       {
         // Serialize the block and then add it to our list
@@ -310,9 +294,7 @@ void Raycaster::AddProvider(RaycastProvider* provider)
   mProviders.PushBack(provider);
 }
 
-void Raycaster::RayCast(Ray& ray,
-                        CastInfo& castInfo,
-                        RaycastResultList& results)
+void Raycaster::RayCast(Ray& ray, CastInfo& castInfo, RaycastResultList& results)
 {
   ray.Direction.Normalize();
   for (uint i = 0; i < mProviders.Size(); ++i)
@@ -329,9 +311,7 @@ void Raycaster::RayCast(Ray& ray,
   }
 }
 
-void Raycaster::FrustumCast(Frustum& frustum,
-                            CastInfo& castInfo,
-                            RaycastResultList& results)
+void Raycaster::FrustumCast(Frustum& frustum, CastInfo& castInfo, RaycastResultList& results)
 {
   for (uint i = 0; i < mProviders.Size(); ++i)
   {
@@ -351,8 +331,7 @@ ZilchDefineType(RaycasterMetaComposition, builder, type)
 {
 }
 
-RaycasterMetaComposition::RaycasterMetaComposition() :
-    MetaComposition(ZilchTypeId(RaycastProvider))
+RaycasterMetaComposition::RaycasterMetaComposition() : MetaComposition(ZilchTypeId(RaycastProvider))
 {
   mSupportsComponentAddition = false;
   mSupportsComponentRemoval = false;
@@ -371,11 +350,10 @@ Handle RaycasterMetaComposition::GetComponentAt(HandleParam owner, uint index)
   return provider;
 }
 
-Handle RaycasterMetaComposition::GetComponent(HandleParam owner,
-                                              BoundType* componentType)
+Handle RaycasterMetaComposition::GetComponent(HandleParam owner, BoundType* componentType)
 {
   Raycaster* raycaster = owner.Get<Raycaster*>();
-  forRange(RaycastProvider * provider, raycaster->mProviders.All())
+  forRange (RaycastProvider* provider, raycaster->mProviders.All())
   {
     if (ZilchVirtualTypeId(provider)->IsA(componentType))
       return provider;

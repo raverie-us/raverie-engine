@@ -79,8 +79,7 @@ SpirVNameSettings::SpirVNameSettings()
   mMainFunctionName = "Main";
   mUnitTestAttribute = "UnitTest";
   mSpecializationConstantAttribute = "SpecConstant";
-  mSpecializationConstantInputAttribute =
-      BuildString(mSpecializationConstantAttribute, "Input");
+  mSpecializationConstantInputAttribute = BuildString(mSpecializationConstantAttribute, "Input");
 
   // Create the implied sub-attributes for [Input]
   mInputSubAttributes.PushBack(mFragmentInputAttribute);
@@ -96,55 +95,46 @@ SpirVNameSettings::SpirVNameSettings()
   mAllowedFieldAttributes.Insert(mInputAttribute, AttributeInfo());
   mAllowedFieldAttributes.Insert(mFragmentInputAttribute, AttributeInfo());
   mAllowedFieldAttributes.Insert(mStageInputAttribute, AttributeInfo());
-  mAllowedFieldAttributes.Insert(mHardwareBuiltInInputAttribute,
-                                 AttributeInfo());
+  mAllowedFieldAttributes.Insert(mHardwareBuiltInInputAttribute, AttributeInfo());
   mAllowedFieldAttributes.Insert(mAppBuiltInInputAttribute, AttributeInfo());
   mAllowedFieldAttributes.Insert(mPropertyInputAttribute, AttributeInfo());
   mAllowedFieldAttributes.Insert(mOutputAttribute, AttributeInfo());
   mAllowedFieldAttributes.Insert(mFragmentOutputAttribute, AttributeInfo());
   mAllowedFieldAttributes.Insert(mStageOutputAttribute, AttributeInfo());
-  mAllowedFieldAttributes.Insert(mHardwareBuiltInOutputAttribute,
-                                 AttributeInfo());
+  mAllowedFieldAttributes.Insert(mHardwareBuiltInOutputAttribute, AttributeInfo());
   mAllowedFieldAttributes.Insert(mStaticAttribute, AttributeInfo());
-  mAllowedFieldAttributes.Insert(mSpecializationConstantAttribute,
-                                 AttributeInfo());
-  mAllowedFieldAttributes.Insert(mSpecializationConstantInputAttribute,
-                                 AttributeInfo());
+  mAllowedFieldAttributes.Insert(mSpecializationConstantAttribute, AttributeInfo());
+  mAllowedFieldAttributes.Insert(mSpecializationConstantInputAttribute, AttributeInfo());
 
   mAllowedFunctionAttributes.Insert(mStaticAttribute, AttributeInfo());
   mAllowedFunctionAttributes.Insert(mExtensionAttribute, AttributeInfo());
   mAllowedFunctionAttributes.Insert(mImplementsAttribute, AttributeInfo());
-  mAllowedFunctionAttributes.Insert(mEntryPointAttributeName,
-                                    AttributeInfo(true));
+  mAllowedFunctionAttributes.Insert(mEntryPointAttributeName, AttributeInfo(true));
 
   mAllowedClassAttributes.Insert(mVertexAttribute, AttributeInfo());
   mAllowedClassAttributes.Insert(mGeometryAttribute, AttributeInfo());
   mAllowedClassAttributes.Insert(mPixelAttribute, AttributeInfo());
   mAllowedClassAttributes.Insert(mComputeAttribute, AttributeInfo());
   mAllowedClassAttributes.Insert(mStorageClassAttribute, AttributeInfo(true));
-  mAllowedClassAttributes.Insert(mNonCopyableAttributeName,
-                                 AttributeInfo(true));
+  mAllowedClassAttributes.Insert(mNonCopyableAttributeName, AttributeInfo(true));
   mAllowedClassAttributes.Insert(mUnitTestAttribute, AttributeInfo(true));
 }
 
 ShaderStage::Enum UniformBufferDescription::mAllStagesMask =
-    (ShaderStage::Vertex | ShaderStage::PreTesselation |
-     ShaderStage::PostTesselation | ShaderStage::Geometry | ShaderStage::Pixel |
-     ShaderStage::Compute);
+    (ShaderStage::Vertex | ShaderStage::PreTesselation | ShaderStage::PostTesselation | ShaderStage::Geometry |
+     ShaderStage::Pixel | ShaderStage::Compute);
 
 UniformBufferDescription::UniformBufferDescription()
 {
   Set(0, 0, mAllStagesMask, "Uniform");
 }
 
-UniformBufferDescription::UniformBufferDescription(int bindingId,
-                                                   int descriptorSetId)
+UniformBufferDescription::UniformBufferDescription(int bindingId, int descriptorSetId)
 {
   Set(bindingId, descriptorSetId, mAllStagesMask, "Uniform");
 }
 
-UniformBufferDescription::UniformBufferDescription(
-    const UniformBufferDescription& rhs)
+UniformBufferDescription::UniformBufferDescription(const UniformBufferDescription& rhs)
 {
   CopyFrom(rhs);
 }
@@ -188,8 +178,7 @@ void UniformBufferDescription::Set(int bindingId,
   mDebugName = debugName;
 }
 
-void UniformBufferDescription::AddField(Zilch::BoundType* type,
-                                        StringParam fieldName)
+void UniformBufferDescription::AddField(Zilch::BoundType* type, StringParam fieldName)
 {
   ShaderIRFieldMeta* fieldMeta = new ShaderIRFieldMeta();
   fieldMeta->mZilchName = fieldName;
@@ -207,8 +196,7 @@ BuiltInBlockDescription::BuiltInFieldMeta::BuiltInFieldMeta()
   mMeta = nullptr;
 }
 
-BuiltInBlockDescription::BuiltInFieldMeta::BuiltInFieldMeta(
-    const BuiltInFieldMeta& rhs)
+BuiltInBlockDescription::BuiltInFieldMeta::BuiltInFieldMeta(const BuiltInFieldMeta& rhs)
 {
   CopyFrom(rhs);
 }
@@ -218,14 +206,12 @@ BuiltInBlockDescription::BuiltInFieldMeta::~BuiltInFieldMeta()
   SafeDelete(mMeta);
 }
 
-void BuiltInBlockDescription::BuiltInFieldMeta::
-operator=(const BuiltInFieldMeta& rhs)
+void BuiltInBlockDescription::BuiltInFieldMeta::operator=(const BuiltInFieldMeta& rhs)
 {
   CopyFrom(rhs);
 }
 
-void BuiltInBlockDescription::BuiltInFieldMeta::CopyFrom(
-    const BuiltInFieldMeta& source)
+void BuiltInBlockDescription::BuiltInFieldMeta::CopyFrom(const BuiltInFieldMeta& source)
 {
   mMeta = new ShaderIRFieldMeta();
   mMeta->mZilchName = source.mMeta->mZilchName;
@@ -250,8 +236,7 @@ void BuiltInBlockDescription::AddField(Zilch::BoundType* type,
   mFields.PushBack(builtInMeta);
 }
 
-void BuiltInBlockDescription::SetBuiltInName(spv::BuiltIn builtInId,
-                                             StringParam name)
+void BuiltInBlockDescription::SetBuiltInName(spv::BuiltIn builtInId, StringParam name)
 {
   // Override the zilch name of anything that matches the given id
   for (size_t i = 0; i < mFields.Size(); ++i)
@@ -264,8 +249,7 @@ void BuiltInBlockDescription::SetBuiltInName(spv::BuiltIn builtInId,
   }
 }
 
-BuiltInBlockDescription::BuiltInFieldMeta*
-BuiltInBlockDescription::FindField(ShaderFieldKey fieldKey)
+BuiltInBlockDescription::BuiltInFieldMeta* BuiltInBlockDescription::FindField(ShaderFieldKey fieldKey)
 {
   // This could be improved to be O(1) instead of O(n) but this list is
   // typically very small so worry about optimizing this later.
@@ -284,8 +268,7 @@ BuiltInStageDescription::BuiltInStageDescription()
   mOutputGlobals.mInterfaceBlock = false;
 }
 
-bool BuiltInStageDescription::IsValidHardwareBuiltIn(ShaderFieldKey& fieldKey,
-                                                     bool isInput)
+bool BuiltInStageDescription::IsValidHardwareBuiltIn(ShaderFieldKey& fieldKey, bool isInput)
 {
   if (isInput)
     return mInternalInputMappings.FindValue(fieldKey, nullptr) != nullptr;
@@ -307,8 +290,7 @@ void BuiltInStageDescription::Finalize()
   Finalize(mOutputGlobals, mInternalOutputMappings);
 }
 
-void BuiltInStageDescription::Finalize(BuiltInBlockDescription& block,
-                                       FieldKeyToBlockMap& mappings)
+void BuiltInStageDescription::Finalize(BuiltInBlockDescription& block, FieldKeyToBlockMap& mappings)
 {
   // For each filed, add a mapping from its field-key to the block it came from
   for (size_t i = 0; i < block.mFields.Size(); ++i)
@@ -319,8 +301,7 @@ void BuiltInStageDescription::Finalize(BuiltInBlockDescription& block,
   }
 }
 
-bool BuiltInStageDescription::ValidateIfHardwareBuiltIn(
-    ShaderFieldKey& fieldKey)
+bool BuiltInStageDescription::ValidateIfHardwareBuiltIn(ShaderFieldKey& fieldKey)
 {
   // Map all of the inputs/outputs fields to their respective descriptions for
   // quick lookup
@@ -331,8 +312,7 @@ bool BuiltInStageDescription::ValidateIfHardwareBuiltIn(
   return isValid;
 }
 
-bool BuiltInStageDescription::ValidateIfHardwareBuiltIn(
-    ShaderFieldKey& fieldKey, BuiltInBlockDescription& block)
+bool BuiltInStageDescription::ValidateIfHardwareBuiltIn(ShaderFieldKey& fieldKey, BuiltInBlockDescription& block)
 {
   // For each filed, add a mapping from its field-key to the block it came from
   for (size_t i = 0; i < block.mFields.Size(); ++i)
@@ -350,8 +330,7 @@ VertexDefinitionDescription::~VertexDefinitionDescription()
   DeleteObjectsIn(mFields);
 }
 
-void VertexDefinitionDescription::AddField(Zilch::BoundType* type,
-                                           StringParam fieldName)
+void VertexDefinitionDescription::AddField(Zilch::BoundType* type, StringParam fieldName)
 {
   ShaderIRFieldMeta* fieldMeta = new ShaderIRFieldMeta();
   fieldMeta->mZilchName = fieldName;
@@ -367,15 +346,13 @@ CallbackSettings::CallbackSettings()
   mAppendCallbackUserData = nullptr;
 }
 
-void CallbackSettings::SetCompositeCallback(ShaderCompositeCallback callback,
-                                            void* userData)
+void CallbackSettings::SetCompositeCallback(ShaderCompositeCallback callback, void* userData)
 {
   mCompositeCallback = callback;
   mCompositeCallbackUserData = userData;
 }
 
-void CallbackSettings::SetAppendCallback(AppendVertexCallback callback,
-                                         void* userData)
+void CallbackSettings::SetAppendCallback(AppendVertexCallback callback, void* userData)
 {
   mAppendCallback = callback;
   mAppendCallbackUserData = userData;
@@ -387,8 +364,7 @@ ZilchShaderErrorSettings::ZilchShaderErrorSettings()
 }
 
 String ZilchShaderSpirVSettings::mLanguageSpecConstantName = "LanguageId";
-String ZilchShaderSpirVSettings::mLanguageVersionSpecConstantName =
-    "LanguageVersion";
+String ZilchShaderSpirVSettings::mLanguageVersionSpecConstantName = "LanguageVersion";
 
 ZilchShaderSpirVSettings::ZilchShaderSpirVSettings()
 {
@@ -397,39 +373,34 @@ ZilchShaderSpirVSettings::ZilchShaderSpirVSettings()
   InitializeBuiltIns();
 }
 
-ZilchShaderSpirVSettings::ZilchShaderSpirVSettings(
-    const SpirVNameSettings& nameSettings) :
-    mNameSettings(nameSettings)
+ZilchShaderSpirVSettings::ZilchShaderSpirVSettings(const SpirVNameSettings& nameSettings) : mNameSettings(nameSettings)
 {
   mFinalized = false;
   mAllowUniformMaterialBufferIndexOverap = false;
   InitializeBuiltIns();
 }
 
-void ZilchShaderSpirVSettings::AddUniformBufferDescription(
-    UniformBufferDescription& description)
+void ZilchShaderSpirVSettings::AddUniformBufferDescription(UniformBufferDescription& description)
 {
   ReturnIf(mFinalized, , "Cannot set built-in names once finalized");
 
   mUniformBufferDescriptions.PushBack(description);
 }
 
-void ZilchShaderSpirVSettings::AutoSetDefaultUniformBufferDescription(
-    int descriptorSetId, StringParam debugName)
+void ZilchShaderSpirVSettings::AutoSetDefaultUniformBufferDescription(int descriptorSetId, StringParam debugName)
 {
   ReturnIf(mFinalized, , "Cannot set built-in names once finalized");
 
-  SetDefaultUniformBufferDescription(
-      mUniformBufferDescriptions.Size(), descriptorSetId, debugName);
+  SetDefaultUniformBufferDescription(mUniformBufferDescriptions.Size(), descriptorSetId, debugName);
 }
 
-void ZilchShaderSpirVSettings::SetDefaultUniformBufferDescription(
-    int bindingId, int descriptorSetId, StringParam debugName)
+void ZilchShaderSpirVSettings::SetDefaultUniformBufferDescription(int bindingId,
+                                                                  int descriptorSetId,
+                                                                  StringParam debugName)
 {
   ReturnIf(mFinalized, , "Cannot set built-in names once finalized");
 
-  mDefaultUniformBufferDescription.mAllowedStages =
-      UniformBufferDescription::mAllStagesMask;
+  mDefaultUniformBufferDescription.mAllowedStages = UniformBufferDescription::mAllStagesMask;
   mDefaultUniformBufferDescription.mBindingId = bindingId;
   mDefaultUniformBufferDescription.mDescriptorSetId = descriptorSetId;
   mDefaultUniformBufferDescription.mDebugName = debugName;
@@ -458,8 +429,7 @@ bool ZilchShaderSpirVSettings::IsValidUniform(FragmentType::Enum fragmentType,
   return false;
 }
 
-void ZilchShaderSpirVSettings::SetHardwareBuiltInName(spv::BuiltIn builtInId,
-                                                      StringParam name)
+void ZilchShaderSpirVSettings::SetHardwareBuiltInName(spv::BuiltIn builtInId, StringParam name)
 {
   ReturnIf(mFinalized, , "Cannot set built-in names once finalized");
 
@@ -472,11 +442,10 @@ void ZilchShaderSpirVSettings::SetHardwareBuiltInName(spv::BuiltIn builtInId,
   }
 }
 
-bool ZilchShaderSpirVSettings::IsValidHardwareBuiltIn(
-    FragmentType::Enum fragmentType,
-    StringParam fieldType,
-    StringParam fieldName,
-    bool isInput)
+bool ZilchShaderSpirVSettings::IsValidHardwareBuiltIn(FragmentType::Enum fragmentType,
+                                                      StringParam fieldType,
+                                                      StringParam fieldName,
+                                                      bool isInput)
 {
   ShaderFieldKey fieldKey(fieldName, fieldType);
 
@@ -498,8 +467,7 @@ void ZilchShaderSpirVSettings::SetMaxSimultaneousRenderTargets(size_t maxNumber)
   mRenderTargetNames.Resize(maxNumber);
 }
 
-void ZilchShaderSpirVSettings::SetRenderTargetName(StringParam varName,
-                                                   size_t targetIndex)
+void ZilchShaderSpirVSettings::SetRenderTargetName(StringParam varName, size_t targetIndex)
 {
   ReturnIf(mFinalized, , "Cannot rename render target once finalized");
 
@@ -522,9 +490,7 @@ void ZilchShaderSpirVSettings::SetRenderTargetName(StringParam varName,
 
     if (mRenderTargetNames[i] == varName)
     {
-      Error("Render target name '%s' is already used in target(%d).",
-            varName.c_str(),
-            i);
+      Error("Render target name '%s' is already used in target(%d).", varName.c_str(), i);
     }
   }
 
@@ -598,8 +564,8 @@ void ZilchShaderSpirVSettings::ValidateUniformsDescriptions()
     UniformBufferDescription& description = mUniformBufferDescriptions[i];
 
     // Validate that the descriptor set and binding id are only used once
-    DescriptorSetBindingPair descriptorPair = DescriptorSetBindingPair(
-        description.mDescriptorSetId, description.mBindingId);
+    DescriptorSetBindingPair descriptorPair =
+        DescriptorSetBindingPair(description.mDescriptorSetId, description.mBindingId);
     if (descriptorMap.ContainsKey(descriptorPair))
     {
       UniformBufferDescription* oldDescription = descriptorMap[descriptorPair];
@@ -646,22 +612,19 @@ void ZilchShaderSpirVSettings::ValidateBuiltInNames()
   }
 }
 
-void ZilchShaderSpirVSettings::ValidateBuiltInNames(
-    BuiltInBlockDescription& blockDescription,
-    HashMap<String, spv::BuiltIn>& keyMappings)
+void ZilchShaderSpirVSettings::ValidateBuiltInNames(BuiltInBlockDescription& blockDescription,
+                                                    HashMap<String, spv::BuiltIn>& keyMappings)
 {
   for (size_t i = 0; i < blockDescription.mFields.Size(); ++i)
   {
-    BuiltInBlockDescription::BuiltInFieldMeta& fieldMeta =
-        blockDescription.mFields[i];
+    BuiltInBlockDescription::BuiltInFieldMeta& fieldMeta = blockDescription.mFields[i];
     spv::BuiltIn builtInId = fieldMeta.mId;
     ShaderFieldKey fieldKey = fieldMeta.mMeta->MakeFieldKey();
 
     spv::BuiltIn* result = keyMappings.FindPointer(fieldKey);
     if (result != nullptr && *result != builtInId)
     {
-      Error("BuiltIn '%s' is declared as multiple spirv builtins",
-            fieldKey.mKey.c_str());
+      Error("BuiltIn '%s' is declared as multiple spirv builtins", fieldKey.mKey.c_str());
     }
     keyMappings[fieldKey] = builtInId;
   }
@@ -703,8 +666,7 @@ void ZilchShaderSpirVSettings::InitializeBuiltIns()
   Zilch::BoundType* boolType = ZilchTypeId(Zilch::Boolean);
 
   BuiltInStageDescription& vertexDescriptions = mBuiltIns[FragmentType::Vertex];
-  vertexDescriptions.mOutputInterfaceBlock.AddField(
-      real4Type, "Position", spv::BuiltInPosition, hardwareBuiltInOutput);
+  vertexDescriptions.mOutputInterfaceBlock.AddField(real4Type, "Position", spv::BuiltInPosition, hardwareBuiltInOutput);
   vertexDescriptions.mOutputInterfaceBlock.AddField(
       realType, "PointSize", spv::BuiltInPointSize, hardwareBuiltInOutput);
   // Can't add clip distance now because of array types
@@ -712,68 +674,44 @@ void ZilchShaderSpirVSettings::InitializeBuiltIns()
   // vertexDescriptions.mOutputInterfaceBlock.AddField(real4Type,
   // "ClipDistance", spv::BuiltInClipDistance);
 
-  vertexDescriptions.mInputGlobals.AddField(
-      intType, "VertexId", spv::BuiltInVertexId, hardwareBuiltInInput);
-  vertexDescriptions.mInputGlobals.AddField(
-      intType, "InstanceId", spv::BuiltInInstanceId, hardwareBuiltInInput);
+  vertexDescriptions.mInputGlobals.AddField(intType, "VertexId", spv::BuiltInVertexId, hardwareBuiltInInput);
+  vertexDescriptions.mInputGlobals.AddField(intType, "InstanceId", spv::BuiltInInstanceId, hardwareBuiltInInput);
 
-  BuiltInStageDescription& geometryDescriptions =
-      mBuiltIns[FragmentType::Geometry];
+  BuiltInStageDescription& geometryDescriptions = mBuiltIns[FragmentType::Geometry];
   geometryDescriptions.mOutputInterfaceBlock.AddField(
       real4Type, "Position", spv::BuiltInPosition, hardwareBuiltInOutput);
-  geometryDescriptions.mInputInterfaceBlock.AddField(
-      real4Type, "Position", spv::BuiltInPosition, hardwareBuiltInInput);
-  geometryDescriptions.mInputGlobals.AddField(
-      intType, "PrimitiveId", spv::BuiltInPrimitiveId, hardwareBuiltInInput);
-  geometryDescriptions.mOutputGlobals.AddField(
-      intType, "PrimitiveId", spv::BuiltInPrimitiveId, hardwareBuiltInOutput);
+  geometryDescriptions.mInputInterfaceBlock.AddField(real4Type, "Position", spv::BuiltInPosition, hardwareBuiltInInput);
+  geometryDescriptions.mInputGlobals.AddField(intType, "PrimitiveId", spv::BuiltInPrimitiveId, hardwareBuiltInInput);
+  geometryDescriptions.mOutputGlobals.AddField(intType, "PrimitiveId", spv::BuiltInPrimitiveId, hardwareBuiltInOutput);
   // @JoshD: Requires glsl 400 to work. Deal with later!
   // geometryDescriptions.mInputGlobals.AddField(intType, "InvocationId",
   // spv::BuiltInInvocationId);
 
   BuiltInStageDescription& pixelDescriptions = mBuiltIns[FragmentType::Pixel];
-  pixelDescriptions.mOutputGlobals.AddField(
-      realType, "FragDepth", spv::BuiltInFragDepth, hardwareBuiltInOutput);
-  pixelDescriptions.mInputGlobals.AddField(
-      real4Type, "FragCoord", spv::BuiltInFragCoord, hardwareBuiltInInput);
-  pixelDescriptions.mInputGlobals.AddField(
-      real2Type, "PointCoord", spv::BuiltInPointCoord, hardwareBuiltInInput);
-  pixelDescriptions.mInputGlobals.AddField(
-      boolType, "FrontFacing", spv::BuiltInFrontFacing, hardwareBuiltInInput);
+  pixelDescriptions.mOutputGlobals.AddField(realType, "FragDepth", spv::BuiltInFragDepth, hardwareBuiltInOutput);
+  pixelDescriptions.mInputGlobals.AddField(real4Type, "FragCoord", spv::BuiltInFragCoord, hardwareBuiltInInput);
+  pixelDescriptions.mInputGlobals.AddField(real2Type, "PointCoord", spv::BuiltInPointCoord, hardwareBuiltInInput);
+  pixelDescriptions.mInputGlobals.AddField(boolType, "FrontFacing", spv::BuiltInFrontFacing, hardwareBuiltInInput);
   // SpirV currently doesn't support this as a pixel input. Seems to be a bug (I
   // filed it and am waiting). Seems to only cause problems currently in the
   // validator.
-  pixelDescriptions.mInputGlobals.AddField(
-      intType, "PrimitiveId", spv::BuiltInPrimitiveId, hardwareBuiltInInput);
+  pixelDescriptions.mInputGlobals.AddField(intType, "PrimitiveId", spv::BuiltInPrimitiveId, hardwareBuiltInInput);
 
-  BuiltInStageDescription& computeDescriptions =
-      mBuiltIns[FragmentType::Compute];
-  computeDescriptions.mInputGlobals.AddField(int3Type,
-                                             "GlobalInvocationId",
-                                             spv::BuiltInGlobalInvocationId,
-                                             hardwareBuiltInInput);
-  computeDescriptions.mInputGlobals.AddField(int3Type,
-                                             "LocalInvocationId",
-                                             spv::BuiltInLocalInvocationId,
-                                             hardwareBuiltInInput);
-  computeDescriptions.mInputGlobals.AddField(intType,
-                                             "LocalInvocationIndex",
-                                             spv::BuiltInLocalInvocationIndex,
-                                             hardwareBuiltInInput);
-  computeDescriptions.mInputGlobals.AddField(int3Type,
-                                             "NumWorkgroups",
-                                             spv::BuiltInNumWorkgroups,
-                                             hardwareBuiltInInput);
+  BuiltInStageDescription& computeDescriptions = mBuiltIns[FragmentType::Compute];
   computeDescriptions.mInputGlobals.AddField(
-      int3Type, "WorkgroupId", spv::BuiltInWorkgroupId, hardwareBuiltInInput);
-  computeDescriptions.mInputGlobals.AddField(int3Type,
-                                             "WorkgroupSize",
-                                             spv::BuiltInWorkgroupSize,
-                                             hardwareBuiltInInput);
+      int3Type, "GlobalInvocationId", spv::BuiltInGlobalInvocationId, hardwareBuiltInInput);
+  computeDescriptions.mInputGlobals.AddField(
+      int3Type, "LocalInvocationId", spv::BuiltInLocalInvocationId, hardwareBuiltInInput);
+  computeDescriptions.mInputGlobals.AddField(
+      intType, "LocalInvocationIndex", spv::BuiltInLocalInvocationIndex, hardwareBuiltInInput);
+  computeDescriptions.mInputGlobals.AddField(
+      int3Type, "NumWorkgroups", spv::BuiltInNumWorkgroups, hardwareBuiltInInput);
+  computeDescriptions.mInputGlobals.AddField(int3Type, "WorkgroupId", spv::BuiltInWorkgroupId, hardwareBuiltInInput);
+  computeDescriptions.mInputGlobals.AddField(
+      int3Type, "WorkgroupSize", spv::BuiltInWorkgroupSize, hardwareBuiltInInput);
 }
 
-bool ZilchShaderSpirVSettings::IsValidHardwareBuiltInAnyStage(
-    ShaderFieldKey& fieldKey, bool isInput)
+bool ZilchShaderSpirVSettings::IsValidHardwareBuiltInAnyStage(ShaderFieldKey& fieldKey, bool isInput)
 {
   for (size_t i = 0; i < FragmentType::Size; ++i)
   {
@@ -784,8 +722,7 @@ bool ZilchShaderSpirVSettings::IsValidHardwareBuiltInAnyStage(
   return false;
 }
 
-bool ZilchShaderSpirVSettings::ValidateAgainstHardwareBuiltIns(
-    ShaderFieldKey& fieldKey)
+bool ZilchShaderSpirVSettings::ValidateAgainstHardwareBuiltIns(ShaderFieldKey& fieldKey)
 {
   for (size_t i = 0; i < FragmentType::Size; ++i)
   {

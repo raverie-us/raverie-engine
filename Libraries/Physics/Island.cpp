@@ -7,8 +7,7 @@ namespace Zero
 namespace Physics
 {
 
-Memory::Pool* Island::sPool = new Memory::Pool(
-    "Islands", Memory::GetNamedHeap("Physics"), sizeof(Island), 4096);
+Memory::Pool* Island::sPool = new Memory::Pool("Islands", Memory::GetNamedHeap("Physics"), sizeof(Island), 4096);
 
 void* Island::operator new(size_t size)
 {
@@ -75,16 +74,14 @@ void Island::Add(Contact* contact)
     contact->SetGhost(true);
     // we still want to check to see if resolution should be skipped for not
     // applying region effects
-    if (collider1->mCollisionGroupInstance->SkipResolution(
-            (*collider2->mCollisionGroupInstance)))
+    if (collider1->mCollisionGroupInstance->SkipResolution((*collider2->mCollisionGroupInstance)))
       contact->SetSkipResolution(true);
     return;
   }
 
   // if the collision group says to skip this,
   // then mark the contact as ghost so we don't resolve it
-  if (collider1->mCollisionGroupInstance->SkipResolution(
-          (*collider2->mCollisionGroupInstance)))
+  if (collider1->mCollisionGroupInstance->SkipResolution((*collider2->mCollisionGroupInstance)))
   {
     contact->SetGhost(true);
     contact->SetSkipResolution(true);
@@ -232,8 +229,7 @@ void Island::ClearIslandFlags(Collider& collider)
   for (; !jointRange.Empty(); jointRange.PopFront())
     jointRange.Front().mJoint->SetOnIsland(false);
 
-  Collider::ContactEdgeList::range contactNewRange =
-      collider.mContactEdges.All();
+  Collider::ContactEdgeList::range contactNewRange = collider.mContactEdges.All();
   for (; !contactNewRange.Empty(); contactNewRange.PopFront())
     contactNewRange.Front().mContact->SetOnIsland(false);
 

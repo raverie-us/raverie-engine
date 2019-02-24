@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-String PhysicsRaycastProviderDisplayText(const BoundType* type,
-                                         const byte* data)
+String PhysicsRaycastProviderDisplayText(const BoundType* type, const byte* data)
 {
   static String Name("Physics");
   return Name;
@@ -36,9 +35,7 @@ PhysicsRaycastProvider::PhysicsRaycastProvider()
   mMultiSelectKinematic = false;
 }
 
-void PhysicsRaycastProvider::RayCast(Ray& ray,
-                                     CastInfo& castInfo,
-                                     RaycastResultList& results)
+void PhysicsRaycastProvider::RayCast(Ray& ray, CastInfo& castInfo, RaycastResultList& results)
 {
   // If we don't select static or dynamic, there's nothing to do...
   if (!mDynamicColliders && !mStaticColliders)
@@ -65,16 +62,11 @@ void PhysicsRaycastProvider::RayCast(Ray& ray,
   for (; !range.Empty(); range.PopFront())
   {
     CastResult& item = range.Front();
-    results.AddItem(item.GetObjectHit(),
-                    item.GetDistance(),
-                    item.GetWorldPosition(),
-                    item.GetNormal());
+    results.AddItem(item.GetObjectHit(), item.GetDistance(), item.GetWorldPosition(), item.GetNormal());
   }
 }
 
-void PhysicsRaycastProvider::FrustumCast(Frustum& frustum,
-                                         CastInfo& castInfo,
-                                         RaycastResultList& results)
+void PhysicsRaycastProvider::FrustumCast(Frustum& frustum, CastInfo& castInfo, RaycastResultList& results)
 {
   // Make sure there is a physics space
   PhysicsSpace* physicsSpace = castInfo.mTargetSpace->has(PhysicsSpace);
@@ -103,10 +95,7 @@ void PhysicsRaycastProvider::FrustumCast(Frustum& frustum,
   for (; !range.Empty(); range.PopFront())
   {
     CastResult& item = range.Front();
-    results.AddItem(item.GetObjectHit(),
-                    item.GetDistance(),
-                    item.GetWorldPosition(),
-                    item.GetNormal());
+    results.AddItem(item.GetObjectHit(), item.GetDistance(), item.GetWorldPosition(), item.GetNormal());
   }
 }
 

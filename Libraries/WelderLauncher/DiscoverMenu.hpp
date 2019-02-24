@@ -11,11 +11,7 @@ public:
   typedef DiscoverTile ZilchSelf;
 
   /// Constructor.
-  DiscoverTile(Composite* parent,
-               StringParam text,
-               StringParam fontStyle,
-               float titleHeight,
-               StringParam url);
+  DiscoverTile(Composite* parent, StringParam text, StringParam fontStyle, float titleHeight, StringParam url);
 
   /// Composite Interface.
   void UpdateTransform() override;

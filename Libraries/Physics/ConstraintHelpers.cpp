@@ -10,9 +10,7 @@ namespace Physics
 namespace JointHelpers
 {
 
-void GetVelocities(RigidBody* body0,
-                   RigidBody* body1,
-                   JointVelocity& velocities)
+void GetVelocities(RigidBody* body0, RigidBody* body1, JointVelocity& velocities)
 {
   if (body0)
   {
@@ -99,35 +97,25 @@ void ForceAwakeJoint(Joint* joint)
   joint->GetCollider(1)->ForceAwake();
 }
 
-void ApplyConstraintImpulse(RigidBody* body0,
-                            RigidBody* body1,
-                            const Jacobian& jacobian,
-                            real lambda)
+void ApplyConstraintImpulse(RigidBody* body0, RigidBody* body1, const Jacobian& jacobian, real lambda)
 {
   if (body0)
   {
-    body0->ApplyConstraintImpulse(jacobian.Linear[0] * lambda,
-                                  jacobian.Angular[0] * lambda);
+    body0->ApplyConstraintImpulse(jacobian.Linear[0] * lambda, jacobian.Angular[0] * lambda);
   }
   if (body1)
   {
-    body1->ApplyConstraintImpulse(jacobian.Linear[1] * lambda,
-                                  jacobian.Angular[1] * lambda);
+    body1->ApplyConstraintImpulse(jacobian.Linear[1] * lambda, jacobian.Angular[1] * lambda);
   }
 }
 
-void ApplyConstraintImpulse(JointMass& masses,
-                            JointVelocity& velocities,
-                            const Jacobian& jacobian,
-                            real lambda)
+void ApplyConstraintImpulse(JointMass& masses, JointVelocity& velocities, const Jacobian& jacobian, real lambda)
 {
   velocities.Linear[0] += masses.mInvMass[0].Apply(jacobian.Linear[0]) * lambda;
-  velocities.Angular[0] +=
-      Math::Transform(masses.InverseInertia[0], jacobian.Angular[0] * lambda);
+  velocities.Angular[0] += Math::Transform(masses.InverseInertia[0], jacobian.Angular[0] * lambda);
 
   velocities.Linear[1] += masses.mInvMass[1].Apply(jacobian.Linear[1]) * lambda;
-  velocities.Angular[1] +=
-      Math::Transform(masses.InverseInertia[1], jacobian.Angular[1] * lambda);
+  velocities.Angular[1] += Math::Transform(masses.InverseInertia[1], jacobian.Angular[1] * lambda);
 }
 
 void CommitVelocities(Collider* obj0, Collider* obj1, JointVelocity& velocities)
@@ -195,8 +183,7 @@ void UnlinkJointsFromSolver(Collider* collider)
     joint->SetOnIsland(false);
   }
 
-  Collider::ContactEdgeList::range contactNewRange =
-      collider->mContactEdges.All();
+  Collider::ContactEdgeList::range contactNewRange = collider->mContactEdges.All();
   while (!contactNewRange.Empty())
   {
     Physics::Contact* contact = contactNewRange.Front().mContact;
@@ -219,19 +206,12 @@ real GetRelativeAngle(QuatParam rotation, Vec3 localAxis)
   return arcCos;
 }
 
-real GetRelativeAngle(QuatParam initial,
-                      Mat3Param obj0,
-                      Mat3Param obj1,
-                      Vec3 localAxis)
+real GetRelativeAngle(QuatParam initial, Mat3Param obj0, Mat3Param obj1, Vec3 localAxis)
 {
-  return GetRelativeAngle(
-      initial, Math::ToQuaternion(obj0), Math::ToQuaternion(obj1), localAxis);
+  return GetRelativeAngle(initial, Math::ToQuaternion(obj0), Math::ToQuaternion(obj1), localAxis);
 }
 
-real GetRelativeAngle(QuatParam initial,
-                      QuatParam obj0,
-                      QuatParam obj1,
-                      Vec3 localAxis)
+real GetRelativeAngle(QuatParam initial, QuatParam obj0, QuatParam obj1, Vec3 localAxis)
 {
   // get the delta rotation
   Quat deltaRotation = obj0.Conjugated() * obj1;

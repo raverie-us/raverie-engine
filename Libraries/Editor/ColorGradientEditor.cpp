@@ -19,8 +19,7 @@ public:
   Vec2 mStartingPosition;
   Vec2 mCurrentPosition;
 
-  GradientKeyManipulator(Mouse* mouse, Composite* owner, GradientKey* target) :
-      MouseManipulation(mouse, owner)
+  GradientKeyManipulator(Mouse* mouse, Composite* owner, GradientKey* target) : MouseManipulation(mouse, owner)
   {
     mTarget = target;
     mStartingPosition = GetLocalPos(mouse->GetClientPosition());
@@ -40,10 +39,7 @@ public:
   }
 };
 
-GradientKey::GradientKey(ColorGradientEditor* parent,
-                         Vec4Param color,
-                         float interpolant) :
-    Spacer(parent)
+GradientKey::GradientKey(ColorGradientEditor* parent, Vec4Param color, float interpolant) : Spacer(parent)
 {
   SetNotInLayout(true);
 
@@ -128,17 +124,13 @@ void GradientKey::OnColorPickCancelled(ColorEvent* event)
 
 } // namespace GradientEditing
 
-GradientKeyDrawer::GradientKeyDrawer(ColorGradientEditor* gradientEditor) :
-    Widget(gradientEditor)
+GradientKeyDrawer::GradientKeyDrawer(ColorGradientEditor* gradientEditor) : Widget(gradientEditor)
 {
   mGradientEditor = gradientEditor;
 }
 
-void GradientKeyDrawer::RenderUpdate(ViewBlock& viewBlock,
-                                     FrameBlock& frameBlock,
-                                     Mat4Param parentTx,
-                                     ColorTransform colorTx,
-                                     WidgetRect clipRect)
+void GradientKeyDrawer::RenderUpdate(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -154,14 +146,10 @@ void GradientKeyDrawer::RenderUpdate(ViewBlock& viewBlock,
     Vec4 color = RemoveHdrFromColor(key->mColor);
     color.w = 1.0f;
     float halfSize = sGradientKeySize * 0.5f;
-    StreamedVertex v0(
-        SnapToPixels(pos + Vec3(-halfSize, -halfSize, 0)), Vec2(0, 0), color);
-    StreamedVertex v1(
-        SnapToPixels(pos + Vec3(-halfSize, halfSize, 0)), Vec2(0, 1), color);
-    StreamedVertex v2(
-        SnapToPixels(pos + Vec3(halfSize, halfSize, 0)), Vec2(1, 1), color);
-    StreamedVertex v3(
-        SnapToPixels(pos + Vec3(halfSize, -halfSize, 0)), Vec2(1, 0), color);
+    StreamedVertex v0(SnapToPixels(pos + Vec3(-halfSize, -halfSize, 0)), Vec2(0, 0), color);
+    StreamedVertex v1(SnapToPixels(pos + Vec3(-halfSize, halfSize, 0)), Vec2(0, 1), color);
+    StreamedVertex v2(SnapToPixels(pos + Vec3(halfSize, halfSize, 0)), Vec2(1, 1), color);
+    StreamedVertex v3(SnapToPixels(pos + Vec3(halfSize, -halfSize, 0)), Vec2(1, 0), color);
 
     Vec3 top = SnapToPixels(pos - Vec3(0, halfSize * 2.0f, 0));
     Vec3 triOffset = -Pixels(-0.25f, 1, 0);
@@ -173,12 +161,9 @@ void GradientKeyDrawer::RenderUpdate(ViewBlock& viewBlock,
     triangles.PushBack(v3);
     triangles.PushBack(v0);
 
-    triangles.PushBack(StreamedVertex(
-        v0.mPosition + triOffset, Vec2(0, 0), ToFloatColor(Color::Black)));
-    triangles.PushBack(StreamedVertex(
-        v3.mPosition + triOffset, Vec2(0, 0), ToFloatColor(Color::Black)));
-    triangles.PushBack(StreamedVertex(
-        top + triOffset, Vec2(0, 0), ToFloatColor(Color::Black)));
+    triangles.PushBack(StreamedVertex(v0.mPosition + triOffset, Vec2(0, 0), ToFloatColor(Color::Black)));
+    triangles.PushBack(StreamedVertex(v3.mPosition + triOffset, Vec2(0, 0), ToFloatColor(Color::Black)));
+    triangles.PushBack(StreamedVertex(top + triOffset, Vec2(0, 0), ToFloatColor(Color::Black)));
 
     v0.mColor = ToFloatColor(Color::Black);
     v1.mColor = ToFloatColor(Color::Black);
@@ -194,15 +179,11 @@ void GradientKeyDrawer::RenderUpdate(ViewBlock& viewBlock,
     lines.PushBack(v0);
   }
 
-  CreateRenderData(
-      viewBlock, frameBlock, clipRect, triangles, PrimitiveType::Triangles);
-  CreateRenderData(
-      viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
+  CreateRenderData(viewBlock, frameBlock, clipRect, triangles, PrimitiveType::Triangles);
+  CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
 }
 
-ColorGradientEditor::ColorGradientEditor(Composite* parent,
-                                         ColorGradient* gradient) :
-    Composite(parent)
+ColorGradientEditor::ColorGradientEditor(Composite* parent, ColorGradient* gradient) : Composite(parent)
 {
   SetSize(parent->GetSize());
 

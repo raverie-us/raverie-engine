@@ -6,8 +6,7 @@ namespace Zero
 
 bool StringStartsWith0x(const StringRange& hexString)
 {
-  return (hexString.SizeInBytes() > 1 && hexString.Data()[0] == '0' &&
-          hexString.Data()[1] == 'x');
+  return (hexString.SizeInBytes() > 1 && hexString.Data()[0] == '0' && hexString.Data()[1] == 'x');
 }
 
 #define TextTrue "true"
@@ -17,8 +16,7 @@ StringRange StripHex0x(const StringRange& hexString)
 {
   if (StringStartsWith0x(hexString))
   {
-    return StringRange(
-        hexString.mOriginalString, hexString.mBegin + 2, hexString.mEnd);
+    return StringRange(hexString.mOriginalString, hexString.mBegin + 2, hexString.mEnd);
   }
 
   return hexString;
@@ -48,11 +46,7 @@ Guid ReadHexString(const StringRange& originalRange)
   return (Guid)result;
 }
 
-uint WriteToHexSize(char* buffer,
-                    uint bufferSize,
-                    uint places,
-                    u64 integerValue,
-                    bool exclude0x)
+uint WriteToHexSize(char* buffer, uint bufferSize, uint places, u64 integerValue, bool exclude0x)
 {
   // + 2 for '0x' at the start of the hex string if we're including the '0x'
   uint offset0x = exclude0x ? 0 : 2;
@@ -94,8 +88,7 @@ uint WriteToHexSize(char* buffer,
 
 uint WriteToHex(char* buffer, uint bufferSize, u64 integerValue, bool exclude0x)
 {
-  return WriteToHexSize(
-      buffer, bufferSize, cHex64Size, integerValue, exclude0x);
+  return WriteToHexSize(buffer, bufferSize, cHex64Size, integerValue, exclude0x);
 }
 
 uint WriteToHex(char* buffer, uint bufferSize, u32 integerValue, bool exclude0x)
@@ -267,10 +260,7 @@ uint ToBuffer(char* buffer, uint bufferSize, String value, bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%s", value.c_str());
 }
-uint ToBuffer(char* buffer,
-              uint bufferSize,
-              StringRange value,
-              bool shortFormat)
+uint ToBuffer(char* buffer, uint bufferSize, StringRange value, bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%s", value.mBegin);
 }
@@ -361,10 +351,7 @@ uint ToBuffer(char* buffer, uint bufferSize, Guid value, bool shortFormat)
 
 // Basic conversion function (input must be UTF-16/2) DestAscii must be
 // unicodeLength +1
-void ConvertUnicodeToAscii(char* destAscii,
-                           uint bufferSize,
-                           const wchar_t* unicodeData,
-                           size_t unicodeLength)
+void ConvertUnicodeToAscii(char* destAscii, uint bufferSize, const wchar_t* unicodeData, size_t unicodeLength)
 {
   if (bufferSize < unicodeLength + 1)
   {

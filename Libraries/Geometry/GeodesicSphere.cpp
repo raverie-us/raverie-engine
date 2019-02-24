@@ -38,9 +38,7 @@ typedef Zero::PodArray<Face> FaceBuffer;
 const real cSamePoint = real(0.00001);
 } // namespace
 
-void SubdivideFace(uint subdivisionCount,
-                   const uint baseFace[3],
-                   FaceBuffer& newFaces)
+void SubdivideFace(uint subdivisionCount, const uint baseFace[3], FaceBuffer& newFaces)
 {
   if (subdivisionCount < 2)
   {
@@ -211,12 +209,8 @@ void GenerateTextureCoordinate(Vec3Param normal, Vec2Ref uvCoords)
   uvCoords[1] = (real(1.0) - normal.y) / real(2.0);
 }
 
-void BuildIcosahedron(Vec3Ptr& vertices,
-                      uint& vertexCount,
-                      uint*& indices,
-                      uint& indexCount,
-                      Vec3Ptr* normals,
-                      Vec2Ptr* textureCoords)
+void BuildIcosahedron(
+    Vec3Ptr& vertices, uint& vertexCount, uint*& indices, uint& indexCount, Vec3Ptr* normals, Vec2Ptr* textureCoords)
 {
   vertexCount = 12;
   indexCount = 20;
@@ -269,8 +263,7 @@ void BuildIcoSphere(uint subdivisionCount,
 {
   if (subdivisionCount == 1)
   {
-    BuildIcosahedron(
-        vertices, vertexCount, indices, indexCount, normals, textureCoords);
+    BuildIcosahedron(vertices, vertexCount, indices, indexCount, normals, textureCoords);
     return;
   }
   else if (subdivisionCount == 0)
@@ -286,8 +279,7 @@ void BuildIcoSphere(uint subdivisionCount,
   // Subdivide all of the faces
   for (uint i = 0; i < 20; ++i)
   {
-    SubdivideFace(
-        subdivisionCount, PlatonicSolids::cIcosahedronFaces[i], faces[i]);
+    SubdivideFace(subdivisionCount, PlatonicSolids::cIcosahedronFaces[i], faces[i]);
   }
 
   // Number of points for all of the faces, after duplicated points are removed

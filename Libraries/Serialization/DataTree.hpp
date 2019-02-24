@@ -22,9 +22,7 @@ public:
 
   /// Load a data tree from a StringRange. The 'source' parameter is used
   /// to make error messages more helpful.
-  bool OpenBuffer(Status& status,
-                  StringRange data,
-                  StringRange source = "text buffer");
+  bool OpenBuffer(Status& status, StringRange data, StringRange source = "text buffer");
 
   /// Release the data tree and file memory.
   void Close() override;
@@ -51,9 +49,7 @@ public:
 
   String DebugLocation() override;
 
-  bool StringField(cstr typeName,
-                   cstr fieldName,
-                   StringRange& stringRange) override;
+  bool StringField(cstr typeName, cstr fieldName, StringRange& stringRange) override;
 
   /// Array Serialization
   bool ArrayField(cstr typeName,
@@ -65,10 +61,7 @@ public:
   void ArraySize(uint& arraySize) override;
 
   /// Enum Serialization
-  bool EnumField(cstr enumTypeName,
-                 cstr fieldName,
-                 uint& enumValue,
-                 BoundType* type) override;
+  bool EnumField(cstr enumTypeName, cstr fieldName, uint& enumValue, BoundType* type) override;
 
   /// Fundamental Serialization
   template <typename type>
@@ -82,13 +75,10 @@ public:
     return true;
   }
 
-  virtual PatchResolveMethod::Enum ResolveInheritedData(StringRange inheritId,
-                                                        DataNode*& result);
+  virtual PatchResolveMethod::Enum ResolveInheritedData(StringRange inheritId, DataNode*& result);
   /// Returns whether or not the
-  virtual DependencyAction::Enum ResolveDependencies(DataNode* parent,
-                                                     DataNode* newChild,
-                                                     DataNode** toReplace,
-                                                     Status& status);
+  virtual DependencyAction::Enum
+  ResolveDependencies(DataNode* parent, DataNode* newChild, DataNode** toReplace, Status& status);
 
   uint mLoadedFileVersion;
 

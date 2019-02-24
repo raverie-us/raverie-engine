@@ -7,8 +7,7 @@ namespace Zero
 class ArchetypeProcessor
 {
 public:
-  ArchetypeProcessor(GeneratedArchetype* generatedArchetype,
-                     HierarchyDataMap& hierarchyData);
+  ArchetypeProcessor(GeneratedArchetype* generatedArchetype, HierarchyDataMap& hierarchyData);
 
   void BuildSceneGraph(String rootNode);
   SceneGraphNode* BuildSceneNodes(HierarchyData nodeData);

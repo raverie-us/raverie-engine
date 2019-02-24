@@ -5,36 +5,28 @@
 namespace Zero
 {
 
-FontProcessor::FontProcessor(RenderQueues* renderQueues,
-                             ViewNode* viewNode,
-                             Vec4 vertexColor) :
+FontProcessor::FontProcessor(RenderQueues* renderQueues, ViewNode* viewNode, Vec4 vertexColor) :
     mRenderQueues(renderQueues),
     mViewNode(viewNode),
     mVertexColor(vertexColor)
 {
 }
 
-void FontProcessor::ProcessRenderRune(RenderRune& rune,
-                                      Vec2 position,
-                                      Vec2 pixelScale)
+void FontProcessor::ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale)
 {
   Vec2 pos0 = position + rune.Offset * pixelScale;
   Vec2 pos1 = pos0 + rune.Size * pixelScale;
   Vec2 uv0 = rune.Rect.TopLeft;
   Vec2 uv1 = rune.Rect.BotRight;
 
-  mRenderQueues->AddStreamedQuad(
-      *mViewNode, Vec3(pos0, 0), Vec3(pos1, 0), uv0, uv1, mVertexColor);
+  mRenderQueues->AddStreamedQuad(*mViewNode, Vec3(pos0, 0), Vec3(pos1, 0), uv0, uv1, mVertexColor);
 }
 
-FontProcessorVertexArray::FontProcessorVertexArray(Vec4 vertexColor) :
-    mVertexColor(vertexColor)
+FontProcessorVertexArray::FontProcessorVertexArray(Vec4 vertexColor) : mVertexColor(vertexColor)
 {
 }
 
-void FontProcessorVertexArray::ProcessRenderRune(RenderRune& rune,
-                                                 Vec2 position,
-                                                 Vec2 pixelScale)
+void FontProcessorVertexArray::ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale)
 {
   Vec2 pos0 = position + rune.Offset * pixelScale;
   Vec2 pos1 = pos0 + rune.Size * pixelScale;
@@ -54,17 +46,14 @@ void FontProcessorVertexArray::ProcessRenderRune(RenderRune& rune,
   mVertices.PushBack(v0);
 }
 
-FontProcessorFindCharPosition::FontProcessorFindCharPosition(
-    int charIndex, Vec2 startPositon) :
+FontProcessorFindCharPosition::FontProcessorFindCharPosition(int charIndex, Vec2 startPositon) :
     mFindIndex(charIndex),
     mCurrentIndex(0),
     mCharPosition(startPositon)
 {
 }
 
-void FontProcessorFindCharPosition::ProcessRenderRune(RenderRune& rune,
-                                                      Vec2 position,
-                                                      Vec2 pixelScale)
+void FontProcessorFindCharPosition::ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale)
 {
   // If we never make it to the requested index then we want the position
   // to be after the last character we encountered

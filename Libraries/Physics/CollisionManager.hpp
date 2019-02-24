@@ -37,14 +37,8 @@ public:
   // these two functions are not currently in use due to a refactor, however
   // they might become useful again when performing a collision test between
   // two complex colliders. Therefore, I am not removing this code.
-  bool CollideShapes(Aabb& aabb,
-                     Collider* aabbCollider,
-                     Collider* otherCollider,
-                     Manifold* manifold);
-  bool CollideShapes(Triangle& tri,
-                     Collider* triCollider,
-                     Collider* otherCollider,
-                     Manifold* manifold);
+  bool CollideShapes(Aabb& aabb, Collider* aabbCollider, Collider* otherCollider, Manifold* manifold);
+  bool CollideShapes(Triangle& tri, Collider* triCollider, Collider* otherCollider, Manifold* manifold);
 
   /// Determines if the collider intersects with a point.
   static bool TestIntersection(Collider* collider, Vec3Param point);
@@ -53,35 +47,20 @@ public:
 
   /// Used as callbacks to the casting system
   /// Casts a Ray against an object.
-  static bool TestRayVsObject(void* userData,
-                              CastDataParam castData,
-                              ProxyResult& result,
-                              BaseCastFilter& filter);
+  static bool TestRayVsObject(void* userData, CastDataParam castData, ProxyResult& result, BaseCastFilter& filter);
 
   /// Casts a Segment against an object.
-  static bool TestSegmentVsObject(void* userData,
-                                  CastDataParam castData,
-                                  ProxyResult& result,
-                                  BaseCastFilter& filter);
+  static bool TestSegmentVsObject(void* userData, CastDataParam castData, ProxyResult& result, BaseCastFilter& filter);
 
   /// Casts an Aabb against an object.
-  static bool TestAabbVsObject(void* userData,
-                               CastDataParam castData,
-                               ProxyResult& result,
-                               BaseCastFilter& filter);
+  static bool TestAabbVsObject(void* userData, CastDataParam castData, ProxyResult& result, BaseCastFilter& filter);
 
   /// Casts a Sphere against an object.
-  static bool TestSphereVsObject(void* userData,
-                                 CastDataParam castData,
-                                 ProxyResult& result,
-                                 BaseCastFilter& filter);
+  static bool TestSphereVsObject(void* userData, CastDataParam castData, ProxyResult& result, BaseCastFilter& filter);
 
   /// Casts a Frustum against an object.  Distance is the distance to the first
   /// plane.
-  static bool TestFrustumVsObject(void* userData,
-                                  CastDataParam castData,
-                                  ProxyResult& result,
-                                  BaseCastFilter& filter);
+  static bool TestFrustumVsObject(void* userData, CastDataParam castData, ProxyResult& result, BaseCastFilter& filter);
 
 private:
   /// Private implementation of the n-squared collider type resolution.

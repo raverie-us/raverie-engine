@@ -7,19 +7,12 @@ namespace Zero
 namespace Physics
 {
 
-void LinearAxisValue(WorldAnchorAtom& anchor,
-                     Vec3Param axis,
-                     ConstraintAtom& atom,
-                     real constant)
+void LinearAxisValue(WorldAnchorAtom& anchor, Vec3Param axis, ConstraintAtom& atom, real constant)
 {
-  atom.mConstraintValue =
-      Math::Dot(anchor.GetPointDifference(), axis) - constant;
+  atom.mConstraintValue = Math::Dot(anchor.GetPointDifference(), axis) - constant;
 }
 
-void AngularAxisValue(WorldAngleAtom& angle,
-                      Vec3Param axis,
-                      ConstraintAtom& atom,
-                      real constant)
+void AngularAxisValue(WorldAngleAtom& angle, Vec3Param axis, ConstraintAtom& atom, real constant)
 {
   // Old way with quaternions (2-1 mapping issue)
   // atom.mConstraintValue = real(2.0) *
@@ -27,9 +20,7 @@ void AngularAxisValue(WorldAngleAtom& angle,
   atom.mConstraintValue = Math::Dot(angle.mEulerAngles, axis);
 }
 
-void LimitedAngularAxisValue(MoleculeData& data,
-                             uint axis,
-                             ConstraintAtom& atom)
+void LimitedAngularAxisValue(MoleculeData& data, uint axis, ConstraintAtom& atom)
 {
   uint indexX = (axis + 1) % 3;
   uint indexY = (axis + 2) % 3;
@@ -59,8 +50,7 @@ void GearAxisValue(GearJoint* joint, ConstraintAtom& atom, real constant)
     else if (joint->mJoints[i].mBoundType == GearJoint::PrismJoint2d)
       coordinates[i] = joint->mJoints[i].mPrismatic2d->GetJointTranslation();
   }
-  joint->mAtoms[0].mConstraintValue =
-      coordinates[0] + coordinates[1] * joint->mRatio;
+  joint->mAtoms[0].mConstraintValue = coordinates[0] + coordinates[1] * joint->mRatio;
   // temporary until i can get correct error values (JoshD questions)
   joint->mAtoms[0].mConstraintValue = real(0.0);
 }
@@ -78,10 +68,8 @@ void PulleyAxisValue(PulleyJoint* joint, ConstraintAtom& atom, real constant)
   uint objId0 = joint->mJoints[0].mObjId;
   uint objId1 = joint->mJoints[1].mObjId;
 
-  Vec3 u0 =
-      anchors0.mWorldPoints[objId0] - anchors0.mWorldPoints[(objId0 + 1) % 2];
-  Vec3 u1 =
-      anchors1.mWorldPoints[objId1] - anchors1.mWorldPoints[(objId1 + 1) % 2];
+  Vec3 u0 = anchors0.mWorldPoints[objId0] - anchors0.mWorldPoints[(objId0 + 1) % 2];
+  Vec3 u1 = anchors1.mWorldPoints[objId1] - anchors1.mWorldPoints[(objId1 + 1) % 2];
 
   real length0 = u0.Length();
   real length1 = u1.Length();
@@ -93,16 +81,11 @@ void PulleyAxisValue(PulleyJoint* joint, ConstraintAtom& atom, real constant)
   joint->mAtoms[0].mConstraintValue = c0 - c;
 }
 
-bool ComputeError(ConstraintAtom& atom,
-                  ImpulseLimitAtom& molLimit,
-                  JointLimit* limit,
-                  real constant,
-                  uint flag)
+bool ComputeError(ConstraintAtom& atom, ImpulseLimitAtom& molLimit, JointLimit* limit, real constant, uint flag)
 {
   // if there is no limit or the limit is not active on this atom, the error is
   // just the value minus the constant passed in
-  if (limit == nullptr || limit->GetActive() == false ||
-      (limit->mAtomIds & flag) == 0)
+  if (limit == nullptr || limit->GetActive() == false || (limit->mAtomIds & flag) == 0)
   {
     atom.mError = atom.mConstraintValue - constant;
     return false;
@@ -128,10 +111,7 @@ bool ComputeError(ConstraintAtom& atom,
   return false;
 }
 
-void ComputeActiveAtoms(ConstraintAtom* atoms,
-                        uint count,
-                        JointLimit* limit,
-                        uint& bitFlag)
+void ComputeActiveAtoms(ConstraintAtom* atoms, uint count, JointLimit* limit, uint& bitFlag)
 {
   // if there is no limit to apply, return
   if (limit == nullptr || limit->GetActive() == false)
@@ -165,31 +145,21 @@ void ComputeActiveAtoms(ConstraintAtom* atoms,
   }
 }
 
-void LinearAxisFragment(WorldAnchorAtom& anchor,
-                        Vec3Param axis,
-                        ConstraintMolecule& mol)
+void LinearAxisFragment(WorldAnchorAtom& anchor, Vec3Param axis, ConstraintMolecule& mol)
 {
-  mol.mJacobian.Set(
-      -axis, -Math::Cross(anchor[0], axis), axis, Math::Cross(anchor[1], axis));
+  mol.mJacobian.Set(-axis, -Math::Cross(anchor[0], axis), axis, Math::Cross(anchor[1], axis));
 }
 
-void LinearAxisFragment2d(WorldAnchorAtom& anchor,
-                          Vec3Param axis,
-                          ConstraintMolecule& mol)
+void LinearAxisFragment2d(WorldAnchorAtom& anchor, Vec3Param axis, ConstraintMolecule& mol)
 {
-  mol.mJacobian.Set(-axis,
-                    -Math::Cross2d(anchor[0], axis),
-                    axis,
-                    Math::Cross2d(anchor[1], axis));
+  mol.mJacobian.Set(-axis, -Math::Cross2d(anchor[0], axis), axis, Math::Cross2d(anchor[1], axis));
   /*Vec3 d = anchor[1] - anchor[0];
   Vec3 c = real(.5) * Cross2d(axis, d);
   mol.mJacobian.Set(-axis, -Math::Cross2d(anchor[0], axis) + c,
                      axis,  Math::Cross2d(anchor[1], axis) + c);*/
 }
 
-void PrismaticAxisFragment2d(WorldAnchorAtom& anchor,
-                             Vec3Param axis,
-                             ConstraintMolecule& mol)
+void PrismaticAxisFragment2d(WorldAnchorAtom& anchor, Vec3Param axis, ConstraintMolecule& mol)
 {
   // Vec3 d = anchor.mWorldPoints[1] - anchor.mWorldPoints[0];
   // This d makes takes into account the rotational energy of the axis. However,
@@ -201,15 +171,10 @@ void PrismaticAxisFragment2d(WorldAnchorAtom& anchor,
   // This is the symmetric jacobian for a prismatic that depends upon w1 == w2.
   // This will work for the prismatic, but not for the wheel.
   Vec3 c = anchor.mWorldR[1] - anchor.mWorldR[0];
-  mol.mJacobian.Set(-axis,
-                    real(.5) * Math::Cross(axis, c),
-                    axis,
-                    real(.5) * Math::Cross(axis, c));
+  mol.mJacobian.Set(-axis, real(.5) * Math::Cross(axis, c), axis, real(.5) * Math::Cross(axis, c));
 }
 
-void AngularAxisFragment(WorldAngleAtom& angle,
-                         Vec3Param axis,
-                         ConstraintMolecule& mol)
+void AngularAxisFragment(WorldAngleAtom& angle, Vec3Param axis, ConstraintMolecule& mol)
 {
   mol.mJacobian.Set(Vec3::cZero, -axis, Vec3::cZero, axis);
 }
@@ -275,21 +240,15 @@ void PulleyAxisFragment(PulleyJoint* joint, ConstraintMolecule& mol)
   Vec3 r0 = anchors0.mWorldR[objId0];
   Vec3 r1 = anchors1.mWorldR[objId1];
 
-  Vec3 u0 =
-      anchors0.mWorldPoints[objId0] - anchors0.mWorldPoints[(objId0 + 1) % 2];
-  Vec3 u1 =
-      anchors1.mWorldPoints[objId1] - anchors1.mWorldPoints[(objId1 + 1) % 2];
+  Vec3 u0 = anchors0.mWorldPoints[objId0] - anchors0.mWorldPoints[(objId0 + 1) % 2];
+  Vec3 u1 = anchors1.mWorldPoints[objId1] - anchors1.mWorldPoints[(objId1 + 1) % 2];
   u0.Normalize();
   u1.Normalize();
 
-  mol.mJacobian.Set(
-      -u0, -Math::Cross(r0, u0), -u1 * ratio, -Math::Cross(r1, u1) * ratio);
+  mol.mJacobian.Set(-u0, -Math::Cross(r0, u0), -u1 * ratio, -Math::Cross(r1, u1) * ratio);
 }
 
-void ComputeMoleculeFragment(ImpulseLimitAtom& limit,
-                             ConstraintAtom& atom,
-                             ConstraintMolecule& mol,
-                             JointMass& masses)
+void ComputeMoleculeFragment(ImpulseLimitAtom& limit, ConstraintAtom& atom, ConstraintMolecule& mol, JointMass& masses)
 {
   // compute the mass term
   real effectiveMass = mol.mJacobian.ComputeMass(masses);
@@ -303,9 +262,7 @@ void ComputeMoleculeFragment(ImpulseLimitAtom& limit,
   mol.SetLimit(limit.mMinImpulse, limit.mMaxImpulse);
 }
 
-void MotorFragment(ConstraintMolecule& constraintMol,
-                   ConstraintMolecule& motorMol,
-                   JointMotor& motor)
+void MotorFragment(ConstraintMolecule& constraintMol, ConstraintMolecule& motorMol, JointMotor& motor)
 {
   // a motor is just the normal molecule with different limits and bias
   motorMol = constraintMol;
@@ -318,10 +275,7 @@ void MotorFragment(ConstraintMolecule& constraintMol,
     motorMol.mBias *= real(-1.0);
 }
 
-void RigidConstraintFragment(real& molError,
-                             real& molBias,
-                             real& molGamma,
-                             real baumgarte)
+void RigidConstraintFragment(real& molError, real& molBias, real& molGamma, real baumgarte)
 {
   molBias = molError * baumgarte;
   molGamma = real(0.0);
@@ -372,24 +326,13 @@ void SoftConstraintFragment(real& molMass,
   molGamma = gamma;
 }
 
-void SoftConstraintFragment(ConstraintMolecule& mol,
-                            SpringAtom& spring,
-                            real baumgarte,
-                            real dt)
+void SoftConstraintFragment(ConstraintMolecule& mol, SpringAtom& spring, real baumgarte, real dt)
 {
-  SoftConstraintFragment(mol.mMass,
-                         mol.mError,
-                         mol.mBias,
-                         mol.mGamma,
-                         spring.mFrequencyHz,
-                         spring.mDampingRatio,
-                         baumgarte,
-                         dt);
+  SoftConstraintFragment(
+      mol.mMass, mol.mError, mol.mBias, mol.mGamma, spring.mFrequencyHz, spring.mDampingRatio, baumgarte, dt);
 }
 
-void ContactNormalFragment(ConstraintMolecule& mol,
-                           real baumgarte,
-                           real restitutionBias)
+void ContactNormalFragment(ConstraintMolecule& mol, real baumgarte, real restitutionBias)
 {
   mol.mBias = mol.mError * baumgarte - restitutionBias;
   mol.mGamma = real(0.0);

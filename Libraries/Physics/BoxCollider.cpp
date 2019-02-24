@@ -31,17 +31,14 @@ void BoxCollider::Serialize(Serializer& stream)
 
   stream.SerializeFieldDefault("HalfSize", mLocalHalfSize, Vec3(real(0.5f)));
   // To deal with bad serialized values (most before the setter was fixed)
-  mLocalHalfSize =
-      Math::Clamp(mLocalHalfSize, mMinAllowedSize, mMaxAllowedSize);
+  mLocalHalfSize = Math::Clamp(mLocalHalfSize, mMinAllowedSize, mMaxAllowedSize);
 }
 
 void BoxCollider::DebugDraw()
 {
   Collider::DebugDraw();
   gDebugDraw->Add(
-      Debug::Obb(GetWorldTranslation(), mWorldHalfSize, GetWorldRotation())
-          .Color(Color::Plum)
-          .BackShade(true));
+      Debug::Obb(GetWorldTranslation(), mWorldHalfSize, GetWorldRotation()).Color(Color::Plum).BackShade(true));
 }
 
 void BoxCollider::CacheWorldValues()
@@ -61,8 +58,7 @@ real BoxCollider::ComputeWorldVolumeInternal()
   return real(8.0f) * mWorldHalfSize[0] * mWorldHalfSize[1] * mWorldHalfSize[2];
 }
 
-void BoxCollider::ComputeLocalInverseInertiaTensor(real mass,
-                                                   Mat3Ref localInvInertia)
+void BoxCollider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia)
 {
   Vec3 size = GetWorldSize();
   real diagonal = real(1.0f / 12.0f) * mass;
@@ -75,11 +71,7 @@ void BoxCollider::ComputeLocalInverseInertiaTensor(real mass,
 
 void BoxCollider::Support(Vec3Param direction, Vec3Ptr support) const
 {
-  Geometry::SupportObb(direction,
-                       GetWorldTranslation(),
-                       mWorldHalfSize,
-                       GetWorldRotation(),
-                       support);
+  Geometry::SupportObb(direction, GetWorldTranslation(), mWorldHalfSize, GetWorldRotation(), support);
 }
 
 Vec3 BoxCollider::GetHalfSize()

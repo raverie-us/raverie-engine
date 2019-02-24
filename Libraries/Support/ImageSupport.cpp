@@ -57,12 +57,10 @@ bool IsImageLoadFormat(TextureFormat::Enum format)
 
 bool IsImageSaveFormat(TextureFormat::Enum format)
 {
-  return format == TextureFormat::R8 || format == TextureFormat::RG8 ||
-         format == TextureFormat::RGB8 || format == TextureFormat::RGBA8 ||
-         format == TextureFormat::SRGB8 || format == TextureFormat::SRGB8A8 ||
-         format == TextureFormat::R16 || format == TextureFormat::RG16 ||
-         format == TextureFormat::RGB16 || format == TextureFormat::RGBA16 ||
-         format == TextureFormat::R32f || format == TextureFormat::RG32f ||
+  return format == TextureFormat::R8 || format == TextureFormat::RG8 || format == TextureFormat::RGB8 ||
+         format == TextureFormat::RGBA8 || format == TextureFormat::SRGB8 || format == TextureFormat::SRGB8A8 ||
+         format == TextureFormat::R16 || format == TextureFormat::RG16 || format == TextureFormat::RGB16 ||
+         format == TextureFormat::RGBA16 || format == TextureFormat::R32f || format == TextureFormat::RG32f ||
          format == TextureFormat::RGB32f || format == TextureFormat::RGBA32f;
 }
 
@@ -115,9 +113,7 @@ TextureFormat::Enum ToImageFormat(int components, ImageBitDepth::Enum depth)
   return TextureFormat::None;
 }
 
-void FromImageFormat(TextureFormat::Enum format,
-                     int* components,
-                     ImageBitDepth::Enum* depth)
+void FromImageFormat(TextureFormat::Enum format, int* components, ImageBitDepth::Enum* depth)
 {
   switch (format)
   {
@@ -238,11 +234,7 @@ bool ReadImageInfo(Stream* stream, ImageInfo& info)
   // We don't actually care about how many components because we always
   // up-convert to 4
   int components = 0;
-  bool result = stbi_info_from_callbacks(&callbacks,
-                                         stream,
-                                         (int*)&info.Width,
-                                         (int*)&info.Height,
-                                         &components) != 0;
+  bool result = stbi_info_from_callbacks(&callbacks, stream, (int*)&info.Width, (int*)&info.Height, &components) != 0;
 
   info.Format = ToImageFormat(components, depth);
   return result;
@@ -257,8 +249,7 @@ bool ReadImageInfo(File& file, ImageInfo& info)
 bool ReadImageInfo(StringParam filename, ImageInfo& info)
 {
   File file;
-  if (!file.Open(
-          filename.c_str(), FileMode::Read, FileAccessPattern::Sequential))
+  if (!file.Open(filename.c_str(), FileMode::Read, FileAccessPattern::Sequential))
     return false;
 
   return ReadImageInfo(file, info);
@@ -280,14 +271,12 @@ void LoadImage(Status& status,
 {
 #ifdef ZeroCustomPngSupport
   if (IsPngLoadFormat(requireFormat) && IsPng(stream))
-    return LoadPng(
-        status, stream, output, width, height, format, requireFormat);
+    return LoadPng(status, stream, output, width, height, format, requireFormat);
 #endif
 
 #ifdef ZeroCustomHdrSupport
   if (IsHdrLoadFormat(requireFormat) && IsHdr(stream))
-    return LoadHdr(
-        status, stream, output, width, height, format, requireFormat);
+    return LoadHdr(status, stream, output, width, height, format, requireFormat);
 #endif
 
   if (!IsImageLoadFormat(requireFormat))
@@ -308,8 +297,7 @@ void LoadImage(Status& status,
   {
     if (stream->Seek(0) && stbi_is_hdr_from_callbacks(&callbacks, stream))
       requireDepth = ImageBitDepth::F32;
-    else if (stream->Seek(0) &&
-             stbi_is_16_bit_from_callbacks(&callbacks, stream))
+    else if (stream->Seek(0) && stbi_is_16_bit_from_callbacks(&callbacks, stream))
       requireDepth = ImageBitDepth::I16;
     else
       requireDepth = ImageBitDepth::I8;
@@ -324,28 +312,16 @@ void LoadImage(Status& status,
   switch (requireDepth)
   {
   case ImageBitDepth::F32:
-    *output = (byte*)stbi_loadf_from_callbacks(&callbacks,
-                                               stream,
-                                               (int*)width,
-                                               (int*)height,
-                                               &componentsOut,
-                                               requireComponents);
+    *output = (byte*)stbi_loadf_from_callbacks(
+        &callbacks, stream, (int*)width, (int*)height, &componentsOut, requireComponents);
     break;
   case ImageBitDepth::I16:
-    *output = (byte*)stbi_load_16_from_callbacks(&callbacks,
-                                                 stream,
-                                                 (int*)width,
-                                                 (int*)height,
-                                                 &componentsOut,
-                                                 requireComponents);
+    *output = (byte*)stbi_load_16_from_callbacks(
+        &callbacks, stream, (int*)width, (int*)height, &componentsOut, requireComponents);
     break;
   case ImageBitDepth::I8:
-    *output = (byte*)stbi_load_from_callbacks(&callbacks,
-                                              stream,
-                                              (int*)width,
-                                              (int*)height,
-                                              &componentsOut,
-                                              requireComponents);
+    *output = (byte*)stbi_load_from_callbacks(
+        &callbacks, stream, (int*)width, (int*)height, &componentsOut, requireComponents);
     break;
   case ImageBitDepth::None:
     break;
@@ -367,8 +343,7 @@ void LoadImage(Status& status,
     static const String cGifHeader("GIF");
     static const size_t cGifBytes = 3;
     byte gifHeader[cGifBytes];
-    if (stream->Peek(gifHeader, cGifBytes) == cGifBytes &&
-        memcmp(gifHeader, cGifHeader.Data(), cGifBytes) == 0)
+    if (stream->Peek(gifHeader, cGifBytes) == cGifBytes && memcmp(gifHeader, cGifHeader.Data(), cGifBytes) == 0)
     {
       // Read the entire stream into memory
       ByteBufferBlock block;
@@ -440,11 +415,7 @@ void LoadImage(Status& status,
                TextureFormat::Enum requireFormat)
 {
   File file;
-  if (!file.Open(filename.c_str(),
-                 FileMode::Read,
-                 FileAccessPattern::Sequential,
-                 FileShare::Unspecified,
-                 &status))
+  if (!file.Open(filename.c_str(), FileMode::Read, FileAccessPattern::Sequential, FileShare::Unspecified, &status))
     return;
 
   return LoadImage(status, file, output, width, height, format, requireFormat);
@@ -470,14 +441,12 @@ void LoadImage(Status& status, Stream* stream, Image* imageOut)
   uint width = 0;
   uint height = 0;
   TextureFormat::Enum format = TextureFormat::None;
-  LoadImage(
-      status, stream, &output, &width, &height, &format, TextureFormat::RGBA8);
+  LoadImage(status, stream, &output, &width, &height, &format, TextureFormat::RGBA8);
 
   // Note that Image::Set steals the data
   if (output && status.Succeeded())
   {
-    ErrorIf(format != TextureFormat::RGBA8,
-            "Got back an invalid format from LoadImage");
+    ErrorIf(format != TextureFormat::RGBA8, "Got back an invalid format from LoadImage");
     imageOut->Set((ImagePixel*)output, width, height);
   }
 }
@@ -491,11 +460,7 @@ void LoadImage(Status& status, File& file, Image* imageOut)
 void LoadImage(Status& status, StringParam filename, Image* imageOut)
 {
   File file;
-  if (!file.Open(filename.c_str(),
-                 FileMode::Read,
-                 FileAccessPattern::Sequential,
-                 FileShare::Unspecified,
-                 &status))
+  if (!file.Open(filename.c_str(), FileMode::Read, FileAccessPattern::Sequential, FileShare::Unspecified, &status))
     return;
 
   return LoadImage(status, file, imageOut);
@@ -533,9 +498,8 @@ void SaveImage(Status& status,
 
   if (!IsImageSaveFormat(format))
   {
-    status.SetFailed(
-        "Image only supports the formats R8, RG8, RGB8, RGBA8, R16, RG16, "
-        "RGB16, RGBA16, R32f, RG32f, RGB32f, and RGBA32f");
+    status.SetFailed("Image only supports the formats R8, RG8, RGB8, RGBA8, R16, RG16, "
+                     "RGB16, RGBA16, R32f, RG32f, RGB32f, and RGBA32f");
     return;
   }
 
@@ -563,24 +527,19 @@ void SaveImage(Status& status,
   switch (imageType)
   {
   case ImageSaveFormat::Png:
-    result = stbi_write_png_to_func(
-        &StbWrite, stream, (int)width, (int)height, components, image, 0);
+    result = stbi_write_png_to_func(&StbWrite, stream, (int)width, (int)height, components, image, 0);
     break;
   case ImageSaveFormat::Bmp:
-    result = stbi_write_bmp_to_func(
-        &StbWrite, stream, (int)width, (int)height, components, image);
+    result = stbi_write_bmp_to_func(&StbWrite, stream, (int)width, (int)height, components, image);
     break;
   case ImageSaveFormat::Tga:
-    result = stbi_write_tga_to_func(
-        &StbWrite, stream, (int)width, (int)height, components, image);
+    result = stbi_write_tga_to_func(&StbWrite, stream, (int)width, (int)height, components, image);
     break;
   case ImageSaveFormat::Hdr:
-    result = stbi_write_hdr_to_func(
-        &StbWrite, stream, (int)width, (int)height, components, (float*)image);
+    result = stbi_write_hdr_to_func(&StbWrite, stream, (int)width, (int)height, components, (float*)image);
     break;
   case ImageSaveFormat::Jpg:
-    result = stbi_write_jpg_to_func(
-        &StbWrite, stream, (int)width, (int)height, components, image, 100);
+    result = stbi_write_jpg_to_func(&StbWrite, stream, (int)width, (int)height, components, image, 100);
     break;
   }
 
@@ -609,49 +568,26 @@ void SaveImage(Status& status,
                ImageSaveFormat::Enum imageType)
 {
   File file;
-  if (!file.Open(filename.c_str(),
-                 FileMode::Write,
-                 FileAccessPattern::Sequential,
-                 FileShare::Unspecified,
-                 &status))
+  if (!file.Open(filename.c_str(), FileMode::Write, FileAccessPattern::Sequential, FileShare::Unspecified, &status))
     return;
   return SaveImage(status, file, image, width, height, format, imageType);
 }
 
-void SaveImage(Status& status,
-               Stream* stream,
-               Image* image,
-               ImageSaveFormat::Enum imageType)
+void SaveImage(Status& status, Stream* stream, Image* image, ImageSaveFormat::Enum imageType)
 {
-  return SaveImage(status,
-                   stream,
-                   (byte*)image->Data,
-                   image->Width,
-                   image->Height,
-                   TextureFormat::RGBA8,
-                   imageType);
+  return SaveImage(status, stream, (byte*)image->Data, image->Width, image->Height, TextureFormat::RGBA8, imageType);
 }
 
-void SaveImage(Status& status,
-               File& file,
-               Image* image,
-               ImageSaveFormat::Enum imageType)
+void SaveImage(Status& status, File& file, Image* image, ImageSaveFormat::Enum imageType)
 {
   FileStream stream(file);
   return SaveImage(status, &stream, image, imageType);
 }
 
-void SaveImage(Status& status,
-               StringParam filename,
-               Image* image,
-               ImageSaveFormat::Enum imageType)
+void SaveImage(Status& status, StringParam filename, Image* image, ImageSaveFormat::Enum imageType)
 {
   File file;
-  if (!file.Open(filename.c_str(),
-                 FileMode::Write,
-                 FileAccessPattern::Sequential,
-                 FileShare::Unspecified,
-                 &status))
+  if (!file.Open(filename.c_str(), FileMode::Write, FileAccessPattern::Sequential, FileShare::Unspecified, &status))
     return;
   return SaveImage(status, file, image, imageType);
 }

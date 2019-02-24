@@ -89,8 +89,7 @@ void ListView::UpdateTransform()
   // Out of bounds sanity check.
   startVisible = Math::Min(activeRows, startVisible);
   // Compute the end of the visible rows.
-  uint endVisible =
-      Math::Min((size_t)mRows.Size(), (size_t)(startVisible + visibleRows));
+  uint endVisible = Math::Min((size_t)mRows.Size(), (size_t)(startVisible + visibleRows));
 
   // Update the client size with the size of all the rows
   mArea->SetClientSize(Vec2(mSize.x, totalRowHeights));
@@ -225,7 +224,7 @@ void ListView::UpdateColumnTransforms()
 
   // Calculate room we after all fixed columns.
   int c = 0;
-  forRange(ColumnFormat & column, mFormatting.Columns.All())
+  forRange (ColumnFormat& column, mFormatting.Columns.All())
   {
     // If the column is made to fit the text, then count it as fixed.
     if (mFitToText[c])
@@ -245,7 +244,7 @@ void ListView::UpdateColumnTransforms()
 
   // Walk through each column and set its size and translation.
   c = 0;
-  forRange(ColumnFormat & column, mFormatting.Columns.All())
+  forRange (ColumnFormat& column, mFormatting.Columns.All())
   {
     // The starting position doesn't rely on the column type
     column.StartX = currentX;
@@ -362,7 +361,7 @@ void ListView::UpdateHeaders()
   // Move all the resizers to the front of the headers so that they get hit
   // first with ray casts.
   typedef Pair<ListColumnHeader*, ColumnResizer*> ResizerPair;
-  forRange(ResizerPair & entry, mHeaderResizers.All())
+  forRange (ResizerPair& entry, mHeaderResizers.All())
   {
     ColumnResizer* resizer = entry.second;
     resizer->MoveToFront();
@@ -431,8 +430,7 @@ void ListView::UpdateTextUI()
 
       float fitWidth = format.CurrSize.x;
       if (format.ColumnType == ColumnType::Flex)
-        fitWidth =
-            RemoveThicknessRect(content->mPadding, Vec2(fitWidth, 0)).SizeX;
+        fitWidth = RemoveThicknessRect(content->mPadding, Vec2(fitWidth, 0)).SizeX;
 
       // Allow ample height for text.
       Vec2 size(Pixels(fitWidth), Pixels(1000));
@@ -529,8 +527,7 @@ void ListView::RedoLastRowUI()
 
 const float ListRow::cRowColor[] = {61.0f / 255.0f, 72.0f / 255.0f};
 
-ListRow::ListRow(ListView* listView, ListRow* rowParent, DataEntry* entry) :
-    TreeBase(listView->mArea)
+ListRow::ListRow(ListView* listView, ListRow* rowParent, DataEntry* entry) : TreeBase(listView->mArea)
 {
   mList = listView;
   mActive = true;
@@ -633,7 +630,7 @@ void ListRow::RecursiveDestroy()
 
 void ListRow::DestroyChildren()
 {
-  forRange(ListRow & child, mChildren.All())
+  forRange (ListRow& child, mChildren.All())
   {
     child.RecursiveDestroy();
   }
@@ -735,8 +732,7 @@ void ListRow::Refresh()
 
       float fitWidth = format.MinWidth;
       if (format.ColumnType == ColumnType::Flex)
-        fitWidth =
-            RemoveThicknessRect(content->mPadding, Vec2(fitWidth, 0)).SizeX;
+        fitWidth = RemoveThicknessRect(content->mPadding, Vec2(fitWidth, 0)).SizeX;
 
       // Allow ample height for text.
       Vec2 size(Pixels(fitWidth), Pixels(1000));
@@ -816,7 +812,7 @@ void ListRow::Fill(Array<ListRow*>& rows)
   rows.PushBack(this);
   this->mVisibleRowIndex = rows.Size() - 1;
 
-  forRange(ListRow & child, mChildren.All())
+  forRange (ListRow& child, mChildren.All())
   {
     child.Fill(rows);
   }
@@ -825,13 +821,9 @@ void ListRow::Fill(Array<ListRow*>& rows)
 const float ListColumnHeader::cHeaderColor = 55.0f / 255.0f;
 const float ListColumnHeader::cColumnSeparatorColor = 47.0f / 255.0f;
 
-ListColumnHeader::ListColumnHeader(ListView* list, ColumnFormat* format) :
-    Composite(list),
-    mFormat(format),
-    mList(list)
+ListColumnHeader::ListColumnHeader(ListView* list, ColumnFormat* format) : Composite(list), mFormat(format), mList(list)
 {
-  Vec4 color = FloatColorRGBA(
-      28, 60, 80, 255); //(cHeaderColor, cHeaderColor, cHeaderColor, 1.0f);
+  Vec4 color = FloatColorRGBA(28, 60, 80, 255); //(cHeaderColor, cHeaderColor, cHeaderColor, 1.0f);
 
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetColor(color);

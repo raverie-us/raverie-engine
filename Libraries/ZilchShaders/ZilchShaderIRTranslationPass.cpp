@@ -6,8 +6,7 @@
 namespace Zero
 {
 
-String ZilchShaderIRTranslationPass::SpirvDiagnosticToString(
-    spv_diagnostic& diagnostic)
+String ZilchShaderIRTranslationPass::SpirvDiagnosticToString(spv_diagnostic& diagnostic)
 {
   if (diagnostic == nullptr)
     return String();
@@ -21,9 +20,8 @@ String ZilchShaderIRTranslationPass::SpirvDiagnosticToString(
     // NOTE: This is a text position
     // NOTE: add 1 to the line as editors start at line 1, we are counting new
     // line characters to start at line 0
-    builder << "error: " << ToString(diagnostic->position.line + 1) << ": "
-            << ToString(diagnostic->position.column + 1) << ": "
-            << ToString(diagnostic->error) << "\n";
+    builder << "error: " << ToString(diagnostic->position.line + 1) << ": " << ToString(diagnostic->position.column + 1)
+            << ": " << ToString(diagnostic->error) << "\n";
   }
   else
   {

@@ -43,36 +43,21 @@ void Statistics::PrintResults()
 
   DebugPrintFilter(Filter::PhysicsFilter,
                    "| Accuracy:  %.2f%%",
-                   (real(ActualCollisions) / real(PossibleCollisionsReturned)) /
-                       real(100.0));
+                   (real(ActualCollisions) / real(PossibleCollisionsReturned)) / real(100.0));
   DebugPrintFilter(Filter::PhysicsFilter,
                    "| Collision Time Taken:  %.2fms",
-                   Profile::ProfileSystem::Instance->GetTimeInSeconds(
-                       UpdateTime.GetTotalTime()));
-  DebugPrintFilter(Filter::PhysicsFilter,
-                   "| Update Time Taken:  %.2fms",
-                   UpdateTime.GetTotalTime());
-  DebugPrintFilter(Filter::PhysicsFilter,
-                   "| Ray Cast Time Taken:  %.2fms",
-                   RayCastTime.GetTotalTime());
-  DebugPrintFilter(Filter::PhysicsFilter,
-                   "| Insertion Time Taken:  %.2fms",
-                   InsertionTime.GetTotalTime());
-  DebugPrintFilter(Filter::PhysicsFilter,
-                   "| Removal Time Taken:  %.2fms",
-                   RemovalTime.GetTotalTime());
-  DebugPrintFilter(Filter::PhysicsFilter,
-                   "| Construction Time Taken:  %.2fms",
-                   ConstructionTime.GetTotalTime());
+                   Profile::ProfileSystem::Instance->GetTimeInSeconds(UpdateTime.GetTotalTime()));
+  DebugPrintFilter(Filter::PhysicsFilter, "| Update Time Taken:  %.2fms", UpdateTime.GetTotalTime());
+  DebugPrintFilter(Filter::PhysicsFilter, "| Ray Cast Time Taken:  %.2fms", RayCastTime.GetTotalTime());
+  DebugPrintFilter(Filter::PhysicsFilter, "| Insertion Time Taken:  %.2fms", InsertionTime.GetTotalTime());
+  DebugPrintFilter(Filter::PhysicsFilter, "| Removal Time Taken:  %.2fms", RemovalTime.GetTotalTime());
+  DebugPrintFilter(Filter::PhysicsFilter, "| Construction Time Taken:  %.2fms", ConstructionTime.GetTotalTime());
   if (CollisionsMissed)
   {
     DebugPrintFilter(Filter::PhysicsFilter, "|");
     DebugPrintFilter(Filter::PhysicsFilter, "| !--COLLISIONS MISSED--!");
-    DebugPrintFilter(Filter::PhysicsFilter,
-                     "| %u collision(s) was picked up by another",
-                     CollisionsMissed);
-    DebugPrintFilter(Filter::PhysicsFilter,
-                     "| broadphase that this did not catch.");
+    DebugPrintFilter(Filter::PhysicsFilter, "| %u collision(s) was picked up by another", CollisionsMissed);
+    DebugPrintFilter(Filter::PhysicsFilter, "| broadphase that this did not catch.");
   }
 }
 

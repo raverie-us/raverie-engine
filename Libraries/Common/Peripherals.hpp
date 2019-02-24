@@ -44,9 +44,7 @@ ZeroShared bool AreGamepadsEnabled();
 ZeroShared bool GetGamepadState(size_t gamepadIndex, GamepadState* stateOut);
 // The left and right motor speeds are set on a [0.0 - 1.0] range with 1.0 being
 // max rumble.
-ZeroShared bool SetGamepadVibration(size_t gamepadIndex,
-                                    float leftSpeed,
-                                    float rightSpeed);
+ZeroShared bool SetGamepadVibration(size_t gamepadIndex, float leftSpeed, float rightSpeed);
 
 static const size_t cMaxGamepads = 4;
 

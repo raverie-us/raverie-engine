@@ -15,15 +15,8 @@ SimInline SimMat3 LoadMat3(const scalar vals[12])
   return m;
 }
 
-SimInline SimMat3 SetMat3(scalar m00,
-                          scalar m01,
-                          scalar m02,
-                          scalar m10,
-                          scalar m11,
-                          scalar m12,
-                          scalar m20,
-                          scalar m21,
-                          scalar m22)
+SimInline SimMat3
+SetMat3(scalar m00, scalar m01, scalar m02, scalar m10, scalar m11, scalar m12, scalar m20, scalar m21, scalar m22)
 {
   SimMat3 m;
   m.columns[0] = Set3(m00, m10, m20);
@@ -364,9 +357,7 @@ SimInline SimMat3 BuildRotation3(SimVecParam quat)
   return m;
 }
 
-SimInline SimMat3 BuildTransform3(SimVecParam axis,
-                                  scalar angle,
-                                  SimVecParam scale)
+SimInline SimMat3 BuildTransform3(SimVecParam axis, scalar angle, SimVecParam scale)
 {
   SimMat3 m = BuildRotation3(axis, angle);
   m.columns[0] = Multiply(m.columns[0], SplatX(scale));
@@ -431,12 +422,9 @@ SimInline SimMat3 AffineInverseWithScale3(SimMat3Param transform)
   SimMat3 invScale;
   // invert the scale by dividing each column by its squared length (so the
   // length is 1/length)
-  invScale.columns[0] =
-      Divide(transform.columns[0], LengthSq3(transform.columns[0]));
-  invScale.columns[1] =
-      Divide(transform.columns[1], LengthSq3(transform.columns[1]));
-  invScale.columns[2] =
-      Divide(transform.columns[2], LengthSq3(transform.columns[2]));
+  invScale.columns[0] = Divide(transform.columns[0], LengthSq3(transform.columns[0]));
+  invScale.columns[1] = Divide(transform.columns[1], LengthSq3(transform.columns[1]));
+  invScale.columns[2] = Divide(transform.columns[2], LengthSq3(transform.columns[2]));
 
   // get the 3x3 inverse of the scale and the rotation
   SimMat3 m = Transpose3(invScale);

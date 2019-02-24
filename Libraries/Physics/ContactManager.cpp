@@ -11,8 +11,7 @@ Memory::Pool* sContactPool = nullptr;
 ContactManager::ContactManager()
 {
   if (sContactPool == nullptr)
-    sContactPool = new Memory::Pool(
-        "Contacts", Memory::GetNamedHeap("Physics"), sizeof(Contact), 1000);
+    sContactPool = new Memory::Pool("Contacts", Memory::GetNamedHeap("Physics"), sizeof(Contact), 1000);
   mContactPool = sContactPool;
   mSpace = nullptr;
 }
@@ -90,8 +89,7 @@ void ContactManager::Remove(Contact* contact, bool sendImmediately)
     manifold->Objects.B->ForceAwake();
   }
 
-  mSpace->mEventManager->BatchCollisionEndedEvent(
-      manifold, mSpace, sendImmediately);
+  mSpace->mEventManager->BatchCollisionEndedEvent(manifold, mSpace, sendImmediately);
 
   // We want the CollisionEnded event to have access to the manifold, but the
   // contact owns the manifold and would delete it, so delay destruct the
@@ -197,8 +195,7 @@ Contact* ContactAlreadyExistsDebug(Manifold* manifold)
     break;
   }
 
-  ErrorIf(contact1 != contact2,
-          "Contact was on one collider but not the other!");
+  ErrorIf(contact1 != contact2, "Contact was on one collider but not the other!");
 
   return contact1;
 }

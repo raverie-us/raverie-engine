@@ -18,8 +18,7 @@ ZilchDefineStaticLibrary(WidgetLibrary)
   builder.CreatableInScriptDefault = false;
 
   // Ranges
-  ZilchInitializeRangeAs(ContextMenuEntryChildren::range,
-                         "ContextMenuEntryChildrenRange");
+  ZilchInitializeRangeAs(ContextMenuEntryChildren::range, "ContextMenuEntryChildrenRange");
 
   // Enums
   ZilchInitializeEnum(VerticalAlignment);
@@ -114,11 +113,8 @@ void WidgetLibrary::Initialize()
   BuildStaticLibrary();
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 
-  RegisterClassAttributeType(ObjectAttributes::cTags, MetaScriptTagAttribute)
-      ->TypeMustBe(Component);
-  RegisterClassAttributeType(ObjectAttributes::cShortcut,
-                             MetaScriptShortcutAttribute)
-      ->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cTags, MetaScriptTagAttribute)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cShortcut, MetaScriptShortcutAttribute)->TypeMustBe(Component);
 
   WidgetManager::Initialize();
   CommandManager::Initialize();

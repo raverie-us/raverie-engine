@@ -13,8 +13,7 @@ static const TimeMs cOneSecondTimeMs = TimeMs(1000);
 static const TimeMs cInfiniteTimeMs = std::numeric_limits<TimeMs>::max();
 
 /// Converts a rate (hertz) to an interval (milliseconds)
-#define RATE_TO_INTERVAL(Rate)                                                 \
-  TimeMs((double(1) / double(Rate)) * cOneSecondTimeMs)
+#define RATE_TO_INTERVAL(Rate) TimeMs((double(1) / double(Rate)) * cOneSecondTimeMs)
 
 /// Returns the duration between start and end
 ZeroShared inline TimeMs GetDuration(TimeMs start, TimeMs end)

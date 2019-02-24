@@ -57,8 +57,7 @@ Vector4 ToAxisAngle(QuatParam quaternion)
 
 void ToAxisAngle(QuatParam quaternion, Vec4Ptr axisAngle)
 {
-  ErrorIf(axisAngle == nullptr,
-          "Math - Null pointer passed for axis-angle pair.");
+  ErrorIf(axisAngle == nullptr, "Math - Null pointer passed for axis-angle pair.");
   Quat tempQuat(Normalized(quaternion));
 
   axisAngle->w = real(2.0) * Math::ArcCos(tempQuat.w);
@@ -111,14 +110,12 @@ EulerAngles ToEulerAngles(Mat3Param matrix, EulerOrders::Enum order)
 
 void ToEulerAngles(Mat3Param matrix, EulerAnglesPtr eulerAngles)
 {
-  ErrorIf(eulerAngles == nullptr,
-          "Math - Null pointer passed for Euler angles.");
+  ErrorIf(eulerAngles == nullptr, "Math - Null pointer passed for Euler angles.");
   uint i, j, k, h, parity, repeated, frame;
   EulerOrder::GetOrder(eulerAngles->Order, i, j, k, h, parity, repeated, frame);
   if (EulerOrders::Yes == repeated)
   {
-    real sy =
-        Math::Sqrt(matrix(i, j) * matrix(i, j) + matrix(i, k) * matrix(i, k));
+    real sy = Math::Sqrt(matrix(i, j) * matrix(i, j) + matrix(i, k) * matrix(i, k));
     if (sy > real(16.0) * real(FLT_EPSILON))
     {
       (*eulerAngles)[cX] = Math::ArcTan2(matrix(i, j), matrix(i, k));
@@ -134,8 +131,7 @@ void ToEulerAngles(Mat3Param matrix, EulerAnglesPtr eulerAngles)
   }
   else
   {
-    real cy =
-        Math::Sqrt(matrix(i, i) * matrix(i, i) + matrix(j, i) * matrix(j, i));
+    real cy = Math::Sqrt(matrix(i, i) * matrix(i, i) + matrix(j, i) * matrix(j, i));
     if (cy > real(16.0) * real(FLT_EPSILON))
     {
       (*eulerAngles)[cX] = Math::ArcTan2(matrix(k, j), matrix(k, k));
@@ -177,15 +173,13 @@ EulerAngles ToEulerAngles(Mat4Param matrix, EulerOrders::Enum order)
 
 void ToEulerAngles(Mat4Param matrix, EulerAnglesPtr eulerAngles)
 {
-  ErrorIf(eulerAngles == nullptr,
-          "Math - Null pointer passed for Euler angles.");
+  ErrorIf(eulerAngles == nullptr, "Math - Null pointer passed for Euler angles.");
 
   uint i, j, k, h, parity, repeated, frame;
   EulerOrder::GetOrder(eulerAngles->Order, i, j, k, h, parity, repeated, frame);
   if (EulerOrders::Yes == repeated)
   {
-    real sy =
-        Math::Sqrt(matrix(i, j) * matrix(i, j) + matrix(i, k) * matrix(i, k));
+    real sy = Math::Sqrt(matrix(i, j) * matrix(i, j) + matrix(i, k) * matrix(i, k));
     if (sy > real(16.0) * real(FLT_EPSILON))
     {
       (*eulerAngles)[cX] = Math::ArcTan2(matrix(i, j), matrix(i, k));
@@ -201,8 +195,7 @@ void ToEulerAngles(Mat4Param matrix, EulerAnglesPtr eulerAngles)
   }
   else
   {
-    real cy =
-        Math::Sqrt(matrix(i, i) * matrix(i, i) + matrix(j, i) * matrix(j, i));
+    real cy = Math::Sqrt(matrix(i, i) * matrix(i, i) + matrix(j, i) * matrix(j, i));
     if (cy > real(16.0) * real(FLT_EPSILON))
     {
       (*eulerAngles)[cX] = Math::ArcTan2(matrix(k, j), matrix(k, k));
@@ -244,8 +237,7 @@ EulerAngles ToEulerAngles(QuatParam quaternion, EulerOrders::Enum order)
 
 void ToEulerAngles(QuatParam quaternion, EulerAnglesPtr eulerAngles)
 {
-  ErrorIf(eulerAngles == nullptr,
-          "Math - Null pointer passed for Euler angles.");
+  ErrorIf(eulerAngles == nullptr, "Math - Null pointer passed for Euler angles.");
 
   Matrix3 matrix;
   ToMatrix3(quaternion, &matrix);
@@ -930,8 +922,7 @@ Quaternion ToQuaternion(Vec3Param facing, Vec3Param up, Vec3Param right)
 
 Quaternion ToQuaternion(Vec3Param eulerVector)
 {
-  return ToQuaternion(EulerAngles(
-      eulerVector.x, eulerVector.y, eulerVector.z, Math::EulerOrders::XYZs));
+  return ToQuaternion(EulerAngles(eulerVector.x, eulerVector.y, eulerVector.z, Math::EulerOrders::XYZs));
 }
 
 Quaternion ToQuaternion(real x, real y, real z)
@@ -979,8 +970,7 @@ Vec2 GeneratePerpendicularVector(Vec2Param input)
 Vec3 GeneratePerpendicularVector(Vec3Param input)
 {
   Vec3 result;
-  if ((Math::Abs(input.x) >= Math::Abs(input.y)) &&
-      (Math::Abs(input.x) >= Math::Abs(input.z)))
+  if ((Math::Abs(input.x) >= Math::Abs(input.y)) && (Math::Abs(input.x) >= Math::Abs(input.z)))
   {
     result.x = -input.y;
     result.y = input.x;

@@ -20,8 +20,8 @@ DefinitionSet::~DefinitionSet()
 
 void DefinitionSet::Unload()
 {
-  forRange(BaseDefinition * definition, DefinitionMap.Values())
-      definition->Unload();
+  forRange (BaseDefinition* definition, DefinitionMap.Values())
+    definition->Unload();
 }
 
 void DefinitionSet::SetParent(DefinitionSet* set)
@@ -96,8 +96,7 @@ void DefinitionSet::Serialize(Serializer& stream)
   while (stream.GetPolymorphic(definitionNode))
   {
     DefinitionSetManager::CreatorMapType::range r =
-        DefinitionSetManager::GetInstance()->CreatorMap.Find(
-            definitionNode.TypeName);
+        DefinitionSetManager::GetInstance()->CreatorMap.Find(definitionNode.TypeName);
     DefinitionCreator* c = r.Front().second;
     BaseDefinition* def = c->Create();
     def->Serialize(stream);
@@ -109,8 +108,7 @@ void DefinitionSet::Serialize(Serializer& stream)
 
 ImplementResourceManager(DefinitionSetManager, DefinitionSet);
 
-DefinitionSetManager::DefinitionSetManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+DefinitionSetManager::DefinitionSetManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   Main = new DefinitionSet();
   AddLoader("DefinitionSet", new TextDataFileLoader<DefinitionSetManager>());

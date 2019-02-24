@@ -12,23 +12,13 @@ template <typename ClientDataType,
           typename QueryType,
           typename ArrayType = Array<AabbNode<ClientDataType>*>,
           typename PolicyType = BroadPhasePolicy<QueryType, Aabb>>
-struct StaticTreeRange : public BroadPhaseTreeRange<ClientDataType,
-                                                    AabbNode<ClientDataType>,
-                                                    QueryType,
-                                                    PolicyType,
-                                                    ArrayType>
+struct StaticTreeRange
+    : public BroadPhaseTreeRange<ClientDataType, AabbNode<ClientDataType>, QueryType, PolicyType, ArrayType>
 {
-  typedef BroadPhaseTreeRange<ClientDataType,
-                              AabbNode<ClientDataType>,
-                              QueryType,
-                              PolicyType,
-                              ArrayType>
-      BaseType;
+  typedef BroadPhaseTreeRange<ClientDataType, AabbNode<ClientDataType>, QueryType, PolicyType, ArrayType> BaseType;
 
   /// Constructs a range using the default BroadPhase.
-  StaticTreeRange(ArrayType* scratchBuffer,
-                  typename BaseType::NodeTypeDef* root,
-                  const QueryType& queryObj) :
+  StaticTreeRange(ArrayType* scratchBuffer, typename BaseType::NodeTypeDef* root, const QueryType& queryObj) :
       BaseType(scratchBuffer, root, queryObj, PolicyType())
   {
   }
@@ -112,11 +102,11 @@ public:
   /// should use the forRangeBroadphaseTreePolicy macro instead of calling this
   /// directly.
   template <typename QueryType, typename ArrayType, typename Policy>
-  StaticTreeRange<ClientDataType, QueryType, ArrayType, Policy> QueryWithPolicy(
-      const QueryType& queryObj, ArrayType& scratchBuffer, Policy policy)
+  StaticTreeRange<ClientDataType, QueryType, ArrayType, Policy> QueryWithPolicy(const QueryType& queryObj,
+                                                                                ArrayType& scratchBuffer,
+                                                                                Policy policy)
   {
-    typedef StaticTreeRange<ClientDataType, QueryType, ArrayType, Policy>
-        RangeType;
+    typedef StaticTreeRange<ClientDataType, QueryType, ArrayType, Policy> RangeType;
 
     return RangeType(&scratchBuffer, mRoot, queryObj, policy);
   }
@@ -126,8 +116,7 @@ public:
   /// defaulted to BroadPhasePolicy<QueryType,Aabb>. For general cases,
   /// use the forRangeBroadphaseTree macro instead of calling this directly.
   template <typename QueryType, typename ArrayType>
-  StaticTreeRange<ClientDataType, QueryType, ArrayType>
-  Query(const QueryType& queryObj, ArrayType& scratchBuffer)
+  StaticTreeRange<ClientDataType, QueryType, ArrayType> Query(const QueryType& queryObj, ArrayType& scratchBuffer)
   {
     typedef StaticTreeRange<ClientDataType, QueryType, ArrayType> RangeType;
 
@@ -139,8 +128,7 @@ public:
 
 private:
   template <typename ClientDataTypeOther>
-  friend void SerializeAabbTree(Serializer& stream,
-                                StaticAabbTree<ClientDataTypeOther>& tree);
+  friend void SerializeAabbTree(Serializer& stream, StaticAabbTree<ClientDataTypeOther>& tree);
 
   typedef uint (*PartitionNodeMethodPtr)(NodeArray&);
   PartitionNodeMethodPtr CurrPartitionMethod;
@@ -172,8 +160,7 @@ template <typename ClientDataType>
 AabbNode<ClientDataType>* SerializeAabbTree(Serializer& stream);
 
 template <typename ClientDataType>
-void SerializeAabbTree(Serializer& stream,
-                       StaticAabbTree<ClientDataType>& tree);
+void SerializeAabbTree(Serializer& stream, StaticAabbTree<ClientDataType>& tree);
 
 } // namespace Zero
 

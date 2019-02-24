@@ -39,8 +39,7 @@ DeclareEnum4(PatchResolveMethod,
              Error);
 
 // Used to resolve inherited data files
-typedef PatchResolveMethod::Enum (*ResolveInheritedData)(StringRange inheritId,
-                                                         DataNode*& result);
+typedef PatchResolveMethod::Enum (*ResolveInheritedData)(StringRange inheritId, DataNode*& result);
 
 struct DataTreeContext
 {
@@ -57,8 +56,7 @@ struct DataTreeContext
   DataTreeLoader* Loader;
 };
 
-DeclareEnum4(
-    ParseErrorCodes, FileError, ParsingError, StructureError, PatchError);
+DeclareEnum4(ParseErrorCodes, FileError, ParsingError, StructureError, PatchError);
 
 DeclareEnum5(PatchState,
              None,
@@ -77,14 +75,13 @@ DeclareEnum2(DependencyAction,
 
 DeclareEnum2(DataNodeType, Object, Value);
 
-DeclareBitField5(
-    DataNodeFlags,
-    // If set, this node should be added to the final tree during patching.
-    LocallyAdded,
-    ChildOrderOverride,
-    Property,
-    Array,
-    Enumeration);
+DeclareBitField5(DataNodeFlags,
+                 // If set, this node should be added to the final tree during patching.
+                 LocallyAdded,
+                 ChildOrderOverride,
+                 Property,
+                 Array,
+                 Enumeration);
 
 // The data tree is a kind of generic tree data structure for storing data
 // loaded from structured text files (xml, JSON, custom).
@@ -138,9 +135,7 @@ public:
   DataNode* FindChildWithTypeName(StringRange typeName);
   /// The 'foundDuplicate' is to notify whomever is using this that there
   /// were multiple objects with the same type name.
-  DataNode* FindChildWithTypeName(StringRange typeName,
-                                  StringRange name,
-                                  bool& foundDuplicate);
+  DataNode* FindChildWithTypeName(StringRange typeName, StringRange name, bool& foundDuplicate);
   DataNode* FindChildWithUniqueNodeId(Guid childId);
 
   void AddAttribute(StringParam name, StringParam value);

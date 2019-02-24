@@ -11,14 +11,14 @@ ZilchDefineType(EventObject, builder, type)
 // different threads.
 Memory::Heap* sEventHeap = new Memory::Heap("Events", Memory::GetRoot());
 
-#define UseEventMemoryPool(type)                                               \
-  void* type::operator new(size_t size)                                        \
-  {                                                                            \
-    return sEventHeap->Allocate(size);                                         \
-  };                                                                           \
-  void type::operator delete(void* pMem, size_t size)                          \
-  {                                                                            \
-    sEventHeap->Deallocate(pMem, size);                                        \
+#define UseEventMemoryPool(type)                                                                                       \
+  void* type::operator new(size_t size)                                                                                \
+  {                                                                                                                    \
+    return sEventHeap->Allocate(size);                                                                                 \
+  };                                                                                                                   \
+  void type::operator delete(void* pMem, size_t size)                                                                  \
+  {                                                                                                                    \
+    sEventHeap->Deallocate(pMem, size);                                                                                \
   }
 
 UseEventMemoryPool(Event);
@@ -53,9 +53,7 @@ Event::Event()
   AtomicPreIncrement(&gEventCount);
 }
 
-Event::Event(const Event& rhs) :
-    EventId(rhs.EventId),
-    mTerminated(rhs.mTerminated)
+Event::Event(const Event& rhs) : EventId(rhs.EventId), mTerminated(rhs.mTerminated)
 {
 }
 
@@ -94,8 +92,7 @@ Object* ObjectEvent::GetSource()
 
 Array<Delegate> EventConnection::sDelayDestructDelegates;
 
-EventConnection::EventConnection(EventDispatcher* dispatcher,
-                                 StringParam eventId) :
+EventConnection::EventConnection(EventDispatcher* dispatcher, StringParam eventId) :
     ThisObject(nullptr),
     EventType(nullptr),
     mDispatcher(dispatcher),
@@ -124,8 +121,7 @@ bool ValidateEvent(StringParam eventId, BoundType* typeSent)
 
   // It is possible that this event was bound to a specific type, make sure our
   // event matches the type it sends
-  BoundType* boundEventType =
-      MetaDatabase::GetInstance()->mEventMap.FindValue(eventId, nullptr);
+  BoundType* boundEventType = MetaDatabase::GetInstance()->mEventMap.FindValue(eventId, nullptr);
 
   if (CheckAllEventsBound)
   {
@@ -143,11 +139,10 @@ bool ValidateEvent(StringParam eventId, BoundType* typeSent)
       // Validate that we are connecting to the correct event type!
       if (!boundEventType->IsA(typeSent))
       {
-        String message =
-            String::Format("The event was bound as a %s but you attempted to "
-                           "register an event connection that takes %s",
-                           boundEventType->Name.c_str(),
-                           typeSent->Name.c_str());
+        String message = String::Format("The event was bound as a %s but you attempted to "
+                                        "register an event connection that takes %s",
+                                        boundEventType->Name.c_str(),
+                                        typeSent->Name.c_str());
         DoNotifyException("Events", message);
         return false;
       }
@@ -185,16 +180,14 @@ size_t EventConnection::Hash()
   DataBlock thisObjectPointer((byte*)&ThisObject, sizeof(ObjPtr));
   DataBlock dispatcherPointer((byte*)&mDispatcher, sizeof(EventDispatcher*));
   DataBlock functionPointer = GetFunctionPointer();
-  return thisObjectPointer.Hash() ^ dispatcherPointer.Hash() ^
-         functionPointer.Hash() ^ mEventId.Hash();
+  return thisObjectPointer.Hash() ^ dispatcherPointer.Hash() ^ functionPointer.Hash() ^ mEventId.Hash();
 }
 
-void EventConnection::ConnectToReceiverAndDispatcher(
-    StringParam eventId, EventReceiver* receiver, EventDispatcher* dispatcher)
+void EventConnection::ConnectToReceiverAndDispatcher(StringParam eventId,
+                                                     EventReceiver* receiver,
+                                                     EventDispatcher* dispatcher)
 {
-  ErrorIf(
-      EventType == nullptr,
-      "The event connection should always register it's event parameter type");
+  ErrorIf(EventType == nullptr, "The event connection should always register it's event parameter type");
 
   if (!ValidateEvent(eventId, EventType))
     return;
@@ -274,18 +267,16 @@ void EventDispatchList::Dispatch(Event* event)
 
     // Do not check if event is already invalid, EventType could have been
     // deleted due to a script recompile.
-    if (CheckEventReceiveAsConnectedType &&
-        !current->Flags.IsSet(ConnectionFlags::Invalid))
+    if (CheckEventReceiveAsConnectedType && !current->Flags.IsSet(ConnectionFlags::Invalid))
     {
       // We should only ever dispatch an event that is either more derived or
       // the exact same as the received event type
       if (!sentEventType->IsA(current->EventType))
       {
-        String message = String::Format(
-            "Expected a %s, but the event type sent for event %s was %s",
-            current->EventType->Name.c_str(),
-            event->EventId.c_str(),
-            sentEventType->Name.c_str());
+        String message = String::Format("Expected a %s, but the event type sent for event %s was %s",
+                                        current->EventType->Name.c_str(),
+                                        event->EventId.c_str(),
+                                        sentEventType->Name.c_str());
 
         current->RaiseError(message);
 
@@ -349,7 +340,7 @@ void EventDispatchList::Disconnect(ObjPtr thisObject)
 
 bool EventDispatchList::IsConnected(ObjPtr thisObject)
 {
-  forRange(EventConnection & connection, mConnections.All())
+  forRange (EventConnection& connection, mConnections.All())
   {
     if (connection.ThisObject == thisObject)
       return true;
@@ -377,7 +368,7 @@ void EventReceiver::DestroyConnections()
   // When an event receiver dies the dispatcher isn't guaranteed to die
   // so we need the connections to disconnect themselves to remove
   // their unique connection key from the event dispatcher
-  forRange(EventConnection & connection, mConnections)
+  forRange (EventConnection& connection, mConnections)
   {
     connection.DisconnectSelf();
   }
@@ -404,7 +395,7 @@ void EventReceiver::Disconnect(ObjPtr thisObject)
 
 void EventReceiver::Disconnect(StringParam eventId)
 {
-  forRange(EventConnection & connection, mConnections.All())
+  forRange (EventConnection& connection, mConnections.All())
   {
     // Mark all matching connections as invalid so they get removed
     if (connection.mEventId == eventId)
@@ -440,8 +431,7 @@ void EventDispatcher::Dispatch(StringParam eventId, Event* event)
 
   // Validate that, if this event is bound, we're actually sending the proper
   // event!
-  BoundType* boundEventType =
-      MetaDatabase::GetInstance()->mEventMap.FindValue(eventId, nullptr);
+  BoundType* boundEventType = MetaDatabase::GetInstance()->mEventMap.FindValue(eventId, nullptr);
 
   if (CheckAllEventsBound)
   {
@@ -458,10 +448,9 @@ void EventDispatcher::Dispatch(StringParam eventId, Event* event)
       // same type
       if (!sentEventType->IsA(boundEventType))
       {
-        String message = String::Format(
-            "The event was bound as a %s but you attempted to send a %s",
-            boundEventType->Name.c_str(),
-            sentEventType->Name.c_str());
+        String message = String::Format("The event was bound as a %s but you attempted to send a %s",
+                                        boundEventType->Name.c_str(),
+                                        sentEventType->Name.c_str());
         DoNotifyException("Events", message);
         return;
       }
@@ -495,8 +484,7 @@ bool EventDispatcher::HasReceivers(StringParam eventId)
 
 void EventDispatcher::Connect(StringParam eventId, EventConnection* connection)
 {
-  ErrorIf(((void*)this) == nullptr,
-          "This is being called on a null dispatcher");
+  ErrorIf(((void*)this) == nullptr, "This is being called on a null dispatcher");
 
   // Check to see if the signal has been mapped
   EventMapType::range r = mEvents.Find(eventId);
@@ -520,13 +508,11 @@ void EventDispatcher::Connect(StringParam eventId, EventConnection* connection)
 
 bool EventDispatcher::IsUniqueConnection(EventConnection* connection)
 {
-  ErrorIf(((void*)this) == nullptr,
-          "This is being called on a null dispatcher");
+  ErrorIf(((void*)this) == nullptr, "This is being called on a null dispatcher");
 
   // Check if the dispatcher has a valid event connections of the same type
   // as invalid event connections are being delay destructed
-  if (EventConnection* otherConnection =
-          mUniqueConnections.FindValue(connection, nullptr))
+  if (EventConnection* otherConnection = mUniqueConnections.FindValue(connection, nullptr))
     return false;
 
   return true;
@@ -535,13 +521,12 @@ bool EventDispatcher::IsUniqueConnection(EventConnection* connection)
 void EventDispatcher::Disconnect(ObjPtr thisObject)
 {
 
-  ErrorIf(((void*)this) == nullptr,
-          "This is being called on a null dispatcher");
+  ErrorIf(((void*)this) == nullptr, "This is being called on a null dispatcher");
   ErrorIf(thisObject == nullptr, "thisObject was null");
 
   // Find all the connection keys for the object being disconnected from
   DisconnectList toErase;
-  forRange(EventConnection * connection, mUniqueConnections.All())
+  forRange (EventConnection* connection, mUniqueConnections.All())
   {
     if (connection->ThisObject == thisObject)
       toErase.PushBack(connection);
@@ -564,14 +549,13 @@ void EventDispatcher::Disconnect(ObjPtr thisObject)
 
 void EventDispatcher::DisconnectEvent(StringParam eventId, ObjPtr thisObject)
 {
-  ErrorIf(((void*)this) == nullptr,
-          "This is being called on a null dispatcher");
+  ErrorIf(((void*)this) == nullptr, "This is being called on a null dispatcher");
   ErrorIf(thisObject == nullptr, "thisObject was null");
 
   // Find all the connection keys for the event and object being disconnected
   // from
   DisconnectList toErase;
-  forRange(EventConnection * connection, mUniqueConnections.All())
+  forRange (EventConnection* connection, mUniqueConnections.All())
   {
     if (connection->mEventId == eventId && connection->ThisObject == thisObject)
       toErase.PushBack(connection);
@@ -594,8 +578,7 @@ void EventDispatcher::DisconnectEvent(StringParam eventId, ObjPtr thisObject)
 
 bool EventDispatcher::IsConnected(StringParam eventId, ObjPtr thisObject)
 {
-  ErrorIf(((void*)this) == nullptr,
-          "This is being called on a null dispatcher");
+  ErrorIf(((void*)this) == nullptr, "This is being called on a null dispatcher");
   ErrorIf(thisObject == nullptr, "thisObject was null");
 
   EventMapType::range r = mEvents.Find(eventId);
@@ -608,8 +591,7 @@ bool EventDispatcher::IsConnected(StringParam eventId, ObjPtr thisObject)
 
 bool EventDispatcher::IsAnyConnected(StringParam eventId)
 {
-  ErrorIf(((void*)this) == nullptr,
-          "This is being called on a null dispatcher");
+  ErrorIf(((void*)this) == nullptr, "This is being called on a null dispatcher");
 
   EventMapType::range r = mEvents.Find(eventId);
   return !r.Empty();

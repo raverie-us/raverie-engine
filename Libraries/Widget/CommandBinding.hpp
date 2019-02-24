@@ -8,10 +8,9 @@ inline void CommandFailed(Command* command, BoundType* contextType)
 {
   if (false)
   {
-    String message =
-        String::Format("There is no '%s' available to run the command '%s'",
-                       contextType->Name.c_str(),
-                       command->GetDisplayName().c_str());
+    String message = String::Format("There is no '%s' available to run the command '%s'",
+                                    contextType->Name.c_str(),
+                                    command->GetDisplayName().c_str());
     DoNotifyWarning("Command Not Run", message);
   }
 }
@@ -30,8 +29,7 @@ public:
 
   bool IsEnabled(Command* command, CommandManager* manager) override
   {
-    return manager->GetContext()->Get<pt0>() != nullptr &&
-           manager->GetContext()->Get<pt1>() != nullptr;
+    return manager->GetContext()->Get<pt0>() != nullptr && manager->GetContext()->Get<pt1>() != nullptr;
   }
 
   void Execute(Command* command, CommandManager* manager) override

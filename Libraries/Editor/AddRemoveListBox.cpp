@@ -12,10 +12,7 @@ DefineEvent(MoveUpPressed);
 DefineEvent(MoveDownPressed);
 } // namespace Events
 
-AddRemoveListBox::AddRemoveListBox(Composite* parent,
-                                   float width,
-                                   StringParam dataTypeName) :
-    Composite(parent)
+AddRemoveListBox::AddRemoveListBox(Composite* parent, float width, StringParam dataTypeName) : Composite(parent)
 {
   mDataTypeName = dataTypeName;
 

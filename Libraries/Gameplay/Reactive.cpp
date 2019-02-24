@@ -84,8 +84,7 @@ ZilchDefineType(ReactiveSpace, builder, type)
 
 void ReactiveSpace::Serialize(Serializer& stream)
 {
-  bool success = Serialization::Policy<Raycaster>::Serialize(
-      stream, "Raycaster", mRaycaster);
+  bool success = Serialization::Policy<Raycaster>::Serialize(stream, "Raycaster", mRaycaster);
   if (success == false)
   {
     mRaycaster.AddProvider(new PhysicsRaycastProvider());

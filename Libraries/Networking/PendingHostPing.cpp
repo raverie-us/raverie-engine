@@ -98,8 +98,7 @@ TimeMs PendingHostPing::GetDurationSinceLastSendTime(TimeMs now)
 {
   return GetDuration(mLastSendTime, now);
 }
-TimeMs PendingHostPing::GetDurationSinceSendAttempt(uint sendAttemptId,
-                                                    TimeMs now)
+TimeMs PendingHostPing::GetDurationSinceSendAttempt(uint sendAttemptId, TimeMs now)
 {
   TimeMs sendTime = mSendAttempts.FindValue(sendAttemptId, mCreationTime);
   return GetDuration(sendTime, now);

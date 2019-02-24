@@ -46,13 +46,8 @@ public:
   static void Write(AnyParam value0);
   static void Write(AnyParam value0, AnyParam value1);
   static void Write(AnyParam value0, AnyParam value1, AnyParam value2);
-  static void
-  Write(AnyParam value0, AnyParam value1, AnyParam value2, AnyParam value3);
-  static void Write(AnyParam value0,
-                    AnyParam value1,
-                    AnyParam value2,
-                    AnyParam value3,
-                    AnyParam value4);
+  static void Write(AnyParam value0, AnyParam value1, AnyParam value2, AnyParam value3);
+  static void Write(AnyParam value0, AnyParam value1, AnyParam value2, AnyParam value3, AnyParam value4);
   static void Write(StringParam value);
   static void Write(StringRange value);
   static void Write(cstr value);
@@ -76,13 +71,8 @@ public:
   static void WriteLine(AnyParam value0);
   static void WriteLine(AnyParam value0, AnyParam value1);
   static void WriteLine(AnyParam value0, AnyParam value1, AnyParam value2);
-  static void
-  WriteLine(AnyParam value0, AnyParam value1, AnyParam value2, AnyParam value3);
-  static void WriteLine(AnyParam value0,
-                        AnyParam value1,
-                        AnyParam value2,
-                        AnyParam value3,
-                        AnyParam value4);
+  static void WriteLine(AnyParam value0, AnyParam value1, AnyParam value2, AnyParam value3);
+  static void WriteLine(AnyParam value0, AnyParam value1, AnyParam value2, AnyParam value3, AnyParam value4);
   static void WriteLine(StringParam value);
   static void WriteLine(StringRange value);
   static void WriteLine(cstr value);
@@ -124,11 +114,8 @@ public:
   static String ReadData();
 
   // Helper for writing out objects
-  static void DumpValue(StringBuilderExtended& builder,
-                        Type* type,
-                        const byte* value,
-                        Integer howDeep,
-                        Integer currentDepth);
+  static void
+  DumpValue(StringBuilderExtended& builder, Type* type, const byte* value, Integer howDeep, Integer currentDepth);
 
 public:
   // Responsible for the console sending and receiveing events (how we hook up

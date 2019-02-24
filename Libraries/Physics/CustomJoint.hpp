@@ -38,10 +38,7 @@ struct CustomConstraintInfo : public ReferenceCountedEventObject
   CustomConstraintInfo();
 
   /// Set the Jacobian of this constraint (and the effective mass).
-  void SetJacobian(Vec3Param linear0,
-                   Vec3Param angular0,
-                   Vec3Param linear1,
-                   Vec3Param angular1);
+  void SetJacobian(Vec3Param linear0, Vec3Param angular0, Vec3Param linear1, Vec3Param angular1);
   /// Set the position error of the constraint. This also sets the bias of the
   /// constraint (used to actually correct the error). If you want to set this
   /// constraint as a motor you should not call this function (or call it
@@ -164,8 +161,7 @@ struct CustomJoint : public Joint
   /// outside the constraint count range.
   CustomConstraintInfo* GetConstraint(size_t index);
 
-  void ConstraintInfoToMolecule(CustomConstraintInfo* constraint,
-                                ConstraintMolecule& molecule);
+  void ConstraintInfoToMolecule(CustomConstraintInfo* constraint, ConstraintMolecule& molecule);
   void UpdateTransform(int colliderIndex);
 
   typedef HandleOf<CustomConstraintInfo> ConstraintInfoReference;

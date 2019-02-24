@@ -17,22 +17,13 @@ public:
   DataIndex ToIndex(DataEntry* dataEntry) override;
   DataEntry* Parent(DataEntry* dataEntry) override;
   uint ChildCount(DataEntry* dataEntry) override;
-  DataEntry* GetChild(DataEntry* dataEntry,
-                      uint index,
-                      DataEntry* prev) override;
+  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override;
   bool IsExpandable(DataEntry* dataEntry) override;
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override;
-  bool SetData(DataEntry* dataEntry,
-               const Any& variant,
-               StringParam column) override;
-  void CanMove(Status& status,
-               DataEntry* source,
-               DataEntry* destination,
-               InsertMode::Type insertMode) override;
+  bool SetData(DataEntry* dataEntry, const Any& variant, StringParam column) override;
+  void CanMove(Status& status, DataEntry* source, DataEntry* destination, InsertMode::Type insertMode) override;
   void BeginBatchMove() override;
-  bool Move(DataEntry* destinationEntry,
-            DataEntry* movingEntry,
-            InsertMode::Type insertMode) override;
+  bool Move(DataEntry* destinationEntry, DataEntry* movingEntry, InsertMode::Type insertMode) override;
   void EndBatchMove() override;
 
   // Checks if given RenderGroup has a parent and if that relationship is

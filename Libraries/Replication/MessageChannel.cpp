@@ -6,13 +6,10 @@ namespace Zero
 
 //                                 MessageChannel //
 
-MessageChannel::MessageChannel() :
-    mChannelId(0),
-    mTransferMode(TransferMode::Immediate)
+MessageChannel::MessageChannel() : mChannelId(0), mTransferMode(TransferMode::Immediate)
 {
 }
-MessageChannel::MessageChannel(MessageChannelId channelId,
-                               TransferMode::Enum transferMode) :
+MessageChannel::MessageChannel(MessageChannelId channelId, TransferMode::Enum transferMode) :
     mChannelId(channelId),
     mTransferMode(transferMode)
 {
@@ -62,8 +59,7 @@ TransferMode::Enum MessageChannel::GetTransferMode() const
 OutMessageChannel::OutMessageChannel() : MessageChannel()
 {
 }
-OutMessageChannel::OutMessageChannel(MessageChannelId channelId,
-                                     TransferMode::Enum transferMode) :
+OutMessageChannel::OutMessageChannel(MessageChannelId channelId, TransferMode::Enum transferMode) :
     MessageChannel(channelId, transferMode)
 {
 }
@@ -89,8 +85,7 @@ InMessageChannel::InMessageChannel() :
     mFinalSequenceId(0)
 {
 }
-InMessageChannel::InMessageChannel(MessageChannelId channelId,
-                                   TransferMode::Enum transferMode) :
+InMessageChannel::InMessageChannel(MessageChannelId channelId, TransferMode::Enum transferMode) :
     MessageChannel(channelId, transferMode),
     mLastSequenceId(0),
     mFragmentedMessages(),
@@ -136,8 +131,7 @@ InMessageChannel& InMessageChannel::operator=(const InMessageChannel& rhs)
   return *this;
 }
 
-InMessageChannel& InMessageChannel::
-operator=(MoveReference<InMessageChannel> rhs)
+InMessageChannel& InMessageChannel::operator=(MoveReference<InMessageChannel> rhs)
 {
   MessageChannel::operator=(*rhs);
   mLastSequenceId = rhs->mLastSequenceId;
@@ -165,8 +159,7 @@ bool InMessageChannel::IsDuplicate(const Message& message) const
   // been acknowledged?)
   if (message.IsFragment())
   {
-    ArraySet<FragmentedMessage>::const_iterator iter =
-        mFragmentedMessages.FindIterator(message.GetSequenceId());
+    ArraySet<FragmentedMessage>::const_iterator iter = mFragmentedMessages.FindIterator(message.GetSequenceId());
     if (iter != mFragmentedMessages.End())
       if (iter->IsDuplicate(message))
         return true;
@@ -182,8 +175,7 @@ bool InMessageChannel::Push(MoveReference<Message> message)
   // Fragment message already exists as a fragmented message?
   if (message->IsFragment())
   {
-    ArraySet<FragmentedMessage>::iterator iter =
-        mFragmentedMessages.FindIterator(message->GetSequenceId());
+    ArraySet<FragmentedMessage>::iterator iter = mFragmentedMessages.FindIterator(message->GetSequenceId());
     if (iter != mFragmentedMessages.End())
     {
       // Add message fragment
@@ -211,8 +203,7 @@ bool InMessageChannel::Push(MoveReference<Message> message)
 
   // Channel closed? (And if channel is ordered, allow any outstanding messages
   // to proceed as normal)
-  if (mClosed && (GetTransferMode() != TransferMode::Ordered ||
-                  message->GetSequenceId() > mFinalSequenceId))
+  if (mClosed && (GetTransferMode() != TransferMode::Ordered || message->GetSequenceId() > mFinalSequenceId))
     return false; // Discard message
 
   // New message?
@@ -275,8 +266,7 @@ Array<Message> InMessageChannel::Release()
 
   case TransferMode::Ordered:
     // Release all verified whole Messages
-    for (ArraySet<Message>::iterator iter = mMessages.Begin();
-         iter != mMessages.End();)
+    for (ArraySet<Message>::iterator iter = mMessages.Begin(); iter != mMessages.End();)
       if (mMessageSequence.IsVerified(iter->GetSequenceId()))
       {
         result.PushBack(ZeroMove(*iter));
@@ -312,9 +302,7 @@ bool InMessageChannel::IsClosed()
 bool InMessageChannel::ReadyToDelete() const
 {
   return mClosed &&
-         (GetTransferMode() == TransferMode::Ordered
-              ? mMessageSequence.IsVerified(mFinalSequenceId)
-              : true) &&
+         (GetTransferMode() == TransferMode::Ordered ? mMessageSequence.IsVerified(mFinalSequenceId) : true) &&
          mMessages.Empty() && mFragmentedMessages.Empty();
 }
 

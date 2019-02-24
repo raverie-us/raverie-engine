@@ -10,8 +10,7 @@ Resolution GetDesktopResolution()
 
 void Enumerate(Array<Resolution>& resolutions, int bitDepth, Resolution aspect)
 {
-  resolutions.PushBack(
-      Resolution(cMinimumMonitorSize.x, cMinimumMonitorSize.y));
+  resolutions.PushBack(Resolution(cMinimumMonitorSize.x, cMinimumMonitorSize.y));
 }
 
 } // namespace Zero

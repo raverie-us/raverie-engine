@@ -56,10 +56,7 @@ Matrix4::Matrix4(real p00,
   m33 = p33;
 }
 
-Matrix4::Matrix4(Vec4Param basisX,
-                 Vec4Param basisY,
-                 Vec4Param basisZ,
-                 Vec4Param basisW)
+Matrix4::Matrix4(Vec4Param basisX, Vec4Param basisY, Vec4Param basisZ, Vec4Param basisW)
 {
   SetBasis(0, basisX);
   SetBasis(1, basisY);
@@ -195,8 +192,7 @@ Matrix4 Matrix4::operator*(Mat4Param rhs) const
 bool Matrix4::operator==(Mat4Param rhs) const
 {
   const Matrix4& self = *this;
-  return self[0] == rhs[0] && self[1] == rhs[1] && self[2] == rhs[2] &&
-         self[3] == rhs[3];
+  return self[0] == rhs[0] && self[1] == rhs[1] && self[2] == rhs[2] && self[3] == rhs[3];
 }
 
 bool Matrix4::operator!=(Mat4Param rhs) const
@@ -228,8 +224,7 @@ Matrix4::BasisVector Matrix4::GetBasis(uint index) const
 {
   ErrorIf(index > 3, "Matrix4 - Index out of range.");
 #if ColumnBasis == 1
-  return Vector4(
-      array[index], array[4 + index], array[8 + index], array[12 + index]);
+  return Vector4(array[index], array[4 + index], array[8 + index], array[12 + index]);
 #else
   Mat4Param self = *this;
   return self[index];
@@ -268,8 +263,7 @@ Matrix4::CrossVector Matrix4::GetCross(uint index) const
   Mat4Param self = *this;
   return self[index];
 #else
-  return Vector4(
-      array[index], array[4 + index], array[8 + index], array[12 + index]);
+  return Vector4(array[index], array[4 + index], array[8 + index], array[12 + index]);
 #endif
 }
 
@@ -290,8 +284,7 @@ void Matrix4::SetCross(uint index, Vec4Param cross)
 bool Matrix4::Valid() const
 {
   const Matrix4& self = *this;
-  return self[0].Valid() && self[1].Valid() && self[2].Valid() &&
-         self[3].Valid();
+  return self[0].Valid() && self[1].Valid() && self[2].Valid() && self[3].Valid();
 }
 
 real Matrix4::Determinant() const
@@ -559,21 +552,9 @@ Matrix4 Matrix4::GenerateRotation(Vec3Param axis, real rotationRadians)
   real x = nAxis.x;
   real y = nAxis.y;
   real z = nAxis.z;
-  result.SetCross(cX,
-                  x * x * n1C0 + c0,
-                  x * y * n1C0 - z * s0,
-                  x * z * n1C0 + y * s0,
-                  real(0.0));
-  result.SetCross(cY,
-                  x * y * n1C0 + z * s0,
-                  y * y * n1C0 + c0,
-                  y * z * n1C0 - x * s0,
-                  real(0.0));
-  result.SetCross(cZ,
-                  x * z * n1C0 - y * s0,
-                  y * z * n1C0 + x * s0,
-                  z * z * n1C0 + c0,
-                  real(0.0));
+  result.SetCross(cX, x * x * n1C0 + c0, x * y * n1C0 - z * s0, x * z * n1C0 + y * s0, real(0.0));
+  result.SetCross(cY, x * y * n1C0 + z * s0, y * y * n1C0 + c0, y * z * n1C0 - x * s0, real(0.0));
+  result.SetCross(cZ, x * z * n1C0 - y * s0, y * z * n1C0 + x * s0, z * z * n1C0 + c0, real(0.0));
   result.SetCross(cW, real(0.0), real(0.0), real(0.0), real(1.0));
   return result;
 }
@@ -587,9 +568,7 @@ Matrix4 Matrix4::GenerateTranslation(Vec3Param translation)
   return result;
 }
 
-Matrix4 Matrix4::GenerateTransform(Vec3Param translation,
-                                   QuatParam rotatation,
-                                   Vec3Param scale)
+Matrix4 Matrix4::GenerateTransform(Vec3Param translation, QuatParam rotatation, Vec3Param scale)
 {
   Matrix4 result;
   // Translation component
@@ -638,9 +617,7 @@ Matrix4 Matrix4::GenerateTransform(Vec3Param translation,
   return result;
 }
 
-Matrix4 Matrix4::GenerateTransform(Vec3Param translation,
-                                   Mat3Param rotatation,
-                                   Vec3Param scale)
+Matrix4 Matrix4::GenerateTransform(Vec3Param translation, Mat3Param rotatation, Vec3Param scale)
 {
   Matrix4 result;
   // Translation component
@@ -679,20 +656,13 @@ Matrix4 Matrix4::GenerateTransform(Vec3Param translation,
   return result;
 }
 
-void Matrix4::Decompose(Mat4Param transform,
-                        Vec3Ref translation,
-                        Mat3Ref rotation,
-                        Vec3Ref scale)
+void Matrix4::Decompose(Mat4Param transform, Vec3Ref translation, Mat3Ref rotation, Vec3Ref scale)
 {
   Vector3 shear;
   Matrix4::Decompose(transform, translation, rotation, shear, scale);
 }
 
-void Matrix4::Decompose(Mat4Param transform,
-                        Vec3Ref translation,
-                        Mat3Ref rotation,
-                        Vec3Ref shear,
-                        Vec3Ref scale)
+void Matrix4::Decompose(Mat4Param transform, Vec3Ref translation, Mat3Ref rotation, Vec3Ref shear, Vec3Ref scale)
 {
   // Translation is the last basis vector
   translation.x = transform.m03;
@@ -715,8 +685,7 @@ void Matrix4::Decompose(Mat4Param transform,
   rotation.m22 = transform.m22;
 
   // ScaleX is the magnitude of X'
-  scale.x = Math::Sqrt(Math::Sq(transform.m00) + Math::Sq(transform.m10) +
-                       Math::Sq(transform.m20));
+  scale.x = Math::Sqrt(Math::Sq(transform.m00) + Math::Sq(transform.m10) + Math::Sq(transform.m20));
 
   // X' is normalized
   rotation.m00 /= scale.x;
@@ -724,8 +693,7 @@ void Matrix4::Decompose(Mat4Param transform,
   rotation.m20 /= scale.x;
 
   // ShearXY is the dot product of X' and Y'
-  shear.z = rotation.m00 * rotation.m01 + rotation.m10 * rotation.m11 +
-            rotation.m20 * rotation.m21;
+  shear.z = rotation.m00 * rotation.m01 + rotation.m10 * rotation.m11 + rotation.m20 * rotation.m21;
 
   // Make Y' orthogonal to X' by " Y' = Y' - (ShearXY * X') "
   rotation.m01 -= shear.z * rotation.m00;
@@ -733,8 +701,7 @@ void Matrix4::Decompose(Mat4Param transform,
   rotation.m21 -= shear.z * rotation.m20;
 
   // ScaleY is the magnitude of the modified Y'
-  scale.y = Math::Sqrt(Math::Sq(transform.m01) + Math::Sq(transform.m11) +
-                       Math::Sq(transform.m21));
+  scale.y = Math::Sqrt(Math::Sq(transform.m01) + Math::Sq(transform.m11) + Math::Sq(transform.m21));
 
   // Y' is normalized
   rotation.m01 /= scale.y;
@@ -745,12 +712,10 @@ void Matrix4::Decompose(Mat4Param transform,
   shear.z /= scale.y;
 
   // ShearXZ is the dot product of X' and Z'
-  shear.y = rotation.m00 * rotation.m02 + rotation.m10 * rotation.m12 +
-            rotation.m20 * rotation.m22;
+  shear.y = rotation.m00 * rotation.m02 + rotation.m10 * rotation.m12 + rotation.m20 * rotation.m22;
 
   // ShearYZ is the dot product of Y' and Z'
-  shear.x = rotation.m01 * rotation.m02 + rotation.m11 * rotation.m12 +
-            rotation.m21 * rotation.m22;
+  shear.x = rotation.m01 * rotation.m02 + rotation.m11 * rotation.m12 + rotation.m21 * rotation.m22;
 
   // Make Z' orthogonal to X' by " Z' = Z' - (ShearXZ * X') "
   rotation.m02 -= shear.y * rotation.m00;
@@ -763,8 +728,7 @@ void Matrix4::Decompose(Mat4Param transform,
   rotation.m22 -= shear.x * rotation.m21;
 
   // ScaleZ is the magnitude of the modified Z'
-  scale.z = Math::Sqrt(Math::Sq(transform.m02) + Math::Sq(transform.m12) +
-                       Math::Sq(transform.m22));
+  scale.z = Math::Sqrt(Math::Sq(transform.m02) + Math::Sq(transform.m12) + Math::Sq(transform.m22));
 
   // Z' is normalized
   rotation.m02 /= scale.z;
@@ -778,10 +742,9 @@ void Matrix4::Decompose(Mat4Param transform,
   shear.x /= scale.z;
 
   // If the determinant is negative, then the rotation and scale contain a flip
-  Vector3 v =
-      Vector3(rotation.m11 * rotation.m22 - rotation.m21 * rotation.m12,
-              rotation.m21 * rotation.m02 - rotation.m01 * rotation.m22,
-              rotation.m01 * rotation.m12 - rotation.m11 * rotation.m02);
+  Vector3 v = Vector3(rotation.m11 * rotation.m22 - rotation.m21 * rotation.m12,
+                      rotation.m21 * rotation.m02 - rotation.m01 * rotation.m22,
+                      rotation.m01 * rotation.m12 - rotation.m11 * rotation.m02);
   real dot = v.x * rotation.m00 + v.y * rotation.m10 + v.z * rotation.m20;
   if (dot < real(0.0))
   {
@@ -866,16 +829,12 @@ void Matrix4::Translate(Vec3Param axis)
   *this = Matrix4::GenerateTranslation(axis);
 }
 
-void Matrix4::BuildTransform(Vec3Param translate,
-                             QuatParam rotate,
-                             Vec3Param scale)
+void Matrix4::BuildTransform(Vec3Param translate, QuatParam rotate, Vec3Param scale)
 {
   *this = Matrix4::GenerateTransform(translate, rotate, scale);
 }
 
-void Matrix4::BuildTransform(Vec3Param translate,
-                             Mat3Param rotate,
-                             Vec3Param scale)
+void Matrix4::BuildTransform(Vec3Param translate, Mat3Param rotate, Vec3Param scale)
 {
   *this = Matrix4::GenerateTransform(translate, rotate, scale);
 }
@@ -884,23 +843,18 @@ void Matrix4::Decompose(Vec3Ptr scale, Mat3Ptr rotate, Vec3Ptr translate) const
 {
   ErrorIf(scale == nullptr, "Matrix4 - Null pointer passed for scale.");
   ErrorIf(rotate == nullptr, "Matrix4 - Null pointer passed for rotation.");
-  ErrorIf(translate == nullptr,
-          "Matrix4 - Null pointer passed for translation.");
+  ErrorIf(translate == nullptr, "Matrix4 - Null pointer passed for translation.");
   Matrix4::Decompose(*this, *translate, *rotate, *scale);
 }
 
 // Shear values that are calculated are XY, XZ, and YZ. They are stored as the
 // element their name does not contain, so shear->x would have YZ in it
-void Matrix4::Decompose(Vec3Ptr scale,
-                        Vec3Ptr shear,
-                        Mat3Ptr rotate,
-                        Vec3Ptr translate) const
+void Matrix4::Decompose(Vec3Ptr scale, Vec3Ptr shear, Mat3Ptr rotate, Vec3Ptr translate) const
 {
   ErrorIf(scale == nullptr, "Matrix4 - Null pointer passed for scale.");
   ErrorIf(shear == nullptr, "Matrix4 - Null pointer passed for shear.");
   ErrorIf(rotate == nullptr, "Matrix4 - Null pointer passed for rotation.");
-  ErrorIf(translate == nullptr,
-          "Matrix4 - Null pointer passed for translation.");
+  ErrorIf(translate == nullptr, "Matrix4 - Null pointer passed for translation.");
 
   Matrix4::Decompose(*this, *translate, *rotate, *shear, *scale);
 }
@@ -1038,40 +992,27 @@ Vector3 TransformNormalCol(Mat4Param matrix, Vec3Param normal)
 
 Vector3 TransformPointCol(Mat4Param matrix, Vec3Param point)
 {
-  real x =
-      Dot(Vector3(matrix.m00, matrix.m10, matrix.m20), point) + matrix[3][0];
-  real y =
-      Dot(Vector3(matrix.m01, matrix.m11, matrix.m21), point) + matrix[3][1];
-  real z =
-      Dot(Vector3(matrix.m02, matrix.m12, matrix.m22), point) + matrix[3][2];
+  real x = Dot(Vector3(matrix.m00, matrix.m10, matrix.m20), point) + matrix[3][0];
+  real y = Dot(Vector3(matrix.m01, matrix.m11, matrix.m21), point) + matrix[3][1];
+  real z = Dot(Vector3(matrix.m02, matrix.m12, matrix.m22), point) + matrix[3][2];
   return Vector3(x, y, z);
 }
 
 Vector3 TransformPointProjectedCol(Mat4Param matrix, Vec3Param point)
 {
-  real x =
-      Dot(Vector3(matrix.m00, matrix.m10, matrix.m20), point) + matrix[3][0];
-  real y =
-      Dot(Vector3(matrix.m01, matrix.m11, matrix.m21), point) + matrix[3][1];
-  real z =
-      Dot(Vector3(matrix.m02, matrix.m12, matrix.m22), point) + matrix[3][2];
-  real w =
-      Dot(Vector3(matrix.m03, matrix.m13, matrix.m23), point) + matrix[3][3];
+  real x = Dot(Vector3(matrix.m00, matrix.m10, matrix.m20), point) + matrix[3][0];
+  real y = Dot(Vector3(matrix.m01, matrix.m11, matrix.m21), point) + matrix[3][1];
+  real z = Dot(Vector3(matrix.m02, matrix.m12, matrix.m22), point) + matrix[3][2];
+  real w = Dot(Vector3(matrix.m03, matrix.m13, matrix.m23), point) + matrix[3][3];
   return Vector3(x / w, y / w, z / w);
 }
 
-Vector3 TransformPointProjectedCol(Mat4Param matrix,
-                                   Vec3Param point,
-                                   real* wOut)
+Vector3 TransformPointProjectedCol(Mat4Param matrix, Vec3Param point, real* wOut)
 {
-  real x =
-      Dot(Vector3(matrix.m00, matrix.m10, matrix.m20), point) + matrix[3][0];
-  real y =
-      Dot(Vector3(matrix.m01, matrix.m11, matrix.m21), point) + matrix[3][1];
-  real z =
-      Dot(Vector3(matrix.m02, matrix.m12, matrix.m22), point) + matrix[3][2];
-  real w =
-      Dot(Vector3(matrix.m03, matrix.m13, matrix.m23), point) + matrix[3][3];
+  real x = Dot(Vector3(matrix.m00, matrix.m10, matrix.m20), point) + matrix[3][0];
+  real y = Dot(Vector3(matrix.m01, matrix.m11, matrix.m21), point) + matrix[3][1];
+  real z = Dot(Vector3(matrix.m02, matrix.m12, matrix.m22), point) + matrix[3][2];
+  real w = Dot(Vector3(matrix.m03, matrix.m13, matrix.m23), point) + matrix[3][3];
   *wOut = w;
   return Vector3(x / w, y / w, z / w);
 }

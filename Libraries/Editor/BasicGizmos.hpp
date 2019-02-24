@@ -72,12 +72,8 @@ Vec3 SingleAxisToOffAxesScale(Vec3Param movement);
 Vec3 SingleAxisToOffAxesScale(int dragAxis, Vec3Param movement);
 Vec3 GetMovementDirection(Vec3Param movement, Mat3Param bases);
 
-Vec3 MovementToUniformSignedLocalScale(float scaleDirection,
-                                       Vec3Param worldMovement,
-                                       QuatParam worldToLocal);
-Vec3 MovementToUniformSignedLocalScale(Vec3Param scaleDirection,
-                                       Vec3Param worldMovement,
-                                       QuatParam worldToLocal);
+Vec3 MovementToUniformSignedLocalScale(float scaleDirection, Vec3Param worldMovement, QuatParam worldToLocal);
+Vec3 MovementToUniformSignedLocalScale(Vec3Param scaleDirection, Vec3Param worldMovement, QuatParam worldToLocal);
 
 float ProcessScale(float movement, float startDis, float starting);
 Vec3 ScaleVector(Vec3Param delta, float distance, Vec3Param start);
@@ -116,9 +112,7 @@ Vec3 GetSnappedScale(Vec3Param startPosition,
                      float snapDistance,
                      GizmoDragMode::Enum dragMode);
 
-Vec3 GetSnappedVectorWorldAxes(Vec3Param start,
-                               Vec3Param end,
-                               float snapDistance);
+Vec3 GetSnappedVectorWorldAxes(Vec3Param start, Vec3Param end, float snapDistance);
 
 } // namespace GizmoSnapping
 
@@ -345,10 +339,7 @@ public:
   /// on the current update mode.
   void OnGizmoModified(GizmoUpdateEvent* e);
 
-  Vec3 TranslateFromDrag(GizmoDrag* gizmoDrag,
-                         Vec3Param startPosition,
-                         Vec3Param movement,
-                         QuatParam rotation);
+  Vec3 TranslateFromDrag(GizmoDrag* gizmoDrag, Vec3Param startPosition, Vec3Param movement, QuatParam rotation);
 
   /// Start Position getter (we want it to be read only).
   Vec3 GetStartPosition();

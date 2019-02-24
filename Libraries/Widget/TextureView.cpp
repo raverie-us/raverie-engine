@@ -10,8 +10,7 @@ public:
   TextureView* mView;
 
   //****************************************************************************
-  SkyboxDrag(MouseEvent* e, TextureView* view) :
-      MouseManipulation(e->GetMouse(), view->GetParent())
+  SkyboxDrag(MouseEvent* e, TextureView* view) : MouseManipulation(e->GetMouse(), view->GetParent())
   {
     mView = view;
   }
@@ -19,8 +18,7 @@ public:
   //****************************************************************************
   void OnMouseMove(MouseEvent* event) override
   {
-    mView->mSkyboxInput +=
-        Vec4(event->Movement.x, event->Movement.y, 0.0f, 0.0f);
+    mView->mSkyboxInput += Vec4(event->Movement.x, event->Movement.y, 0.0f, 0.0f);
     mView->mSkyboxInput.y = Math::Clamp(mView->mSkyboxInput.y, -330.0f, 330.0f);
     mView->mTimeSinceLastDrag = 0.0f;
   }
@@ -124,11 +122,8 @@ void TextureView::SizeToContents()
     mSize = Math::ToVec2(texture->GetSize());
 }
 
-void TextureView::RenderUpdate(ViewBlock& viewBlock,
-                               FrameBlock& frameBlock,
-                               Mat4Param parentTx,
-                               ColorTransform colorTx,
-                               WidgetRect clipRect)
+void TextureView::RenderUpdate(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -139,31 +134,23 @@ void TextureView::RenderUpdate(ViewBlock& viewBlock,
   Vec2 size = mSize;
   Vec4 color(1, 1, 1, 1);
 
-  ViewNode& viewNode =
-      AddRenderNodes(viewBlock, frameBlock, clipRect, mTexture);
+  ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, mTexture);
   FrameNode& frameNode = frameBlock.mFrameNodes.Back();
 
   if (texture->mType == TextureType::TextureCube)
   {
-    Array<ShaderInput>& shaderInputs =
-        frameBlock.mRenderQueues->mRenderTasks->mShaderInputs;
+    Array<ShaderInput>& shaderInputs = frameBlock.mRenderQueues->mRenderTasks->mShaderInputs;
 
     // Store the starting point
     frameNode.mShaderInputRange.start = shaderInputs.Size();
 
     // Add our custom shader inputs
-    ZilchShaderGenerator* shaderGenerator =
-        Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
-    ShaderInput input =
-        shaderGenerator->CreateShaderInput("TextureCubePreview",
-                                           "SkyboxPreviewInput",
-                                           ShaderInputType::Vec4,
-                                           mSkyboxInput);
+    ZilchShaderGenerator* shaderGenerator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
+    ShaderInput input = shaderGenerator->CreateShaderInput(
+        "TextureCubePreview", "SkyboxPreviewInput", ShaderInputType::Vec4, mSkyboxInput);
     shaderInputs.PushBack(input);
-    input = shaderGenerator->CreateShaderInput("TextureCubePreview",
-                                               "TextureViewResolution",
-                                               ShaderInputType::Vec2,
-                                               size);
+    input =
+        shaderGenerator->CreateShaderInput("TextureCubePreview", "TextureViewResolution", ShaderInputType::Vec2, size);
     shaderInputs.PushBack(input);
 
     // Store the ending point
@@ -177,12 +164,8 @@ void TextureView::RenderUpdate(ViewBlock& viewBlock,
       mSkyboxInput.w += 0.016f * Math::Min((mTimeSinceLastDrag - 2.0f), 1.0f);
   }
 
-  frameBlock.mRenderQueues->AddStreamedQuad(viewNode,
-                                            Vec3(0, 0, 0),
-                                            Vec3(size, 0),
-                                            mUv0,
-                                            mUv1,
-                                            color * colorTx.ColorMultiply);
+  frameBlock.mRenderQueues->AddStreamedQuad(
+      viewNode, Vec3(0, 0, 0), Vec3(size, 0), mUv0, mUv1, color * colorTx.ColorMultiply);
 }
 
 } // namespace Zero

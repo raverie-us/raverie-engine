@@ -184,9 +184,7 @@ void SpringSystem::DebugDraw()
     for (uint i = 0; i < mEdges.Size(); ++i)
     {
       Edge& edge = mEdges[i];
-      maxDistance = Math::Max(
-          maxDistance,
-          Math::Min(edge.mIndex0AnchorDistance, edge.mIndex1AnchorDistance));
+      maxDistance = Math::Max(maxDistance, Math::Min(edge.mIndex0AnchorDistance, edge.mIndex1AnchorDistance));
     }
 
     // then draw all edges with a weighted coloring based upon the anchor
@@ -198,8 +196,7 @@ void SpringSystem::DebugDraw()
       PointMass& p0 = mPointMasses[edge.mIndex0];
       PointMass& p1 = mPointMasses[edge.mIndex1];
 
-      real minAnchorDistance = (real)Math::Min(edge.mIndex0AnchorDistance,
-                                               edge.mIndex1AnchorDistance);
+      real minAnchorDistance = (real)Math::Min(edge.mIndex0AnchorDistance, edge.mIndex1AnchorDistance);
       real weight = minAnchorDistance / (real)maxDistance;
       Vec4 tempColor = Vec4(weight, weight, weight, 1);
       gDebugDraw->Add(Debug::Line(p0.mPosition, p1.mPosition).Color(tempColor));
@@ -225,8 +222,7 @@ void SpringSystem::DebugDraw()
   UpdateConnections();
 
   // only render owned edges (so they don't get drawn twice)
-  for (OwnedEdgeList::range range = mOwnedEdges.All(); !range.Empty();
-       range.PopFront())
+  for (OwnedEdgeList::range range = mOwnedEdges.All(); !range.Empty(); range.PopFront())
   {
     SystemConnection& connection = range.Front();
 
@@ -364,8 +360,7 @@ void SpringSystem::RelaxSprings()
   }
 
   // solve all connected edges (only the ones we own to avoid a double solve)
-  for (OwnedEdgeList::range range = mOwnedEdges.All(); !range.Empty();
-       range.PopFront())
+  for (OwnedEdgeList::range range = mOwnedEdges.All(); !range.Empty(); range.PopFront())
   {
     SystemConnection& connection = range.Front();
 
@@ -442,9 +437,7 @@ void SpringSystem::IntegratePosition(real dt)
   }
 }
 
-SpringSystem::Edge& SpringSystem::AddEdge(uint index0,
-                                          uint index1,
-                                          real errCorrection)
+SpringSystem::Edge& SpringSystem::AddEdge(uint index0, uint index1, real errCorrection)
 {
   Vec3 pos0 = mPointMasses[index0].mPosition;
   Vec3 pos1 = mPointMasses[index1].mPosition;
@@ -493,8 +486,7 @@ void SpringSystem::SetPointMassAnchor(uint index, Cog* anchorCog)
     Transform* anchorTransform = anchorCog->has(Transform);
     // now we need to compute the local point that we are anchored to
     if (anchorTransform != nullptr)
-      anchor.mLocalAnchorPoint =
-          anchorTransform->TransformPointInverse(pointMass.mPosition);
+      anchor.mLocalAnchorPoint = anchorTransform->TransformPointInverse(pointMass.mPosition);
   }
   // otherwise since it is null we are clearing the anchor
   else
@@ -511,9 +503,7 @@ void SpringSystem::SetPointMassAnchor(uint index, Cog* anchorCog)
   }
 }
 
-void SpringSystem::AddConnection(SpringSystem* otherSystem,
-                                 uint indexA,
-                                 uint indexB)
+void SpringSystem::AddConnection(SpringSystem* otherSystem, uint indexA, uint indexB)
 {
   SystemConnection* connection = FindConnection(otherSystem);
   // if a connection did not already exist then create one between these two
@@ -537,8 +527,7 @@ void SpringSystem::AddConnection(SpringSystem* otherSystem,
   edge.Set(indexA, indexB, pointA, pointB);
 }
 
-SpringSystem::SystemConnection*
-SpringSystem::FindConnection(SpringSystem* otherSystem)
+SpringSystem::SystemConnection* SpringSystem::FindConnection(SpringSystem* otherSystem)
 {
   OwnedEdgeList::range range = mOwnedEdges.All();
   for (; !range.Empty(); range.PopFront())
@@ -574,8 +563,7 @@ struct EdgeInfo
   // minimum distance of the two points we're connected to.
   uint GetDistance() const
   {
-    return Math::Min(mPoint0->mDistanceFromAnchor,
-                     mPoint1->mDistanceFromAnchor);
+    return Math::Min(mPoint0->mDistanceFromAnchor, mPoint1->mDistanceFromAnchor);
   }
 
   bool operator<(const EdgeInfo& rhs) const
@@ -713,9 +701,7 @@ void SpringSystem::SetDebugDrawType(SpringDebugDrawType::Enum debugDrawType)
   mDebugDrawType = debugDrawType;
 }
 
-bool SpringSystem::Cast(RayParam ray,
-                        Face& resultFace,
-                        Vec3Ref intersectionPoint)
+bool SpringSystem::Cast(RayParam ray, Face& resultFace, Vec3Ref intersectionPoint)
 {
   int closestFace = -1;
   real closestDistance = Math::PositiveMax();
@@ -732,8 +718,7 @@ bool SpringSystem::Cast(RayParam ray,
 
     // see if the ray intersects this triangle
     Intersection::IntersectionPoint point;
-    Intersection::Type result = Intersection::RayTriangle(
-        ray.Start, ray.Direction, tri.p0, tri.p1, tri.p2, &point);
+    Intersection::Type result = Intersection::RayTriangle(ray.Start, ray.Direction, tri.p0, tri.p1, tri.p2, &point);
     if (result < (Intersection::Type)0)
       continue;
 
@@ -800,8 +785,7 @@ void SpringSystem::SystemConnection::Serialize(Serializer& stream)
   SerializeNameDefault(mEdges, Edges());
 }
 
-void SpringSystem::SystemConnection::OnAllObjectsCreated(
-    CogInitializer& initializer)
+void SpringSystem::SystemConnection::OnAllObjectsCreated(CogInitializer& initializer)
 {
   // restore our CogIds to the systems we're connected to
   mOwningSystemId.OnAllObjectsCreated(initializer);
@@ -853,8 +837,7 @@ void DecorativeCloth::Initialize(CogInitializer& initializer)
 
 void DecorativeCloth::OnAllObjectsCreated(CogInitializer& initializer)
 {
-  bool dynamicallyCreated =
-      (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
+  bool dynamicallyCreated = (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
   // if we weren't dynamically created then just call the base class (which will
   // fix our anchors)
   if (dynamicallyCreated == false)
@@ -898,9 +881,7 @@ void DecorativeCloth::UpdatePointMassPosition(uint index, Vec3Param position)
   pointMass.mInitialOffset = localPoint - initPos;
 }
 
-void DecorativeCloth::UpdateAnchorPoint(uint index,
-                                        Vec3Param position,
-                                        Cog* anchorCog)
+void DecorativeCloth::UpdateAnchorPoint(uint index, Vec3Param position, Cog* anchorCog)
 {
   if (index >= mPointMasses.Size())
     return;
@@ -919,8 +900,7 @@ void DecorativeCloth::UpdateAnchorPoint(uint index,
   if (anchor != nullptr && anchorCog != nullptr)
   {
     Transform* anchorTransform = anchorCog->has(Transform);
-    anchor->mLocalAnchorPoint =
-        anchorTransform->TransformPointInverse(pointMass.mPosition);
+    anchor->mLocalAnchorPoint = anchorTransform->TransformPointInverse(pointMass.mPosition);
   }
 }
 
@@ -935,8 +915,7 @@ void DecorativeCloth::LoadFromMesh(PhysicsMesh* mesh, bool clearOldData)
   LoadFromMeshData(verts, indices, clearOldData);
 }
 
-void DecorativeCloth::LoadPointMeshData(const Array<Vec3>& verts,
-                                        bool clearOldData)
+void DecorativeCloth::LoadPointMeshData(const Array<Vec3>& verts, bool clearOldData)
 {
   if (mPointMasses.Size() == 0)
     clearOldData = true;
@@ -958,9 +937,7 @@ void DecorativeCloth::LoadPointMeshData(const Array<Vec3>& verts,
   }
 }
 
-void DecorativeCloth::LoadFromMeshData(const Array<Vec3>& verts,
-                                       const Array<uint>& indices,
-                                       bool clearOldData)
+void DecorativeCloth::LoadFromMeshData(const Array<Vec3>& verts, const Array<uint>& indices, bool clearOldData)
 {
   LoadPointMeshData(verts, clearOldData);
 
@@ -995,8 +972,7 @@ void DecorativeCloth::LoadFromMeshData(const Array<Vec3>& verts,
   {
     for (uint j = i + 1; j < mPointMasses.Size(); ++j)
     {
-      PointNode::AdjacencyInfo& adjacencyInfo =
-          graph.mNodes[i].mAdjacentPoints[j];
+      PointNode::AdjacencyInfo& adjacencyInfo = graph.mNodes[i].mAdjacentPoints[j];
       if (adjacencyInfo.mJumps > mConnectivityCounter)
         continue;
 
@@ -1133,10 +1109,8 @@ void DecorativeRope::DebugDraw()
 
     // need a dummy to use the helper function
     SpringSystem* dummySystem;
-    Vec3 worldPointA =
-        GetWorldPoint(cogA, mLocalPointA, mPointMassIndexA, dummySystem);
-    Vec3 worldPointB =
-        GetWorldPoint(cogB, mLocalPointB, mPointMassIndexB, dummySystem);
+    Vec3 worldPointA = GetWorldPoint(cogA, mLocalPointA, mPointMassIndexA, dummySystem);
+    Vec3 worldPointB = GetWorldPoint(cogB, mLocalPointB, mPointMassIndexB, dummySystem);
 
     gDebugDraw->Add(Debug::Line(worldPointA, worldPointB));
     return;
@@ -1167,10 +1141,8 @@ void DecorativeRope::GetPoints(Array<Vec3>& points)
   // the full length of the rope.
   SpringSystem* systemA = nullptr;
   SpringSystem* systemB = nullptr;
-  Vec3 worldPointA =
-      GetWorldPoint(cogA, mLocalPointA, mPointMassIndexA, systemA);
-  Vec3 worldPointB =
-      GetWorldPoint(cogB, mLocalPointB, mPointMassIndexB, systemB);
+  Vec3 worldPointA = GetWorldPoint(cogA, mLocalPointA, mPointMassIndexA, systemA);
+  Vec3 worldPointB = GetWorldPoint(cogB, mLocalPointB, mPointMassIndexB, systemB);
 
   if (systemA != nullptr)
     points.PushBack(worldPointA);
@@ -1180,10 +1152,7 @@ void DecorativeRope::GetPoints(Array<Vec3>& points)
     points.PushBack(worldPointB);
 }
 
-Vec3 DecorativeRope::GetWorldPoint(Cog* cog,
-                                   Vec3Param localPoint,
-                                   uint pointMassIndex,
-                                   SpringSystem*& resultingSystem)
+Vec3 DecorativeRope::GetWorldPoint(Cog* cog, Vec3Param localPoint, uint pointMassIndex, SpringSystem*& resultingSystem)
 {
   // if the cog has a spring system then return the point mass at the given
   // index
@@ -1218,10 +1187,8 @@ void DecorativeRope::CreateLinks()
   // Get the world points of each connection and if they had a system
   SpringSystem* systemA = nullptr;
   SpringSystem* systemB = nullptr;
-  Vec3 worldPointA =
-      GetWorldPoint(cogA, mLocalPointA, mPointMassIndexA, systemA);
-  Vec3 worldPointB =
-      GetWorldPoint(cogB, mLocalPointB, mPointMassIndexB, systemB);
+  Vec3 worldPointA = GetWorldPoint(cogA, mLocalPointA, mPointMassIndexA, systemA);
+  Vec3 worldPointB = GetWorldPoint(cogB, mLocalPointB, mPointMassIndexB, systemB);
 
   // if we had a system on either side then shrink that index by 1
   if (systemA != nullptr)
@@ -1325,8 +1292,7 @@ void SpringGroup::ApplyGlobalEffects(PhysicsSpace* space, SpringSystem* system)
 
   // if the system has an IgnoreSpaceEffects component then make
   // sure an effect isn't ignored before we apply it
-  IgnoreSpaceEffects* effectsToIgnore =
-      system->GetOwner()->has(IgnoreSpaceEffects);
+  IgnoreSpaceEffects* effectsToIgnore = system->GetOwner()->has(IgnoreSpaceEffects);
   if (effectsToIgnore != nullptr)
   {
     PhysicsEffectList::range effects = space->GetGlobalEffects();

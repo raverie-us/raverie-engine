@@ -79,10 +79,7 @@ public:
   ZilchDeclareType(ErrorEvent, TypeCopyMode::ReferenceType);
 
   ErrorEvent();
-  ErrorEvent(const ErrorInfo& info,
-             const CodeLocation& location,
-             ErrorCode::Enum code,
-             va_list args);
+  ErrorEvent(const ErrorInfo& info, const CodeLocation& location, ErrorCode::Enum code, va_list args);
 
   // The specific error code for the error
   ErrorCode::Enum ErrorCode;

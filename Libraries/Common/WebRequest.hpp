@@ -58,13 +58,8 @@ typedef int Type;
 
 class WebRequest;
 
-typedef void (*WebRequestHeadersFn)(const Array<String>& headers,
-                                    WebResponseCode::Enum code,
-                                    WebRequest* request);
-typedef void (*WebRequestDataFn)(const byte* data,
-                                 size_t size,
-                                 u64 totalDownloaded,
-                                 WebRequest* request);
+typedef void (*WebRequestHeadersFn)(const Array<String>& headers, WebResponseCode::Enum code, WebRequest* request);
+typedef void (*WebRequestDataFn)(const byte* data, size_t size, u64 totalDownloaded, WebRequest* request);
 typedef void (*WebRequestCompleteFn)(Status& status, WebRequest* request);
 
 class WebPostData

@@ -166,8 +166,7 @@ private:
 template <>
 struct ZeroShared MoveWithoutDestructionOperator<ByteBufferBlock>
 {
-  static inline void MoveWithoutDestruction(ByteBufferBlock* dest,
-                                            ByteBufferBlock* source)
+  static inline void MoveWithoutDestruction(ByteBufferBlock* dest, ByteBufferBlock* source)
   {
     memcpy(dest, source, sizeof(*dest));
   }

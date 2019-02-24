@@ -6,8 +6,7 @@ namespace Zero
 
 bool OperationQueue::sListeningForSideEffects = false;
 Array<PropertyOperation*> OperationQueue::sSideEffects;
-Array<OperationQueue::SideEffectContext>
-    OperationQueue::sSideEffectContextStack;
+Array<OperationQueue::SideEffectContext> OperationQueue::sSideEffectContextStack;
 
 namespace Z
 {
@@ -33,16 +32,15 @@ OperationCreationContext::~OperationCreationContext()
   {
     Error("Finalize was not called");
 
-    forRange(MetaCreationContext * context, mContexts.Values()) delete context;
+    forRange (MetaCreationContext* context, mContexts.Values())
+      delete context;
     mContexts.Clear();
   }
 }
 
-MetaCreationContext*
-OperationCreationContext::GetContext(MetaComposition* composition)
+MetaCreationContext* OperationCreationContext::GetContext(MetaComposition* composition)
 {
-  MetaCreationContext* creationContext =
-      mContexts.FindValue(composition, nullptr);
+  MetaCreationContext* creationContext = mContexts.FindValue(composition, nullptr);
   if (creationContext == nullptr)
   {
     creationContext = composition->GetCreationContext();
@@ -54,7 +52,7 @@ OperationCreationContext::GetContext(MetaComposition* composition)
 
 void OperationCreationContext::Finalize()
 {
-  forRange(ContextMap::range::FrontResult entry, mContexts.All())
+  forRange (ContextMap::range::FrontResult entry, mContexts.All())
   {
     entry.first->FinalizeCreation(entry.second);
     delete entry.second;
@@ -167,8 +165,7 @@ ZilchDefineType(OperationQueue, builder, type)
   ZilchBindGetterProperty(Commands);
   ZilchBindGetterProperty(RedoCommands);
 
-  ZilchBindOverloadedMethod(BeginBatch,
-                            ZilchInstanceOverload(void, StringParam));
+  ZilchBindOverloadedMethod(BeginBatch, ZilchInstanceOverload(void, StringParam));
   ZilchBindOverloadedMethod(BeginBatch, ZilchInstanceOverload(void));
   ZilchBindMethod(EndBatch);
 
@@ -228,7 +225,7 @@ bool OperationQueue::Undo(Operation* allbeforeThis)
   Array<Operation*> toErase;
 
   OperationListType::reverse_range rRange(mCommands.Begin(), mCommands.End());
-  forRange(Operation & operation, rRange.All())
+  forRange (Operation& operation, rRange.All())
   {
     if (&operation == searchCriteria)
     {
@@ -288,7 +285,7 @@ bool OperationQueue::Redo(Operation* upToAndThis)
   bool operationFound = false;
   Array<Operation*> toErase;
 
-  forRange(Operation & operation, mRedoCommands.All())
+  forRange (Operation& operation, mRedoCommands.All())
   {
     toErase.PushBack(&operation);
 
@@ -320,15 +317,12 @@ bool OperationQueue::Redo(Operation* upToAndThis)
 template <typename type, Link<type> type::*PtrToMember>
 void DeleteObjectsInTest(InList<type, PtrToMember>& container)
 {
-  container.SafeForEach(
-      container.Begin(), container.End(), EraseAndDelete<type, PtrToMember>);
+  container.SafeForEach(container.Begin(), container.End(), EraseAndDelete<type, PtrToMember>);
 }
 template <typename type, typename baseLinkType>
 void DeleteObjectsInTest(BaseInList<baseLinkType, type>& container)
 {
-  container.SafeForEach(container.Begin(),
-                        container.End(),
-                        EraseAndDeleteBase<type, baseLinkType>);
+  container.SafeForEach(container.Begin(), container.End(), EraseAndDeleteBase<type, baseLinkType>);
 }
 
 void OperationQueue::ClearUndo()
@@ -425,17 +419,17 @@ void OperationQueue::EndBatch()
 {
   if (ActiveBatch == nullptr)
   {
-    DoNotifyException("No Operation Batch Active",
-                      "Call BeginBatch before EndBatch.");
+    DoNotifyException("No Operation Batch Active", "Call BeginBatch before EndBatch.");
     return;
   }
 
   // Queue all changes
-  forRange(MetaProxy * proxy, ActiveBatch->mObjectProxies.All())
-      QueueChanges(proxy);
+  forRange (MetaProxy* proxy, ActiveBatch->mObjectProxies.All())
+    QueueChanges(proxy);
 
   int operationCount = 0;
-  forRange(Operation & operation, ActiveBatch->GetChildren())++ operationCount;
+  forRange (Operation& operation, ActiveBatch->GetChildren())
+    ++operationCount;
 
   // Cleanup
   mDestroyedObjects.Clear();
@@ -535,8 +529,7 @@ void OperationQueue::SaveObjectState(Cog* object)
 
   if (ActiveBatch == nullptr)
   {
-    DoNotifyException("No Active Batch",
-                      "Call 'BeginBatch' before making modifications.");
+    DoNotifyException("No Active Batch", "Call 'BeginBatch' before making modifications.");
     return;
   }
 
@@ -546,13 +539,11 @@ void OperationQueue::SaveObjectState(Cog* object)
   ActiveBatch->mObjectProxies.PushBack(proxy);
 }
 
-void OperationQueue::MarkPropertyAsModified(Component* component,
-                                            StringParam propertyName)
+void OperationQueue::MarkPropertyAsModified(Component* component, StringParam propertyName)
 {
   if (component == nullptr)
   {
-    DoNotifyException("Null component",
-                      "Cannot mark a property of a null component as modified");
+    DoNotifyException("Null component", "Cannot mark a property of a null component as modified");
     return;
   }
 
@@ -560,10 +551,9 @@ void OperationQueue::MarkPropertyAsModified(Component* component,
   Property* property = componentType->GetProperty(propertyName);
   if (property == nullptr)
   {
-    String msg = String::Format(
-        "Component '%s' doesn't have a property by the name of '%s'",
-        componentType->Name.c_str(),
-        propertyName.c_str());
+    String msg = String::Format("Component '%s' doesn't have a property by the name of '%s'",
+                                componentType->Name.c_str(),
+                                propertyName.c_str());
     DoNotifyException("Invalid property", msg);
     return;
   }
@@ -582,8 +572,7 @@ void OperationQueue::ObjectCreated(Cog* object)
 
   if (ActiveBatch == nullptr)
   {
-    DoNotifyException("No Active Batch",
-                      "Call 'BeginBatch' before making modifications.");
+    DoNotifyException("No Active Batch", "Call 'BeginBatch' before making modifications.");
     return;
   }
 
@@ -593,7 +582,7 @@ void OperationQueue::ObjectCreated(Cog* object)
 void RecordDestroyedObjects(Cog* object, HashSet<Cog*>& objectSet)
 {
   objectSet.Insert(object);
-  forRange(Cog & child, object->GetChildren())
+  forRange (Cog& child, object->GetChildren())
   {
     RecordDestroyedObjects(&child, objectSet);
   }
@@ -603,8 +592,7 @@ void OperationQueue::DestroyObject(Cog* object)
 {
   if (ActiveBatch == nullptr)
   {
-    DoNotifyException("No Active Batch",
-                      "Call 'BeginBatch' before making modifications.");
+    DoNotifyException("No Active Batch", "Call 'BeginBatch' before making modifications.");
     return;
   }
 
@@ -625,10 +613,9 @@ void OperationQueue::AttachObject(Cog* object, Cog* parent, bool relative)
 
 void AddProperties(MetaProxy* proxy, Object* object)
 {
-  forRange(Property * prop, ZilchVirtualTypeId(object)->GetProperties())
+  forRange (Property* prop, ZilchVirtualTypeId(object)->GetProperties())
   {
-    if (prop->HasAttribute(PropertyAttributes::cProperty) == nullptr ||
-        prop->Set == nullptr)
+    if (prop->HasAttribute(PropertyAttributes::cProperty) == nullptr || prop->Set == nullptr)
       continue;
 
     MetaProxy::PropertyState propertyState;
@@ -664,7 +651,7 @@ void OperationQueue::BuildMetaProxy(MetaProxy* proxy, Cog* object)
   AddProperties(proxy, object);
 
   // Add all Components
-  forRange(Component * component, object->GetComponents())
+  forRange (Component* component, object->GetComponents())
   {
     MetaProxy* componentProxy = new MetaProxy();
     componentProxy->mType = ZilchVirtualTypeId(component);
@@ -677,7 +664,7 @@ void OperationQueue::BuildMetaProxy(MetaProxy* proxy, Cog* object)
   }
 
   // Record changes to all children
-  forRange(Cog & child, object->GetChildren())
+  forRange (Cog& child, object->GetChildren())
   {
     MetaProxy* childProxy = new MetaProxy();
     BuildMetaProxy(childProxy, &child);
@@ -732,11 +719,9 @@ void OperationQueue::QueueChanges(MetaProxy* proxy)
     }
 
     // Check properties
-    forRange(MetaProxy::PropertyState & propertyState,
-             componentProxy->mProperties.All())
+    forRange (MetaProxy::PropertyState& propertyState, componentProxy->mProperties.All())
     {
-      Property* prop =
-          ZilchVirtualTypeId(component)->GetProperty(propertyState.mName);
+      Property* prop = ZilchVirtualTypeId(component)->GetProperty(propertyState.mName);
 
       // Property removed / renamed?
       if (prop == nullptr)
@@ -782,11 +767,11 @@ void OperationQueue::QueueChanges(MetaProxy* proxy)
   }
 
   // Check for any newly added components on the live object
-  forRange(Component * component, newCog->GetComponents())
+  forRange (Component* component, newCog->GetComponents())
   {
     // Look to see if the old object had the component
     bool found = false;
-    forRange(MetaProxy * proxyComponent, proxy->mComponents.All())
+    forRange (MetaProxy* proxyComponent, proxy->mComponents.All())
     {
       if (proxyComponent->mType == ZilchVirtualTypeId(component))
       {
@@ -801,7 +786,7 @@ void OperationQueue::QueueChanges(MetaProxy* proxy)
   }
 
   // Check changes on all children
-  forRange(MetaProxy * childProxy, proxy->mChildren.All())
+  forRange (MetaProxy* childProxy, proxy->mChildren.All())
   {
     QueueChanges(childProxy);
   }
@@ -821,15 +806,12 @@ bool OperationQueue::IsListeningForSideEffects()
   return sListeningForSideEffects;
 }
 
-void OperationQueue::RegisterSideEffect(HandleParam object,
-                                        PropertyPathParam propertyPath,
-                                        const Any& oldValue)
+void OperationQueue::RegisterSideEffect(HandleParam object, PropertyPathParam propertyPath, const Any& oldValue)
 {
   if (sListeningForSideEffects == false)
   {
-    DoNotifyExceptionAssert(
-        "OperationQueue is not listening for side effects",
-        "First check OperationQueue.IsListeningForSideEffects");
+    DoNotifyExceptionAssert("OperationQueue is not listening for side effects",
+                            "First check OperationQueue.IsListeningForSideEffects");
     return;
   }
 
@@ -837,8 +819,7 @@ void OperationQueue::RegisterSideEffect(HandleParam object,
   if (objectType->HasInherited<MetaDataInheritance>() != nullptr)
   {
     Any dummyNewValue;
-    PropertyOperation* op =
-        new PropertyOperation(object, propertyPath, oldValue, dummyNewValue);
+    PropertyOperation* op = new PropertyOperation(object, propertyPath, oldValue, dummyNewValue);
     sSideEffects.PushBack(op);
 
     PropertyPath contextPath = propertyPath;
@@ -853,20 +834,17 @@ void OperationQueue::RegisterSideEffect(HandleParam object,
 
     // Combine the paths
     PropertyPath finalPath = context.mRootPath;
-    forRange(PropertyPath::Entry & entry, propertyPath.mPath.All())
-        finalPath.mPath.PushBack(entry);
+    forRange (PropertyPath::Entry& entry, propertyPath.mPath.All())
+      finalPath.mPath.PushBack(entry);
 
     // Create an operation
     Any dummyNewValue;
-    PropertyOperation* op = new PropertyOperation(
-        context.mContext, finalPath, oldValue, dummyNewValue);
+    PropertyOperation* op = new PropertyOperation(context.mContext, finalPath, oldValue, dummyNewValue);
     sSideEffects.PushBack(op);
   }
 }
 
-void OperationQueue::RegisterSideEffectProperty(HandleParam object,
-                                                StringParam propertyName,
-                                                const Any& oldValue)
+void OperationQueue::RegisterSideEffectProperty(HandleParam object, StringParam propertyName, const Any& oldValue)
 {
   RegisterSideEffect(object, propertyName, oldValue);
 }
@@ -881,7 +859,7 @@ void OperationQueue::QueueRegisteredSideEffects()
     BeginBatch();
 
   // Queue all property operations
-  forRange(PropertyOperation * op, sSideEffects.All())
+  forRange (PropertyOperation* op, sSideEffects.All())
   {
     // Query for the new value
     op->UpdateValueAfter();
@@ -900,8 +878,7 @@ void OperationQueue::QueueRegisteredSideEffects()
   sSideEffectContextStack.Clear();
 }
 
-void OperationQueue::PushSubPropertyContext(HandleParam object,
-                                            PropertyPathParam contextPath)
+void OperationQueue::PushSubPropertyContext(HandleParam object, PropertyPathParam contextPath)
 {
   sSideEffectContextStack.PushBack(SideEffectContext(object, contextPath));
 }
@@ -912,8 +889,7 @@ void OperationQueue::PopSubPropertyContext()
     sSideEffectContextStack.PopBack();
 }
 
-OperationQueue::SideEffectContext::SideEffectContext(HandleParam context,
-                                                     PropertyPathParam path)
+OperationQueue::SideEffectContext::SideEffectContext(HandleParam context, PropertyPathParam path)
 {
   mContext = context;
   mRootPath = path;
@@ -1036,8 +1012,7 @@ UndoObjectId UndoMap::GetUndoId(HandleParam object, bool createEntry)
 
 u64 UndoMap::GetObjectId(HandleParam object)
 {
-  if (MetaOperations* metaOp =
-          object.StoredType->HasInherited<MetaOperations>())
+  if (MetaOperations* metaOp = object.StoredType->HasInherited<MetaOperations>())
     return metaOp->GetUndoHandleId(object);
   return (u64)-1;
 }

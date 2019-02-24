@@ -57,16 +57,10 @@ struct MoleculeData
   MoleculeData(){};
 
   void SetUp(AnchorAtom* anchor, const AngleAtom* angle, const Joint* joint);
-  void SetUp(AnchorAtom* anchor,
-             const AngleAtom* angle,
-             AxisAtom* axis,
-             const Joint* joint);
+  void SetUp(AnchorAtom* anchor, const AngleAtom* angle, AxisAtom* axis, const Joint* joint);
   void SetUp(AnchorAtom* anchor, const AngleAtom* angle, Contact* contact);
 
-  void SetUp(AnchorAtom* anchor,
-             const AngleAtom* angle,
-             Collider* collider1,
-             Collider* collider2);
+  void SetUp(AnchorAtom* anchor, const AngleAtom* angle, Collider* collider1, Collider* collider2);
   void SetLinearBasis(Vec3Param axis);
   void SetAngularBasis(Vec3Param axis);
   void SetAngularBases(Mat3Param basis);

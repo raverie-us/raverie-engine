@@ -157,8 +157,7 @@ public:
   {
     PointMass()
     {
-      mInitialOffset = mOldPosition = mPosition = mVelocity = mForce =
-          Vec3::cZero;
+      mInitialOffset = mOldPosition = mPosition = mVelocity = mForce = Vec3::cZero;
       mInvMass = real(1.0);
       mAnchor = nullptr;
     }
@@ -256,8 +255,7 @@ public:
   // and connected edges.
   typedef InList<SystemConnection, &SystemConnection::mOwnedEdge> OwnedEdgeList;
   OwnedEdgeList mOwnedEdges;
-  typedef InList<SystemConnection, &SystemConnection::mConnectedEdge>
-      ConnectedEdgeList;
+  typedef InList<SystemConnection, &SystemConnection::mConnectedEdge> ConnectedEdgeList;
   ConnectedEdgeList mConnectedEdges;
 
   Link<SpringSystem> SpaceLink;
@@ -288,9 +286,7 @@ public:
   void UpdateAnchorPoint(uint index, Vec3Param position, Cog* anchorCog);
   void LoadFromMesh(PhysicsMesh* mesh, bool clearOldData);
   void LoadPointMeshData(const Array<Vec3>& verts, bool clearOldData);
-  void LoadFromMeshData(const Array<Vec3>& verts,
-                        const Array<uint>& indices,
-                        bool clearOldData);
+  void LoadFromMeshData(const Array<Vec3>& verts, const Array<uint>& indices, bool clearOldData);
   void AddEdge(uint index0, uint index1, real errCorrection = real(0.01));
 
   void Commit() override;
@@ -333,10 +329,7 @@ public:
 
   // Internal helper
   void GetPoints(Array<Vec3>& points);
-  Vec3 GetWorldPoint(Cog* cog,
-                     Vec3Param localPoint,
-                     uint pointMassIndex,
-                     SpringSystem*& resultingSystem);
+  Vec3 GetWorldPoint(Cog* cog, Vec3Param localPoint, uint pointMassIndex, SpringSystem*& resultingSystem);
   void CreateLinks();
 
   /// How many links there should be between the two connected points that

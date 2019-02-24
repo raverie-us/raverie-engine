@@ -56,17 +56,14 @@ CollisionGroupInstance::CollisionGroupInstance()
   mTable = nullptr;
 }
 
-bool CollisionGroupInstance::SkipDetection(
-    const CollisionGroupInstance& rhs) const
+bool CollisionGroupInstance::SkipDetection(const CollisionGroupInstance& rhs) const
 {
   return !((mGroupId & rhs.mDetectionMask) || (rhs.mGroupId & mDetectionMask));
 }
 
-bool CollisionGroupInstance::SkipResolution(
-    const CollisionGroupInstance& rhs) const
+bool CollisionGroupInstance::SkipResolution(const CollisionGroupInstance& rhs) const
 {
-  return !((mGroupId & rhs.mResolutionMask) ||
-           (rhs.mGroupId & mResolutionMask));
+  return !((mGroupId & rhs.mResolutionMask) || (rhs.mGroupId & mResolutionMask));
 }
 
 String CollisionGroupInstance::GetGroupName() const
@@ -76,8 +73,7 @@ String CollisionGroupInstance::GetGroupName() const
 
 ImplementResourceManager(CollisionGroupManager, CollisionGroup);
 
-CollisionGroupManager::CollisionGroupManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+CollisionGroupManager::CollisionGroupManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   AddLoader("CollisionGroup", new TextDataFileLoader<CollisionGroupManager>());
   mCategory = "Physics";

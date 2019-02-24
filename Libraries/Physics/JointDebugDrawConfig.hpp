@@ -4,10 +4,7 @@
 namespace Zero
 {
 
-DeclareBitField3(JointDebugDrawConfigFlags,
-                 ObjectAPerspective,
-                 ObjectBPerspective,
-                 Active);
+DeclareBitField3(JointDebugDrawConfigFlags, ObjectAPerspective, ObjectBPerspective, Active);
 
 /// Allows the user to override parameters for debug drawing of joints.
 /// Primarily used to debug draw from different object perspectives and to

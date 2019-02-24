@@ -11,9 +11,7 @@ namespace Zero
 /// Generic front deque array class. Store objects in buckets of a 1 <<
 /// shiftSize. Fast when the total number of objects being inserted is not
 /// known. Currently hardcoded as only storing pod types.
-template <typename type,
-          uint shiftSize = 6,
-          typename Allocator = DefaultAllocator>
+template <typename type, uint shiftSize = 6, typename Allocator = DefaultAllocator>
 class PodBlockArray : public AllocationContainer<Allocator>
 {
 public:
@@ -78,8 +76,7 @@ public:
 
     bool operator==(const iterator& other)
     {
-      if (mBlockArray == other.mBlockArray &&
-          mCurrentIndex == other.mCurrentIndex)
+      if (mBlockArray == other.mBlockArray && mCurrentIndex == other.mCurrentIndex)
         return true;
       return false;
     }
@@ -327,8 +324,7 @@ public:
     size_type newBucketSize = BucketCountFromSize(newCapacity);
     size_type oldBucketSize = BucketCountFromSize(mCapacity);
     // allocate our new array of buckets
-    pointer* newData =
-        (pointer*)mAllocator.Allocate(newBucketSize * sizeof(pointer));
+    pointer* newData = (pointer*)mAllocator.Allocate(newBucketSize * sizeof(pointer));
 
     // if we had any buckets previously, copy over our pointers to them
     // then deallocate the old array of buckets
@@ -340,8 +336,7 @@ public:
 
     // now allocate any new buckets we need
     for (size_t i = oldBucketSize; i < newBucketSize; ++i)
-      newData[i] =
-          (pointer)mAllocator.Allocate(sizeof(value_type) * BucketSize);
+      newData[i] = (pointer)mAllocator.Allocate(sizeof(value_type) * BucketSize);
 
     // finally set our new state
     mData = newData;
@@ -428,17 +423,13 @@ public:
       // The bucket sizes are the same, so we just grew within the bucket.
       else if (oldBucketCount == newBucketCount)
       {
-        UninitializedFill(mData[newBucketIndex] + sizeInOldBucket,
-                          sizeInNewBucket - sizeInOldBucket,
-                          defaultvalue);
+        UninitializedFill(mData[newBucketIndex] + sizeInOldBucket, sizeInNewBucket - sizeInOldBucket, defaultvalue);
       }
       else
       {
         // First, set the default value in any remaining portion of the old
         // bucket
-        UninitializedFill(mData[oldBucketIndex] + sizeInOldBucket,
-                          BucketSize - sizeInOldBucket,
-                          defaultvalue);
+        UninitializedFill(mData[oldBucketIndex] + sizeInOldBucket, BucketSize - sizeInOldBucket, defaultvalue);
         // Now fill any complete buckets up
         for (uint i = oldBucketIndex + 1; i < newBucketIndex; ++i)
           UninitializedFill(mData[i], BucketSize, defaultvalue);
@@ -467,10 +458,7 @@ public:
     for (size_type i = 0; i < lastBucket; ++i)
       UninitializedCopy(mData[i], other.mData[i], BucketSize, true_type());
     // fill out the remaining portion of the last bucket
-    UninitializedCopy(mData[lastBucket],
-                      other.mData[lastBucket],
-                      lastBucketFillCount,
-                      true_type());
+    UninitializedCopy(mData[lastBucket], other.mData[lastBucket], lastBucketFillCount, true_type());
   }
 
   size_type BucketCountFromSize(size_type size)

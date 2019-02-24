@@ -21,10 +21,7 @@ DeclareEvent(ExitViewAll);
 static float cMinimumBoundingSize = 0.01f;
 static float cMinimumBoundingHalfSize = cMinimumBoundingSize * 0.5f;
 
-void MakeLocalToViewAligned(Mat4& localToView,
-                            Mat4Param localToWorld,
-                            Mat4Param worldToView,
-                            Vec3Param translation);
+void MakeLocalToViewAligned(Mat4& localToView, Mat4Param localToWorld, Mat4Param worldToView, Vec3Param translation);
 
 class PropertyShaderInput
 {
@@ -61,14 +58,9 @@ public:
   // Graphical Interface
 
   virtual Aabb GetLocalAabb() = 0;
-  virtual void ExtractFrameData(FrameNode& frameNode,
-                                FrameBlock& frameBlock) = 0;
-  virtual void ExtractViewData(ViewNode& viewNode,
-                               ViewBlock& viewBlock,
-                               FrameBlock& frameBlock) = 0;
-  virtual void MidPhaseQuery(Array<GraphicalEntry>& entries,
-                             Camera& camera,
-                             Frustum* frustum);
+  virtual void ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock) = 0;
+  virtual void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) = 0;
+  virtual void MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Frustum* frustum);
   virtual bool TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo);
   virtual bool TestFrustum(const Frustum& frustum, CastInfo& castInfo);
   virtual void AddToSpace();

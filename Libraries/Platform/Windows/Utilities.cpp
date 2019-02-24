@@ -118,13 +118,12 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
   ZPrint("%s\n", message.c_str());
 
   // Output the command line
-  String commandLine =
-      String::Format("ErrorDialog.exe \"%s\" \"%s\" \"%s:%d\" %s",
-                     message.c_str(),
-                     expression.c_str(),
-                     errorData.File,
-                     errorData.Line,
-                     "Default");
+  String commandLine = String::Format("ErrorDialog.exe \"%s\" \"%s\" \"%s:%d\" %s",
+                                      message.c_str(),
+                                      expression.c_str(),
+                                      errorData.File,
+                                      errorData.Line,
+                                      "Default");
 
   // Create a structure to facilitating starting of a process
   STARTUPINFO startUpInfo;
@@ -135,17 +134,16 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
   memset(&processInfo, 0, sizeof(processInfo));
 
   // Start the child process.
-  BOOL result =
-      CreateProcess(NULL, // No module name (use command line)
-                    (LPTSTR)Widen(commandLine).c_str(), // Command line
-                    NULL,             // Process handle not inheritable
-                    NULL,             // Thread handle not inheritable
-                    FALSE,            // Set handle inheritance to FALSE
-                    CREATE_NO_WINDOW, // Creation flags
-                    NULL,             // Use parent's environment block
-                    NULL,             // Use parent's starting directory
-                    &startUpInfo,     // Pointer to STARTUPINFO structure
-                    &processInfo);
+  BOOL result = CreateProcess(NULL,                               // No module name (use command line)
+                              (LPTSTR)Widen(commandLine).c_str(), // Command line
+                              NULL,                               // Process handle not inheritable
+                              NULL,                               // Thread handle not inheritable
+                              FALSE,                              // Set handle inheritance to FALSE
+                              CREATE_NO_WINDOW,                   // Creation flags
+                              NULL,                               // Use parent's environment block
+                              NULL,                               // Use parent's starting directory
+                              &startUpInfo,                       // Pointer to STARTUPINFO structure
+                              &processInfo);
 
   // If we failed to start the process...
   if (!result)
@@ -154,8 +152,7 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
 
     // Show a message box instead
     message = BuildString(message, "\nWould you like to continue?");
-    int result = MessageBoxA(
-        NULL, message.c_str(), "Error", MB_YESNO | MB_ICONEXCLAMATION);
+    int result = MessageBoxA(NULL, message.c_str(), "Error", MB_YESNO | MB_ICONEXCLAMATION);
 
     // Trigger a break point
     return result == IDNO;
@@ -203,11 +200,7 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
 
 cwstr windowsVerbNames[] = {NULL, L"open", L"edit", L"run"};
 
-bool SystemOpenFile(Status& status,
-                    cstr file,
-                    uint verb,
-                    cstr parameters,
-                    cstr workingDirectory)
+bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
   HINSTANCE success = ShellExecute(NULL,
                                    windowsVerbNames[verb],
@@ -222,20 +215,13 @@ bool SystemOpenFile(Status& status,
 
   int errorCode = (int)GetLastError();
   String errorString = ToErrorString(errorCode);
-  String message =
-      String::Format("Failed to execute shell command with file '%s'. %s",
-                     file,
-                     errorString.c_str());
+  String message = String::Format("Failed to execute shell command with file '%s'. %s", file, errorString.c_str());
   status.SetFailed(message, errorCode);
 
   return false;
 }
 
-bool SystemOpenNetworkFile(Status& status,
-                           cstr file,
-                           uint verb,
-                           cstr parameters,
-                           cstr workingDirectory)
+bool SystemOpenNetworkFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
   return SystemOpenFile(status, file, verb, parameters, workingDirectory);
 }
@@ -259,10 +245,7 @@ void GetMemoryStatus(MemoryInfo& data)
     MEMORY_BASIC_INFORMATION memoryInfo;
     // VirtualQueryEx return the size of the MEMORY_BASIC_INFORMATION if it
     // succeeds or zero if no more pages are found.
-    foundPage = VirtualQueryEx(GetCurrentProcess(),
-                               (void*)pageRegion,
-                               &memoryInfo,
-                               sizeof(memoryInfo));
+    foundPage = VirtualQueryEx(GetCurrentProcess(), (void*)pageRegion, &memoryInfo, sizeof(memoryInfo));
     if (foundPage)
     {
       if (memoryInfo.State & MEM_FREE)
@@ -312,8 +295,8 @@ String GetVersionString()
   // This gets more information to determine 64bit vs 32bit but
   // is only available on later versions.
 
-  GetNativeSystemInfoPtr pGNSI = (GetNativeSystemInfoPtr)GetProcAddress(
-      GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo");
+  GetNativeSystemInfoPtr pGNSI =
+      (GetNativeSystemInfoPtr)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo");
 
   if (pGNSI != NULL)
     pGNSI(&si);
@@ -379,8 +362,7 @@ String GetVersionString()
         builder << "Windows Storage Server 2003";
       else if (osvi.wSuiteMask & VER_SUITE_WH_SERVER)
         builder << "Windows Home Server";
-      else if (osvi.wProductType == VER_NT_WORKSTATION &&
-               si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64)
+      else if (osvi.wProductType == VER_NT_WORKSTATION && si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64)
         builder << "Windows XP Professional x64 Edition";
       else
         builder << "Windows Server 2003";

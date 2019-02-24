@@ -37,10 +37,7 @@ ZilchDefineType(GraphicsEngine, builder, type)
 {
 }
 
-GraphicsEngine::GraphicsEngine() :
-    mNewLibrariesCommitted(false),
-    mRenderGroupCount(0),
-    mUpdateRenderGroupCount(false)
+GraphicsEngine::GraphicsEngine() : mNewLibrariesCommitted(false), mRenderGroupCount(0), mUpdateRenderGroupCount(false)
 {
   mEngineShutdown = false;
 }
@@ -94,69 +91,34 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
   ConnectThisTo(Z::gResources, Events::ResourcesUnloaded, OnResourcesRemoved);
 
   // Event connections for ResourceManagers
-  ConnectThisTo(RenderGroupManager::GetInstance(),
-                Events::ResourceAdded,
-                OnRenderGroupAdded);
-  ConnectThisTo(RenderGroupManager::GetInstance(),
-                Events::ResourceModified,
-                OnRenderGroupModified);
-  ConnectThisTo(RenderGroupManager::GetInstance(),
-                Events::ResourceRemoved,
-                OnRenderGroupRemoved);
+  ConnectThisTo(RenderGroupManager::GetInstance(), Events::ResourceAdded, OnRenderGroupAdded);
+  ConnectThisTo(RenderGroupManager::GetInstance(), Events::ResourceModified, OnRenderGroupModified);
+  ConnectThisTo(RenderGroupManager::GetInstance(), Events::ResourceRemoved, OnRenderGroupRemoved);
 
-  ConnectThisTo(
-      MaterialManager::GetInstance(), Events::ResourceAdded, OnMaterialAdded);
-  ConnectThisTo(MaterialManager::GetInstance(),
-                Events::ResourceModified,
-                OnMaterialModified);
-  ConnectThisTo(MaterialManager::GetInstance(),
-                Events::ResourceRemoved,
-                OnMaterialRemoved);
+  ConnectThisTo(MaterialManager::GetInstance(), Events::ResourceAdded, OnMaterialAdded);
+  ConnectThisTo(MaterialManager::GetInstance(), Events::ResourceModified, OnMaterialModified);
+  ConnectThisTo(MaterialManager::GetInstance(), Events::ResourceRemoved, OnMaterialRemoved);
 
-  ConnectThisTo(ZilchFragmentManager::GetInstance(),
-                Events::ResourceAdded,
-                OnZilchFragmentAdded);
-  ConnectThisTo(ZilchFragmentManager::GetInstance(),
-                Events::ResourceModified,
-                OnZilchFragmentModified);
-  ConnectThisTo(ZilchFragmentManager::GetInstance(),
-                Events::ResourceRemoved,
-                OnZilchFragmentRemoved);
+  ConnectThisTo(ZilchFragmentManager::GetInstance(), Events::ResourceAdded, OnZilchFragmentAdded);
+  ConnectThisTo(ZilchFragmentManager::GetInstance(), Events::ResourceModified, OnZilchFragmentModified);
+  ConnectThisTo(ZilchFragmentManager::GetInstance(), Events::ResourceRemoved, OnZilchFragmentRemoved);
 
   ConnectThisTo(MeshManager::GetInstance(), Events::ResourceAdded, OnMeshAdded);
-  ConnectThisTo(
-      MeshManager::GetInstance(), Events::ResourceModified, OnMeshModified);
-  ConnectThisTo(
-      MeshManager::GetInstance(), Events::ResourceRemoved, OnMeshRemoved);
+  ConnectThisTo(MeshManager::GetInstance(), Events::ResourceModified, OnMeshModified);
+  ConnectThisTo(MeshManager::GetInstance(), Events::ResourceRemoved, OnMeshRemoved);
 
-  ConnectThisTo(
-      TextureManager::GetInstance(), Events::ResourceAdded, OnTextureAdded);
-  ConnectThisTo(TextureManager::GetInstance(),
-                Events::ResourceModified,
-                OnTextureModified);
-  ConnectThisTo(
-      TextureManager::GetInstance(), Events::ResourceRemoved, OnTextureRemoved);
+  ConnectThisTo(TextureManager::GetInstance(), Events::ResourceAdded, OnTextureAdded);
+  ConnectThisTo(TextureManager::GetInstance(), Events::ResourceModified, OnTextureModified);
+  ConnectThisTo(TextureManager::GetInstance(), Events::ResourceRemoved, OnTextureRemoved);
 
-  ConnectThisTo(ZilchManager::GetInstance(),
-                Events::CompileZilchFragments,
-                OnCompileZilchFragments);
-  ConnectThisTo(ZilchManager::GetInstance(),
-                Events::ScriptsCompiledPrePatch,
-                OnScriptsCompiledPrePatch);
-  ConnectThisTo(ZilchManager::GetInstance(),
-                Events::ScriptsCompiledCommit,
-                OnScriptsCompiledCommit);
-  ConnectThisTo(ZilchManager::GetInstance(),
-                Events::ScriptsCompiledPostPatch,
-                OnScriptsCompiledPostPatch);
-  ConnectThisTo(ZilchManager::GetInstance(),
-                Events::ScriptCompilationFailed,
-                OnScriptCompilationFailed);
+  ConnectThisTo(ZilchManager::GetInstance(), Events::CompileZilchFragments, OnCompileZilchFragments);
+  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledPrePatch, OnScriptsCompiledPrePatch);
+  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledCommit, OnScriptsCompiledCommit);
+  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledPostPatch, OnScriptsCompiledPostPatch);
+  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptCompilationFailed, OnScriptCompilationFailed);
 
-  ParticleList::Memory =
-      new Memory::Pool("Particles", Memory::GetRoot(), sizeof(Particle), 1024);
-  gShaderPool =
-      new Memory::Pool("Shaders", Memory::GetRoot(), sizeof(Shader), 1024);
+  ParticleList::Memory = new Memory::Pool("Particles", Memory::GetRoot(), sizeof(Particle), 1024);
+  gShaderPool = new Memory::Pool("Shaders", Memory::GetRoot(), sizeof(Shader), 1024);
 
   mFrameCounter = 0;
 
@@ -181,10 +143,8 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
 
   if (ThreadingEnabled)
   {
-    mRendererThread.Initialize(
-        RendererThreadMain, mRendererJobQueue, "RendererThread");
-    ErrorIf(mRendererThread.IsValid() == false,
-            "RendererThread failed to initialize.");
+    mRendererThread.Initialize(RendererThreadMain, mRendererJobQueue, "RendererThread");
+    ErrorIf(mRendererThread.IsValid() == false, "RendererThread failed to initialize.");
   }
 
   mVerticalSync = false;
@@ -207,8 +167,7 @@ void CollectShadersRenderTaskRenderPass(RenderTaskRenderPass* task,
   }
 
   // All ViewNodes under the base RenderGroup.
-  IndexRange viewNodeRange =
-      viewBlock->mRenderGroupRanges[task->mRenderGroupIndex];
+  IndexRange viewNodeRange = viewBlock->mRenderGroupRanges[task->mRenderGroupIndex];
 
   for (uint i = viewNodeRange.start; i < viewNodeRange.end; ++i)
   {
@@ -232,43 +191,35 @@ void CollectShadersRenderTaskRenderPass(RenderTaskRenderPass* task,
       continue;
 
     // Shader permutation lookup for vertex type and render pass
-    String name = BuildString(GetCoreVertexFragmentName(frameNode.mCoreVertexType),
-                    materialData->mCompositeName,
-                    subTask->mRenderPassName);
+    String name = BuildString(
+        GetCoreVertexFragmentName(frameNode.mCoreVertexType), materialData->mCompositeName, subTask->mRenderPassName);
     shadersOut.PushBack(name);
   }
 }
 
-void CollectShadersRenderTaskPostProcess(RenderTaskPostProcess* task,
-                                         Array<String>& shadersOut)
+void CollectShadersRenderTaskPostProcess(RenderTaskPostProcess* task, Array<String>& shadersOut)
 {
   MaterialRenderData* materialData = task->mMaterialRenderData;
   if (materialData == nullptr && task->mPostProcessName.Empty() == true)
     return;
 
-  String compositeName =
-      materialData ? materialData->mCompositeName : task->mPostProcessName;
+  String compositeName = materialData ? materialData->mCompositeName : task->mPostProcessName;
 
   String name = BuildString(cPostVertex, compositeName);
   shadersOut.PushBack(name);
 }
 
-void CollectShaders(RenderTasks* renderTasks,
-                    RenderQueues* renderQueues,
-                    Array<String>& shaderNamesOut)
+void CollectShaders(RenderTasks* renderTasks, RenderQueues* renderQueues, Array<String>& shaderNamesOut)
 {
-  forRange(RenderTaskRange & taskRange, renderTasks->mRenderTaskRanges.All())
+  forRange (RenderTaskRange& taskRange, renderTasks->mRenderTaskRanges.All())
   {
-    FrameBlock* frameBlock =
-        &renderQueues->mFrameBlocks[taskRange.mFrameBlockIndex];
-    ViewBlock* viewBlock =
-        &renderQueues->mViewBlocks[taskRange.mViewBlockIndex];
+    FrameBlock* frameBlock = &renderQueues->mFrameBlocks[taskRange.mFrameBlockIndex];
+    ViewBlock* viewBlock = &renderQueues->mViewBlocks[taskRange.mViewBlockIndex];
 
     uint taskIndex = taskRange.mTaskIndex;
     for (uint i = 0; i < taskRange.mTaskCount; ++i)
     {
-      RenderTask* task = (RenderTask*)&renderTasks->mRenderTaskBuffer
-                             .mRenderTaskData[taskIndex];
+      RenderTask* task = (RenderTask*)&renderTasks->mRenderTaskBuffer.mRenderTaskData[taskIndex];
 
       switch (task->mId)
       {
@@ -279,19 +230,16 @@ void CollectShaders(RenderTasks* renderTasks,
       case RenderTaskType::RenderPass:
       {
         RenderTaskRenderPass* renderPass = (RenderTaskRenderPass*)task;
-        CollectShadersRenderTaskRenderPass(
-            renderPass, viewBlock, frameBlock, shaderNamesOut);
+        CollectShadersRenderTaskRenderPass(renderPass, viewBlock, frameBlock, shaderNamesOut);
         // RenderPass tasks can have multiple following task entries for sub
         // RenderGroup settings. Have to index past all sub tasks.
-        taskIndex += sizeof(RenderTaskRenderPass) *
-                     (renderPass->mSubRenderGroupCount + 1);
+        taskIndex += sizeof(RenderTaskRenderPass) * (renderPass->mSubRenderGroupCount + 1);
         i += renderPass->mSubRenderGroupCount;
       }
       break;
 
       case RenderTaskType::PostProcess:
-        CollectShadersRenderTaskPostProcess((RenderTaskPostProcess*)task,
-                                            shaderNamesOut);
+        CollectShadersRenderTaskPostProcess((RenderTaskPostProcess*)task, shaderNamesOut);
         taskIndex += sizeof(RenderTaskPostProcess);
         break;
 
@@ -327,7 +275,7 @@ void GraphicsEngine::Update(bool debugger)
   // Run all return jobs from renderer
   Array<RendererJob*> returnJobs;
   mReturnJobQueue->TakeAllJobs(returnJobs);
-  forRange(RendererJob * job, returnJobs.All())
+  forRange (RendererJob* job, returnJobs.All())
   {
     job->ReturnExecute();
   }
@@ -347,19 +295,20 @@ void GraphicsEngine::Update(bool debugger)
   {
     ProfileScopeTree("FrameUpdate", "Graphics", Color::SpringGreen);
     float frameDt = Z::gEngine->has(TimeSystem)->mEngineDt;
-    forRange(GraphicsSpace & space, mSpaces.All()) space.OnFrameUpdate(frameDt);
+    forRange (GraphicsSpace& space, mSpaces.All())
+      space.OnFrameUpdate(frameDt);
   }
 
   {
     ProfileScopeTree("RenderTasksUpdate", "Graphics", Color::LimeGreen);
-    forRange(GraphicsSpace & space, mSpaces.All())
-        space.RenderTasksUpdate(*mRenderTasksBack);
+    forRange (GraphicsSpace& space, mSpaces.All())
+      space.RenderTasksUpdate(*mRenderTasksBack);
   }
 
   {
     ProfileScopeTree("RenderQueuesUpdate", "Graphics", Color::LawnGreen);
-    forRange(GraphicsSpace & space, mSpaces.All())
-        space.RenderQueuesUpdate(*mRenderTasksBack, *mRenderQueuesBack);
+    forRange (GraphicsSpace& space, mSpaces.All())
+      space.RenderQueuesUpdate(*mRenderTasksBack, *mRenderQueuesBack);
 
     Sort(mRenderTasksBack->mRenderTaskRanges.All());
   }
@@ -384,15 +333,13 @@ void GraphicsEngine::Update(bool debugger)
   // pass everything to the renderer, all rendering happens on this job
   mDoRenderTasksJob->mRenderTasks = mRenderTasksFront;
   mDoRenderTasksJob->mRenderQueues = mRenderQueuesFront;
-  
+
 #if defined(WelderLazyShaderCompositing)
   Array<String> shaderNames;
-  CollectShaders(mRenderTasksFront,
-                 mRenderQueuesFront,
-                 shaderNames);
+  CollectShaders(mRenderTasksFront, mRenderQueuesFront, shaderNames);
 
   ShaderSet shadersToCompile;
-  forRange(StringParam name, shaderNames)
+  forRange (StringParam name, shaderNames)
   {
     Shader* shader = mCompositeShaders.FindValue(name, nullptr);
     if (shader == nullptr)
@@ -406,8 +353,7 @@ void GraphicsEngine::Update(bool debugger)
   if (!shadersToCompile.Empty())
   {
     AddShadersJob* addShadersJob = new AddShadersJob(mRendererJobQueue);
-    bool compiled = mShaderGenerator->BuildShaders(
-        shadersToCompile, mUniqueComposites, addShadersJob->mShaders);
+    bool compiled = mShaderGenerator->BuildShaders(shadersToCompile, mUniqueComposites, addShadersJob->mShaders);
     ErrorIf(!compiled, "Shaders did not compile after composition.");
     AddRendererJob(addShadersJob);
   }
@@ -417,7 +363,7 @@ void GraphicsEngine::Update(bool debugger)
 
   // Add job for texture data after render tasks job so that
   // textures being written to in render tasks will have the expected data
-  forRange(TextureToFile & toFile, mDelayedTextureToFile.All())
+  forRange (TextureToFile& toFile, mDelayedTextureToFile.All())
   {
     SaveImageToFileJob* toFileJob = new SaveImageToFileJob();
     toFileJob->mRenderData = toFile.mTexture->mRenderData;
@@ -462,7 +408,7 @@ void GraphicsEngine::OnEngineShutdown(Event* event)
   {
     RemoveShadersJob* removeShadersJob = new RemoveShadersJob();
 
-    forRange(Shader * shader, shadersToRemove.All())
+    forRange (Shader* shader, shadersToRemove.All())
     {
       ShaderEntry entry(shader);
       removeShadersJob->mShaders.PushBack(entry);
@@ -505,8 +451,7 @@ void GraphicsEngine::StartProgress(Event* event)
   Texture* logoTexture = TextureManager::FindOrNull("ZeroLogoAnimated");
   Texture* whiteTexture = TextureManager::FindOrNull("White");
   Texture* splashTexture = TextureManager::FindOrNull("ZeroSplash");
-  if (loadingTexture == nullptr || logoTexture == nullptr ||
-      whiteTexture == nullptr || splashTexture == nullptr)
+  if (loadingTexture == nullptr || logoTexture == nullptr || whiteTexture == nullptr || splashTexture == nullptr)
     return;
 
   mShowProgressJob->Lock();
@@ -537,8 +482,7 @@ void GraphicsEngine::UpdateProgress(ProgressEvent* event)
 
   RenderFont* renderFont = font->GetRenderFont(16);
 
-  String progressText = BuildString(
-      event->Operation, " ", event->CurrentTask, " ", event->ProgressLine);
+  String progressText = BuildString(event->Operation, " ", event->CurrentTask, " ", event->ProgressLine);
   FontProcessorVertexArray fontProcessor(Vec4(1.0f));
   AddTextRange(fontProcessor,
                renderFont,
@@ -546,8 +490,7 @@ void GraphicsEngine::UpdateProgress(ProgressEvent* event)
                Vec2::cZero,
                TextAlign::Left,
                Vec2(1.0f),
-               Vec2((float)mShowProgressJob->mProgressWidth,
-                    (float)renderFont->mFontHeight),
+               Vec2((float)mShowProgressJob->mProgressWidth, (float)renderFont->mFontHeight),
                true);
 
   mShowProgressJob->Lock();
@@ -697,10 +640,7 @@ void GraphicsEngine::CheckTextureYInvert(Texture* texture)
       {
         MipHeader* mipHeader = texture->mMipHeaders + i;
         byte* mipData = texture->mImageData + mipHeader->mDataOffset;
-        YInvertNonCompressed(mipData,
-                             mipHeader->mWidth,
-                             mipHeader->mHeight,
-                             GetPixelSize(texture->mFormat));
+        YInvertNonCompressed(mipData, mipHeader->mWidth, mipHeader->mHeight, GetPixelSize(texture->mFormat));
       }
     }
     else
@@ -709,11 +649,8 @@ void GraphicsEngine::CheckTextureYInvert(Texture* texture)
       {
         MipHeader* mipHeader = texture->mMipHeaders + i;
         byte* mipData = texture->mImageData + mipHeader->mDataOffset;
-        YInvertBlockCompressed(mipData,
-                               mipHeader->mWidth,
-                               mipHeader->mHeight,
-                               mipHeader->mDataSize,
-                               texture->mCompression);
+        YInvertBlockCompressed(
+            mipData, mipHeader->mWidth, mipHeader->mHeight, mipHeader->mDataSize, texture->mCompression);
       }
     }
   }
@@ -792,14 +729,12 @@ void GraphicsEngine::AddMesh(Mesh* mesh)
   if (vertices->mFixedDesc.mVertexSize != 0)
   {
     rendererJob->mVertexSize = vertices->mFixedDesc.mVertexSize;
-    rendererJob->mVertexCount =
-        vertices->mDataSize / vertices->mFixedDesc.mVertexSize;
+    rendererJob->mVertexCount = vertices->mDataSize / vertices->mFixedDesc.mVertexSize;
 
     // Do not try allocating without a full vertex worth of data.
     if (rendererJob->mVertexCount > 0)
     {
-      uint vertexDataSize =
-          rendererJob->mVertexSize * rendererJob->mVertexCount;
+      uint vertexDataSize = rendererJob->mVertexSize * rendererJob->mVertexCount;
       rendererJob->mVertexData = new byte[vertexDataSize];
       memcpy(rendererJob->mVertexData, vertices->mData, vertexDataSize);
     }
@@ -809,8 +744,7 @@ void GraphicsEngine::AddMesh(Mesh* mesh)
     {
       if (vertices->mFixedDesc.mAttributes[i].mSemantic == VertexSemantic::None)
         break;
-      rendererJob->mVertexAttributes.PushBack(
-          vertices->mFixedDesc.mAttributes[i]);
+      rendererJob->mVertexAttributes.PushBack(vertices->mFixedDesc.mAttributes[i]);
     }
   }
 
@@ -829,10 +763,7 @@ void GraphicsEngine::AddMesh(Mesh* mesh)
   AddRendererJob(rendererJob);
 }
 
-void GraphicsEngine::AddTexture(Texture* texture,
-                                bool subImage,
-                                uint xOffset,
-                                uint yOffset)
+void GraphicsEngine::AddTexture(Texture* texture, bool subImage, uint xOffset, uint yOffset)
 {
   // Do y inverting on main thread (if needed)
   // otherwise the render thread takes too long to upload textures
@@ -945,8 +876,8 @@ void GraphicsEngine::OnRenderGroupRemoved(ResourceEvent* event)
   // Remove hierarchy connections.
   renderGroup->SetParentInternal(nullptr);
   Array<RenderGroup*> children = renderGroup->mChildrenInternal;
-  forRange(RenderGroup * child, children.All())
-      child->SetParentInternal(nullptr);
+  forRange (RenderGroup* child, children.All())
+    child->SetParentInternal(nullptr);
 
   mUpdateRenderGroupCount = true;
 }
@@ -1046,24 +977,22 @@ void GraphicsEngine::OnTextureRemoved(ResourceEvent* event)
 
 void GraphicsEngine::OnResourcesAdded(ResourceEvent* event)
 {
-  forRange(Material * material, mAddedMaterials.All())
-      ResourceListAdd(material);
+  forRange (Material* material, mAddedMaterials.All())
+    ResourceListAdd(material);
 
-  forRange(RenderGroup * renderGroup, mAddedRenderGroups.All())
-      ResourceListAdd(renderGroup);
+  forRange (RenderGroup* renderGroup, mAddedRenderGroups.All())
+    ResourceListAdd(renderGroup);
 
   if (mAddedMaterials.Empty() == false)
   {
-    forRange(Resource * resource,
-             RenderGroupManager::GetInstance()->AllResources())
-        ResourceListResolveReferences((RenderGroup*)resource);
+    forRange (Resource* resource, RenderGroupManager::GetInstance()->AllResources())
+      ResourceListResolveReferences((RenderGroup*)resource);
   }
 
   if (mAddedRenderGroups.Empty() == false)
   {
-    forRange(Resource * resource,
-             MaterialManager::GetInstance()->AllResources())
-        ResourceListResolveReferences((Material*)resource);
+    forRange (Resource* resource, MaterialManager::GetInstance()->AllResources())
+      ResourceListResolveReferences((Material*)resource);
 
     ResolveRenderGroupHierarchies();
   }
@@ -1082,7 +1011,7 @@ void GraphicsEngine::OnResourcesAdded(ResourceEvent* event)
   }
   else
   {
-    forRange(Material * material, mAddedMaterialsForComposites.All())
+    forRange (Material* material, mAddedMaterialsForComposites.All())
     {
       UpdateUniqueComposites(material, UniqueCompositeOp::Add);
       AddMaterial(material);
@@ -1125,8 +1054,7 @@ void GraphicsEngine::AddComposite(Material* material)
 
 void GraphicsEngine::RemoveComposite(StringParam compositeName)
 {
-  ErrorIf(mUniqueComposites.ContainsKey(compositeName) == false,
-          "Reference count error.");
+  ErrorIf(mUniqueComposites.ContainsKey(compositeName) == false, "Reference count error.");
 
   mUniqueComposites[compositeName].mReferences -= 1;
 
@@ -1163,8 +1091,7 @@ void GraphicsEngine::FindShadersToCompile(Array<String>& coreVertexRange,
                                           uint index,
                                           ShaderSet& shaders)
 {
-  Array<String>* ranges[] = {
-      &coreVertexRange, &compositeRange, &renderPassRange};
+  Array<String>* ranges[] = {&coreVertexRange, &compositeRange, &renderPassRange};
 
   // Index order for iteration
   uint i0 = index;
@@ -1177,25 +1104,24 @@ void GraphicsEngine::FindShadersToCompile(Array<String>& coreVertexRange,
   uint f1 = (f0 + 1) % 3;
   uint f2 = (f0 + 2) % 3;
 
-  forRange(String frag0, ranges[i0]->All())
+  forRange (String frag0, ranges[i0]->All())
   {
     if (testMap.ContainsKey(frag0))
     {
       ShaderSet* shaderSet = testMap.FindPointer(frag0);
-      forRange(Shader * shader, shaderSet->All()) shaders.Insert(shader);
+      forRange (Shader* shader, shaderSet->All())
+        shaders.Insert(shader);
     }
     else
     {
-      forRange(String frag1, ranges[i1]->All())
+      forRange (String frag1, ranges[i1]->All())
       {
-        forRange(String frag2, ranges[i2]->All())
+        forRange (String frag2, ranges[i2]->All())
         {
           String fragmentNames[] = {frag0, frag1, frag2};
 
-          Shader* shader = GetOrCreateShader(fragmentNames[f0],
-                                             fragmentNames[f1],
-                                             fragmentNames[f2],
-                                             mCompositeShaders);
+          Shader* shader =
+              GetOrCreateShader(fragmentNames[f0], fragmentNames[f1], fragmentNames[f2], mCompositeShaders);
           shaders.Insert(shader);
         }
       }
@@ -1203,19 +1129,16 @@ void GraphicsEngine::FindShadersToCompile(Array<String>& coreVertexRange,
       // Special case for composites as a post process
       if (index == 1)
       {
-        Shader* shader =
-            GetOrCreateShader(cPostVertex, frag0, String(), mCompositeShaders);
+        Shader* shader = GetOrCreateShader(cPostVertex, frag0, String(), mCompositeShaders);
         shaders.Insert(shader);
       }
     }
   }
 }
 
-void GraphicsEngine::FindShadersToRemove(Array<String>& elementRange,
-                                         ShaderSetMap& testMap,
-                                         ShaderSet& shaders)
+void GraphicsEngine::FindShadersToRemove(Array<String>& elementRange, ShaderSetMap& testMap, ShaderSet& shaders)
 {
-  forRange(String name, elementRange.All())
+  forRange (String name, elementRange.All())
   {
     // Composites can not be in the map if the composite exists because one of
     // its fragments didn't compile
@@ -1223,7 +1146,7 @@ void GraphicsEngine::FindShadersToRemove(Array<String>& elementRange,
       continue;
 
     ShaderSet* shaderSet = testMap.FindPointer(name);
-    forRange(Shader * shader, shaderSet->All())
+    forRange (Shader* shader, shaderSet->All())
     {
       shaders.Insert(shader);
       mCompositeShaders.Erase(shader->mName);
@@ -1233,7 +1156,7 @@ void GraphicsEngine::FindShadersToRemove(Array<String>& elementRange,
 
 void GraphicsEngine::AddToShaderMaps(ShaderSet& shaders)
 {
-  forRange(Shader * shader, shaders.All())
+  forRange (Shader* shader, shaders.All())
   {
     mShaderCoreVertexMap[shader->mCoreVertex].Insert(shader);
     mShaderCompositeMap[shader->mComposite].Insert(shader);
@@ -1243,7 +1166,7 @@ void GraphicsEngine::AddToShaderMaps(ShaderSet& shaders)
 
 void GraphicsEngine::RemoveFromShaderMaps(ShaderSet& shaders)
 {
-  forRange(Shader * shader, shaders.All())
+  forRange (Shader* shader, shaders.All())
   {
     RemoveFromShaderMap(mShaderCoreVertexMap, shader->mCoreVertex, shader);
     RemoveFromShaderMap(mShaderCompositeMap, shader->mComposite, shader);
@@ -1251,9 +1174,7 @@ void GraphicsEngine::RemoveFromShaderMaps(ShaderSet& shaders)
   }
 }
 
-void GraphicsEngine::RemoveFromShaderMap(ShaderSetMap& shaderMap,
-                                         StringParam elementName,
-                                         Shader* shader)
+void GraphicsEngine::RemoveFromShaderMap(ShaderSetMap& shaderMap, StringParam elementName, Shader* shader)
 {
   if (shaderMap.ContainsKey(elementName))
   {
@@ -1265,7 +1186,7 @@ void GraphicsEngine::RemoveFromShaderMap(ShaderSetMap& shaderMap,
 
 void GraphicsEngine::ProcessModifiedScripts(LibraryRef library)
 {
-  forRange(BoundType * type, library->BoundTypes.Values())
+  forRange (BoundType* type, library->BoundTypes.Values())
   {
     String typeName = type->Name;
 
@@ -1277,10 +1198,9 @@ void GraphicsEngine::ProcessModifiedScripts(LibraryRef library)
     if (type->IsA(ZilchTypeId(Component)))
     {
 
-      forRange(Property * metaProperty, type->GetProperties())
+      forRange (Property* metaProperty, type->GetProperties())
       {
-        forRange(MetaShaderInput * shaderInput,
-                 metaProperty->HasAll<MetaShaderInput>())
+        forRange (MetaShaderInput* shaderInput, metaProperty->HasAll<MetaShaderInput>())
         {
           ShaderMetaProperty shaderProperty;
           shaderProperty.mMetaPropertyName = metaProperty->Name;
@@ -1304,25 +1224,19 @@ void GraphicsEngine::ProcessModifiedScripts(LibraryRef library)
   }
 }
 
-ZilchFragmentType::Enum
-GraphicsEngine::GetFragmentType(MaterialBlock* materialBlock)
+ZilchFragmentType::Enum GraphicsEngine::GetFragmentType(MaterialBlock* materialBlock)
 {
-  return mShaderGenerator->mFragmentTypes.FindValue(
-      ZilchVirtualTypeId(materialBlock)->Name, ZilchFragmentType::Fragment);
+  return mShaderGenerator->mFragmentTypes.FindValue(ZilchVirtualTypeId(materialBlock)->Name,
+                                                    ZilchFragmentType::Fragment);
 }
 
 HandleOf<RenderTarget>
-GraphicsEngine::GetRenderTarget(uint width,
-                                uint height,
-                                TextureFormat::Enum format,
-                                SamplerSettings samplerSettings)
+GraphicsEngine::GetRenderTarget(uint width, uint height, TextureFormat::Enum format, SamplerSettings samplerSettings)
 {
-  return mRenderTargetManager.GetRenderTarget(
-      width, height, format, samplerSettings);
+  return mRenderTargetManager.GetRenderTarget(width, height, format, samplerSettings);
 }
 
-HandleOf<RenderTarget>
-GraphicsEngine::GetRenderTarget(HandleOf<Texture> texture)
+HandleOf<RenderTarget> GraphicsEngine::GetRenderTarget(HandleOf<Texture> texture)
 {
   return mRenderTargetManager.GetRenderTarget(texture);
 }
@@ -1345,8 +1259,7 @@ void GraphicsEngine::ForceCompileAllShaders()
     return;
 
   AddShadersJob* addShadersJob = new AddShadersJob(mRendererJobQueue);
-  bool compiled = mShaderGenerator->BuildShaders(
-      allShaders, mUniqueComposites, addShadersJob->mShaders);
+  bool compiled = mShaderGenerator->BuildShaders(allShaders, mUniqueComposites, addShadersJob->mShaders);
   ErrorIf(!compiled, "Shaders did not compile after composition.");
 
   // Blocking task is ended in the return exectute of the job,
@@ -1355,8 +1268,7 @@ void GraphicsEngine::ForceCompileAllShaders()
   AddRendererJob(addShadersJob);
 }
 
-void GraphicsEngine::ModifiedFragment(ZilchFragmentType::Enum type,
-                                      StringParam name)
+void GraphicsEngine::ModifiedFragment(ZilchFragmentType::Enum type, StringParam name)
 {
   switch (type)
   {
@@ -1374,8 +1286,7 @@ void GraphicsEngine::ModifiedFragment(ZilchFragmentType::Enum type,
   }
 }
 
-void GraphicsEngine::RemovedFragment(ZilchFragmentType::Enum type,
-                                     StringParam name)
+void GraphicsEngine::RemovedFragment(ZilchFragmentType::Enum type, StringParam name)
 {
   switch (type)
   {
@@ -1396,34 +1307,30 @@ void GraphicsEngine::RemovedFragment(ZilchFragmentType::Enum type,
 void GraphicsEngine::OnCompileZilchFragments(ZilchCompileFragmentEvent* event)
 {
   String libraryName = BuildString(event->mOwningLibrary->Name, "Fragments");
-  event->mReturnedLibrary = mShaderGenerator->BuildFragmentsLibrary(
-      event->mDependencies, event->mFragments, libraryName);
+  event->mReturnedLibrary =
+      mShaderGenerator->BuildFragmentsLibrary(event->mDependencies, event->mFragments, libraryName);
 }
 
 void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
 {
-  forRange(ResourceLibrary * modifiedLibrary, event->mModifiedLibraries.All())
+  forRange (ResourceLibrary* modifiedLibrary, event->mModifiedLibraries.All())
   {
     if (!modifiedLibrary->mSwapFragment.HasPendingLibrary())
       continue;
 
     ZilchShaderIRLibraryRef currentLibrary =
-        mShaderGenerator->GetCurrentInternalLibrary(
-            modifiedLibrary->mSwapFragment.mCurrentLibrary);
-    ZilchFragmentTypeMap& currentFragmentTypes =
-        mShaderGenerator->mFragmentTypes;
+        mShaderGenerator->GetCurrentInternalLibrary(modifiedLibrary->mSwapFragment.mCurrentLibrary);
+    ZilchFragmentTypeMap& currentFragmentTypes = mShaderGenerator->mFragmentTypes;
 
     ZilchShaderIRLibraryRef pendingLibrary =
-        mShaderGenerator->GetPendingInternalLibrary(
-            modifiedLibrary->mSwapFragment.mPendingLibrary);
+        mShaderGenerator->GetPendingInternalLibrary(modifiedLibrary->mSwapFragment.mPendingLibrary);
     ZilchFragmentTypeMap& pendingFragmentTypes =
-        mShaderGenerator->mPendingFragmentTypes[modifiedLibrary->mSwapFragment
-                                                    .mPendingLibrary];
+        mShaderGenerator->mPendingFragmentTypes[modifiedLibrary->mSwapFragment.mPendingLibrary];
 
     // Find removed types
     if (currentLibrary != nullptr)
     {
-      forRange(ZilchShaderIRType * shaderType, currentLibrary->mTypes.Values())
+      forRange (ZilchShaderIRType* shaderType, currentLibrary->mTypes.Values())
       {
         ShaderIRTypeMeta* shaderTypeMeta = shaderType->mMeta;
         if (shaderTypeMeta == nullptr)
@@ -1437,8 +1344,8 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
         if (pendingLibrary->mTypes.ContainsKey(shaderTypeMeta->mZilchName))
           continue;
 
-        ZilchFragmentType::Enum fragmentType = currentFragmentTypes.FindValue(
-            shaderTypeMeta->mZilchName, ZilchFragmentType::Fragment);
+        ZilchFragmentType::Enum fragmentType =
+            currentFragmentTypes.FindValue(shaderTypeMeta->mZilchName, ZilchFragmentType::Fragment);
         RemovedFragment(fragmentType, shaderTypeMeta->mZilchName);
       }
     }
@@ -1446,7 +1353,7 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
     // Find added/modified types
     if (mModifiedFragmentFiles.Empty() == false)
     {
-      forRange(ZilchShaderIRType * shaderType, pendingLibrary->mTypes.Values())
+      forRange (ZilchShaderIRType* shaderType, pendingLibrary->mTypes.Values())
       {
         ShaderIRTypeMeta* shaderTypeMeta = shaderType->mMeta;
         if (shaderTypeMeta == nullptr)
@@ -1462,19 +1369,16 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
         // Identify new/modified types.
         // We currently only have one class written to the complex user data
         // so we can hard-code passing 0 in (for the index).
-        FragmentUserData& fragmentUserData =
-            shaderTypeMeta->mComplexUserData.ReadObject<FragmentUserData>(0);
+        FragmentUserData& fragmentUserData = shaderTypeMeta->mComplexUserData.ReadObject<FragmentUserData>(0);
         String resourceName = fragmentUserData.mResourceName;
         if (mModifiedFragmentFiles.Contains(resourceName))
         {
           // Check for fragments that used to have a special attribute and add
           // them to the appropriate removed list
           ZilchFragmentType::Enum currentFragmentType =
-              currentFragmentTypes.FindValue(shaderTypeMeta->mZilchName,
-                                             ZilchFragmentType::Fragment);
+              currentFragmentTypes.FindValue(shaderTypeMeta->mZilchName, ZilchFragmentType::Fragment);
           ZilchFragmentType::Enum pendingFragmentType =
-              pendingFragmentTypes.FindValue(shaderTypeMeta->mZilchName,
-                                             ZilchFragmentType::Fragment);
+              pendingFragmentTypes.FindValue(shaderTypeMeta->mZilchName, ZilchFragmentType::Fragment);
 
           if (pendingFragmentType != currentFragmentType)
             RemovedFragment(currentFragmentType, shaderTypeMeta->mZilchName);
@@ -1486,10 +1390,9 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
           // be checked
           if (pendingFragmentType == ZilchFragmentType::Fragment)
           {
-            forRange(UniqueComposite & composite, mUniqueComposites.Values())
+            forRange (UniqueComposite& composite, mUniqueComposites.Values())
             {
-              if (composite.mFragmentNameMap.Contains(
-                      shaderTypeMeta->mZilchName))
+              if (composite.mFragmentNameMap.Contains(shaderTypeMeta->mZilchName))
                 mModifiedComposites.Insert(composite.mName);
             }
           }
@@ -1497,15 +1400,14 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
           // Find all types dependent on this one and also list them as modified
           HashSet<ZilchShaderIRType*> dependents;
           pendingLibrary->GetAllDependents(shaderType, dependents);
-          forRange(ZilchShaderIRType * dependent, dependents.All())
+          forRange (ZilchShaderIRType* dependent, dependents.All())
           {
             ShaderIRTypeMeta* dependentTypeMeta = dependent->mMeta;
             if (dependentTypeMeta == nullptr)
               continue;
 
             ZilchFragmentType::Enum dependentType =
-                pendingFragmentTypes.FindValue(dependentTypeMeta->mZilchName,
-                                               ZilchFragmentType::Fragment);
+                pendingFragmentTypes.FindValue(dependentTypeMeta->mZilchName, ZilchFragmentType::Fragment);
 
             // Do not need to check composites unless it's a regular fragment
             // type Composites will otherwise be handled by the other fragment
@@ -1516,10 +1418,9 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
               // Post patch still needs to run composite update on materials,
               // but if a composite results in being removed it will correctly
               // be removed from this list
-              forRange(UniqueComposite & composite, mUniqueComposites.Values())
+              forRange (UniqueComposite& composite, mUniqueComposites.Values())
               {
-                if (composite.mFragmentNameMap.Contains(
-                        dependentTypeMeta->mZilchName))
+                if (composite.mFragmentNameMap.Contains(dependentTypeMeta->mZilchName))
                   mModifiedComposites.Insert(composite.mName);
               }
             }
@@ -1546,7 +1447,7 @@ void GraphicsEngine::OnScriptsCompiledCommit(ZilchCompileEvent* event)
 
   // After fragment libraries are committed component shader inputs can be
   // processed
-  forRange(ResourceLibrary * modifiedLibrary, event->mModifiedLibraries.All())
+  forRange (ResourceLibrary* modifiedLibrary, event->mModifiedLibraries.All())
   {
     if (modifiedLibrary->mSwapScript.HasPendingLibrary())
       ProcessModifiedScripts(modifiedLibrary->mSwapScript.mPendingLibrary);
@@ -1563,11 +1464,11 @@ void GraphicsEngine::OnScriptsCompiledPostPatch(ZilchCompileEvent* event)
 
   mNewLibrariesCommitted = false;
 
-  MaterialFactory::GetInstance()->UpdateRestrictedComponents(
-      mShaderGenerator->mCurrentToInternal, mShaderGenerator->mFragmentTypes);
+  MaterialFactory::GetInstance()->UpdateRestrictedComponents(mShaderGenerator->mCurrentToInternal,
+                                                             mShaderGenerator->mFragmentTypes);
 
   // Re-Initialize composites after new types have been committed
-  forRange(Resource * resource, MaterialManager::GetInstance()->AllResources())
+  forRange (Resource* resource, MaterialManager::GetInstance()->AllResources())
   {
     Material* material = (Material*)resource;
 
@@ -1588,7 +1489,7 @@ void GraphicsEngine::OnScriptsCompiledPostPatch(ZilchCompileEvent* event)
 
 void GraphicsEngine::OnScriptCompilationFailed(Event* event)
 {
-  forRange(Material * material, mAddedMaterialsForComposites.All())
+  forRange (Material* material, mAddedMaterialsForComposites.All())
   {
     UpdateUniqueComposites(material, UniqueCompositeOp::Add);
     AddMaterial(material);
@@ -1601,20 +1502,17 @@ void GraphicsEngine::OnScriptCompilationFailed(Event* event)
     CompileShaders();
 }
 
-void GraphicsEngine::UpdateUniqueComposites(
-    Material* material, UniqueCompositeOp::Enum uniqueCompositeOp)
+void GraphicsEngine::UpdateUniqueComposites(Material* material, UniqueCompositeOp::Enum uniqueCompositeOp)
 {
   if (uniqueCompositeOp == UniqueCompositeOp::Add)
   {
-    ErrorIf(material->mRenderData != nullptr,
-            "Material has already been added.");
+    ErrorIf(material->mRenderData != nullptr, "Material has already been added.");
     material->UpdateCompositeName();
     AddComposite(material);
   }
   else if (uniqueCompositeOp == UniqueCompositeOp::Remove)
   {
-    ErrorIf(material->mRenderData == nullptr,
-            "Material has already been removed.");
+    ErrorIf(material->mRenderData == nullptr, "Material has already been removed.");
     RemoveComposite(material->mCompositeName);
   }
   else if (uniqueCompositeOp == UniqueCompositeOp::Modify)
@@ -1642,15 +1540,13 @@ void GraphicsEngine::CompileShaders()
   Array<String> removedComposites;
   removedComposites.Append(mRemovedComposites.All());
 
-  FindShadersToRemove(
-      mRemovedCoreVertex, mShaderCoreVertexMap, shadersToRemove);
+  FindShadersToRemove(mRemovedCoreVertex, mShaderCoreVertexMap, shadersToRemove);
   FindShadersToRemove(removedComposites, mShaderCompositeMap, shadersToRemove);
-  FindShadersToRemove(
-      mRemovedRenderPass, mShaderRenderPassMap, shadersToRemove);
+  FindShadersToRemove(mRemovedRenderPass, mShaderRenderPassMap, shadersToRemove);
 
   RemoveFromShaderMaps(shadersToRemove);
 
-  forRange(String fragment, mRemovedPostProcess.All())
+  forRange (String fragment, mRemovedPostProcess.All())
   {
     String shaderName = BuildString(cPostVertex, fragment);
     shadersToRemove.Insert(mPostProcessShaders[shaderName]);
@@ -1661,7 +1557,7 @@ void GraphicsEngine::CompileShaders()
   {
     RemoveShadersJob* removeShadersJob = new RemoveShadersJob();
 
-    forRange(Shader * shader, shadersToRemove.All())
+    forRange (Shader* shader, shadersToRemove.All())
     {
       ShaderEntry entry(shader);
       removeShadersJob->mShaders.PushBack(entry);
@@ -1689,28 +1585,16 @@ void GraphicsEngine::CompileShaders()
   Array<String>& renderPassFragments = mShaderGenerator->mRenderPassFragments;
 
   // Process based on modified lists
-  FindShadersToCompile(mModifiedCoreVertex,
-                       compositeNames,
-                       renderPassFragments,
-                       mShaderCoreVertexMap,
-                       0,
-                       shadersToCompile);
-  FindShadersToCompile(coreVertexFragments,
-                       modifiedComposites,
-                       renderPassFragments,
-                       mShaderCompositeMap,
-                       1,
-                       shadersToCompile);
-  FindShadersToCompile(coreVertexFragments,
-                       compositeNames,
-                       mModifiedRenderPass,
-                       mShaderRenderPassMap,
-                       2,
-                       shadersToCompile);
+  FindShadersToCompile(
+      mModifiedCoreVertex, compositeNames, renderPassFragments, mShaderCoreVertexMap, 0, shadersToCompile);
+  FindShadersToCompile(
+      coreVertexFragments, modifiedComposites, renderPassFragments, mShaderCompositeMap, 1, shadersToCompile);
+  FindShadersToCompile(
+      coreVertexFragments, compositeNames, mModifiedRenderPass, mShaderRenderPassMap, 2, shadersToCompile);
 
   AddToShaderMaps(shadersToCompile);
 
-  forRange(String fragment, mModifiedPostProcess.All())
+  forRange (String fragment, mModifiedPostProcess.All())
   {
     Shader* shader = GetOrCreateShader(cPostVertex, fragment, String(), mPostProcessShaders);
     shadersToCompile.Insert(shader);
@@ -1721,7 +1605,7 @@ void GraphicsEngine::CompileShaders()
   mModifiedRenderPass.Clear();
   mModifiedPostProcess.Clear();
 
-  forRange(Shader* shader, shadersToCompile)
+  forRange (Shader* shader, shadersToCompile)
   {
     shader->mSentToRenderer = false;
   }
@@ -1730,16 +1614,14 @@ void GraphicsEngine::CompileShaders()
   if (shadersToCompile.Empty() == false)
   {
     AddShadersJob* addShadersJob = new AddShadersJob(mRendererJobQueue);
-    bool compiled = mShaderGenerator->BuildShaders(
-        shadersToCompile, mUniqueComposites, addShadersJob->mShaders);
+    bool compiled = mShaderGenerator->BuildShaders(shadersToCompile, mUniqueComposites, addShadersJob->mShaders);
     ErrorIf(!compiled, "Shaders did not compile after composition.");
     AddRendererJob(addShadersJob);
   }
 #endif
 }
 
-void GraphicsEngine::WriteTextureToFile(HandleOf<Texture> texture,
-                                        StringParam filename)
+void GraphicsEngine::WriteTextureToFile(HandleOf<Texture> texture, StringParam filename)
 {
   mDelayedTextureToFile.PushBack(TextureToFile(texture, filename));
 }

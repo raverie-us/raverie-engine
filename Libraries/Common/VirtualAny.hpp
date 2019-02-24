@@ -84,8 +84,7 @@ protected:
     MaxAlignmentType mObjectDataAligned[ZeroAlignCount(MaxDerivedSize)];
   };
 
-  friend struct MoveWithoutDestructionOperator<
-      VirtualAny<BaseType, MaxDerivedSize>>;
+  friend struct MoveWithoutDestructionOperator<VirtualAny<BaseType, MaxDerivedSize>>;
 };
 
 template <typename BaseType, uint MaxDerivedSize>
@@ -93,8 +92,7 @@ struct MoveWithoutDestructionOperator<VirtualAny<BaseType, MaxDerivedSize>>
 {
   typedef VirtualAny<BaseType, MaxDerivedSize> VirtualAnyType;
 
-  static inline void MoveWithoutDestruction(VirtualAnyType* dest,
-                                            VirtualAnyType* source)
+  static inline void MoveWithoutDestruction(VirtualAnyType* dest, VirtualAnyType* source)
   {
     memcpy(dest->mObjectData, source->mObjectData, sizeof(source->mObjectData));
     dest->mBasePointer = (BaseType*)dest->mObjectData;

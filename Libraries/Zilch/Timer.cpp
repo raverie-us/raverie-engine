@@ -31,8 +31,7 @@ long long Timer::GetAndUpdateTicks()
     const long long SecondsPerMinute = 60;
     const long long MinutesPerHour = 60;
     const long long HoursPerDay = 24;
-    ErrorIf(difference > Timer::TicksPerSecond * SecondsPerMinute *
-                             MinutesPerHour * HoursPerDay,
+    ErrorIf(difference > Timer::TicksPerSecond * SecondsPerMinute * MinutesPerHour * HoursPerDay,
             "The timer should be called at least once a day to prevent wrap "
             "around issues");
   }

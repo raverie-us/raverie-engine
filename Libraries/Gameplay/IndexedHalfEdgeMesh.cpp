@@ -6,14 +6,14 @@
 namespace Zero
 {
 
-#define DefineHalfEdgeArrayType(arrayType)                                     \
-  ZilchDefineType(arrayType, builder, type)                                    \
-  {                                                                            \
-    ZeroBindDocumented();                                                      \
-                                                                               \
-    ZilchBindMethod(Get);                                                      \
-    ZilchBindGetter(All);                                                      \
-    ZilchBindGetterProperty(Count);                                            \
+#define DefineHalfEdgeArrayType(arrayType)                                                                             \
+  ZilchDefineType(arrayType, builder, type)                                                                            \
+  {                                                                                                                    \
+    ZeroBindDocumented();                                                                                              \
+                                                                                                                       \
+    ZilchBindMethod(Get);                                                                                              \
+    ZilchBindGetter(All);                                                                                              \
+    ZilchBindGetterProperty(Count);                                                                                    \
   }
 
 DefineHalfEdgeArrayType(IndexedHalfEdgeMeshVertexArray);

@@ -17,9 +17,7 @@ IntersectionPoint2D& Manifold2D::PointAt(uint index)
 }
 
 /// Find the closest point on a line segment to the given point.
-Type ClosestPointOnSegmentToPoint(Vec2Param segmentPointA,
-                                  Vec2Param segmentPointB,
-                                  Vec2Ptr point)
+Type ClosestPointOnSegmentToPoint(Vec2Param segmentPointA, Vec2Param segmentPointB, Vec2Ptr point)
 {
   ErrorIf(point == nullptr,
           "Intersection - Null pointer passed, this function"
@@ -73,20 +71,13 @@ real IntersectIntervals(Vec2Param intervalA, Vec2Param intervalB)
 
 // Project a box onto the given axis, storing its (absolute-valued) minimum and
 // maximum projections in the return vector.
-Vec2 ProjectBoxOntoAxis(Vec2Param boxCenter,
-                        Vec2Param boxHalfExtents,
-                        const Vec2* boxAxes,
-                        Vec2Param axis)
+Vec2 ProjectBoxOntoAxis(Vec2Param boxCenter, Vec2Param boxHalfExtents, const Vec2* boxAxes, Vec2Param axis)
 {
   // Compute all 4 points of the box
-  Vec2 boxPoints[4] = {boxCenter + (boxAxes[0] * boxHalfExtents[0]) +
-                           (boxAxes[1] * boxHalfExtents[1]),
-                       boxCenter - (boxAxes[0] * boxHalfExtents[0]) +
-                           (boxAxes[1] * boxHalfExtents[1]),
-                       boxCenter - (boxAxes[0] * boxHalfExtents[0]) -
-                           (boxAxes[1] * boxHalfExtents[1]),
-                       boxCenter + (boxAxes[0] * boxHalfExtents[0]) -
-                           (boxAxes[1] * boxHalfExtents[1])};
+  Vec2 boxPoints[4] = {boxCenter + (boxAxes[0] * boxHalfExtents[0]) + (boxAxes[1] * boxHalfExtents[1]),
+                       boxCenter - (boxAxes[0] * boxHalfExtents[0]) + (boxAxes[1] * boxHalfExtents[1]),
+                       boxCenter - (boxAxes[0] * boxHalfExtents[0]) - (boxAxes[1] * boxHalfExtents[1]),
+                       boxCenter + (boxAxes[0] * boxHalfExtents[0]) - (boxAxes[1] * boxHalfExtents[1])};
 
   // Resulting minimum and maximum projections onto the axis
   real minProj = Math::PositiveMax();
@@ -110,9 +101,7 @@ Vec2 ProjectBoxOntoAxis(Vec2Param boxCenter,
 
 // Project a polygon onto the given axis, storing its (absolute-valued) minimum
 // and maximum projections in the return vector.
-Vec2 ProjectPolygonOntoAxis(const Vec2* polygonPoints,
-                            uint polygonPointCount,
-                            Vec2 axis)
+Vec2 ProjectPolygonOntoAxis(const Vec2* polygonPoints, uint polygonPointCount, Vec2 axis)
 {
   // Stores the minimum and maximum projections, with minimum in the x-component
   // and maximum in y-component
@@ -152,10 +141,8 @@ Type BoxBox(Vec2Param boxCenterA,
   for (uint i = 0; i < 2; ++i)
   {
     Vec2 axis = boxAxesA[i];
-    Vec2 intervalA =
-        ProjectBoxOntoAxis(boxCenterA, boxHalfExtentsA, boxAxesA, axis);
-    Vec2 intervalB =
-        ProjectBoxOntoAxis(boxCenterB, boxHalfExtentsB, boxAxesB, axis);
+    Vec2 intervalA = ProjectBoxOntoAxis(boxCenterA, boxHalfExtentsA, boxAxesA, axis);
+    Vec2 intervalB = ProjectBoxOntoAxis(boxCenterB, boxHalfExtentsB, boxAxesB, axis);
     real overlapAmount = IntersectIntervals(intervalA, intervalB);
 
     // Overlap amount is negative, interval is invalid, no intersection
@@ -176,10 +163,8 @@ Type BoxBox(Vec2Param boxCenterA,
   for (uint i = 0; i < 2; ++i)
   {
     Vec2 axis = boxAxesB[i];
-    Vec2 intervalA =
-        ProjectBoxOntoAxis(boxCenterA, boxHalfExtentsA, boxAxesA, axis);
-    Vec2 intervalB =
-        ProjectBoxOntoAxis(boxCenterB, boxHalfExtentsB, boxAxesB, axis);
+    Vec2 intervalA = ProjectBoxOntoAxis(boxCenterA, boxHalfExtentsA, boxAxesA, axis);
+    Vec2 intervalB = ProjectBoxOntoAxis(boxCenterB, boxHalfExtentsB, boxAxesB, axis);
     real overlapAmount = IntersectIntervals(intervalA, intervalB);
 
     // Overlap amount is negative, interval is invalid, no intersection
@@ -222,10 +207,8 @@ Type BoxBox(Vec2Param boxCenterA,
        |           |
        3-----------2
   */
-  const real pointSigns[4][2] = {{real(1.0), real(1.0)},
-                                 {real(1.0), real(-1.0)},
-                                 {real(-1.0), real(-1.0)},
-                                 {real(-1.0), real(1.0)}};
+  const real pointSigns[4][2] = {
+      {real(1.0), real(1.0)}, {real(1.0), real(-1.0)}, {real(-1.0), real(-1.0)}, {real(-1.0), real(1.0)}};
 
   Vec2 pointOnA, pointOnB;
 
@@ -237,8 +220,8 @@ Type BoxBox(Vec2Param boxCenterA,
     real testValue = -Math::PositiveMax();
     for (uint i = 0; i < 4; ++i)
     {
-      Vec2 tempPoint = boxAxesB[0] * pointSigns[i][0] * boxHalfExtentsB[0] +
-                       boxAxesB[1] * pointSigns[i][1] * boxHalfExtentsB[1];
+      Vec2 tempPoint =
+          boxAxesB[0] * pointSigns[i][0] * boxHalfExtentsB[0] + boxAxesB[1] * pointSigns[i][1] * boxHalfExtentsB[1];
       real tempValue = Dot(-minAxis, tempPoint);
       if (tempValue > testValue)
       {
@@ -262,11 +245,11 @@ Type BoxBox(Vec2Param boxCenterA,
     uint altIndex = (axisIndex + 1) % 2;
 
     // All this is just to get points on the edge on box A closest to box B
-    boxPointsA[0] += (sign * boxAxesA[axisIndex] * boxHalfExtentsA[axisIndex]) +
-                     boxAxesA[altIndex] * boxHalfExtentsA[altIndex];
+    boxPointsA[0] +=
+        (sign * boxAxesA[axisIndex] * boxHalfExtentsA[axisIndex]) + boxAxesA[altIndex] * boxHalfExtentsA[altIndex];
 
-    boxPointsA[1] += (sign * boxAxesA[axisIndex] * boxHalfExtentsA[axisIndex]) -
-                     boxAxesA[altIndex] * boxHalfExtentsA[altIndex];
+    boxPointsA[1] +=
+        (sign * boxAxesA[axisIndex] * boxHalfExtentsA[axisIndex]) - boxAxesA[altIndex] * boxHalfExtentsA[altIndex];
 
     // Find the closest intersectionPoint on A's edge to B's intersectionPoint
     pointOnA = pointOnB;
@@ -280,8 +263,8 @@ Type BoxBox(Vec2Param boxCenterA,
     real testValue = -Math::PositiveMax();
     for (uint i = 0; i < 4; ++i)
     {
-      Vec2 tempPoint = boxAxesA[0] * pointSigns[i][0] * boxHalfExtentsA[0] +
-                       boxAxesA[1] * pointSigns[i][1] * boxHalfExtentsA[1];
+      Vec2 tempPoint =
+          boxAxesA[0] * pointSigns[i][0] * boxHalfExtentsA[0] + boxAxesA[1] * pointSigns[i][1] * boxHalfExtentsA[1];
       real tempValue = Dot(minAxis, tempPoint);
       if (tempValue > testValue)
       {
@@ -306,11 +289,11 @@ Type BoxBox(Vec2Param boxCenterA,
     uint altIndex = (axisIndex + 1) % 2;
 
     // All this is just to get points on the edge on box A closest to box B
-    boxPointsB[0] += (sign * boxAxesB[axisIndex] * boxHalfExtentsB[axisIndex]) +
-                     boxAxesB[altIndex] * boxHalfExtentsB[altIndex];
+    boxPointsB[0] +=
+        (sign * boxAxesB[axisIndex] * boxHalfExtentsB[axisIndex]) + boxAxesB[altIndex] * boxHalfExtentsB[altIndex];
 
-    boxPointsB[1] += (sign * boxAxesB[axisIndex] * boxHalfExtentsB[axisIndex]) -
-                     boxAxesB[altIndex] * boxHalfExtentsB[altIndex];
+    boxPointsB[1] +=
+        (sign * boxAxesB[axisIndex] * boxHalfExtentsB[axisIndex]) - boxAxesB[altIndex] * boxHalfExtentsB[altIndex];
 
     // Find the closest intersectionPoint on B's edge to A's intersectionPoint
     pointOnB = pointOnA;
@@ -334,14 +317,10 @@ Type BoxCircle(Vec2Param boxCenter,
                real circleRadius,
                Manifold2D* manifold)
 {
-  const Vec2 boxPoints[4] = {boxCenter + boxAxes[0] * boxHalfExtents[0] +
-                                 boxAxes[1] * boxHalfExtents[1],
-                             boxCenter + boxAxes[0] * boxHalfExtents[0] -
-                                 boxAxes[1] * boxHalfExtents[1],
-                             boxCenter - boxAxes[0] * boxHalfExtents[0] -
-                                 boxAxes[1] * boxHalfExtents[1],
-                             boxCenter - boxAxes[0] * boxHalfExtents[0] +
-                                 boxAxes[1] * boxHalfExtents[1]};
+  const Vec2 boxPoints[4] = {boxCenter + boxAxes[0] * boxHalfExtents[0] + boxAxes[1] * boxHalfExtents[1],
+                             boxCenter + boxAxes[0] * boxHalfExtents[0] - boxAxes[1] * boxHalfExtents[1],
+                             boxCenter - boxAxes[0] * boxHalfExtents[0] - boxAxes[1] * boxHalfExtents[1],
+                             boxCenter - boxAxes[0] * boxHalfExtents[0] + boxAxes[1] * boxHalfExtents[1]};
 
   // Find the closest intersectionPoint on the box to the circle
   Vec2 closestPoint;
@@ -349,8 +328,7 @@ Type BoxCircle(Vec2Param boxCenter,
   for (uint i = 0; i < 4; ++i)
   {
     Vec2 tempPoint = circleCenter;
-    ClosestPointOnSegmentToPoint(
-        boxPoints[i], boxPoints[(i + 1) % 4], &tempPoint);
+    ClosestPointOnSegmentToPoint(boxPoints[i], boxPoints[(i + 1) % 4], &tempPoint);
 
     real tempLength = Length(circleCenter - tempPoint);
     if (tempLength < shortestLength)
@@ -387,11 +365,8 @@ Type BoxCircle(Vec2Param boxCenter,
 }
 
 /// Intersect a circle with a circle
-Type CircleCircle(Vec2Param circleCenterA,
-                  real circleRadiusA,
-                  Vec2Param circleCenterB,
-                  real circleRadiusB,
-                  Manifold2D* manifold)
+Type CircleCircle(
+    Vec2Param circleCenterA, real circleRadiusA, Vec2Param circleCenterB, real circleRadiusB, Manifold2D* manifold)
 {
   // Represents the distance that the centers of the circles can be before the
   // circles begin to overlap
@@ -456,9 +431,7 @@ Type CircleConvexPolygon(Vec2Param circleCenter,
     nextPoint = (i == lastPoint) ? 0 : i + 1;
 
     Vec2 tempPoint = circleCenter;
-    ClosestPointOnSegmentToPoint(convexPolygonPoints[currPoint],
-                                 convexPolygonPoints[nextPoint],
-                                 &tempPoint);
+    ClosestPointOnSegmentToPoint(convexPolygonPoints[currPoint], convexPolygonPoints[nextPoint], &tempPoint);
 
     real length = Length(circleCenter - tempPoint);
     if (length < minCircleToPolyLength)
@@ -533,10 +506,8 @@ Type ConvexPolygonConvexPolygon(const Vec2* convexPolygonPointsA,
     Vec2 axis = Normalized(nextPoint - currPoint);
     axis.Set(axis.y, -axis.x);
 
-    Vec2 aProjection = ProjectPolygonOntoAxis(
-        convexPolygonPointsA, convexPolygonPointCountA, axis);
-    Vec2 bProjection = ProjectPolygonOntoAxis(
-        convexPolygonPointsB, convexPolygonPointCountB, axis);
+    Vec2 aProjection = ProjectPolygonOntoAxis(convexPolygonPointsA, convexPolygonPointCountA, axis);
+    Vec2 bProjection = ProjectPolygonOntoAxis(convexPolygonPointsB, convexPolygonPointCountB, axis);
 
     real overlapAmount = IntersectIntervals(aProjection, bProjection);
     if (overlapAmount < real(0.0))
@@ -564,10 +535,8 @@ Type ConvexPolygonConvexPolygon(const Vec2* convexPolygonPointsA,
     Vec2 axis = Normalized(nextPoint - currPoint);
     axis.Set(axis.y, -axis.x);
 
-    Vec2 aProjection = ProjectPolygonOntoAxis(
-        convexPolygonPointsA, convexPolygonPointCountA, axis);
-    Vec2 bProjection = ProjectPolygonOntoAxis(
-        convexPolygonPointsB, convexPolygonPointCountB, axis);
+    Vec2 aProjection = ProjectPolygonOntoAxis(convexPolygonPointsA, convexPolygonPointCountA, axis);
+    Vec2 bProjection = ProjectPolygonOntoAxis(convexPolygonPointsB, convexPolygonPointCountB, axis);
 
     real overlapAmount = IntersectIntervals(aProjection, bProjection);
     if (overlapAmount < real(0.0))
@@ -611,8 +580,7 @@ Type PointSegment(Vec2Param point, Vec2Param segmentStart, Vec2Param segmentEnd)
   // Now that we know the point is on the infinite line, we must check if it's
   // within the endpoints of the segment
   Vec2 toEnd = segmentEnd - segmentStart;
-  if (toEnd.Dot(point - segmentEnd) <= real(0.0) &&
-      toEnd.Dot(point - segmentStart) >= real(0.0))
+  if (toEnd.Dot(point - segmentEnd) <= real(0.0) && toEnd.Dot(point - segmentStart) >= real(0.0))
   {
     return Inside;
   }
@@ -620,17 +588,13 @@ Type PointSegment(Vec2Param point, Vec2Param segmentStart, Vec2Param segmentEnd)
   return Outside;
 }
 
-Type RayAabb(Vec2Param rayStart,
-             Vec2Param rayDirection,
-             Vec2Param aabbMinPoint,
-             Vec2Param aabbMaxPoint,
-             Interval* interval)
+Type RayAabb(
+    Vec2Param rayStart, Vec2Param rayDirection, Vec2Param aabbMinPoint, Vec2Param aabbMaxPoint, Interval* interval)
 {
   ErrorIf(interval == nullptr,
           "Intersection - Invalid interval passed to "
           "function.");
-  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) ||
-              (aabbMinPoint.y > aabbMaxPoint.y),
+  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
           " than it's maximum point.");
 

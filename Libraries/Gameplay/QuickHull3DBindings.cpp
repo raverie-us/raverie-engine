@@ -109,15 +109,13 @@ void QuickHull3DInterface::BuildHalfEdgeMesh()
   int faceId = 0;
 
   // Compute the ids of all faces, edges, and vertices
-  for (FaceList::range faces = mQuickHull3D.GetFaces(); !faces.Empty();
-       faces.PopFront())
+  for (FaceList::range faces = mQuickHull3D.GetFaces(); !faces.Empty(); faces.PopFront())
   {
     Face* face = &faces.Front();
     mFaceIds[face] = faceId;
     ++faceId;
 
-    for (EdgeList::range edges = face->mEdges.All(); !edges.Empty();
-         edges.PopFront())
+    for (EdgeList::range edges = face->mEdges.All(); !edges.Empty(); edges.PopFront())
     {
       Edge* edge = &edges.Front();
       mEdgeIds[edge] = edgeId;
@@ -133,12 +131,12 @@ void QuickHull3DInterface::BuildHalfEdgeMesh()
   }
 
   // Copy all vertices
-  forRange(VertexMap::PairType & pair, mVertexIds.All())
+  forRange (VertexMap::PairType& pair, mVertexIds.All())
   {
     outMeshVertices[pair.second] = pair.first->mPosition;
   }
   // Copy all edges, making sure to map the vertex, twin, and faces
-  forRange(EdgeMap::PairType & pair, mEdgeIds.All())
+  forRange (EdgeMap::PairType& pair, mEdgeIds.All())
   {
     IndexedHalfEdge* outEdge = outMeshEdges[pair.second];
     Edge* inEdge = pair.first;
@@ -147,13 +145,12 @@ void QuickHull3DInterface::BuildHalfEdgeMesh()
     outEdge->mTwinIndex = mEdgeIds[inEdge->mTwin];
   }
   // Copy all faces, making sure to map all edges
-  forRange(auto& pair, mFaceIds.All())
+  forRange (auto& pair, mFaceIds.All())
   {
     IndexedHalfEdgeFace* outFace = outMeshFaces[pair.second];
     Face* inFace = pair.first;
 
-    for (EdgeList::range edges = inFace->mEdges.All(); !edges.Empty();
-         edges.PopFront())
+    for (EdgeList::range edges = inFace->mEdges.All(); !edges.Empty(); edges.PopFront())
     {
       Edge* edge = &edges.Front();
       outFace->mEdges.PushBack(mEdgeIds[edge]);

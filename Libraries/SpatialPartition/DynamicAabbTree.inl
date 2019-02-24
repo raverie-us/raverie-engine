@@ -21,10 +21,7 @@ DynamicTreeNode<ClientDataType>::~DynamicTreeNode()
 
 template <typename ClientDataType>
 Memory::Pool* DynamicTreeNode<ClientDataType>::sDynamicNodePool =
-    new Memory::Pool("DynamicNodes",
-                     Memory::GetNamedHeap("BroadPhase"),
-                     sizeof(DynamicTreeNode<ClientDataType>),
-                     200);
+    new Memory::Pool("DynamicNodes", Memory::GetNamedHeap("BroadPhase"), sizeof(DynamicTreeNode<ClientDataType>), 200);
 
 template <typename ClientDataType>
 void* DynamicTreeNode<ClientDataType>::operator new(size_t size)
@@ -53,9 +50,7 @@ DynamicTreeNode<ClientDataType>* DynamicTreeNode<ClientDataType>::GetSibling()
 }
 
 template <typename ClientDataType>
-void DynamicTreePolicy<ClientDataType>::InsertNode(NodeType*& root,
-                                                   NodeType* leafNode,
-                                                   NodeType* start)
+void DynamicTreePolicy<ClientDataType>::InsertNode(NodeType*& root, NodeType* leafNode, NodeType* start)
 {
   // if we have no root, then this node is the root
   if (root == nullptr)
@@ -86,9 +81,8 @@ void DynamicTreePolicy<ClientDataType>::InsertNode(NodeType*& root,
 }
 
 template <typename ClientDataType>
-typename DynamicTreePolicy<ClientDataType>::NodeType*
-DynamicTreePolicy<ClientDataType>::RemoveNode(NodeType*& root,
-                                              NodeType* leafNode)
+typename DynamicTreePolicy<ClientDataType>::NodeType* DynamicTreePolicy<ClientDataType>::RemoveNode(NodeType*& root,
+                                                                                                    NodeType* leafNode)
 {
   ErrorIf(leafNode->mChild1 != nullptr, "Can only remove leaf nodes.");
   ErrorIf(leafNode->mChild2 != nullptr, "Can only remove leaf nodes.");
@@ -127,8 +121,7 @@ DynamicTreePolicy<ClientDataType>::RemoveNode(NodeType*& root,
   {
     Aabb oldAabb = grandParent->mAabb;
     grandParent->mAabb = grandParent->mChild1->mAabb;
-    grandParent->mAabb =
-        grandParent->mAabb.Combined(grandParent->mChild2->mAabb);
+    grandParent->mAabb = grandParent->mAabb.Combined(grandParent->mChild2->mAabb);
 
     // if our old Aabb and our new Aabb are of the same size, then there
     // is no point in continuing up the tree since none of our parent's will

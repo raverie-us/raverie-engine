@@ -32,8 +32,7 @@ bool BaseSpirVOptimizerPass::RunOptimizer(int primaryPass,
 
   // Run the actual optimizer
   spv_binary binaryOut;
-  spv_result_t result = spvOptimizeWithOptions(
-      context, options, &binary, &binaryOut, &diagnostic);
+  spv_result_t result = spvOptimizeWithOptions(context, options, &binary, &binaryOut, &diagnostic);
 
   // On success, load the result into the output stream
   if (result == SPV_SUCCESS)
@@ -56,8 +55,9 @@ bool BaseSpirVOptimizerPass::RunOptimizer(int primaryPass,
   return success;
 }
 
-void BaseSpirVOptimizerPass::CreateOptimizerOptions(
-    spv_optimizer_options& options, int primaryPass, Array<String>& flags)
+void BaseSpirVOptimizerPass::CreateOptimizerOptions(spv_optimizer_options& options,
+                                                    int primaryPass,
+                                                    Array<String>& flags)
 {
   options = spvOptimizerOptionsCreate();
   // We always assume the validator should never be run (that's a separate
@@ -69,8 +69,7 @@ void BaseSpirVOptimizerPass::CreateOptimizerOptions(
   SetOptimizerOptionsFlags(options, flags);
 }
 
-void BaseSpirVOptimizerPass::SetOptimizerOptionsFlags(
-    spv_optimizer_options& options, Array<String>& flags)
+void BaseSpirVOptimizerPass::SetOptimizerOptionsFlags(spv_optimizer_options& options, Array<String>& flags)
 {
   size_t flagsCount = flags.Size();
   // Allocate an array of c-strings (one extra for null)
@@ -90,8 +89,7 @@ void BaseSpirVOptimizerPass::SetOptimizerOptionsFlags(
   }
 }
 
-void BaseSpirVOptimizerPass::DestroyOptimizerOptions(
-    spv_optimizer_options& options)
+void BaseSpirVOptimizerPass::DestroyOptimizerOptions(spv_optimizer_options& options)
 {
   int flagIndex = 0;
   // Deallocate each individual flag followed by the 'array'.
@@ -116,15 +114,11 @@ String BaseSpirVOptimizerPass::GetErrorLog()
   return mErrorLog;
 }
 
-bool SpirVOptimizerPass::RunTranslationPass(
-    ShaderTranslationPassResult& inputData,
-    ShaderTranslationPassResult& outputData)
+bool SpirVOptimizerPass::RunTranslationPass(ShaderTranslationPassResult& inputData,
+                                            ShaderTranslationPassResult& outputData)
 {
   Array<String> flags;
-  bool success = RunOptimizer(SPV_OPTIMIZER_SIZE_PASS,
-                              flags,
-                              inputData.mByteStream,
-                              outputData.mByteStream);
+  bool success = RunOptimizer(SPV_OPTIMIZER_SIZE_PASS, flags, inputData.mByteStream, outputData.mByteStream);
 
   // By default, all of the reflection data is the same as the input stage
   if (success)
@@ -137,9 +131,8 @@ SpirVValidatorPass::SpirVValidatorPass()
   mTargetEnv = SPV_ENV_UNIVERSAL_1_3;
 }
 
-bool SpirVValidatorPass::RunTranslationPass(
-    ShaderTranslationPassResult& inputData,
-    ShaderTranslationPassResult& outputData)
+bool SpirVValidatorPass::RunTranslationPass(ShaderTranslationPassResult& inputData,
+                                            ShaderTranslationPassResult& outputData)
 {
   mErrorLog.Clear();
 
@@ -154,8 +147,7 @@ bool SpirVValidatorPass::RunTranslationPass(
   uint32_t* code = (uint32_t*)inputData.mByteStream.Data();
   spv_const_binary_t binary{code, wordCount};
 
-  spv_result_t result =
-      spvValidateWithOptions(context, options, &binary, &diagnostic);
+  spv_result_t result = spvValidateWithOptions(context, options, &binary, &diagnostic);
 
   // If there's failure for any reason
   if (result != SPV_SUCCESS)
@@ -187,13 +179,11 @@ SpirVFileWriterPass::SpirVFileWriterPass(StringParam targetDirectory)
   mExtension = ".spv";
 }
 
-bool SpirVFileWriterPass::RunTranslationPass(
-    ShaderTranslationPassResult& inputData,
-    ShaderTranslationPassResult& outputData)
+bool SpirVFileWriterPass::RunTranslationPass(ShaderTranslationPassResult& inputData,
+                                             ShaderTranslationPassResult& outputData)
 {
   String typeName = inputData.mReflectionData.mShaderTypeName;
-  String filePath =
-      FilePath::CombineWithExtension(mTargetDirectory, typeName, mExtension);
+  String filePath = FilePath::CombineWithExtension(mTargetDirectory, typeName, mExtension);
 
   ShaderByteStream& byteStream = inputData.mByteStream;
 

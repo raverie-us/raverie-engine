@@ -43,10 +43,7 @@ public:
   ZilchDeclareType(AnimationEditorData, TypeCopyMode::ReferenceType);
 
   /// Constructor.
-  AnimationEditorData(AnimationEditor* editor,
-                      Cog* animGraphObject,
-                      Animation* animation,
-                      ScrollingGraph* graphData);
+  AnimationEditorData(AnimationEditor* editor, Cog* animGraphObject, Animation* animation, ScrollingGraph* graphData);
 
   /// When the rich animation is modified, we want to bake it out to
   /// the animation resource.

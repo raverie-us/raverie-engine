@@ -44,9 +44,7 @@ RawPacket& RawPacket::operator=(MoveReference<RawPacket> rhs)
 
 //                                    Packet //
 
-Packet::Packet(const IpAddress& ipAddress,
-               bool isStandalone,
-               PacketSequenceId sequenceId) :
+Packet::Packet(const IpAddress& ipAddress, bool isStandalone, PacketSequenceId sequenceId) :
     mIpAddress(ipAddress),
     mIsStandalone(isStandalone),
     mSequenceId(sequenceId)
@@ -126,19 +124,14 @@ bool operator<(PacketSequenceId lhs, const Packet& rhs)
 
 //                                  OutPacket //
 
-OutPacket::OutPacket(const IpAddress& destination,
-                     bool isStandalone,
-                     PacketSequenceId sequenceId) :
+OutPacket::OutPacket(const IpAddress& destination, bool isStandalone, PacketSequenceId sequenceId) :
     Packet(destination, isStandalone, sequenceId),
     mMessages(),
     mSendTime(0)
 {
 }
 
-OutPacket::OutPacket(const OutPacket& rhs) :
-    Packet(rhs),
-    mMessages(rhs.mMessages),
-    mSendTime(rhs.mSendTime)
+OutPacket::OutPacket(const OutPacket& rhs) : Packet(rhs), mMessages(rhs.mMessages), mSendTime(rhs.mSendTime)
 {
 }
 
@@ -182,14 +175,16 @@ bool OutPacket::HasMessages() const
 }
 bool OutPacket::HasCustomMessages() const
 {
-  forRange(Message & message,
-           mMessages.All()) if (message.IsCustomType()) return true;
+  forRange (Message& message, mMessages.All())
+    if (message.IsCustomType())
+      return true;
   return false;
 }
 bool OutPacket::HasProtocolMessages() const
 {
-  forRange(Message & message,
-           mMessages.All()) if (!message.IsCustomType()) return true;
+  forRange (Message& message, mMessages.All())
+    if (!message.IsCustomType())
+      return true;
   return false;
 }
 
@@ -213,15 +208,14 @@ Bits OutPacket::GetTotalBits() const
   Bits result = GetHeaderBits();
 
   // Message sizes
-  forRange(Message & message, mMessages.All()) result += message.GetTotalBits();
+  forRange (Message& message, mMessages.All())
+    result += message.GetTotalBits();
 
   return result;
 }
 
 template <>
-Bits Serialize<OutPacket>(SerializeDirection::Enum direction,
-                          BitStream& bitStream,
-                          OutPacket& outPacket)
+Bits Serialize<OutPacket>(SerializeDirection::Enum direction, BitStream& bitStream, OutPacket& outPacket)
 {
   // Write operation only
   Assert(direction == SerializeDirection::Write);
@@ -247,14 +241,13 @@ Bits Serialize<OutPacket>(SerializeDirection::Enum direction,
   }
 
   // (Packet header size should be correct)
-  Assert((bitStream.GetBitsWritten() - bitsWrittenStart) ==
-         outPacket.GetHeaderBits());
+  Assert((bitStream.GetBitsWritten() - bitsWrittenStart) == outPacket.GetHeaderBits());
 
   //
   // Write Messages
   //
-  forRange(Message & message, outPacket.mMessages.All())
-      bitStream.Write(message);
+  forRange (Message& message, outPacket.mMessages.All())
+    bitStream.Write(message);
 
   // Success
   return bitStream.GetBitsWritten() - bitsWrittenStart;
@@ -270,9 +263,7 @@ InPacket::InPacket(const InPacket& rhs) : Packet(rhs), mMessages(rhs.mMessages)
 {
 }
 
-InPacket::InPacket(MoveReference<InPacket> rhs) :
-    Packet(*rhs),
-    mMessages(ZeroMove(rhs->mMessages))
+InPacket::InPacket(MoveReference<InPacket> rhs) : Packet(*rhs), mMessages(ZeroMove(rhs->mMessages))
 {
 }
 
@@ -312,15 +303,14 @@ Bits InPacket::GetTotalBits() const
   Bits result = GetHeaderBits();
 
   // Message sizes
-  forRange(Message & message, mMessages.All()) result += message.GetTotalBits();
+  forRange (Message& message, mMessages.All())
+    result += message.GetTotalBits();
 
   return result;
 }
 
 template <>
-Bits Serialize<InPacket>(SerializeDirection::Enum direction,
-                         BitStream& bitStream,
-                         InPacket& inPacket)
+Bits Serialize<InPacket>(SerializeDirection::Enum direction, BitStream& bitStream, InPacket& inPacket)
 {
   // Read operation only
   Assert(direction == SerializeDirection::Read);

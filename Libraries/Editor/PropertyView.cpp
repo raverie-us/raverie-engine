@@ -8,14 +8,10 @@ namespace PropertyViewUi
 {
 const cstr cLocation = "EditorUi/PropertyView";
 Tweakable(float, ObjectSize, Pixels(24), cLocation); // Size of objects
-Tweakable(float,
-          PropertySize,
-          Pixels(20),
+Tweakable(float, PropertySize, Pixels(20),
           cLocation); // Size of each property widget
-Tweakable(float,
-          PropertySpacing,
-          Pixels(2),
-          cLocation); // Pixels in between each property
+Tweakable(float, PropertySpacing, Pixels(2),
+          cLocation);                                // Pixels in between each property
 Tweakable(float, IndentSize, Pixels(10), cLocation); // Indent per level
 } // namespace PropertyViewUi
 
@@ -33,9 +29,7 @@ ZilchDefineType(PropertyView, builder, type)
   ZilchBindMethod(ActivateAutoUpdate);
 }
 
-PropertyView::PropertyView(Composite* parent) :
-    Composite(parent),
-    mFixedHeight(false)
+PropertyView::PropertyView(Composite* parent) : Composite(parent), mFixedHeight(false)
 {
   mScrollArea = new ScrollArea(this);
   mScrollArea->SetClientSize(Pixels(10, 10));
@@ -50,8 +44,7 @@ PropertyView::PropertyView(Composite* parent) :
 
   SetPropertyInterface(&mDefaultPropertyInterface);
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
-  ConnectThisTo(
-      MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
+  ConnectThisTo(MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
 }
 
 PropertyView::~PropertyView()
@@ -61,7 +54,7 @@ PropertyView::~PropertyView()
 void PropertyView::DisconnectAllObjects()
 {
   // Disconnect from all old objects
-  forRange(HandleParam oldObject, mSelectedObjects.All())
+  forRange (HandleParam oldObject, mSelectedObjects.All())
   {
     // Disconnect if the handle is a valid Object
     if (Object* object = oldObject.Get<Object*>())
@@ -90,7 +83,8 @@ void PropertyView::Invalidate()
   mSelectedObjects.Clear();
 
   // Clear the additional widgets
-  forRange(Widget * widget, mAddtionalWidgets.All()) widget->Destroy();
+  forRange (Widget* widget, mAddtionalWidgets.All())
+    widget->Destroy();
   mAddtionalWidgets.Clear();
 }
 
@@ -100,8 +94,7 @@ void PropertyView::Rebuild()
   if (instance.IsNotNull())
   {
     // SafeDelete(mRootObjectNode);
-    auto rootObjectNode =
-        mPropertyInterface->BuildObjectTree(nullptr, instance);
+    auto rootObjectNode = mPropertyInterface->BuildObjectTree(nullptr, instance);
     if (rootObjectNode == nullptr)
       return;
 
@@ -123,8 +116,7 @@ void PropertyView::Rebuild()
   Refresh();
 }
 
-void PropertyView::SetObject(HandleParam newObject,
-                             PropertyInterface* newInterface)
+void PropertyView::SetObject(HandleParam newObject, PropertyInterface* newInterface)
 {
   DisconnectAllObjects();
 
@@ -150,23 +142,15 @@ void PropertyView::SetObject(HandleParam newObject,
   // We need to know when a component has changed on one of the objects
   // we have selected in order to properly rebuild the tree
   mPropertyInterface->GetObjects(newObject, mSelectedObjects);
-  forRange(Handle object, mSelectedObjects.All())
+  forRange (Handle object, mSelectedObjects.All())
   {
     // Connect if handle is a valid Object
     if (Object* objectPointer = object.Get<Object*>())
     {
       if (EventDispatcher* dispatcher = objectPointer->GetDispatcherObject())
       {
-        Connect(objectPointer,
-                Events::ComponentsModified,
-                this,
-                &ZilchSelf::OnInvalidate,
-                ConnectNotify::Ignore);
-        Connect(objectPointer,
-                Events::ObjectStructureModified,
-                this,
-                &ZilchSelf::OnInvalidate,
-                ConnectNotify::Ignore);
+        Connect(objectPointer, Events::ComponentsModified, this, &ZilchSelf::OnInvalidate, ConnectNotify::Ignore);
+        Connect(objectPointer, Events::ObjectStructureModified, this, &ZilchSelf::OnInvalidate, ConnectNotify::Ignore);
       }
     }
   }
@@ -221,10 +205,7 @@ void PropertyView::UpdateTransform()
 void PropertyView::SizeToContents()
 {
   UpdateTransform();
-  ReturnIf(
-      mRoot == nullptr,
-      ,
-      "No valid on object selected on property grid. Size will be invalid");
+  ReturnIf(mRoot == nullptr, , "No valid on object selected on property grid. Size will be invalid");
   Vec2 sizeNeeded = mRoot->GetSize();
   this->SetSize(sizeNeeded);
 }
@@ -266,8 +247,7 @@ void PropertyView::Refresh()
   }
 }
 
-void PropertyView::SetPropertyInterface(PropertyInterface* propInterface,
-                                        bool rebuild)
+void PropertyView::SetPropertyInterface(PropertyInterface* propInterface, bool rebuild)
 {
   mPropertyInterface = propInterface;
 
@@ -281,8 +261,7 @@ void PropertyView::SetPropertyInterface(PropertyInterface* propInterface,
     Invalidate();
 }
 
-void PropertyView::AddCustomPropertyIcon(CustomIconCreatorFunction callback,
-                                         void* clientData)
+void PropertyView::AddCustomPropertyIcon(CustomIconCreatorFunction callback, void* clientData)
 {
   // If it's already in the array, no need to add it
   if (mCustomIconCallbacks.Contains(callback))

@@ -140,8 +140,7 @@ ZeroSharedTemplate inline T Clamp(const T value)
 /// Clamps between min and max but it sets a bool saying whether or not a value
 /// was clamped.
 template <typename T>
-ZeroSharedTemplate inline T
-DebugClamp(const T x, const T xMin, const T xMax, bool& wasClamped)
+ZeroSharedTemplate inline T DebugClamp(const T x, const T xMin, const T xMax, bool& wasClamped)
 {
   wasClamped = true;
   if (x < xMin)
@@ -153,8 +152,7 @@ DebugClamp(const T x, const T xMin, const T xMax, bool& wasClamped)
 }
 
 template <typename T>
-ZeroSharedTemplate inline T
-ClampIfClose(const T x, const T xMin, const T xMax, const T epsilon)
+ZeroSharedTemplate inline T ClampIfClose(const T x, const T xMin, const T xMax, const T epsilon)
 {
   real value = x < xMin && x > (xMin - epsilon) ? xMin : x;
   value = value > xMax && value < (xMax + epsilon) ? xMax : value;
@@ -162,8 +160,7 @@ ClampIfClose(const T x, const T xMin, const T xMax, const T epsilon)
 }
 
 template <typename T>
-ZeroSharedTemplate inline bool
-TryClampIfClose(T& x, const T xMin, const T xMax, const T epsilon)
+ZeroSharedTemplate inline bool TryClampIfClose(T& x, const T xMin, const T xMax, const T epsilon)
 {
   if (x < xMin)
   {
@@ -183,9 +180,7 @@ TryClampIfClose(T& x, const T xMin, const T xMax, const T epsilon)
 }
 
 template <typename T>
-ZeroSharedTemplate inline real InverseLerp(const T x,
-                                           const T start,
-                                           const T end)
+ZeroSharedTemplate inline real InverseLerp(const T x, const T start, const T end)
 {
   if (end == start)
   {
@@ -196,9 +191,7 @@ ZeroSharedTemplate inline real InverseLerp(const T x,
 }
 
 template <typename T>
-ZeroSharedTemplate inline real InverseLerpClamped(const T x,
-                                                  const T start,
-                                                  const T end)
+ZeroSharedTemplate inline real InverseLerpClamped(const T x, const T start, const T end)
 {
   return Clamp(InverseLerp(x, start, end));
 }
@@ -220,8 +213,7 @@ ZeroSharedTemplate inline bool InBounds(const T x, const T xMin, const T xMax)
 template <typename T>
 ZeroSharedTemplate inline T Wrap(const T x, const T xMin, const T xMax)
 {
-  return (x < xMin) ? (x + (xMax - xMin))
-                    : ((x > xMax) ? (x - (xMax - xMin)) : x);
+  return (x < xMin) ? (x + (xMax - xMin)) : ((x > xMax) ? (x - (xMax - xMin)) : x);
 }
 
 template <typename T>
@@ -233,18 +225,13 @@ ZeroSharedTemplate inline void Swap(T& a, T& b)
 }
 
 template <typename Data, typename T>
-ZeroSharedTemplate inline Data Lerp(const Data& start,
-                                    const Data& end,
-                                    T interpolationValue)
+ZeroSharedTemplate inline Data Lerp(const Data& start, const Data& end, T interpolationValue)
 {
-  return (Data)((T(1.0) - interpolationValue) * start +
-                interpolationValue * end);
+  return (Data)((T(1.0) - interpolationValue) * start + interpolationValue * end);
 }
 
 template <typename Data>
-ZeroSharedTemplate inline Data SmoothStep(const Data& start,
-                                          const Data& end,
-                                          real t)
+ZeroSharedTemplate inline Data SmoothStep(const Data& start, const Data& end, real t)
 {
   t = Clamp((t - start) / (end - start));
 

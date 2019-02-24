@@ -50,12 +50,9 @@ void CreateVectorContent(ContentSystem* system)
 {
   AddContent<FontContent>(system);
   AddContentComponent<FontBuilder>(system);
-  system->CreatorsByExtension["ttf"] =
-      ContentTypeEntry(ZilchTypeId(FontContent), MakeFontContent);
-  system->CreatorsByExtension["ttc"] =
-      ContentTypeEntry(ZilchTypeId(FontContent), MakeFontContent);
-  system->CreatorsByExtension["otf"] =
-      ContentTypeEntry(ZilchTypeId(FontContent), MakeFontContent);
+  system->CreatorsByExtension["ttf"] = ContentTypeEntry(ZilchTypeId(FontContent), MakeFontContent);
+  system->CreatorsByExtension["ttc"] = ContentTypeEntry(ZilchTypeId(FontContent), MakeFontContent);
+  system->CreatorsByExtension["otf"] = ContentTypeEntry(ZilchTypeId(FontContent), MakeFontContent);
 }
 
 } // namespace Zero

@@ -25,22 +25,17 @@ bool IsValidForStorage(HandleParam object)
 
   if (!type->HasAttributeInherited(ObjectAttributes::cStoreLocalModifications))
     return false;
-  if (MetaDataInheritance* inheritance =
-          type->HasInherited<MetaDataInheritance>())
+  if (MetaDataInheritance* inheritance = type->HasInherited<MetaDataInheritance>())
     return inheritance->ShouldStoreLocalModifications(object);
   return false;
 }
 
 // Child Id
-ObjectState::ChildId::ChildId(StringParam typeName, Guid id) :
-    mTypeName(typeName),
-    mId(id)
+ObjectState::ChildId::ChildId(StringParam typeName, Guid id) : mTypeName(typeName), mId(id)
 {
 }
 
-ObjectState::ChildId::ChildId(BoundType* type, Guid id) :
-    mTypeName(type->Name),
-    mId(id)
+ObjectState::ChildId::ChildId(BoundType* type, Guid id) : mTypeName(type->Name), mId(id)
 {
 }
 
@@ -49,8 +44,7 @@ ObjectState::ChildId::ChildId(HandleParam object) : mId(cInvalidUniqueId)
   BoundType* type = object.StoredType;
   mTypeName = type->Name;
 
-  if (MetaDataInheritance* inheritance =
-          type->HasInherited<MetaDataInheritance>())
+  if (MetaDataInheritance* inheritance = type->HasInherited<MetaDataInheritance>())
     mId = inheritance->GetUniqueId(object);
 }
 
@@ -59,8 +53,7 @@ ObjectState::ChildId::ChildId(Object* object) : mId(cInvalidUniqueId)
   BoundType* type = ZilchVirtualTypeId(object);
   mTypeName = type->Name;
 
-  if (MetaDataInheritance* inheritance =
-          type->HasInherited<MetaDataInheritance>())
+  if (MetaDataInheritance* inheritance = type->HasInherited<MetaDataInheritance>())
     mId = inheritance->GetUniqueId(object);
 }
 
@@ -87,11 +80,11 @@ ObjectState* ObjectState::Clone()
 void ObjectState::Combine(ObjectState* state)
 {
   // Copy properties
-  forRange(PropertyPath & propertyPath, state->GetModifiedProperties())
-      mModifiedProperties.Insert(propertyPath);
+  forRange (PropertyPath& propertyPath, state->GetModifiedProperties())
+    mModifiedProperties.Insert(propertyPath);
 
   // Copy Child modifications
-  forRange(ChildId & addedChild, state->GetAddedChildren())
+  forRange (ChildId& addedChild, state->GetAddedChildren())
   {
     if (mRemovedChildren.Contains(addedChild))
       mRemovedChildren.Erase(addedChild);
@@ -99,7 +92,7 @@ void ObjectState::Combine(ObjectState* state)
       mAddedChildren.Insert(addedChild);
   }
 
-  forRange(ChildId & removedChild, state->GetRemovedChildren())
+  forRange (ChildId& removedChild, state->GetRemovedChildren())
   {
     if (mAddedChildren.Contains(removedChild))
       mAddedChildren.Erase(removedChild);
@@ -118,8 +111,7 @@ bool ObjectState::IsModified()
 
 bool ObjectState::IsModified(HandleParam object, bool ignoreOverrideProperties)
 {
-  return IsSelfModified(object, ignoreOverrideProperties) ||
-         AreChildrenModified();
+  return IsSelfModified(object, ignoreOverrideProperties) || AreChildrenModified();
 }
 
 bool ObjectState::IsSelfModified()
@@ -127,19 +119,17 @@ bool ObjectState::IsSelfModified()
   return !mModifiedProperties.Empty();
 }
 
-bool ObjectState::IsSelfModified(HandleParam object,
-                                 bool ignoreOverrideProperties)
+bool ObjectState::IsSelfModified(HandleParam object, bool ignoreOverrideProperties)
 {
   // Call the default if we're not ignoring override properties
   if (!ignoreOverrideProperties)
     return IsSelfModified();
 
   // Walk through and try to find any non-override properties
-  forRange(PropertyPath & propertyPath, mModifiedProperties.All())
+  forRange (PropertyPath& propertyPath, mModifiedProperties.All())
   {
     Property* property = propertyPath.GetPropertyFromRoot(object);
-    if (property &&
-        !property->HasAttribute(PropertyAttributes::cLocalModificationOverride))
+    if (property && !property->HasAttribute(PropertyAttributes::cLocalModificationOverride))
       return true;
   }
 
@@ -148,8 +138,7 @@ bool ObjectState::IsSelfModified(HandleParam object,
 
 bool ObjectState::AreChildrenModified()
 {
-  return (!mAddedChildren.Empty() || !mRemovedChildren.Empty() ||
-          mChildOrderModified);
+  return (!mAddedChildren.Empty() || !mRemovedChildren.Empty() || mChildOrderModified);
 }
 
 void ObjectState::ClearModifications()
@@ -160,8 +149,7 @@ void ObjectState::ClearModifications()
   mChildOrderModified = false;
 }
 
-void ObjectState::ClearModifications(HandleParam object,
-                                     bool retainOverrideProperties)
+void ObjectState::ClearModifications(HandleParam object, bool retainOverrideProperties)
 {
   ModifiedProperties cachedMemory;
   ClearModifications(retainOverrideProperties, object, cachedMemory);
@@ -175,18 +163,15 @@ void ObjectState::ClearModifications(bool retainOverrideProperties,
   {
     // We need the instance to get the meta properties to check if they are set
     // to override
-    ReturnIf(object.IsNull(),
-             ,
-             "We must have an instance to retain overridden properties");
+    ReturnIf(object.IsNull(), , "We must have an instance to retain overridden properties");
 
     // Store all properties that are set to override so we can restore them
     // after clearing all other modified properties
     ModifiedProperties& savedProperties = cachedMemory;
-    forRange(PropertyPath & propertyPath, mModifiedProperties.All())
+    forRange (PropertyPath& propertyPath, mModifiedProperties.All())
     {
       Property* property = propertyPath.GetPropertyFromRoot(object);
-      if (property && property->HasAttribute(
-                          PropertyAttributes::cLocalModificationOverride))
+      if (property && property->HasAttribute(PropertyAttributes::cLocalModificationOverride))
         savedProperties.Insert(propertyPath);
     }
 
@@ -194,8 +179,8 @@ void ObjectState::ClearModifications(bool retainOverrideProperties,
     mModifiedProperties.Clear();
 
     // Restore all saved override properties
-    forRange(PropertyPath & propertyPath, savedProperties.All())
-        mModifiedProperties.Insert(propertyPath);
+    forRange (PropertyPath& propertyPath, savedProperties.All())
+      mModifiedProperties.Insert(propertyPath);
 
     // Clear the cached memory now that we're done with it
     cachedMemory.Clear();
@@ -280,9 +265,7 @@ ObjectState::ChildrenMap::range ObjectState::GetRemovedChildren()
 }
 
 // Object Modifications
-ObjectState* LocalModifications::GetObjectState(HandleParam object,
-                                                bool createNew,
-                                                bool validateStorage)
+ObjectState* LocalModifications::GetObjectState(HandleParam object, bool createNew, bool validateStorage)
 {
   if (object.IsNull())
     return nullptr;
@@ -301,9 +284,7 @@ ObjectState* LocalModifications::GetObjectState(HandleParam object,
   return state;
 }
 
-bool LocalModifications::IsModified(HandleParam object,
-                                    bool checkHierarchy,
-                                    bool ignoreOverrideProperties)
+bool LocalModifications::IsModified(HandleParam object, bool checkHierarchy, bool ignoreOverrideProperties)
 {
   if (IsValidForStorage(object) == false)
     return false;
@@ -314,14 +295,12 @@ bool LocalModifications::IsModified(HandleParam object,
       return true;
   }
 
-  MetaComposition* composition =
-      object.StoredType->HasInherited<MetaComposition>();
+  MetaComposition* composition = object.StoredType->HasInherited<MetaComposition>();
   if (checkHierarchy && composition)
   {
-    forRange(Handle child, composition->AllComponents(object))
+    forRange (Handle child, composition->AllComponents(object))
     {
-      if (child.StoredType->HasAttributeInherited(
-              ObjectAttributes::cStoreLocalModifications))
+      if (child.StoredType->HasAttributeInherited(ObjectAttributes::cStoreLocalModifications))
       {
         if (IsModified(child, true, ignoreOverrideProperties))
           return true;
@@ -337,16 +316,13 @@ bool LocalModifications::IsModified(HandleParam object,
   return false;
 }
 
-Handle LocalModifications::GetClosestInheritedObject(HandleParam object,
-                                                     bool checkParents)
+Handle LocalModifications::GetClosestInheritedObject(HandleParam object, bool checkParents)
 {
   BoundType* objectType = object.StoredType;
-  if (MetaDataInheritanceRoot* inheritance =
-          objectType->HasInherited<MetaDataInheritanceRoot>())
+  if (MetaDataInheritanceRoot* inheritance = objectType->HasInherited<MetaDataInheritanceRoot>())
   {
     // Check
-    String inheritId =
-        inheritance->GetInheritId(object, InheritIdContext::Instance);
+    String inheritId = inheritance->GetInheritId(object, InheritIdContext::Instance);
     if (!inheritId.Empty())
       return object;
 
@@ -369,20 +345,16 @@ Handle LocalModifications::GetClosestInheritedObject(HandleParam object,
   return Handle();
 }
 
-void LocalModifications::ClearModifications(HandleParam object,
-                                            bool clearChildren,
-                                            bool retainOverrideProperties)
+void LocalModifications::ClearModifications(HandleParam object, bool clearChildren, bool retainOverrideProperties)
 {
   ObjectState::ModifiedProperties cachedMemory;
-  ClearModifications(
-      object, clearChildren, retainOverrideProperties, cachedMemory);
+  ClearModifications(object, clearChildren, retainOverrideProperties, cachedMemory);
 }
 
-void LocalModifications::ClearModifications(
-    HandleParam object,
-    bool clearChildren,
-    bool retainOverrideProperties,
-    ObjectState::ModifiedProperties& cachedMemory)
+void LocalModifications::ClearModifications(HandleParam object,
+                                            bool clearChildren,
+                                            bool retainOverrideProperties,
+                                            ObjectState::ModifiedProperties& cachedMemory)
 {
   if (object == nullptr)
     return;
@@ -416,11 +388,10 @@ void LocalModifications::ClearModifications(
   }
 
   // Clear all children
-  MetaComposition* composition =
-      object.StoredType->HasInherited<MetaComposition>();
+  MetaComposition* composition = object.StoredType->HasInherited<MetaComposition>();
   if (clearChildren && composition)
   {
-    forRange(Handle child, composition->AllComponents(object))
+    forRange (Handle child, composition->AllComponents(object))
     {
       // If we're not retaining override properties, recursively delete all
       // child states as there's nothing we want to save
@@ -444,8 +415,7 @@ void LocalModifications::ClearModifications(
 
           // If we have a guid for the child, use that. Otherwise use the type
           // name
-          if (MetaDataInheritance* inheritance =
-                  childType->HasInherited<MetaDataInheritance>())
+          if (MetaDataInheritance* inheritance = childType->HasInherited<MetaDataInheritance>())
             childId.mId = inheritance->GetUniqueId(child);
 
           isLocallyAdded = state->IsChildLocallyAdded(childId);
@@ -457,55 +427,47 @@ void LocalModifications::ClearModifications(
   }
 }
 
-bool LocalModifications::IsPropertyModified(HandleParam object,
-                                            PropertyPathParam property)
+bool LocalModifications::IsPropertyModified(HandleParam object, PropertyPathParam property)
 {
   if (ObjectState* objectState = GetObjectState(object, false, false))
     return objectState->IsPropertyModified(property);
   return false;
 }
 
-void LocalModifications::SetPropertyModified(HandleParam object,
-                                             PropertyPathParam property,
-                                             bool state)
+void LocalModifications::SetPropertyModified(HandleParam object, PropertyPathParam property, bool state)
 {
   bool shouldCreateNew = state;
   if (ObjectState* objectState = GetObjectState(object, shouldCreateNew))
     objectState->SetPropertyModified(property, state);
 }
 
-void LocalModifications::ChildAdded(HandleParam object,
-                                    ObjectState::ChildIdParam childId)
+void LocalModifications::ChildAdded(HandleParam object, ObjectState::ChildIdParam childId)
 {
   if (ObjectState* objectState = GetObjectState(object, true))
     objectState->ChildAdded(childId);
 }
 
-void LocalModifications::ChildRemoved(HandleParam object,
-                                      ObjectState::ChildIdParam childId)
+void LocalModifications::ChildRemoved(HandleParam object, ObjectState::ChildIdParam childId)
 {
   if (ObjectState* objectState = GetObjectState(object, true))
     objectState->ChildRemoved(childId);
 }
 
-bool LocalModifications::IsChildLocallyAdded(HandleParam object,
-                                             ObjectState::ChildIdParam childId)
+bool LocalModifications::IsChildLocallyAdded(HandleParam object, ObjectState::ChildIdParam childId)
 {
   if (ObjectState* objectState = GetObjectState(object, false, false))
     return objectState->IsChildLocallyAdded(childId);
   return false;
 }
 
-bool LocalModifications::IsChildLocallyRemoved(
-    HandleParam object, ObjectState::ChildIdParam childId)
+bool LocalModifications::IsChildLocallyRemoved(HandleParam object, ObjectState::ChildIdParam childId)
 {
   if (ObjectState* objectState = GetObjectState(object, false, false))
     return objectState->IsChildLocallyRemoved(childId);
   return false;
 }
 
-bool LocalModifications::IsObjectLocallyAdded(HandleParam object,
-                                              bool recursivelyCheckParents)
+bool LocalModifications::IsObjectLocallyAdded(HandleParam object, bool recursivelyCheckParents)
 {
   BoundType* objectType = object.StoredType;
   MetaOwner* metaOwner = objectType->HasInherited<MetaOwner>();
@@ -523,11 +485,9 @@ bool LocalModifications::IsObjectLocallyAdded(HandleParam object,
 
     // If we hit something that inherits from other data, we are not locally
     // added
-    if (MetaDataInheritanceRoot* inheritance =
-            owner.StoredType->HasInherited<MetaDataInheritanceRoot>())
+    if (MetaDataInheritanceRoot* inheritance = owner.StoredType->HasInherited<MetaDataInheritanceRoot>())
     {
-      String ownerInheritId =
-          inheritance->GetInheritId(owner, InheritIdContext::Instance);
+      String ownerInheritId = inheritance->GetInheritId(owner, InheritIdContext::Instance);
       if (!ownerInheritId.Empty())
         return false;
     }
@@ -563,8 +523,7 @@ ObjectState* LocalModifications::TakeObjectState(HandleParam object)
   return nullptr;
 }
 
-void LocalModifications::RestoreObjectState(HandleParam object,
-                                            ObjectState* objectState)
+void LocalModifications::RestoreObjectState(HandleParam object, ObjectState* objectState)
 {
   if (object == nullptr)
     return;
@@ -578,11 +537,9 @@ void LocalModifications::RestoreObjectState(HandleParam object,
     mObjectStates.Erase(object);
 }
 
-void LocalModifications::CombineObjectState(HandleParam object,
-                                            ObjectState* objectState)
+void LocalModifications::CombineObjectState(HandleParam object, ObjectState* objectState)
 {
-  ReturnIf(
-      object == nullptr || objectState == nullptr, , "Invalid data given.");
+  ReturnIf(object == nullptr || objectState == nullptr, , "Invalid data given.");
   ObjectState* currentState = mObjectStates.FindValue(object, nullptr);
   if (currentState)
     currentState->Combine(objectState);
@@ -599,10 +556,9 @@ bool ObjectContainsProperty(HandleParam object, Property* property)
     return true;
 
   // Walk composition
-  if (MetaComposition* composition =
-          objectType->HasInherited<MetaComposition>())
+  if (MetaComposition* composition = objectType->HasInherited<MetaComposition>())
   {
-    forRange(Handle child, composition->AllComponents(object))
+    forRange (Handle child, composition->AllComponents(object))
     {
       if (ObjectContainsProperty(child, property))
         return true;
@@ -610,10 +566,9 @@ bool ObjectContainsProperty(HandleParam object, Property* property)
   }
 
   // Walk child property objects
-  forRange(Property * property, objectType->GetProperties())
+  forRange (Property* property, objectType->GetProperties())
   {
-    BoundType* propertyType =
-        Zilch::BoundType::GetBoundType(property->PropertyType);
+    BoundType* propertyType = Zilch::BoundType::GetBoundType(property->PropertyType);
 
     // If the contained property has its own properties, check them
     if (propertyType && !propertyType->GetProperties().Empty())
@@ -642,12 +597,10 @@ bool LocalModifications::IsModified(HandleParam object,
   if (ObjectState* parentState = GetObjectState(propertyPathParent))
   {
     // Walk each modified property of our parent
-    forRange(PropertyPath & modifiedProperty,
-             parentState->GetModifiedProperties())
+    forRange (PropertyPath& modifiedProperty, parentState->GetModifiedProperties())
     {
       // Check if
-      Property* property =
-          modifiedProperty.GetPropertyFromRoot(propertyPathParent);
+      Property* property = modifiedProperty.GetPropertyFromRoot(propertyPathParent);
 
       if (ObjectContainsProperty(object, property))
         return true;
@@ -689,8 +642,7 @@ bool MetaDataInheritance::ShouldStoreLocalModifications(HandleParam object)
   */
   LocalModifications* modifications = LocalModifications::GetInstance();
 
-  Handle closestInheritedObject =
-      modifications->GetClosestInheritedObject(object, true);
+  Handle closestInheritedObject = modifications->GetClosestInheritedObject(object, true);
 
   // If nothing above us inherits from other data, we don't want to store
   // modifications
@@ -711,40 +663,32 @@ void MetaDataInheritance::Revert(HandleParam object)
   LocalModifications::GetInstance()->ClearModifications(object, true, false);
 }
 
-bool MetaDataInheritance::CanPropertyBeReverted(HandleParam object,
-                                                PropertyPathParam propertyPath)
+bool MetaDataInheritance::CanPropertyBeReverted(HandleParam object, PropertyPathParam propertyPath)
 {
   return false;
 }
 
-void MetaDataInheritance::RevertProperty(HandleParam object,
-                                         PropertyPathParam propertyPath)
+void MetaDataInheritance::RevertProperty(HandleParam object, PropertyPathParam propertyPath)
 {
-  LocalModifications::GetInstance()->SetPropertyModified(
-      object, propertyPath, false);
+  LocalModifications::GetInstance()->SetPropertyModified(object, propertyPath, false);
 }
 
-void MetaDataInheritance::RestoreRemovedChild(HandleParam parent,
-                                              ObjectState::ChildId childId)
+void MetaDataInheritance::RestoreRemovedChild(HandleParam parent, ObjectState::ChildId childId)
 {
   LocalModifications::GetInstance()->ChildAdded(parent, childId);
   RebuildObject(parent);
 }
 
-void MetaDataInheritance::SetPropertyModified(HandleParam object,
-                                              PropertyPathParam propertyPath,
-                                              bool state)
+void MetaDataInheritance::SetPropertyModified(HandleParam object, PropertyPathParam propertyPath, bool state)
 {
-  LocalModifications::GetInstance()->SetPropertyModified(
-      object, propertyPath, state);
+  LocalModifications::GetInstance()->SetPropertyModified(object, propertyPath, state);
 }
 
 bool MetaDataInheritance::InheritsFromData(HandleParam object)
 {
   ReturnIf(object.IsNull(), false, "Null object");
 
-  if (MetaDataInheritance* inheritance =
-          object.StoredType->HasInherited<MetaDataInheritance>())
+  if (MetaDataInheritance* inheritance = object.StoredType->HasInherited<MetaDataInheritance>())
     return inheritance->ShouldStoreLocalModifications(object);
   return false;
 }

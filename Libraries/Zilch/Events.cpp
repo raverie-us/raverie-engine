@@ -12,8 +12,7 @@ namespace Zilch
 
 // When we attempt to 'get an event handler' from a type that is actually an
 // EventHandler then we really don't need to do anything except return ourself
-EventHandler* EventHandlerGetEventHandlerFunction(const BoundType* type,
-                                                  const byte* data)
+EventHandler* EventHandlerGetEventHandlerFunction(const BoundType* type, const byte* data)
 {
   return (EventHandler*)data;
 }
@@ -27,18 +26,8 @@ ZilchDefineType(EventHandler, builder, type)
 
 ZilchDefineType(EventsClass, builder, type)
 {
-  ZilchFullBindMethod(builder,
-                      type,
-                      &EventsClass::Send,
-                      ZilchNoOverload,
-                      "Send",
-                      "sender, eventName, event");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &EventsClass::Connect,
-                      ZilchNoOverload,
-                      "Connect",
-                      "sender, eventName, callback");
+  ZilchFullBindMethod(builder, type, &EventsClass::Send, ZilchNoOverload, "Send", "sender, eventName, event");
+  ZilchFullBindMethod(builder, type, &EventsClass::Connect, ZilchNoOverload, "Connect", "sender, eventName, callback");
 }
 
 ZilchDefineType(EventData, builder, type)
@@ -92,24 +81,22 @@ int EventDelegateList::Send(EventData* event)
   // way if the user destroy objects, disconnect or reconnect new events, etc we
   // won't have issues referencing the original list / connections
   size_t totalOutgoing = 0;
-  ZilchForEach(EventDelegate & delegate, this->Outgoing)
+  ZilchForEach (EventDelegate& delegate, this->Outgoing)
   {
     // Count how many outgoing event delegates we have
     ++totalOutgoing;
   }
 
   // Allocate on the stack an array of pointers to the delegates
-  byte* delegatesList =
-      (byte*)alloca(EventDelegate::MaxEventDelegateSize * totalOutgoing);
+  byte* delegatesList = (byte*)alloca(EventDelegate::MaxEventDelegateSize * totalOutgoing);
 
   // Now copy all the event delegates into our stack local list (before we
   // invoke any user code!)
   size_t i = 0;
-  ZilchForEach(EventDelegate & delegate, this->Outgoing)
+  ZilchForEach (EventDelegate& delegate, this->Outgoing)
   {
     // Get the memory for the current delegate
-    byte* currentDelegate =
-        delegatesList + EventDelegate::MaxEventDelegateSize * i;
+    byte* currentDelegate = delegatesList + EventDelegate::MaxEventDelegateSize * i;
 
     // Copy construct (clone) the current delegate into the memory
     delegate.CopyInto(currentDelegate);
@@ -124,9 +111,7 @@ int EventDelegateList::Send(EventData* event)
   for (size_t j = 0; j < totalOutgoing; ++j)
   {
     // Get the memory for the current delegate
-    EventDelegate* delegate =
-        (EventDelegate*)(delegatesList +
-                         EventDelegate::MaxEventDelegateSize * j);
+    EventDelegate* delegate = (EventDelegate*)(delegatesList + EventDelegate::MaxEventDelegateSize * j);
 
     // If the event is not of the correct type, then don't deliver it
     // We allow the delegate to accept a more base version of the event too
@@ -148,8 +133,7 @@ int EventDelegateList::Send(EventData* event)
   return successfulInvokes;
 }
 
-EventDelegateList*
-EventHandler::GetOrCreateOutgoingDelegateList(StringParam eventName)
+EventDelegateList* EventHandler::GetOrCreateOutgoingDelegateList(StringParam eventName)
 {
   // Get the current list from the map, or Insert a new entry (will be null)
   EventDelegateList*& list = this->OutgoingPerEventName[eventName];
@@ -189,8 +173,7 @@ int EventSend(EventHandler* sender, StringParam eventName, EventData* event)
 
   // Get the event delegate list for the given event name and send the event to
   // all of them
-  EventDelegateList* delegates =
-      sender->OutgoingPerEventName.FindValue(eventName, nullptr);
+  EventDelegateList* delegates = sender->OutgoingPerEventName.FindValue(eventName, nullptr);
   if (delegates != nullptr)
   {
     return delegates->Send(event);
@@ -206,31 +189,23 @@ void EventSwapAll(EventHandler* a, EventHandler* b)
   a->Incoming.Swap(b->Incoming);
 }
 
-void EventConnect(EventHandler* sender,
-                  StringParam eventName,
-                  EventDelegate* delegate,
-                  EventHandler* receiver)
+void EventConnect(EventHandler* sender, StringParam eventName, EventDelegate* delegate, EventHandler* receiver)
 {
   // The receiver doesn't need to do anything special, it just directly stores a
   // reference to the delegate
   receiver->Incoming.PushBack(delegate);
 
   // Grab the list of outgoing delegates from the sender by this event name
-  EventDelegateList* outgoingDelegates =
-      sender->GetOrCreateOutgoingDelegateList(eventName);
+  EventDelegateList* outgoingDelegates = sender->GetOrCreateOutgoingDelegateList(eventName);
 
   // Link in the delegate to this outgoing connection
   outgoingDelegates->Outgoing.PushBack(delegate);
 }
 
-int EventDisconnect(EventHandler* sender,
-                    EventHandler* receiver,
-                    StringParam eventName,
-                    void* thisPointerOrUniqueId)
+int EventDisconnect(EventHandler* sender, EventHandler* receiver, StringParam eventName, void* thisPointerOrUniqueId)
 {
   // Grab the list of outgoing delegates from the sender by this event name
-  EventDelegateList* outgoingDelegates =
-      sender->OutgoingPerEventName.FindValue(eventName, nullptr);
+  EventDelegateList* outgoingDelegates = sender->OutgoingPerEventName.FindValue(eventName, nullptr);
 
   // If nobody signed up for this event, then early out (nothing to disconnect)
   if (outgoingDelegates == nullptr)
@@ -264,8 +239,7 @@ int EventDisconnect(EventHandler* sender,
   return removeCount;
 }
 
-ForwardingEventDelegate::ForwardingEventDelegate(EventHandler* forwardTo) :
-    ForwardTo(forwardTo)
+ForwardingEventDelegate::ForwardingEventDelegate(EventHandler* forwardTo) : ForwardTo(forwardTo)
 {
   this->Type = ZilchTypeId(EventData);
 }
@@ -281,27 +255,22 @@ void* ForwardingEventDelegate::GetThisPointerOrUniqueId()
   return (void*)this->ForwardTo;
 }
 
-void EventForward(EventHandler* sender,
-                  StringParam eventName,
-                  EventHandler* receiver)
+void EventForward(EventHandler* sender, StringParam eventName, EventHandler* receiver)
 {
   // Create a member function delegate
-  ForwardingEventDelegate* eventDelegate =
-      new ForwardingEventDelegate(receiver);
+  ForwardingEventDelegate* eventDelegate = new ForwardingEventDelegate(receiver);
 
   // Connect the event handler up to this newly created member delegate
   EventConnect(sender, eventName, eventDelegate, receiver);
 }
 
-ZilchEventDelegate::ZilchEventDelegate(const Delegate& delegate,
-                                       ExecutableState* state) :
+ZilchEventDelegate::ZilchEventDelegate(const Delegate& delegate, ExecutableState* state) :
     FunctionWithThis(delegate),
     State(state)
 {
   // We assume that the passed in delegate should be validated by this point, so
   // this should not crash or be invalid
-  this->Type = (BoundType*)delegate.BoundFunction->FunctionType->Parameters[0]
-                   .ParameterType;
+  this->Type = (BoundType*)delegate.BoundFunction->FunctionType->Parameters[0].ParameterType;
 }
 
 int ZilchEventDelegate::Invoke(EventData* event)
@@ -347,9 +316,7 @@ void* ZilchEventDelegate::GetThisPointerOrUniqueId()
   return (void*)this->FunctionWithThis.ThisHandle.Dereference();
 }
 
-int EventsClass::Send(const Handle& sender,
-                      StringParam eventName,
-                      EventData* event)
+int EventsClass::Send(const Handle& sender, StringParam eventName, EventData* event)
 {
   // Get the state that called the function (this is thread local and therefore
   // safe)
@@ -373,8 +340,7 @@ int EventsClass::Send(const Handle& sender,
 
   // Attempt to get an event handler from the memory of the sender (calls into
   // user code for user provided types)
-  EventHandler* senderHandler =
-      sender.StoredType->GetEventHandler(senderMemory);
+  EventHandler* senderHandler = sender.StoredType->GetEventHandler(senderMemory);
   if (senderHandler == nullptr)
   {
     state->ThrowException(report,
@@ -387,9 +353,7 @@ int EventsClass::Send(const Handle& sender,
   return EventSend(senderHandler, eventName, event);
 }
 
-void EventsClass::Connect(const Handle& sender,
-                          StringParam eventName,
-                          const Delegate& callback)
+void EventsClass::Connect(const Handle& sender, StringParam eventName, const Delegate& callback)
 {
   // Get the state that called the function (this is thread local and therefore
   // safe)
@@ -407,9 +371,7 @@ void EventsClass::Connect(const Handle& sender,
   DelegateType* signature = callback.BoundFunction->FunctionType;
   if (Type::IsSame(signature->Return, ZilchTypeId(void)) == false)
   {
-    state->ThrowException(
-        report,
-        "The callback must not return a value (the return type must be Void)");
+    state->ThrowException(report, "The callback must not return a value (the return type must be Void)");
     return;
   }
 
@@ -417,19 +379,15 @@ void EventsClass::Connect(const Handle& sender,
   ParameterArray& parameters = signature->Parameters;
   if (parameters.Size() != 1)
   {
-    state->ThrowException(
-        report, "The callback must take only one parameter, the EventData");
+    state->ThrowException(report, "The callback must take only one parameter, the EventData");
     return;
   }
 
   // Make sure the delegate's parameter derives from EventData (it can also be
   // just EventData itself)
-  if (Type::GenericIsA(parameters[0].ParameterType, ZilchTypeId(EventData)) ==
-      false)
+  if (Type::GenericIsA(parameters[0].ParameterType, ZilchTypeId(EventData)) == false)
   {
-    state->ThrowException(
-        report,
-        "The callback's parameter must be an EventData or inherit from it");
+    state->ThrowException(report, "The callback's parameter must be an EventData or inherit from it");
     return;
   }
 
@@ -447,8 +405,7 @@ void EventsClass::Connect(const Handle& sender,
 
   // Attempt to get an event handler from the memory of the receiver (calls into
   // user code for user provided types)
-  EventHandler* receiverHandler =
-      receiver.StoredType->GetEventHandler(receiverMemory);
+  EventHandler* receiverHandler = receiver.StoredType->GetEventHandler(receiverMemory);
   if (receiverHandler == nullptr)
   {
     state->ThrowException(report,
@@ -467,8 +424,7 @@ void EventsClass::Connect(const Handle& sender,
 
   // Attempt to get an event handler from the memory of the sender (calls into
   // user code for user provided types)
-  EventHandler* senderHandler =
-      sender.StoredType->GetEventHandler(senderMemory);
+  EventHandler* senderHandler = sender.StoredType->GetEventHandler(senderMemory);
   if (senderHandler == nullptr)
   {
     state->ThrowException(report,

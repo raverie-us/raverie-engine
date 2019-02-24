@@ -92,8 +92,7 @@ public:
   //****************************************************************************
   bool Contains(CurveEditing::Draggable* target, WidgetRect& selectionRect)
   {
-    Vec2 center =
-        ToVector2(target->GetTranslation()) + target->GetSize() * 0.5f;
+    Vec2 center = ToVector2(target->GetTranslation()) + target->GetSize() * 0.5f;
     return selectionRect.Contains(center);
   }
 
@@ -105,9 +104,9 @@ public:
     static Array<CurveEditing::Draggable*> toSelect;
     toSelect.Clear();
 
-    forRange(CurveObject * curve, mEditor->mCurves.All())
+    forRange (CurveObject* curve, mEditor->mCurves.All())
     {
-      forRange(CurveObject::ControlPoint * target, curve->mControlPoints.All())
+      forRange (CurveObject::ControlPoint* target, curve->mControlPoints.All())
       {
         if (target->TangentsVisible())
         {
@@ -126,7 +125,7 @@ public:
     if (!e->CtrlPressed)
       mEditor->ClearSelection();
 
-    forRange(CurveEditing::Draggable * selected, toSelect.All())
+    forRange (CurveEditing::Draggable* selected, toSelect.All())
     {
       selected->Select();
     }
@@ -141,18 +140,15 @@ CurveDrawer::CurveDrawer(CurveEditor* curveEditor) : Widget(curveEditor)
   mCurveEditor = curveEditor;
 }
 
-void CurveDrawer::RenderUpdate(ViewBlock& viewBlock,
-                               FrameBlock& frameBlock,
-                               Mat4Param parentTx,
-                               ColorTransform colorTx,
-                               WidgetRect clipRect)
+void CurveDrawer::RenderUpdate(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
   if (!mCurveEditor->mEnabled)
     return;
 
-  forRange(CurveObject * curve, mCurveEditor->mCurves.All())
+  forRange (CurveObject* curve, mCurveEditor->mCurves.All())
   {
     AddCurve(viewBlock, frameBlock, clipRect, curve);
     AddControlPoints(viewBlock, frameBlock, clipRect, curve);
@@ -161,10 +157,7 @@ void CurveDrawer::RenderUpdate(ViewBlock& viewBlock,
   }
 }
 
-void CurveDrawer::AddCurve(ViewBlock& viewBlock,
-                           FrameBlock& frameBlock,
-                           WidgetRect clipRect,
-                           CurveObject* curveObject)
+void CurveDrawer::AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, CurveObject* curveObject)
 {
   Array<StreamedVertex> lines;
   Array<StreamedVertex> triangles;
@@ -192,16 +185,9 @@ void CurveDrawer::AddCurve(ViewBlock& viewBlock,
     if (p1.x != p2.x)
       continue;
 
-    AddPoint(lines,
-             triangles,
-             Vec3(p1),
-             CurveEditorUi::ControlPointSize,
-             ToFloatColor(Color::Black),
-             true);
-    lines.PushBack(StreamedVertex(
-        SnapToPixels(Vec3(p1)), Vec2::cZero, ToFloatColor(Color::Black)));
-    lines.PushBack(StreamedVertex(
-        SnapToPixels(Vec3(p2)), Vec2::cZero, ToFloatColor(Color::Black)));
+    AddPoint(lines, triangles, Vec3(p1), CurveEditorUi::ControlPointSize, ToFloatColor(Color::Black), true);
+    lines.PushBack(StreamedVertex(SnapToPixels(Vec3(p1)), Vec2::cZero, ToFloatColor(Color::Black)));
+    lines.PushBack(StreamedVertex(SnapToPixels(Vec3(p2)), Vec2::cZero, ToFloatColor(Color::Black)));
   }
 
   // Curve line segments
@@ -220,8 +206,7 @@ void CurveDrawer::AddCurve(ViewBlock& viewBlock,
     lines.PushBack(StreamedVertex(SnapToPixels(Vec3(p2)), Vec2::cZero, color));
   }
 
-  CreateRenderData(
-      viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
+  CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
 }
 
 void CurveDrawer::AddControlPoints(ViewBlock& viewBlock,
@@ -249,14 +234,10 @@ void CurveDrawer::AddControlPoints(ViewBlock& viewBlock,
       // Draw TangentIn if it's not the first control point
       if (i != 0)
       {
-        Vec3 tanPos =
-            Vec3(cp.GetPixelPosition() + cp.mTangentIn->GetPixelDirection());
+        Vec3 tanPos = Vec3(cp.GetPixelPosition() + cp.mTangentIn->GetPixelDirection());
 
-        tangentLines.PushBack(StreamedVertex(
-            SnapToPixels(Vec3(pos)), Vec2::cZero, ToFloatColor(Color::Black)));
-        tangentLines.PushBack(StreamedVertex(SnapToPixels(Vec3(tanPos)),
-                                             Vec2::cZero,
-                                             ToFloatColor(Color::Black)));
+        tangentLines.PushBack(StreamedVertex(SnapToPixels(Vec3(pos)), Vec2::cZero, ToFloatColor(Color::Black)));
+        tangentLines.PushBack(StreamedVertex(SnapToPixels(Vec3(tanPos)), Vec2::cZero, ToFloatColor(Color::Black)));
 
         Vec4 color = ToFloatColor(curveObject->mCurveColor);
         if (cp.mTangentIn->IsSelected())
@@ -264,24 +245,16 @@ void CurveDrawer::AddControlPoints(ViewBlock& viewBlock,
         if (cp.mTangentIn->mMouseOver)
           color *= Vec4(0.7f, 0.7f, 0.7f, 1);
 
-        AddPoint(pointLines,
-                 pointTriangles,
-                 tanPos,
-                 CurveEditorUi::TangentSize,
-                 color);
+        AddPoint(pointLines, pointTriangles, tanPos, CurveEditorUi::TangentSize, color);
       }
 
       // Draw TangentOut if it's not the last control point
       if (i != controlPoints.Size() - 1)
       {
-        Vec3 tanPos =
-            Vec3(cp.GetPixelPosition() + cp.mTangentOut->GetPixelDirection());
+        Vec3 tanPos = Vec3(cp.GetPixelPosition() + cp.mTangentOut->GetPixelDirection());
 
-        tangentLines.PushBack(StreamedVertex(
-            SnapToPixels(Vec3(pos)), Vec2::cZero, ToFloatColor(Color::Black)));
-        tangentLines.PushBack(StreamedVertex(SnapToPixels(Vec3(tanPos)),
-                                             Vec2::cZero,
-                                             ToFloatColor(Color::Black)));
+        tangentLines.PushBack(StreamedVertex(SnapToPixels(Vec3(pos)), Vec2::cZero, ToFloatColor(Color::Black)));
+        tangentLines.PushBack(StreamedVertex(SnapToPixels(Vec3(tanPos)), Vec2::cZero, ToFloatColor(Color::Black)));
 
         Vec4 color = ToFloatColor(curveObject->mCurveColor);
         if (cp.mTangentOut->IsSelected())
@@ -289,11 +262,7 @@ void CurveDrawer::AddControlPoints(ViewBlock& viewBlock,
         if (cp.mTangentOut->mMouseOver)
           color *= Vec4(0.7f, 0.7f, 0.7f, 1);
 
-        AddPoint(pointLines,
-                 pointTriangles,
-                 tanPos,
-                 CurveEditorUi::TangentSize,
-                 color);
+        AddPoint(pointLines, pointTriangles, tanPos, CurveEditorUi::TangentSize, color);
       }
     }
 
@@ -304,40 +273,22 @@ void CurveDrawer::AddControlPoints(ViewBlock& viewBlock,
       color *= Vec4(0.7f, 0.7f, 0.7f, 1);
 
     // Draw the point
-    AddPoint(pointLines,
-             pointTriangles,
-             Vec3(pos),
-             CurveEditorUi::ControlPointSize,
-             color);
+    AddPoint(pointLines, pointTriangles, Vec3(pos), CurveEditorUi::ControlPointSize, color);
   }
 
-  CreateRenderData(
-      viewBlock, frameBlock, clipRect, tangentLines, PrimitiveType::Lines);
-  CreateRenderData(viewBlock,
-                   frameBlock,
-                   clipRect,
-                   pointTriangles,
-                   PrimitiveType::Triangles);
-  CreateRenderData(
-      viewBlock, frameBlock, clipRect, pointLines, PrimitiveType::Lines);
+  CreateRenderData(viewBlock, frameBlock, clipRect, tangentLines, PrimitiveType::Lines);
+  CreateRenderData(viewBlock, frameBlock, clipRect, pointTriangles, PrimitiveType::Triangles);
+  CreateRenderData(viewBlock, frameBlock, clipRect, pointLines, PrimitiveType::Lines);
 }
 
-void CurveDrawer::AddPoint(Array<StreamedVertex>& lines,
-                           Array<StreamedVertex>& triangles,
-                           Vec3Param pos,
-                           float size,
-                           Vec4 color,
-                           bool empty)
+void CurveDrawer::AddPoint(
+    Array<StreamedVertex>& lines, Array<StreamedVertex>& triangles, Vec3Param pos, float size, Vec4 color, bool empty)
 {
   float halfSize = size * 0.5f;
-  StreamedVertex v0(
-      SnapToPixels(pos + Vec3(-halfSize, -halfSize, 0)), Vec2(0, 0), color);
-  StreamedVertex v1(
-      SnapToPixels(pos + Vec3(-halfSize, halfSize, 0)), Vec2(0, 1), color);
-  StreamedVertex v2(
-      SnapToPixels(pos + Vec3(halfSize, halfSize, 0)), Vec2(1, 1), color);
-  StreamedVertex v3(
-      SnapToPixels(pos + Vec3(halfSize, -halfSize, 0)), Vec2(1, 0), color);
+  StreamedVertex v0(SnapToPixels(pos + Vec3(-halfSize, -halfSize, 0)), Vec2(0, 0), color);
+  StreamedVertex v1(SnapToPixels(pos + Vec3(-halfSize, halfSize, 0)), Vec2(0, 1), color);
+  StreamedVertex v2(SnapToPixels(pos + Vec3(halfSize, halfSize, 0)), Vec2(1, 1), color);
+  StreamedVertex v3(SnapToPixels(pos + Vec3(halfSize, -halfSize, 0)), Vec2(1, 0), color);
 
   if (empty == false)
   {
@@ -373,14 +324,13 @@ CurveObject::CurveObject(CurveEditor* editor) : mEditor(editor)
 
 static Math::PiecewiseFunction sFunction;
 
-void BuildPiecewiseFunction(Math::PiecewiseFunction& function,
-                            CurveObject* curve)
+void BuildPiecewiseFunction(Math::PiecewiseFunction& function, CurveObject* curve)
 {
   function.mError = curve->mError;
   function.Clear();
   function.mControlPoints.Reserve(curve->mControlPoints.Size());
 
-  forRange(CurveEditor::ControlPoint * cp, curve->mControlPoints.All())
+  forRange (CurveEditor::ControlPoint* cp, curve->mControlPoints.All())
   {
     Vec2 position = cp->mGraphPosition;
     Vec2 tanIn = cp->mTangentIn->GetGraphDirection();
@@ -404,7 +354,7 @@ void CurveObject::Clear()
 void CurveObject::Destroy()
 {
   // Remove all selected control points and tangents
-  forRange(ControlPoint * cp, mControlPoints.All())
+  forRange (ControlPoint* cp, mControlPoints.All())
   {
     mEditor->mSelection.Erase(cp);
     mEditor->mSelection.Erase(cp->mTangentIn);
@@ -428,14 +378,12 @@ void CurveObject::GetCurve(Vec3Array& curve)
   curve.Assign(sFunction.GetBakedCurve());
 }
 
-CurveEditing::ControlPoint*
-CurveObject::CreateControlPoint(Vec2Param pos,
-                                Vec2Param tanIn,
-                                Vec2Param tanOut,
-                                CurveEditing::CurveEditorFlags::Type flags)
+CurveEditing::ControlPoint* CurveObject::CreateControlPoint(Vec2Param pos,
+                                                            Vec2Param tanIn,
+                                                            Vec2Param tanOut,
+                                                            CurveEditing::CurveEditorFlags::Type flags)
 {
-  ControlPoint* internalPoint =
-      new ControlPoint(this, pos, tanIn, tanOut, flags);
+  ControlPoint* internalPoint = new ControlPoint(this, pos, tanIn, tanOut, flags);
 
   // Add the point
   AddControlPoint(internalPoint);
@@ -467,8 +415,7 @@ bool CurveObject::IsMouseOver(Vec2Param pixelPos)
     if (mControlPoints.Size() == 1)
     {
       // Bring the control point into pixels
-      Vec2 cpPixelPos =
-          mEditor->ToPixelPosition(mControlPoints.Front()->mGraphPosition);
+      Vec2 cpPixelPos = mEditor->ToPixelPosition(mControlPoints.Front()->mGraphPosition);
 
       // Return whether or not it's within distance
       float xDistance = Math::Abs(cpPixelPos.x - pixelPos.x);
@@ -492,8 +439,7 @@ uint CurveObject::AddControlPoint(ControlPoint* controlPoint)
 CurveEditing::ControlPoint* CurveObject::AddNewControlPoint(Vec2Param pos)
 {
   // Create a new internal control point
-  CurveEditing::ControlPoint* point =
-      new ControlPoint(this, pos, Vec2::cZero, Vec2::cZero);
+  CurveEditing::ControlPoint* point = new ControlPoint(this, pos, Vec2::cZero, Vec2::cZero);
   uint index = AddControlPoint(point);
 
   // Set the tangents
@@ -545,8 +491,7 @@ float CurveObject::GetCurrentLineThickness()
   return mEditor->mDefaultLineThickness;
 }
 
-void CurveObject::DispatchCurveEvent(StringParam eventName,
-                                     ControlPoint* controlPoint)
+void CurveObject::DispatchCurveEvent(StringParam eventName, ControlPoint* controlPoint)
 {
   CurveEvent eventToSend;
   eventToSend.mCurve = this;
@@ -597,9 +542,9 @@ CurveEditor::~CurveEditor()
 
 void CurveEditor::UpdateTransform()
 {
-  forRange(CurveObject * curve, mCurves.All())
+  forRange (CurveObject* curve, mCurves.All())
   {
-    forRange(ControlPoint * cp, curve->mControlPoints.All())
+    forRange (ControlPoint* cp, curve->mControlPoints.All())
     {
       Vec2 halfSize = cp->GetSize() * 0.5f;
       Vec2 pixelPosition = cp->GetPixelPosition() - halfSize;
@@ -665,7 +610,7 @@ float CurveEditor::DisplayTextToGraphY(StringParam displayText)
 
 CurveObject* CurveEditor::GetMouseOverCurve()
 {
-  forRange(CurveObject * curve, mCurves.All())
+  forRange (CurveObject* curve, mCurves.All())
   {
     if (curve->mMouseOverCurve)
       return curve;
@@ -721,14 +666,13 @@ void CurveEditor::DeleteSelected()
 {
   Array<ControlPoint*> selectedControlPoints;
 
-  forRange(Draggable * draggable, mSelection.All())
+  forRange (Draggable* draggable, mSelection.All())
   {
-    if (ControlPoint* controlPoint =
-            Type::DynamicCast<ControlPoint*>(draggable))
+    if (ControlPoint* controlPoint = Type::DynamicCast<ControlPoint*>(draggable))
       selectedControlPoints.PushBack(controlPoint);
   }
 
-  forRange(ControlPoint * controlPoint, selectedControlPoints.All())
+  forRange (ControlPoint* controlPoint, selectedControlPoints.All())
   {
     controlPoint->Delete();
   }
@@ -835,7 +779,7 @@ void CurveEditor::OnDoubleClick(MouseEvent* event)
   if (event->Handled)
     return;
 
-  forRange(CurveObject * curve, mCurves.All())
+  forRange (CurveObject* curve, mCurves.All())
   {
     // Get the position in graph coordinates
     Vec2 pixelPos = ToLocal(event->Position);
@@ -871,12 +815,11 @@ void CurveEditor::OnKeyDown(KeyboardEvent* event)
 
 void CurveEditor::OnLinearTangentsPressed(ObjectEvent* e)
 {
-  forRange(Draggable * draggable, mSelection.All())
+  forRange (Draggable* draggable, mSelection.All())
   {
     // Control points always take priority here. If a control point is selected,
     // both tangents are modified regardless of whether or not they're selected
-    if (ControlPoint* controlPoint =
-            Type::DynamicCast<ControlPoint*>(draggable))
+    if (ControlPoint* controlPoint = Type::DynamicCast<ControlPoint*>(draggable))
     {
       controlPoint->OnLinearTangents(e);
     }
@@ -895,12 +838,11 @@ void CurveEditor::OnLinearTangentsPressed(ObjectEvent* e)
 
 void CurveEditor::OnSplitTangentsPressed(ObjectEvent* e)
 {
-  forRange(Draggable * draggable, mSelection.All())
+  forRange (Draggable* draggable, mSelection.All())
   {
     // Control points always take priority here. If a control point is selected,
     // both tangents are modified regardless of whether or not they're selected
-    if (ControlPoint* controlPoint =
-            Type::DynamicCast<ControlPoint*>(draggable))
+    if (ControlPoint* controlPoint = Type::DynamicCast<ControlPoint*>(draggable))
     {
       controlPoint->OnSplitTangents(e);
     }
@@ -919,12 +861,11 @@ void CurveEditor::OnSplitTangentsPressed(ObjectEvent* e)
 
 void CurveEditor::OnWeightedTangentsPressed(ObjectEvent* e)
 {
-  forRange(Draggable * draggable, mSelection.All())
+  forRange (Draggable* draggable, mSelection.All())
   {
     // Control points always take priority here. If a control point is selected,
     // both tangents are modified regardless of whether or not they're selected
-    if (ControlPoint* controlPoint =
-            Type::DynamicCast<ControlPoint*>(draggable))
+    if (ControlPoint* controlPoint = Type::DynamicCast<ControlPoint*>(draggable))
     {
       controlPoint->OnWeightedTangents(e);
     }
@@ -941,8 +882,7 @@ void CurveEditor::OnWeightedTangentsPressed(ObjectEvent* e)
   }
 }
 
-bool CurveObject::SortByX::operator()(const ControlPoint* left,
-                                      const ControlPoint* right)
+bool CurveObject::SortByX::operator()(const ControlPoint* left, const ControlPoint* right)
 {
   return left->mGraphPosition.x < right->mGraphPosition.x;
 }
@@ -950,11 +890,9 @@ bool CurveObject::SortByX::operator()(const ControlPoint* left,
 namespace CurveEditing
 {
 
-CurveEditorToolbar::CurveEditorToolbar(Composite* parent, float textBoxWidth) :
-    Composite(parent)
+CurveEditorToolbar::CurveEditorToolbar(Composite* parent, float textBoxWidth) : Composite(parent)
 {
-  SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Pixels(0, 0), Thickness(1, 1, 1, 1)));
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(0, 0), Thickness(1, 1, 1, 1)));
 
   Label* labelX = new Label(this);
   labelX->SetText("X:");
@@ -997,7 +935,7 @@ void CurveEditorToolbar::Update()
   Vec2 initial = selection.Front()->GetDisplayPosition();
   Math::BoolVec2 valid(true, true);
   selection.PopFront();
-  forRange(Draggable * draggable, selection)
+  forRange (Draggable* draggable, selection)
   {
     Vec2 current = draggable->GetDisplayPosition();
 
@@ -1024,7 +962,7 @@ void CurveEditorToolbar::Update()
 void CurveEditorToolbar::OnXChanged(Event* e)
 {
   String text = mPositionX->GetText();
-  forRange(Draggable * draggable, allControlPoints())
+  forRange (Draggable* draggable, allControlPoints())
   {
     Vec2 pos = draggable->GetDisplayPosition();
     pos.x = mEditor->DisplayTextToGraphX(text);
@@ -1038,7 +976,7 @@ void CurveEditorToolbar::OnXChanged(Event* e)
 void CurveEditorToolbar::OnYChanged(Event* e)
 {
   String text = mPositionY->GetText();
-  forRange(Draggable * draggable, allControlPoints())
+  forRange (Draggable* draggable, allControlPoints())
   {
     Vec2 pos = draggable->GetDisplayPosition();
     pos.y = mEditor->DisplayTextToGraphY(text);
@@ -1109,17 +1047,15 @@ public:
   HashMap<Draggable*, Vec2> mOffsets;
 
   //****************************************************************************
-  DragManipulator(Mouse* mouse, CurveEditor* editor) :
-      MouseManipulation(mouse, editor->GetRootWidget())
+  DragManipulator(Mouse* mouse, CurveEditor* editor) : MouseManipulation(mouse, editor->GetRootWidget())
   {
     mEditor = editor;
 
     Vec2 graphPixels = mEditor->ToLocal(mouse->GetClientPosition());
 
-    forRange(Draggable * target, mEditor->GetSelection())
+    forRange (Draggable* target, mEditor->GetSelection())
     {
-      Vec2 center =
-          ToVector2(target->GetTranslation()) + target->GetSize() * 0.5f;
+      Vec2 center = ToVector2(target->GetTranslation()) + target->GetSize() * 0.5f;
       Vec2 offset = center - graphPixels;
       mOffsets.Insert(target, offset);
     }
@@ -1130,7 +1066,7 @@ public:
   {
     // We want the position in our parents local space (the curve editor)
     Vec2 graphPixels = mEditor->ToLocal(e->Position);
-    forRange(Draggable * target, mEditor->GetSelection())
+    forRange (Draggable* target, mEditor->GetSelection())
     {
       Vec2 offset = mOffsets.FindValue(target, Vec2::cZero);
       target->MoveTo(graphPixels + offset, mEditor->mClampMouseDrag);
@@ -1144,7 +1080,7 @@ public:
 
     // We want the position in our parents local space (the curve editor)
     Vec2 graphPixels = mEditor->ToLocal(e->Position);
-    forRange(Draggable * target, mEditor->GetSelection())
+    forRange (Draggable* target, mEditor->GetSelection())
     {
       Vec2 offset = mOffsets.FindValue(target, Vec2::cZero);
       target->MoveTo(graphPixels + offset, mEditor->mClampMouseDrag);
@@ -1154,7 +1090,7 @@ public:
   //****************************************************************************
   void OnMouseUp(MouseEvent* e) override
   {
-    forRange(Draggable * target, mEditor->GetSelection())
+    forRange (Draggable* target, mEditor->GetSelection())
     {
       target->FinishedDrag();
     }
@@ -1255,11 +1191,7 @@ ZilchDefineType(ControlPoint, builder, type)
 {
 }
 
-ControlPoint::ControlPoint(CurveObject* curve,
-                           Vec2Param pos,
-                           Vec2Param tanIn,
-                           Vec2Param tanOut,
-                           uint editorFlags) :
+ControlPoint::ControlPoint(CurveObject* curve, Vec2Param pos, Vec2Param tanIn, Vec2Param tanOut, uint editorFlags) :
     Draggable(curve),
     mEditorFlags(editorFlags)
 {
@@ -1267,8 +1199,7 @@ ControlPoint::ControlPoint(CurveObject* curve,
 
   SetNotInLayout(true);
   ConnectThisTo(this, Events::RightMouseUp, OnRightMouseUp);
-  SetSize(Vec2(1, 1) * CurveEditorUi::ControlPointSize *
-          CurveEditorUi::SelectionScale);
+  SetSize(Vec2(1, 1) * CurveEditorUi::ControlPointSize * CurveEditorUi::SelectionScale);
 
   mGraphPosition = pos;
   mTangentIn = new Tangent(curve, this, tanIn, TangentSide::In);
@@ -1287,12 +1218,10 @@ void ControlPoint::UpdateTransform()
   mTangentIn->SetActive(tangentsVisible);
   mTangentOut->SetActive(tangentsVisible);
 
-  SetSize(Vec2(1, 1) * CurveEditorUi::ControlPointSize *
-          CurveEditorUi::SelectionScale);
+  SetSize(Vec2(1, 1) * CurveEditorUi::ControlPointSize * CurveEditorUi::SelectionScale);
 
   Vec2 pixelPos = GetPixelPosition();
-  Vec2 halfSize = Vec2(1, 1) * CurveEditorUi::TangentSize * 0.5f *
-                  CurveEditorUi::SelectionScale;
+  Vec2 halfSize = Vec2(1, 1) * CurveEditorUi::TangentSize * 0.5f * CurveEditorUi::SelectionScale;
 
   Vec2 inPos = pixelPos + mTangentIn->GetPixelDirection() - halfSize;
   mTangentIn->SetTranslation(ToVector3(inPos));
@@ -1394,11 +1323,9 @@ void ControlPoint::UpdateLinearTangents()
   else
   {
     if (index != 0 && InIsLinear())
-      mTangentIn->mGraphDirection =
-          (prev - mGraphPosition).Normalized() * inLength;
+      mTangentIn->mGraphDirection = (prev - mGraphPosition).Normalized() * inLength;
     if (index != mCurve->mControlPoints.Size() - 1 && OutIsLinear())
-      mTangentOut->mGraphDirection =
-          (next - mGraphPosition).Normalized() * outLength;
+      mTangentOut->mGraphDirection = (next - mGraphPosition).Normalized() * outLength;
   }
 
   MarkAsNeedsUpdate();
@@ -1467,8 +1394,7 @@ void ControlPoint::OnSplitTangents(ObjectEvent* event)
     // They are being joined, so both should be on linear
     // if either is already on linear
     if (InIsLinear() || OutIsLinear())
-      mEditorFlags |=
-          (CurveEditorFlags::LinearIn | CurveEditorFlags::LinearOut);
+      mEditorFlags |= (CurveEditorFlags::LinearIn | CurveEditorFlags::LinearOut);
   }
 
   mEditorFlags ^= CurveEditorFlags::TangentsSplit;
@@ -1580,17 +1506,13 @@ ZilchDefineType(Tangent, builder, type)
 {
 }
 
-Tangent::Tangent(CurveObject* curve,
-                 ControlPoint* controlPoint,
-                 Vec2Param direction,
-                 TangentSide::Type side) :
+Tangent::Tangent(CurveObject* curve, ControlPoint* controlPoint, Vec2Param direction, TangentSide::Type side) :
     Draggable(curve)
 {
   ConnectThisTo(this, Events::RightMouseUp, OnRightMouseUp);
 
   SetNotInLayout(true);
-  SetSize(Vec2(1, 1) * CurveEditorUi::TangentSize *
-          CurveEditorUi::SelectionScale);
+  SetSize(Vec2(1, 1) * CurveEditorUi::TangentSize * CurveEditorUi::SelectionScale);
   mControlPoint = controlPoint;
   mSide = side;
 
@@ -1614,8 +1536,7 @@ void Tangent::SetGraphDirection(Vec2Param graphDirection)
     other->mGraphDirection = -mGraphDirection;
 
     // Clear both linear flags if it's not split
-    u32 flagsToClear =
-        (CurveEditorFlags::LinearIn | CurveEditorFlags::LinearOut);
+    u32 flagsToClear = (CurveEditorFlags::LinearIn | CurveEditorFlags::LinearOut);
     mControlPoint->mEditorFlags &= ~(flagsToClear);
   }
   else
@@ -1679,11 +1600,9 @@ void Tangent::SetPixelDirection(Vec2Param pixelDirection, bool clampToScreen)
     if (ControlPoint* cp = mControlPoint->GetNeighborControlPoint(dir))
     {
       Vec2 otherCpPos = cp->GetPixelPosition();
-      float extentPos = (otherCpPos.x * cScalePercent) +
-                        (cpPixelPos.x * (1.0f - cScalePercent));
+      float extentPos = (otherCpPos.x * cScalePercent) + (cpPixelPos.x * (1.0f - cScalePercent));
       float directionRatio = pixelDirection.y / pixelDirection.x;
-      Vec2 newDirection = Vec2(extentPos - cpPixelPos.x,
-                               (extentPos - cpPixelPos.x) * directionRatio);
+      Vec2 newDirection = Vec2(extentPos - cpPixelPos.x, (extentPos - cpPixelPos.x) * directionRatio);
       tangentPixelPos = cpPixelPos + newDirection;
     }
   }
@@ -1750,10 +1669,7 @@ void Tangent::OnRightMouseUp(MouseEvent* e)
     itemSplit = menu->AddEntry("Join");
   else
     itemSplit = menu->AddEntry("Split");
-  Zero::Connect(itemSplit,
-                Events::MenuItemSelected,
-                mControlPoint,
-                &ControlPoint::OnSplitTangents);
+  Zero::Connect(itemSplit, Events::MenuItemSelected, mControlPoint, &ControlPoint::OnSplitTangents);
 
   // Create the linear button
   cstr linearTangentName = "Linear Tangents";

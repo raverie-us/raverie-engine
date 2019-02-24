@@ -134,15 +134,13 @@ Semaphore::Semaphore()
 
 Semaphore::~Semaphore()
 {
-  ZeroGetPrivateData(SemaphorePrivateData)
-      SDL_DestroySemaphore(self->mSemaphore);
+  ZeroGetPrivateData(SemaphorePrivateData) SDL_DestroySemaphore(self->mSemaphore);
   ZeroDestructPrivateData(SemaphorePrivateData);
 }
 
 void Semaphore::Increment()
 {
-  ZeroGetPrivateData(SemaphorePrivateData) int result =
-      SDL_SemPost(self->mSemaphore);
+  ZeroGetPrivateData(SemaphorePrivateData) int result = SDL_SemPost(self->mSemaphore);
   if (result != 0)
     Warn(SDL_GetError());
 }
@@ -193,9 +191,7 @@ InterprocessMutex::~InterprocessMutex()
   ZeroDestructPrivateData(InterprocessMutexPrivateData);
 }
 
-void InterprocessMutex::Initialize(Status& status,
-                                   const char* mutexName,
-                                   bool failIfAlreadyExists)
+void InterprocessMutex::Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists)
 {
   ZeroGetPrivateData(InterprocessMutexPrivateData)
 
@@ -227,14 +223,10 @@ void InterprocessMutex::Initialize(Status& status,
     ++mutexName;
   }
 
-  String sharedMutexPathName =
-      FilePath::Combine(GetTemporaryDirectory(), builder.ToString());
+  String sharedMutexPathName = FilePath::Combine(GetTemporaryDirectory(), builder.ToString());
 
-  self->mFile->Open(sharedMutexPathName,
-                    FileMode::Write,
-                    FileAccessPattern::Sequential,
-                    FileShare::Unspecified,
-                    &status);
+  self->mFile->Open(
+      sharedMutexPathName, FileMode::Write, FileAccessPattern::Sequential, FileShare::Unspecified, &status);
 }
 
 CountdownEvent::CountdownEvent() : mCount(0)

@@ -197,22 +197,19 @@ public:
   }
 
   template <size_t otherSize>
-  friend inline bool operator==(const this_type& left,
-                                const FixedString<otherSize>& right)
+  friend inline bool operator==(const this_type& left, const FixedString<otherSize>& right)
   {
     return strcmp(left.Data(), right.Data()) == 0;
   }
 
   template <size_t otherSize>
-  friend inline bool operator!=(const this_type& left,
-                                const FixedString<otherSize>& right)
+  friend inline bool operator!=(const this_type& left, const FixedString<otherSize>& right)
   {
     return !(left == right);
   }
 
   template <size_t otherSize>
-  friend inline bool operator<(const this_type& left,
-                               const FixedString<otherSize>& right)
+  friend inline bool operator<(const this_type& left, const FixedString<otherSize>& right)
   {
     return strcmp(left.Data(), right.Data()) < 0;
   }

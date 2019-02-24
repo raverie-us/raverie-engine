@@ -295,28 +295,17 @@ public:
   void BakeToAnimation(Animation* animation);
 
   /// Finds a child object with the given path.
-  TrackNode* GetObjectTrack(TrackNode* root,
-                            StringTokenRange pathRange,
-                            String currPath,
-                            bool createNew = true);
+  TrackNode* GetObjectTrack(TrackNode* root, StringTokenRange pathRange, String currPath, bool createNew = true);
   TrackNode* GetObjectTrack(StringRange path, bool createNew = true);
-  TrackNode* GetPropertyTrack(TrackNode* objectTrack,
-                              StringParam path,
-                              BoundType* targetMeta,
-                              bool createNew = true);
+  TrackNode* GetPropertyTrack(TrackNode* objectTrack, StringParam path, BoundType* targetMeta, bool createNew = true);
 
   /// Searches the direct children of the given track
   TrackNode* GetDirectChildTrack(TrackNode* parent, StringParam path);
-  TrackNode* GetComponentTrack(TrackNode* objectTrack,
-                               StringParam component,
-                               BoundType* targetMeta,
-                               bool createNew = true);
+  TrackNode*
+  GetComponentTrack(TrackNode* objectTrack, StringParam component, BoundType* targetMeta, bool createNew = true);
 
-  TrackNode* GetPropertyTrack(Cog* object,
-                              Cog* animGraphObject,
-                              BoundType* componentType,
-                              StringParam propertyName,
-                              bool createNew = true);
+  TrackNode* GetPropertyTrack(
+      Cog* object, Cog* animGraphObject, BoundType* componentType, StringParam propertyName, bool createNew = true);
 
   /// Returns a key frame from the given id.
   KeyFrame* GetKeyFrame(TrackKeyFrameId id);

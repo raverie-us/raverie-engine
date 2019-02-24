@@ -54,8 +54,7 @@ BugReporter::BugReporter(Composite* parent) : Composite(parent)
   new Label(this, cText, "Include File:");
 
   auto fileRow = new Composite(this);
-  fileRow->SetLayout(CreateStackLayout(
-      LayoutDirection::RightToLeft, Vec2::cZero, Thickness::cZero));
+  fileRow->SetLayout(CreateStackLayout(LayoutDirection::RightToLeft, Vec2::cZero, Thickness::cZero));
 
   mBrowse = new TextButton(fileRow);
   mBrowse->SetText("Browse...");
@@ -195,9 +194,7 @@ void BugReporter::OnSend(Event* event)
   job->mRepro = mRepro->GetAllText();
   job->mIncludedFile = mIncludeFile->GetText();
 
-  job->mReportType =
-      mSelectorButton->mButtons[mSelectorButton->GetSelectedItem()]
-          ->mButtonText->GetText();
+  job->mReportType = mSelectorButton->mButtons[mSelectorButton->GetSelectedItem()]->mButtonText->GetText();
 
   OsShell* shell = Z::gEngine->has(OsShell);
 
@@ -334,10 +331,9 @@ void BugReportJob::OnWebResponseComplete(WebResponseEvent* event)
     // latest bug reports
     if (taskIdMatches.Empty())
     {
-      String message = String::Format(
-          "ZeroHub returned success, but did not include a TaskID. Please "
-          "visit %s to find your task, or contact a ZeroHub administrator.",
-          Urls::cUserLatestIssues);
+      String message = String::Format("ZeroHub returned success, but did not include a TaskID. Please "
+                                      "visit %s to find your task, or contact a ZeroHub administrator.",
+                                      Urls::cUserLatestIssues);
       DoNotifyWarning("Bug Reporter", message);
       return;
     }

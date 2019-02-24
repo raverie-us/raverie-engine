@@ -123,12 +123,12 @@ void Record::Update()
 
 void Record::AverageRunningSample()
 {
-  mSamples[sSampleIndex] =
-      mRunningSample / (float)(mRunningCount != 0 ? mRunningCount : 1);
+  mSamples[sSampleIndex] = mRunningSample / (float)(mRunningCount != 0 ? mRunningCount : 1);
   mRunningSample = 0.0f;
   mRunningCount = 0;
 
-  forRange(Record & record, GetChildren()) record.AverageRunningSample();
+  forRange (Record& record, GetChildren())
+    record.AverageRunningSample();
 }
 
 float Record::Average()
@@ -183,9 +183,7 @@ void PrintProfileGraph(Record* record, double total, int level)
   for (int i = 0; i < level; ++i)
     DebugPrint("\t");
 
-  DebugPrint("%s : %3.2f\n",
-             record->GetName(),
-             ((double)record->GetTotalTime() / total) * 100.0);
+  DebugPrint("%s : %3.2f\n", record->GetName(), ((double)record->GetTotalTime() / total) * 100.0);
   InListBaseLink<Profile::Record>::range records = record->GetChildren();
 
   while (!records.Empty())
@@ -198,8 +196,7 @@ void PrintProfileGraph(Record* record, double total, int level)
 
 void PrintProfileGraph()
 {
-  Array<Profile::Record*>::range records =
-      Profile::ProfileSystem::Instance->GetRecords();
+  Array<Profile::Record*>::range records = Profile::ProfileSystem::Instance->GetRecords();
   Record* root = records.Front();
   PrintProfileGraph(root, (double)root->GetTotalTime(), 0);
 }

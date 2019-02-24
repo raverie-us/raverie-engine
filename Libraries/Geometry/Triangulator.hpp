@@ -53,9 +53,6 @@ bool Triangulate(const Zero::Array<Vec2>& vertices, Zero::Array<uint>* indices);
 //  Internal (for debugging)
 //
 
-bool BuildSet(const Zero::TrapezoidMap& map,
-              Zero::Array<uint>* indices,
-              s32 seed,
-              FillRule::Type rule);
+bool BuildSet(const Zero::TrapezoidMap& map, Zero::Array<uint>* indices, s32 seed, FillRule::Type rule);
 
 } // namespace Geometry

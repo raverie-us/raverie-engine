@@ -11,8 +11,7 @@ DefineEvent(ImportOptionsModified);
 
 String SanitizeContentFilename(StringParam filename)
 {
-  String sanitizedName =
-      Cog::SanitizeName(FilePath::GetFileNameWithoutExtension(filename));
+  String sanitizedName = Cog::SanitizeName(FilePath::GetFileNameWithoutExtension(filename));
   return BuildString(sanitizedName, ".", FilePath::GetExtension(filename));
 }
 
@@ -23,8 +22,7 @@ ZilchDefineType(ImageOptions, builder, type)
   type->HandleManager = ZilchManagerId(PointerManager);
 
   ZeroBindExpanded();
-  ZilchBindFieldProperty(mImportImages)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindFieldProperty(mImportImages)->AddAttribute(PropertyAttributes::cInvalidatesObject);
 }
 
 ImageOptions::ImageOptions(ImportOptions* owner) : mOwner(owner)
@@ -40,13 +38,11 @@ ZilchDefineType(GeometryOptions, builder, type)
 
   ZeroBindExpanded();
 
-  ZilchBindFieldProperty(mImportMeshes)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindFieldProperty(mImportMeshes)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindFieldProperty(mGenerateSmoothNormals)
       ->AddAttributeChainable(PropertyAttributes::cInvalidatesObject)
       ->ZeroFilterBool(mImportMeshes);
-  ZilchBindFieldProperty(mSmoothingAngleDegreesThreshold)
-      ->Add(new ShowNormalGenerationOptionsFilter());
+  ZilchBindFieldProperty(mSmoothingAngleDegreesThreshold)->Add(new ShowNormalGenerationOptionsFilter());
   ZilchBindFieldProperty(mGenerateTangentSpace)->ZeroFilterBool(mImportMeshes);
   ZilchBindFieldProperty(mInvertUvYAxis)->ZeroFilterBool(mImportMeshes);
   ZilchBindFieldProperty(mFlipWindingOrder)->ZeroFilterBool(mImportMeshes);
@@ -58,13 +54,10 @@ ZilchDefineType(GeometryOptions, builder, type)
   ZilchBindFieldProperty(mImportTextures);
 
   ZilchBindFieldProperty(mOriginOffset);
-  ZilchBindFieldProperty(mScaleConversion)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindFieldProperty(mScaleConversion)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindFieldProperty(mScaleFactor)
-      ->ZeroFilterEquality(
-          mScaleConversion, ScaleConversion::Enum, ScaleConversion::Custom);
-  ZilchBindFieldProperty(mChangeBasis)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+      ->ZeroFilterEquality(mScaleConversion, ScaleConversion::Enum, ScaleConversion::Custom);
+  ZilchBindFieldProperty(mChangeBasis)->AddAttribute(PropertyAttributes::cInvalidatesObject);
 
   ZilchBindFieldProperty(mXBasisTo)->ZeroFilterBool(mChangeBasis);
   ZilchBindFieldProperty(mYBasisTo)->ZeroFilterBool(mChangeBasis);
@@ -100,11 +93,9 @@ ZilchDefineType(ShowNormalGenerationOptionsFilter, builder, type)
 {
 }
 
-bool ShowNormalGenerationOptionsFilter::Filter(Member* prop,
-                                               HandleParam instance)
+bool ShowNormalGenerationOptionsFilter::Filter(Member* prop, HandleParam instance)
 {
-  GeometryOptions* options =
-      instance.Get<GeometryOptions*>(GetOptions::AssertOnNull);
+  GeometryOptions* options = instance.Get<GeometryOptions*>(GetOptions::AssertOnNull);
   return options->mImportMeshes && options->mGenerateSmoothNormals;
 }
 
@@ -199,8 +190,7 @@ void ImportOptions::Initialize(Array<String>& files, ContentLibrary* library)
     String fileName = SanitizeContentFilename(originalFilename);
 
     // Check to see if the filename contained any valid characters
-    if (fileName == Zilch::EmptyUpperIdentifier &&
-        !originalFilename.Contains(Zilch::EmptyUpperIdentifier))
+    if (fileName == Zilch::EmptyUpperIdentifier && !originalFilename.Contains(Zilch::EmptyUpperIdentifier))
     {
       invalidFiles.PushBack(originalFilename);
       continue;
@@ -221,9 +211,8 @@ void ImportOptions::Initialize(Array<String>& files, ContentLibrary* library)
     for (unsigned i = 1; i < invalidFiles.Size(); ++i)
       builder.AppendFormat(", %s", invalidFiles[i].c_str());
 
-    String errorMessage = String::Format(
-        "The following files do not contain any valid characters: %s",
-        builder.ToString().c_str());
+    String errorMessage =
+        String::Format("The following files do not contain any valid characters: %s", builder.ToString().c_str());
     DoNotifyError("File Import Failed", errorMessage);
   }
 
@@ -231,10 +220,7 @@ void ImportOptions::Initialize(Array<String>& files, ContentLibrary* library)
 }
 
 template <typename ClassType>
-void BuildContentOptions(ClassType** object,
-                         ImportOptions* owner,
-                         HashSet<String>& set,
-                         StringParam ContentType)
+void BuildContentOptions(ClassType** object, ImportOptions* owner, HashSet<String>& set, StringParam ContentType)
 {
   if (set.FindValue(ContentType, "None") != "None")
   {
@@ -257,8 +243,7 @@ void InsertExtension(Array<String>& files, HashSet<String>& set)
     extension = extension.ToLower();
 
     // Check known extensions
-    ContentTypeEntry* entry =
-        Z::gContentSystem->CreatorsByExtension.FindPointer(extension);
+    ContentTypeEntry* entry = Z::gContentSystem->CreatorsByExtension.FindPointer(extension);
     if (entry)
       set.Insert(entry->Meta->Name);
   }
@@ -285,8 +270,7 @@ void ImportOptions::BuildOptions()
 bool ImportOptions::ShouldAutoImport()
 {
   // If any options are present, we cannot auto import
-  return !(mImageOptions || mGeometryOptions || mAudioOptions ||
-           mConflictOptions);
+  return !(mImageOptions || mGeometryOptions || mAudioOptions || mConflictOptions);
 }
 
 } // namespace Zero

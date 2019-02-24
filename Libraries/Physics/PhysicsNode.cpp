@@ -156,8 +156,7 @@ void PhysicsNode::QueueSelf()
               "Action was queued on a dead queue. Make sure all changes are "
               "done before removing the owner.");
 
-    mQueue.mBroadPhaseAction.SetState(
-        Physics::BroadPhaseAction::CurrStateQueued);
+    mQueue.mBroadPhaseAction.SetState(Physics::BroadPhaseAction::CurrStateQueued);
   }
 }
 

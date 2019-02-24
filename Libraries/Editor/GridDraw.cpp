@@ -122,8 +122,7 @@ void GridDraw::Draw()
   Vec3 translation = Vec3(0, 0, 0);
   int highlightOffsets[] = {0, 0, 0};
 
-  Cog* camera =
-      this->GetSpace()->FindObjectByName(SpecialCogNames::EditorCamera);
+  Cog* camera = this->GetSpace()->FindObjectByName(SpecialCogNames::EditorCamera);
   if (camera && mFollowEditorCamera)
   {
     tx = nullptr;
@@ -181,9 +180,7 @@ void GridDraw::Draw()
           continue;
 
         ByteColor color = gridColor;
-        if ((currentLine + highlightOffsets[currentAxis]) %
-                mHighlightInterval ==
-            0)
+        if ((currentLine + highlightOffsets[currentAxis]) % mHighlightInterval == 0)
           color = gridHighlight;
 
         // Put the start and end points of the line right at the center

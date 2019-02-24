@@ -33,9 +33,7 @@ unsigned Resampler::GetOutputFrameCount(unsigned inputFrames)
   return (unsigned)frames;
 }
 
-void Resampler::SetInputBuffer(const float* inputSamples,
-                               unsigned frameCount,
-                               unsigned channels)
+void Resampler::SetInputBuffer(const float* inputSamples, unsigned frameCount, unsigned channels)
 {
   InputSamples = inputSamples;
   InputFrames = frameCount;
@@ -69,8 +67,7 @@ bool Resampler::GetNextFrame(float* output)
 
   // Interpolate between the two frames for each channel
   for (unsigned i = 0; i < InputChannels; ++i)
-    output[i] = firstFrame[i] + ((secondFrame[i] - firstFrame[i]) *
-                                 (float)(ResampleFrameIndex - frameIndex));
+    output[i] = firstFrame[i] + ((secondFrame[i] - firstFrame[i]) * (float)(ResampleFrameIndex - frameIndex));
 
   // Advance the frame index
   ResampleFrameIndex += ResampleFactor;
@@ -79,9 +76,7 @@ bool Resampler::GetNextFrame(float* output)
   if ((unsigned)ResampleFrameIndex >= InputFrames)
   {
     // Get the last frame of samples in the buffer
-    memcpy(PreviousFrame,
-           InputSamples + ((InputFrames - 1) * InputChannels),
-           sizeof(float) * InputChannels);
+    memcpy(PreviousFrame, InputSamples + ((InputFrames - 1) * InputChannels), sizeof(float) * InputChannels);
     return false;
   }
   else

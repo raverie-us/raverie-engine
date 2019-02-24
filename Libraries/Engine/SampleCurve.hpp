@@ -34,10 +34,7 @@ public:
 
   /// Adds a control point.
   uint AddControlPoint(Vec2Param pos, Vec2Param tanIn, uint editorFlags = 0);
-  uint AddControlPoint(Vec2Param pos,
-                       Vec2Param tanIn,
-                       Vec2Param tanOut,
-                       uint editorFlags = 0);
+  uint AddControlPoint(Vec2Param pos, Vec2Param tanIn, Vec2Param tanOut, uint editorFlags = 0);
 
   /// Clears all control points in the curve
   void Clear();
@@ -74,10 +71,7 @@ public:
     {
       EditorFlags = 0;
     }
-    ControlPoint(Vec2Param pos,
-                 Vec2Param tanIn,
-                 Vec2Param tanOut,
-                 uint editorFlags = 0);
+    ControlPoint(Vec2Param pos, Vec2Param tanIn, Vec2Param tanOut, uint editorFlags = 0);
 
     /// Used for detecting piecewise curves.
     bool operator==(const ControlPoint& rhs);

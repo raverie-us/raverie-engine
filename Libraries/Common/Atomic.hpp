@@ -40,9 +40,7 @@ bool AtomicCompareExchange(volatile s8* target, s8 value, s8 comparison);
 bool AtomicCompareExchange(volatile s16* target, s16 value, s16 comparison);
 bool AtomicCompareExchange(volatile s32* target, s32 value, s32 comparison);
 bool AtomicCompareExchange(volatile s64* target, s64 value, s64 comparison);
-bool AtomicCompareExchange(void* volatile* target,
-                           void* value,
-                           void* comparison);
+bool AtomicCompareExchange(void* volatile* target, void* value, void* comparison);
 
 /// Adds the specified value to the value stored in target
 /// Returns the previous value stored in target
@@ -171,14 +169,12 @@ public:
   /// Returns the previous value
   value_type Exchange(value_type value)
   {
-    underlying_type result =
-        AtomicExchange(&mValue, reinterpret_cast<underlying_type&>(value));
+    underlying_type result = AtomicExchange(&mValue, reinterpret_cast<underlying_type&>(value));
     return reinterpret_cast<value_type&>(result);
   }
   value_type Exchange(value_type value) volatile
   {
-    underlying_type result =
-        AtomicExchange(&mValue, reinterpret_cast<underlying_type&>(value));
+    underlying_type result = AtomicExchange(&mValue, reinterpret_cast<underlying_type&>(value));
     return reinterpret_cast<value_type&>(result);
   }
 
@@ -187,16 +183,12 @@ public:
   value_type CompareExchange(value_type value, value_type comparison)
   {
     return AtomicCompareExchange(
-        &mValue,
-        reinterpret_cast<underlying_type&>(value),
-        reinterpret_cast<underlying_type&>(comparison));
+        &mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison));
   }
   value_type CompareExchange(value_type value, value_type comparison) volatile
   {
     return AtomicCompareExchange(
-        &mValue,
-        reinterpret_cast<underlying_type&>(value),
-        reinterpret_cast<underlying_type&>(comparison));
+        &mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison));
   }
 
   //
@@ -207,14 +199,12 @@ public:
   /// Returns the previous value
   value_type FetchAdd(value_type value)
   {
-    underlying_type result =
-        AtomicFetchAdd(&mValue, reinterpret_cast<underlying_type&>(value));
+    underlying_type result = AtomicFetchAdd(&mValue, reinterpret_cast<underlying_type&>(value));
     return reinterpret_cast<value_type&>(result);
   }
   value_type FetchAdd(value_type value) volatile
   {
-    underlying_type result =
-        AtomicFetchAdd(&mValue, reinterpret_cast<underlying_type&>(value));
+    underlying_type result = AtomicFetchAdd(&mValue, reinterpret_cast<underlying_type&>(value));
     return reinterpret_cast<value_type&>(result);
   }
 
@@ -222,14 +212,12 @@ public:
   /// Returns the previous value
   value_type FetchSubtract(value_type value)
   {
-    underlying_type result =
-        AtomicFetchSubtract(&mValue, reinterpret_cast<underlying_type&>(value));
+    underlying_type result = AtomicFetchSubtract(&mValue, reinterpret_cast<underlying_type&>(value));
     return reinterpret_cast<value_type&>(result);
   }
   value_type FetchSubtract(value_type value) volatile
   {
-    underlying_type result =
-        AtomicFetchSubtract(&mValue, reinterpret_cast<underlying_type&>(value));
+    underlying_type result = AtomicFetchSubtract(&mValue, reinterpret_cast<underlying_type&>(value));
     return reinterpret_cast<value_type&>(result);
   }
 
@@ -380,14 +368,12 @@ public:
   /// Returns the previous value
   value_type Exchange(value_type value)
   {
-    underlying_type result =
-        AtomicExchange(&mValue, reinterpret_cast<underlying_type&>(value));
+    underlying_type result = AtomicExchange(&mValue, reinterpret_cast<underlying_type&>(value));
     return reinterpret_cast<value_type&>(result);
   }
   value_type Exchange(value_type value) volatile
   {
-    underlying_type result =
-        AtomicExchange(&mValue, reinterpret_cast<underlying_type&>(value));
+    underlying_type result = AtomicExchange(&mValue, reinterpret_cast<underlying_type&>(value));
     return reinterpret_cast<value_type&>(result);
   }
 
@@ -396,16 +382,12 @@ public:
   bool CompareExchange(value_type value, value_type comparison)
   {
     return AtomicCompareExchange(
-        &mValue,
-        reinterpret_cast<underlying_type&>(value),
-        reinterpret_cast<underlying_type&>(comparison));
+        &mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison));
   }
   bool CompareExchange(value_type value, value_type comparison) volatile
   {
     return AtomicCompareExchange(
-        &mValue,
-        reinterpret_cast<underlying_type&>(value),
-        reinterpret_cast<underlying_type&>(comparison));
+        &mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison));
   }
 
 private:

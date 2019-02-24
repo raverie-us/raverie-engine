@@ -15,8 +15,7 @@ bool AnyNewLine(Rune rune)
 // character > 255 quick fix for UTF8 needs to be improved to be accurate
 bool IsPrintable(Rune rune)
 {
-  return (rune >= 32 && rune < 127) || rune == 169 || rune == 149 ||
-         rune == 245 || rune > 255;
+  return (rune >= 32 && rune < 127) || rune == 169 || rune == 149 || rune == 245 || rune > 255;
 }
 
 RenderFont::RenderFont(Font* fontObject, int fontHeight) :
@@ -34,9 +33,7 @@ RenderFont::~RenderFont()
 {
 }
 
-Vec2 RenderFont::MeasureText(StringRange text,
-                             uint runesToCount,
-                             float unitsPerPixel)
+Vec2 RenderFont::MeasureText(StringRange text, uint runesToCount, float unitsPerPixel)
 {
   Vec2 size = Vec2(0.0f, mLineHeight * unitsPerPixel);
   uint count = Math::Min(runesToCount, (uint)text.ComputeRuneCount());
@@ -72,10 +69,7 @@ Vec2 RenderFont::MeasureText(StringRange text, float unitsPerPixel)
   return MeasureText(text, text.SizeInBytes(), unitsPerPixel);
 }
 
-uint RenderFont::GetPosition(StringRange text,
-                             float offset,
-                             float unitsPerPixel,
-                             TextRounding::Enum rounding)
+uint RenderFont::GetPosition(StringRange text, float offset, float unitsPerPixel, TextRounding::Enum rounding)
 {
   float width = 0.0f;
   float lastWidth = 0.0f;
@@ -139,8 +133,7 @@ RenderRune& RenderFont::GetRenderRune(Rune rune)
     // this if a fail safe as this should never be the case
     if (renderRune == nullptr)
     {
-      DoNotifyWarning("Unsupported Rune",
-                      "New rune failed to render for the selected font");
+      DoNotifyWarning("Unsupported Rune", "New rune failed to render for the selected font");
       renderRune = mRunes.FindPointer('?');
     }
 
@@ -236,8 +229,7 @@ FontManager::~FontManager()
 {
 }
 
-FontManager::FontManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+FontManager::FontManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   AddLoader("Font", new FontLoaderTtf());
   mCategory = "Graphics";
@@ -294,10 +286,8 @@ RenderFont* FontRasterizer::RasterNewFont(int fontHeight)
   else
   {
     // get all existing rune codes rasterized for this font so far
-    RenderFont* existingRenderFont =
-        mFontObject->mRendered.All().Front().second;
-    HashMap<int, RenderRune>::keyrange runeCodeRange =
-        existingRenderFont->mRunes.Keys();
+    RenderFont* existingRenderFont = mFontObject->mRendered.All().Front().second;
+    HashMap<int, RenderRune>::keyrange runeCodeRange = existingRenderFont->mRunes.Keys();
 
     while (!runeCodeRange.Empty())
     {
@@ -314,8 +304,7 @@ RenderFont* FontRasterizer::RasterNewFont(int fontHeight)
   return renderFont;
 }
 
-RenderFont* FontRasterizer::UpdateRasteredFont(RenderFont* existingFont,
-                                               Array<int>& newRuneCodes)
+RenderFont* FontRasterizer::UpdateRasteredFont(RenderFont* existingFont, Array<int>& newRuneCodes)
 {
   SetRenderFont(existingFont);
   LoadFontFace(existingFont->mFontHeight);
@@ -344,8 +333,7 @@ RenderFont* FontRasterizer::UpdateRasteredFont(RenderFont* existingFont,
 }
 
 // For ease of use when adding just one new rune code
-Zero::RenderFont* FontRasterizer::UpdateRasteredFont(RenderFont* existingFont,
-                                                     Rune newRuneCode)
+Zero::RenderFont* FontRasterizer::UpdateRasteredFont(RenderFont* existingFont, Rune newRuneCode)
 {
   Array<int> runeCodes;
   runeCodes.PushBack(newRuneCode.value);
@@ -379,25 +367,16 @@ void FontRasterizer::LoadFontFace(int fontHeight)
   // because freetype continues to reference it.
   mFontSource = ReadFileIntoDataBlock(mFontObject->LoadPath.c_str());
   // Create the font face from the file data now stored in memory
-  int errorCode = FT_New_Memory_Face(mData->Library,
-                                     mFontSource.Data,
-                                     mFontSource.Size,
-                                     faceIndex,
-                                     &mData->FontFace);
+  int errorCode = FT_New_Memory_Face(mData->Library, mFontSource.Data, mFontSource.Size, faceIndex, &mData->FontFace);
 
-  ErrorIf(errorCode == FT_Err_Unknown_File_Format,
-          nullptr,
-          "File is not a valid font file.");
+  ErrorIf(errorCode == FT_Err_Unknown_File_Format, nullptr, "File is not a valid font file.");
   ErrorIf(errorCode != 0, nullptr, "Bad file or path.");
 
   errorCode = FT_Set_Pixel_Sizes(mData->FontFace, 0, fontHeight);
   ErrorIf(errorCode != 0, nullptr, "Pixel size failed for some reason.");
 
   FT_Select_Charmap(mData->FontFace, FT_ENCODING_UNICODE);
-  ErrorIf(errorCode != 0,
-          nullptr,
-          "Failed to set unicode charmap for %s.",
-          mFontObject->LoadPath.c_str());
+  ErrorIf(errorCode != 0, nullptr, "Failed to set unicode charmap for %s.", mFontObject->LoadPath.c_str());
 }
 
 void FontRasterizer::CollectRenderGlyphInfo(Array<int>& runeCodes)
@@ -418,8 +397,7 @@ void FontRasterizer::CollectRenderGlyphInfo(Array<int>& runeCodes)
       RenderGlyph curGlyph;
       curGlyph.RuneCode = rune.value;
 
-      FT_UInt glyphIndex =
-          FT_Get_Char_Index(mData->FontFace, UTF8::Utf8ToUtf32(rune));
+      FT_UInt glyphIndex = FT_Get_Char_Index(mData->FontFace, UTF8::Utf8ToUtf32(rune));
 
       if (glyphIndex == cMissingGlyphIndex)
       {
@@ -521,8 +499,7 @@ void FontRasterizer::LoadGlyphsOntoTexture(bool isOriginalTexture)
         // copy the data into an image to upload to the existing texture
         for (int x = 0; x < stripWidth; ++x)
           for (int y = 0; y < stripHeight; ++y)
-            subImage.SetPixel(
-                x, y, mFontImage.GetPixel(stripX + x, stripY + y));
+            subImage.SetPixel(x, y, mFontImage.GetPixel(stripX + x, stripY + y));
 
         // upload to the texture
         texture->SubUpload(subImage, stripStartX, stripStartY);
@@ -541,19 +518,13 @@ void FontRasterizer::LoadGlyphsOntoTexture(bool isOriginalTexture)
     int textureSize = mRenderFont->mTextureSize;
     texture = Texture::CreateRuntime();
     texture->mFiltering = TextureFiltering::Bilinear;
-    texture->Upload(textureSize,
-                    textureSize,
-                    TextureFormat::RGBA8,
-                    (byte*)mFontImage.Data,
-                    mFontImage.SizeInBytes);
+    texture->Upload(textureSize, textureSize, TextureFormat::RGBA8, (byte*)mFontImage.Data, mFontImage.SizeInBytes);
 
     // None of these steps should be repeated for new textures altogether
     // Load all the data into the Rendered Font
-    mRenderFont->mDescent =
-        -(float)FtToPixels(mData->FontFace->size->metrics.descender);
+    mRenderFont->mDescent = -(float)FtToPixels(mData->FontFace->size->metrics.descender);
     mRenderFont->mFontHeight = fontHeight;
-    mRenderFont->mLineHeight =
-        (float)FtToPixels(mData->FontFace->size->metrics.height);
+    mRenderFont->mLineHeight = (float)FtToPixels(mData->FontFace->size->metrics.height);
 
     // Clear all default characters
     mRenderFont->mRunes[cEmptyRuneIndex].Rect.BotRight = Vec2(1, 1);
@@ -566,8 +537,7 @@ void FontRasterizer::LoadGlyphsOntoTexture(bool isOriginalTexture)
     FT_UInt glyph_index = FT_Get_Char_Index(mData->FontFace, cEmptyRuneIndex);
     errorCode = FT_Load_Glyph(mData->FontFace, glyph_index, FT_LOAD_DEFAULT);
     FT_GlyphSlot glyphSlot = mData->FontFace->glyph;
-    mRenderFont->mRunes[cEmptyRuneIndex].Advance =
-        (float)FtToPixels(glyphSlot->advance.x);
+    mRenderFont->mRunes[cEmptyRuneIndex].Advance = (float)FtToPixels(glyphSlot->advance.x);
 
     // If the hashmap resizes during an assignment the returned reference will
     // be invalid so we need a copy here for assignment below.
@@ -583,13 +553,13 @@ void FontRasterizer::LoadGlyphsOntoTexture(bool isOriginalTexture)
 
   // Set all unprintable rune codes to the empty rune
   RenderRune emptyRune = mRenderFont->mRunes[cEmptyRuneIndex];
-  forRange(int runeCode, mUnprintableRuneCodes.All())
+  forRange (int runeCode, mUnprintableRuneCodes.All())
   {
     mRenderFont->mRunes[runeCode] = emptyRune;
   }
   // Set all invalid runes for the current font to a ?
   RenderRune missingRune = mRenderFont->mRunes['?'];
-  forRange(int runeCode, mInvalidRuneCodes.All())
+  forRange (int runeCode, mInvalidRuneCodes.All())
   {
     mRenderFont->mRunes[runeCode] = missingRune;
   }
@@ -627,8 +597,7 @@ void FontRasterizer::ComputeAndRasterizeGlyphs()
 
     // retrieve glyph index from character code
     FT_UInt glyph_index;
-    glyph_index = FT_Get_Char_Index(mData->FontFace,
-                                    UTF8::Utf8ToUtf32(Rune(curGlyph.RuneCode)));
+    glyph_index = FT_Get_Char_Index(mData->FontFace, UTF8::Utf8ToUtf32(Rune(curGlyph.RuneCode)));
 
     // load glyph image into the slot
     errorCode = FT_Load_Glyph(mData->FontFace, glyph_index, FT_LOAD_DEFAULT);
@@ -646,8 +615,7 @@ void FontRasterizer::ComputeAndRasterizeGlyphs()
     curGlyph.X = texPosX;
     curGlyph.Y = texPosY;
     curGlyph.DrawOffsetX = FtToPixels(glyphSlot->metrics.horiBearingX);
-    curGlyph.DrawOffsetY =
-        FtToPixels(-glyphSlot->metrics.horiBearingY) + fontHeight;
+    curGlyph.DrawOffsetY = FtToPixels(-glyphSlot->metrics.horiBearingY) + fontHeight;
     curGlyph.AdvanceX = FtToPixels(glyphSlot->advance.x);
 
     // Raster the glyph to the image
@@ -677,10 +645,9 @@ void FontRasterizer::ComputeGlyphTextureCoordinates()
     r->Offset = Vec2(float(curGlyph.DrawOffsetX), float(curGlyph.DrawOffsetY));
     r->Advance = float(curGlyph.AdvanceX);
 
-    r->Rect.TopLeft =
-        Vec2(float(curGlyph.X) / texSize, float(curGlyph.Y) / texSize);
-    r->Rect.BotRight = Vec2(float(curGlyph.X + curGlyph.Width) / texSize,
-                            float(curGlyph.Y + curGlyph.Height) / texSize);
+    r->Rect.TopLeft = Vec2(float(curGlyph.X) / texSize, float(curGlyph.Y) / texSize);
+    r->Rect.BotRight =
+        Vec2(float(curGlyph.X + curGlyph.Width) / texSize, float(curGlyph.Y + curGlyph.Height) / texSize);
   }
 }
 
@@ -723,8 +690,7 @@ bool FontRasterizer::RoomOnTextureForRunes(int xPos, int yPos)
   int currentColumn = (xPos / mRenderFont->mMaxWidthInPixels) + 1;
   int currentRow = (yPos / mRenderFont->mMaxHeightInPixels) + 1;
 
-  uint runeSlotsLeft = (totalColumns * (totalRows - currentRow)) +
-                       (totalColumns - currentColumn);
+  uint runeSlotsLeft = (totalColumns * (totalRows - currentRow)) + (totalColumns - currentColumn);
 
   return runeSlotsLeft >= mGlyphInfo.Size();
 }

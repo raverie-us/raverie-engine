@@ -119,8 +119,7 @@ class SliderManipulation : public MouseManipulation
 {
 public:
   //****************************************************************************
-  SliderManipulation(Mouse* mouse, Composite* owner, Slider* sliderTarget) :
-      MouseManipulation(mouse, owner)
+  SliderManipulation(Mouse* mouse, Composite* owner, Slider* sliderTarget) : MouseManipulation(mouse, owner)
   {
     mSliderTarget = sliderTarget;
     UpdateToMouse(mouse);
@@ -156,8 +155,7 @@ ZilchDefineType(Slider, builder, type)
 {
 }
 
-Slider::Slider(Composite* parent, SliderType::Type sliderType) :
-    Composite(parent)
+Slider::Slider(Composite* parent, SliderType::Type sliderType) : Composite(parent)
 {
   mType = sliderType;
 

@@ -83,10 +83,8 @@ Handle::Handle(const Any& other)
   else if (other.StoredType->IsValue())
   {
     // Just get a pointer to the value inside the variant
-    HandleManager* manager = HandleManagers::GetInstance().GetManager(
-        ZilchManagerId(PointerManager));
-    this->Initialize(
-        other.GetData(), static_cast<BoundType*>(other.StoredType), manager);
+    HandleManager* manager = HandleManagers::GetInstance().GetManager(ZilchManagerId(PointerManager));
+    this->Initialize(other.GetData(), static_cast<BoundType*>(other.StoredType), manager);
   }
   else
   {
@@ -102,18 +100,12 @@ Handle::Handle(Handle&& other)
   memset(&other, 0, sizeof(*this));
 }
 
-Handle::Handle(const byte* data,
-               BoundType* type,
-               HandleManager* manager,
-               ExecutableState* state)
+Handle::Handle(const byte* data, BoundType* type, HandleManager* manager, ExecutableState* state)
 {
   this->Initialize(data, type, manager, state);
 }
 
-void Handle::Initialize(const byte* data,
-                        BoundType* type,
-                        HandleManager* manager,
-                        ExecutableState* state)
+void Handle::Initialize(const byte* data, BoundType* type, HandleManager* manager, ExecutableState* state)
 {
   type->IsInitializedAssert();
   this->StoredType = type;
@@ -122,8 +114,7 @@ void Handle::Initialize(const byte* data,
 
   // Grab the handle manager for this type
   if (manager == nullptr)
-    manager =
-        HandleManagers::GetInstance().GetManager(type->HandleManager, state);
+    manager = HandleManagers::GetInstance().GetManager(type->HandleManager, state);
   this->Manager = manager;
 
   // Zero out the data (this is a guarantee we make before we ask the manager to
@@ -192,32 +183,24 @@ void Handle::ValidateAllHandles()
 void Handle::Validate() const
 {
   // Verify the next and prev values
-  ErrorIf(this->DebugNext == nullptr && this->DebugPrev == nullptr &&
-              DebugHead != this,
+  ErrorIf(this->DebugNext == nullptr && this->DebugPrev == nullptr && DebugHead != this,
           "A handle was possibly mem-cleared");
-  ErrorIf(this->DebugNext != nullptr && this->DebugNext == this->DebugPrev,
-          "Possibly corrupted handle");
-  ErrorIf(this->DebugNext == (Handle*)0xCDCDCDCD ||
-              this->DebugPrev == (Handle*)0xCDCDCDCD,
+  ErrorIf(this->DebugNext != nullptr && this->DebugNext == this->DebugPrev, "Possibly corrupted handle");
+  ErrorIf(this->DebugNext == (Handle*)0xCDCDCDCD || this->DebugPrev == (Handle*)0xCDCDCDCD,
           "Possibly corrupted handle");
 
   // Make sure the offset size is ok
-  ErrorIf(this->Offset > 0x7777,
-          "Possibly corrupted handle based on the large offset size");
+  ErrorIf(this->Offset > 0x7777, "Possibly corrupted handle based on the large offset size");
 
   // Clear all flags and see if any other bits were set
-  ErrorIf(
-      (this->Flags & ~(HandleFlags::NoReferenceCounting |
-                       HandleFlags::InitializedByConstructor)) != 0,
-      "Possibly corrupted handle (bits set even when we cleared all flags)");
+  ErrorIf((this->Flags & ~(HandleFlags::NoReferenceCounting | HandleFlags::InitializedByConstructor)) != 0,
+          "Possibly corrupted handle (bits set even when we cleared all flags)");
 
   // See if we have a manager
   if (this->Manager)
   {
     // Verify that we can access the manager
-    ErrorIf(
-        this->Manager->GetName().Empty(),
-        "Possibly corrupted handle (could not get the handle manager name)");
+    ErrorIf(this->Manager->GetName().Empty(), "Possibly corrupted handle (could not get the handle manager name)");
 
     // Attempt to derefence the handle, see what happens
     this->Manager->HandleToObject(*this);
@@ -227,8 +210,7 @@ void Handle::Validate() const
   if (this->Type)
   {
     // Check that we can get the type name
-    ErrorIf(this->Type->ToString().Empty(),
-            "Possibly corrupted handle (could not get the type name)");
+    ErrorIf(this->Type->ToString().Empty(), "Possibly corrupted handle (could not get the type name)");
   }
 
   // Make sure we either have no type and no manager, or a type and a manager
@@ -507,8 +489,7 @@ void Handle::DestructAndDelete()
 
   // Make sure this only gets called from places where we know we have a manager
   HandleManager* manager = this->Manager;
-  ErrorIf(manager == nullptr,
-          "This should only get called from non-null handles");
+  ErrorIf(manager == nullptr, "This should only get called from non-null handles");
 
   // Grab the state from the manager (this could be null!)
   ExecutableState* state = ExecutableState::CallingState;
@@ -536,8 +517,7 @@ void Handle::DestructAndDelete()
     {
       // Only invoke the destructor if its is not native, or it is native and
       // fully constructed
-      if (type->Native == false ||
-          manager->GetNativeTypeFullyConstructed(*this))
+      if (type->Native == false || manager->GetNativeTypeFullyConstructed(*this))
       {
         // We currently execute the destructor and basically ignore any
         // exceptions They still get reported, but will be caught here
@@ -549,10 +529,9 @@ void Handle::DestructAndDelete()
     }
     else
     {
-      ErrorIf(
-          type->Native && !type->IgnoreNativeDestructor,
-          "All native types must bind a destructor. If it is not possible to "
-          "bind, then set the flag on BoundType->IgnoreNativeDestructor");
+      ErrorIf(type->Native && !type->IgnoreNativeDestructor,
+              "All native types must bind a destructor. If it is not possible to "
+              "bind, then set the flag on BoundType->IgnoreNativeDestructor");
     }
 
     // Invoke the post-destructor
@@ -627,8 +606,7 @@ bool Handle::Delete()
     return true;
 
   // Make sure this only gets called from places where we know we have a manager
-  ErrorIf(this->Manager == nullptr,
-          "This should only get called from non-null handles");
+  ErrorIf(this->Manager == nullptr, "This should only get called from non-null handles");
 
   // If we have an offset, we cannot be deleted
   if (this->Offset != 0)

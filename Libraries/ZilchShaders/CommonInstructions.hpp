@@ -18,11 +18,10 @@ void DummyMemberFunctionResolver(ZilchSpirVFrontEnd* translator,
                                  Zilch::FunctionCallNode* functionCallNode,
                                  Zilch::MemberAccessNode* memberAccessNode,
                                  ZilchSpirVFrontEndContext* context);
-void DummyMemberPropertySetterResolver(
-    ZilchSpirVFrontEnd* translator,
-    Zilch::MemberAccessNode* memberAccessNode,
-    ZilchShaderIROp* resultValue,
-    ZilchSpirVFrontEndContext* context);
+void DummyMemberPropertySetterResolver(ZilchSpirVFrontEnd* translator,
+                                       Zilch::MemberAccessNode* memberAccessNode,
+                                       ZilchShaderIROp* resultValue,
+                                       ZilchSpirVFrontEndContext* context);
 void DummyBinaryOpResolver(ZilchSpirVFrontEnd* translator,
                            Zilch::BinaryOperatorNode* binaryOpNode,
                            ZilchSpirVFrontEndContext* context);
@@ -32,8 +31,7 @@ void DummyUnaryOpResolver(ZilchSpirVFrontEnd* translator,
 void DummyTypeCastResolver(ZilchSpirVFrontEnd* translator,
                            Zilch::TypeCastNode* binaryOpNode,
                            ZilchSpirVFrontEndContext* context);
-void DummyTemplateTypeReslover(ZilchSpirVFrontEnd* translator,
-                               Zilch::BoundType* boundType);
+void DummyTemplateTypeReslover(ZilchSpirVFrontEnd* translator, Zilch::BoundType* boundType);
 void DummyExpressionInitializerResolver(ZilchSpirVFrontEnd* translator,
                                         Zilch::ExpressionInitializerNode*& node,
                                         ZilchSpirVFrontEndContext* context);

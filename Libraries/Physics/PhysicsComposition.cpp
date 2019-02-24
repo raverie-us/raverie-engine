@@ -14,8 +14,7 @@ void AddChildBody(RigidBody* parent, RigidBody* child)
 
 void RemoveChildBody(RigidBody* parent, RigidBody* child)
 {
-  ErrorIf(child->mParentBody != parent,
-          "Child had a different parent that what was passed in.");
+  ErrorIf(child->mParentBody != parent, "Child had a different parent that what was passed in.");
 
   child->mParentBody = nullptr;
   parent->mChildBodies.Unlink(child);
@@ -23,8 +22,7 @@ void RemoveChildBody(RigidBody* parent, RigidBody* child)
 
 void AddDirectChildCollider(RigidBody* directBody, Collider* collider)
 {
-  ErrorIf(collider->mActiveRigidBody != nullptr,
-          "Collider already had a body.");
+  ErrorIf(collider->mActiveRigidBody != nullptr, "Collider already had a body.");
 
   collider->mDirectRigidBody = directBody;
   directBody->mColliders.PushBack(collider);
@@ -32,8 +30,7 @@ void AddDirectChildCollider(RigidBody* directBody, Collider* collider)
 
 void RemoveDirectChildCollider(RigidBody* directBody, Collider* collider)
 {
-  ErrorIf(collider->mActiveRigidBody != directBody,
-          "Collider did not have a body.");
+  ErrorIf(collider->mActiveRigidBody != directBody, "Collider did not have a body.");
 
   collider->mDirectRigidBody = nullptr;
   directBody->mColliders.Unlink(collider);
@@ -121,10 +118,7 @@ PhysicsNode* FindParentNode(Cog* owner)
 // when a new node comes into existence, our parent may have children
 // nodes that actually belong to us we need to figure out which of those
 // nodes have us as a parent before their old parent
-void RelinkNodes(Cog* owner,
-                 Cog* parentOwner,
-                 PhysicsNode* node,
-                 PhysicsNode* parentNode)
+void RelinkNodes(Cog* owner, Cog* parentOwner, PhysicsNode* node, PhysicsNode* parentNode)
 {
   PhysicsNode::ChildrenRange range = parentNode->mChildren.All();
   while (!range.Empty())
@@ -429,9 +423,7 @@ void UnlinkNode(PhysicsNode* node)
 }
 
 template <typename ObjectType1, typename ObjectType2>
-void GenericInitialize(ObjectType1* obj,
-                       ObjectType2* otherObj,
-                       bool dynamicallyCreated)
+void GenericInitialize(ObjectType1* obj, ObjectType2* otherObj, bool dynamicallyCreated)
 {
   PhysicsNode* node = nullptr;
   PhysicsNode* parentNode = nullptr;
@@ -473,9 +465,7 @@ void GenericInitialize(ObjectType1* obj,
 }
 
 template <typename ObjectType>
-void GenericOnAllObjectsCreated(ObjectType* obj,
-                                PhysicsNode* node,
-                                bool dynamicallyCreated)
+void GenericOnAllObjectsCreated(ObjectType* obj, PhysicsNode* node, bool dynamicallyCreated)
 {
   // when we're dynamically created, just rebuild everything
   if (dynamicallyCreated)
@@ -494,9 +484,7 @@ void GenericOnAllObjectsCreated(ObjectType* obj,
 }
 
 template <typename ObjectType>
-void GenericOnDestroy(ObjectType* obj,
-                      PhysicsNode* node,
-                      bool dynamicallyDestroyed)
+void GenericOnDestroy(ObjectType* obj, PhysicsNode* node, bool dynamicallyDestroyed)
 {
   PhysicsNode* root = GetTreeRoot(node);
   // remove ourself from the physics node
@@ -588,8 +576,7 @@ void ColliderInitialize(Collider* collider, bool dynamicallyCreated)
 
 void ColliderOnAllObjectsCreated(Collider* collider, bool dynamicallyCreated)
 {
-  GenericOnAllObjectsCreated(
-      collider, collider->mPhysicsNode, dynamicallyCreated);
+  GenericOnAllObjectsCreated(collider, collider->mPhysicsNode, dynamicallyCreated);
 }
 
 void ColliderOnDestroy(Collider* collider, bool dynamicallyDestroyed)

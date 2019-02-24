@@ -15,8 +15,7 @@ namespace Zero
 
 ContentItem* MakeDataContent(ContentInitializer& initializer)
 {
-  String fullPath =
-      FilePath::Combine(initializer.Library->SourcePath, initializer.Filename);
+  String fullPath = FilePath::Combine(initializer.Library->SourcePath, initializer.Filename);
 
   // What type is in the file so we know what builder type
   String loaderType = GetTypeInFile(fullPath);
@@ -101,16 +100,13 @@ bool DataBuilder::NeedsBuilding(BuildOptions& options)
 void DataBuilder::BuildContent(BuildOptions& buildOptions)
 {
   String destFile = FilePath::Combine(buildOptions.OutputPath, GetOutputFile());
-  String sourceFile =
-      FilePath::Combine(buildOptions.SourcePath, mOwner->Filename);
+  String sourceFile = FilePath::Combine(buildOptions.SourcePath, mOwner->Filename);
   bool fileCopied = CopyFile(destFile, sourceFile);
 
   if (!fileCopied)
   {
     buildOptions.Failure = true;
-    buildOptions.Message = String::Format("Failed to copy data file %s to %s",
-                                          sourceFile.c_str(),
-                                          destFile.c_str());
+    buildOptions.Message = String::Format("Failed to copy data file %s to %s", sourceFile.c_str(), destFile.c_str());
   }
 
   SetFileToCurrentTime(destFile);
@@ -122,8 +118,7 @@ void DataBuilder::BuildListing(ResourceListing& listing)
 
   uint order = Z::gContentSystem->LoadOrderMap.FindValue(LoaderType, 10);
 
-  listing.PushBack(ResourceEntry(
-      order, LoaderType, Name, destFile, mResourceId, this->mOwner, this));
+  listing.PushBack(ResourceEntry(order, LoaderType, Name, destFile, mResourceId, this->mOwner, this));
 }
 
 void CreateDataContent(ContentSystem* system)
@@ -133,8 +128,7 @@ void CreateDataContent(ContentSystem* system)
   CreateZilchPluginContent(system);
   AddContent<DataContent>(system);
 
-  system->CreatorsByExtension["data"] =
-      ContentTypeEntry(ZilchTypeId(DataContent), MakeDataContent);
+  system->CreatorsByExtension["data"] = ContentTypeEntry(ZilchTypeId(DataContent), MakeDataContent);
 }
 
 } // namespace Zero

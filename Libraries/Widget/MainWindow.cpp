@@ -79,12 +79,10 @@ MainWindow::MainWindow(OsWindow* window) : RootWidget(window)
 
   Composite* menuArea = new Composite(mTitleBar);
   mMenuArea = menuArea;
-  menuArea->SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Vec2::cZero, Thickness(0, 0, 0, 0)));
+  menuArea->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness(0, 0, 0, 0)));
 
   Composite* mainMenu = new Composite(menuArea);
-  mainMenu->SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Vec2::cZero, Thickness(2, 2, 2, 2)));
+  mainMenu->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness(2, 2, 2, 2)));
   Label* zeroLabel = new Label(mainMenu);
   zeroLabel->SetText(window->GetTitle());
   zeroLabel->mText->ChangeDefinition(mDefSet->GetDefinition("TitleText"));
@@ -218,8 +216,7 @@ void MainWindow::UpdateTransform()
   mTitleGrip->SetActive(windowState != WindowState::Fullscreen);
 
   bool sizeUpdated = false;
-  MainWindowTransformEvent eventToSend(
-      osWindow, position, position, size, size);
+  MainWindowTransformEvent eventToSend(osWindow, position, position, size, size);
 
   // Do not resize all child widgets unless
   // a child has been added or the size of the OS window
@@ -319,8 +316,7 @@ void MainWindow::UpdateTransform()
   }
 }
 
-WindowBorderArea::Enum OsDocker::GetWindowBorderArea(Widget* widget,
-                                                     DockMode::Enum direction)
+WindowBorderArea::Enum OsDocker::GetWindowBorderArea(Widget* widget, DockMode::Enum direction)
 {
   RootWidget* rootWidget = widget->GetRootWidget();
   OsWindow* window = rootWidget->GetOsWindow();

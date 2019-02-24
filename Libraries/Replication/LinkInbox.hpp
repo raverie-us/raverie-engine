@@ -57,24 +57,21 @@ class LinkInbox
   PeerLink* mLink; /// Operating link
 
   /// Packet Data
-  Array<InPacket> mReceivedPackets;       /// Received packets
-  TimeMs mLastReceiveTime;                /// Last packet receive time
-  PacketSequence mIncomingPacketSequence; /// Incoming packet sequence record
-  TimeMs mLastOutPacketSequenceHistorySendTime; /// Last outgoing packet
-                                                /// sequence history send time
-  PacketSequenceId
-      mLastOutPacketSequenceHistoryNESQ; /// Last outgoing packet sequence
-                                         /// history next expected sequence ID
-  PacketSequenceId
-      mLastInPacketSequenceHistoryNESQ; /// Last incoming packet sequence
-                                        /// history next expected sequence ID
+  Array<InPacket> mReceivedPackets;                   /// Received packets
+  TimeMs mLastReceiveTime;                            /// Last packet receive time
+  PacketSequence mIncomingPacketSequence;             /// Incoming packet sequence record
+  TimeMs mLastOutPacketSequenceHistorySendTime;       /// Last outgoing packet
+                                                      /// sequence history send time
+  PacketSequenceId mLastOutPacketSequenceHistoryNESQ; /// Last outgoing packet sequence
+                                                      /// history next expected sequence ID
+  PacketSequenceId mLastInPacketSequenceHistoryNESQ;  /// Last incoming packet sequence
+                                                      /// history next expected sequence ID
 
   /// Channel Data
-  InMessageChannel
-      mCustomDefaultChannel; /// Incoming default (zero) custom message channel
+  InMessageChannel mCustomDefaultChannel;   /// Incoming default (zero) custom message channel
   InMessageChannel mProtocolDefaultChannel; /// Incoming default (zero) protocol
                                             /// message channel
-  ArraySet<InMessageChannel> mChannels; /// Incoming (non-zero) message channels
+  ArraySet<InMessageChannel> mChannels;     /// Incoming (non-zero) message channels
 
   /// Message Data
   Array<Message> mReleasedCustomMessages;   /// Released custom messages

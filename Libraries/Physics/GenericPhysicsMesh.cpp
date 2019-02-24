@@ -64,8 +64,7 @@ void GenericPhysicsMesh::ResourceModified()
   OnResourceModified();
 }
 
-void GenericPhysicsMesh::Upload(const Vec3Array& points,
-                                const IndexArray& indices)
+void GenericPhysicsMesh::Upload(const Vec3Array& points, const IndexArray& indices)
 {
   mVertices = points;
   mIndices = indices;
@@ -216,23 +215,17 @@ void GenericPhysicsMesh::DrawFaceNormals(Mat4Param transform, ByteColor color)
     triArea *= cAreaScalar;
     triArea = Math::Min(triArea, 0.5f);
 
-    gDebugDraw->Add(Debug::Line(center, center + normal * triArea)
-                        .Color(color)
-                        .HeadSize(triArea * real(0.25f)));
+    gDebugDraw->Add(Debug::Line(center, center + normal * triArea).Color(color).HeadSize(triArea * real(0.25f)));
   }
 }
 
-bool GenericPhysicsMesh::CastRayTriangle(const Ray& localRay,
-                                         const Triangle& tri,
-                                         int triIndex,
-                                         ProxyResult& result,
-                                         BaseCastFilter& filter)
+bool GenericPhysicsMesh::CastRayTriangle(
+    const Ray& localRay, const Triangle& tri, int triIndex, ProxyResult& result, BaseCastFilter& filter)
 {
   // Check the ray for intersection with the triangle
   Intersection::IntersectionPoint pointData;
   Intersection::IntersectionType tResult;
-  tResult = Intersection::RayTriangle(
-      localRay.Start, localRay.Direction, tri[0], tri[1], tri[2], &pointData);
+  tResult = Intersection::RayTriangle(localRay.Start, localRay.Direction, tri[0], tri[1], tri[2], &pointData);
   // If there is a collision (clean up intersection library's wonkyness later)
   if (tResult >= (Intersection::Type)0)
   {
@@ -251,8 +244,7 @@ bool GenericPhysicsMesh::CastRayTriangle(const Ray& localRay,
     // If the filter is set to retrieve the normal of the surface
     if (filter.IsSet(BaseCastFilterFlags::GetContactNormal))
     {
-      Vec3 normal = Geometry::NormalFromPointOnTriangle(
-          result.mPoints[0], tri[0], tri[1], tri[2]);
+      Vec3 normal = Geometry::NormalFromPointOnTriangle(result.mPoints[0], tri[0], tri[1], tri[2]);
 
       // The normal returned should always be positive in the y (local space),
       // but if the ray was cast from below the triangle, we want to negate it.
@@ -266,9 +258,7 @@ bool GenericPhysicsMesh::CastRayTriangle(const Ray& localRay,
   return false;
 }
 
-bool GenericPhysicsMesh::CastRayGeneric(const Ray& localRay,
-                                        ProxyResult& result,
-                                        BaseCastFilter& filter)
+bool GenericPhysicsMesh::CastRayGeneric(const Ray& localRay, ProxyResult& result, BaseCastFilter& filter)
 {
   bool triangleHit = false;
   result.mTime = Math::PositiveMax();
@@ -283,9 +273,7 @@ bool GenericPhysicsMesh::CastRayGeneric(const Ray& localRay,
   return triangleHit;
 }
 
-void GenericPhysicsMesh::Support(const Vec3Array points,
-                                 Vec3Param localDirection,
-                                 Vec3Ptr support) const
+void GenericPhysicsMesh::Support(const Vec3Array points, Vec3Param localDirection, Vec3Ptr support) const
 {
   real longestDistance = -Math::PositiveMax();
   // Initialize the support point to a large, unlikely to be hit value in case
@@ -305,8 +293,7 @@ void GenericPhysicsMesh::Support(const Vec3Array points,
   }
 }
 
-void GenericPhysicsMesh::Support(Vec3Param localDirection,
-                                 Vec3Ptr support) const
+void GenericPhysicsMesh::Support(Vec3Param localDirection, Vec3Ptr support) const
 {
   Support(mVertices, localDirection, support);
 }
@@ -343,8 +330,7 @@ void GenericPhysicsMesh::ComputeLocalCenterOfMass()
   uint triCount = GetTriangleCount();
   Vec3* verts = mVertices.Begin();
   uint* indices = mIndices.Begin();
-  mLocalCenterOfMass =
-      Geometry::CalculateTriMeshCenterOfMass(verts, indices, triCount);
+  mLocalCenterOfMass = Geometry::CalculateTriMeshCenterOfMass(verts, indices, triCount);
 }
 
 Vec3 GenericPhysicsMesh::ComputeScaledCenterOfMass(Vec3Param worldScale)
@@ -358,8 +344,7 @@ real GenericPhysicsMesh::ComputeScaledVolume(Vec3Param worldScale)
   return mLocalVolume * scalar;
 }
 
-Mat3 GenericPhysicsMesh::ComputeScaledInvInertiaTensor(Vec3Param worldScale,
-                                                       real worldMass)
+Mat3 GenericPhysicsMesh::ComputeScaledInvInertiaTensor(Vec3Param worldScale, real worldMass)
 {
   if (mVertices.Empty() || mIndices.Empty() || !GetValid())
     return Mat3::cIdentity;
@@ -371,8 +356,7 @@ Mat3 GenericPhysicsMesh::ComputeScaledInvInertiaTensor(Vec3Param worldScale,
   Vec3* verts = mVertices.Begin();
   uint* indices = mIndices.Begin();
   Vec3 scaledCenterOfMass = mLocalCenterOfMass * worldScale;
-  Geometry::CalculateTriMeshInertiaTensor(
-      verts, indices, triCount, scaledCenterOfMass, &inertiaTensor, worldScale);
+  Geometry::CalculateTriMeshInertiaTensor(verts, indices, triCount, scaledCenterOfMass, &inertiaTensor, worldScale);
 
   inertiaTensor *= worldMass;
   return Math::Inverted(inertiaTensor);

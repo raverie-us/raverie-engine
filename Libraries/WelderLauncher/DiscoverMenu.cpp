@@ -42,11 +42,8 @@ void CreateSpacer(Composite* parent)
   e->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1);
 }
 
-DiscoverTile::DiscoverTile(Composite* parent,
-                           StringParam text,
-                           StringParam fontStyle,
-                           float titleHeight,
-                           StringParam url) :
+DiscoverTile::DiscoverTile(
+    Composite* parent, StringParam text, StringParam fontStyle, float titleHeight, StringParam url) :
     Composite(parent),
     mUrl(url)
 {
@@ -105,8 +102,7 @@ void DiscoverTile::OnMouseExit(MouseEvent* e)
   seq->Add(Fade(mTitle, Vec4(0.6, 0.6, 0.6, 1), 0.3));
 }
 
-DevUpdateEntry::DevUpdateEntry(Composite* parent, DeveloperNotes& notes) :
-    Composite(parent)
+DevUpdateEntry::DevUpdateEntry(Composite* parent, DeveloperNotes& notes) : Composite(parent)
 {
   SetLayout(CreateStackLayout());
 
@@ -117,8 +113,7 @@ DevUpdateEntry::DevUpdateEntry(Composite* parent, DeveloperNotes& notes) :
     CalendarDateTime dateTime = Time::GetLocalTime(currTime);
 
     cstr month = Time::GetMonthString(dateTime.Month);
-    String date =
-        String::Format("%s %i, %i", month, dateTime.Day, dateTime.Year);
+    String date = String::Format("%s %i, %i", month, dateTime.Day, dateTime.Year);
 
     new Spacer(topRow, SizePolicy::Flex, Vec2(1));
 
@@ -146,17 +141,12 @@ DevUpdateEntry::DevUpdateEntry(Composite* parent, DeveloperNotes& notes) :
   mUpdate->SetColor(DiscoverUi::DevUpdateText);
 }
 
-DiscoverMenu::DiscoverMenu(Composite* parent, LauncherWindow* launcher) :
-    Composite(parent),
-    mLauncher(launcher)
+DiscoverMenu::DiscoverMenu(Composite* parent, LauncherWindow* launcher) : Composite(parent), mLauncher(launcher)
 {
-  SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Pixels(0, 0), Thickness::cZero));
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(0, 0), Thickness::cZero));
 
   Composite* left = new Composite(this);
-  left->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom,
-                                    Vec2::cZero,
-                                    Thickness(Pixels(32, 27, 0, 0))));
+  left->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness(Pixels(32, 27, 0, 0))));
   left->SetSizing(SizePolicy::Fixed, Pixels(672, 328));
   {
     mBackground = left->CreateAttached<Element>("DiscoverBgDefault");
@@ -170,17 +160,13 @@ DiscoverMenu::DiscoverMenu(Composite* parent, LauncherWindow* launcher) :
   spacer->SetSizing(SizePolicy::Flex, Vec2(1));
 
   Composite* right = new Composite(this);
-  right->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom,
-                                     Pixels(0, 3),
-                                     Thickness(Pixels(0, 18, 27, 5))));
+  right->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 3), Thickness(Pixels(0, 18, 27, 5))));
   right->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(300));
   right->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1);
   {
     // Used to indent the title to align with the entry text
     Composite* titleRow = new Composite(right);
-    titleRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight,
-                                          Vec2::cZero,
-                                          Thickness(Pixels(0, 0, 15, 0))));
+    titleRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness(Pixels(0, 0, 15, 0))));
 
     Spacer* spacer = new Spacer(titleRow);
     spacer->SetSizing(SizePolicy::Flex, Vec2(1));
@@ -193,8 +179,8 @@ DiscoverMenu::DiscoverMenu(Composite* parent, LauncherWindow* launcher) :
 
     mDevUpdatesArea = new ScrollArea(right);
     mDevUpdatesArea->SetSizing(SizePolicy::Flex, Vec2(1));
-    mDevUpdatesArea->GetClientWidget()->SetLayout(CreateStackLayout(
-        LayoutDirection::TopToBottom, Pixels(0, 7), Thickness::cZero));
+    mDevUpdatesArea->GetClientWidget()->SetLayout(
+        CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 7), Thickness::cZero));
   }
 
   ConnectThisTo(this, Events::MenuDisplayed, OnMenuDisplayed);
@@ -223,8 +209,7 @@ void DiscoverMenu::CreateTiles(Composite* parent)
     left->SetLayout(CreateStackLayout());
     {
       // Documentation tile
-      Composite* zeroHub = new DiscoverTile(
-          left, "ZEROHUB", "TileTitleText", Pixels(74), Urls::cUserZeroHub);
+      Composite* zeroHub = new DiscoverTile(left, "ZEROHUB", "TileTitleText", Pixels(74), Urls::cUserZeroHub);
       zeroHub->SetSizing(SizePolicy::Fixed, Pixels(316, 170));
 
       // Spacer
@@ -235,22 +220,14 @@ void DiscoverMenu::CreateTiles(Composite* parent)
       bottom->SetLayout(CreateRowLayout());
       {
         // Zilch tile
-        Composite* zilch = new DiscoverTile(bottom,
-                                            "ZILCH",
-                                            "TileTitleTextMedium",
-                                            Pixels(44),
-                                            Urls::cUserZilch);
+        Composite* zilch = new DiscoverTile(bottom, "ZILCH", "TileTitleTextMedium", Pixels(44), Urls::cUserZilch);
         zilch->SetSizing(SizePolicy::Fixed, Pixels(154, 150));
 
         // Spacer
         CreateSpacer(bottom);
 
         // Roadmap
-        Composite* roadmap = new DiscoverTile(bottom,
-                                              "ROADMAP",
-                                              "TileTitleTextMedium",
-                                              Pixels(44),
-                                              Urls::cUserRoadmap);
+        Composite* roadmap = new DiscoverTile(bottom, "ROADMAP", "TileTitleTextMedium", Pixels(44), Urls::cUserRoadmap);
         roadmap->SetSizing(SizePolicy::Fixed, Pixels(154, 150));
       }
     }
@@ -263,8 +240,7 @@ void DiscoverMenu::CreateTiles(Composite* parent)
     right->SetLayout(CreateStackLayout());
     {
       // Documentation tile
-      Composite* documentation = new DiscoverTile(
-          right, "DOCUMENTATION", "TileTitleText", Pixels(74), Urls::cUserDoc);
+      Composite* documentation = new DiscoverTile(right, "DOCUMENTATION", "TileTitleText", Pixels(74), Urls::cUserDoc);
       documentation->SetSizing(SizePolicy::Fixed, Pixels(316, 252));
 
       // Spacer
@@ -275,19 +251,14 @@ void DiscoverMenu::CreateTiles(Composite* parent)
       bottom->SetLayout(CreateRowLayout());
       {
         // Market place
-        Composite* market = new DiscoverTile(bottom,
-                                             "MARKET",
-                                             "TileTitleTextSmall",
-                                             Pixels(39),
-                                             Urls::cUserMarket);
+        Composite* market = new DiscoverTile(bottom, "MARKET", "TileTitleTextSmall", Pixels(39), Urls::cUserMarket);
         market->SetSizing(SizePolicy::Fixed, Pixels(240, 68));
 
         // Spacer
         CreateSpacer(bottom);
 
         // Q&A tile
-        Composite* questionAnswer = new DiscoverTile(
-            bottom, "Q&A", "TileTitleTextSmall", Pixels(39), Urls::cUserQa);
+        Composite* questionAnswer = new DiscoverTile(bottom, "Q&A", "TileTitleTextSmall", Pixels(39), Urls::cUserQa);
         questionAnswer->SetSizing(SizePolicy::Fixed, Pixels(68, 68));
       }
     }
@@ -297,8 +268,7 @@ void DiscoverMenu::CreateTiles(Composite* parent)
 void DiscoverMenu::DownloadDevNotes()
 {
   BackgroundTask* task = mLauncher->mVersionSelector->DownloadDeveloperNotes();
-  ConnectThisTo(
-      task, Events::BackgroundTaskCompleted, OnDeveloperNotesDownloaded);
+  ConnectThisTo(task, Events::BackgroundTaskCompleted, OnDeveloperNotesDownloaded);
 }
 
 void DiscoverMenu::OnCheckForUpdates(Event* e)

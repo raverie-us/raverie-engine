@@ -91,9 +91,7 @@ public:
   typedef AnimationScrubber ZilchSelf;
 
   /// Constructor.
-  AnimationScrubber(Composite* parent,
-                    AnimationEditor* editor,
-                    ScrollingGraph* graphData);
+  AnimationScrubber(Composite* parent, AnimationEditor* editor, ScrollingGraph* graphData);
 
   /// Information about the animation we're modifying.
   void SetAnimationEditorData(AnimationEditorData* editorData);

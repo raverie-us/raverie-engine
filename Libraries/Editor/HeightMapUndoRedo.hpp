@@ -19,9 +19,7 @@ struct ModifiedHeightMapCell
   {
     Index.Set(-1, -1);
   }
-  ModifiedHeightMapCell(const HeightMapCell& cell,
-                        float originalHeight,
-                        float height);
+  ModifiedHeightMapCell(const HeightMapCell& cell, float originalHeight, float height);
   void Set(const HeightMapCell& cell, float originalHeight, float height);
 };
 
@@ -30,8 +28,7 @@ class HeightMapUndoRedo : public Operation
 public:
   typedef HashMap<int, ModifiedHeightMapCell> YAxisCells;
 
-  HeightMapUndoRedo(HeightMap* heightMap,
-                    StringParam name = "HeightMapOperation");
+  HeightMapUndoRedo(HeightMap* heightMap, StringParam name = "HeightMapOperation");
 
   void AddCell(const HeightMapCell& cell, float preDeltaHeight, float height);
 
@@ -60,9 +57,7 @@ public:
     ModifiedPatch()
     {
     }
-    ModifiedPatch(bool create, PatchIndexParam index) :
-        Create(create),
-        Index(index)
+    ModifiedPatch(bool create, PatchIndexParam index) : Create(create), Index(index)
     {
     }
 
@@ -70,12 +65,10 @@ public:
     PatchIndex Index;
   };
 
-  HeightPatchUndoRedo(HeightMap* heightMap,
-                      StringParam name = "HeightPatchOperation");
+  HeightPatchUndoRedo(HeightMap* heightMap, StringParam name = "HeightPatchOperation");
 
   void AddPatch(bool create, PatchIndexParam index);
-  void
-  SetNoise(bool usePerlin, float baseHeight, float frequency, float amplitude);
+  void SetNoise(bool usePerlin, float baseHeight, float frequency, float amplitude);
 
   void Create(PatchIndex& index);
   void Destroy(PatchIndex& index);
@@ -105,16 +98,8 @@ struct ModifiedWeightMapPixel
   {
     Coord.Set(-1, -1);
   }
-  ModifiedWeightMapPixel(PatchIndexParam index,
-                         uint x,
-                         uint y,
-                         ByteColor originalWeight,
-                         ByteColor weight);
-  void Set(PatchIndexParam index,
-           uint x,
-           uint y,
-           ByteColor originalWeight,
-           ByteColor weight);
+  ModifiedWeightMapPixel(PatchIndexParam index, uint x, uint y, ByteColor originalWeight, ByteColor weight);
+  void Set(PatchIndexParam index, uint x, uint y, ByteColor originalWeight, ByteColor weight);
 };
 
 class WeightMapUndoRedo : public Operation
@@ -122,14 +107,9 @@ class WeightMapUndoRedo : public Operation
 public:
   typedef HashMap<int, ModifiedWeightMapPixel> YAxisPixels;
 
-  WeightMapUndoRedo(HeightMap* heightMap,
-                    StringParam name = "WeightPainterOperation");
+  WeightMapUndoRedo(HeightMap* heightMap, StringParam name = "WeightPainterOperation");
 
-  void AddPixel(PatchIndexParam index,
-                uint x,
-                uint y,
-                ByteColor preDeltaWeight,
-                ByteColor weight);
+  void AddPixel(PatchIndexParam index, uint x, uint y, ByteColor preDeltaWeight, ByteColor weight);
 
   void ApplyWeightHelper(ByteColor useAppliedWeight);
 

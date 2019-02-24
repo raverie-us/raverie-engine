@@ -109,9 +109,7 @@ public:
   /// Samples a bell curve in the range [center - range, center + range] with
   /// the given standard deviation. Around 68% will lie within the 1st standard
   /// deviation
-  float BellCurveDistribution(float center,
-                              float range,
-                              float standardDeviation);
+  float BellCurveDistribution(float center, float range, float standardDeviation);
 
 private:
   Math::Random mRandom;

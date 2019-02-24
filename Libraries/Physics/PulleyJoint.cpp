@@ -28,21 +28,14 @@ struct PulleyPolicy : public DefaultFragmentPolicy<PulleyJoint>
 {
   void AxisValue(MoleculeData& data, int atomIndex, PulleyJoint* joint)
   {
-    ErrorIf(atomIndex >= 1,
-            "PulleyJoint only has one atom. Cannot compute atom number %d.",
-            atomIndex);
+    ErrorIf(atomIndex >= 1, "PulleyJoint only has one atom. Cannot compute atom number %d.", atomIndex);
     PulleyAxisValue(joint, joint->mAtoms[atomIndex], 0);
   }
 
   // Returns baumgarte
-  real AxisFragment(MoleculeData& data,
-                    int atomIndex,
-                    PulleyJoint* joint,
-                    ConstraintMolecule& mol)
+  real AxisFragment(MoleculeData& data, int atomIndex, PulleyJoint* joint, ConstraintMolecule& mol)
   {
-    ErrorIf(atomIndex >= 1,
-            "PulleyJoint only has one atom. Cannot compute atom number %d.",
-            atomIndex);
+    ErrorIf(atomIndex >= 1, "PulleyJoint only has one atom. Cannot compute atom number %d.", atomIndex);
     PulleyAxisFragment(joint, mol);
 
     return joint->GetLinearBaumgarte();
@@ -90,8 +83,7 @@ void PulleyJoint::OnAllObjectsCreated(CogInitializer& initializer)
 {
   Joint::OnAllObjectsCreated(initializer);
 
-  bool dynamicallyCreated =
-      (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
+  bool dynamicallyCreated = (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
 
   if (!dynamicallyCreated)
   {
@@ -164,8 +156,7 @@ void PulleyJoint::OnAllObjectsCreated(CogInitializer& initializer)
     return;
 
   // If either joint was invalid, then we are also invalid
-  if (mJoints[0].mJoint->GetValid() == false ||
-      mJoints[1].mJoint->GetValid() == false)
+  if (mJoints[0].mJoint->GetValid() == false || mJoints[1].mJoint->GetValid() == false)
   {
     SetValid(false);
     return;
@@ -223,8 +214,7 @@ void PulleyJoint::ComputeMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputeMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData, PulleyPolicy());
+  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, PulleyPolicy());
 }
 
 void PulleyJoint::WarmStart(MoleculeWalker& molecules)
@@ -252,8 +242,7 @@ void PulleyJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData, PulleyPolicy());
+  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, PulleyPolicy());
 }
 
 void PulleyJoint::DebugDraw()
@@ -267,8 +256,7 @@ void PulleyJoint::DebugDraw()
   gDebugDraw->Add(Debug::Line(obj0Pos, obj1Pos).Color(Color::Black));
 }
 
-uint PulleyJoint::GetAtomIndexFilter(uint atomIndex,
-                                     real& desiredConstraintValue) const
+uint PulleyJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   return LinearAxis;
@@ -363,8 +351,7 @@ void PulleyJoint::RelinkJoint(uint index, Cog* cog)
   StickJoint* stick = cog->has(StickJoint);
   if (stick == nullptr)
   {
-    DoNotifyWarning("Invalid link",
-                    "Cannot link to an object that doesn't have a StickJoint.");
+    DoNotifyWarning("Invalid link", "Cannot link to an object that doesn't have a StickJoint.");
     return;
   }
 

@@ -24,8 +24,7 @@ BackgroundTask* DownloadTaskJob::DownloadToBuffer(StringParam url)
   return DownloadToBuffer(url, fileName);
 }
 
-BackgroundTask* DownloadTaskJob::DownloadToBuffer(StringParam url,
-                                                  StringParam fileName)
+BackgroundTask* DownloadTaskJob::DownloadToBuffer(StringParam url, StringParam fileName)
 {
   const String cDownloadIcon = "TaskDownload";
 
@@ -54,8 +53,7 @@ DownloadTaskJob::DownloadTaskJob(StringParam url, u64 forceCacheSeconds)
   request->mSendEventsOnRequestThread = true;
 
   request->mUrl = url;
-  ConnectThisTo(
-      request, Events::WebResponsePartialData, OnWebResponsePartialData);
+  ConnectThisTo(request, Events::WebResponsePartialData, OnWebResponsePartialData);
   ConnectThisTo(request, Events::WebResponseComplete, OnWebResponseComplete);
 }
 
@@ -108,10 +106,7 @@ void DownloadTaskJob::UpdateDownloadProgress()
   float percentComplete = GetPercentageComplete();
   String downloaded = HumanReadableFileSize(mRequest->mTotalDownloaded);
   String total = HumanReadableFileSize(mRequest->mTotalExpected);
-  String progressText = String::Format("%0.0f%% (%s/%s)",
-                                       percentComplete * 100.0f,
-                                       downloaded.c_str(),
-                                       total.c_str());
+  String progressText = String::Format("%0.0f%% (%s/%s)", percentComplete * 100.0f, downloaded.c_str(), total.c_str());
   UpdateProgress(mName, percentComplete, progressText);
 }
 

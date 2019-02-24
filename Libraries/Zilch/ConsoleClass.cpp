@@ -51,101 +51,35 @@ void DefaultReadText(ConsoleEvent* event)
 
 ZilchDefineType(Console, builder, type)
 {
+  ZilchFullBindMethod(builder, type, &Console::Write, (void (*)(AnyParam)), "Write", nullptr);
+  ZilchFullBindMethod(builder, type, &Console::Write, (void (*)(AnyParam, AnyParam)), "Write", nullptr);
+  ZilchFullBindMethod(builder, type, &Console::Write, (void (*)(AnyParam, AnyParam, AnyParam)), "Write", nullptr);
   ZilchFullBindMethod(
-      builder, type, &Console::Write, (void (*)(AnyParam)), "Write", nullptr);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Console::Write,
-                      (void (*)(AnyParam, AnyParam)),
-                      "Write",
-                      nullptr);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Console::Write,
-                      (void (*)(AnyParam, AnyParam, AnyParam)),
-                      "Write",
-                      nullptr);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Console::Write,
-                      (void (*)(AnyParam, AnyParam, AnyParam, AnyParam)),
-                      "Write",
-                      nullptr);
+      builder, type, &Console::Write, (void (*)(AnyParam, AnyParam, AnyParam, AnyParam)), "Write", nullptr);
   ZilchFullBindMethod(
-      builder,
-      type,
-      &Console::Write,
-      (void (*)(AnyParam, AnyParam, AnyParam, AnyParam, AnyParam)),
-      "Write",
-      nullptr);
+      builder, type, &Console::Write, (void (*)(AnyParam, AnyParam, AnyParam, AnyParam, AnyParam)), "Write", nullptr);
 
+  ZilchFullBindMethod(builder, type, &Console::WriteLine, (void (*)()), "WriteLine", nullptr);
+  ZilchFullBindMethod(builder, type, &Console::WriteLine, (void (*)(AnyParam)), "WriteLine", nullptr);
+  ZilchFullBindMethod(builder, type, &Console::WriteLine, (void (*)(AnyParam, AnyParam)), "WriteLine", nullptr);
   ZilchFullBindMethod(
-      builder, type, &Console::WriteLine, (void (*)()), "WriteLine", nullptr);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Console::WriteLine,
-                      (void (*)(AnyParam)),
-                      "WriteLine",
-                      nullptr);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Console::WriteLine,
-                      (void (*)(AnyParam, AnyParam)),
-                      "WriteLine",
-                      nullptr);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Console::WriteLine,
-                      (void (*)(AnyParam, AnyParam, AnyParam)),
-                      "WriteLine",
-                      nullptr);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Console::WriteLine,
-                      (void (*)(AnyParam, AnyParam, AnyParam, AnyParam)),
-                      "WriteLine",
-                      nullptr);
+      builder, type, &Console::WriteLine, (void (*)(AnyParam, AnyParam, AnyParam)), "WriteLine", nullptr);
   ZilchFullBindMethod(
-      builder,
-      type,
-      &Console::WriteLine,
-      (void (*)(AnyParam, AnyParam, AnyParam, AnyParam, AnyParam)),
-      "WriteLine",
-      nullptr);
-
+      builder, type, &Console::WriteLine, (void (*)(AnyParam, AnyParam, AnyParam, AnyParam)), "WriteLine", nullptr);
   ZilchFullBindMethod(builder,
                       type,
-                      &Console::DumpValue,
-                      (void (*)(AnyParam)),
-                      "DumpValue",
-                      nullptr);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Console::DumpValue,
-                      (void (*)(AnyParam, Integer)),
-                      "DumpValue",
+                      &Console::WriteLine,
+                      (void (*)(AnyParam, AnyParam, AnyParam, AnyParam, AnyParam)),
+                      "WriteLine",
                       nullptr);
 
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Console::ReadString,
-                      ZilchNoOverload,
-                      "ReadString",
-                      nullptr);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Console::ReadInteger,
-                      ZilchNoOverload,
-                      "ReadInteger",
-                      nullptr);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Console::ReadBoolean,
-                      ZilchNoOverload,
-                      "ReadBoolean",
-                      nullptr);
-  ZilchFullBindMethod(
-      builder, type, &Console::ReadReal, ZilchNoOverload, "ReadReal", nullptr);
+  ZilchFullBindMethod(builder, type, &Console::DumpValue, (void (*)(AnyParam)), "DumpValue", nullptr);
+  ZilchFullBindMethod(builder, type, &Console::DumpValue, (void (*)(AnyParam, Integer)), "DumpValue", nullptr);
+
+  ZilchFullBindMethod(builder, type, &Console::ReadString, ZilchNoOverload, "ReadString", nullptr);
+  ZilchFullBindMethod(builder, type, &Console::ReadInteger, ZilchNoOverload, "ReadInteger", nullptr);
+  ZilchFullBindMethod(builder, type, &Console::ReadBoolean, ZilchNoOverload, "ReadBoolean", nullptr);
+  ZilchFullBindMethod(builder, type, &Console::ReadReal, ZilchNoOverload, "ReadReal", nullptr);
 }
 
 void Console::WriteData(StringParam text)
@@ -173,23 +107,15 @@ void Console::Write(AnyParam value0)
 
 void Console::Write(AnyParam value0, AnyParam value1)
 {
-  WriteData(
-      BuildString(value0.ToString(), ConsoleSeparator, value1.ToString()));
+  WriteData(BuildString(value0.ToString(), ConsoleSeparator, value1.ToString()));
 }
 
 void Console::Write(AnyParam value0, AnyParam value1, AnyParam value2)
 {
-  WriteData(BuildString(value0.ToString(),
-                        ConsoleSeparator,
-                        value1.ToString(),
-                        ConsoleSeparator,
-                        value2.ToString()));
+  WriteData(BuildString(value0.ToString(), ConsoleSeparator, value1.ToString(), ConsoleSeparator, value2.ToString()));
 }
 
-void Console::Write(AnyParam value0,
-                    AnyParam value1,
-                    AnyParam value2,
-                    AnyParam value3)
+void Console::Write(AnyParam value0, AnyParam value1, AnyParam value2, AnyParam value3)
 {
   StringBuilder builder;
   builder.Append(value0.ToString());
@@ -202,11 +128,7 @@ void Console::Write(AnyParam value0,
   WriteData(builder.ToString());
 }
 
-void Console::Write(AnyParam value0,
-                    AnyParam value1,
-                    AnyParam value2,
-                    AnyParam value3,
-                    AnyParam value4)
+void Console::Write(AnyParam value0, AnyParam value1, AnyParam value2, AnyParam value3, AnyParam value4)
 {
   StringBuilder builder;
   builder.Append(value0.ToString());
@@ -328,8 +250,7 @@ void Console::WriteLine(AnyParam value0)
 
 void Console::WriteLine(AnyParam value0, AnyParam value1)
 {
-  WriteData(BuildString(
-      value0.ToString(), ConsoleSeparator, value1.ToString(), NewLine));
+  WriteData(BuildString(value0.ToString(), ConsoleSeparator, value1.ToString(), NewLine));
 }
 
 void Console::WriteLine(AnyParam value0, AnyParam value1, AnyParam value2)
@@ -344,10 +265,7 @@ void Console::WriteLine(AnyParam value0, AnyParam value1, AnyParam value2)
   WriteData(builder.ToString());
 }
 
-void Console::WriteLine(AnyParam value0,
-                        AnyParam value1,
-                        AnyParam value2,
-                        AnyParam value3)
+void Console::WriteLine(AnyParam value0, AnyParam value1, AnyParam value2, AnyParam value3)
 {
   StringBuilder builder;
   builder.Append(value0.ToString());
@@ -361,11 +279,7 @@ void Console::WriteLine(AnyParam value0,
   WriteData(builder.ToString());
 }
 
-void Console::WriteLine(AnyParam value0,
-                        AnyParam value1,
-                        AnyParam value2,
-                        AnyParam value3,
-                        AnyParam value4)
+void Console::WriteLine(AnyParam value0, AnyParam value1, AnyParam value2, AnyParam value3, AnyParam value4)
 {
   StringBuilder builder;
   builder.Append(value0.ToString());
@@ -476,11 +390,8 @@ void Console::WriteLine(QuaternionParam value)
   WriteData(BuildString(QuaternionToString(value), NewLine));
 }
 
-void Console::DumpValue(StringBuilderExtended& builder,
-                        Type* type,
-                        const byte* value,
-                        Integer howDeep,
-                        Integer currentDepth)
+void Console::DumpValue(
+    StringBuilderExtended& builder, Type* type, const byte* value, Integer howDeep, Integer currentDepth)
 {
   // First write the generic value of the type...
   String baseValueString = type->GenericToString(value);
@@ -524,11 +435,7 @@ void Console::DumpValue(StringBuilderExtended& builder,
           byte* fieldData = instanceData + field->Offset;
 
           // Recursively dumping will imediately print out the property value
-          DumpValue(builder,
-                    field->PropertyType,
-                    fieldData,
-                    howDeep,
-                    currentDepth + 1);
+          DumpValue(builder, field->PropertyType, fieldData, howDeep, currentDepth + 1);
         }
       }
     }

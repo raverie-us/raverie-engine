@@ -196,9 +196,8 @@ public:
 
   // Data
   NetRequestType::Enum mNetRequestType; ///< Network request type.
-  IpAddress
-      mTheirIpAddress; ///< Their IP address (as seen from our perspective).
-  EventBundle mOurRequestBundle; ///< Our bundled request event data.
+  IpAddress mTheirIpAddress;            ///< Their IP address (as seen from our perspective).
+  EventBundle mOurRequestBundle;        ///< Our bundled request event data.
 };
 
 //                                NetHost Events //
@@ -239,13 +238,11 @@ public:
   NetHostUpdate();
 
   // Data
-  NetRefreshResult::Enum
-      mRefreshResult; ///< Whether or not the operation completed successfully.
-  float
-      mResponseTime; ///< Operation response time (from request to completion).
-  Network::Enum mNetwork; ///< Operation target network.
-  NetHost* mHost; ///< Host discovered or refreshed (will contain the first host
-                  ///< updated if this is a list update).
+  NetRefreshResult::Enum mRefreshResult; ///< Whether or not the operation completed successfully.
+  float mResponseTime;                   ///< Operation response time (from request to completion).
+  Network::Enum mNetwork;                ///< Operation target network.
+  NetHost* mHost;                        ///< Host discovered or refreshed (will contain the first host
+                                         ///< updated if this is a list update).
 };
 
 //                                 NetHostListUpdate //
@@ -323,8 +320,7 @@ public:
   NetPeerSentConnectRequest(GameSession* gameSession);
 
   // Data
-  IpAddress
-      mTheirIpAddress; ///< Their IP address (as seen from our perspective).
+  IpAddress mTheirIpAddress;           ///< Their IP address (as seen from our perspective).
   EventBundle mOurRequestBundle;       ///< Our bundled request event data.
   uint mOurPendingUserAddRequestCount; ///< Our pending user add requests
                                        ///< following this connect request
@@ -345,17 +341,15 @@ public:
   NetPeerReceivedConnectRequest(GameSession* gameSession);
 
   // Data
-  IpAddress
-      mTheirIpAddress; ///< Their IP address (as seen from our perspective).
+  IpAddress mTheirIpAddress;             ///< Their IP address (as seen from our perspective).
   EventBundle mTheirRequestBundle;       ///< Their bundled request event data.
   uint mTheirPendingUserAddRequestCount; ///< Their pending user add requests
                                          ///< following this connect request
                                          ///< (within the same frame).
-  IpAddress mOurIpAddress; ///< Our IP address (as seen from their perspective).
-  bool mReturnOurConnectResponse; ///< Return: Our connect response (accept the
-                                  ///< connect request?).
-  EventBundle
-      mReturnOurResponseBundle; ///< Return: Our bundled response event data.
+  IpAddress mOurIpAddress;               ///< Our IP address (as seen from their perspective).
+  bool mReturnOurConnectResponse;        ///< Return: Our connect response (accept the
+                                         ///< connect request?).
+  EventBundle mReturnOurResponseBundle;  ///< Return: Our bundled response event data.
 };
 
 //                           NetPeerSentConnectResponse //
@@ -372,16 +366,15 @@ public:
   NetPeerSentConnectResponse(GameSession* gameSession);
 
   // Data
-  NetPeerId mTheirNetPeerId; ///< Their net peer ID (set only if accepted).
-  IpAddress
-      mTheirIpAddress; ///< Their IP address (as seen from our perspective).
-  EventBundle mTheirRequestBundle;       ///< Their bundled request event data.
-  uint mTheirPendingUserAddRequestCount; ///< Their pending user add requests
-                                         ///< following this connect request
-                                         ///< (within the same frame).
-  IpAddress mOurIpAddress; ///< Our IP address (as seen from their perspective).
+  NetPeerId mTheirNetPeerId;                 ///< Their net peer ID (set only if accepted).
+  IpAddress mTheirIpAddress;                 ///< Their IP address (as seen from our perspective).
+  EventBundle mTheirRequestBundle;           ///< Their bundled request event data.
+  uint mTheirPendingUserAddRequestCount;     ///< Their pending user add requests
+                                             ///< following this connect request
+                                             ///< (within the same frame).
+  IpAddress mOurIpAddress;                   ///< Our IP address (as seen from their perspective).
   ConnectResponse::Enum mOurConnectResponse; ///< Our connect response.
-  EventBundle mOurResponseBundle; ///< Our bundled response event data.
+  EventBundle mOurResponseBundle;            ///< Our bundled response event data.
 };
 
 //                        NetPeerReceivedConnectResponse //
@@ -399,16 +392,15 @@ public:
   NetPeerReceivedConnectResponse(GameSession* gameSession);
 
   // Data
-  IpAddress
-      mTheirIpAddress; ///< Their IP address (as seen from our perspective).
-  EventBundle mOurRequestBundle;       ///< Our bundled request event data.
-  uint mOurPendingUserAddRequestCount; ///< Our pending user add requests
-                                       ///< following this connect request
-                                       ///< (within the same frame).
-  IpAddress mOurIpAddress; ///< Our IP address (as seen from their perspective).
+  IpAddress mTheirIpAddress;                   ///< Their IP address (as seen from our perspective).
+  EventBundle mOurRequestBundle;               ///< Our bundled request event data.
+  uint mOurPendingUserAddRequestCount;         ///< Our pending user add requests
+                                               ///< following this connect request
+                                               ///< (within the same frame).
+  IpAddress mOurIpAddress;                     ///< Our IP address (as seen from their perspective).
   ConnectResponse::Enum mTheirConnectResponse; ///< Their connect response.
-  EventBundle mTheirResponseBundle; ///< Their bundled response event data.
-  NetPeerId mOurNetPeerId;          ///< Our net peer ID (set only if accepted).
+  EventBundle mTheirResponseBundle;            ///< Their bundled response event data.
+  NetPeerId mOurNetPeerId;                     ///< Our net peer ID (set only if accepted).
 };
 
 ////////////////
@@ -427,9 +419,8 @@ public:
   NetLinkConnected();
 
   // Data
-  NetPeerId mTheirNetPeerId; ///< Their net peer ID.
-  IpAddress
-      mTheirIpAddress; ///< Their IP address (as seen from our perspective).
+  NetPeerId mTheirNetPeerId;              ///< Their net peer ID.
+  IpAddress mTheirIpAddress;              ///< Their IP address (as seen from our perspective).
   TransmissionDirection::Enum mDirection; ///< Transmission direction.
 };
 
@@ -446,9 +437,8 @@ public:
   NetLinkDisconnected(GameSession* gameSession);
 
   // Data
-  NetPeerId mTheirNetPeerId; ///< Their net peer ID.
-  IpAddress
-      mTheirIpAddress; ///< Their IP address (as seen from our perspective).
+  NetPeerId mTheirNetPeerId;                ///< Their net peer ID.
+  IpAddress mTheirIpAddress;                ///< Their IP address (as seen from our perspective).
   DisconnectReason::Enum mDisconnectReason; ///< Disconnect reason.
   EventBundle mRequestBundle;               ///< Bundled request event data.
   TransmissionDirection::Enum mDirection;   ///< Transmission direction.
@@ -495,9 +485,8 @@ public:
   NetPeerSentUserAddRequest(GameSession* gameSession);
 
   // Data
-  NetPeerId mTheirNetPeerId; ///< Their net peer ID.
-  IpAddress
-      mTheirIpAddress; ///< Their IP address (as seen from our perspective).
+  NetPeerId mTheirNetPeerId;     ///< Their net peer ID.
+  IpAddress mTheirIpAddress;     ///< Their IP address (as seen from our perspective).
   EventBundle mOurRequestBundle; ///< Our bundled request event data.
 };
 
@@ -513,18 +502,16 @@ public:
   NetPeerReceivedUserAddRequest(GameSession* gameSession);
 
   // Data
-  NetPeerId mTheirNetPeerId; ///< Their net peer ID.
-  IpAddress
-      mTheirIpAddress; ///< Their IP address (as seen from our perspective).
-  EventBundle mTheirRequestBundle; ///< Their bundled request event data.
-  bool mReturnOurAddResponse;      ///< Return: Our add response (accept the add
-                                   ///< request?).
-  EventBundle
-      mReturnOurResponseBundle; ///< Return: Our bundled response event data.
-  Cog* mReturnTheirNetUser;  ///< Return: Their network user object (must have a
-                             ///< NetUser component).
-  NetUserId mTheirNetUserId; ///< Their net user ID (released back to the store
-                             ///< if not accepted).
+  NetPeerId mTheirNetPeerId;            ///< Their net peer ID.
+  IpAddress mTheirIpAddress;            ///< Their IP address (as seen from our perspective).
+  EventBundle mTheirRequestBundle;      ///< Their bundled request event data.
+  bool mReturnOurAddResponse;           ///< Return: Our add response (accept the add
+                                        ///< request?).
+  EventBundle mReturnOurResponseBundle; ///< Return: Our bundled response event data.
+  Cog* mReturnTheirNetUser;             ///< Return: Their network user object (must have a
+                                        ///< NetUser component).
+  NetUserId mTheirNetUserId;            ///< Their net user ID (released back to the store
+                                        ///< if not accepted).
 };
 
 //                          NetPeerSentUserAddResponse //
@@ -539,15 +526,14 @@ public:
   NetPeerSentUserAddResponse(GameSession* gameSession);
 
   // Data
-  NetPeerId mTheirNetPeerId; ///< Their net peer ID.
-  IpAddress
-      mTheirIpAddress; ///< Their IP address (as seen from our perspective).
-  EventBundle mTheirRequestBundle; ///< Their bundled request event data.
+  NetPeerId mTheirNetPeerId;                ///< Their net peer ID.
+  IpAddress mTheirIpAddress;                ///< Their IP address (as seen from our perspective).
+  EventBundle mTheirRequestBundle;          ///< Their bundled request event data.
   NetUserAddResponse::Enum mOurAddResponse; ///< Our add response.
-  EventBundle mOurResponseBundle; ///< Our bundled response event data.
-  NetUserId mTheirNetUserId;      ///< Their net user ID (set only if accepted).
-  Cog* mTheirNetUser; ///< Their net user object about to be added (set only if
-                      ///< accepted).
+  EventBundle mOurResponseBundle;           ///< Our bundled response event data.
+  NetUserId mTheirNetUserId;                ///< Their net user ID (set only if accepted).
+  Cog* mTheirNetUser;                       ///< Their net user object about to be added (set only if
+                                            ///< accepted).
 };
 
 //                        NetPeerReceivedUserAddResponse //
@@ -562,13 +548,12 @@ public:
   NetPeerReceivedUserAddResponse(GameSession* gameSession);
 
   // Data
-  NetPeerId mTheirNetPeerId; ///< Their net peer ID.
-  IpAddress
-      mTheirIpAddress; ///< Their IP address (as seen from our perspective).
-  EventBundle mOurRequestBundle; ///< Our bundled request event data.
+  NetPeerId mTheirNetPeerId;                  ///< Their net peer ID.
+  IpAddress mTheirIpAddress;                  ///< Their IP address (as seen from our perspective).
+  EventBundle mOurRequestBundle;              ///< Our bundled request event data.
   NetUserAddResponse::Enum mTheirAddResponse; ///< Their add response.
-  EventBundle mTheirResponseBundle; ///< Their bundled response event data.
-  NetUserId mOurNetUserId;          ///< Our net user ID (set only if accepted).
+  EventBundle mTheirResponseBundle;           ///< Their bundled response event data.
+  NetUserId mOurNetUserId;                    ///< Our net user ID (set only if accepted).
 };
 
 ///////////////////////
@@ -584,7 +569,7 @@ public:
   ZilchDeclareType(NetUserLostObjectOwnership, TypeCopyMode::ReferenceType);
 
   // Data
-  Cog* mLostObject; ///< The object this user just lost network ownership of.
+  Cog* mLostObject;          ///< The object this user just lost network ownership of.
   Cog* mCurrentNetUserOwner; ///< The object's current network user owner.
 };
 
@@ -687,9 +672,9 @@ public:
   TransmissionDirection::Enum mDirection;   ///< The change direction.
   Cog* mObject;                             ///< The changed net object.
   String mChannelName;                      ///< The changed net channel.
-  String mComponentName; ///< The component which declared the changed net
-                         ///< property.
-  String mPropertyName;  ///< The changed net property.
+  String mComponentName;                    ///< The component which declared the changed net
+                                            ///< property.
+  String mPropertyName;                     ///< The changed net property.
 };
 
 //                                NetEvent Events //
@@ -723,10 +708,10 @@ public:
   // Data
   NetPeerId mTheirNetPeerId; ///< Their net peer ID.
   Event* mNetEvent;          ///< Network event received.
-  Cog* mDestination; ///< Dispatch destination object (null if the net object
-                     ///< could not be found locally).
-  bool mReturnAllow; ///< Return: Allow the received network event to be
-                     ///< dispatched on the destination object?
+  Cog* mDestination;         ///< Dispatch destination object (null if the net object
+                             ///< could not be found locally).
+  bool mReturnAllow;         ///< Return: Allow the received network event to be
+                             ///< dispatched on the destination object?
 };
 
 //                                 NetHostRecord //
@@ -741,9 +726,8 @@ public:
   NetHostRecordEvent();
   NetHostRecordEvent(NetHostRecord*);
 
-  NetHostRecord*
-      mHostRecord; ///< Host discovered or refreshed (will contain the first
-                   ///< host updated if this is a list update).
+  NetHostRecord* mHostRecord; ///< Host discovered or refreshed (will contain the first
+                              ///< host updated if this is a list update).
 };
 
 } // namespace Zero

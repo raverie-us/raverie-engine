@@ -25,8 +25,7 @@ TimeOfImpactDebug::TimeOfImpactDebug() : mSimulatedDt(0.0167), mSteps(0)
 {
 }
 
-Vec3 TimeOfImpactDebug::PointAtTime(
-    Vec3Param p, Vec3Param v, Vec3Param r, Vec3Param w, real a, real t)
+Vec3 TimeOfImpactDebug::PointAtTime(Vec3Param p, Vec3Param v, Vec3Param r, Vec3Param w, real a, real t)
 {
   Quat q = ToQuaternion(w, a * t);
   return p + v * t + Math::Multiply(q, r);
@@ -39,8 +38,7 @@ void TimeOfImpactDebug::DebugDraw()
 
   real impact = mSimulatedDt;
   Physics::Manifold manifold;
-  TimeOfImpactData data(
-      GetOwner()->has(Collider), mOtherObject.has(Collider), mSimulatedDt);
+  TimeOfImpactData data(GetOwner()->has(Collider), mOtherObject.has(Collider), mSimulatedDt);
   data.Steps = mSteps;
   TimeOfImpact(&data);
 
@@ -96,54 +94,18 @@ void TimeOfImpactDebug::DrawBoxAtTime(Cog* cog, real dt)
   // |/    |/
   // 6 --- 2
 
-  gDebugDraw->Add(Debug::Triangle(p[6], p[2], p[0])
-                      .Color(Color::Red)
-                      .Alpha(50)
-                      .Border(true));
-  gDebugDraw->Add(Debug::Triangle(p[6], p[0], p[4])
-                      .Color(Color::Red)
-                      .Alpha(50)
-                      .Border(true));
-  gDebugDraw->Add(Debug::Triangle(p[2], p[3], p[1])
-                      .Color(Color::Red)
-                      .Alpha(50)
-                      .Border(true));
-  gDebugDraw->Add(Debug::Triangle(p[2], p[1], p[0])
-                      .Color(Color::Red)
-                      .Alpha(50)
-                      .Border(true));
-  gDebugDraw->Add(Debug::Triangle(p[3], p[7], p[5])
-                      .Color(Color::Red)
-                      .Alpha(50)
-                      .Border(true));
-  gDebugDraw->Add(Debug::Triangle(p[3], p[5], p[1])
-                      .Color(Color::Red)
-                      .Alpha(50)
-                      .Border(true));
-  gDebugDraw->Add(Debug::Triangle(p[7], p[6], p[4])
-                      .Color(Color::Red)
-                      .Alpha(50)
-                      .Border(true));
-  gDebugDraw->Add(Debug::Triangle(p[7], p[4], p[5])
-                      .Color(Color::Red)
-                      .Alpha(50)
-                      .Border(true));
-  gDebugDraw->Add(Debug::Triangle(p[4], p[0], p[1])
-                      .Color(Color::Red)
-                      .Alpha(50)
-                      .Border(true));
-  gDebugDraw->Add(Debug::Triangle(p[4], p[1], p[5])
-                      .Color(Color::Red)
-                      .Alpha(50)
-                      .Border(true));
-  gDebugDraw->Add(Debug::Triangle(p[7], p[3], p[2])
-                      .Color(Color::Red)
-                      .Alpha(50)
-                      .Border(true));
-  gDebugDraw->Add(Debug::Triangle(p[7], p[2], p[6])
-                      .Color(Color::Red)
-                      .Alpha(50)
-                      .Border(true));
+  gDebugDraw->Add(Debug::Triangle(p[6], p[2], p[0]).Color(Color::Red).Alpha(50).Border(true));
+  gDebugDraw->Add(Debug::Triangle(p[6], p[0], p[4]).Color(Color::Red).Alpha(50).Border(true));
+  gDebugDraw->Add(Debug::Triangle(p[2], p[3], p[1]).Color(Color::Red).Alpha(50).Border(true));
+  gDebugDraw->Add(Debug::Triangle(p[2], p[1], p[0]).Color(Color::Red).Alpha(50).Border(true));
+  gDebugDraw->Add(Debug::Triangle(p[3], p[7], p[5]).Color(Color::Red).Alpha(50).Border(true));
+  gDebugDraw->Add(Debug::Triangle(p[3], p[5], p[1]).Color(Color::Red).Alpha(50).Border(true));
+  gDebugDraw->Add(Debug::Triangle(p[7], p[6], p[4]).Color(Color::Red).Alpha(50).Border(true));
+  gDebugDraw->Add(Debug::Triangle(p[7], p[4], p[5]).Color(Color::Red).Alpha(50).Border(true));
+  gDebugDraw->Add(Debug::Triangle(p[4], p[0], p[1]).Color(Color::Red).Alpha(50).Border(true));
+  gDebugDraw->Add(Debug::Triangle(p[4], p[1], p[5]).Color(Color::Red).Alpha(50).Border(true));
+  gDebugDraw->Add(Debug::Triangle(p[7], p[3], p[2]).Color(Color::Red).Alpha(50).Border(true));
+  gDebugDraw->Add(Debug::Triangle(p[7], p[2], p[6]).Color(Color::Red).Alpha(50).Border(true));
 }
 
 void TimeOfImpactDebug::DrawColliderAtTime(Cog* cog, real dt)
@@ -169,8 +131,7 @@ void TimeOfImpactDebug::DrawColliderAtTime(Cog* cog, real dt)
   Quat oldRotation = Math::ToQuaternion(transform->GetWorldRotation());
   // integrate the position and orientation forward in time
   transform->SetTranslation(oldPosition + vel * dt);
-  Quat newRotation =
-      Math::ToQuaternion(angularVel, rotationAngle * dt) * oldRotation;
+  Quat newRotation = Math::ToQuaternion(angularVel, rotationAngle * dt) * oldRotation;
   transform->SetRotation(Math::ToMatrix3(newRotation));
 
   collider->DebugDraw();

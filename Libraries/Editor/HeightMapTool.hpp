@@ -15,12 +15,7 @@ class HeightPatchUndoRedo;
 class WeightMapUndoRedo;
 
 /// Declaration of all tools
-DeclareEnum5(HeightTool,
-             CreateDestroy,
-             RaiseLower,
-             SmoothSharpen,
-             Flatten,
-             WeightPainter);
+DeclareEnum5(HeightTool, CreateDestroy, RaiseLower, SmoothSharpen, Flatten, WeightPainter);
 
 class HeightMapSubTool : public Object
 {
@@ -83,8 +78,7 @@ public:
 protected:
   /// Apply a particular function to a cell query (such as adjusting height)
   /// The mode that is passed in tells us what input the user was giving us
-  virtual void ApplyToCells(HeightMapCellRange& range,
-                            ViewportMouseEvent* e) = 0;
+  virtual void ApplyToCells(HeightMapCellRange& range, ViewportMouseEvent* e) = 0;
 
   /// Perform the cell query, and returns if the query grabbed anything
   void PerformQuery(HeightMap* map, ViewportMouseEvent* e);
@@ -389,9 +383,7 @@ public:
 private:
   /// Tells the sub-tool where the current mouse position is at
   /// Returns true if the mouse intersects the map, false otherwise
-  bool SetupLocalPosition(HeightMap* map,
-                          Viewport* viewport,
-                          ViewportMouseEvent* e);
+  bool SetupLocalPosition(HeightMap* map, Viewport* viewport, ViewportMouseEvent* e);
 
   /// Sets the selection to a new selection
   void SetEditingMap(CogId cog, HeightMap* map);

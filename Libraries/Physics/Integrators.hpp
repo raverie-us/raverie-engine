@@ -27,15 +27,9 @@ struct Integration
   static void IntegrateRk2Velocity(RigidBody* body, real dt);
   static void IntegrateRk2Position(RigidBody* body, real dt);
 
-  static Vec3 VelocityApproximation(Vec3Param startPosition,
-                                    Vec3Param endPosition,
-                                    real dt);
-  static Vec3 AngularVelocityApproximation(QuatParam startRotation,
-                                           QuatParam endRotation,
-                                           real dt);
-  static Vec3 AngularVelocityApproximation(Mat3Param startRotation,
-                                           Mat3Param endRotation,
-                                           real dt);
+  static Vec3 VelocityApproximation(Vec3Param startPosition, Vec3Param endPosition, real dt);
+  static Vec3 AngularVelocityApproximation(QuatParam startRotation, QuatParam endRotation, real dt);
+  static Vec3 AngularVelocityApproximation(Mat3Param startRotation, Mat3Param endRotation, real dt);
 };
 
 } // namespace Physics

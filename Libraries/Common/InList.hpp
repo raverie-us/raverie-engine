@@ -21,9 +21,7 @@ template <typename type>
 struct ZeroSharedTemplate Link
 {
 #if DEBUGLINKS
-  Link() :
-      Next((type*)ObjListPtrDebugValue),
-      Prev((type*)ObjListPtrDebugValue){};
+  Link() : Next((type*)ObjListPtrDebugValue), Prev((type*)ObjListPtrDebugValue){};
 #endif
   type* Next;
   type* Prev;
@@ -45,21 +43,17 @@ inline ptrdiff_t PointerToMemberOffset(const Member Parent::*ptrToMember)
 
 typedef const char* const cstrc;
 
-cstrc cBadRemoveError =
-    "Prev object next pointer does not match current object."
-    "Most likely the prev object has been deleted or improperly removed.";
-cstrc cBadLinkInsertError =
-    "Link value is not set to debug value. "
-    "Probably a double Insert or not yet removed from another list.";
+cstrc cBadRemoveError = "Prev object next pointer does not match current object."
+                        "Most likely the prev object has been deleted or improperly removed.";
+cstrc cBadLinkInsertError = "Link value is not set to debug value. "
+                            "Probably a double Insert or not yet removed from another list.";
 
 cstrc cBadRemovedAlready = "Object has already been erased or was never added.";
 
 /// Intrusively linked list container.
 /// Does not own the objects in Contains (they are implicitly pointers)
 /// Objects can link and unlink without using the container.
-template <typename type,
-          typename refType,
-          Link<type> type::*PtrToMember = &type::link>
+template <typename type, typename refType, Link<type> type::*PtrToMember = &type::link>
 class ZeroSharedTemplate BaseInList
 {
 public:
@@ -299,8 +293,7 @@ public:
 #if DEBUGLINKS
     pointer prev = Prev(element);
     pointer next = Next(element);
-    if (prev == (type*)ObjListPtrDebugValue &&
-        next == (pointer)ObjListPtrDebugValue)
+    if (prev == (type*)ObjListPtrDebugValue && next == (pointer)ObjListPtrDebugValue)
       return true;
     else
       return false;
@@ -625,9 +618,7 @@ public:
   }
 
   template <typename Comparer>
-  void SortedInsertInternal(iterator where,
-                            pointer valueInInsert,
-                            Comparer comparer)
+  void SortedInsertInternal(iterator where, pointer valueInInsert, Comparer comparer)
   {
     while (where != End())
     {
@@ -692,8 +683,7 @@ protected:
 
   inline static pointer ToNode(Link<type>& link)
   {
-    return (pointer)((unsigned char*)&link -
-                     PointerToMemberOffset(PtrToMember));
+    return (pointer)((unsigned char*)&link - PointerToMemberOffset(PtrToMember));
   }
   inline static Link<type>& ToLink(pointer obj)
   {
@@ -726,8 +716,7 @@ private:
 };
 
 template <typename type, typename baseLinkType = LinkBase>
-class ZeroSharedTemplate InListBaseLink
-    : public BaseInList<baseLinkType, type, &baseLinkType::link>
+class ZeroSharedTemplate InListBaseLink : public BaseInList<baseLinkType, type, &baseLinkType::link>
 {
 public:
   InListBaseLink()
@@ -754,16 +743,13 @@ void EraseAndDeleteBase(baseLinkType* element)
 template <typename baseLinkType, typename type>
 void DeleteObjectsIn(BaseInList<baseLinkType, type>& container)
 {
-  container.SafeForEach(container.Begin(),
-                        container.End(),
-                        EraseAndDeleteBase<baseLinkType, type>);
+  container.SafeForEach(container.Begin(), container.End(), EraseAndDeleteBase<baseLinkType, type>);
 }
 
 template <typename baseLinkType, typename type>
-void DeleteObjectsInRange(
-    BaseInList<baseLinkType, type>& container,
-    typename BaseInList<baseLinkType, type>::iterator& begin,
-    typename BaseInList<baseLinkType, type>::iterator& end)
+void DeleteObjectsInRange(BaseInList<baseLinkType, type>& container,
+                          typename BaseInList<baseLinkType, type>::iterator& begin,
+                          typename BaseInList<baseLinkType, type>::iterator& end)
 {
   container.SafeForEach(begin, end, EraseAndDeleteBase<baseLinkType, type>);
 }
@@ -778,8 +764,7 @@ void EraseAndDelete(type* element)
 template <typename type, Link<type> type::*PtrToMember>
 void DeleteObjectsIn(InList<type, PtrToMember>& container)
 {
-  container.SafeForEach(
-      container.Begin(), container.End(), EraseAndDelete<type, PtrToMember>);
+  container.SafeForEach(container.Begin(), container.End(), EraseAndDelete<type, PtrToMember>);
 }
 
 template <typename type, typename baseLinktype = LinkBase>
@@ -792,9 +777,7 @@ void EraseAndDeleteBaseLink(baseLinktype* element)
 template <typename type, typename baseLinkType = LinkBase>
 void DeleteObjectsIn(InListBaseLink<type, baseLinkType>& container)
 {
-  container.SafeForEach(container.Begin(),
-                        container.End(),
-                        EraseAndDeleteBaseLink<type, baseLinkType>);
+  container.SafeForEach(container.Begin(), container.End(), EraseAndDeleteBaseLink<type, baseLinkType>);
 }
 
 template <typename type, Link<type> type::*PtrToMember>

@@ -16,10 +16,8 @@ ZilchDefineType(BaseCastFilter, builder, type)
 
 BaseCastFilter::BaseCastFilter()
 {
-  mFlags.SetFlag(BaseCastFilterFlags::Refine |
-                 BaseCastFilterFlags::GetContactNormal |
-                 BaseCastFilterFlags::IgnoreInternalCasts |
-                 BaseCastFilterFlags::IgnoreGhost);
+  mFlags.SetFlag(BaseCastFilterFlags::Refine | BaseCastFilterFlags::GetContactNormal |
+                 BaseCastFilterFlags::IgnoreInternalCasts | BaseCastFilterFlags::IgnoreGhost);
   mIgnoredCog = nullptr;
 }
 
@@ -109,8 +107,7 @@ void BaseCastFilter::ValidateFlags()
 {
   bool refineSet = IsSet(BaseCastFilterFlags::Refine);
   bool normalSet = IsSet(BaseCastFilterFlags::GetContactNormal);
-  ErrorIf(!refineSet && normalSet,
-          "Cannot get contact normals without the refine flag set.");
+  ErrorIf(!refineSet && normalSet, "Cannot get contact normals without the refine flag set.");
 }
 
 CastData::CastData(Vec3Param start, Vec3Param vec)
@@ -198,8 +195,7 @@ const Frustum& CastData::GetFrustum() const
   return *(Frustum*)bytes;
 }
 
-ProxyResult::ProxyResult(
-    void* proxy, Vec3Param p1, Vec3Param p2, Vec3Param contactNormal, real time)
+ProxyResult::ProxyResult(void* proxy, Vec3Param p1, Vec3Param p2, Vec3Param contactNormal, real time)
 {
   mObjectHit = proxy;
   mPoints[0] = p1;
@@ -219,9 +215,8 @@ void ProxyResult::operator=(const ProxyResult& rhs)
 
 bool ProxyResult::operator==(const ProxyResult& rhs)
 {
-  return (mObjectHit == rhs.mObjectHit && mPoints[0] == rhs.mPoints[0] &&
-          mPoints[1] == rhs.mPoints[1] && mTime == rhs.mTime &&
-          mContactNormal == rhs.mContactNormal);
+  return (mObjectHit == rhs.mObjectHit && mPoints[0] == rhs.mPoints[0] && mPoints[1] == rhs.mPoints[1] &&
+          mTime == rhs.mTime && mContactNormal == rhs.mContactNormal);
 }
 
 bool ProxyResult::operator!=(const ProxyResult& rhs)
@@ -229,10 +224,7 @@ bool ProxyResult::operator!=(const ProxyResult& rhs)
   return !(*this == rhs);
 }
 
-void ProxyResult::Set(void* proxy,
-                      Vec3 points[2],
-                      Vec3Param contactNormal,
-                      real time)
+void ProxyResult::Set(void* proxy, Vec3 points[2], Vec3Param contactNormal, real time)
 {
   mObjectHit = proxy;
   mPoints[0] = points[0];
@@ -241,8 +233,7 @@ void ProxyResult::Set(void* proxy,
   mTime = time;
 }
 
-ProxyCastResults::ProxyCastResults(ProxyCastResultArray& array,
-                                   BaseCastFilter& filter) :
+ProxyCastResults::ProxyCastResults(ProxyCastResultArray& array, BaseCastFilter& filter) :
     CurrSize(0),
     Filter(filter),
     Results(array)
@@ -251,10 +242,7 @@ ProxyCastResults::ProxyCastResults(ProxyCastResultArray& array,
 
 bool ProxyCastResults::Insert(ProxyResult& proxyResult)
 {
-  return Insert(proxyResult.mObjectHit,
-                proxyResult.mPoints,
-                proxyResult.mContactNormal,
-                proxyResult.mTime);
+  return Insert(proxyResult.mObjectHit, proxyResult.mPoints, proxyResult.mContactNormal, proxyResult.mTime);
 }
 
 bool ProxyCastResults::Insert(void* mObjectHit, real distance)
@@ -266,10 +254,7 @@ bool ProxyCastResults::Insert(void* mObjectHit, real distance)
   return Insert(mObjectHit, points, normal, distance);
 }
 
-bool ProxyCastResults::Insert(void* mObjectHit,
-                              Vec3 points[2],
-                              Vec3Param normal,
-                              real time)
+bool ProxyCastResults::Insert(void* mObjectHit, Vec3 points[2], Vec3Param normal, real time)
 {
   if (!IsValid(mObjectHit))
     return false;

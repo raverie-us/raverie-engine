@@ -4,37 +4,23 @@
 
 namespace Zero
 {
-float GetValueLinearCurve(const float current,
-                          const float total,
-                          const float startValue,
-                          const float endValue)
+float GetValueLinearCurve(const float current, const float total, const float startValue, const float endValue)
 {
   return ((current / total) * (endValue - startValue)) + startValue;
 }
 
-float GetValueSquaredCurve(const float current,
-                           const float total,
-                           const float startValue,
-                           const float endValue)
+float GetValueSquaredCurve(const float current, const float total, const float startValue, const float endValue)
 {
   float percent = current / total;
   return ((percent * percent) * (endValue - startValue)) + startValue;
 }
 
-float GetValueSineCurve(const float current,
-                        const float total,
-                        const float startValue,
-                        const float endValue)
+float GetValueSineCurve(const float current, const float total, const float startValue, const float endValue)
 {
-  return (Math::Sin((current / total) * Math::cTwoPi) *
-          (endValue - startValue)) +
-         startValue;
+  return (Math::Sin((current / total) * Math::cTwoPi) * (endValue - startValue)) + startValue;
 }
 
-float GetValueSquareRootCurve(const float current,
-                              const float total,
-                              const float startValue,
-                              const float endValue)
+float GetValueSquareRootCurve(const float current, const float total, const float startValue, const float endValue)
 {
   float percent = current / total;
 
@@ -45,14 +31,9 @@ float GetValueSquareRootCurve(const float current,
 }
 
 const float expDenominator = Math::Log(101.0f);
-float GetValueExponentialCurve(const float current,
-                               const float total,
-                               const float startValue,
-                               const float endValue)
+float GetValueExponentialCurve(const float current, const float total, const float startValue, const float endValue)
 {
-  return ((Math::Log(((current / total) * 100.0f) + 1.0f) / expDenominator) *
-          (endValue - startValue)) +
-         startValue;
+  return ((Math::Log(((current / total) * 100.0f) + 1.0f) / expDenominator) * (endValue - startValue)) + startValue;
 }
 
 // Interpolating Object
@@ -70,16 +51,13 @@ InterpolatingObject::InterpolatingObject() :
 
 float InterpolatingObject::NextValue()
 {
-  if (mTotalFrames == 0 || mCurrentFrame >= mTotalFrames ||
-      mEndValue == mStartValue)
+  if (mTotalFrames == 0 || mCurrentFrame >= mTotalFrames || mEndValue == mStartValue)
     return mEndValue;
 
   if (mCurrentCurveType != FalloffCurveType::Custom)
-    return GetValue(
-        (float)mCurrentFrame++, (float)mTotalFrames, mStartValue, mEndValue);
+    return GetValue((float)mCurrentFrame++, (float)mTotalFrames, mStartValue, mEndValue);
   else
-    return CustomCurveObject.GetValue(
-        (float)mCurrentFrame++, (float)mTotalFrames, mStartValue, mEndValue);
+    return CustomCurveObject.GetValue((float)mCurrentFrame++, (float)mTotalFrames, mStartValue, mEndValue);
 }
 
 float InterpolatingObject::ValueAtIndex(const unsigned index)
@@ -93,8 +71,7 @@ float InterpolatingObject::ValueAtIndex(const unsigned index)
   if (mCurrentCurveType != FalloffCurveType::Custom)
     return GetValue((float)index, (float)mTotalFrames, mStartValue, mEndValue);
   else
-    return CustomCurveObject.GetValue(
-        (float)index, (float)mTotalFrames, mStartValue, mEndValue);
+    return CustomCurveObject.GetValue((float)index, (float)mTotalFrames, mStartValue, mEndValue);
 }
 
 float InterpolatingObject::ValueAtDistance(const float currentDistance)
@@ -108,13 +85,10 @@ float InterpolatingObject::ValueAtDistance(const float currentDistance)
   if (mCurrentCurveType != FalloffCurveType::Custom)
     return GetValue(currentDistance, mTotalDistance, mStartValue, mEndValue);
   else
-    return CustomCurveObject.GetValue(
-        currentDistance, mTotalDistance, mStartValue, mEndValue);
+    return CustomCurveObject.GetValue(currentDistance, mTotalDistance, mStartValue, mEndValue);
 }
 
-void InterpolatingObject::SetValues(const float start,
-                                    const float end,
-                                    const unsigned frames)
+void InterpolatingObject::SetValues(const float start, const float end, const unsigned frames)
 {
   mStartValue = start;
   mEndValue = end;
@@ -126,8 +100,7 @@ void InterpolatingObject::SetValues(const float start,
     mCurrentFrame = mTotalFrames;
 }
 
-void InterpolatingObject::SetValues(const float endValue,
-                                    const unsigned numberOfFrames)
+void InterpolatingObject::SetValues(const float endValue, const unsigned numberOfFrames)
 {
   mStartValue = GetCurrentValue();
 
@@ -140,9 +113,7 @@ void InterpolatingObject::SetValues(const float endValue,
     mCurrentFrame = mTotalFrames;
 }
 
-void InterpolatingObject::SetValues(const float start,
-                                    const float end,
-                                    const float distance)
+void InterpolatingObject::SetValues(const float start, const float end, const float distance)
 {
   mStartValue = start;
   mEndValue = end;
@@ -179,9 +150,7 @@ bool InterpolatingObject::Finished(HandleOf<SoundNode> nodeForEvent)
     {
       // Notify the external object that the interpolation is done
       Z::gSound->Mixer.AddTaskThreaded(
-          CreateFunctor(&SoundNode::DispatchEventFromMixThread,
-                        *nodeForEvent,
-                        Events::AudioInterpolationDone),
+          CreateFunctor(&SoundNode::DispatchEventFromMixThread, *nodeForEvent, Events::AudioInterpolationDone),
           nodeForEvent);
     }
 
@@ -241,11 +210,9 @@ const float InterpolatingObject::GetCurrentValue()
     return mStartValue;
 
   if (mCurrentCurveType != FalloffCurveType::Custom)
-    return GetValue(
-        (float)mCurrentFrame, (float)mTotalFrames, mStartValue, mEndValue);
+    return GetValue((float)mCurrentFrame, (float)mTotalFrames, mStartValue, mEndValue);
   else
-    return CustomCurveObject.GetValue(
-        (float)mCurrentFrame, (float)mTotalFrames, mStartValue, mEndValue);
+    return CustomCurveObject.GetValue((float)mCurrentFrame, (float)mTotalFrames, mStartValue, mEndValue);
 }
 
 void InterpolatingObject::SetFrame(const unsigned frame)
@@ -284,10 +251,7 @@ void CustomCurve::SetCurveData(Zero::Array<Math::Vec3>* newCurveData)
   CurveData = newCurveData;
 }
 
-float CustomCurve::GetValue(const float current,
-                            const float total,
-                            const float startValue,
-                            const float endValue)
+float CustomCurve::GetValue(const float current, const float total, const float startValue, const float endValue)
 {
   if (CurveData->Empty())
     return 0.0f;

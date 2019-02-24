@@ -13,15 +13,8 @@ class PhysicsNode;
 class IgnoreSpaceEffects;
 
 // Internal states of a rigid body.
-DeclareBitField8(RigidBodyStates,
-                 Static,
-                 Asleep,
-                 Kinematic,
-                 RotationLocked,
-                 Mode2D,
-                 AllowSleep,
-                 Inherit2DMode,
-                 SleepAccumulated);
+DeclareBitField8(
+    RigidBodyStates, Static, Asleep, Kinematic, RotationLocked, Mode2D, AllowSleep, Inherit2DMode, SleepAccumulated);
 
 /// What kind of dynamics this body should have. Determines if forces are
 /// integrated and if collisions are resolved.
@@ -57,10 +50,7 @@ public:
   ZilchDeclareType(RigidBody, TypeCopyMode::ReferenceType);
   typedef InList<Collider, &Collider::mBodyLink> CompositeColliderList;
   typedef CompositeColliderList::range CompositeColliderRange;
-  typedef BaseInList<BaseRigidBody,
-                     RigidBody,
-                     &BaseRigidBody::RigidBodyHierarchyLink>
-      ChildBodyList;
+  typedef BaseInList<BaseRigidBody, RigidBody, &BaseRigidBody::RigidBodyHierarchyLink> ChildBodyList;
   typedef ChildBodyList::range BodyRange;
 
   RigidBody();
@@ -153,8 +143,7 @@ public:
   /// Applies an impulse at on offset from the center of mass (world space).
   /// Results in a change in linear and angular velocity. Will not wake up the
   /// body if it's asleep.
-  void ApplyImpulseAtOffsetVectorNoWakeUp(Vec3Param impulse,
-                                          Vec3Param worldOffset);
+  void ApplyImpulseAtOffsetVectorNoWakeUp(Vec3Param impulse, Vec3Param worldOffset);
   /// Applies an impulse at a world point (world space).
   /// Results in a change to linear and angular velocity.
   /// Will not wake up the body if it's asleep.
@@ -305,9 +294,7 @@ public:
   void UpdateKinematicVelocities();
   /// Compute the delta velocities to get from the passed translation and
   /// rotation to the current ones.
-  void ComputeVelocities(Vec3Param oldTranslation,
-                         Mat3Param oldRotation,
-                         real dt);
+  void ComputeVelocities(Vec3Param oldTranslation, Mat3Param oldRotation, real dt);
 
   /// Recompute the mass, inertia, and world inertia of this body.
   /// Internal function that doesn't check the modified state (otherwise

@@ -51,27 +51,23 @@ private:
   typedef OrderedHashSet<ZilchShaderIRFunction*> FunctionList;
   typedef OrderedHashSet<ZilchShaderIROp*> OpList;
   typedef OrderedHashSet<ZilchShaderExtensionImport*> ImportList;
-  typedef OrderedHashMap<ZilchShaderIRFunction*, ZilchShaderIRFunction*>
-      LateBoundFunctionMap;
+  typedef OrderedHashMap<ZilchShaderIRFunction*, ZilchShaderIRFunction*> LateBoundFunctionMap;
 
   /// Helper function to emit the given entry points and their dependencies out
   /// to spirv binary.
-  void EmitSpirvBinary(TypeDependencyCollector& collector,
-                       ZilchShaderToSpirVContext* context);
+  void EmitSpirvBinary(TypeDependencyCollector& collector, ZilchShaderToSpirVContext* context);
 
   void GenerateDummyMain(ZilchShaderIRType* type,
                          ZilchShaderIRLibrary* library,
                          TypeDependencyCollector& collector,
                          ZilchShaderToSpirVContext* context);
-  void GenerateGlobalsInitializerFunction(TypeDependencyCollector& collector,
-                                          ZilchShaderToSpirVContext* context);
+  void GenerateGlobalsInitializerFunction(TypeDependencyCollector& collector, ZilchShaderToSpirVContext* context);
   void RegisterLateBoundFunctions(LateBoundFunctionMap& lateBoundFunctionMap,
                                   TypeDependencyCollector& collector,
                                   ZilchShaderToSpirVContext* context);
   void Clear();
 
-  void AddDecorationCapabilities(TypeDependencyCollector& collector,
-                                 ZilchShaderToSpirVContext* context);
+  void AddDecorationCapabilities(TypeDependencyCollector& collector, ZilchShaderToSpirVContext* context);
   void AddDecorationCapabilities(EntryPointInfo* entryPoint,
                                  TypeDependencyCollector& collector,
                                  ZilchShaderToSpirVContext* context);
@@ -83,65 +79,43 @@ private:
                                        ZilchShaderToSpirVContext* context);
 
   template <typename T>
-  void GenerateListIds(OrderedHashSet<T>& input,
-                       ZilchShaderToSpirVContext* context);
-  void GenerateFunctionIds(FunctionList& functions,
-                           ZilchShaderToSpirVContext* context);
-  void GenerateFunctionBlockIds(ZilchShaderIRFunction* function,
-                                ZilchShaderToSpirVContext* context);
-  void GenerateBlockLineIds(BasicBlock* block,
-                            ZilchShaderToSpirVContext* context);
+  void GenerateListIds(OrderedHashSet<T>& input, ZilchShaderToSpirVContext* context);
+  void GenerateFunctionIds(FunctionList& functions, ZilchShaderToSpirVContext* context);
+  void GenerateFunctionBlockIds(ZilchShaderIRFunction* function, ZilchShaderToSpirVContext* context);
+  void GenerateBlockLineIds(BasicBlock* block, ZilchShaderToSpirVContext* context);
 
-  void WriteHeader(ZilchShaderToSpirVContext* context,
-                   TypeDependencyCollector& typeCollector);
+  void WriteHeader(ZilchShaderToSpirVContext* context, TypeDependencyCollector& typeCollector);
   void WriteDebug(TypeList& types, ZilchShaderToSpirVContext* context);
   void WriteDebug(ZilchShaderIRType* type, ZilchShaderToSpirVContext* context);
   void WriteDebug(FunctionList& functions, ZilchShaderToSpirVContext* context);
-  void WriteDebug(ZilchShaderIRFunction* function,
-                  ZilchShaderToSpirVContext* context);
+  void WriteDebug(ZilchShaderIRFunction* function, ZilchShaderToSpirVContext* context);
   void WriteDebug(BasicBlock* block, ZilchShaderToSpirVContext* context);
   void WriteDebug(OpList& ops, ZilchShaderToSpirVContext* context);
-  void WriteDebugName(IZilchShaderIR* resultIR,
-                      StringParam debugName,
-                      ZilchShaderToSpirVContext* context);
+  void WriteDebugName(IZilchShaderIR* resultIR, StringParam debugName, ZilchShaderToSpirVContext* context);
   void WriteDecorations(ZilchShaderToSpirVContext* context);
-  void WriteSpecializationConstantBindingDecorations(
-      TypeDependencyCollector& typeCollector,
-      ZilchShaderToSpirVContext* context);
+  void WriteSpecializationConstantBindingDecorations(TypeDependencyCollector& typeCollector,
+                                                     ZilchShaderToSpirVContext* context);
   ZilchShaderIROp* FindSpecialiationConstantCompositeId(ZilchShaderIROp* op);
 
-  void WriteTypesGlobalsAndConstants(IRList& typesGlobalsAndConstants,
-                                     ZilchShaderToSpirVContext* context);
+  void WriteTypesGlobalsAndConstants(IRList& typesGlobalsAndConstants, ZilchShaderToSpirVContext* context);
   void WriteType(ZilchShaderIRType* type, ZilchShaderToSpirVContext* context);
-  void WriteConstant(ZilchShaderIROp* constantOp,
-                     ZilchShaderToSpirVContext* context);
-  void WriteSpecConstant(ZilchShaderIROp* constantOp,
-                         ZilchShaderToSpirVContext* context);
-  void WriteGlobal(ZilchShaderIROp* globalVarOp,
-                   ZilchShaderToSpirVContext* context);
-  void WriteFunctions(FunctionList& functions,
-                      ZilchShaderToSpirVContext* context);
-  void WriteFunction(ZilchShaderIRFunction* function,
-                     ZilchShaderToSpirVContext* context);
+  void WriteConstant(ZilchShaderIROp* constantOp, ZilchShaderToSpirVContext* context);
+  void WriteSpecConstant(ZilchShaderIROp* constantOp, ZilchShaderToSpirVContext* context);
+  void WriteGlobal(ZilchShaderIROp* globalVarOp, ZilchShaderToSpirVContext* context);
+  void WriteFunctions(FunctionList& functions, ZilchShaderToSpirVContext* context);
+  void WriteFunction(ZilchShaderIRFunction* function, ZilchShaderToSpirVContext* context);
 
   void WriteBlock(BasicBlock* block, ZilchShaderToSpirVContext* context);
   void WriteBlockInstructions(BasicBlock* block,
                               Array<IZilchShaderIR*>& instructions,
                               ZilchShaderToSpirVContext* context);
-  void WriteIROp(BasicBlock* block,
-                 ZilchShaderIROp* op,
-                 ZilchShaderToSpirVContext* context);
-  void WriteIROpGeneric(ZilchShaderIROp* op,
-                        ZilchShaderToSpirVContext* context);
-  void WriteIROpGenericNoReturnType(ZilchShaderIROp* op,
-                                    ZilchShaderToSpirVContext* context);
-  void WriteIROpArguments(ZilchShaderIROp* op,
-                          ZilchShaderToSpirVContext* context);
-  void WriteIRArguments(Array<IZilchShaderIR*>& mArguments,
-                        ZilchShaderToSpirVContext* context);
+  void WriteIROp(BasicBlock* block, ZilchShaderIROp* op, ZilchShaderToSpirVContext* context);
+  void WriteIROpGeneric(ZilchShaderIROp* op, ZilchShaderToSpirVContext* context);
+  void WriteIROpGenericNoReturnType(ZilchShaderIROp* op, ZilchShaderToSpirVContext* context);
+  void WriteIROpArguments(ZilchShaderIROp* op, ZilchShaderToSpirVContext* context);
+  void WriteIRArguments(Array<IZilchShaderIR*>& mArguments, ZilchShaderToSpirVContext* context);
   void WriteIRId(IZilchShaderIR* ir, ZilchShaderToSpirVContext* context);
-  void WriteImport(ZilchShaderExtensionImport* importLibrary,
-                   ZilchShaderToSpirVContext* context);
+  void WriteImport(ZilchShaderExtensionImport* importLibrary, ZilchShaderToSpirVContext* context);
 
   Array<IZilchShaderIR*> mOwnedInstructions;
   Array<EntryPointInfo*> mOwnedEntryPoints;

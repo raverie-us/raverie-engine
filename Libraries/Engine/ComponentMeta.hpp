@@ -12,13 +12,9 @@ public:
 
   /// MetaDataInheritance Interface.
   void Revert(HandleParam object) override;
-  bool CanPropertyBeReverted(HandleParam object,
-                             PropertyPathParam propertyPath) override;
-  void RevertProperty(HandleParam object,
-                      PropertyPathParam propertyPath) override;
-  void SetPropertyModified(HandleParam object,
-                           PropertyPathParam propertyPath,
-                           bool state) override;
+  bool CanPropertyBeReverted(HandleParam object, PropertyPathParam propertyPath) override;
+  void RevertProperty(HandleParam object, PropertyPathParam propertyPath) override;
+  void SetPropertyModified(HandleParam object, PropertyPathParam propertyPath, bool state) override;
   void RebuildObject(HandleParam object) override;
 };
 

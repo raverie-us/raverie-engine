@@ -19,9 +19,7 @@ AttributeExtensions::~AttributeExtensions()
   DeleteObjectsIn(mFunctionExtensions.Values());
 }
 
-void AttributeExtensions::ProcessType(AttributeStatus& status,
-                                      BoundType* type,
-                                      bool ignoreUnkownAttributes)
+void AttributeExtensions::ProcessType(AttributeStatus& status, BoundType* type, bool ignoreUnkownAttributes)
 {
   // Class attributes
   ProcessObject(status, type, mClassExtensions, ignoreUnkownAttributes);
@@ -29,19 +27,17 @@ void AttributeExtensions::ProcessType(AttributeStatus& status,
     return;
 
   // Property attributes
-  forRange(Property * property, type->GetProperties(Members::InstanceStatic))
+  forRange (Property* property, type->GetProperties(Members::InstanceStatic))
   {
-    ProcessObject(
-        status, property, mPropertyExtensions, ignoreUnkownAttributes);
+    ProcessObject(status, property, mPropertyExtensions, ignoreUnkownAttributes);
     if (status.Failed())
       return;
   }
 
   // Function attributes
-  forRange(Function * function, type->GetFunctions(Members::InstanceStatic))
+  forRange (Function* function, type->GetFunctions(Members::InstanceStatic))
   {
-    ProcessObject(
-        status, function, mFunctionExtensions, ignoreUnkownAttributes);
+    ProcessObject(status, function, mFunctionExtensions, ignoreUnkownAttributes);
     if (status.Failed())
       return;
   }
@@ -83,10 +79,9 @@ void AttributeExtensions::ProcessObject(AttributeStatus& status,
   // Used to keep track of duplicate attributes
   HashSet<String> processedAttributes;
 
-  forRange(Attribute & attribute, object->Attributes.All())
+  forRange (Attribute& attribute, object->Attributes.All())
   {
-    AttributeExtension* extension =
-        extensionMap.FindValue(attribute.Name, nullptr);
+    AttributeExtension* extension = extensionMap.FindValue(attribute.Name, nullptr);
 
     // The attribute name wasn't registered for properties
     if (extension == nullptr)
@@ -95,19 +90,15 @@ void AttributeExtensions::ProcessObject(AttributeStatus& status,
         continue;
 
       String message;
-      if (mClassExtensions.ContainsKey(attribute.Name) ||
-          mPropertyExtensions.ContainsKey(attribute.Name) ||
+      if (mClassExtensions.ContainsKey(attribute.Name) || mPropertyExtensions.ContainsKey(attribute.Name) ||
           mFunctionExtensions.ContainsKey(attribute.Name))
       {
         String descriptor = GetDescriptorFromObject(object);
-        message = String::Format("Attribute '%s' is not valid on a %s",
-                                 attribute.Name.c_str(),
-                                 descriptor.c_str());
+        message = String::Format("Attribute '%s' is not valid on a %s", attribute.Name.c_str(), descriptor.c_str());
       }
       else
       {
-        message = String::Format("Attribute '%s' is not recognized",
-                                 attribute.Name.c_str());
+        message = String::Format("Attribute '%s' is not recognized", attribute.Name.c_str());
       }
 
       status.SetFailed(object->Location, message);
@@ -115,11 +106,9 @@ void AttributeExtensions::ProcessObject(AttributeStatus& status,
     }
 
     // Check if this attribute has already been processed
-    if (processedAttributes.Contains(attribute.Name) &&
-        extension->mAllowMultiple == false)
+    if (processedAttributes.Contains(attribute.Name) && extension->mAllowMultiple == false)
     {
-      String message = String::Format(
-          "You cannot have multiple '%s' attributes", attribute.Name.c_str());
+      String message = String::Format("You cannot have multiple '%s' attributes", attribute.Name.c_str());
       status.SetFailed(object->Location, message);
       return;
     }
@@ -137,32 +126,28 @@ void AttributeExtensions::ProcessObject(AttributeStatus& status,
   }
 }
 
-AttributeExtension*
-AttributeExtensions::RegisterClassExtension(AttributeExtension* extension)
+AttributeExtension* AttributeExtensions::RegisterClassExtension(AttributeExtension* extension)
 {
   return RegisterExtension(extension, mClassExtensions);
 }
 
-AttributeExtension*
-AttributeExtensions::RegisterPropertyExtension(AttributeExtension* extension)
+AttributeExtension* AttributeExtensions::RegisterPropertyExtension(AttributeExtension* extension)
 {
   return RegisterExtension(extension, mPropertyExtensions);
 }
 
-AttributeExtension*
-AttributeExtensions::RegisterFunctionExtension(AttributeExtension* extension)
+AttributeExtension* AttributeExtensions::RegisterFunctionExtension(AttributeExtension* extension)
 {
   return RegisterExtension(extension, mFunctionExtensions);
 }
 
-AttributeExtension* AttributeExtensions::RegisterExtension(
-    AttributeExtension* extension, ExtensionMap& extensionMap)
+AttributeExtension* AttributeExtensions::RegisterExtension(AttributeExtension* extension, ExtensionMap& extensionMap)
 {
   // Confirm that all optional attribute parameters are at the end
   if (BoundType* componentType = extension->GetMetaComponentType())
   {
     bool foundOptional = false;
-    forRange(Property * property, componentType->GetProperties())
+    forRange (Property* property, componentType->GetProperties())
     {
       if (property->HasAttribute(PropertyAttributes::cOptional))
       {
@@ -170,10 +155,9 @@ AttributeExtension* AttributeExtensions::RegisterExtension(
       }
       else
       {
-        String message = String::Format(
-            "All optional attribute parameters on '%s' must be bound "
-            "after all required properties",
-            componentType->Name.c_str());
+        String message = String::Format("All optional attribute parameters on '%s' must be bound "
+                                        "after all required properties",
+                                        componentType->Name.c_str());
         ErrorIf(foundOptional, message.c_str());
       }
     }
@@ -192,9 +176,7 @@ AttributeExtension::AttributeExtension(StringParam name) :
 {
 }
 
-void AttributeExtension::Validate(Status& status,
-                                  ReflectionObject* object,
-                                  Attribute& attribute)
+void AttributeExtension::Validate(Status& status, ReflectionObject* object, Attribute& attribute)
 {
   // First validate the type
   ValidateType(status, object);
@@ -222,9 +204,7 @@ void AttributeExtension::Validate(Status& status,
     // accept any parameters
     if (attribute.Parameters.Empty() == false)
     {
-      String message =
-          String::Format("Attribute '%s' shouldn't have any parameters",
-                         attribute.Name.c_str());
+      String message = String::Format("Attribute '%s' shouldn't have any parameters", attribute.Name.c_str());
       status.SetFailed(message);
     }
   }
@@ -257,30 +237,26 @@ void AttributeExtension::ValidateType(Status& status, ReflectionObject* object)
     String message;
     if (Type::DynamicCast<Property*>(object))
     {
-      message = String::Format(
-          "Attribute '%s' can only exist on a property of type '%s'",
-          mAttributeName.c_str(),
-          mMustBeType->Name.c_str());
+      message = String::Format("Attribute '%s' can only exist on a property of type '%s'",
+                               mAttributeName.c_str(),
+                               mMustBeType->Name.c_str());
     }
     else
     {
-      message = String::Format("Attribute '%s' can only exist on a '%s'",
-                               mAttributeName.c_str(),
-                               mMustBeType->Name.c_str());
+      message =
+          String::Format("Attribute '%s' can only exist on a '%s'", mAttributeName.c_str(), mMustBeType->Name.c_str());
     }
     status.SetFailed(message);
   }
 }
 
-void AttributeExtension::ValidateStatic(Status& status,
-                                        ReflectionObject* object)
+void AttributeExtension::ValidateStatic(Status& status, ReflectionObject* object)
 {
   if (Member* member = Type::DynamicCast<Member*>(object))
   {
     if (member->IsStatic && mAllowStatic == false)
     {
-      String message = String::Format(
-          "Attribute '%s' cannot be on static members", mAttributeName.c_str());
+      String message = String::Format("Attribute '%s' cannot be on static members", mAttributeName.c_str());
       status.SetFailed(message);
     }
   }
@@ -330,13 +306,10 @@ Any Cast(AnyParam value, BoundType* expectedType)
 // attribute for parameters
 String PropertyToAttributeName(String name)
 {
-  return BuildString(String(ToLower(name.Front())),
-                     name.SubString(name.Begin() + 1, name.End()));
+  return BuildString(String(ToLower(name.Front())), name.SubString(name.Begin() + 1, name.End()));
 }
 
-void AppendMissingParametersError(String& currentMessage,
-                                  BoundType* componentType,
-                                  StringParam attributeName)
+void AppendMissingParametersError(String& currentMessage, BoundType* componentType, StringParam attributeName)
 {
   StringBuilder message;
   message.Append(currentMessage);
@@ -344,14 +317,14 @@ void AppendMissingParametersError(String& currentMessage,
   message.Append("Expected parameters: ");
 
   int propertyCount = 0;
-  forRange(Property * expectedProperty,
-           componentType->GetProperties())++ propertyCount;
+  forRange (Property* expectedProperty, componentType->GetProperties())
+    ++propertyCount;
 
   message.Append("(");
   // Example: (min, max, [increment])
   int index = 0;
   bool hitOptional = false;
-  forRange(Property * expectedProperty, componentType->GetProperties())
+  forRange (Property* expectedProperty, componentType->GetProperties())
   {
     // Open optional parameters only once (all optional parameters are right
     // next to each other)
@@ -366,8 +339,7 @@ void AppendMissingParametersError(String& currentMessage,
     message.AppendFormat("%s", name.c_str());
 
     // Add parameter type name
-    if (BoundType* propertyType =
-            Type::GetBoundType(expectedProperty->PropertyType))
+    if (BoundType* propertyType = Type::GetBoundType(expectedProperty->PropertyType))
       message.AppendFormat(": %s", propertyType->Name.c_str());
 
     // Add a comma between parameters
@@ -385,9 +357,7 @@ void AppendMissingParametersError(String& currentMessage,
   currentMessage = message.ToString();
 }
 
-void AttributeExtension::ValidateParameters(Status& status,
-                                            HandleParam component,
-                                            Attribute& attribute)
+void AttributeExtension::ValidateParameters(Status& status, HandleParam component, Attribute& attribute)
 {
   BoundType* componentType = component.StoredType;
 
@@ -397,7 +367,7 @@ void AttributeExtension::ValidateParameters(Status& status,
   // We need to check how many are named so we know whether or not they're all
   // named
   uint namedParametersCount = 0;
-  forRange(AttributeParameter & parameter, attribute.Parameters.All())
+  forRange (AttributeParameter& parameter, attribute.Parameters.All())
   {
     if (!parameter.Name.Empty())
       ++namedParametersCount;
@@ -406,13 +376,12 @@ void AttributeExtension::ValidateParameters(Status& status,
   bool namedParameters = (namedParametersCount != 0);
   if (namedParameters && namedParametersCount != parameterCount)
   {
-    status.SetFailed(
-        "Attribute parameters must either be all named, or all unnamed");
+    status.SetFailed("Attribute parameters must either be all named, or all unnamed");
     return;
   }
 
   uint currentParameter = 0;
-  forRange(Property * property, componentType->GetProperties())
+  forRange (Property* property, componentType->GetProperties())
   {
     String name = PropertyToAttributeName(property->Name);
 
@@ -430,9 +399,7 @@ void AttributeExtension::ValidateParameters(Status& status,
         // All non-optional parameters must be specified
         if (!optional)
         {
-          String message =
-              String::Format("Attribute '%s' is missing required parameters.",
-                             attribute.Name.c_str());
+          String message = String::Format("Attribute '%s' is missing required parameters.", attribute.Name.c_str());
           AppendMissingParametersError(message, componentType, attribute.Name);
           status.SetFailed(message);
         }
@@ -460,18 +427,14 @@ void AttributeExtension::ValidateParameters(Status& status,
       }
       else
       {
-        String message = String::Format(
-            "Attribute '%s' expected the parameter '%s' to be a '%s'",
-            attribute.Name.c_str(),
-            name.c_str(),
-            propertyType->Name.c_str());
+        String message = String::Format("Attribute '%s' expected the parameter '%s' to be a '%s'",
+                                        attribute.Name.c_str(),
+                                        name.c_str(),
+                                        propertyType->Name.c_str());
 
         // If the parameter was a bound type, append to the message
-        if (BoundType* parameterType =
-                Type::GetBoundType(parameterValue.StoredType))
-          message = String::Format("%s, but instead got a '%s'.",
-                                   message.c_str(),
-                                   parameterType->Name.c_str());
+        if (BoundType* parameterType = Type::GetBoundType(parameterValue.StoredType))
+          message = String::Format("%s, but instead got a '%s'.", message.c_str(), parameterType->Name.c_str());
 
         AppendMissingParametersError(message, componentType, attribute.Name);
 
@@ -482,11 +445,10 @@ void AttributeExtension::ValidateParameters(Status& status,
     // If it's a required property, it should be an error
     else if (property->HasAttribute(PropertyAttributes::cOptional) == nullptr)
     {
-      String message = String::Format(
-          "Attribute '%s' must have a parameter called '%s' of type '%s'.",
-          attribute.Name.c_str(),
-          name.c_str(),
-          propertyType->Name.c_str());
+      String message = String::Format("Attribute '%s' must have a parameter called '%s' of type '%s'.",
+                                      attribute.Name.c_str(),
+                                      name.c_str(),
+                                      propertyType->Name.c_str());
       AppendMissingParametersError(message, componentType, attribute.Name);
       status.SetFailed(message);
       return;
@@ -501,14 +463,12 @@ void AttributeExtension::ValidateParameters(Status& status,
     if (namedParameters)
     {
       AttributeParameter& parameter = attribute.Parameters[currentParameter];
-      message = String::Format("Attribute '%s' has an invalid parameter '%s'.",
-                               attribute.Name.c_str(),
-                               parameter.Name.c_str());
+      message = String::Format(
+          "Attribute '%s' has an invalid parameter '%s'.", attribute.Name.c_str(), parameter.Name.c_str());
     }
     else
     {
-      message = String::Format("Attribute '%s' has too many parameters.",
-                               attribute.Name.c_str());
+      message = String::Format("Attribute '%s' has too many parameters.", attribute.Name.c_str());
     }
 
     AppendMissingParametersError(message, componentType, attribute.Name);

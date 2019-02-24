@@ -23,10 +23,7 @@ ZilchDefineType(EmitterNode, builder, type)
 {
 }
 
-EmitterNode::EmitterNode(StringParam name,
-                         const unsigned ID,
-                         Math::Vec3Param position,
-                         Math::Vec3Param velocity) :
+EmitterNode::EmitterNode(StringParam name, const unsigned ID, Math::Vec3Param position, Math::Vec3Param velocity) :
     SoundNode(name, ID, true, false),
     mPosition(position),
     mVelocity(velocity),
@@ -35,8 +32,7 @@ EmitterNode::EmitterNode(StringParam name,
     mPaused(false),
     mDirectionalAngleRadians(0.0f)
 {
-  PanningObject.Initialize(
-      Z::gSound->Mixer.mSystemChannels.Get(AudioThreads::MainThread));
+  PanningObject.Initialize(Z::gSound->Mixer.mSystemChannels.Get(AudioThreads::MainThread));
 }
 
 void EmitterNode::SetPausedThreaded(bool paused)
@@ -56,8 +52,7 @@ void EmitterNode::SetPausedThreaded(bool paused)
   }
 }
 
-void EmitterNode::SetPositionThreaded(const Math::Vec3 newPosition,
-                                      const Math::Vec3 newVelocity)
+void EmitterNode::SetPositionThreaded(const Math::Vec3 newPosition, const Math::Vec3 newVelocity)
 {
   mVelocity = newVelocity;
   mPosition = newPosition;
@@ -68,14 +63,12 @@ void EmitterNode::SetForwardDirectionThreaded(const Math::Vec3 forwardDirection)
   mFacingDirection = forwardDirection;
 }
 
-void EmitterNode::SetDirectionalAngleThreaded(const float angleInDegrees,
-                                              const float reducedVolume)
+void EmitterNode::SetDirectionalAngleThreaded(const float angleInDegrees, const float reducedVolume)
 {
   // Store half angle, in radians
   mDirectionalAngleRadians = Math::DegToRad(angleInDegrees) * 0.5f;
 
-  DirectionalInterpolator.SetValues(
-      1.0f, reducedVolume, Math::cPi - mDirectionalAngleRadians);
+  DirectionalInterpolator.SetValues(1.0f, reducedVolume, Math::cPi - mDirectionalAngleRadians);
 }
 
 bool EmitterNode::GetOutputSamples(BufferType* outputBuffer,
@@ -103,8 +96,7 @@ bool EmitterNode::GetOutputSamples(BufferType* outputBuffer,
   }
 
   // Get the relative position between emitter and listener
-  Math::Vec3 relativePosition =
-      listener->GetRelativePositionThreaded(mPosition);
+  Math::Vec3 relativePosition = listener->GetRelativePositionThreaded(mPosition);
 
   // If necessary, add new listener data
   if (!DataPerListener.FindPointer(listener))
@@ -116,12 +108,8 @@ bool EmitterNode::GetOutputSamples(BufferType* outputBuffer,
   // Check if the listener or emitter has moved (don't care about up/down
   // changes)
   bool valuesChanged = false;
-  if (!IsWithinLimit(relativePosition.x,
-                     listenerData.mPreviousRelativePosition.x,
-                     cMinimumPositionChange) ||
-      !IsWithinLimit(relativePosition.z,
-                     listenerData.mPreviousRelativePosition.z,
-                     cMinimumPositionChange))
+  if (!IsWithinLimit(relativePosition.x, listenerData.mPreviousRelativePosition.x, cMinimumPositionChange) ||
+      !IsWithinLimit(relativePosition.z, listenerData.mPreviousRelativePosition.z, cMinimumPositionChange))
   {
     CalculateData(&listenerData, relativePosition, listener, numberOfChannels);
     valuesChanged = true;
@@ -132,17 +120,14 @@ bool EmitterNode::GetOutputSamples(BufferType* outputBuffer,
 
   // Apply low pass filter to output (if turned on)
   if (listenerData.mUseLowPass)
-    listenerData.LowPass.ProcessBuffer(mInputSamplesThreaded.Data(),
-                                       outputBuffer->Data(),
-                                       numberOfChannels,
-                                       bufferSize);
+    listenerData.LowPass.ProcessBuffer(
+        mInputSamplesThreaded.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
   // Otherwise move the input into the output buffer
   else
     outputBuffer->Swap(mInputSamplesThreaded);
 
   // Adjust each frame with gain values
-  BufferRange outputRange1 = outputBuffer->All(),
-              outputRange2 = outputBuffer->All();
+  BufferRange outputRange1 = outputBuffer->All(), outputRange2 = outputBuffer->All();
   for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
   {
     float volume = 1.0f;
@@ -175,9 +160,7 @@ bool EmitterNode::GetOutputSamples(BufferType* outputBuffer,
 
       // If the gain values changed, interpolate from old to new value
       if (valuesChanged)
-        multiplier +=
-            (listenerData.mGainValues[j] - listenerData.mPreviousGains[j]) *
-            ((float)i / (float)bufferSize);
+        multiplier += (listenerData.mGainValues[j] - listenerData.mPreviousGains[j]) * ((float)i / (float)bufferSize);
 
       outputRange2.Front() += monoValue * multiplier;
     }
@@ -185,9 +168,7 @@ bool EmitterNode::GetOutputSamples(BufferType* outputBuffer,
 
   // If gain values changed, copy new ones to previous values
   if (valuesChanged)
-    memcpy(listenerData.mPreviousGains,
-           listenerData.mGainValues,
-           sizeof(float) * cMaxChannels);
+    memcpy(listenerData.mPreviousGains, listenerData.mGainValues, sizeof(float) * cMaxChannels);
 
   AddBypassThreaded(outputBuffer);
 
@@ -225,17 +206,14 @@ void EmitterNode::CalculateData(EmitterDataPerListener* data,
   if (mDirectionalAngleRadians > 0.0f)
   {
     // Get the emitter's facing direction relative to the listener
-    Math::Vec3 relativeFacing =
-        listener->GetRelativeFacingThreaded(mFacingDirection);
+    Math::Vec3 relativeFacing = listener->GetRelativeFacingThreaded(mFacingDirection);
     // Get the relative angle (facing should always be normalized)
-    float angle =
-        Math::ArcCos(Math::Dot(relativePosition.Normalized(), relativeFacing));
+    float angle = Math::ArcCos(Math::Dot(relativePosition.Normalized(), relativeFacing));
 
     // If the angle to the listener is greater than the emitter's angle, reduce
     // volume
     if (angle > mDirectionalAngleRadians)
-      listenerData.mDirectionalVolume = DirectionalInterpolator.ValueAtDistance(
-          angle - mDirectionalAngleRadians);
+      listenerData.mDirectionalVolume = DirectionalInterpolator.ValueAtDistance(angle - mDirectionalAngleRadians);
   }
   else
     listenerData.mDirectionalVolume = 1.0f;
@@ -252,23 +230,18 @@ void EmitterNode::CalculateData(EmitterDataPerListener* data,
 
     // The low pass cutoff frequency ranges from min to max depending on the
     // angle percentage, using a squared curve
-    float frequency =
-        cLowPassCutoffBase + (cLowPassCutoffAdditional * percent * percent);
+    float frequency = cLowPassCutoffBase + (cLowPassCutoffAdditional * percent * percent);
 
     // Check if the difference between this frequency and the last frequency
     // used is large
-    if (!IsWithinLimit(frequency,
-                       listenerData.LowPass.GetCutoffFrequency(),
-                       cMaxLowPassDifference))
+    if (!IsWithinLimit(frequency, listenerData.LowPass.GetCutoffFrequency(), cMaxLowPassDifference))
     {
       // Set frequency to be only maxDifferenceAllowed away from the last
       // frequency used
       if (frequency > listenerData.LowPass.GetCutoffFrequency())
-        frequency =
-            listenerData.LowPass.GetCutoffFrequency() + cMaxLowPassDifference;
+        frequency = listenerData.LowPass.GetCutoffFrequency() + cMaxLowPassDifference;
       else
-        frequency =
-            listenerData.LowPass.GetCutoffFrequency() - cMaxLowPassDifference;
+        frequency = listenerData.LowPass.GetCutoffFrequency() - cMaxLowPassDifference;
     }
 
     // Set the cutoff frequency on the low pass filter
@@ -279,8 +252,7 @@ void EmitterNode::CalculateData(EmitterDataPerListener* data,
   else
   {
     // Make sure the cutoff frequency is set to the maximum value
-    listenerData.LowPass.SetCutoffFrequency(cLowPassCutoffBase +
-                                            cLowPassCutoffAdditional);
+    listenerData.LowPass.SetCutoffFrequency(cLowPassCutoffBase + cLowPassCutoffAdditional);
 
     listenerData.mUseLowPass = false;
   }
@@ -289,8 +261,7 @@ void EmitterNode::CalculateData(EmitterDataPerListener* data,
   if (numberOfChannels != PanningObject.GetNumberOfChannels())
     PanningObject.Initialize(numberOfChannels);
 
-  PanningObject.ComputeGains(
-      relativePosition2D, 0.0f, listenerData.mGainValues);
+  PanningObject.ComputeGains(relativePosition2D, 0.0f, listenerData.mGainValues);
 }
 
 } // namespace Zero

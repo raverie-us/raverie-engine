@@ -81,8 +81,7 @@ void ContentPackage::OnWebResponse(WebResponseEvent* e)
   if (e->mResponseCode != WebResponseCode::OK)
     return;
 
-  String location =
-      FilePath::Combine(GetTemporaryDirectory(), "StreamedImage.png");
+  String location = FilePath::Combine(GetTemporaryDirectory(), "StreamedImage.png");
   WriteStringRangeToFile(location, e->mData);
 
   LoadLocalTexture(location);

@@ -9,13 +9,10 @@ void ResolveIntBitCount(ZilchSpirVFrontEnd* translator,
                         Zilch::MemberAccessNode* memberAccessNode,
                         ZilchSpirVFrontEndContext* context)
 {
-  ZilchShaderIRType* resultType =
-      translator->FindType(functionCallNode->ResultType, functionCallNode);
+  ZilchShaderIRType* resultType = translator->FindType(functionCallNode->ResultType, functionCallNode);
 
-  ZilchShaderIROp* baseOp = translator->WalkAndGetValueTypeResult(
-      functionCallNode->Arguments[0], context);
-  ZilchShaderIROp* bitCountOp = translator->BuildCurrentBlockIROp(
-      OpType::OpBitCount, resultType, baseOp, context);
+  ZilchShaderIROp* baseOp = translator->WalkAndGetValueTypeResult(functionCallNode->Arguments[0], context);
+  ZilchShaderIROp* bitCountOp = translator->BuildCurrentBlockIROp(OpType::OpBitCount, resultType, baseOp, context);
   context->PushIRStack(bitCountOp);
 }
 
@@ -23,9 +20,7 @@ void ResolveIntBitCount(ZilchSpirVFrontEnd* translator,
 // the spir-v spec). Some functions aren't implemented here as zilch doesn't
 // have a corresponding function. Everything else should be implemented on the
 // ShaderIntrinsics type.
-void RegisterBitOps(ZilchSpirVFrontEnd* translator,
-                    ZilchShaderIRLibrary* shaderLibrary,
-                    TypeGroups& types)
+void RegisterBitOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
   Zilch::BoundType* mathType = core.MathType;
@@ -42,28 +37,16 @@ void RegisterBitOps(ZilchSpirVFrontEnd* translator,
     Zilch::BoundType* zilchType = types.mIntegerVectorTypes[i]->mZilchType;
     String zilchTypeName = zilchType->ToString();
 
-    mathTypeResolver.RegisterFunctionResolver(
-        GetStaticFunction(mathType, "CountBits", zilchTypeName),
-        ResolveIntBitCount);
+    mathTypeResolver.RegisterFunctionResolver(GetStaticFunction(mathType, "CountBits", zilchTypeName),
+                                              ResolveIntBitCount);
 
     opResolvers.RegisterBinaryOpResolver(
-        zilchType,
-        zilchType,
-        Zilch::Grammar::BitwiseOr,
-        ResolveBinaryOperator<OpType::OpBitwiseOr>);
+        zilchType, zilchType, Zilch::Grammar::BitwiseOr, ResolveBinaryOperator<OpType::OpBitwiseOr>);
     opResolvers.RegisterBinaryOpResolver(
-        zilchType,
-        zilchType,
-        Zilch::Grammar::BitwiseAnd,
-        ResolveBinaryOperator<OpType::OpBitwiseAnd>);
+        zilchType, zilchType, Zilch::Grammar::BitwiseAnd, ResolveBinaryOperator<OpType::OpBitwiseAnd>);
     opResolvers.RegisterBinaryOpResolver(
-        zilchType,
-        zilchType,
-        Zilch::Grammar::BitwiseXor,
-        ResolveBinaryOperator<OpType::OpBitwiseXor>);
-    opResolvers.RegisterUnaryOpResolver(zilchType,
-                                        Zilch::Grammar::BitwiseNot,
-                                        ResolveUnaryOperator<OpType::OpNot>);
+        zilchType, zilchType, Zilch::Grammar::BitwiseXor, ResolveBinaryOperator<OpType::OpBitwiseXor>);
+    opResolvers.RegisterUnaryOpResolver(zilchType, Zilch::Grammar::BitwiseNot, ResolveUnaryOperator<OpType::OpNot>);
   }
 }
 

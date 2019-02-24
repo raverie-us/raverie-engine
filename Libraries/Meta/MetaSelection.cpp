@@ -17,19 +17,9 @@ ZilchDefineType(MetaSelection, builder, type)
 {
   ZilchBindMethod(Count);
   ZilchBindMethod(Empty);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &MetaSelection::Clear,
-                      (void (MetaSelection::*)()),
-                      "Clear",
-                      ZilchNoNames);
+  ZilchFullBindMethod(builder, type, &MetaSelection::Clear, (void (MetaSelection::*)()), "Clear", ZilchNoNames);
   ZilchBindMethod(SelectOnly);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &MetaSelection::Add,
-                      (void (MetaSelection::*)(HandleParam)),
-                      "Add",
-                      ZilchNoNames);
+  ZilchFullBindMethod(builder, type, &MetaSelection::Add, (void (MetaSelection::*)(HandleParam)), "Add", ZilchNoNames);
   ZilchBindMethod(Remove);
   ZilchBindMethod(Replace);
   ZilchBindMethod(Contains);
@@ -97,8 +87,8 @@ void MetaSelection::SelectOnly(HandleParam object)
 
 void MetaSelection::Add(MetaSelection& other, SendsEvents::Enum sendsEvents)
 {
-  forRange(const Handle& object, other.All()) this->Add(object,
-                                                        SendsEvents::False);
+  forRange (const Handle& object, other.All())
+    this->Add(object, SendsEvents::False);
 
   if (sendsEvents == SendsEvents::True)
     SelectionChanged();
@@ -231,7 +221,7 @@ MetaSelection::MetaSelectionArray::range MetaSelection::GetAllSelections()
 
 void MetaSelection::ReplaceInAllSelections(Object* oldObject, Object* newObject)
 {
-  forRange(MetaSelection * selection, MetaSelection::GetAllSelections())
+  forRange (MetaSelection* selection, MetaSelection::GetAllSelections())
   {
     if (selection->Contains(oldObject))
     {
@@ -243,7 +233,7 @@ void MetaSelection::ReplaceInAllSelections(Object* oldObject, Object* newObject)
 
 void MetaSelection::RemoveObjectFromAllSelections(Object* object)
 {
-  forRange(MetaSelection * selection, MetaSelection::GetAllSelections())
+  forRange (MetaSelection* selection, MetaSelection::GetAllSelections())
   {
     if (selection->Contains(object))
     {

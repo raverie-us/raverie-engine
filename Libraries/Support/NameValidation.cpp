@@ -14,8 +14,7 @@ const char cExtensionDelimiter = '.';
 
 bool IsValidFileNameRune(Rune r)
 {
-  return IsAlphaNumeric(r) || r.value == '.' || r.value == '_' ||
-         r.value == '(' || r.value == ')';
+  return IsAlphaNumeric(r) || r.value == '.' || r.value == '_' || r.value == '(' || r.value == ')';
 }
 
 const uint cMaxNameLength = 100;
@@ -63,8 +62,7 @@ bool IsValidFilename(StringParam name, Status& status)
   {
     if (!IsValidFileNameRune(r.Front()))
     {
-      String err = String::Format("Invalid character '%c' contained in name.",
-                                  r.Front().value);
+      String err = String::Format("Invalid character '%c' contained in name.", r.Front().value);
       status.SetFailed(err);
       return false;
     }

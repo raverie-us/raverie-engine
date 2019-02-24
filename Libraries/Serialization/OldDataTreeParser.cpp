@@ -35,15 +35,12 @@ DataTreeGrammar::DataTreeGrammar()
   GrammarRule<Character>& False = mTokenGrammar["False"];
   GrammarRule<Character>& Var = mTokenGrammar["Var"];
 
-  TokenStart |= Enum | Float | Whitespace | StringLiteral | OpenBracket |
-                CloseBracket | OpenCurley | CloseCurley | Assignment | Comma |
-                Colon;
+  TokenStart |= Enum | Float | Whitespace | StringLiteral | OpenBracket | CloseBracket | OpenCurley | CloseCurley |
+                Assignment | Comma | Colon;
   Enum |= Identifier << T(".") << T("a-zA-Z_") << *T("a-zA-Z_0-9");
   Identifier |= T("a-zA-Z_") << *T("a-zA-Z_0-9");
-  Float |=
-      ~Integer << (T(".") << +T("0-9") << ~(T("e") << ~T("-+") << +T("0-9")) |
-                   T("e") << ~T("-+") << +T("0-9"))
-               << ~T("f");
+  Float |= ~Integer << (T(".") << +T("0-9") << ~(T("e") << ~T("-+") << +T("0-9")) | T("e") << ~T("-+") << +T("0-9"))
+                    << ~T("f");
   Integer |= ~T("-") << ((T("0") << (Hex | *T("0-9"))) | T("1-9") << *T("0-9"));
   Hex |= T("xX") << +T("0-9a-fA-F") << T();
   Whitespace |= +T(" \t\r\n\v\f");
@@ -71,16 +68,11 @@ DataTreeGrammar::DataTreeGrammar()
   // We're allowing any amount of file attributes at the start
   ParserStart |= *Attribute << +Object;
   Object |= P("Identifier", P(Identifier))
-            << *Attribute << P(OpenCurley)
-            << *((Property | Value | Object) << ~P(Comma)) << P(CloseCurley);
-  Attribute |= P(OpenBracket) << P("Name", P(Identifier))
-                              << ~(P(Colon) << (P("Value", Value) | Object))
+            << *Attribute << P(OpenCurley) << *((Property | Value | Object) << ~P(Comma)) << P(CloseCurley);
+  Attribute |= P(OpenBracket) << P("Name", P(Identifier)) << ~(P(Colon) << (P("Value", Value) | Object))
                               << P(CloseBracket);
-  Property |= P(Var) << P("Name", P(Identifier)) << P(Assignment)
-                     << (P("Value", Value) | Object);
-  Value |= P("Value",
-             P(Integer) | P(Float) | P(Hex) | P(StringLiteral) | P(Enum) |
-                 P(True) | P(False));
+  Property |= P(Var) << P("Name", P(Identifier)) << P(Assignment) << (P("Value", Value) | Object);
+  Value |= P("Value", P(Integer) | P(Float) | P(Hex) | P(StringLiteral) | P(Enum) | P(True) | P(False));
 
   // Store tokens so they can be used later
   mTokenStart = &TokenStart;
@@ -103,15 +95,13 @@ DataTreeGrammar::DataTreeGrammar()
   mValue = &Value;
 }
 
-DataNode* OldDataTreeParser::BuildTree(DataTreeContext& context,
-                                       StringRange data)
+DataNode* OldDataTreeParser::BuildTree(DataTreeContext& context, StringRange data)
 {
   DataTreeGrammar& grammar = DataTreeGrammar::GetInstance();
 
   // Create a token range from the data
   TokenStream<> tokenStream;
-  tokenStream.mRange =
-      TokenRange<>(grammar.mTokenGrammar, *grammar.mTokenStart, data);
+  tokenStream.mRange = TokenRange<>(grammar.mTokenGrammar, *grammar.mTokenStart, data);
 
   // This will build the data tree for us
   OldDataTreeParser dataTreeParser;
@@ -216,8 +206,7 @@ void AssignValue(DataNode* node, ParseNodeInfo<Token>* info)
     node->mTypeName = Serialization::Trait<float>::TypeName();
   }
   // Boolean
-  else if (valueToken.mRule == grammar.mTrue ||
-           valueToken.mRule == grammar.mFalse)
+  else if (valueToken.mRule == grammar.mTrue || valueToken.mRule == grammar.mFalse)
   {
     node->mTypeName = Serialization::Trait<bool>::TypeName();
   }
@@ -227,8 +216,7 @@ void AssignValue(DataNode* node, ParseNodeInfo<Token>* info)
     StringRange processedValue = valueToken.mString.All();
 
     // 1 and -2 to strip the quotes
-    node->mTextValue = processedValue.SubStringFromByteIndices(
-        1, processedValue.SizeInBytes() - 1);
+    node->mTextValue = processedValue.SubStringFromByteIndices(1, processedValue.SizeInBytes() - 1);
   }
   // Enum
   else if (valueToken.mRule == grammar.mEnum)
@@ -243,9 +231,7 @@ void AssignValue(DataNode* node, ParseNodeInfo<Token>* info)
   }
 }
 
-void ReadObjectAttributes(Token& nameToken,
-                          Token& valueToken,
-                          DataNode* objectNode)
+void ReadObjectAttributes(Token& nameToken, Token& valueToken, DataNode* objectNode)
 {
   objectNode->AddAttribute(nameToken.mString, valueToken.mString);
 }
@@ -338,7 +324,7 @@ void OldDataTreeParser::EndRule(ParseNodeInfo<Token>* info)
 void OldDataTreeParser::PostProcessAttributes(DataNode* node)
 {
   // Walk each attribute and update relevant flags
-  forRange(DataAttribute & attribute, node->mAttributes.All())
+  forRange (DataAttribute& attribute, node->mAttributes.All())
   {
     if (attribute.mName == SerializationAttributes::Id)
     {
@@ -367,8 +353,8 @@ void OldDataTreeParser::PostProcessAttributes(DataNode* node)
   }
 
   // Update children
-  forRange(DataNode & child, node->mChildren.All())
-      PostProcessAttributes(&child);
+  forRange (DataNode& child, node->mChildren.All())
+    PostProcessAttributes(&child);
 }
 
 } // namespace Zero

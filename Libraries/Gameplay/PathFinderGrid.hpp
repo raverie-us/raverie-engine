@@ -54,10 +54,7 @@ public:
   bool mCollision;
 };
 
-class PathFinderAlgorithmGrid
-    : public PathFinderAlgorithm<PathFinderAlgorithmGrid,
-                                 IntVec3,
-                                 PathFinderGridNodeRange>
+class PathFinderAlgorithmGrid : public PathFinderAlgorithm<PathFinderAlgorithmGrid, IntVec3, PathFinderGridNodeRange>
 {
 public:
   PathFinderAlgorithmGrid();
@@ -107,11 +104,8 @@ public:
   // PathFinder Interface
   Variant WorldPositionToNodeKey(Vec3Param worldPosition) override;
   Vec3 NodeKeyToWorldPosition(VariantParam nodeKey) override;
-  void FindPathGeneric(VariantParam start,
-                       VariantParam goal,
-                       Array<Variant>& pathOut) override;
-  HandleOf<PathFinderRequest>
-  FindPathGenericThreaded(VariantParam start, VariantParam goal) override;
+  void FindPathGeneric(VariantParam start, VariantParam goal, Array<Variant>& pathOut) override;
+  HandleOf<PathFinderRequest> FindPathGenericThreaded(VariantParam start, VariantParam goal) override;
   StringParam GetCustomEventName() override;
 
   // PathFinderGrid Interface
@@ -134,23 +128,20 @@ public:
 
   /// Finds a path between world positions (or returns an empty array if no path
   /// could be found).
-  HandleOf<ArrayClass<Vec3>> FindPath(Vec3Param worldStart,
-                                      Vec3Param worldGoal);
+  HandleOf<ArrayClass<Vec3>> FindPath(Vec3Param worldStart, Vec3Param worldGoal);
 
   /// Finds a path on another thread between cell indices.
   /// When the thread is completed, the events PathFinderGridCompleted or
   /// PathFinderGridFailed will be sent on both the returned PathFinderRequest
   /// and on the Cog that owns this component (on this.Owner).
-  HandleOf<PathFinderRequest> FindPathThreaded(IntVec3Param start,
-                                               IntVec3Param goal);
+  HandleOf<PathFinderRequest> FindPathThreaded(IntVec3Param start, IntVec3Param goal);
 
   /// Finds a path on another thread between the closest nodes to the given
   /// world positions. When the thread is completed, the events
   /// PathFinderGridCompleted or PathFinderGridFailed will be sent on both the
   /// returned PathFinderRequest and on the Cog that owns this component (on
   /// this.Owner).
-  HandleOf<PathFinderRequest> FindPathThreaded(Vec3Param worldStart,
-                                               Vec3Param worldGoal);
+  HandleOf<PathFinderRequest> FindPathThreaded(Vec3Param worldStart, Vec3Param worldGoal);
 
   /// The size of the cell in local space units.
   /// If the PathFinderGrid has no parent, or the parent's transform has

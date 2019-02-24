@@ -26,8 +26,7 @@ Tweakable(Vec4, ProgressPrimaryColor, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(Vec4, ProgressBackgroundColor, Vec4(1, 1, 1, 1), cLocation);
 } // namespace TaskButtonUi
 
-BackgroundTaskButton::BackgroundTaskButton(Composite* parent) :
-    IconButton(parent)
+BackgroundTaskButton::BackgroundTaskButton(Composite* parent) : IconButton(parent)
 {
   SetIcon("TaskDownload");
   SetToolTip("Background Tasks");
@@ -41,12 +40,9 @@ BackgroundTaskButton::BackgroundTaskButton(Composite* parent) :
   mAverageProgress->mPadding = Thickness::cZero;
 
   ConnectThisTo(this, Events::ButtonPressed, OnButtonPressed);
-  ConnectThisTo(
-      Z::gBackgroundTasks, Events::BackgroundTaskStarted, OnTaskStarted);
-  ConnectThisTo(
-      Z::gBackgroundTasks, Events::BackgroundTaskUpdated, OnTaskUpdated);
-  ConnectThisTo(
-      Z::gBackgroundTasks, Events::BackgroundTaskCompleted, OnTaskCompleted);
+  ConnectThisTo(Z::gBackgroundTasks, Events::BackgroundTaskStarted, OnTaskStarted);
+  ConnectThisTo(Z::gBackgroundTasks, Events::BackgroundTaskUpdated, OnTaskUpdated);
+  ConnectThisTo(Z::gBackgroundTasks, Events::BackgroundTaskCompleted, OnTaskCompleted);
 
   ConnectThisTo(GetRootWidget(), Events::WidgetUpdate, OnUpdate);
   mActiveTasks = false;
@@ -92,18 +88,14 @@ void BackgroundTaskButton::Flash(bool toFlash)
   if (toFlash == 1)
     color = TaskButtonUi::IconFlash;
 
-  ActionSequence* seq =
-      new ActionSequence(this, ActionExecuteMode::FrameUpdate);
-  seq->Add(
-      AnimatePropertyGetSet(Widget, Color, Ease::Quad::InOut, mIcon, t, color));
-  seq->Add(
-      new CallParamAction<ZilchSelf, bool, &ZilchSelf::Flash>(this, !toFlash));
+  ActionSequence* seq = new ActionSequence(this, ActionExecuteMode::FrameUpdate);
+  seq->Add(AnimatePropertyGetSet(Widget, Color, Ease::Quad::InOut, mIcon, t, color));
+  seq->Add(new CallParamAction<ZilchSelf, bool, &ZilchSelf::Flash>(this, !toFlash));
 }
 
 void BackgroundTaskButton::OnTaskStarted(BackgroundTaskEvent* e)
 {
-  Element* signal =
-      GetRootWidget()->CreateAttached<Element>("TaskDownloadCenter");
+  Element* signal = GetRootWidget()->CreateAttached<Element>("TaskDownloadCenter");
   signal->SetTranslation(ToVector3(GetScreenRect().Center()));
 
   ActionSequence* seq = new ActionSequence(signal);
@@ -129,8 +121,7 @@ void BackgroundTaskButton::OnTaskCompleted(BackgroundTaskEvent* e)
     return;
 
   // Notify the user that the task has been completed
-  String message = String::Format("The background task %s has completed.",
-                                  e->mTask->mName.c_str());
+  String message = String::Format("The background task %s has completed.", e->mTask->mName.c_str());
   DoNotify("Background task completed", message, "TaskGear");
 
   // If they have the task window
@@ -153,8 +144,7 @@ void BackgroundTaskButton::OnUpdate(UpdateEvent* e)
     float t = Math::Sin(e->TimePassed * 5.0f) * 0.5f + 0.5f;
     // Don't go all the way green. Just looks better
     t *= 0.7;
-    color = Math::Lerp(
-        Vec4(TaskButtonUi::IconColor), Vec4(TaskButtonUi::IconFlash), t);
+    color = Math::Lerp(Vec4(TaskButtonUi::IconColor), Vec4(TaskButtonUi::IconFlash), t);
   }
 
   mIconColor = ToByteColor(color);
@@ -168,7 +158,7 @@ void BackgroundTaskButton::UpdateProgressBar()
   uint count = 0;
   float averagePercent = 0.0f;
   mActiveTasks = false;
-  forRange(BackgroundTask * task, Z::gBackgroundTasks->mActiveTasks.All())
+  forRange (BackgroundTask* task, Z::gBackgroundTasks->mActiveTasks.All())
   {
     // Ignore hidden tasks and tasks that shouldn't be accounted for
     if (task->mHidden || !task->mUseForAverage)
@@ -187,15 +177,12 @@ void BackgroundTaskButton::UpdateProgressBar()
   float cEpsilon = 0.00001f;
   if (averagePercent >= (1.0 - cEpsilon))
   {
-    forRange(BackgroundTask * task, Z::gBackgroundTasks->mActiveTasks.All())
-        task->mUseForAverage = false;
+    forRange (BackgroundTask* task, Z::gBackgroundTasks->mActiveTasks.All())
+      task->mUseForAverage = false;
   }
 }
 
-BackgroundTaskItem::BackgroundTaskItem(Composite* parent,
-                                       BackgroundTask* task) :
-    Composite(parent),
-    mTask(task)
+BackgroundTaskItem::BackgroundTaskItem(Composite* parent, BackgroundTask* task) : Composite(parent), mTask(task)
 {
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetColor(TaskUi::TaskBackgroundColor);
@@ -226,8 +213,7 @@ BackgroundTaskItem::BackgroundTaskItem(Composite* parent,
 
   mProgressBar = new ProgressBar(this);
   mProgressBar->SetPercentage(task->mPercentComplete);
-  mProgressBar->SetSizing(
-      SizeAxis::Y, SizePolicy::Fixed, TaskUi::ProgressBarHeight);
+  mProgressBar->SetSizing(SizeAxis::Y, SizePolicy::Fixed, TaskUi::ProgressBarHeight);
   mProgressBar->SetTextVisible(false);
   mProgressBar->mPadding = Thickness::cZero;
   mProgressBar->SetPrimaryColor(task->mProgressPrimaryColor);
@@ -313,17 +299,15 @@ void BackgroundTaskItem::OnMouseExitX(MouseEvent* e)
   MarkAsNeedsUpdate();
 }
 
-BackgroundTaskWindow::BackgroundTaskWindow(Composite* parent) :
-    PopUp(parent, PopUpCloseMode::MouseOutTarget)
+BackgroundTaskWindow::BackgroundTaskWindow(Composite* parent) : PopUp(parent, PopUpCloseMode::MouseOutTarget)
 {
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetColor(TaskUi::WindowBackgroundColor);
   mBackground->SetNotInLayout(true);
-  SetLayout(CreateStackLayout(
-      LayoutDirection::TopToBottom, Pixels(0, 2), Thickness(2, 2, 2, 2)));
+  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 2), Thickness(2, 2, 2, 2)));
 
   bool foundActiveTask = false;
-  forRange(BackgroundTask * task, Z::gBackgroundTasks->mActiveTasks.All())
+  forRange (BackgroundTask* task, Z::gBackgroundTasks->mActiveTasks.All())
   {
     // Ignore hidden tasks
     if (task->mHidden)
@@ -340,8 +324,7 @@ BackgroundTaskWindow::BackgroundTaskWindow(Composite* parent) :
     return;
   }
 
-  ConnectThisTo(
-      Z::gBackgroundTasks, Events::BackgroundTaskStarted, OnTaskStarted);
+  ConnectThisTo(Z::gBackgroundTasks, Events::BackgroundTaskStarted, OnTaskStarted);
 }
 
 void BackgroundTaskWindow::UpdateTransform()

@@ -14,9 +14,7 @@ ZilchDefineType(PropertyWidget, builder, type)
 {
 }
 
-PropertyWidget::PropertyWidget(PropertyWidgetInitializer& init,
-                               StyleMode::Enum style) :
-    Composite(init.Parent)
+PropertyWidget::PropertyWidget(PropertyWidgetInitializer& init, StyleMode::Enum style) : Composite(init.Parent)
 {
   mDestination = Vec3::cZero;
   mAnimating = false;
@@ -29,15 +27,13 @@ PropertyWidget::PropertyWidget(PropertyWidgetInitializer& init,
   mCustomIcons = nullptr;
 
   // Add custom icons if they exist
-  PropertyView::CustomPropertyIconArray& customIconCallbacks =
-      mGrid->mCustomIconCallbacks;
+  PropertyView::CustomPropertyIconArray& customIconCallbacks = mGrid->mCustomIconCallbacks;
   if (!customIconCallbacks.Empty())
   {
     mCustomIcons = new Composite(this);
     mCustomIcons->SetMinSize(Pixels(0, 0));
-    mCustomIcons->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight,
-                                              Pixels(5, 0),
-                                              Thickness(Pixels(-3, 4, 2, 0))));
+    mCustomIcons->SetLayout(
+        CreateStackLayout(LayoutDirection::LeftToRight, Pixels(5, 0), Thickness(Pixels(-3, 4, 2, 0))));
 
     for (uint i = 0; i < customIconCallbacks.Size(); ++i)
     {
@@ -50,8 +46,7 @@ PropertyWidget::PropertyWidget(PropertyWidgetInitializer& init,
       if (init.ObjectNode && init.ObjectNode->mObject.IsNotNull())
         object = init.ObjectNode->mObject;
 
-      void* clientData =
-          mGrid->mCallbackClientData.FindValue((void*)callback, nullptr);
+      void* clientData = mGrid->mCallbackClientData.FindValue((void*)callback, nullptr);
       callback(mCustomIcons, object, init.Property, clientData);
     }
 
@@ -92,10 +87,7 @@ void PropertyWidget::OnMouseHover(MouseEvent* event)
 
     ToolTipPlacement placement;
     placement.SetScreenRect(GetScreenRect());
-    placement.SetPriority(IndicatorSide::Right,
-                          IndicatorSide::Left,
-                          IndicatorSide::Bottom,
-                          IndicatorSide::Top);
+    placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Bottom, IndicatorSide::Top);
     toolTip->SetArrowTipTranslation(placement);
   }
 }

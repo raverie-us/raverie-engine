@@ -23,33 +23,19 @@ public:
   static Factory* StaticInitialize(Engine* engine, Tracker* tracker);
 
   /// Create initialize and Id a Cog from the data file.
-  Cog* Create(Space* space,
-              StringParam filename,
-              uint flags,
-              GameSession* gameSession);
-  Cog* CreateFromStream(Space* space,
-                        Serializer& stream,
-                        uint flags,
-                        GameSession* gameSession);
+  Cog* Create(Space* space, StringParam filename, uint flags, GameSession* gameSession);
+  Cog* CreateFromStream(Space* space, Serializer& stream, uint flags, GameSession* gameSession);
   Space* CreateSpace(StringParam name, uint flags, GameSession* gameSession);
-  Space* CreateSpaceFromStream(Serializer& stream,
-                               uint flags,
-                               GameSession* gameSession);
+  Space* CreateSpaceFromStream(Serializer& stream, uint flags, GameSession* gameSession);
 
   /// Creates an object of an expected type. Used to create a GameSession or
   /// something else but still properly check to make sure the filename we're
   /// opening has the correct type in it.
-  Cog* CreateCheckedType(BoundType* expectedType,
-                         Space* space,
-                         StringParam filename,
-                         uint flags,
-                         GameSession* gameSession);
+  Cog*
+  CreateCheckedType(BoundType* expectedType, Space* space, StringParam filename, uint flags, GameSession* gameSession);
 
   // Create an object engine error if it could not be found.
-  Cog* CreateRequired(Space* space,
-                      StringParam filename,
-                      uint flags,
-                      GameSession* gameSession);
+  Cog* CreateRequired(Space* space, StringParam filename, uint flags, GameSession* gameSession);
 
   /// Add a Cog to the destroy list for delayed destruction.
   void Destroy(Cog* gameObject);
@@ -63,17 +49,11 @@ public:
   /// Build a composition and serialize from the data file
   /// but does not initialize the Cog
   Cog* BuildAndSerialize(BoundType* expected, StringParam source);
-  Cog* BuildAndSerialize(BoundType* expected,
-                         StringParam source,
-                         CogCreationContext* context);
+  Cog* BuildAndSerialize(BoundType* expected, StringParam source, CogCreationContext* context);
 
   Cog* BuildFromStream(CogCreationContext* context, Serializer& stream);
-  Cog* BuildFromFile(BoundType* expectedMetaType,
-                     StringParam source,
-                     CogCreationContext* context);
-  Cog* BuildFromArchetype(BoundType* expectedMetaType,
-                          Archetype* archtype,
-                          CogCreationContext* context);
+  Cog* BuildFromFile(BoundType* expectedMetaType, StringParam source, CogCreationContext* context);
+  Cog* BuildFromArchetype(BoundType* expectedMetaType, Archetype* archtype, CogCreationContext* context);
 
 private:
   Tracker* mTracker;

@@ -22,8 +22,7 @@ class WebBrowser;
 
 // Everything we need to startup and shutdown browsers (singleton)
 // Also manages all instances of browsers
-class WebBrowserManager
-    : public ExplicitSingleton<WebBrowserManager, EventObject>
+class WebBrowserManager : public ExplicitSingleton<WebBrowserManager, EventObject>
 {
 public:
   ZilchDeclareType(WebBrowserManager, TypeCopyMode::ReferenceType);
@@ -146,8 +145,7 @@ public:
 
   void SimulateKey(int key, bool down, BrowserModifiers::Enum modifiers);
   void SimulateTextTyped(int character, BrowserModifiers::Enum modifiers);
-  void SimulateMouseMove(IntVec2Param localPosition,
-                         BrowserModifiers::Enum modifiers);
+  void SimulateMouseMove(IntVec2Param localPosition, BrowserModifiers::Enum modifiers);
   void SimulateMouseClick(IntVec2Param localPosition,
                           MouseButtons::Enum button,
                           bool down,
@@ -155,9 +153,7 @@ public:
   void SimulateMouseDoubleClick(IntVec2Param localPosition,
                                 MouseButtons::Enum button,
                                 BrowserModifiers::Enum modifiers);
-  void SimulateMouseScroll(IntVec2Param localPosition,
-                           Vec2Param delta,
-                           BrowserModifiers::Enum modifiers);
+  void SimulateMouseScroll(IntVec2Param localPosition, Vec2Param delta, BrowserModifiers::Enum modifiers);
 
   // Internal
   PixelBuffer mBuffer;
@@ -173,21 +169,13 @@ private:
   static void OnPointQuery(Math::IntVec2Param browserPixelPosition,
                            Math::IntVec2* monitorPixelPositionOut,
                            Browser* browser);
-  static void OnConsoleMessage(StringParam message,
-                               StringParam source,
-                               int line,
-                               bool* handledOut,
-                               Browser* browser);
+  static void OnConsoleMessage(StringParam message, StringParam source, int line, bool* handledOut, Browser* browser);
   static void OnStatusChanged(StringParam text, Browser* browser);
   static void OnTitleChanged(StringParam text, Browser* browser);
   static void OnUrlChanged(StringParam url, bool* handledOut, Browser* browser);
   static void OnCursorChanged(Cursor::Enum cursor, Browser* browser);
-  static void OnDownloadStarted(BrowserDownload& download,
-                                bool* cancelOut,
-                                Browser* browser);
-  static void OnDownloadUpdated(const BrowserDownload& download,
-                                bool* cancelOut,
-                                Browser* browser);
+  static void OnDownloadStarted(BrowserDownload& download, bool* cancelOut, Browser* browser);
+  static void OnDownloadUpdated(const BrowserDownload& download, bool* cancelOut, Browser* browser);
 };
 
 class WebBrowserEvent : public Event

@@ -17,9 +17,8 @@ String ZeroZilchShaderGlslBackend::GetExtension()
   return "glsl";
 }
 
-bool ZeroZilchShaderGlslBackend::RunTranslationPass(
-    ShaderTranslationPassResult& inputData,
-    ShaderTranslationPassResult& outputData)
+bool ZeroZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult& inputData,
+                                                    ShaderTranslationPassResult& outputData)
 {
   ShaderByteStream& inputByteStream = inputData.mByteStream;
   uint32_t* data = (uint32_t*)inputByteStream.Data();
@@ -50,8 +49,7 @@ bool ZeroZilchShaderGlslBackend::RunTranslationPass(
   // name to each member. Forcing block typenames to match.
   for (auto stageInput : resources.stage_inputs)
   {
-    int isBlock =
-        compiler.get_decoration(stageInput.base_type_id, spv::DecorationBlock);
+    int isBlock = compiler.get_decoration(stageInput.base_type_id, spv::DecorationBlock);
     if (isBlock == 1)
     {
       std::string name = "block";
@@ -60,8 +58,7 @@ bool ZeroZilchShaderGlslBackend::RunTranslationPass(
   }
   for (auto stageOutput : resources.stage_outputs)
   {
-    int isBlock =
-        compiler.get_decoration(stageOutput.base_type_id, spv::DecorationBlock);
+    int isBlock = compiler.get_decoration(stageOutput.base_type_id, spv::DecorationBlock);
     if (isBlock == 1)
     {
       std::string name = "block";
@@ -80,8 +77,7 @@ bool ZeroZilchShaderGlslBackend::RunTranslationPass(
     {
       auto resourceType = compiler.get_type(stageOutput.base_type_id);
       for (size_t i = 0; i < resourceType.member_types.size(); ++i)
-        compiler.set_member_decoration(
-            stageOutput.base_type_id, i, spv::DecorationLocation, i);
+        compiler.set_member_decoration(stageOutput.base_type_id, i, spv::DecorationLocation, i);
     }
   }
 #endif
@@ -109,8 +105,7 @@ bool ZeroZilchShaderGlslBackend::RunTranslationPass(
   internalData.mResources = &resources;
   // Extract reflection data now that we've done all modifications
   ExtractResourceReflectionData(internalData);
-  outputData.mReflectionData.mShaderTypeName =
-      inputData.mReflectionData.mShaderTypeName;
+  outputData.mReflectionData.mShaderTypeName = inputData.mReflectionData.mShaderTypeName;
 
   bool success = true;
   try

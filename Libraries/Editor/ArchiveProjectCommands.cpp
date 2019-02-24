@@ -46,8 +46,7 @@ void StartArchiveJob(StringParam filename)
 
 void BackupProject(ProjectSettings* project)
 {
-  String backupDirectory =
-      FilePath::Combine(GetUserDocumentsDirectory(), "ZeroProjects", "Backups");
+  String backupDirectory = FilePath::Combine(GetUserDocumentsDirectory(), "ZeroProjects", "Backups");
   CreateDirectoryAndParents(backupDirectory);
   String timeStamp = GetTimeAndDateStamp();
   String fileName = BuildString(project->ProjectName, timeStamp, ".zip");
@@ -94,8 +93,7 @@ void BuildContent(ProjectSettings* project)
   // Build content for this project to make sure all files are up to date.
   Status status;
   ResourcePackage package;
-  Z::gContentSystem->BuildLibrary(
-      status, project->ProjectContentLibrary, package);
+  Z::gContentSystem->BuildLibrary(status, project->ProjectContentLibrary, package);
   DoNotifyStatus(status);
 }
 
@@ -140,14 +138,11 @@ void BindArchiveCommands(Cog* config, CommandManager* commands)
   commands->AddCommand("BackupProject", BindCommandFunction(BackupProject));
 
   commands->AddCommand("ExportGame", BindCommandFunction(ExportGame));
-  commands->AddCommand("ExportAndPlayGame",
-                       BindCommandFunction(ExportAndPlayGame));
+  commands->AddCommand("ExportAndPlayGame", BindCommandFunction(ExportAndPlayGame));
   commands->AddCommand("ExportContent", BindCommandFunction(ExportContent));
 
-  commands->AddCommand(
-      "ShowProjectFolder", BindCommandFunction(ShowProjectFolder), true);
-  commands->AddCommand(
-      "ShowContentOutput", BindCommandFunction(ShowContentOutput), true);
+  commands->AddCommand("ShowProjectFolder", BindCommandFunction(ShowProjectFolder), true);
+  commands->AddCommand("ShowContentOutput", BindCommandFunction(ShowContentOutput), true);
 }
 
 } // namespace Zero

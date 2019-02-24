@@ -46,34 +46,28 @@ ShaderFieldKey ShaderIRFieldMeta::MakeFieldKey() const
   return ShaderFieldKey(mZilchName, mZilchType->ToString());
 }
 
-ShaderFieldKey
-ShaderIRFieldMeta::MakeFieldKey(ShaderIRAttribute* attribute) const
+ShaderFieldKey ShaderIRFieldMeta::MakeFieldKey(ShaderIRAttribute* attribute) const
 {
-  return ShaderFieldKey(GetFieldAttributeName(attribute),
-                        mZilchType->ToString());
+  return ShaderFieldKey(GetFieldAttributeName(attribute), mZilchType->ToString());
 }
 
-String
-ShaderIRFieldMeta::GetFieldAttributeName(ShaderIRAttribute* attribute) const
+String ShaderIRFieldMeta::GetFieldAttributeName(ShaderIRAttribute* attribute) const
 {
   String nameOverrideParam = SpirVNameSettings::mNameOverrideParam;
   // If the field contains a name override attribute then use that to make the
   // field key instead.
-  ShaderIRAttributeParameter* param =
-      attribute->FindFirstParameter(nameOverrideParam);
+  ShaderIRAttributeParameter* param = attribute->FindFirstParameter(nameOverrideParam);
   if (param != nullptr)
     return param->GetStringValue();
 
   // Check if there's an un-named parameter and count this as 'name'.
   // @JoshD: Cleanup later!
-  if (attribute->mParameters.Size() == 1 &&
-      attribute->mParameters[0].GetName().Empty())
+  if (attribute->mParameters.Size() == 1 && attribute->mParameters[0].GetName().Empty())
     return attribute->mParameters[0].GetStringValue();
   return mZilchName;
 }
 
-ShaderIRFieldMeta*
-ShaderIRFieldMeta::Clone(ZilchShaderIRLibrary* owningLibrary) const
+ShaderIRFieldMeta* ShaderIRFieldMeta::Clone(ZilchShaderIRLibrary* owningLibrary) const
 {
   ShaderIRFieldMeta* clone = new ShaderIRFieldMeta();
   owningLibrary->mOwnedFieldMeta.PushBack(clone);
@@ -118,8 +112,7 @@ ShaderIRFieldMeta* ShaderIRTypeMeta::FindField(StringParam fieldName)
   return nullptr;
 }
 
-ShaderIRFunctionMeta*
-ShaderIRTypeMeta::CreateFunction(ZilchShaderIRLibrary* library)
+ShaderIRFunctionMeta* ShaderIRTypeMeta::CreateFunction(ZilchShaderIRLibrary* library)
 {
   ShaderIRFunctionMeta* functionMeta = new ShaderIRFunctionMeta();
   mFunctions.PushBack(functionMeta);

@@ -97,8 +97,7 @@ ContentSystem::ContentSystem()
 
   SystemVerbosity = Verbosity::Minimal;
 
-  HistoryPath =
-      FilePath::Combine(GetUserDocumentsDirectory(), "ZeroEditor", "History");
+  HistoryPath = FilePath::Combine(GetUserDocumentsDirectory(), "ZeroEditor", "History");
 }
 
 ContentSystem::~ContentSystem()
@@ -112,15 +111,14 @@ void ContentSystem::EnumerateLibraries()
   TimerBlock t("Enumerate Libraries");
 
   // For every search path
-  forRange(String path, LibrarySearchPaths.All())
+  forRange (String path, LibrarySearchPaths.All())
   {
     path = FilePath::Normalize(path);
     EnumerateLibrariesInPath(path);
   }
 }
 
-ContentLibrary* ContentSystem::LibraryFromDirectory(
-    Status& status, StringParam name, StringParam libraryDirectory)
+ContentLibrary* ContentSystem::LibraryFromDirectory(Status& status, StringParam name, StringParam libraryDirectory)
 {
   // If the library already exists then update the directory and return the
   // library
@@ -131,8 +129,7 @@ ContentLibrary* ContentSystem::LibraryFromDirectory(
   String directory = FilePath::Normalize(libraryDirectory);
 
   // Find the library file
-  String libraryFile =
-      FilePath::CombineWithExtension(directory, name, ".library");
+  String libraryFile = FilePath::CombineWithExtension(directory, name, ".library");
 
   ContentLibrary* library = new ContentLibrary();
   library->LibraryFile = libraryFile;
@@ -146,8 +143,7 @@ ContentLibrary* ContentSystem::LibraryFromDirectory(
 
     if (!loaded)
     {
-      status.SetFailed(String::Format("Can not load library file '%s'",
-                                      libraryFile.c_str()));
+      status.SetFailed(String::Format("Can not load library file '%s'", libraryFile.c_str()));
       return nullptr;
     }
 
@@ -204,9 +200,7 @@ ContentLibrary* ContentSystem::LibraryFromDirectory(
   return library;
 }
 
-void ContentSystem::BuildLibrary(Status& status,
-                                 ContentLibrary* library,
-                                 ResourcePackage& package)
+void ContentSystem::BuildLibrary(Status& status, ContentLibrary* library, ResourcePackage& package)
 {
   BuildOptions buildOptions;
   SetupOptions(library, buildOptions);
@@ -216,20 +210,15 @@ void ContentSystem::BuildLibrary(Status& status,
     status.SetFailed(buildOptions.Message);
 }
 
-void ContentSystem::BuildPackage(BuildOptions& buildOptions,
-                                 ContentLibrary* library,
-                                 ResourcePackage& package)
+void ContentSystem::BuildPackage(BuildOptions& buildOptions, ContentLibrary* library, ResourcePackage& package)
 {
   String outputPath = ContentOutputPath;
 
   // Output path
   String libraryOutputPath = library->GetOutputPath();
-  String libraryPackageFile =
-      FilePath::CombineWithExtension(libraryOutputPath, library->Name, ".pack");
+  String libraryPackageFile = FilePath::CombineWithExtension(libraryOutputPath, library->Name, ".pack");
 
-  ZPrintFilter(Filter::EngineFilter,
-               "Building Content Library '%s'\n",
-               library->Name.c_str());
+  ZPrintFilter(Filter::EngineFilter, "Building Content Library '%s'\n", library->Name.c_str());
   CreateDirectoryAndParents(libraryOutputPath);
   library->BuildContent(buildOptions);
 
@@ -258,8 +247,7 @@ public:
   }
 };
 
-ContentItem* ContentSystem::AddContentItemToLibrary(Status& status,
-                                                    AddContentItemInfo& info)
+ContentItem* ContentSystem::AddContentItemToLibrary(Status& status, AddContentItemInfo& info)
 {
   status = Status();
 
@@ -276,8 +264,7 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status,
   ContentLibrary* library = info.Library;
   if (library == nullptr)
   {
-    status.SetFailed(
-        "Need a content library to contain resource's ContentItem.");
+    status.SetFailed("Need a content library to contain resource's ContentItem.");
     return nullptr;
   }
 
@@ -305,15 +292,13 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status,
         // Try to generate a new name
         info.OnContentFileConflict = ContentFileConflict::Fail;
         String fileToSplit = info.FileName;
-        Pair<StringRange, StringRange> splitPath =
-            SplitOnFirst(fileToSplit, '.');
+        Pair<StringRange, StringRange> splitPath = SplitOnFirst(fileToSplit, '.');
 
         // Keep looping trying to find a valid file name
         for (uint i = 0; i < 100; ++i)
         {
           String numberSuffix = String::Format("_%d", i);
-          info.FileName =
-              BuildString(splitPath.first, numberSuffix, splitPath.second);
+          info.FileName = BuildString(splitPath.first, numberSuffix, splitPath.second);
 
           ContentItem* item = AddContentItemToLibrary(status, info);
 
@@ -330,14 +315,12 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status,
           }
         }
 
-        status.SetFailed(String::Format("Can not find valid name for file '%s'",
-                                        info.FileName.c_str()));
+        status.SetFailed(String::Format("Can not find valid name for file '%s'", info.FileName.c_str()));
         return nullptr;
       }
       else if (info.OnContentFileConflict == ContentFileConflict::Replace)
       {
-        ContentItem* existingItem =
-            library->FindContentItemByFileName(info.FileName);
+        ContentItem* existingItem = library->FindContentItemByFileName(info.FileName);
 
         if (existingItem)
         {
@@ -353,8 +336,7 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status,
           initializer.AddResourceId = info.AddResourceId;
 
           // Update the .meta information for this item
-          ContentTypeEntry entry =
-              CreatorsByExtension.FindValue(extension, ContentTypeEntry());
+          ContentTypeEntry entry = CreatorsByExtension.FindValue(extension, ContentTypeEntry());
           UpdateContentItem contentUpdater = entry.UpdateItem;
           if (contentUpdater)
           {
@@ -386,24 +368,18 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status,
             // load somehow
             String metaFile = FilePath::GetFileName(metaFilePath);
             status.SetFailed(
-                String::Format("Meta file %s is corrupt or failed to load.",
-                               info.FileName.c_str(),
-                               metaFile.c_str()));
+                String::Format("Meta file %s is corrupt or failed to load.", info.FileName.c_str(), metaFile.c_str()));
           }
           else
           {
-            status.SetFailed(
-                String::Format("File %s exists but is not a content file.",
-                               info.FileName.c_str()));
+            status.SetFailed(String::Format("File %s exists but is not a content file.", info.FileName.c_str()));
           }
           return nullptr;
         }
       }
       else // if(info.OnContentFileConflict == ContentFileConflict::Fail)
       {
-        String message =
-            String::Format("The content file named %s has already been added.",
-                           info.FileName.c_str());
+        String message = String::Format("The content file named %s has already been added.", info.FileName.c_str());
         status.SetFailed(message);
         status.Context = ExtenedAddErrors::AlreadyExists;
         return nullptr;
@@ -419,8 +395,7 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status,
 
   String uniqueFileId = UniqueFileId(fullPath);
 
-  ContentItem* currentContentItem =
-      library->ContentItems.FindValue(uniqueFileId, nullptr);
+  ContentItem* currentContentItem = library->ContentItems.FindValue(uniqueFileId, nullptr);
 
   if (currentContentItem)
   {
@@ -431,30 +406,26 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status,
     }
     else
     {
-      status.SetFailed(String::Format(
-          "The content file named '%s' is already in the content library",
-          info.FileName.c_str()));
+      status.SetFailed(
+          String::Format("The content file named '%s' is already in the content library", info.FileName.c_str()));
       return nullptr;
     }
   }
 
   bool contentFileExists = FileExists(fullPath);
 
-  String metaFile = FilePath::CombineWithExtension(
-      library->SourcePath, info.FileName, ".meta");
+  String metaFile = FilePath::CombineWithExtension(library->SourcePath, info.FileName, ".meta");
 
   if (FileExists(metaFile))
   {
     if (!contentFileExists)
     {
       // Meta file but no content item
-      status.SetFailed(String::Format(
-          "File '%s' not found but meta file exists.", fullPath.c_str()));
+      status.SetFailed(String::Format("File '%s' not found but meta file exists.", fullPath.c_str()));
       return nullptr;
     }
 
-    ContentTypeEntry entry =
-        CreatorsByExtension.FindValue(extension, ContentTypeEntry());
+    ContentTypeEntry entry = CreatorsByExtension.FindValue(extension, ContentTypeEntry());
     if (entry.MakeItem == 0)
     {
       return nullptr;
@@ -475,16 +446,14 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status,
     PolymorphicNode node;
     uint offset = stream->GetPolymorphic(node);
 
-    entry = Z::gContentSystem->Creators.FindValue(node.TypeName,
-                                                  ContentTypeEntry());
+    entry = Z::gContentSystem->Creators.FindValue(node.TypeName, ContentTypeEntry());
     MakeContentItem contentCreator = entry.MakeItem;
 
     if (contentCreator == nullptr)
     {
-      status.SetFailed(String::Format(
-          "Failed to create content type %s. Content type is not "
-          "registered with content system.",
-          node.TypeName.Data()));
+      status.SetFailed(String::Format("Failed to create content type %s. Content type is not "
+                                      "registered with content system.",
+                                      node.TypeName.Data()));
       return nullptr;
     }
 
@@ -534,26 +503,21 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status,
     if (!contentFileExists)
     {
       status.SetFailed(
-          String::Format("File %s is missing from content library %s ",
-                         info.FileName.c_str(),
-                         library->Name.c_str()));
+          String::Format("File %s is missing from content library %s ", info.FileName.c_str(), library->Name.c_str()));
       return nullptr;
     }
 
     // Is this file extension ignored?
     if (IgnoredExtensions.Count(extension))
     {
-      status.SetFailed(
-          String::Format("Extension '%s' is ignored", extension.c_str()));
+      status.SetFailed(String::Format("Extension '%s' is ignored", extension.c_str()));
       return nullptr;
     }
 
-    ContentTypeEntry entry =
-        CreatorsByExtension.FindValue(extension, ContentTypeEntry());
+    ContentTypeEntry entry = CreatorsByExtension.FindValue(extension, ContentTypeEntry());
     if (entry.MakeItem == 0)
     {
-      status.SetFailed(String::Format(
-          "Could not find content type for extension %s", extension.c_str()));
+      status.SetFailed(String::Format("Could not find content type for extension %s", extension.c_str()));
       return nullptr;
     }
 
@@ -647,8 +611,7 @@ bool ContentSystem::RemoveContentItemFromLibray(ContentItem* contentItem)
   return true;
 }
 
-bool ContentSystem::RenameContentItemFile(ContentItem* contentItem,
-                                          StringParam newFileName)
+bool ContentSystem::RenameContentItemFile(ContentItem* contentItem, StringParam newFileName)
 {
   ContentLibrary* library = contentItem->mLibrary;
   SetWorkingDirectory(library->SourcePath);
@@ -667,8 +630,7 @@ bool ContentSystem::RenameContentItemFile(ContentItem* contentItem,
   // Does a file with this name already exist?
   // Is that file not the file we are renaming? If they are the same file allow
   // capitalization changes in existing name.
-  if (FileExists(newFileName) &&
-      (contentFile.ToLower() != newFullPath.ToLower()))
+  if (FileExists(newFileName) && (contentFile.ToLower() != newFullPath.ToLower()))
   {
     // Do not rename the file
     return false;
@@ -702,7 +664,7 @@ String ContentSystem::GetHistoryPath(ContentLibrary* library)
 
 ContentItem* ContentSystem::FindContentItemByFileName(StringParam filename)
 {
-  forRange(ContentLibrary * library, Libraries.Values())
+  forRange (ContentLibrary* library, Libraries.Values())
   {
     ContentItem* item = library->FindContentItemByFileName(filename);
     if (item)
@@ -725,8 +687,7 @@ ContentItem* ContentSystem::CreateFromName(StringRange name)
   return nullptr;
 }
 
-void ContentSystem::SetupOptions(ContentLibrary* library,
-                                 BuildOptions& buildOptions)
+void ContentSystem::SetupOptions(ContentLibrary* library, BuildOptions& buildOptions)
 {
   library->SetPaths(buildOptions);
   buildOptions.Packaging = Packaging::Directory;
@@ -740,9 +701,7 @@ void ContentSystem::SetupOptions(ContentLibrary* library,
   buildOptions.Failure = false;
 }
 
-void ContentSystem::BuildContentItems(Status& status,
-                                      ContentItemArray& toBuild,
-                                      ResourcePackage& package)
+void ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild, ResourcePackage& package)
 {
   if (toBuild.Empty())
     return;
@@ -758,11 +717,8 @@ void ContentSystem::BuildContentItems(Status& status,
   {
     // Process from this contentItem down.
     ContentItem* contentItem = toBuild[i];
-    Z::gEngine->LoadingUpdate("Loading",
-                              package.Name,
-                              contentItem->Filename,
-                              ProgressType::Normal,
-                              (float)(i + 1) / toBuild.Size());
+    Z::gEngine->LoadingUpdate(
+        "Loading", package.Name, contentItem->Filename, ProgressType::Normal, (float)(i + 1) / toBuild.Size());
 
     contentItem->BuildContent(buildOptions);
 
@@ -785,9 +741,7 @@ void ContentSystem::BuildContentItems(Status& status,
   Z::gEngine->LoadingFinish();
 }
 
-void ContentSystem::BuildContentItem(Status& status,
-                                     ContentItem* contentItem,
-                                     ResourcePackage& package)
+void ContentSystem::BuildContentItem(Status& status, ContentItem* contentItem, ResourcePackage& package)
 {
   ContentItemArray contentItems;
   contentItems.PushBack(contentItem);

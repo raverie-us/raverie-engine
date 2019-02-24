@@ -107,8 +107,7 @@ void FixedAngleJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData);
+  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData);
 }
 
 void FixedAngleJoint::DebugDraw()
@@ -118,8 +117,7 @@ void FixedAngleJoint::DebugDraw()
   DrawAngleAtomFragment(mReferenceAngle, GetCollider(0), GetCollider(1));
 }
 
-uint FixedAngleJoint::GetAtomIndexFilter(uint atomIndex,
-                                         real& desiredConstraintValue) const
+uint FixedAngleJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   return AngularAxis;

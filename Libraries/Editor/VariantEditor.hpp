@@ -49,9 +49,7 @@ public:
 class ValueEditor : public Composite
 {
 public:
-  ValueEditor(Composite* parent, bool editable = false) :
-      Composite(parent),
-      Editable(editable){};
+  ValueEditor(Composite* parent, bool editable = false) : Composite(parent), Editable(editable){};
 
   virtual void Edit()
   {
@@ -111,9 +109,7 @@ class ValueEditorFactory : public ExplicitSingleton<ValueEditorFactory, Object>
 {
 public:
   /// Typedefs
-  typedef ValueEditor* (*ValueEditorCreator)(Composite* parent,
-                                             AnyParam data,
-                                             u32 flags);
+  typedef ValueEditor* (*ValueEditorCreator)(Composite* parent, AnyParam data, u32 flags);
 
   /// Meta Initialization.
   ZilchDeclareType(ValueEditorFactory, TypeCopyMode::ReferenceType);
@@ -125,8 +121,7 @@ public:
   void RegisterEditor(StringParam type, ValueEditorCreator creator);
 
   /// Gets an editor based on the given type.
-  ValueEditor*
-  GetEditor(StringParam type, Composite* parent, AnyParam data, u32 flags);
+  ValueEditor* GetEditor(StringParam type, Composite* parent, AnyParam data, u32 flags);
 
 private:
   /// Stores all creators.

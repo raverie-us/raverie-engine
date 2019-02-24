@@ -21,35 +21,18 @@ enum
 {
   Size = 6
 };
-static const cstr Names[] = {"DockNone",
-                             "DockLeft",
-                             "DockTop",
-                             "DockRight",
-                             "DockBottom",
-                             "DockFill",
-                             NULL};
-static const uint Values[] = {
-    DockNone, DockLeft, DockTop, DockRight, DockBottom, DockFill};
+static const cstr Names[] = {"DockNone", "DockLeft", "DockTop", "DockRight", "DockBottom", "DockFill", NULL};
+static const uint Values[] = {DockNone, DockLeft, DockTop, DockRight, DockBottom, DockFill};
 } // namespace DockMode
 
 // DeclareEnum6(DockMode, DockNone, DockLeft, DockTop, DockRight, DockBottom,
 // DockFill);
 
-DeclareEnum9(DockArea,
-             Top,
-             Bottom,
-             Left,
-             Right,
-             Center,
-             Count,
-             TopTool,
-             BotTool,
-             Floating);
+DeclareEnum9(DockArea, Top, Bottom, Left, Right, Center, Count, TopTool, BotTool, Floating);
 
 // Direction of layout needs to match
 // Dock area
-DeclareEnum4(
-    LayoutDirection, TopToBottom, BottomToTop, LeftToRight, RightToLeft);
+DeclareEnum4(LayoutDirection, TopToBottom, BottomToTop, LeftToRight, RightToLeft);
 
 // Get the axis related to that dock area
 uint GetAxis(DockArea::Enum dockArea);
@@ -119,15 +102,10 @@ public:
   ZilchDeclareType(StackLayout, TypeCopyMode::ReferenceType);
 
   StackLayout(Thickness padding = Thickness::cZero);
-  StackLayout(LayoutDirection::Enum direction,
-              Vec2 spacing = Vec2::cZero,
-              Thickness padding = Thickness::cZero);
+  StackLayout(LayoutDirection::Enum direction, Vec2 spacing = Vec2::cZero, Thickness padding = Thickness::cZero);
 
   Vec2 Measure(Composite* widget, LayoutArea data) override;
-  float ComputeFlexRatio(float fixedSize,
-                         float totalFlex,
-                         float flexMinSize,
-                         float totalSize);
+  float ComputeFlexRatio(float fixedSize, float totalFlex, float flexMinSize, float totalSize);
   Vec2 DoLayout(Composite* widget, LayoutArea data) override;
 
   static StackLayout* CreateRowLayout();
@@ -212,8 +190,6 @@ Layout* CreateRatioLayout();
 
 void PlaceWithLayout(LayoutResult& result, Widget* widget);
 
-LayoutResult RemoveThickness(Thickness thickness,
-                             Vec2Param outerSize,
-                             Vec3Param offset = Vec3::cZero);
+LayoutResult RemoveThickness(Thickness thickness, Vec2Param outerSize, Vec3Param offset = Vec3::cZero);
 
 } // namespace Zero

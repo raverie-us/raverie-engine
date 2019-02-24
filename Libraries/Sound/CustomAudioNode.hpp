@@ -70,9 +70,7 @@ public:
   /// Sends a buffer of audio samples to the audio system for output.
   void SendBuffer(SoundBuffer* buffer);
   /// Sends a partial buffer of audio samples to the audio system for output.
-  void SendPartialBuffer(SoundBuffer* buffer,
-                         int startAtIndex,
-                         int howManySamples);
+  void SendPartialBuffer(SoundBuffer* buffer, int startAtIndex, int howManySamples);
   /// Takes the AudioData from a MicrophoneUncompressedFloatData event and sends
   /// all of the audio samples to the audio engine for output
   void SendMicUncompressedData(const HandleOf<ArrayClass<float>>& audioData);

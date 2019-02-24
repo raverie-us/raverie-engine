@@ -45,15 +45,12 @@ Pair<StringRange, StringRange> SplitOnLast(StringRange input, Rune delimiter)
     return Pair<StringRange, StringRange>(input, StringRange());
 
   if (lastOf.SizeInBytes() == 0)
-    return Pair<StringRange, StringRange>(
-        StringRange(), input.SubString(input.Begin(), input.End()));
+    return Pair<StringRange, StringRange>(StringRange(), input.SubString(input.Begin(), input.End()));
   if (lastOf.SizeInBytes() == numRunes - 1)
-    return Pair<StringRange, StringRange>(
-        input.SubString(input.Begin(), input.End()), StringRange());
+    return Pair<StringRange, StringRange>(input.SubString(input.Begin(), input.End()), StringRange());
 
-  return Pair<StringRange, StringRange>(
-      input.SubString(input.Begin(), lastOf.End()),
-      input.SubString(lastOf.Begin() + 1, lastOf.End()));
+  return Pair<StringRange, StringRange>(input.SubString(input.Begin(), lastOf.End()),
+                                        input.SubString(lastOf.Begin() + 1, lastOf.End()));
 }
 
 Pair<StringRange, StringRange> SplitOnFirst(StringRange input, Rune delimiter)
@@ -105,8 +102,7 @@ char OnlyAlphaNumeric(char c)
 }
 
 // Recursive helper for global string Permute below
-static void
-PermuteRecursive(char* src, uint start, uint end, Array<String>& perms)
+static void PermuteRecursive(char* src, uint start, uint end, Array<String>& perms)
 {
   // finished a permutation, add it to the list
   if (start == end)

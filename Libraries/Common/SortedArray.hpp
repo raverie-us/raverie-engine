@@ -60,9 +60,7 @@ struct PointerSortPolicy
 /// inserted at the lower bound Search, insertion, and removal operations have
 /// O(log n) complexity Functionality is similar to std::multiset but with
 /// better performance
-template <typename ValueType,
-          typename Sorter = SortPolicy<ValueType>,
-          typename Allocator = DefaultAllocator>
+template <typename ValueType, typename Sorter = SortPolicy<ValueType>, typename Allocator = DefaultAllocator>
 class SortedArray : public Array<ValueType, Allocator>
 {
 public:
@@ -111,9 +109,7 @@ public:
   }
 
   /// Move Constructor
-  SortedArray(MoveReference<this_type> rhs) :
-      base_type(ZeroMove(static_cast<base_type&>(*rhs))),
-      mSorter(rhs->mSorter)
+  SortedArray(MoveReference<this_type> rhs) : base_type(ZeroMove(static_cast<base_type&>(*rhs))), mSorter(rhs->mSorter)
   {
   }
 
@@ -144,8 +140,7 @@ public:
   {
     // Get lower bound
     iterator position = LowerBound(base_type::All(), value, mSorter).Begin();
-    if (position != base_type::End() &&
-        mSorter.Equal(*position, value)) // Found?
+    if (position != base_type::End() && mSorter.Equal(*position, value)) // Found?
       return position;
     else
       return base_type::End();
@@ -164,8 +159,7 @@ public:
     // Get lower bound
     iterator position = LowerBound(base_type::All(), value, mSorter).Begin();
     size_type index = position - base_type::mData;
-    if (position != base_type::End() &&
-        mSorter.Equal(*position, value)) // Found?
+    if (position != base_type::End() && mSorter.Equal(*position, value)) // Found?
       return index;
     else
       return base_type::InvalidIndex;
@@ -187,8 +181,7 @@ public:
   /// Returns the value of the first equivalent element in the array, else
   /// valueIfNotFound
   template <typename CompareType>
-  const_reference FindValue(const CompareType& value,
-                            const_reference valueIfNotFound) const
+  const_reference FindValue(const CompareType& value, const_reference valueIfNotFound) const
   {
     // Find first instance
     size_type index = FindIndex(value);
@@ -304,8 +297,7 @@ public:
     if (index == base_type::InvalidIndex) // Unable?
       return pointer_bool_pair(base_type::End(), false);
     else
-      return pointer_bool_pair(base_type::Erase(base_type::mData + index),
-                               true);
+      return pointer_bool_pair(base_type::Erase(base_type::mData + index), true);
   }
   pointer_bool_pair EraseValue(const value_type& value)
   {

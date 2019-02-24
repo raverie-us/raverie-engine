@@ -15,32 +15,18 @@ DeclareEnum3(AnimationPlayMode, PlayOnce, Loop, Pingpong);
 DeclareEnum2(AnimationDirection, Forward, Backward);
 
 /// Blend between two looping animation like walk to run
-AnimationNode* BuildCrossBlend(AnimationGraph* animGraph,
-                               AnimationNode* a,
-                               AnimationNode* b,
-                               float transitionTime);
+AnimationNode* BuildCrossBlend(AnimationGraph* animGraph, AnimationNode* a, AnimationNode* b, float transitionTime);
 
 /// Blend from the current animation position to the beginning of the next.
-AnimationNode* BuildDirectBlend(AnimationGraph* animGraph,
-                                AnimationNode* a,
-                                AnimationNode* b,
-                                float transitionTime);
+AnimationNode* BuildDirectBlend(AnimationGraph* animGraph, AnimationNode* a, AnimationNode* b, float transitionTime);
 
-AnimationNode* BuildSelectiveNode(AnimationGraph* t,
-                                  AnimationNode* a,
-                                  AnimationNode* b,
-                                  Cog* rootBone);
+AnimationNode* BuildSelectiveNode(AnimationGraph* t, AnimationNode* a, AnimationNode* b, Cog* rootBone);
 
 // Rename to Sequence
-AnimationNode* BuildChainNode(AnimationGraph* t,
-                              AnimationNode* a,
-                              AnimationNode* b);
+AnimationNode* BuildChainNode(AnimationGraph* t, AnimationNode* a, AnimationNode* b);
 
 /// Base animation node.
-AnimationNode* BuildBasic(AnimationGraph* animGraph,
-                          Animation* animation,
-                          float t,
-                          AnimationPlayMode::Enum playMode);
+AnimationNode* BuildBasic(AnimationGraph* animGraph, Animation* animation, float t, AnimationPlayMode::Enum playMode);
 
 struct BlendTrack
 {
@@ -118,10 +104,7 @@ public:
   {
   }
 
-  virtual AnimationNode* Update(AnimationGraph* animGraph,
-                                float dt,
-                                uint frameId,
-                                EventList eventsToSend) = 0;
+  virtual AnimationNode* Update(AnimationGraph* animGraph, float dt, uint frameId, EventList eventsToSend) = 0;
   virtual AnimationNode* Clone()
   {
     return NULL;
@@ -194,10 +177,7 @@ public:
   PoseNode(AnimationFrame& pose);
 
   /// AnimationNode Interface.
-  AnimationNode* Update(AnimationGraph* animGraph,
-                        float dt,
-                        uint frameId,
-                        EventList eventsToSend) override;
+  AnimationNode* Update(AnimationGraph* animGraph, float dt, uint frameId, EventList eventsToSend) override;
   virtual bool IsPlayingInNode(StringParam animName)
   {
     return false;
@@ -214,17 +194,11 @@ public:
   /// Constructors.
   BasicAnimation();
   BasicAnimation(AnimationGraph* animGraph);
-  BasicAnimation(AnimationGraph* animGraph,
-                 Animation* animation,
-                 float t,
-                 AnimationPlayMode::Enum playMode);
+  BasicAnimation(AnimationGraph* animGraph, Animation* animation, float t, AnimationPlayMode::Enum playMode);
 
   /// AnimationNode Interface.
   void ReLinkAnimations() override;
-  AnimationNode* Update(AnimationGraph* animGraph,
-                        float dt,
-                        uint frameId,
-                        EventList eventsToSend) override;
+  AnimationNode* Update(AnimationGraph* animGraph, float dt, uint frameId, EventList eventsToSend) override;
   void UpdateFrame(AnimationGraph* animGraph);
   AnimationNode* Clone() override;
   bool IsPlayingInNode(StringParam animName) override;
@@ -271,12 +245,8 @@ public:
   void ReLinkAnimations() override;
   virtual String GetName() = 0;
   AnimationNode* Clone() override;
-  AnimationNode* CollapseToA(AnimationGraph* animGraph,
-                             uint frameId,
-                             EventList eventsToSend);
-  AnimationNode* CollapseToB(AnimationGraph* animGraph,
-                             uint frameId,
-                             EventList eventsToSend);
+  AnimationNode* CollapseToA(AnimationGraph* animGraph, uint frameId, EventList eventsToSend);
+  AnimationNode* CollapseToB(AnimationGraph* animGraph, uint frameId, EventList eventsToSend);
   bool IsPlayingInNode(StringParam animName) override;
 
   /// Left node.
@@ -306,10 +276,7 @@ public:
 
   /// AnimationNode Interface.
   String GetName() override;
-  AnimationNode* Update(AnimationGraph* animGraph,
-                        float dt,
-                        uint frameId,
-                        EventList eventsToSend) override;
+  AnimationNode* Update(AnimationGraph* animGraph, float dt, uint frameId, EventList eventsToSend) override;
   void PrintNode(uint tabs) override;
 };
 
@@ -340,10 +307,7 @@ public:
 
   /// AnimationNode Interface.
   String GetName() override;
-  AnimationNode* Update(AnimationGraph* animGraph,
-                        float dt,
-                        uint frameId,
-                        EventList eventsToSend) override;
+  AnimationNode* Update(AnimationGraph* animGraph, float dt, uint frameId, EventList eventsToSend) override;
   void PrintNode(uint tabs) override;
 
   /// Updates the time of the 'To' animation to sync the cadence with the
@@ -375,10 +339,7 @@ public:
 
   /// AnimationNode Interface.
   String GetName() override;
-  AnimationNode* Update(AnimationGraph* animGraph,
-                        float dt,
-                        uint frameId,
-                        EventList eventsToSend) override;
+  AnimationNode* Update(AnimationGraph* animGraph, float dt, uint frameId, EventList eventsToSend) override;
   AnimationNode* Clone() override;
   void PrintNode(uint tabs) override;
 
@@ -398,10 +359,7 @@ public:
   ChainNode();
 
   String GetName() override;
-  AnimationNode* Update(AnimationGraph* animGraph,
-                        float dt,
-                        uint frameId,
-                        EventList eventsToSend) override;
+  AnimationNode* Update(AnimationGraph* animGraph, float dt, uint frameId, EventList eventsToSend) override;
   bool IsPlayingInNode(StringParam animName) override;
   void PrintNode(uint tabs) override;
 };

@@ -96,8 +96,7 @@ public:
   /// What kinds of pre-processing should be performed on islands. Used to test
   /// performance.
   PhysicsIslandPreProcessingMode::Enum GetIslandPreProcessType() const;
-  void
-  SetIslandPreProcessType(PhysicsIslandPreProcessingMode::Enum preProcessType);
+  void SetIslandPreProcessType(PhysicsIslandPreProcessingMode::Enum preProcessType);
   /// Post-processing islands will merge islands that are too small.
   bool GetPostProcessIslands() const;
   void SetPostProcessIslands(bool postProcess);
@@ -125,10 +124,7 @@ public:
   void RemovePairFilterInternal(Collider* collider1, Collider* collider2);
   /// Creates a joint by name (e.g. StickJoint) between two cogs.
   /// The world points of the joint are both set to worldPoint.
-  Cog* CreateJoint(Cog* cog0,
-                   Cog* cog1,
-                   StringParam jointName,
-                   Vec3Param worldPoint);
+  Cog* CreateJoint(Cog* cog0, Cog* cog1, StringParam jointName, Vec3Param worldPoint);
 
   /// The default 2D mode for this space. If a RigidBody is set to
   /// InheritFromSpace then it will use this value.
@@ -213,9 +209,7 @@ public:
   CastResultsRange CastRay(const Ray& worldRay, uint maxCount);
   /// Finds all colliders in the space that a ray hits using the
   /// given filter. This returns up to maxCount number of objects.
-  CastResultsRange CastRay(const Ray& worldRay,
-                           uint maxCount,
-                           CastFilter& filter);
+  CastResultsRange CastRay(const Ray& worldRay, uint maxCount, CastFilter& filter);
 
   //------------------------------------------------------------ Segment Casting
   /// Returns the results of a Segment Cast.  The results of the segment cast
@@ -227,82 +221,56 @@ public:
   CastResultsRange CastSegment(const Segment& segment, uint maxCount);
   /// Finds all colliders in the space that a line segment hits using the
   /// given filter. This returns up to maxCount number of objects.
-  CastResultsRange CastSegment(const Segment& segment,
-                               uint maxCount,
-                               CastFilter& filter);
+  CastResultsRange CastSegment(const Segment& segment, uint maxCount, CastFilter& filter);
 
   //------------------------------------------------------------- Aabb Casting
   void CastAabb(const Aabb& aabb, CastResults& results);
   /// Finds all colliders in the space that an Aabb hits using the
   /// given filter. This returns up to maxCount number of objects.
-  CastResultsRange CastAabb(const Aabb& aabb,
-                            uint maxCount,
-                            CastFilter& filter);
+  CastResultsRange CastAabb(const Aabb& aabb, uint maxCount, CastFilter& filter);
 
   //------------------------------------------------------------- Sphere Casting
   void CastSphere(const Sphere& sphere, CastResults& results);
   /// Finds all colliders in the space that a Sphere hits using the
   /// given filter. This returns up to maxCount number of objects.
-  CastResultsRange CastSphere(const Sphere& sphere,
-                              uint maxCount,
-                              CastFilter& filter);
+  CastResultsRange CastSphere(const Sphere& sphere, uint maxCount, CastFilter& filter);
 
   //------------------------------------------------------------- Frustum
   // Casting
   void CastFrustum(const Frustum& frustum, CastResults& results);
   /// Finds all colliders in the space that a Frustum hits using the
   /// given filter. This returns up to maxCount number of objects.
-  CastResultsRange CastFrustum(const Frustum& frustum,
-                               uint maxCount,
-                               CastFilter& filter);
+  CastResultsRange CastFrustum(const Frustum& frustum, uint maxCount, CastFilter& filter);
 
   //------------------------------------------------------------- Collider
   // Casting
   /// Currently a hack function for player controller sweeping
-  void CastCollider(Vec3Param offset,
-                    Collider* testCollider,
-                    Physics::ManifoldArray& results,
-                    CastFilter& filter);
+  void CastCollider(Vec3Param offset, Collider* testCollider, Physics::ManifoldArray& results, CastFilter& filter);
   /// Finds all colliders in the space that another collider hits using the
   /// given filter. The test collider's position can be offset to test at a
   /// different location. This returns up to maxCount number of objects.
-  CastResultsRange CastCollider(Vec3Param offset,
-                                Collider* testCollider,
-                                CastFilter& filter);
+  CastResultsRange CastCollider(Vec3Param offset, Collider* testCollider, CastFilter& filter);
 
   //------------------------------------------------------------- Collider
   // Sweeping
   /// Performs a swept cast with a collider's shape and a given velocity.
   /// Returns a range of all objects the collider could've hit within 'dt' time.
-  SweepResultRange SweepCollider(Collider* collider,
-                                 Vec3Param velocity,
-                                 real dt,
-                                 CastFilter& filter);
+  SweepResultRange SweepCollider(Collider* collider, Vec3Param velocity, real dt, CastFilter& filter);
 
   //------------------------------------------------------------- Collision
   // Shape Events
   /// Dispatches an event to all objects within the given sphere. Uses the
   /// default cast filter.
-  void DispatchWithinSphere(const Sphere& sphere,
-                            StringParam eventName,
-                            Event* toSend);
+  void DispatchWithinSphere(const Sphere& sphere, StringParam eventName, Event* toSend);
   /// Dispatches an event to all objects within the given sphere using the
   /// provided cast filter.
-  void DispatchWithinSphere(const Sphere& sphere,
-                            CastFilter& filter,
-                            StringParam eventName,
-                            Event* toSend);
+  void DispatchWithinSphere(const Sphere& sphere, CastFilter& filter, StringParam eventName, Event* toSend);
   /// Dispatches an event to all objects within the given aabb. Uses the default
   /// cast filter.
-  void DispatchWithinAabb(const Aabb& aabb,
-                          StringParam eventName,
-                          Event* toSend);
+  void DispatchWithinAabb(const Aabb& aabb, StringParam eventName, Event* toSend);
   /// Dispatches an event to all objects within the given aabb using the
   /// provided cast filter.
-  void DispatchWithinAabb(const Aabb& aabb,
-                          CastFilter& filter,
-                          StringParam eventName,
-                          Event* toSend);
+  void DispatchWithinAabb(const Aabb& aabb, CastFilter& filter, StringParam eventName, Event* toSend);
 
   /// The number of iterations the physics space will take every frame.
   /// Used to achieve higher accuracy and increase visual results.

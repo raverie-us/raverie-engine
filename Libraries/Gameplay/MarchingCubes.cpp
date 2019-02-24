@@ -5,30 +5,22 @@ namespace Zero
 {
 
 u32 MarchingCubes::EdgeTable[] = {
-    0x000, 0x109, 0x203, 0x30A, 0x406, 0x50F, 0x605, 0x70C, 0x80C, 0x905, 0xA0F,
-    0xB06, 0xC0A, 0xD03, 0xE09, 0xF00, 0x190, 0x099, 0x393, 0x29A, 0x596, 0x49F,
-    0x795, 0x69C, 0x99C, 0x895, 0xB9F, 0xA96, 0xD9A, 0xC93, 0xF99, 0xE90, 0x230,
-    0x339, 0x033, 0x13A, 0x636, 0x73F, 0x435, 0x53C, 0xA3C, 0xB35, 0x83F, 0x936,
-    0xE3A, 0xF33, 0xC39, 0xD30, 0x3A0, 0x2A9, 0x1A3, 0x0AA, 0x7A6, 0x6AF, 0x5A5,
-    0x4AC, 0xBAC, 0xAA5, 0x9AF, 0x8A6, 0xFAA, 0xEA3, 0xDA9, 0xCA0, 0x460, 0x569,
-    0x663, 0x76A, 0x066, 0x16F, 0x265, 0x36C, 0xC6C, 0xD65, 0xE6F, 0xF66, 0x86A,
-    0x963, 0xA69, 0xB60, 0x5F0, 0x4F9, 0x7F3, 0x6FA, 0x1F6, 0x0FF, 0x3F5, 0x2FC,
-    0xDFC, 0xCF5, 0xFFF, 0xEF6, 0x9FA, 0x8F3, 0xBF9, 0xAF0, 0x650, 0x759, 0x453,
-    0x55A, 0x256, 0x35F, 0x055, 0x15C, 0xE5C, 0xF55, 0xC5F, 0xD56, 0xA5A, 0xB53,
-    0x859, 0x950, 0x7C0, 0x6C9, 0x5C3, 0x4CA, 0x3C6, 0x2CF, 0x1C5, 0x0CC, 0xFCC,
-    0xEC5, 0xDCF, 0xCC6, 0xBCA, 0xAC3, 0x9C9, 0x8C0, 0x8C0, 0x9C9, 0xAC3, 0xBCA,
-    0xCC6, 0xDCF, 0xEC5, 0xFCC, 0x0CC, 0x1C5, 0x2CF, 0x3C6, 0x4CA, 0x5C3, 0x6C9,
-    0x7C0, 0x950, 0x859, 0xB53, 0xA5A, 0xD56, 0xC5F, 0xF55, 0xE5C, 0x15C, 0x055,
-    0x35F, 0x256, 0x55A, 0x453, 0x759, 0x650, 0xAF0, 0xBF9, 0x8F3, 0x9FA, 0xEF6,
-    0xFFF, 0xCF5, 0xDFC, 0x2FC, 0x3F5, 0x0FF, 0x1F6, 0x6FA, 0x7F3, 0x4F9, 0x5F0,
-    0xB60, 0xA69, 0x963, 0x86A, 0xF66, 0xE6F, 0xD65, 0xC6C, 0x36C, 0x265, 0x16F,
-    0x066, 0x76A, 0x663, 0x569, 0x460, 0xCA0, 0xDA9, 0xEA3, 0xFAA, 0x8A6, 0x9AF,
-    0xAA5, 0xBAC, 0x4AC, 0x5A5, 0x6AF, 0x7A6, 0x0AA, 0x1A3, 0x2A9, 0x3A0, 0xD30,
-    0xC39, 0xF33, 0xE3A, 0x936, 0x83F, 0xB35, 0xA3C, 0x53C, 0x435, 0x73F, 0x636,
-    0x13A, 0x033, 0x339, 0x230, 0xE90, 0xF99, 0xC93, 0xD9A, 0xA96, 0xB9F, 0x895,
-    0x99C, 0x69C, 0x795, 0x49F, 0x596, 0x29A, 0x393, 0x099, 0x190, 0xF00, 0xE09,
-    0xD03, 0xC0A, 0xB06, 0xA0F, 0x905, 0x80C, 0x70C, 0x605, 0x50F, 0x406, 0x30A,
-    0x203, 0x109, 0x000,
+    0x000, 0x109, 0x203, 0x30A, 0x406, 0x50F, 0x605, 0x70C, 0x80C, 0x905, 0xA0F, 0xB06, 0xC0A, 0xD03, 0xE09, 0xF00,
+    0x190, 0x099, 0x393, 0x29A, 0x596, 0x49F, 0x795, 0x69C, 0x99C, 0x895, 0xB9F, 0xA96, 0xD9A, 0xC93, 0xF99, 0xE90,
+    0x230, 0x339, 0x033, 0x13A, 0x636, 0x73F, 0x435, 0x53C, 0xA3C, 0xB35, 0x83F, 0x936, 0xE3A, 0xF33, 0xC39, 0xD30,
+    0x3A0, 0x2A9, 0x1A3, 0x0AA, 0x7A6, 0x6AF, 0x5A5, 0x4AC, 0xBAC, 0xAA5, 0x9AF, 0x8A6, 0xFAA, 0xEA3, 0xDA9, 0xCA0,
+    0x460, 0x569, 0x663, 0x76A, 0x066, 0x16F, 0x265, 0x36C, 0xC6C, 0xD65, 0xE6F, 0xF66, 0x86A, 0x963, 0xA69, 0xB60,
+    0x5F0, 0x4F9, 0x7F3, 0x6FA, 0x1F6, 0x0FF, 0x3F5, 0x2FC, 0xDFC, 0xCF5, 0xFFF, 0xEF6, 0x9FA, 0x8F3, 0xBF9, 0xAF0,
+    0x650, 0x759, 0x453, 0x55A, 0x256, 0x35F, 0x055, 0x15C, 0xE5C, 0xF55, 0xC5F, 0xD56, 0xA5A, 0xB53, 0x859, 0x950,
+    0x7C0, 0x6C9, 0x5C3, 0x4CA, 0x3C6, 0x2CF, 0x1C5, 0x0CC, 0xFCC, 0xEC5, 0xDCF, 0xCC6, 0xBCA, 0xAC3, 0x9C9, 0x8C0,
+    0x8C0, 0x9C9, 0xAC3, 0xBCA, 0xCC6, 0xDCF, 0xEC5, 0xFCC, 0x0CC, 0x1C5, 0x2CF, 0x3C6, 0x4CA, 0x5C3, 0x6C9, 0x7C0,
+    0x950, 0x859, 0xB53, 0xA5A, 0xD56, 0xC5F, 0xF55, 0xE5C, 0x15C, 0x055, 0x35F, 0x256, 0x55A, 0x453, 0x759, 0x650,
+    0xAF0, 0xBF9, 0x8F3, 0x9FA, 0xEF6, 0xFFF, 0xCF5, 0xDFC, 0x2FC, 0x3F5, 0x0FF, 0x1F6, 0x6FA, 0x7F3, 0x4F9, 0x5F0,
+    0xB60, 0xA69, 0x963, 0x86A, 0xF66, 0xE6F, 0xD65, 0xC6C, 0x36C, 0x265, 0x16F, 0x066, 0x76A, 0x663, 0x569, 0x460,
+    0xCA0, 0xDA9, 0xEA3, 0xFAA, 0x8A6, 0x9AF, 0xAA5, 0xBAC, 0x4AC, 0x5A5, 0x6AF, 0x7A6, 0x0AA, 0x1A3, 0x2A9, 0x3A0,
+    0xD30, 0xC39, 0xF33, 0xE3A, 0x936, 0x83F, 0xB35, 0xA3C, 0x53C, 0x435, 0x73F, 0x636, 0x13A, 0x033, 0x339, 0x230,
+    0xE90, 0xF99, 0xC93, 0xD9A, 0xA96, 0xB9F, 0x895, 0x99C, 0x69C, 0x795, 0x49F, 0x596, 0x29A, 0x393, 0x099, 0x190,
+    0xF00, 0xE09, 0xD03, 0xC0A, 0xB06, 0xA0F, 0x905, 0x80C, 0x70C, 0x605, 0x50F, 0x406, 0x30A, 0x203, 0x109, 0x000,
 };
 
 s32 MarchingCubes::TriangleTable[256][16] = {
@@ -339,36 +331,18 @@ void MarchingCubes::GenerateMesh()
 
   Vec3 halfSample = SampleDistances / 2.0f;
 
-  forRange(CellInfo & cell, InvalidatedCells.All())
+  forRange (CellInfo& cell, InvalidatedCells.All())
   {
-    Vec3 center(SampleDistances.x * cell.x,
-                SampleDistances.y * cell.y,
-                SampleDistances.z * cell.z);
+    Vec3 center(SampleDistances.x * cell.x, SampleDistances.y * cell.y, SampleDistances.z * cell.z);
 
-    cell.p[0] = Vec3(center.x - halfSample.x,
-                     center.y - halfSample.y,
-                     center.z - halfSample.z);
-    cell.p[1] = Vec3(center.x + halfSample.x,
-                     center.y - halfSample.y,
-                     center.z - halfSample.z);
-    cell.p[2] = Vec3(center.x + halfSample.x,
-                     center.y - halfSample.y,
-                     center.z + halfSample.z);
-    cell.p[3] = Vec3(center.x - halfSample.x,
-                     center.y - halfSample.y,
-                     center.z + halfSample.z);
-    cell.p[4] = Vec3(center.x - halfSample.x,
-                     center.y + halfSample.y,
-                     center.z - halfSample.z);
-    cell.p[5] = Vec3(center.x + halfSample.x,
-                     center.y + halfSample.y,
-                     center.z - halfSample.z);
-    cell.p[6] = Vec3(center.x + halfSample.x,
-                     center.y + halfSample.y,
-                     center.z + halfSample.z);
-    cell.p[7] = Vec3(center.x - halfSample.x,
-                     center.y + halfSample.y,
-                     center.z + halfSample.z);
+    cell.p[0] = Vec3(center.x - halfSample.x, center.y - halfSample.y, center.z - halfSample.z);
+    cell.p[1] = Vec3(center.x + halfSample.x, center.y - halfSample.y, center.z - halfSample.z);
+    cell.p[2] = Vec3(center.x + halfSample.x, center.y - halfSample.y, center.z + halfSample.z);
+    cell.p[3] = Vec3(center.x - halfSample.x, center.y - halfSample.y, center.z + halfSample.z);
+    cell.p[4] = Vec3(center.x - halfSample.x, center.y + halfSample.y, center.z - halfSample.z);
+    cell.p[5] = Vec3(center.x + halfSample.x, center.y + halfSample.y, center.z - halfSample.z);
+    cell.p[6] = Vec3(center.x + halfSample.x, center.y + halfSample.y, center.z + halfSample.z);
+    cell.p[7] = Vec3(center.x - halfSample.x, center.y + halfSample.y, center.z + halfSample.z);
 
     invalidatedPoints.Insert(cell.p[0]);
     invalidatedPoints.Insert(cell.p[1]);
@@ -380,14 +354,14 @@ void MarchingCubes::GenerateMesh()
     invalidatedPoints.Insert(cell.p[7]);
   }
 
-  forRange(Vec3 & pos, invalidatedPoints.All())
+  forRange (Vec3& pos, invalidatedPoints.All())
   {
     Values[pos] = this->DensitySampler(pos, this->UserData);
   }
 
   invalidatedPoints.Clear();
 
-  forRange(CellInfo & cell, InvalidatedCells.All())
+  forRange (CellInfo& cell, InvalidatedCells.All())
   {
     GenerateCell(cell);
   }
@@ -426,12 +400,9 @@ void MarchingCubes::GenerateCell(CellInfo& cell)
   // Create the triangle
   while (TriangleTable[cubeIndex][i] != -1)
   {
-    positions[i + 0] =
-        this->InterpolatedVertices[TriangleTable[cubeIndex][i + 0]];
-    positions[i + 1] =
-        this->InterpolatedVertices[TriangleTable[cubeIndex][i + 1]];
-    positions[i + 2] =
-        this->InterpolatedVertices[TriangleTable[cubeIndex][i + 2]];
+    positions[i + 0] = this->InterpolatedVertices[TriangleTable[cubeIndex][i + 0]];
+    positions[i + 1] = this->InterpolatedVertices[TriangleTable[cubeIndex][i + 1]];
+    positions[i + 2] = this->InterpolatedVertices[TriangleTable[cubeIndex][i + 2]];
 
     normals[i + 0] = SampleNormal(positions[i + 0]);
     normals[i + 1] = SampleNormal(positions[i + 1]);
@@ -444,16 +415,11 @@ void MarchingCubes::GenerateCell(CellInfo& cell)
 
   if (info.numTrianglesWritten != 0)
   {
-    this->Invalidator(
-        info.firstIndices, info.numTrianglesWritten, this->UserData);
+    this->Invalidator(info.firstIndices, info.numTrianglesWritten, this->UserData);
   }
 
   info.numTrianglesWritten = i / 3;
-  this->VertexWriter(positions,
-                     normals,
-                     info.firstIndices,
-                     info.numTrianglesWritten,
-                     this->UserData);
+  this->VertexWriter(positions, normals, info.firstIndices, info.numTrianglesWritten, this->UserData);
 }
 
 Vec3 MarchingCubes::SampleNormal(Vec3 position)
@@ -465,18 +431,12 @@ Vec3 MarchingCubes::SampleNormal(Vec3 position)
     real xOffset = this->SampleDistances.x * this->NormalSampleDelta;
     real yOffset = this->SampleDistances.y * this->NormalSampleDelta;
     real zOffset = this->SampleDistances.z * this->NormalSampleDelta;
-    normal.x = this->DensitySampler(position + Vec3(+xOffset, 0.0f, 0.0f),
-                                    this->UserData) -
-               this->DensitySampler(position + Vec3(-xOffset, 0.0f, 0.0f),
-                                    this->UserData);
-    normal.y = this->DensitySampler(position + Vec3(0.0f, +yOffset, 0.0f),
-                                    this->UserData) -
-               this->DensitySampler(position + Vec3(0.0f, -yOffset, 0.0f),
-                                    this->UserData);
-    normal.z = this->DensitySampler(position + Vec3(0.0f, 0.0f, +zOffset),
-                                    this->UserData) -
-               this->DensitySampler(position + Vec3(0.0f, 0.0f, -zOffset),
-                                    this->UserData);
+    normal.x = this->DensitySampler(position + Vec3(+xOffset, 0.0f, 0.0f), this->UserData) -
+               this->DensitySampler(position + Vec3(-xOffset, 0.0f, 0.0f), this->UserData);
+    normal.y = this->DensitySampler(position + Vec3(0.0f, +yOffset, 0.0f), this->UserData) -
+               this->DensitySampler(position + Vec3(0.0f, -yOffset, 0.0f), this->UserData);
+    normal.z = this->DensitySampler(position + Vec3(0.0f, 0.0f, +zOffset), this->UserData) -
+               this->DensitySampler(position + Vec3(0.0f, 0.0f, -zOffset), this->UserData);
 
     normal.AttemptNormalize();
     normal = -normal;
@@ -487,8 +447,7 @@ Vec3 MarchingCubes::SampleNormal(Vec3 position)
   return normal;
 }
 
-void MarchingCubes::ComputeInterpolatedVertexForEdge(s32 edgeIndex,
-                                                     CellInfo& cell)
+void MarchingCubes::ComputeInterpolatedVertexForEdge(s32 edgeIndex, CellInfo& cell)
 {
   if ((this->EdgeFlags & (1 << edgeIndex)) != 0)
   {
@@ -500,13 +459,11 @@ void MarchingCubes::ComputeInterpolatedVertexForEdge(s32 edgeIndex,
     float v1 = Values[p1];
     float v2 = Values[p2];
 
-    this->InterpolatedVertices[edgeIndex] =
-        Interpolate(this->SurfaceLevel, p1, p2, v1, v2);
+    this->InterpolatedVertices[edgeIndex] = Interpolate(this->SurfaceLevel, p1, p2, v1, v2);
   }
 }
 
-Vec3 MarchingCubes::Interpolate(
-    float surfaceLevel, Vec3 p1, Vec3 p2, float val1, float val2)
+Vec3 MarchingCubes::Interpolate(float surfaceLevel, Vec3 p1, Vec3 p2, float val1, float val2)
 {
   if (Math::Abs(surfaceLevel - val1) < 0.00001f)
     return p1;

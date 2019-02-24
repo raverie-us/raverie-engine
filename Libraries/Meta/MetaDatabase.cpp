@@ -26,8 +26,7 @@ MetaSerializedProperty::MetaSerializedProperty()
   MetaDatabase::GetInstance()->mDefaults.PushBack(this);
 }
 
-MetaSerializedProperty::MetaSerializedProperty(AnyParam defaultValue) :
-    mDefault(defaultValue)
+MetaSerializedProperty::MetaSerializedProperty(AnyParam defaultValue) : mDefault(defaultValue)
 {
   MetaDatabase::GetInstance()->mDefaults.PushBack(this);
 }
@@ -44,7 +43,7 @@ BoundType* MetaDatabase::FindType(StringParam typeName)
 
 void MetaDatabase::AddLibrary(LibraryParam library, bool sendModifiedEvent)
 {
-  forRange(BoundType * type, library->BoundTypes.Values())
+  forRange (BoundType* type, library->BoundTypes.Values())
   {
     BoundType* oldType = mTypeMap[type->Name];
     if (oldType)
@@ -52,8 +51,7 @@ void MetaDatabase::AddLibrary(LibraryParam library, bool sendModifiedEvent)
       if (oldType->HasAttribute(ObjectAttributes::cProxy))
       {
         RemoveLibrary(oldType->SourceLibrary);
-        ErrorIf(mTypeMap[type->Name] != nullptr,
-                "The proxy type should have been erased");
+        ErrorIf(mTypeMap[type->Name] != nullptr, "The proxy type should have been erased");
       }
       // Exception proxies can replace current types
       else if (type->HasAttribute(ObjectAttributes::cExceptionProxy) == nullptr)
@@ -67,16 +65,15 @@ void MetaDatabase::AddLibrary(LibraryParam library, bool sendModifiedEvent)
 
     // Add the type to meta compositions if it belongs to one
     // e.g. add ZilchComponents to the ComponentTypes on CogMetaComposition
-    forRange(BoundType * compositionType, mCompositionTypes.All())
+    forRange (BoundType* compositionType, mCompositionTypes.All())
     {
-      MetaComposition* composition =
-          compositionType->HasInherited<MetaComposition>();
+      MetaComposition* composition = compositionType->HasInherited<MetaComposition>();
       if (type->IsA(composition->mComponentType))
         composition->mComponentTypes.Insert(type->Name, type);
     }
 
     // Add all event types
-    forRange(SendsEvent * sendsEvents, type->SendsEvents.All())
+    forRange (SendsEvent* sendsEvents, type->SendsEvents.All())
     {
       String eventName = sendsEvents->Name;
 
@@ -109,18 +106,16 @@ void MetaDatabase::AddNativeLibrary(LibraryParam library)
 void MetaDatabase::RemoveLibrary(LibraryParam library)
 {
   // Remove all types from our type map
-  forRange(BoundType * type, library->BoundTypes.Values())
-      mTypeMap.Erase(type->Name);
+  forRange (BoundType* type, library->BoundTypes.Values())
+    mTypeMap.Erase(type->Name);
 
-  forRange(BoundType * type, library->BoundTypes.Values())
+  forRange (BoundType* type, library->BoundTypes.Values())
   {
     // Remove the type from meta compositions if it belongs to one
     // e.g. remove ZilchComponents from the ComponentTypes on CogMetaComposition
-    forRange(BoundType * compositionType,
-             MetaDatabase::GetInstance()->mCompositionTypes.All())
+    forRange (BoundType* compositionType, MetaDatabase::GetInstance()->mCompositionTypes.All())
     {
-      MetaComposition* composition =
-          compositionType->HasInherited<MetaComposition>();
+      MetaComposition* composition = compositionType->HasInherited<MetaComposition>();
 
       // Composition may be null if we're shutting down
       if (composition && type->IsA(composition->mComponentType))
@@ -128,7 +123,7 @@ void MetaDatabase::RemoveLibrary(LibraryParam library)
     }
 
     // Remove all event types from the meta database
-    forRange(SendsEvent * sendsEvents, type->SendsEvents.All())
+    forRange (SendsEvent* sendsEvents, type->SendsEvents.All())
     {
       String eventName = sendsEvents->Name;
 
@@ -154,7 +149,7 @@ void MetaDatabase::AddAlternateName(StringParam name, BoundType* boundType)
 
 void MetaDatabase::ReleaseDefaults()
 {
-  forRange(MetaSerializedProperty & prop, mDefaults.All())
+  forRange (MetaSerializedProperty& prop, mDefaults.All())
   {
     prop.mDefault = Any();
   }

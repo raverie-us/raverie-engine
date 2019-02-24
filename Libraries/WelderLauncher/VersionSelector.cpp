@@ -30,12 +30,10 @@ struct VersionSorter
 
     // If the branches are different just sort alphabetically
     if (state == BuildUpdateState::DifferentBranch)
-      return lhsBuildId.mExperimentalBranchName <
-             rhsBuildId.mExperimentalBranchName;
+      return lhsBuildId.mExperimentalBranchName < rhsBuildId.mExperimentalBranchName;
 
     // Otherwise, return true if lhs > rhs (aka the update is to an older build)
-    bool updatingToOlder = (state == BuildUpdateState::Older ||
-                            state == BuildUpdateState::OlderBreaking);
+    bool updatingToOlder = (state == BuildUpdateState::Older || state == BuildUpdateState::OlderBreaking);
     return updatingToOlder;
   }
 };
@@ -95,8 +93,7 @@ void VersionSelector::FindInstalledVersions(StringParam searchPath)
 
       // If this folder contains an exe (a build) then load the version,
       // otherwise recurse.
-      String zeroExePath =
-          FilePath::CombineWithExtension(fullDirName, "ZeroEditor", ".exe");
+      String zeroExePath = FilePath::CombineWithExtension(fullDirName, "ZeroEditor", ".exe");
       if (FileExists(zeroExePath) == false)
         FindInstalledVersions(fullDirName);
       else
@@ -105,8 +102,7 @@ void VersionSelector::FindInstalledVersions(StringParam searchPath)
   }
 }
 
-void VersionSelector::LoadInstalledBuild(StringParam directoryPath,
-                                         StringParam buildFolder)
+void VersionSelector::LoadInstalledBuild(StringParam directoryPath, StringParam buildFolder)
 {
   // By default, parse the build's folder name to
   // attempt to get the build id (mostly for legacy)
@@ -124,8 +120,7 @@ void VersionSelector::LoadInstalledBuild(StringParam directoryPath,
     // Create the meta file's cog for this build (make sure to clear the
     // archetype if it has one). Also, load the build id from the
     // ZeroBuildContent component.
-    metaCog = Z::gFactory->Create(
-        Z::gEngine->GetEngineSpace(), metaFilePath, 0, nullptr);
+    metaCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), metaFilePath, 0, nullptr);
     // Meta could be null if the file was invalid (all nulls after a bluescreen
     // for instance)
     if (metaCog != nullptr)
@@ -151,8 +146,7 @@ void VersionSelector::LoadInstalledBuild(StringParam directoryPath,
     if (isLegacy)
     {
       ZeroBuildContent* buildInfo = localBuild->GetBuildContent(false);
-      buildInfo->mChangeSetDate =
-          String::Format("%s-%s-%s", year.c_str(), month.c_str(), day.c_str());
+      buildInfo->mChangeSetDate = String::Format("%s-%s-%s", year.c_str(), month.c_str(), day.c_str());
     }
 
     localBuild->SetBuildId(buildId);
@@ -262,13 +256,10 @@ void VersionSelector::UpdatePackageListing(GetVersionListingTaskJob* job)
       {
         // If the local build had a user defined deprecated message then
         // transfer that over to the new meta
-        ZeroBuildDeprecated* oldDeprecatedInfo =
-            oldMetaCog->has(ZeroBuildDeprecated);
-        if (oldDeprecatedInfo != nullptr &&
-            !oldDeprecatedInfo->mUserMessage.Empty())
+        ZeroBuildDeprecated* oldDeprecatedInfo = oldMetaCog->has(ZeroBuildDeprecated);
+        if (oldDeprecatedInfo != nullptr && !oldDeprecatedInfo->mUserMessage.Empty())
         {
-          ZeroBuildDeprecated* deprecatedInfo =
-              localStandalone->GetDeprecatedInfo(true);
+          ZeroBuildDeprecated* deprecatedInfo = localStandalone->GetDeprecatedInfo(true);
           deprecatedInfo->mUserMessage = oldDeprecatedInfo->mUserMessage;
         }
       }
@@ -287,8 +278,7 @@ void VersionSelector::UpdatePackageListing(GetVersionListingTaskJob* job)
     // version is deprecated then mark that it is bad
     if (buildContent->ContainsTag(ZeroBuild::mDeprecatedTag) == true)
     {
-      ZeroBuildDeprecated* deprecatedInfo =
-          localStandalone->GetDeprecatedInfo(true);
+      ZeroBuildDeprecated* deprecatedInfo = localStandalone->GetDeprecatedInfo(true);
       if (deprecatedInfo->mServerMessage.Empty())
         deprecatedInfo->mServerMessage = "Version was deprecated";
     }
@@ -353,8 +343,7 @@ void VersionSelector::AddCustomBuild(StringParam buildPath, bool shouldInstall)
 
   // If we already had the build installed then remove the old one
   // so we can replace it with the new one
-  ZeroBuild* oldBuild =
-      mVersionMap.FindValue(localBuild->GetBuildId(), nullptr);
+  ZeroBuild* oldBuild = mVersionMap.FindValue(localBuild->GetBuildId(), nullptr);
   if (oldBuild != nullptr)
   {
     mVersions.EraseValue(oldBuild);
@@ -382,22 +371,10 @@ void VersionSelector::AddCustomBuild(StringParam buildPath, bool shouldInstall)
     BackgroundTask* task = Z::gBackgroundTasks->CreateTask(job);
     task->mName = "Latest Install";
 
-    Zero::Connect(task,
-                  Events::BackgroundTaskUpdated,
-                  localBuild,
-                  &ZeroBuild::ForwardEvent);
-    Zero::Connect(task,
-                  Events::BackgroundTaskCompleted,
-                  localBuild,
-                  &ZeroBuild::ForwardEvent);
-    Zero::Connect(task,
-                  Events::BackgroundTaskCompleted,
-                  localBuild,
-                  &ZeroBuild::InstallCompleted);
-    Zero::Connect(task,
-                  Events::BackgroundTaskFailed,
-                  localBuild,
-                  &ZeroBuild::ForwardEvent);
+    Zero::Connect(task, Events::BackgroundTaskUpdated, localBuild, &ZeroBuild::ForwardEvent);
+    Zero::Connect(task, Events::BackgroundTaskCompleted, localBuild, &ZeroBuild::ForwardEvent);
+    Zero::Connect(task, Events::BackgroundTaskCompleted, localBuild, &ZeroBuild::InstallCompleted);
+    Zero::Connect(task, Events::BackgroundTaskFailed, localBuild, &ZeroBuild::ForwardEvent);
 
     Event toSend;
     localBuild->DispatchEvent(Events::InstallStarted, &toSend);
@@ -419,8 +396,7 @@ bool VersionSelector::InstallLocalTemplateProject(StringParam filePath)
   // images/icons if they exist)
   String sku = FilePath::GetFileNameWithoutExtension(filePath);
   String metaFileName = BuildString(sku, ".meta");
-  Cog* metaCog =
-      ExtractLocalTemplateMetaAndImages(archive, file, metaFileName, true);
+  Cog* metaCog = ExtractLocalTemplateMetaAndImages(archive, file, metaFileName, true);
   // If we failed to find a meta file then we need to parse the file name to get
   // the sku and build id
   if (metaCog == nullptr)
@@ -439,8 +415,7 @@ bool VersionSelector::InstallLocalTemplateProject(StringParam filePath)
       return false;
 
     // Create a cog for the meta
-    metaCog = Z::gFactory->Create(
-        Z::gEngine->GetEngineSpace(), CoreArchetypes::Empty, 0, nullptr);
+    metaCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), CoreArchetypes::Empty, 0, nullptr);
     metaCog->ClearArchetype();
 
     // Create the zero template component and set the sku and version id from
@@ -459,14 +434,12 @@ bool VersionSelector::InstallLocalTemplateProject(StringParam filePath)
 
   // Always create the template's output directory
   String fullTemplateName = zeroTemplate->GetFullTemplateVersionName();
-  String templateInstallDirectory =
-      FilePath::Combine(mConfig->GetTemplateInstallPath(), fullTemplateName);
+  String templateInstallDirectory = FilePath::Combine(mConfig->GetTemplateInstallPath(), fullTemplateName);
   CreateDirectoryAndParents(templateInstallDirectory);
 
   // Create the template project from our meta cog so that we can
   // cache information like where this is installed, icon images, etc...
-  TemplateProject* currentProject =
-      CreateTemplateProjectFromMeta(metaCog, templateInstallDirectory);
+  TemplateProject* currentProject = CreateTemplateProjectFromMeta(metaCog, templateInstallDirectory);
   // Make sure we set the local path of where this template is installed right
   // away as several other functions use this
   currentProject->mLocalPath = templateInstallDirectory;
@@ -477,8 +450,7 @@ bool VersionSelector::InstallLocalTemplateProject(StringParam filePath)
   CopyFile(zeroTemplateFilePathDest, filePath);
 
   // Always save out the meta file
-  String metaFilePath = FilePath::CombineWithExtension(
-      templateInstallDirectory, fullTemplateName, ".meta");
+  String metaFilePath = FilePath::CombineWithExtension(templateInstallDirectory, fullTemplateName, ".meta");
   String metaContents = currentProject->SaveMetaFileToString();
   WriteStringRangeToFile(metaFilePath, metaContents);
 
@@ -493,21 +465,17 @@ bool VersionSelector::InstallLocalTemplateProject(StringParam filePath)
   return true;
 }
 
-TemplateProject*
-VersionSelector::CreateTemplateProjectFromMeta(StringParam metaFilePath)
+TemplateProject* VersionSelector::CreateTemplateProjectFromMeta(StringParam metaFilePath)
 {
   // Load the meta file
   DataTreeLoader loader;
   Status status;
   loader.OpenFile(status, metaFilePath);
-  Cog* metaCog = Z::gFactory->CreateFromStream(
-      Z::gEngine->GetEngineSpace(), loader, 0, nullptr);
-  return CreateTemplateProjectFromMeta(
-      metaCog, FilePath::GetDirectoryPath(metaFilePath));
+  Cog* metaCog = Z::gFactory->CreateFromStream(Z::gEngine->GetEngineSpace(), loader, 0, nullptr);
+  return CreateTemplateProjectFromMeta(metaCog, FilePath::GetDirectoryPath(metaFilePath));
 }
 
-TemplateProject* VersionSelector::CreateTemplateProjectFromMeta(
-    Cog* metaCog, StringParam localPath)
+TemplateProject* VersionSelector::CreateTemplateProjectFromMeta(Cog* metaCog, StringParam localPath)
 {
   // Make sure the meta file contained the necessary info
   if (metaCog == nullptr)
@@ -576,14 +544,12 @@ void VersionSelector::FindDownloadedTemplatesRecursive(StringParam searchPath)
 BackgroundTask* VersionSelector::GetTemplateListing()
 {
   ZPrint("Checking server for project templates.\n");
-  GetTemplateListingTaskJob* job =
-      new GetTemplateListingTaskJob(Urls::cApiLauncherTemplates);
+  GetTemplateListingTaskJob* job = new GetTemplateListingTaskJob(Urls::cApiLauncherTemplates);
   job->mName = "Template List";
   return Z::gBackgroundTasks->Execute(job, job->mName);
 }
 
-void VersionSelector::UpdateTemplateListing(
-    GetTemplateListingTaskJob* templates)
+void VersionSelector::UpdateTemplateListing(GetTemplateListingTaskJob* templates)
 {
   ZPrint("Updating template project listing.\n");
   // Mark all templates as not being on the server (so we know which ones to get
@@ -625,8 +591,7 @@ void VersionSelector::UpdateTemplateListing(
     {
       ZeroTemplate* localZeroTemplate = localTemplate->GetZeroTemplate(true);
       localTemplate->mIsOnServer = true;
-      localTemplate->mIsDifferentFromServer =
-          (serverZeroTemplate->mDate != localZeroTemplate->mDate);
+      localTemplate->mIsDifferentFromServer = (serverZeroTemplate->mDate != localZeroTemplate->mDate);
       continue;
     }
 
@@ -663,35 +628,29 @@ void VersionSelector::UpdateTemplateListing(
   Sort(mTemplates.All(), TemplateSorter());
 }
 
-BackgroundTask*
-VersionSelector::DownloadTemplateProject(TemplateProject* project)
+BackgroundTask* VersionSelector::DownloadTemplateProject(TemplateProject* project)
 {
   String templateUrl = project->GetTemplateUrl();
   ZPrint("Downloading template project '%s'.\n", templateUrl.c_str());
-  DownloadTemplateTaskJob* job =
-      new DownloadTemplateTaskJob(templateUrl, project);
+  DownloadTemplateTaskJob* job = new DownloadTemplateTaskJob(templateUrl, project);
 
   ZeroTemplate* zeroTemplate = project->GetZeroTemplate(true);
   job->mTemplateInstallLocation =
-      FilePath::Combine(mConfig->GetTemplateInstallPath(),
-                        zeroTemplate->GetFullTemplateVersionName());
-  job->mTemplateNameWithoutExtension = FilePath::GetFileNameWithoutExtension(
-      project->GetLocalTemplateFileName());
+      FilePath::Combine(mConfig->GetTemplateInstallPath(), zeroTemplate->GetFullTemplateVersionName());
+  job->mTemplateNameWithoutExtension = FilePath::GetFileNameWithoutExtension(project->GetLocalTemplateFileName());
   job->mMetaContents = project->SaveMetaFileToString();
 
   return Z::gBackgroundTasks->Execute(job, job->mName);
 }
 
-BackgroundTask*
-VersionSelector::CreateProjectFromTemplate(TemplateProject* project,
-                                           StringParam templateInstallPath,
-                                           StringParam projectInstallPath,
-                                           const BuildId& buildId,
-                                           const HashSet<String>& projectTags)
+BackgroundTask* VersionSelector::CreateProjectFromTemplate(TemplateProject* project,
+                                                           StringParam templateInstallPath,
+                                                           StringParam projectInstallPath,
+                                                           const BuildId& buildId,
+                                                           const HashSet<String>& projectTags)
 {
   String templateUrl = project->GetTemplateUrl();
-  DownloadAndCreateTemplateTaskJob* job =
-      new DownloadAndCreateTemplateTaskJob(templateUrl, project);
+  DownloadAndCreateTemplateTaskJob* job = new DownloadAndCreateTemplateTaskJob(templateUrl, project);
 
   job->mTemplateInstallLocation = templateInstallPath;
   job->mTemplateNameWithoutExtension = project->GetLocalTemplateFileName();
@@ -713,8 +672,7 @@ BackgroundTask* VersionSelector::DownloadTemplateIcon(TemplateProject* project)
   return Z::gBackgroundTasks->Execute(job, job->mName);
 }
 
-BackgroundTask*
-VersionSelector::DownloadTemplatePreviews(TemplateProject* project)
+BackgroundTask* VersionSelector::DownloadTemplatePreviews(TemplateProject* project)
 {
   // @JoshD: Update to get the remaining preview icons later...
   return nullptr;
@@ -728,9 +686,7 @@ BackgroundTask* VersionSelector::DownloadDeveloperNotes()
   return Z::gBackgroundTasks->Execute(job, job->mName);
 }
 
-void VersionSelector::GetBuildIdFromArchive(StringParam buildPath,
-                                            ZeroBuild& zeroBuild,
-                                            BuildId& buildId)
+void VersionSelector::GetBuildIdFromArchive(StringParam buildPath, ZeroBuild& zeroBuild, BuildId& buildId)
 {
   // Keep track of if we successfully loaded our build info from a meta file
   bool buildInfoLoadedFromMeta = false;
@@ -744,8 +700,7 @@ void VersionSelector::GetBuildIdFromArchive(StringParam buildPath,
   Archive archive(ArchiveMode::Decompressing);
   archive.ReadZip(ArchiveReadFlags::Entries, file);
   // Find the meta file's entry
-  for (Archive::range range = archive.GetEntries(); !range.Empty();
-       range.PopFront())
+  for (Archive::range range = archive.GetEntries(); !range.Empty(); range.PopFront())
   {
     ArchiveEntry& entry = range.Front();
     if (entry.Name != metaFileName)
@@ -759,8 +714,7 @@ void VersionSelector::GetBuildIdFromArchive(StringParam buildPath,
     DataTreeLoader loader;
     Status status;
     loader.OpenBuffer(status, metaContents);
-    Cog* metaCog = Z::gFactory->CreateFromStream(
-        Z::gEngine->GetEngineSpace(), loader, 0, nullptr);
+    Cog* metaCog = Z::gFactory->CreateFromStream(Z::gEngine->GetEngineSpace(), loader, 0, nullptr);
     // If we failed to create the meta then maybe we'll get lucky with another
     // entry?
     if (metaCog == nullptr)
@@ -788,8 +742,7 @@ void VersionSelector::GetBuildIdFromArchive(StringParam buildPath,
   // If the old parsing method succeeded then make sure to set the release date
   if (oldFormatParsed)
   {
-    buildInfo->mChangeSetDate =
-        String::Format("%s-%s-%s", year.c_str(), month.c_str(), day.c_str());
+    buildInfo->mChangeSetDate = String::Format("%s-%s-%s", year.c_str(), month.c_str(), day.c_str());
     return;
   }
 
@@ -803,22 +756,21 @@ void VersionSelector::GetBuildIdFromArchive(StringParam buildPath,
   Zilch::Sha1Builder sha1Builder;
   sha1Builder.Append(file);
   sha1Builder.OutputHash(bytes);
-  buildId.mMajorVersion =
-      Math::Abs((int)HashString((char*)bytes.Data(), bytes.Size()));
+  buildId.mMajorVersion = Math::Abs((int)HashString((char*)bytes.Data(), bytes.Size()));
 
   // Set the revision id to a hash of the file's date time
   CalendarDateTime dateTime;
   GetFileDateTime(buildPath, dateTime);
-  buildId.mRevisionId =
-      Math::Abs((int)HashString((char*)&dateTime, sizeof(CalendarDateTime)));
+  buildId.mRevisionId = Math::Abs((int)HashString((char*)&dateTime, sizeof(CalendarDateTime)));
 
   // Also set the release date string
-  buildInfo->mChangeSetDate = String::Format(
-      "%d-%d-%d", dateTime.Year, dateTime.Month + 1, dateTime.Day);
+  buildInfo->mChangeSetDate = String::Format("%d-%d-%d", dateTime.Year, dateTime.Month + 1, dateTime.Day);
 }
 
-Cog* VersionSelector::ExtractLocalTemplateMetaAndImages(
-    Archive& archive, File& file, StringParam metaFileName, bool extractImages)
+Cog* VersionSelector::ExtractLocalTemplateMetaAndImages(Archive& archive,
+                                                        File& file,
+                                                        StringParam metaFileName,
+                                                        bool extractImages)
 {
   // Find the meta file as a file with the same name as the sku
   ArchiveEntry* metaFileEntry = FindEntryFromArchive(archive, metaFileName);
@@ -835,8 +787,7 @@ Cog* VersionSelector::ExtractLocalTemplateMetaAndImages(
   Status status;
   DataTreeLoader loader;
   loader.OpenBuffer(status, metaContents);
-  Cog* metaCog = Z::gFactory->CreateFromStream(
-      Z::gEngine->GetEngineSpace(), loader, 0, nullptr);
+  Cog* metaCog = Z::gFactory->CreateFromStream(Z::gEngine->GetEngineSpace(), loader, 0, nullptr);
   // Make sure we successfully created the cog and that it has the required
   // component
   if (metaCog == nullptr)
@@ -852,33 +803,26 @@ Cog* VersionSelector::ExtractLocalTemplateMetaAndImages(
   {
     // Make sure the template's directory exists
     String templateInstallDirectory =
-        FilePath::Combine(mConfig->GetTemplateInstallPath(),
-                          zeroTemplate->GetFullTemplateVersionName());
+        FilePath::Combine(mConfig->GetTemplateInstallPath(), zeroTemplate->GetFullTemplateVersionName());
     CreateDirectoryAndParents(templateInstallDirectory);
 
     // Find the icon file in the archive specified by the meta file
-    ArchiveEntry* iconEntry =
-        FindEntryFromArchive(archive, zeroTemplate->mIconUrl);
+    ArchiveEntry* iconEntry = FindEntryFromArchive(archive, zeroTemplate->mIconUrl);
     if (iconEntry != nullptr)
     {
       // Decompress the entry and save it out to the specified relative path
       archive.DecompressEntry(*iconEntry, file);
-      String iconFilePathDest =
-          FilePath::Combine(templateInstallDirectory, zeroTemplate->mIconUrl);
-      WriteToFile(
-          iconFilePathDest.c_str(), iconEntry->Full.Data, iconEntry->Full.Size);
+      String iconFilePathDest = FilePath::Combine(templateInstallDirectory, zeroTemplate->mIconUrl);
+      WriteToFile(iconFilePathDest.c_str(), iconEntry->Full.Data, iconEntry->Full.Size);
     }
   }
   return metaCog;
 }
 
-ArchiveEntry* VersionSelector::FindEntryFromArchive(Archive& archive,
-                                                    StringParam fileName,
-                                                    bool ignorePath)
+ArchiveEntry* VersionSelector::FindEntryFromArchive(Archive& archive, StringParam fileName, bool ignorePath)
 {
   // Find the specified file's entry
-  for (Archive::range range = archive.GetEntries(); !range.Empty();
-       range.PopFront())
+  for (Archive::range range = archive.GetEntries(); !range.Empty(); range.PopFront())
   {
     ArchiveEntry& entry = range.Front();
     String entryName = entry.Name;
@@ -894,8 +838,7 @@ ArchiveEntry* VersionSelector::FindEntryFromArchive(Archive& archive,
 
 BackgroundTask* VersionSelector::InstallVersion(ZeroBuild* standalone)
 {
-  if (standalone->mInstallState == InstallState::Installed ||
-      standalone->mInstallState == InstallState::Installing)
+  if (standalone->mInstallState == InstallState::Installed || standalone->mInstallState == InstallState::Installing)
     return nullptr;
 
   ZPrint("Installing build '%s'\n", standalone->GetDebugIdString().c_str());
@@ -921,20 +864,10 @@ BackgroundTask* VersionSelector::InstallVersion(ZeroBuild* standalone)
   BackgroundTask* task = Z::gBackgroundTasks->CreateTask(job);
   task->mName = "Latest Install";
 
-  Zero::Connect(task,
-                Events::BackgroundTaskUpdated,
-                standalone,
-                &ZeroBuild::ForwardEvent);
-  Zero::Connect(task,
-                Events::BackgroundTaskCompleted,
-                standalone,
-                &ZeroBuild::ForwardEvent);
-  Zero::Connect(task,
-                Events::BackgroundTaskCompleted,
-                standalone,
-                &ZeroBuild::InstallCompleted);
-  Zero::Connect(
-      task, Events::BackgroundTaskFailed, standalone, &ZeroBuild::ForwardEvent);
+  Zero::Connect(task, Events::BackgroundTaskUpdated, standalone, &ZeroBuild::ForwardEvent);
+  Zero::Connect(task, Events::BackgroundTaskCompleted, standalone, &ZeroBuild::ForwardEvent);
+  Zero::Connect(task, Events::BackgroundTaskCompleted, standalone, &ZeroBuild::InstallCompleted);
+  Zero::Connect(task, Events::BackgroundTaskFailed, standalone, &ZeroBuild::ForwardEvent);
   ConnectThisTo(standalone, Events::InstallStarted, OnForwardEvent);
   ConnectThisTo(standalone, Events::InstallCompleted, OnForwardEvent);
 
@@ -963,26 +896,15 @@ BackgroundTask* VersionSelector::DeleteVersion(ZeroBuild* standalone)
   String installLocation = GetInstallLocation(standalone);
   // Delete the directory of the build. Also recursively delete empty
   // parent directories up to the root install location.
-  DeleteDirectoryJob* job =
-      new DeleteDirectoryJob(installLocation, GetRootInstallLocation(), true);
+  DeleteDirectoryJob* job = new DeleteDirectoryJob(installLocation, GetRootInstallLocation(), true);
 
   BackgroundTask* task = Z::gBackgroundTasks->CreateTask(job);
   task->mName = "DeleteVersion";
 
-  Zero::Connect(task,
-                Events::BackgroundTaskUpdated,
-                standalone,
-                &ZeroBuild::ForwardEvent);
-  Zero::Connect(task,
-                Events::BackgroundTaskCompleted,
-                standalone,
-                &ZeroBuild::ForwardEvent);
-  Zero::Connect(task,
-                Events::BackgroundTaskCompleted,
-                standalone,
-                &ZeroBuild::UninstallCompleted);
-  Zero::Connect(
-      task, Events::BackgroundTaskFailed, standalone, &ZeroBuild::ForwardEvent);
+  Zero::Connect(task, Events::BackgroundTaskUpdated, standalone, &ZeroBuild::ForwardEvent);
+  Zero::Connect(task, Events::BackgroundTaskCompleted, standalone, &ZeroBuild::ForwardEvent);
+  Zero::Connect(task, Events::BackgroundTaskCompleted, standalone, &ZeroBuild::UninstallCompleted);
+  Zero::Connect(task, Events::BackgroundTaskFailed, standalone, &ZeroBuild::ForwardEvent);
 
   Event toSend;
   standalone->DispatchEvent(Events::UninstallStarted, &toSend);
@@ -1049,10 +971,8 @@ BackgroundTask* VersionSelector::DownloadPatchLauncherUpdate(StringParam url)
 
   String majorVersionIdStr = ToString(GetMajorVersion());
   String launcherFolderName =
-      FilePath::Combine(GetUserLocalDirectory(),
-                        BuildString("ZeroLauncher_", majorVersionIdStr, ".0"));
-  DownloadLauncherPatchInstallerJob* job =
-      new DownloadLauncherPatchInstallerJob(url, launcherFolderName);
+      FilePath::Combine(GetUserLocalDirectory(), BuildString("ZeroLauncher_", majorVersionIdStr, ".0"));
+  DownloadLauncherPatchInstallerJob* job = new DownloadLauncherPatchInstallerJob(url, launcherFolderName);
   job->mName = "Download Patch Installer";
 
   return Z::gBackgroundTasks->Execute(job, job->mName);
@@ -1062,8 +982,7 @@ BackgroundTask* VersionSelector::DownloadMajorLauncherUpdate(StringParam url)
 {
   ZPrint("Downloading launcher major update.\n");
 
-  DownloadLauncherMajorInstallerJob* job =
-      new DownloadLauncherMajorInstallerJob(url);
+  DownloadLauncherMajorInstallerJob* job = new DownloadLauncherMajorInstallerJob(url);
   job->mName = "Download Major Installer";
 
   return Z::gBackgroundTasks->Execute(job, job->mName);
@@ -1111,18 +1030,17 @@ ZeroBuild* VersionSelector::GetLatestBuild()
   return GetLatestBuild(legacyTags, rejectionTags);
 }
 
-ZeroBuild* VersionSelector::GetLatestBuild(const HashSet<String>& requiredTags,
-                                           const HashSet<String>& rejectionTags)
+ZeroBuild* VersionSelector::GetLatestBuild(const HashSet<String>& requiredTags, const HashSet<String>& rejectionTags)
 {
   // We need to find the first build that satisfies the user tags
-  forRange(ZeroBuild * build, mVersions.All())
+  forRange (ZeroBuild* build, mVersions.All())
   {
     // Ignore builds that aren't on the server
     if (!build->mOnServer)
       continue;
 
     bool containsUserTags = true;
-    forRange(String userTag, requiredTags.All())
+    forRange (String userTag, requiredTags.All())
     {
       if (!build->ContainsTag(userTag))
       {
@@ -1131,7 +1049,7 @@ ZeroBuild* VersionSelector::GetLatestBuild(const HashSet<String>& requiredTags,
       }
     }
     bool containsRejectionTag = false;
-    forRange(String rejectTag, rejectionTags.All())
+    forRange (String rejectTag, rejectionTags.All())
     {
       if (build->ContainsTag(rejectTag))
       {
@@ -1150,7 +1068,7 @@ ZeroBuild* VersionSelector::GetLatestBuild(const HashSet<String>& requiredTags,
 size_t VersionSelector::GetInstalledBuildsCount() const
 {
   size_t count = 0;
-  forRange(ZeroBuild * build, mVersions.All())
+  forRange (ZeroBuild* build, mVersions.All())
   {
     if (build->mInstallState == InstallState::Installed)
       ++count;
@@ -1164,20 +1082,11 @@ void VersionSelector::OnForwardEvent(Event* e)
   DispatchEvent(e->EventId, e);
 }
 
-void VersionSelector::FindVersionsWithTags(TagSet& activeTags,
-                                           TagSet& rejectionTags,
-                                           StringParam activeSearch,
-                                           Array<ZeroBuild*>& results,
-                                           TagSet& resultTags)
+void VersionSelector::FindVersionsWithTags(
+    TagSet& activeTags, TagSet& rejectionTags, StringParam activeSearch, Array<ZeroBuild*>& results, TagSet& resultTags)
 {
   ZeroBuildTagPolicy policy;
-  FilterDataSetWithTags(activeTags,
-                        rejectionTags,
-                        activeSearch,
-                        mVersions,
-                        results,
-                        resultTags,
-                        policy);
+  FilterDataSetWithTags(activeTags, rejectionTags, activeSearch, mVersions, results, resultTags, policy);
 }
 
 void VersionSelector::FindTemplateWithTags(const BuildId& buildId,
@@ -1189,13 +1098,7 @@ void VersionSelector::FindTemplateWithTags(const BuildId& buildId,
 {
   TemplatePackageTagPolicy policy;
   policy.mBuildId = buildId;
-  FilterDataSetWithTags(activeTags,
-                        rejectionTags,
-                        activeSearch,
-                        mTemplates,
-                        results,
-                        resultTags,
-                        policy);
+  FilterDataSetWithTags(activeTags, rejectionTags, activeSearch, mTemplates, results, resultTags, policy);
 
   // There's a chance that two projects with the same SKU could match the given
   // build. This typically happens with an installed template (such as the ones
@@ -1215,12 +1118,10 @@ void VersionSelector::FindTemplateWithTags(const BuildId& buildId,
     }
 
     // Log a warning
-    ZPrint("Project template conflict of SKU '%s'. Picking latest version.\n",
-           currentTemplate->mSKU.c_str());
+    ZPrint("Project template conflict of SKU '%s'. Picking latest version.\n", currentTemplate->mSKU.c_str());
     // Get the previous template project for this SKU and determine which one is
     // a more exact range
-    ZeroTemplate* previousTemplate =
-        uniqueTemplates[currentTemplate->mSKU]->GetZeroTemplate(false);
+    ZeroTemplate* previousTemplate = uniqueTemplates[currentTemplate->mSKU]->GetZeroTemplate(false);
     if (currentTemplate->IsMoreExactRangeThan(buildId, previousTemplate))
       uniqueTemplates[currentTemplate->mSKU] = currentProject;
   }
@@ -1229,17 +1130,15 @@ void VersionSelector::FindTemplateWithTags(const BuildId& buildId,
   results.Insert(results.End(), uniqueTemplates.Values());
 }
 
-WarningLevel::Enum
-VersionSelector::CheckVersionForProject(ZeroBuild* standalone,
-                                        CachedProject* cachedProject,
-                                        String& warningString,
-                                        bool warnForUpgrading)
+WarningLevel::Enum VersionSelector::CheckVersionForProject(ZeroBuild* standalone,
+                                                           CachedProject* cachedProject,
+                                                           String& warningString,
+                                                           bool warnForUpgrading)
 {
   // If the build was marked bad for any reason then it is a sever warning level
   if (standalone->IsBad() == true)
   {
-    warningString =
-        BuildString("Are you sure? ", standalone->GetDeprecatedString());
+    warningString = BuildString("Are you sure? ", standalone->GetDeprecatedString());
     return WarningLevel::Severe;
   }
 
@@ -1254,8 +1153,7 @@ VersionSelector::CheckVersionForProject(ZeroBuild* standalone,
     return WarningLevel::Basic;
   }
   // If we try to go to an older version (breaking changes older as well)
-  else if (updateState == BuildUpdateState::Older ||
-           updateState == BuildUpdateState::OlderBreaking)
+  else if (updateState == BuildUpdateState::Older || updateState == BuildUpdateState::OlderBreaking)
   {
     warningString = "Reverting to an old version. Are you Sure?";
     return WarningLevel::Basic;
@@ -1285,41 +1183,32 @@ void VersionSelector::RunProject(ZeroBuild* standalone, StringParam projectPath)
   // get the location to zero
   String zeroExePath = GetInstallExePath(standalone);
 
-  ZPrint("Running project '%s' with build '%s'\n",
-         projectPath.c_str(),
-         zeroExePath.c_str());
+  ZPrint("Running project '%s' with build '%s'\n", projectPath.c_str(), zeroExePath.c_str());
 
   // call zero with our project file
   String commandLine = String::Format("-file \"%s\"", projectPath.c_str());
-  Os::SystemOpenFile(
-      zeroExePath.c_str(), Os::Verb::Default, commandLine.c_str());
+  Os::SystemOpenFile(zeroExePath.c_str(), Os::Verb::Default, commandLine.c_str());
 }
 
-void VersionSelector::RunProject(ZeroBuild* standalone,
-                                 CachedProject* cachedProject)
+void VersionSelector::RunProject(ZeroBuild* standalone, CachedProject* cachedProject)
 {
   String projectFilePath = cachedProject->GetProjectPath();
   RunProject(standalone, projectFilePath);
 }
 
-void VersionSelector::RunNewProject(ZeroBuild* standalone,
-                                    StringParam projectName,
-                                    Cog* configCog)
+void VersionSelector::RunNewProject(ZeroBuild* standalone, StringParam projectName, Cog* configCog)
 {
   // get the location to zero
   String zeroExePath = GetInstallExePath(standalone);
 
-  ZPrint("Running project '%s' with build '%s'\n",
-         projectName.c_str(),
-         zeroExePath.c_str());
+  ZPrint("Running project '%s' with build '%s'\n", projectName.c_str(), zeroExePath.c_str());
 
   String commandLine = "-newProject";
   // if a project name was specified then set the name of the new project to run
   if (projectName.Empty() == false)
     commandLine = String::Format("-newProject \"%s\"", projectName.c_str());
 
-  Os::SystemOpenFile(
-      zeroExePath.c_str(), Os::Verb::Default, commandLine.c_str());
+  Os::SystemOpenFile(zeroExePath.c_str(), Os::Verb::Default, commandLine.c_str());
 }
 
 void VersionSelector::MarkVersionValid(ZeroBuild* build)
@@ -1331,8 +1220,7 @@ void VersionSelector::MarkVersionValid(ZeroBuild* build)
   deprecatedInfo->GetOwner()->RemoveComponent(deprecatedInfo);
 }
 
-void VersionSelector::MarkVersionInvalid(ZeroBuild* build,
-                                         StringParam userDescription)
+void VersionSelector::MarkVersionInvalid(ZeroBuild* build, StringParam userDescription)
 {
   ZeroBuildDeprecated* deprecatedInfo = build->GetDeprecatedInfo(true);
   deprecatedInfo->mUserMessage = userDescription;
@@ -1362,19 +1250,16 @@ String VersionSelector::GetDefaultInstallLocation(const BuildId& buildId)
   if (branch.Empty())
     branch = "Master";
   String coreVersionId = buildId.GetMajorMinorPatchRevisionIdString();
-  return FilePath::Combine(
-      GetRootInstallLocation(), branch, coreVersionId, buildId.mPlatform);
+  return FilePath::Combine(GetRootInstallLocation(), branch, coreVersionId, buildId.mPlatform);
 }
 
 String VersionSelector::GetMarkedBadPath(ZeroBuild* standalone)
 {
-  String markedBadPath = FilePath::CombineWithExtension(
-      GetInstallLocation(standalone), "VersionMarkedBad", ".txt");
+  String markedBadPath = FilePath::CombineWithExtension(GetInstallLocation(standalone), "VersionMarkedBad", ".txt");
   return markedBadPath;
 }
 
-ReinstallHelper::ReinstallHelper(ZeroBuild* build,
-                                 VersionSelector* versionSelector)
+ReinstallHelper::ReinstallHelper(ZeroBuild* build, VersionSelector* versionSelector)
 {
   mBuild = build;
   mVersionSelector = versionSelector;

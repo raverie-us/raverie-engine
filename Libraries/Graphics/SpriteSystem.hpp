@@ -6,8 +6,7 @@ namespace Zero
 {
 
 /// Sprite Particle System Enums
-DeclareEnum5(
-    SpriteParticleGeometryMode, Billboarded, Beam, Outward, FaceVelocity, Flat);
+DeclareEnum5(SpriteParticleGeometryMode, Billboarded, Beam, Outward, FaceVelocity, Flat);
 DeclareEnum9(SpriteParticleSortMode,
              None,
              BackToFrontView,
@@ -35,9 +34,7 @@ public:
 
   String GetDefaultMaterialName() override;
   void ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock) override;
-  void ExtractViewData(ViewNode& viewNode,
-                       ViewBlock& viewBlock,
-                       FrameBlock& frameBlock) override;
+  void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) override;
 
   // Properties
 

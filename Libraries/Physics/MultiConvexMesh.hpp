@@ -21,8 +21,7 @@ public:
   ZilchDeclareType(MultiConvexMeshIndexData, TypeCopyMode::ReferenceType);
 };
 
-class MultiConvexMeshSubMeshData
-    : public BoundMeshData<MultiConvexMesh, SubConvexMesh*>
+class MultiConvexMeshSubMeshData : public BoundMeshData<MultiConvexMesh, SubConvexMesh*>
 {
 public:
   ZilchDeclareType(MultiConvexMeshSubMeshData, TypeCopyMode::ReferenceType);
@@ -63,9 +62,7 @@ public:
   void ComputeUniqueIndices();
 
   void ComputeCenterOfMassAndVolume(VertexArrayParam verts);
-  Mat3 ComputeInertiaTensor(VertexArrayParam verts,
-                            Vec3Param centerOfMass,
-                            Vec3Param scale);
+  Mat3 ComputeInertiaTensor(VertexArrayParam verts, Vec3Param centerOfMass, Vec3Param scale);
   Aabb ComputeAabb(VertexArrayParam verts);
 
   // Gjk/Mpr interface functions
@@ -75,10 +72,7 @@ public:
   Vec3 GetCenter();
 
   /// Determines if a local-space ray hits this mesh.
-  bool CastRay(const Ray& localRay,
-               MultiConvexMesh* mesh,
-               ProxyResult& result,
-               BaseCastFilter& filter);
+  bool CastRay(const Ray& localRay, MultiConvexMesh* mesh, ProxyResult& result, BaseCastFilter& filter);
 
   Triangle GetTriangleIndexed(VertexArrayParam verts, uint index);
   Triangle GetTriangle(VertexArrayParam verts, uint index);
@@ -91,19 +85,11 @@ public:
   /// for determining triangles than for generating the convex mesh.
   MultiConvexMeshIndexData* GetTriangleIndices();
 
-  void Draw(VertexArrayParam verts,
-            Mat4Param transform,
-            bool drawEdges,
-            bool drawFaces);
-  void Draw2d(VertexArrayParam verts,
-              Mat4Param transform,
-              bool drawEdges,
-              bool drawFaces);
+  void Draw(VertexArrayParam verts, Mat4Param transform, bool drawEdges, bool drawFaces);
+  void Draw2d(VertexArrayParam verts, Mat4Param transform, bool drawEdges, bool drawFaces);
   void DrawFaces(VertexArrayParam verts, Mat4Param transform, ByteColor color);
   void DrawEdges(VertexArrayParam verts, Mat4Param transform, ByteColor color);
-  void DrawEdges2d(VertexArrayParam verts,
-                   Mat4Param transform,
-                   ByteColor color);
+  void DrawEdges2d(VertexArrayParam verts, Mat4Param transform, ByteColor color);
 
   /// The indices into the vertices array that represent what points are in the
   /// convex mesh.
@@ -188,9 +174,7 @@ public:
   Mat3 ComputeInvInertiaTensor(Vec3Param worldScale, real totalMass);
 
   /// Determines if a local-space ray hits any of the sub-meshes.
-  bool CastRay(const Ray& localRay,
-               ProxyResult& result,
-               BaseCastFilter& filter);
+  bool CastRay(const Ray& localRay, ProxyResult& result, BaseCastFilter& filter);
 
   /// Rebuild all cached information for when the mesh has changed (center of
   /// mass, volume, aabb).

@@ -73,8 +73,7 @@ struct ConstraintGroup
 };
 
 template <typename ListType, typename Functor>
-void GroupOperationFragment(
-    ConstraintGroup<typename ListType::value_type>& group, Functor operation)
+void GroupOperationFragment(ConstraintGroup<typename ListType::value_type>& group, Functor operation)
 {
   typedef ConstraintGroup<typename ListType::value_type> JointGroup;
   typedef ConstraintPhase<typename ListType::value_type> JointPhase;
@@ -90,10 +89,9 @@ void GroupOperationFragment(
 }
 
 template <typename ListType, typename ParamType, typename Functor>
-void GroupOperationParamFragment(
-    ConstraintGroup<typename ListType::value_type>& group,
-    ParamType& param,
-    Functor operation)
+void GroupOperationParamFragment(ConstraintGroup<typename ListType::value_type>& group,
+                                 ParamType& param,
+                                 Functor operation)
 {
   typedef ConstraintGroup<typename ListType::value_type> JointGroup;
   typedef ConstraintPhase<typename ListType::value_type> JointPhase;
@@ -108,15 +106,11 @@ void GroupOperationParamFragment(
   }
 }
 
-template <typename ListType,
-          typename ParamType1,
-          typename ParamType2,
-          typename Functor>
-void GroupOperationTwoParamFragment(
-    ConstraintGroup<typename ListType::value_type>& group,
-    ParamType1& param1,
-    ParamType2& param2,
-    Functor operation)
+template <typename ListType, typename ParamType1, typename ParamType2, typename Functor>
+void GroupOperationTwoParamFragment(ConstraintGroup<typename ListType::value_type>& group,
+                                    ParamType1& param1,
+                                    ParamType2& param2,
+                                    Functor operation)
 {
   typedef ConstraintGroup<typename ListType::value_type> JointGroup;
   typedef ConstraintPhase<typename ListType::value_type> JointPhase;
@@ -132,8 +126,7 @@ void GroupOperationTwoParamFragment(
 }
 
 template <typename ListType>
-void SplitConstraints(ListType& joints,
-                      ConstraintGroup<typename ListType::value_type>& phases)
+void SplitConstraints(ListType& joints, ConstraintGroup<typename ListType::value_type>& phases)
 {
   typedef ConstraintPhase<typename ListType::value_type> PhaseType;
   typedef ConstraintBatch<typename ListType::value_type> BatchType;

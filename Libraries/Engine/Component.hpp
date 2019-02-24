@@ -186,12 +186,8 @@ public:
   }
 
   // HandleManager interface
-  void Allocate(BoundType* type,
-                Handle& handleToInitialize,
-                size_t customFlags) override;
-  void ObjectToHandle(const byte* object,
-                      BoundType* type,
-                      Handle& handleToInitialize) override;
+  void Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags) override;
+  void ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize) override;
   byte* HandleToObject(const Handle& handle) override;
   bool CanDelete(const Handle& handle) override;
   void Delete(const Handle& handle) override;

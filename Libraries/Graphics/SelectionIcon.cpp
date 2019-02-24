@@ -24,8 +24,7 @@ ZilchDefineType(SelectionIcon, builder, type)
   ZilchBindGetterSetter(ShaderInputs);
 
   // SelectionIcon data
-  ZilchBindGetterSetterProperty(SpriteSource)
-      ->Add(new MetaEditorResource(true, false, "SelectionIcon"));
+  ZilchBindGetterSetterProperty(SpriteSource)->Add(new MetaEditorResource(true, false, "SelectionIcon"));
   ZilchBindFieldProperty(mViewScale);
   ZilchBindGetterSetterProperty(OverrideSelections);
 }
@@ -35,12 +34,10 @@ void SelectionIcon::Serialize(Serializer& stream)
   // Graphical data
   SerializeNameDefault(mVisible, true);
   SerializeNameDefault(mVisibilityEvents, true);
-  SerializeResourceNameDefault(
-      mMaterial, MaterialManager, GetDefaultMaterialName());
+  SerializeResourceNameDefault(mMaterial, MaterialManager, GetDefaultMaterialName());
 
   // SelectionIcon data
-  SerializeResourceNameDefault(
-      mSpriteSource, SpriteSourceManager, "SelectIcon");
+  SerializeResourceNameDefault(mSpriteSource, SpriteSourceManager, "SelectIcon");
   SerializeNameDefault(mViewScale, 1.0f);
   SerializeNameDefault(mOverrideSelections, true);
 }
@@ -62,8 +59,7 @@ Aabb SelectionIcon::GetLocalAabb()
   return Aabb(Vec3(0.0f), Vec3(0.5f));
 }
 
-void SelectionIcon::ExtractFrameData(FrameNode& frameNode,
-                                     FrameBlock& frameBlock)
+void SelectionIcon::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   frameNode.mBorderThickness = 1.0f;
   frameNode.mBlendSettingsOverride = false;
@@ -82,16 +78,11 @@ void SelectionIcon::ExtractFrameData(FrameNode& frameNode,
   frameNode.mBoneMatrixRange = IndexRange(0, 0);
 }
 
-void SelectionIcon::ExtractViewData(ViewNode& viewNode,
-                                    ViewBlock& viewBlock,
-                                    FrameBlock& frameBlock)
+void SelectionIcon::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
 
-  MakeLocalToViewAligned(viewNode.mLocalToView,
-                         frameNode.mLocalToWorld,
-                         viewBlock.mWorldToView,
-                         GetWorldTranslation());
+  MakeLocalToViewAligned(viewNode.mLocalToView, frameNode.mLocalToWorld, viewBlock.mWorldToView, GetWorldTranslation());
 
   float radius = GetRadius(viewBlock);
   Vec2 center = Vec2(0.0f);
@@ -109,17 +100,13 @@ void SelectionIcon::ExtractViewData(ViewNode& viewNode,
   Vec2 uvAux1 = Vec2(1, 1);
 
   viewNode.mStreamedVertexType = PrimitiveType::Triangles;
-  viewNode.mStreamedVertexStart =
-      frameBlock.mRenderQueues->mStreamedVertices.Size();
+  viewNode.mStreamedVertexStart = frameBlock.mRenderQueues->mStreamedVertices.Size();
   viewNode.mStreamedVertexCount = 0;
 
-  frameBlock.mRenderQueues->AddStreamedQuad(
-      viewNode, pos0, pos1, uv0, uv1, Vec4(1.0f), uvAux0, uvAux1);
+  frameBlock.mRenderQueues->AddStreamedQuad(viewNode, pos0, pos1, uv0, uv1, Vec4(1.0f), uvAux0, uvAux1);
 }
 
-void SelectionIcon::MidPhaseQuery(Array<GraphicalEntry>& entries,
-                                  Camera& camera,
-                                  Frustum* frustum)
+void SelectionIcon::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Frustum* frustum)
 {
   mGraphicalEntryData.mGraphical = this;
   mGraphicalEntryData.mFrameNodeIndex = -1;
@@ -137,11 +124,8 @@ bool SelectionIcon::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
 {
   float radius = GetRadius(castInfo.mCameraCog->has(Camera));
   Intersection::IntersectionPoint point;
-  Intersection::Type result = Intersection::RaySphere(rayCast.mRay.Start,
-                                                      rayCast.mRay.Direction,
-                                                      GetWorldTranslation(),
-                                                      radius,
-                                                      &point);
+  Intersection::Type result =
+      Intersection::RaySphere(rayCast.mRay.Start, rayCast.mRay.Direction, GetWorldTranslation(), radius, &point);
   if (result == Intersection::None)
     return false;
 
@@ -194,23 +178,18 @@ void SelectionIcon::SetOverrideSelections(bool overrideSelections)
 
 float SelectionIcon::GetRadius(Camera* camera)
 {
-  float viewDistance = Debug::GetViewDistance(GetWorldTranslation(),
-                                              camera->GetWorldTranslation(),
-                                              camera->GetWorldDirection());
+  float viewDistance =
+      Debug::GetViewDistance(GetWorldTranslation(), camera->GetWorldTranslation(), camera->GetWorldDirection());
   bool orthographic = camera->mPerspectiveMode == PerspectiveMode::Orthographic;
-  float viewScale = Debug::GetViewScale(
-      viewDistance, camera->mFieldOfView, camera->mSize, orthographic);
+  float viewScale = Debug::GetViewScale(viewDistance, camera->mFieldOfView, camera->mSize, orthographic);
   return viewScale * mViewScale * cBaseScale * 0.5f;
 }
 
 float SelectionIcon::GetRadius(ViewBlock& viewBlock)
 {
-  float viewDistance = Debug::GetViewDistance(
-      GetWorldTranslation(), viewBlock.mEyePosition, viewBlock.mEyeDirection);
-  float viewScale = Debug::GetViewScale(viewDistance,
-                                        viewBlock.mFieldOfView,
-                                        viewBlock.mOrthographicSize,
-                                        viewBlock.mOrthographic);
+  float viewDistance = Debug::GetViewDistance(GetWorldTranslation(), viewBlock.mEyePosition, viewBlock.mEyeDirection);
+  float viewScale =
+      Debug::GetViewScale(viewDistance, viewBlock.mFieldOfView, viewBlock.mOrthographicSize, viewBlock.mOrthographic);
   return viewScale * mViewScale * cBaseScale * 0.5f;
 }
 

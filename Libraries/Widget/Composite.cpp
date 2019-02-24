@@ -55,8 +55,7 @@ ZilchDefineType(Composite, builder, type)
 {
 }
 
-Composite::Composite(Composite* parent, AttachType::Enum attachType) :
-    Widget(parent, attachType)
+Composite::Composite(Composite* parent, AttachType::Enum attachType) : Widget(parent, attachType)
 {
   mLayout = nullptr;
   mMinSize = Vec2(10, 10);
@@ -84,10 +83,8 @@ void Composite::InternalDetach(Composite* parent, Widget* child)
 
 void Composite::InternalAttach(Composite* parent, Widget* child)
 {
-  ErrorIf(child->mDestroyed,
-          "Widget is being destroyed and is now attaching to another widget.");
-  ErrorIf(parent->mDestroyed,
-          "Widget is attaching to widget that is being destroyed");
+  ErrorIf(child->mDestroyed, "Widget is being destroyed and is now attaching to another widget.");
+  ErrorIf(parent->mDestroyed, "Widget is attaching to widget that is being destroyed");
 
   if (child->mParent)
     InternalDetach(child->GetParent(), child);
@@ -164,11 +161,8 @@ void Composite::ShiftOntoScreen(Vec3 offset)
   this->SetTranslation(offset);
 }
 
-void Composite::RenderUpdate(ViewBlock& viewBlock,
-                             FrameBlock& frameBlock,
-                             Mat4Param parentTx,
-                             ColorTransform colorTx,
-                             WidgetRect clipRect)
+void Composite::RenderUpdate(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -182,10 +176,8 @@ void Composite::RenderUpdate(ViewBlock& viewBlock,
     WidgetRect newRect;
     newRect.X = Math::Max(clipRect.X, rect.X);
     newRect.Y = Math::Max(clipRect.Y, rect.Y);
-    newRect.SizeX =
-        Math::Min(clipRect.X + clipRect.SizeX, rect.X + rect.SizeX) - newRect.X;
-    newRect.SizeY =
-        Math::Min(clipRect.Y + clipRect.SizeY, rect.Y + rect.SizeY) - newRect.Y;
+    newRect.SizeX = Math::Min(clipRect.X + clipRect.SizeX, rect.X + rect.SizeX) - newRect.X;
+    newRect.SizeY = Math::Min(clipRect.Y + clipRect.SizeY, rect.Y + rect.SizeY) - newRect.Y;
     clipRect = newRect;
     if (clipRect.SizeX <= 0 || clipRect.SizeY <= 0)
       return;
@@ -193,7 +185,7 @@ void Composite::RenderUpdate(ViewBlock& viewBlock,
 
   colorTx.ColorMultiply *= mColor;
 
-  forRange(Widget & child, GetChildren())
+  forRange (Widget& child, GetChildren())
   {
     if (child.mActive && child.mVisible && !child.mDestroyed)
       child.RenderUpdate(viewBlock, frameBlock, mWorldTx, colorTx, clipRect);
@@ -272,7 +264,7 @@ void Composite::UpdateTransform()
 
 void Composite::DispatchDown(StringParam eventId, Event* event)
 {
-  forRange(Widget & widget, mChildren.All())
+  forRange (Widget& widget, mChildren.All())
   {
     widget.DispatchEvent(eventId, event);
     widget.DispatchDown(eventId, event);
@@ -298,8 +290,7 @@ void Composite::SetMinSize(Vec2 newMin)
 Vec2 Composite::Measure(LayoutArea& data)
 {
   // If we're fixed, no need to do anything
-  if (mSizePolicy.XPolicy == SizePolicy::Fixed &&
-      mSizePolicy.YPolicy == SizePolicy::Fixed)
+  if (mSizePolicy.XPolicy == SizePolicy::Fixed && mSizePolicy.YPolicy == SizePolicy::Fixed)
     return mSize;
 
   // If there is a layout active use it
@@ -320,10 +311,7 @@ Vec2 Composite::Measure(LayoutArea& data)
     return Widget::Measure(data);
 }
 
-Widget* Find(StringParam name,
-             UiTraversal::Enum traversalType,
-             size_t& index,
-             Widget* parent)
+Widget* Find(StringParam name, UiTraversal::Enum traversalType, size_t& index, Widget* parent)
 {
   // Get itself as a composite
   Composite* composite = parent->GetSelfAsComposite();
@@ -398,18 +386,13 @@ Widget* Find(StringParam name,
 }
 
 // Find any child widget by name
-Widget* FindWidgetByName(StringParam name,
-                         UiTraversal::Enum traversalType,
-                         size_t index,
-                         Widget* parent)
+Widget* FindWidgetByName(StringParam name, UiTraversal::Enum traversalType, size_t index, Widget* parent)
 {
   return Find(name, traversalType, index, parent);
 }
 
 // Colored Composite
-ColoredComposite::ColoredComposite(Composite* parent,
-                                   Vec4Param color,
-                                   AttachType::Enum attachType) :
+ColoredComposite::ColoredComposite(Composite* parent, Vec4Param color, AttachType::Enum attachType) :
     Composite(parent, attachType)
 {
   mBackground = CreateAttached<Element>(cWhiteSquare);

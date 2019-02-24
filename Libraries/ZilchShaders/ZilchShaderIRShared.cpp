@@ -4,17 +4,15 @@
 namespace Zero
 {
 
-ZilchShaderIROp::ZilchShaderIROp(OpType opType) :
-    IZilchShaderIR(mStaticBaseType)
+ZilchShaderIROp::ZilchShaderIROp(OpType opType) : IZilchShaderIR(mStaticBaseType)
 {
   mOpType = opType;
 }
 
 bool ZilchShaderIROp::IsTerminator()
 {
-  bool isTerminator =
-      (mOpType == OpType::OpReturn) || (mOpType == OpType::OpReturnValue) ||
-      (mOpType == OpType::OpBranch) || (mOpType == OpType::OpBranchConditional);
+  bool isTerminator = (mOpType == OpType::OpReturn) || (mOpType == OpType::OpReturnValue) ||
+                      (mOpType == OpType::OpBranch) || (mOpType == OpType::OpBranchConditional);
   return isTerminator;
 }
 
@@ -99,8 +97,7 @@ ZilchShaderIRType::~ZilchShaderIRType()
   delete mEntryPoint;
 }
 
-ZilchShaderIRFunction*
-ZilchShaderIRType::CreateFunction(ZilchShaderIRLibrary* library)
+ZilchShaderIRFunction* ZilchShaderIRType::CreateFunction(ZilchShaderIRLibrary* library)
 {
   ZilchShaderIRFunction* function = new ZilchShaderIRFunction();
   mFunctions.PushBack(function);
@@ -108,8 +105,7 @@ ZilchShaderIRType::CreateFunction(ZilchShaderIRLibrary* library)
   return function;
 }
 
-void ZilchShaderIRType::AddMember(ZilchShaderIRType* memberType,
-                                  StringParam memberName)
+void ZilchShaderIRType::AddMember(ZilchShaderIRType* memberType, StringParam memberName)
 {
   mParameters.PushBack(memberType);
 
@@ -143,8 +139,7 @@ String ZilchShaderIRType::GetMemberName(size_t memberIndex)
 
 ZilchShaderIRType* ZilchShaderIRType::GetSubType(int index) const
 {
-  bool supportsSubTypes = mBaseType == ShaderIRTypeBaseType::Struct ||
-                          mBaseType == ShaderIRTypeBaseType::Function;
+  bool supportsSubTypes = mBaseType == ShaderIRTypeBaseType::Struct || mBaseType == ShaderIRTypeBaseType::Function;
 
   ErrorIf(!supportsSubTypes,
           "Type '%s' does not support sub-types. The parameters on this type "
@@ -158,8 +153,7 @@ ZilchShaderIRType* ZilchShaderIRType::GetSubType(int index) const
 
 size_t ZilchShaderIRType::GetSubTypeCount()
 {
-  bool supportsSubTypes = mBaseType == ShaderIRTypeBaseType::Struct ||
-                          mBaseType == ShaderIRTypeBaseType::Function;
+  bool supportsSubTypes = mBaseType == ShaderIRTypeBaseType::Struct || mBaseType == ShaderIRTypeBaseType::Function;
 
   ErrorIf(!supportsSubTypes,
           "Type '%s' does not support sub-types. The parameters on this type "
@@ -172,8 +166,7 @@ size_t ZilchShaderIRType::GetSubTypeCount()
 size_t ZilchShaderIRType::GetByteSize() const
 {
   // Force everything to 4 bytes
-  if (mBaseType == ShaderIRTypeBaseType::Bool ||
-      mBaseType == ShaderIRTypeBaseType::Int ||
+  if (mBaseType == ShaderIRTypeBaseType::Bool || mBaseType == ShaderIRTypeBaseType::Int ||
       mBaseType == ShaderIRTypeBaseType::Float)
     return 4;
   // Don't pad matrices to weird byte alignments
@@ -224,8 +217,7 @@ size_t ZilchShaderIRType::GetByteSize() const
 
 size_t ZilchShaderIRType::GetByteAlignment() const
 {
-  if (mBaseType == ShaderIRTypeBaseType::Bool ||
-      mBaseType == ShaderIRTypeBaseType::Int ||
+  if (mBaseType == ShaderIRTypeBaseType::Bool || mBaseType == ShaderIRTypeBaseType::Int ||
       mBaseType == ShaderIRTypeBaseType::Float)
     return 4;
   else if (mBaseType == ShaderIRTypeBaseType::Vector)
@@ -250,10 +242,8 @@ size_t ZilchShaderIRType::GetByteAlignment() const
     // types are padded up to vec4s. This happens for efficiency reason (at
     // least with uniform buffers).
     ZilchShaderIRType* elementType = mParameters[0]->As<ZilchShaderIRType>();
-    if (elementType->mBaseType == ShaderIRTypeBaseType::Int ||
-        elementType->mBaseType == ShaderIRTypeBaseType::Float ||
-        elementType->mBaseType == ShaderIRTypeBaseType::Bool ||
-        elementType->mBaseType == ShaderIRTypeBaseType::Vector)
+    if (elementType->mBaseType == ShaderIRTypeBaseType::Int || elementType->mBaseType == ShaderIRTypeBaseType::Float ||
+        elementType->mBaseType == ShaderIRTypeBaseType::Bool || elementType->mBaseType == ShaderIRTypeBaseType::Vector)
       return 16;
     return elementType->GetByteAlignment();
   }
@@ -275,18 +265,15 @@ size_t ZilchShaderIRType::GetByteAlignment() const
 
 ShaderIRTypeBaseType::Enum ZilchShaderIRType::GetBasePrimitiveType() const
 {
-  if (mBaseType == ShaderIRTypeBaseType::Bool ||
-      mBaseType == ShaderIRTypeBaseType::Int ||
+  if (mBaseType == ShaderIRTypeBaseType::Bool || mBaseType == ShaderIRTypeBaseType::Int ||
       mBaseType == ShaderIRTypeBaseType::Float)
     return mBaseType;
-  else if (mBaseType == ShaderIRTypeBaseType::Vector ||
-           mBaseType == ShaderIRTypeBaseType::Matrix)
+  else if (mBaseType == ShaderIRTypeBaseType::Vector || mBaseType == ShaderIRTypeBaseType::Matrix)
     return mComponentType->GetBasePrimitiveType();
   return mBaseType;
 }
 
-ShaderIRAttribute*
-ZilchShaderIRType::FindFirstAttribute(StringParam attributeName) const
+ShaderIRAttribute* ZilchShaderIRType::FindFirstAttribute(StringParam attributeName) const
 {
   if (mMeta == nullptr)
     return nullptr;
@@ -301,16 +288,13 @@ bool ZilchShaderIRType::IsPointerType()
 bool ZilchShaderIRType::IsGlobalType() const
 {
   // Find the storage class attribute
-  ShaderIRAttribute* storageClassAttribute =
-      FindFirstAttribute(SpirVNameSettings::mStorageClassAttribute);
+  ShaderIRAttribute* storageClassAttribute = FindFirstAttribute(SpirVNameSettings::mStorageClassAttribute);
   if (storageClassAttribute == nullptr)
     return false;
 
   // Check the value of the storage class
-  spv::StorageClass storageClass =
-      (spv::StorageClass)storageClassAttribute->mParameters[0].GetIntValue();
-  if (storageClass == spv::StorageClass::StorageClassUniformConstant ||
-      storageClass == spv::StorageClassUniform ||
+  spv::StorageClass storageClass = (spv::StorageClass)storageClassAttribute->mParameters[0].GetIntValue();
+  if (storageClass == spv::StorageClass::StorageClassUniformConstant || storageClass == spv::StorageClassUniform ||
       storageClass == spv::StorageClassStorageBuffer)
     return true;
   return false;
@@ -354,15 +338,13 @@ ZilchShaderIRType* GetImageTypeFromSampledImage(ZilchShaderIRType* samplerType)
 {
   if (samplerType->mBaseType != ShaderIRTypeBaseType::SampledImage)
   {
-    Error("Given type was expected to be a SampledImage but was '%s'",
-          samplerType->mName.c_str());
+    Error("Given type was expected to be a SampledImage but was '%s'", samplerType->mName.c_str());
     return nullptr;
   }
 
   IZilchShaderIR* imageArg = samplerType->mParameters[0];
   ZilchShaderIRType* imageType = imageArg->As<ZilchShaderIRType>();
-  ErrorIf(imageType->mBaseType != ShaderIRTypeBaseType::Image,
-          "Sampler's image type parameter isn't an image");
+  ErrorIf(imageType->mBaseType != ShaderIRTypeBaseType::Image, "Sampler's image type parameter isn't an image");
   return imageType;
 }
 
@@ -406,8 +388,7 @@ String GenerateSpirVPropertyName(StringParam fieldName, StringParam ownerType)
   return BuildString(fieldName, "_", ownerType);
 }
 
-String GenerateSpirVPropertyName(StringParam fieldName,
-                                 ZilchShaderIRType* ownerType)
+String GenerateSpirVPropertyName(StringParam fieldName, ZilchShaderIRType* ownerType)
 {
   return GenerateSpirVPropertyName(fieldName, ownerType->mName);
 }

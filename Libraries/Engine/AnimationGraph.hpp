@@ -45,8 +45,7 @@ public:
   void PrintGraph();
 
   /// Node creation functions.
-  BasicAnimation* CreateBasicNode(Animation* animation,
-                                  AnimationPlayMode::Enum mode);
+  BasicAnimation* CreateBasicNode(Animation* animation, AnimationPlayMode::Enum mode);
   DirectBlend* CreateDirectBlendNode();
   CrossBlend* CreateCrossBlendNode();
   SelectiveNode* CreateSelectiveNode();
@@ -119,19 +118,11 @@ public:
   void SetPlayMode(AnimationPlayMode::Enum mode);
 
   /// Play animations directly.
-  AnimationNode* PlaySingle(Animation* animation,
-                            AnimationPlayMode::Enum playMode);
-  AnimationNode* DirectBlend(Animation* animation,
-                             float transitionTime,
-                             AnimationPlayMode::Enum playMode);
-  AnimationNode* CrossBlend(Animation* animation,
-                            float transitionTime,
-                            AnimationPlayMode::Enum playMode);
-  AnimationNode* PlayIsolatedAnimation(Animation* animation,
-                                       Cog* rootBone,
-                                       AnimationPlayMode::Enum playMode);
-  AnimationNode* ChainAnimation(Animation* animation,
-                                AnimationPlayMode::Enum playMode);
+  AnimationNode* PlaySingle(Animation* animation, AnimationPlayMode::Enum playMode);
+  AnimationNode* DirectBlend(Animation* animation, float transitionTime, AnimationPlayMode::Enum playMode);
+  AnimationNode* CrossBlend(Animation* animation, float transitionTime, AnimationPlayMode::Enum playMode);
+  AnimationNode* PlayIsolatedAnimation(Animation* animation, Cog* rootBone, AnimationPlayMode::Enum playMode);
+  AnimationNode* ChainAnimation(Animation* animation, AnimationPlayMode::Enum playMode);
 
 private:
   AnimationGraph* mAnimGraph;

@@ -18,10 +18,7 @@ DefineEvent(ExitView);
 DefineEvent(ExitViewAll);
 } // namespace Events
 
-void MakeLocalToViewAligned(Mat4& localToView,
-                            Mat4Param localToWorld,
-                            Mat4Param worldToView,
-                            Vec3Param translation)
+void MakeLocalToViewAligned(Mat4& localToView, Mat4Param localToWorld, Mat4Param worldToView, Vec3Param translation)
 {
   // Get just the camera's rotation
   Mat4 viewBasis = worldToView;
@@ -63,12 +60,9 @@ ZilchDefineType(Graphical, builder, type)
   ZilchBindGetterSetterProperty(Visible);
   ZilchBindGetterSetterProperty(ViewCulling);
   ZilchBindFieldProperty(mVisibilityEvents);
-  ZilchBindGetterSetterProperty(OverrideBoundingBox)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(LocalAabbCenter)
-      ->ZeroFilterEquality(mOverrideBoundingBox, bool, true);
-  ZilchBindGetterSetterProperty(LocalAabbHalfExtents)
-      ->ZeroFilterEquality(mOverrideBoundingBox, bool, true);
+  ZilchBindGetterSetterProperty(OverrideBoundingBox)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(LocalAabbCenter)->ZeroFilterEquality(mOverrideBoundingBox, bool, true);
+  ZilchBindGetterSetterProperty(LocalAabbHalfExtents)->ZeroFilterEquality(mOverrideBoundingBox, bool, true);
   ZilchBindFieldProperty(mGroupSortValue);
   ZilchBindGetterSetterProperty(Material);
   ZilchBindGetterSetter(ShaderInputs);
@@ -92,12 +86,8 @@ void Graphical::Initialize(CogInitializer& initializer)
 
   RebuildComponentShaderInputs();
 
-  ConnectThisTo(Z::gEngine->has(GraphicsEngine),
-                Events::ShaderInputsModified,
-                OnShaderInputsModified);
-  ConnectThisTo(MaterialManager::GetInstance(),
-                Events::ResourceModified,
-                OnMaterialModified);
+  ConnectThisTo(Z::gEngine->has(GraphicsEngine), Events::ShaderInputsModified, OnShaderInputsModified);
+  ConnectThisTo(MaterialManager::GetInstance(), Events::ResourceModified, OnMaterialModified);
 }
 
 void Graphical::Serialize(Serializer& stream)
@@ -109,8 +99,7 @@ void Graphical::Serialize(Serializer& stream)
   SerializeNameDefault(mLocalAabbCenter, Vec3(0.0f));
   SerializeNameDefault(mLocalAabbHalfExtents, Vec3(1.0f));
   SerializeNameDefault(mGroupSortValue, 0);
-  SerializeResourceNameDefault(
-      mMaterial, MaterialManager, GetDefaultMaterialName());
+  SerializeResourceNameDefault(mMaterial, MaterialManager, GetDefaultMaterialName());
 }
 
 void Graphical::OnDestroy(uint flags)
@@ -133,9 +122,7 @@ void Graphical::Detached(AttachmentInfo& info)
   UpdateBroadPhaseAabb();
 }
 
-void Graphical::MidPhaseQuery(Array<GraphicalEntry>& entries,
-                              Camera& camera,
-                              Frustum* frustum)
+void Graphical::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Frustum* frustum)
 {
   mGraphicalEntryData.mGraphical = this;
   mGraphicalEntryData.mFrameNodeIndex = -1;
@@ -157,8 +144,7 @@ bool Graphical::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
   Intersection::IntersectionPoint point;
   Intersection::Type result = Intersection::None;
 
-  result = Intersection::RayObb(
-      ray.Start, ray.Direction, obb.Center, obb.HalfExtents, obb.Basis, &point);
+  result = Intersection::RayObb(ray.Start, ray.Direction, obb.Center, obb.HalfExtents, obb.Basis, &point);
   if (result == Intersection::None)
     return false;
 
@@ -246,8 +232,7 @@ Vec3 Graphical::GetLocalAabbHalfExtents()
 
 void Graphical::SetLocalAabbHalfExtents(Vec3 halfExtents)
 {
-  mLocalAabbHalfExtents =
-      Math::Max(halfExtents, Vec3(cMinimumBoundingHalfSize));
+  mLocalAabbHalfExtents = Math::Max(halfExtents, Vec3(cMinimumBoundingHalfSize));
   UpdateBroadPhaseAabb();
 }
 
@@ -281,16 +266,14 @@ void Graphical::SetShaderInputs(ShaderInputs* shaderInputs)
 Aabb Graphical::GetWorldAabb()
 {
   Aabb localAabb = GetLocalAabbInternal();
-  localAabb.SetHalfExtents(
-      Math::Max(localAabb.GetHalfExtents(), Vec3(cMinimumBoundingHalfSize)));
+  localAabb.SetHalfExtents(Math::Max(localAabb.GetHalfExtents(), Vec3(cMinimumBoundingHalfSize)));
   return localAabb.TransformAabb(mTransform->GetWorldMatrix());
 }
 
 Obb Graphical::GetWorldObb()
 {
   Aabb localAabb = GetLocalAabbInternal();
-  localAabb.SetHalfExtents(
-      Math::Max(localAabb.GetHalfExtents(), Vec3(cMinimumBoundingHalfSize)));
+  localAabb.SetHalfExtents(Math::Max(localAabb.GetHalfExtents(), Vec3(cMinimumBoundingHalfSize)));
   return localAabb.Transform(mTransform->GetWorldMatrix());
 }
 
@@ -325,9 +308,7 @@ void Graphical::OnShaderInputsModified(ShaderInputsEvent* event)
     return;
 
   // Iterate backwards to erase while iterating
-  for (uint i = mPropertyShaderInputs.Size() - 1;
-       i < mPropertyShaderInputs.Size();
-       --i)
+  for (uint i = mPropertyShaderInputs.Size() - 1; i < mPropertyShaderInputs.Size(); --i)
   {
     if (mPropertyShaderInputs[i].mComponent == component)
       mPropertyShaderInputs.EraseAt(i);
@@ -349,9 +330,7 @@ void Graphical::ComponentAdded(BoundType* typeId, Component* component)
 
 void Graphical::ComponentRemoved(BoundType* typeId, Component* component)
 {
-  for (uint i = mPropertyShaderInputs.Size() - 1;
-       i < mPropertyShaderInputs.Size();
-       --i)
+  for (uint i = mPropertyShaderInputs.Size() - 1; i < mPropertyShaderInputs.Size(); --i)
   {
     if (mPropertyShaderInputs[i].mComponent == component)
       mPropertyShaderInputs.EraseAt(i);
@@ -362,8 +341,8 @@ void Graphical::RebuildComponentShaderInputs()
 {
   mPropertyShaderInputs.Clear();
 
-  forRange(Component * component, GetOwner()->GetComponents())
-      AddComponentShaderInputs(component);
+  forRange (Component* component, GetOwner()->GetComponents())
+    AddComponentShaderInputs(component);
 }
 
 void Graphical::AddComponentShaderInputs(Component* component)
@@ -376,20 +355,17 @@ void Graphical::AddComponentShaderInputs(Component* component)
 
   String componentName = ZilchVirtualTypeId(component)->Name;
   Array<ShaderMetaProperty>* shaderProperties =
-      Z::gEngine->has(GraphicsEngine)
-          ->mComponentShaderProperties.FindPointer(componentName);
+      Z::gEngine->has(GraphicsEngine)->mComponentShaderProperties.FindPointer(componentName);
 
   // No inputs from this component
   if (shaderProperties == nullptr)
     return;
 
-  ZilchShaderGenerator* shaderGenerator =
-      Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
+  ZilchShaderGenerator* shaderGenerator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
 
-  forRange(ShaderMetaProperty & shaderProperty, shaderProperties->All())
+  forRange (ShaderMetaProperty& shaderProperty, shaderProperties->All())
   {
-    Property* metaProperty = ZilchVirtualTypeId(component)->GetProperty(
-        shaderProperty.mMetaPropertyName);
+    Property* metaProperty = ZilchVirtualTypeId(component)->GetProperty(shaderProperty.mMetaPropertyName);
     String fragmentName = shaderProperty.mFragmentName;
     String inputName = shaderProperty.mInputName;
 
@@ -401,13 +377,13 @@ void Graphical::AddComponentShaderInputs(Component* component)
     // specify
     if (fragmentName.Empty())
     {
-      forRange(MaterialBlock * materialBlock, mMaterial->mMaterialBlocks.All())
+      forRange (MaterialBlock* materialBlock, mMaterial->mMaterialBlocks.All())
       {
         BoundType* metaType = ZilchVirtualTypeId(materialBlock);
         if (metaType->HasAttribute(ObjectAttributes::cProxy))
           continue;
 
-        forRange(Property * fragmentProperty, metaType->GetProperties())
+        forRange (Property* fragmentProperty, metaType->GetProperties())
         {
           if (fragmentProperty->Name != inputName)
             continue;
@@ -425,11 +401,8 @@ void Graphical::AddComponentShaderInputs(Component* component)
       }
     }
 
-    ShaderInputType::Enum type =
-        MaterialFactory::GetInstance()->GetShaderInputType(
-            metaProperty->PropertyType);
-    ShaderInput shaderInput = shaderGenerator->CreateShaderInput(
-        fragmentName, inputName, type, Any());
+    ShaderInputType::Enum type = MaterialFactory::GetInstance()->GetShaderInputType(metaProperty->PropertyType);
+    ShaderInput shaderInput = shaderGenerator->CreateShaderInput(fragmentName, inputName, type, Any());
     if (shaderInput.mShaderInputType == ShaderInputType::Invalid)
       continue;
 

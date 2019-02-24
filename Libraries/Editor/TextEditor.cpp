@@ -68,9 +68,7 @@ public:
   // Scintilla Interface
   void Initialise() override;
   void Finalise() override;
-  sptr_t DefWndProc(unsigned int iMessage,
-                    uptr_t wParam,
-                    sptr_t lParam) override;
+  sptr_t DefWndProc(unsigned int iMessage, uptr_t wParam, sptr_t lParam) override;
   void SetTicking(bool on) override;
   void SetMouseCapture(bool on) override;
   bool HaveMouseCapture() override;
@@ -81,10 +79,7 @@ public:
   void NotifyChange() override;
   void NotifyFocus(bool focus) override;
   void NotifyParent(Scintilla::SCNotification scn) override;
-  void NotifyDoubleClick(Scintilla::Point pt,
-                         bool shift,
-                         bool ctrl,
-                         bool alt) override;
+  void NotifyDoubleClick(Scintilla::Point pt, bool shift, bool ctrl, bool alt) override;
   void Copy() override;
   bool CanPaste() override;
   void Paste() override;
@@ -93,16 +88,10 @@ public:
   void ClaimSelection() override;
   void CopyToClipboard(const Scintilla::SelectionText& selectedText) override;
 
-  void InsertPasteText(const char* text,
-                       int len,
-                       Scintilla::SelectionPosition selStart,
-                       bool isRectangular,
-                       bool isLine);
+  void
+  InsertPasteText(const char* text, int len, Scintilla::SelectionPosition selStart, bool isRectangular, bool isLine);
   uint SendEditor(unsigned int Msg, unsigned long wParam = 0, long lParam = 0);
-  void InsertAutoCompleteText(const char* text,
-                              int length,
-                              int removeCount,
-                              int charOffset);
+  void InsertAutoCompleteText(const char* text, int length, int removeCount, int charOffset);
 
 public:
   TextEditor* mOwner;
@@ -120,15 +109,10 @@ protected:
   void MoveSelectedLinesDown();
 
 private:
-  void MoveSelection(Scintilla::SelectionRange& selection,
-                     int dir,
-                     bool extend);
+  void MoveSelection(Scintilla::SelectionRange& selection, int dir, bool extend);
 
   bool IsSelected(Scintilla::SelectionRange& range, int* endSelectionOut);
-  bool FindTextNotSelected(int start,
-                           int end,
-                           const char* text,
-                           Scintilla::SelectionRange& newSel);
+  bool FindTextNotSelected(int start, int end, const char* text, Scintilla::SelectionRange& newSel);
 
   void ClearHighlightRanges();
   void UpdateHighlightIndicators();
@@ -141,9 +125,7 @@ private:
 
 void TextFromSelectionRange(int start, int end, char bufferOut[]);
 
-ScintillaWidget::ScintillaWidget(Composite* parent) :
-    Widget(parent),
-    mSurface(this)
+ScintillaWidget::ScintillaWidget(Composite* parent) : Widget(parent), mSurface(this)
 {
   // Prevent scrolling issue when scintilla is first created.
   mSize = Pixels(1000, 500);
@@ -154,11 +136,8 @@ ScintillaWidget::~ScintillaWidget()
   SafeDelete(mScintilla);
 }
 
-void ScintillaWidget::RenderUpdate(ViewBlock& viewBlock,
-                                   FrameBlock& frameBlock,
-                                   Mat4Param parentTx,
-                                   ColorTransform colorTx,
-                                   WidgetRect clipRect)
+void ScintillaWidget::RenderUpdate(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -170,8 +149,7 @@ void ScintillaWidget::RenderUpdate(ViewBlock& viewBlock,
 
   // Setting clip rect here because scintilla is not getting the correct client
   // rect
-  mSurface.mClipRect =
-      WidgetRect::PointAndSize(Vec2(parentTx.m30, parentTx.m31), mSize);
+  mSurface.mClipRect = WidgetRect::PointAndSize(Vec2(parentTx.m30, parentTx.m31), mSize);
 
   Scintilla::PRectangle rcPaint = mScintilla->GetClientRectangle();
   mScintilla->Paint(&mSurface, rcPaint);
@@ -378,86 +356,81 @@ void TextEditor::SetLexer(uint lexer)
     // In the interest of time this was manually grabbed from the header but
     // should eventually be updated.
     const char languages[] = "Unknown ESSL GLSL OpenCL_C OpenCL_CPP HLSL";
-    const char executionModels[] =
-        "Vertex TessellationControl TessellationEvaluation Geometry Fragment "
-        "GLCompute Kernel";
+    const char executionModels[] = "Vertex TessellationControl TessellationEvaluation Geometry Fragment "
+                                   "GLCompute Kernel";
     const char addressingModels[] = "Logical Physical32 Physical64";
-    const char storageClasses[] =
-        "UniformConstant Input Uniform Output Workgroup CrossWorkgroup Private "
-        "Function Generic PushConstant AtomicCounter Image StorageBuffer";
-    const char decorations[] =
-        "RelaxedPrecision SpecId Block BufferBlock RowMajor ColMajor "
-        "ArrayStride MatrixStride GLSLShared GLSLPacked CPacked BuiltIn "
-        "NoPerspective Flat Patch Centroid Sample Invariant Restrict Aliased "
-        "Volatile Constant Coherent NonWritable NonReadable Uniform "
-        "SaturatedConversion Stream Location Component Index Binding "
-        "DescriptorSet Offset XfbBuffer XfbStride FuncParamAttr FPRoundingMode "
-        "FPFastMathMode LinkageAttributes NoContraction InputAttachmentIndex "
-        "Alignment MaxByteOffset AlignmentId MaxByteOffsetId ExplicitInterpAMD "
-        "OverrideCoverageNV PassthroughNV ViewportRelativeNV "
-        "SecondaryViewportRelativeNV NonUniformEXT HlslCounterBufferGOOGLE "
-        "HlslSemanticGOOGLE";
-    const char builtIns[] =
-        "Position PointSize ClipDistance CullDistance VertexId InstanceId "
-        "PrimitiveId InvocationId Layer ViewportIndex TessLevelOuter "
-        "TessLevelInner TessCoord PatchVertices FragCoord PointCoord "
-        "FrontFacing SampleId SamplePosition SampleMask FragDepth "
-        "HelperInvocation NumWorkgroups WorkgroupSize WorkgroupId "
-        "LocalInvocationId GlobalInvocationId LocalInvocationIndex WorkDim "
-        "GlobalSize EnqueuedWorkgroupSize GlobalOffset GlobalLinearId "
-        "SubgroupSize SubgroupMaxSize NumSubgroups NumEnqueuedSubgroups "
-        "SubgroupId SubgroupLocalInvocationId VertexIndex InstanceIndex "
-        "SubgroupEqMask SubgroupEqMaskKHR SubgroupGeMask SubgroupGeMaskKHR "
-        "SubgroupGtMask SubgroupGtMaskKHR SubgroupLeMask SubgroupLeMaskKHR "
-        "SubgroupLtMask SubgroupLtMaskKHR BaseVertex BaseInstance DrawIndex "
-        "DeviceIndex ViewIndex BaryCoordNoPerspAMD BaryCoordNoPerspCentroidAMD "
-        "BaryCoordNoPerspSampleAMD BaryCoordSmoothAMD "
-        "BaryCoordSmoothCentroidAMD BaryCoordSmoothSampleAMD "
-        "BaryCoordPullModelAMD FragStencilRefEXT ViewportMaskNV "
-        "SecondaryPositionNV SecondaryViewportMaskNV PositionPerViewNV "
-        "ViewportMaskPerViewNV FullyCoveredEXT";
-    const char capabilities[] =
-        "Matrix Shader Geometry Tessellation Addresses Linkage Kernel Vector16 "
-        "Float16Buffer Float16 Float64 Int64 Int64Atomics ImageBasic "
-        "ImageReadWrite ImageMipmap Pipes Groups DeviceEnqueue LiteralSampler "
-        "AtomicStorage Int16 TessellationPointSize GeometryPointSize "
-        "ImageGatherExtended StorageImageMultisample "
-        "UniformBufferArrayDynamicIndexing SampledImageArrayDynamicIndexing "
-        "StorageBufferArrayDynamicIndexing StorageImageArrayDynamicIndexing "
-        "ClipDistance CullDistance ImageCubeArray SampleRateShading ImageRect "
-        "SampledRect GenericPointer Int8 InputAttachment SparseResidency "
-        "MinLod Sampled1D Image1D SampledCubeArray SampledBuffer ImageBuffer "
-        "ImageMSArray StorageImageExtendedFormats ImageQuery DerivativeControl "
-        "InterpolationFunction TransformFeedback GeometryStreams "
-        "StorageImageReadWithoutFormat StorageImageWriteWithoutFormat "
-        "MultiViewport SubgroupDispatch NamedBarrier PipeStorage "
-        "GroupNonUniform GroupNonUniformVote GroupNonUniformArithmetic "
-        "GroupNonUniformBallot GroupNonUniformShuffle "
-        "GroupNonUniformShuffleRelative GroupNonUniformClustered "
-        "GroupNonUniformQuad SubgroupBallotKHR DrawParameters SubgroupVoteKHR "
-        "StorageBuffer16BitAccess StorageUniformBufferBlock16 StorageUniform16 "
-        "UniformAndStorageBuffer16BitAccess StoragePushConstant16 "
-        "StorageInputOutput16 DeviceGroup MultiView "
-        "VariablePointersStorageBuffer VariablePointers AtomicStorageOps "
-        "SampleMaskPostDepthCoverage StorageBuffer8BitAccess "
-        "UniformAndStorageBuffer8BitAccess StoragePushConstant8 "
-        "Float16ImageAMD ImageGatherBiasLodAMD FragmentMaskAMD "
-        "StencilExportEXT ImageReadWriteLodAMD SampleMaskOverrideCoverageNV "
-        "GeometryShaderPassthroughNV ShaderViewportIndexLayerEXT "
-        "ShaderViewportIndexLayerNV ShaderViewportMaskNV ShaderStereoViewNV "
-        "PerViewAttributesNV FragmentFullyCoveredEXT "
-        "GroupNonUniformPartitionedNV ShaderNonUniformEXT "
-        "RuntimeDescriptorArrayEXT InputAttachmentArrayDynamicIndexingEXT "
-        "UniformTexelBufferArrayDynamicIndexingEXT "
-        "StorageTexelBufferArrayDynamicIndexingEXT "
-        "UniformBufferArrayNonUniformIndexingEXT "
-        "SampledImageArrayNonUniformIndexingEXT "
-        "StorageBufferArrayNonUniformIndexingEXT "
-        "StorageImageArrayNonUniformIndexingEXT "
-        "InputAttachmentArrayNonUniformIndexingEXT "
-        "UniformTexelBufferArrayNonUniformIndexingEXT "
-        "StorageTexelBufferArrayNonUniformIndexingEXT SubgroupShuffleINTEL "
-        "SubgroupBufferBlockIOINTEL SubgroupImageBlockIOINTEL";
+    const char storageClasses[] = "UniformConstant Input Uniform Output Workgroup CrossWorkgroup Private "
+                                  "Function Generic PushConstant AtomicCounter Image StorageBuffer";
+    const char decorations[] = "RelaxedPrecision SpecId Block BufferBlock RowMajor ColMajor "
+                               "ArrayStride MatrixStride GLSLShared GLSLPacked CPacked BuiltIn "
+                               "NoPerspective Flat Patch Centroid Sample Invariant Restrict Aliased "
+                               "Volatile Constant Coherent NonWritable NonReadable Uniform "
+                               "SaturatedConversion Stream Location Component Index Binding "
+                               "DescriptorSet Offset XfbBuffer XfbStride FuncParamAttr FPRoundingMode "
+                               "FPFastMathMode LinkageAttributes NoContraction InputAttachmentIndex "
+                               "Alignment MaxByteOffset AlignmentId MaxByteOffsetId ExplicitInterpAMD "
+                               "OverrideCoverageNV PassthroughNV ViewportRelativeNV "
+                               "SecondaryViewportRelativeNV NonUniformEXT HlslCounterBufferGOOGLE "
+                               "HlslSemanticGOOGLE";
+    const char builtIns[] = "Position PointSize ClipDistance CullDistance VertexId InstanceId "
+                            "PrimitiveId InvocationId Layer ViewportIndex TessLevelOuter "
+                            "TessLevelInner TessCoord PatchVertices FragCoord PointCoord "
+                            "FrontFacing SampleId SamplePosition SampleMask FragDepth "
+                            "HelperInvocation NumWorkgroups WorkgroupSize WorkgroupId "
+                            "LocalInvocationId GlobalInvocationId LocalInvocationIndex WorkDim "
+                            "GlobalSize EnqueuedWorkgroupSize GlobalOffset GlobalLinearId "
+                            "SubgroupSize SubgroupMaxSize NumSubgroups NumEnqueuedSubgroups "
+                            "SubgroupId SubgroupLocalInvocationId VertexIndex InstanceIndex "
+                            "SubgroupEqMask SubgroupEqMaskKHR SubgroupGeMask SubgroupGeMaskKHR "
+                            "SubgroupGtMask SubgroupGtMaskKHR SubgroupLeMask SubgroupLeMaskKHR "
+                            "SubgroupLtMask SubgroupLtMaskKHR BaseVertex BaseInstance DrawIndex "
+                            "DeviceIndex ViewIndex BaryCoordNoPerspAMD BaryCoordNoPerspCentroidAMD "
+                            "BaryCoordNoPerspSampleAMD BaryCoordSmoothAMD "
+                            "BaryCoordSmoothCentroidAMD BaryCoordSmoothSampleAMD "
+                            "BaryCoordPullModelAMD FragStencilRefEXT ViewportMaskNV "
+                            "SecondaryPositionNV SecondaryViewportMaskNV PositionPerViewNV "
+                            "ViewportMaskPerViewNV FullyCoveredEXT";
+    const char capabilities[] = "Matrix Shader Geometry Tessellation Addresses Linkage Kernel Vector16 "
+                                "Float16Buffer Float16 Float64 Int64 Int64Atomics ImageBasic "
+                                "ImageReadWrite ImageMipmap Pipes Groups DeviceEnqueue LiteralSampler "
+                                "AtomicStorage Int16 TessellationPointSize GeometryPointSize "
+                                "ImageGatherExtended StorageImageMultisample "
+                                "UniformBufferArrayDynamicIndexing SampledImageArrayDynamicIndexing "
+                                "StorageBufferArrayDynamicIndexing StorageImageArrayDynamicIndexing "
+                                "ClipDistance CullDistance ImageCubeArray SampleRateShading ImageRect "
+                                "SampledRect GenericPointer Int8 InputAttachment SparseResidency "
+                                "MinLod Sampled1D Image1D SampledCubeArray SampledBuffer ImageBuffer "
+                                "ImageMSArray StorageImageExtendedFormats ImageQuery DerivativeControl "
+                                "InterpolationFunction TransformFeedback GeometryStreams "
+                                "StorageImageReadWithoutFormat StorageImageWriteWithoutFormat "
+                                "MultiViewport SubgroupDispatch NamedBarrier PipeStorage "
+                                "GroupNonUniform GroupNonUniformVote GroupNonUniformArithmetic "
+                                "GroupNonUniformBallot GroupNonUniformShuffle "
+                                "GroupNonUniformShuffleRelative GroupNonUniformClustered "
+                                "GroupNonUniformQuad SubgroupBallotKHR DrawParameters SubgroupVoteKHR "
+                                "StorageBuffer16BitAccess StorageUniformBufferBlock16 StorageUniform16 "
+                                "UniformAndStorageBuffer16BitAccess StoragePushConstant16 "
+                                "StorageInputOutput16 DeviceGroup MultiView "
+                                "VariablePointersStorageBuffer VariablePointers AtomicStorageOps "
+                                "SampleMaskPostDepthCoverage StorageBuffer8BitAccess "
+                                "UniformAndStorageBuffer8BitAccess StoragePushConstant8 "
+                                "Float16ImageAMD ImageGatherBiasLodAMD FragmentMaskAMD "
+                                "StencilExportEXT ImageReadWriteLodAMD SampleMaskOverrideCoverageNV "
+                                "GeometryShaderPassthroughNV ShaderViewportIndexLayerEXT "
+                                "ShaderViewportIndexLayerNV ShaderViewportMaskNV ShaderStereoViewNV "
+                                "PerViewAttributesNV FragmentFullyCoveredEXT "
+                                "GroupNonUniformPartitionedNV ShaderNonUniformEXT "
+                                "RuntimeDescriptorArrayEXT InputAttachmentArrayDynamicIndexingEXT "
+                                "UniformTexelBufferArrayDynamicIndexingEXT "
+                                "StorageTexelBufferArrayDynamicIndexingEXT "
+                                "UniformBufferArrayNonUniformIndexingEXT "
+                                "SampledImageArrayNonUniformIndexingEXT "
+                                "StorageBufferArrayNonUniformIndexingEXT "
+                                "StorageImageArrayNonUniformIndexingEXT "
+                                "InputAttachmentArrayNonUniformIndexingEXT "
+                                "UniformTexelBufferArrayNonUniformIndexingEXT "
+                                "StorageTexelBufferArrayNonUniformIndexingEXT SubgroupShuffleINTEL "
+                                "SubgroupBufferBlockIOINTEL SubgroupImageBlockIOINTEL";
 
     StringBuilder specialBuilder;
     specialBuilder.Append(languages);
@@ -525,10 +498,9 @@ void TextEditor::SetLexer(uint lexer)
 
   case Lexer::Python:
   {
-    const char pythonKeywords[] =
-        "and del for is raise assert elif from lambda return "
-        "break else global not try class except if or while "
-        "continue exec import pass yield def finally in print show";
+    const char pythonKeywords[] = "and del for is raise assert elif from lambda return "
+                                  "break else global not try class except if or while "
+                                  "continue exec import pass yield def finally in print show";
 
     const char pythonSpecial[] = "self event True False None";
 
@@ -554,24 +526,23 @@ void TextEditor::SetLexer(uint lexer)
 
   case Lexer::Zilch:
   {
-    const char zilchKeywords[] =
-        "abstract alias alignof as assert Assign auto base break case catch "
-        "checked "
-        "class compare const constructor continue copy decrement default "
-        "delegate delete "
-        "destructor do dynamic else enum explicit export extern false finally "
-        "fixed "
-        "flags for foreach friend function get global goto if immutable "
-        "implicit import in include "
-        "increment inline interface internal is local lock loop module mutable "
-        "namespace new "
-        "null operator out override package params partial positional private "
-        "protected public "
-        "readonly ref register require return sealed sends set signed sizeof "
-        "stackalloc static "
-        "struct switch throw true try typedef typeid typename typeof type "
-        "unchecked unsafe unsigned "
-        "using var virtual volatile where while yield timeout scope debug";
+    const char zilchKeywords[] = "abstract alias alignof as assert Assign auto base break case catch "
+                                 "checked "
+                                 "class compare const constructor continue copy decrement default "
+                                 "delegate delete "
+                                 "destructor do dynamic else enum explicit export extern false finally "
+                                 "fixed "
+                                 "flags for foreach friend function get global goto if immutable "
+                                 "implicit import in include "
+                                 "increment inline interface internal is local lock loop module mutable "
+                                 "namespace new "
+                                 "null operator out override package params partial positional private "
+                                 "protected public "
+                                 "readonly ref register require return sealed sends set signed sizeof "
+                                 "stackalloc static "
+                                 "struct switch throw true try typedef typeid typename typeof type "
+                                 "unchecked unsafe unsigned "
+                                 "using var virtual volatile where while yield timeout scope debug";
 
     const char zilchSpecial[] = "this value event";
 
@@ -638,10 +609,8 @@ void TextEditor::UpdateMargins(ColorScheme& scheme)
     SendEditor(SCI_MARKERDEFINE, SC_MARKNUM_FOLDER, SC_MARK_BOXPLUS);
     SendEditor(SCI_MARKERDEFINE, SC_MARKNUM_FOLDERSUB, SC_MARK_VLINE);
     SendEditor(SCI_MARKERDEFINE, SC_MARKNUM_FOLDERTAIL, SC_MARK_LCORNER);
-    SendEditor(
-        SCI_MARKERDEFINE, SC_MARKNUM_FOLDEREND, SC_MARK_BOXPLUSCONNECTED);
-    SendEditor(
-        SCI_MARKERDEFINE, SC_MARKNUM_FOLDEROPENMID, SC_MARK_BOXMINUSCONNECTED);
+    SendEditor(SCI_MARKERDEFINE, SC_MARKNUM_FOLDEREND, SC_MARK_BOXPLUSCONNECTED);
+    SendEditor(SCI_MARKERDEFINE, SC_MARKNUM_FOLDEROPENMID, SC_MARK_BOXMINUSCONNECTED);
     SendEditor(SCI_MARKERDEFINE, SC_MARKNUM_FOLDERMIDTAIL, SC_MARK_TCORNER);
 
     // Set all colors for folding markers
@@ -751,10 +720,7 @@ void TextEditor::EndUndo()
   SendEditor(SCI_ENDUNDOACTION);
 }
 
-void TextEditor::InsertAutoCompleteText(const char* text,
-                                        int length,
-                                        int removeCount,
-                                        int charOffset)
+void TextEditor::InsertAutoCompleteText(const char* text, int length, int removeCount, int charOffset)
 {
   mScintilla->InsertAutoCompleteText(text, length, removeCount, charOffset);
 }
@@ -807,8 +773,7 @@ TextEditorConfig* TextEditor::GetConfig()
   if (Z::gEditor)
   {
     auto config = Z::gEditor->mConfig->has(TextEditorConfig);
-    ErrorIf(config == nullptr,
-            "The config should always have a TextEditorConfig component");
+    ErrorIf(config == nullptr, "The config should always have a TextEditorConfig component");
     return config;
   }
   return nullptr;
@@ -882,22 +847,14 @@ void TextEditor::OnTextTyped(KeyboardTextEvent* event)
 void TextEditor::OnRightMouseDown(MouseEvent* event)
 {
   Vec2 p = ToLocal(event->Position);
-  mScintilla->ButtonDown(Scintilla::Point(p.x, p.y),
-                         mTime,
-                         event->ShiftPressed,
-                         event->CtrlPressed,
-                         event->AltPressed);
+  mScintilla->ButtonDown(Scintilla::Point(p.x, p.y), mTime, event->ShiftPressed, event->CtrlPressed, event->AltPressed);
   mScintilla->ButtonUp(Scintilla::Point(p.x, p.y), mTime, false);
 }
 
 void TextEditor::OnMouseDown(MouseEvent* event)
 {
   Vec2 p = ToLocal(event->Position);
-  mScintilla->ButtonDown(Scintilla::Point(p.x, p.y),
-                         mTime,
-                         event->ShiftPressed,
-                         event->CtrlPressed,
-                         event->AltPressed);
+  mScintilla->ButtonDown(Scintilla::Point(p.x, p.y), mTime, event->ShiftPressed, event->CtrlPressed, event->AltPressed);
 }
 
 void TextEditor::OnMouseMove(MouseEvent* event)
@@ -978,16 +935,10 @@ void TextEditor::SetColorScheme(ColorScheme& scheme)
   SendEditor(SCI_STYLECLEARALL);
 
   // Set the overall default style for text (foreground and background color)
-  SetAStyle(STYLE_DEFAULT,
-            ToByteColor(scheme.Default),
-            ToByteColor(scheme.Background),
-            mFontSize,
-            "Inconsolata");
+  SetAStyle(STYLE_DEFAULT, ToByteColor(scheme.Default), ToByteColor(scheme.Background), mFontSize, "Inconsolata");
 
   // Set style for Line number / gutter
-  SetAStyle(STYLE_LINENUMBER,
-            ToByteColor(scheme.GutterText),
-            ToByteColor(scheme.Gutter));
+  SetAStyle(STYLE_LINENUMBER, ToByteColor(scheme.GutterText), ToByteColor(scheme.Gutter));
 
   // Set the color of any whitespace identifiers (the . where spaces are, and ->
   // where tabs are)
@@ -1011,8 +962,7 @@ void TextEditor::SetColorScheme(ColorScheme& scheme)
   {
     SetCommonLexerStyles(scheme);
 
-    SetAStyle(SCE_C_CHARACTER,
-              ToByteColor(scheme.Default),
+    SetAStyle(SCE_C_CHARACTER, ToByteColor(scheme.Default),
               background); // Character literals: 'c'
     break;
   }
@@ -1027,56 +977,41 @@ void TextEditor::SetColorScheme(ColorScheme& scheme)
   case Lexer::Console:
   case Lexer::Text:
   {
-    SetAStyle(
-        SCE_P_DEFAULT, ToByteColor(scheme.Default), background); // Default text
-    SetAStyle(SCE_P_IDENTIFIER,
-              ToByteColor(scheme.Default),
+    SetAStyle(SCE_P_DEFAULT, ToByteColor(scheme.Default), background); // Default text
+    SetAStyle(SCE_P_IDENTIFIER, ToByteColor(scheme.Default),
               background); // Identifiers: self.Space
 
-    SetAStyle(SCE_P_COMMENTBLOCK,
-              ToByteColor(scheme.Default),
+    SetAStyle(SCE_P_COMMENTBLOCK, ToByteColor(scheme.Default),
               background); // Block comments: /* */, """
-    SetAStyle(SCE_P_COMMENTLINE,
-              ToByteColor(scheme.Default),
+    SetAStyle(SCE_P_COMMENTLINE, ToByteColor(scheme.Default),
               background); // Line comments: #, //
-    SetAStyle(SCE_P_TRIPLE,
-              ToByteColor(scheme.Default),
+    SetAStyle(SCE_P_TRIPLE, ToByteColor(scheme.Default),
               background); // Triple comment
-    SetAStyle(SCE_P_TRIPLEDOUBLE,
-              ToByteColor(scheme.Default),
-              background); // Triple comment
+    SetAStyle(SCE_P_TRIPLEDOUBLE, ToByteColor(scheme.Default),
+              background);                                               // Triple comment
     SetAStyle(SCE_P_STRINGEOL, ToByteColor(scheme.Default), background); // ?
     SetAStyle(SCE_P_DECORATOR, ToByteColor(scheme.Default), background); // ?
 
-    SetAStyle(SCE_P_NUMBER,
-              ToByteColor(scheme.Number),
+    SetAStyle(SCE_P_NUMBER, ToByteColor(scheme.Number),
               background); // Number literals: 5, 3.9
-    SetAStyle(SCE_P_CHARACTER,
-              ToByteColor(scheme.Default),
+    SetAStyle(SCE_P_CHARACTER, ToByteColor(scheme.Default),
               background); // Character literals: 'c'
-    SetAStyle(SCE_P_STRING,
-              ToByteColor(scheme.StringLiteral),
+    SetAStyle(SCE_P_STRING, ToByteColor(scheme.StringLiteral),
               background); // String literals: "hello world"
 
-    SetAStyle(SCE_P_CLASSNAME,
-              ToByteColor(scheme.Default),
+    SetAStyle(SCE_P_CLASSNAME, ToByteColor(scheme.Default),
               background); // Class names: RigidBody, Model
-    SetAStyle(SCE_P_DEFNAME,
-              ToByteColor(scheme.Default),
+    SetAStyle(SCE_P_DEFNAME, ToByteColor(scheme.Default),
               background); // Function names: OnLogicUpdate
-    SetAStyle(SCE_P_OPERATOR,
-              ToByteColor(scheme.Default),
+    SetAStyle(SCE_P_OPERATOR, ToByteColor(scheme.Default),
               background); // Operators: () += .
 
-    SetAStyle(SCE_P_WORD,
-              ToByteColor(scheme.Default),
+    SetAStyle(SCE_P_WORD, ToByteColor(scheme.Default),
               background); // Keywords: class, if
-    SetAStyle(SCE_P_WORD2,
-              ToByteColor(scheme.Default),
+    SetAStyle(SCE_P_WORD2, ToByteColor(scheme.Default),
               background); // Context keywords: self, this, value
 
-    SetAStyle(SCE_ERROR,
-              ToByteColor(scheme.Error),
+    SetAStyle(SCE_ERROR, ToByteColor(scheme.Error),
               background); // Errors / exceptions
 
     SetAStyle(SCE_LINK, ToByteColor(scheme.Link), background); // Link text
@@ -1088,56 +1023,41 @@ void TextEditor::SetColorScheme(ColorScheme& scheme)
 
   case Lexer::Python:
   {
-    SetAStyle(
-        SCE_P_DEFAULT, ToByteColor(scheme.Default), background); // Default text
-    SetAStyle(SCE_P_IDENTIFIER,
-              ToByteColor(scheme.Default),
+    SetAStyle(SCE_P_DEFAULT, ToByteColor(scheme.Default), background); // Default text
+    SetAStyle(SCE_P_IDENTIFIER, ToByteColor(scheme.Default),
               background); // Identifiers: self.Space
 
-    SetAStyle(SCE_P_COMMENTBLOCK,
-              ToByteColor(scheme.Comment),
+    SetAStyle(SCE_P_COMMENTBLOCK, ToByteColor(scheme.Comment),
               background); // Block comments: /* */, """
-    SetAStyle(SCE_P_COMMENTLINE,
-              ToByteColor(scheme.Comment),
+    SetAStyle(SCE_P_COMMENTLINE, ToByteColor(scheme.Comment),
               background); // Line comments: #, //
-    SetAStyle(SCE_P_TRIPLE,
-              ToByteColor(scheme.Comment),
+    SetAStyle(SCE_P_TRIPLE, ToByteColor(scheme.Comment),
               background); // Triple comment
-    SetAStyle(SCE_P_TRIPLEDOUBLE,
-              ToByteColor(scheme.Comment),
-              background); // Triple comment
+    SetAStyle(SCE_P_TRIPLEDOUBLE, ToByteColor(scheme.Comment),
+              background);                                               // Triple comment
     SetAStyle(SCE_P_STRINGEOL, ToByteColor(scheme.Comment), background); // ?
     SetAStyle(SCE_P_DECORATOR, ToByteColor(scheme.Comment), background); // ?
 
-    SetAStyle(SCE_P_NUMBER,
-              ToByteColor(scheme.Number),
+    SetAStyle(SCE_P_NUMBER, ToByteColor(scheme.Number),
               background); // Number literals: 5, 3.9
-    SetAStyle(SCE_P_CHARACTER,
-              ToByteColor(scheme.StringLiteral),
+    SetAStyle(SCE_P_CHARACTER, ToByteColor(scheme.StringLiteral),
               background); // Character literals: 'c'
-    SetAStyle(SCE_P_STRING,
-              ToByteColor(scheme.StringLiteral),
+    SetAStyle(SCE_P_STRING, ToByteColor(scheme.StringLiteral),
               background); // String literals: "hello world"
 
-    SetAStyle(SCE_P_CLASSNAME,
-              ToByteColor(scheme.ClassName),
+    SetAStyle(SCE_P_CLASSNAME, ToByteColor(scheme.ClassName),
               background); // Class names: RigidBody, Model
-    SetAStyle(SCE_P_DEFNAME,
-              ToByteColor(scheme.FunctionName),
+    SetAStyle(SCE_P_DEFNAME, ToByteColor(scheme.FunctionName),
               background); // Function names: OnLogicUpdate
-    SetAStyle(SCE_P_OPERATOR,
-              ToByteColor(scheme.Operator),
+    SetAStyle(SCE_P_OPERATOR, ToByteColor(scheme.Operator),
               background); // Operators: () += .
 
-    SetAStyle(SCE_P_WORD,
-              ToByteColor(scheme.Keyword),
+    SetAStyle(SCE_P_WORD, ToByteColor(scheme.Keyword),
               background); // Keywords: class, if
-    SetAStyle(SCE_P_WORD2,
-              ToByteColor(scheme.SpecialWords),
+    SetAStyle(SCE_P_WORD2, ToByteColor(scheme.SpecialWords),
               background); // Context keywords: self, this, value
 
-    SetAStyle(SCE_ERROR,
-              ToByteColor(scheme.Error),
+    SetAStyle(SCE_ERROR, ToByteColor(scheme.Error),
               background); // Errors / exceptions
 
     SetAStyle(SCE_LINK, ToByteColor(scheme.Link), background); // Link text
@@ -1158,69 +1078,50 @@ void TextEditor::SetCommonLexerStyles(ColorScheme& scheme)
 {
   uint background = ToByteColor(scheme.Background);
 
-  SetAStyle(
-      SCE_C_DEFAULT, ToByteColor(scheme.Default), background); // Default text
-  SetAStyle(SCE_C_IDENTIFIER,
-            ToByteColor(scheme.Default),
+  SetAStyle(SCE_C_DEFAULT, ToByteColor(scheme.Default), background); // Default text
+  SetAStyle(SCE_C_IDENTIFIER, ToByteColor(scheme.Default),
             background); // Identifiers: self.Space
 
-  SetAStyle(SCE_C_COMMENT,
-            ToByteColor(scheme.Comment),
+  SetAStyle(SCE_C_COMMENT, ToByteColor(scheme.Comment),
             background); // Block comments: /* */, """
-  SetAStyle(SCE_C_COMMENTDOC,
-            ToByteColor(scheme.Comment),
+  SetAStyle(SCE_C_COMMENTDOC, ToByteColor(scheme.Comment),
             background); // Block comments: /* */, """
-  SetAStyle(SCE_C_COMMENTLINE,
-            ToByteColor(scheme.Comment),
+  SetAStyle(SCE_C_COMMENTLINE, ToByteColor(scheme.Comment),
             background); // Line comments: #, //
-  SetAStyle(SCE_C_COMMENTLINEDOC,
-            ToByteColor(scheme.Comment),
-            background); // Line comments: #, //
-  SetAStyle(SCE_C_UUID, ToByteColor(scheme.Comment), background);           // ?
-  SetAStyle(SCE_C_STRINGEOL, ToByteColor(scheme.Comment), background);      // ?
-  SetAStyle(SCE_C_VERBATIM, ToByteColor(scheme.Comment), background);       // ?
-  SetAStyle(SCE_C_TRIPLEVERBATIM, ToByteColor(scheme.Comment), background); // ?
-  SetAStyle(
-      SCE_C_HASHQUOTEDSTRING, ToByteColor(scheme.Comment), background); // ?
-  SetAStyle(SCE_C_REGEX, ToByteColor(scheme.Comment), background);      // ?
+  SetAStyle(SCE_C_COMMENTLINEDOC, ToByteColor(scheme.Comment),
+            background);                                                      // Line comments: #, //
+  SetAStyle(SCE_C_UUID, ToByteColor(scheme.Comment), background);             // ?
+  SetAStyle(SCE_C_STRINGEOL, ToByteColor(scheme.Comment), background);        // ?
+  SetAStyle(SCE_C_VERBATIM, ToByteColor(scheme.Comment), background);         // ?
+  SetAStyle(SCE_C_TRIPLEVERBATIM, ToByteColor(scheme.Comment), background);   // ?
+  SetAStyle(SCE_C_HASHQUOTEDSTRING, ToByteColor(scheme.Comment), background); // ?
+  SetAStyle(SCE_C_REGEX, ToByteColor(scheme.Comment), background);            // ?
 
-  SetAStyle(SCE_C_NUMBER,
-            ToByteColor(scheme.Number),
+  SetAStyle(SCE_C_NUMBER, ToByteColor(scheme.Number),
             background); // Number literals: 5, 3.9
-  SetAStyle(SCE_C_CHARACTER,
-            ToByteColor(scheme.StringLiteral),
+  SetAStyle(SCE_C_CHARACTER, ToByteColor(scheme.StringLiteral),
             background); // Character literals: 'c'
-  SetAStyle(SCE_C_STRING,
-            ToByteColor(scheme.StringLiteral),
+  SetAStyle(SCE_C_STRING, ToByteColor(scheme.StringLiteral),
             background); // String literals: "hello world"
-  SetAStyle(SCE_C_STRINGRAW,
-            ToByteColor(scheme.StringLiteral),
+  SetAStyle(SCE_C_STRINGRAW, ToByteColor(scheme.StringLiteral),
             background); // String literals: "hello world"
 
-  SetAStyle(SCE_C_GLOBALCLASS,
-            ToByteColor(scheme.ClassName),
+  SetAStyle(SCE_C_GLOBALCLASS, ToByteColor(scheme.ClassName),
             background); // Class names: RigidBody, Model
-  SetAStyle(SCE_C_OPERATOR,
-            ToByteColor(scheme.Operator),
+  SetAStyle(SCE_C_OPERATOR, ToByteColor(scheme.Operator),
             background); // Operators: () += .
 
-  SetAStyle(SCE_C_WORD,
-            ToByteColor(scheme.Keyword),
+  SetAStyle(SCE_C_WORD, ToByteColor(scheme.Keyword),
             background); // Keywords: class, if
-  SetAStyle(SCE_C_COMMENTDOCKEYWORD,
-            ToByteColor(scheme.Keyword),
+  SetAStyle(SCE_C_COMMENTDOCKEYWORD, ToByteColor(scheme.Keyword),
             background); // Documentation keywords
-  SetAStyle(SCE_C_PREPROCESSOR,
-            ToByteColor(scheme.Directive),
+  SetAStyle(SCE_C_PREPROCESSOR, ToByteColor(scheme.Directive),
             background); // Preprocessor directives
-  SetAStyle(SCE_C_WORD2,
-            ToByteColor(scheme.SpecialWords),
+  SetAStyle(SCE_C_WORD2, ToByteColor(scheme.SpecialWords),
             background); // Context keywords: self, this, value
 
-  SetAStyle(
-      SCE_ERROR, ToByteColor(scheme.Error), background); // Errors / exceptions
-  SetAStyle(SCE_C_COMMENTDOCKEYWORDERROR,
-            ToByteColor(scheme.Error),
+  SetAStyle(SCE_ERROR, ToByteColor(scheme.Error), background); // Errors / exceptions
+  SetAStyle(SCE_C_COMMENTDOCKEYWORDERROR, ToByteColor(scheme.Error),
             background); // Documentation errors
 }
 
@@ -1236,11 +1137,7 @@ void TextEditor::OnKeyDown(KeyboardEvent* event)
   int key = KeyTranslate(event->Key);
 
   bool consumed = false;
-  int handled = mScintilla->KeyDown(key,
-                                    event->ShiftPressed,
-                                    event->CtrlPressed,
-                                    event->AltPressed,
-                                    &consumed);
+  int handled = mScintilla->KeyDown(key, event->ShiftPressed, event->CtrlPressed, event->AltPressed, &consumed);
 
   // Check to see if the event has been consumed to prevent other widgets
   // from doing things
@@ -1321,8 +1218,7 @@ void TextEditor::OnMouseScroll(MouseEvent* event)
   // change font size while holding control and scrolling
   else
   {
-    mFontSize =
-        Math::Clamp(int(mFontSize + scroll), cMinFontSize, cMaxFontSize);
+    mFontSize = Math::Clamp(int(mFontSize + scroll), cMinFontSize, cMaxFontSize);
     SetFontSize(mFontSize);
     UpdateColorScheme();
   }
@@ -1402,7 +1298,7 @@ void TextEditor::BlockComment(cstr comment)
 
   // Get the lines that have active carets without duplicate entries
   HashSet<int> linesSelected;
-  forRange(int caretPos, caretPositions.All())
+  forRange (int caretPos, caretPositions.All())
   {
     int line = SendEditor(SCI_LINEFROMPOSITION, caretPos);
     linesSelected.Insert(line);
@@ -1420,7 +1316,7 @@ void TextEditor::BlockComment(cstr comment)
 
   // Check lines for indent level and comment mode
   int minIndentLevel = INT_MAX;
-  forRange(int currentLine, linesSelected.All())
+  forRange (int currentLine, linesSelected.All())
   {
     int lineStart = SendEditor(SCI_POSITIONFROMLINE, currentLine);
     int lineEnd = SendEditor(SCI_GETLINEENDPOSITION, currentLine);
@@ -1445,7 +1341,7 @@ void TextEditor::BlockComment(cstr comment)
 
   // Comment and uncomment all the lines
   SendEditor(SCI_BEGINUNDOACTION);
-  forRange(int currentLine, linesSelected.All())
+  forRange (int currentLine, linesSelected.All())
   {
     int lineStart = SendEditor(SCI_POSITIONFROMLINE, currentLine);
     int lineEnd = SendEditor(SCI_GETLINEENDPOSITION, currentLine);
@@ -1475,8 +1371,7 @@ void TextEditor::BlockComment(cstr comment)
   SendEditor(SCI_ENDUNDOACTION);
 }
 
-void TextEditor::SetAStyle(
-    int style, ByteColor fore, ByteColor back, int size, cstr face)
+void TextEditor::SetAStyle(int style, ByteColor fore, ByteColor back, int size, cstr face)
 {
   SendEditor(SCI_STYLESETFORE, style, fore);
   SendEditor(SCI_STYLESETBACK, style, back);
@@ -1519,15 +1414,9 @@ void TextEditor::UpdateTextMatchHighlighting()
 
   if (verticalBar->mVisible)
   {
-    mIndicators->Resize(verticalBar->mSize.x + bufferSize.x,
-                        bufferSize.y,
-                        false,
-                        false,
-                        Color::White,
-                        false);
+    mIndicators->Resize(verticalBar->mSize.x + bufferSize.x, bufferSize.y, false, false, Color::White, false);
 
-    mIndicatorDisplay->SetTranslation(
-        Pixels(position.x + 1, position.y, position.z));
+    mIndicatorDisplay->SetTranslation(Pixels(position.x + 1, position.y, position.z));
     mIndicatorDisplay->SetSize(Pixels(bufferSize.x, bufferSize.y));
   }
 
@@ -1546,13 +1435,12 @@ void TextEditor::UpdateTextMatchHighlighting()
   mIndicators->Upload();
 }
 
-void TextEditor::UpdateIndicators(
-    Array<Rectangle>& indicators,
-    const std::vector<Scintilla::SelectionRange>& ranges,
-    Vec4Param indicatorColor,
-    Vec2Param minIndicatorHeight,
-    float indicatorWidth,
-    float indicatorOffsetX)
+void TextEditor::UpdateIndicators(Array<Rectangle>& indicators,
+                                  const std::vector<Scintilla::SelectionRange>& ranges,
+                                  Vec4Param indicatorColor,
+                                  Vec2Param minIndicatorHeight,
+                                  float indicatorWidth,
+                                  float indicatorOffsetX)
 {
   ScrollBar* verticalBar = GetVerticalScrollBar();
   if (!verticalBar->mVisible)
@@ -1569,8 +1457,7 @@ void TextEditor::UpdateIndicators(
 
   Vec2 size;
   if (indicatorWidth == 0)
-    size.x =
-        Math::Floor(verticalBar->mSize.x + verticalBar->mBackground->mSize.x);
+    size.x = Math::Floor(verticalBar->mSize.x + verticalBar->mBackground->mSize.x);
   else
     size.x = indicatorWidth;
 
@@ -1584,9 +1471,7 @@ void TextEditor::UpdateIndicators(
   int count = ranges.size();
   for (int i = 0; i < count; ++i)
   {
-    top = Math::Floor(barHeight *
-                      GetLineFromPosition(ranges[i].anchor.Position()) /
-                      lineCount);
+    top = Math::Floor(barHeight * GetLineFromPosition(ranges[i].anchor.Position()) / lineCount);
 
     Rectangle& rect = indicators.PushBack();
     rect.Min = Vec2(indicatorOffsetX, top);
@@ -1788,8 +1673,7 @@ int TextEditor::GetWordEndPosition(int position, bool onlyWordCharacters)
 void TextEditor::GetAllWordStartPositions(Array<int>& startPositions)
 {
   for (size_t i = 0; i < mScintilla->sel.Count(); ++i)
-    startPositions.PushBack(
-        GetWordStartPosition(mScintilla->sel.Range(i).caret.Position()));
+    startPositions.PushBack(GetWordStartPosition(mScintilla->sel.Range(i).caret.Position()));
 }
 
 void TextEditor::GetAllCaretPositions(Array<int>& caretPositions)
@@ -1927,13 +1811,10 @@ int TextEditor::GetCursorFromScreenPosition(Vec2Param screenPos)
 {
   Vec2 localPos = screenPos - Math::ToVector2(this->GetScreenPosition());
 
-  return SendEditor(
-      SCI_POSITIONFROMPOINTCLOSE, (int)localPos.x, (int)localPos.y);
+  return SendEditor(SCI_POSITIONFROMPOINTCLOSE, (int)localPos.x, (int)localPos.y);
 }
 
-void TextEditor::SetAnnotation(int lineNumber,
-                               StringParam errorMessage,
-                               bool goToLine)
+void TextEditor::SetAnnotation(int lineNumber, StringParam errorMessage, bool goToLine)
 {
   String wrappedMessage = WordWrap(errorMessage, 80);
 
@@ -1946,8 +1827,7 @@ void TextEditor::SetAnnotation(int lineNumber,
 
     // ANNOTATION_STANDARD //ANNOTATION_BOXED
     SendEditor(SCI_ANNOTATIONSETVISIBLE, ANNOTATION_STANDARD);
-    SendEditor(
-        SCI_ANNOTATIONSETTEXT, lineNumber, (intptr_t)wrappedMessage.c_str());
+    SendEditor(SCI_ANNOTATIONSETTEXT, lineNumber, (intptr_t)wrappedMessage.c_str());
     SendEditor(SCI_ANNOTATIONSETSTYLE, lineNumber, SCE_ERROR);
   }
 
@@ -2028,10 +1908,7 @@ void TextEditor::GetLineText(int line, char* buffer, uint size)
 {
   int length = GetLineLength(line);
 
-  ReturnIf(
-      length >= int(size),
-      ,
-      "The output buffer is not big enough to fit the line (including null!)");
+  ReturnIf(length >= int(size), , "The output buffer is not big enough to fit the line (including null!)");
 
   SendEditor(SCI_GETLINE, line, (sptr_t)buffer);
 
@@ -2125,8 +2002,7 @@ void TextEditor::OnNotify(Scintilla::SCNotification& notify)
   if (mSendEvents == true)
   {
     bool shouldSendEvent =
-        (notify.nmhdr.code == SCN_MODIFIED &&
-         notify.modificationType & (SC_MOD_INSERTTEXT | SC_MOD_DELETETEXT)) ||
+        (notify.nmhdr.code == SCN_MODIFIED && notify.modificationType & (SC_MOD_INSERTTEXT | SC_MOD_DELETETEXT)) ||
         (notify.nmhdr.code == SCN_CHARADDED || notify.nmhdr.code == SCN_KEY);
 
     if (shouldSendEvent)
@@ -2135,8 +2011,7 @@ void TextEditor::OnNotify(Scintilla::SCNotification& notify)
       // Scintilla on notify messages do not fill out the position/line modified
       // causing incorrect behavior when attempting to scroll off screen
       // modification into view
-      MakeLineVisible(
-          GetLineFromPosition(mScintilla->SelectionStart().Position()));
+      MakeLineVisible(GetLineFromPosition(mScintilla->SelectionStart().Position()));
 
       Event event;
       this->GetDispatcher()->Dispatch(Events::TextEditorModified, &event);
@@ -2159,8 +2034,7 @@ void ScintillaZero::Clear()
   if (sel.Empty())
   {
     bool singleVirtual = false;
-    if ((sel.Count() == 1) &&
-        !RangeContainsProtected(sel.MainCaret(), sel.MainCaret() + 1) &&
+    if ((sel.Count() == 1) && !RangeContainsProtected(sel.MainCaret(), sel.MainCaret() + 1) &&
         sel.RangeMain().Start().VirtualSpace())
     {
       singleVirtual = true;
@@ -2168,19 +2042,16 @@ void ScintillaZero::Clear()
     Scintilla::UndoGroup ug(pdoc, (sel.Count() > 1) || singleVirtual);
     for (size_t r = 0; r < sel.Count(); r++)
     {
-      if (!RangeContainsProtected(sel.Range(r).caret.Position(),
-                                  sel.Range(r).caret.Position() + 1))
+      if (!RangeContainsProtected(sel.Range(r).caret.Position(), sel.Range(r).caret.Position() + 1))
       {
         if (sel.Range(r).Start().VirtualSpace())
         {
           if (sel.Range(r).anchor < sel.Range(r).caret)
             sel.Range(r) = Scintilla::SelectionPosition(
-                InsertSpace(sel.Range(r).anchor.Position(),
-                            sel.Range(r).anchor.VirtualSpace()));
+                InsertSpace(sel.Range(r).anchor.Position(), sel.Range(r).anchor.VirtualSpace()));
           else
             sel.Range(r) = Scintilla::SelectionPosition(
-                InsertSpace(sel.Range(r).caret.Position(),
-                            sel.Range(r).caret.VirtualSpace()));
+                InsertSpace(sel.Range(r).caret.Position(), sel.Range(r).caret.VirtualSpace()));
         }
         else
         {
@@ -2256,8 +2127,7 @@ void ScintillaZero::MoveSelectedLinesUp()
     int fromLine = selectionLines[i] - 1;
 
     // Walk until there is a line gap between groups of selections
-    while (i + 1 < selectionLines.Size() &&
-           selectionLines[i + 1] - 1 <= selectionLines[i])
+    while (i + 1 < selectionLines.Size() && selectionLines[i + 1] - 1 <= selectionLines[i])
       ++i;
 
     // Line below current group of selections
@@ -2289,19 +2159,14 @@ void ScintillaZero::MoveSelectedLinesUp()
         --length;
       }
 
-      pdoc->InsertCString(pdoc->LineEnd(pdoc->LinesTotal() - 1),
-                          StringFromEOLMode(pdoc->eolMode));
+      pdoc->InsertCString(pdoc->LineEnd(pdoc->LinesTotal() - 1), StringFromEOLMode(pdoc->eolMode));
       // Correct caret if on end of document
       for (size_t j = 0; j < sel.Count(); ++j)
       {
-        if (sel.Range(j).anchor.Position() ==
-            pdoc->LineEnd(pdoc->LinesTotal() - 1))
-          sel.Range(j).anchor.Add(
-              -(int)strlen(StringFromEOLMode(pdoc->eolMode)));
-        if (sel.Range(j).caret.Position() ==
-            pdoc->LineEnd(pdoc->LinesTotal() - 1))
-          sel.Range(j).caret.Add(
-              -(int)strlen(StringFromEOLMode(pdoc->eolMode)));
+        if (sel.Range(j).anchor.Position() == pdoc->LineEnd(pdoc->LinesTotal() - 1))
+          sel.Range(j).anchor.Add(-(int)strlen(StringFromEOLMode(pdoc->eolMode)));
+        if (sel.Range(j).caret.Position() == pdoc->LineEnd(pdoc->LinesTotal() - 1))
+          sel.Range(j).caret.Add(-(int)strlen(StringFromEOLMode(pdoc->eolMode)));
       }
       pdoc->InsertCString(pdoc->LineEnd(pdoc->LinesTotal() - 1), lineText);
     }
@@ -2337,8 +2202,7 @@ void ScintillaZero::MoveSelectedLinesDown()
     int fromLine = selectionLines[i] + 1;
 
     // Walk until there is a line gap between groups of selections
-    while (i + 1 < selectionLines.Size() &&
-           selectionLines[i + 1] + 1 >= selectionLines[i])
+    while (i + 1 < selectionLines.Size() && selectionLines[i + 1] + 1 >= selectionLines[i])
       ++i;
 
     // Line above current group of selections
@@ -2450,10 +2314,8 @@ int ScintillaZero::KeyCommand(unsigned int iMessage)
         if (other.caret.Position() < selection.anchor.Position() &&
             other.anchor.Position() > selection.caret.Position())
         {
-          Scintilla::SelectionPosition anchor(
-              std::max(other.anchor.Position(), selection.anchor.Position()));
-          Scintilla::SelectionPosition caret(
-              std::min(other.caret.Position(), selection.caret.Position()));
+          Scintilla::SelectionPosition anchor(std::max(other.anchor.Position(), selection.anchor.Position()));
+          Scintilla::SelectionPosition caret(std::min(other.caret.Position(), selection.caret.Position()));
           Scintilla::SelectionRange newRange(caret, anchor);
 
           selection = newRange;
@@ -2478,10 +2340,8 @@ int ScintillaZero::KeyCommand(unsigned int iMessage)
         if (other.caret.Position() > selection.anchor.Position() &&
             other.anchor.Position() < selection.caret.Position())
         {
-          Scintilla::SelectionPosition anchor(
-              std::min(other.anchor.Position(), selection.anchor.Position()));
-          Scintilla::SelectionPosition caret(
-              std::max(other.caret.Position(), selection.caret.Position()));
+          Scintilla::SelectionPosition anchor(std::min(other.anchor.Position(), selection.anchor.Position()));
+          Scintilla::SelectionPosition caret(std::max(other.caret.Position(), selection.caret.Position()));
           Scintilla::SelectionRange newRange(caret, anchor);
 
           selection = newRange;
@@ -2495,72 +2355,56 @@ int ScintillaZero::KeyCommand(unsigned int iMessage)
   case SCI_WORDLEFT:
   {
     for (size_t i = 0; i < sel.Count(); ++i)
-      MoveSelection(sel.Range(i),
-                    pdoc->ExtendWordSelect(sel.Range(i).caret.Position(), -1),
-                    false);
+      MoveSelection(sel.Range(i), pdoc->ExtendWordSelect(sel.Range(i).caret.Position(), -1), false);
   }
   break;
 
   case SCI_WORDRIGHT:
   {
     for (size_t i = 0; i < sel.Count(); ++i)
-      MoveSelection(sel.Range(i),
-                    pdoc->ExtendWordSelect(sel.Range(i).caret.Position(), 1),
-                    false);
+      MoveSelection(sel.Range(i), pdoc->ExtendWordSelect(sel.Range(i).caret.Position(), 1), false);
   }
   break;
 
   case SCI_WORDLEFTEXTEND:
   {
     for (size_t i = 0; i < sel.Count(); ++i)
-      MoveSelection(sel.Range(i),
-                    pdoc->ExtendWordSelect(sel.Range(i).caret.Position(), -1),
-                    true);
+      MoveSelection(sel.Range(i), pdoc->ExtendWordSelect(sel.Range(i).caret.Position(), -1), true);
   }
   break;
 
   case SCI_WORDRIGHTEXTEND:
   {
     for (size_t i = 0; i < sel.Count(); ++i)
-      MoveSelection(sel.Range(i),
-                    pdoc->ExtendWordSelect(sel.Range(i).caret.Position(), 1),
-                    true);
+      MoveSelection(sel.Range(i), pdoc->ExtendWordSelect(sel.Range(i).caret.Position(), 1), true);
   }
   break;
 
   case SCI_VCHOME:
   {
     for (size_t i = 0; i < sel.Count(); ++i)
-      MoveSelection(sel.Range(i),
-                    pdoc->VCHomePosition(sel.Range(i).caret.Position()),
-                    false);
+      MoveSelection(sel.Range(i), pdoc->VCHomePosition(sel.Range(i).caret.Position()), false);
   }
   break;
 
   case SCI_LINEEND:
   {
     for (size_t i = 0; i < sel.Count(); ++i)
-      MoveSelection(sel.Range(i),
-                    pdoc->LineEndPosition(sel.Range(i).caret.Position()),
-                    false);
+      MoveSelection(sel.Range(i), pdoc->LineEndPosition(sel.Range(i).caret.Position()), false);
   }
   break;
 
   case SCI_VCHOMEEXTEND:
   {
     for (size_t i = 0; i < sel.Count(); ++i)
-      MoveSelection(sel.Range(i),
-                    pdoc->VCHomePosition(sel.Range(i).caret.Position()),
-                    true);
+      MoveSelection(sel.Range(i), pdoc->VCHomePosition(sel.Range(i).caret.Position()), true);
   }
   break;
 
   case SCI_LINEENDEXTEND:
   {
     for (size_t i = 0; i < sel.Count(); ++i)
-      MoveSelection(sel.Range(i),
-                    pdoc->LineEndPosition(sel.Range(i).caret.Position()),
-                    true);
+      MoveSelection(sel.Range(i), pdoc->LineEndPosition(sel.Range(i).caret.Position()), true);
   }
   break;
 
@@ -2568,10 +2412,8 @@ int ScintillaZero::KeyCommand(unsigned int iMessage)
   {
     if (!sel.Empty())
     {
-      int start = std::min(sel.RangeMain().caret.Position(),
-                           sel.RangeMain().anchor.Position());
-      int end = std::max(sel.RangeMain().caret.Position(),
-                         sel.RangeMain().anchor.Position());
+      int start = std::min(sel.RangeMain().caret.Position(), sel.RangeMain().anchor.Position());
+      int end = std::max(sel.RangeMain().caret.Position(), sel.RangeMain().anchor.Position());
       int size = end - start;
       char* text = (char*)alloca(size + 1);
       text[size] = 0;
@@ -2622,9 +2464,7 @@ int ScintillaZero::KeyCommand(unsigned int iMessage)
   return 0;
 }
 
-void ScintillaZero::MoveSelection(Scintilla::SelectionRange& selection,
-                                  int pos,
-                                  bool extend)
+void ScintillaZero::MoveSelection(Scintilla::SelectionRange& selection, int pos, bool extend)
 {
   Scintilla::SelectionPosition newPos(pos);
 
@@ -2636,16 +2476,14 @@ void ScintillaZero::MoveSelection(Scintilla::SelectionRange& selection,
     selection.anchor = selection.caret;
 }
 
-bool ScintillaZero::IsSelected(Scintilla::SelectionRange& range,
-                               int* endSelectionOut)
+bool ScintillaZero::IsSelected(Scintilla::SelectionRange& range, int* endSelectionOut)
 {
   for (size_t i = 0; i < sel.Count(); ++i)
   {
     Scintilla::SelectionRange& current = sel.Range(i);
     if (range == current)
     {
-      *endSelectionOut =
-          std::max(current.caret.Position(), current.anchor.Position());
+      *endSelectionOut = std::max(current.caret.Position(), current.anchor.Position());
       return true;
     }
   }
@@ -2653,26 +2491,22 @@ bool ScintillaZero::IsSelected(Scintilla::SelectionRange& range,
   return false;
 }
 
-bool ScintillaZero::FindTextNotSelected(int start,
-                                        int end,
-                                        const char* text,
-                                        Scintilla::SelectionRange& newSel)
+bool ScintillaZero::FindTextNotSelected(int start, int end, const char* text, Scintilla::SelectionRange& newSel)
 {
   int length = strlen(text);
   while (start < end)
   {
     int lengthFound = length;
-    int pos = pdoc->FindText(
-        start,
-        end,
-        text,
-        true,
-        false,
-        false,
-        false,
-        0,
-        &lengthFound,
-        std::unique_ptr<Scintilla::CaseFolder>(CaseFolderForEncoding()).get());
+    int pos = pdoc->FindText(start,
+                             end,
+                             text,
+                             true,
+                             false,
+                             false,
+                             false,
+                             0,
+                             &lengthFound,
+                             std::unique_ptr<Scintilla::CaseFolder>(CaseFolderForEncoding()).get());
     if (pos == -1)
       return false;
 
@@ -2719,9 +2553,7 @@ void ScintillaZero::Copy()
     // Copy the line that the main caret is on
     Scintilla::SelectionText selectedText;
     CopySelectionRange(&selectedText, true);
-    Z::gEngine->has(Zero::OsShell)
-        ->SetClipboardText(
-            StringRange(selectedText.s, selectedText.s + selectedText.len));
+    Z::gEngine->has(Zero::OsShell)->SetClipboardText(StringRange(selectedText.s, selectedText.s + selectedText.len));
     return;
   }
 
@@ -2753,9 +2585,7 @@ void ScintillaZero::Copy()
 
   // Last or only caret, no additional newline
   Scintilla::SelectionRange& selection = rangesInOrder.back();
-  for (int charIndex = selection.Start().Position();
-       charIndex < selection.End().Position();
-       ++charIndex)
+  for (int charIndex = selection.Start().Position(); charIndex < selection.End().Position(); ++charIndex)
     builder.Append(pdoc->CharAt(charIndex));
 
   String text = builder.ToString();
@@ -2766,8 +2596,7 @@ void ScintillaZero::Paste()
 {
   Scintilla::UndoGroup ug(pdoc);
 
-  Zero::String clipboardText =
-      Z::gEngine->has(Zero::OsShell)->GetClipboardText();
+  Zero::String clipboardText = Z::gEngine->has(Zero::OsShell)->GetClipboardText();
 
   ClearSelection(multiPasteMode == SC_MULTIPASTE_EACH);
 
@@ -2789,8 +2618,8 @@ void ScintillaZero::Paste()
   // check for newlines for multiselect positions within the text to paste
   while (!clipboardRange.Empty())
   {
-    StringRange newLineGroup = clipboardRange.SubString(
-        clipboardRange.Begin(), clipboardRange.Begin() + newLineRuneCount);
+    StringRange newLineGroup =
+        clipboardRange.SubString(clipboardRange.Begin(), clipboardRange.Begin() + newLineRuneCount);
     if (newLineGroup == newLine)
     {
       ++newLineCount;
@@ -2811,18 +2640,14 @@ void ScintillaZero::Paste()
     {
       Scintilla::SelectionRange& selection = ranges[i];
 
-      InsertSpace(selection.Start().Position(),
-                  selection.Start().VirtualSpace());
+      InsertSpace(selection.Start().Position(), selection.Start().VirtualSpace());
       selection.ClearVirtualSpace();
 
       StringIterator start = linePositions[i];
-      StringIterator end = (i + 1 < linePositions.Size())
-                               ? (linePositions[i + 1] - newLineRuneCount)
-                               : clipboardText.End();
+      StringIterator end =
+          (i + 1 < linePositions.Size()) ? (linePositions[i + 1] - newLineRuneCount) : clipboardText.End();
       String lineChunk(start, end);
-      pdoc->InsertString(selection.Start().Position(),
-                         lineChunk.Data(),
-                         lineChunk.SizeInBytes());
+      pdoc->InsertString(selection.Start().Position(), lineChunk.Data(), lineChunk.SizeInBytes());
     }
   }
   else
@@ -2832,12 +2657,9 @@ void ScintillaZero::Paste()
     {
       Scintilla::SelectionRange& selection = ranges[i];
 
-      InsertSpace(selection.Start().Position(),
-                  selection.Start().VirtualSpace());
+      InsertSpace(selection.Start().Position(), selection.Start().VirtualSpace());
       selection.ClearVirtualSpace();
-      pdoc->InsertString(selection.Start().Position(),
-                         clipboardText.c_str(),
-                         clipboardText.SizeInBytes());
+      pdoc->InsertString(selection.Start().Position(), clipboardText.c_str(), clipboardText.SizeInBytes());
     }
   }
 }
@@ -2889,8 +2711,7 @@ void ScintillaZero::UpdateHighlightIndicators()
   int lineCaret = SendEditor(SCI_LINEFROMPOSITION, main.caret.Position());
 
   Scintilla::SelectionRange& rectangle = sel.Rectangular();
-  int rectAnchor =
-      SendEditor(SCI_LINEFROMPOSITION, rectangle.anchor.Position());
+  int rectAnchor = SendEditor(SCI_LINEFROMPOSITION, rectangle.anchor.Position());
   int rectCaret = SendEditor(SCI_LINEFROMPOSITION, rectangle.caret.Position());
 
   // 1) Text matching is globally disabled.
@@ -2898,8 +2719,7 @@ void ScintillaZero::UpdateHighlightIndicators()
   // 3) Selection line-wraps.
   // 4) Selection is rectangular.
   // 5) Selection has virtual space.
-  if (!mOwner->mTextMatchHighlighting || main.Empty() ||
-      lineAnchor != lineCaret || rectAnchor != rectCaret ||
+  if (!mOwner->mTextMatchHighlighting || main.Empty() || lineAnchor != lineCaret || rectAnchor != rectCaret ||
       main.anchor.VirtualSpace() || main.caret.VirtualSpace())
   {
     mHighlightIndicators.Clear();
@@ -3000,15 +2820,13 @@ void ScintillaZero::ProcessTextMatch(char*& text, int* begin, int* end)
   // 2) Is begin at the start of a line?
   bool beginValid = start == 0 || lineBegin != lineBeginNeighbor;
   // 3) Is begin's previous char whitespace or an alpha numeric?
-  bool opBeginValid =
-      start > 0 && (UTF8::IsWhiteSpace(a) || UTF8::IsAlphaNumeric(a));
+  bool opBeginValid = start > 0 && (UTF8::IsWhiteSpace(a) || UTF8::IsAlphaNumeric(a));
 
   // 1) Is 'end' at the end of the document?
   // 2) Is end at the end of a line?
   bool endValid = stop == pdoc->Length() || lineEnd != lineEndNeighbor;
   // 3) Is end whitespace or alpha numeric?
-  bool opEndValid = stop < pdoc->Length() &&
-                    (UTF8::IsWhiteSpace(b) || UTF8::IsAlphaNumeric(b));
+  bool opEndValid = stop < pdoc->Length() && (UTF8::IsWhiteSpace(b) || UTF8::IsAlphaNumeric(b));
 
   // Check for chained operator chars surrounded by either whitespace or alpha
   // numerics.
@@ -3028,11 +2846,9 @@ void ScintillaZero::ProcessTextMatch(char*& text, int* begin, int* end)
   }
 
   // 3) Is begin's previous char whitespace or an operator?
-  beginValid |=
-      (start > 0 && (UTF8::IsWhiteSpace(a) || UTF8::IsPunctuation(a)));
+  beginValid |= (start > 0 && (UTF8::IsWhiteSpace(a) || UTF8::IsPunctuation(a)));
   // 3) Is end whitespace or an operator?
-  endValid |= (stop < pdoc->Length() &&
-               (UTF8::IsWhiteSpace(b) || UTF8::IsPunctuation(b)));
+  endValid |= (stop < pdoc->Length() && (UTF8::IsWhiteSpace(b) || UTF8::IsPunctuation(b)));
 
   if (!beginValid || !endValid)
   {
@@ -3060,22 +2876,18 @@ void ScintillaZero::HighlightMatchingText(int begin, int end, const char* text)
   // in each line's respective comment.  However, they all call
   // 'InvalidateStyleRedraw'.  Yet, it only needs to be called once
   // after setting all desired indicator params.
-  vs.indicators[indicator].style =
-      (s64)IndicatorStyle::Roundbox;     // SCI_INDICSETSTYLE
-  vs.indicators[indicator].under = true; // SCI_INDICSETUNDER
-  vs.indicators[indicator].fore = color; // SCI_INDICSETFORE
-  vs.indicators[indicator].outlineAlpha =
-      outlineAlpha;                                  // SCI_INDICSETOUTLINEALPHA
-  vs.indicators[indicator].fillAlpha = matchColor.w; // SCI_INDICSETALPHA
+  vs.indicators[indicator].style = (s64)IndicatorStyle::Roundbox; // SCI_INDICSETSTYLE
+  vs.indicators[indicator].under = true;                          // SCI_INDICSETUNDER
+  vs.indicators[indicator].fore = color;                          // SCI_INDICSETFORE
+  vs.indicators[indicator].outlineAlpha = outlineAlpha;           // SCI_INDICSETOUTLINEALPHA
+  vs.indicators[indicator].fillAlpha = matchColor.w;              // SCI_INDICSETALPHA
   InvalidateStyleRedraw();
 
   // Search the document
   HighlightAllTextInstances(begin, end, text);
 }
 
-void ScintillaZero::HighlightAllTextInstances(int begin,
-                                              int end,
-                                              const char* text)
+void ScintillaZero::HighlightAllTextInstances(int begin, int end, const char* text)
 {
   // rangeValue == 0 is reserved as the default value for the entire document.
   // rangeValue == 1 is reserved for the main 'text' selected.
@@ -3100,18 +2912,16 @@ void ScintillaZero::HighlightAllTextInstances(int begin,
     while (start < stop)
     {
       int lengthFound = length;
-      int pos = pdoc->FindText(
-          start,
-          stop,
-          text,
-          true,
-          false,
-          false,
-          false,
-          0,
-          &lengthFound,
-          std::unique_ptr<Scintilla::CaseFolder>(CaseFolderForEncoding())
-              .get());
+      int pos = pdoc->FindText(start,
+                               stop,
+                               text,
+                               true,
+                               false,
+                               false,
+                               false,
+                               0,
+                               &lengthFound,
+                               std::unique_ptr<Scintilla::CaseFolder>(CaseFolderForEncoding()).get());
       if (pos == -1)
         break;
 
@@ -3172,9 +2982,7 @@ void ScintillaZero::SetTicking(bool on)
   timer.ticksToWait = caret.period;
 }
 
-uint ScintillaZero::SendEditor(unsigned int Msg,
-                               unsigned long wParam,
-                               long lParam)
+uint ScintillaZero::SendEditor(unsigned int Msg, unsigned long wParam, long lParam)
 {
   return WndProc(Msg, wParam, lParam);
 }
@@ -3203,9 +3011,7 @@ void ScintillaZero::CreateCallTipWindow(Scintilla::PRectangle rc)
 {
 }
 
-sptr_t ScintillaZero::DefWndProc(unsigned int iMessage,
-                                 uptr_t wParam,
-                                 sptr_t lParam)
+sptr_t ScintillaZero::DefWndProc(unsigned int iMessage, uptr_t wParam, sptr_t lParam)
 {
   switch (iMessage)
   {
@@ -3256,10 +3062,7 @@ sptr_t ScintillaZero::DefWndProc(unsigned int iMessage,
   return 0;
 }
 
-void ScintillaZero::InsertAutoCompleteText(const char* text,
-                                           int length,
-                                           int removeCount,
-                                           int charOffset)
+void ScintillaZero::InsertAutoCompleteText(const char* text, int length, int removeCount, int charOffset)
 {
   Scintilla::UndoGroup ug(pdoc);
 
@@ -3271,9 +3074,7 @@ void ScintillaZero::InsertAutoCompleteText(const char* text,
   }
 }
 
-void ScintillaZero::AddToPopUp(const char* label,
-                               int cmd /*= 0*/,
-                               bool enabled /*= true*/)
+void ScintillaZero::AddToPopUp(const char* label, int cmd /*= 0*/, bool enabled /*= true*/)
 {
 }
 
@@ -3282,15 +3083,11 @@ void ScintillaZero::UpdateSystemCaret()
   ScintillaBase::UpdateSystemCaret();
 }
 
-void ScintillaZero::CopyToClipboard(
-    const Scintilla::SelectionText& selectedText)
+void ScintillaZero::CopyToClipboard(const Scintilla::SelectionText& selectedText)
 {
 }
 
-void ScintillaZero::NotifyDoubleClick(Scintilla::Point pt,
-                                      bool shift,
-                                      bool ctrl,
-                                      bool alt)
+void ScintillaZero::NotifyDoubleClick(Scintilla::Point pt, bool shift, bool ctrl, bool alt)
 {
 }
 

@@ -10,10 +10,7 @@ namespace Z
 Renderer* gRenderer;
 }
 
-ZilchDefineExternalBaseType(GraphicsDriverSupport,
-                            TypeCopyMode::ReferenceType,
-                            builder,
-                            type)
+ZilchDefineExternalBaseType(GraphicsDriverSupport, TypeCopyMode::ReferenceType, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
 

@@ -38,8 +38,7 @@ public:
   ZilchDeclareType(PropertyWidget, TypeCopyMode::ReferenceType);
 
   /// Constructor / Destructor.
-  PropertyWidget(PropertyWidgetInitializer& i,
-                 StyleMode::Enum style = StyleMode::Regular);
+  PropertyWidget(PropertyWidgetInitializer& i, StyleMode::Enum style = StyleMode::Regular);
   ~PropertyWidget();
 
   /// Composite interface.
@@ -86,8 +85,7 @@ protected:
   Label* mLabel;
 };
 
-typedef PropertyWidget* (*MakePropertyWidget)(
-    PropertyWidgetInitializer& initializer);
+typedef PropertyWidget* (*MakePropertyWidget)(PropertyWidgetInitializer& initializer);
 
 // Creates a custom editor widget for modifying properties.
 // This meta component is expected to be found in two places:

@@ -8,34 +8,23 @@ namespace Zero
 /// BroadPhase. This range is templated to check the Aabbs against the provided
 /// QueryType using the provided policy. This range becomes invalidated when the
 /// BroadPhase is changed.
-template <typename ClientDataType,
-          typename QueryType,
-          typename PolicyType = BroadPhasePolicy<QueryType, Aabb>>
-struct BoundingBoxRange
-    : public BroadPhaseArrayRange<
-          ClientDataType,
-          QueryType,
-          PolicyType,
-          BoxQueryCheck<ClientDataType, QueryType, PolicyType>>
+template <typename ClientDataType, typename QueryType, typename PolicyType = BroadPhasePolicy<QueryType, Aabb>>
+struct BoundingBoxRange : public BroadPhaseArrayRange<ClientDataType,
+                                                      QueryType,
+                                                      PolicyType,
+                                                      BoxQueryCheck<ClientDataType, QueryType, PolicyType>>
 {
   typedef BoxQueryCheck<ClientDataType, QueryType, PolicyType> QueryCheck;
-  typedef BroadPhaseArrayRange<ClientDataType,
-                               QueryType,
-                               PolicyType,
-                               QueryCheck>
-      BaseType;
+  typedef BroadPhaseArrayRange<ClientDataType, QueryType, PolicyType, QueryCheck> BaseType;
 
   /// Constructs a range using the default Policy.
-  BoundingBoxRange(typename BaseType::ObjectArray* data,
-                   const QueryType& queryObj) :
+  BoundingBoxRange(typename BaseType::ObjectArray* data, const QueryType& queryObj) :
       BaseType(data, queryObj, PolicyType())
   {
   }
 
   /// Constructs a range using the policy type passed in.
-  BoundingBoxRange(typename BaseType::ObjectArray* data,
-                   const QueryType& queryObj,
-                   PolicyType policy) :
+  BoundingBoxRange(typename BaseType::ObjectArray* data, const QueryType& queryObj, PolicyType policy) :
       BaseType(data, queryObj, policy)
   {
   }
@@ -44,13 +33,9 @@ struct BoundingBoxRange
 /// A range for iterating through the self pairs of the BoundingBox BroadPhase.
 /// This range becomes invalidated when the BroadPhase is changed.
 template <typename ClientDataType>
-struct BoundingBoxPairRange
-    : public BroadPhaseArrayPairRange<ClientDataType,
-                                      BoxQueryPairCheck<ClientDataType>>
+struct BoundingBoxPairRange : public BroadPhaseArrayPairRange<ClientDataType, BoxQueryPairCheck<ClientDataType>>
 {
-  typedef BroadPhaseArrayPairRange<ClientDataType,
-                                   BoxQueryPairCheck<ClientDataType>>
-      BaseType;
+  typedef BroadPhaseArrayPairRange<ClientDataType, BoxQueryPairCheck<ClientDataType>> BaseType;
 
   BoundingBoxPairRange(typename BaseType::ObjectArray* data) : BaseType(data)
   {
@@ -79,11 +64,9 @@ public:
   /// The policy determines if the queryObj and an Aabb overlap
   /// through a function called Overlap.
   template <typename QueryType, typename Policy>
-  BoundingBoxRange<ClientDataType, QueryType, Policy>
-  QueryWithPolicy(const QueryType& queryObj, Policy policy)
+  BoundingBoxRange<ClientDataType, QueryType, Policy> QueryWithPolicy(const QueryType& queryObj, Policy policy)
   {
-    return BoundingBoxRange<ClientDataType, QueryType, Policy>(
-        &mData, queryObj, policy);
+    return BoundingBoxRange<ClientDataType, QueryType, Policy>(&mData, queryObj, policy);
   }
 
   /// Returns a range to iterate through any cast on this BroadPhase. The

@@ -24,18 +24,18 @@ struct Trait
   }
 };
 
-#define BasicSerializationType(type, typeName)                                 \
-  template <>                                                                  \
-  struct Trait<type>                                                           \
-  {                                                                            \
-    enum                                                                       \
-    {                                                                          \
-      Type = StructureType::Value                                              \
-    };                                                                         \
-    static inline cstr TypeName()                                              \
-    {                                                                          \
-      return typeName;                                                         \
-    }                                                                          \
+#define BasicSerializationType(type, typeName)                                                                         \
+  template <>                                                                                                          \
+  struct Trait<type>                                                                                                   \
+  {                                                                                                                    \
+    enum                                                                                                               \
+    {                                                                                                                  \
+      Type = StructureType::Value                                                                                      \
+    };                                                                                                                 \
+    static inline cstr TypeName()                                                                                      \
+    {                                                                                                                  \
+      return typeName;                                                                                                 \
+    }                                                                                                                  \
   };
 
 BasicSerializationType(int, "Integer");
@@ -54,8 +54,7 @@ struct Policy
 {
   static inline bool Serialize(Serializer& stream, cstr fieldName, type& value)
   {
-    bool started =
-        stream.Start(Trait<type>::TypeName(), fieldName, Trait<type>::Type);
+    bool started = stream.Start(Trait<type>::TypeName(), fieldName, Trait<type>::Type);
     if (started)
     {
       value.Serialize(stream);
@@ -70,9 +69,7 @@ template <typename type>
 struct Policy<type*>
 {
   // Serialize the connection
-  static inline bool Serialize(Serializer& stream,
-                               cstr fieldName,
-                               type*& typePtr)
+  static inline bool Serialize(Serializer& stream, cstr fieldName, type*& typePtr)
   {
     // Saving just serialize the object with policy
     if (stream.GetMode() == SerializerMode::Saving)
@@ -90,16 +87,14 @@ struct Policy<type*>
   }
 };
 
-#define FUNDAMENTAL(type)                                                      \
-  template <>                                                                  \
-  struct Policy<type>                                                          \
-  {                                                                            \
-    static inline bool Serialize(Serializer& stream,                           \
-                                 cstr fieldName,                               \
-                                 type& value)                                  \
-    {                                                                          \
-      return stream.FundamentalField(fieldName, value);                        \
-    }                                                                          \
+#define FUNDAMENTAL(type)                                                                                              \
+  template <>                                                                                                          \
+  struct Policy<type>                                                                                                  \
+  {                                                                                                                    \
+    static inline bool Serialize(Serializer& stream, cstr fieldName, type& value)                                      \
+    {                                                                                                                  \
+      return stream.FundamentalField(fieldName, value);                                                                \
+    }                                                                                                                  \
   };
 #include "FundamentalTypes.hpp"
 #undef FUNDAMENTAL
@@ -108,19 +103,19 @@ struct Policy<type*>
 
 } // namespace Zero
 
-#define DecalareTypeName(type, ctypename)                                      \
-  namespace Serialization                                                      \
-  {                                                                            \
-  template <>                                                                  \
-  struct Trait<type>                                                           \
-  {                                                                            \
-    enum                                                                       \
-    {                                                                          \
-      Type = StructureType::Object                                             \
-    };                                                                         \
-    static inline cstr TypeName()                                              \
-    {                                                                          \
-      return ctypename;                                                        \
-    }                                                                          \
-  };                                                                           \
+#define DecalareTypeName(type, ctypename)                                                                              \
+  namespace Serialization                                                                                              \
+  {                                                                                                                    \
+  template <>                                                                                                          \
+  struct Trait<type>                                                                                                   \
+  {                                                                                                                    \
+    enum                                                                                                               \
+    {                                                                                                                  \
+      Type = StructureType::Object                                                                                     \
+    };                                                                                                                 \
+    static inline cstr TypeName()                                                                                      \
+    {                                                                                                                  \
+      return ctypename;                                                                                                \
+    }                                                                                                                  \
+  };                                                                                                                   \
   }

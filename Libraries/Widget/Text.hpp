@@ -55,9 +55,7 @@ class Label : public Composite
 public:
   ZilchDeclareType(Label, TypeCopyMode::ReferenceType);
 
-  Label(Composite* parent,
-        StringParam style = DefaultTextStyle,
-        StringParam text = String());
+  Label(Composite* parent, StringParam style = DefaultTextStyle, StringParam text = String());
   ~Label();
 
   RenderFont* GetFont();

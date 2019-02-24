@@ -58,8 +58,7 @@ public:
 
   /// Create a template project from the specified meta file
   TemplateProject* CreateTemplateProjectFromMeta(StringParam metaFilePath);
-  TemplateProject* CreateTemplateProjectFromMeta(Cog* metaCog,
-                                                 StringParam localPath);
+  TemplateProject* CreateTemplateProjectFromMeta(Cog* metaCog, StringParam localPath);
 
   // Find all available downloaded templates (checks next to the dll and the
   // downloads location)
@@ -85,21 +84,14 @@ public:
   // parsing the old file naming format, finally it may generate a unique id
   // from the hash. Note: the passed in zero build's meta cog will be set to the
   // loaded meta cog or newly created one.
-  void GetBuildIdFromArchive(StringParam buildPath,
-                             ZeroBuild& zeroBuild,
-                             BuildId& buildId);
+  void GetBuildIdFromArchive(StringParam buildPath, ZeroBuild& zeroBuild, BuildId& buildId);
   /// Given an archive that came from the specified file, find the specified
   /// meta file and create it if we can. Also, try and extract any images
   /// specified in the meta file to the same directory that the meta file goes
   /// to.
-  Cog* ExtractLocalTemplateMetaAndImages(Archive& archive,
-                                         File& file,
-                                         StringParam metaFileName,
-                                         bool extractImages);
+  Cog* ExtractLocalTemplateMetaAndImages(Archive& archive, File& file, StringParam metaFileName, bool extractImages);
   /// Finds a file by name from the given archive
-  ArchiveEntry* FindEntryFromArchive(Archive& archive,
-                                     StringParam fileName,
-                                     bool ignorePath = true);
+  ArchiveEntry* FindEntryFromArchive(Archive& archive, StringParam fileName, bool ignorePath = true);
 
   // Starts a task to installs the given version
   BackgroundTask* InstallVersion(ZeroBuild* standalone);
@@ -124,8 +116,7 @@ public:
   ZeroBuild* FindExactVersion(CachedProject* cachedProject);
   ZeroBuild* GetLatestBuild();
   /// Get the latest build available with certain tags
-  ZeroBuild* GetLatestBuild(const HashSet<String>& requiredTags,
-                            const HashSet<String>& rejectionTags);
+  ZeroBuild* GetLatestBuild(const HashSet<String>& requiredTags, const HashSet<String>& rejectionTags);
 
   /// Returns how many builds are currently installed
   size_t GetInstalledBuildsCount() const;
@@ -162,9 +153,7 @@ public:
   // Runs the given version and tells it to create a new project with the given
   // name (if possible, some old versions can't properly specify the name). Also
   // assumes the version is installed.
-  void RunNewProject(ZeroBuild* standalone,
-                     StringParam projectName,
-                     Cog* configCog);
+  void RunNewProject(ZeroBuild* standalone, StringParam projectName, Cog* configCog);
 
   // Locally marks the version as valid
   void MarkVersionValid(ZeroBuild* standalone);

@@ -66,9 +66,7 @@ public:
   }
 
   //****************************************************************************
-  DataEntry* GetChild(DataEntry* dataEntry,
-                      uint index,
-                      DataEntry* prev) override
+  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
   {
     TrackNode* trackInfo = (TrackNode*)dataEntry;
     return trackInfo->Children[index];
@@ -168,15 +166,12 @@ public:
   }
 
   //****************************************************************************
-  bool SetData(DataEntry* dataEntry,
-               AnyParam variant,
-               StringParam column) override
+  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
   {
     TrackNode* track = (TrackNode*)dataEntry;
     if (track->Type != TrackType::Object || track->IsRoot())
     {
-      DoNotifyWarning("Failed to rename track",
-                      "Can only rename object tracks.");
+      DoNotifyWarning("Failed to rename track", "Can only rename object tracks.");
       return false;
     }
 
@@ -198,8 +193,7 @@ class AnimationNameEditor : public InPlaceTextEditor
 {
 public:
   //****************************************************************************
-  AnimationNameEditor(Composite* parent, u32 flags) :
-      InPlaceTextEditor(parent, flags)
+  AnimationNameEditor(Composite* parent, u32 flags) : InPlaceTextEditor(parent, flags)
   {
   }
 
@@ -236,9 +230,7 @@ public:
   }
 };
 
-ValueEditor* CreateAnimationNameEditor(Composite* composite,
-                                       AnyParam data,
-                                       u32 flags)
+ValueEditor* CreateAnimationNameEditor(Composite* composite, AnyParam data, u32 flags)
 {
   return new AnimationNameEditor(composite, flags);
 }
@@ -304,9 +296,7 @@ ZilchDefineType(AnimationTrackView, builder, type)
 {
 }
 
-AnimationTrackView::AnimationTrackView(Composite* parent,
-                                       AnimationEditor* editor) :
-    Composite(parent)
+AnimationTrackView::AnimationTrackView(Composite* parent, AnimationEditor* editor) : Composite(parent)
 {
   mEditor = editor;
   mEditorData = nullptr;
@@ -385,8 +375,7 @@ void AnimationTrackView::SetAnimationEditorData(AnimationEditorData* editorData)
   DisconnectAll(richAnimation, this);
 
   ConnectThisTo(selection, Events::DataSelectionFinal, OnTracksSelected);
-  ConnectThisTo(
-      editorData, Events::TrackSelectionModified, OnSelectionModified);
+  ConnectThisTo(editorData, Events::TrackSelectionModified, OnSelectionModified);
   ConnectThisTo(mSource, Events::DataActivated, OnDataActivated);
 
   mTree->SetDataSource(mSource);
@@ -398,7 +387,7 @@ void AnimationTrackView::SetAnimationEditorData(AnimationEditorData* editorData)
 
   // Expand all
   DataSelection* expanded = mTree->GetExpanded();
-  forRange(TrackNode * track, richAnimation->allTracks())
+  forRange (TrackNode* track, richAnimation->allTracks())
   {
     if (track->IsRoot() || track->Parent->IsRoot())
       expanded->Select(mSource->ToIndex(track));
@@ -422,9 +411,7 @@ void AnimationTrackView::SetSelection(Array<TrackNode*>& selection)
   }
 }
 
-void AddPropertyTracks(TrackNode* root,
-                       HashSet<TrackNode*>& selection,
-                       bool childrenObjects)
+void AddPropertyTracks(TrackNode* root, HashSet<TrackNode*>& selection, bool childrenObjects)
 {
   if (root->Type == TrackType::Property || root->Type == TrackType::SubProperty)
     selection.Insert(root);
@@ -443,7 +430,7 @@ void AnimationTrackView::FocusOnObject(TrackNode* track)
   AddPropertyTracks(track, propertyTracks, false);
 
   Array<TrackNode*> selection;
-  forRange(TrackNode * info, propertyTracks.All())
+  forRange (TrackNode* info, propertyTracks.All())
   {
     selection.PushBack(info);
   }
@@ -506,10 +493,7 @@ void AnimationTrackView::UpdateToolTip()
   WidgetRect rect = GetScreenRect();
   rect.SizeX -= Pixels(5);
   placement.SetScreenRect(rect);
-  placement.SetPriority(IndicatorSide::Right,
-                        IndicatorSide::Left,
-                        IndicatorSide::Top,
-                        IndicatorSide::Bottom);
+  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Top, IndicatorSide::Bottom);
   toolTip->SetArrowTipTranslation(placement);
 }
 
@@ -524,7 +508,7 @@ void AnimationTrackView::OnSelectionModified(Event* e)
   DataSelection* dataSelection = mTree->GetSelection();
   dataSelection->SelectNone();
 
-  forRange(TrackNode * track, mEditorData->mVisiblePropertyTracks.All())
+  forRange (TrackNode* track, mEditorData->mVisiblePropertyTracks.All())
   {
     DataIndex index = mSource->ToIndex(track);
     dataSelection->Select(index);
@@ -633,7 +617,7 @@ void AnimationTrackView::OnTracksSelected(Event* e)
   }
 
   Array<TrackNode*> selection;
-  forRange(TrackNode * info, propertyTracks.All())
+  forRange (TrackNode* info, propertyTracks.All())
   {
     selection.PushBack(info);
   }

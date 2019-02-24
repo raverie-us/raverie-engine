@@ -67,9 +67,9 @@ namespace Z
 Shortcuts* gShortcutsDoc = nullptr;
 }
 
-#define IF_ROOT(r)                                                             \
-  DataEntry* root = &mSet;                                                     \
-  if (dataEntry == root)                                                       \
+#define IF_ROOT(r)                                                                                                     \
+  DataEntry* root = &mSet;                                                                                             \
+  if (dataEntry == root)                                                                                               \
     return r;
 
 ShortcutSource::ShortcutSource()
@@ -107,9 +107,7 @@ DataEntry* ShortcutSource::Parent(DataEntry* dataEntry)
   return root;
 }
 
-DataEntry* ShortcutSource::GetChild(DataEntry* dataEntry,
-                                    uint index,
-                                    DataEntry* prev)
+DataEntry* ShortcutSource::GetChild(DataEntry* dataEntry, uint index, DataEntry* prev)
 {
   if (index < mSet.Size())
     return &mSet[index];
@@ -135,9 +133,7 @@ bool ShortcutSource::IsExpandable(DataEntry* dataEntry)
   return false;
 }
 
-void ShortcutSource::GetData(DataEntry* dataEntry,
-                             Any& variant,
-                             StringParam column)
+void ShortcutSource::GetData(DataEntry* dataEntry, Any& variant, StringParam column)
 {
   ShortcutEntry* entry = ((ShortcutEntry*)dataEntry);
 
@@ -149,9 +145,7 @@ void ShortcutSource::GetData(DataEntry* dataEntry,
     variant = entry->mDescription;
 }
 
-bool ShortcutSource::SetData(DataEntry* dataEntry,
-                             AnyParam variant,
-                             StringParam column)
+bool ShortcutSource::SetData(DataEntry* dataEntry, AnyParam variant, StringParam column)
 {
   return false;
 }

@@ -53,8 +53,7 @@ public:
 
   // Find an element by a key type that is different than the template key type
   template <typename SearchType, typename comparePolicy>
-  range FindAs(const SearchType& key,
-               comparePolicy comparer = ComparePolicy<SearchType>())
+  range FindAs(const SearchType& key, comparePolicy comparer = ComparePolicy<SearchType>())
   {
     // Loop through all the elements
     for (size_t i = 0; i < base_type::Size(); ++i)

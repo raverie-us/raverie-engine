@@ -19,11 +19,7 @@ ZilchDefineType(NetHostRecord, builder, type)
   // (int64 I think)
 }
 
-NetHostRecord::NetHostRecord() :
-    mLifetime(0.0f),
-    mIpAddress(),
-    mBasicHostInfo(),
-    mProjectGuid()
+NetHostRecord::NetHostRecord() : mLifetime(0.0f), mIpAddress(), mBasicHostInfo(), mProjectGuid()
 {
 }
 NetHostRecord::NetHostRecord(NetHostRecord const& ref) :

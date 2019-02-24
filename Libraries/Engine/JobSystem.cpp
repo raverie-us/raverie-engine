@@ -31,10 +31,7 @@ JobSystem::JobSystem()
     {
       mWorkers[i] = new Thread();
       Thread& thread = *mWorkers[i];
-      thread.Initialize(
-          &Thread::ObjectEntryCreator<JobSystem, &JobSystem::WorkerThreadEntry>,
-          this,
-          "Background");
+      thread.Initialize(&Thread::ObjectEntryCreator<JobSystem, &JobSystem::WorkerThreadEntry>, this, "Background");
     }
   }
 }
@@ -44,7 +41,8 @@ JobSystem::~JobSystem()
   // Cancel all active Jobs.
   mLock.Lock();
   // Active job range is safe because of the lock.
-  forRange(Job & job, mActiveJobs.All()) job.Cancel();
+  forRange (Job& job, mActiveJobs.All())
+    job.Cancel();
 
   // Release all active and pending job references that we own (this may delete
   // the jobs).

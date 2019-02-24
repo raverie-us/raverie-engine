@@ -123,8 +123,7 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
         archetype = ArchetypeManager::GetDefault();
 
       // Build the object
-      gameObject =
-          BuildFromArchetype(archetype->mStoredType, archetype, context);
+      gameObject = BuildFromArchetype(archetype->mStoredType, archetype, context);
 
       if (gameObject == nullptr)
         return nullptr;
@@ -137,12 +136,9 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
     }
     else if (compositionMeta)
     {
-      gameObject =
-          ZilchAllocate(Cog, compositionMeta, HeapFlags::NonReferenceCounted);
+      gameObject = ZilchAllocate(Cog, compositionMeta, HeapFlags::NonReferenceCounted);
       // Allocate can return a null object if it can't be defaultly constructed
-      ReturnIf(gameObject == nullptr,
-               nullptr,
-               "Factory can only create objects of type Cog.");
+      ReturnIf(gameObject == nullptr, nullptr, "Factory can only create objects of type Cog.");
       gameObject->mChildId = cogNode.UniqueNodeId;
 
       // We entered an Archetype, so we need to start a sub context so that
@@ -179,7 +175,7 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
     if (cogNode.mAttributes != nullptr)
     {
       static String sContextId = "ContextId";
-      forRange(DataAttribute & attribute, cogNode.mAttributes->All())
+      forRange (DataAttribute& attribute, cogNode.mAttributes->All())
       {
         if (attribute.mName == sContextId)
           ToValue(attribute.mValue, localContextId);
@@ -225,8 +221,7 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
         // Only set them if we're in the editor
         if (context->mSpace->IsEditorMode())
         {
-          gameObject->mFlags.SetState(CogFlags::EditorViewportHidden,
-                                      flags.mHidden);
+          gameObject->mFlags.SetState(CogFlags::EditorViewportHidden, flags.mHidden);
           gameObject->mFlags.SetState(CogFlags::Locked, flags.mLocked);
         }
       }
@@ -241,33 +236,26 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
       }
       else
       {
-        BoundType* componentMeta =
-            MetaDatabase::GetInstance()->FindType(componentNode.TypeName);
-        if (componentMeta != nullptr &&
-            !componentMeta->IsA(ZilchTypeId(Component)))
+        BoundType* componentMeta = MetaDatabase::GetInstance()->FindType(componentNode.TypeName);
+        if (componentMeta != nullptr && !componentMeta->IsA(ZilchTypeId(Component)))
         {
-          String message = String::Format(
-              "We tried to create a Component named %s while loading "
-              "'%s' but it is not a Component type",
-              componentMeta->Name.c_str(),
-              context->Source.c_str());
+          String message = String::Format("We tried to create a Component named %s while loading "
+                                          "'%s' but it is not a Component type",
+                                          componentMeta->Name.c_str(),
+                                          context->Source.c_str());
           DoNotifyError("Could not create Component", message);
           componentMeta = nullptr;
         }
 
-        bool subtractiveNode =
-            componentNode.Flags.IsSet(PolymorphicFlags::Subtractive);
+        bool subtractiveNode = componentNode.Flags.IsSet(PolymorphicFlags::Subtractive);
 
         // Handle missing components
         if (componentMeta == nullptr && !subtractiveNode)
         {
           // If Zilch hasn't fully compiled due to script errors or
           // because it's waiting on plugins then don't emit proxy errors.
-          bool compileSuccess =
-              ZilchManager::GetInstance()->mLastCompileResult ==
-              CompileResult::CompilationSucceeded;
-          bool proxyComponentsExpected =
-              context->Flags & CreationFlags::ProxyComponentsExpected;
+          bool compileSuccess = ZilchManager::GetInstance()->mLastCompileResult == CompileResult::CompilationSucceeded;
+          bool proxyComponentsExpected = context->Flags & CreationFlags::ProxyComponentsExpected;
           if (!proxyComponentsExpected && compileSuccess)
           {
             String message = String::Format("Could not find component '%s'. "
@@ -278,8 +266,7 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
           }
 
           // Create a Proxy to be used for this component
-          componentMeta = ProxyObject<Component>::CreateProxyType(
-              componentNode.TypeName, ProxyReason::TypeDidntExist);
+          componentMeta = ProxyObject<Component>::CreateProxyType(componentNode.TypeName, ProxyReason::TypeDidntExist);
           if (componentMeta == nullptr)
           {
             Error("Could not create proxy meta");
@@ -324,20 +311,16 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
             }
 
             // Create the component by using the ComponentMeta
-            component = ZilchAllocate(
-                Component, componentMeta, HeapFlags::NonReferenceCounted);
+            component = ZilchAllocate(Component, componentMeta, HeapFlags::NonReferenceCounted);
 
             // If we failed to create the object (should only happen on Script
             // Components where an exception was thrown in the constructor),
             // proxy the object and re-create it under the proxy
-            if (component == nullptr &&
-                componentMeta->HasAttribute(ObjectAttributes::cProxy) ==
-                    nullptr)
+            if (component == nullptr && componentMeta->HasAttribute(ObjectAttributes::cProxy) == nullptr)
             {
-              componentMeta = ProxyObject<Component>::CreateProxyType(
-                  componentNode.TypeName, ProxyReason::AllocationException);
-              component = ZilchAllocate(
-                  Component, componentMeta, HeapFlags::NonReferenceCounted);
+              componentMeta =
+                  ProxyObject<Component>::CreateProxyType(componentNode.TypeName, ProxyReason::AllocationException);
+              component = ZilchAllocate(Component, componentMeta, HeapFlags::NonReferenceCounted);
             }
 
             // Be tolerant of the meta create failing!
@@ -416,27 +399,21 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
   return nullptr;
 }
 
-Cog* TypeCheckFail(cstr sourceType,
-                   cstr sourceContainedType,
-                   cstr sourceName,
-                   BoundType* expectedMetaType)
+Cog* TypeCheckFail(cstr sourceType, cstr sourceContainedType, cstr sourceName, BoundType* expectedMetaType)
 {
-  String message = String::Format(
-      "Attempted to create an object from %s that Contains a different type. "
-      "Expected '%s'. Source type was '%s' in %s",
-      sourceType,
-      expectedMetaType->Name.c_str(),
-      sourceContainedType,
-      sourceName);
+  String message = String::Format("Attempted to create an object from %s that Contains a different type. "
+                                  "Expected '%s'. Source type was '%s' in %s",
+                                  sourceType,
+                                  expectedMetaType->Name.c_str(),
+                                  sourceContainedType,
+                                  sourceName);
 
   DoNotifyErrorWithContext(message);
 
   return nullptr;
 }
 
-Cog* Factory::BuildFromFile(BoundType* expectedMetaType,
-                            StringParam fileName,
-                            CogCreationContext* context)
+Cog* Factory::BuildFromFile(BoundType* expectedMetaType, StringParam fileName, CogCreationContext* context)
 {
   String message = String::Format("Loading Cog File '%s'", fileName.c_str());
   PushErrorContext(message.c_str());
@@ -444,8 +421,7 @@ Cog* Factory::BuildFromFile(BoundType* expectedMetaType,
   // Now loading from file.
   if (!FileExists(fileName))
   {
-    String errorMessage = String::Format(
-        "No loaded archetype or file with name '%s'", fileName.c_str());
+    String errorMessage = String::Format("No loaded archetype or file with name '%s'", fileName.c_str());
     DoNotifyErrorNoAssert("Missing", errorMessage);
     return nullptr;
   }
@@ -466,25 +442,20 @@ Cog* Factory::BuildFromFile(BoundType* expectedMetaType,
   // Validation - make sure the file contains the expected type
   DataNode* root = loader.GetNext();
   if (!(root->mTypeName == expectedMetaType->Name))
-    return TypeCheckFail(
-        "a file", root->mTypeName.c_str(), fileName.c_str(), expectedMetaType);
+    return TypeCheckFail("a file", root->mTypeName.c_str(), fileName.c_str(), expectedMetaType);
 
   return BuildFromStream(context, loader);
 }
 
-Cog* Factory::BuildFromArchetype(BoundType* expectedMetaType,
-                                 Archetype* archetype,
-                                 CogCreationContext* context)
+Cog* Factory::BuildFromArchetype(BoundType* expectedMetaType, Archetype* archetype, CogCreationContext* context)
 {
 
   PushErrorContextObject("Loading Archetype", archetype);
 
   // Validation - make sure the archetype Contains the expected type
   if (archetype->mStoredType != expectedMetaType)
-    return TypeCheckFail("an Archetype",
-                         archetype->mStoredType->Name.c_str(),
-                         archetype->Name.c_str(),
-                         expectedMetaType);
+    return TypeCheckFail(
+        "an Archetype", archetype->mStoredType->Name.c_str(), archetype->Name.c_str(), expectedMetaType);
 
   const bool CacheBinaryArchetypes = true;
   if (archetype->mBinaryCache && CacheBinaryArchetypes)
@@ -544,9 +515,7 @@ Cog* Factory::BuildAndSerialize(BoundType* expectedMetaType, StringParam source)
   return BuildAndSerialize(expectedMetaType, source, &context);
 }
 
-Cog* Factory::BuildAndSerialize(BoundType* expectedMetaType,
-                                StringParam source,
-                                CogCreationContext* context)
+Cog* Factory::BuildAndSerialize(BoundType* expectedMetaType, StringParam source, CogCreationContext* context)
 {
   // Create and setup object
 
@@ -559,18 +528,13 @@ Cog* Factory::BuildAndSerialize(BoundType* expectedMetaType,
     return BuildFromArchetype(expectedMetaType, archetype, context);
 }
 
-Space* Factory::CreateSpaceFromStream(Serializer& stream,
-                                      uint flags,
-                                      GameSession* gameSession)
+Space* Factory::CreateSpaceFromStream(Serializer& stream, uint flags, GameSession* gameSession)
 {
   return (Space*)CreateFromStream(nullptr, stream, flags, gameSession);
 }
 
-Cog* Factory::CreateCheckedType(BoundType* expectedType,
-                                Space* space,
-                                StringParam filename,
-                                uint flags,
-                                GameSession* gameSession)
+Cog* Factory::CreateCheckedType(
+    BoundType* expectedType, Space* space, StringParam filename, uint flags, GameSession* gameSession)
 {
   CogInitializer initializer(space, gameSession);
   initializer.Flags = flags;
@@ -587,8 +551,7 @@ Cog* Factory::CreateCheckedType(BoundType* expectedType,
     // we should set ourself as the game session before calling initialize
     if (expectedType == ZilchTypeId(GameSession))
     {
-      ErrorIf(gameSession != nullptr,
-              "Cannot create a game session in another game session");
+      ErrorIf(gameSession != nullptr, "Cannot create a game session in another game session");
       initializer.mGameSession = (GameSession*)cog;
     }
 
@@ -599,18 +562,12 @@ Cog* Factory::CreateCheckedType(BoundType* expectedType,
   return cog;
 }
 
-Space* Factory::CreateSpace(StringParam filename,
-                            uint flags,
-                            GameSession* gameSession)
+Space* Factory::CreateSpace(StringParam filename, uint flags, GameSession* gameSession)
 {
-  return (Space*)CreateCheckedType(
-      ZilchTypeId(Space), nullptr, filename, flags, gameSession);
+  return (Space*)CreateCheckedType(ZilchTypeId(Space), nullptr, filename, flags, gameSession);
 }
 
-Cog* Factory::CreateFromStream(Space* space,
-                               Serializer& stream,
-                               uint flags,
-                               GameSession* gameSession)
+Cog* Factory::CreateFromStream(Space* space, Serializer& stream, uint flags, GameSession* gameSession)
 {
   CogInitializer initializer(space, gameSession);
   initializer.Flags = flags;
@@ -629,10 +586,7 @@ Cog* Factory::CreateFromStream(Space* space,
   return cog;
 }
 
-Cog* Factory::Create(Space* space,
-                     StringParam filename,
-                     uint flags,
-                     GameSession* gameSession)
+Cog* Factory::Create(Space* space, StringParam filename, uint flags, GameSession* gameSession)
 {
   CogInitializer initializer(space, gameSession);
   initializer.Flags = flags;
@@ -651,16 +605,12 @@ Cog* Factory::Create(Space* space,
   return cog;
 }
 
-Cog* Factory::CreateRequired(Space* space,
-                             StringParam filename,
-                             uint flags,
-                             GameSession* gameSession)
+Cog* Factory::CreateRequired(Space* space, StringParam filename, uint flags, GameSession* gameSession)
 {
   Cog* object = Create(space, filename, flags, gameSession);
   if (object == nullptr)
   {
-    FatalEngineError("Failed to create a required archetype '%s'.",
-                     filename.c_str());
+    FatalEngineError("Failed to create a required archetype '%s'.", filename.c_str());
   }
   return object;
 }

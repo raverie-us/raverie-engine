@@ -13,8 +13,7 @@ void NSquaredBroadPhase::Serialize(Serializer& stream)
   mNSquared.Serialize(stream);
 }
 
-void NSquaredBroadPhase::CreateProxy(BroadPhaseProxy& proxy,
-                                     BroadPhaseData& data)
+void NSquaredBroadPhase::CreateProxy(BroadPhaseProxy& proxy, BroadPhaseData& data)
 {
   mNSquared.CreateProxy(proxy, data);
 }
@@ -41,8 +40,7 @@ void NSquaredBroadPhase::RemoveProxies(ProxyHandleArray& proxies)
     mNSquared.RemoveProxy(*range.Front());
 }
 
-void NSquaredBroadPhase::UpdateProxy(BroadPhaseProxy& proxy,
-                                     BroadPhaseData& data)
+void NSquaredBroadPhase::UpdateProxy(BroadPhaseProxy& proxy, BroadPhaseData& data)
 {
   mNSquared.UpdateProxy(proxy, data);
 }
@@ -68,15 +66,13 @@ void NSquaredBroadPhase::Query(BroadPhaseData& data, ClientPairArray& results)
   GetCollisions(data, results);
 }
 
-void NSquaredBroadPhase::BatchQuery(BroadPhaseDataArray& data,
-                                    ClientPairArray& results)
+void NSquaredBroadPhase::BatchQuery(BroadPhaseDataArray& data, ClientPairArray& results)
 {
   for (uint i = 0; i < data.Size(); ++i)
     GetCollisions(data[i], results);
 }
 
-void NSquaredBroadPhase::CastRay(CastDataParam castData,
-                                 ProxyCastResults& results)
+void NSquaredBroadPhase::CastRay(CastDataParam castData, ProxyCastResults& results)
 {
   SimpleRayCallback callback(mCastRayCallBack, &results);
   range r = mNSquared.Query();
@@ -84,8 +80,7 @@ void NSquaredBroadPhase::CastRay(CastDataParam castData,
     callback.Refine(r.Front(), castData);
 }
 
-void NSquaredBroadPhase::CastSegment(CastDataParam castData,
-                                     ProxyCastResults& results)
+void NSquaredBroadPhase::CastSegment(CastDataParam castData, ProxyCastResults& results)
 {
   SimpleSegmentCallback callback(mCastSegmentCallBack, &results);
   range r = mNSquared.Query();
@@ -93,8 +88,7 @@ void NSquaredBroadPhase::CastSegment(CastDataParam castData,
     callback.Refine(r.Front(), castData);
 }
 
-void NSquaredBroadPhase::CastAabb(CastDataParam castData,
-                                  ProxyCastResults& results)
+void NSquaredBroadPhase::CastAabb(CastDataParam castData, ProxyCastResults& results)
 {
   SimpleAabbCallback callback(mCastAabbCallBack, &results);
   range r = mNSquared.Query();
@@ -102,8 +96,7 @@ void NSquaredBroadPhase::CastAabb(CastDataParam castData,
     callback.Refine(r.Front(), castData);
 }
 
-void NSquaredBroadPhase::CastSphere(CastDataParam castData,
-                                    ProxyCastResults& results)
+void NSquaredBroadPhase::CastSphere(CastDataParam castData, ProxyCastResults& results)
 {
   SimpleSphereCallback callback(mCastSphereCallBack, &results);
   range r = mNSquared.Query();
@@ -111,8 +104,7 @@ void NSquaredBroadPhase::CastSphere(CastDataParam castData,
     callback.Refine(r.Front(), castData);
 }
 
-void NSquaredBroadPhase::CastFrustum(CastDataParam castData,
-                                     ProxyCastResults& results)
+void NSquaredBroadPhase::CastFrustum(CastDataParam castData, ProxyCastResults& results)
 {
   SimpleFrustumCallback callback(mCastFrustumCallBack, &results);
   range r = mNSquared.Query();
@@ -132,8 +124,7 @@ void NSquaredBroadPhase::RegisterCollisions()
   }
 }
 
-void NSquaredBroadPhase::GetCollisions(BroadPhaseData& data,
-                                       ClientPairArray& results)
+void NSquaredBroadPhase::GetCollisions(BroadPhaseData& data, ClientPairArray& results)
 {
   range r = mNSquared.Query();
   for (; !r.Empty(); r.PopFront())

@@ -10,10 +10,7 @@ DefineEvent(LauncherDebuggerCommunicationCompleted);
 DefineEvent(LauncherDebuggerCommunicationFailed);
 } // namespace Events
 
-void LoadProject(Editor* editor,
-                 Cog* projectCog,
-                 StringParam path,
-                 StringParam projectFile)
+void LoadProject(Editor* editor, Cog* projectCog, StringParam path, StringParam projectFile)
 {
   ZPrint("Loading project '%s'\n", projectFile.c_str());
 
@@ -34,8 +31,7 @@ void LoadProject(Editor* editor,
   project->ProjectFile = projectFile;
 
   // Set the Platform Title Bar.
-  editor->mMainWindow->SetTitle(
-      BuildString("Zero Editor - ", project->ProjectName));
+  editor->mMainWindow->SetTitle(BuildString("Zero Editor - ", project->ProjectName));
 
   // Set the store name based on the project name.
   ObjectStore::GetInstance()->SetStoreName(project->ProjectName);
@@ -45,31 +41,27 @@ void LoadProject(Editor* editor,
   // Load shared content libraries if present
   if (SharedContent* sharedConent = projectCog->has(SharedContent))
   {
-    forRange(ContentLibraryReference libraryRef,
-             sharedConent->ExtraContentLibraries.All())
+    forRange (ContentLibraryReference libraryRef, sharedConent->ExtraContentLibraries.All())
     {
       String libraryName = libraryRef.mContentLibraryName;
       String contentFolder = FilePath::Combine(projectFolder, libraryName);
       Status loadContentLibrary;
-      ContentLibrary* projectLibrary = Z::gContentSystem->LibraryFromDirectory(
-          loadContentLibrary, libraryName, contentFolder);
+      ContentLibrary* projectLibrary =
+          Z::gContentSystem->LibraryFromDirectory(loadContentLibrary, libraryName, contentFolder);
       if (projectLibrary)
         Z::gContentSystem->BuildLibraryIntoPackageJob(projectLibrary);
       else
-        DoNotifyWarning(
-            "Missing Library",
-            String::Format("Failed to find shared content library %s",
-                           libraryName.c_str()));
+        DoNotifyWarning("Missing Library",
+                        String::Format("Failed to find shared content library %s", libraryName.c_str()));
     }
   }
 
-  EditorSettings* engineEditorSettings =
-      HasOrAdd<EditorSettings>(Z::gEditor->mConfig);
+  EditorSettings* engineEditorSettings = HasOrAdd<EditorSettings>(Z::gEditor->mConfig);
 
   // Load content package of project
   Status loadContentLibrary;
-  ContentLibrary* projectLibrary = Z::gContentSystem->LibraryFromDirectory(
-      loadContentLibrary, project->ProjectName, project->ContentFolder);
+  ContentLibrary* projectLibrary =
+      Z::gContentSystem->LibraryFromDirectory(loadContentLibrary, project->ProjectName, project->ContentFolder);
 
   /// Store the library on the project
   project->ProjectContentLibrary = projectLibrary;
@@ -109,8 +101,8 @@ void UnloadProject(Editor* editor, Cog* projectCog)
   if (ResourceLibrary* projectLibrary = project->ProjectResourceLibrary)
     projectLibrary->Unload();
 
-  forRange(ResourceLibrary * library, project->SharedResourceLibraries.All())
-      library->Unload();
+  forRange (ResourceLibrary* library, project->SharedResourceLibraries.All())
+    library->Unload();
 
   // Send Out Editor Close
 
@@ -131,17 +123,13 @@ bool OpenProjectFile(StringParam filename)
   // File check
   if (!FileExists(filename))
   {
-    DoNotifyError(
-        "Failed to load project.",
-        String::Format("Project file not found '%s'", filename.c_str()));
+    DoNotifyError("Failed to load project.", String::Format("Project file not found '%s'", filename.c_str()));
     return false;
   }
 
   // Load the project object
-  Cog* projectCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(),
-                                        filename,
-                                        CreationFlags::ProxyComponentsExpected,
-                                        nullptr);
+  Cog* projectCog =
+      Z::gFactory->Create(Z::gEngine->GetEngineSpace(), filename, CreationFlags::ProxyComponentsExpected, nullptr);
   if (projectCog == nullptr)
   {
     DoNotifyError("Failed to load project.", "Project file invalid.");
@@ -165,10 +153,8 @@ bool OpenProjectFile(StringParam filename)
 void RunLauncherOpenProject(StringParam eventName)
 {
   // See if the composite is already open
-  Widget* widget = Z::gEditor->mManager->FindWidget(
-      ZilchTypeId(LauncherOpenProjectComposite)->Name);
-  LauncherOpenProjectComposite* launcherComposite =
-      (LauncherOpenProjectComposite*)widget;
+  Widget* widget = Z::gEditor->mManager->FindWidget(ZilchTypeId(LauncherOpenProjectComposite)->Name);
+  LauncherOpenProjectComposite* launcherComposite = (LauncherOpenProjectComposite*)widget;
   // if not create it
   if (launcherComposite == nullptr)
   {
@@ -225,8 +211,7 @@ ZilchDefineType(LauncherOpenProjectComposite, builder, type)
 {
 }
 
-LauncherOpenProjectComposite::LauncherOpenProjectComposite(Composite* parent) :
-    Composite(parent)
+LauncherOpenProjectComposite::LauncherOpenProjectComposite(Composite* parent) : Composite(parent)
 {
   mSocket = nullptr;
   mName = ZilchVirtualTypeId(this)->Name;
@@ -262,19 +247,13 @@ bool LauncherOpenProjectComposite::RunLauncherExe(StringParam exePath)
   {
     String cmd;
     if (mEventType == Events::LauncherOpenRecentProjects)
-      cmd = BuildString(
-          "-",
-          LauncherStartupArguments::Names[LauncherStartupArguments::Projects]);
+      cmd = BuildString("-", LauncherStartupArguments::Names[LauncherStartupArguments::Projects]);
     else if (mEventType == Events::LauncherNewProject)
-      cmd = BuildString(
-          "-", LauncherStartupArguments::Names[LauncherStartupArguments::New]);
+      cmd = BuildString("-", LauncherStartupArguments::Names[LauncherStartupArguments::New]);
 
     // If the debugger is attached tell the launcher to run in debugger mode
     if (Os::IsDebuggerAttached())
-      cmd = BuildString(cmd,
-                        " -",
-                        LauncherStartupArguments::Names
-                            [LauncherStartupArguments::DebuggerMode]);
+      cmd = BuildString(cmd, " -", LauncherStartupArguments::Names[LauncherStartupArguments::DebuggerMode]);
 
     Os::SystemOpenFile(exePath.c_str(), Os::Verb::Default, cmd.c_str());
     return true;
@@ -285,8 +264,7 @@ bool LauncherOpenProjectComposite::RunLauncherExe(StringParam exePath)
 bool LauncherOpenProjectComposite::RunFromInstalledPath()
 {
   String installPath;
-  bool result = GetRegistryValueFromCommonInstallPaths(
-      sLauncherGuid, "InstallLocation", installPath);
+  bool result = GetRegistryValueFromCommonInstallPaths(sLauncherGuid, "InstallLocation", installPath);
   if (result == false)
     return false;
 
@@ -309,8 +287,7 @@ void LauncherOpenProjectComposite::OnConnectionCompleted(Event* e)
   // projects ui
   LauncherCommunicationEvent toSend;
   if (Os::IsDebuggerAttached())
-    toSend.mExtraData =
-        LauncherStartupArguments::Names[LauncherStartupArguments::DebuggerMode];
+    toSend.mExtraData = LauncherStartupArguments::Names[LauncherStartupArguments::DebuggerMode];
   mSocket->SendToAll(mEventType, &toSend);
 
   mSocket->Close();
@@ -326,8 +303,7 @@ String GetLauncherLocationFromLauncherConfig()
   if (versionConfig == nullptr)
     return String();
 
-  if (versionConfig->mLauncherLocation.Empty() ||
-      !FileExists(versionConfig->mLauncherLocation))
+  if (versionConfig->mLauncherLocation.Empty() || !FileExists(versionConfig->mLauncherLocation))
     return String();
 
   String location = versionConfig->mLauncherLocation;
@@ -348,7 +324,7 @@ void LauncherOpenProjectComposite::OnConnectionFailed(Event* e)
     // dialog
     FailedToOpenLauncher();
   }
-  
+
   mSocket->Close();
 }
 
@@ -361,8 +337,7 @@ LauncherSingletonCommunication::LauncherSingletonCommunication()
   mTimesTryingToConnect = 0;
 
   ZPrint("Sending launcher communication event with parameters:\n");
-  AutoDeclare(argRange,
-              Environment::GetInstance()->mParsedCommandLineArguments.All());
+  AutoDeclare(argRange, Environment::GetInstance()->mParsedCommandLineArguments.All());
   for (; !argRange.Empty(); argRange.PopFront())
   {
     AutoDeclare(pair, argRange.Front());
@@ -398,8 +373,7 @@ void LauncherSingletonCommunication::OnConnectionCompleted(Event* e)
   mStatus.Succeeded();
 
   LauncherCommunicationEvent myEvent;
-  myEvent.LoadFromCommandArguments(
-      Environment::GetInstance()->mParsedCommandLineArguments);
+  myEvent.LoadFromCommandArguments(Environment::GetInstance()->mParsedCommandLineArguments);
 
   // If no arguments were provided then just tell the open launcher to display
   // recent projects
@@ -433,8 +407,7 @@ void LauncherDebuggerCommunication::SendOpenProject(StringParam projectFile)
   SendOpenProject(projectFile, LauncherCommunicationEvent::DebuggerDesiredPort);
 }
 
-void LauncherDebuggerCommunication::SendOpenProject(StringParam projectFile,
-                                                    int port)
+void LauncherDebuggerCommunication::SendOpenProject(StringParam projectFile, int port)
 {
   mProjectFile = projectFile;
   mSocket = new TcpSocket(Protocol::Events | Protocol::Chunks, "Launcher");
@@ -468,13 +441,11 @@ ZilchDefineType(SimpleDebuggerListener, builder, type)
 
 SimpleDebuggerListener::SimpleDebuggerListener()
 {
-  mListener =
-      new TcpSocket(Protocol::Events | Protocol::Chunks, "IPC-Listener");
+  mListener = new TcpSocket(Protocol::Events | Protocol::Chunks, "IPC-Listener");
   // Listen for the launcher telling us to open a project
   ConnectThisTo(mListener, Events::LauncherOpenProject, OnLauncherOpenProject);
-  mListener->Listen(LauncherCommunicationEvent::DebuggerDesiredPort,
-                    TcpSocket::MaxPossibleConnections,
-                    TcpSocketBind::Loopback);
+  mListener->Listen(
+      LauncherCommunicationEvent::DebuggerDesiredPort, TcpSocket::MaxPossibleConnections, TcpSocketBind::Loopback);
 }
 
 SimpleDebuggerListener::~SimpleDebuggerListener()
@@ -482,8 +453,7 @@ SimpleDebuggerListener::~SimpleDebuggerListener()
   delete mListener;
 }
 
-void SimpleDebuggerListener::OnLauncherOpenProject(
-    LauncherCommunicationEvent* e)
+void SimpleDebuggerListener::OnLauncherOpenProject(LauncherCommunicationEvent* e)
 {
   OpenProjectFile(e->mProjectFile);
 }

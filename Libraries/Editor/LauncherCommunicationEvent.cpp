@@ -59,25 +59,18 @@ void LauncherCommunicationEvent::LoadFromCommandArguments(StringMap& arguments)
   if (!mProjectFile.Empty() && !PathIsRooted(mProjectFile))
     mProjectFile = FilePath::Combine(GetWorkingDirectory(), mProjectFile);
 
-  String tagsArg =
-      LauncherStartupArguments::Names[LauncherStartupArguments::Tags];
+  String tagsArg = LauncherStartupArguments::Names[LauncherStartupArguments::Tags];
   mTags = arguments.FindValue(tagsArg, String());
   if (eventName.Empty() && !mTags.Empty())
     eventName = Events::LauncherUpdateTags;
 
   // grab the command strings
-  String newCommand =
-      LauncherStartupArguments::Names[LauncherStartupArguments::New];
-  String openCommand =
-      LauncherStartupArguments::Names[LauncherStartupArguments::Open];
-  String runCommand =
-      LauncherStartupArguments::Names[LauncherStartupArguments::Run];
-  String installAndRunCommand =
-      LauncherStartupArguments::Names[LauncherStartupArguments::InstallAndRun];
-  String projectsCommand =
-      LauncherStartupArguments::Names[LauncherStartupArguments::Projects];
-  String debuggerModeCommand =
-      LauncherStartupArguments::Names[LauncherStartupArguments::DebuggerMode];
+  String newCommand = LauncherStartupArguments::Names[LauncherStartupArguments::New];
+  String openCommand = LauncherStartupArguments::Names[LauncherStartupArguments::Open];
+  String runCommand = LauncherStartupArguments::Names[LauncherStartupArguments::Run];
+  String installAndRunCommand = LauncherStartupArguments::Names[LauncherStartupArguments::InstallAndRun];
+  String projectsCommand = LauncherStartupArguments::Names[LauncherStartupArguments::Projects];
+  String debuggerModeCommand = LauncherStartupArguments::Names[LauncherStartupArguments::DebuggerMode];
 
   if (arguments.FindPointer(newCommand) != nullptr)
     eventName = Events::LauncherNewProject;

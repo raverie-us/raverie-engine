@@ -62,8 +62,7 @@ public:
   Collider* mCollider;
   RigidBody* mBody;
 
-  typedef BaseInList<BasePhysicsNode, PhysicsNode, &BasePhysicsNode::NodeLink>
-      ChildrenList;
+  typedef BaseInList<BasePhysicsNode, PhysicsNode, &BasePhysicsNode::NodeLink> ChildrenList;
   typedef ChildrenList::range ChildrenRange;
   ChildrenList mChildren;
   PhysicsNode* mParent;

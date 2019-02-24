@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-inline static void LogAudioIoError(Zero::StringParam message,
-                                   Zero::String* savedMessage = nullptr)
+inline static void LogAudioIoError(Zero::StringParam message, Zero::String* savedMessage = nullptr)
 {
   ZPrint(message.c_str());
   if (savedMessage)
@@ -78,8 +77,7 @@ StreamStatus::Enum AudioInputOutput::InitializeAPI(Zero::String* resultMessage)
   return StreamStatus::Initialized;
 }
 
-StreamStatus::Enum AudioInputOutput::InitializeStream(
-    StreamTypes::Enum whichStream, Zero::String* resultMessage)
+StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStream, Zero::String* resultMessage)
 {
   SDLAudioDevice& data = ((AudioIoSdlData*)PlatformData)->Streams[whichStream];
   if (whichStream == StreamTypes::Output)
@@ -117,12 +115,8 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(
   return StreamStatus::DeviceProblem;
 #endif
 
-  data.mDeviceID = SDL_OpenAudioDevice(nullptr,
-                                       capture,
-                                       &want,
-                                       &have,
-                                       SDL_AUDIO_ALLOW_CHANNELS_CHANGE ||
-                                           SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
+  data.mDeviceID = SDL_OpenAudioDevice(
+      nullptr, capture, &want, &have, SDL_AUDIO_ALLOW_CHANNELS_CHANGE || SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
 
   if (data.mDeviceID == 0)
   {
@@ -141,8 +135,7 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(
   ZPrint("Channels    : %d\n", data.mChannels);
   ZPrint("Sample rate : %d\n", data.mSampleRate);
 
-  ZPrint("Audio %s stream successfully initialized\n",
-         data.mStreamTypeName.c_str());
+  ZPrint("Audio %s stream successfully initialized\n", data.mStreamTypeName.c_str());
 
   return StreamStatus::Initialized;
 }
@@ -167,16 +160,13 @@ StreamStatus::Enum AudioInputOutput::StartStream(StreamTypes::Enum whichStream,
   }
   else
   {
-    LogAudioIoError(String::Format("Unable to start audio %s stream\n",
-                                   data.mStreamTypeName.c_str()),
-                    resultMessage);
+    LogAudioIoError(String::Format("Unable to start audio %s stream\n", data.mStreamTypeName.c_str()), resultMessage);
 
     return StreamStatus::Uninitialized;
   }
 }
 
-StreamStatus::Enum AudioInputOutput::StopStream(StreamTypes::Enum whichStream,
-                                                Zero::String* resultMessage)
+StreamStatus::Enum AudioInputOutput::StopStream(StreamTypes::Enum whichStream, Zero::String* resultMessage)
 {
   SDLAudioDevice& data = ((AudioIoSdlData*)PlatformData)->Streams[whichStream];
 
@@ -189,8 +179,7 @@ StreamStatus::Enum AudioInputOutput::StopStream(StreamTypes::Enum whichStream,
   }
   else
   {
-    ZPrint("Unable to stop audio %s stream: not open\n",
-           data.mStreamTypeName.c_str());
+    ZPrint("Unable to stop audio %s stream: not open\n", data.mStreamTypeName.c_str());
   }
 
   return StreamStatus::Stopped;

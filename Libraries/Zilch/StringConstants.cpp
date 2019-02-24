@@ -126,10 +126,8 @@ StringRange StripStringQuotes(StringRange input)
   ErrorIf(input.SizeInBytes() < 2,
           "A string cannot contain quotes on both ends if it has a size less "
           "than 2");
-  ErrorIf(IsZilchQuoteCharacter(input.Front()) == false,
-          "The starting character was not a Zilch quotation");
-  ErrorIf(IsZilchQuoteCharacter(input.Back()) == false,
-          "The ending character was not a Zilch quotation");
+  ErrorIf(IsZilchQuoteCharacter(input.Front()) == false, "The starting character was not a Zilch quotation");
+  ErrorIf(IsZilchQuoteCharacter(input.Back()) == false, "The ending character was not a Zilch quotation");
 
   // Move the beginning inward and the end backwards by 1 to strip the quotes
   input.PopFront();

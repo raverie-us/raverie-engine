@@ -13,124 +13,43 @@ ZilchDefineType(Random, builder, type)
   ZilchFullBindConstructor(builder, type, Random, nullptr);
 
   // Change to a property later
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &Random::GetSeed,
-                            ZilchNoOverload,
-                            &Random::SetSeed,
-                            ZilchNoOverload,
-                            "Seed");
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &Random::GetMaxInteger,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "MaxInteger");
+  ZilchFullBindGetterSetter(
+      builder, type, &Random::GetSeed, ZilchNoOverload, &Random::SetSeed, ZilchNoOverload, "Seed");
+  ZilchFullBindGetterSetter(
+      builder, type, &Random::GetMaxInteger, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "MaxInteger");
 
   // Basic type randoms
-  ZilchFullBindMethod(
-      builder, type, &Random::Boolean, ZilchNoOverload, "Boolean", nullptr);
-  ZilchFullBindMethod(
-      builder, type, &Random::Integer, ZilchNoOverload, "Integer", nullptr);
-  ZilchFullBindMethod(
-      builder, type, &Random::Real, ZilchNoOverload, "Real", nullptr);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Random::DoubleReal,
-                      ZilchNoOverload,
-                      "DoubleReal",
-                      nullptr);
-  ZilchFullBindMethod(
-      builder, type, &Random::UnitReal2, ZilchNoOverload, "UnitReal2", nullptr);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Random::Real2,
-                      ZilchNoOverload,
-                      "Real2",
-                      "minLength, maxLength");
-  ZilchFullBindMethod(
-      builder, type, &Random::UnitReal3, ZilchNoOverload, "UnitReal3", nullptr);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Random::Real3,
-                      ZilchNoOverload,
-                      "Real3",
-                      "minLength, maxLength");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Random::Quaternion,
-                      ZilchNoOverload,
-                      "Quaternion",
-                      nullptr);
+  ZilchFullBindMethod(builder, type, &Random::Boolean, ZilchNoOverload, "Boolean", nullptr);
+  ZilchFullBindMethod(builder, type, &Random::Integer, ZilchNoOverload, "Integer", nullptr);
+  ZilchFullBindMethod(builder, type, &Random::Real, ZilchNoOverload, "Real", nullptr);
+  ZilchFullBindMethod(builder, type, &Random::DoubleReal, ZilchNoOverload, "DoubleReal", nullptr);
+  ZilchFullBindMethod(builder, type, &Random::UnitReal2, ZilchNoOverload, "UnitReal2", nullptr);
+  ZilchFullBindMethod(builder, type, &Random::Real2, ZilchNoOverload, "Real2", "minLength, maxLength");
+  ZilchFullBindMethod(builder, type, &Random::UnitReal3, ZilchNoOverload, "UnitReal3", nullptr);
+  ZilchFullBindMethod(builder, type, &Random::Real3, ZilchNoOverload, "Real3", "minLength, maxLength");
+  ZilchFullBindMethod(builder, type, &Random::Quaternion, ZilchNoOverload, "Quaternion", nullptr);
 
   // Range/variance helpers
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Random::RangeInclusiveMax,
-                      ZilchNoOverload,
-                      "RangeInclusiveMax",
-                      "min, max");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Random::RangeExclusiveMax,
-                      ZilchNoOverload,
-                      "RangeExclusiveMax",
-                      "min, max");
+  ZilchFullBindMethod(builder, type, &Random::RangeInclusiveMax, ZilchNoOverload, "RangeInclusiveMax", "min, max");
+  ZilchFullBindMethod(builder, type, &Random::RangeExclusiveMax, ZilchNoOverload, "RangeExclusiveMax", "min, max");
+  ZilchFullBindMethod(builder, type, &Random::Range, ZilchNoOverload, "Range", "min, max");
+  ZilchFullBindMethod(builder, type, &Random::DoubleRange, ZilchNoOverload, "DoubleRange", "min, max");
+  ZilchFullBindMethod(builder, type, &Random::Variance, (int (Random::*)(int, int)), "Variance", "baseValue, variance");
   ZilchFullBindMethod(
-      builder, type, &Random::Range, ZilchNoOverload, "Range", "min, max");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Random::DoubleRange,
-                      ZilchNoOverload,
-                      "DoubleRange",
-                      "min, max");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Random::Variance,
-                      (int (Random::*)(int, int)),
-                      "Variance",
-                      "baseValue, variance");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Random::Variance,
-                      (float (Random::*)(float, float)),
-                      "Variance",
-                      "baseValue, variance");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Random::Variance,
-                      (double (Random::*)(double, double)),
-                      "Variance",
-                      "baseValue, variance");
+      builder, type, &Random::Variance, (float (Random::*)(float, float)), "Variance", "baseValue, variance");
+  ZilchFullBindMethod(
+      builder, type, &Random::Variance, (double (Random::*)(double, double)), "Variance", "baseValue, variance");
 
   // Some more "user friendly" functions for designers
-  ZilchFullBindMethod(
-      builder, type, &Random::DieRoll, ZilchNoOverload, "DieRoll", nullptr);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Random::Probability,
-                      ZilchNoOverload,
-                      "Probability",
-                      "probabilityOfTrue");
-  ZilchFullBindMethod(
-      builder, type, &Random::CoinFlip, ZilchNoOverload, "CoinFlip", nullptr);
-  ZilchFullBindMethod(
-      builder, type, &Random::Rotation, ZilchNoOverload, "Rotation", nullptr);
+  ZilchFullBindMethod(builder, type, &Random::DieRoll, ZilchNoOverload, "DieRoll", nullptr);
+  ZilchFullBindMethod(builder, type, &Random::Probability, ZilchNoOverload, "Probability", "probabilityOfTrue");
+  ZilchFullBindMethod(builder, type, &Random::CoinFlip, ZilchNoOverload, "CoinFlip", nullptr);
+  ZilchFullBindMethod(builder, type, &Random::Rotation, ZilchNoOverload, "Rotation", nullptr);
 
   // Bell curve (Gaussian) distribution
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Random::BellCurve,
-                      (float (Random::*)()),
-                      "BellCurve",
-                      nullptr);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Random::BellCurve,
-                      (float (Random::*)(float, float)),
-                      "BellCurve",
-                      "center, range");
+  ZilchFullBindMethod(builder, type, &Random::BellCurve, (float (Random::*)()), "BellCurve", nullptr);
+  ZilchFullBindMethod(
+      builder, type, &Random::BellCurve, (float (Random::*)(float, float)), "BellCurve", "center, range");
   ZilchFullBindMethod(builder,
                       type,
                       &Random::BellCurve,

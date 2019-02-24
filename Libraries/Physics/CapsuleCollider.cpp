@@ -36,8 +36,7 @@ void CapsuleCollider::Serialize(Serializer& stream)
   SerializeNameDefault(mRadius, real(0.5f));
   SerializeNameDefault(mHeight, real(1.0f));
   SerializeEnumNameDefault(AxisDirection, mDirection, AxisDirection::Y);
-  SerializeEnumNameDefault(
-      CapsuleScalingMode, mScalingMode, CapsuleScalingMode::PreserveHeight);
+  SerializeEnumNameDefault(CapsuleScalingMode, mScalingMode, CapsuleScalingMode::PreserveHeight);
 }
 
 void CapsuleCollider::DebugDraw()
@@ -46,9 +45,7 @@ void CapsuleCollider::DebugDraw()
 
   Vec3 pointA, pointB;
   ComputeWorldPoints(pointA, pointB);
-  gDebugDraw->Add(Debug::Capsule(pointA, pointB, GetWorldRadius())
-                      .Color(Color::Lime)
-                      .OnTop(true));
+  gDebugDraw->Add(Debug::Capsule(pointA, pointB, GetWorldRadius()).Color(Color::Lime).OnTop(true));
 }
 
 void CapsuleCollider::CacheWorldValues()
@@ -126,8 +123,7 @@ real CapsuleCollider::ComputeWorldVolumeInternal()
   return cylinderVolume + 2 * hemiSphereVolume;
 }
 
-void CapsuleCollider::ComputeLocalInverseInertiaTensor(real mass,
-                                                       Mat3Ref localInvInertia)
+void CapsuleCollider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia)
 {
   // A capsule's inertia is pieced together from two hemisphere's inertia
   // and a cylinder's inertia using the parallel axis theorem
@@ -142,8 +138,7 @@ void CapsuleCollider::ComputeLocalInverseInertiaTensor(real mass,
   // recomputing it)
   real density = GetMaterial()->mDensity;
   real cylinderVolume = Math::cPi * rSquared * worldHeight;
-  real hemiSphereVolume =
-      real(2.0f / 3.0f) * Math::cPi * rSquared * worldRadius;
+  real hemiSphereVolume = real(2.0f / 3.0f) * Math::cPi * rSquared * worldRadius;
   real cylinderMass = cylinderVolume * density;
   real hemiSphereMass = hemiSphereVolume * density;
 
@@ -151,8 +146,7 @@ void CapsuleCollider::ComputeLocalInverseInertiaTensor(real mass,
   // strangely enough symmetric)
   real hemiSphereInertia = real(2.0f / 5.0f) * hemiSphereMass * rSquared;
   real cylinderRadiusInertia = real(1.0f / 2.0f) * cylinderMass * rSquared;
-  real cylinderHeightInertia =
-      (cylinderMass / 12.0f) * (hSquared + 3 * rSquared);
+  real cylinderHeightInertia = (cylinderMass / 12.0f) * (hSquared + 3 * rSquared);
 
   // The height is just the sum of the cylinder and the two radii (no extra
   // terms show up)
@@ -161,10 +155,8 @@ void CapsuleCollider::ComputeLocalInverseInertiaTensor(real mass,
   // terms since it should be harder to rotate about the x or z axes than a
   // cylinder and a sphere put together (since the sphere's are offset from the
   // center of the cylinder)
-  real radiusInertiaOffsetTerm = hemiSphereMass * worldHeight *
-                                 ((2 * worldHeight + 3 * worldRadius) / 8.0f);
-  real radiusInertia =
-      cylinderRadiusInertia + 2 * (hemiSphereInertia + radiusInertiaOffsetTerm);
+  real radiusInertiaOffsetTerm = hemiSphereMass * worldHeight * ((2 * worldHeight + 3 * worldRadius) / 8.0f);
+  real radiusInertia = cylinderRadiusInertia + 2 * (hemiSphereInertia + radiusInertiaOffsetTerm);
   real invHeightInertia = real(1.0f) / heightInertia;
   real invRadiusInertia = real(1.0f) / radiusInertia;
 
@@ -184,8 +176,7 @@ void CapsuleCollider::Support(Vec3Param direction, Vec3Ptr support) const
 {
   Vec3 pointA, pointB;
   ComputeWorldPoints(pointA, pointB);
-  Geometry::SupportCapsule(
-      direction, pointA, pointB, GetWorldRadius(), support);
+  Geometry::SupportCapsule(direction, pointA, pointB, GetWorldRadius(), support);
 }
 
 real CapsuleCollider::GetRadius() const

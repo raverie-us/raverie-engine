@@ -10,23 +10,15 @@ const char* Instruction::Names[] = {
 #undef ZilchEnumValue
 };
 
-Operand::Operand() :
-    Type(OperandType::NotSet),
-    HandleConstantLocal(0),
-    FieldOffset(0)
+Operand::Operand() : Type(OperandType::NotSet), HandleConstantLocal(0), FieldOffset(0)
 {
 }
 
-Operand::Operand(OperandIndex local) :
-    Type(OperandType::Local),
-    HandleConstantLocal(local),
-    FieldOffset(0)
+Operand::Operand(OperandIndex local) : Type(OperandType::Local), HandleConstantLocal(local), FieldOffset(0)
 {
 }
 
-Operand::Operand(OperandIndex handleConstantLocal,
-                 size_t field,
-                 OperandType::Enum type) :
+Operand::Operand(OperandIndex handleConstantLocal, size_t field, OperandType::Enum type) :
     Type(type),
     HandleConstantLocal(handleConstantLocal),
     FieldOffset(field)
@@ -40,10 +32,7 @@ DebugOperand::DebugOperand()
   this->IsLocalOnly = false;
 }
 
-DebugOperand::DebugOperand(size_t offset,
-                           DebugPrimitive::Enum primitive,
-                           bool isLocal,
-                           StringParam name)
+DebugOperand::DebugOperand(size_t offset, DebugPrimitive::Enum primitive, bool isLocal, StringParam name)
 {
   this->OperandOffset = offset;
   this->Primitive = primitive;
@@ -55,9 +44,8 @@ DebugInstruction::DebugInstruction() : IsCopy(false)
 {
 }
 
-#define ZilchOperand(array, type, member, primitive, isLocal)                  \
-  array.PushBack(                                                              \
-      DebugOperand(ZeroOffsetOf(type, member), primitive, isLocal, #member));
+#define ZilchOperand(array, type, member, primitive, isLocal)                                                          \
+  array.PushBack(DebugOperand(ZeroOffsetOf(type, member), primitive, isLocal, #member));
 
 void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
 {
@@ -66,61 +54,34 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
   // ToHandle
   {
     DebugInstruction& info = debugOut[Instruction::ToHandle];
-    ZilchOperand(info.ReadOperands,
-                 ToHandleOpcode,
-                 ToHandle,
-                 DebugPrimitive::Memory,
-                 false);
-    ZilchOperand(info.WriteOperands,
-                 ToHandleOpcode,
-                 SaveLocal,
-                 DebugPrimitive::Memory,
-                 true);
+    ZilchOperand(info.ReadOperands, ToHandleOpcode, ToHandle, DebugPrimitive::Memory, false);
+    ZilchOperand(info.WriteOperands, ToHandleOpcode, SaveLocal, DebugPrimitive::Memory, true);
   }
 
   // CreateStaticDelegate
   {
     DebugInstruction& info = debugOut[Instruction::CreateStaticDelegate];
-    info.FunctionPointers.PushBack(
-        ZeroOffsetOf(CreateStaticDelegateOpcode, BoundFunction));
-    ZilchOperand(info.WriteOperands,
-                 CreateStaticDelegateOpcode,
-                 SaveLocal,
-                 DebugPrimitive::Delegate,
-                 true);
+    info.FunctionPointers.PushBack(ZeroOffsetOf(CreateStaticDelegateOpcode, BoundFunction));
+    ZilchOperand(info.WriteOperands, CreateStaticDelegateOpcode, SaveLocal, DebugPrimitive::Delegate, true);
   }
 
   // CreateInstanceDelegate
   {
     DebugInstruction& info = debugOut[Instruction::CreateInstanceDelegate];
-    info.FunctionPointers.PushBack(
-        ZeroOffsetOf(CreateInstanceDelegateOpcode, BoundFunction));
-    ZilchOperand(info.ReadOperands,
-                 CreateInstanceDelegateOpcode,
-                 ThisHandle,
-                 DebugPrimitive::Handle,
-                 false);
-    ZilchOperand(info.WriteOperands,
-                 CreateInstanceDelegateOpcode,
-                 SaveLocal,
-                 DebugPrimitive::Delegate,
-                 true);
+    info.FunctionPointers.PushBack(ZeroOffsetOf(CreateInstanceDelegateOpcode, BoundFunction));
+    ZilchOperand(info.ReadOperands, CreateInstanceDelegateOpcode, ThisHandle, DebugPrimitive::Handle, false);
+    ZilchOperand(info.WriteOperands, CreateInstanceDelegateOpcode, SaveLocal, DebugPrimitive::Delegate, true);
   }
 
   // IfFalseRelativeGoTo / IfTrueRelativeGoTo
   {
-    Instruction::Enum instructions[] = {Instruction::IfFalseRelativeGoTo,
-                                        Instruction::IfTrueRelativeGoTo};
+    Instruction::Enum instructions[] = {Instruction::IfFalseRelativeGoTo, Instruction::IfTrueRelativeGoTo};
 
     for (size_t i = 0; i < ZilchCArrayCount(instructions); ++i)
     {
       Instruction::Enum instruction = instructions[i];
       DebugInstruction& info = debugOut[instruction];
-      ZilchOperand(info.ReadOperands,
-                   IfOpcode,
-                   Condition,
-                   DebugPrimitive::Boolean,
-                   false);
+      ZilchOperand(info.ReadOperands, IfOpcode, Condition, DebugPrimitive::Boolean, false);
       info.OpcodeOffsets.PushBack(ZeroOffsetOf(IfOpcode, JumpOffset));
     }
   }
@@ -128,8 +89,7 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
   // IfTrueRelativeGoTo
   {
     DebugInstruction& info = debugOut[Instruction::IfTrueRelativeGoTo];
-    ZilchOperand(
-        info.ReadOperands, IfOpcode, Condition, DebugPrimitive::Boolean, false);
+    ZilchOperand(info.ReadOperands, IfOpcode, Condition, DebugPrimitive::Boolean, false);
     info.OpcodeOffsets.PushBack(ZeroOffsetOf(IfOpcode, JumpOffset));
   }
 
@@ -142,51 +102,29 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
   // PrepForFunctionCall
   {
     DebugInstruction& info = debugOut[Instruction::PrepForFunctionCall];
-    ZilchOperand(info.ReadOperands,
-                 PrepForFunctionCallOpcode,
-                 Delegate,
-                 DebugPrimitive::Delegate,
-                 false);
-    info.OpcodeOffsets.PushBack(
-        ZeroOffsetOf(PrepForFunctionCallOpcode, JumpOffsetIfStatic));
+    ZilchOperand(info.ReadOperands, PrepForFunctionCallOpcode, Delegate, DebugPrimitive::Delegate, false);
+    info.OpcodeOffsets.PushBack(ZeroOffsetOf(PrepForFunctionCallOpcode, JumpOffsetIfStatic));
   }
 
   // NewObject
   {
     DebugInstruction& info = debugOut[Instruction::NewObject];
     info.TypePointers.PushBack(ZeroOffsetOf(CreateTypeOpcode, CreatedType));
-    ZilchOperand(info.WriteOperands,
-                 CreateTypeOpcode,
-                 SaveHandleLocal,
-                 DebugPrimitive::Handle,
-                 true);
+    ZilchOperand(info.WriteOperands, CreateTypeOpcode, SaveHandleLocal, DebugPrimitive::Handle, true);
   }
 
   // LocalObject
   {
     DebugInstruction& info = debugOut[Instruction::LocalObject];
-    info.TypePointers.PushBack(
-        ZeroOffsetOf(CreateLocalTypeOpcode, CreatedType));
-    ZilchOperand(info.WriteOperands,
-                 CreateLocalTypeOpcode,
-                 SaveHandleLocal,
-                 DebugPrimitive::Handle,
-                 true);
-    ZilchOperand(info.WriteOperands,
-                 CreateLocalTypeOpcode,
-                 StackLocal,
-                 DebugPrimitive::Memory,
-                 true);
+    info.TypePointers.PushBack(ZeroOffsetOf(CreateLocalTypeOpcode, CreatedType));
+    ZilchOperand(info.WriteOperands, CreateLocalTypeOpcode, SaveHandleLocal, DebugPrimitive::Handle, true);
+    ZilchOperand(info.WriteOperands, CreateLocalTypeOpcode, StackLocal, DebugPrimitive::Memory, true);
   }
 
   // DeleteObject
   {
     DebugInstruction& info = debugOut[Instruction::DeleteObject];
-    ZilchOperand(info.WriteOperands,
-                 DeleteObjectOpcode,
-                 Object,
-                 DebugPrimitive::Handle,
-                 false);
+    ZilchOperand(info.WriteOperands, DeleteObjectOpcode, Object, DebugPrimitive::Handle, false);
   }
 
   // [UnaryRValueOpcode]
@@ -212,13 +150,8 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
       Instruction::Enum instruction = instructions[i];
       DebugPrimitive::Enum primitive = types[i];
       DebugInstruction& info = debugOut[instruction];
-      ZilchOperand(info.ReadOperands,
-                   UnaryRValueOpcode,
-                   SingleOperand,
-                   primitive,
-                   false);
-      ZilchOperand(
-          info.WriteOperands, UnaryRValueOpcode, Output, primitive, true);
+      ZilchOperand(info.ReadOperands, UnaryRValueOpcode, SingleOperand, primitive, false);
+      ZilchOperand(info.WriteOperands, UnaryRValueOpcode, Output, primitive, true);
     }
   }
 
@@ -231,21 +164,15 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
         Instruction::DecrementReal,
     };
 
-    DebugPrimitive::Enum types[] = {DebugPrimitive::Integer,
-                                    DebugPrimitive::Real,
-                                    DebugPrimitive::Integer,
-                                    DebugPrimitive::Real};
+    DebugPrimitive::Enum types[] = {
+        DebugPrimitive::Integer, DebugPrimitive::Real, DebugPrimitive::Integer, DebugPrimitive::Real};
 
     for (size_t i = 0; i < ZilchCArrayCount(instructions); ++i)
     {
       Instruction::Enum instruction = instructions[i];
       DebugPrimitive::Enum primitive = types[i];
       DebugInstruction& info = debugOut[instruction];
-      ZilchOperand(info.WriteOperands,
-                   UnaryLValueOpcode,
-                   SingleOperand,
-                   primitive,
-                   false);
+      ZilchOperand(info.WriteOperands, UnaryLValueOpcode, SingleOperand, primitive, false);
     }
   }
 
@@ -288,24 +215,15 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
                                         Instruction::PowReal4};
 
     DebugPrimitive::Enum types[] = {
-        DebugPrimitive::Integer, DebugPrimitive::Integer,
-        DebugPrimitive::Integer, DebugPrimitive::Integer,
-        DebugPrimitive::Integer, DebugPrimitive::Boolean,
-        DebugPrimitive::Boolean, DebugPrimitive::Integer,
-        DebugPrimitive::Real,    DebugPrimitive::Real2,
-        DebugPrimitive::Real3,   DebugPrimitive::Real4,
-        DebugPrimitive::Integer, DebugPrimitive::Real,
-        DebugPrimitive::Real2,   DebugPrimitive::Real3,
-        DebugPrimitive::Real4,   DebugPrimitive::Integer,
-        DebugPrimitive::Real,    DebugPrimitive::Real2,
-        DebugPrimitive::Real3,   DebugPrimitive::Real4,
-        DebugPrimitive::Integer, DebugPrimitive::Real,
-        DebugPrimitive::Real2,   DebugPrimitive::Real3,
-        DebugPrimitive::Real4,   DebugPrimitive::Integer,
-        DebugPrimitive::Real,    DebugPrimitive::Real2,
-        DebugPrimitive::Real3,   DebugPrimitive::Real4,
-        DebugPrimitive::Integer, DebugPrimitive::Real,
-        DebugPrimitive::Real2,   DebugPrimitive::Real3,
+        DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Integer,
+        DebugPrimitive::Integer, DebugPrimitive::Boolean, DebugPrimitive::Boolean, DebugPrimitive::Integer,
+        DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,
+        DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,
+        DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,
+        DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,
+        DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer,
+        DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,
+        DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,
         DebugPrimitive::Real4,
     };
 
@@ -314,52 +232,43 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
       Instruction::Enum instruction = instructions[i];
       DebugPrimitive::Enum primitive = types[i];
       DebugInstruction& info = debugOut[instruction];
-      ZilchOperand(
-          info.ReadOperands, BinaryRValueOpcode, Left, primitive, false);
-      ZilchOperand(
-          info.ReadOperands, BinaryRValueOpcode, Right, primitive, false);
-      ZilchOperand(
-          info.WriteOperands, BinaryRValueOpcode, Output, primitive, true);
+      ZilchOperand(info.ReadOperands, BinaryRValueOpcode, Left, primitive, false);
+      ZilchOperand(info.ReadOperands, BinaryRValueOpcode, Right, primitive, false);
+      ZilchOperand(info.WriteOperands, BinaryRValueOpcode, Output, primitive, true);
     }
   }
 
   // [BinaryRValueOpcode] (Operands all the same type, Result is a Boolean)
   {
-    Instruction::Enum instructions[] = {
-        Instruction::TestLessThanInteger,
-        Instruction::TestLessThanReal,
-        Instruction::TestLessThanOrEqualToInteger,
-        Instruction::TestLessThanOrEqualToReal,
-        Instruction::TestGreaterThanInteger,
-        Instruction::TestGreaterThanReal,
-        Instruction::TestGreaterThanOrEqualToInteger,
-        Instruction::TestGreaterThanOrEqualToReal,
-        Instruction::TestInequalityInteger,
-        Instruction::TestInequalityReal,
-        Instruction::TestInequalityBoolean,
-        Instruction::TestInequalityHandle,
-        Instruction::TestInequalityReal2,
-        Instruction::TestInequalityReal3,
-        Instruction::TestInequalityReal4,
-        Instruction::TestEqualityInteger,
-        Instruction::TestEqualityReal,
-        Instruction::TestEqualityBoolean,
-        Instruction::TestEqualityHandle,
-        Instruction::TestEqualityReal2,
-        Instruction::TestEqualityReal3,
-        Instruction::TestEqualityReal4};
+    Instruction::Enum instructions[] = {Instruction::TestLessThanInteger,
+                                        Instruction::TestLessThanReal,
+                                        Instruction::TestLessThanOrEqualToInteger,
+                                        Instruction::TestLessThanOrEqualToReal,
+                                        Instruction::TestGreaterThanInteger,
+                                        Instruction::TestGreaterThanReal,
+                                        Instruction::TestGreaterThanOrEqualToInteger,
+                                        Instruction::TestGreaterThanOrEqualToReal,
+                                        Instruction::TestInequalityInteger,
+                                        Instruction::TestInequalityReal,
+                                        Instruction::TestInequalityBoolean,
+                                        Instruction::TestInequalityHandle,
+                                        Instruction::TestInequalityReal2,
+                                        Instruction::TestInequalityReal3,
+                                        Instruction::TestInequalityReal4,
+                                        Instruction::TestEqualityInteger,
+                                        Instruction::TestEqualityReal,
+                                        Instruction::TestEqualityBoolean,
+                                        Instruction::TestEqualityHandle,
+                                        Instruction::TestEqualityReal2,
+                                        Instruction::TestEqualityReal3,
+                                        Instruction::TestEqualityReal4};
 
     DebugPrimitive::Enum types[] = {
-        DebugPrimitive::Integer, DebugPrimitive::Real,
-        DebugPrimitive::Integer, DebugPrimitive::Real,
-        DebugPrimitive::Integer, DebugPrimitive::Real,
-        DebugPrimitive::Integer, DebugPrimitive::Real,
-        DebugPrimitive::Integer, DebugPrimitive::Real,
-        DebugPrimitive::Boolean, DebugPrimitive::Handle,
-        DebugPrimitive::Real2,   DebugPrimitive::Real3,
-        DebugPrimitive::Real4,   DebugPrimitive::Integer,
-        DebugPrimitive::Real,    DebugPrimitive::Boolean,
-        DebugPrimitive::Handle,  DebugPrimitive::Real2,
+        DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Integer, DebugPrimitive::Real,
+        DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Integer, DebugPrimitive::Real,
+        DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Boolean, DebugPrimitive::Handle,
+        DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer,
+        DebugPrimitive::Real,    DebugPrimitive::Boolean, DebugPrimitive::Handle,  DebugPrimitive::Real2,
         DebugPrimitive::Real3,   DebugPrimitive::Real4,
     };
 
@@ -368,15 +277,9 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
       Instruction::Enum instruction = instructions[i];
       DebugPrimitive::Enum primitive = types[i];
       DebugInstruction& info = debugOut[instruction];
-      ZilchOperand(
-          info.ReadOperands, BinaryRValueOpcode, Left, primitive, false);
-      ZilchOperand(
-          info.ReadOperands, BinaryRValueOpcode, Right, primitive, false);
-      ZilchOperand(info.WriteOperands,
-                   BinaryRValueOpcode,
-                   Output,
-                   DebugPrimitive::Boolean,
-                   true);
+      ZilchOperand(info.ReadOperands, BinaryRValueOpcode, Left, primitive, false);
+      ZilchOperand(info.ReadOperands, BinaryRValueOpcode, Right, primitive, false);
+      ZilchOperand(info.WriteOperands, BinaryRValueOpcode, Output, DebugPrimitive::Boolean, true);
     }
   }
 
@@ -415,104 +318,85 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
       Instruction::Enum instruction = instructions[i];
       DebugPrimitive::Enum primitive = types[i];
       DebugInstruction& info = debugOut[instruction];
-      ZilchOperand(
-          info.ReadOperands, BinaryRValueOpcode, Left, primitive, false);
-      ZilchOperand(info.ReadOperands,
-                   BinaryRValueOpcode,
-                   Right,
-                   DebugPrimitive::Real,
-                   false);
-      ZilchOperand(
-          info.WriteOperands, BinaryRValueOpcode, Output, primitive, true);
+      ZilchOperand(info.ReadOperands, BinaryRValueOpcode, Left, primitive, false);
+      ZilchOperand(info.ReadOperands, BinaryRValueOpcode, Right, DebugPrimitive::Real, false);
+      ZilchOperand(info.WriteOperands, BinaryRValueOpcode, Output, primitive, true);
     }
   }
 
   // [BinaryLValueOpcode] (Operands all the same type)
   {
-    Instruction::Enum instructions[] = {
-        Instruction::AssignmentBitshiftLeftInteger,
-        Instruction::AssignmentBitshiftRightInteger,
-        Instruction::AssignmentBitwiseOrInteger,
-        Instruction::AssignmentBitwiseXorInteger,
-        Instruction::AssignmentBitwiseAndInteger,
-        Instruction::AssignmentAddInteger,
-        Instruction::AssignmentAddReal,
-        Instruction::AssignmentAddReal2,
-        Instruction::AssignmentAddReal3,
-        Instruction::AssignmentAddReal4,
-        Instruction::AssignmentSubtractInteger,
-        Instruction::AssignmentSubtractReal,
-        Instruction::AssignmentSubtractReal2,
-        Instruction::AssignmentSubtractReal3,
-        Instruction::AssignmentSubtractReal4,
-        Instruction::AssignmentMultiplyInteger,
-        Instruction::AssignmentMultiplyReal,
-        Instruction::AssignmentMultiplyReal2,
-        Instruction::AssignmentMultiplyReal3,
-        Instruction::AssignmentMultiplyReal4,
-        Instruction::AssignmentDivideInteger,
-        Instruction::AssignmentDivideReal,
-        Instruction::AssignmentDivideReal2,
-        Instruction::AssignmentDivideReal3,
-        Instruction::AssignmentDivideReal4,
-        Instruction::AssignmentModuloInteger,
-        Instruction::AssignmentModuloReal,
-        Instruction::AssignmentModuloReal2,
-        Instruction::AssignmentModuloReal3,
-        Instruction::AssignmentModuloReal4,
-        Instruction::AssignmentPowInteger,
-        Instruction::AssignmentPowReal,
-        Instruction::AssignmentPowReal2,
-        Instruction::AssignmentPowReal3,
-        Instruction::AssignmentPowReal4};
+    Instruction::Enum instructions[] = {Instruction::AssignmentBitshiftLeftInteger,
+                                        Instruction::AssignmentBitshiftRightInteger,
+                                        Instruction::AssignmentBitwiseOrInteger,
+                                        Instruction::AssignmentBitwiseXorInteger,
+                                        Instruction::AssignmentBitwiseAndInteger,
+                                        Instruction::AssignmentAddInteger,
+                                        Instruction::AssignmentAddReal,
+                                        Instruction::AssignmentAddReal2,
+                                        Instruction::AssignmentAddReal3,
+                                        Instruction::AssignmentAddReal4,
+                                        Instruction::AssignmentSubtractInteger,
+                                        Instruction::AssignmentSubtractReal,
+                                        Instruction::AssignmentSubtractReal2,
+                                        Instruction::AssignmentSubtractReal3,
+                                        Instruction::AssignmentSubtractReal4,
+                                        Instruction::AssignmentMultiplyInteger,
+                                        Instruction::AssignmentMultiplyReal,
+                                        Instruction::AssignmentMultiplyReal2,
+                                        Instruction::AssignmentMultiplyReal3,
+                                        Instruction::AssignmentMultiplyReal4,
+                                        Instruction::AssignmentDivideInteger,
+                                        Instruction::AssignmentDivideReal,
+                                        Instruction::AssignmentDivideReal2,
+                                        Instruction::AssignmentDivideReal3,
+                                        Instruction::AssignmentDivideReal4,
+                                        Instruction::AssignmentModuloInteger,
+                                        Instruction::AssignmentModuloReal,
+                                        Instruction::AssignmentModuloReal2,
+                                        Instruction::AssignmentModuloReal3,
+                                        Instruction::AssignmentModuloReal4,
+                                        Instruction::AssignmentPowInteger,
+                                        Instruction::AssignmentPowReal,
+                                        Instruction::AssignmentPowReal2,
+                                        Instruction::AssignmentPowReal3,
+                                        Instruction::AssignmentPowReal4};
 
     DebugPrimitive::Enum types[] = {
-        DebugPrimitive::Integer, DebugPrimitive::Integer,
-        DebugPrimitive::Integer, DebugPrimitive::Integer,
-        DebugPrimitive::Integer, DebugPrimitive::Integer,
-        DebugPrimitive::Real,    DebugPrimitive::Real2,
-        DebugPrimitive::Real3,   DebugPrimitive::Real4,
-        DebugPrimitive::Integer, DebugPrimitive::Real,
-        DebugPrimitive::Real2,   DebugPrimitive::Real3,
-        DebugPrimitive::Real4,   DebugPrimitive::Integer,
-        DebugPrimitive::Real,    DebugPrimitive::Real2,
-        DebugPrimitive::Real3,   DebugPrimitive::Real4,
-        DebugPrimitive::Integer, DebugPrimitive::Real,
-        DebugPrimitive::Real2,   DebugPrimitive::Real3,
-        DebugPrimitive::Real4,   DebugPrimitive::Integer,
-        DebugPrimitive::Real,    DebugPrimitive::Real2,
-        DebugPrimitive::Real3,   DebugPrimitive::Real4,
-        DebugPrimitive::Integer, DebugPrimitive::Real,
-        DebugPrimitive::Real2,   DebugPrimitive::Real3,
-        DebugPrimitive::Real4};
+        DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Integer,
+        DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,
+        DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,
+        DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer,
+        DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,
+        DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,
+        DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,
+        DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,
+        DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4};
 
     for (size_t i = 0; i < ZilchCArrayCount(instructions); ++i)
     {
       Instruction::Enum instruction = instructions[i];
       DebugPrimitive::Enum primitive = types[i];
       DebugInstruction& info = debugOut[instruction];
-      ZilchOperand(
-          info.ReadOperands, BinaryLValueOpcode, Right, primitive, false);
-      ZilchOperand(
-          info.WriteOperands, BinaryLValueOpcode, Output, primitive, false);
+      ZilchOperand(info.ReadOperands, BinaryLValueOpcode, Right, primitive, false);
+      ZilchOperand(info.WriteOperands, BinaryLValueOpcode, Output, primitive, false);
     }
   }
 
   // [BinaryLValueOpcode] (Scalar + Vector assignment operations)
   {
-    Instruction::Enum instructions[] = {
-        Instruction::AssignmentScalarMultiplyReal2,
-        Instruction::AssignmentScalarMultiplyReal3,
-        Instruction::AssignmentScalarMultiplyReal4,
-        Instruction::AssignmentScalarDivideReal2,
-        Instruction::AssignmentScalarDivideReal3,
-        Instruction::AssignmentScalarDivideReal4,
-        Instruction::AssignmentScalarModuloReal2,
-        Instruction::AssignmentScalarModuloReal3,
-        Instruction::AssignmentScalarModuloReal4,
-        Instruction::AssignmentScalarPowReal2,
-        Instruction::AssignmentScalarPowReal3,
-        Instruction::AssignmentScalarPowReal4};
+    Instruction::Enum instructions[] = {Instruction::AssignmentScalarMultiplyReal2,
+                                        Instruction::AssignmentScalarMultiplyReal3,
+                                        Instruction::AssignmentScalarMultiplyReal4,
+                                        Instruction::AssignmentScalarDivideReal2,
+                                        Instruction::AssignmentScalarDivideReal3,
+                                        Instruction::AssignmentScalarDivideReal4,
+                                        Instruction::AssignmentScalarModuloReal2,
+                                        Instruction::AssignmentScalarModuloReal3,
+                                        Instruction::AssignmentScalarModuloReal4,
+                                        Instruction::AssignmentScalarPowReal2,
+                                        Instruction::AssignmentScalarPowReal3,
+                                        Instruction::AssignmentScalarPowReal4};
 
     DebugPrimitive::Enum types[] = {DebugPrimitive::Real2,
                                     DebugPrimitive::Real3,
@@ -532,13 +416,8 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
       Instruction::Enum instruction = instructions[i];
       DebugPrimitive::Enum primitive = types[i];
       DebugInstruction& info = debugOut[instruction];
-      ZilchOperand(info.ReadOperands,
-                   BinaryLValueOpcode,
-                   Right,
-                   DebugPrimitive::Real,
-                   false);
-      ZilchOperand(
-          info.WriteOperands, BinaryLValueOpcode, Output, primitive, false);
+      ZilchOperand(info.ReadOperands, BinaryLValueOpcode, Right, DebugPrimitive::Real, false);
+      ZilchOperand(info.WriteOperands, BinaryLValueOpcode, Output, primitive, false);
     }
   }
 
@@ -575,24 +454,19 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
       DebugPrimitive::Enum fromPrimitive = fromTypes[i];
       DebugPrimitive::Enum toPrimitive = toTypes[i];
       DebugInstruction& info = debugOut[instruction];
-      ZilchOperand(
-          info.ReadOperands, ConversionOpcode, ToConvert, fromPrimitive, false);
-      ZilchOperand(
-          info.WriteOperands, ConversionOpcode, Output, toPrimitive, true);
+      ZilchOperand(info.ReadOperands, ConversionOpcode, ToConvert, fromPrimitive, false);
+      ZilchOperand(info.WriteOperands, ConversionOpcode, Output, toPrimitive, true);
     }
   }
 
   // String to StringRange conversion
   {
-    Instruction::Enum instruction =
-        Instruction::ConvertStringToStringRangeExtended;
+    Instruction::Enum instruction = Instruction::ConvertStringToStringRangeExtended;
     DebugPrimitive::Enum fromPrimitive = DebugPrimitive::Handle;
     DebugPrimitive::Enum toPrimitive = DebugPrimitive::Handle;
     DebugInstruction& info = debugOut[instruction];
-    ZilchOperand(
-        info.ReadOperands, ConversionOpcode, ToConvert, fromPrimitive, false);
-    ZilchOperand(
-        info.WriteOperands, ConversionOpcode, Output, toPrimitive, true);
+    ZilchOperand(info.ReadOperands, ConversionOpcode, ToConvert, fromPrimitive, false);
+    ZilchOperand(info.WriteOperands, ConversionOpcode, Output, toPrimitive, true);
   }
 
   // [CopyOpcode]
@@ -626,8 +500,7 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
       DebugInstruction& info = debugOut[instruction];
       info.IsCopy = true;
       ZilchOperand(info.ReadOperands, CopyOpcode, Source, primitive, false);
-      ZilchOperand(
-          info.WriteOperands, CopyOpcode, Destination, primitive, false);
+      ZilchOperand(info.WriteOperands, CopyOpcode, Destination, primitive, false);
       info.Sizes.PushBack(ZeroOffsetOf(CopyOpcode, Size));
       info.Options.PushBack(ZeroOffsetOf(CopyOpcode, Mode));
     }

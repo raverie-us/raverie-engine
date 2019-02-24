@@ -34,11 +34,10 @@ void DummyMemberFunctionResolver(ZilchSpirVFrontEnd* translator,
   Error("This should not be called");
 }
 
-void DummyMemberPropertySetterResolver(
-    ZilchSpirVFrontEnd* translator,
-    Zilch::MemberAccessNode* memberAccessNode,
-    ZilchShaderIROp* resultValue,
-    ZilchSpirVFrontEndContext* context)
+void DummyMemberPropertySetterResolver(ZilchSpirVFrontEnd* translator,
+                                       Zilch::MemberAccessNode* memberAccessNode,
+                                       ZilchShaderIROp* resultValue,
+                                       ZilchSpirVFrontEndContext* context)
 {
   Error("This should not be called");
 }
@@ -64,8 +63,7 @@ void DummyTypeCastResolver(ZilchSpirVFrontEnd* translator,
   Error("This should not be called");
 }
 
-void DummyTemplateTypeReslover(ZilchSpirVFrontEnd* translator,
-                               Zilch::BoundType* boundType)
+void DummyTemplateTypeReslover(ZilchSpirVFrontEnd* translator, Zilch::BoundType* boundType)
 {
   Error("This should not be called");
 }

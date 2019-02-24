@@ -200,10 +200,7 @@ public:
   // Lookup a binary operator between two types
   // Both entries for communative operators will exist, eg, scalar * vector and
   // vector * scalar
-  BinaryOperator GetBinaryOperator(Type* lhs,
-                                   Type* rhs,
-                                   Grammar::Enum oper,
-                                   bool allowRecursiveLookup = true);
+  BinaryOperator GetBinaryOperator(Type* lhs, Type* rhs, Grammar::Enum oper, bool allowRecursiveLookup = true);
 
   // Lookup a unary operator
   UnaryOperator GetUnaryOperator(Type* type, Grammar::Enum oper);
@@ -216,8 +213,7 @@ public:
 
   // Get a structure that represents the precedence and associativity of an
   // operator, regardless of types
-  UntypedOperator GetOperatorPrecedence(Grammar::Enum oper,
-                                        OperatorArity::Enum arity);
+  UntypedOperator GetOperatorPrecedence(Grammar::Enum oper, OperatorArity::Enum arity);
 
   // Gets all the operators stored in an array thats indexed by precedence
   // Note: Precedence starts at 0 and ends at Size() - 1
@@ -234,43 +230,24 @@ private:
                  bool flip);
 
   // Adds a binary communative operator (which adds the reversed operator too)
-  void AddBinaryCommunative(Type* type1,
-                            Type* type2,
-                            Type* result,
-                            Grammar::Enum oper,
-                            Instruction::Enum instruction,
-                            IoMode::Enum io);
+  void AddBinaryCommunative(
+      Type* type1, Type* type2, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io);
 
   // Adds a binary non-communative operator (the reverse will not be added)
-  void AddBinaryNonCommunative(Type* lhs,
-                               Type* rhs,
-                               Type* result,
-                               Grammar::Enum oper,
-                               Instruction::Enum instruction,
-                               IoMode::Enum io);
+  void AddBinaryNonCommunative(
+      Type* lhs, Type* rhs, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io);
 
   // Adds a binary operator where the operands are the same type
   // Note: If the operator is the same type, we don't care if it's communative
   // or not because we always perform the operation in the correct order, and we
   // only need one opcode to represent it
-  void AddBinary(Type* sameType,
-                 Type* result,
-                 Grammar::Enum oper,
-                 Instruction::Enum instruction,
-                 IoMode::Enum io);
+  void AddBinary(Type* sameType, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io);
 
   // Adds a unary operator
-  void AddUnary(Type* operand,
-                Type* result,
-                Grammar::Enum oper,
-                Instruction::Enum instruction,
-                IoMode::Enum io);
+  void AddUnary(Type* operand, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io);
 
   // Adds a primitive cast operator (must have an instruction
-  void AddPrimitiveCast(Type* fromType,
-                        Type* toType,
-                        Instruction::Enum instruction,
-                        bool canBeImplicit);
+  void AddPrimitiveCast(Type* fromType, Type* toType, Instruction::Enum instruction, bool canBeImplicit);
 
   // Adds an operator to the precedence chart (maps it both ways)
   void AddPrecedence(size_t precedence,

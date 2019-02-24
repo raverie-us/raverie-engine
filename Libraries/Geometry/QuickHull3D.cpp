@@ -16,8 +16,7 @@ template <typename ListType>
 size_t CountInList(ListType& list)
 {
   size_t count = 0;
-  for (typename ListType::range range = list.All(); !range.Empty();
-       range.PopFront())
+  for (typename ListType::range range = list.All(); !range.Empty(); range.PopFront())
     ++count;
   return count;
 }
@@ -87,10 +86,8 @@ bool QuickHull3D::QuickHullFace::IsConvexTo(QuickHullFace* other, real epsilon)
   // A face is convex to another if its center is strictly behind the
   // thick plane. Do this test symmetrically (a->b and b->a) for numerical
   // reasons.
-  real face1Convex =
-      Math::Dot(other->mCenter - this->mCenter, this->mNormal) < -epsilon;
-  real face0Convex =
-      Math::Dot(this->mCenter - other->mCenter, other->mNormal) < -epsilon;
+  real face1Convex = Math::Dot(other->mCenter - this->mCenter, this->mNormal) < -epsilon;
+  real face0Convex = Math::Dot(this->mCenter - other->mCenter, other->mNormal) < -epsilon;
   if (face0Convex && face1Convex)
     return true;
   return false;
@@ -189,8 +186,7 @@ size_t QuickHull3D::ComputeVertexCount()
   for (FaceList::range faces = mFaces.All(); !faces.Empty(); faces.PopFront())
   {
     QuickHullFace* face = &faces.Front();
-    for (EdgeList::range edges = face->mEdges.All(); !edges.Empty();
-         edges.PopFront())
+    for (EdgeList::range edges = face->mEdges.All(); !edges.Empty(); edges.PopFront())
     {
       QuickHullEdge* edge = &edges.Front();
       QuickHullVertex* vertex = edge->mTail;
@@ -240,12 +236,9 @@ void QuickHull3D::AllocatePools(const Array<Vec3>& points)
   size_t vertexPoolCount = 1024;
   size_t edgePoolCount = 1024;
   size_t facePoolCount = 1024;
-  mVertexPool = new Memory::Pool(
-      "VertexPool", nullptr, sizeof(QuickHullVertex), vertexPoolCount, true);
-  mEdgePool = new Memory::Pool(
-      "EdgePool", nullptr, sizeof(QuickHullEdge), edgePoolCount, true);
-  mFacePool = new Memory::Pool(
-      "FacePool", nullptr, sizeof(QuickHullFace), facePoolCount, true);
+  mVertexPool = new Memory::Pool("VertexPool", nullptr, sizeof(QuickHullVertex), vertexPoolCount, true);
+  mEdgePool = new Memory::Pool("EdgePool", nullptr, sizeof(QuickHullEdge), edgePoolCount, true);
+  mFacePool = new Memory::Pool("FacePool", nullptr, sizeof(QuickHullFace), facePoolCount, true);
 }
 
 void QuickHull3D::ComputeEpsilon(const Array<Vec3>& points)
@@ -264,8 +257,7 @@ void QuickHull3D::ComputeEpsilon(const Array<Vec3>& points)
   mEpsilon = 3 * (maxVals.x + maxVals.y + maxVals.z) * FLT_EPSILON;
 }
 
-bool QuickHull3D::BuildDataSet(const Array<Vec3>& points,
-                               size_t& resultPointCount)
+bool QuickHull3D::BuildDataSet(const Array<Vec3>& points, size_t& resultPointCount)
 {
   resultPointCount = 0;
   ComputeEpsilon(points);
@@ -279,8 +271,7 @@ bool QuickHull3D::BuildDataSet(const Array<Vec3>& points,
   return true;
 }
 
-void QuickHull3D::BuildDataSetNSquared(const Array<Vec3>& points,
-                                       size_t& resultPointCount)
+void QuickHull3D::BuildDataSetNSquared(const Array<Vec3>& points, size_t& resultPointCount)
 {
   // Kept around for performance analysis at later points in time.
 
@@ -319,8 +310,7 @@ void QuickHull3D::BuildDataSetNSquared(const Array<Vec3>& points,
   //}
 }
 
-void QuickHull3D::BuildDataSetGrid(const Array<Vec3>& points,
-                                   size_t& resultPointCount)
+void QuickHull3D::BuildDataSetGrid(const Array<Vec3>& points, size_t& resultPointCount)
 {
   // Kept around for performance analysis at later points in time.
 
@@ -376,8 +366,7 @@ void QuickHull3D::BuildDataSetGrid(const Array<Vec3>& points,
   //}
 }
 
-void QuickHull3D::BuildDataSetGridApproximation(const Array<Vec3>& points,
-                                                size_t& resultPointCount)
+void QuickHull3D::BuildDataSetGridApproximation(const Array<Vec3>& points, size_t& resultPointCount)
 {
   QHullScopedTimer("Grid Approximation:");
 
@@ -505,8 +494,7 @@ void QuickHull3D::FindInitialSpan(QuickHullVertex*& v0, QuickHullVertex*& v1)
   QuickHullVertex* minVertices[3] = {first, first, first};
   QuickHullVertex* maxVertices[3] = {first, first, first};
   // Find the furthest away points on each cardinal axis
-  for (VertexList::range vertices = mVertices.All(); !vertices.Empty();
-       vertices.PopFront())
+  for (VertexList::range vertices = mVertices.All(); !vertices.Empty(); vertices.PopFront())
   {
     QuickHullVertex* vertex = &vertices.Front();
     for (size_t i = 0; i < 3; ++i)
@@ -519,12 +507,9 @@ void QuickHull3D::FindInitialSpan(QuickHullVertex*& v0, QuickHullVertex*& v1)
   }
 
   // Calculate the distance away these points are
-  real xSpanSq =
-      Math::DistanceSq(minVertices[0]->mPosition, maxVertices[0]->mPosition);
-  real ySpanSq =
-      Math::DistanceSq(minVertices[1]->mPosition, maxVertices[1]->mPosition);
-  real zSpanSq =
-      Math::DistanceSq(minVertices[2]->mPosition, maxVertices[2]->mPosition);
+  real xSpanSq = Math::DistanceSq(minVertices[0]->mPosition, maxVertices[0]->mPosition);
+  real ySpanSq = Math::DistanceSq(minVertices[1]->mPosition, maxVertices[1]->mPosition);
+  real zSpanSq = Math::DistanceSq(minVertices[2]->mPosition, maxVertices[2]->mPosition);
 
   // Pick the span with the largest spread
   int maxSpreadIndex = 0;
@@ -542,8 +527,7 @@ void QuickHull3D::FindInitialSpan(QuickHullVertex*& v0, QuickHullVertex*& v1)
   DrawInitialSpan(v0, v1);
 }
 
-QuickHull3D::QuickHullVertex*
-QuickHull3D::FindVertexFurthestFrom(QuickHullVertex* v0, QuickHullVertex* v1)
+QuickHull3D::QuickHullVertex* QuickHull3D::FindVertexFurthestFrom(QuickHullVertex* v0, QuickHullVertex* v1)
 {
   // Find the furthest furthest away point from the line. Instead of calling a
   // helper function, we can cache a lot of common values from the line [v0, v1]
@@ -559,8 +543,7 @@ QuickHull3D::FindVertexFurthestFrom(QuickHullVertex* v0, QuickHullVertex* v1)
 
   real maxDistance = 0;
   QuickHullVertex* furthestVertex = nullptr;
-  for (VertexList::range vertices = mVertices.All(); !vertices.Empty();
-       vertices.PopFront())
+  for (VertexList::range vertices = mVertices.All(); !vertices.Empty(); vertices.PopFront())
   {
     QuickHullVertex* vertex = &vertices.Front();
     Vec3 c = vertex->mPosition;
@@ -584,8 +567,9 @@ QuickHull3D::FindVertexFurthestFrom(QuickHullVertex* v0, QuickHullVertex* v1)
   return furthestVertex;
 }
 
-QuickHull3D::QuickHullVertex* QuickHull3D::FindVertexFurthestFrom(
-    QuickHullVertex* v0, QuickHullVertex* v1, QuickHullVertex* v2)
+QuickHull3D::QuickHullVertex* QuickHull3D::FindVertexFurthestFrom(QuickHullVertex* v0,
+                                                                  QuickHullVertex* v1,
+                                                                  QuickHullVertex* v2)
 {
   // Find the furthest furthest away point from the triangle [v0, v1, v2].
 
@@ -599,8 +583,7 @@ QuickHull3D::QuickHullVertex* QuickHull3D::FindVertexFurthestFrom(
 
   real maxDistance = 0;
   QuickHullVertex* furthestVertex = nullptr;
-  for (VertexList::range vertices = mVertices.All(); !vertices.Empty();
-       vertices.PopFront())
+  for (VertexList::range vertices = mVertices.All(); !vertices.Empty(); vertices.PopFront())
   {
     QuickHullVertex* vertex = &vertices.Front();
     real distance = Math::Abs(Math::Dot(normal, vertex->mPosition - p0));
@@ -638,8 +621,7 @@ void QuickHull3D::ComputeInitialConflictLists()
   DrawConflictPartition();
 }
 
-QuickHull3D::QuickHullFace*
-QuickHull3D::FindClosestFace(QuickHullVertex* vertex)
+QuickHull3D::QuickHullFace* QuickHull3D::FindClosestFace(QuickHullVertex* vertex)
 {
   QuickHullFace* closestFace = nullptr;
   real closestDistance = Math::PositiveMax();
@@ -647,8 +629,7 @@ QuickHull3D::FindClosestFace(QuickHullVertex* vertex)
   for (FaceList::range faces = mFaces.All(); !faces.Empty(); faces.PopFront())
   {
     QuickHullFace* face = &faces.Front();
-    real signedDistance =
-        Math::Dot(vertex->mPosition - face->mCenter, face->mNormal);
+    real signedDistance = Math::Dot(vertex->mPosition - face->mCenter, face->mNormal);
     if (signedDistance >= mEpsilon && signedDistance < closestDistance)
     {
       closestDistance = signedDistance;
@@ -659,8 +640,7 @@ QuickHull3D::FindClosestFace(QuickHullVertex* vertex)
   return closestFace;
 }
 
-void QuickHull3D::FindNextConflictVertex(QuickHullVertex*& conflictVertex,
-                                         QuickHullFace*& conflictFace)
+void QuickHull3D::FindNextConflictVertex(QuickHullVertex*& conflictVertex, QuickHullFace*& conflictFace)
 {
   conflictVertex = nullptr;
   conflictFace = nullptr;
@@ -669,9 +649,7 @@ void QuickHull3D::FindNextConflictVertex(QuickHullVertex*& conflictVertex,
   for (FaceList::range faces = mFaces.All(); !faces.Empty(); faces.PopFront())
   {
     QuickHullFace* face = &faces.Front();
-    for (VertexList::range vertices = face->mConflictList.All();
-         !vertices.Empty();
-         vertices.PopFront())
+    for (VertexList::range vertices = face->mConflictList.All(); !vertices.Empty(); vertices.PopFront())
     {
       QuickHullVertex* vertex = &vertices.Front();
       if (vertex->mConflictDistance > furthestDistance)
@@ -684,8 +662,7 @@ void QuickHull3D::FindNextConflictVertex(QuickHullVertex*& conflictVertex,
   }
 }
 
-void QuickHull3D::AddVertexToHull(QuickHullVertex* conflictVertex,
-                                  QuickHullFace* conflictFace)
+void QuickHull3D::AddVertexToHull(QuickHullVertex* conflictVertex, QuickHullFace* conflictFace)
 {
   // Remove the vertex from the face since we're going to partition it
   conflictFace->mConflictList.Erase(conflictVertex);
@@ -771,8 +748,7 @@ void QuickHull3D::IdentifyHorizon(QuickHullVertex* conflictVertex,
     // If this face isn't visible then this edge is on the horizon.
     // Add the edge and then pop the stack back to continue iteration.
     bool isFaceVisible =
-        Math::Dot(conflictVertex->mPosition - adjacentFace->mCenter,
-                  adjacentFace->mNormal) >= mEpsilon;
+        Math::Dot(conflictVertex->mPosition - adjacentFace->mCenter, adjacentFace->mNormal) >= mEpsilon;
     if (!isFaceVisible)
     {
       horizonEdges.PushBack(edge);
@@ -870,8 +846,7 @@ void QuickHull3D::PartitionOldFaceConflictLists(Array<QuickHullFace*>& faces)
   }
 }
 
-void QuickHull3D::AbsorbConflictList(QuickHullFace* face,
-                                     VertexList& conflictList)
+void QuickHull3D::AbsorbConflictList(QuickHullFace* face, VertexList& conflictList)
 {
   // Absorb each vertex in the list into the given face. We don't splice the
   // vertex in because we can sort the vertices by conflict distance to speed up
@@ -885,8 +860,7 @@ void QuickHull3D::AbsorbConflictList(QuickHullFace* face,
   }
 }
 
-void QuickHull3D::AbsorbConflictVertex(QuickHullFace* face,
-                                       QuickHullVertex* vertex)
+void QuickHull3D::AbsorbConflictVertex(QuickHullFace* face, QuickHullVertex* vertex)
 {
   // For now just insert at the end. This should be sorted into place later.
   face->mConflictList.PushBack(vertex);
@@ -978,14 +952,12 @@ void QuickHull3D::MergeFaces(Array<QuickHullFace*>& newFaces)
   }
 }
 
-QuickHull3D::QuickHullEdge*
-QuickHull3D::FindQuickHullMergeFace(QuickHullFace* face)
+QuickHull3D::QuickHullEdge* QuickHull3D::FindQuickHullMergeFace(QuickHullFace* face)
 {
   // Walk over all edges in this face. Test the adjacent face to see if it's
   // strictly convex to this face. If it isn't then return the edge bordering
   // these faces as we need to merge across this edge.
-  for (EdgeList::range edges = face->mEdges.All(); !edges.Empty();
-       edges.PopFront())
+  for (EdgeList::range edges = face->mEdges.All(); !edges.Empty(); edges.PopFront())
   {
     QuickHullEdge* edge = &edges.Front();
     QuickHullFace* adjacentFace = edge->mTwin->mFace;
@@ -1039,10 +1011,9 @@ void QuickHull3D::AbsorbFace(QuickHullFace* face,
   DrawHullWithFace("Merged Faces", face);
 }
 
-QuickHull3D::QuickHullEdge*
-QuickHull3D::InsertEdgeRangeAfter(QuickHullFace* face,
-                                  QuickHullEdge* edgeToInsertAfter,
-                                  EdgeList::range& edgesToInsert)
+QuickHull3D::QuickHullEdge* QuickHull3D::InsertEdgeRangeAfter(QuickHullFace* face,
+                                                              QuickHullEdge* edgeToInsertAfter,
+                                                              EdgeList::range& edgesToInsert)
 {
   // Iteratively add each edge in the given range after the provided edge
   QuickHullEdge* it = edgeToInsertAfter;
@@ -1088,16 +1059,13 @@ bool QuickHull3D::FixTopologicalInvariants(QuickHullFace* face)
   return false;
 }
 
-bool QuickHull3D::FindTopoligicalInvariant(QuickHullFace* face,
-                                           QuickHullEdge*& e0,
-                                           QuickHullEdge*& e1)
+bool QuickHull3D::FindTopoligicalInvariant(QuickHullFace* face, QuickHullEdge*& e0, QuickHullEdge*& e1)
 {
   // The only topological invariant we care about is two faces sharing more than
   // one edge. We can detect this by iterating over all edges and seeing if two
   // adjacent edge's have the same twin face.
   QuickHullEdge* prev = &face->mEdges.Back();
-  for (EdgeList::range edges = face->mEdges.All(); !edges.Empty();
-       edges.PopFront())
+  for (EdgeList::range edges = face->mEdges.All(); !edges.Empty(); edges.PopFront())
   {
     QuickHullEdge* edge = &edges.Front();
     if (prev->mTwin->mFace == edge->mTwin->mFace)
@@ -1111,9 +1079,7 @@ bool QuickHull3D::FindTopoligicalInvariant(QuickHullFace* face,
   return false;
 }
 
-void QuickHull3D::FixTriangleTopoligicalInvariant(QuickHullFace* face,
-                                                  QuickHullEdge* e0,
-                                                  QuickHullEdge* e1)
+void QuickHull3D::FixTriangleTopoligicalInvariant(QuickHullFace* face, QuickHullEdge* e0, QuickHullEdge* e1)
 {
   // When the adjacent edge is a triangle, we need to remove the two shared
   // edges of the adjacent face, remove the internal vertex, and absorb the
@@ -1163,9 +1129,7 @@ void QuickHull3D::FixTriangleTopoligicalInvariant(QuickHullFace* face,
   DrawHullWithFace("Collapse triangle", face);
 }
 
-void QuickHull3D::FixEdgeTopoligicalInvariant(QuickHullFace* face,
-                                              QuickHullEdge* e0,
-                                              QuickHullEdge* e1)
+void QuickHull3D::FixEdgeTopoligicalInvariant(QuickHullFace* face, QuickHullEdge* e0, QuickHullEdge* e1)
 {
   // To fix an edge topological issue, we need to merge the two
   // edges into one, removing the vertex in the middle.
@@ -1195,10 +1159,7 @@ void QuickHull3D::FixEdgeTopoligicalInvariant(QuickHullFace* face,
   DrawHullWithFace("Collapse edge", face);
 }
 
-void QuickHull3D::CreateTwinEdge(QuickHullVertex* v0,
-                                 QuickHullVertex* v1,
-                                 QuickHullEdge* edge01,
-                                 QuickHullEdge* edge10)
+void QuickHull3D::CreateTwinEdge(QuickHullVertex* v0, QuickHullVertex* v1, QuickHullEdge* edge01, QuickHullEdge* edge10)
 {
   edge01->mTail = v0;
   edge10->mTail = v1;
@@ -1206,9 +1167,7 @@ void QuickHull3D::CreateTwinEdge(QuickHullVertex* v0,
   edge10->mTwin = edge01;
 }
 
-QuickHull3D::QuickHullFace* QuickHull3D::CreateFace(QuickHullEdge* e0,
-                                                    QuickHullEdge* e1,
-                                                    QuickHullEdge* e2)
+QuickHull3D::QuickHullFace* QuickHull3D::CreateFace(QuickHullEdge* e0, QuickHullEdge* e1, QuickHullEdge* e2)
 {
   QuickHullFace* face = AllocateFace();
   face->mEdges.PushBack(e0);
@@ -1248,8 +1207,7 @@ void QuickHull3D::DeallocateEdge(QuickHullEdge* edge)
 void QuickHull3D::DeallocateFace(QuickHullFace* face)
 {
   ErrorIf(!face->mEdges.Empty(), "Deallocating face with edges");
-  ErrorIf(!face->mConflictList.Empty(),
-          "Deallocating face with conflict vertices");
+  ErrorIf(!face->mConflictList.Empty(), "Deallocating face with conflict vertices");
 
   mFacePool->DeallocateType<QuickHullFace>(face);
 }
@@ -1257,8 +1215,7 @@ void QuickHull3D::DeallocateFace(QuickHullFace* face)
 void QuickHull3D::ValidateFace(QuickHullFace* face)
 {
   size_t edgeCount = 0;
-  for (EdgeList::range edges = face->mEdges.All(); !edges.Empty();
-       edges.PopFront())
+  for (EdgeList::range edges = face->mEdges.All(); !edges.Empty(); edges.PopFront())
   {
     ++edgeCount;
     QuickHullEdge* edge = &edges.Front();
@@ -1270,10 +1227,8 @@ void QuickHull3D::ValidateFace(QuickHullFace* face)
     ErrorIf(edge->mTail == nullptr, "Invalid tail");
 
     QuickHullFace* adjacentFace = twin->mFace;
-    real signedDistance0 =
-        Math::Dot(face->mNormal, adjacentFace->mCenter - face->mCenter);
-    real signedDistance1 =
-        Math::Dot(adjacentFace->mNormal, face->mCenter - adjacentFace->mCenter);
+    real signedDistance0 = Math::Dot(face->mNormal, adjacentFace->mCenter - face->mCenter);
+    real signedDistance1 = Math::Dot(adjacentFace->mNormal, face->mCenter - adjacentFace->mCenter);
     ErrorIf(signedDistance0 > -mEpsilon, "Face 1 isn't convex to Face 0");
     ErrorIf(signedDistance1 > -mEpsilon, "Face 0 isn't convex to Face 1");
 
@@ -1305,7 +1260,7 @@ void QuickHull3D::ValidateFinalHull(const Array<Vec3>& points)
 
 bool QuickHull3D::IsInsideHull(Vec3Param point, float epsilon)
 {
-  forRange(QuickHullFace & face, mFaces.All())
+  forRange (QuickHullFace& face, mFaces.All())
   {
     real signedDistance = Math::Dot(face.mNormal, point - face.mCenter);
     if (signedDistance > epsilon)
@@ -1333,12 +1288,9 @@ DebugDrawStep& QuickHull3D::DrawHull(DebugDrawStep& step, bool filled)
   return step;
 }
 
-void QuickHull3D::DrawVertices(DebugDrawStep& step,
-                               VertexList& vertexList,
-                               Vec4Param color)
+void QuickHull3D::DrawVertices(DebugDrawStep& step, VertexList& vertexList, Vec4Param color)
 {
-  for (VertexList::range vertices = vertexList.All(); !vertices.Empty();
-       vertices.PopFront())
+  for (VertexList::range vertices = vertexList.All(); !vertices.Empty(); vertices.PopFront())
   {
     QuickHullVertex* vertex = &vertices.Front();
     DrawPoint(step, vertex->mPosition, color);
@@ -1368,10 +1320,7 @@ void QuickHull3D::DrawPoint(DebugDrawStep& step, Vec3Param p0, Vec4Param color)
   step.Add(point);
 }
 
-void QuickHull3D::DrawLine(DebugDrawStep& step,
-                           Vec3Param p0,
-                           Vec3Param p1,
-                           Vec4Param color)
+void QuickHull3D::DrawLine(DebugDrawStep& step, Vec3Param p0, Vec3Param p1, Vec4Param color)
 {
   Debug::Line line = mDebugDrawStack->mBaseLine;
   line.mStart = p0;
@@ -1380,11 +1329,7 @@ void QuickHull3D::DrawLine(DebugDrawStep& step,
   step.Add(line);
 }
 
-void QuickHull3D::DrawRay(DebugDrawStep& step,
-                          Vec3Param p0,
-                          Vec3Param p1,
-                          real headSize,
-                          Vec4Param color)
+void QuickHull3D::DrawRay(DebugDrawStep& step, Vec3Param p0, Vec3Param p1, real headSize, Vec4Param color)
 {
   Debug::Line line = mDebugDrawStack->mBaseLine;
   line.mStart = p0;
@@ -1394,24 +1339,17 @@ void QuickHull3D::DrawRay(DebugDrawStep& step,
   step.Add(line);
 }
 
-void QuickHull3D::DrawEdge(DebugDrawStep& step,
-                           QuickHullEdge* edge,
-                           Vec4Param color)
+void QuickHull3D::DrawEdge(DebugDrawStep& step, QuickHullEdge* edge, Vec4Param color)
 {
   Vec3 p0 = edge->mTail->mPosition;
   Vec3 p1 = edge->mTwin->mTail->mPosition;
   DrawLine(step, p0, p1, color);
 }
 
-void QuickHull3D::DrawFace(DebugDrawStep& step,
-                           QuickHullFace* face,
-                           Vec4Param color,
-                           bool drawEdges,
-                           bool drawFaceVec)
+void QuickHull3D::DrawFace(DebugDrawStep& step, QuickHullFace* face, Vec4Param color, bool drawEdges, bool drawFaceVec)
 {
   face->RecomputeCenterAndNormal();
-  for (EdgeList::range edges = face->mEdges.All(); !edges.Empty();
-       edges.PopFront())
+  for (EdgeList::range edges = face->mEdges.All(); !edges.Empty(); edges.PopFront())
   {
     QuickHullEdge& edge = edges.Front();
 
@@ -1435,8 +1373,7 @@ void QuickHull3D::DrawFace(DebugDrawStep& step,
     }
   }
 
-  DrawRay(
-      step, face->mCenter, face->mCenter + face->mNormal * 0.5f, 0.1f, color);
+  DrawRay(step, face->mCenter, face->mCenter + face->mNormal * 0.5f, 0.1f, color);
 }
 
 void QuickHull3D::DrawInitialSpan(QuickHullVertex* v0, QuickHullVertex* v1)
@@ -1450,9 +1387,7 @@ void QuickHull3D::DrawInitialSpan(QuickHullVertex* v0, QuickHullVertex* v1)
   DrawLine(step, v0->mPosition, v1->mPosition);
 }
 
-void QuickHull3D::DrawInitialTriangle(QuickHullVertex* v0,
-                                      QuickHullVertex* v1,
-                                      QuickHullVertex* v2)
+void QuickHull3D::DrawInitialTriangle(QuickHullVertex* v0, QuickHullVertex* v1, QuickHullVertex* v2)
 {
   if (mDebugDrawStack == nullptr)
     return;
@@ -1464,9 +1399,7 @@ void QuickHull3D::DrawInitialTriangle(QuickHullVertex* v0,
   DrawLine(step, v0->mPosition, v1->mPosition);
 
   Vec3 axis = Math::AttemptNormalized(v0->mPosition - v1->mPosition);
-  Vec3 projectionPoint =
-      v0->mPosition +
-      Math::ProjectOnVector(v2->mPosition - v0->mPosition, axis);
+  Vec3 projectionPoint = v0->mPosition + Math::ProjectOnVector(v2->mPosition - v0->mPosition, axis);
   DrawPoint(step, projectionPoint);
   DrawLine(step, projectionPoint, v2->mPosition);
 }
@@ -1488,12 +1421,9 @@ void QuickHull3D::DrawInitialTetrahedron(QuickHullVertex* v0,
   DrawLine(step, v0->mPosition, v2->mPosition);
   DrawLine(step, v1->mPosition, v2->mPosition);
 
-  Vec3 normal =
-      Math::Cross(v1->mPosition - v0->mPosition, v2->mPosition - v0->mPosition);
+  Vec3 normal = Math::Cross(v1->mPosition - v0->mPosition, v2->mPosition - v0->mPosition);
   normal.AttemptNormalize();
-  Vec3 projectionPoint =
-      v0->mPosition +
-      Math::ProjectOnPlane(v3->mPosition - v0->mPosition, normal);
+  Vec3 projectionPoint = v0->mPosition + Math::ProjectOnPlane(v3->mPosition - v0->mPosition, normal);
   DrawPoint(step, projectionPoint);
   DrawLine(step, projectionPoint, v3->mPosition);
 }
@@ -1519,8 +1449,7 @@ void QuickHull3D::DrawConflictPartition()
   DrawConflictVertices(step);
 }
 
-void QuickHull3D::DrawFoundConflictVertex(QuickHullVertex* conflictVertex,
-                                          QuickHullFace* conflictFace)
+void QuickHull3D::DrawFoundConflictVertex(QuickHullVertex* conflictVertex, QuickHullFace* conflictFace)
 {
   if (mDebugDrawStack == nullptr)
     return;
@@ -1532,8 +1461,7 @@ void QuickHull3D::DrawFoundConflictVertex(QuickHullVertex* conflictVertex,
   DrawFace(step, conflictFace, conflictColor);
 }
 
-void QuickHull3D::DrawHorizon(QuickHullVertex* eye,
-                              Array<QuickHullEdge*>& edges)
+void QuickHull3D::DrawHorizon(QuickHullVertex* eye, Array<QuickHullEdge*>& edges)
 {
   if (mDebugDrawStack == nullptr)
     return;
@@ -1569,9 +1497,7 @@ void QuickHull3D::DrawNonConvexFaces(QuickHullFace* face0, QuickHullFace* face1)
   DrawFace(step, face1, conflictColor, true, true);
 }
 
-void QuickHull3D::DrawHullWithFace(StringParam text,
-                                   QuickHullFace* face,
-                                   Vec4Param color)
+void QuickHull3D::DrawHullWithFace(StringParam text, QuickHullFace* face, Vec4Param color)
 {
   if (mDebugDrawStack == nullptr)
     return;
@@ -1581,9 +1507,7 @@ void QuickHull3D::DrawHullWithFace(StringParam text,
   DrawFace(step, face, color, true, true);
 }
 
-void QuickHull3D::DrawFaceMerge(QuickHullFace* face0,
-                                QuickHullFace* face1,
-                                Vec4Param color)
+void QuickHull3D::DrawFaceMerge(QuickHullFace* face0, QuickHullFace* face1, Vec4Param color)
 {
   if (mDebugDrawStack == nullptr)
     return;
@@ -1594,11 +1518,8 @@ void QuickHull3D::DrawFaceMerge(QuickHullFace* face0,
   DrawFace(step, face1, color, true, true);
 }
 
-void QuickHull3D::DrawTopologicalFix(StringParam text,
-                                     QuickHullFace* face0,
-                                     QuickHullFace* face1,
-                                     QuickHullEdge* edge0,
-                                     QuickHullEdge* edge1)
+void QuickHull3D::DrawTopologicalFix(
+    StringParam text, QuickHullFace* face0, QuickHullFace* face1, QuickHullEdge* edge0, QuickHullEdge* edge1)
 {
   if (mDebugDrawStack == nullptr)
     return;

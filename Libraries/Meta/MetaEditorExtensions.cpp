@@ -14,12 +14,9 @@ ZilchDefineType(EditorIndexedStringArray, builder, type)
 {
 }
 
-EditorIndexedStringArray::EditorIndexedStringArray(GetStringsFunc sourceArray) :
-    AccessSourceArray(sourceArray){};
+EditorIndexedStringArray::EditorIndexedStringArray(GetStringsFunc sourceArray) : AccessSourceArray(sourceArray){};
 
-void EditorIndexedStringArray::Enumerate(HandleParam instance,
-                                         Property* property,
-                                         Array<String>& strings)
+void EditorIndexedStringArray::Enumerate(HandleParam instance, Property* property, Array<String>& strings)
 {
   if (AccessSourceArray)
     AccessSourceArray(instance, property, strings);
@@ -32,14 +29,10 @@ ZilchDefineType(EditorRange, builder, type)
 {
   ZilchBindFieldProperty(Min);
   ZilchBindFieldProperty(Max);
-  ZilchBindFieldProperty(Increment)->AddAttribute(
-      PropertyAttributes::cOptional);
+  ZilchBindFieldProperty(Increment)->AddAttribute(PropertyAttributes::cOptional);
 }
 
-EditorRange::EditorRange() :
-    Min(-Math::PositiveMax()),
-    Max(Math::PositiveMax()),
-    Increment(0.01f)
+EditorRange::EditorRange() : Min(-Math::PositiveMax()), Max(Math::PositiveMax()), Increment(0.01f)
 {
 }
 
@@ -81,9 +74,7 @@ ZilchDefineType(EditorRotationBasis, builder, type)
 {
 }
 
-EditorRotationBasis::EditorRotationBasis() :
-    mIntData(0),
-    mGizmoName("EditorGizmo")
+EditorRotationBasis::EditorRotationBasis() : mIntData(0), mGizmoName("EditorGizmo")
 {
 }
 
@@ -94,9 +85,7 @@ EditorRotationBasis::EditorRotationBasis(StringParam archetypeName) :
 {
 }
 
-EditorRotationBasis::EditorRotationBasis(StringParam archetypeName,
-                                         StringParam gizmoName,
-                                         int intData) :
+EditorRotationBasis::EditorRotationBasis(StringParam archetypeName, StringParam gizmoName, int intData) :
     mIntData(intData),
     mGizmoName(gizmoName),
     mArchetypeName(archetypeName)
@@ -112,11 +101,8 @@ ZilchDefineType(MetaEditorResource, builder, type)
   ZilchBindField(SearchPreview)->AddAttribute(PropertyAttributes::cOptional);
 }
 
-MetaEditorResource::MetaEditorResource(bool allowAdd,
-                                       bool allowNone,
-                                       StringParam filterTag,
-                                       bool forceCompact,
-                                       bool searchPreview) :
+MetaEditorResource::MetaEditorResource(
+    bool allowAdd, bool allowNone, StringParam filterTag, bool forceCompact, bool searchPreview) :
     FilterTag(filterTag),
     AllowAdd(allowAdd),
     AllowNone(allowNone),
@@ -165,10 +151,8 @@ ZilchDefineType(MetaEditorGizmo, builder, type)
 // Meta Shader Input
 ZilchDefineType(MetaShaderInput, builder, type)
 {
-  ZilchBindFieldProperty(mFragmentName)
-      ->AddAttribute(PropertyAttributes::cOptional);
-  ZilchBindFieldProperty(mInputName)
-      ->AddAttribute(PropertyAttributes::cOptional);
+  ZilchBindFieldProperty(mFragmentName)->AddAttribute(PropertyAttributes::cOptional);
+  ZilchBindFieldProperty(mInputName)->AddAttribute(PropertyAttributes::cOptional);
 }
 
 // Meta Group

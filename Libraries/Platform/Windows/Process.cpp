@@ -26,9 +26,7 @@ Process::~Process()
   ZeroDestructPrivateData(ProcessPrivateData);
 }
 
-inline void DuplicateAndClose(Status& status,
-                              HANDLE currentProcess,
-                              StackHandle& handle)
+inline void DuplicateAndClose(Status& status, HANDLE currentProcess, StackHandle& handle)
 {
   // This handle has not been redirected, just return
   if (handle.mHandle == cInvalidHandle)
@@ -51,10 +49,7 @@ inline void DuplicateAndClose(Status& status,
   handle = noninheritingHandle;
 }
 
-inline void SetupStandardHandle(Status& status,
-                                StackHandle& writeHandle,
-                                StackHandle& readHandle,
-                                bool redirect)
+inline void SetupStandardHandle(Status& status, StackHandle& writeHandle, StackHandle& readHandle, bool redirect)
 {
   // If we are redirecting create a new pipe.
   if (redirect)
@@ -67,8 +62,7 @@ inline void SetupStandardHandle(Status& status,
     security.bInheritHandle = TRUE;
 
     SetLastError(0);
-    BOOL result =
-        CreatePipe(&readHandle.mHandle, &writeHandle.mHandle, &security, 0);
+    BOOL result = CreatePipe(&readHandle.mHandle, &writeHandle.mHandle, &security, 0);
     if (result == FALSE)
       WinReturnIfStatus(status);
   }
@@ -80,8 +74,7 @@ void SetUpStartInfo(ProcessStartInfo& info)
   // passed in as the application name. Because of this the application name (if
   // it exists) is always quoted as the first argument.
   if (info.mApplicationName.Empty() != true)
-    info.mArguments = String::Format(
-        "\"%s\" %s", info.mApplicationName.c_str(), info.mArguments.c_str());
+    info.mArguments = String::Format("\"%s\" %s", info.mApplicationName.c_str(), info.mArguments.c_str());
 
   // In order for process to search for the application, the passed in
   // application name needs to be null. In this case we've already set the
@@ -112,22 +105,17 @@ void Process::Start(Status& status, ProcessStartInfo& info)
 
   // Set up the handles for each standard stream.
   // Make sure to clean up the unneeded ones.
-  SetupStandardHandle(
-      status, standardOutWrite, standardOutRead, info.mRedirectStandardOutput);
+  SetupStandardHandle(status, standardOutWrite, standardOutRead, info.mRedirectStandardOutput);
   WinReturnIfStatus(status);
   DuplicateAndClose(status, currentProcess, standardOutRead);
   WinReturnIfStatus(status);
 
-  SetupStandardHandle(status,
-                      standardErrorWrite,
-                      standardErrorRead,
-                      info.mRedirectStandardError);
+  SetupStandardHandle(status, standardErrorWrite, standardErrorRead, info.mRedirectStandardError);
   WinReturnIfStatus(status);
   DuplicateAndClose(status, currentProcess, standardErrorRead);
   WinReturnIfStatus(status);
 
-  SetupStandardHandle(
-      status, standardInWrite, standardInRead, info.mRedirectStandardInput);
+  SetupStandardHandle(status, standardInWrite, standardInRead, info.mRedirectStandardInput);
   WinReturnIfStatus(status);
   DuplicateAndClose(status, currentProcess, standardInWrite);
   WinReturnIfStatus(status);
@@ -152,8 +140,7 @@ void Process::Start(Status& status, ProcessStartInfo& info)
 
   if (applicationName.c_str() == nullptr && arguments.c_str() == nullptr)
   {
-    status.SetFailed(
-        "Neither application name or command line parameters were specified.");
+    status.SetFailed("Neither application name or command line parameters were specified.");
     return;
   }
 
@@ -176,11 +163,10 @@ void Process::Start(Status& status, ProcessStartInfo& info)
     FillWindowsErrorStatus(status);
     if (status.Failed())
     {
-      status.Message =
-          String::Format("Failed to create process %s. \nCommand line '%s'\n%s",
-                         info.mApplicationName.c_str(),
-                         info.mArguments.c_str(),
-                         status.Message.c_str());
+      status.Message = String::Format("Failed to create process %s. \nCommand line '%s'\n%s",
+                                      info.mApplicationName.c_str(),
+                                      info.mArguments.c_str(),
+                                      status.Message.c_str());
       return;
     }
   }
@@ -244,9 +230,7 @@ int Process::WaitForClose(unsigned long milliseconds)
   return exitCode;
 }
 
-void OpenStandardStream(StackHandle& handle,
-                        File& fileStream,
-                        FileMode::Enum mode)
+void OpenStandardStream(StackHandle& handle, File& fileStream, FileMode::Enum mode)
 {
   fileStream.Open(handle, mode);
   handle = cInvalidHandle;
@@ -289,9 +273,7 @@ bool Process::IsStandardInRedirected()
 }
 
 // Global Functions/Helpers
-inline void GetProcessNameAndId(DWORD processID,
-                                String& processName,
-                                String& processPath)
+inline void GetProcessNameAndId(DWORD processID, String& processName, String& processPath)
 {
   // We can't retrieve info about some processes so default those to some string
   static const String unknownStr = "<unknown>";
@@ -300,8 +282,7 @@ inline void GetProcessNameAndId(DWORD processID,
   TCHAR szProcessPath[MAX_PATH] = TEXT("<unknown>");
 
   // Get a handle to the process.
-  HANDLE hProcess = OpenProcess(
-      PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processID);
+  HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processID);
 
   // Get the process name.
   if (NULL != hProcess)
@@ -310,16 +291,12 @@ inline void GetProcessNameAndId(DWORD processID,
     DWORD resultsBytesNeeded;
 
     // Gets a handle for each module in the process
-    if (EnumProcessModules(
-            hProcess, &moduleHandle, sizeof(moduleHandle), &resultsBytesNeeded))
+    if (EnumProcessModules(hProcess, &moduleHandle, sizeof(moduleHandle), &resultsBytesNeeded))
     {
       // According to the exhumation's of GetModuleBaseName it is preferable
       // (and faster) to use GetModuleFileName (which gets the full path) and
       // the parse the text to get the process name
-      GetModuleFileNameEx(hProcess,
-                          moduleHandle,
-                          szProcessPath,
-                          sizeof(szProcessPath) / sizeof(TCHAR));
+      GetModuleFileNameEx(hProcess, moduleHandle, szProcessPath, sizeof(szProcessPath) / sizeof(TCHAR));
 
       processPath = Narrow(szProcessPath);
       // Make sure to normalize the path just in-case

@@ -37,8 +37,7 @@ struct DynamicTreeNode
 /// Policy for the DynamicAabbTree that determines
 /// how insertions and removals are handled.
 template <typename ClientDataType>
-struct DynamicTreePolicy
-    : public BaseDynamicTreePolicy<DynamicTreeNode<ClientDataType>>
+struct DynamicTreePolicy : public BaseDynamicTreePolicy<DynamicTreeNode<ClientDataType>>
 {
   typedef DynamicTreeNode<ClientDataType> NodeType;
   typedef ClientDataType ClientDataTypeDef;
@@ -58,8 +57,7 @@ struct DynamicTreePolicy
 /// Raycasting performs much faster than most other dynamic BroadPhases, and the
 /// normal update is decently fast.
 template <typename ClientDataType>
-class DynamicAabbTree
-    : public BaseDynamicAabbTree<DynamicTreePolicy<ClientDataType>>
+class DynamicAabbTree : public BaseDynamicAabbTree<DynamicTreePolicy<ClientDataType>>
 {
 public:
   typedef DynamicAabbTree<ClientDataType> TreeType;

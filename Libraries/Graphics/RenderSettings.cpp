@@ -12,30 +12,18 @@ ZilchDefineType(ShaderInputs, builder, type)
 
   ZilchBindMethod(Create);
 
-  ZilchBindOverloadedMethod(Add,
-                            ZilchInstanceOverload(void, String, String, bool));
-  ZilchBindOverloadedMethod(Add,
-                            ZilchInstanceOverload(void, String, String, int));
-  ZilchBindOverloadedMethod(
-      Add, ZilchInstanceOverload(void, String, String, IntVec2));
-  ZilchBindOverloadedMethod(
-      Add, ZilchInstanceOverload(void, String, String, IntVec3));
-  ZilchBindOverloadedMethod(
-      Add, ZilchInstanceOverload(void, String, String, IntVec4));
-  ZilchBindOverloadedMethod(Add,
-                            ZilchInstanceOverload(void, String, String, float));
-  ZilchBindOverloadedMethod(Add,
-                            ZilchInstanceOverload(void, String, String, Vec2));
-  ZilchBindOverloadedMethod(Add,
-                            ZilchInstanceOverload(void, String, String, Vec3));
-  ZilchBindOverloadedMethod(Add,
-                            ZilchInstanceOverload(void, String, String, Vec4));
-  ZilchBindOverloadedMethod(Add,
-                            ZilchInstanceOverload(void, String, String, Mat3));
-  ZilchBindOverloadedMethod(Add,
-                            ZilchInstanceOverload(void, String, String, Mat4));
-  ZilchBindOverloadedMethod(
-      Add, ZilchInstanceOverload(void, String, String, Texture*));
+  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, bool));
+  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, int));
+  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, IntVec2));
+  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, IntVec3));
+  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, IntVec4));
+  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, float));
+  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Vec2));
+  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Vec3));
+  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Vec4));
+  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Mat3));
+  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Mat4));
+  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Texture*));
   ZilchBindMethod(Remove);
   ZilchBindMethod(Clear);
 }
@@ -111,16 +99,11 @@ void ShaderInputs::Add(String fragmentName, String inputName, Texture* input)
   Add(fragmentName, inputName, ShaderInputType::Texture, input);
 }
 
-void ShaderInputs::Add(String fragmentName,
-                       String inputName,
-                       ShaderInputType::Enum type,
-                       AnyParam value)
+void ShaderInputs::Add(String fragmentName, String inputName, ShaderInputType::Enum type, AnyParam value)
 {
-  ZilchShaderGenerator* shaderGenerator =
-      Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
+  ZilchShaderGenerator* shaderGenerator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
 
-  ShaderInput shaderInput =
-      shaderGenerator->CreateShaderInput(fragmentName, inputName, type, value);
+  ShaderInput shaderInput = shaderGenerator->CreateShaderInput(fragmentName, inputName, type, value);
   if (shaderInput.mShaderInputType != ShaderInputType::Invalid)
     mShaderInputs.Insert(StringPair(fragmentName, inputName), shaderInput);
 }
@@ -317,8 +300,7 @@ GraphicsBlendSettings* GraphicsRenderSettings::GetBlendSettings()
   return (GraphicsBlendSettings*)RenderSettings::GetBlendSettings();
 }
 
-void GraphicsRenderSettings::SetBlendSettings(
-    GraphicsBlendSettings* blendSettings)
+void GraphicsRenderSettings::SetBlendSettings(GraphicsBlendSettings* blendSettings)
 {
   RenderSettings::SetBlendSettings(blendSettings);
 }
@@ -328,8 +310,7 @@ GraphicsDepthSettings* GraphicsRenderSettings::GetDepthSettings()
   return (GraphicsDepthSettings*)RenderSettings::GetDepthSettings();
 }
 
-void GraphicsRenderSettings::SetDepthSettings(
-    GraphicsDepthSettings* depthSettings)
+void GraphicsRenderSettings::SetDepthSettings(GraphicsDepthSettings* depthSettings)
 {
   RenderSettings::SetDepthSettings(depthSettings);
 }
@@ -345,8 +326,7 @@ GraphicsBlendSettings* GraphicsRenderSettings::GetBlendSettingsMrt(uint index)
   return (GraphicsBlendSettings*)&mBlendSettings[index];
 }
 
-void GraphicsRenderSettings::SetBlendSettingsMrt(
-    GraphicsBlendSettings* blendSettings, uint index)
+void GraphicsRenderSettings::SetBlendSettingsMrt(GraphicsBlendSettings* blendSettings, uint index)
 {
   if (index >= 8)
     return DoNotifyException("Error", "Invalid index. Must be 0-7.");
@@ -381,8 +361,7 @@ ZilchDefineType(ColorTargetMrt, builder, type)
 void ColorTargetMrt::Set(uint index, RenderTarget* colorTarget)
 {
   if (mRenderSettings.IsNull())
-    return DoNotifyException("Error",
-                             "Attempting to call member on null object.");
+    return DoNotifyException("Error", "Attempting to call member on null object.");
   mRenderSettings->SetColorTargetMrt(colorTarget, index);
 }
 
@@ -397,8 +376,7 @@ ZilchDefineType(BlendSettingsMrt, builder, type)
 void BlendSettingsMrt::Set(uint index, GraphicsBlendSettings* blendSettings)
 {
   if (mRenderSettings.IsNull())
-    return DoNotifyException("Error",
-                             "Attempting to call member on null object.");
+    return DoNotifyException("Error", "Attempting to call member on null object.");
   mRenderSettings->SetBlendSettingsMrt(blendSettings, index);
 }
 
@@ -437,8 +415,7 @@ ZilchDefineType(MultiRenderTarget, builder, type)
   ZilchBindGetterSetter(BlendSettings7);
 }
 
-MultiRenderTarget::MultiRenderTarget(
-    HandleOf<GraphicsRenderSettings> renderSettings) :
+MultiRenderTarget::MultiRenderTarget(HandleOf<GraphicsRenderSettings> renderSettings) :
     mRenderSettings(renderSettings),
     mColorTargetMrt(renderSettings),
     mBlendSettingsMrt(renderSettings)

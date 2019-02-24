@@ -8,14 +8,12 @@ Resource* AddResourceFromFile(StringParam filePath, StringParam resourceType)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Resources",
-                    "Cannot add resources while in read-only mode");
+    DoNotifyWarning("Resources", "Cannot add resources while in read-only mode");
     return nullptr;
   }
 
   ContentLibrary* contentLibrary = Z::gEditor->mProjectLibrary;
-  ResourceLibrary* resourceLibrary =
-      Z::gResources->GetResourceLibrary(contentLibrary->Name);
+  ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(contentLibrary->Name);
 
   if (!FileExists(filePath))
   {
@@ -25,8 +23,7 @@ Resource* AddResourceFromFile(StringParam filePath, StringParam resourceType)
   }
 
   String fileName = FilePath::GetFileName(filePath);
-  ContentItem* newContentItem =
-      contentLibrary->FindContentItemByFileName(fileName);
+  ContentItem* newContentItem = contentLibrary->FindContentItemByFileName(fileName);
 
   // Add to the library and save
   AddContentItemInfo addContent;
@@ -38,8 +35,7 @@ Resource* AddResourceFromFile(StringParam filePath, StringParam resourceType)
 
   Status addContentStatus;
 
-  newContentItem =
-      Z::gContentSystem->AddContentItemToLibrary(addContentStatus, addContent);
+  newContentItem = Z::gContentSystem->AddContentItemToLibrary(addContentStatus, addContent);
 
   if (addContentStatus.Succeeded())
   {
@@ -54,14 +50,11 @@ Resource* AddResourceFromFile(StringParam filePath, StringParam resourceType)
 
     DoEditorSideImporting(&package, NULL);
 
-    DoNotify("File Added",
-             String::Format("File '%s' has been added.", fileName.c_str()),
-             "Disk");
+    DoNotify("File Added", String::Format("File '%s' has been added.", fileName.c_str()), "Disk");
   }
   else
   {
-    String message = BuildString("Failed to import content item. ",
-                                 addContentStatus.Message);
+    String message = BuildString("Failed to import content item. ", addContentStatus.Message);
     DoNotifyError("Failed Import", message);
   }
 
@@ -72,14 +65,12 @@ void AddResourcesFromFiles(const Array<String>& files, StringParam resourceType)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Resources",
-                    "Cannot add resources while in read-only mode");
+    DoNotifyWarning("Resources", "Cannot add resources while in read-only mode");
     return;
   }
 
   ContentLibrary* contentLibrary = Z::gEditor->mProjectLibrary;
-  ResourceLibrary* resourceLibrary =
-      Z::gResources->GetResourceLibrary(contentLibrary->Name);
+  ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(contentLibrary->Name);
 
   if (!contentLibrary || !resourceLibrary)
   {
@@ -90,13 +81,11 @@ void AddResourcesFromFiles(const Array<String>& files, StringParam resourceType)
     AddResourceFromFile(files[i], resourceType);
 }
 
-Resource* AddNewResource(ResourceManager* resourceManager,
-                         ResourceAdd& resourceAdd)
+Resource* AddNewResource(ResourceManager* resourceManager, ResourceAdd& resourceAdd)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Resources",
-                    "Cannot add resources while in read-only mode");
+    DoNotifyWarning("Resources", "Cannot add resources while in read-only mode");
     return nullptr;
   }
 
@@ -120,8 +109,7 @@ Resource* AddNewResource(ResourceManager* resourceManager,
   }
 
   if (resourceAdd.FileName.Empty())
-    resourceAdd.FileName =
-        GetResourceFileName(resourceManager, resourceAdd.Name);
+    resourceAdd.FileName = GetResourceFileName(resourceManager, resourceAdd.Name);
 
   // Name check
   if (resourceManager->ResourceNameMap.FindValue(resourceAdd.Name, 0) != 0)
@@ -132,29 +120,25 @@ Resource* AddNewResource(ResourceManager* resourceManager,
 
   // Save resource into file in the temp directory
   if (resourceAdd.Template)
-    resourceAdd.SourceFile =
-        resourceManager->GetTemplateSourceFile(resourceAdd);
+    resourceAdd.SourceFile = resourceManager->GetTemplateSourceFile(resourceAdd);
 
   // If no source resource is provided construct one using meta
   if (resourceAdd.SourceFile.Empty())
   {
     if (resourceAdd.SourceResource == NULL)
-      resourceAdd.SourceResource =
-          resourceManager->CreateNewResourceInternal(resourceAdd.Name);
+      resourceAdd.SourceResource = resourceManager->CreateNewResourceInternal(resourceAdd.Name);
 
     if (resourceAdd.SourceResource == NULL)
     {
-      ErrorIf(
-          true,
-          "The resource returned from CreateNewResource is NULL. "
-          "The resource most likely is marked as able to create a new "
-          "resource but does not implement the CreateNewResource interface.");
+      ErrorIf(true,
+              "The resource returned from CreateNewResource is NULL. "
+              "The resource most likely is marked as able to create a new "
+              "resource but does not implement the CreateNewResource interface.");
       return NULL;
     }
 
     // Save the resource to a file
-    resourceAdd.SourceFile =
-        FilePath::Combine(GetTemporaryDirectory(), resourceAdd.FileName);
+    resourceAdd.SourceFile = FilePath::Combine(GetTemporaryDirectory(), resourceAdd.FileName);
     resourceAdd.SourceResource->Save(resourceAdd.SourceFile);
   }
 
@@ -172,16 +156,15 @@ Resource* AddNewResource(ResourceManager* resourceManager,
   // Add to the library (this builds the meta data and content file).
   Status addStatus;
 
-  ContentItem* newContentItem =
-      Z::gContentSystem->AddContentItemToLibrary(addStatus, addContent);
+  ContentItem* newContentItem = Z::gContentSystem->AddContentItemToLibrary(addStatus, addContent);
 
   if (addStatus.Succeeded())
   {
     resourceAdd.mSuccess = true;
 
     // Load the new resource
-    resourceAdd.SourceResource = LoadResourceFromNewContentItem(
-        resourceManager, newContentItem, resourceAdd.SourceResource);
+    resourceAdd.SourceResource =
+        LoadResourceFromNewContentItem(resourceManager, newContentItem, resourceAdd.SourceResource);
 
     // Notify the resource system and the relevant resource manage that a new
     // resource was created
@@ -201,8 +184,7 @@ Resource* DuplicateResource(Resource* resource, StringParam expectedNewName)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Resources",
-                    "Cannot add resources while in read-only mode");
+    DoNotifyWarning("Resources", "Cannot add resources while in read-only mode");
     return nullptr;
   }
 
@@ -211,9 +193,7 @@ Resource* DuplicateResource(Resource* resource, StringParam expectedNewName)
   String resourceTypeName = resourceManager->mResourceTypeName;
   ContentItem* contentItem = resource->mContentItem;
 
-  ReturnIf(!contentItem->mResourceIsContentItem,
-           NULL,
-           "Can not duplicate resource.");
+  ReturnIf(!contentItem->mResourceIsContentItem, NULL, "Can not duplicate resource.");
 
   String newName = expectedNewName;
   // If there wasn't a name specified, build up the new full file name.
@@ -229,8 +209,7 @@ Resource* DuplicateResource(Resource* resource, StringParam expectedNewName)
       newName = BuildString(resource->Name, nameSuffix);
 
       // Has the name been taken?
-      Resource* resource =
-          resourceManager->GetResource(newName, ResourceNotFound::ReturnNull);
+      Resource* resource = resourceManager->GetResource(newName, ResourceNotFound::ReturnNull);
       if (resource == NULL)
         break;
     }
@@ -243,8 +222,7 @@ Resource* DuplicateResource(Resource* resource, StringParam expectedNewName)
     contentItem->SaveContent();
 
   // Copy the resource file
-  String newFileName =
-      GetResourceFileName(resourceManager, newName, resource->mContentItem);
+  String newFileName = GetResourceFileName(resourceManager, newName, resource->mContentItem);
   String tempFile = FilePath::Combine(GetTemporaryDirectory(), newFileName);
   String sourceFileName = resource->mContentItem->GetFullPath();
 
@@ -263,8 +241,7 @@ Resource* DuplicateResource(Resource* resource, StringParam expectedNewName)
 
   // Try to add the file
   Status addStatus;
-  ContentItem* newContentItem =
-      Z::gContentSystem->AddContentItemToLibrary(addStatus, addContent);
+  ContentItem* newContentItem = Z::gContentSystem->AddContentItemToLibrary(addStatus, addContent);
 
   if (addStatus.Failed())
   {
@@ -272,8 +249,7 @@ Resource* DuplicateResource(Resource* resource, StringParam expectedNewName)
     return NULL;
   }
 
-  Resource* duplicate =
-      LoadResourceFromNewContentItem(resourceManager, newContentItem, NULL);
+  Resource* duplicate = LoadResourceFromNewContentItem(resourceManager, newContentItem, NULL);
   resourceManager->ResourceDuplicated(resource, duplicate);
   return duplicate;
 }
@@ -282,8 +258,7 @@ bool RenameResource(Resource* resource, StringParam newName)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Resources",
-                    "Cannot rename resources while in read-only mode");
+    DoNotifyWarning("Resources", "Cannot rename resources while in read-only mode");
     return false;
   }
 
@@ -300,8 +275,7 @@ bool RenameResource(Resource* resource, StringParam newName)
   ContentLibrary* library = resource->mContentItem->mLibrary;
 
   bool canModifyReadOnly = false;
-  if (DeveloperConfig* devConfig =
-          Z::gEngine->GetConfigCog()->has(DeveloperConfig))
+  if (DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig))
     canModifyReadOnly = devConfig->mCanModifyReadOnlyResources;
 
   // Do not rename resources from read only content libraries.
@@ -312,10 +286,8 @@ bool RenameResource(Resource* resource, StringParam newName)
 
   if (contentItem->mResourceIsContentItem)
   {
-    String newFileName =
-        GetResourceFileName(resourceManager, newName, resource->mContentItem);
-    bool result =
-        Z::gContentSystem->RenameContentItemFile(contentItem, newFileName);
+    String newFileName = GetResourceFileName(resourceManager, newName, resource->mContentItem);
+    bool result = Z::gContentSystem->RenameContentItemFile(contentItem, newFileName);
     // Renamed failed, name already in use
     if (result == false)
     {
@@ -355,18 +327,15 @@ bool RenameResource(Resource* resource, StringParam newName)
   resourceManager->DispatchEvent(Events::ResourceModified, &event);
   Z::gResources->DispatchEvent(Events::ResourceModified, &event);
 
-  ZPrintFilter(Filter::ResourceFilter,
-               "Renamed %s %s to %s\n",
-               resourceTypeName.c_str(),
-               oldName.c_str(),
-               newName.c_str());
+  ZPrintFilter(
+      Filter::ResourceFilter, "Renamed %s %s to %s\n", resourceTypeName.c_str(), oldName.c_str(), newName.c_str());
 
   return true;
 }
 
 bool InPackage(Resource* resource, ResourcePackage* package)
 {
-  forRange(ResourceEntry & entry, package->Resources.All())
+  forRange (ResourceEntry& entry, package->Resources.All())
   {
     if (resource->mResourceId == entry.mResourceId)
     {
@@ -378,14 +347,11 @@ bool InPackage(Resource* resource, ResourcePackage* package)
 
 // Unload all resources that where not loaded when the content item was built.
 // Used for content reloading.
-void UnloadInactive(ContentItem* contentItem,
-                    ResourceLibrary* resourceLibrary,
-                    ResourcePackage* package)
+void UnloadInactive(ContentItem* contentItem, ResourceLibrary* resourceLibrary, ResourcePackage* package)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Resources",
-                    "Cannot unload resources while in read-only mode");
+    DoNotifyWarning("Resources", "Cannot unload resources while in read-only mode");
     return;
   }
 
@@ -394,7 +360,7 @@ void UnloadInactive(ContentItem* contentItem,
   // Gather all resources from the same content item that are not loaded in the
   // new package Do not remove in place since this will modify the loaded
   // resources on the resource library
-  forRange(HandleOf<Resource> resourceHandle, resourceLibrary->Resources.All())
+  forRange (HandleOf<Resource> resourceHandle, resourceLibrary->Resources.All())
   {
     Resource* resource = resourceHandle;
 
@@ -410,7 +376,7 @@ void UnloadInactive(ContentItem* contentItem,
   }
 
   // Delete the resources from the resource managers
-  forRange(Resource * resource, resourcesToDelete.All())
+  forRange (Resource* resource, resourcesToDelete.All())
   {
     // Remove the resource from the resource manager
     resource->GetManager()->Remove(resource, RemoveMode::Deleted);
@@ -433,8 +399,7 @@ void ReloadContentItem(ContentItem* contentItem)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Resources",
-                    "Cannot reload resources while in read-only mode");
+    DoNotifyWarning("Resources", "Cannot reload resources while in read-only mode");
     return;
   }
 
@@ -445,8 +410,7 @@ void ReloadContentItem(ContentItem* contentItem)
   contentItem->SaveMetaFile();
 
   // Get the ResourceLibrary for this library
-  ResourceLibrary* resourceLibrary =
-      Z::gResources->GetResourceLibrary(contentItem->mLibrary->Name);
+  ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(contentItem->mLibrary->Name);
 
   // Rebuild the content item to get new modified resources
   ResourcePackage package;
@@ -479,8 +443,7 @@ void RemoveResource(Resource* resource)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Resources",
-                    "Cannot remove resources while in read-only mode");
+    DoNotifyWarning("Resources", "Cannot remove resources while in read-only mode");
     return;
   }
 
@@ -508,7 +471,7 @@ void RemoveResource(Resource* resource)
   Array<Resource*> toDelete;
 
   // Find all resources built from this content item
-  forRange(HandleOf<Resource> resourceHandle, resourceLibrary->Resources.All())
+  forRange (HandleOf<Resource> resourceHandle, resourceLibrary->Resources.All())
   {
     Resource* currentResource = resourceHandle;
     // Must be the same content item
@@ -527,7 +490,7 @@ void RemoveResource(Resource* resource)
   ArchetypeManager::GetInstance()->FlushBinaryArchetypes();
 
   // Delete the resources from the resource manager
-  forRange(Resource * deletingResource, toDelete.All())
+  forRange (Resource* deletingResource, toDelete.All())
   {
     ZPrintFilter(Filter::ResourceFilter,
                  "Removed Resource %s %s.%s.\n",
@@ -535,8 +498,7 @@ void RemoveResource(Resource* resource)
                  library->Name.c_str(),
                  deletingResource->Name.c_str());
 
-    deletingResource->GetManager()->Remove(deletingResource,
-                                           RemoveMode::Deleted);
+    deletingResource->GetManager()->Remove(deletingResource, RemoveMode::Deleted);
 
     resourceLibrary->Remove(deletingResource);
   }
@@ -548,8 +510,7 @@ Resource* LoadResourceFromNewContentItem(ResourceManager* resourceManager,
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Resources",
-                    "Cannot add resources while in read-only mode");
+    DoNotifyWarning("Resources", "Cannot add resources while in read-only mode");
     return nullptr;
   }
 
@@ -569,15 +530,13 @@ Resource* LoadResourceFromNewContentItem(ResourceManager* resourceManager,
   ContentLibrary* contentLibrary = newContentItem->mLibrary;
 
   // Resource that are added this way only have one resource per content item
-  ErrorIf(package.Resources.Size() != 1 &&
-              !newContentItem->mIgnoreMultipleResourcesWarning,
+  ErrorIf(package.Resources.Size() != 1 && !newContentItem->mIgnoreMultipleResourcesWarning,
           "Multiple resources in content item.");
 
   if (package.Resources.Size() > 0)
   {
     // ResourceLibrary resource will be loaded into
-    ResourceLibrary* resourceLibrary =
-        Z::gResources->GetResourceLibrary(contentLibrary->Name);
+    ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(contentLibrary->Name);
 
     if (resource)
     {
@@ -619,9 +578,7 @@ Resource* LoadResourceFromNewContentItem(ResourceManager* resourceManager,
   return NULL;
 }
 
-String GetResourceFileName(ResourceManager* resourceManager,
-                           StringParam resourceName,
-                           ContentItem* current)
+String GetResourceFileName(ResourceManager* resourceManager, StringParam resourceName, ContentItem* current)
 {
   String resourceTypeName = resourceManager->mResourceTypeName;
 
@@ -638,8 +595,7 @@ String GetResourceFileName(ResourceManager* resourceManager,
   // In the case of "data" or "bin" files add the resource type name to the
   // file to prevent conflicts
   if (resourceExtension == DataResourceExtension)
-    fileName = BuildString(
-        resourceName, ".", resourceTypeName, ".", resourceExtension);
+    fileName = BuildString(resourceName, ".", resourceTypeName, ".", resourceExtension);
 
   return fileName;
 }
@@ -688,8 +644,7 @@ Resource* NewResourceOnWrite(ResourceManager* resourceManager,
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Resources",
-                    "Cannot create resources while in read-only mode");
+    DoNotifyWarning("Resources", "Cannot create resources while in read-only mode");
     return resource;
   }
 
@@ -699,10 +654,7 @@ Resource* NewResourceOnWrite(ResourceManager* resourceManager,
 
   // Verify correct meta property request regardless of code path
   Property* metaProperty = resourceType->GetProperty(property);
-  ErrorIf(!metaProperty,
-          "MetaProperty '%s' not found on type '%s'.",
-          property.c_str(),
-          resourceType->Name.c_str());
+  ErrorIf(!metaProperty, "MetaProperty '%s' not found on type '%s'.", property.c_str(), resourceType->Name.c_str());
 
   // Must have a space, be in editor mode, and have a level
   if (!space)
@@ -721,7 +673,7 @@ Resource* NewResourceOnWrite(ResourceManager* resourceManager,
   {
     // Find number of objects in the level using this resource
     uint instanceCount = 0;
-    forRange(Cog & cog, space->AllObjects())
+    forRange (Cog& cog, space->AllObjects())
     {
       Component* component = cog.QueryComponentType(resourceType);
       if (!component)
@@ -742,8 +694,7 @@ Resource* NewResourceOnWrite(ResourceManager* resourceManager,
 
     // Get the archetype that this resource may belong to from meta data
     ArchetypeManager* archetypeManager = ArchetypeManager::GetInstance();
-    Resource* archetypeOwner = archetypeManager->GetResource(
-        resourceIdName, ResourceNotFound::ReturnNull);
+    Resource* archetypeOwner = archetypeManager->GetResource(resourceIdName, ResourceNotFound::ReturnNull);
 
     // If saving to archetype
     if (archetype)
@@ -769,8 +720,7 @@ Resource* NewResourceOnWrite(ResourceManager* resourceManager,
     {
       // Get the level that this resource may belong to from meta data
       LevelManager* levelManager = LevelManager::GetInstance();
-      Resource* levelOwner = levelManager->GetResource(
-          resourceIdName, ResourceNotFound::ReturnNull);
+      Resource* levelOwner = levelManager->GetResource(resourceIdName, ResourceNotFound::ReturnNull);
 
       // Assign to this level if no previous owner
       if (!levelOwner)
@@ -801,11 +751,9 @@ Resource* NewResourceOnWrite(ResourceManager* resourceManager,
 
   do
   {
-    resourceName = BuildString(
-        levelName, "_", resourceType->Name, String::Format("%.2d", id));
+    resourceName = BuildString(levelName, "_", resourceType->Name, String::Format("%.2d", id));
     ++id;
-  } while (
-      resourceManager->GetResource(resourceName, ResourceNotFound::ReturnNull));
+  } while (resourceManager->GetResource(resourceName, ResourceNotFound::ReturnNull));
 
   resource = resourceManager->CreateNewResourceInternal(String());
 

@@ -70,8 +70,7 @@ template <typename T>
 class SetAndRecallOnDestruction : public RecallOnDestruction<T>
 {
 public:
-  SetAndRecallOnDestruction(T* variable, T setToValue) :
-      RecallOnDestruction<T>(variable)
+  SetAndRecallOnDestruction(T* variable, T setToValue) : RecallOnDestruction<T>(variable)
   {
     *variable = setToValue;
   }

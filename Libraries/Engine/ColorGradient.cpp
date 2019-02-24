@@ -55,8 +55,7 @@ Vec4 ColorGradient::Sample(float t)
 
 ImplementResourceManager(ColorGradientManager, ColorGradient);
 
-ColorGradientManager::ColorGradientManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+ColorGradientManager::ColorGradientManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   AddLoader("ColorGradient", new TextDataFileLoader<ColorGradientManager>());
   DefaultResourceName = "DefaultColorGradient";

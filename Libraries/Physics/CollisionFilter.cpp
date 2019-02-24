@@ -8,8 +8,7 @@ String GroupFilterDisplay(CollisionFilter* filter)
 {
   String typeAName = filter->GetTypeADisplayName();
   String typeBName = filter->GetTypeBDisplayName();
-  return String::Format(
-      "Filter: (%s / %s)", typeAName.c_str(), typeBName.c_str());
+  return String::Format("Filter: (%s / %s)", typeAName.c_str(), typeBName.c_str());
 }
 
 ZilchDefineType(CollisionFilter, builder, type)
@@ -74,8 +73,7 @@ void CollisionFilter::Serialize(Serializer& stream)
 
   // Serialize our composition of constraint config blocks
   BoundType* selfBoundType = this->ZilchGetDerivedType();
-  CollisionFilterMetaComposition* factory =
-      selfBoundType->Has<CollisionFilterMetaComposition>();
+  CollisionFilterMetaComposition* factory = selfBoundType->Has<CollisionFilterMetaComposition>();
   factory->SerializeArray(stream, mBlocks);
 }
 
@@ -88,8 +86,7 @@ void CollisionFilter::SetDefaults()
 CollisionFilterCollisionFlags::Enum CollisionFilter::GetCollisionFlag()
 {
   // Convert the bitfield to the corresponding enum value
-  if (mFilterFlags.IsSet(FilterFlags::SkipResolution |
-                         FilterFlags::SkipDetectingCollision) == false)
+  if (mFilterFlags.IsSet(FilterFlags::SkipResolution | FilterFlags::SkipDetectingCollision) == false)
     return CollisionFilterCollisionFlags::Resolve;
   else if (mFilterFlags.IsSet(FilterFlags::SkipDetectingCollision))
     return CollisionFilterCollisionFlags::SkipDetection;
@@ -97,12 +94,10 @@ CollisionFilterCollisionFlags::Enum CollisionFilter::GetCollisionFlag()
     return CollisionFilterCollisionFlags::SkipResolution;
 }
 
-void CollisionFilter::SetCollisionFlag(
-    CollisionFilterCollisionFlags::Enum state)
+void CollisionFilter::SetCollisionFlag(CollisionFilterCollisionFlags::Enum state)
 {
   // Convert the enum to the corresponding bit field value
-  mFilterFlags.ClearFlag(FilterFlags::SkipResolution |
-                         FilterFlags::SkipDetectingCollision);
+  mFilterFlags.ClearFlag(FilterFlags::SkipResolution | FilterFlags::SkipDetectingCollision);
   if (state == CollisionFilterCollisionFlags::SkipDetection)
     mFilterFlags.SetFlag(FilterFlags::SkipDetectingCollision);
   else if (state == CollisionFilterCollisionFlags::SkipResolution)
@@ -177,10 +172,8 @@ CollisionFilter* CollisionFilter::Clone() const
     // Create a new copy of the same block type by getting the bound type then
     // going through the meta composition to allocate the block type
     BoundType* boundType = mBlocks[i]->ZilchGetDerivedType();
-    CollisionFilterMetaComposition* metaComposition =
-        boundType->HasInherited<CollisionFilterMetaComposition>();
-    HandleOf<CollisionFilterBlock> newBlockHandle =
-        metaComposition->AllocateBlock(boundType, false);
+    CollisionFilterMetaComposition* metaComposition = boundType->HasInherited<CollisionFilterMetaComposition>();
+    HandleOf<CollisionFilterBlock> newBlockHandle = metaComposition->AllocateBlock(boundType, false);
     CollisionFilterBlock* newBlock = newBlockHandle;
     // Deep copy the block
     *newBlock = *mBlocks[i];
@@ -217,8 +210,7 @@ HandleOf<CollisionFilterBlock> CollisionFilter::GetById(BoundType* typeId)
   return Handle();
 }
 
-void CollisionFilter::Add(const HandleOf<CollisionFilterBlock>& blockHandle,
-                          int index)
+void CollisionFilter::Add(const HandleOf<CollisionFilterBlock>& blockHandle, int index)
 {
   CollisionFilterBlock* block = blockHandle;
   // Add the block to the filter

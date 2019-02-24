@@ -71,51 +71,40 @@ struct CrashHandler
   // handler only checks next to the .exe).
   static void AppendToExtraSymbolPath(StringParam path);
 
-  typedef void (*RunCrashHandlerCallback)(void* crashData,
-                                          bool doRescueCall,
-                                          void* userData);
+  typedef void (*RunCrashHandlerCallback)(void* crashData, bool doRescueCall, void* userData);
   // Called when a crash happens. This function controls all of the behavior of
   // the crash handler, including making the minidump and sending off the crash
   // information.
-  static void SetRunCrashHandlerCallback(RunCrashHandlerCallback callback,
-                                         void* userData);
+  static void SetRunCrashHandlerCallback(RunCrashHandlerCallback callback, void* userData);
 
   typedef void (*CrashStartCallback)(CrashInfo&, void* userData);
   // The crash start callback is used primarily to get the dump/log/stack file
   // name. Any other initial setup for the crash handler can also be performed
   // here.
-  static void SetCrashStartCallback(CrashStartCallback callback,
-                                    void* userData);
+  static void SetCrashStartCallback(CrashStartCallback callback, void* userData);
 
   typedef void (*PreMemoryDumpCallback)(void* userData);
   // Called before the memory dump is run. This allows for any setup before the
   // CustomMemoryCallback is called.
-  static void SetPreMemoryDumpCallback(PreMemoryDumpCallback callback,
-                                       void* userData);
+  static void SetPreMemoryDumpCallback(PreMemoryDumpCallback callback, void* userData);
 
-  typedef bool (*CustomMemoryCallback)(MemoryRange& memoryRange,
-                                       void* userData);
+  typedef bool (*CustomMemoryCallback)(MemoryRange& memoryRange, void* userData);
   // Used to inject a range of memory manually into the crash dump.
   // This is a re-entrant call that will be continually called until false is
   // returned. Used currently to put Zilch op-code into the dump for debugging.
   // Can be used for any bit of memory used to make debugging easier (Strings?).
-  static void SetCustomMemoryCallback(CustomMemoryCallback callback,
-                                      void* userData);
+  static void SetCustomMemoryCallback(CustomMemoryCallback callback, void* userData);
 
-  typedef void (*LoggingCallback)(CrashHandlerParameters& params,
-                                  CrashInfo& info,
-                                  void* userData);
+  typedef void (*LoggingCallback)(CrashHandlerParameters& params, CrashInfo& info, void* userData);
   // Perform any logging before the crash report is sent.
   // This may need to flush any log files as well as add the log file's name to
   // the parameters.
   static void SetLoggingCallback(LoggingCallback callback, void* userData);
 
-  typedef void (*SendCrashReportCallback)(CrashHandlerParameters& params,
-                                          void* userData);
+  typedef void (*SendCrashReportCallback)(CrashHandlerParameters& params, void* userData);
   // Send the crash report out somehow. The params should contain all
   // of the files/parameters to properly invoke the crash reporter.
-  static void SetSendCrashReportCallback(SendCrashReportCallback callback,
-                                         void* userData);
+  static void SetSendCrashReportCallback(SendCrashReportCallback callback, void* userData);
 
   typedef void (*FinalRescueCall)(void* userData);
   // The rescue call happens after the crash report is sent so we can attempt to
@@ -127,14 +116,9 @@ struct CrashHandler
   // safety.
   static void InvokeCrashStartCallback(CrashInfo& info);
   static void InvokePreMemoryDumpCallback();
-  static void WriteMiniDump(CrashHandlerParameters& params,
-                            void* crashData,
-                            CrashInfo& info);
-  static void InvokeWriteCallstack(CrashHandlerParameters& params,
-                                   void* crashData,
-                                   CrashInfo& info);
-  static void InvokeLoggingCallback(CrashHandlerParameters& params,
-                                    CrashInfo& info);
+  static void WriteMiniDump(CrashHandlerParameters& params, void* crashData, CrashInfo& info);
+  static void InvokeWriteCallstack(CrashHandlerParameters& params, void* crashData, CrashInfo& info);
+  static void InvokeLoggingCallback(CrashHandlerParameters& params, CrashInfo& info);
   static void InvokeRescueCallback();
   static void InvokeSendCrashReport(CrashHandlerParameters& params);
 
@@ -145,9 +129,7 @@ struct CrashHandler
   static void FatalError(int errorCode);
 
   // The default logic for the crash handler.
-  static void DefaultRunCrashHandlerCallback(void* crashData,
-                                             bool doRescueCall,
-                                             void* userData);
+  static void DefaultRunCrashHandlerCallback(void* crashData, bool doRescueCall, void* userData);
   static void SetRestartCommandLine(StringRange commandLine);
   static void RestartOnCrash(bool state);
 

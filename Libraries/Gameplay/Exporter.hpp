@@ -10,11 +10,8 @@ class Exporter;
 
 namespace ExportUtility
 {
-typedef void (*FileCallback)(StringParam fullPath,
-                             StringParam relativePath,
-                             StringParam fileName,
-                             void* userData,
-                             float progressPercent);
+typedef void (*FileCallback)(
+    StringParam fullPath, StringParam relativePath, StringParam fileName, void* userData, float progressPercent);
 HashSet<String>& GetExcludedFiles();
 void AddFilesHelper(StringParam directory,
                     StringParam relativePathFromStart,
@@ -22,35 +19,22 @@ void AddFilesHelper(StringParam directory,
                     FileCallback callback,
                     void* userData);
 void ExportContentFolders(Cog* projectCog);
-void AddFiles(StringParam directory,
-              HashSet<String>& additionalFileExcludes,
-              FileCallback callback,
-              void* userData);
+void AddFiles(StringParam directory, HashSet<String>& additionalFileExcludes, FileCallback callback, void* userData);
 void ArchiveLibraryOutput(Archive& archive, ContentLibrary* library);
 void ArchiveLibraryOutput(Archive& archive, StringParam libraryName);
 void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library);
 void CopyLibraryOut(StringParam outputDirectory, StringParam name);
-void RelativeCopyFile(StringParam dest,
-                      StringParam source,
-                      StringParam filename);
-void ArchiveFileCallback(StringParam fullPath,
-                         StringParam relativePath,
-                         StringParam fileName,
-                         void* userData,
-                         float progressPercent);
-void CopyFileCallback(StringParam fullPath,
-                      StringParam relativePath,
-                      StringParam fileName,
-                      void* userData);
+void RelativeCopyFile(StringParam dest, StringParam source, StringParam filename);
+void ArchiveFileCallback(
+    StringParam fullPath, StringParam relativePath, StringParam fileName, void* userData, float progressPercent);
+void CopyFileCallback(StringParam fullPath, StringParam relativePath, StringParam fileName, void* userData);
 } // namespace ExportUtility
 
 // ExportTarget
 class ExportTarget
 {
 public:
-  ExportTarget(Exporter* exporter, String targetName) :
-      mExporter(exporter),
-      mTargetName(targetName){};
+  ExportTarget(Exporter* exporter, String targetName) : mExporter(exporter), mTargetName(targetName){};
 
   virtual HashSet<String>& GetAdditionalExcludedFiles()
   {
@@ -60,10 +44,7 @@ public:
 
   virtual void ExportApplication() = 0;
   virtual void ExportContentFolders(Cog* projectCog) = 0;
-  virtual void CopyInstallerSetupFile(StringParam dest,
-                                      StringParam source,
-                                      StringParam projectName,
-                                      Guid guid) = 0;
+  virtual void CopyInstallerSetupFile(StringParam dest, StringParam source, StringParam projectName, Guid guid) = 0;
 
   Exporter* mExporter;
   String mTargetName;
@@ -78,10 +59,7 @@ public:
   HashSet<String>& GetAdditionalExcludedFiles() override;
   void ExportApplication() override;
   void ExportContentFolders(Cog* projectCog) override;
-  void CopyInstallerSetupFile(StringParam dest,
-                              StringParam source,
-                              StringParam projectName,
-                              Guid guid) override;
+  void CopyInstallerSetupFile(StringParam dest, StringParam source, StringParam projectName, Guid guid) override;
 };
 
 // EmscriptenExportTarget
@@ -93,10 +71,7 @@ public:
   HashSet<String>& GetAdditionalExcludedFiles() override;
   void ExportApplication() override;
   void ExportContentFolders(Cog* projectCog) override;
-  void CopyInstallerSetupFile(StringParam dest,
-                              StringParam source,
-                              StringParam projectName,
-                              Guid guid) override;
+  void CopyInstallerSetupFile(StringParam dest, StringParam source, StringParam projectName, Guid guid) override;
 };
 
 // ExportTargetEntry
@@ -166,9 +141,7 @@ public:
   void ExportApplication(HashSet<String> exportTargets);
   void ExportContent(HashSet<String> exportTargets);
 
-  void CopyContent(Status& status,
-                   String outputDirectory,
-                   ExportTarget* target);
+  void CopyContent(Status& status, String outputDirectory, ExportTarget* target);
   void UpdateIcon(ProjectSettings* project, ExecutableResourceUpdater& updater);
 
   void SaveAndBuildContent();

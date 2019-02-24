@@ -40,10 +40,7 @@ bool IsDebuggerAttached()
   return false;
 }
 
-void SystemOpenFile(cstr file,
-                    uint verb,
-                    cstr parameters,
-                    cstr workingDirectory)
+void SystemOpenFile(cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
 }
 

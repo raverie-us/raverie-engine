@@ -43,8 +43,7 @@ MemPtr zStaticAllocate(size_t size)
   // Static Memory graph nodes and other static objects
   // are allocated from a fixed size buffer this allows them to have controlled
   // or optional initialization and prevents them from showing up in leaks
-  ErrorIf(BufferLocation + size >=
-              StaticMemoryGraphBuffer + cStaticMemoryBufferSize,
+  ErrorIf(BufferLocation + size >= StaticMemoryGraphBuffer + cStaticMemoryBufferSize,
           "Allocated too many memory graph objects. Increase "
           "cStaticMemoryBufferSize.");
   byte* current = BufferLocation;
@@ -56,12 +55,7 @@ MemPtr zStaticAllocate(size_t size)
 
 namespace Memory
 {
-Stats::Stats() :
-    Allocations(0),
-    Active(0),
-    BytesAllocated(0),
-    BytesDedicated(0),
-    PeakAllocated(0)
+Stats::Stats() : Allocations(0), Active(0), BytesAllocated(0), BytesDedicated(0), PeakAllocated(0)
 {
 }
 
@@ -166,8 +160,7 @@ const size_t tabSize = 2;
 void Root::PrintAll()
 {
   if (RootGraph)
-    Root::RootGraph->PrintGraph(Stats::ShowBytes | Stats::ShowTotal |
-                                Stats::ShowActive);
+    Root::RootGraph->PrintGraph(Stats::ShowBytes | Stats::ShowTotal | Stats::ShowActive);
 }
 
 class VistPrinter

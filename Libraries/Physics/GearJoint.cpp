@@ -33,21 +33,14 @@ struct GearPolicy : public DefaultFragmentPolicy<GearJoint>
 {
   void AxisValue(MoleculeData& data, int atomIndex, GearJoint* joint)
   {
-    ErrorIf(atomIndex >= 1,
-            "LinearAxisJoint only has one atom. Cannot compute atom number %d.",
-            atomIndex);
+    ErrorIf(atomIndex >= 1, "LinearAxisJoint only has one atom. Cannot compute atom number %d.", atomIndex);
     GearAxisValue(joint, joint->mAtoms[atomIndex], 0);
   }
 
   // Returns baumgarte
-  real AxisFragment(MoleculeData& data,
-                    int atomIndex,
-                    GearJoint* joint,
-                    ConstraintMolecule& mol)
+  real AxisFragment(MoleculeData& data, int atomIndex, GearJoint* joint, ConstraintMolecule& mol)
   {
-    ErrorIf(atomIndex >= 1,
-            "LinearAxisJoint only has one atom. Cannot compute atom number %d.",
-            atomIndex);
+    ErrorIf(atomIndex >= 1, "LinearAxisJoint only has one atom. Cannot compute atom number %d.", atomIndex);
     GearAxisFragment(joint, mol);
 
     return joint->GetLinearBaumgarte();
@@ -97,8 +90,7 @@ void GearJoint::OnAllObjectsCreated(CogInitializer& initializer)
 {
   Joint::OnAllObjectsCreated(initializer);
 
-  bool dynamicallyCreated =
-      (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
+  bool dynamicallyCreated = (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
   if (!dynamicallyCreated)
   {
     mJoints[0].mCogPath.RestoreLink(initializer, this, "JointAPath");
@@ -154,8 +146,7 @@ void GearJoint::OnAllObjectsCreated(CogInitializer& initializer)
   }
 
   // If either joint was invalid, then we are also invalid
-  if (mJoints[0].mJoint->GetValid() == false ||
-      mJoints[1].mJoint->GetValid() == false)
+  if (mJoints[0].mJoint->GetValid() == false || mJoints[1].mJoint->GetValid() == false)
   {
     SetValid(false);
     return;
@@ -192,8 +183,7 @@ void GearJoint::ComputeMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputeMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData, GearPolicy());
+  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, GearPolicy());
 }
 
 void GearJoint::WarmStart(MoleculeWalker& molecules)
@@ -235,8 +225,7 @@ void GearJoint::DebugDraw()
   gDebugDraw->Add(Debug::Line(obj0Pos, obj1Pos).Color(Color::Black));
 }
 
-uint GearJoint::GetAtomIndexFilter(uint atomIndex,
-                                   real& desiredConstraintValue) const
+uint GearJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   return LinearAxis;
@@ -342,10 +331,9 @@ void GearJoint::RelinkJoint(uint index, Cog* cog)
   Joint* joint = GetValidJointOnCog(cog);
   if (joint == nullptr)
   {
-    DoNotifyWarning(
-        "Invalid link",
-        "Cannot link to an object that doesn't have a "
-        "RevoluteJoint, RevoluteJoint2d, PrismaticJoint, or PrismaticJoint2d.");
+    DoNotifyWarning("Invalid link",
+                    "Cannot link to an object that doesn't have a "
+                    "RevoluteJoint, RevoluteJoint2d, PrismaticJoint, or PrismaticJoint2d.");
     return;
   }
 
@@ -369,11 +357,9 @@ void GearJoint::RelinkJoint(uint index, Cog* cog)
 bool GearJoint::FindAndSetJoint(Collider* collider, uint index)
 {
   RevoluteJointRange revolutes = FilterJointRange<RevoluteJoint>(collider);
-  RevoluteJoint2dRange revolutes2d =
-      FilterJointRange<RevoluteJoint2d>(collider);
+  RevoluteJoint2dRange revolutes2d = FilterJointRange<RevoluteJoint2d>(collider);
   PrismaticJointRange prismatics = FilterJointRange<PrismaticJoint>(collider);
-  PrismaticJoint2dRange prismatics2d =
-      FilterJointRange<PrismaticJoint2d>(collider);
+  PrismaticJoint2dRange prismatics2d = FilterJointRange<PrismaticJoint2d>(collider);
 
   // Try to find a joint type we can connect to
   // (just choose an arbitrary order of which joint type we pick first)
@@ -393,11 +379,9 @@ bool GearJoint::FindAndSetJoint(Collider* collider, uint index)
   if (OperationQueue::IsListeningForSideEffects())
   {
     if (index == 0)
-      OperationQueue::RegisterSideEffect(
-          this, "JointAPath", mJoints[index].mCogPath);
+      OperationQueue::RegisterSideEffect(this, "JointAPath", mJoints[index].mCogPath);
     else
-      OperationQueue::RegisterSideEffect(
-          this, "JointBPath", mJoints[index].mCogPath);
+      OperationQueue::RegisterSideEffect(this, "JointBPath", mJoints[index].mCogPath);
   }
   mJoints[index].mJoint = joint;
   mJoints[index].mCogPath.SetCog(joint->GetOwner());

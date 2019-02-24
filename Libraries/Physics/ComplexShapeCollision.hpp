@@ -42,15 +42,13 @@ struct LocalFunctor
   }
 
   template <typename ComplexShapeType>
-  typename ComplexShapeType::TransformedShapeType
-  ToWorldShape(const ComplexShapeType& shape)
+  typename ComplexShapeType::TransformedShapeType ToWorldShape(const ComplexShapeType& shape)
   {
     return shape.Transform(transform);
   }
 
   template <typename ComplexShapeType>
-  typename ComplexShapeType::TransformedShapeType
-  ToLocalShape(const ComplexShapeType& shape)
+  typename ComplexShapeType::TransformedShapeType ToLocalShape(const ComplexShapeType& shape)
   {
     return shape.Transform(invTransform);
   }
@@ -139,8 +137,7 @@ bool ComplexCollideCollidersInternal(Collider* complexCollider,
 
       Physics::Manifold* manifold = &manifolds->PushBack();
       manifold->SetPair(pair);
-      IntersectionToPhysicsManifold<WorldShapeType, Shape2Type>(&iManifold,
-                                                                manifold);
+      IntersectionToPhysicsManifold<WorldShapeType, Shape2Type>(&iManifold, manifold);
       // set the id of this item on the manifold and mark that we collided with
       // something
       manifold->ContactId = item.Index;
@@ -172,10 +169,7 @@ bool ComplexCollideCollidersResolveLocal(Collider* complexCollider,
                                          PodArray<Physics::Manifold>* manifolds,
                                          true_type)
 {
-  return ComplexCollideCollidersInternal<ColliderType,
-                                         Shape2Type,
-                                         LocalFunctor>(
-      complexCollider, collider2, manifolds);
+  return ComplexCollideCollidersInternal<ColliderType, Shape2Type, LocalFunctor>(complexCollider, collider2, manifolds);
 }
 
 /// Resolves the false_type of RangeInLocalSpace to the WorldFunctor.
@@ -185,10 +179,7 @@ bool ComplexCollideCollidersResolveLocal(Collider* complexCollider,
                                          PodArray<Physics::Manifold>* manifolds,
                                          false_type)
 {
-  return ComplexCollideCollidersInternal<ColliderType,
-                                         Shape2Type,
-                                         WorldFunctor>(
-      complexCollider, collider2, manifolds);
+  return ComplexCollideCollidersInternal<ColliderType, Shape2Type, WorldFunctor>(complexCollider, collider2, manifolds);
 }
 
 // These two functions deal with resolving the order of which collider
@@ -196,41 +187,26 @@ bool ComplexCollideCollidersResolveLocal(Collider* complexCollider,
 
 /// Resolves the order when the complex collider is the first collider.
 template <typename ColliderType, typename Shape2Type>
-bool ComplexCollideCollidersA(Collider* complexCollider,
-                              Collider* collider2,
-                              PodArray<Physics::Manifold>* manifolds)
+bool ComplexCollideCollidersA(Collider* complexCollider, Collider* collider2, PodArray<Physics::Manifold>* manifolds)
 {
   // let overloading based upon the RangeInLocalSpace type take care of the
   // functor
   return ComplexCollideCollidersResolveLocal<ColliderType, Shape2Type>(
-      complexCollider,
-      collider2,
-      manifolds,
-      typename ColliderType::RangeInLocalSpace());
+      complexCollider, collider2, manifolds, typename ColliderType::RangeInLocalSpace());
 }
 
 /// Resolves the order when the complex collider is the second collider.
 template <typename Shape1Type, typename ColliderType>
-bool ComplexCollideCollidersB(Collider* collider1,
-                              Collider* complexCollider,
-                              PodArray<Physics::Manifold>* manifolds)
+bool ComplexCollideCollidersB(Collider* collider1, Collider* complexCollider, PodArray<Physics::Manifold>* manifolds)
 {
   // let overloading based upon the RangeInLocalSpace type take care of the
   // functor
   return ComplexCollideCollidersResolveLocal<ColliderType, Shape1Type>(
-      complexCollider,
-      collider1,
-      manifolds,
-      typename ColliderType::RangeInLocalSpace());
+      complexCollider, collider1, manifolds, typename ColliderType::RangeInLocalSpace());
 }
 
-template <typename ColliderType0,
-          typename ColliderType1,
-          typename SpaceFunctor0,
-          typename SpaceFunctor1>
-bool ComplexVsComplexCollidersInternal(Collider* collider0,
-                                       Collider* collider1,
-                                       PodArray<Physics::Manifold>* manifolds)
+template <typename ColliderType0, typename ColliderType1, typename SpaceFunctor0, typename SpaceFunctor1>
+bool ComplexVsComplexCollidersInternal(Collider* collider0, Collider* collider1, PodArray<Physics::Manifold>* manifolds)
 {
   ColliderType0* castedCollider0 = static_cast<ColliderType0*>(collider0);
   ColliderType1* castedCollider1 = static_cast<ColliderType1*>(collider1);
@@ -288,8 +264,7 @@ bool ComplexVsComplexCollidersInternal(Collider* collider0,
 
         Physics::Manifold* manifold = &manifolds->PushBack();
         manifold->SetPair(pair);
-        IntersectionToPhysicsManifold<WorldShape0Type, WorldShape1Type>(
-            &iManifold, manifold);
+        IntersectionToPhysicsManifold<WorldShape0Type, WorldShape1Type>(&iManifold, manifold);
 
         // set the id of this item on the manifold
         //(just lexicographically pack the two indices together for now)
@@ -319,9 +294,7 @@ bool ComplexVsComplexCollidersInternal(Collider* collider0,
 }
 
 template <typename ColliderType0, typename ColliderType1>
-bool ComplexVsComplexColliders(Collider* collider0,
-                               Collider* collider1,
-                               PodArray<Physics::Manifold>* manifolds)
+bool ComplexVsComplexColliders(Collider* collider0, Collider* collider1, PodArray<Physics::Manifold>* manifolds)
 {
   bool type0Local = ColliderType0::RangeInLocalSpace::value;
   bool type1Local = ColliderType1::RangeInLocalSpace::value;
@@ -331,37 +304,24 @@ bool ComplexVsComplexColliders(Collider* collider0,
   if (type0Local)
   {
     if (type1Local)
-      return ComplexVsComplexCollidersInternal<ColliderType0,
-                                               ColliderType1,
-                                               LocalFunctor,
-                                               LocalFunctor>(
+      return ComplexVsComplexCollidersInternal<ColliderType0, ColliderType1, LocalFunctor, LocalFunctor>(
           collider0, collider1, manifolds);
     else
-      return ComplexVsComplexCollidersInternal<ColliderType0,
-                                               ColliderType1,
-                                               LocalFunctor,
-                                               WorldFunctor>(
+      return ComplexVsComplexCollidersInternal<ColliderType0, ColliderType1, LocalFunctor, WorldFunctor>(
           collider0, collider1, manifolds);
   }
   else if (type1Local)
-    return ComplexVsComplexCollidersInternal<ColliderType0,
-                                             ColliderType1,
-                                             WorldFunctor,
-                                             LocalFunctor>(
+    return ComplexVsComplexCollidersInternal<ColliderType0, ColliderType1, WorldFunctor, LocalFunctor>(
         collider0, collider1, manifolds);
   else
-    return ComplexVsComplexCollidersInternal<ColliderType0,
-                                             ColliderType1,
-                                             WorldFunctor,
-                                             WorldFunctor>(
+    return ComplexVsComplexCollidersInternal<ColliderType0, ColliderType1, WorldFunctor, WorldFunctor>(
         collider0, collider1, manifolds);
 }
 
 template <typename ColliderType0, typename ColliderType1>
 bool OverlapComplexVsComplexColliders(Collider* collider0, Collider* collider1)
 {
-  return ComplexVsComplexColliders<ColliderType0, ColliderType1>(
-      collider0, collider1, nullptr);
+  return ComplexVsComplexColliders<ColliderType0, ColliderType1>(collider0, collider1, nullptr);
 }
 
 /// The core logic of the complex shape cast. Helps to deal with the
@@ -399,11 +359,7 @@ bool ComplexCastInternal(const CastType& castShape,
       //(check the filter for the normal?)
       ManifoldToProxyResult(castShape, complexCollider, &iManifold, result);
       result->ShapeIndex = item.Index;
-      GetNormalFromPointOnShape(castShape,
-                                item.Shape,
-                                complexCollider,
-                                result->mPoints[0],
-                                result->mContactNormal);
+      GetNormalFromPointOnShape(castShape, item.Shape, complexCollider, result->mPoints[0], result->mContactNormal);
       hitItem = true;
     }
   }
@@ -463,8 +419,7 @@ bool ComplexCastVsShape(const CastType& castShape,
       RangeType range = castedCollider->GetOverlapRange(castShapeAabb);
 
       // do the internal range iteration with the local space shape
-      hitItem = ComplexCastInternal(
-          uniformLocalShape, complexCollider, range, result);
+      hitItem = ComplexCastInternal(uniformLocalShape, complexCollider, range, result);
     }
     else
     {
@@ -483,8 +438,7 @@ bool ComplexCastVsShape(const CastType& castShape,
     {
       result->mPoints[0] = Math::TransformPoint(transform, result->mPoints[0]);
       result->mPoints[1] = Math::TransformPoint(transform, result->mPoints[1]);
-      result->mContactNormal =
-          worldTransform->TransformSurfaceNormal(result->mContactNormal);
+      result->mContactNormal = worldTransform->TransformSurfaceNormal(result->mContactNormal);
       result->mContactNormal.AttemptNormalize();
     }
   }
@@ -505,8 +459,7 @@ bool ComplexCastVsShape(const CastType& castShape,
 template <typename ShapeType, typename ComplexColliderType>
 bool ComplexOverlapVsShape(const ShapeType& shape, Collider* complexCollider)
 {
-  ComplexColliderType* castedComplexCollider =
-      static_cast<ComplexColliderType*>(complexCollider);
+  ComplexColliderType* castedComplexCollider = static_cast<ComplexColliderType*>(complexCollider);
 
   Aabb shapeAabb = ToAabb(shape);
   typedef typename ComplexColliderType::RangeType RangeType;
@@ -577,8 +530,7 @@ bool SpecialComplexCastVsShape(const CastType& castShape,
     {
       result->mPoints[0] = Math::TransformPoint(transform, result->mPoints[0]);
       result->mPoints[1] = Math::TransformPoint(transform, result->mPoints[1]);
-      result->mContactNormal =
-          worldTransform->TransformSurfaceNormal(result->mContactNormal);
+      result->mContactNormal = worldTransform->TransformSurfaceNormal(result->mContactNormal);
       result->mContactNormal.AttemptNormalize();
     }
   }

@@ -7,10 +7,7 @@ namespace Zero
 byte* ReadFileIntoMemory(cstr filePath, size_t& fileSize, size_t extra)
 {
   File file;
-  if (!file.Open(filePath,
-                 FileMode::Read,
-                 FileAccessPattern::Sequential,
-                 FileShare::Read))
+  if (!file.Open(filePath, FileMode::Read, FileAccessPattern::Sequential, FileShare::Read))
     return nullptr;
 
   fileSize = (size_t)file.CurrentFileSize();
@@ -18,9 +15,7 @@ byte* ReadFileIntoMemory(cstr filePath, size_t& fileSize, size_t extra)
   byte* fileBuffer = (byte*)zAllocate(fileSize + extra);
   if (fileBuffer == nullptr)
   {
-    ErrorIf(fileBuffer == nullptr,
-            "Could not allocate enough memory for file '%s' into memory.",
-            filePath);
+    ErrorIf(fileBuffer == nullptr, "Could not allocate enough memory for file '%s' into memory.", filePath);
     return nullptr;
   }
   else
@@ -53,10 +48,7 @@ byte* ReadFileIntoMemory(cstr filePath, size_t& fileSize, size_t extra)
 size_t WriteToFile(cstr filePath, const byte* data, size_t bufferSize)
 {
   File file;
-  if (!file.Open(filePath,
-                 FileMode::Write,
-                 FileAccessPattern::Sequential,
-                 FileShare::Unspecified))
+  if (!file.Open(filePath, FileMode::Write, FileAccessPattern::Sequential, FileShare::Unspecified))
     return 0;
 
   while (bufferSize != 0)
@@ -96,19 +88,11 @@ bool CompareFile(Status& status, StringParam filePath1, StringParam filePath2)
   File file1;
   File file2;
 
-  file1.Open(filePath1,
-             FileMode::Read,
-             FileAccessPattern::Sequential,
-             FileShare::Read,
-             &status);
+  file1.Open(filePath1, FileMode::Read, FileAccessPattern::Sequential, FileShare::Read, &status);
   if (status.Failed())
     return false;
 
-  file2.Open(filePath2,
-             FileMode::Read,
-             FileAccessPattern::Sequential,
-             FileShare::Read,
-             &status);
+  file2.Open(filePath2, FileMode::Read, FileAccessPattern::Sequential, FileShare::Read, &status);
   if (status.Failed())
     return false;
 
@@ -146,16 +130,10 @@ bool CompareFile(Status& status, StringParam filePath1, StringParam filePath2)
   return true;
 }
 
-bool CompareFileAndString(Status& status,
-                          StringParam filePath,
-                          StringParam string)
+bool CompareFileAndString(Status& status, StringParam filePath, StringParam string)
 {
   File file;
-  file.Open(filePath,
-            FileMode::Read,
-            FileAccessPattern::Sequential,
-            FileShare::Read,
-            &status);
+  file.Open(filePath, FileMode::Read, FileAccessPattern::Sequential, FileShare::Read, &status);
   if (status.Failed())
     return false;
 

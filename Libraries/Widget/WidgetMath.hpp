@@ -96,9 +96,7 @@ struct WidgetRect
 };
 
 void PlaceWithRect(const WidgetRect& rect, Widget* widget);
-void PlaceCenterToRect(const WidgetRect& rect,
-                       Widget* widget,
-                       Vec2Param offset = Vec2::cZero);
+void PlaceCenterToRect(const WidgetRect& rect, Widget* widget, Vec2Param offset = Vec2::cZero);
 
 Mat4 Invert2D(Mat4Param matrix);
 void Build2dTransform(Mat4& matrix, Vec3Param translation, float rotation);

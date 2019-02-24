@@ -4,11 +4,7 @@
 namespace Zero
 {
 
-Permutation::Permutation() :
-    mInOrder(false),
-    mNoDuplicates(false),
-    mMinIndex(0),
-    mMaxIndex(0)
+Permutation::Permutation() : mInOrder(false), mNoDuplicates(false), mMinIndex(0), mMaxIndex(0)
 {
 }
 
@@ -16,9 +12,7 @@ Permuter::Permuter() : mArraySize(0), mEmpty(true)
 {
 }
 
-Permuter::Permuter(size_t arraySize, size_t howManyToSelect) :
-    mArraySize(arraySize),
-    mEmpty(false)
+Permuter::Permuter(size_t arraySize, size_t howManyToSelect) : mArraySize(arraySize), mEmpty(false)
 {
   if (howManyToSelect == 0 || arraySize == 0)
   {
@@ -115,9 +109,7 @@ MultiPermuter::MultiPermuter() : mMaxSelect(0), mEmpty(true)
 {
 }
 
-MultiPermuter::MultiPermuter(size_t arraySize,
-                             size_t minSelect,
-                             size_t maxSelect) :
+MultiPermuter::MultiPermuter(size_t arraySize, size_t minSelect, size_t maxSelect) :
     mMaxSelect(maxSelect),
     mPermuter(arraySize, minSelect),
     mEmpty(false)

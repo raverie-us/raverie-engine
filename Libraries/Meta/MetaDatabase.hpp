@@ -32,8 +32,7 @@ public:
   IntrusiveLink(MetaSerializedProperty, mLink);
 };
 
-typedef InList<MetaSerializedProperty, &MetaSerializedProperty::mLink>
-    MetaPropertyDefaultsList;
+typedef InList<MetaSerializedProperty, &MetaSerializedProperty::mLink> MetaPropertyDefaultsList;
 
 // Meta Database
 class MetaDatabase : public ExplicitSingleton<MetaDatabase, EventObject>

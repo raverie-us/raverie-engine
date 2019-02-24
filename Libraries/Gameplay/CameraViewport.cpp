@@ -16,19 +16,13 @@ ZilchDefineType(CameraViewport, builder, type)
   ZilchBindFieldProperty(mCameraPath)->ZeroBindPropertyRename("Camera");
   ZilchBindFieldProperty(mRendererPath)->ZeroBindPropertyRename("Renderer");
   ZilchBindGetterSetterProperty(ResolutionOrAspect);
-  ZilchBindGetterSetterProperty(RenderToViewport)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mForwardViewportEvents)
-      ->ZeroFilterEquality(mRenderToViewport, bool, true);
+  ZilchBindGetterSetterProperty(RenderToViewport)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindFieldProperty(mForwardViewportEvents)->ZeroFilterEquality(mRenderToViewport, bool, true);
   ;
-  ZilchBindFieldProperty(mViewportScaling)
-      ->ZeroFilterEquality(mRenderToViewport, bool, true);
-  ZilchBindFieldProperty(mMarginColor)
-      ->ZeroFilterEquality(mRenderToViewport, bool, true);
-  ZilchBindFieldProperty(mNormalizedSize)
-      ->ZeroFilterEquality(mRenderToViewport, bool, true);
-  ZilchBindFieldProperty(mNormalizedOffset)
-      ->ZeroFilterEquality(mRenderToViewport, bool, true);
+  ZilchBindFieldProperty(mViewportScaling)->ZeroFilterEquality(mRenderToViewport, bool, true);
+  ZilchBindFieldProperty(mMarginColor)->ZeroFilterEquality(mRenderToViewport, bool, true);
+  ZilchBindFieldProperty(mNormalizedSize)->ZeroFilterEquality(mRenderToViewport, bool, true);
+  ZilchBindFieldProperty(mNormalizedOffset)->ZeroFilterEquality(mRenderToViewport, bool, true);
 
   ZilchBindMethod(ViewportTakeFocus);
   ZilchBindGetter(ViewportHasFocus);
@@ -62,15 +56,12 @@ void CameraViewport::Serialize(Serializer& stream)
   SerializeNameDefault(mRenderInEditor, false);
   SerializeNameDefault(mRenderInGame, true);
   SerializeNameDefault(mRenderOrder, 0);
-  stream.SerializeFieldDefault(
-      "CameraPath", mCameraPath, CogPath("."), "Camera");
-  stream.SerializeFieldDefault(
-      "RendererPath", mRendererPath, CogPath("."), "Renderer");
+  stream.SerializeFieldDefault("CameraPath", mCameraPath, CogPath("."), "Camera");
+  stream.SerializeFieldDefault("RendererPath", mRendererPath, CogPath("."), "Renderer");
   SerializeNameDefault(mResolutionOrAspect, IntVec2(1920, 1080));
   SerializeNameDefault(mRenderToViewport, true);
   SerializeNameDefault(mForwardViewportEvents, true);
-  SerializeEnumNameDefault(
-      ViewportScaling, mViewportScaling, ViewportScaling::Fill);
+  SerializeEnumNameDefault(ViewportScaling, mViewportScaling, ViewportScaling::Fill);
   SerializeNameDefault(mMarginColor, Vec4(0.0f, 0.0f, 0.0f, 1.0f));
   SerializeNameDefault(mNormalizedSize, Vec2(1.0f));
   SerializeNameDefault(mNormalizedOffset, Vec2(0.0f));
@@ -149,8 +140,7 @@ Frustum CameraViewport::GetFrustum()
   Camera* camera = GetCamera();
   if (!camera)
   {
-    DoNotifyException("CameraViewport",
-                      "The Camera was null so we could not create a Frustum");
+    DoNotifyException("CameraViewport", "The Camera was null so we could not create a Frustum");
     return Frustum();
   }
 
@@ -292,8 +282,7 @@ Ray CameraViewport::ScreenToWorldRay(Vec2Param screenPoint)
     return Ray(Vec3::cZero, Vec3::cZAxis);
 }
 
-Vec3 CameraViewport::ScreenToWorldZPlane(Vec2Param screenPoint,
-                                         float worldDepth)
+Vec3 CameraViewport::ScreenToWorldZPlane(Vec2Param screenPoint, float worldDepth)
 {
   Viewport* viewport = mViewport;
   if (viewport != nullptr)
@@ -302,8 +291,7 @@ Vec3 CameraViewport::ScreenToWorldZPlane(Vec2Param screenPoint,
     return Vec3::cZero;
 }
 
-Vec3 CameraViewport::ScreenToWorldViewPlane(Vec2Param screenPoint,
-                                            float viewDepth)
+Vec3 CameraViewport::ScreenToWorldViewPlane(Vec2Param screenPoint, float viewDepth)
 {
   Viewport* viewport = mViewport;
   if (viewport != nullptr)
@@ -312,14 +300,11 @@ Vec3 CameraViewport::ScreenToWorldViewPlane(Vec2Param screenPoint,
     return Vec3::cZero;
 }
 
-Vec3 CameraViewport::ScreenToWorldPlane(Vec2Param screenPoint,
-                                        Vec3Param worldPlaneNormal,
-                                        Vec3Param worldPlanePosition)
+Vec3 CameraViewport::ScreenToWorldPlane(Vec2Param screenPoint, Vec3Param worldPlaneNormal, Vec3Param worldPlanePosition)
 {
   Viewport* viewport = mViewport;
   if (viewport != nullptr)
-    return viewport->ScreenToWorldPlane(
-        screenPoint, worldPlaneNormal, worldPlanePosition);
+    return viewport->ScreenToWorldPlane(screenPoint, worldPlaneNormal, worldPlanePosition);
   else
     return Vec3::cZero;
 }
@@ -433,12 +418,7 @@ void CameraViewport::OnRenderTasksUpdateInternal(RenderTasksEvent* event)
   event->mViewportSize = Math::ToIntVec2(GetViewportSize());
   event->mCamera = mActiveCamera;
 
-  RenderTasksUpdateData update = {event,
-                                  rendererDispatcher,
-                                  mGraphicsSpace,
-                                  mActiveCamera,
-                                  mRenderOrder,
-                                  0};
+  RenderTasksUpdateData update = {event, rendererDispatcher, mGraphicsSpace, mActiveCamera, mRenderOrder, 0};
 
   // Set FinalTexture for this CameraViewport before sending event to script
   event->mFinalTexture = mFinalTexture;
@@ -502,8 +482,7 @@ void CameraViewport::ConfigureViewport()
   Vec2 parentSize = parent->GetSize();
 
   Vec2 viewportSize = SnapToPixels(parentSize * mNormalizedSize);
-  Vec3 viewportOffset =
-      SnapToPixels(Vec3(parentSize * mNormalizedOffset, 0.0f));
+  Vec3 viewportOffset = SnapToPixels(Vec3(parentSize * mNormalizedOffset, 0.0f));
 
   Vec2 scaledSize = Vec2(1, 1);
   Vec3 scaledOffset = Vec3(0, 0, 0);
@@ -527,24 +506,20 @@ void CameraViewport::ConfigureViewport()
       scaleAspect = Vec2(1, viewportRatio / targetRatio);
 
     scaledSize = SnapToPixels(viewportSize * scaleAspect);
-    scaledOffset = SnapToPixels(viewportOffset +
-                                Vec3((viewportSize - scaledSize) * 0.5f, 0.0f));
+    scaledOffset = SnapToPixels(viewportOffset + Vec3((viewportSize - scaledSize) * 0.5f, 0.0f));
   }
   else if (mViewportScaling == ViewportScaling::Exact)
   {
     scaledSize = Math::Min(Math::ToVec2(mResolutionOrAspect), viewportSize);
-    scaledOffset = viewportOffset +
-                   SnapToPixels(Vec3((viewportSize - scaledSize) * 0.5f, 0.0f));
+    scaledOffset = viewportOffset + SnapToPixels(Vec3((viewportSize - scaledSize) * 0.5f, 0.0f));
   }
   else if (mViewportScaling == ViewportScaling::LargestMultiple)
   {
     Vec2 targetSize = Math::ToVec2(mResolutionOrAspect);
-    float multiple =
-        Math::Min(viewportSize.x / targetSize.x, viewportSize.y / targetSize.y);
+    float multiple = Math::Min(viewportSize.x / targetSize.x, viewportSize.y / targetSize.y);
     multiple = Math::Max(Math::Floor(multiple), 1.0f);
     scaledSize = Math::Min(targetSize * multiple, viewportSize);
-    scaledOffset = viewportOffset +
-                   SnapToPixels(Vec3((viewportSize - scaledSize) * 0.5f, 0.0f));
+    scaledOffset = viewportOffset + SnapToPixels(Vec3((viewportSize - scaledSize) * 0.5f, 0.0f));
   }
 
   viewport->SetSize(viewportSize, scaledSize);
@@ -569,8 +544,7 @@ void CameraViewport::CheckSetup()
     if (mActiveCamera == nullptr)
     {
       mViewport.SafeDestroy();
-      GetSpace()->GetDispatcher()->DisconnectEvent(
-          Events::RenderTasksUpdateInternal, this);
+      GetSpace()->GetDispatcher()->DisconnectEvent(Events::RenderTasksUpdateInternal, this);
       mCompleteSetup = false;
     }
     // Or viewport requirement was changed
@@ -584,9 +558,7 @@ void CameraViewport::CheckSetup()
     if (mRenderToViewport)
       CreateViewport(mActiveCamera);
     mGraphicsSpace->AddCamera(mActiveCamera);
-    ConnectThisTo(GetSpace(),
-                  Events::RenderTasksUpdateInternal,
-                  OnRenderTasksUpdateInternal);
+    ConnectThisTo(GetSpace(), Events::RenderTasksUpdateInternal, OnRenderTasksUpdateInternal);
     mCompleteSetup = true;
   }
   // No camera, can't complete setup
@@ -601,8 +573,7 @@ void CameraViewport::ClearSetup()
     // Setup could have only been completed if camera was valid and added to
     // graphics space
     mGraphicsSpace->RemoveCamera(mActiveCamera);
-    GetSpace()->GetDispatcher()->DisconnectEvent(
-        Events::RenderTasksUpdateInternal, this);
+    GetSpace()->GetDispatcher()->DisconnectEvent(Events::RenderTasksUpdateInternal, this);
   }
 }
 
@@ -621,13 +592,11 @@ void CameraViewport::SetActiveCamera(Camera* camera)
         viewport->mViewportInterface = nullptr;
       mViewport.SafeDestroy();
       mGraphicsSpace->RemoveCamera(mActiveCamera);
-      GetSpace()->GetDispatcher()->DisconnectEvent(
-          Events::RenderTasksUpdateInternal, this);
+      GetSpace()->GetDispatcher()->DisconnectEvent(Events::RenderTasksUpdateInternal, this);
       mCompleteSetup = false;
     }
 
-    mActiveCamera->GetDispatcher()->DisconnectEvent(Events::CameraDestroyed,
-                                                    this);
+    mActiveCamera->GetDispatcher()->DisconnectEvent(Events::CameraDestroyed, this);
     mActiveCamera->mViewportInterface = nullptr;
   }
 
@@ -639,8 +608,7 @@ void CameraViewport::SetActiveCamera(Camera* camera)
     if (mActiveCamera->mViewportInterface != nullptr)
     {
       // CameraViewport is the only ViewportInterface
-      CameraViewport* cameraViewport =
-          (CameraViewport*)mActiveCamera->mViewportInterface;
+      CameraViewport* cameraViewport = (CameraViewport*)mActiveCamera->mViewportInterface;
       // Remove path from other CameraViewport to prevent retaking of camera
       // Changing the CogPath will also make the other CameraViewport tear-down
       // its setup

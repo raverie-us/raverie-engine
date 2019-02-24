@@ -89,8 +89,7 @@ public:
   // Internal
 
   Link<ParticleSystem> SystemLink;
-  typedef InList<ParticleSystem, &ParticleSystem::SystemLink>
-      ParticleSystemList;
+  typedef InList<ParticleSystem, &ParticleSystem::SystemLink> ParticleSystemList;
 
   void OnUpdate(UpdateEvent* event);
 

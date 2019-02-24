@@ -9,9 +9,7 @@ const String cCogPathParent("../");
 class SkeletonProcessor
 {
 public:
-  SkeletonProcessor(HierarchyDataMap& hierarchyData,
-                    MeshDataMap& meshData,
-                    String& rootNodeName);
+  SkeletonProcessor(HierarchyDataMap& hierarchyData, MeshDataMap& meshData, String& rootNodeName);
 
   void ProcessSkeletonHierarchy(const aiScene* scene);
   String FindSkeletonRootFromBone(String boneName);

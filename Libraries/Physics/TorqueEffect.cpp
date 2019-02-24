@@ -50,8 +50,7 @@ void TorqueEffect::DebugDraw()
   real radius = 1;
   // Draw a ring that has 3 sub-divisions
   DrawRing(torqueCenter, torqueAxis, radius, 3, t, Color::White);
-  gDebugDraw->Add(
-      Debug::Line(torqueCenter, torqueCenter + torqueAxis).HeadSize(0.1f));
+  gDebugDraw->Add(Debug::Line(torqueCenter, torqueCenter + torqueAxis).HeadSize(0.1f));
 }
 
 void TorqueEffect::PreCalculate(real dt)

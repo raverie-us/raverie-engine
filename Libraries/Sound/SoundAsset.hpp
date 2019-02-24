@@ -62,9 +62,7 @@ class DecompressedSoundAsset : public SoundAsset
 public:
   ZilchDeclareType(DecompressedSoundAsset, TypeCopyMode::ReferenceType);
 
-  DecompressedSoundAsset(Status& status,
-                         const String& fileName,
-                         const String& assetName);
+  DecompressedSoundAsset(Status& status, const String& fileName, const String& assetName);
 
   // Appends the specified number of samples to the array, starting at the
   // specified frame index.
@@ -91,20 +89,12 @@ class StreamingDataPerInstance
 public:
   // The file object must be already open, and will not be closed by this
   // decoder
-  StreamingDataPerInstance(Status& status,
-                           File* inputFile,
-                           ThreadLock* lock,
-                           unsigned channels,
-                           unsigned frames,
-                           unsigned instanceID);
+  StreamingDataPerInstance(
+      Status& status, File* inputFile, ThreadLock* lock, unsigned channels, unsigned frames, unsigned instanceID);
   // The input data buffer must already exist, and will not be deleted by this
   // decoder
-  StreamingDataPerInstance(Status& status,
-                           byte* inputData,
-                           unsigned dataSize,
-                           unsigned channels,
-                           unsigned frames,
-                           unsigned instanceID);
+  StreamingDataPerInstance(
+      Status& status, byte* inputData, unsigned dataSize, unsigned channels, unsigned frames, unsigned instanceID);
 
   // Resets the data to start streaming from the beginning of the file
   void Reset();

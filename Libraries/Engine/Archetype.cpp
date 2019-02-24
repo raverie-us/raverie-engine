@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-Memory::Heap* Archetype::CacheHeap =
-    new Memory::Heap("Archetypes", Memory::GetRoot());
+Memory::Heap* Archetype::CacheHeap = new Memory::Heap("Archetypes", Memory::GetRoot());
 bool Archetype::sRebuilding = false;
 
 // Archetype
@@ -54,8 +53,7 @@ void Archetype::Save(StringParam filename)
       ClearDataTreeCache();
       ClearBinaryCache();
 
-      forRange(Resource * archetypeResource,
-               ArchetypeManager::GetInstance()->AllResources())
+      forRange (Resource* archetypeResource, ArchetypeManager::GetInstance()->AllResources())
       {
         // For now we're clearing the cache for all Archetypes, however this
         // should check to see if each Archetype has a dependency on this
@@ -92,13 +90,11 @@ void Archetype::BinaryCache(Cog* cog, CogCreationContext* creationContext)
   if (creationContext)
   {
     u32 objectContext = cog->mSubContextId;
-    forRange(CogCreationContext::IdMapType::value_type entry,
-             creationContext->mContextIdMap.All())
+    forRange (CogCreationContext::IdMapType::value_type entry, creationContext->mContextIdMap.All())
     {
       // Only add objects under this object
       if ((entry.first & cContextIdMask) == objectContext)
-        context.ContextIdMap[entry.second.NewId] =
-            entry.first & ~cContextIdMask;
+        context.ContextIdMap[entry.second.NewId] = entry.first & ~cContextIdMask;
     }
   }
 
@@ -132,7 +128,7 @@ void Archetype::CacheDataTree()
 
   // Add all modifications from all the base Archetypes
   mAllCachedModifications.Combine(mLocalCachedModifications);
-  forRange(Resource * baseResource, GetBaseResources())
+  forRange (Resource* baseResource, GetBaseResources())
   {
     Archetype* baseArchetype = (Archetype*)baseResource;
     mAllCachedModifications.Combine(baseArchetype->mLocalCachedModifications);
@@ -232,9 +228,7 @@ public:
     // Find the stored type by typename and save it
     if (StoredType == nullptr)
       StoredType = MetaDatabase::GetInstance()->FindType(StoredTypeName);
-    ErrorIf(StoredType == nullptr,
-            "Can not find type named %s",
-            StoredTypeName.c_str());
+    ErrorIf(StoredType == nullptr, "Can not find type named %s", StoredTypeName.c_str());
 
     // Store the meta type on the archetype
     archetype->mStoredType = StoredType;
@@ -270,8 +264,7 @@ public:
 // Archetype Manager
 ImplementResourceManager(ArchetypeManager, Archetype);
 
-ArchetypeManager::ArchetypeManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+ArchetypeManager::ArchetypeManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   AddLoader("Cog", new ArchetypeLoader("Cog", "Archetype"));
   AddLoader("Space", new ArchetypeLoader("Space", "Space"));
@@ -331,9 +324,7 @@ Archetype* ArchetypeManager::MakeNewArchetypeWith(Cog* cog,
     Status status;
     if (!IsValidFilename(newName, status))
     {
-      String errorString = String::Format("The name %s is not valid. %s",
-                                          newName.c_str(),
-                                          status.Message.c_str());
+      String errorString = String::Format("The name %s is not valid. %s", newName.c_str(), status.Message.c_str());
       DoNotifyWarning("Invalid name", errorString.c_str());
       return nullptr;
     }
@@ -351,8 +342,7 @@ Archetype* ArchetypeManager::MakeNewArchetypeWith(Cog* cog,
     {
       // We want the new Archetype to be exactly the same as the old, so we need
       // to copy over any modifications from the Archetype we're copying from
-      oldArchetype->GetLocalCachedModifications().ApplyModificationsToObject(
-          cog);
+      oldArchetype->GetLocalCachedModifications().ApplyModificationsToObject(cog);
       newArchetype->mBaseResourceIdName = oldArchetype->mBaseResourceIdName;
     }
 
@@ -362,9 +352,7 @@ Archetype* ArchetypeManager::MakeNewArchetypeWith(Cog* cog,
   }
 }
 
-bool ArchetypeManager::SaveToContent(Cog* object,
-                                     Archetype* archetype,
-                                     ResourceId addResourceId)
+bool ArchetypeManager::SaveToContent(Cog* object, Archetype* archetype, ResourceId addResourceId)
 {
   archetype->mCachedObject = object;
   archetype->mStoredType = ZilchVirtualTypeId(object);
@@ -378,8 +366,7 @@ bool ArchetypeManager::SaveToContent(Cog* object,
 
   // We can modify read only resources if specified by dev config
   bool canModifyReadOnly = false;
-  if (DeveloperConfig* devConfig =
-          Z::gEngine->GetConfigCog()->has(DeveloperConfig))
+  if (DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig))
     canModifyReadOnly = devConfig->mCanModifyReadOnlyResources;
 
   // Archetype has no content item so create one and upload.
@@ -418,8 +405,7 @@ bool ArchetypeManager::SaveToContent(Cog* object,
     }
     else
     {
-      DoNotifyError("Failed to save",
-                    "Failed to create archetype content item");
+      DoNotifyError("Failed to save", "Failed to create archetype content item");
       return false;
     }
   }
@@ -441,11 +427,10 @@ bool ArchetypeManager::SaveToContent(Cog* object,
   }
   else
   {
-    DoNotifyWarning(
-        "Can not upload",
-        String::Format("Archetype %s is read only."
-                       " Built in engine resources can not be changed.",
-                       archetype->Name.c_str()));
+    DoNotifyWarning("Can not upload",
+                    String::Format("Archetype %s is read only."
+                                   " Built in engine resources can not be changed.",
+                                   archetype->Name.c_str()));
     return false;
   }
 }
@@ -454,7 +439,7 @@ void ArchetypeManager::FlushBinaryArchetypes()
 {
   // A structure change (new serialized values) has invalidated binary
   // cached archetypes. For simplicity just clear all archetypes.
-  forRange(Resource * resource, ResourceIdMap.Values())
+  forRange (Resource* resource, ResourceIdMap.Values())
   {
     Archetype* archetype = (Archetype*)resource;
     archetype->ClearBinaryCache();
@@ -473,7 +458,7 @@ void ArchetypeManager::ArchetypeModified(Archetype* archetype)
   this->DispatchEvent(Events::ResourceReload, &event);
 
   // Clear the cache for all Archetypes that inherit from the modified Archetype
-  forRange(Resource * resource, ArchetypeManager::GetInstance()->AllResources())
+  forRange (Resource* resource, ArchetypeManager::GetInstance()->AllResources())
   {
     while (resource)
     {

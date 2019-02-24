@@ -134,9 +134,7 @@ void BasicSolver::SolvePositions()
   CollectJointsToSolve(mJoints, jointsToSolve);
   CollectContactsToSolve(mContacts, contactsToSolve, mSolverConfig);
 
-  for (uint iterationCount = 0;
-       iterationCount < GetSolverPositionIterationCount();
-       ++iterationCount)
+  for (uint iterationCount = 0; iterationCount < GetSolverPositionIterationCount(); ++iterationCount)
   {
     if (mSolverConfig->mSubType == PhysicsSolverSubType::BasicSolving)
     {

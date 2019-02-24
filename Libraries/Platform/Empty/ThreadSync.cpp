@@ -88,9 +88,7 @@ InterprocessMutex::~InterprocessMutex()
 {
 }
 
-void InterprocessMutex::Initialize(Status& status,
-                                   const char* mutexName,
-                                   bool failIfAlreadyExists)
+void InterprocessMutex::Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists)
 {
 }
 

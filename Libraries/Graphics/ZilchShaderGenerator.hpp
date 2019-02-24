@@ -7,12 +7,7 @@ namespace Zero
 
 ZilchShaderGenerator* CreateZilchShaderGenerator();
 
-DeclareEnum5(ZilchFragmentType,
-             CoreVertex,
-             RenderPass,
-             PostProcess,
-             Protected,
-             Fragment);
+DeclareEnum5(ZilchFragmentType, CoreVertex, RenderPass, PostProcess, Protected, Fragment);
 typedef HashMap<String, ZilchFragmentType::Enum> ZilchFragmentTypeMap;
 
 // User data written per shader type. Used to deal with efficient re-compiling
@@ -28,8 +23,7 @@ public:
 class ZilchShaderGenerator : public Zilch::EventHandler
 {
 public:
-  typedef HashMap<LibraryRef, ZilchShaderIRLibraryRef>
-      ExternalToInternalLibraryMap;
+  typedef HashMap<LibraryRef, ZilchShaderIRLibraryRef> ExternalToInternalLibraryMap;
   typedef ExternalToInternalLibraryMap::valuerange InternalLibraryRange;
   typedef ZilchShaderIRCompositor::ShaderDefinition ShaderDefinition;
   typedef Zilch::Ref<ShaderTranslationPassResult> TranslationPassResultRef;
@@ -56,10 +50,8 @@ public:
                        ShaderPipelineDescription& pipeline,
                        Array<TranslationPassResultRef>& pipelineResults);
 
-  ShaderInput CreateShaderInput(StringParam fragmentName,
-                                StringParam inputName,
-                                ShaderInputType::Enum type,
-                                AnyParam value);
+  ShaderInput
+  CreateShaderInput(StringParam fragmentName, StringParam inputName, ShaderInputType::Enum type, AnyParam value);
 
   void OnZilchFragmentCompilationError(Zilch::ErrorEvent* event);
   void OnZilchFragmentTypeParsed(Zilch::ParseEvent* event);

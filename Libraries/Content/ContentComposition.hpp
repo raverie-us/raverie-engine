@@ -50,9 +50,7 @@ public:
                     int index = -1,
                     bool ignoreDependencies = false,
                     MetaCreationContext* creationContext = nullptr) override;
-  void RemoveComponent(HandleParam owner,
-                       HandleParam component,
-                       bool ignoreDependencies = false) override;
+  void RemoveComponent(HandleParam owner, HandleParam component, bool ignoreDependencies = false) override;
 };
 
 /// A content item that allows composited items.

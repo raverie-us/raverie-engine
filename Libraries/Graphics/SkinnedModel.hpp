@@ -21,9 +21,7 @@ public:
   // Graphical Interface
   Aabb GetLocalAabb() override;
   void ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock) override;
-  void ExtractViewData(ViewNode& viewNode,
-                       ViewBlock& viewBlock,
-                       FrameBlock& frameBlock) override;
+  void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) override;
   bool TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo) override;
 
   // Properties

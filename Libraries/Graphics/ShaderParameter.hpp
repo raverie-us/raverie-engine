@@ -3,10 +3,10 @@
 
 namespace Zero
 {
-#define SetParam(name)                                                         \
-  {                                                                            \
-    ShaderParameter p = shader->GetParameter(#name);                           \
-    shader->SetParameter(p, name);                                             \
+#define SetParam(name)                                                                                                 \
+  {                                                                                                                    \
+    ShaderParameter p = shader->GetParameter(#name);                                                                   \
+    shader->SetParameter(p, name);                                                                                     \
   }
 
 #define ApplyParam(name) apply(shader, #name, name);

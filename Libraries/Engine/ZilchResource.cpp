@@ -62,7 +62,7 @@ void ZilchDocumentResource::OnCharacterAdded(ICodeEditor* editor, Rune value)
     if (info.IsLiteral && info.NearestType == ZilchTypeId(int))
       return;
 
-    forRange(CompletionEntry & entry, info.CompletionEntries.All())
+    forRange (CompletionEntry& entry, info.CompletionEntries.All())
     {
       Completion& completion = completions.PushBack();
       completion.Description = entry.Description;
@@ -74,8 +74,7 @@ void ZilchDocumentResource::OnCharacterAdded(ICodeEditor* editor, Rune value)
 
     editor->ShowAutoComplete(completions, CompletionConfidence::Perfect);
   }
-  else if (value == ':' ||
-           (value == ' ' && currentLine.FindLastNonWhitespaceRune() == ':'))
+  else if (value == ':' || (value == ' ' && currentLine.FindLastNonWhitespaceRune() == ':'))
   {
     Array<Completion> completions;
     // The any keyword is special. Just force add it to our possible completion
@@ -99,13 +98,13 @@ void ZilchDocumentResource::OnCharacterAdded(ICodeEditor* editor, Rune value)
     if (info.FunctionName.Empty() == false)
     {
       Array<CallTip> tips;
-      forRange(CompletionOverload & overload, info.CompletionOverloads.All())
+      forRange (CompletionOverload& overload, info.CompletionOverloads.All())
       {
         CallTip& tip = tips.PushBack();
         tip.Description = overload.Description;
         tip.Return = overload.ReturnType;
 
-        forRange(CompletionParameter & param, overload.Parameters.All())
+        forRange (CompletionParameter& param, overload.Parameters.All())
         {
           ParameterTip& paramTip = tip.Parameters.PushBack();
           paramTip.Description = param.Description;
@@ -134,12 +133,11 @@ void AddTypesToAutoComplete(LibraryRef library, Array<Completion>& keywordsOut)
 {
   if (library != nullptr)
   {
-    forRange(BoundType * type, library->BoundTypes.Values())
+    forRange (BoundType* type, library->BoundTypes.Values())
     {
       keywordsOut.PushBack(Completion(type->Name, type->Description));
     }
-    forRange(InstantiateTemplateInfo & templateHandler,
-             library->TemplateHandlers.Values())
+    forRange (InstantiateTemplateInfo& templateHandler, library->TemplateHandlers.Values())
     {
       // Build the full name of the template
       StringBuilder nameBuilder;
@@ -157,8 +155,7 @@ void AddTypesToAutoComplete(LibraryRef library, Array<Completion>& keywordsOut)
       // Since auto-completion adds the full name, we can't put the default
       // template argument names in there. For now put the full name in the
       // description so the user can at least see the required arguments.
-      keywordsOut.PushBack(
-          Completion(templateHandler.TemplateBaseName, nameBuilder.ToString()));
+      keywordsOut.PushBack(Completion(templateHandler.TemplateBaseName, nameBuilder.ToString()));
     }
   }
 }
@@ -185,8 +182,7 @@ String ZilchDocumentResource::GenerateConnectCallEnd(StringParam functionName)
   return BuildString("this.", functionName, ");");
 }
 
-String ZilchDocumentResource::GenerateConnectFunctionStart(
-    StringParam functionName, StringParam eventType)
+String ZilchDocumentResource::GenerateConnectFunctionStart(StringParam functionName, StringParam eventType)
 {
   StringBuilder builder;
   builder.Append("\n\n\ffunction ");
@@ -202,9 +198,7 @@ String ZilchDocumentResource::GenerateConnectFunctionEnd()
   return "\n\f}";
 }
 
-void ZilchDocumentResource::FindPositionToGenerateFunction(ICodeEditor* editor,
-                                                           int& positionOut,
-                                                           String& indent)
+void ZilchDocumentResource::FindPositionToGenerateFunction(ICodeEditor* editor, int& positionOut, String& indent)
 {
   // Assume we can't find it, until we do!
   positionOut = -1;
@@ -220,8 +214,7 @@ void ZilchDocumentResource::FindPositionToGenerateFunction(ICodeEditor* editor,
   if (function.Empty())
     return;
 
-  StringRange newlineBeforeFunction =
-      allText.SubString(allText.Begin(), function.Begin()).FindLastOf("\n");
+  StringRange newlineBeforeFunction = allText.SubString(allText.Begin(), function.Begin()).FindLastOf("\n");
 
   if (newlineBeforeFunction.Empty())
     return;
@@ -232,8 +225,7 @@ void ZilchDocumentResource::FindPositionToGenerateFunction(ICodeEditor* editor,
 
   // Find the indent space leading up the start of non-whitespace text to
   // account for potential attribute tags and get the correct indent size
-  StringRange textBeforeFunction =
-      allText.SubString(newlineBeforeFunction.Begin(), function.End());
+  StringRange textBeforeFunction = allText.SubString(newlineBeforeFunction.Begin(), function.End());
   Rune indentEndRune = textBeforeFunction.FindFirstNonWhitespaceRune();
   StringRange indentEnd = textBeforeFunction.FindFirstOf(indentEndRune);
 
@@ -304,8 +296,7 @@ void ZilchDocumentResource::FindPositionToGenerateFunction(ICodeEditor* editor,
   positionOut = endIndex.mIteratorRange.Data() - allText.Data();
 }
 
-void ZilchDocumentResource::ValidateNewScriptName(Status& status,
-                                                  StringParam name)
+void ZilchDocumentResource::ValidateNewScriptName(Status& status, StringParam name)
 {
   // If we're making a new type, then we need to check if this name already
   // exists.
@@ -320,8 +311,7 @@ void ZilchDocumentResource::ValidateNewScriptName(Status& status,
   }
 }
 
-void ZilchDocumentResource::ValidateRawScriptName(Status& status,
-                                                  StringParam name)
+void ZilchDocumentResource::ValidateRawScriptName(Status& status, StringParam name)
 {
   // Make sure the user used a valid Zilch type name
   if (LibraryBuilder::CheckUpperIdentifier(name) == false)
@@ -332,9 +322,7 @@ void ZilchDocumentResource::ValidateRawScriptName(Status& status,
   }
 }
 
-void ZilchDocumentResource::PrepForAutoComplete(ICodeEditor* editor,
-                                                Project& project,
-                                                Module& dependencies)
+void ZilchDocumentResource::PrepForAutoComplete(ICodeEditor* editor, Project& project, Module& dependencies)
 {
   String allText = editor->GetAllText();
 
@@ -348,54 +336,43 @@ void ZilchDocumentResource::PrepForAutoComplete(ICodeEditor* editor,
 
   for (uint i = 0; i < libraries.Size(); ++i)
     dependencies.PushBack(libraries[i]);
-  project.AddCodeFromString(
-      allText, editor->GetOrigin(), editor->GetDocumentResource());
+  project.AddCodeFromString(allText, editor->GetOrigin(), editor->GetDocumentResource());
 }
 
-void ZilchDocumentResource::AttemptGetDefinition(ICodeEditor* editor,
-                                                 size_t cursorPosition,
-                                                 CodeDefinition& definition)
+void ZilchDocumentResource::AttemptGetDefinition(ICodeEditor* editor, size_t cursorPosition, CodeDefinition& definition)
 {
   Project project;
   Module dependencies;
   PrepForAutoComplete(editor, project, dependencies);
 
-  project.GetDefinitionInfo(
-      dependencies, cursorPosition, editor->GetOrigin(), definition);
+  project.GetDefinitionInfo(dependencies, cursorPosition, editor->GetOrigin(), definition);
 }
 
-Any ZilchDocumentResource::QueryExpression(StringParam expression,
-                                           Array<QueryResult>& results)
+Any ZilchDocumentResource::QueryExpression(StringParam expression, Array<QueryResult>& results)
 {
-  return ZilchManager::GetInstance()->mDebugger.QueryExpression(expression,
-                                                                results);
+  return ZilchManager::GetInstance()->mDebugger.QueryExpression(expression, results);
 }
 
 bool ZilchDocumentResource::SetBreakpoint(size_t line, bool breakpoint)
 {
   // Zilch uses 1 based lines and the code editor uses 0 based lines
-  return ZilchManager::GetInstance()->mDebugger.SetBreakpoint(
-      GetOrigin(), line + 1, breakpoint);
+  return ZilchManager::GetInstance()->mDebugger.SetBreakpoint(GetOrigin(), line + 1, breakpoint);
 }
 
 bool ZilchDocumentResource::HasBreakpoint(size_t line)
 {
   // Zilch uses 1 based lines and the code editor uses 0 based lines
-  return ZilchManager::GetInstance()->mDebugger.HasBreakpoint(GetOrigin(),
-                                                              line + 1);
+  return ZilchManager::GetInstance()->mDebugger.HasBreakpoint(GetOrigin(), line + 1);
 }
 
 void ZilchDocumentResource::GetBreakpoints(Array<size_t>& breakpointLines)
 {
-  if (!ZilchManager::GetInstance()->mDebugger.Breakpoints.ContainsKey(
-          GetOrigin()))
+  if (!ZilchManager::GetInstance()->mDebugger.Breakpoints.ContainsKey(GetOrigin()))
     return;
 
   // Zilch uses 1 based lines and the code editor uses 0 based lines
-  forRange(
-      size_t line,
-      ZilchManager::GetInstance()->mDebugger.Breakpoints[GetOrigin()].All())
-      breakpointLines.PushBack(line - 1);
+  forRange (size_t line, ZilchManager::GetInstance()->mDebugger.Breakpoints[GetOrigin()].All())
+    breakpointLines.PushBack(line - 1);
 }
 
 void ZilchDocumentResource::ClearBreakpoints()
@@ -403,21 +380,17 @@ void ZilchDocumentResource::ClearBreakpoints()
   ZilchManager::GetInstance()->mDebugger.ClearBreakpoints(GetOrigin());
 }
 
-void ZilchDocumentResource::GetAutoCompleteInfo(ICodeEditor* editor,
-                                                AutoCompleteInfo& info)
+void ZilchDocumentResource::GetAutoCompleteInfo(ICodeEditor* editor, AutoCompleteInfo& info)
 {
   Project project;
   Module dependencies;
   PrepForAutoComplete(editor, project, dependencies);
 
   String cursorOrigin = editor->GetOrigin();
-  project.GetAutoCompleteInfo(
-      dependencies, editor->GetCaretPosition(), cursorOrigin, info);
+  project.GetAutoCompleteInfo(dependencies, editor->GetCaretPosition(), cursorOrigin, info);
 
   // Don't show types marked as hidden
-  for (uint i = info.CompletionEntries.Size() - 1;
-       i < info.CompletionEntries.Size();
-       --i)
+  for (uint i = info.CompletionEntries.Size() - 1; i < info.CompletionEntries.Size(); --i)
   {
     BoundType* type = MetaDatabase::FindType(info.CompletionEntries[i].Type);
     if (type->HasAttributeInherited(ObjectAttributes::cHidden))
@@ -425,12 +398,11 @@ void ZilchDocumentResource::GetAutoCompleteInfo(ICodeEditor* editor,
   }
 }
 
-void ZilchDocumentResource::AddTypesToCompletion(Array<Completion>& completions,
-                                                 LibraryRef library)
+void ZilchDocumentResource::AddTypesToCompletion(Array<Completion>& completions, LibraryRef library)
 {
   if (library != nullptr)
   {
-    forRange(BoundType * &type, library->BoundTypes.Values())
+    forRange (BoundType*& type, library->BoundTypes.Values())
     {
       // Don't show types marked as hidden
       if (type->HasAttributeInherited(ObjectAttributes::cHidden))
@@ -456,20 +428,13 @@ bool ZilchDocumentResource::CanStartLocalWordCompletion(ICodeEditor* editor)
   if (initialized == false)
   {
     initialized = true;
-    noLocalCompletionKeywords.Insert(
-        Grammar::GetKeywordOrSymbol(Grammar::Class));
-    noLocalCompletionKeywords.Insert(
-        Grammar::GetKeywordOrSymbol(Grammar::Struct));
-    noLocalCompletionKeywords.Insert(
-        Grammar::GetKeywordOrSymbol(Grammar::Variable));
-    noLocalCompletionKeywords.Insert(
-        Grammar::GetKeywordOrSymbol(Grammar::Function));
-    noLocalCompletionKeywords.Insert(
-        Grammar::GetKeywordOrSymbol(Grammar::Enumeration));
-    noLocalCompletionKeywords.Insert(
-        Grammar::GetKeywordOrSymbol(Grammar::Flags));
-    noLocalCompletionKeywords.Insert(
-        Grammar::GetKeywordOrSymbol(Grammar::Sends));
+    noLocalCompletionKeywords.Insert(Grammar::GetKeywordOrSymbol(Grammar::Class));
+    noLocalCompletionKeywords.Insert(Grammar::GetKeywordOrSymbol(Grammar::Struct));
+    noLocalCompletionKeywords.Insert(Grammar::GetKeywordOrSymbol(Grammar::Variable));
+    noLocalCompletionKeywords.Insert(Grammar::GetKeywordOrSymbol(Grammar::Function));
+    noLocalCompletionKeywords.Insert(Grammar::GetKeywordOrSymbol(Grammar::Enumeration));
+    noLocalCompletionKeywords.Insert(Grammar::GetKeywordOrSymbol(Grammar::Flags));
+    noLocalCompletionKeywords.Insert(Grammar::GetKeywordOrSymbol(Grammar::Sends));
   }
 
   return (noLocalCompletionKeywords.Contains(keyword) == false);

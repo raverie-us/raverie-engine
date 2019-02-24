@@ -29,11 +29,9 @@ static_assert(CHAR_BIT == 8, "Platform byte length must be 8 bits");
 #define LBIT(N) (uint8(128) >> (N))
 
 /// Sets the right-justified bit N of Byte if Condition is true, else clears it
-#define ASSIGN_RBIT(Condition, Byte, N)                                        \
-  ((*(uint8*)Byte) ^= ((-(bool)(Condition) ^ ((uint8)*Byte)) & RBIT(N)))
+#define ASSIGN_RBIT(Condition, Byte, N) ((*(uint8*)Byte) ^= ((-(bool)(Condition) ^ ((uint8)*Byte)) & RBIT(N)))
 /// Sets the left-justified bit N of Byte if Condition is true, else clears it
-#define ASSIGN_LBIT(Condition, Byte, N)                                        \
-  ((*(uint8*)Byte) ^= ((-(bool)(Condition) ^ ((uint8)*Byte)) & LBIT(N)))
+#define ASSIGN_LBIT(Condition, Byte, N) ((*(uint8*)Byte) ^= ((-(bool)(Condition) ^ ((uint8)*Byte)) & LBIT(N)))
 
 /// Equivalent to (X / 8)
 #define DIV8(X) ((X) >> 3)
@@ -53,10 +51,8 @@ static_assert(CHAR_BIT == 8, "Platform byte length must be 8 bits");
 #define ROUND_UP_POW2_1(X) ((X) | (X) >> 1)
 
 /// Rounds X up to the next highest power of 2
-#define ROUND_UP_POW2(X)                                                       \
-  (ROUND_UP_POW2_32(ROUND_UP_POW2_16(ROUND_UP_POW2_8(                          \
-       ROUND_UP_POW2_4(ROUND_UP_POW2_2(ROUND_UP_POW2_1((X)-1)))))) +           \
-   1)
+#define ROUND_UP_POW2(X)                                                                                               \
+  (ROUND_UP_POW2_32(ROUND_UP_POW2_16(ROUND_UP_POW2_8(ROUND_UP_POW2_4(ROUND_UP_POW2_2(ROUND_UP_POW2_1((X)-1)))))) + 1)
 
 /// Returns the number of bits needed to represent X
 #define BITS_NEEDED_TO_REPRESENT(X) (LOG2(X) + 1)
@@ -65,85 +61,69 @@ static_assert(CHAR_BIT == 8, "Platform byte length must be 8 bits");
 #define ROUND_UP(X) (intmax(X) + (1 - intmax(intmax((X) + 1) - (X))))
 
 /// Returns the exact uint type of N bits, else void
-#define EXACT_UINT(N)                                                          \
-  typename conditional<                                                        \
-      (N) == 8,                                                                \
-      uint8,                                                                   \
-      typename conditional<                                                    \
-          (N) == 16,                                                           \
-          uint16,                                                              \
-          typename conditional<(N) == 32,                                      \
-                               uint32,                                         \
-                               typename conditional<(N) == 64, uint64, void>:: \
-                                   type>::type>::type>::type
+#define EXACT_UINT(N)                                                                                                  \
+  typename conditional<                                                                                                \
+      (N) == 8,                                                                                                        \
+      uint8,                                                                                                           \
+      typename conditional<                                                                                            \
+          (N) == 16,                                                                                                   \
+          uint16,                                                                                                      \
+          typename conditional<(N) == 32, uint32, typename conditional<(N) == 64, uint64, void>::type>::type>::type>:: \
+      type
 
 /// Returns the nearest uint type of N bits, else uintmax
-#define NEAREST_UINT(N)                                                        \
-  typename conditional<                                                        \
-      (N) <= 8,                                                                \
-      uint8,                                                                   \
-      typename conditional<                                                    \
-          (N) <= 16,                                                           \
-          uint16,                                                              \
-          typename conditional<                                                \
-              (N) <= 32,                                                       \
-              uint32,                                                          \
-              typename conditional<(N) <= 64, uint64, uintmax>::type>::type>:: \
+#define NEAREST_UINT(N)                                                                                                \
+  typename conditional<                                                                                                \
+      (N) <= 8,                                                                                                        \
+      uint8,                                                                                                           \
+      typename conditional<                                                                                            \
+          (N) <= 16,                                                                                                   \
+          uint16,                                                                                                      \
+          typename conditional<(N) <= 32, uint32, typename conditional<(N) <= 64, uint64, uintmax>::type>::type>::     \
           type>::type
 
 /// Returns the fastest uint type of at least N bits, else uintmax
-#define FASTEST_UINT(N)                                                        \
-  typename conditional<                                                        \
-      (N) <= 8,                                                                \
-      uintfast8,                                                               \
-      typename conditional<                                                    \
-          (N) <= 16,                                                           \
-          uintfast16,                                                          \
-          typename conditional<                                                \
-              (N) <= 32,                                                       \
-              uintfast32,                                                      \
-              typename conditional<(N) <= 64, uintfast64, uintmax>::type>::    \
+#define FASTEST_UINT(N)                                                                                                \
+  typename conditional<                                                                                                \
+      (N) <= 8,                                                                                                        \
+      uintfast8,                                                                                                       \
+      typename conditional<                                                                                            \
+          (N) <= 16,                                                                                                   \
+          uintfast16,                                                                                                  \
+          typename conditional<(N) <= 32, uintfast32, typename conditional<(N) <= 64, uintfast64, uintmax>::type>::    \
               type>::type>::type
 
 /// Returns the exact int type of N bits, else void
-#define EXACT_INT(N)                                                           \
-  typename conditional<                                                        \
-      (N) == 8,                                                                \
-      int8,                                                                    \
-      typename conditional<                                                    \
-          (N) == 16,                                                           \
-          int16,                                                               \
-          typename conditional<(N) == 32,                                      \
-                               int32,                                          \
-                               typename conditional<(N) == 64, int64, void>::  \
-                                   type>::type>::type>::type
+#define EXACT_INT(N)                                                                                                   \
+  typename conditional<                                                                                                \
+      (N) == 8,                                                                                                        \
+      int8,                                                                                                            \
+      typename conditional<                                                                                            \
+          (N) == 16,                                                                                                   \
+          int16,                                                                                                       \
+          typename conditional<(N) == 32, int32, typename conditional<(N) == 64, int64, void>::type>::type>::type>::   \
+      type
 
 /// Returns the nearest int type of N bits, else intmax
-#define NEAREST_INT(N)                                                         \
-  typename conditional<                                                        \
-      (N) <= 8,                                                                \
-      int8,                                                                    \
-      typename conditional<                                                    \
-          (N) <= 16,                                                           \
-          int16,                                                               \
-          typename conditional<                                                \
-              (N) <= 32,                                                       \
-              int32,                                                           \
-              typename conditional<(N) <= 64, int64, intmax>::type>::type>::   \
-          type>::type
+#define NEAREST_INT(N)                                                                                                 \
+  typename conditional<                                                                                                \
+      (N) <= 8,                                                                                                        \
+      int8,                                                                                                            \
+      typename conditional<                                                                                            \
+          (N) <= 16,                                                                                                   \
+          int16,                                                                                                       \
+          typename conditional<(N) <= 32, int32, typename conditional<(N) <= 64, int64, intmax>::type>::type>::type>:: \
+      type
 
 /// Returns the fastest int type of at least N bits, else intmax
-#define FASTEST_INT(N)                                                         \
-  typename conditional<                                                        \
-      (N) <= 8,                                                                \
-      intfast8,                                                                \
-      typename conditional<                                                    \
-          (N) <= 16,                                                           \
-          intfast16,                                                           \
-          typename conditional<                                                \
-              (N) <= 32,                                                       \
-              intfast32,                                                       \
-              typename conditional<(N) <= 64, intfast64, intmax>::type>::      \
+#define FASTEST_INT(N)                                                                                                 \
+  typename conditional<                                                                                                \
+      (N) <= 8,                                                                                                        \
+      intfast8,                                                                                                        \
+      typename conditional<                                                                                            \
+          (N) <= 16,                                                                                                   \
+          intfast16,                                                                                                   \
+          typename conditional<(N) <= 32, intfast32, typename conditional<(N) <= 64, intfast64, intmax>::type>::       \
               type>::type>::type
 
 /// Smallest unsigned integer capable of storing a pointer
@@ -206,22 +186,19 @@ inline R_ENABLE_IF(sizeof(T) > 1, T) EndianFlip(T value)
 template <typename T>
 inline T NetworkFlip(T value)
 {
-  return (PlatformEndianness() == Endianness::Little) ? EndianFlip(value)
-                                                      : value;
+  return (PlatformEndianness() == Endianness::Little) ? EndianFlip(value) : value;
 }
 
 /// Returns the number of bits needed to represent the unsigned integral value
 template <typename T>
-inline R_ENABLE_IF(is_integral<T>::value&& is_unsigned<T>::value, Bits)
-    BitsNeededToRepresent(T value)
+inline R_ENABLE_IF(is_integral<T>::value&& is_unsigned<T>::value, Bits) BitsNeededToRepresent(T value)
 {
   return BITS_NEEDED_TO_REPRESENT(value);
 }
 
 /// Returns the number of bits needed to represent the signed integral value
 template <typename T>
-inline R_ENABLE_IF(is_integral<T>::value&& is_signed<T>::value, Bits)
-    BitsNeededToRepresent(T value)
+inline R_ENABLE_IF(is_integral<T>::value&& is_signed<T>::value, Bits) BitsNeededToRepresent(T value)
 {
   typedef typename make_unsigned<T>::type UT;
 
@@ -243,17 +220,12 @@ inline bool BufferIsZeroed(const byte (&buffer)[N])
 }
 
 /// Returns true if memA and memB are overlapping
-inline bool MemoryIsOverlapping(const byte* memA,
-                                Bytes memASize,
-                                const byte* memB,
-                                Bytes memBSize)
+inline bool MemoryIsOverlapping(const byte* memA, Bytes memASize, const byte* memB, Bytes memBSize)
 {
-  if ((memA - memB <= 0 &&
-       memB - (memA + memASize) <= 0) //    memB starting point is within memA?
+  if ((memA - memB <= 0 && memB - (memA + memASize) <= 0) //    memB starting point is within memA?
       || (memA - (memB + memBSize) <= 0 &&
-          (memB + memBSize) - (memA + memASize) <=
-              0)) // OR memB ending point is within memA?
-    return true;  // There is overlap
+          (memB + memBSize) - (memA + memASize) <= 0)) // OR memB ending point is within memA?
+    return true;                                       // There is overlap
   else
     return false; // No overlap
 }
@@ -295,12 +267,10 @@ inline R_ENABLE_IF(is_integral<T>::value, T) DivCeil(T numerator, T denominator)
 {
   // Formula from StackOverflow answer ( http://stackoverflow.com/a/17005764 ),
   // Ben Voigt, June 9th, 2013
-  return (numerator / denominator) +
-         T(((numerator < 0) ^ (denominator > 0)) && (numerator % denominator));
+  return (numerator / denominator) + T(((numerator < 0) ^ (denominator > 0)) && (numerator % denominator));
 }
 template <typename T>
-inline R_ENABLE_IF(is_floating_point<T>::value, T)
-    DivCeil(T numerator, T denominator)
+inline R_ENABLE_IF(is_floating_point<T>::value, T) DivCeil(T numerator, T denominator)
 {
   return std::ceil(numerator / denominator);
 }

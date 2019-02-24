@@ -27,9 +27,7 @@ ZilchDefineType(WebSocketEvent, builder, type)
 {
 }
 
-WebSocketEvent::WebSocketEvent() :
-    Connection(nullptr),
-    PacketType(WebSocketPacketType::Invalid)
+WebSocketEvent::WebSocketEvent() : Connection(nullptr), PacketType(WebSocketPacketType::Invalid)
 {
 }
 
@@ -37,11 +35,10 @@ BlockingWebSocketConnection::BlockingWebSocketConnection()
 {
 }
 
-void BlockingWebSocketConnection::SendFullPacket(
-    Status& status,
-    const byte* data,
-    size_t length,
-    WebSocketPacketType::Enum packetType)
+void BlockingWebSocketConnection::SendFullPacket(Status& status,
+                                                 const byte* data,
+                                                 size_t length,
+                                                 WebSocketPacketType::Enum packetType)
 {
   // The header has a maximum size without the mask, lets build that header
   byte header[10] = {0};
@@ -77,15 +74,13 @@ void BlockingWebSocketConnection::SendFullPacket(
   else
   {
     header[1] = 127;
-    *((unsigned long long*)(header + 2)) =
-        NetworkFlip((unsigned long long)length);
+    *((unsigned long long*)(header + 2)) = NetworkFlip((unsigned long long)length);
     headerSize = 10;
   }
 
   // Send the header off first (this will block until it sends the entire
   // thing!)
-  int sentSizeHeader = this->RemoteSocket.Send(
-      status, header, (int)headerSize, SocketFlags::None);
+  int sentSizeHeader = this->RemoteSocket.Send(status, header, (int)headerSize, SocketFlags::None);
   ErrorIf(sentSizeHeader != 0 && sentSizeHeader != (int)headerSize,
           "We should always send the entire header, send should block until "
           "its all sent!");
@@ -94,8 +89,7 @@ void BlockingWebSocketConnection::SendFullPacket(
 
   // Now send the rest of the payload data (could be done in one send, no
   // problem though!)
-  int sentSizeData =
-      this->RemoteSocket.Send(status, data, (int)length, SocketFlags::None);
+  int sentSizeData = this->RemoteSocket.Send(status, data, (int)length, SocketFlags::None);
   ErrorIf(sentSizeData != 0 && sentSizeData != (int)length,
           "We should always send the entire data, send should block until its "
           "all sent!");
@@ -108,8 +102,7 @@ bool BlockingWebSocketConnection::IsValid()
   return this->RemoteSocket.IsOpen();
 }
 
-WebSocketPacketType::Enum
-BlockingWebSocketConnection::ReceiveFullPacket(Status& status, String& dataOut)
+WebSocketPacketType::Enum BlockingWebSocketConnection::ReceiveFullPacket(Status& status, String& dataOut)
 {
   // All the information we need for a web-socket header
   bool readHeader = false;
@@ -133,16 +126,14 @@ BlockingWebSocketConnection::ReceiveFullPacket(Status& status, String& dataOut)
 
     // Read the data from the socket
     byte buffer[ReceiveBufferSize];
-    int amountReceived = this->RemoteSocket.Receive(
-        status, buffer, ReceiveBufferSize, SocketFlags::None);
+    int amountReceived = this->RemoteSocket.Receive(status, buffer, ReceiveBufferSize, SocketFlags::None);
 
     // If the receive call failed, or we gracefully disconnected...
     if (status.Failed() || amountReceived == 0)
       return WebSocketPacketType::Invalid;
 
     // Add the data to a remaining buffer
-    this->ReadData.Insert(
-        this->ReadData.End(), buffer, buffer + amountReceived);
+    this->ReadData.Insert(this->ReadData.End(), buffer, buffer + amountReceived);
     byte* data = this->ReadData.Data();
 
     // The minimum amount of data a packet can be is 6, but the header can be
@@ -200,12 +191,9 @@ BlockingWebSocketConnection::ReceiveFullPacket(Status& status, String& dataOut)
         if (this->ReadData.Size() >= 14)
         {
           payloadSize = (size_t)NetworkFlip(
-              (unsigned long long)(data[2] + (data[3] << 8) + (data[4] << 16) +
-                                   (data[5] << 24) +
-                                   ((unsigned long long)data[6] << 32) +
-                                   ((unsigned long long)data[7] << 40) +
-                                   ((unsigned long long)data[8] << 48) +
-                                   ((unsigned long long)data[9] << 56)));
+              (unsigned long long)(data[2] + (data[3] << 8) + (data[4] << 16) + (data[5] << 24) +
+                                   ((unsigned long long)data[6] << 32) + ((unsigned long long)data[7] << 40) +
+                                   ((unsigned long long)data[8] << 48) + ((unsigned long long)data[9] << 56)));
           position = 10;
         }
         else
@@ -254,8 +242,7 @@ BlockingWebSocketConnection::ReceiveFullPacket(Status& status, String& dataOut)
 
       // We're done, we read a full packet, remove the data we read so that the
       // next packet can be processed
-      this->ReadData.Erase(
-          Array<byte>::range(readData, readData + payloadSize));
+      this->ReadData.Erase(Array<byte>::range(readData, readData + payloadSize));
       return opcode;
     }
   }
@@ -268,16 +255,12 @@ BlockingWebSocketListener::BlockingWebSocketListener()
 void BlockingWebSocketListener::Initialize(Status& status, int port)
 {
   // Web sockets are strictly TCP
-  this->ListenerSocket.Open(status,
-                            SocketAddressFamily::InternetworkV4,
-                            SocketType::Stream,
-                            SocketProtocol::Tcp);
+  this->ListenerSocket.Open(status, SocketAddressFamily::InternetworkV4, SocketType::Stream, SocketProtocol::Tcp);
 
   // First create a local socket address, bound to any network adapter (let the
   // OS choose) Use the port that the user passed in
   SocketAddress localAddress;
-  localAddress.SetIpv4(
-      status, String(), ushort(port), SocketAddressResolutionFlags::AnyAddress);
+  localAddress.SetIpv4(status, String(), ushort(port), SocketAddressResolutionFlags::AnyAddress);
 
   if (status.Failed())
     return;
@@ -303,8 +286,7 @@ bool BlockingWebSocketListener::IsValid()
   return this->ListenerSocket.IsOpen();
 }
 
-void BlockingWebSocketListener::Accept(
-    Status& status, BlockingWebSocketConnection& connectionOut)
+void BlockingWebSocketListener::Accept(Status& status, BlockingWebSocketConnection& connectionOut)
 {
   // Attempt to accept a connection
   this->ListenerSocket.Accept(status, &connectionOut.RemoteSocket);
@@ -332,16 +314,14 @@ void BlockingWebSocketListener::Accept(
   {
     // Read the data from the socket
     byte buffer[ReceiveBufferSize];
-    int amountReceived = connectionOut.RemoteSocket.Receive(
-        status, buffer, ReceiveBufferSize, SocketFlags::None);
+    int amountReceived = connectionOut.RemoteSocket.Receive(status, buffer, ReceiveBufferSize, SocketFlags::None);
 
     // If the receive call failed, or we gracefully disconnected...
     if (status.Failed() || amountReceived == 0)
       return;
 
     // Add the data to a remaining buffer
-    remainingHeaderData.Insert(
-        remainingHeaderData.End(), buffer, buffer + amountReceived);
+    remainingHeaderData.Insert(remainingHeaderData.End(), buffer, buffer + amountReceived);
 
     // If we process the get request header
     bool getRequest = false;
@@ -422,8 +402,7 @@ void BlockingWebSocketListener::Accept(
           else
           {
             // We got some bad data, or just something we didn't yet handle!
-            status.SetFailed(BuildString(
-                "Invalid line found in the http header request: ", range));
+            status.SetFailed(BuildString("Invalid line found in the http header request: ", range));
             return;
           }
         }
@@ -440,8 +419,7 @@ void BlockingWebSocketListener::Accept(
     }
 
     // Erase all the data we processed already
-    remainingHeaderData.Erase(
-        Array<byte>::range((byte*)data, (byte*)lastLineStart));
+    remainingHeaderData.Erase(Array<byte>::range((byte*)data, (byte*)lastLineStart));
   }
   // Loop until we read the full header
   while (readFullHttpHeader == false);
@@ -455,9 +433,8 @@ void BlockingWebSocketListener::Accept(
   String* key = connectionOut.Headers.FindPointer(SecWebSocketKey);
   if (key == nullptr)
   {
-    status.SetFailed(
-        "We did not receive the 'Sec-WebSocket-Key' parameter, and "
-        "therefore the connection was not a valid web socket connection");
+    status.SetFailed("We did not receive the 'Sec-WebSocket-Key' parameter, and "
+                     "therefore the connection was not a valid web socket connection");
     return;
   }
 
@@ -468,13 +445,11 @@ void BlockingWebSocketListener::Accept(
   // Get the sha1 on of the concatenated key
   byte finalSha1[Sha1Builder::Sha1ByteSize];
   Sha1Builder sha1Builder;
-  sha1Builder.Append((byte*)concatenatedKey.Data(),
-                     concatenatedKey.SizeInBytes());
+  sha1Builder.Append((byte*)concatenatedKey.Data(), concatenatedKey.SizeInBytes());
   sha1Builder.OutputHash(finalSha1);
 
   // Lastly, we need to base64 encode the sha1 hash
-  String base64Encoded =
-      Base64Encoder::Encode(finalSha1, Sha1Builder::Sha1ByteSize);
+  String base64Encoded = Base64Encoder::Encode(finalSha1, Sha1Builder::Sha1ByteSize);
 
   // Send the response to the web socket request
   String response = BuildString("HTTP/1.1 101 Switching Protocols\r\n"
@@ -485,14 +460,10 @@ void BlockingWebSocketListener::Accept(
                                 "\r\n\r\n");
 
   // This should be the last thing we have to send!
-  connectionOut.RemoteSocket.Send(status,
-                                  (byte*)response.Data(),
-                                  (int)response.SizeInBytes(),
-                                  SocketFlags::None);
+  connectionOut.RemoteSocket.Send(status, (byte*)response.Data(), (int)response.SizeInBytes(), SocketFlags::None);
 }
 
-void ThreadedWebSocketConnection::SendPacket(
-    StringParam message, WebSocketPacketType::Enum packetType)
+void ThreadedWebSocketConnection::SendPacket(StringParam message, WebSocketPacketType::Enum packetType)
 {
   // First initiale the lock around the send messages queue, Append the message
   // then unlock it so the 'SendThread' can resume its work
@@ -537,8 +508,7 @@ void ThreadedWebSocketConnection::Close()
   // connection
   WebSocketEvent shutdownEvent;
   shutdownEvent.Connection = this;
-  this->BlockingConnection.RemoteSocket.Shutdown(shutdownEvent.ErrorStatus,
-                                                 SocketIo::Both);
+  this->BlockingConnection.RemoteSocket.Shutdown(shutdownEvent.ErrorStatus, SocketIo::Both);
 
   // Close the remote connection
   WebSocketEvent closeEvent;
@@ -667,8 +637,8 @@ OsInt ThreadedWebSocketConnection::ReceiveEntryPoint(void* context)
     receivedEvent.Connection = self;
 
     // Receive an entire packet of text, this text should be json data
-    receivedEvent.PacketType = self->BlockingConnection.ReceiveFullPacket(
-        receivedEvent.ErrorStatus, receivedEvent.Data);
+    receivedEvent.PacketType =
+        self->BlockingConnection.ReceiveFullPacket(receivedEvent.ErrorStatus, receivedEvent.Data);
 
     // Lock the recieve buffer and push the message into it
     // The message may be an actual packet, or an error message
@@ -737,10 +707,8 @@ OsInt ThreadedWebSocketConnection::SendEntryPoint(void* context)
       errorEvent.Connection = self;
 
       // Send the full packet over
-      self->BlockingConnection.SendFullPacket(errorEvent.ErrorStatus,
-                                              (const byte*)message.Data.Data(),
-                                              message.Data.SizeInBytes(),
-                                              message.PacketType);
+      self->BlockingConnection.SendFullPacket(
+          errorEvent.ErrorStatus, (const byte*)message.Data.Data(), message.Data.SizeInBytes(), message.PacketType);
 
       // If we encountered an error when sending...
       if (errorEvent.ErrorStatus.Failed())
@@ -765,8 +733,7 @@ OsInt ThreadedWebSocketConnection::SendEntryPoint(void* context)
   }
 }
 
-ThreadedWebSocketListener::ThreadedWebSocketListener() :
-    AcceptingConnection(nullptr)
+ThreadedWebSocketListener::ThreadedWebSocketListener() : AcceptingConnection(nullptr)
 {
 }
 
@@ -815,10 +782,8 @@ void ThreadedWebSocketListener::Close()
 
   // If the accepting connection is valid (we have one that is currently being
   // accepted
-  if (this->AcceptingConnection != nullptr &&
-      this->AcceptingConnection->BlockingConnection.IsValid())
-    this->AcceptingConnection->BlockingConnection.RemoteSocket.Close(
-        acceptingCloseEvent.ErrorStatus);
+  if (this->AcceptingConnection != nullptr && this->AcceptingConnection->BlockingConnection.IsValid())
+    this->AcceptingConnection->BlockingConnection.RemoteSocket.Close(acceptingCloseEvent.ErrorStatus);
 
   // Let the accepting thread resume
   this->AcceptingConnectionLock.Unlock();
@@ -906,8 +871,7 @@ OsInt ThreadedWebSocketListener::AcceptEntryPoint(void* context)
     // Accept an incoming connection (blocks until the connection is fully acked
     // according to web-sockets) Will unblock if the sockets are terminated by
     // the owning thread
-    self->BlockingListener.Accept(acceptEvent.ErrorStatus,
-                                  connection->BlockingConnection);
+    self->BlockingListener.Accept(acceptEvent.ErrorStatus, connection->BlockingConnection);
 
     // Now that we've finished accepting (could have failed, or could be a valid
     // connection) we are no longer accepting this 'connection'
@@ -943,12 +907,10 @@ OsInt ThreadedWebSocketListener::AcceptEntryPoint(void* context)
 
       // If the extended error code was set, it means we ran into a true socket
       // error (or the socket was closed) so terminate the connection
-      if (acceptEvent.ErrorStatus.Context != 0 &&
-          Socket::IsCommonAcceptError(acceptEvent.ErrorStatus.Context) == false)
+      if (acceptEvent.ErrorStatus.Context != 0 && Socket::IsCommonAcceptError(acceptEvent.ErrorStatus.Context) == false)
       {
         // We only dispatch the error message if it's not a close event
-        if (Socket::IsCommonReceiveError(acceptEvent.ErrorStatus.Context) ==
-            false)
+        if (Socket::IsCommonReceiveError(acceptEvent.ErrorStatus.Context) == false)
         {
           // Lock the recieve buffer and push the error into it
           self->IncomingLock.Lock();
@@ -963,15 +925,12 @@ OsInt ThreadedWebSocketListener::AcceptEntryPoint(void* context)
   }
 }
 
-ThreadedWebSocketServer::ThreadedWebSocketServer(size_t maxConnections) :
-    MaximumConnections(maxConnections)
+ThreadedWebSocketServer::ThreadedWebSocketServer(size_t maxConnections) : MaximumConnections(maxConnections)
 {
   // We want to know when connections are accepted, and when errors occur with
   // the listener
-  EventConnect(&this->Listener,
-               Events::WebSocketAcceptedConnection,
-               &ThreadedWebSocketServer::OnAcceptedConnection,
-               this);
+  EventConnect(
+      &this->Listener, Events::WebSocketAcceptedConnection, &ThreadedWebSocketServer::OnAcceptedConnection, this);
   EventForward(&this->Listener, Events::WebSocketError, this);
 }
 
@@ -1025,8 +984,7 @@ void ThreadedWebSocketServer::Update()
   }
 }
 
-void ThreadedWebSocketServer::SendPacketToAll(
-    StringParam message, WebSocketPacketType::Enum packetType)
+void ThreadedWebSocketServer::SendPacketToAll(StringParam message, WebSocketPacketType::Enum packetType)
 {
   // Loop through all the connections and send the message to each
   for (size_t i = 0; i < this->Connections.Size(); ++i)

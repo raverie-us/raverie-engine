@@ -54,9 +54,7 @@ ContactPoint ContactGraphEdge::GetFirstPoint()
     objectIndex = 1;
 
   ContactPoint proxyPoint;
-  proxyPoint.Set(mConstraint->mManifold,
-                 &mConstraint->mManifold->Contacts[0],
-                 objectIndex);
+  proxyPoint.Set(mConstraint->mManifold, &mConstraint->mManifold->Contacts[0], objectIndex);
   return proxyPoint;
 }
 
@@ -111,8 +109,7 @@ void JointBodyFilter::SkipDead(RangeType& range)
 
 typedef BodyFilterPolicy<Physics::Contact> ContactBodyFilter;
 
-ContactBodyFilter::GraphEdgeType
-ContactBodyFilter::CreateGraphEdge(EdgeType* edge)
+ContactBodyFilter::GraphEdgeType ContactBodyFilter::CreateGraphEdge(EdgeType* edge)
 {
   return GraphEdgeType(edge);
 }
@@ -132,8 +129,7 @@ void ContactBodyFilter::SkipDead(RangeType& range)
 }
 
 // functions
-InList<JointEdge, &JointEdge::ColliderLink>::range
-GetJointEdges(Collider* collider)
+InList<JointEdge, &JointEdge::ColliderLink>::range GetJointEdges(Collider* collider)
 {
   return collider->mJointEdges.All();
 }

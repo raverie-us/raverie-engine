@@ -7,8 +7,7 @@ namespace Zero
 // Whether or not the given widget should be in the layout
 bool NeedsLayout(UiWidget* widget)
 {
-  return widget->GetActive() && widget->GetInLayout() &&
-         !widget->GetOwner()->GetMarkedForDestruction();
+  return widget->GetActive() && widget->GetInLayout() && !widget->GetOwner()->GetMarkedForDestruction();
 }
 
 ZilchDefineType(UiLayout, builder, type)
@@ -92,7 +91,7 @@ void UiLayout::Debug()
 
 void UiLayout::UpdateNotInLayout(UiTransformUpdateEvent* e)
 {
-  forRange(Cog & child, GetOwner()->GetChildren())
+  forRange (Cog& child, GetOwner()->GetChildren())
   {
     if (UiWidget* widget = child.has(UiWidget))
     {
@@ -124,8 +123,7 @@ void UiLayout::CalculateAlignment(Axis::Type axis,
     break;
   case UiHorizontalAlignment::Center:
     // case UiVerticalAlignment::Center:
-    childTranslation[axis] =
-        areaPos[axis] + (areaSize[axis] / 2.0f) - (childSize[axis] / 2.0f);
+    childTranslation[axis] = areaPos[axis] + (areaSize[axis] / 2.0f) - (childSize[axis] / 2.0f);
     break;
   }
 }
@@ -134,7 +132,7 @@ Vec2 UiLayout::MaxMeasure(Rectangle& rect)
 {
   Vec2 neededSize = Vec2(0, 0);
 
-  forRange(UiWidget * child, AllWidgetsInLayout())
+  forRange (UiWidget* child, AllWidgetsInLayout())
   {
     Vec2 childSize = child->Measure(rect) + child->GetMargins().Size();
     neededSize.x = Math::Max(neededSize.x, childSize.x);

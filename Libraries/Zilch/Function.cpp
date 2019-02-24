@@ -7,26 +7,12 @@ namespace Zilch
 ZilchDefineType(Function, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
-  ZilchFullBindField(
-      builder, type, &Function::FunctionType, "Type", PropertyBinding::Get);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Function::CreateDelegate,
-                      ZilchNoOverload,
-                      "CreateDelegate",
-                      "instance");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Function::Invoke,
-                      ZilchNoOverload,
-                      "Invoke",
-                      "instance, arguments");
+  ZilchFullBindField(builder, type, &Function::FunctionType, "Type", PropertyBinding::Get);
+  ZilchFullBindMethod(builder, type, &Function::CreateDelegate, ZilchNoOverload, "CreateDelegate", "instance");
+  ZilchFullBindMethod(builder, type, &Function::Invoke, ZilchNoOverload, "Invoke", "instance, arguments");
 }
 
-NativeVirtualInfo::NativeVirtualInfo() :
-    Index(NonVirtual),
-    Thunk(nullptr),
-    Guid(InvalidGuid)
+NativeVirtualInfo::NativeVirtualInfo() : Index(NonVirtual), Thunk(nullptr), Guid(InvalidGuid)
 {
 }
 
@@ -39,9 +25,7 @@ bool NativeVirtualInfo::Validate()
            "You must provide both the virtual index and thunk, or neither");
 
   // Error check the guid
-  ReturnIf(this->Index != NonVirtual && this->Guid == InvalidGuid,
-           false,
-           "The guid provided was not valid");
+  ReturnIf(this->Index != NonVirtual && this->Guid == InvalidGuid, false, "The guid provided was not valid");
 
   // Otherwise, we validated
   return true;
@@ -129,13 +113,11 @@ String Function::ToString() const
 CodeLocation* Function::GetCodeLocationFromProgramCounter(size_t programCounter)
 {
   // We don't know the location of native and non-active program counters
-  if (programCounter == ProgramCounterNative ||
-      programCounter == ProgramCounterNotActive)
+  if (programCounter == ProgramCounterNative || programCounter == ProgramCounterNotActive)
     return nullptr;
 
   // Now get the code location for the given opcode inside the function
-  CodeLocation* codeLocation =
-      this->OpcodeLocationToCodeLocation.FindPointer(programCounter);
+  CodeLocation* codeLocation = this->OpcodeLocationToCodeLocation.FindPointer(programCounter);
   if (codeLocation == nullptr)
     return nullptr;
 
@@ -198,11 +180,10 @@ Any Function::Invoke(const Any& instance, ArrayClass<Any>* arguments)
   size_t expectedCount = parameters.Size();
   if (argumentCount != expectedCount)
   {
-    String message =
-        String::Format("Attempting to invoke a function with an incorrect "
-                       "number of arguments (got %d, expected %d)",
-                       argumentCount,
-                       expectedCount);
+    String message = String::Format("Attempting to invoke a function with an incorrect "
+                                    "number of arguments (got %d, expected %d)",
+                                    argumentCount,
+                                    expectedCount);
     state->ThrowException(message);
     return Any();
   }
@@ -217,16 +198,14 @@ Any Function::Invoke(const Any& instance, ArrayClass<Any>* arguments)
     // Note that if the types are the same, a cast always technically exists of
     // 'Raw' type This ALSO gives us an invalid cast and handles if the user
     // gave us a empty any (with a null StoredType)
-    CastOperator cast =
-        Shared::GetInstance().GetCastOperator(argumentType, expectedType);
+    CastOperator cast = Shared::GetInstance().GetCastOperator(argumentType, expectedType);
     if (cast.IsValid == false || cast.Operation != CastOperation::Raw)
     {
-      String message =
-          String::Format("Parameter %d expected the type '%s' but was given "
-                         "'%s' (which could not be raw-converted)",
-                         i,
-                         expectedType->ToString().c_str(),
-                         argumentType->ToString().c_str());
+      String message = String::Format("Parameter %d expected the type '%s' but was given "
+                                      "'%s' (which could not be raw-converted)",
+                                      i,
+                                      expectedType->ToString().c_str(),
+                                      argumentType->ToString().c_str());
       state->ThrowException(message);
       return Any();
     }

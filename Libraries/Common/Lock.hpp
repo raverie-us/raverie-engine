@@ -74,9 +74,7 @@ struct ZeroSharedTemplate Locked
   {
     mLock->Lock();
   }
-  Locked(Lockable& object) :
-      mObject(static_cast<T*>(&object)),
-      mLock(object.mLock)
+  Locked(Lockable& object) : mObject(static_cast<T*>(&object)), mLock(object.mLock)
   {
     mLock->Lock();
   }
@@ -246,16 +244,12 @@ public:
   /// Note: We copy the container to provide thread-safety for the container
   /// itself This is also why LockedRange is designed for containers of pointer
   /// items
-  LockedRange(const container_type& container) :
-      mContainer(container),
-      mRange(mContainer.All()) // This is correct
+  LockedRange(const container_type& container) : mContainer(container), mRange(mContainer.All()) // This is correct
   {
   }
 
   /// Copy Constructor
-  LockedRange(const LockedRange& rhs) :
-      mContainer(rhs.mContainer),
-      mRange(mContainer.All()) // This is correct
+  LockedRange(const LockedRange& rhs) : mContainer(rhs.mContainer), mRange(mContainer.All()) // This is correct
   {
   }
 

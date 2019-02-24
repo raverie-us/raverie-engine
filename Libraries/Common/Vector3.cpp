@@ -8,8 +8,7 @@ const Vector3 Vector3::cZero(real(0.0), real(0.0), real(0.0));
 const Vector3 Vector3::cXAxis(real(1.0), real(0.0), real(0.0));
 const Vector3 Vector3::cYAxis(real(0.0), real(1.0), real(0.0));
 const Vector3 Vector3::cZAxis(real(0.0), real(0.0), real(1.0));
-const Vector3 Vector3::Axes[] = {
-    Vector3::cXAxis, Vector3::cYAxis, Vector3::cZAxis};
+const Vector3 Vector3::Axes[] = {Vector3::cXAxis, Vector3::cYAxis, Vector3::cZAxis};
 
 Vector3::Vector3(real xx, real yy, real zz)
 {
@@ -53,8 +52,7 @@ real Vector3::operator[](uint index) const
 
 bool Vector3::operator==(Vec3Param rhs) const
 {
-  return Math::Equal(x, rhs.x) && Math::Equal(y, rhs.y) &&
-         Math::Equal(z, rhs.z);
+  return Math::Equal(x, rhs.x) && Math::Equal(y, rhs.y) && Math::Equal(z, rhs.z);
 }
 
 bool Vector3::operator!=(Vec3Param rhs) const
@@ -185,16 +183,12 @@ Vector3 Vector3::Abs(Vec3Param value)
 
 Vector3 Vector3::Min(Vec3Param lhs, Vec3Param rhs)
 {
-  return Vector3(Math::Min(lhs.x, rhs.x),
-                 Math::Min(lhs.y, rhs.y),
-                 Math::Min(lhs.z, rhs.z));
+  return Vector3(Math::Min(lhs.x, rhs.x), Math::Min(lhs.y, rhs.y), Math::Min(lhs.z, rhs.z));
 }
 
 Vector3 Vector3::Max(Vec3Param lhs, Vec3Param rhs)
 {
-  return Vector3(Math::Max(lhs.x, rhs.x),
-                 Math::Max(lhs.y, rhs.y),
-                 Math::Max(lhs.z, rhs.z));
+  return Vector3(Math::Max(lhs.x, rhs.x), Math::Max(lhs.y, rhs.y), Math::Max(lhs.z, rhs.z));
 }
 
 Vector3 Vector3::Clamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue)
@@ -206,10 +200,7 @@ Vector3 Vector3::Clamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue)
   return result;
 }
 
-Vector3 Vector3::DebugClamp(Vec3Param value,
-                            Vec3Param minValue,
-                            Vec3Param maxValue,
-                            bool& wasClamped)
+Vector3 Vector3::DebugClamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue, bool& wasClamped)
 {
   Vector3 result;
   result.x = Math::DebugClamp(value.x, minValue.x, maxValue.x, wasClamped);
@@ -283,8 +274,7 @@ Vector3 Vector3::ProjectOnPlane(Vec3Param input, Vec3Param planeNormal)
   return GenericProjectOnPlane(input, planeNormal);
 }
 
-Vector3 Vector3::ReflectAcrossVector(Vec3Param input,
-                                     Vec3Param normalizedVector)
+Vector3 Vector3::ReflectAcrossVector(Vec3Param input, Vec3Param normalizedVector)
 {
   return GenericReflectAcrossVector(input, normalizedVector);
 }
@@ -294,9 +284,7 @@ Vector3 Vector3::ReflectAcrossPlane(Vec3Param input, Vec3Param planeNormal)
   return GenericReflectAcrossPlane(input, planeNormal);
 }
 
-Vector3 Vector3::Refract(Vec3Param input,
-                         Vec3Param planeNormal,
-                         real refractionIndex)
+Vector3 Vector3::Refract(Vec3Param input, Vec3Param planeNormal, real refractionIndex)
 {
   return GenericRefract(input, planeNormal, refractionIndex);
 }
@@ -310,9 +298,7 @@ real Vector3::AngleBetween(Vec3Param a, Vec3Param b)
 
 bool Vector3::ApproximatelyEqual(Vec3Param lhs, Vec3Param rhs, real epsilon)
 {
-  return Math::Equal(lhs.x, rhs.x, epsilon) &&
-         Math::Equal(lhs.y, rhs.y, epsilon) &&
-         Math::Equal(lhs.z, rhs.z, epsilon);
+  return Math::Equal(lhs.x, rhs.x, epsilon) && Math::Equal(lhs.y, rhs.y, epsilon) && Math::Equal(lhs.z, rhs.z, epsilon);
 }
 
 bool Vector3::Valid() const
@@ -487,10 +473,7 @@ Vector3 Clamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue)
   return Vector3::Clamp(value, minValue, maxValue);
 }
 
-Vector3 DebugClamp(Vec3Param value,
-                   Vec3Param minValue,
-                   Vec3Param maxValue,
-                   bool& wasClamped)
+Vector3 DebugClamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue, bool& wasClamped)
 {
   return Vector3::DebugClamp(value, minValue, maxValue, wasClamped);
 }
@@ -567,9 +550,7 @@ real AngleBetween(Vec3Param a, Vec3Param b)
 
 bool Equal(Vec3Param lhs, Vec3Param rhs, real epsilon)
 {
-  return Math::Equal(lhs.x, rhs.x, epsilon) &&
-         Math::Equal(lhs.y, rhs.y, epsilon) &&
-         Math::Equal(lhs.z, rhs.z, epsilon);
+  return Math::Equal(lhs.x, rhs.x, epsilon) && Math::Equal(lhs.y, rhs.y, epsilon) && Math::Equal(lhs.z, rhs.z, epsilon);
 }
 
 Vector3 Cross2d(Vec3Param lhs, Vec3Param rhs)

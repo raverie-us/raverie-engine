@@ -19,19 +19,14 @@ public:
   // If providing a default library, then that library should not contain hidden
   // content.  If the library contains hidden content, but needs to be shown,
   // then supply that library as the first arg.
-  ResourceSearchProvider(ResourceLibrary* library,
-                         bool showHidden = false,
-                         ResourceLibrary* defaultLib = nullptr);
+  ResourceSearchProvider(ResourceLibrary* library, bool showHidden = false, ResourceLibrary* defaultLib = nullptr);
 
   void RunCommand(SearchView* searchView, SearchViewResult& element) override;
   void Search(SearchData& search) override;
 
-  void AttemptAddResource(SearchData& search,
-                          HashSet<String>& localTags,
-                          Resource* resource);
+  void AttemptAddResource(SearchData& search, HashSet<String>& localTags, Resource* resource);
 
-  Composite* CreatePreview(Composite* parent,
-                           SearchViewResult& element) override;
+  Composite* CreatePreview(Composite* parent, SearchViewResult& element) override;
   String GetElementType(SearchViewResult& element) override;
 };
 
@@ -44,8 +39,7 @@ public:
   ResourceSearchProvider mTargetResourceProvider;
   ContentSystem::ContentLibraryMapType& mLibraries;
 
-  LibrarySearchProvider(bool canReturnResources,
-                        ResourceLibrary* defaultLibrary);
+  LibrarySearchProvider(bool canReturnResources, ResourceLibrary* defaultLibrary);
 
   bool OnMatch(SearchView* searchView, SearchViewResult& element) override;
   void RunCommand(SearchView* searchView, SearchViewResult& element) override;
@@ -65,8 +59,7 @@ public:
   void AddObject(Cog& object, SearchData& search);
   void Search(SearchData& search) override;
 
-  Composite* CreatePreview(Composite* parent,
-                           SearchViewResult& element) override;
+  Composite* CreatePreview(Composite* parent, SearchViewResult& element) override;
   String GetElementType(SearchViewResult& element) override;
 };
 
@@ -83,27 +76,21 @@ public:
 
   bool mResultsContainExactMatch;
 
-  ComponentSearchProvider(HandleParam object,
-                          HandleOf<MetaComposition>& composition);
+  ComponentSearchProvider(HandleParam object, HandleOf<MetaComposition>& composition);
 
   void Search(SearchData& search) override;
 
   String GetElementType(SearchViewResult& element) override;
-  Composite* CreatePreview(Composite* parent,
-                           SearchViewResult& element) override;
+  Composite* CreatePreview(Composite* parent, SearchViewResult& element) override;
 
-  bool AddToAlternatePreview(SearchData* search,
-                             Composite* searchPreviewWidget) override;
+  bool AddToAlternatePreview(SearchData* search, Composite* searchPreviewWidget) override;
   void AttemptAlternateSearchCompleted() override;
 };
 
 SearchProvider* GetObjectSearchProvider();
-SearchProvider* GetFactoryProvider(HandleParam object,
-                                   HandleOf<MetaComposition>& composition);
-SearchProvider* GetLibrarySearchProvider(
-    bool canReturnResources = false, ResourceLibrary* defaultLibrary = nullptr);
-SearchProvider* GetResourceSearchProvider(
-    ResourceLibrary* resourceLibrary = NULL, bool showHidden = false);
+SearchProvider* GetFactoryProvider(HandleParam object, HandleOf<MetaComposition>& composition);
+SearchProvider* GetLibrarySearchProvider(bool canReturnResources = false, ResourceLibrary* defaultLibrary = nullptr);
+SearchProvider* GetResourceSearchProvider(ResourceLibrary* resourceLibrary = NULL, bool showHidden = false);
 void AddEditorProviders(SearchData& search);
 
 } // namespace Zero

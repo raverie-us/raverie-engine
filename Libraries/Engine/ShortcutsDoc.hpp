@@ -60,18 +60,14 @@ public:
   DataIndex ToIndex(DataEntry* dataEntry) override;
 
   DataEntry* Parent(DataEntry* dataEntry) override;
-  DataEntry* GetChild(DataEntry* dataEntry,
-                      uint index,
-                      DataEntry* prev) override;
+  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override;
 
   uint ChildCount(DataEntry* dataEntry) override;
 
   bool IsExpandable(DataEntry* dataEntry) override;
 
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override;
-  bool SetData(DataEntry* dataEntry,
-               AnyParam variant,
-               StringParam column) override;
+  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override;
 
 public:
   ShortcutSet mSet;

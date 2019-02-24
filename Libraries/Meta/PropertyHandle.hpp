@@ -84,12 +84,10 @@ public:
   void AddPropertyToPath(Property* prop);
   void AddPropertyToPath(StringParam propertyName);
 
-  void GetInstanceHierarchy(HandleParam rootInstance,
-                            Array<Handle>* objects) const;
+  void GetInstanceHierarchy(HandleParam rootInstance, Array<Handle>* objects) const;
 
   /// Returns the leaf instance, and fills out the given object list if given.
-  Handle GetLeafInstanceInternal(HandleParam rootInstance,
-                                 Array<Handle>* objects = nullptr) const;
+  Handle GetLeafInstanceInternal(HandleParam rootInstance, Array<Handle>* objects = nullptr) const;
 
   /// Pops the last entry in the property path.
   void PopEntry();
@@ -102,9 +100,7 @@ public:
     Entry()
     {
     }
-    Entry(StringParam typeName,
-          PropertyPathType::Enum type,
-          uint index = uint(-1)) :
+    Entry(StringParam typeName, PropertyPathType::Enum type, uint index = uint(-1)) :
         mName(typeName),
         mType(type),
         mIndex(index)

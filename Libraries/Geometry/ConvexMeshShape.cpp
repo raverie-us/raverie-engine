@@ -9,8 +9,7 @@ ConvexMeshShape::ConvexMeshShape()
   mWorldAabb.Zero();
 }
 
-ConvexMeshShape::ConvexMeshShape(const Intersection::SupportShape& support) :
-    mSupport(support)
+ConvexMeshShape::ConvexMeshShape(const Intersection::SupportShape& support) : mSupport(support)
 {
   mWorldAabb.Zero();
 }

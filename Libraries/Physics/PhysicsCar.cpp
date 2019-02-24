@@ -19,10 +19,8 @@ ZilchDefineType(PhysicsCar, builder, type)
   ZilchBindFieldProperty(mGripScalar);
   ZilchBindFieldProperty(mAntiLockBrakes);
   ZilchBindFieldProperty(mTorqueGovernor);
-  ZilchBindFieldProperty(mWheelFrictionSideRollCoef)
-      ->Add(new EditorSlider(0, 1, 0.001));
-  ZilchBindFieldProperty(mWheelFrictionFrontRollCoef)
-      ->Add(new EditorSlider(0, 1, 0.001));
+  ZilchBindFieldProperty(mWheelFrictionSideRollCoef)->Add(new EditorSlider(0, 1, 0.001));
+  ZilchBindFieldProperty(mWheelFrictionFrontRollCoef)->Add(new EditorSlider(0, 1, 0.001));
 
   ZilchBindGetterSetter(Steer);
   ZilchBindGetterSetter(Gas);
@@ -106,8 +104,7 @@ void PhysicsCar::TransformUpdate(TransformUpdateInfo& info)
 {
   // We want to move our wheels if we were moved in the editor,
   // but we do not want to do this if we are actually running in the game
-  if (!mFlags.IsSet(CarFlags::InEditor) ||
-      !mFlags.IsSet(CarFlags::OnAllObjectsCreatedCalled))
+  if (!mFlags.IsSet(CarFlags::InEditor) || !mFlags.IsSet(CarFlags::OnAllObjectsCreatedCalled))
     return;
 
   // If we have wheels to update, forcibly update the physics transform
@@ -371,8 +368,7 @@ Cog* PhysicsCar::CarWheelArray::Get(int index)
   int count = mCarBody->mWheelRefs.Size();
   if (index >= count)
   {
-    String msg = String::Format(
-        "Index %d is invalid. Array only contains %d elements.", index, count);
+    String msg = String::Format("Index %d is invalid. Array only contains %d elements.", index, count);
     DoNotifyException("Invalid index", msg);
     return nullptr;
   }

@@ -88,9 +88,7 @@ struct BaseBroadPhaseObject
   typedef BaseBroadPhaseData<ClientDataType> DataType;
   BaseBroadPhaseObject(){};
 
-  BaseBroadPhaseObject(BroadPhaseProxy* proxy, DataType& data) :
-      mProxy(proxy),
-      mData(data)
+  BaseBroadPhaseObject(BroadPhaseProxy* proxy, DataType& data) : mProxy(proxy), mData(data)
   {
   }
 

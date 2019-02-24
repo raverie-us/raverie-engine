@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-MeshProcessor::MeshProcessor(MeshBuilder* meshBuilder,
-                             MeshDataMap& meshDataMap) :
+MeshProcessor::MeshProcessor(MeshBuilder* meshBuilder, MeshDataMap& meshDataMap) :
     mBuilder(meshBuilder),
     mMeshDataMap(meshDataMap)
 {
@@ -41,8 +40,7 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
     MeshData& meshData = mMeshDataMap[meshIndex];
 
     VertexDescriptionBuilder vertexDescriptionBuilder;
-    meshData.mVertexDescription =
-        vertexDescriptionBuilder.SetupDescriptionFromMesh(mesh);
+    meshData.mVertexDescription = vertexDescriptionBuilder.SetupDescriptionFromMesh(mesh);
 
     // write out the vertex count
     uint numVertices = mesh->mNumVertices;
@@ -60,8 +58,7 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
       {
         aiVector3D position = mesh->mVertices[i];
         vertexBuffer[i].mPosition = Vec3(position.x, position.y, position.z);
-        vertexBuffer[i].mPosition =
-            Math::TransformPoint(transform, vertexBuffer[i].mPosition);
+        vertexBuffer[i].mPosition = Math::TransformPoint(transform, vertexBuffer[i].mPosition);
         // we are generating the aabb as we go
         meshData.mAabb.Expand(vertexBuffer[i].mPosition);
       }
@@ -74,8 +71,7 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
       {
         aiVector3D normal = mesh->mNormals[i];
         vertexBuffer[i].mNormal = Vec3(normal.x, normal.y, normal.z);
-        vertexBuffer[i].mNormal =
-            Math::Transform(normalTransform, vertexBuffer[i].mNormal);
+        vertexBuffer[i].mNormal = Math::Transform(normalTransform, vertexBuffer[i].mNormal);
       }
     }
 
@@ -87,12 +83,9 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
         aiVector3D tangent = mesh->mTangents[i];
         aiVector3D biTangent = mesh->mBitangents[i];
         vertexBuffer[i].mTangent = Vec3(tangent.x, tangent.y, tangent.z);
-        vertexBuffer[i].mBitangent =
-            Vec3(biTangent.x, biTangent.y, biTangent.z);
-        vertexBuffer[i].mTangent =
-            Math::Transform(normalTransform, vertexBuffer[i].mTangent);
-        vertexBuffer[i].mBitangent =
-            Math::Transform(normalTransform, vertexBuffer[i].mBitangent);
+        vertexBuffer[i].mBitangent = Vec3(biTangent.x, biTangent.y, biTangent.z);
+        vertexBuffer[i].mTangent = Math::Transform(normalTransform, vertexBuffer[i].mTangent);
+        vertexBuffer[i].mBitangent = Math::Transform(normalTransform, vertexBuffer[i].mBitangent);
       }
     }
 
@@ -291,8 +284,7 @@ void MeshProcessor::WriteSingleMeshes(String outputPath)
     // setup the chunk writer
     ChunkFileWriter writer;
 
-    String meshFile =
-        FilePath::CombineWithExtension(outputPath, entry.mName, ".mesh");
+    String meshFile = FilePath::CombineWithExtension(outputPath, entry.mName, ".mesh");
     writer.Open(meshFile);
 
     // write out the the header first
@@ -379,7 +371,7 @@ void MeshProcessor::WriteSingleMeshes(String outputPath)
       uint count = meshData.mBones.Size();
       writer.Write(count);
 
-      forRange(MeshBone & bone, meshData.mBones.All())
+      forRange (MeshBone& bone, meshData.mBones.All())
       {
         writer.Write(bone.mName);
         writer.Write(bone.mBindTransform);

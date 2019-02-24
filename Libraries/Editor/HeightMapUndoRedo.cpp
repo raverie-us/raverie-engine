@@ -5,9 +5,7 @@
 namespace Zero
 {
 
-ModifiedHeightMapCell::ModifiedHeightMapCell(const HeightMapCell& cell,
-                                             float originalHeight,
-                                             float height)
+ModifiedHeightMapCell::ModifiedHeightMapCell(const HeightMapCell& cell, float originalHeight, float height)
 {
   PatchIndex = cell.Patch->Index;
 
@@ -16,9 +14,7 @@ ModifiedHeightMapCell::ModifiedHeightMapCell(const HeightMapCell& cell,
   AppliedHeight = height - originalHeight;
 }
 
-void ModifiedHeightMapCell::Set(const HeightMapCell& cell,
-                                float originalHeight,
-                                float height)
+void ModifiedHeightMapCell::Set(const HeightMapCell& cell, float originalHeight, float height)
 {
   PatchIndex = cell.Patch->Index;
 
@@ -47,17 +43,13 @@ void HeightMapUndoRedo::UpdateAABB(const HeightMapCellRange& additionalCells)
   mMax = Math::Max(additionalCells.mAabbMax, mMax);
 }
 
-void HeightMapUndoRedo::AddCell(const HeightMapCell& cell,
-                                float preDeltaHeight,
-                                float height)
+void HeightMapUndoRedo::AddCell(const HeightMapCell& cell, float preDeltaHeight, float height)
 {
-  AbsoluteIndex index =
-      mHeightMap->GetAbsoluteIndex(cell.Patch->Index, cell.Index);
+  AbsoluteIndex index = mHeightMap->GetAbsoluteIndex(cell.Patch->Index, cell.Index);
   YAxisCells::range result = mModifiedCells[index.x].Find(index.y);
 
   if (!result.Empty())
-    result.Front().second.AppliedHeight =
-        height - result.Front().second.OriginalHeight;
+    result.Front().second.AppliedHeight = height - result.Front().second.OriginalHeight;
   else
     mModifiedCells[index.x][index.y].Set(cell, preDeltaHeight, height);
 }
@@ -66,12 +58,11 @@ void HeightMapUndoRedo::ApplyHeightHelper(int useAppliedHeight)
 {
   HeightMap* map = *mHeightMap;
 
-  forRange(YAxisCells yAxis, mModifiedCells.Values())
+  forRange (YAxisCells yAxis, mModifiedCells.Values())
   {
-    forRange(ModifiedHeightMapCell cell, yAxis.Values())
+    forRange (ModifiedHeightMapCell cell, yAxis.Values())
     {
-      float& height =
-          map->GetPatchAtIndex(cell.PatchIndex)->GetHeight(cell.Index);
+      float& height = map->GetPatchAtIndex(cell.PatchIndex)->GetHeight(cell.Index);
       height = cell.OriginalHeight + useAppliedHeight * cell.AppliedHeight;
     }
   }
@@ -110,10 +101,7 @@ void HeightPatchUndoRedo::AddPatch(bool create, PatchIndexParam index)
   mPatches.PushBack(ModifiedPatch(create, index));
 }
 
-void HeightPatchUndoRedo::SetNoise(bool usePerlin,
-                                   float baseHeight,
-                                   float frequency,
-                                   float amplitude)
+void HeightPatchUndoRedo::SetNoise(bool usePerlin, float baseHeight, float frequency, float amplitude)
 {
   mUsePerlinNoise = usePerlin;
   mBaseHeight = baseHeight;
@@ -129,8 +117,7 @@ void HeightPatchUndoRedo::Create(PatchIndex& index)
 
   if (mUsePerlinNoise)
   {
-    map->ApplyNoiseToPatch(
-        patch, mBaseHeight, mPerlinFrequency, mPerlinAmplitude);
+    map->ApplyNoiseToPatch(patch, mBaseHeight, mPerlinFrequency, mPerlinAmplitude);
   }
   else
   {
@@ -149,7 +136,7 @@ void HeightPatchUndoRedo::Destroy(PatchIndex& index)
 
 void HeightPatchUndoRedo::Undo()
 {
-  forRange(ModifiedPatch & i, mPatches.All())
+  forRange (ModifiedPatch& i, mPatches.All())
   {
     if (i.Create)
       Destroy(i.Index);
@@ -160,7 +147,7 @@ void HeightPatchUndoRedo::Undo()
 
 void HeightPatchUndoRedo::Redo()
 {
-  forRange(ModifiedPatch & i, mPatches.All())
+  forRange (ModifiedPatch& i, mPatches.All())
   {
     if (i.Create)
       Create(i.Index);
@@ -169,11 +156,8 @@ void HeightPatchUndoRedo::Redo()
   }
 }
 
-ModifiedWeightMapPixel::ModifiedWeightMapPixel(PatchIndexParam index,
-                                               uint x,
-                                               uint y,
-                                               ByteColor originalWeight,
-                                               ByteColor weight)
+ModifiedWeightMapPixel::ModifiedWeightMapPixel(
+    PatchIndexParam index, uint x, uint y, ByteColor originalWeight, ByteColor weight)
 {
   PatchIndex = index;
 
@@ -182,11 +166,7 @@ ModifiedWeightMapPixel::ModifiedWeightMapPixel(PatchIndexParam index,
   AppliedWeight = weight;
 }
 
-void ModifiedWeightMapPixel::Set(PatchIndexParam index,
-                                 uint x,
-                                 uint y,
-                                 ByteColor originalWeight,
-                                 ByteColor weight)
+void ModifiedWeightMapPixel::Set(PatchIndexParam index, uint x, uint y, ByteColor originalWeight, ByteColor weight)
 {
   PatchIndex = index;
 
@@ -202,17 +182,12 @@ WeightMapUndoRedo::WeightMapUndoRedo(HeightMap* heightMap, StringParam name)
   mHeightMapObject = heightMap->GetOwner();
 }
 
-void WeightMapUndoRedo::AddPixel(PatchIndexParam index,
-                                 uint x,
-                                 uint y,
-                                 ByteColor preDeltaWeight,
-                                 ByteColor weight)
+void WeightMapUndoRedo::AddPixel(PatchIndexParam index, uint x, uint y, ByteColor preDeltaWeight, ByteColor weight)
 {
   YAxisPixels::range result = mModifiedPixels[x].Find(y);
 
   if (!result.Empty())
-    result.Front().second.AppliedWeight =
-        weight - result.Front().second.OriginalWeight;
+    result.Front().second.AppliedWeight = weight - result.Front().second.OriginalWeight;
   else
     mModifiedPixels[x][y].Set(index, x, y, preDeltaWeight, weight);
 }
@@ -226,24 +201,21 @@ void WeightMapUndoRedo::ApplyWeightHelper(ByteColor useAppliedWeight)
 
   HashSet<GraphicalHeightPatch*> buffers;
 
-  forRange(YAxisPixels yAxis, mModifiedPixels.Values())
+  forRange (YAxisPixels yAxis, mModifiedPixels.Values())
   {
-    forRange(ModifiedWeightMapPixel pixel, yAxis.Values())
+    forRange (ModifiedWeightMapPixel pixel, yAxis.Values())
     {
       HeightPatch* patch = map->GetPatchAtIndex(pixel.PatchIndex);
-      GraphicalHeightPatch* graphicalPatch =
-          model->mGraphicalPatches.FindPointer(patch, nullptr);
+      GraphicalHeightPatch* graphicalPatch = model->mGraphicalPatches.FindPointer(patch, nullptr);
 
       buffers.Insert(graphicalPatch);
 
-      ByteColor weight =
-          pixel.OriginalWeight + useAppliedWeight * pixel.AppliedWeight;
-      graphicalPatch->mWeightTexture->SetPixel(
-          pixel.Coord.x, pixel.Coord.y, weight);
+      ByteColor weight = pixel.OriginalWeight + useAppliedWeight * pixel.AppliedWeight;
+      graphicalPatch->mWeightTexture->SetPixel(pixel.Coord.x, pixel.Coord.y, weight);
     }
   }
 
-  forRange(GraphicalHeightPatch * patch, buffers.All())
+  forRange (GraphicalHeightPatch* patch, buffers.All())
   {
     patch->mWeightTexture->Upload();
   }

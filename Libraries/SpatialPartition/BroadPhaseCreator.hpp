@@ -32,9 +32,7 @@ class BroadPhaseLibrary
 public:
   BroadPhaseLibrary();
   ~BroadPhaseLibrary();
-  void RegisterBroadPhaseCreator(BoundType* type,
-                                 BroadPhaseCreator* creator,
-                                 u32 canBeUsedAs);
+  void RegisterBroadPhaseCreator(BoundType* type, BroadPhaseCreator* creator, u32 canBeUsedAs);
 
   BroadPhaseCreator* GetCreatorBy(PolymorphicNode& broadPhaseNode);
   BroadPhaseCreator* GetCreatorBy(StringParam name);
@@ -63,9 +61,8 @@ namespace Z
 extern BroadPhaseLibrary* gBroadPhaseLibrary;
 } // namespace Z
 
-#define RegisterBroadPhase(type, canBeUsedAs)                                  \
-  Z::gBroadPhaseLibrary->RegisterBroadPhaseCreator(                            \
-      ZilchTypeId(type), new BroadPhaseCreatorType<type>(), canBeUsedAs);
+#define RegisterBroadPhase(type, canBeUsedAs)                                                                          \
+  Z::gBroadPhaseLibrary->RegisterBroadPhaseCreator(ZilchTypeId(type), new BroadPhaseCreatorType<type>(), canBeUsedAs);
 
 /// A property editor for enumerating broadphase types
 /// (BroadPhaseType is used to distinguish between Static and Dynamic
@@ -75,23 +72,17 @@ class BroadphasePropertyExtension : public EditorIndexedStringArray
 {
 public:
   ZilchDeclareType(BroadphasePropertyExtension, TypeCopyMode::ReferenceType);
-  static void EnumerateBroadphases(HandleParam instance,
-                                   Property* property,
-                                   Array<String>& strings)
+  static void EnumerateBroadphases(HandleParam instance, Property* property, Array<String>& strings)
   {
     Z::gBroadPhaseLibrary->EnumerateNamesOfType(BroadphaseType, strings);
   }
 
-  BroadphasePropertyExtension() :
-      EditorIndexedStringArray(
-          &BroadphasePropertyExtension::EnumerateBroadphases)
+  BroadphasePropertyExtension() : EditorIndexedStringArray(&BroadphasePropertyExtension::EnumerateBroadphases)
   {
   }
 };
 
-typedef BroadphasePropertyExtension<BroadPhase::Dynamic>
-    DynamicBroadphasePropertyExtension;
-typedef BroadphasePropertyExtension<BroadPhase::Static>
-    StaticBroadphasePropertyExtension;
+typedef BroadphasePropertyExtension<BroadPhase::Dynamic> DynamicBroadphasePropertyExtension;
+typedef BroadphasePropertyExtension<BroadPhase::Static> StaticBroadphasePropertyExtension;
 
 } // namespace Zero

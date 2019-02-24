@@ -46,14 +46,14 @@ void HeapDeallocate(Heap* heap, type* instance)
 
 } // namespace Memory
 
-#define UseStaticHeap()                                                        \
-  static void* operator new(size_t size)                                       \
-  {                                                                            \
-    return Memory::GetStaticHeap()->Allocate(size);                            \
-  }                                                                            \
-  static void operator delete(void* pMem, size_t size)                         \
-  {                                                                            \
-    return Memory::GetStaticHeap()->Deallocate(pMem, size);                    \
+#define UseStaticHeap()                                                                                                \
+  static void* operator new(size_t size)                                                                               \
+  {                                                                                                                    \
+    return Memory::GetStaticHeap()->Allocate(size);                                                                    \
+  }                                                                                                                    \
+  static void operator delete(void* pMem, size_t size)                                                                 \
+  {                                                                                                                    \
+    return Memory::GetStaticHeap()->Deallocate(pMem, size);                                                            \
   }
 
 template <typename NodeType>
@@ -96,9 +96,7 @@ public:
   {
   }
 
-  ReservedSizeAllocator(cstr name) :
-      mNode(Memory::GetNamedHeap(name)),
-      mAllocated(false)
+  ReservedSizeAllocator(cstr name) : mNode(Memory::GetNamedHeap(name)), mAllocated(false)
   {
   }
 
@@ -135,8 +133,7 @@ public:
 
 // This allocator specifically works with
 template <typename NodeType>
-class ZeroSharedTemplate MemsetZeroTypedAllocator
-    : public TypedAllocator<NodeType>
+class ZeroSharedTemplate MemsetZeroTypedAllocator : public TypedAllocator<NodeType>
 {
 public:
   MemsetZeroTypedAllocator() : mNode(Memory::GetGlobalHeap())
@@ -171,8 +168,7 @@ public:
 typedef TypedAllocator<Memory::Heap> HeapAllocator;
 
 template <size_t ReserveSizeInBytes>
-using ReservedSizeHeapAllocator =
-    ReservedSizeAllocator<Memory::Heap, ReserveSizeInBytes>;
+using ReservedSizeHeapAllocator = ReservedSizeAllocator<Memory::Heap, ReserveSizeInBytes>;
 
 // Override default
 typedef TypedAllocator<Memory::Heap> DefaultAllocator;

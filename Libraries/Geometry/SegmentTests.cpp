@@ -24,11 +24,8 @@ void MakeBasisFromY(Vec3Param yAxis, Mat3Ptr basis)
 } // namespace
 
 // Intersect a segment with an axis aligned bounding box.
-Type SegmentAabb(Vec3Param segmentStart,
-                 Vec3Param segmentEnd,
-                 Vec3Param aabbMinPoint,
-                 Vec3Param aabbMaxPoint,
-                 Interval* interval)
+Type SegmentAabb(
+    Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -74,13 +71,7 @@ Type SegmentCapsule(Vec3Param segmentStart,
   Mat3 basis;
   MakeBasisFromY(yAxis, &basis);
 
-  return SegmentCapsule(segmentStart,
-                        segmentEnd,
-                        center,
-                        basis,
-                        capsuleRadius,
-                        halfLength,
-                        interval);
+  return SegmentCapsule(segmentStart, segmentEnd, center, basis, capsuleRadius, halfLength, interval);
 }
 
 // Intersect a segment with a cylinder defined by its center, local axes,
@@ -119,13 +110,7 @@ Type SegmentCylinder(Vec3Param segmentStart,
   Mat3 basis;
   MakeBasisFromY(yAxis, &basis);
 
-  return SegmentCylinder(segmentStart,
-                         segmentEnd,
-                         center,
-                         basis,
-                         cylinderRadius,
-                         halfLength,
-                         interval);
+  return SegmentCylinder(segmentStart, segmentEnd, center, basis, cylinderRadius, halfLength, interval);
 }
 
 // Intersect a segment with an elliptical cylinder defined by its center, local
@@ -164,11 +149,8 @@ Type SegmentEllipsoid(Vec3Param segmentStart,
 }
 
 // Intersect a segment with a plane.
-Type SegmentPlane(Vec3Param segmentStart,
-                  Vec3Param segmentEnd,
-                  Vec3Param planeNormal,
-                  real planeDistance,
-                  Interval* interval)
+Type SegmentPlane(
+    Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param planeNormal, real planeDistance, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -195,11 +177,8 @@ Type SegmentObb(Vec3Param segmentStart,
 }
 
 // Intersect a segment with a sphere.
-Type SegmentSphere(Vec3Param segmentStart,
-                   Vec3Param segmentEnd,
-                   Vec3Param sphereCenter,
-                   real sphereRadius,
-                   Interval* interval)
+Type SegmentSphere(
+    Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param sphereCenter, real sphereRadius, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -249,9 +228,7 @@ Type SegmentAabb(Vec3Param segmentStart,
                  Vec3Param aabbMaxPoint,
                  IntersectionPoint* intersectionPoint)
 {
-  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) ||
-              (aabbMinPoint.y > aabbMaxPoint.y) ||
-              (aabbMinPoint.z > aabbMaxPoint.z),
+  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y) || (aabbMinPoint.z > aabbMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
           " than it's maximum point.");
 
@@ -274,8 +251,7 @@ Type SegmentAabb(Vec3Param segmentStart,
     {
       if (Math::IsZero(segment[i]))
       {
-        if ((segmentStart[i] < aabbMinPoint[i]) ||
-            (segmentStart[i] > aabbMaxPoint[i]))
+        if ((segmentStart[i] < aabbMinPoint[i]) || (segmentStart[i] > aabbMaxPoint[i]))
         {
           return None;
         }
@@ -310,8 +286,7 @@ Type SegmentAabb(Vec3Param segmentStart,
       if (Math::InRange(tMax, real(0.0), real(1.0)))
       {
         intersectionPoint->Points[0] = segmentStart;
-        intersectionPoint->Points[0] =
-            Vector3::MultiplyAdd(intersectionPoint->Points[0], segment, tMax);
+        intersectionPoint->Points[0] = Vector3::MultiplyAdd(intersectionPoint->Points[0], segment, tMax);
         intersectionPoint->Points[1] = intersectionPoint->Points[0];
         intersectionPoint->T = tMax;
         return Point;
@@ -327,19 +302,16 @@ Type SegmentAabb(Vec3Param segmentStart,
       if (tMax > real(1.0))
       {
         intersectionPoint->Points[0] = segmentStart;
-        intersectionPoint->Points[0] =
-            Vector3::MultiplyAdd(intersectionPoint->Points[0], segment, tMin);
+        intersectionPoint->Points[0] = Vector3::MultiplyAdd(intersectionPoint->Points[0], segment, tMin);
         intersectionPoint->Points[1] = intersectionPoint->Points[0];
         intersectionPoint->T = tMin;
         return Point;
       }
 
       intersectionPoint->Points[0] = segmentStart;
-      intersectionPoint->Points[0] =
-          Vector3::MultiplyAdd(intersectionPoint->Points[0], segment, tMin);
+      intersectionPoint->Points[0] = Vector3::MultiplyAdd(intersectionPoint->Points[0], segment, tMin);
       intersectionPoint->Points[1] = segmentStart;
-      intersectionPoint->Points[1] =
-          Vector3::MultiplyAdd(intersectionPoint->Points[1], segment, tMax);
+      intersectionPoint->Points[1] = Vector3::MultiplyAdd(intersectionPoint->Points[1], segment, tMax);
       intersectionPoint->T = tMin;
       return Segment;
     }
@@ -382,24 +354,21 @@ Type SegmentAabb(Vec3Param segmentStart,
   absSegmentZ += cAabbSegmentEpsilon;
 
   // Try cross products of segment direction vector with coordinate axes
-  real cross = Math::Abs(segmentMidpoint.y * segmentHalflength.z -
-                         segmentMidpoint.z * segmentHalflength.y);
+  real cross = Math::Abs(segmentMidpoint.y * segmentHalflength.z - segmentMidpoint.z * segmentHalflength.y);
   real proj = aabbHalfExtents.y * absSegmentZ + aabbHalfExtents.z * absSegmentY;
   if (cross > proj)
   {
     return None;
   }
 
-  cross = Math::Abs(segmentMidpoint.z * segmentHalflength.x -
-                    segmentMidpoint.x * segmentHalflength.z);
+  cross = Math::Abs(segmentMidpoint.z * segmentHalflength.x - segmentMidpoint.x * segmentHalflength.z);
   proj = aabbHalfExtents.x * absSegmentZ + aabbHalfExtents.z * absSegmentX;
   if (cross > proj)
   {
     return None;
   }
 
-  cross = Math::Abs(segmentMidpoint.x * segmentHalflength.y -
-                    segmentMidpoint.y * segmentHalflength.x);
+  cross = Math::Abs(segmentMidpoint.x * segmentHalflength.y - segmentMidpoint.y * segmentHalflength.x);
   proj = aabbHalfExtents.x * absSegmentY + aabbHalfExtents.y * absSegmentX;
   if (cross > proj)
   {
@@ -469,8 +438,7 @@ Type SegmentCapsule(Vec3Param segmentStart,
     Vec3 relStart = segmentStart - capsulePointA;
     real startDotNormal = Dot(relStart, normal);
     real a = real(1.0) - Math::Sq(dirDotNormal);
-    real b =
-        real(2.0) * (Dot(relStart, segment) - startDotNormal * dirDotNormal);
+    real b = real(2.0) * (Dot(relStart, segment) - startDotNormal * dirDotNormal);
     real c = (LengthSq(relStart) - radiusSq) - Math::Sq(startDotNormal);
 
     real discr = b * b - real(4.0) * a * c;
@@ -617,8 +585,7 @@ Type SegmentCylinder(Vec3Param segmentStart,
   // Ray's direction is perpendicular to plane, if ray's origin lies outside of
   // the plane then there is no intersection with the ray and the plane (as well
   // as the cylinder)
-  else if ((Dot(cylinderPointA, normal) - Dot(segmentStart, normal)) <
-           real(0.0))
+  else if ((Dot(cylinderPointA, normal) - Dot(segmentStart, normal)) < real(0.0))
   {
     return None;
   }
@@ -642,8 +609,7 @@ Type SegmentCylinder(Vec3Param segmentStart,
   // Ray's direction is perpendicular to plane, if ray's origin lies outside of
   // the plane then there is no intersection with the ray and the plane (as well
   // as the cylinder)
-  else if ((Dot(cylinderPointB, normal) - Dot(segmentStart, normal)) <
-           real(0.0))
+  else if ((Dot(cylinderPointB, normal) - Dot(segmentStart, normal)) < real(0.0))
   {
     return None;
   }
@@ -653,8 +619,7 @@ Type SegmentCylinder(Vec3Param segmentStart,
   real startDotNormal = Dot(relStart, normal);
   real a = real(1.0) - Math::Sq(dirDotNormal);
   real b = real(2.0) * (Dot(relStart, segment) - startDotNormal * dirDotNormal);
-  real c = (LengthSq(relStart) - Math::Sq(cylinderRadius)) -
-           Math::Sq(startDotNormal);
+  real c = (LengthSq(relStart) - Math::Sq(cylinderRadius)) - Math::Sq(startDotNormal);
 
   real discr = b * b - real(4.0) * a * c;
   if (discr >= real(0.0))
@@ -746,8 +711,7 @@ Type SegmentPlane(Vec3Param segmentStart,
     if (intersectionPoint != nullptr)
     {
       intersectionPoint->Points[0] = segmentStart;
-      intersectionPoint->Points[0] =
-          Vector3::MultiplyAdd(intersectionPoint->Points[0], segment, t);
+      intersectionPoint->Points[0] = Vector3::MultiplyAdd(intersectionPoint->Points[0], segment, t);
       intersectionPoint->T = t;
     }
     return Point;
@@ -768,8 +732,7 @@ Type SegmentObb(Vec3Param segmentStart,
   Vec3 segEnd = segmentEnd - obbCenter;
   Math::TransposedTransform(obbBasis, &segStart);
   Math::TransposedTransform(obbBasis, &segEnd);
-  Type result = SegmentAabb(
-      segStart, segEnd, -obbHalfExtents, obbHalfExtents, intersectionPoint);
+  Type result = SegmentAabb(segStart, segEnd, -obbHalfExtents, obbHalfExtents, intersectionPoint);
 
   if (intersectionPoint != nullptr)
   {
@@ -829,8 +792,7 @@ Type SegmentSphere(Vec3Param segmentStart,
       if (intersectionPoint != nullptr)
       {
         intersectionPoint->Points[0] = segmentStart;
-        intersectionPoint->Points[0] =
-            Vector3::MultiplyAdd(intersectionPoint->Points[0], d, t);
+        intersectionPoint->Points[0] = Vector3::MultiplyAdd(intersectionPoint->Points[0], d, t);
         intersectionPoint->Points[1] = intersectionPoint->Points[0];
         intersectionPoint->T = t / segmentLength;
       }
@@ -853,8 +815,7 @@ Type SegmentSphere(Vec3Param segmentStart,
       if (intersectionPoint != nullptr)
       {
         intersectionPoint->Points[0] = segmentStart;
-        intersectionPoint->Points[0] =
-            Vector3::MultiplyAdd(intersectionPoint->Points[0], d, t1);
+        intersectionPoint->Points[0] = Vector3::MultiplyAdd(intersectionPoint->Points[0], d, t1);
         intersectionPoint->Points[1] = intersectionPoint->Points[0];
         intersectionPoint->T = t1 / segmentLength;
       }
@@ -878,8 +839,7 @@ Type SegmentSphere(Vec3Param segmentStart,
       if (intersectionPoint != nullptr)
       {
         intersectionPoint->Points[0] = segmentStart;
-        intersectionPoint->Points[0] =
-            Vector3::MultiplyAdd(intersectionPoint->Points[0], d, t0);
+        intersectionPoint->Points[0] = Vector3::MultiplyAdd(intersectionPoint->Points[0], d, t0);
         intersectionPoint->Points[1] = intersectionPoint->Points[0];
         intersectionPoint->T = t0 / segmentLength;
       }
@@ -890,11 +850,9 @@ Type SegmentSphere(Vec3Param segmentStart,
     if (intersectionPoint != nullptr)
     {
       intersectionPoint->Points[0] = segmentStart;
-      intersectionPoint->Points[0] =
-          Vector3::MultiplyAdd(intersectionPoint->Points[0], d, t0);
+      intersectionPoint->Points[0] = Vector3::MultiplyAdd(intersectionPoint->Points[0], d, t0);
       intersectionPoint->Points[1] = segmentStart;
-      intersectionPoint->Points[1] =
-          Vector3::MultiplyAdd(intersectionPoint->Points[1], d, t1);
+      intersectionPoint->Points[1] = Vector3::MultiplyAdd(intersectionPoint->Points[1], d, t1);
       intersectionPoint->T = t0 / segmentLength;
     }
     return Segment;
@@ -943,8 +901,7 @@ Type SegmentTriangle(Vec3Param segmentStart,
     }
 
     Vec3 pointOnPlane = segmentStart + t * segmentDirection;
-    Type result = PointTriangle(
-        pointOnPlane, trianglePointA, trianglePointB, trianglePointC);
+    Type result = PointTriangle(pointOnPlane, trianglePointA, trianglePointB, trianglePointC);
     if (result == Inside)
     {
       if (intersectionPoint != nullptr)

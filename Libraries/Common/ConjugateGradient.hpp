@@ -25,15 +25,8 @@ struct ConjugateGradientSolver
 
   /// X0 is the initial values and also the results (set to 0 if there is no
   /// initial)
-  template <typename MatrixType,
-            typename VectorType,
-            typename PolicyType,
-            typename ErrorCallbackType>
-  void SolveSlow(MatrixType& A,
-                 VectorType& b,
-                 VectorType& x0,
-                 PolicyType& policy,
-                 ErrorCallbackType& errCallback)
+  template <typename MatrixType, typename VectorType, typename PolicyType, typename ErrorCallbackType>
+  void SolveSlow(MatrixType& A, VectorType& b, VectorType& x0, PolicyType& policy, ErrorCallbackType& errCallback)
   {
     VectorType residual = b;
     residual = policy.Subtract(residual, policy.Transform(A, x0));
@@ -68,15 +61,8 @@ struct ConjugateGradientSolver
     }
   }
 
-  template <typename MatrixType,
-            typename VectorType,
-            typename PolicyType,
-            typename ErrorCallbackType>
-  void Solve(MatrixType& A,
-             VectorType& b,
-             VectorType& x0,
-             PolicyType& policy,
-             ErrorCallbackType& errCallback)
+  template <typename MatrixType, typename VectorType, typename PolicyType, typename ErrorCallbackType>
+  void Solve(MatrixType& A, VectorType& b, VectorType& x0, PolicyType& policy, ErrorCallbackType& errCallback)
   {
     VectorType residual = b;
     // r = r Z- A * x0
@@ -112,10 +98,7 @@ struct ConjugateGradientSolver
     }
   }
 
-  template <typename MatrixType,
-            typename VectorType,
-            typename PolicyType,
-            typename ErrorCallbackType>
+  template <typename MatrixType, typename VectorType, typename PolicyType, typename ErrorCallbackType>
   void SolveGeneric(MatrixType& A,
                     VectorType& b,
                     VectorType& x0,

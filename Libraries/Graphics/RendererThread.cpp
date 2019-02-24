@@ -9,8 +9,7 @@ static const float cAcceptableLoadtime = 0.15f;
 
 OsInt RendererThreadMain(void* rendererThreadJobQueue)
 {
-  RendererThreadJobQueue* jobQueue =
-      (RendererThreadJobQueue*)rendererThreadJobQueue;
+  RendererThreadJobQueue* jobQueue = (RendererThreadJobQueue*)rendererThreadJobQueue;
 
   Array<RendererJob*> rendererJobs;
 
@@ -20,7 +19,8 @@ OsInt RendererThreadMain(void* rendererThreadJobQueue)
     jobQueue->WaitForJobs();
 
     jobQueue->TakeAllJobs(rendererJobs);
-    forRange(RendererJob * job, rendererJobs.All()) job->Execute();
+    forRange (RendererJob* job, rendererJobs.All())
+      job->Execute();
     rendererJobs.Clear();
 
     if (!ThreadingEnabled)
@@ -137,9 +137,7 @@ void SetLazyShaderCompilationJob::Execute()
   delete this;
 }
 
-AddShadersJob::AddShadersJob(RendererThreadJobQueue* jobQueue) :
-    RepeatingJob(jobQueue),
-    mForceCompileBatchCount(0)
+AddShadersJob::AddShadersJob(RendererThreadJobQueue* jobQueue) : RepeatingJob(jobQueue), mForceCompileBatchCount(0)
 {
   // Job starts and terminates itself.
   Start();
@@ -310,8 +308,7 @@ void RepeatingJob::ForceTerminate()
   Unlock();
 }
 
-ShowProgressJob::ShowProgressJob(RendererThreadJobQueue* jobQueue) :
-    RepeatingJob(jobQueue)
+ShowProgressJob::ShowProgressJob(RendererThreadJobQueue* jobQueue) : RepeatingJob(jobQueue)
 {
 }
 
@@ -335,9 +332,7 @@ void ShowProgressJob::OnExecute()
   {
     // Increases current percent every run so that progress always smoothly
     // completes
-    mCurrentPercent =
-        Math::Min((mProgressWidth * mCurrentPercent + 16.0f) / mProgressWidth,
-                  mTargetPercent);
+    mCurrentPercent = Math::Min((mProgressWidth * mCurrentPercent + 16.0f) / mProgressWidth, mTargetPercent);
 
     // It's OK if the UI freezes for a small acceptable amount of time
     // During this time we don't show the loading screen (for example, when

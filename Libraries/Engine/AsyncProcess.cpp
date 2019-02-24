@@ -33,25 +33,12 @@ ZilchDefineType(AsyncProcess, builder, type)
   ZeroBindEvent(Events::StandardErrorFinished, Event);
 
   ZilchBindMethod(Create);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &AsyncProcess::Start,
-                      ZilchInstanceOverload(bool, ProcessStartInfo&),
-                      "Start",
-                      "startInfo");
+  ZilchFullBindMethod(
+      builder, type, &AsyncProcess::Start, ZilchInstanceOverload(bool, ProcessStartInfo&), "Start", "startInfo");
   ZilchBindMethod(IsRunning);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &AsyncProcess::WaitForClose,
-                      ZilchInstanceOverload(int),
-                      "WaitForClose",
-                      "");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &AsyncProcess::WaitForClose,
-                      ZilchInstanceOverload(int, int),
-                      "WaitForClose",
-                      "milliseconds");
+  ZilchFullBindMethod(builder, type, &AsyncProcess::WaitForClose, ZilchInstanceOverload(int), "WaitForClose", "");
+  ZilchFullBindMethod(
+      builder, type, &AsyncProcess::WaitForClose, ZilchInstanceOverload(int, int), "WaitForClose", "milliseconds");
   ZilchBindMethod(Close);
   ZilchBindMethod(Terminate);
   ZilchBindGetterSetter(StoreStandardOutputData);
@@ -117,8 +104,7 @@ void AsyncProcess::Start(Status& status, ProcessStartInfo& startInfo)
     ThreadInfo& threadInfo = mThreads[StreamType::StandardOutput];
     threadInfo.mIsRunning = true;
     mProcess.OpenStandardOut(threadInfo.mFileStream);
-    threadInfo.mThread.Initialize(
-        AsyncProcess::StandardOutputThreadFn, this, "StandardOutputThread");
+    threadInfo.mThread.Initialize(AsyncProcess::StandardOutputThreadFn, this, "StandardOutputThread");
   }
   // Start the standard error thread if necessary
   if (startInfo.mRedirectStandardError)
@@ -126,8 +112,7 @@ void AsyncProcess::Start(Status& status, ProcessStartInfo& startInfo)
     ThreadInfo& threadInfo = mThreads[StreamType::StandardError];
     threadInfo.mIsRunning = true;
     mProcess.OpenStandardError(threadInfo.mFileStream);
-    threadInfo.mThread.Initialize(
-        AsyncProcess::StandardErrorThreadFn, this, "StandardErrorThread");
+    threadInfo.mThread.Initialize(AsyncProcess::StandardErrorThreadFn, this, "StandardErrorThread");
   }
   // Redirect standard input if necessary
   if (startInfo.mRedirectStandardInput)
@@ -237,13 +222,11 @@ void AsyncProcess::ResetEventConnections()
   // Reconnect to the appropriate partial response events
   if (mThreads[StreamType::StandardOutput].mShouldStoreResults)
   {
-    ConnectThisTo(
-        this, Events::PartialStandardOutputResponse, OnPartialResponse);
+    ConnectThisTo(this, Events::PartialStandardOutputResponse, OnPartialResponse);
   }
   if (mThreads[StreamType::StandardError].mShouldStoreResults)
   {
-    ConnectThisTo(
-        this, Events::PartialStandardErrorResponse, OnPartialResponse);
+    ConnectThisTo(this, Events::PartialStandardErrorResponse, OnPartialResponse);
   }
 }
 
@@ -280,20 +263,16 @@ OsInt AsyncProcess::StandardOutputThreadFn(void* threadStartData)
 {
   // Start reading from standard output
   AsyncProcess* asyncProcess = (AsyncProcess*)threadStartData;
-  return RunThread(asyncProcess,
-                   StreamType::StandardOutput,
-                   Events::PartialStandardOutputResponse,
-                   Events::StandardOutputFinished);
+  return RunThread(
+      asyncProcess, StreamType::StandardOutput, Events::PartialStandardOutputResponse, Events::StandardOutputFinished);
 }
 
 OsInt AsyncProcess::StandardErrorThreadFn(void* threadStartData)
 {
   // Start reading from standard error
   AsyncProcess* asyncProcess = (AsyncProcess*)threadStartData;
-  return RunThread(asyncProcess,
-                   StreamType::StandardError,
-                   Events::PartialStandardErrorResponse,
-                   Events::StandardErrorFinished);
+  return RunThread(
+      asyncProcess, StreamType::StandardError, Events::PartialStandardErrorResponse, Events::StandardErrorFinished);
 }
 
 OsInt AsyncProcess::RunThread(AsyncProcess* asyncProcess,
@@ -332,8 +311,7 @@ OsInt AsyncProcess::RunThread(AsyncProcess* asyncProcess,
     AsyncProcessEvent* toSend = new AsyncProcessEvent();
     toSend->mBytes = String((char*)buffer, bytesRead);
     toSend->mStreamType = streamType;
-    asyncProcess->mEventDispatchList.Dispatch(
-        asyncProcess, partialResponseEventName, toSend);
+    asyncProcess->mEventDispatchList.Dispatch(asyncProcess, partialResponseEventName, toSend);
   }
 
   // The process has finished but we need to signal back to the main thread that
@@ -343,8 +321,7 @@ OsInt AsyncProcess::RunThread(AsyncProcess* asyncProcess,
   // correctly signal that the main thread has all data for this stream.
   AsyncProcessEvent* finalEvent = new AsyncProcessEvent();
   finalEvent->mStreamType = streamType;
-  asyncProcess->mEventDispatchList.Dispatch(
-      asyncProcess, finishedEventName, finalEvent);
+  asyncProcess->mEventDispatchList.Dispatch(asyncProcess, finishedEventName, finalEvent);
   return 0;
 }
 

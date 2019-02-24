@@ -125,9 +125,7 @@ bool AtomicCompareExchange(volatile s64* target, s64 value, s64 comparison)
   return false;
 }
 
-bool AtomicCompareExchange(void* volatile* target,
-                           void* value,
-                           void* comparison)
+bool AtomicCompareExchange(void* volatile* target, void* value, void* comparison)
 {
   if (*target == comparison)
   {

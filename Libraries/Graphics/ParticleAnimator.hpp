@@ -16,9 +16,7 @@ public:
   void Initialize(CogInitializer& initializer) override;
 
   // Particle Animator Interface
-  virtual void Animate(ParticleList* particleList,
-                       float dt,
-                       Mat4Ref transform) = 0;
+  virtual void Animate(ParticleList* particleList, float dt, Mat4Ref transform) = 0;
 
   Link<ParticleAnimator> link;
   GraphicsSpace* mGraphicsSpace;

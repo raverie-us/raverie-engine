@@ -4,9 +4,7 @@
 namespace Zero
 {
 
-VertexDescriptionBuilder::VertexDescriptionBuilder() :
-    mCurrentOffset(0),
-    mIndex(0)
+VertexDescriptionBuilder::VertexDescriptionBuilder() : mCurrentOffset(0), mIndex(0)
 {
 }
 
@@ -14,8 +12,7 @@ VertexDescriptionBuilder::~VertexDescriptionBuilder()
 {
 }
 
-FixedVertexDescription&
-VertexDescriptionBuilder::SetupDescriptionFromMesh(aiMesh* mesh)
+FixedVertexDescription& VertexDescriptionBuilder::SetupDescriptionFromMesh(aiMesh* mesh)
 {
   if (mesh->HasPositions())
     AddAttribute(VertexSemantic::Position, VertexElementType::Real, 3);
@@ -43,10 +40,8 @@ VertexDescriptionBuilder::SetupDescriptionFromMesh(aiMesh* mesh)
 
   if (mesh->HasBones())
   {
-    AddAttribute(
-        VertexSemantic::BoneWeights, VertexElementType::Real, cMaxBonesWeights);
-    AddAttribute(
-        VertexSemantic::BoneIndices, VertexElementType::Byte, cMaxBonesWeights);
+    AddAttribute(VertexSemantic::BoneWeights, VertexElementType::Real, cMaxBonesWeights);
+    AddAttribute(VertexSemantic::BoneIndices, VertexElementType::Byte, cMaxBonesWeights);
   }
 
   mVertexDescription.mVertexSize = mCurrentOffset;
@@ -58,12 +53,9 @@ VertexDescriptionBuilder::SetupDescriptionFromMesh(aiMesh* mesh)
   return mVertexDescription;
 }
 
-void VertexDescriptionBuilder::AddAttribute(VertexSemantic::Enum semantic,
-                                            VertexElementType::Enum type,
-                                            byte count)
+void VertexDescriptionBuilder::AddAttribute(VertexSemantic::Enum semantic, VertexElementType::Enum type, byte count)
 {
-  mVertexDescription.mAttributes[mIndex++] =
-      VertexAttribute(semantic, type, count, mCurrentOffset);
+  mVertexDescription.mAttributes[mIndex++] = VertexAttribute(semantic, type, count, mCurrentOffset);
   mCurrentOffset += count * GetElementSize(type);
 }
 

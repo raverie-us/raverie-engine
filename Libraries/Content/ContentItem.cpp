@@ -11,9 +11,7 @@ ZilchDefineType(ContentItem, builder, type)
   ZilchBindGetterProperty(Name);
 }
 
-void ContentItemHandleManager::ObjectToHandle(const byte* object,
-                                              BoundType* type,
-                                              Handle& handleToInitialize)
+void ContentItemHandleManager::ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize)
 {
   if (object == nullptr)
     return;
@@ -24,8 +22,7 @@ void ContentItemHandleManager::ObjectToHandle(const byte* object,
 
 byte* ContentItemHandleManager::HandleToObject(const Handle& handle)
 {
-  return (byte*)Z::gContentSystem->LoadedItems.FindValue(handle.HandleU32,
-                                                         nullptr);
+  return (byte*)Z::gContentSystem->LoadedItems.FindValue(handle.HandleU32, nullptr);
 }
 
 ContentItem::ContentItem()
@@ -63,9 +60,7 @@ void ContentItem::SaveContent()
   {
     // Ask the resource to save itself
     Resource* resource = Z::gResources->GetResource(mRuntimeResource);
-    ErrorIf(
-        resource == nullptr,
-        "Resource has been removed but this content item still refers to it.");
+    ErrorIf(resource == nullptr, "Resource has been removed but this content item still refers to it.");
 
     if (resource)
     {
@@ -104,7 +99,7 @@ void ContentItem::GetTags(Array<String>& tags)
   if (contentTags == nullptr)
     return;
 
-  forRange(String currTag, contentTags->mTags.All())
+  forRange (String currTag, contentTags->mTags.All())
   {
     tags.PushBack(currTag);
   }
@@ -116,7 +111,7 @@ void ContentItem::GetTags(HashSet<String>& tags)
   if (contentTags == nullptr)
     return;
 
-  forRange(String currTag, contentTags->mTags.All())
+  forRange (String currTag, contentTags->mTags.All())
   {
     tags.Insert(currTag);
   }
@@ -148,7 +143,7 @@ void ContentItem::SetTags(HashSet<String>& tags)
   }
 
   // Insert each tag
-  forRange(String tag, tags.All())
+  forRange (String tag, tags.All())
   {
     contentTags->mTags.Insert(tag);
   }
@@ -160,7 +155,7 @@ void ContentItem::RemoveTags(HashSet<String>& tags)
   if (contentTags == nullptr)
     return;
 
-  forRange(String & tag, tags.All())
+  forRange (String& tag, tags.All())
   {
     contentTags->mTags.Erase(tag);
   }
@@ -184,7 +179,7 @@ Object* ContentItem::GetEditingObject(Resource* resource)
 
     BoundType* resourceType = ZilchVirtualTypeId(resource);
 
-    forRange(Property * prop, resourceType->GetProperties())
+    forRange (Property* prop, resourceType->GetProperties())
     {
       if (prop->HasAttribute(PropertyAttributes::cProperty))
         return resource;
@@ -235,15 +230,13 @@ ZilchDefineType(ContentItemMetaOperations, builder, type)
 {
 }
 
-void ContentItemMetaOperations::ObjectModified(HandleParam object,
-                                               bool intermediateChange)
+void ContentItemMetaOperations::ObjectModified(HandleParam object, bool intermediateChange)
 {
   MetaOperations::ObjectModified(object, intermediateChange);
 
   if (!intermediateChange)
   {
-    ContentItem* contentItem =
-        object.Get<ContentItem*>(GetOptions::AssertOnNull);
+    ContentItem* contentItem = object.Get<ContentItem*>(GetOptions::AssertOnNull);
     Z::gContentSystem->mModifiedContentItems.Insert(contentItem->Id);
   }
 }

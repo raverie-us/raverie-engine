@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-TypeDependencyCollector::TypeDependencyCollector(
-    ZilchShaderIRLibrary* owningLibrary)
+TypeDependencyCollector::TypeDependencyCollector(ZilchShaderIRLibrary* owningLibrary)
 {
   mOwningLibrary = owningLibrary;
   mCapabilities.InsertOrIgnore(spv::CapabilityLinkage);
@@ -82,10 +81,8 @@ void TypeDependencyCollector::Collect(ZilchShaderIROp* op)
   // Check for global variables
   if (op->mOpType == OpType::OpVariable)
   {
-    ZilchShaderIRConstantLiteral* storageClassLiteral =
-        op->mArguments[0]->As<ZilchShaderIRConstantLiteral>();
-    spv::StorageClass storageClass =
-        (spv::StorageClass)storageClassLiteral->mValue.Get<int>();
+    ZilchShaderIRConstantLiteral* storageClassLiteral = op->mArguments[0]->As<ZilchShaderIRConstantLiteral>();
+    spv::StorageClass storageClass = (spv::StorageClass)storageClassLiteral->mValue.Get<int>();
     // If this is a global variable the add it to the global variable list and
     // collect all arguments as normal
     if (IsGlobalStorageClass(storageClass))
@@ -99,8 +96,7 @@ void TypeDependencyCollector::Collect(ZilchShaderIROp* op)
   // Check if an op requires a capability, if so add it.
   // @JoshD: Can an op require more than one capability? They're nested so I'm
   // not sure (primarily with Kernel)
-  spv::Capability* requiredCapability =
-      mRequiredCapabilities.FindPointer(op->mOpType);
+  spv::Capability* requiredCapability = mRequiredCapabilities.FindPointer(op->mOpType);
   if (requiredCapability != nullptr)
     mCapabilities.InsertOrIgnore(*requiredCapability);
 
@@ -117,10 +113,8 @@ void TypeDependencyCollector::Collect(ZilchShaderIROp* op)
   // Handle constants (have to add them to a separate map). These should be
   // added after collecting all arguments so that composite instructions are
   // guaranteed to have already visited their constituents.
-  if (op->mOpType == OpType::OpConstant ||
-      op->mOpType == OpType::OpConstantComposite ||
-      op->mOpType == OpType::OpSpecConstant ||
-      op->mOpType == OpType::OpSpecConstantComposite)
+  if (op->mOpType == OpType::OpConstant || op->mOpType == OpType::OpConstantComposite ||
+      op->mOpType == OpType::OpSpecConstant || op->mOpType == OpType::OpSpecConstantComposite)
   {
     AddConstantReference(op);
   }
@@ -180,8 +174,7 @@ void TypeDependencyCollector::AddGlobalReference(ZilchShaderIROp* op)
 
   // Try to add the global variable's initializer function
   GlobalVariableData* globalVarData = mOwningLibrary->FindGlobalVariable(op);
-  if (globalVarData != nullptr &&
-      globalVarData->mInitializerFunction != nullptr)
+  if (globalVarData != nullptr && globalVarData->mInitializerFunction != nullptr)
   {
     // Make sure to collect all referenced objects in the initializer function
     Collect(globalVarData->mInitializerFunction);
@@ -189,15 +182,11 @@ void TypeDependencyCollector::AddGlobalReference(ZilchShaderIROp* op)
   }
 }
 
-bool TypeDependencyCollector::IsGlobalStorageClass(
-    spv::StorageClass storageClass)
+bool TypeDependencyCollector::IsGlobalStorageClass(spv::StorageClass storageClass)
 {
-  return storageClass == spv::StorageClassUniform ||
-         storageClass == spv::StorageClassUniformConstant ||
-         storageClass == spv::StorageClassStorageBuffer ||
-         storageClass == spv::StorageClassInput ||
-         storageClass == spv::StorageClassOutput ||
-         storageClass == spv::StorageClassPrivate;
+  return storageClass == spv::StorageClassUniform || storageClass == spv::StorageClassUniformConstant ||
+         storageClass == spv::StorageClassStorageBuffer || storageClass == spv::StorageClassInput ||
+         storageClass == spv::StorageClassOutput || storageClass == spv::StorageClassPrivate;
 }
 
 } // namespace Zero

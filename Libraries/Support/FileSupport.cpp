@@ -14,9 +14,7 @@ void WriteStringRangeToFile(StringParam path, StringRange range)
   WriteToFile(path.c_str(), (byte*)range.Data(), range.SizeInBytes());
 }
 
-bool MoveFolderContents(StringParam dest,
-                        StringParam source,
-                        FileFilter* filter)
+bool MoveFolderContents(StringParam dest, StringParam source, FileFilter* filter)
 {
   ReturnIf(source.Empty(),
            false,
@@ -57,9 +55,7 @@ bool MoveFolderContents(StringParam dest,
   return success;
 }
 
-void CopyFolderContents(StringParam dest,
-                        StringParam source,
-                        FileFilter* filter)
+void CopyFolderContents(StringParam dest, StringParam source, FileFilter* filter)
 {
   CreateDirectoryAndParents(dest);
 
@@ -110,9 +106,7 @@ void FindFilesRecursively(StringParam path, Array<String>& foundFiles)
   }
 }
 
-void FindFilesRecursively(StringParam path,
-                          Array<String>& foundFiles,
-                          FileFilter* filter)
+void FindFilesRecursively(StringParam path, Array<String>& foundFiles, FileFilter* filter)
 {
   // If this is a file then just add this to the results and return
   if (!DirectoryExists(path))
@@ -175,13 +169,7 @@ String GetTimeAndDateStamp()
   TimeType t = Time::GetTime();
   CalendarDateTime now = Time::GetLocalTime(t);
   // struct tm * now = localtime(&t);
-  return String::Format("%d-%d-%d--%d-%02d-%02d",
-                        now.Year,
-                        now.Month + 1,
-                        now.Day,
-                        now.Hour,
-                        now.Minutes,
-                        now.Seconds);
+  return String::Format("%d-%d-%d--%d-%02d-%02d", now.Year, now.Month + 1, now.Day, now.Hour, now.Minutes, now.Seconds);
 }
 
 String GetDate()
@@ -250,12 +238,7 @@ String HumanReadableFileSize(u64 bytes)
 {
   const float cConversion = 1024.0f;
 
-  cstr formats[] = {"%0.0f bytes",
-                    "%.0f KiB",
-                    "%.0f MiB",
-                    "%.2f GiB",
-                    "%.2f TiB",
-                    "%.2f PiB"};
+  cstr formats[] = {"%0.0f bytes", "%.0f KiB", "%.0f MiB", "%.2f GiB", "%.2f TiB", "%.2f PiB"};
   size_t count = sizeof(formats) / sizeof(formats[0]);
 
   float current = (float)bytes;
@@ -283,10 +266,8 @@ void PopulateVirtualFileSystemWithZip(void* userData)
   {
     // We can't call GetApplicationDirectory because it's the emulated one by
     // the virtual file system
-    String trueApplicationDirectory =
-        FilePath::GetDirectoryPath(gCommandLineArguments.Front());
-    String filePath =
-        FilePath::Combine(trueApplicationDirectory, "FileSystem.zip");
+    String trueApplicationDirectory = FilePath::GetDirectoryPath(gCommandLineArguments.Front());
+    String filePath = FilePath::Combine(trueApplicationDirectory, "FileSystem.zip");
     file = fopen(filePath.c_str(), "rb");
   }
 
@@ -326,12 +307,11 @@ void PopulateVirtualFileSystemWithZip(void* userData)
   archive.ReadBuffer(ArchiveReadFlags::All, block);
 
   // Populate file system entries based on what's in the archive
-  forRange(ArchiveEntry & archiveEntry, archive.GetEntries())
+  forRange (ArchiveEntry& archiveEntry, archive.GetEntries())
   {
     // Create our entries for our files based on name, data, and modified time
     String absolutePath = BuildString("/", archiveEntry.Name);
-    AddVirtualFileSystemEntry(
-        absolutePath, &archiveEntry.Full, archiveEntry.ModifiedTime);
+    AddVirtualFileSystemEntry(absolutePath, &archiveEntry.Full, archiveEntry.ModifiedTime);
   }
 }
 

@@ -99,8 +99,7 @@ struct Lerp<String>
       buffer.Append(*it);
     }
 
-    int lerpValue = (int)Math::Lerp(
-        (float)startRune.value, (float)endRune.value, leftoverT);
+    int lerpValue = (int)Math::Lerp((float)startRune.value, (float)endRune.value, leftoverT);
     buffer.Append(Rune(lerpValue));
 
     it = smallStr->Begin() + (runeIndex + 1);
@@ -192,11 +191,9 @@ struct Elastic
     float exponent = 10.0f;
     float period = 0.3f;
 
-    float valueAtX = Math::Pow(2.0f, exponent * (t - 1.0f)) *
-                     Math::Cos(Math::cTwoPi * (t - 1.0f) / period);
-    float verticalShift = -0.00048828125f; // for default exponent and period
-    float verticalScale =
-        1.0f - verticalShift; // 1.00048828125 for default exponent and period
+    float valueAtX = Math::Pow(2.0f, exponent * (t - 1.0f)) * Math::Cos(Math::cTwoPi * (t - 1.0f) / period);
+    float verticalShift = -0.00048828125f;      // for default exponent and period
+    float verticalScale = 1.0f - verticalShift; // 1.00048828125 for default exponent and period
     return (valueAtX - verticalShift) / verticalScale;
   }
 
@@ -210,9 +207,7 @@ struct Elastic
     float exponent = 10.0f;
     float period = 0.3f;
     float verticalScale = 1.00048828125f; // for default exponent and period
-    return (1.0f - Math::Pow(2.0f, -exponent * t) *
-                       Math::Cos(Math::cTwoPi * t / period)) /
-           verticalScale;
+    return (1.0f - Math::Pow(2.0f, -exponent * t) * Math::Cos(Math::cTwoPi * t / period)) / verticalScale;
   }
 
   static inline float InOut(float t)

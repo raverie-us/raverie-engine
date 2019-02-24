@@ -120,8 +120,7 @@ int PartialMatch(RangeType part, RangeType full, Compare compare)
 
     // 'upperPriority' will never be negative. If 'upperPriority' is 0, it's
     // invalid.
-    if (upperPriority > priority && upperPriority != cInvalidUpperMatch &&
-        part.Empty() == true)
+    if (upperPriority > priority && upperPriority != cInvalidUpperMatch && part.Empty() == true)
     {
       // If both 'full' and 'part' are equally empty, then they are an exact
       // match.
@@ -180,11 +179,8 @@ struct PrioritizedEntry
   {
   }
 
-  void ChooseHigherPriority(FilterMatch::Enum match,
-                            int priority,
-                            ValueType* value,
-                            size_t originalIndex,
-                            size_t filteredIndex)
+  void ChooseHigherPriority(
+      FilterMatch::Enum match, int priority, ValueType* value, size_t originalIndex, size_t filteredIndex)
   {
     // If we got a better major match, or the match is the same and we got a
     // better minor match, choose that
@@ -205,16 +201,15 @@ struct PrioritizedEntry
 bool MatchesAcronym(StringRangeParam text, StringRangeParam acronym);
 
 /// Checks to see if a partial bit of text is found within a full string
-bool MatchesPartial(StringParam text,
-                    StringParam partial,
-                    RuneComparer compare = CaseSensitiveCompare);
+bool MatchesPartial(StringParam text, StringParam partial, RuneComparer compare = CaseSensitiveCompare);
 
 /// The adapter pulls out the strings that we're filtering from any container
 /// Usage: auto filtered = FilterStrings(stringArray.All(), "Hello",
 /// YourContainerAdapter);
 template <typename RangeType, typename Adapter>
-StringFilterResult<typename RangeType::value_type>
-FilterStrings(RangeType range, StringParam searchText, Adapter adapter)
+StringFilterResult<typename RangeType::value_type> FilterStrings(RangeType range,
+                                                                 StringParam searchText,
+                                                                 Adapter adapter)
 {
   typedef typename RangeType::value_type ValueType;
 
@@ -241,44 +236,28 @@ FilterStrings(RangeType range, StringParam searchText, Adapter adapter)
 
     if (text.StartsWith(searchText, CaseSensitiveCompare))
     {
-      primary.ChooseHigherPriority(FilterMatch::StartsWithCaseSensitive,
-                                   priority,
-                                   &front,
-                                   indexCounter,
-                                   filteredIndex);
+      primary.ChooseHigherPriority(FilterMatch::StartsWithCaseSensitive, priority, &front, indexCounter, filteredIndex);
       matchedAny = true;
     }
     else if (text.StartsWith(searchText, CaseInsensitiveCompare))
     {
-      primary.ChooseHigherPriority(FilterMatch::StartsWithCaseInsensitive,
-                                   priority,
-                                   &front,
-                                   indexCounter,
-                                   filteredIndex);
+      primary.ChooseHigherPriority(
+          FilterMatch::StartsWithCaseInsensitive, priority, &front, indexCounter, filteredIndex);
       matchedAny = true;
     }
     else if (MatchesAcronym(text, searchText))
     {
-      primary.ChooseHigherPriority(
-          FilterMatch::Acronym, priority, &front, indexCounter, filteredIndex);
+      primary.ChooseHigherPriority(FilterMatch::Acronym, priority, &front, indexCounter, filteredIndex);
       matchedAny = true;
     }
     else if (MatchesPartial(text, searchText, CaseSensitiveCompare))
     {
-      primary.ChooseHigherPriority(FilterMatch::PartialCaseSensitive,
-                                   priority,
-                                   &front,
-                                   indexCounter,
-                                   filteredIndex);
+      primary.ChooseHigherPriority(FilterMatch::PartialCaseSensitive, priority, &front, indexCounter, filteredIndex);
       matchedAny = true;
     }
     else if (MatchesPartial(text, searchText, CaseInsensitiveCompare))
     {
-      primary.ChooseHigherPriority(FilterMatch::PartialCaseInsensitive,
-                                   priority,
-                                   &front,
-                                   indexCounter,
-                                   filteredIndex);
+      primary.ChooseHigherPriority(FilterMatch::PartialCaseInsensitive, priority, &front, indexCounter, filteredIndex);
       matchedAny = true;
     }
 
@@ -302,8 +281,7 @@ FilterStrings(RangeType range, StringParam searchText, Adapter adapter)
 /// Helper function that works for any container of strings (see FilterStrings
 /// above) Usage: auto filtered = FilterStrings(stringArray.All(), "Hello");
 template <typename RangeType>
-StringFilterResult<typename RangeType::value_type>
-FilterStrings(RangeType range, StringParam searchText)
+StringFilterResult<typename RangeType::value_type> FilterStrings(RangeType range, StringParam searchText)
 {
   return FilterStrings(range, searchText, StringContainerAdapter);
 }

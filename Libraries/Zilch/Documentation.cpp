@@ -4,10 +4,7 @@
 
 namespace Zilch
 {
-DocumentationProperty::DocumentationProperty() :
-    IsSettable(true),
-    IsGettable(true),
-    IsField(true)
+DocumentationProperty::DocumentationProperty() : IsSettable(true), IsGettable(true), IsField(true)
 {
 }
 
@@ -102,8 +99,7 @@ void RstBuilder::WriteLine(RstTable& table)
   }
 }
 
-void RstBuilder::WriteLineHeading(StringRange heading,
-                                  RstHeadingType::Enum type)
+void RstBuilder::WriteLineHeading(StringRange heading, RstHeadingType::Enum type)
 {
   char lineCharacter = ' ';
   bool needsOverline = false;

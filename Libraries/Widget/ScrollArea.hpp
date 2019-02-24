@@ -100,9 +100,7 @@ public:
   void ScrollPixels(Vec2 additivePixels);
 
   void OnMouseScroll(MouseEvent* event);
-  void SetScrolledPercentageInternal(Vec2 scrollPercentage,
-                                     ScrollUpdate::Enum updateType,
-                                     bool generateMessages);
+  void SetScrolledPercentageInternal(Vec2 scrollPercentage, ScrollUpdate::Enum updateType, bool generateMessages);
   void SetScrolledOffsetInternal(Vec2Param scrollOffset,
                                  ScrollUpdate::Enum updateType,
                                  bool generateMessages,

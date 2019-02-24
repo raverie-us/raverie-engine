@@ -4,14 +4,7 @@
 namespace Zero
 {
 
-DeclareEnum7(ZilchShaderIRBaseType,
-             Op,
-             ConstantLiteral,
-             DataType,
-             Function,
-             Block,
-             Comment,
-             Extension);
+DeclareEnum7(ZilchShaderIRBaseType, Op, ConstantLiteral, DataType, Function, Block, Comment, Extension);
 DeclareEnum3(BlockType, Direct, Selection, Loop);
 DeclareEnum15(ShaderIRTypeBaseType,
               Bool,
@@ -93,11 +86,9 @@ public:
 class ZilchShaderIRConstantLiteral : public IZilchShaderIR
 {
 public:
-  const static ZilchShaderIRBaseType::Enum mStaticBaseType =
-      ZilchShaderIRBaseType::ConstantLiteral;
+  const static ZilchShaderIRBaseType::Enum mStaticBaseType = ZilchShaderIRBaseType::ConstantLiteral;
 
-  ZilchShaderIRConstantLiteral(Zilch::Any value) :
-      IZilchShaderIR(mStaticBaseType)
+  ZilchShaderIRConstantLiteral(Zilch::Any value) : IZilchShaderIR(mStaticBaseType)
   {
     mValue = value;
   }
@@ -108,10 +99,8 @@ public:
 class ZilchShaderExtensionImport : public IZilchShaderIR
 {
 public:
-  const static ZilchShaderIRBaseType::Enum mStaticBaseType =
-      ZilchShaderIRBaseType::Extension;
-  ZilchShaderExtensionImport(SpirVExtensionLibrary* library) :
-      IZilchShaderIR(mStaticBaseType)
+  const static ZilchShaderIRBaseType::Enum mStaticBaseType = ZilchShaderIRBaseType::Extension;
+  ZilchShaderExtensionImport(SpirVExtensionLibrary* library) : IZilchShaderIR(mStaticBaseType)
   {
     mLibrary = library;
   }
@@ -122,8 +111,7 @@ public:
 class ZilchShaderIROp : public IZilchShaderIR
 {
 public:
-  const static ZilchShaderIRBaseType::Enum mStaticBaseType =
-      ZilchShaderIRBaseType::Op;
+  const static ZilchShaderIRBaseType::Enum mStaticBaseType = ZilchShaderIRBaseType::Op;
 
   ZilchShaderIROp(OpType opType);
 
@@ -145,8 +133,7 @@ public:
 class BasicBlock : public IZilchShaderIR
 {
 public:
-  const static ZilchShaderIRBaseType::Enum mStaticBaseType =
-      ZilchShaderIRBaseType::Block;
+  const static ZilchShaderIRBaseType::Enum mStaticBaseType = ZilchShaderIRBaseType::Block;
 
   BasicBlock();
   ~BasicBlock();
@@ -205,16 +192,14 @@ public:
   /// reference with another during back-end generation. This is needed in
   /// particular for the Geometry shader stage's Append function which needs to
   /// be unique to each composite (due to pass-through).
-  OrderedHashMap<ZilchShaderIRFunction*, ZilchShaderIRFunction*>
-      mLateBoundFunctions;
+  OrderedHashMap<ZilchShaderIRFunction*, ZilchShaderIRFunction*> mLateBoundFunctions;
 };
 
 /// Represents a function type for spir-v.
 class ZilchShaderIRFunction : public IZilchShaderIR
 {
 public:
-  const static ZilchShaderIRBaseType::Enum mStaticBaseType =
-      ZilchShaderIRBaseType::Function;
+  const static ZilchShaderIRBaseType::Enum mStaticBaseType = ZilchShaderIRBaseType::Function;
 
   ZilchShaderIRFunction();
   ~ZilchShaderIRFunction();
@@ -241,8 +226,7 @@ public:
 class ZilchShaderIRType : public IZilchShaderIR
 {
 public:
-  const static ZilchShaderIRBaseType::Enum mStaticBaseType =
-      ZilchShaderIRBaseType::DataType;
+  const static ZilchShaderIRBaseType::Enum mStaticBaseType = ZilchShaderIRBaseType::DataType;
 
   ZilchShaderIRType();
   ~ZilchShaderIRType();
@@ -344,8 +328,7 @@ TemplateTypeKey GenerateTemplateTypeKey(Zilch::BoundType* zilchType);
 String GenerateSpirVPropertyName(StringParam fieldName, StringParam ownerType);
 /// Given a field name (after any extra mangling) and the owning class type,
 /// generate the property name used to uniquely identify the field.
-String GenerateSpirVPropertyName(StringParam fieldName,
-                                 ZilchShaderIRType* ownerType);
+String GenerateSpirVPropertyName(StringParam fieldName, ZilchShaderIRType* ownerType);
 
 /// Get all spirv opocode string names. The returned strings don't contain
 /// the leading "Op" that the disassembler generates.

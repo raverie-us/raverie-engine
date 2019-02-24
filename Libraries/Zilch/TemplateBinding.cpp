@@ -10,8 +10,7 @@ void ParameterNameTokenizing(ErrorEvent* e)
   Error("Error parsing parameter names: %s", e->ExactError.c_str());
 }
 
-void TemplateBinding::ParseParameterArrays(ParameterArray& parameters,
-                                           StringRange commaDelimitedNames)
+void TemplateBinding::ParseParameterArrays(ParameterArray& parameters, StringRange commaDelimitedNames)
 {
   // We return immediately if the string is empty because this function
   // gets generically called even when no arguments are supplied

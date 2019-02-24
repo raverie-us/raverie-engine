@@ -19,9 +19,7 @@ void SetTimerFrequency(uint ms)
 }
 #endif
 
-const char* GetEnvironmentList(const char* defaultValue,
-                               const char* names[],
-                               size_t length)
+const char* GetEnvironmentList(const char* defaultValue, const char* names[], size_t length)
 {
   for (size_t i = 0; i < length; ++i)
   {
@@ -39,8 +37,7 @@ const char* GetEnvironmentList(const char* defaultValue,
 String UserName()
 {
   // There is no portable way to get the user name
-  const char* names[] = {
-      "USER", "USERNAME", "LOGNAME", "COMPUTERNAME", "HOSTNAME"};
+  const char* names[] = {"USER", "USERNAME", "LOGNAME", "COMPUTERNAME", "HOSTNAME"};
   return GetEnvironmentList("User", names, SDL_arraysize(names));
 }
 #endif
@@ -49,8 +46,7 @@ String UserName()
 String ComputerName()
 {
   // There is no portable way to get the computer/host name
-  const char* names[] = {
-      "COMPUTERNAME", "HOSTNAME", "USER", "USERNAME", "LOGNAME"};
+  const char* names[] = {"COMPUTERNAME", "HOSTNAME", "USER", "USERNAME", "LOGNAME"};
   return GetEnvironmentList("Computer", names, SDL_arraysize(names));
 }
 #endif
@@ -101,8 +97,7 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
   String expression = errorData.Expression;
 
   // Check if no message was provided
-  const char* errorMessage =
-      errorData.Message ? errorData.Message : "No message";
+  const char* errorMessage = errorData.Message ? errorData.Message : "No message";
 
   String message = BuildString(errorMessage, "\n");
 
@@ -117,22 +112,13 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
 
   const SDL_MessageBoxButtonData buttons[] = {
       {0, ReturnCode::Continue, "Continue"},
-      {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT,
-       ReturnCode::DebugBreak,
-       "DebugBreak"},
-      {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT,
-       ReturnCode::Terminate,
-       "Terminate"},
+      {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, ReturnCode::DebugBreak, "DebugBreak"},
+      {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, ReturnCode::Terminate, "Terminate"},
       {0, ReturnCode::Ignore, "Ignore"},
   };
 
-  SDL_MessageBoxData data = {SDL_MESSAGEBOX_INFORMATION,
-                             nullptr,
-                             "Error",
-                             message.c_str(),
-                             SDL_arraysize(buttons),
-                             buttons,
-                             nullptr};
+  SDL_MessageBoxData data = {
+      SDL_MESSAGEBOX_INFORMATION, nullptr, "Error", message.c_str(), SDL_arraysize(buttons), buttons, nullptr};
 
   int buttonId = -1;
   SDL_ShowMessageBox(&data, &buttonId);
@@ -177,11 +163,7 @@ void WebRequest(Status& status,
 #endif
 
 #if !defined(ZeroPlatformNoSystemOpenFile)
-bool SystemOpenFile(Status& status,
-                    cstr file,
-                    uint verb,
-                    cstr parameters,
-                    cstr workingDirectory)
+bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
   // Unfortunately we have no portable way of using the working directory.
   String commandLine = String::Format("\"%s\" %s", file, parameters);
@@ -191,11 +173,7 @@ bool SystemOpenFile(Status& status,
 #endif
 
 #if !defined(ZeroPlatformNoSystemOpenNetworkFile)
-bool SystemOpenNetworkFile(Status& status,
-                           cstr file,
-                           uint verb,
-                           cstr parameters,
-                           cstr workingDirectory)
+bool SystemOpenNetworkFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
   return SystemOpenFile(status, file, verb, parameters, workingDirectory);
 }
@@ -220,11 +198,7 @@ String GetVersionString()
 {
   SDL_version version;
   SDL_GetVersion(&version);
-  return String::Format("%s SDL %d.%d.%d",
-                        SDL_GetPlatform(),
-                        version.major,
-                        version.minor,
-                        version.patch);
+  return String::Format("%s SDL %d.%d.%d", SDL_GetPlatform(), version.major, version.minor, version.patch);
 }
 
 } // namespace Os

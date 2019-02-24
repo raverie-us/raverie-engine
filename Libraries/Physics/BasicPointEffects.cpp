@@ -13,12 +13,9 @@ ZilchDefineType(BasicPointEffect, builder, type)
   ZilchBindGetterSetterProperty(MaxDistance)->ZeroSerialize(real(5));
   ZilchBindGetterSetterProperty(StrengthAtMin)->ZeroSerialize(real(1));
   ZilchBindGetterSetterProperty(StrengthAtMax)->ZeroSerialize(real(5));
-  ZilchBindGetterSetterProperty(LocalPositionOffset)
-      ->ZeroSerialize(Vec3::cZero);
-  ZilchBindGetterSetterProperty(InterpolationType)
-      ->ZeroSerialize(PhysicsEffectInterpolationType::Linear);
-  ZilchBindGetterSetterProperty(EndCondition)
-      ->ZeroSerialize(PhysicsEffectEndCondition::ClampToMax);
+  ZilchBindGetterSetterProperty(LocalPositionOffset)->ZeroSerialize(Vec3::cZero);
+  ZilchBindGetterSetterProperty(InterpolationType)->ZeroSerialize(PhysicsEffectInterpolationType::Linear);
+  ZilchBindGetterSetterProperty(EndCondition)->ZeroSerialize(PhysicsEffectEndCondition::ClampToMax);
 }
 
 BasicPointEffect::BasicPointEffect()
@@ -85,12 +82,8 @@ void BasicPointEffect::DebugDraw()
 
       Vec3 minPos = mWorldPoint + dir * minDistance;
       Vec3 maxPos = mWorldPoint + dir * maxDistance;
-      gDebugDraw->Add(Debug::Line(minPos, minPos + dir * minForce)
-                          .HeadSize(0.1f)
-                          .Color(Color::Red));
-      gDebugDraw->Add(Debug::Line(maxPos, maxPos + dir * maxForce)
-                          .HeadSize(0.1f)
-                          .Color(Color::Green));
+      gDebugDraw->Add(Debug::Line(minPos, minPos + dir * minForce).HeadSize(0.1f).Color(Color::Red));
+      gDebugDraw->Add(Debug::Line(maxPos, maxPos + dir * maxForce).HeadSize(0.1f).Color(Color::Green));
     }
   }
 }
@@ -262,12 +255,10 @@ PhysicsEffectEndCondition::Enum BasicPointEffect::GetEndCondition()
   return state;
 }
 
-void BasicPointEffect::SetEndCondition(
-    PhysicsEffectEndCondition::Enum condition)
+void BasicPointEffect::SetEndCondition(PhysicsEffectEndCondition::Enum condition)
 {
   // Convert the enum representation of our end condition to the bitfield
-  mPointFlags.ClearFlag(PointFlags::ContinueFalloff | PointFlags::NoEffect |
-                        PointFlags::ClampToMax);
+  mPointFlags.ClearFlag(PointFlags::ContinueFalloff | PointFlags::NoEffect | PointFlags::ClampToMax);
   if (condition == PhysicsEffectEndCondition::NoEffect)
     mPointFlags.SetFlag(PointFlags::NoEffect);
   else if (condition == PhysicsEffectEndCondition::ContinueFalloff)
@@ -281,8 +272,7 @@ void BasicPointEffect::SetEndCondition(
 PhysicsEffectInterpolationType::Enum BasicPointEffect::GetInterpolationType()
 {
   // Convert the bitfield representation of our interpolation to the enum value
-  PhysicsEffectInterpolationType::Enum state =
-      PhysicsEffectInterpolationType::Linear;
+  PhysicsEffectInterpolationType::Enum state = PhysicsEffectInterpolationType::Linear;
   if (mPointFlags.IsSet(PointFlags::LinearInterpolation))
     state = PhysicsEffectInterpolationType::Linear;
   else if (mPointFlags.IsSet(PointFlags::QuadraticInterpolation))
@@ -290,8 +280,7 @@ PhysicsEffectInterpolationType::Enum BasicPointEffect::GetInterpolationType()
   return state;
 }
 
-void BasicPointEffect::SetInterpolationType(
-    PhysicsEffectInterpolationType::Enum type)
+void BasicPointEffect::SetInterpolationType(PhysicsEffectInterpolationType::Enum type)
 {
   // Convert the enum representation of our interpolation to the bitfield
   mPointFlags.ClearFlag(PointFlags::LinearInterpolation);

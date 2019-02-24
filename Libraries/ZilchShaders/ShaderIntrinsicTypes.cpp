@@ -14,22 +14,15 @@ Zilch::Function* AddFunction(Zilch::LibraryBuilder& builder,
                              StringParam fnName,
                              ParameterArray& params)
 {
-  Zilch::Function* zilchFn =
-      builder.AddBoundFunction(owner,
-                               fnName,
-                               UnTranslatedBoundFunction,
-                               params,
-                               returnType,
-                               Zilch::FunctionOptions::Static);
+  Zilch::Function* zilchFn = builder.AddBoundFunction(
+      owner, fnName, UnTranslatedBoundFunction, params, returnType, Zilch::FunctionOptions::Static);
   zilchFn->UserData = (void*)&ResolveSimpleFunction<opType>;
   return zilchFn;
 }
 
 template <OpType opType>
-Zilch::Function* AddFunction(Zilch::LibraryBuilder& builder,
-                             Zilch::BoundType* owner,
-                             Zilch::BoundType* returnType,
-                             StringParam fnName)
+Zilch::Function*
+AddFunction(Zilch::LibraryBuilder& builder, Zilch::BoundType* owner, Zilch::BoundType* returnType, StringParam fnName)
 {
   ParameterArray params;
   return AddFunction<opType>(builder, owner, returnType, fnName, params);
@@ -57,8 +50,7 @@ Zilch::Function* AddFunction(Zilch::LibraryBuilder& builder,
                              StringParam fnName,
                              Zilch::BoundType* param0Type)
 {
-  return AddFunction<opType>(
-      builder, owner, returnType, fnName, param0Type, String());
+  return AddFunction<opType>(builder, owner, returnType, fnName, param0Type, String());
 }
 
 template <OpType opType>
@@ -90,14 +82,7 @@ Zilch::Function* AddFunction(Zilch::LibraryBuilder& builder,
                              Zilch::BoundType* param0Type,
                              Zilch::BoundType* param1Type)
 {
-  return AddFunction<opType>(builder,
-                             owner,
-                             returnType,
-                             fnName,
-                             param0Type,
-                             String(),
-                             param1Type,
-                             String());
+  return AddFunction<opType>(builder, owner, returnType, fnName, param0Type, String(), param1Type, String());
 }
 
 template <OpType opType>
@@ -135,16 +120,8 @@ Zilch::Function* AddFunction(Zilch::LibraryBuilder& builder,
                              Zilch::BoundType* param1Type,
                              Zilch::BoundType* param2Type)
 {
-  return AddFunction<opType>(builder,
-                             owner,
-                             returnType,
-                             fnName,
-                             param0Type,
-                             String(),
-                             param1Type,
-                             String(),
-                             param2Type,
-                             String());
+  return AddFunction<opType>(
+      builder, owner, returnType, fnName, param0Type, String(), param1Type, String(), param2Type, String());
 }
 
 template <OpType opType>
@@ -203,9 +180,7 @@ Zilch::Function* AddFunction(Zilch::LibraryBuilder& builder,
                              String());
 }
 
-void AddMathOps(Zilch::LibraryBuilder& builder,
-                Zilch::BoundType* type,
-                TypeGroups& types)
+void AddMathOps(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, TypeGroups& types)
 {
   Zilch::BoundType* voidType = ZilchTypeId(void);
   Zilch::BoundType* boolType = types.mBooleanVectorTypes[0]->mZilchType;
@@ -218,8 +193,7 @@ void AddMathOps(Zilch::LibraryBuilder& builder,
     Zilch::BoundType* vectorBoolType = zilchType;
 
     // Unary
-    AddFunction<OpType::OpLogicalNot>(
-        builder, type, zilchType, "LogicalNot", zilchType);
+    AddFunction<OpType::OpLogicalNot>(builder, type, zilchType, "LogicalNot", zilchType);
     // Any/all only exists on vector types
     if (i != 0)
     {
@@ -228,25 +202,13 @@ void AddMathOps(Zilch::LibraryBuilder& builder,
     }
 
     // Binary
-    AddFunction<OpType::OpLogicalEqual>(
-        builder, type, zilchType, "LogicalEqual", zilchType, zilchType);
-    AddFunction<OpType::OpLogicalNotEqual>(
-        builder, type, zilchType, "LogicalNotEqual", zilchType, zilchType);
-    AddFunction<OpType::OpLogicalOr>(
-        builder, type, zilchType, "LogicalOr", zilchType, zilchType);
-    AddFunction<OpType::OpLogicalAnd>(
-        builder, type, zilchType, "LogicalAnd", zilchType, zilchType);
+    AddFunction<OpType::OpLogicalEqual>(builder, type, zilchType, "LogicalEqual", zilchType, zilchType);
+    AddFunction<OpType::OpLogicalNotEqual>(builder, type, zilchType, "LogicalNotEqual", zilchType, zilchType);
+    AddFunction<OpType::OpLogicalOr>(builder, type, zilchType, "LogicalOr", zilchType, zilchType);
+    AddFunction<OpType::OpLogicalAnd>(builder, type, zilchType, "LogicalAnd", zilchType, zilchType);
 
-    AddFunction<OpType::OpSelect>(builder,
-                                  type,
-                                  zilchType,
-                                  "Select",
-                                  vectorBoolType,
-                                  "condition",
-                                  zilchType,
-                                  "obj1",
-                                  zilchType,
-                                  "obj2");
+    AddFunction<OpType::OpSelect>(
+        builder, type, zilchType, "Select", vectorBoolType, "condition", zilchType, "obj1", zilchType, "obj2");
   }
 
   for (size_t i = 0; i < types.mIntegerVectorTypes.Size(); ++i)
@@ -255,86 +217,35 @@ void AddMathOps(Zilch::LibraryBuilder& builder,
     Zilch::BoundType* vectorBoolType = types.mBooleanVectorTypes[i]->mZilchType;
 
     // Unary
-    AddFunction<OpType::OpBitReverse>(
-        builder, type, zilchType, "BitReverse", zilchType);
-    AddFunction<OpType::OpBitCount>(
-        builder, type, zilchType, "BitCount", zilchType);
+    AddFunction<OpType::OpBitReverse>(builder, type, zilchType, "BitReverse", zilchType);
+    AddFunction<OpType::OpBitCount>(builder, type, zilchType, "BitCount", zilchType);
     AddFunction<OpType::OpNot>(builder, type, zilchType, "Not", zilchType);
 
     // Binary
-    AddFunction<OpType::OpShiftRightLogical>(builder,
-                                             type,
-                                             zilchType,
-                                             "ShiftRightLogical",
-                                             zilchType,
-                                             "base",
-                                             zilchType,
-                                             "shift");
-    AddFunction<OpType::OpShiftRightArithmetic>(builder,
-                                                type,
-                                                zilchType,
-                                                "ShiftRightArithmetic",
-                                                zilchType,
-                                                "base",
-                                                zilchType,
-                                                "shift");
-    AddFunction<OpType::OpShiftLeftLogical>(builder,
-                                            type,
-                                            zilchType,
-                                            "ShiftLeftLogical",
-                                            zilchType,
-                                            "base",
-                                            zilchType,
-                                            "shift");
-    AddFunction<OpType::OpBitwiseOr>(
-        builder, type, zilchType, "BitwiseOr", zilchType, zilchType);
-    AddFunction<OpType::OpBitwiseXor>(
-        builder, type, zilchType, "BitwiseXor", zilchType, zilchType);
-    AddFunction<OpType::OpBitwiseAnd>(
-        builder, type, zilchType, "BitwiseAnd", zilchType, zilchType);
-    AddFunction<OpType::OpIEqual>(
-        builder, type, vectorBoolType, "Equal", zilchType, zilchType);
-    AddFunction<OpType::OpINotEqual>(
-        builder, type, vectorBoolType, "NotEqual", zilchType, zilchType);
-    AddFunction<OpType::OpSGreaterThan>(
-        builder, type, vectorBoolType, "GreaterThan", zilchType, zilchType);
-    AddFunction<OpType::OpSGreaterThanEqual>(builder,
-                                             type,
-                                             vectorBoolType,
-                                             "GreaterThanEqual",
-                                             zilchType,
-                                             zilchType);
-    AddFunction<OpType::OpSLessThan>(
-        builder, type, vectorBoolType, "LessThan", zilchType, zilchType);
-    AddFunction<OpType::OpSLessThanEqual>(
-        builder, type, vectorBoolType, "LessThanEqual", zilchType, zilchType);
+    AddFunction<OpType::OpShiftRightLogical>(
+        builder, type, zilchType, "ShiftRightLogical", zilchType, "base", zilchType, "shift");
+    AddFunction<OpType::OpShiftRightArithmetic>(
+        builder, type, zilchType, "ShiftRightArithmetic", zilchType, "base", zilchType, "shift");
+    AddFunction<OpType::OpShiftLeftLogical>(
+        builder, type, zilchType, "ShiftLeftLogical", zilchType, "base", zilchType, "shift");
+    AddFunction<OpType::OpBitwiseOr>(builder, type, zilchType, "BitwiseOr", zilchType, zilchType);
+    AddFunction<OpType::OpBitwiseXor>(builder, type, zilchType, "BitwiseXor", zilchType, zilchType);
+    AddFunction<OpType::OpBitwiseAnd>(builder, type, zilchType, "BitwiseAnd", zilchType, zilchType);
+    AddFunction<OpType::OpIEqual>(builder, type, vectorBoolType, "Equal", zilchType, zilchType);
+    AddFunction<OpType::OpINotEqual>(builder, type, vectorBoolType, "NotEqual", zilchType, zilchType);
+    AddFunction<OpType::OpSGreaterThan>(builder, type, vectorBoolType, "GreaterThan", zilchType, zilchType);
+    AddFunction<OpType::OpSGreaterThanEqual>(builder, type, vectorBoolType, "GreaterThanEqual", zilchType, zilchType);
+    AddFunction<OpType::OpSLessThan>(builder, type, vectorBoolType, "LessThan", zilchType, zilchType);
+    AddFunction<OpType::OpSLessThanEqual>(builder, type, vectorBoolType, "LessThanEqual", zilchType, zilchType);
 
-    AddFunction<OpType::OpSRem>(
-        builder, type, zilchType, "Remainder", zilchType, zilchType);
-    AddFunction<OpType::OpSMod>(
-        builder, type, zilchType, "Mod", zilchType, zilchType);
+    AddFunction<OpType::OpSRem>(builder, type, zilchType, "Remainder", zilchType, zilchType);
+    AddFunction<OpType::OpSMod>(builder, type, zilchType, "Mod", zilchType, zilchType);
 
     // Tri
-    AddFunction<OpType::OpSelect>(builder,
-                                  type,
-                                  zilchType,
-                                  "Select",
-                                  vectorBoolType,
-                                  "condition",
-                                  zilchType,
-                                  "obj1",
-                                  zilchType,
-                                  "obj2");
-    AddFunction<OpType::OpBitFieldSExtract>(builder,
-                                            type,
-                                            zilchType,
-                                            "BitFieldExtract",
-                                            zilchType,
-                                            "base",
-                                            intType,
-                                            "offset",
-                                            intType,
-                                            "count");
+    AddFunction<OpType::OpSelect>(
+        builder, type, zilchType, "Select", vectorBoolType, "condition", zilchType, "obj1", zilchType, "obj2");
+    AddFunction<OpType::OpBitFieldSExtract>(
+        builder, type, zilchType, "BitFieldExtract", zilchType, "base", intType, "offset", intType, "count");
 
     // Quad
     AddFunction<OpType::OpBitFieldInsert>(builder,
@@ -363,96 +274,43 @@ void AddMathOps(Zilch::LibraryBuilder& builder,
         ->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
     AddFunction<OpType::OpFwidth>(builder, type, zilchType, "FWidth", zilchType)
         ->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
-    AddFunction<OpType::OpIsNan>(
-        builder, type, vectorBoolType, "IsNan", zilchType);
-    AddFunction<OpType::OpIsInf>(
-        builder, type, vectorBoolType, "IsInf", zilchType);
+    AddFunction<OpType::OpIsNan>(builder, type, vectorBoolType, "IsNan", zilchType);
+    AddFunction<OpType::OpIsInf>(builder, type, vectorBoolType, "IsInf", zilchType);
 
     // Binary
-    AddFunction<OpType::OpFRem>(
-        builder, type, zilchType, "Remainder", zilchType, zilchType);
-    AddFunction<OpType::OpFMod>(
-        builder, type, zilchType, "Mod", zilchType, zilchType);
+    AddFunction<OpType::OpFRem>(builder, type, zilchType, "Remainder", zilchType, zilchType);
+    AddFunction<OpType::OpFMod>(builder, type, zilchType, "Mod", zilchType, zilchType);
 
-    AddFunction<OpType::OpFOrdEqual>(
-        builder, type, vectorBoolType, "OrderedEqual", zilchType, zilchType);
-    AddFunction<OpType::OpFOrdNotEqual>(
-        builder, type, vectorBoolType, "OrderedNotEqual", zilchType, zilchType);
-    AddFunction<OpType::OpFOrdLessThan>(
-        builder, type, vectorBoolType, "OrderedLessThan", zilchType, zilchType);
-    AddFunction<OpType::OpFOrdLessThanEqual>(builder,
-                                             type,
-                                             vectorBoolType,
-                                             "OrderedLessThanEqual",
-                                             zilchType,
-                                             zilchType);
-    AddFunction<OpType::OpFOrdGreaterThan>(builder,
-                                           type,
-                                           vectorBoolType,
-                                           "OrderedGreaterThan",
-                                           zilchType,
-                                           zilchType);
-    AddFunction<OpType::OpFOrdGreaterThanEqual>(builder,
-                                                type,
-                                                vectorBoolType,
-                                                "OrderedGreaterThanEqual",
-                                                zilchType,
-                                                zilchType);
+    AddFunction<OpType::OpFOrdEqual>(builder, type, vectorBoolType, "OrderedEqual", zilchType, zilchType);
+    AddFunction<OpType::OpFOrdNotEqual>(builder, type, vectorBoolType, "OrderedNotEqual", zilchType, zilchType);
+    AddFunction<OpType::OpFOrdLessThan>(builder, type, vectorBoolType, "OrderedLessThan", zilchType, zilchType);
+    AddFunction<OpType::OpFOrdLessThanEqual>(
+        builder, type, vectorBoolType, "OrderedLessThanEqual", zilchType, zilchType);
+    AddFunction<OpType::OpFOrdGreaterThan>(builder, type, vectorBoolType, "OrderedGreaterThan", zilchType, zilchType);
+    AddFunction<OpType::OpFOrdGreaterThanEqual>(
+        builder, type, vectorBoolType, "OrderedGreaterThanEqual", zilchType, zilchType);
 
     // Any/all only exists on vector types
     if (i != 0)
     {
-      AddFunction<OpType::OpDot>(
-          builder, type, realType, "Dot", zilchType, zilchType);
-      AddFunction<OpType::OpVectorTimesScalar>(
-          builder, type, zilchType, "VectorTimesScalar", zilchType, realType);
+      AddFunction<OpType::OpDot>(builder, type, realType, "Dot", zilchType, zilchType);
+      AddFunction<OpType::OpVectorTimesScalar>(builder, type, zilchType, "VectorTimesScalar", zilchType, realType);
     }
 
     // Not implemented in glsl
-    AddFunction<OpType::OpFUnordEqual>(
-        builder, type, vectorBoolType, "UnorderedEqual", zilchType, zilchType);
-    AddFunction<OpType::OpFUnordNotEqual>(builder,
-                                          type,
-                                          vectorBoolType,
-                                          "UnorderedNotEqual",
-                                          zilchType,
-                                          zilchType);
-    AddFunction<OpType::OpFUnordLessThan>(builder,
-                                          type,
-                                          vectorBoolType,
-                                          "UnorderedLessThan",
-                                          zilchType,
-                                          zilchType);
-    AddFunction<OpType::OpFUnordLessThanEqual>(builder,
-                                               type,
-                                               vectorBoolType,
-                                               "UnorderedLessThanEqual",
-                                               zilchType,
-                                               zilchType);
-    AddFunction<OpType::OpFUnordGreaterThan>(builder,
-                                             type,
-                                             vectorBoolType,
-                                             "UnorderedGreaterThan",
-                                             zilchType,
-                                             zilchType);
-    AddFunction<OpType::OpFUnordGreaterThanEqual>(builder,
-                                                  type,
-                                                  vectorBoolType,
-                                                  "UnorderedGreaterThanEqual",
-                                                  zilchType,
-                                                  zilchType);
+    AddFunction<OpType::OpFUnordEqual>(builder, type, vectorBoolType, "UnorderedEqual", zilchType, zilchType);
+    AddFunction<OpType::OpFUnordNotEqual>(builder, type, vectorBoolType, "UnorderedNotEqual", zilchType, zilchType);
+    AddFunction<OpType::OpFUnordLessThan>(builder, type, vectorBoolType, "UnorderedLessThan", zilchType, zilchType);
+    AddFunction<OpType::OpFUnordLessThanEqual>(
+        builder, type, vectorBoolType, "UnorderedLessThanEqual", zilchType, zilchType);
+    AddFunction<OpType::OpFUnordGreaterThan>(
+        builder, type, vectorBoolType, "UnorderedGreaterThan", zilchType, zilchType);
+    AddFunction<OpType::OpFUnordGreaterThanEqual>(
+        builder, type, vectorBoolType, "UnorderedGreaterThanEqual", zilchType, zilchType);
 
     // Trinary
-    AddFunction<OpType::OpSelect>(builder,
-                                  type,
-                                  zilchType,
-                                  "Select",
-                                  vectorBoolType,
-                                  "condition",
-                                  zilchType,
-                                  "obj1",
-                                  zilchType,
-                                  "obj2");
+    AddFunction<OpType::OpSelect>(
+        builder, type, zilchType, "Select", vectorBoolType, "condition", zilchType, "obj1", zilchType, "obj2");
   }
 
   for (size_t y = 2; y <= 4; ++y)
@@ -463,12 +321,10 @@ void AddMathOps(Zilch::LibraryBuilder& builder,
       Zilch::BoundType* zilchType = shaderType->mZilchType;
 
       // Unary
-      AddFunction<OpType::OpTranspose>(
-          builder, type, zilchType, "Transpose", zilchType);
+      AddFunction<OpType::OpTranspose>(builder, type, zilchType, "Transpose", zilchType);
 
       // Binary
-      AddFunction<OpType::OpMatrixTimesScalar>(
-          builder, type, zilchType, "MatrixTimesScalar", zilchType, realType);
+      AddFunction<OpType::OpMatrixTimesScalar>(builder, type, zilchType, "MatrixTimesScalar", zilchType, realType);
 
       // Ignore for now (have to figure out row/column order stuff)
       // AddFunction<OpType::OpMatrixTimesMatrix>(builder, type, zilchType,
@@ -483,15 +339,11 @@ void AddMathOps(Zilch::LibraryBuilder& builder,
     Zilch::BoundType* zilchIntType = types.mIntegerVectorTypes[i]->mZilchType;
     Zilch::BoundType* zilchBoolType = types.mBooleanVectorTypes[i]->mZilchType;
 
-    AddFunction<OpType::OpConvertFToS>(
-        builder, type, zilchIntType, "ConvertFToS", zilchRealType);
-    AddFunction<OpType::OpConvertSToF>(
-        builder, type, zilchRealType, "ConvertSToF", zilchIntType);
+    AddFunction<OpType::OpConvertFToS>(builder, type, zilchIntType, "ConvertFToS", zilchRealType);
+    AddFunction<OpType::OpConvertSToF>(builder, type, zilchRealType, "ConvertSToF", zilchIntType);
 
-    AddFunction<OpType::OpBitcast>(
-        builder, type, zilchRealType, "BitCastToReal", zilchIntType);
-    AddFunction<OpType::OpBitcast>(
-        builder, type, zilchIntType, "BitCastToInteger", zilchRealType);
+    AddFunction<OpType::OpBitcast>(builder, type, zilchRealType, "BitCastToReal", zilchIntType);
+    AddFunction<OpType::OpBitcast>(builder, type, zilchIntType, "BitCastToInteger", zilchRealType);
   }
 }
 
@@ -509,28 +361,17 @@ ZilchDefineType(ShaderIntrinsics, builder, type)
       ->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 
   AddMathOps(builder, type, types);
-  AddGlslExtensionIntrinsicOps(
-      builder, shaderCore.mGlsl450ExtensionsLibrary, type, types);
+  AddGlslExtensionIntrinsicOps(builder, shaderCore.mGlsl450ExtensionsLibrary, type, types);
   AddImageFunctions(builder, type, types);
 
   Zilch::ParameterArray parameters = OneParameter(intType, "language");
-  Zilch::Function* isLanguageFn =
-      builder.AddBoundFunction(type,
-                               "IsLanguage",
-                               Zero::DummyBoundFunction,
-                               parameters,
-                               boolType,
-                               Zilch::FunctionOptions::Static);
+  Zilch::Function* isLanguageFn = builder.AddBoundFunction(
+      type, "IsLanguage", Zero::DummyBoundFunction, parameters, boolType, Zilch::FunctionOptions::Static);
   isLanguageFn->UserData = (void*)&ResolveIsLanguage;
 
-  parameters = ThreeParameters(
-      intType, "language", intType, "minVersion", intType, "maxVersion");
-  isLanguageFn = builder.AddBoundFunction(type,
-                                          "IsLanguage",
-                                          Zero::DummyBoundFunction,
-                                          parameters,
-                                          boolType,
-                                          Zilch::FunctionOptions::Static);
+  parameters = ThreeParameters(intType, "language", intType, "minVersion", intType, "maxVersion");
+  isLanguageFn = builder.AddBoundFunction(
+      type, "IsLanguage", Zero::DummyBoundFunction, parameters, boolType, Zilch::FunctionOptions::Static);
   isLanguageFn->UserData = (void*)&ResolveIsLanguageMinMaxVersion;
 }
 

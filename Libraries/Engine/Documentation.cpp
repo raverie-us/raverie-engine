@@ -24,10 +24,7 @@ String ReplaceTypeIfTemplated(StringParam typeString)
     {
       return String();
     }
-    return BuildString(
-        typeString.SubString(typeString.Begin(),
-                             typeString.FindFirstOf("[").Begin()),
-        "[T]");
+    return BuildString(typeString.SubString(typeString.Begin(), typeString.FindFirstOf("[").Begin()), "[T]");
   }
   else if (typeString == "any")
   {
@@ -39,8 +36,7 @@ String ReplaceTypeIfTemplated(StringParam typeString)
   }
 }
 
-MethodDoc* MethodDocWithSameParams(Array<MethodDoc*>& methodList,
-                                   Zilch::Function* function)
+MethodDoc* MethodDocWithSameParams(Array<MethodDoc*>& methodList, Zilch::Function* function)
 {
   uint matchIndex = (uint)-1;
 
@@ -60,8 +56,7 @@ MethodDoc* MethodDocWithSameParams(Array<MethodDoc*>& methodList,
     bool match = true;
     for (uint j = 0; j < posMatchMeth->mParameterList.Size(); ++j)
     {
-      if (posMatchMeth->mParameterList[j]->mType !=
-          delegateType->Parameters[j].ParameterType->ToString())
+      if (posMatchMeth->mParameterList[j]->mType != delegateType->Parameters[j].ParameterType->ToString())
       {
         match = false;
         break;
@@ -102,8 +97,7 @@ bool TrimCompareFn(const MethodDoc* lhs, const MethodDoc* rhs)
     return nameComparison < 0;
   }
 
-  uint iterLimit =
-      Math::Min(lhs->mParameterList.Size(), rhs->mParameterList.Size());
+  uint iterLimit = Math::Min(lhs->mParameterList.Size(), rhs->mParameterList.Size());
 
   // if the names are the same, sort by parameter type
   for (uint i = 0; i < iterLimit; ++i)
@@ -177,8 +171,7 @@ String ReplaceTypeIfOnList(String& type, TypeReplacementMap* replacements)
     if (type == replacementPair->second)
       return returnString;
 
-    returnString =
-        returnString.Replace(replacementPair->first, replacementPair->second);
+    returnString = returnString.Replace(replacementPair->first, replacementPair->second);
   }
 
   return returnString;
@@ -313,9 +306,7 @@ struct Zero::Serialization::Trait<EventDoc>
   }
 };
 
-EventDoc::EventDoc(StringParam eventType, StringParam eventName) :
-    mType(eventType),
-    mName(eventName)
+EventDoc::EventDoc(StringParam eventType, StringParam eventName) : mType(eventType), mName(eventName)
 {
 }
 void EventDoc::Serialize(Serializer& stream)
@@ -437,11 +428,11 @@ struct Zero::Serialization::Trait<MethodDoc>
 
 MethodDoc::~MethodDoc()
 {
-  forRange(ParameterDoc * param, mParameterList.All())
+  forRange (ParameterDoc* param, mParameterList.All())
   {
     delete param;
   }
-  forRange(ExceptionDoc * except, mPossibleExceptionThrows.All())
+  forRange (ExceptionDoc* except, mPossibleExceptionThrows.All())
   {
     delete except;
   }
@@ -473,15 +464,15 @@ void AttributeDoc::Serialize(Serializer& stream)
 // AttributeDocList
 Zero::AttributeDocList::~AttributeDocList()
 {
-  forRange(AttributeDoc * attribToDelete, mObjectAttributes.All())
+  forRange (AttributeDoc* attribToDelete, mObjectAttributes.All())
   {
     delete attribToDelete;
   }
-  forRange(AttributeDoc * attribToDelete, mFunctionAttributes.All())
+  forRange (AttributeDoc* attribToDelete, mFunctionAttributes.All())
   {
     delete attribToDelete;
   }
-  forRange(AttributeDoc * attribToDelete, mPropertyAttributes.All())
+  forRange (AttributeDoc* attribToDelete, mPropertyAttributes.All())
   {
     delete attribToDelete;
   }
@@ -523,15 +514,15 @@ bool AttributeDocList::SaveToFile(StringParam fileName)
 
 void AttributeDocList::CreateAttributeMap(void)
 {
-  forRange(AttributeDoc * attrib, mObjectAttributes.All())
+  forRange (AttributeDoc* attrib, mObjectAttributes.All())
   {
     mObjectAttributesMap[attrib->mName] = attrib;
   }
-  forRange(AttributeDoc * attrib, mFunctionAttributes.All())
+  forRange (AttributeDoc* attrib, mFunctionAttributes.All())
   {
     mFunctionAttributesMap[attrib->mName] = attrib;
   }
-  forRange(AttributeDoc * attrib, mPropertyAttributes.All())
+  forRange (AttributeDoc* attrib, mPropertyAttributes.All())
   {
     mPropertyAttributesMap[attrib->mName] = attrib;
   }
@@ -570,10 +561,7 @@ struct Zero::Serialization::Trait<ClassDoc>
   }
 };
 
-ClassDoc::ClassDoc() :
-    mBaseClassPtr(nullptr),
-    mImportDocumentation(true),
-    mDevOnly(false)
+ClassDoc::ClassDoc() : mBaseClassPtr(nullptr), mImportDocumentation(true), mDevOnly(false)
 {
 }
 
@@ -650,7 +638,7 @@ void ClassDoc::FillDocumentation(BoundType* classType)
   classType->Description = mDescription;
 
   // Properties
-  forRange(Property * metaProperty, classType->GetProperties())
+  forRange (Property* metaProperty, classType->GetProperties())
   {
     if (PropertyDoc* propertyDoc = GetPropertyDoc(metaProperty->Name))
       metaProperty->Description = propertyDoc->mDescription;
@@ -659,7 +647,7 @@ void ClassDoc::FillDocumentation(BoundType* classType)
   // METAREFACTOR Handle looking up overloads
 
   // Methods
-  forRange(Function * function, classType->GetFunctions())
+  forRange (Function* function, classType->GetFunctions())
   {
     if (MethodDoc* methodDoc = GetMethodDoc(function))
     {
@@ -681,15 +669,14 @@ PropertyDoc* ClassDoc::GetPropertyDoc(StringParam propertyName)
 
 MethodDoc* ClassDoc::GetMethodDoc(Function* function)
 {
-  if (MethodDocArray* overloadedMethods =
-          mMethodsMap.FindPointer(function->Name))
+  if (MethodDocArray* overloadedMethods = mMethodsMap.FindPointer(function->Name))
   {
     // get the list of parameters so we can make sure we get the same function
     // signature
     ParameterArray& functionParameters = function->FunctionType->Parameters;
 
     // Walk all overloaded methods and find the matching function
-    forRange(MethodDoc * methodDoc, overloadedMethods->All())
+    forRange (MethodDoc* methodDoc, overloadedMethods->All())
     {
       MethodDoc::ParameterArray& docParameters = methodDoc->mParameterList;
 
@@ -705,8 +692,7 @@ MethodDoc* ClassDoc::GetMethodDoc(Function* function)
 
         // we have to make sure the docParameter type is in the same form that
         // documentation uses
-        String metaParamType =
-            ReplaceTypeIfTemplated(functionParameter.ParameterType->ToString());
+        String metaParamType = ReplaceTypeIfTemplated(functionParameter.ParameterType->ToString());
 
         if (metaParamType != docParameter->mType)
         {
@@ -730,9 +716,7 @@ MethodDoc* ClassDoc::GetMethodDoc(Function* function)
   return nullptr;
 }
 
-void ClassDoc::CreateMethodDocFromBoundType(Zilch::Function* method,
-                                            TypeReplacementMap* replacements,
-                                            bool exportDoc)
+void ClassDoc::CreateMethodDocFromBoundType(Zilch::Function* method, TypeReplacementMap* replacements, bool exportDoc)
 {
 
   MethodDoc* newMethod = new MethodDoc();
@@ -743,8 +727,7 @@ void ClassDoc::CreateMethodDocFromBoundType(Zilch::Function* method,
   // strip.
   if (method->Name.StartsWith("["))
   {
-    newMethod->mName = method->Name.SubString(method->Name.Begin() + 1,
-                                              method->Name.End() - 1);
+    newMethod->mName = method->Name.SubString(method->Name.Begin() + 1, method->Name.End() - 1);
     if (newMethod->mName == "Constructor")
     {
       newMethod->mName = mName;
@@ -774,11 +757,10 @@ void ClassDoc::CreateMethodDocFromBoundType(Zilch::Function* method,
       newMethod->mReturnType = returnType->ToString();
     }
     // replace the type if it is in our replacements list
-    newMethod->mReturnType =
-        ReplaceTypeIfOnList(newMethod->mReturnType, replacements);
+    newMethod->mReturnType = ReplaceTypeIfOnList(newMethod->mReturnType, replacements);
   }
 
-  forRange(DelegateParameter & param, type->GetParameters().All())
+  forRange (DelegateParameter& param, type->GetParameters().All())
   {
     ParameterDoc* newParam = new ParameterDoc();
 
@@ -796,9 +778,7 @@ void ClassDoc::CreateMethodDocFromBoundType(Zilch::Function* method,
   }
 }
 
-void ClassDoc::CreatePropertyDocFromBoundType(Property* metaProperty,
-                                              TypeReplacementMap* replacements,
-                                              bool exportDoc)
+void ClassDoc::CreatePropertyDocFromBoundType(Property* metaProperty, TypeReplacementMap* replacements, bool exportDoc)
 {
   // Skip this property if we have already seen it
   if (mPropertiesMap.ContainsKey(metaProperty->Name))
@@ -819,8 +799,7 @@ void ClassDoc::CreatePropertyDocFromBoundType(Property* metaProperty,
   if (exportDoc)
     newProp->mDescription = metaProperty->Description;
 
-  newProp->mType =
-      ReplaceTypeIfTemplated(metaProperty->PropertyType->ToString());
+  newProp->mType = ReplaceTypeIfTemplated(metaProperty->PropertyType->ToString());
 
   // if empty, this was a template type we shouldn't replace
   if (newProp->mType.Empty())
@@ -851,14 +830,12 @@ void EnumDoc::FillDocumentation(BoundType* enumOrFlagType)
   typedef Pair<String, String> pairType;
 
   // get the properties for enum values and fill their descriptions
-  forRange(pairType & valueDescriptionPair, mEnumValues.All())
+  forRange (pairType& valueDescriptionPair, mEnumValues.All())
   {
-    int enumValue =
-        enumOrFlagType->StringToEnumValue[valueDescriptionPair.first];
-    Array<Property*>& valueProp =
-        enumOrFlagType->EnumValueToProperties[enumValue];
+    int enumValue = enumOrFlagType->StringToEnumValue[valueDescriptionPair.first];
+    Array<Property*>& valueProp = enumOrFlagType->EnumValueToProperties[enumValue];
 
-    forRange(Property * enumValueProperty, valueProp.All())
+    forRange (Property* enumValueProperty, valueProp.All())
     {
       // since we get properties by value, we have to find the property with the
       // right name
@@ -897,11 +874,11 @@ void DocumentationLibrary::LoadDocumentation(StringParam fileName)
   Z::gDocumentation = this;
 
   MetaDatabase* meta = MetaDatabase::GetInstance();
-  forRange(Library * lib, meta->mNativeLibraries.All())
+  forRange (Library* lib, meta->mNativeLibraries.All())
   {
     BoundType* resourceType = ZilchTypeId(Resource);
 
-    forRange(BoundType * type, lib->BoundTypes.Values())
+    forRange (BoundType* type, lib->BoundTypes.Values())
     {
       ClassDoc* classDoc = GetClassDoc(type);
       if (classDoc)
@@ -930,11 +907,11 @@ void DocumentationLibrary::FinalizeDocumentation(void)
   Zero::Sort(mFlags.All(), TrimCompareFn<EnumDoc>);
 
   // build the enum and flag map
-  forRange(EnumDoc * enumDoc, mEnums.All())
+  forRange (EnumDoc* enumDoc, mEnums.All())
   {
     mEnumAndFlagMap[enumDoc->mName] = enumDoc;
   }
-  forRange(EnumDoc * flagDoc, mFlags.All())
+  forRange (EnumDoc* flagDoc, mFlags.All())
   {
     mEnumAndFlagMap[flagDoc->mName] = flagDoc;
   }
@@ -974,8 +951,7 @@ String GetTemplateBaseName(StringParam templateName)
   return templateName.SubString(templateName.Begin(), paramSubstring.Begin());
 }
 
-void DocumentationLibrary::CreateFlagOrEnumDocFromBoundType(BoundType* type,
-                                                            bool exportDoc)
+void DocumentationLibrary::CreateFlagOrEnumDocFromBoundType(BoundType* type, bool exportDoc)
 {
   // save the enum
   EnumDoc* newEnumDoc = new EnumDoc();
@@ -988,9 +964,9 @@ void DocumentationLibrary::CreateFlagOrEnumDocFromBoundType(BoundType* type,
   // typedef used due to template type causing forRange macro to fail
   typedef Pair<Integer, StringArray> pairType;
 
-  forRange(pairType & enumPair, type->EnumValueToStrings.All())
+  forRange (pairType& enumPair, type->EnumValueToStrings.All())
   {
-    forRange(StringParam enumValueName, enumPair.second.All())
+    forRange (StringParam enumValueName, enumPair.second.All())
     {
       newEnumDoc->mEnumValues.FindOrInsert(enumValueName, "");
     }
@@ -1038,8 +1014,7 @@ void ClassDoc::CreateEventDocFromBoundType(SendsEvent* eventSent)
   }
 }
 
-ClassDoc* DocumentationLibrary::CreateClassDocFromBoundType(
-    BoundType* type, TypeReplacementMap* replacements)
+ClassDoc* DocumentationLibrary::CreateClassDocFromBoundType(BoundType* type, TypeReplacementMap* replacements)
 {
   HashSet<Function*> functionSet;
 
@@ -1053,8 +1028,7 @@ ClassDoc* DocumentationLibrary::CreateClassDocFromBoundType(
     return nullptr;
   }
 
-  if (type->HasAttribute(ObjectAttributes::cDoNotDocument) ||
-      (!type->Location.IsNative && !exportDoc))
+  if (type->HasAttribute(ObjectAttributes::cDoNotDocument) || (!type->Location.IsNative && !exportDoc))
   {
     return nullptr;
   }
@@ -1062,16 +1036,14 @@ ClassDoc* DocumentationLibrary::CreateClassDocFromBoundType(
   // Used to remove a couple of core types that should not be documented
   if (type->Name.Contains(":"))
   {
-    ZPrint("Warning: type '%s' is improperly named and unreferenceable.\n",
-           type->Name.c_str());
+    ZPrint("Warning: type '%s' is improperly named and unreferenceable.\n", type->Name.c_str());
     return nullptr;
   }
 
   // check if we have to do template name replacement
   String name = type->Name;
 
-  String nonTemplatedName =
-      name.SubString(name.Begin(), name.FindFirstOf("[").Begin());
+  String nonTemplatedName = name.SubString(name.Begin(), name.FindFirstOf("[").Begin());
 
   name = ReplaceTypeIfTemplated(type->Name);
 
@@ -1113,17 +1085,16 @@ ClassDoc* DocumentationLibrary::CreateClassDocFromBoundType(
   // This is to tell the doc tool to only import doxygen descriptions if we had
   // either of these
   classDoc->mImportDocumentation =
-      type->HasAttribute(ObjectAttributes::cDocumented) ||
-      type->HasAttribute(ImportDocumentation);
+      type->HasAttribute(ObjectAttributes::cDocumented) || type->HasAttribute(ImportDocumentation);
 
   if (exportDoc)
     classDoc->mDescription = type->Description;
 
-  forRange(CogComponentMeta * metaComponent, type->HasAll<CogComponentMeta>())
-      classDoc->mTags.Assign(metaComponent->mTags.All());
+  forRange (CogComponentMeta* metaComponent, type->HasAll<CogComponentMeta>())
+    classDoc->mTags.Assign(metaComponent->mTags.All());
 
   // Loop over all events this meta type sends and save them
-  forRange(SendsEvent * eventSent, type->SendsEvents.All())
+  forRange (SendsEvent* eventSent, type->SendsEvents.All())
   {
     classDoc->CreateEventDocFromBoundType(eventSent);
   }
@@ -1132,13 +1103,13 @@ ClassDoc* DocumentationLibrary::CreateClassDocFromBoundType(
   Array<Function*> allFunctions = type->AllFunctions;
 
   // add constructors to method list so we get them into the documentation too.
-  forRange(Function * constructor, type->Constructors.All())
+  forRange (Function* constructor, type->Constructors.All())
   {
     allFunctions.Append(constructor);
   }
 
   // Save all methods
-  forRange(Function * method, allFunctions.All())
+  forRange (Function* method, allFunctions.All())
   {
     if (functionSet.Contains(method))
       continue;
@@ -1151,19 +1122,17 @@ ClassDoc* DocumentationLibrary::CreateClassDocFromBoundType(
   }
 
   // Get all properties
-  forRange(Property * metaProperty, type->AllProperties.All())
+  forRange (Property* metaProperty, type->AllProperties.All())
   {
-    classDoc->CreatePropertyDocFromBoundType(
-        metaProperty, replacements, exportDoc);
+    classDoc->CreatePropertyDocFromBoundType(metaProperty, replacements, exportDoc);
   }
   return classDoc;
 }
 
-void DocumentationLibrary::GetDocumentationFromTemplateHandler(
-    StringParam libName,
-    InstantiateTemplateInfo& templateHandler,
-    LibraryBuilder& builder,
-    ArrayMap<String, String>& replacements)
+void DocumentationLibrary::GetDocumentationFromTemplateHandler(StringParam libName,
+                                                               InstantiateTemplateInfo& templateHandler,
+                                                               LibraryBuilder& builder,
+                                                               ArrayMap<String, String>& replacements)
 {
   // base name for the template
   String baseName;
@@ -1194,17 +1163,16 @@ void DocumentationLibrary::GetDocumentationFromTemplateHandler(
 
   // save our type replacements so we can remove the dummy types after
   // instantiation
-  fullDocTemplateName = InsertIntoReplacementsMap(
-      baseName, instanceFullName, templateHandler, dummyTypes, replacements);
+  fullDocTemplateName =
+      InsertIntoReplacementsMap(baseName, instanceFullName, templateHandler, dummyTypes, replacements);
 
   // create the template instance, possibly instantiating more then one template
   // type
-  templateHandler.Delegate.Callback(
-      builder, baseName, fullDocTemplateName, dummyTypes, nullptr);
+  templateHandler.Delegate.Callback(builder, baseName, fullDocTemplateName, dummyTypes, nullptr);
 
   // instantiating that template type could have instantiated more then one
   // template get type replacements for them all
-  forRange(BoundType * boundTemplateType, builder.BoundTypes.Values().All())
+  forRange (BoundType* boundTemplateType, builder.BoundTypes.Values().All())
   {
     String newInstanceBaseName = GetTemplateBaseName(boundTemplateType->Name);
 
@@ -1213,10 +1181,8 @@ void DocumentationLibrary::GetDocumentationFromTemplateHandler(
     // if the bound type also has template arguments, add them to the name
     if (!boundTemplateType->TemplateArguments.Empty())
     {
-      newInstanceFullName = BuildDocumentationFullTemplateName(
-          newInstanceBaseName,
-          boundTemplateType->TemplateArguments,
-          replacements);
+      newInstanceFullName =
+          BuildDocumentationFullTemplateName(newInstanceBaseName, boundTemplateType->TemplateArguments, replacements);
     }
 
     if (replacements.FindPairPointer(newInstanceBaseName) == nullptr)
@@ -1254,19 +1220,17 @@ void DocumentationLibrary::LoadFromMeta()
 
   ArrayMap<String, String> allTemplateReplacements;
 
-  forRange(Library * lib, database->mLibraries.All())
+  forRange (Library* lib, database->mLibraries.All())
   {
-    forRange(InstantiateTemplateInfo & templateHandler,
-             lib->TemplateHandlers.Values())
+    forRange (InstantiateTemplateInfo& templateHandler, lib->TemplateHandlers.Values())
     {
-      GetDocumentationFromTemplateHandler(
-          lib->Name, templateHandler, builder, allTemplateReplacements);
+      GetDocumentationFromTemplateHandler(lib->Name, templateHandler, builder, allTemplateReplacements);
     }
   }
 
   LibraryRef templateLibrary = builder.CreateLibrary();
 
-  forRange(auto& boundTemplate, templateLibrary->BoundTypes.All())
+  forRange (auto& boundTemplate, templateLibrary->BoundTypes.All())
   {
     BoundType* templatedType = boundTemplate.second;
 
@@ -1274,13 +1238,12 @@ void DocumentationLibrary::LoadFromMeta()
   }
 
   // loop over every template type
-  forRange(BoundType * metaType, templateLibrary->BoundTypes.Values())
+  forRange (BoundType* metaType, templateLibrary->BoundTypes.Values())
   {
-    ClassDoc* newDoc =
-        CreateClassDocFromBoundType(metaType, &allTemplateReplacements);
+    ClassDoc* newDoc = CreateClassDocFromBoundType(metaType, &allTemplateReplacements);
   }
   // Loop over every nontemplate type
-  forRange(BoundType * metaType, database->mTypeMap.Values())
+  forRange (BoundType* metaType, database->mTypeMap.Values())
   {
     ClassDoc* newDoc = CreateClassDocFromBoundType(metaType, nullptr);
   }
@@ -1312,7 +1275,7 @@ String GenerateDocumentationString(StringParam name)
   builder << "Properties: \n\n";
   if (!classDoc->mProperties.Empty())
   {
-    forRange(PropertyDoc * propertyDoc, classDoc->mProperties.All())
+    forRange (PropertyDoc* propertyDoc, classDoc->mProperties.All())
     {
       builder << propertyDoc->mName << " : " << propertyDoc->mType << "\n";
       builder << propertyDoc->mDescription << "\n";
@@ -1323,7 +1286,7 @@ String GenerateDocumentationString(StringParam name)
   if (!classDoc->mEventsSent.Empty())
   {
     builder << "Events: \n\n";
-    forRange(EventDoc * eventDoc, classDoc->mEventsSent.All())
+    forRange (EventDoc* eventDoc, classDoc->mEventsSent.All())
     {
       builder << "On: " << eventDoc->mName;
       builder << " Sends: " << eventDoc->mType << "\n";
@@ -1334,10 +1297,9 @@ String GenerateDocumentationString(StringParam name)
   if (!classDoc->mMethods.Empty())
   {
     builder << "Methods: \n\n";
-    forRange(MethodDoc * methodDoc, classDoc->mMethods.All())
+    forRange (MethodDoc* methodDoc, classDoc->mMethods.All())
     {
-      builder << methodDoc->mReturnType << " " << methodDoc->mName
-              << methodDoc->mParameters << "\n";
+      builder << methodDoc->mReturnType << " " << methodDoc->mName << methodDoc->mParameters << "\n";
       builder << methodDoc->mDescription << "\n";
       builder << "\n";
     }

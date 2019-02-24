@@ -18,24 +18,21 @@ GenericVector<ScalarType, Dimension>::GenericVector(scalar* data)
 }
 
 template <typename ScalarType, uint Dimension>
-typename GenericVector<ScalarType, Dimension>::scalar&
-    GenericVector<ScalarType, Dimension>::operator[](uint index)
+typename GenericVector<ScalarType, Dimension>::scalar& GenericVector<ScalarType, Dimension>::operator[](uint index)
 {
   ErrorIf(index > Dim, "Math::GenericVector - Subscript out of range.");
   return array[index];
 }
 
 template <typename ScalarType, uint Dimension>
-typename GenericVector<ScalarType, Dimension>::scalar
-    GenericVector<ScalarType, Dimension>::operator[](uint index) const
+typename GenericVector<ScalarType, Dimension>::scalar GenericVector<ScalarType, Dimension>::operator[](uint index) const
 {
   ErrorIf(index > Dim, "Math::GenericVector - Subscript out of range.");
   return array[index];
 }
 
 template <typename ScalarType, uint Dimension>
-GenericVector<ScalarType, Dimension> GenericVector<ScalarType, Dimension>::
-operator-(void) const
+GenericVector<ScalarType, Dimension> GenericVector<ScalarType, Dimension>::operator-(void) const
 {
   SelfType ret;
   for (uint i = 0; i < Dim; ++i)
@@ -58,8 +55,7 @@ void GenericVector<ScalarType, Dimension>::operator/=(scalar rhs)
 }
 
 template <typename ScalarType, uint Dimension>
-GenericVector<ScalarType, Dimension> GenericVector<ScalarType, Dimension>::
-operator*(scalar rhs) const
+GenericVector<ScalarType, Dimension> GenericVector<ScalarType, Dimension>::operator*(scalar rhs) const
 {
   SelfType ret;
   for (uint i = 0; i < Dim; ++i)
@@ -68,8 +64,7 @@ operator*(scalar rhs) const
 }
 
 template <typename ScalarType, uint Dimension>
-GenericVector<ScalarType, Dimension> GenericVector<ScalarType, Dimension>::
-operator/(scalar rhs) const
+GenericVector<ScalarType, Dimension> GenericVector<ScalarType, Dimension>::operator/(scalar rhs) const
 {
   SelfType ret;
   for (uint i = 0; i < Dim; ++i)
@@ -92,8 +87,7 @@ void GenericVector<ScalarType, Dimension>::operator-=(SelfParam rhs)
 }
 
 template <typename ScalarType, uint Dimension>
-GenericVector<ScalarType, Dimension> GenericVector<ScalarType, Dimension>::
-operator+(SelfParam rhs) const
+GenericVector<ScalarType, Dimension> GenericVector<ScalarType, Dimension>::operator+(SelfParam rhs) const
 {
   SelfType ret;
   for (uint i = 0; i < Dim; ++i)
@@ -102,8 +96,7 @@ operator+(SelfParam rhs) const
 }
 
 template <typename ScalarType, uint Dimension>
-GenericVector<ScalarType, Dimension> GenericVector<ScalarType, Dimension>::
-operator-(SelfParam rhs) const
+GenericVector<ScalarType, Dimension> GenericVector<ScalarType, Dimension>::operator-(SelfParam rhs) const
 {
   SelfType ret;
   for (uint i = 0; i < Dim; ++i)
@@ -112,8 +105,7 @@ operator-(SelfParam rhs) const
 }
 
 template <typename ScalarType, uint Dimension>
-GenericVector<ScalarType, Dimension> GenericVector<ScalarType, Dimension>::
-operator*(SelfParam rhs) const
+GenericVector<ScalarType, Dimension> GenericVector<ScalarType, Dimension>::operator*(SelfParam rhs) const
 {
   SelfType ret;
   for (uint i = 0; i < Dim; ++i)
@@ -122,8 +114,7 @@ operator*(SelfParam rhs) const
 }
 
 template <typename ScalarType, uint Dimension>
-GenericVector<ScalarType, Dimension> GenericVector<ScalarType, Dimension>::
-operator/(SelfParam rhs) const
+GenericVector<ScalarType, Dimension> GenericVector<ScalarType, Dimension>::operator/(SelfParam rhs) const
 {
   SelfType ret;
   for (uint i = 0; i < Dim; ++i)
@@ -160,8 +151,7 @@ void GenericVector<ScalarType, Dimension>::Splat(scalar value)
 }
 
 template <typename ScalarType, uint Dimension>
-typename GenericVector<ScalarType, Dimension>::scalar
-GenericVector<ScalarType, Dimension>::Dot(SelfParam rhs) const
+typename GenericVector<ScalarType, Dimension>::scalar GenericVector<ScalarType, Dimension>::Dot(SelfParam rhs) const
 {
   scalar ret = scalar(0);
   for (uint i = 0; i < Dim; ++i)
@@ -170,8 +160,7 @@ GenericVector<ScalarType, Dimension>::Dot(SelfParam rhs) const
 }
 
 template <typename ScalarType, uint Dimension>
-typename GenericVector<ScalarType, Dimension>::scalar
-GenericVector<ScalarType, Dimension>::LengthSq(void) const
+typename GenericVector<ScalarType, Dimension>::scalar GenericVector<ScalarType, Dimension>::LengthSq(void) const
 {
   return Dot(*this);
 }

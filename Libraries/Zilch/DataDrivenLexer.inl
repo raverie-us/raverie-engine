@@ -9,11 +9,9 @@ void DataDrivenLexer::StartRule(GrammarRule<Token>* rule,
 {
   DataDrivenLexerShared& shared = DataDrivenLexerShared::GetInstance();
 
-  bool needsGrammarNodeStack = rule == shared.mRuleStatement ||
-                               rule == shared.mGrammarExpressionOr ||
+  bool needsGrammarNodeStack = rule == shared.mRuleStatement || rule == shared.mGrammarExpressionOr ||
                                rule == shared.mGrammarExpressionCapture ||
-                               rule == shared.mGrammarExpressionConcatenate ||
-                               rule == shared.mGrammarExpressionUnary ||
+                               rule == shared.mGrammarExpressionConcatenate || rule == shared.mGrammarExpressionUnary ||
                                rule == shared.mReplacementStatement;
   if (needsGrammarNodeStack)
   {
@@ -21,17 +19,14 @@ void DataDrivenLexer::StartRule(GrammarRule<Token>* rule,
   }
 
   bool needsReplacementNodeStack =
-      rule == shared.mReplacementStatement ||
-      rule == shared.mReplacementExpressionConcatenate ||
-      rule == shared.mReplacementExpressionJoin ||
-      rule == shared.mReplacementExpressionForeach;
+      rule == shared.mReplacementStatement || rule == shared.mReplacementExpressionConcatenate ||
+      rule == shared.mReplacementExpressionJoin || rule == shared.mReplacementExpressionForeach;
   if (needsReplacementNodeStack)
   {
     this->mReplacementNodes.PushBack();
   }
 
-  bool needsCaptureNodeStack = rule == shared.mReplacementExpressionPost ||
-                               rule == shared.mReplacementExpressionJoin ||
+  bool needsCaptureNodeStack = rule == shared.mReplacementExpressionPost || rule == shared.mReplacementExpressionJoin ||
                                rule == shared.mReplacementExpressionForeach;
   if (needsCaptureNodeStack)
   {
@@ -60,8 +55,7 @@ void DataDrivenLexer::EndRule(ParseNodeInfo<Token>* info,
   else if (rule == shared.mKeywordStatement)
   {
     String ruleName = info->GetFirstCapturedToken("RuleName").mString;
-    String keywordStringLiteral =
-        info->GetFirstCapturedToken("Keyword").mString;
+    String keywordStringLiteral = info->GetFirstCapturedToken("Keyword").mString;
     String keyword = ReplaceStringEscapesAndStripQuotes(keywordStringLiteral);
 
     GrammarRule<TokenType>& toBeKeyword = grammar[ruleName];
@@ -108,8 +102,7 @@ void DataDrivenLexer::EndRule(ParseNodeInfo<Token>* info,
   }
   else if (rule == shared.mGrammarExpressionCaptureRule)
   {
-    String captureAndRuleName =
-        info->GetFirstCapturedToken("CaptureName").mString;
+    String captureAndRuleName = info->GetFirstCapturedToken("CaptureName").mString;
     GrammarNode<TokenType>& node = *new GrammarNode<TokenType>();
     node.mType = Zero::GrammarNodeType::Capture;
     node.mName = captureAndRuleName;
@@ -118,8 +111,7 @@ void DataDrivenLexer::EndRule(ParseNodeInfo<Token>* info,
   }
   // If this is a binary operator (we should have pushed a node array in the
   // StartRule)
-  else if (rule == shared.mGrammarExpressionOr ||
-           rule == shared.mGrammarExpressionConcatenate)
+  else if (rule == shared.mGrammarExpressionOr || rule == shared.mGrammarExpressionConcatenate)
   {
     Array<GrammarNode<TokenType>*>& operands = nodes.Back();
     if (operands.Size() >= 1)
@@ -151,8 +143,7 @@ void DataDrivenLexer::EndRule(ParseNodeInfo<Token>* info,
     Array<GrammarNode<TokenType>*>& operands = nodes.Back();
     if (operands.Size() == 1)
     {
-      GrammarNode<Character>* op =
-          info->GetFirstCapturedToken("UnaryOperator").mRule;
+      GrammarNode<Character>* op = info->GetFirstCapturedToken("UnaryOperator").mRule;
 
       GrammarNode<TokenType>* lhs = operands.Front();
       if (op == shared.mZeroOrMore)
@@ -217,8 +208,7 @@ void DataDrivenLexer::EndRule(ParseNodeInfo<Token>* info,
       ReplacementNode* replacement = replacements.Front();
 
       typedef typename GrammarNode<TokenType>::ReplacementPair ReplacementPair;
-      modifiedRule.mReplacements.PushBack(
-          ReplacementPair(operand, replacement));
+      modifiedRule.mReplacements.PushBack(ReplacementPair(operand, replacement));
 
       nodes.PopBack();
       this->mReplacementNodes.PopBack();
@@ -251,8 +241,7 @@ void DataDrivenLexer::EndRule(ParseNodeInfo<Token>* info,
   }
   else if (rule == shared.mReplacementExpressionText)
   {
-    String textStringLiteral =
-        info->GetFirstCapturedToken("ReplacementText").mString;
+    String textStringLiteral = info->GetFirstCapturedToken("ReplacementText").mString;
     String text = ReplaceStringEscapesAndStripQuotes(textStringLiteral);
     this->mReplacementNodes.Back().PushBack(&R(text));
   }
@@ -268,8 +257,7 @@ void DataDrivenLexer::EndRule(ParseNodeInfo<Token>* info,
       this->mReplacementNodes.Back().PushBack(node);
     }
   }
-  else if (rule == shared.mReplacementExpressionJoin ||
-           rule == shared.mReplacementExpressionForeach)
+  else if (rule == shared.mReplacementExpressionJoin || rule == shared.mReplacementExpressionForeach)
   {
     // We previously pushed a context when we started, so that other captures
     // nested could occur
@@ -314,8 +302,7 @@ void DataDrivenLexer::EndRule(ParseNodeInfo<Token>* info,
     {
       Token startIndex = info->GetFirstCapturedToken("StartIndex");
       Token endIndex = info->GetFirstCapturedToken("EndIndex");
-      Token nestedCaptureName =
-          info->GetFirstCapturedToken("NestedCaptureName");
+      Token nestedCaptureName = info->GetFirstCapturedToken("NestedCaptureName");
 
       // If this is a single index (or a range)
       if (startIndex.IsValid())
@@ -326,8 +313,7 @@ void DataDrivenLexer::EndRule(ParseNodeInfo<Token>* info,
         if (endIndex.IsValid())
         {
           int endIndeInclusive = atoi(endIndex.mString.c_str());
-          this->mCaptureNodes.Back() =
-              &C(*capture, startIndexInclusive, endIndeInclusive);
+          this->mCaptureNodes.Back() = &C(*capture, startIndexInclusive, endIndeInclusive);
         }
         // Otherwise, it's just a single index
         else

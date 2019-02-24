@@ -128,9 +128,7 @@ public:
   /// actually written This will throw if the byteStart and byteCount exceeds
   /// the array size Check the stream capabilities for Write before calling this
   /// function
-  virtual Integer Write(ArrayClass<Byte>& data,
-                        Integer arrayByteStart,
-                        Integer arrayByteCount);
+  virtual Integer Write(ArrayClass<Byte>& data, Integer arrayByteStart, Integer arrayByteCount);
 
   /// Writes a single byte of data to the stream (should be implemented for
   /// efficiency) Returns 1 if the single byte was written, or 0 Check the
@@ -141,9 +139,7 @@ public:
   /// If the array is not large enough to store the data at the start/with the
   /// given count, it will be resized Check the stream capabilities for Read
   /// before calling this function
-  virtual Integer Read(ArrayClass<Byte>& data,
-                       Integer arrayByteStart,
-                       Integer arrayByteCount);
+  virtual Integer Read(ArrayClass<Byte>& data, Integer arrayByteStart, Integer arrayByteCount);
 
   /// Reads a single byte of data or returns -1 if the byte could not be read
   /// Check the stream capabilities for Write before calling this function
@@ -162,10 +158,7 @@ public:
   /// the array Invalid values will always cause exceptions to be thrown (such
   /// as a negative value) Returns true if it succeeds (or resizes) or false if
   /// it throws an exception
-  static bool ValidateArray(ArrayClass<Byte>& data,
-                            Integer byteStart,
-                            Integer byteCount,
-                            bool resizeArrayIfNeeded);
+  static bool ValidateArray(ArrayClass<Byte>& data, Integer byteStart, Integer byteCount, bool resizeArrayIfNeeded);
 
   /// Directly set the position where we are in the stream (always from the
   /// beginning, in bytes) Invokes Seek, and if it fails it will attempt to

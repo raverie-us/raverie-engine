@@ -88,8 +88,7 @@ inline Vector3 Vector3::operator*(Vec3Param rhs) const
 
 inline Vector3 Vector3::operator/(Vec3Param rhs) const
 {
-  ErrorIf(rhs.x == real(0.0) || rhs.y == real(0.0) || rhs.z == real(0.0),
-          "Vector3 - Division by zero.");
+  ErrorIf(rhs.x == real(0.0) || rhs.y == real(0.0) || rhs.z == real(0.0), "Vector3 - Division by zero.");
   return Vector3(x / rhs.x, y / rhs.y, z / rhs.z);
 }
 

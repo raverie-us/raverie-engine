@@ -12,7 +12,7 @@ void MakeInvisible(Cog* cog)
   // if(Sprite* sprite = cog->has(Sprite))
   //  sprite->mVisible = false;
 
-  forRange(Cog & child, cog->GetChildren())
+  forRange (Cog& child, cog->GetChildren())
   {
     MakeInvisible(&child);
   }
@@ -77,7 +77,7 @@ void OnionSkinning::Update()
 void OnionSkinning::Clear()
 {
   // Destroy all objects
-  forRange(Cog * cog, mPreviewObjects.All())
+  forRange (Cog* cog, mPreviewObjects.All())
   {
     if (cog)
       cog->Destroy();
@@ -107,16 +107,14 @@ void OnionSkinning::CreateObjects()
     // Create the object.  (See **NOTE above for info on
     // 'Cog::CreateFromDataBlock')
     // Cog* newObject = Cog::CreateFromDataBlock(selected->GetSpace(), data);
-    Cog* newObject =
-        selected->CreateFromString(selected->GetSpace(), stringData);
+    Cog* newObject = selected->CreateFromString(selected->GetSpace(), stringData);
 
     // Attach to our parent if we're not a root object
     if (Cog* parent = selected->GetParent())
       newObject->AttachToPreserveLocal(parent);
 
     // We don't want it to show up in the editor or be selectable
-    newObject->mFlags.SetFlag(CogFlags::Transient | CogFlags::Locked |
-                              CogFlags::ObjectViewHidden);
+    newObject->mFlags.SetFlag(CogFlags::Transient | CogFlags::Locked | CogFlags::ObjectViewHidden);
 
     // Make it invisible
     MakeInvisible(newObject);
@@ -125,8 +123,7 @@ void OnionSkinning::CreateObjects()
   }
 }
 
-bool OnionSkinning::ApplyTrack(BoundType* componentType,
-                               StringParam propertyName)
+bool OnionSkinning::ApplyTrack(BoundType* componentType, StringParam propertyName)
 {
   RichAnimation* richAnim = mEditor->GetEditorData()->mRichAnimation;
 
@@ -136,8 +133,7 @@ bool OnionSkinning::ApplyTrack(BoundType* componentType,
   Cog* selected = mEditor->GetSelectedObject();
 
   // Get the property track to sample the value
-  TrackNode* track = richAnim->GetPropertyTrack(
-      selected, animGraphObject, componentType, propertyName, false);
+  TrackNode* track = richAnim->GetPropertyTrack(selected, animGraphObject, componentType, propertyName, false);
 
   // If the property track doesn't exist, there's nothing for us to do
   if (track == NULL)

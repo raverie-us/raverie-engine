@@ -172,8 +172,7 @@ int Utf16ToUtf8(int utf16)
   // take the straight code point value and put it in a wchar
   wchar_t inputUTF16 = (wchar_t)utf16;
 
-  size_t size =
-      WideCharToMultiByte(CP_UTF8, 0, &inputUTF16, 1, NULL, 0, NULL, NULL);
+  size_t size = WideCharToMultiByte(CP_UTF8, 0, &inputUTF16, 1, NULL, 0, NULL, NULL);
 
   // output buffer is exact required size, no null terminator processed
   char outputUTF8[4] = {0};

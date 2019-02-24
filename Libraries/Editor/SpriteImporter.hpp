@@ -47,12 +47,8 @@ public:
 
   SpriteSheetImporter(Composite* parent);
 
-  void ComputeFrameWidthAndCount(int& frameSize,
-                                 int& frameCount,
-                                 int newFrameSize,
-                                 int spacing,
-                                 int sourceSize,
-                                 int offset);
+  void
+  ComputeFrameWidthAndCount(int& frameSize, int& frameCount, int newFrameSize, int spacing, int sourceSize, int offset);
   void UpdateTexture();
   void LoadImages(Array<String>& files);
   void LoadSprite(SpriteSource* spriteSource);
@@ -66,13 +62,8 @@ public:
   void ClearSelectedFrames();
   void OnClearPressed(ObjectEvent* event);
 
-  void SaveDataToSpriteSource(SpriteSource* sprite,
-                              IntRect frameSize,
-                              uint numberOfFrames);
-  SpriteSource* AddSpriteResource(StringParam name,
-                                  Image& output,
-                                  IntRect frameSize,
-                                  uint numberOfFrames);
+  void SaveDataToSpriteSource(SpriteSource* sprite, IntRect frameSize, uint numberOfFrames);
+  SpriteSource* AddSpriteResource(StringParam name, Image& output, IntRect frameSize, uint numberOfFrames);
   bool AddFramesAsSprites();
   bool AddMultiFrameSprite();
 
@@ -99,11 +90,8 @@ public:
                  Vec2 totalSize,
                  Vec2 startOffset,
                  uint lineCount);
-  void DrawRedirect(ViewBlock& viewBlock,
-                    FrameBlock& frameBlock,
-                    Mat4Param parentTx,
-                    ColorTransform colorTx,
-                    WidgetRect clipRect);
+  void DrawRedirect(
+      ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect);
   void NudgePosition(IntVec2 move);
   void AddFrame(IntVec2 gridCell);
   void RemoveFrame(int frameIndex);

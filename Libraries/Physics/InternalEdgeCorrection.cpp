@@ -15,10 +15,7 @@ real GetAngle(Vec3Param yBasis, Vec3Param xBasis, Vec3Param testAxis)
   return Math::ArcTan2(yProj, xProj);
 }
 
-void ComputeEdgeInfoForTriangleA(Triangle& triA,
-                                 uint indexA,
-                                 Triangle& triB,
-                                 TriangleInfoMap* infoMap)
+void ComputeEdgeInfoForTriangleA(Triangle& triA, uint indexA, Triangle& triB, TriangleInfoMap* infoMap)
 {
   // hardcoded values at the moment, maybe expose or something later
   real equalVertexThreshold = real(.001);
@@ -55,8 +52,7 @@ void ComputeEdgeInfoForTriangleA(Triangle& triA,
         continue;
 
       if (numSharedVertices == 1 &&
-          (sharedVerticesA[numSharedVertices - 1] == iA ||
-           sharedVerticesB[numSharedVertices - 1] == iB))
+          (sharedVerticesA[numSharedVertices - 1] == iA || sharedVerticesB[numSharedVertices - 1] == iB))
         continue;
 
       // they are close enough, so mark what indices we are looking at
@@ -164,11 +160,8 @@ void ComputeEdgeInfoForTriangleA(Triangle& triA,
   // now that we've compute the angle we need to set the info structure.
   // That means determining which edge we are and marking the correct one's
   // angle and whether or not that edge was shared convexly or concavely.
-  uint flags[3] = {TriangleInfoFlags::V0V1Convex,
-                   TriangleInfoFlags::V2V0Convex,
-                   TriangleInfoFlags::V1V2Convex};
-  real* mEdgeAngles[3] = {
-      &info->mEdgeV0V1Angle, &info->mEdgeV2V0Angle, &info->mEdgeV1V2Angle};
+  uint flags[3] = {TriangleInfoFlags::V0V1Convex, TriangleInfoFlags::V2V0Convex, TriangleInfoFlags::V1V2Convex};
+  real* mEdgeAngles[3] = {&info->mEdgeV0V1Angle, &info->mEdgeV2V0Angle, &info->mEdgeV1V2Angle};
   // the index into the array is the sum index minus 1
   //(look at how the arrays above are constructed)
   uint flagIndex = verticesSumA - 1;
@@ -182,8 +175,7 @@ void ComputeEdgeInfoForTriangleA(Triangle& triA,
   info->mEdgeFlags.SetState(flags[flagIndex], isConvex);
 }
 
-void GenerateInternalEdgeInfo(GenericPhysicsMesh* mesh,
-                              TriangleInfoMap* infoMap)
+void GenerateInternalEdgeInfo(GenericPhysicsMesh* mesh, TriangleInfoMap* infoMap)
 {
   infoMap->Clear();
 
@@ -265,16 +257,14 @@ static uint ComputeTriangleIndex(AbsoluteIndex absIndex, uint triIndex)
   return index;
 }
 
-void GenerateInternalEdgeInfo(HeightMapCollider* collider,
-                              TriangleInfoMap* infoMap)
+void GenerateInternalEdgeInfo(HeightMapCollider* collider, TriangleInfoMap* infoMap)
 {
   // Don't pre-cache any information for height-maps as they can be to big.
   // Instead cache as we visit a triangle (calls the dynamic version).
 }
 
 // Note yet used until brave cobra has height maps again
-void GenerateInternalEdgeInfoDynamic(HeightMapCollider* collider,
-                                     uint contactId)
+void GenerateInternalEdgeInfoDynamic(HeightMapCollider* collider, uint contactId)
 {
   HeightMap* heightMap = collider->GetHeightMap();
   TriangleInfoMap* map = collider->GetInfoMap();
@@ -292,8 +282,7 @@ void GenerateInternalEdgeInfoDynamic(HeightMapCollider* collider,
   // angles change)
   real cellSize = heightMap->mUnitsPerPatch / HeightPatch::Size;
   Vec2 patchStart =
-      heightMap->GetLocalPosition(patchIndex) -
-      Vec2(heightMap->mUnitsPerPatch, heightMap->mUnitsPerPatch) * 0.5f;
+      heightMap->GetLocalPosition(patchIndex) - Vec2(heightMap->mUnitsPerPatch, heightMap->mUnitsPerPatch) * 0.5f;
   Vec2 cellStart = patchStart + Math::ToVec2(cellIndex) * cellSize;
 
   // For a given cell, there are potentially 4 extra triangles that need to be
@@ -314,59 +303,47 @@ void GenerateInternalEdgeInfoDynamic(HeightMapCollider* collider,
 
   // The 4 vertices of the current cell always need to be sampled
   float h11 = heightMap->SampleHeight(absIndex, Math::cInfinite);
-  float h12 = heightMap->SampleHeight(
-      heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 0)),
-      Math::cInfinite);
-  float h21 = heightMap->SampleHeight(
-      heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 1)),
-      Math::cInfinite);
-  float h22 = heightMap->SampleHeight(
-      heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 1)),
-      Math::cInfinite);
+  float h12 =
+      heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 0)), Math::cInfinite);
+  float h21 =
+      heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 1)), Math::cInfinite);
+  float h22 =
+      heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 1)), Math::cInfinite);
 
   // If we are on the bottom left triangle then only build adjacency for the
   // 3 adjacent triangles: (h21, h12, h22), (h20, h11, h21), (h11, h02, h12)
   if (triIndex == 0)
   {
     // The triangle we are querying doesn't exist there's nothing to do
-    if (h11 == Math::cInfinite || h12 == Math::cInfinite ||
-        h21 == Math::cInfinite)
+    if (h11 == Math::cInfinite || h12 == Math::cInfinite || h21 == Math::cInfinite)
       return;
 
-    Vec3 p11 =
-        Vec3(cellStart.x + cellSize * 0, h11, cellStart.y + cellSize * 0);
-    Vec3 p12 =
-        Vec3(cellStart.x + cellSize * 0, h12, cellStart.y + cellSize * 1);
-    Vec3 p21 =
-        Vec3(cellStart.x + cellSize * 1, h21, cellStart.y + cellSize * 0);
+    Vec3 p11 = Vec3(cellStart.x + cellSize * 0, h11, cellStart.y + cellSize * 0);
+    Vec3 p12 = Vec3(cellStart.x + cellSize * 0, h12, cellStart.y + cellSize * 1);
+    Vec3 p21 = Vec3(cellStart.x + cellSize * 1, h21, cellStart.y + cellSize * 0);
     Triangle mainTri = Triangle(p11, p12, p21);
 
-    float h20 = heightMap->SampleHeight(
-        heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(-1, 1)),
-        Math::cInfinite);
-    float h02 = heightMap->SampleHeight(
-        heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, -1)),
-        Math::cInfinite);
+    float h20 =
+        heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(-1, 1)), Math::cInfinite);
+    float h02 =
+        heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, -1)), Math::cInfinite);
 
     // Try each adjacent triangle if it exists
     if (h22 != Math::cInfinite)
     {
-      Vec3 p22 =
-          Vec3(cellStart.x + cellSize * 1, h22, cellStart.y + cellSize * 1);
+      Vec3 p22 = Vec3(cellStart.x + cellSize * 1, h22, cellStart.y + cellSize * 1);
       Triangle testTri = Triangle(p12, p22, p21);
       ComputeEdgeInfoForTriangleA(mainTri, contactId, testTri, map);
     }
     if (h20 != Math::cInfinite)
     {
-      Vec3 p20 =
-          Vec3(cellStart.x + cellSize * -1, h20, cellStart.y + cellSize * 1);
+      Vec3 p20 = Vec3(cellStart.x + cellSize * -1, h20, cellStart.y + cellSize * 1);
       Triangle testTri = Triangle(p20, p11, p21);
       ComputeEdgeInfoForTriangleA(mainTri, contactId, testTri, map);
     }
     if (h02 != Math::cInfinite)
     {
-      Vec3 p02 =
-          Vec3(cellStart.x + cellSize * 1, h02, cellStart.y + cellSize * -1);
+      Vec3 p02 = Vec3(cellStart.x + cellSize * 1, h02, cellStart.y + cellSize * -1);
       Triangle testTri = Triangle(p11, p02, p12);
       ComputeEdgeInfoForTriangleA(mainTri, contactId, testTri, map);
     }
@@ -376,44 +353,35 @@ void GenerateInternalEdgeInfoDynamic(HeightMapCollider* collider,
   else
   {
     // The triangle we are querying doesn't exist there's nothing to do
-    if (h21 == Math::cInfinite || h12 == Math::cInfinite ||
-        h22 == Math::cInfinite)
+    if (h21 == Math::cInfinite || h12 == Math::cInfinite || h22 == Math::cInfinite)
       return;
 
-    Vec3 p21 =
-        Vec3(cellStart.x + cellSize * 0, h21, cellStart.y + cellSize * 1);
-    Vec3 p12 =
-        Vec3(cellStart.x + cellSize * 1, h12, cellStart.y + cellSize * 0);
-    Vec3 p22 =
-        Vec3(cellStart.x + cellSize * 1, h22, cellStart.y + cellSize * 1);
+    Vec3 p21 = Vec3(cellStart.x + cellSize * 0, h21, cellStart.y + cellSize * 1);
+    Vec3 p12 = Vec3(cellStart.x + cellSize * 1, h12, cellStart.y + cellSize * 0);
+    Vec3 p22 = Vec3(cellStart.x + cellSize * 1, h22, cellStart.y + cellSize * 1);
     Triangle mainTri = Triangle(p21, p12, p22);
 
-    float h31 = heightMap->SampleHeight(
-        heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 1)),
-        Math::cInfinite);
-    float h13 = heightMap->SampleHeight(
-        heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, -1)),
-        Math::cInfinite);
+    float h31 =
+        heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 1)), Math::cInfinite);
+    float h13 =
+        heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, -1)), Math::cInfinite);
 
     // Try each adjacent triangle if it exists
     if (h11 != Math::cInfinite)
     {
-      Vec3 p11 =
-          Vec3(cellStart.x + cellSize * 0, h11, cellStart.y + cellSize * 0);
+      Vec3 p11 = Vec3(cellStart.x + cellSize * 0, h11, cellStart.y + cellSize * 0);
       Triangle testTri = Triangle(p11, p12, p21);
       ComputeEdgeInfoForTriangleA(mainTri, contactId, testTri, map);
     }
     if (h31 != Math::cInfinite)
     {
-      Vec3 p31 =
-          Vec3(cellStart.x + cellSize * 0, h31, cellStart.y + cellSize * 2);
+      Vec3 p31 = Vec3(cellStart.x + cellSize * 0, h31, cellStart.y + cellSize * 2);
       Triangle testTri = Triangle(p31, p21, p22);
       ComputeEdgeInfoForTriangleA(mainTri, contactId, testTri, map);
     }
     if (h13 != Math::cInfinite)
     {
-      Vec3 p13 =
-          Vec3(cellStart.x + cellSize * 2, h13, cellStart.y + cellSize * 0);
+      Vec3 p13 = Vec3(cellStart.x + cellSize * 2, h13, cellStart.y + cellSize * 0);
       Triangle testTri = Triangle(p22, p12, p13);
       ComputeEdgeInfoForTriangleA(mainTri, contactId, testTri, map);
     }
@@ -441,12 +409,8 @@ struct StateInfo
   uint mConvexTestFlag;
 };
 
-void TestEdgeCloseness(Vec3Param contactPoint,
-                       Vec3Param point1,
-                       Vec3Param point2,
-                       real angle,
-                       uint testEdgeIndex,
-                       StateInfo& stateInfo)
+void TestEdgeCloseness(
+    Vec3Param contactPoint, Vec3Param point1, Vec3Param point2, real angle, uint testEdgeIndex, StateInfo& stateInfo)
 {
   // if this edge is too sharp, then we don't correct the edge
   real maxAngleThreshold = Math::cTwoPi;
@@ -477,8 +441,7 @@ void TestEdgeCloseness(Vec3Param contactPoint,
     // make the current edge
     Vec3 currEdge = (point2 - point1).Normalized();
     // test the angle between the current edge and the previous edge
-    real oldEdgePerpTest =
-        Math::Dot(stateInfo.mLocalContactNormal, stateInfo.mEdge);
+    real oldEdgePerpTest = Math::Dot(stateInfo.mLocalContactNormal, stateInfo.mEdge);
     real newEdgePerpTest = Math::Dot(stateInfo.mLocalContactNormal, currEdge);
 
     // if the new edge is more perpendicular than the previous
@@ -505,11 +468,8 @@ void TestEdgeCloseness(Vec3Param contactPoint,
 
 // clamps the normal to the voronoi region (on one side) if it is outside the
 // bounds
-bool ClampNormal(Vec3Param edge,
-                 Vec3Param triNormal,
-                 Vec3Param localContactNormal,
-                 real voronoiAngle,
-                 Vec3Ref clampedLocalNormal)
+bool ClampNormal(
+    Vec3Param edge, Vec3Param triNormal, Vec3Param localContactNormal, real voronoiAngle, Vec3Ref clampedLocalNormal)
 {
   // build our remaining vector needed for out basis
   Vec3 edgeCross = Math::Cross(edge, triNormal);
@@ -522,26 +482,21 @@ bool ClampNormal(Vec3Param edge,
   // We only correct on one side because we only need to fix normals that point
   // in the direction away from the edge as those are the only ones that will
   // cause collision issues.
-  if ((voronoiAngle < 0 && angle < voronoiAngle) ||
-      (voronoiAngle >= 0 && angle > voronoiAngle))
+  if ((voronoiAngle < 0 && angle < voronoiAngle) || (voronoiAngle >= 0 && angle > voronoiAngle))
   {
     // compute the matrix that will rotate us right to the edge of the Voronoi
     // region
     real angleDiff = voronoiAngle - angle;
     Mat3 correctionRotation = Math::ToMatrix3(edge, angleDiff);
     // that rotated normal is the new contact normal
-    clampedLocalNormal =
-        Math::Transform(correctionRotation, localContactNormal);
+    clampedLocalNormal = Math::Transform(correctionRotation, localContactNormal);
     return true;
   }
 
   return false;
 }
 
-void DebugDrawVoronoiRegion(Physics::ManifoldPoint& point,
-                            StateInfo& stateInfo,
-                            Vec3Param nA,
-                            Vec3Param nB)
+void DebugDrawVoronoiRegion(Physics::ManifoldPoint& point, StateInfo& stateInfo, Vec3Param nA, Vec3Param nB)
 {
   Vec3 p = point.BodyPoints[stateInfo.mObjectIndex];
   Mat4 rot = stateInfo.mCollider->GetOwner()->has(Transform)->GetWorldMatrix();
@@ -595,15 +550,12 @@ void CorrectConcaveNormal(Physics::ManifoldPoint& point, StateInfo& stateInfo)
     triNormal *= -1;
 
   // triangle normal is in local space, bring it to world space
-  point.Normal =
-      Math::Transform(stateInfo.mCollider->GetWorldRotation(), triNormal);
+  point.Normal = Math::Transform(stateInfo.mCollider->GetWorldRotation(), triNormal);
   point.Normal.Normalize();
   FixOtherPoint(point, stateInfo);
 }
 
-void EvaluateBestEdge(Physics::ManifoldPoint& point,
-                      StateInfo& stateInfo,
-                      bool& onEdge)
+void EvaluateBestEdge(Physics::ManifoldPoint& point, StateInfo& stateInfo, bool& onEdge)
 {
   // hardcoded values for now, maybe make tweakable or something later
   real convexEpsilon = real(.001);
@@ -645,8 +597,7 @@ void EvaluateBestEdge(Physics::ManifoldPoint& point,
     // otherwise we need the triangle normal and not allow it to be flipped
     else
     {
-      point.Normal = Math::Transform(stateInfo.mCollider->GetWorldRotation(),
-                                     stateInfo.mTriNormal);
+      point.Normal = Math::Transform(stateInfo.mCollider->GetWorldRotation(), stateInfo.mTriNormal);
       point.Normal.Normalize();
       FixOtherPoint(point, stateInfo);
     }
@@ -684,8 +635,7 @@ void EvaluateBestEdge(Physics::ManifoldPoint& point,
   // negative side of both normals). If so, we don't correct to the Voronoi
   // region, we instead use the triangle normal, however since we are on the
   // back use the negative normal
-  bool backFacingNormal =
-      (nDotA < convexEpsilon); // && (nDotB < convexEpsilon);
+  bool backFacingNormal = (nDotA < convexEpsilon); // && (nDotB < convexEpsilon);
   if (backFacingNormal)
   {
     if (sAllowBackfaces)
@@ -698,13 +648,11 @@ void EvaluateBestEdge(Physics::ManifoldPoint& point,
       // if edge is convex, then the closest front face normal is on the other
       // triangle (B's normal)
       if (isConvex)
-        point.Normal =
-            Math::Transform(stateInfo.mCollider->GetWorldRotation(), nB);
+        point.Normal = Math::Transform(stateInfo.mCollider->GetWorldRotation(), nB);
       // when concave, the closest normal in the voronoi region is our own (A's
       // normal)
       else
-        point.Normal =
-            Math::Transform(stateInfo.mCollider->GetWorldRotation(), nA);
+        point.Normal = Math::Transform(stateInfo.mCollider->GetWorldRotation(), nA);
 
       point.Normal.Normalize();
       FixOtherPoint(point, stateInfo);
@@ -721,26 +669,20 @@ void EvaluateBestEdge(Physics::ManifoldPoint& point,
 
   // otherwise, we actually want to clamp the normal to the Voronoi region
   Vec3 clampedNormal;
-  bool isClamped = ClampNormal(edge,
-                               nA * swapFactor,
-                               stateInfo.mLocalContactNormal,
-                               voronoiAngle,
-                               clampedNormal);
+  bool isClamped = ClampNormal(edge, nA * swapFactor, stateInfo.mLocalContactNormal, voronoiAngle, clampedNormal);
 
   // if we didn't clamp then there is nothing to do
   if (!isClamped)
     return;
 
   // if we did clamp, update the normal (add fixing the point later too)
-  Vec3 newNormal =
-      Math::Transform(stateInfo.mCollider->GetWorldRotation(), clampedNormal);
+  Vec3 newNormal = Math::Transform(stateInfo.mCollider->GetWorldRotation(), clampedNormal);
   point.Normal = newNormal;
   point.Normal.Normalize();
   FixOtherPoint(point, stateInfo);
 }
 
-bool CorrectPointInternalEdgeNormal(Physics::ManifoldPoint& point,
-                                    StateInfo& stateInfo)
+bool CorrectPointInternalEdgeNormal(Physics::ManifoldPoint& point, StateInfo& stateInfo)
 {
   // we have to bring the normal back into local space on the mesh since all
   // of the Voronoi region info was computed in local space
@@ -764,12 +706,9 @@ bool CorrectPointInternalEdgeNormal(Physics::ManifoldPoint& point,
   // test all 3 edges to see which one is the closest, store which one
   // is the closest, how close it is as well as what the closest point
   // on the edge is to the contact point
-  TestEdgeCloseness(
-      bodyPoint, tri.p0, tri.p1, info->mEdgeV0V1Angle, 0, stateInfo);
-  TestEdgeCloseness(
-      bodyPoint, tri.p2, tri.p0, info->mEdgeV2V0Angle, 1, stateInfo);
-  TestEdgeCloseness(
-      bodyPoint, tri.p1, tri.p2, info->mEdgeV1V2Angle, 2, stateInfo);
+  TestEdgeCloseness(bodyPoint, tri.p0, tri.p1, info->mEdgeV0V1Angle, 0, stateInfo);
+  TestEdgeCloseness(bodyPoint, tri.p2, tri.p0, info->mEdgeV2V0Angle, 1, stateInfo);
+  TestEdgeCloseness(bodyPoint, tri.p1, tri.p2, info->mEdgeV1V2Angle, 2, stateInfo);
 
   bool onEdge = false;
   // now evaluate the best edge and see whether or not we need to fix the normal
@@ -801,18 +740,14 @@ bool CorrectPointInternalEdgeNormal(Physics::ManifoldPoint& point,
   return onEdge;
 }
 
-void CorrectInternalEdgeNormal(Physics::ManifoldPoint& point,
-                               uint objectIndex,
-                               Collider* meshCollider,
-                               uint triId)
+void CorrectInternalEdgeNormal(Physics::ManifoldPoint& point, uint objectIndex, Collider* meshCollider, uint triId)
 {
   GenericPhysicsMesh* mesh = nullptr;
   HeightMapCollider* heightMap = nullptr;
   // get the generic physics mesh from the collider
   if (meshCollider->GetColliderType() == Collider::cConvexMesh)
   {
-    ConvexMeshCollider* cmCollider =
-        static_cast<ConvexMeshCollider*>(meshCollider);
+    ConvexMeshCollider* cmCollider = static_cast<ConvexMeshCollider*>(meshCollider);
     ConvexMesh* convexMesh = cmCollider->GetConvexMesh();
     mesh = convexMesh;
   }
@@ -851,9 +786,7 @@ void CorrectInternalEdgeNormal(Physics::ManifoldPoint& point,
 
   MeshTriangleInfo* info = map->FindPointer(triId);
 
-  ErrorIf(info == nullptr,
-          "Triangle map did not contain info for triangle of index %d",
-          triId);
+  ErrorIf(info == nullptr, "Triangle map did not contain info for triangle of index %d", triId);
 
   StateInfo stateInfo;
   stateInfo.mCollider = meshCollider;
@@ -865,10 +798,7 @@ void CorrectInternalEdgeNormal(Physics::ManifoldPoint& point,
   CorrectPointInternalEdgeNormal(point, stateInfo);
 }
 
-void CorrectInternalEdgeNormal(GenericPhysicsMesh* mesh,
-                               Physics::Manifold* manifold,
-                               uint objectIndex,
-                               uint contactId)
+void CorrectInternalEdgeNormal(GenericPhysicsMesh* mesh, Physics::Manifold* manifold, uint objectIndex, uint contactId)
 {
   // get the collider that is the mesh
   Collider* collider = manifold->Objects[objectIndex];
@@ -893,8 +823,7 @@ void CorrectInternalEdgeNormal(GenericPhysicsMesh* mesh,
 
   // attempt to correct all of the points
   for (uint i = 0; i < manifold->ContactCount; ++i)
-    edgeCorrected[i] =
-        CorrectPointInternalEdgeNormal(manifold->Contacts[i], stateInfo);
+    edgeCorrected[i] = CorrectPointInternalEdgeNormal(manifold->Contacts[i], stateInfo);
 
   // Correct manifold points to nearest corrected point on edge (if any)
   for (uint i = 0; i < manifold->ContactCount; ++i)
@@ -915,9 +844,8 @@ void CorrectInternalEdgeNormal(GenericPhysicsMesh* mesh,
         if (!edgeCorrected[j])
           continue;
 
-        real distance = (manifold->Contacts[i].WorldPoints[objectIndex] -
-                         manifold->Contacts[j].WorldPoints[objectIndex])
-                            .Length();
+        real distance =
+            (manifold->Contacts[i].WorldPoints[objectIndex] - manifold->Contacts[j].WorldPoints[objectIndex]).Length();
         if (!hasClosest)
         {
           closestDistance = distance;
@@ -1001,8 +929,7 @@ void CorrectInternalEdgeNormal(HeightMapCollider* collider,
     // works
     Mat4 transform = collider->GetOwner()->has(Transform)->GetWorldMatrix();
     manifold->Contacts[i].BodyPoints[objectIndex] = R;
-    manifold->Contacts[i].WorldPoints[objectIndex] =
-        Math::TransformPoint(transform, R);
+    manifold->Contacts[i].WorldPoints[objectIndex] = Math::TransformPoint(transform, R);
     // Penetration should not be over written by the projection parameter
     // manifold->Contacts[i].Penetration = t;
     CorrectPointInternalEdgeNormal(manifold->Contacts[i], stateInfo);

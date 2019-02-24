@@ -31,12 +31,8 @@ ZeroShared ProcessInfo FindProcess(StringParam processName)
   return ProcessInfo();
 }
 
-void Process::Start(Status& status,
-                    StringRange commandLine,
-                    bool redirectOut,
-                    bool redirectError,
-                    bool redirectIn,
-                    bool showWindow)
+void Process::Start(
+    Status& status, StringRange commandLine, bool redirectOut, bool redirectError, bool redirectIn, bool showWindow)
 {
   ProcessStartInfo info;
   info.mArguments = commandLine;
@@ -58,10 +54,7 @@ SimpleProcess::~SimpleProcess()
   }
 }
 
-void SimpleProcess::ExecProcess(StringParam debugName,
-                                StringParam commandLine,
-                                TextStream* stream,
-                                bool showWindow)
+void SimpleProcess::ExecProcess(StringParam debugName, StringParam commandLine, TextStream* stream, bool showWindow)
 {
   mCancel = false;
   mStream = stream;

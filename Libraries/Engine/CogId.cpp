@@ -70,8 +70,7 @@ namespace Serialization
 {
 bool Policy<CogId>::Serialize(Serializer& stream, cstr fieldName, CogId& cogId)
 {
-  CogSavingContext* context =
-      static_cast<CogSavingContext*>(stream.GetSerializationContext());
+  CogSavingContext* context = static_cast<CogSavingContext*>(stream.GetSerializationContext());
 
   if (context != NULL && context->CurrentContextMode == ContextMode::Saving)
   {
@@ -105,11 +104,7 @@ Cog* CogId::OnAllObjectsCreated(CogInitializer& initializer)
   return RestoreLink(this, initializer.Context);
 }
 
-Cog* RestoreLink(CogId* id,
-                 CogCreationContext* context,
-                 Component* component,
-                 StringParam propertyName,
-                 bool isError)
+Cog* RestoreLink(CogId* id, CogCreationContext* context, Component* component, StringParam propertyName, bool isError)
 {
   // Id is invalid link is intentionally NULL.
   if (*id == cInvalidCogId || id->Id == 0)
@@ -135,8 +130,7 @@ Cog* RestoreLink(CogId* id,
 
   // The CogId refers to an object in the local creation context. Look up the id
   // in the stream id amp
-  CogCreationContext::IdMapType::range r0 =
-      context->mContextIdMap.Find(id->Id + context->mCurrentSubContextId);
+  CogCreationContext::IdMapType::range r0 = context->mContextIdMap.Find(id->Id + context->mCurrentSubContextId);
   if (r0.Empty())
   {
     // Look in space if 'LocalModificationOverride' is set on the property
@@ -145,12 +139,10 @@ Cog* RestoreLink(CogId* id,
       BoundType* componentType = ZilchVirtualTypeId(component);
       Property* metaProperty = componentType->GetProperty(propertyName);
       ErrorIf(metaProperty == nullptr,
-              String::Format("Property '%s' doesn't exist on component '%s'",
-                             propertyName.c_str(),
-                             componentType->Name.c_str())
+              String::Format(
+                  "Property '%s' doesn't exist on component '%s'", propertyName.c_str(), componentType->Name.c_str())
                   .c_str());
-      if (metaProperty && metaProperty->HasAttribute(
-                              PropertyAttributes::cLocalModificationOverride))
+      if (metaProperty && metaProperty->HasAttribute(PropertyAttributes::cLocalModificationOverride))
         r0 = context->mContextIdMap.Find(id->Id);
     }
   }
@@ -172,14 +164,11 @@ Cog* RestoreLink(CogId* id,
       {
         String componentName = component->GetDescription();
         errorMessage = String::Format(
-            "Failed to restore direct id link '%s for property %s'",
-            componentName.c_str(),
-            propertyName.c_str());
+            "Failed to restore direct id link '%s for property %s'", componentName.c_str(), propertyName.c_str());
       }
       else if (!propertyName.Empty())
       {
-        errorMessage = String::Format("Failed to restore direct id link %s",
-                                      propertyName.c_str());
+        errorMessage = String::Format("Failed to restore direct id link %s", propertyName.c_str());
       }
 
       DoNotifyErrorWithContext(errorMessage);

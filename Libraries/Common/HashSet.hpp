@@ -29,13 +29,8 @@ struct SetHashAdapter
 };
 
 /// Hash Set is an Associative Hashed Container.
-template <typename ValueType,
-          typename Hasher = HashPolicy<ValueType>,
-          typename Allocator = DefaultAllocator>
-class ZeroSharedTemplate HashSet
-    : public HashedContainer<ValueType,
-                             SetHashAdapter<Hasher, ValueType>,
-                             Allocator>
+template <typename ValueType, typename Hasher = HashPolicy<ValueType>, typename Allocator = DefaultAllocator>
+class ZeroSharedTemplate HashSet : public HashedContainer<ValueType, SetHashAdapter<Hasher, ValueType>, Allocator>
 {
 public:
   typedef ValueType value_type;
@@ -43,10 +38,7 @@ public:
   typedef value_type& reference;
   typedef const value_type& const_reference;
   typedef HashSet<ValueType, Hasher, Allocator> this_type;
-  typedef HashedContainer<ValueType,
-                          SetHashAdapter<Hasher, ValueType>,
-                          Allocator>
-      base_type;
+  typedef HashedContainer<ValueType, SetHashAdapter<Hasher, ValueType>, Allocator> base_type;
   typedef typename base_type::Node* iterator;
   typedef typename base_type::Node Node;
   typedef typename base_type::range range;
@@ -63,20 +55,13 @@ public:
     Insert(p0);
     Insert(p1);
   }
-  HashSet(ContainerInitializerDummy*,
-          const_reference p0,
-          const_reference p1,
-          const_reference p2)
+  HashSet(ContainerInitializerDummy*, const_reference p0, const_reference p1, const_reference p2)
   {
     Insert(p0);
     Insert(p1);
     Insert(p2);
   }
-  HashSet(ContainerInitializerDummy*,
-          const_reference p0,
-          const_reference p1,
-          const_reference p2,
-          const_reference p3)
+  HashSet(ContainerInitializerDummy*, const_reference p0, const_reference p1, const_reference p2, const_reference p3)
   {
     Insert(p0);
     Insert(p1);
@@ -147,8 +132,7 @@ public:
   }
 
   template <typename searchType, typename searchHasher>
-  range FindAs(const searchType& searchKey,
-               searchHasher keyHasher = HashPolicy<searchType>()) const
+  range FindAs(const searchType& searchKey, searchHasher keyHasher = HashPolicy<searchType>()) const
   {
     Node* node = base_type::InternalFindAs(searchKey, keyHasher);
     if (node != cHashOpenNode)
@@ -157,8 +141,7 @@ public:
       return range((Node*)cHashOpenNode, (Node*)cHashOpenNode, 0);
   }
 
-  value_type FindValue(const value_type& searchKey,
-                       const value_type& ifNotFound) const
+  value_type FindValue(const value_type& searchKey, const value_type& ifNotFound) const
   {
     Node* node = base_type::InternalFindAs(searchKey, base_type::mHasher);
     if (node != cHashOpenNode)
@@ -191,8 +174,7 @@ public:
 
   bool InsertOrError(const value_type& value)
   {
-    return base_type::InsertInternal(value, base_type::OnCollisionError) !=
-           false;
+    return base_type::InsertInternal(value, base_type::OnCollisionError) != false;
   }
 
   bool InsertOrError(const value_type& value, cstr error)
@@ -204,14 +186,12 @@ public:
 
   bool InsertNoOverwrite(const value_type& value)
   {
-    return base_type::InsertInternal(value, base_type::OnCollisionReturn) !=
-           false;
+    return base_type::InsertInternal(value, base_type::OnCollisionReturn) != false;
   }
 
   bool Contains(const value_type& value) const
   {
-    return base_type::InternalFindAs(value, base_type::mHasher) !=
-           cHashOpenNode;
+    return base_type::InternalFindAs(value, base_type::mHasher) != cHashOpenNode;
   }
 
   ~HashSet()

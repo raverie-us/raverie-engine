@@ -16,8 +16,7 @@ ThreadSafeReferenceCounted::ThreadSafeReferenceCounted()
   ConstructThreadSafeReferenceCountedHandle();
 }
 
-ThreadSafeReferenceCounted::ThreadSafeReferenceCounted(
-    const ThreadSafeReferenceCounted&)
+ThreadSafeReferenceCounted::ThreadSafeReferenceCounted(const ThreadSafeReferenceCounted&)
 {
   ConstructThreadSafeReferenceCountedHandle();
 }

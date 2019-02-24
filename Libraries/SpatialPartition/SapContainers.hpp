@@ -100,8 +100,7 @@ private:
 /// of the Aabb on that axis.
 struct SapEndPoint
 {
-  static const uint sMinBit =
-      static_cast<uint>((uint)1 << (sizeof(uint) * 8 - 1));
+  static const uint sMinBit = static_cast<uint>((uint)1 << (sizeof(uint) * 8 - 1));
 
   SapEndPoint()
   {
@@ -214,9 +213,7 @@ struct SapBox
 /// perform queries without having to provide a callback function.
 /// Note: this range will become completely invalidated if any operations are
 /// performed on Sap.
-template <typename ClientDataType,
-          typename QueryType,
-          typename PolicyType = BroadPhasePolicy<QueryType, Aabb>>
+template <typename ClientDataType, typename QueryType, typename PolicyType = BroadPhasePolicy<QueryType, Aabb>>
 struct SapRange
 {
   typedef SapBox<ClientDataType> BoxType;

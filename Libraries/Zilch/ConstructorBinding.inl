@@ -5,8 +5,7 @@ static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
   Handle& handle = call.GetHandle(Call::This);
   byte* data = handle.Dereference();
   new (data) Class();
-  call.GetState()->UpdateCppVirtualTable(
-      data, ZilchTypeId(Class), handle.StoredType);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
 template <typename Class>
 static Function* FromConstructorVirtual(LibraryBuilder& builder,
@@ -26,9 +25,7 @@ static void BoundConstructor(Call& call, ExceptionReport& report)
   new (data) Class();
 }
 template <typename Class>
-static Function* FromConstructor(LibraryBuilder& builder,
-                                 BoundType* classBoundType,
-                                 StringRange spaceDelimitedNames)
+static Function* FromConstructor(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
 {
   BoundFn boundFunction = BoundConstructor<Class>;
   ParameterArray parameters;
@@ -42,8 +39,7 @@ static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
   Handle& handle = call.GetHandle(Call::This);
   byte* data = handle.Dereference();
   new (data) Class(arg0);
-  call.GetState()->UpdateCppVirtualTable(
-      data, ZilchTypeId(Class), handle.StoredType);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
 template <typename Class, typename Arg0>
 static Function* FromConstructorVirtual(LibraryBuilder& builder,
@@ -66,9 +62,7 @@ static void BoundConstructor(Call& call, ExceptionReport& report)
   new (data) Class(arg0);
 }
 template <typename Class, typename Arg0>
-static Function* FromConstructor(LibraryBuilder& builder,
-                                 BoundType* classBoundType,
-                                 StringRange spaceDelimitedNames)
+static Function* FromConstructor(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
 {
   BoundFn boundFunction = BoundConstructor<Class, Arg0>;
   ParameterArray parameters;
@@ -85,8 +79,7 @@ static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
   Handle& handle = call.GetHandle(Call::This);
   byte* data = handle.Dereference();
   new (data) Class(arg0, arg1);
-  call.GetState()->UpdateCppVirtualTable(
-      data, ZilchTypeId(Class), handle.StoredType);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
 template <typename Class, typename Arg0, typename Arg1>
 static Function* FromConstructorVirtual(LibraryBuilder& builder,
@@ -112,9 +105,7 @@ static void BoundConstructor(Call& call, ExceptionReport& report)
   new (data) Class(arg0, arg1);
 }
 template <typename Class, typename Arg0, typename Arg1>
-static Function* FromConstructor(LibraryBuilder& builder,
-                                 BoundType* classBoundType,
-                                 StringRange spaceDelimitedNames)
+static Function* FromConstructor(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
 {
   BoundFn boundFunction = BoundConstructor<Class, Arg0, Arg1>;
   ParameterArray parameters;
@@ -134,8 +125,7 @@ static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
   Handle& handle = call.GetHandle(Call::This);
   byte* data = handle.Dereference();
   new (data) Class(arg0, arg1, arg2);
-  call.GetState()->UpdateCppVirtualTable(
-      data, ZilchTypeId(Class), handle.StoredType);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
 template <typename Class, typename Arg0, typename Arg1, typename Arg2>
 static Function* FromConstructorVirtual(LibraryBuilder& builder,
@@ -164,9 +154,7 @@ static void BoundConstructor(Call& call, ExceptionReport& report)
   new (data) Class(arg0, arg1, arg2);
 }
 template <typename Class, typename Arg0, typename Arg1, typename Arg2>
-static Function* FromConstructor(LibraryBuilder& builder,
-                                 BoundType* classBoundType,
-                                 StringRange spaceDelimitedNames)
+static Function* FromConstructor(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
 {
   BoundFn boundFunction = BoundConstructor<Class, Arg0, Arg1, Arg2>;
   ParameterArray parameters;
@@ -179,11 +167,7 @@ static Function* FromConstructor(LibraryBuilder& builder,
   ParseParameterArrays(parameters, spaceDelimitedNames);
   return builder.AddBoundConstructor(classBoundType, boundFunction, parameters);
 }
-template <typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3>
+template <typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
 static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
 {
   Arg0 arg0 = call.Get<Arg0>(0);
@@ -193,20 +177,14 @@ static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
   Handle& handle = call.GetHandle(Call::This);
   byte* data = handle.Dereference();
   new (data) Class(arg0, arg1, arg2, arg3);
-  call.GetState()->UpdateCppVirtualTable(
-      data, ZilchTypeId(Class), handle.StoredType);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
-template <typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3>
+template <typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
 static Function* FromConstructorVirtual(LibraryBuilder& builder,
                                         BoundType* classBoundType,
                                         StringRange spaceDelimitedNames)
 {
-  BoundFn boundFunction =
-      BoundConstructorVirtual<Class, Arg0, Arg1, Arg2, Arg3>;
+  BoundFn boundFunction = BoundConstructorVirtual<Class, Arg0, Arg1, Arg2, Arg3>;
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -219,11 +197,7 @@ static Function* FromConstructorVirtual(LibraryBuilder& builder,
   ParseParameterArrays(parameters, spaceDelimitedNames);
   return builder.AddBoundConstructor(classBoundType, boundFunction, parameters);
 }
-template <typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3>
+template <typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
 static void BoundConstructor(Call& call, ExceptionReport& report)
 {
   Arg0 arg0 = call.Get<Arg0>(0);
@@ -234,14 +208,8 @@ static void BoundConstructor(Call& call, ExceptionReport& report)
   byte* data = handle.Dereference();
   new (data) Class(arg0, arg1, arg2, arg3);
 }
-template <typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3>
-static Function* FromConstructor(LibraryBuilder& builder,
-                                 BoundType* classBoundType,
-                                 StringRange spaceDelimitedNames)
+template <typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
+static Function* FromConstructor(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
 {
   BoundFn boundFunction = BoundConstructor<Class, Arg0, Arg1, Arg2, Arg3>;
   ParameterArray parameters;
@@ -256,12 +224,7 @@ static Function* FromConstructor(LibraryBuilder& builder,
   ParseParameterArrays(parameters, spaceDelimitedNames);
   return builder.AddBoundConstructor(classBoundType, boundFunction, parameters);
 }
-template <typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4>
+template <typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
 static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
 {
   Arg0 arg0 = call.Get<Arg0>(0);
@@ -272,21 +235,14 @@ static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
   Handle& handle = call.GetHandle(Call::This);
   byte* data = handle.Dereference();
   new (data) Class(arg0, arg1, arg2, arg3, arg4);
-  call.GetState()->UpdateCppVirtualTable(
-      data, ZilchTypeId(Class), handle.StoredType);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
-template <typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4>
+template <typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
 static Function* FromConstructorVirtual(LibraryBuilder& builder,
                                         BoundType* classBoundType,
                                         StringRange spaceDelimitedNames)
 {
-  BoundFn boundFunction =
-      BoundConstructorVirtual<Class, Arg0, Arg1, Arg2, Arg3, Arg4>;
+  BoundFn boundFunction = BoundConstructorVirtual<Class, Arg0, Arg1, Arg2, Arg3, Arg4>;
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -301,12 +257,7 @@ static Function* FromConstructorVirtual(LibraryBuilder& builder,
   ParseParameterArrays(parameters, spaceDelimitedNames);
   return builder.AddBoundConstructor(classBoundType, boundFunction, parameters);
 }
-template <typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4>
+template <typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
 static void BoundConstructor(Call& call, ExceptionReport& report)
 {
   Arg0 arg0 = call.Get<Arg0>(0);
@@ -318,15 +269,8 @@ static void BoundConstructor(Call& call, ExceptionReport& report)
   byte* data = handle.Dereference();
   new (data) Class(arg0, arg1, arg2, arg3, arg4);
 }
-template <typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4>
-static Function* FromConstructor(LibraryBuilder& builder,
-                                 BoundType* classBoundType,
-                                 StringRange spaceDelimitedNames)
+template <typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
+static Function* FromConstructor(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
 {
   BoundFn boundFunction = BoundConstructor<Class, Arg0, Arg1, Arg2, Arg3, Arg4>;
   ParameterArray parameters;
@@ -343,13 +287,7 @@ static Function* FromConstructor(LibraryBuilder& builder,
   ParseParameterArrays(parameters, spaceDelimitedNames);
   return builder.AddBoundConstructor(classBoundType, boundFunction, parameters);
 }
-template <typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5>
+template <typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
 static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
 {
   Arg0 arg0 = call.Get<Arg0>(0);
@@ -361,22 +299,14 @@ static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
   Handle& handle = call.GetHandle(Call::This);
   byte* data = handle.Dereference();
   new (data) Class(arg0, arg1, arg2, arg3, arg4, arg5);
-  call.GetState()->UpdateCppVirtualTable(
-      data, ZilchTypeId(Class), handle.StoredType);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
-template <typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5>
+template <typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
 static Function* FromConstructorVirtual(LibraryBuilder& builder,
                                         BoundType* classBoundType,
                                         StringRange spaceDelimitedNames)
 {
-  BoundFn boundFunction =
-      BoundConstructorVirtual<Class, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>;
+  BoundFn boundFunction = BoundConstructorVirtual<Class, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>;
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -393,13 +323,7 @@ static Function* FromConstructorVirtual(LibraryBuilder& builder,
   ParseParameterArrays(parameters, spaceDelimitedNames);
   return builder.AddBoundConstructor(classBoundType, boundFunction, parameters);
 }
-template <typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5>
+template <typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
 static void BoundConstructor(Call& call, ExceptionReport& report)
 {
   Arg0 arg0 = call.Get<Arg0>(0);
@@ -412,19 +336,10 @@ static void BoundConstructor(Call& call, ExceptionReport& report)
   byte* data = handle.Dereference();
   new (data) Class(arg0, arg1, arg2, arg3, arg4, arg5);
 }
-template <typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5>
-static Function* FromConstructor(LibraryBuilder& builder,
-                                 BoundType* classBoundType,
-                                 StringRange spaceDelimitedNames)
+template <typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
+static Function* FromConstructor(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
 {
-  BoundFn boundFunction =
-      BoundConstructor<Class, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>;
+  BoundFn boundFunction = BoundConstructor<Class, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>;
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -461,8 +376,7 @@ static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
   Handle& handle = call.GetHandle(Call::This);
   byte* data = handle.Dereference();
   new (data) Class(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
-  call.GetState()->UpdateCppVirtualTable(
-      data, ZilchTypeId(Class), handle.StoredType);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
 template <typename Class,
           typename Arg0,
@@ -476,8 +390,7 @@ static Function* FromConstructorVirtual(LibraryBuilder& builder,
                                         BoundType* classBoundType,
                                         StringRange spaceDelimitedNames)
 {
-  BoundFn boundFunction =
-      BoundConstructorVirtual<Class, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>;
+  BoundFn boundFunction = BoundConstructorVirtual<Class, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>;
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -525,12 +438,9 @@ template <typename Class,
           typename Arg4,
           typename Arg5,
           typename Arg6>
-static Function* FromConstructor(LibraryBuilder& builder,
-                                 BoundType* classBoundType,
-                                 StringRange spaceDelimitedNames)
+static Function* FromConstructor(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
 {
-  BoundFn boundFunction =
-      BoundConstructor<Class, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>;
+  BoundFn boundFunction = BoundConstructor<Class, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>;
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);

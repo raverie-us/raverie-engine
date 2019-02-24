@@ -78,45 +78,42 @@ private:
   LibraryRef Library;
 };
 
-#  define ZilchDeclareStaticLibraryInternals(Name, Namespace, ...)             \
-    /* Needed for binding macros work with this library */                     \
-    typedef Name ZilchLibrary;                                                 \
-    Name() : ZZ::StaticLibrary(#Name, Namespace)                               \
-    {                                                                          \
-      ZilchDependency(ZZ::Core) __VA_ARGS__                                    \
-    }                                                                          \
-    static Name* Instance;                                                     \
-    static void InitializeInstance()                                           \
-    {                                                                          \
-      ReturnIf(Instance != nullptr,                                            \
-               ,                                                               \
-               "Can't initialize a static library more than once");            \
-      Instance = new Name();                                                   \
-    }                                                                          \
-    static void Destroy()                                                      \
-    {                                                                          \
-      delete Instance;                                                         \
-      Instance = nullptr;                                                      \
-    }                                                                          \
-    static Name& GetInstance()                                                 \
-    {                                                                          \
-      ErrorIf(Instance == nullptr,                                             \
-              "Attempted to get an uninitialized singleton static library");   \
-      return *Instance;                                                        \
-    }                                                                          \
-    static ZZ::LibraryRef GetLibrary()                                         \
-    {                                                                          \
-      return GetInstance().StaticLibrary::GetLibrary();                        \
-    }                                                                          \
-    static ZZ::LibraryBuilder* GetBuilder()                                    \
-    {                                                                          \
-      return GetInstance().StaticLibrary::GetBuilder();                        \
-    }                                                                          \
-    static void BuildStaticLibrary()                                           \
-    {                                                                          \
-      InitializeInstance();                                                    \
-      return GetInstance().StaticLibrary::BuildLibrary();                      \
-    }                                                                          \
+#  define ZilchDeclareStaticLibraryInternals(Name, Namespace, ...)                                                     \
+    /* Needed for binding macros work with this library */                                                             \
+    typedef Name ZilchLibrary;                                                                                         \
+    Name() : ZZ::StaticLibrary(#Name, Namespace)                                                                       \
+    {                                                                                                                  \
+      ZilchDependency(ZZ::Core) __VA_ARGS__                                                                            \
+    }                                                                                                                  \
+    static Name* Instance;                                                                                             \
+    static void InitializeInstance()                                                                                   \
+    {                                                                                                                  \
+      ReturnIf(Instance != nullptr, , "Can't initialize a static library more than once");                             \
+      Instance = new Name();                                                                                           \
+    }                                                                                                                  \
+    static void Destroy()                                                                                              \
+    {                                                                                                                  \
+      delete Instance;                                                                                                 \
+      Instance = nullptr;                                                                                              \
+    }                                                                                                                  \
+    static Name& GetInstance()                                                                                         \
+    {                                                                                                                  \
+      ErrorIf(Instance == nullptr, "Attempted to get an uninitialized singleton static library");                      \
+      return *Instance;                                                                                                \
+    }                                                                                                                  \
+    static ZZ::LibraryRef GetLibrary()                                                                                 \
+    {                                                                                                                  \
+      return GetInstance().StaticLibrary::GetLibrary();                                                                \
+    }                                                                                                                  \
+    static ZZ::LibraryBuilder* GetBuilder()                                                                            \
+    {                                                                                                                  \
+      return GetInstance().StaticLibrary::GetBuilder();                                                                \
+    }                                                                                                                  \
+    static void BuildStaticLibrary()                                                                                   \
+    {                                                                                                                  \
+      InitializeInstance();                                                                                            \
+      return GetInstance().StaticLibrary::BuildLibrary();                                                              \
+    }                                                                                                                  \
     void SetupBinding(ZZ::LibraryBuilder& builder) override;
 
 // Create a static library that we can use in C++ binding
@@ -125,11 +122,11 @@ private:
 // ZilchDependency(Namespace::OtherLibrary) to mark dependencies
 // upon other static libraries
 // All libraries declared with this macro implicitly add a dependency on Core
-#  define ZilchDeclareStaticLibrary(Name, Namespace, Linkage, ...)             \
-    class Linkage Name : public ZZ::StaticLibrary                              \
-    {                                                                          \
-    public:                                                                    \
-      ZilchDeclareStaticLibraryInternals(Name, Namespace, __VA_ARGS__)         \
+#  define ZilchDeclareStaticLibrary(Name, Namespace, Linkage, ...)                                                     \
+    class Linkage Name : public ZZ::StaticLibrary                                                                      \
+    {                                                                                                                  \
+    public:                                                                                                            \
+      ZilchDeclareStaticLibraryInternals(Name, Namespace, __VA_ARGS__)                                                 \
     };
 
 // When we don't care about a namespace for a static library
@@ -141,13 +138,12 @@ private:
 // or pre-main initialization because there were issues on some compilers that
 // would optimize out pre-main code if it was never referenced anywhere (but
 // would otherwise be available to script)
-#  define ZilchDefineStaticLibrary(Name)                                       \
-    Name* Name::Instance = nullptr;                                            \
+#  define ZilchDefineStaticLibrary(Name)                                                                               \
+    Name* Name::Instance = nullptr;                                                                                    \
     void Name::SetupBinding(ZZ::LibraryBuilder& builder)
 
 // Used in declaring dependencies upon other static libraries
-#  define ZilchDependency(Library)                                             \
-    this->Dependencies.PushBack(&Library::GetInstance());
+#  define ZilchDependency(Library) this->Dependencies.PushBack(&Library::GetInstance());
 } // namespace Zilch
 
 #endif

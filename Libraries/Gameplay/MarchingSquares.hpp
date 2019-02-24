@@ -20,16 +20,10 @@ public:
   MarchingSquares();
 
   /// Sample using traditional marching squares
-  void Sample(Vec2Param startCoords,
-              Vec2Param endCoords,
-              Vec2Param sampleFrequency,
-              void* userData);
+  void Sample(Vec2Param startCoords, Vec2Param endCoords, Vec2Param sampleFrequency, void* userData);
   /// Sample using a modified marching squares that samples on
   /// the exact pixel boundaries (doesn't round corners)
-  void SamplePixels(Vec2Param startCoords,
-                    Vec2Param endCoords,
-                    Vec2Param sampleFrequency,
-                    void* userData);
+  void SamplePixels(Vec2Param startCoords, Vec2Param endCoords, Vec2Param sampleFrequency, void* userData);
 
   /// Builds contours from the results of marching squares and simplifies them.
   /// The threshold is used to remove a point if the area of the triangle
@@ -55,13 +49,8 @@ public:
 private:
   Vec2 GetPositionOfZero(real val0, real val1, Vec2Param pos0, Vec2Param pos1);
 
-  void SolveSingleEdge(real valC,
-                       real valX,
-                       real valY,
-                       Vec2Param posC,
-                       Vec2Param posX,
-                       Vec2Param posY,
-                       Array<Segment2d>& segments);
+  void SolveSingleEdge(
+      real valC, real valX, real valY, Vec2Param posC, Vec2Param posX, Vec2Param posY, Array<Segment2d>& segments);
 
   void SolveDoubleEdge(real val0Edge0,
                        real val1Edge0,

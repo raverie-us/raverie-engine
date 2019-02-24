@@ -9,8 +9,7 @@ ZilchDefineType(TextDefinition, builder, type)
 
 void TextDefinition::Initialize()
 {
-  mFont =
-      FontManager::GetInstance()->GetRenderFont(FontName, (uint)FontSize, 0);
+  mFont = FontManager::GetInstance()->GetRenderFont(FontName, (uint)FontSize, 0);
 }
 
 void TextDefinition::Serialize(Serializer& stream)

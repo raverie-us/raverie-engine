@@ -28,8 +28,7 @@ HandleManagers::~HandleManagers()
   this->Unique.Clear();
 }
 
-void HandleManagers::AddSharedManager(HandleManagerId id,
-                                      HandleManager* manager)
+void HandleManagers::AddSharedManager(HandleManagerId id, HandleManager* manager)
 {
   // Error checking
   ReturnIf(this->Locked,
@@ -40,8 +39,7 @@ void HandleManagers::AddSharedManager(HandleManagerId id,
   this->Shared.Insert(id, manager);
 }
 
-void HandleManagers::AddUniqueCreator(HandleManagerId id,
-                                      CreateHandleManagerFn creator)
+void HandleManagers::AddUniqueCreator(HandleManagerId id, CreateHandleManagerFn creator)
 {
   // Error checking
   ReturnIf(this->Locked,
@@ -52,8 +50,7 @@ void HandleManagers::AddUniqueCreator(HandleManagerId id,
   this->Unique.Insert(id, creator);
 }
 
-HandleManager* HandleManagers::GetManager(HandleManagerId id,
-                                          ExecutableState* state)
+HandleManager* HandleManagers::GetManager(HandleManagerId id, ExecutableState* state)
 {
   // First look globally for the shared manager
   HandleManager* manager = this->Shared.FindValue(id, nullptr);
@@ -164,9 +161,7 @@ String HandleManager::GetName()
   return Name;
 }
 
-void HandleManager::Allocate(BoundType* type,
-                             Handle& handleToInitialize,
-                             size_t customFlags)
+void HandleManager::Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags)
 {
   Error("This HandleManager did not override the Allocate method (the "
         "allocated handle will be null)");
@@ -185,8 +180,7 @@ bool HandleManager::CanDelete(const Handle& handle)
   return false;
 }
 
-void HandleManager::SetNativeTypeFullyConstructed(const Handle& handle,
-                                                  bool value)
+void HandleManager::SetNativeTypeFullyConstructed(const Handle& handle, bool value)
 {
 }
 
@@ -230,16 +224,13 @@ byte* HeapManager::HandleToObject(const Handle& handle)
   return object;
 }
 
-void HeapManager::Allocate(BoundType* type,
-                           Handle& handleToInitialize,
-                           size_t customFlags)
+void HeapManager::Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags)
 {
   // Create a buffer that's the size of the object we'd like to allocate
   // At the beginning of the buffer, we put the object slot pointer so that
   // 'ObjectToHandle' can recreate a handle via the slot data pointer
   size_t objectSize = type->GetAllocatedSize();
-  size_t fullSize =
-      sizeof(ObjectHeader) + objectSize + HeapManagerExtraPatchSize;
+  size_t fullSize = sizeof(ObjectHeader) + objectSize + HeapManagerExtraPatchSize;
   byte* memory = (byte*)Zero::zAllocate(fullSize);
 
   // If the memory failed to allocate, early out
@@ -279,9 +270,7 @@ void HeapManager::Allocate(BoundType* type,
   data.UniqueId = header.UniqueId;
 }
 
-void HeapManager::ObjectToHandle(const byte* object,
-                                 BoundType* type,
-                                 Handle& handleToInitialize)
+void HeapManager::ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize)
 {
   // We weren't given a valid object, just null out the handle
   if (object == nullptr)
@@ -298,14 +287,13 @@ void HeapManager::ObjectToHandle(const byte* object,
     // will be fine since we're passing through binding and not typically
     // invoking user code
     ExceptionReport report;
-    HandleManager* manager = HandleManagers::GetInstance().GetManager(
-        ZilchManagerId(PointerManager));
+    HandleManager* manager = HandleManagers::GetInstance().GetManager(ZilchManagerId(PointerManager));
     Handle fromHandle(object, type, manager);
 
     // Copy construct the object into an allocated version (with reference
     // counting and safe handles that we now manage)
-    handleToInitialize = this->State->AllocateCopyConstructedHeapObject(
-        type, report, HeapFlags::ReferenceCounted, fromHandle);
+    handleToInitialize =
+        this->State->AllocateCopyConstructedHeapObject(type, report, HeapFlags::ReferenceCounted, fromHandle);
     return;
   }
 
@@ -364,8 +352,7 @@ void HeapManager::DeleteAll(ExecutableState* state)
             "always should be deletable)");
   }
 
-  ErrorIf(this->LiveObjects.Empty() == false,
-          "All objects should be cleared by this point");
+  ErrorIf(this->LiveObjects.Empty() == false, "All objects should be cleared by this point");
 }
 
 void HeapManager::Delete(const Handle& handle)
@@ -416,12 +403,10 @@ ReleaseResult::Enum HeapManager::ReleaseReference(const Handle& handle)
   }
 }
 
-void HeapManager::SetNativeTypeFullyConstructed(const Handle& handle,
-                                                bool value)
+void HeapManager::SetNativeTypeFullyConstructed(const Handle& handle, bool value)
 {
   HeapHandleData& data = *(HeapHandleData*)handle.Data;
-  data.Header->Flags = (HeapObjectFlags::Enum)(
-      data.Header->Flags | HeapObjectFlags::NativeFullyConstructed);
+  data.Header->Flags = (HeapObjectFlags::Enum)(data.Header->Flags | HeapObjectFlags::NativeFullyConstructed);
 }
 
 bool HeapManager::GetNativeTypeFullyConstructed(const Handle& handle)
@@ -440,9 +425,7 @@ String StackManager::GetName()
   return Name;
 }
 
-void StackManager::Allocate(BoundType* type,
-                            Handle& handleToInitialize,
-                            size_t customFlags)
+void StackManager::Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags)
 {
   Error("Allocating an object using a the StackObjectManager is not supported");
 }
@@ -461,9 +444,7 @@ byte* StackManager::HandleToObject(const Handle& handle)
   return data.StackLocation;
 }
 
-void StackManager::ObjectToHandle(const byte* object,
-                                  BoundType* type,
-                                  Handle& handleToInitialize)
+void StackManager::ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize)
 {
   StackHandleData& data = *(StackHandleData*)handleToInitialize.Data;
   data.StackLocation = const_cast<byte*>(object);
@@ -486,9 +467,7 @@ byte* PointerManager::HandleToObject(const Handle& handle)
   return *(byte**)handle.Data;
 }
 
-void PointerManager::Allocate(BoundType* type,
-                              Handle& handleToInitialize,
-                              size_t customFlags)
+void PointerManager::Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags)
 {
   handleToInitialize.Flags |= HandleFlags::NoReferenceCounting;
   handleToInitialize.HandlePointer = Zero::zAllocate(type->Size);
@@ -504,9 +483,7 @@ bool PointerManager::CanDelete(const Handle& handle)
   return true;
 }
 
-void PointerManager::ObjectToHandle(const byte* object,
-                                    BoundType* type,
-                                    Handle& handleToInitialize)
+void PointerManager::ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize)
 {
   handleToInitialize.Flags |= HandleFlags::NoReferenceCounting;
   handleToInitialize.HandlePointer = (void*)object;
@@ -534,16 +511,12 @@ size_t StringManager::Hash(const Handle& handle)
   return (int)((String*)handle.Data)->Hash();
 }
 
-void StringManager::Allocate(BoundType* type,
-                             Handle& handleToInitialize,
-                             size_t customFlags)
+void StringManager::Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags)
 {
   Error("Allocating an object using a the StringManager is not supported");
 }
 
-void StringManager::ObjectToHandle(const byte* object,
-                                   BoundType* type,
-                                   Handle& handleToInitialize)
+void StringManager::ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize)
 {
   String& str = *(String*)object;
   new (handleToInitialize.Data) String(str);

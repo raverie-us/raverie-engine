@@ -49,8 +49,7 @@ UiLegacyToolTip::~UiLegacyToolTip()
   mToolTip.SafeDestroy();
 }
 
-void UiLegacyToolTip::SetPlacement(CameraViewport* viewport,
-                                   RectangleParam localRect)
+void UiLegacyToolTip::SetPlacement(CameraViewport* viewport, RectangleParam localRect)
 {
   mPlacementRect = viewport->mViewport->GetScreenRect();
   mPlacementRect.X += localRect.GetTopLeft().x;

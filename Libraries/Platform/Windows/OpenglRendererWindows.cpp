@@ -12,8 +12,7 @@ public:
   ~OpenglRendererWindows() override;
 };
 
-OpenglRendererWindows::OpenglRendererWindows(OsHandle windowHandle,
-                                             String& error)
+OpenglRendererWindows::OpenglRendererWindows(OsHandle windowHandle, String& error)
 {
   HWND window = (HWND)windowHandle;
   HDC deviceContext = GetDC(window);

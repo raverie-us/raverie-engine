@@ -104,9 +104,7 @@ struct PointInfo
     //
   }
 
-  PointInfo(Vec3Param point, real projection) :
-      Point(point),
-      Projection(projection)
+  PointInfo(Vec3Param point, real projection) : Point(point), Projection(projection)
   {
     //
   }
@@ -145,10 +143,7 @@ void MinMaxInPlace(real& min, real& max)
 
 /// Given the point in world coordinates, find the vertex of the box that is
 /// closest to it.
-bool ObbPointIndexFromPoint(Vec3Param worldPoint,
-                            Vec3Param obbCenter,
-                            Mat3Param obbBasis,
-                            uint& index)
+bool ObbPointIndexFromPoint(Vec3Param worldPoint, Vec3Param obbCenter, Mat3Param obbBasis, uint& index)
 {
   Vec3 obbToPoint = worldPoint - obbCenter;
   TransposedTransform(obbBasis, &obbToPoint);
@@ -157,8 +152,7 @@ bool ObbPointIndexFromPoint(Vec3Param worldPoint,
     bool pointFound = true;
     for (uint j = 0; j < 3; ++j)
     {
-      if (Math::GetSign(obbToPoint[j]) !=
-          Math::GetSign(Geometry::Box::cPoint[i][j]))
+      if (Math::GetSign(obbToPoint[j]) != Math::GetSign(Geometry::Box::cPoint[i][j]))
       {
         pointFound = false;
         break;
@@ -177,9 +171,7 @@ bool ObbPointIndexFromPoint(Vec3Param worldPoint,
 /// rectangle's center is at the origin and its axes are aligned with the world
 /// axes. This is all done in a 2D space rather than 3D. Borrowed heavily from
 /// Bullet.
-uint ClipQuadWithRectangle(Vec2Param rectangleHalfExtents,
-                           const Vec2* inPoints,
-                           Vec2* outPoints)
+uint ClipQuadWithRectangle(Vec2Param rectangleHalfExtents, const Vec2* inPoints, Vec2* outPoints)
 {
   // Rectangle sides are tested in the following order: -x, +x, -y, +y
   uint quadPointCount = 4; // Quadrilateral starts off with 4 points
@@ -200,8 +192,8 @@ uint ClipQuadWithRectangle(Vec2Param rectangleHalfExtents,
     {
       const real realSign = real(sign); // Used throughout the loop
       const Vec2* curr = quadPoint;     // Current point of the quad
-      Vec2* clip = clipPoint; // Where to store the end resulting point
-      clipPointCount = 0;     // No clipping has occurred on this side yet
+      Vec2* clip = clipPoint;           // Where to store the end resulting point
+      clipPointCount = 0;               // No clipping has occurred on this side yet
 
       // Used to help clarify when the next point of the quad should be the
       // first point of the quad
@@ -306,11 +298,7 @@ uint ClipQuadWithRectangle(Vec2Param rectangleHalfExtents,
   return clipPointCount;
 }
 
-void GetExtremePoints(const Vec2* points,
-                      uint pointCount,
-                      uint maxPoints,
-                      uint initIndex,
-                      uint* pointIndices)
+void GetExtremePoints(const Vec2* points, uint pointCount, uint maxPoints, uint initIndex, uint* pointIndices)
 {
   Vec2 centroid;
   Geometry::CalculatePolygonCentriod(points, pointCount, &centroid);
@@ -323,8 +311,7 @@ void GetExtremePoints(const Vec2* points,
   bool inArray[8];
   for (uint i = 0; i < pointCount; ++i)
   {
-    angles[i] =
-        Math::ArcTan2(points[i].y - centroid.y, points[i].x - centroid.x);
+    angles[i] = Math::ArcTan2(points[i].y - centroid.y, points[i].x - centroid.x);
     inArray[i] = false;
   }
 
@@ -431,8 +418,7 @@ void ObbObbEdgeCase(Vec3Param obbOneCenter,
   for (uint i = 0; i < 3; ++i)
   {
     real sign = Math::GetSign(Dot(normal, obbOneAxes[i]));
-    obbOnePoint = Vector3::MultiplyAdd(
-        obbOnePoint, obbOneAxes[i], obbOneHalfExtents[i] * sign);
+    obbOnePoint = Vector3::MultiplyAdd(obbOnePoint, obbOneAxes[i], obbOneHalfExtents[i] * sign);
   }
 
   // Look for one of the points that makes up the intersecting edge on OBB two.
@@ -440,8 +426,7 @@ void ObbObbEdgeCase(Vec3Param obbOneCenter,
   for (uint i = 0; i < 3; ++i)
   {
     real sign = -Math::GetSign(Dot(normal, obbTwoAxes[i]));
-    obbTwoPoint = Vector3::MultiplyAdd(
-        obbTwoPoint, obbTwoAxes[i], obbTwoHalfExtents[i] * sign);
+    obbTwoPoint = Vector3::MultiplyAdd(obbTwoPoint, obbTwoAxes[i], obbTwoHalfExtents[i] * sign);
   }
 
   // The index of one's edge axis is stored in the upper 16 bits of the number.
@@ -452,12 +437,7 @@ void ObbObbEdgeCase(Vec3Param obbOneCenter,
   uint twoEdgeIndex = (cObbAxes[axisCase - 1] & 0x0000FFFF) - 1;
   Vec3 obbTwoEdgeAxis = obbTwoAxes[twoEdgeIndex];
 
-  ClosestPointsOfTwoLines(obbOnePoint,
-                          obbOneEdgeAxis,
-                          obbTwoPoint,
-                          obbTwoEdgeAxis,
-                          &obbOnePoint,
-                          &obbTwoPoint);
+  ClosestPointsOfTwoLines(obbOnePoint, obbOneEdgeAxis, obbTwoPoint, obbTwoEdgeAxis, &obbOnePoint, &obbTwoPoint);
 
   manifold.Normal = normal;
   manifold.PointAt(0).Points[0] = obbOnePoint;
@@ -674,8 +654,7 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
     // frame. These are just the axes of B's face scaled by B's face's extents.
     // The four combinations of these (--, -+, ++, +-) are used to generate all
     // four of the points on B's face
-    Vec2 bFaceBasis[2] = {bFaceAxes[0] * (*bHalfExtents)[bOne],
-                          bFaceAxes[1] * (*bHalfExtents)[bTwo]};
+    Vec2 bFaceBasis[2] = {bFaceAxes[0] * (*bHalfExtents)[bOne], bFaceAxes[1] * (*bHalfExtents)[bTwo]};
 
     // --
     bFacePoints[0].x = bFaceXY.x - bFaceBasis[0].x - bFaceBasis[1].x;
@@ -705,8 +684,7 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
   // (or z-axis, depending on how you view things). Now clip B's face against
   // A's face.
   Vec2 bFace[8];
-  uint bFacePointCount =
-      ClipQuadWithRectangle(aFaceExtents, bFacePoints, bFace);
+  uint bFacePointCount = ClipQuadWithRectangle(aFaceExtents, bFacePoints, bFace);
   if (bFacePointCount == 0)
   {
     return None;
@@ -719,8 +697,7 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
   {
     // Determinant of the matrix that brought B's points into A's reference
     // frame.
-    real inverseDeterminant = real(1.0) / (bFaceAxes[0].x * bFaceAxes[1].y -
-                                           bFaceAxes[1].x * bFaceAxes[0].y);
+    real inverseDeterminant = real(1.0) / (bFaceAxes[0].x * bFaceAxes[1].y - bFaceAxes[1].x * bFaceAxes[0].y);
 
     // Invert the matrix to bring B's points back into world space but with the
     // center of A's face as the origin.
@@ -748,17 +725,14 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
     // This block of code is using the aforementioned point representation to
     // compute the points' positions in world space
     points[pointCount] = bFaceCenter;
-    points[pointCount] =
-        Math::MultiplyAdd(points[pointCount], *(bAxes[bOne]), xExtent);
-    points[pointCount] =
-        Math::MultiplyAdd(points[pointCount], *(bAxes[bTwo]), yExtent);
+    points[pointCount] = Math::MultiplyAdd(points[pointCount], *(bAxes[bOne]), xExtent);
+    points[pointCount] = Math::MultiplyAdd(points[pointCount], *(bAxes[bTwo]), yExtent);
 
     // Dot the face normal with the point and compute the depth
     // Since A's center is the origin, A's face's distance from the origin is
     // the half extents of A along the normal
     const real faceDistance = (*aHalfExtents)[aAxis];
-    depths[pointCount] = Geometry::SignedDistanceToPlane(
-        points[pointCount], aNormal, faceDistance);
+    depths[pointCount] = Geometry::SignedDistanceToPlane(points[pointCount], aNormal, faceDistance);
 
     // Point is inside of the face, keep it
     if (Math::IsNegative(depths[pointCount]))
@@ -817,9 +791,7 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
 
       if (cGeometrySafeChecks)
       {
-        Vec3 oneToTwo[2] = {obbTwoCenter - obbOneCenter,
-                            manifold.PointAt(i).Points[1] -
-                                manifold.PointAt(i).Points[0]};
+        Vec3 oneToTwo[2] = {obbTwoCenter - obbOneCenter, manifold.PointAt(i).Points[1] - manifold.PointAt(i).Points[0]};
         real dot = Dot(oneToTwo[0], oneToTwo[1]);
         ErrorIf(dot > cObbObbPointCheck,
                 "Intersection - Points are not stored"
@@ -870,9 +842,7 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
 
       if (cGeometrySafeChecks)
       {
-        Vec3 oneToTwo[2] = {obbTwoCenter - obbOneCenter,
-                            manifold.PointAt(i).Points[1] -
-                                manifold.PointAt(i).Points[0]};
+        Vec3 oneToTwo[2] = {obbTwoCenter - obbOneCenter, manifold.PointAt(i).Points[1] - manifold.PointAt(i).Points[0]};
         real dot = Dot(oneToTwo[0], oneToTwo[1]);
         ErrorIf(dot > cObbObbPointCheck,
                 "Intersection - Points are not stored"
@@ -905,12 +875,8 @@ Type ObbObb(Vec3Param obbOneCenter,
             Mat3Param obbTwoBasis,
             Manifold* manifold)
 {
-  const Vec3 obbOneAxes[3] = {obbOneBasis.GetBasis(0),
-                              obbOneBasis.GetBasis(1),
-                              obbOneBasis.GetBasis(2)};
-  const Vec3 obbTwoAxes[3] = {obbTwoBasis.GetBasis(0),
-                              obbTwoBasis.GetBasis(1),
-                              obbTwoBasis.GetBasis(2)};
+  const Vec3 obbOneAxes[3] = {obbOneBasis.GetBasis(0), obbOneBasis.GetBasis(1), obbOneBasis.GetBasis(2)};
+  const Vec3 obbTwoAxes[3] = {obbTwoBasis.GetBasis(0), obbTwoBasis.GetBasis(1), obbTwoBasis.GetBasis(2)};
 
 #ifdef VisualizeObbObbTestAxes
   // Axes visualization
@@ -922,27 +888,20 @@ Type ObbObb(Vec3Param obbOneCenter,
       Vec3 lineStart = obbOneCenter + obbOneAxes[i] * obbOneHalfExtents[i];
       Vec3 lineEnd = lineStart + obbOneAxes[i];
 
-      Zero::gDebugDraw->Add(Zero::Debug::Line(lineStart, lineEnd)
-                                .Color(axes[i])
-                                .HeadSize(headSize));
+      Zero::gDebugDraw->Add(Zero::Debug::Line(lineStart, lineEnd).Color(axes[i]).HeadSize(headSize));
     }
     for (uint i = 0; i < 3; ++i)
     {
       Vec3 lineStart = obbTwoCenter + obbTwoAxes[i] * obbTwoHalfExtents[i];
       Vec3 lineEnd = lineStart + obbTwoAxes[i];
 
-      Zero::gDebugDraw->Add(Zero::Debug::Line(lineStart, lineEnd)
-                                .Color(axes[i])
-                                .HeadSize(headSize));
+      Zero::gDebugDraw->Add(Zero::Debug::Line(lineStart, lineEnd).Color(axes[i]).HeadSize(headSize));
     }
-#  define MultiColoredLine(start, end, colorA, colorB)                         \
-    {                                                                          \
-      Vec3 halfway = ((start) + (end)) / real(2.0);                            \
-      Zero::gDebugDraw->Add(                                                   \
-          Zero::Debug::Line((start), halfway).Color((colorA)));                \
-      Zero::gDebugDraw->Add(Zero::Debug::Line(halfway, (end))                  \
-                                .Color((colorB))                               \
-                                .HeadSize(headSize));                          \
+#  define MultiColoredLine(start, end, colorA, colorB)                                                                 \
+    {                                                                                                                  \
+      Vec3 halfway = ((start) + (end)) / real(2.0);                                                                    \
+      Zero::gDebugDraw->Add(Zero::Debug::Line((start), halfway).Color((colorA)));                                      \
+      Zero::gDebugDraw->Add(Zero::Debug::Line(halfway, (end)).Color((colorB)).HeadSize(headSize));                     \
     }
 
     for (uint i = 0; i < 3; ++i)
@@ -1056,26 +1015,26 @@ Type ObbObb(Vec3Param obbOneCenter,
 
   if (existsParallel == false)
   {
-#define HandleObbOverlap(nX, nY, nZ, aCase)                                    \
-  {                                                                            \
-    rOverlap = boxProjections - Math::Abs(test);                               \
-    if (rOverlap < cObbObbZero)                                                \
-    {                                                                          \
-      return None;                                                             \
-    }                                                                          \
-    real length = Math::Sqrt((nX) * (nX) + (nY) * (nY) + (nZ) * (nZ));         \
-    if (length > cSimdEpsilon)                                                 \
-    {                                                                          \
-      rOverlap /= length;                                                      \
-      if ((rOverlap * cObbObbFudgeFactor) < min)                               \
-      {                                                                        \
-        min = rOverlap;                                                        \
-        normal.x = (nX) / length;                                              \
-        normal.y = (nY) / length;                                              \
-        normal.z = (nZ) / length;                                              \
-        axisCase = (aCase);                                                    \
-      }                                                                        \
-    }                                                                          \
+#define HandleObbOverlap(nX, nY, nZ, aCase)                                                                            \
+  {                                                                                                                    \
+    rOverlap = boxProjections - Math::Abs(test);                                                                       \
+    if (rOverlap < cObbObbZero)                                                                                        \
+    {                                                                                                                  \
+      return None;                                                                                                     \
+    }                                                                                                                  \
+    real length = Math::Sqrt((nX) * (nX) + (nY) * (nY) + (nZ) * (nZ));                                                 \
+    if (length > cSimdEpsilon)                                                                                         \
+    {                                                                                                                  \
+      rOverlap /= length;                                                                                              \
+      if ((rOverlap * cObbObbFudgeFactor) < min)                                                                       \
+      {                                                                                                                \
+        min = rOverlap;                                                                                                \
+        normal.x = (nX) / length;                                                                                      \
+        normal.y = (nY) / length;                                                                                      \
+        normal.z = (nZ) / length;                                                                                      \
+        axisCase = (aCase);                                                                                            \
+      }                                                                                                                \
+    }                                                                                                                  \
   }
 
     //--------------------------------------------------------------------------
@@ -1220,16 +1179,12 @@ Type ObbPlane(Vec3Param obbCenter,
   if (manifold == nullptr)
   {
     // Compute the projection interval radius of box onto L(t) = b.c + t * p.n
-    real radius =
-        obbHalfExtents[0] * Math::Abs(Dot(planeNormal, obbBasis.GetBasis(0)));
-    radius +=
-        obbHalfExtents[1] * Math::Abs(Dot(planeNormal, obbBasis.GetBasis(1)));
-    radius +=
-        obbHalfExtents[2] * Math::Abs(Dot(planeNormal, obbBasis.GetBasis(2)));
+    real radius = obbHalfExtents[0] * Math::Abs(Dot(planeNormal, obbBasis.GetBasis(0)));
+    radius += obbHalfExtents[1] * Math::Abs(Dot(planeNormal, obbBasis.GetBasis(1)));
+    radius += obbHalfExtents[2] * Math::Abs(Dot(planeNormal, obbBasis.GetBasis(2)));
 
     // Compute the signed distance of the box's center from the plane
-    real signedDistance =
-        Geometry::SignedDistanceToPlane(obbCenter, planeNormal, planeDistance);
+    real signedDistance = Geometry::SignedDistanceToPlane(obbCenter, planeNormal, planeDistance);
 
     // Intersection occurs when the signed distance falls within the
     //[-radius, +radius] interval
@@ -1285,8 +1240,7 @@ Type ObbPlane(Vec3Param obbCenter,
 
   // Do an early out check to see if all of the box's face points are on the
   // negative side of the plane.
-  real sign =
-      Geometry::SignedDistanceToPlane(obbCenter, planeNormal, planeDistance);
+  real sign = Geometry::SignedDistanceToPlane(obbCenter, planeNormal, planeDistance);
   if (Math::IsNegative(sign))
   {
     // All of the box's face points are negative, add as many as we can and
@@ -1310,8 +1264,7 @@ Type ObbPlane(Vec3Param obbCenter,
       point = Math::MultiplyAdd(point, obbAxes[1], signs[1]);
       point = Math::MultiplyAdd(point, obbAxes[2], signs[2]);
       points[i].Point = point;
-      points[i].Projection =
-          Geometry::SignedDistanceToPlane(point, planeNormal, planeDistance);
+      points[i].Projection = Geometry::SignedDistanceToPlane(point, planeNormal, planeDistance);
     }
 
     uint maxCount = manifold->PointCount;
@@ -1325,8 +1278,7 @@ Type ObbPlane(Vec3Param obbCenter,
       IntersectionPoint& manifoldPoint = manifold->PointAt(i);
       manifoldPoint.Points[0] = points[i].Point;
       manifoldPoint.Points[1] = points[i].Point;
-      ClosestPointOnPlaneToPoint(
-          planeNormal, planeDistance, &(manifoldPoint.Points[1]));
+      ClosestPointOnPlaneToPoint(planeNormal, planeDistance, &(manifoldPoint.Points[1]));
       manifoldPoint.Depth = -points[i].Projection;
     }
     return Face;
@@ -1350,8 +1302,7 @@ Type ObbPlane(Vec3Param obbCenter,
     point = Math::MultiplyAdd(point, obbAxes[1], signs[1]);
     point = Math::MultiplyAdd(point, obbAxes[2], signs[2]);
 
-    real depth =
-        Geometry::SignedDistanceToPlane(point, planeNormal, planeDistance);
+    real depth = Geometry::SignedDistanceToPlane(point, planeNormal, planeDistance);
     if (Math::IsNegative(depth))
     {
       points.PushBack(PointInfo(point, depth));
@@ -1374,8 +1325,7 @@ Type ObbPlane(Vec3Param obbCenter,
     IntersectionPoint& manifoldPoint = manifold->PointAt(i);
     manifoldPoint.Points[0] = points[i].Point;
     manifoldPoint.Points[1] = points[i].Point;
-    ClosestPointOnPlaneToPoint(
-        planeNormal, planeDistance, &(manifoldPoint.Points[1]));
+    ClosestPointOnPlaneToPoint(planeNormal, planeDistance, &(manifoldPoint.Points[1]));
     manifoldPoint.Depth = -points[i].Projection;
   }
   return Other;
@@ -1391,8 +1341,7 @@ Type ObbSphere(Vec3Param obbCenter,
 {
   Vec3 newSphereCenter = sphereCenter - obbCenter;
   Math::TransposedTransform(obbBasis, &newSphereCenter);
-  Type result = AabbSphere(
-      -obbHalfExtents, obbHalfExtents, newSphereCenter, sphereRadius, manifold);
+  Type result = AabbSphere(-obbHalfExtents, obbHalfExtents, newSphereCenter, sphereRadius, manifold);
 
   if ((manifold != nullptr) && (result != None))
   {
@@ -1416,8 +1365,7 @@ void ObbTriangleEdgeCase(Vec3Param obbCenter,
                          real projection,
                          Manifold& manifold)
 {
-  Vec3 obbAxes[3] = {
-      obbBasis.GetBasis(0), obbBasis.GetBasis(1), obbBasis.GetBasis(2)};
+  Vec3 obbAxes[3] = {obbBasis.GetBasis(0), obbBasis.GetBasis(1), obbBasis.GetBasis(2)};
 
   // Normal is currently in the body space of the box, transform the normal back
   // into world space
@@ -1444,8 +1392,7 @@ void ObbTriangleEdgeCase(Vec3Param obbCenter,
   for (uint i = 0; i < 3; ++i)
   {
     real sign = Math::GetSign(Dot(normal, obbAxes[i]));
-    boxEdgePoint =
-        Math::MultiplyAdd(boxEdgePoint, obbAxes[i], obbHalfExtents[i] * sign);
+    boxEdgePoint = Math::MultiplyAdd(boxEdgePoint, obbAxes[i], obbHalfExtents[i] * sign);
   }
 
   // Get the point and the axis that make up the triangle's intersecting edge
@@ -1478,12 +1425,7 @@ void ObbTriangleEdgeCase(Vec3Param obbCenter,
   }
   Vec3 boxEdgeAxis = obbAxes[boxEdgeIndex];
 
-  ClosestPointsOfTwoLines(boxEdgePoint,
-                          boxEdgeAxis,
-                          triEdgePoint,
-                          triEdgeAxis,
-                          &boxEdgePoint,
-                          &triEdgePoint);
+  ClosestPointsOfTwoLines(boxEdgePoint, boxEdgeAxis, triEdgePoint, triEdgeAxis, &boxEdgePoint, &triEdgePoint);
 
   manifold.Normal = normal;
   manifold.PointAt(0).Points[0] = boxEdgePoint;
@@ -1500,8 +1442,7 @@ Type ClipTriangleAgainstBox(Vec3Param obbCenter,
                             Vec3Param normal,
                             Manifold& manifold)
 {
-  Vec3 obbAxes[3] = {
-      obbBasis.GetBasis(0), obbBasis.GetBasis(1), obbBasis.GetBasis(2)};
+  Vec3 obbAxes[3] = {obbBasis.GetBasis(0), obbBasis.GetBasis(1), obbBasis.GetBasis(2)};
 
   //----------------------------------------------------------------------------
   // Find the largest component of the normal. The perpendicular components are
@@ -1546,25 +1487,12 @@ Type ClipTriangleAgainstBox(Vec3Param obbCenter,
     const real extentTwo = obbHalfExtents[boxTwo];
 
     // Build clipping planes
-    Vec4 clippingPlanes[4] = {Vec4(axisOne.x,
-                                   axisOne.y,
-                                   axisOne.z,
-                                   extentOne + Dot(obbCenter, axisOne)),
-                              Vec4(-axisOne.x,
-                                   -axisOne.y,
-                                   -axisOne.z,
-                                   extentOne - Dot(obbCenter, axisOne)),
-                              Vec4(axisTwo.x,
-                                   axisTwo.y,
-                                   axisTwo.z,
-                                   extentTwo + Dot(obbCenter, axisTwo)),
-                              Vec4(-axisTwo.x,
-                                   -axisTwo.y,
-                                   -axisTwo.z,
-                                   extentTwo - Dot(obbCenter, axisTwo))};
+    Vec4 clippingPlanes[4] = {Vec4(axisOne.x, axisOne.y, axisOne.z, extentOne + Dot(obbCenter, axisOne)),
+                              Vec4(-axisOne.x, -axisOne.y, -axisOne.z, extentOne - Dot(obbCenter, axisOne)),
+                              Vec4(axisTwo.x, axisTwo.y, axisTwo.z, extentTwo + Dot(obbCenter, axisTwo)),
+                              Vec4(-axisTwo.x, -axisTwo.y, -axisTwo.z, extentTwo - Dot(obbCenter, axisTwo))};
     // Clip the triangle against the box's face
-    triPointCount = Geometry::ClipPolygonWithPlanes(
-        clippingPlanes, 4, trianglePoints, 3, triPoints);
+    triPointCount = Geometry::ClipPolygonWithPlanes(clippingPlanes, 4, trianglePoints, 3, triPoints);
   }
   uint pointCount = 0;
   Vec3 points[7];
@@ -1632,19 +1560,10 @@ Type ClipTriangleAgainstBox(Vec3Param obbCenter,
     // the z-axis. This is probably a good place to start optimizing.
     Vec3 triCenter;
     Geometry::CalculateBarycenter(trianglePoints, 3, &triCenter);
-    Vec3 zAxis = Cross(trianglePoints[1] - trianglePoints[0],
-                       trianglePoints[2] - trianglePoints[0]);
+    Vec3 zAxis = Cross(trianglePoints[1] - trianglePoints[0], trianglePoints[2] - trianglePoints[0]);
     Vec3 xAxis = trianglePoints[0] - triCenter;
     Vec3 yAxis = Cross(xAxis, zAxis);
-    Mat3 triMatrix(xAxis[0],
-                   yAxis[0],
-                   zAxis[0],
-                   xAxis[1],
-                   yAxis[1],
-                   zAxis[1],
-                   xAxis[2],
-                   yAxis[2],
-                   zAxis[2]);
+    Mat3 triMatrix(xAxis[0], yAxis[0], zAxis[0], xAxis[1], yAxis[1], zAxis[1], xAxis[2], yAxis[2], zAxis[2]);
     triMatrix.Orthonormalize();
 
     // Bring the clipped triangle points back to the triangle's "model space" so
@@ -1653,8 +1572,7 @@ Type ClipTriangleAgainstBox(Vec3Param obbCenter,
     Vec2 triPlanePoints[7];
     for (uint i = 0; i < pointCount; ++i)
     {
-      Vec3 triSpacePoint =
-          Math::TransposedTransform(triMatrix, (points[i] - triCenter));
+      Vec3 triSpacePoint = Math::TransposedTransform(triMatrix, (points[i] - triCenter));
       triPlanePoints[i].Set(triSpacePoint.x, triSpacePoint.y);
     }
 
@@ -1672,8 +1590,7 @@ Type ClipTriangleAgainstBox(Vec3Param obbCenter,
           maxDepthIndex = i;
         }
       }
-      GetExtremePoints(
-          triPlanePoints, pointCount, maxPoints, maxDepthIndex, bestPoints);
+      GetExtremePoints(triPlanePoints, pointCount, maxPoints, maxDepthIndex, bestPoints);
     }
 
     Vec3 pointInWorld;
@@ -1702,8 +1619,7 @@ Type ClipBoxAgainstTriangle(Vec3Param obbCenter,
                             Vec3Param normal,
                             Manifold& manifold)
 {
-  Vec3 obbAxes[3] = {
-      obbBasis.GetBasis(0), obbBasis.GetBasis(1), obbBasis.GetBasis(2)};
+  Vec3 obbAxes[3] = {obbBasis.GetBasis(0), obbBasis.GetBasis(1), obbBasis.GetBasis(2)};
 
   Vec3 triNormal = -normal;
   uint boxAxis, boxOne, boxTwo;
@@ -1746,22 +1662,16 @@ Type ClipBoxAgainstTriangle(Vec3Param obbCenter,
   {
     Vec3 facePoints[4];
     real sign = Math::GetSign(boxNormal[boxAxis]);
-    Vec3 faceCenter =
-        obbCenter + obbAxes[boxAxis] * (sign * obbHalfExtents[boxAxis]);
+    Vec3 faceCenter = obbCenter + obbAxes[boxAxis] * (sign * obbHalfExtents[boxAxis]);
     //++
-    facePoints[0] = faceCenter + obbAxes[boxOne] * obbHalfExtents[boxOne] +
-                    obbAxes[boxTwo] * obbHalfExtents[boxTwo];
+    facePoints[0] = faceCenter + obbAxes[boxOne] * obbHalfExtents[boxOne] + obbAxes[boxTwo] * obbHalfExtents[boxTwo];
     //+-
-    facePoints[1] = faceCenter + obbAxes[boxOne] * obbHalfExtents[boxOne] -
-                    obbAxes[boxTwo] * obbHalfExtents[boxTwo];
+    facePoints[1] = faceCenter + obbAxes[boxOne] * obbHalfExtents[boxOne] - obbAxes[boxTwo] * obbHalfExtents[boxTwo];
     //--
-    facePoints[2] = faceCenter - obbAxes[boxOne] * obbHalfExtents[boxOne] -
-                    obbAxes[boxTwo] * obbHalfExtents[boxTwo];
+    facePoints[2] = faceCenter - obbAxes[boxOne] * obbHalfExtents[boxOne] - obbAxes[boxTwo] * obbHalfExtents[boxTwo];
     //-+
-    facePoints[3] = faceCenter - obbAxes[boxOne] * obbHalfExtents[boxOne] +
-                    obbAxes[boxTwo] * obbHalfExtents[boxTwo];
-    boxPointCount = Geometry::ClipPolygonWithPolygon(
-        trianglePoints, 3, facePoints, 4, boxPoints);
+    facePoints[3] = faceCenter - obbAxes[boxOne] * obbHalfExtents[boxOne] + obbAxes[boxTwo] * obbHalfExtents[boxTwo];
+    boxPointCount = Geometry::ClipPolygonWithPolygon(trianglePoints, 3, facePoints, 4, boxPoints);
   }
 
   uint pointCount = 0;
@@ -1833,8 +1743,7 @@ Type ClipBoxAgainstTriangle(Vec3Param obbCenter,
     Vec2 boxPlanePoints[7];
     for (uint i = 0; i < pointCount; ++i)
     {
-      Vec3 boxSpacePoint =
-          Math::TransposedTransform(obbBasis, points[i] - faceCenter);
+      Vec3 boxSpacePoint = Math::TransposedTransform(obbBasis, points[i] - faceCenter);
       boxPlanePoints[i].Set(boxSpacePoint[boxOne], boxSpacePoint[boxTwo]);
     }
 
@@ -1852,8 +1761,7 @@ Type ClipBoxAgainstTriangle(Vec3Param obbCenter,
           maxDepthIndex = i;
         }
       }
-      GetExtremePoints(
-          boxPlanePoints, pointCount, maxPoints, maxDepthIndex, bestPoints);
+      GetExtremePoints(boxPlanePoints, pointCount, maxPoints, maxDepthIndex, bestPoints);
     }
 
     Vec3 pointInWorld;
@@ -1890,14 +1798,7 @@ Type ObbTriangleContactGeneration(Vec3Param obbCenter,
   // closest points of the two edges.
   if (axisCase > 4)
   {
-    ObbTriangleEdgeCase(obbCenter,
-                        obbHalfExtents,
-                        obbBasis,
-                        triPoints,
-                        normal,
-                        axisCase,
-                        projection,
-                        manifold);
+    ObbTriangleEdgeCase(obbCenter, obbHalfExtents, obbBasis, triPoints, normal, axisCase, projection, manifold);
     return EdgeEdge;
   }
 
@@ -1919,13 +1820,7 @@ Type ObbTriangleContactGeneration(Vec3Param obbCenter,
   // clipped against one of the box's faces.
   if (axisCase != 4)
   {
-    return ClipTriangleAgainstBox(obbCenter,
-                                  obbHalfExtents,
-                                  obbBasis,
-                                  triPoints,
-                                  axisCase,
-                                  normal,
-                                  manifold);
+    return ClipTriangleAgainstBox(obbCenter, obbHalfExtents, obbBasis, triPoints, axisCase, normal, manifold);
   }
 
   //----------------------------------------------------------------------------
@@ -1933,13 +1828,7 @@ Type ObbTriangleContactGeneration(Vec3Param obbCenter,
   // toward the triangle will be used to clip the triangle.
   else
   {
-    return ClipBoxAgainstTriangle(obbCenter,
-                                  obbHalfExtents,
-                                  obbBasis,
-                                  triPoints,
-                                  axisCase,
-                                  normal,
-                                  manifold);
+    return ClipBoxAgainstTriangle(obbCenter, obbHalfExtents, obbBasis, triPoints, axisCase, normal, manifold);
   }
 
   /* To get the triangle all setup for clipping against the face, first the
@@ -1967,28 +1856,20 @@ Type ObbTriangle(Vec3Param obbCenter,
                  Manifold* manifold)
 {
   Vec3 trianglePoints[3] = {trianglePointA, trianglePointB, trianglePointC};
-  return ObbTriangle(
-      obbCenter, obbHalfExtents, obbBasis, trianglePoints, manifold);
+  return ObbTriangle(obbCenter, obbHalfExtents, obbBasis, trianglePoints, manifold);
 }
 
 /// Intersect an oriented bounding box with a triangle. Different parameters.
-Type ObbTriangle(Vec3Param obbCenter,
-                 Vec3Param obbHalfExtents,
-                 Mat3Param obbBasis,
-                 const Vec3 trianglePoints[3],
-                 Manifold* manifold)
+Type ObbTriangle(
+    Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, const Vec3 trianglePoints[3], Manifold* manifold)
 {
   // Take the triangle into the box's space
-  Vec3 triPoint[3] = {trianglePoints[0] - obbCenter,
-                      trianglePoints[1] - obbCenter,
-                      trianglePoints[2] - obbCenter};
+  Vec3 triPoint[3] = {trianglePoints[0] - obbCenter, trianglePoints[1] - obbCenter, trianglePoints[2] - obbCenter};
   Math::TransposedTransform(obbBasis, &(triPoint[0]));
   Math::TransposedTransform(obbBasis, &(triPoint[1]));
   Math::TransposedTransform(obbBasis, &(triPoint[2]));
 
-  Vec3 triEdge[3] = {triPoint[1] - triPoint[0],
-                     triPoint[2] - triPoint[1],
-                     triPoint[0] - triPoint[2]};
+  Vec3 triEdge[3] = {triPoint[1] - triPoint[0], triPoint[2] - triPoint[1], triPoint[0] - triPoint[2]};
 
   Vec3 normal;                           // Axis of minimum overlap
   real minOverlap = Math::PositiveMax(); // Overall minimum overlap
@@ -1998,31 +1879,31 @@ Type ObbTriangle(Vec3Param obbCenter,
   {
     real boxProj;
 // Category 3: Test cross product axes (9 axes, cases 5 - 13)
-#define HandleObbTriOverlap(nX, nY, nZ, aCase)                                 \
-  {                                                                            \
-    MinMaxInPlace(triProj[0], triProj[1]);                                     \
-    triProj[0] = boxProj - triProj[0];                                         \
-    triProj[1] += boxProj;                                                     \
-    if ((triProj[0] < cObbTriangleZero) || (triProj[1] < cObbTriangleZero))    \
-    {                                                                          \
-      return None;                                                             \
-    }                                                                          \
-    real curOverlap = Math::Min(triProj[0], triProj[1]);                       \
-    {                                                                          \
-      real length = Math::Sqrt((nX) * (nX) + (nY) * (nY) + (nZ) * (nZ));       \
-      if (length > cSimdEpsilon)                                               \
-      {                                                                        \
-        curOverlap /= length;                                                  \
-        if (curOverlap < minOverlap)                                           \
-        {                                                                      \
-          minOverlap = curOverlap;                                             \
-          normal.x = (nX) / length;                                            \
-          normal.y = (nY) / length;                                            \
-          normal.z = (nZ) / length;                                            \
-          axisCase = (aCase);                                                  \
-        }                                                                      \
-      }                                                                        \
-    }                                                                          \
+#define HandleObbTriOverlap(nX, nY, nZ, aCase)                                                                         \
+  {                                                                                                                    \
+    MinMaxInPlace(triProj[0], triProj[1]);                                                                             \
+    triProj[0] = boxProj - triProj[0];                                                                                 \
+    triProj[1] += boxProj;                                                                                             \
+    if ((triProj[0] < cObbTriangleZero) || (triProj[1] < cObbTriangleZero))                                            \
+    {                                                                                                                  \
+      return None;                                                                                                     \
+    }                                                                                                                  \
+    real curOverlap = Math::Min(triProj[0], triProj[1]);                                                               \
+    {                                                                                                                  \
+      real length = Math::Sqrt((nX) * (nX) + (nY) * (nY) + (nZ) * (nZ));                                               \
+      if (length > cSimdEpsilon)                                                                                       \
+      {                                                                                                                \
+        curOverlap /= length;                                                                                          \
+        if (curOverlap < minOverlap)                                                                                   \
+        {                                                                                                              \
+          minOverlap = curOverlap;                                                                                     \
+          normal.x = (nX) / length;                                                                                    \
+          normal.y = (nY) / length;                                                                                    \
+          normal.z = (nZ) / length;                                                                                    \
+          axisCase = (aCase);                                                                                          \
+        }                                                                                                              \
+      }                                                                                                                \
+    }                                                                                                                  \
   }
 
     //--------------------------------------------------------------------------
@@ -2030,8 +1911,7 @@ Type ObbTriangle(Vec3Param obbCenter,
     //--------------------------------------------------------------------------
     triProj[0] = triPoint[0].z * triPoint[1].y - triPoint[0].y * triPoint[1].z;
     triProj[1] = triPoint[2].z * triEdge[0].y - triPoint[2].y * triEdge[0].z;
-    boxProj = obbHalfExtents[1] * Math::Abs(triEdge[0].z) +
-              obbHalfExtents[2] * Math::Abs(triEdge[0].y);
+    boxProj = obbHalfExtents[1] * Math::Abs(triEdge[0].z) + obbHalfExtents[2] * Math::Abs(triEdge[0].y);
     HandleObbTriOverlap(real(0.0), -triEdge[0].z, triEdge[0].y, 5);
 
     //--------------------------------------------------------------------------
@@ -2039,8 +1919,7 @@ Type ObbTriangle(Vec3Param obbCenter,
     //--------------------------------------------------------------------------
     triProj[0] = triPoint[1].z * triPoint[2].y - triPoint[1].y * triPoint[2].z;
     triProj[1] = triPoint[0].z * triEdge[1].y - triPoint[0].y * triEdge[1].z;
-    boxProj = obbHalfExtents[1] * Math::Abs(triEdge[1].z) +
-              obbHalfExtents[2] * Math::Abs(triEdge[1].y);
+    boxProj = obbHalfExtents[1] * Math::Abs(triEdge[1].z) + obbHalfExtents[2] * Math::Abs(triEdge[1].y);
     HandleObbTriOverlap(real(0.0), -triEdge[1].z, triEdge[1].y, 6);
 
     //--------------------------------------------------------------------------
@@ -2048,8 +1927,7 @@ Type ObbTriangle(Vec3Param obbCenter,
     //--------------------------------------------------------------------------
     triProj[0] = triPoint[0].y * triPoint[2].z - triPoint[0].z * triPoint[2].y;
     triProj[1] = triPoint[1].z * triEdge[2].y - triPoint[1].y * triEdge[2].z;
-    boxProj = obbHalfExtents[1] * Math::Abs(triEdge[2].z) +
-              obbHalfExtents[2] * Math::Abs(triEdge[2].y);
+    boxProj = obbHalfExtents[1] * Math::Abs(triEdge[2].z) + obbHalfExtents[2] * Math::Abs(triEdge[2].y);
     HandleObbTriOverlap(real(0.0), -triEdge[2].z, triEdge[2].y, 7);
 
     //--------------------------------------------------------------------------
@@ -2057,8 +1935,7 @@ Type ObbTriangle(Vec3Param obbCenter,
     //--------------------------------------------------------------------------
     triProj[0] = triPoint[0].x * triPoint[1].z - triPoint[0].z * triPoint[1].x;
     triProj[1] = triPoint[2].x * triEdge[0].z - triPoint[2].z * triEdge[0].x;
-    boxProj = obbHalfExtents[0] * Math::Abs(triEdge[0].z) +
-              obbHalfExtents[2] * Math::Abs(triEdge[0].x);
+    boxProj = obbHalfExtents[0] * Math::Abs(triEdge[0].z) + obbHalfExtents[2] * Math::Abs(triEdge[0].x);
     HandleObbTriOverlap(triEdge[0].z, real(0.0), -triEdge[0].x, 8);
 
     //--------------------------------------------------------------------------
@@ -2066,8 +1943,7 @@ Type ObbTriangle(Vec3Param obbCenter,
     //--------------------------------------------------------------------------
     triProj[0] = triPoint[1].x * triPoint[2].z - triPoint[1].z * triPoint[2].x;
     triProj[1] = triPoint[0].x * triEdge[1].z - triPoint[0].z * triEdge[1].x;
-    boxProj = obbHalfExtents[0] * Math::Abs(triEdge[1].z) +
-              obbHalfExtents[2] * Math::Abs(triEdge[1].x);
+    boxProj = obbHalfExtents[0] * Math::Abs(triEdge[1].z) + obbHalfExtents[2] * Math::Abs(triEdge[1].x);
     HandleObbTriOverlap(triEdge[1].z, real(0.0), -triEdge[1].x, 9);
 
     //--------------------------------------------------------------------------
@@ -2075,8 +1951,7 @@ Type ObbTriangle(Vec3Param obbCenter,
     //--------------------------------------------------------------------------
     triProj[0] = triPoint[0].z * triPoint[2].x - triPoint[0].x * triPoint[2].z;
     triProj[1] = triPoint[1].x * triEdge[2].z - triPoint[1].z * triEdge[2].x;
-    boxProj = obbHalfExtents[0] * Math::Abs(triEdge[2].z) +
-              obbHalfExtents[2] * Math::Abs(triEdge[2].x);
+    boxProj = obbHalfExtents[0] * Math::Abs(triEdge[2].z) + obbHalfExtents[2] * Math::Abs(triEdge[2].x);
     HandleObbTriOverlap(triEdge[2].z, real(0.0), -triEdge[2].x, 10);
 
     //--------------------------------------------------------------------------
@@ -2084,8 +1959,7 @@ Type ObbTriangle(Vec3Param obbCenter,
     //--------------------------------------------------------------------------
     triProj[0] = triPoint[0].y * triPoint[1].x - triPoint[0].x * triPoint[1].y;
     triProj[1] = triPoint[2].y * triEdge[0].x - triPoint[2].x * triEdge[0].y;
-    boxProj = obbHalfExtents[0] * Math::Abs(triEdge[0].y) +
-              obbHalfExtents[1] * Math::Abs(triEdge[0].x);
+    boxProj = obbHalfExtents[0] * Math::Abs(triEdge[0].y) + obbHalfExtents[1] * Math::Abs(triEdge[0].x);
     HandleObbTriOverlap(-triEdge[0].y, triEdge[0].x, real(0.0), 11);
 
     //--------------------------------------------------------------------------
@@ -2093,8 +1967,7 @@ Type ObbTriangle(Vec3Param obbCenter,
     //--------------------------------------------------------------------------
     triProj[0] = triPoint[1].y * triPoint[2].x - triPoint[1].x * triPoint[2].y;
     triProj[1] = triPoint[0].y * triEdge[1].x - triPoint[0].x * triEdge[1].y;
-    boxProj = obbHalfExtents[0] * Math::Abs(triEdge[1].y) +
-              obbHalfExtents[1] * Math::Abs(triEdge[1].x);
+    boxProj = obbHalfExtents[0] * Math::Abs(triEdge[1].y) + obbHalfExtents[1] * Math::Abs(triEdge[1].x);
     HandleObbTriOverlap(-triEdge[1].y, triEdge[1].x, real(0.0), 12);
 
     //--------------------------------------------------------------------------
@@ -2102,8 +1975,7 @@ Type ObbTriangle(Vec3Param obbCenter,
     //--------------------------------------------------------------------------
     triProj[0] = triPoint[0].x * triPoint[2].y - triPoint[0].y * triPoint[2].x;
     triProj[1] = triPoint[1].y * triEdge[2].x - triPoint[1].x * triEdge[2].y;
-    boxProj = obbHalfExtents[0] * Math::Abs(triEdge[2].y) +
-              obbHalfExtents[1] * Math::Abs(triEdge[2].x);
+    boxProj = obbHalfExtents[0] * Math::Abs(triEdge[2].y) + obbHalfExtents[1] * Math::Abs(triEdge[2].x);
     HandleObbTriOverlap(-triEdge[2].y, triEdge[2].x, real(0.0), 13);
 
 #undef HandleObbTriOverlap
@@ -2165,8 +2037,7 @@ Type ObbTriangle(Vec3Param obbCenter,
     real planeDistance = Dot(planeNormal, triPoint[0]);
 
     // Compute the projection interval radius of box onto L(t) = b.c + t * p.n
-    real radius = obbHalfExtents.x * Math::Abs(planeNormal.x) +
-                  obbHalfExtents.y * Math::Abs(planeNormal.y) +
+    real radius = obbHalfExtents.x * Math::Abs(planeNormal.x) + obbHalfExtents.y * Math::Abs(planeNormal.y) +
                   obbHalfExtents.z * Math::Abs(planeNormal.z);
 
     // Compute the signed distance of the box's center from the plane. Since the
@@ -2187,14 +2058,8 @@ Type ObbTriangle(Vec3Param obbCenter,
 
   if (manifold != nullptr)
   {
-    return ObbTriangleContactGeneration(obbCenter,
-                                        obbHalfExtents,
-                                        obbBasis,
-                                        trianglePoints,
-                                        normal,
-                                        axisCase,
-                                        minOverlap,
-                                        *manifold);
+    return ObbTriangleContactGeneration(
+        obbCenter, obbHalfExtents, obbBasis, trianglePoints, normal, axisCase, minOverlap, *manifold);
   }
   return Other;
 }

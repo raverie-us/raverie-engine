@@ -15,9 +15,7 @@ public:
 };
 
 // Indexed String Array
-typedef void (*GetStringsFunc)(HandleParam instance,
-                               Property* property,
-                               Array<String>& strings);
+typedef void (*GetStringsFunc)(HandleParam instance, Property* property, Array<String>& strings);
 extern const String StringArrayEdit;
 
 class EditorIndexedStringArray : public EditorPropertyExtension
@@ -30,9 +28,7 @@ public:
   {
   }
 
-  void Enumerate(HandleParam instance,
-                 Property* property,
-                 Array<String>& strings);
+  void Enumerate(HandleParam instance, Property* property, Array<String>& strings);
 
   // If the function pointer is present, it will be called
   // otherwise the array of values will be used
@@ -79,9 +75,7 @@ public:
 
   EditorRotationBasis();
   EditorRotationBasis(StringParam archetypeName);
-  EditorRotationBasis(StringParam archetypeName,
-                      StringParam gizmoName,
-                      int intData);
+  EditorRotationBasis(StringParam archetypeName, StringParam gizmoName, int intData);
 
   int mIntData;
   String mGizmoName;
@@ -94,10 +88,7 @@ class MetaEditorResource : public EditorPropertyExtension
 public:
   ZilchDeclareType(MetaEditorResource, TypeCopyMode::ReferenceType);
 
-  typedef bool (*SearchFilter)(HandleParam object,
-                               Property* property,
-                               HandleParam result,
-                               Status& status);
+  typedef bool (*SearchFilter)(HandleParam object, Property* property, HandleParam result, Status& status);
 
   MetaEditorResource(bool allowAdd = false,
                      bool allowNone = false,
@@ -109,10 +100,7 @@ public:
   /// Custom filter for the Resource search for this property. Return false to
   /// not show the result. Set the status to failed to make it not selectable,
   /// but still shown.
-  virtual bool FilterPropertySearchResult(HandleParam object,
-                                          Property* property,
-                                          HandleParam result,
-                                          Status& status);
+  virtual bool FilterPropertySearchResult(HandleParam object, Property* property, HandleParam result, Status& status);
 
   /// If not empty only match resources with same FilterTag
   String FilterTag;
@@ -175,10 +163,7 @@ public:
 };
 
 // Template Filter Equality
-template <typename ClassType,
-          typename ValueType,
-          ValueType ClassType::*ClassMember,
-          ValueType Value>
+template <typename ClassType, typename ValueType, ValueType ClassType::*ClassMember, ValueType Value>
 class TemplateFilterEquality : public TemplateFilterBase
 {
 public:
@@ -194,8 +179,7 @@ class MetaPropertyBasicFilter : public MetaPropertyFilter
 public:
   ZilchDeclareType(MetaPropertyBasicFilter, TypeCopyMode::ReferenceType);
 
-  MetaPropertyBasicFilter(TemplateFilterBase* filter = nullptr) :
-      mActualFilter(filter)
+  MetaPropertyBasicFilter(TemplateFilterBase* filter = nullptr) : mActualFilter(filter)
   {
   }
   ~MetaPropertyBasicFilter()
@@ -230,20 +214,14 @@ public:
   String mGizmoArchetype;
 };
 
-#define ZeroFilterBool(Member)                                                 \
-  Add(new MetaPropertyBasicFilter(                                             \
-      new TemplateFilterBool<ZilchSelf, &ZilchSelf::Member>()))
+#define ZeroFilterBool(Member) Add(new MetaPropertyBasicFilter(new TemplateFilterBool<ZilchSelf, &ZilchSelf::Member>()))
 
-#define ZeroFilterNotBool(Member)                                              \
-  Add(new MetaPropertyBasicFilter(                                             \
-      new TemplateFilterNotBool<ZilchSelf, &ZilchSelf::Member>()))
+#define ZeroFilterNotBool(Member)                                                                                      \
+  Add(new MetaPropertyBasicFilter(new TemplateFilterNotBool<ZilchSelf, &ZilchSelf::Member>()))
 
-#define ZeroFilterEquality(Member, MemberType, ConstantValue)                  \
-  Add(new MetaPropertyBasicFilter(                                             \
-      new TemplateFilterEquality<ZilchSelf,                                    \
-                                 MemberType,                                   \
-                                 &ZilchSelf::Member,                           \
-                                 ConstantValue>()))
+#define ZeroFilterEquality(Member, MemberType, ConstantValue)                                                          \
+  Add(new MetaPropertyBasicFilter(                                                                                     \
+      new TemplateFilterEquality<ZilchSelf, MemberType, &ZilchSelf::Member, ConstantValue>()))
 
 // Meta Group
 /// Used for grouping properties in the property grid.

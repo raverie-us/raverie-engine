@@ -1,45 +1,45 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-#define CustomPropertySetter(type, name, propName)                             \
-  ReturnType& propName(type var)                                               \
-  {                                                                            \
-    m##name = var;                                                             \
-    return *(ReturnType*)this;                                                 \
+#define CustomPropertySetter(type, name, propName)                                                                     \
+  ReturnType& propName(type var)                                                                                       \
+  {                                                                                                                    \
+    m##name = var;                                                                                                     \
+    return *(ReturnType*)this;                                                                                         \
   }
 
 #define PropertySetter(type, name) CustomPropertySetter(type, name, name)
 
-#define PropertySetterBit(name, flagName)                                      \
-  ReturnType& name(bool value)                                                 \
-  {                                                                            \
-    if (value)                                                                 \
-      mDrawFlags |= DebugDrawFlags::flagName;                                  \
-    else                                                                       \
-      mDrawFlags &= ~DebugDrawFlags::flagName;                                 \
-    return *(ReturnType*)this;                                                 \
-  }                                                                            \
-  void Set##name(bool value)                                                   \
-  {                                                                            \
-    if (value)                                                                 \
-      mDrawFlags |= DebugDrawFlags::flagName;                                  \
-    else                                                                       \
-      mDrawFlags &= ~DebugDrawFlags::flagName;                                 \
-  }                                                                            \
-  bool Get##name() const                                                       \
-  {                                                                            \
-    return mDrawFlags & DebugDrawFlags::flagName;                              \
+#define PropertySetterBit(name, flagName)                                                                              \
+  ReturnType& name(bool value)                                                                                         \
+  {                                                                                                                    \
+    if (value)                                                                                                         \
+      mDrawFlags |= DebugDrawFlags::flagName;                                                                          \
+    else                                                                                                               \
+      mDrawFlags &= ~DebugDrawFlags::flagName;                                                                         \
+    return *(ReturnType*)this;                                                                                         \
+  }                                                                                                                    \
+  void Set##name(bool value)                                                                                           \
+  {                                                                                                                    \
+    if (value)                                                                                                         \
+      mDrawFlags |= DebugDrawFlags::flagName;                                                                          \
+    else                                                                                                               \
+      mDrawFlags &= ~DebugDrawFlags::flagName;                                                                         \
+  }                                                                                                                    \
+  bool Get##name() const                                                                                               \
+  {                                                                                                                    \
+    return mDrawFlags & DebugDrawFlags::flagName;                                                                      \
   }
 
-#define DebugObjectAddMethods(DebugObjectType)                                 \
-  void Add(const DebugObjectType& object)                                      \
-  {                                                                            \
-    ErrorIf(mSpaceIdStack.Empty(), "No SpaceId on stack.");                    \
-    Add(mSpaceIdStack.Back(), object);                                         \
-  }                                                                            \
-  void Add(uint spaceId, const DebugObjectType& object)                        \
-  {                                                                            \
-    AddInternal(spaceId, DebugDrawObjectAny(object));                          \
+#define DebugObjectAddMethods(DebugObjectType)                                                                         \
+  void Add(const DebugObjectType& object)                                                                              \
+  {                                                                                                                    \
+    ErrorIf(mSpaceIdStack.Empty(), "No SpaceId on stack.");                                                            \
+    Add(mSpaceIdStack.Back(), object);                                                                                 \
+  }                                                                                                                    \
+  void Add(uint spaceId, const DebugObjectType& object)                                                                \
+  {                                                                                                                    \
+    AddInternal(spaceId, DebugDrawObjectAny(object));                                                                  \
   }
 
 namespace Zero
@@ -48,31 +48,10 @@ namespace Zero
 namespace Debug
 {
 
-DeclareBitField8(DebugDrawFlags,
-                 BackShade,
-                 Border,
-                 Filled,
-                 OnTop,
-                 ViewAligned,
-                 ViewScaled,
-                 Special1,
-                 Special2);
+DeclareBitField8(DebugDrawFlags, BackShade, Border, Filled, OnTop, ViewAligned, ViewScaled, Special1, Special2);
 
-DeclareEnum14(DebugType,
-              None,
-              Arc,
-              Box,
-              Capsule,
-              Circle,
-              Cone,
-              Cylinder,
-              Frustum,
-              Line,
-              LineCross,
-              Obb,
-              Sphere,
-              Text,
-              Triangle);
+DeclareEnum14(
+    DebugType, None, Arc, Box, Capsule, Circle, Cone, Cylinder, Frustum, Line, LineCross, Obb, Sphere, Text, Triangle);
 
 class Vertex
 {
@@ -104,13 +83,8 @@ public:
 const float cViewScale = 0.05f;
 
 float GetViewScale(Vec3Param location, const DebugViewData& viewData);
-float GetViewScale(float viewDistance,
-                   float fieldOfView,
-                   float orthographicSize,
-                   bool orthographic);
-float GetViewDistance(Vec3Param location,
-                      Vec3Param eyePosition,
-                      Vec3 viewDirection);
+float GetViewScale(float viewDistance, float fieldOfView, float orthographicSize, bool orthographic);
+float GetViewDistance(Vec3Param location, Vec3Param eyePosition, Vec3 viewDirection);
 
 class DebugDrawObjectBase
 {
@@ -132,8 +106,7 @@ public:
   {
     return DebugType::None;
   }
-  virtual void GetVertices(const DebugViewData& viewData,
-                           DebugVertexArray& vertices)
+  virtual void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices)
   {
   }
 
@@ -228,17 +201,13 @@ public:
   {
     return DebugType::Arc;
   }
-  void GetVertices(const DebugViewData& viewData,
-                   DebugVertexArray& vertices) override;
+  void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
   Arc() : mStart(Vec3::cXAxis), mMid(Vec3::cYAxis), mEnd(-Vec3::cXAxis)
   {
   }
 
-  Arc(Vec3Param start, Vec3Param mid, Vec3Param end) :
-      mStart(start),
-      mMid(mid),
-      mEnd(end)
+  Arc(Vec3Param start, Vec3Param mid, Vec3Param end) : mStart(start), mMid(mid), mEnd(end)
   {
   }
 
@@ -260,13 +229,9 @@ public:
   {
     return DebugType::Box;
   }
-  void GetVertices(const DebugViewData& viewData,
-                   DebugVertexArray& vertices) override;
+  void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
-  Box() :
-      mPosition(Vec3::cZero),
-      mHalfExtents(Vec2(0.5f)),
-      mRotation(Quat::cIdentity)
+  Box() : mPosition(Vec3::cZero), mHalfExtents(Vec2(0.5f)), mRotation(Quat::cIdentity)
   {
   }
 
@@ -298,9 +263,7 @@ public:
   {
   }
 
-  Box(Vec3Param position,
-      Vec3Param halfExtents,
-      QuatParam rotation = Quat::cIdentity) :
+  Box(Vec3Param position, Vec3Param halfExtents, QuatParam rotation = Quat::cIdentity) :
       mPosition(position),
       mHalfExtents(Math::ToVector2(halfExtents)),
       mRotation(rotation)
@@ -334,20 +297,13 @@ public:
   {
     return DebugType::Capsule;
   }
-  void GetVertices(const DebugViewData& viewData,
-                   DebugVertexArray& vertices) override;
+  void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
-  Capsule() :
-      mStart(-Vec3::cYAxis * 0.5f),
-      mEnd(Vec3::cYAxis * 0.5f),
-      mRadius(0.5f)
+  Capsule() : mStart(-Vec3::cYAxis * 0.5f), mEnd(Vec3::cYAxis * 0.5f), mRadius(0.5f)
   {
   }
 
-  Capsule(Vec3Param start, Vec3Param end, float radius) :
-      mStart(start),
-      mEnd(end),
-      mRadius(radius)
+  Capsule(Vec3Param start, Vec3Param end, float radius) : mStart(start), mEnd(end), mRadius(radius)
   {
   }
 
@@ -358,10 +314,7 @@ public:
   {
   }
 
-  Capsule(const Zero::Capsule& capsule) :
-      mStart(capsule.PointA),
-      mEnd(capsule.PointB),
-      mRadius(capsule.Radius)
+  Capsule(const Zero::Capsule& capsule) : mStart(capsule.PointA), mEnd(capsule.PointB), mRadius(capsule.Radius)
   {
   }
 
@@ -383,17 +336,13 @@ public:
   {
     return DebugType::Circle;
   }
-  void GetVertices(const DebugViewData& viewData,
-                   DebugVertexArray& vertices) override;
+  void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
   Circle() : mPosition(Vec3::cZero), mAxis(Vec3::cZAxis), mRadius(0.5f)
   {
   }
 
-  Circle(Vec3Param position, Vec3Param axis, float radius) :
-      mPosition(position),
-      mAxis(axis),
-      mRadius(radius)
+  Circle(Vec3Param position, Vec3Param axis, float radius) : mPosition(position), mAxis(axis), mRadius(radius)
   {
   }
 
@@ -415,14 +364,9 @@ public:
   {
     return DebugType::Cone;
   }
-  void GetVertices(const DebugViewData& viewData,
-                   DebugVertexArray& vertices) override;
+  void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
-  Cone() :
-      mPosition(Vec3::cZero),
-      mDirection(Vec3::cYAxis),
-      mLength(1.0f),
-      mRadius(0.5f)
+  Cone() : mPosition(Vec3::cZero), mDirection(Vec3::cYAxis), mLength(1.0f), mRadius(0.5f)
   {
   }
 
@@ -454,17 +398,13 @@ public:
   {
     return DebugType::Cylinder;
   }
-  void GetVertices(const DebugViewData& viewData,
-                   DebugVertexArray& vertices) override;
+  void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
   Cylinder() : mStart(-Vec3::cYAxis), mEnd(Vec3::cYAxis * 0.5f), mRadius(0.5f)
   {
   }
 
-  Cylinder(Vec3Param start, Vec3Param end, float radius) :
-      mStart(start),
-      mEnd(end),
-      mRadius(radius)
+  Cylinder(Vec3Param start, Vec3Param end, float radius) : mStart(start), mEnd(end), mRadius(radius)
   {
   }
 
@@ -475,10 +415,7 @@ public:
   {
   }
 
-  Cylinder(const Zero::Cylinder& cylinder) :
-      mStart(cylinder.PointA),
-      mEnd(cylinder.PointB),
-      mRadius(cylinder.Radius)
+  Cylinder(const Zero::Cylinder& cylinder) : mStart(cylinder.PointA), mEnd(cylinder.PointB), mRadius(cylinder.Radius)
   {
   }
 
@@ -500,8 +437,7 @@ public:
   {
     return DebugType::Frustum;
   }
-  void GetVertices(const DebugViewData& viewData,
-                   DebugVertexArray& vertices) override;
+  void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
   Frustum()
   {
@@ -534,38 +470,25 @@ public:
   {
     return DebugType::Line;
   }
-  void GetVertices(const DebugViewData& viewData,
-                   DebugVertexArray& vertices) override;
+  void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
   Line() : mStart(Vec3::cZero), mEnd(Vec3::cXAxis), mHeadSize(0)
   {
   }
 
-  Line(Vec3Param start, Vec3Param end) :
-      mStart(start),
-      mEnd(end),
-      mHeadSize(0.0f)
+  Line(Vec3Param start, Vec3Param end) : mStart(start), mEnd(end), mHeadSize(0.0f)
   {
   }
 
-  Line(Vec3Param start, Vec3Param end, float headSize) :
-      mStart(start),
-      mEnd(end),
-      mHeadSize(headSize)
+  Line(Vec3Param start, Vec3Param end, float headSize) : mStart(start), mEnd(end), mHeadSize(headSize)
   {
   }
 
-  Line(const Zero::Ray& ray, float t = 1.0f) :
-      mStart(ray.Start),
-      mEnd(ray.Start + ray.Direction * t),
-      mHeadSize(1.0f)
+  Line(const Zero::Ray& ray, float t = 1.0f) : mStart(ray.Start), mEnd(ray.Start + ray.Direction * t), mHeadSize(1.0f)
   {
   }
 
-  Line(const Zero::Segment& segment) :
-      mStart(segment.Start),
-      mEnd(segment.End),
-      mHeadSize(0.0f)
+  Line(const Zero::Segment& segment) : mStart(segment.Start), mEnd(segment.End), mHeadSize(0.0f)
   {
   }
 
@@ -590,16 +513,13 @@ public:
   {
     return DebugType::LineCross;
   }
-  void GetVertices(const DebugViewData& viewData,
-                   DebugVertexArray& vertices) override;
+  void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
   LineCross() : mPosition(Vec3::cZero), mHalfExtents(0.5f)
   {
   }
 
-  LineCross(Vec3Param position, float halfExtents) :
-      mPosition(position),
-      mHalfExtents(halfExtents)
+  LineCross(Vec3Param position, float halfExtents) : mPosition(position), mHalfExtents(halfExtents)
   {
   }
 
@@ -619,13 +539,9 @@ public:
   {
     return DebugType::Obb;
   }
-  void GetVertices(const DebugViewData& viewData,
-                   DebugVertexArray& vertices) override;
+  void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
-  Obb() :
-      mPosition(Vec3::cZero),
-      mHalfExtents(Vec3(0.5f)),
-      mRotation(Quat::cIdentity)
+  Obb() : mPosition(Vec3::cZero), mHalfExtents(Vec3(0.5f)), mRotation(Quat::cIdentity)
   {
   }
 
@@ -698,22 +614,17 @@ public:
   {
     return DebugType::Sphere;
   }
-  void GetVertices(const DebugViewData& viewData,
-                   DebugVertexArray& vertices) override;
+  void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
   Sphere() : mPosition(Vec3::cZero), mRadius(0.5f)
   {
   }
 
-  Sphere(Vec3Param position, float radius) :
-      mPosition(position),
-      mRadius(radius)
+  Sphere(Vec3Param position, float radius) : mPosition(position), mRadius(radius)
   {
   }
 
-  Sphere(const Zero::Sphere& sphere) :
-      mPosition(sphere.mCenter),
-      mRadius(sphere.mRadius)
+  Sphere(const Zero::Sphere& sphere) : mPosition(sphere.mCenter), mRadius(sphere.mRadius)
   {
   }
 
@@ -739,11 +650,7 @@ public:
     return DebugType::Text;
   }
 
-  Text() :
-      mPosition(Vec3::cZero),
-      mRotation(Quat::cIdentity),
-      mTextHeight(1.0f),
-      mText("Aa")
+  Text() : mPosition(Vec3::cZero), mRotation(Quat::cIdentity), mTextHeight(1.0f), mText("Aa")
   {
   }
 
@@ -777,27 +684,17 @@ public:
   {
     return DebugType::Triangle;
   }
-  void GetVertices(const DebugViewData& viewData,
-                   DebugVertexArray& vertices) override;
+  void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
-  Triangle() :
-      mPoint0(-Vec3::cXAxis),
-      mPoint1(Vec3::cXAxis),
-      mPoint2(Vec3::cYAxis)
+  Triangle() : mPoint0(-Vec3::cXAxis), mPoint1(Vec3::cXAxis), mPoint2(Vec3::cYAxis)
   {
   }
 
-  Triangle(Vec3Param point0, Vec3Param point1, Vec3Param point2) :
-      mPoint0(point0),
-      mPoint1(point1),
-      mPoint2(point2)
+  Triangle(Vec3Param point0, Vec3Param point1, Vec3Param point2) : mPoint0(point0), mPoint1(point1), mPoint2(point2)
   {
   }
 
-  Triangle(const Zero::Triangle& tri) :
-      mPoint0(tri.p0),
-      mPoint1(tri.p1),
-      mPoint2(tri.p2)
+  Triangle(const Zero::Triangle& tri) : mPoint0(tri.p0), mPoint1(tri.p1), mPoint2(tri.p2)
   {
   }
 

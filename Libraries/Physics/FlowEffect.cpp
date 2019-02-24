@@ -66,9 +66,7 @@ void FlowEffect::DebugDraw()
   Math::GenerateOrthonormalBasis(mWorldFlowDirection, &axis0, &axis1);
 
   // Draw the flow direction
-  gDebugDraw->Add(
-      Debug::Line(mWorldFlowCenter, mWorldFlowCenter + mWorldFlowDirection)
-          .HeadSize(0.1f));
+  gDebugDraw->Add(Debug::Line(mWorldFlowCenter, mWorldFlowCenter + mWorldFlowDirection).HeadSize(0.1f));
 
   // Pick some arbitrary scaling on the inward force vectors based upon the
   // ring's radius
@@ -119,8 +117,7 @@ void FlowEffect::DebugDraw()
         // Compute the "inward vector" based upon the direction of the attract
         // force
         Vec3 dir = attractSign * offset * inwardForceDisplaySize;
-        gDebugDraw->Add(
-            Debug::Line(radialPoint, radialPoint - dir).HeadSize(headSize));
+        gDebugDraw->Add(Debug::Line(radialPoint, radialPoint - dir).HeadSize(headSize));
       }
     }
   }
@@ -180,8 +177,7 @@ void FlowEffect::ApplyEffect(RigidBody* obj, real dt)
     {
       Vec3 velocityDir = sideVel.AttemptNormalized();
       real stoppingForce = sideSpeed / (invMass * dt);
-      stoppingForce =
-          Math::Clamp(stoppingForce, -mMaxAttractForce, mMaxAttractForce);
+      stoppingForce = Math::Clamp(stoppingForce, -mMaxAttractForce, mMaxAttractForce);
       totalSideAttractionForce = -velocityDir * stoppingForce;
     }
     // Otherwise, compute an acceleration force towards the center of the flow
@@ -197,17 +193,14 @@ void FlowEffect::ApplyEffect(RigidBody* obj, real dt)
       // This acceleration could overshoot our target position, so also
       // calculate the acceleration that will get us to our target position next
       // frame
-      real accelerationToTargetPosition =
-          (distanceToCenter - dt * sideSpeed) / (dt * dt);
+      real accelerationToTargetPosition = (distanceToCenter - dt * sideSpeed) / (dt * dt);
 
       // We want the min of the two accelerations (so we'll stop at the center)
-      real acceleration =
-          Math::Min(accelerationToTargetSpeed, accelerationToTargetPosition);
+      real acceleration = Math::Min(accelerationToTargetSpeed, accelerationToTargetPosition);
 
       // Clamp the force to our force limits
       real appliedAttractForce = acceleration / invMass;
-      appliedAttractForce =
-          Math::Clamp(appliedAttractForce, -mMaxAttractForce, mMaxAttractForce);
+      appliedAttractForce = Math::Clamp(appliedAttractForce, -mMaxAttractForce, mMaxAttractForce);
       totalSideAttractionForce = dirToCenter * appliedAttractForce;
     }
     obj->ApplyForceNoWakeUp(totalSideAttractionForce);
@@ -222,8 +215,7 @@ void FlowEffect::UpdateFlowInformation()
   // If this is a local force then transform the flow direction and position to
   // world space
   if (mForceStates.IsSet(FlowFlags::LocalForce))
-    TransformLocalDirectionAndPointToWorld(mWorldFlowCenter,
-                                           mWorldFlowDirection);
+    TransformLocalDirectionAndPointToWorld(mWorldFlowCenter, mWorldFlowDirection);
   // Otherwise we still need the world space position
   else
     mWorldFlowCenter = TransformLocalPointToWorld(mWorldFlowCenter);

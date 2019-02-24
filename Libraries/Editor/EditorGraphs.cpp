@@ -20,8 +20,7 @@ class FpsSampler : public DataSampler
     Array<Record*>::range records = ProfileSystem::Instance->GetRecords();
     Record* record = records.Front();
     record->Update();
-    float timeInS = ProfileSystem::Instance->GetTimeInSeconds(
-        (ProfileTime)record->Average());
+    float timeInS = ProfileSystem::Instance->GetTimeInSeconds((ProfileTime)record->Average());
 
     float fps = 0.0f;
     if (timeInS != 0.0f)
@@ -154,8 +153,7 @@ void AddGraph(Editor* editor)
 
 void SetupGraphCommands(Cog* configCog, CommandManager* commands)
 {
-  commands->AddCommand(
-      "Performance", BindCommandFunction(AddPerformance), true);
+  commands->AddCommand("Performance", BindCommandFunction(AddPerformance), true);
   commands->AddCommand("Graph", BindCommandFunction(AddGraph), true);
 }
 

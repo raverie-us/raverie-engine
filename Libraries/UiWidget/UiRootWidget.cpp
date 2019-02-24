@@ -148,9 +148,7 @@ void UiRootWidget::Update()
   }
 }
 
-UiWidget* UiRootWidget::CastPoint(Vec2Param worldPoint,
-                                  UiWidget* ignore,
-                                  bool interactiveOnly)
+UiWidget* UiRootWidget::CastPoint(Vec2Param worldPoint, UiWidget* ignore, bool interactiveOnly)
 {
   // Walk in reverse to hit the most recently created first
   uint size = mOnTopWidgets.Size();
@@ -162,8 +160,7 @@ UiWidget* UiRootWidget::CastPoint(Vec2Param worldPoint,
     // this widget
     onTopWidget->mFlags.ClearFlag(UiWidgetFlags::OnTop);
 
-    UiWidget* hitWidget =
-        onTopWidget->CastPoint(worldPoint, ignore, interactiveOnly);
+    UiWidget* hitWidget = onTopWidget->CastPoint(worldPoint, ignore, interactiveOnly);
 
     // Re-set the on top flag
     onTopWidget->mFlags.SetFlag(UiWidgetFlags::OnTop);
@@ -233,10 +230,7 @@ void UiRootWidget::PerformKeyUp(Keys::Enum key)
 {
 }
 
-void SendKeyboardEvent(KeyboardEvent* e,
-                       Cog* cog,
-                       StringParam previewEventId,
-                       cstr eventPreAppend)
+void SendKeyboardEvent(KeyboardEvent* e, Cog* cog, StringParam previewEventId, cstr eventPreAppend)
 {
   e->Handled = false;
 
@@ -275,23 +269,20 @@ void UiRootWidget::PerformKeyboardEvent(KeyboardEvent* e)
   // Pre-append "Hover" to each event so that the widget knows the context of
   // the event
   if (UiWidget* mouseOver = mMouseOverWidget)
-    SendKeyboardEvent(
-        e, mouseOver->GetOwner(), Events::HoverKeyPreview, "Hover");
+    SendKeyboardEvent(e, mouseOver->GetOwner(), Events::HoverKeyPreview, "Hover");
 }
 
 void UiRootWidget::PerformMouseMove(Vec2Param newRootPoint)
 {
 }
 
-void UiRootWidget::PerformMouseDown(MouseButtons::Enum button,
-                                    Vec2Param rootPoint)
+void UiRootWidget::PerformMouseDown(MouseButtons::Enum button, Vec2Param rootPoint)
 {
   // ViewportMouseEvent e;
   // BuildMouseEvent(rootPoint, &e);
 }
 
-void UiRootWidget::PerformMouseUp(MouseButtons::Enum button,
-                                  Vec2Param rootPoint)
+void UiRootWidget::PerformMouseUp(MouseButtons::Enum button, Vec2Param rootPoint)
 {
 }
 
@@ -299,9 +290,7 @@ void UiRootWidget::PerformMouseScroll(Vec2Param rootPoint, Vec2Param scroll)
 {
 }
 
-void UiRootWidget::BuildMouseEvent(ViewportMouseEvent* e,
-                                   Vec2Param rootPoint,
-                                   MouseButtons::Enum button)
+void UiRootWidget::BuildMouseEvent(ViewportMouseEvent* e, Vec2Param rootPoint, MouseButtons::Enum button)
 {
   // Mouse* mouse = Z::gMouse;
   //
@@ -404,8 +393,7 @@ void UiRootWidget::PerformMouseButton(ViewportMouseEvent* e)
 
       // Send the DoubleClick event if we're within the time limit
       bool buttonsAreTheSame = (mLastClickedButton == button);
-      bool distanceIsSmall =
-          GetLargestAxis(e->Position - mLastClickPosition) < 4.0f;
+      bool distanceIsSmall = GetLargestAxis(e->Position - mLastClickPosition) < 4.0f;
       bool doubleClickTime = mTimeSinceLastClick < mDoubleClickTime;
 
       if (buttonsAreTheSame && distanceIsSmall && doubleClickTime)
@@ -429,8 +417,7 @@ void UiRootWidget::PerformMouseButton(ViewportMouseEvent* e)
     Cog* mouseOverCog = mouseOverWidget->GetOwner();
 
     // Send generic mouse down / up
-    String genericEventName =
-        e->ButtonDown ? Events::MouseDown : Events::MouseUp;
+    String genericEventName = e->ButtonDown ? Events::MouseDown : Events::MouseUp;
     mouseOverCog->DispatchEvent(genericEventName, e);
     mouseOverCog->DispatchUp(genericEventName, e);
 
@@ -603,24 +590,17 @@ void UiRootWidget::OnKeyboardEvent(KeyboardEvent* e)
   e->Handled = true;
 }
 
-void UiRootWidget::Render(RenderTasksEvent* e,
-                          RenderTarget* color,
-                          RenderTarget* depth,
-                          MaterialBlock* renderPass)
+void UiRootWidget::Render(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth, MaterialBlock* renderPass)
 {
-  if (e == nullptr || color == nullptr || depth == nullptr ||
-      renderPass == nullptr)
+  if (e == nullptr || color == nullptr || depth == nullptr || renderPass == nullptr)
   {
-    DoNotifyExceptionAssert("Cannot render Widgets",
-                            "All parameters must be satisfied.");
+    DoNotifyExceptionAssert("Cannot render Widgets", "All parameters must be satisfied.");
     return;
   }
 
   if (!IsDepthStencilFormat(depth->mTexture->mFormat))
   {
-    DoNotifyExceptionAssert(
-        "Cannot render Widgets",
-        "Depth target must have stencil (Depth24Stencil8).");
+    DoNotifyExceptionAssert("Cannot render Widgets", "Depth target must have stencil (Depth24Stencil8).");
     return;
   }
 
@@ -632,11 +612,10 @@ void UiRootWidget::Render(RenderTasksEvent* e,
 
   // Render all widgets
   Vec4 colorTransform(1);
-  RenderWidgets(
-      e, color, depth, renderPass, this, colorTransform, &floatingWidgets);
+  RenderWidgets(e, color, depth, renderPass, this, colorTransform, &floatingWidgets);
 
   // Render all floating widgets
-  forRange(CachedFloatingWidget cachedWidget, floatingWidgets.All())
+  forRange (CachedFloatingWidget cachedWidget, floatingWidgets.All())
   {
     UiWidget* widget = cachedWidget.first;
     Vec4 cachedColor = cachedWidget.second;
@@ -659,8 +638,7 @@ void UiRootWidget::RenderWidgets(RenderTasksEvent* e,
   Cog* widgetCog = widget->GetOwner();
   bool spaceInEditMode = GetSpace()->IsEditorMode();
   bool editorHidden = (spaceInEditMode && widgetCog->GetEditorViewportHidden());
-  if (!widget->GetActive() || widgetCog->GetMarkedForDestruction() ||
-      editorHidden)
+  if (!widget->GetActive() || widgetCog->GetMarkedForDestruction() || editorHidden)
     return;
 
   if (floatingWidgets && widget->GetOnTop())
@@ -683,21 +661,18 @@ void UiRootWidget::RenderWidgets(RenderTasksEvent* e,
   {
     // Write out stencil if we're clipping our children
     if (widget->GetClipChildren())
-      AddGraphical(
-          e, color, depth, renderPass, widgetCog, StencilDrawMode::Add, 1);
+      AddGraphical(e, color, depth, renderPass, widgetCog, StencilDrawMode::Add, 1);
 
     // Add the widget to be rendered
-    AddGraphical(
-        e, color, depth, renderPass, widgetCog, StencilDrawMode::Test, 0);
+    AddGraphical(e, color, depth, renderPass, widgetCog, StencilDrawMode::Test, 0);
 
     // Recurse to all children
-    forRange(UiWidget & child, widget->GetChildren()) RenderWidgets(
-        e, color, depth, renderPass, &child, hierarchyColor, floatingWidgets);
+    forRange (UiWidget& child, widget->GetChildren())
+      RenderWidgets(e, color, depth, renderPass, &child, hierarchyColor, floatingWidgets);
 
     // Remove the written stencil data
     if (widget->GetClipChildren())
-      AddGraphical(
-          e, color, depth, renderPass, widgetCog, StencilDrawMode::Remove, -1);
+      AddGraphical(e, color, depth, renderPass, widgetCog, StencilDrawMode::Remove, -1);
   }
 }
 
@@ -741,8 +716,7 @@ void UiRootWidget::FlushGraphicals(RenderTasksEvent* e,
   else if (mStencilDrawMode == StencilDrawMode::Remove)
   {
     mStencilRemoveSettings.SetDepthTarget(depth);
-    e->AddRenderTaskRenderPass(
-        mStencilRemoveSettings, mGraphicals, *renderPass);
+    e->AddRenderTaskRenderPass(mStencilRemoveSettings, mGraphicals, *renderPass);
   }
   else if (mStencilDrawMode == StencilDrawMode::Test)
   {

@@ -11,12 +11,9 @@ JointInfo RelativeVelocityJoint::sInfo = JointInfo(3, 0);
 
 /// The linearAxisJoint's policy for Atom updating as well as Molecule
 /// computing.
-struct RelativeVelocityPolicy
-    : public DefaultFragmentPolicy<RelativeVelocityJoint>
+struct RelativeVelocityPolicy : public DefaultFragmentPolicy<RelativeVelocityJoint>
 {
-  void AxisValue(MoleculeData& data,
-                 int atomIndex,
-                 RelativeVelocityJoint* joint)
+  void AxisValue(MoleculeData& data, int atomIndex, RelativeVelocityJoint* joint)
   {
     ErrorIf(atomIndex >= (int)joint->sInfo.mAtomCount,
             "RelativeVelocityJoint has only %d atom. Cannot compute atom "
@@ -27,9 +24,7 @@ struct RelativeVelocityPolicy
     joint->mAtoms[atomIndex].mError = -joint->mSpeeds[atomIndex];
   }
 
-  void ErrorFragment(int atomIndex,
-                     RelativeVelocityJoint* joint,
-                     ImpulseLimitAtom& molLimit)
+  void ErrorFragment(int atomIndex, RelativeVelocityJoint* joint, ImpulseLimitAtom& molLimit)
   {
     ErrorIf(atomIndex >= (int)joint->sInfo.mAtomCount,
             "RelativeVelocityJoint has only %d atom. Cannot compute atom "
@@ -48,10 +43,7 @@ struct RelativeVelocityPolicy
   }
 
   // Returns baumgarte
-  real AxisFragment(MoleculeData& data,
-                    int atomIndex,
-                    RelativeVelocityJoint* joint,
-                    ConstraintMolecule& mol)
+  real AxisFragment(MoleculeData& data, int atomIndex, RelativeVelocityJoint* joint, ConstraintMolecule& mol)
   {
     ErrorIf(atomIndex >= (int)joint->sInfo.mAtomCount,
             "RelativeVelocityJoint has only %d atom. Cannot compute atom "
@@ -127,8 +119,7 @@ void RelativeVelocityJoint::UpdateAtoms()
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  UpdateAtomsFragment(
-      this, sInfo.mAtomCount, moleculeData, RelativeVelocityPolicy());
+  UpdateAtomsFragment(this, sInfo.mAtomCount, moleculeData, RelativeVelocityPolicy());
 }
 
 uint RelativeVelocityJoint::MoleculeCount() const
@@ -141,11 +132,7 @@ void RelativeVelocityJoint::ComputeMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputeMoleculesFragment(this,
-                           molecules,
-                           sInfo.mAtomCount,
-                           moleculeData,
-                           RelativeVelocityPolicy());
+  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, RelativeVelocityPolicy());
 }
 
 void RelativeVelocityJoint::WarmStart(MoleculeWalker& molecules)
@@ -177,8 +164,7 @@ void RelativeVelocityJoint::DebugDraw()
 {
 }
 
-uint RelativeVelocityJoint::GetAtomIndexFilter(
-    uint atomIndex, real& desiredConstraintValue) const
+uint RelativeVelocityJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   return LinearAxis;

@@ -6,18 +6,15 @@ namespace Zero
 
 inline Action* MoveWidgetAction(Widget* widget, Vec3 position, float time)
 {
-  return AnimatePropertyGetSet(
-      Widget, Translation, Ease::Quad::Out, widget, time, position);
+  return AnimatePropertyGetSet(Widget, Translation, Ease::Quad::Out, widget, time, position);
 }
 
 inline Action* SizeWidgetAction(Widget* widget, Vec2 size, float time)
 {
-  return AnimatePropertyGetSet(
-      Widget, Size, Ease::Quad::Out, widget, time, size);
+  return AnimatePropertyGetSet(Widget, Size, Ease::Quad::Out, widget, time, size);
 }
 
-inline Action*
-MoveAndSizeWidgetAction(Widget* widget, Vec3 position, Vec2 size, float time)
+inline Action* MoveAndSizeWidgetAction(Widget* widget, Vec3 position, Vec2 size, float time)
 {
   ActionGroup* group = new ActionGroup();
 
@@ -30,8 +27,7 @@ MoveAndSizeWidgetAction(Widget* widget, Vec3 position, Vec2 size, float time)
 
 inline Action* Fade(Widget* widget, Vec4 color, float t)
 {
-  return AnimatePropertyGetSet(
-      Widget, Color, Ease::Quad::Out, widget, t, color);
+  return AnimatePropertyGetSet(Widget, Color, Ease::Quad::Out, widget, t, color);
 }
 
 inline Action* DestroyAction(Widget* widget)
@@ -39,8 +35,7 @@ inline Action* DestroyAction(Widget* widget)
   return new CallAction<Widget, &Widget::Destroy>(widget);
 }
 
-inline void
-AnimateTo(Widget* widget, Vec3Param position, Vec2Param size, float time = 0.3f)
+inline void AnimateTo(Widget* widget, Vec3Param position, Vec2Param size, float time = 0.3f)
 {
   widget->GetActions()->Cancel();
   Action* group = MoveAndSizeWidgetAction(widget, position, size, time);

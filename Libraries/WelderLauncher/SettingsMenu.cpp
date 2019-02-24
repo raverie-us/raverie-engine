@@ -28,8 +28,7 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
     mParentModal(parent)
 {
   ZPrint("Settings Menu Displayed\n");
-  SetLayout(CreateStackLayout(
-      LayoutDirection::TopToBottom, Pixels(0, 5), Thickness(32, 52, 32, 22)));
+  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 5), Thickness(32, 52, 32, 22)));
 
   // Create the background and slide it in
   mBackground = CreateAttached<Element>(cWhiteSquare);
@@ -41,18 +40,15 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
   LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
 
   Composite* topRow = new Composite(this);
-  topRow->SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Pixels(23, 0), Thickness(-2, -3, 0, 0)));
+  topRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(23, 0), Thickness(-2, -3, 0, 0)));
   {
     IconButton* settingsButton = new IconButton(topRow);
     settingsButton->SetIcon("OptionsIcon");
     settingsButton->mBackground->SetVisible(false);
     settingsButton->mBorder->SetVisible(false);
     settingsButton->mIconColor = ToByteColor(SettingsUi::SettingsColor);
-    settingsButton->mIconHoverColor =
-        ToByteColor(SettingsUi::SettingsHoverColor);
-    settingsButton->mIconClickedColor =
-        ToByteColor(SettingsUi::SettingsClickedColor);
+    settingsButton->mIconHoverColor = ToByteColor(SettingsUi::SettingsHoverColor);
+    settingsButton->mIconClickedColor = ToByteColor(SettingsUi::SettingsClickedColor);
     settingsButton->SetColor(Vec4(1, 1, 1, 0));
     ConnectThisTo(settingsButton, Events::ButtonPressed, OnSettingsPressed);
 
@@ -63,9 +59,7 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
     settingsText->SizeToContents();
     settingsText->SetColor(Vec4(1, 1, 1, 0));
 
-    group->Add(Fade(settingsText,
-                    SettingsUi::SettingsColor,
-                    SettingsUi::SlideInTime * 2.0f));
+    group->Add(Fade(settingsText, SettingsUi::SettingsColor, SettingsUi::SlideInTime * 2.0f));
   }
 
   new Spacer(this, SizePolicy::Fixed, Pixels(0, 28));
@@ -82,8 +76,7 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
     StringSource* source = new StringSource();
     source->Strings.Resize(2);
     source->Strings[LauncherAutoRunMode::None] = "Always open launcher";
-    source->Strings[LauncherAutoRunMode::IfInstalled] =
-        "Auto run project if build installed";
+    source->Strings[LauncherAutoRunMode::IfInstalled] = "Auto run project if build installed";
     // Don't do this option for now, maybe later
     // source->Strings[LauncherAutoRunMode::InstallAndRun] = "Auto run project";
     mAutoRunMode = new ComboBox(this);
@@ -110,19 +103,12 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
     mDefaultProjectLocation->SetStyle(TextBoxStyle::Modern);
     mDefaultProjectLocation->SetEditable(true);
     mDefaultProjectLocation->mEditTextField->mFont->mFontHeight = 10;
-    mDefaultProjectLocation->mButton->mBackgroundColor =
-        ToByteColor(SettingsUi::BackgroundColor);
-    mDefaultProjectLocation->mButton->mBackgroundHoverColor =
-        ToByteColor(SettingsUi::TextBoxButtonHover);
-    mDefaultProjectLocation->mButton->mBackgroundClickedColor =
-        ToByteColor(SettingsUi::TextBoxButtonClicked);
-    ConnectThisTo(mDefaultProjectLocation,
-                  Events::TextSubmit,
-                  OnProjectLocationTextSubmit);
+    mDefaultProjectLocation->mButton->mBackgroundColor = ToByteColor(SettingsUi::BackgroundColor);
+    mDefaultProjectLocation->mButton->mBackgroundHoverColor = ToByteColor(SettingsUi::TextBoxButtonHover);
+    mDefaultProjectLocation->mButton->mBackgroundClickedColor = ToByteColor(SettingsUi::TextBoxButtonClicked);
+    ConnectThisTo(mDefaultProjectLocation, Events::TextSubmit, OnProjectLocationTextSubmit);
     mWidgetsToAnimate.PushBack(mDefaultProjectLocation);
-    ConnectThisTo(mDefaultProjectLocation->mButton,
-                  Events::ButtonPressed,
-                  OnBrowseProjectLocation);
+    ConnectThisTo(mDefaultProjectLocation->mButton, Events::ButtonPressed, OnBrowseProjectLocation);
   }
 
   // Download location
@@ -137,20 +123,13 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
     mDownloadLocation = new TextBoxButton(this, "OpenFolderIcon");
     mDownloadLocation->SetStyle(TextBoxStyle::Modern);
     mDownloadLocation->SetEditable(true);
-    mDownloadLocation->mButton->mBackgroundColor =
-        ToByteColor(SettingsUi::BackgroundColor);
-    mDownloadLocation->mButton->mBackgroundHoverColor =
-        ToByteColor(SettingsUi::TextBoxButtonHover);
-    mDownloadLocation->mButton->mBackgroundClickedColor =
-        ToByteColor(SettingsUi::TextBoxButtonClicked);
-    ConnectThisTo(
-        mDownloadLocation, Events::TextChanged, OnDownloadLocationTextChanged);
-    ConnectThisTo(
-        mDownloadLocation, Events::TextSubmit, OnDownloadLocationTextSubmit);
+    mDownloadLocation->mButton->mBackgroundColor = ToByteColor(SettingsUi::BackgroundColor);
+    mDownloadLocation->mButton->mBackgroundHoverColor = ToByteColor(SettingsUi::TextBoxButtonHover);
+    mDownloadLocation->mButton->mBackgroundClickedColor = ToByteColor(SettingsUi::TextBoxButtonClicked);
+    ConnectThisTo(mDownloadLocation, Events::TextChanged, OnDownloadLocationTextChanged);
+    ConnectThisTo(mDownloadLocation, Events::TextSubmit, OnDownloadLocationTextSubmit);
     mWidgetsToAnimate.PushBack(mDownloadLocation);
-    ConnectThisTo(mDownloadLocation->mButton,
-                  Events::ButtonPressed,
-                  OnBrowseDownloadLocation);
+    ConnectThisTo(mDownloadLocation->mButton, Events::ButtonPressed, OnBrowseDownloadLocation);
   }
 
   new Spacer(this, SizePolicy::Fixed, Pixels(0, 10));
@@ -167,11 +146,8 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
     mMaxNumberOfRecentProjects = new TextBox(this);
     mMaxNumberOfRecentProjects->SetEditable(true);
     mMaxNumberOfRecentProjects->SetStyle(TextBoxStyle::Modern);
-    mMaxNumberOfRecentProjects->SetSizing(
-        SizeAxis::X, SizePolicy::Fixed, Pixels(160));
-    ConnectThisTo(mMaxNumberOfRecentProjects,
-                  Events::TextSubmit,
-                  OnMaxRecentProjectsModified);
+    mMaxNumberOfRecentProjects->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(160));
+    ConnectThisTo(mMaxNumberOfRecentProjects, Events::TextSubmit, OnMaxRecentProjectsModified);
     mWidgetsToAnimate.PushBack(mMaxNumberOfRecentProjects);
   }
 
@@ -185,13 +161,9 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
     new Spacer(this, SizePolicy::Fixed, Pixels(0, -9));
 
     mAutoCheckForLauncherUpdatesCheckBox = new CheckBox(this);
-    mAutoCheckForLauncherUpdatesCheckBox->SetChecked(
-        config->mAutoCheckForLauncherUpdates);
-    mAutoCheckForLauncherUpdatesCheckBox->SetSizing(
-        SizeAxis::X, SizePolicy::Fixed, Pixels(12));
-    ConnectThisTo(mAutoCheckForLauncherUpdatesCheckBox,
-                  Events::ValueChanged,
-                  OnAutoCheckForMajorUpdatesModified);
+    mAutoCheckForLauncherUpdatesCheckBox->SetChecked(config->mAutoCheckForLauncherUpdates);
+    mAutoCheckForLauncherUpdatesCheckBox->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(12));
+    ConnectThisTo(mAutoCheckForLauncherUpdatesCheckBox, Events::ValueChanged, OnAutoCheckForMajorUpdatesModified);
     mWidgetsToAnimate.PushBack(mAutoCheckForLauncherUpdatesCheckBox);
   }
 
@@ -207,8 +179,7 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
     mShowDevelopCheckBox = new CheckBox(this);
     mShowDevelopCheckBox->SetChecked(false);
     mShowDevelopCheckBox->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(12));
-    ConnectThisTo(
-        mShowDevelopCheckBox, Events::ValueChanged, OnShowDevelopModified);
+    ConnectThisTo(mShowDevelopCheckBox, Events::ValueChanged, OnShowDevelopModified);
     mWidgetsToAnimate.PushBack(mShowDevelopCheckBox);
   }
 
@@ -223,11 +194,8 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
 
     mShowExperimentalBranchesCheckBox = new CheckBox(this);
     mShowExperimentalBranchesCheckBox->SetChecked(false);
-    mShowExperimentalBranchesCheckBox->SetSizing(
-        SizeAxis::X, SizePolicy::Fixed, Pixels(12));
-    ConnectThisTo(mShowExperimentalBranchesCheckBox,
-                  Events::ValueChanged,
-                  OnShowExperimentalBranchesModified);
+    mShowExperimentalBranchesCheckBox->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(12));
+    ConnectThisTo(mShowExperimentalBranchesCheckBox, Events::ValueChanged, OnShowExperimentalBranchesModified);
     mWidgetsToAnimate.PushBack(mShowExperimentalBranchesCheckBox);
   }
 
@@ -236,8 +204,7 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
   // Check for updates (builds/etc...)
   TextButton* checkForUpdatesButton = new TextButton(this);
   checkForUpdatesButton->SetText("Check for Updates");
-  ConnectThisTo(
-      checkForUpdatesButton, Events::ButtonPressed, OnCheckForUpdates);
+  ConnectThisTo(checkForUpdatesButton, Events::ButtonPressed, OnCheckForUpdates);
 
   mWidgetsToAnimate.PushBack(checkForUpdatesButton);
   if (Z::gEngine->GetConfigCog()->has(DeveloperConfig))
@@ -245,9 +212,7 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
     // Check for updates (might go away)
     TextButton* checkForLauncherUpdatesButton = new TextButton(this);
     checkForLauncherUpdatesButton->SetText("Check for Launcher Updates");
-    ConnectThisTo(checkForLauncherUpdatesButton,
-                  Events::ButtonPressed,
-                  OnCheckForLauncherUpdates);
+    ConnectThisTo(checkForLauncherUpdatesButton, Events::ButtonPressed, OnCheckForLauncherUpdates);
     mWidgetsToAnimate.PushBack(checkForLauncherUpdatesButton);
   }
 
@@ -255,8 +220,7 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
   TextButton* revertSettingsButton = new TextButton(this);
   revertSettingsButton->SetText("Revert to default");
   revertSettingsButton->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(160));
-  ConnectThisTo(
-      revertSettingsButton, Events::ButtonPressed, OnRevertToDefaults);
+  ConnectThisTo(revertSettingsButton, Events::ButtonPressed, OnRevertToDefaults);
   mWidgetsToAnimate.PushBack(revertSettingsButton);
 
   ConnectThisTo(this, Events::Activated, OnActivated);
@@ -338,8 +302,7 @@ void SettingsMenu::OnBrowseProjectLocationSelected(OsFileSelection* e)
 {
   if (e->Files.Size() > 0)
   {
-    String path = BuildString(FilePath::GetDirectoryPath(e->Files[0]),
-                              cDirectorySeparatorCstr);
+    String path = BuildString(FilePath::GetDirectoryPath(e->Files[0]), cDirectorySeparatorCstr);
     mDefaultProjectLocation->SetText(path);
     OnProjectLocationTextSubmit(nullptr);
   }
@@ -358,22 +321,18 @@ void SettingsMenu::OnDownloadLocationTextSubmit(Event* e)
 {
   LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
   String oldDownloadPath = config->mDownloadPath;
-  String oldDownloadPathWithSeparator =
-      BuildString(oldDownloadPath, cDirectorySeparatorCstr);
+  String oldDownloadPathWithSeparator = BuildString(oldDownloadPath, cDirectorySeparatorCstr);
 
   // Since we're just moving the folder to the new location, we can't move to a
   // sub-folder of the current location, to detect this we're just seeing if the
   // starting paths are the same (by adding a trailing '\' right now, hopefully
   // that's sufficient) and if they are we're just showing a tooltip to the user
-  String newPathWithSeparator =
-      BuildString(FilePath::Normalize(mDownloadLocation->GetText()),
-                  cDirectorySeparatorCstr);
+  String newPathWithSeparator = BuildString(FilePath::Normalize(mDownloadLocation->GetText()), cDirectorySeparatorCstr);
   if (newPathWithSeparator.StartsWith(oldDownloadPathWithSeparator))
   {
     mDownloadLocation->SetText(config->mDownloadPath);
 
-    ToolTip* toolTip =
-        new ToolTip(mDownloadLocation, "Cannot move to sub-directory");
+    ToolTip* toolTip = new ToolTip(mDownloadLocation, "Cannot move to sub-directory");
     mToolTip = toolTip;
     // Don't have the tooltip destroyed when the mouse leaves the text box
     toolTip->SetDestroyOnMouseExit(false);
@@ -386,8 +345,7 @@ void SettingsMenu::OnDownloadLocationTextSubmit(Event* e)
 
   // Make a confirmation dialog to see if the user whats to move
   // the downloads folder and contents to the new location
-  ModalConfirmAction* modal =
-      new ModalConfirmAction(mParentModal, "Move downloads to new location?");
+  ModalConfirmAction* modal = new ModalConfirmAction(mParentModal, "Move downloads to new location?");
   ConnectThisTo(modal, Events::ModalConfirmResult, OnChangeDownloadLocation);
   mConfirmModal = modal;
 }
@@ -431,9 +389,7 @@ void SettingsMenu::OnChangeDownloadLocation(ModalConfirmEvent* e)
     config->mDownloadPath = mDownloadLocation->GetText();
     SaveConfig();
 
-    ZPrint("Settings: Changing downloads from '%s' to '%s'\n",
-           oldDownloadPath.c_str(),
-           config->mDownloadPath.c_str());
+    ZPrint("Settings: Changing downloads from '%s' to '%s'\n", oldDownloadPath.c_str(), config->mDownloadPath.c_str());
 
     // Move the old folder to the new location
     MoveFolderContents(config->mDownloadPath, oldDownloadPath);
@@ -442,8 +398,7 @@ void SettingsMenu::OnChangeDownloadLocation(ModalConfirmEvent* e)
       DeleteDirectory(oldDownloadPath);
 
     Event toSend;
-    Z::gEngine->GetConfigCog()->DispatchEvent(Events::LauncherConfigChanged,
-                                         &toSend);
+    Z::gEngine->GetConfigCog()->DispatchEvent(Events::LauncherConfigChanged, &toSend);
   }
   else
   {
@@ -475,9 +430,8 @@ void SettingsMenu::OnMaxRecentProjectsModified(Event* e)
   // We still need some logical extremes for the max projects...
   maxRecentProjects = Math::Clamp(maxRecentProjects, 1u, 50u);
 
-  ZPrint("Settings: Changing max recent projects from %d to %d\n",
-         recentProjects->mMaxRecentProjects,
-         maxRecentProjects);
+  ZPrint(
+      "Settings: Changing max recent projects from %d to %d\n", recentProjects->mMaxRecentProjects, maxRecentProjects);
 
   // If we clamped the value then the text also has to be updated
   mMaxNumberOfRecentProjects->SetText(ToString(maxRecentProjects));
@@ -490,15 +444,13 @@ void SettingsMenu::OnMaxRecentProjectsModified(Event* e)
 void SettingsMenu::OnAutoCheckForMajorUpdatesModified(Event* e)
 {
   LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
-  config->mAutoCheckForLauncherUpdates =
-      mAutoCheckForLauncherUpdatesCheckBox->GetChecked();
+  config->mAutoCheckForLauncherUpdates = mAutoCheckForLauncherUpdatesCheckBox->GetChecked();
 
   // Save the config now with the new settings
   SaveConfig();
 
   // Start checking for auto-updates now (needs to queue up actions)
-  if (config->mAutoCheckForLauncherUpdates &&
-      !mLauncher->mIsLauncherUpdateCheckQueued)
+  if (config->mAutoCheckForLauncherUpdates && !mLauncher->mIsLauncherUpdateCheckQueued)
     mLauncher->AutoCheckForLauncherUpdates();
 }
 
@@ -519,8 +471,7 @@ void SettingsMenu::OnShowDevelopModified(Event* e)
 void SettingsMenu::OnShowExperimentalBranchesModified(Event* e)
 {
   LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
-  config->mShowExperimentalBranches =
-      mShowExperimentalBranchesCheckBox->GetChecked();
+  config->mShowExperimentalBranches = mShowExperimentalBranchesCheckBox->GetChecked();
 
   // Save the config now with the new settings
   SaveConfig();
@@ -548,10 +499,8 @@ void SettingsMenu::OnRevertToDefaults(Event* e)
 {
   // Make a confirmation dialog to see if the user whats to move
   // the downloads folder and contents to the new location
-  ModalConfirmAction* modal =
-      new ModalConfirmAction(mParentModal, "Revert all settings to default?");
-  ConnectThisTo(
-      modal, Events::ModalConfirmResult, OnRevertToDefaultsConfirmation);
+  ModalConfirmAction* modal = new ModalConfirmAction(mParentModal, "Revert all settings to default?");
+  ConnectThisTo(modal, Events::ModalConfirmResult, OnRevertToDefaultsConfirmation);
   mConfirmModal = modal;
 }
 
@@ -570,11 +519,9 @@ void SettingsMenu::LoadFromConfig()
   mDownloadLocation->SetText(config->mDownloadPath);
   mAutoRunMode->SetSelectedItem(config->mAutoRunMode, false);
 
-  mMaxNumberOfRecentProjects->SetText(
-      ToString(recentProjects->mMaxRecentProjects));
+  mMaxNumberOfRecentProjects->SetText(ToString(recentProjects->mMaxRecentProjects));
   mShowDevelopCheckBox->SetCheckedDirect(config->mShowDevelopmentBuilds);
-  mShowExperimentalBranchesCheckBox->SetCheckedDirect(
-      config->mShowExperimentalBranches);
+  mShowExperimentalBranchesCheckBox->SetCheckedDirect(config->mShowExperimentalBranches);
 }
 
 void SettingsMenu::RevertConfigToDefaults()
@@ -622,8 +569,7 @@ void SettingsMenu::AnimateIn()
   ActionGroup* group = new ActionGroup(this);
 
   // Animate the background in
-  group->Add(
-      MoveWidgetAction(mBackground, Vec3::cZero, SettingsUi::SlideInTime));
+  group->Add(MoveWidgetAction(mBackground, Vec3::cZero, SettingsUi::SlideInTime));
 
   float delayPadding = 0.01f;
 
@@ -644,12 +590,11 @@ void SettingsMenu::AnimateOut()
   Vec3 destination = Pixels(-500, 0, 0);
 
   // Animate the background in
-  group->Add(
-      MoveWidgetAction(mBackground, destination, SettingsUi::SlideInTime));
+  group->Add(MoveWidgetAction(mBackground, destination, SettingsUi::SlideInTime));
 
   // Animate each widget
-  forRange(Widget * widget, mWidgetsToAnimate.All()) group->Add(
-      MoveWidgetAction(widget, destination, SettingsUi::SlideInTime));
+  forRange (Widget* widget, mWidgetsToAnimate.All())
+    group->Add(MoveWidgetAction(widget, destination, SettingsUi::SlideInTime));
 }
 
 } // namespace Zero

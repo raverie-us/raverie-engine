@@ -118,12 +118,10 @@ using std::numeric_limits;
 } // namespace Zilch
 
 // Special macros
-#  define ZilchForEach(VariableName, Range) forRange(VariableName, Range)
-#  define ZilchRefForEach(VariableName, Range) forRangeRef(VariableName, Range)
-#  define ZilchForRange(VariableName, RangeName, Range)                        \
-    ZeroForRangeVar(VariableName, RangeName, Range)
-#  define ZilchRefForRange(VariableName, RangeName, Range)                     \
-    ZeroForRangeRefVar(VariableName, RangeName, Range)
+#  define ZilchForEach(VariableName, Range) forRange (VariableName, Range)
+#  define ZilchRefForEach(VariableName, Range) forRangeRef (VariableName, Range)
+#  define ZilchForRange(VariableName, RangeName, Range) ZeroForRangeVar (VariableName, RangeName, Range)
+#  define ZilchRefForRange(VariableName, RangeName, Range) ZeroForRangeRefVar (VariableName, RangeName, Range)
 
 // Zilch Includes
 #  include "ForwardDeclarations.hpp"
@@ -178,8 +176,7 @@ typedef Array<LibraryRef> LibraryArray;
 typedef LibraryArray::range LibraryRange;
 
 typedef Function* (BoundType::*GetFunctionFn)(StringParam name) const;
-typedef const FunctionArray* (BoundType::*GetOverloadedFunctionsFn)(
-    StringParam name) const;
+typedef const FunctionArray* (BoundType::*GetOverloadedFunctionsFn)(StringParam name) const;
 typedef Field* (BoundType::*GetFieldFn)(StringParam name) const;
 typedef GetterSetter* (BoundType::*GetGetterSetterFn)(StringParam name) const;
 
@@ -228,25 +225,23 @@ String GetDocumentationCStringOrEmpty(cstr string);
 
 // Defines a static member function that allows us to query the documentation
 // for a particular member (including properties, functions, and fields)
-#    define ZilchDocument(Member, DocumentationString)                         \
-      static Zilch::String Member##Documentation()                             \
-      {                                                                        \
-        return Zilch::String();                                                \
+#    define ZilchDocument(Member, DocumentationString)                                                                 \
+      static Zilch::String Member##Documentation()                                                                     \
+      {                                                                                                                \
+        return Zilch::String();                                                                                        \
       }
 #  else
 // Defines a documentation string and allows users to easily disable
 // documentation via globally defining 'ZilchDisableDocumentation'
-#    define ZilchDocumentString(DocumentationString)                           \
-      Zilch::GetDocumentationStringOrEmpty(DocumentationString)
+#    define ZilchDocumentString(DocumentationString) Zilch::GetDocumentationStringOrEmpty(DocumentationString)
 
 // Defines a global function that allows us to query the documentation for a
 // particular type including classes, enums, primitives, etc)
-#    define ZilchDocument(Name, DocumentationString)                           \
-      static Zilch::String Name##Documentation()                               \
-      {                                                                        \
-        static Zilch::String Documentation =                                   \
-            GetDocumentationCStringOrEmpty(DocumentationString);               \
-        return Documentation;                                                  \
+#    define ZilchDocument(Name, DocumentationString)                                                                   \
+      static Zilch::String Name##Documentation()                                                                       \
+      {                                                                                                                \
+        static Zilch::String Documentation = GetDocumentationCStringOrEmpty(DocumentationString);                      \
+        return Documentation;                                                                                          \
       }
 #  endif
 } // namespace Zilch

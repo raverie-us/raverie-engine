@@ -7,7 +7,6 @@ namespace Zero
 /// specify a location to search for symbol information. The exceptionContext is
 /// operating system dependent and should be left as null unless we're handling
 /// a crash.
-String GetCallStack(StringParam extraSymbolPath = String(),
-                    OsHandle exceptionContext = nullptr);
+String GetCallStack(StringParam extraSymbolPath = String(), OsHandle exceptionContext = nullptr);
 
 } // namespace Zero

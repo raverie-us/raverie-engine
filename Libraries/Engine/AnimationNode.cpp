@@ -12,10 +12,7 @@ void PrintTabs(uint tabs)
     DebugPrint("|   ");
 }
 
-void LerpFrame(AnimationFrame& a,
-               AnimationFrame& b,
-               float t,
-               AnimationFrame& result)
+void LerpFrame(AnimationFrame& a, AnimationFrame& b, float t, AnimationFrame& result)
 {
   uint numberOfTracks = a.Tracks.Size();
   result.Tracks.Resize(numberOfTracks);
@@ -136,10 +133,7 @@ PoseNode::PoseNode(AnimationFrame& pose)
   mFrameData.Tracks.Assign(pose.Tracks.All());
 }
 
-AnimationNode* PoseNode::Update(AnimationGraph* animGraph,
-                                float dt,
-                                uint frameId,
-                                EventList eventsToSend)
+AnimationNode* PoseNode::Update(AnimationGraph* animGraph, float dt, uint frameId, EventList eventsToSend)
 {
   return this;
 }
@@ -196,10 +190,7 @@ void BasicAnimation::ReLinkAnimations()
   }
 }
 
-AnimationNode* BasicAnimation::Update(AnimationGraph* animGraph,
-                                      float dt,
-                                      uint frameId,
-                                      EventList eventsToSend)
+AnimationNode* BasicAnimation::Update(AnimationGraph* animGraph, float dt, uint frameId, EventList eventsToSend)
 {
   // Return early if we've already been updated
   if (HasUpdatedThisFrame(frameId))
@@ -312,10 +303,7 @@ void BasicAnimation::PrintNode(uint tabs)
 {
   PrintTabs(tabs);
   String animName = mAnimation->Name;
-  DebugPrint("BasicAnimation: %s, at: %.2gs of %.2gs\n",
-             animName.c_str(),
-             mTime,
-             mDuration);
+  DebugPrint("BasicAnimation: %s, at: %.2gs of %.2gs\n", animName.c_str(), mTime, mDuration);
 }
 
 String BasicAnimation::GetDisplayName()
@@ -340,10 +328,7 @@ void BasicAnimation::SetAnimation(Animation* animation)
   ReLinkAnimations();
 }
 
-AnimationNode* BuildBasic(AnimationGraph* animGraph,
-                          Animation* animation,
-                          float t,
-                          AnimationPlayMode::Enum playMode)
+AnimationNode* BuildBasic(AnimationGraph* animGraph, Animation* animation, float t, AnimationPlayMode::Enum playMode)
 {
   return new BasicAnimation(animGraph, animation, t, playMode);
 }
@@ -361,10 +346,7 @@ String DirectBlend::GetName()
   return String("DirectBlend");
 }
 
-AnimationNode* DirectBlend::Update(AnimationGraph* animGraph,
-                                   float dt,
-                                   uint frameId,
-                                   EventList eventsToSend)
+AnimationNode* DirectBlend::Update(AnimationGraph* animGraph, float dt, uint frameId, EventList eventsToSend)
 {
   // Return early if we've already been updated
   if (HasUpdatedThisFrame(frameId))
@@ -434,10 +416,7 @@ void DirectBlend::PrintNode(uint tabs)
   mB->PrintNode(tabs + 1);
 }
 
-AnimationNode* BuildDirectBlend(AnimationGraph* t,
-                                AnimationNode* a,
-                                AnimationNode* b,
-                                float transitionTime)
+AnimationNode* BuildDirectBlend(AnimationGraph* t, AnimationNode* a, AnimationNode* b, float transitionTime)
 {
   DirectBlend* direct = new DirectBlend();
   direct->mA = a;
@@ -470,10 +449,7 @@ String CrossBlend::GetName()
   return String("CrossBlend");
 }
 
-AnimationNode* CrossBlend::Update(AnimationGraph* animGraph,
-                                  float dt,
-                                  uint frameId,
-                                  EventList eventsToSend)
+AnimationNode* CrossBlend::Update(AnimationGraph* animGraph, float dt, uint frameId, EventList eventsToSend)
 {
   // Return early if we've already been updated
   if (HasUpdatedThisFrame(frameId))
@@ -613,10 +589,7 @@ void CrossBlend::SetNormalizedTimeScale(float min, float max, float current)
   SetNormalizedTime(Math::Clamp(blendTime, 0.0f, 1.0f));
 }
 
-AnimationNode* BuildCrossBlend(AnimationGraph* t,
-                               AnimationNode* a,
-                               AnimationNode* b,
-                               float transitionTime)
+AnimationNode* BuildCrossBlend(AnimationGraph* t, AnimationNode* a, AnimationNode* b, float transitionTime)
 {
   CrossBlend* blend = new CrossBlend();
 
@@ -645,10 +618,7 @@ String SelectiveNode::GetName()
   return String("SelectiveNode");
 }
 
-AnimationNode* SelectiveNode::Update(AnimationGraph* animGraph,
-                                     float dt,
-                                     uint frameId,
-                                     EventList eventsToSend)
+AnimationNode* SelectiveNode::Update(AnimationGraph* animGraph, float dt, uint frameId, EventList eventsToSend)
 {
   // Return early if we've already been updated
   if (HasUpdatedThisFrame(frameId))
@@ -779,10 +749,7 @@ Cog* SelectiveNode::GetRoot()
   return mRoot;
 }
 
-AnimationNode* BuildSelectiveNode(AnimationGraph* t,
-                                  AnimationNode* a,
-                                  AnimationNode* b,
-                                  Cog* rootBone)
+AnimationNode* BuildSelectiveNode(AnimationGraph* t, AnimationNode* a, AnimationNode* b, Cog* rootBone)
 {
   SelectiveNode* selective = new SelectiveNode();
 
@@ -806,10 +773,7 @@ String ChainNode::GetName()
   return String("ChainNode");
 }
 
-AnimationNode* ChainNode::Update(AnimationGraph* animGraph,
-                                 float dt,
-                                 uint frameId,
-                                 EventList eventsToSend)
+AnimationNode* ChainNode::Update(AnimationGraph* animGraph, float dt, uint frameId, EventList eventsToSend)
 {
   // Return early if we've already been updated
   if (HasUpdatedThisFrame(frameId))
@@ -869,9 +833,7 @@ void ChainNode::PrintNode(uint tabs)
   mB->PrintNode(tabs + 2);
 }
 
-AnimationNode* BuildChainNode(AnimationGraph* t,
-                              AnimationNode* a,
-                              AnimationNode* b)
+AnimationNode* BuildChainNode(AnimationGraph* t, AnimationNode* a, AnimationNode* b)
 {
   ChainNode* chain = new ChainNode();
   chain->mA = a;

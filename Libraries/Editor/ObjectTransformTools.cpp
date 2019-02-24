@@ -163,8 +163,8 @@ void ObjectTransformTool::RegisterNewGizmo()
   transformGizmo->ClearObjects();
 
   // add each object in the selection to the gizmo
-  forRange(Handle object, mRegisteredObjects.All())
-      transformGizmo->AddObject(object, false);
+  forRange (Handle object, mRegisteredObjects.All())
+    transformGizmo->AddObject(object, false);
 
   transformGizmo->UpdateGizmoBasis();
 }
@@ -231,10 +231,9 @@ void ObjectTransformTool::OnFrameUpdate(UpdateEvent* event)
 void ObjectTransformTool::OnComponentsChanged(Event* event)
 {
   bool transformFound = false;
-  forRange(Handle object, mRegisteredObjects.All())
+  forRange (Handle object, mRegisteredObjects.All())
   {
-    if (MetaTransform* transform =
-            object.StoredType->HasInherited<MetaTransform>())
+    if (MetaTransform* transform = object.StoredType->HasInherited<MetaTransform>())
     {
       MetaTransformInstance transformInstance = transform->GetInstance(object);
       if (transformInstance.IsNotNull())
@@ -269,7 +268,7 @@ void ObjectTransformTool::OnSelectionChanged(Event* event)
   MetaSelection* selection = Z::gEditor->GetSelection();
 
   // disconnect all previous objects
-  forRange(Handle objectHandle, mRegisteredObjects.All())
+  forRange (Handle objectHandle, mRegisteredObjects.All())
   {
     if (Object* object = objectHandle.Get<Object*>())
       object->GetDispatcher()->Disconnect(this);
@@ -290,16 +289,14 @@ void ObjectTransformTool::OnSelectionChanged(Event* event)
   bool transformFound = false;
 
   // register new object connections
-  forRange(Handle objectHandle, selection->All())
+  forRange (Handle objectHandle, selection->All())
   {
     if (Object* object = objectHandle.Get<Cog*>())
       ConnectThisTo(object, Events::ComponentsModified, OnComponentsChanged);
 
-    if (MetaTransform* transform =
-            objectHandle.StoredType->HasInherited<MetaTransform>())
+    if (MetaTransform* transform = objectHandle.StoredType->HasInherited<MetaTransform>())
     {
-      MetaTransformInstance transformInstance =
-          transform->GetInstance(objectHandle);
+      MetaTransformInstance transformInstance = transform->GetInstance(objectHandle);
       if (transformInstance.IsNotNull())
         transformFound = true;
     }
@@ -337,7 +334,7 @@ void ObjectTransformTool::UpdateGrabState(GizmoGrabMode::Enum state)
   if (gizmo == nullptr)
     return;
 
-  forRange(Cog & child, gizmo->GetChildren())
+  forRange (Cog& child, gizmo->GetChildren())
   {
     GizmoDrag* drag;
     if ((drag = child.has(GizmoDrag)))
@@ -479,10 +476,8 @@ void ObjectTranslateTool::OnGizmoObjectsDuplicated(Event* event)
   if (gizmo == nullptr)
     return;
 
-  ObjectTransformGizmo* transformGizmo =
-      mGizmo.ToCog()->has(ObjectTransformGizmo);
-  transformGizmo->GetSpace()->DispatchEvent(Events::DuplicateFirstChance,
-                                            event);
+  ObjectTransformGizmo* transformGizmo = mGizmo.ToCog()->has(ObjectTransformGizmo);
+  transformGizmo->GetSpace()->DispatchEvent(Events::DuplicateFirstChance, event);
 
   int count = transformGizmo->GetObjectCount();
   for (int i = 0; i < count; ++i)
@@ -494,8 +489,7 @@ void ObjectTranslateTool::OnGizmoObjectsDuplicated(Event* event)
 
 void ObjectTranslateTool::GizmoCreated(Cog* gizmo)
 {
-  ConnectThisTo(
-      gizmo, Events::GizmoObjectsDuplicated, OnGizmoObjectsDuplicated);
+  ConnectThisTo(gizmo, Events::GizmoObjectsDuplicated, OnGizmoObjectsDuplicated);
 }
 
 void ObjectTranslateTool::CopyPropertiesToGizmo()

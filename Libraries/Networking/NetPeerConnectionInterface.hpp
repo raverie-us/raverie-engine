@@ -24,20 +24,16 @@ public:
 
   /// Handles the event where we sent a connect response to someone. Return true
   /// if we handled it, false if we did not
-  virtual void
-  HandleNetPeerSentConnectResponse(NetPeerSentConnectResponse* event) = 0;
+  virtual void HandleNetPeerSentConnectResponse(NetPeerSentConnectResponse* event) = 0;
   /// Handles a connection response received from another net peer. Return true
   /// if we handled it, false if we did not
-  virtual void HandleNetPeerReceivedConnectResponse(
-      NetPeerReceivedConnectResponse* event) = 0;
+  virtual void HandleNetPeerReceivedConnectResponse(NetPeerReceivedConnectResponse* event) = 0;
   /// Handles the event where we sent a connect request. Return true if we
   /// handled it, false if we did not
-  virtual void
-  HandleNetPeerSentConnectRequest(NetPeerSentConnectRequest* event) = 0;
+  virtual void HandleNetPeerSentConnectRequest(NetPeerSentConnectRequest* event) = 0;
   /// Handles the event where we received a connect response. Return true if we
   /// handled, false if we did not
-  virtual void
-  HandleNetPeerReceivedConnectRequest(NetPeerReceivedConnectRequest* event) = 0;
+  virtual void HandleNetPeerReceivedConnectRequest(NetPeerReceivedConnectRequest* event) = 0;
 
   /// Handles the event where we established a connection. Return true if we
   /// handled, false if we did not

@@ -22,9 +22,7 @@ public:
   ZilchDeclareType(MainPropertyView, TypeCopyMode::ReferenceType);
 
   /// Constructor.
-  MainPropertyView(Composite* parent,
-                   MetaSelection* selection,
-                   OperationQueue* queue);
+  MainPropertyView(Composite* parent, MetaSelection* selection, OperationQueue* queue);
   ~MainPropertyView();
 
   /// Displays the given object in the property view. If it's a resource type,

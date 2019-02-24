@@ -20,32 +20,31 @@ namespace Zilch
 #  define ZilchStringify(Argument) ZilchStr(Argument)
 
 // Don't allow copying of a type
-#  define ZilchNoCopy(type)                                                    \
-  private:                                                                     \
-    type& operator=(const type&);                                              \
+#  define ZilchNoCopy(type)                                                                                            \
+  private:                                                                                                             \
+    type& operator=(const type&);                                                                                      \
     type(const type&);
 
 // Don't allow copying of a type
-#  define ZilchNoDefaultConstructor(type)                                      \
-  private:                                                                     \
+#  define ZilchNoDefaultConstructor(type)                                                                              \
+  private:                                                                                                             \
     type();
 
 // Don't allow destruction of a type
-#  define ZilchNoDestructor(type)                                              \
-  private:                                                                     \
+#  define ZilchNoDestructor(type)                                                                                      \
+  private:                                                                                                             \
     ~type();
 
 // Don't allow instantiations of this type
-#  define ZilchNoInstantiations(type)                                          \
-  private:                                                                     \
-    type();                                                                    \
-    ~type();                                                                   \
-    type& operator=(const type&);                                              \
+#  define ZilchNoInstantiations(type)                                                                                  \
+  private:                                                                                                             \
+    type();                                                                                                            \
+    ~type();                                                                                                           \
+    type& operator=(const type&);                                                                                      \
     type(const type&);
 
 // Macro for figuring out the size of a fixed C-array
-#  define ZilchCArrayCount(x)                                                  \
-    ((sizeof(x) / sizeof(0 [x])) / ((size_t)(!(sizeof(x) % sizeof(0 [x])))))
+#  define ZilchCArrayCount(x) ((sizeof(x) / sizeof(0 [x])) / ((size_t)(!(sizeof(x) % sizeof(0 [x])))))
 
 // A class we use when we're either debugging or refactoring
 // This class attempts to act as a placeholder for any other class

@@ -30,9 +30,7 @@ typedef Array<ErrorContext*> ErrorContextStack;
 // Thread local context
 ZeroThreadLocal extern ErrorContextStack* ActiveErrorContextStack;
 // Do a Notify and print the error context stack
-void DoNotifyErrorWithContext(
-    StringParam message,
-    NotifyException::Enum notifyException = NotifyException::Script);
+void DoNotifyErrorWithContext(StringParam message, NotifyException::Enum notifyException = NotifyException::Script);
 // Cleanup Error Context
 void CleanUpErrorContext();
 
@@ -68,9 +66,7 @@ public:
   // ErrorContext Interface
   String GetDescription() override;
 
-  ErrorContextObject(cstr message, Object* object) :
-      Message(message),
-      ContextObject(object)
+  ErrorContextObject(cstr message, Object* object) : Message(message), ContextObject(object)
   {
   }
 };
@@ -78,7 +74,6 @@ public:
 // Push a cstr message and Object pointer.
 // Do not free object or string memory.
 // Standard usage is PushErrorContextObject("Loading Level", level)
-#define PushErrorContextObject(message, contextObject)                         \
-  ErrorContextObject __entry(message, contextObject);
+#define PushErrorContextObject(message, contextObject) ErrorContextObject __entry(message, contextObject);
 
 } // namespace Zero

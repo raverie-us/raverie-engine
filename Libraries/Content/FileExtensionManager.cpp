@@ -20,8 +20,7 @@ bool TypeExtensionEntry::IsValidExtensionWithDot(StringParam extension) const
   // Strip the dot from the given extension
   StringRange dotLocation = extension.FindFirstOf(Rune('.'));
   ErrorIf(dotLocation.Empty(), "Given extension must contain a '.'");
-  StringRange extensionNoDot =
-      extension.SubString(dotLocation.End(), extension.End());
+  StringRange extensionNoDot = extension.SubString(dotLocation.End(), extension.End());
   // Now check the "no dot" version as that's what we store.
   return IsValidExtensionNoDot(extensionNoDot);
 }

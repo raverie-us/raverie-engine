@@ -109,8 +109,7 @@ Vector2 Vector2::operator*(Vec2Param rhs) const
 
 Vector2 Vector2::operator/(Vec2Param rhs) const
 {
-  ErrorIf(rhs.x == real(0.0) || rhs.y == real(0.0),
-          "Vector2 - Division by zero.");
+  ErrorIf(rhs.x == real(0.0) || rhs.y == real(0.0), "Vector2 - Division by zero.");
   return Vector2(x / rhs.x, y / rhs.y);
 }
 
@@ -272,10 +271,7 @@ Vector2 Vector2::Clamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue)
   return result;
 }
 
-Vector2 Vector2::DebugClamp(Vec2Param value,
-                            Vec2Param minValue,
-                            Vec2Param maxValue,
-                            bool& wasClamped)
+Vector2 Vector2::DebugClamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue, bool& wasClamped)
 {
   Vector2 result = value;
   result.x = Math::DebugClamp(value.x, minValue.x, maxValue.x, wasClamped);
@@ -317,8 +313,7 @@ Vector2 Vector2::Round(Vec2Param value)
 
 Vector2 Vector2::Lerp(Vec2Param start, Vec2Param end, real tValue)
 {
-  WarnIf(!Math::InRange(tValue, real(0.0), real(1.0)),
-         "Vector2 - Interpolation value is not in the range of [0, 1]");
+  WarnIf(!Math::InRange(tValue, real(0.0), real(1.0)), "Vector2 - Interpolation value is not in the range of [0, 1]");
   return Math::Lerp<Vector2, real>(start, end, tValue);
 }
 
@@ -347,8 +342,7 @@ Vector2 Vector2::ProjectOnPlane(Vec2Param input, Vec2Param planeNormal)
   return GenericProjectOnPlane(input, planeNormal);
 }
 
-Vector2 Vector2::ReflectAcrossVector(Vec2Param input,
-                                     Vec2Param normalizedVector)
+Vector2 Vector2::ReflectAcrossVector(Vec2Param input, Vec2Param normalizedVector)
 {
   return GenericReflectAcrossVector(input, normalizedVector);
 }
@@ -358,9 +352,7 @@ Vector2 Vector2::ReflectAcrossPlane(Vec2Param input, Vec2Param planeNormal)
   return GenericReflectAcrossPlane(input, planeNormal);
 }
 
-Vector2 Vector2::Refract(Vec2Param input,
-                         Vec2Param planeNormal,
-                         real refractionIndex)
+Vector2 Vector2::Refract(Vec2Param input, Vec2Param planeNormal, real refractionIndex)
 {
   return GenericRefract(input, planeNormal, refractionIndex);
 }
@@ -374,8 +366,7 @@ real Vector2::AngleBetween(Vec2Param a, Vec2Param b)
 
 bool Vector2::ApproximatelyEqual(Vec2Param lhs, Vec2Param rhs, real epsilon)
 {
-  return Math::Equal(lhs.x, rhs.x, epsilon) &&
-         Math::Equal(lhs.y, rhs.y, epsilon);
+  return Math::Equal(lhs.x, rhs.x, epsilon) && Math::Equal(lhs.y, rhs.y, epsilon);
 }
 
 bool Vector2::Valid() const
@@ -570,10 +561,7 @@ Vector2 Clamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue)
   return Vector2::Clamp(value, minValue, maxValue);
 }
 
-Vector2 DebugClamp(Vec2Param value,
-                   Vec2Param minValue,
-                   Vec2Param maxValue,
-                   bool& wasClamped)
+Vector2 DebugClamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue, bool& wasClamped)
 {
   return Vector2::DebugClamp(value, minValue, maxValue, wasClamped);
 }

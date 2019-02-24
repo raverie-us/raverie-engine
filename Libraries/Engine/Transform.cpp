@@ -19,8 +19,7 @@ MetaTransformInstance TransformMetaTransform::GetInstance(HandleParam object)
   return BuildInstance(transform);
 }
 
-MetaTransformInstance
-TransformMetaTransform::BuildInstance(Transform* transform)
+MetaTransformInstance TransformMetaTransform::BuildInstance(Transform* transform)
 {
   if (transform == nullptr)
     return MetaTransformInstance();
@@ -79,15 +78,7 @@ Quat LookTowards(Vec3 direction, Vec3 up, Facing::Enum facing)
   Vec3 yaxis = Cross(zaxis, xaxis);
   yaxis.AttemptNormalize();
 
-  Mat3 matrix = Mat3(xaxis.x,
-                     yaxis.x,
-                     zaxis.x,
-                     xaxis.y,
-                     yaxis.y,
-                     zaxis.y,
-                     xaxis.z,
-                     yaxis.z,
-                     zaxis.z);
+  Mat3 matrix = Mat3(xaxis.x, yaxis.x, zaxis.x, xaxis.y, yaxis.y, zaxis.y, xaxis.z, yaxis.z, zaxis.z);
   Quat rotation;
   Math::ToQuaternion(matrix, &rotation);
   return rotation;
@@ -98,17 +89,13 @@ Quat LookAt(Vec3 eyePoint, Vec3 lookAtPoint, Vec3 up, Facing::Enum facing)
   return LookTowards(lookAtPoint - eyePoint, up, facing);
 }
 
-void SetRotationLookAt(Transform* transform,
-                       Vec3 lookAtPoint,
-                       Vec3 up,
-                       Facing::Enum facing)
+void SetRotationLookAt(Transform* transform, Vec3 lookAtPoint, Vec3 up, Facing::Enum facing)
 {
-  transform->SetWorldRotation(
-      LookAt(transform->GetWorldTranslation(), lookAtPoint, up, facing));
+  transform->SetWorldRotation(LookAt(transform->GetWorldTranslation(), lookAtPoint, up, facing));
 }
 
-Memory::Pool* Transform::sCachedWorldMatrixPool = new Memory::Pool(
-    "TransformWorldMatrixCache", Memory::GetRoot(), sizeof(Mat4), 100);
+Memory::Pool* Transform::sCachedWorldMatrixPool =
+    new Memory::Pool("TransformWorldMatrixCache", Memory::GetRoot(), sizeof(Mat4), 100);
 
 bool Transform::sCacheWorldMatrices = true;
 
@@ -206,8 +193,7 @@ void Transform::AttachTo(AttachmentInfo& info)
 
   if (TransformParent == NULL)
   {
-    ErrorIf(parent->has(Transform) == NULL,
-            "Parent does not have a Transform.");
+    ErrorIf(parent->has(Transform) == NULL, "Parent does not have a Transform.");
     TransformParent = parent->has(Transform);
   }
 
@@ -234,8 +220,7 @@ void Transform::TransformUpdate(TransformUpdateInfo& info)
   // If we were in-world and not the object that started transform update
   // then we have to apply the delta to ourself. (Don't apply this if it
   // was done by physics as it'll be identity anyways)
-  if (info.mTransform != this && InWorld &&
-      !(info.TransformFlags & TransformUpdateFlags::Physics))
+  if (info.mTransform != this && InWorld && !(info.TransformFlags & TransformUpdateFlags::Physics))
   {
     Mat4 newTransform = Math::Multiply(info.mDelta, GetWorldMatrix());
 
@@ -254,9 +239,7 @@ void Transform::Update(uint flags)
   GetOwner()->TransformUpdate(info);
 }
 
-void Transform::ComputeDeltaTransform(TransformUpdateInfo& info,
-                                      Mat4Param oldWorldMat,
-                                      Mat4Param newWorldMat)
+void Transform::ComputeDeltaTransform(TransformUpdateInfo& info, Mat4Param oldWorldMat, Mat4Param newWorldMat)
 {
   // compute the delta transform
   Mat4 origMatInv = oldWorldMat.Inverted();
@@ -275,8 +258,7 @@ void Transform::Update(uint flags, Mat4Param oldMat)
 
 void Transform::UpdateAll(Mat4Param oldMat, uint flags)
 {
-  flags = TransformUpdateFlags::Translation | TransformUpdateFlags::Scale |
-          TransformUpdateFlags::Rotation | flags;
+  flags = TransformUpdateFlags::Translation | TransformUpdateFlags::Scale | TransformUpdateFlags::Rotation | flags;
   Update(flags, oldMat);
 }
 
@@ -285,9 +267,8 @@ void Transform::UpdateAll(uint flags)
   SetDirty();
   TransformUpdateInfo info;
   info.mTransform = this;
-  info.TransformFlags = TransformUpdateFlags::Translation |
-                        TransformUpdateFlags::Scale |
-                        TransformUpdateFlags::Rotation | flags;
+  info.TransformFlags =
+      TransformUpdateFlags::Translation | TransformUpdateFlags::Scale | TransformUpdateFlags::Rotation | flags;
   GetOwner()->TransformUpdate(info);
 }
 
@@ -554,8 +535,7 @@ void Transform::SetLocalTranslationInternal(Vec3Param localTranslation)
 {
   // clamp to max transform values (should maybe clamp the world values, don't
   // care right now)
-  Vec3 newLocalTranslation =
-      ClampTranslation(GetSpace(), GetOwner(), localTranslation);
+  Vec3 newLocalTranslation = ClampTranslation(GetSpace(), GetOwner(), localTranslation);
 
   // we only need to do special logic if we are marked as in world and have a
   // parent
@@ -725,8 +705,7 @@ void Transform::SetWorldTranslationInternal(Vec3Param worldTranslation)
 {
   // clamp to max transform values (should maybe clamp the world values, don't
   // care right now)
-  Vec3 newWorldTranslation =
-      ClampTranslation(GetSpace(), GetOwner(), worldTranslation);
+  Vec3 newWorldTranslation = ClampTranslation(GetSpace(), GetOwner(), worldTranslation);
 
   if (!InWorld && TransformParent)
   {
@@ -796,7 +775,7 @@ void Transform::SetDirty()
   // Free the memory
   FreeCachedMatrix();
 
-  forRange(Cog & child, GetOwner()->GetChildren())
+  forRange (Cog& child, GetOwner()->GetChildren())
   {
     if (Transform* t = child.has(Transform))
       t->SetDirty();
@@ -812,8 +791,7 @@ Vec3 Transform::ClampTranslation(Space* space, Cog* owner, Vec3 translation)
   // clamp to the space's max translation
   real maxTranslation = space->mMaxObjectPosition;
   bool wasClamped = false;
-  Vec3 t = Math::DebugClamp(
-      translation, Vec3(-maxTranslation), Vec3(maxTranslation), wasClamped);
+  Vec3 t = Math::DebugClamp(translation, Vec3(-maxTranslation), Vec3(maxTranslation), wasClamped);
 
   // if anything was clamped and we haven't already
   // had a bad object then we'll print a message
@@ -825,12 +803,11 @@ Vec3 Transform::ClampTranslation(Space* space, Cog* owner, Vec3 translation)
       space->mInvalidObjectPositionOccurred = true;
 
     String objName = owner->GetDescription();
-    String errStr = String::Format(
-        "Translation was set beyond the range of [%g, %g] on object %s. "
-        "The translation will be clamped to this range.",
-        -maxTranslation,
-        maxTranslation,
-        objName.c_str());
+    String errStr = String::Format("Translation was set beyond the range of [%g, %g] on object %s. "
+                                   "The translation will be clamped to this range.",
+                                   -maxTranslation,
+                                   maxTranslation,
+                                   objName.c_str());
     DoNotifyWarning("Setting Invalid Translation", errStr);
   }
   return t;
@@ -840,7 +817,7 @@ void Transform::OnDestroy(uint flags /*= 0*/)
 {
   Cog* owner = GetOwner();
 
-  forRange(Cog & cog, owner->GetChildren().All())
+  forRange (Cog& cog, owner->GetChildren().All())
   {
     Transform* transform = cog.has(Transform);
     if (transform)
@@ -850,18 +827,14 @@ void Transform::OnDestroy(uint flags /*= 0*/)
   FreeCachedMatrix();
 }
 
-void Transform::SetRotationBases(Vec3Param facing,
-                                 Vec3Param up,
-                                 Vec3Param right)
+void Transform::SetRotationBases(Vec3Param facing, Vec3Param up, Vec3Param right)
 {
   Mat3 rotation;
   GenerateRotationMatrix(facing, up, right, &rotation);
   SetRotation(Math::ToQuaternion(rotation));
 }
 
-void Transform::SetEulerAnglesXYZ(float xRadians,
-                                  float yRadians,
-                                  float zRadians)
+void Transform::SetEulerAnglesXYZ(float xRadians, float yRadians, float zRadians)
 {
   Mat3 rotation;
   GenerateRotationMatrix(xRadians, yRadians, zRadians, &rotation);
@@ -952,9 +925,7 @@ Vec3 Transform::TransformPointLocal(Vec3Param point)
   return Math::TransformPoint(m, point);
 }
 
-Aabb FromTransformAndExtents(Transform* transform,
-                             Vec3Param extents,
-                             Vec3Param translation)
+Aabb FromTransformAndExtents(Transform* transform, Vec3Param extents, Vec3Param translation)
 {
   Mat4 worldMatrix = transform->GetWorldMatrix();
   return FromMatrix(worldMatrix, extents, translation);

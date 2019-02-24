@@ -7,9 +7,7 @@ namespace Zero
 
 // Ring Buffer
 
-int RingBuffer::Initialize(unsigned elementSizeBytes,
-                           unsigned elementCountInBuffer,
-                           void* buffer)
+int RingBuffer::Initialize(unsigned elementSizeBytes, unsigned elementCountInBuffer, void* buffer)
 {
   // Check if the number of elements is a power of 2
   if (((elementCountInBuffer - 1) & elementCountInBuffer) != 0)
@@ -79,16 +77,12 @@ unsigned RingBuffer::Write(const void* data, int elementCount)
     // Copy first section, from index position to end of buffer
     memcpy(Buffer + (index * ElementSizeBytes), data, size1 * ElementSizeBytes);
     // Copy second section, from beginning of buffer to end of elements
-    memcpy(Buffer,
-           (char*)data + (size1 * ElementSizeBytes),
-           (elementCount - size1) * ElementSizeBytes);
+    memcpy(Buffer, (char*)data + (size1 * ElementSizeBytes), (elementCount - size1) * ElementSizeBytes);
   }
   else
   {
     // Write all elements at once
-    memcpy(Buffer + (index * ElementSizeBytes),
-           data,
-           elementCount * ElementSizeBytes);
+    memcpy(Buffer + (index * ElementSizeBytes), data, elementCount * ElementSizeBytes);
   }
 
   // Advance the write index, wrapping at 2 * BufferSize
@@ -122,16 +116,12 @@ unsigned RingBuffer::Read(void* data, int elementCount)
     // Copy first section, from index position to end of buffer
     memcpy(data, Buffer + (index * ElementSizeBytes), size1 * ElementSizeBytes);
     // Copy second section, from beginning of buffer to end of elements
-    memcpy((char*)data + (size1 * ElementSizeBytes),
-           Buffer,
-           (elementCount - size1) * ElementSizeBytes);
+    memcpy((char*)data + (size1 * ElementSizeBytes), Buffer, (elementCount - size1) * ElementSizeBytes);
   }
   else
   {
     // Read all elements at once
-    memcpy(data,
-           Buffer + (index * ElementSizeBytes),
-           elementCount * ElementSizeBytes);
+    memcpy(data, Buffer + (index * ElementSizeBytes), elementCount * ElementSizeBytes);
   }
 
   // Advance the read index, wrapping at 2 * BufferSize

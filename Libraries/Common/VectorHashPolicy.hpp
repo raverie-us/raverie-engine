@@ -10,8 +10,7 @@ struct ZeroShared HashPolicy<Math::IntVec2>
 {
   inline size_t operator()(Math::IntVec2Param value) const
   {
-    return HashUint(*(unsigned int*)&value.x) +
-           HashUint(*(unsigned int*)&value.y);
+    return HashUint(*(unsigned int*)&value.x) + HashUint(*(unsigned int*)&value.y);
   }
 
   inline bool Equal(Math::IntVec2Param left, Math::IntVec2Param right) const

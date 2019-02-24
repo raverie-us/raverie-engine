@@ -37,8 +37,7 @@ ZilchDefineType(RotationBasisGizmoMetaTransform, builder, type)
 {
 }
 
-MetaTransformInstance
-RotationBasisGizmoMetaTransform::GetInstance(HandleParam object)
+MetaTransformInstance RotationBasisGizmoMetaTransform::GetInstance(HandleParam object)
 {
   RotationBasisGizmo* gizmo = object.Get<RotationBasisGizmo*>();
   ReturnIf(gizmo == nullptr, MetaTransformInstance(), "Invalid object given");
@@ -71,8 +70,7 @@ ZilchDefineType(RotationBasisGizmo, builder, type)
   ZeroBindEvent(Events::RotationBasisGizmoBegin, Event);
   ZeroBindEvent(Events::RotationBasisGizmoModified, Event);
   ZeroBindEvent(Events::RotationBasisGizmoEnd, Event);
-  ZeroBindEvent(Events::RotationBasisAabbQuery,
-                RotationBasisGizmoAabbQueryEvent);
+  ZeroBindEvent(Events::RotationBasisAabbQuery, RotationBasisGizmoAabbQueryEvent);
 
   ZilchBindMethod(ActivateAsGizmo);
   // Does not need to be serialized. Purely for editing purposes.
@@ -148,8 +146,7 @@ void RotationBasisGizmo::ActivateAsGizmo()
   owner->SetObjectViewHidden(true);
   owner->SetTransient(true);
   // Listen for the selection changing so we can delete ourself
-  ConnectThisTo(
-      Z::gEditor->GetSelection(), Events::SelectionChanged, OnSelectionChanged);
+  ConnectThisTo(Z::gEditor->GetSelection(), Events::SelectionChanged, OnSelectionChanged);
 }
 
 void RotationBasisGizmo::SetAsSelection()
@@ -160,9 +157,7 @@ void RotationBasisGizmo::SetAsSelection()
   selection->FinalSelectionChanged();
 }
 
-void RotationBasisGizmo::DrawBasisText(QuatParam axisRotation,
-                                       StringParam axisText,
-                                       Vec3Param localOffset)
+void RotationBasisGizmo::DrawBasisText(QuatParam axisRotation, StringParam axisText, Vec3Param localOffset)
 {
   Debug::Text text;
   text.SetViewScaled(true);
@@ -263,19 +258,12 @@ OrientationBasisGizmo::OrientationBasisGizmo()
 
 void OrientationBasisGizmo::Initialize(CogInitializer& initializer)
 {
-  ConnectThisTo(GetOwner(),
-                Events::AddRotationBasisGizmoObject,
-                OnAddRotationBasisGizmoObject);
-  ConnectThisTo(
-      GetOwner(), Events::RotationBasisGizmoBegin, OnRotationBasisGizmoBegin);
-  ConnectThisTo(GetOwner(),
-                Events::RotationBasisGizmoModified,
-                OnRotationBasisGizmoModified);
-  ConnectThisTo(
-      GetOwner(), Events::RotationBasisGizmoEnd, OnRotationBasisGizmoEnd);
+  ConnectThisTo(GetOwner(), Events::AddRotationBasisGizmoObject, OnAddRotationBasisGizmoObject);
+  ConnectThisTo(GetOwner(), Events::RotationBasisGizmoBegin, OnRotationBasisGizmoBegin);
+  ConnectThisTo(GetOwner(), Events::RotationBasisGizmoModified, OnRotationBasisGizmoModified);
+  ConnectThisTo(GetOwner(), Events::RotationBasisGizmoEnd, OnRotationBasisGizmoEnd);
   ConnectThisTo(GetSpace(), Events::FrameUpdate, OnFrameUpdate);
-  ConnectThisTo(
-      GetOwner(), Events::RotationBasisAabbQuery, OnRotationBasisAabbQuery);
+  ConnectThisTo(GetOwner(), Events::RotationBasisAabbQuery, OnRotationBasisAabbQuery);
 
   // Cache the rotation basis gizmo
   mRotationBasisGizmo = GetOwner()->has(RotationBasisGizmo);
@@ -285,8 +273,7 @@ void OrientationBasisGizmo::Initialize(CogInitializer& initializer)
   mRotationBasisGizmo->mZAxisName = "Up";
 }
 
-void OrientationBasisGizmo::OnAddRotationBasisGizmoObject(
-    RotationBasisGizmoInitializationEvent* e)
+void OrientationBasisGizmo::OnAddRotationBasisGizmoObject(RotationBasisGizmoInitializationEvent* e)
 {
   // Create the property that we store for this object (will contain a cached
   // rotation later)
@@ -346,8 +333,7 @@ void OrientationBasisGizmo::OnRotationBasisGizmoEnd(Event* e)
   queue->SetActiveBatchName("OrientationGizmo batch");
 
   for (size_t i = 0; i < mCogs.Size(); ++i)
-    QueueRotationsWithUndo(
-        queue, mCogs[i], mRotationBasisGizmo->mFinalWorldRotation);
+    QueueRotationsWithUndo(queue, mCogs[i], mRotationBasisGizmo->mFinalWorldRotation);
 
   queue->EndBatch();
 }
@@ -370,8 +356,7 @@ void OrientationBasisGizmo::OnFrameUpdate(Event* e)
   }
 }
 
-void OrientationBasisGizmo::OnRotationBasisAabbQuery(
-    RotationBasisGizmoAabbQueryEvent* e)
+void OrientationBasisGizmo::OnRotationBasisAabbQuery(RotationBasisGizmoAabbQueryEvent* e)
 {
   for (size_t i = 0; i < mCogs.Size(); ++i)
     e->mAabb.Combine(mRotationBasisGizmo->GetCogAabb(mCogs[i].mCogId));
@@ -400,8 +385,7 @@ void OrientationBasisGizmo::CacheRotation(OrientationBasisProperty& prop)
   prop.mBasisType = orientation->GetDefaultOrientationBases();
 }
 
-void OrientationBasisGizmo::UpdateRotation(OrientationBasisProperty& prop,
-                                           QuatParam rotation)
+void OrientationBasisGizmo::UpdateRotation(OrientationBasisProperty& prop, QuatParam rotation)
 {
   SetWorldRotation(prop, rotation);
 }
@@ -416,8 +400,9 @@ void OrientationBasisGizmo::RevertRotation(OrientationBasisProperty& prop)
   orientation->SetDefaultOrientationBases(prop.mBasisType);
 }
 
-void OrientationBasisGizmo::QueueRotationsWithUndo(
-    OperationQueue* queue, OrientationBasisProperty& prop, QuatParam rotation)
+void OrientationBasisGizmo::QueueRotationsWithUndo(OperationQueue* queue,
+                                                   OrientationBasisProperty& prop,
+                                                   QuatParam rotation)
 {
   Orientation* orientation = prop.mCogId.has(Orientation);
   if (orientation != nullptr)
@@ -427,13 +412,9 @@ void OrientationBasisGizmo::QueueRotationsWithUndo(
     Quat worldRotation = transform->GetWorldRotation();
     Quat localBasis = worldRotation.Inverted() * rotation;
     // Also queue up that we're changing to a custom basis
-    ChangeAndQueueProperty(queue,
-                           orientation,
-                           "DefaultOrientationBases",
-                           OrientationBases::Custom);
+    ChangeAndQueueProperty(queue, orientation, "DefaultOrientationBases", OrientationBases::Custom);
     // Queue up a property change to set the local basis
-    ChangeAndQueueProperty(
-        queue, orientation, "LocalOrientationBasis", ToRightHanded(localBasis));
+    ChangeAndQueueProperty(queue, orientation, "LocalOrientationBasis", ToRightHanded(localBasis));
   }
 }
 
@@ -459,8 +440,7 @@ Quat OrientationBasisGizmo::GetWorldRotation(OrientationBasisProperty& prop)
   return worldBasis;
 }
 
-void OrientationBasisGizmo::SetWorldRotation(OrientationBasisProperty& prop,
-                                             QuatParam rotation)
+void OrientationBasisGizmo::SetWorldRotation(OrientationBasisProperty& prop, QuatParam rotation)
 {
   Orientation* orientation = prop.mCogId.has(Orientation);
   if (orientation == nullptr)
@@ -508,19 +488,12 @@ PhysicsCarWheelBasisGizmo::PhysicsCarWheelBasisGizmo()
 
 void PhysicsCarWheelBasisGizmo::Initialize(CogInitializer& initializer)
 {
-  ConnectThisTo(GetOwner(),
-                Events::AddRotationBasisGizmoObject,
-                OnAddRotationBasisGizmoObject);
-  ConnectThisTo(
-      GetOwner(), Events::RotationBasisGizmoBegin, OnRotationBasisGizmoBegin);
-  ConnectThisTo(GetOwner(),
-                Events::RotationBasisGizmoModified,
-                OnRotationBasisGizmoModified);
-  ConnectThisTo(
-      GetOwner(), Events::RotationBasisGizmoEnd, OnRotationBasisGizmoEnd);
+  ConnectThisTo(GetOwner(), Events::AddRotationBasisGizmoObject, OnAddRotationBasisGizmoObject);
+  ConnectThisTo(GetOwner(), Events::RotationBasisGizmoBegin, OnRotationBasisGizmoBegin);
+  ConnectThisTo(GetOwner(), Events::RotationBasisGizmoModified, OnRotationBasisGizmoModified);
+  ConnectThisTo(GetOwner(), Events::RotationBasisGizmoEnd, OnRotationBasisGizmoEnd);
   ConnectThisTo(GetSpace(), Events::FrameUpdate, OnFrameUpdate);
-  ConnectThisTo(
-      GetOwner(), Events::RotationBasisAabbQuery, OnRotationBasisAabbQuery);
+  ConnectThisTo(GetOwner(), Events::RotationBasisAabbQuery, OnRotationBasisAabbQuery);
 
   // Cache the rotation basis gizmo
   mRotationBasisGizmo = GetOwner()->has(RotationBasisGizmo);
@@ -530,8 +503,7 @@ void PhysicsCarWheelBasisGizmo::Initialize(CogInitializer& initializer)
   mRotationBasisGizmo->mZAxisName = "Axle";
 }
 
-void PhysicsCarWheelBasisGizmo::OnAddRotationBasisGizmoObject(
-    RotationBasisGizmoInitializationEvent* e)
+void PhysicsCarWheelBasisGizmo::OnAddRotationBasisGizmoObject(RotationBasisGizmoInitializationEvent* e)
 {
   // Create the property that we store for this object (will contain a cached
   // rotation later)
@@ -591,8 +563,7 @@ void PhysicsCarWheelBasisGizmo::OnRotationBasisGizmoEnd(Event* e)
   queue->SetActiveBatchName("CarWheel rotations batch");
 
   for (size_t i = 0; i < mCogs.Size(); ++i)
-    QueueRotationsWithUndo(
-        queue, mCogs[i], mRotationBasisGizmo->mFinalWorldRotation);
+    QueueRotationsWithUndo(queue, mCogs[i], mRotationBasisGizmo->mFinalWorldRotation);
 
   queue->EndBatch();
 }
@@ -615,8 +586,7 @@ void PhysicsCarWheelBasisGizmo::OnFrameUpdate(Event* e)
   }
 }
 
-void PhysicsCarWheelBasisGizmo::OnRotationBasisAabbQuery(
-    RotationBasisGizmoAabbQueryEvent* e)
+void PhysicsCarWheelBasisGizmo::OnRotationBasisAabbQuery(RotationBasisGizmoAabbQueryEvent* e)
 {
   for (size_t i = 0; i < mCogs.Size(); ++i)
     e->mAabb.Combine(mRotationBasisGizmo->GetCogAabb(mCogs[i].mCogId));
@@ -640,8 +610,7 @@ void PhysicsCarWheelBasisGizmo::CacheRotation(SimpleBasisProperty& prop)
   prop.mOriginalBasis = GetWorldRotation(prop);
 }
 
-void PhysicsCarWheelBasisGizmo::UpdateRotation(SimpleBasisProperty& prop,
-                                               QuatParam rotation)
+void PhysicsCarWheelBasisGizmo::UpdateRotation(SimpleBasisProperty& prop, QuatParam rotation)
 {
   SetWorldRotation(prop, rotation);
 }
@@ -651,8 +620,9 @@ void PhysicsCarWheelBasisGizmo::RevertRotation(SimpleBasisProperty& prop)
   SetWorldRotation(prop, prop.mOriginalBasis);
 }
 
-void PhysicsCarWheelBasisGizmo::QueueRotationsWithUndo(
-    OperationQueue* queue, SimpleBasisProperty& prop, QuatParam rotation)
+void PhysicsCarWheelBasisGizmo::QueueRotationsWithUndo(OperationQueue* queue,
+                                                       SimpleBasisProperty& prop,
+                                                       QuatParam rotation)
 {
   PhysicsCarWheel* wheel = prop.mCogId.has(PhysicsCarWheel);
   if (wheel == nullptr)
@@ -678,8 +648,7 @@ Quat PhysicsCarWheelBasisGizmo::GetWorldRotation(SimpleBasisProperty& prop)
   return wheel->GetWorldWheelBasis();
 }
 
-void PhysicsCarWheelBasisGizmo::SetWorldRotation(SimpleBasisProperty& prop,
-                                                 QuatParam rotation)
+void PhysicsCarWheelBasisGizmo::SetWorldRotation(SimpleBasisProperty& prop, QuatParam rotation)
 {
   PhysicsCarWheel* wheel = prop.mCogId.has(PhysicsCarWheel);
   if (wheel == nullptr)
@@ -703,19 +672,12 @@ RevoluteBasisGizmo::RevoluteBasisGizmo()
 
 void RevoluteBasisGizmo::Initialize(CogInitializer& initializer)
 {
-  ConnectThisTo(GetOwner(),
-                Events::AddRotationBasisGizmoObject,
-                OnAddRotationBasisGizmoObject);
-  ConnectThisTo(
-      GetOwner(), Events::RotationBasisGizmoBegin, OnRotationBasisGizmoBegin);
-  ConnectThisTo(GetOwner(),
-                Events::RotationBasisGizmoModified,
-                OnRotationBasisGizmoModified);
-  ConnectThisTo(
-      GetOwner(), Events::RotationBasisGizmoEnd, OnRotationBasisGizmoEnd);
+  ConnectThisTo(GetOwner(), Events::AddRotationBasisGizmoObject, OnAddRotationBasisGizmoObject);
+  ConnectThisTo(GetOwner(), Events::RotationBasisGizmoBegin, OnRotationBasisGizmoBegin);
+  ConnectThisTo(GetOwner(), Events::RotationBasisGizmoModified, OnRotationBasisGizmoModified);
+  ConnectThisTo(GetOwner(), Events::RotationBasisGizmoEnd, OnRotationBasisGizmoEnd);
   ConnectThisTo(GetSpace(), Events::FrameUpdate, OnFrameUpdate);
-  ConnectThisTo(
-      GetOwner(), Events::RotationBasisAabbQuery, OnRotationBasisAabbQuery);
+  ConnectThisTo(GetOwner(), Events::RotationBasisAabbQuery, OnRotationBasisAabbQuery);
 
   // Cache the rotation basis gizmo
   mRotationBasisGizmo = GetOwner()->has(RotationBasisGizmo);
@@ -725,8 +687,7 @@ void RevoluteBasisGizmo::Initialize(CogInitializer& initializer)
   mRotationBasisGizmo->mZAxisName = "Hinge";
 }
 
-void RevoluteBasisGizmo::OnAddRotationBasisGizmoObject(
-    RotationBasisGizmoInitializationEvent* e)
+void RevoluteBasisGizmo::OnAddRotationBasisGizmoObject(RotationBasisGizmoInitializationEvent* e)
 {
   // Create the property that we store for this object (will contain a cached
   // rotation later)
@@ -787,8 +748,7 @@ void RevoluteBasisGizmo::OnRotationBasisGizmoEnd(Event* e)
   queue->SetActiveBatchName("RevoluteBasis batch");
 
   for (size_t i = 0; i < mCogs.Size(); ++i)
-    QueueRotationsWithUndo(
-        queue, mCogs[i], mRotationBasisGizmo->mFinalWorldRotation);
+    QueueRotationsWithUndo(queue, mCogs[i], mRotationBasisGizmo->mFinalWorldRotation);
 
   queue->EndBatch();
 }
@@ -811,8 +771,7 @@ void RevoluteBasisGizmo::OnFrameUpdate(Event* e)
   }
 }
 
-void RevoluteBasisGizmo::OnRotationBasisAabbQuery(
-    RotationBasisGizmoAabbQueryEvent* e)
+void RevoluteBasisGizmo::OnRotationBasisAabbQuery(RotationBasisGizmoAabbQueryEvent* e)
 {
   for (size_t i = 0; i < mCogs.Size(); ++i)
   {
@@ -849,8 +808,7 @@ void RevoluteBasisGizmo::CacheRotation(RevoluteJointBasisProperty& prop)
   prop.mOriginalBasisB = GetWorldBasis(joint, 1);
 }
 
-void RevoluteBasisGizmo::UpdateRotation(RevoluteJointBasisProperty& prop,
-                                        QuatParam rotation)
+void RevoluteBasisGizmo::UpdateRotation(RevoluteJointBasisProperty& prop, QuatParam rotation)
 {
   // Set both world bases to the same rotation
   SetWorldBasis(prop, rotation);
@@ -869,8 +827,9 @@ void RevoluteBasisGizmo::RevertRotation(RevoluteJointBasisProperty& prop)
     SetWorldBasis(joint, 1, prop.mOriginalBasisB);
 }
 
-void RevoluteBasisGizmo::QueueRotationsWithUndo(
-    OperationQueue* queue, RevoluteJointBasisProperty& prop, QuatParam rotation)
+void RevoluteBasisGizmo::QueueRotationsWithUndo(OperationQueue* queue,
+                                                RevoluteJointBasisProperty& prop,
+                                                QuatParam rotation)
 {
   RevoluteJoint* joint = prop.mCogId.has(RevoluteJoint);
   if (joint == nullptr)
@@ -924,8 +883,7 @@ Quat RevoluteBasisGizmo::GetWorldBasis(RevoluteJointBasisProperty& prop)
   return joint->GetWorldBasis();
 }
 
-void RevoluteBasisGizmo::SetWorldBasis(RevoluteJointBasisProperty& prop,
-                                       QuatParam worldBasis)
+void RevoluteBasisGizmo::SetWorldBasis(RevoluteJointBasisProperty& prop, QuatParam worldBasis)
 {
   RevoluteJoint* joint = prop.mCogId.has(RevoluteJoint);
   if (joint == nullptr)
@@ -938,8 +896,7 @@ void RevoluteBasisGizmo::SetWorldBasis(RevoluteJointBasisProperty& prop,
     SetWorldBasis(joint, 1, worldBasis);
 }
 
-Quat RevoluteBasisGizmo::GetColliderWorldRotation(RevoluteJoint* joint,
-                                                  uint colliderIndex)
+Quat RevoluteBasisGizmo::GetColliderWorldRotation(RevoluteJoint* joint, uint colliderIndex)
 {
   // Safely get the world rotation from the provided collider index,
   // taking into account all possible null components
@@ -966,9 +923,7 @@ Quat RevoluteBasisGizmo::GetWorldBasis(RevoluteJoint* joint, uint colliderIndex)
   return worldRotation * joint->GetLocalBasisB();
 }
 
-void RevoluteBasisGizmo::SetWorldBasis(RevoluteJoint* joint,
-                                       uint colliderIndex,
-                                       QuatParam worldBasis)
+void RevoluteBasisGizmo::SetWorldBasis(RevoluteJoint* joint, uint colliderIndex, QuatParam worldBasis)
 {
   // Bring the provided world-space basis into the correct collider's local
   // space and to set the joint's field.

@@ -22,10 +22,8 @@ StartupFunction LoadDll(Zero::StringParam libraryPath, ExternalLibrary& library)
 Zero::String GetLauncherDownloadedPath()
 {
   String majorVersionIdStr = ToString(GetMajorVersion());
-  String launcherFolderName =
-      BuildString("ZeroLauncher_", majorVersionIdStr, ".0");
-  String searchLocation =
-      FilePath::Combine(GetUserLocalDirectory(), launcherFolderName);
+  String launcherFolderName = BuildString("ZeroLauncher_", majorVersionIdStr, ".0");
+  String searchLocation = FilePath::Combine(GetUserLocalDirectory(), launcherFolderName);
 
   String foundPath;
   int bestId = -1;
@@ -87,8 +85,7 @@ extern "C" int main(int argc, char* argv[])
     String appDir = GetApplicationDirectory();
 
     String localVersionPath = appDir;
-    String localVersionIdPath =
-        FilePath::Combine(localVersionPath, versionIdFileName);
+    String localVersionIdPath = FilePath::Combine(localVersionPath, versionIdFileName);
     String localDllPath = FilePath::Combine(localVersionPath, launcherDllName);
 
     String downloadPath = GetLauncherDownloadedPath();
@@ -97,8 +94,7 @@ extern "C" int main(int argc, char* argv[])
     // empty string. This will cause us to fail to open the file and get back a
     // default id value.
     if (!downloadPath.Empty())
-      downloadedVersionIdPath =
-          FilePath::Combine(downloadPath, versionIdFileName);
+      downloadedVersionIdPath = FilePath::Combine(downloadPath, versionIdFileName);
 
     int localVersionId = GetVersionId(localVersionIdPath);
     int downloadedVersionId = GetVersionId(downloadedVersionIdPath);
@@ -124,8 +120,7 @@ extern "C" int main(int argc, char* argv[])
     // one (if they install a newer version selector we want to run that dll
     // instead of the downloaded one and if the server was newer we would've
     // already downloaded it)
-    String dllDirectoryPath = ChooseDllPath(
-        localVersionPath, localVersionId, downloadPath, downloadedVersionId);
+    String dllDirectoryPath = ChooseDllPath(localVersionPath, localVersionId, downloadPath, downloadedVersionId);
     String dllPath = FilePath::Combine(dllDirectoryPath, launcherDllName);
     StartupFunction startupFunction = LoadDll(dllPath, library);
 

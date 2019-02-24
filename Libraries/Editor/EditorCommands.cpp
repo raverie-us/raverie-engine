@@ -4,10 +4,7 @@
 namespace Zero
 {
 
-void AddToSelection(Space* space,
-                    MetaSelection* selection,
-                    BoundType* boundType,
-                    SelectComponentMode::Enum mode)
+void AddToSelection(Space* space, MetaSelection* selection, BoundType* boundType, SelectComponentMode::Enum mode)
 {
   Space::range r = space->AllObjects();
   while (!r.Empty())
@@ -60,7 +57,7 @@ void DuplicateSelection(Editor* editor, Space* space)
 
   Array<Cog*> duplicateCogs;
   // Duplicate all valid selected objects
-  forRange(Cog * cog, cogs.All())
+  forRange (Cog* cog, cogs.All())
   {
     Cog* duplicateCog = cog->Clone();
     duplicateCogs.PushBack(duplicateCog);
@@ -75,7 +72,7 @@ void DuplicateSelection(Editor* editor, Space* space)
   if (!duplicateCogs.Empty())
   {
     selection->Clear(SendsEvents::False);
-    forRange(Cog * cog, duplicateCogs.All())
+    forRange (Cog* cog, duplicateCogs.All())
     {
       selection->Add(cog, SendsEvents::False);
     }
@@ -91,7 +88,7 @@ void DeleteSelectedObjects(Editor* editor, Space* space)
   FilterChildrenAndProtected(cogs, selection, &filteredCogs);
 
   StringBuilder builder;
-  forRange(Cog * object, filteredCogs.All())
+  forRange (Cog* object, filteredCogs.All())
   {
     if (object->mFlags.IsSet(CogFlags::Protected))
     {
@@ -113,8 +110,7 @@ void DeleteSelectedObjects(Editor* editor, Space* space)
   queue->BeginBatch();
 
   String spaceName = space != nullptr ? space->GetName() : "Null";
-  String batchName =
-      BuildString("DeleteSelectedObjects in space \"", spaceName, "\"");
+  String batchName = BuildString("DeleteSelectedObjects in space \"", spaceName, "\"");
   queue->SetActiveBatchName(batchName);
 
   Array<Cog*>::range r = cogs.All();
@@ -282,8 +278,7 @@ void LoadObjectFromClipboard(Editor* editor, Space* space)
 
           // Only move the index if it was copied from the same space it's being
           // pasted into
-          if (editor->mPasteHierarchyIndex != uint(-1) &&
-              editor->mLastSpaceCopiedFrom == space->GetId())
+          if (editor->mPasteHierarchyIndex != uint(-1) && editor->mLastSpaceCopiedFrom == space->GetId())
             MoveObjectIndex(queue, object, editor->mPasteHierarchyIndex);
 
           // Add the object to the selection, wait until the end to push changes
@@ -298,8 +293,8 @@ void LoadObjectFromClipboard(Editor* editor, Space* space)
       FilterChildrenAndProtected(newSelection, selection);
 
       selection->Clear();
-      forRange(Cog * cog, newSelection.All())
-          selection->Add(cog, SendsEvents::False);
+      forRange (Cog* cog, newSelection.All())
+        selection->Add(cog, SendsEvents::False);
 
       // Signal that the selection has changed
       selection->FinalSelectionChanged();
@@ -439,7 +434,7 @@ void GroupSelected(Editor* editor, Space* space)
   uint transformCount = 0;
 
   uint lowestHierarchyIndex = uint(-1);
-  forRange(Cog * object, selection->AllOfType<Cog>())
+  forRange (Cog* object, selection->AllOfType<Cog>())
   {
     Transform* transform = object->has(Transform);
     if (transform)
@@ -515,13 +510,13 @@ void GroupSelected(Editor* editor, Space* space)
 
   // We want to maintain the order of all objects
   Array<Cog*> orderedSelection;
-  forRange(Cog * cog, selection->AllOfType<Cog>())
-      orderedSelection.PushBack(cog);
+  forRange (Cog* cog, selection->AllOfType<Cog>())
+    orderedSelection.PushBack(cog);
 
   Zero::Sort(orderedSelection.All(), CogHierarchyIndexCompareFn);
 
-  forRange(Cog * child, orderedSelection)
-      AttachObject(queue, child, rootObject);
+  forRange (Cog* child, orderedSelection)
+    AttachObject(queue, child, rootObject);
 
   queue->EndBatch();
 
@@ -566,10 +561,7 @@ void SelectSibling(Editor* editor, Space* space)
 void SelectAll(Editor* editor, Space* space)
 {
   MetaSelection* active = editor->GetSelection();
-  AddToSelection(space,
-                 active,
-                 ZilchTypeId(Transform),
-                 SelectComponentMode::WithComponent);
+  AddToSelection(space, active, ZilchTypeId(Transform), SelectComponentMode::WithComponent);
 }
 
 /// Parents all selected objects to the primary selected object
@@ -683,7 +675,7 @@ void ExpandExtents(Cog* object, Vec3 center, float& size)
     if (Hierarchy* h = object->has(Hierarchy))
     {
       HierarchyList::range r = h->GetChildren();
-      forRange(Cog & child, r)
+      forRange (Cog& child, r)
       {
         ExpandExtents(&child, center, size);
       }
@@ -714,8 +706,7 @@ void MoveToLookPoint(Editor* editor, Space* space)
       if (Transform* transform = cog->has(Transform))
       {
         Property* translationProp = transformMeta->GetProperty("Translation");
-        ChangeAndQueueProperty(
-            opQueue, transform, translationProp, newTranslation);
+        ChangeAndQueueProperty(opQueue, transform, translationProp, newTranslation);
       }
     }
     opQueue->EndBatch();
@@ -742,8 +733,7 @@ void ResetTransform(Editor* editor, Space* space)
     {
       // Queue the translation change
       Property* translationProp = transformMeta->GetProperty("Translation");
-      ChangeAndQueueProperty(
-          opQueue, transform, translationProp, newTranslation);
+      ChangeAndQueueProperty(opQueue, transform, translationProp, newTranslation);
 
       // Queue the rotation change
       Property* rotationProp = transformMeta->GetProperty("Rotation");
@@ -777,9 +767,7 @@ void FocusOnSelectedObjects()
   CameraFocusSpace(Z::gEditor->GetEditSpace());
 }
 
-void CameraFocusSpace(Space* space,
-                      Cog* cameraObject,
-                      EditFocusMode::Enum focusMode)
+void CameraFocusSpace(Space* space, Cog* cameraObject, EditFocusMode::Enum focusMode)
 {
   MetaSelection* activeSelection = Z::gEditor->GetSelection();
   if (activeSelection->Empty())
@@ -787,13 +775,12 @@ void CameraFocusSpace(Space* space,
 
   MetaSelection transformObjects;
   // we only want to construct an aabb from objects with transforms
-  forRange(Handle selection, activeSelection->All())
+  forRange (Handle selection, activeSelection->All())
   {
     if (selection.IsNull())
       continue;
 
-    MetaTransform* metaTransform =
-        selection.StoredType->HasInherited<MetaTransform>();
+    MetaTransform* metaTransform = selection.StoredType->HasInherited<MetaTransform>();
     if (metaTransform && metaTransform->GetInstance(selection).IsNotNull())
       transformObjects.Add(selection);
   }
@@ -816,10 +803,7 @@ void CameraFocusSpace(Space* space,
   CameraFocusSpace(space, cameraObject, aabb, focusMode);
 }
 
-void CameraFocusSpace(Space* space,
-                      Cog* cameraObject,
-                      const Aabb& focusAabb,
-                      EditFocusMode::Enum focusMode)
+void CameraFocusSpace(Space* space, Cog* cameraObject, const Aabb& focusAabb, EditFocusMode::Enum focusMode)
 {
   if (space == nullptr)
     return;
@@ -829,8 +813,7 @@ void CameraFocusSpace(Space* space,
 
   // Get Components
   Camera* camera = cameraObject->has(Camera);
-  EditorCameraController* controller =
-      cameraObject->has(EditorCameraController);
+  EditorCameraController* controller = cameraObject->has(EditorCameraController);
 
   if (camera == nullptr || controller == nullptr)
     return;
@@ -847,15 +830,10 @@ void CameraFocusSpace(Space* space,
 
   Actions* actions = controller->GetOwner()->GetActions();
   actions->SetRealTime(true);
-  if ((focusMode == EditFocusMode::AutoTime && actions->IsEmpty()) ||
-      focusMode == EditFocusMode::Center)
+  if ((focusMode == EditFocusMode::AutoTime && actions->IsEmpty()) || focusMode == EditFocusMode::Center)
   {
-    Action* action = AnimatePropertyGetSet(EditorCameraController,
-                                           LookTarget,
-                                           Ease::Quad::Out,
-                                           controller,
-                                           0.5f,
-                                           lookCenter);
+    Action* action =
+        AnimatePropertyGetSet(EditorCameraController, LookTarget, Ease::Quad::Out, controller, 0.5f, lookCenter);
     actions->Add(action, ActionExecuteMode::FrameUpdate);
   }
   else
@@ -865,27 +843,18 @@ void CameraFocusSpace(Space* space,
 
     if (camera->mPerspectiveMode == PerspectiveMode::Orthographic)
     {
-      Action* viewAction = AnimatePropertyGetSet(
-          Camera, Size, Ease::Quad::Out, camera, 0.5f, viewSize);
+      Action* viewAction = AnimatePropertyGetSet(Camera, Size, Ease::Quad::Out, camera, 0.5f, viewSize);
       group->Add(viewAction);
     }
     else
     {
-      Action* zoom = AnimatePropertyGetSet(EditorCameraController,
-                                           LookDistance,
-                                           Ease::Quad::Out,
-                                           controller,
-                                           0.5f,
-                                           lookDistance);
+      Action* zoom =
+          AnimatePropertyGetSet(EditorCameraController, LookDistance, Ease::Quad::Out, controller, 0.5f, lookDistance);
       group->Add(zoom);
     }
 
-    Action* look = AnimatePropertyGetSet(EditorCameraController,
-                                         LookTarget,
-                                         Ease::Quad::Out,
-                                         controller,
-                                         0.5f,
-                                         lookCenter);
+    Action* look =
+        AnimatePropertyGetSet(EditorCameraController, LookTarget, Ease::Quad::Out, controller, 0.5f, lookCenter);
     group->Add(look);
 
     actions->Add(group, ActionExecuteMode::FrameUpdate);
@@ -1067,8 +1036,7 @@ void ResetCamera(Editor* editor)
   {
     if (Cog* editorCamera = viewport->mEditorCamera)
     {
-      EditorCameraController* camController =
-          editorCamera->has(EditorCameraController);
+      EditorCameraController* camController = editorCamera->has(EditorCameraController);
       camController->Reset();
       if (editor->GetEditMode() == EditorMode::Mode2D)
       {
@@ -1092,8 +1060,7 @@ void AlignCogs(Editor* editor, Cog* fromCog, Cog* toCog)
   OperationQueue* opQueue = editor->GetOperationQueue();
   opQueue->BeginBatch();
 
-  String batchName = BuildString(
-      "Align '", CogDisplayName(fromCog), "' to '", CogDisplayName(toCog), "'");
+  String batchName = BuildString("Align '", CogDisplayName(fromCog), "' to '", CogDisplayName(toCog), "'");
 
   opQueue->SetActiveBatchName(batchName);
 
@@ -1102,8 +1069,7 @@ void AlignCogs(Editor* editor, Cog* fromCog, Cog* toCog)
   // Queue the translation change
   Property* translationProp = transformMeta->GetProperty("Translation");
   Any newTranslation = toTransform->GetLocalTranslation();
-  ChangeAndQueueProperty(
-      opQueue, fromTransform, translationProp, newTranslation);
+  ChangeAndQueueProperty(opQueue, fromTransform, translationProp, newTranslation);
 
   // Queue the rotation change
   Property* rotationProp = transformMeta->GetProperty("Rotation");
@@ -1180,12 +1146,10 @@ void GoToDefinition(Editor* editor)
   if (codeEditor == nullptr)
     return;
 
-  forRange(DocumentEditor * docEditor, docManager->Instances.All())
+  forRange (DocumentEditor* docEditor, docManager->Instances.All())
   {
-    ZilchDocumentResource* docResource =
-        Type::DynamicCast<ZilchDocumentResource*>(docEditor->GetResource());
-    if (docResource != nullptr &&
-        ZilchVirtualTypeId(docResource) == ZilchVirtualTypeId(resource))
+    ZilchDocumentResource* docResource = Type::DynamicCast<ZilchDocumentResource*>(docEditor->GetResource());
+    if (docResource != nullptr && ZilchVirtualTypeId(docResource) == ZilchVirtualTypeId(resource))
     {
       // Saves the current text from the document editor to the Document (which
       // may just set a resource or other thing underlying) This should only
@@ -1197,16 +1161,14 @@ void GoToDefinition(Editor* editor)
   }
 
   CodeDefinition definition;
-  codeInspector->AttemptGetDefinition(
-      codeEditor, codeEditor->GetCaretPosition(), definition);
+  codeInspector->AttemptGetDefinition(codeEditor, codeEditor->GetCaretPosition(), definition);
 
   DisplayCodeDefinition(definition);
 }
 
 void Add(Editor* editor)
 {
-  ContentLibrary* library =
-      CommandManager::GetInstance()->GetContext()->Get<ContentLibrary>();
+  ContentLibrary* library = CommandManager::GetInstance()->GetContext()->Get<ContentLibrary>();
   editor->AddResourceType(nullptr, library);
 }
 
@@ -1250,8 +1212,7 @@ void TakeProjectScreenshotDelayed(Editor* editor)
   }
   else
   {
-    String message =
-        "Neither an active game nor the editor viewport was visible.";
+    String message = "Neither an active game nor the editor viewport was visible.";
     DoNotifyWarning("Failed to take screenshot", message);
   }
 }
@@ -1265,8 +1226,7 @@ void TakeProjectScreenshot(Editor* editor)
   ActionSequence* seq = new ActionSequence(editor);
   seq->Add(new ActionDelayOnce());
   seq->Add(new ActionDelayOnce());
-  seq->Add(
-      new GlobalCallParamAction<Editor*, TakeProjectScreenshotDelayed>(editor));
+  seq->Add(new GlobalCallParamAction<Editor*, TakeProjectScreenshotDelayed>(editor));
 }
 
 void DumpMemoryDebuggerStats()
@@ -1285,7 +1245,7 @@ void EditInGame(Editor* editor)
 
   Editor::GameRange gameSessionList = editor->GetGames();
 
-  forRange(GameSession * session, gameSessionList.All())
+  forRange (GameSession* session, gameSessionList.All())
   {
     session->EditSpaces();
   }
@@ -1297,46 +1257,36 @@ void BindEditorCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("Redo", BindCommandFunction(EditorRedo));
 
   commands->AddCommand("Cut", BindCommandFunction(SaveToClipBoardAndDelete));
-  commands->AddCommand(
-      "Copy", BindCommandFunction(SaveSelectionToClipboard), true);
+  commands->AddCommand("Copy", BindCommandFunction(SaveSelectionToClipboard), true);
   commands->AddCommand("Paste", BindCommandFunction(LoadObjectFromClipboard));
   commands->AddCommand("Delete", BindCommandFunction(DeleteSelectedObjects));
   commands->AddCommand("Duplicate", BindCommandFunction(DuplicateSelection));
 
   commands->AddCommand("SelectNone", BindCommandFunction(Deselect), true);
-  commands->AddCommand(
-      "SelectAllInTree", BindCommandFunction(SelectAllInTree), true);
-  commands->AddCommand(
-      "SelectRoot", BindCommandFunction(SelectTopInTreeNoObj), true);
+  commands->AddCommand("SelectAllInTree", BindCommandFunction(SelectAllInTree), true);
+  commands->AddCommand("SelectRoot", BindCommandFunction(SelectTopInTreeNoObj), true);
   commands->AddCommand("SelectParent", BindCommandFunction(SelectParent), true);
   commands->AddCommand("SelectChild", BindCommandFunction(SelectChild), true);
-  commands->AddCommand(
-      "SelectSibling", BindCommandFunction(SelectSibling), true);
+  commands->AddCommand("SelectSibling", BindCommandFunction(SelectSibling), true);
   commands->AddCommand("SelectAll", BindCommandFunction(SelectAll), true);
 
   commands->AddCommand("SelectSpace", BindCommandFunction(SelectSpace), true);
   commands->AddCommand("SelectGame", BindCommandFunction(SelectGame), true);
 
-  commands->AddCommand(
-      "PreviousSelection", BindCommandFunction(PreviousSelection), true);
-  commands->AddCommand(
-      "NextSelection", BindCommandFunction(NextSelection), true);
+  commands->AddCommand("PreviousSelection", BindCommandFunction(PreviousSelection), true);
+  commands->AddCommand("NextSelection", BindCommandFunction(NextSelection), true);
 
-  commands->AddCommand(
-      "CenterSelected", BindCommandFunction(CenterSelected), true);
-  commands->AddCommand(
-      "FrameSelected", BindCommandFunction(FrameSelected), true);
+  commands->AddCommand("CenterSelected", BindCommandFunction(CenterSelected), true);
+  commands->AddCommand("FrameSelected", BindCommandFunction(FrameSelected), true);
 
   commands->AddCommand("UnhideAll", BindCommandFunction(UnhideAll), true);
   commands->AddCommand("HideSelected", BindCommandFunction(HideSelected), true);
-  commands->AddCommand(
-      "UnhideSelected", BindCommandFunction(UnHideSelected), true);
+  commands->AddCommand("UnhideSelected", BindCommandFunction(UnHideSelected), true);
 
   commands->AddCommand("ResetTransform", BindCommandFunction(ResetTransform));
   commands->AddCommand("MoveToLookPoint", BindCommandFunction(MoveToLookPoint));
 
-  commands->AddCommand("ClearObjectStore",
-                       BindCommandFunction(ClearObjectStore));
+  commands->AddCommand("ClearObjectStore", BindCommandFunction(ClearObjectStore));
 
   commands->AddCommand("Mode2D", BindCommandFunction(Mode2D));
   commands->AddCommand("Mode3D", BindCommandFunction(Mode3D));
@@ -1344,43 +1294,31 @@ void BindEditorCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("ParentToPrimary", BindCommandFunction(ParentToPrimary));
   commands->AddCommand("DetachSelected", BindCommandFunction(DetachSelected));
   commands->AddCommand("GroupSelected", BindCommandFunction(GroupSelected));
-  commands->AddCommand("ExportHeightMapToObj",
-                       BindCommandFunction(ExportHeightMapToObj));
+  commands->AddCommand("ExportHeightMapToObj", BindCommandFunction(ExportHeightMapToObj));
 
-  commands->AddCommand("ImportSpriteSheet",
-                       BindCommandFunction(ImportSpriteSheet));
+  commands->AddCommand("ImportSpriteSheet", BindCommandFunction(ImportSpriteSheet));
   commands->AddCommand("ImportGroup", BindCommandFunction(ImportGroup));
   commands->AddCommand("ImportHeightMap", BindCommandFunction(ImportHeightMap));
 
   commands->AddCommand("ResetCamera", BindCommandFunction(ResetCamera), true);
-  commands->AddCommand("AlignSelectedCameraToCamera",
-                       BindCommandFunction(AlignSelectedCameraToCamera),
-                       true);
-  commands->AddCommand("AlignCameraToSelectedCamera",
-                       BindCommandFunction(AlignCameraToSelectedCamera),
-                       true);
+  commands->AddCommand("AlignSelectedCameraToCamera", BindCommandFunction(AlignSelectedCameraToCamera), true);
+  commands->AddCommand("AlignCameraToSelectedCamera", BindCommandFunction(AlignCameraToSelectedCamera), true);
 
   commands->AddCommand("AddComponent", BindCommandFunction(AddComponent));
 
-  commands->AddCommand("TakeProjectScreenshot",
-                       BindCommandFunction(TakeProjectScreenshot));
-  commands->AddCommand("EnableAutoProjectScreenshot",
-                       BindCommandFunction(EnableAutoProjectScreenshot));
-  commands->AddCommand("DisableAutoProjectScreenshot",
-                       BindCommandFunction(DisableAutoProjectScreenshot));
+  commands->AddCommand("TakeProjectScreenshot", BindCommandFunction(TakeProjectScreenshot));
+  commands->AddCommand("EnableAutoProjectScreenshot", BindCommandFunction(EnableAutoProjectScreenshot));
+  commands->AddCommand("DisableAutoProjectScreenshot", BindCommandFunction(DisableAutoProjectScreenshot));
 
-  commands->AddCommand(
-      "GoToDefinition", BindCommandFunction(GoToDefinition), true);
+  commands->AddCommand("GoToDefinition", BindCommandFunction(GoToDefinition), true);
   commands->AddCommand("Add", BindCommandFunction(Add));
 
-  Command* editInGameCommand =
-      commands->AddCommand("EditInGame", BindCommandFunction(EditInGame));
+  Command* editInGameCommand = commands->AddCommand("EditInGame", BindCommandFunction(EditInGame));
   editInGameCommand->Shortcut = "F9";
 
   if (DeveloperConfig* config = configCog->has(DeveloperConfig))
   {
-    commands->AddCommand("DumpMemoryDebuggerStats",
-                         BindCommandFunction(DumpMemoryDebuggerStats));
+    commands->AddCommand("DumpMemoryDebuggerStats", BindCommandFunction(DumpMemoryDebuggerStats));
   }
 }
 

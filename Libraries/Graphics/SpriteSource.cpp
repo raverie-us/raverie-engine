@@ -46,8 +46,7 @@ public:
 
     if (image.Data == nullptr)
     {
-      String message =
-          String::Format("Failed to load sprite %s", entry.Name.c_str());
+      String message = String::Format("Failed to load sprite %s", entry.Name.c_str());
       DoNotifyWarning("Sprite Error", message);
 
       // Create a dummy source
@@ -66,8 +65,7 @@ public:
     else
     {
       // Get extra data on the end of the sprite file
-      SpriteData* spriteData =
-          (SpriteData*)(block.Data + block.Size - sizeof(SpriteData));
+      SpriteData* spriteData = (SpriteData*)(block.Data + block.Size - sizeof(SpriteData));
       memcpy(&source->GetSpriteData(), spriteData, sizeof(SpriteData));
     }
 
@@ -78,10 +76,8 @@ public:
       source->FrameSizeY = image.Height;
     }
     // Make sure frame size is valid
-    source->FrameSizeX =
-        Math::Clamp(source->FrameSizeX, cMinFrameSize, (uint)image.Width);
-    source->FrameSizeY =
-        Math::Clamp(source->FrameSizeY, cMinFrameSize, (uint)image.Height);
+    source->FrameSizeX = Math::Clamp(source->FrameSizeX, cMinFrameSize, (uint)image.Width);
+    source->FrameSizeY = Math::Clamp(source->FrameSizeY, cMinFrameSize, (uint)image.Height);
 
     FixAlphaHalo(&image);
 
@@ -169,8 +165,7 @@ TextureRenderData* SpriteSource::GetAtlasTextureRenderData()
 
 ImplementResourceManager(SpriteSourceManager, SpriteSource);
 
-SpriteSourceManager::SpriteSourceManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+SpriteSourceManager::SpriteSourceManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   AddLoader("SpriteSource", new SpriteSourceLoader());
   mCategory = "Graphics";

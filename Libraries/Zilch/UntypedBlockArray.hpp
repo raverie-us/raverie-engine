@@ -19,8 +19,7 @@ public:
   }
 
   // Copy constructor
-  UntypedBlockArray(const UntypedBlockArray& from) :
-      CompactedSize(from.CompactedSize)
+  UntypedBlockArray(const UntypedBlockArray& from) : CompactedSize(from.CompactedSize)
   {
     // Loop through all the blocks allocated by the source
     for (size_t i = 0; i < from.Blocks.Size(); ++i)
@@ -130,8 +129,7 @@ public:
     }
     else
     {
-      return (this->Blocks.Size() - 1) * BlockSize +
-             this->Blocks.Back().LengthWritten;
+      return (this->Blocks.Size() - 1) * BlockSize + this->Blocks.Back().LengthWritten;
     }
   }
 
@@ -157,10 +155,7 @@ public:
   byte* RequestElementOfSize(size_t size, size_t* absoluteIndexOut = nullptr)
   {
     // Error checking and handling
-    ReturnIf(
-        size > BlockSize,
-        nullptr,
-        "The element that was being allocated was larger than the block size");
+    ReturnIf(size > BlockSize, nullptr, "The element that was being allocated was larger than the block size");
 
     // We know that we'll add that size below (we have to!)
     this->CompactedSize += size;
@@ -192,8 +187,7 @@ private:
   };
 
   // Recursive version of requesting an element (we only recurse once)
-  byte* RequestElementOfSizeRecursive(size_t size,
-                                      size_t* absoluteIndexOut = nullptr)
+  byte* RequestElementOfSizeRecursive(size_t size, size_t* absoluteIndexOut = nullptr)
   {
     // Get the last block (the only one we should be writing to)
     Block& last = this->Blocks.Back();
@@ -208,8 +202,7 @@ private:
       if (absoluteIndexOut != nullptr)
       {
         // Return the index where we wrote the data
-        *absoluteIndexOut =
-            (this->Blocks.Size() - 1) * BlockSize + last.LengthWritten;
+        *absoluteIndexOut = (this->Blocks.Size() - 1) * BlockSize + last.LengthWritten;
       }
 
       // We've now 'written' more to the last block

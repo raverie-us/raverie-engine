@@ -12,33 +12,27 @@ class AppendCallbackData;
 class CompositorCallbackData;
 
 // Helper macro to add bitwise operators to enums
-#define DeclareBitFieldBitwiseOperators(bitFieldEnum)                          \
-  inline bitFieldEnum operator|(bitFieldEnum a, bitFieldEnum b)                \
-  {                                                                            \
-    return bitFieldEnum(int(a) | int(b));                                      \
-  }                                                                            \
-  inline void operator|=(bitFieldEnum& a, bitFieldEnum b)                      \
-  {                                                                            \
-    a = a | b;                                                                 \
-  }                                                                            \
-  inline bitFieldEnum operator&(bitFieldEnum a, bitFieldEnum b)                \
-  {                                                                            \
-    return bitFieldEnum(int(a) & int(b));                                      \
-  }                                                                            \
-  inline void operator&=(bitFieldEnum& a, bitFieldEnum b)                      \
-  {                                                                            \
-    a = a & b;                                                                 \
+#define DeclareBitFieldBitwiseOperators(bitFieldEnum)                                                                  \
+  inline bitFieldEnum operator|(bitFieldEnum a, bitFieldEnum b)                                                        \
+  {                                                                                                                    \
+    return bitFieldEnum(int(a) | int(b));                                                                              \
+  }                                                                                                                    \
+  inline void operator|=(bitFieldEnum& a, bitFieldEnum b)                                                              \
+  {                                                                                                                    \
+    a = a | b;                                                                                                         \
+  }                                                                                                                    \
+  inline bitFieldEnum operator&(bitFieldEnum a, bitFieldEnum b)                                                        \
+  {                                                                                                                    \
+    return bitFieldEnum(int(a) & int(b));                                                                              \
+  }                                                                                                                    \
+  inline void operator&=(bitFieldEnum& a, bitFieldEnum b)                                                              \
+  {                                                                                                                    \
+    a = a & b;                                                                                                         \
   }
 
 /// @JoshD: Unify later with the FragmentType enum. This needs to be a bitfield
 /// due to the buffer stage binding.
-DeclareBitField6(ShaderStage,
-                 Vertex,
-                 PreTesselation,
-                 PostTesselation,
-                 Geometry,
-                 Pixel,
-                 Compute);
+DeclareBitField6(ShaderStage, Vertex, PreTesselation, PostTesselation, Geometry, Pixel, Compute);
 DeclareBitFieldBitwiseOperators(ShaderStage::Enum);
 
 ShaderStage::Enum FragmentTypeToShaderStage(FragmentType::Enum fragmentType);
@@ -137,10 +131,7 @@ public:
   void CopyFrom(const UniformBufferDescription& source);
 
   /// Set the common description terms for this uniform buffer.
-  void Set(int bindingId,
-           int descriptorSetId,
-           ShaderStage::Enum allowedStages,
-           StringParam debugName = String());
+  void Set(int bindingId, int descriptorSetId, ShaderStage::Enum allowedStages, StringParam debugName = String());
 
   /// Add a field to this buffer. Fields are laid out in the order they are
   /// added.
@@ -192,10 +183,7 @@ private:
   };
 
   /// Adds a field that maps to the current built-in.
-  void AddField(Zilch::BoundType* type,
-                StringParam fieldName,
-                spv::BuiltIn builtInId,
-                StringParam attribute);
+  void AddField(Zilch::BoundType* type, StringParam fieldName, spv::BuiltIn builtInId, StringParam attribute);
   /// Overrides the zilch name that is used to map to a spirv built-in variable.
   void SetBuiltInName(spv::BuiltIn builtInId, StringParam name);
   /// Finds a built-in by key if it exists.
@@ -242,8 +230,7 @@ private:
   // Validation functions. These happen before finalization so they
   // must check the un-mapped data. Used for setup error checking.
   bool ValidateIfHardwareBuiltIn(ShaderFieldKey& fieldKey);
-  bool ValidateIfHardwareBuiltIn(ShaderFieldKey& fieldKey,
-                                 BuiltInBlockDescription& block);
+  bool ValidateIfHardwareBuiltIn(ShaderFieldKey& fieldKey, BuiltInBlockDescription& block);
 };
 
 /// Defines the vertex inputs for the vertex shader stage.
@@ -267,15 +254,13 @@ class CallbackSettings
 public:
   CallbackSettings();
 
-  typedef void (*ShaderCompositeCallback)(CompositorCallbackData& callbackData,
-                                          void* userData);
+  typedef void (*ShaderCompositeCallback)(CompositorCallbackData& callbackData, void* userData);
   /// Set a callback that is called right before the composited shader is
   /// emitted. Allows modifying inputs and outputs, in particular allows forced
   /// HardwareBuiltIns like Position.
   void SetCompositeCallback(ShaderCompositeCallback callback, void* userData);
 
-  typedef void (*AppendVertexCallback)(AppendCallbackData& callbackData,
-                                       void* userData);
+  typedef void (*AppendVertexCallback)(AppendCallbackData& callbackData, void* userData);
   /// Callback to allow custom spirv emission in the Append function for
   /// geometry shader output streams. Allows custom handling of things like the
   /// BuiltIn Position to account for different api transforms.
@@ -314,25 +299,18 @@ public:
   void AddUniformBufferDescription(UniformBufferDescription& description);
   /// Sets the default uniform buffer description to the last available binding
   /// id (based upon number bound).
-  void AutoSetDefaultUniformBufferDescription(
-      int descriptorSetId = 0, StringParam debugName = "Material");
+  void AutoSetDefaultUniformBufferDescription(int descriptorSetId = 0, StringParam debugName = "Material");
   /// Sets the default uniform buffer description values.
-  void SetDefaultUniformBufferDescription(int bindingId,
-                                          int descriptorSetId,
-                                          StringParam debugName);
+  void SetDefaultUniformBufferDescription(int bindingId, int descriptorSetId, StringParam debugName);
   /// Checks if the given field matches any uniform constant buffer
   /// for the given fragment type. Used for attribute validation.
-  bool IsValidUniform(FragmentType::Enum fragmentType,
-                      StringParam fieldType,
-                      StringParam fieldName);
+  bool IsValidUniform(FragmentType::Enum fragmentType, StringParam fieldType, StringParam fieldName);
 
   /// Overrides the zilch name that is used to map to a spirv built-in variable
   /// for all shader stages.
   void SetHardwareBuiltInName(spv::BuiltIn builtInId, StringParam name);
-  bool IsValidHardwareBuiltIn(FragmentType::Enum fragmentType,
-                              StringParam fieldType,
-                              StringParam fieldName,
-                              bool isInput);
+  bool
+  IsValidHardwareBuiltIn(FragmentType::Enum fragmentType, StringParam fieldType, StringParam fieldName, bool isInput);
 
   // Set what's the max number of render targets that can be used
   void SetMaxSimultaneousRenderTargets(size_t maxNumber);
@@ -393,8 +371,7 @@ private:
   /// errors (duplicate fields, duplicate binding ids, etc...)
   void ValidateUniformsDescriptions();
   void ValidateBuiltInNames();
-  void ValidateBuiltInNames(BuiltInBlockDescription& blockDescription,
-                            HashMap<String, spv::BuiltIn>& keyMappings);
+  void ValidateBuiltInNames(BuiltInBlockDescription& blockDescription, HashMap<String, spv::BuiltIn>& keyMappings);
   void ValidateAppBuiltInsAgainstHardwareBuiltIns();
 
   void InitializeBuiltIns();

@@ -25,8 +25,7 @@ public:
   // parameters must match the number of parsed names. All names should be
   // lower-camel case For generic use, if the names list is empty, this will
   // immediately return with no errors
-  static void ParseParameterArrays(ParameterArray& parameters,
-                                   StringRange commaDelimitedNames);
+  static void ParseParameterArrays(ParameterArray& parameters, StringRange commaDelimitedNames);
 
   // Validate that a destructor has been bound (asserts within binding
   // constructors) This just returns the same bound type that is used, which
@@ -65,8 +64,7 @@ public:
   //*** BUILDER DESTRUCTOR ***// Generates a Zilch function to call a class
   // destructor
   template <typename Class>
-  static Function* FromDestructor(LibraryBuilder& builder,
-                                  BoundType* classBoundType)
+  static Function* FromDestructor(LibraryBuilder& builder, BoundType* classBoundType)
   {
     return builder.AddBoundDestructor(classBoundType, BoundDestructor<Class>);
   }
@@ -93,57 +91,42 @@ public:
     Class* self = (Class*)call.GetHandle(Call::This).Dereference();
 
     // Read in the value that we're trying to set
-    byte* stackPointer =
-        call.GetArgumentPointer<ZilchBindingType(FieldType)>(0);
+    byte* stackPointer = call.GetArgumentPointer<ZilchBindingType(FieldType)>(0);
 
     // If read is invalid, throw a more specific exception
     if (report.HasThrownExceptions())
-      return ExecutableState::GetCallingState()->ThrowException(
-          "Error: Cannot assign null.");
+      return ExecutableState::GetCallingState()->ThrowException("Error: Cannot assign null.");
 
-    ZilchBindingType(FieldType) value =
-        call.CastArgumentPointer<ZilchBindingType(FieldType)>(stackPointer);
+    ZilchBindingType(FieldType) value = call.CastArgumentPointer<ZilchBindingType(FieldType)>(stackPointer);
 
     // Set the value of the member
     self->*field = value;
   }
 
   //*** BUILDER INSTANCE CONST FIELD ***//
-  template <typename FieldPointer,
-            FieldPointer field,
-            typename Class,
-            typename FieldType>
+  template <typename FieldPointer, FieldPointer field, typename Class, typename FieldType>
   static Property* FromField(LibraryBuilder& builder,
                              BoundType* owner,
                              StringParam name,
                              const FieldType Class::*dummy,
                              PropertyBinding::Enum mode)
   {
-    ErrorIf(dummy != field,
-            "The dummy should always match our template member");
+    ErrorIf(dummy != field, "The dummy should always match our template member");
     BoundFn get = BoundInstanceGet<const FieldType, Class, field>;
     ErrorIf(mode != PropertyBinding::Get,
             "The field is const and therefore a setter cannot be generated "
             "(use PropertyBinding::Get)");
-    return builder.AddBoundGetterSetter(
-        owner, name, ZilchTypeId(FieldType), nullptr, get, MemberOptions::None);
+    return builder.AddBoundGetterSetter(owner, name, ZilchTypeId(FieldType), nullptr, get, MemberOptions::None);
   }
 
   //*** BUILDER INSTANCE FIELD ***//
   // Generates a Zilch property by creating get/set functions to wrap the member
   // variable and binding them
-  template <typename FieldPointer,
-            FieldPointer field,
-            typename Class,
-            typename FieldType>
-  static Property* FromField(LibraryBuilder& builder,
-                             BoundType* owner,
-                             StringParam name,
-                             FieldType Class::*dummy,
-                             PropertyBinding::Enum mode)
+  template <typename FieldPointer, FieldPointer field, typename Class, typename FieldType>
+  static Property* FromField(
+      LibraryBuilder& builder, BoundType* owner, StringParam name, FieldType Class::*dummy, PropertyBinding::Enum mode)
   {
-    ErrorIf(dummy != field,
-            "The dummy should always match our template member");
+    ErrorIf(dummy != field, "The dummy should always match our template member");
     BoundFn set = BoundInstanceSet<FieldType, Class, field>;
     BoundFn get = BoundInstanceGet<FieldType, Class, field>;
 
@@ -156,8 +139,7 @@ public:
       get = nullptr;
     }
 
-    return builder.AddBoundGetterSetter(
-        owner, name, ZilchTypeId(FieldType), set, get, MemberOptions::None);
+    return builder.AddBoundGetterSetter(owner, name, ZilchTypeId(FieldType), set, get, MemberOptions::None);
   }
 
   //*** BOUND STATIC FIELD GET ***//
@@ -176,16 +158,13 @@ public:
   static void BoundStaticSet(Call& call, ExceptionReport& report)
   {
     // Read in the value that we're trying to set
-    byte* stackPointer =
-        call.GetArgumentPointer<ZilchBindingType(FieldType)>(0);
+    byte* stackPointer = call.GetArgumentPointer<ZilchBindingType(FieldType)>(0);
 
     // If read is invalid, throw a more specific exception
     if (report.HasThrownExceptions())
-      return ExecutableState::GetCallingState()->ThrowException(
-          "Error: Cannot assign null.");
+      return ExecutableState::GetCallingState()->ThrowException("Error: Cannot assign null.");
 
-    ZilchBindingType(FieldType) value =
-        call.CastArgumentPointer<ZilchBindingType(FieldType)>(stackPointer);
+    ZilchBindingType(FieldType) value = call.CastArgumentPointer<ZilchBindingType(FieldType)>(stackPointer);
 
     // Set the value of the member
     *field = value;
@@ -193,38 +172,25 @@ public:
 
   //*** BUILDER STATIC CONST FIELD ***//
   template <typename FieldPointer, FieldPointer field, typename FieldType>
-  static Property* FromField(LibraryBuilder& builder,
-                             BoundType* owner,
-                             StringParam name,
-                             const FieldType* dummy,
-                             PropertyBinding::Enum mode)
+  static Property* FromField(
+      LibraryBuilder& builder, BoundType* owner, StringParam name, const FieldType* dummy, PropertyBinding::Enum mode)
   {
-    ErrorIf(dummy != field,
-            "The dummy should always match our template member");
+    ErrorIf(dummy != field, "The dummy should always match our template member");
     BoundFn get = BoundStaticGet<const FieldType, field>;
     ErrorIf(mode != PropertyBinding::Get,
             "The field is const and therefore a setter cannot be generated "
             "(use PropertyBinding::Get)");
-    return builder.AddBoundGetterSetter(owner,
-                                        name,
-                                        ZilchTypeId(FieldType),
-                                        nullptr,
-                                        get,
-                                        MemberOptions::Static);
+    return builder.AddBoundGetterSetter(owner, name, ZilchTypeId(FieldType), nullptr, get, MemberOptions::Static);
   }
 
   //*** BUILDER STATIC FIELD ***//
   // Generates a Zilch property by creating get/set functions to wrap the global
   // variable and binding them
   template <typename FieldPointer, FieldPointer field, typename FieldType>
-  static Property* FromField(LibraryBuilder& builder,
-                             BoundType* owner,
-                             StringParam name,
-                             FieldType* dummy,
-                             PropertyBinding::Enum mode)
+  static Property*
+  FromField(LibraryBuilder& builder, BoundType* owner, StringParam name, FieldType* dummy, PropertyBinding::Enum mode)
   {
-    ErrorIf(dummy != field,
-            "The dummy should always match our template member");
+    ErrorIf(dummy != field, "The dummy should always match our template member");
     BoundFn set = BoundStaticSet<FieldType, field>;
     BoundFn get = BoundStaticGet<FieldType, field>;
 
@@ -233,8 +199,7 @@ public:
     if (mode == PropertyBinding::Set)
       get = nullptr;
 
-    return builder.AddBoundGetterSetter(
-        owner, name, ZilchTypeId(FieldType), set, get, MemberOptions::Static);
+    return builder.AddBoundGetterSetter(owner, name, ZilchTypeId(FieldType), set, get, MemberOptions::Static);
   }
 
   //*** BUILDER INSTANCE PROPERTY GET/SET ***//
@@ -251,26 +216,18 @@ public:
                                         GetType (Class::*dummyGetter)(),
                                         void (Class::*dummySetter)(SetType))
   {
-    ReturnIf(
-        ZilchTypeId(GetType) != ZilchTypeId(SetType),
-        nullptr,
-        "Cannot bind a Get/Set property type that has a different fundamental "
-        "type for the getter's return value and setters input value");
+    ReturnIf(ZilchTypeId(GetType) != ZilchTypeId(SetType),
+             nullptr,
+             "Cannot bind a Get/Set property type that has a different fundamental "
+             "type for the getter's return value and setters input value");
 
-    ErrorIf(dummyGetter != getter,
-            "The dummy getter should always match our template member");
-    ErrorIf(dummySetter != setter,
-            "The dummy getter should always match our template member");
+    ErrorIf(dummyGetter != getter, "The dummy getter should always match our template member");
+    ErrorIf(dummySetter != setter, "The dummy getter should always match our template member");
 
     BoundFn boundGet = BoundInstanceReturn<GetterType, getter, Class, GetType>;
     BoundFn boundSet = BoundInstance<SetterType, setter, Class, SetType>;
 
-    return builder.AddBoundGetterSetter(owner,
-                                        name,
-                                        ZilchTypeId(GetType),
-                                        boundSet,
-                                        boundGet,
-                                        MemberOptions::None);
+    return builder.AddBoundGetterSetter(owner, name, ZilchTypeId(GetType), boundSet, boundGet, MemberOptions::None);
   }
 
   //*** BUILDER INSTANCE PROPERTY CONST GET/SET ***//
@@ -287,26 +244,18 @@ public:
                                         GetType (Class::*dummyGetter)() const,
                                         void (Class::*dummySetter)(SetType))
   {
-    ReturnIf(
-        ZilchTypeId(GetType) != ZilchTypeId(SetType),
-        nullptr,
-        "Cannot bind a Get/Set property type that has a different fundamental "
-        "type for the getter's return value and setters input value");
+    ReturnIf(ZilchTypeId(GetType) != ZilchTypeId(SetType),
+             nullptr,
+             "Cannot bind a Get/Set property type that has a different fundamental "
+             "type for the getter's return value and setters input value");
 
-    ErrorIf(dummyGetter != getter,
-            "The dummy getter should always match our template member");
-    ErrorIf(dummySetter != setter,
-            "The dummy getter should always match our template member");
+    ErrorIf(dummyGetter != getter, "The dummy getter should always match our template member");
+    ErrorIf(dummySetter != setter, "The dummy getter should always match our template member");
 
     BoundFn boundGet = BoundInstanceReturn<GetterType, getter, Class, GetType>;
     BoundFn boundSet = BoundInstance<SetterType, setter, Class, SetType>;
 
-    return builder.AddBoundGetterSetter(owner,
-                                        name,
-                                        ZilchTypeId(GetType),
-                                        boundSet,
-                                        boundGet,
-                                        MemberOptions::None);
+    return builder.AddBoundGetterSetter(owner, name, ZilchTypeId(GetType), boundSet, boundGet, MemberOptions::None);
   }
 
   //*** BUILDER INSTANCE PROPERTY GET ***//
@@ -316,21 +265,12 @@ public:
             SetterType setter,
             typename Class,
             typename GetType>
-  static GetterSetter* FromGetterSetter(LibraryBuilder& builder,
-                                        BoundType* owner,
-                                        StringRange name,
-                                        GetType (Class::*dummyGetter)(),
-                                        NullPointerType)
+  static GetterSetter* FromGetterSetter(
+      LibraryBuilder& builder, BoundType* owner, StringRange name, GetType (Class::*dummyGetter)(), NullPointerType)
   {
-    ErrorIf(dummyGetter != getter,
-            "The dummy getter should always match our template member");
+    ErrorIf(dummyGetter != getter, "The dummy getter should always match our template member");
     BoundFn boundGet = BoundInstanceReturn<GetterType, getter, Class, GetType>;
-    return builder.AddBoundGetterSetter(owner,
-                                        name,
-                                        ZilchTypeId(GetType),
-                                        nullptr,
-                                        boundGet,
-                                        MemberOptions::None);
+    return builder.AddBoundGetterSetter(owner, name, ZilchTypeId(GetType), nullptr, boundGet, MemberOptions::None);
   }
 
   //*** BUILDER INSTANCE PROPERTY CONST GET ***//
@@ -346,15 +286,9 @@ public:
                                         GetType (Class::*dummyGetter)() const,
                                         NullPointerType)
   {
-    ErrorIf(dummyGetter != getter,
-            "The dummy getter should always match our template member");
+    ErrorIf(dummyGetter != getter, "The dummy getter should always match our template member");
     BoundFn boundGet = BoundInstanceReturn<GetterType, getter, Class, GetType>;
-    return builder.AddBoundGetterSetter(owner,
-                                        name,
-                                        ZilchTypeId(GetType),
-                                        nullptr,
-                                        boundGet,
-                                        MemberOptions::None);
+    return builder.AddBoundGetterSetter(owner, name, ZilchTypeId(GetType), nullptr, boundGet, MemberOptions::None);
   }
 
   //*** BUILDER INSTANCE PROPERTY SET ***//
@@ -364,21 +298,12 @@ public:
             SetterType setter,
             typename Class,
             typename SetType>
-  static GetterSetter* FromGetterSetter(LibraryBuilder& builder,
-                                        BoundType* owner,
-                                        StringRange name,
-                                        NullPointerType,
-                                        void (Class::*dummySetter)(SetType))
+  static GetterSetter* FromGetterSetter(
+      LibraryBuilder& builder, BoundType* owner, StringRange name, NullPointerType, void (Class::*dummySetter)(SetType))
   {
-    ErrorIf(dummySetter != setter,
-            "The dummy setter should always match our template member");
+    ErrorIf(dummySetter != setter, "The dummy setter should always match our template member");
     BoundFn boundSet = BoundInstance<SetterType, setter, Class, SetType>;
-    return builder.AddBoundGetterSetter(owner,
-                                        name,
-                                        ZilchTypeId(SetType),
-                                        boundSet,
-                                        nullptr,
-                                        MemberOptions::None);
+    return builder.AddBoundGetterSetter(owner, name, ZilchTypeId(SetType), boundSet, nullptr, MemberOptions::None);
   }
 
   //*** BUILDER STATIC PROPERTY GET/SET ***//
@@ -394,72 +319,38 @@ public:
                                         GetType (*dummyGetter)(),
                                         void (*dummySetter)(SetType))
   {
-    ReturnIf(
-        ZilchTypeId(GetType) != ZilchTypeId(SetType),
-        nullptr,
-        "Cannot bind a Get/Set property type that has a different fundamental "
-        "type for the getter's return value and setters input value");
+    ReturnIf(ZilchTypeId(GetType) != ZilchTypeId(SetType),
+             nullptr,
+             "Cannot bind a Get/Set property type that has a different fundamental "
+             "type for the getter's return value and setters input value");
 
-    ErrorIf(dummyGetter != getter,
-            "The dummy getter should always match our template member");
-    ErrorIf(dummySetter != setter,
-            "The dummy getter should always match our template member");
+    ErrorIf(dummyGetter != getter, "The dummy getter should always match our template member");
+    ErrorIf(dummySetter != setter, "The dummy getter should always match our template member");
 
     BoundFn boundGet = BoundStaticReturn<GetterType, getter, GetType>;
     BoundFn boundSet = BoundStatic<SetterType, setter, SetType>;
 
-    return builder.AddBoundGetterSetter(owner,
-                                        name,
-                                        ZilchTypeId(GetType),
-                                        boundSet,
-                                        boundGet,
-                                        MemberOptions::Static);
+    return builder.AddBoundGetterSetter(owner, name, ZilchTypeId(GetType), boundSet, boundGet, MemberOptions::Static);
   }
 
   //*** BUILDER STATIC PROPERTY GET ***//
-  template <typename GetterType,
-            GetterType getter,
-            typename SetterType,
-            SetterType setter,
-            typename GetType>
-  static GetterSetter* FromGetterSetter(LibraryBuilder& builder,
-                                        BoundType* owner,
-                                        StringRange name,
-                                        GetType (*dummyGetter)(),
-                                        NullPointerType)
+  template <typename GetterType, GetterType getter, typename SetterType, SetterType setter, typename GetType>
+  static GetterSetter* FromGetterSetter(
+      LibraryBuilder& builder, BoundType* owner, StringRange name, GetType (*dummyGetter)(), NullPointerType)
   {
-    ErrorIf(dummyGetter != getter,
-            "The dummy getter should always match our template member");
+    ErrorIf(dummyGetter != getter, "The dummy getter should always match our template member");
     BoundFn boundGet = BoundStaticReturn<GetterType, getter, GetType>;
-    return builder.AddBoundGetterSetter(owner,
-                                        name,
-                                        ZilchTypeId(GetType),
-                                        nullptr,
-                                        boundGet,
-                                        MemberOptions::Static);
+    return builder.AddBoundGetterSetter(owner, name, ZilchTypeId(GetType), nullptr, boundGet, MemberOptions::Static);
   }
 
   //*** BUILDER STATIC PROPERTY SET ***//
-  template <typename GetterType,
-            GetterType getter,
-            typename SetterType,
-            SetterType setter,
-            typename SetType>
-  static GetterSetter* FromGetterSetter(LibraryBuilder& builder,
-                                        BoundType* owner,
-                                        StringRange name,
-                                        NullPointerType,
-                                        void (*dummySetter)(SetType))
+  template <typename GetterType, GetterType getter, typename SetterType, SetterType setter, typename SetType>
+  static GetterSetter* FromGetterSetter(
+      LibraryBuilder& builder, BoundType* owner, StringRange name, NullPointerType, void (*dummySetter)(SetType))
   {
-    ErrorIf(dummySetter != setter,
-            "The dummy setter should always match our template member");
+    ErrorIf(dummySetter != setter, "The dummy setter should always match our template member");
     BoundFn boundSet = BoundStatic<SetterType, setter, SetType>;
-    return builder.AddBoundGetterSetter(owner,
-                                        name,
-                                        ZilchTypeId(SetType),
-                                        boundSet,
-                                        nullptr,
-                                        MemberOptions::Static);
+    return builder.AddBoundGetterSetter(owner, name, ZilchTypeId(SetType), boundSet, nullptr, MemberOptions::Static);
   }
 };
 
@@ -478,323 +369,202 @@ public:
 #  define ZilchNoOverload
 
 // Workhorse macro for binding methods
-#  define ZilchFullBindMethod(ZilchBuilder,                                    \
-                              ZilchType,                                       \
-                              MethodPointer,                                   \
-                              OverloadResolution,                              \
-                              Name,                                            \
-                              SpaceDelimitedParameterNames)                    \
-    ZZ::TemplateBinding::                                                      \
-        FromMethod<decltype(OverloadResolution MethodPointer), MethodPointer>( \
-            ZilchBuilder,                                                      \
-            ZilchType,                                                         \
-            Name,                                                              \
-            SpaceDelimitedParameterNames,                                      \
-            OverloadResolution(MethodPointer))
+#  define ZilchFullBindMethod(                                                                                         \
+      ZilchBuilder, ZilchType, MethodPointer, OverloadResolution, Name, SpaceDelimitedParameterNames)                  \
+    ZZ::TemplateBinding::FromMethod<decltype(OverloadResolution MethodPointer), MethodPointer>(                        \
+        ZilchBuilder, ZilchType, Name, SpaceDelimitedParameterNames, OverloadResolution(MethodPointer))
 
 // Workhorse macro for binding virtual methods
-#  define ZilchFullBindVirtualMethod(                                          \
-      ZilchBuilder, ZilchType, MethodPointer, NameOrNull)                      \
-    ZZ::TemplateBinding::FromVirtual<decltype(MethodPointer), MethodPointer>(  \
-        ZilchBuilder,                                                          \
-        ZilchType,                                                             \
-        Name,                                                                  \
-        SpaceDelimitedParameterNames,                                          \
-        (MethodPointer))
+#  define ZilchFullBindVirtualMethod(ZilchBuilder, ZilchType, MethodPointer, NameOrNull)                               \
+    ZZ::TemplateBinding::FromVirtual<decltype(MethodPointer), MethodPointer>(                                          \
+        ZilchBuilder, ZilchType, Name, SpaceDelimitedParameterNames, (MethodPointer))
 
 // Bind a constructor that takes any number of arguments
 // Due to the inability to get a 'member function pointer' to a constructor, the
 // arguments must always be specified
-#  define ZilchFullBindConstructor(                                            \
-      ZilchBuilder, ZilchType, Class, SpaceDelimitedParameterNames, ...)       \
-    ZZ::TemplateBinding::FromConstructor<Class, ##__VA_ARGS__>(                \
-        ZilchBuilder, ZilchType, SpaceDelimitedParameterNames)
+#  define ZilchFullBindConstructor(ZilchBuilder, ZilchType, Class, SpaceDelimitedParameterNames, ...)                  \
+    ZZ::TemplateBinding::FromConstructor<Class, ##__VA_ARGS__>(ZilchBuilder, ZilchType, SpaceDelimitedParameterNames)
 
 // Bind a constructor that takes any number of arguments (this binds a special
 // constructor that lets Zilch know about the type's v-table) Due to the
 // inability to get a 'member function pointer' to a constructor, the arguments
 // must always be specified
-#  define ZilchFullBindConstructorVirtual(                                     \
-      ZilchBuilder, ZilchType, Class, SpaceDelimitedParameterNames, ...)       \
-    ZZ::TemplateBinding::FromConstructorVirtual<Class, ##__VA_ARGS__>(         \
+#  define ZilchFullBindConstructorVirtual(ZilchBuilder, ZilchType, Class, SpaceDelimitedParameterNames, ...)           \
+    ZZ::TemplateBinding::FromConstructorVirtual<Class, ##__VA_ARGS__>(                                                 \
         ZilchBuilder, ZilchType, SpaceDelimitedParameterNames)
 
 // Bind the destructor of a class
 // The destructor should ALWAYS be bound if the constructor is bound
-#  define ZilchFullBindDestructor(ZilchBuilder, ZilchType, Class)              \
+#  define ZilchFullBindDestructor(ZilchBuilder, ZilchType, Class)                                                      \
     ZZ::TemplateBinding::FromDestructor<Class>(ZilchBuilder, ZilchType)
 
 // Bind data members as properties
-#  define ZilchFullBindField(                                                  \
-      ZilchBuilder, ZilchType, FieldPointer, Name, PropertyBinding)            \
-    ZZ::TemplateBinding::FromField<decltype(FieldPointer), FieldPointer>(      \
+#  define ZilchFullBindField(ZilchBuilder, ZilchType, FieldPointer, Name, PropertyBinding)                             \
+    ZZ::TemplateBinding::FromField<decltype(FieldPointer), FieldPointer>(                                              \
         ZilchBuilder, ZilchType, Name, FieldPointer, PropertyBinding)
 
 // Bind data members with an offset
-#  define ZilchFullBindMember(                                                 \
-      ZilchBuilder, ZilchType, MemberName, Name, PropertyBinding)              \
-    [&]() {                                                                    \
-      ErrorIf(                                                                 \
-          ZilchTypeId(decltype(ZilchSelf::MemberName))->GetCopyableSize() !=   \
-              sizeof(ZilchSelf::MemberName),                                   \
-          "When binding a member the type must match the exact size it is "    \
-          "expected to be in Zilch "                                           \
-          "(e.g. all reference types must be a Handle). Most likely you want " \
-          "ZilchBindField.");                                                  \
-      return ZilchBuilder.AddBoundField(                                       \
-          ZilchType,                                                           \
-          Name,                                                                \
-          ZilchTypeId(decltype(ZilchSelf::MemberName)),                        \
-          ZeroOffsetOf(ZilchSelf, MemberName),                                 \
-          PropertyBinding);                                                    \
+#  define ZilchFullBindMember(ZilchBuilder, ZilchType, MemberName, Name, PropertyBinding)                              \
+    [&]() {                                                                                                            \
+      ErrorIf(ZilchTypeId(decltype(ZilchSelf::MemberName))->GetCopyableSize() != sizeof(ZilchSelf::MemberName),        \
+              "When binding a member the type must match the exact size it is "                                        \
+              "expected to be in Zilch "                                                                               \
+              "(e.g. all reference types must be a Handle). Most likely you want "                                     \
+              "ZilchBindField.");                                                                                      \
+      return ZilchBuilder.AddBoundField(ZilchType,                                                                     \
+                                        Name,                                                                          \
+                                        ZilchTypeId(decltype(ZilchSelf::MemberName)),                                  \
+                                        ZeroOffsetOf(ZilchSelf, MemberName),                                           \
+                                        PropertyBinding);                                                              \
     }()
 
 // Bind a property (getter and setter in C++) to Zilch
 // A property will appear like a member, but it will invoke the getter when
 // being read, and the setter when being written to
-#  define ZilchFullBindGetterSetter(ZilchBuilder,                              \
-                                    ZilchType,                                 \
-                                    GetterMethodPointer,                       \
-                                    GetterOverload,                            \
-                                    SetterMethodPointer,                       \
-                                    SetterOverload,                            \
-                                    Name)                                      \
-    ZZ::TemplateBinding::FromGetterSetter<                                     \
-        decltype(GetterOverload GetterMethodPointer),                          \
-        GetterMethodPointer,                                                   \
-        decltype(SetterOverload SetterMethodPointer),                          \
-        SetterMethodPointer>(ZilchBuilder,                                     \
-                             ZilchType,                                        \
-                             Name,                                             \
-                             GetterMethodPointer,                              \
-                             SetterMethodPointer)
+#  define ZilchFullBindGetterSetter(                                                                                   \
+      ZilchBuilder, ZilchType, GetterMethodPointer, GetterOverload, SetterMethodPointer, SetterOverload, Name)         \
+    ZZ::TemplateBinding::FromGetterSetter<decltype(GetterOverload GetterMethodPointer),                                \
+                                          GetterMethodPointer,                                                         \
+                                          decltype(SetterOverload SetterMethodPointer),                                \
+                                          SetterMethodPointer>(                                                        \
+        ZilchBuilder, ZilchType, Name, GetterMethodPointer, SetterMethodPointer)
 
 // Bind a type as being an enum (verifies that the size matches)
-#  define ZilchFullBindEnum(ZilchBuilder, ZilchType, SpecialTypeEnum)          \
-    do                                                                         \
-    {                                                                          \
-      (ZilchType)->SpecialType = SpecialTypeEnum;                              \
-      if ((SpecialTypeEnum) == ZZ::SpecialType::Enumeration)                   \
-        (ZilchType)->ToStringFunction =                                        \
-            ZZ::VirtualMachine::EnumerationToString;                           \
-      else                                                                     \
-        (ZilchType)->ToStringFunction = ZZ::VirtualMachine::FlagsToString;     \
-      ErrorIf(                                                                 \
-          (ZilchType)->Size != sizeof(ZZ::Integer),                            \
-          "The sizeof(Enum) bound to Zilch must match the sizeof(Integer)");   \
-      (ZilchType)->BaseType = ZilchTypeId(ZZ::Enum);                           \
+#  define ZilchFullBindEnum(ZilchBuilder, ZilchType, SpecialTypeEnum)                                                  \
+    do                                                                                                                 \
+    {                                                                                                                  \
+      (ZilchType)->SpecialType = SpecialTypeEnum;                                                                      \
+      if ((SpecialTypeEnum) == ZZ::SpecialType::Enumeration)                                                           \
+        (ZilchType)->ToStringFunction = ZZ::VirtualMachine::EnumerationToString;                                       \
+      else                                                                                                             \
+        (ZilchType)->ToStringFunction = ZZ::VirtualMachine::FlagsToString;                                             \
+      ErrorIf((ZilchType)->Size != sizeof(ZZ::Integer),                                                                \
+              "The sizeof(Enum) bound to Zilch must match the sizeof(Integer)");                                       \
+      (ZilchType)->BaseType = ZilchTypeId(ZZ::Enum);                                                                   \
     } while (false)
 
 // Bind a single value of
-#  define ZilchFullBindEnumValue(ZilchBuilder, ZilchType, EnumValue, Name)     \
+#  define ZilchFullBindEnumValue(ZilchBuilder, ZilchType, EnumValue, Name)                                             \
     (ZilchBuilder).AddEnumValue((ZilchType), (Name), (EnumValue));
 
 // Extra convenience macros that just wrap the above macros (simpler, intended
 // for binding values only to our own type) Note that the Property versions only
 // add the attribute "Property" and can be used for displaying within a property
 // grid
-#  define ZilchBindConstructor(...)                                            \
-    ZilchFullBindConstructor(                                                  \
-        builder, type, ZilchSelf, ZilchNoNames, ##__VA_ARGS__)
+#  define ZilchBindConstructor(...) ZilchFullBindConstructor(builder, type, ZilchSelf, ZilchNoNames, ##__VA_ARGS__)
 #  define ZilchBindDefaultConstructor() ZilchBindConstructor()
 #  define ZilchBindCopyConstructor() ZilchBindConstructor(const ZilchSelf&)
-#  define ZilchBindDestructor()                                                \
-    ZilchFullBindDestructor(builder, type, ZilchSelf)
-#  define ZilchBindDefaultDestructor()                                         \
-    ZilchBindDefaultConstructor();                                             \
+#  define ZilchBindDestructor() ZilchFullBindDestructor(builder, type, ZilchSelf)
+#  define ZilchBindDefaultDestructor()                                                                                 \
+    ZilchBindDefaultConstructor();                                                                                     \
     ZilchBindDestructor();
-#  define ZilchBindDefaultCopyDestructor()                                     \
-    ZilchBindDefaultConstructor();                                             \
-    ZilchBindCopyConstructor();                                                \
+#  define ZilchBindDefaultCopyDestructor()                                                                             \
+    ZilchBindDefaultConstructor();                                                                                     \
+    ZilchBindCopyConstructor();                                                                                        \
     ZilchBindDestructor();
 
 // These versions allow you to rename anything bound
 // Note that 'Custom' means we don't apply the Get or Set to the beginning of
 // the name
-#  define ZilchBindOverloadedMethodAs(MethodName, OverloadResolution, Name)    \
-    ZilchFullBindMethod(builder,                                               \
-                        type,                                                  \
-                        &ZilchSelf::MethodName,                                \
-                        OverloadResolution,                                    \
-                        Name,                                                  \
-                        ZilchNoNames)
-#  define ZilchBindMethodAs(MethodName, Name)                                  \
-    ZilchBindOverloadedMethodAs(MethodName, ZilchNoOverload, Name)
-#  define ZilchBindOverloadedMethodPropertyAs(                                 \
-      MethodName, OverloadResolution, Name)                                    \
-    ZilchFullBindMethod(builder,                                               \
-                        type,                                                  \
-                        &ZilchSelf::MethodName,                                \
-                        OverloadResolution,                                    \
-                        Name,                                                  \
-                        ZilchNoNames)                                          \
+#  define ZilchBindOverloadedMethodAs(MethodName, OverloadResolution, Name)                                            \
+    ZilchFullBindMethod(builder, type, &ZilchSelf::MethodName, OverloadResolution, Name, ZilchNoNames)
+#  define ZilchBindMethodAs(MethodName, Name) ZilchBindOverloadedMethodAs(MethodName, ZilchNoOverload, Name)
+#  define ZilchBindOverloadedMethodPropertyAs(MethodName, OverloadResolution, Name)                                    \
+    ZilchFullBindMethod(builder, type, &ZilchSelf::MethodName, OverloadResolution, Name, ZilchNoNames)                 \
         ->AddAttributeChainable(Zilch::PropertyAttribute)
-#  define ZilchBindMethodPropertyAs(MethodName, Name)                          \
-    ZilchBindOverloadedMethodAs(MethodName, ZilchNoOverload, Name)             \
-        ->AddAttributeChainable(Zilch::PropertyAttribute)
-#  define ZilchBindMemberAs(MemberName, Name)                                  \
-    ZilchFullBindMember(                                                       \
-        builder, type, MemberName, Name, Zilch::MemberOptions::None)
-#  define ZilchBindMemberPropertyAs(MemberName, Name)                          \
-    ZilchBindMemberAs(MemberName, Name)                                        \
-        ->AddAttributeChainable(Zilch::PropertyAttribute)
-#  define ZilchBindFieldAs(FieldName, Name)                                    \
-    ZilchFullBindField(builder,                                                \
-                       type,                                                   \
-                       &ZilchSelf::FieldName,                                  \
-                       Name,                                                   \
-                       Zilch::PropertyBinding::GetSet)
-#  define ZilchBindFieldGetterAs(FieldName, Name)                              \
-    ZilchFullBindField(builder,                                                \
-                       type,                                                   \
-                       &ZilchSelf::FieldName,                                  \
-                       Name,                                                   \
-                       Zilch::PropertyBinding::Get)
-#  define ZilchBindFieldSetterAs(FieldName, Name)                              \
-    ZilchFullBindField(builder,                                                \
-                       type,                                                   \
-                       &ZilchSelf::FieldName,                                  \
-                       Name,                                                   \
-                       Zilch::PropertyBinding::Set)
-#  define ZilchBindFieldPropertyAs(FieldName, Name)                            \
-    ZilchBindFieldAs(FieldName, Name)                                          \
-        ->AddAttributeChainable(Zilch::PropertyAttribute)
-#  define ZilchBindFieldGetterPropertyAs(FieldName, Name)                      \
-    ZilchBindFieldGetterAs(FieldName, Name)                                    \
-        ->AddAttributeChainable(Zilch::PropertyAttribute)
-#  define ZilchBindFieldSetterPropertyAs(FieldName, Name)                      \
-    ZilchBindFieldSetterAs(FieldName, Name)                                    \
-        ->AddAttributeChainable(Zilch::PropertyAttribute)
-#  define ZilchBindGetterAs(PropertyName, Name)                                \
-    ZilchFullBindGetterSetter(builder,                                         \
-                              type,                                            \
-                              &ZilchSelf::Get##PropertyName,                   \
-                              ZilchNoOverload,                                 \
-                              ZilchNoSetter,                                   \
-                              ZilchNoOverload,                                 \
+#  define ZilchBindMethodPropertyAs(MethodName, Name)                                                                  \
+    ZilchBindOverloadedMethodAs(MethodName, ZilchNoOverload, Name)->AddAttributeChainable(Zilch::PropertyAttribute)
+#  define ZilchBindMemberAs(MemberName, Name)                                                                          \
+    ZilchFullBindMember(builder, type, MemberName, Name, Zilch::MemberOptions::None)
+#  define ZilchBindMemberPropertyAs(MemberName, Name)                                                                  \
+    ZilchBindMemberAs(MemberName, Name)->AddAttributeChainable(Zilch::PropertyAttribute)
+#  define ZilchBindFieldAs(FieldName, Name)                                                                            \
+    ZilchFullBindField(builder, type, &ZilchSelf::FieldName, Name, Zilch::PropertyBinding::GetSet)
+#  define ZilchBindFieldGetterAs(FieldName, Name)                                                                      \
+    ZilchFullBindField(builder, type, &ZilchSelf::FieldName, Name, Zilch::PropertyBinding::Get)
+#  define ZilchBindFieldSetterAs(FieldName, Name)                                                                      \
+    ZilchFullBindField(builder, type, &ZilchSelf::FieldName, Name, Zilch::PropertyBinding::Set)
+#  define ZilchBindFieldPropertyAs(FieldName, Name)                                                                    \
+    ZilchBindFieldAs(FieldName, Name)->AddAttributeChainable(Zilch::PropertyAttribute)
+#  define ZilchBindFieldGetterPropertyAs(FieldName, Name)                                                              \
+    ZilchBindFieldGetterAs(FieldName, Name)->AddAttributeChainable(Zilch::PropertyAttribute)
+#  define ZilchBindFieldSetterPropertyAs(FieldName, Name)                                                              \
+    ZilchBindFieldSetterAs(FieldName, Name)->AddAttributeChainable(Zilch::PropertyAttribute)
+#  define ZilchBindGetterAs(PropertyName, Name)                                                                        \
+    ZilchFullBindGetterSetter(                                                                                         \
+        builder, type, &ZilchSelf::Get##PropertyName, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, Name)
+#  define ZilchBindSetterAs(PropertyName, Name)                                                                        \
+    ZilchFullBindGetterSetter(                                                                                         \
+        builder, type, ZilchNoGetter, ZilchNoOverload, &ZilchSelf::Set##PropertyName, ZilchNoOverload, Name)
+#  define ZilchBindGetterSetterAs(PropertyName, Name)                                                                  \
+    ZilchFullBindGetterSetter(builder,                                                                                 \
+                              type,                                                                                    \
+                              &ZilchSelf::Get##PropertyName,                                                           \
+                              ZilchNoOverload,                                                                         \
+                              &ZilchSelf::Set##PropertyName,                                                           \
+                              ZilchNoOverload,                                                                         \
                               Name)
-#  define ZilchBindSetterAs(PropertyName, Name)                                \
-    ZilchFullBindGetterSetter(builder,                                         \
-                              type,                                            \
-                              ZilchNoGetter,                                   \
-                              ZilchNoOverload,                                 \
-                              &ZilchSelf::Set##PropertyName,                   \
-                              ZilchNoOverload,                                 \
-                              Name)
-#  define ZilchBindGetterSetterAs(PropertyName, Name)                          \
-    ZilchFullBindGetterSetter(builder,                                         \
-                              type,                                            \
-                              &ZilchSelf::Get##PropertyName,                   \
-                              ZilchNoOverload,                                 \
-                              &ZilchSelf::Set##PropertyName,                   \
-                              ZilchNoOverload,                                 \
-                              Name)
-#  define ZilchBindGetterPropertyAs(PropertyName, Name)                        \
-    ZilchBindGetterAs(PropertyName, Name)                                      \
-        ->AddAttributeChainable(Zilch::PropertyAttribute)
-#  define ZilchBindSetterPropertyAs(PropertyName, Name)                        \
-    ZilchBindSetterAs(PropertyName, Name)                                      \
-        ->AddAttributeChainable(Zilch::PropertyAttribute)
-#  define ZilchBindGetterSetterPropertyAs(PropertyName, Name)                  \
-    ZilchBindGetterSetterAs(PropertyName, Name)                                \
-        ->AddAttributeChainable(Zilch::PropertyAttribute)
-#  define ZilchBindCustomGetterAs(PropertyName, Name)                          \
-    ZilchFullBindGetterSetter(builder,                                         \
-                              type,                                            \
-                              &ZilchSelf::PropertyName,                        \
-                              ZilchNoOverload,                                 \
-                              ZilchNoSetter,                                   \
-                              ZilchNoOverload,                                 \
-                              Name)
-#  define ZilchBindCustomSetterAs(PropertyName, Name)                          \
-    ZilchFullBindGetterSetter(builder,                                         \
-                              type,                                            \
-                              ZilchNoGetter,                                   \
-                              ZilchNoOverload,                                 \
-                              &ZilchSelf::PropertyName,                        \
-                              ZilchNoOverload,                                 \
-                              Name)
-#  define ZilchBindCustomGetterSetterAs(PropertyName, Name)                    \
-    ZilchFullBindGetterSetter(builder,                                         \
-                              type,                                            \
-                              &ZilchSelf::PropertyName,                        \
-                              ZilchNoOverload,                                 \
-                              &ZilchSelf::PropertyName,                        \
-                              ZilchNoOverload,                                 \
-                              Name)
-#  define ZilchBindCustomGetterPropertyAs(PropertyName, Name)                  \
-    ZilchBindCustomGetterAs(PropertyName, Name)                                \
-        ->AddAttributeChainable(Zilch::PropertyAttribute)
-#  define ZilchBindCustomSetterPropertyAs(PropertyName, Name)                  \
-    ZilchBindCustomSetterAs(PropertyName, Name)                                \
-        ->AddAttributeChainable(Zilch::PropertyAttribute)
-#  define ZilchBindCustomGetterSetterPropertyAs(PropertyName, Name)            \
-    ZilchBindCustomGetterSetterAs(PropertyName, Name)                          \
-        ->AddAttributeChainable(Zilch::PropertyAttribute)
-#  define ZilchBindEnumValueAs(EnumValue, Name)                                \
-    ZilchFullBindEnumValue(builder, type, EnumValue, Name)
+#  define ZilchBindGetterPropertyAs(PropertyName, Name)                                                                \
+    ZilchBindGetterAs(PropertyName, Name)->AddAttributeChainable(Zilch::PropertyAttribute)
+#  define ZilchBindSetterPropertyAs(PropertyName, Name)                                                                \
+    ZilchBindSetterAs(PropertyName, Name)->AddAttributeChainable(Zilch::PropertyAttribute)
+#  define ZilchBindGetterSetterPropertyAs(PropertyName, Name)                                                          \
+    ZilchBindGetterSetterAs(PropertyName, Name)->AddAttributeChainable(Zilch::PropertyAttribute)
+#  define ZilchBindCustomGetterAs(PropertyName, Name)                                                                  \
+    ZilchFullBindGetterSetter(                                                                                         \
+        builder, type, &ZilchSelf::PropertyName, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, Name)
+#  define ZilchBindCustomSetterAs(PropertyName, Name)                                                                  \
+    ZilchFullBindGetterSetter(                                                                                         \
+        builder, type, ZilchNoGetter, ZilchNoOverload, &ZilchSelf::PropertyName, ZilchNoOverload, Name)
+#  define ZilchBindCustomGetterSetterAs(PropertyName, Name)                                                            \
+    ZilchFullBindGetterSetter(                                                                                         \
+        builder, type, &ZilchSelf::PropertyName, ZilchNoOverload, &ZilchSelf::PropertyName, ZilchNoOverload, Name)
+#  define ZilchBindCustomGetterPropertyAs(PropertyName, Name)                                                          \
+    ZilchBindCustomGetterAs(PropertyName, Name)->AddAttributeChainable(Zilch::PropertyAttribute)
+#  define ZilchBindCustomSetterPropertyAs(PropertyName, Name)                                                          \
+    ZilchBindCustomSetterAs(PropertyName, Name)->AddAttributeChainable(Zilch::PropertyAttribute)
+#  define ZilchBindCustomGetterSetterPropertyAs(PropertyName, Name)                                                    \
+    ZilchBindCustomGetterSetterAs(PropertyName, Name)->AddAttributeChainable(Zilch::PropertyAttribute)
+#  define ZilchBindEnumValueAs(EnumValue, Name) ZilchFullBindEnumValue(builder, type, EnumValue, Name)
 
 // All these versions assume the name is the same as the property/field/method
 // identifier
-#  define ZilchBindOverloadedMethod(MethodName, OverloadResolution)            \
+#  define ZilchBindOverloadedMethod(MethodName, OverloadResolution)                                                    \
     ZilchBindOverloadedMethodAs(MethodName, OverloadResolution, #MethodName)
 #  define ZilchBindMethod(MethodName) ZilchBindMethodAs(MethodName, #  MethodName)
-#  define ZilchBindOverloadedMethodProperty(MethodName, OverloadResolution)    \
-    ZilchBindOverloadedPropertyMethodAs(                                       \
-        MethodName, OverloadResolution, #MethodName)
-#  define ZilchBindMethodProperty(MethodName)                                  \
-    ZilchBindMethodPropertyAs(MethodName, #MethodName)
+#  define ZilchBindOverloadedMethodProperty(MethodName, OverloadResolution)                                            \
+    ZilchBindOverloadedPropertyMethodAs(MethodName, OverloadResolution, #MethodName)
+#  define ZilchBindMethodProperty(MethodName) ZilchBindMethodPropertyAs(MethodName, #  MethodName)
 #  define ZilchBindMember(MemberName) ZilchBindMemberAs(MemberName, #  MemberName)
-#  define ZilchBindMemberProperty(MemberName)                                  \
-    ZilchBindMemberPropertyAs(MemberName, #MemberName)
+#  define ZilchBindMemberProperty(MemberName) ZilchBindMemberPropertyAs(MemberName, #  MemberName)
 #  define ZilchBindField(FieldName) ZilchBindFieldAs(FieldName, #  FieldName)
-#  define ZilchBindFieldGetter(FieldName)                                      \
-    ZilchBindFieldGetterAs(FieldName, #FieldName)
-#  define ZilchBindFieldSetter(FieldName)                                      \
-    ZilchBindFieldSetterAs(FieldName, #FieldName)
-#  define ZilchBindFieldProperty(FieldName)                                    \
-    ZilchBindFieldPropertyAs(FieldName, #FieldName)
-#  define ZilchBindFieldGetterProperty(FieldName)                              \
-    ZilchBindFieldGetterPropertyAs(FieldName, #FieldName)
-#  define ZilchBindFieldSetterProperty(FieldName)                              \
-    ZilchBindFieldSetterPropertyAs(FieldName, #FieldName)
-#  define ZilchBindGetter(PropertyName)                                        \
-    ZilchBindGetterAs(PropertyName, #PropertyName)
-#  define ZilchBindSetter(PropertyName)                                        \
-    ZilchBindSetterAs(PropertyName, #PropertyName)
-#  define ZilchBindGetterSetter(PropertyName)                                  \
-    ZilchBindGetterSetterAs(PropertyName, #PropertyName)
-#  define ZilchBindGetterProperty(PropertyName)                                \
-    ZilchBindGetterPropertyAs(PropertyName, #PropertyName)
-#  define ZilchBindSetterProperty(PropertyName)                                \
-    ZilchBindSetterPropertyAs(PropertyName, #PropertyName)
-#  define ZilchBindGetterSetterProperty(PropertyName)                          \
-    ZilchBindGetterSetterPropertyAs(PropertyName, #PropertyName)
-#  define ZilchBindCustomGetter(PropertyName)                                  \
-    ZilchBindCustomGetterAs(PropertyName, #PropertyName)
-#  define ZilchBindCustomSetter(PropertyName)                                  \
-    ZilchBindCustomSetterAs(PropertyName, #PropertyName)
-#  define ZilchBindCustomGetterSetter(PropertyName)                            \
-    ZilchBindCustomGetterSetterAs(PropertyName, #PropertyName)
-#  define ZilchBindCustomGetterProperty(PropertyName)                          \
-    ZilchBindCustomGetterPropertyAs(PropertyName, #PropertyName)
-#  define ZilchBindCustomSetterProperty(PropertyName)                          \
-    ZilchBindCustomSetterPropertyAs(PropertyName, #PropertyName)
-#  define ZilchBindCustomGetterSetterProperty(PropertyName)                    \
+#  define ZilchBindFieldGetter(FieldName) ZilchBindFieldGetterAs(FieldName, #  FieldName)
+#  define ZilchBindFieldSetter(FieldName) ZilchBindFieldSetterAs(FieldName, #  FieldName)
+#  define ZilchBindFieldProperty(FieldName) ZilchBindFieldPropertyAs(FieldName, #  FieldName)
+#  define ZilchBindFieldGetterProperty(FieldName) ZilchBindFieldGetterPropertyAs(FieldName, #  FieldName)
+#  define ZilchBindFieldSetterProperty(FieldName) ZilchBindFieldSetterPropertyAs(FieldName, #  FieldName)
+#  define ZilchBindGetter(PropertyName) ZilchBindGetterAs(PropertyName, #  PropertyName)
+#  define ZilchBindSetter(PropertyName) ZilchBindSetterAs(PropertyName, #  PropertyName)
+#  define ZilchBindGetterSetter(PropertyName) ZilchBindGetterSetterAs(PropertyName, #  PropertyName)
+#  define ZilchBindGetterProperty(PropertyName) ZilchBindGetterPropertyAs(PropertyName, #  PropertyName)
+#  define ZilchBindSetterProperty(PropertyName) ZilchBindSetterPropertyAs(PropertyName, #  PropertyName)
+#  define ZilchBindGetterSetterProperty(PropertyName) ZilchBindGetterSetterPropertyAs(PropertyName, #  PropertyName)
+#  define ZilchBindCustomGetter(PropertyName) ZilchBindCustomGetterAs(PropertyName, #  PropertyName)
+#  define ZilchBindCustomSetter(PropertyName) ZilchBindCustomSetterAs(PropertyName, #  PropertyName)
+#  define ZilchBindCustomGetterSetter(PropertyName) ZilchBindCustomGetterSetterAs(PropertyName, #  PropertyName)
+#  define ZilchBindCustomGetterProperty(PropertyName) ZilchBindCustomGetterPropertyAs(PropertyName, #  PropertyName)
+#  define ZilchBindCustomSetterProperty(PropertyName) ZilchBindCustomSetterPropertyAs(PropertyName, #  PropertyName)
+#  define ZilchBindCustomGetterSetterProperty(PropertyName)                                                            \
     ZilchBindCustomGetterSetterPropertyAs(PropertyName, #PropertyName)
-#  define ZilchBindEnumValue(EnumValue)                                        \
-    ZilchBindEnumValueAs(EnumValue, #EnumValue)
+#  define ZilchBindEnumValue(EnumValue) ZilchBindEnumValueAs(EnumValue, #  EnumValue)
 
 // Overload resolution helper macros
 #  define ZilchStaticOverload(ReturnType, ...) (ReturnType(*)(__VA_ARGS__))
-#  define ZilchInstanceOverload(ReturnType, ...)                               \
-    (ReturnType(ZilchSelf::*)(__VA_ARGS__))
-#  define ZilchConstInstanceOverload(ReturnType, ...)                          \
-    (ReturnType(ZilchSelf::*)(__VA_ARGS__) const)
+#  define ZilchInstanceOverload(ReturnType, ...) (ReturnType(ZilchSelf::*)(__VA_ARGS__))
+#  define ZilchConstInstanceOverload(ReturnType, ...) (ReturnType(ZilchSelf::*)(__VA_ARGS__) const)
 
 // This macro sets up all the special attributes to make a C++ value into a
 // Zilch enumeration
-#  define ZilchBindEnum(SpecialTypeEnum)                                       \
-    ZilchFullBindEnum(builder, type, SpecialTypeEnum)
+#  define ZilchBindEnum(SpecialTypeEnum) ZilchFullBindEnum(builder, type, SpecialTypeEnum)
 } // namespace Zilch
 #endif

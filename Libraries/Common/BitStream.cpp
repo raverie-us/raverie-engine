@@ -69,8 +69,7 @@ BitStream& BitStream::operator=(MoveReference<BitStream> rhs)
 
 bool BitStream::operator==(const BitStream& rhs) const
 {
-  return (mByteCapacity == rhs.mByteCapacity) &&
-         memcmp(this->mData, rhs.mData, mByteCapacity) == 0;
+  return (mByteCapacity == rhs.mByteCapacity) && memcmp(this->mData, rhs.mData, mByteCapacity) == 0;
 }
 bool BitStream::operator!=(const BitStream& rhs) const
 {
@@ -78,8 +77,7 @@ bool BitStream::operator!=(const BitStream& rhs) const
 }
 bool BitStream::operator<(const BitStream& rhs) const
 {
-  return (mByteCapacity < rhs.mByteCapacity) ||
-         memcmp(this->mData, rhs.mData, mByteCapacity) < 0;
+  return (mByteCapacity < rhs.mByteCapacity) || memcmp(this->mData, rhs.mData, mByteCapacity) < 0;
 }
 
 //
@@ -142,8 +140,7 @@ Bits BitStream::WriteBits(const byte* data, Bits dataBits)
   // Data size must not exceed maximum possible BitStream size
   Assert(dataBits <= BYTES_TO_BITS(BITSTREAM_MAX_BYTES));
   // Data must not overlap with internal BitStream memory
-  Assert(!MemoryIsOverlapping(
-      mData, mByteCapacity, data, BITS_TO_BYTES(dataBits)));
+  Assert(!MemoryIsOverlapping(mData, mByteCapacity, data, BITS_TO_BYTES(dataBits)));
 
   // Byte Alignment?
   if (mAlignment == BitAlignment::Byte)
@@ -251,8 +248,7 @@ Bits BitStream::WriteBytes(const byte* data, Bytes dataBytes)
 
 Bits BitStream::Write(const String& value)
 {
-  return WriteBits((const byte*)value.c_str(),
-                   BYTES_TO_BITS(value.SizeInBytes() + 1));
+  return WriteBits((const byte*)value.c_str(), BYTES_TO_BITS(value.SizeInBytes() + 1));
 }
 
 Bits BitStream::WriteUntilByteAligned()
@@ -318,8 +314,7 @@ Bits BitStream::Append(const BitStream& bitStream, Bits dataBits)
 
     // Write remaining bits from their bitstream to ours
     WriteBits(bitStream.GetData() + DIV8(bitStream.mBitsRead), remAppendBits);
-    bitStream.mBitsRead +=
-        remAppendBits; // Advance other bitstream's read cursor
+    bitStream.mBitsRead += remAppendBits; // Advance other bitstream's read cursor
     Assert(bitStream.mBitsRead <= bitStream.mBitsWritten);
   }
 
@@ -371,8 +366,7 @@ Bits BitStream::ReadBits(byte* data, Bits dataBits) const
   // Data size must not exceed maximum possible BitStream size
   Assert(dataBits <= BYTES_TO_BITS(BITSTREAM_MAX_BYTES));
   // Data must not overlap with internal BitStream memory
-  Assert(!MemoryIsOverlapping(
-      mData, mByteCapacity, data, BITS_TO_BYTES(dataBits)));
+  Assert(!MemoryIsOverlapping(mData, mByteCapacity, data, BITS_TO_BYTES(dataBits)));
 
   // Byte Alignment?
   Bits bitsRead1 = 0;
@@ -605,8 +599,7 @@ void BitStream::ReallocateIfNecessary(Bits additionalBits)
   // Need to reallocate to fit the additional bits?
   if (BYTES_TO_BITS(mByteCapacity) < mBitsWritten + additionalBits)
   {
-    const Bytes growSize =
-        (Bytes)(mByteCapacity * 2) + BITS_TO_BYTES(additionalBits);
+    const Bytes growSize = (Bytes)(mByteCapacity * 2) + BITS_TO_BYTES(additionalBits);
 
     // First allocation?
     if (!mByteCapacity)
@@ -633,9 +626,8 @@ void BitStream::Reallocate(Bytes capacity, bool copyData)
   // Copying data?
   else if (copyData)
   {
-    memcpy(mData, temp, tempCapacity); // Copy previous memory space
-    memset(
-        mData + tempCapacity, 0, mByteCapacity - tempCapacity); // Zero the rest
+    memcpy(mData, temp, tempCapacity);                             // Copy previous memory space
+    memset(mData + tempCapacity, 0, mByteCapacity - tempCapacity); // Zero the rest
   }
 
   if (temp)

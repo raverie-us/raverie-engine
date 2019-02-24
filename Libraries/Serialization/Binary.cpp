@@ -94,8 +94,7 @@ bool BinaryBufferLoader::TestForObjectEnd(BoundType** data)
 
 void BinaryBufferLoader::Data(byte* data, uint sizeInBytes)
 {
-  const bool bufferOverrun =
-      mCurrentPosition + sizeInBytes > mBuffer + mBufferSize;
+  const bool bufferOverrun = mCurrentPosition + sizeInBytes > mBuffer + mBufferSize;
   ErrorIf(bufferOverrun, "Access buffer out of range.");
 
   if (!bufferOverrun)
@@ -105,9 +104,7 @@ void BinaryBufferLoader::Data(byte* data, uint sizeInBytes)
   }
 }
 
-bool BinaryBufferLoader::StringField(cstr typeName,
-                                     cstr fieldName,
-                                     StringRange& stringRange)
+bool BinaryBufferLoader::StringField(cstr typeName, cstr fieldName, StringRange& stringRange)
 {
   u32 size = 0;
   Data((byte*)&size, sizeof(size));
@@ -162,9 +159,7 @@ void BinaryFileLoader::Data(byte* data, uint sizeInBytes)
   mFile.Read(status, data, sizeInBytes);
 }
 
-bool BinaryFileLoader::StringField(cstr typeName,
-                                   cstr fieldName,
-                                   StringRange& stringRange)
+bool BinaryFileLoader::StringField(cstr typeName, cstr fieldName, StringRange& stringRange)
 {
   Status status;
   u32 size = 0;

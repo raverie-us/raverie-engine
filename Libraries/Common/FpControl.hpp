@@ -40,37 +40,34 @@ struct ZeroShared FpuControlSystem
 
 #ifdef ZFpExceptions
 
-#  define FpuExceptionsEnabler()                                               \
-    ScopeFpuExceptionsEnabler __LocalScopedFpuExceptionsEnabler;
+#  define FpuExceptionsEnabler() ScopeFpuExceptionsEnabler __LocalScopedFpuExceptionsEnabler;
 
-#  define FpuExceptionsDisabler()                                              \
-    ScopeFpuExceptionsDisabler __LocalScopedFpuExceptionsDisabler;
+#  define FpuExceptionsDisabler() ScopeFpuExceptionsDisabler __LocalScopedFpuExceptionsDisabler;
 
 #  ifdef ZeroDebug
-#    define FpuExceptionsEnablerDebug()                                        \
-      ScopeFpuExceptionsEnabler __LocalScopedFpuExceptionsEnabler;
+#    define FpuExceptionsEnablerDebug() ScopeFpuExceptionsEnabler __LocalScopedFpuExceptionsEnabler;
 #  else
-#    define FpuExceptionsEnablerDebug()                                        \
-      do                                                                       \
-      {                                                                        \
+#    define FpuExceptionsEnablerDebug()                                                                                \
+      do                                                                                                               \
+      {                                                                                                                \
       } while (0)
 #  endif
 
 #else
 
-#  define FpuExceptionsEnabler()                                               \
-    do                                                                         \
-    {                                                                          \
+#  define FpuExceptionsEnabler()                                                                                       \
+    do                                                                                                                 \
+    {                                                                                                                  \
     } while (0)
 
-#  define FpuExceptionsDisabler()                                              \
-    do                                                                         \
-    {                                                                          \
+#  define FpuExceptionsDisabler()                                                                                      \
+    do                                                                                                                 \
+    {                                                                                                                  \
     } while (0)
 
-#  define FpuExceptionsEnablerDebug()                                          \
-    do                                                                         \
-    {                                                                          \
+#  define FpuExceptionsEnablerDebug()                                                                                  \
+    do                                                                                                                 \
+    {                                                                                                                  \
     } while (0)
 
 #endif

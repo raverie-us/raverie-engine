@@ -23,17 +23,14 @@ public:
                       PropertyPathParam property,
                       PropertyState& state,
                       PropertyAction::Enum action) override;
-  void MarkPropertyModified(HandleParam object,
-                            PropertyPathParam property) override;
+  void MarkPropertyModified(HandleParam object, PropertyPathParam property) override;
   void RevertProperty(HandleParam object, PropertyPathParam property) override;
-  PropertyState GetValue(HandleParam object,
-                         PropertyPathParam property) override;
+  PropertyState GetValue(HandleParam object, PropertyPathParam property) override;
   void InvokeFunction(HandleParam object, Zilch::Function* method) override;
   HandleOf<MetaComposition> GetMetaComposition(BoundType* objectType) override;
-  ObjectPropertyNode*
-  BuildObjectTree(ObjectPropertyNode* parent,
-                  HandleParam instance,
-                  Property* objectProperty = nullptr) override;
+  ObjectPropertyNode* BuildObjectTree(ObjectPropertyNode* parent,
+                                      HandleParam instance,
+                                      Property* objectProperty = nullptr) override;
   void GetObjects(HandleParam instance, Array<Handle>& objects) override;
 
   MetaSelection* mSelection;
@@ -47,48 +44,35 @@ private:
 
   void Undo() override;
   void Redo() override;
-  void CaptureState(PropertyStateCapture& capture,
-                    HandleParam object,
-                    PropertyPathParam property) override;
+  void CaptureState(PropertyStateCapture& capture, HandleParam object, PropertyPathParam property) override;
 };
 
 // Multi Meta Composition
 class MultiMetaComposition : public UndoMetaComposition
 {
 public:
-  MultiMetaComposition(PropertyInterface* propertyInterface,
-                       BoundType* objectType,
-                       OperationQueue* opQueue);
+  MultiMetaComposition(PropertyInterface* propertyInterface, BoundType* objectType, OperationQueue* opQueue);
 
   /// MetaComposition Interface.
   uint GetComponentCount(HandleParam object) override;
   Handle GetComponentAt(HandleParam object, uint index) override;
 
-  bool CanAddComponent(HandleParam object,
-                       BoundType* typeToAdd,
-                       AddInfo* info) override;
+  bool CanAddComponent(HandleParam object, BoundType* typeToAdd, AddInfo* info) override;
   void AddComponent(HandleParam owner,
                     BoundType* typeToAdd,
                     int index = -1,
                     bool ignoreDependencies = false,
                     MetaCreationContext* creationContext = nullptr) override;
 
-  bool CanRemoveComponent(HandleParam object,
-                          HandleParam subObject,
-                          String& reason) override;
-  void RemoveComponent(HandleParam owner,
-                       HandleParam component,
-                       bool ignoreDependencies = false) override;
+  bool CanRemoveComponent(HandleParam object, HandleParam subObject, String& reason) override;
+  void RemoveComponent(HandleParam owner, HandleParam component, bool ignoreDependencies = false) override;
 
-  void Enumerate(Array<BoundType*>& addTypes,
-                 EnumerateAction::Enum action,
-                 HandleParam object) override;
+  void Enumerate(Array<BoundType*>& addTypes, EnumerateAction::Enum action, HandleParam object) override;
 
 private:
   /// We can only display components that all objects in the selection
   /// have. This finds all shared components between the selected objects.
-  void GetSharedComponents(MetaSelection* selection,
-                           Array<BoundType*>& sharedComponents);
+  void GetSharedComponents(MetaSelection* selection, Array<BoundType*>& sharedComponents);
 };
 
 } // namespace Zero

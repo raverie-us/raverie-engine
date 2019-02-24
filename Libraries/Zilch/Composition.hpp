@@ -158,8 +158,7 @@ template <typename T>
 class ComponentRange
 {
 public:
-  ComponentRange(Composition* currentComposition) :
-      mCurrentComposition(currentComposition)
+  ComponentRange(Composition* currentComposition) : mCurrentComposition(currentComposition)
   {
     FindNextValid();
   }

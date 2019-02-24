@@ -79,12 +79,10 @@ real ConvexMeshCollider::ComputeWorldVolumeInternal()
   return mConvexMesh->ComputeScaledVolume(worldScale);
 }
 
-void ConvexMeshCollider::ComputeLocalInverseInertiaTensor(
-    real mass, Mat3Ref localInvInertia)
+void ConvexMeshCollider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia)
 {
   Vec3 worldScale = GetWorldScale();
-  localInvInertia =
-      mConvexMesh->ComputeScaledInvInertiaTensor(worldScale, mass);
+  localInvInertia = mConvexMesh->ComputeScaledInvInertiaTensor(worldScale, mass);
 }
 
 void ConvexMeshCollider::RebuildModifiedResources()
@@ -148,8 +146,7 @@ void ConvexMeshCollider::OnMeshModified(Event* e)
   InternalSizeChanged();
 }
 
-ConvexMeshCollider::RangeType
-ConvexMeshCollider::GetOverlapRange(Aabb& localAabb)
+ConvexMeshCollider::RangeType ConvexMeshCollider::GetOverlapRange(Aabb& localAabb)
 {
   // Return a range containing the mesh info (vertices and indices)
   ConvexMesh* mesh = GetConvexMesh();

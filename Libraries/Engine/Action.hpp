@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-DeclareBitField5(
-    ActionFlag, Started, Completed, NotActive, Linked, Schedulable);
+DeclareBitField5(ActionFlag, Started, Completed, NotActive, Linked, Schedulable);
 
 DeclareEnum2(ActionExecuteMode, LogicUpdate, FrameUpdate);
 DeclareEnum2(ActionState, Running, Completed);
@@ -94,8 +93,7 @@ public:
 
   ActionGroup();
   ~ActionGroup();
-  ActionGroup(Object* object,
-              ActionExecuteMode::Enum mode = ActionExecuteMode::LogicUpdate);
+  ActionGroup(Object* object, ActionExecuteMode::Enum mode = ActionExecuteMode::LogicUpdate);
 
   void Add(Action* action) override;
   ActionState::Enum Update(float dt) override;
@@ -115,8 +113,7 @@ public:
 
   ActionSequence();
   ~ActionSequence();
-  ActionSequence(Object* object,
-                 ActionExecuteMode::Enum mode = ActionExecuteMode::LogicUpdate);
+  ActionSequence(Object* object, ActionExecuteMode::Enum mode = ActionExecuteMode::LogicUpdate);
 
   void Add(Action* action) override;
   ActionState::Enum Update(float dt) override;

@@ -15,8 +15,7 @@ ZilchDefineType(HierarchySpline, builder, type)
 
   ZilchBindGetter(Spline);
   ZilchBindGetterSetterProperty(Closed)->ZeroSerialize(false);
-  ZilchBindGetterSetterProperty(SplineType)
-      ->ZeroSerialize(SplineType::CatmullRom);
+  ZilchBindGetterSetterProperty(SplineType)->ZeroSerialize(SplineType::CatmullRom);
   ZilchBindGetterSetterProperty(Error)->ZeroSerialize(real(0.01f));
   ZilchBindGetterSetterProperty(DebugDrawSpline)->ZeroSerialize(true);
   ZilchBindGetterSetterProperty(SplineColor)->ZeroSerialize(Vec4(0, 0, 0, 1));

@@ -41,9 +41,7 @@ public:
   ZilchDeclareType(PopUp, TypeCopyMode::ReferenceType);
   /// Popup will attach to the root widget of the target and disappear if
   /// the mouse moves outside the target, or the mouse moves away from the popup
-  PopUp(Widget* target,
-        PopUpCloseMode::Enum popCloseMode,
-        StringParam className = cPopUpNormal);
+  PopUp(Widget* target, PopUpCloseMode::Enum popCloseMode, StringParam className = cPopUpNormal);
 
   // Position the PopUp below the mouse.
   void SetBelowMouse(Mouse* mouse, Vec2 offset);

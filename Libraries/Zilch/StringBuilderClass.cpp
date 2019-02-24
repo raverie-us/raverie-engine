@@ -9,33 +9,15 @@ ZilchDefineType(StringBuilderExtended, builder, type)
   ZilchFullBindDestructor(builder, type, StringBuilderExtended);
   ZilchFullBindConstructor(builder, type, StringBuilderExtended, nullptr);
 
-  ZilchFullBindMethod(builder,
-                      type,
-                      &StringBuilderExtended::ToString,
-                      ZilchNoOverload,
-                      "ToString",
-                      nullptr);
+  ZilchFullBindMethod(builder, type, &StringBuilderExtended::ToString, ZilchNoOverload, "ToString", nullptr);
 
-  ZilchFullBindMethod(builder,
-                      type,
-                      &StringBuilderExtended::Clear,
-                      ZilchNoOverload,
-                      "Clear",
-                      nullptr);
+  ZilchFullBindMethod(builder, type, &StringBuilderExtended::Clear, ZilchNoOverload, "Clear", nullptr);
 
-  ZilchFullBindMethod(builder,
-                      type,
-                      &StringBuilderExtended::Write,
-                      (void (StringBuilderExtended::*)(AnyParam)),
-                      "Write",
-                      nullptr);
+  ZilchFullBindMethod(
+      builder, type, &StringBuilderExtended::Write, (void (StringBuilderExtended::*)(AnyParam)), "Write", nullptr);
 
-  ZilchFullBindMethod(builder,
-                      type,
-                      &StringBuilderExtended::WriteLine,
-                      (void (StringBuilderExtended::*)()),
-                      "WriteLine",
-                      nullptr);
+  ZilchFullBindMethod(
+      builder, type, &StringBuilderExtended::WriteLine, (void (StringBuilderExtended::*)()), "WriteLine", nullptr);
   ZilchFullBindMethod(builder,
                       type,
                       &StringBuilderExtended::WriteLine,
@@ -370,59 +352,22 @@ ZilchDefineType(RuneIterator, builder, type)
   type->ToStringFunction = &RuneIterator::ToString;
 
   // Range interface
-  builder.AddBoundGetterSetter(
-      type, "All", type, nullptr, &RuneIterator::All, MemberOptions::None);
-  builder.AddBoundFunction(type,
-                           "MoveNext",
-                           &RuneIterator::Increment,
-                           ParameterArray(),
-                           voidType,
-                           MemberOptions::None);
-  builder.AddBoundGetterSetter(type,
-                               "Current",
-                               runeType,
-                               nullptr,
-                               &RuneIterator::Current,
-                               MemberOptions::None);
-  builder.AddBoundGetterSetter(type,
-                               "IsNotEmpty",
-                               boolType,
-                               nullptr,
-                               &RuneIterator::IsNotEmpty,
-                               MemberOptions::None);
+  builder.AddBoundGetterSetter(type, "All", type, nullptr, &RuneIterator::All, MemberOptions::None);
+  builder.AddBoundFunction(type, "MoveNext", &RuneIterator::Increment, ParameterArray(), voidType, MemberOptions::None);
+  builder.AddBoundGetterSetter(type, "Current", runeType, nullptr, &RuneIterator::Current, MemberOptions::None);
+  builder.AddBoundGetterSetter(type, "IsNotEmpty", boolType, nullptr, &RuneIterator::IsNotEmpty, MemberOptions::None);
 
   // Iterator interface
-  builder.AddBoundFunction(type,
-                           "Increment",
-                           &RuneIterator::Increment,
-                           ParameterArray(),
-                           voidType,
-                           MemberOptions::None);
-  builder.AddBoundFunction(type,
-                           "Decrement",
-                           &RuneIterator::Decrement,
-                           ParameterArray(),
-                           voidType,
-                           MemberOptions::None);
-  builder.AddBoundFunction(type,
-                           "Equals",
-                           &RuneIterator::Equals,
-                           OneParameter(type),
-                           boolType,
-                           MemberOptions::None);
+  builder.AddBoundFunction(
+      type, "Increment", &RuneIterator::Increment, ParameterArray(), voidType, MemberOptions::None);
+  builder.AddBoundFunction(
+      type, "Decrement", &RuneIterator::Decrement, ParameterArray(), voidType, MemberOptions::None);
+  builder.AddBoundFunction(type, "Equals", &RuneIterator::Equals, OneParameter(type), boolType, MemberOptions::None);
 
-  builder.AddBoundGetterSetter(type,
-                               "ByteIndex",
-                               integerType,
-                               nullptr,
-                               &RuneIterator::GetByteIndex,
-                               MemberOptions::None);
-  builder.AddBoundGetterSetter(type,
-                               "OriginalString",
-                               stringType,
-                               nullptr,
-                               &StringRangeExtended::GetOriginalString,
-                               FunctionOptions::None);
+  builder.AddBoundGetterSetter(
+      type, "ByteIndex", integerType, nullptr, &RuneIterator::GetByteIndex, MemberOptions::None);
+  builder.AddBoundGetterSetter(
+      type, "OriginalString", stringType, nullptr, &StringRangeExtended::GetOriginalString, FunctionOptions::None);
 }
 
 String RuneIterator::ToString(const BoundType* type, const byte* data)
@@ -446,10 +391,9 @@ void RuneIterator::Current(Call& call, ExceptionReport& report)
   if (self->mRange.Empty())
   {
     // Throw an exception since the range was empty and we called Current
-    call.GetState()->ThrowException(
-        report,
-        "The iterator reached the end and an attempt was made to get the "
-        "current value");
+    call.GetState()->ThrowException(report,
+                                    "The iterator reached the end and an attempt was made to get the "
+                                    "current value");
     return;
   }
 
@@ -470,9 +414,7 @@ void RuneIterator::Increment(Call& call, ExceptionReport& report)
 
   if (self->mRange.Empty())
   {
-    call.GetState()->ThrowException(
-        report,
-        "Cannot increment an iterator past the end of the original string");
+    call.GetState()->ThrowException(report, "Cannot increment an iterator past the end of the original string");
     return;
   }
 
@@ -485,9 +427,7 @@ void RuneIterator::Decrement(Call& call, ExceptionReport& report)
   self->mRange.DecrementPointerByRune(self->mRange.mBegin);
   if (self->mRange.Begin() < self->mRange.mOriginalString.Begin())
   {
-    call.GetState()->ThrowException(
-        report,
-        "Cannot decrement an iterator before the begin of the original string");
+    call.GetState()->ThrowException(report, "Cannot decrement an iterator before the begin of the original string");
     return;
   }
 }
@@ -504,8 +444,7 @@ void RuneIterator::Equals(Call& call, ExceptionReport& report)
 void RuneIterator::GetByteIndex(Call& call, ExceptionReport& report)
 {
   RuneIterator* self = (RuneIterator*)call.GetHandle(Call::This).Dereference();
-  int byteIndex =
-      (int)(self->mRange.Begin() - self->mRange.mOriginalString.Begin());
+  int byteIndex = (int)(self->mRange.Begin() - self->mRange.mOriginalString.Begin());
   call.Set(Call::Return, byteIndex);
 }
 
@@ -516,8 +455,7 @@ void RuneIterator::GetOriginalString(Call& call, ExceptionReport& report)
   call.SetHandle(Call::Return, &self->mRange.mOriginalString);
 }
 
-void RuneIterator::FindRuneIndexFromIterator(Call& call,
-                                             ExceptionReport& report)
+void RuneIterator::FindRuneIndexFromIterator(Call& call, ExceptionReport& report)
 {
   // for now, just assume the byte index is the same as the rune index
   GetByteIndex(call, report);
@@ -531,8 +469,7 @@ bool RuneIterator::ValidateIteratorPair(RuneIterator& rhs, RuneIterator& lhs)
 
   ExecutableState* state = ExecutableState::CallingState;
   ExceptionReport& report = state->GetCallingReport();
-  state->ThrowException(
-      report, "RuneIterators referencing different strings are invalid.");
+  state->ThrowException(report, "RuneIterators referencing different strings are invalid.");
   return false;
 }
 
@@ -543,8 +480,7 @@ bool RuneIterator::ValidateIteratorOrder(RuneIterator& start, RuneIterator& end)
 
   ExecutableState* state = ExecutableState::CallingState;
   ExceptionReport& report = state->GetCallingReport();
-  state->ThrowException(report,
-                        "A negative substring length is not supported.");
+  state->ThrowException(report, "A negative substring length is not supported.");
   return false;
 }
 
@@ -561,101 +497,37 @@ ZilchDefineType(StringRangeExtended, builder, type)
   type->ToStringFunction = &StringRangeExtended::ToString;
 
   // Range interface
-  builder.AddBoundGetterSetter(type,
-                               "All",
-                               type,
-                               nullptr,
-                               &StringRangeExtended::All,
-                               MemberOptions::None);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &StringRangeExtended::MoveNext,
-                      ZilchNoOverload,
-                      "MoveNext",
-                      nullptr);
-  builder.AddBoundGetterSetter(type,
-                               "Current",
-                               ZilchTypeId(Rune),
-                               nullptr,
-                               &StringRangeExtended::Current,
-                               MemberOptions::None);
-  builder.AddBoundGetterSetter(type,
-                               "Empty",
-                               booleanType,
-                               nullptr,
-                               &StringRangeExtended::Empty,
-                               MemberOptions::None);
-  builder.AddBoundGetterSetter(type,
-                               "IsNotEmpty",
-                               booleanType,
-                               nullptr,
-                               &StringRangeExtended::IsNotEmpty,
-                               MemberOptions::None);
+  builder.AddBoundGetterSetter(type, "All", type, nullptr, &StringRangeExtended::All, MemberOptions::None);
+  ZilchFullBindMethod(builder, type, &StringRangeExtended::MoveNext, ZilchNoOverload, "MoveNext", nullptr);
+  builder.AddBoundGetterSetter(
+      type, "Current", ZilchTypeId(Rune), nullptr, &StringRangeExtended::Current, MemberOptions::None);
+  builder.AddBoundGetterSetter(type, "Empty", booleanType, nullptr, &StringRangeExtended::Empty, MemberOptions::None);
+  builder.AddBoundGetterSetter(
+      type, "IsNotEmpty", booleanType, nullptr, &StringRangeExtended::IsNotEmpty, MemberOptions::None);
 
   builder
-      .AddBoundGetterSetter(type,
-                            "Begin",
-                            iteratorType,
-                            nullptr,
-                            &StringRangeExtended::Begin,
-                            FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Returns the RuneIterator at the start of this range.");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &StringRangeExtended::CompareTo,
-                      ZilchNoOverload,
-                      "CompareTo",
-                      nullptr)
-      ->Description = ZilchDocumentString(
-      "Compares this StringRange to the given StringRange and returns an "
-      "Integer to denote their relative sort order.");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &StringRangeExtended::Contains,
-                      ZilchNoOverload,
-                      "Contains",
-                      nullptr)
-      ->Description = ZilchDocumentString(
-      "Returns if the string Contains the specified substring.");
+      .AddBoundGetterSetter(type, "Begin", iteratorType, nullptr, &StringRangeExtended::Begin, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Returns the RuneIterator at the start of this range.");
+  ZilchFullBindMethod(builder, type, &StringRangeExtended::CompareTo, ZilchNoOverload, "CompareTo", nullptr)
+      ->Description = ZilchDocumentString("Compares this StringRange to the given StringRange and returns an "
+                                          "Integer to denote their relative sort order.");
+  ZilchFullBindMethod(builder, type, &StringRangeExtended::Contains, ZilchNoOverload, "Contains", nullptr)
+      ->Description = ZilchDocumentString("Returns if the string Contains the specified substring.");
+  builder.AddBoundGetterSetter(type, "End", iteratorType, nullptr, &StringRangeExtended::End, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Returns the RuneIterator at the end (one past the "
+                                          "last Rune) of this range.");
+  ZilchFullBindMethod(builder, type, &StringRangeExtended::EndsWith, ZilchNoOverload, "EndsWith", nullptr)
+      ->Description = ZilchDocumentString("Returns true if the string ends with the specified substring.");
   builder
-      .AddBoundGetterSetter(type,
-                            "End",
-                            iteratorType,
-                            nullptr,
-                            &StringRangeExtended::End,
-                            FunctionOptions::None)
-      ->Description =
-      ZilchDocumentString("Returns the RuneIterator at the end (one past the "
-                          "last Rune) of this range.");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &StringRangeExtended::EndsWith,
-                      ZilchNoOverload,
-                      "EndsWith",
-                      nullptr)
-      ->Description = ZilchDocumentString(
-      "Returns true if the string ends with the specified substring.");
+      .AddBoundFunction(
+          type, "FindFirstOf", &StringRangeExtended::FindFirstOf, OneParameter(type), type, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Returns a StringRange that Contains the first "
+                                          "occurrence of given StringRange.");
   builder
-      .AddBoundFunction(type,
-                        "FindFirstOf",
-                        &StringRangeExtended::FindFirstOf,
-                        OneParameter(type),
-                        type,
-                        FunctionOptions::None)
-      ->Description =
-      ZilchDocumentString("Returns a StringRange that Contains the first "
-                          "occurrence of given StringRange.");
-  builder
-      .AddBoundFunction(type,
-                        "FindLastOf",
-                        &StringRangeExtended::FindLastOf,
-                        OneParameter(type),
-                        type,
-                        FunctionOptions::None)
-      ->Description =
-      ZilchDocumentString("Returns a StringRange that Contains the last "
-                          "occurrence of given StringRange.");
+      .AddBoundFunction(
+          type, "FindLastOf", &StringRangeExtended::FindLastOf, OneParameter(type), type, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Returns a StringRange that Contains the last "
+                                          "occurrence of given StringRange.");
   builder
       .AddBoundFunction(type,
                         "FindRangeInclusive",
@@ -663,9 +535,8 @@ ZilchDefineType(StringRangeExtended, builder, type)
                         TwoParameters(type, "startRange", "endRange"),
                         type,
                         FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Finds the first StringRange that starts with 'startRange' and ends with "
-      "'endRange'. This substring includes 'startRange' and 'endRange'.");
+      ->Description = ZilchDocumentString("Finds the first StringRange that starts with 'startRange' and ends with "
+                                          "'endRange'. This substring includes 'startRange' and 'endRange'.");
   builder
       .AddBoundFunction(type,
                         "FindRangeExclusive",
@@ -673,18 +544,11 @@ ZilchDefineType(StringRangeExtended, builder, type)
                         TwoParameters(type, "startRange", "endRange"),
                         type,
                         FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Finds the first StringRange that starts with 'startRange' and ends with "
-      "'endRange'. This substring excludes 'startRange' and 'endRange'.");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &StringRangeExtended::Replace,
-                      ZilchNoOverload,
-                      "Replace",
-                      "oldValue newValue")
-      ->Description =
-      ZilchDocumentString("Returns a new string with all occurances of a "
-                          "substrings replaced with another substring.");
+      ->Description = ZilchDocumentString("Finds the first StringRange that starts with 'startRange' and ends with "
+                                          "'endRange'. This substring excludes 'startRange' and 'endRange'.");
+  ZilchFullBindMethod(builder, type, &StringRangeExtended::Replace, ZilchNoOverload, "Replace", "oldValue newValue")
+      ->Description = ZilchDocumentString("Returns a new string with all occurances of a "
+                                          "substrings replaced with another substring.");
   builder
       .AddBoundFunction(type,
                         "Split",
@@ -692,9 +556,8 @@ ZilchDefineType(StringRangeExtended, builder, type)
                         OneParameter(type, "separator"),
                         splitRangeType,
                         FunctionOptions::None)
-      ->Description =
-      ZilchDocumentString("Splits the string, according to the separator "
-                          "string, into a range of substrings.");
+      ->Description = ZilchDocumentString("Splits the string, according to the separator "
+                                          "string, into a range of substrings.");
   builder
       .AddBoundFunction(type,
                         "SubString",
@@ -702,88 +565,41 @@ ZilchDefineType(StringRangeExtended, builder, type)
                         TwoParameters(iteratorType, "begin", "end"),
                         type,
                         FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Constructs a StringRange from the given begin and end iterators.");
-  builder
-      .AddBoundFunction(
-          type,
-          "SubStringBytes",
-          &StringRangeExtended::SubStringBytes,
-          TwoParameters(integerType, "startByteIndex", "lengthInBytes"),
-          type,
-          FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Constructs a substring based upon a number of bytes. WARNING: strings "
-      "are UTF8 so indexing by bytes could produce unexpected results on "
-      "non-ascii strings.");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &StringRangeExtended::StartsWith,
-                      ZilchNoOverload,
-                      "StartsWith",
-                      nullptr)
-      ->Description = ZilchDocumentString(
-      "Returns true if the string starts with the specified substring.");
+      ->Description = ZilchDocumentString("Constructs a StringRange from the given begin and end iterators.");
   builder
       .AddBoundFunction(type,
-                        "Trim",
-                        &StringRangeExtended::Trim,
-                        ParameterArray(),
+                        "SubStringBytes",
+                        &StringRangeExtended::SubStringBytes,
+                        TwoParameters(integerType, "startByteIndex", "lengthInBytes"),
                         type,
                         FunctionOptions::None)
-      ->Description =
-      ZilchDocumentString("Trims all leading and trailing whitespace.");
+      ->Description = ZilchDocumentString("Constructs a substring based upon a number of bytes. WARNING: strings "
+                                          "are UTF8 so indexing by bytes could produce unexpected results on "
+                                          "non-ascii strings.");
+  ZilchFullBindMethod(builder, type, &StringRangeExtended::StartsWith, ZilchNoOverload, "StartsWith", nullptr)
+      ->Description = ZilchDocumentString("Returns true if the string starts with the specified substring.");
+  builder.AddBoundFunction(type, "Trim", &StringRangeExtended::Trim, ParameterArray(), type, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Trims all leading and trailing whitespace.");
   builder
-      .AddBoundFunction(type,
-                        "TrimEnd",
-                        &StringRangeExtended::TrimEnd,
-                        ParameterArray(),
-                        type,
-                        FunctionOptions::None)
+      .AddBoundFunction(type, "TrimEnd", &StringRangeExtended::TrimEnd, ParameterArray(), type, FunctionOptions::None)
       ->Description = ZilchDocumentString("Trims all trailing whitespace.");
   builder
-      .AddBoundFunction(type,
-                        "TrimStart",
-                        &StringRangeExtended::TrimStart,
-                        ParameterArray(),
-                        type,
-                        FunctionOptions::None)
+      .AddBoundFunction(
+          type, "TrimStart", &StringRangeExtended::TrimStart, ParameterArray(), type, FunctionOptions::None)
       ->Description = ZilchDocumentString("Trims all leading whitespace.");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &StringRangeExtended::ToLower,
-                      ZilchNoOverload,
-                      "ToLower",
-                      nullptr)
-      ->Description = ZilchDocumentString(
-      "Returns a copy of the string that has been converted to lowercase.");
+  ZilchFullBindMethod(builder, type, &StringRangeExtended::ToLower, ZilchNoOverload, "ToLower", nullptr)->Description =
+      ZilchDocumentString("Returns a copy of the string that has been converted to lowercase.");
   builder
-      .AddBoundFunction(type,
-                        "ToString",
-                        &StringRangeExtended::ConvertToString,
-                        ParameterArray(),
-                        stringType,
-                        FunctionOptions::None)
-      ->Description =
-      ZilchDocumentString("Returns a new string of the current range.");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &StringRangeExtended::ToUpper,
-                      ZilchNoOverload,
-                      "ToUpper",
-                      nullptr)
-      ->Description = ZilchDocumentString(
-      "Returns a copy of the string that has been converted to uppercase.");
+      .AddBoundFunction(
+          type, "ToString", &StringRangeExtended::ConvertToString, ParameterArray(), stringType, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Returns a new string of the current range.");
+  ZilchFullBindMethod(builder, type, &StringRangeExtended::ToUpper, ZilchNoOverload, "ToUpper", nullptr)->Description =
+      ZilchDocumentString("Returns a copy of the string that has been converted to uppercase.");
 
   builder
-      .AddBoundGetterSetter(type,
-                            "OriginalString",
-                            stringType,
-                            nullptr,
-                            &StringRangeExtended::GetOriginalString,
-                            FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Returns the entire string that this range was constructed from.");
+      .AddBoundGetterSetter(
+          type, "OriginalString", stringType, nullptr, &StringRangeExtended::GetOriginalString, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Returns the entire string that this range was constructed from.");
   builder
       .AddBoundFunction(type,
                         "RuneIteratorFromByteIndex",
@@ -791,10 +607,9 @@ ZilchDefineType(StringRangeExtended, builder, type)
                         OneParameter(integerType, "byteIndex"),
                         iteratorType,
                         FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Finds the iterator from a byte index. WARNING: Strings are UTF8 and "
-      "constructing an iterator from bytes indices can make an iterator in the "
-      "middle of a rune.");
+      ->Description = ZilchDocumentString("Finds the iterator from a byte index. WARNING: Strings are UTF8 and "
+                                          "constructing an iterator from bytes indices can make an iterator in the "
+                                          "middle of a rune.");
   builder
       .AddBoundFunction(type,
                         "RuneIteratorFromRuneIndex",
@@ -802,10 +617,9 @@ ZilchDefineType(StringRangeExtended, builder, type)
                         OneParameter(integerType, "runeIndex"),
                         iteratorType,
                         FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Finds the iterator from a rune index (the 'character' index). WARNING: "
-      "this may be slow as finding an iterator from rune index requires a "
-      "linear search.");
+      ->Description = ZilchDocumentString("Finds the iterator from a rune index (the 'character' index). WARNING: "
+                                          "this may be slow as finding an iterator from rune index requires a "
+                                          "linear search.");
 }
 
 String StringRangeExtended::ToString(const BoundType* type, const byte* data)
@@ -827,8 +641,7 @@ void StringRangeExtended::MoveNext()
 
 void StringRangeExtended::Current(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
 
   Rune rune;
   if (!self->mRange.Empty())
@@ -838,34 +651,29 @@ void StringRangeExtended::Current(Call& call, ExceptionReport& report)
 
 void StringRangeExtended::Empty(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
 
   call.Set(Call::Return, self->mRange.Empty());
 }
 
 void StringRangeExtended::IsNotEmpty(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
 
   call.Set(Call::Return, !self->mRange.Empty());
 }
 
 void StringRangeExtended::Begin(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
 
-  StringRange result =
-      StringRange(self->mRange.Begin(), self->mOriginalStringReference.End());
+  StringRange result = StringRange(self->mRange.Begin(), self->mOriginalStringReference.End());
   SetResultIterator(call, report, result);
 }
 
 void StringRangeExtended::ConvertToString(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
 
   if (ValidateRange(self->mOriginalStringReference, self->mRange) == false)
     return;
@@ -886,11 +694,9 @@ bool StringRangeExtended::Contains(StringRangeExtended string)
 
 void StringRangeExtended::End(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
 
-  StringRange result =
-      StringRange(self->mRange.End(), self->mOriginalStringReference.End());
+  StringRange result = StringRange(self->mRange.End(), self->mOriginalStringReference.End());
   SetResultIterator(call, report, result);
 }
 
@@ -901,8 +707,7 @@ bool StringRangeExtended::EndsWith(StringRangeExtended subString)
 
 void StringRangeExtended::FindFirstOf(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
   StringRangeExtended* searchRange = call.GetNonNull<StringRangeExtended*>(0);
 
   if (report.HasThrownExceptions())
@@ -917,8 +722,7 @@ void StringRangeExtended::FindFirstOf(Call& call, ExceptionReport& report)
 
 void StringRangeExtended::FindLastOf(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
   StringRangeExtended* searchRange = call.GetNonNull<StringRangeExtended*>(0);
 
   if (report.HasThrownExceptions())
@@ -931,11 +735,9 @@ void StringRangeExtended::FindLastOf(Call& call, ExceptionReport& report)
   SetResultStringRange(call, report, self->mOriginalStringReference, result);
 }
 
-void StringRangeExtended::FindRangeExclusive(Call& call,
-                                             ExceptionReport& report)
+void StringRangeExtended::FindRangeExclusive(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
   StringRangeExtended* beginRange = call.GetNonNull<StringRangeExtended*>(0);
   StringRangeExtended* endRange = call.GetNonNull<StringRangeExtended*>(1);
 
@@ -945,16 +747,13 @@ void StringRangeExtended::FindRangeExclusive(Call& call,
   if (ValidateRange(self->mOriginalStringReference, self->mRange) == false)
     return;
 
-  StringRange result =
-      self->mRange.FindRangeExclusive(beginRange->mRange, endRange->mRange);
+  StringRange result = self->mRange.FindRangeExclusive(beginRange->mRange, endRange->mRange);
   SetResultStringRange(call, report, self->mOriginalStringReference, result);
 }
 
-void StringRangeExtended::FindRangeInclusive(Call& call,
-                                             ExceptionReport& report)
+void StringRangeExtended::FindRangeInclusive(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
   StringRangeExtended* beginRange = call.GetNonNull<StringRangeExtended*>(0);
   StringRangeExtended* endRange = call.GetNonNull<StringRangeExtended*>(1);
 
@@ -964,48 +763,37 @@ void StringRangeExtended::FindRangeInclusive(Call& call,
   if (ValidateRange(self->mOriginalStringReference, self->mRange) == false)
     return;
 
-  StringRange result =
-      self->mRange.FindRangeInclusive(beginRange->mRange, endRange->mRange);
+  StringRange result = self->mRange.FindRangeInclusive(beginRange->mRange, endRange->mRange);
   SetResultStringRange(call, report, self->mOriginalStringReference, result);
 }
 
-String StringRangeExtended::Replace(StringRangeExtended oldValue,
-                                    StringRangeExtended newValue)
+String StringRangeExtended::Replace(StringRangeExtended oldValue, StringRangeExtended newValue)
 {
   return mRange.Replace(oldValue.mRange, newValue.mRange);
 }
 
-void StringRangeExtended::RuneIteratorFromByteIndex(Call& call,
-                                                    ExceptionReport& report)
+void StringRangeExtended::RuneIteratorFromByteIndex(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
   int byteIndex = call.Get<int>(0);
 
-  RuneIteratorFromByteIndexInternal(
-      call, report, self->mOriginalStringReference, self->mRange, byteIndex);
+  RuneIteratorFromByteIndexInternal(call, report, self->mOriginalStringReference, self->mRange, byteIndex);
 }
 
 void StringRangeExtended::RuneIteratorFromByteIndexInternal(
-    Call& call,
-    ExceptionReport& report,
-    StringParam strRef,
-    StringRange range,
-    int byteIndex)
+    Call& call, ExceptionReport& report, StringParam strRef, StringRange range, int byteIndex)
 {
   int sizeInBytes = (int)range.SizeInBytes();
 
   if (byteIndex < 0)
   {
-    call.GetState()->ThrowException(report,
-                                    "A negative byte index is not supported");
+    call.GetState()->ThrowException(report, "A negative byte index is not supported");
     return;
   }
 
   if (byteIndex >= sizeInBytes)
   {
-    call.GetState()->ThrowException(
-        report, "Byte index is greater than the size of the range");
+    call.GetState()->ThrowException(report, "Byte index is greater than the size of the range");
     return;
   }
   cstr byteStart = range.Data() + byteIndex;
@@ -1014,28 +802,20 @@ void StringRangeExtended::RuneIteratorFromByteIndexInternal(
   SetResultIterator(call, report, result);
 }
 
-void StringRangeExtended::RuneIteratorFromRuneIndex(Call& call,
-                                                    ExceptionReport& report)
+void StringRangeExtended::RuneIteratorFromRuneIndex(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
   int byteIndex = call.Get<int>(0);
 
-  RuneIteratorFromRuneIndexInternal(
-      call, report, self->mOriginalStringReference, self->mRange, byteIndex);
+  RuneIteratorFromRuneIndexInternal(call, report, self->mOriginalStringReference, self->mRange, byteIndex);
 }
 
 void StringRangeExtended::RuneIteratorFromRuneIndexInternal(
-    Call& call,
-    ExceptionReport& report,
-    StringParam strRef,
-    StringRange range,
-    int runeIndex)
+    Call& call, ExceptionReport& report, StringParam strRef, StringRange range, int runeIndex)
 {
   if (runeIndex < 0)
   {
-    call.GetState()->ThrowException(report,
-                                    "A negative rune index is not supported");
+    call.GetState()->ThrowException(report, "A negative rune index is not supported");
     return;
   }
 
@@ -1046,8 +826,7 @@ void StringRangeExtended::RuneIteratorFromRuneIndexInternal(
 
 void StringRangeExtended::Split(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
   StringRangeExtended* separatorStr = call.GetNonNull<StringRangeExtended*>(0);
 
   if (report.HasThrownExceptions())
@@ -1056,10 +835,7 @@ void StringRangeExtended::Split(Call& call, ExceptionReport& report)
   if (ValidateRange(self->mOriginalStringReference, self->mRange) == false)
     return;
 
-  SetResultStringSplitRange(call,
-                            report,
-                            self->mOriginalStringReference,
-                            self->mRange.Split(separatorStr->mRange));
+  SetResultStringSplitRange(call, report, self->mOriginalStringReference, self->mRange.Split(separatorStr->mRange));
 }
 
 bool StringRangeExtended::StartsWith(StringRangeExtended subString)
@@ -1069,8 +845,7 @@ bool StringRangeExtended::StartsWith(StringRangeExtended subString)
 
 void StringRangeExtended::SubString(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
   RuneIterator& beginIterator = *call.GetNonNull<RuneIterator*>(0);
   RuneIterator& endIterator = *call.GetNonNull<RuneIterator*>(1);
 
@@ -1081,26 +856,22 @@ void StringRangeExtended::SubString(Call& call, ExceptionReport& report)
   // All validations present contains the zilch throw exception so just return
   if (RuneIterator::ValidateIteratorPair(beginIterator, endIterator) == false)
     return;
-  if (StringRangeExtended::ValidateRange(originalString,
-                                         beginIterator.mRange) == false)
+  if (StringRangeExtended::ValidateRange(originalString, beginIterator.mRange) == false)
     return;
-  if (StringRangeExtended::ValidateRange(originalString, endIterator.mRange) ==
-      false)
+  if (StringRangeExtended::ValidateRange(originalString, endIterator.mRange) == false)
     return;
   if (RuneIterator::ValidateIteratorOrder(beginIterator, endIterator) == false)
     return;
 
-  SetResultStringRange(
-      call,
-      report,
-      self->mOriginalStringReference,
-      StringRange(beginIterator.mRange.Begin(), endIterator.mRange.Begin()));
+  SetResultStringRange(call,
+                       report,
+                       self->mOriginalStringReference,
+                       StringRange(beginIterator.mRange.Begin(), endIterator.mRange.Begin()));
 }
 
 void StringRangeExtended::SubStringBytes(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
   int bytesStart = call.Get<int>(0);
   int bytesLength = call.Get<int>(1);
 
@@ -1113,8 +884,7 @@ void StringRangeExtended::SubStringBytes(Call& call, ExceptionReport& report)
 
 void StringRangeExtended::Trim(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
 
   if (ValidateRange(self->mOriginalStringReference, self->mRange) == false)
     return;
@@ -1125,8 +895,7 @@ void StringRangeExtended::Trim(Call& call, ExceptionReport& report)
 
 void StringRangeExtended::TrimEnd(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
 
   if (ValidateRange(self->mOriginalStringReference, self->mRange) == false)
     return;
@@ -1137,8 +906,7 @@ void StringRangeExtended::TrimEnd(Call& call, ExceptionReport& report)
 
 void StringRangeExtended::TrimStart(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
 
   if (ValidateRange(self->mOriginalStringReference, self->mRange) == false)
     return;
@@ -1165,33 +933,26 @@ void StringRangeExtended::SetResultStringRange(Call& call,
 {
   Handle rangeHandle = call.GetState()->AllocateDefaultConstructedHeapObject(
       ZilchTypeId(StringRangeExtended), report, HeapFlags::ReferenceCounted);
-  StringRangeExtended& stringRange =
-      *(StringRangeExtended*)rangeHandle.Dereference();
+  StringRangeExtended& stringRange = *(StringRangeExtended*)rangeHandle.Dereference();
   stringRange.mOriginalStringReference = strRef;
   stringRange.mRange = result;
   call.SetHandle(Call::Return, rangeHandle);
 }
 
-void StringRangeExtended::SetResultStringSplitRange(
-    Call& call,
-    ExceptionReport& report,
-    StringParam strRef,
-    const Zero::StringSplitRange& result)
+void StringRangeExtended::SetResultStringSplitRange(Call& call,
+                                                    ExceptionReport& report,
+                                                    StringParam strRef,
+                                                    const Zero::StringSplitRange& result)
 {
   Handle rangeHandle =
-      call.GetState()->AllocateHeapObject(ZilchTypeId(StringSplitRangeExtended),
-                                          report,
-                                          HeapFlags::ReferenceCounted);
-  StringSplitRangeExtended& stringRange =
-      *(StringSplitRangeExtended*)rangeHandle.Dereference();
+      call.GetState()->AllocateHeapObject(ZilchTypeId(StringSplitRangeExtended), report, HeapFlags::ReferenceCounted);
+  StringSplitRangeExtended& stringRange = *(StringSplitRangeExtended*)rangeHandle.Dereference();
   stringRange.mOriginalStringReference = strRef;
   stringRange.mSplitRange = result;
   call.SetHandle(Call::Return, rangeHandle);
 }
 
-void StringRangeExtended::SetResultIterator(Call& call,
-                                            ExceptionReport& report,
-                                            StringRange result)
+void StringRangeExtended::SetResultIterator(Call& call, ExceptionReport& report, StringRange result)
 {
   Handle rangeHandle = call.GetState()->AllocateDefaultConstructedHeapObject(
       ZilchTypeId(RuneIterator), report, HeapFlags::ReferenceCounted);
@@ -1202,22 +963,19 @@ void StringRangeExtended::SetResultIterator(Call& call,
 
 void StringRangeExtended::GetOriginalString(Call& call, ExceptionReport& report)
 {
-  StringRangeExtended* self =
-      (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
 
   call.SetHandle(Call::Return, &self->mOriginalStringReference);
 }
 
-bool StringRangeExtended::ValidateRange(StringParam strRef,
-                                        const StringRange& range)
+bool StringRangeExtended::ValidateRange(StringParam strRef, const StringRange& range)
 {
   // the range is empty so it's always valid
   if (range.Begin() == range.End())
     return true;
 
-  if (range.Begin() < strRef.Begin() || range.Begin() > strRef.End() ||
-      range.End() < strRef.Begin() || range.End() > strRef.End() ||
-      range.Begin() > range.End())
+  if (range.Begin() < strRef.Begin() || range.Begin() > strRef.End() || range.End() < strRef.Begin() ||
+      range.End() > strRef.End() || range.Begin() > range.End())
   {
     ExecutableState* state = ExecutableState::CallingState;
     ExceptionReport& report = state->GetCallingReport();
@@ -1235,30 +993,17 @@ ZilchDefineType(StringSplitRangeExtended, builder, type)
   ZilchFullBindDestructor(builder, type, StringRangeExtended);
 
   // Range interface
-  builder.AddBoundGetterSetter(type,
-                               "All",
-                               type,
-                               nullptr,
-                               &StringSplitRangeExtended::All,
-                               MemberOptions::None);
-  builder.AddBoundFunction(type,
-                           "MoveNext",
-                           &StringSplitRangeExtended::MoveNext,
-                           ParameterArray(),
-                           ZilchTypeId(void),
-                           MemberOptions::None);
+  builder.AddBoundGetterSetter(type, "All", type, nullptr, &StringSplitRangeExtended::All, MemberOptions::None);
+  builder.AddBoundFunction(
+      type, "MoveNext", &StringSplitRangeExtended::MoveNext, ParameterArray(), ZilchTypeId(void), MemberOptions::None);
   builder.AddBoundGetterSetter(type,
                                "Current",
                                ZilchTypeId(StringRangeExtended),
                                nullptr,
                                &StringSplitRangeExtended::Current,
                                MemberOptions::None);
-  builder.AddBoundGetterSetter(type,
-                               "IsNotEmpty",
-                               ZilchTypeId(Boolean),
-                               nullptr,
-                               &StringSplitRangeExtended::IsNotEmpty,
-                               MemberOptions::None);
+  builder.AddBoundGetterSetter(
+      type, "IsNotEmpty", ZilchTypeId(Boolean), nullptr, &StringSplitRangeExtended::IsNotEmpty, MemberOptions::None);
 }
 
 void StringSplitRangeExtended::All(Call& call, ExceptionReport& report)
@@ -1268,24 +1013,20 @@ void StringSplitRangeExtended::All(Call& call, ExceptionReport& report)
 
 void StringSplitRangeExtended::MoveNext(Call& call, ExceptionReport& report)
 {
-  StringSplitRangeExtended* self =
-      (StringSplitRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringSplitRangeExtended* self = (StringSplitRangeExtended*)call.GetHandle(Call::This).Dereference();
   self->mSplitRange.PopFront();
 }
 
 void StringSplitRangeExtended::Current(Call& call, ExceptionReport& report)
 {
-  StringSplitRangeExtended* self =
-      (StringSplitRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringSplitRangeExtended* self = (StringSplitRangeExtended*)call.GetHandle(Call::This).Dereference();
 
-  StringRangeExtended::SetResultStringRange(
-      call, report, self->mOriginalStringReference, self->mSplitRange.Front());
+  StringRangeExtended::SetResultStringRange(call, report, self->mOriginalStringReference, self->mSplitRange.Front());
 }
 
 void StringSplitRangeExtended::IsNotEmpty(Call& call, ExceptionReport& report)
 {
-  StringSplitRangeExtended* self =
-      (StringSplitRangeExtended*)call.GetHandle(Call::This).Dereference();
+  StringSplitRangeExtended* self = (StringSplitRangeExtended*)call.GetHandle(Call::This).Dereference();
   call.Set(Call::Return, !self->mSplitRange.Empty());
 }
 } // namespace Zilch

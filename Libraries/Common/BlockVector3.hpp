@@ -98,10 +98,7 @@ struct ZeroShared BlockCgPolicy
 
   // v1 * scalar + v2
   // out is assumed to only ever be aliased as v2
-  void MultiplyAdd(const BlockVector3& v1,
-                   real scalar,
-                   BlockVector3& v2,
-                   BlockVector3* out)
+  void MultiplyAdd(const BlockVector3& v1, real scalar, BlockVector3& v2, BlockVector3* out)
   {
     uint size = v1.GetSize();
     for (uint i = 0; i < size; ++i)
@@ -112,10 +109,7 @@ struct ZeroShared BlockCgPolicy
 
   //-(v1 * scalar - v2) = v2 - v1 * scalar
   // out is assumed to only ever be aliased as v2
-  void MultiplySubtract(const BlockVector3& v1,
-                        real scalar,
-                        BlockVector3& v2,
-                        BlockVector3* out)
+  void MultiplySubtract(const BlockVector3& v1, real scalar, BlockVector3& v2, BlockVector3* out)
   {
     uint size = v1.GetSize();
     for (uint i = 0; i < size; ++i)
@@ -126,10 +120,7 @@ struct ZeroShared BlockCgPolicy
 
   //-(mat * v1 - v2) = v2 - mat * v1
   // out is assumed to only ever be aliased as v2
-  void NegativeTransformSubtract(const BlockMatrix3& mat,
-                                 const BlockVector3& v1,
-                                 BlockVector3& v2,
-                                 BlockVector3* out)
+  void NegativeTransformSubtract(const BlockMatrix3& mat, const BlockVector3& v1, BlockVector3& v2, BlockVector3* out)
   {
     uint size = v1.GetSize();
     for (uint i = 0; i < size; ++i)

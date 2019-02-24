@@ -60,15 +60,11 @@ struct Aabb
   void Transform(Mat3Param rot);
 
   /// Computes an aabb of this aabb after it is transform by the given values.
-  Aabb TransformAabbInternal(Vec3Param worldScale,
-                             Mat3Param worldRotation,
-                             Vec3Param worldTranslation) const;
+  Aabb TransformAabbInternal(Vec3Param worldScale, Mat3Param worldRotation, Vec3Param worldTranslation) const;
   /// Transform's a local space aabb into world space. This transform properly
   /// deals with
   // a local-space aabb that isn't centered at the origin
-  Aabb TransformAabb(Vec3Param worldScale,
-                     Mat3Param worldRotation,
-                     Vec3Param worldTranslation) const;
+  Aabb TransformAabb(Vec3Param worldScale, Mat3Param worldRotation, Vec3Param worldTranslation) const;
   /// First properly translates the aabb to the center, then transforms by the
   /// passed in transformation, then properly translates back with the correct
   /// offset.

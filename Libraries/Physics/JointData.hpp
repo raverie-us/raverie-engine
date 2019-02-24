@@ -68,15 +68,9 @@ struct JointMass
 struct Jacobian
 {
   Jacobian();
-  Jacobian(Vec3Param linear0,
-           Vec3Param angular0,
-           Vec3Param linear1,
-           Vec3Param angular1);
+  Jacobian(Vec3Param linear0, Vec3Param angular0, Vec3Param linear1, Vec3Param angular1);
 
-  void Set(Vec3Param linear0,
-           Vec3Param angular0,
-           Vec3Param linear1,
-           Vec3Param angular1);
+  void Set(Vec3Param linear0, Vec3Param angular0, Vec3Param linear1, Vec3Param angular1);
   real ComputeMass(Mass M0, Mat3Param I0, Mass M1, Mat3Param I1) const;
   real ComputeMass(JointMass& masses);
   real ComputeJV(Vec3Param v0, Vec3Param w0, Vec3Param v1, Vec3Param w1) const;

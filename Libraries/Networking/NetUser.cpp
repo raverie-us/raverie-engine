@@ -36,13 +36,7 @@ ZilchDefineType(NetUser, builder, type)
   ZilchBindMethodProperty(ReleaseOwnedNetObjects)->Add(new EditInGameFilter);
 }
 
-NetUser::NetUser() :
-    NetObject(),
-    mNetPeerId(0),
-    mNetUserId(0),
-    mOwnedNetObjects(),
-    mRequestBundle(),
-    mResponseBundle()
+NetUser::NetUser() : NetObject(), mNetPeerId(0), mNetUserId(0), mOwnedNetObjects(), mRequestBundle(), mResponseBundle()
 {
 }
 
@@ -85,8 +79,7 @@ void NetUser::Initialize(CogInitializer& initializer)
     return;
 
   // Connect event handlers
-  ConnectThisTo(
-      owner, Events::RegisterCppNetProperties, OnRegisterCppNetProperties);
+  ConnectThisTo(owner, Events::RegisterCppNetProperties, OnRegisterCppNetProperties);
 
   // Initialize as net object
   NetObject::Initialize(initializer);
@@ -121,11 +114,9 @@ void NetUser::OnRegisterCppNetProperties(RegisterCppNetProperties* event)
   NetChannel* netUserChannel = AddNetChannel("NetUser");
   if (!netUserChannel) // Unable?
   {
-    DoNotifyError(
-        "Unable to Add NetUser C++ NetProperties",
-        String::Format(
-            "Unable to add built-in 'NetUser' channel on the NetUser '%s'",
-            owner->GetDescription().c_str()));
+    DoNotifyError("Unable to Add NetUser C++ NetProperties",
+                  String::Format("Unable to add built-in 'NetUser' channel on the NetUser '%s'",
+                                 owner->GetDescription().c_str()));
     return;
   }
 
@@ -139,28 +130,24 @@ void NetUser::OnRegisterCppNetProperties(RegisterCppNetProperties* event)
 
   // Add network peer ID net property (replicates adding network peer ID
   // changes)
-  NetProperty* netPeerIdProperty =
-      netUserChannel->AddBasicNetProperty("NetPeerId", mNetPeerId);
+  NetProperty* netPeerIdProperty = netUserChannel->AddBasicNetProperty("NetPeerId", mNetPeerId);
   if (!netPeerIdProperty) // Unable?
   {
-    DoNotifyError(
-        "Unable to Add NetUser C++ NetProperties",
-        String::Format("Unable to add built-in 'NetPeerId' NetProperty to the "
-                       "'NetUser' channel on the NetUser '%s'",
-                       owner->GetDescription().c_str()));
+    DoNotifyError("Unable to Add NetUser C++ NetProperties",
+                  String::Format("Unable to add built-in 'NetPeerId' NetProperty to the "
+                                 "'NetUser' channel on the NetUser '%s'",
+                                 owner->GetDescription().c_str()));
     return;
   }
 
   // Add network user ID net property (replicates network user ID changes)
-  NetProperty* netUserIdProperty =
-      netUserChannel->AddBasicNetProperty("NetUserId", mNetUserId);
+  NetProperty* netUserIdProperty = netUserChannel->AddBasicNetProperty("NetUserId", mNetUserId);
   if (!netUserIdProperty) // Unable?
   {
-    DoNotifyError(
-        "Unable to Add NetUser C++ NetProperties",
-        String::Format("Unable to add built-in 'NetUserId' NetProperty to the "
-                       "'NetUser' channel on the NetUser '%s'",
-                       owner->GetDescription().c_str()));
+    DoNotifyError("Unable to Add NetUser C++ NetProperties",
+                  String::Format("Unable to add built-in 'NetUserId' NetProperty to the "
+                                 "'NetUser' channel on the NetUser '%s'",
+                                 owner->GetDescription().c_str()));
     return;
   }
 }
@@ -236,19 +223,19 @@ void NetUser::HandleNetObjectOfflinePostDispatch(NetObjectOffline* event)
 // Ownership Interface
 //
 
-Cog* NetUser::FindOwnedNetObjectByNameInSpace(StringParam name,
-                                              Space* space) const
+Cog* NetUser::FindOwnedNetObjectByNameInSpace(StringParam name, Space* space) const
 {
-  forRange(Cog * cog,
-           GetOwnedNetObjects()) if (cog->GetSpace() == space &&
-                                     cog->GetName() == name) return cog;
+  forRange (Cog* cog, GetOwnedNetObjects())
+    if (cog->GetSpace() == space && cog->GetName() == name)
+      return cog;
 
   return nullptr;
 }
 Cog* NetUser::FindOwnedNetObjectByName(StringParam name) const
 {
-  forRange(Cog * cog,
-           GetOwnedNetObjects()) if (cog->GetName() == name) return cog;
+  forRange (Cog* cog, GetOwnedNetObjects())
+    if (cog->GetName() == name)
+      return cog;
 
   return nullptr;
 }
@@ -268,7 +255,7 @@ void NetUser::ReleaseOwnedNetObjects()
   {
     // Release ownership of all net objects owned by the user
     CogHashSetRange objects = GetOwnedNetObjects();
-    forRange(Cog * cog, objects)
+    forRange (Cog* cog, objects)
     {
       // Get cog
       if (!cog) // Unable?
@@ -291,8 +278,7 @@ void NetUser::ReleaseOwnedNetObjects()
 NetUserRange::NetUserRange() : NetUserSet::range()
 {
 }
-NetUserRange::NetUserRange(const NetUserSet::range& rhs) :
-    NetUserSet::range(rhs)
+NetUserRange::NetUserRange(const NetUserSet::range& rhs) : NetUserSet::range(rhs)
 {
 }
 
@@ -301,8 +287,7 @@ NetUserRange::NetUserRange(const NetUserSet::range& rhs) :
 PendingNetUser::PendingNetUser() : mOurRequestBundle()
 {
 }
-PendingNetUser::PendingNetUser(GameSession* gameSession) :
-    mOurRequestBundle(gameSession)
+PendingNetUser::PendingNetUser(GameSession* gameSession) : mOurRequestBundle(gameSession)
 {
 }
 

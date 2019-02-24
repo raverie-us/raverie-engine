@@ -36,8 +36,7 @@ Vec3 SolveGyroscopic(RigidBody* body, float dt)
   Quat invRotation = rotation.Inverted();
   Vec3 bodyOmega = Math::Multiply(invRotation, angularVelocity);
   // Compute the residual vector
-  Vec3 residual =
-      dt * Math::Cross(bodyOmega, Math::Transform(inertiaBody, bodyOmega));
+  Vec3 residual = dt * Math::Cross(bodyOmega, Math::Transform(inertiaBody, bodyOmega));
   // Compute the jacobian
   Mat3 term1 = Math::Multiply(Math::SkewSymmetric(bodyOmega), inertiaBody);
   Mat3 term2 = Math::SkewSymmetric(Math::Transform(inertiaBody, bodyOmega));
@@ -153,8 +152,7 @@ void Integration::IntegrateRk2Velocity(RigidBody* body, real dt)
   body->mAngularVelocityOld = body->mAngularVelocity;
 
   // Integrate velocity and position
-  body->mVelocity = Math::MultiplyAdd(
-      body->mVelocity, body->mInvMass.Apply(body->mForceAccumulator), dt);
+  body->mVelocity = Math::MultiplyAdd(body->mVelocity, body->mInvMass.Apply(body->mForceAccumulator), dt);
   // Use superposition rule to split integration into an explicit and implicit
   // step
   Vec3 explicitW = body->mInvInertia.Apply(body->mTorqueAccumulator) * dt;
@@ -165,16 +163,13 @@ void Integration::IntegrateRk2Velocity(RigidBody* body, real dt)
   // in particular)
   real maxVel = body->mSpace->mMaxVelocity;
   body->mVelocity = Math::Clamped(body->mVelocity, -maxVel, maxVel);
-  body->mAngularVelocity =
-      Math::Clamped(body->mAngularVelocity, -maxVel, maxVel);
+  body->mAngularVelocity = Math::Clamped(body->mAngularVelocity, -maxVel, maxVel);
 }
 
 void Integration::IntegrateRk2Position(RigidBody* body, real dt)
 {
   Vec3 newVelocity = body->mVelocity;
-  newVelocity = Math::MultiplyAdd(newVelocity,
-                                  body->mInvMass.Apply(body->mForceAccumulator),
-                                  dt * real(.5));
+  newVelocity = Math::MultiplyAdd(newVelocity, body->mInvMass.Apply(body->mForceAccumulator), dt * real(.5));
   newVelocity *= dt;
   Vec3 newRotation = body->mAngularVelocity;
 
@@ -195,9 +190,7 @@ void Integration::IntegrateRk2Position(RigidBody* body, real dt)
   body->UpdateOrientation(Orientation);
 }
 
-Vec3 Integration::VelocityApproximation(Vec3Param startPosition,
-                                        Vec3Param endPosition,
-                                        real dt)
+Vec3 Integration::VelocityApproximation(Vec3Param startPosition, Vec3Param endPosition, real dt)
 {
   if (dt == real(0.0))
     return Vec3::cZero;
@@ -206,9 +199,7 @@ Vec3 Integration::VelocityApproximation(Vec3Param startPosition,
   return (endPosition - startPosition) * framerate;
 }
 
-Vec3 Integration::AngularVelocityApproximation(QuatParam startRotation,
-                                               QuatParam endRotation,
-                                               real dt)
+Vec3 Integration::AngularVelocityApproximation(QuatParam startRotation, QuatParam endRotation, real dt)
 {
   if (dt == real(0.0))
     return Vec3::cZero;
@@ -219,9 +210,7 @@ Vec3 Integration::AngularVelocityApproximation(QuatParam startRotation,
   return Vec3(orientationDelta.V3()) * 2 * framerate;
 }
 
-Vec3 Integration::AngularVelocityApproximation(Mat3Param startRotation,
-                                               Mat3Param endRotation,
-                                               real dt)
+Vec3 Integration::AngularVelocityApproximation(Mat3Param startRotation, Mat3Param endRotation, real dt)
 {
   if (dt == real(0.0))
     return Vec3::cZero;

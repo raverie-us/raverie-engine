@@ -86,23 +86,17 @@ public:
 
   typedef bool (*CogSelectFilter)(Cog*, Cog*);
 
-  static Cog* WalkRayCast(Cog* current,
-                          RaycastResultList& result,
-                          CogSelectFilter func);
+  static Cog* WalkRayCast(Cog* current, RaycastResultList& result, CogSelectFilter func);
   // Checks the object to select against the archetype selection setup if it is
   // an archetype
   static Cog* ArchetypeSelect(MetaSelection* selection, Cog* toSelect);
   // Check the object to select in the context of an archetype or hierarchy
   // depending on the selection options
-  static Cog* SmartSelect(MetaSelection* selection,
-                          Cog* toSelect,
-                          bool rootSelect,
-                          bool archetypeSelect);
+  static Cog* SmartSelect(MetaSelection* selection, Cog* toSelect, bool rootSelect, bool archetypeSelect);
 
   void Select(ViewportMouseEvent* e);
   SelectionResult RayCastSelect(Viewport* viewport, Vec2 mousePosition);
-  RaycastResultList RayCastSelectInternal(Viewport* viewport,
-                                          Vec2 mousePosition);
+  RaycastResultList RayCastSelectInternal(Viewport* viewport, Vec2 mousePosition);
 
   Cog* RayCast(Viewport* viewport, Vec2 mousePosition);
 
@@ -131,13 +125,7 @@ public:
   Raycaster mRaycaster;
 };
 
-DeclareEnum6(Placement,
-             OnTop,
-             LookAtPlane,
-             LookAtPoint,
-             ViewAtDepth,
-             CameraLocation,
-             PlaneXY);
+DeclareEnum6(Placement, OnTop, LookAtPlane, LookAtPoint, ViewAtDepth, CameraLocation, PlaneXY);
 
 class CreationTool : public Component
 {
@@ -164,20 +152,12 @@ public:
 
   /// Functions
   void UpdateMouse(Viewport* viewport, Vec2 screenPosition);
-  Cog* CreateAt(Viewport* viewport,
-                Archetype* archetypeName,
-                Vec3Param position);
-  Cog* CreateWithViewport(Viewport* viewport,
-                          Vec2 screenPosition,
-                          StringParam archetypeName);
-  Cog* CreateWithViewport(Viewport* viewport,
-                          Vec2 screenPosition,
-                          Archetype* archetype);
+  Cog* CreateAt(Viewport* viewport, Archetype* archetypeName, Vec3Param position);
+  Cog* CreateWithViewport(Viewport* viewport, Vec2 screenPosition, StringParam archetypeName);
+  Cog* CreateWithViewport(Viewport* viewport, Vec2 screenPosition, Archetype* archetype);
 
   Vec3 PointOnViewPlane(EditorCameraController* controller, Ray& worldRay);
-  Vec3 PointOnTopOrViewPlane(Viewport* viewport,
-                             EditorCameraController* controller,
-                             Ray& worldRay);
+  Vec3 PointOnTopOrViewPlane(Viewport* viewport, EditorCameraController* controller, Ray& worldRay);
   Vec3 GetPlacementLocation(Viewport* viewport, Vec2 screenPosition);
 
   /// The object that is spawned.

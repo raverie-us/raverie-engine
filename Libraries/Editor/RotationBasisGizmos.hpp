@@ -17,8 +17,7 @@ DeclareEvent(RotationBasisAabbQuery);
 class RotationBasisGizmoInitializationEvent : public ObjectEvent
 {
 public:
-  ZilchDeclareType(RotationBasisGizmoInitializationEvent,
-                   TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RotationBasisGizmoInitializationEvent, TypeCopyMode::ReferenceType);
 
   RotationBasisGizmoInitializationEvent();
 
@@ -29,8 +28,7 @@ public:
 class RotationBasisGizmoAabbQueryEvent : public ObjectEvent
 {
 public:
-  ZilchDeclareType(RotationBasisGizmoAabbQueryEvent,
-                   TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RotationBasisGizmoAabbQueryEvent, TypeCopyMode::ReferenceType);
 
   RotationBasisGizmoAabbQueryEvent();
 
@@ -41,8 +39,7 @@ public:
 /// selection).
 class RotationBasisGizmoMetaTransform : public MetaTransform
 {
-  ZilchDeclareType(RotationBasisGizmoMetaTransform,
-                   TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RotationBasisGizmoMetaTransform, TypeCopyMode::ReferenceType);
   MetaTransformInstance GetInstance(HandleParam object) override;
 };
 
@@ -73,9 +70,7 @@ public:
   // Set ourself as the active selection. Used so that the world rotation can be
   // modified as a property.
   void SetAsSelection();
-  void DrawBasisText(QuatParam axisRotation,
-                     StringParam axisText,
-                     Vec3Param localOffset);
+  void DrawBasisText(QuatParam axisRotation, StringParam axisText, Vec3Param localOffset);
 
   /// Get the aabb of everything currently selected by this gizmo
   Aabb GetSelectionAabb();
@@ -144,9 +139,7 @@ public:
   void CacheRotation(OrientationBasisProperty& prop);
   void UpdateRotation(OrientationBasisProperty& prop, QuatParam rotation);
   void RevertRotation(OrientationBasisProperty& prop);
-  void QueueRotationsWithUndo(OperationQueue* queue,
-                              OrientationBasisProperty& prop,
-                              QuatParam rotation);
+  void QueueRotationsWithUndo(OperationQueue* queue, OrientationBasisProperty& prop, QuatParam rotation);
   Vec3 GetWorldTranslation(OrientationBasisProperty& prop);
   Quat GetLocalBasis(Orientation* orientation);
   Quat GetWorldRotation(OrientationBasisProperty& prop);
@@ -189,9 +182,7 @@ public:
   void CacheRotation(SimpleBasisProperty& prop);
   void UpdateRotation(SimpleBasisProperty& prop, QuatParam rotation);
   void RevertRotation(SimpleBasisProperty& prop);
-  void QueueRotationsWithUndo(OperationQueue* queue,
-                              SimpleBasisProperty& prop,
-                              QuatParam rotation);
+  void QueueRotationsWithUndo(OperationQueue* queue, SimpleBasisProperty& prop, QuatParam rotation);
   Vec3 GetWorldTranslation(SimpleBasisProperty& prop);
   Quat GetWorldRotation(SimpleBasisProperty& prop);
   void SetWorldRotation(SimpleBasisProperty& prop, QuatParam rotation);
@@ -235,18 +226,14 @@ public:
   void CacheRotation(RevoluteJointBasisProperty& prop);
   void UpdateRotation(RevoluteJointBasisProperty& prop, QuatParam rotation);
   void RevertRotation(RevoluteJointBasisProperty& prop);
-  void QueueRotationsWithUndo(OperationQueue* queue,
-                              RevoluteJointBasisProperty& prop,
-                              QuatParam rotation);
+  void QueueRotationsWithUndo(OperationQueue* queue, RevoluteJointBasisProperty& prop, QuatParam rotation);
   Vec3 GetWorldTranslation(RevoluteJointBasisProperty& prop);
   Quat GetWorldBasis(RevoluteJointBasisProperty& prop);
   void SetWorldBasis(RevoluteJointBasisProperty& prop, QuatParam worldBasis);
 
   Quat GetColliderWorldRotation(RevoluteJoint* joint, uint colliderIndex);
   Quat GetWorldBasis(RevoluteJoint* joint, uint colliderIndex);
-  void SetWorldBasis(RevoluteJoint* joint,
-                     uint colliderIndex,
-                     QuatParam worldBasis);
+  void SetWorldBasis(RevoluteJoint* joint, uint colliderIndex, QuatParam worldBasis);
 
   /// Bit flags for which bases we care about. 0b01 is base A. 0b10 is basis B.
   /// 0b11 is both.

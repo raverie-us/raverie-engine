@@ -6,12 +6,7 @@ namespace Zero
 
 struct JointNode;
 
-DeclareBitField5(JointLimitState,
-                 Active,
-                 AtLowerLimit,
-                 WasAtLowerLimit,
-                 AtUpperLimit,
-                 WasAtUpperLimit);
+DeclareBitField5(JointLimitState, Active, AtLowerLimit, WasAtLowerLimit, AtUpperLimit, WasAtUpperLimit);
 
 /// Defines limit properties for a joint. Used to add a min/max bounds to a
 /// joint. When the joint is in between the min/max bounds, the "limited"

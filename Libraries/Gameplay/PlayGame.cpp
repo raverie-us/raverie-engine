@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-void LoadResourcePackageRelative(StringParam baseDirectory,
-                                 StringParam libraryName)
+void LoadResourcePackageRelative(StringParam baseDirectory, StringParam libraryName)
 {
   String path = FilePath::Combine(baseDirectory, libraryName);
   String fileName = BuildString(libraryName, ".pack");
@@ -13,8 +12,7 @@ void LoadResourcePackageRelative(StringParam baseDirectory,
 
   if (!FileExists(packageFile))
   {
-    FatalEngineError("Failed to find needed content package. %s",
-                     libraryName.c_str());
+    FatalEngineError("Failed to find needed content package. %s", libraryName.c_str());
   }
 
   ResourcePackage* package = new ResourcePackage();
@@ -41,8 +39,7 @@ void CreateGame(OsWindow* mainWindow, Cog* projectCog, StringParam projectFile)
 
   if (SharedContent* sharedContent = projectCog->has(SharedContent))
   {
-    forRange(ContentLibraryReference libraryRef,
-             sharedContent->ExtraContentLibraries.All())
+    forRange (ContentLibraryReference libraryRef, sharedContent->ExtraContentLibraries.All())
     {
       String libraryName = libraryRef.mContentLibraryName;
       LoadResourcePackageRelative(projectDirectory, libraryName);
@@ -67,8 +64,7 @@ void CreateGame(OsWindow* mainWindow, Cog* projectCog, StringParam projectFile)
   ZPrint("Creating game...\n");
 
   IntVec2 intViewportSize = mainWindow->GetClientSize();
-  Vec2 mainViewportSize =
-      Pixels(float(intViewportSize.x), float(intViewportSize.y));
+  Vec2 mainViewportSize = Pixels(float(intViewportSize.x), float(intViewportSize.y));
 
   RootWidget* rootWidget = new RootWidget(mainWindow);
   rootWidget->SetSize(mainViewportSize);

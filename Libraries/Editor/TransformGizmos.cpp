@@ -21,9 +21,7 @@ ZilchDefineType(ObjectTransformGizmoEvent, builder, type)
   ZilchBindGetterSetter(FinalLocalRotation);
 }
 
-ObjectTransformGizmoEvent::ObjectTransformGizmoEvent(Component* sourceGizmo,
-                                                     Cog* owner,
-                                                     ViewportMouseEvent* base) :
+ObjectTransformGizmoEvent::ObjectTransformGizmoEvent(Component* sourceGizmo, Cog* owner, ViewportMouseEvent* base) :
     GizmoEvent(owner, base)
 {
   mSource = sourceGizmo;
@@ -52,8 +50,7 @@ Vec3 ObjectTransformGizmoEvent::GetFinalLocalScale()
 {
   if (!mCanAlterScale)
   {
-    String message =
-        BuildString(mGizmoType->Name, " doesn't operate on Scale.");
+    String message = BuildString(mGizmoType->Name, " doesn't operate on Scale.");
     DoNotifyErrorWithContext(message);
   }
 
@@ -64,8 +61,7 @@ Quat ObjectTransformGizmoEvent::GetFinalLocalRotation()
 {
   if (!mCanAlterRotation)
   {
-    String message =
-        BuildString(mGizmoType->Name, " doesn't operate on Rotation.");
+    String message = BuildString(mGizmoType->Name, " doesn't operate on Rotation.");
     DoNotifyErrorWithContext(message);
   }
 
@@ -81,8 +77,7 @@ void ObjectTransformGizmoEvent::SetFinalLocalScale(Vec3Param scale)
 {
   if (!mCanAlterScale)
   {
-    String message =
-        BuildString(mGizmoType->Name, " doesn't operate on Scale.");
+    String message = BuildString(mGizmoType->Name, " doesn't operate on Scale.");
     DoNotifyErrorWithContext(message);
   }
 
@@ -93,8 +88,7 @@ void ObjectTransformGizmoEvent::SetFinalLocalRotation(QuatParam rotation)
 {
   if (!mCanAlterRotation)
   {
-    String message =
-        BuildString(mGizmoType->Name, " doesn't operate on Rotation.");
+    String message = BuildString(mGizmoType->Name, " doesn't operate on Rotation.");
     DoNotifyErrorWithContext(message);
   }
 
@@ -126,8 +120,7 @@ ZilchDefineType(ObjectTransformGizmo, builder, type)
 
   ZeroBindEvent(Events::GizmoObjectsDuplicated, Event);
   ZeroBindEvent(Events::ObjectTransformGizmoStart, GizmoUpdateEvent);
-  ZeroBindEvent(Events::ObjectTranslateGizmoModified,
-                ObjectTransformGizmoEvent);
+  ZeroBindEvent(Events::ObjectTranslateGizmoModified, ObjectTransformGizmoEvent);
   ZeroBindEvent(Events::ObjectScaleGizmoModified, ObjectTransformGizmoEvent);
   ZeroBindEvent(Events::ObjectRotateGizmoModified, ObjectTransformGizmoEvent);
   ZeroBindEvent(Events::ObjectTransformGizmoEnd, ObjectTransformGizmoEvent);
@@ -174,8 +167,7 @@ void ObjectTransformGizmo::AddObject(HandleParam object, bool updateBasis)
   if (object.IsNull())
     return;
 
-  MetaTransform* metaTransform =
-      object.StoredType->HasInherited<MetaTransform>();
+  MetaTransform* metaTransform = object.StoredType->HasInherited<MetaTransform>();
   if (!metaTransform)
     return;
 
@@ -246,15 +238,13 @@ void ObjectTransformGizmo::OnMouseDragStart(ViewportMouseEvent* event)
   GizmoUpdateEvent eventToSend(GetOwner(), event);
 
   // Store the state of all objects
-  forRange(Handle target, metaObjects.All())
+  forRange (Handle target, metaObjects.All())
   {
     ObjectTransformState data;
     data.MetaObject = target;
 
-    MetaTransform* metaTransform =
-        target.StoredType->HasInherited<MetaTransform>();
-    ErrorIf(metaTransform == nullptr,
-            "No MetaTransform on object being transformed.");
+    MetaTransform* metaTransform = target.StoredType->HasInherited<MetaTransform>();
+    ErrorIf(metaTransform == nullptr, "No MetaTransform on object being transformed.");
 
     MetaTransformInstance transform = metaTransform->GetInstance(target);
 
@@ -324,14 +314,13 @@ void ObjectTransformGizmo::OnMouseDragEnd(ViewportMouseEvent* event)
   queue->BeginBatch();
   queue->SetActiveBatchName("MultiTransform");
 
-  forRange(ObjectTransformState & objectState, mObjectStates.All())
+  forRange (ObjectTransformState& objectState, mObjectStates.All())
   {
     Handle target = objectState.MetaObject;
     if (target.IsNull())
       continue;
 
-    MetaTransform* metaTransform =
-        target.StoredType->HasInherited<MetaTransform>();
+    MetaTransform* metaTransform = target.StoredType->HasInherited<MetaTransform>();
     MetaTransformInstance transform = metaTransform->GetInstance(target);
 
     if (transform.IsNull())
@@ -393,23 +382,20 @@ void ObjectTransformGizmo::OnMouseDragEnd(ViewportMouseEvent* event)
 
       // Queue the change
       PropertyPath propertyPath(transform.mLocalTranslation);
-      ChangeAndQueueProperty(
-          queue, transform.mInstance, propertyPath, objectState.EndTranslation);
+      ChangeAndQueueProperty(queue, transform.mInstance, propertyPath, objectState.EndTranslation);
 
       queue->SetActiveBatchName(BuildString("Translate '", name, "'"));
     }
 
     if (mRotateGizmo)
     {
-      if ((objectState.EndRotation.Inverted() * objectState.StartRotation) !=
-          Quat::cIdentity)
+      if ((objectState.EndRotation.Inverted() * objectState.StartRotation) != Quat::cIdentity)
       {
         transform.SetLocalRotation(objectState.StartRotation);
 
         // Queue the change
         PropertyPath propertyPath(transform.mLocalRotation);
-        ChangeAndQueueProperty(
-            queue, transform.mInstance, propertyPath, objectState.EndRotation);
+        ChangeAndQueueProperty(queue, transform.mInstance, propertyPath, objectState.EndRotation);
 
         queue->SetActiveBatchName(BuildString("Rotate '", name, "'"));
       }
@@ -422,8 +408,7 @@ void ObjectTransformGizmo::OnMouseDragEnd(ViewportMouseEvent* event)
 
       // Queue the change
       PropertyPath propertyPath(transform.mLocalScale);
-      ChangeAndQueueProperty(
-          queue, transform.mInstance, propertyPath, objectState.EndScale);
+      ChangeAndQueueProperty(queue, transform.mInstance, propertyPath, objectState.EndScale);
 
       queue->SetActiveBatchName(BuildString("Scale '", name, "'"));
     }
@@ -434,8 +419,7 @@ void ObjectTransformGizmo::OnMouseDragEnd(ViewportMouseEvent* event)
       {
         if (Area* area = areaCog->has(Area))
         {
-          Property* sizeProperty =
-              ZilchVirtualTypeId(area)->GetProperty("Size");
+          Property* sizeProperty = ZilchVirtualTypeId(area)->GetProperty("Size");
           area->SetSize(objectState.StartSize);
 
           // Queue the change to size
@@ -450,10 +434,7 @@ void ObjectTransformGizmo::OnMouseDragEnd(ViewportMouseEvent* event)
 
               Vec3 startOffset = collider->GetOffset();
               Vec3 startSize = collider->GetSize();
-              Vec3 endOffset = Vec3(
-                  Location::GetDirection(area->GetOrigin(), Location::Center) *
-                      area->GetSize(),
-                  0);
+              Vec3 endOffset = Vec3(Location::GetDirection(area->GetOrigin(), Location::Center) * area->GetSize(), 0);
 
               Property* offsetProperty = colliderType->GetProperty("Offset");
               collider->SetOffset(startOffset);
@@ -462,17 +443,14 @@ void ObjectTransformGizmo::OnMouseDragEnd(ViewportMouseEvent* event)
               PropertyPath offsetPath(offsetProperty);
               ChangeAndQueueProperty(queue, collider, offsetPath, endOffset);
 
-              Vec3 endSize = Vec3(
-                  objectState.EndSize.x, objectState.EndSize.y, startSize.z);
+              Vec3 endSize = Vec3(objectState.EndSize.x, objectState.EndSize.y, startSize.z);
 
-              Property* colliderSizeProperty =
-                  colliderType->GetProperty("Size");
+              Property* colliderSizeProperty = colliderType->GetProperty("Size");
               collider->SetSize(startSize);
 
               // Queue the change to size
               PropertyPath colliderSizePath(colliderSizeProperty);
-              ChangeAndQueueProperty(
-                  queue, collider, colliderSizePath, endSize);
+              ChangeAndQueueProperty(queue, collider, colliderSizePath, endSize);
             }
 
             queue->SetActiveBatchName(BuildString("'", name, "' size change"));
@@ -502,8 +480,7 @@ void ObjectTransformGizmo::UpdateGizmoBasis()
 
   Quat rotation = Quat::cIdentity;
 
-  MetaTransform* metaTransform =
-      primary.StoredType->HasInherited<MetaTransform>();
+  MetaTransform* metaTransform = primary.StoredType->HasInherited<MetaTransform>();
   MetaTransformInstance transform = metaTransform->GetInstance(primary);
 
   if (transform.IsNotNull())
@@ -529,12 +506,11 @@ void ObjectTransformGizmo::UpdateGizmoBasis()
   else if (mPivot == GizmoPivot::Average)
   {
     uint count = 0;
-    forRange(Handle object, mObjects.All())
+    forRange (Handle object, mObjects.All())
     {
       if (object.IsNotNull())
       {
-        MetaTransform* metaTransform =
-            object.StoredType->HasInherited<MetaTransform>();
+        MetaTransform* metaTransform = object.StoredType->HasInherited<MetaTransform>();
         MetaTransformInstance transform = metaTransform->GetInstance(object);
         if (transform.IsNotNull())
         {
@@ -611,7 +587,7 @@ void ObjectTranslateGizmo::OnMouseDragStart(ViewportMouseEvent* event)
   {
     mNewObjects.Clear();
 
-    forRange(Handle object, mObjects.All())
+    forRange (Handle object, mObjects.All())
     {
       Cog* cog = object.Get<Cog*>();
       if (cog && CogSerialization::ShouldSave(*cog))
@@ -633,7 +609,8 @@ void ObjectTranslateGizmo::OnMouseDragStart(ViewportMouseEvent* event)
 
     if (!mNewObjects.Empty())
     {
-      forRange(Handle object, mNewObjects.All()) AddObject(object, false);
+      forRange (Handle object, mNewObjects.All())
+        AddObject(object, false);
 
       UpdateGizmoBasis();
     }
@@ -669,17 +646,15 @@ void ObjectTranslateGizmo::OnGizmoModified(TranslateGizmoUpdateEvent* event)
 
   Vec3 final = movement;
 
-  ObjectTransformGizmoEvent secondEvent(
-      this, GetOwner(), event->GetViewportMouseEvent());
+  ObjectTransformGizmoEvent secondEvent(this, GetOwner(), event->GetViewportMouseEvent());
 
-  forRange(ObjectTransformState & objectState, mObjectStates.All())
+  forRange (ObjectTransformState& objectState, mObjectStates.All())
   {
     Handle target = objectState.MetaObject;
     if (target.IsNull())
       continue;
 
-    MetaTransform* metaTransform =
-        target.StoredType->HasInherited<MetaTransform>();
+    MetaTransform* metaTransform = target.StoredType->HasInherited<MetaTransform>();
     if (metaTransform == nullptr)
       continue;
 
@@ -714,11 +689,8 @@ void ObjectTranslateGizmo::OnGizmoModified(TranslateGizmoUpdateEvent* event)
     // space.
     if (multiTransform)
     {
-      objectState.EndTranslation =
-          baseGizmo->TranslateFromDrag(gizmoDrag,
-                                       objectState.StartTranslation,
-                                       localMovement,
-                                       objectState.StartRotation);
+      objectState.EndTranslation = baseGizmo->TranslateFromDrag(
+          gizmoDrag, objectState.StartTranslation, localMovement, objectState.StartRotation);
     }
     else // If single object, then the final movement will already be snapped.
     {
@@ -737,13 +709,10 @@ void ObjectTranslateGizmo::OnGizmoModified(TranslateGizmoUpdateEvent* event)
 
     if (dispatcher != nullptr)
     {
-      PropertyEvent propertyEvent(transform.mInstance,
-                                  transform.mLocalTranslation,
-                                  objectState.StartTranslation,
-                                  objectState.EndTranslation);
+      PropertyEvent propertyEvent(
+          transform.mInstance, transform.mLocalTranslation, objectState.StartTranslation, objectState.EndTranslation);
 
-      dispatcher->Dispatch(Events::PropertyModifiedIntermediate,
-                           &propertyEvent);
+      dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
     }
   }
 }
@@ -756,14 +725,13 @@ static void AddHierarchyIntoSet(Cog* cog, HashSet<Cog*>& set)
   if (hierarchy == nullptr)
     return;
 
-  forRange(Cog & child, hierarchy->GetChildren())
+  forRange (Cog& child, hierarchy->GetChildren())
   {
     AddHierarchyIntoSet(&child, set);
   }
 }
 
-void ObjectTranslateGizmo::SnapToSurface(GizmoUpdateEvent* event,
-                                         Vec3* movementOut)
+void ObjectTranslateGizmo::SnapToSurface(GizmoUpdateEvent* event, Vec3* movementOut)
 {
   ViewportMouseEvent* vpEvent = event->GetViewportMouseEvent();
   if (vpEvent == nullptr)
@@ -771,7 +739,7 @@ void ObjectTranslateGizmo::SnapToSurface(GizmoUpdateEvent* event,
 
   // Ignore all selected objects and their children
   HashSet<Cog*> ignoredObjects;
-  forRange(ObjectTransformState & objectState, mObjectStates.All())
+  forRange (ObjectTransformState& objectState, mObjectStates.All())
   {
     Handle target = objectState.MetaObject;
     if (target.IsNull())
@@ -843,8 +811,7 @@ void ObjectScaleGizmo::OnMouseDragStart(ViewportMouseEvent* event)
 
   Camera* camera = event->GetViewport()->GetCamera();
   if (camera)
-    mEyeDirection =
-        -Math::ToMatrix3(camera->mTransform->GetWorldRotation()).BasisZ();
+    mEyeDirection = -Math::ToMatrix3(camera->mTransform->GetWorldRotation()).BasisZ();
   else
     mEyeDirection = Vec3::cZero;
 
@@ -870,17 +837,15 @@ void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* event)
   // Are multiple objects being transformed?
   bool multiTransform = mObjectStates.Size() > 1;
 
-  ObjectTransformGizmoEvent secondEvent(
-      this, GetOwner(), event->GetViewportMouseEvent());
+  ObjectTransformGizmoEvent secondEvent(this, GetOwner(), event->GetViewportMouseEvent());
 
-  forRange(ObjectTransformState & objectState, mObjectStates.All())
+  forRange (ObjectTransformState& objectState, mObjectStates.All())
   {
     Handle target = objectState.MetaObject;
     if (target.IsNull())
       continue;
 
-    MetaTransform* metaTransform =
-        target.StoredType->HasInherited<MetaTransform>();
+    MetaTransform* metaTransform = target.StoredType->HasInherited<MetaTransform>();
     if (metaTransform == nullptr)
       continue;
 
@@ -891,12 +856,8 @@ void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* event)
     if (transform.mLocalScale == nullptr)
       continue;
 
-    Vec3 newScale = baseGizmo->ScaleFromDrag(mBasis,
-                                             gizmoDrag,
-                                             distance,
-                                             worldMovement,
-                                             objectState.StartScale,
-                                             transform);
+    Vec3 newScale =
+        baseGizmo->ScaleFromDrag(mBasis, gizmoDrag, distance, worldMovement, objectState.StartScale, transform);
 
     Vec3 newPosition = objectState.EndTranslation;
     if (multiTransform && mAffectTranslation)
@@ -918,8 +879,7 @@ void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* event)
         newPosition = gizmoPosition + pivotOffset;
 
         // Put the new position in parent's space.
-        newPosition = Math::TransformPoint(
-            transform.GetParentWorldMatrix().Inverted(), newPosition);
+        newPosition = Math::TransformPoint(transform.GetParentWorldMatrix().Inverted(), newPosition);
       }
     }
 
@@ -942,13 +902,10 @@ void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* event)
 
       if (dispatcher != nullptr)
       {
-        PropertyEvent propertyEvent(transform.mInstance,
-                                    transform.mLocalScale,
-                                    objectState.StartScale,
-                                    objectState.EndScale);
+        PropertyEvent propertyEvent(
+            transform.mInstance, transform.mLocalScale, objectState.StartScale, objectState.EndScale);
 
-        dispatcher->Dispatch(Events::PropertyModifiedIntermediate,
-                             &propertyEvent);
+        dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
       }
     }
 
@@ -959,13 +916,10 @@ void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* event)
 
       if (dispatcher != nullptr)
       {
-        PropertyEvent propertyEvent(transform.mInstance,
-                                    transform.mLocalTranslation,
-                                    objectState.StartTranslation,
-                                    objectState.EndTranslation);
+        PropertyEvent propertyEvent(
+            transform.mInstance, transform.mLocalTranslation, objectState.StartTranslation, objectState.EndTranslation);
 
-        dispatcher->Dispatch(Events::PropertyModifiedIntermediate,
-                             &propertyEvent);
+        dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
       }
     }
   }
@@ -1019,18 +973,16 @@ void ObjectRotateGizmo::OnGizmoModified(RotateGizmoUpdateEvent* event)
   // If we're transforming multiple objects, we will have to translate them
   bool multiTransform = mObjectStates.Size() > 1;
 
-  ObjectTransformGizmoEvent secondEvent(
-      this, GetOwner(), event->GetViewportMouseEvent());
+  ObjectTransformGizmoEvent secondEvent(this, GetOwner(), event->GetViewportMouseEvent());
 
   // Apply the rotation transform to each selected object
-  forRange(ObjectTransformState & objectState, mObjectStates.All())
+  forRange (ObjectTransformState& objectState, mObjectStates.All())
   {
     Handle target = objectState.MetaObject;
     if (target.IsNull())
       continue;
 
-    MetaTransform* metaTransform =
-        target.StoredType->HasInherited<MetaTransform>();
+    MetaTransform* metaTransform = target.StoredType->HasInherited<MetaTransform>();
     if (metaTransform == nullptr)
       continue;
 
@@ -1066,8 +1018,7 @@ void ObjectRotateGizmo::OnGizmoModified(RotateGizmoUpdateEvent* event)
     Quat newRotation = objectState.EndRotation;
     if (mAffectRotation || !multiTransform)
     {
-      Vec3 localAxis =
-          Math::TransformNormal(inverseMatrix, finalAxis).AttemptNormalized();
+      Vec3 localAxis = Math::TransformNormal(inverseMatrix, finalAxis).AttemptNormalized();
 
       // Construct a local rotation
       Quat localRotation;
@@ -1108,13 +1059,10 @@ void ObjectRotateGizmo::OnGizmoModified(RotateGizmoUpdateEvent* event)
 
       if (dispatcher != nullptr)
       {
-        PropertyEvent propertyEvent(transform.mInstance,
-                                    transform.mLocalRotation,
-                                    objectState.StartRotation,
-                                    objectState.EndRotation);
+        PropertyEvent propertyEvent(
+            transform.mInstance, transform.mLocalRotation, objectState.StartRotation, objectState.EndRotation);
 
-        dispatcher->Dispatch(Events::PropertyModifiedIntermediate,
-                             &propertyEvent);
+        dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
       }
     }
 
@@ -1125,13 +1073,10 @@ void ObjectRotateGizmo::OnGizmoModified(RotateGizmoUpdateEvent* event)
 
       if (dispatcher != nullptr)
       {
-        PropertyEvent propertyEvent(transform.mInstance,
-                                    transform.mLocalTranslation,
-                                    objectState.StartTranslation,
-                                    objectState.EndTranslation);
+        PropertyEvent propertyEvent(
+            transform.mInstance, transform.mLocalTranslation, objectState.StartTranslation, objectState.EndTranslation);
 
-        dispatcher->Dispatch(Events::PropertyModifiedIntermediate,
-                             &propertyEvent);
+        dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
       }
     }
   }

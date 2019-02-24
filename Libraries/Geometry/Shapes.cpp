@@ -5,10 +5,7 @@ namespace Zero
 {
 
 // rotation for an object represented by two extreme points and a radius
-void RotateCylinderOrCapsule(Vec3Ref pointA,
-                             Vec3Ref pointB,
-                             real& radius,
-                             Mat3Param rotation)
+void RotateCylinderOrCapsule(Vec3Ref pointA, Vec3Ref pointB, real& radius, Mat3Param rotation)
 {
   Vec3 center = (pointA + pointB) * real(.5);
   Vec3 axis = pointA - center;
@@ -19,10 +16,7 @@ void RotateCylinderOrCapsule(Vec3Ref pointA,
 }
 
 // translation for an object represented by two extreme points and a radius
-void TranslateCylinderOrCapsule(Vec3Ref pointA,
-                                Vec3Ref pointB,
-                                real& radius,
-                                Vec3Param translation)
+void TranslateCylinderOrCapsule(Vec3Ref pointA, Vec3Ref pointB, real& radius, Vec3Param translation)
 {
   pointA += translation;
   pointB += translation;
@@ -152,8 +146,7 @@ void Triangle::GetCenter(Vec3Ref center) const
 
 void Triangle::Support(Vec3Param direction, Vec3Ptr support) const
 {
-  Geometry::SupportTriangle(
-      direction, (*this)[0], (*this)[1], (*this)[2], support);
+  Geometry::SupportTriangle(direction, (*this)[0], (*this)[1], (*this)[2], support);
 }
 
 real Triangle::GetArea() const
@@ -168,8 +161,7 @@ real Triangle::GetArea() const
 void Triangle::GetBarycentric(Vec3Param point, real& u, real& v, real& w)
 {
   Vec3 barycentricCoordinates;
-  Geometry::BarycentricTriangle(
-      point, (*this)[0], (*this)[1], (*this)[2], &barycentricCoordinates);
+  Geometry::BarycentricTriangle(point, (*this)[0], (*this)[1], (*this)[2], &barycentricCoordinates);
   u = barycentricCoordinates.x;
   v = barycentricCoordinates.y;
   w = barycentricCoordinates.z;
@@ -200,10 +192,7 @@ SweptTriangle::SweptTriangle(Triangle& triangle, Vec3Param scaledDirection) :
 {
 }
 
-SweptTriangle::SweptTriangle(Vec3Param point1,
-                             Vec3Param point2,
-                             Vec3Param point3,
-                             Vec3Param scaledDirection) :
+SweptTriangle::SweptTriangle(Vec3Param point1, Vec3Param point2, Vec3Param point3, Vec3Param scaledDirection) :
     BaseTri(point1, point2, point3),
     ScaledDir(scaledDirection)
 {
@@ -254,10 +243,7 @@ SweptTriangle SweptTriangle::UniformTransform(Mat4Param transformation) const
   return Transform(transformation);
 }
 
-Tetrahedron::Tetrahedron(Vec3Param point1,
-                         Vec3Param point2,
-                         Vec3Param point3,
-                         Vec3Param point4)
+Tetrahedron::Tetrahedron(Vec3Param point1, Vec3Param point2, Vec3Param point3, Vec3Param point4)
 {
   p0 = point1;
   p1 = point2;

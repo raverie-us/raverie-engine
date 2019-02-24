@@ -9,8 +9,7 @@ ZilchDefineType(MultiPrimitive, builder, type)
   type->HandleManager = ZilchManagerId(PointerManager);
 }
 
-MultiPrimitive::MultiPrimitive(BoundType* primitiveMemberType,
-                               size_t primitiveMemberCount) :
+MultiPrimitive::MultiPrimitive(BoundType* primitiveMemberType, size_t primitiveMemberCount) :
     PrimitiveMemberType(primitiveMemberType),
     PrimitiveMemberCount(primitiveMemberCount)
 {

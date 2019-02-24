@@ -13,16 +13,13 @@ TweakableVar<type>::TweakableVar(type defaultValue, cstr name, cstr location)
 }
 
 template <typename PropertyType>
-void Tweakables::RegisterTweakable(PropertyType* tweakable,
-                                   PropertyType& defaultValue,
-                                   cstr name,
-                                   cstr location)
+void Tweakables::RegisterTweakable(PropertyType* tweakable, PropertyType& defaultValue, cstr name, cstr location)
 {
   // Find the parent of the tweakable (start at the root)
   TweakableNode* parent = this;
 
   // Walk each object
-  forRange(StringRange nodeName, StringTokenRange(location, '/'))
+  forRange (StringRange nodeName, StringTokenRange(location, '/'))
   {
     // Add an underscore to the end of the name to avoid conflicts
     String typeName = BuildString(nodeName, "_");
@@ -42,8 +39,7 @@ void Tweakables::RegisterTweakable(PropertyType* tweakable,
   }
 
   // At this point, we should have our parent node
-  parent->mProperties.InsertOrError(
-      name, new TweakablePropertyType<PropertyType>(tweakable, name));
+  parent->mProperties.InsertOrError(name, new TweakablePropertyType<PropertyType>(tweakable, name));
 
   //// Create the new property with our custom getters and setters
   // MetaProperty* customProperty = new MetaProperty(name, typeId,

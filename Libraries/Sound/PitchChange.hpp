@@ -12,8 +12,7 @@ public:
   PitchChangeHandler();
 
   // Must be called before ProcessBuffer
-  void CalculateBufferSize(unsigned outputSampleCount,
-                           unsigned numberOfChannels);
+  void CalculateBufferSize(unsigned outputSampleCount, unsigned numberOfChannels);
   // Interpolates the audio samples in inputSamples into outputBuffer
   void ProcessBuffer(BufferType* inputBuffer, BufferType* outputBuffer);
   // Returns the current pitch factor

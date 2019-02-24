@@ -19,9 +19,7 @@ ZilchDefineType(VolumeNode, builder, type)
   ZilchBindMethod(InterpolateDecibels);
 }
 
-VolumeNode::VolumeNode(StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false),
-    mVolume(1.0f)
+VolumeNode::VolumeNode(StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false), mVolume(1.0f)
 {
 }
 
@@ -39,17 +37,13 @@ void VolumeNode::InterpolateVolume(float volume, float time)
 {
   volume = Math::Clamp(volume, 0.0f, cMaxVolumeValue);
 
-  if ((time == 0.0f && !GetHasOutputs()) ||
-      IsWithinLimit(volume, mVolume.Get(AudioThreads::MainThread), 0.01f))
+  if ((time == 0.0f && !GetHasOutputs()) || IsWithinLimit(volume, mVolume.Get(AudioThreads::MainThread), 0.01f))
     mVolume.Set(volume, AudioThreads::MainThread);
   else
   {
     time = Math::Max(time, 0.02f);
 
-    Z::gSound->Mixer.AddTask(
-        CreateFunctor(
-            &VolumeNode::InterpolateVolumeThreaded, this, volume, time),
-        this);
+    Z::gSound->Mixer.AddTask(CreateFunctor(&VolumeNode::InterpolateVolumeThreaded, this, volume, time), this);
   }
 }
 
@@ -89,16 +83,13 @@ bool VolumeNode::GetOutputSamples(BufferType* outputBuffer,
     return false;
 
   // Apply volume adjustment
-  for (BufferRange outputRange = outputBuffer->All(),
-                   inputRange = mInputSamplesThreaded.All();
-       !outputRange.Empty();)
+  for (BufferRange outputRange = outputBuffer->All(), inputRange = mInputSamplesThreaded.All(); !outputRange.Empty();)
   {
     // Check if the volume is being interpolated
     if (CurrentData.mInterpolating)
     {
       // Get the current volume and increase the index
-      mVolume.Set(Interpolator.ValueAtIndex(CurrentData.mIndex++),
-                  AudioThreads::MixThread);
+      mVolume.Set(Interpolator.ValueAtIndex(CurrentData.mIndex++), AudioThreads::MixThread);
 
       // Check if the interpolation is finished
       if (CurrentData.mIndex >= Interpolator.GetTotalFrames())
@@ -107,19 +98,15 @@ bool VolumeNode::GetOutputSamples(BufferType* outputBuffer,
         if (firstRequest)
         {
           Z::gSound->Mixer.AddTaskThreaded(
-              CreateFunctor(&SoundNode::DispatchEventFromMixThread,
-                            (SoundNode*)this,
-                            Events::AudioInterpolationDone),
+              CreateFunctor(&SoundNode::DispatchEventFromMixThread, (SoundNode*)this, Events::AudioInterpolationDone),
               this);
         }
       }
     }
 
     // Apply the volume multiplier to all samples
-    for (unsigned j = 0; j < numberOfChannels;
-         ++j, outputRange.PopFront(), inputRange.PopFront())
-      outputRange.Front() =
-          inputRange.Front() * mVolume.Get(AudioThreads::MixThread);
+    for (unsigned j = 0; j < numberOfChannels; ++j, outputRange.PopFront(), inputRange.PopFront())
+      outputRange.Front() = inputRange.Front() * mVolume.Get(AudioThreads::MixThread);
   }
 
   AddBypassThreaded(outputBuffer);
@@ -132,8 +119,8 @@ float VolumeNode::GetVolumeChangeFromOutputsThreaded()
   float outputVolume = 0.0f;
 
   // Get all volumes from outputs
-  forRange(HandleOf<SoundNode> node, GetOutputs(AudioThreads::MixThread)->All())
-      outputVolume += node->GetVolumeChangeFromOutputsThreaded();
+  forRange (HandleOf<SoundNode> node, GetOutputs(AudioThreads::MixThread)->All())
+    outputVolume += node->GetVolumeChangeFromOutputsThreaded();
 
   // Return the output volume modified by this node's volume
   return outputVolume * mVolume.Get(AudioThreads::MixThread);
@@ -144,9 +131,7 @@ void VolumeNode::InterpolateVolumeThreaded(float volume, float time)
   CurrentData.mInterpolating = true;
   CurrentData.mIndex = 0;
 
-  Interpolator.SetValues(mVolume.Get(AudioThreads::MixThread),
-                         volume,
-                         (unsigned)(time * cSystemSampleRate));
+  Interpolator.SetValues(mVolume.Get(AudioThreads::MixThread), volume, (unsigned)(time * cSystemSampleRate));
 }
 
 // Panning Node
@@ -196,13 +181,12 @@ void PanningNode::SetLeftVolume(float volume)
 
 void PanningNode::InterpolateLeftVolume(float volume, float time)
 {
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&PanningNode::SetVolumeThreaded,
-                    this,
-                    true,
-                    Math::Clamp(volume, 0.0f, cMaxVolumeValue),
-                    Math::Max(time, 0.0f)),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&PanningNode::SetVolumeThreaded,
+                                         this,
+                                         true,
+                                         Math::Clamp(volume, 0.0f, cMaxVolumeValue),
+                                         Math::Max(time, 0.0f)),
+                           this);
 }
 
 float PanningNode::GetRightVolume()
@@ -217,33 +201,28 @@ void PanningNode::SetRightVolume(float volume)
 
 void PanningNode::InterpolateRightVolume(float volume, float time)
 {
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&PanningNode::SetVolumeThreaded,
-                    this,
-                    false,
-                    Math::Clamp(volume, 0.0f, cMaxVolumeValue),
-                    Math::Max(time, 0.0f)),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&PanningNode::SetVolumeThreaded,
+                                         this,
+                                         false,
+                                         Math::Clamp(volume, 0.0f, cMaxVolumeValue),
+                                         Math::Max(time, 0.0f)),
+                           this);
 }
 
-void PanningNode::InterpolateVolumes(float leftVolume,
-                                     float rightVolume,
-                                     float time)
+void PanningNode::InterpolateVolumes(float leftVolume, float rightVolume, float time)
 {
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&PanningNode::SetVolumeThreaded,
-                    this,
-                    true,
-                    Math::Clamp(leftVolume, 0.0f, cMaxVolumeValue),
-                    Math::Max(time, 0.0f)),
-      this);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&PanningNode::SetVolumeThreaded,
-                    this,
-                    false,
-                    Math::Clamp(rightVolume, 0.0f, cMaxVolumeValue),
-                    Math::Max(time, 0.0f)),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&PanningNode::SetVolumeThreaded,
+                                         this,
+                                         true,
+                                         Math::Clamp(leftVolume, 0.0f, cMaxVolumeValue),
+                                         Math::Max(time, 0.0f)),
+                           this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&PanningNode::SetVolumeThreaded,
+                                         this,
+                                         false,
+                                         Math::Clamp(rightVolume, 0.0f, cMaxVolumeValue),
+                                         Math::Max(time, 0.0f)),
+                           this);
 }
 
 bool PanningNode::GetOutputSamples(BufferType* outputBuffer,
@@ -271,8 +250,7 @@ bool PanningNode::GetOutputSamples(BufferType* outputBuffer,
       channelsToGet = 2;
 
     // Get input and return if there is no data
-    if (!AccumulateInputSamples(
-            totalFrames * channelsToGet, channelsToGet, listener))
+    if (!AccumulateInputSamples(totalFrames * channelsToGet, channelsToGet, listener))
       return false;
 
     float leftVolume = mLeftVolume.Get(AudioThreads::MixThread);
@@ -303,9 +281,7 @@ bool PanningNode::GetOutputSamples(BufferType* outputBuffer,
           CurrentData.mInterpolating = false;
           if (firstRequest)
             Z::gSound->Mixer.AddTaskThreaded(
-                CreateFunctor(&SoundNode::DispatchEventFromMixThread,
-                              (SoundNode*)this,
-                              Events::AudioInterpolationDone),
+                CreateFunctor(&SoundNode::DispatchEventFromMixThread, (SoundNode*)this, Events::AudioInterpolationDone),
                 this);
         }
       }
@@ -341,8 +317,7 @@ bool PanningNode::GetOutputSamples(BufferType* outputBuffer,
 
     // Check for both volumes being at or near 1.0, and if true mark as not
     // active
-    if (!CurrentData.mInterpolating && !sumToMono &&
-        IsWithinLimit(1.0f - leftVolume, 0.0f, 0.01f) &&
+    if (!CurrentData.mInterpolating && !sumToMono && IsWithinLimit(1.0f - leftVolume, 0.0f, 0.01f) &&
         IsWithinLimit(1.0f - rightVolume, 0.0f, 0.01f))
       mActive.Set(false, AudioThreads::MixThread);
   }
@@ -360,12 +335,10 @@ bool PanningNode::GetOutputSamples(BufferType* outputBuffer,
 
 float PanningNode::GetVolumeChangeFromOutputsThreaded()
 {
-  float volume = (mLeftVolume.Get(AudioThreads::MixThread) +
-                  mRightVolume.Get(AudioThreads::MixThread)) /
-                 2.0f;
+  float volume = (mLeftVolume.Get(AudioThreads::MixThread) + mRightVolume.Get(AudioThreads::MixThread)) / 2.0f;
 
-  forRange(HandleOf<SoundNode> node, GetOutputs(AudioThreads::MixThread)->All())
-      volume *= node->GetVolumeChangeFromOutputsThreaded();
+  forRange (HandleOf<SoundNode> node, GetOutputs(AudioThreads::MixThread)->All())
+    volume *= node->GetVolumeChangeFromOutputsThreaded();
 
   return volume;
 }
@@ -384,14 +357,11 @@ void PanningNode::SetVolumeThreaded(bool left, float newVolume, float time)
 
   // If the new volume is very close to the current one, or we have no outputs,
   // just set it directly
-  if ((time == 0 && !GetHasOutputs()) ||
-      IsWithinLimit(newVolume, volume->Get(AudioThreads::MixThread), 0.01f))
+  if ((time == 0 && !GetHasOutputs()) || IsWithinLimit(newVolume, volume->Get(AudioThreads::MixThread), 0.01f))
   {
     CurrentData.mInterpolating = false;
     volume->Set(newVolume, AudioThreads::MixThread);
-    interpolator->SetValues(volume->Get(AudioThreads::MixThread),
-                            volume->Get(AudioThreads::MixThread),
-                            0u);
+    interpolator->SetValues(volume->Get(AudioThreads::MixThread), volume->Get(AudioThreads::MixThread), 0u);
   }
   else
   {
@@ -400,9 +370,7 @@ void PanningNode::SetVolumeThreaded(bool left, float newVolume, float time)
     if (time < 0.02f)
       time = 0.02f;
 
-    interpolator->SetValues(volume->Get(AudioThreads::MixThread),
-                            newVolume,
-                            (unsigned)(time * cSystemSampleRate));
+    interpolator->SetValues(volume->Get(AudioThreads::MixThread), newVolume, (unsigned)(time * cSystemSampleRate));
   }
 }
 
@@ -418,9 +386,7 @@ ZilchDefineType(PitchNode, builder, type)
   ZilchBindMethod(InterpolateSemitones);
 }
 
-PitchNode::PitchNode(StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false),
-    mPitchSemitones(0.0f)
+PitchNode::PitchNode(StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false), mPitchSemitones(0.0f)
 {
 }
 
@@ -439,11 +405,7 @@ void PitchNode::SetPitch(float pitchRatio)
 void PitchNode::InterpolatePitch(float pitchRatio, float time)
 {
   pitchRatio = Math::Clamp(pitchRatio, cMinPitchValue, cMaxPitchValue);
-  Z::gSound->Mixer.AddTask(CreateFunctor(&PitchNode::SetPitchThreaded,
-                                         this,
-                                         PitchToSemitones(pitchRatio),
-                                         time),
-                           this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&PitchNode::SetPitchThreaded, this, PitchToSemitones(pitchRatio), time), this);
 }
 
 float PitchNode::GetSemitones()
@@ -459,9 +421,7 @@ void PitchNode::SetSemitones(float pitchSemitones)
 
 void PitchNode::InterpolateSemitones(float pitchSemitones, float time)
 {
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&PitchNode::SetPitchThreaded, this, pitchSemitones, time),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&PitchNode::SetPitchThreaded, this, pitchSemitones, time), this);
 }
 
 bool PitchNode::GetOutputSamples(BufferType* outputBuffer,
@@ -481,8 +441,7 @@ bool PitchNode::GetOutputSamples(BufferType* outputBuffer,
     PitchObject.ResetToStartOfMix();
 
   // If no valid input, set the last samples to zero and return
-  if (!AccumulateInputSamples(
-          PitchObject.GetInputSampleCount(), numberOfChannels, listener))
+  if (!AccumulateInputSamples(PitchObject.GetInputSampleCount(), numberOfChannels, listener))
   {
     PitchObject.ResetLastSamples();
     return false;
@@ -490,8 +449,7 @@ bool PitchNode::GetOutputSamples(BufferType* outputBuffer,
 
   PitchObject.ProcessBuffer(&mInputSamplesThreaded, outputBuffer);
 
-  mPitchSemitones.Set(12.0f * Math::Log2(PitchObject.GetPitchFactor()),
-                      AudioThreads::MixThread);
+  mPitchSemitones.Set(12.0f * Math::Log2(PitchObject.GetPitchFactor()), AudioThreads::MixThread);
 
   return true;
 }
@@ -519,7 +477,8 @@ LowPassNode::LowPassNode(StringParam name, unsigned ID) :
 
 LowPassNode::~LowPassNode()
 {
-  forRange(LowPassFilter * filter, FiltersPerListener.Values()) delete filter;
+  forRange (LowPassFilter* filter, FiltersPerListener.Values())
+    delete filter;
 }
 
 float LowPassNode::GetCutoffFrequency()
@@ -530,9 +489,7 @@ float LowPassNode::GetCutoffFrequency()
 void LowPassNode::SetCutoffFrequency(float frequency)
 {
   mCutoffFrequency.Set(frequency, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&LowPassNode::SetCutoffFrequencyThreaded, this, frequency),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&LowPassNode::SetCutoffFrequencyThreaded, this, frequency), this);
 }
 
 bool LowPassNode::GetOutputSamples(BufferType* outputBuffer,
@@ -564,10 +521,7 @@ bool LowPassNode::GetOutputSamples(BufferType* outputBuffer,
   }
 
   // Apply filter
-  filter->ProcessBuffer(mInputSamplesThreaded.Data(),
-                        outputBuffer->Data(),
-                        numberOfChannels,
-                        bufferSize);
+  filter->ProcessBuffer(mInputSamplesThreaded.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
 
   AddBypassThreaded(outputBuffer);
 
@@ -597,8 +551,8 @@ void LowPassNode::RemoveListenerThreaded(SoundEvent* event)
 
 void LowPassNode::SetCutoffFrequencyThreaded(float frequency)
 {
-  forRange(LowPassFilter * filter, FiltersPerListener.Values())
-      filter->SetCutoffFrequency(frequency);
+  forRange (LowPassFilter* filter, FiltersPerListener.Values())
+    filter->SetCutoffFrequency(frequency);
 }
 
 // High Pass Node
@@ -618,7 +572,8 @@ HighPassNode::HighPassNode(StringParam name, unsigned ID) :
 
 HighPassNode::~HighPassNode()
 {
-  forRange(HighPassFilter * filter, FiltersPerListener.Values()) delete filter;
+  forRange (HighPassFilter* filter, FiltersPerListener.Values())
+    delete filter;
 }
 
 float HighPassNode::GetCutoffFrequency()
@@ -629,9 +584,7 @@ float HighPassNode::GetCutoffFrequency()
 void HighPassNode::SetCutoffFrequency(float frequency)
 {
   mCutoffFrequency.Set(frequency, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&HighPassNode::SetCutoffFrequencyThreaded, this, frequency),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&HighPassNode::SetCutoffFrequencyThreaded, this, frequency), this);
 }
 
 bool HighPassNode::GetOutputSamples(BufferType* outputBuffer,
@@ -664,9 +617,7 @@ bool HighPassNode::GetOutputSamples(BufferType* outputBuffer,
 
   // Apply filter
   for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
-    filter->ProcessFrame(mInputSamplesThreaded.Data() + i,
-                         outputBuffer->Data() + i,
-                         numberOfChannels);
+    filter->ProcessFrame(mInputSamplesThreaded.Data() + i, outputBuffer->Data() + i, numberOfChannels);
 
   AddBypassThreaded(outputBuffer);
 
@@ -696,8 +647,8 @@ void HighPassNode::RemoveListenerThreaded(SoundEvent* event)
 
 void HighPassNode::SetCutoffFrequencyThreaded(float frequency)
 {
-  forRange(HighPassFilter * filter, FiltersPerListener.Values())
-      filter->SetCutoffFrequency(frequency);
+  forRange (HighPassFilter* filter, FiltersPerListener.Values())
+    filter->SetCutoffFrequency(frequency);
 }
 
 // Band Pass Node
@@ -719,7 +670,8 @@ BandPassNode::BandPassNode(StringParam name, unsigned ID) :
 
 BandPassNode::~BandPassNode()
 {
-  forRange(BandPassFilter * filter, FiltersPerListener.Values()) delete filter;
+  forRange (BandPassFilter* filter, FiltersPerListener.Values())
+    delete filter;
 }
 
 float BandPassNode::GetCentralFrequency()
@@ -730,10 +682,7 @@ float BandPassNode::GetCentralFrequency()
 void BandPassNode::SetCentralFrequency(float frequency)
 {
   mCentralFrequency.Set(frequency, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(
-          &BandPassNode::SetCentralFrequencyThreaded, this, frequency),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&BandPassNode::SetCentralFrequencyThreaded, this, frequency), this);
 }
 
 float BandPassNode::GetQualityFactor()
@@ -744,8 +693,7 @@ float BandPassNode::GetQualityFactor()
 void BandPassNode::SetQualityFactor(float Q)
 {
   mQuality.Set(Q, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&BandPassNode::SetQualityFactorThreaded, this, Q), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&BandPassNode::SetQualityFactorThreaded, this, Q), this);
 }
 
 bool BandPassNode::GetOutputSamples(BufferType* outputBuffer,
@@ -771,9 +719,7 @@ bool BandPassNode::GetOutputSamples(BufferType* outputBuffer,
 
   // Apply filter
   for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
-    filter->ProcessFrame(mInputSamplesThreaded.Data() + i,
-                         outputBuffer->Data() + i,
-                         numberOfChannels);
+    filter->ProcessFrame(mInputSamplesThreaded.Data() + i, outputBuffer->Data() + i, numberOfChannels);
 
   AddBypassThreaded(outputBuffer);
 
@@ -803,14 +749,14 @@ void BandPassNode::RemoveListenerThreaded(SoundEvent* event)
 
 void BandPassNode::SetCentralFrequencyThreaded(float frequency)
 {
-  forRange(BandPassFilter * filter, FiltersPerListener.Values())
-      filter->SetFrequency(frequency);
+  forRange (BandPassFilter* filter, FiltersPerListener.Values())
+    filter->SetFrequency(frequency);
 }
 
 void BandPassNode::SetQualityFactorThreaded(float Q)
 {
-  forRange(BandPassFilter * filter, FiltersPerListener.Values())
-      filter->SetQuality(Q);
+  forRange (BandPassFilter* filter, FiltersPerListener.Values())
+    filter->SetQuality(Q);
 }
 
 // Equalizer Node
@@ -839,7 +785,8 @@ EqualizerNode::EqualizerNode(StringParam name, unsigned ID) :
 
 EqualizerNode::~EqualizerNode()
 {
-  forRange(Equalizer * filter, FiltersPerListener.Values()) delete filter;
+  forRange (Equalizer* filter, FiltersPerListener.Values())
+    delete filter;
 }
 
 float EqualizerNode::GetLowPassGain()
@@ -849,14 +796,12 @@ float EqualizerNode::GetLowPassGain()
 
 void EqualizerNode::SetLowPassGain(float gain)
 {
-  mLowPassGain.Set(Math::Clamp(gain, 0.0f, cMaxVolumeValue),
-                   AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&EqualizerNode::SetBandGainThreaded,
-                    this,
-                    EqualizerBands::Below80,
-                    mLowPassGain.Get(AudioThreads::MainThread)),
-      this);
+  mLowPassGain.Set(Math::Clamp(gain, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EqualizerNode::SetBandGainThreaded,
+                                         this,
+                                         EqualizerBands::Below80,
+                                         mLowPassGain.Get(AudioThreads::MainThread)),
+                           this);
 }
 
 float EqualizerNode::GetHighPassGain()
@@ -866,14 +811,12 @@ float EqualizerNode::GetHighPassGain()
 
 void EqualizerNode::SetHighPassGain(float gain)
 {
-  mHighPassGain.Set(Math::Clamp(gain, 0.0f, cMaxVolumeValue),
-                    AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&EqualizerNode::SetBandGainThreaded,
-                    this,
-                    EqualizerBands::Above5000,
-                    mHighPassGain.Get(AudioThreads::MainThread)),
-      this);
+  mHighPassGain.Set(Math::Clamp(gain, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EqualizerNode::SetBandGainThreaded,
+                                         this,
+                                         EqualizerBands::Above5000,
+                                         mHighPassGain.Get(AudioThreads::MainThread)),
+                           this);
 }
 
 float EqualizerNode::GetBand1Gain()
@@ -883,13 +826,10 @@ float EqualizerNode::GetBand1Gain()
 
 void EqualizerNode::SetBand1Gain(float gain)
 {
-  mBand1Gain.Set(Math::Clamp(gain, 0.0f, cMaxVolumeValue),
-                 AudioThreads::MainThread);
+  mBand1Gain.Set(Math::Clamp(gain, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
   Z::gSound->Mixer.AddTask(
-      CreateFunctor(&EqualizerNode::SetBandGainThreaded,
-                    this,
-                    EqualizerBands::At150,
-                    mBand1Gain.Get(AudioThreads::MainThread)),
+      CreateFunctor(
+          &EqualizerNode::SetBandGainThreaded, this, EqualizerBands::At150, mBand1Gain.Get(AudioThreads::MainThread)),
       this);
 }
 
@@ -900,13 +840,10 @@ float EqualizerNode::GetBand2Gain()
 
 void EqualizerNode::SetBand2Gain(float gain)
 {
-  mBand2Gain.Set(Math::Clamp(gain, 0.0f, cMaxVolumeValue),
-                 AudioThreads::MainThread);
+  mBand2Gain.Set(Math::Clamp(gain, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
   Z::gSound->Mixer.AddTask(
-      CreateFunctor(&EqualizerNode::SetBandGainThreaded,
-                    this,
-                    EqualizerBands::At600,
-                    mBand2Gain.Get(AudioThreads::MainThread)),
+      CreateFunctor(
+          &EqualizerNode::SetBandGainThreaded, this, EqualizerBands::At600, mBand2Gain.Get(AudioThreads::MainThread)),
       this);
 }
 
@@ -917,46 +854,30 @@ float EqualizerNode::GetBand3Gain()
 
 void EqualizerNode::SetBand3Gain(float gain)
 {
-  mBand3Gain.Set(Math::Clamp(gain, 0.0f, cMaxVolumeValue),
-                 AudioThreads::MainThread);
+  mBand3Gain.Set(Math::Clamp(gain, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
   Z::gSound->Mixer.AddTask(
-      CreateFunctor(&EqualizerNode::SetBandGainThreaded,
-                    this,
-                    EqualizerBands::At2500,
-                    mBand3Gain.Get(AudioThreads::MainThread)),
+      CreateFunctor(
+          &EqualizerNode::SetBandGainThreaded, this, EqualizerBands::At2500, mBand3Gain.Get(AudioThreads::MainThread)),
       this);
 }
 
-void EqualizerNode::InterpolateAllBands(float lowPass,
-                                        float band1,
-                                        float band2,
-                                        float band3,
-                                        float highPass,
-                                        float timeToInterpolate)
+void EqualizerNode::InterpolateAllBands(
+    float lowPass, float band1, float band2, float band3, float highPass, float timeToInterpolate)
 {
-  mLowPassGain.Set(Math::Clamp(lowPass, 0.0f, cMaxVolumeValue),
-                   AudioThreads::MainThread);
-  mBand1Gain.Set(Math::Clamp(band1, 0.0f, cMaxVolumeValue),
-                 AudioThreads::MainThread);
-  mBand2Gain.Set(Math::Clamp(band2, 0.0f, cMaxVolumeValue),
-                 AudioThreads::MainThread);
-  mBand3Gain.Set(Math::Clamp(band3, 0.0f, cMaxVolumeValue),
-                 AudioThreads::MainThread);
-  mHighPassGain.Set(Math::Clamp(highPass, 0.0f, cMaxVolumeValue),
-                    AudioThreads::MainThread);
+  mLowPassGain.Set(Math::Clamp(lowPass, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
+  mBand1Gain.Set(Math::Clamp(band1, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
+  mBand2Gain.Set(Math::Clamp(band2, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
+  mBand3Gain.Set(Math::Clamp(band3, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
+  mHighPassGain.Set(Math::Clamp(highPass, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
 
   float* values = new float[EqualizerBands::Count];
   values[EqualizerBands::Below80] = mLowPassGain.Get(AudioThreads::MainThread);
   values[EqualizerBands::At150] = mBand1Gain.Get(AudioThreads::MainThread);
   values[EqualizerBands::At600] = mBand2Gain.Get(AudioThreads::MainThread);
   values[EqualizerBands::At2500] = mBand3Gain.Get(AudioThreads::MainThread);
-  values[EqualizerBands::Above5000] =
-      mHighPassGain.Get(AudioThreads::MainThread);
+  values[EqualizerBands::Above5000] = mHighPassGain.Get(AudioThreads::MainThread);
 
-  Z::gSound->Mixer.AddTask(CreateFunctor(&EqualizerNode::InterpolateAllThreaded,
-                                         this,
-                                         values,
-                                         timeToInterpolate),
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EqualizerNode::InterpolateAllThreaded, this, values, timeToInterpolate),
                            this);
 }
 
@@ -984,10 +905,7 @@ bool EqualizerNode::GetOutputSamples(BufferType* outputBuffer,
   }
 
   // Apply filter
-  filter->ProcessBuffer(mInputSamplesThreaded.Data(),
-                        outputBuffer->Data(),
-                        numberOfChannels,
-                        bufferSize);
+  filter->ProcessBuffer(mInputSamplesThreaded.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
 
   AddBypassThreaded(outputBuffer);
 
@@ -1015,18 +933,16 @@ void EqualizerNode::RemoveListenerThreaded(SoundEvent* event)
   }
 }
 
-void EqualizerNode::SetBandGainThreaded(EqualizerBands::Enum whichBand,
-                                        float gain)
+void EqualizerNode::SetBandGainThreaded(EqualizerBands::Enum whichBand, float gain)
 {
-  forRange(Equalizer * filter, FiltersPerListener.Values())
-      filter->SetBandGain(whichBand, gain);
+  forRange (Equalizer* filter, FiltersPerListener.Values())
+    filter->SetBandGain(whichBand, gain);
 }
 
-void EqualizerNode::InterpolateAllThreaded(float* values,
-                                           float timeToInterpolate)
+void EqualizerNode::InterpolateAllThreaded(float* values, float timeToInterpolate)
 {
-  forRange(Equalizer * filter, FiltersPerListener.Values())
-      filter->InterpolateBands(values, timeToInterpolate);
+  forRange (Equalizer* filter, FiltersPerListener.Values())
+    filter->InterpolateBands(values, timeToInterpolate);
 }
 
 // Reverb Node
@@ -1052,7 +968,8 @@ ReverbNode::ReverbNode(StringParam name, unsigned ID) :
 
 ReverbNode::~ReverbNode()
 {
-  forRange(Reverb * filter, FiltersPerListener.Values()) delete filter;
+  forRange (Reverb* filter, FiltersPerListener.Values())
+    delete filter;
 }
 
 float ReverbNode::GetLength()
@@ -1064,9 +981,7 @@ void ReverbNode::SetLength(float time)
 {
   time = Math::Clamp(time, 0.0f, 100.0f);
   mTimeSec.Set(time, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&ReverbNode::SetLengthMsThreaded, this, time * 1000.0f),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&ReverbNode::SetLengthMsThreaded, this, time * 1000.0f), this);
 }
 
 float ReverbNode::GetWetPercent()
@@ -1078,8 +993,7 @@ void ReverbNode::SetWetPercent(float percent)
 {
   percent = Math::Clamp(percent, 0.0f, 100.0f) / 100.0f;
   mWetLevelValue.Set(percent, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&ReverbNode::SetWetValueThreaded, this, percent), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&ReverbNode::SetWetValueThreaded, this, percent), this);
 }
 
 float ReverbNode::GetWetValue()
@@ -1091,28 +1005,21 @@ void ReverbNode::SetWetValue(float value)
 {
   value = Math::Clamp(value, 0.0f, 1.0f);
   mWetLevelValue.Set(value, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&ReverbNode::SetWetValueThreaded, this, value), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&ReverbNode::SetWetValueThreaded, this, value), this);
 }
 
 void ReverbNode::InterpolateWetPercent(float percent, float time)
 {
   percent = Math::Clamp(percent, 0.0f, 100.0f) / 100.0f;
   mWetLevelValue.Set(percent, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(
-          &ReverbNode::InterpolateWetValueThreaded, this, percent, time),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&ReverbNode::InterpolateWetValueThreaded, this, percent, time), this);
 }
 
 void ReverbNode::InterpolateWetValue(float value, float time)
 {
   value = Math::Clamp(value, 0.0f, 1.0f);
   mWetLevelValue.Set(value, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(
-          &ReverbNode::InterpolateWetValueThreaded, this, value, time),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&ReverbNode::InterpolateWetValueThreaded, this, value, time), this);
 }
 
 bool ReverbNode::GetOutputSamples(BufferType* outputBuffer,
@@ -1123,8 +1030,7 @@ bool ReverbNode::GetOutputSamples(BufferType* outputBuffer,
   unsigned bufferSize = outputBuffer->Size();
 
   // Get input
-  bool isThereInput =
-      AccumulateInputSamples(bufferSize, numberOfChannels, listener);
+  bool isThereInput = AccumulateInputSamples(bufferSize, numberOfChannels, listener);
 
   // No input and the filter has no output
   if (!isThereInput && mOutputFinishedThreaded)
@@ -1140,10 +1046,8 @@ bool ReverbNode::GetOutputSamples(BufferType* outputBuffer,
     FiltersPerListener[listener] = filter;
   }
 
-  bool hasOutput = filter->ProcessBuffer(mInputSamplesThreaded.Data(),
-                                         outputBuffer->Data(),
-                                         numberOfChannels,
-                                         bufferSize);
+  bool hasOutput =
+      filter->ProcessBuffer(mInputSamplesThreaded.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
 
   if (!isThereInput && !hasOutput)
     mOutputFinishedThreaded = true;
@@ -1168,19 +1072,20 @@ void ReverbNode::RemoveListenerThreaded(SoundEvent* event)
 
 void ReverbNode::SetLengthMsThreaded(float time)
 {
-  forRange(Reverb * filter, FiltersPerListener.Values()) filter->SetTime(time);
+  forRange (Reverb* filter, FiltersPerListener.Values())
+    filter->SetTime(time);
 }
 
 void ReverbNode::SetWetValueThreaded(float value)
 {
-  forRange(Reverb * filter, FiltersPerListener.Values())
-      filter->SetWetLevel(value);
+  forRange (Reverb* filter, FiltersPerListener.Values())
+    filter->SetWetLevel(value);
 }
 
 void ReverbNode::InterpolateWetValueThreaded(float value, float time)
 {
-  forRange(Reverb * filter, FiltersPerListener.Values())
-      filter->InterpolateWetLevel(value, time);
+  forRange (Reverb* filter, FiltersPerListener.Values())
+    filter->InterpolateWetLevel(value, time);
 }
 
 // Delay Node
@@ -1208,7 +1113,8 @@ DelayNode::DelayNode(StringParam name, unsigned ID) :
 
 DelayNode::~DelayNode()
 {
-  forRange(DelayLine * filter, FiltersPerListener.Values()) delete filter;
+  forRange (DelayLine* filter, FiltersPerListener.Values())
+    delete filter;
 }
 
 float DelayNode::GetDelay()
@@ -1220,9 +1126,7 @@ void DelayNode::SetDelay(float seconds)
 {
   seconds = Math::Max(seconds, 0.0f);
   mDelaySec.Set(seconds, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DelayNode::SetDelayMsThreaded, this, seconds * 1000.0f),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DelayNode::SetDelayMsThreaded, this, seconds * 1000.0f), this);
 }
 
 float DelayNode::GetFeedbackPercent()
@@ -1234,8 +1138,7 @@ void DelayNode::SetFeedbackPercent(float feedback)
 {
   feedback = Math::Clamp(feedback, 0.0f, 100.0f) / 100.0f;
   mFeedbackValue.Set(feedback, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DelayNode::SetFeedbackThreaded, this, feedback), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DelayNode::SetFeedbackThreaded, this, feedback), this);
 }
 
 float DelayNode::GetFeedbackValue()
@@ -1247,8 +1150,7 @@ void DelayNode::SetFeedbackValue(float feedback)
 {
   feedback = Math::Clamp(feedback, 0.0f, 1.0f);
   mFeedbackValue.Set(feedback, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DelayNode::SetFeedbackThreaded, this, feedback), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DelayNode::SetFeedbackThreaded, this, feedback), this);
 }
 
 float DelayNode::GetWetPercent()
@@ -1260,8 +1162,7 @@ void DelayNode::SetWetPercent(float wetLevel)
 {
   wetLevel = Math::Clamp(wetLevel, 0.0f, 100.0f) / 100.0f;
   mWetValue.Set(wetLevel, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DelayNode::SetWetValueThreaded, this, wetLevel), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DelayNode::SetWetValueThreaded, this, wetLevel), this);
 }
 
 float DelayNode::GetWetValue()
@@ -1273,28 +1174,20 @@ void DelayNode::SetWetValue(float wetLevel)
 {
   wetLevel = Math::Clamp(wetLevel, 0.0f, 1.0f);
   mWetValue.Set(wetLevel, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DelayNode::SetWetValueThreaded, this, wetLevel), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DelayNode::SetWetValueThreaded, this, wetLevel), this);
 }
 
 void DelayNode::InterpolateWetPercent(float percent, float time)
 {
   Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DelayNode::InterpolateWetValueThreaded,
-                    this,
-                    Math::Clamp(percent, 0.0f, 100.0f) / 100.0f,
-                    time),
+      CreateFunctor(&DelayNode::InterpolateWetValueThreaded, this, Math::Clamp(percent, 0.0f, 100.0f) / 100.0f, time),
       this);
 }
 
 void DelayNode::InterpolateWetValue(float wetLevel, float time)
 {
   Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DelayNode::InterpolateWetValueThreaded,
-                    this,
-                    Math::Clamp(wetLevel, 0.0f, 1.0f),
-                    time),
-      this);
+      CreateFunctor(&DelayNode::InterpolateWetValueThreaded, this, Math::Clamp(wetLevel, 0.0f, 1.0f), time), this);
 }
 
 bool DelayNode::GetOutputSamples(BufferType* outputBuffer,
@@ -1305,8 +1198,7 @@ bool DelayNode::GetOutputSamples(BufferType* outputBuffer,
   unsigned outputBufferSize = outputBuffer->Size();
 
   // Get input
-  bool isThereInput =
-      AccumulateInputSamples(outputBufferSize, numberOfChannels, listener);
+  bool isThereInput = AccumulateInputSamples(outputBufferSize, numberOfChannels, listener);
 
   // Check if the listener is in the map
   DelayLine* filter = FiltersPerListener.FindValue(listener, nullptr);
@@ -1325,15 +1217,10 @@ bool DelayNode::GetOutputSamples(BufferType* outputBuffer,
 
   // If there is no input data make sure the array is zeroed out
   if (!isThereInput)
-    memset(mInputSamplesThreaded.Data(),
-           0,
-           sizeof(float) * mInputSamplesThreaded.Size());
+    memset(mInputSamplesThreaded.Data(), 0, sizeof(float) * mInputSamplesThreaded.Size());
 
   // Apply filter
-  filter->ProcessBuffer(mInputSamplesThreaded.Data(),
-                        outputBuffer->Data(),
-                        numberOfChannels,
-                        outputBufferSize);
+  filter->ProcessBuffer(mInputSamplesThreaded.Data(), outputBuffer->Data(), numberOfChannels, outputBufferSize);
 
   AddBypassThreaded(outputBuffer);
 
@@ -1353,26 +1240,26 @@ void DelayNode::RemoveListenerThreaded(SoundEvent* event)
 
 void DelayNode::SetDelayMsThreaded(float time)
 {
-  forRange(DelayLine * filter, FiltersPerListener.Values())
-      filter->SetDelayMSec(time);
+  forRange (DelayLine* filter, FiltersPerListener.Values())
+    filter->SetDelayMSec(time);
 }
 
 void DelayNode::SetFeedbackThreaded(float value)
 {
-  forRange(DelayLine * filter, FiltersPerListener.Values())
-      filter->SetFeedback(value);
+  forRange (DelayLine* filter, FiltersPerListener.Values())
+    filter->SetFeedback(value);
 }
 
 void DelayNode::SetWetValueThreaded(float value)
 {
-  forRange(DelayLine * filter, FiltersPerListener.Values())
-      filter->SetWetLevel(value);
+  forRange (DelayLine* filter, FiltersPerListener.Values())
+    filter->SetWetLevel(value);
 }
 
 void DelayNode::InterpolateWetValueThreaded(float value, float time)
 {
-  forRange(DelayLine * filter, FiltersPerListener.Values())
-      filter->InterpolateWetLevel(value, time);
+  forRange (DelayLine* filter, FiltersPerListener.Values())
+    filter->InterpolateWetLevel(value, time);
 }
 
 // Flanger Node
@@ -1397,7 +1284,8 @@ FlangerNode::FlangerNode(StringParam name, unsigned ID) :
 
 FlangerNode::~FlangerNode()
 {
-  forRange(Data * data, FiltersPerListener.Values()) delete data;
+  forRange (Data* data, FiltersPerListener.Values())
+    delete data;
 }
 
 float FlangerNode::GetMaxDelayMillisec()
@@ -1419,8 +1307,7 @@ void FlangerNode::SetModulationFrequency(float frequency)
 {
   frequency = Math::Clamp(frequency, 0.0f, 20000.0f);
   mModFrequency.Set(frequency, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&FlangerNode::SetModFreqThreaded, this, frequency), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&FlangerNode::SetModFreqThreaded, this, frequency), this);
 }
 
 float FlangerNode::GetFeedbackPercent()
@@ -1432,8 +1319,7 @@ void FlangerNode::SetFeedbackPercent(float percent)
 {
   percent = Math::Clamp(percent, 0.0f, 100.0f) / 100.0f;
   mFeedback.Set(percent, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&FlangerNode::SetFeedbackThreaded, this, percent), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&FlangerNode::SetFeedbackThreaded, this, percent), this);
 }
 
 float FlangerNode::GetFeedbackValue()
@@ -1445,8 +1331,7 @@ void FlangerNode::SetFeedbackValue(float value)
 {
   value = Math::Clamp(value, 0.0f, 1.0f);
   mFeedback.Set(value, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&FlangerNode::SetFeedbackThreaded, this, value), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&FlangerNode::SetFeedbackThreaded, this, value), this);
 }
 
 bool FlangerNode::GetOutputSamples(BufferType* outputBuffer,
@@ -1473,13 +1358,10 @@ bool FlangerNode::GetOutputSamples(BufferType* outputBuffer,
   // Apply filter
   for (unsigned frame = 0; frame < bufferSize; frame += numberOfChannels)
   {
-    filter->Delay.SetDelayMSec(filter->LFO.GetNextSample() *
-                               mMaxDelayMS.Get(AudioThreads::MixThread));
+    filter->Delay.SetDelayMSec(filter->LFO.GetNextSample() * mMaxDelayMS.Get(AudioThreads::MixThread));
 
-    filter->Delay.ProcessBuffer(mInputSamplesThreaded.Data() + frame,
-                                outputBuffer->Data() + frame,
-                                numberOfChannels,
-                                numberOfChannels);
+    filter->Delay.ProcessBuffer(
+        mInputSamplesThreaded.Data() + frame, outputBuffer->Data() + frame, numberOfChannels, numberOfChannels);
   }
 
   AddBypassThreaded(outputBuffer);
@@ -1500,27 +1382,25 @@ void FlangerNode::RemoveListenerThreaded(SoundEvent* event)
 
 void FlangerNode::SetModFreqThreaded(float frequency)
 {
-  forRange(Data * data, FiltersPerListener.Values())
-      data->LFO.SetFrequency(frequency);
+  forRange (Data* data, FiltersPerListener.Values())
+    data->LFO.SetFrequency(frequency);
 }
 
 void FlangerNode::SetFeedbackThreaded(float value)
 {
-  forRange(Data * data, FiltersPerListener.Values())
-      data->Delay.SetFeedback(value);
+  forRange (Data* data, FiltersPerListener.Values())
+    data->Delay.SetFeedback(value);
 }
 
 void FlangerNode::SetMaxDelayMSecThreaded(float delay)
 {
-  forRange(Data * data, FiltersPerListener.Values())
-      data->Delay.SetMaxDelayMSec(delay, cMaxChannels);
+  forRange (Data* data, FiltersPerListener.Values())
+    data->Delay.SetMaxDelayMSec(delay, cMaxChannels);
 }
 
 FlangerNode::Data::Data(float frequency, float feedback, float maxDelayMs)
 {
-  Delay.SetMaxDelayMSec(
-      maxDelayMs,
-      Z::gSound->Mixer.mSystemChannels.Get(AudioThreads::MixThread));
+  Delay.SetMaxDelayMSec(maxDelayMs, Z::gSound->Mixer.mSystemChannels.Get(AudioThreads::MixThread));
   Delay.SetDelayMSec(0);
   Delay.SetFeedback(feedback);
   Delay.SetWetLevel(0.5f);
@@ -1565,7 +1445,8 @@ ChorusNode::ChorusNode(StringParam name, unsigned ID) :
 
 ChorusNode::~ChorusNode()
 {
-  forRange(Data * data, FiltersPerListener.Values()) delete data;
+  forRange (Data* data, FiltersPerListener.Values())
+    delete data;
 }
 
 float ChorusNode::GetMaxDelayMillisec()
@@ -1597,8 +1478,7 @@ void ChorusNode::SetModulationFrequency(float frequency)
 {
   frequency = Math::Max(frequency, 0.0f);
   mModFrequency.Set(frequency, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&ChorusNode::SetModFreqThreaded, this, frequency), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&ChorusNode::SetModFreqThreaded, this, frequency), this);
 }
 
 float ChorusNode::GetFeedbackPercent()
@@ -1610,8 +1490,7 @@ void ChorusNode::SetFeedbackPercent(float percent)
 {
   percent = Math::Clamp(percent, 0.0f, 100.0f) / 100.0f;
   mFeedback.Set(percent, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&ChorusNode::SetFeedbackThreaded, this, percent), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&ChorusNode::SetFeedbackThreaded, this, percent), this);
 }
 
 float ChorusNode::GetFeedbackValue()
@@ -1623,8 +1502,7 @@ void ChorusNode::SetFeedbackValue(float value)
 {
   value = Math::Clamp(value, 0.0f, 1.0f);
   mFeedback.Set(value, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&ChorusNode::SetFeedbackThreaded, this, value), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&ChorusNode::SetFeedbackThreaded, this, value), this);
 }
 
 float ChorusNode::GetOffsetMillisec()
@@ -1661,16 +1539,13 @@ bool ChorusNode::GetOutputSamples(BufferType* outputBuffer,
   // Apply filter
   for (unsigned frame = 0; frame < bufferSize; frame += numberOfChannels)
   {
-    filter->Delay.SetDelayMSec((filter->LFO.GetNextSample() *
-                                (mMaxDelayMS.Get(AudioThreads::MixThread) -
-                                 mMinDelayMS.Get(AudioThreads::MixThread))) +
-                               (mMinDelayMS.Get(AudioThreads::MixThread) +
-                                mChorusOffsetMS.Get(AudioThreads::MixThread)));
+    filter->Delay.SetDelayMSec(
+        (filter->LFO.GetNextSample() *
+         (mMaxDelayMS.Get(AudioThreads::MixThread) - mMinDelayMS.Get(AudioThreads::MixThread))) +
+        (mMinDelayMS.Get(AudioThreads::MixThread) + mChorusOffsetMS.Get(AudioThreads::MixThread)));
 
-    filter->Delay.ProcessBuffer(mInputSamplesThreaded.Data() + frame,
-                                outputBuffer->Data() + frame,
-                                numberOfChannels,
-                                numberOfChannels);
+    filter->Delay.ProcessBuffer(
+        mInputSamplesThreaded.Data() + frame, outputBuffer->Data() + frame, numberOfChannels, numberOfChannels);
   }
 
   AddBypassThreaded(outputBuffer);
@@ -1691,14 +1566,14 @@ void ChorusNode::RemoveListenerThreaded(SoundEvent* event)
 
 void ChorusNode::SetModFreqThreaded(float frequency)
 {
-  forRange(Data * data, FiltersPerListener.Values())
-      data->LFO.SetFrequency(frequency);
+  forRange (Data* data, FiltersPerListener.Values())
+    data->LFO.SetFrequency(frequency);
 }
 
 void ChorusNode::SetFeedbackThreaded(float value)
 {
-  forRange(Data * data, FiltersPerListener.Values())
-      data->Delay.SetFeedback(value);
+  forRange (Data* data, FiltersPerListener.Values())
+    data->Delay.SetFeedback(value);
 }
 
 // Compressor Node
@@ -1738,9 +1613,7 @@ void CompressorNode::SetInputGainDecibels(float dB)
 {
   mInputGainDB = Math::Clamp(dB, cMinDecibelsValue, cMaxDecibelsValue);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DynamicsProcessor::SetInputGain, &Filter, mInputGainDB),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetInputGain, &Filter, mInputGainDB), this);
 }
 
 float CompressorNode::GetThresholdDecibels()
@@ -1752,9 +1625,7 @@ void CompressorNode::SetThresholdDecibels(float dB)
 {
   mThresholdDB = Math::Clamp(dB, cMinDecibelsValue, cMaxDecibelsValue);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DynamicsProcessor::SetThreshold, &Filter, mThresholdDB),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetThreshold, &Filter, mThresholdDB), this);
 }
 
 float CompressorNode::GetAttackMillisec()
@@ -1766,9 +1637,7 @@ void CompressorNode::SetAttackMillisec(float attack)
 {
   mAttackMSec = Math::Max(attack, 0.0f);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DynamicsProcessor::SetAttackMSec, &Filter, mAttackMSec),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetAttackMSec, &Filter, mAttackMSec), this);
 }
 
 float CompressorNode::GetReleaseMillisec()
@@ -1780,9 +1649,7 @@ void CompressorNode::SetReleaseMillisec(float release)
 {
   mReleaseMSec = Math::Max(release, mReleaseMSec);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DynamicsProcessor::SetReleaseMSec, &Filter, mReleaseMSec),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetReleaseMSec, &Filter, mReleaseMSec), this);
 }
 
 float CompressorNode::GetRatio()
@@ -1794,8 +1661,7 @@ void CompressorNode::SetRatio(float ratio)
 {
   mRatio = ratio;
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DynamicsProcessor::SetRatio, &Filter, mRatio), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetRatio, &Filter, mRatio), this);
 }
 
 float CompressorNode::GetOutputGainDecibels()
@@ -1807,9 +1673,7 @@ void CompressorNode::SetOutputGainDecibels(float dB)
 {
   mOutputGainDB = Math::Clamp(dB, cMinDecibelsValue, cMaxDecibelsValue);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DynamicsProcessor::SetOutputGain, &Filter, mOutputGainDB),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetOutputGain, &Filter, mOutputGainDB), this);
 }
 
 float CompressorNode::GetKneeWidth()
@@ -1821,9 +1685,7 @@ void CompressorNode::SetKneeWidth(float knee)
 {
   mKneeWidth = knee;
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DynamicsProcessor::SetKneeWidth, &Filter, mKneeWidth),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetKneeWidth, &Filter, mKneeWidth), this);
 }
 
 bool CompressorNode::GetOutputSamples(BufferType* outputBuffer,
@@ -1838,11 +1700,8 @@ bool CompressorNode::GetOutputSamples(BufferType* outputBuffer,
     return false;
 
   // Apply filter
-  Filter.ProcessBuffer(mInputSamplesThreaded.Data(),
-                       mInputSamplesThreaded.Data(),
-                       outputBuffer->Data(),
-                       numberOfChannels,
-                       bufferSize);
+  Filter.ProcessBuffer(
+      mInputSamplesThreaded.Data(), mInputSamplesThreaded.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
 
   AddBypassThreaded(outputBuffer);
 
@@ -1886,9 +1745,7 @@ void ExpanderNode::SetInputGainDecibels(float dB)
 {
   mInputGainDB = Math::Clamp(dB, cMinDecibelsValue, cMaxDecibelsValue);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DynamicsProcessor::SetInputGain, &Filter, mInputGainDB),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetInputGain, &Filter, mInputGainDB), this);
 }
 
 float ExpanderNode::GetThresholdDecibels()
@@ -1900,9 +1757,7 @@ void ExpanderNode::SetThresholdDecibels(float dB)
 {
   mThresholdDB = Math::Clamp(dB, cMinDecibelsValue, cMaxDecibelsValue);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DynamicsProcessor::SetThreshold, &Filter, mThresholdDB),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetThreshold, &Filter, mThresholdDB), this);
 }
 
 float ExpanderNode::GetAttackMillisec()
@@ -1914,9 +1769,7 @@ void ExpanderNode::SetAttackMillisec(float attack)
 {
   mAttackMSec = Math::Max(attack, 0.0f);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DynamicsProcessor::SetAttackMSec, &Filter, mAttackMSec),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetAttackMSec, &Filter, mAttackMSec), this);
 }
 
 float ExpanderNode::GetReleaseMillisec()
@@ -1928,9 +1781,7 @@ void ExpanderNode::SetReleaseMillisec(float release)
 {
   mReleaseMSec = Math::Max(release, 0.0f);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DynamicsProcessor::SetReleaseMSec, &Filter, mReleaseMSec),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetReleaseMSec, &Filter, mReleaseMSec), this);
 }
 
 float ExpanderNode::GetRatio()
@@ -1942,8 +1793,7 @@ void ExpanderNode::SetRatio(float ratio)
 {
   mRatio = ratio;
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DynamicsProcessor::SetRatio, &Filter, mRatio), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetRatio, &Filter, mRatio), this);
 }
 
 float ExpanderNode::GetOutputGainDecibels()
@@ -1955,9 +1805,7 @@ void ExpanderNode::SetOutputGainDecibels(float dB)
 {
   mOutputGainDB = Math::Clamp(dB, cMinDecibelsValue, cMaxDecibelsValue);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DynamicsProcessor::SetOutputGain, &Filter, mOutputGainDB),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetOutputGain, &Filter, mOutputGainDB), this);
 }
 
 float ExpanderNode::GetKneeWidth()
@@ -1969,9 +1817,7 @@ void ExpanderNode::SetKneeWidth(float knee)
 {
   mKneeWidth = knee;
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DynamicsProcessor::SetKneeWidth, &Filter, mKneeWidth),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetKneeWidth, &Filter, mKneeWidth), this);
 }
 
 bool ExpanderNode::GetOutputSamples(BufferType* outputBuffer,
@@ -1986,11 +1832,8 @@ bool ExpanderNode::GetOutputSamples(BufferType* outputBuffer,
     return false;
 
   // Apply filter
-  Filter.ProcessBuffer(mInputSamplesThreaded.Data(),
-                       mInputSamplesThreaded.Data(),
-                       outputBuffer->Data(),
-                       numberOfChannels,
-                       bufferSize);
+  Filter.ProcessBuffer(
+      mInputSamplesThreaded.Data(), mInputSamplesThreaded.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
 
   AddBypassThreaded(outputBuffer);
 
@@ -2041,12 +1884,9 @@ float AddNoiseNode::GetAdditiveGain()
 
 void AddNoiseNode::SetAdditiveGain(float decibels)
 {
-  mAdditiveNoiseDB =
-      Math::Clamp(decibels, cMinDecibelsValue, cMaxDecibelsValue);
+  mAdditiveNoiseDB = Math::Clamp(decibels, cMinDecibelsValue, cMaxDecibelsValue);
 
-  Z::gSound->Mixer.AddTask(CreateFunctor(&AddNoiseNode::mAddGainThreaded,
-                                         this,
-                                         ValueFromDecibels(mAdditiveNoiseDB)),
+  Z::gSound->Mixer.AddTask(CreateFunctor(&AddNoiseNode::mAddGainThreaded, this, ValueFromDecibels(mAdditiveNoiseDB)),
                            this);
 }
 
@@ -2057,13 +1897,10 @@ float AddNoiseNode::GetMultiplicativeGain()
 
 void AddNoiseNode::SetMultiplicativeGain(float decibels)
 {
-  mMultipleNoiseDB =
-      Math::Clamp(decibels, cMinDecibelsValue, cMaxDecibelsValue);
+  mMultipleNoiseDB = Math::Clamp(decibels, cMinDecibelsValue, cMaxDecibelsValue);
 
-  Z::gSound->Mixer.AddTask(CreateFunctor(&AddNoiseNode::mMultiplyGainThreaded,
-                                         this,
-                                         ValueFromDecibels(mMultipleNoiseDB)),
-                           this);
+  Z::gSound->Mixer.AddTask(
+      CreateFunctor(&AddNoiseNode::mMultiplyGainThreaded, this, ValueFromDecibels(mMultipleNoiseDB)), this);
 }
 
 float AddNoiseNode::GetAdditiveCutoff()
@@ -2076,10 +1913,7 @@ void AddNoiseNode::SetAdditiveCutoff(float frequency)
   mAdditiveNoiseCutoffHz = Math::Max(frequency, 0.0f);
 
   Z::gSound->Mixer.AddTask(
-      CreateFunctor(&AddNoiseNode::mAddPeriodThreaded,
-                    this,
-                    ValueFromFrequency(mAdditiveNoiseCutoffHz)),
-      this);
+      CreateFunctor(&AddNoiseNode::mAddPeriodThreaded, this, ValueFromFrequency(mAdditiveNoiseCutoffHz)), this);
 }
 
 float AddNoiseNode::GetMultiplicativeCutoff()
@@ -2092,10 +1926,7 @@ void AddNoiseNode::SetMultiplicativeCutoff(float frequency)
   mMultipleNoiseCutoffHz = Math::Max(frequency, 0.0f);
 
   Z::gSound->Mixer.AddTask(
-      CreateFunctor(&AddNoiseNode::mMultiplyPeriodThreaded,
-                    this,
-                    ValueFromFrequency(mMultipleNoiseCutoffHz)),
-      this);
+      CreateFunctor(&AddNoiseNode::mMultiplyPeriodThreaded, this, ValueFromFrequency(mMultipleNoiseCutoffHz)), this);
 }
 
 bool AddNoiseNode::GetOutputSamples(BufferType* outputBuffer,
@@ -2109,17 +1940,13 @@ bool AddNoiseNode::GetOutputSamples(BufferType* outputBuffer,
   if (!AccumulateInputSamples(bufferSize, numberOfChannels, listener))
     return false;
 
-  BufferRange outputRange = outputBuffer->All(),
-              inputRange = mInputSamplesThreaded.All();
+  BufferRange outputRange = outputBuffer->All(), inputRange = mInputSamplesThreaded.All();
   while (!outputRange.Empty())
   {
-    for (unsigned j = 0; j < numberOfChannels;
-         ++j, outputRange.PopFront(), inputRange.PopFront())
+    for (unsigned j = 0; j < numberOfChannels; ++j, outputRange.PopFront(), inputRange.PopFront())
     {
       outputRange.Front() =
-          (inputRange.Front() *
-           (1.0f - mMultiplyGainThreaded +
-            (mMultiplyGainThreaded * mMultiplyNoiseThreaded))) +
+          (inputRange.Front() * (1.0f - mMultiplyGainThreaded + (mMultiplyGainThreaded * mMultiplyNoiseThreaded))) +
           (mAddGainThreaded * mAddNoiseThreaded);
     }
 
@@ -2165,8 +1992,8 @@ ModulationNode::ModulationNode(StringParam name, unsigned ID) :
 
 ModulationNode::~ModulationNode()
 {
-  forRange(Oscillator * osc,
-           OscillatorsPerListenerThreaded.Values()) delete osc;
+  forRange (Oscillator* osc, OscillatorsPerListenerThreaded.Values())
+    delete osc;
 }
 
 bool ModulationNode::GetUseAmplitudeModulation()
@@ -2178,10 +2005,7 @@ void ModulationNode::SetUseAmplitudeModulation(bool useAmplitude)
 {
   mAmplitude.Set(useAmplitude, AudioThreads::MainThread);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(
-          &ModulationNode::SetUseAmplitudeThreaded, this, useAmplitude),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&ModulationNode::SetUseAmplitudeThreaded, this, useAmplitude), this);
 }
 
 float ModulationNode::GetFrequency()
@@ -2194,10 +2018,7 @@ void ModulationNode::SetFrequency(float frequency)
   mFrequency.Set(Math::Max(frequency, 0.0f), AudioThreads::MainThread);
 
   Z::gSound->Mixer.AddTask(
-      CreateFunctor(&ModulationNode::SetFrequencyThreaded,
-                    this,
-                    mFrequency.Get(AudioThreads::MainThread)),
-      this);
+      CreateFunctor(&ModulationNode::SetFrequencyThreaded, this, mFrequency.Get(AudioThreads::MainThread)), this);
 }
 
 float ModulationNode::GetWetPercent()
@@ -2207,8 +2028,7 @@ float ModulationNode::GetWetPercent()
 
 void ModulationNode::SetWetPercent(float percent)
 {
-  mWetLevelValue.Set(Math::Clamp(percent, 0.0f, 100.0f) / 100.0f,
-                     AudioThreads::MainThread);
+  mWetLevelValue.Set(Math::Clamp(percent, 0.0f, 100.0f) / 100.0f, AudioThreads::MainThread);
 }
 
 float ModulationNode::GetWetValue()
@@ -2233,8 +2053,7 @@ bool ModulationNode::GetOutputSamples(BufferType* outputBuffer,
     return false;
 
   // Check if the listener is in the map
-  Oscillator* sineWave =
-      OscillatorsPerListenerThreaded.FindValue(listener, nullptr);
+  Oscillator* sineWave = OscillatorsPerListenerThreaded.FindValue(listener, nullptr);
   if (!sineWave)
   {
     sineWave = new Oscillator;
@@ -2248,22 +2067,17 @@ bool ModulationNode::GetOutputSamples(BufferType* outputBuffer,
   }
 
   // Go through all frames
-  BufferRange outputRange = outputBuffer->All(),
-              inputRange = mInputSamplesThreaded.All();
+  BufferRange outputRange = outputBuffer->All(), inputRange = mInputSamplesThreaded.All();
   while (!outputRange.Empty())
   {
     float waveValue = sineWave->GetNextSample();
 
     // Multiply signal with modulator wave, taking into account gain and wet
     // percent
-    for (unsigned channel = 0; channel < numberOfChannels;
-         ++channel, outputRange.PopFront(), inputRange.PopFront())
+    for (unsigned channel = 0; channel < numberOfChannels; ++channel, outputRange.PopFront(), inputRange.PopFront())
     {
-      outputRange.Front() =
-          (inputRange.Front() * waveValue *
-           mWetLevelValue.Get(AudioThreads::MixThread)) +
-          (inputRange.Front() *
-           (1.0f - mWetLevelValue.Get(AudioThreads::MixThread)));
+      outputRange.Front() = (inputRange.Front() * waveValue * mWetLevelValue.Get(AudioThreads::MixThread)) +
+                            (inputRange.Front() * (1.0f - mWetLevelValue.Get(AudioThreads::MixThread)));
     }
   }
 
@@ -2285,7 +2099,7 @@ void ModulationNode::RemoveListenerThreaded(SoundEvent* event)
 
 void ModulationNode::SetUseAmplitudeThreaded(bool useAmplitude)
 {
-  forRange(Oscillator * sineWave, OscillatorsPerListenerThreaded.Values())
+  forRange (Oscillator* sineWave, OscillatorsPerListenerThreaded.Values())
   {
     if (useAmplitude)
       sineWave->SetPolarity(Oscillator::Unipolar);
@@ -2296,8 +2110,8 @@ void ModulationNode::SetUseAmplitudeThreaded(bool useAmplitude)
 
 void ModulationNode::SetFrequencyThreaded(float frequency)
 {
-  forRange(Oscillator * sineWave, OscillatorsPerListenerThreaded.Values())
-      sineWave->SetFrequency(frequency);
+  forRange (Oscillator* sineWave, OscillatorsPerListenerThreaded.Values())
+    sineWave->SetFrequency(frequency);
 }
 
 } // namespace Zero

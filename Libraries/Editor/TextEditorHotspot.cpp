@@ -6,8 +6,7 @@
 namespace Zero
 {
 
-TextEditorHotspot::TextEditorHotspot(StringRange regex) :
-    mSearchRegex(regex, RegexFlavor::EcmaScript, true)
+TextEditorHotspot::TextEditorHotspot(StringRange regex) : mSearchRegex(regex, RegexFlavor::EcmaScript, true)
 {
 }
 
@@ -32,7 +31,7 @@ void TextEditorHotspot::MarkHotspots(TextEditor* textEditor, int line)
   int lineStartPos = textEditor->GetPositionFromLine(line);
 
   // Check all attached hotspots
-  forRange(TextEditorHotspot * hotspot, textEditor->mHotspots.All())
+  forRange (TextEditorHotspot* hotspot, textEditor->mHotspots.All())
   {
     // Search the current line for the regex
     Matches matches;
@@ -41,8 +40,7 @@ void TextEditorHotspot::MarkHotspots(TextEditor* textEditor, int line)
     {
       int matchStart = text.FindFirstOf(matches.Front()).Begin() - text.Begin();
       int matchLength = matches.Front().ComputeRuneCount();
-      textEditor->SetTextStyle(
-          lineStartPos + matchStart, matchLength, HyperLinkStyle);
+      textEditor->SetTextStyle(lineStartPos + matchStart, matchLength, HyperLinkStyle);
     }
   }
 }
@@ -69,7 +67,7 @@ void TextEditorHotspot::ClickHotspotsAt(TextEditor* textEditor, int position)
   int lineStart = textEditor->GetPositionFromLine(line);
 
   // Check all attached hotspots
-  forRange(TextEditorHotspot * hotspot, textEditor->mHotspots.All())
+  forRange (TextEditorHotspot* hotspot, textEditor->mHotspots.All())
   {
     // Re run the regex for capture groups
     Matches matches;

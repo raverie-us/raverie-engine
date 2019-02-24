@@ -46,15 +46,12 @@ private:
   void MakeClosed(Vec3Array& points) const;
 
   template <typename Policy>
-  void GetPoints(const Vec3Array& points,
-                 Vec3Array& results,
-                 uint resolution) const;
+  void GetPoints(const Vec3Array& points, Vec3Array& results, uint resolution) const;
   template <typename Policy>
   void GetPoints(const Vec3Array& points, Vec3Array& results, real error) const;
 
   template <typename Policy>
-  Vec3 ComputePoint(
-      real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const;
+  Vec3 ComputePoint(real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const;
 
   // Used to store a stack of a point on the curve (and how to compute that
   // point) so that sub-division can be performed at a later time.
@@ -71,8 +68,7 @@ private:
     Vec3 Point;
   };
   template <typename Policy>
-  PointData ComputePointData(
-      real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const;
+  PointData ComputePointData(real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const;
 
   //---------------------------------------------------------- B-Spline Policy
   struct BSplinePolicy

@@ -4,26 +4,18 @@
 
 namespace Zilch
 {
-ZilchDefineExternalBaseType(StreamCapabilities::Enum,
-                            TypeCopyMode::ValueType,
-                            builder,
-                            type)
+ZilchDefineExternalBaseType(StreamCapabilities::Enum, TypeCopyMode::ValueType, builder, type)
 {
   ZilchFullBindEnum(builder, type, SpecialType::Flags);
   ZilchFullBindEnumValue(builder, type, StreamCapabilities::None, "None");
   ZilchFullBindEnumValue(builder, type, StreamCapabilities::Read, "Read");
   ZilchFullBindEnumValue(builder, type, StreamCapabilities::Write, "Write");
   ZilchFullBindEnumValue(builder, type, StreamCapabilities::Seek, "Seek");
-  ZilchFullBindEnumValue(
-      builder, type, StreamCapabilities::GetCount, "GetCount");
-  ZilchFullBindEnumValue(
-      builder, type, StreamCapabilities::SetCount, "SetCount");
+  ZilchFullBindEnumValue(builder, type, StreamCapabilities::GetCount, "GetCount");
+  ZilchFullBindEnumValue(builder, type, StreamCapabilities::SetCount, "SetCount");
 }
 
-ZilchDefineExternalBaseType(StreamOrigin::Enum,
-                            TypeCopyMode::ValueType,
-                            builder,
-                            type)
+ZilchDefineExternalBaseType(StreamOrigin::Enum, TypeCopyMode::ValueType, builder, type)
 {
   ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
   ZilchFullBindEnumValue(builder, type, StreamOrigin::Start, "Start");
@@ -40,27 +32,13 @@ ZilchDefineType(IEncoding, builder, type)
   ZilchFullBindDestructor(builder, type, IEncoding);
   ZilchFullBindConstructor(builder, type, IEncoding, nullptr);
 
-  ZilchFullBindMethod(
-      builder, type, &IEncoding::Write, ZilchNoOverload, "Write", nullptr)
-      ->IsVirtual = true;
-  ZilchFullBindMethod(
-      builder, type, &IEncoding::Read, ZilchNoOverload, "Read", nullptr)
-      ->IsVirtual = true;
+  ZilchFullBindMethod(builder, type, &IEncoding::Write, ZilchNoOverload, "Write", nullptr)->IsVirtual = true;
+  ZilchFullBindMethod(builder, type, &IEncoding::Read, ZilchNoOverload, "Read", nullptr)->IsVirtual = true;
 
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &IEncoding::GetAscii,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "Ascii");
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &IEncoding::GetUtf8,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "Utf8");
+  ZilchFullBindGetterSetter(
+      builder, type, &IEncoding::GetAscii, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "Ascii");
+  ZilchFullBindGetterSetter(
+      builder, type, &IEncoding::GetUtf8, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "Utf8");
 }
 
 ZilchDefineType(AsciiEncoding, builder, type)
@@ -78,13 +56,8 @@ ZilchDefineType(IStreamClass, builder, type)
   ZilchFullBindDestructor(builder, type, IStreamClass);
   ZilchFullBindConstructor(builder, type, IStreamClass, nullptr);
 
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &IStreamClass::GetCapabilities,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "Capabilities");
+  ZilchFullBindGetterSetter(
+      builder, type, &IStreamClass::GetCapabilities, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "Capabilities");
   ZilchFullBindGetterSetter(builder,
                             type,
                             &IStreamClass::GetPosition,
@@ -92,62 +65,32 @@ ZilchDefineType(IStreamClass, builder, type)
                             &IStreamClass::SetPosition,
                             ZilchNoOverload,
                             "Position");
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &IStreamClass::GetCount,
-                            ZilchNoOverload,
-                            &IStreamClass::SetCount,
-                            ZilchNoOverload,
-                            "Count");
+  ZilchFullBindGetterSetter(
+      builder, type, &IStreamClass::GetCount, ZilchNoOverload, &IStreamClass::SetCount, ZilchNoOverload, "Count");
 
-  ZilchFullBindMethod(builder,
-                      type,
-                      &IStreamClass::Seek,
-                      ZilchNoOverload,
-                      "Seek",
-                      "position, origin")
-      ->IsVirtual = true;
-  ZilchFullBindMethod(
-      builder,
-      type,
-      &IStreamClass::Write,
-      (Integer(IStreamClass::*)(ArrayClass<Byte>&, Integer, Integer)),
-      "Write",
-      "data, byteStart, byteCount")
-      ->IsVirtual = true;
-  ZilchFullBindMethod(builder,
-                      type,
-                      &IStreamClass::WriteByte,
-                      ZilchNoOverload,
-                      "WriteByte",
-                      nullptr)
-      ->IsVirtual = true;
-  ZilchFullBindMethod(
-      builder,
-      type,
-      &IStreamClass::Read,
-      (Integer(IStreamClass::*)(ArrayClass<Byte>&, Integer, Integer)),
-      "Read",
-      "data, byteStart, byteCount")
-      ->IsVirtual = true;
-  ZilchFullBindMethod(builder,
-                      type,
-                      &IStreamClass::ReadByte,
-                      ZilchNoOverload,
-                      "ReadByte",
-                      nullptr)
-      ->IsVirtual = true;
-  ZilchFullBindMethod(
-      builder, type, &IStreamClass::Flush, ZilchNoOverload, "Flush", nullptr)
-      ->IsVirtual = true;
-
-  // Extensions (these are not virtual)
+  ZilchFullBindMethod(builder, type, &IStreamClass::Seek, ZilchNoOverload, "Seek", "position, origin")->IsVirtual =
+      true;
   ZilchFullBindMethod(builder,
                       type,
                       &IStreamClass::Write,
-                      (Integer(IStreamClass::*)(ArrayClass<Byte>&)),
+                      (Integer(IStreamClass::*)(ArrayClass<Byte>&, Integer, Integer)),
                       "Write",
-                      "data");
+                      "data, byteStart, byteCount")
+      ->IsVirtual = true;
+  ZilchFullBindMethod(builder, type, &IStreamClass::WriteByte, ZilchNoOverload, "WriteByte", nullptr)->IsVirtual = true;
+  ZilchFullBindMethod(builder,
+                      type,
+                      &IStreamClass::Read,
+                      (Integer(IStreamClass::*)(ArrayClass<Byte>&, Integer, Integer)),
+                      "Read",
+                      "data, byteStart, byteCount")
+      ->IsVirtual = true;
+  ZilchFullBindMethod(builder, type, &IStreamClass::ReadByte, ZilchNoOverload, "ReadByte", nullptr)->IsVirtual = true;
+  ZilchFullBindMethod(builder, type, &IStreamClass::Flush, ZilchNoOverload, "Flush", nullptr)->IsVirtual = true;
+
+  // Extensions (these are not virtual)
+  ZilchFullBindMethod(
+      builder, type, &IStreamClass::Write, (Integer(IStreamClass::*)(ArrayClass<Byte>&)), "Write", "data");
   ZilchFullBindMethod(builder,
                       type,
                       &IStreamClass::WriteText,
@@ -155,42 +98,20 @@ ZilchDefineType(IStreamClass, builder, type)
                       "WriteText",
                       "text, sourceStreamEncoding")
       ->IsVirtual = true;
-  ZilchFullBindMethod(builder,
-                      type,
-                      &IStreamClass::WriteText,
-                      (Integer(IStreamClass::*)(StringParam)),
-                      "WriteText",
-                      "text")
+  ZilchFullBindMethod(
+      builder, type, &IStreamClass::WriteText, (Integer(IStreamClass::*)(StringParam)), "WriteText", "text")
       ->IsVirtual = true;
   // ZilchFullBindMethod(builder, type, &IStreamClass::Read, (ArrayClass<Byte>
   // (IStreamClass::*)(Integer)), "Read", "byteCount");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &IStreamClass::ReadLine,
-                      (String(IStreamClass::*)(IEncoding&)),
-                      "ReadLine",
-                      nullptr)
+  ZilchFullBindMethod(
+      builder, type, &IStreamClass::ReadLine, (String(IStreamClass::*)(IEncoding&)), "ReadLine", nullptr)
       ->IsVirtual = true;
-  ZilchFullBindMethod(builder,
-                      type,
-                      &IStreamClass::ReadLine,
-                      (String(IStreamClass::*)()),
-                      "ReadLine",
-                      nullptr)
+  ZilchFullBindMethod(builder, type, &IStreamClass::ReadLine, (String(IStreamClass::*)()), "ReadLine", nullptr)
       ->IsVirtual = true;
-  ZilchFullBindMethod(builder,
-                      type,
-                      &IStreamClass::ReadAllText,
-                      (String(IStreamClass::*)(IEncoding&)),
-                      "ReadAllText",
-                      nullptr)
+  ZilchFullBindMethod(
+      builder, type, &IStreamClass::ReadAllText, (String(IStreamClass::*)(IEncoding&)), "ReadAllText", nullptr)
       ->IsVirtual = true;
-  ZilchFullBindMethod(builder,
-                      type,
-                      &IStreamClass::ReadAllText,
-                      (String(IStreamClass::*)()),
-                      "ReadAllText",
-                      nullptr)
+  ZilchFullBindMethod(builder, type, &IStreamClass::ReadAllText, (String(IStreamClass::*)()), "ReadAllText", nullptr)
       ->IsVirtual = true;
 }
 
@@ -242,8 +163,7 @@ Rune AsciiEncoding::Read(IStreamClass& stream)
 Integer Utf8Encoding::Write(Rune rune, IStreamClass& stream)
 {
   byte utf8Bytes[4] = {0};
-  size_t encodedByteCount =
-      Zero::UTF8::UnpackUtf8RuneIntoBuffer(rune.mValue, utf8Bytes);
+  size_t encodedByteCount = Zero::UTF8::UnpackUtf8RuneIntoBuffer(rune.mValue, utf8Bytes);
 
   for (size_t i = 0; i < encodedByteCount; ++i)
   {
@@ -322,34 +242,28 @@ void IStreamClass::SetPosition(DoubleInteger position)
 DoubleInteger IStreamClass::GetCount()
 {
   if ((this->GetCapabilities() & StreamCapabilities::GetCount) == 0)
-    ExecutableState::CallingState->ThrowException(
-        "This stream does not support the GetCount capability");
+    ExecutableState::CallingState->ThrowException("This stream does not support the GetCount capability");
   return 0;
 }
 
 void IStreamClass::SetCount(DoubleInteger count)
 {
   if ((this->GetCapabilities() & StreamCapabilities::SetCount) == 0)
-    ExecutableState::CallingState->ThrowException(
-        "This stream does not support the SetCount capability");
+    ExecutableState::CallingState->ThrowException("This stream does not support the SetCount capability");
 }
 
 bool IStreamClass::Seek(DoubleInteger position, StreamOrigin::Enum origin)
 {
   if ((this->GetCapabilities() & StreamCapabilities::Seek) == 0)
-    ExecutableState::CallingState->ThrowException(
-        "This stream does not support the Seek capability");
+    ExecutableState::CallingState->ThrowException("This stream does not support the Seek capability");
   return false;
 }
 
-Integer IStreamClass::Write(ArrayClass<Byte>& data,
-                            Integer byteStart,
-                            Integer byteCount)
+Integer IStreamClass::Write(ArrayClass<Byte>& data, Integer byteStart, Integer byteCount)
 {
   if ((this->GetCapabilities() & StreamCapabilities::Write) == 0)
   {
-    ExecutableState::CallingState->ThrowException(
-        "This stream does not support the Write capability");
+    ExecutableState::CallingState->ThrowException("This stream does not support the Write capability");
     return 0;
   }
 
@@ -360,19 +274,15 @@ Integer IStreamClass::Write(ArrayClass<Byte>& data,
 Integer IStreamClass::WriteByte(Byte byte)
 {
   if ((this->GetCapabilities() & StreamCapabilities::Write) == 0)
-    ExecutableState::CallingState->ThrowException(
-        "This stream does not support the Write capability");
+    ExecutableState::CallingState->ThrowException("This stream does not support the Write capability");
   return 0;
 }
 
-Integer IStreamClass::Read(ArrayClass<Byte>& data,
-                           Integer byteStart,
-                           Integer byteCount)
+Integer IStreamClass::Read(ArrayClass<Byte>& data, Integer byteStart, Integer byteCount)
 {
   if ((this->GetCapabilities() & StreamCapabilities::Read) == 0)
   {
-    ExecutableState::CallingState->ThrowException(
-        "This stream does not support the Read capability");
+    ExecutableState::CallingState->ThrowException("This stream does not support the Read capability");
     return 0;
   }
 
@@ -383,8 +293,7 @@ Integer IStreamClass::Read(ArrayClass<Byte>& data,
 Integer IStreamClass::ReadByte()
 {
   if ((this->GetCapabilities() & StreamCapabilities::Read) == 0)
-    ExecutableState::CallingState->ThrowException(
-        "This stream does not support the Read capability");
+    ExecutableState::CallingState->ThrowException("This stream does not support the Read capability");
   return 0;
 }
 
@@ -392,24 +301,19 @@ void IStreamClass::Flush()
 {
 }
 
-bool IStreamClass::ValidateArray(ArrayClass<Byte>& data,
-                                 Integer byteStart,
-                                 Integer byteCount,
-                                 bool resizeArrayIfNeeded)
+bool IStreamClass::ValidateArray(ArrayClass<Byte>& data, Integer byteStart, Integer byteCount, bool resizeArrayIfNeeded)
 {
   // We don't allow a negative starting value
   if (byteStart < 0)
   {
-    ExecutableState::CallingState->ThrowException(
-        "The parameter 'byteStart' cannot be negative");
+    ExecutableState::CallingState->ThrowException("The parameter 'byteStart' cannot be negative");
     return false;
   }
 
   // We don't allow a negative count value
   if (byteCount < 0)
   {
-    ExecutableState::CallingState->ThrowException(
-        "The parameter 'byteCount' cannot be negative");
+    ExecutableState::CallingState->ThrowException("The parameter 'byteCount' cannot be negative");
     return false;
   }
 
@@ -431,8 +335,7 @@ bool IStreamClass::ValidateArray(ArrayClass<Byte>& data,
     }
     else
     {
-      ExecutableState::CallingState->ThrowException(
-          "The byte range exceeds the size of the array");
+      ExecutableState::CallingState->ThrowException("The byte range exceeds the size of the array");
       return false;
     }
   }
@@ -459,20 +362,18 @@ Integer IStreamClass::WriteRune(Rune rune, IEncoding& destinationStreamEncoding)
 Rune IStreamClass::ReadRune()
 {
   if ((this->GetCapabilities() & StreamCapabilities::Read) == 0)
-    ExecutableState::CallingState->ThrowException(
-        "This stream does not support the Read capability");
+    ExecutableState::CallingState->ThrowException("This stream does not support the Read capability");
   return 0;
 }
 
-Integer IStreamClass::WriteText(StringParam text,
-                                IEncoding& destinationStreamEncoding)
+Integer IStreamClass::WriteText(StringParam text, IEncoding& destinationStreamEncoding)
 {
   Integer totalWritten = 0;
 
   // Technically this should be iterating through runes
   ZeroTodo("Unicode");
   StringRange range = text.All();
-  ZilchForEach(Zero::Rune r, range)
+  ZilchForEach (Zero::Rune r, range)
   {
     // Use whatever encoding they passed in to write out the rune (should be
     // virtual)

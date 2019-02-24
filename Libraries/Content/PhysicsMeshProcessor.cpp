@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-PhysicsMeshProcessor::PhysicsMeshProcessor(
-    PhysicsMeshBuilder* physicsMeshBuilder, MeshDataMap& meshDataMap) :
+PhysicsMeshProcessor::PhysicsMeshProcessor(PhysicsMeshBuilder* physicsMeshBuilder, MeshDataMap& meshDataMap) :
     mBuilder(physicsMeshBuilder),
     mMeshDataMap(meshDataMap)
 {
@@ -27,8 +26,7 @@ void PhysicsMeshProcessor::BuildPhysicsMesh(String outputPath)
   {
     GeometryResourceEntry& entry = mBuilder->Meshes[i];
     MeshData& meshData = mMeshDataMap[i];
-    String physicsMeshFile =
-        FilePath::CombineWithExtension(outputPath, entry.mName, extension);
+    String physicsMeshFile = FilePath::CombineWithExtension(outputPath, entry.mName, extension);
     meshData.mPhysicsMeshName = physicsMeshFile;
 
     BinaryFileSaver saver;
@@ -56,9 +54,7 @@ void PhysicsMeshProcessor::BuildPhysicsMesh(String outputPath)
   }
 }
 
-void PhysicsMeshProcessor::WriteStaticMesh(VertexPositionArray& vertices,
-                                           IndexArray& indices,
-                                           Serializer& saver)
+void PhysicsMeshProcessor::WriteStaticMesh(VertexPositionArray& vertices, IndexArray& indices, Serializer& saver)
 {
   // Start the PhysicsMesh node
   saver.StartPolymorphic("PhysicsMesh");
@@ -71,9 +67,7 @@ void PhysicsMeshProcessor::WriteStaticMesh(VertexPositionArray& vertices,
   saver.EndPolymorphic();
 }
 
-void PhysicsMeshProcessor::WriteConvexMesh(VertexPositionArray& vertices,
-                                           IndexArray& indices,
-                                           Serializer& saver)
+void PhysicsMeshProcessor::WriteConvexMesh(VertexPositionArray& vertices, IndexArray& indices, Serializer& saver)
 {
   // Start the ConvexMesh node
   saver.StartPolymorphic("ConvexMesh");
@@ -87,12 +81,10 @@ void PhysicsMeshProcessor::WriteConvexMesh(VertexPositionArray& vertices,
   uint triCount = indices.Size() / 3;
 
   // Calculate the volume of the mesh
-  float volume = Geometry::CalculateTriMeshVolume(
-      &vertices.Front(), (uint*)(&indices.Front()), triCount);
+  float volume = Geometry::CalculateTriMeshVolume(&vertices.Front(), (uint*)(&indices.Front()), triCount);
 
   // Calculate the center of mass of the mesh
-  Vec3 centerOfMass = Geometry::CalculateTriMeshCenterOfMass(
-      &vertices.Front(), (uint*)(&indices.Front()), triCount);
+  Vec3 centerOfMass = Geometry::CalculateTriMeshCenterOfMass(&vertices.Front(), (uint*)(&indices.Front()), triCount);
 
   // Save the volume
   saver.SerializeField("Volume", volume);
@@ -105,9 +97,7 @@ void PhysicsMeshProcessor::WriteConvexMesh(VertexPositionArray& vertices,
   saver.EndPolymorphic();
 }
 
-void PhysicsMeshProcessor::WriteAabbTree(VertexPositionArray& vertices,
-                                         IndexArray& indices,
-                                         Serializer& saver)
+void PhysicsMeshProcessor::WriteAabbTree(VertexPositionArray& vertices, IndexArray& indices, Serializer& saver)
 {
   // Build the Aabb-Tree
   StaticAabbTree<uint> aabbTree;
@@ -147,8 +137,7 @@ void PhysicsMeshProcessor::WriteAabbTree(VertexPositionArray& vertices,
   SerializeAabbTree(saver, aabbTree);
 }
 
-uint PhysicsMeshProcessor::RemoveDegenerateTriangles(
-    VertexPositionArray& vertices, IndexArray& indicies)
+uint PhysicsMeshProcessor::RemoveDegenerateTriangles(VertexPositionArray& vertices, IndexArray& indicies)
 {
   Array<IndexType> filteredIndices;
   filteredIndices.Reserve(indicies.Size());

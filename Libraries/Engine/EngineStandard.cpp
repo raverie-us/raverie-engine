@@ -54,17 +54,12 @@ void LocationBind(LibraryBuilder& builder, BoundType* type)
 
   ZilchBindMethod(IsCardinal);
   ZilchBindMethod(GetCardinalAxis);
-  ZilchBindOverloadedMethod(GetDirection,
-                            ZilchStaticOverload(Vec2, Location::Enum));
-  ZilchBindOverloadedMethod(
-      GetDirection, ZilchStaticOverload(Vec2, Location::Enum, Location::Enum));
+  ZilchBindOverloadedMethod(GetDirection, ZilchStaticOverload(Vec2, Location::Enum));
+  ZilchBindOverloadedMethod(GetDirection, ZilchStaticOverload(Vec2, Location::Enum, Location::Enum));
   ZilchBindMethod(GetOpposite);
 }
 
-ZilchDefineExternalBaseType(Location::Enum,
-                            TypeCopyMode::ValueType,
-                            builder,
-                            type)
+ZilchDefineExternalBaseType(Location::Enum, TypeCopyMode::ValueType, builder, type)
 {
   ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
   ZilchBindEnumValues(Location);
@@ -103,15 +98,13 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeRange(CogNameRange);
   ZilchInitializeRange(CogRootNameRange);
   ZilchInitializeRangeAs(HierarchyList::range, "HierarchyListRange");
-  ZilchInitializeRangeAs(HierarchyList::reverse_range,
-                         "HierarchyListReverseRange");
+  ZilchInitializeRangeAs(HierarchyList::reverse_range, "HierarchyListReverseRange");
   ZilchInitializeRangeAs(Space::range, "SpaceRange");
   ZilchInitializeRangeAs(SpaceMap::valueRange, "SpaceMapValueRange");
   ZilchInitializeRange(ObjectLinkRange);
   ZilchInitializeRangeAs(JoystickDeviceRange, "JoystickRange");
   ZilchInitializeRange(CogHashSetRange);
-  ZilchInitializeRangeAs(ResourceTableEntryList::range,
-                         "ResourceTableEntryRange");
+  ZilchInitializeRangeAs(ResourceTableEntryList::range, "ResourceTableEntryRange");
   ZilchInitializeRange(OperationListRange);
   ZilchInitializeRangeAs(Engine::GameSessionArray::range, "GameSessionRange");
 
@@ -144,8 +137,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeEnum(WindowStyleFlags);
 
   // Arrays
-  ZeroInitializeArrayTypeAs(Array<ContentLibraryReference>,
-                            "ContentLibraryReferenceArray");
+  ZeroInitializeArrayTypeAs(Array<ContentLibraryReference>, "ContentLibraryReferenceArray");
 
   ZilchInitializeType(System);
 
@@ -390,21 +382,13 @@ bool EngineLibrary::Initialize()
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 
   RegisterClassAttribute(ObjectAttributes::cRunInEditor)->TypeMustBe(Component);
-  RegisterClassAttributeType(ObjectAttributes::cCommand, MetaEditorScriptObject)
-      ->TypeMustBe(Component);
-  RegisterClassAttributeType(ObjectAttributes::cTool, MetaEditorScriptObject)
-      ->TypeMustBe(Component);
-  RegisterClassAttributeType(ObjectAttributes::cGizmo, MetaEditorGizmo)
-      ->TypeMustBe(Component);
-  RegisterClassAttributeType(ObjectAttributes::cComponentInterface,
-                             MetaInterface)
-      ->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cCommand, MetaEditorScriptObject)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cTool, MetaEditorScriptObject)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cGizmo, MetaEditorGizmo)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cComponentInterface, MetaInterface)->TypeMustBe(Component);
 
-  RegisterPropertyAttributeType(PropertyAttributes::cDependency, MetaDependency)
-      ->TypeMustBe(Component);
-  RegisterPropertyAttributeType(PropertyAttributes::cResourceProperty,
-                                MetaEditorResource)
-      ->TypeMustBe(Resource);
+  RegisterPropertyAttributeType(PropertyAttributes::cDependency, MetaDependency)->TypeMustBe(Component);
+  RegisterPropertyAttributeType(PropertyAttributes::cResourceProperty, MetaEditorResource)->TypeMustBe(Resource);
 
   ZPrintFilter(Filter::DefaultFilter, "Engine Initialize...\n");
 
@@ -483,8 +467,7 @@ bool EngineLibrary::Initialize()
   Factory* factory = Factory::StaticInitialize(engine, tracker);
   engine->AddSystemInterface(ZilchTypeId(Factory), factory);
 
-  MetaDatabase::GetInstance()->AddAlternateName("Project",
-                                                ZilchTypeId(ProjectSettings));
+  MetaDatabase::GetInstance()->AddAlternateName("Project", ZilchTypeId(ProjectSettings));
   return true;
 }
 

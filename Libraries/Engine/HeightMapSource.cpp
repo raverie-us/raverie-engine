@@ -138,13 +138,13 @@ struct HeightMapSourceLoadPattern
     file.Write(heightMapSource->mVersion);
     file.Write(u32(heightMapSource->mData.Size()));
 
-    forRange(PatchData * data, heightMapSource->mData.Values())
+    forRange (PatchData* data, heightMapSource->mData.Values())
     {
       file.Write(data->Index.x);
       file.Write(data->Index.y);
       file.Write(u32(data->Layers.Size()));
 
-      forRange(PatchLayer * layer, data->Layers.Values())
+      forRange (PatchLayer* layer, data->Layers.Values())
       {
         file.Write(layer->LayerType);
         file.Write(layer->Width);
@@ -160,14 +160,11 @@ struct HeightMapSourceLoadPattern
 
 ImplementResourceManager(HeightMapSourceManager, HeightMapSource);
 
-HeightMapSourceManager::HeightMapSourceManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+HeightMapSourceManager::HeightMapSourceManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   this->mNoFallbackNeeded = true;
   mExtension = "bin";
-  AddLoader("HeightMapSource",
-            new ChunkFileLoader<HeightMapSourceManager,
-                                HeightMapSourceLoadPattern>());
+  AddLoader("HeightMapSource", new ChunkFileLoader<HeightMapSourceManager, HeightMapSourceLoadPattern>());
 }
 
 void HeightMapSource::Save(StringParam filename)

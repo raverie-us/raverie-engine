@@ -72,16 +72,13 @@ void Collider::Serialize(Serializer& stream)
 {
   /// There's quite a few flags that only store run-time state that we need to
   /// ignore when serializing.
-  u32 mask = ColliderFlags::OnIsland | ColliderFlags::Uninitialized |
-             ColliderFlags::HasPairFilter | ColliderFlags::MasslessBody |
-             ColliderFlags::MasslessCollider | ColliderFlags::Seamless;
+  u32 mask = ColliderFlags::OnIsland | ColliderFlags::Uninitialized | ColliderFlags::HasPairFilter |
+             ColliderFlags::MasslessBody | ColliderFlags::MasslessCollider | ColliderFlags::Seamless;
   // The default state is to be not ghost
-  SerializeBits(
-      stream, mState, ColliderFlags::Names, mask, ~ColliderFlags::Ghost);
+  SerializeBits(stream, mState, ColliderFlags::Names, mask, ~ColliderFlags::Ghost);
 
   SerializeResourceName(mMaterial, PhysicsMaterialManager);
-  SerializeResourceImpl<CollisionGroupManager>(
-      "CollisionGroup", stream, mSerializedGroup);
+  SerializeResourceImpl<CollisionGroupManager>("CollisionGroup", stream, mSerializedGroup);
 
   // Serialize the translation offset (previously named "Offset")
   stream.SerializeFieldDefault("Offset", mTranslationOffset, Vec3::cZero);
@@ -100,16 +97,14 @@ void Collider::Initialize(CogInitializer& initializer)
   mSpace->AddComponent(this);
   // Get the collision group instance from our space for the current serialized
   // collision group
-  mCollisionGroupInstance =
-      mSpace->GetCollisionGroupInstance(mSerializedGroup->mResourceId);
+  mCollisionGroupInstance = mSpace->GetCollisionGroupInstance(mSerializedGroup->mResourceId);
 
   // Listen for when our physics material changes
   UpdatePhysicsMaterialConnections(nullptr, mMaterial);
 
   // Initialize the collider (mostly just set up physics nodes and some
   // hierarchy information)
-  bool dynamicallyCreated =
-      (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
+  bool dynamicallyCreated = (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
   ColliderInitialize(this, dynamicallyCreated);
 
   // Make sure all queue states are properly set up for a collider that was just
@@ -124,8 +119,7 @@ void Collider::OnAllObjectsCreated(CogInitializer& initializer)
 {
   // Run the hierarchy OnAllObjectsCreated logic. This will hook up colliders to
   // rigid bodies and more
-  bool dynamicallyCreated =
-      (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
+  bool dynamicallyCreated = (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
   ColliderOnAllObjectsCreated(this, dynamicallyCreated);
 
   // If we were dynamically created, we have to check what joints were
@@ -139,8 +133,7 @@ void Collider::TransformUpdate(TransformUpdateInfo& info)
   // If physics caused this transform update then we shouldn't do anything.
   // There's a chance someone could call this before we've been initialized
   // so guard against this by checking if we have a valid physics node.
-  bool isPhysicsUpdate =
-      (info.TransformFlags & TransformUpdateFlags::Physics) != 0;
+  bool isPhysicsUpdate = (info.TransformFlags & TransformUpdateFlags::Physics) != 0;
   if (!isPhysicsUpdate && mPhysicsNode != nullptr)
     InternalTransformUpdate(cUpdate);
 }
@@ -216,8 +209,7 @@ real Collider::ComputeWorldVolumeInternal()
   return 0;
 }
 
-void Collider::ComputeLocalInverseInertiaTensor(real mass,
-                                                Mat3Ref localInvInertia)
+void Collider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia)
 {
   // Expected that a derived collider will implement this
   localInvInertia.ZeroOut();
@@ -288,8 +280,7 @@ void Collider::SetCollisionGroup(CollisionGroup* collisionGroup)
   // current table. If we can find a collision group instance that is different
   // then update the instance
   mSerializedGroup = collisionGroup;
-  CollisionGroupInstance* newInstance =
-      mSpace->GetCollisionGroupInstance(mSerializedGroup->mResourceId);
+  CollisionGroupInstance* newInstance = mSpace->GetCollisionGroupInstance(mSerializedGroup->mResourceId);
   if (newInstance != nullptr && newInstance != mCollisionGroupInstance)
   {
     mCollisionGroupInstance = newInstance;
@@ -506,14 +497,12 @@ u32 Collider::GetNextColliderId()
   return colliderId++;
 }
 
-void Collider::UpdatePhysicsMaterialConnections(PhysicsMaterial* oldMaterial,
-                                                PhysicsMaterial* newMaterial)
+void Collider::UpdatePhysicsMaterialConnections(PhysicsMaterial* oldMaterial, PhysicsMaterial* newMaterial)
 {
   if (oldMaterial != nullptr)
     DisconnectAll(oldMaterial, this);
   if (newMaterial != nullptr)
-    ConnectThisTo(
-        newMaterial, Events::ResourceModified, OnPhysicsMaterialModified);
+    ConnectThisTo(newMaterial, Events::ResourceModified, OnPhysicsMaterialModified);
 }
 
 void Collider::OnPhysicsMaterialModified(Event* e)
@@ -538,8 +527,7 @@ void Collider::SetWorldAabbFromHalfExtents(Vec3Param worldHalfExtents)
   mAabb.Transform(GetWorldRotation());
 }
 
-Vec3 Collider::TransformSupportDirectionToLocal(
-    Vec3Param worldSupportDirection) const
+Vec3 Collider::TransformSupportDirectionToLocal(Vec3Param worldSupportDirection) const
 {
   // The support direction behaves like a surface normal in that it needs the
   // "inverse transposed" applied. Since we're going to local space though this
@@ -549,8 +537,7 @@ Vec3 Collider::TransformSupportDirectionToLocal(
   // 100) then the inverse scale would effectively remove the entire y-component
   // which would return the wrong point.
   WorldTransformation* worldTransform = GetWorldTransform();
-  Vec3 localSpaceDir =
-      worldTransform->InverseTransformSurfaceNormal(worldSupportDirection);
+  Vec3 localSpaceDir = worldTransform->InverseTransformSurfaceNormal(worldSupportDirection);
   return localSpaceDir;
 }
 
@@ -600,15 +587,13 @@ void Collider::SetHasPairFilter(bool hasPairFilter)
   mState.SetState(ColliderFlags::HasPairFilter, hasPairFilter);
 }
 
-bool Collider::ShouldCollide(Collider* otherCollider,
-                             String& reasonForNotColliding)
+bool Collider::ShouldCollide(Collider* otherCollider, String& reasonForNotColliding)
 {
   return ShouldCollideInternal<true>(otherCollider, &reasonForNotColliding);
 }
 
 template <bool BuildReason>
-bool Collider::ShouldCollideInternal(Collider* otherCollider,
-                                     String* reasonForNotColliding)
+bool Collider::ShouldCollideInternal(Collider* otherCollider, String* reasonForNotColliding)
 {
   RigidBody* body1 = GetActiveBody();
   RigidBody* body2 = otherCollider->GetActiveBody();
@@ -632,8 +617,7 @@ bool Collider::ShouldCollideInternal(Collider* otherCollider,
   }
 
   // Check if the collision group says to skip detection
-  if (mCollisionGroupInstance->SkipDetection(
-          *(otherCollider->mCollisionGroupInstance)))
+  if (mCollisionGroupInstance->SkipDetection(*(otherCollider->mCollisionGroupInstance)))
   {
     if (BuildReason)
       *reasonForNotColliding = "The collision table says to skip detection.";
@@ -652,9 +636,8 @@ bool Collider::ShouldCollideInternal(Collider* otherCollider,
     if (mSpace->mFilteredPairs.Contains(packedId))
     {
       if (BuildReason)
-        *reasonForNotColliding =
-            "A pair filter has been added to the physics space to ignore "
-            "collision between these two objects.";
+        *reasonForNotColliding = "A pair filter has been added to the physics space to ignore "
+                                 "collision between these two objects.";
       return false;
     }
   }
@@ -668,13 +651,11 @@ bool Collider::ShouldCollideInternal(Collider* otherCollider,
   bool obj2Static = otherCollider->IsStatic();
   bool obj2Kinematic = otherCollider->IsKinematic();
   bool obj2Ghost = otherCollider->NotCollideable();
-  bool obj2Uninitialized =
-      otherCollider->mState.IsSet(ColliderFlags::Uninitialized);
+  bool obj2Uninitialized = otherCollider->mState.IsSet(ColliderFlags::Uninitialized);
 
   // If both objects are asleep or static (and they weren't just created) then
   // we skip detection
-  if (((obj1Asleep && !obj1Uninitialized) || obj1Static) &&
-      ((obj2Asleep && !obj2Uninitialized) || obj2Static))
+  if (((obj1Asleep && !obj1Uninitialized) || obj1Static) && ((obj2Asleep && !obj2Uninitialized) || obj2Static))
   {
     if (BuildReason)
       *reasonForNotColliding = "Both objects are asleep or static.";

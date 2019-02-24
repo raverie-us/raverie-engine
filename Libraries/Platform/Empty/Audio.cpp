@@ -17,8 +17,7 @@ StreamStatus::Enum AudioInputOutput::InitializeAPI(Zero::String* resultMessage)
   return StreamStatus::Uninitialized;
 }
 
-StreamStatus::Enum AudioInputOutput::InitializeStream(
-    StreamTypes::Enum whichStream, Zero::String* resultMessage)
+StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStream, Zero::String* resultMessage)
 {
   return StreamStatus::Uninitialized;
 }
@@ -31,8 +30,7 @@ StreamStatus::Enum AudioInputOutput::StartStream(StreamTypes::Enum whichStream,
   return StreamStatus::Uninitialized;
 }
 
-StreamStatus::Enum AudioInputOutput::StopStream(StreamTypes::Enum whichStream,
-                                                Zero::String* resultMessage)
+StreamStatus::Enum AudioInputOutput::StopStream(StreamTypes::Enum whichStream, Zero::String* resultMessage)
 {
   return StreamStatus::Uninitialized;
 }
@@ -56,10 +54,7 @@ float AudioInputOutput::GetBufferSizeMultiplier()
   return 1.0f;
 }
 
-MidiInput::MidiInput() :
-    mOnMidiData(nullptr),
-    mHandle(nullptr),
-    mUserData(nullptr)
+MidiInput::MidiInput() : mOnMidiData(nullptr), mHandle(nullptr), mUserData(nullptr)
 {
 }
 

@@ -17,8 +17,7 @@ ZilchDefineType(RenderGroup, builder, type)
 
   ZilchBindFieldProperty(mGraphicalSortMethod);
 
-  MetaEditorResource* metaEditor =
-      new MetaEditorResource(true, true, String(), false, false);
+  MetaEditorResource* metaEditor = new MetaEditorResource(true, true, String(), false, false);
   metaEditor->Filter = ParentRenderGroupFilter;
   ZilchBindGetterSetterProperty(ParentRenderGroup)->Add(metaEditor);
   ZilchBindFieldGetterProperty(mChildRenderGroups);
@@ -35,43 +34,30 @@ RenderGroup::RenderGroup() :
   mReferencedByList.mDisplayName = "ReferencedBy";
   mReferencedByList.mReadOnly = true;
 
-  mSerializedList.mExpanded =
-      &GraphicsResourceList::mRenderGroupSerializedExpanded;
-  mReferencedByList.mExpanded =
-      &GraphicsResourceList::mRenderGroupRuntimeExpanded;
+  mSerializedList.mExpanded = &GraphicsResourceList::mRenderGroupSerializedExpanded;
+  mReferencedByList.mExpanded = &GraphicsResourceList::mRenderGroupRuntimeExpanded;
 
   mChildRenderGroups.mDisplayName = "ChildRenderGroups";
-  mChildRenderGroups.mExpanded =
-      &GraphicsResourceList::mChildRenderGroupListExpanded;
+  mChildRenderGroups.mExpanded = &GraphicsResourceList::mChildRenderGroupListExpanded;
   mChildRenderGroups.mListItemCallback = ListItemValidChild;
 
-  ConnectThisTo(
-      &mSerializedList, Events::ResourceListItemAdded, OnResourceListItemAdded);
-  ConnectThisTo(&mSerializedList,
-                Events::ResourceListItemRemoved,
-                OnResourceListItemRemoved);
+  ConnectThisTo(&mSerializedList, Events::ResourceListItemAdded, OnResourceListItemAdded);
+  ConnectThisTo(&mSerializedList, Events::ResourceListItemRemoved, OnResourceListItemRemoved);
 
-  ConnectThisTo(
-      &mChildRenderGroups, Events::ResourceListItemAdded, OnChildListItemAdded);
-  ConnectThisTo(&mChildRenderGroups,
-                Events::ResourceListItemRemoved,
-                OnChildListItemRemoved);
+  ConnectThisTo(&mChildRenderGroups, Events::ResourceListItemAdded, OnChildListItemAdded);
+  ConnectThisTo(&mChildRenderGroups, Events::ResourceListItemRemoved, OnChildListItemRemoved);
 
   ConnectThisTo(this, Events::ObjectModified, OnObjectModified);
 }
 
 void RenderGroup::Serialize(Serializer& stream)
 {
-  stream.SerializeFieldDefault(
-      "Materials", mSerializedList.mResourceIdNames, Array<String>());
+  stream.SerializeFieldDefault("Materials", mSerializedList.mResourceIdNames, Array<String>());
 
-  SerializeEnumNameDefault(
-      GraphicalSortMethod, mGraphicalSortMethod, GraphicalSortMethod::None);
+  SerializeEnumNameDefault(GraphicalSortMethod, mGraphicalSortMethod, GraphicalSortMethod::None);
   SerializeNameDefault(mParentRenderGroup, String());
 
-  stream.SerializeFieldDefault("ChildRenderGroups",
-                               mChildRenderGroups.mResourceIdNames,
-                               Array<String>());
+  stream.SerializeFieldDefault("ChildRenderGroups", mChildRenderGroups.mResourceIdNames, Array<String>());
 }
 
 void RenderGroup::OnResourceListItemAdded(ResourceListEvent* event)
@@ -90,16 +76,14 @@ void RenderGroup::OnResourceListItemRemoved(ResourceListEvent* event)
 
 void RenderGroup::OnChildListItemAdded(ResourceListEvent* event)
 {
-  RenderGroup* renderGroup =
-      RenderGroupManager::Instance->FindOrNull(event->mResourceIdName);
+  RenderGroup* renderGroup = RenderGroupManager::Instance->FindOrNull(event->mResourceIdName);
   if (renderGroup != nullptr && !IsSubRenderGroupOf(renderGroup))
     renderGroup->SetParentInternal(this);
 }
 
 void RenderGroup::OnChildListItemRemoved(ResourceListEvent* event)
 {
-  RenderGroup* renderGroup =
-      RenderGroupManager::Instance->FindOrNull(event->mResourceIdName);
+  RenderGroup* renderGroup = RenderGroupManager::Instance->FindOrNull(event->mResourceIdName);
   if (renderGroup != nullptr && IsSubRenderGroup(renderGroup))
     renderGroup->SetParentInternal(nullptr);
 }
@@ -114,15 +98,15 @@ void RenderGroup::GetMaterials(HashSet<Material*>& materials)
   Array<RenderGroup*> renderGroups;
   GetRenderGroups(renderGroups);
 
-  forRange(RenderGroup * renderGroup, renderGroups.All())
-      materials.Append(renderGroup->mActiveResources.All());
+  forRange (RenderGroup* renderGroup, renderGroups.All())
+    materials.Append(renderGroup->mActiveResources.All());
 }
 
 void RenderGroup::GetRenderGroups(Array<RenderGroup*>& renderGroups)
 {
   renderGroups.PushBack(this);
-  forRange(RenderGroup * childGroup, mChildrenInternal.All())
-      childGroup->GetRenderGroups(renderGroups);
+  forRange (RenderGroup* childGroup, mChildrenInternal.All())
+    childGroup->GetRenderGroups(renderGroups);
 }
 
 bool RenderGroup::IsSubRenderGroup(RenderGroup* renderGroup)
@@ -156,9 +140,7 @@ void RenderGroup::SetParentRenderGroup(HandleOf<RenderGroup> renderGroup)
   // If parent is established by this being in its child list, do not allow
   // changing this property. This limitation is for simplicity's sake in
   // managing the RenderGroup hierarchies.
-  if (mParentInternal != nullptr &&
-      mParentInternal->mChildRenderGroups.mResourceIdNames.Contains(
-          ResourceIdName))
+  if (mParentInternal != nullptr && mParentInternal->mChildRenderGroups.mResourceIdNames.Contains(ResourceIdName))
     return DoNotifyWarning("Cannot modify parent",
                            "RenderGroup is in the child list of the other and "
                            "can only be removed from there.");
@@ -195,8 +177,7 @@ void RenderGroup::SetParentInternal(RenderGroup* renderGroup)
 
 ImplementResourceManager(RenderGroupManager, RenderGroup);
 
-RenderGroupManager::RenderGroupManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+RenderGroupManager::RenderGroupManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   AddLoader("RenderGroup", new TextDataFileLoader<RenderGroupManager>());
 
@@ -211,10 +192,7 @@ RenderGroupManager::RenderGroupManager(BoundType* resourceType) :
   mExtension = DataResourceExtension;
 }
 
-bool ParentRenderGroupFilter(HandleParam object,
-                             Property* property,
-                             HandleParam result,
-                             Status& status)
+bool ParentRenderGroupFilter(HandleParam object, Property* property, HandleParam result, Status& status)
 {
   RenderGroup* owner = object.Get<RenderGroup*>();
   RenderGroup* renderGroup = result.Get<RenderGroup*>();
@@ -227,16 +205,12 @@ bool ParentRenderGroupFilter(HandleParam object,
   return true;
 }
 
-void ListItemValidChild(GraphicsResourceList* resourceList,
-                        String entryIdName,
-                        Status& status)
+void ListItemValidChild(GraphicsResourceList* resourceList, String entryIdName, Status& status)
 {
   RenderGroup* owner = (RenderGroup*)resourceList->mOwner;
-  RenderGroup* renderGroup =
-      RenderGroupManager::Instance->FindOrNull(entryIdName);
+  RenderGroup* renderGroup = RenderGroupManager::Instance->FindOrNull(entryIdName);
   if (!owner->mChildrenInternal.Contains(renderGroup))
-    status.SetFailed(
-        "RenderGroup cannot be a child with the current configuration.");
+    status.SetFailed("RenderGroup cannot be a child with the current configuration.");
 }
 
 } // namespace Zero

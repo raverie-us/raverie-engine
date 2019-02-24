@@ -60,8 +60,7 @@ int IsGraph(Rune r)
 }
 int IsGraphOrSpace(Rune r)
 {
-  return t.GetTraits(r.value) &
-         (CharacterBits::Graphical | CharacterBits::WhiteSpace);
+  return t.GetTraits(r.value) & (CharacterBits::Graphical | CharacterBits::WhiteSpace);
 }
 int IsAlpha(Rune r)
 {
@@ -109,7 +108,6 @@ int ToUpper(Rune r)
 }
 bool IsHex(Rune r)
 {
-  return IsNumber(r) || (r.value >= 'a' && r.value <= 'f') ||
-         (r.value >= 'A' && r.value <= 'F');
+  return IsNumber(r) || (r.value >= 'a' && r.value <= 'f') || (r.value >= 'A' && r.value <= 'F');
 };
 }; // namespace Zero

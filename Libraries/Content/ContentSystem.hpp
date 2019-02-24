@@ -24,8 +24,7 @@ struct ContentInitializer
 };
 
 typedef ContentItem* (*MakeContentItem)(ContentInitializer& initializer);
-typedef ContentItem* (*UpdateContentItem)(ContentItem* existingContent,
-                                          ContentInitializer& initializer);
+typedef ContentItem* (*UpdateContentItem)(ContentItem* existingContent, ContentInitializer& initializer);
 typedef ContentComponent* (*MakeContentComponent)();
 
 struct ContentTypeEntry
@@ -33,9 +32,7 @@ struct ContentTypeEntry
   ContentTypeEntry() : Meta(NULL), MakeItem(NULL), UpdateItem(NULL)
   {
   }
-  ContentTypeEntry(BoundType* meta,
-                   MakeContentItem make,
-                   UpdateContentItem update = nullptr) :
+  ContentTypeEntry(BoundType* meta, MakeContentItem make, UpdateContentItem update = nullptr) :
       Meta(meta),
       MakeItem(make),
       UpdateItem(update)
@@ -130,31 +127,22 @@ public:
   /// Building
 
   /// Load or Create a library of the given name from the specified directory.
-  ContentLibrary* LibraryFromDirectory(Status& status,
-                                       StringParam name,
-                                       StringParam directory);
+  ContentLibrary* LibraryFromDirectory(Status& status, StringParam name, StringParam directory);
 
   /// Build the Content Library into a Resource Package.
-  void BuildLibrary(Status& status,
-                    ContentLibrary* library,
-                    ResourcePackage& package);
+  void BuildLibrary(Status& status, ContentLibrary* library, ResourcePackage& package);
 
   /// Build ContentItems into Resource Package.
-  void BuildContentItems(Status& status,
-                         ContentItemArray& toBuild,
-                         ResourcePackage& package);
+  void BuildContentItems(Status& status, ContentItemArray& toBuild, ResourcePackage& package);
 
   /// Build Individual ContentItems into Resource Package.
-  void BuildContentItem(Status& status,
-                        ContentItem* contentItem,
-                        ResourcePackage& package);
+  void BuildContentItem(Status& status, ContentItem* contentItem, ResourcePackage& package);
 
   // Content item management
 
   /// Add a new ContentItem to the given library. See AddContentItemInfo for
   /// details.
-  ContentItem* AddContentItemToLibrary(Status& status,
-                                       AddContentItemInfo& addContent);
+  ContentItem* AddContentItemToLibrary(Status& status, AddContentItemInfo& addContent);
 
   /// Remove the ContentItem from it library.
   bool RemoveContentItemFromLibray(ContentItem* contentItem);
@@ -172,9 +160,7 @@ public:
   void SetupOptions(ContentLibrary* library, BuildOptions& buildOptions);
   void EnumerateLibrariesInPath(StringParam path);
   void BuildLibraryIntoPackageJob(ContentLibrary* library);
-  void BuildPackage(BuildOptions& buildOptions,
-                    ContentLibrary* library,
-                    ResourcePackage& package);
+  void BuildPackage(BuildOptions& buildOptions, ContentLibrary* library, ResourcePackage& package);
 
   BuildOptions Options;
   ContentComponentFactory ComponentFactory;

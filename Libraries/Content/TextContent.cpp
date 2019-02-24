@@ -23,13 +23,11 @@ ContentItem* MakeTextContent(ContentInitializer& initializer)
   if (initializer.Extension == "txt")
     builder = new TextBuilder();
 
-  TypeExtensionEntry* zilchTypeEntry =
-      FileExtensionManager::GetZilchScriptTypeEntry();
+  TypeExtensionEntry* zilchTypeEntry = FileExtensionManager::GetZilchScriptTypeEntry();
   if (zilchTypeEntry->IsValidExtensionNoDot(initializer.Extension))
     builder = new ZilchScriptBuilder();
 
-  TypeExtensionEntry* fragmentTypeEntry =
-      FileExtensionManager::GetZilchFragmentTypeEntry();
+  TypeExtensionEntry* fragmentTypeEntry = FileExtensionManager::GetZilchFragmentTypeEntry();
   // at the moment the extension always comes through as
   // lower case so add both cases to cover any future changes
   if (fragmentTypeEntry->IsValidExtensionNoDot(initializer.Extension))
@@ -73,13 +71,11 @@ void CreateScriptContent(ContentSystem* system)
   ContentTypeEntry text(ZilchTypeId(TextContent), MakeTextContent);
   system->CreatorsByExtension["txt"] = text;
 
-  TypeExtensionEntry* zilchExtensions =
-      FileExtensionManager::GetInstance()->GetZilchScriptTypeEntry();
+  TypeExtensionEntry* zilchExtensions = FileExtensionManager::GetInstance()->GetZilchScriptTypeEntry();
   for (size_t i = 0; i < zilchExtensions->mExtensions.Size(); ++i)
     system->CreatorsByExtension[zilchExtensions->mExtensions[i]] = text;
 
-  TypeExtensionEntry* fragmentExtensions =
-      FileExtensionManager::GetInstance()->GetZilchFragmentTypeEntry();
+  TypeExtensionEntry* fragmentExtensions = FileExtensionManager::GetInstance()->GetZilchFragmentTypeEntry();
   for (size_t i = 0; i < fragmentExtensions->mExtensions.Size(); ++i)
     system->CreatorsByExtension[fragmentExtensions->mExtensions[i]] = text;
 }

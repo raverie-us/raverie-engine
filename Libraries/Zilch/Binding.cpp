@@ -32,7 +32,7 @@ void NativeBindingList::ValidateTypes()
   NativeBindingList& self = GetInstance();
   self.Lock.Lock();
 
-  ZilchForEach(BoundType * type, self.AllNativeBoundTypes)
+  ZilchForEach (BoundType* type, self.AllNativeBoundTypes)
   {
     type->IsInitializedAssert();
   }
@@ -58,8 +58,7 @@ TypeBinding::VirtualTableCounter::VirtualTableCounter()
 void TypeBinding::VirtualTableCounter::AssertIfNotVirtual()
 {
   // Perform the error checking
-  ErrorIf(StaticDebugIsVirtual == false ||
-              this->InstanceDebugIsVirtual == false,
+  ErrorIf(StaticDebugIsVirtual == false || this->InstanceDebugIsVirtual == false,
           "Method being tested was not virtual!");
 
   // Reset our state back, just in case we use this again
@@ -162,10 +161,7 @@ ZilchDefineExternalBaseType(String, TypeCopyMode::ReferenceType, builder, type)
 ZilchDefineExternalBaseType(DoubleReal, TypeCopyMode::ValueType, builder, type)
 {
 }
-ZilchDefineExternalBaseType(DoubleInteger,
-                            TypeCopyMode::ValueType,
-                            builder,
-                            type)
+ZilchDefineExternalBaseType(DoubleInteger, TypeCopyMode::ValueType, builder, type)
 {
 }
 } // namespace Zilch

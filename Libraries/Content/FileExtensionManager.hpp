@@ -28,8 +28,7 @@ public:
 /// Helper singleton to manage default and legacy type extension for given "file
 /// types". The TypeExtensionEntries are not safe to store as they're pointers
 /// into a container. Maybe fix later?
-class FileExtensionManager
-    : public LazySingleton<FileExtensionManager, EventObject>
+class FileExtensionManager : public LazySingleton<FileExtensionManager, EventObject>
 {
 public:
   FileExtensionManager();

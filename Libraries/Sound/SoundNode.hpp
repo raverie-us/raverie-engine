@@ -102,13 +102,9 @@ public:
   // this function and multiply their volume with the return value.
   virtual float GetVolumeChangeFromOutputsThreaded();
   // Handles getting the output from the sound node
-  bool Evaluate(BufferType* outputBuffer,
-                const unsigned numberOfChannels,
-                ListenerNode* listener);
+  bool Evaluate(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener);
   // Adds the output from all input nodes to the InputSamples buffer
-  bool AccumulateInputSamples(const unsigned howManySamples,
-                              const unsigned numberOfChannels,
-                              ListenerNode* listener);
+  bool AccumulateInputSamples(const unsigned howManySamples, const unsigned numberOfChannels, ListenerNode* listener);
   // Uses the BypassValue to add a portion of the InputSamples buffer to the
   // passed-in buffer
   void AddBypassThreaded(BufferType* outputBuffer);
@@ -164,10 +160,7 @@ class SimpleCollapseNode : public SoundNode
 public:
   ZilchDeclareType(SimpleCollapseNode, TypeCopyMode::ReferenceType);
 
-  SimpleCollapseNode(Zero::StringParam name,
-                     unsigned ID,
-                     bool listenerDependent,
-                     bool generator) :
+  SimpleCollapseNode(Zero::StringParam name, unsigned ID, bool listenerDependent, bool generator) :
       SoundNode(name, ID, listenerDependent, generator)
   {
   }

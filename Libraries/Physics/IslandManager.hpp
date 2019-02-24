@@ -10,10 +10,7 @@ DeclareEnum4(PhysicsSolverType, Basic, Normal, GenericBasic, Threaded);
 /// How should islands be built. Internal for testing (mostly legacy).
 DeclareEnum3(PhysicsIslandType, Composites, Kinematics, ForcedOne);
 /// What kind of pre-processing strategy should be used for merging islands.
-DeclareEnum3(PhysicsIslandPreProcessingMode,
-             None,
-             ColliderCount,
-             ConstraintCount);
+DeclareEnum3(PhysicsIslandPreProcessingMode, None, ColliderCount, ConstraintCount);
 
 namespace Physics
 {
@@ -45,9 +42,7 @@ public:
   template <typename Policy>
   void CreateCompactIslands(Policy policy, ColliderList& colliders);
   template <typename Policy, typename PreProcessing>
-  void CreateCompactIslands(Policy policy,
-                            PreProcessing prePolicy,
-                            ColliderList& colliders);
+  void CreateCompactIslands(Policy policy, PreProcessing prePolicy, ColliderList& colliders);
   template <typename Policy>
   void CreateSingleIsland(Policy policy, ColliderList& colliders);
 

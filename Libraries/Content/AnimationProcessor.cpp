@@ -4,10 +4,9 @@
 namespace Zero
 {
 
-AnimationProcessor::AnimationProcessor(
-    AnimationBuilder* animationBuilder,
-    HierarchyDataMap& hierarchyData,
-    AnimationNodeRedirectMap& animationRedirectMap) :
+AnimationProcessor::AnimationProcessor(AnimationBuilder* animationBuilder,
+                                       HierarchyDataMap& hierarchyData,
+                                       AnimationNodeRedirectMap& animationRedirectMap) :
     mBuilder(animationBuilder),
     mHierarchyDataMap(hierarchyData),
     mAnimationRedirectMap(animationRedirectMap)
@@ -33,14 +32,10 @@ void AnimationProcessor::ExtractAndProcessAnimationData(const aiScene* scene)
 
     // Start our animation data for this scenes animation
     AnimationData zeroAnimationData;
-    zeroAnimationData.AnimationName =
-        CleanAssetName(sceneAnimation->mName.C_Str());
+    zeroAnimationData.AnimationName = CleanAssetName(sceneAnimation->mName.C_Str());
 
-    float ticksPerSecond = (float)sceneAnimation->mTicksPerSecond != 0
-                               ? (float)sceneAnimation->mTicksPerSecond
-                               : 1.f;
-    zeroAnimationData.AnimationDuration =
-        (float)sceneAnimation->mDuration / ticksPerSecond;
+    float ticksPerSecond = (float)sceneAnimation->mTicksPerSecond != 0 ? (float)sceneAnimation->mTicksPerSecond : 1.f;
+    zeroAnimationData.AnimationDuration = (float)sceneAnimation->mDuration / ticksPerSecond;
     zeroAnimationData.FramesPerSecond = ticksPerSecond;
 
     // Collect each of the animations channel data (Zero Object Tracks)
@@ -88,64 +83,50 @@ void AnimationProcessor::ExtractAndProcessAnimationData(const aiScene* scene)
       size_t numPositionKeys = sceneChannelNode->mNumPositionKeys;
       for (size_t i = 0; i < numPositionKeys; i++)
       {
-        PositionKey positionKey =
-            AssimpToZeroPositionKey(sceneChannelNode->mPositionKeys[i]);
+        PositionKey positionKey = AssimpToZeroPositionKey(sceneChannelNode->mPositionKeys[i]);
         positionKey.Keytime /= ticksPerSecond;
 
         // Animation Correction if pivots were collapsed
         if (node.mIsAnimatedPivot)
         {
           Mat4 translateTransform;
-          positionKey.Position = Math::TransformPoint(
-              preAnimationCorrection * postAnimationCorrection,
-              positionKey.Position);
+          positionKey.Position =
+              Math::TransformPoint(preAnimationCorrection * postAnimationCorrection, positionKey.Position);
         }
 
-        positionKey.Position =
-            Math::TransformPoint(transform, positionKey.Position);
+        positionKey.Position = Math::TransformPoint(transform, positionKey.Position);
         zeroTrackData.PositionKeys.PushBack(positionKey);
       }
 
       size_t numRotationKeys = sceneChannelNode->mNumRotationKeys;
       for (size_t i = 0; i < numRotationKeys; i++)
       {
-        RotationKey rotationKey =
-            AssimpToZeroRotationKey(sceneChannelNode->mRotationKeys[i]);
+        RotationKey rotationKey = AssimpToZeroRotationKey(sceneChannelNode->mRotationKeys[i]);
         rotationKey.Keytime /= ticksPerSecond;
 
         // Animation Correction if pivots were collapsed
         if (node.mIsAnimatedPivot)
         {
-          rotationKey.Rotation = ToQuaternion(preAnimationCorrection) *
-                                 rotationKey.Rotation *
-                                 ToQuaternion(postAnimationCorrection);
+          rotationKey.Rotation =
+              ToQuaternion(preAnimationCorrection) * rotationKey.Rotation * ToQuaternion(postAnimationCorrection);
         }
 
-        rotationKey.Rotation =
-            changeOfBasis * rotationKey.Rotation * changeOfBasis.Inverted();
+        rotationKey.Rotation = changeOfBasis * rotationKey.Rotation * changeOfBasis.Inverted();
         zeroTrackData.RotationKeys.PushBack(rotationKey);
       }
 
       size_t numScalingKeys = sceneChannelNode->mNumScalingKeys;
       for (size_t i = 0; i < numScalingKeys; i++)
       {
-        ScalingKey scalingKey =
-            AssimpToZeroScalingKey(sceneChannelNode->mScalingKeys[i]);
+        ScalingKey scalingKey = AssimpToZeroScalingKey(sceneChannelNode->mScalingKeys[i]);
         scalingKey.Keytime /= ticksPerSecond;
 
         // Animation Correction if pivots were collapsed
         if (node.mIsAnimatedPivot)
         {
-          Mat4::Decompose(preAnimationCorrection,
-                          translation,
-                          rotation,
-                          preScaleCorrection);
-          Mat4::Decompose(postAnimationCorrection,
-                          translation,
-                          rotation,
-                          postScaleCorrection);
-          scalingKey.Scale =
-              preScaleCorrection * scalingKey.Scale * postScaleCorrection;
+          Mat4::Decompose(preAnimationCorrection, translation, rotation, preScaleCorrection);
+          Mat4::Decompose(postAnimationCorrection, translation, rotation, postScaleCorrection);
+          scalingKey.Scale = preScaleCorrection * scalingKey.Scale * postScaleCorrection;
         }
 
         zeroTrackData.ScalingKeys.PushBack(scalingKey);
@@ -189,10 +170,7 @@ void* GetKeyArray<ScalingKey>(SceneTrack& sceneTrack)
 }
 
 template <typename KeyType>
-void GetClipTrack(SceneTrack& sceneTrack,
-                  SceneTrack& clipTrack,
-                  float startTime,
-                  float endTime)
+void GetClipTrack(SceneTrack& sceneTrack, SceneTrack& clipTrack, float startTime, float endTime)
 {
   Array<KeyType>* sceneKeys = (Array<KeyType>*)GetKeyArray<KeyType>(sceneTrack);
   Array<KeyType>* clipKeys = (Array<KeyType>*)GetKeyArray<KeyType>(clipTrack);
@@ -201,11 +179,8 @@ void GetClipTrack(SceneTrack& sceneTrack,
   KeyType startKey = {startTime};
   KeyType endKey = {endTime};
   typename Array<KeyType>::iterator lower =
-      UpperBound(sceneKeys->All(), startKey, TransformKeyLessThan<KeyType>)
-          .Begin();
-  typename Array<KeyType>::iterator upper =
-      UpperBound(sceneKeys->All(), endKey, TransformKeyLessThan<KeyType>)
-          .Begin();
+      UpperBound(sceneKeys->All(), startKey, TransformKeyLessThan<KeyType>).Begin();
+  typename Array<KeyType>::iterator upper = UpperBound(sceneKeys->All(), endKey, TransformKeyLessThan<KeyType>).Begin();
 
   // Guarantee that at least one key is assigned.
   if (lower == upper)
@@ -220,7 +195,8 @@ void GetClipTrack(SceneTrack& sceneTrack,
 
   // Rebase key times to the first key.
   float offset = clipKeys->Front().Keytime;
-  forRange(KeyType & key, clipKeys->All()) key.Keytime -= offset;
+  forRange (KeyType& key, clipKeys->All())
+    key.Keytime -= offset;
 }
 
 void AnimationProcessor::ExportAnimationData(String outputPath)
@@ -235,15 +211,14 @@ void AnimationProcessor::ExportAnimationData(String outputPath)
   {
     Array<String> usedClipNames;
 
-    forRange(AnimationClip & clip, mBuilder->mClips.All())
+    forRange (AnimationClip& clip, mBuilder->mClips.All())
     {
       if ((size_t)clip.mAnimationIndex >= mAnimationDataArray.Size())
         continue;
 
       AnimationData& animData = mAnimationDataArray[clip.mAnimationIndex];
 
-      String name =
-          BuildString(mBuilder->Name, "_", CleanAssetName(clip.mName));
+      String name = BuildString(mBuilder->Name, "_", CleanAssetName(clip.mName));
 
       // Ignore attempts to make duplicate names.
       if (usedClipNames.Contains(name))
@@ -266,8 +241,7 @@ void AnimationProcessor::ExportAnimationData(String outputPath)
       animHeader.mNumTracks = animData.ObjectTracks.Size();
       writer.Write(animHeader);
 
-      for (size_t trackIndex = 0; trackIndex < animHeader.mNumTracks;
-           ++trackIndex)
+      for (size_t trackIndex = 0; trackIndex < animHeader.mNumTracks; ++trackIndex)
       {
         SceneTrack& sceneTrack = animData.ObjectTracks[trackIndex];
 
@@ -319,8 +293,7 @@ void AnimationProcessor::ExportAnimationData(String outputPath)
 
       writer.Write(animHeader);
 
-      for (size_t trackIndex = 0; trackIndex < animHeader.mNumTracks;
-           ++trackIndex)
+      for (size_t trackIndex = 0; trackIndex < animHeader.mNumTracks; ++trackIndex)
       {
         SceneTrack& sceneTrack = animData.ObjectTracks[trackIndex];
 

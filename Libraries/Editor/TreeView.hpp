@@ -26,12 +26,11 @@ DeclareEnum3(ColumnType,
              Sizeable); // The size will remain unchanged unless
                         // the user resizes it by dragging the header
 
-DeclareEnum2(
-    ColumnIconSizePolicy,
-    // Icon size will fill the header
-    Auto,
-    // Icon size will fill the specified size [ie, independent of header size]
-    Custom);
+DeclareEnum2(ColumnIconSizePolicy,
+             // Icon size will fill the header
+             Auto,
+             // Icon size will fill the specified size [ie, independent of header size]
+             Custom);
 
 /// Format for each Column in each Row
 struct ColumnFormat
@@ -100,8 +99,7 @@ struct ColumnFormat
   Vec2 CurrSize;
 };
 
-DeclareBitField4(
-    FormatFlags, ShowRoot, ShowHeaders, ShowSeparators, ColumnsResizable);
+DeclareBitField4(FormatFlags, ShowRoot, ShowHeaders, ShowSeparators, ColumnsResizable);
 
 /// Formatting for Tree View
 struct TreeFormatting
@@ -191,8 +189,7 @@ public:
   /// Multi select from the current selection to this row
   void MultiSelect();
 
-  void Highlight(HighlightType::Type type,
-                 InsertMode::Type mode = InsertMode::On);
+  void Highlight(HighlightType::Type type, InsertMode::Type mode = InsertMode::On);
 
   /// Destroy Row and Children
   void RecursiveDestroy();
@@ -215,10 +212,7 @@ public:
   void OnAddGroup(MouseEvent* event);
   void OnValueChanged(ObjectEvent* event);
   void OnTextChanged(TextUpdatedEvent* event);
-  void GetInsertMode(Status& status,
-                     DataEntry* movingEntry,
-                     Vec2Param screenPos,
-                     InsertMode::Type& mode);
+  void GetInsertMode(Status& status, DataEntry* movingEntry, Vec2Param screenPos, InsertMode::Type& mode);
   InsertMode::Enum GetInsertPosition(DataEntry* entry, Vec2Param screenPos);
   void OnMetaDrop(MetaDropEvent* event);
   void OnObjectPoll(ObjectPollEvent* event);

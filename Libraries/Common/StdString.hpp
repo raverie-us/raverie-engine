@@ -7,12 +7,10 @@
 namespace Zero
 {
 
-class StdString
-    : public std::basic_string<char, std::char_traits<char>, Zallocator<char>>
+class StdString : public std::basic_string<char, std::char_traits<char>, Zallocator<char>>
 {
 public:
-  typedef std::basic_string<char, std::char_traits<char>, Zallocator<char>>
-      base_type;
+  typedef std::basic_string<char, std::char_traits<char>, Zallocator<char>> base_type;
   StdString(cstr cstring) : base_type(cstring)
   {
   }

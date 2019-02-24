@@ -4,10 +4,9 @@
 namespace Zero
 {
 
-ResourceTableEntryChangeOp::ResourceTableEntryChangeOp(
-    ResourceTableEditor* editor,
-    ResourceTableEntry* oldEntry,
-    const ResourceTable::ValueType& newValue)
+ResourceTableEntryChangeOp::ResourceTableEntryChangeOp(ResourceTableEditor* editor,
+                                                       ResourceTableEntry* oldEntry,
+                                                       const ResourceTable::ValueType& newValue)
 {
   mName = "ResourceTableEntryChange";
 
@@ -17,8 +16,7 @@ ResourceTableEntryChangeOp::ResourceTableEntryChangeOp(
   mIndex = mEditor->mTable->mEntryList.FindIndex(oldEntry);
 }
 
-ResourceTableEntryChangeOp::ResourceTableEntryChangeOp(
-    ResourceTableEditor* editor, ResourceTableEntry* oldEntry)
+ResourceTableEntryChangeOp::ResourceTableEntryChangeOp(ResourceTableEditor* editor, ResourceTableEntry* oldEntry)
 {
   mName = "ResourceTableEntryChange";
 
@@ -39,8 +37,7 @@ void ResourceTableEntryChangeOp::Redo()
   mEditor->Rebuild();
 }
 
-ResourceTableMaxWeightChangeOp::ResourceTableMaxWeightChangeOp(
-    ResourceTableEditor* editor, float newMaxWeight)
+ResourceTableMaxWeightChangeOp::ResourceTableMaxWeightChangeOp(ResourceTableEditor* editor, float newMaxWeight)
 {
   mName = "ResourceTableMaxWeightChange";
 
@@ -76,8 +73,7 @@ void ResourceTableMaxWeightChangeOp::Redo()
   mEditor->mMaxWeightTextBox->SetText(String::Format("%g", mNewMaxWeight));
 }
 
-ResourceTableResourceTypeChangeOp::ResourceTableResourceTypeChangeOp(
-    ResourceTableEditor* editor, StringParam newType)
+ResourceTableResourceTypeChangeOp::ResourceTableResourceTypeChangeOp(ResourceTableEditor* editor, StringParam newType)
 {
   mName = BuildString("ResourceTableResourceTypeChange to \"", newType, "\"");
 
@@ -113,8 +109,9 @@ void ResourceTableResourceTypeChangeOp::PerformOp(StringParam resourceType)
   mEditor->Rebuild();
 }
 
-ResourceTableAddRemoveRowOp::ResourceTableAddRemoveRowOp(
-    ResourceTableEditor* editor, ResourceTableEntry* entry, bool add)
+ResourceTableAddRemoveRowOp::ResourceTableAddRemoveRowOp(ResourceTableEditor* editor,
+                                                         ResourceTableEntry* entry,
+                                                         bool add)
 {
   String opType;
   if (add)
@@ -157,14 +154,9 @@ void ResourceTableAddRemoveRowOp::PerformOp(bool add)
   mEditor->Rebuild();
 }
 
-ResourceTableRowReorderOp::ResourceTableRowReorderOp(
-    ResourceTableEditor* editor, uint oldIndex, uint newIndex)
+ResourceTableRowReorderOp::ResourceTableRowReorderOp(ResourceTableEditor* editor, uint oldIndex, uint newIndex)
 {
-  mName = BuildString("ResourceTable row \"",
-                      ToString(oldIndex),
-                      "\" reorder to \"",
-                      ToString(newIndex),
-                      "\"");
+  mName = BuildString("ResourceTable row \"", ToString(oldIndex), "\" reorder to \"", ToString(newIndex), "\"");
 
   mEditor = editor;
   mOldIndex = oldIndex;
@@ -191,8 +183,9 @@ void ResourceTableRowReorderOp::PerformOp(uint currentIndex, uint newIndex)
   mEditor->Rebuild();
 }
 
-ResourceTableBatchRowReorderOp::ResourceTableBatchRowReorderOp(
-    ResourceTableEditor* editor, Array<int>& oldIndices, Array<int>& newIndices)
+ResourceTableBatchRowReorderOp::ResourceTableBatchRowReorderOp(ResourceTableEditor* editor,
+                                                               Array<int>& oldIndices,
+                                                               Array<int>& newIndices)
 {
   mName = "ResourceTableBatchRowReorder";
 
@@ -211,8 +204,7 @@ void ResourceTableBatchRowReorderOp::Redo()
   PerformOp(mOldIndices, mNewIndices);
 }
 
-void ResourceTableBatchRowReorderOp::PerformOp(Array<int>& currentIndices,
-                                               Array<int>& newIndices)
+void ResourceTableBatchRowReorderOp::PerformOp(Array<int>& currentIndices, Array<int>& newIndices)
 {
   ResourceTable* table = mEditor->mTable;
 
@@ -244,8 +236,9 @@ void ResourceTableBatchRowReorderOp::PerformOp(Array<int>& currentIndices,
   mEditor->Rebuild();
 }
 
-SearchableResourceTextBox::SearchableResourceTextBox(
-    Composite* parent, StringParam resourceType, StringParam resourceIdName) :
+SearchableResourceTextBox::SearchableResourceTextBox(Composite* parent,
+                                                     StringParam resourceType,
+                                                     StringParam resourceIdName) :
     Composite(parent)
 {
   mResourceType = resourceType;
@@ -352,9 +345,7 @@ void SearchableResourceTextBox::SetTextOffset(float offset)
   mDisplayTextBox->SetTextOffset(offset);
 }
 
-WeightedTableBar::WeightedTableBar(
-    Composite* parent, ResourceWeightedTableView* weightedTableView) :
-    Composite(parent)
+WeightedTableBar::WeightedTableBar(Composite* parent, ResourceWeightedTableView* weightedTableView) : Composite(parent)
 {
   mWeightedTableView = weightedTableView;
 
@@ -386,8 +377,7 @@ void WeightedTableBar::UpdateProbability(MouseEvent* mouseEvent, bool queueUndo)
   // convert the mouse position to the graph position
   //(scaled means we'll get [0,maxSize] instead of [0,1])
   Vec2 localPos = mWeightedTableView->ToLocal(mouseEvent->Position);
-  localPos = mWeightedTableView->mGraph->ToGraphPositionScaled(
-      localPos - mWeightedTableView->mMargins.TopLeft());
+  localPos = mWeightedTableView->mGraph->ToGraphPositionScaled(localPos - mWeightedTableView->mMargins.TopLeft());
   // round the probability to a certain number of places
   //(this will make the bar snap to certain values)
   float prob = Math::Round(localPos.y, mWeightedTableView->mRoundingPlaces);
@@ -402,8 +392,7 @@ void WeightedTableBar::OnLeftMouseDown(MouseEvent* mouseEvent)
 
   // create a manipulation that caches the start value for undo and captures the
   // mouse
-  new WeightedTableBarDragManipulation(
-      mouseEvent, this, this, mWeightedTableView->mEditor);
+  new WeightedTableBarDragManipulation(mouseEvent, this, this, mWeightedTableView->mEditor);
 }
 
 void WeightedTableBar::OnRightMouseUp(MouseEvent* mouseEvent)
@@ -442,16 +431,14 @@ void WeightedTableBar::OnNameChanged(Event*)
   String oldName = entry->mName;
 
   // get the new item name and set the name in the table
-  StringParam newName =
-      mWeightedTableView->mEntries[mIndex].mNameTag->GetText();
+  StringParam newName = mWeightedTableView->mEntries[mIndex].mNameTag->GetText();
   if (table->GetOrNull(newName) != nullptr)
   {
     String msg = String::Format("An item with name '%s' already exists, "
                                 "please pick a different name.",
                                 newName.c_str());
     DoNotifyWarning("Invalid Item Name", msg);
-    mWeightedTableView->mEntries[mIndex].mNameTag->SetText(
-        (*table)[mIndex]->mName);
+    mWeightedTableView->mEntries[mIndex].mNameTag->SetText((*table)[mIndex]->mName);
     return;
   }
 
@@ -459,8 +446,7 @@ void WeightedTableBar::OnNameChanged(Event*)
   table->SetOutOfDate();
 
   // queue up an undo operation for changing the name
-  ResourceTableEntryChangeOp* op =
-      new ResourceTableEntryChangeOp(mWeightedTableView->mEditor, entry);
+  ResourceTableEntryChangeOp* op = new ResourceTableEntryChangeOp(mWeightedTableView->mEditor, entry);
   op->mStartEntry.mName = oldName;
   mWeightedTableView->mEditor->mQueue.Queue(op);
 
@@ -475,14 +461,12 @@ void WeightedTableBar::OnValueChanged(Event*)
   String oldValue = entry->mValue;
 
   // get the new item value and set the value in the table
-  StringParam newValue =
-      mWeightedTableView->mEntries[mIndex].mValueTag->mResourceIdName;
+  StringParam newValue = mWeightedTableView->mEntries[mIndex].mValueTag->mResourceIdName;
   entry->mValue = newValue;
   table->ForceRebuild();
 
   // queue up an undo operation for changing the value
-  ResourceTableEntryChangeOp* op =
-      new ResourceTableEntryChangeOp(mWeightedTableView->mEditor, entry);
+  ResourceTableEntryChangeOp* op = new ResourceTableEntryChangeOp(mWeightedTableView->mEditor, entry);
   op->mStartEntry.mValue = oldValue;
   mWeightedTableView->mEditor->mQueue.Queue(op);
 
@@ -500,11 +484,10 @@ void WeightedTableBar::OnRemove(Event*)
   mWeightedTableView->RemoveItem(mIndex);
 }
 
-WeightedTableBarDragManipulation::WeightedTableBarDragManipulation(
-    MouseEvent* e,
-    Composite* parent,
-    WeightedTableBar* bar,
-    ResourceTableEditor* editor) :
+WeightedTableBarDragManipulation::WeightedTableBarDragManipulation(MouseEvent* e,
+                                                                   Composite* parent,
+                                                                   WeightedTableBar* bar,
+                                                                   ResourceTableEditor* editor) :
     MouseManipulation(e->GetMouse(), parent)
 {
   mEditor = editor;
@@ -526,17 +509,14 @@ void WeightedTableBarDragManipulation::OnMouseUp(MouseEvent* e)
 
   // only queue up the undo when we are done with all movement
   ResourceTable& resourceTable = mEditor->mTable;
-  ResourceTableEntryChangeOp* op =
-      new ResourceTableEntryChangeOp(mEditor, resourceTable[mBar->mIndex]);
+  ResourceTableEntryChangeOp* op = new ResourceTableEntryChangeOp(mEditor, resourceTable[mBar->mIndex]);
   op->mStartEntry.mWeight = mStartProbability;
   mEditor->mQueue.Queue(op);
 
   this->Destroy();
 }
 
-ResourceWeightedTableView::ResourceWeightedTableView(
-    Composite* parent, ResourceTableEditor* editor) :
-    Composite(parent)
+ResourceWeightedTableView::ResourceWeightedTableView(Composite* parent, ResourceTableEditor* editor) : Composite(parent)
 {
   mEditor = editor;
 
@@ -651,11 +631,8 @@ void ResourceWeightedTableView::UpdateTransform()
     // compute the upper left and bottom right of the bar (we have this in
     // graph space as it's easier to work in, convert it to world space for
     // display)
-    Vec2 ul =
-        SnapToPixels(mGraph->ToPixelPositionScaled(Vec2(localLeft, height)) +
-                     mMargins.TopLeft());
-    Vec2 br = SnapToPixels(mGraph->ToPixelPositionScaled(Vec2(localRight, 0)) +
-                           mMargins.TopLeft());
+    Vec2 ul = SnapToPixels(mGraph->ToPixelPositionScaled(Vec2(localLeft, height)) + mMargins.TopLeft());
+    Vec2 br = SnapToPixels(mGraph->ToPixelPositionScaled(Vec2(localRight, 0)) + mMargins.TopLeft());
     // move the current x placement value by 1 item and 1 spacer
     currPos += 2.0f * width;
 
@@ -676,13 +653,11 @@ void ResourceWeightedTableView::UpdateTransform()
     // difference in size of the two composites (doing it this way avoids
     // warbling because we're computing a fixed delta from the left edge instead
     // of from the center)
-    float probSizeDeltaX =
-        Math::Min(halfBarSizeX, (probSize.x - barSize.x) * 0.5f);
+    float probSizeDeltaX = Math::Min(halfBarSizeX, (probSize.x - barSize.x) * 0.5f);
     // now we can compute the position from the left edge (that won't warble)
     Vec2 probPos = Vec2(ul.x - probSizeDeltaX, ul.y - probSize.y);
     // now finally we can position the text, making sure to snap to pixels
-    mEntries[i].mProbability->SetTranslation(
-        SnapToPixels(Math::ToVector3(probPos)));
+    mEntries[i].mProbability->SetTranslation(SnapToPixels(Math::ToVector3(probPos)));
     // add a small border because sometimes small text was
     // cut off even though the size should be correct
     mEntries[i].mProbability->SetSize(probSize + textBuffer);
@@ -694,11 +669,9 @@ void ResourceWeightedTableView::UpdateTransform()
     Vec2 nameSize = mEntries[i].mNameTag->GetMinSize();
     // compute the position of the name to avoid warbling (see the probability
     // position calculation for details)
-    float nameSizeDeltaX =
-        SnapToPixels(Math::Min(halfBarSizeX, (nameSize.x - barSize.x) * 0.5f));
+    float nameSizeDeltaX = SnapToPixels(Math::Min(halfBarSizeX, (nameSize.x - barSize.x) * 0.5f));
     Vec2 namePos = Vec2(ul.x - nameSizeDeltaX, ul.y + barSize.y);
-    mEntries[i].mNameTag->SetTranslation(
-        SnapToPixels(Math::ToVector3(namePos)));
+    mEntries[i].mNameTag->SetTranslation(SnapToPixels(Math::ToVector3(namePos)));
     mEntries[i].mNameTag->SetSize(nameSize + textBuffer);
     if (nameSize.x + textBuffer.x < barSize.x)
       mEntries[i].mNameTag->SetTextOffset(0);
@@ -710,12 +683,9 @@ void ResourceWeightedTableView::UpdateTransform()
     // these two composites is computed and then the value text box is
     // positioned a fixed amount (based upon the size offset) away from the name
     // text box.
-    float valueSizeDeltaX = SnapToPixels(
-        Math::Min(halfBarSizeX, (valueSize.x - nameSize.x) * 0.5f));
-    Vec2 valuePos =
-        Vec2(namePos.x - valueSizeDeltaX, ul.y + (barSize.y + valueSize.y));
-    mEntries[i].mValueTag->SetTranslation(
-        SnapToPixels(Math::ToVector3(valuePos)));
+    float valueSizeDeltaX = SnapToPixels(Math::Min(halfBarSizeX, (valueSize.x - nameSize.x) * 0.5f));
+    Vec2 valuePos = Vec2(namePos.x - valueSizeDeltaX, ul.y + (barSize.y + valueSize.y));
+    mEntries[i].mValueTag->SetTranslation(SnapToPixels(Math::ToVector3(valuePos)));
     mEntries[i].mValueTag->SetSize(valueSize + textBuffer);
     if (valueSize.x + textBuffer.x < barSize.x)
       mEntries[i].mValueTag->SetTextOffset(0);
@@ -724,9 +694,7 @@ void ResourceWeightedTableView::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-void ResourceWeightedTableView::CreateItem(StringParam name,
-                                           StringParam value,
-                                           float probability)
+void ResourceWeightedTableView::CreateItem(StringParam name, StringParam value, float probability)
 {
   // make a new entry
   Entry& entry = mEntries.PushBack();
@@ -744,8 +712,7 @@ void ResourceWeightedTableView::CreateItem(StringParam name,
   // Create a searchable text box. This composite wraps the text box and
   // creating the search view on mouse down. This also handles having the
   // text box as editable when the resource type is String.
-  entry.mValueTag =
-      new SearchableResourceTextBox(mScrollArea, mTable->mResourceType, value);
+  entry.mValueTag = new SearchableResourceTextBox(mScrollArea, mTable->mResourceType, value);
 
   // create a text box for displaying/editing the probability of the bar
   entry.mProbability = new TextBox(mScrollArea);
@@ -755,18 +722,9 @@ void ResourceWeightedTableView::CreateItem(StringParam name,
   entry.mProbability->HideBackground(true);
 
   // listen to when any of these items are changed
-  Zero::Connect(entry.mProbability,
-                Events::TextBoxChanged,
-                entry.mBar,
-                &WeightedTableBar::OnProbabilityChanged);
-  Zero::Connect(entry.mNameTag,
-                Events::TextBoxChanged,
-                entry.mBar,
-                &WeightedTableBar::OnNameChanged);
-  Zero::Connect(entry.mValueTag,
-                Events::TextBoxChanged,
-                entry.mBar,
-                &WeightedTableBar::OnValueChanged);
+  Zero::Connect(entry.mProbability, Events::TextBoxChanged, entry.mBar, &WeightedTableBar::OnProbabilityChanged);
+  Zero::Connect(entry.mNameTag, Events::TextBoxChanged, entry.mBar, &WeightedTableBar::OnNameChanged);
+  Zero::Connect(entry.mValueTag, Events::TextBoxChanged, entry.mBar, &WeightedTableBar::OnValueChanged);
 }
 
 void ResourceWeightedTableView::DuplicateItem(uint index)
@@ -787,8 +745,7 @@ void ResourceWeightedTableView::DuplicateItem(uint index)
   // add a new item in the resource
   mTable->AddNewEntry(name, value, weight);
   // queue up the undo/redo for the add
-  mEditor->mQueue.Queue(new ResourceTableAddRemoveRowOp(
-      mEditor, mTable->mEntryList.Back(), true));
+  mEditor->mQueue.Queue(new ResourceTableAddRemoveRowOp(mEditor, mTable->mEntryList.Back(), true));
 
   // make a new item in the ui
   CreateItem(name, value, weight);
@@ -802,17 +759,15 @@ void ResourceWeightedTableView::RemoveItem(uint index)
 {
   if (mTable->Size() == 1)
   {
-    DoNotifyWarning(
-        "Table must have 1 item.",
-        "Cannot remove this item from the "
-        "table because all weighted tables must have at least 1 item. "
-        "This is to ensure that there is an item to return during any "
-        "sample operation.");
+    DoNotifyWarning("Table must have 1 item.",
+                    "Cannot remove this item from the "
+                    "table because all weighted tables must have at least 1 item. "
+                    "This is to ensure that there is an item to return during any "
+                    "sample operation.");
     return;
   }
   // queue up the undo/redo for the remove
-  mEditor->mQueue.Queue(
-      new ResourceTableAddRemoveRowOp(mEditor, (*mTable)[index], false));
+  mEditor->mQueue.Queue(new ResourceTableAddRemoveRowOp(mEditor, (*mTable)[index], false));
   // erase the item from the resource
   mTable->RemoveAt(index);
 
@@ -833,9 +788,7 @@ void ResourceWeightedTableView::RemoveItem(uint index)
   MetaOperations::NotifyObjectModified(mTable);
 }
 
-void ResourceWeightedTableView::UpdateProbability(WeightedTableBar* item,
-                                                  float prob,
-                                                  bool queueUndo)
+void ResourceWeightedTableView::UpdateProbability(WeightedTableBar* item, float prob, bool queueUndo)
 {
   // If we're being set to the value we already are, there's no point in doing
   // anything. This check is done to prevent marking the resource as modified
@@ -864,8 +817,7 @@ void ResourceWeightedTableView::UpdateProbability(WeightedTableBar* item,
   // if we need to, queue up an undo operation for the changing weight value
   if (queueUndo)
   {
-    ResourceTableEntryChangeOp* op =
-        new ResourceTableEntryChangeOp(mEditor, tableEntry);
+    ResourceTableEntryChangeOp* op = new ResourceTableEntryChangeOp(mEditor, tableEntry);
     op->mStartEntry.mWeight = oldWeight;
     mEditor->mQueue.Queue(op);
   }
@@ -949,8 +901,7 @@ void ResourceWeightedTableView::OnAddItem(Event*)
   // create a new item (this creates it with default values)
   mTable->AddNewEntry();
   // queue up the undo/redo for the add
-  mEditor->mQueue.Queue(new ResourceTableAddRemoveRowOp(
-      mEditor, mTable->mEntryList.Back(), true));
+  mEditor->mQueue.Queue(new ResourceTableAddRemoveRowOp(mEditor, mTable->mEntryList.Back(), true));
 
   // now extract the info and set the correct labels
   uint newIndex = mTable->Size() - 1;
@@ -986,8 +937,7 @@ void ResourceWeightedTableView::FixValuesAfterExpansion(bool queueUndo)
   for (uint i = 0; i < mTable->Size(); ++i)
   {
     float prob = (*mTable)[i]->mWeight;
-    mEntries[i].mBar->UpdateProbability(Math::Min(GetMaxWeight(), prob),
-                                        queueUndo);
+    mEntries[i].mBar->UpdateProbability(Math::Min(GetMaxWeight(), prob), queueUndo);
   }
   if (queueUndo)
     mEditor->mQueue.EndBatch();
@@ -1009,9 +959,7 @@ void ResourceWeightedTableView::SetMaxWeight(float maxHeight, bool queueUndo)
   if (maxHeight < .1f)
   {
     maxHeight = .1f;
-    DoNotifyWarning(
-        "Too small graph bounds.",
-        "Graph bounds are too small. New bounds have been clamped to .1");
+    DoNotifyWarning("Too small graph bounds.", "Graph bounds are too small. New bounds have been clamped to .1");
   }
 
   // queue the undo for the max weight change (and also fix all values)
@@ -1112,9 +1060,7 @@ public:
     return 0;
   }
 
-  DataEntry* GetChild(DataEntry* dataEntry,
-                      uint index,
-                      DataEntry* prev) override
+  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
   {
     Entry* root = &mRoot;
     if (dataEntry == root)
@@ -1145,14 +1091,11 @@ public:
     else if (column == CommonColumns::ToolTip)
     {
       if (mTable->ValidateEntry(entry) == false)
-        variant = String::Format("Resource '%s' does not exist",
-                                 entry->GetValueOrResourceIdName().c_str());
+        variant = String::Format("Resource '%s' does not exist", entry->GetValueOrResourceIdName().c_str());
     }
   }
 
-  bool SetData(DataEntry* dataEntry,
-               AnyParam variant,
-               StringParam column) override
+  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
   {
     ResourceTable* table = mTable;
     Entry* entry = (Entry*)dataEntry;
@@ -1192,17 +1135,15 @@ public:
 
       if (oldWeight != weight)
       {
-        String msg =
-            String::Format("The weight must be between 0 and %g (Max Weight). "
-                           "Clamping the weight.",
-                           table->mMaxWeight);
+        String msg = String::Format("The weight must be between 0 and %g (Max Weight). "
+                                    "Clamping the weight.",
+                                    table->mMaxWeight);
         DoNotifyWarning("Invalid weight value.", msg);
         return false;
       }
     }
 
-    ResourceTableEntryChangeOp* op =
-        new ResourceTableEntryChangeOp(mTreeView->mEditor, entry);
+    ResourceTableEntryChangeOp* op = new ResourceTableEntryChangeOp(mTreeView->mEditor, entry);
     op->mStartEntry = startEntry;
     mTreeView->mEditor->mQueue.Queue(op);
 
@@ -1212,10 +1153,7 @@ public:
     return true;
   }
 
-  void CanMove(Status& status,
-               DataEntry* source,
-               DataEntry* destination,
-               InsertMode::Type insertMode)
+  void CanMove(Status& status, DataEntry* source, DataEntry* destination, InsertMode::Type insertMode)
   {
     Entry* entry = static_cast<Entry*>(destination);
     // for now handle on as before
@@ -1241,13 +1179,10 @@ public:
     mDestinationEntry = nullptr;
     mEntriesToMove.Clear();
     mTreeView->mEditor->mQueue.BeginBatch();
-    mTreeView->mEditor->mQueue.SetActiveBatchName(
-        "ResourceTableEditor_BeginBatchMove");
+    mTreeView->mEditor->mQueue.SetActiveBatchName("ResourceTableEditor_BeginBatchMove");
   }
 
-  bool Move(DataEntry* destinationEntry,
-            DataEntry* movingEntry,
-            InsertMode::Type insertMode) override
+  bool Move(DataEntry* destinationEntry, DataEntry* movingEntry, InsertMode::Type insertMode) override
   {
     Entry* destination = static_cast<Entry*>(destinationEntry);
     Entry* moving = static_cast<Entry*>(movingEntry);
@@ -1267,9 +1202,7 @@ public:
     return true;
   }
 
-  void BatchMove(ResourceTableEntry* destination,
-                 Array<int>& indices,
-                 InsertMode::Type insertMode)
+  void BatchMove(ResourceTableEntry* destination, Array<int>& indices, InsertMode::Type insertMode)
   {
     ResourceTable* table = mTable;
     // First get all entries at the current indices (so removing doesn't break
@@ -1305,8 +1238,7 @@ public:
       ++destIndex;
     }
 
-    mTreeView->mEditor->mQueue.Queue(new ResourceTableBatchRowReorderOp(
-        mTreeView->mEditor, indices, newIndices));
+    mTreeView->mEditor->mQueue.Queue(new ResourceTableBatchRowReorderOp(mTreeView->mEditor, indices, newIndices));
   }
 
   void EndBatchMove() override
@@ -1347,9 +1279,7 @@ public:
   }
 };
 
-ResourceTableTreeView::ResourceTableTreeView(Composite* parent,
-                                             ResourceTableEditor* editor) :
-    Composite(parent)
+ResourceTableTreeView::ResourceTableTreeView(Composite* parent, ResourceTableEditor* editor) : Composite(parent)
 {
   mEditor = editor;
   // store the reference to our resource table
@@ -1397,9 +1327,7 @@ void ResourceTableTreeView::Rebuild()
 void ResourceTableTreeView::SetFormatting(StringParam resourceType)
 {
   TreeFormatting formatting;
-  formatting.Flags.SetFlag(FormatFlags::ShowHeaders |
-                           FormatFlags::ShowSeparators |
-                           FormatFlags::ColumnsResizable);
+  formatting.Flags.SetFlag(FormatFlags::ShowHeaders | FormatFlags::ShowSeparators | FormatFlags::ColumnsResizable);
   ResourceTable* table = mTable;
 
   // set up the common values for all rows
@@ -1531,13 +1459,11 @@ void ResourceTableTreeView::RemoveSelectedRows()
   mTreeView->GetSelection()->SelectNone();
 
   mEditor->mQueue.BeginBatch();
-  mEditor->mQueue.SetActiveBatchName(
-      "ResourceTableTreeView_RemoveSelectedRows");
+  mEditor->mQueue.SetActiveBatchName("ResourceTableTreeView_RemoveSelectedRows");
   for (uint i = 0; i < entries.Size(); ++i)
   {
     ResourceTableEntry* entry = entries[i];
-    mEditor->mQueue.Queue(
-        new ResourceTableAddRemoveRowOp(mEditor, entry, false));
+    mEditor->mQueue.Queue(new ResourceTableAddRemoveRowOp(mEditor, entry, false));
     table->RemoveOrError(entry->mName);
   }
   mEditor->mQueue.EndBatch();
@@ -1573,9 +1499,7 @@ void ResourceTableTreeView::OnMetaDrop(MetaDropEvent* e)
     // message saying why it can't be added
     if (e->Testing)
     {
-      e->Result = String::Format("A %s cannot be added to a table of type %s",
-                                 givenType.c_str(),
-                                 expectedType.c_str());
+      e->Result = String::Format("A %s cannot be added to a table of type %s", givenType.c_str(), expectedType.c_str());
     }
     return;
   }
@@ -1596,8 +1520,7 @@ void ResourceTableTreeView::OnMetaDrop(MetaDropEvent* e)
 
   table->AddNewEntry(name);
   // queue the undo/redo for the newly created entry
-  mEditor->mQueue.Queue(
-      new ResourceTableAddRemoveRowOp(mEditor, table->mEntryList.Back(), true));
+  mEditor->mQueue.Queue(new ResourceTableAddRemoveRowOp(mEditor, table->mEntryList.Back(), true));
 
   MetaOperations::NotifyObjectModified(table);
   Rebuild();
@@ -1610,9 +1533,7 @@ void ResourceTableTreeView::FadeOutContextMenu()
     contextMenu->FadeOut();
 }
 
-ResourceTableEditor::ResourceTableEditor(Composite* parent,
-                                         ResourceTable* table) :
-    Composite(parent)
+ResourceTableEditor::ResourceTableEditor(Composite* parent, ResourceTable* table) : Composite(parent)
 {
   this->SetName(table->Name);
   SetTable(table);
@@ -1725,8 +1646,7 @@ void ResourceTableEditor::CreateToolbar()
   mResourceTypeSelector->SetText(table->mResourceType);
 
   ConnectThisTo(mAddButton, Events::LeftMouseUp, AddRow);
-  ConnectThisTo(
-      mResourceTypeSelector, Events::ItemSelected, OnResourceTypeSelected);
+  ConnectThisTo(mResourceTypeSelector, Events::ItemSelected, OnResourceTypeSelected);
   ConnectThisTo(mMaxWeightTextBox, Events::TextSubmit, OnMaxWeightChanged);
 }
 
@@ -1763,8 +1683,7 @@ void ResourceTableEditor::AddRow(MouseEvent* e)
   //(it starts with whatever the default values are for the resource type)
   ResourceTable* table = mTable;
   table->AddNewEntry();
-  mQueue.Queue(
-      new ResourceTableAddRemoveRowOp(this, table->mEntryList.Back(), true));
+  mQueue.Queue(new ResourceTableAddRemoveRowOp(this, table->mEntryList.Back(), true));
 
   Rebuild();
 }
@@ -1843,8 +1762,7 @@ void ResourceTableEditor::SetMaxWeightWithUndo(float maxWeight, bool queueUndo)
   {
     // just perform the redo to change the max weight and all values (for code
     // re-use)
-    ResourceTableMaxWeightChangeOp* op =
-        new ResourceTableMaxWeightChangeOp(this, maxWeight);
+    ResourceTableMaxWeightChangeOp* op = new ResourceTableMaxWeightChangeOp(this, maxWeight);
     op->Redo();
     mQueue.Queue(op);
   }
@@ -1871,8 +1789,7 @@ void ResourceTableEditor::RemapResources()
       StringRange found = resourceIdName.FindLastOf(':');
       // guard for this not having a ':' for some reason
       if (!found.Empty())
-        displayName =
-            resourceIdName.SubString(found.Begin() + 1, resourceIdName.End());
+        displayName = resourceIdName.SubString(found.Begin() + 1, resourceIdName.End());
 
       mQueue.Queue(new ResourceTableEntryChangeOp(this, entry, displayName));
       entry->mValue = displayName;
@@ -1896,8 +1813,7 @@ void ResourceTableEditor::RemapResources()
     ResourceTableEntry* entry = resourceTable[i];
     // grab the name of the resource we're trying to match
     String resourceName = entry->mValue;
-    Resource* resource =
-        manager->GetResource(resourceName, ResourceNotFound::ReturnNull);
+    Resource* resource = manager->GetResource(resourceName, ResourceNotFound::ReturnNull);
 
     // if we failed to get the resource, we need to see if we can get the
     // default
@@ -1906,8 +1822,7 @@ void ResourceTableEditor::RemapResources()
       // work
       resource = manager->GetDefaultResource();
 
-    mQueue.Queue(
-        new ResourceTableEntryChangeOp(this, entry, resource->ResourceIdName));
+    mQueue.Queue(new ResourceTableEntryChangeOp(this, entry, resource->ResourceIdName));
     entry->mValue = resource->ResourceIdName;
   }
   // now just rebuild everything

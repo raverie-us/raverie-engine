@@ -58,18 +58,14 @@ void MeshBuilder::Serialize(Serializer& stream)
 
 void MeshBuilder::BuildListing(ResourceListing& listing)
 {
-  forRange(GeometryResourceEntry & entry, Meshes.All())
+  forRange (GeometryResourceEntry& entry, Meshes.All())
   {
     String output = BuildString(entry.mName, ".mesh");
-    listing.PushBack(ResourceEntry(
-        0, "Mesh", entry.mName, output, entry.mResourceId, this->mOwner, this));
+    listing.PushBack(ResourceEntry(0, "Mesh", entry.mName, output, entry.mResourceId, this->mOwner, this));
   }
 }
 
-VertexAttribute::VertexAttribute(VertexSemantic::Enum semantic,
-                                 VertexElementType::Enum type,
-                                 byte count,
-                                 byte offset) :
+VertexAttribute::VertexAttribute(VertexSemantic::Enum semantic, VertexElementType::Enum type, byte count, byte offset) :
     mSemantic(semantic),
     mType(type),
     mCount(count),

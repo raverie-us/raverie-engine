@@ -11,10 +11,7 @@ namespace
 {
 const real cDistanceEpsilon = real(0.000001);
 
-void SupportPoint(const SupportShape* shape,
-                  void* data,
-                  Vec3Param center,
-                  Vec3Ptr support)
+void SupportPoint(const SupportShape* shape, void* data, Vec3Param center, Vec3Ptr support)
 {
   *support = *reinterpret_cast<Vec3*>(data);
 }
@@ -61,9 +58,7 @@ Type PointSegment(Vec3Param point, Vec3Param segmentStart, Vec3Param segmentEnd)
 // bounding box.
 Type PointAabb(Vec3Param point, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint)
 {
-  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) ||
-              (aabbMinPoint.y > aabbMaxPoint.y) ||
-              (aabbMinPoint.z > aabbMaxPoint.z),
+  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y) || (aabbMinPoint.z > aabbMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
           " than it's maximum point.");
 
@@ -78,10 +73,7 @@ Type PointAabb(Vec3Param point, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint)
 }
 
 // Test to see if the given point lies on or inside the given capsule.
-Type PointCapsule(Vec3Param point,
-                  Vec3Param capsulePointA,
-                  Vec3Param capsulePointB,
-                  real capsuleRadius)
+Type PointCapsule(Vec3Param point, Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius)
 {
   Vec3 closestPoint = point;
   ClosestPointOnSegmentToPoint(capsulePointA, capsulePointB, &closestPoint);
@@ -103,18 +95,14 @@ Type PointConvexShape(Vec3Param point, const SupportShape& convexShape)
 }
 
 // Test to see if the given point lies on or inside the given cylinder.
-Type PointCylinder(Vec3Param point,
-                   Vec3Param cylinderPointA,
-                   Vec3Param cylinderPointB,
-                   real cylinderRadius)
+Type PointCylinder(Vec3Param point, Vec3Param cylinderPointA, Vec3Param cylinderPointB, real cylinderRadius)
 {
   Vec3 closestPoint = point;
 
   // First treat the cylinder as a capsule and do a radius test. This
   // overestimates the size of the cylinder, but if it returns "None" then it is
   // correct, otherwise we have to test the actual cylinder.
-  if (None ==
-      PointCapsule(point, cylinderPointA, cylinderPointB, cylinderRadius))
+  if (None == PointCapsule(point, cylinderPointA, cylinderPointB, cylinderRadius))
   {
     return None;
   }
@@ -122,8 +110,7 @@ Type PointCylinder(Vec3Param point,
   // Now check to see if the point is outside of the planes defined by the
   // cylinder's end caps. Test against the plane at point A first.
   Vec3 normal = Normalized(cylinderPointA - cylinderPointB);
-  real distance = Geometry::SignedDistanceToPlane(
-      point, normal, Dot(normal, cylinderPointA));
+  real distance = Geometry::SignedDistanceToPlane(point, normal, Dot(normal, cylinderPointA));
   if (distance > cDistanceEpsilon)
   {
     return None;
@@ -131,8 +118,7 @@ Type PointCylinder(Vec3Param point,
 
   // Now test against the plane at point B.
   Negate(&normal);
-  distance = Geometry::SignedDistanceToPlane(
-      point, normal, Dot(normal, cylinderPointB));
+  distance = Geometry::SignedDistanceToPlane(point, normal, Dot(normal, cylinderPointB));
   if (distance > cDistanceEpsilon)
   {
     return None;
@@ -141,10 +127,7 @@ Type PointCylinder(Vec3Param point,
 }
 
 // Test to see if the given point lies on or inside the given ellipsoid.
-Type PointEllipsoid(Vec3Param point,
-                    Vec3Param ellipsoidCenter,
-                    Vec3Param ellipsoidRadii,
-                    Mat3Param ellipsoidBasis)
+Type PointEllipsoid(Vec3Param point, Vec3Param ellipsoidCenter, Vec3Param ellipsoidRadii, Mat3Param ellipsoidBasis)
 {
   // First get the point in the reference frame of the ellipsoid's center
   Vec3 testPoint = point - ellipsoidCenter;
@@ -176,8 +159,7 @@ Type PointFrustum(Vec3Param point, const Vec4 frustumPlanes[6])
   {
     planeNormal = reinterpret_cast<const Vec3*>(&(frustumPlanes[i].x));
     // If positive, the point is inside this plane.
-    real d = Geometry::SignedDistanceToPlane(
-        point, *planeNormal, frustumPlanes[i][3]);
+    real d = Geometry::SignedDistanceToPlane(point, *planeNormal, frustumPlanes[i][3]);
 
     // If the point is found to be outside even one plane, it is not inside the
     // frustum.
@@ -191,10 +173,7 @@ Type PointFrustum(Vec3Param point, const Vec4 frustumPlanes[6])
 
 // Test to see if the given point lies on or inside the given oriented-bounding
 // box.
-Type PointObb(Vec3Param point,
-              Vec3Param obbCenter,
-              Vec3Param obbHalfExtents,
-              Mat3Param obbBasis)
+Type PointObb(Vec3Param point, Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis)
 {
   Vec3 obbToPoint = point - obbCenter;
   for (uint i = 0; i < 3; ++i)
@@ -245,12 +224,8 @@ Type PointTetrahedron(Vec3Param point,
                       Vec3Param tetrahedronPointD)
 {
   Vec4 barycentricCoordinates;
-  Geometry::BarycentricTetrahedron(point,
-                                   tetrahedronPointA,
-                                   tetrahedronPointB,
-                                   tetrahedronPointC,
-                                   tetrahedronPointD,
-                                   &barycentricCoordinates);
+  Geometry::BarycentricTetrahedron(
+      point, tetrahedronPointA, tetrahedronPointB, tetrahedronPointC, tetrahedronPointD, &barycentricCoordinates);
   for (uint i = 0; i < 4; ++i)
   {
     if (!Math::InRange(barycentricCoordinates[i], real(0.0), real(1.0)))
@@ -265,16 +240,11 @@ Type PointTetrahedron(Vec3Param point,
 // Test to see if the given point lies on or inside the given counterclockwise
 // triangle. Treats the point as if it was lying on the plane of the triangle,
 // so this can be more accurately described as "point vs triangular prism".
-Type PointTriangle(Vec3Param point,
-                   Vec3Param trianglePointA,
-                   Vec3Param trianglePointB,
-                   Vec3Param trianglePointC,
-                   real epsilon)
+Type PointTriangle(
+    Vec3Param point, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, real epsilon)
 {
   // Compute the vectors
-  Vec3 vec[3] = {trianglePointC - trianglePointA,
-                 trianglePointB - trianglePointA,
-                 point - trianglePointA};
+  Vec3 vec[3] = {trianglePointC - trianglePointA, trianglePointB - trianglePointA, point - trianglePointA};
 
   // Compute the dot products
   real dot00 = Dot(vec[0], vec[0]);

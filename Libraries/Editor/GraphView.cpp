@@ -103,11 +103,8 @@ void GraphView::OnMouseScroll(MouseEvent* event)
 {
 }
 
-void GraphView::RenderUpdate(ViewBlock& viewBlock,
-                             FrameBlock& frameBlock,
-                             Mat4Param parentTx,
-                             ColorTransform colorTx,
-                             WidgetRect clipRect)
+void GraphView::RenderUpdate(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -131,13 +128,9 @@ Vec3 GraphView::GetLabelPosition(uint labelNumber)
   return Vec3(25, float(labelNumber) * mFont->mFontHeight, 0.0f);
 }
 
-void GraphView::DrawLabels(RenderFont* font,
-                           ViewBlock& viewBlock,
-                           FrameBlock& frameBlock,
-                           WidgetRect clipRect)
+void GraphView::DrawLabels(RenderFont* font, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
-  ViewNode& viewNode =
-      AddRenderNodes(viewBlock, frameBlock, clipRect, font->mTexture);
+  ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, font->mTexture);
 
   // Draw the label for each graph entry
   for (uint i = 0; i < Entries.Size(); ++i)
@@ -147,24 +140,14 @@ void GraphView::DrawLabels(RenderFont* font,
     float last = entry->Values.Empty() ? 0.0f : entry->Values.Back();
     String text = String::Format("%s %g", label.Name.c_str(), last);
 
-    FontProcessor fontProcessor(
-        frameBlock.mRenderQueues, &viewNode, ToFloatColor(entry->Color));
-    AddTextRange(fontProcessor,
-                 font,
-                 text,
-                 ToVector2(label.Translation),
-                 TextAlign::Left,
-                 Vec2(1, 1),
-                 mSize);
+    FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNode, ToFloatColor(entry->Color));
+    AddTextRange(fontProcessor, font, text, ToVector2(label.Translation), TextAlign::Left, Vec2(1, 1), mSize);
     // if(i == mMouseOverLabel)
     //  label.DrawSelection(render);
   }
 }
 
-void GraphView::DrawLineGraph(Vec2Param size,
-                              ViewBlock& viewBlock,
-                              FrameBlock& frameBlock,
-                              WidgetRect clipRect)
+void GraphView::DrawLineGraph(Vec2Param size, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   // For each entry, draw it's graph on the grid
   const float sampleSpacing = size.x / maxSamples;
@@ -175,7 +158,7 @@ void GraphView::DrawLineGraph(Vec2Param size,
   lines.Clear();
 
   // Walk through each entry
-  forRange(GraphEntry * entry, Entries.All())
+  forRange (GraphEntry* entry, Entries.All())
   {
     // Get a new sample from the entry
     entry->Update();
@@ -199,7 +182,7 @@ void GraphView::DrawLineGraph(Vec2Param size,
       float scaleY = -size.y;
 
       // Walk each sample and draw a line from sample to sample
-      forRange(float current, values)
+      forRange (float current, values)
       {
         // Normalize the current entry if specified
         if (entry->data.AutoNormalized)
@@ -221,21 +204,15 @@ void GraphView::DrawLineGraph(Vec2Param size,
     }
 
     // Draw all of the lines for this entry
-    CreateRenderData(
-        viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
+    CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
   }
 }
 
-void GraphView::DrawGrid(Vec2Param size,
-                         RenderFont* font,
-                         ViewBlock& viewBlock,
-                         FrameBlock& frameBlock,
-                         WidgetRect clipRect)
+void GraphView::DrawGrid(
+    Vec2Param size, RenderFont* font, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
-  ViewNode& viewNode =
-      AddRenderNodes(viewBlock, frameBlock, clipRect, font->mTexture);
-  FontProcessor fontProcessor(
-      frameBlock.mRenderQueues, &viewNode, ToFloatColor(Color::Black));
+  ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, font->mTexture);
+  FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNode, ToFloatColor(Color::Black));
 
   const float spacing = 1.0f / 100.0f;
   // Draw the value that each grid line represents
@@ -243,14 +220,8 @@ void GraphView::DrawGrid(Vec2Param size,
   {
     String num = String::Format("%d", i);
     Vec3 pos = Vec3(0, mSize.y - i * spacing * mSize.y, 0);
-    AddTextRange(fontProcessor,
-                 font,
-                 num,
-                 ToVector2(mTranslation) + ToVector2(pos),
-                 TextAlign::Left,
-                 Vec2(1, 1),
-                 mSize,
-                 false);
+    AddTextRange(
+        fontProcessor, font, num, ToVector2(mTranslation) + ToVector2(pos), TextAlign::Left, Vec2(1, 1), mSize, false);
   }
 
   static Array<StreamedVertex> lines;
@@ -266,8 +237,7 @@ void GraphView::DrawGrid(Vec2Param size,
     lines.PushBack(StreamedVertex(pos, Vec2(), lineColor));
     lines.PushBack(StreamedVertex(endPos, Vec2(), lineColor));
   }
-  CreateRenderData(
-      viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
+  CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
 }
 
 void GraphView::DrawPieGraph()

@@ -9,10 +9,7 @@ MarchingSquares::MarchingSquares()
   mDensitySurfaceLevel = 0;
 }
 
-void MarchingSquares::Sample(Vec2Param startCoords,
-                             Vec2Param endCoords,
-                             Vec2Param sampleFrequency,
-                             void* userData)
+void MarchingSquares::Sample(Vec2Param startCoords, Vec2Param endCoords, Vec2Param sampleFrequency, void* userData)
 {
   ReturnIf(mDensitySampler == NULL, , "Density sampler callback must be set");
   ReturnIf(mPositionSampler == NULL, , "Position sampler callback must be set");
@@ -30,19 +27,13 @@ void MarchingSquares::Sample(Vec2Param startCoords,
     {
       Vec2 samplePosition00 = Vec2(real(x + 0), real(y + 0));
       Vec2 samplePosition01 = Vec2(real(x + sampleFrequency.x), real(y + 0));
-      Vec2 samplePosition02 =
-          Vec2(real(x + 2 * sampleFrequency.x), real(y + 0));
+      Vec2 samplePosition02 = Vec2(real(x + 2 * sampleFrequency.x), real(y + 0));
       Vec2 samplePosition10 = Vec2(real(x + 0), real(y + sampleFrequency.y));
-      Vec2 samplePosition11 =
-          Vec2(real(x + sampleFrequency.x), real(y + sampleFrequency.y));
-      Vec2 samplePosition12 =
-          Vec2(real(x + 2 * sampleFrequency.x), real(y + sampleFrequency.y));
-      Vec2 samplePosition20 =
-          Vec2(real(x + 0), real(y + 2 * sampleFrequency.y));
-      Vec2 samplePosition21 =
-          Vec2(real(x + sampleFrequency.x), real(y + 2 * sampleFrequency.y));
-      Vec2 samplePosition22 = Vec2(real(x + 2 * sampleFrequency.x),
-                                   real(y + 2 * sampleFrequency.y));
+      Vec2 samplePosition11 = Vec2(real(x + sampleFrequency.x), real(y + sampleFrequency.y));
+      Vec2 samplePosition12 = Vec2(real(x + 2 * sampleFrequency.x), real(y + sampleFrequency.y));
+      Vec2 samplePosition20 = Vec2(real(x + 0), real(y + 2 * sampleFrequency.y));
+      Vec2 samplePosition21 = Vec2(real(x + sampleFrequency.x), real(y + 2 * sampleFrequency.y));
+      Vec2 samplePosition22 = Vec2(real(x + 2 * sampleFrequency.x), real(y + 2 * sampleFrequency.y));
 
       real tlDensity = (*mDensitySampler)(samplePosition00, userData);
       real trDensity = (*mDensitySampler)(samplePosition01, userData);
@@ -72,78 +63,42 @@ void MarchingSquares::Sample(Vec2Param startCoords,
       {
       case blFluid:
       {
-        SolveSingleEdge(
-            blValue, brValue, tlValue, blPos, brPos, tlPos, mSegments);
+        SolveSingleEdge(blValue, brValue, tlValue, blPos, brPos, tlPos, mSegments);
         break;
       }
       case brFluid:
       {
-        SolveSingleEdge(
-            brValue, blValue, trValue, brPos, blPos, trPos, mSegments);
+        SolveSingleEdge(brValue, blValue, trValue, brPos, blPos, trPos, mSegments);
         break;
       }
       case trFluid:
       {
-        SolveSingleEdge(
-            trValue, tlValue, brValue, trPos, tlPos, brPos, mSegments);
+        SolveSingleEdge(trValue, tlValue, brValue, trPos, tlPos, brPos, mSegments);
         break;
       }
       case tlFluid:
       {
-        SolveSingleEdge(
-            tlValue, trValue, blValue, tlPos, trPos, blPos, mSegments);
+        SolveSingleEdge(tlValue, trValue, blValue, tlPos, trPos, blPos, mSegments);
         break;
       }
       case blFluid | brFluid:
       {
-        SolveDoubleEdge(blValue,
-                        tlValue,
-                        brValue,
-                        trValue,
-                        blPos,
-                        tlPos,
-                        brPos,
-                        trPos,
-                        mSegments);
+        SolveDoubleEdge(blValue, tlValue, brValue, trValue, blPos, tlPos, brPos, trPos, mSegments);
         break;
       }
       case tlFluid | trFluid:
       {
-        SolveDoubleEdge(brValue,
-                        trValue,
-                        blValue,
-                        tlValue,
-                        brPos,
-                        trPos,
-                        blPos,
-                        tlPos,
-                        mSegments);
+        SolveDoubleEdge(brValue, trValue, blValue, tlValue, brPos, trPos, blPos, tlPos, mSegments);
         break;
       }
       case blFluid | tlFluid:
       {
-        SolveDoubleEdge(blValue,
-                        brValue,
-                        tlValue,
-                        trValue,
-                        blPos,
-                        brPos,
-                        tlPos,
-                        trPos,
-                        mSegments);
+        SolveDoubleEdge(blValue, brValue, tlValue, trValue, blPos, brPos, tlPos, trPos, mSegments);
         break;
       }
       case brFluid | trFluid:
       {
-        SolveDoubleEdge(tlValue,
-                        trValue,
-                        blValue,
-                        brValue,
-                        tlPos,
-                        trPos,
-                        blPos,
-                        brPos,
-                        mSegments);
+        SolveDoubleEdge(tlValue, trValue, blValue, brValue, tlPos, trPos, blPos, brPos, mSegments);
         break;
       }
 
@@ -153,17 +108,13 @@ void MarchingSquares::Sample(Vec2Param startCoords,
 
         if (centerVal < 0)
         {
-          SolveSingleEdge(
-              tlValue, trValue, blValue, tlPos, trPos, blPos, mSegments);
-          SolveSingleEdge(
-              brValue, blValue, trValue, brPos, blPos, trPos, mSegments);
+          SolveSingleEdge(tlValue, trValue, blValue, tlPos, trPos, blPos, mSegments);
+          SolveSingleEdge(brValue, blValue, trValue, brPos, blPos, trPos, mSegments);
         }
         else
         {
-          SolveSingleEdge(
-              tlValue, trValue, blValue, tlPos, trPos, blPos, mSegments);
-          SolveSingleEdge(
-              trValue, tlValue, brValue, trPos, tlPos, brPos, mSegments);
+          SolveSingleEdge(tlValue, trValue, blValue, tlPos, trPos, blPos, mSegments);
+          SolveSingleEdge(trValue, tlValue, brValue, trPos, tlPos, brPos, mSegments);
         }
         break;
       }
@@ -173,42 +124,34 @@ void MarchingSquares::Sample(Vec2Param startCoords,
 
         if (centerVal < 0)
         {
-          SolveSingleEdge(
-              tlValue, trValue, blValue, tlPos, trPos, blPos, mSegments);
-          SolveSingleEdge(
-              trValue, tlValue, brValue, trPos, tlPos, brPos, mSegments);
+          SolveSingleEdge(tlValue, trValue, blValue, tlPos, trPos, blPos, mSegments);
+          SolveSingleEdge(trValue, tlValue, brValue, trPos, tlPos, brPos, mSegments);
         }
         else
         {
-          SolveSingleEdge(
-              tlValue, trValue, blValue, tlPos, trPos, blPos, mSegments);
-          SolveSingleEdge(
-              brValue, blValue, trValue, brPos, blPos, trPos, mSegments);
+          SolveSingleEdge(tlValue, trValue, blValue, tlPos, trPos, blPos, mSegments);
+          SolveSingleEdge(brValue, blValue, trValue, brPos, blPos, trPos, mSegments);
         }
         break;
       }
       case trFluid | tlFluid | brFluid:
       {
-        SolveSingleEdge(
-            blValue, brValue, tlValue, blPos, brPos, tlPos, mSegments);
+        SolveSingleEdge(blValue, brValue, tlValue, blPos, brPos, tlPos, mSegments);
         break;
       }
       case tlFluid | trFluid | blFluid:
       {
-        SolveSingleEdge(
-            brValue, blValue, trValue, brPos, blPos, trPos, mSegments);
+        SolveSingleEdge(brValue, blValue, trValue, brPos, blPos, trPos, mSegments);
         break;
       }
       case blFluid | brFluid | tlFluid:
       {
-        SolveSingleEdge(
-            trValue, tlValue, brValue, trPos, tlPos, brPos, mSegments);
+        SolveSingleEdge(trValue, tlValue, brValue, trPos, tlPos, brPos, mSegments);
         break;
       }
       case brFluid | blFluid | trFluid:
       {
-        SolveSingleEdge(
-            tlValue, trValue, blValue, tlPos, trPos, blPos, mSegments);
+        SolveSingleEdge(tlValue, trValue, blValue, tlPos, trPos, blPos, mSegments);
         break;
       }
       }
@@ -237,19 +180,13 @@ void MarchingSquares::SamplePixels(Vec2Param startCoords,
     {
       Vec2 samplePosition00 = Vec2(real(x + 0), real(y + 0));
       Vec2 samplePosition01 = Vec2(real(x + sampleFrequency.x), real(y + 0));
-      Vec2 samplePosition02 =
-          Vec2(real(x + 2 * sampleFrequency.x), real(y + 0));
+      Vec2 samplePosition02 = Vec2(real(x + 2 * sampleFrequency.x), real(y + 0));
       Vec2 samplePosition10 = Vec2(real(x + 0), real(y + sampleFrequency.y));
-      Vec2 samplePosition11 =
-          Vec2(real(x + sampleFrequency.x), real(y + sampleFrequency.y));
-      Vec2 samplePosition12 =
-          Vec2(real(x + 2 * sampleFrequency.x), real(y + sampleFrequency.y));
-      Vec2 samplePosition20 =
-          Vec2(real(x + 0), real(y + 2 * sampleFrequency.y));
-      Vec2 samplePosition21 =
-          Vec2(real(x + sampleFrequency.x), real(y + 2 * sampleFrequency.y));
-      Vec2 samplePosition22 = Vec2(real(x + 2 * sampleFrequency.x),
-                                   real(y + 2 * sampleFrequency.y));
+      Vec2 samplePosition11 = Vec2(real(x + sampleFrequency.x), real(y + sampleFrequency.y));
+      Vec2 samplePosition12 = Vec2(real(x + 2 * sampleFrequency.x), real(y + sampleFrequency.y));
+      Vec2 samplePosition20 = Vec2(real(x + 0), real(y + 2 * sampleFrequency.y));
+      Vec2 samplePosition21 = Vec2(real(x + sampleFrequency.x), real(y + 2 * sampleFrequency.y));
+      Vec2 samplePosition22 = Vec2(real(x + 2 * sampleFrequency.x), real(y + 2 * sampleFrequency.y));
 
       real tlDensity = (*mDensitySampler)(samplePosition00, userData);
       real trDensity = (*mDensitySampler)(samplePosition01, userData);
@@ -492,8 +429,7 @@ void MarchingSquares::SimplifyContours(real simplificationThreshold)
     SimplifyContour(mContours[i], simplificationThreshold);
 }
 
-void MarchingSquares::SimplifyContour(Contour& contour,
-                                      real simplificationThreshold)
+void MarchingSquares::SimplifyContour(Contour& contour, real simplificationThreshold)
 {
   Contour tempContour;
   // remove co-linear edges
@@ -535,8 +471,7 @@ void MarchingSquares::SimplifyContour(Contour& contour,
       // if the edges are clockwise then we don't remove them (because that
       // would cut into the shape), otherwise remove the point if the triangle
       // area is below the given threshold
-      if (crossTerm >= real(0) &&
-          Math::Abs(crossTerm) < simplificationThreshold)
+      if (crossTerm >= real(0) && Math::Abs(crossTerm) < simplificationThreshold)
       {
         contour.EraseAt(i);
         continue;
@@ -547,22 +482,14 @@ void MarchingSquares::SimplifyContour(Contour& contour,
   }
 }
 
-Vec2 MarchingSquares::GetPositionOfZero(real val0,
-                                        real val1,
-                                        Vec2Param pos0,
-                                        Vec2Param pos1)
+Vec2 MarchingSquares::GetPositionOfZero(real val0, real val1, Vec2Param pos0, Vec2Param pos1)
 {
   real t = -val0 / (val1 - val0);
   return Math::Lerp(pos0, pos1, t);
 }
 
-void MarchingSquares::SolveSingleEdge(real valC,
-                                      real valX,
-                                      real valY,
-                                      Vec2Param posC,
-                                      Vec2Param posX,
-                                      Vec2Param posY,
-                                      Array<Segment2d>& segments)
+void MarchingSquares::SolveSingleEdge(
+    real valC, real valX, real valY, Vec2Param posC, Vec2Param posX, Vec2Param posY, Array<Segment2d>& segments)
 {
   Vec2 p0 = GetPositionOfZero(valC, valX, posC, posX);
   Vec2 p1 = GetPositionOfZero(valC, valY, posC, posY);

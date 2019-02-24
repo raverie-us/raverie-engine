@@ -33,10 +33,7 @@ JointInfo PrismaticJoint2d::sInfo = JointInfo(3, 0x2);
 struct Prismatic2dPolicy : public DefaultFragmentPolicy2d<PrismaticJoint2d>
 {
   // Returns baumgarte
-  real AxisFragment(MoleculeData& data,
-                    int atomIndex,
-                    PrismaticJoint2d* joint,
-                    ConstraintMolecule& mol)
+  real AxisFragment(MoleculeData& data, int atomIndex, PrismaticJoint2d* joint, ConstraintMolecule& mol)
   {
     real baumgarte = 0.1f;
     uint axisIndex = atomIndex % 2;
@@ -55,10 +52,7 @@ struct Prismatic2dPolicy : public DefaultFragmentPolicy2d<PrismaticJoint2d>
       baumgarte = joint->GetAngularBaumgarte();
     }
     else
-      ErrorIf(true,
-              "Joint %s of index %d returned an invalid index filter.",
-              joint->GetJointName(),
-              atomIndex);
+      ErrorIf(true, "Joint %s of index %d returned an invalid index filter.", joint->GetJointName(), atomIndex);
 
     return baumgarte;
   }
@@ -128,8 +122,7 @@ void PrismaticJoint2d::ComputeMoleculeData(MoleculeData& moleculeData)
   WorldAxisAtom worldAxes(mAxes, GetCollider(0), GetCollider(1));
   moleculeData.SetUp(&mAnchors, &mReferenceAngle, this);
   moleculeData.LinearAxes[1] = worldAxes.mWorldAxes[0];
-  moleculeData.LinearAxes[0] =
-      Math::Cross(moleculeData.LinearAxes[1], Vec3::cZAxis);
+  moleculeData.LinearAxes[0] = Math::Cross(moleculeData.LinearAxes[1], Vec3::cZAxis);
   moleculeData.AngularAxes[0] = Vec3::cZAxis;
 
   moleculeData.LinearAxes[1].Normalize();
@@ -141,8 +134,7 @@ void PrismaticJoint2d::UpdateAtoms()
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  UpdateAtomsFragment(
-      this, sInfo.mAtomCount, moleculeData, Prismatic2dPolicy());
+  UpdateAtomsFragment(this, sInfo.mAtomCount, moleculeData, Prismatic2dPolicy());
 }
 
 uint PrismaticJoint2d::MoleculeCount() const
@@ -155,8 +147,7 @@ void PrismaticJoint2d::ComputeMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputeMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData, Prismatic2dPolicy());
+  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, Prismatic2dPolicy());
 }
 
 void PrismaticJoint2d::WarmStart(MoleculeWalker& molecules)
@@ -184,8 +175,7 @@ void PrismaticJoint2d::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData, Prismatic2dPolicy());
+  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, Prismatic2dPolicy());
 }
 
 void PrismaticJoint2d::DebugDraw()
@@ -197,8 +187,7 @@ void PrismaticJoint2d::DebugDraw()
   DrawAxisAtomFragment(mAxes, mAnchors, GetCollider(0), GetCollider(1));
 }
 
-uint PrismaticJoint2d::GetAtomIndexFilter(uint atomIndex,
-                                          real& desiredConstraintValue) const
+uint PrismaticJoint2d::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   if (atomIndex < 2)

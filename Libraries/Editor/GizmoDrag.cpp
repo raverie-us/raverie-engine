@@ -15,19 +15,15 @@ ZilchDefineType(GizmoUpdateEvent, builder, type)
   ZilchBindFieldProperty(mConstrainedWorldDelta);
   ZilchBindFieldProperty(mInitialGrabPoint);
 
-  ZilchBindFieldPropertyAs(mConstrainedWorldMovement, "MouseWorldMovement")
-      ->AddAttribute(DeprecatedAttribute);
-  ZilchBindFieldPropertyAs(mConstrainedWorldDelta, "MouseWorldDelta")
-      ->AddAttribute(DeprecatedAttribute);
+  ZilchBindFieldPropertyAs(mConstrainedWorldMovement, "MouseWorldMovement")->AddAttribute(DeprecatedAttribute);
+  ZilchBindFieldPropertyAs(mConstrainedWorldDelta, "MouseWorldDelta")->AddAttribute(DeprecatedAttribute);
 }
 
-GizmoUpdateEvent::GizmoUpdateEvent(Cog* gizmoCog, ViewportMouseEvent* e) :
-    GizmoEvent(gizmoCog, e)
+GizmoUpdateEvent::GizmoUpdateEvent(Cog* gizmoCog, ViewportMouseEvent* e) : GizmoEvent(gizmoCog, e)
 {
 }
 
-GizmoUpdateEvent::GizmoUpdateEvent(GizmoUpdateEvent* rhs) :
-    GizmoEvent(rhs->mGizmo, rhs->mMouseEvent)
+GizmoUpdateEvent::GizmoUpdateEvent(GizmoUpdateEvent* rhs) : GizmoEvent(rhs->mGizmo, rhs->mMouseEvent)
 {
   mConstrainedWorldMovement = rhs->mConstrainedWorldMovement;
   mConstrainedWorldDelta = rhs->mConstrainedWorldDelta;
@@ -46,20 +42,13 @@ ZilchDefineType(GizmoDrag, builder, type)
   ZeroBindEvent(Events::GizmoModified, GizmoUpdateEvent);
   ZeroBindEvent(Events::GizmoPreDrag, GizmoEvent);
 
-  ZilchBindFieldProperty(mDragMode)->AddAttribute(
-      PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mLineDirection)
-      ->ZeroFilterEquality(mDragMode, GizmoDragMode::Enum, GizmoDragMode::Line);
-  ZilchBindFieldProperty(mPlaneNormal)
-      ->ZeroFilterEquality(
-          mDragMode, GizmoDragMode::Enum, GizmoDragMode::Plane);
-  ZilchBindFieldProperty(mNormalInWorld)
-      ->ZeroFilterEquality(
-          mDragMode, GizmoDragMode::Enum, GizmoDragMode::Plane);
+  ZilchBindFieldProperty(mDragMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindFieldProperty(mLineDirection)->ZeroFilterEquality(mDragMode, GizmoDragMode::Enum, GizmoDragMode::Line);
+  ZilchBindFieldProperty(mPlaneNormal)->ZeroFilterEquality(mDragMode, GizmoDragMode::Enum, GizmoDragMode::Plane);
+  ZilchBindFieldProperty(mNormalInWorld)->ZeroFilterEquality(mDragMode, GizmoDragMode::Enum, GizmoDragMode::Plane);
   ZilchBindGetter(GrabPoint);
   ZilchBindFieldProperty(mGrabMode);
-  ZilchBindFieldProperty(mAutoDrag)->AddAttribute(
-      PropertyAttributes::cInvalidatesObject);
+  ZilchBindFieldProperty(mAutoDrag)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindFieldProperty(mDragDistance)->ZeroFilterBool(mAutoDrag);
 
   ZilchBindGetter(DragActive);
@@ -165,8 +154,7 @@ void GizmoDrag::StartDrag(ViewportMouseEvent* e)
   e->Handled = true;
 }
 
-Vec3 GizmoDrag::GetLineDragPlane(Vec3Param dragDirection,
-                                 Vec3Param eyeDirection)
+Vec3 GizmoDrag::GetLineDragPlane(Vec3Param dragDirection, Vec3Param eyeDirection)
 {
   Vec3 a = Math::Cross(dragDirection, eyeDirection).Normalized();
   return Math::Cross(dragDirection, a).Normalized();
@@ -186,8 +174,7 @@ void GizmoDrag::OnLeftMouseDown(ViewportMouseEvent* e)
 {
   if (mAutoDrag)
   {
-    if (mGrabMode == GizmoGrabMode::Hold && !GetDragActive() &&
-        mDragDistance < Math::Epsilon())
+    if (mGrabMode == GizmoGrabMode::Hold && !GetDragActive() && mDragDistance < Math::Epsilon())
     {
       StartDrag(e);
       return;
@@ -218,8 +205,7 @@ void GizmoDrag::OnLeftMouseUp(ViewportMouseEvent* e)
 void GizmoDrag::OnMouseMove(ViewportMouseEvent* e)
 {
   // Check auto drag again in case it was changed since the mouse was down
-  if (mAutoDrag && mGrabMode == GizmoGrabMode::Hold && mMouseDown &&
-      !GetDragActive())
+  if (mAutoDrag && mGrabMode == GizmoGrabMode::Hold && mMouseDown && !GetDragActive())
   {
     float mouseDistance = Math::Distance(mMouseDownPosition, e->Position);
 
@@ -263,8 +249,7 @@ void GizmoDrag::OnMouseDragMove(ViewportMouseEvent* e)
   GizmoUpdateEvent eventToSend(GetOwner(), e);
   eventToSend.mConstrainedWorldMovement = movement;
   eventToSend.mInitialGrabPoint = mInitialGrabPoint;
-  eventToSend.mConstrainedWorldDelta =
-      newPosition - mPreviousMouseWorldPosition;
+  eventToSend.mConstrainedWorldDelta = newPosition - mPreviousMouseWorldPosition;
 
   mPreviousMouseWorldPosition = newPosition;
 
@@ -280,11 +265,8 @@ void GizmoDrag::OnMouseDragEnd(Event*)
 Vec3 GizmoDrag::CastRayAgainstDragPlane(const Ray& worldRay)
 {
   Intersection::IntersectionPoint intersection;
-  Intersection::RayPlane(worldRay.Start,
-                         worldRay.Direction,
-                         mDragPlane.GetNormal(),
-                         mDragPlane.GetDistance(),
-                         &intersection);
+  Intersection::RayPlane(
+      worldRay.Start, worldRay.Direction, mDragPlane.GetNormal(), mDragPlane.GetDistance(), &intersection);
 
   return intersection.Points[0];
 }

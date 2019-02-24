@@ -37,8 +37,7 @@ public:
   /// Set the object to be edited. If no property interface is given,
   /// the current interface (default if none was ever set) will be used.
   /// If it's a multi selection, the instance should be the Selection object.
-  void SetObject(HandleParam instance,
-                 PropertyInterface* newInterface = nullptr);
+  void SetObject(HandleParam instance, PropertyInterface* newInterface = nullptr);
   void SetObject(Object* object);
 
   /// The object being edited.
@@ -59,14 +58,12 @@ public:
   void ActivateAutoUpdate();
 
   /// Sets the interface used for getting / setting values on properties.
-  void SetPropertyInterface(PropertyInterface* propertyInterface,
-                            bool rebuild = false);
+  void SetPropertyInterface(PropertyInterface* propertyInterface, bool rebuild = false);
 
   /// Sets a callback for adding a custom icon to the left of the name
   /// of each property widget. This will rebuild the property grid. To remove
   /// the custom icon, pass in NULL for the callback.
-  void AddCustomPropertyIcon(CustomIconCreatorFunction callback,
-                             void* clientData = nullptr);
+  void AddCustomPropertyIcon(CustomIconCreatorFunction callback, void* clientData = nullptr);
   void RemoveCustomPropertyIcon(CustomIconCreatorFunction callback);
 
   /// The percentage of width that the name takes up for each property widget.

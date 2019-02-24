@@ -42,20 +42,15 @@ DataSource::~DataSource()
   mDispatcher.Dispatch(Events::DataDestroyed, &e);
 }
 
-void DataSource::CanMove(Status& status,
-                         DataEntry* source,
-                         DataEntry* destination,
-                         InsertMode::Type insertMode)
+void DataSource::CanMove(Status& status, DataEntry* source, DataEntry* destination, InsertMode::Type insertMode)
 {
   status.State = StatusState::Failure;
   status.Context = InsertError::NotSupported;
 }
 
-bool DataSource::Move(DataEntry* destinationEntry,
-                      Array<DataIndex>& indicesToMove,
-                      InsertMode::Type insertMode)
+bool DataSource::Move(DataEntry* destinationEntry, Array<DataIndex>& indicesToMove, InsertMode::Type insertMode)
 {
-  forRange(DataIndex & index, indicesToMove.All())
+  forRange (DataIndex& index, indicesToMove.All())
   {
     DataEntry* selectedEntry = ToEntry(index);
     Move(destinationEntry, selectedEntry, insertMode);
@@ -114,9 +109,7 @@ uint ArrayDataSource::ChildCount(DataEntry* dataEntry)
   return 0;
 }
 
-DataEntry* ArrayDataSource::GetChild(DataEntry* dataEntry,
-                                     uint index,
-                                     DataEntry* prev)
+DataEntry* ArrayDataSource::GetChild(DataEntry* dataEntry, uint index, DataEntry* prev)
 {
   // have to shift the child to be at index 1 (since a data entry of NULL is
   // considered invalid)
@@ -133,9 +126,7 @@ bool ArrayDataSource::IsExpandable(DataEntry* dataEntry)
   return false;
 }
 
-void ArrayDataSource::GetData(DataEntry* dataEntry,
-                              Any& any,
-                              StringParam column)
+void ArrayDataSource::GetData(DataEntry* dataEntry, Any& any, StringParam column)
 {
   u64 index = (u64)dataEntry;
   if (index == RootIndex)
@@ -147,9 +138,7 @@ void ArrayDataSource::GetData(DataEntry* dataEntry,
   GetData(arrayIndex, any, column);
 }
 
-bool ArrayDataSource::SetData(DataEntry* dataEntry,
-                              const Any& any,
-                              StringParam column)
+bool ArrayDataSource::SetData(DataEntry* dataEntry, const Any& any, StringParam column)
 {
   u64 index = (u64)dataEntry;
   if (index == RootIndex)
@@ -249,8 +238,7 @@ void EnumSource::FillOutDescriptions()
 
   mDescriptions.Reserve(size);
 
-  EnumDoc* enumDoc =
-      Z::gDocumentation->mEnumAndFlagMap.FindValue(enumName, nullptr);
+  EnumDoc* enumDoc = Z::gDocumentation->mEnumAndFlagMap.FindValue(enumName, nullptr);
   if (enumDoc == nullptr)
   {
     for (int i = 0; i < size; ++i)

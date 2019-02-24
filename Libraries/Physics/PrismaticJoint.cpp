@@ -141,8 +141,7 @@ void PrismaticJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData);
+  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData);
 }
 
 void PrismaticJoint::DebugDraw()
@@ -154,8 +153,7 @@ void PrismaticJoint::DebugDraw()
   DrawAxisAtomFragment(mAxes, mAnchors, GetCollider(0), GetCollider(1));
 }
 
-uint PrismaticJoint::GetAtomIndexFilter(uint atomIndex,
-                                        real& desiredConstraintValue) const
+uint PrismaticJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   if (atomIndex < 3)

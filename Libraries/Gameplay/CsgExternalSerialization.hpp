@@ -16,9 +16,7 @@ namespace Serialization
 template <>
 struct Policy<Polygon>
 {
-  static inline bool Serialize(Serializer& stream,
-                               cstr fieldName,
-                               Polygon& value)
+  static inline bool Serialize(Serializer& stream, cstr fieldName, Polygon& value)
   {
     bool started = stream.Start("Polygon", fieldName, Trait<Polygon>::Type);
     if (started)
@@ -35,9 +33,7 @@ struct Policy<Polygon>
 template <>
 struct Policy<Shape2D>
 {
-  static inline bool Serialize(Serializer& stream,
-                               cstr fieldName,
-                               Shape2D& value)
+  static inline bool Serialize(Serializer& stream, cstr fieldName, Shape2D& value)
   {
     bool started = stream.Start("Shape2D", fieldName, Trait<Shape2D>::Type);
     if (started)

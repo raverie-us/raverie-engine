@@ -34,16 +34,14 @@ String ErrorContextObject::GetDescription()
     if (MetaDisplay* display = metaType->HasInherited<MetaDisplay>())
       objectDesc = display->GetDebugText(Handle(ContextObject));
     else
-      objectDesc =
-          metaType->ToStringFunction(metaType, (const byte*)ContextObject);
+      objectDesc = metaType->ToStringFunction(metaType, (const byte*)ContextObject);
   }
 
   // Return the display string combined with
   return String::Format("%s - %s", Message, objectDesc.c_str());
 }
 
-void DoNotifyErrorWithContext(StringParam message,
-                              NotifyException::Enum notifyException)
+void DoNotifyErrorWithContext(StringParam message, NotifyException::Enum notifyException)
 {
   // Notify first
   DoNotify("Error", message, "Warning", NotifyType::Error, notifyException);
@@ -53,7 +51,7 @@ void DoNotifyErrorWithContext(StringParam message,
     return;
 
   // Print every error context level
-  forRange(ErrorContext * context, ActiveErrorContextStack->All())
+  forRange (ErrorContext* context, ActiveErrorContextStack->All())
   {
     String contextMessage = context->GetDescription();
     ZPrint("\t%s\n", contextMessage.c_str());

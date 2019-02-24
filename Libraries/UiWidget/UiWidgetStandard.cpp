@@ -20,8 +20,7 @@ ZilchDefineStaticLibrary(UiWidgetLibrary)
   builder.CreatableInScriptDefault = false;
 
   // Ranges
-  ZilchInitializeRangeAs(UiWidgetComponentHierarchy::ChildListRange,
-                         "UiWidgetRange");
+  ZilchInitializeRangeAs(UiWidgetComponentHierarchy::ChildListRange, "UiWidgetRange");
 
   // Enums
   ZilchInitializeEnum(UiSizePolicy);

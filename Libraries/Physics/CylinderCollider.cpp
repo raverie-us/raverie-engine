@@ -38,8 +38,7 @@ void CylinderCollider::DebugDraw()
 
   Vec3 pointA, pointB;
   ComputeWorldPoints(pointA, pointB);
-  gDebugDraw->Add(
-      Debug::Cylinder(pointA, pointB, GetWorldRadius()).Color(Color::Plum));
+  gDebugDraw->Add(Debug::Cylinder(pointA, pointB, GetWorldRadius()).Color(Color::Plum));
 }
 
 void CylinderCollider::CacheWorldValues()
@@ -82,8 +81,7 @@ void CylinderCollider::ComputeWorldBoundingSphereInternal()
   real radius = GetWorldRadius();
   real halfHeight = GetWorldHalfHeight();
   mBoundingSphere.mCenter = GetWorldTranslation();
-  mBoundingSphere.mRadius =
-      Math::Sqrt((radius * radius) + (halfHeight * halfHeight));
+  mBoundingSphere.mRadius = Math::Sqrt((radius * radius) + (halfHeight * halfHeight));
 }
 
 real CylinderCollider::ComputeWorldVolumeInternal()
@@ -93,8 +91,7 @@ real CylinderCollider::ComputeWorldVolumeInternal()
   return Math::cPi * radius * radius * height;
 }
 
-void CylinderCollider::ComputeLocalInverseInertiaTensor(real mass,
-                                                        Mat3Ref localInvInertia)
+void CylinderCollider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia)
 {
   real oneTwelthMass = mass / real(12.0f);
   real worldRadius = GetWorldRadius();
@@ -104,8 +101,7 @@ void CylinderCollider::ComputeLocalInverseInertiaTensor(real mass,
 
   // Compute the unique inverted terms
   real heightInvInertia = real(1) / (real(0.5f) * mass * rSquared);
-  real radiusInvInertia =
-      real(1) / (oneTwelthMass * (real(3.0f) * rSquared + hSquared));
+  real radiusInvInertia = real(1) / (oneTwelthMass * (real(3.0f) * rSquared + hSquared));
 
   // Get what local axes define the radius and height so we can set the correct
   // local inertia
@@ -123,8 +119,7 @@ void CylinderCollider::Support(Vec3Param direction, Vec3Ptr support) const
 {
   Vec3 pointA, pointB;
   ComputeWorldPoints(pointA, pointB);
-  Geometry::SupportCylinder(
-      direction, pointA, pointB, GetWorldRadius(), support);
+  Geometry::SupportCylinder(direction, pointA, pointB, GetWorldRadius(), support);
 }
 
 real CylinderCollider::GetRadius() const

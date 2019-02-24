@@ -38,9 +38,7 @@ public:
   Ray ScreenToWorldRay(Vec2Param screenPoint);
   Vec3 ScreenToWorldZPlane(Vec2Param screenPoint, float worldDepth);
   Vec3 ScreenToWorldViewPlane(Vec2Param screenPoint, float viewDepth);
-  Vec3 ScreenToWorldPlane(Vec2Param screenPoint,
-                          Vec3Param worldPlaneNormal,
-                          Vec3Param worldPlanePosition);
+  Vec3 ScreenToWorldPlane(Vec2Param screenPoint, Vec3Param worldPlaneNormal, Vec3Param worldPlanePosition);
 
   Vec2 WorldToScreen(Vec3Param worldPoint);
 

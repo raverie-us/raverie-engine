@@ -23,11 +23,8 @@ void MakeBasisFromY(Vec3Param yAxis, Mat3Ptr basis)
 } // namespace
 
 // Intersect a line with an axis-aligned bounding box.
-Type LineAabb(Vec3Param linePoint,
-              Vec3Param lineDirection,
-              Vec3Param aabbMinPoint,
-              Vec3Param aabbMaxPoint,
-              Interval* interval)
+Type LineAabb(
+    Vec3Param linePoint, Vec3Param lineDirection, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -73,13 +70,7 @@ Type LineCapsule(Vec3Param linePoint,
   Mat3 basis;
   MakeBasisFromY(yAxis, &basis);
 
-  return LineCapsule(linePoint,
-                     lineDirection,
-                     center,
-                     basis,
-                     capsuleRadius,
-                     capsuleSegmentHalfLength,
-                     interval);
+  return LineCapsule(linePoint, lineDirection, center, basis, capsuleRadius, capsuleSegmentHalfLength, interval);
 }
 
 // Intersect a line with a cylinder defined by its center, local axes, radius,
@@ -118,13 +109,7 @@ Type LineCylinder(Vec3Param linePoint,
   Mat3 basis;
   MakeBasisFromY(yAxis, &basis);
 
-  return LineCylinder(linePoint,
-                      lineDirection,
-                      center,
-                      basis,
-                      cylinderRadius,
-                      cylinderHalfHeight,
-                      interval);
+  return LineCylinder(linePoint, lineDirection, center, basis, cylinderRadius, cylinderHalfHeight, interval);
 }
 
 // Intersect a line with a cylinder defined by its center, local axes, radii,
@@ -165,11 +150,8 @@ Type LineEllipsoid(Vec3Param linePoint,
 
 // Intersect a line with a plane defined by its normal and distance from the
 // origin along that normal.
-Type LinePlane(Vec3Param linePoint,
-               Vec3Param lineDirection,
-               Vec3Param planeNormal,
-               real planeDistance,
-               Interval* interval)
+Type LinePlane(
+    Vec3Param linePoint, Vec3Param lineDirection, Vec3Param planeNormal, real planeDistance, Interval* interval)
 {
   ErrorIf(interval == nullptr,
           "Intersection - Invalid interval passed to "
@@ -214,11 +196,8 @@ Type LineObb(Vec3Param linePoint,
 }
 
 // Intersect a line with a sphere defined by its center and radius.
-Type LineSphere(Vec3Param linePoint,
-                Vec3Param lineDirection,
-                Vec3Param sphereCenter,
-                real sphereRadius,
-                Interval* interval)
+Type LineSphere(
+    Vec3Param linePoint, Vec3Param lineDirection, Vec3Param sphereCenter, real sphereRadius, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");

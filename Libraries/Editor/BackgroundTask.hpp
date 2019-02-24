@@ -17,8 +17,7 @@ DeclareEvent(BackgroundTaskCanceled);
 /// Forward declarations.
 class BackgroundTask;
 
-DeclareEnum5(
-    BackgroundTaskState, NotStarted, Running, Completed, Failed, Canceled);
+DeclareEnum5(BackgroundTaskState, NotStarted, Running, Completed, Failed, Canceled);
 
 class BackgroundTaskEvent : public Event
 {
@@ -48,9 +47,7 @@ public:
 
   /// Called from the job thread to update the main thread on the
   /// progress of this task.
-  void UpdateProgress(StringParam taskName,
-                      float percentComplete,
-                      StringParam progressText = String());
+  void UpdateProgress(StringParam taskName, float percentComplete, StringParam progressText = String());
 
   /// Returns the name from the task (if the task exists)
   String GetName() const;

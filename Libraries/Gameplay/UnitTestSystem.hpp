@@ -124,8 +124,7 @@ public:
   OsWindowEvent mEvent;
 };
 
-DeclareEnum5(
-    UnitTestMode, Stopped, StartRecording, Recording, StartPlaying, Playing);
+DeclareEnum5(UnitTestMode, Stopped, StartRecording, Recording, StartPlaying, Playing);
 
 class UnitTestSystem : public System, public OsShellHook, public OsInputHook
 {
@@ -154,12 +153,8 @@ public:
   void SubProcessPlay();
   OsWindow* SubProcessSetupWindow();
 
-  static void DiffDirectories(StringParam dir1,
-                              StringParam dir2,
-                              StringParam diffProgram = "tortoisemerge");
-  static void EnumerateFiles(StringParam directory,
-                             StringParam relativeParentPath,
-                             HashSet<String>* relativePaths);
+  static void DiffDirectories(StringParam dir1, StringParam dir2, StringParam diffProgram = "tortoisemerge");
+  static void EnumerateFiles(StringParam directory, StringParam relativeParentPath, HashSet<String>* relativePaths);
 
   RootWidget* GetRootWidget();
   OsWindow* GetMainWindow();
@@ -172,10 +167,8 @@ public:
   UnitTestMode::Enum mMode;
   Array<UnitTestEvent*> mEvents;
 
-  void RecordBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent,
-                            OsMouseEvent* event);
-  void ExecuteBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent,
-                             OsMouseEvent* event);
+  void RecordBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, OsMouseEvent* event);
+  void ExecuteBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, OsMouseEvent* event);
 
   void RecordFile(StringParam file);
   String GetRecordedFile(uint fileIndex, StringParam fileName);

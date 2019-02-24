@@ -19,10 +19,8 @@ bool NodeSortZ(const NodeType* left, const NodeType* right)
 }
 
 template <typename NodeType>
-NodeType* BuildTreeTopDownNodes(
-    Array<NodeType*>& leafNodes,
-    typename PartitionNodeMethod<NodeType>::PartitionNodeAxisMethod
-        partitionMethod)
+NodeType* BuildTreeTopDownNodes(Array<NodeType*>& leafNodes,
+                                typename PartitionNodeMethod<NodeType>::PartitionNodeAxisMethod partitionMethod)
 {
   // this case seems to be happening for some reason. If we continue down
   // this path, we will crash in minimize volume sum.
@@ -126,8 +124,7 @@ uint MinimizeVolumeSumNodes(Array<NodeType*>& leafNodes)
     for (uint i = 1; i < size - 1; ++i)
     {
       // Get the current cost
-      real currentCost = ((leftVolume[i] / totalVolume) * i) +
-                         ((rightVolume[i] / totalVolume) * (size - i - 1));
+      real currentCost = ((leftVolume[i] / totalVolume) * i) + ((rightVolume[i] / totalVolume) * (size - i - 1));
 
       // If the current cost is cheaper than the previous cost, record it.
       if (currentCost < cost)
@@ -206,8 +203,7 @@ uint MinimizeSurfaceAreaSumNodes(Array<NodeType*>& leafNodes)
     for (uint i = 1; i < size - 1; ++i)
     {
       // Get the current cost
-      real currentCost = ((leftArea[i] / totalSurfaceArea) * i) +
-                         ((rightArea[i] / totalSurfaceArea) * (size - i - 1));
+      real currentCost = ((leftArea[i] / totalSurfaceArea) * i) + ((rightArea[i] / totalSurfaceArea) * (size - i - 1));
 
       // If the current cost is cheaper than the previous cost, record it.
       if (currentCost < cost)
@@ -265,9 +261,8 @@ uint MidPointNodes(Array<NodeType*>& leafNodes)
 //------------------------------------- Old functions (still used, can't remove)
 
 template <typename NodeType, typename ObjectType>
-NodeType* BuildTreeTopDown(
-    Array<ObjectType>& leafNodes,
-    typename PartitionMethod<ObjectType>::PartitionAxisMethod partitionMethod)
+NodeType* BuildTreeTopDown(Array<ObjectType>& leafNodes,
+                           typename PartitionMethod<ObjectType>::PartitionAxisMethod partitionMethod)
 {
   // If there is only one object
   if (leafNodes.Size() == 1)
@@ -286,9 +281,8 @@ NodeType* BuildTreeTopDown(
   right.Assign(leafNodes.Begin() + separationIndex, leafNodes.End());
 
   // Allocate a new node
-  return new NodeType(
-      BuildTreeTopDown<NodeType, ObjectType>(left, partitionMethod),
-      BuildTreeTopDown<NodeType, ObjectType>(right, partitionMethod));
+  return new NodeType(BuildTreeTopDown<NodeType, ObjectType>(left, partitionMethod),
+                      BuildTreeTopDown<NodeType, ObjectType>(right, partitionMethod));
 }
 
 template <typename ObjectType>
@@ -378,8 +372,7 @@ uint MinimizeVolumeSum(Array<ObjectType>& proxies)
     for (uint i = 1; i < size - 1; ++i)
     {
       // Get the current cost
-      real currentCost = ((leftVolume[i] / totalVolume) * i) +
-                         ((rightVolume[i] / totalVolume) * (size - i - 1));
+      real currentCost = ((leftVolume[i] / totalVolume) * i) + ((rightVolume[i] / totalVolume) * (size - i - 1));
 
       // If the current cost is cheaper than the previous cost, record it.
       if (currentCost < cost)
@@ -458,8 +451,7 @@ uint MinimizeSurfaceAreaSum(Array<ObjectType>& proxies)
     for (uint i = 1; i < size - 1; ++i)
     {
       // Get the current cost
-      real currentCos = ((leftArea[i] / totalSurfaceArea) * i) +
-                        ((rightArea[i] / totalSurfaceArea) * (size - i - 1));
+      real currentCos = ((leftArea[i] / totalSurfaceArea) * i) + ((rightArea[i] / totalSurfaceArea) * (size - i - 1));
 
       // If the current cost is cheaper than the previous cost, record it.
       if (currentCos < cost)
@@ -519,15 +511,13 @@ uint MidPoint(Array<ObjectType>& proxies)
 template <typename NodeType>
 bool RayNodeTest(NodeType* tree, CastDataParam castData, real& t)
 {
-  return IBroadPhase::TestRayVsAabb(
-      tree->mAabb, castData.GetRay().Start, castData.GetRay().Direction, t);
+  return IBroadPhase::TestRayVsAabb(tree->mAabb, castData.GetRay().Start, castData.GetRay().Direction, t);
 }
 
 template <typename NodeType>
 bool SegmentNodeTest(NodeType* tree, CastDataParam castData, real& t)
 {
-  return IBroadPhase::TestSegmentVsAabb(
-      tree->mAabb, castData.GetSegment().Start, castData.GetSegment().End, t);
+  return IBroadPhase::TestSegmentVsAabb(tree->mAabb, castData.GetSegment().Start, castData.GetSegment().End, t);
 }
 
 /// Callbacks for simple tests to see if we should traverse further down the
@@ -535,10 +525,8 @@ bool SegmentNodeTest(NodeType* tree, CastDataParam castData, real& t)
 template <typename NodeType>
 bool AabbNodeTest(NodeType* tree, CastDataParam castData, real& t)
 {
-  if (Intersection::None != Intersection::AabbAabb(tree->mAabb.mMin,
-                                                   tree->mAabb.mMax,
-                                                   castData.GetAabb().mMin,
-                                                   castData.GetAabb().mMax))
+  if (Intersection::None !=
+      Intersection::AabbAabb(tree->mAabb.mMin, tree->mAabb.mMax, castData.GetAabb().mMin, castData.GetAabb().mMax))
   {
     t = (tree->mAabb.GetCenter() - castData.GetSphere().mCenter).Length();
     return true;
@@ -550,11 +538,8 @@ bool AabbNodeTest(NodeType* tree, CastDataParam castData, real& t)
 template <typename NodeType>
 bool SphereNodeTest(NodeType* tree, CastDataParam castData, real& t)
 {
-  if (Intersection::AabbSphere(tree->mAabb.mMin,
-                               tree->mAabb.mMax,
-                               castData.GetSphere().mCenter,
-                               castData.GetSphere().mRadius,
-                               nullptr))
+  if (Intersection::AabbSphere(
+          tree->mAabb.mMin, tree->mAabb.mMax, castData.GetSphere().mCenter, castData.GetSphere().mRadius, nullptr))
   {
     t = (tree->mAabb.GetCenter() - castData.GetSphere().mCenter).Length();
     return true;
@@ -567,9 +552,7 @@ template <typename NodeType>
 bool FrustumNodeTest(NodeType* tree, CastDataParam castData, real& t)
 {
   if (Intersection::None != Intersection::AabbFrustumApproximation(
-                                tree->mAabb.mMin,
-                                tree->mAabb.mMax,
-                                &castData.GetFrustum().Planes[0].GetData()))
+                                tree->mAabb.mMin, tree->mAabb.mMax, &castData.GetFrustum().Planes[0].GetData()))
   {
     t = (tree->mAabb.GetCenter() - castData.GetSphere().mCenter).Length();
     return true;

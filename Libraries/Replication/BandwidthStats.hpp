@@ -208,12 +208,9 @@ protected:
   {
     if (mOutgoingBandwidthUsageUpdated)
     {
-      mOutgoingBandwidthUsageMin =
-          std::min(Kbps(mOutgoingBandwidthUsageMin), sample);
-      mOutgoingBandwidthUsageAvg =
-          Average(Kbps(mOutgoingBandwidthUsageAvg), sample, 0.1);
-      mOutgoingBandwidthUsageMax =
-          std::max(Kbps(mOutgoingBandwidthUsageMax), sample);
+      mOutgoingBandwidthUsageMin = std::min(Kbps(mOutgoingBandwidthUsageMin), sample);
+      mOutgoingBandwidthUsageAvg = Average(Kbps(mOutgoingBandwidthUsageAvg), sample, 0.1);
+      mOutgoingBandwidthUsageMax = std::max(Kbps(mOutgoingBandwidthUsageMax), sample);
     }
     else
     {
@@ -228,12 +225,9 @@ protected:
   {
     if (mIncomingBandwidthUsageUpdated)
     {
-      mIncomingBandwidthUsageMin =
-          std::min(Kbps(mIncomingBandwidthUsageMin), sample);
-      mIncomingBandwidthUsageAvg =
-          Average(Kbps(mIncomingBandwidthUsageAvg), sample, 0.1);
-      mIncomingBandwidthUsageMax =
-          std::max(Kbps(mIncomingBandwidthUsageMax), sample);
+      mIncomingBandwidthUsageMin = std::min(Kbps(mIncomingBandwidthUsageMin), sample);
+      mIncomingBandwidthUsageAvg = Average(Kbps(mIncomingBandwidthUsageAvg), sample, 0.1);
+      mIncomingBandwidthUsageMax = std::max(Kbps(mIncomingBandwidthUsageMax), sample);
     }
     else
     {
@@ -283,8 +277,7 @@ protected:
     if (mSentPacketBytesUpdated)
     {
       mSentPacketBytesMin = std::min(Bytes(mSentPacketBytesMin), sample);
-      mSentPacketBytesAvg =
-          Average(double(mSentPacketBytesAvg), double(sample), 0.1);
+      mSentPacketBytesAvg = Average(double(mSentPacketBytesAvg), double(sample), 0.1);
       mSentPacketBytesMax = std::max(Bytes(mSentPacketBytesMax), sample);
     }
     else
@@ -300,12 +293,9 @@ protected:
   {
     if (mReceivedPacketBytesUpdated)
     {
-      mReceivedPacketBytesMin =
-          std::min(Bytes(mReceivedPacketBytesMin), sample);
-      mReceivedPacketBytesAvg =
-          Average(double(mReceivedPacketBytesAvg), double(sample), 0.1);
-      mReceivedPacketBytesMax =
-          std::max(Bytes(mReceivedPacketBytesMax), sample);
+      mReceivedPacketBytesMin = std::min(Bytes(mReceivedPacketBytesMin), sample);
+      mReceivedPacketBytesAvg = Average(double(mReceivedPacketBytesAvg), double(sample), 0.1);
+      mReceivedPacketBytesMax = std::max(Bytes(mReceivedPacketBytesMax), sample);
     }
     else
     {
@@ -328,31 +318,23 @@ protected:
 
 private:
   /// Typedefs
-  typedef
-      typename conditional<UseAtomicStats, Atomic<bool>, bool>::type bool_type;
-  typedef typename conditional<UseAtomicStats, Atomic<double>, double>::type
-      double_type;
-  typedef
-      typename conditional<UseAtomicStats, Atomic<Kbps>, Kbps>::type Kbps_type;
-  typedef typename conditional<UseAtomicStats, Atomic<uint32>, uint32>::type
-      uint32_type;
-  typedef typename conditional<UseAtomicStats, Atomic<Bytes>, Bytes>::type
-      Bytes_type;
-  typedef typename conditional<UseAtomicStats, Atomic<uintmax>, uintmax>::type
-      uintmax_type;
+  typedef typename conditional<UseAtomicStats, Atomic<bool>, bool>::type bool_type;
+  typedef typename conditional<UseAtomicStats, Atomic<double>, double>::type double_type;
+  typedef typename conditional<UseAtomicStats, Atomic<Kbps>, Kbps>::type Kbps_type;
+  typedef typename conditional<UseAtomicStats, Atomic<uint32>, uint32>::type uint32_type;
+  typedef typename conditional<UseAtomicStats, Atomic<Bytes>, Bytes>::type Bytes_type;
+  typedef typename conditional<UseAtomicStats, Atomic<uintmax>, uintmax>::type uintmax_type;
 
   /// Statistics
-  bool_type
-      mOutgoingBandwidthUsageUpdated;   /// Outgoing bandwidth usage updated?
-  Kbps_type mOutgoingBandwidthUsageMin; /// Minimum outgoing bandwidth usage
-  Kbps_type mOutgoingBandwidthUsageAvg; /// Average outgoing bandwidth usage
-  Kbps_type mOutgoingBandwidthUsageMax; /// Maximum outgoing bandwidth usage
+  bool_type mOutgoingBandwidthUsageUpdated; /// Outgoing bandwidth usage updated?
+  Kbps_type mOutgoingBandwidthUsageMin;     /// Minimum outgoing bandwidth usage
+  Kbps_type mOutgoingBandwidthUsageAvg;     /// Average outgoing bandwidth usage
+  Kbps_type mOutgoingBandwidthUsageMax;     /// Maximum outgoing bandwidth usage
 
-  bool_type
-      mIncomingBandwidthUsageUpdated;   /// Incoming bandwidth usage updated?
-  Kbps_type mIncomingBandwidthUsageMin; /// Minimum incoming bandwidth usage
-  Kbps_type mIncomingBandwidthUsageAvg; /// Average incoming bandwidth usage
-  Kbps_type mIncomingBandwidthUsageMax; /// Maximum incoming bandwidth usage
+  bool_type mIncomingBandwidthUsageUpdated; /// Incoming bandwidth usage updated?
+  Kbps_type mIncomingBandwidthUsageMin;     /// Minimum incoming bandwidth usage
+  Kbps_type mIncomingBandwidthUsageAvg;     /// Average incoming bandwidth usage
+  Kbps_type mIncomingBandwidthUsageMax;     /// Maximum incoming bandwidth usage
 
   Kbps_type mTotalBandwidthUsageMin; /// Minimum total bandwidth usage
   Kbps_type mTotalBandwidthUsageAvg; /// Average total bandwidth usage

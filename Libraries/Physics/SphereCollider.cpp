@@ -35,16 +35,13 @@ void SphereCollider::Serialize(Serializer& stream)
 void SphereCollider::DebugDraw()
 {
   Collider::DebugDraw();
-  gDebugDraw->Add(Debug::Sphere(GetWorldTranslation(), GetWorldRadius())
-                      .Color(Color::Plum)
-                      .OnTop(true));
+  gDebugDraw->Add(Debug::Sphere(GetWorldTranslation(), GetWorldRadius()).Color(Color::Plum).OnTop(true));
 }
 
 void SphereCollider::CacheWorldValues()
 {
   Vec3 worldScale = GetWorldScale();
-  real largestScale =
-      Math::Max(Math::Max(worldScale[0], worldScale[1]), worldScale[2]);
+  real largestScale = Math::Max(Math::Max(worldScale[0], worldScale[1]), worldScale[2]);
   mWorldRadius = mRadius * largestScale;
 }
 
@@ -71,8 +68,7 @@ real SphereCollider::ComputeWorldVolumeInternal()
   return real(4.0f / 3.0) * Math::cPi * radius * radius * radius;
 }
 
-void SphereCollider::ComputeLocalInverseInertiaTensor(real mass,
-                                                      Mat3Ref localInvInertia)
+void SphereCollider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia)
 {
   real radius = GetWorldRadius();
   real diagonal = real(2.0f / 5.0f) * mass * radius * radius;
@@ -84,8 +80,7 @@ void SphereCollider::ComputeLocalInverseInertiaTensor(real mass,
 
 void SphereCollider::Support(Vec3Param direction, Vec3Ptr support) const
 {
-  Geometry::SupportSphere(
-      direction, GetWorldTranslation(), GetWorldRadius(), support);
+  Geometry::SupportSphere(direction, GetWorldTranslation(), GetWorldRadius(), support);
 }
 
 real SphereCollider::GetRadius() const

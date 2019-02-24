@@ -24,16 +24,12 @@ class FileSourceControl : public SourceControl
     DeleteFile(filePath);
   }
 
-  void Rename(Status& status,
-              StringParam sourcePath,
-              StringParam destPath) override
+  void Rename(Status& status, StringParam sourcePath, StringParam destPath) override
   {
     MoveFile(destPath, sourcePath);
   }
 
-  void GetRevisions(Status& status,
-                    StringParam path,
-                    Array<Revision>& revisions) override
+  void GetRevisions(Status& status, StringParam path, Array<Revision>& revisions) override
   {
     status.SetFailed("Not supported");
   }

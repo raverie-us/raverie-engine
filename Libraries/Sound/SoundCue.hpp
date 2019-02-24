@@ -244,15 +244,12 @@ public:
   void AddSoundTagEntry(SoundTag* soundTag);
   /// Plays this SoundCue using a specified SoundNode as the output and returns
   /// the resulting SoundInstance.
-  HandleOf<SoundInstance> PlayCueOnNode(HandleOf<SoundNode> outputNode,
-                                        bool startPaused);
+  HandleOf<SoundInstance> PlayCueOnNode(HandleOf<SoundNode> outputNode, bool startPaused);
 
   // Internals
   void Preview();
   void StopPreview();
-  HandleOf<SoundInstance> PlayCue(SoundSpace* space,
-                                  HandleOf<SoundNode> outputNode,
-                                  bool startPaused);
+  HandleOf<SoundInstance> PlayCue(SoundSpace* space, HandleOf<SoundNode> outputNode, bool startPaused);
 
 private:
   Array<SoundEntry> Sounds;

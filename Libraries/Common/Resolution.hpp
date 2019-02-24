@@ -56,8 +56,7 @@ const Resolution Aspect4by3(4, 3);
 const Resolution Aspect5by4(5, 4);
 const Resolution Aspect16by9(16, 9);
 const Resolution Aspect16by10(16, 10);
-const Resolution Aspects[5] = {
-    AspectAny, Aspect4by3, Aspect5by4, Aspect16by9, Aspect16by10};
+const Resolution Aspects[5] = {AspectAny, Aspect4by3, Aspect5by4, Aspect16by9, Aspect16by10};
 
 ZeroShared inline uint GetAspectIndex(Resolution& toTest)
 {
@@ -72,9 +71,7 @@ ZeroShared inline uint GetAspectIndex(Resolution& toTest)
 // Return the index of the first resolution that is greater than or
 // equal to minWidth and minHeight. Return the first resolution to pass or the
 // last in the list
-ZeroShared inline int FindMinResolution(Array<Resolution>& resolutions,
-                                        int minWidth,
-                                        int minHeight)
+ZeroShared inline int FindMinResolution(Array<Resolution>& resolutions, int minWidth, int minHeight)
 {
   for (uint i = 0; i < resolutions.Size(); ++i)
   {
@@ -91,8 +88,6 @@ ZeroShared Resolution GetDesktopResolution();
 /// Enumerate all Resolutions valid for the display adapter with the given bit
 /// depth and aspect ratio bitDepth zero for any bit depth resolution any
 /// resolution with the same aspect ratio (0,0) will return all.
-ZeroShared void Enumerate(Array<Resolution>& resolutions,
-                          uint bitDepth,
-                          Resolution aspect);
+ZeroShared void Enumerate(Array<Resolution>& resolutions, uint bitDepth, Resolution aspect);
 
 } // namespace Zero

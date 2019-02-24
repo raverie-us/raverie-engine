@@ -45,8 +45,7 @@ void Environment::SetCommandLineArguments(const Array<String>& commandLineArgs)
 
 bool Environment::ParseCommandLine()
 {
-  return ParseCommandLineStringArray(mParsedCommandLineArguments,
-                                     mCommandLineArguments);
+  return ParseCommandLineStringArray(mParsedCommandLineArguments, mCommandLineArguments);
 }
 
 void Environment::BuildCommandLine()

@@ -99,9 +99,7 @@ struct ContentImporterSource : public DataSource
   }
 
   //****************************************************************************
-  DataEntry* GetChild(DataEntry* dataEntry,
-                      uint index,
-                      DataEntry* prev) override
+  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
   {
     ContentPackageListing* listing = (ContentPackageListing*)dataEntry;
     return (DataEntry*)listing->SortedEntries[index];
@@ -146,9 +144,7 @@ struct ContentImporterSource : public DataSource
   }
 
   //****************************************************************************
-  bool SetData(DataEntry* dataEntry,
-               AnyParam variant,
-               StringParam column) override
+  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
   {
     ContentPackageEntry* entry = (ContentPackageEntry*)dataEntry;
     if (!column.Empty())
@@ -174,34 +170,27 @@ struct ContentImporterSource : public DataSource
     if (flip)
     {
       if (column == CommonColumns::Name)
-        Zero::Sort(mListing->SortedEntries.All(),
-                   GetSorter(ContentEntryNameSorter, greater<String>));
+        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryNameSorter, greater<String>));
       else if (column == CommonColumns::Type)
-        Zero::Sort(mListing->SortedEntries.All(),
-                   GetSorter(ContentEntryExtensionSorter, greater<String>));
+        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryExtensionSorter, greater<String>));
       else if (column == "Import")
-        Zero::Sort(mListing->SortedEntries.All(),
-                   GetSorter(ContentEntryActiveSorter, greater<bool>));
+        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryActiveSorter, greater<bool>));
     }
     else
     {
       if (column == CommonColumns::Name)
-        Zero::Sort(mListing->SortedEntries.All(),
-                   GetSorter(ContentEntryNameSorter, less<String>));
+        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryNameSorter, less<String>));
       else if (column == CommonColumns::Type)
-        Zero::Sort(mListing->SortedEntries.All(),
-                   GetSorter(ContentEntryExtensionSorter, less<String>));
+        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryExtensionSorter, less<String>));
       else if (column == "Import")
-        Zero::Sort(mListing->SortedEntries.All(),
-                   GetSorter(ContentEntryActiveSorter, less<bool>));
+        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryActiveSorter, less<bool>));
     }
   }
 };
 
 ContentImporter::ContentImporter(Composite* parent) : Composite(parent)
 {
-  this->SetLayout(CreateStackLayout(
-      LayoutDirection::TopToBottom, Pixels(0, 2), Thickness::cZero));
+  this->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 2), Thickness::cZero));
 
   mTreeView = new TreeView(this);
   mTreeView->SetMinSize(Pixels(200, 200));
@@ -220,8 +209,7 @@ ContentImporter::ContentImporter(Composite* parent) : Composite(parent)
   mTagEditor->GetTagChain()->mSorted = false;
 
   Composite* buttonRow = new Composite(this);
-  buttonRow->SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
+  buttonRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
   {
     TextButton* importButton = new TextButton(buttonRow);
     importButton->SetText("Import");
@@ -263,8 +251,7 @@ void ContentImporter::LoadListingFromFile(StringParam filename)
   mFileName = filename;
   LoadContentPackageListing(mListing, filename);
 #define GetSorter(type, comparer) type<comparer>(comparer())
-  Sort(mListing.SortedEntries.All(),
-       GetSorter(ContentEntryActiveSorter, less<bool>));
+  Sort(mListing.SortedEntries.All(), GetSorter(ContentEntryActiveSorter, less<bool>));
   mTreeView->Refresh();
 
   String defaultTag = FilePath::GetFileNameWithoutExtension(filename);
@@ -360,10 +347,7 @@ void ContentImporter::OnMouseEnterTreeRow(TreeEvent* e)
     // Position the tooltip
     ToolTipPlacement placement;
     placement.SetScreenRect(e->Row->GetScreenRect());
-    placement.SetPriority(IndicatorSide::Right,
-                          IndicatorSide::Left,
-                          IndicatorSide::Bottom,
-                          IndicatorSide::Top);
+    placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Bottom, IndicatorSide::Top);
     toolTip->SetArrowTipTranslation(placement);
 
     mToolTip = toolTip;

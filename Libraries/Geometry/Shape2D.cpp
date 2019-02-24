@@ -32,8 +32,7 @@ bool CompareArea(const ContourInfo& a, const ContourInfo& b)
   return a.Area < b.Area;
 };
 
-void BuildShapesFromContours(const ContourArray& contours,
-                             Array<Shape2D>* shapes)
+void BuildShapesFromContours(const ContourArray& contours, Array<Shape2D>* shapes)
 {
   ContourArray holes;
 
@@ -141,9 +140,7 @@ void Shape2D::Clear()
   mContours.Clear();
 }
 
-bool Shape2D::Union(const Shape2D& shapeAA,
-                    const Shape2D& shapeBB,
-                    Array<Shape2D>* outputs)
+bool Shape2D::Union(const Shape2D& shapeAA, const Shape2D& shapeBB, Array<Shape2D>* outputs)
 {
   const f32 angleTolerance = 0.00872654f;
   const f32 distanceTolerance = 0.00001f;
@@ -185,9 +182,7 @@ bool Shape2D::Union(const Shape2D& shapeAA,
   return true;
 }
 
-bool Shape2D::Subtract(const Shape2D& shapeAA,
-                       const Shape2D& shapeBB,
-                       Array<Shape2D>* outputs)
+bool Shape2D::Subtract(const Shape2D& shapeAA, const Shape2D& shapeBB, Array<Shape2D>* outputs)
 {
   const f32 angleTolerance = 0.00872654f;
   const f32 distanceTolerance = 0.00001f;
@@ -274,19 +269,12 @@ void Shape2D::Grow(real distance, bool beaking)
 }
 
 // Debug Draw.
-void Shape2D::DebugDraw(ByteColor color,
-                        bool filled,
-                        bool triangleEdges,
-                        float depth)
+void Shape2D::DebugDraw(ByteColor color, bool filled, bool triangleEdges, float depth)
 {
   DebugDraw(color, Mat4::cIdentity, filled, triangleEdges, depth);
 }
 
-void Shape2D::DebugDraw(ByteColor color,
-                        Mat4Param transform,
-                        bool filled,
-                        bool triangleEdges,
-                        float depth)
+void Shape2D::DebugDraw(ByteColor color, Mat4Param transform, bool filled, bool triangleEdges, float depth)
 {
   // Draw each contour
   for (uint i = 0; i < mContours.Size(); ++i)
@@ -306,10 +294,7 @@ void Shape2D::DrawTriangles(ByteColor color, bool borders, float depth)
   DrawTriangles(color, Mat4::cIdentity, borders, depth);
 }
 
-void Shape2D::DrawTriangles(ByteColor color,
-                            Mat4Param transform,
-                            bool borders,
-                            float depth)
+void Shape2D::DrawTriangles(ByteColor color, Mat4Param transform, bool borders, float depth)
 {
   Array<Vec2> vertices;
   GetVertices(&vertices);
@@ -333,8 +318,7 @@ void Shape2D::DrawTriangles(ByteColor color,
     c = Math::TransformPoint(transform, c);
 
     using namespace Zero;
-    gDebugDraw->Add(
-        Debug::Triangle(a, b, c).Color(color).Alpha(128).Border(borders));
+    gDebugDraw->Add(Debug::Triangle(a, b, c).Color(color).Alpha(128).Border(borders));
   }
 }
 
@@ -385,9 +369,7 @@ void Shape2D::GetTriangleIndices(Array<uint>* indices)
 }
 
 // Triangulates the mesh and fills out the given array of indices.
-void Shape2D::GetTriangleIndices(Array<Vec2>& vertices,
-                                 Array<uint>& contours,
-                                 Array<uint>* indices)
+void Shape2D::GetTriangleIndices(Array<Vec2>& vertices, Array<uint>& contours, Array<uint>* indices)
 {
   Array<String> errorCodes;
   Validate(errorCodes);
@@ -541,11 +523,9 @@ bool Shape2D::Validate(Array<String>& errors)
       ShapeSegResult::Enum result = polyA->Intersects(polyB);
 
       if (result == ShapeSegResult::Point)
-        errors.PushBack(
-            "Shapes cannot have shared points on different contours.");
+        errors.PushBack("Shapes cannot have shared points on different contours.");
       else if (result == ShapeSegResult::Segment)
-        errors.PushBack(
-            "Shapes cannot have overlapping edges between different contours.");
+        errors.PushBack("Shapes cannot have overlapping edges between different contours.");
     }
   }
 

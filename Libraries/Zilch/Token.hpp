@@ -18,9 +18,7 @@ public:
   UserToken(Grammar::Enum tokenId, CodeLocation* location = nullptr);
 
   // Constructor for a special type of token
-  UserToken(StringParam token,
-            Grammar::Enum tokenId,
-            CodeLocation* location = nullptr);
+  UserToken(StringParam token, Grammar::Enum tokenId, CodeLocation* location = nullptr);
 
   // The location is optional (if null is given, this will do nothing)
   void SetLocationAndStartLength(CodeLocation* location);
@@ -56,8 +54,7 @@ namespace Zero
 template <>
 struct ZeroShared MoveWithoutDestructionOperator<Zilch::UserToken>
 {
-  static inline void MoveWithoutDestruction(Zilch::UserToken* dest,
-                                            Zilch::UserToken* source)
+  static inline void MoveWithoutDestruction(Zilch::UserToken* dest, Zilch::UserToken* source)
   {
     memcpy(dest, source, sizeof(*source));
   }

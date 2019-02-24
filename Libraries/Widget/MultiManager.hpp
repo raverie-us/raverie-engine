@@ -47,9 +47,7 @@ public:
   HashMap<String, LayoutInfo> Info;
 
   // Add a widget to be managed for tracking and searching
-  Window* AddManagedWidget(Widget* widget,
-                           DockArea::Enum dockArea,
-                           bool isVisible);
+  Window* AddManagedWidget(Widget* widget, DockArea::Enum dockArea, bool isVisible);
   Window* AddManagedWidget(Widget* widget, LayoutInfo& info);
 
   // Show a widget forcing it to the front

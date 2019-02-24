@@ -99,16 +99,14 @@ void BaseCollisionEvent::MatchCollisionFilterOrder(CollisionFilter* filter)
   // collision groups are the same then no flip happens but there's no logical
   // order then anyways.
   Collider* firstCollider = GetCollider();
-  ResourceId firstGroupId =
-      firstCollider->mCollisionGroupInstance->mResource->mResourceId;
+  ResourceId firstGroupId = firstCollider->mCollisionGroupInstance->mResource->mResourceId;
   if (firstGroupId != filter->first())
     mObjectIndex = !mObjectIndex;
 }
 
 const Physics::ManifoldPoint& BaseCollisionEvent::GetPoint(uint index)
 {
-  ErrorIf(index >= GetContactPointCount(),
-          "Point index is greater than the number of contact points.");
+  ErrorIf(index >= GetContactPointCount(), "Point index is greater than the number of contact points.");
   return mManifold->Contacts[index];
 }
 
@@ -133,9 +131,7 @@ void CollisionEvent::Set(Physics::Manifold* manifold, StringParam eventType)
   UpdatePoint();
 }
 
-void CollisionEvent::Set(Physics::Manifold* manifold,
-                         const Physics::ManifoldPoint& point,
-                         StringParam eventType)
+void CollisionEvent::Set(Physics::Manifold* manifold, const Physics::ManifoldPoint& point, StringParam eventType)
 {
   BaseCollisionEvent::Set(manifold, eventType);
   mContactPoint = point;
@@ -150,8 +146,7 @@ ContactPoint CollisionEvent::GetFirstPoint()
 
 void CollisionEvent::UpdatePoint()
 {
-  if (mCollisionType == CollisionStarted ||
-      mCollisionType == CollisionPersisted)
+  if (mCollisionType == CollisionStarted || mCollisionType == CollisionPersisted)
     mContactPoint = mManifold->Contacts[mContactIndex];
 }
 
@@ -192,8 +187,7 @@ void CollisionGroupEvent::Set(Physics::Manifold* manifold,
   mTypeBName = pair.GetTypeBName();
 
   // Put the objects in the same ordering as the pair
-  if (manifold->Objects[0]->mCollisionGroupInstance->mResource->mResourceId !=
-      pair.TypeA)
+  if (manifold->Objects[0]->mCollisionGroupInstance->mResource->mResourceId != pair.TypeA)
     mObjectIndex = !mObjectIndex;
 }
 
@@ -232,8 +226,7 @@ PreSolveEvent::PreSolveEvent()
   mBlock = nullptr;
 }
 
-void PreSolveEvent::Set(Physics::Manifold* manifold,
-                        CollisionFilterBlock* preSolveBlock)
+void PreSolveEvent::Set(Physics::Manifold* manifold, CollisionFilterBlock* preSolveBlock)
 {
   BaseCollisionEvent::Set(manifold, String());
   mBlock = preSolveBlock;

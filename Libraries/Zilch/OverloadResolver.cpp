@@ -9,8 +9,7 @@ bool Overload::ResolveAndImplicitConvert(const FunctionArray* functions,
                                          FunctionCallNode& functionCallNode)
 {
   // Loop through all the overload passes
-  for (size_t passIndex = OverloadPass::NoImplicitConversion;
-       passIndex <= OverloadPass::AnyImplicitConversion;
+  for (size_t passIndex = OverloadPass::NoImplicitConversion; passIndex <= OverloadPass::AnyImplicitConversion;
        ++passIndex)
   {
     // Get the current pass as an enum
@@ -23,8 +22,7 @@ bool Overload::ResolveAndImplicitConvert(const FunctionArray* functions,
       Function* function = (*functions)[i];
 
       // Check the current function type against the call
-      if (TestDelegateTypeVsCall(
-              function->FunctionType, functionCallNode, pass))
+      if (TestDelegateTypeVsCall(function->FunctionType, functionCallNode, pass))
       {
         // If we're on the last pass, then we need to generate implicit
         // conversion code
@@ -42,8 +40,7 @@ bool Overload::ResolveAndImplicitConvert(const FunctionArray* functions,
   return false;
 }
 
-void Overload::GetFunctionCallSignatureString(
-    StringBuilder& builder, const FunctionCallNode& functionCallNode)
+void Overload::GetFunctionCallSignatureString(StringBuilder& builder, const FunctionCallNode& functionCallNode)
 {
   // Add on the beginning call parentheses
   builder.Append("(");
@@ -106,11 +103,8 @@ void Overload::ReportSingleError(CompilationErrors& errors,
   type->BuildSignatureString(options, functionCallNode.IsNamed);
 
   // Now report the error
-  return errors.Raise(location,
-                      ErrorCode::UnableToResolveFunction,
-                      "delegate",
-                      call.ToString().c_str(),
-                      options.ToString().c_str());
+  return errors.Raise(
+      location, ErrorCode::UnableToResolveFunction, "delegate", call.ToString().c_str(), options.ToString().c_str());
 }
 
 void Overload::ReportError(CompilationErrors& errors,
@@ -119,9 +113,8 @@ void Overload::ReportError(CompilationErrors& errors,
                            const FunctionCallNode& functionCallNode)
 {
   // Error checking
-  ErrorIf(
-      functions == nullptr || functions->Empty(),
-      "We cannot report overloading errors when no functions were provided");
+  ErrorIf(functions == nullptr || functions->Empty(),
+          "We cannot report overloading errors when no functions were provided");
 
   // Get the name of one of the functions (we know there is at least one
   // function in this array)
@@ -147,30 +140,22 @@ void Overload::ReportError(CompilationErrors& errors,
     // Add each function signature to the output
     options.Append("\n  ");
     options.Append(name);
-    function->FunctionType->BuildSignatureString(options,
-                                                 functionCallNode.IsNamed);
+    function->FunctionType->BuildSignatureString(options, functionCallNode.IsNamed);
   }
 
   // Now report the error
-  return errors.Raise(location,
-                      ErrorCode::UnableToResolveFunction,
-                      name.c_str(),
-                      call.ToString().c_str(),
-                      options.ToString().c_str());
+  return errors.Raise(
+      location, ErrorCode::UnableToResolveFunction, name.c_str(), call.ToString().c_str(), options.ToString().c_str());
 }
 
-bool Overload::TestCallAndImplicitConvert(DelegateType* delegateType,
-                                          FunctionCallNode& functionCallNode)
+bool Overload::TestCallAndImplicitConvert(DelegateType* delegateType, FunctionCallNode& functionCallNode)
 {
   // Perform each pass one at a time (early out as soon as we get a hit)
-  if (TestDelegateTypeVsCall(
-          delegateType, functionCallNode, OverloadPass::NoImplicitConversion))
+  if (TestDelegateTypeVsCall(delegateType, functionCallNode, OverloadPass::NoImplicitConversion))
     return true;
-  if (TestDelegateTypeVsCall(
-          delegateType, functionCallNode, OverloadPass::RawImplicitConversion))
+  if (TestDelegateTypeVsCall(delegateType, functionCallNode, OverloadPass::RawImplicitConversion))
     return true;
-  if (TestDelegateTypeVsCall(
-          delegateType, functionCallNode, OverloadPass::AnyImplicitConversion))
+  if (TestDelegateTypeVsCall(delegateType, functionCallNode, OverloadPass::AnyImplicitConversion))
   {
     // In the last phase, we need to actually generate implicit casts
     // (TypeCastNodes)
@@ -182,8 +167,7 @@ bool Overload::TestCallAndImplicitConvert(DelegateType* delegateType,
   return false;
 }
 
-void Overload::GenerateImplicitCasts(DelegateType* delegateType,
-                                     FunctionCallNode& functionCallNode)
+void Overload::GenerateImplicitCasts(DelegateType* delegateType, FunctionCallNode& functionCallNode)
 {
   // Grab the list of arguments and parameters for convenience
   NodeList<ExpressionNode>& arguments = functionCallNode.Arguments;
@@ -191,9 +175,7 @@ void Overload::GenerateImplicitCasts(DelegateType* delegateType,
 
   // Get the number of arguments
   size_t argumentCount = functionCallNode.Arguments.Size();
-  ErrorIf(
-      parameters.Size() != argumentCount,
-      "We should have already verified that that the parameter count matched");
+  ErrorIf(parameters.Size() != argumentCount, "We should have already verified that that the parameter count matched");
 
   // First check to see that the overload has all the same argument names
   for (size_t i = 0; i < argumentCount; ++i)
@@ -248,9 +230,7 @@ bool Overload::TestDelegateTypeVsCall(DelegateType* delegateType,
     ExpressionNode* argument = arguments.Front();
 
     // We really need to make sure that all argument types are resolved
-    ReturnIf(argument->ResultType == nullptr,
-             false,
-             "Failed to find a type for a given argument");
+    ReturnIf(argument->ResultType == nullptr, false, "Failed to find a type for a given argument");
 
     // Store the types in a more human readable format
     Type* fromType = argument->ResultType;
@@ -274,8 +254,7 @@ bool Overload::TestDelegateTypeVsCall(DelegateType* delegateType,
       // convertable Ex: Conversion from NullType to Animal (does no work
       // because NullType is also a handle)
       CastOperator cast = shared.GetCastOperator(fromType, toType);
-      if (cast.IsValid == false || cast.CanBeImplicit == false ||
-          cast.RequiresCodeGeneration)
+      if (cast.IsValid == false || cast.CanBeImplicit == false || cast.RequiresCodeGeneration)
         return false;
       break;
     }

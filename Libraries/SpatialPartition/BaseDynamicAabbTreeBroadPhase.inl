@@ -29,15 +29,13 @@ void BaseDynamicAabbTreeBroadPhase<TreeType>::Serialize(Serializer& stream)
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::Draw(int level,
-                                                   uint debugDrawFlags)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::Draw(int level, uint debugDrawFlags)
 {
   mTree.Draw(level);
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::CreateProxy(
-    BroadPhaseProxy& proxy, BroadPhaseData& data)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::CreateProxy(BroadPhaseProxy& proxy, BroadPhaseData& data)
 {
   mTree.CreateProxy(proxy, data);
   NodeType* node = static_cast<NodeType*>(proxy.ToVoidPointer());
@@ -48,8 +46,7 @@ void BaseDynamicAabbTreeBroadPhase<TreeType>::CreateProxy(
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::CreateProxies(
-    BroadPhaseObjectArray& objects)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::CreateProxies(BroadPhaseObjectArray& objects)
 {
   BroadPhaseObjectArray::range range = objects.All();
   for (; !range.Empty(); range.PopFront())
@@ -60,8 +57,7 @@ void BaseDynamicAabbTreeBroadPhase<TreeType>::CreateProxies(
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::RemoveProxy(
-    BroadPhaseProxy& proxy)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::RemoveProxy(BroadPhaseProxy& proxy)
 {
   // remove from the tree
   mTree.RemoveProxy(proxy);
@@ -83,8 +79,7 @@ void BaseDynamicAabbTreeBroadPhase<TreeType>::RemoveProxy(
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::RemoveProxies(
-    ProxyHandleArray& proxies)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::RemoveProxies(ProxyHandleArray& proxies)
 {
   ProxyHandleArray::range range = proxies.All();
   for (; !range.Empty(); range.PopFront())
@@ -92,8 +87,7 @@ void BaseDynamicAabbTreeBroadPhase<TreeType>::RemoveProxies(
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::UpdateProxy(
-    BroadPhaseProxy& proxy, BroadPhaseData& data)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::UpdateProxy(BroadPhaseProxy& proxy, BroadPhaseData& data)
 {
   mTree.UpdateProxy(proxy, data);
   // Temporarily Disabled: Leaks in the editor because nothing cleans up
@@ -102,8 +96,7 @@ void BaseDynamicAabbTreeBroadPhase<TreeType>::UpdateProxy(
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::UpdateProxies(
-    BroadPhaseObjectArray& objects)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::UpdateProxies(BroadPhaseObjectArray& objects)
 {
   BroadPhaseObjectArray::range range = objects.All();
   for (; !range.Empty(); range.PopFront())
@@ -114,8 +107,7 @@ void BaseDynamicAabbTreeBroadPhase<TreeType>::UpdateProxies(
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::SelfQuery(
-    ClientPairArray& results)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::SelfQuery(ClientPairArray& results)
 {
   // should self query clear the pair results? means we can't do
   // multiple queries and then there is no point to having register collisions
@@ -124,16 +116,14 @@ void BaseDynamicAabbTreeBroadPhase<TreeType>::SelfQuery(
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::Query(BroadPhaseData& data,
-                                                    ClientPairArray& results)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::Query(BroadPhaseData& data, ClientPairArray& results)
 {
   forRangeBroadphaseTree(typename TreeType, mTree, Aabb, data.mAabb)
       results.PushBack(ClientPair(data.mClientData, range.Front()));
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::BatchQuery(
-    BroadPhaseDataArray& data, ClientPairArray& results)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::BatchQuery(BroadPhaseDataArray& data, ClientPairArray& results)
 {
   typename BroadPhaseDataArray::range dataRange = data.All();
   for (; !dataRange.Empty(); dataRange.PopFront())
@@ -141,53 +131,43 @@ void BaseDynamicAabbTreeBroadPhase<TreeType>::BatchQuery(
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::CastRay(CastDataParam data,
-                                                      ProxyCastResults& results)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::CastRay(CastDataParam data, ProxyCastResults& results)
 {
   SimpleRayCallback callback(mCastRayCallBack, &results);
 
-  forRangeBroadphaseTree(typename TreeType, mTree, Ray, data.GetRay())
-      callback.Refine(range.Front(), data);
+  forRangeBroadphaseTree(typename TreeType, mTree, Ray, data.GetRay()) callback.Refine(range.Front(), data);
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::CastSegment(
-    CastDataParam data, ProxyCastResults& results)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::CastSegment(CastDataParam data, ProxyCastResults& results)
 {
   SimpleSegmentCallback callback(mCastSegmentCallBack, &results);
 
-  forRangeBroadphaseTree(typename TreeType, mTree, Segment, data.GetSegment())
-      callback.Refine(range.Front(), data);
+  forRangeBroadphaseTree(typename TreeType, mTree, Segment, data.GetSegment()) callback.Refine(range.Front(), data);
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::CastAabb(
-    CastDataParam data, ProxyCastResults& results)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::CastAabb(CastDataParam data, ProxyCastResults& results)
 {
   SimpleAabbCallback callback(mCastAabbCallBack, &results);
 
-  forRangeBroadphaseTree(typename TreeType, mTree, Aabb, data.GetAabb())
-      callback.Refine(range.Front(), data);
+  forRangeBroadphaseTree(typename TreeType, mTree, Aabb, data.GetAabb()) callback.Refine(range.Front(), data);
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::CastSphere(
-    CastDataParam data, ProxyCastResults& results)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::CastSphere(CastDataParam data, ProxyCastResults& results)
 {
   SimpleSphereCallback callback(mCastSphereCallBack, &results);
 
-  forRangeBroadphaseTree(typename TreeType, mTree, Sphere, data.GetSphere())
-      callback.Refine(range.Front(), data);
+  forRangeBroadphaseTree(typename TreeType, mTree, Sphere, data.GetSphere()) callback.Refine(range.Front(), data);
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::CastFrustum(
-    CastDataParam data, ProxyCastResults& results)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::CastFrustum(CastDataParam data, ProxyCastResults& results)
 {
   SimpleFrustumCallback callback(mCastFrustumCallBack, &results);
 
-  forRangeBroadphaseTree(typename TreeType, mTree, Frustum, data.GetFrustum())
-      callback.Refine(range.Front(), data);
+  forRangeBroadphaseTree(typename TreeType, mTree, Frustum, data.GetFrustum()) callback.Refine(range.Front(), data);
 }
 
 template <typename TreeType>
@@ -220,8 +200,7 @@ void BaseDynamicAabbTreeBroadPhase<TreeType>::RegisterCollisions()
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::QueryCallback(void* thisProxy,
-                                                            void* otherProxy)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::QueryCallback(void* thisProxy, void* otherProxy)
 {
   if (thisProxy == otherProxy)
     return;
@@ -295,8 +274,7 @@ void BaseDynamicAabbTreeBroadPhase<TreeType>::FullTreeQuery()
 }
 
 template <typename TreeType>
-void BaseDynamicAabbTreeBroadPhase<TreeType>::FillOutResults(
-    ClientPairArray& results)
+void BaseDynamicAabbTreeBroadPhase<TreeType>::FillOutResults(ClientPairArray& results)
 {
   // we stored a set to avoid duplicate pairs, but now we need to return
   // an array, so loop through the set and push the results back

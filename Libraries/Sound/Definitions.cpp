@@ -12,12 +12,9 @@ void LogAudioIoError(StringParam message, String* savedMessage)
     *savedMessage = message;
 }
 
-bool AudioConstants::IsWithinLimit(float valueToCheck,
-                                   float centralValue,
-                                   float limit)
+bool AudioConstants::IsWithinLimit(float valueToCheck, float centralValue, float limit)
 {
-  if (valueToCheck > centralValue + limit ||
-      valueToCheck < centralValue - limit)
+  if (valueToCheck > centralValue + limit || valueToCheck < centralValue - limit)
     return false;
   else
     return true;
@@ -30,9 +27,8 @@ void AudioConstants::AppendToBuffer(BufferType* destinationBuffer,
 {
   unsigned destIndex = destinationBuffer->Size();
   destinationBuffer->Resize(destinationBuffer->Size() + numberOfSamples);
-  memcpy(destinationBuffer->Data() + destIndex,
-         sourceBuffer.Data() + sourceStartIndex,
-         sizeof(float) * numberOfSamples);
+  memcpy(
+      destinationBuffer->Data() + destIndex, sourceBuffer.Data() + sourceStartIndex, sizeof(float) * numberOfSamples);
 }
 
 float AudioConstants::PitchToSemitones(float pitch)

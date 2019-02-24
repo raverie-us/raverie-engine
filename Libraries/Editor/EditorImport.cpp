@@ -10,8 +10,7 @@ Material* CreateMaterialFromGraphMaterial(SceneGraphMaterial* sceneMaterial)
   // String diffuseTexture =
   // sceneMaterial->Attributes.FindValue("DiffuseTexture", String());
 
-  Material* material =
-      (Material*)MaterialManager::FindOrNull(graphMaterialName);
+  Material* material = (Material*)MaterialManager::FindOrNull(graphMaterialName);
 
   // if(material != NULL)
   //{
@@ -60,11 +59,9 @@ Material* CreateMaterialFromGraphMaterial(SceneGraphMaterial* sceneMaterial)
   return material;
 }
 
-Material* FindOrCreateMaterial(SceneGraphSource* source,
-                               StringParam materialName)
+Material* FindOrCreateMaterial(SceneGraphSource* source, StringParam materialName)
 {
-  SceneGraphMaterial* sceneMaterial =
-      source->MaterialsByName.FindValue(materialName, NULL);
+  SceneGraphMaterial* sceneMaterial = source->MaterialsByName.FindValue(materialName, NULL);
 
   if (sceneMaterial == NULL)
     return MaterialManager::GetDefault();
@@ -122,17 +119,13 @@ MeshType* GetNodeMesh(StringParam sourceName, StringParam meshNodeName)
   return mesh;
 }
 
-void UpdateMeshes(SceneGraphSource* source,
-                  SceneGraphNode* sourceNode,
-                  Cog* object,
-                  UpdateFlags::Type flags)
+void UpdateMeshes(SceneGraphSource* source, SceneGraphNode* sourceNode, Cog* object, UpdateFlags::Type flags)
 {
   if (!(flags & UpdateFlags::Meshes))
     return;
 
   // Mesh
-  Mesh* mesh =
-      GetNodeMesh<Mesh, MeshManager>(source->Name, sourceNode->MeshName);
+  Mesh* mesh = GetNodeMesh<Mesh, MeshManager>(source->Name, sourceNode->MeshName);
   if (mesh)
   {
     // Get the material for this node
@@ -165,8 +158,7 @@ void UpdateMeshes(SceneGraphSource* source,
   }
 
   // Physics Mesh
-  PhysicsMesh* physicsMesh = GetNodeMesh<PhysicsMesh, PhysicsMeshManager>(
-      source->Name, sourceNode->PhysicsMeshName);
+  PhysicsMesh* physicsMesh = GetNodeMesh<PhysicsMesh, PhysicsMeshManager>(source->Name, sourceNode->PhysicsMeshName);
   if (physicsMesh)
   {
     MeshCollider* meshCollider = HasOrAdd<MeshCollider>(object);
@@ -174,8 +166,7 @@ void UpdateMeshes(SceneGraphSource* source,
   }
 
   // Convex Mesh
-  ConvexMesh* convexMesh = GetNodeMesh<ConvexMesh, ConvexMeshManager>(
-      source->Name, sourceNode->PhysicsMeshName);
+  ConvexMesh* convexMesh = GetNodeMesh<ConvexMesh, ConvexMeshManager>(source->Name, sourceNode->PhysicsMeshName);
   if (convexMesh)
   {
     ConvexMeshCollider* meshCollider = HasOrAdd<ConvexMeshCollider>(object);
@@ -202,10 +193,8 @@ Cog* CreateCogFromGraph(Space* space,
   if (object == NULL)
   {
     // Create a object with just transform
-    object = space->CreateAt(CoreArchetypes::Transform,
-                             sourceNode->Translation,
-                             sourceNode->Rotation,
-                             sourceNode->Scale);
+    object =
+        space->CreateAt(CoreArchetypes::Transform, sourceNode->Translation, sourceNode->Rotation, sourceNode->Scale);
     object->ClearArchetype();
 
     // If parent object is provided attach to it
@@ -244,8 +233,7 @@ Cog* CreateCogFromGraph(Space* space,
   for (uint i = 0; i < sourceNode->Children.Size(); ++i)
   {
     SceneGraphNode* childGraphNode = sourceNode->Children[i];
-    CreateCogFromGraph(
-        space, source, childGraphNode, object, NULL, flags, isBone);
+    CreateCogFromGraph(space, source, childGraphNode, object, NULL, flags, isBone);
   }
 
   return object;
@@ -255,7 +243,7 @@ void CopyChildIds(Cog* newArchetypeCog, Cog* oldArchetypeCog)
 {
   newArchetypeCog->mChildId = oldArchetypeCog->mChildId;
 
-  forRange(Cog & newChild, newArchetypeCog->GetChildren())
+  forRange (Cog& newChild, newArchetypeCog->GetChildren())
   {
     if (Cog* oldChild = oldArchetypeCog->FindChildByName(newChild.GetName()))
     {
@@ -272,8 +260,7 @@ void DoEditorSideGeometryImporting(GeometryContent* geometryContent,
                                    StringParam contentOutputPath)
 {
   // Load the graph file with details of materials to generate
-  String graphFile = FilePath::CombineWithExtension(
-      contentOutputPath, geometryContent->Filename, ".graph.data");
+  String graphFile = FilePath::CombineWithExtension(contentOutputPath, geometryContent->Filename, ".graph.data");
   if (!FileExists(graphFile))
     return;
 
@@ -295,14 +282,12 @@ void DoEditorSideGeometryImporting(GeometryContent* geometryContent,
   sceneGraph->MapNames();
 
   // Create a space that will be used to build the object in
-  Space* space = Z::gFactory->CreateSpace(
-      CoreArchetypes::DefaultSpace, CreationFlags::Editing, nullptr);
+  Space* space = Z::gFactory->CreateSpace(CoreArchetypes::DefaultSpace, CreationFlags::Editing, nullptr);
 
   String baseName = geometryContent->GetName();
   sceneGraph->Name = baseName;
 
-  object = CreateCogFromGraph(
-      space, sceneGraph, sceneGraph->Root, NULL, object, flags, false);
+  object = CreateCogFromGraph(space, sceneGraph, sceneGraph->Root, NULL, object, flags, false);
 
   // If there is animations attach a animGraph component and Assign animations
   AnimationBuilder* animations = geometryContent->has(AnimationBuilder);
@@ -320,8 +305,7 @@ void DoEditorSideGeometryImporting(GeometryContent* geometryContent,
     // Assign the first animation
     if (animations->mAnimations.Size() > 0)
     {
-      Animation* animation = (Animation*)Z::gResources->GetResource(
-          animations->mAnimations[0].mResourceId);
+      Animation* animation = (Animation*)Z::gResources->GetResource(animations->mAnimations[0].mResourceId);
       if (animation)
       {
         if (object->AddComponentByType(ZilchTypeId(SimpleAnimation)))
@@ -344,8 +328,7 @@ void DoEditorSideGeometryImporting(GeometryContent* geometryContent,
     }
     else
     {
-      archetype = ArchetypeManager::GetInstance()->MakeNewArchetypeWith(
-          object, baseName, archetypeId);
+      archetype = ArchetypeManager::GetInstance()->MakeNewArchetypeWith(object, baseName, archetypeId);
     }
   }
 
@@ -360,17 +343,15 @@ void UpdateToContent(Cog* object, UpdateFlags::Type flags)
     return;
 
   ContentLibrary* library = Z::gEditor->mProjectLibrary;
-  forRange(ContentItem * item, library->GetContentItems())
+  forRange (ContentItem* item, library->GetContentItems())
   {
     GeneratedArchetype* generated = item->has(GeneratedArchetype);
     if (generated && generated->mResourceId == archetype->mResourceId)
     {
       Resource* res = Z::gResources->GetResource(generated->mResourceId);
       if (res->mResourceLibrary)
-        DoEditorSideGeometryImporting(Type::DynamicCast<GeometryContent*>(item),
-                                      object,
-                                      flags,
-                                      res->mResourceLibrary->Location);
+        DoEditorSideGeometryImporting(
+            Type::DynamicCast<GeometryContent*>(item), object, flags, res->mResourceLibrary->Location);
       else
         ErrorIf(true,
                 "Resource Library not present, location of ContentItem's "
@@ -389,8 +370,7 @@ void BuildSoundCues(ResourcePackage* package, AudioOptions* options)
     for (uint i = 0; i < resources.Size(); ++i)
     {
       ResourceEntry& entry = resources[i];
-      if (entry.Type == "Sound" || entry.Type == "StreamedSound" ||
-          entry.Type == "AutoStreamedSound")
+      if (entry.Type == "Sound" || entry.Type == "StreamedSound" || entry.Type == "AutoStreamedSound")
       {
         // Attempt to create a new sound cue
         ResourceAdd resourceAdd;
@@ -428,8 +408,7 @@ void BuildSoundCues(ResourcePackage* package, AudioOptions* options)
       for (uint i = 0; i < resources.Size(); ++i)
       {
         ResourceEntry& entry = resources[i];
-        if (entry.Type == "Sound" || entry.Type == "StreamedSound" ||
-            entry.Type == "AutoStreamedSound")
+        if (entry.Type == "Sound" || entry.Type == "StreamedSound" || entry.Type == "AutoStreamedSound")
         {
           // Add the sound
           Sound* sound = SoundManager::GetInstance()->Find(entry.mResourceId);
@@ -451,7 +430,7 @@ void DoEditorSideImporting(ResourcePackage* package, ImportOptions* options)
     return;
   }
 
-  forRange(ContentItem * item, package->EditorProcessing.All())
+  forRange (ContentItem* item, package->EditorProcessing.All())
   {
     TextureContent* textureContent = item->has(TextureContent);
     if (textureContent)
@@ -460,8 +439,7 @@ void DoEditorSideImporting(ResourcePackage* package, ImportOptions* options)
 
       for (size_t i = 0; i < textureContent->mTextures.Size(); ++i)
       {
-        String fileName = FilePath::Combine(package->Location,
-                                            textureContent->mTextures[i].mName);
+        String fileName = FilePath::Combine(package->Location, textureContent->mTextures[i].mName);
         files.PushBack(fileName);
       }
 
@@ -479,24 +457,17 @@ void DoEditorSideImporting(ResourcePackage* package, ImportOptions* options)
       // Find the archetype associated with this content item may not be
       // generated yet
       Archetype* archetype =
-          (Archetype*)ArchetypeManager::GetInstance()->ResourceIdMap.FindValue(
-              genArchetype->mResourceId, NULL);
+          (Archetype*)ArchetypeManager::GetInstance()->ResourceIdMap.FindValue(genArchetype->mResourceId, NULL);
 
       // Check to see if the archetype is generated and is up to date
-      bool needToBuild =
-          archetype == NULL ||
-          genArchetype->NeedToBuildArchetype(archetype->mContentItem);
+      bool needToBuild = archetype == NULL || genArchetype->NeedToBuildArchetype(archetype->mContentItem);
       if (!needToBuild)
         continue;
 
       // Build or update the archetype
-      UpdateFlags::Type flags = UpdateFlags::Archetype |
-                                UpdateFlags::Materials | UpdateFlags::Meshes |
-                                UpdateFlags::Transforms;
-      DoEditorSideGeometryImporting(Type::DynamicCast<GeometryContent*>(item),
-                                    NULL,
-                                    flags,
-                                    package->Location);
+      UpdateFlags::Type flags =
+          UpdateFlags::Archetype | UpdateFlags::Materials | UpdateFlags::Meshes | UpdateFlags::Transforms;
+      DoEditorSideGeometryImporting(Type::DynamicCast<GeometryContent*>(item), NULL, flags, package->Location);
     }
     else
       continue;

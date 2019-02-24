@@ -99,12 +99,7 @@ DeclareEnum2(PerspectiveMode, Perspective, Orthographic);
 
 DeclareEnum2(RenderingType, Static, Streamed);
 
-DeclareEnum5(RenderTaskType,
-             ClearTarget,
-             RenderPass,
-             PostProcess,
-             BackBufferBlit,
-             TextureUpdate);
+DeclareEnum5(RenderTaskType, ClearTarget, RenderPass, PostProcess, BackBufferBlit, TextureUpdate);
 
 DeclareEnum2(ScissorMode, Disabled, Enabled);
 
@@ -149,15 +144,7 @@ DeclareEnum3(StencilMode, Disabled, Enabled, Separate);
 /// to 0.</param> <param name="DecrementWrap">Decrements the current stencil
 /// buffer value. Wraps stencil buffer value to the maximum value when
 /// decrementing a stencil buffer value of zero.</param>
-DeclareEnum8(StencilOp,
-             Zero,
-             Keep,
-             Replace,
-             Invert,
-             Increment,
-             IncrementWrap,
-             Decrement,
-             DecrementWrap);
+DeclareEnum8(StencilOp, Zero, Keep, Replace, Invert, Increment, IncrementWrap, Decrement, DecrementWrap);
 
 /// How text is positioned relative to the object position.
 /// <param name="Left">Left side is aligned with the position.</param>
@@ -177,15 +164,7 @@ DeclareEnum2(TextRounding, Nearest, LastCharacter);
 /// test value is greater than or equal to buffer value.</param> <param
 /// name="Equal">Compares if test value is equal to buffer value.</param> <param
 /// name="NotEqual">Compares if test value is not equal to buffer value.</param>
-DeclareEnum8(TextureCompareFunc,
-             Never,
-             Always,
-             Less,
-             LessEqual,
-             Greater,
-             GreaterEqual,
-             Equal,
-             NotEqual);
+DeclareEnum8(TextureCompareFunc, Never, Always, Less, LessEqual, Greater, GreaterEqual, Equal, NotEqual);
 
 /// If texture sampling should do comparison.
 /// <param name="Disabled">Regular texture sampling.</param>

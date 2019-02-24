@@ -22,8 +22,7 @@ CollisionFilterBlock::CollisionFilterBlock()
 
 void CollisionFilterBlock::Serialize(Serializer& stream)
 {
-  uint defaultFlags =
-      CollisionBlockStates::SendEventsToA | CollisionBlockStates::SendEventsToB;
+  uint defaultFlags = CollisionBlockStates::SendEventsToA | CollisionBlockStates::SendEventsToB;
   SerializeBits(stream, mStates, CollisionBlockStates::Names, 0, defaultFlags);
   SerializeNameDefault(mEventOverride, String());
 }

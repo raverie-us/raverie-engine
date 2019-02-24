@@ -126,11 +126,8 @@ public:
   PropertyView* GetPropertyGrid() const;
 
   /// Tool Selection.
-  void SelectToolIndex(
-      uint index, ShowToolProperties::Enum showTool = ShowToolProperties::Auto);
-  void
-  SelectToolName(StringParam toolName,
-                 ShowToolProperties::Enum showTool = ShowToolProperties::Auto);
+  void SelectToolIndex(uint index, ShowToolProperties::Enum showTool = ShowToolProperties::Auto);
+  void SelectToolName(StringParam toolName, ShowToolProperties::Enum showTool = ShowToolProperties::Auto);
 
   /// Whether or not the default selection tool is currently selected.
   bool IsSelectToolActive();

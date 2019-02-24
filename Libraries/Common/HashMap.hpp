@@ -46,9 +46,7 @@ template <typename KeyType,
           typename Hasher = HashPolicy<KeyType>,
           typename Allocator = DefaultAllocator>
 class ZeroSharedTemplate HashMap
-    : public HashedContainer<Pair<KeyType, DataType>,
-                             PairHashAdapter<Hasher, KeyType, DataType>,
-                             Allocator>
+    : public HashedContainer<Pair<KeyType, DataType>, PairHashAdapter<Hasher, KeyType, DataType>, Allocator>
 {
 public:
   typedef KeyType key_type;
@@ -58,10 +56,7 @@ public:
   typedef Pair<KeyType, DataType> pair;
   typedef size_t size_type;
   typedef data_type& reference;
-  typedef HashedContainer<value_type,
-                          PairHashAdapter<Hasher, KeyType, DataType>,
-                          Allocator>
-      base_type;
+  typedef HashedContainer<value_type, PairHashAdapter<Hasher, KeyType, DataType>, Allocator> base_type;
   typedef typename base_type::Node* iterator;
   typedef typename base_type::Node Node;
   typedef typename base_type::range range;
@@ -181,8 +176,7 @@ public:
     else
     {
       value_type newType(key, data_type());
-      return base_type::InsertInternal(newType, base_type::OnCollisionOverride)
-          .mValue->second;
+      return base_type::InsertInternal(newType, base_type::OnCollisionOverride).mValue->second;
     }
   }
 
@@ -193,29 +187,25 @@ public:
 
   InsertResult Insert(const key_type& key, const data_type& value)
   {
-    return base_type::InsertInternal(value_type(key, value),
-                                     base_type::OnCollisionOverride);
+    return base_type::InsertInternal(value_type(key, value), base_type::OnCollisionOverride);
   }
 
   void Insert(range pair_range)
   {
     for (; !pair_range.Empty(); pair_range.PopFront())
     {
-      base_type::InsertInternal(pair_range.Front(),
-                                base_type::OnCollisionOverride);
+      base_type::InsertInternal(pair_range.Front(), base_type::OnCollisionOverride);
     }
   }
 
   bool InsertOrError(const value_type& datapair)
   {
-    return base_type::InsertInternal(datapair, base_type::OnCollisionError) !=
-           false;
+    return base_type::InsertInternal(datapair, base_type::OnCollisionError) != false;
   }
 
   bool InsertOrError(const key_type& key, const data_type& value)
   {
-    return base_type::InsertInternal(value_type(key, value),
-                                     base_type::OnCollisionError) != false;
+    return base_type::InsertInternal(value_type(key, value), base_type::OnCollisionError) != false;
   }
 
   template <typename VType>
@@ -240,16 +230,13 @@ public:
 
   InsertResult InsertNoOverwrite(const key_type& key, const data_type& value)
   {
-    return base_type::InsertInternal(value_type(key, value),
-                                     base_type::OnCollisionReturn);
+    return base_type::InsertInternal(value_type(key, value), base_type::OnCollisionReturn);
   }
 
   template <typename searchType, typename searchHasher>
-  range FindAs(const searchType& searchKey,
-               searchHasher keyHasher = HashPolicy<searchType>())
+  range FindAs(const searchType& searchKey, searchHasher keyHasher = HashPolicy<searchType>())
   {
-    Node* node = base_type::InternalFindAs(
-        searchKey, PairHashAdapter<searchHasher, searchType, DataType>());
+    Node* node = base_type::InternalFindAs(searchKey, PairHashAdapter<searchHasher, searchType, DataType>());
     if (node != cHashOpenNode)
       return range(node, node + 1, 1);
     else
@@ -297,8 +284,7 @@ public:
       return 0;
   }
 
-  data_type FindValue(const key_type& searchKey,
-                      const data_type& ifNotFound) const
+  data_type FindValue(const key_type& searchKey, const data_type& ifNotFound) const
   {
     Node* foundNode = base_type::InternalFindAs(searchKey, base_type::mHasher);
     if (foundNode != cHashOpenNode)
@@ -308,8 +294,7 @@ public:
   }
 
   // Returns a pointer to the value if found, or null if not found
-  data_type* FindPointer(const key_type& searchKey,
-                         data_type* ifNotFound = nullptr) const
+  data_type* FindPointer(const key_type& searchKey, data_type* ifNotFound = nullptr) const
   {
     Node* foundNode = base_type::InternalFindAs(searchKey, base_type::mHasher);
     if (foundNode != cHashOpenNode)

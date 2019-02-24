@@ -129,8 +129,7 @@ void Region::WakeUpAll()
   }
 }
 
-Region::RegionContactRange::RegionContactRange(const ContactRange& range) :
-    mRange(range)
+Region::RegionContactRange::RegionContactRange(const ContactRange& range) : mRange(range)
 {
 }
 

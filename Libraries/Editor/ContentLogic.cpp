@@ -25,8 +25,7 @@ void LoadContentConfig()
 
   librarySearchPaths.PushBack(FilePath::Combine(sourceDirectory, "Resources"));
 
-  CreateDirectoryAndParents(
-      FilePath::Combine(appCacheDirectory, GetApplicationName()));
+  CreateDirectoryAndParents(FilePath::Combine(appCacheDirectory, GetApplicationName()));
 
   contentSystem->ToolPath = FilePath::Combine(sourceDirectory, "Tools");
 
@@ -35,18 +34,15 @@ void LoadContentConfig()
   // To avoid conflicts of assets of different versions(especially when the
   // version selector goes live) set the content folder to a unique directory
   // based upon the version number
-  String revisionChangesetName = BuildString(
-      "ZeroVersion", GetRevisionNumberString(), "-", GetChangeSetString());
-  contentSystem->ContentOutputPath = FilePath::Combine(
-      appCacheDirectory, "ZeroContent", revisionChangesetName);
+  String revisionChangesetName = BuildString("ZeroVersion", GetRevisionNumberString(), "-", GetChangeSetString());
+  contentSystem->ContentOutputPath = FilePath::Combine(appCacheDirectory, "ZeroContent", revisionChangesetName);
 
   // If we don't already have the content output directory, then see if we have
   // local prebuilt content that can be copied into the output directory (this
   // is faster than building the content ourselves, if it exists).
   if (!DirectoryExists(contentSystem->ContentOutputPath))
   {
-    String prebuiltContent =
-        FilePath::Combine(sourceDirectory, "PrebuiltZeroContent");
+    String prebuiltContent = FilePath::Combine(sourceDirectory, "PrebuiltZeroContent");
     if (DirectoryExists(prebuiltContent))
     {
       ZPrint("Copying prebuilt content from '%s' to '%s'\n",
@@ -61,8 +57,7 @@ void LoadContentConfig()
 
 bool LoadContentLibrary(StringParam name, bool isCore)
 {
-  ContentLibrary* library =
-      Z::gContentSystem->Libraries.FindValue(name, nullptr);
+  ContentLibrary* library = Z::gContentSystem->Libraries.FindValue(name, nullptr);
   if (library)
   {
     if (isCore)
@@ -76,12 +71,11 @@ bool LoadContentLibrary(StringParam name, bool isCore)
     {
       if (isCore)
       {
-        forRange(ResourceEntry & entry, package.Resources.All())
+        forRange (ResourceEntry& entry, package.Resources.All())
         {
           if (entry.mLibrarySource)
           {
-            if (ContentEditorOptions* options =
-                    entry.mLibrarySource->has(ContentEditorOptions))
+            if (ContentEditorOptions* options = entry.mLibrarySource->has(ContentEditorOptions))
               entry.mLibrarySource->ShowInEditor = options->mShowInEditor;
             else
               entry.mLibrarySource->ShowInEditor = false;
@@ -121,8 +115,7 @@ EditorPackageLoader::EditorPackageLoader()
 
 void EditorPackageLoader::OnPackagedBuilt(ContentSystemEvent* event)
 {
-  LoadPackage(
-      Z::gEditor, Z::gEditor->mProject, event->mLibrary, event->mPackage);
+  LoadPackage(Z::gEditor, Z::gEditor->mProject, event->mLibrary, event->mPackage);
 }
 
 bool EditorPackageLoader::LoadPackage(Editor* editor,
@@ -137,11 +130,10 @@ bool EditorPackageLoader::LoadPackage(Editor* editor,
   if (project->ProjectContentLibrary == library)
   {
     // Load all packages
-    forRange(ResourcePackage * dependentPackage, PackagesToLoad.All())
+    forRange (ResourcePackage* dependentPackage, PackagesToLoad.All())
     {
       Status status;
-      ResourceLibrary* library =
-          resourceSystem->LoadPackage(status, dependentPackage);
+      ResourceLibrary* library = resourceSystem->LoadPackage(status, dependentPackage);
       if (!status)
         DoNotifyError("Failed to load resource package.", status.Message);
 
@@ -155,8 +147,7 @@ bool EditorPackageLoader::LoadPackage(Editor* editor,
     editor->mProjectLibrary = library;
 
     Status status;
-    project->ProjectResourceLibrary =
-        resourceSystem->LoadPackage(status, package);
+    project->ProjectResourceLibrary = resourceSystem->LoadPackage(status, package);
     if (!status)
       DoNotifyError("Failed to load resource package.", status.Message);
 
@@ -206,7 +197,7 @@ bool LoadEditorContent()
   coreLibs.PushBack("EditorUi");
   coreLibs.PushBack("Editor");
 
-  forRange(String libraryName, coreLibs.All())
+  forRange (String libraryName, coreLibs.All())
   {
     coreContent = coreContent && LoadContentLibrary(libraryName, true);
   }
@@ -219,15 +210,12 @@ bool LoadEditorContent()
   }
 
   // Show all default resources
-  forRange(ResourceManager * manager, Z::gResources->Managers.Values())
+  forRange (ResourceManager* manager, Z::gResources->Managers.Values())
   {
     if (manager->mCanCreateNew)
-      ErrorIf(manager->mExtension.Empty(),
-              "Must set an extension on %s",
-              manager->GetResourceType()->Name.c_str());
+      ErrorIf(manager->mExtension.Empty(), "Must set an extension on %s", manager->GetResourceType()->Name.c_str());
 
-    Resource* resource = manager->GetResource(manager->DefaultResourceName,
-                                              ResourceNotFound::ReturnNull);
+    Resource* resource = manager->GetResource(manager->DefaultResourceName, ResourceNotFound::ReturnNull);
     if (resource && resource->mContentItem)
     {
       resource->mContentItem->ShowInEditor = true;

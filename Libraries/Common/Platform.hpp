@@ -245,9 +245,7 @@
 #define ZeroStringDeref(text) #text
 #define ZeroStringize(text) ZeroStringDeref(text)
 
-#define ZeroOffsetOf(structure, member)                                        \
-  ((::size_t) &                                                                \
-   reinterpret_cast<char const volatile&>((((structure*)0)->member)))
+#define ZeroOffsetOf(structure, member) ((::size_t) & reinterpret_cast<char const volatile&>((((structure*)0)->member)))
 
 #if defined(PLATFORM_WINDOWS)
 #  define ZeroThreadLocal __declspec(thread)
@@ -255,7 +253,7 @@
 #  define ZeroExport __declspec(dllexport)
 #  define ZeroExportC extern "C" __declspec(dllexport)
 #  define ZeroDebugBreak() __debugbreak()
-#  define ZeroTodo(text) /* __pragma(message(__FILE__ "("                      \
+#  define ZeroTodo(text) /* __pragma(message(__FILE__ "("                                                              \
                             ZeroStringize(__LINE__) ") : Todo: " text)) */
 #  if defined(COMPILER_MICROSOFT)
 #    define ZeroForceInline inline __forceinline
@@ -273,8 +271,8 @@
 #    define ZeroForceInline
 #    define ZeroDebugBreak()
 #  else
-#    define ZeroForceInline /* GCC has issues with                             \
-                               __attribute__((always_inline)) */               \
+#    define ZeroForceInline /* GCC has issues with                                                                     \
+                               __attribute__((always_inline)) */                                                       \
       inline
 #    define ZeroDebugBreak() asm("int $3")
 #  endif

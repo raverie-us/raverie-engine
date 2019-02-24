@@ -58,10 +58,7 @@ public:
     int count = GetCount();
     if (arrayIndex >= count)
     {
-      String msg = String::Format(
-          "Index %d is invalid. Array only contains %d element(s).",
-          arrayIndex,
-          count);
+      String msg = String::Format("Index %d is invalid. Array only contains %d element(s).", arrayIndex, count);
       DoNotifyException("Invalid index", msg);
       return false;
     }
@@ -100,9 +97,7 @@ public:
     ArrayType* array = mArray;
     if (array == nullptr)
     {
-      DoNotifyException(
-          "Range is invalid",
-          "The array this range is referencing has been destroyed.");
+      DoNotifyException("Range is invalid", "The array this range is referencing has been destroyed.");
       return true;
     }
 
@@ -115,8 +110,7 @@ public:
     // exception.
     if (Empty())
     {
-      DoNotifyException("Invalid Range Operation",
-                        "Cannot access an item in an empty range.");
+      DoNotifyException("Invalid Range Operation", "Cannot access an item in an empty range.");
       return FrontResult();
     }
     return mArray->Get(mIndex);
@@ -142,30 +136,25 @@ class IndexedHalfEdge;
 class IndexedHalfEdgeFace;
 class IndexedHalfEdgeMesh;
 
-class IndexedHalfEdgeMeshVertexArray
-    : public BoundArray<IndexedHalfEdgeMesh, Vec3>
+class IndexedHalfEdgeMeshVertexArray : public BoundArray<IndexedHalfEdgeMesh, Vec3>
 {
 public:
   ZilchDeclareType(IndexedHalfEdgeMeshVertexArray, TypeCopyMode::ReferenceType);
 };
 
-class IndexedHalfEdgeMeshEdgeArray
-    : public BoundArray<IndexedHalfEdgeMesh, IndexedHalfEdge*>
+class IndexedHalfEdgeMeshEdgeArray : public BoundArray<IndexedHalfEdgeMesh, IndexedHalfEdge*>
 {
 public:
   ZilchDeclareType(IndexedHalfEdgeMeshEdgeArray, TypeCopyMode::ReferenceType);
 };
 
-class IndexedHalfEdgeFaceEdgeIndexArray
-    : public BoundArray<IndexedHalfEdgeFace, int>
+class IndexedHalfEdgeFaceEdgeIndexArray : public BoundArray<IndexedHalfEdgeFace, int>
 {
 public:
-  ZilchDeclareType(IndexedHalfEdgeFaceEdgeIndexArray,
-                   TypeCopyMode::ReferenceType);
+  ZilchDeclareType(IndexedHalfEdgeFaceEdgeIndexArray, TypeCopyMode::ReferenceType);
 };
 
-class IndexedHalfEdgeMeshFaceArray
-    : public BoundArray<IndexedHalfEdgeMesh, IndexedHalfEdgeFace*>
+class IndexedHalfEdgeMeshFaceArray : public BoundArray<IndexedHalfEdgeMesh, IndexedHalfEdgeFace*>
 {
 public:
   ZilchDeclareType(IndexedHalfEdgeMeshFaceArray, TypeCopyMode::ReferenceType);

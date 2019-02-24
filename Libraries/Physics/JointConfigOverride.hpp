@@ -51,8 +51,7 @@ struct JointConfigOverride : public Component
 
   /// The kind of position correction that this joint should use.
   ConstraintPositionCorrection::Enum GetPositionCorrectionType() const;
-  void
-  SetPositionCorrectionType(ConstraintPositionCorrection::Enum correctionType);
+  void SetPositionCorrectionType(ConstraintPositionCorrection::Enum correctionType);
 
   real mSlop;
   real mLinearBaumgarte;

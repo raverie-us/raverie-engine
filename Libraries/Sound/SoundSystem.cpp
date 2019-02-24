@@ -255,99 +255,85 @@ int SoundSystem::GetOutputChannels()
 
 VolumeNode* SoundSystem::VolumeNode()
 {
-  Zero::VolumeNode* node =
-      new Zero::VolumeNode("VolumeNode", Z::gSound->mCounter++);
+  Zero::VolumeNode* node = new Zero::VolumeNode("VolumeNode", Z::gSound->mCounter++);
   return node;
 }
 
 PanningNode* SoundSystem::PanningNode()
 {
-  Zero::PanningNode* node =
-      new Zero::PanningNode("PanningNode", Z::gSound->mCounter++);
+  Zero::PanningNode* node = new Zero::PanningNode("PanningNode", Z::gSound->mCounter++);
   return node;
 }
 
 PitchNode* SoundSystem::PitchNode()
 {
-  Zero::PitchNode* node =
-      new Zero::PitchNode("PitchNode", Z::gSound->mCounter++);
+  Zero::PitchNode* node = new Zero::PitchNode("PitchNode", Z::gSound->mCounter++);
   return node;
 }
 
 LowPassNode* SoundSystem::LowPassNode()
 {
-  Zero::LowPassNode* node =
-      new Zero::LowPassNode("LowPassNode", Z::gSound->mCounter++);
+  Zero::LowPassNode* node = new Zero::LowPassNode("LowPassNode", Z::gSound->mCounter++);
   return node;
 }
 
 HighPassNode* SoundSystem::HighPassNode()
 {
-  Zero::HighPassNode* node =
-      new Zero::HighPassNode("HighPassNode", Z::gSound->mCounter++);
+  Zero::HighPassNode* node = new Zero::HighPassNode("HighPassNode", Z::gSound->mCounter++);
   return node;
 }
 
 BandPassNode* SoundSystem::BandPassNode()
 {
-  Zero::BandPassNode* node =
-      new Zero::BandPassNode("BandPassNode", Z::gSound->mCounter++);
+  Zero::BandPassNode* node = new Zero::BandPassNode("BandPassNode", Z::gSound->mCounter++);
   return node;
 }
 
 EqualizerNode* SoundSystem::EqualizerNode()
 {
-  Zero::EqualizerNode* node =
-      new Zero::EqualizerNode("EqualizerNode", Z::gSound->mCounter++);
+  Zero::EqualizerNode* node = new Zero::EqualizerNode("EqualizerNode", Z::gSound->mCounter++);
   return node;
 }
 
 ReverbNode* SoundSystem::ReverbNode()
 {
-  Zero::ReverbNode* node =
-      new Zero::ReverbNode("ReverbNode", Z::gSound->mCounter++);
+  Zero::ReverbNode* node = new Zero::ReverbNode("ReverbNode", Z::gSound->mCounter++);
   return node;
 }
 
 DelayNode* SoundSystem::DelayNode()
 {
-  Zero::DelayNode* node =
-      new Zero::DelayNode("DelayNode", Z::gSound->mCounter++);
+  Zero::DelayNode* node = new Zero::DelayNode("DelayNode", Z::gSound->mCounter++);
   return node;
 }
 
 FlangerNode* SoundSystem::FlangerNode()
 {
-  Zero::FlangerNode* node =
-      new Zero::FlangerNode("FlangerNode", Z::gSound->mCounter++);
+  Zero::FlangerNode* node = new Zero::FlangerNode("FlangerNode", Z::gSound->mCounter++);
   return node;
 }
 
 ChorusNode* SoundSystem::ChorusNode()
 {
-  Zero::ChorusNode* node =
-      new Zero::ChorusNode("ChorusNode", Z::gSound->mCounter++);
+  Zero::ChorusNode* node = new Zero::ChorusNode("ChorusNode", Z::gSound->mCounter++);
   return node;
 }
 
 CompressorNode* SoundSystem::CompressorNode()
 {
-  Zero::CompressorNode* node =
-      new Zero::CompressorNode("CompressorNode", Z::gSound->mCounter++);
+  Zero::CompressorNode* node = new Zero::CompressorNode("CompressorNode", Z::gSound->mCounter++);
   return node;
 }
 
 ExpanderNode* SoundSystem::ExpanderNode()
 {
-  Zero::ExpanderNode* node =
-      new Zero::ExpanderNode("ExpanderNode", Z::gSound->mCounter++);
+  Zero::ExpanderNode* node = new Zero::ExpanderNode("ExpanderNode", Z::gSound->mCounter++);
   return node;
 }
 
 CustomAudioNode* SoundSystem::CustomAudioNode()
 {
-  Zero::CustomAudioNode* node =
-      new Zero::CustomAudioNode("CustomAudioNode", Z::gSound->mCounter++);
+  Zero::CustomAudioNode* node = new Zero::CustomAudioNode("CustomAudioNode", Z::gSound->mCounter++);
   return node;
 }
 
@@ -359,57 +345,49 @@ SoundBuffer* SoundSystem::SoundBuffer()
 
 GeneratedWaveNode* SoundSystem::GeneratedWaveNode()
 {
-  Zero::GeneratedWaveNode* node =
-      new Zero::GeneratedWaveNode("GeneratedWaveNode", Z::gSound->mCounter++);
+  Zero::GeneratedWaveNode* node = new Zero::GeneratedWaveNode("GeneratedWaveNode", Z::gSound->mCounter++);
   return node;
 }
 
 RecordingNode* SoundSystem::RecordingNode()
 {
-  Zero::RecordingNode* node =
-      new Zero::RecordingNode("RecordingNode", Z::gSound->mCounter++);
+  Zero::RecordingNode* node = new Zero::RecordingNode("RecordingNode", Z::gSound->mCounter++);
   return node;
 }
 
 AddNoiseNode* SoundSystem::AddNoiseNode()
 {
-  Zero::AddNoiseNode* node =
-      new Zero::AddNoiseNode("AddNoiseNode", Z::gSound->mCounter++);
+  Zero::AddNoiseNode* node = new Zero::AddNoiseNode("AddNoiseNode", Z::gSound->mCounter++);
   return node;
 }
 
 AdditiveSynthNode* SoundSystem::AdditiveSynthNode()
 {
-  Zero::AdditiveSynthNode* node =
-      new Zero::AdditiveSynthNode("AdditiveSynthNode", Z::gSound->mCounter++);
+  Zero::AdditiveSynthNode* node = new Zero::AdditiveSynthNode("AdditiveSynthNode", Z::gSound->mCounter++);
   return node;
 }
 
 ModulationNode* SoundSystem::ModulationNode()
 {
-  Zero::ModulationNode* node =
-      new Zero::ModulationNode("ModulationNode", Z::gSound->mCounter++);
+  Zero::ModulationNode* node = new Zero::ModulationNode("ModulationNode", Z::gSound->mCounter++);
   return node;
 }
 
 MicrophoneInputNode* SoundSystem::MicrophoneInputNode()
 {
-  Zero::MicrophoneInputNode* node = new Zero::MicrophoneInputNode(
-      "MicrophoneInputNode", Z::gSound->mCounter++);
+  Zero::MicrophoneInputNode* node = new Zero::MicrophoneInputNode("MicrophoneInputNode", Z::gSound->mCounter++);
   return node;
 }
 
 SaveAudioNode* SoundSystem::SaveAudioNode()
 {
-  Zero::SaveAudioNode* node =
-      new Zero::SaveAudioNode("SaveAudioNode", Z::gSound->mCounter++);
+  Zero::SaveAudioNode* node = new Zero::SaveAudioNode("SaveAudioNode", Z::gSound->mCounter++);
   return node;
 }
 
 GranularSynthNode* SoundSystem::GranularSynthNode()
 {
-  Zero::GranularSynthNode* node =
-      new Zero::GranularSynthNode("GranularSynthNode", Z::gSound->mCounter++);
+  Zero::GranularSynthNode* node = new Zero::GranularSynthNode("GranularSynthNode", Z::gSound->mCounter++);
   return node;
 }
 
@@ -419,7 +397,8 @@ void SoundSystem::Update(bool debugger)
     return;
 
   // Update spaces (also updates emitters)
-  forRange(SoundSpace & space, mSpaces.All()) space.Update();
+  forRange (SoundSpace& space, mSpaces.All())
+    space.Update();
 
   // Update audio system
   Mixer.Update();
@@ -446,7 +425,8 @@ void SoundSystem::AddSoundSpace(SoundSpace* space, bool isEditor)
 
     if (mSoundSpaceCounter == 1)
     {
-      forRange(SoundTag & tag, mSoundTags.All()) tag.CreateTag();
+      forRange (SoundTag& tag, mSoundTags.All())
+        tag.CreateTag();
     }
   }
 }
@@ -460,12 +440,12 @@ void SoundSystem::RemoveSoundSpace(SoundSpace* space, bool isEditor)
   {
     --mSoundSpaceCounter;
 
-    ErrorIf(mSoundSpaceCounter < 0,
-            "SoundSystem's space tracking has become negative");
+    ErrorIf(mSoundSpaceCounter < 0, "SoundSystem's space tracking has become negative");
 
     if (mSoundSpaceCounter == 0)
     {
-      forRange(SoundTag & tag, mSoundTags.All()) tag.ReleaseTag();
+      forRange (SoundTag& tag, mSoundTags.All())
+        tag.ReleaseTag();
     }
   }
 }
@@ -479,16 +459,12 @@ ZilchDefineType(AudioSettings, builder, type)
   ZeroBindTag(Tags::Sound);
   ZeroBindDocumented();
 
-  ZilchBindGetterSetterProperty(SystemVolume)
-      ->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
+  ZilchBindGetterSetterProperty(SystemVolume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
   ZilchBindGetterSetterProperty(MuteAllAudio);
-  ZilchBindGetterSetterProperty(UseRandomSeed)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(Seed)->ZeroFilterEquality(
-      mUseRandomSeed, bool, false);
+  ZilchBindGetterSetterProperty(UseRandomSeed)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(Seed)->ZeroFilterEquality(mUseRandomSeed, bool, false);
   ZilchBindGetterSetterProperty(MixType);
-  ZilchBindGetterSetterProperty(MinVolumeThreshold)
-      ->Add(new EditorSlider(0.0f, 0.2f, 0.001f));
+  ZilchBindGetterSetterProperty(MinVolumeThreshold)->Add(new EditorSlider(0.0f, 0.2f, 0.001f));
   ZilchBindGetterSetterProperty(LatencySetting);
 }
 

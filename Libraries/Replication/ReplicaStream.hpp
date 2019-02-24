@@ -50,19 +50,17 @@ public:
   /// Reads replica creation information (such as CreateContext and ReplicaType)
   /// from the replica stream Returns true if successful, else false
   bool ReadCreationInfo(Replica* replica) const;
-  bool ReadCreationInfo(CreateContext& createContext,
-                        ReplicaType& replicaType) const;
+  bool ReadCreationInfo(CreateContext& createContext, ReplicaType& replicaType) const;
 
   /// Writes replica identification information (such as IsAbsent, ReplicaId,
   /// IsCloned, IsEmplaced, EmplaceContext, and EmplaceId) to the replica stream
   /// Returns true if successful, else false
   bool WriteIdentificationInfo(bool isAbsent, const Replica* replica);
-  bool WriteIdentificationInfo(
-      bool isAbsent,
-      ReplicaId replicaId = 0,
-      bool isEmplaced = false,
-      const EmplaceContext& emplaceContext = EmplaceContext(),
-      EmplaceId emplaceId = 0);
+  bool WriteIdentificationInfo(bool isAbsent,
+                               ReplicaId replicaId = 0,
+                               bool isEmplaced = false,
+                               const EmplaceContext& emplaceContext = EmplaceContext(),
+                               EmplaceId emplaceId = 0);
   /// Reads replica identification information (such as IsAbsent, ReplicaId,
   /// IsCloned, IsEmplaced, EmplaceContext, and EmplaceId) from the replica
   /// stream Returns true if successful, else false
@@ -89,12 +87,11 @@ private:
   //
 
   /// Data
-  Replicator* mReplicator;         /// Operating replicator
-  ReplicatorLink* mReplicatorLink; /// Operating replicator link
-  BitStream& mBitStream;           /// Operating bitstream
-  ReplicaStreamMode::Enum
-      mReplicaStreamMode; /// Replica stream serialization mode
-  TimeMs mTimestamp;      /// Message timestamp
+  Replicator* mReplicator;                    /// Operating replicator
+  ReplicatorLink* mReplicatorLink;            /// Operating replicator link
+  BitStream& mBitStream;                      /// Operating bitstream
+  ReplicaStreamMode::Enum mReplicaStreamMode; /// Replica stream serialization mode
+  TimeMs mTimestamp;                          /// Message timestamp
 
   /// No copy constructor
   ReplicaStream(const ReplicaStream&);

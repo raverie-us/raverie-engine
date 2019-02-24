@@ -26,9 +26,7 @@ public:
 
   //-------------------------------------------------------------------Internal
   /// Finds the first triangle hit by the local-space ray.
-  bool CastRay(const Ray& localRay,
-               ProxyResult& result,
-               BaseCastFilter& filter);
+  bool CastRay(const Ray& localRay, ProxyResult& result, BaseCastFilter& filter);
   void Draw(Mat4Param transform);
 
   void BuildFromPointSet(const Vec3Array& points);

@@ -32,8 +32,7 @@ void ZilchScriptLibrary::Initialize()
 
   ResourceLibrary::sScriptType = ZilchTypeId(ZilchScript);
 
-  EventConnect(
-      &Zilch::Console::Events, Zilch::Events::ConsoleWrite, ZilchConsolePrint);
+  EventConnect(&Zilch::Console::Events, Zilch::Events::ConsoleWrite, ZilchConsolePrint);
 }
 
 void ZilchScriptLibrary::Shutdown()

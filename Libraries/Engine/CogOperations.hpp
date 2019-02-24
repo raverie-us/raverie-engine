@@ -6,10 +6,7 @@ namespace Zero
 {
 
 /// Attaches 'object' to 'parent' and queues the operation.
-void AttachObject(OperationQueue* queue,
-                  Cog* object,
-                  Cog* parent,
-                  bool relative = true);
+void AttachObject(OperationQueue* queue, Cog* object, Cog* parent, bool relative = true);
 
 /// Detaches the given object from its parent and queues the operation.
 void DetachObject(OperationQueue* queue, Cog* object, bool relative = true);
@@ -19,11 +16,8 @@ void MoveObjectIndex(OperationQueue* queue, Cog* objectToMove, uint index);
 
 /// Moves the given object to the new parent at the given index in the
 /// new parent's hierarchy.
-void MoveObject(OperationQueue* queue,
-                Cog* objectToMove,
-                Cog* newParent,
-                uint indexInNewParent,
-                bool relativeAttach = true);
+void MoveObject(
+    OperationQueue* queue, Cog* objectToMove, Cog* newParent, uint indexInNewParent, bool relativeAttach = true);
 
 /// Destroys the given object and queues the operation.
 void DestroyObject(OperationQueue* queue, Cog* object);
@@ -51,10 +45,8 @@ Cog* CreateFromArchetype(OperationQueue* queue,
 void UploadToArchetype(OperationQueue* queue, Cog* cog);
 
 /// Returns a new Archetype if it was created
-Archetype* UploadToArchetype(OperationQueue* queue,
-                             Cog* cog,
-                             StringParam archetypeName,
-                             Archetype* baseArchetype = nullptr);
+Archetype*
+UploadToArchetype(OperationQueue* queue, Cog* cog, StringParam archetypeName, Archetype* baseArchetype = nullptr);
 
 void RevertToArchetype(OperationQueue* queue, Cog* cog);
 void ClearArchetype(OperationQueue* queue, Cog* cog);
@@ -63,11 +55,8 @@ class CreateFromArchetypeOperation : public Operation
 {
 public:
   /// Constructor.
-  CreateFromArchetypeOperation(Space* space,
-                               Archetype* archetype,
-                               Vec3Param location,
-                               QuatParam rotation,
-                               Vec3Param scale);
+  CreateFromArchetypeOperation(
+      Space* space, Archetype* archetype, Vec3Param location, QuatParam rotation, Vec3Param scale);
 
   /// Operation Interface.
   void Undo() override;

@@ -30,13 +30,10 @@ void ResolveAnyAllNonZero(ZilchSpirVFrontEnd* translator,
                           OpType op,
                           ZilchSpirVFrontEndContext* context)
 {
-  ZilchShaderIRType* boolInputType = translator->FindType(
-      functionCallNode->Arguments[0]->ResultType, functionCallNode);
-  ZilchShaderIRType* boolResultType =
-      translator->FindType(functionCallNode->ResultType, functionCallNode);
+  ZilchShaderIRType* boolInputType = translator->FindType(functionCallNode->Arguments[0]->ResultType, functionCallNode);
+  ZilchShaderIRType* boolResultType = translator->FindType(functionCallNode->ResultType, functionCallNode);
 
-  ZilchShaderIROp* vector = translator->WalkAndGetValueTypeResult(
-      functionCallNode->Arguments[0], context);
+  ZilchShaderIROp* vector = translator->WalkAndGetValueTypeResult(functionCallNode->Arguments[0], context);
 
   if (boolInputType->mComponents == 1)
   {
@@ -44,8 +41,7 @@ void ResolveAnyAllNonZero(ZilchSpirVFrontEnd* translator,
     return;
   }
 
-  IZilchShaderIR* operation =
-      translator->BuildCurrentBlockIROp(op, boolResultType, vector, context);
+  IZilchShaderIR* operation = translator->BuildCurrentBlockIROp(op, boolResultType, vector, context);
   context->PushIRStack(operation);
 }
 
@@ -74,21 +70,17 @@ void ResolveLogicalOrAnd(ZilchSpirVFrontEnd* translator,
                          ZilchSpirVFrontEndContext* context)
 {
   // Walk the left hand operator (this can change the current block)
-  IZilchShaderIR* leftIR =
-      translator->WalkAndGetResult(binaryOpNode->LeftOperand, context);
+  IZilchShaderIR* leftIR = translator->WalkAndGetResult(binaryOpNode->LeftOperand, context);
 
   // In the current block, get the value type result of the left hand side
-  ZilchShaderIROp* leftOp =
-      translator->GetOrGenerateValueTypeFromIR(leftIR, context);
+  ZilchShaderIROp* leftOp = translator->GetOrGenerateValueTypeFromIR(leftIR, context);
 
   // Logical ors/ands have to generate conditionals due to short circuit
   // evaluation. To store the temporary result we have to either generate a
   // temporary variable or use an OpPhi instruction. For convenience generate a
   // temporary.
-  ZilchShaderIRType* boolType =
-      translator->FindType(ZilchTypeId(bool), binaryOpNode);
-  ZilchShaderIROp* temp =
-      translator->BuildOpVariable(boolType->mPointerType, context);
+  ZilchShaderIRType* boolType = translator->FindType(ZilchTypeId(bool), binaryOpNode);
+  ZilchShaderIROp* temp = translator->BuildOpVariable(boolType->mPointerType, context);
   if (isOr)
     temp->mDebugResultName = "tempOr";
   else
@@ -107,21 +99,9 @@ void ResolveLogicalOrAnd(ZilchSpirVFrontEnd* translator,
   // Logical Or/And are the same except for which branch they short-circuit on
   // so simply flip the true/false blocks to differentiate between them.
   if (isOr)
-    translator->BuildIROp(currentBlock,
-                          OpType::OpBranchConditional,
-                          nullptr,
-                          leftOp,
-                          ifTrue,
-                          ifFalse,
-                          context);
+    translator->BuildIROp(currentBlock, OpType::OpBranchConditional, nullptr, leftOp, ifTrue, ifFalse, context);
   else
-    translator->BuildIROp(currentBlock,
-                          OpType::OpBranchConditional,
-                          nullptr,
-                          leftOp,
-                          ifFalse,
-                          ifTrue,
-                          context);
+    translator->BuildIROp(currentBlock, OpType::OpBranchConditional, nullptr, leftOp, ifFalse, ifTrue, context);
 
   // In the true condition of a LogicalOr, we don't have to walk the left
   // hand side so simply store the result into the temp variable and branch to
@@ -137,16 +117,14 @@ void ResolveLogicalOrAnd(ZilchSpirVFrontEnd* translator,
   // circuited.
   context->mCurrentBlock = ifFalse;
   context->mCurrentFunction->mBlocks.PushBack(ifFalse);
-  IZilchShaderIR* rightIR =
-      translator->WalkAndGetResult(binaryOpNode->RightOperand, context);
+  IZilchShaderIR* rightIR = translator->WalkAndGetResult(binaryOpNode->RightOperand, context);
 
   // Walking the right hand side can change the current block
   currentBlock = context->GetCurrentBlock();
   // Always store the result of the right hand side into our temp
   translator->BuildStoreOp(currentBlock, temp, rightIR, context);
   // And always branch to the merge point
-  translator->BuildIROp(
-      currentBlock, OpType::OpBranch, nullptr, mergePoint, context);
+  translator->BuildIROp(currentBlock, OpType::OpBranch, nullptr, mergePoint, context);
 
   // Now continue control flow from the merge point with the result of this
   // expression as our temporary result
@@ -173,9 +151,7 @@ void ResolveLogicalAnd(ZilchSpirVFrontEnd* translator,
 // Logical Instructions in the spir-v spec). Some functions aren't implemented
 // here as zilch doesn't have a corresponding function. Everything else should
 // be implemented on the ShaderIntrinsics type.
-void RegisterLogicalOps(ZilchSpirVFrontEnd* translator,
-                        ZilchShaderIRLibrary* shaderLibrary,
-                        TypeGroups& types)
+void RegisterLogicalOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
   Zilch::BoundType* mathType = core.MathType;
@@ -192,35 +168,19 @@ void RegisterLogicalOps(ZilchSpirVFrontEnd* translator,
     Zilch::BoundType* zilchType = types.mRealVectorTypes[i]->mZilchType;
 
     opResolvers.RegisterBinaryOpResolver(
-        zilchType,
-        zilchType,
-        Zilch::Grammar::Equality,
-        ResolveLogicalBinaryOp<OpType::OpFOrdEqual>);
+        zilchType, zilchType, Zilch::Grammar::Equality, ResolveLogicalBinaryOp<OpType::OpFOrdEqual>);
     opResolvers.RegisterBinaryOpResolver(
-        zilchType,
-        zilchType,
-        Zilch::Grammar::Inequality,
-        ResolveLogicalBinaryOp<OpType::OpFOrdNotEqual>);
+        zilchType, zilchType, Zilch::Grammar::Inequality, ResolveLogicalBinaryOp<OpType::OpFOrdNotEqual>);
     opResolvers.RegisterBinaryOpResolver(
-        zilchType,
-        zilchType,
-        Zilch::Grammar::GreaterThan,
-        ResolveLogicalBinaryOp<OpType::OpFOrdGreaterThan>);
+        zilchType, zilchType, Zilch::Grammar::GreaterThan, ResolveLogicalBinaryOp<OpType::OpFOrdGreaterThan>);
+    opResolvers.RegisterBinaryOpResolver(zilchType,
+                                         zilchType,
+                                         Zilch::Grammar::GreaterThanOrEqualTo,
+                                         ResolveLogicalBinaryOp<OpType::OpFOrdGreaterThanEqual>);
     opResolvers.RegisterBinaryOpResolver(
-        zilchType,
-        zilchType,
-        Zilch::Grammar::GreaterThanOrEqualTo,
-        ResolveLogicalBinaryOp<OpType::OpFOrdGreaterThanEqual>);
+        zilchType, zilchType, Zilch::Grammar::LessThan, ResolveLogicalBinaryOp<OpType::OpFOrdLessThan>);
     opResolvers.RegisterBinaryOpResolver(
-        zilchType,
-        zilchType,
-        Zilch::Grammar::LessThan,
-        ResolveLogicalBinaryOp<OpType::OpFOrdLessThan>);
-    opResolvers.RegisterBinaryOpResolver(
-        zilchType,
-        zilchType,
-        Zilch::Grammar::LessThanOrEqualTo,
-        ResolveLogicalBinaryOp<OpType::OpFOrdLessThanEqual>);
+        zilchType, zilchType, Zilch::Grammar::LessThanOrEqualTo, ResolveLogicalBinaryOp<OpType::OpFOrdLessThanEqual>);
   }
 
   // Register ops that are on all integer vector types
@@ -229,52 +189,28 @@ void RegisterLogicalOps(ZilchSpirVFrontEnd* translator,
     Zilch::BoundType* zilchType = types.mIntegerVectorTypes[i]->mZilchType;
 
     opResolvers.RegisterBinaryOpResolver(
-        zilchType,
-        zilchType,
-        Zilch::Grammar::Equality,
-        ResolveLogicalBinaryOp<OpType::OpIEqual>);
+        zilchType, zilchType, Zilch::Grammar::Equality, ResolveLogicalBinaryOp<OpType::OpIEqual>);
     opResolvers.RegisterBinaryOpResolver(
-        zilchType,
-        zilchType,
-        Zilch::Grammar::Inequality,
-        ResolveLogicalBinaryOp<OpType::OpINotEqual>);
+        zilchType, zilchType, Zilch::Grammar::Inequality, ResolveLogicalBinaryOp<OpType::OpINotEqual>);
     opResolvers.RegisterBinaryOpResolver(
-        zilchType,
-        zilchType,
-        Zilch::Grammar::GreaterThan,
-        ResolveLogicalBinaryOp<OpType::OpSGreaterThan>);
+        zilchType, zilchType, Zilch::Grammar::GreaterThan, ResolveLogicalBinaryOp<OpType::OpSGreaterThan>);
+    opResolvers.RegisterBinaryOpResolver(zilchType,
+                                         zilchType,
+                                         Zilch::Grammar::GreaterThanOrEqualTo,
+                                         ResolveLogicalBinaryOp<OpType::OpSGreaterThanEqual>);
     opResolvers.RegisterBinaryOpResolver(
-        zilchType,
-        zilchType,
-        Zilch::Grammar::GreaterThanOrEqualTo,
-        ResolveLogicalBinaryOp<OpType::OpSGreaterThanEqual>);
+        zilchType, zilchType, Zilch::Grammar::LessThan, ResolveLogicalBinaryOp<OpType::OpSLessThan>);
     opResolvers.RegisterBinaryOpResolver(
-        zilchType,
-        zilchType,
-        Zilch::Grammar::LessThan,
-        ResolveLogicalBinaryOp<OpType::OpSLessThan>);
-    opResolvers.RegisterBinaryOpResolver(
-        zilchType,
-        zilchType,
-        Zilch::Grammar::LessThanOrEqualTo,
-        ResolveLogicalBinaryOp<OpType::OpSLessThanEqual>);
+        zilchType, zilchType, Zilch::Grammar::LessThanOrEqualTo, ResolveLogicalBinaryOp<OpType::OpSLessThanEqual>);
   }
 
   // Register bool scalar ops
   opResolvers.RegisterBinaryOpResolver(
-      boolType,
-      boolType,
-      Zilch::Grammar::Equality,
-      ResolveLogicalBinaryOp<OpType::OpLogicalEqual>);
+      boolType, boolType, Zilch::Grammar::Equality, ResolveLogicalBinaryOp<OpType::OpLogicalEqual>);
   opResolvers.RegisterBinaryOpResolver(
-      boolType,
-      boolType,
-      Zilch::Grammar::Inequality,
-      ResolveLogicalBinaryOp<OpType::OpLogicalNotEqual>);
-  opResolvers.RegisterBinaryOpResolver(
-      boolType, boolType, Zilch::Grammar::LogicalOr, ResolveLogicalOr);
-  opResolvers.RegisterBinaryOpResolver(
-      boolType, boolType, Zilch::Grammar::LogicalAnd, ResolveLogicalAnd);
+      boolType, boolType, Zilch::Grammar::Inequality, ResolveLogicalBinaryOp<OpType::OpLogicalNotEqual>);
+  opResolvers.RegisterBinaryOpResolver(boolType, boolType, Zilch::Grammar::LogicalOr, ResolveLogicalOr);
+  opResolvers.RegisterBinaryOpResolver(boolType, boolType, Zilch::Grammar::LogicalAnd, ResolveLogicalAnd);
 
   // Register ops that are on all boolean vector types
   for (size_t i = 0; i < types.mBooleanVectorTypes.Size(); ++i)
@@ -283,16 +219,12 @@ void RegisterLogicalOps(ZilchSpirVFrontEnd* translator,
     String zilchTypeName = zilchType->ToString();
 
     opResolvers.RegisterUnaryOpResolver(
-        zilchType,
-        Zilch::Grammar::LogicalNot,
-        ResolveLogicalUnaryOp<OpType::OpLogicalNot>);
+        zilchType, Zilch::Grammar::LogicalNot, ResolveLogicalUnaryOp<OpType::OpLogicalNot>);
 
-    mathTypeResolver.RegisterFunctionResolver(
-        GetStaticFunction(mathType, "AllNonZero", zilchTypeName),
-        ResolveAllNonZero);
-    mathTypeResolver.RegisterFunctionResolver(
-        GetStaticFunction(mathType, "AnyNonZero", zilchTypeName),
-        ResolveAnyNonZero);
+    mathTypeResolver.RegisterFunctionResolver(GetStaticFunction(mathType, "AllNonZero", zilchTypeName),
+                                              ResolveAllNonZero);
+    mathTypeResolver.RegisterFunctionResolver(GetStaticFunction(mathType, "AnyNonZero", zilchTypeName),
+                                              ResolveAnyNonZero);
   }
 }
 

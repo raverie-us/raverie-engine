@@ -29,9 +29,7 @@ CompilationErrors::CompilationErrors() :
 {
 }
 
-void CompilationErrors::RaiseArgs(const CodeLocation& location,
-                                  int errorCode,
-                                  va_list args)
+void CompilationErrors::RaiseArgs(const CodeLocation& location, int errorCode, va_list args)
 {
   return RaiseArgs(location, String(), LocationArray(), errorCode, args);
 }
@@ -66,18 +64,16 @@ void CompilationErrors::RaiseArgs(const CodeLocation& location,
   this->WasError = true;
 
   // Get the error information from the database
-  const ErrorInfo& errorInfo =
-      ErrorDatabase::GetInstance().GetErrorInfo((ErrorCode::Enum)errorCode);
+  const ErrorInfo& errorInfo = ErrorDatabase::GetInstance().GetErrorInfo((ErrorCode::Enum)errorCode);
 
   // Create an error details object that encompasses the error (including the
   // context of the error)
-  ErrorEvent errorDetails(
-      errorInfo, location, (ErrorCode::Enum)errorCode, args);
+  ErrorEvent errorDetails(errorInfo, location, (ErrorCode::Enum)errorCode, args);
 
   // Copy over any associated locations
   // For example, duplicate class definitions, where is the duplicate class?
-  ZilchForEach(const CodeLocation* location, associatedLocations)
-      errorDetails.AssociatedOtherLocations.PushBack(*location);
+  ZilchForEach (const CodeLocation* location, associatedLocations)
+    errorDetails.AssociatedOtherLocations.PushBack(*location);
 
   // Append any extra context to the error
   // Eg. when the parser expects something, it will say what it got and what it
@@ -108,11 +104,8 @@ void CompilationErrors::Raise(const CodeLocation& location, int errorCode, ...)
   va_end(argList);
 }
 
-void CompilationErrors::Raise(const CodeLocation& location,
-                              StringParam extra,
-                              const CodeLocation& associatedLocation,
-                              int errorCode,
-                              ...)
+void CompilationErrors::Raise(
+    const CodeLocation& location, StringParam extra, const CodeLocation& associatedLocation, int errorCode, ...)
 {
   // Create a variable argument list
   va_list argList;
@@ -127,11 +120,8 @@ void CompilationErrors::Raise(const CodeLocation& location,
   va_end(argList);
 }
 
-void CompilationErrors::Raise(const CodeLocation& location,
-                              StringParam extra,
-                              const LocationArray& associatedLocations,
-                              int errorCode,
-                              ...)
+void CompilationErrors::Raise(
+    const CodeLocation& location, StringParam extra, const LocationArray& associatedLocations, int errorCode, ...)
 {
   // Create a variable argument list
   va_list argList;

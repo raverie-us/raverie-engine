@@ -21,13 +21,7 @@ class ResourceLibraryDataSource;
 class BindingConflictEvent;
 class ModalConfirmEvent;
 
-DeclareEnum6(CommandCompare,
-             IsCogCommand,
-             IsNotCogCommand,
-             CommandName,
-             CommandBinding,
-             CommandTags,
-             None);
+DeclareEnum6(CommandCompare, IsCogCommand, IsNotCogCommand, CommandName, CommandBinding, CommandTags, None);
 
 struct CommandEntry
 {
@@ -82,9 +76,7 @@ public:
   DataIndex ToIndex(DataEntry* dataEntry) override;
 
   DataEntry* Parent(DataEntry* dataEntry) override;
-  DataEntry* GetChild(DataEntry* dataEntry,
-                      uint index,
-                      DataEntry* prev) override;
+  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override;
 
   uint ChildCount(DataEntry* dataEntry) override;
 
@@ -92,9 +84,7 @@ public:
   bool IsExpandable(DataEntry* dataEntry) override;
 
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override;
-  bool SetData(DataEntry* dataEntry,
-               AnyParam variant,
-               StringParam column) override;
+  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override;
 
   bool Remove(DataEntry* dataEntry) override;
 
@@ -138,17 +128,14 @@ public:
   void OnCommandRightClick(TreeEvent* event);
 
   void UpdateIndexes(int start = 0);
-  void Sort(bool updateIndexes,
-            CommandCompare::Enum sortBy = CommandCompare::CommandName);
+  void Sort(bool updateIndexes, CommandCompare::Enum sortBy = CommandCompare::CommandName);
 
   void OnCogCommandSort(MouseEvent* event);
   void OnCommandNameSort(MouseEvent* event);
   void OnCommandBindingSort(MouseEvent* event);
   void OnCommandTagsSort(MouseEvent* event);
 
-  void CreateCommandHeaderToolTip(Widget* source,
-                                  StringParam sortName,
-                                  Vec4Param color);
+  void CreateCommandHeaderToolTip(Widget* source, StringParam sortName, Vec4Param color);
 
   void OnMouseEnterIconHeader(MouseEvent* event);
   void OnMouseEnterCommandHeader(MouseEvent* event);
@@ -165,9 +152,8 @@ public:
   void OnGlobalCommandUpdated(CommandUpdateEvent* event);
 
   void OnRenamedCommand(ObjectEvent* event);
-  void OnAddCommand(MouseEvent* event); /// Add button call back
-  void OnCommandSetSelected(
-      ObjectEvent* event); /// ComboBox (set dropdown) call back
+  void OnAddCommand(MouseEvent* event);          /// Add button call back
+  void OnCommandSetSelected(ObjectEvent* event); /// ComboBox (set dropdown) call back
 
   void OnConfirmBindingOverwrite(BindingConflictEvent* event);
 

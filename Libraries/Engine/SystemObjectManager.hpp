@@ -65,8 +65,8 @@ namespace Z
 extern SystemObjectManager* gSystemObjects;
 }
 
-#define CreateSystemObjectFrom(Type, Value)                                    \
-  ZilchInitializeType(Type);                                                   \
+#define CreateSystemObjectFrom(Type, Value)                                                                            \
+  ZilchInitializeType(Type);                                                                                           \
   Z::gSystemObjects->Add(Value, ZilchTypeId(Type), ObjectCleanup::AutoDelete);
 
 } // namespace Zero

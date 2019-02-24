@@ -29,13 +29,10 @@ protected:
 
   /// Create the optimizer options given a primary pass and extra flags to
   /// apply.
-  void CreateOptimizerOptions(spv_optimizer_options& options,
-                              int primaryPass,
-                              Array<String>& flags);
+  void CreateOptimizerOptions(spv_optimizer_options& options, int primaryPass, Array<String>& flags);
   /// Helper to set extra flags on the options (requires low-level c-style
   /// work).
-  void SetOptimizerOptionsFlags(spv_optimizer_options& options,
-                                Array<String>& flags);
+  void SetOptimizerOptionsFlags(spv_optimizer_options& options, Array<String>& flags);
   /// Destroys the optizer options (including the extra flags).
   /// This could change if the optimizer ever gets proper c-api support (this is
   /// a custom implementation).
@@ -52,8 +49,7 @@ public:
 class SpirVOptimizerPass : public BaseSpirVOptimizerPass
 {
 public:
-  bool RunTranslationPass(ShaderTranslationPassResult& inputData,
-                          ShaderTranslationPassResult& outputData) override;
+  bool RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData) override;
 };
 
 /// Runs the spir-v validator tool over the given input data. The output data
@@ -64,8 +60,7 @@ class SpirVValidatorPass : public ZilchShaderIRTranslationPass
 public:
   SpirVValidatorPass();
 
-  bool RunTranslationPass(ShaderTranslationPassResult& inputData,
-                          ShaderTranslationPassResult& outputData) override;
+  bool RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData) override;
   String GetErrorLog() override;
 
   // The spirv target environment to run.
@@ -79,8 +74,7 @@ struct SpirVFileWriterPass : public ZilchShaderIRTranslationPass
 {
   SpirVFileWriterPass(StringParam targetDirectory);
 
-  bool RunTranslationPass(ShaderTranslationPassResult& inputData,
-                          ShaderTranslationPassResult& outputData) override;
+  bool RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData) override;
   String GetErrorLog() override;
 
   String mTargetDirectory;

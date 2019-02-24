@@ -52,8 +52,7 @@ void TextBlock::ReloadData(StringRange data)
   // reload data.
   ResourceEvent event;
   event.EventResource = this;
-  TextBlockManager::GetInstance()->DispatchEvent(Events::ResourceModified,
-                                                 &event);
+  TextBlockManager::GetInstance()->DispatchEvent(Events::ResourceModified, &event);
 }
 
 String TextBlock::GetFormat()
@@ -90,15 +89,13 @@ class TextBlockLoader : public ResourceLoader
 
 ImplementResourceManager(TextBlockManager, TextBlock);
 
-TextBlockManager::TextBlockManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+TextBlockManager::TextBlockManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   AddLoader("Text", new TextBlockLoader());
   DefaultResourceName = "DefaultTextBlock";
   mCanDuplicate = true;
   mCanAddFile = true;
-  mOpenFileFilters.PushBack(
-      FileDialogFilter("All Text Blocks", "*.txt;*.data"));
+  mOpenFileFilters.PushBack(FileDialogFilter("All Text Blocks", "*.txt;*.data"));
   mOpenFileFilters.PushBack(FileDialogFilter("*.txt"));
   mOpenFileFilters.PushBack(FileDialogFilter("*.data"));
   mCanReload = true;

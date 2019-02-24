@@ -12,8 +12,7 @@ void ZeroZilchExceptionCallback(ExceptionEvent* e)
 
   String shortMessage = exception->Message;
   String fullMessage = exception->GetFormattedMessage(MessageFormat::Python);
-  ZilchScriptManager::DispatchScriptError(
-      Events::UnhandledException, shortMessage, fullMessage, location);
+  ZilchScriptManager::DispatchScriptError(Events::UnhandledException, shortMessage, fullMessage, location);
 }
 
 void ZeroZilchFatalErrorCallback(FatalErrorEvent* e)
@@ -34,17 +33,15 @@ void ZeroZilchErrorCallback(Zilch::ErrorEvent* e)
   ZilchPluginSourceManager* manager = ZilchPluginSourceManager::GetInstance();
   if (manager->IsCompilingPlugins())
   {
-    e->ExactError =
-        BuildString(e->ExactError,
-                    "\nThis may be because we're currently compiling Zilch"
-                    " plugins (once finished, scripts will recompile)");
+    e->ExactError = BuildString(e->ExactError,
+                                "\nThis may be because we're currently compiling Zilch"
+                                " plugins (once finished, scripts will recompile)");
   }
 
   String shortMessage = e->ExactError;
   String fullMessage = e->GetFormattedMessage(MessageFormat::Python);
 
-  ZilchScriptManager::DispatchScriptError(
-      Events::SyntaxError, shortMessage, fullMessage, e->Location);
+  ZilchScriptManager::DispatchScriptError(Events::SyntaxError, shortMessage, fullMessage, e->Location);
 }
 
 void OnDebuggerPauseUpdate(DebuggerEvent* event)
@@ -111,13 +108,12 @@ void ZilchScript::GetLibraries(Array<LibraryRef>& libraries)
 
 // @TrevorS: Isn't this the same logic as AddDependencies on
 // ResourceLibrary/ZilchManager?
-void ZilchScript::GetLibrariesRecursive(Array<LibraryRef>& libraries,
-                                        ResourceLibrary* library)
+void ZilchScript::GetLibrariesRecursive(Array<LibraryRef>& libraries, ResourceLibrary* library)
 {
-  forRange(ResourceLibrary * dependency, library->Dependencies.All())
-      GetLibrariesRecursive(libraries, dependency);
+  forRange (ResourceLibrary* dependency, library->Dependencies.All())
+    GetLibrariesRecursive(libraries, dependency);
 
-  forRange(SwapLibrary & swapPlugin, library->mSwapPlugins.Values())
+  forRange (SwapLibrary& swapPlugin, library->mSwapPlugins.Values())
   {
     if (swapPlugin.mCurrentLibrary != nullptr)
       libraries.PushBack(swapPlugin.mCurrentLibrary);
@@ -162,8 +158,7 @@ ZilchScriptManager::ZilchScriptManager(BoundType* resourceType) :
 {
   mCategory = "Code";
   mCanAddFile = true;
-  mOpenFileFilters.PushBack(
-      FileDialogFilter("All Zilch Scripts", "*.zilchscript;*.z"));
+  mOpenFileFilters.PushBack(FileDialogFilter("All Zilch Scripts", "*.zilchscript;*.z"));
   mOpenFileFilters.PushBack(FileDialogFilter("*.zilchscript"));
   mOpenFileFilters.PushBack(FileDialogFilter("*.z"));
   // We want ZilchScript to be the first thing that shows up in the "Code"
@@ -172,35 +167,24 @@ ZilchScriptManager::ZilchScriptManager(BoundType* resourceType) :
   mNoFallbackNeeded = true;
   mCanCreateNew = true;
   mSearchable = true;
-  mExtension = FileExtensionManager::GetZilchScriptTypeEntry()
-                   ->GetDefaultExtensionNoDot();
+  mExtension = FileExtensionManager::GetZilchScriptTypeEntry()->GetDefaultExtensionNoDot();
   mCanReload = true;
 
   AddLoader("ZilchScript", new ZilchScriptLoader());
 
   // listen for when we should compile
-  Zilch::EventConnect(ExecutableState::CallingState,
-                      Zilch::Events::UnhandledException,
-                      ZeroZilchExceptionCallback);
-  Zilch::EventConnect(ExecutableState::CallingState,
-                      Zilch::Events::FatalError,
-                      ZeroZilchFatalErrorCallback);
+  Zilch::EventConnect(ExecutableState::CallingState, Zilch::Events::UnhandledException, ZeroZilchExceptionCallback);
+  Zilch::EventConnect(ExecutableState::CallingState, Zilch::Events::FatalError, ZeroZilchFatalErrorCallback);
 
-  ConnectThisTo(Z::gResources,
-                Events::ResourceLibraryConstructed,
-                OnResourceLibraryConstructed);
+  ConnectThisTo(Z::gResources, Events::ResourceLibraryConstructed, OnResourceLibraryConstructed);
 }
 
-void ZilchScriptManager::ValidateNewName(Status& status,
-                                         StringParam name,
-                                         BoundType* optionalType)
+void ZilchScriptManager::ValidateNewName(Status& status, StringParam name, BoundType* optionalType)
 {
   ZilchDocumentResource::ValidateNewScriptName(status, name);
 }
 
-void ZilchScriptManager::ValidateRawName(Status& status,
-                                         StringParam name,
-                                         BoundType* optionalType)
+void ZilchScriptManager::ValidateRawName(Status& status, StringParam name, BoundType* optionalType)
 {
   if (!optionalType || optionalType->IsA(ZilchTypeId(Component)))
   {
@@ -208,17 +192,14 @@ void ZilchScriptManager::ValidateRawName(Status& status,
     // might conflict with an actual member of Cog (name a component 'Destroy',
     // what is Owner.Destroy?) We must do this for Space and GameSession also
     // (technically GameSession and Space doubly hit Cog, but that's fine).
-    bool hasMember = ZilchTypeId(Cog)->GetMember(name) ||
-                     ZilchTypeId(GameSession)->GetMember(name) ||
-                     ZilchTypeId(Space)->GetMember(name) ||
-                     ZilchTypeId(CogPath)->GetMember(name);
+    bool hasMember = ZilchTypeId(Cog)->GetMember(name) || ZilchTypeId(GameSession)->GetMember(name) ||
+                     ZilchTypeId(Space)->GetMember(name) || ZilchTypeId(CogPath)->GetMember(name);
 
     if (hasMember)
     {
-      String message = String::Format(
-          "Components cannot have the same name as a property/method on "
-          "Cog/Space/GameSession (this.Owner.%s would conflict)",
-          name.c_str());
+      String message = String::Format("Components cannot have the same name as a property/method on "
+                                      "Cog/Space/GameSession (this.Owner.%s would conflict)",
+                                      name.c_str());
       status.SetFailed(message);
       return;
     }
@@ -229,12 +210,9 @@ void ZilchScriptManager::ValidateRawName(Status& status,
 
 String ZilchScriptManager::GetTemplateSourceFile(ResourceAdd& resourceAdd)
 {
-  ZilchScript* scriptTemplate =
-      Type::DynamicCast<ZilchScript*, Resource*>(resourceAdd.Template);
+  ZilchScript* scriptTemplate = Type::DynamicCast<ZilchScript*, Resource*>(resourceAdd.Template);
 
-  ReturnIf(scriptTemplate == nullptr,
-           String(),
-           "Invalid resource given to create template.");
+  ReturnIf(scriptTemplate == nullptr, String(), "Invalid resource given to create template.");
 
   String templateFile = BuildString("TemplateZilch", scriptTemplate->Name);
 
@@ -258,8 +236,7 @@ String ZilchScriptManager::GetTemplateSourceFile(ResourceAdd& resourceAdd)
   String fileData = Replace(replacements, scriptTemplate->mText);
 
   // Get template data off of resource
-  String sourceFile =
-      FilePath::Combine(GetTemporaryDirectory(), resourceAdd.FileName);
+  String sourceFile = FilePath::Combine(GetTemporaryDirectory(), resourceAdd.FileName);
   WriteStringRangeToFile(sourceFile, fileData);
   return sourceFile;
 }
@@ -267,9 +244,7 @@ String ZilchScriptManager::GetTemplateSourceFile(ResourceAdd& resourceAdd)
 void ZilchScriptManager::OnResourceLibraryConstructed(ObjectEvent* e)
 {
   ResourceLibrary* library = (ResourceLibrary*)e->Source;
-  EventConnect(&library->mScriptProject,
-               Zilch::Events::CompilationError,
-               ZeroZilchErrorCallback);
+  EventConnect(&library->mScriptProject, Zilch::Events::CompilationError, ZeroZilchErrorCallback);
 }
 
 void ZilchScriptManager::DispatchScriptError(StringParam eventId,
@@ -306,8 +281,7 @@ void ZilchScriptManager::DispatchZeroZilchError(const CodeLocation& location,
                                                 Project* buildingProject)
 {
   String shortMessage = BuildString("Zero Error: ", message);
-  String fullMessage = location.GetFormattedStringWithMessage(
-      MessageFormat::Python, shortMessage);
+  String fullMessage = location.GetFormattedStringWithMessage(MessageFormat::Python, shortMessage);
   buildingProject->Raise(location, ErrorCode::GenericError, message.c_str());
 }
 
@@ -332,13 +306,12 @@ void ZilchScriptManager::OnMemoryLeak(MemoryLeakEvent* event)
     isTypeNative = type->IsTypeOrBaseNative();
   }
 
-  String message =
-      String::Format("* A memory leak was detected with the type %s. Make sure "
-                     "to avoid cycles "
-                     "of references, or explicitly invoke delete (typically "
-                     "within a destructor).\n* Memory Dump:\n%s",
-                     typeName.c_str(),
-                     dump.c_str());
+  String message = String::Format("* A memory leak was detected with the type %s. Make sure "
+                                  "to avoid cycles "
+                                  "of references, or explicitly invoke delete (typically "
+                                  "within a destructor).\n* Memory Dump:\n%s",
+                                  typeName.c_str(),
+                                  dump.c_str());
 
   WarnIf(isTypeNative, "%s", message.c_str());
   ZPrint("%s", message.c_str());

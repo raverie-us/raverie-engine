@@ -80,8 +80,7 @@ public:
   void Zoom(Widget* widget) override{};
   void Show(Widget* widget) override;
   void WidgetDestroyed(Widget* widget) override;
-  WindowBorderArea::Enum GetWindowBorderArea(Widget* widget,
-                                             DockMode::Enum direction) override;
+  WindowBorderArea::Enum GetWindowBorderArea(Widget* widget, DockMode::Enum direction) override;
 };
 
 } // namespace Zero

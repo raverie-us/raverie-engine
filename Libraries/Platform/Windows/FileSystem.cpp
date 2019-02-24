@@ -8,8 +8,7 @@ const char cDirectorySeparatorCstr[] = "\\";
 bool cFileSystemCaseSensitive = false;
 
 // There is no initialization or virtual file system on this platform
-FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback,
-                                             void* userData)
+FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback, void* userData)
 {
 }
 
@@ -17,9 +16,7 @@ FileSystemInitializer::~FileSystemInitializer()
 {
 }
 
-void AddVirtualFileSystemEntry(StringParam absolutePath,
-                               DataBlock* stealData,
-                               TimeType modifiedTime)
+void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, TimeType modifiedTime)
 {
 }
 
@@ -92,8 +89,7 @@ String GetTemporaryDirectory()
 bool FileExists(StringParam filePath)
 {
   DWORD attributes = GetFileAttributes(Widen(filePath).c_str());
-  return (attributes != INVALID_FILE_ATTRIBUTES) &&
-         (attributes & FILE_ATTRIBUTE_DIRECTORY) == 0;
+  return (attributes != INVALID_FILE_ATTRIBUTES) && (attributes & FILE_ATTRIBUTE_DIRECTORY) == 0;
 }
 
 bool FileWritable(StringParam filePath)
@@ -168,17 +164,14 @@ void CreateDirectoryAndParents(StringParam directory)
 bool CopyFileInternal(StringParam dest, StringParam source)
 {
   BOOL success = ::CopyFileW(Widen(source).c_str(), Widen(dest).c_str(), FALSE);
-  VerifyWin(
-      success, "Failed to copy file. %s to %s.", source.c_str(), dest.c_str());
+  VerifyWin(success, "Failed to copy file. %s to %s.", source.c_str(), dest.c_str());
   return success != 0;
 }
 
 bool MoveFileInternal(StringParam dest, StringParam source)
 {
-  BOOL success = ::MoveFileEx(
-      Widen(source).c_str(), Widen(dest).c_str(), MOVEFILE_REPLACE_EXISTING);
-  VerifyWin(
-      success, "Failed to move file. %s to %s.", source.c_str(), dest.c_str());
+  BOOL success = ::MoveFileEx(Widen(source).c_str(), Widen(dest).c_str(), MOVEFILE_REPLACE_EXISTING);
+  VerifyWin(success, "Failed to move file. %s to %s.", source.c_str(), dest.c_str());
   return success != 0;
 }
 
@@ -223,8 +216,7 @@ TimeType SystemTimeToTimeType(SYSTEMTIME& systemTime)
 TimeType GetFileModifiedTime(StringParam filename)
 {
   WIN32_FILE_ATTRIBUTE_DATA fileInfo;
-  BOOL success = GetFileAttributesEx(
-      Widen(filename).c_str(), GetFileExInfoStandard, (void*)&fileInfo);
+  BOOL success = GetFileAttributesEx(Widen(filename).c_str(), GetFileExInfoStandard, (void*)&fileInfo);
   CheckWin(success, "Failed to get GetFileAttributesEx.");
 
   // Convert to system time so the time can be parsed
@@ -239,13 +231,7 @@ bool SetFileToCurrentTime(StringParam filename)
 {
   // Need a file handle to do file time operations
   StackHandle sourceFile;
-  sourceFile = CreateFile(Widen(filename).c_str(),
-                          GENERIC_WRITE,
-                          FILE_SHARE_READ,
-                          NULL,
-                          OPEN_EXISTING,
-                          0,
-                          NULL);
+  sourceFile = CreateFile(Widen(filename).c_str(), GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 
   FILETIME fileTime;
   SYSTEMTIME systemTime;
@@ -258,8 +244,7 @@ bool SetFileToCurrentTime(StringParam filename)
 
   // Sets last-write time of the file
   // to the converted current system time
-  result =
-      SetFileTime(sourceFile, (LPFILETIME)NULL, (LPFILETIME)NULL, &fileTime);
+  result = SetFileTime(sourceFile, (LPFILETIME)NULL, (LPFILETIME)NULL, &fileTime);
 
   return result != 0;
 }
@@ -267,13 +252,11 @@ bool SetFileToCurrentTime(StringParam filename)
 u64 GetFileSize(StringParam fileName)
 {
   WIN32_FILE_ATTRIBUTE_DATA fileInfo;
-  BOOL success = GetFileAttributesEx(
-      Widen(fileName).c_str(), GetFileExInfoStandard, (void*)&fileInfo);
+  BOOL success = GetFileAttributesEx(Widen(fileName).c_str(), GetFileExInfoStandard, (void*)&fileInfo);
   CheckWin(success, "Failed to get GetFileAttributesEx.");
   if (!success)
     return 0;
-  return ((u64)fileInfo.nFileSizeHigh * ((u64)MAXDWORD + (u64)1)) +
-         (u64)fileInfo.nFileSizeLow;
+  return ((u64)fileInfo.nFileSizeHigh * ((u64)MAXDWORD + (u64)1)) + (u64)fileInfo.nFileSizeLow;
 }
 
 struct FileRangePrivateData
@@ -380,13 +363,8 @@ String UniqueFileId(StringParam fullpath)
 #ifdef FILE_NAME_NORMALIZED
   StackHandle fileHandle;
 
-  fileHandle = CreateFile(Widen(fullpath).c_str(),
-                          GENERIC_READ,
-                          FILE_SHARE_READ,
-                          NULL,
-                          OPEN_EXISTING,
-                          FILE_FLAG_BACKUP_SEMANTICS,
-                          NULL);
+  fileHandle = CreateFile(
+      Widen(fullpath).c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
 
   if (fileHandle == INVALID_HANDLE_VALUE)
   {
@@ -396,8 +374,7 @@ String UniqueFileId(StringParam fullpath)
   }
 
   wchar_t fixedFullPath[MAX_PATH + 1] = {0};
-  DWORD size = GetFinalPathNameByHandle(
-      fileHandle, fixedFullPath, MAX_PATH, FILE_NAME_NORMALIZED);
+  DWORD size = GetFinalPathNameByHandle(fileHandle, fixedFullPath, MAX_PATH, FILE_NAME_NORMALIZED);
 
   if (size == 0)
     return fullpath;

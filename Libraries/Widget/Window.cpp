@@ -248,10 +248,7 @@ void TabWidget::OnMouseHover(MouseEvent* event)
 
     ToolTipPlacement placement;
     placement.SetScreenRect(GetScreenRect());
-    placement.SetPriority(IndicatorSide::Top,
-                          IndicatorSide::Left,
-                          IndicatorSide::Right,
-                          IndicatorSide::Bottom);
+    placement.SetPriority(IndicatorSide::Top, IndicatorSide::Left, IndicatorSide::Right, IndicatorSide::Bottom);
     toolTip->SetArrowTipTranslation(placement);
     toolTip->UpdateTransform();
     mToolTip = toolTip;
@@ -334,9 +331,7 @@ ZilchDefineType(TabArea, builder, type)
 {
 }
 
-TabArea::TabArea(Composite* parent, Window* window) :
-    Composite(parent, AttachType::Direct),
-    mCodaTab(nullptr)
+TabArea::TabArea(Composite* parent, Window* window) : Composite(parent, AttachType::Direct), mCodaTab(nullptr)
 {
   static const String className = "Tab";
   mBackground = new Spacer(this);
@@ -374,8 +369,7 @@ void TabArea::RequestCloseTab(TabWidget* tab)
     // ownedWidget->DispatchDown(Events::QueryModifiedSave, &queryEvent);
     if (queryEvent.Modified)
     {
-      ConfirmationOfDestructiveAction(
-          tab, queryEvent.Title, queryEvent.Message);
+      ConfirmationOfDestructiveAction(tab, queryEvent.Title, queryEvent.Message);
     }
     else
     {
@@ -412,13 +406,13 @@ void TabArea::CloseAllOtherTabs(TabWidget* safeTab)
 {
   Array<TabWidget*> closingTabs;
 
-  forRange(TabWidget * tab, mTabs.All())
+  forRange (TabWidget* tab, mTabs.All())
   {
     if (tab->UnLocked() && tab != safeTab)
       closingTabs.PushBack(tab);
   }
 
-  forRange(TabWidget * tab, closingTabs.All())
+  forRange (TabWidget* tab, closingTabs.All())
   {
     CloseTab(tab);
   }
@@ -434,7 +428,7 @@ void TabArea::OnRightMouseDown(MouseEvent* event)
 
 TabWidget* TabArea::TabFromWidget(Widget* widget)
 {
-  forRange(TabWidget * tab, mTabs.All())
+  forRange (TabWidget* tab, mTabs.All())
   {
     if (tab->GetOwnedWidget() == widget)
       return tab;
@@ -450,9 +444,7 @@ Widget* TabArea::GetActiveTabWidget()
     return nullptr;
 }
 
-void TabArea::ConfirmationOfDestructiveAction(TabWidget* tab,
-                                              StringParam title,
-                                              StringParam message)
+void TabArea::ConfirmationOfDestructiveAction(TabWidget* tab, StringParam title, StringParam message)
 {
   Array<String> buttons;
   buttons.Append(String("Save and Close"));
@@ -507,7 +499,7 @@ void TabArea::CloseTabWith(Widget* widget)
 
 void TabArea::CloseTabs()
 {
-  forRange(TabWidget * tab, mTabs.All())
+  forRange (TabWidget* tab, mTabs.All())
   {
     if (tab->GetOwnedWidget())
     {
@@ -523,7 +515,7 @@ void TabArea::CloseTabs()
 
 void TabArea::LockTabs()
 {
-  forRange(TabWidget * tab, mTabs.All())
+  forRange (TabWidget* tab, mTabs.All())
   {
     tab->LockTab();
   }
@@ -757,7 +749,7 @@ void TabArea::OnTabFind(WindowTabEvent* event)
   if (event->TabWidgetFound != nullptr)
     return;
 
-  forRange(TabWidget * tab, mTabs.All())
+  forRange (TabWidget* tab, mTabs.All())
   {
     Widget* ownedWidget = tab->GetOwnedWidget();
     if (ownedWidget == nullptr)
@@ -765,8 +757,7 @@ void TabArea::OnTabFind(WindowTabEvent* event)
 
     ownedWidget->DispatchEvent(Events::TabFind, event);
 
-    bool nameMatch =
-        !event->Name.Empty() && ownedWidget->GetName() == event->Name;
+    bool nameMatch = !event->Name.Empty() && ownedWidget->GetName() == event->Name;
     if (nameMatch)
     {
       event->TabWidgetFound = ownedWidget;
@@ -814,8 +805,7 @@ void TabArea::ChangeSelectedTab(TabWidget* toSelect)
   toSelect->MarkAsNeedsUpdate();
 
   // Set the highlight of the window for this tab
-  mParentWindow->SetHighlightBorder(toSelect->mHighlight,
-                                    toSelect->mHighlightColor);
+  mParentWindow->SetHighlightBorder(toSelect->mHighlight, toSelect->mHighlightColor);
 }
 
 const float cMinSizeSize = Pixels(24);
@@ -947,9 +937,7 @@ void Window::SetDockMode(DockMode::Enum newDockMode)
 Vec2 Window::GetMinSize()
 {
   Thickness totalPadding = GetTotalWindowPadding();
-  return Math::Max(
-      mMinSize,
-      ExpandSizeByThickness(totalPadding, mClientWidget->GetMinSize()));
+  return Math::Max(mMinSize, ExpandSizeByThickness(totalPadding, mClientWidget->GetMinSize()));
 }
 
 void Window::SizeToContents()
@@ -1121,8 +1109,7 @@ void Window::UpdateTransform()
     mTabArea->SetTranslation(Vec3(currentRect.TopLeft()));
     mTabArea->SetSize(tabAreaSize);
 
-    mTitleBackground->SetTranslation(Vec3(currentRect.TopLeft()) +
-                                     Pixels(1, 0, 0));
+    mTitleBackground->SetTranslation(Vec3(currentRect.TopLeft()) + Pixels(1, 0, 0));
     mTitleBackground->SetSize(titleBarSize - Vec2(2, 0));
 
     if (tabbedWindow)
@@ -1132,14 +1119,12 @@ void Window::UpdateTransform()
 
     Vec2 titleTextOffset = Vec2(3, 3);
 
-    mTitleText->SetTranslation(
-        Vec3(borderThickness.TopLeft() + titleTextOffset));
+    mTitleText->SetTranslation(Vec3(borderThickness.TopLeft() + titleTextOffset));
     mTitleText->SetSize(tabAreaSize - titleTextOffset);
     mTitleMover->SetSize(Vec2(mSize.x, borderThickness.Top));
 
     Vec2 closeButtonSize = mCloseButton->GetSize();
-    Vec3 closeButtonPos =
-        Vec3(mSize.x - closeButtonSize.x - Pixels(7), Pixels(7), 0);
+    Vec3 closeButtonPos = Vec3(mSize.x - closeButtonSize.x - Pixels(7), Pixels(7), 0);
     mCloseButton->SetTranslation(SnapToPixels(closeButtonPos));
 
     // Set up drop shadow

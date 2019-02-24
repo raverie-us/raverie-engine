@@ -42,7 +42,7 @@ void FileDialog(FileDialogInfo& config, bool opening)
   fileDialog.lpstrFilter = fileFilter;
 
   wchar_t* fileFilterPosition = fileFilter;
-  forRange(FileDialogFilter & fileFilter, config.mSearchFilters.All())
+  forRange (FileDialogFilter& fileFilter, config.mSearchFilters.All())
   {
     WString description = Widen(fileFilter.mDescription);
     WString filter = Widen(fileFilter.mFilter);
@@ -97,8 +97,7 @@ void FileDialog(FileDialogInfo& config, bool opening)
   {
     // If nFileExtension is zero, there is multiple files
     // from a multiselect
-    if (fileDialog.nFileExtension == 0 &&
-        config.Flags & FileDialogFlags::MultiSelect)
+    if (fileDialog.nFileExtension == 0 && config.Flags & FileDialogFlags::MultiSelect)
     {
       // lpstrFile will be a multi null terminated string
       // beginning with the directory name then a list of
@@ -120,8 +119,7 @@ void FileDialog(FileDialogInfo& config, bool opening)
         else
         {
           // Append a full file path Append the file name to the path
-          config.mFiles.PushBack(
-              FilePath::Combine(directoryName, Narrow(currentFile)));
+          config.mFiles.PushBack(FilePath::Combine(directoryName, Narrow(currentFile)));
         }
 
         // Find null terminator
@@ -165,19 +163,12 @@ void ConvertImage(HDC hdc, HBITMAP bitmapHandle, Image* image)
   bi.biClrImportant = 0;
 
   // Row size is padded to 32 bits
-  DWORD dwBmpSize =
-      ((bmpScreen.bmWidth * bi.biBitCount + 31) / 32) * 4 * bmpScreen.bmHeight;
+  DWORD dwBmpSize = ((bmpScreen.bmWidth * bi.biBitCount + 31) / 32) * 4 * bmpScreen.bmHeight;
   byte* rawBitmapData = (byte*)zAllocate(dwBmpSize);
 
   // Gets the "bits" from the bitmap and copies them into a buffer
   // which is pointed to by lpbitmap.
-  GetDIBits(hdc,
-            bitmapHandle,
-            0,
-            (UINT)bmpScreen.bmHeight,
-            rawBitmapData,
-            (BITMAPINFO*)&bi,
-            DIB_RGB_COLORS);
+  GetDIBits(hdc, bitmapHandle, 0, (UINT)bmpScreen.bmHeight, rawBitmapData, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 
   // Allocate the image and copy over pixels
   image->Allocate(bmpScreen.bmWidth, bmpScreen.bmHeight);
@@ -186,8 +177,7 @@ void ConvertImage(HDC hdc, HBITMAP bitmapHandle, Image* image)
   {
     for (int x = 0; x < bmpScreen.bmWidth; ++x)
     {
-      byte* data = rawBitmapData +
-                   bmpScreen.bmWidth * 4 * (bmpScreen.bmHeight - y - 1) + x * 4;
+      byte* data = rawBitmapData + bmpScreen.bmWidth * 4 * (bmpScreen.bmHeight - y - 1) + x * 4;
       image->GetPixel(x, y) = ByteColorRGBA(data[2], data[1], data[0], 255);
     }
   }
@@ -210,15 +200,7 @@ bool GetWindowImage(HWND windowHandle, Image* image)
   HGDIOBJ old = SelectObject(hdcDest, hBitmap);
 
   // Bit block transfer into our compatible memory DC.
-  if (!BitBlt(hdcDest,
-              0,
-              0,
-              width,
-              height,
-              hdcScreen,
-              windowRect.left,
-              windowRect.top,
-              SRCCOPY))
+  if (!BitBlt(hdcDest, 0, 0, width, height, hdcScreen, windowRect.left, windowRect.top, SRCCOPY))
   {
     return false;
   }
@@ -350,8 +332,7 @@ DWORD Win32StyleFromWindowStyle(WindowStyleFlags::Enum styleFlags)
   // WS_SYSMENU shows buttons on titlebar, don't use when in client only.
   // The buttons interfere with input on some drivers, even when border is
   // disabled.
-  if (styleFlags & WindowStyleFlags::Close &&
-      !(styleFlags & WindowStyleFlags::ClientOnly))
+  if (styleFlags & WindowStyleFlags::Close && !(styleFlags & WindowStyleFlags::ClientOnly))
     win32Style |= WS_SYSMENU | WS_MINIMIZEBOX;
   // Removing the caption flag causes a border flicker sometimes when the
   // application gains focus. However, not removing it causes an incorrect
@@ -427,8 +408,7 @@ MONITORINFO GetActualMonitorInfo(HMONITOR monitor)
   // hidden task bar and remove a pixel from the size,
   // otherwise the taskbar is not accessable because windows does not
   // account for its own hidden taskbar in the working desktop size.
-  if (workRect.left == monitorRect.left && workRect.top == monitorRect.top &&
-      workRect.right == monitorRect.right &&
+  if (workRect.left == monitorRect.left && workRect.top == monitorRect.top && workRect.right == monitorRect.right &&
       workRect.bottom == monitorRect.bottom)
   {
     if (IsTaskbarHidden(ABE_BOTTOM, monitorRect))
@@ -455,8 +435,8 @@ Keys::Enum VKToKey(int vk)
     switch (vk)
     {
 
-#define ProcessInput(VKValue, ZeroValue)                                       \
-  case VKValue:                                                                \
+#define ProcessInput(VKValue, ZeroValue)                                                                               \
+  case VKValue:                                                                                                        \
     return ZeroValue;
 #include "Keys.inl"
 #undef ProcessInput
@@ -475,8 +455,8 @@ int KeyToVK(Keys::Enum key)
   {
     switch (key)
     {
-#define ProcessInput(VKValue, ZeroValue)                                       \
-  case ZeroValue:                                                              \
+#define ProcessInput(VKValue, ZeroValue)                                                                               \
+  case ZeroValue:                                                                                                      \
     return VKValue;
 #include "Keys.inl"
 #undef ProcessInput
@@ -489,8 +469,8 @@ MouseButtons::Enum VKToMouseButton(int vk)
 {
   switch (vk)
   {
-#define ProcessInput(VKValue, ZeroValue)                                       \
-  case VKValue:                                                                \
+#define ProcessInput(VKValue, ZeroValue)                                                                               \
+  case VKValue:                                                                                                        \
     return ZeroValue;
 #include "MouseButtons.inl"
 #undef ProcessInput
@@ -502,8 +482,8 @@ int MouseButtonToVK(MouseButtons::Enum button)
 {
   switch (button)
   {
-#define ProcessInput(VKValue, ZeroValue)                                       \
-  case ZeroValue:                                                              \
+#define ProcessInput(VKValue, ZeroValue)                                                                               \
+  case ZeroValue:                                                                                                      \
     return VKValue;
 #include "MouseButtons.inl"
 #undef ProcessInput
@@ -530,12 +510,10 @@ String GetJoystickName(uint venderId, uint productId)
 
   /// Open OEM Key from ...MediaProperties
   HKEY hRoot = HKEY_CURRENT_USER;
-  String keyPath =
-      String::Format("%s\\%s", REGSTR_PATH_JOYOEM, vidPidName.c_str());
+  String keyPath = String::Format("%s\\%s", REGSTR_PATH_JOYOEM, vidPidName.c_str());
 
   HKEY hKey;
-  LONG result =
-      RegOpenKeyEx(hRoot, Widen(keyPath).c_str(), 0, KEY_QUERY_VALUE, &hKey);
+  LONG result = RegOpenKeyEx(hRoot, Widen(keyPath).c_str(), 0, KEY_QUERY_VALUE, &hKey);
 
   if (result != ERROR_SUCCESS)
     return vidPidName;
@@ -544,8 +522,7 @@ String GetJoystickName(uint venderId, uint productId)
   char nameBuffer[256] = {0};
   DWORD length = sizeof(nameBuffer);
 
-  result = RegQueryValueEx(
-      hKey, REGSTR_VAL_JOYOEMNAME, 0, 0, (LPBYTE)nameBuffer, &length);
+  result = RegQueryValueEx(hKey, REGSTR_VAL_JOYOEMNAME, 0, 0, (LPBYTE)nameBuffer, &length);
   RegCloseKey(hKey);
 
   if (result != ERROR_SUCCESS)
@@ -556,53 +533,38 @@ String GetJoystickName(uint venderId, uint productId)
 
 #define MAX_BUTTONS 128
 
-void ScanDevice(Array<PlatformInputDevice>& devices,
-                HANDLE deviceHandle,
-                RID_DEVICE_INFO& ridDeviceInfo)
+void ScanDevice(Array<PlatformInputDevice>& devices, HANDLE deviceHandle, RID_DEVICE_INFO& ridDeviceInfo)
 {
   UINT deviceInfoSize = ridDeviceInfo.cbSize;
-  ReturnIf(GetRawInputDeviceInfo(
-               deviceHandle, RIDI_DEVICEINFO, &ridDeviceInfo, &deviceInfoSize) <
-               0,
+  ReturnIf(GetRawInputDeviceInfo(deviceHandle, RIDI_DEVICEINFO, &ridDeviceInfo, &deviceInfoSize) < 0,
            ,
            "Unable to read device information");
 
   // Only map Raw Input devices that are RIM_TYPEHID (not mice or keyboards)
-  if (ridDeviceInfo.dwType == RIM_TYPEHID &&
-      ridDeviceInfo.hid.usUsagePage == UsbUsagePage::GenericDesktop)
+  if (ridDeviceInfo.dwType == RIM_TYPEHID && ridDeviceInfo.hid.usUsagePage == UsbUsagePage::GenericDesktop)
   {
     // Get a nice name
-    String deviceName = GetJoystickName(ridDeviceInfo.hid.dwVendorId,
-                                        ridDeviceInfo.hid.dwProductId);
+    String deviceName = GetJoystickName(ridDeviceInfo.hid.dwVendorId, ridDeviceInfo.hid.dwProductId);
 
     UINT bufferSize = 0;
-    ReturnIf(GetRawInputDeviceInfo(
-                 deviceHandle, RIDI_PREPARSEDDATA, NULL, &bufferSize) != 0,
+    ReturnIf(GetRawInputDeviceInfo(deviceHandle, RIDI_PREPARSEDDATA, NULL, &bufferSize) != 0,
              ,
              "Unable to get device info length");
 
-    PHIDP_PREPARSED_DATA preparsedData =
-        (PHIDP_PREPARSED_DATA)alloca(bufferSize);
+    PHIDP_PREPARSED_DATA preparsedData = (PHIDP_PREPARSED_DATA)alloca(bufferSize);
     ZeroMemory(preparsedData, bufferSize);
 
-    ReturnIf((int)GetRawInputDeviceInfo(
-                 deviceHandle, RIDI_PREPARSEDDATA, preparsedData, &bufferSize) <
-                 0,
+    ReturnIf((int)GetRawInputDeviceInfo(deviceHandle, RIDI_PREPARSEDDATA, preparsedData, &bufferSize) < 0,
              ,
              "Unable to get device info");
 
     HIDP_CAPS caps;
-    ReturnIf(HidP_GetCaps(preparsedData, &caps) != HIDP_STATUS_SUCCESS,
-             ,
-             "Unable to get device capabilities");
+    ReturnIf(HidP_GetCaps(preparsedData, &caps) != HIDP_STATUS_SUCCESS, , "Unable to get device capabilities");
 
-    HIDP_BUTTON_CAPS* buttonCaps = (PHIDP_BUTTON_CAPS)alloca(
-        sizeof(HIDP_BUTTON_CAPS) * caps.NumberInputButtonCaps);
+    HIDP_BUTTON_CAPS* buttonCaps = (PHIDP_BUTTON_CAPS)alloca(sizeof(HIDP_BUTTON_CAPS) * caps.NumberInputButtonCaps);
 
     USHORT capsLength = caps.NumberInputButtonCaps;
-    ReturnIf(HidP_GetButtonCaps(
-                 HidP_Input, buttonCaps, &capsLength, preparsedData) !=
-                 HIDP_STATUS_SUCCESS,
+    ReturnIf(HidP_GetButtonCaps(HidP_Input, buttonCaps, &capsLength, preparsedData) != HIDP_STATUS_SUCCESS,
              ,
              "Unable to get button capabilities");
 
@@ -617,8 +579,7 @@ void ScanDevice(Array<PlatformInputDevice>& devices,
     for (uint i = 0; i < caps.NumberInputButtonCaps; i++)
     {
       auto& buttonCap = buttonCaps[i];
-      uint buttonCountInRange =
-          buttonCap.Range.UsageMax - buttonCap.Range.UsageMin + 1;
+      uint buttonCountInRange = buttonCap.Range.UsageMax - buttonCap.Range.UsageMin + 1;
 
       for (uint j = 0; j < buttonCountInRange; ++j)
       {
@@ -633,12 +594,9 @@ void ScanDevice(Array<PlatformInputDevice>& devices,
     // Value caps
     if (caps.NumberInputValueCaps != 0)
     {
-      HIDP_VALUE_CAPS* valueCaps = (PHIDP_VALUE_CAPS)alloca(
-          sizeof(HIDP_VALUE_CAPS) * caps.NumberInputValueCaps);
+      HIDP_VALUE_CAPS* valueCaps = (PHIDP_VALUE_CAPS)alloca(sizeof(HIDP_VALUE_CAPS) * caps.NumberInputValueCaps);
       capsLength = caps.NumberInputValueCaps;
-      ReturnIf(HidP_GetValueCaps(
-                   HidP_Input, valueCaps, &capsLength, preparsedData) !=
-                   HIDP_STATUS_SUCCESS,
+      ReturnIf(HidP_GetValueCaps(HidP_Input, valueCaps, &capsLength, preparsedData) != HIDP_STATUS_SUCCESS,
                ,
                "Unable to get value capabilities");
 
@@ -703,18 +661,13 @@ void RawInputMessage(ShellWindow* window, WPARAM wParam, LPARAM lParam)
   // Get the raw input buffer size by passing NULL
   // for the buffer
   UINT bufferSize = 0;
-  GetRawInputData(
-      (HRAWINPUT)lParam, RID_INPUT, NULL, &bufferSize, sizeof(RAWINPUTHEADER));
+  GetRawInputData((HRAWINPUT)lParam, RID_INPUT, NULL, &bufferSize, sizeof(RAWINPUTHEADER));
 
   // Allocate a local buffer for the data
   RAWINPUT* rawInput = (RAWINPUT*)alloca(bufferSize);
 
   // Get the raw input data
-  GetRawInputData((HRAWINPUT)lParam,
-                  RID_INPUT,
-                  rawInput,
-                  &bufferSize,
-                  sizeof(RAWINPUTHEADER));
+  GetRawInputData((HRAWINPUT)lParam, RID_INPUT, rawInput, &bufferSize, sizeof(RAWINPUTHEADER));
 
   if (rawInput->header.dwType == RIM_TYPEMOUSE)
   {
@@ -731,7 +684,7 @@ void RawInputMessage(ShellWindow* window, WPARAM wParam, LPARAM lParam)
     {
       HANDLE deviceHandle = rawInput->header.hDevice;
 
-      forRange(PlatformInputDevice & inputDevice, window->mShell->mInputDevices)
+      forRange (PlatformInputDevice& inputDevice, window->mShell->mInputDevices)
       {
         if (inputDevice.mDeviceHandle != deviceHandle)
           continue;
@@ -740,31 +693,22 @@ void RawInputMessage(ShellWindow* window, WPARAM wParam, LPARAM lParam)
         uint buttons = 0;
 
         UINT bufferSize;
-        if (GetRawInputDeviceInfo(
-                deviceHandle, RIDI_PREPARSEDDATA, NULL, &bufferSize) == 0)
+        if (GetRawInputDeviceInfo(deviceHandle, RIDI_PREPARSEDDATA, NULL, &bufferSize) == 0)
         {
-          PHIDP_PREPARSED_DATA pPreparsedData =
-              (PHIDP_PREPARSED_DATA)alloca(bufferSize);
+          PHIDP_PREPARSED_DATA pPreparsedData = (PHIDP_PREPARSED_DATA)alloca(bufferSize);
 
-          ReturnIf((int)GetRawInputDeviceInfo(deviceHandle,
-                                              RIDI_PREPARSEDDATA,
-                                              pPreparsedData,
-                                              &bufferSize) < 0,
+          ReturnIf((int)GetRawInputDeviceInfo(deviceHandle, RIDI_PREPARSEDDATA, pPreparsedData, &bufferSize) < 0,
                    ,
                    "Unable to get device info");
 
           HIDP_CAPS Caps;
-          ReturnIf(HidP_GetCaps(pPreparsedData, &Caps) != HIDP_STATUS_SUCCESS,
-                   ,
-                   "Unable to get device capabilities");
+          ReturnIf(HidP_GetCaps(pPreparsedData, &Caps) != HIDP_STATUS_SUCCESS, , "Unable to get device capabilities");
 
-          HIDP_BUTTON_CAPS* pButtonCaps = (PHIDP_BUTTON_CAPS)alloca(
-              sizeof(HIDP_BUTTON_CAPS) * Caps.NumberInputButtonCaps);
+          HIDP_BUTTON_CAPS* pButtonCaps =
+              (PHIDP_BUTTON_CAPS)alloca(sizeof(HIDP_BUTTON_CAPS) * Caps.NumberInputButtonCaps);
 
           USHORT capsLength = Caps.NumberInputButtonCaps;
-          ReturnIf(HidP_GetButtonCaps(
-                       HidP_Input, pButtonCaps, &capsLength, pPreparsedData) !=
-                       HIDP_STATUS_SUCCESS,
+          ReturnIf(HidP_GetButtonCaps(HidP_Input, pButtonCaps, &capsLength, pPreparsedData) != HIDP_STATUS_SUCCESS,
                    ,
                    "Unable to get button capabilities");
 
@@ -775,17 +719,13 @@ void RawInputMessage(ShellWindow* window, WPARAM wParam, LPARAM lParam)
           for (uint i = 0; i < Caps.NumberInputButtonCaps; i++)
           {
             auto& buttonCaps = pButtonCaps[i];
-            numberOfButtons +=
-                buttonCaps.Range.UsageMax - buttonCaps.Range.UsageMin + 1;
+            numberOfButtons += buttonCaps.Range.UsageMax - buttonCaps.Range.UsageMin + 1;
           }
 
           // Value caps
-          HIDP_VALUE_CAPS* pValueCaps = (PHIDP_VALUE_CAPS)alloca(
-              sizeof(HIDP_VALUE_CAPS) * Caps.NumberInputValueCaps);
+          HIDP_VALUE_CAPS* pValueCaps = (PHIDP_VALUE_CAPS)alloca(sizeof(HIDP_VALUE_CAPS) * Caps.NumberInputValueCaps);
           capsLength = Caps.NumberInputValueCaps;
-          ReturnIf(HidP_GetValueCaps(
-                       HidP_Input, pValueCaps, &capsLength, pPreparsedData) !=
-                       HIDP_STATUS_SUCCESS,
+          ReturnIf(HidP_GetValueCaps(HidP_Input, pValueCaps, &capsLength, pPreparsedData) != HIDP_STATUS_SUCCESS,
                    ,
                    "Unable to get value capabilities");
 
@@ -799,8 +739,7 @@ void RawInputMessage(ShellWindow* window, WPARAM wParam, LPARAM lParam)
                                   &usageLength,
                                   pPreparsedData,
                                   (PCHAR)rawInput->data.hid.bRawData,
-                                  rawInput->data.hid.dwSizeHid) !=
-                       HIDP_STATUS_SUCCESS,
+                                  rawInput->data.hid.dwSizeHid) != HIDP_STATUS_SUCCESS,
                    ,
                    "Unable to get input usages");
 
@@ -835,8 +774,7 @@ void RawInputMessage(ShellWindow* window, WPARAM wParam, LPARAM lParam)
                                         &value,
                                         pPreparsedData,
                                         (PCHAR)rawInput->data.hid.bRawData,
-                                        rawInput->data.hid.dwSizeHid) !=
-                         HIDP_STATUS_SUCCESS,
+                                        rawInput->data.hid.dwSizeHid) != HIDP_STATUS_SUCCESS,
                      ,
                      "Unable to get input value");
 
@@ -850,8 +788,7 @@ void RawInputMessage(ShellWindow* window, WPARAM wParam, LPARAM lParam)
         // mapping
         byte* bytes = (byte*)rawInput->data.hid.bRawData;
 
-        window->mOnInputDeviceChanged(
-            inputDevice, buttons, axes, DataBlock(bytes, bufferSize), window);
+        window->mOnInputDeviceChanged(inputDevice, buttons, axes, DataBlock(bytes, bufferSize), window);
       }
     }
   }
@@ -859,8 +796,7 @@ void RawInputMessage(ShellWindow* window, WPARAM wParam, LPARAM lParam)
 
 const uint MessageHandled = 0;
 
-LRESULT CALLBACK ShellWindowWndProc(
-    ShellWindow* window, HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK ShellWindowWndProc(ShellWindow* window, HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
   switch (msg)
   {
@@ -1089,30 +1025,25 @@ LRESULT CALLBACK ShellWindowWndProc(
   case WM_LBUTTONUP:
   {
     if (window->mOnMouseUp)
-      window->mOnMouseUp(
-          ClientPositionFromLParam(lParam), MouseButtons::Left, window);
+      window->mOnMouseUp(ClientPositionFromLParam(lParam), MouseButtons::Left, window);
     return MessageHandled;
   }
   case WM_RBUTTONUP:
   {
     if (window->mOnMouseUp)
-      window->mOnMouseUp(
-          ClientPositionFromLParam(lParam), MouseButtons::Right, window);
+      window->mOnMouseUp(ClientPositionFromLParam(lParam), MouseButtons::Right, window);
     return MessageHandled;
   }
   case WM_MBUTTONUP:
   {
     if (window->mOnMouseUp)
-      window->mOnMouseUp(
-          ClientPositionFromLParam(lParam), MouseButtons::Middle, window);
+      window->mOnMouseUp(ClientPositionFromLParam(lParam), MouseButtons::Middle, window);
     return MessageHandled;
   }
   case WM_XBUTTONUP:
   {
     if (window->mOnMouseUp)
-      window->mOnMouseUp(ClientPositionFromLParam(lParam),
-                         MouseButtonFromWParam(wParam),
-                         window);
+      window->mOnMouseUp(ClientPositionFromLParam(lParam), MouseButtonFromWParam(wParam), window);
     return MessageHandled;
   }
 
@@ -1125,8 +1056,7 @@ LRESULT CALLBACK ShellWindowWndProc(
 
     if (window->mOnHitTest)
     {
-      WindowBorderArea::Enum result =
-          window->mOnHitTest(clientPosition, window);
+      WindowBorderArea::Enum result = window->mOnHitTest(clientPosition, window);
       if (result != WindowBorderArea::None)
         ManipulateWindow(window, result);
     }
@@ -1135,23 +1065,19 @@ LRESULT CALLBACK ShellWindowWndProc(
   case WM_RBUTTONDOWN:
   {
     if (window->mOnMouseDown)
-      window->mOnMouseDown(
-          ClientPositionFromLParam(lParam), MouseButtons::Right, window);
+      window->mOnMouseDown(ClientPositionFromLParam(lParam), MouseButtons::Right, window);
     return MessageHandled;
   }
   case WM_MBUTTONDOWN:
   {
     if (window->mOnMouseDown)
-      window->mOnMouseDown(
-          ClientPositionFromLParam(lParam), MouseButtons::Middle, window);
+      window->mOnMouseDown(ClientPositionFromLParam(lParam), MouseButtons::Middle, window);
     return MessageHandled;
   }
   case WM_XBUTTONDOWN:
   {
     if (window->mOnMouseDown)
-      window->mOnMouseDown(ClientPositionFromLParam(lParam),
-                           MouseButtonFromWParam(wParam),
-                           window);
+      window->mOnMouseDown(ClientPositionFromLParam(lParam), MouseButtonFromWParam(wParam), window);
     return MessageHandled;
   }
 
@@ -1217,8 +1143,7 @@ LRESULT CALLBACK ShellWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
   {
     // Window is being created get the WindowsOsWindow from the lParam
     // this is passed in from CreateWindow
-    ShellWindow* window =
-        (ShellWindow*)((CREATESTRUCT*)(lParam))->lpCreateParams;
+    ShellWindow* window = (ShellWindow*)((CREATESTRUCT*)(lParam))->lpCreateParams;
 
     // Set it on the user data section of the window
     SetWindowPointer(hwnd, window);
@@ -1240,11 +1165,8 @@ LRESULT CALLBACK ShellWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       DWORD dwMinor = HIBYTE(LOWORD(GetVersion()));
       if (dwMajor > 6 || (dwMajor == 6 && dwMinor > 0))
       {
-        CoCreateInstance(CLSID_TaskbarList,
-                         nullptr,
-                         CLSCTX_ALL,
-                         __uuidof(ITaskbarList3),
-                         (LPVOID*)&shellPrivateData->mTaskbar);
+        CoCreateInstance(
+            CLSID_TaskbarList, nullptr, CLSCTX_ALL, __uuidof(ITaskbarList3), (LPVOID*)&shellPrivateData->mTaskbar);
       }
     }
 
@@ -1256,10 +1178,7 @@ LRESULT CALLBACK ShellWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
   }
 }
 
-Shell::Shell() :
-    mCursor(Cursor::Arrow),
-    mMainWindow(nullptr),
-    mUserData(nullptr)
+Shell::Shell() : mCursor(Cursor::Arrow), mMainWindow(nullptr), mUserData(nullptr)
 {
   DisableProcessWindowsGhosting();
 
@@ -1343,8 +1262,7 @@ ByteColor Shell::GetColorAtMouse()
   ReleaseDC(nullptr, dc);
 
   // COLORREF is 0x00BBGGRR
-  return ByteColorRGBA(
-      GetRValue(color), GetGValue(color), GetBValue(color), 0xFF);
+  return ByteColorRGBA(GetRValue(color), GetGValue(color), GetBValue(color), 0xFF);
 }
 
 void Shell::SetMonitorCursorClip(const IntRect& monitorRectangle)
@@ -1474,8 +1392,7 @@ void Shell::SetClipboardText(StringParam text)
   uint numCharacters = wideText.SizeInBytes();
   // Allocate a global memory object for the text.
 
-  HGLOBAL hglbCopy =
-      GlobalAlloc(GMEM_MOVEABLE, (numCharacters + 1) * sizeof(wchar_t));
+  HGLOBAL hglbCopy = GlobalAlloc(GMEM_MOVEABLE, (numCharacters + 1) * sizeof(wchar_t));
   if (hglbCopy == NULL)
   {
     CloseClipboard();
@@ -1569,10 +1486,8 @@ const Array<PlatformInputDevice>& Shell::ScanInputDevices()
   // Get the Raw input device  list
   UINT deviceCount = 0;
   GetRawInputDeviceList(NULL, &deviceCount, sizeof(RAWINPUTDEVICELIST));
-  PRAWINPUTDEVICELIST pRawInputDeviceList =
-      (PRAWINPUTDEVICELIST)alloca(sizeof(RAWINPUTDEVICELIST) * deviceCount);
-  GetRawInputDeviceList(
-      pRawInputDeviceList, &deviceCount, sizeof(RAWINPUTDEVICELIST));
+  PRAWINPUTDEVICELIST pRawInputDeviceList = (PRAWINPUTDEVICELIST)alloca(sizeof(RAWINPUTDEVICELIST) * deviceCount);
+  GetRawInputDeviceList(pRawInputDeviceList, &deviceCount, sizeof(RAWINPUTDEVICELIST));
 
   // Iterate through all raw input devices
   RID_DEVICE_INFO ridDeviceInfo;
@@ -1687,14 +1602,8 @@ ShellWindow::ShellWindow(Shell* shell,
 
   ReturnIf(windowHandle == nullptr, , "Failed to create application window");
 
-  SetWindowPos(windowHandle,
-               nullptr,
-               0,
-               0,
-               0,
-               0,
-               SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER |
-                   SWP_FRAMECHANGED);
+  SetWindowPos(
+      windowHandle, nullptr, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 
   // Set Handle
   mHandle = windowHandle;
@@ -1708,8 +1617,7 @@ ShellWindow::ShellWindow(Shell* shell,
 
   if (WindowStyleFlags::MainWindow & flags)
   {
-    ErrorIf(shell->mMainWindow != nullptr,
-            "Another main window already exists");
+    ErrorIf(shell->mMainWindow != nullptr, "Another main window already exists");
     shell->mMainWindow = this;
   }
   shell->mWindows.PushBack(this);
@@ -1754,13 +1662,7 @@ void ShellWindow::SetMonitorClientRectangle(const IntRect& monitorRectangle)
   if (!mStyle.IsSet(WindowStyleFlags::ClientOnly))
     AdjustWindowRect(&rect, Win32StyleFromWindowStyle(mStyle.Field), FALSE);
 
-  SetWindowPos((HWND)mHandle,
-               0,
-               rect.left,
-               rect.top,
-               RectWidth(rect),
-               RectHeight(rect),
-               SWP_NOZORDER | SWP_NOCOPYBITS);
+  SetWindowPos((HWND)mHandle, 0, rect.left, rect.top, RectWidth(rect), RectHeight(rect), SWP_NOZORDER | SWP_NOCOPYBITS);
 
   mClientSize = monitorRectangle.Size();
 }
@@ -1775,13 +1677,7 @@ IntRect ShellWindow::GetMonitorBorderedRectangle()
 void ShellWindow::SetMonitorBorderedRectangle(const IntRect& monitorRectangle)
 {
   RECT rect = ToRECT(monitorRectangle);
-  SetWindowPos((HWND)mHandle,
-               0,
-               rect.left,
-               rect.top,
-               RectWidth(rect),
-               RectHeight(rect),
-               SWP_NOZORDER | SWP_NOCOPYBITS);
+  SetWindowPos((HWND)mHandle, 0, rect.left, rect.top, RectWidth(rect), RectHeight(rect), SWP_NOZORDER | SWP_NOCOPYBITS);
 
   // Remove the border if ClientOnly is not set
   if (!mStyle.IsSet(WindowStyleFlags::ClientOnly))
@@ -1868,8 +1764,7 @@ void ShellWindow::SetStyle(WindowStyleFlags::Enum style)
                0,
                0,
                0,
-               SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER |
-                   SWP_FRAMECHANGED);
+               SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 }
 
 bool ShellWindow::GetVisible()
@@ -1901,8 +1796,7 @@ WindowState::Enum ShellWindow::GetState()
   GetWindowPlacement((HWND)mHandle, &placement);
   if (placement.showCmd == SW_SHOWNORMAL)
   {
-    HMONITOR monitor =
-        MonitorFromWindow((HWND)mHandle, MONITOR_DEFAULTTONEAREST);
+    HMONITOR monitor = MonitorFromWindow((HWND)mHandle, MONITOR_DEFAULTTONEAREST);
     MONITORINFO monitorInfo = {sizeof(monitorInfo)};
     GetMonitorInfo(monitor, &monitorInfo);
     RECT monitorRect = monitorInfo.rcMonitor;
@@ -1911,8 +1805,8 @@ WindowState::Enum ShellWindow::GetState()
 
     // Fullscreen is done in windowed mode, check if window size is the same as
     // the monitor.
-    if (rect.left == monitorRect.left && rect.top == monitorRect.top &&
-        rect.right == monitorRect.right && rect.bottom == monitorRect.bottom)
+    if (rect.left == monitorRect.left && rect.top == monitorRect.top && rect.right == monitorRect.right &&
+        rect.bottom == monitorRect.bottom)
       return WindowState::Fullscreen;
 
     return WindowState::Windowed;
@@ -1963,8 +1857,7 @@ void ShellWindow::SetState(WindowState::Enum windowState)
                  0,
                  0,
                  0,
-                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER |
-                     SWP_FRAMECHANGED);
+                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
     break;
   }
 
@@ -1988,8 +1881,7 @@ void ShellWindow::SetState(WindowState::Enum windowState)
     mStyle.ClearFlag(WindowStyleFlags::TitleBar);
     SetStyle(mStyle.Field);
 
-    HMONITOR monitor =
-        MonitorFromWindow((HWND)mHandle, MONITOR_DEFAULTTONEAREST);
+    HMONITOR monitor = MonitorFromWindow((HWND)mHandle, MONITOR_DEFAULTTONEAREST);
     MONITORINFO monitorInfo = {sizeof(monitorInfo)};
     GetMonitorInfo(monitor, &monitorInfo);
     RECT rect = monitorInfo.rcMonitor;
@@ -2089,9 +1981,8 @@ void ShellWindow::SetProgress(ProgressType::Enum progressType, float progress)
 
       // Progress is a normalized float change it to a ULONGLONG for windows.
       const uint ProgressValueScale = 10000000;
-      taskbar->SetProgressValue((HWND)mHandle,
-                                (ULONGLONG)(progress * ProgressValueScale),
-                                (ULONGLONG)ProgressValueScale);
+      taskbar->SetProgressValue(
+          (HWND)mHandle, (ULONGLONG)(progress * ProgressValueScale), (ULONGLONG)ProgressValueScale);
     }
   }
 }

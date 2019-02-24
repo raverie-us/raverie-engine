@@ -55,9 +55,7 @@ BinaryOperatorKey::BinaryOperatorKey()
   mPair.second = (int)Zilch::Grammar::Invalid;
 }
 
-BinaryOperatorKey::BinaryOperatorKey(Zilch::Type* lhsType,
-                                     Zilch::Type* rhsType,
-                                     Zilch::Grammar::Enum op)
+BinaryOperatorKey::BinaryOperatorKey(Zilch::Type* lhsType, Zilch::Type* rhsType, Zilch::Grammar::Enum op)
 {
   mPair.first.first = lhsType;
   mPair.first.second = rhsType;

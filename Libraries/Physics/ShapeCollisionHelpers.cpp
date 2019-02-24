@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-void IntersectionToPhysicsManifoldFull(Intersection::Manifold* iManifold,
-                                       Physics::Manifold* pManifold)
+void IntersectionToPhysicsManifoldFull(Intersection::Manifold* iManifold, Physics::Manifold* pManifold)
 {
   pManifold->ContactCount = iManifold->PointCount;
   pManifold->SetNormal(iManifold->Normal);
@@ -23,8 +22,7 @@ void IntersectionToPhysicsManifoldFull(Intersection::Manifold* iManifold,
   pManifold->SetPolicy(Physics::AddingPolicy::FullManifold);
 }
 
-void IntersectionToPhysicsManifoldPersistent(Intersection::Manifold* iManifold,
-                                             Physics::Manifold* pManifold)
+void IntersectionToPhysicsManifoldPersistent(Intersection::Manifold* iManifold, Physics::Manifold* pManifold)
 {
   pManifold->ContactCount = iManifold->PointCount;
   pManifold->SetNormal(iManifold->Normal);
@@ -44,23 +42,16 @@ void IntersectionToPhysicsManifoldPersistent(Intersection::Manifold* iManifold,
 
 // Edge Fixing
 
-void FixInternalEdges(GenericPhysicsMesh* mesh,
-                      Physics::Manifold* manifold,
-                      uint objectIndex,
-                      uint contactId)
+void FixInternalEdges(GenericPhysicsMesh* mesh, Physics::Manifold* manifold, uint objectIndex, uint contactId)
 {
   CorrectInternalEdgeNormal(mesh, manifold, objectIndex, contactId);
 }
 
-void FixInternalEdges(Collider* collider,
-                      Physics::Manifold* manifold,
-                      uint contactId)
+void FixInternalEdges(Collider* collider, Physics::Manifold* manifold, uint contactId)
 {
 }
 
-void FixInternalEdges(ConvexMeshCollider* collider,
-                      Physics::Manifold* manifold,
-                      uint contactId)
+void FixInternalEdges(ConvexMeshCollider* collider, Physics::Manifold* manifold, uint contactId)
 {
   if (collider == manifold->Objects[0])
     FixInternalEdges(collider->GetConvexMesh(), manifold, 0, contactId);
@@ -68,9 +59,7 @@ void FixInternalEdges(ConvexMeshCollider* collider,
     FixInternalEdges(collider->GetConvexMesh(), manifold, 1, contactId);
 }
 
-void FixInternalEdges(MeshCollider* collider,
-                      Physics::Manifold* manifold,
-                      uint contactId)
+void FixInternalEdges(MeshCollider* collider, Physics::Manifold* manifold, uint contactId)
 {
   if (collider == manifold->Objects[0])
     FixInternalEdges(collider->GetPhysicsMesh(), manifold, 0, contactId);
@@ -78,9 +67,7 @@ void FixInternalEdges(MeshCollider* collider,
     FixInternalEdges(collider->GetPhysicsMesh(), manifold, 1, contactId);
 }
 
-void FixInternalEdges(HeightMapCollider* collider,
-                      Physics::Manifold* manifold,
-                      uint contactId)
+void FixInternalEdges(HeightMapCollider* collider, Physics::Manifold* manifold, uint contactId)
 {
   if (collider == manifold->Objects[0])
     CorrectInternalEdgeNormal(collider, manifold, 0, contactId);
@@ -88,8 +75,7 @@ void FixInternalEdges(HeightMapCollider* collider,
     CorrectInternalEdgeNormal(collider, manifold, 1, contactId);
 }
 
-void BaseManifoldToProxyResult(Intersection::Manifold* manifold,
-                               ProxyResult* result)
+void BaseManifoldToProxyResult(Intersection::Manifold* manifold, ProxyResult* result)
 {
   result->mContactNormal = manifold->Normal;
   result->mPoints[0] = manifold->PointAt(0).Points[0];
@@ -130,42 +116,27 @@ void ManifoldToProxyResult(const Sphere& castShape,
   BaseManifoldToProxyResult(manifold, result);
 }
 
-Vec3 NormalFromPointOnShape(const Aabb& aabb,
-                            Collider* shapeCollider,
-                            Vec3Param point,
-                            Vec3Param start)
+Vec3 NormalFromPointOnShape(const Aabb& aabb, Collider* shapeCollider, Vec3Param point, Vec3Param start)
 {
   return Geometry::NormalFromPointOnAabb(point, aabb.mMin, aabb.mMax);
 }
 
-Vec3 NormalFromPointOnShape(const Sphere& sphere,
-                            Collider* shapeCollider,
-                            Vec3Param point,
-                            Vec3Param start)
+Vec3 NormalFromPointOnShape(const Sphere& sphere, Collider* shapeCollider, Vec3Param point, Vec3Param start)
 {
-  return Geometry::NormalFromPointOnSphere(
-      point, sphere.mCenter, sphere.mRadius);
+  return Geometry::NormalFromPointOnSphere(point, sphere.mCenter, sphere.mRadius);
 }
 
-Vec3 NormalFromPointOnShape(const Obb& obb,
-                            Collider* shapeCollider,
-                            Vec3Param point,
-                            Vec3Param start)
+Vec3 NormalFromPointOnShape(const Obb& obb, Collider* shapeCollider, Vec3Param point, Vec3Param start)
 {
-  return Geometry::NormalFromPointOnObb(
-      point, obb.Center, obb.HalfExtents, obb.Basis);
+  return Geometry::NormalFromPointOnObb(point, obb.Center, obb.HalfExtents, obb.Basis);
 }
 
-Vec3 NormalFromPointOnShape(const Cylinder& cylinder,
-                            Collider* shapeCollider,
-                            Vec3Param point,
-                            Vec3Param start)
+Vec3 NormalFromPointOnShape(const Cylinder& cylinder, Collider* shapeCollider, Vec3Param point, Vec3Param start)
 {
   // currently, cylinder needs a basis and half extents for this call,
   // not two points and a radius, for now extract that info from the collider
   const Vec3 center = shapeCollider->GetWorldTranslation();
-  CylinderCollider* cylinderCollider =
-      static_cast<CylinderCollider*>(shapeCollider);
+  CylinderCollider* cylinderCollider = static_cast<CylinderCollider*>(shapeCollider);
   real worldRadius = cylinderCollider->GetWorldRadius();
   real worldHalfHeight = cylinderCollider->GetWorldHalfHeight();
   uint heightIndex = cylinderCollider->GetHeightIndex();
@@ -178,36 +149,23 @@ Vec3 NormalFromPointOnShape(const Cylinder& cylinder,
   rotatedOrientation.SetBasis(2, orientation.GetBasis(radius1Index));
   rotatedOrientation.SetBasis(0, orientation.GetBasis(radius2Index));
 
-  Vec3 normal = Geometry::NormalFromPointOnCylinder(
-      point, center, worldRadius, worldHalfHeight, rotatedOrientation);
+  Vec3 normal = Geometry::NormalFromPointOnCylinder(point, center, worldRadius, worldHalfHeight, rotatedOrientation);
   return normal;
 }
 
-Vec3 NormalFromPointOnShape(const Ellipsoid& ellipsoid,
-                            Collider* shapeCollider,
-                            Vec3Param point,
-                            Vec3Param start)
+Vec3 NormalFromPointOnShape(const Ellipsoid& ellipsoid, Collider* shapeCollider, Vec3Param point, Vec3Param start)
 {
-  return Geometry::NormalFromPointOnEllipsoid(
-      point, ellipsoid.Center, ellipsoid.Radii, ellipsoid.Basis);
+  return Geometry::NormalFromPointOnEllipsoid(point, ellipsoid.Center, ellipsoid.Radii, ellipsoid.Basis);
 }
 
-Vec3 NormalFromPointOnShape(const Capsule& capsule,
-                            Collider* shapeCollider,
-                            Vec3Param point,
-                            Vec3Param start)
+Vec3 NormalFromPointOnShape(const Capsule& capsule, Collider* shapeCollider, Vec3Param point, Vec3Param start)
 {
-  return Geometry::NormalFromPointOnCapsule(
-      point, capsule.PointA, capsule.PointB, capsule.Radius);
+  return Geometry::NormalFromPointOnCapsule(point, capsule.PointA, capsule.PointB, capsule.Radius);
 }
 
-Vec3 NormalFromPointOnShape(const Triangle& triangle,
-                            Collider* shapeCollider,
-                            Vec3Param point,
-                            Vec3Param start)
+Vec3 NormalFromPointOnShape(const Triangle& triangle, Collider* shapeCollider, Vec3Param point, Vec3Param start)
 {
-  Vec3 normal = Geometry::NormalFromPointOnTriangle(
-      point, triangle.p0, triangle.p1, triangle.p2);
+  Vec3 normal = Geometry::NormalFromPointOnTriangle(point, triangle.p0, triangle.p1, triangle.p2);
 
   // The normal returned should always be positive in the y, but if the ray
   // was cast from below the triangle, we want to invert it.
@@ -219,8 +177,7 @@ Vec3 NormalFromPointOnShape(const Triangle& triangle,
 void ColliderToShape(Collider* collider, Sphere& sphere)
 {
   SphereCollider* sphereCollider = static_cast<SphereCollider*>(collider);
-  sphere.mCenter =
-      sphereCollider->GetWorldTranslation() + collider->mCollisionOffset;
+  sphere.mCenter = sphereCollider->GetWorldTranslation() + collider->mCollisionOffset;
   sphere.mRadius = sphereCollider->GetWorldRadius();
 }
 
@@ -241,10 +198,8 @@ void ColliderToShape(Collider* collider, Obb& obb)
 
 void ColliderToShape(Collider* collider, Ellipsoid& ellipsoid)
 {
-  EllipsoidCollider* ellipsoidCollider =
-      static_cast<EllipsoidCollider*>(collider);
-  ellipsoid.Center =
-      ellipsoidCollider->GetWorldTranslation() + collider->mCollisionOffset;
+  EllipsoidCollider* ellipsoidCollider = static_cast<EllipsoidCollider*>(collider);
+  ellipsoid.Center = ellipsoidCollider->GetWorldTranslation() + collider->mCollisionOffset;
   ellipsoid.Radii = ellipsoidCollider->GetWorldRadii();
   ellipsoid.Basis = ellipsoidCollider->GetWorldRotation();
 }

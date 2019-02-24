@@ -30,9 +30,7 @@ struct PhysicsQueue
 
   /// Helper for the BroadPhase action. Fills out the batch structures for what
   /// needs to be changed in BroadPhase.
-  void ProcessQueue(BroadPhaseBatch& staticBatch,
-                    BroadPhaseBatch& dynamicBatch,
-                    Collider* collider);
+  void ProcessQueue(BroadPhaseBatch& staticBatch, BroadPhaseBatch& dynamicBatch, Collider* collider);
   void ColliderToBroadPhaseData(Collider* collider, BroadPhaseData& data);
 
   void MarkUnQueued();

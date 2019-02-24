@@ -50,37 +50,22 @@ void PhysicsEventManager::SetAllocator(Memory::Heap* heap)
   mCollisionGroupEvents.SetAllocator(HeapAllocator(heap));
 }
 
-void PhysicsEventManager::BatchCollisionStartedEvent(Manifold* manifold,
-                                                     PhysicsSpace* space)
+void PhysicsEventManager::BatchCollisionStartedEvent(Manifold* manifold, PhysicsSpace* space)
 {
-  CreateEvent(manifold,
-              space,
-              BaseCollisionEvent::CollisionStarted,
-              FilterFlags::StartEvent);
+  CreateEvent(manifold, space, BaseCollisionEvent::CollisionStarted, FilterFlags::StartEvent);
 }
 
-void PhysicsEventManager::BatchCollisionPersistedEvent(Manifold* manifold,
-                                                       PhysicsSpace* space)
+void PhysicsEventManager::BatchCollisionPersistedEvent(Manifold* manifold, PhysicsSpace* space)
 {
-  CreateEvent(manifold,
-              space,
-              BaseCollisionEvent::CollisionPersisted,
-              FilterFlags::PersistedEvent);
+  CreateEvent(manifold, space, BaseCollisionEvent::CollisionPersisted, FilterFlags::PersistedEvent);
 }
 
-void PhysicsEventManager::BatchCollisionEndedEvent(Manifold* manifold,
-                                                   PhysicsSpace* space,
-                                                   bool immediateSend)
+void PhysicsEventManager::BatchCollisionEndedEvent(Manifold* manifold, PhysicsSpace* space, bool immediateSend)
 {
-  CreateEvent(manifold,
-              space,
-              BaseCollisionEvent::CollisionEnded,
-              FilterFlags::EndEvent,
-              immediateSend);
+  CreateEvent(manifold, space, BaseCollisionEvent::CollisionEnded, FilterFlags::EndEvent, immediateSend);
 }
 
-void PhysicsEventManager::BatchPreSolveEvent(Manifold* manifold,
-                                             PhysicsSpace* space)
+void PhysicsEventManager::BatchPreSolveEvent(Manifold* manifold, PhysicsSpace* space)
 {
   // If the filter doesn't exist, there's nothing to do
   CollisionFilter* f = GetFilter(manifold, space);
@@ -114,8 +99,7 @@ void PhysicsEventManager::BatchPreSolveEvent(Manifold* manifold,
   mPreSolveEvents.PushBack(e);
 }
 
-JointEvent* PhysicsEventManager::BatchJointEvent(Joint* joint,
-                                                 StringParam eventName)
+JointEvent* PhysicsEventManager::BatchJointEvent(Joint* joint, StringParam eventName)
 {
   JointEvent* event = new JointEvent();
   event->mJoint = joint;
@@ -187,36 +171,24 @@ void PhysicsEventManager::DispatchPreSolveEvents(PhysicsSpace* space)
   }
 }
 
-CollisionFilter* PhysicsEventManager::GetFilter(Manifold* manifold,
-                                                PhysicsSpace* space)
+CollisionFilter* PhysicsEventManager::GetFilter(Manifold* manifold, PhysicsSpace* space)
 {
-  CollisionGroupInstance* instance1 =
-      manifold->Objects[0]->mCollisionGroupInstance;
-  CollisionGroupInstance* instance2 =
-      manifold->Objects[1]->mCollisionGroupInstance;
+  CollisionGroupInstance* instance1 = manifold->Objects[0]->mCollisionGroupInstance;
+  CollisionGroupInstance* instance2 = manifold->Objects[1]->mCollisionGroupInstance;
 
-  CollisionFilter pair(instance1->mResource->mResourceId,
-                       instance2->mResource->mResourceId);
+  CollisionFilter pair(instance1->mResource->mResourceId, instance2->mResource->mResourceId);
   // Find the filter for this pair
   return space->mCollisionTable->FindFilter(pair);
 }
 
-void PhysicsEventManager::CreateEvent(Physics::Manifold* manifold,
-                                      PhysicsSpace* space,
-                                      uint collisionType,
-                                      uint blockType,
-                                      bool immediateSend)
+void PhysicsEventManager::CreateEvent(
+    Physics::Manifold* manifold, PhysicsSpace* space, uint collisionType, uint blockType, bool immediateSend)
 {
   // Always send the normal collision event (whether or not this is
   // correct behavior I'll worry about later, right now it should never be
   // blocked though)
-  BaseCollisionEvent::CollisionType typedCollision =
-      (BaseCollisionEvent::CollisionType)collisionType;
-  this->CreateCollisionEvent(manifold,
-                             0,
-                             collisionType,
-                             CollisionEvent::GetEventName(typedCollision),
-                             immediateSend);
+  BaseCollisionEvent::CollisionType typedCollision = (BaseCollisionEvent::CollisionType)collisionType;
+  this->CreateCollisionEvent(manifold, 0, collisionType, CollisionEvent::GetEventName(typedCollision), immediateSend);
 
   // Grab the filter for the two objects in the manifold
   CollisionFilter* f = GetFilter(manifold, space);
@@ -270,16 +242,12 @@ void PhysicsEventManager::CreateEvent(Physics::Manifold* manifold,
     AddEvent(eventObj);
 }
 
-void PhysicsEventManager::CreateCollisionEvent(Manifold* manifold,
-                                               uint contactId,
-                                               uint eventType,
-                                               StringParam collisionType,
-                                               bool immediateSend)
+void PhysicsEventManager::CreateCollisionEvent(
+    Manifold* manifold, uint contactId, uint eventType, StringParam collisionType, bool immediateSend)
 {
   ManifoldPoint& point = manifold->Contacts[contactId];
   CollisionEvent* eventObj;
-  eventObj =
-      CreateCollisionEventInternal(manifold, point, eventType, collisionType);
+  eventObj = CreateCollisionEventInternal(manifold, point, eventType, collisionType);
   if (eventObj)
   {
     eventObj->mContactIndex = contactId;
@@ -293,11 +261,10 @@ void PhysicsEventManager::CreateCollisionEvent(Manifold* manifold,
   }
 }
 
-CollisionEvent*
-PhysicsEventManager::CreateCollisionEventInternal(Manifold* manifold,
-                                                  ManifoldPoint& point,
-                                                  uint eventType,
-                                                  StringParam collisionType)
+CollisionEvent* PhysicsEventManager::CreateCollisionEventInternal(Manifold* manifold,
+                                                                  ManifoldPoint& point,
+                                                                  uint eventType,
+                                                                  StringParam collisionType)
 {
   // Make sure that the objects send events (optimization) and events of type
   if (!manifold->GetSendsMessages())
@@ -349,8 +316,7 @@ void PhysicsEventManager::DispatchEvent(CollisionEvent* toSend)
   delete toSend;
 }
 
-void PhysicsEventManager::DispatchEvent(PhysicsSpace* space,
-                                        CollisionGroupEvent* toSend)
+void PhysicsEventManager::DispatchEvent(PhysicsSpace* space, CollisionGroupEvent* toSend)
 {
   // Cache the cogs we might send events to (cleans up the object index
   // swapping)
@@ -364,15 +330,12 @@ void PhysicsEventManager::DispatchEvent(PhysicsSpace* space,
   DispatchGroupEvent(objB, toSend, CollisionBlockStates::SendEventsToB);
   // Try to send to the space (the space will get the swapped
   // event, but no order is really guaranteed here...)
-  DispatchGroupEvent(
-      space->GetOwner(), toSend, CollisionBlockStates::SendEventsToSpace);
+  DispatchGroupEvent(space->GetOwner(), toSend, CollisionBlockStates::SendEventsToSpace);
 
   delete toSend;
 }
 
-void PhysicsEventManager::DispatchGroupEvent(Cog* obj,
-                                             CollisionGroupEvent* eventObj,
-                                             uint filterFlag)
+void PhysicsEventManager::DispatchGroupEvent(Cog* obj, CollisionGroupEvent* eventObj, uint filterFlag)
 {
   if (!eventObj->mBlock->mStates.IsSet(filterFlag))
     return;

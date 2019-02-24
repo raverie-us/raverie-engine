@@ -17,9 +17,7 @@ template <typename PropertyType>
 class TweakablePropertyType : public TweakableProperty
 {
 public:
-  TweakablePropertyType(PropertyType* value, StringParam name) :
-      mValue(value),
-      mName(name)
+  TweakablePropertyType(PropertyType* value, StringParam name) : mValue(value), mName(name)
   {
   }
 
@@ -66,10 +64,7 @@ public:
   /// Searches the path for the correct parent and binds the
   /// tweakable as a MetaProperty.
   template <typename PropertyType>
-  void RegisterTweakable(PropertyType* value,
-                         PropertyType& defaultValue,
-                         cstr name,
-                         cstr location);
+  void RegisterTweakable(PropertyType* value, PropertyType& defaultValue, cstr name, cstr location);
 
   /// Initializes the Tweakables system.
   static void Initialize();
@@ -112,8 +107,7 @@ public:
   type mValue;
 };
 
-#define Tweakable(type, name, defaultValue, location)                          \
-  TweakableVar<type> name(defaultValue, #name, location);
+#define Tweakable(type, name, defaultValue, location) TweakableVar<type> name(defaultValue, #name, location);
 #define DeclareTweakable(type, name) extern TweakableVar<type> name;
 
 namespace Z

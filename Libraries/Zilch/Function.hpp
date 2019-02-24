@@ -87,9 +87,7 @@ public:
 
   // Allocate an opcode of type T
   template <typename T>
-  T& AllocateOpcode(Instruction::Enum instruction,
-                    DebugOrigin::Enum debugOrigin,
-                    const CodeLocation& debugLocation)
+  T& AllocateOpcode(Instruction::Enum instruction, DebugOrigin::Enum debugOrigin, const CodeLocation& debugLocation)
   {
     // Get the compacted index
     size_t compactedIndex = this->OpcodeBuilder.RelativeSize();

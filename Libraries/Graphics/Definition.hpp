@@ -79,8 +79,7 @@ public:
   template <typename definitionType>
   void AddDefinitionCreator()
   {
-    CreatorMap.Insert(ZilchTypeId(definitionType)->Name,
-                      new DefinitionCreatorType<definitionType>);
+    CreatorMap.Insert(ZilchTypeId(definitionType)->Name, new DefinitionCreatorType<definitionType>);
   }
 };
 

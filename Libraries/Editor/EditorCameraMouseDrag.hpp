@@ -12,12 +12,8 @@ public:
   HandleOf<Viewport> mViewport;
   HandleOf<EditorViewport> mEditorViewport;
 
-  EditorCameraMouseDrag(Mouse* mouse,
-                        EditorViewport* editorViewport,
-                        EditorCameraController* controller);
-  EditorCameraMouseDrag(Mouse* mouse,
-                        Viewport* viewport,
-                        EditorCameraController* controller);
+  EditorCameraMouseDrag(Mouse* mouse, EditorViewport* editorViewport, EditorCameraController* controller);
+  EditorCameraMouseDrag(Mouse* mouse, Viewport* viewport, EditorCameraController* controller);
   virtual ~EditorCameraMouseDrag();
 
   // Generic MouseEvent Handlers

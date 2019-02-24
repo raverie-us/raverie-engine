@@ -63,9 +63,7 @@ public:
   HandleOf<Event> mEvent;
   HandleOf<Object> mTargetObject;
 
-  ActionEvent(Object* targetObject,
-              StringParam eventNameToSend,
-              Event* eventToSend)
+  ActionEvent(Object* targetObject, StringParam eventNameToSend, Event* eventToSend)
   {
     mTargetObject = targetObject;
     mEventName = eventNameToSend;

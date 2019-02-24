@@ -36,10 +36,8 @@ public:
 class SimplifiedShaderReflectionData
 {
 public:
-  typedef ZilchShaderIRCompositor::ShaderStageDescription
-      ShaderStageDescription;
-  typedef ShaderStageInterfaceReflection::SampledImageRemappings
-      SampledImageRemappings;
+  typedef ZilchShaderIRCompositor::ShaderStageDescription ShaderStageDescription;
+  typedef ShaderStageInterfaceReflection::SampledImageRemappings SampledImageRemappings;
   typedef Zilch::Ref<ShaderTranslationPassResult> PassResultRef;
   ZilchRefLink(SimplifiedShaderReflectionData);
 
@@ -97,8 +95,7 @@ public:
     HashMap<String, StorageImageRemappingData> mStorageImages;
     /// Map of properties (by name) of structured storage buffers to their
     /// reflection data index.
-    HashMap<String, StructuredStorageBufferRemappingData>
-        mStructedStorageBuffers;
+    HashMap<String, StructuredStorageBufferRemappingData> mStructedStorageBuffers;
   };
 
   /// Build the cached reflection data for quick access for a shader.
@@ -110,14 +107,12 @@ public:
 
   /// Find the reflection data for a uniform given the fragment and property.
   /// Returns null if the property can't be found.
-  ShaderResourceReflectionData* FindUniformReflectionData(
-      ZilchShaderIRType* fragmentType, StringParam propertyName);
+  ShaderResourceReflectionData* FindUniformReflectionData(ZilchShaderIRType* fragmentType, StringParam propertyName);
   /// Finds all potential images, samplers, and sampled images that the given
   /// SampledImage property results in.
-  void
-  FindSampledImageReflectionData(ZilchShaderIRType* fragmentType,
-                                 StringParam propertyName,
-                                 Array<ShaderResourceReflectionData*>& results);
+  void FindSampledImageReflectionData(ZilchShaderIRType* fragmentType,
+                                      StringParam propertyName,
+                                      Array<ShaderResourceReflectionData*>& results);
   /// Finds all potential images and sampled images that the given Image
   /// property results in.
   void FindImageReflectionData(ZilchShaderIRType* fragmentType,
@@ -130,12 +125,10 @@ public:
                                  Array<ShaderResourceReflectionData*>& results);
   /// Find the reflection data for a storage image given the fragment and
   /// property. Returns null if the property can't be found.
-  ShaderResourceReflectionData*
-  FindStorageImage(ZilchShaderIRType* fragmentType, StringParam propertyName);
+  ShaderResourceReflectionData* FindStorageImage(ZilchShaderIRType* fragmentType, StringParam propertyName);
   /// Find the reflection data for a structed storage buffer given the fragment
   /// and property. Returns null if the property can't be found.
-  ShaderResourceReflectionData* FindStructedStorageBuffer(
-      ZilchShaderIRType* fragmentType, StringParam propertyName);
+  ShaderResourceReflectionData* FindStructedStorageBuffer(ZilchShaderIRType* fragmentType, StringParam propertyName);
 
   /// Map lookup of fragment name to property information about the fragment.
   HashMap<String, FragmentLookup> mFragmentLookup;
@@ -167,14 +160,12 @@ private:
   // Given an array of pass results, this recursively walks from the current
   // pass following where all of the input mappings end up at and puts the
   // results in the output mappings.
-  void RecursivelyBuildSamplerAndImageMappings(
-      Array<PassResultRef>& passResults,
-      size_t passIndex,
-      SampledImageRemappings& inputMappings,
-      SampledImageRemappings& outputMappings);
+  void RecursivelyBuildSamplerAndImageMappings(Array<PassResultRef>& passResults,
+                                               size_t passIndex,
+                                               SampledImageRemappings& inputMappings,
+                                               SampledImageRemappings& outputMappings);
   // Merges the source image mappings into the destination image mappings.
-  void MergeRemappings(SampledImageRemappings& dest,
-                       SampledImageRemappings& source);
+  void MergeRemappings(SampledImageRemappings& dest, SampledImageRemappings& source);
   /// Convert the final name mappings to actual indices in the reflection data.
   void BuildFinalSampledImageMappings(SampledImageRemappings* resourceMappings,
                                       NameToIndexMap& samplerIndices,
@@ -184,10 +175,9 @@ private:
 
   /// Fills out information for an individual search map (e.g. sampler/image)
   /// given the property name.
-  void PopulateSamplerAndImageData(
-      HashMap<String, SampledImageRemappingData>& searchMap,
-      StringParam propertyName,
-      Array<ShaderResourceReflectionData*>& results);
+  void PopulateSamplerAndImageData(HashMap<String, SampledImageRemappingData>& searchMap,
+                                   StringParam propertyName,
+                                   Array<ShaderResourceReflectionData*>& results);
 
   /// Create reflectiond ata for simple opaque types (e.g. storage image and
   /// ssbos).
@@ -207,8 +197,7 @@ public:
   typedef Zilch::Ref<SimplifiedShaderReflectionData> SimplifiedReflectionRef;
 
   SimpleZilchShaderIRGenerator(FrontEndTranslatorType* frontEndTranslator);
-  SimpleZilchShaderIRGenerator(FrontEndTranslatorType* frontEndTranslator,
-                               ZilchShaderSpirVSettings* settings);
+  SimpleZilchShaderIRGenerator(FrontEndTranslatorType* frontEndTranslator, ZilchShaderSpirVSettings* settings);
   ~SimpleZilchShaderIRGenerator();
 
   //-------------------------------------------------------------------Settings/Setup
@@ -225,9 +214,7 @@ public:
   void ClearAll();
 
   //-------------------------------------------------------------------Fragments
-  void AddFragmentCode(StringParam fragmentCode,
-                       StringParam fileName,
-                       void* userData);
+  void AddFragmentCode(StringParam fragmentCode, StringParam fileName, void* userData);
   /// Compiles fragments and translates them to an internal representation
   /// (spir-v)
   bool CompileAndTranslateFragments();
@@ -237,13 +224,10 @@ public:
   /// Composes the given shader definition of fragments together. Stores the
   /// resultant zilch shader code in the given definition object. The zilch
   /// shader code is also stored cached internally.
-  bool ComposeShader(ZilchShaderIRCompositor::ShaderDefinition& shaderDef,
-                     ShaderCapabilities& capabilities);
+  bool ComposeShader(ZilchShaderIRCompositor::ShaderDefinition& shaderDef, ShaderCapabilities& capabilities);
 
   //-------------------------------------------------------------------Shaders
-  void AddShaderCode(StringParam shaderCode,
-                     StringParam fileName,
-                     void* userData);
+  void AddShaderCode(StringParam shaderCode, StringParam fileName, void* userData);
   /// Compiles shaders and translates them to an internal representation
   /// (spir-v)
   bool CompileAndTranslateShaders();
@@ -269,34 +253,27 @@ public:
   /// library.
   ZilchShaderIRType* FindShaderType(StringParam typeName);
   /// Finds the translation result (byte data + reflection data) for a shader.
-  ShaderTranslationPassResult*
-  FindTranslationResult(ZilchShaderIRType* shaderType);
+  ShaderTranslationPassResult* FindTranslationResult(ZilchShaderIRType* shaderType);
   /// Finds the cached simplified reflection data for a shader.
-  SimplifiedShaderReflectionData*
-  FindSimplifiedReflectionResult(ZilchShaderIRType* shaderType);
+  SimplifiedShaderReflectionData* FindSimplifiedReflectionResult(ZilchShaderIRType* shaderType);
 
   //-------------------------------------------------------------------Settings
   /// Load default name settings
   static void LoadNameSettings(SpirVNameSettings& nameSettings);
   /// Create the settings that the unit tests use.
-  static ZilchShaderSpirVSettings*
-  CreateUnitTestSettings(SpirVNameSettings& nameSettings);
+  static ZilchShaderSpirVSettings* CreateUnitTestSettings(SpirVNameSettings& nameSettings);
   /// Create the settings that zero uses.
-  static ZilchShaderSpirVSettings*
-  CreateZeroSettings(SpirVNameSettings& nameSettings);
+  static ZilchShaderSpirVSettings* CreateZeroSettings(SpirVNameSettings& nameSettings);
 
   //-------------------------------------------------------------------Internal
-  void Initialize(FrontEndTranslatorType* frontEndTranslator,
-                  ZilchShaderSpirVSettings* settings);
+  void Initialize(FrontEndTranslatorType* frontEndTranslator, ZilchShaderSpirVSettings* settings);
   void SetupEventConnections();
   // Helper to setup a lot of shared data on the translator
   void SetupTranslator(FrontEndTranslatorType* translator);
 
   /// Compiles a shader stage with a given pipeline. Caches the results
   /// internally. Also builds the simplified reflection data for this shader.
-  bool
-  CompilePipeline(ZilchShaderIRCompositor::ShaderStageDescription& stageDef,
-                  ShaderPipelineDescription& pipeline);
+  bool CompilePipeline(ZilchShaderIRCompositor::ShaderStageDescription& stageDef, ShaderPipelineDescription& pipeline);
   /// Runs the pipeline on one shader type and fills out all of the results for
   /// each translation pass. Also fills out an array of debug results for all of
   /// the debug passes in the pipeline. A debug pass will run on the last pass
@@ -307,8 +284,7 @@ public:
                        Array<TranslationPassResultRef>& pipelineResults,
                        Array<TranslationPassResultRef>& debugResults);
 
-  void RecursivelyLoadDirectory(StringParam path,
-                                ZilchShaderIRProject& project);
+  void RecursivelyLoadDirectory(StringParam path, ZilchShaderIRProject& project);
 
   // Basic handler to forward the errors from the underlying
   // project/translator to whoever is listening on this class.
@@ -332,8 +308,7 @@ public:
   ZilchShaderIRProject mShaderProject;
   ZilchShaderIRLibraryRef mShaderLibraryRef;
 
-  typedef HashMap<String, ZilchShaderIRCompositor::ShaderDefinition>
-      ShaderDefinitionMap;
+  typedef HashMap<String, ZilchShaderIRCompositor::ShaderDefinition> ShaderDefinitionMap;
   /// Keep a mapping of shader name to definition so that we can lookup
   /// the actual shaders for each shader stage (e.g. vertex/pixel).
   ShaderDefinitionMap mShaderDefinitionMap;

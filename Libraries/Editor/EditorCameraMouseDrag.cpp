@@ -4,10 +4,9 @@
 namespace Zero
 {
 
-EditorCameraMouseDrag::EditorCameraMouseDrag(
-    Mouse* mouse,
-    EditorViewport* editorViewport,
-    EditorCameraController* controller) :
+EditorCameraMouseDrag::EditorCameraMouseDrag(Mouse* mouse,
+                                             EditorViewport* editorViewport,
+                                             EditorCameraController* controller) :
     MouseManipulation(mouse, editorViewport)
 {
   mController = controller;
@@ -18,8 +17,7 @@ EditorCameraMouseDrag::EditorCameraMouseDrag(
   ConnectThisTo(this, Events::MiddleMouseDown, OnMouseDown);
 }
 
-EditorCameraMouseDrag::EditorCameraMouseDrag(
-    Mouse* mouse, Viewport* viewport, EditorCameraController* controller) :
+EditorCameraMouseDrag::EditorCameraMouseDrag(Mouse* mouse, Viewport* viewport, EditorCameraController* controller) :
     MouseManipulation(mouse, viewport)
 {
   mController = controller;

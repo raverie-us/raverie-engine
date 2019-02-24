@@ -19,8 +19,7 @@ void BaseSprite::Serialize(Serializer& stream)
 {
   Graphical::Serialize(stream);
   SerializeNameDefault(mVertexColor, Vec4(1.0f));
-  SerializeEnumNameDefault(
-      SpriteGeometryMode, mGeometryMode, SpriteGeometryMode::ZPlane);
+  SerializeEnumNameDefault(SpriteGeometryMode, mGeometryMode, SpriteGeometryMode::ZPlane);
 }
 
 void BaseSprite::Initialize(CogInitializer& initializer)
@@ -52,25 +51,16 @@ Aabb BaseSprite::GetViewPlaneAabb(Aabb localAabb)
   Vec3 center = localAabb.GetCenter();
   Vec3 widths = localAabb.GetHalfExtents();
   Vec3 worldSize = mTransform->GetScale();
-  float maxX = Math::Max(Math::Abs(center.x - widths.x),
-                         Math::Abs(center.x + widths.x)) *
-               worldSize.x;
-  float maxY = Math::Max(Math::Abs(center.y - widths.y),
-                         Math::Abs(center.y + widths.y)) *
-               worldSize.y;
+  float maxX = Math::Max(Math::Abs(center.x - widths.x), Math::Abs(center.x + widths.x)) * worldSize.x;
+  float maxY = Math::Max(Math::Abs(center.y - widths.y), Math::Abs(center.y + widths.y)) * worldSize.y;
   float radius = Math::Sqrt(maxX * maxX + maxY * maxY);
   return Aabb(Vec3(0.0f), Vec3(1.0f) * radius / worldSize);
 }
 
-void BaseSprite::ComputeLocalToViewMatrix(Mat4& localToView,
-                                          Mat4& localToWorld,
-                                          Mat4& worldToView)
+void BaseSprite::ComputeLocalToViewMatrix(Mat4& localToView, Mat4& localToWorld, Mat4& worldToView)
 {
   if (mGeometryMode == SpriteGeometryMode::ViewPlane)
-    MakeLocalToViewAligned(localToView,
-                           localToWorld,
-                           worldToView,
-                           mTransform->GetWorldTranslation());
+    MakeLocalToViewAligned(localToView, localToWorld, worldToView, mTransform->GetWorldTranslation());
   else
     localToView = worldToView * localToWorld;
 }
@@ -127,8 +117,7 @@ void Sprite::DebugDraw()
 
 Aabb Sprite::GetLocalAabb()
 {
-  Aabb localAabb =
-      Aabb(Vec3(GetLocalCenter(), 0.0f), Vec3(GetLocalWidths(), 0.0f));
+  Aabb localAabb = Aabb(Vec3(GetLocalCenter(), 0.0f), Vec3(GetLocalWidths(), 0.0f));
 
   if (mGeometryMode == SpriteGeometryMode::ViewPlane)
     return GetViewPlaneAabb(localAabb);
@@ -155,14 +144,11 @@ void Sprite::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
   frameNode.mBoneMatrixRange = IndexRange(0, 0);
 }
 
-void Sprite::ExtractViewData(ViewNode& viewNode,
-                             ViewBlock& viewBlock,
-                             FrameBlock& frameBlock)
+void Sprite::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
 
-  ComputeLocalToViewMatrix(
-      viewNode.mLocalToView, frameNode.mLocalToWorld, viewBlock.mWorldToView);
+  ComputeLocalToViewMatrix(viewNode.mLocalToView, frameNode.mLocalToWorld, viewBlock.mWorldToView);
 
   Vec2 center = GetLocalCenter();
   Vec2 widths = GetLocalWidths();
@@ -190,8 +176,7 @@ void Sprite::ExtractViewData(ViewNode& viewNode,
   }
 
   viewNode.mStreamedVertexType = PrimitiveType::Triangles;
-  viewNode.mStreamedVertexStart =
-      frameBlock.mRenderQueues->mStreamedVertices.Size();
+  viewNode.mStreamedVertexStart = frameBlock.mRenderQueues->mStreamedVertices.Size();
   viewNode.mStreamedVertexCount = 0;
 
   bool hasArea = mOwner->has(Area) != nullptr;
@@ -206,26 +191,15 @@ void Sprite::ExtractViewData(ViewNode& viewNode,
   {
     Vec2 size = mSpriteSource->GetSize();
     Vec4 posSlices = mSpriteSource->Slices / mSpriteSource->PixelsPerUnit;
-    Vec4 uvSlices =
-        mSpriteSource->Slices / Vec4(size.x, size.y, size.x, size.y);
+    Vec4 uvSlices = mSpriteSource->Slices / Vec4(size.x, size.y, size.x, size.y);
     Vec2 uvSignedSize = uv1 - uv0;
-    uvSlices *=
-        Vec4(uvSignedSize.x, uvSignedSize.y, uvSignedSize.x, uvSignedSize.y);
-    frameBlock.mRenderQueues->AddStreamedQuadNineSliced(viewNode,
-                                                        pos0,
-                                                        pos1,
-                                                        uv0,
-                                                        uv1,
-                                                        mVertexColor,
-                                                        posSlices,
-                                                        uvSlices,
-                                                        uvAux0,
-                                                        uvAux1);
+    uvSlices *= Vec4(uvSignedSize.x, uvSignedSize.y, uvSignedSize.x, uvSignedSize.y);
+    frameBlock.mRenderQueues->AddStreamedQuadNineSliced(
+        viewNode, pos0, pos1, uv0, uv1, mVertexColor, posSlices, uvSlices, uvAux0, uvAux1);
   }
   else
   {
-    frameBlock.mRenderQueues->AddStreamedQuad(
-        viewNode, pos0, pos1, uv0, uv1, mVertexColor, uvAux0, uvAux1);
+    frameBlock.mRenderQueues->AddStreamedQuad(viewNode, pos0, pos1, uv0, uv1, mVertexColor, uvAux0, uvAux1);
   }
 }
 
@@ -338,8 +312,7 @@ uint Sprite::WrapIndex(uint index)
 {
   if (mSpriteSource->FrameCount == 0)
   {
-    String msg = String::Format("Sprite source %s has no frames.",
-                                mSpriteSource->Name.c_str());
+    String msg = String::Format("Sprite source %s has no frames.", mSpriteSource->Name.c_str());
     DoNotifyError("Invalid Sprite", msg);
     return 0;
   }
@@ -353,8 +326,7 @@ ZilchDefineType(SpriteText, builder, type)
   ZeroBindInterface(BaseSprite);
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindGetterSetterProperty(Text)->AddAttribute(
-      PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(Text)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
   ZilchBindGetterSetterProperty(Font);
   ZilchBindGetterSetterProperty(FontSize);
   ZilchBindGetterSetterProperty(PixelsPerUnit);
@@ -382,8 +354,7 @@ void SpriteText::Initialize(CogInitializer& initializer)
 
 Aabb SpriteText::GetLocalAabb()
 {
-  Aabb localAabb =
-      Aabb(Vec3(GetLocalCenter(), 0.0f), Vec3(GetLocalWidths(), 0.0f));
+  Aabb localAabb = Aabb(Vec3(GetLocalCenter(), 0.0f), Vec3(GetLocalWidths(), 0.0f));
 
   if (mGeometryMode == SpriteGeometryMode::ViewPlane)
     return GetViewPlaneAabb(localAabb);
@@ -398,8 +369,7 @@ void SpriteText::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 
   frameNode.mMeshRenderData = nullptr;
   frameNode.mMaterialRenderData = mMaterial->mRenderData;
-  frameNode.mTextureRenderData =
-      mFont->GetRenderFont(mFontSize)->mTexture->mRenderData;
+  frameNode.mTextureRenderData = mFont->GetRenderFont(mFontSize)->mTexture->mRenderData;
 
   // Only data needed for ExtractViewData
   frameNode.mLocalToWorld = mTransform->GetWorldMatrix();
@@ -407,14 +377,11 @@ void SpriteText::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
   frameNode.mBoneMatrixRange = IndexRange(0, 0);
 }
 
-void SpriteText::ExtractViewData(ViewNode& viewNode,
-                                 ViewBlock& viewBlock,
-                                 FrameBlock& frameBlock)
+void SpriteText::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
 
-  ComputeLocalToViewMatrix(
-      viewNode.mLocalToView, frameNode.mLocalToWorld, viewBlock.mWorldToView);
+  ComputeLocalToViewMatrix(viewNode.mLocalToView, frameNode.mLocalToWorld, viewBlock.mWorldToView);
 
   RenderFont* font = mFont->GetRenderFont(mFontSize);
   float pixelScale = 1.0f / mPixelsPerUnit;
@@ -423,20 +390,13 @@ void SpriteText::ExtractViewData(ViewNode& viewNode,
   Vec2 widths = GetLocalWidths();
   Vec2 startLocation = center + Vec2(-widths.x, widths.y);
 
-  FontProcessor fontProcessor(
-      frameBlock.mRenderQueues, &viewNode, mVertexColor);
+  FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNode, mVertexColor);
   viewNode.mStreamedVertexType = PrimitiveType::Triangles;
-  viewNode.mStreamedVertexStart =
-      frameBlock.mRenderQueues->mStreamedVertices.Size();
+  viewNode.mStreamedVertexStart = frameBlock.mRenderQueues->mStreamedVertices.Size();
   viewNode.mStreamedVertexCount = 0;
 
-  ProcessTextRange(fontProcessor,
-                   font,
-                   mText,
-                   startLocation,
-                   mTextAlign,
-                   Vec2(1.0f, -1.0f) * pixelScale,
-                   widths * 2.0f);
+  ProcessTextRange(
+      fontProcessor, font, mText, startLocation, mTextAlign, Vec2(1.0f, -1.0f) * pixelScale, widths * 2.0f);
 }
 
 String SpriteText::GetText()
@@ -512,13 +472,8 @@ Vec2 SpriteText::MeasureGivenText(StringParam text)
   {
     RenderFont* font = mFont->GetRenderFont(mFontSize);
     FontProcessorNoRender noRender;
-    return ProcessTextRange(noRender,
-                            font,
-                            text,
-                            Vec2(0.0f),
-                            mTextAlign,
-                            Vec2(1.0f, -1.0f) / mPixelsPerUnit,
-                            area->GetSize());
+    return ProcessTextRange(
+        noRender, font, text, Vec2(0.0f), mTextAlign, Vec2(1.0f, -1.0f) / mPixelsPerUnit, area->GetSize());
   }
   else
   {
@@ -533,8 +488,7 @@ Vec3 SpriteText::GetCharacterPosition(int characterIndex)
   Vec2 widths = GetLocalWidths();
   Vec2 textStart = center + Vec2(-widths.x, widths.y);
 
-  characterIndex =
-      Math::Clamp(characterIndex, 0, (int)mText.ComputeRuneCount());
+  characterIndex = Math::Clamp(characterIndex, 0, (int)mText.ComputeRuneCount());
 
   Vec2 size;
   if (Area* area = GetOwner()->has(Area))
@@ -545,13 +499,7 @@ Vec3 SpriteText::GetCharacterPosition(int characterIndex)
   RenderFont* font = mFont->GetRenderFont(mFontSize);
 
   FontProcessorFindCharPosition findPosition(characterIndex, textStart);
-  ProcessTextRange(findPosition,
-                   font,
-                   mText,
-                   textStart,
-                   mTextAlign,
-                   Vec2(1.0f, -1.0f) / mPixelsPerUnit,
-                   size);
+  ProcessTextRange(findPosition, font, mText, textStart, mTextAlign, Vec2(1.0f, -1.0f) / mPixelsPerUnit, size);
 
   return mTransform->TransformPoint(Vec3(findPosition.mCharPosition, 0.0f));
 }
@@ -655,8 +603,7 @@ Aabb MultiSprite::GetLocalAabb()
 
 void MultiSprite::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
-  GraphicalEntryData* entryData =
-      ((GraphicalEntry*)frameNode.mGraphicalEntry)->mData;
+  GraphicalEntryData* entryData = ((GraphicalEntry*)frameNode.mGraphicalEntry)->mData;
 
   Texture* atlas = (Texture*)entryData->mUtility;
 
@@ -677,12 +624,9 @@ void MultiSprite::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
   frameNode.mBoneMatrixRange = IndexRange(0, 0);
 }
 
-void MultiSprite::ExtractViewData(ViewNode& viewNode,
-                                  ViewBlock& viewBlock,
-                                  FrameBlock& frameBlock)
+void MultiSprite::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
-  GraphicalEntryData* entryData =
-      ((GraphicalEntry*)viewNode.mGraphicalEntry)->mData;
+  GraphicalEntryData* entryData = ((GraphicalEntry*)viewNode.mGraphicalEntry)->mData;
 
   Texture* atlas = (Texture*)entryData->mUtility;
   // Should never get extract calls on missing data
@@ -691,15 +635,13 @@ void MultiSprite::ExtractViewData(ViewNode& viewNode,
 
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
 
-  ComputeLocalToViewMatrix(
-      viewNode.mLocalToView, frameNode.mLocalToWorld, viewBlock.mWorldToView);
+  ComputeLocalToViewMatrix(viewNode.mLocalToView, frameNode.mLocalToWorld, viewBlock.mWorldToView);
 
   viewNode.mStreamedVertexType = PrimitiveType::Triangles;
-  viewNode.mStreamedVertexStart =
-      frameBlock.mRenderQueues->mStreamedVertices.Size();
+  viewNode.mStreamedVertexStart = frameBlock.mRenderQueues->mStreamedVertices.Size();
   viewNode.mStreamedVertexCount = 0;
 
-  forRange(MultiSpriteEntry & spriteEntry, group.mSpriteEntries.All())
+  forRange (MultiSpriteEntry& spriteEntry, group.mSpriteEntries.All())
   {
     IntVec2 index = spriteEntry.mIndex;
     SpriteSource* source = spriteEntry.mSource;
@@ -719,14 +661,11 @@ void MultiSprite::ExtractViewData(ViewNode& viewNode,
     Vec2 uvAux0 = Vec2(0, 0);
     Vec2 uvAux1 = Vec2(1, 1);
 
-    frameBlock.mRenderQueues->AddStreamedQuad(
-        viewNode, pos0, pos1, uv0, uv1, mVertexColor, uvAux0, uvAux1);
+    frameBlock.mRenderQueues->AddStreamedQuad(viewNode, pos0, pos1, uv0, uv1, mVertexColor, uvAux0, uvAux1);
   }
 }
 
-void MultiSprite::MidPhaseQuery(Array<GraphicalEntry>& entries,
-                                Camera& camera,
-                                Frustum* frustum)
+void MultiSprite::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Frustum* frustum)
 {
   CogId cameraId = camera.GetOwner()->GetId();
 
@@ -735,8 +674,8 @@ void MultiSprite::MidPhaseQuery(Array<GraphicalEntry>& entries,
 
   if (frustum == nullptr)
   {
-    forRange(MultiSpriteCell & cell, mCells.Values())
-        AddCellEntries(cell, groupMap);
+    forRange (MultiSpriteCell& cell, mCells.Values())
+      AddCellEntries(cell, groupMap);
   }
   else
   {
@@ -750,21 +689,13 @@ void MultiSprite::MidPhaseQuery(Array<GraphicalEntry>& entries,
 
     Vec3 worldQuadPoints[4];
     worldQuadPoints[0] =
-        Math::TransformPoint(worldMatrix,
-                             localAabbCenter + (localAabbHalfExtents *
-                                                Vec3(-1, 1, 0))); // "Top Left"
+        Math::TransformPoint(worldMatrix, localAabbCenter + (localAabbHalfExtents * Vec3(-1, 1, 0))); // "Top Left"
     worldQuadPoints[1] =
-        Math::TransformPoint(worldMatrix,
-                             localAabbCenter + (localAabbHalfExtents *
-                                                Vec3(1, 1, 0))); // "Top Right"
-    worldQuadPoints[2] = Math::TransformPoint(
-        worldMatrix,
-        localAabbCenter +
-            (localAabbHalfExtents * Vec3(1, -1, 0))); // "Bottom Right"
-    worldQuadPoints[3] = Math::TransformPoint(
-        worldMatrix,
-        localAabbCenter +
-            (localAabbHalfExtents * Vec3(-1, -1, 0))); // "Bottom Left"
+        Math::TransformPoint(worldMatrix, localAabbCenter + (localAabbHalfExtents * Vec3(1, 1, 0))); // "Top Right"
+    worldQuadPoints[2] =
+        Math::TransformPoint(worldMatrix, localAabbCenter + (localAabbHalfExtents * Vec3(1, -1, 0))); // "Bottom Right"
+    worldQuadPoints[3] =
+        Math::TransformPoint(worldMatrix, localAabbCenter + (localAabbHalfExtents * Vec3(-1, -1, 0))); // "Bottom Left"
 
     // Negate the frustum planes because ClipPolygonWithPlanes expects outward
     // facing planes
@@ -779,8 +710,7 @@ void MultiSprite::MidPhaseQuery(Array<GraphicalEntry>& entries,
     // Clip the world quad against the frustum planes
     // This will produce a maximum of 8 clipped points
     Vec3 clippedPoints[Geometry::cMaxSupportPoints];
-    uint clippedPointCount = Geometry::ClipPolygonWithPlanes(
-        frustumPlanes, 6, worldQuadPoints, 4, clippedPoints);
+    uint clippedPointCount = Geometry::ClipPolygonWithPlanes(frustumPlanes, 6, worldQuadPoints, 4, clippedPoints);
     if (clippedPointCount == 0) // Outside frustum?
       return;
 
@@ -793,10 +723,10 @@ void MultiSprite::MidPhaseQuery(Array<GraphicalEntry>& entries,
     Vec3 localClippedAabbMin = localClippedAabb.mMin;
     Vec3 localClippedAabbMax = localClippedAabb.mMax;
 
-    IntVec2 entryLocationMin = IntVec2((int)Math::Floor(localClippedAabbMin.x),
-                                       (int)Math::Floor(localClippedAabbMin.y));
-    IntVec2 entryLocationMax = IntVec2((int)Math::Floor(localClippedAabbMax.x),
-                                       (int)Math::Floor(localClippedAabbMax.y));
+    IntVec2 entryLocationMin =
+        IntVec2((int)Math::Floor(localClippedAabbMin.x), (int)Math::Floor(localClippedAabbMin.y));
+    IntVec2 entryLocationMax =
+        IntVec2((int)Math::Floor(localClippedAabbMax.x), (int)Math::Floor(localClippedAabbMax.y));
 
     IntVec2 cellIndexMin = LocationToCellIndex(entryLocationMin);
     IntVec2 cellIndexMax = LocationToCellIndex(entryLocationMax);
@@ -806,8 +736,7 @@ void MultiSprite::MidPhaseQuery(Array<GraphicalEntry>& entries,
     // Add the entries of all cells overlapping with the frustum
     for (int i = 0; i <= cellIndexCount.x; ++i)
       for (int j = 0; j <= cellIndexCount.y; ++j)
-        if (MultiSpriteCell* cell =
-                mCells.FindPointer(cellIndexMin + IntVec2(i, j)))
+        if (MultiSpriteCell* cell = mCells.FindPointer(cellIndexMin + IntVec2(i, j)))
         {
           Aabb aabb = cell->mLocalAabb.TransformAabb(worldMatrix);
           if (Overlap(aabb, *frustum))
@@ -816,7 +745,7 @@ void MultiSprite::MidPhaseQuery(Array<GraphicalEntry>& entries,
   }
 
   typedef HashMap<Texture*, MultiSpriteTextureGroup>::pair EntryMapPair;
-  forRange(EntryMapPair & pair, groupMap.All())
+  forRange (EntryMapPair& pair, groupMap.All())
   {
     Texture* atlas = pair.first;
     GraphicalEntryData& entryData = pair.second.mGraphicalEntryData;
@@ -839,8 +768,7 @@ bool MultiSprite::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
   Ray localRay = rayCast.mRay.TransformInverse(mTransform->GetWorldMatrix());
 
   Intersection::IntersectionPoint point;
-  Intersection::Type result = Intersection::RayPlane(
-      localRay.Start, localRay.Direction, Vec3::cZAxis, 0.0f, &point);
+  Intersection::Type result = Intersection::RayPlane(localRay.Start, localRay.Direction, Vec3::cZAxis, 0.0f, &point);
   if (result == Intersection::None)
     return false;
 
@@ -912,9 +840,9 @@ void MultiSprite::Clear()
 MultiSpriteEntryRange MultiSprite::All()
 {
   MultiSpriteEntryRange range;
-  forRange(MultiSpriteCell & cell, mCells.Values())
+  forRange (MultiSpriteCell& cell, mCells.Values())
   {
-    forRange(MultiSpriteEntry & entry, cell.mEntries.Values())
+    forRange (MultiSpriteEntry& entry, cell.mEntries.Values())
     {
       range.mEntries.PushBack(entry);
     }
@@ -939,8 +867,8 @@ void MultiSprite::Remove(IntVec2 index)
       else
       {
         mLocalAabb.SetInvalid();
-        forRange(MultiSpriteCell & cell, mCells.Values())
-            mLocalAabb.Combine(cell.mLocalAabb);
+        forRange (MultiSpriteCell& cell, mCells.Values())
+          mLocalAabb.Combine(cell.mLocalAabb);
       }
       UpdateBroadPhaseAabb();
     }
@@ -969,7 +897,7 @@ IntVec2 MultiSprite::LocationToCellIndex(IntVec2 location)
 void MultiSprite::AddCellEntries(MultiSpriteCell& cell, GroupMap& groupMap)
 {
   typedef HashMap<IntVec2, MultiSpriteEntry>::pair EntryPair;
-  forRange(EntryPair & pair, cell.mEntries.All())
+  forRange (EntryPair& pair, cell.mEntries.All())
   {
     IntVec2 entryIndex = pair.first;
     MultiSpriteEntry& spriteEntry = pair.second;

@@ -54,8 +54,7 @@ ItemList::ItemList(Composite* parent, float itemHeight, uint columns) :
 
   Composite* clientArea = mScrollArea->GetClientWidget();
 
-  clientArea->SetLayout(CreateStackLayout(
-      LayoutDirection::TopToBottom, Pixels(0, 2), Thickness::cZero));
+  clientArea->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 2), Thickness::cZero));
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
   ConnectThisTo(this, Events::KeyRepeated, OnKeyDown);
 }
@@ -75,18 +74,14 @@ void ItemList::AddGroup(StringParam groupName, uint weight)
   if (mGroups.ContainsKey(groupName))
     return;
 
-  ItemGroup* group =
-      new ItemGroup(mScrollArea, groupName, weight, mItemHeight, mColumns);
+  ItemGroup* group = new ItemGroup(mScrollArea, groupName, weight, mItemHeight, mColumns);
   group->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
   group->SetSizing(SizeAxis::Y, SizePolicy::Auto, 0.0f);
 
   mGroups.Insert(groupName, group);
 }
 
-Item* ItemList::AddItem(StringParam name,
-                        StringParam displayName,
-                        StringParam groupName,
-                        uint weight)
+Item* ItemList::AddItem(StringParam name, StringParam displayName, StringParam groupName, uint weight)
 {
   ItemGroup* group = mGroups.FindValue(groupName, nullptr);
   ReturnIf(group == nullptr, nullptr, "Create group first");
@@ -104,7 +99,8 @@ Item* ItemList::AddItem(StringParam name,
 void ItemList::Clear()
 {
   // Destroy all groups and items
-  forRange(ItemGroup * group, mGroups.Values()) group->Destroy();
+  forRange (ItemGroup* group, mGroups.Values())
+    group->Destroy();
 
   mSelectedItem = nullptr;
   mGroups.Clear();
@@ -164,11 +160,9 @@ void ItemList::ScrollToItem(StringParam itemName)
   if (Item* item = mItems.FindValue(itemName, nullptr))
   {
     Vec3 itemPosScreen = item->GetScreenPosition();
-    Vec2 itemPosLocal =
-        ToVector2(mScrollArea->GetClientWidget()->ToLocal(itemPosScreen));
+    Vec2 itemPosLocal = ToVector2(mScrollArea->GetClientWidget()->ToLocal(itemPosScreen));
 
-    mScrollArea->ScrollAreaToView(
-        itemPosLocal, itemPosLocal + item->GetSize(), true);
+    mScrollArea->ScrollAreaToView(itemPosLocal, itemPosLocal + item->GetSize(), true);
   }
 }
 
@@ -199,14 +193,12 @@ void ItemList::OnKeyDown(KeyboardEvent* e)
 
     if (e->Key == Keys::Down)
     {
-      if (mSelectedItem->mGroup != newItem->mGroup &&
-          mSelectedItem->mColumn != newItem->mColumn)
+      if (mSelectedItem->mGroup != newItem->mGroup && mSelectedItem->mColumn != newItem->mColumn)
         currentIndex = startIndex + 1;
     }
     else if (e->Key == Keys::Up)
     {
-      if (mSelectedItem->mGroup != newItem->mGroup &&
-          mSelectedItem->mColumn != newItem->mColumn)
+      if (mSelectedItem->mGroup != newItem->mGroup && mSelectedItem->mColumn != newItem->mColumn)
         currentIndex = startIndex - 1;
     }
 
@@ -224,7 +216,8 @@ void ItemList::Sort()
 
   Zero::Sort(mSortedItems.All(), SortItem());
 
-  forRange(ItemGroup * group, mGroups.Values()) group->Sort();
+  forRange (ItemGroup* group, mGroups.Values())
+    group->Sort();
 }
 
 bool ItemList::TakeFocusOverride()
@@ -245,10 +238,7 @@ ZilchDefineType(WeightedComposite, builder, type)
 {
 }
 
-WeightedComposite::WeightedComposite(Composite* parent,
-                                     StringParam displayName,
-                                     uint weight,
-                                     Vec4Param color) :
+WeightedComposite::WeightedComposite(Composite* parent, StringParam displayName, uint weight, Vec4Param color) :
     ColoredComposite(parent, color),
     mWeight(weight)
 {
@@ -267,17 +257,11 @@ ZilchDefineType(ItemGroup, builder, type)
 {
 }
 
-ItemGroup::ItemGroup(Composite* parent,
-                     StringParam name,
-                     uint weight,
-                     float itemHeight,
-                     uint columns) :
+ItemGroup::ItemGroup(Composite* parent, StringParam name, uint weight, float itemHeight, uint columns) :
     WeightedComposite(parent, name, weight, Vec4(1, 1, 1, 0.05f)),
     mColumns(columns)
 {
-  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom,
-                              Pixels(0, 2),
-                              Thickness(Pixels(0, 3, 0, 6))));
+  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 2), Thickness(Pixels(0, 3, 0, 6))));
 
   // Label across the top
   Label* label = new Label(this);
@@ -310,7 +294,7 @@ void ItemGroup::Sort()
   Zero::Sort(mItems.All(), SortGroup());
 
   uint column = 0;
-  forRange(Item * item, mItems.All())
+  forRange (Item* item, mItems.All())
   {
     item->mColumn = column;
     column = (column + 1) % mColumns;
@@ -322,17 +306,12 @@ ZilchDefineType(Item, builder, type)
 {
 }
 
-Item::Item(Composite* parent,
-           StringParam itemName,
-           StringParam displayName,
-           uint weight) :
+Item::Item(Composite* parent, StringParam itemName, StringParam displayName, uint weight) :
     WeightedComposite(parent, displayName, weight, Vec4(1, 1, 1, 0.05f)),
     mItemName(itemName),
     mSelected(false)
 {
-  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight,
-                              Pixels(12, 0),
-                              Thickness(Pixels(12, 0, 12, 0))));
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(12, 0), Thickness(Pixels(12, 0, 12, 0))));
 
   mLabel = new Label(this);
   mLabel->SetText(displayName);
@@ -342,8 +321,7 @@ Item::Item(Composite* parent,
 
   mFocusHighlight = CreateAttached<Element>(cWhiteSquareBorder);
   mFocusHighlight->SetNotInLayout(true);
-  mFocusHighlight->SetColor(
-      Vec4(0.191699997, 0.475143999, 0.709999979, 0.675f));
+  mFocusHighlight->SetColor(Vec4(0.191699997, 0.475143999, 0.709999979, 0.675f));
   mFocusHighlight->SetActive(false);
 
   ConnectThisTo(this, Events::MouseEnter, OnMouseEnter);
@@ -418,7 +396,8 @@ ItemGridLayout::ItemGridLayout(float itemHeight, uint columns) :
 Vec2 ItemGridLayout::Measure(Composite* widget, LayoutArea data)
 {
   uint childCount = 0;
-  forRange(Widget & child, widget->GetChildren())++ childCount;
+  forRange (Widget& child, widget->GetChildren())
+    ++childCount;
 
   uint rows = (uint)Math::Ceil((float)childCount / (float)mColumns);
 
@@ -437,7 +416,7 @@ Vec2 ItemGridLayout::DoLayout(Composite* widget, LayoutArea data)
 
   float itemWidth = data.Size.x / (float)mColumns;
 
-  forRange(Widget & child, widget->GetChildren())
+  forRange (Widget& child, widget->GetChildren())
   {
     uint x = (childIndex % mColumns);
     uint y = (childIndex / mColumns);

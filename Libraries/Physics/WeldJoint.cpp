@@ -124,8 +124,7 @@ void WeldJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData);
+  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData);
 }
 
 void WeldJoint::DebugDraw()
@@ -136,8 +135,7 @@ void WeldJoint::DebugDraw()
   DrawAngleAtomFragment(mReferenceAngle, GetCollider(0), GetCollider(1));
 }
 
-uint WeldJoint::GetAtomIndexFilter(uint atomIndex,
-                                   real& desiredConstraintValue) const
+uint WeldJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   if (atomIndex < 3)

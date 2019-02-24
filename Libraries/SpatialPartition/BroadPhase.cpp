@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-static Memory::Heap* sDefaultBroadPhaseHeap =
-    Memory::GetNamedHeap("BroadPhase");
+static Memory::Heap* sDefaultBroadPhaseHeap = Memory::GetNamedHeap("BroadPhase");
 
 /// Declaration of the static ray cast callbacks.
 IBroadPhase::RayCastCallBack IBroadPhase::mCastRayCallBack = nullptr;
@@ -35,133 +34,94 @@ void IBroadPhase::Serialize(Serializer& stream)
 
 void IBroadPhase::CreateProxy(BroadPhaseProxy& proxy, BroadPhaseData& data)
 {
-  ErrorIf(true,
-          "CreateProxy function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "CreateProxy function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::CreateProxies(BroadPhaseObjectArray& objects)
 {
-  ErrorIf(true,
-          "CreateProxies function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "CreateProxies function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::RemoveProxy(BroadPhaseProxy& proxy)
 {
-  ErrorIf(true,
-          "RemoveProxy function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "RemoveProxy function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::RemoveProxies(ProxyHandleArray& proxies)
 {
-  ErrorIf(true,
-          "RemoveProxies function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "RemoveProxies function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::UpdateProxy(BroadPhaseProxy& proxy, BroadPhaseData& data)
 {
-  ErrorIf(true,
-          "UpdateProxy function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "UpdateProxy function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::UpdateProxies(BroadPhaseObjectArray& objects)
 {
-  ErrorIf(true,
-          "UpdateProxies function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "UpdateProxies function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::SelfQuery(ClientPairArray& results)
 {
-  ErrorIf(true,
-          "SelfQuery function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "SelfQuery function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::Query(BroadPhaseData& data, ClientPairArray& results)
 {
-  ErrorIf(true,
-          "Query function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "Query function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
-void IBroadPhase::BatchQuery(BroadPhaseDataArray& data,
-                             ClientPairArray& results)
+void IBroadPhase::BatchQuery(BroadPhaseDataArray& data, ClientPairArray& results)
 {
-  ErrorIf(true,
-          "BatchQuery function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "BatchQuery function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::Construct()
 {
-  ErrorIf(true,
-          "Construct function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "Construct function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::CastRay(CastDataParam data, ProxyCastResults& results)
 {
-  ErrorIf(true,
-          "CastRay function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "CastRay function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::CastSegment(CastDataParam data, ProxyCastResults& results)
 {
-  ErrorIf(true,
-          "CastSegment function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "CastSegment function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::CastAabb(CastDataParam data, ProxyCastResults& results)
 {
-  ErrorIf(true,
-          "CastAabb function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "CastAabb function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::CastSphere(CastDataParam data, ProxyCastResults& results)
 {
-  ErrorIf(true,
-          "CastSphere function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "CastSphere function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::CastFrustum(CastDataParam data, ProxyCastResults& results)
 {
-  ErrorIf(true,
-          "CastFrustum function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "CastFrustum function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::RegisterCollisions()
 {
-  ErrorIf(true,
-          "RegisterCollisions function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "RegisterCollisions function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::Cleanup()
 {
-  ErrorIf(true,
-          "Cleanup function not implemented on BroadPhase %s",
-          ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "Cleanup function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
 }
 
-bool IBroadPhase::TestRayVsAabb(const Aabb& aabb,
-                                Vec3Param start,
-                                Vec3Param direction,
-                                real& time)
+bool IBroadPhase::TestRayVsAabb(const Aabb& aabb, Vec3Param start, Vec3Param direction, real& time)
 {
   Intersection::IntersectionPoint resultData;
 
-  Intersection::Type ret = Intersection::RayAabb(
-      start, direction, aabb.mMin, aabb.mMax, &resultData);
+  Intersection::Type ret = Intersection::RayAabb(start, direction, aabb.mMin, aabb.mMax, &resultData);
 
   if (ret == Intersection::None)
     return false;
@@ -170,15 +130,11 @@ bool IBroadPhase::TestRayVsAabb(const Aabb& aabb,
   return true;
 }
 
-bool IBroadPhase::TestSegmentVsAabb(const Aabb& aabb,
-                                    Vec3Param start,
-                                    Vec3Param end,
-                                    real& time)
+bool IBroadPhase::TestSegmentVsAabb(const Aabb& aabb, Vec3Param start, Vec3Param end, real& time)
 {
   Intersection::IntersectionPoint resultData;
 
-  Intersection::Type ret =
-      Intersection::SegmentAabb(start, end, aabb.mMin, aabb.mMax, &resultData);
+  Intersection::Type ret = Intersection::SegmentAabb(start, end, aabb.mMin, aabb.mMax, &resultData);
 
   if (ret == Intersection::None)
     return false;
@@ -188,15 +144,11 @@ bool IBroadPhase::TestSegmentVsAabb(const Aabb& aabb,
 }
 
 /// Tests Ray against Sphere.
-bool IBroadPhase::TestRayVsSphere(const Sphere& sphere,
-                                  Vec3Param start,
-                                  Vec3Param direction,
-                                  real& time)
+bool IBroadPhase::TestRayVsSphere(const Sphere& sphere, Vec3Param start, Vec3Param direction, real& time)
 {
   Intersection::IntersectionPoint resultData;
 
-  Intersection::Type ret = Intersection::RaySphere(
-      start, direction, sphere.mCenter, sphere.mRadius, &resultData);
+  Intersection::Type ret = Intersection::RaySphere(start, direction, sphere.mCenter, sphere.mRadius, &resultData);
 
   if (ret == Intersection::None)
     return false;
@@ -206,15 +158,11 @@ bool IBroadPhase::TestRayVsSphere(const Sphere& sphere,
 }
 
 /// Tests Line Segment against Sphere.
-bool IBroadPhase::TestSegmentVsSphere(const Sphere& sphere,
-                                      Vec3Param start,
-                                      Vec3Param end,
-                                      real& time)
+bool IBroadPhase::TestSegmentVsSphere(const Sphere& sphere, Vec3Param start, Vec3Param end, real& time)
 {
   Intersection::IntersectionPoint resultData;
 
-  Intersection::Type ret = Intersection::SegmentSphere(
-      start, end, sphere.mCenter, sphere.mRadius, &resultData);
+  Intersection::Type ret = Intersection::SegmentSphere(start, end, sphere.mCenter, sphere.mRadius, &resultData);
 
   if (ret == Intersection::None)
     return false;

@@ -47,10 +47,7 @@ public:
   String mWorkingDirectory;
 };
 
-SystemEntry::SystemEntry() :
-    mParent(nullptr),
-    mType(EntryType::Directory),
-    mModifiedTime(Time::GetTime())
+SystemEntry::SystemEntry() : mParent(nullptr), mType(EntryType::Directory), mModifiedTime(Time::GetTime())
 {
 }
 
@@ -70,7 +67,7 @@ SystemEntry* SystemEntry::FindChild(StringParam name)
   if (name.Empty())
     return this;
 
-  forRange(SystemEntry & child, mChildren)
+  forRange (SystemEntry& child, mChildren)
   {
     if (child.mName == name)
       return &child;
@@ -86,7 +83,7 @@ SystemEntry* SystemEntry::FindOrAddChild(StringParam name, EntryType::Enum type)
   if (name.Empty())
     return this;
 
-  forRange(SystemEntry & child, mChildren)
+  forRange (SystemEntry& child, mChildren)
   {
     if (child.mName == name)
       return &child;
@@ -107,7 +104,7 @@ bool SystemEntry::DeleteChild(StringParam name)
   if (name.Empty())
     return Delete();
 
-  forRange(SystemEntry & child, mChildren)
+  forRange (SystemEntry& child, mChildren)
   {
     if (child.mName == name)
       return child.Delete();
@@ -125,7 +122,7 @@ void SystemEntry::CopyTo(SystemEntry* copyTo)
   while (!copyTo->mChildren.Empty())
     copyTo->mChildren.Front().Delete();
 
-  forRange(SystemEntry & child, mChildren)
+  forRange (SystemEntry& child, mChildren)
   {
     SystemEntry* clonedChild = child.CloneUnattached();
     clonedChild->mParent = copyTo;
@@ -140,7 +137,7 @@ SystemEntry* SystemEntry::CloneUnattached()
   clone->mType = mType;
   clone->mFileData = mFileData;
 
-  forRange(SystemEntry & child, mChildren)
+  forRange (SystemEntry& child, mChildren)
   {
     SystemEntry* clonedChild = child.CloneUnattached();
     clonedChild->mParent = clone;
@@ -162,10 +159,8 @@ void SystemEntry::AttachTo(SystemEntry* parent)
 
 bool SystemEntry::Delete()
 {
-  ReturnIf(
-      mParent == nullptr, false, "Attempting to delete the root directory");
-  ReturnIf(
-      mLocked, false, "The file/directory is locked and cannot be deleted");
+  ReturnIf(mParent == nullptr, false, "Attempting to delete the root directory");
+  ReturnIf(mLocked, false, "The file/directory is locked and cannot be deleted");
   delete this;
   return true;
 }
@@ -182,7 +177,7 @@ SystemEntry* FileSystem::FindEntry(StringParam path)
   String fullPath = GetFullPath(path);
   SystemEntry* entry = &mRoot;
 
-  forRange(String part, fullPath.Split(cDirectorySeparatorCstr))
+  forRange (String part, fullPath.Split(cDirectorySeparatorCstr))
   {
     entry = entry->FindChild(part);
     if (!entry)
@@ -197,8 +192,8 @@ SystemEntry* FileSystem::CreateEntry(StringParam path, EntryType::Enum type)
 
   SystemEntry* entry = &mRoot;
 
-  forRange(String part, fullPath.Split(cDirectorySeparatorCstr)) entry =
-      entry->FindOrAddChild(part, EntryType::Directory);
+  forRange (String part, fullPath.Split(cDirectorySeparatorCstr))
+    entry = entry->FindOrAddChild(part, EntryType::Directory);
 
   entry->mType = type;
   return entry;
@@ -231,8 +226,7 @@ String FileSystem::GetFullPath(StringParam path)
   return FilePath::Combine(mWorkingDirectory, normalizedPath);
 }
 
-FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback,
-                                             void* userData)
+FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback, void* userData)
 {
   FileSystem::Initialize();
 
@@ -247,27 +241,21 @@ FileSystemInitializer::~FileSystemInitializer()
   FileSystem::Destroy();
 }
 
-void AddVirtualFileSystemEntry(StringParam absolutePath,
-                               DataBlock* stealData,
-                               TimeType modifiedTime)
+void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, TimeType modifiedTime)
 {
-  ErrorIf(!PathIsRooted(absolutePath),
-          "The given path should have been an absolute/rooted path");
+  ErrorIf(!PathIsRooted(absolutePath), "The given path should have been an absolute/rooted path");
 
   SystemEntry* entry = nullptr;
 
   // Create our entries for our files based on name, data, and modified time
   // If the size is 0, then it's a directory
-  if (stealData == nullptr || stealData->Data == nullptr ||
-      stealData->Size == 0)
+  if (stealData == nullptr || stealData->Data == nullptr || stealData->Size == 0)
   {
-    entry = FileSystem::GetInstance()->CreateEntry(absolutePath,
-                                                   EntryType::Directory);
+    entry = FileSystem::GetInstance()->CreateEntry(absolutePath, EntryType::Directory);
   }
   else
   {
-    entry =
-        FileSystem::GetInstance()->CreateEntry(absolutePath, EntryType::File);
+    entry = FileSystem::GetInstance()->CreateEntry(absolutePath, EntryType::File);
 
     // Steal the data from the whoever passed it in
     entry->mFileData.SetData(stealData->Data, stealData->Size);
@@ -292,8 +280,7 @@ bool CopyFileInternal(StringParam dest, StringParam source)
   if (!sourceEntry || sourceEntry->mType != EntryType::File)
     return false;
 
-  SystemEntry* destEntry =
-      FileSystem::GetInstance()->CreateEntry(dest, sourceEntry->mType);
+  SystemEntry* destEntry = FileSystem::GetInstance()->CreateEntry(dest, sourceEntry->mType);
   sourceEntry->CopyTo(destEntry);
   return true;
 }
@@ -305,8 +292,7 @@ bool MoveFileInternal(StringParam dest, StringParam source)
     return false;
 
   String dirDest = FilePath::GetDirectoryPath(dest);
-  SystemEntry* dirEntry =
-      FileSystem::GetInstance()->CreateEntry(dirDest, EntryType::Directory);
+  SystemEntry* dirEntry = FileSystem::GetInstance()->CreateEntry(dirDest, EntryType::Directory);
 
   sourceEntry->AttachTo(dirEntry);
   return true;
@@ -319,8 +305,7 @@ bool DeleteFileInternal(StringParam file)
 
 bool DeleteDirectory(StringParam directory)
 {
-  return FileSystem::GetInstance()->DeleteEntry(directory,
-                                                EntryType::Directory);
+  return FileSystem::GetInstance()->DeleteEntry(directory, EntryType::Directory);
 }
 
 bool PathIsRooted(StringParam directoryPath)
@@ -379,8 +364,7 @@ bool FileExists(StringParam filePath)
 bool FileWritable(StringParam filePath)
 {
   SystemEntry* entry = FileSystem::GetInstance()->FindEntry(filePath);
-  return entry == nullptr ||
-         (entry->mType == EntryType::File && !entry->mLocked);
+  return entry == nullptr || (entry->mType == EntryType::File && !entry->mLocked);
 }
 
 bool DirectoryExists(StringParam directoryPath)
@@ -635,8 +619,7 @@ size_t File::Write(byte* data, size_t sizeInBytes)
   if (!entry)
     return 0;
 
-  size_t newSize =
-      Math::Max(self->mPosition + sizeInBytes, entry->mFileData.Size());
+  size_t newSize = Math::Max(self->mPosition + sizeInBytes, entry->mFileData.Size());
   entry->mFileData.Resize(newSize);
 
   memcpy(entry->mFileData.Data() + self->mPosition, data, sizeInBytes);

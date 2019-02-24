@@ -66,8 +66,7 @@ void HeightMapDebugDrawer::DebugDraw()
         continue;
 
       tri = tri.Transform(worldMat);
-      gDebugDraw->Add(
-          Debug::Triangle(tri).Color(Color::Aqua).Border(true).Alpha(50));
+      gDebugDraw->Add(Debug::Triangle(tri).Color(Color::Aqua).Border(true).Alpha(50));
     }
   }
 }
@@ -94,9 +93,7 @@ void HeightMapDebugDrawer::DrawPatch(IntVec2Param patchIndex)
   gDebugDraw->Add(Debug::Text(obb.GetCenter(), real(1.0), str));
 }
 
-void HeightMapDebugDrawer::DrawCell(IntVec2Param patchIndex,
-                                    IntVec2Param cellIndex,
-                                    bool skippedCell)
+void HeightMapDebugDrawer::DrawCell(IntVec2Param patchIndex, IntVec2Param cellIndex, bool skippedCell)
 {
   float unitsPerPatch = mMap->GetUnitsPerPatch();
   Vec2 patchPos = mMap->GetLocalPosition(patchIndex);
@@ -131,9 +128,7 @@ void HeightMapDebugDrawer::DrawCell(IntVec2Param patchIndex,
   gDebugDraw->Add(Debug::Text(cellObb.GetCenter(), real(.05), cellStr));
 }
 
-void HeightMapDebugDrawer::DrawRayProjection(Vec3Param start,
-                                             Vec3Param dir,
-                                             float maxT)
+void HeightMapDebugDrawer::DrawRayProjection(Vec3Param start, Vec3Param dir, float maxT)
 {
   Mat3 worldRot = Math::ToMatrix3(mTransform->GetWorldRotation());
   Vec3 worldPos = mTransform->GetWorldTranslation();
@@ -243,8 +238,7 @@ void HeightMapAabbChecker::Draw()
     return;
 
   HeightMap* heightMap = heightMapCog->has(HeightMap);
-  HeightMapDebugDrawer* heightMapDrawer =
-      heightMapCog->has(HeightMapDebugDrawer);
+  HeightMapDebugDrawer* heightMapDrawer = heightMapCog->has(HeightMapDebugDrawer);
   if (heightMap == nullptr || heightMapDrawer == nullptr)
     return;
 
@@ -285,20 +279,14 @@ void HeightMapAabbChecker::Draw()
     {
       Triangle& localTri = info.mLocalTri;
       Mat4 worldTransform = transform->GetWorldMatrix();
-      gDebugDraw->Add(Debug::Triangle(localTri.Transform(worldTransform))
-                          .Color(Color::Orange)
-                          .Border(true)
-                          .Alpha(50));
+      gDebugDraw->Add(Debug::Triangle(localTri.Transform(worldTransform)).Color(Color::Orange).Border(true).Alpha(50));
 
       if (heightMapCollider)
       {
         Vec3 dir = HeightMap::UpVector * -heightMapCollider->GetThickness();
-        Triangle sweptTri =
-            Triangle(localTri.p0 + dir, localTri.p1 + dir, localTri.p2 + dir);
-        gDebugDraw->Add(Debug::Triangle(sweptTri.Transform(worldTransform))
-                            .Color(Color::Orange)
-                            .Border(true)
-                            .Alpha(50));
+        Triangle sweptTri = Triangle(localTri.p0 + dir, localTri.p1 + dir, localTri.p2 + dir);
+        gDebugDraw->Add(
+            Debug::Triangle(sweptTri.Transform(worldTransform)).Color(Color::Orange).Border(true).Alpha(50));
       }
     }
 

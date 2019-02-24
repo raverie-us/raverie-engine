@@ -188,9 +188,7 @@ public:
   TabWidget* TabFromWidget(Widget* widget);
   bool IsTabSelected(TabWidget* tab);
   Widget* GetActiveTabWidget();
-  void ConfirmationOfDestructiveAction(TabWidget* tab,
-                                       StringParam title,
-                                       StringParam message);
+  void ConfirmationOfDestructiveAction(TabWidget* tab, StringParam title, StringParam message);
   void CodaResponse(MessageBoxEvent* event);
 
   // Widget Interface

@@ -39,10 +39,7 @@ public:
   void InitializeDecoder();
   // Decodes a single packet of data and allocates a buffer for the decoded
   // data.
-  void DecodePacket(const byte* packetData,
-                    const unsigned dataSize,
-                    float*& decodedData,
-                    unsigned& numberOfSamples);
+  void DecodePacket(const byte* packetData, const unsigned dataSize, float*& decodedData, unsigned& numberOfSamples);
 
 private:
   // Used for repeated calls to DecodePacket
@@ -56,46 +53,31 @@ class PacketDecoder
 public:
   // Decodes the provided packet and returns the number of samples
   // Allocates memory for the decoded data
-  static int DecodePacket(const byte* packetData,
-                          unsigned dataSize,
-                          OpusDecoder* decoder,
-                          float** decodedData);
+  static int DecodePacket(const byte* packetData, unsigned dataSize, OpusDecoder* decoder, float** decodedData);
   // Decodes the provided packet and returns the number of samples
   // Assumes the memory for the decoded data is already allocated
-  static int DecodePacket(const byte* packetData,
-                          unsigned dataSize,
-                          OpusDecoder* decoder,
-                          float* decodedData);
+  static int DecodePacket(const byte* packetData, unsigned dataSize, OpusDecoder* decoder, float* decodedData);
   // Reads the header from the provided buffer and returns the size of the
   // associated data, or -1 if there is an error
   static int GetPacketDataSize(const byte* packetHeader);
   // Reads the header data of the file into the object and returns the size of
   // the file's data
-  static unsigned OpenAndReadHeader(Zero::Status& status,
-                                    const String& fileName,
-                                    File* file,
-                                    FileHeader* header);
+  static unsigned OpenAndReadHeader(Zero::Status& status, const String& fileName, File* file, FileHeader* header);
   // Creates the requested number of opus decoders, returns false if
   // unsuccessful
-  static bool CreateDecoders(Status& status,
-                             OpusDecoder** decoderArray,
-                             int howMany);
+  static bool CreateDecoders(Status& status, OpusDecoder** decoderArray, int howMany);
   // Destroys the requested number of opus decoders, setting the pointers to
   // null
   static void DestroyDecoders(OpusDecoder** decoderArray, int howMany);
   // Fills in the provided buffer with the next packet data from a buffer of
   // data. Returns -1 if getting packet fails or if the end of the data was
   // reached.
-  static int GetPacketFromMemory(byte* packetDataToWrite,
-                                 const byte* inputData,
-                                 unsigned inputDataSize,
-                                 unsigned* dataIndex);
+  static int
+  GetPacketFromMemory(byte* packetDataToWrite, const byte* inputData, unsigned inputDataSize, unsigned* dataIndex);
   // Fills in the provided buffer with the next packet data from a file.
   // Returns -1 if getting packet fails or if the end of the data was reached.
-  static int GetPacketFromFile(byte* packetDataToWrite,
-                               File* inputFile,
-                               FilePosition* filePosition,
-                               ThreadLock* lockObject);
+  static int
+  GetPacketFromFile(byte* packetDataToWrite, File* inputFile, FilePosition* filePosition, ThreadLock* lockObject);
 };
 
 // File Decoder
@@ -105,10 +87,7 @@ typedef void (*FileDecoderCallback)(DecodedPacket*, void* data);
 class AudioFileDecoder
 {
 public:
-  AudioFileDecoder(int channels,
-                   unsigned samplesPerChannel,
-                   FileDecoderCallback callback,
-                   void* callbackData);
+  AudioFileDecoder(int channels, unsigned samplesPerChannel, FileDecoderCallback callback, void* callbackData);
   virtual ~AudioFileDecoder();
 
   // Should only be called when starting the decoding thread

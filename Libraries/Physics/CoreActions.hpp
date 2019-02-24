@@ -15,9 +15,8 @@ struct TransformAction
     Empty = 0,
     ReadTransform = 1 << 0,
     WorldTransform = 1 << 1,
-    OverrideOldTransform =
-        1 << 2, // replaces the old transform values with the current
-    KinematicVelocity = 1 << 3 // effects the rigid body
+    OverrideOldTransform = 1 << 2, // replaces the old transform values with the current
+    KinematicVelocity = 1 << 3     // effects the rigid body
   };
 
   TransformAction();

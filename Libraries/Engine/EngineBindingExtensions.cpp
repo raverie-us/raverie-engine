@@ -29,8 +29,7 @@ MetaEditorScriptObject::MetaEditorScriptObject() : mAutoRegister(true)
 {
 }
 
-void MetaEditorScriptObject::PostProcess(Status& status,
-                                         ReflectionObject* owner)
+void MetaEditorScriptObject::PostProcess(Status& status, ReflectionObject* owner)
 {
   // If auto register is true, we're creating an empty Cog and adding this
   // Component to it. Therefore, it cannot have any dependencies. We could first
@@ -45,7 +44,7 @@ void MetaEditorScriptObject::PostProcess(Status& status,
     // attributes for the class have been processed. Or we could even change
     // this post process to be after everything
 
-    forRange(Property * property, componentType->GetProperties())
+    forRange (Property* property, componentType->GetProperties())
     {
       if (property->HasAttribute(PropertyAttributes::cDependency))
       {
@@ -67,9 +66,7 @@ void MetaDependency::PostProcess(Status& status, ReflectionObject* owner)
 
   // The attribute system should stop this from ever being the case, so it's an
   // assert instead of a compilation error
-  ReturnIf(property == nullptr,
-           ,
-           "Dependency attribute should only ever be on a property");
+  ReturnIf(property == nullptr, , "Dependency attribute should only ever be on a property");
 
   BoundType* classType = property->Owner;
 
@@ -91,8 +88,7 @@ void MetaDependency::PostProcess(Status& status, ReflectionObject* owner)
     return;
   }
 
-  CogComponentMeta* componentMeta =
-      classType->HasOrAdd<::Zero::CogComponentMeta>(classType);
+  CogComponentMeta* componentMeta = classType->HasOrAdd<::Zero::CogComponentMeta>(classType);
   componentMeta->mDependencies.Insert(propertyType);
   componentMeta->mSetupMode = SetupMode::DefaultConstructor;
 }
@@ -108,14 +104,11 @@ void MetaInterface::PostProcess(Status& status, ReflectionObject* owner)
 
   // The attribute system should stop this from ever being the case, so it's an
   // assert instead of a compilation error
-  ReturnIf(classType == nullptr,
-           ,
-           "Interface attribute should only ever be on a class");
+  ReturnIf(classType == nullptr, , "Interface attribute should only ever be on a class");
 
   BoundType* baseType = classType->BaseType;
 
-  CogComponentMeta* componentMeta =
-      classType->HasOrAdd<::Zero::CogComponentMeta>(classType);
+  CogComponentMeta* componentMeta = classType->HasOrAdd<::Zero::CogComponentMeta>(classType);
   componentMeta->AddInterface(baseType);
   componentMeta->mSetupMode = SetupMode::DefaultConstructor;
 }

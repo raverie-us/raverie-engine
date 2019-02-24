@@ -34,9 +34,7 @@ public:
   ~SyntaxTree();
 
   // Get all the nodes at the given cursor position
-  void GetNodesAtCursor(size_t cursorPosition,
-                        StringParam cursorOrigin,
-                        Array<SyntaxNode*>& nodesOut);
+  void GetNodesAtCursor(size_t cursorPosition, StringParam cursorOrigin, Array<SyntaxNode*>& nodesOut);
 
   // Get the graphviz representation for debugging purposes
   String GetGraphVizRepresentation();
@@ -71,27 +69,27 @@ public:
   ZilchNoCopy(SyntaxTree);
 };
 
-#  define ZilchClonableNode(Type)                                              \
-    ~Type()                                                                    \
-    {                                                                          \
-      this->DestroyChildren();                                                 \
-    }                                                                          \
-    Type* Clone() const override                                               \
-    {                                                                          \
-      Type* clone = new Type(*this);                                           \
-                                                                               \
-      NodeChildren children;                                                   \
-      clone->PopulateChildren(children);                                       \
-      clone->PopulateNonTraversedChildren(children);                           \
-      for (size_t i = 0; i < children.Size(); ++i)                             \
-      {                                                                        \
-        SyntaxNode*& child = *children[i];                                     \
-        child = child->Clone();                                                \
-      }                                                                        \
-                                                                               \
-      SyntaxNode::FixParentPointers(clone, nullptr);                           \
-                                                                               \
-      return clone;                                                            \
+#  define ZilchClonableNode(Type)                                                                                      \
+    ~Type()                                                                                                            \
+    {                                                                                                                  \
+      this->DestroyChildren();                                                                                         \
+    }                                                                                                                  \
+    Type* Clone() const override                                                                                       \
+    {                                                                                                                  \
+      Type* clone = new Type(*this);                                                                                   \
+                                                                                                                       \
+      NodeChildren children;                                                                                           \
+      clone->PopulateChildren(children);                                                                               \
+      clone->PopulateNonTraversedChildren(children);                                                                   \
+      for (size_t i = 0; i < children.Size(); ++i)                                                                     \
+      {                                                                                                                \
+        SyntaxNode*& child = *children[i];                                                                             \
+        child = child->Clone();                                                                                        \
+      }                                                                                                                \
+                                                                                                                       \
+      SyntaxNode::FixParentPointers(clone, nullptr);                                                                   \
+                                                                                                                       \
+      return clone;                                                                                                    \
     }
 
 // A syntax node represents any syntactical entity in the syntax tree
@@ -703,8 +701,7 @@ public:
 class ZeroShared ExpressionInitializerMemberNode : public SyntaxNode
 {
 public:
-  ZilchDeclareType(ExpressionInitializerMemberNode,
-                   TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ExpressionInitializerMemberNode, TypeCopyMode::ReferenceType);
   ZilchClonableNode(ExpressionInitializerMemberNode);
 
   // Constructor
@@ -837,9 +834,7 @@ public:
   // This case is generally for when we want to wrap a local stack value with a
   // name we can lookup later We're typically using the local variable as an
   // expression that wraps the initial value
-  LocalVariableNode(StringParam baseName,
-                    Project* parentProject,
-                    ExpressionNode* optionalInitialValue);
+  LocalVariableNode(StringParam baseName, Project* parentProject, ExpressionNode* optionalInitialValue);
 
   // Store a pointer that gives information about the local variable
   Variable* CreatedVariable;

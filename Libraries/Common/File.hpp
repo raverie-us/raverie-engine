@@ -27,22 +27,14 @@ DeclareBitField4(FileShare, Read, Write, Delete, Unspecified);
 // Position in file
 typedef u64 FilePosition;
 
-ZeroShared byte* ReadFileIntoMemory(cstr path,
-                                    size_t& fileSize,
-                                    size_t extra = 0);
+ZeroShared byte* ReadFileIntoMemory(cstr path, size_t& fileSize, size_t extra = 0);
 ZeroShared DataBlock ReadFileIntoDataBlock(cstr path);
 ZeroShared String ReadFileIntoString(StringParam path);
-ZeroShared size_t WriteToFile(cstr filePath,
-                              const byte* data,
-                              size_t bufferSize);
+ZeroShared size_t WriteToFile(cstr filePath, const byte* data, size_t bufferSize);
 
 // Auxiliary functions defined once for every platform
-ZeroShared bool CompareFile(Status& status,
-                            StringParam filePath1,
-                            StringParam filePath2);
-ZeroShared bool CompareFileAndString(Status& status,
-                                     StringParam filePath,
-                                     StringParam string);
+ZeroShared bool CompareFile(Status& status, StringParam filePath1, StringParam filePath2);
+ZeroShared bool CompareFileAndString(Status& status, StringParam filePath, StringParam string);
 
 /// Os file class
 class ZeroShared File
@@ -78,8 +70,7 @@ public:
   FilePosition Tell();
 
   /// Move the read write position to a new filePosition relative to origin
-  bool Seek(FilePosition filePosition,
-            SeekOrigin::Enum origin = SeekOrigin::Begin);
+  bool Seek(FilePosition filePosition, SeekOrigin::Enum origin = SeekOrigin::Begin);
 
   /// Write data to the file
   size_t Write(byte* data, size_t sizeInBytes);
@@ -123,8 +114,7 @@ public:
   FileStream(File& file);
 
   u64 Size() override;
-  bool Seek(u64 filePosition,
-            SeekOrigin::Enum origin = SeekOrigin::Begin) override;
+  bool Seek(u64 filePosition, SeekOrigin::Enum origin = SeekOrigin::Begin) override;
   u64 Tell() override;
   size_t Write(byte* data, size_t sizeInBytes) override;
   size_t Read(byte* data, size_t sizeInBytes) override;

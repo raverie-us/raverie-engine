@@ -180,9 +180,7 @@ Vec3 StressRandom::RandomDirection()
   float phi = Math::ArcCos(real(2.0f * RandomFloat() - 1.0f));
 
   real sinPhi = Math::Sin(phi);
-  return Vec3(Math::Cos(real(theta)) * sinPhi,
-              Math::Sin(real(theta)) * sinPhi,
-              Math::Cos(real(phi)));
+  return Vec3(Math::Cos(real(theta)) * sinPhi, Math::Sin(real(theta)) * sinPhi, Math::Cos(real(phi)));
 }
 
 // Generate a random scale
@@ -319,8 +317,7 @@ StressTestDialog::StressTestDialog(Composite* parent) :
   SetLayout(CreateStackLayout());
   SetMinSize(Vec2(300, 300));
 
-  mSettingsLocation =
-      FilePath::Combine(GetUserDocumentsDirectory(), "StressTester.txt");
+  mSettingsLocation = FilePath::Combine(GetUserDocumentsDirectory(), "StressTester.txt");
   if (FileExists(mSettingsLocation))
     LoadFromDataFile(mTestInfo, mSettingsLocation);
 
@@ -337,14 +334,10 @@ StressTestDialog::StressTestDialog(Composite* parent) :
 
   mStarted = false;
 
-  mExtensionFunctions[ZilchTypeId(Resource)] =
-      &StressTestDialog::GetVariantForResourceExtension;
-  mExtensionFunctions[ZilchTypeId(Enum)] =
-      &StressTestDialog::GetVariantForEnumExtension;
-  mExtensionFunctions[ZilchTypeId(EditorRange)] =
-      &StressTestDialog::GetVariantForRangeExtension;
-  mExtensionFunctions[ZilchTypeId(EditorIndexedStringArray)] =
-      &StressTestDialog::GetVariantForStringArray;
+  mExtensionFunctions[ZilchTypeId(Resource)] = &StressTestDialog::GetVariantForResourceExtension;
+  mExtensionFunctions[ZilchTypeId(Enum)] = &StressTestDialog::GetVariantForEnumExtension;
+  mExtensionFunctions[ZilchTypeId(EditorRange)] = &StressTestDialog::GetVariantForRangeExtension;
+  mExtensionFunctions[ZilchTypeId(EditorIndexedStringArray)] = &StressTestDialog::GetVariantForStringArray;
 
   mIgnoreObjects.PushBack(SpecialCogNames::WorldAnchor);
   mIgnoreObjects.PushBack("Renderer");
@@ -387,8 +380,7 @@ void StressTestDialog::OnStartTest(ObjectEvent* event)
     CopyFolderContents(dest, projectDirectory, &emptyFilter);
   }
 
-  String newProjLocation =
-      FilePath::Combine(dest, BuildString(projName, ".zeroproj"));
+  String newProjLocation = FilePath::Combine(dest, BuildString(projName, ".zeroproj"));
 
   Z::gEditor->mConfig->has(MainConfig)->mSave = false;
 
@@ -411,9 +403,7 @@ void StressTestDialog::OnStartTest(ObjectEvent* event)
   gStressTestDialog = this;
   ErrorSignaler::SetErrorHandler(StressTestErrorHandler);
 
-  bool opened = mLogFile.Open(mTestInfo.LogFile.c_str(),
-                              FileMode::Write,
-                              FileAccessPattern::Sequential);
+  bool opened = mLogFile.Open(mTestInfo.LogFile.c_str(), FileMode::Write, FileAccessPattern::Sequential);
   ErrorIf(!opened, "Failed to open file for text output");
 
   Log("Seed: %d", mTestInfo.Seed);
@@ -443,9 +433,7 @@ void StressTestDialog::OnUpdate(UpdateEvent* event)
 void StressTestDialog::Log(cstr format, ...)
 {
   if (!mLogFile.IsOpen())
-    mLogFile.Open(mTestInfo.LogFile.c_str(),
-                  FileMode::Append,
-                  FileAccessPattern::Sequential);
+    mLogFile.Open(mTestInfo.LogFile.c_str(), FileMode::Append, FileAccessPattern::Sequential);
 
   if (mLogFile.IsOpen())
   {
@@ -462,8 +450,7 @@ void StressTestDialog::Log(cstr format, ...)
 }
 
 // Generate a random variant
-Any StressTestDialog::RandomVariantOfType(BoundType* boundType,
-                                          Space* targetSpace)
+Any StressTestDialog::RandomVariantOfType(BoundType* boundType, Space* targetSpace)
 {
   if (boundType == ZilchTypeId(String))
     return mRandom.RandomString();
@@ -509,9 +496,7 @@ void StressTestDialog::TestOnce()
   if (targetSpace == NULL)
     return;
 
-  Log("******************************************** Test(%d) on Frame(%d)",
-      mTestIterationCount,
-      mTestFrame);
+  Log("******************************************** Test(%d) on Frame(%d)", mTestIterationCount, mTestFrame);
   ++mTestIterationCount;
 
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
@@ -594,35 +579,28 @@ void StressTestDialog::TestOnce()
 
           Any newVariant;
 
-          if (EditorPropertyExtension* extension =
-                  property->HasInherited<EditorPropertyExtension>())
-            function = mExtensionFunctions.FindValue(
-                ZilchVirtualTypeId(extension), nullptr);
+          if (EditorPropertyExtension* extension = property->HasInherited<EditorPropertyExtension>())
+            function = mExtensionFunctions.FindValue(ZilchVirtualTypeId(extension), nullptr);
 
           // Check if this is an enum
-          if (function == nullptr &&
-              property->PropertyType->IsA(ZilchTypeId(Enum)))
+          if (function == nullptr && property->PropertyType->IsA(ZilchTypeId(Enum)))
             function = &GetVariantForEnumExtension;
           // Check if this is a resource
-          if (function == nullptr &&
-              property->PropertyType->IsA(ZilchTypeId(Resource)))
+          if (function == nullptr && property->PropertyType->IsA(ZilchTypeId(Resource)))
             function = &GetVariantForResourceExtension;
 
           if (function == nullptr)
           {
-            MetaPropertyEditor* propertyEditor =
-                property->PropertyType->HasInherited<MetaPropertyEditor>();
+            MetaPropertyEditor* propertyEditor = property->PropertyType->HasInherited<MetaPropertyEditor>();
             BoundType* propertyEditorType = ZilchVirtualTypeId(propertyEditor);
             if (propertyEditorType)
-              function =
-                  mExtensionFunctions.FindValue(propertyEditorType, nullptr);
+              function = mExtensionFunctions.FindValue(propertyEditorType, nullptr);
           }
 
           if (function != nullptr)
             newVariant = function(mRandom, property, component);
           else
-            newVariant = RandomVariantOfType(
-                Type::GetBoundType(property->PropertyType), targetSpace);
+            newVariant = RandomVariantOfType(Type::GetBoundType(property->PropertyType), targetSpace);
 
           Log("Set Property '%s' on '%s' (old value %s, new value %s) on Cog "
               "%s",
@@ -650,13 +628,11 @@ void StressTestDialog::TestOnce()
       auto composition = meta->HasInherited<MetaComposition>();
 
       Array<String> availableComponents;
-      composition->Enumerate(
-          availableComponents, EnumerateAction::AllAddableToObject, object);
+      composition->Enumerate(availableComponents, EnumerateAction::AllAddableToObject, object);
 
       if (!availableComponents.Empty())
       {
-        String component = availableComponents[mRandom.RandomIntMax(
-            availableComponents.Size())];
+        String component = availableComponents[mRandom.RandomIntMax(availableComponents.Size())];
 
         bool validComponent = true;
 
@@ -671,9 +647,7 @@ void StressTestDialog::TestOnce()
 
         if (validComponent)
         {
-          Log("Adding component %s on %s",
-              component.c_str(),
-              ToString(object).c_str());
+          Log("Adding component %s on %s", component.c_str(), ToString(object).c_str());
 
           QueueAddComponent(queue, object, component);
 
@@ -690,9 +664,7 @@ void StressTestDialog::TestOnce()
       auto componentMeta = ZilchVirtualTypeId(component);
       auto owner = component->GetOwner();
 
-      Log("Removing component %s from %s",
-          componentMeta->Name.c_str(),
-          ToString(owner).c_str());
+      Log("Removing component %s from %s", componentMeta->Name.c_str(), ToString(owner).c_str());
 
       auto meta = ZilchVirtualTypeId(owner);
 
@@ -754,9 +726,7 @@ void StressTestDialog::TestOnce()
       for (uint i = 0; i < results.Size(); ++i)
       {
         auto hit = results[i];
-        Log(" - Hit at %f, object %s",
-            hit.GetDistance(),
-            ToString(hit.GetObjectHit()).c_str());
+        Log(" - Hit at %f, object %s", hit.GetDistance(), ToString(hit.GetObjectHit()).c_str());
       }
     }
   }
@@ -769,9 +739,7 @@ void StressTestDialog::TestOnce()
 
     if (parent && child && !child->mFlags.IsSet(CogFlags::Protected))
     {
-      Log("Attaching %s to %s",
-          ToString(child).c_str(),
-          ToString(parent).c_str());
+      Log("Attaching %s to %s", ToString(child).c_str(), ToString(parent).c_str());
 
       bool relative = mRandom.RandomBool();
       AttachObject(queue, child, parent, relative);
@@ -790,9 +758,7 @@ void StressTestDialog::TestOnce()
     if (child)
     {
       if (child->mHierarchyParent)
-        Log("Detaching %s from parent %s",
-            ToString(child).c_str(),
-            ToString(child->mHierarchyParent).c_str());
+        Log("Detaching %s from parent %s", ToString(child).c_str(), ToString(child->mHierarchyParent).c_str());
       else
         Log("Detaching %s from parent", ToString(child).c_str());
 
@@ -838,8 +804,7 @@ void StressTestDialog::TestOnce()
 
   if (mTestInfo.ChangeTools)
   {
-    Z::gEditor->Tools->SelectToolIndex(
-        mRandom.RandomIntMax(Z::gEditor->Tools->mTools.mToolArray.Size() + 5));
+    Z::gEditor->Tools->SelectToolIndex(mRandom.RandomIntMax(Z::gEditor->Tools->mTools.mToolArray.Size() + 5));
   }
 
   if (mTestInfo.StartGameInstances)
@@ -874,8 +839,7 @@ void StressTestDialog::TestOnce()
         Widget& child = children.Front();
         // unfortunately the meta of the window is null now, I should fix this
         // but I'm lazy and I'll just check for the name window right now...
-        if (ZilchVirtualTypeId(&child)->IsA(ZilchTypeId(Window)) ||
-            child.GetName() == "Window")
+        if (ZilchVirtualTypeId(&child)->IsA(ZilchTypeId(Window)) || child.GetName() == "Window")
         {
           Window* window = static_cast<Window*>(&child);
           tabAreas.PushBack(window->mTabArea);
@@ -892,8 +856,7 @@ void StressTestDialog::TestOnce()
 
         if (sourceTabArea->mTabs.Size() != 0)
         {
-          uint sourceTabIndex =
-              mRandom.RandomIntMax(sourceTabArea->mTabs.Size());
+          uint sourceTabIndex = mRandom.RandomIntMax(sourceTabArea->mTabs.Size());
 
           TabWidget* sourceTab = sourceTabArea->mTabs[sourceTabIndex];
           Vec2 pos = Math::ToVector2(sourceTab->mTitle->GetScreenPosition());
@@ -923,8 +886,7 @@ void StressTestDialog::TestOnce()
             // either drag to another tab
             float chance = mRandom.RandomFloat();
             if (chance <= 0.6f)
-              newPos = Math::ToVector2(destTab->mTitle->GetScreenPosition()) +
-                       destTab->mTitle->GetSize() * 0.5f;
+              newPos = Math::ToVector2(destTab->mTitle->GetScreenPosition()) + destTab->mTitle->GetSize() * 0.5f;
             // or drag to one of the four edges of the window
             else
             {
@@ -997,8 +959,7 @@ Cog* StressTestDialog::GetRandomObject(Space* targetSpace)
 
     for (uint j = 0; j < mIgnoreObjects.Size(); ++j)
     {
-      if (cog->GetName() == mIgnoreObjects[j] ||
-          cog->mFlags.IsSet(CogFlags::ObjectViewHidden))
+      if (cog->GetName() == mIgnoreObjects[j] || cog->mFlags.IsSet(CogFlags::ObjectViewHidden))
       {
         return NULL;
       }
@@ -1028,8 +989,7 @@ Component* StressTestDialog::GetRandomComponent(Space* targetSpace)
 
     if (components.Empty() == false)
     {
-      Component* component =
-          components[mRandom.RandomIntMax(components.Size())];
+      Component* component = components[mRandom.RandomIntMax(components.Size())];
 
       for (uint j = 0; j < mIgnoreComponents.Size(); ++j)
       {
@@ -1070,14 +1030,11 @@ Property* StressTestDialog::GetRandomSetProperty(BoundType* boundType)
   return property;
 }
 
-Any StressTestDialog::GetVariantForResourceExtension(StressRandom& random,
-                                                     Property* prop,
-                                                     Component* component)
+Any StressTestDialog::GetVariantForResourceExtension(StressRandom& random, Property* prop, Component* component)
 {
   // Get the resource manager for this editor resource type
   BoundType* resourceType = Type::GetBoundType(prop->PropertyType);
-  ResourceManager* manager =
-      Z::gResources->Managers.FindValue(resourceType->Name, NULL);
+  ResourceManager* manager = Z::gResources->Managers.FindValue(resourceType->Name, NULL);
   // Get all of the resources for this resource type
   Array<String> resources;
   manager->EnumerateResources(resources);
@@ -1087,14 +1044,11 @@ Any StressTestDialog::GetVariantForResourceExtension(StressRandom& random,
   if (resources.Size() != 0)
     resourceName = resources[random.RandomIntMax(resources.Size())];
 
-  Resource* resource =
-      manager->GetResource(resourceName, ResourceNotFound::ErrorFallback);
+  Resource* resource = manager->GetResource(resourceName, ResourceNotFound::ErrorFallback);
   return resource;
 }
 
-Any StressTestDialog::GetVariantForEnumExtension(StressRandom& random,
-                                                 Property* prop,
-                                                 Component* component)
+Any StressTestDialog::GetVariantForEnumExtension(StressRandom& random, Property* prop, Component* component)
 {
   BoundType* propertyType = Type::GetBoundType(prop->PropertyType);
   Zilch::PropertyArray& properties = propertyType->AllProperties;
@@ -1110,9 +1064,7 @@ Any StressTestDialog::GetVariantForEnumExtension(StressRandom& random,
   return Any(index);
 }
 
-Any StressTestDialog::GetVariantForRangeExtension(StressRandom& random,
-                                                  Property* prop,
-                                                  Component* component)
+Any StressTestDialog::GetVariantForRangeExtension(StressRandom& random, Property* prop, Component* component)
 {
   EditorRange* editorRange = prop->HasInherited<EditorRange>();
   BoundType* propertyType = Type::GetBoundType(prop->PropertyType);
@@ -1143,8 +1095,7 @@ Any StressTestDialog::GetVariantForRangeExtension(StressRandom& random,
     if (random.Chance(0.9f))
       value = random.RandomInt();
     else
-      value =
-          random.RandomIntRange((int)editorRange->Min, (int)editorRange->Max);
+      value = random.RandomIntRange((int)editorRange->Min, (int)editorRange->Max);
     return Any(value);
   }
   else
@@ -1154,12 +1105,9 @@ Any StressTestDialog::GetVariantForRangeExtension(StressRandom& random,
   return Any(0);
 }
 
-Any StressTestDialog::GetVariantForStringArray(StressRandom& random,
-                                               Property* prop,
-                                               Component* component)
+Any StressTestDialog::GetVariantForStringArray(StressRandom& random, Property* prop, Component* component)
 {
-  EditorIndexedStringArray* editorStrArray =
-      prop->HasInherited<EditorIndexedStringArray>();
+  EditorIndexedStringArray* editorStrArray = prop->HasInherited<EditorIndexedStringArray>();
 
   if (random.Chance(0.7f))
   {

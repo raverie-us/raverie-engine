@@ -21,9 +21,7 @@ DeclareEnum2(ChannelInfo, Joined, Parted);
 
 struct ChannelEvent : public Event
 {
-  ChannelEvent(ChannelInfo::Enum info, StringParam channel) :
-      Info(info),
-      Channel(channel)
+  ChannelEvent(ChannelInfo::Enum info, StringParam channel) : Info(info), Channel(channel)
   {
   }
   ChannelInfo::Enum Info;
@@ -32,10 +30,7 @@ struct ChannelEvent : public Event
 
 struct UserEvent : public Event
 {
-  UserEvent(ChannelInfo::Enum info,
-            StringParam channel,
-            StringParam name,
-            bool showMessage) :
+  UserEvent(ChannelInfo::Enum info, StringParam channel, StringParam name, bool showMessage) :
       Info(info),
       Channel(channel),
       Name(name),
@@ -59,10 +54,7 @@ struct NameChangeEvent : public Event
 
 struct ChatEvent : public Event
 {
-  ChatEvent(StringParam from, StringParam to, StringParam text) :
-      From(from),
-      To(to),
-      Text(text)
+  ChatEvent(StringParam from, StringParam to, StringParam text) : From(from), To(to), Text(text)
   {
   }
   String From;

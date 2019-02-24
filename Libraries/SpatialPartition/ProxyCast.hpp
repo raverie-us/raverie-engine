@@ -110,10 +110,8 @@ struct CastData
   Frustum& GetFrustum();
   const Frustum& GetFrustum() const;
 
-  char bytes[Max<
-      Max<Max<Max<sizeof(Ray), sizeof(Segment)>::Result, sizeof(Aabb)>::Result,
-          sizeof(Sphere)>::Result,
-      sizeof(Frustum)>::Result];
+  char bytes[Max<Max<Max<Max<sizeof(Ray), sizeof(Segment)>::Result, sizeof(Aabb)>::Result, sizeof(Sphere)>::Result,
+                 sizeof(Frustum)>::Result];
 };
 
 typedef const CastData& CastDataParam;
@@ -124,11 +122,7 @@ struct ProxyResult
   ProxyResult()
   {
   }
-  ProxyResult(void* proxy,
-              Vec3Param p1,
-              Vec3Param p2,
-              Vec3Param contactNormal,
-              real time);
+  ProxyResult(void* proxy, Vec3Param p1, Vec3Param p2, Vec3Param contactNormal, real time);
 
   void operator=(const ProxyResult& rhs);
   bool operator==(const ProxyResult& rhs);

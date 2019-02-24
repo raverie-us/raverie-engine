@@ -13,11 +13,7 @@ real GetAnimationTime(Cog* cog)
   return t;
 }
 
-void DebugDrawDisc(Vec3Param center,
-                   Vec3Param axis0,
-                   Vec3Param axis1,
-                   real radius0,
-                   real radius1)
+void DebugDrawDisc(Vec3Param center, Vec3Param axis0, Vec3Param axis1, real radius0, real radius1)
 {
   // Draw 128 line segments to represent the ellipse
   real delta = Math::cTwoPi / real(128);
@@ -27,20 +23,13 @@ void DebugDrawDisc(Vec3Param center,
     // Could cache the last value and not re-compute it, but this is debug
     // drawing so I don't care right now...
     real next = prev + delta;
-    Vec3 p0 = center + Math::Cos(prev) * axis0 * radius0 +
-              Math::Sin(prev) * axis1 * radius1;
-    Vec3 p1 = center + Math::Cos(next) * axis0 * radius0 +
-              Math::Sin(next) * axis1 * radius1;
+    Vec3 p0 = center + Math::Cos(prev) * axis0 * radius0 + Math::Sin(prev) * axis1 * radius1;
+    Vec3 p1 = center + Math::Cos(next) * axis0 * radius0 + Math::Sin(next) * axis1 * radius1;
     gDebugDraw->Add(Debug::Line(p0, p1).Color(Color::Plum));
   }
 }
 
-void DrawRing(Vec3Param center,
-              Vec3Param axis,
-              real radius,
-              size_t subDivisions,
-              real time,
-              ByteColor color)
+void DrawRing(Vec3Param center, Vec3Param axis, real radius, size_t subDivisions, real time, ByteColor color)
 {
   // Compute a basis for the ring
   Vec3 axis0, axis1;
@@ -58,15 +47,12 @@ void DrawRing(Vec3Param center,
     // Compute the starting angle of this sub-division
     real start = time + (i * Math::cTwoPi / subDivisions);
     real prev = start;
-    for (real deltaAngle = 0; deltaAngle <= subArcAngle;
-         deltaAngle += globalDetail)
+    for (real deltaAngle = 0; deltaAngle <= subArcAngle; deltaAngle += globalDetail)
     {
       real next = start + deltaAngle;
 
-      Vec3 p0 =
-          center + radius * (Math::Cos(prev) * axis0 + Math::Sin(prev) * axis1);
-      Vec3 p1 =
-          center + radius * (Math::Cos(next) * axis0 + Math::Sin(next) * axis1);
+      Vec3 p0 = center + radius * (Math::Cos(prev) * axis0 + Math::Sin(prev) * axis1);
+      Vec3 p1 = center + radius * (Math::Cos(next) * axis0 + Math::Sin(next) * axis1);
 
       // Draw a line with the given color
       Debug::Line line(p0, p1);
@@ -81,10 +67,7 @@ void DrawRing(Vec3Param center,
   }
 }
 
-void GetPenumbraDebugDrawValues(real minDistance,
-                                real maxDistance,
-                                real& minForce,
-                                real& maxForce)
+void GetPenumbraDebugDrawValues(real minDistance, real maxDistance, real& minForce, real& maxForce)
 {
   // Get a signed normalized force for both the min and max distances
   minForce /= Math::Abs(minForce);
@@ -101,8 +84,7 @@ void GetPenumbraDebugDrawValues(real minDistance,
     maxForce *= Math::Min(1.0f, deltaDistance * 0.4f);
 }
 
-Cylinder GetSupportShapeCylinder(const Intersection::SupportShape& supportShape,
-                                 Vec3Param primaryAxis)
+Cylinder GetSupportShapeCylinder(const Intersection::SupportShape& supportShape, Vec3Param primaryAxis)
 {
   // We want to approximate a cylinder from the given support shape. To start
   // we need to build a basis from the primary axis.
@@ -122,14 +104,11 @@ Cylinder GetSupportShapeCylinder(const Intersection::SupportShape& supportShape,
   supportShape.Support(axis1, &supportPoint1);
   // The cylinder's half-height vector can now be found by projecting its
   // support point onto the flow direction.
-  Vec3 cylinderHalfHeightAxis =
-      Math::ProjectOnVector(supportPointPrimary - center, primaryAxis);
+  Vec3 cylinderHalfHeightAxis = Math::ProjectOnVector(supportPointPrimary - center, primaryAxis);
   // The radius can be found by projecting the other two points and then taking
   // the max length between them
-  real radius0 =
-      Math::Length(Math::ProjectOnPlane(supportPoint0 - center, primaryAxis));
-  real radius1 =
-      Math::Length(Math::ProjectOnPlane(supportPoint1 - center, primaryAxis));
+  real radius0 = Math::Length(Math::ProjectOnPlane(supportPoint0 - center, primaryAxis));
+  real radius1 = Math::Length(Math::ProjectOnPlane(supportPoint1 - center, primaryAxis));
 
   Cylinder result;
   result.Radius = Math::Max(radius0, radius1);
@@ -148,8 +127,7 @@ Cylinder GetCogCylinder(Cog* cog, Vec3Param primaryAxis)
   // the aabb if possible.
   Aabb aabb(Vec3::cZero, Vec3(0.5f));
   if (Transform* transform = cog->has(Transform))
-    aabb.SetCenterAndHalfExtents(transform->GetWorldTranslation(),
-                                 transform->GetWorldScale());
+    aabb.SetCenterAndHalfExtents(transform->GetWorldTranslation(), transform->GetWorldScale());
 
   Intersection::SupportShape supportShape = Intersection::MakeSupport(&aabb);
   return GetSupportShapeCylinder(supportShape, primaryAxis);

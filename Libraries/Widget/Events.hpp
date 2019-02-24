@@ -112,9 +112,7 @@ class FocusEvent : public Event
 public:
   ZilchDeclareType(FocusEvent, TypeCopyMode::ReferenceType);
 
-  FocusEvent(Widget* focusGained, Widget* focusLost) :
-      ReceivedFocus(focusGained),
-      LostFocus(focusLost)
+  FocusEvent(Widget* focusGained, Widget* focusLost) : ReceivedFocus(focusGained), LostFocus(focusLost)
   {
   }
 

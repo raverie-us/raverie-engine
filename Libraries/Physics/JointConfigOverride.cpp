@@ -14,12 +14,9 @@ ZilchDefineType(JointConfigOverride, builder, type)
   ZilchBindGetterSetterProperty(Slop)->ZeroSerialize(real(0.0));
   ZilchBindGetterSetterProperty(LinearBaumgarte)->ZeroSerialize(real(4.5));
   ZilchBindGetterSetterProperty(AngularBaumgarte)->ZeroSerialize(real(4.5));
-  ZilchBindGetterSetterProperty(LinearErrorCorrection)
-      ->ZeroSerialize(real(0.2));
-  ZilchBindGetterSetterProperty(AngularErrorCorrection)
-      ->ZeroSerialize(real(0.2));
-  ZilchBindGetterSetterProperty(PositionCorrectionType)
-      ->ZeroSerialize(ConstraintPositionCorrection::Inherit);
+  ZilchBindGetterSetterProperty(LinearErrorCorrection)->ZeroSerialize(real(0.2));
+  ZilchBindGetterSetterProperty(AngularErrorCorrection)->ZeroSerialize(real(0.2));
+  ZilchBindGetterSetterProperty(PositionCorrectionType)->ZeroSerialize(ConstraintPositionCorrection::Inherit);
 
   ZeroBindTag(Tags::Physics);
   ZeroBindTag(Tags::Joint);
@@ -55,13 +52,11 @@ void JointConfigOverride::Initialize(CogInitializer& initializer)
 
   // If the joint is dynamically created, grab the default values from the
   // current config
-  bool dynamicallyCreated =
-      (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
+  bool dynamicallyCreated = (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
   if (dynamicallyCreated)
   {
     PhysicsSolverConfig* config = joint->mSpace->GetPhysicsSolverConfig();
-    ConstraintConfigBlock& configBlock =
-        config->mJointBlocks[joint->GetJointType()];
+    ConstraintConfigBlock& configBlock = config->mJointBlocks[joint->GetJointType()];
     mSlop = configBlock.GetSlop();
     mLinearBaumgarte = configBlock.GetLinearBaumgarte();
     mAngularBaumgarte = configBlock.GetAngularBaumgarte();
@@ -132,14 +127,12 @@ void JointConfigOverride::SetAngularErrorCorrection(real maxError)
   mAngularErrorCorrection = maxError;
 }
 
-ConstraintPositionCorrection::Enum
-JointConfigOverride::GetPositionCorrectionType() const
+ConstraintPositionCorrection::Enum JointConfigOverride::GetPositionCorrectionType() const
 {
   return mPositionCorrectionType;
 }
 
-void JointConfigOverride::SetPositionCorrectionType(
-    ConstraintPositionCorrection::Enum correctionType)
+void JointConfigOverride::SetPositionCorrectionType(ConstraintPositionCorrection::Enum correctionType)
 {
   mPositionCorrectionType = correctionType;
 }

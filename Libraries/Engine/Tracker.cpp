@@ -90,8 +90,7 @@ void Tracker::ClearDeletedObjects()
 
 void Tracker::AddToDestroyList(Cog* gameObject)
 {
-  ErrorIf(gameObject->mFlags.IsSet(CogFlags::Destroyed),
-          "Double delete error.");
+  ErrorIf(gameObject->mFlags.IsSet(CogFlags::Destroyed), "Double delete error.");
   // Add the object to the to be deleted list they will be deleted
   // when the factory is updated
   mDestroyArray.PushBack(gameObject);

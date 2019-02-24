@@ -58,8 +58,7 @@ const Zero::String cViewToLocalNormal("TransformData.ViewToLocalNormal");
 const Zero::String cLocalToPerspective("TransformData.LocalToPerspective");
 const Zero::String cViewToPerspective("TransformData.ViewToPerspective");
 const Zero::String cPerspectiveToView("TransformData.PerspectiveToView");
-const Zero::String cZeroPerspectiveToApiPerspective(
-    "TransformData.ZeroPerspectiveToApiPerspective");
+const Zero::String cZeroPerspectiveToApiPerspective("TransformData.ZeroPerspectiveToApiPerspective");
 
 const Zero::String cSpriteSource("SpriteSource_SpriteSourceColor");
 const Zero::String cSpriteSourceCubePreview("SpriteSource_TextureCubePreview");
@@ -82,35 +81,31 @@ struct GlTextureEnums
 };
 
 GlTextureEnums gTextureEnums[] = {
-    {/* internalFormat    , format            , type */},          // None
-    {GL_R8, GL_RED, GL_UNSIGNED_BYTE},                             // R8
-    {GL_RG8, GL_RG, GL_UNSIGNED_BYTE},                             // RG8
-    {GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE},                           // RGB8
-    {GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE},                         // RGBA8
-    {GL_R16, GL_RED, GL_UNSIGNED_SHORT},                           // R16
-    {GL_RG16, GL_RG, GL_UNSIGNED_SHORT},                           // RG16
-    {GL_RGB16, GL_RGB, GL_UNSIGNED_SHORT},                         // RGB16
-    {GL_RGBA16, GL_RGBA, GL_UNSIGNED_SHORT},                       // RGBA16
-    {GL_R16F, GL_RED, GL_HALF_FLOAT},                              // R16f
-    {GL_RG16F, GL_RG, GL_HALF_FLOAT},                              // RG16f
-    {GL_RGB16F, GL_RGB, GL_HALF_FLOAT},                            // RGB16f
-    {GL_RGBA16F, GL_RGBA, GL_HALF_FLOAT},                          // RGBA16f
-    {GL_R32F, GL_RED, GL_FLOAT},                                   // R32f
-    {GL_RG32F, GL_RG, GL_FLOAT},                                   // RG32f
-    {GL_RGB32F, GL_RGB, GL_FLOAT},                                 // RGB32f
-    {GL_RGBA32F, GL_RGBA, GL_FLOAT},                               // RGBA32f
-    {GL_SRGB8, GL_RGB, GL_UNSIGNED_BYTE},                          // SRGB8
-    {GL_SRGB8_ALPHA8, GL_RGBA, GL_UNSIGNED_BYTE},                  // SRGB8A8
-    {GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT}, // Depth16
-    {GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT},   // Depth24
-    {GL_DEPTH_COMPONENT32, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT},   // Depth32
-    {GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, GL_FLOAT},         // Depth32f
-    {GL_DEPTH24_STENCIL8,
-     GL_DEPTH_STENCIL,
-     GL_UNSIGNED_INT_24_8}, // Depth24Stencil8
-    {GL_DEPTH32F_STENCIL8,
-     GL_DEPTH_STENCIL,
-     GL_FLOAT_32_UNSIGNED_INT_24_8_REV} // Depth32fStencil8Pad24
+    {/* internalFormat    , format            , type */},                       // None
+    {GL_R8, GL_RED, GL_UNSIGNED_BYTE},                                          // R8
+    {GL_RG8, GL_RG, GL_UNSIGNED_BYTE},                                          // RG8
+    {GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE},                                        // RGB8
+    {GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE},                                      // RGBA8
+    {GL_R16, GL_RED, GL_UNSIGNED_SHORT},                                        // R16
+    {GL_RG16, GL_RG, GL_UNSIGNED_SHORT},                                        // RG16
+    {GL_RGB16, GL_RGB, GL_UNSIGNED_SHORT},                                      // RGB16
+    {GL_RGBA16, GL_RGBA, GL_UNSIGNED_SHORT},                                    // RGBA16
+    {GL_R16F, GL_RED, GL_HALF_FLOAT},                                           // R16f
+    {GL_RG16F, GL_RG, GL_HALF_FLOAT},                                           // RG16f
+    {GL_RGB16F, GL_RGB, GL_HALF_FLOAT},                                         // RGB16f
+    {GL_RGBA16F, GL_RGBA, GL_HALF_FLOAT},                                       // RGBA16f
+    {GL_R32F, GL_RED, GL_FLOAT},                                                // R32f
+    {GL_RG32F, GL_RG, GL_FLOAT},                                                // RG32f
+    {GL_RGB32F, GL_RGB, GL_FLOAT},                                              // RGB32f
+    {GL_RGBA32F, GL_RGBA, GL_FLOAT},                                            // RGBA32f
+    {GL_SRGB8, GL_RGB, GL_UNSIGNED_BYTE},                                       // SRGB8
+    {GL_SRGB8_ALPHA8, GL_RGBA, GL_UNSIGNED_BYTE},                               // SRGB8A8
+    {GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT},              // Depth16
+    {GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT},                // Depth24
+    {GL_DEPTH_COMPONENT32, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT},                // Depth32
+    {GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, GL_FLOAT},                      // Depth32f
+    {GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8},              // Depth24Stencil8
+    {GL_DEPTH32F_STENCIL8, GL_DEPTH_STENCIL, GL_FLOAT_32_UNSIGNED_INT_24_8_REV} // Depth32fStencil8Pad24
 };
 
 void WebglConvertTextureFormat(AddTextureInfo* info)
@@ -380,20 +375,16 @@ void CheckShader(GLuint shader, StringParam shaderCode)
     static size_t sMaxPrints = 4;
     if (sMaxPrints > 0)
     {
-      ZPrint(
-          "\n************************************************************\n%"
-          "s\n************************************************************\n",
-          shaderCode.c_str());
+      ZPrint("\n************************************************************\n%"
+             "s\n************************************************************\n",
+             shaderCode.c_str());
       --sMaxPrints;
     }
   }
 #endif
 }
 
-void SetClearData(void* clearData,
-                  TextureFormat::Enum format,
-                  Vec4 color,
-                  float depth)
+void SetClearData(void* clearData, TextureFormat::Enum format, Vec4 color, float depth)
 {
   switch (format)
   {
@@ -577,8 +568,7 @@ void SetBlendSettings(const BlendSettings& blendSettings)
   case BlendMode::Enabled:
     glEnable(GL_BLEND);
     glBlendEquation(GlBlendEquation(blendSettings.mBlendEquation));
-    glBlendFunc(GlBlendFactor(blendSettings.mSourceFactor),
-                GlBlendFactor(blendSettings.mDestFactor));
+    glBlendFunc(GlBlendFactor(blendSettings.mSourceFactor), GlBlendFactor(blendSettings.mDestFactor));
     break;
   case BlendMode::Separate:
     glEnable(GL_BLEND);
@@ -592,8 +582,7 @@ void SetBlendSettings(const BlendSettings& blendSettings)
   }
 }
 
-void SetRenderSettings(const RenderSettings& renderSettings,
-                       bool drawBuffersBlend)
+void SetRenderSettings(const RenderSettings& renderSettings, bool drawBuffersBlend)
 {
   switch (renderSettings.mCullMode)
   {
@@ -624,16 +613,12 @@ void SetRenderSettings(const RenderSettings& renderSettings,
       case BlendMode::Enabled:
         glEnablei(GL_BLEND, i);
         glBlendEquationi(i, GlBlendEquation(blendSettings.mBlendEquation));
-        glBlendFunci(i,
-                     GlBlendFactor(blendSettings.mSourceFactor),
-                     GlBlendFactor(blendSettings.mDestFactor));
+        glBlendFunci(i, GlBlendFactor(blendSettings.mSourceFactor), GlBlendFactor(blendSettings.mDestFactor));
         break;
       case BlendMode::Separate:
         glEnablei(GL_BLEND, i);
         glBlendEquationSeparatei(
-            i,
-            GlBlendEquation(blendSettings.mBlendEquation),
-            GlBlendEquation(blendSettings.mBlendEquationAlpha));
+            i, GlBlendEquation(blendSettings.mBlendEquation), GlBlendEquation(blendSettings.mBlendEquationAlpha));
         glBlendFuncSeparatei(i,
                              GlBlendFactor(blendSettings.mSourceFactor),
                              GlBlendFactor(blendSettings.mDestFactor),
@@ -685,11 +670,10 @@ void SetRenderSettings(const RenderSettings& renderSettings,
                         GlStencilOp(depthSettings.mDepthFailOp),
                         GlStencilOp(depthSettings.mDepthPassOp));
     glStencilMaskSeparate(GL_FRONT, depthSettings.mStencilWriteMask);
-    glStencilFuncSeparate(
-        GL_BACK,
-        GlCompareFunc(depthSettings.mStencilCompareFuncBackFace),
-        depthSettings.mStencilTestValueBackFace,
-        depthSettings.mStencilReadMaskBackFace);
+    glStencilFuncSeparate(GL_BACK,
+                          GlCompareFunc(depthSettings.mStencilCompareFuncBackFace),
+                          depthSettings.mStencilTestValueBackFace,
+                          depthSettings.mStencilReadMaskBackFace);
     glStencilOpSeparate(GL_BACK,
                         GlStencilOp(depthSettings.mStencilFailOpBackFace),
                         GlStencilOp(depthSettings.mDepthFailOpBackFace),
@@ -709,10 +693,7 @@ void SetRenderSettings(const RenderSettings& renderSettings,
   }
 }
 
-void BindTexture(TextureType::Enum textureType,
-                 uint textureSlot,
-                 uint textureId,
-                 bool samplerObjects)
+void BindTexture(TextureType::Enum textureType, uint textureSlot, uint textureId, bool samplerObjects)
 {
   // Clear anything bound to this texture unit
   glActiveTexture(GL_TEXTURE0 + textureSlot);
@@ -744,29 +725,20 @@ void CheckFramebufferStatus()
 #endif
 }
 
-void SetSingleRenderTargets(GLuint fboId,
-                            TextureRenderData** colorTargets,
-                            TextureRenderData* depthTarget)
+void SetSingleRenderTargets(GLuint fboId, TextureRenderData** colorTargets, TextureRenderData* depthTarget)
 {
   glBindFramebuffer(GL_FRAMEBUFFER, fboId);
 
-  glFramebufferTexture2D(
-      GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
   glDrawBuffer(GL_NONE);
 
-  glFramebufferTexture2D(
-      GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
-  glFramebufferTexture2D(
-      GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 
   GlTextureRenderData* colorRenderData = (GlTextureRenderData*)colorTargets[0];
   if (colorRenderData != nullptr)
   {
-    glFramebufferTexture2D(GL_FRAMEBUFFER,
-                           GL_COLOR_ATTACHMENT0,
-                           GL_TEXTURE_2D,
-                           colorRenderData->mId,
-                           0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorRenderData->mId, 0);
     glDrawBuffer(GL_COLOR_ATTACHMENT0);
   }
 
@@ -774,52 +746,34 @@ void SetSingleRenderTargets(GLuint fboId,
   if (depthRenderData != nullptr)
   {
     if (IsDepthStencilFormat(depthRenderData->mFormat))
-      glFramebufferTexture2D(GL_FRAMEBUFFER,
-                             GL_DEPTH_STENCIL_ATTACHMENT,
-                             GL_TEXTURE_2D,
-                             depthRenderData->mId,
-                             0);
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthRenderData->mId, 0);
     else
-      glFramebufferTexture2D(GL_FRAMEBUFFER,
-                             GL_DEPTH_ATTACHMENT,
-                             GL_TEXTURE_2D,
-                             depthRenderData->mId,
-                             0);
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthRenderData->mId, 0);
   }
 
   CheckFramebufferStatus();
 }
 
-void SetMultiRenderTargets(GLuint fboId,
-                           TextureRenderData** colorTargets,
-                           TextureRenderData* depthTarget)
+void SetMultiRenderTargets(GLuint fboId, TextureRenderData** colorTargets, TextureRenderData* depthTarget)
 {
   glBindFramebuffer(GL_FRAMEBUFFER, fboId);
 
-  glFramebufferTexture2D(
-      GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
-  glFramebufferTexture2D(
-      GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 
   GLenum drawBuffers[cMaxDrawBuffers];
 
   for (uint i = 0; i < cMaxDrawBuffers; ++i)
   {
-    GlTextureRenderData* colorRenderData =
-        (GlTextureRenderData*)colorTargets[i];
+    GlTextureRenderData* colorRenderData = (GlTextureRenderData*)colorTargets[i];
     if (colorRenderData != nullptr)
     {
-      glFramebufferTexture2D(GL_FRAMEBUFFER,
-                             GL_COLOR_ATTACHMENT0 + i,
-                             GL_TEXTURE_2D,
-                             colorRenderData->mId,
-                             0);
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, colorRenderData->mId, 0);
       drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
     }
     else
     {
-      glFramebufferTexture2D(
-          GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, 0, 0);
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, 0, 0);
       drawBuffers[i] = GL_NONE;
     }
   }
@@ -832,17 +786,9 @@ void SetMultiRenderTargets(GLuint fboId,
   if (depthRenderData != nullptr)
   {
     if (IsDepthStencilFormat(depthRenderData->mFormat))
-      glFramebufferTexture2D(GL_FRAMEBUFFER,
-                             GL_DEPTH_STENCIL_ATTACHMENT,
-                             GL_TEXTURE_2D,
-                             depthRenderData->mId,
-                             0);
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthRenderData->mId, 0);
     else
-      glFramebufferTexture2D(GL_FRAMEBUFFER,
-                             GL_DEPTH_ATTACHMENT,
-                             GL_TEXTURE_2D,
-                             depthRenderData->mId,
-                             0);
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthRenderData->mId, 0);
   }
 
   CheckFramebufferStatus();
@@ -868,12 +814,8 @@ void StreamedVertexBuffer::Initialize()
                         sizeof(StreamedVertex),
                         (void*)ZeroOffsetOf(StreamedVertex, mPosition));
   glEnableVertexAttribArray(VertexSemantic::Uv);
-  glVertexAttribPointer(VertexSemantic::Uv,
-                        2,
-                        GL_FLOAT,
-                        GL_FALSE,
-                        sizeof(StreamedVertex),
-                        (void*)ZeroOffsetOf(StreamedVertex, mUv));
+  glVertexAttribPointer(
+      VertexSemantic::Uv, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)ZeroOffsetOf(StreamedVertex, mUv));
   glEnableVertexAttribArray(VertexSemantic::Color);
   glVertexAttribPointer(VertexSemantic::Color,
                         4,
@@ -901,9 +843,7 @@ void StreamedVertexBuffer::Destroy()
   glDeleteVertexArrays(1, &mVertexArray);
 }
 
-void StreamedVertexBuffer::AddVertices(StreamedVertex* vertices,
-                                       uint count,
-                                       PrimitiveType::Enum primitiveType)
+void StreamedVertexBuffer::AddVertices(StreamedVertex* vertices, uint count, PrimitiveType::Enum primitiveType)
 {
   if (!mActive)
   {
@@ -968,8 +908,7 @@ void StreamedVertexBuffer::AddVertices(StreamedVertexArray& vertices,
 
     if (remainder != 0)
     {
-      ErrorIf(count < verticesPerPrimitive,
-              "Bad count if it does not have a whole number of primitives.");
+      ErrorIf(count < verticesPerPrimitive, "Bad count if it does not have a whole number of primitives.");
       // Manually populate one primitive over the block array boundary.
       StreamedVertex primitive[3];
       for (uint i = 0; i < verticesPerPrimitive; ++i)
@@ -987,8 +926,7 @@ void StreamedVertexBuffer::FlushBuffer(bool deactivate)
   if (mCurrentBufferOffset > 0)
   {
     if (mPrimitiveType == PrimitiveType::Triangles)
-      glDrawArrays(
-          GL_TRIANGLES, 0, mCurrentBufferOffset / sizeof(StreamedVertex));
+      glDrawArrays(GL_TRIANGLES, 0, mCurrentBufferOffset / sizeof(StreamedVertex));
     else if (mPrimitiveType == PrimitiveType::Lines)
       glDrawArrays(GL_LINES, 0, mCurrentBufferOffset / sizeof(StreamedVertex));
     else if (mPrimitiveType == PrimitiveType::Points)
@@ -1004,10 +942,7 @@ void StreamedVertexBuffer::FlushBuffer(bool deactivate)
   }
 }
 
-void OpenglRenderer::Initialize(OsHandle windowHandle,
-                                OsHandle deviceContext,
-                                OsHandle renderContext,
-                                String& error)
+void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, OsHandle renderContext, String& error)
 {
   mVsync = false;
 
@@ -1025,26 +960,21 @@ void OpenglRenderer::Initialize(OsHandle windowHandle,
     return;
   }
 
-  const char* gl_sl_version =
-      (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+  const char* gl_sl_version = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
   const char* gl_vendor = (const char*)glGetString(GL_VENDOR);
   const char* gl_renderer = (const char*)glGetString(GL_RENDERER);
   const char* gl_extensions = (const char*)glGetString(GL_EXTENSIONS);
 
-  ZPrint("OpenGL Version          : %s\n",
-         gl_version ? gl_version : "(no data)");
-  ZPrint("OpenGL Shading Language : %s\n",
-         gl_sl_version ? gl_sl_version : "(no data)");
+  ZPrint("OpenGL Version          : %s\n", gl_version ? gl_version : "(no data)");
+  ZPrint("OpenGL Shading Language : %s\n", gl_sl_version ? gl_sl_version : "(no data)");
   ZPrint("OpenGL Vendor           : %s\n", gl_vendor ? gl_vendor : "(no data)");
-  ZPrint("OpenGL Renderer         : %s\n",
-         gl_renderer ? gl_renderer : "(no data)");
+  ZPrint("OpenGL Renderer         : %s\n", gl_renderer ? gl_renderer : "(no data)");
 
   // Initialize glew
   GLenum glewInitStatus = glewInit();
   if (glewInitStatus != GLEW_OK)
   {
-    error = String::Format("GLEW failed to initialize with error: %d",
-                           glewInitStatus);
+    error = String::Format("GLEW failed to initialize with error: %d", glewInitStatus);
     return;
   }
 
@@ -1064,37 +994,27 @@ void OpenglRenderer::Initialize(OsHandle windowHandle,
 #endif
 
   ZPrint("OpenGL *Required Extensions\n");
-  ZPrint(
-      "OpenGL *(GL_VERSION_2_0) Shader Program support                 : %s\n",
-      version_2_0 ? "True" : "False");
-  ZPrint(
-      "OpenGL *(GL_ARB_framebuffer_object) Deferred Rendering support  : %s\n",
-      framebuffer_object ? "True" : "False");
+  ZPrint("OpenGL *(GL_VERSION_2_0) Shader Program support                 : %s\n", version_2_0 ? "True" : "False");
+  ZPrint("OpenGL *(GL_ARB_framebuffer_object) Deferred Rendering support  : %s\n",
+         framebuffer_object ? "True" : "False");
 
-  ZPrint(
-      "OpenGL (GL_ARB_texture_compression) Texture Compression support : %s\n",
-      texture_compression ? "True" : "False");
-  ZPrint(
-      "OpenGL (GL_ARB_draw_buffers_blend) Multi Target Blend support   : %s\n",
-      draw_buffers_blend ? "True" : "False");
-  ZPrint(
-      "OpenGL (GL_ARB_sampler_objects) Sampler Object support          : %s\n",
-      sampler_objects ? "True" : "False");
+  ZPrint("OpenGL (GL_ARB_texture_compression) Texture Compression support : %s\n",
+         texture_compression ? "True" : "False");
+  ZPrint("OpenGL (GL_ARB_draw_buffers_blend) Multi Target Blend support   : %s\n",
+         draw_buffers_blend ? "True" : "False");
+  ZPrint("OpenGL (GL_ARB_sampler_objects) Sampler Object support          : %s\n", sampler_objects ? "True" : "False");
 
-  ZPrint("OpenGL All Extensions : %s\n",
-         gl_extensions ? gl_extensions : "(no data)");
+  ZPrint("OpenGL All Extensions : %s\n", gl_extensions ? gl_extensions : "(no data)");
 
   // Required OpenGL extensions
   if (!version_2_0 || !framebuffer_object)
   {
     String failedExtensions =
-        BuildString(version_2_0 ? "" : "GL_VERSION_2_0, ",
-                    framebuffer_object ? "" : "GL_ARB_framebuffer_object, ");
-    error = String::Format(
-        "Required OpenGL extensions: %s are unsupported by the active driver. "
-        "Please update your computer's graphics drivers or verify that your "
-        "graphics card supports the listed features.",
-        failedExtensions.c_str());
+        BuildString(version_2_0 ? "" : "GL_VERSION_2_0, ", framebuffer_object ? "" : "GL_ARB_framebuffer_object, ");
+    error = String::Format("Required OpenGL extensions: %s are unsupported by the active driver. "
+                           "Please update your computer's graphics drivers or verify that your "
+                           "graphics card supports the listed features.",
+                           failedExtensions.c_str());
     return;
   }
 
@@ -1161,10 +1081,7 @@ void OpenglRenderer::Initialize(OsHandle windowHandle,
 
   glGenBuffers(1, &mTriangleVertex);
   glBindBuffer(GL_ARRAY_BUFFER, mTriangleVertex);
-  glBufferData(GL_ARRAY_BUFFER,
-               sizeof(StreamedVertex) * 3,
-               triangleVertices,
-               GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(StreamedVertex) * 3, triangleVertices, GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(VertexSemantic::Position);
   glVertexAttribPointer(VertexSemantic::Position,
@@ -1174,19 +1091,12 @@ void OpenglRenderer::Initialize(OsHandle windowHandle,
                         sizeof(StreamedVertex),
                         (void*)ZeroOffsetOf(StreamedVertex, mPosition));
   glEnableVertexAttribArray(VertexSemantic::Uv);
-  glVertexAttribPointer(VertexSemantic::Uv,
-                        2,
-                        GL_FLOAT,
-                        GL_FALSE,
-                        sizeof(StreamedVertex),
-                        (void*)ZeroOffsetOf(StreamedVertex, mUv));
+  glVertexAttribPointer(
+      VertexSemantic::Uv, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)ZeroOffsetOf(StreamedVertex, mUv));
 
   glGenBuffers(1, &mTriangleIndex);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mTriangleIndex);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-               sizeof(uint) * 3,
-               triangleIndices,
-               GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 3, triangleIndices, GL_STATIC_DRAW);
 
   glBindVertexArray(0);
 
@@ -1217,38 +1127,32 @@ void OpenglRenderer::Initialize(OsHandle windowHandle,
 #define ZeroGlPixelIn ZeroIfGl("in") ZeroIfWebgl("varying")
 
   // @Nate: This will most likley have to change to use uniform buffers
-  String loadingShaderVertex =
-      ZeroIfGl("#version 150\n") ZeroIfWebgl("#version 100\n") ZeroIfWebgl(
-          "precision mediump float;\n") "uniform mat4 Transform;\n"
-                                        "uniform mat3 "
-                                        "UvTransform;\n" ZeroGlVertexIn
-                                        " vec3 LocalPosition;\n" ZeroGlVertexIn
-                                        " vec2 Uv;\n" ZeroGlVertexOut
-                                        " vec2 psInUv;\n"
-                                        "void main(void)\n"
-                                        "{\n"
-                                        "  psInUv = (vec3(Uv, 1.0) * "
-                                        "UvTransform).xy;\n"
-                                        "  gl_Position = vec4(LocalPosition, "
-                                        "1.0) * Transform;\n"
-                                        "}";
+  String loadingShaderVertex = ZeroIfGl("#version 150\n") ZeroIfWebgl("#version 100\n")
+      ZeroIfWebgl("precision mediump float;\n") "uniform mat4 Transform;\n"
+                                                "uniform mat3 "
+                                                "UvTransform;\n" ZeroGlVertexIn " vec3 LocalPosition;\n" ZeroGlVertexIn
+                                                " vec2 Uv;\n" ZeroGlVertexOut " vec2 psInUv;\n"
+                                                "void main(void)\n"
+                                                "{\n"
+                                                "  psInUv = (vec3(Uv, 1.0) * "
+                                                "UvTransform).xy;\n"
+                                                "  gl_Position = vec4(LocalPosition, "
+                                                "1.0) * Transform;\n"
+                                                "}";
 
-  String loadingShaderPixel =
-      ZeroIfGl("#version 150\n") ZeroIfWebgl("#version 100\n") ZeroIfWebgl(
-          "precision mediump float;\n") "uniform sampler2D Texture;\n"
-                                        "uniform float Alpha;\n" ZeroGlPixelIn
-                                        " vec2 psInUv;\n"
-                                        "void main(void)\n"
-                                        "{\n"
-                                        "  vec2 uv = vec2(psInUv.x, 1.0 - "
-                                        "psInUv.y);\n"
-                                        "  gl_FragColor = texture2D(Texture, "
-                                        "uv);\n"
-                                        "  gl_FragColor.xyz *= Alpha;\n"
-                                        "}";
+  String loadingShaderPixel = ZeroIfGl("#version 150\n") ZeroIfWebgl("#version 100\n")
+      ZeroIfWebgl("precision mediump float;\n") "uniform sampler2D Texture;\n"
+                                                "uniform float Alpha;\n" ZeroGlPixelIn " vec2 psInUv;\n"
+                                                "void main(void)\n"
+                                                "{\n"
+                                                "  vec2 uv = vec2(psInUv.x, 1.0 - "
+                                                "psInUv.y);\n"
+                                                "  gl_FragColor = texture2D(Texture, "
+                                                "uv);\n"
+                                                "  gl_FragColor.xyz *= Alpha;\n"
+                                                "}";
 
-  CreateShader(
-      loadingShaderVertex, String(), loadingShaderPixel, mLoadingShader);
+  CreateShader(loadingShaderVertex, String(), loadingShaderPixel, mLoadingShader);
 }
 
 void OpenglRenderer::Shutdown()
@@ -1269,7 +1173,8 @@ void OpenglRenderer::Shutdown()
 
   mStreamedVertexBuffer.Destroy();
 
-  forRange(GLuint sampler, mSamplers.Values()) glDeleteSamplers(1, &sampler);
+  forRange (GLuint sampler, mSamplers.Values())
+    glDeleteSamplers(1, &sampler);
   mSamplers.Clear();
 }
 
@@ -1279,8 +1184,7 @@ void OpenglRenderer::BuildOrthographicTransform(
   BuildOrthographicTransformGl(matrix, size, aspect, nearPlane, farPlane);
 }
 
-void OpenglRenderer::BuildPerspectiveTransform(
-    Mat4Ref matrix, float fov, float aspect, float nearPlane, float farPlane)
+void OpenglRenderer::BuildPerspectiveTransform(Mat4Ref matrix, float fov, float aspect, float nearPlane, float farPlane)
 {
   BuildPerspectiveTransformGl(matrix, fov, aspect, nearPlane, farPlane);
 }
@@ -1351,17 +1255,13 @@ void OpenglRenderer::AddMesh(AddMeshInfo* info)
   GLuint vertexBuffer;
   glGenBuffers(1, &vertexBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-  glBufferData(GL_ARRAY_BUFFER,
-               info->mVertexCount * info->mVertexSize,
-               info->mVertexData,
-               GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, info->mVertexCount * info->mVertexSize, info->mVertexData, GL_STATIC_DRAW);
 
-  forRange(VertexAttribute & element, info->mVertexAttributes.All())
+  forRange (VertexAttribute& element, info->mVertexAttributes.All())
   {
     bool normalized = element.mType >= VertexElementType::NormByte;
     glEnableVertexAttribArray(element.mSemantic);
-    if (element.mType == VertexElementType::Byte ||
-        element.mType == VertexElementType::Short)
+    if (element.mType == VertexElementType::Byte || element.mType == VertexElementType::Short)
       glVertexAttribIPointer(element.mSemantic,
                              element.mCount,
                              ToOpenglType(element.mType),
@@ -1381,10 +1281,7 @@ void OpenglRenderer::AddMesh(AddMeshInfo* info)
   {
     glGenBuffers(1, &indexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 info->mIndexCount * info->mIndexSize,
-                 info->mIndexData,
-                 GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, info->mIndexCount * info->mIndexSize, info->mIndexData, GL_STATIC_DRAW);
   }
 
   glBindVertexArray(0);
@@ -1424,8 +1321,7 @@ void OpenglRenderer::AddTexture(AddTextureInfo* info)
     if (renderData->mId == 0)
       glGenTextures(1, &renderData->mId);
 
-    BindTexture(
-        info->mType, 0, renderData->mId, mDriverSupport.mSamplerObjects);
+    BindTexture(info->mType, 0, renderData->mId, mDriverSupport.mSamplerObjects);
 
     // RenderTarget upload if data size is 0 (not calculated).
     // A texture resource with uploaded data will never set data size to 0.
@@ -1458,8 +1354,7 @@ void OpenglRenderer::AddTexture(AddTextureInfo* info)
 
         if (info->mSubImage)
         {
-          ErrorIf(mipHeader->mLevel != 0,
-                  "Sub-image uploading to lower mip levels is not supported.");
+          ErrorIf(mipHeader->mLevel != 0, "Sub-image uploading to lower mip levels is not supported.");
           uint xOffset = info->mXOffset;
           uint yOffset = info->mHeight - (mipHeader->mHeight + info->mYOffset);
           glTexSubImage2D(GlTextureFace((TextureFace::Enum)mipHeader->mFace),
@@ -1475,15 +1370,14 @@ void OpenglRenderer::AddTexture(AddTextureInfo* info)
         else
         {
           if (info->mCompression != TextureCompression::None)
-            glCompressedTexImage2D(
-                GlTextureFace((TextureFace::Enum)mipHeader->mFace),
-                mipHeader->mLevel,
-                GlInternalFormat(info->mCompression),
-                mipHeader->mWidth,
-                mipHeader->mHeight,
-                0,
-                mipHeader->mDataSize,
-                mipData);
+            glCompressedTexImage2D(GlTextureFace((TextureFace::Enum)mipHeader->mFace),
+                                   mipHeader->mLevel,
+                                   GlInternalFormat(info->mCompression),
+                                   mipHeader->mWidth,
+                                   mipHeader->mHeight,
+                                   0,
+                                   mipHeader->mDataSize,
+                                   mipData);
           else
             glTexImage2D(GlTextureFace((TextureFace::Enum)mipHeader->mFace),
                          mipHeader->mLevel,
@@ -1498,37 +1392,19 @@ void OpenglRenderer::AddTexture(AddTextureInfo* info)
       }
     }
 
-    glTexParameteri(GlTextureType(info->mType),
-                    GL_TEXTURE_WRAP_S,
-                    GlTextureAddressing(info->mAddressingX));
-    glTexParameteri(GlTextureType(info->mType),
-                    GL_TEXTURE_WRAP_T,
-                    GlTextureAddressing(info->mAddressingY));
-    glTexParameteri(GlTextureType(info->mType),
-                    GL_TEXTURE_MIN_FILTER,
-                    GlTextureFilteringMin(info->mFiltering));
-    glTexParameteri(GlTextureType(info->mType),
-                    GL_TEXTURE_MAG_FILTER,
-                    GlTextureFilteringMag(info->mFiltering));
-    glTexParameteri(GlTextureType(info->mType),
-                    GL_TEXTURE_COMPARE_MODE,
-                    GlCompareMode(info->mCompareMode));
-    glTexParameteri(GlTextureType(info->mType),
-                    GL_TEXTURE_COMPARE_FUNC,
-                    GlCompareFunc(info->mCompareFunc));
-    glTexParameterf(GlTextureType(info->mType),
-                    GL_TEXTURE_MAX_ANISOTROPY_EXT,
-                    GlTextureAnisotropy(info->mAnisotropy));
-    glTexParameteri(GlTextureType(info->mType),
-                    GL_TEXTURE_MAX_LEVEL,
-                    GlTextureMipMapping(info->mMipMapping));
+    glTexParameteri(GlTextureType(info->mType), GL_TEXTURE_WRAP_S, GlTextureAddressing(info->mAddressingX));
+    glTexParameteri(GlTextureType(info->mType), GL_TEXTURE_WRAP_T, GlTextureAddressing(info->mAddressingY));
+    glTexParameteri(GlTextureType(info->mType), GL_TEXTURE_MIN_FILTER, GlTextureFilteringMin(info->mFiltering));
+    glTexParameteri(GlTextureType(info->mType), GL_TEXTURE_MAG_FILTER, GlTextureFilteringMag(info->mFiltering));
+    glTexParameteri(GlTextureType(info->mType), GL_TEXTURE_COMPARE_MODE, GlCompareMode(info->mCompareMode));
+    glTexParameteri(GlTextureType(info->mType), GL_TEXTURE_COMPARE_FUNC, GlCompareFunc(info->mCompareFunc));
+    glTexParameterf(GlTextureType(info->mType), GL_TEXTURE_MAX_ANISOTROPY_EXT, GlTextureAnisotropy(info->mAnisotropy));
+    glTexParameteri(GlTextureType(info->mType), GL_TEXTURE_MAX_LEVEL, GlTextureMipMapping(info->mMipMapping));
 
     if (info->mMipMapping == TextureMipMapping::GpuGenerated)
     {
       if (info->mMaxMipOverride > 0)
-        glTexParameteri(GlTextureType(info->mType),
-                        GL_TEXTURE_MAX_LEVEL,
-                        info->mMaxMipOverride);
+        glTexParameteri(GlTextureType(info->mType), GL_TEXTURE_MAX_LEVEL, info->mMaxMipOverride);
       glGenerateMipmap(GlTextureType(info->mType));
     }
 
@@ -1541,15 +1417,11 @@ void OpenglRenderer::AddTexture(AddTextureInfo* info)
   renderData->mHeight = info->mHeight;
 
   renderData->mSamplerSettings = 0;
-  renderData->mSamplerSettings |=
-      SamplerSettings::AddressingX(info->mAddressingX);
-  renderData->mSamplerSettings |=
-      SamplerSettings::AddressingY(info->mAddressingY);
+  renderData->mSamplerSettings |= SamplerSettings::AddressingX(info->mAddressingX);
+  renderData->mSamplerSettings |= SamplerSettings::AddressingY(info->mAddressingY);
   renderData->mSamplerSettings |= SamplerSettings::Filtering(info->mFiltering);
-  renderData->mSamplerSettings |=
-      SamplerSettings::CompareMode(info->mCompareMode);
-  renderData->mSamplerSettings |=
-      SamplerSettings::CompareFunc(info->mCompareFunc);
+  renderData->mSamplerSettings |= SamplerSettings::CompareMode(info->mCompareMode);
+  renderData->mSamplerSettings |= SamplerSettings::CompareFunc(info->mCompareFunc);
 
   delete[] info->mImageData;
   delete[] info->mMipHeaders;
@@ -1580,15 +1452,13 @@ void OpenglRenderer::SetLazyShaderCompilation(bool isLazy)
   mLazyShaderCompilation = isLazy;
 }
 
-void OpenglRenderer::AddShaders(Array<ShaderEntry>& entries,
-                                uint forceCompileBatchCount)
+void OpenglRenderer::AddShaders(Array<ShaderEntry>& entries, uint forceCompileBatchCount)
 {
   if (mLazyShaderCompilation && forceCompileBatchCount == 0)
   {
-    forRange(ShaderEntry & entry, entries.All())
+    forRange (ShaderEntry& entry, entries.All())
     {
-      ShaderKey shaderKey(entry.mComposite,
-                          StringPair(entry.mCoreVertex, entry.mRenderPass));
+      ShaderKey shaderKey(entry.mComposite, StringPair(entry.mCoreVertex, entry.mRenderPass));
       mShaderEntries.Insert(shaderKey, entry);
     }
     entries.Clear();
@@ -1602,8 +1472,7 @@ void OpenglRenderer::AddShaders(Array<ShaderEntry>& entries,
     for (uint i = 0; i < processCount; ++i)
     {
       ShaderEntry& entry = entries[i];
-      ShaderKey shaderKey(entry.mComposite,
-                          StringPair(entry.mCoreVertex, entry.mRenderPass));
+      ShaderKey shaderKey(entry.mComposite, StringPair(entry.mCoreVertex, entry.mRenderPass));
       mShaderEntries.Erase(shaderKey);
       CreateShader(entry);
     }
@@ -1614,10 +1483,9 @@ void OpenglRenderer::AddShaders(Array<ShaderEntry>& entries,
 
 void OpenglRenderer::RemoveShaders(Array<ShaderEntry>& entries)
 {
-  forRange(ShaderEntry & entry, entries)
+  forRange (ShaderEntry& entry, entries)
   {
-    ShaderKey shaderKey(entry.mComposite,
-                        StringPair(entry.mCoreVertex, entry.mRenderPass));
+    ShaderKey shaderKey(entry.mComposite, StringPair(entry.mCoreVertex, entry.mRenderPass));
 
     if (mGlShaders.ContainsKey(shaderKey))
       glDeleteProgram(mGlShaders[shaderKey].mId);
@@ -1659,16 +1527,9 @@ void OpenglRenderer::GetTextureData(GetTextureDataInfo* info)
   info->mImage = new byte[imageSize];
 
   GlTextureEnums textureEnums = gTextureEnums[info->mFormat];
-  glReadPixels(0,
-               0,
-               info->mWidth,
-               info->mHeight,
-               textureEnums.mFormat,
-               textureEnums.mType,
-               info->mImage);
+  glReadPixels(0, 0, info->mWidth, info->mHeight, textureEnums.mFormat, textureEnums.mType, info->mImage);
 
-  YInvertNonCompressed(
-      info->mImage, info->mWidth, info->mHeight, GetPixelSize(info->mFormat));
+  YInvertNonCompressed(info->mImage, info->mWidth, info->mHeight, GetPixelSize(info->mFormat));
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -1676,12 +1537,10 @@ void OpenglRenderer::GetTextureData(GetTextureDataInfo* info)
 void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
 {
   // Get data off info (we don't technically need to copy this anymore or lock)
-  GlTextureRenderData* loadingTexture =
-      (GlTextureRenderData*)info->mLoadingTexture;
+  GlTextureRenderData* loadingTexture = (GlTextureRenderData*)info->mLoadingTexture;
   GlTextureRenderData* logoTexture = (GlTextureRenderData*)info->mLogoTexture;
   GlTextureRenderData* whiteTexture = (GlTextureRenderData*)info->mWhiteTexture;
-  GlTextureRenderData* splashTexture =
-      (GlTextureRenderData*)info->mSplashTexture;
+  GlTextureRenderData* splashTexture = (GlTextureRenderData*)info->mSplashTexture;
   GlTextureRenderData* fontTexture = (GlTextureRenderData*)info->mFontTexture;
   uint logoFrameSize = info->mLogoFrameSize;
   Array<StreamedVertex> progressText = info->mProgressText;
@@ -1694,9 +1553,7 @@ void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
   IntVec2 size = zglGetWindowRenderableSize(this);
 
   Mat4 viewportToNdc;
-  viewportToNdc.BuildTransform(Vec3(-1.0f, 1.0f, 0.0f),
-                               Mat3::cIdentity,
-                               Vec3(2.0f / size.x, -2.0f / size.y, 1.0f));
+  viewportToNdc.BuildTransform(Vec3(-1.0f, 1.0f, 0.0f), Mat3::cIdentity, Vec3(2.0f / size.x, -2.0f / size.y, 1.0f));
 
   // Logo uv transform for animating
   uint xFrames = logoTexture->mWidth / logoFrameSize;
@@ -1704,57 +1561,44 @@ void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
   double framesPerSecond = 30.0;
   uint frame = (uint)(time * framesPerSecond) % (xFrames * yFrames);
   Vec2 logoUvScale = Vec2(1.0f / xFrames, 1.0f / yFrames);
-  Vec2 logoUvTranslate =
-      Vec2((float)(frame % xFrames), (float)(frame / xFrames)) * logoUvScale;
+  Vec2 logoUvTranslate = Vec2((float)(frame % xFrames), (float)(frame / xFrames)) * logoUvScale;
   Mat3 logoUvTransform;
   logoUvTransform.BuildTransform(logoUvTranslate, 0.0f, logoUvScale);
 
   // Object transforms
   Vec3 logoScale = Vec3((float)logoFrameSize, (float)logoFrameSize, 1.0f);
-  Vec3 logoTranslation =
-      Vec3((size.x - loadingTexture->mWidth + logoScale.x) * 0.5f,
-           size.y * 0.5f,
-           0.0f);
+  Vec3 logoTranslation = Vec3((size.x - loadingTexture->mWidth + logoScale.x) * 0.5f, size.y * 0.5f, 0.0f);
   Mat4 logoTransform;
   logoTransform.BuildTransform(logoTranslation, Mat3::cIdentity, logoScale);
   logoTransform = viewportToNdc * logoTransform;
 
-  Vec3 loadingScale =
-      Vec3((float)loadingTexture->mWidth, (float)loadingTexture->mHeight, 1.0f);
+  Vec3 loadingScale = Vec3((float)loadingTexture->mWidth, (float)loadingTexture->mHeight, 1.0f);
   Vec3 loadingTranslation = Vec3(size.x * 0.5f, size.y * 0.5f, 0.0f);
   Mat4 loadingTransform;
-  loadingTransform.BuildTransform(
-      loadingTranslation, Mat3::cIdentity, loadingScale);
+  loadingTransform.BuildTransform(loadingTranslation, Mat3::cIdentity, loadingScale);
   loadingTransform = viewportToNdc * loadingTransform;
 
   Vec3 progressScale = Vec3(progressWidth * currentPercent, 20.0f, 1.0f);
   Vec3 progressTranslation =
-      Vec3((size.x - loadingScale.x + progressScale.x) * 0.5f,
-           (size.y + loadingScale.y) * 0.5f + 40.0f,
-           0.0f);
+      Vec3((size.x - loadingScale.x + progressScale.x) * 0.5f, (size.y + loadingScale.y) * 0.5f + 40.0f, 0.0f);
   Mat4 progressTransform;
-  progressTransform.BuildTransform(
-      progressTranslation, Mat3::cIdentity, progressScale);
+  progressTransform.BuildTransform(progressTranslation, Mat3::cIdentity, progressScale);
   progressTransform = viewportToNdc * progressTransform;
 
   Vec3 textScale = Vec3(1.0f);
-  Vec3 textTranslation = Vec3((size.x - loadingScale.x) * 0.5f,
-                              (size.y + loadingScale.y) * 0.5f + 5.0f,
-                              0.0f);
+  Vec3 textTranslation = Vec3((size.x - loadingScale.x) * 0.5f, (size.y + loadingScale.y) * 0.5f + 5.0f, 0.0f);
   Mat4 textTransform;
   textTransform.BuildTransform(textTranslation, Mat3::cIdentity, textScale);
   textTransform = viewportToNdc * textTransform;
 
-  Vec3 splashScale =
-      Vec3((float)splashTexture->mWidth, (float)splashTexture->mHeight, 1.0f);
+  Vec3 splashScale = Vec3((float)splashTexture->mWidth, (float)splashTexture->mHeight, 1.0f);
   if (size.x < splashScale.x)
     splashScale *= size.x / splashScale.x;
   if (size.y < splashScale.y)
     splashScale *= size.y / splashScale.y;
   Vec3 splashTranslation = Vec3(size.x * 0.5f, size.y * 0.5f, 0.0f);
   Mat4 splashTransform;
-  splashTransform.BuildTransform(
-      splashTranslation, Mat3::cIdentity, splashScale);
+  splashTransform.BuildTransform(splashTranslation, Mat3::cIdentity, splashScale);
   splashTransform = viewportToNdc * splashTransform;
 
   StreamedVertex quadVertices[] = {
@@ -1784,56 +1628,44 @@ void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
   glActiveTexture(GL_TEXTURE0 + textureSlot);
   glUniform1iv(textureLoc, 1, &textureSlot);
 
-  glUniformMatrix3fv(
-      uvTransformLoc, 1, cTransposeMatrices, Mat3::cIdentity.array);
+  glUniformMatrix3fv(uvTransformLoc, 1, cTransposeMatrices, Mat3::cIdentity.array);
 
   if (!splashMode)
   {
     // Loading
-    glUniformMatrix4fv(
-        transformLoc, 1, cTransposeMatrices, loadingTransform.array);
+    glUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, loadingTransform.array);
     glBindTexture(GL_TEXTURE_2D, loadingTexture->mId);
-    mStreamedVertexBuffer.AddVertices(
-        quadVertices, 6, PrimitiveType::Triangles);
+    mStreamedVertexBuffer.AddVertices(quadVertices, 6, PrimitiveType::Triangles);
     mStreamedVertexBuffer.FlushBuffer(true);
 
     // Progress bar
-    glUniformMatrix4fv(
-        transformLoc, 1, cTransposeMatrices, progressTransform.array);
+    glUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, progressTransform.array);
     glBindTexture(GL_TEXTURE_2D, whiteTexture->mId);
-    mStreamedVertexBuffer.AddVertices(
-        quadVertices, 6, PrimitiveType::Triangles);
+    mStreamedVertexBuffer.AddVertices(quadVertices, 6, PrimitiveType::Triangles);
     mStreamedVertexBuffer.FlushBuffer(true);
 
     // Progress text
     if (progressText.Size() > 0)
     {
-      glUniformMatrix4fv(
-          transformLoc, 1, cTransposeMatrices, textTransform.array);
+      glUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, textTransform.array);
       glBindTexture(GL_TEXTURE_2D, fontTexture->mId);
-      mStreamedVertexBuffer.AddVertices(
-          &progressText[0], progressText.Size(), PrimitiveType::Triangles);
+      mStreamedVertexBuffer.AddVertices(&progressText[0], progressText.Size(), PrimitiveType::Triangles);
       mStreamedVertexBuffer.FlushBuffer(true);
     }
 
     // Logo
-    glUniformMatrix3fv(
-        uvTransformLoc, 1, cTransposeMatrices, logoUvTransform.array);
-    glUniformMatrix4fv(
-        transformLoc, 1, cTransposeMatrices, logoTransform.array);
+    glUniformMatrix3fv(uvTransformLoc, 1, cTransposeMatrices, logoUvTransform.array);
+    glUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, logoTransform.array);
     glBindTexture(GL_TEXTURE_2D, logoTexture->mId);
-    mStreamedVertexBuffer.AddVertices(
-        quadVertices, 6, PrimitiveType::Triangles);
+    mStreamedVertexBuffer.AddVertices(quadVertices, 6, PrimitiveType::Triangles);
     mStreamedVertexBuffer.FlushBuffer(true);
   }
   else
   {
     // Splash
-    glUniformMatrix4fv(
-        transformLoc, 1, cTransposeMatrices, splashTransform.array);
+    glUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, splashTransform.array);
     glBindTexture(GL_TEXTURE_2D, splashTexture->mId);
-    mStreamedVertexBuffer.AddVertices(
-        quadVertices, 6, PrimitiveType::Triangles);
+    mStreamedVertexBuffer.AddVertices(quadVertices, 6, PrimitiveType::Triangles);
     mStreamedVertexBuffer.FlushBuffer(true);
   }
 
@@ -1864,14 +1696,13 @@ GlShader* OpenglRenderer::GetShader(ShaderKey& shaderKey)
   return mGlShaders.FindPointer(shaderKey);
 }
 
-void OpenglRenderer::DoRenderTasks(RenderTasks* renderTasks,
-                                   RenderQueues* renderQueues)
+void OpenglRenderer::DoRenderTasks(RenderTasks* renderTasks, RenderQueues* renderQueues)
 {
   mRenderTasks = renderTasks;
   mRenderQueues = renderQueues;
 
-  forRange(RenderTaskRange & taskRange, mRenderTasks->mRenderTaskRanges.All())
-      DoRenderTaskRange(taskRange);
+  forRange (RenderTaskRange& taskRange, mRenderTasks->mRenderTaskRanges.All())
+    DoRenderTaskRange(taskRange);
 
   zglSwapBuffers(this);
 
@@ -1888,10 +1719,8 @@ void OpenglRenderer::DoRenderTaskRange(RenderTaskRange& taskRange)
   uint taskIndex = taskRange.mTaskIndex;
   for (uint i = 0; i < taskRange.mTaskCount; ++i)
   {
-    ErrorIf(taskIndex >= mRenderTasks->mRenderTaskBuffer.mCurrentIndex,
-            "Render task data is not valid.");
-    RenderTask* task = (RenderTask*)&mRenderTasks->mRenderTaskBuffer
-                           .mRenderTaskData[taskIndex];
+    ErrorIf(taskIndex >= mRenderTasks->mRenderTaskBuffer.mCurrentIndex, "Render task data is not valid.");
+    RenderTask* task = (RenderTask*)&mRenderTasks->mRenderTaskBuffer.mRenderTaskData[taskIndex];
 
     switch (task->mId)
     {
@@ -1906,8 +1735,7 @@ void OpenglRenderer::DoRenderTaskRange(RenderTaskRange& taskRange)
       DoRenderTaskRenderPass(renderPass);
       // RenderPass tasks can have multiple following task entries for sub
       // RenderGroup settings. Have to index past all sub tasks.
-      taskIndex +=
-          sizeof(RenderTaskRenderPass) * (renderPass->mSubRenderGroupCount + 1);
+      taskIndex += sizeof(RenderTaskRenderPass) * (renderPass->mSubRenderGroupCount + 1);
       i += renderPass->mSubRenderGroupCount;
     }
     break;
@@ -1968,8 +1796,7 @@ void OpenglRenderer::DoRenderTaskRenderPass(RenderTaskRenderPass* task)
   int currentTaskIndex = -1;
 
   // All ViewNodes under the base RenderGroup.
-  IndexRange viewNodeRange =
-      mViewBlock->mRenderGroupRanges[task->mRenderGroupIndex];
+  IndexRange viewNodeRange = mViewBlock->mRenderGroupRanges[task->mRenderGroupIndex];
 
   for (uint i = viewNodeRange.start; i < viewNodeRange.end; ++i)
   {
@@ -1997,14 +1824,12 @@ void OpenglRenderer::DoRenderTaskRenderPass(RenderTaskRenderPass* task)
       // Flush potential pending draw call before changing state.
       mStreamedVertexBuffer.FlushBuffer(true);
 
-      mViewportSize = IntVec2(subTask->mRenderSettings.mTargetsWidth,
-                              subTask->mRenderSettings.mTargetsHeight);
+      mViewportSize = IntVec2(subTask->mRenderSettings.mTargetsWidth, subTask->mRenderSettings.mTargetsHeight);
 
       mShaderInputsId = subTask->mShaderInputsId;
       mRenderPassName = subTask->mRenderPassName;
 
-      SetRenderSettings(subTask->mRenderSettings,
-                        mDriverSupport.mMultiTargetBlend);
+      SetRenderSettings(subTask->mRenderSettings, mDriverSupport.mMultiTargetBlend);
       mClipMode = subTask->mRenderSettings.mScissorMode == ScissorMode::Enabled;
 
       // For easily resetting blend settings after overriding.
@@ -2042,20 +1867,16 @@ void OpenglRenderer::DoRenderTaskRenderPass(RenderTaskRenderPass* task)
 
 void OpenglRenderer::DoRenderTaskPostProcess(RenderTaskPostProcess* task)
 {
-  mViewportSize = IntVec2(task->mRenderSettings.mTargetsWidth,
-                          task->mRenderSettings.mTargetsHeight);
+  mViewportSize = IntVec2(task->mRenderSettings.mTargetsWidth, task->mRenderSettings.mTargetsHeight);
   if (mViewportSize.x == 0 || mViewportSize.y == 0)
     return;
 
-  GlMaterialRenderData* materialData =
-      (GlMaterialRenderData*)task->mMaterialRenderData;
+  GlMaterialRenderData* materialData = (GlMaterialRenderData*)task->mMaterialRenderData;
   if (materialData == nullptr && task->mPostProcessName.Empty() == true)
     return;
 
-  String compositeName =
-      materialData ? materialData->mCompositeName : task->mPostProcessName;
-  u64 resourceId =
-      materialData ? (u64)materialData->mResourceId : cFragmentShaderInputsId;
+  String compositeName = materialData ? materialData->mCompositeName : task->mPostProcessName;
+  u64 resourceId = materialData ? (u64)materialData->mResourceId : cFragmentShaderInputsId;
 
   ShaderKey shaderKey(compositeName, StringPair(cPostVertex, String()));
   GlShader* shader = GetShader(shaderKey);
@@ -2074,8 +1895,7 @@ void OpenglRenderer::DoRenderTaskPostProcess(RenderTaskPostProcess* task)
   // Set Material or PostProcess fragment parameters
   mNextTextureSlot = 0;
   SetShaderParameters(resourceId, task->mShaderInputsId, mNextTextureSlot);
-  SetShaderParameters(
-      cGlobalShaderInputsId, task->mShaderInputsId, mNextTextureSlot);
+  SetShaderParameters(cGlobalShaderInputsId, task->mShaderInputsId, mNextTextureSlot);
 
   // draw fullscreen triangle
   glBindVertexArray(mTriangleArray);
@@ -2093,15 +1913,9 @@ void OpenglRenderer::DoRenderTaskBackBufferBlit(RenderTaskBackBufferBlit* task)
   ScreenViewport viewport = task->mViewport;
 
   glBindFramebuffer(GL_READ_FRAMEBUFFER, mSingleTargetFbo);
-  glFramebufferTexture2D(GL_READ_FRAMEBUFFER,
-                         GL_COLOR_ATTACHMENT0,
-                         GL_TEXTURE_2D,
-                         renderData->mId,
-                         0);
-  glFramebufferTexture2D(
-      GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
-  glFramebufferTexture2D(
-      GL_READ_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+  glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderData->mId, 0);
+  glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+  glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
   CheckFramebufferStatus();
 
   mThreadLock.Lock();
@@ -2148,28 +1962,21 @@ void OpenglRenderer::DoRenderTaskTextureUpdate(RenderTaskTextureUpdate* task)
 void OpenglRenderer::SetRenderTargets(RenderSettings& renderSettings)
 {
   if (renderSettings.mSingleColorTarget)
-    SetSingleRenderTargets(mSingleTargetFbo,
-                           renderSettings.mColorTargets,
-                           renderSettings.mDepthTarget);
+    SetSingleRenderTargets(mSingleTargetFbo, renderSettings.mColorTargets, renderSettings.mDepthTarget);
   else
-    SetMultiRenderTargets(mMultiTargetFbo,
-                          renderSettings.mColorTargets,
-                          renderSettings.mDepthTarget);
+    SetMultiRenderTargets(mMultiTargetFbo, renderSettings.mColorTargets, renderSettings.mDepthTarget);
 }
 
 void OpenglRenderer::DrawStatic(ViewNode& viewNode, FrameNode& frameNode)
 {
   GlMeshRenderData* meshData = (GlMeshRenderData*)frameNode.mMeshRenderData;
-  GlMaterialRenderData* materialData =
-      (GlMaterialRenderData*)frameNode.mMaterialRenderData;
+  GlMaterialRenderData* materialData = (GlMaterialRenderData*)frameNode.mMaterialRenderData;
   if (meshData == nullptr || materialData == nullptr)
     return;
 
   // Shader permutation lookup for vertex type and render pass
-  ShaderKey shaderKey(
-      materialData->mCompositeName,
-      StringPair(GetCoreVertexFragmentName(frameNode.mCoreVertexType),
-                 mRenderPassName));
+  ShaderKey shaderKey(materialData->mCompositeName,
+                      StringPair(GetCoreVertexFragmentName(frameNode.mCoreVertexType), mRenderPassName));
   GlShader* shader = GetShader(shaderKey);
   if (shader == nullptr)
     return;
@@ -2189,8 +1996,7 @@ void OpenglRenderer::DrawStatic(ViewNode& viewNode, FrameNode& frameNode)
   if (mActiveMaterial == 0)
   {
     mNextTextureSlot = 0;
-    SetShaderParameters(
-        cFragmentShaderInputsId, mShaderInputsId, mNextTextureSlot);
+    SetShaderParameters(cFragmentShaderInputsId, mShaderInputsId, mNextTextureSlot);
   }
 
   // On change of materials, material inputs followed by global inputs have to
@@ -2198,11 +2004,8 @@ void OpenglRenderer::DrawStatic(ViewNode& viewNode, FrameNode& frameNode)
   if (materialData->mResourceId != mActiveMaterial)
   {
     mNextTextureSlotMaterial = mNextTextureSlot;
-    SetShaderParameters((u64)materialData->mResourceId,
-                        mShaderInputsId,
-                        mNextTextureSlotMaterial);
-    SetShaderParameters(
-        cGlobalShaderInputsId, mShaderInputsId, mNextTextureSlotMaterial);
+    SetShaderParameters((u64)materialData->mResourceId, mShaderInputsId, mNextTextureSlotMaterial);
+    SetShaderParameters(cGlobalShaderInputsId, mShaderInputsId, mNextTextureSlotMaterial);
 
     mActiveMaterial = (u64)materialData->mResourceId;
   }
@@ -2221,44 +2024,32 @@ void OpenglRenderer::DrawStatic(ViewNode& viewNode, FrameNode& frameNode)
     mActiveMaterial = 0;
   }
 
-  GlTextureRenderData* textureData =
-      (GlTextureRenderData*)frameNode.mTextureRenderData;
+  GlTextureRenderData* textureData = (GlTextureRenderData*)frameNode.mTextureRenderData;
   if (textureData != nullptr)
   {
-    BindTexture(TextureType::Texture2D,
-                textureSlot,
-                textureData->mId,
-                mDriverSupport.mSamplerObjects);
-    SetShaderParameter(
-        ShaderInputType::Texture, "HeightMapWeights", &textureSlot);
+    BindTexture(TextureType::Texture2D, textureSlot, textureData->mId, mDriverSupport.mSamplerObjects);
+    SetShaderParameter(ShaderInputType::Texture, "HeightMapWeights", &textureSlot);
   }
 
   glBindVertexArray(meshData->mVertexArray);
   if (meshData->mIndexBuffer == 0)
     // If nothing is bound, glDrawArrays will invoke the shader pipeline the
     // given number of times
-    glDrawArrays(
-        GlPrimitiveType(meshData->mPrimitiveType), 0, meshData->mIndexCount);
+    glDrawArrays(GlPrimitiveType(meshData->mPrimitiveType), 0, meshData->mIndexCount);
   else
-    glDrawElements(GlPrimitiveType(meshData->mPrimitiveType),
-                   meshData->mIndexCount,
-                   GL_UNSIGNED_INT,
-                   (void*)0);
+    glDrawElements(GlPrimitiveType(meshData->mPrimitiveType), meshData->mIndexCount, GL_UNSIGNED_INT, (void*)0);
   glBindVertexArray(0);
 }
 
 void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
 {
-  GlMaterialRenderData* materialData =
-      (GlMaterialRenderData*)frameNode.mMaterialRenderData;
+  GlMaterialRenderData* materialData = (GlMaterialRenderData*)frameNode.mMaterialRenderData;
   if (materialData == nullptr)
     return;
 
   // Shader permutation lookup for vertex type and render pass
-  ShaderKey shaderKey(
-      materialData->mCompositeName,
-      StringPair(GetCoreVertexFragmentName(frameNode.mCoreVertexType),
-                 mRenderPassName));
+  ShaderKey shaderKey(materialData->mCompositeName,
+                      StringPair(GetCoreVertexFragmentName(frameNode.mCoreVertexType), mRenderPassName));
   GlShader* shader = GetShader(shaderKey);
   if (shader == nullptr)
     return;
@@ -2270,8 +2061,7 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
   GLuint shaderId = shader->mId;
   GLuint textureId = 0;
 
-  GlTextureRenderData* textureData =
-      (GlTextureRenderData*)frameNode.mTextureRenderData;
+  GlTextureRenderData* textureData = (GlTextureRenderData*)frameNode.mTextureRenderData;
   if (textureData != nullptr)
     textureId = textureData->mId;
 
@@ -2293,8 +2083,7 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
   }
 
   // Check for any state change
-  if (shaderId != mActiveShader || textureId != mActiveTexture ||
-      materialId != mActiveMaterial)
+  if (shaderId != mActiveShader || textureId != mActiveTexture || materialId != mActiveMaterial)
   {
     mStreamedVertexBuffer.FlushBuffer(false);
 
@@ -2306,27 +2095,18 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
     SetShaderParameters(mFrameBlock, mViewBlock);
     // Set RenderPass fragment parameters
     mNextTextureSlot = 0;
-    SetShaderParameters(
-        cFragmentShaderInputsId, mShaderInputsId, mNextTextureSlot);
+    SetShaderParameters(cFragmentShaderInputsId, mShaderInputsId, mNextTextureSlot);
 
-    SetShaderParameters(
-        (u64)materialData->mResourceId, mShaderInputsId, mNextTextureSlot);
-    SetShaderParameters(
-        cGlobalShaderInputsId, mShaderInputsId, mNextTextureSlot);
+    SetShaderParameters((u64)materialData->mResourceId, mShaderInputsId, mNextTextureSlot);
+    SetShaderParameters(cGlobalShaderInputsId, mShaderInputsId, mNextTextureSlot);
 
     if (textureId != 0)
     {
-      BindTexture(textureData->mType,
-                  mNextTextureSlot,
-                  textureId,
-                  mDriverSupport.mSamplerObjects);
+      BindTexture(textureData->mType, mNextTextureSlot, textureId, mDriverSupport.mSamplerObjects);
       if (textureData->mType == TextureType::TextureCube)
-        SetShaderParameter(ShaderInputType::Texture,
-                           cSpriteSourceCubePreview,
-                           &mNextTextureSlot);
+        SetShaderParameter(ShaderInputType::Texture, cSpriteSourceCubePreview, &mNextTextureSlot);
       else
-        SetShaderParameter(
-            ShaderInputType::Texture, cSpriteSource, &mNextTextureSlot);
+        SetShaderParameter(ShaderInputType::Texture, cSpriteSource, &mNextTextureSlot);
       ++mNextTextureSlot;
     }
   }
@@ -2344,16 +2124,13 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
   {
     // Only overrides for target 0, temporary functionality for viewports
     mStreamedVertexBuffer.FlushBuffer(false);
-    SetBlendSettings(
-        mRenderQueues->mBlendSettingsOverrides[frameNode.mBlendSettingsIndex]);
+    SetBlendSettings(mRenderQueues->mBlendSettingsOverrides[frameNode.mBlendSettingsIndex]);
   }
 
   uint vertexStart = viewNode.mStreamedVertexStart;
   uint vertexCount = viewNode.mStreamedVertexCount;
-  mStreamedVertexBuffer.AddVertices(mRenderQueues->mStreamedVertices,
-                                    vertexStart,
-                                    vertexCount,
-                                    viewNode.mStreamedVertexType);
+  mStreamedVertexBuffer.AddVertices(
+      mRenderQueues->mStreamedVertices, vertexStart, vertexCount, viewNode.mStreamedVertexType);
 
   if (frameNode.mBlendSettingsOverride)
   {
@@ -2362,9 +2139,7 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
   }
 }
 
-void OpenglRenderer::SetShaderParameter(ShaderInputType::Enum uniformType,
-                                        StringParam name,
-                                        void* data)
+void OpenglRenderer::SetShaderParameter(ShaderInputType::Enum uniformType, StringParam name, void* data)
 {
   GLint location = glGetUniformLocation(mActiveShader, name.c_str());
   if (location == -1)
@@ -2388,8 +2163,7 @@ void OpenglRenderer::SetShaderParameterMatrix(StringParam name, Mat4& transform)
   glUniformMatrix4fv(location, 1, cTransposeMatrices, transform.array);
 }
 
-void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name,
-                                                 Mat3& transform)
+void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name, Mat3& transform)
 {
   GLint location = glGetUniformLocation(mActiveShader, name.c_str());
   if (location == -1)
@@ -2398,8 +2172,7 @@ void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name,
   glUniformMatrix3fv(location, 1, cTransposeMatrices, inverse.array);
 }
 
-void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name,
-                                                 Mat4& transform)
+void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name, Mat4& transform)
 {
   GLint location = glGetUniformLocation(mActiveShader, name.c_str());
   if (location == -1)
@@ -2409,44 +2182,31 @@ void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name,
   glUniformMatrix4fv(location, 1, cTransposeMatrices, inverse.array);
 }
 
-void OpenglRenderer::SetShaderParameters(FrameBlock* frameBlock,
-                                         ViewBlock* viewBlock)
+void OpenglRenderer::SetShaderParameters(FrameBlock* frameBlock, ViewBlock* viewBlock)
 {
-  SetShaderParameter(
-      ShaderInputType::Float, cFrameTime, &frameBlock->mFrameTime);
-  SetShaderParameter(
-      ShaderInputType::Float, cLogicTime, &frameBlock->mLogicTime);
+  SetShaderParameter(ShaderInputType::Float, cFrameTime, &frameBlock->mFrameTime);
+  SetShaderParameter(ShaderInputType::Float, cLogicTime, &frameBlock->mLogicTime);
 
   SetShaderParameterMatrix(cWorldToView, viewBlock->mWorldToView);
   SetShaderParameterMatrix(cViewToPerspective, viewBlock->mViewToPerspective);
-  SetShaderParameterMatrix(cZeroPerspectiveToApiPerspective,
-                           viewBlock->mZeroPerspectiveToApiPerspective);
+  SetShaderParameterMatrix(cZeroPerspectiveToApiPerspective, viewBlock->mZeroPerspectiveToApiPerspective);
   SetShaderParameterMatrixInv(cViewToWorld, viewBlock->mWorldToView);
-  SetShaderParameterMatrixInv(cPerspectiveToView,
-                              viewBlock->mViewToPerspective);
+  SetShaderParameterMatrixInv(cPerspectiveToView, viewBlock->mViewToPerspective);
 
-  SetShaderParameter(
-      ShaderInputType::Float, cNearPlane, &viewBlock->mNearPlane);
+  SetShaderParameter(ShaderInputType::Float, cNearPlane, &viewBlock->mNearPlane);
   SetShaderParameter(ShaderInputType::Float, cFarPlane, &viewBlock->mFarPlane);
-  SetShaderParameter(
-      ShaderInputType::Vec2, cViewportSize, viewBlock->mViewportSize.array);
-  SetShaderParameter(ShaderInputType::Vec2,
-                     cInverseViewportSize,
-                     viewBlock->mInverseViewportSize.array);
+  SetShaderParameter(ShaderInputType::Vec2, cViewportSize, viewBlock->mViewportSize.array);
+  SetShaderParameter(ShaderInputType::Vec2, cInverseViewportSize, viewBlock->mInverseViewportSize.array);
 }
 
-void OpenglRenderer::SetShaderParameters(FrameNode* frameNode,
-                                         ViewNode* viewNode)
+void OpenglRenderer::SetShaderParameters(FrameNode* frameNode, ViewNode* viewNode)
 {
   SetShaderParameterMatrix(cLocalToWorld, frameNode->mLocalToWorld);
   SetShaderParameterMatrix(cLocalToWorldNormal, frameNode->mLocalToWorldNormal);
   SetShaderParameterMatrixInv(cWorldToLocal, frameNode->mLocalToWorld);
-  SetShaderParameterMatrixInv(cWorldToLocalNormal,
-                              frameNode->mLocalToWorldNormal);
+  SetShaderParameterMatrixInv(cWorldToLocalNormal, frameNode->mLocalToWorldNormal);
 
-  SetShaderParameter(ShaderInputType::Vec3,
-                     cObjectWorldPosition,
-                     frameNode->mObjectWorldPosition.array);
+  SetShaderParameter(ShaderInputType::Vec3, cObjectWorldPosition, frameNode->mObjectWorldPosition.array);
 
   uint boneCount = frameNode->mBoneMatrixRange.Count();
   uint remapCount = frameNode->mIndexRemapRange.Count();
@@ -2455,26 +2215,19 @@ void OpenglRenderer::SetShaderParameters(FrameNode* frameNode,
     GlMeshRenderData* meshData = (GlMeshRenderData*)frameNode->mMeshRenderData;
 
     Array<Mat4> remappedBoneTransforms;
-    for (uint i = frameNode->mIndexRemapRange.start;
-         i < frameNode->mIndexRemapRange.end;
-         ++i)
+    for (uint i = frameNode->mIndexRemapRange.start; i < frameNode->mIndexRemapRange.end; ++i)
     {
       uint meshIndex = i - frameNode->mIndexRemapRange.start;
-      uint bufferIndex = mRenderQueues->mIndexRemapBuffer[i] +
-                         frameNode->mBoneMatrixRange.start;
+      uint bufferIndex = mRenderQueues->mIndexRemapBuffer[i] + frameNode->mBoneMatrixRange.start;
 
-      remappedBoneTransforms.PushBack(
-          mRenderQueues->mSkinningBuffer[bufferIndex] *
-          meshData->mBones[meshIndex].mBindTransform);
+      remappedBoneTransforms.PushBack(mRenderQueues->mSkinningBuffer[bufferIndex] *
+                                      meshData->mBones[meshIndex].mBindTransform);
     }
 
     GLint location = glGetUniformLocation(mActiveShader, "BoneTransforms");
     if (location != -1)
     {
-      glUniformMatrix4fv(location,
-                         remappedBoneTransforms.Size(),
-                         cTransposeMatrices,
-                         remappedBoneTransforms[0].array);
+      glUniformMatrix4fv(location, remappedBoneTransforms.Size(), cTransposeMatrices, remappedBoneTransforms[0].array);
     }
   }
 
@@ -2485,21 +2238,16 @@ void OpenglRenderer::SetShaderParameters(FrameNode* frameNode,
   SetShaderParameterMatrixInv(cViewToLocalNormal, viewNode->mLocalToViewNormal);
 }
 
-void OpenglRenderer::SetShaderParameters(IndexRange inputRange,
-                                         uint& nextTextureSlot)
+void OpenglRenderer::SetShaderParameters(IndexRange inputRange, uint& nextTextureSlot)
 {
-  Array<ShaderInput>::range shaderInputs = mRenderTasks->mShaderInputs.SubRange(
-      inputRange.start, inputRange.Count());
+  Array<ShaderInput>::range shaderInputs = mRenderTasks->mShaderInputs.SubRange(inputRange.start, inputRange.Count());
 
-  forRange(ShaderInput & input, shaderInputs)
+  forRange (ShaderInput& input, shaderInputs)
   {
     if (input.mShaderInputType == ShaderInputType::Texture)
     {
       GlTextureRenderData* textureData = *(GlTextureRenderData**)input.mValue;
-      BindTexture(textureData->mType,
-                  nextTextureSlot,
-                  textureData->mId,
-                  mDriverSupport.mSamplerObjects);
+      BindTexture(textureData->mType, nextTextureSlot, textureData->mId, mDriverSupport.mSamplerObjects);
 
       // Check for custom sampler settings for this input
       // If any sampler attributes were set on the shader input then
@@ -2510,65 +2258,52 @@ void OpenglRenderer::SetShaderParameters(IndexRange inputRange,
         u32 samplerSettings = input.mSamplerSettings;
         // Use texture settings as defaults so that only attributes specified on
         // shader input differ from the texture
-        SamplerSettings::FillDefaults(samplerSettings,
-                                      textureData->mSamplerSettings);
+        SamplerSettings::FillDefaults(samplerSettings, textureData->mSamplerSettings);
         GLuint sampler = GetSampler(samplerSettings);
         glBindSampler(nextTextureSlot, sampler);
       }
 
-      SetShaderParameter(
-          input.mShaderInputType, input.mTranslatedInputName, &nextTextureSlot);
+      SetShaderParameter(input.mShaderInputType, input.mTranslatedInputName, &nextTextureSlot);
       ++nextTextureSlot;
     }
     else if (input.mShaderInputType == ShaderInputType::Bool)
     {
       int value = *(bool*)input.mValue;
-      SetShaderParameter(
-          input.mShaderInputType, input.mTranslatedInputName, &value);
+      SetShaderParameter(input.mShaderInputType, input.mTranslatedInputName, &value);
     }
     else if (input.mShaderInputType == ShaderInputType::Mat3)
     {
-      SetShaderParameterMatrix(input.mTranslatedInputName,
-                               *(Mat3*)input.mValue);
+      SetShaderParameterMatrix(input.mTranslatedInputName, *(Mat3*)input.mValue);
     }
     else if (input.mShaderInputType == ShaderInputType::Mat4)
     {
-      SetShaderParameterMatrix(input.mTranslatedInputName,
-                               *(Mat4*)input.mValue);
+      SetShaderParameterMatrix(input.mTranslatedInputName, *(Mat4*)input.mValue);
     }
     else
     {
-      SetShaderParameter(
-          input.mShaderInputType, input.mTranslatedInputName, input.mValue);
+      SetShaderParameter(input.mShaderInputType, input.mTranslatedInputName, input.mValue);
     }
   }
 }
 
-void OpenglRenderer::SetShaderParameters(u64 objectId,
-                                         uint shaderInputsId,
-                                         uint& nextTextureSlot)
+void OpenglRenderer::SetShaderParameters(u64 objectId, uint shaderInputsId, uint& nextTextureSlot)
 {
   Pair<u64, uint> pair(objectId, shaderInputsId);
-  IndexRange inputRange =
-      mRenderTasks->mShaderInputRanges.FindValue(pair, IndexRange(0, 0));
+  IndexRange inputRange = mRenderTasks->mShaderInputRanges.FindValue(pair, IndexRange(0, 0));
   SetShaderParameters(inputRange, nextTextureSlot);
 }
 
 void OpenglRenderer::CreateShader(ShaderEntry& entry)
 {
 #ifdef ZeroDebug
-  ZPrint("Compiling shader: %s %s %s\n",
-         entry.mCoreVertex.c_str(),
-         entry.mComposite.c_str(),
-         entry.mRenderPass.c_str());
+  ZPrint(
+      "Compiling shader: %s %s %s\n", entry.mCoreVertex.c_str(), entry.mComposite.c_str(), entry.mRenderPass.c_str());
 #endif
 
-  ShaderKey shaderKey(entry.mComposite,
-                      StringPair(entry.mCoreVertex, entry.mRenderPass));
+  ShaderKey shaderKey(entry.mComposite, StringPair(entry.mCoreVertex, entry.mRenderPass));
 
   GLuint shaderId = 0;
-  CreateShader(
-      entry.mVertexShader, entry.mGeometryShader, entry.mPixelShader, shaderId);
+  CreateShader(entry.mVertexShader, entry.mGeometryShader, entry.mPixelShader, shaderId);
 
   // Shouldn't fail at this point. Not currently handling gl errors.
   ErrorIf(shaderId == 0, "Failed to compile or link shader.");
@@ -2715,12 +2450,12 @@ void OpenglRenderer::SetShader(GLuint shader)
 
 void OpenglRenderer::DelayedRenderDataDestruction()
 {
-  forRange(GlMaterialRenderData * renderData,
-           mMaterialRenderDataToDestroy.All()) DestroyRenderData(renderData);
-  forRange(GlMeshRenderData * renderData, mMeshRenderDataToDestroy.All())
-      DestroyRenderData(renderData);
-  forRange(GlTextureRenderData * renderData, mTextureRenderDataToDestroy.All())
-      DestroyRenderData(renderData);
+  forRange (GlMaterialRenderData* renderData, mMaterialRenderDataToDestroy.All())
+    DestroyRenderData(renderData);
+  forRange (GlMeshRenderData* renderData, mMeshRenderDataToDestroy.All())
+    DestroyRenderData(renderData);
+  forRange (GlTextureRenderData* renderData, mTextureRenderDataToDestroy.All())
+    DestroyRenderData(renderData);
 
   mMaterialRenderDataToDestroy.Clear();
   mMeshRenderDataToDestroy.Clear();
@@ -2761,29 +2496,18 @@ GLuint OpenglRenderer::GetSampler(u32 samplerSettings)
   GLuint newSampler;
   glGenSamplers(1, &newSampler);
 
-  TextureAddressing::Enum addressingX =
-      SamplerSettings::AddressingX(samplerSettings);
-  TextureAddressing::Enum addressingY =
-      SamplerSettings::AddressingY(samplerSettings);
-  TextureFiltering::Enum filtering =
-      SamplerSettings::Filtering(samplerSettings);
-  TextureCompareMode::Enum compareMode =
-      SamplerSettings::CompareMode(samplerSettings);
-  TextureCompareFunc::Enum compareFunc =
-      SamplerSettings::CompareFunc(samplerSettings);
+  TextureAddressing::Enum addressingX = SamplerSettings::AddressingX(samplerSettings);
+  TextureAddressing::Enum addressingY = SamplerSettings::AddressingY(samplerSettings);
+  TextureFiltering::Enum filtering = SamplerSettings::Filtering(samplerSettings);
+  TextureCompareMode::Enum compareMode = SamplerSettings::CompareMode(samplerSettings);
+  TextureCompareFunc::Enum compareFunc = SamplerSettings::CompareFunc(samplerSettings);
 
-  glSamplerParameteri(
-      newSampler, GL_TEXTURE_WRAP_S, GlTextureAddressing(addressingX));
-  glSamplerParameteri(
-      newSampler, GL_TEXTURE_WRAP_T, GlTextureAddressing(addressingY));
-  glSamplerParameteri(
-      newSampler, GL_TEXTURE_MIN_FILTER, GlTextureFilteringMin(filtering));
-  glSamplerParameteri(
-      newSampler, GL_TEXTURE_MAG_FILTER, GlTextureFilteringMag(filtering));
-  glSamplerParameteri(
-      newSampler, GL_TEXTURE_COMPARE_MODE, GlCompareMode(compareMode));
-  glSamplerParameteri(
-      newSampler, GL_TEXTURE_COMPARE_FUNC, GlCompareFunc(compareFunc));
+  glSamplerParameteri(newSampler, GL_TEXTURE_WRAP_S, GlTextureAddressing(addressingX));
+  glSamplerParameteri(newSampler, GL_TEXTURE_WRAP_T, GlTextureAddressing(addressingY));
+  glSamplerParameteri(newSampler, GL_TEXTURE_MIN_FILTER, GlTextureFilteringMin(filtering));
+  glSamplerParameteri(newSampler, GL_TEXTURE_MAG_FILTER, GlTextureFilteringMag(filtering));
+  glSamplerParameteri(newSampler, GL_TEXTURE_COMPARE_MODE, GlCompareMode(compareMode));
+  glSamplerParameteri(newSampler, GL_TEXTURE_COMPARE_FUNC, GlCompareFunc(compareFunc));
 
   mSamplers.Insert(samplerSettings, newSampler);
 
@@ -2792,7 +2516,7 @@ GLuint OpenglRenderer::GetSampler(u32 samplerSettings)
 
 void OpenglRenderer::DestroyUnusedSamplers()
 {
-  forRange(u32 id, mUnusedSamplers.All())
+  forRange (u32 id, mUnusedSamplers.All())
   {
     GLuint sampler = mSamplers[id];
     glDeleteSamplers(1, &sampler);

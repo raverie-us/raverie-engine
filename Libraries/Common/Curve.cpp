@@ -35,8 +35,7 @@ void SplineCurve::RemovePointAtIndex(uint index)
 
 void SplineCurve::AddControlPoints(const Vec3Array& controlPoints)
 {
-  ControlPoints.Insert(
-      ControlPoints.End(), controlPoints.Begin(), controlPoints.End());
+  ControlPoints.Insert(ControlPoints.End(), controlPoints.Begin(), controlPoints.End());
 }
 
 void SplineCurve::SetControlPoints(const Vec3Array& controlPoints)
@@ -127,8 +126,8 @@ bool SplineCurve::DistanceSq(Vec3 point, uint resolution, real& distSq) const
 
   real minDistSq1 = Math::PositiveMax(); // smallest distance
   real minDistSq2 = Math::PositiveMax(); // second smallest distance
-  int idx1 = 0; // index of the point with the smallest distance
-  int idx2 = 0; // index of the point with the second smallest distance
+  int idx1 = 0;                          // index of the point with the smallest distance
+  int idx2 = 0;                          // index of the point with the second smallest distance
 
   for (uint i = 0; i < points.Size(); ++i)
   {
@@ -219,9 +218,7 @@ void SplineCurve::MakeClosed(Vec3Array& points) const
 }
 
 template <typename Policy>
-void SplineCurve::GetPoints(const Vec3Array& points,
-                            Vec3Array& results,
-                            uint resolution) const
+void SplineCurve::GetPoints(const Vec3Array& points, Vec3Array& results, uint resolution) const
 {
   real t = real(0.0);
   uint start = 0;
@@ -254,9 +251,7 @@ void SplineCurve::GetPoints(const Vec3Array& points,
 }
 
 template <typename Policy>
-void SplineCurve::GetPoints(const Vec3Array& points,
-                            Vec3Array& results,
-                            real error) const
+void SplineCurve::GetPoints(const Vec3Array& points, Vec3Array& results, real error) const
 {
   uint countControlPoints = uint(points.Size() - 3);
 
@@ -272,12 +267,9 @@ void SplineCurve::GetPoints(const Vec3Array& points,
     // since the spline is cubic, this "approximates" each sub-section as a
     // quadratic)
     Zero::Array<PointData> stack;
-    PointData firstPoint =
-        ComputePointData<Policy>(real(0.0), cp0, cp1, cp2, cp3);
-    PointData centerPoint =
-        ComputePointData<Policy>(real(0.5), cp0, cp1, cp2, cp3);
-    PointData lastPoint =
-        ComputePointData<Policy>(real(1.0), cp0, cp1, cp2, cp3);
+    PointData firstPoint = ComputePointData<Policy>(real(0.0), cp0, cp1, cp2, cp3);
+    PointData centerPoint = ComputePointData<Policy>(real(0.5), cp0, cp1, cp2, cp3);
+    PointData lastPoint = ComputePointData<Policy>(real(1.0), cp0, cp1, cp2, cp3);
     stack.PushBack(lastPoint);
     stack.PushBack(centerPoint);
     stack.PushBack(firstPoint);
@@ -297,9 +289,7 @@ void SplineCurve::GetPoints(const Vec3Array& points,
 
       // calculate the distance of this point from the line
       //(aka, calculate the height of the triangle)
-      real doubleArea =
-          (Math::Cross(midPoint - data0.Point, midPoint - data1.Point))
-              .Length();
+      real doubleArea = (Math::Cross(midPoint - data0.Point, midPoint - data1.Point)).Length();
       real area = doubleArea / 2;
 
       // if the area of the triangle is too large then we need to
@@ -321,8 +311,7 @@ void SplineCurve::GetPoints(const Vec3Array& points,
 }
 
 template <typename Policy>
-Vec3 SplineCurve::ComputePoint(
-    real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const
+Vec3 SplineCurve::ComputePoint(real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const
 {
   Vec4 param = Policy::GetParam(t);
   const Mat4& basis = Policy::GetBasis();
@@ -340,8 +329,7 @@ Vec3 SplineCurve::ComputePoint(
 }
 
 template <typename Policy>
-SplineCurve::PointData SplineCurve::ComputePointData(
-    real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const
+SplineCurve::PointData SplineCurve::ComputePointData(real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const
 {
   PointData data;
 
@@ -498,8 +486,7 @@ Vec3 BakedCurve::SampleFunction(float x, bool clamp) const
 
   // Find nearest two points straddling the desired x value
   const BakedData* pMin = (mArcLengthTable.Data() + 0);
-  const BakedData* pMax =
-      (mArcLengthTable.Data() + (mArcLengthTable.Size() - 1));
+  const BakedData* pMax = (mArcLengthTable.Data() + (mArcLengthTable.Size() - 1));
   for (size_t i = 0; i < mArcLengthTable.Size(); ++i)
   {
     // Get point
@@ -567,8 +554,7 @@ uint BakedCurve::SampleLowerBound(real distance) const
 /// Used to sort the control points by the x-position.
 struct SortByX
 {
-  bool operator()(PiecewiseFunction::ControlPoint& left,
-                  PiecewiseFunction::ControlPoint& right)
+  bool operator()(PiecewiseFunction::ControlPoint& left, PiecewiseFunction::ControlPoint& right)
   {
     // We never want two control points to have the same Time,
     // so every time they're sorted, check and move one slightly
@@ -593,9 +579,7 @@ void PiecewiseFunction::Clear()
   mBakedCurve.Clear();
 }
 
-void PiecewiseFunction::AddControlPoint(Vec2Param pos,
-                                        Vec2Param tanIn,
-                                        Vec2Param tanOut)
+void PiecewiseFunction::AddControlPoint(Vec2Param pos, Vec2Param tanIn, Vec2Param tanOut)
 {
   ControlPoint cp;
   cp.Position = pos;
@@ -610,8 +594,7 @@ void PiecewiseFunction::AddControlPoint(Vec2Param pos,
   mBakedCurve.Clear();
 }
 
-void PiecewiseFunction::SetControlPoints(
-    Zero::Array<ControlPoint>& controlPoints)
+void PiecewiseFunction::SetControlPoints(Zero::Array<ControlPoint>& controlPoints)
 {
   mControlPoints.Assign(controlPoints.All());
 

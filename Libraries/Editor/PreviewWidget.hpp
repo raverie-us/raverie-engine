@@ -61,10 +61,9 @@ public:
   PreviewWidgetGroup(Composite* parent);
   PreviewWidgetGroup(Composite* parent, StringParam name);
 
-  PreviewWidget* AddPreviewWidget(
-      StringParam name,
-      HandleParam instance,
-      PreviewImportance::Enum minImportance = PreviewImportance::None);
+  PreviewWidget* AddPreviewWidget(StringParam name,
+                                  HandleParam instance,
+                                  PreviewImportance::Enum minImportance = PreviewImportance::None);
   void AnimatePreview(PreviewAnimate::Enum value) override;
 
   /// Widget Interface.
@@ -82,8 +81,7 @@ PreviewWidget* CreatePreviewWidgetT(PreviewWidgetInitializer& initializer)
   return new type(initializer);
 }
 
-typedef PreviewWidget* (*CreatePreviewWidget)(
-    PreviewWidgetInitializer& initializer);
+typedef PreviewWidget* (*CreatePreviewWidget)(PreviewWidgetInitializer& initializer);
 
 // Creator
 struct PreviewWidgetCreator
@@ -91,8 +89,7 @@ struct PreviewWidgetCreator
   PreviewWidgetCreator() : Importance(PreviewImportance::None), Creator(nullptr)
   {
   }
-  PreviewWidgetCreator(PreviewImportance::Enum importance,
-                       CreatePreviewWidget creator) :
+  PreviewWidgetCreator(PreviewImportance::Enum importance, CreatePreviewWidget creator) :
       Importance(importance),
       Creator(creator)
   {
@@ -102,8 +99,7 @@ struct PreviewWidgetCreator
 };
 
 /// PreviewWidgetFactory can make preview widgets
-class PreviewWidgetFactory
-    : public ExplicitSingleton<PreviewWidgetFactory, Object>
+class PreviewWidgetFactory : public ExplicitSingleton<PreviewWidgetFactory, Object>
 {
 public:
   ZilchDeclareType(PreviewWidgetFactory, TypeCopyMode::ReferenceType);
@@ -119,11 +115,10 @@ public:
 class ResourcePreview
 {
 public:
-  static PreviewWidget* CreatePreviewWidget(
-      Composite* parent,
-      StringParam name,
-      HandleParam instance,
-      PreviewImportance::Enum minImportance = PreviewImportance::None);
+  static PreviewWidget* CreatePreviewWidget(Composite* parent,
+                                            StringParam name,
+                                            HandleParam instance,
+                                            PreviewImportance::Enum minImportance = PreviewImportance::None);
 
   static PreviewImportance::Enum GetPreviewImportance(BoundType* resourceType);
 };

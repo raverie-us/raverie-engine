@@ -53,15 +53,13 @@ ZilchDefineType(RigidBody, builder, type)
   ZilchBindMethod(ApplyImpulseAtOffsetVector);
   ZilchBindMethod(ApplyImpulseAtPoint);
 
-  ZilchBindGetterSetterProperty(DynamicState)
-      ->ZeroSerialize(RigidBodyDynamicState::Dynamic);
+  ZilchBindGetterSetterProperty(DynamicState)->ZeroSerialize(RigidBodyDynamicState::Dynamic);
   ZilchBindGetterSetterProperty(AllowSleep)->ZeroSerialize(true);
   ZilchBindGetterSetter(Asleep)->ZeroSerialize(true);
   ZilchBindMethod(ForceAwake);
   ZilchBindMethod(ForceAsleep);
   ZilchBindGetterSetterProperty(RotationLocked)->ZeroSerialize(false);
-  ZilchBindGetterSetterProperty(Mode2D)->ZeroSerialize(
-      Mode2DStates::InheritFromSpace);
+  ZilchBindGetterSetterProperty(Mode2D)->ZeroSerialize(Mode2DStates::InheritFromSpace);
   ZilchBindGetterProperty(Mass);
   ZilchBindGetter(LocalInverseInertiaTensor);
   ZilchBindGetter(WorldInverseInertiaTensor);
@@ -108,8 +106,7 @@ void RigidBody::Initialize(CogInitializer& initializer)
   Transform* transform = GetOwner()->has(Transform);
   mCenterOfMass = transform->GetTranslation();
 
-  bool dynamicallyCreated =
-      (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
+  bool dynamicallyCreated = (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
   BodyInitialize(this, dynamicallyCreated);
 
   // We've set the 3 states available from serialization (inherit, 2d, 3d) but
@@ -130,8 +127,7 @@ void RigidBody::Initialize(CogInitializer& initializer)
 
 void RigidBody::OnAllObjectsCreated(CogInitializer& initializer)
 {
-  bool dynamicallyCreated =
-      (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
+  bool dynamicallyCreated = (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
   BodyOnAllObjectsCreated(this, dynamicallyCreated);
 
   QueueOverrideOldTransform(this);
@@ -168,8 +164,7 @@ void RigidBody::TransformUpdate(TransformUpdateInfo& info)
   // (might be able to optimize this in certain cases (root), but this is just
   // queuing us up, so it is fairly cheap)
   Collider* collider = mPhysicsNode->mCollider;
-  if (collider == nullptr ||
-      !collider->mState.IsSet(ColliderFlags::MasslessCollider))
+  if (collider == nullptr || !collider->mState.IsSet(ColliderFlags::MasslessCollider))
     QueueMassUpdate();
 
   // Deal with kinematic state
@@ -290,8 +285,7 @@ void RigidBody::ApplyTorqueNoWakeUp(Vec3Param torque)
   mTorqueAccumulator += torque;
 }
 
-void RigidBody::ApplyForceAtOffsetVectorNoWakeUp(Vec3Param force,
-                                                 Vec3Param worldOffset)
+void RigidBody::ApplyForceAtOffsetVectorNoWakeUp(Vec3Param force, Vec3Param worldOffset)
 {
   Vec3 torque = Math::Cross(worldOffset, force);
   ApplyForceNoWakeUp(force);
@@ -345,15 +339,13 @@ void RigidBody::ApplyAngularImpulseNoWakeUp(Vec3Param angular)
   mAngularVelocity += mInvInertia.Apply(angular);
 }
 
-void RigidBody::ApplyImpulseAtOffsetVectorNoWakeUp(Vec3Param impulse,
-                                                   Vec3Param worldOffset)
+void RigidBody::ApplyImpulseAtOffsetVectorNoWakeUp(Vec3Param impulse, Vec3Param worldOffset)
 {
   Vec3 angularMomentum = Math::Cross(worldOffset, impulse);
   ApplyConstraintImpulse(impulse, angularMomentum);
 }
 
-void RigidBody::ApplyImpulseAtPointNoWakeUp(Vec3Param impulse,
-                                            Vec3Param worldPoint)
+void RigidBody::ApplyImpulseAtPointNoWakeUp(Vec3Param impulse, Vec3Param worldPoint)
 {
   // Check for changes to the center of mass (also mass and inertia)
   UpdateResourcesAndQueue();
@@ -375,8 +367,7 @@ void RigidBody::ApplyAngularImpulse(Vec3Param angular)
   ForceAwake();
 }
 
-void RigidBody::ApplyImpulseAtOffsetVector(Vec3Param impulse,
-                                           Vec3Param worldOffset)
+void RigidBody::ApplyImpulseAtOffsetVector(Vec3Param impulse, Vec3Param worldOffset)
 {
   ApplyImpulseAtOffsetVectorNoWakeUp(impulse, worldOffset);
   ForceAwake();
@@ -718,14 +709,13 @@ Vec3 RigidBody::ClampVelocityValue(Vec3Param value, StringParam varName)
       mSpace->mInvalidVelocityOccurred = true;
 
     String objName = GetOwner()->GetDescription();
-    String errStr = String::Format(
-        "%s was set beyond the max range of [%g, %g] on object %s"
-        "The %s will be clamped to this range.",
-        varName.c_str(),
-        -maxVel,
-        maxVel,
-        objName.c_str(),
-        varName.c_str());
+    String errStr = String::Format("%s was set beyond the max range of [%g, %g] on object %s"
+                                   "The %s will be clamped to this range.",
+                                   varName.c_str(),
+                                   -maxVel,
+                                   maxVel,
+                                   objName.c_str(),
+                                   varName.c_str());
 
     String errTitle = String::Format("Setting invalid %s", varName.c_str());
     DoNotifyWarning(errTitle, errStr);
@@ -817,8 +807,7 @@ bool RigidBody::UpdateSleepTimer(real dt)
   real velLenSq = mVelocity.LengthSq();
   real angVelLenSq = mAngularVelocity.LengthSq();
   // If we are able to sleep, increment our sleep timer
-  if (GetAllowSleep() &&
-      velLenSq <= cLinearSleepEpsilon * cLinearSleepEpsilon &&
+  if (GetAllowSleep() && velLenSq <= cLinearSleepEpsilon * cLinearSleepEpsilon &&
       angVelLenSq <= cAngularSleepEpsilon * cAngularSleepEpsilon)
   {
     mSleepTimer += dt;
@@ -927,9 +916,7 @@ void RigidBody::UpdateKinematicVelocities()
   action.mState &= ~TransformAction::KinematicVelocity;
 }
 
-void RigidBody::ComputeVelocities(Vec3Param oldTranslation,
-                                  Mat3Param oldRotation,
-                                  real dt)
+void RigidBody::ComputeVelocities(Vec3Param oldTranslation, Mat3Param oldRotation, real dt)
 {
   // This only makes sense to do on kinematic objects
   if (!mState.IsSet(RigidBodyStates::Kinematic))
@@ -945,10 +932,8 @@ void RigidBody::ComputeVelocities(Vec3Param oldTranslation,
   Mat3 worldRotation = transform->GetWorldRotation();
 
   // Compute the velocities from our position updates
-  mVelocity = Physics::Integration::VelocityApproximation(
-      oldTranslation, worldTranslation, dt);
-  mAngularVelocity = Physics::Integration::AngularVelocityApproximation(
-      oldRotation, worldRotation, dt);
+  mVelocity = Physics::Integration::VelocityApproximation(oldTranslation, worldTranslation, dt);
+  mAngularVelocity = Physics::Integration::AngularVelocityApproximation(oldRotation, worldRotation, dt);
 }
 
 Vec3 RigidBody::InternalGetWorldCenterOfMass() const
@@ -986,8 +971,7 @@ void RigidBody::UpdateCenterMassFromWorldPosition()
   // Recompute the offset of the translation from the center of mass in
   // world-space and use that to recompute the center of mass
   WorldTransformation* transform = mPhysicsNode->GetTransform();
-  Vec3 worldPositionOffset =
-      Math::Transform(transform->GetWorldRotation(), mPositionOffset);
+  Vec3 worldPositionOffset = Math::Transform(transform->GetWorldRotation(), mPositionOffset);
   mCenterOfMass = transform->GetWorldTranslation() - worldPositionOffset;
 }
 
@@ -1043,14 +1027,12 @@ void RigidBody::UpdateCenterMass(Vec3Param offset)
 {
   mCenterOfMass += offset;
   // Clamp the center of mass to avoid getting to bad floating point positions
-  mCenterOfMass =
-      Transform::ClampTranslation(GetSpace(), GetOwner(), mCenterOfMass);
+  mCenterOfMass = Transform::ClampTranslation(GetSpace(), GetOwner(), mCenterOfMass);
 
   // Bring the position offset into world space so we can update the cached
   // world-space translation
   WorldTransformation* transform = mPhysicsNode->GetTransform();
-  Vec3 worldPositionOffset =
-      Math::Transform(transform->GetWorldRotation(), mPositionOffset);
+  Vec3 worldPositionOffset = Math::Transform(transform->GetWorldRotation(), mPositionOffset);
   transform->SetTranslation(mCenterOfMass + worldPositionOffset);
 }
 
@@ -1129,8 +1111,7 @@ void RigidBody::PublishTransform()
   Transform* transform = GetOwner()->has(Transform);
   // Always set world-space values as the rigid body has always marked this
   // transform as being in world
-  transform->SetWorldTranslationInternal(
-      mPhysicsNode->GetTransform()->GetPublishedTranslation());
+  transform->SetWorldTranslationInternal(mPhysicsNode->GetTransform()->GetPublishedTranslation());
   transform->SetWorldRotationInternal(mRotationQuat);
   transform->UpdateAll(TransformUpdateFlags::Physics);
 }

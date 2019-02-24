@@ -8,21 +8,19 @@ namespace Zero
 DeclareEnum2(ProxyReason, TypeDidntExist, AllocationException);
 
 // Actions
-DeclareEnum2(
-    EnumerateAction,
-    // All Components that could ever be dynamically added to the object type
-    All,
-    // All Components that can currently be added to the given object.
-    // This does dependency checking.
-    AllAddableToObject);
+DeclareEnum2(EnumerateAction,
+             // All Components that could ever be dynamically added to the object type
+             All,
+             // All Components that can currently be added to the given object.
+             // This does dependency checking.
+             AllAddableToObject);
 
 // Meta Component SetupMode is used for dynamic addition setup
-DeclareEnum4(
-    SetupMode,
-    FromDataOnly,         // Object can be setup from data only.
-    DefaultConstructor,   // Default constructor will setup the object
-    DefaultSerialization, // Default serialization will setup the object
-    CallSetDefaults       // Calling SetDefaults will setup the object
+DeclareEnum4(SetupMode,
+             FromDataOnly,         // Object can be setup from data only.
+             DefaultConstructor,   // Default constructor will setup the object
+             DefaultSerialization, // Default serialization will setup the object
+             CallSetDefaults       // Calling SetDefaults will setup the object
 );
 
 // A meta component describes everything we need to know for a component.
@@ -116,17 +114,11 @@ public:
   // Modification
   /// Fills out the given array with all dynamically addable types. The owner is
   /// only required if querying for all addable to object.
-  virtual void Enumerate(Array<BoundType*>& addTypes,
-                         EnumerateAction::Enum action,
-                         HandleParam owner = nullptr);
-  void Enumerate(Array<String>& addTypes,
-                 EnumerateAction::Enum action,
-                 HandleParam owner = nullptr);
+  virtual void Enumerate(Array<BoundType*>& addTypes, EnumerateAction::Enum action, HandleParam owner = nullptr);
+  void Enumerate(Array<String>& addTypes, EnumerateAction::Enum action, HandleParam owner = nullptr);
 
   /// Checks dependencies to see if a component of the given type can be added.
-  virtual bool CanAddComponent(HandleParam owner,
-                               BoundType* typeToAdd,
-                               AddInfo* info = nullptr);
+  virtual bool CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info = nullptr);
 
   /// Creates an object of the given type.
   virtual Handle MakeObject(BoundType* typeToCreate);
@@ -156,35 +148,24 @@ public:
 
   /// Checks dependencies to see if the component can be removed. If it can't be
   /// removed, the reason will be filled out explaining why.
-  virtual bool CanRemoveComponent(HandleParam owner,
-                                  HandleParam component,
-                                  String& reason);
-  bool CanRemoveComponent(HandleParam owner,
-                          BoundType* componentType,
-                          String& reason);
+  virtual bool CanRemoveComponent(HandleParam owner, HandleParam component, String& reason);
+  bool CanRemoveComponent(HandleParam owner, BoundType* componentType, String& reason);
 
   /// Removes the given component. Success or failure will be in the Status
   /// object. This function assumes that the operation has already been
   /// validated through 'CanRemoveComponent'.
-  virtual void RemoveComponent(HandleParam owner,
-                               HandleParam component,
-                               bool ignoreDependencies = false);
+  virtual void RemoveComponent(HandleParam owner, HandleParam component, bool ignoreDependencies = false);
 
   /// Checks whether or not the given component can be moved to the given
   /// destination. If it cannot be moved because of a dependency, the infringing
   /// component will be returned.
-  bool CanMoveComponent(HandleParam owner,
-                        HandleParam component,
-                        uint destination,
-                        Handle& blockingComponent,
-                        String& reason);
+  bool CanMoveComponent(
+      HandleParam owner, HandleParam component, uint destination, Handle& blockingComponent, String& reason);
 
   /// Attempts to move the given component to the given index. If it cannot be
   /// moved there due to moving before a dependency or after a dependent, it
   /// will return the blocking component.
-  virtual void MoveComponent(HandleParam owner,
-                             HandleParam component,
-                             uint destination);
+  virtual void MoveComponent(HandleParam owner, HandleParam component, uint destination);
 
   //--------------------------------------------------------------------------------
   // Component Range

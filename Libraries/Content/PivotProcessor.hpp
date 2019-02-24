@@ -7,9 +7,7 @@ namespace Zero
 class PivotProcessor
 {
 public:
-  PivotProcessor(HierarchyDataMap& hierarchyData,
-                 String& rootNodeName,
-                 AnimationNodeRedirectMap& animationRedirectMap);
+  PivotProcessor(HierarchyDataMap& hierarchyData, String& rootNodeName, AnimationNodeRedirectMap& animationRedirectMap);
 
   void ProccessAndCollapsePivots();
   // Checks pivots for bone data to later handle animation correction
@@ -19,8 +17,7 @@ public:
   void CollapsePivots();
   // Take a node and collapse all pivots between the first pivot and the
   // non-pivot node or animated pivot
-  String CollapsePivotHierarchy(HierarchyData& startNode,
-                                bool preAnimationCorrection);
+  String CollapsePivotHierarchy(HierarchyData& startNode, bool preAnimationCorrection);
   // Helper function that corrects skeleton paths for after collapsing a
   // hierarchy of pivots
   void CorrectSkeletonPath(HierarchyData& node);

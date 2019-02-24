@@ -16,18 +16,14 @@ void CreateSpacer(Composite* parent, float size)
   spacer->SetSizing(SizeAxis::X, SizePolicy::Fixed, size);
 }
 
-void CreateButton(IconButton*& buttonVar,
-                  StringParam icon,
-                  Composite* parent,
-                  Vec2 size)
+void CreateButton(IconButton*& buttonVar, StringParam icon, Composite* parent, Vec2 size)
 {
   buttonVar = new IconButton(parent);
   buttonVar->SetIcon(icon);
   buttonVar->SetSizing(SizeAxis::X, SizePolicy::Fixed, size.x);
 }
 
-AnimationButton::AnimationButton(Composite* parent, StringParam element) :
-    Composite(parent)
+AnimationButton::AnimationButton(Composite* parent, StringParam element) : Composite(parent)
 {
   mImage = CreateAttached<Element>(element);
 
@@ -54,13 +50,9 @@ void AnimationButton::OnMouseExit(MouseEvent* e)
   MarkAsNeedsUpdate();
 }
 
-AnimationSelector::AnimationSelector(Composite* parent,
-                                     AnimationEditor* editor) :
-    Composite(parent),
-    mEditor(editor)
+AnimationSelector::AnimationSelector(Composite* parent, AnimationEditor* editor) : Composite(parent), mEditor(editor)
 {
-  SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Pixels(3, 0), Thickness::cZero));
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(3, 0), Thickness::cZero));
 
   mAnimationBox = new TextBox(this);
   mAnimationBox->SetText("No Animation");
@@ -129,14 +121,10 @@ void AnimationSelector::Show()
   }
 }
 
-AnimationToolBox::AnimationToolBox(Composite* parent, AnimationEditor* editor) :
-    Composite(parent),
-    mEditor(editor)
+AnimationToolBox::AnimationToolBox(Composite* parent, AnimationEditor* editor) : Composite(parent), mEditor(editor)
 {
   mSettings = mEditor->GetSettings();
-  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight,
-                              Pixels(4, 0),
-                              Thickness(Pixels(20, 0, 0, 0))));
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(4, 0), Thickness(Pixels(20, 0, 0, 0))));
 
   mCurveToolBar = new CurveEditing::CurveEditorToolbar(this);
 
@@ -201,7 +189,7 @@ AnimationToolBox::AnimationToolBox(Composite* parent, AnimationEditor* editor) :
 
   mEditFpsBox = new ComboBox(this);
   mSource = new StringSource();
-  forRange(auto entry, AnimationSettings::mEditFpsPresets.All())
+  forRange (auto entry, AnimationSettings::mEditFpsPresets.All())
   {
     mSource->Strings.PushBack(entry.first);
   }
@@ -217,8 +205,7 @@ AnimationToolBox::AnimationToolBox(Composite* parent, AnimationEditor* editor) :
 
   mTimeDisplaySelector = new SelectorButton(this);
   mTimeDisplaySelector->CreateButtons(TimeDisplay::Names, TimeDisplay::Size);
-  ConnectThisTo(
-      mTimeDisplaySelector, Events::ItemSelected, OnTimeDisplaySelected);
+  ConnectThisTo(mTimeDisplaySelector, Events::ItemSelected, OnTimeDisplaySelected);
 
   spacer = new Spacer(this);
   spacer->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(4));
@@ -266,10 +253,8 @@ void AnimationToolBox::SetStatusText(StringParam text, ByteColor color)
   }
 
   mStatusText->GetActions()->Cancel();
-  ActionSequence* seq =
-      new ActionSequence(mStatusText, ActionExecuteMode::FrameUpdate);
-  seq->Add(AnimatePropertyGetSet(
-      Widget, Color, Ease::Quad::InOut, mStatusText, 0.16f, newColor));
+  ActionSequence* seq = new ActionSequence(mStatusText, ActionExecuteMode::FrameUpdate);
+  seq->Add(AnimatePropertyGetSet(Widget, Color, Ease::Quad::InOut, mStatusText, 0.16f, newColor));
 }
 
 void AnimationToolBox::Hide()
@@ -369,16 +354,12 @@ void AnimationToolBox::OnTimeDisplaySelected(Event* e)
     return;
 
   AnimationEditorData* data = mEditor->GetEditorData();
-  mSettings->mTimeDisplay =
-      (TimeDisplay::Enum)mTimeDisplaySelector->GetSelectedItem();
+  mSettings->mTimeDisplay = (TimeDisplay::Enum)mTimeDisplaySelector->GetSelectedItem();
 }
 
-PlayControls::PlayControls(Composite* parent, AnimationControls* controls) :
-    Composite(parent),
-    mControls(controls)
+PlayControls::PlayControls(Composite* parent, AnimationControls* controls) : Composite(parent), mControls(controls)
 {
-  SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
 
   mPlayLeft = new IconButton(this);
   mPlayLeft->SetIcon("AnimPlayLeft");
@@ -455,16 +436,12 @@ void PlayControls::OnPausePressed(Event* e)
   mControls->UpdateToTime(time, false);
 }
 
-AnimationControls::AnimationControls(Composite* parent,
-                                     AnimationEditor* editor) :
-    Composite(parent)
+AnimationControls::AnimationControls(Composite* parent, AnimationEditor* editor) : Composite(parent)
 {
   mEditor = editor;
   mScrubber = NULL;
   mEditorData = NULL;
-  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom,
-                              Pixels(0, 2),
-                              Thickness(Pixels(3, 4, 3, 4))));
+  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 2), Thickness(Pixels(3, 4, 3, 4))));
 
   mBackground = CreateAttached<Element>("ScrubBackground");
   mBackground->SetNotInLayout(true);
@@ -473,8 +450,7 @@ AnimationControls::AnimationControls(Composite* parent,
   const Vec2 cButtonSize = Pixels(40, 20);
 
   Composite* buttonRow = new Composite(this);
-  buttonRow->SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Pixels(2, 0), Thickness::cZero));
+  buttonRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(2, 0), Thickness::cZero));
   buttonRow->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(20));
   buttonRow->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
   {
@@ -489,13 +465,11 @@ AnimationControls::AnimationControls(Composite* parent,
   }
 
   mPlayModeSelector = new SelectorButton(this);
-  mPlayModeSelector->CreateButtons(AnimationPlayMode::Names,
-                                   AnimationPlayMode::Size);
+  mPlayModeSelector->CreateButtons(AnimationPlayMode::Names, AnimationPlayMode::Size);
   mPlayModeSelector->SetSelectedItem(AnimationPlayMode::Loop, false);
   mPlayModeSelector->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
   mPlayModeSelector->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(20));
-  ConnectThisTo(
-      mPlayModeSelector, Events::ItemSelected, OnPlaybackModeSelected);
+  ConnectThisTo(mPlayModeSelector, Events::ItemSelected, OnPlaybackModeSelected);
 
   mPlaybackSpeedSlider = new Slider(this, SliderType::Number);
   mPlaybackSpeedSlider->SetRange(0, 2);
@@ -503,15 +477,10 @@ AnimationControls::AnimationControls(Composite* parent,
   mPlaybackSpeedSlider->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
   mPlaybackSpeedSlider->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1.0f);
   mPlaybackSpeedSlider->SetIncrement(0.01f);
-  ConnectThisTo(mPlaybackSpeedSlider,
-                Events::SliderIncrementalChange,
-                OnPlaybackSliderChanged);
-  ConnectThisTo(
-      mPlaybackSpeedSlider, Events::SliderChanged, OnPlaybackSliderChanged);
-  ConnectThisTo(
-      mPlaybackSpeedSlider, Events::MouseEnter, OnMouseEnterPlaybackSpeed);
-  ConnectThisTo(
-      mPlaybackSpeedSlider, Events::MouseExit, OnMouseExitPlaybackSpeed);
+  ConnectThisTo(mPlaybackSpeedSlider, Events::SliderIncrementalChange, OnPlaybackSliderChanged);
+  ConnectThisTo(mPlaybackSpeedSlider, Events::SliderChanged, OnPlaybackSliderChanged);
+  ConnectThisTo(mPlaybackSpeedSlider, Events::MouseEnter, OnMouseEnterPlaybackSpeed);
+  ConnectThisTo(mPlaybackSpeedSlider, Events::MouseExit, OnMouseExitPlaybackSpeed);
 
   // We need to update the animation on frame update if we're playing
   ConnectThisTo(GetRootWidget(), Events::WidgetUpdate, OnUpdate);
@@ -665,9 +634,7 @@ void AnimationControls::OnPlaybackSliderChanged(Event* e)
   mEditor->GetSettings()->mPlaybackSpeed = mPlaybackSpeedSlider->GetValue();
 }
 
-bool AnimationControls::UpdateToTime(float time,
-                                     bool wrap,
-                                     bool clampToDuration)
+bool AnimationControls::UpdateToTime(float time, bool wrap, bool clampToDuration)
 {
   bool wrapped = false;
 
@@ -708,10 +675,7 @@ void AnimationControls::OnMouseEnterPlaybackSpeed(MouseEvent* e)
   // Position the tooltip
   ToolTipPlacement placement;
   placement.SetScreenRect(mPlaybackSpeedSlider->GetScreenRect());
-  placement.SetPriority(IndicatorSide::Right,
-                        IndicatorSide::Top,
-                        IndicatorSide::Left,
-                        IndicatorSide::Bottom);
+  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Top, IndicatorSide::Left, IndicatorSide::Bottom);
   toolTip->SetArrowTipTranslation(placement);
 
   mPlaybackSpeedTooltip = toolTip;

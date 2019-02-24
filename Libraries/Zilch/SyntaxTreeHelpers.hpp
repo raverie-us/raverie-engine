@@ -38,8 +38,7 @@ private:
 
 // This list is used to hold nodes in the tree
 template <typename ValueType>
-class ZeroSharedTemplate PopulatingPointerArray
-    : public PodBlockArray<ValueType*>
+class ZeroSharedTemplate PopulatingPointerArray : public PodBlockArray<ValueType*>
 {
 public:
   // Type-defines
@@ -121,28 +120,23 @@ class ZeroSharedTemplate BranchWalker
 {
 public:
   // Constructor
-  BranchWalker(CompilationErrors* errors = nullptr) :
-      WasError(false),
-      Errors(errors)
+  BranchWalker(CompilationErrors* errors = nullptr) : WasError(false), Errors(errors)
   {
   }
 
   // The member function type that we'd like to be able to traverse our trees
-  typedef void (TreeOwnerType::*MemberFn)(SyntaxNode*& node,
-                                          ContextType* context);
+  typedef void (TreeOwnerType::*MemberFn)(SyntaxNode*& node, ContextType* context);
 
   // Register a visitor, and the condition is implied to be
   template <typename ChildType>
-  void Register(void (TreeOwnerType::*visitor)(ChildType*& node,
-                                               ContextType* context))
+  void Register(void (TreeOwnerType::*visitor)(ChildType*& node, ContextType* context))
   {
     RegisterInternal((MemberFn)visitor, ZilchTypeId(ChildType), false);
   }
 
   // Register a visitor, for a more derived child type
   template <typename DerivedChildType, typename ChildType>
-  void RegisterDerived(void (TreeOwnerType::*visitor)(ChildType*& node,
-                                                      ContextType* context))
+  void RegisterDerived(void (TreeOwnerType::*visitor)(ChildType*& node, ContextType* context))
   {
     RegisterInternal((MemberFn)visitor, ZilchTypeId(DerivedChildType), false);
   }
@@ -150,16 +144,13 @@ public:
   // Register a visitor that will visit any node of this base type, even if it
   // derives from it
   template <typename ChildType>
-  void RegisterNonLeafBase(void (TreeOwnerType::*visitor)(ChildType*& node,
-                                                          ContextType* context))
+  void RegisterNonLeafBase(void (TreeOwnerType::*visitor)(ChildType*& node, ContextType* context))
   {
     RegisterInternal((MemberFn)visitor, ZilchTypeId(ChildType), true);
   }
 
   template <typename NodeType>
-  void GenericWalkChildren(TreeOwnerType* owner,
-                           NodeType*& node,
-                           ContextType* context)
+  void GenericWalkChildren(TreeOwnerType* owner, NodeType*& node, ContextType* context)
   {
     // Now we need to go through every child that wasn't visited
     NodeChildren children;
@@ -183,9 +174,7 @@ public:
 
   // Using the registered visitors, visit all of the direct child nodes
   template <typename NodeType>
-  void Walk(TreeOwnerType* owner,
-            NodeList<NodeType>& nodes,
-            ContextType* context)
+  void Walk(TreeOwnerType* owner, NodeList<NodeType>& nodes, ContextType* context)
   {
     // Loop through all the nodes in the list
     for (size_t i = 0; i < nodes.Size(); ++i)
@@ -201,8 +190,7 @@ public:
   // Checks to see if any errors have occurred
   bool HasErrorOccurred()
   {
-    return this->WasError ||
-           (this->Errors != nullptr && this->Errors->WasError);
+    return this->WasError || (this->Errors != nullptr && this->Errors->WasError);
   }
 
   // Using the registered visitors, visit all of the direct child nodes
@@ -217,8 +205,7 @@ public:
     context->Walker = this;
 
     // Error checking
-    ErrorIf(node == nullptr,
-            "You should never attempt to traverse a null node");
+    ErrorIf(node == nullptr, "You should never attempt to traverse a null node");
 
     // Get the node type
     BoundType* nodeType = ZilchVirtualTypeId(node);
@@ -234,8 +221,7 @@ public:
 
       // As long as the node we're visiting is somehow derived from the node
       // visitor type
-      if (nodeType == visitor.NodeType ||
-          (visitor.IsNonLeafBase && Type::BoundIsA(nodeType, visitor.NodeType)))
+      if (nodeType == visitor.NodeType || (visitor.IsNonLeafBase && Type::BoundIsA(nodeType, visitor.NodeType)))
       {
         // Clear any flags before visiting this node
         context->Flags = WalkerFlags::None;
@@ -287,9 +273,7 @@ public:
 
 private:
   // Register a visitor
-  void RegisterInternal(MemberFn visitor,
-                        BoundType* childTypeToVisit,
-                        bool isNonLeafBase)
+  void RegisterInternal(MemberFn visitor, BoundType* childTypeToVisit, bool isNonLeafBase)
   {
     VisitorInfo info;
     info.Visitor = visitor;

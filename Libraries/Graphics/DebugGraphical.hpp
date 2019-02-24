@@ -34,9 +34,7 @@ class DebugGraphicalPrimitive : public DebugGraphical
 public:
   ZilchDeclareType(DebugGraphicalPrimitive, TypeCopyMode::ReferenceType);
 
-  void ExtractViewData(ViewNode& viewNode,
-                       ViewBlock& viewBlock,
-                       FrameBlock& frameBlock) override;
+  void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) override;
 };
 
 class DebugGraphicalThickLine : public DebugGraphicalPrimitive
@@ -52,9 +50,7 @@ class DebugGraphicalText : public DebugGraphical
 public:
   ZilchDeclareType(DebugGraphicalText, TypeCopyMode::ReferenceType);
 
-  void ExtractViewData(ViewNode& viewNode,
-                       ViewBlock& viewBlock,
-                       FrameBlock& frameBlock) override;
+  void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) override;
 };
 
 } // namespace Zero

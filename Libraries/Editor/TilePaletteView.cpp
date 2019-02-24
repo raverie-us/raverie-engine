@@ -96,7 +96,7 @@ void TilePaletteOperation::Undo()
   if (!palette)
     return;
 
-  forRange(TilePaletteChange change, mChangeList.All())
+  forRange (TilePaletteChange change, mChangeList.All())
   {
     if (change.mChangeType == TilePaletteChange::Edited)
       palette->mData[change.mLocation] = change.mOldTile;
@@ -122,7 +122,7 @@ void TilePaletteOperation::Redo()
   if (!palette)
     return;
 
-  forRange(TilePaletteChange change, mChangeList.All())
+  forRange (TilePaletteChange change, mChangeList.All())
   {
     if (change.mChangeType == TilePaletteChange::Edited)
       palette->mData[change.mLocation] = change.mNewTile;
@@ -159,16 +159,13 @@ ZilchDefineType(TilePaletteView, builder, type)
   // Can't bind base or composite properties will be exposed
   // BindBase(EventObject);
 
-  ZilchBindGetterSetterProperty(TilePalette)
-      ->Add(new MetaEditorResource(true, false));
+  ZilchBindGetterSetterProperty(TilePalette)->Add(new MetaEditorResource(true, false));
 
   ZilchBindGetterSetterProperty(Archetype);
 
-  ZilchBindGetterSetterProperty(Sprite)->Add(
-      new MetaEditorResource(true, true));
+  ZilchBindGetterSetterProperty(Sprite)->Add(new MetaEditorResource(true, true));
 
-  ZilchBindGetterSetterProperty(Collision)->Add(
-      new MetaEditorResource(true, true, "TileMesh"));
+  ZilchBindGetterSetterProperty(Collision)->Add(new MetaEditorResource(true, true, "TileMesh"));
 
   ZilchBindGetterSetterProperty(Mergeable);
 }
@@ -240,7 +237,7 @@ void TilePaletteView::DeactivatePaletteUi()
 
 void TilePaletteView::ClearPaletteTiles()
 {
-  forRange(auto pair, mPaletteTiles.All())
+  forRange (auto pair, mPaletteTiles.All())
   {
     pair.second.frame->Destroy();
   }
@@ -283,26 +280,23 @@ void TilePaletteView::SetShowCollision(bool showCollision)
 
 void TilePaletteView::AddCollisionOverlays()
 {
-  forRange(auto pair, mPaletteTiles.All())
+  forRange (auto pair, mPaletteTiles.All())
   {
     TilePaletteEntry& entry = pair.second;
     if (PhysicsMesh* collision = entry.tile.GetCollisionResource())
-      entry.frame->SetFrameOverlay(
-          mCollisionTextureName,
-          mEditor->GetCollisionTextureUv(collision->Name));
+      entry.frame->SetFrameOverlay(mCollisionTextureName, mEditor->GetCollisionTextureUv(collision->Name));
   }
 }
 
 void TilePaletteView::RemoveCollisionOverlays()
 {
-  forRange(auto pair, mPaletteTiles.All())
+  forRange (auto pair, mPaletteTiles.All())
   {
     pair.second.frame->RemoveFrameOverlay();
   }
 }
 
-TilePaletteSprite* TilePaletteView::CreateTilePaletteSprite(
-    SpriteSource* sprite, PhysicsMesh* collision)
+TilePaletteSprite* TilePaletteView::CreateTilePaletteSprite(SpriteSource* sprite, PhysicsMesh* collision)
 {
   TilePaletteSprite* frame = new TilePaletteSprite(mPaletteArea);
 
@@ -316,11 +310,9 @@ TilePaletteSprite* TilePaletteView::CreateTilePaletteSprite(
   if (collision && mShowCollision)
   {
     if (mEditor)
-      frame->SetFrameOverlay(mCollisionTextureName,
-                             mEditor->GetCollisionTextureUv(collision->Name));
+      frame->SetFrameOverlay(mCollisionTextureName, mEditor->GetCollisionTextureUv(collision->Name));
     else
-      frame->SetFrameOverlay(mCollisionTextureName,
-                             UvRect{Vec2(0.0f, 0.0f), Vec2(0.0f, 0.0f)});
+      frame->SetFrameOverlay(mCollisionTextureName, UvRect{Vec2(0.0f, 0.0f), Vec2(0.0f, 0.0f)});
   }
 
   return frame;
@@ -332,16 +324,14 @@ void TilePaletteView::LoadPalette()
   {
     ClearPaletteTiles();
 
-    forRange(auto pair, mPaletteSource->mData.All())
+    forRange (auto pair, mPaletteSource->mData.All())
     {
       TilePaletteEntry entry;
-      entry.frame = CreateTilePaletteSprite(pair.second.GetSpriteResource(),
-                                            pair.second.GetCollisionResource());
+      entry.frame = CreateTilePaletteSprite(pair.second.GetSpriteResource(), pair.second.GetCollisionResource());
       entry.tile = pair.second;
       // Use defaults if a resource was removed
       if (entry.tile.GetArchetypeResource() == nullptr)
-        entry.tile.ArchetypeResource =
-            ArchetypeManager::Find(DefaultTileArchetype)->mResourceId;
+        entry.tile.ArchetypeResource = ArchetypeManager::Find(DefaultTileArchetype)->mResourceId;
       /* METAREFACTOR - The handle has "valid" data, but cannot be resolved
       (resource was removed) if
       (entry.tile.CollisionResource.IsNotNullAndCantResolve())
@@ -377,7 +367,7 @@ PropertyState TilePaletteView::GetArchetypeState()
 
   Archetype* firstValue = range.Front().mEntry->tile.GetArchetypeResource();
 
-  forRange(SelectionRange::Selection selection, range)
+  forRange (SelectionRange::Selection selection, range)
   {
     TilePaletteEntry* entry = selection.mEntry;
 
@@ -399,7 +389,7 @@ PropertyState TilePaletteView::GetSpriteState()
 
   SpriteSource* firstValue = range.Front().mEntry->tile.GetSpriteResource();
 
-  forRange(SelectionRange::Selection selection, range)
+  forRange (SelectionRange::Selection selection, range)
   {
     TilePaletteEntry* entry = selection.mEntry;
 
@@ -421,7 +411,7 @@ PropertyState TilePaletteView::GetCollisionState()
 
   PhysicsMesh* firstValue = range.Front().mEntry->tile.GetCollisionResource();
 
-  forRange(SelectionRange::Selection selection, range)
+  forRange (SelectionRange::Selection selection, range)
   {
     TilePaletteEntry* entry = selection.mEntry;
 
@@ -443,7 +433,7 @@ PropertyState TilePaletteView::GetMergeableState()
 
   bool firstValue = range.Front().mEntry->tile.Merge;
 
-  forRange(SelectionRange::Selection selection, range)
+  forRange (SelectionRange::Selection selection, range)
   {
     TilePaletteEntry* entry = selection.mEntry;
 
@@ -478,15 +468,13 @@ void TilePaletteView::SetArchetype(Archetype* newResource)
 {
   mArchetype = newResource;
 
-  if (mSelectionStart == mSelectionEnd &&
-      mPaletteTiles.Find(mSelectionStart).Empty())
+  if (mSelectionStart == mSelectionEnd && mPaletteTiles.Find(mSelectionStart).Empty())
   {
     CreateNewEntry(mSelectionStart, false);
   }
   else
   {
-    forRange(SelectionRange::Selection selection,
-             SelectionRange(&mPaletteTiles, mSelectionStart, mSelectionEnd))
+    forRange (SelectionRange::Selection selection, SelectionRange(&mPaletteTiles, mSelectionStart, mSelectionEnd))
     {
       TilePaletteEntry* entry = selection.mEntry;
 
@@ -505,15 +493,13 @@ void TilePaletteView::SetSprite(SpriteSource* newResource)
   if (mSprite != nullptr)
     spriteId = mSprite->mResourceId;
 
-  if (mSelectionStart == mSelectionEnd &&
-      mPaletteTiles.Find(mSelectionStart).Empty())
+  if (mSelectionStart == mSelectionEnd && mPaletteTiles.Find(mSelectionStart).Empty())
   {
     CreateNewEntry(mSelectionStart, false);
   }
   else
   {
-    forRange(SelectionRange::Selection selection,
-             SelectionRange(&mPaletteTiles, mSelectionStart, mSelectionEnd))
+    forRange (SelectionRange::Selection selection, SelectionRange(&mPaletteTiles, mSelectionStart, mSelectionEnd))
     {
       TilePaletteEntry* entry = selection.mEntry;
 
@@ -537,15 +523,13 @@ void TilePaletteView::SetCollision(PhysicsMesh* newResource)
   if (mCollision != nullptr)
     collisionId = mCollision->mResourceId;
 
-  if (mSelectionStart == mSelectionEnd &&
-      mPaletteTiles.Find(mSelectionStart).Empty())
+  if (mSelectionStart == mSelectionEnd && mPaletteTiles.Find(mSelectionStart).Empty())
   {
     CreateNewEntry(mSelectionStart, false);
   }
   else
   {
-    forRange(SelectionRange::Selection selection,
-             SelectionRange(&mPaletteTiles, mSelectionStart, mSelectionEnd))
+    forRange (SelectionRange::Selection selection, SelectionRange(&mPaletteTiles, mSelectionStart, mSelectionEnd))
     {
       TilePaletteEntry* entry = selection.mEntry;
 
@@ -555,9 +539,7 @@ void TilePaletteView::SetCollision(PhysicsMesh* newResource)
       if (mCollision && mShowCollision)
       {
         PhysicsMesh* collision = mCollision;
-        entry->frame->SetFrameOverlay(
-            mCollisionTextureName,
-            mEditor->GetCollisionTextureUv(collision->Name));
+        entry->frame->SetFrameOverlay(mCollisionTextureName, mEditor->GetCollisionTextureUv(collision->Name));
       }
       else
       {
@@ -573,15 +555,13 @@ void TilePaletteView::SetMergeable(bool mergeable)
 {
   mMergeable = mergeable;
 
-  if (mSelectionStart == mSelectionEnd &&
-      mPaletteTiles.Find(mSelectionStart).Empty())
+  if (mSelectionStart == mSelectionEnd && mPaletteTiles.Find(mSelectionStart).Empty())
   {
     CreateNewEntry(mSelectionStart, false);
   }
   else
   {
-    forRange(SelectionRange::Selection selection,
-             SelectionRange(&mPaletteTiles, mSelectionStart, mSelectionEnd))
+    forRange (SelectionRange::Selection selection, SelectionRange(&mPaletteTiles, mSelectionStart, mSelectionEnd))
     {
       TilePaletteEntry* entry = selection.mEntry;
 
@@ -605,7 +585,7 @@ void TilePaletteView::UpdateTransform()
   float tileSize = float(mTileSize);
 
   // Update all SpriteFrame / PaletteTiles translations
-  forRange(PalettePair pair, mPaletteTiles.All())
+  forRange (PalettePair pair, mPaletteTiles.All())
   {
     IntVec2 location = pair.first;
 
@@ -616,24 +596,21 @@ void TilePaletteView::UpdateTransform()
     // Update SpriteFrame
     TilePaletteSprite* frame = pair.second.frame;
     pair.second.frame->SetSize(Pixels(tileSize, tileSize));
-    pair.second.frame->SetTranslation(
-        Vec3(location.x * tileSize, location.y * tileSize, 0));
+    pair.second.frame->SetTranslation(Vec3(location.x * tileSize, location.y * tileSize, 0));
   }
 
   max += IntVec2(1, 1);
 
   mScrollArea->SetSize(mSize);
-  mScrollArea->SetClientSize(Vec2(real(max.x + 0.5), real(max.y + 0.5)) *
-                             tileSize);
+  mScrollArea->SetClientSize(Vec2(real(max.x + 0.5), real(max.y + 0.5)) * tileSize);
 
-  Vec2 minSelect = Vec2(real(Math::Min(mSelectionStart.x, mSelectionEnd.x)),
-                        real(Math::Min(mSelectionStart.y, mSelectionEnd.y)));
-  Vec2 maxSelect = Vec2(real(Math::Max(mSelectionStart.x, mSelectionEnd.x)),
-                        real(Math::Max(mSelectionStart.y, mSelectionEnd.y)));
+  Vec2 minSelect =
+      Vec2(real(Math::Min(mSelectionStart.x, mSelectionEnd.x)), real(Math::Min(mSelectionStart.y, mSelectionEnd.y)));
+  Vec2 maxSelect =
+      Vec2(real(Math::Max(mSelectionStart.x, mSelectionEnd.x)), real(Math::Max(mSelectionStart.y, mSelectionEnd.y)));
 
   mSelectionBorder->SetTranslation(Math::ToVector3(minSelect, 0) * tileSize);
-  mSelectionBorder->SetSize((maxSelect - minSelect + Vec2(1, 1)) *
-                            real(mTileSize));
+  mSelectionBorder->SetSize((maxSelect - minSelect + Vec2(1, 1)) * real(mTileSize));
 
   mSelectionBorder->MoveToFront();
 
@@ -655,11 +632,9 @@ void TilePaletteView::RefreshSelection()
     TileMapSelection selection;
     selection.Offset = IntVec2(0, 0);
     selection.Width = 1;
-    ResourceId archetypeId =
-        mArchetype.IsNotNull() ? mArchetype->mResourceId : 0;
+    ResourceId archetypeId = mArchetype.IsNotNull() ? mArchetype->mResourceId : 0;
     ResourceId spriteId = mSprite.IsNotNull() ? mSprite->mResourceId : 0;
-    ResourceId collisionId =
-        mCollision.IsNotNull() ? mCollision->mResourceId : 0;
+    ResourceId collisionId = mCollision.IsNotNull() ? mCollision->mResourceId : 0;
     Tile tile(archetypeId, spriteId, collisionId, mMergeable);
     selection.Tiles.PushBack(tile);
     if (mEditor)
@@ -667,10 +642,10 @@ void TilePaletteView::RefreshSelection()
     return;
   }
 
-  IntVec2 minSelect = IntVec2(Math::Min(mSelectionStart.x, mSelectionEnd.x),
-                              Math::Min(mSelectionStart.y, mSelectionEnd.y));
-  IntVec2 maxSelect = IntVec2(Math::Max(mSelectionStart.x, mSelectionEnd.x),
-                              Math::Max(mSelectionStart.y, mSelectionEnd.y));
+  IntVec2 minSelect =
+      IntVec2(Math::Min(mSelectionStart.x, mSelectionEnd.x), Math::Min(mSelectionStart.y, mSelectionEnd.y));
+  IntVec2 maxSelect =
+      IntVec2(Math::Max(mSelectionStart.x, mSelectionEnd.x), Math::Max(mSelectionStart.y, mSelectionEnd.y));
 
   TileMapSelection selection;
   selection.Offset = IntVec2(0, 0);
@@ -730,8 +705,7 @@ void TilePaletteView::CreateNewEntry(IntVec2 location, bool defaults)
   entry.frame = CreateTilePaletteSprite(mSprite, mCollision);
   entry.tile.ArchetypeResource = mArchetype->mResourceId;
   entry.tile.SpriteResource = mSprite.IsNotNull() ? mSprite->mResourceId : 0;
-  entry.tile.CollisionResource =
-      mCollision.IsNotNull() ? mCollision->mResourceId : 0;
+  entry.tile.CollisionResource = mCollision.IsNotNull() ? mCollision->mResourceId : 0;
   entry.tile.Merge = mMergeable;
   mPaletteTiles[location] = entry;
 
@@ -908,9 +882,7 @@ void TilePaletteView::OnRightMouseDownArea(MouseEvent* event)
           currentEntry->frame->SetFrame(0, SpriteSourceManager::GetDefault());
 
         if (collision && mShowCollision)
-          currentEntry->frame->SetFrameOverlay(
-              mCollisionTextureName,
-              mEditor->GetCollisionTextureUv(collision->Name));
+          currentEntry->frame->SetFrameOverlay(mCollisionTextureName, mEditor->GetCollisionTextureUv(collision->Name));
         else
           currentEntry->frame->RemoveFrameOverlay();
 
@@ -944,16 +916,13 @@ void TilePaletteView::OnRightMouseDownArea(MouseEvent* event)
   RefreshSelection();
 }
 
-TilePaletteView::SelectionRange::SelectionRange(
-    TilePaletteView::PaletteEntryMap* paletteTiles,
-    IntVec2 selectionStart,
-    IntVec2 selectionEnd) :
+TilePaletteView::SelectionRange::SelectionRange(TilePaletteView::PaletteEntryMap* paletteTiles,
+                                                IntVec2 selectionStart,
+                                                IntVec2 selectionEnd) :
     mPaletteTiles(paletteTiles)
 {
-  mSelectionMin = IntVec2(Math::Min(selectionStart.x, selectionEnd.x),
-                          Math::Min(selectionStart.y, selectionEnd.y));
-  mSelectionMax = IntVec2(Math::Max(selectionStart.x, selectionEnd.x),
-                          Math::Max(selectionStart.y, selectionEnd.y));
+  mSelectionMin = IntVec2(Math::Min(selectionStart.x, selectionEnd.x), Math::Min(selectionStart.y, selectionEnd.y));
+  mSelectionMax = IntVec2(Math::Max(selectionStart.x, selectionEnd.x), Math::Max(selectionStart.y, selectionEnd.y));
 
   // -1 for popFront logic to get first valid entry
   mSelection.x = mSelectionMin.x - 1;
@@ -967,8 +936,7 @@ bool TilePaletteView::SelectionRange::Empty()
   return mSelection.y > mSelectionMax.y;
 }
 
-TilePaletteView::SelectionRange::Selection
-TilePaletteView::SelectionRange::Front()
+TilePaletteView::SelectionRange::Selection TilePaletteView::SelectionRange::Front()
 {
   return Selection(mCurrentEntry, mSelection);
 }

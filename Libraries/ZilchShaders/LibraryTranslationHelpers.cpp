@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-Zilch::Function* GetFunction(Array<String>& params,
-                             const Zilch::FunctionArray* functions)
+Zilch::Function* GetFunction(Array<String>& params, const Zilch::FunctionArray* functions)
 {
   if (functions == nullptr)
     return nullptr;
@@ -43,10 +42,8 @@ Zilch::Function* GetFunction(Array<String>& params,
   return nullptr;
 }
 
-Zilch::Function* GetFunction(Zilch::Type* type,
-                             StringParam fnName,
-                             Array<String>& params,
-                             const Zilch::FunctionArray* functions)
+Zilch::Function*
+GetFunction(Zilch::Type* type, StringParam fnName, Array<String>& params, const Zilch::FunctionArray* functions)
 {
   return GetFunction(params, functions);
 }
@@ -54,31 +51,25 @@ Zilch::Function* GetFunction(Zilch::Type* type,
 // simple (not pretty or efficient) function to get a zilch
 // function by name and parameter types, only in the Math module for static
 // functions
-Zilch::Function* GetMemberOverloadedFunction(Zilch::Type* type,
-                                             StringParam fnName,
-                                             Array<String>& params)
+Zilch::Function* GetMemberOverloadedFunction(Zilch::Type* type, StringParam fnName, Array<String>& params)
 {
   // get all of the overloaded static functions by this name
   Zilch::BoundType* boundType = Zilch::Type::GetBoundType(type);
   if (boundType == nullptr)
     return nullptr;
 
-  const Zilch::FunctionArray* functions =
-      boundType->GetOverloadedInstanceFunctions(fnName);
+  const Zilch::FunctionArray* functions = boundType->GetOverloadedInstanceFunctions(fnName);
   return GetFunction(type, fnName, params, functions);
 }
 
-Zilch::Function* GetStaticFunction(Zilch::Type* type,
-                                   StringParam fnName,
-                                   Array<String>& params)
+Zilch::Function* GetStaticFunction(Zilch::Type* type, StringParam fnName, Array<String>& params)
 {
   // get all of the overloaded static functions by this name
   Zilch::BoundType* boundType = Zilch::Type::GetBoundType(type);
   if (boundType == nullptr)
     return nullptr;
 
-  const Zilch::FunctionArray* functions =
-      boundType->GetOverloadedStaticFunctions(fnName);
+  const Zilch::FunctionArray* functions = boundType->GetOverloadedStaticFunctions(fnName);
   return GetFunction(type, fnName, params, functions);
 }
 
@@ -96,31 +87,24 @@ Zilch::Function* GetConstructor(Zilch::Type* type, Array<String>& params)
   if (boundType == nullptr)
     return nullptr;
 
-  const Zilch::FunctionArray* constructors =
-      boundType->GetOverloadedInheritedConstructors();
+  const Zilch::FunctionArray* constructors = boundType->GetOverloadedInheritedConstructors();
   return GetFunction(params, constructors);
 }
 
-Zilch::Function* GetMemberOverloadedFunction(Zilch::Type* type,
-                                             StringParam fnName)
+Zilch::Function* GetMemberOverloadedFunction(Zilch::Type* type, StringParam fnName)
 {
   Array<String> params;
   return GetMemberOverloadedFunction(type, fnName, params);
 }
 
-Zilch::Function* GetMemberOverloadedFunction(Zilch::Type* type,
-                                             StringParam fnName,
-                                             StringParam p0)
+Zilch::Function* GetMemberOverloadedFunction(Zilch::Type* type, StringParam fnName, StringParam p0)
 {
   Array<String> params;
   params.PushBack(p0);
   return GetMemberOverloadedFunction(type, fnName, params);
 }
 
-Zilch::Function* GetMemberOverloadedFunction(Zilch::Type* type,
-                                             StringParam fnName,
-                                             StringParam p0,
-                                             StringParam p1)
+Zilch::Function* GetMemberOverloadedFunction(Zilch::Type* type, StringParam fnName, StringParam p0, StringParam p1)
 {
   Array<String> params;
   params.PushBack(p0);
@@ -128,11 +112,8 @@ Zilch::Function* GetMemberOverloadedFunction(Zilch::Type* type,
   return GetMemberOverloadedFunction(type, fnName, params);
 }
 
-Zilch::Function* GetMemberOverloadedFunction(Zilch::Type* type,
-                                             StringParam fnName,
-                                             StringParam p0,
-                                             StringParam p1,
-                                             StringParam p2)
+Zilch::Function*
+GetMemberOverloadedFunction(Zilch::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2)
 {
   Array<String> params;
   params.PushBack(p0);
@@ -141,12 +122,8 @@ Zilch::Function* GetMemberOverloadedFunction(Zilch::Type* type,
   return GetMemberOverloadedFunction(type, fnName, params);
 }
 
-Zilch::Function* GetMemberOverloadedFunction(Zilch::Type* type,
-                                             StringParam fnName,
-                                             StringParam p0,
-                                             StringParam p1,
-                                             StringParam p2,
-                                             StringParam p3)
+Zilch::Function* GetMemberOverloadedFunction(
+    Zilch::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2, StringParam p3)
 {
   Array<String> params;
   params.PushBack(p0);
@@ -165,19 +142,14 @@ Zilch::Function* GetStaticFunction(Zilch::Type* type, StringParam fnName)
   return GetStaticFunction(type, fnName, params);
 }
 
-Zilch::Function* GetStaticFunction(Zilch::Type* type,
-                                   StringParam fnName,
-                                   StringParam p0)
+Zilch::Function* GetStaticFunction(Zilch::Type* type, StringParam fnName, StringParam p0)
 {
   Array<String> params;
   params.PushBack(p0);
   return GetStaticFunction(type, fnName, params);
 }
 
-Zilch::Function* GetStaticFunction(Zilch::Type* type,
-                                   StringParam fnName,
-                                   StringParam p0,
-                                   StringParam p1)
+Zilch::Function* GetStaticFunction(Zilch::Type* type, StringParam fnName, StringParam p0, StringParam p1)
 {
   Array<String> params;
   params.PushBack(p0);
@@ -185,11 +157,8 @@ Zilch::Function* GetStaticFunction(Zilch::Type* type,
   return GetStaticFunction(type, fnName, params);
 }
 
-Zilch::Function* GetStaticFunction(Zilch::Type* type,
-                                   StringParam fnName,
-                                   StringParam p0,
-                                   StringParam p1,
-                                   StringParam p2)
+Zilch::Function*
+GetStaticFunction(Zilch::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2)
 {
   Array<String> params;
   params.PushBack(p0);
@@ -198,12 +167,8 @@ Zilch::Function* GetStaticFunction(Zilch::Type* type,
   return GetStaticFunction(type, fnName, params);
 }
 
-Zilch::Function* GetStaticFunction(Zilch::Type* type,
-                                   StringParam fnName,
-                                   StringParam p0,
-                                   StringParam p1,
-                                   StringParam p2,
-                                   StringParam p3)
+Zilch::Function*
+GetStaticFunction(Zilch::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2, StringParam p3)
 {
   Array<String> params;
   params.PushBack(p0);
@@ -278,8 +243,7 @@ Array<String> BuildParams(StringParam p0, StringParam p1, StringParam p2)
   return params;
 }
 
-Array<String>
-BuildParams(StringParam p0, StringParam p1, StringParam p2, StringParam p3)
+Array<String> BuildParams(StringParam p0, StringParam p1, StringParam p2, StringParam p3)
 {
   Array<String> params;
   params.PushBack(p0);

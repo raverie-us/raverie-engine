@@ -36,8 +36,7 @@ IrcClient::IrcClient() : mSocket("Irc")
   ConnectThisTo(&mSocket, Events::ReceivedData, ReceivedData);
   ConnectThisTo(&mSocket, Events::ConnectionCompleted, ConnectionCompleted);
 
-  ConnectThisTo(
-      &mSocket, Events::ConnectionFailed, ConnectionFailedOrDisconnected);
+  ConnectThisTo(&mSocket, Events::ConnectionFailed, ConnectionFailedOrDisconnected);
   ConnectThisTo(&mSocket, Events::Disconnected, ConnectionFailedOrDisconnected);
   ConnectThisTo(&mSocket, Events::SocketError, SocketError);
 }
@@ -335,9 +334,7 @@ void IrcClient::SocketError(TextErrorEvent* event)
   DoNotifyWarning(
       "Irc Client",
       BuildString(
-          "An error occurred: ",
-          event->Text,
-          ". If you were disconnected, use the 'Chat' command to reconnect"));
+          "An error occurred: ", event->Text, ". If you were disconnected, use the 'Chat' command to reconnect"));
 }
 
 // Occurs when we connect to the remote server
@@ -364,10 +361,7 @@ void IrcClient::ReceivedData(ReceivedDataEvent* event)
   const char* stream = (const char*)event->Data.Data();
 
   // Loop until we hit the NULL terminator
-  while (stream != nullptr &&
-         (stream - (const char*)event->Data.Data()) <
-             (long)event->Data.Size() &&
-         *stream != '\0')
+  while (stream != nullptr && (stream - (const char*)event->Data.Data()) < (long)event->Data.Size() && *stream != '\0')
   {
     // Read the first character
     if (*stream == ':')
@@ -468,8 +462,7 @@ void IrcClient::ReceivedData(ReceivedDataEvent* event)
         ++content;
 
         // Create the content string (everything past the arguments)
-        command.Data.Content =
-            String(content, dataStream + command.Data.All.SizeInBytes());
+        command.Data.Content = String(content, dataStream + command.Data.All.SizeInBytes());
 
         // Get a pointer to the first argument
         const char* currentArg = arguments.c_str();
@@ -500,8 +493,7 @@ void IrcClient::ReceivedData(ReceivedDataEvent* event)
       HandleCommand(command);
     }
     // If we got a ping
-    else if (stream[0] == 'P' && stream[1] == 'I' && stream[2] == 'N' &&
-             stream[3] == 'G')
+    else if (stream[0] == 'P' && stream[1] == 'I' && stream[2] == 'N' && stream[3] == 'G')
     {
       // Create the pong reply and send it out (we just reply with the data we
       // were given)

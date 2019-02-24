@@ -25,8 +25,7 @@ public:
   // Typedefs.
   typedef ComponentHierarchy<ComponentType> self_type;
   typedef ComponentHierarchyBase<ComponentType> base_type;
-  typedef BaseInList<base_type, ComponentType, &base_type::HierarchyLink>
-      ChildList;
+  typedef BaseInList<base_type, ComponentType, &base_type::HierarchyLink> ChildList;
   typedef typename ChildList::range ChildListRange;
   typedef typename ChildList::reverse_range ChildListReverseRange;
 
@@ -103,7 +102,8 @@ ComponentHierarchy<ComponentType>::ComponentHierarchy() : mParent(nullptr)
 template <typename ComponentType>
 ComponentHierarchy<ComponentType>::~ComponentHierarchy()
 {
-  forRange(ComponentType & child, GetChildren()) child.mParent = nullptr;
+  forRange (ComponentType& child, GetChildren())
+    child.mParent = nullptr;
 
   if (mParent)
     mParent->mChildren.Erase(this);
@@ -128,7 +128,7 @@ void ComponentHierarchy<ComponentType>::Initialize(CogInitializer& initializer)
   // list in their initialize
   if (initializer.Flags & CreationFlags::DynamicallyAdded)
   {
-    forRange(Cog & childCog, base_type::GetOwner()->GetChildren())
+    forRange (Cog& childCog, base_type::GetOwner()->GetChildren())
     {
       if (ComponentType* child = childCog.has(ComponentType))
       {
@@ -140,9 +140,7 @@ void ComponentHierarchy<ComponentType>::Initialize(CogInitializer& initializer)
 
   ConnectThisTo(base_type::GetOwner(), Events::ChildAttached, OnChildAttached);
   ConnectThisTo(base_type::GetOwner(), Events::ChildDetached, OnChildDetached);
-  ConnectThisTo(base_type::GetOwner(),
-                Events::ChildrenOrderChanged,
-                OnChildrenOrderChanged);
+  ConnectThisTo(base_type::GetOwner(), Events::ChildrenOrderChanged, OnChildrenOrderChanged);
 }
 
 template <typename ComponentType>
@@ -172,7 +170,7 @@ void ComponentHierarchy<ComponentType>::OnChildrenOrderChanged(Event* e)
   // where, so we're just going to re-build the child list
   mChildren.Clear();
 
-  forRange(Cog & child, base_type::GetOwner()->GetChildren())
+  forRange (Cog& child, base_type::GetOwner()->GetChildren())
   {
     if (ComponentType* childComponent = child.has(ComponentType))
       mChildren.PushBack(childComponent);
@@ -300,7 +298,8 @@ template <typename ComponentType>
 uint ComponentHierarchy<ComponentType>::GetChildCount()
 {
   uint count = 0;
-  forRange(ComponentType & child, GetChildren())++ count;
+  forRange (ComponentType& child, GetChildren())
+    ++count;
   return count;
 }
 

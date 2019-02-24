@@ -6,8 +6,7 @@ namespace Zero
 namespace Memory
 {
 
-Stack::Stack(cstr name, Graph* parent, size_t stackSize, size_t maxEntries) :
-    Graph(name, parent)
+Stack::Stack(cstr name, Graph* parent, size_t stackSize, size_t maxEntries) : Graph(name, parent)
 {
   mStackSize = stackSize;
   mMaxEntries = maxEntries;

@@ -5,8 +5,7 @@ namespace Zero
 {
 struct SimpleRayCallback
 {
-  SimpleRayCallback(IBroadPhase::RayCastCallBack callback,
-                    ProxyCastResults* results)
+  SimpleRayCallback(IBroadPhase::RayCastCallBack callback, ProxyCastResults* results)
   {
     mCallback = callback;
     mResults = results;
@@ -15,15 +14,13 @@ struct SimpleRayCallback
   bool CastVsAabb(Aabb& aabb, CastDataParam castData)
   {
     real time;
-    return IBroadPhase::TestRayVsAabb(
-        aabb, castData.GetRay().Start, castData.GetRay().Direction, time);
+    return IBroadPhase::TestRayVsAabb(aabb, castData.GetRay().Start, castData.GetRay().Direction, time);
   }
 
   bool CastVsSphere(Sphere& sphere, CastDataParam castData)
   {
     real time;
-    return IBroadPhase::TestRayVsSphere(
-        sphere, castData.GetRay().Start, castData.GetRay().Direction, time);
+    return IBroadPhase::TestRayVsSphere(sphere, castData.GetRay().Start, castData.GetRay().Direction, time);
   }
 
   void Refine(void* clientData, CastDataParam castData)
@@ -42,8 +39,7 @@ struct SimpleRayCallback
 
 struct SimpleSegmentCallback
 {
-  SimpleSegmentCallback(IBroadPhase::RayCastCallBack callback,
-                        ProxyCastResults* results)
+  SimpleSegmentCallback(IBroadPhase::RayCastCallBack callback, ProxyCastResults* results)
   {
     mCallback = callback;
     mResults = results;
@@ -52,15 +48,13 @@ struct SimpleSegmentCallback
   bool CastVsAabb(Aabb& aabb, CastDataParam castData)
   {
     real time;
-    return IBroadPhase::TestSegmentVsAabb(
-        aabb, castData.GetSegment().Start, castData.GetSegment().End, time);
+    return IBroadPhase::TestSegmentVsAabb(aabb, castData.GetSegment().Start, castData.GetSegment().End, time);
   }
 
   bool CastVsSphere(Sphere& sphere, CastDataParam castData)
   {
     real time;
-    return IBroadPhase::TestSegmentVsSphere(
-        sphere, castData.GetSegment().Start, castData.GetSegment().End, time);
+    return IBroadPhase::TestSegmentVsSphere(sphere, castData.GetSegment().Start, castData.GetSegment().End, time);
   }
 
   void Refine(void* clientData, CastDataParam castData)
@@ -79,8 +73,7 @@ struct SimpleSegmentCallback
 
 struct SimpleAabbCallback
 {
-  SimpleAabbCallback(IBroadPhase::VolumeCastCallBack callback,
-                     ProxyCastResults* results)
+  SimpleAabbCallback(IBroadPhase::VolumeCastCallBack callback, ProxyCastResults* results)
   {
     mCallback = callback;
     mResults = results;
@@ -89,22 +82,14 @@ struct SimpleAabbCallback
   bool CastVsAabb(Aabb& aabb, CastDataParam castData)
   {
     Intersection::Type testResult =
-        Intersection::AabbAabb(aabb.mMin,
-                               aabb.mMax,
-                               castData.GetAabb().mMin,
-                               castData.GetAabb().mMax,
-                               nullptr);
+        Intersection::AabbAabb(aabb.mMin, aabb.mMax, castData.GetAabb().mMin, castData.GetAabb().mMax, nullptr);
     return testResult != Intersection::None;
   }
 
   bool CastVsSphere(Sphere& sphere, CastDataParam castData)
   {
-    Intersection::Type testResult =
-        Intersection::AabbSphere(castData.GetAabb().mMin,
-                                 castData.GetAabb().mMax,
-                                 sphere.mCenter,
-                                 sphere.mRadius,
-                                 nullptr);
+    Intersection::Type testResult = Intersection::AabbSphere(
+        castData.GetAabb().mMin, castData.GetAabb().mMax, sphere.mCenter, sphere.mRadius, nullptr);
     return testResult != Intersection::None;
   }
 
@@ -124,8 +109,7 @@ struct SimpleAabbCallback
 
 struct SimpleSphereCallback
 {
-  SimpleSphereCallback(IBroadPhase::VolumeCastCallBack callback,
-                       ProxyCastResults* results)
+  SimpleSphereCallback(IBroadPhase::VolumeCastCallBack callback, ProxyCastResults* results)
   {
     mCallback = callback;
     mResults = results;
@@ -133,23 +117,15 @@ struct SimpleSphereCallback
 
   bool CastVsAabb(Aabb& aabb, CastDataParam castData)
   {
-    Intersection::Type testResult =
-        Intersection::AabbSphere(aabb.mMin,
-                                 aabb.mMax,
-                                 castData.GetSphere().mCenter,
-                                 castData.GetSphere().mRadius,
-                                 nullptr);
+    Intersection::Type testResult = Intersection::AabbSphere(
+        aabb.mMin, aabb.mMax, castData.GetSphere().mCenter, castData.GetSphere().mRadius, nullptr);
     return testResult != Intersection::None;
   }
 
   bool CastVsSphere(Sphere& sphere, CastDataParam castData)
   {
-    Intersection::Type testResult =
-        Intersection::SphereSphere(castData.GetSphere().mCenter,
-                                   castData.GetSphere().mRadius,
-                                   sphere.mCenter,
-                                   sphere.mRadius,
-                                   nullptr);
+    Intersection::Type testResult = Intersection::SphereSphere(
+        castData.GetSphere().mCenter, castData.GetSphere().mRadius, sphere.mCenter, sphere.mRadius, nullptr);
     return testResult != Intersection::None;
   }
 
@@ -169,8 +145,7 @@ struct SimpleSphereCallback
 
 struct SimpleFrustumCallback
 {
-  SimpleFrustumCallback(IBroadPhase::VolumeCastCallBack callback,
-                        ProxyCastResults* results)
+  SimpleFrustumCallback(IBroadPhase::VolumeCastCallBack callback, ProxyCastResults* results)
   {
     mCallback = callback;
     mResults = results;
@@ -179,21 +154,15 @@ struct SimpleFrustumCallback
   bool CastVsAabb(Aabb& aabb, CastDataParam castData)
   {
     Intersection::Type testResult = Intersection::AabbFrustumApproximation(
-        aabb.mMin,
-        aabb.mMax,
-        &castData.GetFrustum().Planes[0].GetData(),
-        nullptr);
+        aabb.mMin, aabb.mMax, &castData.GetFrustum().Planes[0].GetData(), nullptr);
     return testResult != Intersection::None;
   }
 
   bool CastVsSphere(Sphere& sphere, CastDataParam castData)
   {
     using namespace Intersection;
-    Intersection::Type testResult =
-        FrustumSphereApproximation(castData.GetFrustum().GetIntersectionData(),
-                                   sphere.mCenter,
-                                   sphere.mRadius,
-                                   nullptr);
+    Intersection::Type testResult = FrustumSphereApproximation(
+        castData.GetFrustum().GetIntersectionData(), sphere.mCenter, sphere.mRadius, nullptr);
     return testResult != Intersection::None;
   }
 
@@ -225,8 +194,7 @@ struct BroadPhasePolicy<Frustum, Aabb>
 {
   bool Overlap(Frustum& frustum, Aabb& aabb)
   {
-    return Intersection::AabbFrustumApproximation(
-               aabb.mMin, aabb.mMax, frustum.GetIntersectionData()) >=
+    return Intersection::AabbFrustumApproximation(aabb.mMin, aabb.mMax, frustum.GetIntersectionData()) >=
            (Intersection::Type)0;
   }
 };
@@ -236,8 +204,7 @@ struct BroadPhasePolicy<Frustum, Sphere>
 {
   bool Overlap(Frustum& frustum, Sphere& sphere)
   {
-    return Intersection::FrustumSphereApproximation(
-               frustum.GetIntersectionData(), sphere.mCenter, sphere.mRadius) >=
+    return Intersection::FrustumSphereApproximation(frustum.GetIntersectionData(), sphere.mCenter, sphere.mRadius) >=
            (Intersection::Type)0;
   }
 };

@@ -29,13 +29,7 @@ bool ComPort::Open(StringParam name, uint baudRate)
 
   ErrorIf(mComHandle != INVALID_HANDLE_VALUE, "Com port already open.");
 
-  mComHandle = CreateFile(Widen(comportName).c_str(),
-                          GENERIC_READ | GENERIC_WRITE,
-                          NULL,
-                          NULL,
-                          OPEN_EXISTING,
-                          0,
-                          NULL);
+  mComHandle = CreateFile(Widen(comportName).c_str(), GENERIC_READ | GENERIC_WRITE, NULL, NULL, OPEN_EXISTING, 0, NULL);
   // CheckWindowsErrorCode(comHandle != INVALID_HANDLE_VALUE, "Check com port");
   if (mComHandle == INVALID_HANDLE_VALUE)
     return false;

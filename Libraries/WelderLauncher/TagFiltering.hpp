@@ -122,8 +122,7 @@ void FilterDataSetWithTags(TagSet& activeTags,
     if (tagSet.Contains("*"))
       containsAllTags = true;
 
-    for (HashSet<String>::range range = rejectionTags.All(); !range.Empty();
-         range.PopFront())
+    for (HashSet<String>::range range = rejectionTags.All(); !range.Empty(); range.PopFront())
     {
       String rejectionTag = range.Front();
       if (tagSet.Contains(rejectionTag) == true)
@@ -139,8 +138,7 @@ void FilterDataSetWithTags(TagSet& activeTags,
     if (containsAllTags && !containsRejection)
     {
       // check the active search string and see if this version matches
-      if (searchText.Empty() ||
-          policy.GetName(item).ToLower().Contains(searchText))
+      if (searchText.Empty() || policy.GetName(item).ToLower().Contains(searchText))
       {
         if (policy.ShouldInclude(item))
           results.PushBack(item);
@@ -149,8 +147,7 @@ void FilterDataSetWithTags(TagSet& activeTags,
       {
         // check to see if there's a partial match with any tag (aka add any
         // item with reasonable tags)
-        for (TagSet::range range = tagSet.All(); !range.Empty();
-             range.PopFront())
+        for (TagSet::range range = tagSet.All(); !range.Empty(); range.PopFront())
         {
           StringRange tag = range.Front();
           if (searchText.Empty() || tag.ToLower().Contains(searchText))

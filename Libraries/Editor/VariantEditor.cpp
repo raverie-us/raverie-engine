@@ -29,8 +29,7 @@ ZilchDefineType(InPlaceTextEditor, builder, type)
 {
 }
 
-InPlaceTextEditor::InPlaceTextEditor(Composite* parent, u32 flags) :
-    ValueEditor(parent)
+InPlaceTextEditor::InPlaceTextEditor(Composite* parent, u32 flags) : ValueEditor(parent)
 {
   mText = new Label(this);
   mText->SetTextClipping(true);
@@ -129,8 +128,7 @@ void InPlaceTextEditor::SetVariant(AnyParam variant)
       else
       {
         currIcon = mCustomIcons[i];
-        BaseDefinition* definition =
-            mDefSet->GetDefinitionOrNull(iconDefinition);
+        BaseDefinition* definition = mDefSet->GetDefinitionOrNull(iconDefinition);
         currIcon->ChangeDefinition(definition);
       }
 
@@ -245,9 +243,7 @@ float InPlaceTextEditor::GetIconsWidth()
   return width;
 }
 
-ValueEditor* CreateInPlaceTextEditor(Composite* composite,
-                                     AnyParam data,
-                                     u32 flags)
+ValueEditor* CreateInPlaceTextEditor(Composite* composite, AnyParam data, u32 flags)
 {
   return new InPlaceTextEditor(composite, flags);
 }
@@ -262,8 +258,7 @@ public:
   TextBox* mText;
   HandleOf<FloatingSearchView> mActiveSearch;
 
-  ResourceDisplay(Composite* parent, AnyParam resourceType) :
-      ValueEditor(parent)
+  ResourceDisplay(Composite* parent, AnyParam resourceType) : ValueEditor(parent)
   {
     mResourceType = resourceType.Get<String>();
     mText = new TextBox(this);
@@ -292,8 +287,7 @@ public:
 
       searchView->AddHiddenTag("Resources");
       searchView->AddHiddenTag(mResourceType);
-      searchView->mSearch->SearchProviders.PushBack(
-          GetResourceSearchProvider());
+      searchView->mSearch->SearchProviders.PushBack(GetResourceSearchProvider());
 
       searchView->TakeFocus();
       viewPopUp->UpdateTransformExternal();
@@ -347,9 +341,7 @@ public:
   }
 };
 
-ValueEditor* CreateResourceDisplay(Composite* composite,
-                                   AnyParam data,
-                                   u32 flags)
+ValueEditor* CreateResourceDisplay(Composite* composite, AnyParam data, u32 flags)
 {
   return new ResourceDisplay(composite, data);
 }
@@ -461,16 +453,12 @@ ValueEditorFactory::ValueEditorFactory()
   RegisterEditor(cDefaultBooleanEditor, CreateBooleanEditor);
 }
 
-void ValueEditorFactory::RegisterEditor(StringParam type,
-                                        ValueEditorCreator creator)
+void ValueEditorFactory::RegisterEditor(StringParam type, ValueEditorCreator creator)
 {
   mRegisteredEditors.Insert(type, creator);
 }
 
-ValueEditor* ValueEditorFactory::GetEditor(StringParam type,
-                                           Composite* parent,
-                                           AnyParam data,
-                                           u32 flags)
+ValueEditor* ValueEditorFactory::GetEditor(StringParam type, Composite* parent, AnyParam data, u32 flags)
 {
   ValueEditorCreator creator = mRegisteredEditors.FindValue(type, nullptr);
   if (creator)

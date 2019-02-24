@@ -90,8 +90,7 @@ DeclareBasicNativeTypeMultiPrimitive(Math::BoolVector2,
 
   // Bool Type
   case BasicNativeType::Bool:
-    return NativeTypeOf(
-        BasicNativeTypeFromEnum<BasicNativeType::Bool>::Type); // aka Boolean
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Bool>::Type); // aka Boolean
 
   // Char Type
   case BasicNativeType::Char:
@@ -103,17 +102,14 @@ DeclareBasicNativeTypeMultiPrimitive(Math::BoolVector2,
   case BasicNativeType::Int16:
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Int16>::Type);
   case BasicNativeType::Int32:
-    return NativeTypeOf(
-        BasicNativeTypeFromEnum<BasicNativeType::Int32>::Type); // aka Integer
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Int32>::Type); // aka Integer
   case BasicNativeType::Int64:
-    return NativeTypeOf(
-        BasicNativeTypeFromEnum<BasicNativeType::Int64>::Type); // aka
-                                                                // DoubleInteger
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Int64>::Type); // aka
+                                                                                // DoubleInteger
 
   // Fixed-Width Unsigned Integral Types
   case BasicNativeType::Uint8:
-    return NativeTypeOf(
-        BasicNativeTypeFromEnum<BasicNativeType::Uint8>::Type); // aka Byte
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Uint8>::Type); // aka Byte
   case BasicNativeType::Uint16:
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Uint16>::Type);
   case BasicNativeType::Uint32:
@@ -123,60 +119,44 @@ DeclareBasicNativeTypeMultiPrimitive(Math::BoolVector2,
 
   // Floating Point Types
   case BasicNativeType::Float:
-    return NativeTypeOf(
-        BasicNativeTypeFromEnum<BasicNativeType::Float>::Type); // aka Real
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Float>::Type); // aka Real
   case BasicNativeType::Double:
-    return NativeTypeOf(
-        BasicNativeTypeFromEnum<BasicNativeType::Double>::Type); // aka
-                                                                 // DoubleReal
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Double>::Type); // aka
+                                                                                 // DoubleReal
 
   // Multi-Primitive Math Types
   case BasicNativeType::BoolVector2:
-    return NativeTypeOf(BasicNativeTypeFromEnum<
-                        BasicNativeType::BoolVector2>::Type); // aka Boolean2
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::BoolVector2>::Type); // aka Boolean2
   case BasicNativeType::BoolVector3:
-    return NativeTypeOf(BasicNativeTypeFromEnum<
-                        BasicNativeType::BoolVector3>::Type); // aka Boolean3
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::BoolVector3>::Type); // aka Boolean3
   case BasicNativeType::BoolVector4:
-    return NativeTypeOf(BasicNativeTypeFromEnum<
-                        BasicNativeType::BoolVector4>::Type); // aka Boolean4
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::BoolVector4>::Type); // aka Boolean4
   case BasicNativeType::IntVector2:
-    return NativeTypeOf(
-        BasicNativeTypeFromEnum<BasicNativeType::IntVector2>::Type); // aka
-                                                                     // Integer2
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::IntVector2>::Type); // aka
+                                                                                     // Integer2
   case BasicNativeType::IntVector3:
-    return NativeTypeOf(
-        BasicNativeTypeFromEnum<BasicNativeType::IntVector3>::Type); // aka
-                                                                     // Integer3
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::IntVector3>::Type); // aka
+                                                                                     // Integer3
   case BasicNativeType::IntVector4:
-    return NativeTypeOf(
-        BasicNativeTypeFromEnum<BasicNativeType::IntVector4>::Type); // aka
-                                                                     // Integer4
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::IntVector4>::Type); // aka
+                                                                                     // Integer4
   case BasicNativeType::Vector2:
-    return NativeTypeOf(
-        BasicNativeTypeFromEnum<BasicNativeType::Vector2>::Type); // aka Real2
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Vector2>::Type); // aka Real2
   case BasicNativeType::Vector3:
-    return NativeTypeOf(
-        BasicNativeTypeFromEnum<BasicNativeType::Vector3>::Type); // aka Real3
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Vector3>::Type); // aka Real3
   case BasicNativeType::Vector4:
-    return NativeTypeOf(
-        BasicNativeTypeFromEnum<BasicNativeType::Vector4>::Type); // aka Real4
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Vector4>::Type); // aka Real4
   case BasicNativeType::Quaternion:
-    return NativeTypeOf(BasicNativeTypeFromEnum<
-                        BasicNativeType::Quaternion>::Type); // aka Quaternion
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Quaternion>::Type); // aka Quaternion
   case BasicNativeType::Matrix2:
-    return NativeTypeOf(
-        BasicNativeTypeFromEnum<BasicNativeType::Matrix2>::Type); // aka Real2x2
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Matrix2>::Type); // aka Real2x2
   case BasicNativeType::Matrix3:
-    return NativeTypeOf(
-        BasicNativeTypeFromEnum<BasicNativeType::Matrix3>::Type); // aka Real3x3
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Matrix3>::Type); // aka Real3x3
   case BasicNativeType::Matrix4:
-    return NativeTypeOf(
-        BasicNativeTypeFromEnum<BasicNativeType::Matrix4>::Type); // aka Real4x4
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Matrix4>::Type); // aka Real4x4
 
   // String Type
   case BasicNativeType::String:
-    return NativeTypeOf(
-        BasicNativeTypeFromEnum<BasicNativeType::String>::Type); // aka String
+    return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::String>::Type); // aka String
   }
 }

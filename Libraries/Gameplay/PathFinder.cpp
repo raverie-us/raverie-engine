@@ -36,8 +36,7 @@ void PathFinder::Initialize(CogInitializer& initializer)
 {
 }
 
-HandleOf<ArrayClass<Vec3>> PathFinder::FindPath(Vec3Param worldStart,
-                                                Vec3Param worldGoal)
+HandleOf<ArrayClass<Vec3>> PathFinder::FindPath(Vec3Param worldStart, Vec3Param worldGoal)
 {
   Array<Variant> path;
   Variant nodeKeyStart = WorldPositionToNodeKey(worldStart);
@@ -53,8 +52,7 @@ HandleOf<ArrayClass<Vec3>> PathFinder::FindPath(Vec3Param worldStart,
   return array;
 }
 
-HandleOf<PathFinderRequest> PathFinder::FindPathThreaded(Vec3Param worldStart,
-                                                         Vec3Param worldGoal)
+HandleOf<PathFinderRequest> PathFinder::FindPathThreaded(Vec3Param worldStart, Vec3Param worldGoal)
 {
   Array<Variant> path;
   Variant nodeKeyStart = WorldPositionToNodeKey(worldStart);
@@ -94,8 +92,7 @@ void PathFinderRequest::OnJobFinished(PathFinderBaseEvent* event)
   if (mStatus == PathFinderStatus::Cancelled)
     return;
 
-  ErrorIf(mStatus != PathFinderStatus::Pending,
-          "The request should not have been completed yet");
+  ErrorIf(mStatus != PathFinderStatus::Pending, "The request should not have been completed yet");
 
   // We consider the path finding as a success if any nodes were returned
   if (event->GenericGetPathNodeCount() != 0)
@@ -110,8 +107,7 @@ void PathFinderRequest::OnJobFinished(PathFinderBaseEvent* event)
     // This occurs when the engine pumps threaded events (came from a finished
     // job) Therefore there is no debug draw space available, so we make ours
     // the default
-    Debug::ActiveDrawSpace activeDrawSpace(
-        pathFinder->GetSpace()->GetRuntimeId());
+    Debug::ActiveDrawSpace activeDrawSpace(pathFinder->GetSpace()->GetRuntimeId());
 
     // Let the derived class send out its own events to the PathFinderRequest
     // and Cog
@@ -125,17 +121,14 @@ void PathFinderRequest::OnJobFinished(PathFinderBaseEvent* event)
     generatedEvent.mRequest = event->mRequest;
     generatedEvent.mDuration = event->mDuration;
 
-    generatedEvent.mStart =
-        pathFinder->NodeKeyToWorldPosition(event->GenericGetStart());
-    generatedEvent.mGoal =
-        pathFinder->NodeKeyToWorldPosition(event->GenericGetGoal());
+    generatedEvent.mStart = pathFinder->NodeKeyToWorldPosition(event->GenericGetStart());
+    generatedEvent.mGoal = pathFinder->NodeKeyToWorldPosition(event->GenericGetGoal());
 
     size_t count = event->GenericGetPathNodeCount();
     generatedEvent.mPath.Reserve(count);
     for (size_t i = 0; i < count; ++i)
     {
-      generatedEvent.mPath.PushBack(
-          pathFinder->NodeKeyToWorldPosition(event->GenericGetPathNode(i)));
+      generatedEvent.mPath.PushBack(pathFinder->NodeKeyToWorldPosition(event->GenericGetPathNode(i)));
     }
 
     DispatchEvent(Events::PathFinderFinished, &generatedEvent);

@@ -36,10 +36,7 @@ void SurfaceImpl::Init(SurfaceID sid, WindowID wid)
   // Do nothing
 }
 
-void SurfaceImpl::InitPixMap(int width,
-                             int height,
-                             Surface* surface_,
-                             WindowID wid)
+void SurfaceImpl::InitPixMap(int width, int height, Surface* surface_, WindowID wid)
 {
   ErrorIf(true, "Not Valid");
 }
@@ -93,14 +90,10 @@ void SurfaceImpl::LineTo(int x_, int y_)
   mFrameBlock->mRenderQueues->mStreamedVertices.PushBack(v1);
 
   mViewNode->mStreamedVertexCount =
-      mFrameBlock->mRenderQueues->mStreamedVertices.Size() -
-      mViewNode->mStreamedVertexStart;
+      mFrameBlock->mRenderQueues->mStreamedVertices.Size() - mViewNode->mStreamedVertexStart;
 }
 
-void SurfaceImpl::Polygon(Point* pts,
-                          int npts,
-                          ColourDesired fore,
-                          ColourDesired back)
+void SurfaceImpl::Polygon(Point* pts, int npts, ColourDesired fore, ColourDesired back)
 {
   MakeViewNode(Zero::PrimitiveType::Triangles, White);
 
@@ -110,9 +103,7 @@ void SurfaceImpl::Polygon(Point* pts,
   {
     for (size_t p = 0; p < 3; ++p)
     {
-      Vec3 point = Math::TransformPoint(mViewNode->mLocalToView,
-                                        Vec3(pts[p].x, pts[p].y, 0) +
-                                            Vec3(1.0f, 1.0f, 0.0f));
+      Vec3 point = Math::TransformPoint(mViewNode->mLocalToView, Vec3(pts[p].x, pts[p].y, 0) + Vec3(1.0f, 1.0f, 0.0f));
       Zero::StreamedVertex vertex(point, Vec2::cZero, color, Vec2::cZero);
       mFrameBlock->mRenderQueues->mStreamedVertices.PushBack(vertex);
     }
@@ -122,9 +113,7 @@ void SurfaceImpl::Polygon(Point* pts,
     Array<Vec2> vertices;
     for (int i = 0; i < npts; ++i)
     {
-      Vec3 point = Math::TransformPoint(mViewNode->mLocalToView,
-                                        Vec3(pts[i].x, pts[i].y, 0) +
-                                            Vec3(1.0f, 1.0f, 0.0f));
+      Vec3 point = Math::TransformPoint(mViewNode->mLocalToView, Vec3(pts[i].x, pts[i].y, 0) + Vec3(1.0f, 1.0f, 0.0f));
       vertices.PushBack(Math::ToVector2(point));
     }
 
@@ -144,13 +133,10 @@ void SurfaceImpl::Polygon(Point* pts,
   }
 
   mViewNode->mStreamedVertexCount =
-      mFrameBlock->mRenderQueues->mStreamedVertices.Size() -
-      mViewNode->mStreamedVertexStart;
+      mFrameBlock->mRenderQueues->mStreamedVertices.Size() - mViewNode->mStreamedVertexStart;
 }
 
-void SurfaceImpl::RectangleDraw(PRectangle rc,
-                                ColourDesired fore,
-                                ColourDesired back)
+void SurfaceImpl::RectangleDraw(PRectangle rc, ColourDesired fore, ColourDesired back)
 {
   MakeViewNode(Zero::PrimitiveType::Lines, White);
 
@@ -158,8 +144,7 @@ void SurfaceImpl::RectangleDraw(PRectangle rc,
   Vec3 pos1 = Vec3(rc.right, rc.bottom, 0);
   Vec4 color = ToFloatColor(0xFF000000 | fore.AsLong());
 
-  mFrameBlock->mRenderQueues->AddStreamedLineRect(
-      *mViewNode, pos0, pos1, Vec2(0, 0), Vec2(1, 1), color);
+  mFrameBlock->mRenderQueues->AddStreamedLineRect(*mViewNode, pos0, pos1, Vec2(0, 0), Vec2(1, 1), color);
 }
 
 void SurfaceImpl::FillRectangle(PRectangle rc, ColourDesired back)
@@ -170,8 +155,7 @@ void SurfaceImpl::FillRectangle(PRectangle rc, ColourDesired back)
   Vec3 pos1 = Vec3(rc.right, rc.bottom, 0);
   Vec4 color = ToFloatColor(back.AsLong());
 
-  mFrameBlock->mRenderQueues->AddStreamedQuad(
-      *mViewNode, pos0, pos1, Vec2(0, 0), Vec2(1, 1), color);
+  mFrameBlock->mRenderQueues->AddStreamedQuad(*mViewNode, pos0, pos1, Vec2(0, 0), Vec2(1, 1), color);
 }
 
 void SurfaceImpl::FillRectangle(PRectangle rc, Surface& surfacePattern)
@@ -179,9 +163,7 @@ void SurfaceImpl::FillRectangle(PRectangle rc, Surface& surfacePattern)
   ErrorIf(true, "Not implemented.");
 }
 
-void SurfaceImpl::RoundedRectangle(PRectangle rc,
-                                   ColourDesired fore,
-                                   ColourDesired back)
+void SurfaceImpl::RoundedRectangle(PRectangle rc, ColourDesired fore, ColourDesired back)
 {
   RectangleDraw(rc, fore, back);
 }
@@ -194,8 +176,7 @@ void SurfaceImpl::AlphaRectangle(PRectangle rc,
                                  int alphaOutline,
                                  int flags)
 {
-  RoundedLineRectHelper(
-      rc, cornerSize, fill, alphaFill, outline, alphaOutline, flags);
+  RoundedLineRectHelper(rc, cornerSize, fill, alphaFill, outline, alphaOutline, flags);
 
   MakeViewNode(Zero::PrimitiveType::Triangles, White);
 
@@ -213,14 +194,10 @@ void SurfaceImpl::AlphaRectangle(PRectangle rc,
   Vec3 pos1 = Vec3(rc.right, rc.bottom, 0);
   Vec4 color = ToFloatColor((alphaFill << 24) | fill.AsLong());
 
-  mFrameBlock->mRenderQueues->AddStreamedQuad(
-      *mViewNode, pos0, pos1, Vec2(0, 0), Vec2(1, 1), color);
+  mFrameBlock->mRenderQueues->AddStreamedQuad(*mViewNode, pos0, pos1, Vec2(0, 0), Vec2(1, 1), color);
 }
 
-void SurfaceImpl::DrawRGBAImage(PRectangle rc,
-                                int width,
-                                int height,
-                                const unsigned char* pixelsImage)
+void SurfaceImpl::DrawRGBAImage(PRectangle rc, int width, int height, const unsigned char* pixelsImage)
 {
   ErrorIf(true, "Not implemented.");
 }
@@ -233,8 +210,7 @@ void SurfaceImpl::Ellipse(PRectangle rc, ColourDesired fore, ColourDesired back)
   Vec3 pos1 = Vec3(rc.right + 2, rc.bottom + 2, 0);
   Vec4 color = ToFloatColor(back.AsLong());
 
-  mFrameBlock->mRenderQueues->AddStreamedQuad(
-      *mViewNode, pos0, pos1, Vec2(0, 0), Vec2(1, 1), color);
+  mFrameBlock->mRenderQueues->AddStreamedQuad(*mViewNode, pos0, pos1, Vec2(0, 0), Vec2(1, 1), color);
 }
 
 void SurfaceImpl::Copy(PRectangle rc, Point from, Surface& surfaceSource)
@@ -242,13 +218,8 @@ void SurfaceImpl::Copy(PRectangle rc, Point from, Surface& surfaceSource)
   ErrorIf(true, "Not available in hardware accelerated version.");
 }
 
-void SurfaceImpl::DrawTextNoClip(PRectangle rc,
-                                 Font& font_,
-                                 XYPOSITION ybase,
-                                 const char* s,
-                                 int len,
-                                 ColourDesired fore,
-                                 ColourDesired back)
+void SurfaceImpl::DrawTextNoClip(
+    PRectangle rc, Font& font_, XYPOSITION ybase, const char* s, int len, ColourDesired fore, ColourDesired back)
 {
   if (len == 0)
     return;
@@ -262,34 +233,18 @@ void SurfaceImpl::DrawTextNoClip(PRectangle rc,
   Vec2 size = Vec2(rc.right, rc.bottom) - textStart;
   Vec4 color = ToFloatColor(0xFF000000 | fore.AsLong());
 
-  Zero::FontProcessor fontProcessor(
-      mFrameBlock->mRenderQueues, mViewNode, color);
-  AddTextRange(fontProcessor,
-               font,
-               text,
-               textStart,
-               Zero::TextAlign::Left,
-               Vec2(1, 1),
-               size);
+  Zero::FontProcessor fontProcessor(mFrameBlock->mRenderQueues, mViewNode, color);
+  AddTextRange(fontProcessor, font, text, textStart, Zero::TextAlign::Left, Vec2(1, 1), size);
 }
 
-void SurfaceImpl::DrawTextClipped(PRectangle rc,
-                                  Font& font_,
-                                  XYPOSITION ybase,
-                                  const char* s,
-                                  int len,
-                                  ColourDesired fore,
-                                  ColourDesired back)
+void SurfaceImpl::DrawTextClipped(
+    PRectangle rc, Font& font_, XYPOSITION ybase, const char* s, int len, ColourDesired fore, ColourDesired back)
 {
   ErrorIf(true, "Not implemented.");
 }
 
-void SurfaceImpl::DrawTextTransparent(PRectangle rc,
-                                      Font& font_,
-                                      XYPOSITION ybase,
-                                      const char* s,
-                                      int len,
-                                      ColourDesired fore)
+void SurfaceImpl::DrawTextTransparent(
+    PRectangle rc, Font& font_, XYPOSITION ybase, const char* s, int len, ColourDesired fore)
 {
   if (len == 0)
     return;
@@ -303,21 +258,11 @@ void SurfaceImpl::DrawTextTransparent(PRectangle rc,
   Vec2 size = Vec2(rc.right, rc.bottom) - textStart;
   Vec4 color = ToFloatColor(fore.AsLong());
 
-  Zero::FontProcessor fontProcessor(
-      mFrameBlock->mRenderQueues, mViewNode, color);
-  AddTextRange(fontProcessor,
-               font,
-               text,
-               textStart,
-               Zero::TextAlign::Left,
-               Vec2(1, 1),
-               size);
+  Zero::FontProcessor fontProcessor(mFrameBlock->mRenderQueues, mViewNode, color);
+  AddTextRange(fontProcessor, font, text, textStart, Zero::TextAlign::Left, Vec2(1, 1), size);
 }
 
-void SurfaceImpl::MeasureWidths(Scintilla::Font& font_,
-                                const char* s,
-                                int len,
-                                XYPOSITION* positions)
+void SurfaceImpl::MeasureWidths(Scintilla::Font& font_, const char* s, int len, XYPOSITION* positions)
 {
   Zero::RenderFont* font = (Zero::RenderFont*)font_.fid;
   if (font)
@@ -461,8 +406,7 @@ void SurfaceImpl::RoundedLineRectHelper(PRectangle rc,
 
   if (cornerEmulation == 0)
   {
-    mFrameBlock->mRenderQueues->AddStreamedLineRect(
-        *mViewNode, pos0, pos1, uv0, uv1, color);
+    mFrameBlock->mRenderQueues->AddStreamedLineRect(*mViewNode, pos0, pos1, uv0, uv1, color);
     return;
   }
 
@@ -470,26 +414,16 @@ void SurfaceImpl::RoundedLineRectHelper(PRectangle rc,
 
   float leftX = pos0.x;
   float rightX = pos1.x + ce;
-  Zero::StreamedVertex v0(
-      Math::TransformPoint(mViewNode->mLocalToView, Vec3(leftX, pos0.y, 0)),
-      uv0,
-      color,
-      uv0);
-  Zero::StreamedVertex v1(
-      Math::TransformPoint(mViewNode->mLocalToView, Vec3(leftX, pos1.y, 0)),
-      Vec2(uv0.x, uv1.y),
-      color,
-      Vec2(uv0.x, uv1.y));
-  Zero::StreamedVertex v2(
-      Math::TransformPoint(mViewNode->mLocalToView, Vec3(pos1.x, pos1.y, 0)),
-      uv1,
-      color,
-      uv1);
-  Zero::StreamedVertex v3(
-      Math::TransformPoint(mViewNode->mLocalToView, Vec3(rightX, pos0.y, 0)),
-      Vec2(uv1.x, uv0.y),
-      color,
-      Vec2(uv1.x, uv0.y));
+  Zero::StreamedVertex v0(Math::TransformPoint(mViewNode->mLocalToView, Vec3(leftX, pos0.y, 0)), uv0, color, uv0);
+  Zero::StreamedVertex v1(Math::TransformPoint(mViewNode->mLocalToView, Vec3(leftX, pos1.y, 0)),
+                          Vec2(uv0.x, uv1.y),
+                          color,
+                          Vec2(uv0.x, uv1.y));
+  Zero::StreamedVertex v2(Math::TransformPoint(mViewNode->mLocalToView, Vec3(pos1.x, pos1.y, 0)), uv1, color, uv1);
+  Zero::StreamedVertex v3(Math::TransformPoint(mViewNode->mLocalToView, Vec3(rightX, pos0.y, 0)),
+                          Vec2(uv1.x, uv0.y),
+                          color,
+                          Vec2(uv1.x, uv0.y));
 
   Zero::RenderQueues* queue = mFrameBlock->mRenderQueues;
 
@@ -500,43 +434,35 @@ void SurfaceImpl::RoundedLineRectHelper(PRectangle rc,
   queue->mStreamedVertices.PushBack(v1);
   queue->mStreamedVertices.PushBack(v2);
   // BottomRight to TopRight
-  v2.mPosition =
-      Math::TransformPoint(mViewNode->mLocalToView, Vec3(rightX, pos1.y, 0));
+  v2.mPosition = Math::TransformPoint(mViewNode->mLocalToView, Vec3(rightX, pos1.y, 0));
   queue->mStreamedVertices.PushBack(v2);
   queue->mStreamedVertices.PushBack(v3);
   // TopRight to TopLeft
   float topY = pos0.y - ce;
-  v3.mPosition =
-      Math::TransformPoint(mViewNode->mLocalToView, Vec3(pos1.x, topY, 0));
-  v0.mPosition =
-      Math::TransformPoint(mViewNode->mLocalToView, Vec3(leftX, topY, 0));
+  v3.mPosition = Math::TransformPoint(mViewNode->mLocalToView, Vec3(pos1.x, topY, 0));
+  v0.mPosition = Math::TransformPoint(mViewNode->mLocalToView, Vec3(leftX, topY, 0));
   queue->mStreamedVertices.PushBack(v3);
   queue->mStreamedVertices.PushBack(v0);
 
-  mViewNode->mStreamedVertexCount =
-      queue->mStreamedVertices.Size() - mViewNode->mStreamedVertexStart;
+  mViewNode->mStreamedVertexCount = queue->mStreamedVertices.Size() - mViewNode->mStreamedVertexStart;
   mViewNode->mStreamedVertexType = Zero::PrimitiveType::Lines;
 }
 
-void SurfaceImpl::MakeViewNode(Zero::PrimitiveType::Enum primitive,
-                               StringParam textureName)
+void SurfaceImpl::MakeViewNode(Zero::PrimitiveType::Enum primitive, StringParam textureName)
 {
   Zero::Texture* texture = Zero::TextureManager::FindOrNull(textureName);
   return MakeViewNode(primitive, texture);
 }
 
-void SurfaceImpl::MakeViewNode(Zero::PrimitiveType::Enum primitive,
-                               Zero::Texture* texture)
+void SurfaceImpl::MakeViewNode(Zero::PrimitiveType::Enum primitive, Zero::Texture* texture)
 {
   bool needsNewViewNode =
       mViewNode == nullptr || mViewNode->mStreamedVertexType != primitive ||
-      mFrameBlock->mFrameNodes[mViewNode->mFrameNodeIndex].mTextureRenderData !=
-          texture->mRenderData;
+      mFrameBlock->mFrameNodes[mViewNode->mFrameNodeIndex].mTextureRenderData != texture->mRenderData;
 
   if (needsNewViewNode)
   {
-    mViewNode =
-        &mWidget->AddRenderNodes(*mViewBlock, *mFrameBlock, mClipRect, texture);
+    mViewNode = &mWidget->AddRenderNodes(*mViewBlock, *mFrameBlock, mClipRect, texture);
     mViewNode->mStreamedVertexType = primitive;
   }
 }
@@ -577,8 +503,7 @@ Font::~Font()
 
 void Font::Create(const FontParameters& fp)
 {
-  this->fid =
-      Zero::FontManager::GetInstance()->GetRenderFont(fp.faceName, fp.size, 0);
+  this->fid = Zero::FontManager::GetInstance()->GetRenderFont(fp.faceName, fp.size, 0);
 }
 
 void Font::Release()
@@ -729,12 +654,7 @@ public:
   {
   }
 
-  virtual void Create(Window& parent,
-                      int ctrlID,
-                      Point location,
-                      int lineHeight_,
-                      bool unicodeMode_,
-                      int technology_)
+  virtual void Create(Window& parent, int ctrlID, Point location, int lineHeight_, bool unicodeMode_, int technology_)
   {
     Zero::Widget* widget = (Zero::Widget*)parent.GetID();
     mListBox = new Zero::ListBox(widget->GetRootWidget()->GetPopUp());
@@ -824,10 +744,7 @@ public:
     mCallbackData = data;
   }
 
-  virtual void RegisterRGBAImage(int type,
-                                 int width,
-                                 int height,
-                                 const unsigned char* pixelsImage)
+  virtual void RegisterRGBAImage(int type, int width, int height, const unsigned char* pixelsImage)
   {
   }
 
@@ -904,18 +821,12 @@ bool Platform::IsKeyDown(int key)
   return 0;
 }
 
-long Platform::SendScintilla(WindowID w,
-                             unsigned int msg,
-                             unsigned long wParam,
-                             long lParam)
+long Platform::SendScintilla(WindowID w, unsigned int msg, unsigned long wParam, long lParam)
 {
   return 0;
 }
 
-long Platform::SendScintillaPointer(WindowID w,
-                                    unsigned int msg,
-                                    unsigned long wParam,
-                                    void* lParam)
+long Platform::SendScintillaPointer(WindowID w, unsigned int msg, unsigned long wParam, void* lParam)
 {
   return 0;
 }
@@ -974,8 +885,7 @@ bool Platform::ShowAssertionPopUps(bool assertionPopUps_)
 void Platform::Assert(const char* c, const char* file, int line)
 {
   bool ignore = false;
-  bool safe = Zero::ErrorSignaler::SignalError(
-      Zero::ErrorSignaler::Error, c, file, line, ignore, "Scintilla Error");
+  bool safe = Zero::ErrorSignaler::SignalError(Zero::ErrorSignaler::Error, c, file, line, ignore, "Scintilla Error");
   ErrorIf(!safe, "Break Scintilla");
 }
 } // namespace Scintilla

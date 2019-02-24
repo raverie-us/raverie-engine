@@ -38,8 +38,7 @@ void SetButtonState(GamepadState* stateOut,
 {
   int bitShift = (int)Math::Log2((real)zeroButtonFlag);
   stateOut->mButtons =
-      ((stateOut->mButtons & zeroButtonFlag) |
-       (SDL_GameControllerGetButton(gamepad, sdlButtonFlag) << bitShift));
+      ((stateOut->mButtons & zeroButtonFlag) | (SDL_GameControllerGetButton(gamepad, sdlButtonFlag) << bitShift));
 }
 
 SDL_GameController* GetGamePad(size_t gamepadIndex)
@@ -74,50 +73,20 @@ bool GetGamepadState(size_t gamepadIndex, GamepadState* stateOut)
     return false;
 
   // Get the state of the buttons
-  SetButtonState(
-      stateOut, gamepad, GamepadButtonFlag::A, SDL_CONTROLLER_BUTTON_A);
-  SetButtonState(
-      stateOut, gamepad, GamepadButtonFlag::B, SDL_CONTROLLER_BUTTON_B);
-  SetButtonState(
-      stateOut, gamepad, GamepadButtonFlag::X, SDL_CONTROLLER_BUTTON_X);
-  SetButtonState(
-      stateOut, gamepad, GamepadButtonFlag::Y, SDL_CONTROLLER_BUTTON_Y);
-  SetButtonState(
-      stateOut, gamepad, GamepadButtonFlag::Back, SDL_CONTROLLER_BUTTON_BACK);
-  SetButtonState(
-      stateOut, gamepad, GamepadButtonFlag::Start, SDL_CONTROLLER_BUTTON_START);
-  SetButtonState(stateOut,
-                 gamepad,
-                 GamepadButtonFlag::LThumb,
-                 SDL_CONTROLLER_BUTTON_LEFTSTICK);
-  SetButtonState(stateOut,
-                 gamepad,
-                 GamepadButtonFlag::RThumb,
-                 SDL_CONTROLLER_BUTTON_RIGHTSTICK);
-  SetButtonState(stateOut,
-                 gamepad,
-                 GamepadButtonFlag::LShoulder,
-                 SDL_CONTROLLER_BUTTON_LEFTSHOULDER);
-  SetButtonState(stateOut,
-                 gamepad,
-                 GamepadButtonFlag::RShoulder,
-                 SDL_CONTROLLER_BUTTON_RIGHTSHOULDER);
-  SetButtonState(stateOut,
-                 gamepad,
-                 GamepadButtonFlag::DpadUp,
-                 SDL_CONTROLLER_BUTTON_DPAD_UP);
-  SetButtonState(stateOut,
-                 gamepad,
-                 GamepadButtonFlag::DpadDown,
-                 SDL_CONTROLLER_BUTTON_DPAD_DOWN);
-  SetButtonState(stateOut,
-                 gamepad,
-                 GamepadButtonFlag::DpadLeft,
-                 SDL_CONTROLLER_BUTTON_DPAD_LEFT);
-  SetButtonState(stateOut,
-                 gamepad,
-                 GamepadButtonFlag::DpadRight,
-                 SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
+  SetButtonState(stateOut, gamepad, GamepadButtonFlag::A, SDL_CONTROLLER_BUTTON_A);
+  SetButtonState(stateOut, gamepad, GamepadButtonFlag::B, SDL_CONTROLLER_BUTTON_B);
+  SetButtonState(stateOut, gamepad, GamepadButtonFlag::X, SDL_CONTROLLER_BUTTON_X);
+  SetButtonState(stateOut, gamepad, GamepadButtonFlag::Y, SDL_CONTROLLER_BUTTON_Y);
+  SetButtonState(stateOut, gamepad, GamepadButtonFlag::Back, SDL_CONTROLLER_BUTTON_BACK);
+  SetButtonState(stateOut, gamepad, GamepadButtonFlag::Start, SDL_CONTROLLER_BUTTON_START);
+  SetButtonState(stateOut, gamepad, GamepadButtonFlag::LThumb, SDL_CONTROLLER_BUTTON_LEFTSTICK);
+  SetButtonState(stateOut, gamepad, GamepadButtonFlag::RThumb, SDL_CONTROLLER_BUTTON_RIGHTSTICK);
+  SetButtonState(stateOut, gamepad, GamepadButtonFlag::LShoulder, SDL_CONTROLLER_BUTTON_LEFTSHOULDER);
+  SetButtonState(stateOut, gamepad, GamepadButtonFlag::RShoulder, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER);
+  SetButtonState(stateOut, gamepad, GamepadButtonFlag::DpadUp, SDL_CONTROLLER_BUTTON_DPAD_UP);
+  SetButtonState(stateOut, gamepad, GamepadButtonFlag::DpadDown, SDL_CONTROLLER_BUTTON_DPAD_DOWN);
+  SetButtonState(stateOut, gamepad, GamepadButtonFlag::DpadLeft, SDL_CONTROLLER_BUTTON_DPAD_LEFT);
+  SetButtonState(stateOut, gamepad, GamepadButtonFlag::DpadRight, SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
 
   // Get the state of the thumb sticks
   s16 thumbLX = SDL_GameControllerGetAxis(gamepad, SDL_CONTROLLER_AXIS_LEFTX);
@@ -127,21 +96,17 @@ bool GetGamepadState(size_t gamepadIndex, GamepadState* stateOut)
 
   // Get the state of the triggers. The function returns an s16, but triggers
   // will only ever return a value 0 to 32767.
-  stateOut->mLTrigger =
-      (u8)SDL_GameControllerGetAxis(gamepad, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
-  stateOut->mRTrigger =
-      (u8)SDL_GameControllerGetAxis(gamepad, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+  stateOut->mLTrigger = (u8)SDL_GameControllerGetAxis(gamepad, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+  stateOut->mRTrigger = (u8)SDL_GameControllerGetAxis(gamepad, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
 
   // Check for dead zone
-  if (sqrt(thumbLX * thumbLX + thumbLY * thumbLY) <
-      float(GAMEPAD_LEFT_THUMB_DEADZONE))
+  if (sqrt(thumbLX * thumbLX + thumbLY * thumbLY) < float(GAMEPAD_LEFT_THUMB_DEADZONE))
   {
     thumbLX = 0;
     thumbLY = 0;
   }
 
-  if (sqrt(thumbRX * thumbRX + thumbRY * thumbRY) <
-      float(GAMEPAD_RIGHT_THUMB_DEADZONE))
+  if (sqrt(thumbRX * thumbRX + thumbRY * thumbRY) < float(GAMEPAD_RIGHT_THUMB_DEADZONE))
   {
     thumbRX = 0;
     thumbRY = 0;

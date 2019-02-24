@@ -38,10 +38,7 @@ public:
   MetaSelection mCurrentSelection;
 
   //****************************************************************************
-  GroupSelectDrag(Composite* owner,
-                  Mouse* mouse,
-                  EditorViewport* editorViewport,
-                  SelectTool* tool) :
+  GroupSelectDrag(Composite* owner, Mouse* mouse, EditorViewport* editorViewport, SelectTool* tool) :
       MouseManipulation(mouse, owner)
   {
     mViewport = editorViewport;
@@ -55,8 +52,8 @@ public:
     }
 
     // copy the current selection
-    forRange(Cog * cog, Z::gEditor->GetSelection()->AllOfType<Cog>())
-        mCurrentSelection.Add(cog, SendsEvents::False);
+    forRange (Cog* cog, Z::gEditor->GetSelection()->AllOfType<Cog>())
+      mCurrentSelection.Add(cog, SendsEvents::False);
   }
 
   //****************************************************************************
@@ -112,23 +109,20 @@ public:
     Vec2 mouseCurrent = event->Position;
 
     // Can be dragged left to right or right to left
-    Vec2 upperLeftScreen = Vec2(Math::Min(mouseStart.x, mouseCurrent.x),
-                                Math::Min(mouseStart.y, mouseCurrent.y));
-    Vec2 lowerRightScreen = Vec2(Math::Max(mouseStart.x, mouseCurrent.x),
-                                 Math::Max(mouseStart.y, mouseCurrent.y));
+    Vec2 upperLeftScreen = Vec2(Math::Min(mouseStart.x, mouseCurrent.x), Math::Min(mouseStart.y, mouseCurrent.y));
+    Vec2 lowerRightScreen = Vec2(Math::Max(mouseStart.x, mouseCurrent.x), Math::Max(mouseStart.y, mouseCurrent.y));
 
     // Clamp to the view port size
     Vec2 minSelectSize = viewport->ViewportToScreen(Vec2(0, 0));
     Vec2 maxSelectSize = viewport->ViewportToScreen(viewport->GetSize());
-    upperLeftScreen = Vec2(Math::Max(upperLeftScreen.x, minSelectSize.x),
-                           Math::Max(upperLeftScreen.y, minSelectSize.y));
-    lowerRightScreen = Vec2(Math::Min(lowerRightScreen.x, maxSelectSize.x),
-                            Math::Min(lowerRightScreen.y, maxSelectSize.y));
+    upperLeftScreen =
+        Vec2(Math::Max(upperLeftScreen.x, minSelectSize.x), Math::Max(upperLeftScreen.y, minSelectSize.y));
+    lowerRightScreen =
+        Vec2(Math::Min(lowerRightScreen.x, maxSelectSize.x), Math::Min(lowerRightScreen.y, maxSelectSize.y));
 
     // If the drag area is too small do nothing
     const float minDragSize = 5.0f;
-    if ((upperLeftScreen - lowerRightScreen).Length() < minDragSize ||
-        upperLeftScreen.x == lowerRightScreen.x ||
+    if ((upperLeftScreen - lowerRightScreen).Length() < minDragSize || upperLeftScreen.x == lowerRightScreen.x ||
         upperLeftScreen.y == lowerRightScreen.y)
       return;
 
@@ -136,14 +130,12 @@ public:
     dragElement->SetVisible(true);
     Vec3 size = Vec3(lowerRightScreen - upperLeftScreen);
     dragElement->SetSize(Vec2(size.x, size.y));
-    dragElement->SetTranslation(
-        Vec3(viewport->ScreenToViewport(upperLeftScreen)));
+    dragElement->SetTranslation(Vec3(viewport->ScreenToViewport(upperLeftScreen)));
 
     SelectToolFrustumEvent frustumEvent;
 
     // Frustum cast to find selected objects
-    frustumEvent.mFrustum =
-        viewport->SubFrustum(upperLeftScreen, lowerRightScreen);
+    frustumEvent.mFrustum = viewport->SubFrustum(upperLeftScreen, lowerRightScreen);
     space->DispatchEvent(Events::SelectToolFrustumCast, &frustumEvent);
 
     if (frustumEvent.Handled || frustumEvent.HandledEventScript)
@@ -152,10 +144,7 @@ public:
     // allow up to 1000 results from raycasting
     RaycastResultList results(1000);
     // build up the info we pass around
-    CastInfo castInfo(space,
-                      viewport->mViewportInterface->GetCameraCog(),
-                      mouseStart,
-                      mouseCurrent);
+    CastInfo castInfo(space, viewport->mViewportInterface->GetCameraCog(), mouseStart, mouseCurrent);
 
     // do the frustum cast here if no one else handled it
     mTool->mRaycaster.FrustumCast(frustumEvent.mFrustum, castInfo, results);
@@ -165,8 +154,8 @@ public:
     // while shift is held copy in the current selection
     if (event->ShiftPressed || event->CtrlPressed || mTool->mSmartGroupSelect)
     {
-      forRange(Cog * cog, mCurrentSelection.AllOfType<Cog>())
-          selection->Add(cog, SendsEvents::False);
+      forRange (Cog* cog, mCurrentSelection.AllOfType<Cog>())
+        selection->Add(cog, SendsEvents::False);
     }
 
     for (uint i = 0; i < results.mSize; ++i)
@@ -176,8 +165,7 @@ public:
       // if we have something selected and mSmartGroupSelect is enabled or ctrl
       // pressed only selects direct children of the currently selected
       // archetype
-      if (!mCurrentSelection.Empty() &&
-          (mTool->mSmartGroupSelect || event->CtrlPressed))
+      if (!mCurrentSelection.Empty() && (mTool->mSmartGroupSelect || event->CtrlPressed))
       {
         Cog* currentHitParent = hitCog->FindNearestParentArchetype();
         if (mCurrentSelection.Contains(currentHitParent))
@@ -275,7 +263,7 @@ void SelectTool::OnToolDraw(Event* e)
     return;
 
   // Draw the selection
-  forRange(Cog * cog, selection->AllOfType<Cog>())
+  forRange (Cog* cog, selection->AllOfType<Cog>())
   {
     // The object could have been destroyed, but not yet removed
     if (cog->GetMarkedForDestruction())
@@ -328,13 +316,9 @@ void SelectTool::OnToolDraw(Event* e)
       worldSize += expansion;
 
       if (primary == cog)
-        gDebugDraw->Add(Debug::Obb(translation, worldSize, rotation)
-                            .Color(Color::Orange)
-                            .Corners(true));
+        gDebugDraw->Add(Debug::Obb(translation, worldSize, rotation).Color(Color::Orange).Corners(true));
       else
-        gDebugDraw->Add(Debug::Obb(translation, worldSize, rotation)
-                            .Color(Color::White)
-                            .Corners(true));
+        gDebugDraw->Add(Debug::Obb(translation, worldSize, rotation).Color(Color::White).Corners(true));
     }
   }
 }
@@ -378,16 +362,13 @@ bool SameArchetypeCompare(Cog* toSelect, Cog* hitCog)
   Cog* toSelectArchetype = toSelect->FindRootArchetype();
   Cog* hitCogArchetype = hitCog->FindRootArchetype();
 
-  if (toSelect == nullptr || hitCog == nullptr ||
-      toSelectArchetype == nullptr || hitCogArchetype == nullptr)
+  if (toSelect == nullptr || hitCog == nullptr || toSelectArchetype == nullptr || hitCogArchetype == nullptr)
     return false;
 
   return toSelectArchetype == hitCogArchetype;
 }
 
-Cog* SelectTool::WalkRayCast(Cog* toSelect,
-                             RaycastResultList& result,
-                             CogSelectFilter func)
+Cog* SelectTool::WalkRayCast(Cog* toSelect, RaycastResultList& result, CogSelectFilter func)
 {
   RayCastEntries::range entries = result.mEntries.All();
   // we want to remove the first entry as we already checked it
@@ -423,16 +404,14 @@ Cog* SelectTool::ArchetypeSelect(MetaSelection* selection, Cog* toSelect)
 
   // if the object we are attempting to select any sibling of the current
   // nearest archetype select it
-  if (current &&
-      current->FindNearestArchetype() == toSelect->FindNearestArchetype())
+  if (current && current->FindNearestArchetype() == toSelect->FindNearestArchetype())
   {
     return toSelect;
   }
 
   // check if we are attempting to selected an object within the context of the
   // last selected archetype
-  if (nearestArchetype->IsDescendant(lastHitArchetype) ||
-      selection->Contains(nearestArchetype))
+  if (nearestArchetype->IsDescendant(lastHitArchetype) || selection->Contains(nearestArchetype))
   {
     return toSelect;
   }
@@ -441,10 +420,7 @@ Cog* SelectTool::ArchetypeSelect(MetaSelection* selection, Cog* toSelect)
   return nearestArchetype;
 }
 
-Cog* SelectTool::SmartSelect(MetaSelection* selection,
-                             Cog* toSelect,
-                             bool rootSelect,
-                             bool archetypeSelect)
+Cog* SelectTool::SmartSelect(MetaSelection* selection, Cog* toSelect, bool rootSelect, bool archetypeSelect)
 {
   Cog* root = toSelect->FindRoot();
   // current is used to check the context of the selection in relation to the
@@ -499,8 +475,7 @@ void SelectTool::Select(ViewportMouseEvent* e)
         selection->Remove(toSelect);
       else
       {
-        toSelect =
-            SmartSelect(selection, toSelect, mRootSelect, mArchetypeSelect);
+        toSelect = SmartSelect(selection, toSelect, mRootSelect, mArchetypeSelect);
         selection->Add(toSelect, SendsEvents::False);
       }
     }
@@ -512,8 +487,7 @@ void SelectTool::Select(ViewportMouseEvent* e)
     }
     else
     {
-      toSelect =
-          SmartSelect(selection, toSelect, mRootSelect, mArchetypeSelect);
+      toSelect = SmartSelect(selection, toSelect, mRootSelect, mArchetypeSelect);
       selection->SelectOnly(toSelect);
     }
 
@@ -527,8 +501,7 @@ void SelectTool::Select(ViewportMouseEvent* e)
   }
 }
 
-SelectionResult SelectTool::RayCastSelect(Viewport* viewport,
-                                          Vec2 mousePosition)
+SelectionResult SelectTool::RayCastSelect(Viewport* viewport, Vec2 mousePosition)
 {
   // Extract the 1st result
   Cog* hitCog = NULL;
@@ -543,8 +516,7 @@ SelectionResult SelectTool::RayCastSelect(Viewport* viewport,
   // For the editor raycast, we only want 1 result
   RaycastResultList results(1);
   // Create the structure of the info to pass around
-  CastInfo castInfo(
-      space, viewport->mViewportInterface->GetCameraCog(), mousePosition);
+  CastInfo castInfo(space, viewport->mViewportInterface->GetCameraCog(), mousePosition);
   Ray ray = viewport->ScreenToWorldRay(mousePosition);
   // Get all of the results
   mRaycaster.RayCast(ray, castInfo, results);
@@ -559,8 +531,7 @@ SelectionResult SelectTool::RayCastSelect(Viewport* viewport,
   return SelectionResult(hitCog, position, normal);
 }
 
-RaycastResultList SelectTool::RayCastSelectInternal(Viewport* viewport,
-                                                    Vec2 mousePosition)
+RaycastResultList SelectTool::RayCastSelectInternal(Viewport* viewport, Vec2 mousePosition)
 {
   // For the editor raycast, we only want the first few results
   RaycastResultList results(5);
@@ -571,8 +542,7 @@ RaycastResultList SelectTool::RayCastSelectInternal(Viewport* viewport,
     return results;
 
   // Create the structure of the info to pass around
-  CastInfo castInfo(
-      space, viewport->mViewportInterface->GetCameraCog(), mousePosition);
+  CastInfo castInfo(space, viewport->mViewportInterface->GetCameraCog(), mousePosition);
   Ray ray = viewport->ScreenToWorldRay(mousePosition);
   // Get all of the results
   mRaycaster.RayCast(ray, castInfo, results);
@@ -591,10 +561,7 @@ void SelectTool::AddCastProvider(RaycastProvider* provider)
   mRaycaster.AddProvider(provider);
 }
 
-void ColliderRayCast(Viewport* viewport,
-                     Vec2Param mousePosition,
-                     ColliderRayCastResult& result,
-                     BaseCastFilter* filter)
+void ColliderRayCast(Viewport* viewport, Vec2Param mousePosition, ColliderRayCastResult& result, BaseCastFilter* filter)
 {
   CastFilter defaultFilter;
   if (filter == NULL)
@@ -625,9 +592,7 @@ void ColliderRayCast(Viewport* viewport,
   }
 }
 
-void BeginSelectDrag(EditorViewport* viewport,
-                     MouseEvent* event,
-                     SelectTool* tool)
+void BeginSelectDrag(EditorViewport* viewport, MouseEvent* event, SelectTool* tool)
 {
   new GroupSelectDrag(viewport->GetParent(), event->GetMouse(), viewport, tool);
 }
@@ -702,24 +667,19 @@ void CreationTool::UpdateMouse(Viewport* viewport, Vec2 screenPosition)
   mValidPoint = true;
 }
 
-Cog* CreationTool::CreateAt(Viewport* viewport,
-                            Archetype* archetype,
-                            Vec3Param position)
+Cog* CreationTool::CreateAt(Viewport* viewport, Archetype* archetype, Vec3Param position)
 {
   // Cannot create GameSession or Space
   BoundType* cogType = archetype->mStoredType;
-  if (cogType->IsA(ZilchTypeId(GameSession)) ||
-      cogType->IsA(ZilchTypeId(Space)))
+  if (cogType->IsA(ZilchTypeId(GameSession)) || cogType->IsA(ZilchTypeId(Space)))
   {
-    String message = String::Format(
-        "Creation tool cannot create Cogs of type %s", cogType->Name.c_str());
+    String message = String::Format("Creation tool cannot create Cogs of type %s", cogType->Name.c_str());
     DoNotifyWarning("Cannot Create Cog", message);
     return nullptr;
   }
 
   Space* space = viewport->GetTargetSpace();
-  Cog* object =
-      CreateFromArchetype(Z::gEditor->mQueue, space, archetype, position);
+  Cog* object = CreateFromArchetype(Z::gEditor->mQueue, space, archetype, position);
   MetaSelection* selection = Z::gEditor->GetSelection();
   selection->SelectOnly(object);
   selection->FinalSelectionChanged();
@@ -730,8 +690,7 @@ Cog* CreationTool::CreateAt(Viewport* viewport,
   return object;
 }
 
-Vec3 CreationTool::PointOnViewPlane(EditorCameraController* controller,
-                                    Ray& worldRay)
+Vec3 CreationTool::PointOnViewPlane(EditorCameraController* controller, Ray& worldRay)
 {
   // Get the point in the direction the camera is facing
   // on the same plane as the look at point
@@ -745,18 +704,12 @@ Vec3 CreationTool::PointOnViewPlane(EditorCameraController* controller,
   Plane plane(cameraDirection, lookAtPoint);
   // Intersect the ray with the plane.
   Intersection::IntersectionPoint point;
-  RayPlane(worldRay.Start,
-           mMouseDir,
-           plane.GetNormal(),
-           plane.GetDistance(),
-           &point);
+  RayPlane(worldRay.Start, mMouseDir, plane.GetNormal(), plane.GetDistance(), &point);
   // Take the start point from the intersection
   return point.Points[0];
 }
 
-Vec3 CreationTool::PointOnTopOrViewPlane(Viewport* viewport,
-                                         EditorCameraController* controller,
-                                         Ray& worldRay)
+Vec3 CreationTool::PointOnTopOrViewPlane(Viewport* viewport, EditorCameraController* controller, Ray& worldRay)
 {
   Space* objectSpace = viewport->GetTargetSpace();
   Camera* camera = viewport->GetCamera();
@@ -799,24 +752,21 @@ Vec3 CreationTool::GetPlacementLocation(Viewport* viewport, Vec2 screenPosition)
     {
     //------------------------------------------------------------------------
     case Placement::OnTop:
-      if (EditorCameraController* controller =
-              camera->GetOwner()->has(EditorCameraController))
+      if (EditorCameraController* controller = camera->GetOwner()->has(EditorCameraController))
         position = PointOnTopOrViewPlane(viewport, controller, worldRay);
 
       break;
 
     //------------------------------------------------------------------------
     case Placement::LookAtPlane:
-      if (EditorCameraController* controller =
-              camera->GetOwner()->has(EditorCameraController))
+      if (EditorCameraController* controller = camera->GetOwner()->has(EditorCameraController))
         position = PointOnViewPlane(controller, worldRay);
 
       break;
 
     //------------------------------------------------------------------------
     case Placement::LookAtPoint:
-      if (EditorCameraController* controller =
-              camera->GetOwner()->has(EditorCameraController))
+      if (EditorCameraController* controller = camera->GetOwner()->has(EditorCameraController))
         position = controller->GetLookTarget();
 
       break;
@@ -851,17 +801,13 @@ Vec3 CreationTool::GetPlacementLocation(Viewport* viewport, Vec2 screenPosition)
   return Vec3(0, 0, 0);
 }
 
-Cog* CreationTool::CreateWithViewport(Viewport* viewport,
-                                      Vec2 screenPosition,
-                                      StringParam archetypeName)
+Cog* CreationTool::CreateWithViewport(Viewport* viewport, Vec2 screenPosition, StringParam archetypeName)
 {
   Archetype* archetype = ArchetypeManager::Find(archetypeName);
   return CreateWithViewport(viewport, screenPosition, archetype);
 }
 
-Cog* CreationTool::CreateWithViewport(Viewport* viewport,
-                                      Vec2 screenPosition,
-                                      Archetype* archetype)
+Cog* CreationTool::CreateWithViewport(Viewport* viewport, Vec2 screenPosition, Archetype* archetype)
 {
   UpdateMouse(viewport, screenPosition);
   Vec3 placement = GetPlacementLocation(viewport, screenPosition);
@@ -923,17 +869,11 @@ void ObjectConnectingTool::OnToolDraw(Event* e)
 {
   if (ObjectA)
   {
-    gDebugDraw->Add(Debug::Sphere(PointOnObjectA, 0.25f)
-                        .Color(Color::Red)
-                        .ViewScaled(true));
+    gDebugDraw->Add(Debug::Sphere(PointOnObjectA, 0.25f).Color(Color::Red).ViewScaled(true));
     if (ObjectB)
     {
-      gDebugDraw->Add(Debug::Line(PointOnObjectA, PointOnObjectB)
-                          .HeadSize(0.3f)
-                          .Color(Color::Green));
-      gDebugDraw->Add(Debug::Sphere(PointOnObjectB, 0.25f)
-                          .Color(Color::Red)
-                          .ViewScaled(true));
+      gDebugDraw->Add(Debug::Line(PointOnObjectA, PointOnObjectB).HeadSize(0.3f).Color(Color::Green));
+      gDebugDraw->Add(Debug::Sphere(PointOnObjectB, 0.25f).Color(Color::Red).ViewScaled(true));
     }
   }
 }
@@ -1008,8 +948,7 @@ uint GenerateDirections(uint granularity, Vec3Ptr& directions)
   uint indexCount;
   Vec3* normalBuffer = NULL;
   Vec2* textureCoords = NULL;
-  Geometry::BuildIcoSphere(
-      granularity, directions, vertexCount, indexBuffer, indexCount);
+  Geometry::BuildIcoSphere(granularity, directions, vertexCount, indexBuffer, indexCount);
   return vertexCount;
 }
 

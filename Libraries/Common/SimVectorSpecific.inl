@@ -146,9 +146,7 @@ SimInline SimVec MultiplyAdd(SimVecParam v0, SimVecParam v1, SimVecParam v2)
   return Add(temp, v2);
 }
 
-SimInline SimVec MultiplySubtract(SimVecParam v0,
-                                  SimVecParam v1,
-                                  SimVecParam v2)
+SimInline SimVec MultiplySubtract(SimVecParam v0, SimVecParam v1, SimVecParam v2)
 {
   SimVec temp = Multiply(v0, v1);
   return Subtract(v2, temp);

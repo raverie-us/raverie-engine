@@ -8,10 +8,7 @@ namespace Zero
 ZilchDefineRange(MetaSelection::range);
 
 // METAREFACTOR - move to platform meta library
-ZilchDefineExternalBaseType(IpAddress,
-                            TypeCopyMode::ReferenceType,
-                            builder,
-                            type)
+ZilchDefineExternalBaseType(IpAddress, TypeCopyMode::ReferenceType, builder, type)
 {
   type->CreatableInScript = true;
 
@@ -177,24 +174,14 @@ void MetaLibrary::Initialize()
   RegisterPropertyAttribute(PropertyAttributes::cSerialize);
   RegisterPropertyAttribute(PropertyAttributes::cDeprecatedSerialized);
   RegisterPropertyAttribute(PropertyAttributes::cDisplay)->AllowStatic(true);
-  RegisterPropertyAttribute(PropertyAttributes::cDeprecatedEditable)
-      ->AllowStatic(true);
-  RegisterPropertyAttribute(PropertyAttributes::cRuntimeClone)
-      ->AllowStatic(true);
-  RegisterPropertyAttributeType(PropertyAttributes::cShaderInput,
-                                MetaShaderInput)
-      ->AllowMultiple(true);
-  RegisterPropertyAttributeType(PropertyAttributes::cRenamedFrom,
-                                MetaPropertyRename);
+  RegisterPropertyAttribute(PropertyAttributes::cDeprecatedEditable)->AllowStatic(true);
+  RegisterPropertyAttribute(PropertyAttributes::cRuntimeClone)->AllowStatic(true);
+  RegisterPropertyAttributeType(PropertyAttributes::cShaderInput, MetaShaderInput)->AllowMultiple(true);
+  RegisterPropertyAttributeType(PropertyAttributes::cRenamedFrom, MetaPropertyRename);
   RegisterPropertyAttribute(PropertyAttributes::cLocalModificationOverride);
-  RegisterPropertyAttributeType(PropertyAttributes::cGroup, MetaGroup)
-      ->AllowStatic(true);
-  RegisterPropertyAttributeType(PropertyAttributes::cRange, EditorRange)
-      ->TypeMustBe(float)
-      ->AllowStatic(true);
-  RegisterPropertyAttributeType(PropertyAttributes::cSlider, EditorSlider)
-      ->TypeMustBe(float)
-      ->AllowStatic(true);
+  RegisterPropertyAttributeType(PropertyAttributes::cGroup, MetaGroup)->AllowStatic(true);
+  RegisterPropertyAttributeType(PropertyAttributes::cRange, EditorRange)->TypeMustBe(float)->AllowStatic(true);
+  RegisterPropertyAttributeType(PropertyAttributes::cSlider, EditorSlider)->TypeMustBe(float)->AllowStatic(true);
 }
 
 void MetaLibrary::Shutdown()

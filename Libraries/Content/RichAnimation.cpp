@@ -69,11 +69,7 @@ KeyFrame::KeyFrame()
   mEditorFlags = 0;
 }
 
-KeyFrame::KeyFrame(float time,
-                   AnyParam value,
-                   KeyFrameId id,
-                   TrackNode* parent) :
-    Id(id)
+KeyFrame::KeyFrame(float time, AnyParam value, KeyFrameId id, TrackNode* parent) : Id(id)
 {
   mTime = time;
   mValue = value;
@@ -240,8 +236,7 @@ void CreateSubTracks(TrackNode* parent, cstr names, RichAnimation* richAnim)
     String path = BuildString(parent->Path, ".", name);
 
     // Create and register the track
-    TrackNode* subTrack = new TrackNode(
-        name, path, TrackType::SubProperty, nullptr, parent, richAnim);
+    TrackNode* subTrack = new TrackNode(name, path, TrackType::SubProperty, nullptr, parent, richAnim);
   }
 }
 
@@ -314,8 +309,7 @@ void TrackNode::Serialize(Serializer& stream)
   SerializeNameDefault(mDisabled, false);
   // Serialized to support old versions. The PropertyTypeName will always
   // get priority over the type id
-  stream.SerializeFieldDefault(
-      "PropertyTypeName", mPropertyType.mName, cInvalidTypeName);
+  stream.SerializeFieldDefault("PropertyTypeName", mPropertyType.mName, cInvalidTypeName);
 
   // Update from legacy types
   if (stream.GetMode() == SerializerMode::Loading)
@@ -381,13 +375,13 @@ void TrackNode::Initialize(RichAnimation* richAnimation, TrackNode* parent)
   }
 
   // Initialize all children tracks
-  forRange(TrackNode * child, Children.All())
+  forRange (TrackNode* child, Children.All())
   {
     child->Initialize(richAnimation, this);
   }
 
   // Generate a unique id for all key frames
-  forRange(KeyFrames::value_type entry, mKeyFrames.All())
+  forRange (KeyFrames::value_type entry, mKeyFrames.All())
   {
     KeyFrame* keyFrame = entry.second;
 
@@ -429,7 +423,7 @@ void RebuildPath(TrackNode* track)
 
   track->Path = GetTrackPath(track);
 
-  forRange(TrackNode * child, track->Children.All())
+  forRange (TrackNode* child, track->Children.All())
   {
     RebuildPath(child);
   }
@@ -449,12 +443,11 @@ void TrackNode::Rename(StringParam newName, Status& status)
   }
 
   // Check to see if there are any siblings with the same name
-  forRange(TrackNode * sibling, Parent->Children.All())
+  forRange (TrackNode* sibling, Parent->Children.All())
   {
     if (sibling->Name == newName)
     {
-      status.SetFailed(
-          "Sibling track has same name. Tracks must have unique paths.");
+      status.SetFailed("Sibling track has same name. Tracks must have unique paths.");
       return;
     }
   }
@@ -484,8 +477,7 @@ Any SubPropertySample(TrackNode* vectorNode, float t)
     TrackNode* subTrack = vectorNode->Children[i];
 
     // Sample the track for the current element
-    float sampledValue =
-        subTrack->SampleTrack(t).Get<float>(GetOptions::AssertOnNull);
+    float sampledValue = subTrack->SampleTrack(t).Get<float>(GetOptions::AssertOnNull);
     sampledVector[i] = sampledValue;
   }
 
@@ -506,8 +498,7 @@ Any SubPropertySample<Quat, 3>(TrackNode* vectorNode, float t)
     TrackNode* subTrack = vectorNode->Children[i];
 
     // Sample the track for the current element
-    float rotation =
-        subTrack->SampleTrack(t).Get<float>(GetOptions::AssertOnNull);
+    float rotation = subTrack->SampleTrack(t).Get<float>(GetOptions::AssertOnNull);
     eulerAngles[i] = Math::DegToRad(rotation);
   }
 
@@ -603,8 +594,7 @@ Any TrackNode::SampleObject(Cog* animGraphObject)
   // Get the object instance
   Component* instance = GetComponent(animGraphObject);
 
-  ReturnIf(
-      !instance, Any(), "Could not find object instance to create key frame.");
+  ReturnIf(!instance, Any(), "Could not find object instance to create key frame.");
 
   // Query the meta property
   return property->GetValue(instance);
@@ -627,15 +617,13 @@ TrackNode* TrackNode::IsValid(Cog* animGraphObject, Status& status)
   {
     // Test for the validity of the object
     if (GetCog(animGraphObject) == nullptr)
-      status.SetFailed(
-          String::Format("Failed to find object at '%s'", Path.c_str()));
+      status.SetFailed(String::Format("Failed to find object at '%s'", Path.c_str()));
     break;
   }
   case TrackType::Component:
   {
     if (GetComponent(animGraphObject) == nullptr)
-      status.SetFailed(
-          String::Format("Failed to find Component '%s'", Name.c_str()));
+      status.SetFailed(String::Format("Failed to find Component '%s'", Name.c_str()));
     break;
   }
   case TrackType::Property:
@@ -647,9 +635,7 @@ TrackNode* TrackNode::IsValid(Cog* animGraphObject, Status& status)
     {
       String componentName = Parent->Name;
       String message =
-          String::Format("Failed to find Property '%s' on Component '%s'",
-                         Name.c_str(),
-                         componentName.c_str());
+          String::Format("Failed to find Property '%s' on Component '%s'", Name.c_str(), componentName.c_str());
       status.SetFailed(message);
     }
     // If the type has changed from the initial type the track was created with
@@ -670,10 +656,7 @@ TrackNode* TrackNode::IsValid(Cog* animGraphObject, Status& status)
       if (storedType)
         storedTypeName = storedType->Name.c_str();
 
-      String message =
-          String::Format("Property type has changed from '%s' to '%s'.",
-                         storedTypeName,
-                         currTypeName);
+      String message = String::Format("Property type has changed from '%s' to '%s'.", storedTypeName, currTypeName);
       status.SetFailed(message);
     }
     break;
@@ -739,14 +722,13 @@ Cog* TrackNode::GetCog(Cog* animGraphObject)
   Cog* cog = animGraphObject;
 
   // Object names are separated by '/'
-  StringTokenRange r =
-      StringTokenRange(objectTrack->Path, cAnimationPathDelimiter);
+  StringTokenRange r = StringTokenRange(objectTrack->Path, cAnimationPathDelimiter);
 
   // We can skip the root object as we're starting from it
   r.PopFront();
 
   // Walk until there's nothing left
-  forRange(String childName, r)
+  forRange (String childName, r)
   {
     // Find the next child
     cog = cog->FindChildByName(childName);
@@ -814,8 +796,7 @@ TrackNode* TrackNode::GetObjectTrack()
 
 TrackNode* TrackNode::GetComponentTrack()
 {
-  ErrorIf(Type == TrackType::Object,
-          "Cannot get a component track from an object track.");
+  ErrorIf(Type == TrackType::Object, "Cannot get a component track from an object track.");
 
   TrackNode* currentTrack = this;
 
@@ -953,9 +934,7 @@ void UpdateSubKeyAtTime(TrackNode* propertyNode, float time, AnyParam value)
 }
 
 template <>
-void UpdateSubKeyAtTime<Quat, 3>(TrackNode* propertyNode,
-                                 float time,
-                                 AnyParam value)
+void UpdateSubKeyAtTime<Quat, 3>(TrackNode* propertyNode, float time, AnyParam value)
 {
   // The SubProperty tracks of a Quaternion track are stored in euler angles,
   // so we need to convert the quaternion to euler angles and update the key
@@ -1004,7 +983,7 @@ void TrackNode::UpdateOrCreateKeyAtTime(float time, AnyParam value)
 
       // We want to collapse all the key frames at this time to the new value,
       // so set the first key frame to the new value and destroy the rest
-      forRange(KeyFrame * frame, keys)
+      forRange (KeyFrame* frame, keys)
       {
         if (first)
           frame->SetValue(value);
@@ -1014,7 +993,7 @@ void TrackNode::UpdateOrCreateKeyAtTime(float time, AnyParam value)
       }
 
       // Destroy the remaining key frames
-      forRange(KeyFrame * frame, toDestroy.All())
+      forRange (KeyFrame* frame, toDestroy.All())
       {
         frame->Destroy();
       }
@@ -1068,10 +1047,7 @@ void TrackNode::DispatchBubble(StringParam eventName, Event* e)
   mRichAnimation->GetDispatcher()->Dispatch(eventName, e);
 }
 
-bool GetStartAndEndTimes(TrackNode* vectorTrack,
-                         float* startTime,
-                         float* endTime,
-                         uint elements)
+bool GetStartAndEndTimes(TrackNode* vectorTrack, float* startTime, float* endTime, uint elements)
 {
   *startTime = Math::cInfinite;
   *endTime = -Math::cInfinite;
@@ -1095,8 +1071,7 @@ bool GetStartAndEndTimes(TrackNode* vectorTrack,
 }
 
 template <typename VectorType, uint Elements>
-void BakeSubPropertyKeyFrames(TrackNode* vectorTrack,
-                              Array<TrackNode::KeyEntry>& keyFrames)
+void BakeSubPropertyKeyFrames(TrackNode* vectorTrack, Array<TrackNode::KeyEntry>& keyFrames)
 {
   // Get the start and end time of the track based on our sub property tracks
   float startTime, endTime;
@@ -1137,7 +1112,7 @@ void TrackNode::BakeKeyFrames(Array<KeyEntry>& keyFrames)
   {
     BakePiecewiseFunction();
 
-    forRange(Vec3 pos, mBakedCurve.GetBakedCurve())
+    forRange (Vec3 pos, mBakedCurve.GetBakedCurve())
     {
       float time = pos.x;
       float value = pos.y;
@@ -1161,7 +1136,7 @@ void TrackNode::BakeKeyFrames(Array<KeyEntry>& keyFrames)
     keyFrames.Reserve(mKeyFrames.Size());
 
     // Add each key frame
-    forRange(KeyFrame * keyFrame, mKeyFrames.AllValues())
+    forRange (KeyFrame* keyFrame, mKeyFrames.AllValues())
     {
       float time = keyFrame->GetTime();
       Any value = keyFrame->GetValue();
@@ -1175,7 +1150,7 @@ void TrackNode::InvalidateBakedCurve()
 {
   mBakedCurve.Clear();
 
-  forRange(TrackNode * child, Children.All())
+  forRange (TrackNode* child, Children.All())
   {
     child->InvalidateBakedCurve();
   }
@@ -1246,7 +1221,7 @@ void TrackNode::BakePiecewiseFunction()
 
   mBakedCurve.Clear();
 
-  forRange(KeyFrame * keyFrame, mKeyFrames.AllValues())
+  forRange (KeyFrame* keyFrame, mKeyFrames.AllValues())
   {
     Vec2 pos = keyFrame->GetGraphPosition();
     Vec2 tanIn = keyFrame->GetTangentIn();
@@ -1285,8 +1260,7 @@ void RichAnimation::Serialize(Serializer& stream)
 
   if (mRoot == nullptr)
   {
-    mRoot = new TrackNode(
-        "Root", String(), TrackType::Object, nullptr, nullptr, this);
+    mRoot = new TrackNode("Root", String(), TrackType::Object, nullptr, nullptr, this);
   }
   stream.SerializeField("Root", *mRoot);
 }
@@ -1296,13 +1270,9 @@ void RichAnimation::Initialize()
   mRoot->Initialize(this, nullptr);
 }
 
-void PushToAnimationRecursive(TrackNode* objectTrackInfo,
-                              Animation* animation,
-                              uint& objectTrackCount,
-                              float& duration)
+void PushToAnimationRecursive(TrackNode* objectTrackInfo, Animation* animation, uint& objectTrackCount, float& duration)
 {
-  ErrorIf(objectTrackInfo->Type != TrackType::Object,
-          "Track type must be object.");
+  ErrorIf(objectTrackInfo->Type != TrackType::Object, "Track type must be object.");
 
   // Create the Object Track on the animation
   ObjectTrack* objectTrack = new ObjectTrack();
@@ -1310,7 +1280,7 @@ void PushToAnimationRecursive(TrackNode* objectTrackInfo,
   objectTrack->SetFullPath(objectTrackInfo->Path);
   animation->ObjectTracks.PushBack(objectTrack);
 
-  forRange(TrackNode * currTrack, objectTrackInfo->Children.All())
+  forRange (TrackNode* currTrack, objectTrackInfo->Children.All())
   {
     // Ignore disabled tracks
     if (currTrack->IsDisabled())
@@ -1319,8 +1289,7 @@ void PushToAnimationRecursive(TrackNode* objectTrackInfo,
     // If it's an object track, continue recursing
     if (currTrack->Type == TrackType::Object)
     {
-      PushToAnimationRecursive(
-          currTrack, animation, objectTrackCount, duration);
+      PushToAnimationRecursive(currTrack, animation, objectTrackCount, duration);
       continue;
     }
 
@@ -1329,7 +1298,7 @@ void PushToAnimationRecursive(TrackNode* objectTrackInfo,
 
     // The children of component tracks MUST be property tracks, so
     // iterate through all of them and add them to the object track
-    forRange(TrackNode * propertyTrackNode, currTrack->Children.All())
+    forRange (TrackNode* propertyTrackNode, currTrack->Children.All())
     {
       // Ignore disabled tracks
       if (propertyTrackNode->IsDisabled())
@@ -1347,8 +1316,7 @@ void PushToAnimationRecursive(TrackNode* objectTrackInfo,
         continue;
 
       // Build the property track
-      PropertyTrack* propertyTrack = MakePropertyTrack(
-          componentName, propertyName, propertyTrackNode->mPropertyType);
+      PropertyTrack* propertyTrack = MakePropertyTrack(componentName, propertyName, propertyTrackNode->mPropertyType);
 
       // The property track could fail to create if the property type doesn't
       // exist anymore
@@ -1357,7 +1325,7 @@ void PushToAnimationRecursive(TrackNode* objectTrackInfo,
         propertyTrack->Name = BuildString(componentName, ".", propertyName);
 
         // Insert all baked key values into the property track
-        forRange(TrackNode::KeyEntry & entry, bakedKeyFrames.All())
+        forRange (TrackNode::KeyEntry& entry, bakedKeyFrames.All())
         {
           float time = entry.first;
           Any& value = entry.second;
@@ -1396,15 +1364,11 @@ void RichAnimation::BakeToAnimation(Animation* animation)
   for (uint i = 0; i < mRoot->Children.Size(); ++i)
   {
     TrackNode* track = mRoot->Children[i];
-    PushToAnimationRecursive(
-        track, animation, animation->mNumberOfTracks, animation->mDuration);
+    PushToAnimationRecursive(track, animation, animation->mNumberOfTracks, animation->mDuration);
   }
 }
 
-TrackNode* RichAnimation::GetObjectTrack(TrackNode* parent,
-                                         StringTokenRange pathRange,
-                                         String currPath,
-                                         bool createNew)
+TrackNode* RichAnimation::GetObjectTrack(TrackNode* parent, StringTokenRange pathRange, String currPath, bool createNew)
 {
   // We want to find the object track with this name.  If we can't find it,
   // we will create the track and continue searching down if there is more
@@ -1450,8 +1414,7 @@ TrackNode* RichAnimation::GetObjectTrack(TrackNode* parent,
     if (createNew == false)
       return nullptr;
 
-    objectTrack = new TrackNode(
-        trackName, currPath, TrackType::Object, nullptr, parent, this);
+    objectTrack = new TrackNode(trackName, currPath, TrackType::Object, nullptr, parent, this);
   }
 
   // If this is the last object in the path, we have found the track
@@ -1468,15 +1431,12 @@ TrackNode* RichAnimation::GetObjectTrack(StringRange path, bool createNew)
   return GetObjectTrack(mRoot, pathRange, String(), createNew);
 }
 
-TrackNode* RichAnimation::GetPropertyTrack(TrackNode* objectTrack,
-                                           StringParam path,
-                                           BoundType* targetMeta,
-                                           bool createNew)
+TrackNode*
+RichAnimation::GetPropertyTrack(TrackNode* objectTrack, StringParam path, BoundType* targetMeta, bool createNew)
 {
   // First we have to get the component track
   String componentName = ComponentNameFromPath(path);
-  TrackNode* componentTrack =
-      GetComponentTrack(objectTrack, componentName, targetMeta, createNew);
+  TrackNode* componentTrack = GetComponentTrack(objectTrack, componentName, targetMeta, createNew);
 
   if (componentTrack == nullptr && !createNew)
     return nullptr;
@@ -1488,19 +1448,13 @@ TrackNode* RichAnimation::GetPropertyTrack(TrackNode* objectTrack,
   {
     // Create the track
     String propertyName = PropertyNameFromPath(path);
-    propertyTrack = new TrackNode(propertyName,
-                                  path,
-                                  TrackType::Property,
-                                  targetMeta,
-                                  componentTrack,
-                                  this);
+    propertyTrack = new TrackNode(propertyName, path, TrackType::Property, targetMeta, componentTrack, this);
   }
 
   return propertyTrack;
 }
 
-TrackNode* RichAnimation::GetDirectChildTrack(TrackNode* parent,
-                                              StringParam path)
+TrackNode* RichAnimation::GetDirectChildTrack(TrackNode* parent, StringParam path)
 {
   // Search all the direct children of the root
   for (uint i = 0; i < parent->Children.Size(); ++i)
@@ -1514,10 +1468,8 @@ TrackNode* RichAnimation::GetDirectChildTrack(TrackNode* parent,
   return nullptr;
 }
 
-TrackNode* RichAnimation::GetComponentTrack(TrackNode* objectTrack,
-                                            StringParam component,
-                                            BoundType* targetMeta,
-                                            bool createNew)
+TrackNode*
+RichAnimation::GetComponentTrack(TrackNode* objectTrack, StringParam component, BoundType* targetMeta, bool createNew)
 {
   // Recurse down from the object track to find the property track
   TrackNode* componentTrack = GetDirectChildTrack(objectTrack, component);
@@ -1525,22 +1477,14 @@ TrackNode* RichAnimation::GetComponentTrack(TrackNode* objectTrack,
   // If we didn't find it, we have to create a new one
   if (componentTrack == nullptr && createNew)
   {
-    componentTrack = new TrackNode(component,
-                                   component,
-                                   TrackType::Component,
-                                   targetMeta,
-                                   objectTrack,
-                                   this);
+    componentTrack = new TrackNode(component, component, TrackType::Component, targetMeta, objectTrack, this);
   }
 
   return componentTrack;
 }
 
-TrackNode* RichAnimation::GetPropertyTrack(Cog* object,
-                                           Cog* animGraphObject,
-                                           BoundType* componentType,
-                                           StringParam propertyName,
-                                           bool createNew)
+TrackNode* RichAnimation::GetPropertyTrack(
+    Cog* object, Cog* animGraphObject, BoundType* componentType, StringParam propertyName, bool createNew)
 {
   // Find the object track (it will be created if it doesn't exist)
   String objectPath = GetObjectPath(object, animGraphObject);
@@ -1556,8 +1500,7 @@ TrackNode* RichAnimation::GetPropertyTrack(Cog* object,
 
   // Find the property track (it will be created if it doesn't exist)
   String propertyPath = GetPropertyPath(component, prop);
-  TrackNode* propertyTrack = GetPropertyTrack(
-      objectTrack, propertyPath, virtualComponentType, createNew);
+  TrackNode* propertyTrack = GetPropertyTrack(objectTrack, propertyPath, virtualComponentType, createNew);
   return propertyTrack;
 }
 
@@ -1614,7 +1557,7 @@ void RichAnimation::Flush()
   Array<KeyFrame*> modifiedKeyFrames;
   modifiedKeyFrames.Reserve(mDirtyKeyFrames.Size());
 
-  forRange(KeyFrame * keyFrame, mDirtyKeyFrames.All())
+  forRange (KeyFrame* keyFrame, mDirtyKeyFrames.All())
   {
     modifiedKeyFrames.PushBack(keyFrame);
   }
@@ -1625,7 +1568,7 @@ void RichAnimation::Flush()
   if (!modifiedKeyFrames.Empty())
     UpdateDuration();
 
-  forRange(KeyFrame * modifiedKeyFrame, modifiedKeyFrames.All())
+  forRange (KeyFrame* modifiedKeyFrame, modifiedKeyFrames.All())
   {
     KeyFrameEvent e;
     e.mKeyFrame = modifiedKeyFrame;
@@ -1663,7 +1606,7 @@ void RichAnimation::DestroyTrack(TrackNode* track)
   track->DispatchBubble(Events::TrackDeleted, &e);
 
   // Make sure none of the tracks are in the dirty list
-  forRange(KeyFrame * keyFrame, track->mKeyFrames.AllValues())
+  forRange (KeyFrame* keyFrame, track->mKeyFrames.AllValues())
   {
     mDirtyKeyFrames.Erase(keyFrame);
   }
@@ -1689,12 +1632,10 @@ ZilchDefineType(RichAnimationBuilder, builder, type)
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::CallSetDefaults);
 
-  ZilchBindGetterSetterProperty(PreviewArchetype)
-      ->Add(new MetaEditorResource(false, true));
+  ZilchBindGetterSetterProperty(PreviewArchetype)->Add(new MetaEditorResource(false, true));
 }
 
-RichAnimationBuilder::RichAnimationBuilder() :
-    DirectBuilderComponent(0, ".data", "Animation")
+RichAnimationBuilder::RichAnimationBuilder() : DirectBuilderComponent(0, ".data", "Animation")
 {
 }
 
@@ -1727,8 +1668,7 @@ void RichAnimationBuilder::BuildContent(BuildOptions& buildOptions)
 {
   // Default behavior for direct builder is to just copy the content file.
   String destFile = FilePath::Combine(buildOptions.OutputPath, GetOutputFile());
-  String sourceFile =
-      FilePath::Combine(buildOptions.SourcePath, mOwner->Filename);
+  String sourceFile = FilePath::Combine(buildOptions.SourcePath, mOwner->Filename);
 
   // Load the rich animation file
   RichAnimation richAnimation;
@@ -1747,9 +1687,7 @@ void RichAnimationBuilder::BuildContent(BuildOptions& buildOptions)
   {
     buildOptions.Failure = true;
     buildOptions.Message =
-        String::Format("Failed to bake rich animation file at %s to %s",
-                       sourceFile.c_str(),
-                       destFile.c_str());
+        String::Format("Failed to bake rich animation file at %s to %s", sourceFile.c_str(), destFile.c_str());
   }
 
   // Update the file time so that NeedsBuilding works.

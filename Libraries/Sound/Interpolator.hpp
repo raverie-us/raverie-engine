@@ -27,10 +27,7 @@ public:
   ~CustomCurve();
 
   // Calculates a value using the current percentage.
-  float GetValue(const float current,
-                 const float total,
-                 const float startValue,
-                 const float endValue);
+  float GetValue(const float current, const float total, const float startValue, const float endValue);
   // Sets the custom curve data pointer. Will delete this data on destruction.
   void SetCurveData(Array<Math::Vec3>* curveData);
 
@@ -87,14 +84,10 @@ public:
   void SetCurve(const FalloffCurveType::Enum curveType);
   // Resets the object for sequential interpolation using NextValue or
   // ValueAtIndex. If no start value is specified, will use the current value
-  void SetValues(const float startValue,
-                 const float endValue,
-                 const unsigned numberOfFrames);
+  void SetValues(const float startValue, const float endValue, const unsigned numberOfFrames);
   void SetValues(const float endValue, const unsigned numberOfFrames);
   // Resets the object for direct-access interpolation using ValueAtDistance.
-  void SetValues(const float startValue,
-                 const float endValue,
-                 const float distance);
+  void SetValues(const float startValue, const float endValue, const float distance);
 
 private:
   // Starting value to interpolate from.
@@ -112,10 +105,7 @@ private:
   // The object used to handle custom curve data
   CustomCurve CustomCurveObject;
   // A pointer to the function used to get values. Set according to curve type.
-  float (*GetValue)(const float current,
-                    const float total,
-                    const float startValue,
-                    const float endValue);
+  float (*GetValue)(const float current, const float total, const float startValue, const float endValue);
 };
 
 } // namespace Zero

@@ -18,16 +18,7 @@ DeclareEvent(WebServerRequest);
 DeclareEvent(WebServerUnhandledRequest);
 } // namespace Events
 
-DeclareEnum9(WebServerRequestMethod,
-             Options,
-             Get,
-             Head,
-             Post,
-             Put,
-             Delete,
-             Trace,
-             Connect,
-             Other);
+DeclareEnum9(WebServerRequestMethod, Options, Get, Head, Post, Put, Delete, Trace, Connect, Other);
 
 typedef OrderedHashMap<String, String> WebServerHeaderMap;
 typedef WebServerHeaderMap::KeyRange WebServerHeaderRange;
@@ -90,17 +81,13 @@ public:
   /// contents. The headers that are automatically generated are: Date,
   /// Content-Length. Note that extraHeaders *MUST* use \r\n to separate each
   /// header (HTTP 1.1 standard) and *MUST* end with \r\n if provided.
-  void Respond(WebResponseCode::Enum code,
-               StringParam extraHeaders,
-               StringParam contents);
+  void Respond(WebResponseCode::Enum code, StringParam extraHeaders, StringParam contents);
 
   /// Builds the response automatically with the given code, headers, and
   /// contents. The headers that are automatically generated are: Date,
   /// Content-Length. Note that extraHeaders *MUST* use \r\n to separate each
   /// header (HTTP 1.1 standard) and *MUST* end with \r\n if provided.
-  void Respond(StringParam code,
-               StringParam extraHeaders,
-               StringParam contents);
+  void Respond(StringParam code, StringParam extraHeaders, StringParam contents);
 
   /// Send a manually filled out HTTP response which includes
   /// the status and full headers (e.g. "HTTP/1.1 200 OK").
@@ -197,9 +184,7 @@ public:
 
 private:
   void OnWebServerRequestRaw(WebServerRequestEvent* event);
-  static void DoNotifyExceptionOnFail(StringParam message,
-                                      const u32& context,
-                                      void* userData);
+  static void DoNotifyExceptionOnFail(StringParam message, const u32& context, void* userData);
   static OsInt AcceptThread(void* userData);
 
   Thread mAcceptThread;

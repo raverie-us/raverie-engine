@@ -96,8 +96,7 @@ public:
     if (mPropertyDelegate.IsNull())
       return ActionState::Completed;
 
-    PropertyDelegateTemplate* propertyDelegate =
-        (PropertyDelegateTemplate*)mPropertyDelegate.Dereference();
+    PropertyDelegateTemplate* propertyDelegate = (PropertyDelegateTemplate*)mPropertyDelegate.Dereference();
 
     // Check Null
     if (propertyDelegate->Set.ThisHandle.IsNull())
@@ -129,8 +128,7 @@ public:
       float easedT = mEaser(t);
 
       // Interpolate the value
-      newValue = Interpolation::Lerp<PropertyType>::Interpolate(
-          mStarting, mEnding, easedT);
+      newValue = Interpolation::Lerp<PropertyType>::Interpolate(mStarting, mEnding, easedT);
     }
 
     // Call the setter
@@ -156,38 +154,31 @@ void CreateZilchPropertyAction(Call& call, ExceptionReport& report)
   // Make sure the delegate isn't null
   if (propertyDelegate.IsNull())
   {
-    DoNotifyException("Invalid Property Action",
-                      "Cannot form a property action on a null delegate.");
+    DoNotifyException("Invalid Property Action", "Cannot form a property action on a null delegate.");
     return;
   }
 
   // Make sure the property isn't read-only
-  PropertyDelegateTemplate* propertyDelegateTemplate =
-      (PropertyDelegateTemplate*)propertyDelegate.Dereference();
+  PropertyDelegateTemplate* propertyDelegateTemplate = (PropertyDelegateTemplate*)propertyDelegate.Dereference();
   if (propertyDelegateTemplate->Set.BoundFunction == nullptr)
   {
-    DoNotifyException("Invalid Property Action",
-                      "Cannot form a property action on a read-only property.");
+    DoNotifyException("Invalid Property Action", "Cannot form a property action on a read-only property.");
     return;
   }
   // Make sure the property isn't read-only
   if (propertyDelegateTemplate->Get.BoundFunction == nullptr)
   {
-    DoNotifyException(
-        "Invalid Property Action",
-        "Cannot form a property action on a write-only property.");
+    DoNotifyException("Invalid Property Action", "Cannot form a property action on a write-only property.");
     return;
   }
 
-  ZilchPropertyAction<PropertyType, EaserType>* action =
-      new ZilchPropertyAction<PropertyType, EaserType>();
+  ZilchPropertyAction<PropertyType, EaserType>* action = new ZilchPropertyAction<PropertyType, EaserType>();
 
   // Make sure the end-value is valid
   PropertyType* endingProperty = call.Get<PropertyType*>(2);
   if (endingProperty == nullptr)
   {
-    DoNotifyException("Invalid Property Action",
-                      "Cannot form a property action with a null endValue.");
+    DoNotifyException("Invalid Property Action", "Cannot form a property action with a null endValue.");
     return;
   }
 
@@ -200,8 +191,7 @@ void CreateZilchPropertyAction(Call& call, ExceptionReport& report)
   ActionSet* actionSet = (ActionSet*)actionSetHandle.Dereference();
   if (actionSet == nullptr)
   {
-    call.GetState()->ThrowNullReferenceException(
-        report, "Cannot create an action on a null ActionSet.");
+    call.GetState()->ThrowNullReferenceException(report, "Cannot create an action on a null ActionSet.");
     return;
   }
 
@@ -215,12 +205,10 @@ void AddZilchActionProperty(LibraryBuilder& library)
 {
   Array<Constant> typeParameters;
   typeParameters.PushBack(Constant(ZilchTypeId(PropertyType)));
-  String sig = String::Format(
-      "Property[%s]", typeParameters.Front().TypeValue->ToString().c_str());
+  String sig = String::Format("Property[%s]", typeParameters.Front().TypeValue->ToString().c_str());
   LibraryArray libs;
   libs.PushBack(Core::GetInstance().GetLibrary());
-  BoundType* propertyType =
-      library.InstantiateTemplate("Property", typeParameters, libs).Type;
+  BoundType* propertyType = library.InstantiateTemplate("Property", typeParameters, libs).Type;
   ParameterArray params;
   DelegateParameter& p0 = params.PushBack();
   p0.ParameterType = ZilchTypeId(ActionSet);
@@ -237,13 +225,12 @@ void AddZilchActionProperty(LibraryBuilder& library)
 
   EaserType::AddParam(library, params);
 
-  library.AddExtensionFunction(
-      ZilchTypeId(Action),
-      "Property",
-      CreateZilchPropertyAction<PropertyType, EaserType>,
-      params,
-      ZilchTypeId(Action),
-      FunctionOptions::Static);
+  library.AddExtensionFunction(ZilchTypeId(Action),
+                               "Property",
+                               CreateZilchPropertyAction<PropertyType, EaserType>,
+                               params,
+                               ZilchTypeId(Action),
+                               FunctionOptions::Static);
 }
 
 class ZilchCallAction : public Action
@@ -273,8 +260,7 @@ void CreateCallAction(Call& call, ExceptionReport& report)
   ActionSet* actionSet = call.Get<ActionSet*>(0);
   if (actionSet == nullptr)
   {
-    call.GetState()->ThrowNullReferenceException(
-        report, "Cannot create an action on a null ActionSet.");
+    call.GetState()->ThrowNullReferenceException(report, "Cannot create an action on a null ActionSet.");
     return;
   }
 
@@ -288,12 +274,9 @@ void CreateCallAction(Call& call, ExceptionReport& report)
   size_t anyStartParameter = 2;
   DelegateType* createCallFunctionType = call.GetFunction()->FunctionType;
 
-  for (size_t i = anyStartParameter;
-       i < createCallFunctionType->Parameters.Size();
-       ++i)
+  for (size_t i = anyStartParameter; i < createCallFunctionType->Parameters.Size(); ++i)
   {
-    ErrorIf(createCallFunctionType->Parameters[i].ParameterType !=
-                ZilchTypeId(Any),
+    ErrorIf(createCallFunctionType->Parameters[i].ParameterType != ZilchTypeId(Any),
             "All parameters afterward must be of type Any");
 
     Any& arg = call.Get<Any&>(i);
@@ -314,12 +297,8 @@ void AddCall(LibraryBuilder& library)
   DelegateParameter& p1 = params.PushBack();
   p1.ParameterType = ZilchTypeId(Delegate);
 
-  library.AddExtensionFunction(ZilchTypeId(Action),
-                               "Call",
-                               CreateCallAction,
-                               params,
-                               ZilchTypeId(Action),
-                               FunctionOptions::Static);
+  library.AddExtensionFunction(
+      ZilchTypeId(Action), "Call", CreateCallAction, params, ZilchTypeId(Action), FunctionOptions::Static);
 
   // Now make up to a certain number of parameters overloads
   // (a better way to do this would be to support variadic params...)
@@ -330,12 +309,8 @@ void AddCall(LibraryBuilder& library)
     DelegateParameter& nextParam = params.PushBack();
     nextParam.ParameterType = ZilchTypeId(Any);
 
-    library.AddExtensionFunction(ZilchTypeId(Action),
-                                 "Call",
-                                 CreateCallAction,
-                                 params,
-                                 ZilchTypeId(Action),
-                                 FunctionOptions::Static);
+    library.AddExtensionFunction(
+        ZilchTypeId(Action), "Call", CreateCallAction, params, ZilchTypeId(Action), FunctionOptions::Static);
   }
 }
 
@@ -346,8 +321,7 @@ void CreateDelayAction(Call& call, ExceptionReport& report)
   ActionSet* actionSet = call.Get<ActionSet*>(0);
   if (actionSet == NULL)
   {
-    call.GetState()->ThrowNullReferenceException(
-        report, "Cannot create an action on a null ActionSet.");
+    call.GetState()->ThrowNullReferenceException(report, "Cannot create an action on a null ActionSet.");
     return;
   }
   actionSet->Add(action);
@@ -361,12 +335,8 @@ void AddDelay(LibraryBuilder& library)
   p0.ParameterType = ZilchTypeId(ActionSet);
   DelegateParameter& p1 = params.PushBack();
   p1.ParameterType = ZilchTypeId(float);
-  library.AddExtensionFunction(ZilchTypeId(Action),
-                               "Delay",
-                               CreateDelayAction,
-                               params,
-                               ZilchTypeId(ActionDelay),
-                               FunctionOptions::Static);
+  library.AddExtensionFunction(
+      ZilchTypeId(Action), "Delay", CreateDelayAction, params, ZilchTypeId(ActionDelay), FunctionOptions::Static);
 }
 
 void CreateEventAction(Call& call, ExceptionReport& report)
@@ -379,29 +349,25 @@ void CreateEventAction(Call& call, ExceptionReport& report)
 
   if (actionSet == nullptr)
   {
-    call.GetState()->ThrowNullReferenceException(
-        report, "Cannot create an action on a null ActionSet.");
+    call.GetState()->ThrowNullReferenceException(report, "Cannot create an action on a null ActionSet.");
     return;
   }
 
   if (object == nullptr)
   {
-    call.GetState()->ThrowNullReferenceException(
-        report, "Cannot dispatch an Event on a null Object.");
+    call.GetState()->ThrowNullReferenceException(report, "Cannot dispatch an Event on a null Object.");
     return;
   }
 
   if (eventId.Empty())
   {
-    call.GetState()->ThrowNullReferenceException(
-        report, "Cannot dispatch an Event with an empty event id.");
+    call.GetState()->ThrowNullReferenceException(report, "Cannot dispatch an Event with an empty event id.");
     return;
   }
 
   if (eventToSend == nullptr)
   {
-    call.GetState()->ThrowNullReferenceException(
-        report, "Cannot dispatch a null Event.");
+    call.GetState()->ThrowNullReferenceException(report, "Cannot dispatch a null Event.");
     return;
   }
 
@@ -421,12 +387,8 @@ void AddEvent(LibraryBuilder& library)
   p2.ParameterType = ZilchTypeId(String);
   DelegateParameter& p3 = params.PushBack();
   p3.ParameterType = ZilchTypeId(Event);
-  library.AddExtensionFunction(ZilchTypeId(Action),
-                               "Event",
-                               CreateEventAction,
-                               params,
-                               ZilchTypeId(Action),
-                               FunctionOptions::Static);
+  library.AddExtensionFunction(
+      ZilchTypeId(Action), "Event", CreateEventAction, params, ZilchTypeId(Action), FunctionOptions::Static);
 }
 
 template <typename ActionType>
@@ -435,8 +397,7 @@ void CreateActionType(Call& call, ExceptionReport& report)
   ActionSet* actionSet = call.Get<ActionSet*>(0);
   if (actionSet == nullptr)
   {
-    call.GetState()->ThrowNullReferenceException(
-        report, "Cannot create an action on a null ActionSet.");
+    call.GetState()->ThrowNullReferenceException(report, "Cannot create an action on a null ActionSet.");
     return;
   }
   ActionType* action = new ActionType();

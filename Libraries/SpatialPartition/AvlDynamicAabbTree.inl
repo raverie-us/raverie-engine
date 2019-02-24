@@ -21,11 +21,8 @@ AvlDynamicTreeNode<ClientDataType>::~AvlDynamicTreeNode()
 }
 
 template <typename ClientDataType>
-Memory::Pool* AvlDynamicTreeNode<ClientDataType>::sDynamicNodePool =
-    new Memory::Pool("DynamicNodes",
-                     Memory::GetNamedHeap("BroadPhase"),
-                     sizeof(AvlDynamicTreeNode<ClientDataType>),
-                     200);
+Memory::Pool* AvlDynamicTreeNode<ClientDataType>::sDynamicNodePool = new Memory::Pool(
+    "DynamicNodes", Memory::GetNamedHeap("BroadPhase"), sizeof(AvlDynamicTreeNode<ClientDataType>), 200);
 
 template <typename ClientDataType>
 void* AvlDynamicTreeNode<ClientDataType>::operator new(size_t size)
@@ -34,8 +31,7 @@ void* AvlDynamicTreeNode<ClientDataType>::operator new(size_t size)
 }
 
 template <typename ClientDataType>
-void AvlDynamicTreeNode<ClientDataType>::operator delete(void* pMem,
-                                                         size_t size)
+void AvlDynamicTreeNode<ClientDataType>::operator delete(void* pMem, size_t size)
 {
   return sDynamicNodePool->Deallocate(pMem, size);
 }
@@ -47,8 +43,7 @@ bool AvlDynamicTreeNode<ClientDataType>::IsLeaf()
 }
 
 template <typename ClientDataType>
-AvlDynamicTreeNode<ClientDataType>*
-AvlDynamicTreeNode<ClientDataType>::GetSibling()
+AvlDynamicTreeNode<ClientDataType>* AvlDynamicTreeNode<ClientDataType>::GetSibling()
 {
   if (mParent->mChild1 == this)
     return mParent->mChild2;
@@ -56,9 +51,7 @@ AvlDynamicTreeNode<ClientDataType>::GetSibling()
 }
 
 template <typename ClientDataType>
-void AvlDynamicTreePolicy<ClientDataType>::InsertNode(NodeType*& root,
-                                                      NodeType* leafNode,
-                                                      NodeType* start)
+void AvlDynamicTreePolicy<ClientDataType>::InsertNode(NodeType*& root, NodeType* leafNode, NodeType* start)
 {
   // if we have no root, then this node is the root
   if (root == nullptr)
@@ -100,8 +93,7 @@ void AvlDynamicTreePolicy<ClientDataType>::InsertNode(NodeType*& root,
 
 template <typename ClientDataType>
 typename AvlDynamicTreePolicy<ClientDataType>::NodeType*
-AvlDynamicTreePolicy<ClientDataType>::RemoveNode(NodeType*& root,
-                                                 NodeType* leafNode)
+AvlDynamicTreePolicy<ClientDataType>::RemoveNode(NodeType*& root, NodeType* leafNode)
 {
   ErrorIf(leafNode->mChild1 != nullptr, "Can only remove leaf nodes.");
   ErrorIf(leafNode->mChild2 != nullptr, "Can only remove leaf nodes.");
@@ -148,8 +140,8 @@ AvlDynamicTreePolicy<ClientDataType>::RemoveNode(NodeType*& root,
 }
 
 template <typename ClientDataType>
-typename AvlDynamicTreePolicy<ClientDataType>::NodeType*
-AvlDynamicTreePolicy<ClientDataType>::Balance(NodeType*& root, NodeType* node)
+typename AvlDynamicTreePolicy<ClientDataType>::NodeType* AvlDynamicTreePolicy<ClientDataType>::Balance(NodeType*& root,
+                                                                                                       NodeType* node)
 {
   if (node->mHeight < 2)
     return node;
@@ -167,9 +159,7 @@ AvlDynamicTreePolicy<ClientDataType>::Balance(NodeType*& root, NodeType* node)
 
 template <typename ClientDataType>
 typename AvlDynamicTreePolicy<ClientDataType>::NodeType*
-AvlDynamicTreePolicy<ClientDataType>::RotateUp(NodeType*& root,
-                                               NodeType* oldParent,
-                                               uint childIndex)
+AvlDynamicTreePolicy<ClientDataType>::RotateUp(NodeType*& root, NodeType* oldParent, uint childIndex)
 {
   NodeType* newParent = oldParent->mChildren[childIndex];
   uint largeIndex, smallIndex;

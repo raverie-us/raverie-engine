@@ -38,9 +38,7 @@ struct HashPolicy<Vec3>
 {
   inline size_t operator()(Vec3Param value) const
   {
-    return HashUint(*(unsigned int*)&value.x) +
-           HashUint(*(unsigned int*)&value.y) +
-           HashUint(*(unsigned int*)&value.z);
+    return HashUint(*(unsigned int*)&value.x) + HashUint(*(unsigned int*)&value.y) + HashUint(*(unsigned int*)&value.z);
   }
   inline bool Equal(Vec3Param left, Vec3Param right) const
   {
@@ -53,8 +51,7 @@ struct HashPolicy<Cell>
 {
   inline size_t operator()(const Cell& cell) const
   {
-    return HashUint((unsigned)cell.x) + HashUint((unsigned)cell.y) +
-           HashUint((unsigned)cell.z);
+    return HashUint((unsigned)cell.x) + HashUint((unsigned)cell.y) + HashUint((unsigned)cell.z);
   }
   inline bool Equal(const Cell& left, const Cell& right) const
   {
@@ -66,14 +63,9 @@ class MarchingCubes
 {
 public:
   typedef float (*DensitySamplerFn)(Vec3Param position, void* userData);
-  typedef void (*VertexWriterFn)(Vec3 positions[],
-                                 Vec3 normals[],
-                                 u32 firstIndicesOut[],
-                                 u32 numTriangles,
-                                 void* userData);
-  typedef void (*InvalidatorFn)(u32 firstIndices[],
-                                u32 numTriangles,
-                                void* userData);
+  typedef void (*VertexWriterFn)(
+      Vec3 positions[], Vec3 normals[], u32 firstIndicesOut[], u32 numTriangles, void* userData);
+  typedef void (*InvalidatorFn)(u32 firstIndices[], u32 numTriangles, void* userData);
 
   float SurfaceLevel;
   Vec3 SampleDistances;
@@ -124,8 +116,7 @@ private:
 
   void ComputeInterpolatedVertexForEdge(s32 edgeIndex, CellInfo& cell);
 
-  static Vec3
-  Interpolate(float surfaceLevel, Vec3 p1, Vec3 p2, float val1, float val2);
+  static Vec3 Interpolate(float surfaceLevel, Vec3 p1, Vec3 p2, float val1, float val2);
 };
 
 } // namespace Zero

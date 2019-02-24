@@ -4,8 +4,7 @@
 
 namespace Zilch
 {
-StaticLibrary::StaticLibrary(StringParam name,
-                             StringParam namespaceForPlugins) :
+StaticLibrary::StaticLibrary(StringParam name, StringParam namespaceForPlugins) :
     Name(name),
     Build(BuildState::NotBuilt)
 {
@@ -78,15 +77,14 @@ void StaticLibrary::BuildLibrary()
   this->Build = BuildState::Building;
 
   // Build all dependent libraries
-  ZilchForEach(StaticLibrary * dependency, this->Dependencies)
+  ZilchForEach (StaticLibrary* dependency, this->Dependencies)
   {
     // Its ok to call BuildLibrary more than once
     dependency->BuildLibrary();
   }
 
   // Let the binding know we're currently building this library
-  NativeBindingList::SetBuildingLibraryForThisThread(
-      this->Builder->BuiltLibrary);
+  NativeBindingList::SetBuildingLibraryForThisThread(this->Builder->BuiltLibrary);
 
   // Before we run initializers, let the user setup anything they want
   this->SetupBinding(*this->Builder);
@@ -111,8 +109,7 @@ void StaticLibrary::BuildLibrary()
 
 void StaticLibrary::ClearLibrary()
 {
-  ErrorIf(this->Build != BuildState::Built,
-          "It is not valid to shutdown a library that has not been built");
+  ErrorIf(this->Build != BuildState::Built, "It is not valid to shutdown a library that has not been built");
 
   this->Library = nullptr;
 }

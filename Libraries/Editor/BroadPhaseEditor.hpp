@@ -23,18 +23,12 @@ public:
 private:
   void RunTest(ObjectEvent* event);
   BroadPhaseTracker* CreateTracker();
-  void AddBroadPhasesToTracker(BroadPhase::Type type,
-                               BroadPhaseTracker* tracker);
+  void AddBroadPhasesToTracker(BroadPhase::Type type, BroadPhaseTracker* tracker);
   void CreateGraphs(BroadPhase::Type type, BroadPhaseTracker* tracker);
-  Widget* CreateRecordGraphWidget(BroadPhase::Type type,
-                                  BroadPhaseTracker* tracker,
-                                  BPStats::Type recordType);
-  Widget* CreateStatsGraphWidget(BroadPhase::Type type,
-                                 BroadPhaseTracker* tracker);
+  Widget* CreateRecordGraphWidget(BroadPhase::Type type, BroadPhaseTracker* tracker, BPStats::Type recordType);
+  Widget* CreateStatsGraphWidget(BroadPhase::Type type, BroadPhaseTracker* tracker);
 
-  Composite* BuildPropertyGrid(StringParam label,
-                               BroadPhase::Type type,
-                               Composite* parent);
+  Composite* BuildPropertyGrid(StringParam label, BroadPhase::Type type, Composite* parent);
 
   /// Adds the selected broad phase to the active list
   void AddButtonPressed(BroadPhase::Type type);

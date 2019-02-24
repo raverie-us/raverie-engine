@@ -43,10 +43,7 @@ ZilchDefineType(SoundNode, builder, type)
   ZeroBindEvent(Events::SoundListenerRemoved, SoundEvent);
 }
 
-SoundNode::SoundNode(StringParam name,
-                     int ID,
-                     bool listenerDependent,
-                     bool generator) :
+SoundNode::SoundNode(StringParam name, int ID, bool listenerDependent, bool generator) :
     cNodeID(ID),
     cName(name),
     mOkayToSaveThreaded(!listenerDependent),
@@ -60,9 +57,7 @@ SoundNode::SoundNode(StringParam name,
     mBypassValue(0.0f),
     mGeneratorThreaded(generator)
 {
-  ConnectThisTo(&(Z::gSound->Mixer),
-                Events::SoundListenerRemoved,
-                RemoveListenerThreaded);
+  ConnectThisTo(&(Z::gSound->Mixer), Events::SoundListenerRemoved, RemoveListenerThreaded);
 }
 
 SoundNode::~SoundNode()
@@ -73,15 +68,13 @@ void SoundNode::AddInputNode(SoundNode* newNode)
 {
   if (!newNode)
   {
-    DoNotifyWarning("Incorrect SoundNode Operation",
-                    "Attempted to add SoundNode to null object");
+    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to add SoundNode to null object");
     return;
   }
 
   if (newNode == this)
   {
-    DoNotifyWarning("Incorrect SoundNode Operation",
-                    "Attempted to add SoundNode to itself as input");
+    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to add SoundNode to itself as input");
     return;
   }
 
@@ -96,16 +89,14 @@ void SoundNode::AddInputNode(SoundNode* newNode)
   // Add this node to the new node's outputs
   newNode->mOutputs[AudioThreads::MainThread].PushBack(this);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&SoundNode::AddInputNodeThreaded, this, handle), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&SoundNode::AddInputNodeThreaded, this, handle), this);
 }
 
 void SoundNode::RemoveInputNode(SoundNode* node)
 {
   if (!node)
   {
-    DoNotifyWarning("Incorrect SoundNode Operation",
-                    "Attempted to remove a null object from SoundNode inputs");
+    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to remove a null object from SoundNode inputs");
     return;
   }
 
@@ -116,11 +107,9 @@ void SoundNode::RemoveInputNode(SoundNode* node)
     return;
 
   // Remove this node from the input node's output list
-  node->mOutputs[AudioThreads::MainThread].EraseValue(
-      HandleOf<SoundNode>(this));
+  node->mOutputs[AudioThreads::MainThread].EraseValue(HandleOf<SoundNode>(this));
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&SoundNode::RemoveInputNodeThreaded, this, handle), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&SoundNode::RemoveInputNodeThreaded, this, handle), this);
 
   // If there are no more inputs and this node should collapse, call the
   // collapse function
@@ -128,8 +117,7 @@ void SoundNode::RemoveInputNode(SoundNode* node)
     CollapseNode();
 
   // If this node is now disconnected, send an event
-  if (mInputs[AudioThreads::MainThread].Empty() &&
-      mOutputs[AudioThreads::MainThread].Empty())
+  if (mInputs[AudioThreads::MainThread].Empty() && mOutputs[AudioThreads::MainThread].Empty())
   {
     SoundEvent event;
     DispatchEvent(Events::SoundNodeDisconnected, &event);
@@ -140,15 +128,13 @@ void SoundNode::InsertNodeBefore(SoundNode* node)
 {
   if (!node)
   {
-    DoNotifyWarning("Incorrect SoundNode Operation",
-                    "Attempted to add sound node to null object");
+    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to add sound node to null object");
     return;
   }
 
   if (node == this)
   {
-    DoNotifyWarning("Incorrect SoundNode Operation",
-                    "Attempted to insert SoundNode before itself");
+    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to insert SoundNode before itself");
     return;
   }
 
@@ -175,15 +161,13 @@ void SoundNode::InsertNodeAfter(SoundNode* node)
 {
   if (!node)
   {
-    DoNotifyWarning("Incorrect SoundNode Operation",
-                    "Attempted to add sound node to null object");
+    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to add sound node to null object");
     return;
   }
 
   if (node == this)
   {
-    DoNotifyWarning("Incorrect SoundNode Operation",
-                    "Attempted to insert SoundNode after itself");
+    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to insert SoundNode after itself");
     return;
   }
 
@@ -209,15 +193,13 @@ void SoundNode::ReplaceWith(SoundNode* node)
 {
   if (!node)
   {
-    DoNotifyWarning("Incorrect SoundNode Operation",
-                    "Attempted to replace sound node with null object");
+    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to replace sound node with null object");
     return;
   }
 
   if (node == this)
   {
-    DoNotifyWarning("Incorrect SoundNode Operation",
-                    "Attempted to replace SoundNode with itself");
+    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to replace SoundNode with itself");
     return;
   }
 
@@ -271,17 +253,16 @@ void SoundNode::RemoveAllOutputs()
 void SoundNode::RemoveAndAttachInputsToOutputs()
 {
   // Add all inputs to all outputs
-  forRange(SoundNode * input, mInputs[AudioThreads::MainThread].All())
+  forRange (SoundNode* input, mInputs[AudioThreads::MainThread].All())
   {
-    forRange(SoundNode * output, mOutputs[AudioThreads::MainThread].All())
-        output->AddInputNode(input);
+    forRange (SoundNode* output, mOutputs[AudioThreads::MainThread].All())
+      output->AddInputNode(input);
   }
 
   RemoveAllOutputs();
   RemoveAllInputs();
 
-  ErrorIf(!mInputs[AudioThreads::MainThread].Empty() ||
-              !mOutputs[AudioThreads::MainThread].Empty(),
+  ErrorIf(!mInputs[AudioThreads::MainThread].Empty() || !mOutputs[AudioThreads::MainThread].Empty(),
           "SoundNode was not fully disconnected");
 }
 
@@ -325,8 +306,7 @@ float SoundNode::GetBypassPercent()
 
 void SoundNode::SetBypassPercent(float percent)
 {
-  mBypassValue.Set(Math::Clamp(percent, 0.0f, 100.0f) / 100.0f,
-                   AudioThreads::MainThread);
+  mBypassValue.Set(Math::Clamp(percent, 0.0f, 100.0f) / 100.0f, AudioThreads::MainThread);
 }
 
 float SoundNode::GetBypassValue()
@@ -349,8 +329,7 @@ void SoundNode::DisconnectThisAndAllInputs()
   while (!mOutputs[AudioThreads::MainThread].Empty())
     mOutputs[AudioThreads::MainThread].Back()->RemoveInputNode(this);
 
-  ErrorIf(!mInputs[AudioThreads::MainThread].Empty() ||
-              !mOutputs[AudioThreads::MainThread].Empty(),
+  ErrorIf(!mInputs[AudioThreads::MainThread].Empty() || !mOutputs[AudioThreads::MainThread].Empty(),
           "SoundNode was not fully disconnected");
 }
 
@@ -365,14 +344,12 @@ void SoundNode::WarningFromMixThread(const String title, const String message)
   DoNotifyWarning(title, message);
 }
 
-const SoundNode::NodeListType*
-SoundNode::GetInputs(AudioThreads::Enum whichThread)
+const SoundNode::NodeListType* SoundNode::GetInputs(AudioThreads::Enum whichThread)
 {
   return &mInputs[whichThread];
 }
 
-const SoundNode::NodeListType*
-SoundNode::GetOutputs(AudioThreads::Enum whichThread)
+const SoundNode::NodeListType* SoundNode::GetOutputs(AudioThreads::Enum whichThread)
 {
   return &mOutputs[whichThread];
 }
@@ -385,15 +362,13 @@ bool SoundNode::HasAudibleOutput()
 float SoundNode::GetVolumeChangeFromOutputsThreaded()
 {
   float volume = 0.0f;
-  forRange(SoundNode * output, mOutputs[AudioThreads::MixThread].All())
-      volume += output->GetVolumeChangeFromOutputsThreaded();
+  forRange (SoundNode* output, mOutputs[AudioThreads::MixThread].All())
+    volume += output->GetVolumeChangeFromOutputsThreaded();
 
   return volume;
 }
 
-bool SoundNode::Evaluate(BufferType* outputBuffer,
-                         const unsigned numberOfChannels,
-                         ListenerNode* listener)
+bool SoundNode::Evaluate(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener)
 {
   bool hasOutput;
 
@@ -403,26 +378,17 @@ bool SoundNode::Evaluate(BufferType* outputBuffer,
     // Check for errors
     String message;
     if (mInProcessThreaded)
-      message = String::Format("Loop in sound node structure, disconnected %s",
-                               cName.c_str());
+      message = String::Format("Loop in sound node structure, disconnected %s", cName.c_str());
     else if (outputBuffer->Size() != mMixedOutputThreaded.Size())
-      message = String::Format(
-          "Mismatch in buffer size requests on sound node, disconnected %s",
-          cName.c_str());
+      message = String::Format("Mismatch in buffer size requests on sound node, disconnected %s", cName.c_str());
     else if (numberOfChannels != mNumMixedChannelsThreaded)
-      message = String::Format(
-          "Mismatch in channel requests on sound node, disconnected %s",
-          cName.c_str());
+      message = String::Format("Mismatch in channel requests on sound node, disconnected %s", cName.c_str());
     if (!message.Empty())
     {
       String title = "Incorrect SoundNode Structure";
-      Z::gSound->Mixer.AddTaskThreaded(
-          CreateFunctor(&SoundNode::WarningFromMixThread, this, title, message),
-          this);
+      Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundNode::WarningFromMixThread, this, title, message), this);
 
-      Z::gSound->Mixer.AddTaskThreaded(
-          CreateFunctor(&SoundNode::RemoveAndAttachInputsToOutputs, this),
-          this);
+      Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundNode::RemoveAndAttachInputsToOutputs, this), this);
 
       return false;
     }
@@ -433,9 +399,7 @@ bool SoundNode::Evaluate(BufferType* outputBuffer,
     {
       // Copy mixed samples to output buffer if there is real data
       if (mValidOutputLastMix.Get() == cTrue)
-        memcpy(outputBuffer->Data(),
-               mMixedOutputThreaded.Data(),
-               sizeof(float) * outputBuffer->Size());
+        memcpy(outputBuffer->Data(), mMixedOutputThreaded.Data(), sizeof(float) * outputBuffer->Size());
 
       hasOutput = mValidOutputLastMix.Get() == cTrue;
     }
@@ -446,17 +410,14 @@ bool SoundNode::Evaluate(BufferType* outputBuffer,
       mMixedListenerThreaded = listener;
 
       // Get output
-      hasOutput = GetOutputSamples(
-          &mMixedOutputThreaded, numberOfChannels, listener, false);
+      hasOutput = GetOutputSamples(&mMixedOutputThreaded, numberOfChannels, listener, false);
 
       if (mValidOutputLastMix.Get() == cFalse && hasOutput)
         mValidOutputLastMix.Set(cTrue);
 
       // Copy mixed samples to output buffer if there is real data
       if (hasOutput)
-        memcpy(outputBuffer->Data(),
-               mMixedOutputThreaded.Data(),
-               sizeof(float) * outputBuffer->Size());
+        memcpy(outputBuffer->Data(), mMixedOutputThreaded.Data(), sizeof(float) * outputBuffer->Size());
 
       mInProcessThreaded = false;
     }
@@ -478,7 +439,7 @@ bool SoundNode::Evaluate(BufferType* outputBuffer,
     // (if any inputs can't be saved, neither can this node)
     if (mOkayToSaveThreaded)
     {
-      forRange(SoundNode * input, mInputs[AudioThreads::MixThread].All())
+      forRange (SoundNode* input, mInputs[AudioThreads::MixThread].All())
       {
         if (!input->mOkayToSaveThreaded)
         {
@@ -489,11 +450,9 @@ bool SoundNode::Evaluate(BufferType* outputBuffer,
     }
 
     // Get output
-    hasOutput = GetOutputSamples(
-        &mMixedOutputThreaded, numberOfChannels, listener, true);
+    hasOutput = GetOutputSamples(&mMixedOutputThreaded, numberOfChannels, listener, true);
 
-    ErrorIf(hasOutput && (mMixedOutputThreaded[0] > 10.0f ||
-                          mMixedOutputThreaded[0] < -10.0f),
+    ErrorIf(hasOutput && (mMixedOutputThreaded[0] > 10.0f || mMixedOutputThreaded[0] < -10.0f),
             "Audio data is outside of normal values");
 
     if (hasOutput)
@@ -506,9 +465,7 @@ bool SoundNode::Evaluate(BufferType* outputBuffer,
     {
       ErrorIf(outputBuffer->Size() != mMixedOutputThreaded.Size(),
               "Buffer sizes do not match when evaluating sound node");
-      memcpy(outputBuffer->Data(),
-             mMixedOutputThreaded.Data(),
-             sizeof(float) * mMixedOutputThreaded.Size());
+      memcpy(outputBuffer->Data(), mMixedOutputThreaded.Data(), sizeof(float) * mMixedOutputThreaded.Size());
     }
 
     // Mark as finished
@@ -533,13 +490,12 @@ bool SoundNode::AccumulateInputSamples(const unsigned howManySamples,
   mInputSamplesThreaded.Resize(howManySamples);
 
   // Get samples from all inputs
-  forRange(SoundNode * input, mInputs[AudioThreads::MixThread].All())
+  forRange (SoundNode* input, mInputs[AudioThreads::MixThread].All())
   {
     // Check if this input has actual output data
     if (input->Evaluate(&tempBuffer, numberOfChannels, listener))
     {
-      ErrorIf(tempBuffer[0] > 10.0f || tempBuffer[0] < -10.0f,
-              "Audio data is outside of normal limits");
+      ErrorIf(tempBuffer[0] > 10.0f || tempBuffer[0] < -10.0f, "Audio data is outside of normal limits");
 
       // If this is the first input data, just swap the buffers
       if (!isThereInput)
@@ -550,9 +506,7 @@ bool SoundNode::AccumulateInputSamples(const unsigned howManySamples,
       // Otherwise add the new samples to the existing ones
       else
       {
-        for (BufferRange myData = mInputSamplesThreaded.All(),
-                         newData = tempBuffer.All();
-             !myData.Empty();
+        for (BufferRange myData = mInputSamplesThreaded.All(), newData = tempBuffer.All(); !myData.Empty();
              myData.PopFront(), newData.PopFront())
         {
           myData.Front() += newData.Front();
@@ -571,13 +525,10 @@ void SoundNode::AddBypassThreaded(BufferType* outputBuffer)
   float bypassValue = mBypassValue.Get(AudioThreads::MixThread);
   if (bypassValue > 0.0f)
   {
-    for (BufferRange outputRange = outputBuffer->All(),
-                     inputRange = mInputSamplesThreaded.All();
-         !outputRange.Empty();
+    for (BufferRange outputRange = outputBuffer->All(), inputRange = mInputSamplesThreaded.All(); !outputRange.Empty();
          outputRange.PopFront(), inputRange.PopFront())
     {
-      outputRange.Front() = (inputRange.Front() * bypassValue) +
-                            (outputRange.Front() * (1.0f - bypassValue));
+      outputRange.Front() = (inputRange.Front() * bypassValue) + (outputRange.Front() * (1.0f - bypassValue));
     }
   }
 }
@@ -640,8 +591,7 @@ bool OutputNode::GetOutputSamples(BufferType* outputBuffer,
                                   const bool firstRequest)
 {
   // Get input
-  bool isThereOutput =
-      AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, nullptr);
+  bool isThereOutput = AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, nullptr);
 
   // Move input to output buffer
   if (isThereOutput)
@@ -656,8 +606,7 @@ ZilchDefineType(CombineNode, builder, Type)
 {
 }
 
-CombineNode::CombineNode(Zero::StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false)
+CombineNode::CombineNode(Zero::StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false)
 {
 }
 
@@ -667,8 +616,7 @@ bool CombineNode::GetOutputSamples(BufferType* outputBuffer,
                                    const bool firstRequest)
 {
   // Get input
-  bool isThereOutput =
-      AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, listener);
+  bool isThereOutput = AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, listener);
 
   // Move input to output buffer
   if (isThereOutput)
@@ -700,9 +648,7 @@ bool CombineAndPauseNode::GetPaused()
 
 void CombineAndPauseNode::SetPaused(const bool paused)
 {
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&CombineAndPauseNode::SetPausedThreaded, this, paused),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&CombineAndPauseNode::SetPausedThreaded, this, paused), this);
 }
 
 bool CombineAndPauseNode::GetMuted()
@@ -712,8 +658,7 @@ bool CombineAndPauseNode::GetMuted()
 
 void CombineAndPauseNode::SetMuted(bool muted)
 {
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&CombineAndPauseNode::SetMutedThreaded, this, muted), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&CombineAndPauseNode::SetMutedThreaded, this, muted), this);
 }
 
 bool CombineAndPauseNode::GetOutputSamples(BufferType* outputBuffer,
@@ -726,8 +671,7 @@ bool CombineAndPauseNode::GetOutputSamples(BufferType* outputBuffer,
     return false;
 
   // Get input
-  bool isThereOutput =
-      AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, listener);
+  bool isThereOutput = AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, listener);
 
   // Check if we are muted (need to process audio, don't need to return any)
   if (mMuted.Get() == cTrue)

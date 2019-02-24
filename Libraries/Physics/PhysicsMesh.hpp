@@ -34,13 +34,9 @@ public:
   //-------------------------------------------------------------------Internal
 
   /// Finds the first triangle hit by the local-space ray.
-  bool CastRay(const Ray& localRay,
-               ProxyResult& result,
-               BaseCastFilter& filter);
+  bool CastRay(const Ray& localRay, ProxyResult& result, BaseCastFilter& filter);
   /// Fills out the given array with all overlapping triangles.
-  void GetOverlappingTriangles(Aabb& aabb,
-                               TriangleArray& triangles,
-                               Array<uint>& triangleIds);
+  void GetOverlappingTriangles(Aabb& aabb, TriangleArray& triangles, Array<uint>& triangleIds);
 
   /// Copy all relevant info for runtime clone.
   void CopyTo(PhysicsMesh* destination);

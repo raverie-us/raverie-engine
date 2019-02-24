@@ -36,10 +36,7 @@ void LerpKeyFrame(KeyFrame& out, KeyFrame& keyOne, KeyFrame& keyTwo, float t)
 }
 
 template <typename keyFrames, typename keyFrameType>
-void InterpolateKeyFrame(float time,
-                         uint& keyFrameIndex,
-                         keyFrames& mKeyFrames,
-                         keyFrameType& keyFrame)
+void InterpolateKeyFrame(float time, uint& keyFrameIndex, keyFrames& mKeyFrames, keyFrameType& keyFrame)
 {
   uint CurKey = keyFrameIndex;
   float animTime = time;
@@ -64,8 +61,7 @@ void InterpolateKeyFrame(float time,
   }
 
   // Search Forward in the keyframes for the interval
-  while (CurKey != mKeyFrames.Size() - 1 &&
-         mKeyFrames[CurKey + 1].Time < animTime)
+  while (CurKey != mKeyFrames.Size() - 1 && mKeyFrames[CurKey + 1].Time < animTime)
     ++CurKey;
 
   // Search Backward in the keyframes for the interval
@@ -99,10 +95,7 @@ void InterpolateKeyFrame(float time,
   keyFrameIndex = CurKey;
 }
 
-BlendTrack* GetBlendTrack(StringParam name,
-                          BlendTracks& tracks,
-                          HandleParam instance,
-                          Property* prop)
+BlendTrack* GetBlendTrack(StringParam name, BlendTracks& tracks, HandleParam instance, Property* prop)
 {
   BlendTrack* blendTrack = tracks.FindValue(name, nullptr);
 
@@ -127,8 +120,8 @@ bool ValidPropertyTrack(Property* property)
   // First check to see if it's a value type
   Type* propertyType = property->PropertyType;
 
-#define DoVariantType(type)                                                    \
-  if (propertyType == ZilchTypeId(type))                                       \
+#define DoVariantType(type)                                                                                            \
+  if (propertyType == ZilchTypeId(type))                                                                               \
     return true;
 #include "Meta/VariantTypes.inl"
 #undef DoVariantType
@@ -141,13 +134,10 @@ bool ValidPropertyTrack(Property* property)
   return false;
 }
 
-PropertyTrack* MakePropertyTrack(StringParam componentName,
-                                 StringParam propertyName,
-                                 StringParam propertyTypeName)
+PropertyTrack* MakePropertyTrack(StringParam componentName, StringParam propertyName, StringParam propertyTypeName)
 {
   // Get the type id from the given property type name
-  BoundType* propertyType =
-      MetaDatabase::GetInstance()->FindType(propertyTypeName);
+  BoundType* propertyType = MetaDatabase::GetInstance()->FindType(propertyTypeName);
 
   // Can't create the property track if the property type doesn't exist
   if (propertyType == nullptr)
@@ -156,13 +146,11 @@ PropertyTrack* MakePropertyTrack(StringParam componentName,
   return MakePropertyTrack(componentName, propertyName, propertyType);
 }
 
-PropertyTrack* MakePropertyTrack(StringParam componentName,
-                                 StringParam propertyName,
-                                 BoundType* propertyTypeId)
+PropertyTrack* MakePropertyTrack(StringParam componentName, StringParam propertyName, BoundType* propertyTypeId)
 {
   // First check to see if it's a value type
-#define DoVariantType(type)                                                    \
-  if (propertyTypeId == ZilchTypeId(type))                                     \
+#define DoVariantType(type)                                                                                            \
+  if (propertyTypeId == ZilchTypeId(type))                                                                             \
     return new AnimatePropertyValueType<type>(componentName, propertyName);
 #include "Meta/VariantTypes.inl"
 #undef DoVariantType

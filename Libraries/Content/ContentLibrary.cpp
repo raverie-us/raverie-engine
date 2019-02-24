@@ -30,7 +30,8 @@ bool ContentLibrary::Load()
 
 void ContentLibrary::SaveAllContentItemMeta()
 {
-  forRange(ContentItem * item, ContentItems.Values()) item->SaveMetaFile();
+  forRange (ContentItem* item, ContentItems.Values())
+    item->SaveMetaFile();
 }
 
 String ContentLibrary::GetOutputPath()
@@ -86,19 +87,14 @@ void ContentLibrary::BuildContent(BuildOptions& buildOptions)
   ContentMapType::valuerange itemsToProcess = ContentItems.Values();
 
   // Continue until finished or canceled
-  while (!itemsToProcess.Empty() &&
-         buildOptions.BuildStatus == BuildStatus::Running)
+  while (!itemsToProcess.Empty() && buildOptions.BuildStatus == BuildStatus::Running)
   {
     ContentItem* item = itemsToProcess.Front();
 
     if (buildOptions.SendProgress)
     {
       float progress = float(itemsBuilt + 1) / float(itemsToBuild);
-      Z::gEngine->LoadingUpdate(currentOperation,
-                                currentTask,
-                                item->Filename,
-                                ProgressType::Normal,
-                                progress);
+      Z::gEngine->LoadingUpdate(currentOperation, currentTask, item->Filename, ProgressType::Normal, progress);
     }
 
     // Build the content item
@@ -126,8 +122,7 @@ void ContentLibrary::BuildContent(BuildOptions& buildOptions)
   else
   {
     buildOptions.BuildStatus = BuildStatus::Failed;
-    String message = String::Format("Failed to build content library '%s'",
-                                    this->Name.c_str());
+    String message = String::Format("Failed to build content library '%s'", this->Name.c_str());
     DoNotifyError("Content Library build failed", message);
   }
 
@@ -136,7 +131,7 @@ void ContentLibrary::BuildContent(BuildOptions& buildOptions)
 
 void ContentLibrary::BuildListing(ResourceListing& listing)
 {
-  forRange(ContentItem * node, ContentItems.Values())
+  forRange (ContentItem* node, ContentItems.Values())
   {
     node->BuildListing(listing);
   }

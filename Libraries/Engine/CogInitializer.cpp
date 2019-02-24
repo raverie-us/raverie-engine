@@ -24,8 +24,7 @@ ZilchDefineType(CogInitializer, builder, type)
   ZeroBindEvent(Events::AllObjectsInitialized, CogInitializerEvent);
 }
 
-CogInitializer::CogInitializer(Zero::Space* space,
-                               Zero::GameSession* gameSession)
+CogInitializer::CogInitializer(Zero::Space* space, Zero::GameSession* gameSession)
 {
   mSpace = space;
   mGameSession = gameSession;

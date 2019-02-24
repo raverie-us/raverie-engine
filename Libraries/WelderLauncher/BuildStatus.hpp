@@ -56,10 +56,7 @@ public:
   typedef BuildList ZilchSelf;
 
   /// Constructor.
-  BuildList(Composite* parent,
-            VersionSelector* versionSelector,
-            ZeroBuild* selected,
-            bool installedOnly);
+  BuildList(Composite* parent, VersionSelector* versionSelector, ZeroBuild* selected, bool installedOnly);
 
   /// Composite Interface.
   void UpdateTransform() override;
@@ -100,9 +97,7 @@ public:
   typedef BuildSelector ZilchSelf;
 
   /// Constructor.
-  BuildSelector(Composite* parent,
-                VersionSelector* versionSelector,
-                ZeroBuild* version = nullptr);
+  BuildSelector(Composite* parent, VersionSelector* versionSelector, ZeroBuild* version = nullptr);
 
   /// Composite Interface.
   void UpdateTransform() override;

@@ -23,9 +23,7 @@ public:
   SpirVExtensionLibrary* mGlsl450ExtensionsLibrary;
 
 private:
-  void MakeMathTypes(ZilchSpirVFrontEnd* translator,
-                     ZilchShaderIRLibrary* shaderLibrary,
-                     TypeGroups& types);
+  void MakeMathTypes(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types);
   void RegisterPrimitiveFunctions(ZilchSpirVFrontEnd* translator,
                                   ZilchShaderIRLibrary* shaderLibrary,
                                   TypeGroups& types,

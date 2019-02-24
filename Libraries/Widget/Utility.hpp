@@ -7,17 +7,12 @@ namespace Zero
 class ColorBlock : public Widget
 {
 public:
-  ColorBlock(Composite* parent,
-             AttachType::Enum attachType = AttachType::Normal) :
-      Widget(parent, attachType)
+  ColorBlock(Composite* parent, AttachType::Enum attachType = AttachType::Normal) : Widget(parent, attachType)
   {
   }
 
-  void RenderUpdate(ViewBlock& viewBlock,
-                    FrameBlock& frameBlock,
-                    Mat4Param parentTx,
-                    ColorTransform colorTx,
-                    WidgetRect clipRect)
+  void RenderUpdate(
+      ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
   {
     Texture* texture = TextureManager::FindOrNull("White");
     if (texture == nullptr)
@@ -33,15 +28,12 @@ public:
     Vec2 uv0 = Vec2(0.0f);
     Vec2 uv1 = Vec2(1.0f);
 
-    ViewNode& viewNode =
-        AddRenderNodes(viewBlock, frameBlock, clipRect, texture);
-    frameBlock.mRenderQueues->AddStreamedQuad(
-        viewNode, pos0, pos1, uv0, uv1, color);
+    ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, texture);
+    frameBlock.mRenderQueues->AddStreamedQuad(viewNode, pos0, pos1, uv0, uv1, color);
   }
 };
 
-inline ColorBlock* CreateBlackOut(Composite* composite,
-                                  AttachType::Enum attach = AttachType::Normal)
+inline ColorBlock* CreateBlackOut(Composite* composite, AttachType::Enum attach = AttachType::Normal)
 {
   ColorBlock* block = new ColorBlock(composite, attach);
 

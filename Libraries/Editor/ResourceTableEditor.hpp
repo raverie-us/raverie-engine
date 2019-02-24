@@ -31,8 +31,7 @@ public:
   ResourceTableEntryChangeOp(ResourceTableEditor* editor,
                              ResourceTableEntry* oldEntry,
                              const ResourceTable::ValueType& newValue);
-  ResourceTableEntryChangeOp(ResourceTableEditor* editor,
-                             ResourceTableEntry* oldEntry);
+  ResourceTableEntryChangeOp(ResourceTableEditor* editor, ResourceTableEntry* oldEntry);
   void Undo() override;
   void Redo() override;
 
@@ -45,8 +44,7 @@ public:
 class ResourceTableMaxWeightChangeOp : public Operation
 {
 public:
-  ResourceTableMaxWeightChangeOp(ResourceTableEditor* editor,
-                                 float newMaxWeight);
+  ResourceTableMaxWeightChangeOp(ResourceTableEditor* editor, float newMaxWeight);
 
   void Undo() override;
   void Redo() override;
@@ -61,8 +59,7 @@ public:
 class ResourceTableResourceTypeChangeOp : public Operation
 {
 public:
-  ResourceTableResourceTypeChangeOp(ResourceTableEditor* editor,
-                                    StringParam newType);
+  ResourceTableResourceTypeChangeOp(ResourceTableEditor* editor, StringParam newType);
   void Undo() override;
   void Redo() override;
 
@@ -76,9 +73,7 @@ public:
 class ResourceTableAddRemoveRowOp : public Operation
 {
 public:
-  ResourceTableAddRemoveRowOp(ResourceTableEditor* editor,
-                              ResourceTableEntry* entry,
-                              bool add);
+  ResourceTableAddRemoveRowOp(ResourceTableEditor* editor, ResourceTableEntry* entry, bool add);
   void Undo() override;
   void Redo() override;
 
@@ -93,9 +88,7 @@ public:
 class ResourceTableRowReorderOp : public Operation
 {
 public:
-  ResourceTableRowReorderOp(ResourceTableEditor* editor,
-                            uint oldIndex,
-                            uint newIndex);
+  ResourceTableRowReorderOp(ResourceTableEditor* editor, uint oldIndex, uint newIndex);
   void Undo() override;
   void Redo() override;
 
@@ -109,9 +102,7 @@ public:
 class ResourceTableBatchRowReorderOp : public Operation
 {
 public:
-  ResourceTableBatchRowReorderOp(ResourceTableEditor* editor,
-                                 Array<int>& oldIndices,
-                                 Array<int>& newIndices);
+  ResourceTableBatchRowReorderOp(ResourceTableEditor* editor, Array<int>& oldIndices, Array<int>& newIndices);
   void Undo() override;
   void Redo() override;
 
@@ -132,9 +123,7 @@ class SearchableResourceTextBox : public Composite
 public:
   typedef SearchableResourceTextBox ZilchSelf;
 
-  SearchableResourceTextBox(Composite* parent,
-                            StringParam resourceType,
-                            StringParam resourceIdName);
+  SearchableResourceTextBox(Composite* parent, StringParam resourceType, StringParam resourceIdName);
 
   void UpdateTransform();
 
@@ -162,8 +151,7 @@ class WeightedTableBar : public Composite
 public:
   typedef WeightedTableBar ZilchSelf;
 
-  WeightedTableBar(Composite* parent,
-                   ResourceWeightedTableView* weightedTableView);
+  WeightedTableBar(Composite* parent, ResourceWeightedTableView* weightedTableView);
 
   void UpdateTransform() override;
 

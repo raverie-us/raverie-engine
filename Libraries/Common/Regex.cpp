@@ -55,8 +55,7 @@ bool Matches::Empty() const
 
 StringRange Matches::operator[](size_t index) const
 {
-  ErrorIf(index >= this->Size(),
-          "Attempting to access an array element out of bounds");
+  ErrorIf(index >= this->Size(), "Attempting to access an array element out of bounds");
   const std::csub_match& subMatch = mPrivate->InternalMatch[index];
   return StringRange(mString, subMatch.first, subMatch.second);
 }
@@ -71,8 +70,7 @@ StringRange Matches::Front() const
 StringRange Matches::Back() const
 {
   ErrorIf(this->Empty(), "Attempting to access an array element out of bounds");
-  const std::csub_match& subMatch =
-      mPrivate->InternalMatch[mPrivate->InternalMatch.size() - 1];
+  const std::csub_match& subMatch = mPrivate->InternalMatch[mPrivate->InternalMatch.size() - 1];
   return StringRange(mString, subMatch.first, subMatch.second);
 }
 
@@ -107,16 +105,12 @@ void Matches::Format(StringRange format, StringBuilder& builder) const
   // See notes above for optimization ideas
   std::string stdFormat(format.mBegin, format.mEnd);
   std::string result = mPrivate->InternalMatch.format(stdFormat);
-  StringRange range(
-      result.c_str(), result.c_str(), result.c_str() + result.size());
+  StringRange range(result.c_str(), result.c_str(), result.c_str() + result.size());
   builder.Append(range);
 }
 
 // Create a regular expression...
-regex CreateRegex(StringRange regexStr,
-                  RegexFlavor::Enum flavor,
-                  bool caseSensitive,
-                  bool optimizeForMatching)
+regex CreateRegex(StringRange regexStr, RegexFlavor::Enum flavor, bool caseSensitive, bool optimizeForMatching)
 {
   // Default flags
   regex::flag_type flags = reg::basic;
@@ -164,10 +158,7 @@ Regex::Regex()
   mPrivate = new RegexPrivateData();
 }
 
-Regex::Regex(StringRange regexStr,
-             RegexFlavor::Enum flavor,
-             bool caseSensitive,
-             bool optimizeForMatching)
+Regex::Regex(StringRange regexStr, RegexFlavor::Enum flavor, bool caseSensitive, bool optimizeForMatching)
 {
   // Create the private data
   mPrivate = new RegexPrivateData();
@@ -178,8 +169,7 @@ Regex::Regex(StringRange regexStr,
   try
   {
     // Create the regular expression from the given text
-    mPrivate->InternalRegex =
-        CreateRegex(regexStr, flavor, caseSensitive, optimizeForMatching);
+    mPrivate->InternalRegex = CreateRegex(regexStr, flavor, caseSensitive, optimizeForMatching);
   }
   catch (...)
   {
@@ -220,9 +210,7 @@ Regex& Regex::operator=(const Regex& source)
   return *this;
 }
 
-bool Regex::Validate(StringRange regexStr,
-                     RegexFlavor::Enum flavor,
-                     bool caseSensitive)
+bool Regex::Validate(StringRange regexStr, RegexFlavor::Enum flavor, bool caseSensitive)
 {
   try
   {
@@ -236,9 +224,7 @@ bool Regex::Validate(StringRange regexStr,
   }
 }
 
-void Regex::Search(StringRange text,
-                   Matches& matches,
-                   RegexFlags::Type flags) const
+void Regex::Search(StringRange text, Matches& matches, RegexFlags::Type flags) const
 {
   matches.Clear();
   matches.mString = text.mOriginalString;
@@ -246,31 +232,23 @@ void Regex::Search(StringRange text,
   reg::match_flag_type translatedFlags = reg::match_default;
   if (flags & RegexFlags::MatchNotNull)
     translatedFlags |= reg::match_not_null;
-  regex_search(text.mBegin,
-               text.mEnd,
-               matches.mPrivate->InternalMatch,
-               mPrivate->InternalRegex,
-               translatedFlags);
+  regex_search(text.mBegin, text.mEnd, matches.mPrivate->InternalMatch, mPrivate->InternalRegex, translatedFlags);
 }
 
 String Regex::Replace(StringRange source, StringRange replaceWith) const
 {
   // Perform the replacement and get the result back
-  string result = regex_replace(string(source.mBegin, source.mEnd),
-                                mPrivate->InternalRegex,
-                                string(replaceWith.mBegin, replaceWith.mEnd));
+  string result = regex_replace(
+      string(source.mBegin, source.mEnd), mPrivate->InternalRegex, string(replaceWith.mBegin, replaceWith.mEnd));
 
   // Return that result as our string type
   return String(result.c_str(), result.size());
 }
 
-String Regex::Escape(StringRange input,
-                     EscapeMode::Enum mode,
-                     RegexFlavor::Enum flavor)
+String Regex::Escape(StringRange input, EscapeMode::Enum mode, RegexFlavor::Enum flavor)
 {
   // Error checking
-  ErrorIf(flavor != RegexFlavor::EcmaScript,
-          "No other regex flavors have been implemented yet!");
+  ErrorIf(flavor != RegexFlavor::EcmaScript, "No other regex flavors have been implemented yet!");
 
   // A builder so we can put in escape sequences
   StringBuilder builder;
@@ -294,8 +272,7 @@ String Regex::Escape(StringRange input,
       {
         // If the current character is itself an escape, and we allow input
         // escapes...
-        if (current == '\\' && mode == EscapeMode::Extended &&
-            input.SizeInBytes() > 1)
+        if (current == '\\' && mode == EscapeMode::Extended && input.SizeInBytes() > 1)
         {
           // Get the next character
           Rune next = *(input.Begin() + 1);

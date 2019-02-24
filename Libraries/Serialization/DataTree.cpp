@@ -50,8 +50,7 @@ bool DataTreeLoader::OpenFile(Status& status, StringParam fileName)
   // First check if the file exists
   if (!FileExists(fileName))
   {
-    status.SetFailed(String::Format("File not found '%s'", fileName.c_str()),
-                     FileSystemErrors::FileNotFound);
+    status.SetFailed(String::Format("File not found '%s'", fileName.c_str()), FileSystemErrors::FileNotFound);
     return false;
   }
 
@@ -61,17 +60,14 @@ bool DataTreeLoader::OpenFile(Status& status, StringParam fileName)
   // Notify if we couldn't open the file
   if (fileRange.Empty())
   {
-    status.SetFailed(String::Format("Can not open '%s'", fileName.c_str()),
-                     FileSystemErrors::FileNotAccessible);
+    status.SetFailed(String::Format("Can not open '%s'", fileName.c_str()), FileSystemErrors::FileNotAccessible);
     return false;
   }
 
   return OpenBuffer(status, fileRange, fileName);
 }
 
-bool DataTreeLoader::OpenBuffer(Status& status,
-                                StringRange data,
-                                StringRange source)
+bool DataTreeLoader::OpenBuffer(Status& status, StringRange data, StringRange source)
 {
   Close();
 
@@ -152,9 +148,7 @@ void DataTreeLoader::EndPolymorphic()
   End((cstr) nullptr, StructureType::Object);
 }
 
-bool CheckNode(DataNode* node,
-               cstr typeName,
-               DataTreeLoader::StructType structType)
+bool CheckNode(DataNode* node, cstr typeName, DataTreeLoader::StructType structType)
 {
   // Don't allow the incorrect node type (when we expect a value node)
   if (structType == StructureType::Value)
@@ -171,9 +165,7 @@ bool CheckNode(DataNode* node,
   return true;
 }
 
-bool DataTreeLoader::InnerStart(cstr typeName,
-                                cstr fieldName,
-                                StructType structType)
+bool DataTreeLoader::InnerStart(cstr typeName, cstr fieldName, StructType structType)
 {
   // The current node that will be parent if successful
   DataNode* parent = GetCurrent();
@@ -191,8 +183,7 @@ bool DataTreeLoader::InnerStart(cstr typeName,
     if (current == NULL || current->mPropertyName != fieldName)
     {
       // No name just type mean old enum (deprecated)
-      if (current && typeName && current->mTypeName.All() == typeName &&
-          current->mPropertyName.Empty())
+      if (current && typeName && current->mTypeName.All() == typeName && current->mPropertyName.Empty())
       {
         PushChildOnStack();
         return true;
@@ -279,31 +270,24 @@ String DataTreeLoader::DebugLocation()
   if (node == NULL)
     return "No location";
 
-  return String::Format("Node '%s %s' in file '%s'",
-                        node->mTypeName.c_str(),
-                        node->mPropertyName.c_str(),
-                        mFileName.c_str());
+  return String::Format(
+      "Node '%s %s' in file '%s'", node->mTypeName.c_str(), node->mPropertyName.c_str(), mFileName.c_str());
 }
 
-PatchResolveMethod::Enum
-DataTreeLoader::ResolveInheritedData(StringRange inheritId, DataNode*& result)
+PatchResolveMethod::Enum DataTreeLoader::ResolveInheritedData(StringRange inheritId, DataNode*& result)
 {
   Error("Data inheritance was found in data file, but not loaded with "
         "appropriate loader");
   return PatchResolveMethod::Error;
 }
 
-DependencyAction::Enum DataTreeLoader::ResolveDependencies(DataNode* parent,
-                                                           DataNode* newChild,
-                                                           DataNode** toReplace,
-                                                           Status& status)
+DependencyAction::Enum
+DataTreeLoader::ResolveDependencies(DataNode* parent, DataNode* newChild, DataNode** toReplace, Status& status)
 {
   return DependencyAction::Add;
 }
 
-bool DataTreeLoader::StringField(cstr typeName,
-                                 cstr fieldName,
-                                 StringRange& stringRange)
+bool DataTreeLoader::StringField(cstr typeName, cstr fieldName, StringRange& stringRange)
 {
   if (InnerStart(typeName, fieldName, StructureType::Value))
   {
@@ -359,12 +343,8 @@ void ReadArray(DataNode* arrayNode, type* data, uint numberOfElements)
   }
 }
 
-bool DataTreeLoader::ArrayField(cstr typeName,
-                                cstr fieldName,
-                                byte* data,
-                                ArrayType arrayType,
-                                uint numberOfElements,
-                                uint sizeOftype)
+bool DataTreeLoader::ArrayField(
+    cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype)
 {
   if (InnerStart(typeName, fieldName, StructureType::BasicArray))
   {
@@ -397,16 +377,12 @@ bool DataTreeLoader::ArrayField(cstr typeName,
   return false;
 }
 
-bool DataTreeLoader::EnumField(cstr enumTypeName,
-                               cstr fieldName,
-                               uint& enumValue,
-                               BoundType* type)
+bool DataTreeLoader::EnumField(cstr enumTypeName, cstr fieldName, uint& enumValue, BoundType* type)
 {
   if (InnerStart(enumTypeName, fieldName, StructureType::Value))
   {
     DataNode* treeValue = GetCurrent();
-    Integer* foundEnumValue =
-        type->StringToEnumValue.FindPointer(treeValue->mTextValue);
+    Integer* foundEnumValue = type->StringToEnumValue.FindPointer(treeValue->mTextValue);
 
     if (foundEnumValue)
     {

@@ -358,7 +358,7 @@ bool Polygon::ContainsPoint(Vec2Param point)
   int winding = 0;
 
   // Iterate through polygon's edges
-  forRange(Edge e, GetEdges())
+  forRange (Edge e, GetEdges())
   {
     // Pull out the points
     Vec2 p0 = e.p0;
@@ -367,8 +367,7 @@ bool Polygon::ContainsPoint(Vec2Param point)
     // Test if a point is directly on the edge
     Vec2 edge = p1 - p0;
     float area = Geometry::Signed2DTriArea(p0, p1, point);
-    if (area == real(0.0) && Dot((point - p0), edge) >= real(0.0) &&
-        Dot((point - p1), edge) <= real(0.0))
+    if (area == real(0.0) && Dot((point - p0), edge) >= real(0.0) && Dot((point - p1), edge) <= real(0.0))
     {
       return false;
     }
@@ -391,13 +390,12 @@ bool Polygon::ContainsPoint(Vec2Param point)
 // Returns whether or not the given polygon overlaps with this polygon.
 ShapeSegResult::Enum Polygon::Intersects(Polygon* rhs)
 {
-  forRange(Edge e0, this->GetEdges())
+  forRange (Edge e0, this->GetEdges())
   {
-    forRange(Edge e1, rhs->GetEdges())
+    forRange (Edge e1, rhs->GetEdges())
     {
       Vec2 points[2];
-      ShapeSegResult::Enum result =
-          ShapeSegmentSegment(e0.p0, e0.p1, e1.p0, e1.p1, points);
+      ShapeSegResult::Enum result = ShapeSegmentSegment(e0.p0, e0.p1, e1.p0, e1.p1, points);
       // If any edges are intersecting,
       if (result != ShapeSegResult::None)
         return result;
@@ -409,8 +407,7 @@ ShapeSegResult::Enum Polygon::Intersects(Polygon* rhs)
 // Returns whether or not the points in the polygon are in clockwise order.
 bool Polygon::IsClockwise()
 {
-  return Geometry::DetermineWindingOrder(mData.Data(), mData.Size()) <
-         real(0.0);
+  return Geometry::DetermineWindingOrder(mData.Data(), mData.Size()) < real(0.0);
 }
 
 bool Polygon::Validate() const
@@ -457,11 +454,8 @@ bool Polygon::Validate(Array<String>& errors) const
 
       uint edgeJ[2] = {j, NextIndex(j)};
       Vec2 points[2];
-      ShapeSegResult::Enum result = ShapeSegmentSegment(mData[edgeI[0]],
-                                                        mData[edgeI[1]],
-                                                        mData[edgeJ[0]],
-                                                        mData[edgeJ[1]],
-                                                        points);
+      ShapeSegResult::Enum result =
+          ShapeSegmentSegment(mData[edgeI[0]], mData[edgeI[1]], mData[edgeJ[0]], mData[edgeJ[1]], points);
       if (result == ShapeSegResult::Point)
         errors.PushBack("Polygons cannot be self-intersecting.");
     }
@@ -474,11 +468,8 @@ bool Polygon::Validate(Array<String>& errors) const
     uint thisEdge[2] = {i, i + 1};
     uint nextEdge[2] = {i + 1, (i + 2) % pointCount};
     Vec2 points[2];
-    ShapeSegResult::Enum result = ShapeSegmentSegment(mData[thisEdge[0]],
-                                                      mData[thisEdge[1]],
-                                                      mData[nextEdge[0]],
-                                                      mData[nextEdge[1]],
-                                                      points);
+    ShapeSegResult::Enum result =
+        ShapeSegmentSegment(mData[thisEdge[0]], mData[thisEdge[1]], mData[nextEdge[0]], mData[nextEdge[1]], points);
     if (result == ShapeSegResult::Segment)
       errors.PushBack("Polygons cannot be self-intersecting.");
   }
@@ -492,12 +483,9 @@ void Polygon::DebugDraw(ByteColor color, bool windingOrder, float depth)
   DebugDraw(color, Mat4::cIdentity, windingOrder, depth);
 }
 
-void Polygon::DebugDraw(ByteColor color,
-                        Mat4Param transform,
-                        bool windingOrder,
-                        float depth)
+void Polygon::DebugDraw(ByteColor color, Mat4Param transform, bool windingOrder, float depth)
 {
-  forRange(Edge edge, GetEdges())
+  forRange (Edge edge, GetEdges())
   {
     using namespace Zero;
     Vec3 p0 = Math::ToVector3(edge.p0, depth);
@@ -508,8 +496,7 @@ void Polygon::DebugDraw(ByteColor color,
     p1 = Math::TransformPoint(transform, p1);
 
     if (windingOrder)
-      gDebugDraw->Add(
-          Debug::Line(p0, p1).OnTop(true).HeadSize(0.18f).Color(color));
+      gDebugDraw->Add(Debug::Line(p0, p1).OnTop(true).HeadSize(0.18f).Color(color));
     else
       gDebugDraw->Add(Debug::Line(p0, p1).OnTop(true).Color(color));
   }
@@ -622,8 +609,7 @@ ShapeSegResult::Enum ShapeSegmentSegment(Vec2Param segmentStartA,
     if (area3 * area4 <= cAreaEpsilon)
     {
       // If the lines are collinear.
-      if (Math::InRange(area1, -cAreaEpsilon, cAreaEpsilon) &&
-          Math::InRange(area2, -cAreaEpsilon, cAreaEpsilon))
+      if (Math::InRange(area1, -cAreaEpsilon, cAreaEpsilon) && Math::InRange(area2, -cAreaEpsilon, cAreaEpsilon))
       {
         Vec2 points[4] = {a, b, c, d};
         Vec2 lineDir = Normalized(b - a);
@@ -693,8 +679,7 @@ void TransformPolygon(Mat4Param matrix, Polygon* polygon)
   uint size = polygon->Size();
   // Transform each point
   for (uint i = 0; i < size; ++i)
-    polygon->mData[i] = Math::ToVector2(
-        Math::TransformPoint(matrix, Math::ToVector3(polygon->mData[i])));
+    polygon->mData[i] = Math::ToVector2(Math::TransformPoint(matrix, Math::ToVector3(polygon->mData[i])));
 }
 
 } // namespace Zero

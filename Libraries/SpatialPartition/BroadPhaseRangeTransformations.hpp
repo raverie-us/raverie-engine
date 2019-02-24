@@ -171,8 +171,7 @@ struct FullRangeSorter
 
   ClientDataType& Front()
   {
-    ErrorIf(mIteratorIndex >= mItems.Size(),
-            "Cannot access front on an empty range.");
+    ErrorIf(mIteratorIndex >= mItems.Size(), "Cannot access front on an empty range.");
     return mItems[mIteratorIndex].Data;
   }
 

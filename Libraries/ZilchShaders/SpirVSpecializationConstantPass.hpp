@@ -14,8 +14,7 @@ ZilchDeclareEvent(CollectSpecializationConstants, SpecializationConstantEvent);
 class SpecializationConstantEvent : public Zilch::EventData
 {
 public:
-  ZilchDeclareType(SpecializationConstantEvent,
-                   Zilch::TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpecializationConstantEvent, Zilch::TypeCopyMode::ReferenceType);
 
   SpecializationConstantEvent();
 
@@ -45,16 +44,13 @@ class SpirVSpecializationConstantPass : public BaseSpirVOptimizerPass
 {
 public:
   SpirVSpecializationConstantPass();
-  bool RunTranslationPass(ShaderTranslationPassResult& inputData,
-                          ShaderTranslationPassResult& outputData) override;
+  bool RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData) override;
 
-  void
-  GetSpecializationFlags(Array<String>& outFlags,
-                         ShaderStageInterfaceReflection& inputStageReflection,
-                         ShaderStageInterfaceReflection& outputStageReflection);
+  void GetSpecializationFlags(Array<String>& outFlags,
+                              ShaderStageInterfaceReflection& inputStageReflection,
+                              ShaderStageInterfaceReflection& outputStageReflection);
   /// Helper that filles out an array of flags for the optimizer.
-  void SetSpecializationValues(Array<String>& outFlags,
-                               HashMap<int, String>& overrides);
+  void SetSpecializationValues(Array<String>& outFlags, HashMap<int, String>& overrides);
 
   /// Should all specialization constants be frozen after setting values?
   /// Needed in-order for optimizations to bake-out constants in all further

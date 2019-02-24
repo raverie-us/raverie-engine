@@ -49,9 +49,7 @@ class SampledImageCube
 // translate
 struct ImageUserData
 {
-  ImageUserData(int optionalOperands,
-                int flags,
-                Zilch::BoundType* sampledImageType = nullptr)
+  ImageUserData(int optionalOperands, int flags, Zilch::BoundType* sampledImageType = nullptr)
   {
     mOptionalOperands = optionalOperands;
     mImageOperandFlags = flags;
@@ -167,8 +165,6 @@ void AddImageQueryLevels(Zilch::LibraryBuilder& builder,
                          Zilch::BoundType* returnType);
 
 // Add all of the relevant image intrinsics to the shader given bound type.
-void AddImageFunctions(Zilch::LibraryBuilder& builder,
-                       Zilch::BoundType* type,
-                       TypeGroups& types);
+void AddImageFunctions(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, TypeGroups& types);
 
 } // namespace Zero

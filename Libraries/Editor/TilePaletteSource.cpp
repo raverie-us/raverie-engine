@@ -52,16 +52,13 @@ IntVec2 TilePaletteSource::GetTileDimensions()
 
 ImplementResourceManager(TilePaletteSourceManager, TilePaletteSource);
 
-TilePaletteSourceManager::TilePaletteSourceManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+TilePaletteSourceManager::TilePaletteSourceManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   this->mNoFallbackNeeded = true;
   mExtension = "bin";
   mCanAddFile = true;
   mOpenFileFilters.PushBack(FileDialogFilter("Tile Palette (*.bin)", "*.bin"));
-  AddLoader("TilePaletteSource",
-            new ChunkFileLoader<TilePaletteSourceManager,
-                                TileMapSourceLoadPattern>());
+  AddLoader("TilePaletteSource", new ChunkFileLoader<TilePaletteSourceManager, TileMapSourceLoadPattern>());
   mCanCreateNew = true;
 }
 

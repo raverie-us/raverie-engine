@@ -21,8 +21,7 @@ void SetupTools(Editor* editor)
   // editor->MetaGizmos = new ToolControl(editor);
 
   // Select Tool
-  Cog* tool =
-      Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("SelectTool"));
+  Cog* tool = Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("SelectTool"));
   Tools->mSelectTool = tool->has(SelectTool);
 
   Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("TranslateTool"));
@@ -51,7 +50,7 @@ void SetupTools(Editor* editor)
   CommandManager* commands = CommandManager::GetInstance();
 
   // Add commands for all tools
-  forRange(ToolData * data, Tools->mTools.mToolArray.All())
+  forRange (ToolData* data, Tools->mTools.mToolArray.All())
   {
     commands->AddCommand(data->GetName(), new ToolSelectionCommand(), true);
   }

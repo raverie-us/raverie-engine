@@ -4,11 +4,7 @@
 namespace Zero
 {
 
-DeclareBitField4(MassOverrideStates,
-                 Active,
-                 AutoComputeCenterOfMass,
-                 AutoComputeInertia,
-                 Serialized);
+DeclareBitField4(MassOverrideStates, Active, AutoComputeCenterOfMass, AutoComputeInertia, Serialized);
 
 /// Takes a snap shot of the current mass and inertia and overrides
 /// the object's mass so it can be resized while keeping it's old mass.

@@ -47,14 +47,12 @@ public:
                                 const FunctionCallNode& functionCallNode);
 
   // Get function call signature string
-  static void GetFunctionCallSignatureString(
-      StringBuilder& builder, const FunctionCallNode& functionCallNode);
+  static void GetFunctionCallSignatureString(StringBuilder& builder, const FunctionCallNode& functionCallNode);
 
   // Test a single function against a function call (performs all overload
   // passes) Note: This will modify the function call node if it needs to add
   // implicit casts
-  static bool TestCallAndImplicitConvert(DelegateType* delegateType,
-                                         FunctionCallNode& functionCallNode);
+  static bool TestCallAndImplicitConvert(DelegateType* delegateType, FunctionCallNode& functionCallNode);
 
   // Perform a single pass of the overload detection
   // Note: If we failed the first two passes and pass the
@@ -67,8 +65,7 @@ public:
   // Generates any necessary casts for calling the function
   // This should only be called AFTER the 'AnyImplicitConversion' test has
   // passed Note: This function will modify the 'FunctionCallNode'
-  static void GenerateImplicitCasts(DelegateType* delegateType,
-                                    FunctionCallNode& functionCallNode);
+  static void GenerateImplicitCasts(DelegateType* delegateType, FunctionCallNode& functionCallNode);
 
   // Detect any ambiguities between one function signature and a list of other
   // function signatures

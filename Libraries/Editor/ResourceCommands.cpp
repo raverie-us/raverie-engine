@@ -30,12 +30,9 @@ void ExportContentPackage(Editor* editor)
 
 void BindContentCommands(Cog* configCog, CommandManager* commands)
 {
-  commands->AddCommand("ExportContentPackage",
-                       BindCommandFunction(ExportContentPackage));
-  commands->AddCommand("ImportContentPackage",
-                       BindCommandFunction(ImportContentPackage));
-  commands->AddCommand("FixArchetypeTransforms",
-                       BindCommandFunction(FixArchetypeTransforms));
+  commands->AddCommand("ExportContentPackage", BindCommandFunction(ExportContentPackage));
+  commands->AddCommand("ImportContentPackage", BindCommandFunction(ImportContentPackage));
+  commands->AddCommand("FixArchetypeTransforms", BindCommandFunction(FixArchetypeTransforms));
 }
 
 } // namespace Zero

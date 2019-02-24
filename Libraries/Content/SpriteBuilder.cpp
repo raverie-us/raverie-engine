@@ -23,8 +23,7 @@ ZilchDefineType(SpriteSourceBuilder, builder, type)
   ZilchBindGetterSetterProperty(Bottom);
 }
 
-SpriteSourceBuilder::SpriteSourceBuilder() :
-    DirectBuilderComponent(6, ".png", "SpriteSource")
+SpriteSourceBuilder::SpriteSourceBuilder() : DirectBuilderComponent(6, ".png", "SpriteSource")
 {
 }
 
@@ -144,8 +143,7 @@ void SpriteData::Serialize(Serializer& stream)
   SerializeNameDefault(OriginX, float(0));
   SerializeNameDefault(OriginY, float(0));
   SerializeNameDefault(PixelsPerUnit, float(64.0f));
-  SerializeEnumNameDefault(SpriteSampling, Sampling, SpriteSampling::Linear)
-      SerializeNameDefault(Looping, true);
+  SerializeEnumNameDefault(SpriteSampling, Sampling, SpriteSampling::Linear) SerializeNameDefault(Looping, true);
   SerializeNameDefault(Slices, Vec4(0, 0, 0, 0));
   SerializeEnumName(SpriteFill, Fill);
 }

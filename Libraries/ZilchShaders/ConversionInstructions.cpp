@@ -9,20 +9,15 @@ void ResolveOpBitcast(ZilchSpirVFrontEnd* translator,
                       Zilch::MemberAccessNode* memberAccessNode,
                       ZilchSpirVFrontEndContext* context)
 {
-  ZilchShaderIRType* resultType =
-      translator->FindType(functionCallNode->ResultType, functionCallNode);
+  ZilchShaderIRType* resultType = translator->FindType(functionCallNode->ResultType, functionCallNode);
 
-  IZilchShaderIR* operand = translator->WalkAndGetValueTypeResult(
-      functionCallNode->Arguments[0], context);
-  IZilchShaderIR* operation = translator->BuildCurrentBlockIROp(
-      OpType::OpBitcast, resultType, operand, context);
+  IZilchShaderIR* operand = translator->WalkAndGetValueTypeResult(functionCallNode->Arguments[0], context);
+  IZilchShaderIR* operation = translator->BuildCurrentBlockIROp(OpType::OpBitcast, resultType, operand, context);
   context->PushIRStack(operation);
 }
 
 template <OpType opType>
-void ResolveOpCast(ZilchSpirVFrontEnd* translator,
-                   Zilch::TypeCastNode* node,
-                   ZilchSpirVFrontEndContext* context)
+void ResolveOpCast(ZilchSpirVFrontEnd* translator, Zilch::TypeCastNode* node, ZilchSpirVFrontEndContext* context)
 {
   translator->PerformTypeCast(node, opType, context);
 }
@@ -33,18 +28,14 @@ void ResolveFromBoolCast(ZilchSpirVFrontEnd* translator,
                          IZilchShaderIR* one,
                          ZilchSpirVFrontEndContext* context)
 {
-  ZilchShaderIROp* condition =
-      translator->WalkAndGetValueTypeResult(node->Operand, context);
+  ZilchShaderIROp* condition = translator->WalkAndGetValueTypeResult(node->Operand, context);
   ZilchShaderIRType* destType = translator->FindType(node->ResultType, node);
   BasicBlock* currentBlock = context->GetCurrentBlock();
-  IZilchShaderIR* operation = translator->GenerateFromBoolCast(
-      currentBlock, condition, destType, zero, one, context);
+  IZilchShaderIR* operation = translator->GenerateFromBoolCast(currentBlock, condition, destType, zero, one, context);
   context->PushIRStack(operation);
 }
 
-void ResolveBoolToIntCast(ZilchSpirVFrontEnd* translator,
-                          Zilch::TypeCastNode* node,
-                          ZilchSpirVFrontEndContext* context)
+void ResolveBoolToIntCast(ZilchSpirVFrontEnd* translator, Zilch::TypeCastNode* node, ZilchSpirVFrontEndContext* context)
 {
   IZilchShaderIR* one = translator->GetIntegerConstant(1, context);
   IZilchShaderIR* zero = translator->GetIntegerConstant(0, context);
@@ -55,8 +46,7 @@ void ResolveBoolToRealCast(ZilchSpirVFrontEnd* translator,
                            Zilch::TypeCastNode* node,
                            ZilchSpirVFrontEndContext* context)
 {
-  ZilchShaderIRType* realType =
-      translator->FindType(ZilchTypeId(float), node, context);
+  ZilchShaderIRType* realType = translator->FindType(ZilchTypeId(float), node, context);
   IZilchShaderIR* one = translator->GetConstant(realType, 1.0f, context);
   IZilchShaderIR* zero = translator->GetConstant(realType, 0.0f, context);
   ResolveFromBoolCast(translator, node, zero, one, context);
@@ -69,17 +59,13 @@ void ResolveToBoolCast(ZilchSpirVFrontEnd* translator,
                        ZilchSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
-  ZilchShaderIROp* condition =
-      translator->WalkAndGetValueTypeResult(node->Operand, context);
+  ZilchShaderIROp* condition = translator->WalkAndGetValueTypeResult(node->Operand, context);
   ZilchShaderIRType* destType = translator->FindType(node->ResultType, node);
-  IZilchShaderIR* operation = translator->GenerateToBoolCast(
-      currentBlock, op, condition, destType, zero, context);
+  IZilchShaderIR* operation = translator->GenerateToBoolCast(currentBlock, op, condition, destType, zero, context);
   context->PushIRStack(operation);
 }
 
-void ResolveIntToBoolCast(ZilchSpirVFrontEnd* translator,
-                          Zilch::TypeCastNode* node,
-                          ZilchSpirVFrontEndContext* context)
+void ResolveIntToBoolCast(ZilchSpirVFrontEnd* translator, Zilch::TypeCastNode* node, ZilchSpirVFrontEndContext* context)
 {
   IZilchShaderIR* zero = translator->GetIntegerConstant(0, context);
   ResolveToBoolCast(translator, node, OpType::OpINotEqual, zero, context);
@@ -89,8 +75,7 @@ void ResolveRealToBoolCast(ZilchSpirVFrontEnd* translator,
                            Zilch::TypeCastNode* node,
                            ZilchSpirVFrontEndContext* context)
 {
-  ZilchShaderIRType* realType =
-      translator->FindType(ZilchTypeId(float), node, context);
+  ZilchShaderIRType* realType = translator->FindType(ZilchTypeId(float), node, context);
   IZilchShaderIR* zero = translator->GetConstant(realType, 0.0f, context);
   ResolveToBoolCast(translator, node, OpType::OpFOrdNotEqual, zero, context);
 }
@@ -99,9 +84,7 @@ void ResolveRealToBoolCast(ZilchSpirVFrontEnd* translator,
 // Instructions in the spir-v spec). Some functions aren't implemented here as
 // zilch doesn't have a corresponding function. Everything else should be
 // implemented on the ShaderIntrinsics type.
-void RegisterConversionOps(ZilchSpirVFrontEnd* translator,
-                           ZilchShaderIRLibrary* shaderLibrary,
-                           TypeGroups& types)
+void RegisterConversionOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
   OperatorResolvers& opResolvers = shaderLibrary->mOperatorResolvers;
@@ -115,20 +98,14 @@ void RegisterConversionOps(ZilchSpirVFrontEnd* translator,
     Zilch::BoundType* intType = types.mIntegerVectorTypes[i]->mZilchType;
     Zilch::BoundType* boolType = types.mBooleanVectorTypes[i]->mZilchType;
 
-    opResolvers.RegisterTypeCastOpResolver(
-        floatType, intType, ResolveOpCast<OpType::OpConvertFToS>);
-    opResolvers.RegisterTypeCastOpResolver(
-        intType, floatType, ResolveOpCast<OpType::OpConvertSToF>);
+    opResolvers.RegisterTypeCastOpResolver(floatType, intType, ResolveOpCast<OpType::OpConvertFToS>);
+    opResolvers.RegisterTypeCastOpResolver(intType, floatType, ResolveOpCast<OpType::OpConvertSToF>);
 
-    opResolvers.RegisterTypeCastOpResolver(
-        boolType, intType, ResolveBoolToIntCast);
-    opResolvers.RegisterTypeCastOpResolver(
-        intType, boolType, ResolveIntToBoolCast);
+    opResolvers.RegisterTypeCastOpResolver(boolType, intType, ResolveBoolToIntCast);
+    opResolvers.RegisterTypeCastOpResolver(intType, boolType, ResolveIntToBoolCast);
 
-    opResolvers.RegisterTypeCastOpResolver(
-        boolType, floatType, ResolveBoolToRealCast);
-    opResolvers.RegisterTypeCastOpResolver(
-        floatType, boolType, ResolveRealToBoolCast);
+    opResolvers.RegisterTypeCastOpResolver(boolType, floatType, ResolveBoolToRealCast);
+    opResolvers.RegisterTypeCastOpResolver(floatType, boolType, ResolveRealToBoolCast);
   }
 
   // Reinterpret cast is only supported between int and real (scalar) in zilch.
@@ -136,13 +113,11 @@ void RegisterConversionOps(ZilchSpirVFrontEnd* translator,
   Zilch::BoundType* intType = core.IntegerType;
   // Register the re-interpret cast functions
   TypeResolvers& realTypeResolver = shaderLibrary->mTypeResolvers[realType];
-  realTypeResolver.RegisterFunctionResolver(
-      GetStaticFunction(realType, "Reinterpret", intType->ToString()),
-      ResolveOpBitcast);
+  realTypeResolver.RegisterFunctionResolver(GetStaticFunction(realType, "Reinterpret", intType->ToString()),
+                                            ResolveOpBitcast);
   TypeResolvers& intTypeResolver = shaderLibrary->mTypeResolvers[intType];
-  intTypeResolver.RegisterFunctionResolver(
-      GetStaticFunction(intType, "Reinterpret", realType->ToString()),
-      ResolveOpBitcast);
+  intTypeResolver.RegisterFunctionResolver(GetStaticFunction(intType, "Reinterpret", realType->ToString()),
+                                           ResolveOpBitcast);
 }
 
 } // namespace Zero

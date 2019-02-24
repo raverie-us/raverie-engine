@@ -2,11 +2,11 @@
 
 #include "Precompiled.hpp"
 
-#define ReturnStatusIf(condition, string)                                      \
-  if ((condition))                                                             \
-  {                                                                            \
-    status.SetFailed((string));                                                \
-    return;                                                                    \
+#define ReturnStatusIf(condition, string)                                                                              \
+  if ((condition))                                                                                                     \
+  {                                                                                                                    \
+    status.SetFailed((string));                                                                                        \
+    return;                                                                                                            \
   }
 
 namespace Zero
@@ -23,8 +23,7 @@ namespace Zero
 //}
 
 template <typename T>
-T* GetPixelClamped(
-    T* image, int width, int height, uint numChannels, int x, int y)
+T* GetPixelClamped(T* image, int width, int height, uint numChannels, int x, int y)
 {
   x = Math::Clamp(x, 0, width - 1);
   y = Math::Clamp(y, 0, height - 1);
@@ -56,14 +55,10 @@ void ResizeImage(const byte* srcImage,
       int srcX = (int)Math::Round(u);
       float xt = u - srcX + 0.5f;
 
-      T* r00 = GetPixelClamped(
-          src, srcWidth, srcHeight, Channels, srcX - 1, srcY - 1);
-      T* r01 = GetPixelClamped(
-          src, srcWidth, srcHeight, Channels, srcX + 0, srcY - 1);
-      T* r10 = GetPixelClamped(
-          src, srcWidth, srcHeight, Channels, srcX - 1, srcY + 0);
-      T* r11 = GetPixelClamped(
-          src, srcWidth, srcHeight, Channels, srcX + 0, srcY + 0);
+      T* r00 = GetPixelClamped(src, srcWidth, srcHeight, Channels, srcX - 1, srcY - 1);
+      T* r01 = GetPixelClamped(src, srcWidth, srcHeight, Channels, srcX + 0, srcY - 1);
+      T* r10 = GetPixelClamped(src, srcWidth, srcHeight, Channels, srcX - 1, srcY + 0);
+      T* r11 = GetPixelClamped(src, srcWidth, srcHeight, Channels, srcX + 0, srcY + 0);
 
       for (uint c = 0; c < Channels; ++c)
       {
@@ -102,35 +97,14 @@ void ResizeImage(TextureFormat::Enum format,
                  uint dstHeight)
 {
   if (format == TextureFormat::RGB32f)
-    ResizeImage<float, 3>(srcImage,
-                          srcWidth,
-                          srcHeight,
-                          dstImage,
-                          dstWidth,
-                          dstHeight,
-                          FloatClamp);
+    ResizeImage<float, 3>(srcImage, srcWidth, srcHeight, dstImage, dstWidth, dstHeight, FloatClamp);
   else if (format == TextureFormat::RGBA16)
-    ResizeImage<u16, 4>(srcImage,
-                        srcWidth,
-                        srcHeight,
-                        dstImage,
-                        dstWidth,
-                        dstHeight,
-                        ShortClamp);
+    ResizeImage<u16, 4>(srcImage, srcWidth, srcHeight, dstImage, dstWidth, dstHeight, ShortClamp);
   else
-    ResizeImage<byte, 4>(srcImage,
-                         srcWidth,
-                         srcHeight,
-                         dstImage,
-                         dstWidth,
-                         dstHeight,
-                         ByteClamp);
+    ResizeImage<byte, 4>(srcImage, srcWidth, srcHeight, dstImage, dstWidth, dstHeight, ByteClamp);
 }
 
-void MipmapTexture(Array<MipHeader>& mipHeaders,
-                   Array<byte*>& imageData,
-                   TextureFormat::Enum format,
-                   bool compressed)
+void MipmapTexture(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, TextureFormat::Enum format, bool compressed)
 {
   if (mipHeaders.Size() != 1 || imageData.Size() != 1)
     return;
@@ -151,8 +125,7 @@ void MipmapTexture(Array<MipHeader>& mipHeaders,
     {
       uint newSize = newWidth * newHeight * GetPixelSize(format);
       byte* newImage = new byte[newSize];
-      ResizeImage(
-          format, imageData[0], width, height, newImage, newWidth, newHeight);
+      ResizeImage(format, imageData[0], width, height, newImage, newWidth, newHeight);
 
       delete[] imageData[0];
       imageData[0] = newImage;
@@ -209,12 +182,7 @@ public:
     mCurrentLocation = 0;
   }
 
-  void beginImage(int size,
-                  int width,
-                  int height,
-                  int depth,
-                  int face,
-                  int miplevel) override
+  void beginImage(int size, int width, int height, int depth, int face, int miplevel) override
   {
     mSize = size;
     mData = new byte[mSize];
@@ -264,11 +232,7 @@ public:
   }
 };
 
-void ToNvttSurface(nvtt::Surface& surface,
-                   uint width,
-                   uint height,
-                   TextureFormat::Enum format,
-                   const byte* image)
+void ToNvttSurface(nvtt::Surface& surface, uint width, uint height, TextureFormat::Enum format, const byte* image)
 {
   byte* convertedImage = nullptr;
 
@@ -300,19 +264,14 @@ void ToNvttSurface(nvtt::Surface& surface,
       Math::Swap(convertedImage[i], convertedImage[i + 2]);
   }
 
-  nvtt::InputFormat inputFormat = format == TextureFormat::RGB32f
-                                      ? nvtt::InputFormat_RGBA_32F
-                                      : nvtt::InputFormat_BGRA_8UB;
+  nvtt::InputFormat inputFormat =
+      format == TextureFormat::RGB32f ? nvtt::InputFormat_RGBA_32F : nvtt::InputFormat_BGRA_8UB;
   surface.setImage(inputFormat, width, height, 1, convertedImage);
 
   delete[] convertedImage;
 }
 
-void FromNvttSurface(const nvtt::Surface& surface,
-                     uint& width,
-                     uint& height,
-                     TextureFormat::Enum format,
-                     byte*& image)
+void FromNvttSurface(const nvtt::Surface& surface, uint& width, uint& height, TextureFormat::Enum format, byte*& image)
 {
   const float* srcImage = surface.data();
   width = surface.width();
@@ -336,21 +295,15 @@ void FromNvttSurface(const nvtt::Surface& surface,
   {
     for (uint i = 0; i < width * height; ++i)
     {
-      image[i * 4 + 0] = (byte)(Math::Clamp(
-          srcImage[(width * height * 0) + i] * 255.0f, 0.0f, 255.0f));
-      image[i * 4 + 1] = (byte)(Math::Clamp(
-          srcImage[(width * height * 1) + i] * 255.0f, 0.0f, 255.0f));
-      image[i * 4 + 2] = (byte)(Math::Clamp(
-          srcImage[(width * height * 2) + i] * 255.0f, 0.0f, 255.0f));
-      image[i * 4 + 3] = (byte)(Math::Clamp(
-          srcImage[(width * height * 3) + i] * 255.0f, 0.0f, 255.0f));
+      image[i * 4 + 0] = (byte)(Math::Clamp(srcImage[(width * height * 0) + i] * 255.0f, 0.0f, 255.0f));
+      image[i * 4 + 1] = (byte)(Math::Clamp(srcImage[(width * height * 1) + i] * 255.0f, 0.0f, 255.0f));
+      image[i * 4 + 2] = (byte)(Math::Clamp(srcImage[(width * height * 2) + i] * 255.0f, 0.0f, 255.0f));
+      image[i * 4 + 3] = (byte)(Math::Clamp(srcImage[(width * height * 3) + i] * 255.0f, 0.0f, 255.0f));
     }
   }
 }
 
-TextureImporter::TextureImporter(StringParam inputFile,
-                                 StringParam outputFile,
-                                 StringParam metaFile) :
+TextureImporter::TextureImporter(StringParam inputFile, StringParam outputFile, StringParam metaFile) :
     mInputFile(inputFile),
     mOutputFile(outputFile),
     mMetaFile(metaFile),
@@ -436,8 +389,7 @@ ImageProcessorCodes::Enum TextureImporter::ProcessTexture(Status& status)
   {
     mBuilder = nullptr;
     delete mImageContent;
-    status.SetFailed(
-        String::Format("Failed to load meta file '%s'", mMetaFile.c_str()));
+    status.SetFailed(String::Format("Failed to load meta file '%s'", mMetaFile.c_str()));
     return ImageProcessorCodes::Failed;
   }
 
@@ -469,13 +421,7 @@ ImageProcessorCodes::Enum TextureImporter::ProcessTexture(Status& status)
         uint newHeight = Math::Max(height / 2, 1u);
         uint newSize = newWidth * newHeight * pixelSize;
         byte* newImageData = new byte[newSize];
-        ResizeImage(mLoadFormat,
-                    mImageData[0],
-                    width,
-                    height,
-                    newImageData,
-                    newWidth,
-                    newHeight);
+        ResizeImage(mLoadFormat, mImageData[0], width, height, newImageData, newWidth, newHeight);
 
         mMipHeaders[0].mWidth = newWidth;
         mMipHeaders[0].mHeight = newHeight;
@@ -491,8 +437,7 @@ ImageProcessorCodes::Enum TextureImporter::ProcessTexture(Status& status)
   }
 
   // Convert to bytes for nvtt if image is going to be compressed
-  if (mLoadFormat == TextureFormat::RGBA16 &&
-      mBuilder->mCompression != TextureCompression::None)
+  if (mLoadFormat == TextureFormat::RGBA16 && mBuilder->mCompression != TextureCompression::None)
   {
     u16* imageData = (u16*)mImageData[0];
 
@@ -543,12 +488,9 @@ ImageProcessorCodes::Enum TextureImporter::ProcessTexture(Status& status)
       {
         byte* pixel = (byte*)(imageData + i * pixelSize);
 
-        pixel[0] = (byte)Math::Clamp(
-            Math::Pow(pixel[0] / 255.0f, 2.2f) * 255.0f, 0.0f, 255.0f);
-        pixel[1] = (byte)Math::Clamp(
-            Math::Pow(pixel[1] / 255.0f, 2.2f) * 255.0f, 0.0f, 255.0f);
-        pixel[2] = (byte)Math::Clamp(
-            Math::Pow(pixel[2] / 255.0f, 2.2f) * 255.0f, 0.0f, 255.0f);
+        pixel[0] = (byte)Math::Clamp(Math::Pow(pixel[0] / 255.0f, 2.2f) * 255.0f, 0.0f, 255.0f);
+        pixel[1] = (byte)Math::Clamp(Math::Pow(pixel[1] / 255.0f, 2.2f) * 255.0f, 0.0f, 255.0f);
+        pixel[2] = (byte)Math::Clamp(Math::Pow(pixel[2] / 255.0f, 2.2f) * 255.0f, 0.0f, 255.0f);
       }
     }
   }
@@ -577,12 +519,9 @@ ImageProcessorCodes::Enum TextureImporter::ProcessTexture(Status& status)
       {
         u16* pixel = (u16*)(imageData + i * pixelSize);
 
-        pixel[0] = (u16)Math::Clamp(
-            Math::Pow(pixel[0] / 65535.0f, 2.2f) * 65535.0f, 0.0f, 65535.0f);
-        pixel[1] = (u16)Math::Clamp(
-            Math::Pow(pixel[1] / 65535.0f, 2.2f) * 65535.0f, 0.0f, 65535.0f);
-        pixel[2] = (u16)Math::Clamp(
-            Math::Pow(pixel[2] / 65535.0f, 2.2f) * 65535.0f, 0.0f, 65535.0f);
+        pixel[0] = (u16)Math::Clamp(Math::Pow(pixel[0] / 65535.0f, 2.2f) * 65535.0f, 0.0f, 65535.0f);
+        pixel[1] = (u16)Math::Clamp(Math::Pow(pixel[1] / 65535.0f, 2.2f) * 65535.0f, 0.0f, 65535.0f);
+        pixel[2] = (u16)Math::Clamp(Math::Pow(pixel[2] / 65535.0f, 2.2f) * 65535.0f, 0.0f, 65535.0f);
       }
     }
   }
@@ -610,20 +549,16 @@ ImageProcessorCodes::Enum TextureImporter::ProcessTexture(Status& status)
 
     uint pixelSize = GetPixelSize(mLoadFormat);
     uint dataOffset = 0;
-    float dimensionScale =
-        Math::Sqrt(GetCompressionRatio(mBuilder->mCompression));
+    float dimensionScale = Math::Sqrt(GetCompressionRatio(mBuilder->mCompression));
 
     for (uint i = 0; i < mMipHeaders.Size(); ++i)
     {
       mBackupMipHeaders[i].mFace = mMipHeaders[i].mFace;
       mBackupMipHeaders[i].mLevel = mMipHeaders[i].mLevel;
-      mBackupMipHeaders[i].mWidth =
-          (uint)Math::Max(mMipHeaders[i].mWidth * dimensionScale, 1.0f);
-      mBackupMipHeaders[i].mHeight =
-          (uint)Math::Max(mMipHeaders[i].mHeight * dimensionScale, 1.0f);
+      mBackupMipHeaders[i].mWidth = (uint)Math::Max(mMipHeaders[i].mWidth * dimensionScale, 1.0f);
+      mBackupMipHeaders[i].mHeight = (uint)Math::Max(mMipHeaders[i].mHeight * dimensionScale, 1.0f);
       mBackupMipHeaders[i].mDataOffset = dataOffset;
-      mBackupMipHeaders[i].mDataSize = mBackupMipHeaders[i].mWidth *
-                                       mBackupMipHeaders[i].mHeight * pixelSize;
+      mBackupMipHeaders[i].mDataSize = mBackupMipHeaders[i].mWidth * mBackupMipHeaders[i].mHeight * pixelSize;
       dataOffset += mBackupMipHeaders[i].mDataSize;
 
       mBackupImageData[i] = new byte[mBackupMipHeaders[i].mDataSize];
@@ -676,13 +611,7 @@ ImageProcessorCodes::Enum TextureImporter::ProcessTexture(Status& status)
         uint newSize = newWidth * newHeight * GetPixelSize(mLoadFormat);
         byte* newImage = new byte[newSize];
 
-        ResizeImage(mLoadFormat,
-                    mImageData[i],
-                    width,
-                    height,
-                    newImage,
-                    newWidth,
-                    newHeight);
+        ResizeImage(mLoadFormat, mImageData[i], width, height, newImage, newWidth, newHeight);
 
         delete[] mImageData[i];
         mImageData[i] = newImage;
@@ -714,8 +643,7 @@ ImageProcessorCodes::Enum TextureImporter::ProcessTexture(Status& status)
 #if defined(PLATFORM_EMSCRIPTEN)
       bool result = true;
 #else
-      bool result =
-          context.compress(surface, 0, 0, compressionOptions, outputOptions);
+      bool result = context.compress(surface, 0, 0, compressionOptions, outputOptions);
 #endif
 
       if (!result)
@@ -737,12 +665,10 @@ ImageProcessorCodes::Enum TextureImporter::ProcessTexture(Status& status)
     }
   }
 
-  String dimensions =
-      String::Format("%d x %d", mMipHeaders[0].mWidth, mMipHeaders[0].mHeight);
+  String dimensions = String::Format("%d x %d", mMipHeaders[0].mWidth, mMipHeaders[0].mHeight);
 
   MipHeader& mipHeader = mMipHeaders.Back();
-  float dataSize =
-      (mipHeader.mDataOffset + mipHeader.mDataSize) / (1024.0f * 1024.0f);
+  float dataSize = (mipHeader.mDataOffset + mipHeader.mDataSize) / (1024.0f * 1024.0f);
   String size = String::Format("%.3f MB", dataSize);
 
   // Check for meta update
@@ -753,8 +679,8 @@ ImageProcessorCodes::Enum TextureImporter::ProcessTexture(Status& status)
     mImageContent->AddComponent(info);
   }
 
-  if (info->mFileType != fileType || info->mLoadFormat != loadFormat ||
-      info->mDimensions != dimensions || info->mSize != size)
+  if (info->mFileType != fileType || info->mLoadFormat != loadFormat || info->mDimensions != dimensions ||
+      info->mSize != size)
   {
     info->mFileType = fileType;
     info->mLoadFormat = loadFormat;
@@ -781,11 +707,7 @@ ImageProcessorCodes::Enum TextureImporter::ProcessTexture(Status& status)
 void TextureImporter::LoadImageData(Status& status, StringParam extension)
 {
   File file;
-  if (!file.Open(mInputFile.c_str(),
-                 FileMode::Read,
-                 FileAccessPattern::Sequential,
-                 FileShare::Read,
-                 &status))
+  if (!file.Open(mInputFile.c_str(), FileMode::Read, FileAccessPattern::Sequential, FileShare::Read, &status))
     return;
 
   FileStream stream(file);
@@ -814,13 +736,7 @@ void TextureImporter::LoadImageData(Status& status, StringParam extension)
   }
 #endif
 
-  LoadImage(status,
-            &stream,
-            &imageData,
-            &width,
-            &height,
-            &mLoadFormat,
-            TextureFormat::RGBA8);
+  LoadImage(status, &stream, &imageData, &width, &height, &mLoadFormat, TextureFormat::RGBA8);
   if (imageData != nullptr)
     AddImageData(imageData, width, height);
 }
@@ -828,12 +744,9 @@ void TextureImporter::LoadImageData(Status& status, StringParam extension)
 void TextureImporter::WriteTextureFile(Status& status)
 {
   File file;
-  file.Open(
-      mOutputFile.c_str(), FileMode::Write, FileAccessPattern::Sequential);
+  file.Open(mOutputFile.c_str(), FileMode::Write, FileAccessPattern::Sequential);
 
-  ReturnStatusIf(
-      !file.IsOpen(),
-      String::Format("Can not open output file '%s'", mOutputFile.c_str()));
+  ReturnStatusIf(!file.IsOpen(), String::Format("Can not open output file '%s'", mOutputFile.c_str()));
 
   TextureHeader header;
   header.mFileId = TextureFileId;
@@ -874,8 +787,7 @@ void TextureImporter::WriteTextureFile(Status& status)
 
     file.Write((byte*)&header, sizeof(TextureHeader));
 
-    file.Write((byte*)mBackupMipHeaders.Data(),
-               mBackupMipHeaders.Size() * sizeof(MipHeader));
+    file.Write((byte*)mBackupMipHeaders.Data(), mBackupMipHeaders.Size() * sizeof(MipHeader));
 
     for (size_t i = 0; i < mBackupMipHeaders.Size(); ++i)
       file.Write(mBackupImageData[i], mBackupMipHeaders[i].mDataSize);

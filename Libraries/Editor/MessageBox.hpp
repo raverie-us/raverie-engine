@@ -47,33 +47,17 @@ public:
   typedef MessageBox ZilchSelf;
 
   // Create a message box
-  static MessageBox* Show(StringParam caption,
-                          StringParam text,
-                          const cstr buttons[]);
-  static MessageBox* Show(StringParam caption,
-                          StringParam text,
-                          Array<String>& buttons);
-  static MessageBox* Show(Composite* parent,
-                          StringParam caption,
-                          StringParam text,
-                          const cstr buttons[]);
-  static MessageBox* Show(Composite* parent,
-                          StringParam caption,
-                          StringParam text,
-                          Array<String>& buttons);
+  static MessageBox* Show(StringParam caption, StringParam text, const cstr buttons[]);
+  static MessageBox* Show(StringParam caption, StringParam text, Array<String>& buttons);
+  static MessageBox* Show(Composite* parent, StringParam caption, StringParam text, const cstr buttons[]);
+  static MessageBox* Show(Composite* parent, StringParam caption, StringParam text, Array<String>& buttons);
 
   bool TakeFocusOverride() override;
 
 protected:
   // Constructor
-  MessageBox(Composite* parent,
-             StringParam caption,
-             StringParam text,
-             const cstr buttons[]);
-  MessageBox(Composite* parent,
-             StringParam caption,
-             StringParam text,
-             Array<String>& buttons);
+  MessageBox(Composite* parent, StringParam caption, StringParam text, const cstr buttons[]);
+  MessageBox(Composite* parent, StringParam caption, StringParam text, Array<String>& buttons);
 
 private:
   void OnDestroy() override;

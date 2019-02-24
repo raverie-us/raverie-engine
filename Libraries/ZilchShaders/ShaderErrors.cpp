@@ -14,8 +14,7 @@ ZilchDefineType(TranslationErrorEvent, builder, type)
 {
 }
 
-String
-TranslationErrorEvent::GetFormattedMessage(Zilch::MessageFormat::Enum format)
+String TranslationErrorEvent::GetFormattedMessage(Zilch::MessageFormat::Enum format)
 {
   return mLocation.GetFormattedStringWithMessage(format, mFullMessage);
 }
@@ -24,8 +23,7 @@ ZilchDefineType(ValidationErrorEvent, builder, type)
 {
 }
 
-String
-ValidationErrorEvent::GetFormattedMessage(Zilch::MessageFormat::Enum format)
+String ValidationErrorEvent::GetFormattedMessage(Zilch::MessageFormat::Enum format)
 {
 
   StringBuilder builder;
@@ -35,8 +33,7 @@ ValidationErrorEvent::GetFormattedMessage(Zilch::MessageFormat::Enum format)
   // Append all call stack locations to the message (to trace the error)
   for (size_t i = 0; i < mCallStack.Size(); ++i)
   {
-    builder.AppendFormat("%s:\n",
-                         mCallStack[i].GetFormattedString(format).c_str());
+    builder.AppendFormat("%s:\n", mCallStack[i].GetFormattedString(format).c_str());
   }
 
   return builder.ToString();
@@ -48,14 +45,14 @@ ShaderCompilationErrors::ShaderCompilationErrors()
   mEmitMultipleErrors = false;
 }
 
-void ShaderCompilationErrors::SendTranslationError(
-    Zilch::CodeLocation& location, StringParam message)
+void ShaderCompilationErrors::SendTranslationError(Zilch::CodeLocation& location, StringParam message)
 {
   SendTranslationError(location, message, message);
 }
 
-void ShaderCompilationErrors::SendTranslationError(
-    Zilch::CodeLocation& location, StringParam shortMsg, StringParam fullMsg)
+void ShaderCompilationErrors::SendTranslationError(Zilch::CodeLocation& location,
+                                                   StringParam shortMsg,
+                                                   StringParam fullMsg)
 {
   // Check if this is the first error being sent and if not check if we send
   // multiple errors
@@ -72,22 +69,14 @@ void ShaderCompilationErrors::SendTranslationError(
   EventSend(this, toSend.EventName, &toSend);
 }
 
-void ShaderCompilationErrors::ListenForZilchErrors(
-    Zilch::CompilationErrors& zilchErrors)
+void ShaderCompilationErrors::ListenForZilchErrors(Zilch::CompilationErrors& zilchErrors)
 {
-  EventConnect(&zilchErrors,
-               Zilch::Events::CompilationError,
-               &ShaderCompilationErrors::ForwardErrorEvent,
-               this);
+  EventConnect(&zilchErrors, Zilch::Events::CompilationError, &ShaderCompilationErrors::ForwardErrorEvent, this);
 }
 
-void ShaderCompilationErrors::ListenForTypeParsed(
-    Zilch::CompilationErrors& zilchErrors)
+void ShaderCompilationErrors::ListenForTypeParsed(Zilch::CompilationErrors& zilchErrors)
 {
-  EventConnect(&zilchErrors,
-               Zilch::Events::TypeParsed,
-               &ShaderCompilationErrors::ForwardGenericEvent,
-               this);
+  EventConnect(&zilchErrors, Zilch::Events::TypeParsed, &ShaderCompilationErrors::ForwardGenericEvent, this);
 }
 
 void ShaderCompilationErrors::ForwardErrorEvent(Zilch::ErrorEvent* e)

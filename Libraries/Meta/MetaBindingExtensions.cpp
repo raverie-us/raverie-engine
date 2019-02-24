@@ -78,7 +78,7 @@ const String cSerializationPrimitive("SerializationPrimitive");
 namespace CommonGroups
 {
 const String cAdvanced("Advanced");
-} // namespace SerializationAttributes
+} // namespace CommonGroups
 
 // Events
 namespace Events
@@ -89,11 +89,8 @@ DefineEvent(ComponentsModified);
 DefineEvent(ObjectModified);
 } // namespace Events
 
-void PropertyModifiedDefault(HandleParam object,
-                             PropertyPathParam property,
-                             AnyParam oldValue,
-                             AnyParam newValue,
-                             bool intermediateChange)
+void PropertyModifiedDefault(
+    HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, bool intermediateChange)
 {
   if (Object* zeroObject = object.Get<Object*>())
   {
@@ -130,11 +127,8 @@ void ObjectModifiedDefault(HandleParam object)
 }
 
 // Meta Operations
-void MetaOperations::NotifyPropertyModified(HandleParam object,
-                                            PropertyPathParam property,
-                                            AnyParam oldValue,
-                                            AnyParam newValue,
-                                            bool intermediateChange)
+void MetaOperations::NotifyPropertyModified(
+    HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, bool intermediateChange)
 {
   Array<Handle> instances;
 
@@ -147,22 +141,18 @@ void MetaOperations::NotifyPropertyModified(HandleParam object,
 
   // The leaf will be at the end
   Handle& leafVariant = instances.Back();
-  ReturnIf(leafVariant.IsNull(),
-           ,
-           "Instances should always be valid if in undo/redo.");
+  ReturnIf(leafVariant.IsNull(), , "Instances should always be valid if in undo/redo.");
 
   // Make sure the property path is always relative to the current object we're
   // sending an event on
   PropertyPath localPath = property;
-  forRange(Handle & localObject, instances.All())
+  forRange (Handle& localObject, instances.All())
   {
     BoundType* objectType = localObject.StoredType;
     if (MetaOperations* metaOps = objectType->HasInherited<MetaOperations>())
-      metaOps->PropertyModified(
-          localObject, localPath, oldValue, newValue, intermediateChange);
+      metaOps->PropertyModified(localObject, localPath, oldValue, newValue, intermediateChange);
     else
-      PropertyModifiedDefault(
-          localObject, localPath, oldValue, newValue, intermediateChange);
+      PropertyModifiedDefault(localObject, localPath, oldValue, newValue, intermediateChange);
 
     // The object has been modified, so notify that as well
     NotifyObjectModified(localObject, intermediateChange);
@@ -186,8 +176,7 @@ void MetaOperations::NotifyComponentsModified(HandleParam object)
   }
 }
 
-void MetaOperations::NotifyObjectModified(HandleParam object,
-                                          bool intermediateChange)
+void MetaOperations::NotifyObjectModified(HandleParam object, bool intermediateChange)
 {
   BoundType* objectType = object.StoredType;
   if (MetaOperations* metaOps = objectType->HasInherited<MetaOperations>())
@@ -206,14 +195,10 @@ Any MetaOperations::GetUndoData(HandleParam object)
   return Any();
 }
 
-void MetaOperations::PropertyModified(HandleParam object,
-                                      PropertyPathParam property,
-                                      AnyParam oldValue,
-                                      AnyParam newValue,
-                                      bool intermediateChange)
+void MetaOperations::PropertyModified(
+    HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, bool intermediateChange)
 {
-  PropertyModifiedDefault(
-      object, property, oldValue, newValue, intermediateChange);
+  PropertyModifiedDefault(object, property, oldValue, newValue, intermediateChange);
 }
 
 void MetaOperations::ComponentsModified(HandleParam object)
@@ -233,10 +218,7 @@ ZilchDefineType(PropertyEvent, builder, type)
   ZeroBindEvent(Events::PropertyModifiedIntermediate, PropertyEvent);
 }
 
-PropertyEvent::PropertyEvent(HandleParam object,
-                             PropertyPathParam property,
-                             AnyParam oldValue,
-                             AnyParam newValue) :
+PropertyEvent::PropertyEvent(HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue) :
     mObject(object),
     mProperty(property),
     mOldValue(oldValue),
@@ -260,10 +242,7 @@ void GetEventNameProperty(Call& call, ExceptionReport& report)
   call.Set<String>(Call::Return, eventName);
 }
 
-void BindEventSent(LibraryBuilder& builder,
-                   BoundType* boundType,
-                   StringParam eventName,
-                   BoundType* eventType)
+void BindEventSent(LibraryBuilder& builder, BoundType* boundType, StringParam eventName, BoundType* eventType)
 {
   ErrorIf(eventType == nullptr, "Event type must be provided");
 
@@ -409,8 +388,7 @@ Mat4 MetaTransformInstance::GetParentLocalMatrix()
 Vec3 MetaTransformInstance::ToParent(Vec3Param local)
 {
   if (mParentLocalMatrix)
-    return Math::TransformPoint(
-        mParentLocalMatrix->GetValue(mParentInstance).Get<Mat4>(), local);
+    return Math::TransformPoint(mParentLocalMatrix->GetValue(mParentInstance).Get<Mat4>(), local);
   return local;
 }
 

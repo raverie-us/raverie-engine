@@ -33,22 +33,13 @@ ZilchDefineType(SoundEmitter, builder, type)
   ZeroBindDependency(Cog);
   ZeroBindDependency(Transform);
 
-  ZilchBindGetterSetterProperty(Volume)->Add(
-      new EditorSlider(0.0f, 2.0f, 0.01f));
-  ZilchBindGetterSetterProperty(Decibels)->Add(
-      new EditorSlider(-32.0f, 6.0f, 0.1f));
-  ZilchBindGetterSetterProperty(Pitch)->Add(
-      new EditorSlider(-2.0f, 2.0f, 0.1f));
-  ZilchBindGetterSetterProperty(Semitones)->Add(
-      new EditorSlider(-24.0f, 24.0f, 0.1f));
-  ZilchBindFieldProperty(mDirectional)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(EmitAngle)
-      ->Add(new EditorSlider(0.0f, 360.0f, 1.0f))
-      ->ZeroFilterBool(mDirectional);
-  ZilchBindGetterSetterProperty(RearVolume)
-      ->Add(new EditorSlider(0.0f, 1.0f, 0.1f))
-      ->ZeroFilterBool(mDirectional);
+  ZilchBindGetterSetterProperty(Volume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
+  ZilchBindGetterSetterProperty(Decibels)->Add(new EditorSlider(-32.0f, 6.0f, 0.1f));
+  ZilchBindGetterSetterProperty(Pitch)->Add(new EditorSlider(-2.0f, 2.0f, 0.1f));
+  ZilchBindGetterSetterProperty(Semitones)->Add(new EditorSlider(-24.0f, 24.0f, 0.1f));
+  ZilchBindFieldProperty(mDirectional)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(EmitAngle)->Add(new EditorSlider(0.0f, 360.0f, 1.0f))->ZeroFilterBool(mDirectional);
+  ZilchBindGetterSetterProperty(RearVolume)->Add(new EditorSlider(0.0f, 1.0f, 0.1f))->ZeroFilterBool(mDirectional);
 
   ZilchBindGetterSetterProperty(Attenuator);
 
@@ -145,8 +136,7 @@ void SoundEmitter::Initialize(CogInitializer& initializer)
     // Add emitter to the space
     mSpace->mEmitters.PushBack(this);
     // Add a new emitter to the audio engine
-    mEmitterObject =
-        new EmitterNode("Emitter", mNodeID, mPrevPosition, Math::Vec3(0, 0, 0));
+    mEmitterObject = new EmitterNode("Emitter", mNodeID, mPrevPosition, Math::Vec3(0, 0, 0));
 
     // If directional, set directional information in audio engine
     if (mDirectional)
@@ -155,8 +145,7 @@ void SoundEmitter::Initialize(CogInitializer& initializer)
       // to anything yet
       mEmitterObject->SetDirectionalAngleThreaded(mEmitAngle, mRearVolume);
 
-      mEmitterObject->SetForwardDirectionThreaded(
-          Math::ToVector3(mTransform->GetWorldMatrix().BasisZ()));
+      mEmitterObject->SetForwardDirectionThreaded(Math::ToVector3(mTransform->GetWorldMatrix().BasisZ()));
     }
 
     // Set the emitter node as the input
@@ -179,9 +168,8 @@ void SoundEmitter::Initialize(CogInitializer& initializer)
     SetUpAttenuatorNode(mAttenuator);
 
     // Add to all existing listeners in the space
-    forRange(SoundListener & listener, mSpace->GetListeners()->All())
-        listener.GetSoundNode()
-            ->AddInputNode(mSoundNodeOutput);
+    forRange (SoundListener& listener, mSpace->GetListeners()->All())
+      listener.GetSoundNode()->AddInputNode(mSoundNodeOutput);
   }
 }
 
@@ -217,12 +205,10 @@ void SoundEmitter::DebugDraw()
         float radians = Math::DegToRad(mEmitAngle * 0.5f);
 
         Vec3 endPoint = Math::RotateVector(-axisZ * distance, axisY, radians);
-        Vec3 startPoint =
-            Math::RotateVector(-axisZ * distance, axisY, -radians);
+        Vec3 startPoint = Math::RotateVector(-axisZ * distance, axisY, -radians);
         Vec3 midPoint = pos - (axisZ * distance);
 
-        gDebugDraw->Add(Debug::Arc(pos + startPoint, midPoint, pos + endPoint)
-                            .Color(Color::Blue));
+        gDebugDraw->Add(Debug::Arc(pos + startPoint, midPoint, pos + endPoint).Color(Color::Blue));
       }
       // If not directional, draw a circle
       else
@@ -311,8 +297,7 @@ void SoundEmitter::SetPaused(bool pause)
 {
   mIsPaused = pause;
   EmitterNode* node = mEmitterObject;
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&EmitterNode::SetPausedThreaded, node, mIsPaused), node);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EmitterNode::SetPausedThreaded, node, mIsPaused), node);
 }
 
 HandleOf<SoundInstance> SoundEmitter::PlayCue(SoundCue* cue)
@@ -363,12 +348,8 @@ void SoundEmitter::SetEmitAngle(float angleInDegrees)
 {
   mEmitAngle = Math::Clamp(angleInDegrees, 1.0f, 360.0f);
   EmitterNode* node = mEmitterObject;
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&EmitterNode::SetDirectionalAngleThreaded,
-                    node,
-                    mEmitAngle,
-                    mRearVolume),
-      node);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EmitterNode::SetDirectionalAngleThreaded, node, mEmitAngle, mRearVolume),
+                           node);
 }
 
 float SoundEmitter::GetRearVolume()
@@ -380,12 +361,8 @@ void SoundEmitter::SetRearVolume(float minimumVolume)
 {
   mRearVolume = Math::Clamp(minimumVolume, 0.0f, cMaxVolumeValue);
   EmitterNode* node = mEmitterObject;
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&EmitterNode::SetDirectionalAngleThreaded,
-                    node,
-                    mEmitAngle,
-                    mRearVolume),
-      node);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EmitterNode::SetDirectionalAngleThreaded, node, mEmitAngle, mRearVolume),
+                           node);
 }
 
 SoundAttenuator* SoundEmitter::GetAttenuator()
@@ -435,18 +412,15 @@ void SoundEmitter::Update(float dt)
       velocity *= (1.0f / dt);
 
     // Update the emitter node with new data
-    Z::gSound->Mixer.AddTask(
-        CreateFunctor(
-            &EmitterNode::SetPositionThreaded, node, newPosition, velocity),
-        node);
+    Z::gSound->Mixer.AddTask(CreateFunctor(&EmitterNode::SetPositionThreaded, node, newPosition, velocity), node);
 
     // If the emitter has an attenuator, update its position
     if (mAttenuatorNode)
       mAttenuatorNode->mNode->SetPosition(newPosition);
 
     // Update SoundCue attenuation nodes with the new position
-    forRange(InstanceAttenuation & nodeStruct, mAttenuatorList.All())
-        nodeStruct.mAttenuatorNode->mNode->SetPosition(newPosition);
+    forRange (InstanceAttenuation& nodeStruct, mAttenuatorList.All())
+      nodeStruct.mAttenuatorNode->mNode->SetPosition(newPosition);
   }
 
   // If this is a directional emitter, set the forward direction
@@ -460,14 +434,12 @@ void SoundEmitter::Update(float dt)
     Vec3 y = Vec3(by.x, by.y, by.z);
     Vec3 forward = x.Cross(y);
 
-    Z::gSound->Mixer.AddTask(
-        CreateFunctor(&EmitterNode::SetForwardDirectionThreaded, node, forward),
-        node);
+    Z::gSound->Mixer.AddTask(CreateFunctor(&EmitterNode::SetForwardDirectionThreaded, node, forward), node);
   }
 
   // Check for SoundCue attenuator nodes with no input
   Array<InstanceAttenuation*> toDelete;
-  forRange(InstanceAttenuation & info, mAttenuatorList.All())
+  forRange (InstanceAttenuation& info, mAttenuatorList.All())
   {
     if (!info.mAttenuatorNode->mNode->GetHasInputs())
     {
@@ -477,15 +449,14 @@ void SoundEmitter::Update(float dt)
       toDelete.PushBack(&info);
     }
   }
-  forRange(InstanceAttenuation * info, toDelete.All())
+  forRange (InstanceAttenuation* info, toDelete.All())
   {
     mAttenuatorList.Erase(info);
     delete info;
   }
 }
 
-HandleOf<SoundInstance> SoundEmitter::PlayCueInternal(SoundCue* cue,
-                                                      bool startPaused)
+HandleOf<SoundInstance> SoundEmitter::PlayCueInternal(SoundCue* cue, bool startPaused)
 {
   if (!cue)
     return nullptr;
@@ -500,12 +471,10 @@ HandleOf<SoundInstance> SoundEmitter::PlayCueInternal(SoundCue* cue,
     // If not already stored, get a new attenuation node
     if (!attenuatorNode)
     {
-      attenuatorNode = attenuator->GetAttenuationNode("CueAttenuator",
-                                                      Z::gSound->mCounter++);
+      attenuatorNode = attenuator->GetAttenuationNode("CueAttenuator", Z::gSound->mCounter++);
       if (attenuatorNode)
       {
-        InstanceAttenuation* info =
-            new InstanceAttenuation(attenuatorNode, attenuator);
+        InstanceAttenuation* info = new InstanceAttenuation(attenuatorNode, attenuator);
         mAttenuatorList.PushBack(info);
         info->mAttenuatorNode->mNode->SetPosition(mPrevPosition);
         outputNode = info->mAttenuatorNode->mNode;
@@ -524,15 +493,14 @@ HandleOf<SoundInstance> SoundEmitter::PlayCueInternal(SoundCue* cue,
     outputNode = mSoundNodeInput;
 
   // Play the instance
-  HandleOf<SoundInstance> instance =
-      cue->PlayCue(mSpace, outputNode, startPaused);
+  HandleOf<SoundInstance> instance = cue->PlayCue(mSpace, outputNode, startPaused);
 
   return instance;
 }
 
 bool SoundEmitter::CheckAttenuatorInputs()
 {
-  forRange(InstanceAttenuation & info, mAttenuatorList.All())
+  forRange (InstanceAttenuation& info, mAttenuatorList.All())
   {
     if (info.mAttenuatorNode->mNode->GetHasInputs())
       return true;
@@ -567,8 +535,7 @@ void SoundEmitter::SetUpAttenuatorNode(SoundAttenuator* newAttenuator)
     if (mAttenuatorNode && oldAttenuator->Name != "DefaultNoAttenuation")
     {
       // Create a new attenuator node
-      mAttenuatorNode = newAttenuator->GetAttenuationNode(
-          "EmitterAttenuator", Z::gSound->mCounter++);
+      mAttenuatorNode = newAttenuator->GetAttenuationNode("EmitterAttenuator", Z::gSound->mCounter++);
 
       if (mAttenuatorNode)
       {
@@ -586,8 +553,7 @@ void SoundEmitter::SetUpAttenuatorNode(SoundAttenuator* newAttenuator)
     else
     {
       // Create a new attenuator node
-      mAttenuatorNode = newAttenuator->GetAttenuationNode(
-          "EmitterAttenuator", Z::gSound->mCounter++);
+      mAttenuatorNode = newAttenuator->GetAttenuationNode("EmitterAttenuator", Z::gSound->mCounter++);
 
       if (mAttenuatorNode)
       {
@@ -602,10 +568,9 @@ void SoundEmitter::SetUpAttenuatorNode(SoundAttenuator* newAttenuator)
   }
 }
 
-SoundAttenuatorNode*
-SoundEmitter::IsAttenuatorInList(SoundAttenuator* attenuator)
+SoundAttenuatorNode* SoundEmitter::IsAttenuatorInList(SoundAttenuator* attenuator)
 {
-  forRange(InstanceAttenuation & data, mAttenuatorList.All())
+  forRange (InstanceAttenuation& data, mAttenuatorList.All())
   {
     SoundAttenuator* check = data.mAttenuator;
     if (attenuator == check)

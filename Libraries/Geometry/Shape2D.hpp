@@ -36,13 +36,9 @@ public:
   /// Removes all contours in the shape.
   void Clear();
 
-  static bool Subtract(const Shape2D& shapeA,
-                       const Shape2D& shapeB,
-                       Array<Shape2D>* outputs);
+  static bool Subtract(const Shape2D& shapeA, const Shape2D& shapeB, Array<Shape2D>* outputs);
 
-  static bool Union(const Shape2D& shapeA,
-                    const Shape2D& shapeB,
-                    Array<Shape2D>* outputs);
+  static bool Union(const Shape2D& shapeA, const Shape2D& shapeB, Array<Shape2D>* outputs);
 
   /// Translates the shape by the given translation.
   void Translate(Vec2Param translation);
@@ -60,22 +56,12 @@ public:
   void Grow(real distance, bool beaking);
 
   /// Debug Draw.
-  void DebugDraw(ByteColor color,
-                 bool filled,
-                 bool triangleEdges = false,
-                 float depth = 0.0f);
-  void DebugDraw(ByteColor color,
-                 Mat4Param transform,
-                 bool filled,
-                 bool triangleEdges = false,
-                 float depth = 0.0f);
+  void DebugDraw(ByteColor color, bool filled, bool triangleEdges = false, float depth = 0.0f);
+  void DebugDraw(ByteColor color, Mat4Param transform, bool filled, bool triangleEdges = false, float depth = 0.0f);
 
   /// Draws the triangles of the shape.
   void DrawTriangles(ByteColor color, bool borders = false, float depth = 0.0f);
-  void DrawTriangles(ByteColor color,
-                     Mat4Param transform,
-                     bool borders = false,
-                     float depth = 0.0f);
+  void DrawTriangles(ByteColor color, Mat4Param transform, bool borders = false, float depth = 0.0f);
 
   //----------------------------------------------------------------------- Info
   /// Returns whether or not the polygon is empty.
@@ -94,9 +80,7 @@ public:
   void GetTriangleIndices(Array<uint>* indices);
 
   /// Triangulates the mesh and fills out the given array of indices.
-  void GetTriangleIndices(Array<Vec2>& vertices,
-                          Array<uint>& contours,
-                          Array<uint>* indices);
+  void GetTriangleIndices(Array<Vec2>& vertices, Array<uint>& contours, Array<uint>* indices);
 
   /// Calculates the barycenter (point average) of the shape.
   Vec2 GetBarycenter();
@@ -181,8 +165,7 @@ public:
   Array<uint> mTriangleIndices;
 };
 
-void BuildShapesFromContours(const ContourArray& contours,
-                             Array<Shape2D>* shapes);
+void BuildShapesFromContours(const ContourArray& contours, Array<Shape2D>* shapes);
 
 /// Transforms the shape by the given matrix.
 void TransformShape(Mat4Param matrix, Shape2D* shape);

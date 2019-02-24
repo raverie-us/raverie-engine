@@ -46,8 +46,7 @@ Any CogMetaOperations::GetUndoData(HandleParam object)
   return nullptr;
 }
 
-void CogMetaOperations::ObjectModified(HandleParam object,
-                                       bool intermediateChange)
+void CogMetaOperations::ObjectModified(HandleParam object, bool intermediateChange)
 {
   Cog* cog = object.Get<Cog*>(GetOptions::AssertOnNull);
   if (Space* space = cog->GetSpace())
@@ -99,8 +98,7 @@ ZilchDefineType(CogMetaDataInheritance, builder, type)
 {
 }
 
-String CogMetaDataInheritance::GetInheritId(HandleParam instance,
-                                            InheritIdContext::Enum context)
+String CogMetaDataInheritance::GetInheritId(HandleParam instance, InheritIdContext::Enum context)
 {
   ReturnIf(!instance.StoredType->IsA(ZilchTypeId(Cog)), "", "Expected Cog");
 
@@ -116,8 +114,7 @@ String CogMetaDataInheritance::GetInheritId(HandleParam instance,
   return String();
 }
 
-void CogMetaDataInheritance::SetInheritId(HandleParam instance,
-                                          StringParam inheritId)
+void CogMetaDataInheritance::SetInheritId(HandleParam instance, StringParam inheritId)
 {
   Cog* cog = instance.Get<Cog*>(GetOptions::AssertOnNull);
 
@@ -143,14 +140,12 @@ void CogMetaDataInheritance::Revert(HandleParam instance)
   cog->RevertToArchetype();
 }
 
-bool CogMetaDataInheritance::CanPropertyBeReverted(HandleParam,
-                                                   PropertyPathParam)
+bool CogMetaDataInheritance::CanPropertyBeReverted(HandleParam, PropertyPathParam)
 {
   return true;
 }
 
-void CogMetaDataInheritance::RevertProperty(HandleParam instance,
-                                            PropertyPathParam propertyPath)
+void CogMetaDataInheritance::RevertProperty(HandleParam instance, PropertyPathParam propertyPath)
 {
   MetaDataInheritance::RevertProperty(instance, propertyPath);
 
@@ -170,8 +165,7 @@ void CogMetaDataInheritance::RevertProperty(HandleParam instance,
   }
 }
 
-void CogMetaDataInheritance::RestoreRemovedChild(HandleParam parent,
-                                                 ObjectState::ChildId childId)
+void CogMetaDataInheritance::RestoreRemovedChild(HandleParam parent, ObjectState::ChildId childId)
 {
   MetaDataInheritance::RestoreRemovedChild(parent, childId);
 
@@ -191,9 +185,7 @@ void CogMetaDataInheritance::RestoreRemovedChild(HandleParam parent,
   }
 }
 
-void CogMetaDataInheritance::SetPropertyModified(HandleParam instance,
-                                                 PropertyPathParam propertyPath,
-                                                 bool state)
+void CogMetaDataInheritance::SetPropertyModified(HandleParam instance, PropertyPathParam propertyPath, bool state)
 {
   Cog* cog = instance.Get<Cog*>(GetOptions::AssertOnNull);
 
@@ -285,8 +277,7 @@ String CogMetaDisplay::GetName(HandleParam object)
   if (Archetype* archetype = cog->GetArchetype())
     return String::Format("(%s)[%d]", archetype->Name.c_str(), cog->GetId().Id);
   else
-    return String::Format(
-        "(%s)[%d]", ZilchTypeId(Cog)->Name.c_str(), cog->GetId().Id);
+    return String::Format("(%s)[%d]", ZilchTypeId(Cog)->Name.c_str(), cog->GetId().Id);
 }
 
 String CogMetaDisplay::GetDebugText(HandleParam object)
@@ -314,8 +305,7 @@ bool CogMetaSerialization::SerializeReferenceProperty(BoundType* propertyType,
   return true;
 }
 
-void CogMetaSerialization::AddCustomAttributes(HandleParam object,
-                                               TextSaver* saver)
+void CogMetaSerialization::AddCustomAttributes(HandleParam object, TextSaver* saver)
 {
   if (sSaveContextIds == false)
     return;
@@ -324,8 +314,7 @@ void CogMetaSerialization::AddCustomAttributes(HandleParam object,
 
   if (Cog* cog = object.Get<Cog*>())
   {
-    CogSavingContext* context =
-        static_cast<CogSavingContext*>(saver->GetSerializationContext());
+    CogSavingContext* context = static_cast<CogSavingContext*>(saver->GetSerializationContext());
     CogId id = cog->GetId();
 
     if (context && id != cInvalidCogId)

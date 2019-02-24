@@ -34,8 +34,7 @@ ZilchDefineType(TranslateGizmoUpdateEvent, builder, type)
   ZilchBindFieldProperty(mGizmoWorldTranslation);
 }
 
-TranslateGizmoUpdateEvent::TranslateGizmoUpdateEvent(GizmoUpdateEvent* e) :
-    GizmoUpdateEvent(e)
+TranslateGizmoUpdateEvent::TranslateGizmoUpdateEvent(GizmoUpdateEvent* e) : GizmoUpdateEvent(e)
 {
   mGizmoWorldTranslation = Vec3::cZero;
 }
@@ -45,8 +44,7 @@ ZilchDefineType(ScaleGizmoUpdateEvent, builder, type)
   ZilchBindFieldProperty(mGizmoWorldScale);
 }
 
-ScaleGizmoUpdateEvent::ScaleGizmoUpdateEvent(GizmoUpdateEvent* e) :
-    GizmoUpdateEvent(e)
+ScaleGizmoUpdateEvent::ScaleGizmoUpdateEvent(GizmoUpdateEvent* e) : GizmoUpdateEvent(e)
 {
   mGizmoWorldScale = Vec3::cZero;
 }
@@ -57,8 +55,7 @@ ZilchDefineType(RotateGizmoUpdateEvent, builder, type)
   ZilchBindFieldProperty(mGizmoWorldRotationAxis);
 }
 
-RotateGizmoUpdateEvent::RotateGizmoUpdateEvent(GizmoUpdateEvent* e) :
-    GizmoUpdateEvent(e)
+RotateGizmoUpdateEvent::RotateGizmoUpdateEvent(GizmoUpdateEvent* e) : GizmoUpdateEvent(e)
 {
   mGizmoRotation = 0.0f;
   mGizmoWorldRotationAxis = Vec3::cZero;
@@ -70,11 +67,9 @@ static const real sGizmoEpsilon = real(0.0001);
 
 float GetViewScale(Camera* camera, Vec3Param location)
 {
-  float viewDistance = Debug::GetViewDistance(
-      location, camera->GetWorldTranslation(), camera->GetWorldDirection());
+  float viewDistance = Debug::GetViewDistance(location, camera->GetWorldTranslation(), camera->GetWorldDirection());
   bool orthographic = camera->mPerspectiveMode == PerspectiveMode::Orthographic;
-  return Debug::GetViewScale(
-      viewDistance, camera->mFieldOfView, camera->mSize, orthographic);
+  return Debug::GetViewScale(viewDistance, camera->mFieldOfView, camera->mSize, orthographic);
 }
 
 int GetDragAxis(Vec3Param movement)
@@ -136,18 +131,14 @@ Vec3 GetMovementDirection(Vec3Param movement, Mat3Param bases)
 }
 
 // Input 'scaleDirection' is [-1, 1].  ie, up, down, none
-Vec3 MovementToUniformSignedLocalScale(float scaleDirection,
-                                       Vec3Param worldMovement,
-                                       QuatParam worldToLocal)
+Vec3 MovementToUniformSignedLocalScale(float scaleDirection, Vec3Param worldMovement, QuatParam worldToLocal)
 {
   Vec3 d(scaleDirection);
   return MovementToUniformSignedLocalScale(d, worldMovement, worldToLocal);
 }
 
 // Input 'scaleDirection' is [-1, 1] on each axis (x, y, z).  ie, up, down, none
-Vec3 MovementToUniformSignedLocalScale(Vec3Param scaleDirection,
-                                       Vec3Param worldMovement,
-                                       QuatParam worldToLocal)
+Vec3 MovementToUniformSignedLocalScale(Vec3Param scaleDirection, Vec3Param worldMovement, QuatParam worldToLocal)
 {
   // Movement in local orientation.
   Vec3 v = Math::Multiply(worldToLocal, worldMovement);
@@ -231,8 +222,7 @@ Vec3 GetSnappedPosition(Vec3Param currentPosition,
 
       // If 'snapOnAxis * snapDistance' is 0, then 'currentPosition[i]' will be
       // the final result. [ie, don't snap on that axis]
-      newPosition[i] =
-          Snap(currentPosition[i] + movement[i], snapOnAxis * snapDistance);
+      newPosition[i] = Snap(currentPosition[i] + movement[i], snapOnAxis * snapDistance);
     }
 
     return newPosition;
@@ -280,13 +270,11 @@ Vec3 GetSnappedScale(Vec3Param startPosition,
     Vec3 newScale;
     for (int i = 0; i < 3; ++i)
     {
-      bool snapOnAxis =
-          (Math::Abs(worldMovement[i]) > GizmoHelpers::sGizmoEpsilon);
+      bool snapOnAxis = (Math::Abs(worldMovement[i]) > GizmoHelpers::sGizmoEpsilon);
 
       // If 'snapOnAxis * snapDistance' is 0, then 'startPosition[i]' will be
       // the final result. [ie, don't snap on that axis]
-      newScale[i] =
-          Snap(startPosition[i] + worldMovement[i], snapOnAxis * snapDistance);
+      newScale[i] = Snap(startPosition[i] + worldMovement[i], snapOnAxis * snapDistance);
     }
 
     return newScale;
@@ -415,12 +403,8 @@ void SquareGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
 
   Ray ray = e->GetWorldRay();
   Intersection::IntersectionPoint point;
-  Intersection::Type result = Intersection::RayObb(ray.Start,
-                                                   ray.Direction,
-                                                   scaledCenter,
-                                                   mSize * 0.5f * viewScale,
-                                                   worldRotation,
-                                                   &point);
+  Intersection::Type result =
+      Intersection::RayObb(ray.Start, ray.Direction, scaledCenter, mSize * 0.5f * viewScale, worldRotation, &point);
 
   if (result != Intersection::None)
     e->RegisterResult(GetOwner(), point.T, mPickingPriority);
@@ -529,8 +513,7 @@ void ArrowGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
   float radius = mSelectRadius * viewScale;
 
   Intersection::IntersectionPoint point;
-  Intersection::Type result = Intersection::RayCapsule(
-      ray.Start, ray.Direction, start, end, radius, &point);
+  Intersection::Type result = Intersection::RayCapsule(ray.Start, ray.Direction, start, end, radius, &point);
 
   // All negative values of 'Intersection::Type' are considered false.
   if (result > 0)
@@ -560,15 +543,14 @@ void ArrowGizmo::OnFrameUpdate(Event*)
   bool boxHeads = mHeadType == ArrowHeadType::Cube;
 
   // lines/border
-  gDebugDraw->Add(
-      Debug::Line(worldStart, worldEnd)
-          .HeadSize(mHeadSize)
-          .Color(color)
-          .OnTop(mDrawOnTop)
-          .ViewScaled(mViewScaled)
-          .DualHeads(mDualHeads)
-          .BoxHeads(boxHeads) /*.BackShade(true)*/.Width(mLineDrawWidth)
-          .Border(true));
+  gDebugDraw->Add(Debug::Line(worldStart, worldEnd)
+                      .HeadSize(mHeadSize)
+                      .Color(color)
+                      .OnTop(mDrawOnTop)
+                      .ViewScaled(mViewScaled)
+                      .DualHeads(mDualHeads)
+                      .BoxHeads(boxHeads) /*.BackShade(true)*/.Width(mLineDrawWidth)
+                      .Border(true));
 
   // fill
   gDebugDraw->Add(Debug::Line(worldStart, worldEnd)
@@ -692,13 +674,12 @@ void RingGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
   Ray mouseRay = e->GetWorldRay();
 
   Intersection::IntersectionPoint point;
-  Intersection::Type result =
-      Intersection::RayCylinder(mouseRay.Start,
-                                mouseRay.Direction,
-                                center - axis * tubeRadius,
-                                center + axis * tubeRadius,
-                                outerSphereRadius,
-                                &point);
+  Intersection::Type result = Intersection::RayCylinder(mouseRay.Start,
+                                                        mouseRay.Direction,
+                                                        center - axis * tubeRadius,
+                                                        center + axis * tubeRadius,
+                                                        outerSphereRadius,
+                                                        &point);
 
   // All negative values of 'Intersection::Type' are considered false.
   if (result > 0)
@@ -719,8 +700,7 @@ void RingGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
       // Check to see if the intersection is within the tube radius
       // of the ring [ie, within the donut surrounding the ring gizmo].
       float distanceToEdge = Math::Abs(sphereRadius - distance);
-      bool withinEdge =
-          (distanceToEdge <= tubeRadius + GizmoHelpers::sGizmoEpsilon);
+      bool withinEdge = (distanceToEdge <= tubeRadius + GizmoHelpers::sGizmoEpsilon);
 
       dirToIntersection.AttemptNormalize();
       real angle = Dot(dirToIntersection, mouseRay.Direction);
@@ -736,8 +716,7 @@ void RingGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
 
         // Snap to plane of ring
         Plane ringPlane(axis, center);
-        Intersection::ClosestPointOnPlaneToPoint(
-            ringPlane.GetNormal(), ringPlane.GetDistance(), &mGrabPoint);
+        Intersection::ClosestPointOnPlaneToPoint(ringPlane.GetNormal(), ringPlane.GetDistance(), &mGrabPoint);
 
         // Snap to radius of ring
         Vec3 grabDir = mGrabPoint - center;
@@ -887,10 +866,8 @@ void TranslateGizmo::Initialize(CogInitializer& initializer)
 bool TranslateGizmo::GetSnapping()
 {
   // Shift key modifies the snapping flag temporarily
-  bool nonShiftModified =
-      (mSnapping && Keyboard::Instance->KeyIsUp(Keys::Shift));
-  bool tempSnappingOn =
-      (!mSnapping && Keyboard::Instance->KeyIsDown(Keys::Shift));
+  bool nonShiftModified = (mSnapping && Keyboard::Instance->KeyIsUp(Keys::Shift));
+  bool tempSnappingOn = (!mSnapping && Keyboard::Instance->KeyIsDown(Keys::Shift));
 
   return (nonShiftModified || tempSnappingOn);
 }
@@ -917,15 +894,12 @@ void TranslateGizmo::OnGizmoModified(GizmoUpdateEvent* e)
     objectToUpdate = GetOwner()->FindRoot();
 
   Transform* t = objectToUpdate->has(Transform);
-  ReturnIf(t == nullptr,
-           ,
-           "TranslateGizmo has no Transform. This should never happen.");
+  ReturnIf(t == nullptr, , "TranslateGizmo has no Transform. This should never happen.");
 
   // Pull the drag mode off the gizmo
   Cog* gizmo = e->GetGizmo();
   GizmoDrag* gizmoDrag = gizmo->has(GizmoDrag);
-  ReturnIf(
-      gizmoDrag == nullptr, , "Dragging gizmo has no GizmoDrag Component.");
+  ReturnIf(gizmoDrag == nullptr, , "Dragging gizmo has no GizmoDrag Component.");
 
   mDragMode = gizmoDrag->mDragMode;
 
@@ -933,10 +907,7 @@ void TranslateGizmo::OnGizmoModified(GizmoUpdateEvent* e)
   t->SetWorldTranslation(mStartPosition + e->mConstrainedWorldMovement);
 
   // Calculate a position that includes snapping, if applicable.
-  Vec3 newPosition = TranslateFromDrag(gizmoDrag,
-                                       mStartPosition,
-                                       e->mConstrainedWorldMovement,
-                                       t->GetWorldRotation());
+  Vec3 newPosition = TranslateFromDrag(gizmoDrag, mStartPosition, e->mConstrainedWorldMovement, t->GetWorldRotation());
 
   TranslateGizmoUpdateEvent eventToSend(e);
   eventToSend.mGizmoWorldTranslation = newPosition - mStartPosition;
@@ -952,12 +923,8 @@ Vec3 TranslateGizmo::TranslateFromDrag(GizmoDrag* gizmoDrag,
   Vec3 newPosition;
   if (GetSnapping())
   {
-    newPosition = GizmoSnapping::GetSnappedPosition(startPosition,
-                                                    movement,
-                                                    rotation,
-                                                    gizmoDrag->mDragMode,
-                                                    mSnapMode,
-                                                    mSnapDistance);
+    newPosition = GizmoSnapping::GetSnappedPosition(
+        startPosition, movement, rotation, gizmoDrag->mDragMode, mSnapMode, mSnapDistance);
   }
   else
   {
@@ -1004,10 +971,8 @@ void ScaleGizmo::Initialize(CogInitializer& initializer)
 bool ScaleGizmo::GetSnapping()
 {
   // Shift key modifies the snapping flag temporarily
-  bool nonShiftModified =
-      (mSnapping && Keyboard::Instance->KeyIsUp(Keys::Shift));
-  bool tempSnappingOn =
-      (!mSnapping && Keyboard::Instance->KeyIsDown(Keys::Shift));
+  bool nonShiftModified = (mSnapping && Keyboard::Instance->KeyIsUp(Keys::Shift));
+  bool tempSnappingOn = (!mSnapping && Keyboard::Instance->KeyIsDown(Keys::Shift));
 
   return (nonShiftModified || tempSnappingOn);
 }
@@ -1021,8 +986,7 @@ void ScaleGizmo::OnMouseDragStart(ViewportMouseEvent* e)
 {
   Viewport* viewport = e->GetViewport();
 
-  Mat3 rotation =
-      Math::ToMatrix3(viewport->GetCamera()->mTransform->GetWorldRotation());
+  Mat3 rotation = Math::ToMatrix3(viewport->GetCamera()->mTransform->GetWorldRotation());
   mEyeDirection = -rotation.BasisZ();
 }
 
@@ -1031,12 +995,10 @@ void ScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
   Cog* owner = GetOwner();
 
   Transform* t = owner->has(Transform);
-  ReturnIf(
-      t == nullptr, , "ScaleGizmo has no Transform. This should never happen.");
+  ReturnIf(t == nullptr, , "ScaleGizmo has no Transform. This should never happen.");
 
   GizmoDrag* gizmoDrag = e->GetGizmo()->has(GizmoDrag);
-  ReturnIf(
-      gizmoDrag == nullptr, , "Dragging gizmo has no GizmoDrag Component.");
+  ReturnIf(gizmoDrag == nullptr, , "Dragging gizmo has no GizmoDrag Component.");
 
   Vec3 worldMovement = e->mConstrainedWorldMovement;
 
@@ -1073,8 +1035,7 @@ void ScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
     mDirection.Set(scalingDir, scalingDir, scalingDir);
 
     Vec3 viewPlaneVector(mViewPlaneMove, mViewPlaneMove, mViewPlaneMove);
-    mScaledLocalMovement =
-        GizmoHelpers::ScaleVector(viewPlaneVector, distance, startScale);
+    mScaledLocalMovement = GizmoHelpers::ScaleVector(viewPlaneVector, distance, startScale);
   }
   else
   {
@@ -1084,18 +1045,12 @@ void ScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
     mDirection = GizmoHelpers::GetMovementDirection(worldMovement, m);
     // Scale the drag with respect to grab distance from gizmo pivot.
     Vec3 localMovement = Math::Transform(m.Inverted(), worldMovement);
-    mScaledLocalMovement =
-        GizmoHelpers::ScaleVector(localMovement, distance, startScale);
+    mScaledLocalMovement = GizmoHelpers::ScaleVector(localMovement, distance, startScale);
   }
 
   MetaTransformInstance transform = TransformMetaTransform::BuildInstance(t);
 
-  Vec3 newScale = ScaleFromDrag(GizmoBasis::Local,
-                                gizmoDrag,
-                                distance,
-                                worldMovement,
-                                startScale,
-                                transform);
+  Vec3 newScale = ScaleFromDrag(GizmoBasis::Local, gizmoDrag, distance, worldMovement, startScale, transform);
 
   ScaleGizmoUpdateEvent eventToSend(e);
   eventToSend.mGizmoWorldScale = newScale - startScale;
@@ -1144,11 +1099,9 @@ Vec3 ScaleGizmo::ScaleFromDrag(GizmoBasis::Enum basis,
       // axes. but will NOT be aligned with local xyz axes after transformation.
       // Meaning: drag-axis information is lost/destroyed by transformation.
       if (basis == GizmoBasis::World && offAxes)
-        localMovement =
-            GizmoHelpers::SingleAxisToOffAxesScale(axis, localMovement);
+        localMovement = GizmoHelpers::SingleAxisToOffAxesScale(axis, localMovement);
 
-      localMovement = GizmoHelpers::MovementToUniformSignedLocalScale(
-          mDirection[axis], localMovement, worldToLocal);
+      localMovement = GizmoHelpers::MovementToUniformSignedLocalScale(mDirection[axis], localMovement, worldToLocal);
 
       // If in local, post-process off-axis conversion after transform.
       //
@@ -1156,8 +1109,7 @@ Vec3 ScaleGizmo::ScaleFromDrag(GizmoBasis::Enum basis,
       // until after transformation.  Meaning: drag-axis information is not
       // discretely available while a local movement is in world space.
       if (basis == GizmoBasis::Local && offAxes)
-        localMovement =
-            GizmoHelpers::SingleAxisToOffAxesScale(axis, localMovement);
+        localMovement = GizmoHelpers::SingleAxisToOffAxesScale(axis, localMovement);
     }
     else // dragMode == GizmoDragMode::Plane
     {
@@ -1168,8 +1120,7 @@ Vec3 ScaleGizmo::ScaleFromDrag(GizmoBasis::Enum basis,
       // axis-aligned.
       if (basis == GizmoBasis::Local)
       {
-        localMovement = GizmoHelpers::MovementToUniformSignedLocalScale(
-            mDirection, localMovement, worldToLocal);
+        localMovement = GizmoHelpers::MovementToUniformSignedLocalScale(mDirection, localMovement, worldToLocal);
       }
       else // basis ==  GizmoBasis::World
       {
@@ -1191,8 +1142,7 @@ Vec3 ScaleGizmo::ScaleFromDrag(GizmoBasis::Enum basis,
           // movement is lost. Single axis-aligned movement will no longer be
           // axis-aligned after transformation, yet needs to remain
           // singularly/uniformly directed after transformation.
-          v = GizmoHelpers::MovementToUniformSignedLocalScale(
-              mDirection[axis], v, worldToLocal);
+          v = GizmoHelpers::MovementToUniformSignedLocalScale(mDirection[axis], v, worldToLocal);
 
           localMovement += v;
         }
@@ -1216,12 +1166,8 @@ Vec3 ScaleGizmo::ScaleFromDrag(GizmoBasis::Enum basis,
 
     // Pass in an Identity bases as the scale to be snapped is already
     // in local space.
-    newScale = GizmoSnapping::GetSnappedPosition(startScale,
-                                                 scaleDelta,
-                                                 Quat::cIdentity,
-                                                 dragMode,
-                                                 mSnapMode,
-                                                 mSnapDistance);
+    newScale =
+        GizmoSnapping::GetSnappedPosition(startScale, scaleDelta, Quat::cIdentity, dragMode, mSnapMode, mSnapDistance);
   }
 
   return newScale;
@@ -1257,10 +1203,8 @@ void RotateGizmo::Initialize(CogInitializer& initializer)
 bool RotateGizmo::GetSnapping()
 {
   // Shift key modifies the snapping flag temporarily
-  bool nonShiftModified =
-      (mSnapping && Keyboard::Instance->KeyIsUp(Keys::Shift));
-  bool tempSnappingOn =
-      (!mSnapping && Keyboard::Instance->KeyIsDown(Keys::Shift));
+  bool nonShiftModified = (mSnapping && Keyboard::Instance->KeyIsUp(Keys::Shift));
+  bool tempSnappingOn = (!mSnapping && Keyboard::Instance->KeyIsDown(Keys::Shift));
 
   return (nonShiftModified || tempSnappingOn);
 }
@@ -1278,9 +1222,7 @@ void RotateGizmo::OnMouseDragStart(ViewportMouseEvent* e)
 void RotateGizmo::OnGizmoModified(RingGizmoEvent* e)
 {
   Transform* t = GetOwner()->has(Transform);
-  ReturnIf(t == nullptr,
-           ,
-           "RotateGizmo has no Transform. This should never happen.");
+  ReturnIf(t == nullptr, , "RotateGizmo has no Transform. This should never happen.");
 
   float rotation = e->mRadiansAroundAxis;
   float delta = e->mDeltaRadiansAroundAxis;
@@ -1293,8 +1235,7 @@ void RotateGizmo::OnGizmoModified(RingGizmoEvent* e)
     float deltaSnap = Math::Abs(rotation) - Math::Abs(mPreviousSnap);
     if (deltaSnap > Math::Epsilon() || deltaSnap < -Math::Epsilon())
     {
-      delta = Math::DegToRad((rotation - mPreviousSnap < 0.0f) ? -mSnapAngle
-                                                               : mSnapAngle);
+      delta = Math::DegToRad((rotation - mPreviousSnap < 0.0f) ? -mSnapAngle : mSnapAngle);
       mPreviousSnap = rotation;
     }
     else

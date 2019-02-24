@@ -53,8 +53,7 @@ public:
   /// Configures the peer to use connection facilitation (NAT punch-through)
   /// when establishing a connection over the internet. (Requires master server
   /// subscriptions)
-  void
-  SetFacilitateInternetConnections(bool facilitateInternetConnections = true);
+  void SetFacilitateInternetConnections(bool facilitateInternetConnections = true);
   bool GetFacilitateInternetConnections() const;
 
   /// Configures the inclusive range of ports used to host this game.
@@ -75,8 +74,7 @@ public:
   /// Controls how often the internet discoverable peer sends a host record
   /// message to its master server subscriptions. (Requires master server
   /// subscriptions)
-  void
-  SetInternetHostPublishInterval(float internetHostPublishInterval = 30.0f);
+  void SetInternetHostPublishInterval(float internetHostPublishInterval = 30.0f);
   float GetInternetHostPublishInterval() const;
 
   /// Controls the lifetime of every host record stored on the master server.
@@ -85,8 +83,7 @@ public:
 
   /// Controls how many host records from the same IP address may be stored on
   /// the master server (used to prevent flood attacks).
-  void
-  SetInternetSameIpHostRecordLimit(uint internetSameIpHostRecordLimit = 64);
+  void SetInternetSameIpHostRecordLimit(uint internetSameIpHostRecordLimit = 64);
   uint GetInternetSameIpHostRecordLimit() const;
 
   /// Subscribes to the master server located at the specified IP address.
@@ -101,8 +98,7 @@ public:
   /// Returns the first equivalent host found in the given network's host list,
   /// else nullptr.
   NetHost* GetHostByIndex(Network::Enum network, uint index) const;
-  NetHost* GetHostByAddress(Network::Enum network,
-                            const IpAddress& ipAddress) const;
+  NetHost* GetHostByAddress(Network::Enum network, const IpAddress& ipAddress) const;
   NetHost* GetHostByAddress(const IpAddress& ipAddress) const;
 
   /// Adds or finds a host in the given network's host list.
@@ -141,10 +137,7 @@ public:
   /// Allowing discovery will enable new hosts to be discovered in the process
   /// of refreshing. Listen to the NetHost event interface to handle the
   /// results. Returns true if the refresh was successfully started, else false.
-  bool RefreshHostList(Network::Enum network,
-                       bool getExtraHostInfo,
-                       bool allowDiscovery,
-                       bool removeStaleHosts);
+  bool RefreshHostList(Network::Enum network, bool getExtraHostInfo, bool allowDiscovery, bool removeStaleHosts);
 
   /// Cancels all host discovery and refresh requests currently in progress (the
   /// operations will be considered unsuccessful). Listen to the NetHost event
@@ -336,8 +329,7 @@ public:
   TimeMs GetLinkCreationDuration(NetPeerId netPeerId) const;
   /// [Client/Server] Returns the direction in which the link was created (which
   /// peer initiated the connection), else TransmissionDirection::Unspecified.
-  TransmissionDirection::Enum
-  GetLinkCreationDirection(NetPeerId netPeerId) const;
+  TransmissionDirection::Enum GetLinkCreationDirection(NetPeerId netPeerId) const;
 
   /// [Client/Server] Returns the link's overall status, else
   /// LinkStatus::Unspecified.
@@ -435,9 +427,7 @@ public:
 
   /// [Server/Offline] Receives a network user add request.
   /// Returns true if successful, else false.
-  bool ReceiveUserAddRequest(NetPeerId theirNetPeerId,
-                             const IpAddress& theirIpAddress,
-                             const Message& message);
+  bool ReceiveUserAddRequest(NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, const Message& message);
   /// [Server/Offline] Handles behavior after receiving a network user add
   /// request. Returns true to accept the request, else false to deny the
   /// request.
@@ -482,13 +472,10 @@ public:
 
   /// Sends a network user remove request.
   /// Returns true if successful, else false.
-  bool SendUserRemoveRequest(NetUserId netUserId,
-                             EventBundle* ourRequestBundle);
+  bool SendUserRemoveRequest(NetUserId netUserId, EventBundle* ourRequestBundle);
   /// [Server/Offline] Receives a network user remove request.
   /// Returns true if successful, else false.
-  bool ReceiveUserRemoveRequest(NetPeerId theirNetPeerId,
-                                const IpAddress& theirIpAddress,
-                                const Message& message);
+  bool ReceiveUserRemoveRequest(NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, const Message& message);
 
   //
   // Object Interface
@@ -513,8 +500,7 @@ public:
 
   /// Removes all hosts from the specified network's host list not found in the
   /// responding hosts list.
-  void RemoveUnresponsiveHosts(Network::Enum network,
-                               const ArraySet<NetHost*>& respondingHosts);
+  void RemoveUnresponsiveHosts(Network::Enum network, const ArraySet<NetHost*>& respondingHosts);
 
   //
   // Level Replication
@@ -523,14 +509,10 @@ public:
   /// [Server] Sends a network level load started message.
   /// Tells the client to start loading the specified level in the given space.
   /// Returns true if successful, else false.
-  bool SendLevelLoadStarted(NetPeerId theirNetPeerId,
-                            Space* space,
-                            Level* level);
+  bool SendLevelLoadStarted(NetPeerId theirNetPeerId, Space* space, Level* level);
   /// [Client] Receives a network level load started message.
   /// Returns true if successful, else false.
-  bool ReceiveLevelLoadStarted(NetPeerId theirNetPeerId,
-                               const IpAddress& theirIpAddress,
-                               const Message& message);
+  bool ReceiveLevelLoadStarted(NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, const Message& message);
 
   /// [Server] Sends a network level load finished message.
   /// Tells the client that the level replication is now complete.
@@ -538,9 +520,7 @@ public:
   bool SendLevelLoadFinished(NetPeerId theirNetPeerId, Space* space);
   /// [Client] Receives a network level load finished message.
   /// Returns true if successful, else false.
-  bool ReceiveLevelLoadFinished(NetPeerId theirNetPeerId,
-                                const IpAddress& theirIpAddress,
-                                const Message& message);
+  bool ReceiveLevelLoadFinished(NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, const Message& message);
 
   /// Handles behavior when a network level is started.
   void HandleNetLevelStarted(Space* space);
@@ -554,18 +534,14 @@ public:
   bool SendGameLoadStarted(NetPeerId theirNetPeerId);
   /// [Client] Receives a network game load started message.
   /// Returns true if successful, else false.
-  bool ReceiveGameLoadStarted(NetPeerId theirNetPeerId,
-                              const IpAddress& theirIpAddress,
-                              const Message& message);
+  bool ReceiveGameLoadStarted(NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, const Message& message);
 
   /// [Server] Sends a network game load finished message.
   /// Returns true if successful, else false.
   bool SendGameLoadFinished(NetPeerId theirNetPeerId);
   /// [Client] Receives a network game load finished message.
   /// Returns true if successful, else false.
-  bool ReceiveGameLoadFinished(NetPeerId theirNetPeerId,
-                               const IpAddress& theirIpAddress,
-                               const Message& message);
+  bool ReceiveGameLoadFinished(NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, const Message& message);
 
   /// Handles behavior when a network game is started.
   void HandleNetGameStarted();
@@ -609,9 +585,7 @@ public:
   bool EmplaceNetObjectByGameSetup(Cog* cog);
   /// [Client/Server] Emplaces the invalid net object locally against the
   /// specified net space and level. Returns true if successful, else false.
-  bool EmplaceNetObjectBySpaceAndLevel(Cog* cog,
-                                       Space* space,
-                                       StringParam levelResourceIdName);
+  bool EmplaceNetObjectBySpaceAndLevel(Cog* cog, Space* space, StringParam levelResourceIdName);
 
   /// [Server] Spawns all present, invalid net objects in the family tree
   /// locally and remotely along the route. Returns true if successful, else
@@ -669,49 +643,32 @@ public:
 
   /// Serializes the net event.
   /// Returns true if successful, else false.
-  bool SerializeNetEvent(BitStreamExtended& bitStream,
-                         Event* netEvent,
-                         Cog* destination);
+  bool SerializeNetEvent(BitStreamExtended& bitStream, Event* netEvent, Cog* destination);
   /// Deserializes the net event.
   /// Returns true if successful, else false.
-  bool DeserializeNetEvent(const BitStreamExtended& bitStream,
-                           Event*& netEvent,
-                           Cog*& destination,
-                           NetPeerId netPeerId);
+  bool
+  DeserializeNetEvent(const BitStreamExtended& bitStream, Event*& netEvent, Cog*& destination, NetPeerId netPeerId);
 
   /// Handles behavior when a dispatched net event is sent.
-  void HandleNetEventSent(Event* netEvent,
-                          Cog* destination,
-                          NetPeerId netPeerId);
+  void HandleNetEventSent(Event* netEvent, Cog* destination, NetPeerId netPeerId);
   /// Handles behavior when a received net event is dispatched.
-  void HandleNetEventReceived(Event* netEvent,
-                              Cog* destination,
-                              NetPeerId netPeerId);
+  void HandleNetEventReceived(Event* netEvent, Cog* destination, NetPeerId netPeerId);
 
   /// Validates the net event.
   /// Returns true if successful, else false.
-  bool ValidateNetEvent(StringParam netEventId,
-                        Event* netEvent,
-                        TransmissionDirection::Enum direction);
+  bool ValidateNetEvent(StringParam netEventId, Event* netEvent, TransmissionDirection::Enum direction);
 
   /// [Client/Server/Offline] Dispatches the net event on the local peer.
   /// Returns true if successful, else false.
-  bool DispatchLocalInternal(StringParam netEventId,
-                             Event* netEvent,
-                             Cog* destination = nullptr);
+  bool DispatchLocalInternal(StringParam netEventId, Event* netEvent, Cog* destination = nullptr);
 
   /// [Client/Server] Dispatches the net event on the remote peer.
   /// Returns true if successful, else false.
-  bool DispatchRemoteInternal(StringParam netEventId,
-                              Event* netEvent,
-                              NetPeerId netPeerId,
-                              Cog* destination = nullptr);
+  bool DispatchRemoteInternal(StringParam netEventId, Event* netEvent, NetPeerId netPeerId, Cog* destination = nullptr);
 
   /// [Client/Server] Dispatches the net event on all remote peers.
   /// Returns true if successful, else false.
-  bool DispatchBroadcastInternal(StringParam netEventId,
-                                 Event* netEvent,
-                                 Cog* destination = nullptr);
+  bool DispatchBroadcastInternal(StringParam netEventId, Event* netEvent, Cog* destination = nullptr);
 
   //
   // Channel Type Management
@@ -720,9 +677,8 @@ public:
   /// Finds the specified net channel type or adds and configures it if it does
   /// not exist. Returns the found or added net channel type with the specified
   /// name.
-  NetChannelType*
-  GetOrAddReplicaChannelType(const String& netChannelTypeName,
-                             NetChannelConfig* netChannelConfig = nullptr);
+  NetChannelType* GetOrAddReplicaChannelType(const String& netChannelTypeName,
+                                             NetChannelConfig* netChannelConfig = nullptr);
 
   //
   // Property Type Management
@@ -731,13 +687,12 @@ public:
   /// Finds the specified net property type or adds and configures it if it does
   /// not exist. Returns the found or added net property type with the specified
   /// name.
-  NetPropertyType*
-  GetOrAddReplicaPropertyType(const String& netPropertyTypeName,
-                              NativeType* nativeType,
-                              SerializeValueFn serializeValueFn,
-                              GetValueFn getValueFn,
-                              SetValueFn setValueFn,
-                              NetPropertyConfig* netPropertyConfig = nullptr);
+  NetPropertyType* GetOrAddReplicaPropertyType(const String& netPropertyTypeName,
+                                               NativeType* nativeType,
+                                               SerializeValueFn serializeValueFn,
+                                               GetValueFn getValueFn,
+                                               SetValueFn setValueFn,
+                                               NetPropertyConfig* netPropertyConfig = nullptr);
 
   //
   // Replicator Replica Interface
@@ -746,15 +701,13 @@ public:
   /// Serializes replicas to a replica stream.
   /// Gaps may be represented as null replicas and additional data may be
   /// serialized as needed. Returns true if successful, else false.
-  bool SerializeReplicas(const ReplicaArray& replicas,
-                         ReplicaStream& replicaStream) override;
+  bool SerializeReplicas(const ReplicaArray& replicas, ReplicaStream& replicaStream) override;
   /// Deserializes replicas from a replica stream.
   /// Creates or finds replicas as necessary depending on replica info and the
   /// replica stream mode. Gaps may be represented as null replicas and
   /// additional data may be deserialized as needed. Returns true if successful,
   /// else false.
-  bool DeserializeReplicas(const ReplicaStream& replicaStream,
-                           ReplicaArray& replicas) override;
+  bool DeserializeReplicas(const ReplicaStream& replicaStream, ReplicaArray& replicas) override;
 
   /// Creates replicas using the replica stream and creation info (create
   /// context and replica type). Gaps may be represented as null replicas.
@@ -780,13 +733,12 @@ public:
 
   /// Called after a replica channel property has legitimately changed,
   /// determined using comparisons, in a particular replication phase.
-  void OnReplicaChannelPropertyChange(
-      TimeMs timestamp,
-      ReplicationPhase::Enum replicationPhase,
-      Replica* replica,
-      ReplicaChannel* replicaChannel,
-      ReplicaProperty* replicaProperty,
-      TransmissionDirection::Enum direction) override;
+  void OnReplicaChannelPropertyChange(TimeMs timestamp,
+                                      ReplicationPhase::Enum replicationPhase,
+                                      Replica* replica,
+                                      ReplicaChannel* replicaChannel,
+                                      ReplicaProperty* replicaProperty,
+                                      TransmissionDirection::Enum direction) override;
 
   //
   // Replicator Link Interface
@@ -802,17 +754,14 @@ public:
   //
 
   /// [Client] Called after sending a connect request.
-  void ClientOnConnectRequest(ReplicatorLink* link,
-                              ConnectRequestData& connectRequestData) override;
+  void ClientOnConnectRequest(ReplicatorLink* link, ConnectRequestData& connectRequestData) override;
   /// [Client] Called after receiving a connect response.
   /// If accepted, our replicator ID is set immediately before this and a
   /// connect confirmation is sent after this. If denied, our replicator ID is
   /// cleared and link is destroyed immediately after this.
-  BitStream ClientOnConnectResponse(
-      ReplicatorLink* link, ConnectResponseData& connectResponseData) override;
+  BitStream ClientOnConnectResponse(ReplicatorLink* link, ConnectResponseData& connectResponseData) override;
   /// [Client] Called after sending a connect confirmation.
-  void ClientOnConnectConfirmation(ReplicatorLink* link,
-                                   BitStream& connectConfirmationData) override;
+  void ClientOnConnectConfirmation(ReplicatorLink* link, BitStream& connectConfirmationData) override;
   /// [Client] Called after sending or receiving a disconnect notice.
   /// Our replicator ID is cleared and link is destroyed immediately after this.
   void ClientOnDisconnectNotice(ReplicatorLink* link,
@@ -822,16 +771,13 @@ public:
   /// [Server] Called after receiving a connect request.
   /// If accepted, their replicator ID is assigned immediately after this.
   /// Return true to accept the connect request, else false.
-  Pair<bool, BitStream> ServerOnConnectRequest(
-      ReplicatorLink* link, ConnectRequestData& connectRequestData) override;
+  Pair<bool, BitStream> ServerOnConnectRequest(ReplicatorLink* link, ConnectRequestData& connectRequestData) override;
   /// [Server] Called after sending a connect response.
   /// If denied, their replicator ID is released and link is destroyed
   /// immediately after this.
-  void ServerOnConnectResponse(
-      ReplicatorLink* link, ConnectResponseData& connectResponseData) override;
+  void ServerOnConnectResponse(ReplicatorLink* link, ConnectResponseData& connectResponseData) override;
   /// [Server] Called after receiving a connect confirmation.
-  void ServerOnConnectConfirmation(ReplicatorLink* link,
-                                   BitStream& connectConfirmationData) override;
+  void ServerOnConnectConfirmation(ReplicatorLink* link, BitStream& connectConfirmationData) override;
   /// [Server] Called after sending or receiving a disconnect notice.
   /// Their replicator ID is released and link is destroyed immediately after
   /// this.
@@ -867,8 +813,7 @@ public:
   /// all its subscribed master servers on a periodic interval.
   void UpdatePublishInterval(UpdateEvent* event);
 
-  bool HandlePing(IpAddress const& theirIpAddress,
-                  NetHostPingData& netHostPingData);
+  bool HandlePing(IpAddress const& theirIpAddress, NetHostPingData& netHostPingData);
 
   //
   // Master Server
@@ -882,8 +827,7 @@ public:
   void UpdateHostRecords(UpdateEvent* event);
   /// Remove a NetHostRecord by IP address from a project record map. Intended
   /// to give users control over HostRecords in the master server.
-  void RemoveNetHostRecord(Guid const& projectGuid,
-                           IpAddress const& netHostRecordIp);
+  void RemoveNetHostRecord(Guid const& projectGuid, IpAddress const& netHostRecordIp);
   /// Gets a reference to the Project's HostRecord Map. If it doesn't exist, it
   /// creates it.
   HostRecordsMap& GetProjectRecordsMap(Guid const& projectGuid);
@@ -924,99 +868,91 @@ public:
   float GetExtraHostInfoTimeout() const;
 
   // Data
-  bool mAlreadyOpening; ///< Peer is already opening? (Dirty flag to prevent
-                        ///< opening while opening.)
-  bool mAlreadyClosing; ///< Peer is already closing? (Dirty flag to prevent
-                        ///< closing while closing.)
-  bool mIsOpenOffline;  ///< Is peer open in offline mode?
-  PendingNetUserArray mPendingUserRequests; ///< [Client] Pending outgoing
-                                            ///< network user add requests.
-  NetUserSet mAddedUsers;                   ///< Added network user objects.
-  NetUserSet mOurAddedUsers; ///< Added network user objects added by our peer.
-  ArrayMap<NetPeerId, NetUserSet>
-      mTheirAddedUsers; ///< Added network user objects added by remote peers.
-  IdStore<NetUserId>
-      mNetUserIdStore; ///< [Server/Offline] Network user ID store.
-  NetPeerReceivedUserAddRequest*
-      mActiveUserAddRequest; ///< [Server/Offline] Active net user add request
-                             ///< (used temporarily during net user creation).
-  bool mIsReceivingNetGame;  ///< [Client] Is currently receiving the net game?
-  bool mPendingNetGameStarted; ///< [Client] Delayed net game started event.
-  Array<NetRequest> mPendingRequests; ///< Pending outgoing network requests.
-  bool mWaitingOnConnectResponse; ///< [Client] Currently waiting on a connect
-                                  ///< response?
-  FamilyTreeSet mFamilyTrees; ///< [Client/Server] Network object family trees.
-  IdStore<FamilyTreeId> mFamilyTreeIdStore; ///< [Client/Server] Network object
-                                            ///< family tree ID store.
-  const ReplicaStream*
-      mActiveReplicaStream; ///< [Client] Active replica stream (used
-                            ///< temporarily during net object creation).
-  const CogInitializer*
-      mActiveCogInitializer; ///< [Client] Active cog initializer, determines
-                             ///< replica stream context (used temporarily
-                             ///< during net object creation).
-  bool mLanDiscoverable; ///< Configures the server peer to be discoverable on
-                         ///< the local area network.
-  bool mInternetDiscoverable; ///< Configures the server peer to be discoverable
-                              ///< on the internet.
-  bool mFacilitateInternetConnections; ///< Configures the peer to use
-                                       ///< connection facilitation (NAT
-                                       ///< punch-through) when establishing a
-                                       ///< connection over the internet.
-  uint mHostPortRangeStart; ///< Configures the inclusive range of ports used to
-                            ///< host this game.
-  uint mHostPortRangeEnd;   ///< Configures the inclusive range of ports used to
-                            ///< host this game.
-  float mInternetHostPublishInterval; ///< Controls how often the internet
-                                      ///< discoverable peer sends a host record
-                                      ///< message to its master server
-                                      ///< subscriptions.
-  Array<IpAddress> mMasterServerSubscriptions; ///< Master servers this peer has
-                                               ///< subscribed to.
-  NetHostsMap mHostLists;                      ///< Network host lists.
-  float mPublishElapsedTime; ///< [Server] how much time has elapsed since it
-                             ///< last published a record.
-  float mInternetHostListTimeout; ///< [Client/Server] Determines the amount of
-                                  ///< time the client is willing to wait to get
-                                  ///< a host list from master server.
-  float mBasicHostInfoTimeout;    ///< [Client/Server] Determines the amount of
-                                  ///< time the client is willing to wait for.
-  float mExtraHostInfoTimeout;    ///< [Client/Server] Determines the amount of
-                                  ///< time the client will wait for extra host
-                                  ///< info from a server.
-  float mHostPingInterval;  ///< [Client/Server] The time between (potentially)
-                            ///< redundant pings from a net peer.
-  PingManager mPingManager; ///< [Client/Server/MtrSrv] Ping manager is capable
-                            ///< of sending and receiving pings.
-  uint mNextManagerId; ///< Ping managers need an id to be unique. We use this
-                       ///< to prescribe unique ids.
+  bool mAlreadyOpening;                                 ///< Peer is already opening? (Dirty flag to prevent
+                                                        ///< opening while opening.)
+  bool mAlreadyClosing;                                 ///< Peer is already closing? (Dirty flag to prevent
+                                                        ///< closing while closing.)
+  bool mIsOpenOffline;                                  ///< Is peer open in offline mode?
+  PendingNetUserArray mPendingUserRequests;             ///< [Client] Pending outgoing
+                                                        ///< network user add requests.
+  NetUserSet mAddedUsers;                               ///< Added network user objects.
+  NetUserSet mOurAddedUsers;                            ///< Added network user objects added by our peer.
+  ArrayMap<NetPeerId, NetUserSet> mTheirAddedUsers;     ///< Added network user objects added by remote peers.
+  IdStore<NetUserId> mNetUserIdStore;                   ///< [Server/Offline] Network user ID store.
+  NetPeerReceivedUserAddRequest* mActiveUserAddRequest; ///< [Server/Offline] Active net user add request
+                                                        ///< (used temporarily during net user creation).
+  bool mIsReceivingNetGame;                             ///< [Client] Is currently receiving the net game?
+  bool mPendingNetGameStarted;                          ///< [Client] Delayed net game started event.
+  Array<NetRequest> mPendingRequests;                   ///< Pending outgoing network requests.
+  bool mWaitingOnConnectResponse;                       ///< [Client] Currently waiting on a connect
+                                                        ///< response?
+  FamilyTreeSet mFamilyTrees;                           ///< [Client/Server] Network object family trees.
+  IdStore<FamilyTreeId> mFamilyTreeIdStore;             ///< [Client/Server] Network object
+                                                        ///< family tree ID store.
+  const ReplicaStream* mActiveReplicaStream;            ///< [Client] Active replica stream (used
+                                                        ///< temporarily during net object creation).
+  const CogInitializer* mActiveCogInitializer;          ///< [Client] Active cog initializer, determines
+                                                        ///< replica stream context (used temporarily
+                                                        ///< during net object creation).
+  bool mLanDiscoverable;                                ///< Configures the server peer to be discoverable on
+                                                        ///< the local area network.
+  bool mInternetDiscoverable;                           ///< Configures the server peer to be discoverable
+                                                        ///< on the internet.
+  bool mFacilitateInternetConnections;                  ///< Configures the peer to use
+                                                        ///< connection facilitation (NAT
+                                                        ///< punch-through) when establishing a
+                                                        ///< connection over the internet.
+  uint mHostPortRangeStart;                             ///< Configures the inclusive range of ports used to
+                                                        ///< host this game.
+  uint mHostPortRangeEnd;                               ///< Configures the inclusive range of ports used to
+                                                        ///< host this game.
+  float mInternetHostPublishInterval;                   ///< Controls how often the internet
+                                                        ///< discoverable peer sends a host record
+                                                        ///< message to its master server
+                                                        ///< subscriptions.
+  Array<IpAddress> mMasterServerSubscriptions;          ///< Master servers this peer has
+                                                        ///< subscribed to.
+  NetHostsMap mHostLists;                               ///< Network host lists.
+  float mPublishElapsedTime;                            ///< [Server] how much time has elapsed since it
+                                                        ///< last published a record.
+  float mInternetHostListTimeout;                       ///< [Client/Server] Determines the amount of
+                                                        ///< time the client is willing to wait to get
+                                                        ///< a host list from master server.
+  float mBasicHostInfoTimeout;                          ///< [Client/Server] Determines the amount of
+                                                        ///< time the client is willing to wait for.
+  float mExtraHostInfoTimeout;                          ///< [Client/Server] Determines the amount of
+                                                        ///< time the client will wait for extra host
+                                                        ///< info from a server.
+  float mHostPingInterval;                              ///< [Client/Server] The time between (potentially)
+                                                        ///< redundant pings from a net peer.
+  PingManager mPingManager;                             ///< [Client/Server/MtrSrv] Ping manager is capable
+                                                        ///< of sending and receiving pings.
+  uint mNextManagerId;                                  ///< Ping managers need an id to be unique. We use this
+                                                        ///< to prescribe unique ids.
 
   // Data for master server
-  float mInternetHostRecordLifetime;   ///< Controls the lifetime of every host
-                                       ///< record stored on the master server.
-  uint mInternetSameIpHostRecordLimit; ///< Controls how many host records from
-                                       ///< the same IP address may be stored on
-                                       ///< the master server (used to prevent
-                                       ///< flood attacks).
-  HashMap<String, uint>
-      mIpAddressServerCounts; ///< Keeps track of how many servers there are per
-                              ///< IP address.
-  HashMap<Guid, HostRecordsMap>
-      mProjectHostRecordMaps; ///< A map of project to guid to host record maps.
-                              ///< This is used to identify if Host records
-                              ///< exist, and quickly get references to them.
-  HostRecordsArray mHostRecords;   ///< The structure which stores all of the
-                                   ///< HostRecords pointers.
-  bool mIsOpenMasterServer;        ///< Is peer open in MasterServer mode?
-  RecieptIpMap mReceiptRecipients; ///< A Map the server uses to determine which
-                                   ///< peer links to terminate.
+  float mInternetHostRecordLifetime;                    ///< Controls the lifetime of every host
+                                                        ///< record stored on the master server.
+  uint mInternetSameIpHostRecordLimit;                  ///< Controls how many host records from
+                                                        ///< the same IP address may be stored on
+                                                        ///< the master server (used to prevent
+                                                        ///< flood attacks).
+  HashMap<String, uint> mIpAddressServerCounts;         ///< Keeps track of how many servers there are per
+                                                        ///< IP address.
+  HashMap<Guid, HostRecordsMap> mProjectHostRecordMaps; ///< A map of project to guid to host record maps.
+                                                        ///< This is used to identify if Host records
+                                                        ///< exist, and quickly get references to them.
+  HostRecordsArray mHostRecords;                        ///< The structure which stores all of the
+                                                        ///< HostRecords pointers.
+  bool mIsOpenMasterServer;                             ///< Is peer open in MasterServer mode?
+  RecieptIpMap mReceiptRecipients;                      ///< A Map the server uses to determine which
+                                                        ///< peer links to terminate.
 
   // Host discovery
-  InternetHostDiscovery
-      mInternetHostDiscovery; ///< A class which uses the net peer to discover
-                              ///< internet hosts.
-  LanHostDiscovery mLanHostDiscovery; ///< A class which uses the net peer to
-                                      ///< discover LAN hosts.
+  InternetHostDiscovery mInternetHostDiscovery; ///< A class which uses the net peer to discover
+                                                ///< internet hosts.
+  LanHostDiscovery mLanHostDiscovery;           ///< A class which uses the net peer to
+                                                ///< discover LAN hosts.
 };
 
 //                                 NetLinkData //

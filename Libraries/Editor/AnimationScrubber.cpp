@@ -35,28 +35,17 @@ public:
                     ColorTransform colorTx,
                     WidgetRect clipRect) override;
 
-  void DrawHashes(Array<StreamedVertex>& lines,
-                  ByteColor color,
-                  ScrollingGraph::range r,
-                  float hashHeight);
+  void DrawHashes(Array<StreamedVertex>& lines, ByteColor color, ScrollingGraph::range r, float hashHeight);
 
   /// Draw the vertical hash marks.
-  void DrawHashMarks(ViewBlock& viewBlock,
-                     FrameBlock& frameBlock,
-                     WidgetRect clipRect,
-                     Array<StreamedVertex>& lines);
+  void DrawHashMarks(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines);
 
   /// Draws the ghost play head line.
-  void DrawGhostPlayHead(ViewBlock& viewBlock,
-                         FrameBlock& frameBlock,
-                         WidgetRect clipRect,
-                         Array<StreamedVertex>& lines);
+  void
+  DrawGhostPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines);
 
   /// Draws the play head line and the text.
-  void DrawPlayHead(ViewBlock& viewBlock,
-                    FrameBlock& frameBlock,
-                    WidgetRect clipRect,
-                    Array<StreamedVertex>& lines);
+  void DrawPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines);
 
   /// The height of the hash marks.
   float mHashHeight;
@@ -75,8 +64,7 @@ public:
   HashMap<KeyFrameIcon*, float> mTimeOffsets;
 
   //****************************************************************************
-  KeyFrameManipulator(Mouse* mouse, AnimationScrubber* scrubber) :
-      MouseManipulation(mouse, scrubber)
+  KeyFrameManipulator(Mouse* mouse, AnimationScrubber* scrubber) : MouseManipulation(mouse, scrubber)
   {
     mScrubber = scrubber;
 
@@ -84,7 +72,7 @@ public:
 
     // Find the offset from he mouse of each selected key frame so that
     // we can apply that offset when the mouse moves
-    forRange(KeyFrameIcon * keyFrame, mScrubber->mSelection.All())
+    forRange (KeyFrameIcon* keyFrame, mScrubber->mSelection.All())
     {
       float timeOffset = keyFrame->mTime - timeAtMouse;
       mTimeOffsets.Insert(keyFrame, timeOffset);
@@ -104,11 +92,10 @@ public:
     float timeAtMouse = GetTimeAtMouse(e->GetMouse());
 
     // Move each key frame
-    forRange(KeyFrameIcon * keyFrame, mScrubber->mSelection.All())
+    forRange (KeyFrameIcon* keyFrame, mScrubber->mSelection.All())
     {
       float timeOffset = mTimeOffsets.FindValue(keyFrame, Math::cInfinite);
-      ErrorIf(timeOffset == Math::cInfinite,
-              "Selection changed while dragging.");
+      ErrorIf(timeOffset == Math::cInfinite, "Selection changed while dragging.");
 
       keyFrame->MoveTo(timeAtMouse + timeOffset);
     }
@@ -124,7 +111,7 @@ public:
   //****************************************************************************
   void OnMouseUp(MouseEvent* e) override
   {
-    forRange(KeyFrameIcon * keyFrame, mScrubber->mSelection.All())
+    forRange (KeyFrameIcon* keyFrame, mScrubber->mSelection.All())
     {
       keyFrame->FinishMove();
     }
@@ -132,8 +119,7 @@ public:
   }
 };
 
-KeyFrameIcon::KeyFrameIcon(AnimationScrubber* scrubber, float time) :
-    Composite(scrubber)
+KeyFrameIcon::KeyFrameIcon(AnimationScrubber* scrubber, float time) : Composite(scrubber)
 {
   // Create the icon
   mIcon = CreateAttached<Element>(cKeyFrameImage);
@@ -252,7 +238,7 @@ void KeyFrameIcon::Delete()
   RichAnimation* richAnimation = mScrubber->mEditorData->mRichAnimation;
 
   // Delete all key frames that we represent from the rich animation
-  forRange(KeyFrame * keyFrame, mKeyFrames.All())
+  forRange (KeyFrame* keyFrame, mKeyFrames.All())
   {
     keyFrame->Destroy();
   }
@@ -277,7 +263,7 @@ void KeyFrameIcon::MoveTo(float time)
   RichAnimation* richAnimation = mScrubber->mEditorData->mRichAnimation;
 
   // Delete all key frames that we represent from the rich animation
-  forRange(KeyFrame * keyFrame, mKeyFrames.All())
+  forRange (KeyFrame* keyFrame, mKeyFrames.All())
   {
     keyFrame->SetTime(time);
   }
@@ -310,15 +296,14 @@ void KeyFrameIcon::FinishMove()
 
   // If we're moving them to a time that already has a key frame icon,
   // just add them to that icon and destroy ourself
-  KeyFrameIcon* destinationIcon =
-      mScrubber->mKeyFrames.FindValue(time, nullptr);
+  KeyFrameIcon* destinationIcon = mScrubber->mKeyFrames.FindValue(time, nullptr);
 
   if (destinationIcon)
   {
     mScrubber->mIgnoreAnimationEvents = true;
 
     // Delete all key frames that we represent from the rich animation
-    forRange(KeyFrame * keyFrame, mKeyFrames.All())
+    forRange (KeyFrame* keyFrame, mKeyFrames.All())
     {
       // Set the time
       keyFrame->SetTime(time);
@@ -326,8 +311,7 @@ void KeyFrameIcon::FinishMove()
       // Add it to the destination icon (if it isn't ourself)
       if (destinationIcon != this)
       {
-        ErrorIf(destinationIcon->mKeyFrames.Contains(keyFrame),
-                "Key frame already added");
+        ErrorIf(destinationIcon->mKeyFrames.Contains(keyFrame), "Key frame already added");
         destinationIcon->mKeyFrames.PushBack(keyFrame);
       }
     }
@@ -397,7 +381,7 @@ KeyFrameIcon* KeyFrameIcon::Duplicate()
   mScrubber->mIgnoreAnimationEvents = true;
 
   // Duplicate and add each key frame of the rich animation
-  forRange(KeyFrame * keyFrame, mKeyFrames.All())
+  forRange (KeyFrame* keyFrame, mKeyFrames.All())
   {
     KeyFrame* duplicateKeyFrame = keyFrame->Duplicate(newTime);
     duplicate->mKeyFrames.PushBack(duplicateKeyFrame);
@@ -450,10 +434,7 @@ public:
   float mGraphStart;
 
   //****************************************************************************
-  ScrubberManipulator(Mouse* mouse,
-                      AnimationScrubber* scrubber,
-                      ScrubberMode::Type mode,
-                      float startPos = 0.0f) :
+  ScrubberManipulator(Mouse* mouse, AnimationScrubber* scrubber, ScrubberMode::Type mode, float startPos = 0.0f) :
       MouseManipulation(mouse, scrubber)
   {
     mScrubber = scrubber;
@@ -544,8 +525,7 @@ public:
   Vec2 mStart;
 
   //****************************************************************************
-  ScrubberSelection(Mouse* mouse, AnimationScrubber* scrubber) :
-      MouseManipulation(mouse, scrubber)
+  ScrubberSelection(Mouse* mouse, AnimationScrubber* scrubber) : MouseManipulation(mouse, scrubber)
   {
     mScrubber = scrubber;
     mStart = scrubber->ToLocal(mouse->GetClientPosition());
@@ -600,7 +580,7 @@ public:
       mScrubber->mSelection.Clear();
 
     // Add all overlapping key frames to the selection
-    forRange(KeyFrameIcon * keyFrame, mScrubber->mKeyFrames.AllValues())
+    forRange (KeyFrameIcon* keyFrame, mScrubber->mKeyFrames.AllValues())
     {
       WidgetRect keyFrameRect = keyFrame->GetRectInParent();
 
@@ -616,9 +596,7 @@ public:
   }
 };
 
-AnimationScrubber::AnimationScrubber(Composite* parent,
-                                     AnimationEditor* editor,
-                                     ScrollingGraph* graphData) :
+AnimationScrubber::AnimationScrubber(Composite* parent, AnimationEditor* editor, ScrollingGraph* graphData) :
     Composite(parent)
 {
   mEditor = editor;
@@ -673,8 +651,7 @@ void AnimationScrubber::SetAnimationEditorData(AnimationEditorData* editorData)
   ConnectThisTo(richAnimation, Events::KeyFrameAdded, OnKeyFrameAdded);
   ConnectThisTo(richAnimation, Events::KeyFrameModified, OnKeyFrameModified);
   ConnectThisTo(richAnimation, Events::KeyFrameDeleted, OnKeyFrameDeleted);
-  ConnectThisTo(
-      mEditorData, Events::TrackSelectionModified, OnSelectionModified);
+  ConnectThisTo(mEditorData, Events::TrackSelectionModified, OnSelectionModified);
 
   RebuildKeyFrames();
 }
@@ -703,7 +680,7 @@ void AnimationScrubber::SetPlayHead(float t, bool sendsEvent)
 void AnimationScrubber::DestroyKeyFrames()
 {
   // Destroy all key frames
-  forRange(KeyFrameIcon * keyFrame, mKeyFrames.AllValues())
+  forRange (KeyFrameIcon* keyFrame, mKeyFrames.AllValues())
   {
     keyFrame->Destroy();
   }
@@ -718,7 +695,7 @@ void AnimationScrubber::FrameSelectedKeyFrames(KeyFrameSelection& selection)
 void AnimationScrubber::Hide()
 {
   mEnabled = false;
-  forRange(KeyFrameIcon * keyFrame, mKeyFrames.AllValues())
+  forRange (KeyFrameIcon* keyFrame, mKeyFrames.AllValues())
   {
     keyFrame->Hide();
   }
@@ -727,7 +704,7 @@ void AnimationScrubber::Hide()
 void AnimationScrubber::Show()
 {
   mEnabled = true;
-  forRange(KeyFrameIcon * keyFrame, mKeyFrames.AllValues())
+  forRange (KeyFrameIcon* keyFrame, mKeyFrames.AllValues())
   {
     keyFrame->Show();
   }
@@ -741,11 +718,11 @@ void AnimationScrubber::DeleteSelectedKeys()
   // selection when we call delete
   Array<KeyFrameIcon*> keysToDestroy;
   keysToDestroy.Reserve(mSelection.Size());
-  forRange(KeyFrameIcon * key, mSelection.All())
+  forRange (KeyFrameIcon* key, mSelection.All())
   {
     keysToDestroy.PushBack(key);
   }
-  forRange(KeyFrameIcon * key, keysToDestroy.All())
+  forRange (KeyFrameIcon* key, keysToDestroy.All())
   {
     key->Delete();
   }
@@ -782,9 +759,9 @@ void AnimationScrubber::RebuildKeyFrames()
   DestroyKeyFrames();
 
   // We only want property tracks
-  forRange(TrackNode * track, mEditorData->mVisiblePropertyTracks.All())
+  forRange (TrackNode* track, mEditorData->mVisiblePropertyTracks.All())
   {
-    forRange(KeyFrame * keyFrame, track->mKeyFrames.AllValues())
+    forRange (KeyFrame* keyFrame, track->mKeyFrames.AllValues())
     {
       AddKeyFrame(keyFrame);
     }
@@ -823,7 +800,7 @@ void AnimationScrubber::OnKeyFrameModified(KeyFrameEvent* event)
 
   KeyFrame* movedKeyFrame = event->mKeyFrame;
 
-  forRange(KeyFrameIcon * keyFrameIcon, mKeyFrames.AllValues())
+  forRange (KeyFrameIcon* keyFrameIcon, mKeyFrames.AllValues())
   {
     // If this key icon Contains the moved key frame
     if (keyFrameIcon->mKeyFrames.Contains(movedKeyFrame))
@@ -836,8 +813,7 @@ void AnimationScrubber::OnKeyFrameModified(KeyFrameEvent* event)
       {
         // If there's another icon at the destination, we can move the key frame
         // to that icon instead of creating a new one
-        KeyFrameIcon* destination =
-            mKeyFrames.FindValue(destinationTime, nullptr);
+        KeyFrameIcon* destination = mKeyFrames.FindValue(destinationTime, nullptr);
 
         if (destination)
         {
@@ -845,8 +821,7 @@ void AnimationScrubber::OnKeyFrameModified(KeyFrameEvent* event)
           keyFrameIcon->mKeyFrames.EraseValueError(movedKeyFrame);
 
           // Add it to the destination icon
-          ErrorIf(destination->mKeyFrames.Contains(movedKeyFrame),
-                  "Key frame already added");
+          ErrorIf(destination->mKeyFrames.Contains(movedKeyFrame), "Key frame already added");
           destination->mKeyFrames.PushBack(movedKeyFrame);
 
           // If the icon it came from doesn't have any more key frames, delete
@@ -898,7 +873,7 @@ void AnimationScrubber::OnKeyFrameDeleted(KeyFrameEvent* event)
     return;
 
   // Remove the key frame from each key icon if it exists
-  forRange(KeyFrameIcon * keyIcon, mKeyFrames.AllValues())
+  forRange (KeyFrameIcon* keyIcon, mKeyFrames.AllValues())
   {
     if (keyIcon->AttemptRemove(event->mKeyFrame))
     {
@@ -978,8 +953,7 @@ void AnimationScrubber::OnMiddleMouseDown(MouseEvent* event)
   float localMouse = ToLocal(event->Position).x;
   float startPos = -mGraphData->Translation.x + localMouse;
 
-  new ScrubberManipulator(
-      event->GetMouse(), this, ScrubberMode::Scroll, startPos);
+  new ScrubberManipulator(event->GetMouse(), this, ScrubberMode::Scroll, startPos);
 }
 
 void AnimationScrubber::OnMouseScroll(MouseEvent* e)
@@ -1032,12 +1006,11 @@ void AnimationScrubber::UpdateTransform()
   mDrawer->SetSize(mSize);
 
   // Update the key frames
-  forRange(KeyFrameIcon * key, mKeyFrames.AllValues())
+  forRange (KeyFrameIcon* key, mKeyFrames.AllValues())
   {
     float localX = ToPixels(key->mTime);
     float size = Pixels(10);
-    key->SetTranslation(
-        SnapToPixels(Vec3(localX - (size * 0.5f), Pixels(2), 0)));
+    key->SetTranslation(SnapToPixels(Vec3(localX - (size * 0.5f), Pixels(2), 0)));
     key->SetSize(Vec2(size, size));
   }
 
@@ -1058,11 +1031,8 @@ ScrubberDrawer::ScrubberDrawer(AnimationScrubber* parent) : Widget(parent)
   mScrubber = parent;
 }
 
-void ScrubberDrawer::RenderUpdate(ViewBlock& viewBlock,
-                                  FrameBlock& frameBlock,
-                                  Mat4Param parentTx,
-                                  ColorTransform colorTx,
-                                  WidgetRect clipRect)
+void ScrubberDrawer::RenderUpdate(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -1075,8 +1045,7 @@ void ScrubberDrawer::RenderUpdate(ViewBlock& viewBlock,
     DrawPlayHead(viewBlock, frameBlock, clipRect, lines);
   }
 
-  CreateRenderData(
-      viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
+  CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
 }
 
 void ScrubberDrawer::DrawHashes(Array<StreamedVertex>& lines,
@@ -1084,7 +1053,7 @@ void ScrubberDrawer::DrawHashes(Array<StreamedVertex>& lines,
                                 ScrollingGraph::range r,
                                 float hashHeight)
 {
-  forRange(ScrollingGraph::HashMark entry, r)
+  forRange (ScrollingGraph::HashMark entry, r)
   {
     if (entry.Position < 0.0f)
       continue;
@@ -1092,10 +1061,8 @@ void ScrubberDrawer::DrawHashes(Array<StreamedVertex>& lines,
     Vec3 end = start + Vec3(0, hashHeight, 0);
 
     // Draw the line
-    lines.PushBack(
-        StreamedVertex(SnapToPixels(start), Vec2(0, 0), ToFloatColor(color)));
-    lines.PushBack(
-        StreamedVertex(SnapToPixels(end), Vec2(0, 0), ToFloatColor(color)));
+    lines.PushBack(StreamedVertex(SnapToPixels(start), Vec2(0, 0), ToFloatColor(color)));
+    lines.PushBack(StreamedVertex(SnapToPixels(end), Vec2(0, 0), ToFloatColor(color)));
   }
 }
 
@@ -1111,22 +1078,13 @@ void ScrubberDrawer::DrawHashMarks(ViewBlock& viewBlock,
   lines.PushBack(StreamedVertex(Vec3(0, 0, 0), Vec2(0, 0), color));
   lines.PushBack(StreamedVertex(Vec3(mSize.x, 0, 0), Vec2(0, 0), color));
 
-  DrawHashes(lines,
-             AnimationConstants::cHashColor,
-             graphData.GetWidthHashes(mSize.x),
-             mHashHeight);
-  DrawHashes(lines,
-             AnimationConstants::cHashColor,
-             graphData.GetWidthHashes(mSize.x, true),
-             mHashHeight * 0.5f);
+  DrawHashes(lines, AnimationConstants::cHashColor, graphData.GetWidthHashes(mSize.x), mHashHeight);
+  DrawHashes(lines, AnimationConstants::cHashColor, graphData.GetWidthHashes(mSize.x, true), mHashHeight * 0.5f);
 
-  ViewNode& viewNode =
-      AddRenderNodes(viewBlock, frameBlock, clipRect, mFont->mTexture);
-  FontProcessor fontProcessor(frameBlock.mRenderQueues,
-                              &viewNode,
-                              ToFloatColor(AnimationConstants::cHashColor));
+  ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, mFont->mTexture);
+  FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNode, ToFloatColor(AnimationConstants::cHashColor));
 
-  forRange(ScrollingGraph::HashMark entry, graphData.GetWidthHashes(mSize.x))
+  forRange (ScrollingGraph::HashMark entry, graphData.GetWidthHashes(mSize.x))
   {
     if (entry.Position < 0.0f)
       continue;
@@ -1134,13 +1092,7 @@ void ScrubberDrawer::DrawHashMarks(ViewBlock& viewBlock,
     String label = entry.Label;
     Vec2 textSize = mFont->MeasureText(label, 1.0f);
     Vec2 labelPos = start + Vec2(-textSize.x * 0.5f, mHashHeight * 1.35f);
-    ProcessTextRange(fontProcessor,
-                     mFont,
-                     label,
-                     labelPos,
-                     TextAlign::Left,
-                     Vec2(1, 1),
-                     textSize);
+    ProcessTextRange(fontProcessor, mFont, label, labelPos, TextAlign::Left, Vec2(1, 1), textSize);
   }
 }
 
@@ -1155,10 +1107,8 @@ void ScrubberDrawer::DrawGhostPlayHead(ViewBlock& viewBlock,
   float localX = mScrubber->ToPixels(mScrubber->mGhostPlayHead);
 
   Vec4 color = AnimScrubberUi::GhostPlayHeadColor;
-  lines.PushBack(
-      StreamedVertex(SnapToPixels(Vec3(localX, 0, 0)), Vec2(0, 0), color));
-  lines.PushBack(StreamedVertex(
-      SnapToPixels(Vec3(localX, mScrubber->mSize.y, 0)), Vec2(0, 0), color));
+  lines.PushBack(StreamedVertex(SnapToPixels(Vec3(localX, 0, 0)), Vec2(0, 0), color));
+  lines.PushBack(StreamedVertex(SnapToPixels(Vec3(localX, mScrubber->mSize.y, 0)), Vec2(0, 0), color));
 }
 
 void ScrubberDrawer::DrawPlayHead(ViewBlock& viewBlock,
@@ -1170,10 +1120,8 @@ void ScrubberDrawer::DrawPlayHead(ViewBlock& viewBlock,
   float localX = mScrubber->ToPixels(playHead);
 
   Vec4 color = AnimScrubberUi::PlayHeadColor;
-  lines.PushBack(
-      StreamedVertex(SnapToPixels(Vec3(localX, 0, 0)), Vec2(0, 0), color));
-  lines.PushBack(StreamedVertex(
-      SnapToPixels(Vec3(localX, mHashHeight * 2.15f, 0)), Vec2(0, 0), color));
+  lines.PushBack(StreamedVertex(SnapToPixels(Vec3(localX, 0, 0)), Vec2(0, 0), color));
+  lines.PushBack(StreamedVertex(SnapToPixels(Vec3(localX, mHashHeight * 2.15f, 0)), Vec2(0, 0), color));
 
   AnimationSettings* settings = mScrubber->mEditor->GetSettings();
   ScrollingGraph& graphData = *mScrubber->mGraphData;
@@ -1194,8 +1142,7 @@ void ScrubberDrawer::DrawPlayHead(ViewBlock& viewBlock,
     const float cSecondsPerHour = cSecondsPerMinute * 60.0f;
 
     // 'playHead' is in seconds
-    uint milliseconds =
-        (uint)((playHead - Math::Truncate(playHead) + 0.000001f) * 100.0f);
+    uint milliseconds = (uint)((playHead - Math::Truncate(playHead) + 0.000001f) * 100.0f);
     uint seconds = (uint)(Math::FMod(playHead, cSecondsPerMinute));
     uint minutes = (uint)(playHead / cSecondsPerMinute);
     uint hours = (uint)(playHead / (cSecondsPerHour));
@@ -1206,18 +1153,9 @@ void ScrubberDrawer::DrawPlayHead(ViewBlock& viewBlock,
   Vec2 size = mFont->MeasureText(text, 1.0f);
   Vec2 textPos(localX - (size.x * 0.5f), mHashHeight * 2.15f);
 
-  ViewNode& viewNode =
-      AddRenderNodes(viewBlock, frameBlock, clipRect, mFont->mTexture);
-  FontProcessor fontProcessor(frameBlock.mRenderQueues,
-                              &viewNode,
-                              ToFloatColor(AnimationConstants::cHashColor));
-  ProcessTextRange(fontProcessor,
-                   mFont,
-                   text,
-                   SnapToPixels(textPos),
-                   TextAlign::Left,
-                   Vec2(1, 1),
-                   size);
+  ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, mFont->mTexture);
+  FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNode, ToFloatColor(AnimationConstants::cHashColor));
+  ProcessTextRange(fontProcessor, mFont, text, SnapToPixels(textPos), TextAlign::Left, Vec2(1, 1), size);
 }
 
 } // namespace Zero

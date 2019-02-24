@@ -18,16 +18,14 @@ void EngineLibraryExtensions::AddNativeExtensions(LibraryBuilder& builder)
   return AddNativeExtensions(builder, builder.BoundTypes);
 }
 
-void EngineLibraryExtensions::AddNativeExtensions(LibraryBuilder& builder,
-                                                  BoundTypeMap& boundTypes)
+void EngineLibraryExtensions::AddNativeExtensions(LibraryBuilder& builder, BoundTypeMap& boundTypes)
 {
   BoundType* resourceType = ZilchTypeId(Resource);
 
-  forRange(BoundType * type, boundTypes.Values())
+  forRange (BoundType* type, boundTypes.Values())
   {
     // Add Resource.Find functions
-    if (type->IsA(resourceType) &&
-        !type->HasAttribute(ObjectAttributes::cResourceInterface))
+    if (type->IsA(resourceType) && !type->HasAttribute(ObjectAttributes::cResourceInterface))
       AddResourceFind(builder, type);
 
     // The only reason we need to check if 'EnumMetaSerialization' already
@@ -40,22 +38,19 @@ void EngineLibraryExtensions::AddNativeExtensions(LibraryBuilder& builder,
   MetaLibraryExtensions::AddNativeExtensions(builder, boundTypes);
 }
 
-void EngineLibraryExtensions::AddExtensionsPreCompilation(
-    LibraryBuilder& builder, ResourceLibrary* resources)
+void EngineLibraryExtensions::AddExtensionsPreCompilation(LibraryBuilder& builder, ResourceLibrary* resources)
 {
   AddResourceExtensions(builder, resources);
 
   MetaLibraryExtensions::AddExtensionsPreCompilation(builder);
 }
 
-void EngineLibraryExtensions::AddExtensionsPostCompilation(
-    LibraryBuilder& builder)
+void EngineLibraryExtensions::AddExtensionsPostCompilation(LibraryBuilder& builder)
 {
   MetaLibraryExtensions::AddExtensionsPostCompilation(builder);
 }
 
-void EngineLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e,
-                                                 void* userData)
+void EngineLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e, void* userData)
 {
   MetaLibraryExtensions::TypeParsedCallback(e, userData);
 
@@ -73,19 +68,15 @@ void EngineLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e,
 
   // Get the location of the resource so we can take the user to where the type
   // is defined
-  ZilchDocumentResource* resource =
-      (ZilchDocumentResource*)e->Location->CodeUserData;
+  ZilchDocumentResource* resource = (ZilchDocumentResource*)e->Location->CodeUserData;
   ReturnIf(resource == nullptr, , "Type parsed not from a Resource?");
   boundType->Add(new MetaResource(resource));
 
   Status nameStatus;
-  resource->GetManager()->ValidateRawName(
-      nameStatus, boundType->TemplateBaseName, boundType);
+  resource->GetManager()->ValidateRawName(nameStatus, boundType->TemplateBaseName, boundType);
 
   if (nameStatus.Failed())
-    e->BuildingProject->Raise(boundType->NameLocation,
-                              ErrorCode::GenericError,
-                              nameStatus.Message.c_str());
+    e->BuildingProject->Raise(boundType->NameLocation, ErrorCode::GenericError, nameStatus.Message.c_str());
 
   ProcessComponentInterfaces(boundType);
 }
@@ -95,15 +86,13 @@ void EngineLibraryExtensions::FindProxiedTypeOrigin(BoundType* proxiedType)
   // This should probably look through only ZilchScripts for "class" and
   // ZilchFragments for "struct" This can possibly point a proxied fragment to a
   // ZilchScript
-  String regexString =
-      String::Format("(class|struct)\\s+%s", proxiedType->Name.c_str());
+  String regexString = String::Format("(class|struct)\\s+%s", proxiedType->Name.c_str());
 
   Regex regex(regexString);
 
-  forRange(ResourceId textResourceId, Z::gResources->TextResources.Values())
+  forRange (ResourceId textResourceId, Z::gResources->TextResources.Values())
   {
-    DocumentResource* textResource =
-        (DocumentResource*)Z::gResources->GetResource(textResourceId);
+    DocumentResource* textResource = (DocumentResource*)Z::gResources->GetResource(textResourceId);
     if (textResource == nullptr)
       continue;
 
@@ -124,25 +113,19 @@ void EngineLibraryExtensions::FindProxiedTypeOrigin(BoundType* proxiedType)
     proxiedType->Remove<MetaResource>();
 }
 
-void EngineLibraryExtensions::AddResourceExtensions(LibraryBuilder& builder,
-                                                    ResourceLibrary* resources)
+void EngineLibraryExtensions::AddResourceExtensions(LibraryBuilder& builder, ResourceLibrary* resources)
 {
   // Add a property extension for all resources so they can be accessed on the
   // resource type e.g. SpriteSource.Fireball
-  forRange(HandleOf<Resource> resourceHandle, resources->Resources.All())
+  forRange (HandleOf<Resource> resourceHandle, resources->Resources.All())
   {
     Resource* resource = resourceHandle;
     BoundType* resourceType = ZilchVirtualTypeId(resource);
 
     String resourceName = resource->Name;
 
-    Property* property =
-        builder.AddExtensionGetterSetter(resourceType,
-                                         resourceName,
-                                         resourceType,
-                                         nullptr,
-                                         FindNamedResource,
-                                         MemberOptions::Static);
+    Property* property = builder.AddExtensionGetterSetter(
+        resourceType, resourceName, resourceType, nullptr, FindNamedResource, MemberOptions::Static);
 
     property->Get->ComplexUserData.WriteObject(resourceName);
     property->Get->UserData = resource->GetManager();
@@ -157,9 +140,7 @@ void EngineLibraryExtensions::AddResourceExtensions(LibraryBuilder& builder,
   }
 }
 
-bool FindResourceMode(Call& call,
-                      ExceptionReport& report,
-                      ResourceNotFound::Enum mode)
+bool FindResourceMode(Call& call, ExceptionReport& report, ResourceNotFound::Enum mode)
 {
   Function* currentFunction = call.GetFunction();
   String* name = call.Get<String*>(0);
@@ -167,14 +148,12 @@ bool FindResourceMode(Call& call,
   // Guard against the user passing in null
   if (name == nullptr)
   {
-    call.GetState()->ThrowNullReferenceException(
-        report,
-        "The string that was passed in was null. Please provide a name.");
+    call.GetState()->ThrowNullReferenceException(report,
+                                                 "The string that was passed in was null. Please provide a name.");
     return false;
   }
 
-  ResourceManager* manager =
-      Z::gResources->Managers.FindValue(currentFunction->Owner->Name, nullptr);
+  ResourceManager* manager = Z::gResources->Managers.FindValue(currentFunction->Owner->Name, nullptr);
   ReturnIf(manager == nullptr, false, "Couldn't find resource manager");
 
   if (Resource* resource = manager->GetResource(*name, mode))
@@ -208,8 +187,7 @@ void FindResourceOrError(Call& call, ExceptionReport& report)
     if (report.HasThrownExceptions() == false)
     {
       String* name = call.Get<String*>(0);
-      String message = String::Format(
-          "Failed to find resource by the name '%s'", name->c_str());
+      String message = String::Format("Failed to find resource by the name '%s'", name->c_str());
       call.GetState()->ThrowException(report, message);
     }
   }
@@ -225,28 +203,16 @@ void AddResourceFind(LibraryBuilder& builder, BoundType* resourceType)
   p0.Name = "name";
 
   // Find
-  Function* function = builder.AddExtensionFunction(resourceType,
-                                                    "FindOrDefault",
-                                                    FindResourceOrDefault,
-                                                    params,
-                                                    resourceType,
-                                                    FunctionOptions::Static);
+  Function* function = builder.AddExtensionFunction(
+      resourceType, "FindOrDefault", FindResourceOrDefault, params, resourceType, FunctionOptions::Static);
 
   // Find or null
-  function = builder.AddExtensionFunction(resourceType,
-                                          "FindOrNull",
-                                          FindResourceOrNull,
-                                          params,
-                                          resourceType,
-                                          FunctionOptions::Static);
+  function = builder.AddExtensionFunction(
+      resourceType, "FindOrNull", FindResourceOrNull, params, resourceType, FunctionOptions::Static);
 
   // Find or error
-  function = builder.AddExtensionFunction(resourceType,
-                                          "FindOrError",
-                                          FindResourceOrError,
-                                          params,
-                                          resourceType,
-                                          FunctionOptions::Static);
+  function = builder.AddExtensionFunction(
+      resourceType, "FindOrError", FindResourceOrError, params, resourceType, FunctionOptions::Static);
 }
 
 void FindNamedResource(Call& call, ExceptionReport& report)
@@ -255,8 +221,7 @@ void FindNamedResource(Call& call, ExceptionReport& report)
   String& name = currentFunction->ComplexUserData.ReadObject<String>(0);
   ResourceManager* manager = (ResourceManager*)currentFunction->UserData;
 
-  Resource* resource =
-      manager->GetResource(name, ResourceNotFound::ErrorFallback);
+  Resource* resource = manager->GetResource(name, ResourceNotFound::ErrorFallback);
 
   call.Set(Call::Return, resource);
 }
@@ -264,8 +229,7 @@ void FindNamedResource(Call& call, ExceptionReport& report)
 void ProcessComponentInterfaces(BoundType* type)
 {
   // Check for this having a base that has component interface
-  Attribute* componentInterfaceAttribute =
-      type->HasAttributeInherited(ObjectAttributes::cComponentInterface);
+  Attribute* componentInterfaceAttribute = type->HasAttributeInherited(ObjectAttributes::cComponentInterface);
   if (componentInterfaceAttribute)
   {
     BoundType* baseType = type->BaseType;
@@ -276,8 +240,7 @@ void ProcessComponentInterfaces(BoundType* type)
     {
       if (baseType->HasAttribute(ObjectAttributes::cComponentInterface))
       {
-        CogComponentMeta* componentMeta =
-            type->HasOrAdd<CogComponentMeta>(type);
+        CogComponentMeta* componentMeta = type->HasOrAdd<CogComponentMeta>(type);
         // The default constructor will set this type to FromDataOnly so we have
         // to manually set this for now
         componentMeta->mSetupMode = SetupMode::DefaultSerialization;

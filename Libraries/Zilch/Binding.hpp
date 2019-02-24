@@ -147,11 +147,10 @@ public:
   };
 
 // Get the type of the pointer (using virtual behavior if possible)
-#  define ZilchVirtualTypeId(Pointer)                                          \
-    ZZ::TypeBinding::DiscoverDerivedType<                                      \
-        ZilchStrip(decltype(Pointer)),                                         \
-        ZZ::TypeBinding::CanGetDerivedType<ZilchStrip(                         \
-            decltype(Pointer))>::value>::Get(Pointer)
+#  define ZilchVirtualTypeId(Pointer)                                                                                  \
+    ZZ::TypeBinding::DiscoverDerivedType<                                                                              \
+        ZilchStrip(decltype(Pointer)),                                                                                 \
+        ZZ::TypeBinding::CanGetDerivedType<ZilchStrip(decltype(Pointer))>::value>::Get(Pointer)
 
   template <typename T>
   class StripQualifiers
@@ -244,9 +243,7 @@ public:
 // Examples: const int** -> int*, or const int& -> int*
 // To just get the type as a pointer rather than the expression, use
 // ZilchStrip(T)*
-#  define ZilchToPointer(Expression)                                           \
-    (ZZ::TypeBinding::InternalToPointer<ZilchStrip(decltype(Expression))>(     \
-        Expression))
+#  define ZilchToPointer(Expression) (ZZ::TypeBinding::InternalToPointer<ZilchStrip(decltype(Expression))>(Expression))
 
   // Strips all forms of const from a type
   template <typename T>
@@ -737,8 +734,7 @@ template <typename T>
 Handle::Handle(const T& value, HandleManager* manager, ExecutableState* state)
 {
   typedef typename TypeBinding::StripQualifiers<T>::Type UnqualifiedType;
-  const UnqualifiedType* pointer =
-      TypeBinding::ReferenceCast<T&, const UnqualifiedType*>::Cast((T&)value);
+  const UnqualifiedType* pointer = TypeBinding::ReferenceCast<T&, const UnqualifiedType*>::Cast((T&)value);
   BoundType* type = ZilchVirtualTypeId(pointer);
   type->IsInitializedAssert();
   ZilchTypeId(T)->IsInitializedAssert();
@@ -750,8 +746,7 @@ T Handle::Get(GetOptions::Enum options) const
 {
   if (this->StoredType == nullptr)
   {
-    ErrorIf(options == GetOptions::AssertOnNull,
-            "The value inside the Handle was null");
+    ErrorIf(options == GetOptions::AssertOnNull, "The value inside the Handle was null");
     return T();
   }
 
@@ -779,8 +774,7 @@ HandleOf<T>::HandleOf()
 template <typename T>
 HandleOf<T>::HandleOf(const Handle& other) : Handle(other)
 {
-  if (this->StoredType != nullptr &&
-      this->StoredType->IsA(this->GetCompileType()) == false)
+  if (this->StoredType != nullptr && this->StoredType->IsA(this->GetCompileType()) == false)
   {
     // Clear the handle out since its invalid
     Error("The handle we're constructing from does not match our type");
@@ -791,8 +785,7 @@ HandleOf<T>::HandleOf(const Handle& other) : Handle(other)
 template <typename T>
 HandleOf<T>::HandleOf(Handle&& other) : Handle(other)
 {
-  if (this->StoredType != nullptr &&
-      this->StoredType->IsA(this->GetCompileType()) == false)
+  if (this->StoredType != nullptr && this->StoredType->IsA(this->GetCompileType()) == false)
   {
     // Clear the handle out since its invalid
     Error("The handle we're constructing from does not match our type");
@@ -801,14 +794,12 @@ HandleOf<T>::HandleOf(Handle&& other) : Handle(other)
 }
 
 template <typename T>
-HandleOf<T>::HandleOf(const T& value) :
-    Handle((const byte*)&value, ZilchVirtualTypeId(&value))
+HandleOf<T>::HandleOf(const T& value) : Handle((const byte*)&value, ZilchVirtualTypeId(&value))
 {
 }
 
 template <typename T>
-HandleOf<T>::HandleOf(const T* value) :
-    Handle((const byte*)value, ZilchVirtualTypeId(value))
+HandleOf<T>::HandleOf(const T* value) : Handle((const byte*)value, ZilchVirtualTypeId(value))
 {
 }
 
@@ -1000,9 +991,8 @@ public:
   {
     // Check that the derived type is bigger than the
     // base type (should be since we have Debug_SizeTest)
-    static_assert(
-        sizeof(SelfType) >= sizeof(BaseType),
-        "It appears either the derived class or parent class is incorrect");
+    static_assert(sizeof(SelfType) >= sizeof(BaseType),
+                  "It appears either the derived class or parent class is incorrect");
 
     // Attempt a static cast to ensure the types given were related
     // We need to use an invalid pointer (but not null) to avoid this getting
@@ -1029,24 +1019,24 @@ public:
 // If we're in debug mode, add extra checks...
 #  if ZeroDebug
 // Checks used in the declaration of a C++ type exposed to Zilch
-#    define ZilchDeclareChecks(SelfType, BaseType)                             \
-      /* Do a series of debug checks to ensure the user is using the macros    \
-       * correctly */                                                          \
-      void ZilchDebugChecks()                                                  \
-      {                                                                        \
-        /* Check that the sizes of the type we declared as 'our type' is the   \
-         * same as the size of the this reference */                           \
-        static_assert(sizeof(SelfType) == sizeof(*this),                       \
-                      "The type passed into the macro wasn't the same as the " \
-                      "class it was declared in");                             \
-        /* Check that the two types are related via static casting */          \
-        ZZ::CheckTypesAreRelated<SelfType, BaseType>::Test();                  \
-      }                                                                        \
-      static void ZilchDebugDerivedHasNotBeenDeclared()                        \
-      {                                                                        \
-      }                                                                        \
-      static void ZilchDebugBaseHasNotBeenDeclared()                           \
-      {                                                                        \
+#    define ZilchDeclareChecks(SelfType, BaseType)                                                                     \
+      /* Do a series of debug checks to ensure the user is using the macros                                            \
+       * correctly */                                                                                                  \
+      void ZilchDebugChecks()                                                                                          \
+      {                                                                                                                \
+        /* Check that the sizes of the type we declared as 'our type' is the                                           \
+         * same as the size of the this reference */                                                                   \
+        static_assert(sizeof(SelfType) == sizeof(*this),                                                               \
+                      "The type passed into the macro wasn't the same as the "                                         \
+                      "class it was declared in");                                                                     \
+        /* Check that the two types are related via static casting */                                                  \
+        ZZ::CheckTypesAreRelated<SelfType, BaseType>::Test();                                                          \
+      }                                                                                                                \
+      static void ZilchDebugDerivedHasNotBeenDeclared()                                                                \
+      {                                                                                                                \
+      }                                                                                                                \
+      static void ZilchDebugBaseHasNotBeenDeclared()                                                                   \
+      {                                                                                                                \
       }
 #  else
 #    define ZilchDeclareChecks(SelfType, BaseType)
@@ -1054,69 +1044,68 @@ public:
 
 /**************************** EXTERNAL REDIRECTION
  * *****************************/
-#  define ZilchDeclareCustomType(SelfType, CustomBoundType, Linkage)           \
-    /* A specialization so we know that type info exists for this type */      \
-    template <>                                                                \
-    class Linkage ZilchStaticType(SelfType)                                    \
-    {                                                                          \
-    public:                                                                    \
-      typedef SelfType UnqualifiedType;                                        \
-      typedef SelfType QualifiedType;                                          \
-      typedef SelfType BindingType;                                            \
-      typedef SelfType RepresentedType;                                        \
-      typedef SelfType& ReadType;                                              \
-      static const bool DirectRead = true;                                     \
-      /* Implementation of the 'get type' specialization */                    \
-      static ZZ::BoundType*(GetType)()                                         \
-      {                                                                        \
-        static BoundType* type = (CustomBoundType);                            \
-        return type;                                                           \
-      }                                                                        \
-      /* Read our object representation from either stack data or handle data  \
-       */                                                                      \
-      static typename ZilchStaticType(SelfType)::ReadType(Read)(byte * from)   \
-      {                                                                        \
-        return *(SelfType*)from;                                               \
-      }                                                                        \
-      /* Write our object representation to either stack data or handle data   \
-       */                                                                      \
-      static void(Write)(const SelfType& value, byte* to)                      \
-      {                                                                        \
-        memcpy(to, &value, sizeof(SelfType));                                  \
-      }                                                                        \
+#  define ZilchDeclareCustomType(SelfType, CustomBoundType, Linkage)                                                   \
+    /* A specialization so we know that type info exists for this type */                                              \
+    template <>                                                                                                        \
+    class Linkage ZilchStaticType(SelfType)                                                                            \
+    {                                                                                                                  \
+    public:                                                                                                            \
+      typedef SelfType UnqualifiedType;                                                                                \
+      typedef SelfType QualifiedType;                                                                                  \
+      typedef SelfType BindingType;                                                                                    \
+      typedef SelfType RepresentedType;                                                                                \
+      typedef SelfType& ReadType;                                                                                      \
+      static const bool DirectRead = true;                                                                             \
+      /* Implementation of the 'get type' specialization */                                                            \
+      static ZZ::BoundType*(GetType)()                                                                                 \
+      {                                                                                                                \
+        static BoundType* type = (CustomBoundType);                                                                    \
+        return type;                                                                                                   \
+      }                                                                                                                \
+      /* Read our object representation from either stack data or handle data                                          \
+       */                                                                                                              \
+      static typename ZilchStaticType(SelfType)::ReadType(Read)(byte * from)                                           \
+      {                                                                                                                \
+        return *(SelfType*)from;                                                                                       \
+      }                                                                                                                \
+      /* Write our object representation to either stack data or handle data                                           \
+       */                                                                                                              \
+      static void(Write)(const SelfType& value, byte* to)                                                              \
+      {                                                                                                                \
+        memcpy(to, &value, sizeof(SelfType));                                                                          \
+      }                                                                                                                \
     };
 
 // Declare an external type
-#  define ZilchDeclareDefineRedirectType(                                      \
-      SelfType, RedirectType, ConvertFromRedirect, ConvertToRedirect, Linkage) \
-    /* A specialization so we know that type info exists for this type */      \
-    template <>                                                                \
-    class Linkage ZilchStaticType(SelfType)                                    \
-    {                                                                          \
-    public:                                                                    \
-      typedef SelfType UnqualifiedType;                                        \
-      typedef SelfType QualifiedType;                                          \
-      typedef SelfType BindingType;                                            \
-      typedef RedirectType RepresentedType;                                    \
-      typedef SelfType ReadType;                                               \
-      static const bool DirectRead = false;                                    \
-      /* Implementation of the 'get type' specialization */                    \
-      static ZZ::BoundType*(GetType)()                                         \
-      {                                                                        \
-        return ZilchTypeId(RepresentedType);                                   \
-      }                                                                        \
-      /* Read our object representation from either stack data or handle data  \
-       */                                                                      \
-      static typename ZilchStaticType(SelfType)::ReadType(Read)(byte * from)   \
-      {                                                                        \
-        return ConvertToRedirect(*(RepresentedType*)from);                     \
-      }                                                                        \
-      /* Write our object representation to either stack data or handle data   \
-       */                                                                      \
-      static void(Write)(const SelfType& value, byte* to)                      \
-      {                                                                        \
-        new (to) RepresentedType(ConvertFromRedirect(value));                  \
-      }                                                                        \
+#  define ZilchDeclareDefineRedirectType(SelfType, RedirectType, ConvertFromRedirect, ConvertToRedirect, Linkage)      \
+    /* A specialization so we know that type info exists for this type */                                              \
+    template <>                                                                                                        \
+    class Linkage ZilchStaticType(SelfType)                                                                            \
+    {                                                                                                                  \
+    public:                                                                                                            \
+      typedef SelfType UnqualifiedType;                                                                                \
+      typedef SelfType QualifiedType;                                                                                  \
+      typedef SelfType BindingType;                                                                                    \
+      typedef RedirectType RepresentedType;                                                                            \
+      typedef SelfType ReadType;                                                                                       \
+      static const bool DirectRead = false;                                                                            \
+      /* Implementation of the 'get type' specialization */                                                            \
+      static ZZ::BoundType*(GetType)()                                                                                 \
+      {                                                                                                                \
+        return ZilchTypeId(RepresentedType);                                                                           \
+      }                                                                                                                \
+      /* Read our object representation from either stack data or handle data                                          \
+       */                                                                                                              \
+      static typename ZilchStaticType(SelfType)::ReadType(Read)(byte * from)                                           \
+      {                                                                                                                \
+        return ConvertToRedirect(*(RepresentedType*)from);                                                             \
+      }                                                                                                                \
+      /* Write our object representation to either stack data or handle data                                           \
+       */                                                                                                              \
+      static void(Write)(const SelfType& value, byte* to)                                                              \
+      {                                                                                                                \
+        new (to) RepresentedType(ConvertFromRedirect(value));                                                          \
+      }                                                                                                                \
     };
 
 // Can be used by redirection macros to support changing of a type to another
@@ -1129,13 +1118,9 @@ To StaticCast(const From& from)
 
 // Define an external type with a given name that can be statically casted to
 // our redirected type
-#  define ZilchDeclareDefineImplicitRedirectType(                              \
-      SelfType, RedirectType, Linkage)                                         \
-    ZilchDeclareDefineRedirectType(SelfType,                                   \
-                                   RedirectType,                               \
-                                   (StaticCast<SelfType, RedirectType>),       \
-                                   (StaticCast<RedirectType, SelfType>),       \
-                                   Linkage)
+#  define ZilchDeclareDefineImplicitRedirectType(SelfType, RedirectType, Linkage)                                      \
+    ZilchDeclareDefineRedirectType(                                                                                    \
+        SelfType, RedirectType, (StaticCast<SelfType, RedirectType>), (StaticCast<RedirectType, SelfType>), Linkage)
 
 /********************************** BINDING ***********************************/
 
@@ -1151,32 +1136,29 @@ public:
   BoundType* Type;
 };
 
-#  define ZilchDeclareInheritableType(SelfType, TypeCopyMode)                  \
-    ZilchDeclareType(SelfType, TypeCopyMode);                                  \
-    ZZ::AutoGrabAllocatingType ZilchDerivedType;                               \
-    ZZ::BoundType* ZilchDerivedTypeOverride() const                            \
-    {                                                                          \
-      if (this->ZilchDerivedType.Type != nullptr)                              \
-        return this->ZilchDerivedType.Type;                                    \
-      return ZilchTypeId(ZilchSelf);                                           \
+#  define ZilchDeclareInheritableType(SelfType, TypeCopyMode)                                                          \
+    ZilchDeclareType(SelfType, TypeCopyMode);                                                                          \
+    ZZ::AutoGrabAllocatingType ZilchDerivedType;                                                                       \
+    ZZ::BoundType* ZilchDerivedTypeOverride() const                                                                    \
+    {                                                                                                                  \
+      if (this->ZilchDerivedType.Type != nullptr)                                                                      \
+        return this->ZilchDerivedType.Type;                                                                            \
+      return ZilchTypeId(ZilchSelf);                                                                                   \
     }
 
-ZeroDeclareHasMemberTrait(HasZilchDerivedTypeOverride,
-                          ZilchDerivedTypeOverride);
+ZeroDeclareHasMemberTrait(HasZilchDerivedTypeOverride, ZilchDerivedTypeOverride);
 
 // This helper allows us to use SFINAE to detect if we have a base type (only
 // for internal binding) If we do not have internal binding, then we have to
 // explicitly set the base type
 template <typename T>
-BoundType* GetDerivedTypeOverride(
-    const T* self, P_ENABLE_IF(HasZilchDerivedTypeOverride<T>::value))
+BoundType* GetDerivedTypeOverride(const T* self, P_ENABLE_IF(HasZilchDerivedTypeOverride<T>::value))
 {
   return self->ZilchDerivedTypeOverride();
 }
 
 template <typename T>
-BoundType* GetDerivedTypeOverride(
-    const T* self, P_DISABLE_IF(HasZilchDerivedTypeOverride<T>::value))
+BoundType* GetDerivedTypeOverride(const T* self, P_DISABLE_IF(HasZilchDerivedTypeOverride<T>::value))
 {
   return ZilchTypeId(T);
 }
@@ -1192,9 +1174,7 @@ void SetupType(LibraryBuilder& builder,
                SetupFunction setupType,
                P_ENABLE_IF(HasZilchSetupType<ZilchSelf>::value))
 {
-  builder.AddNativeBoundType(type,
-                             ZilchTypeId(typename ZilchSelf::ZilchBase),
-                             ZilchSelf::ZilchCopyMode);
+  builder.AddNativeBoundType(type, ZilchTypeId(typename ZilchSelf::ZilchBase), ZilchSelf::ZilchCopyMode);
   if (setupType != nullptr)
     setupType(nullptr, builder, type);
   ZilchSelf::ZilchSetupType(builder, type);
@@ -1216,11 +1196,8 @@ void SetupType(LibraryBuilder& builder,
 };
 
 // This function gets called when the static library we belong to is built
-template <typename InitializingType,
-          typename StaticLibraryType,
-          typename SetupFunction>
-BoundType* InitializeType(const char* initializingTypeName,
-                          SetupFunction setupType = nullptr)
+template <typename InitializingType, typename StaticLibraryType, typename SetupFunction>
+BoundType* InitializeType(const char* initializingTypeName, SetupFunction setupType = nullptr)
 {
   // Check if we've already been initialized
   BoundType* type = ZilchTypeId(InitializingType);
@@ -1231,73 +1208,61 @@ BoundType* InitializeType(const char* initializingTypeName,
   StaticLibraryType& library = StaticLibraryType::GetInstance();
   if (library.CanBuildTypes() == false)
   {
-    String message = String::Format(
-        "ZilchInitializeType can only be called on "
-        "the type %s when its library is in the process of being "
-        "initialized via %s::GetInstance().BuildLibrary()",
-        initializingTypeName,
-        library.Name.c_str());
+    String message = String::Format("ZilchInitializeType can only be called on "
+                                    "the type %s when its library is in the process of being "
+                                    "initialized via %s::GetInstance().BuildLibrary()",
+                                    initializingTypeName,
+                                    library.Name.c_str());
     Error(message.c_str());
     return type;
   }
   String typeName = initializingTypeName;
-  typeName = LibraryBuilder::FixIdentifier(
-      typeName,
-      TokenCheck::IsUpper | TokenCheck::SkipPastScopeResolution,
-      '\0');
+  typeName = LibraryBuilder::FixIdentifier(typeName, TokenCheck::IsUpper | TokenCheck::SkipPastScopeResolution, '\0');
   type->Name = typeName;
   type->TemplateBaseName = typeName;
   type->Size = sizeof(InitializingType);
-  type->RawNativeVirtualCount =
-      TypeBinding::GetVirtualTableCount<InitializingType>();
+  type->RawNativeVirtualCount = TypeBinding::GetVirtualTableCount<InitializingType>();
   LibraryBuilder& builder = *library.GetBuilder();
   SetupType<InitializingType>(builder, type, setupType);
   return type;
 };
 
   // A helper for initializing types that belong to a library
-#  define ZilchInitializeTypeAs(Type, Name)                                    \
-    ZZ::InitializeType<Type,                                                   \
-                       ZilchLibrary,                                           \
-                       void (*)(Type*, ZZ::LibraryBuilder&, ZZ::BoundType*)>(  \
-        Name)
+#  define ZilchInitializeTypeAs(Type, Name)                                                                            \
+    ZZ::InitializeType<Type, ZilchLibrary, void (*)(Type*, ZZ::LibraryBuilder&, ZZ::BoundType*)>(Name)
 #  define ZilchInitializeType(Type) ZilchInitializeTypeAs(Type, #  Type)
 
   // A helper for initializing types that belong to a library
-#  define ZilchInitializeExternalTypeAs(Type, Name)                            \
-    ZZ::InitializeType<Type,                                                   \
-                       ZilchLibrary,                                           \
-                       void (*)(Type*, ZZ::LibraryBuilder&, ZZ::BoundType*)>(  \
-        Name, ZilchSetupType)
-#  define ZilchInitializeExternalType(Type)                                    \
-    ZilchInitializeExternalTypeAs(Type, #Type)
+#  define ZilchInitializeExternalTypeAs(Type, Name)                                                                    \
+    ZZ::InitializeType<Type, ZilchLibrary, void (*)(Type*, ZZ::LibraryBuilder&, ZZ::BoundType*)>(Name, ZilchSetupType)
+#  define ZilchInitializeExternalType(Type) ZilchInitializeExternalTypeAs(Type, #  Type)
 
   // Declares a zilch derived type (belongs inside the type definition)
-#  define ZilchDeclareDerivedTypeExplicit(SelfType, BaseType, CopyMode)        \
-  public:                                                                      \
-    /* Current class being bound and it's base class */                        \
-    /* Classes without a base class will have ZilchBase defined as NoType */   \
-    typedef SelfType ZilchSelf;                                                \
-    typedef BaseType ZilchBase;                                                \
-    typedef ZilchSelf* ZilchSelfPointer;                                       \
-    typedef ZilchBase* ZilchBasePointer;                                       \
-    /* Get the most derived type from an instance of the class */              \
-    /* Inheriting from 'IZilchObject' will make these virtual */               \
-    /* We don't want to implicitly introduce v-tables to anyone's structures   \
-     */                                                                        \
-    /*virtual*/ ZZ::BoundType* ZilchGetDerivedType() const                     \
-    {                                                                          \
-      return ZZ::GetDerivedTypeOverride<ZilchSelf>(this);                      \
-    }                                                                          \
-    /* This lets binding know how the class should be treated when just        \
-     * referred to by its name */                                              \
-    static const ZZ::TypeCopyMode::Enum ZilchCopyMode = CopyMode;              \
-    /* This function is to be implemented by the user so that */               \
-    /* they may choose what they want to bind to reflection */                 \
+#  define ZilchDeclareDerivedTypeExplicit(SelfType, BaseType, CopyMode)                                                \
+  public:                                                                                                              \
+    /* Current class being bound and it's base class */                                                                \
+    /* Classes without a base class will have ZilchBase defined as NoType */                                           \
+    typedef SelfType ZilchSelf;                                                                                        \
+    typedef BaseType ZilchBase;                                                                                        \
+    typedef ZilchSelf* ZilchSelfPointer;                                                                               \
+    typedef ZilchBase* ZilchBasePointer;                                                                               \
+    /* Get the most derived type from an instance of the class */                                                      \
+    /* Inheriting from 'IZilchObject' will make these virtual */                                                       \
+    /* We don't want to implicitly introduce v-tables to anyone's structures                                           \
+     */                                                                                                                \
+    /*virtual*/ ZZ::BoundType* ZilchGetDerivedType() const                                                             \
+    {                                                                                                                  \
+      return ZZ::GetDerivedTypeOverride<ZilchSelf>(this);                                                              \
+    }                                                                                                                  \
+    /* This lets binding know how the class should be treated when just                                                \
+     * referred to by its name */                                                                                      \
+    static const ZZ::TypeCopyMode::Enum ZilchCopyMode = CopyMode;                                                      \
+    /* This function is to be implemented by the user so that */                                                       \
+    /* they may choose what they want to bind to reflection */                                                         \
     static void ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
 
   // Declares a zilch base type (belongs inside the type definition)
-#  define ZilchDeclareBaseTypeExplicit(SelfType, CopyMode)                     \
+#  define ZilchDeclareBaseTypeExplicit(SelfType, CopyMode)                                                             \
     ZilchDeclareDerivedTypeExplicit(SelfType, ZZ::NoType, CopyMode)
 
   // Completely prevents binding from occurring with this type,
@@ -1306,86 +1271,70 @@ BoundType* InitializeType(const char* initializingTypeName,
 
   // Declares a zilch type (belongs inside the type definition)
   // Implicitly deduces self and base types being bound
-#  define ZilchDeclareType(ClassType, CopyMode)                                \
-  public:                                                                      \
-    /* Binding macros need the current class being bound */                    \
-    /* This is a really neat trick where we never need to declare our base     \
-     * type */                                                                 \
-    /* because of how typedefs are inherited (and they only apply to members   \
-     * below */                                                                \
-    /* The only issue is the base case (no base class), which we use SFINAE */ \
-    /* to detect if we even inherited a ZilchSelf typedef */                   \
-    template <typename ZilchT>                                                 \
-    static typename ZilchT::ZilchSelf* SfinaeBase(int);                        \
-    template <typename ZilchT>                                                 \
-    static ZZ::NoType SfinaeBase(...);                                         \
-    typedef                                                                    \
-        typename ZE::remove_pointer<decltype(SfinaeBase<ClassType>(0))>::type  \
-            ZilchTempBase;                                                     \
+#  define ZilchDeclareType(ClassType, CopyMode)                                                                        \
+  public:                                                                                                              \
+    /* Binding macros need the current class being bound */                                                            \
+    /* This is a really neat trick where we never need to declare our base                                             \
+     * type */                                                                                                         \
+    /* because of how typedefs are inherited (and they only apply to members                                           \
+     * below */                                                                                                        \
+    /* The only issue is the base case (no base class), which we use SFINAE */                                         \
+    /* to detect if we even inherited a ZilchSelf typedef */                                                           \
+    template <typename ZilchT>                                                                                         \
+    static typename ZilchT::ZilchSelf* SfinaeBase(int);                                                                \
+    template <typename ZilchT>                                                                                         \
+    static ZZ::NoType SfinaeBase(...);                                                                                 \
+    typedef typename ZE::remove_pointer<decltype(SfinaeBase<ClassType>(0))>::type ZilchTempBase;                       \
     ZilchDeclareDerivedTypeExplicit(ClassType, ZilchTempBase, CopyMode)
 
-#  define ZilchDefineType(SelfType, builder, type)                             \
-    void SelfType::ZilchSetupType(ZZ::LibraryBuilder& builder,                 \
-                                  ZZ::BoundType* type)
+#  define ZilchDefineType(SelfType, builder, type)                                                                     \
+    void SelfType::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
 
-#  define ZilchDefineTemplateType(SelfType, builder, type)                     \
-    template <>                                                                \
-    void SelfType::ZilchSetupType(ZZ::LibraryBuilder& builder,                 \
-                                  ZZ::BoundType* type)
+#  define ZilchDefineTemplateType(SelfType, builder, type)                                                             \
+    template <>                                                                                                        \
+    void SelfType::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
 
-#  define ZilchDeclareExternalType(SelfType)                                   \
-    void ZilchSetupType(                                                       \
-        SelfType*, ZZ::LibraryBuilder& builder, ZZ::BoundType* type);
+#  define ZilchDeclareExternalType(SelfType)                                                                           \
+    void ZilchSetupType(SelfType*, ZZ::LibraryBuilder& builder, ZZ::BoundType* type);
 
   // The declaration of the external type must be within the same namespace as
   // the definition Alternatively, all the externally bound types can be defined
   // ABOVE the library initialization
-#  define ZilchDefineExternalDerivedType(                                      \
-      SelfType, SelfBaseType, TypeCopyMode, builder, type)                     \
-    /* This is just a forward declared template which is literally defined     \
-     * below by the user */                                                    \
-    /* We want ZilchSelf and ZilchBase to act as if they are typedefs (because \
-     * many binding macros depend on them) */                                  \
-    template <typename ZilchSelf, typename ZilchBase>                          \
-    void ZilchSetupExternalType(                                               \
-        SelfType*, ZZ::LibraryBuilder& builder, ZZ::BoundType* type);          \
-    void ZilchSetupType(                                                       \
-        SelfType*, ZZ::LibraryBuilder& builder, ZZ::BoundType* type)           \
-    {                                                                          \
-      builder.AddNativeBoundType(                                              \
-          type, ZilchTypeId(SelfBaseType), TypeCopyMode);                      \
-      ZilchSetupExternalType<SelfType, SelfBaseType>(                          \
-          (SelfType*)nullptr, builder, type);                                  \
-    }                                                                          \
-    template <typename ZilchSelf, typename ZilchBase>                          \
-    void ZilchSetupExternalType(                                               \
-        SelfType*, ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
+#  define ZilchDefineExternalDerivedType(SelfType, SelfBaseType, TypeCopyMode, builder, type)                          \
+    /* This is just a forward declared template which is literally defined                                             \
+     * below by the user */                                                                                            \
+    /* We want ZilchSelf and ZilchBase to act as if they are typedefs (because                                         \
+     * many binding macros depend on them) */                                                                          \
+    template <typename ZilchSelf, typename ZilchBase>                                                                  \
+    void ZilchSetupExternalType(SelfType*, ZZ::LibraryBuilder& builder, ZZ::BoundType* type);                          \
+    void ZilchSetupType(SelfType*, ZZ::LibraryBuilder& builder, ZZ::BoundType* type)                                   \
+    {                                                                                                                  \
+      builder.AddNativeBoundType(type, ZilchTypeId(SelfBaseType), TypeCopyMode);                                       \
+      ZilchSetupExternalType<SelfType, SelfBaseType>((SelfType*)nullptr, builder, type);                               \
+    }                                                                                                                  \
+    template <typename ZilchSelf, typename ZilchBase>                                                                  \
+    void ZilchSetupExternalType(SelfType*, ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
 
-#  define ZilchDefineExternalBaseType(SelfType, CopyMode, builder, type)       \
-    ZilchDefineExternalDerivedType(                                            \
-        SelfType, ZZ::NoType, CopyMode, builder, type)
+#  define ZilchDefineExternalBaseType(SelfType, CopyMode, builder, type)                                               \
+    ZilchDefineExternalDerivedType(SelfType, ZZ::NoType, CopyMode, builder, type)
 
   /************************************* ENUM
    * ************************************/
-#  define ZilchBindEnumValues(enumType)                                        \
-    for (uint i = 0; i < enumType::Size; ++i)                                  \
-    {                                                                          \
-      ZilchFullBindEnumValue(                                                  \
-          builder, type, enumType::Values[i], enumType::Names[i]);             \
+#  define ZilchBindEnumValues(enumType)                                                                                \
+    for (uint i = 0; i < enumType::Size; ++i)                                                                          \
+    {                                                                                                                  \
+      ZilchFullBindEnumValue(builder, type, enumType::Values[i], enumType::Names[i]);                                  \
     }
 
-#  define ZilchDefineEnum(enumType)                                            \
-    ZilchDefineExternalBaseType(                                               \
-        enumType::Enum, ZZ::TypeCopyMode::ValueType, builder, type)            \
-    {                                                                          \
-      ZilchFullBindEnum(builder, type, ZZ::SpecialType::Enumeration);          \
-      ZilchBindEnumValues(enumType);                                           \
+#  define ZilchDefineEnum(enumType)                                                                                    \
+    ZilchDefineExternalBaseType(enumType::Enum, ZZ::TypeCopyMode::ValueType, builder, type)                            \
+    {                                                                                                                  \
+      ZilchFullBindEnum(builder, type, ZZ::SpecialType::Enumeration);                                                  \
+      ZilchBindEnumValues(enumType);                                                                                   \
     }
 
-#  define ZilchInitializeEnum(enumType)                                        \
-    ZilchInitializeExternalTypeAs(enumType::Enum, #enumType);
-#  define ZilchInitializeEnumAs(enumType, name)                                \
-    ZilchInitializeExternalTypeAs(enumType::Enum, name);
+#  define ZilchInitializeEnum(enumType) ZilchInitializeExternalTypeAs(enumType::Enum, #  enumType);
+#  define ZilchInitializeEnumAs(enumType, name) ZilchInitializeExternalTypeAs(enumType::Enum, name);
 
 /********************************** PRIMITIVE
  * **********************************/
@@ -1420,9 +1369,7 @@ ZilchDeclareDefineImplicitRedirectType(unsigned int, Integer, ZeroShared);
 ZilchDeclareDefineImplicitRedirectType(signed long, Integer, ZeroShared);
 ZilchDeclareDefineImplicitRedirectType(unsigned long, Integer, ZeroShared);
 
-ZilchDeclareDefineImplicitRedirectType(unsigned long long,
-                                       DoubleInteger,
-                                       ZeroShared);
+ZilchDeclareDefineImplicitRedirectType(unsigned long long, DoubleInteger, ZeroShared);
 } // namespace Zilch
 
 #endif

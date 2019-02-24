@@ -64,8 +64,7 @@ public:
     mSource->GetData(entry, varName, CommonColumns::Name);
 
     String name = varName.Get<String>();
-    int priority =
-        PartialMatch(mFilterString.All(), name.All(), CaseInsensitiveCompare);
+    int priority = PartialMatch(mFilterString.All(), name.All(), CaseInsensitiveCompare);
     return priority != cNoMatch;
   }
 
@@ -77,8 +76,7 @@ public:
 
     // Default is to filter by name
     DataEntry* root = mSource->GetRoot();
-    BindMethodPtr<DataSourceFilter, &DataSourceFilter::FilterByName> nameFilter(
-        this);
+    BindMethodPtr<DataSourceFilter, &DataSourceFilter::FilterByName> nameFilter(this);
     FilterNodes(nameFilter, root);
   }
 
@@ -125,9 +123,7 @@ public:
       return 0;
   }
 
-  DataEntry* GetChild(DataEntry* dataEntry,
-                      uint index,
-                      DataEntry* prev) override
+  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
   {
     ErrorIf(dataEntry != this, "FilteredDataSource is flat");
     return mSource->ToEntry(mFilteredList[index]);
@@ -156,9 +152,7 @@ public:
     mSource->GetData(dataEntry, variant, column);
   }
 
-  bool SetData(DataEntry* dataEntry,
-               AnyParam variant,
-               StringParam column) override
+  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
   {
     if (dataEntry == this)
       return false;

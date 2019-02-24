@@ -42,10 +42,7 @@ SpringSystem* SpringSubTool::GetSystem()
   return nullptr;
 }
 
-bool SpringSubTool::RayCastSpringSystem(const Ray& ray,
-                                        SpringSystem* system,
-                                        Vec3& closestPoint,
-                                        uint& index)
+bool SpringSubTool::RayCastSpringSystem(const Ray& ray, SpringSystem* system, Vec3& closestPoint, uint& index)
 {
   if (system == nullptr)
     return false;
@@ -71,10 +68,7 @@ bool SpringSubTool::RayCastSpringSystem(const Ray& ray,
   return true;
 }
 
-bool SpringSubTool::RayCastCog(ViewportMouseEvent* e,
-                               CogId& hitCog,
-                               Vec3& hitPoint,
-                               uint& hitIndex)
+bool SpringSubTool::RayCastCog(ViewportMouseEvent* e, CogId& hitCog, Vec3& hitPoint, uint& hitIndex)
 {
   Viewport* viewport = e->mViewport;
 
@@ -139,22 +133,18 @@ void DragSelectSubTool::OnMouseDragMove(ViewportMouseEvent* e)
   Vec2 newPosition = e->Position;
 
   // Get the corners (Can be dragged left to right or right to left)
-  Vec2 upperLeftScreen = Vec2(Math::Min(mouseStart.x, mouseStart.x),
-                              Math::Min(mouseStart.y, newPosition.y));
-  Vec2 lowerRightScreen = Vec2(Math::Max(mouseStart.x, newPosition.x),
-                               Math::Max(mouseStart.y, newPosition.y));
+  Vec2 upperLeftScreen = Vec2(Math::Min(mouseStart.x, mouseStart.x), Math::Min(mouseStart.y, newPosition.y));
+  Vec2 lowerRightScreen = Vec2(Math::Max(mouseStart.x, newPosition.x), Math::Max(mouseStart.y, newPosition.y));
 
   // Clamp to the viewport size
   Vec2 minSelectSize = viewport->ViewportToScreen(Vec2(0, 0));
   Vec2 maxSelectSize = viewport->ViewportToScreen(viewport->GetSize());
-  upperLeftScreen = Vec2(Math::Max(upperLeftScreen.x, minSelectSize.x),
-                         Math::Max(upperLeftScreen.y, minSelectSize.y));
-  lowerRightScreen = Vec2(Math::Min(lowerRightScreen.x, maxSelectSize.x),
-                          Math::Min(lowerRightScreen.y, maxSelectSize.y));
+  upperLeftScreen = Vec2(Math::Max(upperLeftScreen.x, minSelectSize.x), Math::Max(upperLeftScreen.y, minSelectSize.y));
+  lowerRightScreen =
+      Vec2(Math::Min(lowerRightScreen.x, maxSelectSize.x), Math::Min(lowerRightScreen.y, maxSelectSize.y));
 
   // can't cast a frustum of zero size
-  if (upperLeftScreen.x != lowerRightScreen.x &&
-      upperLeftScreen.y != lowerRightScreen.y)
+  if (upperLeftScreen.x != lowerRightScreen.x && upperLeftScreen.y != lowerRightScreen.y)
   {
     // call the virtual function of frustum casting to let an individual tool do
     // something
@@ -169,8 +159,7 @@ void DragSelectSubTool::OnMouseDragMove(ViewportMouseEvent* e)
   dragElement->SetVisible(true);
   Vec3 size = Vec3(lowerRightScreen - upperLeftScreen);
   dragElement->SetSize(Vec2(size.x, size.y));
-  dragElement->SetTranslation(
-      Vec3(viewport->ScreenToViewport(upperLeftScreen)));
+  dragElement->SetTranslation(Vec3(viewport->ScreenToViewport(upperLeftScreen)));
 
   return;
 }
@@ -227,22 +216,18 @@ void SelectorSpringSubTool::OnMouseDragMove(ViewportMouseEvent* e)
   Vec2 newPosition = e->Position;
 
   // Get the corners (Can be dragged left to right or right to left)
-  Vec2 upperLeftScreen = Vec2(Math::Min(mouseStart.x, newPosition.x),
-                              Math::Min(mouseStart.y, newPosition.y));
-  Vec2 lowerRightScreen = Vec2(Math::Max(mouseStart.x, newPosition.x),
-                               Math::Max(mouseStart.y, newPosition.y));
+  Vec2 upperLeftScreen = Vec2(Math::Min(mouseStart.x, newPosition.x), Math::Min(mouseStart.y, newPosition.y));
+  Vec2 lowerRightScreen = Vec2(Math::Max(mouseStart.x, newPosition.x), Math::Max(mouseStart.y, newPosition.y));
 
   // Clamp to the viewport size
   Vec2 minSelectSize = viewport->ViewportToScreen(Vec2(0, 0));
   Vec2 maxSelectSize = viewport->ViewportToScreen(viewport->GetSize());
-  upperLeftScreen = Vec2(Math::Max(upperLeftScreen.x, minSelectSize.x),
-                         Math::Max(upperLeftScreen.y, minSelectSize.y));
-  lowerRightScreen = Vec2(Math::Min(lowerRightScreen.x, maxSelectSize.x),
-                          Math::Min(lowerRightScreen.y, maxSelectSize.y));
+  upperLeftScreen = Vec2(Math::Max(upperLeftScreen.x, minSelectSize.x), Math::Max(upperLeftScreen.y, minSelectSize.y));
+  lowerRightScreen =
+      Vec2(Math::Min(lowerRightScreen.x, maxSelectSize.x), Math::Min(lowerRightScreen.y, maxSelectSize.y));
 
   // can't cast a frustum of zero size
-  if (upperLeftScreen.x != lowerRightScreen.x &&
-      upperLeftScreen.y != lowerRightScreen.y)
+  if (upperLeftScreen.x != lowerRightScreen.x && upperLeftScreen.y != lowerRightScreen.y)
   {
     // we constantly overwrite our current selection based upon
     // the current frustum (so clear the current selection)
@@ -262,8 +247,7 @@ void SelectorSpringSubTool::OnMouseDragMove(ViewportMouseEvent* e)
   dragElement->SetVisible(true);
   Vec3 size = Vec3(lowerRightScreen - upperLeftScreen);
   dragElement->SetSize(Vec2(size.x, size.y));
-  dragElement->SetTranslation(
-      Vec3(viewport->ScreenToViewport(upperLeftScreen)));
+  dragElement->SetTranslation(Vec3(viewport->ScreenToViewport(upperLeftScreen)));
 }
 
 void SelectorSpringSubTool::OnLeftMouseUp(ViewportMouseEvent* e)
@@ -366,8 +350,7 @@ void AnchoringSubTool::Draw()
     {
       SpringSystem::PointMass& pointMass = system->mPointMasses[i];
       if (pointMass.mAnchor != nullptr)
-        gDebugDraw->Add(Debug::Sphere(pointMass.mPosition, real(0.1))
-                            .Color(mAnchoredPointMassColor));
+        gDebugDraw->Add(Debug::Sphere(pointMass.mPosition, real(0.1)).Color(mAnchoredPointMassColor));
     }
   }
 
@@ -626,9 +609,7 @@ void RopeCreatorSubTool::SetNumberOfLinks(uint numberOfLinks)
 
 // Simple helper to set the group value of a property
 template <typename ValueType, typename CallbackType>
-void SetGroupProperty(AnchoringSubTool* anchorTool,
-                      ValueType& value,
-                      CallbackType setPropertyFn)
+void SetGroupProperty(AnchoringSubTool* anchorTool, ValueType& value, CallbackType setPropertyFn)
 {
   SpringSystem* system = anchorTool->GetSystem();
   if (system == nullptr)
@@ -652,8 +633,7 @@ void SetGroupProperty(AnchoringSubTool* anchorTool,
 }
 
 template <typename CallbackType>
-PropertyState GetGroupState(AnchoringSubTool* anchorTool,
-                            CallbackType getPropertyFn)
+PropertyState GetGroupState(AnchoringSubTool* anchorTool, CallbackType getPropertyFn)
 {
   SpringSystem* system = anchorTool->GetSystem();
   if (system == nullptr)
@@ -797,8 +777,7 @@ ZilchDefineType(SpringPointProxyProperty, builder, type)
   type->HandleManager = ZilchManagerId(PointerManager);
 }
 
-PropertyState SpringPointProxyProperty::GetValue(HandleParam object,
-                                                 PropertyPathParam property)
+PropertyState SpringPointProxyProperty::GetValue(HandleParam object, PropertyPathParam property)
 {
   SpringPointProxy* proxy = object.Get<SpringPointProxy*>();
 
@@ -823,8 +802,7 @@ ZilchDefineType(SpringTools, builder, type)
   type->AddAttribute(ObjectAttributes::cTool);
 
   // changing this property will invalidate us (so we refresh the property view)
-  ZilchBindGetterSetterProperty(CurrentSubToolType)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(CurrentSubToolType)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindFieldProperty(mCurrentSubTool);
 }
 

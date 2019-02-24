@@ -60,16 +60,9 @@ SimMat4 BuildScale(SimVecParam scale);
 SimMat4 BuildRotation(SimVecParam axis, scalar angle);
 SimMat4 BuildRotation(SimVecParam quat);
 SimMat4 BuildTranslation(SimVecParam translation);
-SimMat4 BuildTransform(SimVecParam translation,
-                       SimVecParam axis,
-                       scalar angle,
-                       SimVecParam scale);
-SimMat4 BuildTransform(SimVecParam translation,
-                       SimVecParam quat,
-                       SimVecParam scale);
-SimMat4 BuildTransform(SimVecParam translation,
-                       SimMat4Param rot,
-                       SimVecParam scale);
+SimMat4 BuildTransform(SimVecParam translation, SimVecParam axis, scalar angle, SimVecParam scale);
+SimMat4 BuildTransform(SimVecParam translation, SimVecParam quat, SimVecParam scale);
+SimMat4 BuildTransform(SimVecParam translation, SimMat4Param rot, SimVecParam scale);
 // transposes the upper 3x3 of the 4x4 and leaves the remaining elements alone
 SimMat4 TransposeUpper3x3(SimMat4Param mat);
 SimMat4 Transpose4x4(SimMat4Param mat);

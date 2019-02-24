@@ -16,7 +16,7 @@ ImageContent::ImageContent()
 
 void ImageContent::BuildContent(BuildOptions& options)
 {
-  forRange(BuilderComponent * bc, Builders.All())
+  forRange (BuilderComponent* bc, Builders.All())
   {
     if (bc->NeedsBuilding(options))
       bc->BuildContent(options);
@@ -38,17 +38,14 @@ ContentItem* MakeImageContentItem(ContentInitializer& initializer)
 {
   ImageContent* content = new ImageContent();
 
-  String fullPath =
-      FilePath::Combine(initializer.Library->SourcePath, initializer.Filename);
+  String fullPath = FilePath::Combine(initializer.Library->SourcePath, initializer.Filename);
 
   content->Filename = initializer.Filename;
 
   String extension = FilePath::GetExtension(initializer.Filename);
 
   bool isSprite = initializer.BuilderType == "SpriteSource" ||
-                  initializer.Options &&
-                      initializer.Options->mImageOptions->mImportImages ==
-                          ImageImport::Sprites;
+                  initializer.Options && initializer.Options->mImageOptions->mImportImages == ImageImport::Sprites;
 
   if (isSprite)
   {
@@ -103,18 +100,17 @@ void CreateImageContent(ContentSystem* system)
 
   AddContent<ImageContent>(system);
 
-  ContentTypeEntry imageContent(ZilchTypeId(ImageContent),
-                                MakeImageContentItem);
+  ContentTypeEntry imageContent(ZilchTypeId(ImageContent), MakeImageContentItem);
 
   // The extensions returned are always without the '.', e.g. "png"
-  forRange(StringParam extension, GetSupportedImageLoadExtensions())
-      system->CreatorsByExtension[extension] = imageContent;
+  forRange (StringParam extension, GetSupportedImageLoadExtensions())
+    system->CreatorsByExtension[extension] = imageContent;
 }
 
 void BuildImageFileDialogFilters(Array<FileDialogFilter>& filters)
 {
   StringBuilder builder;
-  forRange(StringParam extension, GetSupportedImageLoadExtensions())
+  forRange (StringParam extension, GetSupportedImageLoadExtensions())
   {
     builder.Append("*.");
     builder.Append(extension);
@@ -123,8 +119,8 @@ void BuildImageFileDialogFilters(Array<FileDialogFilter>& filters)
 
   filters.PushBack(FileDialogFilter("All Images", builder.ToString()));
 
-  forRange(StringParam extension, GetSupportedImageLoadExtensions())
-      filters.PushBack(FileDialogFilter(BuildString("*.", extension)));
+  forRange (StringParam extension, GetSupportedImageLoadExtensions())
+    filters.PushBack(FileDialogFilter(BuildString("*.", extension)));
 }
 
 } // namespace Zero

@@ -205,8 +205,7 @@ bool ZeroTemplate::TestBuildId(const BuildId& buildId)
   return foundMatch;
 }
 
-bool ZeroTemplate::IsMoreExactRangeThan(const BuildId& buildId,
-                                        ZeroTemplate* otherTemplate)
+bool ZeroTemplate::IsMoreExactRangeThan(const BuildId& buildId, ZeroTemplate* otherTemplate)
 {
   // Find the best build range for 'this' template. If one doesn't exist then
   // this is not a more exact range.
@@ -243,8 +242,7 @@ bool ZeroTemplate::ParseVersionId(StringParam versionId, BuildIdList& buildIds)
   return true;
 }
 
-bool ZeroTemplate::ParseVersionId(StringParam versionId,
-                                  BuildIdRange& buildIdRange)
+bool ZeroTemplate::ParseVersionId(StringParam versionId, BuildIdRange& buildIdRange)
 {
   // Split on the range separator token '-'.
   StringSplitRange splitRange = versionId.Split("-");
@@ -305,10 +303,7 @@ bool ZeroTemplate::ParseVersionId(StringParam versionId, BuildId& buildId)
   // Continue parsing 4 values from wherever we left off (i.e. index 1 if we
   // parsed a branch), up to the max number of tokens. This should technically
   // check if any value isn't a valid number but I'm lazy for now.
-  int* ids[4] = {&buildId.mMajorVersion,
-                 &buildId.mMinorVersion,
-                 &buildId.mPatchVersion,
-                 &buildId.mRevisionId};
+  int* ids[4] = {&buildId.mMajorVersion, &buildId.mMinorVersion, &buildId.mPatchVersion, &buildId.mRevisionId};
   for (size_t i = 0; i < 4; ++i, ++index)
   {
     if (index >= (int)tokens.Size())
@@ -320,8 +315,7 @@ bool ZeroTemplate::ParseVersionId(StringParam versionId, BuildId& buildId)
   return true;
 }
 
-ZeroTemplate::BuildIdRange*
-ZeroTemplate::FindBestBuildRange(const BuildId& buildId)
+ZeroTemplate::BuildIdRange* ZeroTemplate::FindBestBuildRange(const BuildId& buildId)
 {
   for (size_t i = 0; i < mBuildIds.Size(); ++i)
   {
@@ -331,8 +325,7 @@ ZeroTemplate::FindBestBuildRange(const BuildId& buildId)
   return nullptr;
 }
 
-bool ZeroTemplate::TestBuildId(const BuildId& buildId,
-                               BuildIdRange& buildIdRange)
+bool ZeroTemplate::TestBuildId(const BuildId& buildId, BuildIdRange& buildIdRange)
 {
   BuildId& minId = buildIdRange.mMin;
   BuildId& maxId = buildIdRange.mMax;
@@ -344,8 +337,7 @@ bool ZeroTemplate::TestBuildId(const BuildId& buildId,
   // If going from the build id to the min version is not explicitly an older or
   // same upgrade then this isn't valid. (This deals with going to new and
   // breaking changes).
-  if (!(minResult == BuildUpdateState::Older ||
-        minResult == BuildUpdateState::Same))
+  if (!(minResult == BuildUpdateState::Older || minResult == BuildUpdateState::Same))
     return false;
 
   // Otherwise, if we have a max range to compare to then check it
@@ -355,8 +347,7 @@ bool ZeroTemplate::TestBuildId(const BuildId& buildId,
 
     // If going from the build to the max id isn't an explicitly same or newer
     // upgrade (no breaking) then we are outside the max value.
-    if (!(maxResult == BuildUpdateState::Newer ||
-          maxResult == BuildUpdateState::Same))
+    if (!(maxResult == BuildUpdateState::Newer || maxResult == BuildUpdateState::Same))
       return false;
   }
 

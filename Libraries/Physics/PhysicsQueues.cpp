@@ -40,9 +40,7 @@ void PhysicsQueue::Empty()
   mBroadPhaseAction.EmptyState();
 }
 
-void PhysicsQueue::ProcessQueue(BroadPhaseBatch& staticBatch,
-                                BroadPhaseBatch& dynamicBatch,
-                                Collider* collider)
+void PhysicsQueue::ProcessQueue(BroadPhaseBatch& staticBatch, BroadPhaseBatch& dynamicBatch, Collider* collider)
 {
   typedef BroadPhaseAction BPAction;
   BPAction& action = mBroadPhaseAction;
@@ -72,8 +70,7 @@ void PhysicsQueue::ProcessQueue(BroadPhaseBatch& staticBatch,
   }
 
   // deal with updates
-  if (!action.IsSet(BPAction::Static | BPAction::Dynamic) &&
-      action.IsSet(BPAction::Update))
+  if (!action.IsSet(BPAction::Static | BPAction::Dynamic) && action.IsSet(BPAction::Update))
   {
     BroadPhaseData bpData;
     ColliderToBroadPhaseData(collider, bpData);
@@ -88,8 +85,7 @@ void PhysicsQueue::ProcessQueue(BroadPhaseBatch& staticBatch,
   }
 }
 
-void PhysicsQueue::ColliderToBroadPhaseData(Collider* collider,
-                                            BroadPhaseData& data)
+void PhysicsQueue::ColliderToBroadPhaseData(Collider* collider, BroadPhaseData& data)
 {
   data.mAabb = collider->mAabb;
   data.mClientData = (void*)collider;

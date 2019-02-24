@@ -17,9 +17,7 @@ UserToken::UserToken(Grammar::Enum tokenId, CodeLocation* location) :
   this->SetLocationAndStartLength(location);
 }
 
-UserToken::UserToken(StringParam token,
-                     Grammar::Enum tokenId,
-                     CodeLocation* location) :
+UserToken::UserToken(StringParam token, Grammar::Enum tokenId, CodeLocation* location) :
     Token(token),
     TokenId(tokenId),
     Start(0),
@@ -73,8 +71,7 @@ void Tokenizer::Finalize(Array<UserToken>& tokensOut)
 
 const UserToken* Tokenizer::GetBaseToken()
 {
-  static UserToken token(Grammar::GetKeywordOrSymbol(Grammar::Base),
-                         Grammar::Base);
+  static UserToken token(Grammar::GetKeywordOrSymbol(Grammar::Base), Grammar::Base);
   return &token;
 }
 
@@ -92,21 +89,17 @@ const UserToken* Tokenizer::GetValueToken()
 
 const UserToken* Tokenizer::GetAccessToken()
 {
-  static UserToken token(Grammar::GetKeywordOrSymbol(Grammar::Access),
-                         Grammar::Access);
+  static UserToken token(Grammar::GetKeywordOrSymbol(Grammar::Access), Grammar::Access);
   return &token;
 }
 
 const UserToken* Tokenizer::GetAssignmentToken()
 {
-  static UserToken token(Grammar::GetKeywordOrSymbol(Grammar::Assignment),
-                         Grammar::Assignment);
+  static UserToken token(Grammar::GetKeywordOrSymbol(Grammar::Assignment), Grammar::Assignment);
   return &token;
 }
 
-bool Tokenizer::Parse(const CodeEntry& entry,
-                      Array<UserToken>& tokensOut,
-                      Array<UserToken>& commentsOut)
+bool Tokenizer::Parse(const CodeEntry& entry, Array<UserToken>& tokensOut, Array<UserToken>& commentsOut)
 {
   // Clear out our location for proper line and character counting
   this->Location = CodeLocation();
@@ -134,8 +127,7 @@ bool Tokenizer::Parse(const CodeEntry& entry,
   return ParseInternal(tokensOut, commentsOut);
 }
 
-bool Tokenizer::ParseInternal(Array<UserToken>& tokensOut,
-                              Array<UserToken>& commentsOut)
+bool Tokenizer::ParseInternal(Array<UserToken>& tokensOut, Array<UserToken>& commentsOut)
 {
   // The next token that will be parsed as we move along
   UserToken nextToken;
@@ -176,13 +168,10 @@ bool Tokenizer::ParseInternal(Array<UserToken>& tokensOut,
           // end to strip the /* and */
           nextToken.Start = multiLineCommentStart.EndPosition;
           nextToken.Length = nextToken.Location.StartPosition - nextToken.Start;
-          nextToken.Token = this->Data.SubStringFromByteIndices(
-              nextToken.Start, nextToken.Location.StartPosition);
-          nextToken.Location.StartPosition =
-              multiLineCommentStart.StartPosition;
+          nextToken.Token = this->Data.SubStringFromByteIndices(nextToken.Start, nextToken.Location.StartPosition);
+          nextToken.Location.StartPosition = multiLineCommentStart.StartPosition;
           nextToken.Location.StartLine = multiLineCommentStart.StartLine;
-          nextToken.Location.StartCharacter =
-              multiLineCommentStart.StartCharacter;
+          nextToken.Location.StartCharacter = multiLineCommentStart.StartCharacter;
           commentsOut.PushBack(nextToken);
         }
       }
@@ -357,8 +346,7 @@ bool Tokenizer::ReadKeywordOrSymbol(UserToken* outToken,
     {
       // As long as the last character read was not an alpha-numeric
       // character...
-      if (CharacterUtilities::IsAlphaNumeric(character) == false &&
-          character != '_')
+      if (CharacterUtilities::IsAlphaNumeric(character) == false && character != '_')
       {
         // Backup the last read character
         --this->Position;
@@ -385,10 +373,7 @@ bool Tokenizer::ReadKeywordOrSymbol(UserToken* outToken,
   return false;
 }
 
-bool Tokenizer::ReadIdentifier(UserToken* outToken,
-                               bool startedFromKeyword,
-                               size_t& lastAcceptedPos,
-                               char& character)
+bool Tokenizer::ReadIdentifier(UserToken* outToken, bool startedFromKeyword, size_t& lastAcceptedPos, char& character)
 {
   // Whether or not we've accepted the token
   bool acceptedToken = startedFromKeyword;
@@ -404,8 +389,7 @@ bool Tokenizer::ReadIdentifier(UserToken* outToken,
     if (acceptedToken)
     {
       // If it's not an alpha-numeric value or underscore, then we have to stop
-      if (CharacterUtilities::IsAlphaNumeric(character) == false &&
-          character != '_')
+      if (CharacterUtilities::IsAlphaNumeric(character) == false && character != '_')
         break;
     }
     // Otherwise, we haven't accepted anything yet (so we're on the first
@@ -448,9 +432,7 @@ bool Tokenizer::ReadIdentifier(UserToken* outToken,
   return acceptedToken;
 }
 
-bool Tokenizer::ReadNumber(UserToken* outToken,
-                           size_t& lastAcceptedPos,
-                           char& character)
+bool Tokenizer::ReadNumber(UserToken* outToken, size_t& lastAcceptedPos, char& character)
 {
   // Whether or not we've accepted the token
   bool acceptedToken = false;
@@ -578,9 +560,7 @@ bool Tokenizer::ReadNumber(UserToken* outToken,
   return acceptedToken;
 }
 
-bool Tokenizer::ReadString(UserToken* outToken,
-                           size_t& lastAcceptedPos,
-                           char& character)
+bool Tokenizer::ReadString(UserToken* outToken, size_t& lastAcceptedPos, char& character)
 {
   // We only consider this string to be an interpolant end if it starts with a
   // grave accent
@@ -623,9 +603,7 @@ bool Tokenizer::ReadString(UserToken* outToken,
           if (this->CommentDepth == 0)
           {
             // We hit an invalid escape
-            this->Errors.Raise(this->Location,
-                               ErrorCode::InvalidEscapeInStringLiteral,
-                               character);
+            this->Errors.Raise(this->Location, ErrorCode::InvalidEscapeInStringLiteral, character);
             return false;
           }
         }
@@ -634,16 +612,14 @@ bool Tokenizer::ReadString(UserToken* outToken,
         escaped = false;
       }
       // Otherwise, if it's a non escaped quotation..
-      else if (character == '"' ||
-               (this->EnableStringInterpolation && character == '`'))
+      else if (character == '"' || (this->EnableStringInterpolation && character == '`'))
       {
         // Set that the last accepted position was this position
         lastAcceptedPos = this->Position;
 
         // If we're ending this string with a grave, then it means we're
         // starting an interpolant
-        bool isInterpolantStart =
-            (this->EnableStringInterpolation && character == '`');
+        bool isInterpolantStart = (this->EnableStringInterpolation && character == '`');
 
         // If the character is an interpolant starting character...
         if (isInterpolantStart)
@@ -695,8 +671,7 @@ bool Tokenizer::ReadString(UserToken* outToken,
         else
         {
           // We hit the eof before closing the string
-          this->Errors.Raise(this->Location,
-                             ErrorCode::StringLiteralNotComplete);
+          this->Errors.Raise(this->Location, ErrorCode::StringLiteralNotComplete);
           return false;
         }
       }
@@ -726,8 +701,7 @@ bool Tokenizer::ReadToken(UserToken* outToken)
     // Attempt to read a keyword or symbol
     // Internally we call 'ReadCharacter', which can return eof, so we handle it
     // below
-    if (ReadKeywordOrSymbol(outToken, lastAcceptedPos, character, tokenType) ==
-        true)
+    if (ReadKeywordOrSymbol(outToken, lastAcceptedPos, character, tokenType) == true)
     {
       // Break out since we've found the full token
       break;
@@ -742,8 +716,7 @@ bool Tokenizer::ReadToken(UserToken* outToken)
 
         // Read the identifier (we don't actually need to check the return since
         // we always know its 'true')
-        bool result =
-            ReadIdentifier(outToken, true, lastAcceptedPos, character);
+        bool result = ReadIdentifier(outToken, true, lastAcceptedPos, character);
         ErrorIf(result != true, "Reading the identifier must always succeed");
         break;
       }
@@ -770,8 +743,7 @@ bool Tokenizer::ReadToken(UserToken* outToken)
         }
         // Attempt to read it as an identifier
         else if (ReadIdentifier(outToken, false, lastAcceptedPos, character) ||
-                 ReadNumber(outToken, lastAcceptedPos, character) ||
-                 ReadString(outToken, lastAcceptedPos, character))
+                 ReadNumber(outToken, lastAcceptedPos, character) || ReadString(outToken, lastAcceptedPos, character))
         {
           // Break out since we've found the full token
           break;
@@ -806,8 +778,7 @@ bool Tokenizer::ReadToken(UserToken* outToken)
         // If we got here, some sort of unknown data must have been input
         // Add a parsing error that informs the user that a token could not be
         // read
-        this->Errors.Raise(
-            this->Location, ErrorCode::UnidentifiedSymbol, badCharacter);
+        this->Errors.Raise(this->Location, ErrorCode::UnidentifiedSymbol, badCharacter);
         return false;
       }
     }
@@ -820,8 +791,7 @@ bool Tokenizer::ReadToken(UserToken* outToken)
   outToken->Length = lastAcceptedPos - outToken->Start;
 
   // Read in the token
-  outToken->Token =
-      String(this->Data.c_str() + outToken->Start, outToken->Length);
+  outToken->Token = String(this->Data.c_str() + outToken->Start, outToken->Length);
 
   // Move the location's start forward
   this->Location.StartLine = this->Location.EndLine;
@@ -920,8 +890,7 @@ bool CharacterUtilities::IsWhiteSpace(Rune r)
 
 bool CharacterUtilities::IsAlpha(Rune r)
 {
-  return (r.mValue >= 'a' && r.mValue <= 'z') ||
-         (r.mValue >= 'A' && r.mValue <= 'Z');
+  return (r.mValue >= 'a' && r.mValue <= 'z') || (r.mValue >= 'A' && r.mValue <= 'Z');
 }
 
 bool CharacterUtilities::IsNumeric(Rune r)
@@ -931,8 +900,7 @@ bool CharacterUtilities::IsNumeric(Rune r)
 
 bool CharacterUtilities::IsAlphaNumeric(Rune r)
 {
-  return (r.mValue >= 'a' && r.mValue <= 'z') ||
-         (r.mValue >= 'A' && r.mValue <= 'Z') ||
+  return (r.mValue >= 'a' && r.mValue <= 'z') || (r.mValue >= 'A' && r.mValue <= 'Z') ||
          (r.mValue >= '0' && r.mValue <= '9');
 }
 

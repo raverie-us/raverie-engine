@@ -46,8 +46,7 @@ template <typename T>
 struct ZeroSharedTemplate has_hash_function_helper
 {
   template <typename T2>
-  static inline yes
-  Test(static_verify_function_signature<size_t (T2::*)() const, &T2::Hash>*);
+  static inline yes Test(static_verify_function_signature<size_t (T2::*)() const, &T2::Hash>*);
   template <typename T2>
   static inline no Test(...);
 
@@ -57,8 +56,7 @@ struct ZeroSharedTemplate has_hash_function_helper
 /// Provides a constant defined as true if T has a hash function, else defined
 /// as false
 template <typename T>
-struct ZeroSharedTemplate has_hash_function
-    : public integral_constant<bool, has_hash_function_helper<T>::value>
+struct ZeroSharedTemplate has_hash_function : public integral_constant<bool, has_hash_function_helper<T>::value>
 {
 };
 
@@ -82,9 +80,7 @@ struct ZeroSharedTemplate HashPolicy : public ComparePolicy<T>
 /// Default hash policy
 /// Available for instantiation if T has an accessible hash function
 template <typename T>
-struct ZeroSharedTemplate
-    HashPolicy<T, TC_ENABLE_IF(has_hash_function<T>::value)>
-    : public ComparePolicy<T>
+struct ZeroSharedTemplate HashPolicy<T, TC_ENABLE_IF(has_hash_function<T>::value)> : public ComparePolicy<T>
 {
 public:
   typedef HashPolicy<T> this_type;
@@ -151,8 +147,7 @@ struct ZeroShared HashPolicy<long> : public ComparePolicy<long>
 
 /// HashPolicy for unsigned long
 template <>
-struct ZeroShared HashPolicy<unsigned long>
-    : public ComparePolicy<unsigned long>
+struct ZeroShared HashPolicy<unsigned long> : public ComparePolicy<unsigned long>
 {
   inline size_t operator()(const unsigned long& value) const
   {
@@ -229,8 +224,7 @@ struct ZeroShared HashPolicy<s64> : public ComparePolicy<s64>
 template <typename type0, typename type1>
 size_t Pair<type0, type1>::Hash() const
 {
-  return HashPolicy<first_type>()(first) ^
-         HashPolicy<second_type>()(second) * 7187;
+  return HashPolicy<first_type>()(first) ^ HashPolicy<second_type>()(second) * 7187;
 }
 
 //
@@ -244,9 +238,8 @@ struct ZeroSharedTemplate has_valid_hash_policy_helper
   typedef struct HashPolicy<T> HashPolicyT;
 
   template <typename T2>
-  static inline yes Test(
-      static_verify_function_signature<size_t (HashPolicyT::*)(const T2&) const,
-                                       &HashPolicyT::operator()>*);
+  static inline yes
+  Test(static_verify_function_signature<size_t (HashPolicyT::*)(const T2&) const, &HashPolicyT::operator()>*);
   template <typename T2>
   static inline no Test(...);
 
@@ -257,8 +250,7 @@ struct ZeroSharedTemplate has_valid_hash_policy_helper
 /// defined as false A hash policy is valid if it has a function callable as:
 /// size_t operator()(const T& value) const;
 template <typename T>
-struct ZeroSharedTemplate has_valid_hash_policy
-    : public integral_constant<bool, has_valid_hash_policy_helper<T>::value>
+struct ZeroSharedTemplate has_valid_hash_policy : public integral_constant<bool, has_valid_hash_policy_helper<T>::value>
 {
 };
 

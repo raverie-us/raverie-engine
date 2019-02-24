@@ -18,9 +18,7 @@ Tweakable(Vec4, InvalidColor, Vec4(1, 1, 1, 1), cLocation);
 } // namespace NewProjectsUi
 
 // TemplateProjectItem
-TemplateProjectItem::TemplateProjectItem(Composite* parent,
-                                         NewProjectMenu* newProjectMenu,
-                                         TemplateProject* project) :
+TemplateProjectItem::TemplateProjectItem(Composite* parent, NewProjectMenu* newProjectMenu, TemplateProject* project) :
     Composite(parent),
     mNewProjectMenu(newProjectMenu),
     mTemplateProject(project)
@@ -32,9 +30,7 @@ TemplateProjectItem::TemplateProjectItem(Composite* parent,
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetColor(NewProjectsUi::TemplateColor);
   SetSizing(SizeAxis::X, SizePolicy::Fixed, NewProjectsUi::TemplateWidth);
-  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom,
-                              Pixels(13, 0),
-                              Thickness(Pixels(4, 0, 0, 5))));
+  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(13, 0), Thickness(Pixels(4, 0, 0, 5))));
 
   mImage = new TextureView(this);
   mImage->SetNotInLayout(true);
@@ -42,7 +38,7 @@ TemplateProjectItem::TemplateProjectItem(Composite* parent,
   new Spacer(this, SizePolicy::Flex, Vec2(1));
 
   String projectName = mTemplateProject->GetDisplayName();
-  forRange(String curr, projectName.Split("\\n"))
+  forRange (String curr, projectName.Split("\\n"))
   {
     Text* name = new Text(this, mLauncherBoldFont, 16);
     name->SetText(curr);
@@ -56,9 +52,7 @@ TemplateProjectItem::TemplateProjectItem(Composite* parent,
 
   // Listen for the template project being updated (so if it ever downloads a
   // new preview we update)
-  ConnectThisTo(mTemplateProject,
-                Events::TemplateProjectPreviewUpdated,
-                OnTemplateProjectPreviewUpdated);
+  ConnectThisTo(mTemplateProject, Events::TemplateProjectPreviewUpdated, OnTemplateProjectPreviewUpdated);
   // Grab the current preview image (if it has one)
   UpdatePreviewImage();
 }
@@ -123,27 +117,22 @@ void TemplateProjectItem::UpdatePreviewImage()
 }
 
 // NewProjectMenu
-NewProjectMenu::NewProjectMenu(Composite* parent, LauncherWindow* launcher) :
-    Composite(parent),
-    mLauncher(launcher)
+NewProjectMenu::NewProjectMenu(Composite* parent, LauncherWindow* launcher) : Composite(parent), mLauncher(launcher)
 {
   LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
-  SetLayout(CreateStackLayout(
-      LayoutDirection::TopToBottom, Vec2::cZero, Thickness(35, 23, 35, 21)));
+  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness(35, 23, 35, 21)));
   SetClipping(true);
 
   mTemplateArea = new Composite(this);
   mTemplateArea->SetSizing(SizePolicy::Flex, Vec2(1));
-  mTemplateArea->SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Pixels(21, 0), Thickness(0, 0, 0, 11)));
+  mTemplateArea->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(21, 0), Thickness(0, 0, 0, 11)));
 
   Composite* topRow = new Composite(this);
   topRow->SetLayout(CreateRowLayout());
   {
     Composite* nameGroup = new Composite(topRow);
     nameGroup->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(500));
-    nameGroup->SetLayout(CreateStackLayout(
-        LayoutDirection::TopToBottom, Vec2::cZero, Thickness(0, 5, 10, 0)));
+    nameGroup->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness(0, 5, 10, 0)));
     {
       mNameBox = new TextBox(nameGroup);
       mNameBox->SetReadOnly(false);
@@ -153,8 +142,7 @@ NewProjectMenu::NewProjectMenu(Composite* parent, LauncherWindow* launcher) :
       ConnectThisTo(mNameBox, Events::TextChanged, OnFilePathTextChanged);
 
       Composite* bottomRow = new Composite(nameGroup);
-      bottomRow->SetLayout(CreateStackLayout(
-          LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
+      bottomRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
       {
         Text* label = new Text(bottomRow, mLauncherRegularFont, 11);
         label->SetText("NAME");
@@ -162,8 +150,7 @@ NewProjectMenu::NewProjectMenu(Composite* parent, LauncherWindow* launcher) :
 
         new Spacer(bottomRow, SizePolicy::Flex, Vec2(1, 1));
 
-        mProjectCreationErrorMessage =
-            new Text(bottomRow, mLauncherRegularFont, 11);
+        mProjectCreationErrorMessage = new Text(bottomRow, mLauncherRegularFont, 11);
         mProjectCreationErrorMessage->SetText("Error message unset");
         mProjectCreationErrorMessage->SetColor(NewProjectsUi::InvalidColor);
         mProjectCreationErrorMessage->SetVisible(false);
@@ -172,8 +159,7 @@ NewProjectMenu::NewProjectMenu(Composite* parent, LauncherWindow* launcher) :
 
     Composite* tagsGroup = new Composite(topRow);
     tagsGroup->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
-    tagsGroup->SetLayout(CreateStackLayout(
-        LayoutDirection::TopToBottom, Vec2::cZero, Thickness(0, 5, 5, 0)));
+    tagsGroup->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness(0, 5, 5, 0)));
     {
       mTags = new TextBox(tagsGroup);
       mTags->SetReadOnly(false);
@@ -207,9 +193,7 @@ NewProjectMenu::NewProjectMenu(Composite* parent, LauncherWindow* launcher) :
       mLocationBox->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(18));
       mLocationBox->SetStyle(TextBoxStyle::Modern);
       ConnectThisTo(mLocationBox, Events::TextChanged, OnFilePathTextChanged);
-      ConnectThisTo(mLocationBox->mButton,
-                    Events::ButtonPressed,
-                    OnSelectLocationPressed);
+      ConnectThisTo(mLocationBox->mButton, Events::ButtonPressed, OnSelectLocationPressed);
     }
 
     Text* label = new Text(bottomRow, mLauncherRegularFont, 11);
@@ -230,17 +214,13 @@ NewProjectMenu::NewProjectMenu(Composite* parent, LauncherWindow* launcher) :
   mLocationBox->SetText(config->mDefaultProjectSaveLocation);
 
   VersionSelector* versionSelector = mLauncher->mVersionSelector;
-  ConnectThisTo(
-      versionSelector, Events::TemplateListLoaded, OnTemplateListLoaded);
-  ConnectThisTo(
-      versionSelector, Events::TemplateListUpdated, OnTemplateListLoaded);
+  ConnectThisTo(versionSelector, Events::TemplateListLoaded, OnTemplateListLoaded);
+  ConnectThisTo(versionSelector, Events::TemplateListUpdated, OnTemplateListLoaded);
   ConnectThisTo(mBuildSelector, Events::BuildSelected, OnVersionChange);
 
   // Listen for when the user tags change on the config (most likely from the
   // settings menu)
-  ConnectThisTo(Z::gEngine->GetConfigCog(),
-                Events::LauncherConfigChanged,
-                OnLauncherConfigChanged);
+  ConnectThisTo(Z::gEngine->GetConfigCog(), Events::LauncherConfigChanged, OnLauncherConfigChanged);
 }
 
 BuildId NewProjectMenu::GetBuildId() const
@@ -291,8 +271,7 @@ void NewProjectMenu::UpdateTemplates()
   for (size_t i = 0; i < templates.Size(); ++i)
   {
     TemplateProject* project = templates[i];
-    TemplateProjectItem* item =
-        new TemplateProjectItem(mTemplateArea, this, project);
+    TemplateProjectItem* item = new TemplateProjectItem(mTemplateArea, this, project);
     ConnectThisTo(item, Events::ButtonPressed, OnTemplateSelected);
     mTemplates.PushBack(item);
   }
@@ -319,14 +298,12 @@ void NewProjectMenu::ValidateProjectCreation()
 
   // Save the project to a folder under the project's name
   String projectFolder = FilePath::Combine(projectLocation, projectName);
-  String filePath =
-      FilePath::CombineWithExtension(projectFolder, projectName, ".zeroproj");
+  String filePath = FilePath::CombineWithExtension(projectFolder, projectName, ".zeroproj");
 
   bool projectExists = FileExists(filePath);
 
   ZeroBuild* selectedBuild = mBuildSelector->GetBuild();
-  bool validBuild = (selectedBuild != nullptr &&
-                     selectedBuild->mInstallState == InstallState::Installed);
+  bool validBuild = (selectedBuild != nullptr && selectedBuild->mInstallState == InstallState::Installed);
 
   mProjectCreationErrorMessage->SetVisible(false);
   mNameBox->mBackgroundColor = ToByteColor(ModernTextBoxUi::BackgroundColor);
@@ -346,8 +323,7 @@ void NewProjectMenu::ValidateProjectCreation()
     {
       SetInvalidProject("Project already exists at given location");
     }
-    else if (selectedBuild == nullptr ||
-             selectedBuild->mInstallState != InstallState::Installing)
+    else if (selectedBuild == nullptr || selectedBuild->mInstallState != InstallState::Installing)
     {
       highlightBuildBorder = true;
       SetInvalidProject("Please select a valid build version");
@@ -361,8 +337,7 @@ void NewProjectMenu::ValidateProjectCreation()
   {
     // make sure the project isn't named the same as any of our default
     // libraries
-    ContentLibrary* library =
-        Z::gContentSystem->Libraries.FindValue(projectName, NULL);
+    ContentLibrary* library = Z::gContentSystem->Libraries.FindValue(projectName, NULL);
     if (library)
     {
       // we found a library with the same name as the project, disallow the name
@@ -410,7 +385,7 @@ void NewProjectMenu::OnMenuDisplayed(Event* e)
   ZeroBuild* latestInstalledBuild = nullptr;
 
   VersionSelector* versionSelector = mLauncher->mVersionSelector;
-  forRange(ZeroBuild * build, versionSelector->mVersions.All())
+  forRange (ZeroBuild* build, versionSelector->mVersions.All())
   {
     if (build->mInstallState == InstallState::Installed)
     {
@@ -427,11 +402,9 @@ void NewProjectMenu::OnMenuDisplayed(Event* e)
   {
     mBuildSelector->mCurrentBuild->mBuildText->SetText("Select Build");
     mBuildSelector->mCurrentBuild->mInstallState->SetText("NONE");
-    mBuildSelector->mCurrentBuild->mInstallState->SetColor(
-        BuildColors::Deprecated);
+    mBuildSelector->mCurrentBuild->mInstallState->SetColor(BuildColors::Deprecated);
 
-    ConnectThisTo(
-        versionSelector, Events::InstallStarted, OnFirstInstallStarted);
+    ConnectThisTo(versionSelector, Events::InstallStarted, OnFirstInstallStarted);
   }
 
   // When it's pressed, we want to install
@@ -472,10 +445,9 @@ void NewProjectMenu::OnFirstInstallStarted(Event* e)
   GetDispatcher()->DisconnectEvent(Events::InstallCompleted, this);
 
   ZeroBuild* latestInstalledBuild = nullptr;
-  forRange(ZeroBuild * build, versionSelector->mVersions.All())
+  forRange (ZeroBuild* build, versionSelector->mVersions.All())
   {
-    if (build->mInstallState == InstallState::Installed ||
-        build->mInstallState == InstallState::Installing)
+    if (build->mInstallState == InstallState::Installed || build->mInstallState == InstallState::Installing)
     {
       latestInstalledBuild = build;
       break;
@@ -497,8 +469,7 @@ void NewProjectMenu::OnVersionChange(Event* e)
     ConnectThisTo(selectedBuild, Events::InstallStarted, OnBuildStateChanged);
     ConnectThisTo(selectedBuild, Events::InstallCompleted, OnBuildStateChanged);
     ConnectThisTo(selectedBuild, Events::UninstallStarted, OnBuildStateChanged);
-    ConnectThisTo(
-        selectedBuild, Events::UninstallCompleted, OnBuildStateChanged);
+    ConnectThisTo(selectedBuild, Events::UninstallCompleted, OnBuildStateChanged);
   }
 }
 
@@ -609,28 +580,16 @@ void NewProjectMenu::OnCreateProject(Event* e)
   // otherwise download it
   if (selectedProject->mIsDownloaded)
   {
-    CachedProject* cachedProject =
-        mLauncher->mProjectCache->CreateProjectFromTemplate(
-            projectName,
-            projectFolder,
-            selectedProject->GetInstalledTemplatePath(),
-            projectBuildId,
-            projectTags);
+    CachedProject* cachedProject = mLauncher->mProjectCache->CreateProjectFromTemplate(
+        projectName, projectFolder, selectedProject->GetInstalledTemplatePath(), projectBuildId, projectTags);
     RunNewlyCreatedProject(cachedProject);
   }
   else
   {
-    BackgroundTask* task =
-        mLauncher->mVersionSelector->CreateProjectFromTemplate(
-            selectedProject,
-            templateInstallLocation,
-            projectFolder,
-            projectBuildId,
-            projectTags);
-    ConnectThisTo(
-        task, Events::BackgroundTaskCompleted, OnTemplateInstallFinished);
-    ConnectThisTo(
-        task, Events::BackgroundTaskFailed, OnTemplateInstallFinished);
+    BackgroundTask* task = mLauncher->mVersionSelector->CreateProjectFromTemplate(
+        selectedProject, templateInstallLocation, projectFolder, projectBuildId, projectTags);
+    ConnectThisTo(task, Events::BackgroundTaskCompleted, OnTemplateInstallFinished);
+    ConnectThisTo(task, Events::BackgroundTaskFailed, OnTemplateInstallFinished);
   }
 
   // Set the project name and tags back to empty
@@ -650,16 +609,13 @@ void NewProjectMenu::OnTemplateInstallFinished(BackgroundTaskEvent* e)
   {
     String msg = "Project creation failed";
     String extraMsg = "Cannot download template project. Do you have internet?";
-    ModalButtonsAction* modal = new ModalButtonsAction(
-        this, msg.ToUpper(), "CLOSE", extraMsg.ToUpper());
+    ModalButtonsAction* modal = new ModalButtonsAction(this, msg.ToUpper(), "CLOSE", extraMsg.ToUpper());
     mLauncher->mActiveModal = modal;
     return;
   }
 
-  DownloadAndCreateTemplateTaskJob* job =
-      (DownloadAndCreateTemplateTaskJob*)e->mTask->GetFinishedJob();
-  CachedProject* project =
-      job->GetOrCreateCachedProject(mLauncher->mProjectCache);
+  DownloadAndCreateTemplateTaskJob* job = (DownloadAndCreateTemplateTaskJob*)e->mTask->GetFinishedJob();
+  CachedProject* project = job->GetOrCreateCachedProject(mLauncher->mProjectCache);
 
   RunNewlyCreatedProject(project);
 }
@@ -677,13 +633,11 @@ void NewProjectMenu::RunNewlyCreatedProject(CachedProject* project)
   {
     // This will currently leak, but it's tricky to deal with the tcp socket
     // destruction (this shouldn't happen too often so whatever for now)
-    LauncherDebuggerCommunication* debugCommunication =
-        new LauncherDebuggerCommunication();
+    LauncherDebuggerCommunication* debugCommunication = new LauncherDebuggerCommunication();
     mLauncher->mDummyCommunicators.PushBack(debugCommunication);
     debugCommunication->SendOpenProject(project->GetProjectPath());
-    ConnectThisTo(debugCommunication,
-                  Events::LauncherDebuggerCommunicationFailed,
-                  OnNewProjectDebuggerCommunicationFailed);
+    ConnectThisTo(
+        debugCommunication, Events::LauncherDebuggerCommunicationFailed, OnNewProjectDebuggerCommunicationFailed);
     return;
   }
 
@@ -692,11 +646,9 @@ void NewProjectMenu::RunNewlyCreatedProject(CachedProject* project)
   mLauncher->mVersionSelector->RunProject(version, project);
 }
 
-void NewProjectMenu::OnNewProjectDebuggerCommunicationFailed(
-    LauncherCommunicationEvent* e)
+void NewProjectMenu::OnNewProjectDebuggerCommunicationFailed(LauncherCommunicationEvent* e)
 {
-  CachedProject* project =
-      mLauncher->mProjectCache->LoadProjectFile(e->mProjectFile);
+  CachedProject* project = mLauncher->mProjectCache->LoadProjectFile(e->mProjectFile);
   // Run the project that we just created
   ZeroBuild* version = mLauncher->mVersionSelector->FindExactVersion(project);
   mLauncher->mVersionSelector->RunProject(version, project);

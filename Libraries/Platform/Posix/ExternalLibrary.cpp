@@ -37,9 +37,7 @@ void ExternalLibrary::Unload()
 
 void* ExternalLibrary::GetFunctionByName(cstr name)
 {
-  ReturnIf(mHandle == nullptr,
-           nullptr,
-           "Attempting to get a function from an invalid library");
+  ReturnIf(mHandle == nullptr, nullptr, "Attempting to get a function from an invalid library");
   return dlsym(mHandle, name);
 }
 

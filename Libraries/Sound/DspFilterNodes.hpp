@@ -332,12 +332,8 @@ public:
   /// Sets the volume adjustment of all bands (the parameters in order are low
   /// pass, band 1, band 2, band 3, high pass) over the number of seconds passed
   /// in as the final parameter.
-  void InterpolateAllBands(float lowPass,
-                           float band1,
-                           float band2,
-                           float band3,
-                           float highPass,
-                           float timeToInterpolate);
+  void
+  InterpolateAllBands(float lowPass, float band1, float band2, float band3, float highPass, float timeToInterpolate);
 
 private:
   bool GetOutputSamples(BufferType* outputBuffer,

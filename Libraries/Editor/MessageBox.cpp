@@ -13,9 +13,7 @@ ZilchDefineType(MessageBoxEvent, builder, type)
 }
 
 // Create a message box
-MessageBox* MessageBox::Show(StringParam caption,
-                             StringParam text,
-                             const cstr buttons[])
+MessageBox* MessageBox::Show(StringParam caption, StringParam text, const cstr buttons[])
 {
   //// Create a new message box
   Composite* composite = Z::gEditor->GetRootWidget();
@@ -27,9 +25,7 @@ MessageBox* MessageBox::Show(StringParam caption,
 }
 
 // Create a message box
-MessageBox* MessageBox::Show(StringParam caption,
-                             StringParam text,
-                             Array<String>& buttons)
+MessageBox* MessageBox::Show(StringParam caption, StringParam text, Array<String>& buttons)
 {
   //// Create a new message box
   Composite* composite = Z::gEditor->GetRootWidget();
@@ -40,10 +36,7 @@ MessageBox* MessageBox::Show(StringParam caption,
   return dialog;
 }
 
-MessageBox* MessageBox::Show(Composite* parent,
-                             StringParam caption,
-                             StringParam text,
-                             const cstr buttons[])
+MessageBox* MessageBox::Show(Composite* parent, StringParam caption, StringParam text, const cstr buttons[])
 {
   MessageBox* dialog = new MessageBox(parent, caption, text, buttons);
 
@@ -51,10 +44,7 @@ MessageBox* MessageBox::Show(Composite* parent,
   return dialog;
 }
 
-Zero::MessageBox* MessageBox::Show(Composite* parent,
-                                   StringParam caption,
-                                   StringParam text,
-                                   Array<String>& buttons)
+Zero::MessageBox* MessageBox::Show(Composite* parent, StringParam caption, StringParam text, Array<String>& buttons)
 {
   MessageBox* dialog = new MessageBox(parent, caption, text, buttons);
 
@@ -63,11 +53,7 @@ Zero::MessageBox* MessageBox::Show(Composite* parent,
 }
 
 // Constructor
-MessageBox::MessageBox(Composite* parent,
-                       StringParam caption,
-                       StringParam text,
-                       const cstr buttons[]) :
-    Window(parent)
+MessageBox::MessageBox(Composite* parent, StringParam caption, StringParam text, const cstr buttons[]) : Window(parent)
 {
   // Create a large transparent block to darken and block input on the screen.
   mBlock = CreateBlackOut(parent);
@@ -86,8 +72,7 @@ MessageBox::MessageBox(Composite* parent,
   mText->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
 
   Composite* buttonRow = new Composite(this);
-  buttonRow->SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Pixels(4, 4), Thickness::All(4)));
+  buttonRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(4, 4), Thickness::All(4)));
 
   const cstr* current = buttons;
   while (*current != NULL)
@@ -124,10 +109,7 @@ MessageBox::MessageBox(Composite* parent,
   this->TakeFocus();
 }
 
-MessageBox::MessageBox(Composite* parent,
-                       StringParam caption,
-                       StringParam text,
-                       Array<String>& buttons) :
+MessageBox::MessageBox(Composite* parent, StringParam caption, StringParam text, Array<String>& buttons) :
     Window(parent)
 {
   // Create a large transparent block to darken and block input on the screen.
@@ -147,10 +129,9 @@ MessageBox::MessageBox(Composite* parent,
   mText->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
 
   Composite* buttonRow = new Composite(this);
-  buttonRow->SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Pixels(4, 4), Thickness::All(4)));
+  buttonRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(4, 4), Thickness::All(4)));
 
-  forRange(StringParam current, buttons.All())
+  forRange (StringParam current, buttons.All())
   {
     // Create a new button and setup the text
     TextButton* button = new TextButton(buttonRow);

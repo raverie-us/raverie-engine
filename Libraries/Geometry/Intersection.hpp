@@ -145,10 +145,7 @@ struct Interval
 };
 
 class SupportShape;
-typedef void (*SupportFunction)(const SupportShape* shape,
-                                void* data,
-                                Vec3Param direction,
-                                Vec3Ptr support);
+typedef void (*SupportFunction)(const SupportShape* shape, void* data, Vec3Param direction, Vec3Ptr support);
 class SupportShape
 {
 public:
@@ -177,19 +174,13 @@ public:
 };
 
 template <typename ShapeType>
-void Support(const SupportShape* shape,
-             void* data,
-             Vec3Param direction,
-             Vec3Ptr support)
+void Support(const SupportShape* shape, void* data, Vec3Param direction, Vec3Ptr support)
 {
   reinterpret_cast<const ShapeType*>(data)->Support(direction, support);
 }
 
 template <typename ShapeType>
-void SupportDelta(const SupportShape* shape,
-                  void* data,
-                  Vec3Param direction,
-                  Vec3Ptr support)
+void SupportDelta(const SupportShape* shape, void* data, Vec3Param direction, Vec3Ptr support)
 {
   Vec3 pos;
   shape->GetCenter(&pos);
@@ -197,22 +188,18 @@ void SupportDelta(const SupportShape* shape,
   Quat deltaRot = shape->GetDeltaRotation();
   Vec3 dir = Math::Multiply(deltaRot.Inverted(), direction);
   reinterpret_cast<const ShapeType*>(data)->Support(dir, support);
-  *support = Math::Multiply(deltaRot, *support - pos) + pos +
-             shape->GetDeltaPosition();
+  *support = Math::Multiply(deltaRot, *support - pos) + pos + shape->GetDeltaPosition();
 }
 
 template <typename ShapeType>
-Intersection::SupportShape MakeSupport(const ShapeType* object,
-                                       bool supportDelta = false)
+Intersection::SupportShape MakeSupport(const ShapeType* object, bool supportDelta = false)
 {
   Vec3 center;
   object->GetCenter(center);
   if (supportDelta)
-    return Intersection::SupportShape(
-        center, &SupportDelta<ShapeType>, (void*)object);
+    return Intersection::SupportShape(center, &SupportDelta<ShapeType>, (void*)object);
   else
-    return Intersection::SupportShape(
-        center, &Support<ShapeType>, (void*)object);
+    return Intersection::SupportShape(center, &Support<ShapeType>, (void*)object);
 }
 
 /*
@@ -300,34 +287,23 @@ Type PointPoint(Vec3Param pointA, Vec3Param pointB);
 Type PointRay(Vec3Param point, Vec3Param rayStart, Vec3Param rayDirection);
 
 /// Test to see if the given point lies on or inside the given segment.
-Type PointSegment(Vec3Param point,
-                  Vec3Param segmentStart,
-                  Vec3Param segmentEnd);
+Type PointSegment(Vec3Param point, Vec3Param segmentStart, Vec3Param segmentEnd);
 
 /// Test to see if the given point lies on or inside the given axis-aligned
 /// bounding box.
 Type PointAabb(Vec3Param point, Vec3Param aabbMin, Vec3Param aabbMax);
 
 /// Test to see if the given point lies on or inside the given capsule.
-Type PointCapsule(Vec3Param point,
-                  Vec3Param capsulePointA,
-                  Vec3Param capsulePointB,
-                  real capsuleRadius);
+Type PointCapsule(Vec3Param point, Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius);
 
 /// Test to see if the given point lies on or inside the given convex shape.
 Type PointConvexShape(Vec3Param point, const SupportShape& support);
 
 /// Test to see if the given point lies on or inside the given cylinder.
-Type PointCylinder(Vec3Param point,
-                   Vec3Param cylinderPointA,
-                   Vec3Param cylinderPointB,
-                   real cylinderRadius);
+Type PointCylinder(Vec3Param point, Vec3Param cylinderPointA, Vec3Param cylinderPointB, real cylinderRadius);
 
 /// Test to see if the given point lies on or inside the given ellipsoid.
-Type PointEllipsoid(Vec3Param point,
-                    Vec3Param ellipsoidCenter,
-                    Vec3Param ellipsoidRadii,
-                    Mat3Param ellipsoidBasis);
+Type PointEllipsoid(Vec3Param point, Vec3Param ellipsoidCenter, Vec3Param ellipsoidRadii, Mat3Param ellipsoidBasis);
 
 /// Test to see if the given point lies inside the given frustum. The 6 planes
 /// of the frustum are assumed to be pointing inwards.
@@ -335,10 +311,7 @@ Type PointFrustum(Vec3Param point, const Vec4 frustumPlanes[6]);
 
 /// Test to see if the given point lies on or inside the given oriented-bounding
 /// box.
-Type PointObb(Vec3Param point,
-              Vec3Param obbCenter,
-              Vec3Param obbHalfExtents,
-              Mat3Param obbBasis);
+Type PointObb(Vec3Param point, Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis);
 
 /// Test to see if the given point lies on or inside the given plane.
 Type PointPlane(Vec3Param point, Vec3Param planeNormal, real planeDistance);
@@ -367,63 +340,41 @@ Type PointTriangle(Vec3Param point,
 /// Find the closest point on a ray to the given point. Will return "Inside" if
 /// the closest point found is in the interval of t = [0, inf], otherwise
 /// returns "Outside".
-Type ClosestPointOnRayToPoint(Vec3Param rayStart,
-                              Vec3Param rayDirection,
-                              Vec3Ptr point);
+Type ClosestPointOnRayToPoint(Vec3Param rayStart, Vec3Param rayDirection, Vec3Ptr point);
 
 /// Find the closest point on a line segment to the given point.
-Type ClosestPointOnSegmentToPoint(Vec3Param segmentPointA,
-                                  Vec3Param segmentPointB,
-                                  Vec3Ptr point);
+Type ClosestPointOnSegmentToPoint(Vec3Param segmentPointA, Vec3Param segmentPointB, Vec3Ptr point);
 
 /// Find the closest point on an axis aligned bounding box to the given point.
 /// The point returned will always be on the surface of the axis aligned
 /// bounding box.
-Type ClosestPointOnAabbToPoint(Vec3Param aabbMinPoint,
-                               Vec3Param aabbMaxPoint,
-                               Vec3Ptr point);
+Type ClosestPointOnAabbToPoint(Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Ptr point);
 
 /// Find the closest point on a capsule to the given point. The point returned
 /// will always be on the surface of the capsule.
-Type ClosestPointOnCapsuleToPoint(Vec3Param capsulePointA,
-                                  Vec3Param capsulePointB,
-                                  real capsuleRadius,
-                                  Vec3Ptr point);
+Type ClosestPointOnCapsuleToPoint(Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Vec3Ptr point);
 
 /// Find the closest point on an oriented bounding box to the given point. The
 /// point returned will always be on the surface of the oriented bounding box.
-Type ClosestPointOnObbToPoint(Vec3Param obbCenter,
-                              Vec3Param obbHalfExtents,
-                              Mat3Param obbBasis,
-                              Vec3Ptr point);
+Type ClosestPointOnObbToPoint(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Vec3Ptr point);
 
 /// Find the closest point in or on an oriented bounding box to the given point.
 /// The point returned can be inside or on the surface of the oriented bounding
 /// box.
-Type ClosestPointInObbToPoint(Vec3Param obbCenter,
-                              Vec3Param obbHalfExtents,
-                              Mat3Param obbBasis,
-                              Vec3Ptr point);
+Type ClosestPointInObbToPoint(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Vec3Ptr point);
 
 /// Find the closest point in or on an oriented bounding box to the given point.
 /// The point returned can be inside or on the surface of the oriented bounding
 /// box.
-Type ClosestPointInObbToPoint(Vec3Param obbCenter,
-                              Vec3Param obbHalfExtents,
-                              const Vec3 obbAxes[3],
-                              Vec3Ptr point);
+Type ClosestPointInObbToPoint(Vec3Param obbCenter, Vec3Param obbHalfExtents, const Vec3 obbAxes[3], Vec3Ptr point);
 
 /// Find the closest point on a plane to the given point. Assumes that the plane
 /// normal is normalized.
-Type ClosestPointOnPlaneToPoint(Vec3Param planeNormal,
-                                real planeDistance,
-                                Vec3Ptr point);
+Type ClosestPointOnPlaneToPoint(Vec3Param planeNormal, real planeDistance, Vec3Ptr point);
 
 /// Find the closest point on a sphere to the given point. The point returned
 /// will always be on the surface of the sphere.
-Type ClosestPointOnSphereToPoint(Vec3Param sphereCenter,
-                                 real sphereRadius,
-                                 Vec3Ptr point);
+Type ClosestPointOnSphereToPoint(Vec3Param sphereCenter, real sphereRadius, Vec3Ptr point);
 
 /// Find the closest point on a triangle to the given point.
 Type ClosestPointOnTriangleToPoint(Vec3Param trianglePointA,
@@ -450,11 +401,8 @@ Type ClosestPointsOfTwoSegments(Vec3Param segmentOnePointA,
                                 Vec3Ptr closestPointTwo);
 
 /// Intersect a line with an axis-aligned bounding box.
-Type LineAabb(Vec3Param linePoint,
-              Vec3Param lineDirection,
-              Vec3Param aabbMinPoint,
-              Vec3Param aabbMaxPoint,
-              Interval* interval);
+Type LineAabb(
+    Vec3Param linePoint, Vec3Param lineDirection, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Interval* interval);
 
 /// Intersect a line with a capsule defined by its center, local axes, radius,
 /// and half of the distance between the centers of the spherical endcaps.
@@ -515,11 +463,8 @@ Type LineEllipsoid(Vec3Param linePoint,
                    Interval* interval);
 
 /// Intersect a line with a plane.
-Type LinePlane(Vec3Param linePoint,
-               Vec3Param lineDirection,
-               Vec3Param planeNormal,
-               real planeDistance,
-               Interval* interval);
+Type LinePlane(
+    Vec3Param linePoint, Vec3Param lineDirection, Vec3Param planeNormal, real planeDistance, Interval* interval);
 
 /// Intersect a line with an oriented bounding box.
 Type LineObb(Vec3Param linePoint,
@@ -530,11 +475,8 @@ Type LineObb(Vec3Param linePoint,
              Interval* interval);
 
 /// Intersect a line with a sphere.
-Type LineSphere(Vec3Param linePoint,
-                Vec3Param lineDirection,
-                Vec3Param sphereCenter,
-                real sphereRadius,
-                Interval* interval);
+Type LineSphere(
+    Vec3Param linePoint, Vec3Param lineDirection, Vec3Param sphereCenter, real sphereRadius, Interval* interval);
 
 /// Intersect a line with a torus.
 Type LineTorus(Vec3Param linePoint,
@@ -554,11 +496,8 @@ Type LineTriangle(Vec3Param linePoint,
                   Interval* interval);
 
 /// Intersect a ray with an axis aligned bounding box.
-Type RayAabb(Vec3Param rayStart,
-             Vec3Param rayDirection,
-             Vec3Param aabbMinPoint,
-             Vec3Param aabbMaxPoint,
-             Interval* interval);
+Type RayAabb(
+    Vec3Param rayStart, Vec3Param rayDirection, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Interval* interval);
 
 /// Intersect a ray with a cylinder. Returns None if the ray doesn't intersect
 /// the infinite cylinder anywhere. Returns Outside if the intersection with the
@@ -626,11 +565,8 @@ Type RayEllipsoid(Vec3Param rayStart,
                   Interval* interval);
 
 /// Intersect a ray with a plane.
-Type RayPlane(Vec3Param rayStart,
-              Vec3Param rayDirection,
-              Vec3Param planeNormal,
-              real planeDistance,
-              Interval* interval);
+Type RayPlane(
+    Vec3Param rayStart, Vec3Param rayDirection, Vec3Param planeNormal, real planeDistance, Interval* interval);
 
 /// Intersect a ray with an oriented bounding box.
 Type RayObb(Vec3Param rayStart,
@@ -641,19 +577,13 @@ Type RayObb(Vec3Param rayStart,
             Interval* interval);
 
 /// Intersect a ray with a sphere.
-Type RaySphere(Vec3Param rayStart,
-               Vec3Param rayDirection,
-               Vec3Param sphereCenter,
-               real sphereRadius,
-               Interval* interval);
+Type RaySphere(
+    Vec3Param rayStart, Vec3Param rayDirection, Vec3Param sphereCenter, real sphereRadius, Interval* interval);
 /// Intersect a ray with a sphere. This function will not early out when the
 /// sphere is behind the ray so that the interval can be filled out. This is
 /// currently used in RayCapsule to get accurate t-values.
-Type RaySphereAllowBehind(Vec3Param rayStart,
-                          Vec3Param rayDirection,
-                          Vec3Param sphereCenter,
-                          real sphereRadius,
-                          Interval* interval);
+Type RaySphereAllowBehind(
+    Vec3Param rayStart, Vec3Param rayDirection, Vec3Param sphereCenter, real sphereRadius, Interval* interval);
 
 // Intersect a ray with a tetrahedron.
 Type RayTetrahedron(Vec3Param rayStart,
@@ -684,11 +614,8 @@ Type RayTriangle(Vec3Param rayStart,
                  real epsilon = real(0));
 
 /// Intersect a segment with an axis aligned bounding box.
-Type SegmentAabb(Vec3Param segmentStart,
-                 Vec3Param segmentEnd,
-                 Vec3Param aabbMinPoint,
-                 Vec3Param aabbMaxPoint,
-                 Interval* interval);
+Type SegmentAabb(
+    Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Interval* interval);
 
 /// Intersect a segment with a capsule defined by its center, local axes,
 /// radius, and half of the distance between the centers of the spherical
@@ -750,11 +677,8 @@ Type SegmentEllipsoid(Vec3Param segmentStart,
                       Interval* interval);
 
 /// Intersect a segment with a plane.
-Type SegmentPlane(Vec3Param segmentStart,
-                  Vec3Param segmentEnd,
-                  Vec3Param planeNormal,
-                  real planeDistance,
-                  Interval* interval);
+Type SegmentPlane(
+    Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param planeNormal, real planeDistance, Interval* interval);
 
 /// Intersect a segment with an oriented bounding box.
 Type SegmentObb(Vec3Param segmentStart,
@@ -765,11 +689,8 @@ Type SegmentObb(Vec3Param segmentStart,
                 Interval* interval);
 
 /// Intersect a segment with a sphere.
-Type SegmentSphere(Vec3Param segmentStart,
-                   Vec3Param segmentEnd,
-                   Vec3Param sphereCenter,
-                   real sphereRadius,
-                   Interval* interval);
+Type SegmentSphere(
+    Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param sphereCenter, real sphereRadius, Interval* interval);
 
 /// Intersect a segment with a torus.
 Type SegmentTorus(Vec3Param segmentStart,
@@ -1090,10 +1011,7 @@ Type FrustumObbApproximation(const Vec4 frustumPlanes[6],
 
 /// Intersect a frustum with a plane. The 6 planes of the frustum are assumed to
 /// be pointing inwards.
-Type FrustumPlane(const Vec4 frustumPlanes[6],
-                  Vec3Param planeNormal,
-                  real planeDistance,
-                  Manifold* manifold = nullptr);
+Type FrustumPlane(const Vec4 frustumPlanes[6], Vec3Param planeNormal, real planeDistance, Manifold* manifold = nullptr);
 
 /// Intersect an oriented bounding box with an oriented bounding box.
 Type ObbObb(Vec3Param obbOneCenter,
@@ -1146,17 +1064,11 @@ Type PlanePlane(Vec3Param planeOneNormal,
 
 /// Intersect a plane with a plane with plane. If intersection
 /// data is desired, the point of collision is returned (if there is one).
-Type PlanePlanePlane(Vec4Param planeA,
-                     Vec4Param planeB,
-                     Vec4Param planeC,
-                     Manifold* manifold = nullptr);
+Type PlanePlanePlane(Vec4Param planeA, Vec4Param planeB, Vec4Param planeC, Manifold* manifold = nullptr);
 
 /// Intersect a plane with a sphere.
-Type PlaneSphere(Vec3Param planeNormal,
-                 real planeDistance,
-                 Vec3Param sphereCenter,
-                 real sphereRadius,
-                 Manifold* manifold = nullptr);
+Type PlaneSphere(
+    Vec3Param planeNormal, real planeDistance, Vec3Param sphereCenter, real sphereRadius, Manifold* manifold = nullptr);
 
 /// Intersect a plane with a triangle.
 Type PlaneTriangle(Vec3Param planeNormal,
@@ -1229,9 +1141,7 @@ struct Manifold2D
 };
 
 /// Find the closest point on a line segment to the given point.
-Type ClosestPointOnSegmentToPoint(Vec2Param segmentPointA,
-                                  Vec2Param segmentPointB,
-                                  Vec2Ptr point);
+Type ClosestPointOnSegmentToPoint(Vec2Param segmentPointA, Vec2Param segmentPointB, Vec2Ptr point);
 
 /// Intersect a rotated box with a rotated box.
 Type BoxBox(Vec2Param boxCenterA,
@@ -1272,9 +1182,7 @@ Type ConvexPolygonConvexPolygon(const Vec2* convexPolygonPointsA,
                                 Manifold2D* manifold = nullptr);
 
 /// Test if a point lies on a line segment.
-Type PointSegment(Vec2Param point,
-                  Vec2Param segmentStart,
-                  Vec2Param segmentEnd);
+Type PointSegment(Vec2Param point, Vec2Param segmentStart, Vec2Param segmentEnd);
 
 /// Intersect a ray with an axis aligned bounding box (2D).
 Type RayAabb(Vec2Param rayStart,

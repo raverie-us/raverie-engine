@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-LayoutProxy::LayoutProxy(Widget* widgetToProxy) :
-    Composite(widgetToProxy->GetParent())
+LayoutProxy::LayoutProxy(Widget* widgetToProxy) : Composite(widgetToProxy->GetParent())
 {
   // We're going to attach to the widgets parent
   Composite* parent = widgetToProxy->GetParent();
@@ -65,11 +64,7 @@ LayoutProxy* CreateLayoutProxy(Widget* widget)
   return new LayoutProxy(widget);
 }
 
-LayoutProxy* ProxyAndAnimateIn(Widget* widget,
-                               Vec3Param startPos,
-                               float translateTime,
-                               float fadeInTime,
-                               float delay)
+LayoutProxy* ProxyAndAnimateIn(Widget* widget, Vec3Param startPos, float translateTime, float fadeInTime, float delay)
 {
   // Make a proxy so we can translate the widget manually
   LayoutProxy* proxy = CreateLayoutProxy(widget);

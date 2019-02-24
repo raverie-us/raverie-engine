@@ -41,8 +41,7 @@ void JointTool::DoConnection()
       if (t0 == nullptr || t1 == nullptr)
         return;
 
-      Cog* jointCog = mJointCreator.CreateWorldPoints(
-          a, b, GetJointName(), PointOnObjectA, PointOnObjectB);
+      Cog* jointCog = mJointCreator.CreateWorldPoints(a, b, GetJointName(), PointOnObjectA, PointOnObjectB);
       // Queue up an undo operation on this joint being created
       if (jointCog != nullptr)
       {

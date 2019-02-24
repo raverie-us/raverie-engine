@@ -63,13 +63,9 @@ public:
   DoubleInteger GetPosition() override;
   DoubleInteger GetCount() override;
   bool Seek(DoubleInteger position, StreamOrigin::Enum origin) override;
-  Integer Write(ArrayClass<Byte>& data,
-                Integer byteStart,
-                Integer byteCount) override;
+  Integer Write(ArrayClass<Byte>& data, Integer byteStart, Integer byteCount) override;
   Integer WriteByte(Byte byte) override;
-  Integer Read(ArrayClass<Byte>& data,
-               Integer byteStart,
-               Integer byteCount) override;
+  Integer Read(ArrayClass<Byte>& data, Integer byteStart, Integer byteCount) override;
   Integer ReadByte() override;
   void Flush() override;
   void Close();

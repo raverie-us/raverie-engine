@@ -11,21 +11,18 @@ ZeroShared bool CaseInsensitiveStringLess(StringParam a, StringParam b);
 // Split string into to two parts not including the delimiter
 // if the delimiter is not found it will return an empty range as the second
 // range.
-ZeroShared Pair<StringRange, StringRange> SplitOnFirst(StringRange filename,
-                                                       Rune delimiter);
+ZeroShared Pair<StringRange, StringRange> SplitOnFirst(StringRange filename, Rune delimiter);
 
 // Split string into to two parts not including the delimiter
 // if the delimiter is not found it will return an empty range as the second
 // range.
-ZeroShared Pair<StringRange, StringRange> SplitOnLast(StringRange filename,
-                                                      Rune delimiter);
+ZeroShared Pair<StringRange, StringRange> SplitOnLast(StringRange filename, Rune delimiter);
 
 // Strip all of string before last of delimiter
 ZeroShared StringRange StripBeforeLast(StringRange filename, char delimiter);
 
 // Join strings together using a delimiter
-ZeroShared String JoinStrings(const Array<String>& strings,
-                              StringParam delimiter);
+ZeroShared String JoinStrings(const Array<String>& strings, StringParam delimiter);
 
 ZeroShared char OnlyAlphaNumeric(char c);
 

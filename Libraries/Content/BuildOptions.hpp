@@ -16,12 +16,7 @@ DeclareEnum2(BuildMode, Rebuild, Incremental);
 DeclareEnum5(BuildStatus, Starting, Completed, Running, Canceled, Failed);
 
 // Standard error codes for building.
-DeclareEnum5(BuildErrors,
-             Success,
-             FileNotFound,
-             InvalidFormat,
-             InvalidSettings,
-             OutOfMemory);
+DeclareEnum5(BuildErrors, Success, FileNotFound, InvalidFormat, InvalidSettings, OutOfMemory);
 
 // Options used to control content building
 class BuildOptions

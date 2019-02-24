@@ -80,13 +80,11 @@ public:
   void HandleNetObjectOfflinePostDispatch(NetObjectOffline* event) override;
 
   // Data
-  Array<CogId> mPendingNetObjects; ///< [Server/Offline] Delayed net objects
-                                   ///< that need to be brought online.
-  bool mPendingNetLevelStarted;    ///< Delayed net level started event.
-  ArrayMap<NetObjectId, NetObjectId>
-      mReadyChildMap; ///< Maps a ready child to a delayed parent.
-  ArrayMap<NetObjectId, ArraySet<NetObjectId>>
-      mDelayedParentMap; ///< Maps a delayed parent to ready children.
+  Array<CogId> mPendingNetObjects;                                ///< [Server/Offline] Delayed net objects
+                                                                  ///< that need to be brought online.
+  bool mPendingNetLevelStarted;                                   ///< Delayed net level started event.
+  ArrayMap<NetObjectId, NetObjectId> mReadyChildMap;              ///< Maps a ready child to a delayed parent.
+  ArrayMap<NetObjectId, ArraySet<NetObjectId>> mDelayedParentMap; ///< Maps a delayed parent to ready children.
 };
 
 } // namespace Zero

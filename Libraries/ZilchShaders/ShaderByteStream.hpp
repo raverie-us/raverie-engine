@@ -16,13 +16,8 @@ public:
   void Write(uint8 a, uint8 b, uint8 c, uint8 d);
   void WriteInstruction(uint16 size, uint16 instruction);
   void WriteInstruction(uint16 size, uint16 instruction, uint32 data0);
-  void
-  WriteInstruction(uint16 size, uint16 instruction, uint32 data0, uint32 data1);
-  void WriteInstruction(uint16 size,
-                        uint16 instruction,
-                        uint32 data0,
-                        uint32 data1,
-                        uint32 data2);
+  void WriteInstruction(uint16 size, uint16 instruction, uint32 data0, uint32 data1);
+  void WriteInstruction(uint16 size, uint16 instruction, uint32 data0, uint32 data1, uint32 data2);
   void WriteInstruction(uint16 instruction, Array<uint32>& args);
 
   void Write(StringParam text);

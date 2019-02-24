@@ -27,8 +27,7 @@ ZilchDefineType(PopUp, builder, type)
 {
 }
 
-FloatingComposite::FloatingComposite(Composite* parent, StringParam className) :
-    Composite(parent)
+FloatingComposite::FloatingComposite(Composite* parent, StringParam className) : Composite(parent)
 {
   mDefSet = mDefSet->GetDefinitionSet(className);
   mDropShadow = CreateAttached<Element>(cDropShadow);
@@ -74,9 +73,7 @@ void FloatingComposite::Slide(Vec3Param offset, float time)
   AnimateTo(this, destinatino, GetSize(), time);
 }
 
-PopUp::PopUp(Widget* target,
-             PopUpCloseMode::Enum popCloseMode,
-             StringParam className) :
+PopUp::PopUp(Widget* target, PopUpCloseMode::Enum popCloseMode, StringParam className) :
     FloatingComposite(target->GetRootWidget()->GetPopUp(), className)
 {
   mMoved = false;
@@ -148,15 +145,12 @@ void PopUp::OnMouseMove(MouseEvent* event)
 
   // If the cursor move farther away from the center
   // than the diagonal size close the pop up
-  Vec3 localMousePos = mBackground->ToLocal(
-      ToVector3(event->Position - mBackground->GetSize() * 0.5f));
+  Vec3 localMousePos = mBackground->ToLocal(ToVector3(event->Position - mBackground->GetSize() * 0.5f));
   bool notChildOfTarget = !hoverTarget->IsAncestorOf(event->Source);
   bool notChildOfMine = !this->IsAncestorOf(event->Source);
-  if (notChildOfTarget && notChildOfMine &&
-      mCloseMode != PopUpCloseMode::DisableClose)
+  if (notChildOfTarget && notChildOfMine && mCloseMode != PopUpCloseMode::DisableClose)
   {
-    if (localMousePos.Length() > mSize.Length() &&
-        mCloseMode == PopUpCloseMode::MouseDistance)
+    if (localMousePos.Length() > mSize.Length() && mCloseMode == PopUpCloseMode::MouseDistance)
     {
       FadeOut();
     }

@@ -13,34 +13,24 @@ ZilchDefineType(SpriteParticleSystem, builder, type)
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
   ZilchBindFieldProperty(mVertexColor);
-  ZilchBindFieldProperty(mGeometryMode)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindFieldProperty(mGeometryMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindFieldProperty(mSpriteSource);
   ZilchBindFieldProperty(mParticleAnimation);
   ZilchBindFieldProperty(mParticleSort);
   ZilchBindFieldProperty(mBeamBaseScale)
-      ->ZeroFilterEquality(mGeometryMode,
-                           SpriteParticleGeometryMode::Enum,
-                           SpriteParticleGeometryMode::Beam);
+      ->ZeroFilterEquality(mGeometryMode, SpriteParticleGeometryMode::Enum, SpriteParticleGeometryMode::Beam);
   ZilchBindFieldProperty(mBeamVelocityScale)
-      ->ZeroFilterEquality(mGeometryMode,
-                           SpriteParticleGeometryMode::Enum,
-                           SpriteParticleGeometryMode::Beam);
+      ->ZeroFilterEquality(mGeometryMode, SpriteParticleGeometryMode::Enum, SpriteParticleGeometryMode::Beam);
 }
 
 void SpriteParticleSystem::Serialize(Serializer& stream)
 {
   ParticleSystem::Serialize(stream);
   SerializeNameDefault(mVertexColor, Vec4(1.0f));
-  SerializeEnumNameDefault(SpriteParticleGeometryMode,
-                           mGeometryMode,
-                           SpriteParticleGeometryMode::Billboarded);
+  SerializeEnumNameDefault(SpriteParticleGeometryMode, mGeometryMode, SpriteParticleGeometryMode::Billboarded);
   SerializeResourceNameDefault(mSpriteSource, SpriteSourceManager, "Circle");
-  SerializeEnumNameDefault(SpriteParticleAnimationMode,
-                           mParticleAnimation,
-                           SpriteParticleAnimationMode::Single);
-  SerializeEnumNameDefault(
-      SpriteParticleSortMode, mParticleSort, SpriteParticleSortMode::None);
+  SerializeEnumNameDefault(SpriteParticleAnimationMode, mParticleAnimation, SpriteParticleAnimationMode::Single);
+  SerializeEnumNameDefault(SpriteParticleSortMode, mParticleSort, SpriteParticleSortMode::None);
   SerializeNameDefault(mBeamBaseScale, 1.0f);
   SerializeNameDefault(mBeamVelocityScale, 1.0f);
 }
@@ -55,8 +45,7 @@ String SpriteParticleSystem::GetDefaultMaterialName()
   return "AdditiveSprite";
 }
 
-void SpriteParticleSystem::ExtractFrameData(FrameNode& frameNode,
-                                            FrameBlock& frameBlock)
+void SpriteParticleSystem::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   frameNode.mBorderThickness = 1.0f;
   frameNode.mBlendSettingsOverride = false;
@@ -75,19 +64,15 @@ void SpriteParticleSystem::ExtractFrameData(FrameNode& frameNode,
   frameNode.mBoneMatrixRange = IndexRange(0, 0);
 }
 
-void SpriteParticleSystem::ExtractViewData(ViewNode& viewNode,
-                                           ViewBlock& viewBlock,
-                                           FrameBlock& frameBlock)
+void SpriteParticleSystem::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   viewNode.mLocalToView = viewBlock.mWorldToView;
 
   if (mSystemSpace != SystemSpace::WorldSpace)
-    viewNode.mLocalToView =
-        viewNode.mLocalToView * mTransform->GetWorldMatrix();
+    viewNode.mLocalToView = viewNode.mLocalToView * mTransform->GetWorldMatrix();
 
   viewNode.mStreamedVertexType = PrimitiveType::Triangles;
-  viewNode.mStreamedVertexStart =
-      frameBlock.mRenderQueues->mStreamedVertices.Size();
+  viewNode.mStreamedVertexStart = frameBlock.mRenderQueues->mStreamedVertices.Size();
   viewNode.mStreamedVertexCount = 0;
 
   Vec3 emitterPos = mTransform->GetWorldTranslation();
@@ -116,13 +101,11 @@ void SpriteParticleSystem::ExtractViewData(ViewNode& viewNode,
 
     case SpriteParticleGeometryMode::Beam:
     {
-      Vec3 velocityDir =
-          Math::TransformNormal(viewNode.mLocalToView, particle->Velocity);
+      Vec3 velocityDir = Math::TransformNormal(viewNode.mLocalToView, particle->Velocity);
       float speed = velocityDir.AttemptNormalize();
 
       center = Math::TransformPoint(viewNode.mLocalToView, particle->Position);
-      right = velocityDir * (speed * mBeamVelocityScale + mBeamBaseScale) *
-              particleWidth;
+      right = velocityDir * (speed * mBeamVelocityScale + mBeamBaseScale) * particleWidth;
       up = Cross(Vec3(0, 0, 1), velocityDir) * particleWidth;
     }
     break;
@@ -143,8 +126,7 @@ void SpriteParticleSystem::ExtractViewData(ViewNode& viewNode,
       zAxis.AttemptNormalize();
 
       center = Math::TransformPoint(viewNode.mLocalToView, particle->Position);
-      right = (xAxis * Math::Cos(particle->Rotation) +
-               yAxis * Math::Sin(particle->Rotation));
+      right = (xAxis * Math::Cos(particle->Rotation) + yAxis * Math::Sin(particle->Rotation));
       up = Cross(zAxis, right) * particleWidth;
       right *= particleWidth;
     }
@@ -166,8 +148,7 @@ void SpriteParticleSystem::ExtractViewData(ViewNode& viewNode,
       zAxis.AttemptNormalize();
 
       center = Math::TransformPoint(viewNode.mLocalToView, particle->Position);
-      right = (xAxis * Math::Cos(particle->Rotation) +
-               yAxis * Math::Sin(particle->Rotation));
+      right = (xAxis * Math::Cos(particle->Rotation) + yAxis * Math::Sin(particle->Rotation));
       up = Cross(zAxis, right) * particleWidth;
       right *= particleWidth;
     }
@@ -183,8 +164,7 @@ void SpriteParticleSystem::ExtractViewData(ViewNode& viewNode,
       yAxis.AttemptNormalize();
 
       center = Math::TransformPoint(viewNode.mLocalToView, particle->Position);
-      right = (xAxis * Math::Cos(particle->Rotation) +
-               yAxis * Math::Sin(particle->Rotation));
+      right = (xAxis * Math::Cos(particle->Rotation) + yAxis * Math::Sin(particle->Rotation));
       up = Cross(facing, right) * particleWidth;
       right *= particleWidth;
     }
@@ -205,11 +185,9 @@ void SpriteParticleSystem::ExtractViewData(ViewNode& viewNode,
       // Update particle frame
       uint frame;
       if (mParticleAnimation == SpriteParticleAnimationMode::Single)
-        frame = (uint)(particle->Time / particle->Lifetime *
-                       (float)mSpriteSource->FrameCount);
+        frame = (uint)(particle->Time / particle->Lifetime * (float)mSpriteSource->FrameCount);
       else
-        frame = (uint)(particle->Time / mSpriteSource->FrameDelay) %
-                mSpriteSource->FrameCount;
+        frame = (uint)(particle->Time / mSpriteSource->FrameDelay) % mSpriteSource->FrameCount;
       uvRect = mSpriteSource->GetUvRect(frame);
     }
 
@@ -218,8 +196,7 @@ void SpriteParticleSystem::ExtractViewData(ViewNode& viewNode,
 
     Vec4 color = particle->Color * mVertexColor;
 
-    frameBlock.mRenderQueues->AddStreamedQuadView(
-        viewNode, pos, uv0, uv1, color);
+    frameBlock.mRenderQueues->AddStreamedQuadView(viewNode, pos, uv0, uv1, color);
 
     particle = particle->Next;
   }
@@ -239,10 +216,7 @@ struct LocalSpriteSorter
   }
 };
 
-u32 GetParticleSortValue(SpriteParticleSortMode::Enum sortMode,
-                         Vec3 pos,
-                         Vec3 camPos,
-                         Vec3 camDir)
+u32 GetParticleSortValue(SpriteParticleSortMode::Enum sortMode, Vec3 pos, Vec3 camPos, Vec3 camDir)
 {
   u32 value = 0;
   float* floatValue = (float*)&value;
@@ -309,8 +283,7 @@ void SpriteParticleSystem::CheckSort(ViewBlock& viewBlock)
   {
     // Fill in the particle info and push it back
     particleInfo.mParticle = particle;
-    particleInfo.mSortValue = GetParticleSortValue(
-        mParticleSort, particle->Position, cameraPos, cameraDir);
+    particleInfo.mSortValue = GetParticleSortValue(mParticleSort, particle->Position, cameraPos, cameraDir);
 
     // Push them into the array
     sortedParticles.PushBack(particleInfo);

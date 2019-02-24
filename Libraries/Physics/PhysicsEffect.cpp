@@ -198,8 +198,7 @@ Vec3 PhysicsEffect::TransformLocalPointToWorld(Vec3Param localPoint) const
   return worldPoint;
 }
 
-void PhysicsEffect::TransformLocalDirectionAndPointToWorld(Vec3& localPoint,
-                                                           Vec3& localDir) const
+void PhysicsEffect::TransformLocalDirectionAndPointToWorld(Vec3& localPoint, Vec3& localDir) const
 {
   // If we have a collider then use the cached body-to-world transform to get
   // our world space values

@@ -24,14 +24,7 @@ public:
   Element* mIcon;
 };
 
-DeclareEnum7(LauncherMenu,
-             Discover,
-             Projects,
-             RecentProjects,
-             NewProject,
-             Builds,
-             MenuCount,
-             None);
+DeclareEnum7(LauncherMenu, Discover, Projects, RecentProjects, NewProject, Builds, MenuCount, None);
 
 class MenuData
 {
@@ -168,12 +161,9 @@ public:
                          Composite* clientComposite = nullptr,
                          LauncherMenu::Type parentMenu = LauncherMenu::None);
 
-  void SetDefaultSubMenu(LauncherMenu::Type parentMenu,
-                         LauncherMenu::Type defaultSubMenu);
+  void SetDefaultSubMenu(LauncherMenu::Type parentMenu, LauncherMenu::Type defaultSubMenu);
 
-  void AddMenuButton(LauncherMenu::Type menu,
-                     StringParam name,
-                     StringParam style);
+  void AddMenuButton(LauncherMenu::Type menu, StringParam name, StringParam style);
 
   /// Displays the given composite in the menu area.
   void DisplayInClientArea(Composite* composite);

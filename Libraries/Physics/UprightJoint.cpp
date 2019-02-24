@@ -41,10 +41,7 @@ struct UprightPolicy : public DefaultFragmentPolicy<UprightJoint>
   }
 
   // Returns baumgarte
-  real AxisFragment(MoleculeData& data,
-                    int atomIndex,
-                    UprightJoint* joint,
-                    ConstraintMolecule& mol)
+  real AxisFragment(MoleculeData& data, int atomIndex, UprightJoint* joint, ConstraintMolecule& mol)
   {
     ErrorIf(atomIndex >= (int)joint->sInfo.mAtomCount,
             "UprightJoint has only %d atom. Cannot compute atom number %d.",
@@ -113,8 +110,7 @@ void UprightJoint::ComputeMolecules(MoleculeWalker& molecules)
 {
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
-  ComputeMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData, UprightPolicy());
+  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, UprightPolicy());
 }
 
 void UprightJoint::WarmStart(MoleculeWalker& molecules)
@@ -141,8 +137,7 @@ void UprightJoint::ComputePositionMolecules(MoleculeWalker& molecules)
 {
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
-  ComputePositionMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData, UprightPolicy());
+  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, UprightPolicy());
 }
 
 void UprightJoint::DebugDraw()
@@ -163,8 +158,7 @@ void UprightJoint::DebugDraw()
   gDebugDraw->Add(Debug::Line(pos1, pos1 + worldAxes[1]).Color(Color::Blue));
 }
 
-uint UprightJoint::GetAtomIndexFilter(uint atomIndex,
-                                      real& desiredConstraintValue) const
+uint UprightJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   return AngularAxis;
 }

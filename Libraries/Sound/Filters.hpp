@@ -22,11 +22,7 @@ public:
   BiQuad();
 
   void FlushDelays();
-  void SetValues(const float a0,
-                 const float a1,
-                 const float a2,
-                 const float b1,
-                 const float b2);
+  void SetValues(const float a0, const float a1, const float a2, const float b1, const float b2);
   float DoBiQuad(const float x);
   void AddHistoryTo(BiQuad& otherFilter);
 
@@ -157,13 +153,8 @@ class LowPassFilter
 public:
   LowPassFilter();
 
-  void ProcessFrame(const float* input,
-                    float* output,
-                    const unsigned numChannels);
-  void ProcessBuffer(const float* input,
-                     float* output,
-                     const unsigned numChannels,
-                     const unsigned numSamples);
+  void ProcessFrame(const float* input, float* output, const unsigned numChannels);
+  void ProcessBuffer(const float* input, float* output, const unsigned numChannels, const unsigned numSamples);
 
   float GetCutoffFrequency();
   void SetCutoffFrequency(const float value);
@@ -186,9 +177,7 @@ class HighPassFilter
 public:
   HighPassFilter();
 
-  void ProcessFrame(const float* input,
-                    float* output,
-                    const unsigned numChannels);
+  void ProcessFrame(const float* input, float* output, const unsigned numChannels);
 
   void SetCutoffFrequency(const float value);
   void MergeWith(HighPassFilter& otherFilter);
@@ -210,9 +199,7 @@ class BandPassFilter
 public:
   BandPassFilter();
 
-  void ProcessFrame(const float* input,
-                    float* output,
-                    const unsigned numChannels);
+  void ProcessFrame(const float* input, float* output, const unsigned numChannels);
 
   void SetFrequency(const float frequency);
   void SetQuality(const float Q);
@@ -239,9 +226,7 @@ class Oscillator
 public:
   Oscillator();
 
-  void ProcessBuffer(float* buffer,
-                     const unsigned numChannels,
-                     const unsigned bufferSize);
+  void ProcessBuffer(float* buffer, const unsigned numChannels, const unsigned bufferSize);
 
   float GetNextSample();
 
@@ -284,10 +269,7 @@ public:
   DelayLine();
   ~DelayLine();
 
-  void ProcessBuffer(const float* input,
-                     float* output,
-                     const unsigned numChannels,
-                     const unsigned bufferSize);
+  void ProcessBuffer(const float* input, float* output, const unsigned numChannels, const unsigned bufferSize);
 
   // Sets the length of delay in milliseconds
   void SetDelayMSec(float delay);
@@ -387,10 +369,9 @@ private:
   bool mLogDetector;
 
   const float DIGITAL_TC = -4.60517019f; // ln(1%)
-  const float ANALOG_TC =
-      -1.00239343f; // ln(36.7%)
-                    // const float METER_UPDATE_INTERVAL_MSEC = 50.0;
-                    // const float METER_MIN_DB = -60.0;
+  const float ANALOG_TC = -1.00239343f;  // ln(36.7%)
+                                         // const float METER_UPDATE_INTERVAL_MSEC = 50.0;
+                                         // const float METER_MIN_DB = -60.0;
 };
 
 // Dynamics Processor Filter
@@ -493,8 +474,7 @@ private:
 
   EnvelopeDetector Detectors[AudioConstants::cMaxChannels];
 
-  static double
-  LagrangeInterpolation(double* x, double* y, int howMany, double xBar);
+  static double LagrangeInterpolation(double* x, double* y, int howMany, double xBar);
 };
 
 // Equalizer Filter
@@ -516,18 +496,12 @@ class Equalizer
 {
 public:
   Equalizer();
-  Equalizer(const float below80Hz,
-            const float at150Hz,
-            const float at600Hz,
-            const float at2500Hz,
-            const float above5000Hz);
+  Equalizer(
+      const float below80Hz, const float at150Hz, const float at600Hz, const float at2500Hz, const float above5000Hz);
   Equalizer(const Equalizer& copy);
   Equalizer(float* values);
 
-  void ProcessBuffer(const float* input,
-                     float* output,
-                     const unsigned numChannels,
-                     const unsigned bufferSize);
+  void ProcessBuffer(const float* input, float* output, const unsigned numChannels, const unsigned bufferSize);
 
   float GetBandGain(EqualizerBands::Enum whichBand);
   void SetBandGain(EqualizerBands::Enum whichBand, float gain);
@@ -588,10 +562,7 @@ class Reverb
 public:
   Reverb();
 
-  bool ProcessBuffer(const float* input,
-                     float* output,
-                     const unsigned numChannels,
-                     const unsigned bufferSize);
+  bool ProcessBuffer(const float* input, float* output, const unsigned numChannels, const unsigned bufferSize);
 
   // Sets the length of the reverb tail in milliseconds
   void SetTime(const float timeInMSec);
@@ -625,14 +596,10 @@ public:
   ComplexNumber() : mReal(0.0f), mImaginary(0.0f)
   {
   }
-  ComplexNumber(const float real, const float imaginary) :
-      mReal(real),
-      mImaginary(imaginary)
+  ComplexNumber(const float real, const float imaginary) : mReal(real), mImaginary(imaginary)
   {
   }
-  ComplexNumber(const ComplexNumber& copy) :
-      mReal(copy.mReal),
-      mImaginary(copy.mImaginary)
+  ComplexNumber(const ComplexNumber& copy) : mReal(copy.mReal), mImaginary(copy.mImaginary)
   {
   }
 
@@ -656,14 +623,10 @@ class FFT
 public:
   static void Forward(ComplexNumber* samples, const int numberOfSamples);
   static void Backward(ComplexNumber* samples, const int numberOfSamples);
-  static void Forward(const float* input,
-                      ComplexNumber* result,
-                      const int numberOfSamples);
+  static void Forward(const float* input, ComplexNumber* result, const int numberOfSamples);
 
 private:
-  static void DoFFT(ComplexNumber* samples,
-                    const int numberOfSamples,
-                    const bool forward);
+  static void DoFFT(ComplexNumber* samples, const int numberOfSamples, const bool forward);
 };
 
 // Transform Convolver
@@ -707,12 +670,8 @@ public:
       mReleaseTime(0.02f)
   {
   }
-  EnvelopeSettings(float delayTime,
-                   float attackTime,
-                   float decayTime,
-                   float sustainTime,
-                   float sustainLevel,
-                   float releaseTime) :
+  EnvelopeSettings(
+      float delayTime, float attackTime, float decayTime, float sustainTime, float sustainLevel, float releaseTime) :
       mDelayTime(delayTime),
       mAttackTime(attackTime),
       mDecayTime(decayTime),

@@ -11,14 +11,11 @@ ZilchDefineType(Library, builder, type)
 const BoundFn LibraryBuilder::DoNotGenerate = (BoundFn)0x01;
 const BoundFn LibraryBuilder::NoOperation = (BoundFn)0x02;
 
-InstantiateTemplateDelegate::InstantiateTemplateDelegate() :
-    Callback(nullptr),
-    UserData(nullptr)
+InstantiateTemplateDelegate::InstantiateTemplateDelegate() : Callback(nullptr), UserData(nullptr)
 {
 }
 
-String
-InstantiateTemplateInfo::GetFullName(const Array<Constant>& templateArguments)
+String InstantiateTemplateInfo::GetFullName(const Array<Constant>& templateArguments)
 {
   // Create a string builder to build the template name
   StringBuilder builder;
@@ -82,10 +79,10 @@ void ComputeTypesInDependencyOrder(const Array<LibraryRef>& libraries,
 
   outLibrarySet.Append(libraries.All());
 
-  ZilchForEach(const LibraryRef& library, libraries)
+  ZilchForEach (const LibraryRef& library, libraries)
   {
     // Loop through all types created in this library
-    ZilchForEach(Type * type, library->OwnedTypes)
+    ZilchForEach (Type* type, library->OwnedTypes)
     {
       // Only consider bound types...
       BoundType* boundType = Type::DynamicCast<BoundType*>(type);
@@ -94,8 +91,7 @@ void ComputeTypesInDependencyOrder(const Array<LibraryRef>& libraries,
 
       // Visiting a type walks its base types first, and then adds them to the
       // 'typesOut' array
-      VisitBoundTypeLibraryArray(
-          outLibrarySet, visitedTypes, boundType, outOrderedTypes);
+      VisitBoundTypeLibraryArray(outLibrarySet, visitedTypes, boundType, outOrderedTypes);
     }
   }
 }
@@ -110,8 +106,7 @@ bool DelegateTypePolicy::Equal(DelegateType* a, DelegateType* b) const
   return Type::IsRawSame(a, b);
 }
 
-LibraryBuilder::LibraryBuilder(StringParam name,
-                               StringParam namespaceForPlugins) :
+LibraryBuilder::LibraryBuilder(StringParam name, StringParam namespaceForPlugins) :
     UserData(nullptr),
     CreatableInScriptDefault(true),
     ComputedDelegateAndFunctionSizes(false)
@@ -136,16 +131,14 @@ Function* LibraryBuilder::AddBoundFunction(BoundType* owner,
                                            NativeVirtualInfo nativeVirtual)
 {
   // First add a raw function to the library
-  Function* func = this->CreateRawFunction(
-      owner, name, function, parameters, returnType, options, nativeVirtual);
+  Function* func = this->CreateRawFunction(owner, name, function, parameters, returnType, options, nativeVirtual);
 
   // If the function is valid...
   if (func != nullptr)
   {
     // Add the function to the bound type
     AddMemberResult::Enum result = owner->AddRawFunction(func);
-    ErrorIf(result == AddMemberResult::AlreadyExists,
-            "The function already existed (most likely it was bound twice)");
+    ErrorIf(result == AddMemberResult::AlreadyExists, "The function already existed (most likely it was bound twice)");
   }
 
   // Return the function that was created
@@ -160,8 +153,7 @@ Function* LibraryBuilder::AddExtensionFunction(BoundType* forType,
                                                FunctionOptions::Flags options)
 {
   // First add a raw function to the library
-  Function* createdFunction = this->CreateRawFunction(
-      forType, name, function, parameters, returnType, options);
+  Function* createdFunction = this->CreateRawFunction(forType, name, function, parameters, returnType, options);
 
   // If the function is valid...
   if (createdFunction != nullptr)
@@ -182,11 +174,9 @@ void LibraryBuilder::AddRawExtensionFunction(Function* function)
 
   // Add the property to the library extension map
   if (function->This != nullptr)
-    overloadedFunctionsByName =
-        &this->BuiltLibrary->InstanceExtensionFunctions[guid];
+    overloadedFunctionsByName = &this->BuiltLibrary->InstanceExtensionFunctions[guid];
   else
-    overloadedFunctionsByName =
-        &this->BuiltLibrary->StaticExtensionFunctions[guid];
+    overloadedFunctionsByName = &this->BuiltLibrary->StaticExtensionFunctions[guid];
 
   // Get the array of overloaded functions
   FunctionArray& overloads = (*overloadedFunctionsByName)[function->Name];
@@ -195,14 +185,12 @@ void LibraryBuilder::AddRawExtensionFunction(Function* function)
   overloads.PushBack(function);
 }
 
-Function* LibraryBuilder::AddBoundPreConstructor(BoundType* owner,
-                                                 BoundFn function)
+Function* LibraryBuilder::AddBoundPreConstructor(BoundType* owner, BoundFn function)
 {
   // Error checking
-  ErrorIf(
-      owner->PreConstructor != nullptr,
-      "A type cannot have two pre-constructors! A pre-constructor is a simple "
-      "initializer (like memset) that runs before any constructors get run");
+  ErrorIf(owner->PreConstructor != nullptr,
+          "A type cannot have two pre-constructors! A pre-constructor is a simple "
+          "initializer (like memset) that runs before any constructors get run");
 
   // First add a raw function to the library
   Function* func = this->CreateRawPreConstructor(owner, function);
@@ -218,9 +206,7 @@ Function* LibraryBuilder::AddBoundPreConstructor(BoundType* owner,
   return func;
 }
 
-Function* LibraryBuilder::AddBoundConstructor(BoundType* owner,
-                                              BoundFn function,
-                                              const ParameterArray& parameters)
+Function* LibraryBuilder::AddBoundConstructor(BoundType* owner, BoundFn function, const ParameterArray& parameters)
 {
   // First add a raw function to the library
   Function* func = this->CreateRawConstructor(owner, function, parameters);
@@ -237,8 +223,7 @@ Function* LibraryBuilder::AddBoundConstructor(BoundType* owner,
   return func;
 }
 
-Function* LibraryBuilder::AddBoundDefaultConstructor(BoundType* owner,
-                                                     BoundFn function)
+Function* LibraryBuilder::AddBoundDefaultConstructor(BoundType* owner, BoundFn function)
 {
   // First add a raw function to the library
   Function* func = this->CreateRawDefaultConstructor(owner, function);
@@ -268,8 +253,7 @@ Function* LibraryBuilder::AddBoundDestructor(BoundType* owner, BoundFn function)
   if (func != nullptr)
   {
     // Make sure the user doesn't define two destructors
-    ErrorIf(owner->Destructor != nullptr,
-            "A class may only have one destructor");
+    ErrorIf(owner->Destructor != nullptr, "A class may only have one destructor");
 
     // Add the function to the bound type
     owner->Destructor = func;
@@ -279,16 +263,11 @@ Function* LibraryBuilder::AddBoundDestructor(BoundType* owner, BoundFn function)
   return func;
 }
 
-GetterSetter* LibraryBuilder::AddBoundGetterSetter(BoundType* owner,
-                                                   StringParam name,
-                                                   Type* type,
-                                                   BoundFn set,
-                                                   BoundFn get,
-                                                   MemberOptions::Flags options)
+GetterSetter* LibraryBuilder::AddBoundGetterSetter(
+    BoundType* owner, StringParam name, Type* type, BoundFn set, BoundFn get, MemberOptions::Flags options)
 {
   // First add a raw property to the library
-  GetterSetter* property =
-      this->CreateRawGetterSetter(owner, name, type, set, get, options);
+  GetterSetter* property = this->CreateRawGetterSetter(owner, name, type, set, get, options);
 
   // If the property is valid...
   if (property != nullptr)
@@ -309,21 +288,12 @@ GetterSetter* LibraryBuilder::AddBoundGetterSetter(BoundType* owner,
   return property;
 }
 
-GetterSetter* LibraryBuilder::AddEnumValue(BoundType* owner,
-                                           StringParam name,
-                                           Integer value)
+GetterSetter* LibraryBuilder::AddEnumValue(BoundType* owner, StringParam name, Integer value)
 {
-  ErrorIf(Type::IsEnumOrFlagsType(owner) == false,
-          "Use ZilchFullBindEnum before calling ZilchFullBindEnumValue");
-  ErrorIf(owner->Size != sizeof(Integer),
-          "Must be the same size as an Integer");
-  GetterSetter* getset =
-      this->AddBoundGetterSetter(owner,
-                                 name,
-                                 owner,
-                                 nullptr,
-                                 &ZZ::VirtualMachine::EnumerationProperty,
-                                 ZZ::MemberOptions::Static);
+  ErrorIf(Type::IsEnumOrFlagsType(owner) == false, "Use ZilchFullBindEnum before calling ZilchFullBindEnumValue");
+  ErrorIf(owner->Size != sizeof(Integer), "Must be the same size as an Integer");
+  GetterSetter* getset = this->AddBoundGetterSetter(
+      owner, name, owner, nullptr, &ZZ::VirtualMachine::EnumerationProperty, ZZ::MemberOptions::Static);
   getset->Get->UserData = (void*)(size_t)(value);
 
   owner->PropertyToEnumValue[getset] = value;
@@ -340,10 +310,9 @@ GetterSetter* LibraryBuilder::AddEnumValue(BoundType* owner,
   return getset;
 }
 
-InstantiatedTemplate
-LibraryBuilder::InstantiateTemplate(StringParam baseName,
-                                    const Array<Constant>& arguments,
-                                    const LibraryArray& fromLibraries)
+InstantiatedTemplate LibraryBuilder::InstantiateTemplate(StringParam baseName,
+                                                         const Array<Constant>& arguments,
+                                                         const LibraryArray& fromLibraries)
 {
   // What we'll return to the user
   InstantiatedTemplate result;
@@ -358,8 +327,7 @@ LibraryBuilder::InstantiateTemplate(StringParam baseName,
     const LibraryRef& library = fromLibraries[i];
 
     // Get a pointer (or null) to the callback delegate
-    InstantiateTemplateInfo* info =
-        library->TemplateHandlers.FindPointer(baseName);
+    InstantiateTemplateInfo* info = library->TemplateHandlers.FindPointer(baseName);
 
     // If there is a template by that name...
     if (info != nullptr)
@@ -393,16 +361,14 @@ LibraryBuilder::InstantiateTemplate(StringParam baseName,
       String fullyQualifiedTemplateName = info->GetFullName(arguments);
 
       // Check to see if we already have this type...
-      result.Type =
-          this->BoundTypes.FindValue(fullyQualifiedTemplateName, nullptr);
+      result.Type = this->BoundTypes.FindValue(fullyQualifiedTemplateName, nullptr);
 
       // If we didn't find it, look through all of the dependent libraries
       if (result.Type == nullptr)
       {
-        ZilchForEach(Library * dependentLibrary, fromLibraries)
+        ZilchForEach (Library* dependentLibrary, fromLibraries)
         {
-          result.Type = dependentLibrary->BoundTypes.FindValue(
-              fullyQualifiedTemplateName, nullptr);
+          result.Type = dependentLibrary->BoundTypes.FindValue(fullyQualifiedTemplateName, nullptr);
           if (result.Type != nullptr)
             break;
         }
@@ -412,11 +378,7 @@ LibraryBuilder::InstantiateTemplate(StringParam baseName,
       if (result.Type == nullptr)
       {
         // Invoke the callback to instantiate the type
-        result.Type = delegate.Callback(*this,
-                                        baseName,
-                                        fullyQualifiedTemplateName,
-                                        arguments,
-                                        delegate.UserData);
+        result.Type = delegate.Callback(*this, baseName, fullyQualifiedTemplateName, arguments, delegate.UserData);
 
         // If we found the created type
         if (result.Type != nullptr)
@@ -455,17 +417,11 @@ LibraryBuilder::InstantiateTemplate(StringParam baseName,
   return result;
 }
 
-GetterSetter*
-LibraryBuilder::AddExtensionGetterSetter(BoundType* forType,
-                                         StringParam name,
-                                         Type* type,
-                                         BoundFn set,
-                                         BoundFn get,
-                                         MemberOptions::Flags options)
+GetterSetter* LibraryBuilder::AddExtensionGetterSetter(
+    BoundType* forType, StringParam name, Type* type, BoundFn set, BoundFn get, MemberOptions::Flags options)
 {
   // First add a raw property to the library
-  GetterSetter* property =
-      this->CreateRawGetterSetter(forType, name, type, set, get, options);
+  GetterSetter* property = this->CreateRawGetterSetter(forType, name, type, set, get, options);
 
   // If the property is valid...
   if (property != nullptr)
@@ -484,14 +440,12 @@ LibraryBuilder::AddExtensionGetterSetter(BoundType* forType,
     // Add the property to the library extension map
     if (options & FunctionOptions::Static)
     {
-      propertiesByName =
-          &this->BuiltLibrary->StaticExtensionGetterSetters[guid];
+      propertiesByName = &this->BuiltLibrary->StaticExtensionGetterSetters[guid];
       functionsByName = &this->BuiltLibrary->StaticExtensionFunctions[guid];
     }
     else
     {
-      propertiesByName =
-          &this->BuiltLibrary->InstanceExtensionGetterSetters[guid];
+      propertiesByName = &this->BuiltLibrary->InstanceExtensionGetterSetters[guid];
       functionsByName = &this->BuiltLibrary->InstanceExtensionFunctions[guid];
     }
 
@@ -517,10 +471,8 @@ LibraryBuilder::AddExtensionGetterSetter(BoundType* forType,
   return property;
 }
 
-SendsEvent* LibraryBuilder::AddSendsEvent(BoundType* forType,
-                                          StringParam name,
-                                          BoundType* sentType,
-                                          StringParam description)
+SendsEvent*
+LibraryBuilder::AddSendsEvent(BoundType* forType, StringParam name, BoundType* sentType, StringParam description)
 {
   ErrorIf(sentType == nullptr, "Event type must be provided");
 
@@ -529,8 +481,7 @@ SendsEvent* LibraryBuilder::AddSendsEvent(BoundType* forType,
 
   // Get the extension properties for the events type
   GuidType guid = ZilchTypeId(EventsClass)->Hash();
-  GetterSetterMap& properties =
-      this->BuiltLibrary->StaticExtensionGetterSetters[guid];
+  GetterSetterMap& properties = this->BuiltLibrary->StaticExtensionGetterSetters[guid];
 
   // Check to see if we do not yet have a property by this name (if we do, we
   // won't bother to create another)
@@ -539,13 +490,12 @@ SendsEvent* LibraryBuilder::AddSendsEvent(BoundType* forType,
   {
     // Create an extension property on the events object so that the event can
     // be accessed by name
-    Property* property =
-        this->AddExtensionGetterSetter(ZilchTypeId(EventsClass),
-                                       name,
-                                       ZilchTypeId(String),
-                                       nullptr,
-                                       VirtualMachine::EventsProperty,
-                                       MemberOptions::Static);
+    Property* property = this->AddExtensionGetterSetter(ZilchTypeId(EventsClass),
+                                                        name,
+                                                        ZilchTypeId(String),
+                                                        nullptr,
+                                                        VirtualMachine::EventsProperty,
+                                                        MemberOptions::Static);
     sendsEvent->EventProperty = property;
 
     // Store the event name in the complex user data (the 'EventsProperty' will
@@ -553,11 +503,7 @@ SendsEvent* LibraryBuilder::AddSendsEvent(BoundType* forType,
     property->Get->ComplexUserData.WriteObject(name);
 
     // Add in the type that the event declares it sends
-    property->Description = BuildString(property->Description,
-                                        "Event Type: ",
-                                        sentType->ToString(),
-                                        ". ",
-                                        description);
+    property->Description = BuildString(property->Description, "Event Type: ", sentType->ToString(), ". ", description);
   }
   else
   {
@@ -571,11 +517,8 @@ SendsEvent* LibraryBuilder::AddSendsEvent(BoundType* forType,
   return sendsEvent;
 }
 
-Field* LibraryBuilder::AddBoundField(BoundType* owner,
-                                     StringParam name,
-                                     Type* type,
-                                     size_t offset,
-                                     MemberOptions::Flags options)
+Field* LibraryBuilder::AddBoundField(
+    BoundType* owner, StringParam name, Type* type, size_t offset, MemberOptions::Flags options)
 {
   // First add a raw field to the library
   Field* field = this->CreateRawField(owner, name, type, offset, options);
@@ -635,8 +578,7 @@ Function* LibraryBuilder::CreateRawFunction(BoundType* owner,
   if (options & FunctionOptions::Virtual)
   {
     // The function cannot also be static
-    ErrorIf((options & FunctionOptions::Static) != 0,
-            "Static functions cannot be marked as virtual");
+    ErrorIf((options & FunctionOptions::Static) != 0, "Static functions cannot be marked as virtual");
 
     // Mark the function as being virtual
     function->IsVirtual = true;
@@ -667,24 +609,17 @@ Function* LibraryBuilder::CreateRawFunction(BoundType* owner,
   return function;
 }
 
-Function* LibraryBuilder::CreateRawPreConstructor(BoundType* owner,
-                                                  BoundFn function)
+Function* LibraryBuilder::CreateRawPreConstructor(BoundType* owner, BoundFn function)
 {
   // Get a reference to the core library
   Core& core = Core::GetInstance();
 
   // Create the function
-  return this->CreateRawFunction(owner,
-                                 PreConstructorName,
-                                 function,
-                                 ParameterArray(),
-                                 core.VoidType,
-                                 FunctionOptions::None);
+  return this->CreateRawFunction(
+      owner, PreConstructorName, function, ParameterArray(), core.VoidType, FunctionOptions::None);
 }
 
-Function* LibraryBuilder::CreateRawConstructor(BoundType* owner,
-                                               BoundFn function,
-                                               const ParameterArray& parameters)
+Function* LibraryBuilder::CreateRawConstructor(BoundType* owner, BoundFn function, const ParameterArray& parameters)
 {
   // Get a reference to the core library
   Core& core = Core::GetInstance();
@@ -697,44 +632,29 @@ Function* LibraryBuilder::CreateRawConstructor(BoundType* owner,
 
   // Create the constructor and set the 'original' bound-function on it (may not
   // be used)
-  Function* constructor = this->CreateRawFunction(owner,
-                                                  ConstructorName,
-                                                  invokedFunction,
-                                                  parameters,
-                                                  core.VoidType,
-                                                  FunctionOptions::None);
+  Function* constructor = this->CreateRawFunction(
+      owner, ConstructorName, invokedFunction, parameters, core.VoidType, FunctionOptions::None);
   constructor->NativeConstructor = function;
   return constructor;
 }
 
-Function* LibraryBuilder::CreateRawDefaultConstructor(BoundType* owner,
-                                                      BoundFn function)
+Function* LibraryBuilder::CreateRawDefaultConstructor(BoundType* owner, BoundFn function)
 {
   return this->CreateRawConstructor(owner, function, ParameterArray());
 }
 
-Function* LibraryBuilder::CreateRawDestructor(BoundType* owner,
-                                              BoundFn function)
+Function* LibraryBuilder::CreateRawDestructor(BoundType* owner, BoundFn function)
 {
   // Get a reference to the core library
   Core& core = Core::GetInstance();
 
   // Create the function
-  return this->CreateRawFunction(owner,
-                                 DestructorName,
-                                 function,
-                                 ParameterArray(),
-                                 core.VoidType,
-                                 FunctionOptions::None);
+  return this->CreateRawFunction(
+      owner, DestructorName, function, ParameterArray(), core.VoidType, FunctionOptions::None);
 }
 
-GetterSetter*
-LibraryBuilder::CreateRawGetterSetter(BoundType* owner,
-                                      String name,
-                                      Type* type,
-                                      BoundFn set,
-                                      BoundFn get,
-                                      MemberOptions::Flags options)
+GetterSetter* LibraryBuilder::CreateRawGetterSetter(
+    BoundType* owner, String name, Type* type, BoundFn set, BoundFn get, MemberOptions::Flags options)
 {
   // Verify that the name is correct
   name = FixIdentifier(name, TokenCheck::IsUpper);
@@ -770,12 +690,8 @@ LibraryBuilder::CreateRawGetterSetter(BoundType* owner,
     if (get != nullptr && get != DoNotGenerate)
     {
       // Generate the get function
-      property->Get = this->CreateRawFunction(owner,
-                                              BuildGetterName(name),
-                                              get,
-                                              ParameterArray(),
-                                              type,
-                                              functionOptions);
+      property->Get =
+          this->CreateRawFunction(owner, BuildGetterName(name), get, ParameterArray(), type, functionOptions);
       property->Get->IsHidden = true;
       property->Get->OwningProperty = property;
     }
@@ -794,12 +710,8 @@ LibraryBuilder::CreateRawGetterSetter(BoundType* owner,
       Core& core = Core::GetInstance();
 
       // Generate the set function
-      property->Set = this->CreateRawFunction(owner,
-                                              BuildSetterName(name),
-                                              set,
-                                              parameters,
-                                              core.VoidType,
-                                              functionOptions);
+      property->Set =
+          this->CreateRawFunction(owner, BuildSetterName(name), set, parameters, core.VoidType, functionOptions);
       property->Set->IsHidden = true;
       property->Set->OwningProperty = property;
     }
@@ -919,11 +831,8 @@ void StaticFieldGetter(Call& call, ExceptionReport& report)
   field->PropertyType->GenericCopyConstruct(returnMemory, fieldMemory);
 }
 
-Field* LibraryBuilder::CreateRawField(BoundType* owner,
-                                      String name,
-                                      Type* type,
-                                      size_t offset,
-                                      MemberOptions::Flags options)
+Field*
+LibraryBuilder::CreateRawField(BoundType* owner, String name, Type* type, size_t offset, MemberOptions::Flags options)
 {
   // Verify that the name is correct
   name = FixIdentifier(name, TokenCheck::IsUpper);
@@ -977,11 +886,10 @@ Variable* LibraryBuilder::CreateRawVariable(Function* function, String name)
   return variable;
 }
 
-void LibraryBuilder::AddTemplateInstantiator(
-    StringParam baseName,
-    InstantiateTemplateCallback callback,
-    const StringArray& templateTypeParameters,
-    void* userData)
+void LibraryBuilder::AddTemplateInstantiator(StringParam baseName,
+                                             InstantiateTemplateCallback callback,
+                                             const StringArray& templateTypeParameters,
+                                             void* userData)
 {
   Array<TemplateParameter> parameters;
   parameters.Reserve(templateTypeParameters.Size());
@@ -997,11 +905,10 @@ void LibraryBuilder::AddTemplateInstantiator(
   this->AddTemplateInstantiator(baseName, callback, parameters, userData);
 }
 
-void LibraryBuilder::AddTemplateInstantiator(
-    StringParam baseName,
-    InstantiateTemplateCallback callback,
-    const Array<TemplateParameter>& templateParameters,
-    void* userData)
+void LibraryBuilder::AddTemplateInstantiator(StringParam baseName,
+                                             InstantiateTemplateCallback callback,
+                                             const Array<TemplateParameter>& templateParameters,
+                                             void* userData)
 {
   // Create the delegate that we will call
   InstantiateTemplateInfo info;
@@ -1011,18 +918,15 @@ void LibraryBuilder::AddTemplateInstantiator(
   info.TemplateBaseName = baseName;
 
   // Perform the callback
-  bool inserted =
-      this->BuiltLibrary->TemplateHandlers.InsertNoOverwrite(baseName, info);
+  bool inserted = this->BuiltLibrary->TemplateHandlers.InsertNoOverwrite(baseName, info);
   ErrorIf(inserted == false,
           "Another template instantiator of the same name (%s) was added to "
           "the Library Builder.",
           baseName.c_str());
 }
 
-BoundType* LibraryBuilder::AddBoundType(StringParam name,
-                                        TypeCopyMode::Enum copyMode,
-                                        size_t size,
-                                        size_t nativeVirtualCount)
+BoundType*
+LibraryBuilder::AddBoundType(StringParam name, TypeCopyMode::Enum copyMode, size_t size, size_t nativeVirtualCount)
 {
   return AddBoundType(name, name, copyMode, size, nativeVirtualCount);
 }
@@ -1074,14 +978,10 @@ void LibraryBuilder::AddNativeBoundType(BoundType* type)
   // Map the bound type's name to its type object
   bool inserted = this->BoundTypes.InsertNoOverwrite(type->Name, type);
   ErrorIf(
-      inserted == false,
-      "Another type with the same name (%s) was added to the LibraryBuilder.",
-      type->Name.c_str());
+      inserted == false, "Another type with the same name (%s) was added to the LibraryBuilder.", type->Name.c_str());
 }
 
-void LibraryBuilder::AddNativeBoundType(BoundType* type,
-                                        BoundType* base,
-                                        TypeCopyMode::Enum mode)
+void LibraryBuilder::AddNativeBoundType(BoundType* type, BoundType* base, TypeCopyMode::Enum mode)
 {
   type->BaseType = base;
   type->CopyMode = mode;
@@ -1089,10 +989,9 @@ void LibraryBuilder::AddNativeBoundType(BoundType* type,
   {
     if (base->IsInitialized() == false)
     {
-      String message =
-          String::Format("The base type must be initialized before we "
-                         "initialize our type %s.\n----------------\n",
-                         type->Name.c_str());
+      String message = String::Format("The base type must be initialized before we "
+                                      "initialize our type %s.\n----------------\n",
+                                      type->Name.c_str());
       base->IsInitializedAssert(message.c_str());
     }
     type->HandleManager = base->HandleManager;
@@ -1132,13 +1031,12 @@ void LibraryBuilder::GenerateGetSetFields()
     if (field->Get == nullptr)
     {
       // Generate the get function
-      field->Get = this->CreateRawFunction(
-          field->Owner,
-          BuildGetterName(field->Name),
-          field->IsStatic ? StaticFieldGetter : InstanceFieldGetter,
-          ParameterArray(),
-          field->PropertyType,
-          functionOptions);
+      field->Get = this->CreateRawFunction(field->Owner,
+                                           BuildGetterName(field->Name),
+                                           field->IsStatic ? StaticFieldGetter : InstanceFieldGetter,
+                                           ParameterArray(),
+                                           field->PropertyType,
+                                           functionOptions);
       field->Get->IsHidden = true;
       field->Get->OwningProperty = field;
 
@@ -1154,13 +1052,12 @@ void LibraryBuilder::GenerateGetSetFields()
     if (field->Set == nullptr)
     {
       // Generate the set function
-      field->Set = this->CreateRawFunction(
-          field->Owner,
-          BuildSetterName(field->Name),
-          field->IsStatic ? StaticFieldSetter : InstanceFieldSetter,
-          OneParameter(field->PropertyType, ValueKeyword),
-          ZilchTypeId(void),
-          functionOptions);
+      field->Set = this->CreateRawFunction(field->Owner,
+                                           BuildSetterName(field->Name),
+                                           field->IsStatic ? StaticFieldSetter : InstanceFieldSetter,
+                                           OneParameter(field->PropertyType, ValueKeyword),
+                                           ZilchTypeId(void),
+                                           functionOptions);
       field->Set->IsHidden = true;
       field->Set->OwningProperty = field;
 
@@ -1174,8 +1071,7 @@ void LibraryBuilder::GenerateGetSetFields()
   }
 }
 
-bool LibraryBuilder::CheckIdentifier(StringParam identifier,
-                                     TokenCheck::Flags flags)
+bool LibraryBuilder::CheckIdentifier(StringParam identifier, TokenCheck::Flags flags)
 {
   // Just attempt to fix the identifier (this will assert if the flag is set)
   String fixedIdentifier = FixIdentifier(identifier, flags);
@@ -1184,9 +1080,7 @@ bool LibraryBuilder::CheckIdentifier(StringParam identifier,
   return (fixedIdentifier == identifier);
 }
 
-String LibraryBuilder::FixIdentifier(StringParam ident,
-                                     TokenCheck::Flags flags,
-                                     char invalidCharacter)
+String LibraryBuilder::FixIdentifier(StringParam ident, TokenCheck::Flags flags, char invalidCharacter)
 {
   // We're going to be overwriting this identifier
   String identifier = ident;
@@ -1215,14 +1109,12 @@ String LibraryBuilder::FixIdentifier(StringParam ident,
   bool expectUpperIdentifier = (flags & TokenCheck::IsUpper) != 0;
   bool expectLowerIdentifier = (flags & TokenCheck::IsLower) != 0;
   bool removeOuterBrackets = (flags & TokenCheck::RemoveOuterBrackets) != 0;
-  bool noMultipleInvalidCharacters =
-      (flags & TokenCheck::NoMultipleInvalidCharacters) != 0;
+  bool noMultipleInvalidCharacters = (flags & TokenCheck::NoMultipleInvalidCharacters) != 0;
 
   // Check if the given identifier was empty
   if (identifier.Empty())
   {
-    ErrorIf(asserts,
-            "The identifier must be at least one character in length!");
+    ErrorIf(asserts, "The identifier must be at least one character in length!");
     if (expectLowerIdentifier)
       return EmptyLowerIdentifier;
     else
@@ -1293,9 +1185,7 @@ String LibraryBuilder::FixIdentifier(StringParam ident,
           StringRange peekRange = identifierRange;
           peekRange.PopFront();
           bool isNextUpperOrUnderscore =
-              !peekRange.Empty() &&
-              (CharacterUtilities::IsUpper(peekRange.Front()) ||
-               r.mValue == '_');
+              !peekRange.Empty() && (CharacterUtilities::IsUpper(peekRange.Front()) || r.mValue == '_');
 
           // Automatically make the next character uppercase, unless we detected
           // Hungarian notation
@@ -1321,8 +1211,7 @@ String LibraryBuilder::FixIdentifier(StringParam ident,
     }
     // If any part of the rest of the identifier is NOT alpha-numeric or
     // underscore
-    else if (CharacterUtilities::IsAlphaNumeric(r.mValue) == false &&
-             r.mValue != '_')
+    else if (CharacterUtilities::IsAlphaNumeric(r.mValue) == false && r.mValue != '_')
     {
       ErrorIf(asserts,
               "Character '%c' in the identifier must be either a letter, "
@@ -1331,9 +1220,8 @@ String LibraryBuilder::FixIdentifier(StringParam ident,
       // We should only Append invalid characters if the user specified one (not
       // null) and if the user doesn't want multiple of the same character
       bool shouldAppendInvalidCharacter =
-          invalidCharacter != '\0' &&
-          (noMultipleInvalidCharacters == false || builder.GetSize() == 0 ||
-           builder[builder.GetSize() - 1] != invalidCharacter);
+          invalidCharacter != '\0' && (noMultipleInvalidCharacters == false || builder.GetSize() == 0 ||
+                                       builder[builder.GetSize() - 1] != invalidCharacter);
 
       // Append the invalid character
       if (shouldAppendInvalidCharacter)
@@ -1352,8 +1240,7 @@ String LibraryBuilder::FixIdentifier(StringParam ident,
   // Perform the same behavior as above when the original identifier was empty
   if (builder.GetSize() == 0)
   {
-    ErrorIf(asserts,
-            "The identifier must be at least one character in length!");
+    ErrorIf(asserts, "The identifier must be at least one character in length!");
     if (expectLowerIdentifier)
       return EmptyLowerIdentifier;
     else
@@ -1413,8 +1300,7 @@ void LibraryBuilder::ComputeDelegateAndFunctionSizesOnce()
 
     // Move the first parameter forward by the return value's size
     // (void has a size of zero, so this always works!)
-    parameterStackOffset +=
-        (OperandIndex)AlignToBusWidth(delegateType->Return->GetCopyableSize());
+    parameterStackOffset += (OperandIndex)AlignToBusWidth(delegateType->Return->GetCopyableSize());
 
     // Walk through the parameters and Assign stack offsets
     for (size_t i = 0; i < delegateType->Parameters.Size(); ++i)
@@ -1427,15 +1313,13 @@ void LibraryBuilder::ComputeDelegateAndFunctionSizesOnce()
       parameter.StackOffset = parameterStackOffset;
 
       // Push forward the next parameter's stack offset by this parameter's size
-      parameterStackOffset += (OperandIndex)AlignToBusWidth(
-          parameter.ParameterType->GetCopyableSize());
+      parameterStackOffset += (OperandIndex)AlignToBusWidth(parameter.ParameterType->GetCopyableSize());
 
       // Get a reference to the core library
       Core& core = Core::GetInstance();
 
       // Make sure all delegates have returns
-      ErrorIf(parameter.ParameterType == nullptr ||
-                  parameter.ParameterType == core.VoidType,
+      ErrorIf(parameter.ParameterType == nullptr || parameter.ParameterType == core.VoidType,
               "Delegate/function parameters cannot be null or void");
     }
 
@@ -1454,8 +1338,7 @@ void LibraryBuilder::ComputeDelegateAndFunctionSizesOnce()
     // The base required stack space for any function is the parameters and
     // return sizes totaled
     Function* function = functions[i];
-    function->RequiredStackSpace =
-        function->FunctionType->TotalStackSizeExcludingThisHandle;
+    function->RequiredStackSpace = function->FunctionType->TotalStackSizeExcludingThisHandle;
     function->ComputeHash();
 
     // If the function has a this handle
@@ -1463,12 +1346,10 @@ void LibraryBuilder::ComputeDelegateAndFunctionSizesOnce()
     {
       // The this handle is the last parameter (after the returns and the
       // parameters)
-      function->This->Local =
-          (OperandLocal)function->FunctionType->ThisHandleStackOffset;
+      function->This->Local = (OperandLocal)function->FunctionType->ThisHandleStackOffset;
 
       // Add the size of the this handle
-      function->RequiredStackSpace +=
-          function->This->ResultType->GetCopyableSize();
+      function->RequiredStackSpace += function->This->ResultType->GetCopyableSize();
     }
   }
 }
@@ -1498,8 +1379,7 @@ String GetInheritedDescription(Function* function)
     // Find will automatically walk up base classes to look for the function
     // We are puposefully looking on our base class for the same exact function
     // as ourselves This will return null if we have no parent function
-    foundFunction =
-        baseType->FindFunction(function->Name, function->FunctionType, options);
+    foundFunction = baseType->FindFunction(function->Name, function->FunctionType, options);
     if (foundFunction == nullptr)
       break;
   }
@@ -1548,8 +1428,7 @@ LibraryRef LibraryBuilder::CreateLibrary()
     BoundType* boundType = boundTypes.Front();
     boundTypes.PopFront();
 
-    ErrorIf(boundType->BaseType != nullptr &&
-                boundType->BaseType->CopyMode != boundType->CopyMode,
+    ErrorIf(boundType->BaseType != nullptr && boundType->BaseType->CopyMode != boundType->CopyMode,
             "The type %s must be bound with the same TypeCopyMode as its base "
             "class %s",
             boundType->Name.c_str(),
@@ -1596,8 +1475,7 @@ IndirectionType* LibraryBuilder::ReferenceOf(BoundType* type)
     return nullptr;
   }
 
-  ErrorIf(type->IndirectType == nullptr,
-          "We don't have the indirect type for this type");
+  ErrorIf(type->IndirectType == nullptr, "We don't have the indirect type for this type");
   return type->IndirectType;
 }
 
@@ -1607,8 +1485,7 @@ BoundType* LibraryBuilder::Dereference(IndirectionType* qualifiedType)
   return qualifiedType->ReferencedType;
 }
 
-DelegateType* LibraryBuilder::GetDelegateType(const ParameterArray& parameters,
-                                              Type* returnType)
+DelegateType* LibraryBuilder::GetDelegateType(const ParameterArray& parameters, Type* returnType)
 {
   // Create a delegate type and fill it in
   DelegateType* delegateType = new DelegateType();
@@ -1638,11 +1515,7 @@ size_t CodeEntry::GetHash()
   return this->Code.Hash() ^ this->Origin.Hash() * 5689;
 }
 
-Library::Library() :
-    GeneratedDefinitionStubCode(false),
-    UserData(nullptr),
-    TolerantMode(false),
-    Plugin(nullptr)
+Library::Library() : GeneratedDefinitionStubCode(false), UserData(nullptr), TolerantMode(false), Plugin(nullptr)
 {
 }
 
@@ -1655,7 +1528,7 @@ void Library::GenerateDefinitionStubCode()
   this->GeneratedDefinitionStubCode = true;
 
   // Walk through all bound types and generate stub code for each one
-  ZilchForEach(BoundType * type, this->BoundTypes.Values())
+  ZilchForEach (BoundType* type, this->BoundTypes.Values())
   {
     // Generate stub code for this bound type and set all the native
     // locations for the class/struct, properties, functions, etc
@@ -1667,9 +1540,7 @@ void Library::GenerateDefinitionStubCode()
   }
 }
 
-void VisitBoundType(HashSet<BoundType*>& visitedTypes,
-                    BoundType* type,
-                    Array<BoundType*>& typesInOrder)
+void VisitBoundType(HashSet<BoundType*>& visitedTypes, BoundType* type, Array<BoundType*>& typesInOrder)
 {
   // If we already visited this type, then skip it
   if (visitedTypes.Contains(type))
@@ -1875,31 +1746,23 @@ void Module::BuildTypeDocumentation(BoundType* type, DocumentationType* docType)
   this->BuildFunctionDocumentation(docType->Constructors, type->Constructors);
 
   // Add all instance and static functions to the documentation
-  this->BuildFunctionDocumentation(docType->InstanceMethods,
-                                   type->InstanceFunctions);
-  this->BuildFunctionDocumentation(docType->StaticMethods,
-                                   type->StaticFunctions);
+  this->BuildFunctionDocumentation(docType->InstanceMethods, type->InstanceFunctions);
+  this->BuildFunctionDocumentation(docType->StaticMethods, type->StaticFunctions);
 
   // Add all the properties and members
-  this->BuildPropertyDocumentation(docType->InstanceProperties,
-                                   type->InstanceFields);
-  this->BuildPropertyDocumentation(docType->InstanceProperties,
-                                   type->InstanceGetterSetters);
-  this->BuildPropertyDocumentation(docType->StaticProperties,
-                                   type->StaticFields);
-  this->BuildPropertyDocumentation(docType->StaticProperties,
-                                   type->StaticGetterSetters);
+  this->BuildPropertyDocumentation(docType->InstanceProperties, type->InstanceFields);
+  this->BuildPropertyDocumentation(docType->InstanceProperties, type->InstanceGetterSetters);
+  this->BuildPropertyDocumentation(docType->StaticProperties, type->StaticFields);
+  this->BuildPropertyDocumentation(docType->StaticProperties, type->StaticGetterSetters);
 }
 
-bool DocumentationFunctionSorter(DocumentationFunction* left,
-                                 DocumentationFunction* right)
+bool DocumentationFunctionSorter(DocumentationFunction* left, DocumentationFunction* right)
 {
   // Compare the names with each other
   return left->Name < right->Name;
 }
 
-void Module::BuildFunctionDocumentation(Array<DocumentationFunction*>& addTo,
-                                        const FunctionMultiMap& functions)
+void Module::BuildFunctionDocumentation(Array<DocumentationFunction*>& addTo, const FunctionMultiMap& functions)
 {
   // Get the instance functions
   FunctionMultiValueRange functionArrays = functions.Values();
@@ -1920,8 +1783,7 @@ void Module::BuildFunctionDocumentation(Array<DocumentationFunction*>& addTo,
   Sort(addTo.All(), DocumentationFunctionSorter);
 }
 
-void Module::BuildFunctionDocumentation(Array<DocumentationFunction*>& addTo,
-                                        const FunctionArray& functions)
+void Module::BuildFunctionDocumentation(Array<DocumentationFunction*>& addTo, const FunctionArray& functions)
 {
   // Loop through all the functions in an array
   for (size_t i = 0; i < functions.Size(); ++i)
@@ -1971,8 +1833,7 @@ void Module::BuildFunctionDocumentation(Array<DocumentationFunction*>& addTo,
 
     // If this function is a constructor, it has no description, and it takes no
     // arguments (defaulted)...
-    if (function->Name == ConstructorName && docFunction->Description.Empty() &&
-        docFunction->Parameters.Empty())
+    if (function->Name == ConstructorName && docFunction->Description.Empty() && docFunction->Parameters.Empty())
     {
       // Set the description to something special
       docFunction->Description = "*Default constructor*";
@@ -1980,8 +1841,7 @@ void Module::BuildFunctionDocumentation(Array<DocumentationFunction*>& addTo,
   }
 }
 
-void Module::BuildPropertyDocumentation(Array<DocumentationProperty*>& addTo,
-                                        const FieldMap& members)
+void Module::BuildPropertyDocumentation(Array<DocumentationProperty*>& addTo, const FieldMap& members)
 {
   // Get a range of all the properties
   FieldMapValueRange range = members.Values();
@@ -1998,15 +1858,13 @@ void Module::BuildPropertyDocumentation(Array<DocumentationProperty*>& addTo,
   }
 }
 
-bool DocumentationPropertySorter(DocumentationProperty* left,
-                                 DocumentationProperty* right)
+bool DocumentationPropertySorter(DocumentationProperty* left, DocumentationProperty* right)
 {
   // Compare the names with each other
   return left->Name < right->Name;
 }
 
-void Module::BuildPropertyDocumentation(Array<DocumentationProperty*>& addTo,
-                                        const GetterSetterMap& properties)
+void Module::BuildPropertyDocumentation(Array<DocumentationProperty*>& addTo, const GetterSetterMap& properties)
 {
   // Get a range of all the properties
   PropertyMapValueRange range = properties.Values();
@@ -2026,8 +1884,7 @@ void Module::BuildPropertyDocumentation(Array<DocumentationProperty*>& addTo,
   Sort(addTo.All(), DocumentationPropertySorter);
 }
 
-void Module::BuildPropertyDocumentation(Array<DocumentationProperty*>& addTo,
-                                        const Property* property)
+void Module::BuildPropertyDocumentation(Array<DocumentationProperty*>& addTo, const Property* property)
 {
   // Create the documentation property to represent the property
   DocumentationProperty* docProperty = new DocumentationProperty();
@@ -2093,8 +1950,7 @@ DocumentationModule* Module::BuildDocumentation()
 
     // Loop through all template handlers, instantiate them as templates that
     // take the 'Any' type
-    HashMap<String, InstantiateTemplateInfo>::valuerange templates =
-        library->TemplateHandlers.Values();
+    HashMap<String, InstantiateTemplateInfo>::valuerange templates = library->TemplateHandlers.Values();
     while (templates.Empty() == false)
     {
       // Get the current template and move to the next one
@@ -2107,18 +1963,15 @@ DocumentationModule* Module::BuildDocumentation()
       for (size_t i = 0; i < templateInfo.TemplateParameters.Size(); ++i)
       {
         TemplateParameter& parameter = templateInfo.TemplateParameters[i];
-        BoundType* fakeType =
-            builder.BoundTypes.FindValue(parameter.Name, nullptr);
+        BoundType* fakeType = builder.BoundTypes.FindValue(parameter.Name, nullptr);
 
         if (fakeType == nullptr)
-          fakeType = builder.AddBoundType(
-              parameter.Name, TypeCopyMode::ReferenceType, 0);
+          fakeType = builder.AddBoundType(parameter.Name, TypeCopyMode::ReferenceType, 0);
 
         arguments.PushBack(fakeType);
       }
 
-      InstantiatedTemplate finalTemplate = builder.InstantiateTemplate(
-          templateInfo.TemplateBaseName, arguments, *this);
+      InstantiatedTemplate finalTemplate = builder.InstantiateTemplate(templateInfo.TemplateBaseName, arguments, *this);
 
       if (finalTemplate.Result == TemplateResult::Success)
       {
@@ -2144,10 +1997,9 @@ DocumentationModule* Module::BuildDocumentation()
   return docs;
 }
 
-void Module::BuildJsonConstructors(
-    JsonBuilder& json,
-    const Array<DocumentationFunction*>& constructors,
-    StringParam name)
+void Module::BuildJsonConstructors(JsonBuilder& json,
+                                   const Array<DocumentationFunction*>& constructors,
+                                   StringParam name)
 {
   // Early out if we have no functions
   if (constructors.Empty())
@@ -2178,9 +2030,7 @@ void Module::BuildJsonConstructors(
   json.End();
 }
 
-void Module::BuildJsonMethods(JsonBuilder& json,
-                              const Array<DocumentationFunction*>& functions,
-                              StringParam name)
+void Module::BuildJsonMethods(JsonBuilder& json, const Array<DocumentationFunction*>& functions, StringParam name)
 {
   // Early out if we have no functions
   if (functions.Empty())
@@ -2211,10 +2061,7 @@ void Module::BuildJsonMethods(JsonBuilder& json,
   json.End();
 }
 
-void Module::BuildJsonProperties(
-    JsonBuilder& json,
-    const Array<DocumentationProperty*>& properties,
-    StringParam name)
+void Module::BuildJsonProperties(JsonBuilder& json, const Array<DocumentationProperty*>& properties, StringParam name)
 {
   // Early out if we have no functions
   if (properties.Empty())
@@ -2248,9 +2095,7 @@ void Module::BuildJsonProperties(
   json.End();
 }
 
-void BuildBaseChain(StringBuilderExtended& builder,
-                    DocumentationLibrary* library,
-                    DocumentationType* type)
+void BuildBaseChain(StringBuilderExtended& builder, DocumentationLibrary* library, DocumentationType* type)
 {
   if (type->BaseName.Empty())
     return;
@@ -2335,8 +2180,7 @@ void Module::BuildDocumentationRst(StringParam directory)
 
       if (type->InstanceProperties.Empty() == false)
       {
-        builder.WriteLineHeading("Instance Properties",
-                                 RstHeadingType::SubSection);
+        builder.WriteLineHeading("Instance Properties", RstHeadingType::SubSection);
 
         RstTable table;
         table.Resize(3, type->InstanceProperties.Size() + 1);
@@ -2362,8 +2206,7 @@ void Module::BuildDocumentationRst(StringParam directory)
 
       if (type->StaticProperties.Empty() == false)
       {
-        builder.WriteLineHeading("Static Properties",
-                                 RstHeadingType::SubSection);
+        builder.WriteLineHeading("Static Properties", RstHeadingType::SubSection);
 
         RstTable table;
         table.Resize(3, type->StaticProperties.Size() + 1);
@@ -2389,8 +2232,7 @@ void Module::BuildDocumentationRst(StringParam directory)
 
       if (type->InstanceMethods.Empty() == false)
       {
-        builder.WriteLineHeading("Instance Methods",
-                                 RstHeadingType::SubSection);
+        builder.WriteLineHeading("Instance Methods", RstHeadingType::SubSection);
 
         RstTable table;
         table.Resize(2, type->InstanceMethods.Size() + 1);
@@ -2402,8 +2244,7 @@ void Module::BuildDocumentationRst(StringParam directory)
         {
           DocumentationFunction* function = type->InstanceMethods[i];
 
-          String nameAndSignature =
-              BuildString(function->Name, function->Signature);
+          String nameAndSignature = BuildString(function->Name, function->Signature);
 
           table.SetCell(nameAndSignature, 0, i + 1);
           table.SetCell(function->Description, 1, i + 1);
@@ -2427,8 +2268,7 @@ void Module::BuildDocumentationRst(StringParam directory)
         {
           DocumentationFunction* function = type->StaticMethods[i];
 
-          String nameAndSignature =
-              BuildString(function->Name, function->Signature);
+          String nameAndSignature = BuildString(function->Name, function->Signature);
 
           table.SetCell(nameAndSignature, 0, i + 1);
           table.SetCell(function->Description, 1, i + 1);
@@ -2443,9 +2283,7 @@ void Module::BuildDocumentationRst(StringParam directory)
       // HACK should be using file path stuff (platform agnostic!)
       String rstFileName = BuildString(directory, "\\", type->Name, ".rst");
 
-      Zero::WriteToFile(rstFileName.c_str(),
-                        (const byte*)typeRst.c_str(),
-                        typeRst.SizeInBytes());
+      Zero::WriteToFile(rstFileName.c_str(), (const byte*)typeRst.c_str(), typeRst.SizeInBytes());
     }
   }
 }
@@ -2507,18 +2345,13 @@ String Module::BuildDocumentationHtml()
             json.Key("tables");
             json.Begin(JsonType::Object);
             {
-              this->BuildJsonConstructors(
-                  json, type->Constructors, "Constructors");
+              this->BuildJsonConstructors(json, type->Constructors, "Constructors");
 
-              this->BuildJsonMethods(
-                  json, type->InstanceMethods, "Instance Methods");
-              this->BuildJsonMethods(
-                  json, type->StaticMethods, "Static Methods");
+              this->BuildJsonMethods(json, type->InstanceMethods, "Instance Methods");
+              this->BuildJsonMethods(json, type->StaticMethods, "Static Methods");
 
-              this->BuildJsonProperties(
-                  json, type->InstanceProperties, "Instance Properties");
-              this->BuildJsonProperties(
-                  json, type->StaticProperties, "Static Properties");
+              this->BuildJsonProperties(json, type->InstanceProperties, "Instance Properties");
+              this->BuildJsonProperties(json, type->StaticProperties, "Static Properties");
             }
             json.End();
           }
@@ -2598,8 +2431,7 @@ ParameterArray TwoParameters(Type* type1, Type* type2)
   return parameters;
 }
 
-ParameterArray
-TwoParameters(Type* type1, StringParam name1, Type* type2, StringParam name2)
+ParameterArray TwoParameters(Type* type1, StringParam name1, Type* type2, StringParam name2)
 {
   ParameterArray parameters;
 
@@ -2623,12 +2455,8 @@ ParameterArray ThreeParameters(Type* type)
   return parameters;
 }
 
-ParameterArray ThreeParameters(Type* type1,
-                               StringParam name1,
-                               Type* type2,
-                               StringParam name2,
-                               Type* type3,
-                               StringParam name3)
+ParameterArray
+ThreeParameters(Type* type1, StringParam name1, Type* type2, StringParam name2, Type* type3, StringParam name3)
 {
   ParameterArray parameters;
 
@@ -2647,10 +2475,7 @@ ParameterArray ThreeParameters(Type* type1,
   return parameters;
 }
 
-ParameterArray ThreeParameters(Type* type,
-                               StringParam name1,
-                               StringParam name2,
-                               StringParam name3)
+ParameterArray ThreeParameters(Type* type, StringParam name1, StringParam name2, StringParam name3)
 {
   ParameterArray parameters;
 
@@ -2688,11 +2513,7 @@ ParameterArray FourParameters(Type* type)
   return parameters;
 }
 
-ParameterArray FourParameters(Type* type,
-                              StringParam name1,
-                              StringParam name2,
-                              StringParam name3,
-                              StringParam name4)
+ParameterArray FourParameters(Type* type, StringParam name1, StringParam name2, StringParam name3, StringParam name4)
 {
   ParameterArray parameters;
 
@@ -2726,12 +2547,8 @@ ParameterArray FiveParameters(Type* type)
   return parameters;
 }
 
-ParameterArray FiveParameters(Type* type,
-                              StringParam name1,
-                              StringParam name2,
-                              StringParam name3,
-                              StringParam name4,
-                              StringParam name5)
+ParameterArray FiveParameters(
+    Type* type, StringParam name1, StringParam name2, StringParam name3, StringParam name4, StringParam name5)
 {
   ParameterArray parameters;
 

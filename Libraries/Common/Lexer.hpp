@@ -88,11 +88,8 @@ protected:
   static void DeleteNode(GrammarNode* node);
 
 private:
-  static GrammarNode& MakeBinary(GrammarNode& lhs,
-                                 GrammarNode& rhs,
-                                 GrammarNodeType::Enum type);
-  static GrammarNode& MakeUnary(GrammarNode& operand,
-                                GrammarNodeType::Enum type);
+  static GrammarNode& MakeBinary(GrammarNode& lhs, GrammarNode& rhs, GrammarNodeType::Enum type);
+  static GrammarNode& MakeUnary(GrammarNode& operand, GrammarNodeType::Enum type);
 };
 
 template <typename TokenType>
@@ -157,15 +154,13 @@ GrammarNode<Character>& T();
 GrammarNode<Character>& T(int character);
 GrammarNode<Character>& T(StringRange rangeSet);
 GrammarNode<Character>& T(int startInclusive, int endInclusive);
-GrammarNode<Character>& T(StringParam captureName,
-                          GrammarNode<Character>& capture);
+GrammarNode<Character>& T(StringParam captureName, GrammarNode<Character>& capture);
 
 GrammarNode<Token>& P();
 GrammarNode<Token>& P(GrammarRule<Character>& tokenRule);
 GrammarNode<Token>& P(StringParam captureName, GrammarNode<Token>& capture);
 
-DeclareEnum4(
-    ReplacementNodeType, Text, JoinCapture, ForeachCapture, Concatenate);
+DeclareEnum4(ReplacementNodeType, Text, JoinCapture, ForeachCapture, Concatenate);
 class ReplacementNode
 {
 public:
@@ -189,21 +184,12 @@ public:
 
 ReplacementNode& R(StringParam text);
 ReplacementNode& R(CaptureExpressionNode& capture);
-ReplacementNode& R(CaptureExpressionNode& capture,
-                   ReplacementNode& replaceEach);
-ReplacementNode& R(CaptureExpressionNode& capture,
-                   StringParam name,
-                   ReplacementNode& replaceEach);
+ReplacementNode& R(CaptureExpressionNode& capture, ReplacementNode& replaceEach);
+ReplacementNode& R(CaptureExpressionNode& capture, StringParam name, ReplacementNode& replaceEach);
 
 // Capture nodes always result in a forest of captures (which can be linearized
 // by replacement nodes)
-DeclareEnum6(CaptureExpressionNodeType,
-             NamedCapture,
-             NestedCapture,
-             IndexRange,
-             Exists,
-             Not,
-             Union);
+DeclareEnum6(CaptureExpressionNodeType, NamedCapture, NestedCapture, IndexRange, Exists, Not, Union);
 class CaptureExpressionNode
 {
 public:
@@ -230,9 +216,7 @@ public:
 };
 
 CaptureExpressionNode& C(StringParam captureName);
-CaptureExpressionNode& C(CaptureExpressionNode& parent,
-                         int startIndexInclusive,
-                         int endIndexInclusive);
+CaptureExpressionNode& C(CaptureExpressionNode& parent, int startIndexInclusive, int endIndexInclusive);
 
 template <typename TokenType>
 class ParseNodeInfo
@@ -241,8 +225,7 @@ public:
   ParseNodeInfo();
   ~ParseNodeInfo();
 
-  TokenType GetFirstCapturedToken(StringParam name,
-                                  const TokenType& failResult = TokenType());
+  TokenType GetFirstCapturedToken(StringParam name, const TokenType& failResult = TokenType());
 
   GrammarRule<TokenType>* mRule;
   TokenType mToken;
@@ -307,10 +290,7 @@ public:
   size_t mCharacter;
 
 private:
-  static void Compute(StringRange input,
-                      CharacterLocation* outLocation,
-                      size_t* outIndex,
-                      bool computeIndex);
+  static void Compute(StringRange input, CharacterLocation* outLocation, size_t* outIndex, bool computeIndex);
 };
 
 class CharacterStream
@@ -352,8 +332,7 @@ public:
   Capture();
   ~Capture();
 
-  TokenType GetFirstToken(StringParam name,
-                          const TokenType& failResult = TokenType());
+  TokenType GetFirstToken(StringParam name, const TokenType& failResult = TokenType());
 
   String mName;
   Capture* mParent;
@@ -384,9 +363,7 @@ private:
   void OutputNode(StringBuilder& builder);
   void GetDebugRepresentation(size_t depth, StringBuilder& builder);
   void GetGraphRepresentation(size_t& index, StringBuilder& builder);
-  static void GetGraphRepresentation(size_t& index,
-                                     StringBuilder& builder,
-                                     Capture<TokenType>* capture);
+  static void GetGraphRepresentation(size_t& index, StringBuilder& builder, Capture<TokenType>* capture);
 };
 
 template <typename TokenType>
@@ -449,9 +426,7 @@ public:
   size_t mFailedIndex;
 };
 
-template <typename TokenType,
-          typename StreamType,
-          typename ParseHandlerType = EmptyParseHandler<TokenType>>
+template <typename TokenType, typename StreamType, typename ParseHandlerType = EmptyParseHandler<TokenType>>
 class RecursiveDescentParser
 {
 public:
@@ -460,9 +435,7 @@ public:
   RecursiveDescentParser(const RecursiveDescentParser& rhs);
 
   void Parse();
-  void ReplaceAndBackup(StringParam text,
-                        size_t startInclusive,
-                        size_t endExclusive);
+  void ReplaceAndBackup(StringParam text, size_t startInclusive, size_t endExclusive);
 
   static const size_t MaxRecursionDepth = 500;
   static const size_t MaxReplacementStringLength = 256 * 256;
@@ -486,8 +459,7 @@ private:
   // Returns whether or not anything was parsed (in all cases, even epsilon)
   bool EvaluateGrammar(GrammarNode<TokenType>* node);
   void EvaluateReplacement(ReplacementNode* node, StringBuilder& builder);
-  void EvaluateCapture(CaptureExpressionNode* node,
-                       Array<Capture<TokenType>*>& capturesOut);
+  void EvaluateCapture(CaptureExpressionNode* node, Array<Capture<TokenType>*>& capturesOut);
 
   bool ShouldInvokeParseHandler();
   bool IsInReplacement();
@@ -542,10 +514,7 @@ class TokenRange
 {
 public:
   TokenRange();
-  TokenRange(GrammarSet<Character>& set,
-             GrammarRule<Character>& startRule,
-             StringParam input,
-             bool debug = false);
+  TokenRange(GrammarSet<Character>& set, GrammarRule<Character>& startRule, StringParam input, bool debug = false);
   TokenRange(const TokenRange& rhs);
   TokenRange& operator=(const TokenRange& rhs);
 

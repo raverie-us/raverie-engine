@@ -21,8 +21,7 @@ public:
   void ComputeWorldAabbInternal() override;
   void ComputeWorldBoundingSphereInternal() override;
   real ComputeWorldVolumeInternal() override;
-  void ComputeLocalInverseInertiaTensor(real mass,
-                                        Mat3Ref localInvInertia) override;
+  void ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia) override;
   void Support(Vec3Param direction, Vec3Ptr support) const override;
 
   /// The radius of the sphere in local space (before transform is applied).

@@ -28,10 +28,7 @@ public:
   {
   }
 
-  bool EnumField(cstr enumTypeName,
-                 cstr fieldName,
-                 uint& enumValue,
-                 BoundType* type) override
+  bool EnumField(cstr enumTypeName, cstr fieldName, uint& enumValue, BoundType* type) override
   {
     enumValue = (uint)type->DefaultEnumValue;
     return false;
@@ -56,17 +53,15 @@ public:
     return false;
   }
 
-  bool StringField(cstr typeName,
-                   cstr fieldName,
-                   StringRange& stringRange) override
+  bool StringField(cstr typeName, cstr fieldName, StringRange& stringRange) override
   {
     return false;
   }
 
-#define FUNDAMENTAL(type)                                                      \
-  bool FundamentalField(cstr fieldName, type& value) override                  \
-  {                                                                            \
-    return false;                                                              \
+#define FUNDAMENTAL(type)                                                                                              \
+  bool FundamentalField(cstr fieldName, type& value) override                                                          \
+  {                                                                                                                    \
+    return false;                                                                                                      \
   };
 #include "FundamentalTypes.hpp"
 #undef FUNDAMENTAL

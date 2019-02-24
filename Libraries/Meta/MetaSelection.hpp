@@ -213,19 +213,17 @@ void MetaSelection::FilterComponentType(Array<type*>& destination)
   BoundType* componentType = ZilchTypeId(Type);
 
   // Walk all objects in the selection
-  forRange(Handle object, All())
+  forRange (Handle object, All())
   {
     // Look up the component on the object
-    MetaComposition* composition =
-        object.StoredType->HasInherited<MetaComposition>();
+    MetaComposition* composition = object.StoredType->HasInherited<MetaComposition>();
 
     // The selection can include things in the library view
     // (such as archetypes) which don't have a valid composition
     if (composition == NULL)
       continue;
 
-    Handle component =
-        composition->GetComponent(object.Get<Object>(), componentType);
+    Handle component = composition->GetComponent(object.Get<Object>(), componentType);
 
     // Add it if it's valid
     if (component.IsNotNull())

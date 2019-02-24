@@ -59,25 +59,19 @@ public:
 
   // Perform type collecting, assigning, and checking on the tree or an
   // individual expression
-  void ApplyToTree(SyntaxTree& syntaxTree,
-                   LibraryBuilder& builder,
-                   Project& project,
-                   const Module& dependencies);
+  void ApplyToTree(SyntaxTree& syntaxTree, LibraryBuilder& builder, Project& project, const Module& dependencies);
 
   // Retrieves/resolves a type if it exists
-  Type* RetrieveType(SyntaxType* syntaxType,
-                     const CodeLocation& location,
-                     const Module& dependencies);
+  Type* RetrieveType(SyntaxType* syntaxType, const CodeLocation& location, const Module& dependencies);
 
 private:
   // Walk through all dependenices, collect all their types and store them in a
   // map
   void PopulateDependencies();
 
-  void
-  FindDependencyCycles(BoundType* type,
-                       HashMap<BoundType*, DependencyState::Enum>& dependencies,
-                       const CodeLocation& location);
+  void FindDependencyCycles(BoundType* type,
+                            HashMap<BoundType*, DependencyState::Enum>& dependencies,
+                            const CodeLocation& location);
 
   // Print out an error message corresponding to a given node
   void ErrorAt(SyntaxNode* node, int errorCode, ...);
@@ -112,17 +106,13 @@ private:
 
   // Make sure we don't have another class/struct/enum of the same name
   // Sets WasError if another type exists of the same name
-  void PreventDuplicateTypeNames(StringParam name,
-                                 const CodeLocation& location);
+  void PreventDuplicateTypeNames(StringParam name, const CodeLocation& location);
 
   // Make sure we don't have another member of the same name (an exception is
   // made for functions due to overloading) Sets WasError if another type exists
   // of the same name
-  void PreventDuplicateMemberNames(BoundType* type,
-                                   StringParam memberName,
-                                   const CodeLocation& location,
-                                   bool isStatic,
-                                   bool isFunction);
+  void PreventDuplicateMemberNames(
+      BoundType* type, StringParam memberName, const CodeLocation& location, bool isStatic, bool isFunction);
 
   // Make sure we don't have another member of the same name on a base class (an
   // exception is made for functions due to overloading) Sets WasError if
@@ -140,29 +130,21 @@ private:
 
   // Given a list of syntax types, attempt to instantiate any referenced
   // templates from them (recursive)
-  void InstantiateTemplatesFromSyntaxTypes(SyntaxTypes& types,
-                                           ClassContext* context,
-                                           const CodeLocation& location);
+  void InstantiateTemplatesFromSyntaxTypes(SyntaxTypes& types, ClassContext* context, const CodeLocation& location);
 
   // Setup a class instance for a given class node (called by CollectClass, and
   // CollectTemplateInstantiations)
-  void SetupClassInstance(StringParam baseName,
-                          ClassNode* node,
-                          ClassContext* context);
+  void SetupClassInstance(StringParam baseName, ClassNode* node, ClassContext* context);
 
   // Setup the location for a function, as well as the this variable
-  void SetupFunctionLocation(Function* function,
-                             const CodeLocation& location,
-                             const CodeLocation& nameLocation);
+  void SetupFunctionLocation(Function* function, const CodeLocation& location, const CodeLocation& nameLocation);
 
   // Convert a value to a constant
   Constant ValueNodeToConstant(ValueNode* node);
 
   // Read all the attributes from an attribute node list into an array of
   // attributes
-  void ReadAttributes(SyntaxNode* parentNode,
-                      NodeList<AttributeNode>& nodes,
-                      Array<Attribute>& attributesOut);
+  void ReadAttributes(SyntaxNode* parentNode, NodeList<AttributeNode>& nodes, Array<Attribute>& attributesOut);
 
   // Setup the inheritance chain (including interfaces and base class)
   void CollectClassInheritance(ClassNode*& node, TypingContext* context);
@@ -192,8 +174,7 @@ private:
   void CollectFunction(FunctionNode*& node, TypingContext* context);
 
   // Collect the member variables
-  void CollectMemberVariableAndProperty(MemberVariableNode*& node,
-                                        TypingContext* context);
+  void CollectMemberVariableAndProperty(MemberVariableNode*& node, TypingContext* context);
 
   // Collect the member properties
   void CollectPropertyGetSet(MemberVariableNode*& node, TypingContext* context);
@@ -221,27 +202,23 @@ private:
   void DecorateValue(ValueNode*& node, TypingContext* context);
 
   // Let the string interpolant know it's of a string type
-  void DecorateStringInterpolant(StringInterpolantNode*& node,
-                                 TypingContext* context);
+  void DecorateStringInterpolant(StringInterpolantNode*& node, TypingContext* context);
 
   // Assign a type to the initializer
   void DecorateInitializer(InitializerNode*& node, TypingContext* context);
 
   // Handle checking that the creation call is valid for its type (also infers
   // new/local if not provided)
-  void DecorateStaticTypeOrCreationCall(StaticTypeNode*& node,
-                                        TypingContext* context);
+  void DecorateStaticTypeOrCreationCall(StaticTypeNode*& node, TypingContext* context);
 
   // Handle initializing a created object or adding to a container (technically
   // this can come after any expression)
-  void DecorateExpressionInitializer(ExpressionInitializerNode*& node,
-                                     TypingContext* context);
+  void DecorateExpressionInitializer(ExpressionInitializerNode*& node, TypingContext* context);
 
   // A multi-expression is a single expression that runs multiple expressions
   // and then yields the results of one of them This forwards the type of the
   // yielded expresion (and walks them all)
-  void DecorateMultiExpression(MultiExpressionNode*& node,
-                               TypingContext* context);
+  void DecorateMultiExpression(MultiExpressionNode*& node, TypingContext* context);
 
   // Make sure typeid results in a type (of the most derived type)
   void DecorateTypeId(TypeIdNode*& node, TypingContext* context);
@@ -301,8 +278,7 @@ private:
   void CheckContinue(ContinueNode*& node, TypingContext* context);
 
   // Resolve a local variable reference (get the variable its referencing)
-  void ResolveLocalVariableReference(LocalVariableReferenceNode*& node,
-                                     TypingContext* context);
+  void ResolveLocalVariableReference(LocalVariableReferenceNode*& node, TypingContext* context);
 
   // Mark the parent scope node as being a complete path
   void MarkParentScopeAsAllPathsReturn(SyntaxNode* parent, bool isDebugReturn);
@@ -313,8 +289,7 @@ private:
   // false since no conversion is available Note: Always remember to pass the
   // actual node pointer in instead of a stack local so we can modify it in
   // place!
-  static bool ImplicitConvertAfterWalkAndIo(ExpressionNode*& nodeToReparent,
-                                            Type* toType);
+  static bool ImplicitConvertAfterWalkAndIo(ExpressionNode*& nodeToReparent, Type* toType);
 
   // Check the type of a return value
   void CheckReturn(ReturnNode*& node, TypingContext* context);
@@ -323,23 +298,19 @@ private:
   void DecorateCheckTypeCast(TypeCastNode*& node, TypingContext* context);
 
   // Assign a type to a function call (and check the type)
-  void DecorateCheckFunctionCall(FunctionCallNode*& node,
-                                 TypingContext* context);
+  void DecorateCheckFunctionCall(FunctionCallNode*& node, TypingContext* context);
 
   // Store the function in the code context and validate it as a member
   void CheckAndPushFunction(FunctionNode*& node, TypingContext* context);
 
   // Check that the binary operator is valid and that it's types are valid
-  void DecorateCheckBinaryOperator(BinaryOperatorNode*& node,
-                                   TypingContext* context);
+  void DecorateCheckBinaryOperator(BinaryOperatorNode*& node, TypingContext* context);
 
   // Check that the unary operator is valid and that it's types are valid
-  void DecorateCheckPropertyDelegateOperator(
-      PropertyDelegateOperatorNode*& node, TypingContext* context);
+  void DecorateCheckPropertyDelegateOperator(PropertyDelegateOperatorNode*& node, TypingContext* context);
 
   // Check that the unary operator is valid and that it's types are valid
-  void DecorateCheckUnaryOperator(UnaryOperatorNode*& node,
-                                  TypingContext* context);
+  void DecorateCheckUnaryOperator(UnaryOperatorNode*& node, TypingContext* context);
 
   // Check all expressions and verify that their io modes are being used
   // properly
@@ -356,25 +327,20 @@ private:
   void ResolveMember(MemberAccessNode*& node, TypingContext* context);
 
   void PrecomputeValueNode(ValueNode*& node, TypingContext* context);
-  void PrecomputeStringInterpolantNode(StringInterpolantNode*& node,
-                                       TypingContext* context);
-  void PrecomputeFunctionCallNode(FunctionCallNode*& node,
-                                  TypingContext* context);
-  void PrecomputeMultiExpressionNode(MultiExpressionNode*& node,
-                                     TypingContext* context);
-  void PrecomputeExpressionInitializerNode(ExpressionInitializerNode*& node,
-                                           TypingContext* context);
+  void PrecomputeStringInterpolantNode(StringInterpolantNode*& node, TypingContext* context);
+  void PrecomputeFunctionCallNode(FunctionCallNode*& node, TypingContext* context);
+  void PrecomputeMultiExpressionNode(MultiExpressionNode*& node, TypingContext* context);
+  void PrecomputeExpressionInitializerNode(ExpressionInitializerNode*& node, TypingContext* context);
   void PrecomputeTypeCastNode(TypeCastNode*& node, TypingContext* context);
 
   // Because replacing the side-effect operator case for binary/unary operators
   // is so similar, we functionalized it The template type should be the
   // operator node type
   template <typename NodeType>
-  void BuildGetSetSideEffectIndexerNodes(
-      NodeType*& node,
-      IndexerCallNode* indexer,
-      ExpressionNode* NodeType::*operandMemberThatWasIndexer,
-      TypingContext* context);
+  void BuildGetSetSideEffectIndexerNodes(NodeType*& node,
+                                         IndexerCallNode* indexer,
+                                         ExpressionNode* NodeType::*operandMemberThatWasIndexer,
+                                         TypingContext* context);
 
   // When we hit a binary operator that has side effects and the left operand is
   // an indexer We need to transform the binary operator into being a child of

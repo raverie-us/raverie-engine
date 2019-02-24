@@ -6,14 +6,7 @@
 namespace Zero
 {
 
-DeclareBitField7(CharacterBits,
-                 Graphical,
-                 Alpha,
-                 Number,
-                 WhiteSpace,
-                 Lower,
-                 Symbol,
-                 Control);
+DeclareBitField7(CharacterBits, Graphical, Alpha, Number, WhiteSpace, Lower, Symbol, Control);
 
 int IsSpace(Rune r);
 int IsGraph(Rune r);

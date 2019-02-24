@@ -17,26 +17,17 @@ public:
 
   void Initialize(CogInitializer& initializer) override;
   void DrawTriangles();
-  void DrawVoronoiRegion(Vec3Param p0,
-                         Vec3Param p1,
-                         real angle,
-                         Vec3Param triNormal,
-                         Mat4Param transform);
+  void DrawVoronoiRegion(Vec3Param p0, Vec3Param p1, real angle, Vec3Param triNormal, Mat4Param transform);
   void DrawTriangleVoronoiRegion(uint triIndex);
   void DrawVectorAtPoint(Vec3Param start, Vec3Param dir, Vec3Param vec);
   void DrawAllTriangleVoronoiRegions();
-  void TestManifoldPoint(Vec3Param start,
-                         Vec3Param dir,
-                         Vec3Param contactNormal);
+  void TestManifoldPoint(Vec3Param start, Vec3Param dir, Vec3Param contactNormal);
 
   uint GetTriangleIndexFromCast(Vec3Param start, Vec3Param dir);
   Vec3 GetTriangleNormal(uint index);
   Vec3 GetPointFromCastOnTriangle(uint index, Vec3Param start, Vec3Param dir);
   void DrawTriangleFromCast(Vec3Param start, Vec3Param dir);
-  void GenerateInfoForTriangles(Vec3Param start1,
-                                Vec3Param dir1,
-                                Vec3Param start2,
-                                Vec3Param dir2);
+  void GenerateInfoForTriangles(Vec3Param start1, Vec3Param dir1, Vec3Param start2, Vec3Param dir2);
 
   GenericPhysicsMesh* mMesh;
   HeightMapCollider* mHeightMap;

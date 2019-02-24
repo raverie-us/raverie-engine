@@ -11,16 +11,11 @@ Vec3 GetObjectTextPosition(Cog* cog);
 
 DeclareEnum2(IncludeMode, OnlyRoot, Children);
 // Get an Aabb for a cog and its children
-Aabb GetAabb(Cog* cog,
-             IncludeMode::Type includeMode = IncludeMode::Children,
-             bool world = true);
-Aabb GetAabb(HandleParam metaObject,
-             IncludeMode::Type includeMode = IncludeMode::Children,
-             bool world = true);
+Aabb GetAabb(Cog* cog, IncludeMode::Type includeMode = IncludeMode::Children, bool world = true);
+Aabb GetAabb(HandleParam metaObject, IncludeMode::Type includeMode = IncludeMode::Children, bool world = true);
 
 // Get an Aabb for selection
-Aabb GetAabb(MetaSelection* selection,
-             IncludeMode::Type includeMode = IncludeMode::Children);
+Aabb GetAabb(MetaSelection* selection, IncludeMode::Type includeMode = IncludeMode::Children);
 
 // Expand the aabb by this object size
 void ExpandAabb(Cog* cog,
@@ -37,10 +32,7 @@ void ExpandAabb(HandleParam metaObject,
                 bool expandTransform = false);
 // Expand the aabb by this object's childrens' sizes only, but not the object's
 // size itself.
-void ExpandAabbChildrenOnly(HandleParam instance,
-                            Aabb& aabb,
-                            bool world = true,
-                            bool expandTransform = false);
+void ExpandAabbChildrenOnly(HandleParam instance, Aabb& aabb, bool world = true, bool expandTransform = false);
 
 // Get distance needed to full view an Aabb
 float GetViewDistance(Aabb& aabb);
@@ -49,8 +41,7 @@ float GetViewDistance(Aabb& aabb);
 void DisplayCodeDefinition(CodeDefinition& definition);
 
 template <typename metaRangeType>
-Aabb GetAabbFromObjects(metaRangeType objects,
-                        IncludeMode::Type includeMode = IncludeMode::Children)
+Aabb GetAabbFromObjects(metaRangeType objects, IncludeMode::Type includeMode = IncludeMode::Children)
 {
   Aabb aabb = Aabb(Vec3::cZero, Vec3::cZero);
 
@@ -61,7 +52,7 @@ Aabb GetAabbFromObjects(metaRangeType objects,
   // point of the aabb will always be (0,0,0), which is incorrect.
   aabb = GetAabb(objects.Front(), includeMode);
 
-  forRange(Handle instance, objects)
+  forRange (Handle instance, objects)
   {
     Aabb currAabb = GetAabb(instance, includeMode);
     aabb.Combine(currAabb);

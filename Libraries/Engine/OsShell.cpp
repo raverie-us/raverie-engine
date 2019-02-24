@@ -96,8 +96,7 @@ OsWindow* OsShell::CreateOsWindow(StringParam windowName,
                                   OsWindow* parentWindow,
                                   WindowStyleFlags::Enum flags)
 {
-  return new OsWindow(
-      this, windowName, clientSize, monitorClientPos, parentWindow, flags);
+  return new OsWindow(this, windowName, clientSize, monitorClientPos, parentWindow, flags);
 }
 
 ByteColor OsShell::GetColorAtMouse()
@@ -161,7 +160,7 @@ void OsShell::ScanInputDevices()
   Z::gJoysticks->DeactivateAll();
 
   const Array<PlatformInputDevice>& devices = mShell.ScanInputDevices();
-  forRange(PlatformInputDevice & device, devices)
+  forRange (PlatformInputDevice& device, devices)
   {
     // Tell the Joysticks system that a Joystick is present
     Z::gJoysticks->AddJoystickDevice(device);

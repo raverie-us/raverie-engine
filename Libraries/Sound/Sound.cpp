@@ -22,10 +22,7 @@ ZilchDefineType(Sound, builder, type)
   ZilchBindGetterProperty(Channels);
 }
 
-void Sound::CreateAsset(Status& status,
-                        StringParam assetName,
-                        StringParam fileName,
-                        AudioFileLoadType::Enum loadType)
+void Sound::CreateAsset(Status& status, StringParam assetName, StringParam fileName, AudioFileLoadType::Enum loadType)
 {
   // If the load type is set to auto, determine the type based on the length of
   // the file
@@ -44,8 +41,7 @@ void Sound::CreateAsset(Status& status,
 
       if (status.Succeeded())
       {
-        float fileLength = (float)header.SamplesPerChannel /
-                           (float)AudioConstants::cSystemSampleRate;
+        float fileLength = (float)header.SamplesPerChannel / (float)AudioConstants::cSystemSampleRate;
 
         if (fileLength < mStreamFromMemoryLength)
           loadType = AudioFileLoadType::Uncompressed;
@@ -57,8 +53,7 @@ void Sound::CreateAsset(Status& status,
     }
   }
 
-  if (loadType == AudioFileLoadType::StreamFromFile ||
-      loadType == AudioFileLoadType::StreamFromMemory)
+  if (loadType == AudioFileLoadType::StreamFromFile || loadType == AudioFileLoadType::StreamFromMemory)
     mAsset = new StreamingSoundAsset(status, fileName, loadType, Name);
   else
     mAsset = new DecompressedSoundAsset(status, fileName, Name);
@@ -162,12 +157,10 @@ bool SoundLoader::LoadSound(Sound* sound, ResourceEntry& entry)
 
 ImplementResourceManager(SoundManager, Sound);
 
-SoundManager::SoundManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+SoundManager::SoundManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   AddLoader("Sound", new SoundLoader(AudioFileLoadType::Uncompressed));
-  AddLoader("StreamedSound",
-            new SoundLoader(AudioFileLoadType::StreamFromFile));
+  AddLoader("StreamedSound", new SoundLoader(AudioFileLoadType::StreamFromFile));
   AddLoader("AutoStreamedSound", new SoundLoader(AudioFileLoadType::Auto));
   mCategory = "Sound";
   mCanAddFile = true;

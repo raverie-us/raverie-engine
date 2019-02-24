@@ -43,8 +43,7 @@ void Aabb::AttemptToCorrectInvalid()
 
 bool Aabb::Overlap(const Aabb& rhs) const
 {
-  Intersection::IntersectionType type =
-      Intersection::AabbAabb(mMin, mMax, rhs.mMin, rhs.mMax);
+  Intersection::IntersectionType type = Intersection::AabbAabb(mMin, mMax, rhs.mMin, rhs.mMax);
   return type == Intersection::Point;
 }
 
@@ -176,9 +175,7 @@ void Aabb::Transform(Mat3Param rot)
   SetHalfExtents(halfExtents);
 }
 
-Aabb Aabb::TransformAabbInternal(Vec3Param worldScale,
-                                 Mat3Param worldRotation,
-                                 Vec3Param worldTranslation) const
+Aabb Aabb::TransformAabbInternal(Vec3Param worldScale, Mat3Param worldRotation, Vec3Param worldTranslation) const
 {
   Aabb result = *this;
 
@@ -192,9 +189,7 @@ Aabb Aabb::TransformAabbInternal(Vec3Param worldScale,
   return result;
 }
 
-Aabb Aabb::TransformAabb(Vec3Param worldScale,
-                         Mat3Param worldRotation,
-                         Vec3Param worldTranslation) const
+Aabb Aabb::TransformAabb(Vec3Param worldScale, Mat3Param worldRotation, Vec3Param worldTranslation) const
 {
   Aabb result = *this;
   // compute the offset of the aabb from origin in local space
@@ -202,8 +197,7 @@ Aabb Aabb::TransformAabb(Vec3Param worldScale,
   // put the aabb at the origin so we can scale and rotate it
   result.Translate(-center);
   // scale, rotate and world translate it
-  result =
-      result.TransformAabbInternal(worldScale, worldRotation, worldTranslation);
+  result = result.TransformAabbInternal(worldScale, worldRotation, worldTranslation);
   // now rotate and scale that local offset to get the final world translation
   result.Translate(Math::Transform(worldRotation, worldScale * center));
   return result;

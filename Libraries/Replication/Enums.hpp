@@ -34,65 +34,60 @@ DeclareEnum3(TransmissionDirection,
 //
 
 /// Overall link status
-DeclareEnum4(
-    LinkStatus,
-    Unspecified,          /// Unspecified overall link status
-    Disconnected,         /// Disconnected from the remote peer
-    AttemptingConnection, /// Attempting connection with the remote peer
-    Connected);           /// Connected to the remote peer
+DeclareEnum4(LinkStatus,
+             Unspecified,          /// Unspecified overall link status
+             Disconnected,         /// Disconnected from the remote peer
+             AttemptingConnection, /// Attempting connection with the remote peer
+             Connected);           /// Connected to the remote peer
 
 /// Specific link state
-DeclareEnum9(
-    LinkState,
-    Unspecified, /// Unspecified specific link state
+DeclareEnum9(LinkState,
+             Unspecified, /// Unspecified specific link state
 
-    // LinkStatus::Disconnected
-    Disconnected,         /// Disconnected from the remote peer (default state)
-    SentDisconnectNotice, /// Sent a disconnect notice, awaiting their ACK or
-                          /// ((RTT/2) * disconnect attempt factor) timeout
-                          /// before being disconnected
-    ReceivedDisconnectNotice, /// Received a disconnect notice, waiting ((RTT/2)
-                              /// * disconnect attempt factor) for probable
-                              /// ACKing before being disconnected
-    SentNegativeConnectResponse, /// Sent a negative connect response, awaiting
-                                 /// their ACK or ((RTT/2) * connect attempt
-                                 /// factor) timeout before being disconnected
-    ReceivedNegativeConnectResponse, /// Received a negative connect response,
-                                     /// waiting ((RTT/2) * connect attempt
-                                     /// factor) for probable ACKing before
-                                     /// being disconnected
+             // LinkStatus::Disconnected
+             Disconnected,                    /// Disconnected from the remote peer (default state)
+             SentDisconnectNotice,            /// Sent a disconnect notice, awaiting their ACK or
+                                              /// ((RTT/2) * disconnect attempt factor) timeout
+                                              /// before being disconnected
+             ReceivedDisconnectNotice,        /// Received a disconnect notice, waiting ((RTT/2)
+                                              /// * disconnect attempt factor) for probable
+                                              /// ACKing before being disconnected
+             SentNegativeConnectResponse,     /// Sent a negative connect response, awaiting
+                                              /// their ACK or ((RTT/2) * connect attempt
+                                              /// factor) timeout before being disconnected
+             ReceivedNegativeConnectResponse, /// Received a negative connect response,
+                                              /// waiting ((RTT/2) * connect attempt
+                                              /// factor) for probable ACKing before
+                                              /// being disconnected
 
-    // LinkStatus::AttemptingConnection
-    SentConnectRequest,     /// Sent a connect request, awaiting their connect
-                            /// response or ((RTT/2) * connect attempt factor)
-                            /// timeout before being disconnected
-    ReceivedConnectRequest, /// Received an appropriate connect request, they're
-                            /// awaiting our connect response or ((RTT/2) *
-                            /// connect attempt factor) timeout before being
-                            /// disconnected
+             // LinkStatus::AttemptingConnection
+             SentConnectRequest,     /// Sent a connect request, awaiting their connect
+                                     /// response or ((RTT/2) * connect attempt factor)
+                                     /// timeout before being disconnected
+             ReceivedConnectRequest, /// Received an appropriate connect request, they're
+                                     /// awaiting our connect response or ((RTT/2) *
+                                     /// connect attempt factor) timeout before being
+                                     /// disconnected
 
-    // LinkStatus::Connected
-    Connected); /// Connected to the remote peer, may send or receive a
-                /// disconnect notice by request, latency (latency limit), or
-                /// timeout ((RTT/2) * timeout factor)
+             // LinkStatus::Connected
+             Connected); /// Connected to the remote peer, may send or receive a
+                         /// disconnect notice by request, latency (latency limit), or
+                         /// timeout ((RTT/2) * timeout factor)
 
 /// Link connect response
-DeclareEnum4(
-    ConnectResponse,
-    Accept,   /// Connection request accepted
-    Deny,     /// Connection request denied
-    DenyFull, /// Connection request denied, remote peer connection limit has
-              /// been reached (Peer::GetConnectionLimit)
-    DenyTimeout); /// Connection request timed out, remote peer did not respond
+DeclareEnum4(ConnectResponse,
+             Accept,       /// Connection request accepted
+             Deny,         /// Connection request denied
+             DenyFull,     /// Connection request denied, remote peer connection limit has
+                           /// been reached (Peer::GetConnectionLimit)
+             DenyTimeout); /// Connection request timed out, remote peer did not respond
 
 /// Link connect response range
 static const ConnectResponse::Type ConnectResponseMin = ConnectResponse::Accept;
-static const ConnectResponse::Type ConnectResponseMax =
-    ConnectResponse::DenyTimeout;
+static const ConnectResponse::Type ConnectResponseMax = ConnectResponse::DenyTimeout;
 
 /// Link connect response bits
-static const Bits ConnectResponseBits =
-    BITS_NEEDED_TO_REPRESENT(ConnectResponseMax);
+static const Bits ConnectResponseBits = BITS_NEEDED_TO_REPRESENT(ConnectResponseMax);
 
 /// Link disconnect reason
 DeclareEnum3(DisconnectReason,
@@ -101,14 +96,11 @@ DeclareEnum3(DisconnectReason,
              Latency); /// Disconnected by latency
 
 /// Link disconnect reason range
-static const DisconnectReason::Type DisconnectReasonMin =
-    DisconnectReason::Request;
-static const DisconnectReason::Type DisconnectReasonMax =
-    DisconnectReason::Latency;
+static const DisconnectReason::Type DisconnectReasonMin = DisconnectReason::Request;
+static const DisconnectReason::Type DisconnectReasonMax = DisconnectReason::Latency;
 
 /// Link disconnect reason bits
-static const Bits DisconnectReasonBits =
-    BITS_NEEDED_TO_REPRESENT(DisconnectReasonMax);
+static const Bits DisconnectReasonBits = BITS_NEEDED_TO_REPRESENT(DisconnectReasonMax);
 
 /// Link user connect response (used internally)
 DeclareEnum3(UserConnectResponse,
@@ -121,14 +113,13 @@ DeclareEnum3(UserConnectResponse,
 //
 
 /// Packet write message result (used internally)
-DeclareEnum5(
-    PacketWriteResult,
-    NotDone_None,     /// Not done with this message, nothing was written
-    NotDone_Fragment, /// Not done with this message, a fragment was written
-    Done_Fragment,    /// Done with this message, the final fragment was written
-    Done_Whole,       /// Done with this message, the whole message was written
-    Done_Rejected);   /// Done with this message, the whole message was rejected
-                      /// (nothing was written)
+DeclareEnum5(PacketWriteResult,
+             NotDone_None,     /// Not done with this message, nothing was written
+             NotDone_Fragment, /// Not done with this message, a fragment was written
+             Done_Fragment,    /// Done with this message, the final fragment was written
+             Done_Whole,       /// Done with this message, the whole message was written
+             Done_Rejected);   /// Done with this message, the whole message was rejected
+                               /// (nothing was written)
 
 /// Packet acknowledgement state (used internally)
 DeclareEnum3(ACKState,

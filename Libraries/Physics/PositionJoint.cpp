@@ -108,8 +108,7 @@ void PositionJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData);
+  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData);
 }
 
 void PositionJoint::DebugDraw()
@@ -119,8 +118,7 @@ void PositionJoint::DebugDraw()
   DrawAnchorAtomFragment(mAnchors, GetCollider(0), GetCollider(1));
 }
 
-uint PositionJoint::GetAtomIndexFilter(uint atomIndex,
-                                       real& desiredConstraintValue) const
+uint PositionJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   return LinearAxis;

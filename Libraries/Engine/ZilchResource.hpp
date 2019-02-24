@@ -39,17 +39,11 @@ public:
   bool CanStartLocalWordCompletion(ICodeEditor* editor) override;
   bool SupportsZeroConnect() override;
   String GenerateConnectCallEnd(StringParam functionName) override;
-  String GenerateConnectFunctionStart(StringParam functionName,
-                                      StringParam eventType) override;
+  String GenerateConnectFunctionStart(StringParam functionName, StringParam eventType) override;
   String GenerateConnectFunctionEnd() override;
-  void FindPositionToGenerateFunction(ICodeEditor* editor,
-                                      int& positionOut,
-                                      String& indent) override;
-  void AttemptGetDefinition(ICodeEditor* editor,
-                            size_t cursorPosition,
-                            CodeDefinition& definition) override;
-  Any QueryExpression(StringParam expression,
-                      Array<QueryResult>& results) override;
+  void FindPositionToGenerateFunction(ICodeEditor* editor, int& positionOut, String& indent) override;
+  void AttemptGetDefinition(ICodeEditor* editor, size_t cursorPosition, CodeDefinition& definition) override;
+  Any QueryExpression(StringParam expression, Array<QueryResult>& results) override;
   bool SetBreakpoint(size_t line, bool breakpoint) override;
   bool HasBreakpoint(size_t line) override;
   void GetBreakpoints(Array<size_t>& breakpointLines) override;
@@ -65,9 +59,7 @@ public:
 
   // Fill a project with a single document that the code editor is looking at
   // and push all the proper required libraries into the module
-  void PrepForAutoComplete(ICodeEditor* editor,
-                           Project& project,
-                           Module& dependencies);
+  void PrepForAutoComplete(ICodeEditor* editor, Project& project, Module& dependencies);
   void GetAutoCompleteInfo(ICodeEditor* editor, AutoCompleteInfo& info);
   void AddTypesToCompletion(Array<Completion>& completions, LibraryRef library);
 

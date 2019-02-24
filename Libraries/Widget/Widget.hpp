@@ -52,8 +52,7 @@ public:
   {
     return false;
   }
-  virtual WindowBorderArea::Enum GetWindowBorderArea(Widget* widget,
-                                                     DockMode::Enum direction)
+  virtual WindowBorderArea::Enum GetWindowBorderArea(Widget* widget, DockMode::Enum direction)
   {
     return WindowBorderArea::None;
   }
@@ -100,10 +99,7 @@ public:
     YPolicy = ypolicy;
   }
 
-  SizePolicies(SizePolicy::Enum xyPolicy) :
-      XPolicy(xyPolicy),
-      YPolicy(xyPolicy),
-      Size(Vec2::cZero)
+  SizePolicies(SizePolicy::Enum xyPolicy) : XPolicy(xyPolicy), YPolicy(xyPolicy), Size(Vec2::cZero)
   {
   }
 
@@ -119,12 +115,11 @@ public:
   Vec2 Size;
 };
 
-DeclareEnum2(
-    AttachType,
-    // Normal attachment may get redirected to client widget (ScrollArea etc)
-    Normal,
-    // Attach as direct child
-    Direct);
+DeclareEnum2(AttachType,
+             // Normal attachment may get redirected to client widget (ScrollArea etc)
+             Normal,
+             // Attach as direct child
+             Direct);
 
 class WidgetHandleManager : public HandleManager
 {
@@ -133,9 +128,7 @@ public:
   {
   }
 
-  void ObjectToHandle(const byte* object,
-                      BoundType* type,
-                      Handle& handleToInitialize) override;
+  void ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize) override;
   byte* HandleToObject(const Handle& handle) override;
   void Delete(const Handle& handle) override;
   bool CanDelete(const Handle& handle) override;
@@ -353,21 +346,12 @@ public:
     mVisible = visible;
   }
 
-  virtual void Draw(DisplayRender* render,
-                    Mat4Param parentTx,
-                    ColorTransform& colorTx,
-                    DrawParams& params){};
+  virtual void Draw(DisplayRender* render, Mat4Param parentTx, ColorTransform& colorTx, DrawParams& params){};
   virtual void DispatchAt(DispatchAtParams& params);
 
-  virtual void RenderUpdate(ViewBlock& viewBlock,
-                            FrameBlock& frameBlock,
-                            Mat4Param parentTx,
-                            ColorTransform colorTx,
-                            WidgetRect clipRect);
-  ViewNode& AddRenderNodes(ViewBlock& viewBlock,
-                           FrameBlock& frameBlock,
-                           WidgetRect clipRect,
-                           Texture* texture);
+  virtual void RenderUpdate(
+      ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect);
+  ViewNode& AddRenderNodes(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Texture* texture);
   void CreateRenderData(ViewBlock& viewBlock,
                         FrameBlock& frameBlock,
                         WidgetRect clipRect,

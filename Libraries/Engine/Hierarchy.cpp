@@ -76,8 +76,7 @@ void Hierarchy::Serialize(Serializer& stream)
   }
   else
   {
-    CogCreationContext* context =
-        static_cast<CogCreationContext*>(stream.GetSerializationContext());
+    CogCreationContext* context = static_cast<CogCreationContext*>(stream.GetSerializationContext());
     CogSerialization::LoadHierarchy(stream, context, this);
   }
 }
@@ -179,7 +178,8 @@ uint HierarchyComposition::GetComponentCount(HandleParam instance)
 {
   Hierarchy* hierarchy = instance.Get<Hierarchy*>(GetOptions::AssertOnNull);
   uint count = 0;
-  forRange(Cog & child, hierarchy->GetChildren())++ count;
+  forRange (Cog& child, hierarchy->GetChildren())
+    ++count;
   return count;
 }
 
@@ -187,7 +187,7 @@ Handle HierarchyComposition::GetComponentAt(HandleParam instance, uint index)
 {
   Hierarchy* hierarchy = instance.Get<Hierarchy*>(GetOptions::AssertOnNull);
   uint currIndex = 0;
-  forRange(Cog & child, hierarchy->GetChildren())
+  forRange (Cog& child, hierarchy->GetChildren())
   {
     if (currIndex == index)
       return Handle(&child);
@@ -197,9 +197,7 @@ Handle HierarchyComposition::GetComponentAt(HandleParam instance, uint index)
   return Handle();
 }
 
-bool HierarchyComposition::CanAddComponent(HandleParam owner,
-                                           BoundType* typeToAdd,
-                                           AddInfo* info)
+bool HierarchyComposition::CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info)
 {
   if (typeToAdd == ZilchTypeId(Cog))
     return true;

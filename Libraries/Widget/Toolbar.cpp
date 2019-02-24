@@ -11,8 +11,7 @@ Tweakable(Vec4, BackgroundColor, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(Vec4, DividerColor, Vec4(1, 1, 1, 1), cLocation);
 } // namespace ToolbarUi
 
-CommandSubItem::CommandSubItem(ToolBarGroupPopUp* parent, Command* command) :
-    Composite(parent)
+CommandSubItem::CommandSubItem(ToolBarGroupPopUp* parent, Command* command) : Composite(parent)
 {
   mPopUp = parent;
   mCommand = command;
@@ -49,8 +48,7 @@ void CommandSubItem::UpdateTransform()
   mIcon->SetTranslation(Vec3(cMargins, cMargins, 0));
   mIcon->SetSize(Pixels(28, 28));
 
-  Vec3 textTranslation(
-      cMargins + mIcon->mSize.x + cSpacing, cMargins + Pixels(7), 0);
+  Vec3 textTranslation(cMargins + mIcon->mSize.x + cSpacing, cMargins + Pixels(7), 0);
   mText->SetTranslation(textTranslation);
   mText->SetSize(mText->GetMinSize());
 
@@ -87,8 +85,7 @@ ToolBarGroupPopUp::ToolBarGroupPopUp(Composite* parent, ToolBarGroup* group) :
 {
   Array<Command*>& commands = group->mCommands;
   mCommandWidgets.Reserve(commands.Size());
-  SetLayout(CreateStackLayout(
-      LayoutDirection::TopToBottom, Pixels(2, 2), Thickness::All(1)));
+  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(2, 2), Thickness::All(1)));
 
   float maxWidth = 0.0f;
   for (uint i = 0; i < commands.Size(); ++i)
@@ -119,8 +116,7 @@ ToolBarGroupPopUp::ToolBarGroupPopUp(Composite* parent, ToolBarGroup* group) :
   seq->Add(SizeWidgetAction(this, size, 0.1f));
 }
 
-ToolBarGroup::ToolBarGroup(Composite* parent, StringParam name) :
-    Composite(parent)
+ToolBarGroup::ToolBarGroup(Composite* parent, StringParam name) : Composite(parent)
 {
   mButton = new IconButton(this);
   mButton->SetIcon(name);
@@ -167,13 +163,10 @@ void ToolBarGroup::LoadMenu(StringParam menuName)
 {
   CommandManager* commandManager = CommandManager::GetInstance();
   MenuDefinition* menuDef = commandManager->mMenus.FindValue(menuName, NULL);
-  ReturnIf(menuDef == NULL,
-           ,
-           "Could not find menu definition '%s'",
-           menuName.c_str());
+  ReturnIf(menuDef == NULL, , "Could not find menu definition '%s'", menuName.c_str());
 
   // Add all entries
-  forRange(String & name, menuDef->Entries.All())
+  forRange (String& name, menuDef->Entries.All())
   {
     Command* command = commandManager->GetCommand(name);
     ErrorIf(command == NULL, "Can not find command '%s'", name.c_str());
@@ -193,7 +186,7 @@ void ToolBarArea::UpdateTransform()
   float sizeY = mSize.y - Pixels(2);
 
   Widget* center = NULL;
-  forRange(Widget & child, GetChildren())
+  forRange (Widget& child, GetChildren())
   {
     child.UpdateTransformExternal();
     Vec2 childSize = child.mSize;
@@ -237,8 +230,7 @@ public:
   ToolBar* mDraggin;
 
   //****************************************************************************
-  ToolBarDrag(Mouse* mouse, ToolBar* toBeDragged) :
-      MouseManipulation(mouse, toBeDragged->GetParent())
+  ToolBarDrag(Mouse* mouse, ToolBar* toBeDragged) : MouseManipulation(mouse, toBeDragged->GetParent())
   {
     mStartTrans = toBeDragged->GetTranslation();
     mDraggin = toBeDragged;
@@ -256,8 +248,7 @@ ToolBar::ToolBar(Composite* parent) : Composite(parent)
 {
   static const String className = "TextButton";
   mDefSet = mDefSet->GetDefinitionSet(className);
-  SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Pixels(0, 0), Thickness::All(2)));
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(0, 0), Thickness::All(2)));
 
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetVisible(false);
@@ -323,13 +314,10 @@ void ToolBar::LoadMenu(StringParam menuName)
 {
   CommandManager* commandManager = CommandManager::GetInstance();
   MenuDefinition* menuDef = commandManager->mMenus.FindValue(menuName, NULL);
-  ReturnIf(menuDef == NULL,
-           ,
-           "Could not find menu definition '%s'",
-           menuName.c_str());
+  ReturnIf(menuDef == NULL, , "Could not find menu definition '%s'", menuName.c_str());
 
   // Add all entries
-  forRange(String & name, menuDef->Entries.All())
+  forRange (String& name, menuDef->Entries.All())
   {
     StringTokenRange tokens(name.All(), '#');
 
@@ -346,8 +334,7 @@ void ToolBar::LoadMenu(StringParam menuName)
       if (command->DevOnly && !Z::gEngine->GetConfigCog()->has(DeveloperConfig))
         continue;
 
-      Command* other =
-          (secondary.Empty()) ? nullptr : commandManager->GetCommand(secondary);
+      Command* other = (secondary.Empty()) ? nullptr : commandManager->GetCommand(secondary);
 
       this->AddCommand(command, other);
       continue;

@@ -4,10 +4,7 @@
 
 namespace Zilch
 {
-ZilchDefineExternalBaseType(FileMode::Enum,
-                            TypeCopyMode::ValueType,
-                            builder,
-                            type)
+ZilchDefineExternalBaseType(FileMode::Enum, TypeCopyMode::ValueType, builder, type)
 {
   ZilchFullBindEnum(builder, type, SpecialType::Flags);
   ZilchFullBindEnumValue(builder, type, FileMode::Read, "Read");
@@ -24,29 +21,18 @@ ZilchDefineType(FileStreamClass, builder, type)
   // Even though this is an interface, because it is native, it must have a
   // constructor that can be implemented
   ZilchFullBindDestructor(builder, type, FileStreamClass);
-  ZilchFullBindConstructor(builder,
-                           type,
-                           FileStreamClass,
-                           "filePath, mode",
-                           StringParam,
-                           FileMode::Enum);
+  ZilchFullBindConstructor(builder, type, FileStreamClass, "filePath, mode", StringParam, FileMode::Enum);
   ZilchFullBindConstructor(builder, type, FileStreamClass, nullptr);
   ZilchBindConstructor(const FileStreamClass&);
 
-  ZilchFullBindMethod(builder,
-                      type,
-                      &FileStreamClass::Close,
-                      ZilchNoOverload,
-                      "Close",
-                      nullptr);
+  ZilchFullBindMethod(builder, type, &FileStreamClass::Close, ZilchNoOverload, "Close", nullptr);
 }
 
 FileStreamClass::FileStreamClass(StringParam filePath, FileMode::Enum mode)
 {
   Zero::FileShare::Enum zeroShare = (Zero::FileShare::Enum)0;
   Zero::FileMode::Enum zeroMode = Zero::FileMode::Read;
-  Zero::FileAccessPattern::Enum zeroAccessPattern =
-      Zero::FileAccessPattern::Random;
+  Zero::FileAccessPattern::Enum zeroAccessPattern = Zero::FileAccessPattern::Random;
 
   bool read = (mode & FileMode::Read) != 0;
   bool write = (mode & FileMode::Write) != 0;
@@ -54,8 +40,7 @@ FileStreamClass::FileStreamClass(StringParam filePath, FileMode::Enum mode)
 
   if (append && read)
   {
-    ExecutableState::CallingState->ThrowException(
-        "Cannot Append and Read from the same FileStreamClass");
+    ExecutableState::CallingState->ThrowException("Cannot Append and Read from the same FileStreamClass");
     return;
   }
 
@@ -74,8 +59,7 @@ FileStreamClass::FileStreamClass(StringParam filePath, FileMode::Enum mode)
     zeroAccessPattern = Zero::FileAccessPattern::Sequential;
 
   // We always have these capabilities
-  this->Capabilities = (StreamCapabilities::Enum)(StreamCapabilities::GetCount |
-                                                  StreamCapabilities::Seek);
+  this->Capabilities = (StreamCapabilities::Enum)(StreamCapabilities::GetCount | StreamCapabilities::Seek);
 
   if (mode & FileMode::ShareRead)
     zeroShare = (Zero::FileShare::Enum)(zeroShare | Zero::FileShare::Read);
@@ -86,18 +70,14 @@ FileStreamClass::FileStreamClass(StringParam filePath, FileMode::Enum mode)
 
   // Setup stream capabilities based on flags passed in
   if (read)
-    this->Capabilities = (StreamCapabilities::Enum)(this->Capabilities |
-                                                    StreamCapabilities::Read);
+    this->Capabilities = (StreamCapabilities::Enum)(this->Capabilities | StreamCapabilities::Read);
   if (write)
-    this->Capabilities = (StreamCapabilities::Enum)(this->Capabilities |
-                                                    StreamCapabilities::Write);
+    this->Capabilities = (StreamCapabilities::Enum)(this->Capabilities | StreamCapabilities::Write);
 
   // Create the path if it doesn't exist and we're in a writing file mode (all
   // of these should create the file according to the windows standard but
   // currently ReadWrite might not actually do this)
-  if (zeroMode == Zero::FileMode::Write ||
-      zeroMode == Zero::FileMode::ReadWrite ||
-      zeroMode == Zero::FileMode::Append)
+  if (zeroMode == Zero::FileMode::Write || zeroMode == Zero::FileMode::ReadWrite || zeroMode == Zero::FileMode::Append)
   {
     String directoryPath = Zero::FilePath::GetDirectoryPath(filePath);
     CreateDirectoryAndParents(directoryPath);
@@ -105,13 +85,10 @@ FileStreamClass::FileStreamClass(StringParam filePath, FileMode::Enum mode)
 
   // Open the file and throw an exception if we fail
   Status status;
-  this->InternalFile.Open(
-      filePath, zeroMode, zeroAccessPattern, zeroShare, &status);
+  this->InternalFile.Open(filePath, zeroMode, zeroAccessPattern, zeroShare, &status);
   if (status.Failed())
   {
-    String message = String::Format("Unable to open the file '%s': %s",
-                                    filePath.c_str(),
-                                    status.Message.c_str());
+    String message = String::Format("Unable to open the file '%s': %s", filePath.c_str(), status.Message.c_str());
     ExecutableState::CallingState->ThrowException(message);
   }
 }
@@ -125,8 +102,7 @@ FileStreamClass::FileStreamClass(const FileStreamClass& stream)
 {
   // Duplicate the file handle
   Status status;
-  const_cast<FileStreamClass&>(stream).InternalFile.Duplicate(status,
-                                                              InternalFile);
+  const_cast<FileStreamClass&>(stream).InternalFile.Duplicate(status, InternalFile);
 
   Capabilities = stream.Capabilities;
 }
@@ -157,16 +133,13 @@ bool FileStreamClass::Seek(DoubleInteger position, StreamOrigin::Enum origin)
   return this->InternalFile.Seek(position, (Zero::SeekOrigin::Enum)origin);
 }
 
-Integer FileStreamClass::Write(ArrayClass<Byte>& data,
-                               Integer byteStart,
-                               Integer byteCount)
+Integer FileStreamClass::Write(ArrayClass<Byte>& data, Integer byteStart, Integer byteCount)
 {
   IStreamClass::Write(data, byteStart, byteCount);
   if (ExecutableState::GetCallingReport().HasThrownExceptions())
     return 0;
 
-  return (Integer)this->InternalFile.Write(data.NativeArray.Data() + byteStart,
-                                           (size_t)byteCount);
+  return (Integer)this->InternalFile.Write(data.NativeArray.Data() + byteStart, (size_t)byteCount);
 }
 
 Integer FileStreamClass::WriteByte(Byte byte)
@@ -174,17 +147,14 @@ Integer FileStreamClass::WriteByte(Byte byte)
   return (Integer)this->InternalFile.Write(&byte, 1);
 }
 
-Integer FileStreamClass::Read(ArrayClass<Byte>& data,
-                              Integer byteStart,
-                              Integer byteCount)
+Integer FileStreamClass::Read(ArrayClass<Byte>& data, Integer byteStart, Integer byteCount)
 {
   Status status;
   IStreamClass::Read(data, byteStart, byteCount);
   if (ExecutableState::GetCallingReport().HasThrownExceptions())
     return 0;
 
-  return (Integer)this->InternalFile.Read(
-      status, data.NativeArray.Data() + byteStart, (size_t)byteCount);
+  return (Integer)this->InternalFile.Read(status, data.NativeArray.Data() + byteStart, (size_t)byteCount);
 }
 
 Integer FileStreamClass::ReadByte()

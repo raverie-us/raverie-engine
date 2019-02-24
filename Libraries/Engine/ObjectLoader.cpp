@@ -11,8 +11,7 @@ void AddDependencies(DataNode* parent, BoundType* type, DataNode* addLocation);
 void ObjectLoader::RecordModifications(Object* rootObject)
 {
   // Object loader assumes a single root node
-  ErrorIf(mFileRoot->GetNumberOfChildren() != 1,
-          "Must contain a single root node");
+  ErrorIf(mFileRoot->GetNumberOfChildren() != 1, "Must contain a single root node");
 
   DataNode* root = mFileRoot->GetFirstChild();
   if (root->IsPatched())
@@ -26,15 +25,13 @@ void ObjectLoader::RecordModifications(Object* rootObject)
 void ObjectLoader::CacheModifications(CachedModifications* modifications)
 {
   // Object loader assumes a single root node
-  ErrorIf(mFileRoot->GetNumberOfChildren() != 1,
-          "Must contain a single root node");
+  ErrorIf(mFileRoot->GetNumberOfChildren() != 1, "Must contain a single root node");
 
   DataNode* root = mFileRoot->GetFirstChild();
   modifications->Cache(root);
 }
 
-PatchResolveMethod::Enum
-ObjectLoader::ResolveInheritedData(StringRange inheritId, DataNode*& result)
+PatchResolveMethod::Enum ObjectLoader::ResolveInheritedData(StringRange inheritId, DataNode*& result)
 {
   // Currently, the only objects that have data inheritance are resources,
   // so for now this just supports resources
@@ -50,10 +47,8 @@ ObjectLoader::ResolveInheritedData(StringRange inheritId, DataNode*& result)
   return PatchResolveMethod::PatchNode;
 }
 
-DependencyAction::Enum ObjectLoader::ResolveDependencies(DataNode* parent,
-                                                         DataNode* newChild,
-                                                         DataNode** toReplace,
-                                                         Status& status)
+DependencyAction::Enum
+ObjectLoader::ResolveDependencies(DataNode* parent, DataNode* newChild, DataNode** toReplace, Status& status)
 {
   // We need to get the meta type of the parent to check dependencies
   String parentTypeName = parent->mTypeName.All();
@@ -103,11 +98,10 @@ DataNode* FindSimilarInterfaces(DataNode* parent, BoundType* typeToAdd)
   MetaDatabase* metaDataBase = MetaDatabase::GetInstance();
 
   // Check all interfaces on all base classes
-  forRange(CogComponentMeta * addMetaComponent,
-           typeToAdd->HasAll<CogComponentMeta>())
+  forRange (CogComponentMeta* addMetaComponent, typeToAdd->HasAll<CogComponentMeta>())
   {
     // Walk all nodes and see if there's a shared interface
-    forRange(DataNode & childNode, parent->mChildren.All())
+    forRange (DataNode& childNode, parent->mChildren.All())
     {
       BoundType* childType = metaDataBase->FindType(childNode.mTypeName.All());
 
@@ -115,10 +109,9 @@ DataNode* FindSimilarInterfaces(DataNode* parent, BoundType* typeToAdd)
       if (childType == nullptr)
         continue;
 
-      forRange(CogComponentMeta * childMetaComponent,
-               childType->HasAll<CogComponentMeta>())
+      forRange (CogComponentMeta* childMetaComponent, childType->HasAll<CogComponentMeta>())
       {
-        forRange(BoundType * addInterfaceType, addMetaComponent->mInterfaces)
+        forRange (BoundType* addInterfaceType, addMetaComponent->mInterfaces)
         {
           // If they're shared, we want to remove the base type
           if (childMetaComponent->mInterfaces.Contains(addInterfaceType))
@@ -141,9 +134,7 @@ DataNode* FindSimilarInterfaces(DataNode* parent, BoundType* typeToAdd)
 BoundType* FindAddableType(BoundType* typeToFind)
 {
   CogComponentMeta* metaComponent = typeToFind->Has<CogComponentMeta>();
-  ReturnIf(metaComponent == nullptr,
-           nullptr,
-           "Type did not have a CogComponentMeta attached to it");
+  ReturnIf(metaComponent == nullptr, nullptr, "Type did not have a CogComponentMeta attached to it");
 
   bool canBeCreated = !typeToFind->Constructors.Empty();
   bool isInterface = !metaComponent->mInterfaceDerivedTypes.Empty();
@@ -165,14 +156,13 @@ void AddDependencies(DataNode* parent, BoundType* type, DataNode* addLocation)
 {
   // Extra dependencies can be defined on more derived types, so we have to
   // check all
-  forRange(CogComponentMeta * metaComponent, type->HasAll<CogComponentMeta>())
+  forRange (CogComponentMeta* metaComponent, type->HasAll<CogComponentMeta>())
   {
-    forRange(BoundType * dependency, metaComponent->mDependencies.All())
+    forRange (BoundType* dependency, metaComponent->mDependencies.All())
     {
       // These types were special cased with Cogs and we want to ignore them
       // until it's refactored to not use dependencies.
-      if (dependency == ZilchTypeId(Cog) || dependency == ZilchTypeId(Space) ||
-          dependency == ZilchTypeId(GameSession))
+      if (dependency == ZilchTypeId(Cog) || dependency == ZilchTypeId(Space) || dependency == ZilchTypeId(GameSession))
       {
         continue;
       }
@@ -181,14 +171,13 @@ void AddDependencies(DataNode* parent, BoundType* type, DataNode* addLocation)
       bool foundDependency = false;
 
       // Check all the child nodes to see if the dependency exists
-      forRange(DataNode & childNode, parent->mChildren.All())
+      forRange (DataNode& childNode, parent->mChildren.All())
       {
         // Allocation here, we should maybe consider not using fixed strings
         String childTypeName = childNode.mTypeName.All();
 
         // Look up the type to check if it's the type of the dependency
-        BoundType* childNodeType =
-            MetaDatabase::GetInstance()->FindType(childTypeName);
+        BoundType* childNodeType = MetaDatabase::GetInstance()->FindType(childTypeName);
 
         if (childNodeType)
         {
@@ -279,15 +268,12 @@ void CachedModifications::Combine(CachedModifications& modifications)
   mRootObjectNode->Combine(modifications.mRootObjectNode);
 }
 
-void CachedModifications::ApplyModificationsToObject(Object* object,
-                                                     bool combine)
+void CachedModifications::ApplyModificationsToObject(Object* object, bool combine)
 {
   ApplyModificationsToObjectInternal(object, mRootObjectNode, combine);
 }
 
-void CachedModifications::ApplyModificationsToChildObject(Object* rootObject,
-                                                          Object* childObject,
-                                                          bool combine)
+void CachedModifications::ApplyModificationsToChildObject(Object* rootObject, Object* childObject, bool combine)
 {
   // Search for the node that contains the child object and apply modifications
   // from there
@@ -295,16 +281,14 @@ void CachedModifications::ApplyModificationsToChildObject(Object* rootObject,
     ApplyModificationsToObjectInternal(childObject, childNode, combine);
 }
 
-void CachedModifications::StoreOverlappingModifications(Object* object,
-                                                        ObjectNode* cachedNode)
+void CachedModifications::StoreOverlappingModifications(Object* object, ObjectNode* cachedNode)
 {
   if (cachedNode == nullptr)
     return;
   mRootObjectNode = StoreOverlappingModificationsInternal(object, cachedNode);
 }
 
-CachedModifications::ObjectNode*
-CachedModifications::FindChildNode(Object* rootObject, Object* childObject)
+CachedModifications::ObjectNode* CachedModifications::FindChildNode(Object* rootObject, Object* childObject)
 {
   if (mRootObjectNode == nullptr)
     return nullptr;
@@ -362,11 +346,9 @@ bool CachedModifications::Empty()
   return (mRootObjectNode == nullptr);
 }
 
-Object* GetComponentFromChildId(Object* instance,
-                                const ObjectState::ChildId& childId)
+Object* GetComponentFromChildId(Object* instance, const ObjectState::ChildId& childId)
 {
-  MetaComposition* composition =
-      ZilchVirtualTypeId(instance)->Has<MetaComposition>();
+  MetaComposition* composition = ZilchVirtualTypeId(instance)->Has<MetaComposition>();
   if (composition == nullptr)
     return nullptr;
 
@@ -374,23 +356,19 @@ Object* GetComponentFromChildId(Object* instance,
 
   // First look up by the unique id
   if (childObject == nullptr)
-    childObject = composition->GetComponentUniqueId(instance, (u64)childId.mId)
-                      .Get<Object*>();
+    childObject = composition->GetComponentUniqueId(instance, (u64)childId.mId).Get<Object*>();
 
   // If that failed, look up by type name
   if (childObject == nullptr)
   {
-    if (BoundType* childType =
-            MetaDatabase::GetInstance()->FindType(childId.mTypeName))
-      childObject =
-          composition->GetComponent(instance, childType).Get<Object*>();
+    if (BoundType* childType = MetaDatabase::GetInstance()->FindType(childId.mTypeName))
+      childObject = composition->GetComponent(instance, childType).Get<Object*>();
   }
 
   return childObject;
 }
 
-void CachedModifications::ApplyModificationsToObjectInternal(
-    Object* object, ObjectNode* objectNode, bool combine)
+void CachedModifications::ApplyModificationsToObjectInternal(Object* object, ObjectNode* objectNode, bool combine)
 {
   if (objectNode == nullptr)
     return;
@@ -411,8 +389,7 @@ void CachedModifications::ApplyModificationsToObjectInternal(
   if (MetaComposition* composition = objectType->Has<MetaComposition>())
   {
     // Walk each child state and try to find the respective object
-    forRange(ObjectNode::ChildMap::value_type entry,
-             objectNode->mChildren.All())
+    forRange (ObjectNode::ChildMap::value_type entry, objectNode->mChildren.All())
     {
       ObjectState::ChildId& childId = entry.first;
       ObjectNode* childNode = entry.second;
@@ -426,16 +403,14 @@ void CachedModifications::ApplyModificationsToObjectInternal(
   }
 }
 
-CachedModifications::ObjectNode*
-CachedModifications::StoreOverlappingModificationsInternal(Object* object,
-                                                           ObjectNode* node)
+CachedModifications::ObjectNode* CachedModifications::StoreOverlappingModificationsInternal(Object* object,
+                                                                                            ObjectNode* node)
 {
   LocalModifications* modifications = LocalModifications::GetInstance();
 
   ObjectNode* overlapNode = nullptr;
 
-#define GetOverlapNode()                                                       \
-  (overlapNode == nullptr ? overlapNode = new ObjectNode() : overlapNode)
+#define GetOverlapNode() (overlapNode == nullptr ? overlapNode = new ObjectNode() : overlapNode)
 
   // Check if both objects have the same modifications
   ObjectState* cachedState = node->GetObjectState();
@@ -443,24 +418,21 @@ CachedModifications::StoreOverlappingModificationsInternal(Object* object,
   if (cachedState && objectState)
   {
     // Modified properties
-    forRange(PropertyPath & cachedProperty,
-             cachedState->GetModifiedProperties())
+    forRange (PropertyPath& cachedProperty, cachedState->GetModifiedProperties())
     {
       if (objectState->IsPropertyModified(cachedProperty))
-        GetOverlapNode()->GetObjectState()->SetPropertyModified(cachedProperty,
-                                                                true);
+        GetOverlapNode()->GetObjectState()->SetPropertyModified(cachedProperty, true);
     }
 
     // Locally added children
-    forRange(ObjectState::ChildId addedChild, cachedState->GetAddedChildren())
+    forRange (ObjectState::ChildId addedChild, cachedState->GetAddedChildren())
     {
       if (objectState->IsChildLocallyAdded(addedChild))
         GetOverlapNode()->GetObjectState()->ChildAdded(addedChild);
     }
 
     // Locally removed children
-    forRange(ObjectState::ChildId removedChild,
-             cachedState->GetRemovedChildren())
+    forRange (ObjectState::ChildId removedChild, cachedState->GetRemovedChildren())
     {
       if (objectState->IsChildLocallyRemoved(removedChild))
         GetOverlapNode()->GetObjectState()->ChildRemoved(removedChild);
@@ -476,7 +448,7 @@ CachedModifications::StoreOverlappingModificationsInternal(Object* object,
   if (MetaComposition* composition = objectType->Has<MetaComposition>())
   {
     // Walk each child state and try to find the respective object
-    forRange(ObjectNode::ChildMap::value_type entry, node->mChildren.All())
+    forRange (ObjectNode::ChildMap::value_type entry, node->mChildren.All())
     {
       ObjectState::ChildId& childId = entry.first;
       ObjectNode* childNode = entry.second;
@@ -486,8 +458,7 @@ CachedModifications::StoreOverlappingModificationsInternal(Object* object,
       // Recurse if we found a valid object
       if (childObject)
       {
-        ObjectNode* childOverlapNode =
-            StoreOverlappingModificationsInternal(childObject, childNode);
+        ObjectNode* childOverlapNode = StoreOverlappingModificationsInternal(childObject, childNode);
         if (childOverlapNode)
           GetOverlapNode()->mChildren.Insert(childId, childOverlapNode);
       }
@@ -502,16 +473,14 @@ ObjectState::ChildId GetDataNodeKey(DataNode* dataNode)
   return ObjectState::ChildId(dataNode->mTypeName, dataNode->mUniqueNodeId);
 }
 
-void CachedModifications::ExtractInternal(DataNode* dataNode,
-                                          ObjectNode* objectNode,
-                                          PropertyPath& path)
+void CachedModifications::ExtractInternal(DataNode* dataNode, ObjectNode* objectNode, PropertyPath& path)
 {
   // Copy over child order override flag
   if (dataNode->mFlags.IsSet(DataNodeFlags::ChildOrderOverride))
     objectNode->GetObjectState()->SetChildOrderModified(true);
 
   // Record any child removals (this include components and hierarchy children)
-  forRange(DataNode::RemovedNode removed, dataNode->mRemovedChildren.All())
+  forRange (DataNode::RemovedNode removed, dataNode->mRemovedChildren.All())
   {
     ObjectState::ChildId childId(removed.mTypeName, removed.mUniqueNodeId);
 
@@ -532,7 +501,7 @@ void CachedModifications::ExtractInternal(DataNode* dataNode,
   }
 
   // Walk all children
-  forRange(DataNode & childDataNode, children)
+  forRange (DataNode& childDataNode, children)
   {
     if (!childDataNode.IsPatched())
       continue;
@@ -546,7 +515,7 @@ void CachedModifications::ExtractInternal(DataNode* dataNode,
       // recurse down
       if (childDataNode.HasChildProperties())
       {
-        forRange(DataNode & subNode, childDataNode.GetChildren())
+        forRange (DataNode& subNode, childDataNode.GetChildren())
         {
           if (subNode.IsPatched())
             ExtractInternal(&subNode, objectNode, path);
@@ -567,8 +536,7 @@ void CachedModifications::ExtractInternal(DataNode* dataNode,
       {
         ObjectState* objectState = objectNode->GetObjectState();
 
-        ObjectState::ChildId childId(childDataNode.mTypeName,
-                                     childDataNode.mUniqueNodeId);
+        ObjectState::ChildId childId(childDataNode.mTypeName, childDataNode.mUniqueNodeId);
         objectState->ChildAdded(childId);
       }
 
@@ -588,8 +556,7 @@ void CachedModifications::ExtractInternal(DataNode* dataNode,
   }
 }
 
-CachedModifications::ObjectNode*
-CachedModifications::ExtractInternal(Object* object)
+CachedModifications::ObjectNode* CachedModifications::ExtractInternal(Object* object)
 {
   BoundType* objectType = ZilchVirtualTypeId(object);
 
@@ -598,7 +565,7 @@ CachedModifications::ExtractInternal(Object* object)
   // Recurse depth first and build the tree as we go back up
   if (MetaComposition* composition = objectType->Has<MetaComposition>())
   {
-    forRange(Handle child, composition->AllComponents(object))
+    forRange (Handle child, composition->AllComponents(object))
     {
       if (ObjectNode* childNode = ExtractInternal(child.Get<Object*>()))
       {
@@ -636,7 +603,8 @@ CachedModifications::ObjectNode::ObjectNode()
 CachedModifications::ObjectNode::~ObjectNode()
 {
   SafeDelete(mState);
-  forRange(ObjectNode * child, mChildren.Values()) delete child;
+  forRange (ObjectNode* child, mChildren.Values())
+    delete child;
 }
 
 ObjectState* CachedModifications::ObjectNode::GetObjectState()
@@ -646,8 +614,7 @@ ObjectState* CachedModifications::ObjectNode::GetObjectState()
   return mState;
 }
 
-CachedModifications::ObjectNode*
-CachedModifications::ObjectNode::FindChild(Object* child)
+CachedModifications::ObjectNode* CachedModifications::ObjectNode::FindChild(Object* child)
 {
   return mChildren.FindValue(ObjectState::ChildId(child), nullptr);
 }
@@ -661,7 +628,7 @@ CachedModifications::ObjectNode* CachedModifications::ObjectNode::Clone()
     clone->mState = mState->Clone();
 
   // Clone children
-  forRange(ChildMap::value_type & entry, mChildren.All())
+  forRange (ChildMap::value_type& entry, mChildren.All())
   {
     ObjectState::ChildId childId = entry.first;
     ObjectNode* child = entry.second;
@@ -684,7 +651,7 @@ void CachedModifications::ObjectNode::Combine(ObjectNode* toCombine)
   }
 
   // Combine children
-  forRange(ChildMap::value_type & entry, toCombine->mChildren.All())
+  forRange (ChildMap::value_type& entry, toCombine->mChildren.All())
   {
     ObjectState::ChildId childId = entry.first;
     ObjectNode* toCombineChild = entry.second;

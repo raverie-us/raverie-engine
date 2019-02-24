@@ -3,9 +3,7 @@
 
 namespace Zero
 {
-GeometryImporter::GeometryImporter(StringParam inputFile,
-                                   StringParam outputPath,
-                                   StringParam metaFile) :
+GeometryImporter::GeometryImporter(StringParam inputFile, StringParam outputPath, StringParam metaFile) :
     mScene(nullptr),
     mInputFile(inputFile),
     mOutputPath(outputPath),
@@ -48,9 +46,7 @@ uint GeometryImporter::SetupAssimpPostProcess()
     // generate our own
     flags |= aiProcess_RemoveComponent;
     removeFlags |= aiComponent_NORMALS;
-    mAssetImporter.SetPropertyFloat(
-        AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE,
-        meshBuilder->mSmoothingAngleDegreesThreshold);
+    mAssetImporter.SetPropertyFloat(AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE, meshBuilder->mSmoothingAngleDegreesThreshold);
   }
 
   if (meshBuilder->mGenerateTangentSpace)
@@ -98,8 +94,7 @@ GeometryProcessorCodes::Enum GeometryImporter::ProcessModelFiles()
   DataBlock block = ReadFileIntoDataBlock(mInputFile.c_str());
   mScene = mAssetImporter.ReadFileFromMemory(block.Data, block.Size, flags);
   zDeallocate(block.Data);
-  ZPrint("Processing model: %s\n",
-         FilePath::GetFileNameWithoutExtension(mInputFile).Data());
+  ZPrint("Processing model: %s\n", FilePath::GetFileNameWithoutExtension(mInputFile).Data());
 
   // An error has occurred, no scene imported
   if (!mScene)
@@ -124,8 +119,7 @@ GeometryProcessorCodes::Enum GeometryImporter::ProcessModelFiles()
   {
     // We need the hierarchy data to travel through it marking what nodes
     // comprise the skeleton
-    SkeletonProcessor skeletonProcess(
-        mHierarchyDataMap, mMeshDataMap, mRootNodeName);
+    SkeletonProcessor skeletonProcess(mHierarchyDataMap, mMeshDataMap, mRootNodeName);
     skeletonProcess.ProcessSkeletonHierarchy(mScene);
   }
 
@@ -133,8 +127,7 @@ GeometryProcessorCodes::Enum GeometryImporter::ProcessModelFiles()
   // with animations so run this step after the SkeletonProcessor
   if (mGeometryContent->has(GeometryImport)->mCollapsePivots)
   {
-    PivotProcessor pivotProcessor(
-        mHierarchyDataMap, mRootNodeName, mAnimationRedirectMap);
+    PivotProcessor pivotProcessor(mHierarchyDataMap, mRootNodeName, mAnimationRedirectMap);
     pivotProcessor.ProccessAndCollapsePivots();
   }
 
@@ -147,8 +140,7 @@ GeometryProcessorCodes::Enum GeometryImporter::ProcessModelFiles()
     meshProcessor.ExportMeshData(mOutputPath);
   }
 
-  PhysicsMeshBuilder* physicsMeshBuilder =
-      mGeometryContent->has(PhysicsMeshBuilder);
+  PhysicsMeshBuilder* physicsMeshBuilder = mGeometryContent->has(PhysicsMeshBuilder);
   if (physicsMeshBuilder)
   {
     PhysicsMeshProcessor physicsMeshProcessor(physicsMeshBuilder, mMeshDataMap);
@@ -166,8 +158,7 @@ GeometryProcessorCodes::Enum GeometryImporter::ProcessModelFiles()
   if (animationBuilder && mScene->HasAnimations())
   {
     animationBuilder->Name = mBaseMeshName;
-    AnimationProcessor animationProcessor(
-        animationBuilder, mHierarchyDataMap, mAnimationRedirectMap);
+    AnimationProcessor animationProcessor(animationBuilder, mHierarchyDataMap, mAnimationRedirectMap);
     animationProcessor.ExtractAndProcessAnimationData(mScene);
     animationProcessor.ExportAnimationData(mOutputPath);
   }
@@ -175,19 +166,15 @@ GeometryProcessorCodes::Enum GeometryImporter::ProcessModelFiles()
   // we need to build a scene graph such that on import the engine can create an
   // archetype for this mesh file and any animations attached to it if it has
   // any
-  GeneratedArchetype* generatedArchetype =
-      mGeometryContent->has(GeneratedArchetype);
+  GeneratedArchetype* generatedArchetype = mGeometryContent->has(GeneratedArchetype);
   if (generatedArchetype)
   {
-    ArchetypeProcessor archetypeProcessor(generatedArchetype,
-                                          mHierarchyDataMap);
+    ArchetypeProcessor archetypeProcessor(generatedArchetype, mHierarchyDataMap);
     archetypeProcessor.BuildSceneGraph(mRootNodeName);
-    archetypeProcessor.ExportSceneGraph(FilePath::GetFileName(mInputFile),
-                                        mOutputPath);
+    archetypeProcessor.ExportSceneGraph(FilePath::GetFileName(mInputFile), mOutputPath);
   }
 
-  if ((metaUpdated || animationBuilder || generatedArchetype) &&
-      !textureContent)
+  if ((metaUpdated || animationBuilder || generatedArchetype) && !textureContent)
     return GeometryProcessorCodes::LoadGraph;
 
   if (!(metaUpdated || animationBuilder) && textureContent)
@@ -202,8 +189,7 @@ GeometryProcessorCodes::Enum GeometryImporter::ProcessModelFiles()
 bool GeometryImporter::SceneEmpty()
 {
   // nothing we import is present, the scene is empty
-  if (!mScene->HasAnimations() && !mScene->HasMeshes() &&
-      !mScene->HasTextures())
+  if (!mScene->HasAnimations() && !mScene->HasMeshes() && !mScene->HasTextures())
     return true;
 
   return false;
@@ -215,8 +201,7 @@ void GeometryImporter::CollectNodeData()
   // If the root scene node has 1 child, no meshes, and its transform is the
   // identity matrix then don't include it in the model hierarchy as this is
   // commonly a hidden node within Maya
-  if ((rootNode->mNumChildren == 1) && (rootNode->mNumMeshes == 0) &&
-      (rootNode->mTransformation.IsIdentity()))
+  if ((rootNode->mNumChildren == 1) && (rootNode->mNumMeshes == 0) && (rootNode->mTransformation.IsIdentity()))
     rootNode = rootNode->mChildren[0];
 
   // Set the root node name and loop through the scenes nodes children and find
@@ -228,15 +213,13 @@ void GeometryImporter::CollectNodeData()
   // Find all nodes with animations if they are present
   // and collapse pivots has been enabled
   AnimationBuilder* animationBuilder = mGeometryContent->has(AnimationBuilder);
-  if (animationBuilder && mScene->HasAnimations() &&
-      mGeometryContent->has(GeometryImport)->mCollapsePivots)
+  if (animationBuilder && mScene->HasAnimations() && mGeometryContent->has(GeometryImport)->mCollapsePivots)
     FindAnimationNodes();
 
   ComputeMeshTransforms();
 }
 
-String GeometryImporter::ExtractDataFromNodesRescursive(aiNode* node,
-                                                        String parentName)
+String GeometryImporter::ExtractDataFromNodesRescursive(aiNode* node, String parentName)
 {
   uint numChildren = node->mNumChildren;
 
@@ -251,9 +234,7 @@ String GeometryImporter::ExtractDataFromNodesRescursive(aiNode* node,
 
   String nodePath = nodeName;
   if (node->mParent)
-    nodePath = BuildString(mHierarchyDataMap[parentName].mNodePath,
-                           cAnimationPathDelimiterStr,
-                           nodeName);
+    nodePath = BuildString(mHierarchyDataMap[parentName].mNodePath, cAnimationPathDelimiterStr, nodeName);
 
   HierarchyData hierarchyData;
   hierarchyData.mParentNodeName = parentName;
@@ -284,16 +265,14 @@ String GeometryImporter::ExtractDataFromNodesRescursive(aiNode* node,
   // walk down all the children
   for (uint i = 0; i < numChildren; ++i)
   {
-    String childsName =
-        ExtractDataFromNodesRescursive(node->mChildren[i], nodeName);
+    String childsName = ExtractDataFromNodesRescursive(node->mChildren[i], nodeName);
     mHierarchyDataMap[nodeName].mChildren.PushBack(childsName);
   }
 
   return nodeName;
 }
 
-void GeometryImporter::SingleMeshHierarchyEntry(HierarchyData& hierarchyData,
-                                                uint meshIndex)
+void GeometryImporter::SingleMeshHierarchyEntry(HierarchyData& hierarchyData, uint meshIndex)
 {
   hierarchyData.mHasMesh = true;
 
@@ -307,14 +286,12 @@ void GeometryImporter::SingleMeshHierarchyEntry(HierarchyData& hierarchyData,
   {
     MeshData data;
     data.mMeshTransform = hierarchyData.mLocalTransform;
-    hierarchyData.mPhysicsMeshName = hierarchyData.mMeshName = data.mMeshName =
-        hierarchyData.mNodeName;
+    hierarchyData.mPhysicsMeshName = hierarchyData.mMeshName = data.mMeshName = hierarchyData.mNodeName;
     mMeshDataMap.Insert(meshIndex, data);
   }
 }
 
-void GeometryImporter::MultipleMeshsHierarchicalEntry(
-    HierarchyData& hierarchyData, aiNode* node)
+void GeometryImporter::MultipleMeshsHierarchicalEntry(HierarchyData& hierarchyData, aiNode* node)
 {
   String parentNodeName = hierarchyData.mNodeName;
 
@@ -322,11 +299,9 @@ void GeometryImporter::MultipleMeshsHierarchicalEntry(
   {
     HierarchyData childHierarchyData;
     childHierarchyData.mParentNodeName = parentNodeName;
-    childHierarchyData.mNodeName = BuildString(
-        parentNodeName, "GeneratedMeshNode", ToString(mUniquifyingIndex++));
-    childHierarchyData.mNodePath = BuildString(hierarchyData.mNodePath,
-                                               cAnimationPathDelimiterStr,
-                                               childHierarchyData.mNodeName);
+    childHierarchyData.mNodeName = BuildString(parentNodeName, "GeneratedMeshNode", ToString(mUniquifyingIndex++));
+    childHierarchyData.mNodePath =
+        BuildString(hierarchyData.mNodePath, cAnimationPathDelimiterStr, childHierarchyData.mNodeName);
     childHierarchyData.mLocalTransform = Mat4::cIdentity;
 
     SingleMeshHierarchyEntry(childHierarchyData, node->mMeshes[i]);
@@ -360,15 +335,13 @@ void GeometryImporter::FindAnimationNodes()
         // scale it does not count as an animation and will be collapsed as
         // these values are only used to take the model out of bind pose and are
         // effectively the nodes local transform
-        if (sceneChannelNode->mNumPositionKeys > 1 ||
-            sceneChannelNode->mNumRotationKeys > 1 ||
+        if (sceneChannelNode->mNumPositionKeys > 1 || sceneChannelNode->mNumRotationKeys > 1 ||
             sceneChannelNode->mNumScalingKeys > 1)
         {
           node.mIsPivot = false;
           node.mIsAnimatedPivot = true;
         }
-        else if (sceneChannelNode->mNumPositionKeys == 1 ||
-                 sceneChannelNode->mNumRotationKeys == 1 ||
+        else if (sceneChannelNode->mNumPositionKeys == 1 || sceneChannelNode->mNumRotationKeys == 1 ||
                  sceneChannelNode->mNumScalingKeys == 1)
         {
           node.mAnimationNode = sceneChannelNode;
@@ -380,7 +353,7 @@ void GeometryImporter::FindAnimationNodes()
 
 void GeometryImporter::ComputeMeshTransforms()
 {
-  forRange(HierarchyData & node, mHierarchyDataMap.Values())
+  forRange (HierarchyData& node, mHierarchyDataMap.Values())
   {
     if (node.mHasMesh == false)
       continue;
@@ -396,7 +369,7 @@ void GeometryImporter::ComputeMeshTransforms()
       parentName = parentNode.mParentNodeName;
     }
 
-    forRange(MeshData & meshData, mMeshDataMap.Values())
+    forRange (MeshData& meshData, mMeshDataMap.Values())
     {
       if (meshData.mMeshName == node.mMeshName)
       {
@@ -429,8 +402,7 @@ bool GeometryImporter::UpdateBuilderMetaData()
       GeometryResourceEntry entry;
       entry.mName = name;
 
-      if (GeometryResourceEntry* previousEntry =
-              meshBuilder->Meshes.FindPointer(entry))
+      if (GeometryResourceEntry* previousEntry = meshBuilder->Meshes.FindPointer(entry))
         entry.mResourceId = previousEntry->mResourceId;
       else
         entry.mResourceId = GenerateUniqueId64();
@@ -445,8 +417,7 @@ bool GeometryImporter::UpdateBuilderMetaData()
     }
   }
 
-  PhysicsMeshBuilder* physicsMeshBuilder =
-      mGeometryContent->has(PhysicsMeshBuilder);
+  PhysicsMeshBuilder* physicsMeshBuilder = mGeometryContent->has(PhysicsMeshBuilder);
   if (mScene->HasMeshes() && physicsMeshBuilder != nullptr)
   {
     Array<GeometryResourceEntry> physicsMeshEntries;
@@ -464,8 +435,7 @@ bool GeometryImporter::UpdateBuilderMetaData()
       GeometryResourceEntry entry;
       entry.mName = name;
 
-      if (GeometryResourceEntry* previousEntry =
-              physicsMeshBuilder->Meshes.FindPointer(entry))
+      if (GeometryResourceEntry* previousEntry = physicsMeshBuilder->Meshes.FindPointer(entry))
         entry.mResourceId = previousEntry->mResourceId;
       else
         entry.mResourceId = GenerateUniqueId64();
@@ -490,13 +460,12 @@ bool GeometryImporter::UpdateBuilderMetaData()
 
     if (animBuilder->mClips.Size() != 0)
     {
-      forRange(AnimationClip & clip, animBuilder->mClips.All())
+      forRange (AnimationClip& clip, animBuilder->mClips.All())
       {
         if ((size_t)clip.mAnimationIndex >= animationCount)
           continue;
 
-        String name =
-            BuildString(mBaseMeshName, "_", CleanAssetName(clip.mName));
+        String name = BuildString(mBaseMeshName, "_", CleanAssetName(clip.mName));
 
         GeometryResourceEntry entry;
         entry.mName = name;
@@ -507,8 +476,7 @@ bool GeometryImporter::UpdateBuilderMetaData()
 
         // Get resource id if this name already had one, otherwise make a new
         // one.
-        if (GeometryResourceEntry* previousEntry =
-                animBuilder->mAnimations.FindPointer(entry))
+        if (GeometryResourceEntry* previousEntry = animBuilder->mAnimations.FindPointer(entry))
           entry.mResourceId = previousEntry->mResourceId;
         else
           entry.mResourceId = GenerateUniqueId64();
@@ -524,16 +492,14 @@ bool GeometryImporter::UpdateBuilderMetaData()
 
         String name = mBaseMeshName;
         if (animationCount > 1)
-          name =
-              BuildString(name, "_", CleanAssetName(animation->mName.C_Str()));
+          name = BuildString(name, "_", CleanAssetName(animation->mName.C_Str()));
 
         GeometryResourceEntry entry;
         entry.mName = name;
 
         // Get resource id if this name already had one, otherwise make a new
         // one.
-        if (GeometryResourceEntry* previousEntry =
-                animBuilder->mAnimations.FindPointer(entry))
+        if (GeometryResourceEntry* previousEntry = animBuilder->mAnimations.FindPointer(entry))
           entry.mResourceId = previousEntry->mResourceId;
         else
           entry.mResourceId = GenerateUniqueId64();
@@ -569,16 +535,11 @@ bool GeometryImporter::UpdateBuilderMetaData()
       if (IsSupportedImageLoadExtension(extension))
       {
         GeometryResourceEntry entry;
-        entry.mName =
-            BuildString(FilePath::GetFileNameWithoutExtension(mInputFile),
-                        ToString(i),
-                        ".",
-                        extension);
+        entry.mName = BuildString(FilePath::GetFileNameWithoutExtension(mInputFile), ToString(i), ".", extension);
 
         // Get resource id if this name already had one, otherwise make a new
         // one.
-        if (GeometryResourceEntry* previousEntry =
-                textureContent->mTextures.FindPointer(entry))
+        if (GeometryResourceEntry* previousEntry = textureContent->mTextures.FindPointer(entry))
           entry.mResourceId = previousEntry->mResourceId;
         else
           entry.mResourceId = GenerateUniqueId64();

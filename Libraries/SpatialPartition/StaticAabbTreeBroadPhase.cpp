@@ -18,8 +18,7 @@ void StaticAabbTreeBroadPhase::Draw(int level, uint debugDrawFlags)
   mTree.Draw(level, debugDrawFlags);
 }
 
-void StaticAabbTreeBroadPhase::CreateProxy(BroadPhaseProxy& proxy,
-                                           BroadPhaseData& data)
+void StaticAabbTreeBroadPhase::CreateProxy(BroadPhaseProxy& proxy, BroadPhaseData& data)
 {
   mTree.CreateProxy(proxy, data);
   mTree.Construct();
@@ -50,8 +49,7 @@ void StaticAabbTreeBroadPhase::RemoveProxies(ProxyHandleArray& proxies)
   mTree.Construct();
 }
 
-void StaticAabbTreeBroadPhase::UpdateProxy(BroadPhaseProxy& proxy,
-                                           BroadPhaseData& data)
+void StaticAabbTreeBroadPhase::UpdateProxy(BroadPhaseProxy& proxy, BroadPhaseData& data)
 {
   mTree.UpdateProxy(proxy, data);
   mTree.Construct();
@@ -73,15 +71,13 @@ void StaticAabbTreeBroadPhase::SelfQuery(ClientPairArray& results)
   ErrorIf(true, "Static Aabb Tree cannot be used as a Dynamic BroadPhase.");
 }
 
-void StaticAabbTreeBroadPhase::Query(BroadPhaseData& data,
-                                     ClientPairArray& results)
+void StaticAabbTreeBroadPhase::Query(BroadPhaseData& data, ClientPairArray& results)
 {
   forRangeBroadphaseTree(TreeType, mTree, Aabb, data.mAabb)
       results.PushBack(ClientPair(data.mClientData, range.Front()));
 }
 
-void StaticAabbTreeBroadPhase::BatchQuery(BroadPhaseDataArray& data,
-                                          ClientPairArray& results)
+void StaticAabbTreeBroadPhase::BatchQuery(BroadPhaseDataArray& data, ClientPairArray& results)
 {
   BroadPhaseDataArray::range range = data.All();
   for (; !range.Empty(); range.PopFront())
@@ -93,49 +89,39 @@ void StaticAabbTreeBroadPhase::Construct()
   mTree.Construct();
 }
 
-void StaticAabbTreeBroadPhase::CastRay(CastDataParam data,
-                                       ProxyCastResults& results)
+void StaticAabbTreeBroadPhase::CastRay(CastDataParam data, ProxyCastResults& results)
 {
   SimpleRayCallback callback(mCastRayCallBack, &results);
 
-  forRangeBroadphaseTree(TreeType, mTree, Ray, data.GetRay())
-      callback.Refine(range.Front(), data);
+  forRangeBroadphaseTree(TreeType, mTree, Ray, data.GetRay()) callback.Refine(range.Front(), data);
 }
 
-void StaticAabbTreeBroadPhase::CastSegment(CastDataParam data,
-                                           ProxyCastResults& results)
+void StaticAabbTreeBroadPhase::CastSegment(CastDataParam data, ProxyCastResults& results)
 {
   SimpleSegmentCallback callback(mCastSegmentCallBack, &results);
 
-  forRangeBroadphaseTree(TreeType, mTree, Segment, data.GetSegment())
-      callback.Refine(range.Front(), data);
+  forRangeBroadphaseTree(TreeType, mTree, Segment, data.GetSegment()) callback.Refine(range.Front(), data);
 }
 
-void StaticAabbTreeBroadPhase::CastAabb(CastDataParam data,
-                                        ProxyCastResults& results)
+void StaticAabbTreeBroadPhase::CastAabb(CastDataParam data, ProxyCastResults& results)
 {
   SimpleAabbCallback callback(mCastAabbCallBack, &results);
 
-  forRangeBroadphaseTree(TreeType, mTree, Aabb, data.GetAabb())
-      callback.Refine(range.Front(), data);
+  forRangeBroadphaseTree(TreeType, mTree, Aabb, data.GetAabb()) callback.Refine(range.Front(), data);
 }
 
-void StaticAabbTreeBroadPhase::CastSphere(CastDataParam data,
-                                          ProxyCastResults& results)
+void StaticAabbTreeBroadPhase::CastSphere(CastDataParam data, ProxyCastResults& results)
 {
   SimpleSphereCallback callback(mCastSphereCallBack, &results);
 
-  forRangeBroadphaseTree(TreeType, mTree, Sphere, data.GetSphere())
-      callback.Refine(range.Front(), data);
+  forRangeBroadphaseTree(TreeType, mTree, Sphere, data.GetSphere()) callback.Refine(range.Front(), data);
 }
 
-void StaticAabbTreeBroadPhase::CastFrustum(CastDataParam data,
-                                           ProxyCastResults& results)
+void StaticAabbTreeBroadPhase::CastFrustum(CastDataParam data, ProxyCastResults& results)
 {
   SimpleFrustumCallback callback(mCastFrustumCallBack, &results);
 
-  forRangeBroadphaseTree(TreeType, mTree, Frustum, data.GetFrustum())
-      callback.Refine(range.Front(), data);
+  forRangeBroadphaseTree(TreeType, mTree, Frustum, data.GetFrustum()) callback.Refine(range.Front(), data);
 }
 
 } // namespace Zero

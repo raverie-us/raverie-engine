@@ -38,13 +38,8 @@ public:
   }
 
   virtual ~PropertyTrack(){};
-  virtual void LinkInstance(PropertyTrackPlayData& data,
-                            BlendTracks& tracks,
-                            StringParam objectPath,
-                            Cog* object) = 0;
-  virtual void UpdateFrame(PropertyTrackPlayData& data,
-                           TrackParams& params,
-                           AnimationFrame& animationFrame){};
+  virtual void LinkInstance(PropertyTrackPlayData& data, BlendTracks& tracks, StringParam objectPath, Cog* object) = 0;
+  virtual void UpdateFrame(PropertyTrackPlayData& data, TrackParams& params, AnimationFrame& animationFrame){};
 
   // Editing
   virtual void InsertKey(PropertyTrackPlayData& data, float time)
@@ -88,13 +83,8 @@ public:
 
   /// PropertyTrack Interface.
   void Serialize(Serializer& stream) override;
-  void LinkInstance(PropertyTrackPlayData& data,
-                    BlendTracks& tracks,
-                    StringParam objectPath,
-                    Cog* object) override;
-  void UpdateFrame(PropertyTrackPlayData& data,
-                   TrackParams& params,
-                   AnimationFrame& animationFrame) override;
+  void LinkInstance(PropertyTrackPlayData& data, BlendTracks& tracks, StringParam objectPath, Cog* object) override;
+  void UpdateFrame(PropertyTrackPlayData& data, TrackParams& params, AnimationFrame& animationFrame) override;
   void GetKeyTimes(Array<float>& times) override;
   void GetKeyValues(Array<Any>& values) override;
   void InsertKey(PropertyTrackPlayData& data, float time) override;
@@ -142,20 +132,13 @@ public:
   propertyType* VariantToType(AnyParam variant) override;
 };
 
-BlendTrack* GetBlendTrack(StringParam name,
-                          BlendTracks& tracks,
-                          HandleParam instance,
-                          Property* prop);
+BlendTrack* GetBlendTrack(StringParam name, BlendTracks& tracks, HandleParam instance, Property* prop);
 /// Returns whether or not the given property can be animated.
 bool ValidPropertyTrack(Property* property);
 
 /// Creates a track that animates the property of the given component.
-PropertyTrack* MakePropertyTrack(StringParam componentName,
-                                 StringParam propertyName,
-                                 StringParam propertyTypeName);
-PropertyTrack* MakePropertyTrack(StringParam componentName,
-                                 StringParam propertyName,
-                                 BoundType* propertyTypeId);
+PropertyTrack* MakePropertyTrack(StringParam componentName, StringParam propertyName, StringParam propertyTypeName);
+PropertyTrack* MakePropertyTrack(StringParam componentName, StringParam propertyName, BoundType* propertyTypeId);
 PropertyTrack* MakePropertyTrack(BoundType* componentName, Property* property);
 
 #include "PropertyTrack.inl"

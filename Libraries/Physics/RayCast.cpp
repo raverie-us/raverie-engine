@@ -72,8 +72,7 @@ bool CastFilter::IsValid(void* clientData)
     }
   }
 
-  if (collider->GetOwner()->mFlags.IsSet(CogFlags::Locked |
-                                         CogFlags::SelectionLimited))
+  if (collider->GetOwner()->mFlags.IsSet(CogFlags::Locked | CogFlags::SelectionLimited))
     return false;
 
   if (IsSet(BaseCastFilterFlags::IgnoreGhost) && collider->GetGhost())
@@ -92,8 +91,7 @@ bool CastFilter::IsValid(void* clientData)
   // Check for collision groups
   if (mFilterGroup != nullptr)
   {
-    CollisionGroupInstance* groupInstance =
-        collider->mSpace->GetCollisionGroupInstance(mFilterGroup->mResourceId);
+    CollisionGroupInstance* groupInstance = collider->mSpace->GetCollisionGroupInstance(mFilterGroup->mResourceId);
 
     if (groupInstance->SkipDetection(*(collider->mCollisionGroupInstance)))
       return false;
@@ -193,9 +191,7 @@ Vec3 CastResult::GetLocalPosition(uint pointIndex)
 
   if (pointIndex >= 2)
   {
-    String msg = String::Format(
-        "Index %d is invalid. Index 0 and 1 are the only valid values",
-        pointIndex);
+    String msg = String::Format("Index %d is invalid. Index 0 and 1 are the only valid values", pointIndex);
     DoNotifyException("Invalid index", msg);
   }
 
@@ -227,36 +223,29 @@ ZilchDefineType(CastResults, builder, type)
 
 CastFilter CastResults::mDefaultFilter;
 
-CastResults::CastResults(uint amount, BaseCastFilter& filter) :
-    mResults((ProxyCastResultArray&)mArray, filter)
+CastResults::CastResults(uint amount, BaseCastFilter& filter) : mResults((ProxyCastResultArray&)mArray, filter)
 {
   const uint maxResults = 100000;
 
   // Sanity check.  Can't cast a ray and get back 0 results.
   if (amount == 0)
   {
-    DoNotifyTimer("Ray/Volume Cast Error",
-                  "Cannot make a cast with 0 results.  Result count set to 1.",
-                  "Warning",
-                  1.0f);
+    DoNotifyTimer(
+        "Ray/Volume Cast Error", "Cannot make a cast with 0 results.  Result count set to 1.", "Warning", 1.0f);
     amount = 1;
   }
   if (amount > maxResults)
   {
-    DoNotifyTimer(
-        "Ray/Volume Cast Error",
-        String::Format("Cannot have %d results in a cast, clamping to %d",
-                       amount,
-                       maxResults),
-        "Warning",
-        1.0f);
+    DoNotifyTimer("Ray/Volume Cast Error",
+                  String::Format("Cannot have %d results in a cast, clamping to %d", amount, maxResults),
+                  "Warning",
+                  1.0f);
     amount = maxResults;
   }
   mArray.Resize(amount);
 }
 
-CastResults::CastResults(const CastResults& rhs) :
-    mResults((ProxyCastResultArray&)mArray, rhs.mResults.Filter)
+CastResults::CastResults(const CastResults& rhs) : mResults((ProxyCastResultArray&)mArray, rhs.mResults.Filter)
 {
   uint count = rhs.Capacity();
   mArray.Resize(count);

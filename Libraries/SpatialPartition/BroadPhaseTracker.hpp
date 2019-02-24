@@ -4,15 +4,7 @@
 namespace Zero
 {
 
-DeclareEnum8(BPStats,
-             Insertion,
-             Removal,
-             Update,
-             Collision,
-             Construction,
-             RayCast,
-             VolumeCast,
-             Cleanup);
+DeclareEnum8(BPStats, Insertion, Removal, Update, Collision, Construction, RayCast, VolumeCast, Cleanup);
 
 /// The statistics for a single broad phases entire life.
 class Statistics
@@ -101,9 +93,7 @@ public:
   /// Fills out the proxy for the broadphase at the position specified by data.
   /// The proxy can be thought of as a handle, an object should do nothing more
   /// than hold onto it and give it to broadphase when it wants to do something.
-  virtual void CreateProxy(uint type,
-                           BroadPhaseProxy& proxy,
-                           BroadPhaseData& data);
+  virtual void CreateProxy(uint type, BroadPhaseProxy& proxy, BroadPhaseData& data);
   /// Batch version of CreateProxy.
   virtual void CreateProxies(uint type, BroadPhaseObjectArray& objects);
   /// Removes the given proxy.
@@ -111,9 +101,7 @@ public:
   /// Batch version of RemoveProxy.
   virtual void RemoveProxies(uint type, ProxyHandleArray& proxies);
   /// Updates the given proxy to the position specified by data.
-  virtual void UpdateProxy(uint type,
-                           BroadPhaseProxy& proxy,
-                           BroadPhaseData& data);
+  virtual void UpdateProxy(uint type, BroadPhaseProxy& proxy, BroadPhaseData& data);
   /// Batch version of UpdateProxy.
   virtual void UpdateProxies(uint type, BroadPhaseObjectArray& objects);
 
@@ -122,9 +110,7 @@ public:
   void SelfQuery(ClientPairArray& results) override;
   /// Internal function or query. Finds all overlaps in the broadphase of the
   /// given type.
-  void Query(BroadPhaseData& data,
-             ClientPairArray& results,
-             uint broadphaseType);
+  void Query(BroadPhaseData& data, ClientPairArray& results, uint broadphaseType);
   /// Finds everything that is in contact with the data.
   void Query(BroadPhaseData& data, ClientPairArray& results) override;
   /// Batch version of Query.
@@ -143,17 +129,12 @@ public:
   virtual void Cleanup();
 
 private:
-  virtual void CastIntoBroadphase(uint broadPhaseType,
-                                  CastDataParam data,
-                                  ProxyCastResults& results,
-                                  CastFunction func);
+  virtual void
+  CastIntoBroadphase(uint broadPhaseType, CastDataParam data, ProxyCastResults& results, CastFunction func);
 
   uint GetNewProxyIndex(uint type);
 
-  void RegisterCollisions(uint type,
-                          uint broadPhaseId,
-                          ClientPairArray& currentResults,
-                          ClientPairArray& finalResults);
+  void RegisterCollisions(uint type, uint broadPhaseId, ClientPairArray& currentResults, ClientPairArray& finalResults);
 
   /// Tells the tracker that there was a pair of objects sent to be
   /// checked for collision.  Returns whether or not the object was added.

@@ -157,8 +157,7 @@ void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
   float totalSize = areaSize[stackAxis];
 
   // Flex ratio
-  float flexRatio =
-      ComputeFlexRatio(fixedSize, totalFlex, flexMinSize, totalSize);
+  float flexRatio = ComputeFlexRatio(fixedSize, totalFlex, flexMinSize, totalSize);
 
   // When all the flex objects can't be evenly distributed within the size
   // allocated for flex objects, we need to assign them slightly "incorrect"
@@ -187,14 +186,8 @@ void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
     // If we're laying out right to left, we want to do the opposite.
     // These are lookup tables for which margins to apply given the
     // stack direction. This is an optimization to avoid branching.
-    float marginsStart[4] = {childMargins.Top,
-                             childMargins.Bottom,
-                             childMargins.Left,
-                             childMargins.Right};
-    float marginsEnd[4] = {childMargins.Bottom,
-                           childMargins.Top,
-                           childMargins.Right,
-                           childMargins.Left};
+    float marginsStart[4] = {childMargins.Top, childMargins.Bottom, childMargins.Left, childMargins.Right};
+    float marginsEnd[4] = {childMargins.Bottom, childMargins.Top, childMargins.Right, childMargins.Left};
 
     // Before placing the widget, move over by the margins
     offset[stackAxis] += marginsStart[mStackDirection] * direction;
@@ -210,14 +203,12 @@ void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
     // Stack axis logic
     if (stackPolicy == UiSizePolicy::Flex)
     {
-      float size = (child->GetFlexSize()[stackAxis] *
-                    flexRatio); // +childSize[stackAxis];
+      float size = (child->GetFlexSize()[stackAxis] * flexRatio); // +childSize[stackAxis];
 
       // Add in the previous remainder
       size += flexRemainder;
 
-      float flooredSize =
-          Math::Floor(size / cUiWidgetSnapSize) * cUiWidgetSnapSize;
+      float flooredSize = Math::Floor(size / cUiWidgetSnapSize) * cUiWidgetSnapSize;
       childSize[stackAxis] = flooredSize;
 
       // Calculate the new remainder
@@ -242,10 +233,8 @@ void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
       if (opPolicy == UiSizePolicy::Fixed)
         childSize[opAxis] = child->GetSize()[opAxis];
 
-      uint alignment = stackAxis ? child->GetHorizontalAlignment()
-                                 : child->GetVerticalAlignment();
-      CalculateAlignment(
-          opAxis, alignment, areaSize, offset, childSize, childTranslation);
+      uint alignment = stackAxis ? child->GetHorizontalAlignment() : child->GetVerticalAlignment();
+      CalculateAlignment(opAxis, alignment, areaSize, offset, childSize, childTranslation);
     }
 
     // Shift ourselves along the off axis based on our margins
@@ -285,10 +274,7 @@ void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
   }
 }
 
-float UiStackLayout::ComputeFlexRatio(float fixedSize,
-                                      float totalFlex,
-                                      float flexMinSize,
-                                      float totalSize)
+float UiStackLayout::ComputeFlexRatio(float fixedSize, float totalFlex, float flexMinSize, float totalSize)
 {
   float extraSize = totalSize - fixedSize; // -flexMinSize;
   // Only flex if there is extra space including min size used by flex controls

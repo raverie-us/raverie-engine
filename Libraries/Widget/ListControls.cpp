@@ -228,9 +228,7 @@ void ListBox::UpdateTransform()
     Element* background = mTextBlocks[i].first;
     Text* text = mTextBlocks[i].second;
 
-    Vec3 translation = Vec3(borderThickness.Left,
-                            cTextCellHeight * i + cellsOff * cTextCellHeight,
-                            0);
+    Vec3 translation = Vec3(borderThickness.Left, cTextCellHeight * i + cellsOff * cTextCellHeight, 0);
 
     text->SetTranslation(translation);
     text->SetSize(Vec2(boxWidth, cTextCellHeight));
@@ -266,8 +264,7 @@ void ListBox::UpdateTransform()
         mSelection->SetSize(blockSize);
       }
 
-      if (currentBlockIndex == mHighlightItem && mMouseHover &&
-          mHighlightItem < (int)dataCount)
+      if (currentBlockIndex == mHighlightItem && mMouseHover && mHighlightItem < (int)dataCount)
       {
         mHighlightBox->SetVisible(true);
         mHighlightBox->SetTranslation(blockTrans);
@@ -275,10 +272,8 @@ void ListBox::UpdateTransform()
       }
 
       TextDefinition* regular = (TextDefinition*)mDefSet->GetDefinition(cText);
-      TextDefinition* selected =
-          (TextDefinition*)mDefSet->GetDefinition(cSelectText);
-      TextDefinition* highlighted =
-          (TextDefinition*)mDefSet->GetDefinition(cHighlightedText);
+      TextDefinition* selected = (TextDefinition*)mDefSet->GetDefinition(cSelectText);
+      TextDefinition* highlighted = (TextDefinition*)mDefSet->GetDefinition(cHighlightedText);
 
       Text& text = *mTextBlocks[i].second;
       if (currentBlockIndex < itemCount)
@@ -394,8 +389,7 @@ void ListBox::OnMouseMove(MouseEvent* event)
       {
         mToolTip.SafeDestroy();
         mToolTip = new ToolTip(this);
-        mToolTip->SetTextAndPlace(toolTipText.ToString(),
-                                  mTextBlocks[index].first->GetScreenRect());
+        mToolTip->SetTextAndPlace(toolTipText.ToString(), mTextBlocks[index].first->GetScreenRect());
       }
     }
   }
@@ -768,9 +762,7 @@ void ComboBox::UpdateTransform()
   PlaceWithRect(textRect, mText);
 
   real rightBorder = 6.0f;
-  mPullImage->SetTranslation(Vec3(newSize.x - iconSize.x - rightBorder,
-                                  (newSize.y - iconSize.y) / 2.0f,
-                                  0.0f));
+  mPullImage->SetTranslation(Vec3(newSize.x - iconSize.x - rightBorder, (newSize.y - iconSize.y) / 2.0f, 0.0f));
   Composite::UpdateTransform();
 }
 

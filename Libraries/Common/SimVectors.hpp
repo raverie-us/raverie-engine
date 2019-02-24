@@ -71,8 +71,7 @@ SimVec Abs(SimVecParam vec);
 // random stuff
 SimVec Lerp(SimVecParam start, SimVecParam end, SimVecParam t);
 SimVec Lerp(SimVecParam start, SimVecParam end, scalar t);
-SimVec
-BaryCentric(SimVecParam p0, SimVecParam p1, SimVecParam p2, scalar u, scalar v);
+SimVec BaryCentric(SimVecParam p0, SimVecParam p1, SimVecParam p2, scalar u, scalar v);
 
 // arithmetic operators
 SimVec operator+(SimVecParam lhs, SimVecParam rhs);
@@ -101,9 +100,7 @@ SimVec Normalize3(SimVecParam vec);
 SimVec NormalizeEst3(SimVecParam vec);
 SimVec AttemptNormalize4(SimVecParam lhs);
 SimVec Reflect3(SimVecParam incident, SimVecParam normal);
-SimVec Refract3(SimVecParam incident,
-                SimVecParam normal,
-                SimVecParam refractionIndex);
+SimVec Refract3(SimVecParam incident, SimVecParam normal, SimVecParam refractionIndex);
 
 // vector4 specific
 // the scalar value is splatted across all values of the result
@@ -115,9 +112,7 @@ SimVec Normalize4(SimVecParam lhs);
 SimVec NormalizeEst4(SimVecParam lhs);
 SimVec AttemptNormalize4(SimVecParam lhs);
 SimVec Reflect4(SimVecParam incident, SimVecParam normal);
-SimVec Refract4(SimVecParam incident,
-                SimVecParam normal,
-                SimVecParam refractionIndex);
+SimVec Refract4(SimVecParam incident, SimVecParam normal, SimVecParam refractionIndex);
 
 } // namespace Simd
 

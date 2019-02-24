@@ -4,13 +4,7 @@
 namespace Zero
 {
 
-DeclareEnum6(OrientationBases,
-             ForwardZUpY,
-             ForwardNegativeZUpY,
-             ForwardXUpY,
-             ForwardXUpZ,
-             ForwardYUpZ,
-             Custom);
+DeclareEnum6(OrientationBases, ForwardZUpY, ForwardNegativeZUpY, ForwardXUpY, ForwardXUpZ, ForwardYUpZ, Custom);
 
 /// Defines a new basis for a desired right, up, and forward vector. Provides a
 /// bunch of helper functions to change between these spaces and to perform
@@ -132,18 +126,12 @@ public:
   /// Get the angle of the object about the up vector
   float GetAbsoluteAngle();
   /// Compute the rotation angle between two vectors (in radians)
-  float ComputeSignedAngle(Vec3Param up,
-                           Vec3Param forward,
-                           Vec3Param newVector);
+  float ComputeSignedAngle(Vec3Param up, Vec3Param forward, Vec3Param newVector);
 
   /// Transform all 3 orientation-space basis vectors into local space.
-  void GetLocalBasisVectors(Vec3& localRight,
-                            Vec3& localUp,
-                            Vec3& localForward);
+  void GetLocalBasisVectors(Vec3& localRight, Vec3& localUp, Vec3& localForward);
   /// Transform all 3 orientation-space basis vectors into world space.
-  void GetWorldBasisVectors(Vec3& worldRight,
-                            Vec3& worldUp,
-                            Vec3& worldForward);
+  void GetWorldBasisVectors(Vec3& worldRight, Vec3& worldUp, Vec3& worldForward);
 
   /// Transforms the given orientation-space vector into local space and then
   /// normalizes it.
@@ -153,13 +141,9 @@ public:
   Vec3 ComputeNormalizedWorldVector(Vec3Param orientationVector);
 
   // Get the rotation angle between two vectors (in radians)
-  static float SignedAngle(Vec3Param up,
-                           Vec3Param forward,
-                           Vec3Param newVector);
+  static float SignedAngle(Vec3Param up, Vec3Param forward, Vec3Param newVector);
   // Get the rotation angle between two vectors (in radians)
-  static float AbsoluteAngle(Vec3Param up,
-                             Vec3Param forward,
-                             Vec3Param newVector);
+  static float AbsoluteAngle(Vec3Param up, Vec3Param forward, Vec3Param newVector);
   // Get the absolute rotation angle of an object (in radians)
   static float AbsoluteAngle(Cog* cog);
 

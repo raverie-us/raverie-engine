@@ -16,8 +16,7 @@ MaterialFactory::MaterialFactory()
 {
   sInstance = this;
 
-  MaterialFactory::ShaderInputTypeMap& shaderInputTypes =
-      MaterialFactory::sInstance->mShaderInputTypes;
+  MaterialFactory::ShaderInputTypeMap& shaderInputTypes = MaterialFactory::sInstance->mShaderInputTypes;
   shaderInputTypes[ZilchTypeId(bool)] = ShaderInputType::Bool;
   shaderInputTypes[ZilchTypeId(int)] = ShaderInputType::Int;
   shaderInputTypes[ZilchTypeId(IntVec2)] = ShaderInputType::IntVec2;
@@ -31,13 +30,10 @@ MaterialFactory::MaterialFactory()
   shaderInputTypes[ZilchTypeId(Mat4)] = ShaderInputType::Mat4;
   shaderInputTypes[ZilchTypeId(Texture)] = ShaderInputType::Texture;
 
-  ErrorIf(shaderInputTypes.FindPointer(nullptr) != nullptr,
-          "A MetaType was not found.");
+  ErrorIf(shaderInputTypes.FindPointer(nullptr) != nullptr, "A MetaType was not found.");
 }
 
-void MaterialFactory::MoveComponent(HandleParam instance,
-                                    HandleParam componentToMove,
-                                    uint destination)
+void MaterialFactory::MoveComponent(HandleParam instance, HandleParam componentToMove, uint destination)
 {
   uint indexToMove = GetComponentIndex(instance, componentToMove.StoredType);
 
@@ -62,9 +58,7 @@ uint MaterialFactory::GetComponentIndex(HandleParam instance, BoundType* typeId)
   return resource->GetBlockIndex(typeId);
 }
 
-bool MaterialFactory::CanAddComponent(HandleParam owner,
-                                      BoundType* typeToAdd,
-                                      AddInfo* info)
+bool MaterialFactory::CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info)
 {
   // If component is a restricted type
   if (mRestrictedComponents.Contains(typeToAdd))
@@ -80,16 +74,14 @@ bool MaterialFactory::CanAddComponent(HandleParam owner,
 
   // We can only have one geometry fragment on the composition
   bool addingGeometry = mGeometryComponents.Contains(typeToAdd);
-  forRange(Handle component, AllComponents(owner))
+  forRange (Handle component, AllComponents(owner))
   {
     if (addingGeometry && mGeometryComponents.Contains(component.StoredType))
     {
       if (info)
       {
         info->BlockingComponent = component;
-        info->Reason =
-            String::Format("Geometry Fragment %s already present on Material.",
-                           typeToAdd->Name.c_str());
+        info->Reason = String::Format("Geometry Fragment %s already present on Material.", typeToAdd->Name.c_str());
       }
       return false;
     }
@@ -98,19 +90,17 @@ bool MaterialFactory::CanAddComponent(HandleParam owner,
   return MetaComposition::CanAddComponent(owner, typeToAdd, info);
 }
 
-void MaterialFactory::UpdateRestrictedComponents(
-    HashMap<LibraryRef, ZilchShaderIRLibraryRef>& libraries,
-    ZilchFragmentTypeMap& fragmentTypes)
+void MaterialFactory::UpdateRestrictedComponents(HashMap<LibraryRef, ZilchShaderIRLibraryRef>& libraries,
+                                                 ZilchFragmentTypeMap& fragmentTypes)
 {
   mRestrictedComponents.Clear();
   mGeometryComponents.Clear();
 
-  forRange(LibraryRef wrapperLibrary, libraries.Keys())
+  forRange (LibraryRef wrapperLibrary, libraries.Keys())
   {
-    forRange(BoundType * boundType, wrapperLibrary->BoundTypes.Values())
+    forRange (BoundType* boundType, wrapperLibrary->BoundTypes.Values())
     {
-      ZilchFragmentType::Enum fragmentType =
-          fragmentTypes.FindValue(boundType->Name, ZilchFragmentType::Fragment);
+      ZilchFragmentType::Enum fragmentType = fragmentTypes.FindValue(boundType->Name, ZilchFragmentType::Fragment);
 
       if (fragmentType != ZilchFragmentType::Fragment)
         mRestrictedComponents.Insert(boundType);

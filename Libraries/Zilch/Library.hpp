@@ -7,12 +7,11 @@
 namespace Zilch
 {
 // Type-defines
-typedef BoundType* (*InstantiateTemplateCallback)(
-    LibraryBuilder& builder,
-    StringParam baseName,
-    StringParam fullyQualifiedName,
-    const Array<Constant>& templateParameters,
-    const void* userData);
+typedef BoundType* (*InstantiateTemplateCallback)(LibraryBuilder& builder,
+                                                  StringParam baseName,
+                                                  StringParam fullyQualifiedName,
+                                                  const Array<Constant>& templateParameters,
+                                                  const void* userData);
 
 // An type parsed delegate is a structure that stores the callback and user-data
 class ZeroShared InstantiateTemplateDelegate
@@ -270,40 +269,19 @@ ZeroShared ParameterArray OneParameter(Type* type);
 ZeroShared ParameterArray OneParameter(Type* type, StringParam name);
 ZeroShared ParameterArray TwoParameters(Type* type);
 ZeroShared ParameterArray TwoParameters(Type* type1, Type* type2);
-ZeroShared ParameterArray TwoParameters(Type* type,
-                                        StringParam name1,
-                                        StringParam name2);
-ZeroShared ParameterArray TwoParameters(Type* type1,
-                                        StringParam name1,
-                                        Type* type2,
-                                        StringParam name2);
+ZeroShared ParameterArray TwoParameters(Type* type, StringParam name1, StringParam name2);
+ZeroShared ParameterArray TwoParameters(Type* type1, StringParam name1, Type* type2, StringParam name2);
 ZeroShared ParameterArray ThreeParameters(Type* type);
-ZeroShared ParameterArray ThreeParameters(Type* type1,
-                                          Type* type2,
-                                          Type* type3);
-ZeroShared ParameterArray ThreeParameters(Type* type,
-                                          StringParam name1,
-                                          StringParam name2,
-                                          StringParam name3);
-ZeroShared ParameterArray ThreeParameters(Type* type1,
-                                          StringParam name1,
-                                          Type* type2,
-                                          StringParam name2,
-                                          Type* type3,
-                                          StringParam name3);
+ZeroShared ParameterArray ThreeParameters(Type* type1, Type* type2, Type* type3);
+ZeroShared ParameterArray ThreeParameters(Type* type, StringParam name1, StringParam name2, StringParam name3);
+ZeroShared ParameterArray
+ThreeParameters(Type* type1, StringParam name1, Type* type2, StringParam name2, Type* type3, StringParam name3);
 ZeroShared ParameterArray FourParameters(Type* type);
-ZeroShared ParameterArray FourParameters(Type* type,
-                                         StringParam name1,
-                                         StringParam name2,
-                                         StringParam name3,
-                                         StringParam name4);
+ZeroShared ParameterArray
+FourParameters(Type* type, StringParam name1, StringParam name2, StringParam name3, StringParam name4);
 ZeroShared ParameterArray FiveParameters(Type* type);
-ZeroShared ParameterArray FiveParameters(Type* type,
-                                         StringParam name1,
-                                         StringParam name2,
-                                         StringParam name3,
-                                         StringParam name4,
-                                         StringParam name5);
+ZeroShared ParameterArray FiveParameters(
+    Type* type, StringParam name1, StringParam name2, StringParam name3, StringParam name4, StringParam name5);
 
 class ZeroShared LibraryBuilder
 {
@@ -325,14 +303,13 @@ public:
 
   // Add a function to the library and bound type (pass nullptr for thisType if
   // the function is static)
-  Function*
-  AddBoundFunction(BoundType* owner,
-                   StringParam name,
-                   BoundFn function,
-                   const ParameterArray& parameters,
-                   Type* returnType,
-                   FunctionOptions::Flags options,
-                   NativeVirtualInfo nativeVirtual = NativeVirtualInfo());
+  Function* AddBoundFunction(BoundType* owner,
+                             StringParam name,
+                             BoundFn function,
+                             const ParameterArray& parameters,
+                             Type* returnType,
+                             FunctionOptions::Flags options,
+                             NativeVirtualInfo nativeVirtual = NativeVirtualInfo());
 
   // Add a function to the library as an extension of another type (pass nullptr
   // for thisType if the function is static)
@@ -351,9 +328,7 @@ public:
   Function* AddBoundPreConstructor(BoundType* owner, BoundFn function);
 
   // Add a constructor to the library and bound type
-  Function* AddBoundConstructor(BoundType* owner,
-                                BoundFn function,
-                                const ParameterArray& parameters);
+  Function* AddBoundConstructor(BoundType* owner, BoundFn function, const ParameterArray& parameters);
 
   // Add a default constructor to the library and bound type
   Function* AddBoundDefaultConstructor(BoundType* owner, BoundFn function);
@@ -362,36 +337,22 @@ public:
   Function* AddBoundDestructor(BoundType* owner, BoundFn function);
 
   // Add a member to the library and bound type
-  Field* AddBoundField(BoundType* owner,
-                       StringParam name,
-                       Type* type,
-                       size_t offset,
-                       MemberOptions::Flags options);
+  Field* AddBoundField(BoundType* owner, StringParam name, Type* type, size_t offset, MemberOptions::Flags options);
 
   // Add a property to the library and bound type
-  GetterSetter* AddBoundGetterSetter(BoundType* owner,
-                                     StringParam name,
-                                     Type* type,
-                                     BoundFn set,
-                                     BoundFn get,
-                                     MemberOptions::Flags options);
+  GetterSetter* AddBoundGetterSetter(
+      BoundType* owner, StringParam name, Type* type, BoundFn set, BoundFn get, MemberOptions::Flags options);
 
   // Adds an enumeration value to the bound type
   GetterSetter* AddEnumValue(BoundType* owner, StringParam name, Integer value);
 
   // Add a property to the library as an extension of another type
-  GetterSetter* AddExtensionGetterSetter(BoundType* forType,
-                                         StringParam name,
-                                         Type* type,
-                                         BoundFn set,
-                                         BoundFn get,
-                                         MemberOptions::Flags options);
+  GetterSetter* AddExtensionGetterSetter(
+      BoundType* forType, StringParam name, Type* type, BoundFn set, BoundFn get, MemberOptions::Flags options);
 
   // Add a sends event declaration to a type
-  SendsEvent* AddSendsEvent(BoundType* forType,
-                            StringParam name,
-                            BoundType* sentType,
-                            StringParam description = String());
+  SendsEvent*
+  AddSendsEvent(BoundType* forType, StringParam name, BoundType* sentType, StringParam description = String());
 
   // Attempts to instantiate a template (or returns a failure error code)
   InstantiatedTemplate InstantiateTemplate(StringParam baseName,
@@ -400,22 +361,19 @@ public:
 
   // Add a function to the library (pass nullptr for thisType if the function is
   // static)
-  Function*
-  CreateRawFunction(BoundType* owner,
-                    String name,
-                    BoundFn function,
-                    const ParameterArray& parameters,
-                    Type* returnType,
-                    FunctionOptions::Flags options,
-                    NativeVirtualInfo nativeVirtual = NativeVirtualInfo());
+  Function* CreateRawFunction(BoundType* owner,
+                              String name,
+                              BoundFn function,
+                              const ParameterArray& parameters,
+                              Type* returnType,
+                              FunctionOptions::Flags options,
+                              NativeVirtualInfo nativeVirtual = NativeVirtualInfo());
 
   // Add a pre-constructor to the library
   Function* CreateRawPreConstructor(BoundType* owner, BoundFn function);
 
   // Add a constructor to the library
-  Function* CreateRawConstructor(BoundType* owner,
-                                 BoundFn function,
-                                 const ParameterArray& parameters);
+  Function* CreateRawConstructor(BoundType* owner, BoundFn function, const ParameterArray& parameters);
 
   // Add a default constructor to the library
   Function* CreateRawDefaultConstructor(BoundType* owner, BoundFn function);
@@ -424,19 +382,11 @@ public:
   Function* CreateRawDestructor(BoundType* owner, BoundFn function);
 
   // Add a property to the library
-  GetterSetter* CreateRawGetterSetter(BoundType* owner,
-                                      String name,
-                                      Type* type,
-                                      BoundFn set,
-                                      BoundFn get,
-                                      MemberOptions::Flags options);
+  GetterSetter* CreateRawGetterSetter(
+      BoundType* owner, String name, Type* type, BoundFn set, BoundFn get, MemberOptions::Flags options);
 
   // Add a field to the library
-  Field* CreateRawField(BoundType* owner,
-                        String name,
-                        Type* type,
-                        size_t offset,
-                        MemberOptions::Flags options);
+  Field* CreateRawField(BoundType* owner, String name, Type* type, size_t offset, MemberOptions::Flags options);
 
   // Add a variable to the library
   Variable* CreateRawVariable(Function* function, String name);
@@ -461,8 +411,7 @@ public:
 
   // Given a created delegate type, add or merge it into the delegate set (and
   // return the proper type that we should be using...)
-  DelegateType* GetDelegateType(const ParameterArray& parameters,
-                                Type* returnType);
+  DelegateType* GetDelegateType(const ParameterArray& parameters, Type* returnType);
 
   // Adds a callback to the library that will be called any time a user attempts
   // to instantiate a template type with this name
@@ -473,17 +422,13 @@ public:
 
   // Adds a callback to the library that will be called any time a user attempts
   // to instantiate a template type with this name
-  void
-  AddTemplateInstantiator(StringParam baseName,
-                          InstantiateTemplateCallback callback,
-                          const Array<TemplateParameter>& templateParameters,
-                          void* userData);
+  void AddTemplateInstantiator(StringParam baseName,
+                               InstantiateTemplateCallback callback,
+                               const Array<TemplateParameter>& templateParameters,
+                               void* userData);
 
   // Adds a bound type to the library builder
-  BoundType* AddBoundType(StringParam name,
-                          TypeCopyMode::Enum copyMode,
-                          size_t size,
-                          size_t nativeVirtualCount = 0);
+  BoundType* AddBoundType(StringParam name, TypeCopyMode::Enum copyMode, size_t size, size_t nativeVirtualCount = 0);
   BoundType* AddBoundType(StringParam baseName,
                           StringParam fullyQualifiedName,
                           TypeCopyMode::Enum copyMode,
@@ -494,9 +439,7 @@ public:
   // already exist to solve dependency issues, so the library builder cannot
   // 'new' the BoundType itself
   void AddNativeBoundType(BoundType* type);
-  void AddNativeBoundType(BoundType* type,
-                          BoundType* base,
-                          TypeCopyMode::Enum mode);
+  void AddNativeBoundType(BoundType* type, BoundType* base, TypeCopyMode::Enum mode);
 
   // Find a named type by name, or return null
   BoundType* FindBoundType(StringParam name);
@@ -526,9 +469,7 @@ public:
   // uppercased or lowercased depending on the flags If 'None' is specified, the
   // identifier returned will not be modified to be upper/lower If the string is
   // empty, this will return either "empty" or "Empty"
-  static String FixIdentifier(StringParam identifier,
-                              TokenCheck::Flags flags,
-                              char invalidCharacter = '_');
+  static String FixIdentifier(StringParam identifier, TokenCheck::Flags flags, char invalidCharacter = '_');
 
   // A pointer to any data the user wants to attach
   mutable const void* UserData;
@@ -605,33 +546,22 @@ private:
   void BuildTypeDocumentation(BoundType* type, DocumentationType* docType);
 
   // Build documentation for a set of functions
-  void BuildFunctionDocumentation(Array<DocumentationFunction*>& addTo,
-                                  const FunctionMultiMap& functions);
-  void BuildFunctionDocumentation(Array<DocumentationFunction*>& addTo,
-                                  const FunctionArray& functions);
+  void BuildFunctionDocumentation(Array<DocumentationFunction*>& addTo, const FunctionMultiMap& functions);
+  void BuildFunctionDocumentation(Array<DocumentationFunction*>& addTo, const FunctionArray& functions);
 
   // Build documentation for properties and members
-  void BuildPropertyDocumentation(Array<DocumentationProperty*>& addTo,
-                                  const FieldMap& fields);
-  void BuildPropertyDocumentation(Array<DocumentationProperty*>& addTo,
-                                  const GetterSetterMap& properties);
-  void BuildPropertyDocumentation(Array<DocumentationProperty*>& addTo,
-                                  const Property* property);
+  void BuildPropertyDocumentation(Array<DocumentationProperty*>& addTo, const FieldMap& fields);
+  void BuildPropertyDocumentation(Array<DocumentationProperty*>& addTo, const GetterSetterMap& properties);
+  void BuildPropertyDocumentation(Array<DocumentationProperty*>& addTo, const Property* property);
 
   // Builds a Json array of documented constructors
-  void BuildJsonConstructors(JsonBuilder& json,
-                             const Array<DocumentationFunction*>& constructors,
-                             StringParam name);
+  void BuildJsonConstructors(JsonBuilder& json, const Array<DocumentationFunction*>& constructors, StringParam name);
 
   // Builds a Json array of documented functions
-  void BuildJsonMethods(JsonBuilder& json,
-                        const Array<DocumentationFunction*>& functions,
-                        StringParam name);
+  void BuildJsonMethods(JsonBuilder& json, const Array<DocumentationFunction*>& functions, StringParam name);
 
   // Builds a Json array of documented properties
-  void BuildJsonProperties(JsonBuilder& json,
-                           const Array<DocumentationProperty*>& properties,
-                           StringParam name);
+  void BuildJsonProperties(JsonBuilder& json, const Array<DocumentationProperty*>& properties, StringParam name);
 };
 
 namespace ForEachFunctorResult
@@ -646,10 +576,7 @@ enum Enum
 // The functor should return a ForEachFunctorResult::Enum and takes (Property*)
 template <typename Functor>
 ZeroSharedTemplate void
-ForEachExtensionGetterSetter(bool isStatic,
-                             const LibraryArray& libraries,
-                             BoundType* type,
-                             Functor functor)
+ForEachExtensionGetterSetter(bool isStatic, const LibraryArray& libraries, BoundType* type, Functor functor)
 {
   // Loop through all the libraries
   for (size_t i = 0; i < libraries.Size(); ++i)
@@ -678,7 +605,7 @@ ForEachExtensionGetterSetter(bool isStatic,
       // If we got a valid array of properties...
       if (properties != nullptr)
       {
-        ZilchForEach(GetterSetter * property, properties->Values())
+        ZilchForEach (GetterSetter* property, properties->Values())
         {
           if (functor(property) == ForEachFunctorResult::Stop)
             return;
@@ -693,10 +620,8 @@ ForEachExtensionGetterSetter(bool isStatic,
 
 // The functor should return a ForEachFunctorResult::Enum and takes (Function*)
 template <typename Functor>
-ZeroSharedTemplate void ForEachExtensionFunction(bool isStatic,
-                                                 const LibraryArray& libraries,
-                                                 BoundType* type,
-                                                 Functor functor)
+ZeroSharedTemplate void
+ForEachExtensionFunction(bool isStatic, const LibraryArray& libraries, BoundType* type, Functor functor)
 {
   // Loop through all the libraries
   for (size_t i = 0; i < libraries.Size(); ++i)
@@ -720,16 +645,15 @@ ZeroSharedTemplate void ForEachExtensionFunction(bool isStatic,
       if (isStatic)
         functionMultiMap = library->StaticExtensionFunctions.FindPointer(guid);
       else
-        functionMultiMap =
-            library->InstanceExtensionFunctions.FindPointer(guid);
+        functionMultiMap = library->InstanceExtensionFunctions.FindPointer(guid);
 
       // If we got a valid map from the type to the function overloads...
       if (functionMultiMap != nullptr)
       {
         // Walk through all overloads and functions...
-        ZilchForEach(FunctionArray & overloads, functionMultiMap->Values())
+        ZilchForEach (FunctionArray& overloads, functionMultiMap->Values())
         {
-          ZilchForEach(Function * function, overloads.All())
+          ZilchForEach (Function* function, overloads.All())
           {
             if (function->OwningProperty != nullptr)
               continue;
@@ -749,10 +673,8 @@ ZeroSharedTemplate void ForEachExtensionFunction(bool isStatic,
 // The functor should return a bool (true means stop, false means keep going)
 // and takes (Property*)
 template <typename Functor>
-ZeroSharedTemplate void ForEachGetterSetter(bool isStatic,
-                                            const LibraryArray& libraries,
-                                            BoundType* type,
-                                            Functor functor)
+ZeroSharedTemplate void
+ForEachGetterSetter(bool isStatic, const LibraryArray& libraries, BoundType* type, Functor functor)
 {
   // Walk up the base class heirarchy
   BoundType* baseType = type;
@@ -781,10 +703,7 @@ ZeroSharedTemplate void ForEachGetterSetter(bool isStatic,
 // The functor should return a bool (true means stop, false means keep going)
 // and takes (Function*)
 template <typename Functor>
-ZeroSharedTemplate void ForEachFunction(bool isStatic,
-                                        const LibraryArray& libraries,
-                                        BoundType* type,
-                                        Functor functor)
+ZeroSharedTemplate void ForEachFunction(bool isStatic, const LibraryArray& libraries, BoundType* type, Functor functor)
 {
   // Walk up the base class heirarchy
   BoundType* baseType = type;

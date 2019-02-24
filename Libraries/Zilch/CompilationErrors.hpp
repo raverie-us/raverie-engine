@@ -54,18 +54,12 @@ public:
   void RaiseArgs(const CodeLocation& location, int errorCode, va_list args);
 
   // Print out an error message with extra context (one extra location)
-  void Raise(const CodeLocation& location,
-             StringParam extra,
-             const CodeLocation& associatedLocation,
-             int errorCode,
-             ...);
+  void
+  Raise(const CodeLocation& location, StringParam extra, const CodeLocation& associatedLocation, int errorCode, ...);
 
   // Print out an error message with extra context (multiple locations)
-  void Raise(const CodeLocation& location,
-             StringParam extra,
-             const LocationArray& associatedLocations,
-             int errorCode,
-             ...);
+  void
+  Raise(const CodeLocation& location, StringParam extra, const LocationArray& associatedLocations, int errorCode, ...);
 
   // Print out an error message
   void Raise(const CodeLocation& location, int errorCode, ...);

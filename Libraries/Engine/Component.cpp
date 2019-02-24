@@ -10,8 +10,7 @@ DefineTag(Component);
 }
 
 // Component Memory
-Memory::Heap* Component::sHeap =
-    new Memory::Heap("Components", Memory::GetNamedHeap("Objects"));
+Memory::Heap* Component::sHeap = new Memory::Heap("Components", Memory::GetNamedHeap("Objects"));
 
 void* Component::operator new(size_t size)
 {
@@ -154,9 +153,7 @@ void Component::DispatchEvent(StringParam eventId, Event* event)
 }
 
 // Component Handle Manager
-void ComponentHandleManager::Allocate(BoundType* type,
-                                      Handle& handleToInitialize,
-                                      size_t customFlags)
+void ComponentHandleManager::Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags)
 {
   handleToInitialize.Flags |= HandleFlags::NoReferenceCounting;
 
@@ -167,9 +164,7 @@ void ComponentHandleManager::Allocate(BoundType* type,
   data.mComponentType = type;
 }
 
-void ComponentHandleManager::ObjectToHandle(const byte* object,
-                                            BoundType* type,
-                                            Handle& handleToInitialize)
+void ComponentHandleManager::ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize)
 {
   if (object == nullptr)
     return;

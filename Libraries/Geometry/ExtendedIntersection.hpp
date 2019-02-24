@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-bool SupportShapeOverlap(const Intersection::SupportShape& a,
-                         const Intersection::SupportShape& b);
+bool SupportShapeOverlap(const Intersection::SupportShape& a, const Intersection::SupportShape& b);
 
 bool Overlap(Vec3Param point1, Vec3Param point2);
 bool Overlap(Vec3Param point, const Ray& ray);
@@ -181,8 +180,7 @@ bool Overlap(const Tetrahedron& tetrahedron, const Obb& obb);
 bool Overlap(const Tetrahedron& tetrahedron, const Sphere& sphere);
 bool Overlap(const Tetrahedron& tetrahedron, const Triangle& triangle);
 bool Overlap(const Tetrahedron& tetrahedron1, const Tetrahedron& tetrahedron2);
-bool Overlap(const Tetrahedron& tetrahedron,
-             const ConvexMeshShape& supportShape);
+bool Overlap(const Tetrahedron& tetrahedron, const ConvexMeshShape& supportShape);
 bool Overlap(const Tetrahedron& tetrahedron, const SweptTriangle& sweptTri);
 
 bool Overlap(const ConvexMeshShape& supportShape, Vec3Param point);
@@ -194,12 +192,9 @@ bool Overlap(const ConvexMeshShape& supportShape, const Frustum& frustum);
 bool Overlap(const ConvexMeshShape& supportShape, const Obb& obb);
 bool Overlap(const ConvexMeshShape& supportShape, const Sphere& sphere);
 bool Overlap(const ConvexMeshShape& supportShape, const Triangle& triangle);
-bool Overlap(const ConvexMeshShape& supportShape,
-             const Tetrahedron& tetrahedron);
-bool Overlap(const ConvexMeshShape& supportShape1,
-             const ConvexMeshShape& supportShape2);
-bool Overlap(const ConvexMeshShape& supportShape,
-             const SweptTriangle& sweptTri);
+bool Overlap(const ConvexMeshShape& supportShape, const Tetrahedron& tetrahedron);
+bool Overlap(const ConvexMeshShape& supportShape1, const ConvexMeshShape& supportShape2);
+bool Overlap(const ConvexMeshShape& supportShape, const SweptTriangle& sweptTri);
 
 bool Overlap(const SweptTriangle& sweptTri, Vec3Param point);
 bool Overlap(const SweptTriangle& sweptTri, const Aabb& aabb);
@@ -211,8 +206,7 @@ bool Overlap(const SweptTriangle& sweptTri, const Obb& obb);
 bool Overlap(const SweptTriangle& sweptTri, const Sphere& sphere);
 bool Overlap(const SweptTriangle& sweptTri, const Triangle& triangle);
 bool Overlap(const SweptTriangle& sweptTri, const Tetrahedron& tetrahedron);
-bool Overlap(const SweptTriangle& sweptTri,
-             const ConvexMeshShape& supportShape);
+bool Overlap(const SweptTriangle& sweptTri, const ConvexMeshShape& supportShape);
 bool Overlap(const SweptTriangle& sweptTri1, const SweptTriangle& sweptTri2);
 
 } // namespace Zero

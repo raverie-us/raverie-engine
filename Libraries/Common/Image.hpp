@@ -104,23 +104,11 @@ public:
 void CopyImageExpand(Image* dest, Image* source);
 void CopyImage(Image* dest, Image* source);
 void CopyImage(Image* dest, Image* source, int startDestX, int startDestY);
-void CopyImage(Image* dest,
-               Image* source,
-               int startDestX,
-               int startDestY,
-               int sourceX,
-               int sourceY,
-               int sizeX,
-               int sizeY);
+void CopyImage(
+    Image* dest, Image* source, int startDestX, int startDestY, int sourceX, int sourceY, int sizeX, int sizeY);
 
-void FillPixelBorders(Image* image,
-                      IntVec2 topLeft,
-                      IntVec2 bottomRight,
-                      int borderWidth);
-void AddPixelBorders(Image* image,
-                     int frameWidth,
-                     int frameHeight,
-                     int borderWidth);
+void FillPixelBorders(Image* image, IntVec2 topLeft, IntVec2 bottomRight, int borderWidth);
+void AddPixelBorders(Image* image, int frameWidth, int frameHeight, int borderWidth);
 
 // Removed Alpha artifact created by edge transparent pixels when mip mapping.
 void FixAlphaHalo(Image* image);

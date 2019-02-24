@@ -66,11 +66,8 @@ void EditText::ChangeDefinition(BaseDefinition* def)
   // mFont = mDef->mFont;
 }
 
-void EditText::RenderUpdate(ViewBlock& viewBlock,
-                            FrameBlock& frameBlock,
-                            Mat4Param parentTx,
-                            ColorTransform colorTx,
-                            WidgetRect clipRect)
+void EditText::RenderUpdate(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -86,8 +83,7 @@ void EditText::RenderUpdate(ViewBlock& viewBlock,
   Vec2 textSize = mFont->MeasureText(text, (uint)text.SizeInBytes());
   bool needsClipping = textSize.x + mOffset > mSize.x || mOffset < 0.0f;
   if (needsClipping)
-    clipRect = WidgetRect::PointAndSize(Vec2(mWorldTx.m30, mWorldTx.m31),
-                                        Vec2(mSize.x + 1, mSize.y));
+    clipRect = WidgetRect::PointAndSize(Vec2(mWorldTx.m30, mWorldTx.m31), Vec2(mSize.x + 1, mSize.y));
 
   if (mEditEnabled && mHasFocus)
   {
@@ -116,28 +112,15 @@ void EditText::RenderUpdate(ViewBlock& viewBlock,
     Texture* white = TextureManager::FindOrNull("White");
     ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, white);
 
-    frameBlock.mRenderQueues->AddStreamedQuad(viewNode,
-                                              Vec3(pos0, 0),
-                                              Vec3(pos1, 0),
-                                              Vec2(0, 0),
-                                              Vec2(1, 1),
-                                              boxColor);
+    frameBlock.mRenderQueues->AddStreamedQuad(viewNode, Vec3(pos0, 0), Vec3(pos1, 0), Vec2(0, 0), Vec2(1, 1), boxColor);
   }
 
   if (text.SizeInBytes() == 0)
     return;
 
-  ViewNode& viewNode =
-      AddRenderNodes(viewBlock, frameBlock, clipRect, mFont->mTexture);
+  ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, mFont->mTexture);
   FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNode, color);
-  AddTextRange(fontProcessor,
-               mFont,
-               text,
-               textStart,
-               mAlign,
-               Vec2(1, 1),
-               mSize,
-               mClipText);
+  AddTextRange(fontProcessor, mFont, text, textStart, mAlign, Vec2(1, 1), mSize, mClipText);
 }
 
 void EditText::SetText(StringParam text)
@@ -219,8 +202,7 @@ int EditText::CharacterPositionAt(Vec2Param screenPos)
 {
   Vec2 textStart = Vec2(mOffset, 0);
   Vec2 localPos = this->ToLocal(screenPos) - textStart;
-  return mFont->GetPosition(
-      mDisplayText.All(), localPos.x, 1.0f, TextRounding::Nearest);
+  return mFont->GetPosition(mDisplayText.All(), localPos.x, 1.0f, TextRounding::Nearest);
 }
 
 int EditText::MoveEditCaret(Vec2Param screenPos)
@@ -233,8 +215,7 @@ void EditText::MoveCaretNextToken()
 {
   StringIterator begin = mDisplayText.Begin();
   StringIterator currentCaretPos = begin + mCaretPos;
-  StringRange range =
-      mDisplayText.SubString(currentCaretPos, mDisplayText.End());
+  StringRange range = mDisplayText.SubString(currentCaretPos, mDisplayText.End());
 
   // Already at the end of the text
   if (range.Empty())
@@ -376,10 +357,9 @@ void EditText::ReplaceSelection(StringRange text)
   StringIterator displayTextStartIt = mDisplayText.Begin();
   StringIterator selectionStartIt = displayTextStartIt + mSelectionLeftPos;
   StringIterator selectionEndIt = displayTextStartIt + mSelectionRightPos;
-  mDisplayText =
-      BuildString(mDisplayText.SubString(displayTextStartIt, selectionStartIt),
-                  text,
-                  mDisplayText.SubString(selectionEndIt, mDisplayText.End()));
+  mDisplayText = BuildString(mDisplayText.SubString(displayTextStartIt, selectionStartIt),
+                             text,
+                             mDisplayText.SubString(selectionEndIt, mDisplayText.End()));
   // Move the caret to the End() of the pasted text
 
   int newCaretPos = mSelectionLeftPos + text.ComputeRuneCount();
@@ -394,8 +374,7 @@ StringRange EditText::GetSelectedText()
   int selectionSizeInBytes = mSelectionRightPos - mSelectionLeftPos;
   if (mDisplayText.SizeInBytes() && selectionSizeInBytes > 0)
   {
-    return StringRange(mDisplayText.Begin() + mSelectionLeftPos,
-                       mDisplayText.Begin() + mSelectionRightPos);
+    return StringRange(mDisplayText.Begin() + mSelectionLeftPos, mDisplayText.Begin() + mSelectionRightPos);
   }
   else
   {

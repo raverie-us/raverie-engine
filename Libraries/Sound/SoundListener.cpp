@@ -50,11 +50,10 @@ void SoundListener::Initialize(CogInitializer& initializer)
   else
     name = "EditorListener";
 
-  mListenerNode = new ListenerNode(
-      name,
-      Z::gSound->mCounter++,
-      ListenerWorldPositionInfo(
-          mPrevPosition, Math::Vec3(0, 0, 0), Math::ToMatrix3(matrix)));
+  mListenerNode =
+      new ListenerNode(name,
+                       Z::gSound->mCounter++,
+                       ListenerWorldPositionInfo(mPrevPosition, Math::Vec3(0, 0, 0), Math::ToMatrix3(matrix)));
 
   // If not currently active, tell the audio engine
   if (!mActive)
@@ -63,8 +62,8 @@ void SoundListener::Initialize(CogInitializer& initializer)
   mListenerNode->SetAttenuationScale(mAttenuationScale);
 
   // Add to all existing SoundEmitters
-  forRange(SoundEmitter & emitter, mSpace->mEmitters.All())
-      mListenerNode->AddInputNode(emitter.GetOutputNode());
+  forRange (SoundEmitter& emitter, mSpace->mEmitters.All())
+    mListenerNode->AddInputNode(emitter.GetOutputNode());
 
   // Add to the SoundSpace's output
   mSpace->GetInputNode()->AddInputNode(mListenerNode);
@@ -83,18 +82,12 @@ void SoundListener::DebugDraw()
   Vec3 scale = t->GetScale();
   Vec3 axis = Math::TransformNormal(t->GetWorldMatrix(), Vec3::cXAxis);
 
+  gDebugDraw->Add(Debug::Cone(pos, axis, 2.0f, scale.x * 0.4f).Color(Color::Red));
+  gDebugDraw->Add(Debug::Cone(pos, -axis, 2.0f, scale.x * 0.4f).Color(Color::Blue));
   gDebugDraw->Add(
-      Debug::Cone(pos, axis, 2.0f, scale.x * 0.4f).Color(Color::Red));
+      Debug::Text(pos + (axis * 2.0f), scale.x * 0.2f, "R").Color(Color::Red).Centered(true).ViewAligned(true));
   gDebugDraw->Add(
-      Debug::Cone(pos, -axis, 2.0f, scale.x * 0.4f).Color(Color::Blue));
-  gDebugDraw->Add(Debug::Text(pos + (axis * 2.0f), scale.x * 0.2f, "R")
-                      .Color(Color::Red)
-                      .Centered(true)
-                      .ViewAligned(true));
-  gDebugDraw->Add(Debug::Text(pos - (axis * 2.0f), scale.x * 0.2f, "L")
-                      .Color(Color::Blue)
-                      .Centered(true)
-                      .ViewAligned(true));
+      Debug::Text(pos - (axis * 2.0f), scale.x * 0.2f, "L").Color(Color::Blue).Centered(true).ViewAligned(true));
 }
 
 bool SoundListener::GetActive()
@@ -142,8 +135,7 @@ void SoundListener::Update(float invDt)
       mPrevPosition = position;
       mPrevForward = basisZ;
 
-      mListenerNode->SetPositionData(ListenerWorldPositionInfo(
-          position, velocity, Math::ToMatrix3(matrix)));
+      mListenerNode->SetPositionData(ListenerWorldPositionInfo(position, velocity, Math::ToMatrix3(matrix)));
     }
   }
 }

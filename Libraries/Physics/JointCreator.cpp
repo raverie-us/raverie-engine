@@ -4,9 +4,7 @@
 namespace Zero
 {
 
-JointCreator::ConnectionInfo::ConnectionInfo(Cog* obj0,
-                                             Cog* obj1,
-                                             bool worldConnect)
+JointCreator::ConnectionInfo::ConnectionInfo(Cog* obj0, Cog* obj1, bool worldConnect)
 {
   a = obj0;
   b = obj1;
@@ -30,8 +28,7 @@ JointCreator::ConnectionInfo::ConnectionInfo(Cog* obj0,
   }
 }
 
-void JointCreator::ConnectionInfo::SetLocalPoints(Vec3Param localPoint0,
-                                                  Vec3Param localPoint1)
+void JointCreator::ConnectionInfo::SetLocalPoints(Vec3Param localPoint0, Vec3Param localPoint1)
 {
   mBodyRs[0] = localPoint0;
   mBodyRs[1] = localPoint1;
@@ -43,8 +40,7 @@ void JointCreator::ConnectionInfo::SetWorldPoint(Vec3Param worldPoint)
   mBodyRs[1] = Math::TransformPoint(mTransforms[1].Inverted(), worldPoint);
 }
 
-void JointCreator::ConnectionInfo::SetWorldPoints(Vec3Param worldPoint0,
-                                                  Vec3Param worldPoint1)
+void JointCreator::ConnectionInfo::SetWorldPoints(Vec3Param worldPoint0, Vec3Param worldPoint1)
 {
   mBodyRs[0] = Math::TransformPoint(mTransforms[0].Inverted(), worldPoint0);
   mBodyRs[1] = Math::TransformPoint(mTransforms[1].Inverted(), worldPoint1);
@@ -66,32 +62,18 @@ ZilchDefineType(JointCreator, builder, type)
   ZilchBindDefaultConstructor();
   ZeroBindDocumented();
 
-  ZilchBindOverloadedMethod(
-      Create, ZilchInstanceOverload(Cog*, Cog*, Cog*, StringParam));
-  ZilchBindOverloadedMethod(
-      CreateWorldPoints,
-      ZilchInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param));
-  ZilchBindOverloadedMethod(
-      CreateWorldPoints,
-      ZilchInstanceOverload(
-          Cog*, Cog*, Cog*, StringParam, Vec3Param, Vec3Param));
-  ZilchBindOverloadedMethod(
-      CreateLocalPoints,
-      ZilchInstanceOverload(
-          Cog*, Cog*, Cog*, StringParam, Vec3Param, Vec3Param));
-  ZilchBindOverloadedMethod(
-      Create, ZilchInstanceOverload(Cog*, Cog*, Cog*, Archetype*));
-  ZilchBindOverloadedMethod(
-      CreateWorldPoints,
-      ZilchInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param));
-  ZilchBindOverloadedMethod(
-      CreateWorldPoints,
-      ZilchInstanceOverload(
-          Cog*, Cog*, Cog*, Archetype*, Vec3Param, Vec3Param));
-  ZilchBindOverloadedMethod(
-      CreateLocalPoints,
-      ZilchInstanceOverload(
-          Cog*, Cog*, Cog*, Archetype*, Vec3Param, Vec3Param));
+  ZilchBindOverloadedMethod(Create, ZilchInstanceOverload(Cog*, Cog*, Cog*, StringParam));
+  ZilchBindOverloadedMethod(CreateWorldPoints, ZilchInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param));
+  ZilchBindOverloadedMethod(CreateWorldPoints,
+                            ZilchInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param, Vec3Param));
+  ZilchBindOverloadedMethod(CreateLocalPoints,
+                            ZilchInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param, Vec3Param));
+  ZilchBindOverloadedMethod(Create, ZilchInstanceOverload(Cog*, Cog*, Cog*, Archetype*));
+  ZilchBindOverloadedMethod(CreateWorldPoints, ZilchInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param));
+  ZilchBindOverloadedMethod(CreateWorldPoints,
+                            ZilchInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param, Vec3Param));
+  ZilchBindOverloadedMethod(CreateLocalPoints,
+                            ZilchInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param, Vec3Param));
 
   ZilchBindMethod(AddJointLimit);
   ZilchBindMethod(AddJointMotor);
@@ -109,55 +91,42 @@ Cog* JointCreator::Create(Cog* objectA, Cog* objectB, StringParam jointName)
   if (!ObjectsValid(objectA, objectB, jointName))
     return nullptr;
 
-  ConnectionInfo info(
-      objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
+  ConnectionInfo info(objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
   info.SetLocalPoints(Vec3::cZero, Vec3::cZero);
   info.mLength = mLength;
   return AttachInternal(info, jointName);
 }
 
-Cog* JointCreator::CreateWorldPoints(Cog* objectA,
-                                     Cog* objectB,
-                                     StringParam jointName,
-                                     Vec3Param bothWorldPoints)
+Cog* JointCreator::CreateWorldPoints(Cog* objectA, Cog* objectB, StringParam jointName, Vec3Param bothWorldPoints)
 {
   if (!ObjectsValid(objectA, objectB, jointName))
     return nullptr;
 
-  ConnectionInfo info(
-      objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
+  ConnectionInfo info(objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
   info.SetWorldPoint(bothWorldPoints);
   info.mLength = mLength;
   return AttachInternal(info, jointName);
 }
 
-Cog* JointCreator::CreateWorldPoints(Cog* objectA,
-                                     Cog* objectB,
-                                     StringParam jointName,
-                                     Vec3Param worldPointA,
-                                     Vec3Param worldPointB)
+Cog* JointCreator::CreateWorldPoints(
+    Cog* objectA, Cog* objectB, StringParam jointName, Vec3Param worldPointA, Vec3Param worldPointB)
 {
   if (!ObjectsValid(objectA, objectB, jointName))
     return nullptr;
 
-  ConnectionInfo info(
-      objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
+  ConnectionInfo info(objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
   info.SetWorldPoints(worldPointA, worldPointB);
   info.mLength = mLength;
   return AttachInternal(info, jointName);
 }
 
-Cog* JointCreator::CreateLocalPoints(Cog* objectA,
-                                     Cog* objectB,
-                                     StringParam jointName,
-                                     Vec3Param localPointA,
-                                     Vec3Param localPointB)
+Cog* JointCreator::CreateLocalPoints(
+    Cog* objectA, Cog* objectB, StringParam jointName, Vec3Param localPointA, Vec3Param localPointB)
 {
   if (!ObjectsValid(objectA, objectB, jointName))
     return nullptr;
 
-  ConnectionInfo info(
-      objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
+  ConnectionInfo info(objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
   info.SetLocalPoints(localPointA, localPointB);
   info.mLength = mLength;
   return AttachInternal(info, jointName);
@@ -169,66 +138,51 @@ Cog* JointCreator::Create(Cog* objectA, Cog* objectB, Archetype* jointArchetype)
   if (!ObjectsValid(objectA, objectB, jointName))
     return nullptr;
 
-  ConnectionInfo info(
-      objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
+  ConnectionInfo info(objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
   info.SetLocalPoints(Vec3::cZero, Vec3::cZero);
   info.mLength = mLength;
   return AttachInternal(info, jointName, jointArchetype);
 }
 
-Cog* JointCreator::CreateWorldPoints(Cog* objectA,
-                                     Cog* objectB,
-                                     Archetype* jointArchetype,
-                                     Vec3Param bothWorldPoints)
+Cog* JointCreator::CreateWorldPoints(Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param bothWorldPoints)
 {
   String jointName;
   if (!ObjectsValid(objectA, objectB, jointName))
     return nullptr;
 
-  ConnectionInfo info(
-      objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
+  ConnectionInfo info(objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
   info.SetWorldPoint(bothWorldPoints);
   info.mLength = mLength;
   return AttachInternal(info, jointName, jointArchetype);
 }
 
-Cog* JointCreator::CreateWorldPoints(Cog* objectA,
-                                     Cog* objectB,
-                                     Archetype* jointArchetype,
-                                     Vec3Param worldPointA,
-                                     Vec3Param worldPointB)
+Cog* JointCreator::CreateWorldPoints(
+    Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param worldPointA, Vec3Param worldPointB)
 {
   String jointName;
   if (!ObjectsValid(objectA, objectB, jointName))
     return nullptr;
 
-  ConnectionInfo info(
-      objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
+  ConnectionInfo info(objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
   info.SetWorldPoints(worldPointA, worldPointB);
   info.mLength = mLength;
   return AttachInternal(info, jointName, jointArchetype);
 }
 
-Cog* JointCreator::CreateLocalPoints(Cog* objectA,
-                                     Cog* objectB,
-                                     Archetype* jointArchetype,
-                                     Vec3Param localPointA,
-                                     Vec3Param localPointB)
+Cog* JointCreator::CreateLocalPoints(
+    Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param localPointA, Vec3Param localPointB)
 {
   String jointName;
   if (!ObjectsValid(objectA, objectB, jointName))
     return nullptr;
 
-  ConnectionInfo info(
-      objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
+  ConnectionInfo info(objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
   info.SetLocalPoints(localPointA, localPointB);
   info.mLength = mLength;
   return AttachInternal(info, jointName, jointArchetype);
 }
 
-Cog* JointCreator::AttachInternal(ConnectionInfo& info,
-                                  StringParam jointName,
-                                  Archetype* archetype)
+Cog* JointCreator::AttachInternal(ConnectionInfo& info, StringParam jointName, Archetype* archetype)
 {
   ConfigureInfo(info);
   Cog* cog = CreateJoint(jointName, info, archetype);
@@ -361,8 +315,7 @@ bool JointCreator::GetAttachToCommonParent() const
 
 void JointCreator::SetAttachToCommonParent(bool attachToCommonParent)
 {
-  mFlags.SetState(JointCreatorFlags::AttachToCommonParent,
-                  attachToCommonParent);
+  mFlags.SetState(JointCreatorFlags::AttachToCommonParent, attachToCommonParent);
 }
 
 bool JointCreator::ObjectsValid(Cog* a, Cog* b, StringParam jointName)
@@ -407,10 +360,8 @@ void JointCreator::ConfigureInfo(ConnectionInfo& info)
   }
 
   // Get the world points
-  info.mWorldPoints[0] =
-      Math::TransformPoint(info.mTransforms[0], info.mBodyRs[0]);
-  info.mWorldPoints[1] =
-      Math::TransformPoint(info.mTransforms[1], info.mBodyRs[1]);
+  info.mWorldPoints[0] = Math::TransformPoint(info.mTransforms[0], info.mBodyRs[0]);
+  info.mWorldPoints[1] = Math::TransformPoint(info.mTransforms[1], info.mBodyRs[1]);
 
   // If this was a world connection, set the world's points
   // to the world point on object A
@@ -429,9 +380,7 @@ void JointCreator::ConfigureInfo(ConnectionInfo& info)
     info.mLength = length;
 }
 
-Cog* JointCreator::CreateJoint(StringParam fileName,
-                               ConnectionInfo& info,
-                               Archetype* archetype)
+Cog* JointCreator::CreateJoint(StringParam fileName, ConnectionInfo& info, Archetype* archetype)
 {
   // Create an object link, we dynamically add the appropriate joint type later
   Space* space = info.a->GetSpace();
@@ -448,9 +397,7 @@ Cog* JointCreator::CreateJoint(StringParam fileName,
   ObjectLink* objLink = cog->has(ObjectLink);
   if (objLink == nullptr)
   {
-    ErrorIf(true,
-            "Joint data file %s did not contain a ObjectLink.",
-            fileName.c_str());
+    ErrorIf(true, "Joint data file %s did not contain a ObjectLink.", fileName.c_str());
     return nullptr;
   }
 
@@ -494,11 +441,11 @@ void JointCreator::SetBasicProperties(Joint* joint)
   joint->SetAutoSnaps(mFlags.IsSet(JointCreatorFlags::AutoSnaps));
 }
 
-#define JointType(type)                                                        \
-  case JointEnums::type##Type:                                                 \
-  {                                                                            \
-    CallJointFunctions<type>(joint, info);                                     \
-    break;                                                                     \
+#define JointType(type)                                                                                                \
+  case JointEnums::type##Type:                                                                                         \
+  {                                                                                                                    \
+    CallJointFunctions<type>(joint, info);                                                                             \
+    break;                                                                                                             \
   }
 
 void JointCreator::CallJointFunctions(Joint* joint, ConnectionInfo& info)
@@ -518,10 +465,8 @@ void JointCreator::SetPointsAtLength(ConnectionInfo& info)
 {
   info.mWorldPoints[0] += mAxis * real(.5) * info.mLength;
   info.mWorldPoints[1] -= mAxis * real(.5) * info.mLength;
-  info.mBodyRs[0] = Math::TransformPoint(info.mTransforms[0].Inverted(),
-                                         info.mWorldPoints[0]);
-  info.mBodyRs[1] = Math::TransformPoint(info.mTransforms[1].Inverted(),
-                                         info.mWorldPoints[1]);
+  info.mBodyRs[0] = Math::TransformPoint(info.mTransforms[0].Inverted(), info.mWorldPoints[0]);
+  info.mBodyRs[1] = Math::TransformPoint(info.mTransforms[1].Inverted(), info.mWorldPoints[1]);
 }
 
 void JointCreator::FixPoints(Joint* joint, ConnectionInfo& info)

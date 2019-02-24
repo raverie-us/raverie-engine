@@ -17,9 +17,7 @@ public:
 
   /// Connection invokes the given delegate when sender dispatches the specified
   /// event.
-  static void Connect(Object* sender,
-                      StringParam eventId,
-                      DelegateParam receiverDelegate);
+  static void Connect(Object* sender, StringParam eventId, DelegateParam receiverDelegate);
   /// Removes specified event connection,
   /// if connection delegate was a component method then receiver object is just
   /// the component.
@@ -50,9 +48,7 @@ public:
 class ZilchScriptConnection : public EventConnection
 {
 public:
-  ZilchScriptConnection(EventDispatcher* dispatcher,
-                        StringParam eventId,
-                        DelegateParam delagate);
+  ZilchScriptConnection(EventDispatcher* dispatcher, StringParam eventId, DelegateParam delagate);
   ~ZilchScriptConnection();
 
   void RaiseError(StringParam message) override;

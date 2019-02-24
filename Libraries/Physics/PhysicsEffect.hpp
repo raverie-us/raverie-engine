@@ -7,15 +7,8 @@ namespace Zero
 /// Most of these flags are internally used to store what the effect is
 /// operating on. The Active and WakeUpOnChange flags are exposed as base class
 /// properties though.
-DeclareBitField8(EffectFlags,
-                 Active,
-                 WakeUpOnChange,
-                 DebugDraw,
-                 SpaceEffect,
-                 RegionEffect,
-                 BodyEffect,
-                 ColliderEffect,
-                 LevelEffect);
+DeclareBitField8(
+    EffectFlags, Active, WakeUpOnChange, DebugDraw, SpaceEffect, RegionEffect, BodyEffect, ColliderEffect, LevelEffect);
 
 /// All physics effect types. Exposed on each physics effect to denote
 /// what kind of effect it is. Also used in IgnoreSpaceEffects.
@@ -77,8 +70,7 @@ public:
   // Helpers
   Vec3 TransformLocalDirectionToWorld(Vec3Param localDir) const;
   Vec3 TransformLocalPointToWorld(Vec3Param localPoint) const;
-  void TransformLocalDirectionAndPointToWorld(Vec3& localPoint,
-                                              Vec3& localDir) const;
+  void TransformLocalDirectionAndPointToWorld(Vec3& localPoint, Vec3& localDir) const;
 
   void AddEffect();
   void RemoveEffect();

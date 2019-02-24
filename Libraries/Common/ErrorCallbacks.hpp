@@ -9,8 +9,7 @@ namespace Math
 struct EmptyErrorCallback
 {
   template <typename MatrixType, typename VectorType>
-  void
-  operator()(MatrixType& A, VectorType& b, VectorType& x0, real convergence)
+  void operator()(MatrixType& A, VectorType& b, VectorType& x0, real convergence)
   {
   }
 };
@@ -27,8 +26,7 @@ struct SimpleErrorCallback
   }
 
   template <typename MatrixType, typename VectorType>
-  void
-  operator()(MatrixType& A, VectorType& b, VectorType& x0, real convergence)
+  void operator()(MatrixType& A, VectorType& b, VectorType& x0, real convergence)
   {
     mSuccessfullySolved = false;
     mConvergence = convergence;

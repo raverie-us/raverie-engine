@@ -18,8 +18,7 @@ ZilchDefineType(Model, builder, type)
 void Model::Initialize(CogInitializer& initializer)
 {
   Graphical::Initialize(initializer);
-  ConnectThisTo(
-      MeshManager::GetInstance(), Events::ResourceModified, OnMeshModified);
+  ConnectThisTo(MeshManager::GetInstance(), Events::ResourceModified, OnMeshModified);
 }
 
 void Model::Serialize(Serializer& stream)
@@ -45,8 +44,7 @@ void Model::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
   frameNode.mTextureRenderData = nullptr;
 
   frameNode.mLocalToWorld = mTransform->GetWorldMatrix();
-  frameNode.mLocalToWorldNormal = Math::BuildTransform(
-      mTransform->GetWorldRotation(), mTransform->GetWorldScale());
+  frameNode.mLocalToWorldNormal = Math::BuildTransform(mTransform->GetWorldRotation(), mTransform->GetWorldScale());
   frameNode.mLocalToWorldNormal.Invert().Transpose();
 
   frameNode.mObjectWorldPosition = mTransform->GetWorldTranslation();
@@ -54,17 +52,13 @@ void Model::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
   frameNode.mBoneMatrixRange = IndexRange(0, 0);
 }
 
-void Model::ExtractViewData(ViewNode& viewNode,
-                            ViewBlock& viewBlock,
-                            FrameBlock& frameBlock)
+void Model::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
 
   viewNode.mLocalToView = viewBlock.mWorldToView * frameNode.mLocalToWorld;
-  viewNode.mLocalToViewNormal =
-      Math::ToMatrix3(viewBlock.mWorldToView) * frameNode.mLocalToWorldNormal;
-  viewNode.mLocalToPerspective =
-      viewBlock.mViewToPerspective * viewNode.mLocalToView;
+  viewNode.mLocalToViewNormal = Math::ToMatrix3(viewBlock.mWorldToView) * frameNode.mLocalToWorldNormal;
+  viewNode.mLocalToPerspective = viewBlock.mViewToPerspective * viewNode.mLocalToView;
 }
 
 bool Model::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)

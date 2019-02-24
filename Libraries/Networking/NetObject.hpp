@@ -72,8 +72,7 @@ public:
 
   /// Reads identification information (such as IsAbsent, ReplicaId, IsCloned,
   /// IsEmplaced, EmplaceContext, and EmplaceId) from the replica stream.
-  void ReadIdentificationInfo(const ReplicaStream* replicaStream,
-                              bool& isAbsent);
+  void ReadIdentificationInfo(const ReplicaStream* replicaStream, bool& isAbsent);
   /// Reads channel data (such as forward and reverse ReplicaChannels) from the
   /// replica stream.
   void ReadChannelData(const ReplicaStream* replicaStream);
@@ -217,8 +216,7 @@ public:
   bool WasCogInitialized() const;
 
   /// Sets the initialization level resource ID name.
-  void
-  SetInitializationLevelResourceIdName(const String& initLevelResourceIdName);
+  void SetInitializationLevelResourceIdName(const String& initLevelResourceIdName);
   /// Returns the initialization level resource ID name (if created as part of a
   /// level initialization), else String().
   const String& GetInitializationLevelResourceIdName() const;
@@ -264,8 +262,7 @@ public:
 
   /// [Client/Server] Returns true if the specified net property already belongs
   /// to a net channel, else false.
-  bool DoesThisNetPropertyAlreadyBelongToAChannel(
-      Component* component, StringParam propertyName) const;
+  bool DoesThisNetPropertyAlreadyBelongToAChannel(Component* component, StringParam propertyName) const;
 
   /// [Client/Server] Returns true if the net object has the specified net
   /// channel, else false.
@@ -279,8 +276,7 @@ public:
   /// (Must not differ between client/server peers!)
   /// Returns the net channel if successful, else nullptr (a net channel of that
   /// name already exists).
-  NetChannel* AddNetChannel(const String& netChannelName,
-                            NetChannelConfig* netChannelConfig = nullptr);
+  NetChannel* AddNetChannel(const String& netChannelName, NetChannelConfig* netChannelConfig = nullptr);
 
   /// [Client/Server] Adds the net property to the specified net channel (will
   /// be added if it does not already exist). (Cannot be modified after net
@@ -405,9 +401,7 @@ public:
 
   /// Dispatches the net event on the net object for the local peer and for the
   /// remote peer. In Offline mode, this calls DispatchLocal only.
-  void DispatchLocalAndRemote(StringParam eventId,
-                              Event* event,
-                              NetPeerId netPeerId);
+  void DispatchLocalAndRemote(StringParam eventId, Event* event, NetPeerId netPeerId);
 
   /// Dispatches the net event on the net object for the local peer and for all
   /// remote peers. In Offline mode, this calls DispatchLocal only.
@@ -433,35 +427,29 @@ public:
   bool HasNetPropertyInfo(BoundType* componentType, StringParam propertyName);
 
   /// Returns the net property info if it has been added, else nullptr.
-  NetPropertyInfo* GetNetPropertyInfo(BoundType* componentType,
-                                      StringParam propertyName);
+  NetPropertyInfo* GetNetPropertyInfo(BoundType* componentType, StringParam propertyName);
 
   /// Adds a net property info.
   /// Must specify a supported property by name defined in the given component.
   /// Returns the added net property info, else nullptr.
-  NetPropertyInfo* AddNetPropertyInfo(BoundType* componentType,
-                                      StringParam propertyName);
+  NetPropertyInfo* AddNetPropertyInfo(BoundType* componentType, StringParam propertyName);
 
   /// Removes a net property info if it was added.
-  void RemoveNetPropertyInfo(BoundType* componentType,
-                             StringParam propertyName);
+  void RemoveNetPropertyInfo(BoundType* componentType, StringParam propertyName);
 
   // Data
-  String
-      mInitLevelResourceIdName; ///< Initialization level resource ID name (if
-                                ///< created as part of a level initialization).
-  bool mIsAncestor; ///< Is an ancestor? (Original network object archetype
-                    ///< hierarchy root?).
-  FamilyTreeId
-      mFamilyTreeId; ///< [Client/Server] Family tree ID this net object belongs
-                     ///< to (either as an ancestor or descendant).
-  bool mIsOnline; ///< Is online? (Between the NetObjectOnline/Offline scope?).
-  NetUserId mNetUserOwnerUserId; ///< User ID of our net user owner.
-  HandleOf<NetChannelConfig>
-      mAutomaticChannel; ///< Automatic net channel configuration resource
-                         ///< applied to net properties by default.
-  NetPropertyInfoArray mNetPropertyInfos; ///< Net property infos added through
-                                          ///< the property grid.
+  String mInitLevelResourceIdName;              ///< Initialization level resource ID name (if
+                                                ///< created as part of a level initialization).
+  bool mIsAncestor;                             ///< Is an ancestor? (Original network object archetype
+                                                ///< hierarchy root?).
+  FamilyTreeId mFamilyTreeId;                   ///< [Client/Server] Family tree ID this net object belongs
+                                                ///< to (either as an ancestor or descendant).
+  bool mIsOnline;                               ///< Is online? (Between the NetObjectOnline/Offline scope?).
+  NetUserId mNetUserOwnerUserId;                ///< User ID of our net user owner.
+  HandleOf<NetChannelConfig> mAutomaticChannel; ///< Automatic net channel configuration resource
+                                                ///< applied to net properties by default.
+  NetPropertyInfoArray mNetPropertyInfos;       ///< Net property infos added through
+                                                ///< the property grid.
 };
 
 //                               EditInGameFilter //

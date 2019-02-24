@@ -5,8 +5,8 @@ namespace Zero
 {
 
 // All Components need to call this in their meta initialization
-#define ZeroBindComponent()                                                    \
-  ZilchBindDefaultConstructor();                                               \
+#define ZeroBindComponent()                                                                                            \
+  ZilchBindDefaultConstructor();                                                                                       \
   ZilchBindDestructor();
 
 // Meta Resource

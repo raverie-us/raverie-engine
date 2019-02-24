@@ -47,8 +47,7 @@ size_t Base64Encoder::ComputeSize(size_t length)
 
 char Base64Encoder::EncodeValue(char value)
 {
-  static const char* Encoding =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+  static const char* Encoding = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
   if (value > 63)
     return '=';

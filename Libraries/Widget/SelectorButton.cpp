@@ -21,12 +21,9 @@ ZilchDefineType(SelectorButton, builder, type)
 {
 }
 
-SelectorButton::SelectorButton(Composite* parent) :
-    Composite(parent),
-    mAllowSelect(true)
+SelectorButton::SelectorButton(Composite* parent) : Composite(parent), mAllowSelect(true)
 {
-  SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Pixels(2, 2), Thickness::cZero));
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(2, 2), Thickness::cZero));
 
   mDataSource = nullptr;
   mSelectedItem = 0;
@@ -147,8 +144,7 @@ void SelectorButton::OnMouseHover(MouseEvent* event)
       {
         mToolTip.SafeDestroy();
         mToolTip = new ToolTip(this);
-        mToolTip->SetTextAndPlace(toolTipText.ToString(),
-                                  this->GetScreenRect());
+        mToolTip->SetTextAndPlace(toolTipText.ToString(), this->GetScreenRect());
       }
 
       break;
@@ -165,10 +161,8 @@ void SelectorButton::SelectButton(TextButton* button)
 {
   DeselectAll();
   button->mBackgroundColor = ToByteColor(SelectorButtonUi::SelectedColor);
-  button->mBackgroundHoverColor =
-      ToByteColor(SelectorButtonUi::SelectedHighlightColor);
-  button->mBackgroundClickedColor =
-      ToByteColor(SelectorButtonUi::SelectedClickedColor);
+  button->mBackgroundHoverColor = ToByteColor(SelectorButtonUi::SelectedHighlightColor);
+  button->mBackgroundClickedColor = ToByteColor(SelectorButtonUi::SelectedClickedColor);
   button->mButtonText->SetColor(SelectorButtonUi::SelectedTextColor);
   button->MarkAsNeedsUpdate();
 
@@ -178,10 +172,8 @@ void SelectorButton::SelectButton(TextButton* button)
 void SelectorButton::DeSelectButton(TextButton* button)
 {
   button->mBackgroundColor = ToByteColor(SelectorButtonUi::DefaultColor);
-  button->mBackgroundHoverColor =
-      ToByteColor(SelectorButtonUi::DefaultHighlightColor);
-  button->mBackgroundClickedColor =
-      ToByteColor(SelectorButtonUi::DefaultClickedColor);
+  button->mBackgroundHoverColor = ToByteColor(SelectorButtonUi::DefaultHighlightColor);
+  button->mBackgroundClickedColor = ToByteColor(SelectorButtonUi::DefaultClickedColor);
   button->mButtonText->SetColor(SelectorButtonUi::DefaultTextColor);
   button->MarkAsNeedsUpdate();
 }

@@ -20,8 +20,7 @@ public:
   void CacheWorldValues() override;
   void ComputeWorldAabbInternal() override;
   real ComputeWorldVolumeInternal() override;
-  void ComputeLocalInverseInertiaTensor(real mass,
-                                        Mat3Ref localInvInertia) override;
+  void ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia) override;
   void Support(Vec3Param direction, Vec3Ptr support) const override;
 
   /// The half size (from the center to the upper-right corner) on each axis of

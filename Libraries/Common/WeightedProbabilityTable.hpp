@@ -106,8 +106,7 @@ struct ZeroSharedTemplate WeightedProbabilityTable
     // we need for this algorithm.
     for (uint i = 0; i < count; ++i)
     {
-      mItems[i].mWeightedProbability =
-          count * mItems[i].mProbability / mTotalProbability;
+      mItems[i].mWeightedProbability = count * mItems[i].mProbability / mTotalProbability;
       if (mItems[i].mWeightedProbability < 1)
         smallItems.PushBack(i);
       else
@@ -131,9 +130,7 @@ struct ZeroSharedTemplate WeightedProbabilityTable
       // so recompute what portion remains (could do large -= small,
       // but (large + small) - 1 is apparently more numerically stable.
       mItems[largeIndex].mWeightedProbability =
-          (mItems[largeIndex].mWeightedProbability +
-           mItems[smallIndex].mWeightedProbability) -
-          1;
+          (mItems[largeIndex].mWeightedProbability + mItems[smallIndex].mWeightedProbability) - 1;
       // now we have to check to see if the large item is still large or not,
       // put it in the correct bucket
       if (mItems[largeIndex].mWeightedProbability < 1)
@@ -184,8 +181,7 @@ struct ZeroSharedTemplate WeightedProbabilityTable
   /// index of the items that was rolled on a weighted die.
   uint SampleIndex(float random1, float random2)
   {
-    ErrorIf(random1 >= 1.0f || random2 >= 1.0f,
-            "random value passed in was not in the range of [0,1).");
+    ErrorIf(random1 >= 1.0f || random2 >= 1.0f, "random value passed in was not in the range of [0,1).");
     uint dieIndex = static_cast<uint>(random1 * Size());
     return SampleIndex(dieIndex, random2);
   }

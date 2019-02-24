@@ -32,8 +32,7 @@ int GetCardinalAxis(Location::Enum location)
   case Location::BottomCenter:
     return 1;
   default:
-    DoNotifyException("Location not supported.",
-                      "The given location is not a cardinal axis");
+    DoNotifyException("Location not supported.", "The given location is not a cardinal axis");
     return -1;
   }
 }
@@ -132,11 +131,7 @@ Thickness::Thickness() : Left(0), Top(0), Right(0), Bottom(0)
 {
 }
 
-Thickness::Thickness(float splat) :
-    Left(splat),
-    Top(splat),
-    Right(splat),
-    Bottom(splat)
+Thickness::Thickness(float splat) : Left(splat), Top(splat), Right(splat), Bottom(splat)
 {
 }
 
@@ -148,11 +143,7 @@ Thickness::Thickness(float left, float top, float right, float bottom) :
 {
 }
 
-Thickness::Thickness(Vec4 vector) :
-    Left(vector.x),
-    Top(vector.y),
-    Right(vector.z),
-    Bottom(vector.w)
+Thickness::Thickness(Vec4 vector) : Left(vector.x), Top(vector.y), Right(vector.z), Bottom(vector.w)
 {
 }
 
@@ -164,11 +155,7 @@ Thickness::Thickness(float leftRight, float topBottom) :
 {
 }
 
-Thickness::Thickness(Vec2 vector) :
-    Left(vector.x),
-    Top(vector.y),
-    Right(vector.x),
-    Bottom(vector.y)
+Thickness::Thickness(Vec2 vector) : Left(vector.x), Top(vector.y), Right(vector.x), Bottom(vector.y)
 {
 }
 
@@ -179,13 +166,11 @@ Thickness Thickness::All(float amount)
 
 Thickness Thickness::operator+(const Thickness& rhs)
 {
-  return Thickness(
-      Left + rhs.Left, Top + rhs.Top, Right + rhs.Right, Bottom + rhs.Bottom);
+  return Thickness(Left + rhs.Left, Top + rhs.Top, Right + rhs.Right, Bottom + rhs.Bottom);
 }
 
 // Ui Rect
-const Rectangle Rectangle::cZero =
-    Rectangle::CenterAndSize(Vec2(0, 0), Vec2(0, 0));
+const Rectangle Rectangle::cZero = Rectangle::CenterAndSize(Vec2(0, 0), Vec2(0, 0));
 
 ZilchDefineType(Rectangle, builder, type)
 {
@@ -195,24 +180,17 @@ ZilchDefineType(Rectangle, builder, type)
   ZilchBindFieldProperty(Max);
   ZilchBindGetterProperty(Size);
   ZilchBindMethod(SetSize);
-  ZilchBindOverloadedMethod(ResizeToPoint,
-                            ZilchInstanceOverload(void, Location::Enum, float));
-  ZilchBindOverloadedMethod(
-      ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, Vec2Param));
-  ZilchBindOverloadedMethod(
-      ResizeToPoint,
-      ZilchInstanceOverload(void, Location::Enum, Vec2Param, Vec2Param));
+  ZilchBindOverloadedMethod(ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, float));
+  ZilchBindOverloadedMethod(ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, Vec2Param));
+  ZilchBindOverloadedMethod(ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, Vec2Param, Vec2Param));
   ZilchBindMethod(Expand);
 
   ZilchBindOverloadedMethod(Transform, ZilchInstanceOverload(void, Mat2Param));
   ZilchBindOverloadedMethod(Transform, ZilchInstanceOverload(void, Mat3Param));
   ZilchBindOverloadedMethod(Transform, ZilchInstanceOverload(void, Mat4Param));
-  ZilchBindOverloadedMethod(Transformed,
-                            ZilchConstInstanceOverload(Rectangle, Mat2Param));
-  ZilchBindOverloadedMethod(Transformed,
-                            ZilchConstInstanceOverload(Rectangle, Mat3Param));
-  ZilchBindOverloadedMethod(Transformed,
-                            ZilchConstInstanceOverload(Rectangle, Mat4Param));
+  ZilchBindOverloadedMethod(Transformed, ZilchConstInstanceOverload(Rectangle, Mat2Param));
+  ZilchBindOverloadedMethod(Transformed, ZilchConstInstanceOverload(Rectangle, Mat3Param));
+  ZilchBindOverloadedMethod(Transformed, ZilchConstInstanceOverload(Rectangle, Mat4Param));
 
   ZilchBindGetterSetterProperty(TopLeft);
   ZilchBindGetterSetterProperty(TopRight);
@@ -225,10 +203,8 @@ ZilchDefineType(Rectangle, builder, type)
   ZilchBindGetterSetterProperty(Top);
   ZilchBindGetterSetterProperty(Bottom);
 
-  ZilchBindOverloadedMethod(Contains,
-                            ZilchConstInstanceOverload(bool, Vec2Param));
-  ZilchBindOverloadedMethod(Contains,
-                            ZilchConstInstanceOverload(bool, RectangleParam));
+  ZilchBindOverloadedMethod(Contains, ZilchConstInstanceOverload(bool, Vec2Param));
+  ZilchBindOverloadedMethod(Contains, ZilchConstInstanceOverload(bool, RectangleParam));
   ZilchBindMethodAs(Overlap, "Overlaps");
 
   Zilch::Function* overlapFn = ZilchBindMethodAs(Overlap, "Overlap");
@@ -238,11 +214,9 @@ ZilchDefineType(Rectangle, builder, type)
   ZilchBindMethod(RemoveThickness);
 
   ZilchBindMethod(GetCardinalLocation);
-  ZilchBindOverloadedMethod(SetLocation,
-                            ZilchInstanceOverload(void, Location::Enum, float));
+  ZilchBindOverloadedMethod(SetLocation, ZilchInstanceOverload(void, Location::Enum, float));
   ZilchBindMethod(GetLocation);
-  ZilchBindOverloadedMethod(
-      SetLocation, ZilchInstanceOverload(void, Location::Enum, Vec2Param));
+  ZilchBindOverloadedMethod(SetLocation, ZilchInstanceOverload(void, Location::Enum, Vec2Param));
 
   type->ToStringFunction = Zilch::BoundTypeToGlobalToString<Rectangle>;
 }
@@ -288,15 +262,7 @@ void Rectangle::Translate(Vec2Param translation)
 
 void Rectangle::Transform(Mat2Param transform)
 {
-  Mat3 mat3(transform.m00,
-            transform.m01,
-            0,
-            transform.m10,
-            transform.m11,
-            0,
-            0,
-            0,
-            1);
+  Mat3 mat3(transform.m00, transform.m01, 0, transform.m10, transform.m11, 0, 0, 0, 1);
 
   Transform(mat3);
 }
@@ -427,8 +393,7 @@ void Rectangle::ResizeToPoint(Location::Enum location, float position)
   }
   default:
   {
-    DoNotifyException("Location not supported.",
-                      "The given location is not a cardinal axis");
+    DoNotifyException("Location not supported.", "The given location is not a cardinal axis");
   }
   }
 }
@@ -438,9 +403,7 @@ void Rectangle::ResizeToPoint(Location::Enum location, Vec2Param position)
   ResizeToPoint(location, position, Vec2::cZero);
 }
 
-void Rectangle::ResizeToPoint(Location::Enum location,
-                              Vec2Param position,
-                              Vec2Param minSize)
+void Rectangle::ResizeToPoint(Location::Enum location, Vec2Param position, Vec2Param minSize)
 {
   switch (location)
   {
@@ -519,14 +482,12 @@ bool Rectangle::Contains(Vec2Param point) const
 
 bool Rectangle::Contains(RectangleParam other) const
 {
-  return (Min.x <= other.Min.x) && (Min.y <= other.Min.y) &&
-         (Max.x >= other.Max.x) && (Max.y >= other.Max.y);
+  return (Min.x <= other.Min.x) && (Min.y <= other.Min.y) && (Max.x >= other.Max.x) && (Max.y >= other.Max.y);
 }
 
 bool Rectangle::Overlap(RectangleParam other) const
 {
-  bool noOverlap = (Min.x > other.Max.x) || (Min.y > other.Max.y) ||
-                   (other.Min.x > Max.x) || (other.Min.y > Max.y);
+  bool noOverlap = (Min.x > other.Max.x) || (Min.y > other.Max.y) || (other.Min.x > Max.x) || (other.Min.y > Max.y);
 
   return !noOverlap;
 }
@@ -642,8 +603,7 @@ float Rectangle::GetCardinalLocation(Location::Enum location)
   case Location::BottomCenter:
     return GetBottom();
   default:
-    DoNotifyException("Location not supported.",
-                      "Only cardinal axes are supported.");
+    DoNotifyException("Location not supported.", "Only cardinal axes are supported.");
   }
 
   return 0.0f;
@@ -674,8 +634,7 @@ void Rectangle::SetLocation(Location::Enum location, float value)
     break;
   }
   default:
-    DoNotifyException("Location not supported.",
-                      "Only cardinal axes are supported.");
+    DoNotifyException("Location not supported.", "Only cardinal axes are supported.");
   }
 }
 
@@ -717,8 +676,7 @@ void Rectangle::SetLocation(Location::Enum location, Vec2Param value)
     break;
   }
   default:
-    DoNotifyException("Location not supported.",
-                      "Only non-cardinal axes are supported.");
+    DoNotifyException("Location not supported.", "Only non-cardinal axes are supported.");
   }
 }
 

@@ -47,9 +47,7 @@ LinearParticleAnimator::~LinearParticleAnimator()
   AnimatorList::Unlink(this);
 }
 
-void LinearParticleAnimator::Animate(ParticleList* particleList,
-                                     float dt,
-                                     Mat4Ref transform)
+void LinearParticleAnimator::Animate(ParticleList* particleList, float dt, Mat4Ref transform)
 {
   Particle* p = particleList->Particles;
   Math::Random& random = mGraphicsSpace->mRandom;
@@ -152,9 +150,7 @@ ParticleWander::~ParticleWander()
   AnimatorList::Unlink(this);
 }
 
-void ParticleWander::Animate(ParticleList* particleList,
-                             float dt,
-                             Mat4Ref transform)
+void ParticleWander::Animate(ParticleList* particleList, float dt, Mat4Ref transform)
 {
   Particle* p = particleList->Particles;
   Vec3 center = GetTranslationFrom(transform);
@@ -171,17 +167,14 @@ void ParticleWander::Animate(ParticleList* particleList,
 
       // Get the current wander value
       float curAngle = p->WanderAngle;
-      curAngle += mGraphicsSpace->mRandom.FloatVariance(mWanderAngle,
-                                                        mWanderAngleVariance) *
-                  dt;
+      curAngle += mGraphicsSpace->mRandom.FloatVariance(mWanderAngle, mWanderAngleVariance) * dt;
 
       // Get a basis(not consistent varies based on normal)
       Vec3 a, b;
       Math::GenerateOrthonormalBasis(normalizedVel, &a, &b);
 
       float wanderChange = dt * mWanderStrength;
-      Vec3 change = Math::Cos(curAngle) * wanderChange * a +
-                    Math::Sin(curAngle) * wanderChange * b;
+      Vec3 change = Math::Cos(curAngle) * wanderChange * a + Math::Sin(curAngle) * wanderChange * b;
       velocity += change;
 
       // Store updated wander velocity
@@ -201,10 +194,8 @@ ZilchDefineType(ParticleColorAnimator, builder, type)
   ZeroBindDependency(ParticleSystem);
   ZeroBindDocumented();
 
-  ZilchBindFieldProperty(mTimeGradient)
-      ->Add(new MetaEditorResource(false, true));
-  ZilchBindFieldProperty(mVelocityGradient)
-      ->Add(new MetaEditorResource(false, true));
+  ZilchBindFieldProperty(mTimeGradient)->Add(new MetaEditorResource(false, true));
+  ZilchBindFieldProperty(mVelocityGradient)->Add(new MetaEditorResource(false, true));
   ZilchBindFieldProperty(mMaxParticleSpeed);
 }
 
@@ -215,10 +206,8 @@ ParticleColorAnimator::~ParticleColorAnimator()
 
 void ParticleColorAnimator::Serialize(Serializer& stream)
 {
-  SerializeNullableResourceNameDefault(
-      mTimeGradient, ColorGradientManager, "FadeInOut");
-  SerializeNullableResourceNameDefault(
-      mVelocityGradient, ColorGradientManager, nullptr);
+  SerializeNullableResourceNameDefault(mTimeGradient, ColorGradientManager, "FadeInOut");
+  SerializeNullableResourceNameDefault(mVelocityGradient, ColorGradientManager, nullptr);
   SerializeNameDefault(mMaxParticleSpeed, 5.0f);
 }
 
@@ -228,9 +217,7 @@ void ParticleColorAnimator::Initialize(CogInitializer& initializer)
   GetOwner()->has(ParticleSystem)->AddAnimator(this);
 }
 
-void ParticleColorAnimator::Animate(ParticleList* particleList,
-                                    float dt,
-                                    Mat4Ref transform)
+void ParticleColorAnimator::Animate(ParticleList* particleList, float dt, Mat4Ref transform)
 {
   // Do nothing if neither gradients exist
   ColorGradient* timeGradient = mTimeGradient;
@@ -295,8 +282,7 @@ ParticleAttractor::~ParticleAttractor()
 
 void ParticleAttractor::Serialize(Serializer& stream)
 {
-  SerializeEnumNameDefault(
-      SystemSpace, mPositionSpace, SystemSpace::LocalSpace);
+  SerializeEnumNameDefault(SystemSpace, mPositionSpace, SystemSpace::LocalSpace);
   SerializeNameDefault(mAttractPosition, Vec3::cZero);
   SerializeNameDefault(mStrength, 1.0f);
   SerializeNameDefault(mMinDistance, 0.0f);
@@ -309,9 +295,7 @@ void ParticleAttractor::Initialize(CogInitializer& initializer)
   GetOwner()->has(ParticleSystem)->AddAnimator(this);
 }
 
-void ParticleAttractor::Animate(ParticleList* particleList,
-                                float dt,
-                                Mat4Ref transform)
+void ParticleAttractor::Animate(ParticleList* particleList, float dt, Mat4Ref transform)
 {
   Vec3 center = GetTranslationFrom(transform);
   float range = mMaxDistance - mMinDistance;
@@ -378,9 +362,7 @@ void ParticleTwister::Initialize(CogInitializer& initializer)
   GetOwner()->has(ParticleSystem)->AddAnimator(this);
 }
 
-void ParticleTwister::Animate(ParticleList* particleList,
-                              float dt,
-                              Mat4Ref transform)
+void ParticleTwister::Animate(ParticleList* particleList, float dt, Mat4Ref transform)
 {
   Vec3 center = GetTranslationFrom(transform);
   float range = mMaxDistance - mMinDistance;
@@ -425,10 +407,8 @@ ZilchDefineType(ParticleCollisionPlane, builder, type)
   ZilchBindFieldProperty(mPlaneSpace);
   ZilchBindFieldProperty(mPlanePosition);
   ZilchBindFieldProperty(mPlaneNormal);
-  ZilchBindGetterSetterProperty(Restitution)
-      ->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
-  ZilchBindGetterSetterProperty(Friction)->Add(
-      new EditorSlider(0.0f, 1.0f, 0.01f));
+  ZilchBindGetterSetterProperty(Restitution)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
+  ZilchBindGetterSetterProperty(Friction)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
 }
 
 ParticleCollisionPlane::~ParticleCollisionPlane()
@@ -451,10 +431,7 @@ void ParticleCollisionPlane::Initialize(CogInitializer& initializer)
   GetOwner()->has(ParticleSystem)->AddAnimator(this);
 }
 
-void ReflectParticle(Particle* particle,
-                     Vec3Param planeNormal,
-                     float restitution,
-                     float friction)
+void ReflectParticle(Particle* particle, Vec3Param planeNormal, float restitution, float friction)
 {
   Vec3 velocity = particle->Velocity;
 
@@ -473,9 +450,7 @@ void ReflectParticle(Particle* particle,
   particle->Velocity = velocityNormal + velocityTangent;
 }
 
-void ParticleCollisionPlane::Animate(ParticleList* particleList,
-                                     float dt,
-                                     Mat4Ref transform)
+void ParticleCollisionPlane::Animate(ParticleList* particleList, float dt, Mat4Ref transform)
 {
   Vec3 planePosition = mPlanePosition;
   Vec3 planeNormal = mPlaneNormal.AttemptNormalized();
@@ -536,10 +511,8 @@ ZilchDefineType(ParticleCollisionHeightmap, builder, type)
   ZeroBindDependency(ParticleSystem);
   ZeroBindDocumented();
   ZilchBindFieldProperty(mHeightMap);
-  ZilchBindGetterSetterProperty(Restitution)
-      ->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
-  ZilchBindGetterSetterProperty(Friction)->Add(
-      new EditorSlider(0.0f, 1.0f, 0.01f));
+  ZilchBindGetterSetterProperty(Restitution)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
+  ZilchBindGetterSetterProperty(Friction)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
 }
 
 ParticleCollisionHeightmap::~ParticleCollisionHeightmap()
@@ -554,8 +527,7 @@ void ParticleCollisionHeightmap::Serialize(Serializer& stream)
   SerializeNameDefault(mFriction, 0.3f);
 }
 
-void ParticleCollisionHeightmap::OnAllObjectsCreated(
-    CogInitializer& initializer)
+void ParticleCollisionHeightmap::OnAllObjectsCreated(CogInitializer& initializer)
 {
   mHeightMap.RestoreLink(initializer, this, "HeightMap");
 }
@@ -566,9 +538,7 @@ void ParticleCollisionHeightmap::Initialize(CogInitializer& initializer)
   GetOwner()->has(ParticleSystem)->AddAnimator(this);
 }
 
-void ParticleCollisionHeightmap::Animate(ParticleList* particleList,
-                                         float dt,
-                                         Mat4Ref transform)
+void ParticleCollisionHeightmap::Animate(ParticleList* particleList, float dt, Mat4Ref transform)
 {
   Cog* cog = mHeightMap.GetCog();
   if (cog == nullptr)
@@ -588,8 +558,7 @@ void ParticleCollisionHeightmap::Animate(ParticleList* particleList,
     Vec3 position = particle->Position;
 
     Vec3 normal;
-    float sampleHeight =
-        map->SampleHeight(position, -Math::PositiveMax(), &normal);
+    float sampleHeight = map->SampleHeight(position, -Math::PositiveMax(), &normal);
     float particleHeight = map->GetWorldPointHeight(position);
     float particleBottom = particleHeight - particle->Size;
 

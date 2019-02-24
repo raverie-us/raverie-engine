@@ -60,9 +60,7 @@ void PhysicsMesh::GenerateInternalEdgeData()
   GenerateInternalEdgeInfo(this, &mInfoMap);
 }
 
-bool PhysicsMesh::CastRay(const Ray& localRay,
-                          ProxyResult& result,
-                          BaseCastFilter& filter)
+bool PhysicsMesh::CastRay(const Ray& localRay, ProxyResult& result, BaseCastFilter& filter)
 {
   bool triangleHit = false;
   result.mTime = Math::PositiveMax();
@@ -79,9 +77,7 @@ bool PhysicsMesh::CastRay(const Ray& localRay,
   return triangleHit;
 }
 
-void PhysicsMesh::GetOverlappingTriangles(Aabb& aabb,
-                                          TriangleArray& triangles,
-                                          Array<uint>& triangleIds)
+void PhysicsMesh::GetOverlappingTriangles(Aabb& aabb, TriangleArray& triangles, Array<uint>& triangleIds)
 {
   forRangeBroadphaseTree(StaticAabbTree<uint>, mTree, Aabb, aabb)
   {
@@ -134,8 +130,7 @@ void PhysicsMesh::GenerateTree()
 
 ImplementResourceManager(PhysicsMeshManager, PhysicsMesh);
 
-PhysicsMeshManager::PhysicsMeshManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+PhysicsMeshManager::PhysicsMeshManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   AddLoader("PhysicsMesh", new BinaryDataFileLoader<PhysicsMeshManager>());
   mCategory = "Physics";

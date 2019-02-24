@@ -50,8 +50,7 @@ public:
   ResourceLibrary* LoadPackage(Status& status, ResourcePackage* package);
 
   // Reload all resource in package into resource library.
-  void ReloadPackage(ResourceLibrary* resourceLibrary,
-                     ResourcePackage* package);
+  void ReloadPackage(ResourceLibrary* resourceLibrary, ResourcePackage* package);
 
   // Unload all resource libraries
   void UnloadAll();
@@ -61,15 +60,11 @@ public:
   // Find resource with their name or name and id string
   Resource* GetResourceByName(StringParam resourceIdAndName);
   // Find a resource with a given type and name
-  Resource* GetResourceByTypeAndName(StringParam resourceType,
-                                     StringParam resourceName);
+  Resource* GetResourceByTypeAndName(StringParam resourceType, StringParam resourceName);
   // Find a resource library
   ResourceLibrary* GetResourceLibrary(StringParam name);
 
-  void LoadIntoLibrary(Status& status,
-                       ResourceLibrary* resourceLibrary,
-                       ResourcePackage* resourcePackage,
-                       bool isNew);
+  void LoadIntoLibrary(Status& status, ResourceLibrary* resourceLibrary, ResourcePackage* resourcePackage, bool isNew);
 
   void OnResourcesLoaded(ResourceEvent* event);
 

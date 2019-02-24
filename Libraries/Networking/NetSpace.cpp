@@ -100,7 +100,7 @@ void NetSpace::ServerOnEngineUpdate(UpdateEvent* event)
   NetPeer* netPeer = GetNetPeer();
 
   // For all pending net objects that need to be brought online
-  forRange(Cog * cog, mPendingNetObjects.All())
+  forRange (Cog* cog, mPendingNetObjects.All())
   {
     // Cog is no longer valid?
     if (!cog)
@@ -120,11 +120,10 @@ void NetSpace::ServerOnEngineUpdate(UpdateEvent* event)
     {
       // Emplace net object by level now
       // (We clone later when replicating the entire net level state)
-      if (!netPeer->EmplaceNetObjectBySpaceAndLevel(
-              cog,
-              cog->GetSpace(),
-              netObject->GetInitializationLevelResourceIdName())) // Unable?
-        continue;                                                 // Skip
+      if (!netPeer->EmplaceNetObjectBySpaceAndLevel(cog,
+                                                    cog->GetSpace(),
+                                                    netObject->GetInitializationLevelResourceIdName())) // Unable?
+        continue;                                                                                       // Skip
     }
     // Was cog initialized?
     else
@@ -189,7 +188,7 @@ void NetSpace::OfflineOnEngineUpdate(UpdateEvent* event)
   NetPeer* netPeer = GetNetPeer();
 
   // For all pending net objects that need to be brought online
-  forRange(Cog * cog, mPendingNetObjects.All())
+  forRange (Cog* cog, mPendingNetObjects.All())
   {
     // Cog is no longer valid?
     if (!cog)
@@ -270,12 +269,9 @@ uint NetSpace::GetNetObjectCount() const
   uint netObjectCount = 0;
 
   // For all cogs in this space
-  forRange(
-      Cog & cog,
-      const_cast<NetSpace*>(this)
-          ->GetSpace()
-          ->AllObjects()) if (cog.has(NetObject)) // Has net object component?
-      ++ netObjectCount;
+  forRange (Cog& cog, const_cast<NetSpace*>(this)->GetSpace()->AllObjects())
+    if (cog.has(NetObject)) // Has net object component?
+      ++netObjectCount;
 
   return netObjectCount;
 }
@@ -284,12 +280,9 @@ uint NetSpace::GetNetUserCount() const
   uint netUserCount = 0;
 
   // For all cogs in this space
-  forRange(
-      Cog & cog,
-      const_cast<NetSpace*>(this)
-          ->GetSpace()
-          ->AllObjects()) if (cog.has(NetUser)) // Has net object component?
-      ++ netUserCount;
+  forRange (Cog& cog, const_cast<NetSpace*>(this)->GetSpace()->AllObjects())
+    if (cog.has(NetUser)) // Has net object component?
+      ++netUserCount;
 
   return netUserCount;
 }
@@ -327,12 +320,10 @@ void NetSpace::FulfillDelayedAttachments(Cog* delayedParentObject)
   Assert(netPeer->IsReceivingNetGame());
 
   // Get delayed parent net object ID (may be invalid)
-  NetObjectId delayedParent =
-      delayedParentObject->has(NetObject)->GetNetObjectId();
+  NetObjectId delayedParent = delayedParentObject->has(NetObject)->GetNetObjectId();
 
   // Get all delayed attachments waiting on this parent object (if any)
-  ArrayMap<NetObjectId, ArraySet<NetObjectId>>::pointer result =
-      mDelayedParentMap.FindPairPointer(delayedParent);
+  ArrayMap<NetObjectId, ArraySet<NetObjectId>>::pointer result = mDelayedParentMap.FindPairPointer(delayedParent);
   if (!result) // Unable?
   {
     // Done (No delayed attachments to fulfill)
@@ -340,7 +331,7 @@ void NetSpace::FulfillDelayedAttachments(Cog* delayedParentObject)
   }
 
   // For all ready children waiting on this delayed parent
-  forRange(NetObjectId readyChild, result->second.All())
+  forRange (NetObjectId readyChild, result->second.All())
   {
     // Get ready child object
     Cog* readyChildObject = netPeer->GetNetObject(readyChild);
@@ -364,8 +355,7 @@ void NetSpace::FulfillDelayedAttachments(Cog* delayedParentObject)
   mDelayedParentMap.Erase(result);
 }
 
-void NetSpace::AddDelayedAttachment(NetObjectId readyChild,
-                                    NetObjectId delayedParent)
+void NetSpace::AddDelayedAttachment(NetObjectId readyChild, NetObjectId delayedParent)
 {
   // Get net peer
   NetPeer* netPeer = GetNetPeer();
@@ -396,22 +386,18 @@ void NetSpace::AddDelayedAttachment(NetObjectId readyChild,
   Assert(result1.second); // (Insertion should have occurred)
 
   // Add to ready child set in delayed parent map
-  ArraySet<NetObjectId>& readyChildren =
-      mDelayedParentMap.FindOrInsert(delayedParent);
-  ArraySet<NetObjectId>::pointer_bool_pair result2 =
-      readyChildren.InsertOrAssign(readyChild);
+  ArraySet<NetObjectId>& readyChildren = mDelayedParentMap.FindOrInsert(delayedParent);
+  ArraySet<NetObjectId>::pointer_bool_pair result2 = readyChildren.InsertOrAssign(readyChild);
   Assert(result2.second); // (Insertion should have occurred)
 }
 bool NetSpace::RemoveDelayedAttachment(NetObjectId readyChild)
 {
   // A delayed attachment exists for this ready child?
-  if (ArrayMap<NetObjectId, NetObjectId>::pointer result1 =
-          mReadyChildMap.FindPairPointer(readyChild))
+  if (ArrayMap<NetObjectId, NetObjectId>::pointer result1 = mReadyChildMap.FindPairPointer(readyChild))
   {
     // Remove from ready child set in delayed parent map
     NetObjectId delayedParent = result1->second;
-    ArrayMap<NetObjectId, ArraySet<NetObjectId>>::pointer result2 =
-        mDelayedParentMap.FindPairPointer(delayedParent);
+    ArrayMap<NetObjectId, ArraySet<NetObjectId>>::pointer result2 = mDelayedParentMap.FindPairPointer(delayedParent);
     if (!result2 || result2->second.Empty()) // Unable?
     {
       // (This shouldn't happen, we don't allow a mismatch to occur between

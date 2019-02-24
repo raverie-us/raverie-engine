@@ -30,9 +30,7 @@ ZilchDefineType(MetaDropEvent, builder, type)
   ZilchBindGetterProperty(ViewportMouseEvent);
 }
 
-MetaDropEvent::MetaDropEvent(MouseEvent* e) :
-    mMouseEvent(e),
-    mViewportMouseEvent(nullptr)
+MetaDropEvent::MetaDropEvent(MouseEvent* e) : mMouseEvent(e), mViewportMouseEvent(nullptr)
 {
   Property = nullptr;
   Testing = false;
@@ -61,8 +59,7 @@ ViewportMouseEvent* MetaDropEvent::GetViewportMouseEvent()
   return mViewportMouseEvent;
 }
 
-MetaDrag::MetaDrag(Mouse* mouse, Composite* owner, HandleParam object) :
-    MouseManipulation(mouse, owner)
+MetaDrag::MetaDrag(Mouse* mouse, Composite* owner, HandleParam object) : MouseManipulation(mouse, owner)
 {
   AddObject(object);
 
@@ -87,7 +84,7 @@ void MetaDrag::OnMouseUp(MouseEvent* event)
 {
   Vec2 position = event->GetMouse()->GetClientPosition();
 
-  forRange(Handle object, mObjects.All())
+  forRange (Handle object, mObjects.All())
   {
     MetaDropEvent* dropEvent = new MetaDropEvent(event);
     dropEvent->Position = event->Position;
@@ -118,7 +115,7 @@ void MetaDrag::OnMouseMove(MouseEvent* event)
 {
   Vec2 position = event->GetMouse()->GetClientPosition();
 
-  forRange(Handle object, mObjects.All())
+  forRange (Handle object, mObjects.All())
   {
     MetaDropEvent* dropEvent = new MetaDropEvent(event);
     dropEvent->Position = event->Position;
@@ -155,12 +152,8 @@ void MetaDrag::OnMouseMove(MouseEvent* event)
       }
       else
       {
-        placement.SetScreenRect(
-            WidgetRect::PointAndSize(position, Vec2::cZero));
-        placement.SetPriority(IndicatorSide::Right,
-                              IndicatorSide::Left,
-                              IndicatorSide::Bottom,
-                              IndicatorSide::Top);
+        placement.SetScreenRect(WidgetRect::PointAndSize(position, Vec2::cZero));
+        placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Bottom, IndicatorSide::Top);
       }
 
       mToolTip->SetArrowTipTranslation(placement);
@@ -176,7 +169,7 @@ void MetaDrag::OnMouseUpdate(MouseEvent* event)
 {
   Vec2 position = event->GetMouse()->GetClientPosition();
 
-  forRange(Handle object, mObjects.All())
+  forRange (Handle object, mObjects.All())
   {
     MetaDropEvent* dropEvent = new MetaDropEvent(event);
     dropEvent->Position = event->Position;

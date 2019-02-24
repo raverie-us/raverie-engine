@@ -31,12 +31,11 @@ public:
   LibraryTileView(LibraryView* parent);
 
   /// TileView interface.
-  TileViewWidget*
-  CreateTileViewWidget(Composite* parent,
-                       StringParam name,
-                       HandleParam instance,
-                       DataIndex index,
-                       PreviewImportance::Enum minImportance) override;
+  TileViewWidget* CreateTileViewWidget(Composite* parent,
+                                       StringParam name,
+                                       HandleParam instance,
+                                       DataIndex index,
+                                       PreviewImportance::Enum minImportance) override;
 
   LibraryView* mLibraryView;
 };
@@ -71,9 +70,7 @@ public:
 
   /// Creates a preview group of the given tag with the current search as
   /// extra tags.
-  PreviewWidgetGroup* CreatePreviewGroup(Composite* parent,
-                                         StringParam tag,
-                                         uint max);
+  PreviewWidgetGroup* CreatePreviewGroup(Composite* parent, StringParam tag, uint max);
 
   void AddHiddenLibrary(StringParam libraryName);
 
@@ -126,9 +123,7 @@ private:
 
   void OnAddTagToSearch(ObjectEvent* event);
 
-  bool AddResourceOptionsToMenu(ContextMenu* menu,
-                                StringParam resouceName,
-                                bool addDivider = false);
+  bool AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouceName, bool addDivider = false);
   void OnAddResource(ObjectEvent* event);
 
   /// Editor event response.

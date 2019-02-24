@@ -37,31 +37,20 @@ String BuildString(StringRange a, StringRange b, StringRange c, StringRange d)
   return BuildString(strings, 4);
 }
 
-String BuildString(
-    StringRange a, StringRange b, StringRange c, StringRange d, StringRange e)
+String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e)
 {
   StringRange* strings[] = {&a, &b, &c, &d, &e};
   return BuildString(strings, 5);
 }
 
-String BuildString(StringRange a,
-                   StringRange b,
-                   StringRange c,
-                   StringRange d,
-                   StringRange e,
-                   StringRange f)
+String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e, StringRange f)
 {
   StringRange* strings[] = {&a, &b, &c, &d, &e, &f};
   return BuildString(strings, 6);
 }
 
-String BuildString(StringRange a,
-                   StringRange b,
-                   StringRange c,
-                   StringRange d,
-                   StringRange e,
-                   StringRange f,
-                   StringRange g)
+String
+BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e, StringRange f, StringRange g)
 {
   StringRange* strings[] = {&a, &b, &c, &d, &e, &f, &g};
   return BuildString(strings, 7);

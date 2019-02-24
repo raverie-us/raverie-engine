@@ -6,10 +6,7 @@ namespace Intersection
 
 const float Gjk::sEpsilon = 0.00001f;
 
-Type Gjk::Test(const SupportShape* shapeA,
-               const SupportShape* shapeB,
-               Manifold* manifold,
-               unsigned maxIter)
+Type Gjk::Test(const SupportShape* shapeA, const SupportShape* shapeB, Manifold* manifold, unsigned maxIter)
 {
   // Get initial support vector
   Initialize(shapeA, shapeB);
@@ -51,10 +48,7 @@ Type Gjk::Test(const SupportShape* shapeA,
   return Intersection::None;
 }
 
-Type Gjk::TestDebug(const SupportShape* shapeA,
-                    const SupportShape* shapeB,
-                    Manifold* manifold,
-                    unsigned maxIter)
+Type Gjk::TestDebug(const SupportShape* shapeA, const SupportShape* shapeB, Manifold* manifold, unsigned maxIter)
 {
   // Get initial support vector
   Initialize(shapeA, shapeB);
@@ -128,16 +122,12 @@ void Gjk::DrawDebug(uint debugFlag)
   for (uint i = 0; i < mSimplex.mCount; ++i)
   {
     float radius = 0.05f - 0.01f * i;
-    Zero::gDebugDraw->Add(
-        Zero::Debug::Sphere(mSimplex.mPoints[i].cso, radius).Color(colors[i]));
-    Zero::gDebugDraw->Add(
-        Zero::Debug::Sphere(mSimplex.mPoints[i].objA, radius).Color(colors[i]));
-    Zero::gDebugDraw->Add(
-        Zero::Debug::Sphere(mSimplex.mPoints[i].objB, radius).Color(colors[i]));
+    Zero::gDebugDraw->Add(Zero::Debug::Sphere(mSimplex.mPoints[i].cso, radius).Color(colors[i]));
+    Zero::gDebugDraw->Add(Zero::Debug::Sphere(mSimplex.mPoints[i].objA, radius).Color(colors[i]));
+    Zero::gDebugDraw->Add(Zero::Debug::Sphere(mSimplex.mPoints[i].objB, radius).Color(colors[i]));
   }
 
-  Zero::gDebugDraw->Add(
-      Zero::Debug::Line(Vec3(0, 0, 0), mSupportVector).Color(Color::White));
+  Zero::gDebugDraw->Add(Zero::Debug::Line(Vec3(0, 0, 0), mSupportVector).Color(Color::White));
 
   // mSupportVector = mSimplex.GetSupportVector();
 
@@ -198,10 +188,7 @@ CSOVertex Gjk::ComputeSupport(Vec3 supportVector)
 
 void Gjk::DrawTriangle(Vec3 p0, Vec3 p1, Vec3 p2)
 {
-  Zero::gDebugDraw->Add(Zero::Debug::Triangle(p0, p1, p2)
-                            .Color(Color::Orange)
-                            .Border(true)
-                            .Alpha(50));
+  Zero::gDebugDraw->Add(Zero::Debug::Triangle(p0, p1, p2).Color(Color::Orange).Border(true).Alpha(50));
 }
 
 void Gjk::DrawCSO(void)
@@ -275,9 +262,7 @@ void Gjk::DrawCSO(void)
   //   0.01f).Color(Color::Green));
 }
 
-bool Gjk::ComputeContactData(Manifold* manifold,
-                             unsigned maxExpands,
-                             bool debug)
+bool Gjk::ComputeContactData(Manifold* manifold, unsigned maxExpands, bool debug)
 {
   if (!manifold)
     return true;
@@ -345,14 +330,9 @@ bool Gjk::ComputeContactData(Manifold* manifold,
   mEpa.GetClosestFace(face);
 
   Vec3 weights;
-  Geometry::BarycentricTriangle(
-      csoContact, face[0].cso, face[1].cso, face[2].cso, &weights);
-  manifold->Points[0].Points[0] = face[0].objA * weights.x +
-                                  face[1].objA * weights.y +
-                                  face[2].objA * weights.z;
-  manifold->Points[0].Points[1] = face[0].objB * weights.x +
-                                  face[1].objB * weights.y +
-                                  face[2].objB * weights.z;
+  Geometry::BarycentricTriangle(csoContact, face[0].cso, face[1].cso, face[2].cso, &weights);
+  manifold->Points[0].Points[0] = face[0].objA * weights.x + face[1].objA * weights.y + face[2].objA * weights.z;
+  manifold->Points[0].Points[1] = face[0].objB * weights.x + face[1].objB * weights.y + face[2].objB * weights.z;
 
   return true;
 }
@@ -395,9 +375,7 @@ void Gjk::CompleteSimplex(void)
       }
     }
 
-    ReturnIf(mSimplex.mCount < 3,
-             ,
-             "Failed to complete simplex, possibly a degenerate CSO.");
+    ReturnIf(mSimplex.mCount < 3, , "Failed to complete simplex, possibly a degenerate CSO.");
   }
 
   case 3:

@@ -121,16 +121,12 @@ public:
     }
 
     /// Constructor
-    IdSequenceHistory(Id next, MoveReference<BitStream> history) :
-        mNext(next),
-        mHistory(ZeroMove(history))
+    IdSequenceHistory(Id next, MoveReference<BitStream> history) : mNext(next), mHistory(ZeroMove(history))
     {
     }
 
     /// Move Constructor
-    IdSequenceHistory(MoveReference<IdSequenceHistory> rhs) :
-        mNext(rhs->mNext),
-        mHistory(ZeroMove(rhs->mHistory))
+    IdSequenceHistory(MoveReference<IdSequenceHistory> rhs) : mNext(rhs->mNext), mHistory(ZeroMove(rhs->mHistory))
     {
     }
 
@@ -172,8 +168,7 @@ private:
 template <typename Id>
 struct MoveWithoutDestructionOperator<IdSequence<Id>>
 {
-  static inline void MoveWithoutDestruction(IdSequence<Id>* dest,
-                                            IdSequence<Id>* source)
+  static inline void MoveWithoutDestruction(IdSequence<Id>* dest, IdSequence<Id>* source)
   {
     new (dest) IdSequence<Id>(ZeroMove(*source));
   }

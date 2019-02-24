@@ -20,13 +20,11 @@ namespace fs = std::filesystem;
 namespace Zero
 {
 const Rune cDirectorySeparatorRune = Rune(fs::path::preferred_separator);
-const char cDirectorySeparatorCstr[] = {(char)fs::path::preferred_separator,
-                                        '\0'};
+const char cDirectorySeparatorCstr[] = {(char)fs::path::preferred_separator, '\0'};
 bool cFileSystemCaseSensitive = true;
 
 // There is no initialization or virtual file system on this platform
-FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback,
-                                             void* userData)
+FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback, void* userData)
 {
 }
 
@@ -34,9 +32,7 @@ FileSystemInitializer::~FileSystemInitializer()
 {
 }
 
-void AddVirtualFileSystemEntry(StringParam absolutePath,
-                               DataBlock* stealData,
-                               TimeType modifiedTime)
+void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, TimeType modifiedTime)
 {
 }
 
@@ -61,10 +57,7 @@ void SetWorkingDirectory(StringParam path)
 String GetUserLocalDirectory()
 {
   std::error_code error;
-  return fs::temp_directory_path(error)
-      .append("LocalDirectory")
-      .u8string()
-      .c_str();
+  return fs::temp_directory_path(error).append("LocalDirectory").u8string().c_str();
 }
 #endif
 
@@ -72,10 +65,7 @@ String GetUserLocalDirectory()
 String GetUserDocumentsDirectory()
 {
   std::error_code error;
-  return fs::temp_directory_path(error)
-      .append("DocumentsDirectory")
-      .u8string()
-      .c_str();
+  return fs::temp_directory_path(error).append("DocumentsDirectory").u8string().c_str();
 }
 #endif
 
@@ -83,9 +73,8 @@ String GetUserDocumentsDirectory()
 String GetApplication()
 {
   // The first entry in the command line arguments should be our executable.
-  ReturnIf(gCommandLineArguments.Empty(),
-           "/Main.app",
-           "The command line arguments should not be empty, were they set?");
+  ReturnIf(
+      gCommandLineArguments.Empty(), "/Main.app", "The command line arguments should not be empty, were they set?");
   return gCommandLineArguments.Front();
 }
 #endif
@@ -149,10 +138,7 @@ void CreateDirectoryAndParents(StringParam directory)
 bool CopyFileInternal(StringParam dest, StringParam source)
 {
   std::error_code error;
-  fs::copy_file(source.c_str(),
-                dest.c_str(),
-                fs::copy_options::overwrite_existing,
-                error);
+  fs::copy_file(source.c_str(), dest.c_str(), fs::copy_options::overwrite_existing, error);
   return !(bool)error;
 }
 
@@ -220,8 +206,7 @@ FileRange::FileRange(StringParam filePath)
   }
 
   std::error_code error;
-  fs::directory_iterator begin =
-      fs::directory_iterator(filePath.c_str(), error);
+  fs::directory_iterator begin = fs::directory_iterator(filePath.c_str(), error);
   self->mIterator = begin;
   self->mEnd = fs::end(begin);
 }

@@ -29,8 +29,7 @@ Replica::Replica() :
 {
   ResetConfig();
 }
-Replica::Replica(const CreateContext& createContext,
-                 const ReplicaType& replicaType) :
+Replica::Replica(const CreateContext& createContext, const ReplicaType& replicaType) :
     mCreateContext(),
     mReplicaType(),
     mReplicator(nullptr),
@@ -224,22 +223,22 @@ TimeMs Replica::GetUninitializationTimestamp() const
 void Replica::WakeUp()
 {
   // For all replica channels
-  forRange(ReplicaChannel * replicaChannel, GetReplicaChannels().All())
-      replicaChannel->WakeUp();
+  forRange (ReplicaChannel* replicaChannel, GetReplicaChannels().All())
+    replicaChannel->WakeUp();
 }
 void Replica::TakeNap()
 {
   // For all replica channels
-  forRange(ReplicaChannel * replicaChannel, GetReplicaChannels().All())
-      replicaChannel->TakeNap();
+  forRange (ReplicaChannel* replicaChannel, GetReplicaChannels().All())
+    replicaChannel->TakeNap();
 }
 
 bool Replica::IsAwake() const
 {
   // For all replica channels
-  forRange(
-      const ReplicaChannel* replicaChannel,
-      GetReplicaChannels().All()) if (replicaChannel->IsAwake()) return true;
+  forRange (const ReplicaChannel* replicaChannel, GetReplicaChannels().All())
+    if (replicaChannel->IsAwake())
+      return true;
 
   return false;
 }
@@ -286,8 +285,7 @@ bool Replica::GetAllowNapping() const
   return mAllowNapping;
 }
 
-void Replica::SetAuthorityClientReplicatorId(
-    ReplicatorId authorityClientReplicatorId)
+void Replica::SetAuthorityClientReplicatorId(ReplicatorId authorityClientReplicatorId)
 {
   mAuthorityClientReplicatorId = authorityClientReplicatorId;
 }
@@ -296,8 +294,7 @@ ReplicatorId Replica::GetAuthorityClientReplicatorId() const
   return mAuthorityClientReplicatorId;
 }
 
-void Replica::SetAccurateTimestampOnInitialization(
-    bool accurateTimestampOnInitialization)
+void Replica::SetAccurateTimestampOnInitialization(bool accurateTimestampOnInitialization)
 {
   mAccurateTimestampOnInitialization = accurateTimestampOnInitialization;
 }
@@ -315,8 +312,7 @@ bool Replica::GetAccurateTimestampOnChange() const
   return mAccurateTimestampOnChange;
 }
 
-void Replica::SetAccurateTimestampOnUninitialization(
-    bool accurateTimestampOnUninitialization)
+void Replica::SetAccurateTimestampOnUninitialization(bool accurateTimestampOnUninitialization)
 {
   mAccurateTimestampOnUninitialization = accurateTimestampOnUninitialization;
 }
@@ -333,17 +329,14 @@ bool Replica::HasReplicaChannel(const String& replicaChannelName) const
 {
   return mReplicaChannels.Contains(replicaChannelName);
 }
-const ReplicaChannel*
-Replica::GetReplicaChannel(const String& replicaChannelName) const
+const ReplicaChannel* Replica::GetReplicaChannel(const String& replicaChannelName) const
 {
-  const ReplicaChannel* result =
-      mReplicaChannels.FindValue(replicaChannelName, ReplicaChannelPtr());
+  const ReplicaChannel* result = mReplicaChannels.FindValue(replicaChannelName, ReplicaChannelPtr());
   return result;
 }
 ReplicaChannel* Replica::GetReplicaChannel(const String& replicaChannelName)
 {
-  const ReplicaChannel* result =
-      mReplicaChannels.FindValue(replicaChannelName, ReplicaChannelPtr());
+  const ReplicaChannel* result = mReplicaChannels.FindValue(replicaChannelName, ReplicaChannelPtr());
   return const_cast<ReplicaChannel*>(result);
 }
 const ReplicaChannelSet& Replica::GetReplicaChannels() const
@@ -367,8 +360,7 @@ ReplicaChannel* Replica::AddReplicaChannel(ReplicaChannelPtr replicaChannel)
   }
 
   // Add replica channel
-  ReplicaChannelSet::pointer_bool_pair result =
-      mReplicaChannels.Insert(replicaChannel);
+  ReplicaChannelSet::pointer_bool_pair result = mReplicaChannels.Insert(replicaChannel);
   if (!result.second) // Unable?
   {
     Error("Replica already has a replica channel with that name, unable to add "
@@ -394,8 +386,7 @@ bool Replica::RemoveReplicaChannel(const String& replicaChannelName)
   }
 
   // Remove replica channel
-  ReplicaChannelSet::pointer_bool_pair result =
-      mReplicaChannels.EraseValue(replicaChannelName);
+  ReplicaChannelSet::pointer_bool_pair result = mReplicaChannels.EraseValue(replicaChannelName);
   return result.second;
 }
 
@@ -421,11 +412,10 @@ void Replica::ClearReplicaChannels()
 bool Replica::UsesReverseReplicaChannels() const
 {
   // For all replica channels
-  forRange(ReplicaChannel * replicaChannel, GetReplicaChannels().All())
+  forRange (ReplicaChannel* replicaChannel, GetReplicaChannels().All())
   {
     // Get replica channel type
-    ReplicaChannelType* replicaChannelType =
-        replicaChannel->GetReplicaChannelType();
+    ReplicaChannelType* replicaChannelType = replicaChannel->GetReplicaChannelType();
 
     //    Replica channel has client change authority?
     // OR Replica channel type has dynamic change authority mode?
@@ -458,22 +448,18 @@ void Replica::SetEmplaceId(EmplaceId emplaceId)
   mEmplaceId = emplaceId;
 }
 
-void Replica::ReactToChannelPropertyChanges(
-    TimeMs timestamp,
-    ReplicationPhase::Enum replicationPhase,
-    TransmissionDirection::Enum direction,
-    bool generateNotifications,
-    bool setLastValues)
+void Replica::ReactToChannelPropertyChanges(TimeMs timestamp,
+                                            ReplicationPhase::Enum replicationPhase,
+                                            TransmissionDirection::Enum direction,
+                                            bool generateNotifications,
+                                            bool setLastValues)
 {
   // For all replica channels
-  forRange(ReplicaChannel * replicaChannel, GetReplicaChannels().All())
+  forRange (ReplicaChannel* replicaChannel, GetReplicaChannels().All())
   {
     // React to property changes
-    replicaChannel->ReactToPropertyChanges(timestamp,
-                                           replicationPhase,
-                                           direction,
-                                           generateNotifications,
-                                           setLastValues);
+    replicaChannel->ReactToPropertyChanges(
+        timestamp, replicationPhase, direction, generateNotifications, setLastValues);
   }
 }
 

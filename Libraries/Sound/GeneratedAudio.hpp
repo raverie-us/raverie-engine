@@ -127,10 +127,7 @@ public:
 class HarmonicData
 {
 public:
-  HarmonicData(float multiplier,
-               float volume,
-               EnvelopeSettings& envelope,
-               SynthWaveType::Enum type) :
+  HarmonicData(float multiplier, float volume, EnvelopeSettings& envelope, SynthWaveType::Enum type) :
       mFrequencyMultiplier(multiplier),
       mVolume(volume),
       mEnvelope(envelope),
@@ -156,10 +153,7 @@ public:
   {
   }
 
-  void SetValues(float frequency,
-                 float volume,
-                 EnvelopeSettings& envelope,
-                 SynthWaveType::Enum waveType);
+  void SetValues(float frequency, float volume, EnvelopeSettings& envelope, SynthWaveType::Enum waveType);
   float operator()();
   bool IsFinished();
   void Stop();
@@ -176,10 +170,7 @@ private:
 class AdditiveNote
 {
 public:
-  void AddHarmonic(float frequency,
-                   float volume,
-                   EnvelopeSettings& envelope,
-                   SynthWaveType::Enum waveType);
+  void AddHarmonic(float frequency, float volume, EnvelopeSettings& envelope, SynthWaveType::Enum waveType);
   float operator()();
   bool IsFinished();
   void Stop();
@@ -206,10 +197,7 @@ public:
   /// multiplier that will be applied to the base frequency, the second is the
   /// volume of this harmonic, and the third (the AdsrEnvelope object) contains
   /// the envelope-related values.
-  void AddHarmonic(float frequencyMultiplier,
-                   float volume,
-                   AdsrEnvelope envelope,
-                   SynthWaveType::Enum type);
+  void AddHarmonic(float frequencyMultiplier, float volume, AdsrEnvelope envelope, SynthWaveType::Enum type);
   /// Removes all current harmonics. You must add at least one harmonic before
   /// playing a note.
   void RemoveAllHarmonics();
@@ -292,10 +280,7 @@ DeclareEnum4(GranularSynthWindows, Linear, Parabolic, RaisedCosine, Trapezoid);
 class GrainWindow
 {
 public:
-  GrainWindow(unsigned length, GranularSynthWindows::Enum type) :
-      mTotalLength(length),
-      mCounter(0),
-      mType(type)
+  GrainWindow(unsigned length, GranularSynthWindows::Enum type) : mTotalLength(length), mCounter(0), mType(type)
   {
   }
   GrainWindow(GrainWindow& other)
@@ -331,9 +316,7 @@ public:
 class RaisedCosineGrainWindow : public GrainWindow
 {
 public:
-  RaisedCosineGrainWindow(unsigned length,
-                          unsigned attackLength,
-                          unsigned releaseLength);
+  RaisedCosineGrainWindow(unsigned length, unsigned attackLength, unsigned releaseLength);
 
   float GetNextValue() override;
   void Reset(unsigned length, unsigned attack, unsigned release) override;
@@ -413,9 +396,7 @@ public:
                 GranularSynthWindows::Enum windowType,
                 unsigned windowAttack,
                 unsigned windowRelease);
-  void GetSamples(float* outputBuffer,
-                  unsigned outputFrames,
-                  unsigned outputChannels);
+  void GetSamples(float* outputBuffer, unsigned outputFrames, unsigned outputChannels);
 
   bool mActive;
   unsigned mCounter;

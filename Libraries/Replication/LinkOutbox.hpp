@@ -5,8 +5,7 @@ namespace Zero
 {
 
 /// Typedefs
-typedef SortedArray<OutMessagePtr, PointerSortPolicy<OutMessagePtr>>
-    OutMessages;
+typedef SortedArray<OutMessagePtr, PointerSortPolicy<OutMessagePtr>> OutMessages;
 
 //                              FragmentedReceipt //
 
@@ -42,8 +41,7 @@ struct FragmentedReceipt
 template <>
 struct MoveWithoutDestructionOperator<FragmentedReceipt>
 {
-  static inline void MoveWithoutDestruction(FragmentedReceipt* dest,
-                                            FragmentedReceipt* source)
+  static inline void MoveWithoutDestruction(FragmentedReceipt* dest, FragmentedReceipt* source)
   {
     new (dest) FragmentedReceipt(ZeroMove(*source));
   }
@@ -91,9 +89,7 @@ class LinkOutbox
   //
 
   /// Records a fragmented receipt and adds the corresponding packet record
-  void RecordFragmentReceipt(const OutPacket& packet,
-                             const OutMessage& message,
-                             const OutPacket* prevPacket);
+  void RecordFragmentReceipt(const OutPacket& packet, const OutMessage& message, const OutPacket* prevPacket);
   /// Updates and returns the receipt ID's overall ACK state
   ACKState::Enum UpdateReceiptACKState(const OutPacket& packet,
                                        ACKState::Enum packetACKState,
@@ -103,8 +99,7 @@ class LinkOutbox
   void AcknowledgePacket(OutPacket& packet, ACKState::Enum packetACKState);
 
   /// ACKs a sent packet
-  void ACKSentPacket(const ArraySet<OutPacket>::iterator& sentPacketIter,
-                     TimeMs ACKTime);
+  void ACKSentPacket(const ArraySet<OutPacket>::iterator& sentPacketIter, TimeMs ACKTime);
   /// NAKs a sent packet
   void NAKSentPacket(ArraySet<OutPacket>::iterator& sentPacketIter);
 
@@ -127,16 +122,10 @@ class LinkOutbox
                                bool isProtocol);
   /// Writes a message to the packet
   /// Returns true if done with the message, else false
-  bool WriteMessageToPacket(OutPacket& packet,
-                            Bits& remBits,
-                            OutMessage& message,
-                            OutPacket* prevPacket = nullptr);
+  bool WriteMessageToPacket(OutPacket& packet, Bits& remBits, OutMessage& message, OutPacket* prevPacket = nullptr);
   /// Attempts to write a message to the packet
   /// Returns the result of the operation
-  PacketWriteResult::Enum WriteMessage(OutPacket& packet,
-                                       OutMessage& message,
-                                       Bits& remBits,
-                                       bool isResendMessage);
+  PacketWriteResult::Enum WriteMessage(OutPacket& packet, OutMessage& message, Bits& remBits, bool isResendMessage);
   /// Updates the link outbox
   void Update(const ACKArray& remoteACKs, const NAKArray& remoteNAKs);
 
@@ -157,24 +146,21 @@ class LinkOutbox
   PeerLink* mLink; /// Operating link
 
   /// Channel Data
-  OutMessageChannel mDefaultChannel; /// Outgoing default (zero) message channel
-  ArraySet<OutMessageChannel>
-      mChannels; /// Outgoing (non-zero) message channels
-  IdStore<MessageChannelId>
-      mChannelIdStore; /// Outgoing message channel ID store
+  OutMessageChannel mDefaultChannel;         /// Outgoing default (zero) message channel
+  ArraySet<OutMessageChannel> mChannels;     /// Outgoing (non-zero) message channels
+  IdStore<MessageChannelId> mChannelIdStore; /// Outgoing message channel ID store
 
   /// Message Data
   MessageReceiptId mNextReceiptID; /// Next outgoing message receipt ID
   OutMessages mOutMessages;        /// Queued outgoing messages
 
   /// Packet Data
-  PacketSequenceId mNextSequenceId; /// Next packet sequence ID
-  TimeMs mLastSendTime;             /// Last packet send time
-  ArraySet<OutPacket> mSentPackets; /// Sent packets awaiting acknowledgement
-  Array<OutPacket> mResendPackets;  /// NAKd packets containing messages that
-                                    /// need to be resent
-  ArraySet<FragmentedReceipt>
-      mFragmentedReceipts; /// Fragmented receipt records
+  PacketSequenceId mNextSequenceId;                /// Next packet sequence ID
+  TimeMs mLastSendTime;                            /// Last packet send time
+  ArraySet<OutPacket> mSentPackets;                /// Sent packets awaiting acknowledgement
+  Array<OutPacket> mResendPackets;                 /// NAKd packets containing messages that
+                                                   /// need to be resent
+  ArraySet<FragmentedReceipt> mFragmentedReceipts; /// Fragmented receipt records
 
   /// Friends
   friend class PeerLink;

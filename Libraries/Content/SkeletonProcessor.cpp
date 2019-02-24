@@ -4,9 +4,7 @@
 namespace Zero
 {
 
-SkeletonProcessor::SkeletonProcessor(HierarchyDataMap& hierarchyData,
-                                     MeshDataMap& meshData,
-                                     String& rootNodeName) :
+SkeletonProcessor::SkeletonProcessor(HierarchyDataMap& hierarchyData, MeshDataMap& meshData, String& rootNodeName) :
     mHierarchyDataMap(hierarchyData),
     mMeshDataMap(meshData),
     mRootNodeName(rootNodeName)
@@ -42,8 +40,7 @@ void SkeletonProcessor::ProcessSkeletonHierarchy(const aiScene* scene)
       // on the mesh node set the path to the skeleton root node we just found
       String skeletonRootNode = FindSkeletonRootFromBone(boneName);
       HierarchyData& hierarchyData = mHierarchyDataMap[meshData.mMeshName];
-      hierarchyData.mSkeletonRootNodePath =
-          CreateCogPathToSkeletonRoot(meshData.mMeshName, skeletonRootNode);
+      hierarchyData.mSkeletonRootNodePath = CreateCogPathToSkeletonRoot(meshData.mMeshName, skeletonRootNode);
     }
   }
 }
@@ -63,8 +60,7 @@ String SkeletonProcessor::FindSkeletonRootFromBone(String boneName)
   return data.mNodeName;
 }
 
-String SkeletonProcessor::CreateCogPathToSkeletonRoot(String meshNode,
-                                                      String skeletonRootNode)
+String SkeletonProcessor::CreateCogPathToSkeletonRoot(String meshNode, String skeletonRootNode)
 {
   // the skeleton will always be one level down from the root node
   // so we just need to count up the number of levels to the root that the mesh
@@ -121,9 +117,7 @@ void SkeletonProcessor::UpdateCogPaths(String nodeName)
     mHierarchyDataMap[nodeName].mNodePath = nodeName;
   else
     mHierarchyDataMap[nodeName].mNodePath =
-        BuildString(mRootNodeName,
-                    cAnimationPathDelimiterStr,
-                    mHierarchyDataMap[nodeName].mNodePath);
+        BuildString(mRootNodeName, cAnimationPathDelimiterStr, mHierarchyDataMap[nodeName].mNodePath);
 }
 
 } // namespace Zero

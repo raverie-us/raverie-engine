@@ -48,8 +48,7 @@ ZilchDefineType(SubRenderGroupPass, builder, type)
   ZilchBindMethod(ExcludeSubRenderGroup);
 }
 
-SubRenderGroupPass::SubRenderGroupPass(RenderTasksEvent* renderTasksEvent,
-                                       RenderGroup& baseRenderGroup) :
+SubRenderGroupPass::SubRenderGroupPass(RenderTasksEvent* renderTasksEvent, RenderGroup& baseRenderGroup) :
     mRenderTasksEvent(renderTasksEvent)
 {
   Reset(baseRenderGroup);
@@ -66,8 +65,7 @@ void SubRenderGroupPass::Reset(RenderGroup& baseRenderGroup)
   subData.mRender = false;
 }
 
-void SubRenderGroupPass::SetDefaultSettings(
-    GraphicsRenderSettings& defaultSettings, MaterialBlock& defaultPass)
+void SubRenderGroupPass::SetDefaultSettings(GraphicsRenderSettings& defaultSettings, MaterialBlock& defaultPass)
 {
   if (mSubData[0].mRender)
     return DoNotifyException("Error", "Defaults have already been set.");
@@ -108,16 +106,13 @@ void SubRenderGroupPass::ExcludeSubRenderGroup(RenderGroup& subGroup)
   subData.mRender = false;
 }
 
-bool SubRenderGroupPass::ValidateSettings(
-    GraphicsRenderSettings& renderSettings, MaterialBlock& renderPass)
+bool SubRenderGroupPass::ValidateSettings(GraphicsRenderSettings& renderSettings, MaterialBlock& renderPass)
 {
-  ZilchFragmentType::Enum fragmentType =
-      Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
+  ZilchFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
   if (fragmentType != ZilchFragmentType::RenderPass)
     return DoNotifyException("Error", "Fragment is not a [RenderPass]"), false;
 
-  if (!RenderTaskHelper(mRenderTasksEvent->mRenderTasks->mRenderTaskBuffer)
-           .ValidateRenderTargets(renderSettings))
+  if (!RenderTaskHelper(mRenderTasksEvent->mRenderTasks->mRenderTaskBuffer).ValidateRenderTargets(renderSettings))
     return false;
 
   return true;
@@ -126,12 +121,10 @@ bool SubRenderGroupPass::ValidateSettings(
 bool SubRenderGroupPass::ValidateRenderGroup(RenderGroup& renderGroup)
 {
   if (!mBaseRenderGroup->IsSubRenderGroup(&renderGroup))
-    return DoNotifyException(
-               "Error",
-               String::Format(
-                   "'%s' is not a child of the base RenderGroup '%s'.",
-                   renderGroup.Name.c_str(),
-                   mBaseRenderGroup->Name.c_str())),
+    return DoNotifyException("Error",
+                             String::Format("'%s' is not a child of the base RenderGroup '%s'.",
+                                            renderGroup.Name.c_str(),
+                                            mBaseRenderGroup->Name.c_str())),
            false;
 
   for (size_t i = 1; i < mSubData.Size(); ++i)
@@ -139,9 +132,7 @@ bool SubRenderGroupPass::ValidateRenderGroup(RenderGroup& renderGroup)
     if (&renderGroup == *mSubData[i].mRenderGroup)
       return DoNotifyException(
                  "Error",
-                 String::Format(
-                     "Settings or exclusion for '%s' have already been added.",
-                     renderGroup.Name.c_str())),
+                 String::Format("Settings or exclusion for '%s' have already been added.", renderGroup.Name.c_str())),
              false;
   }
 
@@ -157,89 +148,49 @@ ZilchDefineType(RenderTasksEvent, builder, type)
   ZilchBindGetter(CameraViewportCog);
 
   ZilchBindOverloadedMethod(GetRenderTarget,
-                            ZilchInstanceOverload(HandleOf<RenderTarget>,
-                                                  IntVec2,
-                                                  TextureFormat::Enum));
-  ZilchBindOverloadedMethod(GetRenderTarget,
-                            ZilchInstanceOverload(HandleOf<RenderTarget>,
-                                                  IntVec2,
-                                                  TextureFormat::Enum,
-                                                  SamplerSettings&));
+                            ZilchInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum));
   ZilchBindOverloadedMethod(
-      GetRenderTarget,
-      ZilchInstanceOverload(HandleOf<RenderTarget>, HandleOf<Texture>));
+      GetRenderTarget, ZilchInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum, SamplerSettings&));
+  ZilchBindOverloadedMethod(GetRenderTarget, ZilchInstanceOverload(HandleOf<RenderTarget>, HandleOf<Texture>));
 
   ZilchBindMethod(CreateSubRenderGroupPass);
 
+  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderTarget*, Vec4));
+  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderTarget*, float));
+  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderTarget*, float, uint));
+  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderTarget*, float, uint, uint));
   ZilchBindOverloadedMethod(AddRenderTaskClearTarget,
-                            ZilchInstanceOverload(void, RenderTarget*, Vec4));
+                            ZilchInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float));
   ZilchBindOverloadedMethod(AddRenderTaskClearTarget,
-                            ZilchInstanceOverload(void, RenderTarget*, float));
-  ZilchBindOverloadedMethod(
-      AddRenderTaskClearTarget,
-      ZilchInstanceOverload(void, RenderTarget*, float, uint));
-  ZilchBindOverloadedMethod(
-      AddRenderTaskClearTarget,
-      ZilchInstanceOverload(void, RenderTarget*, float, uint, uint));
-  ZilchBindOverloadedMethod(
-      AddRenderTaskClearTarget,
-      ZilchInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float));
-  ZilchBindOverloadedMethod(
-      AddRenderTaskClearTarget,
-      ZilchInstanceOverload(
-          void, RenderTarget*, RenderTarget*, Vec4, float, uint));
-  ZilchBindOverloadedMethod(
-      AddRenderTaskClearTarget,
-      ZilchInstanceOverload(
-          void, RenderTarget*, RenderTarget*, Vec4, float, uint, uint));
-  ZilchBindOverloadedMethod(
-      AddRenderTaskClearTarget,
-      ZilchInstanceOverload(void, GraphicsRenderSettings&, Vec4));
-  ZilchBindOverloadedMethod(
-      AddRenderTaskClearTarget,
-      ZilchInstanceOverload(void, GraphicsRenderSettings&, Vec4, float));
-  ZilchBindOverloadedMethod(
-      AddRenderTaskClearTarget,
-      ZilchInstanceOverload(void, GraphicsRenderSettings&, Vec4, float, uint));
-  ZilchBindOverloadedMethod(
-      AddRenderTaskClearTarget,
-      ZilchInstanceOverload(
-          void, GraphicsRenderSettings&, Vec4, float, uint, uint));
+                            ZilchInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float, uint));
+  ZilchBindOverloadedMethod(AddRenderTaskClearTarget,
+                            ZilchInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float, uint, uint));
+  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, GraphicsRenderSettings&, Vec4));
+  ZilchBindOverloadedMethod(AddRenderTaskClearTarget,
+                            ZilchInstanceOverload(void, GraphicsRenderSettings&, Vec4, float));
+  ZilchBindOverloadedMethod(AddRenderTaskClearTarget,
+                            ZilchInstanceOverload(void, GraphicsRenderSettings&, Vec4, float, uint));
+  ZilchBindOverloadedMethod(AddRenderTaskClearTarget,
+                            ZilchInstanceOverload(void, GraphicsRenderSettings&, Vec4, float, uint, uint));
 
+  ZilchBindOverloadedMethod(AddRenderTaskRenderPass,
+                            ZilchInstanceOverload(void, GraphicsRenderSettings&, RenderGroup&, MaterialBlock&));
   ZilchBindOverloadedMethod(
       AddRenderTaskRenderPass,
-      ZilchInstanceOverload(
-          void, GraphicsRenderSettings&, RenderGroup&, MaterialBlock&));
-  ZilchBindOverloadedMethod(AddRenderTaskRenderPass,
-                            ZilchInstanceOverload(void,
-                                                  GraphicsRenderSettings&,
-                                                  GraphicalRangeInterface&,
-                                                  MaterialBlock&));
+      ZilchInstanceOverload(void, GraphicsRenderSettings&, GraphicalRangeInterface&, MaterialBlock&));
 
   ZilchBindMethod(AddRenderTaskSubRenderGroupPass);
 
-  ZilchBindOverloadedMethod(
-      AddRenderTaskPostProcess,
-      ZilchInstanceOverload(void, RenderTarget*, Material&));
-  ZilchBindOverloadedMethod(
-      AddRenderTaskPostProcess,
-      ZilchInstanceOverload(void, RenderTarget*, MaterialBlock&));
-  ZilchBindOverloadedMethod(
-      AddRenderTaskPostProcess,
-      ZilchInstanceOverload(void, GraphicsRenderSettings&, Material&));
-  ZilchBindOverloadedMethod(
-      AddRenderTaskPostProcess,
-      ZilchInstanceOverload(void, GraphicsRenderSettings&, MaterialBlock&));
+  ZilchBindOverloadedMethod(AddRenderTaskPostProcess, ZilchInstanceOverload(void, RenderTarget*, Material&));
+  ZilchBindOverloadedMethod(AddRenderTaskPostProcess, ZilchInstanceOverload(void, RenderTarget*, MaterialBlock&));
+  ZilchBindOverloadedMethod(AddRenderTaskPostProcess, ZilchInstanceOverload(void, GraphicsRenderSettings&, Material&));
+  ZilchBindOverloadedMethod(AddRenderTaskPostProcess,
+                            ZilchInstanceOverload(void, GraphicsRenderSettings&, MaterialBlock&));
 
   ZilchBindOverloadedMethod(GetFinalTarget,
-                            ZilchInstanceOverload(HandleOf<RenderTarget>,
-                                                  IntVec2,
-                                                  TextureFormat::Enum));
-  ZilchBindOverloadedMethod(GetFinalTarget,
-                            ZilchInstanceOverload(HandleOf<RenderTarget>,
-                                                  IntVec2,
-                                                  TextureFormat::Enum,
-                                                  SamplerSettings&));
+                            ZilchInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum));
+  ZilchBindOverloadedMethod(
+      GetFinalTarget, ZilchInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum, SamplerSettings&));
 }
 
 RenderTasksEvent::RenderTasksEvent() :
@@ -267,56 +218,48 @@ IntVec2 RenderTasksEvent::GetViewportSize()
   return mViewportSize;
 }
 
-HandleOf<RenderTarget>
-RenderTasksEvent::GetRenderTarget(IntVec2 size, TextureFormat::Enum format)
+HandleOf<RenderTarget> RenderTasksEvent::GetRenderTarget(IntVec2 size, TextureFormat::Enum format)
 {
   SamplerSettings samplerSettings;
   return GetRenderTarget(size, format, samplerSettings);
 }
 
-HandleOf<RenderTarget> RenderTasksEvent::GetRenderTarget(
-    IntVec2 size, TextureFormat::Enum format, SamplerSettings& samplerSettings)
+HandleOf<RenderTarget> RenderTasksEvent::GetRenderTarget(IntVec2 size,
+                                                         TextureFormat::Enum format,
+                                                         SamplerSettings& samplerSettings)
 {
   // need to determine a good size limit
   size = Math::Clamp(size, IntVec2(1, 1), IntVec2(4096, 4096));
-  return Z::gEngine->has(GraphicsEngine)
-      ->GetRenderTarget((uint)size.x, (uint)size.y, format, samplerSettings);
+  return Z::gEngine->has(GraphicsEngine)->GetRenderTarget((uint)size.x, (uint)size.y, format, samplerSettings);
 }
 
-HandleOf<RenderTarget>
-RenderTasksEvent::GetRenderTarget(HandleOf<Texture> texture)
+HandleOf<RenderTarget> RenderTasksEvent::GetRenderTarget(HandleOf<Texture> texture)
 {
   return Z::gEngine->has(GraphicsEngine)->GetRenderTarget(texture);
 }
 
-HandleOf<SubRenderGroupPass>
-RenderTasksEvent::CreateSubRenderGroupPass(RenderGroup& baseGroup)
+HandleOf<SubRenderGroupPass> RenderTasksEvent::CreateSubRenderGroupPass(RenderGroup& baseGroup)
 {
-  SubRenderGroupPass* subRenderGroupPass =
-      new SubRenderGroupPass(this, baseGroup);
+  SubRenderGroupPass* subRenderGroupPass = new SubRenderGroupPass(this, baseGroup);
   mSubRenderGroupPasses.PushBack(subRenderGroupPass);
   return subRenderGroupPass;
 }
 
-void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget,
-                                                Vec4 color)
+void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget, Vec4 color)
 {
   GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(colorTarget);
   AddRenderTaskClearTarget(renderSettings, color, 0.0f, 0, 0xFF);
 }
 
-void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* depthTarget,
-                                                float depth)
+void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* depthTarget, float depth)
 {
   GraphicsRenderSettings renderSettings;
   renderSettings.SetDepthTarget(depthTarget);
   AddRenderTaskClearTarget(renderSettings, Vec4::cZero, depth, 0, 0xFF);
 }
 
-void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* depthTarget,
-                                                float depth,
-                                                uint stencil)
+void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* depthTarget, float depth, uint stencil)
 {
   GraphicsRenderSettings renderSettings;
   renderSettings.SetDepthTarget(depthTarget);
@@ -330,8 +273,7 @@ void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* depthTarget,
 {
   GraphicsRenderSettings renderSettings;
   renderSettings.SetDepthTarget(depthTarget);
-  AddRenderTaskClearTarget(
-      renderSettings, Vec4::cZero, depth, stencil, stencilWriteMask);
+  AddRenderTaskClearTarget(renderSettings, Vec4::cZero, depth, stencil, stencilWriteMask);
 }
 
 void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget,
@@ -345,11 +287,8 @@ void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget,
   AddRenderTaskClearTarget(renderSettings, color, depth, 0, 0xFF);
 }
 
-void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget,
-                                                RenderTarget* depthTarget,
-                                                Vec4 color,
-                                                float depth,
-                                                uint stencil)
+void RenderTasksEvent::AddRenderTaskClearTarget(
+    RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth, uint stencil)
 {
   GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(colorTarget);
@@ -357,60 +296,45 @@ void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget,
   AddRenderTaskClearTarget(renderSettings, color, depth, stencil, 0xFF);
 }
 
-void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget,
-                                                RenderTarget* depthTarget,
-                                                Vec4 color,
-                                                float depth,
-                                                uint stencil,
-                                                uint stencilWriteMask)
+void RenderTasksEvent::AddRenderTaskClearTarget(
+    RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth, uint stencil, uint stencilWriteMask)
 {
   GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(colorTarget);
   renderSettings.SetDepthTarget(depthTarget);
-  AddRenderTaskClearTarget(
-      renderSettings, color, depth, stencil, stencilWriteMask);
+  AddRenderTaskClearTarget(renderSettings, color, depth, stencil, stencilWriteMask);
 }
 
-void RenderTasksEvent::AddRenderTaskClearTarget(
-    GraphicsRenderSettings& renderSettings, Vec4 color)
+void RenderTasksEvent::AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color)
 {
   AddRenderTaskClearTarget(renderSettings, color, 0, 0, 0xFF);
 }
 
-void RenderTasksEvent::AddRenderTaskClearTarget(
-    GraphicsRenderSettings& renderSettings, Vec4 color, float depth)
+void RenderTasksEvent::AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color, float depth)
 {
   AddRenderTaskClearTarget(renderSettings, color, depth, 0, 0xFF);
 }
 
-void RenderTasksEvent::AddRenderTaskClearTarget(
-    GraphicsRenderSettings& renderSettings,
-    Vec4 color,
-    float depth,
-    uint stencil)
+void RenderTasksEvent::AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings,
+                                                Vec4 color,
+                                                float depth,
+                                                uint stencil)
 {
   AddRenderTaskClearTarget(renderSettings, color, depth, stencil, 0xFF);
 }
 
 void RenderTasksEvent::AddRenderTaskClearTarget(
-    GraphicsRenderSettings& renderSettings,
-    Vec4 color,
-    float depth,
-    uint stencil,
-    uint stencilWriteMask)
+    GraphicsRenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask)
 {
   RenderTaskHelper(mRenderTasks->mRenderTaskBuffer)
-      .AddRenderTaskClearTarget(
-          renderSettings, color, depth, stencil, stencilWriteMask);
+      .AddRenderTaskClearTarget(renderSettings, color, depth, stencil, stencilWriteMask);
 }
 
-void RenderTasksEvent::AddRenderTaskRenderPass(
-    GraphicsRenderSettings& renderSettings,
-    RenderGroup& renderGroup,
-    MaterialBlock& renderPass)
+void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSettings,
+                                               RenderGroup& renderGroup,
+                                               MaterialBlock& renderPass)
 {
-  ZilchFragmentType::Enum fragmentType =
-      Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
+  ZilchFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
   if (fragmentType != ZilchFragmentType::RenderPass)
     return DoNotifyException("Error", "Fragment is not a [RenderPass]");
 
@@ -420,21 +344,19 @@ void RenderTasksEvent::AddRenderTaskRenderPass(
   uint shaderInputsId = GetUniqueShaderInputsId();
 
   AddShaderInputs(&renderPass, shaderInputsId);
-  forRange(Material * material, materials.All())
-      AddShaderInputs(material, shaderInputsId);
+  forRange (Material* material, materials.All())
+    AddShaderInputs(material, shaderInputsId);
 
   AddShaderInputs(renderSettings.mGlobalShaderInputs, shaderInputsId);
 
   String renderPassName = ZilchVirtualTypeId(&renderPass)->Name;
   RenderTaskHelper(mRenderTasks->mRenderTaskBuffer)
-      .AddRenderTaskRenderPass(
-          renderSettings, renderGroup.mSortId, renderPassName, shaderInputsId);
+      .AddRenderTaskRenderPass(renderSettings, renderGroup.mSortId, renderPassName, shaderInputsId);
 
   mCamera->mUsedRenderGroupIds.Insert(renderGroup.mSortId);
 }
 
-void RenderTasksEvent::AddRenderTaskSubRenderGroupPass(
-    SubRenderGroupPass& subRenderGroupPass)
+void RenderTasksEvent::AddRenderTaskSubRenderGroupPass(SubRenderGroupPass& subRenderGroupPass)
 {
   // Index 0 is always the base task entry and/or the defaults.
   // The base task needs to know how many other tasks proceed it for sub
@@ -458,11 +380,10 @@ void RenderTasksEvent::AddRenderTaskSubRenderGroupPass(
       // Okay to use the whole Material set from the base RenderGroup because
       // inputs will just be cached but we need an input range entry for each
       // unique shaderInputsId to find the inputs.
-      forRange(Material * material, materials.All())
-          AddShaderInputs(material, shaderInputsId);
+      forRange (Material* material, materials.All())
+        AddShaderInputs(material, shaderInputsId);
 
-      AddShaderInputs(subData.mRenderSettings.mGlobalShaderInputs,
-                      shaderInputsId);
+      AddShaderInputs(subData.mRenderSettings.mGlobalShaderInputs, shaderInputsId);
     }
 
     String renderPassName = ZilchVirtualTypeId(&subData.mRenderPass)->Name;
@@ -479,17 +400,14 @@ void RenderTasksEvent::AddRenderTaskSubRenderGroupPass(
 
   // Sub RenderGroups are sorted as the base group, only set the base as being
   // used.
-  mCamera->mUsedRenderGroupIds.Insert(
-      subRenderGroupPass.mBaseRenderGroup->mSortId);
+  mCamera->mUsedRenderGroupIds.Insert(subRenderGroupPass.mBaseRenderGroup->mSortId);
 }
 
-void RenderTasksEvent::AddRenderTaskRenderPass(
-    GraphicsRenderSettings& renderSettings,
-    GraphicalRangeInterface& graphicalRange,
-    MaterialBlock& renderPass)
+void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSettings,
+                                               GraphicalRangeInterface& graphicalRange,
+                                               MaterialBlock& renderPass)
 {
-  ZilchFragmentType::Enum fragmentType =
-      Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
+  ZilchFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
   if (fragmentType != ZilchFragmentType::RenderPass)
     return DoNotifyException("Error", "Fragment is not a [RenderPass]");
 
@@ -499,7 +417,7 @@ void RenderTasksEvent::AddRenderTaskRenderPass(
   IndexRange indexRange;
   indexRange.start = mGraphicsSpace->mVisibleGraphicals.Size();
 
-  forRange(Graphical * graphical, graphicalRange.mGraphicals.All())
+  forRange (Graphical* graphical, graphicalRange.mGraphicals.All())
   {
     // Do not allow a graphical from a different space
     if (graphical->GetSpace() != mGraphicsSpace->GetOwner())
@@ -507,8 +425,7 @@ void RenderTasksEvent::AddRenderTaskRenderPass(
 
     // No sort values are needed, these entries are to be rendered in the order
     // given
-    graphical->MidPhaseQuery(
-        mGraphicsSpace->mVisibleGraphicals, *mCamera, nullptr);
+    graphical->MidPhaseQuery(mGraphicsSpace->mVisibleGraphicals, *mCamera, nullptr);
     materials.Insert(graphical->mMaterial);
   }
 
@@ -528,54 +445,46 @@ void RenderTasksEvent::AddRenderTaskRenderPass(
   uint shaderInputsId = GetUniqueShaderInputsId();
 
   AddShaderInputs(&renderPass, shaderInputsId);
-  forRange(Material * material, materials.All())
-      AddShaderInputs(material, shaderInputsId);
+  forRange (Material* material, materials.All())
+    AddShaderInputs(material, shaderInputsId);
 
   AddShaderInputs(renderSettings.mGlobalShaderInputs, shaderInputsId);
 
   String renderPassName = ZilchVirtualTypeId(&renderPass)->Name;
   RenderTaskHelper(mRenderTasks->mRenderTaskBuffer)
-      .AddRenderTaskRenderPass(
-          renderSettings, groupId, renderPassName, shaderInputsId);
+      .AddRenderTaskRenderPass(renderSettings, groupId, renderPassName, shaderInputsId);
 
   mCamera->mUsedRenderGroupIds.Insert(groupId);
 }
 
-void RenderTasksEvent::AddRenderTaskPostProcess(RenderTarget* colorTarget,
-                                                Material& material)
+void RenderTasksEvent::AddRenderTaskPostProcess(RenderTarget* colorTarget, Material& material)
 {
   GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(colorTarget);
   AddRenderTaskPostProcess(renderSettings, material);
 }
 
-void RenderTasksEvent::AddRenderTaskPostProcess(RenderTarget* colorTarget,
-                                                MaterialBlock& postProcess)
+void RenderTasksEvent::AddRenderTaskPostProcess(RenderTarget* colorTarget, MaterialBlock& postProcess)
 {
   GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(colorTarget);
   AddRenderTaskPostProcess(renderSettings, postProcess);
 }
 
-void RenderTasksEvent::AddRenderTaskPostProcess(
-    GraphicsRenderSettings& renderSettings, Material& material)
+void RenderTasksEvent::AddRenderTaskPostProcess(GraphicsRenderSettings& renderSettings, Material& material)
 {
   uint shaderInputsId = GetUniqueShaderInputsId();
   AddShaderInputs(&material, shaderInputsId);
 
-  AddShaderInputs(renderSettings.mGlobalShaderInputs.Dereference(),
-                  shaderInputsId);
+  AddShaderInputs(renderSettings.mGlobalShaderInputs.Dereference(), shaderInputsId);
 
   RenderTaskHelper(mRenderTasks->mRenderTaskBuffer)
-      .AddRenderTaskPostProcess(
-          renderSettings, material.mRenderData, shaderInputsId);
+      .AddRenderTaskPostProcess(renderSettings, material.mRenderData, shaderInputsId);
 }
 
-void RenderTasksEvent::AddRenderTaskPostProcess(
-    GraphicsRenderSettings& renderSettings, MaterialBlock& postProcess)
+void RenderTasksEvent::AddRenderTaskPostProcess(GraphicsRenderSettings& renderSettings, MaterialBlock& postProcess)
 {
-  ZilchFragmentType::Enum fragmentType =
-      Z::gEngine->has(GraphicsEngine)->GetFragmentType(&postProcess);
+  ZilchFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&postProcess);
   if (fragmentType != ZilchFragmentType::PostProcess)
     return DoNotifyException("Error", "Fragment is not a [PostProcess]");
 
@@ -586,26 +495,23 @@ void RenderTasksEvent::AddRenderTaskPostProcess(
 
   String postProcessName = ZilchVirtualTypeId(&postProcess)->Name;
   RenderTaskHelper(mRenderTasks->mRenderTaskBuffer)
-      .AddRenderTaskPostProcess(
-          renderSettings, postProcessName, shaderInputsId);
+      .AddRenderTaskPostProcess(renderSettings, postProcessName, shaderInputsId);
 }
 
-void RenderTasksEvent::AddRenderTaskBackBufferBlit(RenderTarget* colorTarget,
-                                                   ScreenViewport viewport)
+void RenderTasksEvent::AddRenderTaskBackBufferBlit(RenderTarget* colorTarget, ScreenViewport viewport)
 {
-  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer)
-      .AddRenderTaskBackBufferBlit(colorTarget, viewport);
+  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer).AddRenderTaskBackBufferBlit(colorTarget, viewport);
 }
 
-HandleOf<RenderTarget>
-RenderTasksEvent::GetFinalTarget(IntVec2 size, TextureFormat::Enum format)
+HandleOf<RenderTarget> RenderTasksEvent::GetFinalTarget(IntVec2 size, TextureFormat::Enum format)
 {
   SamplerSettings samplerSettings;
   return GetFinalTarget(size, format, samplerSettings);
 }
 
-HandleOf<RenderTarget> RenderTasksEvent::GetFinalTarget(
-    IntVec2 size, TextureFormat::Enum format, SamplerSettings& samplerSettings)
+HandleOf<RenderTarget> RenderTasksEvent::GetFinalTarget(IntVec2 size,
+                                                        TextureFormat::Enum format,
+                                                        SamplerSettings& samplerSettings)
 {
   size = Math::Clamp(size, IntVec2(1, 1), IntVec2(4096, 4096));
 
@@ -635,22 +541,18 @@ uint RenderTasksEvent::GetUniqueShaderInputsId()
 void RenderTasksEvent::AddShaderInputs(Material* material, uint shaderInputsId)
 {
   Pair<u64, uint> key((u64)material->mResourceId, shaderInputsId);
-  IndexRange range = material->AddShaderInputs(
-      mRenderTasks->mShaderInputs, mRenderTasks->mShaderInputsVersion);
+  IndexRange range = material->AddShaderInputs(mRenderTasks->mShaderInputs, mRenderTasks->mShaderInputsVersion);
   mRenderTasks->mShaderInputRanges.Insert(key, range);
 }
 
-void RenderTasksEvent::AddShaderInputs(MaterialBlock* materialBlock,
-                                       uint shaderInputsId)
+void RenderTasksEvent::AddShaderInputs(MaterialBlock* materialBlock, uint shaderInputsId)
 {
   Pair<u64, uint> key(cFragmentShaderInputsId, shaderInputsId);
-  IndexRange range =
-      materialBlock->AddShaderInputs(mRenderTasks->mShaderInputs);
+  IndexRange range = materialBlock->AddShaderInputs(mRenderTasks->mShaderInputs);
   mRenderTasks->mShaderInputRanges.Insert(key, range);
 }
 
-void RenderTasksEvent::AddShaderInputs(ShaderInputs* globalInputs,
-                                       uint shaderInputsId)
+void RenderTasksEvent::AddShaderInputs(ShaderInputs* globalInputs, uint shaderInputsId)
 {
   if (globalInputs == nullptr)
     return;
@@ -677,11 +579,8 @@ RenderTaskHelper::RenderTaskHelper(RenderTaskBuffer& buffer) : mBuffer(buffer)
 {
 }
 
-void RenderTaskHelper::AddRenderTaskClearTarget(RenderSettings& renderSettings,
-                                                Vec4 color,
-                                                float depth,
-                                                uint stencil,
-                                                uint stencilWriteMask)
+void RenderTaskHelper::AddRenderTaskClearTarget(
+    RenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask)
 {
   if (!ValidateRenderTargets(renderSettings))
     return;
@@ -732,10 +631,9 @@ void RenderTaskHelper::AddRenderTaskPostProcess(RenderSettings& renderSettings,
   renderTask->mShaderInputsId = shaderInputsId;
 }
 
-void RenderTaskHelper::AddRenderTaskPostProcess(
-    RenderSettings& renderSettings,
-    MaterialRenderData* materialRenderData,
-    uint shaderInputsId)
+void RenderTaskHelper::AddRenderTaskPostProcess(RenderSettings& renderSettings,
+                                                MaterialRenderData* materialRenderData,
+                                                uint shaderInputsId)
 {
   if (!ValidateRenderTargets(renderSettings))
     return;
@@ -748,12 +646,10 @@ void RenderTaskHelper::AddRenderTaskPostProcess(
   renderTask->mShaderInputsId = shaderInputsId;
 }
 
-void RenderTaskHelper::AddRenderTaskBackBufferBlit(RenderTarget* colorTarget,
-                                                   ScreenViewport viewport)
+void RenderTaskHelper::AddRenderTaskBackBufferBlit(RenderTarget* colorTarget, ScreenViewport viewport)
 {
   // Don't need to validate render target, only used internally
-  RenderTaskBackBufferBlit* renderTask =
-      NewRenderTask<RenderTaskBackBufferBlit>();
+  RenderTaskBackBufferBlit* renderTask = NewRenderTask<RenderTaskBackBufferBlit>();
   renderTask->mId = RenderTaskType::BackBufferBlit;
   Texture* texture = colorTarget->mTexture;
   renderTask->mColorTarget = texture->mRenderData;
@@ -762,8 +658,7 @@ void RenderTaskHelper::AddRenderTaskBackBufferBlit(RenderTarget* colorTarget,
 
 void RenderTaskHelper::AddRenderTaskTextureUpdate(Texture* texture)
 {
-  RenderTaskTextureUpdate* renderTask =
-      NewRenderTask<RenderTaskTextureUpdate>();
+  RenderTaskTextureUpdate* renderTask = NewRenderTask<RenderTaskTextureUpdate>();
   renderTask->mId = RenderTaskType::TextureUpdate;
   renderTask->mRenderData = texture->mRenderData;
   renderTask->mWidth = texture->mWidth;
@@ -816,8 +711,7 @@ bool RenderTaskHelper::ValidateRenderTargets(RenderSettings& renderSettings)
 
   for (uint i = 1; i < sizes.Size(); ++i)
     if (sizes[i] != sizes[i - 1])
-      return DoNotifyException("Error", "Mismatching RenderTarget sizes."),
-             false;
+      return DoNotifyException("Error", "Mismatching RenderTarget sizes."), false;
 
   renderSettings.mTargetsWidth = (uint)sizes[0].x;
   renderSettings.mTargetsHeight = (uint)sizes[0].y;
@@ -838,10 +732,8 @@ bool RenderTaskHelper::ValidateRenderTargets(RenderSettings& renderSettings)
 
 void RenderTasksUpdateHelper(RenderTasksUpdateData& update)
 {
-  Array<RenderTaskRange>& renderTaskRanges =
-      update.mEvent->mRenderTasks->mRenderTaskRanges;
-  RenderTaskBuffer& renderTaskBuffer =
-      update.mEvent->mRenderTasks->mRenderTaskBuffer;
+  Array<RenderTaskRange>& renderTaskRanges = update.mEvent->mRenderTasks->mRenderTaskRanges;
+  RenderTaskBuffer& renderTaskBuffer = update.mEvent->mRenderTasks->mRenderTaskBuffer;
 
   RenderTaskRange range;
   range.mTaskIndex = renderTaskBuffer.mCurrentIndex;

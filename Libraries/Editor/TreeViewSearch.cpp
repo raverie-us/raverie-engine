@@ -4,10 +4,7 @@
 namespace Zero
 {
 
-TreeViewSearch::TreeViewSearch(Composite* parent,
-                               TreeView* treeView,
-                               DataSourceFilter* filter) :
-    Composite(parent)
+TreeViewSearch::TreeViewSearch(Composite* parent, TreeView* treeView, DataSourceFilter* filter) : Composite(parent)
 {
   mTreeView = treeView;
   mFiltered = filter;
@@ -52,7 +49,8 @@ void TreeViewSearch::OnKeyDown(KeyboardEvent* event)
     // normally there will be only one row
     Array<DataIndex> selectedIndices;
     mTreeView->GetSelection()->GetSelected(selectedIndices);
-    forRange(DataIndex index, selectedIndices.All()) mTreeView->ShowRow(index);
+    forRange (DataIndex index, selectedIndices.All())
+      mTreeView->ShowRow(index);
 
     // Move focus to the tree view
     mTreeView->TryTakeFocus();

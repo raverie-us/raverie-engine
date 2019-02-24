@@ -126,8 +126,7 @@ ZilchDefineStaticLibrary(EditorLibrary)
   // Commands
   ZilchInitializeType(Command);
   ZilchInitializeType(CogCommand);
-  ZilchInitializeTypeAs(EditorScriptObjects<CogCommand>,
-                        "EditorScriptObjectsCogCommand");
+  ZilchInitializeTypeAs(EditorScriptObjects<CogCommand>, "EditorScriptObjectsCogCommand");
   ZilchInitializeType(CogCommandManager);
 
   // Data Editors

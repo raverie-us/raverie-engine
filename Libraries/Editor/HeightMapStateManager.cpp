@@ -39,7 +39,7 @@ void HeightMapKeyFrame::CopyHeightMapData(HeightMap* map)
 {
   mUnitsPerPatch = map->mUnitsPerPatch;
 
-  forRange(PatchMapPair & patch, map->mPatches.All())
+  forRange (PatchMapPair& patch, map->mPatches.All())
   {
     mPatches[patch.first] = *patch.second;
   }

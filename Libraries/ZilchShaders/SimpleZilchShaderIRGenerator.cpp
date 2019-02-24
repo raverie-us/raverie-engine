@@ -4,10 +4,9 @@
 namespace Zero
 {
 
-void SimplifiedShaderReflectionData::CreateReflectionData(
-    ZilchShaderIRLibrary* shaderLibrary,
-    ShaderStageDescription& stageDef,
-    Array<PassResultRef>& passResults)
+void SimplifiedShaderReflectionData::CreateReflectionData(ZilchShaderIRLibrary* shaderLibrary,
+                                                          ShaderStageDescription& stageDef,
+                                                          Array<PassResultRef>& passResults)
 {
   if (passResults.Empty())
     return;
@@ -17,9 +16,8 @@ void SimplifiedShaderReflectionData::CreateReflectionData(
   CreateSimpleOpaqueTypeReflectionData(shaderLibrary, stageDef, passResults);
 }
 
-ShaderResourceReflectionData*
-SimplifiedShaderReflectionData::FindUniformReflectionData(
-    ZilchShaderIRType* fragmentType, StringParam propertyName)
+ShaderResourceReflectionData* SimplifiedShaderReflectionData::FindUniformReflectionData(ZilchShaderIRType* fragmentType,
+                                                                                        StringParam propertyName)
 {
   String fragmentName = fragmentType->mMeta->mZilchName;
   // Find the fragment's lookup data
@@ -28,8 +26,7 @@ SimplifiedShaderReflectionData::FindUniformReflectionData(
     return nullptr;
 
   // Find the uniform data for the given property name
-  UniformReflectionData* uniformData =
-      fragmentLookup->mMaterialUniforms.FindPointer(propertyName);
+  UniformReflectionData* uniformData = fragmentLookup->mMaterialUniforms.FindPointer(propertyName);
   if (uniformData == nullptr)
     return nullptr;
 
@@ -39,8 +36,7 @@ SimplifiedShaderReflectionData::FindUniformReflectionData(
     return nullptr;
 
   // Finally, index into the target uniform buffer to get the member data
-  ShaderStageResource& uniformBuffer =
-      mReflection.mUniforms[uniformBufferIndex];
+  ShaderStageResource& uniformBuffer = mReflection.mUniforms[uniformBufferIndex];
   size_t memberIndex = uniformData->mMemberIndex;
   if (memberIndex >= uniformBuffer.mMembers.Size())
     return nullptr;
@@ -48,90 +44,76 @@ SimplifiedShaderReflectionData::FindUniformReflectionData(
   return &uniformBuffer.mMembers[memberIndex];
 }
 
-void SimplifiedShaderReflectionData::FindSampledImageReflectionData(
-    ZilchShaderIRType* fragmentType,
-    StringParam propertyName,
-    Array<ShaderResourceReflectionData*>& results)
+void SimplifiedShaderReflectionData::FindSampledImageReflectionData(ZilchShaderIRType* fragmentType,
+                                                                    StringParam propertyName,
+                                                                    Array<ShaderResourceReflectionData*>& results)
 {
-  FragmentLookup* fragmentLookup =
-      mFragmentLookup.FindPointer(fragmentType->mMeta->mZilchName);
+  FragmentLookup* fragmentLookup = mFragmentLookup.FindPointer(fragmentType->mMeta->mZilchName);
   if (fragmentLookup == nullptr)
     return;
 
-  PopulateSamplerAndImageData(
-      fragmentLookup->mSampledImages, propertyName, results);
+  PopulateSamplerAndImageData(fragmentLookup->mSampledImages, propertyName, results);
 }
 
-void SimplifiedShaderReflectionData::FindImageReflectionData(
-    ZilchShaderIRType* fragmentType,
-    StringParam propertyName,
-    Array<ShaderResourceReflectionData*>& results)
+void SimplifiedShaderReflectionData::FindImageReflectionData(ZilchShaderIRType* fragmentType,
+                                                             StringParam propertyName,
+                                                             Array<ShaderResourceReflectionData*>& results)
 {
-  FragmentLookup* fragmentLookup =
-      mFragmentLookup.FindPointer(fragmentType->mMeta->mZilchName);
+  FragmentLookup* fragmentLookup = mFragmentLookup.FindPointer(fragmentType->mMeta->mZilchName);
   if (fragmentLookup == nullptr)
     return;
 
   PopulateSamplerAndImageData(fragmentLookup->mImages, propertyName, results);
 }
 
-void SimplifiedShaderReflectionData::FindSamplerReflectionData(
-    ZilchShaderIRType* fragmentType,
-    StringParam propertyName,
-    Array<ShaderResourceReflectionData*>& results)
+void SimplifiedShaderReflectionData::FindSamplerReflectionData(ZilchShaderIRType* fragmentType,
+                                                               StringParam propertyName,
+                                                               Array<ShaderResourceReflectionData*>& results)
 {
-  FragmentLookup* fragmentLookup =
-      mFragmentLookup.FindPointer(fragmentType->mMeta->mZilchName);
+  FragmentLookup* fragmentLookup = mFragmentLookup.FindPointer(fragmentType->mMeta->mZilchName);
   if (fragmentLookup == nullptr)
     return;
 
   PopulateSamplerAndImageData(fragmentLookup->mSamplers, propertyName, results);
 }
 
-ShaderResourceReflectionData* SimplifiedShaderReflectionData::FindStorageImage(
-    ZilchShaderIRType* fragmentType, StringParam propertyName)
+ShaderResourceReflectionData* SimplifiedShaderReflectionData::FindStorageImage(ZilchShaderIRType* fragmentType,
+                                                                               StringParam propertyName)
 {
-  FragmentLookup* fragmentLookup =
-      mFragmentLookup.FindPointer(fragmentType->mMeta->mZilchName);
+  FragmentLookup* fragmentLookup = mFragmentLookup.FindPointer(fragmentType->mMeta->mZilchName);
   if (fragmentLookup == nullptr)
     return nullptr;
 
   // Find the uniform data for the given property name
-  StorageImageRemappingData* storageImageData =
-      fragmentLookup->mStorageImages.FindPointer(propertyName);
+  StorageImageRemappingData* storageImageData = fragmentLookup->mStorageImages.FindPointer(propertyName);
   if (storageImageData == nullptr)
     return nullptr;
 
   return &mReflection.mStorageImages[storageImageData->mIndex].mReflectionData;
 }
 
-ShaderResourceReflectionData*
-SimplifiedShaderReflectionData::FindStructedStorageBuffer(
-    ZilchShaderIRType* fragmentType, StringParam propertyName)
+ShaderResourceReflectionData* SimplifiedShaderReflectionData::FindStructedStorageBuffer(ZilchShaderIRType* fragmentType,
+                                                                                        StringParam propertyName)
 {
-  FragmentLookup* fragmentLookup =
-      mFragmentLookup.FindPointer(fragmentType->mMeta->mZilchName);
+  FragmentLookup* fragmentLookup = mFragmentLookup.FindPointer(fragmentType->mMeta->mZilchName);
   if (fragmentLookup == nullptr)
     return nullptr;
 
   // Find the uniform data for the given property name
-  StructuredStorageBufferRemappingData* ssboData =
-      fragmentLookup->mStructedStorageBuffers.FindPointer(propertyName);
+  StructuredStorageBufferRemappingData* ssboData = fragmentLookup->mStructedStorageBuffers.FindPointer(propertyName);
   if (ssboData == nullptr)
     return nullptr;
 
   return &mReflection.mStructedStorageBuffers[ssboData->mIndex].mReflectionData;
 }
 
-void SimplifiedShaderReflectionData::CreateUniformReflectionData(
-    ZilchShaderIRLibrary* shaderLibrary,
-    ShaderStageDescription& stageDef,
-    Array<PassResultRef>& passResults)
+void SimplifiedShaderReflectionData::CreateUniformReflectionData(ZilchShaderIRLibrary* shaderLibrary,
+                                                                 ShaderStageDescription& stageDef,
+                                                                 Array<PassResultRef>& passResults)
 {
   HashMap<String, UniformReflectionData> memberRemappings;
   HashMap<String, SimpleResourceRemappingData> bufferRenames;
-  ShaderStageInterfaceReflection& firstStageData =
-      passResults[0]->mReflectionData;
+  ShaderStageInterfaceReflection& firstStageData = passResults[0]->mReflectionData;
   ShaderStageInterfaceReflection* lastStageData = &firstStageData;
 
   // Walk all uniforms in the first stage, building a mapping of the
@@ -142,8 +124,7 @@ void SimplifiedShaderReflectionData::CreateUniformReflectionData(
     String resourceName = uniformBuffer.mReflectionData.mInstanceName;
     // Make a map of the buffer to itself for now (if there's only
     // 1 pipeline stage then this should still be true)
-    SimpleResourceRemappingData& resourceRemapping =
-        bufferRenames[resourceName];
+    SimpleResourceRemappingData& resourceRemapping = bufferRenames[resourceName];
     resourceRemapping.mName = resourceName;
     resourceRemapping.mIndex = i;
     resourceRemapping.mActive = true;
@@ -155,8 +136,7 @@ void SimplifiedShaderReflectionData::CreateUniformReflectionData(
       AutoDeclare(pair, range.Front());
       String memberName = pair.first;
       size_t memberIndex = pair.second;
-      ShaderResourceReflectionData& memberReflection =
-          uniformBuffer.mMembers[memberIndex];
+      ShaderResourceReflectionData& memberReflection = uniformBuffer.mMembers[memberIndex];
       UniformReflectionData& memberRemappingData = memberRemappings[memberName];
       memberRemappingData.mBufferIndex = i;
       memberRemappingData.mMemberIndex = memberIndex;
@@ -167,11 +147,9 @@ void SimplifiedShaderReflectionData::CreateUniformReflectionData(
   // this only supports changes at the top level of a buffer (buffer renames or
   // buffers disappearing) and doesn't support member changes (member
   // re-orderings, buffer splits, etc...)
-  for (size_t pipelineIndex = 1; pipelineIndex < passResults.Size();
-       ++pipelineIndex)
+  for (size_t pipelineIndex = 1; pipelineIndex < passResults.Size(); ++pipelineIndex)
   {
-    ShaderStageInterfaceReflection& reflectionData =
-        passResults[pipelineIndex]->mReflectionData;
+    ShaderStageInterfaceReflection& reflectionData = passResults[pipelineIndex]->mReflectionData;
 
     // For each uniform buffer in the current stage, build a map of its name to
     // index
@@ -202,8 +180,7 @@ void SimplifiedShaderReflectionData::CreateUniformReflectionData(
       }
 
       // The buffer does exist, update its name and index
-      String newName =
-          reflectionData.mUniforms[*newIndex].mReflectionData.mInstanceName;
+      String newName = reflectionData.mUniforms[*newIndex].mReflectionData.mInstanceName;
       resourceRemapping.mName = newName;
       resourceRemapping.mIndex = *newIndex;
     }
@@ -216,21 +193,18 @@ void SimplifiedShaderReflectionData::CreateUniformReflectionData(
   AutoDeclare(fragRange, stageDef.mFragmentDescriptions->All());
   for (; !fragRange.Empty(); fragRange.PopFront())
   {
-    ZilchShaderIRCompositor::ShaderFragmentDescription* fragDesc =
-        fragRange.Front().second;
+    ZilchShaderIRCompositor::ShaderFragmentDescription* fragDesc = fragRange.Front().second;
 
     FragmentLookup& fragLookup = mFragmentLookup[fragDesc->mMeta->mZilchName];
     AutoDeclare(propRange, fragDesc->mFieldDescriptions.All());
     for (; !propRange.Empty(); propRange.PopFront())
     {
-      ZilchShaderIRCompositor::ShaderFieldDescription& fieldDesc =
-          propRange.Front().second;
+      ZilchShaderIRCompositor::ShaderFieldDescription& fieldDesc = propRange.Front().second;
 
       // Find the remapping data for this fragment's property
       // (make sure to use the property name which is the compositor's result
       // name)
-      UniformReflectionData* memberRemappingData =
-          memberRemappings.FindPointer(fieldDesc.mFieldPropertyName);
+      UniformReflectionData* memberRemappingData = memberRemappings.FindPointer(fieldDesc.mFieldPropertyName);
       if (memberRemappingData == nullptr)
         continue;
 
@@ -240,10 +214,8 @@ void SimplifiedShaderReflectionData::CreateUniformReflectionData(
 
       // We now need to trace this uniform buffer to the final stage to see
       // where this property ends up
-      String spirvBufferName = firstStageData.mUniforms[firstStageBufferIndex]
-                                   .mReflectionData.mInstanceName;
-      SimpleResourceRemappingData* resourceRemapping =
-          bufferRenames.FindPointer(spirvBufferName);
+      String spirvBufferName = firstStageData.mUniforms[firstStageBufferIndex].mReflectionData.mInstanceName;
+      SimpleResourceRemappingData* resourceRemapping = bufferRenames.FindPointer(spirvBufferName);
       // The property didn't make it to a final uniform buffer (or one that's
       // inactive)
       if (resourceRemapping == nullptr || !resourceRemapping->mActive)
@@ -251,8 +223,7 @@ void SimplifiedShaderReflectionData::CreateUniformReflectionData(
 
       // Store for the current fragment where the given property ended up
       String originalFieldName = fieldDesc.mMeta->mZilchName;
-      UniformReflectionData& uniformData =
-          fragLookup.mMaterialUniforms[originalFieldName];
+      UniformReflectionData& uniformData = fragLookup.mMaterialUniforms[originalFieldName];
       uniformData.mBufferIndex = resourceRemapping->mIndex;
       uniformData.mMemberIndex = memberRemappingData->mMemberIndex;
     }
@@ -263,15 +234,12 @@ void SimplifiedShaderReflectionData::CreateUniformReflectionData(
   mReflection = *lastStageData;
 }
 
-void SimplifiedShaderReflectionData::CreateSamplerAndImageReflectionData(
-    ZilchShaderIRLibrary* shaderLibrary,
-    ShaderStageDescription& stageDef,
-    Array<PassResultRef>& passResults)
+void SimplifiedShaderReflectionData::CreateSamplerAndImageReflectionData(ZilchShaderIRLibrary* shaderLibrary,
+                                                                         ShaderStageDescription& stageDef,
+                                                                         Array<PassResultRef>& passResults)
 {
-  ShaderStageInterfaceReflection& firstPassData =
-      passResults[0]->mReflectionData;
-  ShaderStageInterfaceReflection& lastPassData =
-      passResults[passResults.Size() - 1]->mReflectionData;
+  ShaderStageInterfaceReflection& firstPassData = passResults[0]->mReflectionData;
+  ShaderStageInterfaceReflection& lastPassData = passResults[passResults.Size() - 1]->mReflectionData;
 
   // Copy final data results
   mReflection.mImages = lastPassData.mImages;
@@ -287,61 +255,47 @@ void SimplifiedShaderReflectionData::CreateSamplerAndImageReflectionData(
   for (size_t i = 0; i < lastPassData.mImages.Size(); ++i)
     imageIndices[lastPassData.mImages[i].mReflectionData.mInstanceName] = i;
   for (size_t i = 0; i < lastPassData.mSampledImages.Size(); ++i)
-    sampledImageIndices[lastPassData.mSampledImages[i]
-                            .mReflectionData.mInstanceName] = i;
+    sampledImageIndices[lastPassData.mSampledImages[i].mReflectionData.mInstanceName] = i;
 
   // Walk all fragments looking for sampled image like properties
   AutoDeclare(fragRange, stageDef.mFragmentDescriptions->All());
   for (; !fragRange.Empty(); fragRange.PopFront())
   {
-    ZilchShaderIRCompositor::ShaderFragmentDescription* fragDesc =
-        fragRange.Front().second;
+    ZilchShaderIRCompositor::ShaderFragmentDescription* fragDesc = fragRange.Front().second;
 
     FragmentLookup& fragLookup = mFragmentLookup[fragDesc->mMeta->mZilchName];
     AutoDeclare(propRange, fragDesc->mFieldDescriptions.All());
     for (; !propRange.Empty(); propRange.PopFront())
     {
-      ZilchShaderIRCompositor::ShaderFieldDescription& fieldDesc =
-          propRange.Front().second;
+      ZilchShaderIRCompositor::ShaderFieldDescription& fieldDesc = propRange.Front().second;
       String fieldName = fieldDesc.mMeta->mZilchName;
       String propertyName = fieldDesc.mFieldPropertyName;
-      ZilchShaderIRType* shaderType =
-          shaderLibrary->FindType(fieldDesc.mMeta->mZilchType);
+      ZilchShaderIRType* shaderType = shaderLibrary->FindType(fieldDesc.mMeta->mZilchType);
       // This is a sampled image. Walk the sampled image properties
       if (shaderType->mBaseType == ShaderIRTypeBaseType::SampledImage)
       {
         // Get the first stage's data for the sampled image
-        SampledImageRemappings* resourceMappings =
-            firstPassData.mSampledImageRemappings.FindPointer(propertyName);
+        SampledImageRemappings* resourceMappings = firstPassData.mSampledImageRemappings.FindPointer(propertyName);
         if (resourceMappings == nullptr)
           continue;
 
         // Walk the pipeline stages to find the final multi-to-multi mappings.
         SampledImageRemappings results;
-        RecursivelyBuildSamplerAndImageMappings(
-            passResults, 1, *resourceMappings, results);
+        RecursivelyBuildSamplerAndImageMappings(passResults, 1, *resourceMappings, results);
         // Build the final name to index mapping
-        BuildFinalSampledImageMappings(&results,
-                                       samplerIndices,
-                                       imageIndices,
-                                       sampledImageIndices,
-                                       fragLookup.mSampledImages[fieldName]);
+        BuildFinalSampledImageMappings(
+            &results, samplerIndices, imageIndices, sampledImageIndices, fragLookup.mSampledImages[fieldName]);
       }
       else if (shaderType->mBaseType == ShaderIRTypeBaseType::Sampler)
       {
-        SampledImageRemappings* resourceMappings =
-            firstPassData.mSamplerRemappings.FindPointer(propertyName);
+        SampledImageRemappings* resourceMappings = firstPassData.mSamplerRemappings.FindPointer(propertyName);
         if (resourceMappings == nullptr)
           continue;
 
         SampledImageRemappings results;
-        RecursivelyBuildSamplerAndImageMappings(
-            passResults, 1, *resourceMappings, results);
-        BuildFinalSampledImageMappings(&results,
-                                       samplerIndices,
-                                       imageIndices,
-                                       sampledImageIndices,
-                                       fragLookup.mSamplers[fieldName]);
+        RecursivelyBuildSamplerAndImageMappings(passResults, 1, *resourceMappings, results);
+        BuildFinalSampledImageMappings(
+            &results, samplerIndices, imageIndices, sampledImageIndices, fragLookup.mSamplers[fieldName]);
       }
       else if (shaderType->mBaseType == ShaderIRTypeBaseType::Image)
       {
@@ -350,29 +304,23 @@ void SimplifiedShaderReflectionData::CreateSamplerAndImageReflectionData(
         if (!imageType.Load(shaderType) || imageType.IsStorageImage())
           continue;
 
-        SampledImageRemappings* resourceMappings =
-            firstPassData.mImageRemappings.FindPointer(propertyName);
+        SampledImageRemappings* resourceMappings = firstPassData.mImageRemappings.FindPointer(propertyName);
         if (resourceMappings == nullptr)
           continue;
 
         SampledImageRemappings results;
-        RecursivelyBuildSamplerAndImageMappings(
-            passResults, 1, *resourceMappings, results);
-        BuildFinalSampledImageMappings(&results,
-                                       samplerIndices,
-                                       imageIndices,
-                                       sampledImageIndices,
-                                       fragLookup.mImages[fieldName]);
+        RecursivelyBuildSamplerAndImageMappings(passResults, 1, *resourceMappings, results);
+        BuildFinalSampledImageMappings(
+            &results, samplerIndices, imageIndices, sampledImageIndices, fragLookup.mImages[fieldName]);
       }
     }
   }
 }
 
-void SimplifiedShaderReflectionData::RecursivelyBuildSamplerAndImageMappings(
-    Array<PassResultRef>& passResults,
-    size_t passIndex,
-    SampledImageRemappings& inputMappings,
-    SampledImageRemappings& outputMappings)
+void SimplifiedShaderReflectionData::RecursivelyBuildSamplerAndImageMappings(Array<PassResultRef>& passResults,
+                                                                             size_t passIndex,
+                                                                             SampledImageRemappings& inputMappings,
+                                                                             SampledImageRemappings& outputMappings)
 {
   // Base case. Just copy the inputs to the outputs.
   if (passIndex >= passResults.Size())
@@ -384,65 +332,49 @@ void SimplifiedShaderReflectionData::RecursivelyBuildSamplerAndImageMappings(
   // Walk all image, sampler, and sampled image remappings recursively.
   // Technically an image could merge into a sampled image and then split later
   // so we have to walk everything.
-  ShaderStageInterfaceReflection& reflectionData =
-      passResults[passIndex]->mReflectionData;
+  ShaderStageInterfaceReflection& reflectionData = passResults[passIndex]->mReflectionData;
 
   typedef Array<String>::range rangeType;
-  for (rangeType range = inputMappings.mImageRemappings.All(); !range.Empty();
-       range.PopFront())
+  for (rangeType range = inputMappings.mImageRemappings.All(); !range.Empty(); range.PopFront())
   {
     String name = range.Front();
-    SampledImageRemappings& sourceMappings =
-        reflectionData.mImageRemappings[name];
+    SampledImageRemappings& sourceMappings = reflectionData.mImageRemappings[name];
     SampledImageRemappings sourceResults;
-    RecursivelyBuildSamplerAndImageMappings(
-        passResults, passIndex + 1, sourceMappings, sourceResults);
+    RecursivelyBuildSamplerAndImageMappings(passResults, passIndex + 1, sourceMappings, sourceResults);
     MergeRemappings(outputMappings, sourceResults);
   }
 
-  for (rangeType range = inputMappings.mSamplerRemappings.All(); !range.Empty();
-       range.PopFront())
+  for (rangeType range = inputMappings.mSamplerRemappings.All(); !range.Empty(); range.PopFront())
   {
     String name = range.Front();
-    SampledImageRemappings& sourceMappings =
-        reflectionData.mSamplerRemappings[name];
+    SampledImageRemappings& sourceMappings = reflectionData.mSamplerRemappings[name];
     SampledImageRemappings sourceResults;
-    RecursivelyBuildSamplerAndImageMappings(
-        passResults, passIndex + 1, sourceMappings, sourceResults);
+    RecursivelyBuildSamplerAndImageMappings(passResults, passIndex + 1, sourceMappings, sourceResults);
     MergeRemappings(outputMappings, sourceResults);
   }
 
-  for (rangeType range = inputMappings.mSampledImageRemappings.All();
-       !range.Empty();
-       range.PopFront())
+  for (rangeType range = inputMappings.mSampledImageRemappings.All(); !range.Empty(); range.PopFront())
   {
     String name = range.Front();
-    SampledImageRemappings& sourceMappings =
-        reflectionData.mSampledImageRemappings[name];
+    SampledImageRemappings& sourceMappings = reflectionData.mSampledImageRemappings[name];
     SampledImageRemappings sourceResults;
-    RecursivelyBuildSamplerAndImageMappings(
-        passResults, passIndex + 1, sourceMappings, sourceResults);
+    RecursivelyBuildSamplerAndImageMappings(passResults, passIndex + 1, sourceMappings, sourceResults);
     MergeRemappings(outputMappings, sourceResults);
   }
 }
 
-void SimplifiedShaderReflectionData::MergeRemappings(
-    SampledImageRemappings& dest, SampledImageRemappings& source)
+void SimplifiedShaderReflectionData::MergeRemappings(SampledImageRemappings& dest, SampledImageRemappings& source)
 {
-  dest.mImageRemappings.Insert(dest.mImageRemappings.End(),
-                               source.mImageRemappings.All());
-  dest.mSamplerRemappings.Insert(dest.mSamplerRemappings.End(),
-                                 source.mSamplerRemappings.All());
-  dest.mSampledImageRemappings.Insert(dest.mSampledImageRemappings.End(),
-                                      source.mSampledImageRemappings.All());
+  dest.mImageRemappings.Insert(dest.mImageRemappings.End(), source.mImageRemappings.All());
+  dest.mSamplerRemappings.Insert(dest.mSamplerRemappings.End(), source.mSamplerRemappings.All());
+  dest.mSampledImageRemappings.Insert(dest.mSampledImageRemappings.End(), source.mSampledImageRemappings.All());
 }
 
-void SimplifiedShaderReflectionData::BuildFinalSampledImageMappings(
-    SampledImageRemappings* resourceMappings,
-    NameToIndexMap& samplerIndices,
-    NameToIndexMap& imageIndices,
-    NameToIndexMap& sampledImageIndices,
-    SampledImageRemappingData& results)
+void SimplifiedShaderReflectionData::BuildFinalSampledImageMappings(SampledImageRemappings* resourceMappings,
+                                                                    NameToIndexMap& samplerIndices,
+                                                                    NameToIndexMap& imageIndices,
+                                                                    NameToIndexMap& sampledImageIndices,
+                                                                    SampledImageRemappingData& results)
 {
   if (resourceMappings == nullptr)
     return;
@@ -473,10 +405,9 @@ void SimplifiedShaderReflectionData::BuildFinalSampledImageMappings(
   }
 }
 
-void SimplifiedShaderReflectionData::PopulateSamplerAndImageData(
-    HashMap<String, SampledImageRemappingData>& searchMap,
-    StringParam propertyName,
-    Array<ShaderResourceReflectionData*>& results)
+void SimplifiedShaderReflectionData::PopulateSamplerAndImageData(HashMap<String, SampledImageRemappingData>& searchMap,
+                                                                 StringParam propertyName,
+                                                                 Array<ShaderResourceReflectionData*>& results)
 {
   // Find the property in the given search map
   SampledImageRemappingData* remapData = searchMap.FindPointer(propertyName);
@@ -503,18 +434,15 @@ void SimplifiedShaderReflectionData::PopulateSamplerAndImageData(
   }
 }
 
-void SimplifiedShaderReflectionData::CreateSimpleOpaqueTypeReflectionData(
-    ZilchShaderIRLibrary* shaderLibrary,
-    ShaderStageDescription& stageDef,
-    Array<PassResultRef>& passResults)
+void SimplifiedShaderReflectionData::CreateSimpleOpaqueTypeReflectionData(ZilchShaderIRLibrary* shaderLibrary,
+                                                                          ShaderStageDescription& stageDef,
+                                                                          Array<PassResultRef>& passResults)
 {
   // @JoshD: Currently hardcode this to only look at the last stage.
   // Currently nothing renames variables between stages so this is reasonable.
-  ShaderStageInterfaceReflection* lastStageData =
-      &passResults.Back()->mReflectionData;
+  ShaderStageInterfaceReflection* lastStageData = &passResults.Back()->mReflectionData;
   Array<ShaderStageResource>& storageImages = lastStageData->mStorageImages;
-  Array<ShaderStageResource>& storageBuffers =
-      lastStageData->mStructedStorageBuffers;
+  Array<ShaderStageResource>& storageBuffers = lastStageData->mStructedStorageBuffers;
   HashMap<String, StructuredStorageBufferRemappingData> storageBufferMappings;
   HashMap<String, StorageImageRemappingData> storageImageMappings;
 
@@ -538,26 +466,22 @@ void SimplifiedShaderReflectionData::CreateSimpleOpaqueTypeReflectionData(
   AutoDeclare(fragRange, stageDef.mFragmentDescriptions->All());
   for (; !fragRange.Empty(); fragRange.PopFront())
   {
-    ZilchShaderIRCompositor::ShaderFragmentDescription* fragDesc =
-        fragRange.Front().second;
+    ZilchShaderIRCompositor::ShaderFragmentDescription* fragDesc = fragRange.Front().second;
 
     FragmentLookup& fragLookup = mFragmentLookup[fragDesc->mMeta->mZilchName];
     AutoDeclare(propRange, fragDesc->mFieldDescriptions.All());
     for (; !propRange.Empty(); propRange.PopFront())
     {
-      ZilchShaderIRCompositor::ShaderFieldDescription& fieldDesc =
-          propRange.Front().second;
+      ZilchShaderIRCompositor::ShaderFieldDescription& fieldDesc = propRange.Front().second;
       String fieldName = fieldDesc.mMeta->mZilchName;
       String propertyName = fieldDesc.mFieldPropertyName;
-      ZilchShaderIRType* shaderType =
-          shaderLibrary->FindType(fieldDesc.mMeta->mZilchType);
+      ZilchShaderIRType* shaderType = shaderLibrary->FindType(fieldDesc.mMeta->mZilchType);
 
       // Check if this is a runtime array
       ZilchShaderIRRuntimeArrayType runtimeArrayType;
       if (runtimeArrayType.Load(shaderType))
       {
-        StructuredStorageBufferRemappingData* remappingData =
-            storageBufferMappings.FindPointer(propertyName);
+        StructuredStorageBufferRemappingData* remappingData = storageBufferMappings.FindPointer(propertyName);
         // Store the remapped data if it exists
         if (remappingData != nullptr)
           fragLookup.mStructedStorageBuffers[fieldName] = *remappingData;
@@ -567,8 +491,7 @@ void SimplifiedShaderReflectionData::CreateSimpleOpaqueTypeReflectionData(
       ZilchShaderIRImageType imageType;
       if (imageType.Load(shaderType) && imageType.IsStorageImage())
       {
-        StorageImageRemappingData* remappingData =
-            storageImageMappings.FindPointer(propertyName);
+        StorageImageRemappingData* remappingData = storageImageMappings.FindPointer(propertyName);
         // Store the remapped data if it exists
         if (remappingData != nullptr)
           fragLookup.mStorageImages[fieldName] = *remappingData;
@@ -578,8 +501,7 @@ void SimplifiedShaderReflectionData::CreateSimpleOpaqueTypeReflectionData(
   }
 }
 
-SimpleZilchShaderIRGenerator::SimpleZilchShaderIRGenerator(
-    FrontEndTranslatorType* frontEndTranslator) :
+SimpleZilchShaderIRGenerator::SimpleZilchShaderIRGenerator(FrontEndTranslatorType* frontEndTranslator) :
     mFragmentProject("Fragments"),
     mShaderProject("Shaders")
 {
@@ -592,9 +514,8 @@ SimpleZilchShaderIRGenerator::SimpleZilchShaderIRGenerator(
   Initialize(frontEndTranslator, settings);
 }
 
-SimpleZilchShaderIRGenerator::SimpleZilchShaderIRGenerator(
-    FrontEndTranslatorType* frontEndTranslator,
-    ZilchShaderSpirVSettings* settings) :
+SimpleZilchShaderIRGenerator::SimpleZilchShaderIRGenerator(FrontEndTranslatorType* frontEndTranslator,
+                                                           ZilchShaderSpirVSettings* settings) :
     mFragmentProject("Fragments"),
     mShaderProject("Shaders")
 {
@@ -610,8 +531,7 @@ SimpleZilchShaderIRGenerator::~SimpleZilchShaderIRGenerator()
   ZilchShaderIRCore::Destroy();
 }
 
-void SimpleZilchShaderIRGenerator::SetupDependencies(
-    StringParam extensionsDirectoryPath)
+void SimpleZilchShaderIRGenerator::SetupDependencies(StringParam extensionsDirectoryPath)
 {
   // Create the core library and parse it
   ZilchShaderIRCore::InitializeInstance();
@@ -623,8 +543,7 @@ void SimpleZilchShaderIRGenerator::SetupDependencies(
 
   // Create the intrinsics library and parse it
   ShaderIntrinsicsStaticZilchLibrary::InitializeInstance();
-  ShaderIntrinsicsStaticZilchLibrary& shaderIntrinsics =
-      ShaderIntrinsicsStaticZilchLibrary::GetInstance();
+  ShaderIntrinsicsStaticZilchLibrary& shaderIntrinsics = ShaderIntrinsicsStaticZilchLibrary::GetInstance();
   shaderIntrinsics.Parse(mFrontEndTranslator);
   mShaderIntrinsicsLibrary = shaderIntrinsics.GetLibrary();
 
@@ -633,27 +552,16 @@ void SimpleZilchShaderIRGenerator::SetupDependencies(
 
   // Load all of the extension zilch fragments
   ZilchShaderIRProject extensionProject("Extensions");
-  EventConnect(&extensionProject,
-               Events::TranslationError,
-               &SimpleZilchShaderIRGenerator::OnForwardEvent,
-               this);
-  EventConnect(&extensionProject,
-               Zilch::Events::CompilationError,
-               &SimpleZilchShaderIRGenerator::OnForwardEvent,
-               this);
-  EventConnect(&extensionProject,
-               Events::ValidationError,
-               &SimpleZilchShaderIRGenerator::OnForwardEvent,
-               this);
+  EventConnect(&extensionProject, Events::TranslationError, &SimpleZilchShaderIRGenerator::OnForwardEvent, this);
+  EventConnect(&extensionProject, Zilch::Events::CompilationError, &SimpleZilchShaderIRGenerator::OnForwardEvent, this);
+  EventConnect(&extensionProject, Events::ValidationError, &SimpleZilchShaderIRGenerator::OnForwardEvent, this);
 
   RecursivelyLoadDirectory(extensionsDirectoryPath, extensionProject);
 
-  mExtensionsLibraryRef =
-      extensionProject.CompileAndTranslate(dependencies, mFrontEndTranslator);
+  mExtensionsLibraryRef = extensionProject.CompileAndTranslate(dependencies, mFrontEndTranslator);
 }
 
-void SimpleZilchShaderIRGenerator::SetPipeline(
-    ShaderPipelineDescription* pipeline)
+void SimpleZilchShaderIRGenerator::SetPipeline(ShaderPipelineDescription* pipeline)
 {
   mPipeline = pipeline;
 }
@@ -663,9 +571,7 @@ void SimpleZilchShaderIRGenerator::ClearAll()
   ClearFragmentsProjectAndLibrary();
 }
 
-void SimpleZilchShaderIRGenerator::AddFragmentCode(StringParam fragmentCode,
-                                                   StringParam fileName,
-                                                   void* userData)
+void SimpleZilchShaderIRGenerator::AddFragmentCode(StringParam fragmentCode, StringParam fileName, void* userData)
 {
   mFragmentProject.AddCodeFromString(fragmentCode, fileName, userData);
 }
@@ -686,8 +592,7 @@ bool SimpleZilchShaderIRGenerator::CompileAndTranslateFragments()
   fragmentDependencies->PushBack(mExtensionsLibraryRef);
 
   // Compile and translate the fragments project into a library
-  mFragmentLibraryRef = mFragmentProject.CompileAndTranslate(
-      fragmentDependencies, mFrontEndTranslator);
+  mFragmentLibraryRef = mFragmentProject.CompileAndTranslate(fragmentDependencies, mFrontEndTranslator);
   return mFragmentLibraryRef != nullptr;
 }
 
@@ -697,23 +602,13 @@ void SimpleZilchShaderIRGenerator::ClearFragmentsProjectAndLibrary()
   mFragmentLibraryRef = nullptr;
 }
 
-bool SimpleZilchShaderIRGenerator::ComposeShader(
-    ZilchShaderIRCompositor::ShaderDefinition& shaderDef,
-    ShaderCapabilities& capabilities)
+bool SimpleZilchShaderIRGenerator::ComposeShader(ZilchShaderIRCompositor::ShaderDefinition& shaderDef,
+                                                 ShaderCapabilities& capabilities)
 {
   ZilchShaderIRCompositor compositor;
-  EventConnect(&compositor,
-               Events::TranslationError,
-               &SimpleZilchShaderIRGenerator::OnForwardEvent,
-               this);
-  EventConnect(&compositor,
-               Zilch::Events::CompilationError,
-               &SimpleZilchShaderIRGenerator::OnForwardEvent,
-               this);
-  EventConnect(&compositor,
-               Events::ValidationError,
-               &SimpleZilchShaderIRGenerator::OnForwardEvent,
-               this);
+  EventConnect(&compositor, Events::TranslationError, &SimpleZilchShaderIRGenerator::OnForwardEvent, this);
+  EventConnect(&compositor, Zilch::Events::CompilationError, &SimpleZilchShaderIRGenerator::OnForwardEvent, this);
+  EventConnect(&compositor, Events::ValidationError, &SimpleZilchShaderIRGenerator::OnForwardEvent, this);
 
   bool success = compositor.Composite(shaderDef, capabilities, mSettings);
 
@@ -722,9 +617,7 @@ bool SimpleZilchShaderIRGenerator::ComposeShader(
   return success;
 }
 
-void SimpleZilchShaderIRGenerator::AddShaderCode(StringParam shaderCode,
-                                                 StringParam fileName,
-                                                 void* userData)
+void SimpleZilchShaderIRGenerator::AddShaderCode(StringParam shaderCode, StringParam fileName, void* userData)
 {
   mShaderProject.AddCodeFromString(shaderCode, fileName, userData);
 }
@@ -743,8 +636,7 @@ bool SimpleZilchShaderIRGenerator::CompileAndTranslateShaders()
   dependencies->PushBack(mFragmentLibraryRef);
 
   // Compile and translate the fragments project into a library
-  mShaderLibraryRef =
-      mShaderProject.CompileAndTranslate(dependencies, mFrontEndTranslator);
+  mShaderLibraryRef = mShaderProject.CompileAndTranslate(dependencies, mFrontEndTranslator);
   return mShaderLibraryRef != nullptr;
 }
 
@@ -764,8 +656,7 @@ bool SimpleZilchShaderIRGenerator::CompilePipeline()
   return CompilePipeline(*pipeline);
 }
 
-bool SimpleZilchShaderIRGenerator::CompilePipeline(
-    ShaderPipelineDescription& pipeline)
+bool SimpleZilchShaderIRGenerator::CompilePipeline(ShaderPipelineDescription& pipeline)
 {
   // Shader library needs to be compiled to try and build shaders from it.
   if (mShaderLibraryRef == nullptr)
@@ -781,8 +672,7 @@ bool SimpleZilchShaderIRGenerator::CompilePipeline(
 
     for (size_t i = 0; i < FragmentType::Size; ++i)
     {
-      ZilchShaderIRCompositor::ShaderStageDescription& stageDef =
-          shaderDef.mResults[i];
+      ZilchShaderIRCompositor::ShaderStageDescription& stageDef = shaderDef.mResults[i];
       // This stage wasn't active since it produced no code. Skip it.
       if (stageDef.mShaderCode.Empty())
         continue;
@@ -794,8 +684,7 @@ bool SimpleZilchShaderIRGenerator::CompilePipeline(
   return result;
 }
 
-ZilchShaderIRType*
-SimpleZilchShaderIRGenerator::FindFragmentType(StringParam typeName)
+ZilchShaderIRType* SimpleZilchShaderIRGenerator::FindFragmentType(StringParam typeName)
 {
   ZilchShaderIRLibrary* fragmentLibrary = mFragmentLibraryRef;
   if (fragmentLibrary == nullptr)
@@ -804,8 +693,7 @@ SimpleZilchShaderIRGenerator::FindFragmentType(StringParam typeName)
   return fragmentLibrary->FindType(typeName, false);
 }
 
-ZilchShaderIRType*
-SimpleZilchShaderIRGenerator::FindShaderType(StringParam typeName)
+ZilchShaderIRType* SimpleZilchShaderIRGenerator::FindShaderType(StringParam typeName)
 {
   ZilchShaderIRLibrary* shaderLibrary = mShaderLibraryRef;
   if (shaderLibrary == nullptr)
@@ -814,12 +702,9 @@ SimpleZilchShaderIRGenerator::FindShaderType(StringParam typeName)
   return shaderLibrary->FindType(typeName, false);
 }
 
-ShaderTranslationPassResult*
-SimpleZilchShaderIRGenerator::FindTranslationResult(
-    ZilchShaderIRType* shaderType)
+ShaderTranslationPassResult* SimpleZilchShaderIRGenerator::FindTranslationResult(ZilchShaderIRType* shaderType)
 {
-  ShaderTranslationResult* translationResult =
-      mShaderResults.FindPointer(shaderType->mMeta->mZilchName);
+  ShaderTranslationResult* translationResult = mShaderResults.FindPointer(shaderType->mMeta->mZilchName);
   if (translationResult == nullptr)
     return nullptr;
 
@@ -827,35 +712,27 @@ SimpleZilchShaderIRGenerator::FindTranslationResult(
 }
 
 SimplifiedShaderReflectionData*
-SimpleZilchShaderIRGenerator::FindSimplifiedReflectionResult(
-    ZilchShaderIRType* shaderType)
+SimpleZilchShaderIRGenerator::FindSimplifiedReflectionResult(ZilchShaderIRType* shaderType)
 {
-  ShaderTranslationResult* translationResult =
-      mShaderResults.FindPointer(shaderType->mMeta->mZilchName);
+  ShaderTranslationResult* translationResult = mShaderResults.FindPointer(shaderType->mMeta->mZilchName);
   if (translationResult == nullptr)
     return nullptr;
 
   return translationResult->mReflectionData;
 }
 
-void SimpleZilchShaderIRGenerator::LoadNameSettings(
-    SpirVNameSettings& nameSettings)
+void SimpleZilchShaderIRGenerator::LoadNameSettings(SpirVNameSettings& nameSettings)
 {
   // Any unique name settings here
   nameSettings.mAllowedClassAttributes.Insert("Protected", AttributeInfo(true));
-  nameSettings.mAllowedClassAttributes.Insert("PostProcess",
-                                              AttributeInfo(true));
-  nameSettings.mAllowedClassAttributes.Insert("RenderPass",
-                                              AttributeInfo(true));
-  nameSettings.mAllowedClassAttributes.Insert("CoreVertex",
-                                              AttributeInfo(true));
+  nameSettings.mAllowedClassAttributes.Insert("PostProcess", AttributeInfo(true));
+  nameSettings.mAllowedClassAttributes.Insert("RenderPass", AttributeInfo(true));
+  nameSettings.mAllowedClassAttributes.Insert("CoreVertex", AttributeInfo(true));
 }
 
-ZilchShaderSpirVSettings* SimpleZilchShaderIRGenerator::CreateUnitTestSettings(
-    SpirVNameSettings& nameSettings)
+ZilchShaderSpirVSettings* SimpleZilchShaderIRGenerator::CreateUnitTestSettings(SpirVNameSettings& nameSettings)
 {
-  ZilchShaderSpirVSettings* settings =
-      new ZilchShaderSpirVSettings(nameSettings);
+  ZilchShaderSpirVSettings* settings = new ZilchShaderSpirVSettings(nameSettings);
 
   Zilch::BoundType* realType = ZilchTypeId(Zilch::Real);
   Zilch::BoundType* real2Type = ZilchTypeId(Zilch::Real2);
@@ -882,8 +759,7 @@ ZilchShaderSpirVSettings* SimpleZilchShaderIRGenerator::CreateUnitTestSettings(
   UniformBufferDescription transformData(2);
   transformData.mDebugName = "TransformData";
   transformData.AddField(real4x4Type, "LocalToWorld");
-  transformData.AddField(real4x4Type,
-                         nameSettings.mPerspectiveToApiPerspectiveName);
+  transformData.AddField(real4x4Type, nameSettings.mPerspectiveToApiPerspectiveName);
   settings->AddUniformBufferDescription(transformData);
 
   settings->AutoSetDefaultUniformBufferDescription();
@@ -898,8 +774,7 @@ ZilchShaderSpirVSettings* SimpleZilchShaderIRGenerator::CreateUnitTestSettings(
   settings->mVertexDefinitions.AddField(int4Type, "BoneIndices");
 
   // Set zilch fragment names for spirv built-ins
-  settings->SetHardwareBuiltInName(spv::BuiltInPosition,
-                                   nameSettings.mApiPerspectivePositionName);
+  settings->SetHardwareBuiltInName(spv::BuiltInPosition, nameSettings.mApiPerspectivePositionName);
 
   settings->SetMaxSimultaneousRenderTargets(4);
   settings->SetRenderTargetName("Target0", 0);
@@ -909,23 +784,19 @@ ZilchShaderSpirVSettings* SimpleZilchShaderIRGenerator::CreateUnitTestSettings(
 
   // Set custom callbacks in both the compositor and entry point code generation
   // for dealing with perspective position vs. api perspective position.
-  settings->mCallbackSettings.SetCompositeCallback(
-      &ZilchShaderIRCompositor::ApiPerspectivePositionCallback, nullptr);
-  settings->mCallbackSettings.SetAppendCallback(
-      &EntryPointGeneration::PerspectiveTransformAppendVertexCallback, nullptr);
+  settings->mCallbackSettings.SetCompositeCallback(&ZilchShaderIRCompositor::ApiPerspectivePositionCallback, nullptr);
+  settings->mCallbackSettings.SetAppendCallback(&EntryPointGeneration::PerspectiveTransformAppendVertexCallback,
+                                                nullptr);
 
   settings->Finalize();
 
   return settings;
 }
 
-ZilchShaderSpirVSettings* SimpleZilchShaderIRGenerator::CreateZeroSettings(
-    SpirVNameSettings& nameSettings)
+ZilchShaderSpirVSettings* SimpleZilchShaderIRGenerator::CreateZeroSettings(SpirVNameSettings& nameSettings)
 {
-  nameSettings.mPerspectiveToApiPerspectiveName =
-      "ZeroPerspectiveToApiPerspective";
-  ZilchShaderSpirVSettings* settings =
-      new ZilchShaderSpirVSettings(nameSettings);
+  nameSettings.mPerspectiveToApiPerspectiveName = "ZeroPerspectiveToApiPerspective";
+  ZilchShaderSpirVSettings* settings = new ZilchShaderSpirVSettings(nameSettings);
 
   Zilch::BoundType* realType = ZilchTypeId(Zilch::Real);
   Zilch::BoundType* real2Type = ZilchTypeId(Zilch::Real2);
@@ -986,15 +857,13 @@ ZilchShaderSpirVSettings* SimpleZilchShaderIRGenerator::CreateZeroSettings(
   transformData.AddField(real4x4Type, "LocalToPerspective");
   transformData.AddField(real4x4Type, "ViewToPerspective");
   transformData.AddField(real4x4Type, "PerspectiveToView");
-  transformData.AddField(real4x4Type,
-                         nameSettings.mPerspectiveToApiPerspectiveName);
+  transformData.AddField(real4x4Type, nameSettings.mPerspectiveToApiPerspectiveName);
   settings->AddUniformBufferDescription(transformData);
 
   settings->AutoSetDefaultUniformBufferDescription();
 
   // Set zilch fragment names for spirv built-ins
-  settings->SetHardwareBuiltInName(spv::BuiltInPosition,
-                                   nameSettings.mApiPerspectivePositionName);
+  settings->SetHardwareBuiltInName(spv::BuiltInPosition, nameSettings.mApiPerspectivePositionName);
 
   settings->SetMaxSimultaneousRenderTargets(4);
   settings->SetRenderTargetName("Target0", 0);
@@ -1004,18 +873,16 @@ ZilchShaderSpirVSettings* SimpleZilchShaderIRGenerator::CreateZeroSettings(
 
   // Set custom callbacks in both the compositor and entry point code generation
   // for dealing with perspective position vs. api perspective position.
-  settings->mCallbackSettings.SetCompositeCallback(
-      &ZilchShaderIRCompositor::ApiPerspectivePositionCallback, nullptr);
-  settings->mCallbackSettings.SetAppendCallback(
-      &EntryPointGeneration::PerspectiveTransformAppendVertexCallback, nullptr);
+  settings->mCallbackSettings.SetCompositeCallback(&ZilchShaderIRCompositor::ApiPerspectivePositionCallback, nullptr);
+  settings->mCallbackSettings.SetAppendCallback(&EntryPointGeneration::PerspectiveTransformAppendVertexCallback,
+                                                nullptr);
 
   settings->Finalize();
 
   return settings;
 }
 
-void SimpleZilchShaderIRGenerator::Initialize(
-    FrontEndTranslatorType* translator, ZilchShaderSpirVSettings* settings)
+void SimpleZilchShaderIRGenerator::Initialize(FrontEndTranslatorType* translator, ZilchShaderSpirVSettings* settings)
 {
   mPipeline = nullptr;
   mFrontEndTranslator = translator;
@@ -1026,48 +893,27 @@ void SimpleZilchShaderIRGenerator::Initialize(
 void SimpleZilchShaderIRGenerator::SetupEventConnections()
 {
   // Add event connections for errors on the fragment and shader projects
-  EventConnect(&mFragmentProject,
-               Events::TranslationError,
-               &SimpleZilchShaderIRGenerator::OnForwardEvent,
-               this);
-  EventConnect(&mFragmentProject,
-               Zilch::Events::CompilationError,
-               &SimpleZilchShaderIRGenerator::OnForwardEvent,
-               this);
-  EventConnect(&mFragmentProject,
-               Events::ValidationError,
-               &SimpleZilchShaderIRGenerator::OnForwardEvent,
-               this);
-  EventConnect(&mShaderProject,
-               Events::TranslationError,
-               &SimpleZilchShaderIRGenerator::OnForwardEvent,
-               this);
-  EventConnect(&mShaderProject,
-               Zilch::Events::CompilationError,
-               &SimpleZilchShaderIRGenerator::OnForwardEvent,
-               this);
-  EventConnect(&mShaderProject,
-               Events::ValidationError,
-               &SimpleZilchShaderIRGenerator::OnForwardEvent,
-               this);
+  EventConnect(&mFragmentProject, Events::TranslationError, &SimpleZilchShaderIRGenerator::OnForwardEvent, this);
+  EventConnect(&mFragmentProject, Zilch::Events::CompilationError, &SimpleZilchShaderIRGenerator::OnForwardEvent, this);
+  EventConnect(&mFragmentProject, Events::ValidationError, &SimpleZilchShaderIRGenerator::OnForwardEvent, this);
+  EventConnect(&mShaderProject, Events::TranslationError, &SimpleZilchShaderIRGenerator::OnForwardEvent, this);
+  EventConnect(&mShaderProject, Zilch::Events::CompilationError, &SimpleZilchShaderIRGenerator::OnForwardEvent, this);
+  EventConnect(&mShaderProject, Events::ValidationError, &SimpleZilchShaderIRGenerator::OnForwardEvent, this);
 }
 
-void SimpleZilchShaderIRGenerator::SetupTranslator(
-    FrontEndTranslatorType* frontEndTranslator)
+void SimpleZilchShaderIRGenerator::SetupTranslator(FrontEndTranslatorType* frontEndTranslator)
 {
   frontEndTranslator->SetSettings(mSettings);
   frontEndTranslator->Setup();
 }
 
-bool SimpleZilchShaderIRGenerator::CompilePipeline(
-    ZilchShaderIRCompositor::ShaderStageDescription& stageDef,
-    ShaderPipelineDescription& pipeline)
+bool SimpleZilchShaderIRGenerator::CompilePipeline(ZilchShaderIRCompositor::ShaderStageDescription& stageDef,
+                                                   ShaderPipelineDescription& pipeline)
 {
   if (stageDef.mShaderCode.Empty())
     return false;
 
-  ZilchShaderIRType* shaderType =
-      mShaderLibraryRef->FindType(stageDef.mClassName);
+  ZilchShaderIRType* shaderType = mShaderLibraryRef->FindType(stageDef.mClassName);
   if (shaderType == nullptr)
     return false;
 
@@ -1076,40 +922,34 @@ bool SimpleZilchShaderIRGenerator::CompilePipeline(
 
   // Compile the pipeline into the given results
   Array<TranslationPassResultRef> pipelineResults;
-  CompilePipeline(
-      shaderType, pipeline, pipelineResults, translationResult.mDebugResults);
+  CompilePipeline(shaderType, pipeline, pipelineResults, translationResult.mDebugResults);
   // Store the final results from the pipeline
   translationResult.mFinalPassData = pipelineResults.Back();
 
   // Create the simplified reflection data
-  SimplifiedShaderReflectionData* simplifiedReflectionData =
-      new SimplifiedShaderReflectionData();
-  simplifiedReflectionData->CreateReflectionData(
-      shaderType->mShaderLibrary, stageDef, pipelineResults);
+  SimplifiedShaderReflectionData* simplifiedReflectionData = new SimplifiedShaderReflectionData();
+  simplifiedReflectionData->CreateReflectionData(shaderType->mShaderLibrary, stageDef, pipelineResults);
   translationResult.mReflectionData = simplifiedReflectionData;
 
   return true;
 }
 
-bool SimpleZilchShaderIRGenerator::CompilePipeline(
-    ZilchShaderIRType* shaderType,
-    ShaderPipelineDescription& pipeline,
-    Array<TranslationPassResultRef>& pipelineResults,
-    Array<TranslationPassResultRef>& debugResults)
+bool SimpleZilchShaderIRGenerator::CompilePipeline(ZilchShaderIRType* shaderType,
+                                                   ShaderPipelineDescription& pipeline,
+                                                   Array<TranslationPassResultRef>& pipelineResults,
+                                                   Array<TranslationPassResultRef>& debugResults)
 {
   if (shaderType == nullptr)
     return false;
 
-  ShaderTranslationPassResult* binaryBackendData =
-      new ShaderTranslationPassResult();
+  ShaderTranslationPassResult* binaryBackendData = new ShaderTranslationPassResult();
   pipelineResults.PushBack(binaryBackendData);
 
   // Convert from the in-memory format of spir-v to actual binary (array of
   // words)
   ShaderByteStreamWriter byteWriter(&binaryBackendData->mByteStream);
   ZilchShaderSpirVBinaryBackend binaryBackend;
-  binaryBackend.TranslateType(
-      shaderType, byteWriter, binaryBackendData->mReflectionData);
+  binaryBackend.TranslateType(shaderType, byteWriter, binaryBackendData->mReflectionData);
 
   // Run each tool in the pipeline
   for (size_t i = 0; i < pipeline.mToolPasses.Size(); ++i)
@@ -1137,16 +977,14 @@ bool SimpleZilchShaderIRGenerator::CompilePipeline(
   }
 
   // Run the final backend
-  ShaderTranslationPassResult* backendResult =
-      new ShaderTranslationPassResult();
+  ShaderTranslationPassResult* backendResult = new ShaderTranslationPassResult();
   pipelineResults.PushBack(backendResult);
   pipeline.mBackend->RunTranslationPass(*lastPassData, *backendResult);
 
   return true;
 }
 
-void SimpleZilchShaderIRGenerator::RecursivelyLoadDirectory(
-    StringParam path, ZilchShaderIRProject& project)
+void SimpleZilchShaderIRGenerator::RecursivelyLoadDirectory(StringParam path, ZilchShaderIRProject& project)
 {
   // This should really use the FileExtensionManager to find files of the
   // correct extension but we can't see that right now. These scripts are

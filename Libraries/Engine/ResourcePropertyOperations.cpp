@@ -4,22 +4,20 @@
 namespace Zero
 {
 
-void GetResourcesFromProperties(HandleParam object,
-                                HashSet<Resource*>& resources)
+void GetResourcesFromProperties(HandleParam object, HashSet<Resource*>& resources)
 {
   // METAREFACTOR We should optimize all these cases by making a special range
   // class that does not allocate
   // Originally the range class allocated to store values safely for Zilch...
   // (does it actually matter for Zilch, since all types are safe?)
   BoundType* objectType = object.StoredType;
-  forRange(Property * metaProperty, objectType->GetProperties())
+  forRange (Property* metaProperty, objectType->GetProperties())
   {
     // We're only looking for dependencies that are serialized. Any runtime
     // references don't matter.
     if (metaProperty->HasAttribute(PropertyAttributes::cProperty) == nullptr &&
         metaProperty->HasAttribute(PropertyAttributes::cSerialize) == nullptr &&
-        metaProperty->HasAttribute(PropertyAttributes::cDeprecatedSerialized) ==
-            nullptr)
+        metaProperty->HasAttribute(PropertyAttributes::cDeprecatedSerialized) == nullptr)
       continue;
 
     Type* propType = metaProperty->PropertyType;
@@ -52,8 +50,7 @@ void GetResourcesFromProperties(HandleParam object,
       if (fromResource != nullptr && fromResource->mResourceId != 0)
       {
         // Look up the resource and add it if it exists
-        Resource* resource =
-            Z::gResources->GetResource(fromResource->mResourceId);
+        Resource* resource = Z::gResources->GetResource(fromResource->mResourceId);
         if (resource)
           resources.Insert(resource);
       }

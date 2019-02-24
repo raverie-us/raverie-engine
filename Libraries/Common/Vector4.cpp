@@ -9,8 +9,7 @@ const Vector4 Vector4::cXAxis(real(1.0), real(0.0), real(0.0), real(0.0));
 const Vector4 Vector4::cYAxis(real(0.0), real(1.0), real(0.0), real(0.0));
 const Vector4 Vector4::cZAxis(real(0.0), real(0.0), real(1.0), real(0.0));
 const Vector4 Vector4::cWAxis(real(0.0), real(0.0), real(0.0), real(1.0));
-const Vector4 Vector4::Axes[] = {
-    Vector4::cXAxis, Vector4::cYAxis, Vector4::cZAxis, Vector4::cWAxis};
+const Vector4 Vector4::Axes[] = {Vector4::cXAxis, Vector4::cYAxis, Vector4::cZAxis, Vector4::cWAxis};
 
 Vector4::Vector4(real x_, real y_, real z_, real w_)
 {
@@ -127,16 +126,14 @@ Vector4 Vector4::operator*(Vec4Param rhs) const
 
 Vector4 Vector4::operator/(Vec4Param rhs) const
 {
-  ErrorIf(rhs.x == real(0.0) || rhs.y == real(0.0) || rhs.z == real(0.0) ||
-              rhs.w == real(0.0),
+  ErrorIf(rhs.x == real(0.0) || rhs.y == real(0.0) || rhs.z == real(0.0) || rhs.w == real(0.0),
           "Vector4 - Division by Zero.");
   return Vector4(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
 }
 
 bool Vector4::operator==(Vec4Param rhs) const
 {
-  return Equal(x, rhs.x) && Equal(y, rhs.y) && Equal(z, rhs.z) &&
-         Equal(w, rhs.w);
+  return Equal(x, rhs.x) && Equal(y, rhs.y) && Equal(z, rhs.z) && Equal(w, rhs.w);
 }
 
 bool Vector4::operator!=(Vec4Param rhs) const
@@ -256,26 +253,17 @@ Vector4 Vector4::MultiplySubtract(Vec4Param v0, Vec4Param v1, real scalar)
 
 Vector4 Vector4::Abs(Vec4Param value)
 {
-  return Vector4(Math::Abs(value.x),
-                 Math::Abs(value.y),
-                 Math::Abs(value.z),
-                 Math::Abs(value.w));
+  return Vector4(Math::Abs(value.x), Math::Abs(value.y), Math::Abs(value.z), Math::Abs(value.w));
 }
 
 Vector4 Vector4::Min(Vec4Param lhs, Vec4Param rhs)
 {
-  return Vector4(Math::Min(lhs.x, rhs.x),
-                 Math::Min(lhs.y, rhs.y),
-                 Math::Min(lhs.z, rhs.z),
-                 Math::Min(lhs.w, rhs.w));
+  return Vector4(Math::Min(lhs.x, rhs.x), Math::Min(lhs.y, rhs.y), Math::Min(lhs.z, rhs.z), Math::Min(lhs.w, rhs.w));
 }
 
 Vector4 Vector4::Max(Vec4Param lhs, Vec4Param rhs)
 {
-  return Vector4(Math::Max(lhs.x, rhs.x),
-                 Math::Max(lhs.y, rhs.y),
-                 Math::Max(lhs.z, rhs.z),
-                 Math::Max(lhs.w, rhs.w));
+  return Vector4(Math::Max(lhs.x, rhs.x), Math::Max(lhs.y, rhs.y), Math::Max(lhs.z, rhs.z), Math::Max(lhs.w, rhs.w));
 }
 
 Vector4 Vector4::Clamp(Vec4Param value, Vec4Param minValue, Vec4Param maxValue)
@@ -288,10 +276,7 @@ Vector4 Vector4::Clamp(Vec4Param value, Vec4Param minValue, Vec4Param maxValue)
   return result;
 }
 
-Vector4 Vector4::DebugClamp(Vec4Param value,
-                            Vec4Param minValue,
-                            Vec4Param maxValue,
-                            bool& wasClamped)
+Vector4 Vector4::DebugClamp(Vec4Param value, Vec4Param minValue, Vec4Param maxValue, bool& wasClamped)
 {
   Vector4 result;
   result.x = Math::DebugClamp(value.x, minValue.x, maxValue.x, wasClamped);
@@ -356,8 +341,7 @@ Vector4 Vector4::ProjectOnPlane(Vec4Param input, Vec4Param planeNormal)
   return GenericProjectOnPlane(input, planeNormal);
 }
 
-Vector4 Vector4::ReflectAcrossVector(Vec4Param input,
-                                     Vec4Param normalizedVector)
+Vector4 Vector4::ReflectAcrossVector(Vec4Param input, Vec4Param normalizedVector)
 {
   return GenericReflectAcrossVector(input, normalizedVector);
 }
@@ -367,9 +351,7 @@ Vector4 Vector4::ReflectAcrossPlane(Vec4Param input, Vec4Param planeNormal)
   return GenericReflectAcrossPlane(input, planeNormal);
 }
 
-Vector4 Vector4::Refract(Vec4Param input,
-                         Vec4Param planeNormal,
-                         real refractionIndex)
+Vector4 Vector4::Refract(Vec4Param input, Vec4Param planeNormal, real refractionIndex)
 {
   return GenericRefract(input, planeNormal, refractionIndex);
 }
@@ -383,10 +365,8 @@ real Vector4::AngleBetween(Vec4Param a, Vec4Param b)
 
 bool Vector4::ApproximatelyEqual(Vec4Param lhs, Vec4Param rhs, real epsilon)
 {
-  return Math::Equal(lhs.x, rhs.x, epsilon) &&
-         Math::Equal(lhs.y, rhs.y, epsilon) &&
-         Math::Equal(lhs.z, rhs.z, epsilon) &&
-         Math::Equal(lhs.w, rhs.w, epsilon);
+  return Math::Equal(lhs.x, rhs.x, epsilon) && Math::Equal(lhs.y, rhs.y, epsilon) &&
+         Math::Equal(lhs.z, rhs.z, epsilon) && Math::Equal(lhs.w, rhs.w, epsilon);
 }
 
 bool Vector4::Valid() const
@@ -536,10 +516,7 @@ Vector4 Clamp(Vec4Param value, Vec4Param minValue, Vec4Param maxValue)
   return Vector4::Clamp(value, minValue, maxValue);
 }
 
-Vector4 DebugClamp(Vec4Param value,
-                   Vec4Param minValue,
-                   Vec4Param maxValue,
-                   bool& wasClamped)
+Vector4 DebugClamp(Vec4Param value, Vec4Param minValue, Vec4Param maxValue, bool& wasClamped)
 {
   return Vector4::DebugClamp(value, minValue, maxValue, wasClamped);
 }

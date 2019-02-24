@@ -18,8 +18,7 @@ Sphere::Sphere(Vec3Param center, real radius)
 
 bool Sphere::Overlap(const Sphere& rhs)
 {
-  Intersection::Type type =
-      Intersection::SphereSphere(mCenter, mRadius, rhs.mCenter, rhs.mRadius);
+  Intersection::Type type = Intersection::SphereSphere(mCenter, mRadius, rhs.mCenter, rhs.mRadius);
   return type == Intersection::Point;
 }
 
@@ -27,8 +26,7 @@ void Sphere::Compute(const Vec3Array& pts)
 {
   mCenter.ZeroOut();
   uint size = pts.Size();
-  ErrorIf(size == 0,
-          "Computing the bounding sphere of a vector of zero points.");
+  ErrorIf(size == 0, "Computing the bounding sphere of a vector of zero points.");
   for (uint i = 0; i < size; ++i)
     mCenter += pts[i];
   mCenter /= static_cast<real>(size);

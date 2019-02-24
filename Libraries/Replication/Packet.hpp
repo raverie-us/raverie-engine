@@ -50,9 +50,7 @@ class Packet
 {
 public:
   /// Constructor
-  Packet(const IpAddress& ipAddress,
-         bool isStandalone = true,
-         PacketSequenceId sequenceId = 0);
+  Packet(const IpAddress& ipAddress, bool isStandalone = true, PacketSequenceId sequenceId = 0);
 
   /// Copy Constructor
   Packet(const Packet& rhs);
@@ -106,9 +104,7 @@ class OutPacket : public Packet
 {
 public:
   /// Constructor
-  OutPacket(const IpAddress& destination = IpAddress(),
-            bool isStandalone = true,
-            PacketSequenceId sequenceId = 0);
+  OutPacket(const IpAddress& destination = IpAddress(), bool isStandalone = true, PacketSequenceId sequenceId = 0);
 
   /// Copy Constructor
   OutPacket(const OutPacket& rhs);
@@ -156,9 +152,7 @@ public:
   friend class LinkOutbox;
 
   template <typename OutPacket>
-  friend Bits Serialize(SerializeDirection::Enum direction,
-                        BitStream& bitStream,
-                        OutPacket& outPacket);
+  friend Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, OutPacket& outPacket);
 };
 
 /// OutPacket Move-Without-Destruction Operator
@@ -174,9 +168,7 @@ struct MoveWithoutDestructionOperator<OutPacket>
 /// Serializes an outgoing packet (write only)
 /// Returns the number of bits serialized if successful, else 0
 template <>
-Bits Serialize<OutPacket>(SerializeDirection::Enum direction,
-                          BitStream& bitStream,
-                          OutPacket& outPacket);
+Bits Serialize<OutPacket>(SerializeDirection::Enum direction, BitStream& bitStream, OutPacket& outPacket);
 
 //                                   InPacket //
 
@@ -217,9 +209,7 @@ public:
 
   /// Friends
   template <typename InPacket>
-  friend Bits Serialize(SerializeDirection::Enum direction,
-                        BitStream& bitStream,
-                        InPacket& inPacket);
+  friend Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, InPacket& inPacket);
 };
 
 /// InPacket Move-Without-Destruction Operator
@@ -235,38 +225,31 @@ struct MoveWithoutDestructionOperator<InPacket>
 /// Serializes an incoming packet (read only)
 /// Returns the number of bits serialized if successful, else 0
 template <>
-Bits Serialize<InPacket>(SerializeDirection::Enum direction,
-                         BitStream& bitStream,
-                         InPacket& inPacket);
+Bits Serialize<InPacket>(SerializeDirection::Enum direction, BitStream& bitStream, InPacket& inPacket);
 
 //                               Packet Constants //
 
 /// Maximum packet size (packet header size + data)
 /// Might work but it's likely the IPv4/IPv6 + UDP header will contain more
 /// options than the minimum
-static const Bits MaxPacketBits =
-    BYTES_TO_BITS(EthernetMtuBytes - Ipv4MinHeaderBytes - UdpHeaderBytes);
+static const Bits MaxPacketBits = BYTES_TO_BITS(EthernetMtuBytes - Ipv4MinHeaderBytes - UdpHeaderBytes);
 static const Bytes MaxPacketBytes = BITS_TO_BYTES(MaxPacketBits);
 /// Typical packet size (packet header size + data)
 /// Should be safe over the internet
-static const Bits TypicalPacketBits =
-    BYTES_TO_BITS(Ipv4MinMtuBytes - Ipv4MaxHeaderBytes - UdpHeaderBytes);
+static const Bits TypicalPacketBits = BYTES_TO_BITS(Ipv4MinMtuBytes - Ipv4MaxHeaderBytes - UdpHeaderBytes);
 static const Bytes TypicalPacketBytes = BITS_TO_BYTES(TypicalPacketBits);
 /// Minimum packet size (packet header size + data)
 /// Our peer protocol requires at least one minimum sized message fragment be
 /// able to fit into every packet
-static const Bits MinPacketBits =
-    MaxPacketHeaderBits + MaxMessageHeaderBits + MinMessageFragmentDataBits;
+static const Bits MinPacketBits = MaxPacketHeaderBits + MaxMessageHeaderBits + MinMessageFragmentDataBits;
 static const Bytes MinPacketBytes = BITS_TO_BYTES(MinPacketBits);
 
 /// Maximum packet data size left over for messages
 static const Bits MaxPacketDataBits = MaxPacketBits - MaxPacketHeaderBits;
 static const Bytes MaxPacketDataBytes = BITS_TO_BYTES(MaxPacketDataBits);
 /// Typical packet data size left over for messages
-static const Bits TypicalPacketDataBits =
-    TypicalPacketBits - MaxPacketHeaderBits;
-static const Bytes TypicalPacketDataBytes =
-    BITS_TO_BYTES(TypicalPacketDataBits);
+static const Bits TypicalPacketDataBits = TypicalPacketBits - MaxPacketHeaderBits;
+static const Bytes TypicalPacketDataBytes = BITS_TO_BYTES(TypicalPacketDataBits);
 /// Minimum packet data size left over for messages
 static const Bits MinPacketDataBits = MinPacketBits - MaxPacketHeaderBits;
 static const Bytes MinPacketDataBytes = BITS_TO_BYTES(MinPacketDataBits);

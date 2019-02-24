@@ -41,9 +41,7 @@ void ConstraintConfigBlock::SetSlop(real slop)
 {
   if (slop < 0)
   {
-    DoNotifyWarning(
-        "Invalid value",
-        "The slop value cannot be negative. Clamping value to be positive.");
+    DoNotifyWarning("Invalid value", "The slop value cannot be negative. Clamping value to be positive.");
     slop = 0;
   }
   mSlop = slop;
@@ -60,21 +58,18 @@ void ConstraintConfigBlock::SetLinearBaumgarte(real linearBaumgarte)
   real maxValue = 100;
   if (linearBaumgarte < minValue)
   {
-    String msg = String::Format(
-        "LinearBaumgarte must be positive. Clamping to the range of [%g, %g]",
-        minValue,
-        maxValue);
+    String msg =
+        String::Format("LinearBaumgarte must be positive. Clamping to the range of [%g, %g]", minValue, maxValue);
     DoNotifyWarning("Invalid value", msg);
     linearBaumgarte = minValue;
   }
   else if (linearBaumgarte > maxValue)
   {
-    String msg =
-        String::Format("To prevent instabilities, LinearBaumgarte must be "
-                       "below %g. Clamping to the range of [%g, %g]",
-                       maxValue,
-                       minValue,
-                       maxValue);
+    String msg = String::Format("To prevent instabilities, LinearBaumgarte must be "
+                                "below %g. Clamping to the range of [%g, %g]",
+                                maxValue,
+                                minValue,
+                                maxValue);
     DoNotifyWarning("Invalid value", msg);
     linearBaumgarte = maxValue;
   }
@@ -92,21 +87,18 @@ void ConstraintConfigBlock::SetAngularBaumgarte(real angularBaumgarte)
   real maxValue = 100;
   if (angularBaumgarte < minValue)
   {
-    String msg = String::Format(
-        "AngularBaumgarte must be positive. Clamping to the range of [%g, %g]",
-        minValue,
-        maxValue);
+    String msg =
+        String::Format("AngularBaumgarte must be positive. Clamping to the range of [%g, %g]", minValue, maxValue);
     DoNotifyWarning("Invalid value", msg);
     angularBaumgarte = minValue;
   }
   else if (angularBaumgarte > maxValue)
   {
-    String msg =
-        String::Format("To prevent instabilities, AngularBaumgarte must be "
-                       "below %g. Clamping to the range of [%g, %g]",
-                       maxValue,
-                       minValue,
-                       maxValue);
+    String msg = String::Format("To prevent instabilities, AngularBaumgarte must be "
+                                "below %g. Clamping to the range of [%g, %g]",
+                                maxValue,
+                                minValue,
+                                maxValue);
     DoNotifyWarning("Invalid value", msg);
     angularBaumgarte = maxValue;
   }
@@ -122,9 +114,7 @@ void ConstraintConfigBlock::SetLinearErrorCorrection(real maxError)
 {
   if (maxError < 0)
   {
-    DoNotifyWarning(
-        "Invalid Value",
-        "LinearErrorCorrection must be positive. Clamping value to 0.");
+    DoNotifyWarning("Invalid Value", "LinearErrorCorrection must be positive. Clamping value to 0.");
     maxError = 0;
   }
 
@@ -140,23 +130,19 @@ void ConstraintConfigBlock::SetAngularErrorCorrection(real maxError)
 {
   if (maxError < 0)
   {
-    DoNotifyWarning(
-        "Invalid Value",
-        "AngularErrorCorrection must be positive. Clamping value to 0.");
+    DoNotifyWarning("Invalid Value", "AngularErrorCorrection must be positive. Clamping value to 0.");
     maxError = 0;
   }
 
   mAngularErrorCorrection = maxError;
 }
 
-ConstraintPositionCorrection::Enum
-ConstraintConfigBlock::GetPositionCorrectionType()
+ConstraintPositionCorrection::Enum ConstraintConfigBlock::GetPositionCorrectionType()
 {
   return mPositionCorrectionType;
 }
 
-void ConstraintConfigBlock::SetPositionCorrectionType(
-    ConstraintPositionCorrection::Enum correctionType)
+void ConstraintConfigBlock::SetPositionCorrectionType(ConstraintPositionCorrection::Enum correctionType)
 {
   // Deal with special joint types that can't be position corrected
   if (mJointId == JointEnums::RelativeVelocityJointType)
@@ -279,13 +265,13 @@ ZilchDefineType(ContactBlock, builder, type)
 }
 
 // joint block type
-#define JointType(jointType)                                                   \
-  ZilchDefineType(jointType##Block, builder, type)                             \
-  {                                                                            \
-    ZeroBindComponent();                                                       \
-    type->HasOrAdd<::Zero::CogComponentMeta>(type);                            \
-    type->Add(new MetaSerialization());                                        \
-    ZeroBindSetup(SetupMode::DefaultSerialization);                            \
+#define JointType(jointType)                                                                                           \
+  ZilchDefineType(jointType##Block, builder, type)                                                                     \
+  {                                                                                                                    \
+    ZeroBindComponent();                                                                                               \
+    type->HasOrAdd<::Zero::CogComponentMeta>(type);                                                                    \
+    type->Add(new MetaSerialization());                                                                                \
+    ZeroBindSetup(SetupMode::DefaultSerialization);                                                                    \
   }
 #include "JointList.hpp"
 #undef JointType
@@ -308,10 +294,10 @@ ZilchDefineType(PhysicsSolverConfig, builder, type)
   // @JoshD: Hide for now so these won't confuse anyone
   // These properties are only for showing people how constraints handle
   // when you don't implement important features
-  //ZilchBindFieldProperty(mWarmStart);
-  //ZilchBindFieldProperty(mCacheContacts);
-  //ZilchBindGetterSetterProperty(SubCorrectionType);
-  //ZilchBindGetterSetterProperty(SolverType);
+  // ZilchBindFieldProperty(mWarmStart);
+  // ZilchBindFieldProperty(mCacheContacts);
+  // ZilchBindGetterSetterProperty(SubCorrectionType);
+  // ZilchBindGetterSetterProperty(SolverType);
 
   ZilchBindGetterSetterProperty(PositionCorrectionType);
 }
@@ -337,21 +323,15 @@ void PhysicsSolverConfig::Serialize(Serializer& stream)
   SerializeNameDefault(mWarmStart, true);
   SerializeNameDefault(mCacheContacts, true);
 
-  SerializeEnumNameDefault(PhysicsContactTangentTypes,
-                           mTangentType,
-                           PhysicsContactTangentTypes::OrthonormalTangents);
-  SerializeEnumNameDefault(PhysicsSolverPositionCorrection,
-                           mPositionCorrectionType,
-                           PhysicsSolverPositionCorrection::PostStabilization);
+  SerializeEnumNameDefault(PhysicsContactTangentTypes, mTangentType, PhysicsContactTangentTypes::OrthonormalTangents);
   SerializeEnumNameDefault(
-      PhysicsSolverType, mSolverType, PhysicsSolverType::Basic);
-  SerializeEnumNameDefault(
-      PhysicsSolverSubType, mSubType, PhysicsSolverSubType::BlockSolving);
+      PhysicsSolverPositionCorrection, mPositionCorrectionType, PhysicsSolverPositionCorrection::PostStabilization);
+  SerializeEnumNameDefault(PhysicsSolverType, mSolverType, PhysicsSolverType::Basic);
+  SerializeEnumNameDefault(PhysicsSolverSubType, mSubType, PhysicsSolverSubType::BlockSolving);
 
   // Serialize our composition of constraint config blocks
   BoundType* selfBoundType = this->ZilchGetDerivedType();
-  PhysicsSolverConfigMetaComposition* factory =
-      selfBoundType->Has<PhysicsSolverConfigMetaComposition>();
+  PhysicsSolverConfigMetaComposition* factory = selfBoundType->Has<PhysicsSolverConfigMetaComposition>();
   factory->SerializeArray(stream, mBlocks);
 
   // Now that we've serialized all blocks we can cache the necessary run-time
@@ -380,8 +360,7 @@ void PhysicsSolverConfig::SetSolverIterationCount(uint count)
   mSolverIterationCount = Math::DebugClamp(count, 0u, 100u, wasClamped);
 
   if (wasClamped)
-    DoNotifyWarning("Invalid Value",
-                    "Iteration count must be in the range [0, 100]");
+    DoNotifyWarning("Invalid Value", "Iteration count must be in the range [0, 100]");
 }
 
 uint PhysicsSolverConfig::GetPositionIterationCount()
@@ -395,8 +374,7 @@ void PhysicsSolverConfig::SetPositionIterationCount(uint count)
   mPositionIterationCount = Math::DebugClamp(count, 0u, 100u, wasClamped);
 
   if (wasClamped)
-    DoNotifyWarning("Invalid Value",
-                    "Iteration count must be in the range [0, 100]");
+    DoNotifyWarning("Invalid Value", "Iteration count must be in the range [0, 100]");
 }
 
 real PhysicsSolverConfig::GetVelocityRestitutionThreshold()
@@ -408,8 +386,7 @@ void PhysicsSolverConfig::SetVelocityRestitutionThreshold(real threshold)
 {
   if (threshold < 0)
   {
-    DoNotifyWarning("Invalid Value",
-                    "VelocityResolutionThreshold must be positive");
+    DoNotifyWarning("Invalid Value", "VelocityResolutionThreshold must be positive");
     threshold = 0;
   }
 
@@ -425,22 +402,18 @@ void PhysicsSolverConfig::SetSolverType(PhysicsSolverType::Enum solverType)
 {
   if ((u32)solverType >= (u32)PhysicsSolverType::Size)
   {
-    DoNotifyWarning(
-        "Invalid value",
-        "SolverType must be set to a valid value from the SolverType enum");
+    DoNotifyWarning("Invalid value", "SolverType must be set to a valid value from the SolverType enum");
     return;
   }
   mSolverType = solverType;
 }
 
-PhysicsSolverPositionCorrection::Enum
-PhysicsSolverConfig::GetPositionCorrectionType()
+PhysicsSolverPositionCorrection::Enum PhysicsSolverConfig::GetPositionCorrectionType()
 {
   return mPositionCorrectionType;
 }
 
-void PhysicsSolverConfig::SetPositionCorrectionType(
-    PhysicsSolverPositionCorrection::Enum correctionType)
+void PhysicsSolverConfig::SetPositionCorrectionType(PhysicsSolverPositionCorrection::Enum correctionType)
 {
   if ((u32)correctionType >= (u32)PhysicsSolverPositionCorrection::Size)
   {
@@ -457,8 +430,7 @@ PhysicsSolverSubType::Enum PhysicsSolverConfig::GetSubCorrectionType()
   return mSubType;
 }
 
-void PhysicsSolverConfig::SetSubCorrectionType(
-    PhysicsSolverSubType::Enum subType)
+void PhysicsSolverConfig::SetSubCorrectionType(PhysicsSolverSubType::Enum subType)
 {
   mSubType = subType;
 }
@@ -510,13 +482,11 @@ void PhysicsSolverConfig::CopyTo(PhysicsSolverConfig* destination)
   destination->mBlocks.Clear();
   // Clone all of our blocks into the destination
   BoundType* selfBoundType = this->ZilchGetDerivedType();
-  PhysicsSolverConfigMetaComposition* factory =
-      selfBoundType->Has<PhysicsSolverConfigMetaComposition>();
+  PhysicsSolverConfigMetaComposition* factory = selfBoundType->Has<PhysicsSolverConfigMetaComposition>();
   for (size_t i = 0; i < mBlocks.Size(); ++i)
   {
     BoundType* blockMeta = ZilchVirtualTypeId(mBlocks[i]);
-    ConstraintConfigBlock* newBlock =
-        factory->MakeObject(blockMeta).Get<ConstraintConfigBlock*>();
+    ConstraintConfigBlock* newBlock = factory->MakeObject(blockMeta).Get<ConstraintConfigBlock*>();
     destination->mBlocks.PushBack(newBlock);
   }
 
@@ -549,8 +519,7 @@ HandleOf<ConstraintConfigBlock> PhysicsSolverConfig::GetById(BoundType* typeId)
   return nullptr;
 }
 
-void PhysicsSolverConfig::Add(const HandleOf<ConstraintConfigBlock>& block,
-                              int index)
+void PhysicsSolverConfig::Add(const HandleOf<ConstraintConfigBlock>& block, int index)
 {
   // Set the newly created block's default values
   block->ResetDefaultValues();
@@ -576,12 +545,9 @@ ImplementResourceManager(PhysicsSolverConfigManager, PhysicsSolverConfig);
 
 DefinePhysicsRuntimeClone(PhysicsSolverConfig);
 
-PhysicsSolverConfigManager::PhysicsSolverConfigManager(
-    BoundType* resourceType) :
-    ResourceManager(resourceType)
+PhysicsSolverConfigManager::PhysicsSolverConfigManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
-  AddLoader("PhysicsSolverConfig",
-            new TextDataFileLoader<PhysicsSolverConfigManager>());
+  AddLoader("PhysicsSolverConfig", new TextDataFileLoader<PhysicsSolverConfigManager>());
   mCategory = "Physics";
   mCanAddFile = true;
   mOpenFileFilters.PushBack(FileDialogFilter("*.PhysicsSolverConfig.data"));

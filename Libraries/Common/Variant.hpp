@@ -111,8 +111,7 @@ public:
   /// Returns the stored value if the variant stored type is T, else
   /// defaultValue
   template <typename T, typename UnqualifiedType = typename Decay<T>::Type>
-  UnqualifiedType&
-  GetOrDefault(const UnqualifiedType& defaultValue = UnqualifiedType()) const;
+  UnqualifiedType& GetOrDefault(const UnqualifiedType& defaultValue = UnqualifiedType()) const;
   /// Returns a pointer to the stored value if the variant stored type is T,
   /// else nullptr
   template <typename T, typename UnqualifiedType = typename Decay<T>::Type>
@@ -205,8 +204,7 @@ public:
   /// managed (If nativeType is null, the variant is simply cleared) (If
   /// valueAddress is null, the variant is assigned a default constructed value
   /// of the specified native type instead)
-  void Assign(NativeType* nativeType = nullptr,
-              const void* valueAddress = nullptr);
+  void Assign(NativeType* nativeType = nullptr, const void* valueAddress = nullptr);
 
   /// Clears the variant and copies the specified value to be managed
   template <typename T>
@@ -237,8 +235,7 @@ public:
   template <typename T,
             typename UnqualifiedType = typename Decay<T>::Type,
             TF_ENABLE_IF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value),
-            typename PrimitiveType =
-                typename BasicNativeTypePrimitiveMembers<UnqualifiedType>::Type>
+            typename PrimitiveType = typename BasicNativeTypePrimitiveMembers<UnqualifiedType>::Type>
   PrimitiveType& GetPrimitiveMemberOrError(size_t index) const;
 
   /// (Only defined for arithmetic types)
@@ -247,10 +244,8 @@ public:
   template <typename T,
             typename UnqualifiedType = typename Decay<T>::Type,
             TF_ENABLE_IF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value),
-            typename PrimitiveType =
-                typename BasicNativeTypePrimitiveMembers<UnqualifiedType>::Type>
-  PrimitiveType& GetPrimitiveMemberOrDefault(
-      size_t index, const PrimitiveType& defaultValue = PrimitiveType()) const;
+            typename PrimitiveType = typename BasicNativeTypePrimitiveMembers<UnqualifiedType>::Type>
+  PrimitiveType& GetPrimitiveMemberOrDefault(size_t index, const PrimitiveType& defaultValue = PrimitiveType()) const;
 
   /// (Only defined for arithmetic types)
   /// Returns a pointer to the stored value's primitive member at the specified
@@ -258,8 +253,7 @@ public:
   template <typename T,
             typename UnqualifiedType = typename Decay<T>::Type,
             TF_ENABLE_IF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value),
-            typename PrimitiveType =
-                typename BasicNativeTypePrimitiveMembers<UnqualifiedType>::Type>
+            typename PrimitiveType = typename BasicNativeTypePrimitiveMembers<UnqualifiedType>::Type>
   PrimitiveType* GetPrimitiveMemberOrNull(size_t index) const;
 
 private:
@@ -386,8 +380,7 @@ struct ZeroShared MoveWithoutDestructionOperator<Variant>
 
 /// Returns the string representation of the stored value if the variant is
 /// non-empty, else String()
-ZeroShared inline String ToString(const Variant& value,
-                                  bool shortFormat = false);
+ZeroShared inline String ToString(const Variant& value, bool shortFormat = false);
 
 /// Parses the string as a value of the specified type T and assigns the parsed
 /// value to the variant, else clears the variant
@@ -395,9 +388,7 @@ template <typename T>
 ZeroSharedTemplate inline void ToValue(StringRange range, Variant& value);
 /// Parses the string as a value of the specified native type and assigns the
 /// parsed value to the variant, else clears the variant
-ZeroShared inline void ToValue(StringRange range,
-                               Variant& value,
-                               NativeType* nativeType);
+ZeroShared inline void ToValue(StringRange range, Variant& value, NativeType* nativeType);
 /// Parses the string as a value of the variant's stored type and assigns the
 /// parsed value to the variant, else clears the variant
 ZeroShared inline void ToValue(StringRange range, Variant& value);

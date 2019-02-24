@@ -83,8 +83,7 @@ SimInline SimVec Lerp(SimVecParam start, SimVecParam end, scalar t)
   return Lerp(start, end, Set4(t, t, t, t));
 }
 
-SimInline SimVec
-BaryCentric(SimVecParam p0, SimVecParam p1, SimVecParam p2, scalar u, scalar v)
+SimInline SimVec BaryCentric(SimVecParam p0, SimVecParam p1, SimVecParam p2, scalar u, scalar v)
 {
   // Result = p0 + u * (p1 - p0) + v * (p2 - p0)
   SimVec result = p0;
@@ -243,9 +242,7 @@ SimInline SimVec Reflect3(SimVecParam incident, SimVecParam normal)
   return MultiplySubtract(result, normal, incident);
 }
 
-SimInline SimVec Refract3(SimVecParam incident,
-                          SimVecParam normal,
-                          SimVecParam refractionIndex)
+SimInline SimVec Refract3(SimVecParam incident, SimVecParam normal, SimVecParam refractionIndex)
 {
   // IDotN = dot(Incident,Normal)
   // R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
@@ -263,8 +260,7 @@ SimInline SimVec Refract3(SimVecParam incident,
   // result = (RefractionIndex * IDotN + sqrt(R))
   SimVec result = MultiplyAdd(refractionIndex, iDotN, sqrt);
   // result = RefractionIndex * Incident - Normal * result
-  result =
-      MultiplySubtract(normal, result, Multiply(refractionIndex, incident));
+  result = MultiplySubtract(normal, result, Multiply(refractionIndex, incident));
   // mask the terms that failed the sqrt
   return AndVec(result, mask);
 }
@@ -324,9 +320,7 @@ SimInline SimVec Reflect4(SimVecParam incident, SimVecParam normal)
   return Subtract(incident, result);
 }
 
-SimInline SimVec Refract4(SimVecParam incident,
-                          SimVecParam normal,
-                          SimVecParam refractionIndex)
+SimInline SimVec Refract4(SimVecParam incident, SimVecParam normal, SimVecParam refractionIndex)
 {
   // IDotN = dot(Incident,Normal)
   // R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
@@ -344,8 +338,7 @@ SimInline SimVec Refract4(SimVecParam incident,
   // result = (RefractionIndex * IDotN + sqrt(R))
   SimVec result = MultiplyAdd(refractionIndex, iDotN, sqrt);
   // result = RefractionIndex * Incident - Normal * result
-  result =
-      MultiplySubtract(normal, result, Multiply(refractionIndex, incident));
+  result = MultiplySubtract(normal, result, Multiply(refractionIndex, incident));
   // mask the terms that failed the sqrt
   return AndVec(result, mask);
 }
@@ -354,12 +347,8 @@ SimInline SimVec DotXM(SimVecParam lhs, SimVecParam rhs)
 {
   SimVec vTemp2 = rhs;
   SimVec vTemp = Multiply(lhs, vTemp2);
-  vTemp2 = VecShuffle(vTemp2,
-                      vTemp,
-                      1,
-                      0,
-                      0,
-                      0); // Copy X to the Z position and Y to the W position
+  vTemp2 = VecShuffle(vTemp2, vTemp, 1, 0, 0,
+                      0);                        // Copy X to the Z position and Y to the W position
   vTemp2 = Add(vTemp2, vTemp);                   // Add Z = X+Z; W = Y+W;
   vTemp = VecShuffle(vTemp, vTemp2, 0, 3, 0, 0); // Copy W to the Z position
   vTemp = Add(vTemp, vTemp2);                    // Add Z and W together

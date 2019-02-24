@@ -79,9 +79,7 @@ void CollisionMatrixItem::OnRightMouseUp(MouseEvent* event)
 
   // Cycle to the next state
   CollisionFilterCollisionFlags::Enum newState =
-      (CollisionFilterCollisionFlags::Enum)(
-          (mFilter->GetCollisionFlag() + 1) %
-          CollisionFilterCollisionFlags::Size);
+      (CollisionFilterCollisionFlags::Enum)((mFilter->GetCollisionFlag() + 1) % CollisionFilterCollisionFlags::Size);
   mFilter->SetCollisionFlag(newState);
 
   // Mark the table as modified and update the visuals
@@ -127,20 +125,17 @@ void CollisionMatrixItem::UpdateDisplay()
     mTextLabel->SetText("R");
     mIcon->ChangeDefinition(mDefSet->GetDefinition("Resolve"));
   }
-  else if (mFilter->GetCollisionFlag() ==
-           CollisionFilterCollisionFlags::Resolve)
+  else if (mFilter->GetCollisionFlag() == CollisionFilterCollisionFlags::Resolve)
   {
     mTextLabel->SetText("R");
     mIcon->ChangeDefinition(mDefSet->GetDefinition("Resolve"));
   }
-  else if (mFilter->GetCollisionFlag() ==
-           CollisionFilterCollisionFlags::SkipDetection)
+  else if (mFilter->GetCollisionFlag() == CollisionFilterCollisionFlags::SkipDetection)
   {
     mTextLabel->SetText("SD");
     mIcon->ChangeDefinition(mDefSet->GetDefinition("SkipDetection"));
   }
-  else if (mFilter->GetCollisionFlag() ==
-           CollisionFilterCollisionFlags::SkipResolution)
+  else if (mFilter->GetCollisionFlag() == CollisionFilterCollisionFlags::SkipResolution)
   {
     mTextLabel->SetText("SR");
     mIcon->ChangeDefinition(mDefSet->GetDefinition("SkipResolution"));
@@ -244,8 +239,7 @@ void CollisionGroupLabel::UpdateGroupState(uint flags)
 
     // Make a search filter so we can find the filter between ourself and the
     // other type
-    CollisionFilter searchFilter(mGroup->mResourceId,
-                                 groupInstance->mResource->mResourceId);
+    CollisionFilter searchFilter(mGroup->mResourceId, groupInstance->mResource->mResourceId);
 
     // If the filter type doesn't exist, create it so we can set the state
     CollisionFilter* filter = mTableEditor->mTable->FindFilter(searchFilter);
@@ -266,10 +260,9 @@ void CollisionGroupLabel::OnRemoveGroup(Event* event)
   // Prevent removing the default group
   if (mGroup.Dereference() == mTableEditor->mTable->GetDefaultGroup())
   {
-    DoNotifyWarning(
-        "Cannot remove default group.",
-        "The default collision group cannot be removed from a table as "
-        "it is used in case another collision group cannot be found.");
+    DoNotifyWarning("Cannot remove default group.",
+                    "The default collision group cannot be removed from a table as "
+                    "it is used in case another collision group cannot be found.");
     return;
   }
 
@@ -294,9 +287,7 @@ struct GroupSorter
   }
 };
 
-CollisionTableMatrix::CollisionTableMatrix(Composite* parent,
-                                           CollisionTableEditor* tableEditor) :
-    Composite(parent)
+CollisionTableMatrix::CollisionTableMatrix(Composite* parent, CollisionTableEditor* tableEditor) : Composite(parent)
 {
   mAddableGroupSelector = nullptr;
   mAddNewGroupButton = nullptr;
@@ -336,9 +327,7 @@ void CollisionTableMatrix::SetTable(CollisionTableEditor* tableEditor)
   Array<CollisionGroup*> groups;
   groups.Resize(groupCount);
   uint i = 0;
-  for (auto range = tableEditor->mTable->mRegisteredGroups.All();
-       !range.Empty();
-       range.PopFront())
+  for (auto range = tableEditor->mTable->mRegisteredGroups.All(); !range.Empty(); range.PopFront())
   {
     groups[i] = range.Front().second->mResource;
     ++i;
@@ -368,13 +357,11 @@ void CollisionTableMatrix::SetTable(CollisionTableEditor* tableEditor)
   mAddNewGroupButton = new IconButton(this);
   mAddNewGroupButton->SetSize(Pixels(18, 18));
   // Position this button just to the right of the group selector
-  mAddNewGroupButton->SetTranslation(
-      startPosition + Vec3(mAddableGroupSelector->GetSize().x, 1, 0));
+  mAddNewGroupButton->SetTranslation(startPosition + Vec3(mAddableGroupSelector->GetSize().x, 1, 0));
   mAddNewGroupButton->SetIcon("NewResource");
   mAddNewGroupButton->SetToolTip("New CollisionGroup");
   mAddNewGroupButton->mBorder->SetActive(false);
-  ConnectThisTo(
-      mAddNewGroupButton, Events::ButtonPressed, OnAddNewCollisionGroup);
+  ConnectThisTo(mAddNewGroupButton, Events::ButtonPressed, OnAddNewCollisionGroup);
 
   // Now build the list of what we can add (anything that exists that not
   // already in the list)
@@ -382,15 +369,13 @@ void CollisionTableMatrix::SetTable(CollisionTableEditor* tableEditor)
 
   // Now store the minimum size we need to display everything. This is used to
   // determine the client area size needed for our scrollable area.
-  mMinSize = Vec2(xStart + groupCount * (size.x + buffer),
-                  yStart + groupCount * (size.y + buffer) + Pixels(20));
+  mMinSize = Vec2(xStart + groupCount * (size.x + buffer), yStart + groupCount * (size.y + buffer) + Pixels(20));
   // Add in the end position of the addable group selector
   mMinSize.x = Math::Max(mMinSize.x, Pixels(300));
   mTableEditor->UpdateScrollArea();
 
   // Listen for when a new group is added through the selector
-  ConnectThisTo(
-      mAddableGroupSelector, Events::ItemSelected, OnRegisterNewGroup);
+  ConnectThisTo(mAddableGroupSelector, Events::ItemSelected, OnRegisterNewGroup);
 }
 
 void CollisionTableMatrix::Refresh()
@@ -407,11 +392,8 @@ Vec2 CollisionTableMatrix::GetMinSize()
   return mMinSize;
 }
 
-void CollisionTableMatrix::CreateLabels(Array<CollisionGroup*>& groups,
-                                        float height,
-                                        float buffer,
-                                        float& xStart,
-                                        float& yStart)
+void CollisionTableMatrix::CreateLabels(
+    Array<CollisionGroup*>& groups, float height, float buffer, float& xStart, float& yStart)
 {
   // Cap the max length for a label as 100 pixels,
   // otherwise long names could cause the ui to be too big
@@ -428,8 +410,7 @@ void CollisionTableMatrix::CreateLabels(Array<CollisionGroup*>& groups,
     CollisionGroup* group = groups[x];
 
     // Create a new label object for this group
-    CollisionGroupLabel* label =
-        new CollisionGroupLabel(this, mTableEditor, group);
+    CollisionGroupLabel* label = new CollisionGroupLabel(this, mTableEditor, group);
     label->SetTranslation(Vec3(0, x * (height + buffer), 0.0f));
     xLabels.PushBack(label);
 
@@ -450,8 +431,7 @@ void CollisionTableMatrix::CreateLabels(Array<CollisionGroup*>& groups,
     Vec2 size = xLabels[i]->mText->GetMinSize();
     // Position so the right sides are lined up
     pos.x = Math::Max(0.0f, maxLength - size.x);
-    pos.y = maxHeight + i * (height + buffer) +
-            CollisionTableSettings::LabelYPadding;
+    pos.y = maxHeight + i * (height + buffer) + CollisionTableSettings::LabelYPadding;
     size.x = Math::Min(size.x, maxLength);
     // Set the new position and size
     xLabels[i]->SetTranslation(pos);
@@ -462,11 +442,8 @@ void CollisionTableMatrix::CreateLabels(Array<CollisionGroup*>& groups,
   yStart = maxHeight;
 }
 
-void CollisionTableMatrix::CreateMatrix(Array<CollisionGroup*>& groups,
-                                        float xStart,
-                                        float yStart,
-                                        Vec2Param size,
-                                        float buffer)
+void CollisionTableMatrix::CreateMatrix(
+    Array<CollisionGroup*>& groups, float xStart, float yStart, Vec2Param size, float buffer)
 {
   uint count = groups.Size();
 
@@ -486,12 +463,10 @@ void CollisionTableMatrix::CreateMatrix(Array<CollisionGroup*>& groups,
       CollisionFilter* filter = mTableEditor->mTable->FindFilter(searchFilter);
 
       // Create a new item for this pairing
-      CollisionMatrixItem* item =
-          new CollisionMatrixItem(this, mTableEditor, filter, searchFilter);
+      CollisionMatrixItem* item = new CollisionMatrixItem(this, mTableEditor, filter, searchFilter);
 
       // Position the item at the correct x,y
-      Vec3 pos = Vec3(
-          xStart + x * (size.x + buffer), yStart + y * (size.y + buffer), 0.0f);
+      Vec3 pos = Vec3(xStart + x * (size.x + buffer), yStart + y * (size.y + buffer), 0.0f);
       item->SetTranslation(pos);
       item->SetSize(size);
     }
@@ -509,8 +484,7 @@ void CollisionTableMatrix::BuildGroupListing()
   groupManager->EnumerateResources(groupsList);
 
   // Just store a reference to reduce the line lengths
-  CollisionTable::RegisteredGroups& registeredGroups =
-      mTableEditor->mTable->mRegisteredGroups;
+  CollisionTable::RegisteredGroups& registeredGroups = mTableEditor->mTable->mRegisteredGroups;
 
   // Now iterate through all of the groups
   for (uint i = 0; i < groupsList.Size(); ++i)
@@ -523,8 +497,7 @@ void CollisionTableMatrix::BuildGroupListing()
 
     // Now see if that group is already registered, if
     // it is not then add it to the available groups list
-    CollisionTable::RegisteredGroups::range range =
-        registeredGroups.Find(group->mResourceId);
+    CollisionTable::RegisteredGroups::range range = registeredGroups.Find(group->mResourceId);
     if (range.Empty())
       mAvailableGroups.Strings.PushBack(groupsList[i]);
   }
@@ -562,9 +535,7 @@ void CollisionTableMatrix::OnAddNewCollisionGroup(Event* event)
   addWidget->ShowResourceTypeSearch(false);
 }
 
-CollisionTableEditor::CollisionTableEditor(Composite* parent,
-                                           CollisionTable* table) :
-    Composite(parent)
+CollisionTableEditor::CollisionTableEditor(Composite* parent, CollisionTable* table) : Composite(parent)
 {
   mTable = table;
   // Clear all of the starting values to null. This is necessary because some
@@ -620,8 +591,7 @@ CollisionTableEditor::CollisionTableEditor(Composite* parent,
   // correctly when items are added/deleted and when they are renamed.
   CollisionGroupManager* groupManager = CollisionGroupManager::GetInstance();
   ConnectThisTo(groupManager, Events::ResourceAdded, OnCollisionGroupAdded);
-  ConnectThisTo(
-      groupManager, Events::ResourceModified, OnCollisionGroupModified);
+  ConnectThisTo(groupManager, Events::ResourceModified, OnCollisionGroupModified);
   ConnectThisTo(groupManager, Events::ResourceRemoved, OnCollisionGroupRemoved);
 
   CollisionTableManager* tableManager = CollisionTableManager::GetInstance();

@@ -166,10 +166,8 @@ public:
 
     void RemoveChild(TreeNodeType* treeNode)
     {
-      ReturnIf(
-          treeNode->Parent != this, , "Element is not child of this node.");
-      ReturnIf(
-          treeNode != Children[treeNode->Index], , "Element is not at index.");
+      ReturnIf(treeNode->Parent != this, , "Element is not child of this node.");
+      ReturnIf(treeNode != Children[treeNode->Index], , "Element is not at index.");
 
       uint index = treeNode->Index;
 
@@ -187,7 +185,7 @@ public:
 
     TreeNodeType* FindChild(const ValueType& value)
     {
-      forRange(TreeNodeType * child, GetChildren())
+      forRange (TreeNodeType* child, GetChildren())
       {
         if (child->Object == value)
           return child;
@@ -459,9 +457,7 @@ public:
     }
   }
 
-  bool SetData(DataEntry* dataEntry,
-               AnyParam variant,
-               StringParam column) override
+  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
   {
     TreeNodeType* node = (TreeNodeType*)dataEntry;
     if (node->IsFolder())
@@ -535,9 +531,7 @@ public:
     return node->ChildCount();
   }
 
-  bool Move(DataEntry* dest,
-            DataEntry* node,
-            InsertMode::Type insertMode) override
+  bool Move(DataEntry* dest, DataEntry* node, InsertMode::Type insertMode) override
   {
     TreeNodeType* destNode = (TreeNodeType*)dest;
     TreeNodeType* treeNode = (TreeNodeType*)node;
@@ -620,11 +614,9 @@ public:
 
     Array<uint>::iterator folderEnd = indices.Begin() + folderCount;
     // Sort the folders
-    Zero::Sort(Array<uint>::range(indices.Begin(), folderEnd),
-               DataSorter(strings));
+    Zero::Sort(Array<uint>::range(indices.Begin(), folderEnd), DataSorter(strings));
     // Sort the items
-    Zero::Sort(Array<uint>::range(folderEnd, indices.End()),
-               DataSorter(strings));
+    Zero::Sort(Array<uint>::range(folderEnd, indices.End()), DataSorter(strings));
 
     // Rebuild
     for (uint i = 0; i < childCount; ++i)
@@ -636,9 +628,7 @@ public:
     EventOnNode(treeNode, Events::DataAdded);
   }
 
-  DataEntry* GetChild(DataEntry* dataEntry,
-                      uint index,
-                      DataEntry* prev) override
+  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
   {
     TreeNodeType* node = (TreeNodeType*)dataEntry;
     if (index < node->ChildCount())

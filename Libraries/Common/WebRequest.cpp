@@ -6,15 +6,13 @@ namespace Zero
 
 String WebRequest::GetBoundary()
 {
-  static const String cBoundary(
-      "----------ZeroEngine43476095-a5a0-4190-a9b5-bce2d2de5eef$");
+  static const String cBoundary("----------ZeroEngine43476095-a5a0-4190-a9b5-bce2d2de5eef$");
   return cBoundary;
 }
 
 String WebRequest::GetContentTypeHeader()
 {
-  String contentType = BuildString(
-      "Content-Type:multipart/form-data; boundary=", GetBoundary(), "\r\n");
+  String contentType = BuildString("Content-Type:multipart/form-data; boundary=", GetBoundary(), "\r\n");
 
   return contentType;
 }
@@ -24,7 +22,7 @@ String WebRequest::GetPostDataWithBoundaries()
   String boundary = GetBoundary();
   StringBuilder post;
 
-  forRange(WebPostData & postData, mPostData)
+  forRange (WebPostData& postData, mPostData)
   {
     post.Append("--");
     post.Append(boundary);
@@ -63,7 +61,7 @@ String WebRequest::GetNewlineSeparatedHeaders()
   String contentTypeHeader = GetContentTypeHeader();
   builder.Append(contentTypeHeader);
 
-  forRange(StringParam header, mAdditionalRequestHeaders)
+  forRange (StringParam header, mAdditionalRequestHeaders)
   {
     builder.Append(header);
     builder.Append("\r\n");

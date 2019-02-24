@@ -6,12 +6,7 @@ namespace Zero
 namespace Memory
 {
 
-Pool::Pool(cstr name,
-           Graph* parent,
-           size_t blockSize,
-           size_t blocksPerPage,
-           bool podStackPool) :
-    Graph(name, parent)
+Pool::Pool(cstr name, Graph* parent, size_t blockSize, size_t blocksPerPage, bool podStackPool) : Graph(name, parent)
 {
   mPodStackPool = podStackPool;
 
@@ -38,9 +33,8 @@ void Pool::AllocatePage()
 
 void Pool::CleanUp()
 {
-  ErrorIf(mPodStackPool == false && mData.BytesAllocated != 0,
-          "Failed to release all memory from pool %s",
-          Name.c_str());
+  ErrorIf(
+      mPodStackPool == false && mData.BytesAllocated != 0, "Failed to release all memory from pool %s", Name.c_str());
   // Deallocate each page
   for (unsigned i = 0; i < mPages.Size(); ++i)
     zDeallocate(mPages[i]); // mPageSize

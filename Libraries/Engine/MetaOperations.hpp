@@ -8,10 +8,7 @@ namespace Zero
 class ObjectRestoreState;
 
 /// Changes the property to the given value and queues the operation.
-void ChangeAndQueueProperty(OperationQueue* queue,
-                            HandleParam object,
-                            PropertyPathParam property,
-                            AnyParam newValue);
+void ChangeAndQueueProperty(OperationQueue* queue, HandleParam object, PropertyPathParam property, AnyParam newValue);
 
 /// Removes the component and queues the operation.
 bool QueueRemoveComponent(OperationQueue* queue,
@@ -26,31 +23,18 @@ void QueueRemoveComponent(OperationQueue* queue,
                           uint componentIndex);
 
 /// Adds the component of the given name and queues the operation.
-bool QueueAddComponent(OperationQueue* queue,
-                       HandleParam object,
-                       BoundType* componentType);
+bool QueueAddComponent(OperationQueue* queue, HandleParam object, BoundType* componentType);
 
 /// Queues the already added component.
-void QueueAddComponent(OperationQueue* queue,
-                       HandleParam object,
-                       HandleParam component);
+void QueueAddComponent(OperationQueue* queue, HandleParam object, HandleParam component);
 
 /// Moves the component to before the given index.
-void QueueMoveComponent(OperationQueue* queue,
-                        HandleParam object,
-                        HandleParam component,
-                        uint index);
+void QueueMoveComponent(OperationQueue* queue, HandleParam object, HandleParam component, uint index);
 
-void MarkPropertyAsModified(OperationQueue* queue,
-                            HandleParam object,
-                            PropertyPathParam propertyPath);
+void MarkPropertyAsModified(OperationQueue* queue, HandleParam object, PropertyPathParam propertyPath);
 
-void RevertProperty(OperationQueue* queue,
-                    HandleParam object,
-                    PropertyPathParam propertyPath);
-void RestoreLocallyRemovedChild(OperationQueue* queue,
-                                HandleParam parent,
-                                ObjectState::ChildId& childId);
+void RevertProperty(OperationQueue* queue, HandleParam object, PropertyPathParam propertyPath);
+void RestoreLocallyRemovedChild(OperationQueue* queue, HandleParam parent, ObjectState::ChildId& childId);
 void RestoreChildOrder(OperationQueue* queue, HandleParam object);
 
 class MetaOperation : public Operation
@@ -72,10 +56,7 @@ class PropertyOperation : public MetaOperation
 public:
   ZilchDeclareType(PropertyOperation, TypeCopyMode::ReferenceType);
 
-  PropertyOperation(HandleParam object,
-                    PropertyPathParam property,
-                    AnyParam before,
-                    AnyParam after);
+  PropertyOperation(HandleParam object, PropertyPathParam property, AnyParam before, AnyParam after);
   ~PropertyOperation();
 
   /// Operation Interface.
@@ -150,9 +131,7 @@ private:
 class MoveComponentOperation : public MetaOperation
 {
 public:
-  MoveComponentOperation(HandleParam object,
-                         HandleParam componentToMove,
-                         uint destinationIndex);
+  MoveComponentOperation(HandleParam object, HandleParam componentToMove, uint destinationIndex);
   ~MoveComponentOperation();
 
   /// Operation Interface.
@@ -176,8 +155,7 @@ class MarkPropertyModifiedOperation : public MetaOperation
 {
 public:
   /// Constructor.
-  MarkPropertyModifiedOperation(HandleParam object,
-                                PropertyPathParam propertyPath);
+  MarkPropertyModifiedOperation(HandleParam object, PropertyPathParam propertyPath);
 
   /// Operation Interface.
   void Undo() override;

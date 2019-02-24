@@ -39,27 +39,23 @@ String SimpleZilchParser::Run(Zilch::SyntaxNode* node)
   return context.mBuilder.ToString();
 }
 
-void SimpleZilchParser::WalkClassNode(Zilch::ClassNode*& node,
-                                      SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkClassNode(Zilch::ClassNode*& node, SimpleZilchParserContext* context)
 {
   if (node->CopyMode == Zilch::TypeCopyMode::ValueType)
     context->mBuilder << "struct " << node->Name.Token;
   else
     context->mBuilder << "class " << node->Name.Token;
 }
-void SimpleZilchParser::WalkClassVariables(Zilch::MemberVariableNode*& node,
-                                           SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkClassVariables(Zilch::MemberVariableNode*& node, SimpleZilchParserContext* context)
 {
 }
-void SimpleZilchParser::WalkClassConstructor(Zilch::ConstructorNode*& node,
-                                             SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkClassConstructor(Zilch::ConstructorNode*& node, SimpleZilchParserContext* context)
 {
   context->mBuilder << "constructor(";
   mWalker.Walk(this, node->Parameters, context);
   context->mBuilder << ")";
 }
-void SimpleZilchParser::WalkClassFunction(Zilch::FunctionNode*& node,
-                                          SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkClassFunction(Zilch::FunctionNode*& node, SimpleZilchParserContext* context)
 {
   context->mBuilder << "function " << node->Name.Token << "(";
   // Add all of the parameters
@@ -67,24 +63,21 @@ void SimpleZilchParser::WalkClassFunction(Zilch::FunctionNode*& node,
   for (size_t i = 0; i < size; ++i)
   {
     Zilch::ParameterNode* paramNode = node->Parameters[i];
-    context->mBuilder << paramNode->Name.Token << " : "
-                      << paramNode->ResultType->ToString();
+    context->mBuilder << paramNode->Name.Token << " : " << paramNode->ResultType->ToString();
     if (i != size - 1)
       context->mBuilder << ", ";
   }
 
   context->mBuilder << ")";
 }
-void SimpleZilchParser::WalkFunctionCallNode(Zilch::FunctionCallNode*& node,
-                                             SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkFunctionCallNode(Zilch::FunctionCallNode*& node, SimpleZilchParserContext* context)
 {
   mWalker.Walk(this, node->LeftOperand, context);
   context->mBuilder << "(";
   mWalker.Walk(this, node->Arguments, context);
   context->mBuilder << ")";
 }
-void SimpleZilchParser::WalkLocalVariable(Zilch::LocalVariableNode*& node,
-                                          SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkLocalVariable(Zilch::LocalVariableNode*& node, SimpleZilchParserContext* context)
 {
   context->mBuilder << "var " << node->Name.Token;
   if (node->InitialValue != nullptr)
@@ -94,25 +87,23 @@ void SimpleZilchParser::WalkLocalVariable(Zilch::LocalVariableNode*& node,
   }
   context->mBuilder << ";";
 }
-void SimpleZilchParser::WalkStaticTypeOrCreationCallNode(
-    Zilch::StaticTypeNode*& node, SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkStaticTypeOrCreationCallNode(Zilch::StaticTypeNode*& node,
+                                                         SimpleZilchParserContext* context)
 {
   context->mBuilder << node->ReferencedType->Name;
 }
-void SimpleZilchParser::WalkExpressionInitializerNode(
-    Zilch::ExpressionInitializerNode*& node, SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkExpressionInitializerNode(Zilch::ExpressionInitializerNode*& node,
+                                                      SimpleZilchParserContext* context)
 {
 }
-void SimpleZilchParser::WalkUnaryOperationNode(
-    Zilch::UnaryOperatorNode*& node, SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkUnaryOperationNode(Zilch::UnaryOperatorNode*& node, SimpleZilchParserContext* context)
 {
   context->mBuilder << node->Operator->Token;
   context->mBuilder << "(";
   mWalker.Walk(this, node->Operand, context);
   context->mBuilder << ")";
 }
-void SimpleZilchParser::WalkBinaryOperationNode(
-    Zilch::BinaryOperatorNode*& node, SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkBinaryOperationNode(Zilch::BinaryOperatorNode*& node, SimpleZilchParserContext* context)
 {
   HashSet<int> noGroupingOps;
   noGroupingOps.Insert((int)Zilch::Grammar::Assignment);
@@ -133,19 +124,16 @@ void SimpleZilchParser::WalkBinaryOperationNode(
   if (needsGrouping)
     context->mBuilder << ")";
 }
-void SimpleZilchParser::WalkCastNode(Zilch::TypeCastNode*& node,
-                                     SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkCastNode(Zilch::TypeCastNode*& node, SimpleZilchParserContext* context)
 {
   context->mBuilder << "(" << node->ResultType->ToString() << ")";
   mWalker.Walk(this, node->Operand, context);
 }
-void SimpleZilchParser::WalkValueNode(Zilch::ValueNode*& node,
-                                      SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkValueNode(Zilch::ValueNode*& node, SimpleZilchParserContext* context)
 {
   context->mBuilder << node->Value.Token;
 }
-void SimpleZilchParser::WalkLocalRef(Zilch::LocalVariableReferenceNode*& node,
-                                     SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkLocalRef(Zilch::LocalVariableReferenceNode*& node, SimpleZilchParserContext* context)
 {
   context->mBuilder << node->AccessedVariable->Name;
 }
@@ -154,25 +142,21 @@ void SimpleZilchParser::WalkGetterSetter(Zilch::MemberAccessNode*& node,
                                          SimpleZilchParserContext* context)
 {
 }
-void SimpleZilchParser::WalkMemberAccessNode(Zilch::MemberAccessNode*& node,
-                                             SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkMemberAccessNode(Zilch::MemberAccessNode*& node, SimpleZilchParserContext* context)
 {
   mWalker.Walk(this, node->LeftOperand, context);
   context->mBuilder << Zilch::Grammar::GetKeywordOrSymbol(node->Operator);
   context->mBuilder << node->Name;
 }
-void SimpleZilchParser::WalkMultiExpressionNode(
-    Zilch::MultiExpressionNode*& node, SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkMultiExpressionNode(Zilch::MultiExpressionNode*& node, SimpleZilchParserContext* context)
 {
 }
-void SimpleZilchParser::WalkIfRootNode(Zilch::IfRootNode*& node,
-                                       SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkIfRootNode(Zilch::IfRootNode*& node, SimpleZilchParserContext* context)
 {
   // context->mBuilder << "if";
   // mWalker.Walk(this, node->IfParts, context);
 }
-void SimpleZilchParser::WalkIfNode(Zilch::IfNode*& node,
-                                   SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkIfNode(Zilch::IfNode*& node, SimpleZilchParserContext* context)
 {
   if (node->IsFirstPart)
     context->mBuilder << "if";
@@ -189,18 +173,15 @@ void SimpleZilchParser::WalkIfNode(Zilch::IfNode*& node,
   }
   // mWalker.Walk(this, node->IfParts, context);
 }
-void SimpleZilchParser::WalkBreakNode(Zilch::BreakNode*& node,
-                                      SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkBreakNode(Zilch::BreakNode*& node, SimpleZilchParserContext* context)
 {
   context->mBuilder << "break";
 }
-void SimpleZilchParser::WalkContinueNode(Zilch::ContinueNode*& node,
-                                         SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkContinueNode(Zilch::ContinueNode*& node, SimpleZilchParserContext* context)
 {
   context->mBuilder << "continue";
 }
-void SimpleZilchParser::WalkReturnNode(Zilch::ReturnNode*& node,
-                                       SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkReturnNode(Zilch::ReturnNode*& node, SimpleZilchParserContext* context)
 {
   context->mBuilder << "return";
   if (node->ReturnValue)
@@ -209,20 +190,16 @@ void SimpleZilchParser::WalkReturnNode(Zilch::ReturnNode*& node,
     mWalker.Walk(this, node->ReturnValue, context);
   }
 }
-void SimpleZilchParser::WalkWhileNode(Zilch::WhileNode*& node,
-                                      SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkWhileNode(Zilch::WhileNode*& node, SimpleZilchParserContext* context)
 {
 }
-void SimpleZilchParser::WalkDoWhileNode(Zilch::DoWhileNode*& node,
-                                        SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkDoWhileNode(Zilch::DoWhileNode*& node, SimpleZilchParserContext* context)
 {
 }
-void SimpleZilchParser::WalkForNode(Zilch::ForNode*& node,
-                                    SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkForNode(Zilch::ForNode*& node, SimpleZilchParserContext* context)
 {
 }
-void SimpleZilchParser::WalkForEachNode(Zilch::ForEachNode*& node,
-                                        SimpleZilchParserContext* context)
+void SimpleZilchParser::WalkForEachNode(Zilch::ForEachNode*& node, SimpleZilchParserContext* context)
 {
 }
 

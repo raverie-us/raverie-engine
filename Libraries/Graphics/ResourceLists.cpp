@@ -35,8 +35,7 @@ GraphicsResourceList::GraphicsResourceList(const GraphicsResourceList& rhs)
   mResourceIdNames = rhs.mResourceIdNames;
 }
 
-GraphicsResourceList& GraphicsResourceList::
-operator=(const GraphicsResourceList& graphicsResourceList)
+GraphicsResourceList& GraphicsResourceList::operator=(const GraphicsResourceList& graphicsResourceList)
 {
   mResourceIdNames = graphicsResourceList.mResourceIdNames;
   return *this;
@@ -132,7 +131,7 @@ void RenderGroupList::Remove(RenderGroup& renderGroup)
 Array<HandleOf<RenderGroup>> RenderGroupList::All()
 {
   Array<HandleOf<RenderGroup>> resources;
-  forRange(String idName, mResourceIdNames.All())
+  forRange (String idName, mResourceIdNames.All())
   {
     RenderGroup* renderGroup = RenderGroupManager::Instance->FindOrNull(idName);
     if (renderGroup != nullptr)
@@ -146,8 +145,7 @@ ZilchDefineType(ChildRenderGroupList, builder, type)
 {
 }
 
-ChildRenderGroupList::ChildRenderGroupList(Resource* owner) :
-    RenderGroupList(owner)
+ChildRenderGroupList::ChildRenderGroupList(Resource* owner) : RenderGroupList(owner)
 {
 }
 
@@ -170,8 +168,7 @@ void ChildRenderGroupList::CheckForAddition(Status& status, Resource* resource)
   // Already assigned a parent.
   if (RenderGroup* parentGroup = renderGroup->GetParentRenderGroup())
   {
-    status.SetFailed(String::Format("RenderGroup is already a child of '%s'.",
-                                    parentGroup->Name.c_str()));
+    status.SetFailed(String::Format("RenderGroup is already a child of '%s'.", parentGroup->Name.c_str()));
     return;
   }
 
@@ -234,7 +231,7 @@ void MaterialList::Remove(Material& material)
 Array<HandleOf<Material>> MaterialList::All()
 {
   Array<HandleOf<Material>> resources;
-  forRange(String idName, mResourceIdNames.All())
+  forRange (String idName, mResourceIdNames.All())
   {
     Material* material = MaterialManager::Instance->FindOrNull(idName);
     if (material != nullptr)
@@ -246,7 +243,7 @@ Array<HandleOf<Material>> MaterialList::All()
 
 void ResourceListAdd(Material* material)
 {
-  forRange(String & resourceIdName, material->mSerializedList.GetIdNames())
+  forRange (String& resourceIdName, material->mSerializedList.GetIdNames())
   {
     RenderGroup* renderGroup = RenderGroupManager::FindOrNull(resourceIdName);
     if (renderGroup != nullptr)
@@ -256,7 +253,7 @@ void ResourceListAdd(Material* material)
 
 void ResourceListAdd(RenderGroup* renderGroup)
 {
-  forRange(String & resourceIdName, renderGroup->mSerializedList.GetIdNames())
+  forRange (String& resourceIdName, renderGroup->mSerializedList.GetIdNames())
   {
     Material* material = MaterialManager::FindOrNull(resourceIdName);
     if (material != nullptr)
@@ -266,7 +263,7 @@ void ResourceListAdd(RenderGroup* renderGroup)
 
 void ResourceListRemove(Material* material)
 {
-  forRange(RenderGroup * renderGroup, material->mActiveResources.All())
+  forRange (RenderGroup* renderGroup, material->mActiveResources.All())
   {
     if (renderGroup != nullptr)
       ResourceListResourceRemoved(material, renderGroup);
@@ -276,7 +273,7 @@ void ResourceListRemove(Material* material)
 
 void ResourceListRemove(RenderGroup* renderGroup)
 {
-  forRange(Material * material, renderGroup->mActiveResources.All())
+  forRange (Material* material, renderGroup->mActiveResources.All())
   {
     if (material != nullptr)
       ResourceListResourceRemoved(renderGroup, material);
@@ -287,15 +284,14 @@ void ResourceListRemove(RenderGroup* renderGroup)
 void ResourceListResolveReferences(Material* material)
 {
   // Find any entries in serialized list that previously didn't exist
-  forRange(String & resourceIdName, material->mSerializedList.GetIdNames())
+  forRange (String& resourceIdName, material->mSerializedList.GetIdNames())
   {
     RenderGroup* renderGroup = RenderGroupManager::FindOrNull(resourceIdName);
     if (renderGroup != nullptr)
     {
       // If this resource is not in the runtime list of the found resource then
       // this is a newly added resource
-      if (renderGroup->mReferencedByList.mResourceIdNames.Contains(
-              material->ResourceIdName) == false)
+      if (renderGroup->mReferencedByList.mResourceIdNames.Contains(material->ResourceIdName) == false)
         ResourceListResourceAdded(material, renderGroup, &resourceIdName);
     }
   }
@@ -304,15 +300,14 @@ void ResourceListResolveReferences(Material* material)
 void ResourceListResolveReferences(RenderGroup* renderGroup)
 {
   // Find any entries in serialized list that previously didn't exist
-  forRange(String & resourceIdName, renderGroup->mSerializedList.GetIdNames())
+  forRange (String& resourceIdName, renderGroup->mSerializedList.GetIdNames())
   {
     Material* material = MaterialManager::FindOrNull(resourceIdName);
     if (material != nullptr)
     {
       // If this resource is not in the runtime list of the found resource then
       // this is a newly added resource
-      if (material->mReferencedByList.mResourceIdNames.Contains(
-              renderGroup->ResourceIdName) == false)
+      if (material->mReferencedByList.mResourceIdNames.Contains(renderGroup->ResourceIdName) == false)
         ResourceListResourceAdded(renderGroup, material, &resourceIdName);
     }
   }
@@ -325,17 +320,14 @@ void ResolveRenderGroupHierarchy(RenderGroup* renderGroup)
   // case it's newly resolved. Redundantly setting is okay.
 
   // Resolve parent if valid.
-  RenderGroup* parentGroup =
-      RenderGroupManager::Instance->FindOrNull(renderGroup->mParentRenderGroup);
+  RenderGroup* parentGroup = RenderGroupManager::Instance->FindOrNull(renderGroup->mParentRenderGroup);
   if (parentGroup != nullptr && !renderGroup->IsSubRenderGroup(parentGroup))
   {
     renderGroup->mParentRenderGroup = parentGroup->ResourceIdName;
     renderGroup->SetParentInternal(parentGroup);
   }
 
-  for (size_t i = 0;
-       i < renderGroup->mChildRenderGroups.mResourceIdNames.Size();
-       ++i)
+  for (size_t i = 0; i < renderGroup->mChildRenderGroups.mResourceIdNames.Size(); ++i)
   {
     // Resolve child if valid.
     String& idName = renderGroup->mChildRenderGroups.mResourceIdNames[i];
@@ -352,7 +344,7 @@ void ResolveRenderGroupHierarchies()
 {
   Array<Resource*> renderGroups;
   RenderGroupManager::Instance->EnumerateResources(renderGroups);
-  forRange(Resource * resource, renderGroups.All())
+  forRange (Resource* resource, renderGroups.All())
   {
     RenderGroup* group = (RenderGroup*)resource;
     ResolveRenderGroupHierarchy(group);

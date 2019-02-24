@@ -82,23 +82,16 @@ private:
 #endif
 
 #define ZPrintFilter(filter, ...) ::Zero::Console::Print(filter, __VA_ARGS__)
-#define ZPrint(...)                                                            \
-  ::Zero::Console::Print(Zero::Filter::DefaultFilter, __VA_ARGS__)
+#define ZPrint(...) ::Zero::Console::Print(Zero::Filter::DefaultFilter, __VA_ARGS__)
 
 // Debug printing functions will only print in debug builds
 
 #if ZERO_ENABLE_DEBUG_CONSOLE
 
-#  define DebugPrintFilter(filter, ...)                                        \
-    ::Zero::Console::Print(filter, __VA_ARGS__)
-#  define DebugPrint(...)                                                      \
-    ::Zero::Console::Print(Zero::Filter::DefaultFilter, __VA_ARGS__)
-#  define DebugTrace(format, ...)                                              \
-    ::Zero::Console::Print(Zero::Filter::DefaultFilter,                        \
-                           "%s(%d) : " format,                                 \
-                           __FILE__,                                           \
-                           __LINE__,                                           \
-                           __VA_ARGS__)
+#  define DebugPrintFilter(filter, ...) ::Zero::Console::Print(filter, __VA_ARGS__)
+#  define DebugPrint(...) ::Zero::Console::Print(Zero::Filter::DefaultFilter, __VA_ARGS__)
+#  define DebugTrace(format, ...)                                                                                      \
+    ::Zero::Console::Print(Zero::Filter::DefaultFilter, "%s(%d) : " format, __FILE__, __LINE__, __VA_ARGS__)
 
 #else
 

@@ -73,13 +73,9 @@ public:
 
   //-------------------------------------------------------------------Internal
   void ParseTags(LauncherProjectInfo* launcherInfo, StringParam tags);
-  DataNode* GetComponentPropertyNode(StringParam componentType,
-                                     StringParam propertyName);
-  String GetChildComponentPropertyValue(StringParam componentType,
-                                        StringParam propertyName);
-  void SetChildComponentPropertyValue(StringParam componentType,
-                                      StringParam propertyName,
-                                      StringParam value);
+  DataNode* GetComponentPropertyNode(StringParam componentType, StringParam propertyName);
+  String GetChildComponentPropertyValue(StringParam componentType, StringParam propertyName);
+  void SetChildComponentPropertyValue(StringParam componentType, StringParam propertyName, StringParam value);
   void AddOrReplaceDataNodeComponent(Component* component);
 
   // Helper to get a value from the "Project" component. This is special as the

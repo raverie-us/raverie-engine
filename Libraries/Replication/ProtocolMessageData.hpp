@@ -179,10 +179,9 @@ struct ReceiptData
 
 //                               ConnectRequestData //
 template <>
-inline Bits
-Serialize<ConnectRequestData>(SerializeDirection::Enum direction,
-                              BitStream& bitStream,
-                              ConnectRequestData& connectRequestData)
+inline Bits Serialize<ConnectRequestData>(SerializeDirection::Enum direction,
+                                          BitStream& bitStream,
+                                          ConnectRequestData& connectRequestData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -193,9 +192,7 @@ Serialize<ConnectRequestData>(SerializeDirection::Enum direction,
     bitStream.Write(connectRequestData.mIpAddress);
 
     // Write timestamp
-    bitStream.WriteQuantized(connectRequestData.mTimestamp,
-                             MessageTimestampMin,
-                             MessageTimestampMax);
+    bitStream.WriteQuantized(connectRequestData.mTimestamp, MessageTimestampMin, MessageTimestampMax);
 
     // Write extra data (if any)
     bitStream.AppendAll(connectRequestData.mExtraData);
@@ -212,11 +209,7 @@ Serialize<ConnectRequestData>(SerializeDirection::Enum direction,
     ReturnIf(!bitStream.Read(connectRequestData.mIpAddress), 0, "");
 
     // Read timestamp
-    ReturnIf(!bitStream.ReadQuantized(connectRequestData.mTimestamp,
-                                      MessageTimestampMin,
-                                      MessageTimestampMax),
-             0,
-             "");
+    ReturnIf(!bitStream.ReadQuantized(connectRequestData.mTimestamp, MessageTimestampMin, MessageTimestampMax), 0, "");
 
     // Read extra data (if any)
     connectRequestData.mExtraData.AssignRemainder(bitStream);
@@ -228,10 +221,9 @@ Serialize<ConnectRequestData>(SerializeDirection::Enum direction,
 
 //                              ConnectResponseData //
 template <>
-inline Bits
-Serialize<ConnectResponseData>(SerializeDirection::Enum direction,
-                               BitStream& bitStream,
-                               ConnectResponseData& connectResponseData)
+inline Bits Serialize<ConnectResponseData>(SerializeDirection::Enum direction,
+                                           BitStream& bitStream,
+                                           ConnectResponseData& connectResponseData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -242,14 +234,10 @@ Serialize<ConnectResponseData>(SerializeDirection::Enum direction,
     bitStream.Write(connectResponseData.mIpAddress);
 
     // Write timestamp
-    bitStream.WriteQuantized(connectResponseData.mTimestamp,
-                             MessageTimestampMin,
-                             MessageTimestampMax);
+    bitStream.WriteQuantized(connectResponseData.mTimestamp, MessageTimestampMin, MessageTimestampMax);
 
     // Write connect response
-    bitStream.WriteQuantized(connectResponseData.mConnectResponse,
-                             ConnectResponseMin,
-                             ConnectResponseMax);
+    bitStream.WriteQuantized(connectResponseData.mConnectResponse, ConnectResponseMin, ConnectResponseMax);
 
     // Write extra data (if any)
     bitStream.AppendAll(connectResponseData.mExtraData);
@@ -266,18 +254,11 @@ Serialize<ConnectResponseData>(SerializeDirection::Enum direction,
     ReturnIf(!bitStream.Read(connectResponseData.mIpAddress), 0, "");
 
     // Read timestamp
-    ReturnIf(!bitStream.ReadQuantized(connectResponseData.mTimestamp,
-                                      MessageTimestampMin,
-                                      MessageTimestampMax),
-             0,
-             "");
+    ReturnIf(!bitStream.ReadQuantized(connectResponseData.mTimestamp, MessageTimestampMin, MessageTimestampMax), 0, "");
 
     // Read connect response
-    ReturnIf(!bitStream.ReadQuantized(connectResponseData.mConnectResponse,
-                                      ConnectResponseMin,
-                                      ConnectResponseMax),
-             0,
-             "");
+    ReturnIf(
+        !bitStream.ReadQuantized(connectResponseData.mConnectResponse, ConnectResponseMin, ConnectResponseMax), 0, "");
 
     // Read extra data (if any)
     connectResponseData.mExtraData.AssignRemainder(bitStream);
@@ -292,10 +273,9 @@ Serialize<ConnectResponseData>(SerializeDirection::Enum direction,
 /// Serializes packet sequence history protocol message data
 /// Returns the number of bits serialized if successful, else 0
 template <>
-inline Bits Serialize<PacketSequenceHistoryData>(
-    SerializeDirection::Enum direction,
-    BitStream& bitStream,
-    PacketSequenceHistoryData& packetSequenceHistoryData)
+inline Bits Serialize<PacketSequenceHistoryData>(SerializeDirection::Enum direction,
+                                                 BitStream& bitStream,
+                                                 PacketSequenceHistoryData& packetSequenceHistoryData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -333,18 +313,14 @@ inline Bits Serialize<ChannelOpenedData>(SerializeDirection::Enum direction,
                                          BitStream& bitStream,
                                          ChannelOpenedData& channelOpenedData)
 {
-  return bitStream.SerializeQuantized(direction,
-                                      channelOpenedData.mTransferMode,
-                                      TransferModeMin,
-                                      TransferModeMax);
+  return bitStream.SerializeQuantized(direction, channelOpenedData.mTransferMode, TransferModeMin, TransferModeMax);
 };
 
 //                              DisconnectNoticeData //
 template <>
-inline Bits
-Serialize<DisconnectNoticeData>(SerializeDirection::Enum direction,
-                                BitStream& bitStream,
-                                DisconnectNoticeData& disconnectNoticeData)
+inline Bits Serialize<DisconnectNoticeData>(SerializeDirection::Enum direction,
+                                            BitStream& bitStream,
+                                            DisconnectNoticeData& disconnectNoticeData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -352,9 +328,7 @@ Serialize<DisconnectNoticeData>(SerializeDirection::Enum direction,
     const Bits bitsWrittenStart = bitStream.GetBitsWritten();
 
     // Write disconnect reason
-    bitStream.WriteQuantized(disconnectNoticeData.mDisconnectReason,
-                             DisconnectReasonMin,
-                             DisconnectReasonMax);
+    bitStream.WriteQuantized(disconnectNoticeData.mDisconnectReason, DisconnectReasonMin, DisconnectReasonMax);
 
     // Write extra data (if any)
     bitStream.AppendAll(disconnectNoticeData.mExtraData);
@@ -368,9 +342,7 @@ Serialize<DisconnectNoticeData>(SerializeDirection::Enum direction,
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read disconnect reason
-    ReturnIf(!bitStream.ReadQuantized(disconnectNoticeData.mDisconnectReason,
-                                      DisconnectReasonMin,
-                                      DisconnectReasonMax),
+    ReturnIf(!bitStream.ReadQuantized(disconnectNoticeData.mDisconnectReason, DisconnectReasonMin, DisconnectReasonMax),
              0,
              "");
 
@@ -388,10 +360,9 @@ Serialize<DisconnectNoticeData>(SerializeDirection::Enum direction,
 
 //                           IncomingLinkCreatedData //
 template <>
-inline Bits Serialize<IncomingLinkCreatedData>(
-    SerializeDirection::Enum direction,
-    BitStream& bitStream,
-    IncomingLinkCreatedData& incomingLinkCreatedData)
+inline Bits Serialize<IncomingLinkCreatedData>(SerializeDirection::Enum direction,
+                                               BitStream& bitStream,
+                                               IncomingLinkCreatedData& incomingLinkCreatedData)
 {
   return bitStream.Serialize(direction, incomingLinkCreatedData.mIpAddress);
 };
@@ -411,10 +382,9 @@ inline Bits Serialize<FatalErrorData>(SerializeDirection::Enum direction,
 
 //                              ConnectRequestedData //
 template <>
-inline Bits
-Serialize<ConnectRequestedData>(SerializeDirection::Enum direction,
-                                BitStream& bitStream,
-                                ConnectRequestedData& connectRequestedData)
+inline Bits Serialize<ConnectRequestedData>(SerializeDirection::Enum direction,
+                                            BitStream& bitStream,
+                                            ConnectRequestedData& connectRequestedData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -448,10 +418,9 @@ Serialize<ConnectRequestedData>(SerializeDirection::Enum direction,
 
 //                              ConnectRespondedData //
 template <>
-inline Bits
-Serialize<ConnectRespondedData>(SerializeDirection::Enum direction,
-                                BitStream& bitStream,
-                                ConnectRespondedData& connectRespondedData)
+inline Bits Serialize<ConnectRespondedData>(SerializeDirection::Enum direction,
+                                            BitStream& bitStream,
+                                            ConnectRespondedData& connectRespondedData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -485,10 +454,9 @@ Serialize<ConnectRespondedData>(SerializeDirection::Enum direction,
 
 //                              DisconnectNoticedData //
 template <>
-inline Bits
-Serialize<DisconnectNoticedData>(SerializeDirection::Enum direction,
-                                 BitStream& bitStream,
-                                 DisconnectNoticedData& disconnectNoticedData)
+inline Bits Serialize<DisconnectNoticedData>(SerializeDirection::Enum direction,
+                                             BitStream& bitStream,
+                                             DisconnectNoticedData& disconnectNoticedData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -513,8 +481,7 @@ Serialize<DisconnectNoticedData>(SerializeDirection::Enum direction,
     ReturnIf(!bitStream.Read(disconnectNoticedData.mDirection), 0, "");
 
     // Read disconnect notice data
-    ReturnIf(
-        !bitStream.Read(disconnectNoticedData.mDisconnectNoticeData), 0, "");
+    ReturnIf(!bitStream.Read(disconnectNoticedData.mDisconnectNoticeData), 0, "");
 
     // Success
     return bitStream.GetBitsRead() - bitsReadStart;
@@ -523,10 +490,9 @@ Serialize<DisconnectNoticedData>(SerializeDirection::Enum direction,
 
 //                           IncomingChannelOpenedData //
 template <>
-inline Bits Serialize<IncomingChannelOpenedData>(
-    SerializeDirection::Enum direction,
-    BitStream& bitStream,
-    IncomingChannelOpenedData& incomingChannelOpenedData)
+inline Bits Serialize<IncomingChannelOpenedData>(SerializeDirection::Enum direction,
+                                                 BitStream& bitStream,
+                                                 IncomingChannelOpenedData& incomingChannelOpenedData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -560,10 +526,9 @@ inline Bits Serialize<IncomingChannelOpenedData>(
 
 //                           IncomingChannelClosedData //
 template <>
-inline Bits Serialize<IncomingChannelClosedData>(
-    SerializeDirection::Enum direction,
-    BitStream& bitStream,
-    IncomingChannelClosedData& incomingChannelClosedData)
+inline Bits Serialize<IncomingChannelClosedData>(SerializeDirection::Enum direction,
+                                                 BitStream& bitStream,
+                                                 IncomingChannelClosedData& incomingChannelClosedData)
 {
   return bitStream.Serialize(direction, incomingChannelClosedData.mChannelId);
 };
@@ -588,9 +553,7 @@ inline Bits Serialize<StatusChangeData>(SerializeDirection::Enum direction,
 
 //                                  ReceiptData //
 template <>
-inline Bits Serialize<ReceiptData>(SerializeDirection::Enum direction,
-                                   BitStream& bitStream,
-                                   ReceiptData& receiptData)
+inline Bits Serialize<ReceiptData>(SerializeDirection::Enum direction, BitStream& bitStream, ReceiptData& receiptData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)

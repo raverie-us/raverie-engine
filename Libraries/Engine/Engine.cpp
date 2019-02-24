@@ -22,11 +22,8 @@ namespace Z
 Engine* gEngine;
 }
 
-void ZeroDoNotify(StringParam title,
-                  StringParam message,
-                  StringParam icon,
-                  NotifyType::Enum type,
-                  NotifyException::Enum expections)
+void ZeroDoNotify(
+    StringParam title, StringParam message, StringParam icon, NotifyType::Enum type, NotifyException::Enum expections)
 {
   if (type == NotifyType::Error)
   {
@@ -34,8 +31,7 @@ void ZeroDoNotify(StringParam title,
   }
 
   if (expections == NotifyException::Script)
-    ExecutableState::CallingState->ThrowException(
-        String::Format("%s: %s", title.c_str(), message.c_str()));
+    ExecutableState::CallingState->ThrowException(String::Format("%s: %s", title.c_str(), message.c_str()));
 
   // This would normally not be safe because in a threaded scenario, the
   // gDispatch could be deleted between when we check it and when we call
@@ -65,8 +61,7 @@ void ZeroDoNotify(StringParam title,
     }
   }
 
-  ZPrintFilter(
-      Filter::EngineFilter, "%s : %s\n", title.c_str(), message.c_str());
+  ZPrintFilter(Filter::EngineFilter, "%s : %s\n", title.c_str(), message.c_str());
 }
 
 ZilchDefineType(Engine, builder, type)
@@ -209,12 +204,8 @@ void Engine::Terminate()
 
 GameSession* Engine::CreateGameSession()
 {
-  GameSession* game =
-      (GameSession*)Z::gFactory->CreateCheckedType(ZilchTypeId(GameSession),
-                                                   nullptr,
-                                                   CoreArchetypes::Game,
-                                                   CreationFlags::Default,
-                                                   nullptr);
+  GameSession* game = (GameSession*)Z::gFactory->CreateCheckedType(
+      ZilchTypeId(GameSession), nullptr, CoreArchetypes::Game, CreationFlags::Default, nullptr);
 
   return game;
 }
@@ -222,8 +213,7 @@ GameSession* Engine::CreateGameSession()
 GameSession* Engine::CreateGameSessionFromArchetype(Archetype* archetype)
 {
   CogCreationContext context;
-  GameSession* game = (GameSession*)Z::gFactory->BuildFromArchetype(
-      ZilchTypeId(GameSession), archetype, &context);
+  GameSession* game = (GameSession*)Z::gFactory->BuildFromArchetype(ZilchTypeId(GameSession), archetype, &context);
   CogInitializer initializer(game->mSpace, game);
 
   if (game != nullptr)
@@ -284,7 +274,7 @@ ProjectSettings* Engine::GetProjectSettings()
 {
   // Return the first project cog found in the engine space
   // (Note: This should be improved, but this works for now)
-  forRange(Cog & cog, mEngineSpace->AllObjects())
+  forRange (Cog& cog, mEngineSpace->AllObjects())
   {
     if (ProjectSettings* project = cog.has(ProjectSettings))
       return project;
@@ -409,15 +399,15 @@ bool Engine::IsReadOnly()
 
 void Engine::LoadPendingLevels()
 {
-  forRange(Space & space, mSpaceList.All()) space.LoadPendingLevel();
+  forRange (Space& space, mSpaceList.All())
+    space.LoadPendingLevel();
 }
 
 ZilchDefineType(EngineMetaComposition, builder, type)
 {
 }
 
-EngineMetaComposition::EngineMetaComposition() :
-    MetaComposition(ZilchTypeId(System))
+EngineMetaComposition::EngineMetaComposition() : MetaComposition(ZilchTypeId(System))
 {
 }
 
@@ -427,8 +417,7 @@ uint EngineMetaComposition::GetComponentCount(HandleParam owner)
   return engine->mSystems.Size();
 }
 
-Handle EngineMetaComposition::GetComponent(HandleParam owner,
-                                           BoundType* componentType)
+Handle EngineMetaComposition::GetComponent(HandleParam owner, BoundType* componentType)
 {
   Engine* engine = owner.Get<Engine*>(GetOptions::AssertOnNull);
   return engine->QueryComponentId(componentType);
@@ -461,10 +450,9 @@ void FatalEngineError(cstr format, ...)
   ZPrint("%s", message.c_str());
 
   // Show Message Box
-  String finalMessage =
-      BuildString(message,
-                  " The engine will now exit. If this issue persists please"
-                  " reinstall Zero Engine or contact support.");
+  String finalMessage = BuildString(message,
+                                    " The engine will now exit. If this issue persists please"
+                                    " reinstall Zero Engine or contact support.");
 
   OsShell* shell = Z::gEngine->has(OsShell);
   shell->ShowMessageBox("Core Engine Error", finalMessage);

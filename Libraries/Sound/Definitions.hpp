@@ -86,11 +86,9 @@ public:
     mValues[threadCalledOn] = value;
 
     if (threadCalledOn == AudioThreads::MainThread)
-      Z::gSound->Mixer.AddTask(
-          CreateFunctor(&mValues[AudioThreads::MixThread], value), nullptr);
+      Z::gSound->Mixer.AddTask(CreateFunctor(&mValues[AudioThreads::MixThread], value), nullptr);
     else
-      Z::gSound->Mixer.AddTaskThreaded(
-          CreateFunctor(&mValues[AudioThreads::MainThread], value), nullptr);
+      Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&mValues[AudioThreads::MainThread], value), nullptr);
   }
 
   void SetDirectly(T value)

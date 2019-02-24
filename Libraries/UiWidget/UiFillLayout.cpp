@@ -41,7 +41,7 @@ void UiFillLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
   rect.RemoveThickness(mPadding);
 
   // Layout each child
-  forRange(UiWidget * child, AllWidgetsInLayout())
+  forRange (UiWidget* child, AllWidgetsInLayout())
   {
     // Do nothing if it's not in the layout
     if (!child->GetInLayout())
@@ -87,12 +87,7 @@ void UiFillLayout::FillToRectangle(RectangleParam rect, UiWidget* widget)
     if (widget->GetSizePolicyX() == UiSizePolicy::Fixed)
       childSize.x = widget->GetSize().x + childMargins.Width();
 
-    CalculateAlignment(Axis::X,
-                       widget->GetHorizontalAlignment(),
-                       size,
-                       pos,
-                       childSize,
-                       childPos);
+    CalculateAlignment(Axis::X, widget->GetHorizontalAlignment(), size, pos, childSize, childPos);
   }
 
   if (widget->GetSizePolicyY() == UiSizePolicy::Flex)
@@ -105,12 +100,7 @@ void UiFillLayout::FillToRectangle(RectangleParam rect, UiWidget* widget)
     if (widget->GetSizePolicyY() == UiSizePolicy::Fixed)
       childSize.y = widget->GetSize().y + childMargins.Height();
 
-    CalculateAlignment(Axis::Y,
-                       widget->GetVerticalAlignment(),
-                       size,
-                       pos,
-                       childSize,
-                       childPos);
+    CalculateAlignment(Axis::Y, widget->GetVerticalAlignment(), size, pos, childSize, childPos);
   }
 
   Rectangle childRect = Rectangle::PointAndSize(childPos, childSize);

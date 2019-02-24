@@ -78,12 +78,10 @@ real MeshCollider::ComputeWorldVolumeInternal()
   return worldVolume;
 }
 
-void MeshCollider::ComputeLocalInverseInertiaTensor(real mass,
-                                                    Mat3Ref localInvInertia)
+void MeshCollider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia)
 {
   Vec3 worldScale = GetWorldScale();
-  localInvInertia =
-      mPhysicsMesh->ComputeScaledInvInertiaTensor(worldScale, mass);
+  localInvInertia = mPhysicsMesh->ComputeScaledInvInertiaTensor(worldScale, mass);
 }
 
 void MeshCollider::Support(Vec3Param direction, Vec3Ptr support) const
@@ -142,9 +140,7 @@ MeshCollider::RangeType MeshCollider::GetOverlapRange(Aabb& localAabb)
   return range;
 }
 
-bool MeshCollider::Cast(const Ray& localRay,
-                        ProxyResult& result,
-                        BaseCastFilter& filter)
+bool MeshCollider::Cast(const Ray& localRay, ProxyResult& result, BaseCastFilter& filter)
 {
   PhysicsMesh* mesh = GetPhysicsMesh();
   return mesh->CastRay(localRay, result, filter);

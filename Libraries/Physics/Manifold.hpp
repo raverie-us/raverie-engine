@@ -32,10 +32,7 @@ struct ManifoldPoint
   real Penetration;
 };
 
-DeclareBitField3(AddingPolicy,
-                 FullManifold,
-                 PersistentManifold,
-                 NormalManifold);
+DeclareBitField3(AddingPolicy, FullManifold, PersistentManifold, NormalManifold);
 
 struct Manifold
 {
@@ -54,10 +51,7 @@ struct Manifold
   /// Used to get the separating velocity of the two points along the normal.
   real GetSeparatingVelocity(uint contactIndex);
   Vec3 GetSeparatingTangentVelocity(uint contactIndex);
-  void GetTangents(PhysicsSolverConfig* config,
-                   uint contactIndex,
-                   Vec3Ref t1,
-                   Vec3Ref t2);
+  void GetTangents(PhysicsSolverConfig* config, uint contactIndex, Vec3Ref t1, Vec3Ref t2);
 
   void SetNormal(Vec3Param normal);
   void Clear();

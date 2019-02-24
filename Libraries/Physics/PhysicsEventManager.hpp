@@ -24,9 +24,7 @@ struct PhysicsEventManager
   // Event Batching
   void BatchCollisionStartedEvent(Manifold* manifold, PhysicsSpace* space);
   void BatchCollisionPersistedEvent(Manifold* manifold, PhysicsSpace* space);
-  void BatchCollisionEndedEvent(Manifold* manifold,
-                                PhysicsSpace* space,
-                                bool immediateSend = false);
+  void BatchCollisionEndedEvent(Manifold* manifold, PhysicsSpace* space, bool immediateSend = false);
   void BatchPreSolveEvent(Manifold* manifold, PhysicsSpace* space);
   JointEvent* BatchJointEvent(Joint* joint, StringParam eventName);
 
@@ -41,15 +39,10 @@ private:
                    uint collisionType,
                    uint filterFlag,
                    bool immediateSend = false);
-  void CreateCollisionEvent(Manifold* manifold,
-                            uint contactId,
-                            uint eventType,
-                            StringParam collisionType,
-                            bool immediateSend = false);
-  CollisionEvent* CreateCollisionEventInternal(Manifold* manifold,
-                                               ManifoldPoint& point,
-                                               uint eventType,
-                                               StringParam collisionType);
+  void CreateCollisionEvent(
+      Manifold* manifold, uint contactId, uint eventType, StringParam collisionType, bool immediateSend = false);
+  CollisionEvent*
+  CreateCollisionEventInternal(Manifold* manifold, ManifoldPoint& point, uint eventType, StringParam collisionType);
 
   void AddEvent(CollisionEvent* event);
   void AddEvent(CollisionGroupEvent* event);
@@ -57,9 +50,7 @@ private:
 
   void DispatchEvent(CollisionEvent* toSend);
   void DispatchEvent(PhysicsSpace* space, CollisionGroupEvent* toSend);
-  void DispatchGroupEvent(Cog* obj,
-                          CollisionGroupEvent* eventObj,
-                          uint filterFlag);
+  void DispatchGroupEvent(Cog* obj, CollisionGroupEvent* eventObj, uint filterFlag);
 
   typedef Array<CollisionEvent*> CollisionEvents;
   typedef Array<CollisionGroupEvent*> CollisionGroupEvents;

@@ -16,11 +16,7 @@ DeclareEnum3(NetDiscoveryMode, RefreshList, Refresh, Idle);
 /// Net Discovery Stage.
 /// What stage of discovery is a host request in? The stages are represented
 /// here.
-DeclareEnum4(NetDiscoveryStage,
-             Unresponding,
-             BasicHostInfo,
-             BasicHostInfoDirect,
-             ExtraHostInfo);
+DeclareEnum4(NetDiscoveryStage, Unresponding, BasicHostInfo, BasicHostInfoDirect, ExtraHostInfo);
 
 //                                   NetDiscovery //
 
@@ -43,9 +39,8 @@ public:
   BitStream mBasicHostInfo;  ///< Basic host info (limited to 480 bytes).
   BitStream mExtraHostInfo;  ///< Extra host info (requires that connection is
                              ///< established).
-  NetRefreshResult::Enum mRefreshResult =
-      NetRefreshResult::NoResponse; ///< How far in the process did this host
-                                    ///< get?
+  NetRefreshResult::Enum mRefreshResult = NetRefreshResult::NoResponse; ///< How far in the process did this host
+                                                                        ///< get?
 };
 
 /// Open Host Request.
@@ -59,8 +54,7 @@ class OpenHostRequest
 public:
   /// Called in order to prematurely shutdown a host request. Dispatches events,
   /// expects that this host request cleans up anything it created
-  virtual void FlushHostRequest(NetPeer& netPeer,
-                                NetDiscoveryInterface& netDisoveryInstance) = 0;
+  virtual void FlushHostRequest(NetPeer& netPeer, NetDiscoveryInterface& netDisoveryInstance) = 0;
   /// It will test the passed in IpAddress, and if it was a newly discovered
   /// host it will return true.
   virtual bool IsNewHost(IpAddress const& hostIpAddress) = 0;
@@ -75,25 +69,19 @@ public:
   /// true if first response, else false
   virtual bool GetIsFirstResponseFrom(IpAddress const& pingedHostIp) = 0;
   /// Sets if this was the first response from a specific IpAddress.
-  virtual void SetIsFirstResponseFrom(IpAddress const& pingedHostIp,
-                                      bool isFirstResponse) = 0;
+  virtual void SetIsFirstResponseFrom(IpAddress const& pingedHostIp, bool isFirstResponse) = 0;
 
   /// Helper function to cancel a single host.
-  void FlushHost(NetPeer& netPeer,
-                 NetDiscoveryInterface& netDiscoveryInstance,
-                 IpAddress const& ipAddress);
+  void FlushHost(NetPeer& netPeer, NetDiscoveryInterface& netDiscoveryInstance, IpAddress const& ipAddress);
 
   //
   // Data
   //
-  Network::Enum mNetwork = Network::LAN; ///< Network request is on.
-  bool mAllowDiscovery = false; ///< Should refresh allow new discoveries?
-  NetDiscoveryStage::Enum mDiscoveryStage =
-      NetDiscoveryStage::Unresponding; ///< How far along is this host request?
-  bool mRemoveStaleHosts =
-      true; ///< Should hosts that did not respond be removed?
-  bool mAquireExtraHostInfo =
-      false; ///< Does this request want extra host info.
+  Network::Enum mNetwork = Network::LAN;                                     ///< Network request is on.
+  bool mAllowDiscovery = false;                                              ///< Should refresh allow new discoveries?
+  NetDiscoveryStage::Enum mDiscoveryStage = NetDiscoveryStage::Unresponding; ///< How far along is this host request?
+  bool mRemoveStaleHosts = true;     ///< Should hosts that did not respond be removed?
+  bool mAquireExtraHostInfo = false; ///< Does this request want extra host info.
 };
 
 typedef UniquePointer<OpenHostRequest> OpenHostRequestPtr;
@@ -105,19 +93,17 @@ public:
   //
   // Request Interface
   //
-  void FlushHostRequest(NetPeer& netPeer,
-                        NetDiscoveryInterface& netDiscoveryInstance) override;
+  void FlushHostRequest(NetPeer& netPeer, NetDiscoveryInterface& netDiscoveryInstance) override;
   bool IsNewHost(IpAddress const& hostIpAddress) override;
   bool IsStaleHost(IpAddress const& hostIpAddress) override;
   void BeginExtraHostInfo() override;
   bool GetIsFirstResponseFrom(IpAddress const& pingedHostIp) override;
-  void SetIsFirstResponseFrom(IpAddress const& pingedHostIp,
-                              bool isFirstResponse) override;
+  void SetIsFirstResponseFrom(IpAddress const& pingedHostIp, bool isFirstResponse) override;
   //
   // Data
   //
-  IpAddress mIpAddress;  ///< Specific IP that was refreshed was requested for.
-  bool mPreviouslyKnown; ///< Did we know about this host before the request?
+  IpAddress mIpAddress;        ///< Specific IP that was refreshed was requested for.
+  bool mPreviouslyKnown;       ///< Did we know about this host before the request?
   bool mReceivedFirstResponse; ///< Has this request received its first request?
 };
 
@@ -129,29 +115,26 @@ public:
   // Request Interface
   //
 
-  void FlushHostRequest(NetPeer& netPeer,
-                        NetDiscoveryInterface& netDiscoveryInstance) override;
+  void FlushHostRequest(NetPeer& netPeer, NetDiscoveryInterface& netDiscoveryInstance) override;
   bool IsNewHost(IpAddress const& hostIpAddress) override;
   bool IsStaleHost(IpAddress const& hostIpAddress) override;
   void BeginExtraHostInfo() override;
   bool GetIsFirstResponseFrom(IpAddress const& pingedHostIp) override;
-  void SetIsFirstResponseFrom(IpAddress const& pingedHostIp,
-                              bool isFirstResponse) override;
+  void SetIsFirstResponseFrom(IpAddress const& pingedHostIp, bool isFirstResponse) override;
 
   //
   // Data
   //
   ArraySet<IpAddress> mRespondingHosts; ///< An array containing the IpAddress
                                         ///< of All hosts who responded.
-  ArraySet<IpAddress> mExpectedHosts; ///< An array containing a list of IPs who
-                                      ///< we expect a response from.
+  ArraySet<IpAddress> mExpectedHosts;   ///< An array containing a list of IPs who
+                                        ///< we expect a response from.
 };
 
 /// NetDiscoveryInterface.
 /// Works under the net peer to manage discovering other net peers.
 /// Manages network object state and event replication.
-class NetDiscoveryInterface : public NetPeerConnectionInterface,
-                              public NetPeerMessageInterface
+class NetDiscoveryInterface : public NetPeerConnectionInterface, public NetPeerMessageInterface
 {
 public:
   NetDiscoveryInterface(NetPeer* netPeer);
@@ -161,23 +144,16 @@ public:
   //
 
   /// Refresh all hosts that it possibly can.
-  virtual void RefreshAll(bool allowDiscovery,
-                          bool getExtraHostInfo,
-                          bool removeStaleHosts) = 0;
+  virtual void RefreshAll(bool allowDiscovery, bool getExtraHostInfo, bool removeStaleHosts) = 0;
   /// Refresh just one host.
-  virtual void SingleHostRefresh(IpAddress const& thierIp,
-                                 bool allowDiscovery,
-                                 bool getExtraHostInfo,
-                                 bool removeStaleHosts) = 0;
+  virtual void
+  SingleHostRefresh(IpAddress const& thierIp, bool allowDiscovery, bool getExtraHostInfo, bool removeStaleHosts) = 0;
 
-  virtual void
-  HandleCancelSingleHostRequest(SingleHostRequest& singleHostRequest) = 0;
-  virtual void
-  HandleCancelMultiHostRequest(MultiHostRequest& multiHostRequest) = 0;
+  virtual void HandleCancelSingleHostRequest(SingleHostRequest& singleHostRequest) = 0;
+  virtual void HandleCancelMultiHostRequest(MultiHostRequest& multiHostRequest) = 0;
 
   /// Handle different ping callbacks.
-  virtual bool HandlePing(IpAddress const& theirIpAddress,
-                          NetHostPingData& netHostPingData) = 0;
+  virtual bool HandlePing(IpAddress const& theirIpAddress, NetHostPingData& netHostPingData) = 0;
   virtual void HandlePingCancelled(PendingHostPing& pendingHostPing) = 0;
   virtual void HandlePingTimeout(PendingHostPing& pendingHostPing) = 0;
 
@@ -224,8 +200,7 @@ public:
 
   /// Helper function which looks to net peer to see what hosts we expect a
   /// response from.
-  void GetExpectedHosts(Network::Enum network,
-                        ArraySet<IpAddress>& outIpAddressList);
+  void GetExpectedHosts(Network::Enum network, ArraySet<IpAddress>& outIpAddressList);
 
   /// Helper to create and get a pointer to a new open host request.
   SingleHostRequest* CreateSingleHostRequest(Network::Enum network,
@@ -234,10 +209,8 @@ public:
                                              bool removeStaleHosts,
                                              bool extraHostInfo);
   /// Helper to create and get a pointer to a new open host request.
-  MultiHostRequest* CreateMultiHostRequest(Network::Enum network,
-                                           bool allowDiscovery,
-                                           bool removeStaleHosts,
-                                           bool extraHostInfo);
+  MultiHostRequest*
+  CreateMultiHostRequest(Network::Enum network, bool allowDiscovery, bool removeStaleHosts, bool extraHostInfo);
 
   /// Helper for dispatching NetEvents.
   /// Dispatches a responding host event. Creates NetHosts as appropriate.
@@ -263,8 +236,7 @@ public:
                        NetHostPongData& netHostPongData,
                        PendingHostPing& pendingHostPing);
 
-  bool PongIsForThisProject(NetHostPongData const& netHostPongData,
-                            PendingHostPing const& pendingHostPing);
+  bool PongIsForThisProject(NetHostPongData const& netHostPongData, PendingHostPing const& pendingHostPing);
 
   /// Called on net discovery interface in order to dispatch events, and clean
   /// up all other information related to the host request.
@@ -276,25 +248,22 @@ public:
 
   /// Default implementation receives peer messages for our PingManager. (be
   /// sure to call this in overloaded functions)
-  virtual bool ReceivePeerMessage(IpAddress const& theirIpAddress,
-                                  Message& peerMessage) override;
+  virtual bool ReceivePeerMessage(IpAddress const& theirIpAddress, Message& peerMessage) override;
 
   //
   // Data
   //
-  NetDiscoveryMode::Enum mDiscoveryMode; ///< Some modes cancel others.
-  PingManager mPingManager; ///< Tool for NetHostDiscovery to use to communicate
-                            ///< with others.
-  Array<OpenHostRequestPtr> mOpenHostRequests; ///< Open host request list.
-  ArrayMap<IpAddress, RespondingHostData>
-      mRespondingHostData; ///< Array of host data for those who responded. this
-                           ///< is for both multi and single host requests to
-                           ///< use.
-  HashMap<IpAddress, SingleHostRequest*>
-      mSingleHostRequests; ///< Map of single host requests for easy access.
-  bool mPendingCancelRefreshes; ///< Pending cancel refreshes request? (Frame
-                                ///< delayed to avoid possible infinite
-                                ///< recursion)
+  NetDiscoveryMode::Enum mDiscoveryMode;                       ///< Some modes cancel others.
+  PingManager mPingManager;                                    ///< Tool for NetHostDiscovery to use to communicate
+                                                               ///< with others.
+  Array<OpenHostRequestPtr> mOpenHostRequests;                 ///< Open host request list.
+  ArrayMap<IpAddress, RespondingHostData> mRespondingHostData; ///< Array of host data for those who responded. this
+                                                               ///< is for both multi and single host requests to
+                                                               ///< use.
+  HashMap<IpAddress, SingleHostRequest*> mSingleHostRequests;  ///< Map of single host requests for easy access.
+  bool mPendingCancelRefreshes;                                ///< Pending cancel refreshes request? (Frame
+                                                               ///< delayed to avoid possible infinite
+                                                               ///< recursion)
 };
 
 } // namespace Zero

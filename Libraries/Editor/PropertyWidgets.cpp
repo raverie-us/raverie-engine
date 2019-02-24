@@ -4,9 +4,7 @@
 namespace Zero
 {
 
-PropertyEditAction::PropertyEditAction(PropertyWidgetInitializer& init,
-                                       Function* method,
-                                       HandleParam instance) :
+PropertyEditAction::PropertyEditAction(PropertyWidgetInitializer& init, Function* method, HandleParam instance) :
     PropertyWidget(init)
 {
   mLabel->SetActive(false);
@@ -19,8 +17,7 @@ PropertyEditAction::PropertyEditAction(PropertyWidgetInitializer& init,
 
   mButton->SetSizing(SizePolicy::Flex, 1.0f);
   Thickness thickness(20, 0, 0, 0);
-  SetLayout(
-      CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, thickness));
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, thickness));
 }
 
 void PropertyEditAction::OnButtonPress(Event* event)
@@ -64,8 +61,7 @@ AddObjectWidget::AddObjectWidget(PropertyWidgetInitializer& init,
   mAddIcon->SetVisible(false);
 
   if (mComposition)
-    ConnectThisTo(
-        MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
+    ConnectThisTo(MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
 
   mBackground = CreateAttached<Element>(cWhiteSquare);
   ConnectThisTo(this, Events::MouseEnterHierarchy, OnMouseEnter);
@@ -94,8 +90,7 @@ FloatingSearchView* AddObjectWidget::OpenSearch(Vec3 position)
 
   mActiveSearch = viewPopUp;
 
-  ConnectThisTo(
-      provider, Events::AlternateSearchCompleted, OnAlternateSearchCompleted);
+  ConnectThisTo(provider, Events::AlternateSearchCompleted, OnAlternateSearchCompleted);
   ConnectThisTo(searchView, Events::SearchCompleted, OnSearchCompleted);
 
   return viewPopUp;
@@ -105,8 +100,7 @@ void AddObjectWidget::OnLeftClick(MouseEvent* event)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Property View",
-                    "Cannot add components while in read-only mode");
+    DoNotifyWarning("Property View", "Cannot add components while in read-only mode");
     return;
   }
 
@@ -146,8 +140,7 @@ void AddObjectWidget::OnPostResourceAdded(PostAddResourceEvent* event)
     if (componentType == nullptr)
     {
       // Create a Proxy to be used for this component
-      componentType = ProxyObject<Component>::CreateProxyType(
-          componentName, ProxyReason::TypeDidntExist);
+      componentType = ProxyObject<Component>::CreateProxyType(componentName, ProxyReason::TypeDidntExist);
       if (componentType == nullptr)
       {
         Error("Could not create proxy type");
@@ -162,11 +155,9 @@ void AddObjectWidget::OnPostResourceAdded(PostAddResourceEvent* event)
   }
 }
 
-void AddObjectWidget::OnAlternateSearchCompleted(
-    AlternateSearchCompletedEvent* event)
+void AddObjectWidget::OnAlternateSearchCompleted(AlternateSearchCompletedEvent* event)
 {
-  AddResourceWindow* addDialog =
-      OpenAddWindow(ZilchTypeId(ZilchScript), nullptr, event->mSearchText);
+  AddResourceWindow* addDialog = OpenAddWindow(ZilchTypeId(ZilchScript), nullptr, event->mSearchText);
   ConnectThisTo(addDialog, Events::PostAddResource, OnPostResourceAdded);
 }
 
@@ -174,8 +165,7 @@ void AddObjectWidget::OnSearchCompleted(SearchViewEvent* event)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Property View",
-                    "Cannot add components while in read-only mode");
+    DoNotifyWarning("Property View", "Cannot add components while in read-only mode");
     return;
   }
 

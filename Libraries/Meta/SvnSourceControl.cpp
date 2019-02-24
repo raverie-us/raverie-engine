@@ -26,9 +26,7 @@ public:
     RunSimpleCommandLine(status, commandLine);
   }
 
-  void Rename(Status& status,
-              StringParam sourcePath,
-              StringParam destPath) override
+  void Rename(Status& status, StringParam sourcePath, StringParam destPath) override
   {
     // svn move
     String source = BuildString(" \"", sourcePath, "\"");
@@ -37,9 +35,7 @@ public:
     RunSimpleCommandLine(status, commandLine);
   }
 
-  void GetRevisions(Status& status,
-                    StringParam path,
-                    Array<Revision>& revisions) override
+  void GetRevisions(Status& status, StringParam path, Array<Revision>& revisions) override
   {
   }
 };

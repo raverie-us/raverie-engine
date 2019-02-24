@@ -37,9 +37,7 @@ present (not currently solved because I haven't done limits with this yet)
 /// The GearJoint's policy for Atom updating as well as Molecule computing.
 struct ConeTwistPolicy : public DefaultFragmentPolicy<UniversalJoint>
 {
-  void ErrorFragment(int atomIndex,
-                     UniversalJoint* joint,
-                     ImpulseLimitAtom& molLimit)
+  void ErrorFragment(int atomIndex, UniversalJoint* joint, ImpulseLimitAtom& molLimit)
   {
     uint flag = 1 << atomIndex;
     real desiredConstraintValue = 0;
@@ -49,8 +47,7 @@ struct ConeTwistPolicy : public DefaultFragmentPolicy<UniversalJoint>
     // Compute the error of this constraint. Have to compute the error at this
     // time so that the limit values are known
     if (filter & UniversalJoint::LinearAxis)
-      ComputeError(
-          atom, molLimit, joint->mNode->mLimit, desiredConstraintValue, flag);
+      ComputeError(atom, molLimit, joint->mNode->mLimit, desiredConstraintValue, flag);
     else
       atom.mConstraintValue = real(0.0);
 
@@ -58,10 +55,7 @@ struct ConeTwistPolicy : public DefaultFragmentPolicy<UniversalJoint>
   }
 
   // Returns baumgarte
-  real AxisFragment(MoleculeData& data,
-                    int atomIndex,
-                    UniversalJoint* joint,
-                    ConstraintMolecule& mol)
+  real AxisFragment(MoleculeData& data, int atomIndex, UniversalJoint* joint, ConstraintMolecule& mol)
   {
     real baumgarte = 0.1f;
     uint axisIndex = atomIndex % 3;
@@ -199,8 +193,7 @@ void UniversalJoint::ComputeMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputeMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData, ConeTwistPolicy());
+  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, ConeTwistPolicy());
 }
 
 void UniversalJoint::WarmStart(MoleculeWalker& molecules)
@@ -228,8 +221,7 @@ void UniversalJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData, ConeTwistPolicy());
+  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, ConeTwistPolicy());
 }
 
 void UniversalJoint::DebugDraw()
@@ -258,8 +250,7 @@ void UniversalJoint::DebugDraw()
   gDebugDraw->Add(Debug::Line(point1, point1 + worldB1A1).Color(Color::Blue));
 }
 
-uint UniversalJoint::GetAtomIndexFilter(uint atomIndex,
-                                        real& desiredConstraintValue) const
+uint UniversalJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   if (atomIndex < 3)

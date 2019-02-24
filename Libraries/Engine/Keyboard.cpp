@@ -12,8 +12,7 @@ DefineEvent(KeyRepeated);
 DefineEvent(TextTyped);
 } // namespace Events
 
-const String cKeyboardEventsFromState[] = {
-    Events::KeyUp, Events::KeyDown, Events::KeyRepeated};
+const String cKeyboardEventsFromState[] = {Events::KeyUp, Events::KeyDown, Events::KeyRepeated};
 
 HashMap<String, Keys::Enum> KeyNameToEnum;
 HashMap<String, String> KeyNameToSymbol;
@@ -202,10 +201,8 @@ ZilchDefineType(Keyboard, builder, type)
   ZilchBindOverloadedMethod(Valid, ZilchInstanceOverload(bool, StringParam));
 
   ZilchBindMethod(ToKey);
-  ZilchBindOverloadedMethod(ToSymbol,
-                            ZilchInstanceOverload(String, Keys::Enum));
-  ZilchBindOverloadedMethod(ToSymbol,
-                            ZilchInstanceOverload(String, StringParam));
+  ZilchBindOverloadedMethod(ToSymbol, ZilchInstanceOverload(String, Keys::Enum));
+  ZilchBindOverloadedMethod(ToSymbol, ZilchInstanceOverload(String, StringParam));
 
   ZeroBindEvent(Events::KeyUp, KeyboardEvent);
   ZeroBindEvent(Events::KeyDown, KeyboardEvent);
@@ -263,13 +260,10 @@ String Keyboard::GetKeyName(Keys::Enum key)
 
 bool Keyboard::Valid(Keys::Enum key)
 {
-  bool isValid = (key == Keys::Space) || (key == Keys::LeftBracket) ||
-                 (key == Keys::RightBracket) || (key == Keys::Comma) ||
-                 (key == Keys::Period) || (key == Keys::Semicolon) ||
-                 (key == Keys::Minus) || (key == Keys::Apostrophe) ||
-                 (key == Keys::Slash) || (key == Keys::Backslash) ||
-                 (key >= Keys::A && key <= Keys::Z) ||
-                 (key >= Keys::Num0 && key <= Keys::Num9) ||
+  bool isValid = (key == Keys::Space) || (key == Keys::LeftBracket) || (key == Keys::RightBracket) ||
+                 (key == Keys::Comma) || (key == Keys::Period) || (key == Keys::Semicolon) || (key == Keys::Minus) ||
+                 (key == Keys::Apostrophe) || (key == Keys::Slash) || (key == Keys::Backslash) ||
+                 (key >= Keys::A && key <= Keys::Z) || (key >= Keys::Num0 && key <= Keys::Num9) ||
                  (key >= Keys::Up && key < Keys::None);
 
   return isValid;

@@ -51,8 +51,7 @@ ZilchDefineType(PhysicsCarWheel, builder, type)
   ZilchBindGetterSetterProperty(WheelLocalStartPosition);
   ZilchBindGetterSetterProperty(PreRotation);
 
-  ZilchBindGetterSetterProperty(WorldWheelBasis)
-      ->Add(new EditorRotationBasis("PhysicsCarWheelBasisGizmo"));
+  ZilchBindGetterSetterProperty(WorldWheelBasis)->Add(new EditorRotationBasis("PhysicsCarWheelBasisGizmo"));
 
   ZilchBindGetter(IsInContact);
   ZilchBindGetter(IsSliding);
@@ -94,8 +93,7 @@ void PhysicsCarWheel::Serialize(Serializer& stream)
   SerializeNameDefault(mBodyWheelSpringDir, Vec3(0, 1, 0));
   SerializeNameDefault(mBodyWheelForwardDir, Vec3(1, 0, 0));
   SerializeNameDefault(mBodyWheelAxleDir, Vec3(0, 0, 1));
-  SerializeNameDefault(mPreRotation,
-                       Math::ToQuaternion(Vec3(1, 0, 0), real(3.14159f * .5f)));
+  SerializeNameDefault(mPreRotation, Math::ToQuaternion(Vec3(1, 0, 0), real(3.14159f * .5f)));
 
   SerializeNameDefault(mSpringMinLength, real(0.0));
   SerializeNameDefault(mSpringStartLength, real(0.0));
@@ -122,16 +120,14 @@ void PhysicsCarWheel::Serialize(Serializer& stream)
 
   stream.SerializeFieldDefault("PhysicsCarPath", mPhysicsCarPath, CogPath());
 
-  u32 mask = CarWheelFlags::IsInContact | CarWheelFlags::InEditor |
-             CarWheelFlags::ChildedWheel | CarWheelFlags::IsSliding;
-  SerializeBits(
-      stream, mFlags, CarWheelFlags::Names, mask, ~CarWheelFlags::Is2DWheel);
+  u32 mask =
+      CarWheelFlags::IsInContact | CarWheelFlags::InEditor | CarWheelFlags::ChildedWheel | CarWheelFlags::IsSliding;
+  SerializeBits(stream, mFlags, CarWheelFlags::Names, mask, ~CarWheelFlags::Is2DWheel);
 }
 
 void PhysicsCarWheel::OnAllObjectsCreated(CogInitializer& initializer)
 {
-  ConnectThisTo(
-      &mPhysicsCarPath, Events::CogPathCogChanged, OnCogPathCogChanged);
+  ConnectThisTo(&mPhysicsCarPath, Events::CogPathCogChanged, OnCogPathCogChanged);
   mPhysicsCarPath.SetRelativeTo(GetOwner());
   mPhysicsCarPath.RestoreLink(initializer, GetOwner(), "PhysicsCarPath");
 
@@ -158,42 +154,25 @@ void PhysicsCarWheel::DebugDraw()
   Vec3 pos = mWorldWheelStartPosition;
 
   // Draw the bases
-  gDebugDraw->Add(Debug::Line(pos, pos + mWorldWheelSpringDir * real(2.0))
-                      .HeadSize(real(0.2))
-                      .Color(Color::Red));
-  gDebugDraw->Add(Debug::Line(pos, pos + mWorldWheelForwardDir * real(2.0))
-                      .HeadSize(real(0.2))
-                      .Color(Color::Blue));
-  gDebugDraw->Add(Debug::Line(pos, pos + mWorldWheelAxleDir * real(2.0))
-                      .HeadSize(real(0.2))
-                      .Color(Color::Green));
+  gDebugDraw->Add(Debug::Line(pos, pos + mWorldWheelSpringDir * real(2.0)).HeadSize(real(0.2)).Color(Color::Red));
+  gDebugDraw->Add(Debug::Line(pos, pos + mWorldWheelForwardDir * real(2.0)).HeadSize(real(0.2)).Color(Color::Blue));
+  gDebugDraw->Add(Debug::Line(pos, pos + mWorldWheelAxleDir * real(2.0)).HeadSize(real(0.2)).Color(Color::Green));
   gDebugDraw->Add(Debug::Cylinder(pos, mWorldWheelAxleDir, real(.01), mRadius));
 
-  Vec3 start =
-      mWorldWheelStartPosition - mWorldWheelSpringDir * mSpringStartLength;
+  Vec3 start = mWorldWheelStartPosition - mWorldWheelSpringDir * mSpringStartLength;
   Vec3 min = mWorldWheelStartPosition - mWorldWheelSpringDir * mSpringMinLength;
   Vec3 max = mWorldWheelStartPosition - mWorldWheelSpringDir * mSpringMaxLength;
-  Vec3 rest =
-      mWorldWheelStartPosition - mWorldWheelSpringDir * mSpringRestLength;
-  gDebugDraw->Add(Debug::Circle(start, mWorldWheelSpringDir, real(.01))
-                      .Color(Color::Red)
-                      .OnTop(true));
-  gDebugDraw->Add(Debug::Circle(min, mWorldWheelSpringDir, real(.01))
-                      .Color(Color::Green)
-                      .OnTop(true));
-  gDebugDraw->Add(Debug::Circle(max, mWorldWheelSpringDir, real(.01))
-                      .Color(Color::Blue)
-                      .OnTop(true));
-  gDebugDraw->Add(Debug::Circle(rest, mWorldWheelSpringDir, real(.01))
-                      .Color(Color::Gold)
-                      .OnTop(true));
+  Vec3 rest = mWorldWheelStartPosition - mWorldWheelSpringDir * mSpringRestLength;
+  gDebugDraw->Add(Debug::Circle(start, mWorldWheelSpringDir, real(.01)).Color(Color::Red).OnTop(true));
+  gDebugDraw->Add(Debug::Circle(min, mWorldWheelSpringDir, real(.01)).Color(Color::Green).OnTop(true));
+  gDebugDraw->Add(Debug::Circle(max, mWorldWheelSpringDir, real(.01)).Color(Color::Blue).OnTop(true));
+  gDebugDraw->Add(Debug::Circle(rest, mWorldWheelSpringDir, real(.01)).Color(Color::Gold).OnTop(true));
   gDebugDraw->Add(Debug::Line(start, max));
 
   // Draw the normal force
   real dt = mCarBody->mSpace->mIterationDt;
   Vec3 impulse = mWorldWheelSpringDir * mSpringForce * dt;
-  gDebugDraw->Add(
-      Debug::Line(pos, pos + impulse).OnTop(true).Color(Color::Green));
+  gDebugDraw->Add(Debug::Line(pos, pos + impulse).OnTop(true).Color(Color::Green));
 
   // Calculate the actual apply position for the frictions
 
@@ -210,16 +189,12 @@ void PhysicsCarWheel::DebugDraw()
   Vec3 newR = r + (mCarBody->mWheelFrictionSideRollCoef - real(1.0)) * rPosUp;
   Vec3 dir = mWorldAxleTangent;
   pos = newR + centerMass;
-  gDebugDraw->Add(Debug::Line(pos, pos + mTotalSideImpulse * dir)
-                      .OnTop(true)
-                      .Color(Color::Red));
+  gDebugDraw->Add(Debug::Line(pos, pos + mTotalSideImpulse * dir).OnTop(true).Color(Color::Red));
   // Compute the r vector for the side friction coef. and apply the impulse
   newR = r + (mCarBody->mWheelFrictionFrontRollCoef - real(1.0)) * rPosUp;
   dir = mWorldForwardTangent;
   pos = newR + centerMass;
-  gDebugDraw->Add(Debug::Line(pos, pos + mTotalForwardImpulse * dir)
-                      .OnTop(true)
-                      .Color(Color::Blue));
+  gDebugDraw->Add(Debug::Line(pos, pos + mTotalForwardImpulse * dir).OnTop(true).Color(Color::Blue));
 }
 
 void PhysicsCarWheel::TransformUpdate(TransformUpdateInfo& info)
@@ -321,8 +296,7 @@ void PhysicsCarWheel::UpdateLocalPointOnCar(bool forcedUpdate)
   // body because hierarchies are currently not guaranteed to be last so our
   // transform update might be called before the car's transform update...
   Mat4 worldTransform = mCarBody->GetOwner()->has(Transform)->GetWorldMatrix();
-  mWheelLocalStartPosition =
-      Math::TransformPoint(worldTransform.Inverted(), pos);
+  mWheelLocalStartPosition = Math::TransformPoint(worldTransform.Inverted(), pos);
 
   // This is what I'd like to do...
   // mBodyWheelStartPos = mCarBody->mWorldTransform.InverseTransformPoint(pos);
@@ -339,8 +313,7 @@ void PhysicsCarWheel::UpdatePreRotationOnCar(bool forcedUpdate)
 
   // Recalculate the pre-rotation of the wheel
   Transform* transform = GetOwner()->has(Transform);
-  Quat rot = mCarBody->mBody->GetWorldRotationQuat().Inverted() *
-             transform->GetWorldRotation();
+  Quat rot = mCarBody->mBody->GetWorldRotationQuat().Inverted() * transform->GetWorldRotation();
 
   mPreRotation = rot;
 }
@@ -354,15 +327,12 @@ void PhysicsCarWheel::UpdateTransformRelativeToParent()
   Transform* transform = GetOwner()->has(Transform);
   Math::DecomposedMatrix4& worldTransform = mCarBody->mWorldTransform;
 
-  transform->SetWorldTranslation(
-      worldTransform.TransformPoint(mWheelLocalStartPosition));
-  transform->SetWorldRotation(mCarBody->mBody->GetWorldRotationQuat() *
-                              mPreRotation);
+  transform->SetWorldTranslation(worldTransform.TransformPoint(mWheelLocalStartPosition));
+  transform->SetWorldRotation(mCarBody->mBody->GetWorldRotationQuat() * mPreRotation);
   transform->UpdateAll();
 }
 
-real PhysicsCarWheel::CalculateRotationalVelocity(Vec3Param dir,
-                                                  Vec3Param relativeVelocity)
+real PhysicsCarWheel::CalculateRotationalVelocity(Vec3Param dir, Vec3Param relativeVelocity)
 {
   // Project the velocity of the wheel onto the direction to determine how fast
   // the wheel is turning
@@ -375,13 +345,11 @@ Vec3 PhysicsCarWheel::GetRelativeVelocity()
 {
   Vec3 rVel = mCarBody->mBody->GetPointVelocityInternal(mWorldContactPosition);
   if (mContactedObject)
-    rVel -=
-        mContactedObject->ComputePointVelocityInternal(mWorldContactPosition);
+    rVel -= mContactedObject->ComputePointVelocityInternal(mWorldContactPosition);
   return rVel;
 }
 
-real PhysicsCarWheel::CalculateImpulse(Vec3Param dir,
-                                       Vec3Param relativeVelocity)
+real PhysicsCarWheel::CalculateImpulse(Vec3Param dir, Vec3Param relativeVelocity)
 {
   real top = -Math::Dot(relativeVelocity, dir);
   // We assume that the object we are in contact with has infinite mass
@@ -430,8 +398,7 @@ void PhysicsCarWheel::UpdateWheelData()
 {
   // Bring the local wheel positions into world space
   Mat3 carWorldRot = mCarBody->mBody->GetWorldRotationMat3();
-  Mat3 rot = Math::ToMatrix3(mBodyWheelSpringDir,
-                             -mCarBody->mSteerInput * mSteerFactor);
+  Mat3 rot = Math::ToMatrix3(mBodyWheelSpringDir, -mCarBody->mSteerInput * mSteerFactor);
   rot = carWorldRot * rot;
 
   mWorldWheelSpringDir = Math::Transform(carWorldRot, mBodyWheelSpringDir);
@@ -439,8 +406,7 @@ void PhysicsCarWheel::UpdateWheelData()
   mWorldWheelForwardDir = Math::Transform(rot, mBodyWheelForwardDir);
   mWorldWheelAxleDir = Math::Transform(rot, mBodyWheelAxleDir);
 
-  mWorldWheelStartPosition =
-      mCarBody->mWorldTransform.TransformPoint(mWheelLocalStartPosition);
+  mWorldWheelStartPosition = mCarBody->mWorldTransform.TransformPoint(mWheelLocalStartPosition);
 }
 
 void PhysicsCarWheel::CastWheelPosition()
@@ -518,9 +484,7 @@ void PhysicsCarWheel::CalculateSpringForce()
 
   // Compute the mass that this spring sees (basically the mass of the impulse
   // for the wheel)
-  real effectiveMass = real(1.0) / CalculateObjectMass(mWorldWheelSpringDir,
-                                                       mCarBody->mBody,
-                                                       mWorldContactPosition);
+  real effectiveMass = real(1.0) / CalculateObjectMass(mWorldWheelSpringDir, mCarBody->mBody, mWorldContactPosition);
   // Convert the frequency to the spring coefficient k (k = mass*frequency^2)
   real springCoef = effectiveMass * mFrequencyHz * mFrequencyHz;
   // Calculate how far away we are from the rest length of the spring
@@ -554,8 +518,7 @@ void PhysicsCarWheel::CalculateSpringForce()
     dampeningRatio = mDampingRelaxationRatio;
   // Convert the dampening ratio to the dampening coefficient c (c =
   // 2*mass*ratio*frequency)
-  real dampeningCoef =
-      real(2.0) * effectiveMass * dampeningRatio * mFrequencyHz;
+  real dampeningCoef = real(2.0) * effectiveMass * dampeningRatio * mFrequencyHz;
   // Calculate the dampening force (F = -cv)
   mSpringForce -= dampeningCoef * velRelativeToSpring;
 
@@ -593,10 +556,8 @@ struct ConstraintInfo
     Vec3 r = wheel->mWorldContactPosition - centerMass;
     // Compute the projected vector of the relative position along the contact
     // normal
-    Vec3 rPosUp =
-        Math::Dot(r, wheel->mWorldContactNormal) * wheel->mWorldContactNormal;
-    mR1 = wheel->mContactedObject->GetRigidBodyCenterOfMass() -
-          wheel->mWorldContactPosition;
+    Vec3 rPosUp = Math::Dot(r, wheel->mWorldContactNormal) * wheel->mWorldContactNormal;
+    mR1 = wheel->mContactedObject->GetRigidBodyCenterOfMass() - wheel->mWorldContactPosition;
     mR2 = r + (rollCoef - real(1.0)) * rPosUp;
   }
 
@@ -633,14 +594,12 @@ void PhysicsCarWheel::BeginIteration()
   mForwardGrip = mSideGrip = real(0.0);
 
   // Project the forward and axle direction onto the contact plane
-  mWorldForwardTangent =
-      Math::ProjectOnPlane(mWorldWheelForwardDir, mWorldContactNormal);
+  mWorldForwardTangent = Math::ProjectOnPlane(mWorldWheelForwardDir, mWorldContactNormal);
   mWorldForwardTangent.AttemptNormalize();
   mWorldAxleTangent = Math::Cross(mWorldForwardTangent, mWorldContactNormal);
 }
 
-real PhysicsCarWheel::InternalFrictionCalculation(Vec3Param dir,
-                                                  ConstraintInfo& info)
+real PhysicsCarWheel::InternalFrictionCalculation(Vec3Param dir, ConstraintInfo& info)
 {
   real dt = info.mDt;
   RigidBody* otherBody = mContactedObject->GetActiveBody();
@@ -648,8 +607,7 @@ real PhysicsCarWheel::InternalFrictionCalculation(Vec3Param dir,
 
   // The jacobian could also be computed only once (see comment below)
   Physics::Jacobian jacobian;
-  jacobian.Set(
-      -dir, -Math::Cross(info.mR1, dir), dir, Math::Cross(info.mR2, dir));
+  jacobian.Set(-dir, -Math::Cross(info.mR1, dir), dir, Math::Cross(info.mR2, dir));
 
   // This could be optimized by taking this entire mass calculation and only
   // doing it once per logic update, however due to having to store the memory
@@ -675,8 +633,7 @@ real PhysicsCarWheel::InternalFrictionCalculation(Vec3Param dir,
   // Clamp the total impulse
   real maxImpulse = info.mMaxForce * dt;
   real oldImpulse = info.mTotalImpulse;
-  info.mTotalImpulse =
-      Math::Clamp(oldImpulse + lambda, -maxImpulse, maxImpulse);
+  info.mTotalImpulse = Math::Clamp(oldImpulse + lambda, -maxImpulse, maxImpulse);
 
   // Now clamp to the friction cone
   real maxStaticImpulse = info.GetStaticFrictionImpulse();
@@ -711,8 +668,7 @@ real PhysicsCarWheel::InternalFrictionCalculation(Vec3Param dir,
   // impulse we actually got to apply after clamping)
   real impulse = info.mTotalImpulse - oldImpulse;
 
-  body->ApplyConstraintImpulse(jacobian.Linear[1] * impulse,
-                               jacobian.Angular[1] * impulse);
+  body->ApplyConstraintImpulse(jacobian.Linear[1] * impulse, jacobian.Angular[1] * impulse);
 
   // Now return the new total impulse so the caller can cache it
   return info.mTotalImpulse;
@@ -739,8 +695,7 @@ void PhysicsCarWheel::SolveFrictionImpulse(real dt)
     info.mMaxForce = mMaxBrakeStrength * mCarBody->mBrakeInput;
     info.mTotalImpulse = mTotalForwardImpulse;
 
-    mTotalForwardImpulse =
-        InternalFrictionCalculation(mWorldForwardTangent, info);
+    mTotalForwardImpulse = InternalFrictionCalculation(mWorldForwardTangent, info);
   }
   else if (GetIsDriveWheel() && mCarBody->mGasInput != real(0.0))
   {
@@ -749,8 +704,7 @@ void PhysicsCarWheel::SolveFrictionImpulse(real dt)
     info.mMaxForce = mCarBody->mMaxTorque;
     info.mTotalImpulse = mTotalForwardImpulse;
 
-    mTotalForwardImpulse =
-        InternalFrictionCalculation(mWorldForwardTangent, info);
+    mTotalForwardImpulse = InternalFrictionCalculation(mWorldForwardTangent, info);
   }
   // If there was no input, we're just coasting which for now gives us full grip
   else
@@ -784,8 +738,7 @@ void PhysicsCarWheel::FinishedIteration(real dt)
     real targetSpeed = real(0.0);
     if (mCarBody->mGasInput != real(0.0))
       targetSpeed = mCarBody->mMaxSpeed * mCarBody->mGasInput;
-    mRotationalVelocity =
-        Math::Lerp(mRotationalVelocity, targetSpeed, real(.01));
+    mRotationalVelocity = Math::Lerp(mRotationalVelocity, targetSpeed, real(.01));
     return;
   }
 
@@ -798,8 +751,7 @@ void PhysicsCarWheel::FinishedIteration(real dt)
   // Otherwise calculate the point velocity of the wheel to get the rotational
   // velocity
   else
-    mRotationalVelocity =
-        CalculateRotationalVelocity(mWorldForwardTangent, relVel);
+    mRotationalVelocity = CalculateRotationalVelocity(mWorldForwardTangent, relVel);
 }
 
 void PhysicsCarWheel::UpdateWheelTransform(real dt)
@@ -810,8 +762,7 @@ void PhysicsCarWheel::UpdateWheelTransform(real dt)
   Quat rollRot = Math::ToQuaternion(mBodyWheelAxleDir, mCurrRotation);
   // Calculate the rotation of the wheel about the spring dir
   Mat3 rotMat;
-  rotMat = Math::ToMatrix3(mBodyWheelSpringDir,
-                           -mCarBody->mSteerInput * mSteerFactor);
+  rotMat = Math::ToMatrix3(mBodyWheelSpringDir, -mCarBody->mSteerInput * mSteerFactor);
   Quat rotQuat = Math::ToQuaternion(rotMat);
 
   Transform* transform = GetOwner()->has(Transform);
@@ -838,13 +789,11 @@ void PhysicsCarWheel::UpdateWheelTransform(real dt)
   }
 
   // Need to update the start pos of the wheel because of integration
-  mWorldWheelStartPosition =
-      mCarBody->mWorldTransform.TransformPoint(mWheelLocalStartPosition);
+  mWorldWheelStartPosition = mCarBody->mWorldTransform.TransformPoint(mWheelLocalStartPosition);
   // Set the world translation (so children work as well, have to set world
   // instead of local in children case because we may be n levels deep in the
   // hierarchy).
-  Vec3 worldPos =
-      mWorldWheelStartPosition + springLength * -mWorldWheelSpringDir;
+  Vec3 worldPos = mWorldWheelStartPosition + springLength * -mWorldWheelSpringDir;
   transform->SetWorldTranslation(worldPos);
   // Set world rotation for the same reason as listed above
   Quat carRot = mCarBody->mBody->GetWorldRotationQuat();
@@ -972,9 +921,8 @@ void PhysicsCarWheel::SetSpringMaxLength(real value)
 {
   if (value < mSpringMinLength)
   {
-    DoNotifyException(
-        "Invalid spring max length.",
-        "The spring max length cannot be smaller than the spring min length.");
+    DoNotifyException("Invalid spring max length.",
+                      "The spring max length cannot be smaller than the spring min length.");
     mSpringMaxLength = mSpringMinLength;
   }
   else

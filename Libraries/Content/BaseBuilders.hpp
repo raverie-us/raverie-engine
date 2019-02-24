@@ -21,9 +21,7 @@ public:
   // Owner of output resource, if any.
   String ResourceOwner;
 
-  DirectBuilderComponent(uint order,
-                         StringParam extension,
-                         StringParam loaderType) :
+  DirectBuilderComponent(uint order, StringParam extension, StringParam loaderType) :
       Extension(extension),
       LoaderType(loaderType),
       Order(order)

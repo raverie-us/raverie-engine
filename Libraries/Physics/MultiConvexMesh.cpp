@@ -14,25 +14,10 @@ ZilchDefineType(MultiConvexMeshSubMeshData, builder, type)
 
   // Explicitly bind the derived type versions of these functions
   // (auto-binding can do weird things with the base class overloads)
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &ZilchSelf::All,
-                            ZilchInstanceOverload(RangeType),
-                            nullptr,
-                            ZilchNoOverload,
-                            "All");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &ZilchSelf::Add,
-                      ZilchInstanceOverload(SubConvexMesh*),
-                      "Add",
-                      ZilchNoNames);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &ZilchSelf::RemoveAt,
-                      ZilchInstanceOverload(void, int),
-                      "RemoveAt",
-                      "arrayIndex");
+  ZilchFullBindGetterSetter(
+      builder, type, &ZilchSelf::All, ZilchInstanceOverload(RangeType), nullptr, ZilchNoOverload, "All");
+  ZilchFullBindMethod(builder, type, &ZilchSelf::Add, ZilchInstanceOverload(SubConvexMesh*), "Add", ZilchNoNames);
+  ZilchFullBindMethod(builder, type, &ZilchSelf::RemoveAt, ZilchInstanceOverload(void, int), "RemoveAt", "arrayIndex");
   ZilchBindMethod(Get);
   ZilchBindMethod(Clear);
   ZilchBindGetterProperty(Count);
@@ -152,13 +137,10 @@ void SubConvexMesh::ComputeCenterOfMassAndVolume(VertexArrayParam verts)
   if (verts.Empty() || mTriangleIndices.Empty())
     return;
 
-  Geometry::CalculateTriMeshCenterOfMassAndVolume(
-      verts, mTriangleIndices, mCenterOfMass, mVolume);
+  Geometry::CalculateTriMeshCenterOfMassAndVolume(verts, mTriangleIndices, mCenterOfMass, mVolume);
 }
 
-Mat3 SubConvexMesh::ComputeInertiaTensor(VertexArrayParam verts,
-                                         Vec3Param centerOfMass,
-                                         Vec3Param scale)
+Mat3 SubConvexMesh::ComputeInertiaTensor(VertexArrayParam verts, Vec3Param centerOfMass, Vec3Param scale)
 {
   Mat3 inertiaTensor = Mat3::cIdentity;
 
@@ -166,8 +148,7 @@ Mat3 SubConvexMesh::ComputeInertiaTensor(VertexArrayParam verts,
   if (verts.Empty() || mTriangleIndices.Empty())
     return inertiaTensor;
 
-  Geometry::CalculateTriMeshInertiaTensor(
-      verts, mTriangleIndices, centerOfMass, &inertiaTensor, scale);
+  Geometry::CalculateTriMeshInertiaTensor(verts, mTriangleIndices, centerOfMass, &inertiaTensor, scale);
   return inertiaTensor;
 }
 
@@ -184,9 +165,7 @@ Aabb SubConvexMesh::ComputeAabb(VertexArrayParam verts)
   return mAabb;
 }
 
-void SubConvexMesh::Support(VertexArrayParam verts,
-                            Vec3Param direction,
-                            Vec3Ptr support)
+void SubConvexMesh::Support(VertexArrayParam verts, Vec3Param direction, Vec3Ptr support)
 {
   // Support should never be called on an invalid sub-mesh so no error checking
   // should be needed
@@ -210,10 +189,7 @@ Vec3 SubConvexMesh::GetCenter()
   return mCenterOfMass;
 }
 
-bool SubConvexMesh::CastRay(const Ray& localRay,
-                            MultiConvexMesh* mesh,
-                            ProxyResult& result,
-                            BaseCastFilter& filter)
+bool SubConvexMesh::CastRay(const Ray& localRay, MultiConvexMesh* mesh, ProxyResult& result, BaseCastFilter& filter)
 {
   // If the ray doesn't hit our aabb then just skip it
   if (Overlap(localRay, mAabb) == false)
@@ -226,8 +202,8 @@ bool SubConvexMesh::CastRay(const Ray& localRay,
 
     Intersection::IntersectionPoint pointData;
     //  the ray for intersection with the triangle
-    Intersection::IntersectionType tResult = Intersection::RayTriangle(
-        localRay.Start, localRay.Direction, tri[0], tri[1], tri[2], &pointData);
+    Intersection::IntersectionType tResult =
+        Intersection::RayTriangle(localRay.Start, localRay.Direction, tri[0], tri[1], tri[2], &pointData);
 
     if (tResult <= Intersection::None)
       continue;
@@ -263,10 +239,7 @@ uint SubConvexMesh::GetTriangleCount()
   return mTriangleIndices.Size() / 3;
 }
 
-void SubConvexMesh::Draw(VertexArrayParam verts,
-                         Mat4Param transform,
-                         bool drawEdges,
-                         bool drawFaces)
+void SubConvexMesh::Draw(VertexArrayParam verts, Mat4Param transform, bool drawEdges, bool drawFaces)
 {
   if (!mValid)
     return;
@@ -277,10 +250,7 @@ void SubConvexMesh::Draw(VertexArrayParam verts,
     DrawEdges(verts, transform, Color::Lime);
 }
 
-void SubConvexMesh::Draw2d(VertexArrayParam verts,
-                           Mat4Param transform,
-                           bool drawEdges,
-                           bool drawFaces)
+void SubConvexMesh::Draw2d(VertexArrayParam verts, Mat4Param transform, bool drawEdges, bool drawFaces)
 {
   if (!mValid)
     return;
@@ -291,9 +261,7 @@ void SubConvexMesh::Draw2d(VertexArrayParam verts,
     DrawEdges2d(verts, transform, Color::Lime);
 }
 
-void SubConvexMesh::DrawFaces(VertexArrayParam verts,
-                              Mat4Param transform,
-                              ByteColor color)
+void SubConvexMesh::DrawFaces(VertexArrayParam verts, Mat4Param transform, ByteColor color)
 {
   Debug::ActiveDebugConfig config;
   config.Alpha(100).Border(false).Filled(true);
@@ -312,9 +280,7 @@ void SubConvexMesh::DrawFaces(VertexArrayParam verts,
   }
 }
 
-void SubConvexMesh::DrawEdges(VertexArrayParam verts,
-                              Mat4Param transform,
-                              ByteColor color)
+void SubConvexMesh::DrawEdges(VertexArrayParam verts, Mat4Param transform, ByteColor color)
 {
   uint triCount = GetTriangleCount();
   for (uint i = 0; i < triCount; ++i)
@@ -330,9 +296,7 @@ void SubConvexMesh::DrawEdges(VertexArrayParam verts,
   }
 }
 
-void SubConvexMesh::DrawEdges2d(VertexArrayParam verts,
-                                Mat4Param transform,
-                                ByteColor color)
+void SubConvexMesh::DrawEdges2d(VertexArrayParam verts, Mat4Param transform, ByteColor color)
 {
   Debug::ActiveDebugConfig config;
   config.Alpha(100).Border(false).Filled(false);
@@ -452,8 +416,7 @@ void MultiConvexMesh::ResourceModified()
   mModified = true;
 
   MultiConvexMeshManager* manager = (MultiConvexMeshManager*)GetManager();
-  manager->mModifiedMeshes.PushBack(
-      MultiConvexMeshManager::MeshReference(this));
+  manager->mModifiedMeshes.PushBack(MultiConvexMeshManager::MeshReference(this));
 }
 
 HandleOf<MultiConvexMesh> MultiConvexMesh::CreateRuntime()
@@ -604,8 +567,7 @@ Vec3 MultiConvexMesh::GetWorldCenterOfMass(Vec3Param worldScale)
   return mCenterOfMass * worldScale;
 }
 
-Mat3 MultiConvexMesh::ComputeInvInertiaTensor(Vec3Param worldScale,
-                                              real totalMass)
+Mat3 MultiConvexMesh::ComputeInvInertiaTensor(Vec3Param worldScale, real totalMass)
 {
   // If we aren't valid then return a default inertia tensor to prevent crashes.
   // Arbitrarily choose zero instead of identity.
@@ -623,23 +585,16 @@ Mat3 MultiConvexMesh::ComputeInvInertiaTensor(Vec3Param worldScale,
     SubConvexMesh* subMesh = mMeshes[i];
     Vec3 subCenterOfMass = subMesh->mCenterOfMass;
     real subMass = subMesh->mVolume;
-    Mat3 subInertiaTensor =
-        subMesh->ComputeInertiaTensor(mVertices, subCenterOfMass, worldScale);
+    Mat3 subInertiaTensor = subMesh->ComputeInertiaTensor(mVertices, subCenterOfMass, worldScale);
 
-    Geometry::CombineInertiaTensor(totalInertiaTensor,
-                                   worldCenterOfMass,
-                                   subInertiaTensor,
-                                   subCenterOfMass,
-                                   subMass);
+    Geometry::CombineInertiaTensor(totalInertiaTensor, worldCenterOfMass, subInertiaTensor, subCenterOfMass, subMass);
   }
   totalInertiaTensor *= totalMass;
 
   return totalInertiaTensor.Inverted();
 }
 
-bool MultiConvexMesh::CastRay(const Ray& localRay,
-                              ProxyResult& result,
-                              BaseCastFilter& filter)
+bool MultiConvexMesh::CastRay(const Ray& localRay, ProxyResult& result, BaseCastFilter& filter)
 {
   result.mTime = Math::PositiveMax();
   bool subMeshHit = false;
@@ -698,11 +653,9 @@ Aabb MultiConvexMesh::ComputeAabb()
 // MultiConvexMeshManager
 ImplementResourceManager(MultiConvexMeshManager, MultiConvexMesh);
 
-MultiConvexMeshManager::MultiConvexMeshManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+MultiConvexMeshManager::MultiConvexMeshManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
-  AddLoader("MultiConvexMesh",
-            new BinaryDataFileLoader<MultiConvexMeshManager>());
+  AddLoader("MultiConvexMesh", new BinaryDataFileLoader<MultiConvexMeshManager>());
   DefaultResourceName = "DefaultMultiConvexMesh";
 
   mCategory = "Physics";
@@ -713,8 +666,7 @@ MultiConvexMeshManager::MultiConvexMeshManager(BoundType* resourceType) :
   mCanDuplicate = true;
 }
 
-MultiConvexMesh*
-MultiConvexMeshManager::CreateNewResourceInternal(StringParam name)
+MultiConvexMesh* MultiConvexMeshManager::CreateNewResourceInternal(StringParam name)
 {
   MultiConvexMesh* mesh = new MultiConvexMesh();
   mesh->mFlags.SetFlag(MultiConvexMeshFlags::NewlyCreatedInEditor);

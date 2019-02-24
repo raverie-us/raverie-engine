@@ -23,13 +23,8 @@ public:
   void Initialize();
   void Destroy();
 
-  void AddVertices(StreamedVertex* vertices,
-                   uint count,
-                   PrimitiveType::Enum primitiveType);
-  void AddVertices(StreamedVertexArray& vertices,
-                   uint start,
-                   uint count,
-                   PrimitiveType::Enum primitiveType);
+  void AddVertices(StreamedVertex* vertices, uint count, PrimitiveType::Enum primitiveType);
+  void AddVertices(StreamedVertexArray& vertices, uint start, uint count, PrimitiveType::Enum primitiveType);
   void FlushBuffer(bool deactivate);
 
   uint mBufferSize;
@@ -80,25 +75,14 @@ class OpenglRenderer : public Renderer
 public:
   // This must be called by the derived class after the OpenGL context has been
   // created.
-  void Initialize(OsHandle windowHandle,
-                  OsHandle deviceContext,
-                  OsHandle renderContext,
-                  String& error);
+  void Initialize(OsHandle windowHandle, OsHandle deviceContext, OsHandle renderContext, String& error);
 
   // This must be called by the derived class before the OpenGL context has been
   // destroyed.
   void Shutdown();
 
-  void BuildOrthographicTransform(Mat4Ref matrix,
-                                  float size,
-                                  float aspect,
-                                  float nearPlane,
-                                  float farPlane) override;
-  void BuildPerspectiveTransform(Mat4Ref matrix,
-                                 float fov,
-                                 float aspect,
-                                 float nearPlane,
-                                 float farPlane) override;
+  void BuildOrthographicTransform(Mat4Ref matrix, float size, float aspect, float nearPlane, float farPlane) override;
+  void BuildPerspectiveTransform(Mat4Ref matrix, float fov, float aspect, float nearPlane, float farPlane) override;
   bool YInvertImageData(TextureType::Enum type) override;
 
   GlMaterialRenderData* CreateMaterialRenderData() override;
@@ -114,8 +98,7 @@ public:
 
   bool GetLazyShaderCompilation() override;
   void SetLazyShaderCompilation(bool isLazy) override;
-  void AddShaders(Array<ShaderEntry>& entries,
-                  uint forceCompileBatchCount) override;
+  void AddShaders(Array<ShaderEntry>& entries, uint forceCompileBatchCount) override;
   void RemoveShaders(Array<ShaderEntry>& entries) override;
 
   void SetVSync(bool vsync) override;
@@ -124,8 +107,7 @@ public:
 
   void ShowProgress(ShowProgressInfo* info) override;
 
-  void DoRenderTasks(RenderTasks* renderTasks,
-                     RenderQueues* renderQueues) override;
+  void DoRenderTasks(RenderTasks* renderTasks, RenderQueues* renderQueues) override;
 
   void DoRenderTaskRange(RenderTaskRange& taskRange);
   void DoRenderTaskClearTarget(RenderTaskClearTarget* task);
@@ -139,9 +121,7 @@ public:
   void DrawStatic(ViewNode& viewNode, FrameNode& frameNode);
   void DrawStreamed(ViewNode& viewNode, FrameNode& frameNode);
 
-  void SetShaderParameter(ShaderInputType::Enum inputType,
-                          StringParam name,
-                          void* data);
+  void SetShaderParameter(ShaderInputType::Enum inputType, StringParam name, void* data);
   void SetShaderParameterMatrix(StringParam name, Mat3& transform);
   void SetShaderParameterMatrix(StringParam name, Mat4& transform);
   void SetShaderParameterMatrixInv(StringParam name, Mat3& transform);
@@ -149,16 +129,11 @@ public:
   void SetShaderParameters(FrameBlock* frameBlock, ViewBlock* viewBlock);
   void SetShaderParameters(FrameNode* frameNode, ViewNode* viewNode);
   void SetShaderParameters(IndexRange inputRange, uint& nextTextureSlot);
-  void SetShaderParameters(u64 objectId,
-                           uint shaderInputsId,
-                           uint& nextTextureSlot);
+  void SetShaderParameters(u64 objectId, uint shaderInputsId, uint& nextTextureSlot);
 
   GlShader* GetShader(ShaderKey& shaderKey);
   void CreateShader(ShaderEntry& entry);
-  void CreateShader(StringParam vertexSource,
-                    StringParam geometrySource,
-                    StringParam pixelSource,
-                    GLuint& shader);
+  void CreateShader(StringParam vertexSource, StringParam geometrySource, StringParam pixelSource, GLuint& shader);
   void SetShader(GLuint shader);
 
   void DelayedRenderDataDestruction();

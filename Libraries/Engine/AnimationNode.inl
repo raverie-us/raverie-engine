@@ -43,9 +43,7 @@ AnimationNode* DualBlend<DerivedType>::Clone()
 }
 
 template <typename DerivedType>
-AnimationNode* DualBlend<DerivedType>::CollapseToA(AnimationGraph* animGraph,
-                                                   uint frameId,
-                                                   EventList eventsToSend)
+AnimationNode* DualBlend<DerivedType>::CollapseToA(AnimationGraph* animGraph, uint frameId, EventList eventsToSend)
 {
   AnimationGraphEvent* e = new AnimationGraphEvent();
   e->mPlayMode = AnimationPlayMode::PlayOnce;
@@ -58,9 +56,7 @@ AnimationNode* DualBlend<DerivedType>::CollapseToA(AnimationGraph* animGraph,
 }
 
 template <typename DerivedType>
-AnimationNode* DualBlend<DerivedType>::CollapseToB(AnimationGraph* animGraph,
-                                                   uint frameId,
-                                                   EventList eventsToSend)
+AnimationNode* DualBlend<DerivedType>::CollapseToB(AnimationGraph* animGraph, uint frameId, EventList eventsToSend)
 {
   AnimationGraphEvent* e = new AnimationGraphEvent();
   e->mPlayMode = AnimationPlayMode::PlayOnce;
@@ -83,8 +79,7 @@ void DualBlend<DerivedType>::SetFrom(AnimationNode* node)
 {
   if (node == this)
   {
-    DoNotifyException("Cannot attach node to itself",
-                      "This would cause an infinite loop.");
+    DoNotifyException("Cannot attach node to itself", "This would cause an infinite loop.");
     return;
   }
   mA = node;
@@ -101,8 +96,7 @@ void DualBlend<DerivedType>::SetTo(AnimationNode* node)
 {
   if (node == this)
   {
-    DoNotifyException("Cannot attach node to itself",
-                      "This would cause an infinite loop.");
+    DoNotifyException("Cannot attach node to itself", "This would cause an infinite loop.");
     return;
   }
   mB = node;

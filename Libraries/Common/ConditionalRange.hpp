@@ -21,10 +21,7 @@ public:
   }
 
   // Copy constructor
-  ConditionalRange(const Range& value,
-                   ConditionPolicy policy = ConditionPolicy()) :
-      Range(value),
-      mPolicy(policy)
+  ConditionalRange(const Range& value, ConditionPolicy policy = ConditionPolicy()) : Range(value), mPolicy(policy)
   {
     Advance();
   }

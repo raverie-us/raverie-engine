@@ -5,11 +5,7 @@
 namespace Zero
 {
 
-inline Vec2 Align(TextAlign::Enum textAlignement,
-                  Vec2& cur,
-                  float textOnLineSize,
-                  float lineSize,
-                  float scale)
+inline Vec2 Align(TextAlign::Enum textAlignement, Vec2& cur, float textOnLineSize, float lineSize, float scale)
 {
   float extraSpaceOnLine = lineSize - textOnLineSize;
   switch (textAlignement)
@@ -74,8 +70,7 @@ void AddTextRange(FontProcessor& processor,
       if (align == TextAlign::Right)
         textStart.x = Math::Round(textAreaSize.x - sizeOfCharacters);
       else if (align == TextAlign::Center)
-        textStart.x =
-            Math::Round(textAreaSize.x * 0.5f) - (sizeOfCharacters * 0.5f);
+        textStart.x = Math::Round(textAreaSize.x * 0.5f) - (sizeOfCharacters * 0.5f);
     }
     else
     {
@@ -95,7 +90,7 @@ void AddTextRange(FontProcessor& processor,
 
   Vec2 pos = textStart;
 
-  forRange(Rune current, displayText.All())
+  forRange (Rune current, displayText.All())
   {
     RenderRune& r = font->GetRenderRune(current);
 
@@ -131,8 +126,7 @@ Vec2 ProcessTextRange(FontProcessor& processor,
     uint charactersLeft = text.ComputeRuneCount();
 
     // Get number of characters till line end or new line.
-    uint charactersTilLineEnd = font->GetPosition(
-        text, lineSize, pixelScale.x, TextRounding::LastCharacter);
+    uint charactersTilLineEnd = font->GetPosition(text, lineSize, pixelScale.x, TextRounding::LastCharacter);
 
     if (charactersTilLineEnd >= charactersLeft)
     {
@@ -140,13 +134,7 @@ Vec2 ProcessTextRange(FontProcessor& processor,
       float textSize = font->MeasureText(text, pixelScale.x).x;
       maxLineWidth = Math::Max(maxLineWidth, textSize);
       Vec2 textStart = Align(textAlign, t, textSize, lineSize, pixelScale.x);
-      AddTextRange(processor,
-                   font,
-                   text,
-                   textStart,
-                   textAlign,
-                   pixelScale,
-                   textAreaSize);
+      AddTextRange(processor, font, text, textStart, textAlign, pixelScale, textAreaSize);
       // No more text to render
       text = StringRange();
     }
@@ -171,13 +159,7 @@ Vec2 ProcessTextRange(FontProcessor& processor,
       maxLineWidth = Math::Max(maxLineWidth, textSize);
       Vec2 textStart = Align(textAlign, t, textSize, lineSize, pixelScale.x);
 
-      AddTextRange(processor,
-                   font,
-                   rangeToDraw,
-                   textStart,
-                   textAlign,
-                   pixelScale,
-                   textAreaSize);
+      AddTextRange(processor, font, rangeToDraw, textStart, textAlign, pixelScale, textAreaSize);
 
       // build a range of what is left to draw
       text = StringRange(rangeToDraw.End(), text.End());
@@ -197,9 +179,7 @@ Vec2 ProcessTextRange(FontProcessor& processor,
 class FontProcessor
 {
 public:
-  FontProcessor(RenderQueues* renderQueues,
-                ViewNode* viewNode,
-                Vec4 vertexColor);
+  FontProcessor(RenderQueues* renderQueues, ViewNode* viewNode, Vec4 vertexColor);
   void ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale);
 
   RenderQueues* mRenderQueues;

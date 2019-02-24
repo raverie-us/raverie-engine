@@ -11,9 +11,7 @@ Tweakable(Vec2, ColorGradientSize, Pixels(170, 30), cLocation);
 Tweakable(Vec2, SpacePreviewSize, Pixels(200, 200), cLocation);
 } // namespace PreviewWidgetUi
 
-IconPreview::IconPreview(PreviewWidgetInitializer& initializer,
-                         StringParam icon) :
-    PreviewWidget(initializer)
+IconPreview::IconPreview(PreviewWidgetInitializer& initializer, StringParam icon) : PreviewWidget(initializer)
 {
   static const String className = "TextButton";
   mDefSet = mDefSet->GetDefinitionSet(className);
@@ -32,8 +30,7 @@ void IconPreview::UpdateTransform()
   PreviewWidget::UpdateTransform();
 }
 
-SoundCuePreview::SoundCuePreview(PreviewWidgetInitializer& initializer) :
-    IconPreview(initializer, "SoundIcon")
+SoundCuePreview::SoundCuePreview(PreviewWidgetInitializer& initializer) : IconPreview(initializer, "SoundIcon")
 {
   ConnectThisTo(this, Events::LeftClick, OnLeftClick);
 }
@@ -44,8 +41,7 @@ void SoundCuePreview::OnLeftClick(MouseEvent* event)
     cue->Preview();
 }
 
-CameraViewportDrawer::CameraViewportDrawer(Composite* parent,
-                                           Cog* cameraObject) :
+CameraViewportDrawer::CameraViewportDrawer(Composite* parent, Cog* cameraObject) :
     Widget(parent),
     mCameraObject(cameraObject)
 {
@@ -63,11 +59,8 @@ void CameraViewportDrawer::SetSize(Vec2 newSize)
   }
 }
 
-void CameraViewportDrawer::RenderUpdate(ViewBlock& viewBlock,
-                                        FrameBlock& frameBlock,
-                                        Mat4Param parentTx,
-                                        ColorTransform colorTx,
-                                        WidgetRect clipRect)
+void CameraViewportDrawer::RenderUpdate(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -80,21 +73,15 @@ void CameraViewportDrawer::RenderUpdate(ViewBlock& viewBlock,
         Vec2 size = mSize;
         Vec4 color(1, 1, 1, 1);
 
-        ViewNode& viewNode =
-            AddRenderNodes(viewBlock, frameBlock, clipRect, texture);
-        frameBlock.mRenderQueues->AddStreamedQuad(viewNode,
-                                                  Vec3(0, 0, 0),
-                                                  Vec3(size, 0),
-                                                  Vec2(0, 0),
-                                                  Vec2(1, 1),
-                                                  color);
+        ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, texture);
+        frameBlock.mRenderQueues->AddStreamedQuad(
+            viewNode, Vec3(0, 0, 0), Vec3(size, 0), Vec2(0, 0), Vec2(1, 1), color);
       }
     }
   }
 }
 
-SpacePreviewMouseDrag::SpacePreviewMouseDrag(Mouse* mouse,
-                                             SpacePreview* preview) :
+SpacePreviewMouseDrag::SpacePreviewMouseDrag(Mouse* mouse, SpacePreview* preview) :
     MouseManipulation(mouse, preview),
     mPreview(preview)
 {
@@ -105,8 +92,7 @@ void SpacePreviewMouseDrag::OnMouseMove(MouseEvent* event)
   float sensitivity = Math::DegToRad(1.0f) * 0.5f;
   mPreview->mHorizontalAngle += event->Movement.x * sensitivity;
   mPreview->mVerticalAngle += event->Movement.y * sensitivity;
-  mPreview->mVerticalAngle = Math::Clamp(
-      mPreview->mVerticalAngle, -Math::cPi * 0.5f, Math::cPi * 0.5f);
+  mPreview->mVerticalAngle = Math::Clamp(mPreview->mVerticalAngle, -Math::cPi * 0.5f, Math::cPi * 0.5f);
   mPreview->UpdateCameraPosition();
 }
 
@@ -115,9 +101,7 @@ void SpacePreviewMouseDrag::OnRightMouseUp(MouseEvent* event)
   CloseAndReturnFocus();
 }
 
-SpacePreview::SpacePreview(PreviewWidgetInitializer& initializer,
-                           StringParam objectArchetype,
-                           Cog* objectToView) :
+SpacePreview::SpacePreview(PreviewWidgetInitializer& initializer, StringParam objectArchetype, Cog* objectToView) :
     PreviewWidget(initializer)
 {
   mPreviewAnimate = PreviewAnimate::None;
@@ -138,8 +122,7 @@ SpacePreview::SpacePreview(PreviewWidgetInitializer& initializer,
     uint creationFlags = CreationFlags::Editing | CreationFlags::Preview;
 
     // Unless specified otherwise by the dev config
-    if (DeveloperConfig* devConfig =
-            Z::gEngine->GetConfigCog()->has(DeveloperConfig))
+    if (DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig))
     {
       if (devConfig->mProxyObjectsInPreviews == false)
         creationFlags = 0;
@@ -147,8 +130,7 @@ SpacePreview::SpacePreview(PreviewWidgetInitializer& initializer,
 
     // Create the space
     GameSession* editorGameSession = Z::gEditor->GetEditGameSession();
-    Archetype* spaceArchetype =
-        ArchetypeManager::Find(CoreArchetypes::DefaultSpace);
+    Archetype* spaceArchetype = ArchetypeManager::Find(CoreArchetypes::DefaultSpace);
     space = editorGameSession->CreateSpaceFlags(spaceArchetype, creationFlags);
 
     String spaceName = BuildString("ResourcePreview ", initializer.Name);
@@ -159,10 +141,8 @@ SpacePreview::SpacePreview(PreviewWidgetInitializer& initializer,
   }
 
   uint creationFlags = CreationFlags::Editing | CreationFlags::Preview;
-  Cog* camera = Z::gFactory->Create(space,
-                                    CoreArchetypes::PreviewCamera,
-                                    creationFlags,
-                                    Z::gEditor->GetEditGameSession());
+  Cog* camera =
+      Z::gFactory->Create(space, CoreArchetypes::PreviewCamera, creationFlags, Z::gEditor->GetEditGameSession());
   mCameraViewportDrawer = new CameraViewportDrawer(this, camera);
   if (GravityEffect* g = space->has(GravityEffect))
     g->SetActive(false);
@@ -185,8 +165,7 @@ SpacePreview::SpacePreview(PreviewWidgetInitializer& initializer,
         // This is being used in the preview space, apply its modifications so
         // that they can be modified in the Archetypes context
         Archetype* archetype = objectToView->GetArchetype();
-        archetype->GetLocalCachedModifications().ApplyModificationsToObject(
-            objectToView);
+        archetype->GetLocalCachedModifications().ApplyModificationsToObject(objectToView);
       }
     }
   }
@@ -256,8 +235,7 @@ void SpacePreview::OnUpdate(UpdateEvent* updateEvent)
   if (!object)
     return;
 
-  bool mouseOverUpdate =
-      (IsMouseOver() && mPreviewAnimate == PreviewAnimate::MouseOver);
+  bool mouseOverUpdate = (IsMouseOver() && mPreviewAnimate == PreviewAnimate::MouseOver);
   bool alwaysUpdate = (mPreviewAnimate == PreviewAnimate::Always);
 
   if (mouseOverUpdate || alwaysUpdate)
@@ -268,7 +246,7 @@ void SpacePreview::OnUpdate(UpdateEvent* updateEvent)
     // graphical components
     // if(!mHasGraphical)
     {
-      forRange(Component * component, object->GetComponents())
+      forRange (Component* component, object->GetComponents())
       {
         component->DebugDraw();
       }
@@ -324,8 +302,7 @@ void SpacePreview::UpdateViewDistance(Vec3 viewDirection)
 
     object->has(Transform)->SetWorldTranslation(-aabb.GetCenter());
 
-    float size =
-        Math::Max(aabb.mMax.x - aabb.mMin.x, aabb.mMax.y - aabb.mMin.y);
+    float size = Math::Max(aabb.mMax.x - aabb.mMin.x, aabb.mMax.y - aabb.mMin.y);
     mLookAtDistance = size / (2.0f * Math::Tan(Math::DegToRad(22.5f)));
     mLookAtDistance += (aabb.mMax.z - aabb.mMin.z) * 0.5f;
 
@@ -333,17 +310,14 @@ void SpacePreview::UpdateViewDistance(Vec3 viewDirection)
     Vec3 cameraDirection = viewDirection.Normalized();
     mVerticalAngle = -Math::ArcSin(cameraDirection.y);
     mHorizontalAngle = Math::ArcTan2(cameraDirection.x, -cameraDirection.z);
-    mLookAtDistance = Math::Clamp(mLookAtDistance,
-                                  cameraComponent->mNearPlane,
-                                  cameraComponent->mFarPlane);
+    mLookAtDistance = Math::Clamp(mLookAtDistance, cameraComponent->mNearPlane, cameraComponent->mFarPlane);
     transform->SetTranslation(-cameraDirection * mLookAtDistance);
   }
 }
 
 void SpacePreview::UpdateCameraPosition()
 {
-  mVerticalAngle =
-      Math::Clamp(mVerticalAngle, -Math::cPi * 0.5f, Math::cPi * 0.5f);
+  mVerticalAngle = Math::Clamp(mVerticalAngle, -Math::cPi * 0.5f, Math::cPi * 0.5f);
 
   Vec3 cameraDirection;
   cameraDirection.x = Math::Sin(mHorizontalAngle) * Math::Cos(mVerticalAngle);
@@ -385,8 +359,7 @@ void SpacePreview::UpdateTransform()
   PreviewWidget::UpdateTransform();
 }
 
-MaterialPreview::MaterialPreview(PreviewWidgetInitializer& initializer) :
-    SpacePreview(initializer)
+MaterialPreview::MaterialPreview(PreviewWidgetInitializer& initializer) : SpacePreview(initializer)
 {
   Material* material = initializer.Object.Get<Material*>();
   if (Cog* object = mObject)
@@ -397,8 +370,7 @@ MaterialPreview::MaterialPreview(PreviewWidgetInitializer& initializer) :
   UpdateViewDistance(Vec3(-1.0f));
 }
 
-MeshPreview::MeshPreview(PreviewWidgetInitializer& initializer) :
-    SpacePreview(initializer)
+MeshPreview::MeshPreview(PreviewWidgetInitializer& initializer) : SpacePreview(initializer)
 {
   Mesh* mesh = initializer.Object.Get<Mesh*>();
   if (Cog* object = mObject)
@@ -441,8 +413,7 @@ ConvexMeshPreview::ConvexMeshPreview(PreviewWidgetInitializer& initializer) :
   AnimatePreview(PreviewAnimate::Always);
 }
 
-MultiConvexMeshPreview::MultiConvexMeshPreview(
-    PreviewWidgetInitializer& initializer) :
+MultiConvexMeshPreview::MultiConvexMeshPreview(PreviewWidgetInitializer& initializer) :
     SpacePreview(initializer, CoreArchetypes::Transform)
 {
   MultiConvexMesh* mesh = initializer.Object.Get<MultiConvexMesh*>();
@@ -467,8 +438,7 @@ MultiConvexMeshPreview::MultiConvexMeshPreview(
 }
 
 ArchetypePreview::ArchetypePreview(PreviewWidgetInitializer& initializer) :
-    SpacePreview(initializer,
-                 initializer.Object.Get<Archetype*>()->ResourceIdName)
+    SpacePreview(initializer, initializer.Object.Get<Archetype*>()->ResourceIdName)
 {
   UpdateViewDistance(Vec3(-1.0f));
 
@@ -487,8 +457,7 @@ Handle ArchetypePreview::GetEditObject()
   return (Cog*)mObject;
 }
 
-SpriteSourcePreview::SpriteSourcePreview(
-    PreviewWidgetInitializer& initializer) :
+SpriteSourcePreview::SpriteSourcePreview(PreviewWidgetInitializer& initializer) :
     SpacePreview(initializer, CoreArchetypes::Sprite)
 {
   Space* space = mSpace;
@@ -500,8 +469,7 @@ SpriteSourcePreview::SpriteSourcePreview(
   UpdateViewDistance(-Vec3::cZAxis);
 }
 
-AnimationPreview::AnimationPreview(PreviewWidgetInitializer& initializer) :
-    SpacePreview(initializer, "")
+AnimationPreview::AnimationPreview(PreviewWidgetInitializer& initializer) : SpacePreview(initializer, "")
 {
   // Destroy the object that was created by the space preview
   mObject.SafeDestroy();
@@ -554,8 +522,7 @@ CogPreview::CogPreview(PreviewWidgetInitializer& initializer) :
   UpdateViewDistance(Vec3(-1.0f));
 }
 
-TexturePreview::TexturePreview(PreviewWidgetInitializer& initializer) :
-    PreviewWidget(initializer)
+TexturePreview::TexturePreview(PreviewWidgetInitializer& initializer) : PreviewWidget(initializer)
 {
   Texture* texture = initializer.Object.Get<Texture*>();
   mImage = new TextureView(this);
@@ -569,8 +536,7 @@ void TexturePreview::UpdateTransform()
 }
 
 // preview
-FontPreview::FontPreview(PreviewWidgetInitializer& initializer) :
-    SpacePreview(initializer, CoreArchetypes::SpriteText)
+FontPreview::FontPreview(PreviewWidgetInitializer& initializer) : SpacePreview(initializer, CoreArchetypes::SpriteText)
 {
   Font* font = initializer.Object.Get<Font*>();
 
@@ -586,9 +552,7 @@ FontPreview::FontPreview(PreviewWidgetInitializer& initializer) :
   UpdateViewDistance(-Vec3::cZAxis);
 }
 
-TilePaletteSourcePreview::TilePaletteSourcePreview(
-    PreviewWidgetInitializer& initializer) :
-    PreviewWidget(initializer)
+TilePaletteSourcePreview::TilePaletteSourcePreview(PreviewWidgetInitializer& initializer) : PreviewWidget(initializer)
 {
   mSource = initializer.Object.Get<TilePaletteSource*>();
   mTilePaletteView = new TilePaletteView(this, nullptr);
@@ -612,11 +576,9 @@ void TilePaletteSourcePreview::SizeToContents()
   // widget size and tile size are in pixels
   IntVec2 paletteTiles = mSource->GetTileDimensions();
   if (paletteTiles.x > paletteTiles.y)
-    mTilePaletteView->mTileSize =
-        (int)Math::Floor(mSize.x / float(paletteTiles.x));
+    mTilePaletteView->mTileSize = (int)Math::Floor(mSize.x / float(paletteTiles.x));
   else
-    mTilePaletteView->mTileSize =
-        (int)Math::Floor(mSize.y / float(paletteTiles.y));
+    mTilePaletteView->mTileSize = (int)Math::Floor(mSize.y / float(paletteTiles.y));
 }
 
 void TilePaletteSourcePreview::UpdateTransform()
@@ -632,9 +594,7 @@ void TilePaletteSourcePreview::UpdateTransform()
   PreviewWidget::UpdateTransform();
 }
 
-ColorGradientPreview::ColorGradientPreview(
-    PreviewWidgetInitializer& initializer) :
-    PreviewWidget(initializer)
+ColorGradientPreview::ColorGradientPreview(PreviewWidgetInitializer& initializer) : PreviewWidget(initializer)
 {
   mMinSize = PreviewWidgetUi::ColorGradientSize;
 
@@ -665,8 +625,7 @@ Vec2 ColorGradientPreview::GetHalfSize()
   return GetMinSize() * 0.75f;
 }
 
-SampleCurveDrawer::SampleCurveDrawer(Composite* parent, HandleParam object) :
-    Widget(parent)
+SampleCurveDrawer::SampleCurveDrawer(Composite* parent, HandleParam object) : Widget(parent)
 {
   mObject = object;
   parent->SetClipping(true);
@@ -704,30 +663,22 @@ void SampleCurveDrawer::AddCurve(ViewBlock& viewBlock,
     if (p1.x == p2.x)
     {
       // Vertical segments
-      lines.PushBack(StreamedVertex(
-          SnapToPixels(Vec3(p1)), Vec2::cZero, ToFloatColor(Color::Black)));
-      lines.PushBack(StreamedVertex(
-          SnapToPixels(Vec3(p2)), Vec2::cZero, ToFloatColor(Color::Black)));
+      lines.PushBack(StreamedVertex(SnapToPixels(Vec3(p1)), Vec2::cZero, ToFloatColor(Color::Black)));
+      lines.PushBack(StreamedVertex(SnapToPixels(Vec3(p2)), Vec2::cZero, ToFloatColor(Color::Black)));
     }
     else
     {
       // Curve segments
-      lines.PushBack(
-          StreamedVertex(SnapToPixels(Vec3(p1)), Vec2::cZero, color));
-      lines.PushBack(
-          StreamedVertex(SnapToPixels(Vec3(p2)), Vec2::cZero, color));
+      lines.PushBack(StreamedVertex(SnapToPixels(Vec3(p1)), Vec2::cZero, color));
+      lines.PushBack(StreamedVertex(SnapToPixels(Vec3(p2)), Vec2::cZero, color));
     }
   }
 
-  CreateRenderData(
-      viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
+  CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
 }
 
-void SampleCurveDrawer::RenderUpdate(ViewBlock& viewBlock,
-                                     FrameBlock& frameBlock,
-                                     Mat4Param parentTx,
-                                     ColorTransform colorTx,
-                                     WidgetRect clipRect)
+void SampleCurveDrawer::RenderUpdate(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -739,8 +690,7 @@ void SampleCurveDrawer::RenderUpdate(ViewBlock& viewBlock,
 }
 
 // SampleCurvePreview
-SampleCurvePreview::SampleCurvePreview(PreviewWidgetInitializer& initializer) :
-    PreviewWidget(initializer)
+SampleCurvePreview::SampleCurvePreview(PreviewWidgetInitializer& initializer) : PreviewWidget(initializer)
 {
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetColor(WindowUi::BackgroundColor);
@@ -766,9 +716,7 @@ void SampleCurvePreview::UpdateTransform()
   PreviewWidget::UpdateTransform();
 }
 
-ResourceTablePreview::ResourceTablePreview(
-    PreviewWidgetInitializer& initializer) :
-    PreviewWidget(initializer)
+ResourceTablePreview::ResourceTablePreview(PreviewWidgetInitializer& initializer) : PreviewWidget(initializer)
 {
   mGroup = new PreviewWidgetGroup(this);
   ResourceTable* table = initializer.Object.Get<ResourceTable*>();
@@ -783,8 +731,7 @@ ResourceTablePreview::ResourceTablePreview(
   {
     Resource* resource = (*table)[i]->GetResource();
     if (resource)
-      mGroup->AddPreviewWidget(
-          resource->Name, resource, PreviewImportance::Simple);
+      mGroup->AddPreviewWidget(resource->Name, resource, PreviewImportance::Simple);
   }
 }
 
@@ -799,14 +746,12 @@ void ResourceTablePreview::UpdateTransform()
   PreviewWidget::UpdateTransform();
 }
 
-SpaceArchetypePreview::SpaceArchetypePreview(
-    PreviewWidgetInitializer& initializer, Archetype* archetype) :
+SpaceArchetypePreview::SpaceArchetypePreview(PreviewWidgetInitializer& initializer, Archetype* archetype) :
     IconPreview(initializer, "Level")
 {
   // Space archetype
-  Space* space = Z::gFactory->CreateSpace(archetype->ResourceIdName,
-                                          CreationFlags::Editing,
-                                          Z::gEditor->GetEditGameSession());
+  Space* space =
+      Z::gFactory->CreateSpace(archetype->ResourceIdName, CreationFlags::Editing, Z::gEditor->GetEditGameSession());
   mObject = space;
 }
 
@@ -821,8 +766,7 @@ Handle SpaceArchetypePreview::GetEditObject()
   return space;
 }
 
-GameArchetypePreview::GameArchetypePreview(
-    PreviewWidgetInitializer& initializer, Archetype* archetype) :
+GameArchetypePreview::GameArchetypePreview(PreviewWidgetInitializer& initializer, Archetype* archetype) :
     IconPreview(initializer, "Level")
 {
   // If this is the same archetype as the main game session reuse
@@ -835,11 +779,7 @@ GameArchetypePreview::GameArchetypePreview(
   else
   {
     mObject = (GameSession*)Z::gFactory->CreateCheckedType(
-        ZilchTypeId(GameSession),
-        nullptr,
-        archetype->Name,
-        CreationFlags::Editing | CreationFlags::Preview,
-        nullptr);
+        ZilchTypeId(GameSession), nullptr, archetype->Name, CreationFlags::Editing | CreationFlags::Preview, nullptr);
     UsingEditorGameSession = false;
   }
 }
@@ -856,8 +796,7 @@ Handle GameArchetypePreview::GetEditObject()
   return game;
 }
 
-PreviewWidget*
-CreateArchetypePreviewWidget(PreviewWidgetInitializer& initializer)
+PreviewWidget* CreateArchetypePreviewWidget(PreviewWidgetInitializer& initializer)
 {
   TemporaryDoNotifyOverride doNotifyOverride(IgnoreDoNotify);
 
@@ -889,78 +828,74 @@ void RegisterEditorTileViewWidgets()
 {
   PreviewWidgetFactory* previewFactory = PreviewWidgetFactory::GetInstance();
 
-  previewFactory->Creators[CoreArchetypes::EmptyTile] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<EmptyPreview>);
+  previewFactory->Creators[CoreArchetypes::EmptyTile] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<EmptyPreview>);
 
   // Core resource types
-  previewFactory->Creators["Archetype"] = PreviewWidgetCreator(
-      PreviewImportance::High, CreateArchetypePreviewWidget);
-  previewFactory->Creators["Material"] = PreviewWidgetCreator(
-      PreviewImportance::High, &CreatePreviewWidgetT<MaterialPreview>);
-  previewFactory->Creators["Mesh"] = PreviewWidgetCreator(
-      PreviewImportance::High, &CreatePreviewWidgetT<MeshPreview>);
-  previewFactory->Creators["PhysicsMesh"] = PreviewWidgetCreator(
-      PreviewImportance::High, &CreatePreviewWidgetT<PhysicsMeshPreview>);
-  previewFactory->Creators["ConvexMesh"] = PreviewWidgetCreator(
-      PreviewImportance::High, &CreatePreviewWidgetT<ConvexMeshPreview>);
-  previewFactory->Creators["MultiConvexMesh"] = PreviewWidgetCreator(
-      PreviewImportance::High, &CreatePreviewWidgetT<MultiConvexMeshPreview>);
-  previewFactory->Creators["Texture"] = PreviewWidgetCreator(
-      PreviewImportance::High, &CreatePreviewWidgetT<TexturePreview>);
-  previewFactory->Creators["Font"] = PreviewWidgetCreator(
-      PreviewImportance::High, &CreatePreviewWidgetT<FontPreview>);
-  previewFactory->Creators["SpriteSource"] = PreviewWidgetCreator(
-      PreviewImportance::High, &CreatePreviewWidgetT<SpriteSourcePreview>);
-  previewFactory->Creators["TilePaletteSource"] = PreviewWidgetCreator(
-      PreviewImportance::High, &CreatePreviewWidgetT<TilePaletteSourcePreview>);
-  previewFactory->Creators["ColorGradient"] = PreviewWidgetCreator(
-      PreviewImportance::High, &CreatePreviewWidgetT<ColorGradientPreview>);
-  previewFactory->Creators["SampleCurve"] = PreviewWidgetCreator(
-      PreviewImportance::High, &CreatePreviewWidgetT<SampleCurvePreview>);
-  previewFactory->Creators["ResourceTable"] = PreviewWidgetCreator(
-      PreviewImportance::High, &CreatePreviewWidgetT<ResourceTablePreview>);
-  previewFactory->Creators["Animation"] = PreviewWidgetCreator(
-      PreviewImportance::High, &CreatePreviewWidgetT<AnimationPreview>);
+  previewFactory->Creators["Archetype"] = PreviewWidgetCreator(PreviewImportance::High, CreateArchetypePreviewWidget);
+  previewFactory->Creators["Material"] =
+      PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<MaterialPreview>);
+  previewFactory->Creators["Mesh"] = PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<MeshPreview>);
+  previewFactory->Creators["PhysicsMesh"] =
+      PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<PhysicsMeshPreview>);
+  previewFactory->Creators["ConvexMesh"] =
+      PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<ConvexMeshPreview>);
+  previewFactory->Creators["MultiConvexMesh"] =
+      PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<MultiConvexMeshPreview>);
+  previewFactory->Creators["Texture"] =
+      PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<TexturePreview>);
+  previewFactory->Creators["Font"] = PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<FontPreview>);
+  previewFactory->Creators["SpriteSource"] =
+      PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<SpriteSourcePreview>);
+  previewFactory->Creators["TilePaletteSource"] =
+      PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<TilePaletteSourcePreview>);
+  previewFactory->Creators["ColorGradient"] =
+      PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<ColorGradientPreview>);
+  previewFactory->Creators["SampleCurve"] =
+      PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<SampleCurvePreview>);
+  previewFactory->Creators["ResourceTable"] =
+      PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<ResourceTablePreview>);
+  previewFactory->Creators["Animation"] =
+      PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<AnimationPreview>);
 
-  previewFactory->Creators["CollisionGroup"] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<PhysicsPreview>);
-  previewFactory->Creators["CollisionTable"] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<PhysicsPreview>);
-  previewFactory->Creators["PhysicsMaterial"] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<PhysicsPreview>);
-  previewFactory->Creators["PhysicsSolverConfig"] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<PhysicsPreview>);
+  previewFactory->Creators["CollisionGroup"] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<PhysicsPreview>);
+  previewFactory->Creators["CollisionTable"] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<PhysicsPreview>);
+  previewFactory->Creators["PhysicsMaterial"] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<PhysicsPreview>);
+  previewFactory->Creators["PhysicsSolverConfig"] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<PhysicsPreview>);
 
   // Simple resource types
-  previewFactory->Creators["ZilchScript"] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
-  previewFactory->Creators["ZilchFragment"] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
-  previewFactory->Creators["TextBlock"] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
-  previewFactory->Creators["ZilchPluginSource"] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
-  previewFactory->Creators["Level"] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<LevelPreview>);
-  previewFactory->Creators["Sound"] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<SoundPreview>);
-  previewFactory->Creators["SoundCue"] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<SoundCuePreview>);
-  previewFactory->Creators["SoundTag"] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<SoundPreview>);
-  previewFactory->Creators["SoundAttenuator"] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<SoundPreview>);
-  previewFactory->Creators["RenderGroup"] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<RenderGroupPreview>);
+  previewFactory->Creators["ZilchScript"] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
+  previewFactory->Creators["ZilchFragment"] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
+  previewFactory->Creators["TextBlock"] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
+  previewFactory->Creators["ZilchPluginSource"] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
+  previewFactory->Creators["Level"] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<LevelPreview>);
+  previewFactory->Creators["Sound"] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<SoundPreview>);
+  previewFactory->Creators["SoundCue"] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<SoundCuePreview>);
+  previewFactory->Creators["SoundTag"] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<SoundPreview>);
+  previewFactory->Creators["SoundAttenuator"] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<SoundPreview>);
+  previewFactory->Creators["RenderGroup"] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<RenderGroupPreview>);
 
-  previewFactory->Creators["NetPropertyConfig"] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<NetworkingPreview>);
-  previewFactory->Creators["NetChannelConfig"] = PreviewWidgetCreator(
-      PreviewImportance::Simple, &CreatePreviewWidgetT<NetworkingPreview>);
+  previewFactory->Creators["NetPropertyConfig"] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<NetworkingPreview>);
+  previewFactory->Creators["NetChannelConfig"] =
+      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<NetworkingPreview>);
 
   // Cog Object
-  previewFactory->Creators["Cog"] = PreviewWidgetCreator(
-      PreviewImportance::High, &CreatePreviewWidgetT<CogPreview>);
+  previewFactory->Creators["Cog"] = PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<CogPreview>);
 }
 
 } // namespace Zero

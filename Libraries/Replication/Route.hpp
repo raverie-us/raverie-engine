@@ -16,8 +16,7 @@ public:
   static const Route None;
 
   /// Constructors
-  Route(RouteMode::Enum mode = RouteMode::Exclude,
-        ReplicatorIdSet targets = ReplicatorIdSet());
+  Route(RouteMode::Enum mode = RouteMode::Exclude, ReplicatorIdSet targets = ReplicatorIdSet());
   Route(RouteMode::Enum mode, ReplicatorId replicatorId);
   Route(ReplicatorId replicatorId);
   Route(ReplicatorLink* replicatorLink);

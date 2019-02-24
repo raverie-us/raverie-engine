@@ -7,8 +7,7 @@ extern "C" int main(int argc, char* argv[])
 {
   CommandLineToStringArray(gCommandLineArguments, argv, argc);
 
-  SetupApplication(
-      1, 0, 0, 1, sWelderOrganization, sLauncherGuid, sLauncherName);
+  SetupApplication(1, 0, 0, 1, sWelderOrganization, sLauncherGuid, sLauncherName);
 
   LauncherStartup startup;
   Engine* engine = startup.Initialize();

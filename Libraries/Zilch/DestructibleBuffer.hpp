@@ -117,8 +117,7 @@ public:
   {
     // Allocate the memory for the object and push a wrapper around it's
     // destructor
-    byte* newData = this->Allocate(
-        sizeof(T), GetDestructor<T>(), GetCopyConstructor<T>(), positionOut);
+    byte* newData = this->Allocate(sizeof(T), GetDestructor<T>(), GetCopyConstructor<T>(), positionOut);
 
     // Copy the object we got into the allocated data and return it
     return *new (newData) T(value);
@@ -131,8 +130,7 @@ public:
   {
     // Allocate the memory for the object and push a wrapper around it's
     // destructor
-    byte* newData = this->Allocate(
-        sizeof(T), GetDestructor<T>(), GetCopyConstructor<T>(), positionOut);
+    byte* newData = this->Allocate(sizeof(T), GetDestructor<T>(), GetCopyConstructor<T>(), positionOut);
 
     // Default construct the type into the allocated data and return it
     return *new (newData) T();

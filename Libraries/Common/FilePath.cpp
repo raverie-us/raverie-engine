@@ -14,9 +14,7 @@ String FilePath::Combine(StringRange path0, StringRange path1)
   return Combine(paths, 2, StringRange());
 }
 
-String FilePath::Combine(StringRange path0,
-                         StringRange path1,
-                         StringRange path2)
+String FilePath::Combine(StringRange path0, StringRange path1, StringRange path2)
 {
   const StringRange* paths[3];
   paths[0] = &path0;
@@ -25,10 +23,7 @@ String FilePath::Combine(StringRange path0,
   return Combine(paths, 3, StringRange());
 }
 
-String FilePath::Combine(StringRange path0,
-                         StringRange path1,
-                         StringRange path2,
-                         StringRange path3)
+String FilePath::Combine(StringRange path0, StringRange path1, StringRange path2, StringRange path3)
 {
   const StringRange* paths[4];
   paths[0] = &path0;
@@ -38,11 +33,7 @@ String FilePath::Combine(StringRange path0,
   return Combine(paths, 4, StringRange());
 }
 
-String FilePath::Combine(StringRange path0,
-                         StringRange path1,
-                         StringRange path2,
-                         StringRange path3,
-                         StringRange path4)
+String FilePath::Combine(StringRange path0, StringRange path1, StringRange path2, StringRange path3, StringRange path4)
 {
   const StringRange* paths[5];
   paths[0] = &path0;
@@ -53,9 +44,7 @@ String FilePath::Combine(StringRange path0,
   return Combine(paths, 5, StringRange());
 }
 
-String FilePath::CombineWithExtension(StringRange path,
-                                      StringRange fileName,
-                                      StringRange ext)
+String FilePath::CombineWithExtension(StringRange path, StringRange fileName, StringRange ext)
 {
   if (!ext.Empty())
     ErrorIf(ext.Front() != '.',
@@ -141,8 +130,7 @@ String FilePath::Normalize(StringRange path)
 
   // We strip out trailing separators as well
   // (we can only have 1 at the end due to the normalization part of the code)
-  if (buffer.GetSize() > 0 &&
-      buffer[buffer.GetSize() - 1] == cDirectorySeparatorRune)
+  if (buffer.GetSize() > 0 && buffer[buffer.GetSize() - 1] == cDirectorySeparatorRune)
   {
     size_t newSize = buffer.GetSize() - 1;
     buffer[newSize] = '\0';
@@ -183,9 +171,7 @@ FilePathInfo FilePath::GetPathInfo(StringRange path)
   return info;
 }
 
-String FilePath::Combine(const StringRange** paths,
-                         uint count,
-                         StringRange extension)
+String FilePath::Combine(const StringRange** paths, uint count, StringRange extension)
 {
   if (count == 0)
     return String();

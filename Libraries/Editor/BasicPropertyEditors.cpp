@@ -36,8 +36,7 @@ ZilchDefineType(DirectProperty, builder, type)
 {
 }
 
-DirectProperty::DirectProperty(PropertyWidgetInitializer& initializer) :
-    PropertyWidget(initializer)
+DirectProperty::DirectProperty(PropertyWidgetInitializer& initializer) : PropertyWidget(initializer)
 {
   mNode = initializer.ObjectNode;
   mProperty = initializer.Property;
@@ -45,8 +44,7 @@ DirectProperty::DirectProperty(PropertyWidgetInitializer& initializer) :
   mReadOnly = mProperty->IsReadOnly();
   mLabel->SetText(mProperty->Name);
   ConnectThisTo(mLabel, Events::RightMouseUp, OnRightMouseUpLabel);
-  ConnectThisTo(
-      MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
+  ConnectThisTo(MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
 }
 
 void DirectProperty::BeginPreviewChanges()
@@ -81,8 +79,7 @@ void DirectProperty::PreviewValue(PropertyState& state)
   PropertyPath propertyPath;
   BuildPath(mNode, rootInstance, propertyPath);
 
-  mProp->ChangeProperty(
-      rootInstance, propertyPath, state, PropertyAction::Preview);
+  mProp->ChangeProperty(rootInstance, propertyPath, state, PropertyAction::Preview);
 }
 
 void DirectProperty::CommitValue(AnyParam var)
@@ -91,9 +88,7 @@ void DirectProperty::CommitValue(AnyParam var)
   CommitValue(state);
 }
 
-void DirectProperty::BuildPath(ObjectPropertyNode* node,
-                               Handle& rootInstance,
-                               PropertyPath& path)
+void DirectProperty::BuildPath(ObjectPropertyNode* node, Handle& rootInstance, PropertyPath& path)
 {
   bool foundRoot = false;
 
@@ -102,8 +97,7 @@ void DirectProperty::BuildPath(ObjectPropertyNode* node,
 
   if (object.IsNotNull())
   {
-    foundRoot = objectType->HasAttributeInherited(
-        ObjectAttributes::cStoreLocalModifications);
+    foundRoot = objectType->HasAttributeInherited(ObjectAttributes::cStoreLocalModifications);
     if (foundRoot)
     {
       rootInstance = object;
@@ -158,8 +152,7 @@ void DirectProperty::CommitValue(PropertyState& state)
   PropertyPath propertyPath;
   BuildPath(mNode, rootInstance, propertyPath);
 
-  mProp->ChangeProperty(
-      rootInstance, propertyPath, state, PropertyAction::Commit);
+  mProp->ChangeProperty(rootInstance, propertyPath, state, PropertyAction::Commit);
 }
 
 PropertyState DirectProperty::GetValue()
@@ -194,8 +187,7 @@ String DirectProperty::GetToolTip(ToolTipColorScheme::Enum* color)
   // Only handling descriptions for enum types.
   if (Type::IsEnumType(propertyType))
   {
-    if (EnumDoc* enumDoc = Z::gDocumentation->mEnumAndFlagMap.FindValue(
-            propertyType->Name, nullptr))
+    if (EnumDoc* enumDoc = Z::gDocumentation->mEnumAndFlagMap.FindValue(propertyType->Name, nullptr))
     {
       if (!enumDoc->mDescription.Empty())
       {
@@ -296,8 +288,7 @@ public:
   EditorIndexedStringArray* mMetaEdit;
   StringSource mStrings;
 
-  PropertyIndexedStringArray(PropertyWidgetInitializer& initializer) :
-      DirectProperty(initializer)
+  PropertyIndexedStringArray(PropertyWidgetInitializer& initializer) : DirectProperty(initializer)
   {
     mDefSet = initializer.Parent->GetDefinitionSet();
     mSelectBox = new ComboBox(this);
@@ -331,8 +322,7 @@ public:
     else if (currentValue.Is<int>())
       mSelectBox->SetSelectedItem(currentValue.Get<int>(), false);
     else if (currentValue.Is<String>())
-      mSelectBox->SetSelectedItem(
-          mStrings.GetIndexOfString(currentValue.Get<String>()), false);
+      mSelectBox->SetSelectedItem(mStrings.GetIndexOfString(currentValue.Get<String>()), false);
   }
 
   void UpdateTransform() override
@@ -381,8 +371,7 @@ public:
   HashMap<int, int> mEnumIndexToListIndex;
   Array<int> mEnumIndexes;
 
-  PropertyEditorEnum(PropertyWidgetInitializer& initializer) :
-      DirectProperty(initializer)
+  PropertyEditorEnum(PropertyWidgetInitializer& initializer) : DirectProperty(initializer)
   {
     mDefSet = initializer.Parent->GetDefinitionSet();
     mSelectBox = new ComboBox(this);
@@ -420,8 +409,7 @@ public:
     }
 
     ConnectThisTo(mSelectBox, Events::ItemSelected, OnIndexChanged);
-    ConnectThisTo(
-        mSelectorButton, Events::ItemSelected, OnSelectorIndexChanged);
+    ConnectThisTo(mSelectorButton, Events::ItemSelected, OnSelectorIndexChanged);
     ConnectThisTo(mGrid->mScrollArea, Events::ScrollUpdated, OnScrollUpdated);
   }
 
@@ -490,8 +478,7 @@ public:
 
     // Show the buttons if we have enough room to fit the min size of the
     // buttons
-    bool showButtons =
-        (mSelectorButton->GetMinSize().x <= contentLayout.Size.x);
+    bool showButtons = (mSelectorButton->GetMinSize().x <= contentLayout.Size.x);
     mSelectorButton->SetActive(showButtons);
     mSelectBox->SetActive(!showButtons);
 
@@ -509,8 +496,7 @@ public:
   typedef PropertyEditorRange ZilchSelf;
   Slider* mSlider;
 
-  PropertyEditorRange(PropertyWidgetInitializer& initializer) :
-      DirectProperty(initializer)
+  PropertyEditorRange(PropertyWidgetInitializer& initializer) : DirectProperty(initializer)
   {
     mDefSet = initializer.Parent->GetDefinitionSet();
     EditorRange* metaEdit = mProperty->HasInherited<EditorRange>();
@@ -521,11 +507,8 @@ public:
 
     Refresh();
 
-    ConnectThisTo(mSlider,
-                  Events::SliderManipulationStarted,
-                  OnSliderManipulationStarted);
-    ConnectThisTo(
-        mSlider, Events::SliderIncrementalChange, OnSliderIncrementalChange);
+    ConnectThisTo(mSlider, Events::SliderManipulationStarted, OnSliderManipulationStarted);
+    ConnectThisTo(mSlider, Events::SliderIncrementalChange, OnSliderIncrementalChange);
     ConnectThisTo(mSlider, Events::SliderChanged, OnSliderChanged);
   }
 
@@ -592,8 +575,7 @@ public:
   typedef PropertyEditorString ZilchSelf;
   TextBox* mEditText;
 
-  PropertyEditorString(PropertyWidgetInitializer& initializer) :
-      DirectProperty(initializer)
+  PropertyEditorString(PropertyWidgetInitializer& initializer) : DirectProperty(initializer)
   {
     mDefSet = initializer.Parent->GetDefinitionSet();
 
@@ -700,16 +682,11 @@ Any ConvertValue(BoundType* boundType, double newValue)
 class NumberManipulation : public MouseManipulation
 {
 public:
-  NumberManipulation(Mouse* mouse,
-                     Composite* owner,
-                     AnyParam startingValue,
-                     Vec3 screenPosition,
-                     uint userData,
-                     EditorRange* range) :
+  NumberManipulation(
+      Mouse* mouse, Composite* owner, AnyParam startingValue, Vec3 screenPosition, uint userData, EditorRange* range) :
       MouseManipulation(mouse, owner)
   {
-    mSpinOverlay =
-        owner->GetRootWidget()->GetPopUp()->CreateAttached<Element>("Spinner");
+    mSpinOverlay = owner->GetRootWidget()->GetPopUp()->CreateAttached<Element>("Spinner");
     mSpinOverlay->SetTranslation(screenPosition);
     mOwner = owner;
     mLocalMouseStart = mOwner->ToLocal(mouse->GetClientPosition());
@@ -836,8 +813,7 @@ public:
   IconButton* mSpinButton;
   EditorRange* mEditRange;
 
-  PropertyEditorNumber(PropertyWidgetInitializer& initializer) :
-      DirectProperty(initializer)
+  PropertyEditorNumber(PropertyWidgetInitializer& initializer) : DirectProperty(initializer)
   {
     mDefSet = initializer.Parent->GetDefinitionSet();
 
@@ -888,12 +864,9 @@ public:
     String newStringValue = mEditText->GetText();
 
     Type* propertyType = mProperty->PropertyType;
-    MetaSerialization* metaSerialization =
-        propertyType->HasInherited<MetaSerialization>();
+    MetaSerialization* metaSerialization = propertyType->HasInherited<MetaSerialization>();
 
-    ReturnIf(metaSerialization == nullptr,
-             ,
-             "Must have MetaSerialization to convert from string");
+    ReturnIf(metaSerialization == nullptr, , "Must have MetaSerialization to convert from string");
 
     Any newValue;
     // newValue.DefaultConstruct(mProperty->PropertyType);
@@ -909,17 +882,12 @@ public:
     BeginPreviewChanges();
 
     Vec2 size = mSpinButton->GetSize();
-    Vec3 screenPosition =
-        mSpinButton->GetScreenPosition() + ToVector3(size) * 0.5f;
+    Vec3 screenPosition = mSpinButton->GetScreenPosition() + ToVector3(size) * 0.5f;
     SnapToPixels(screenPosition);
 
     PropertyState state = GetValue();
-    NumberManipulation* manip = new NumberManipulation(event->GetMouse(),
-                                                       GetParent(),
-                                                       state.Value,
-                                                       screenPosition,
-                                                       0,
-                                                       mEditRange);
+    NumberManipulation* manip =
+        new NumberManipulation(event->GetMouse(), GetParent(), state.Value, screenPosition, 0, mEditRange);
 
     ConnectThisTo(manip, Events::NumberValueChanged, OnNumberValueChange);
     ConnectThisTo(manip, Events::NumberValueCommited, OnNumberValueCommited);
@@ -962,8 +930,7 @@ public:
   typedef PropertyEditorBool ZilchSelf;
   CheckBox* mCheckBox;
 
-  PropertyEditorBool(PropertyWidgetInitializer& initializer) :
-      DirectProperty(initializer)
+  PropertyEditorBool(PropertyWidgetInitializer& initializer) : DirectProperty(initializer)
   {
     mDefSet = initializer.Parent->GetDefinitionSet();
 
@@ -1030,8 +997,7 @@ public:
   uint mDimension;
   PropertyState mState;
 
-  PropertyEditVector(PropertyWidgetInitializer& initializer, uint dimension) :
-      DirectProperty(initializer)
+  PropertyEditVector(PropertyWidgetInitializer& initializer, uint dimension) : DirectProperty(initializer)
   {
     mDefSet = initializer.Parent->GetDefinitionSet();
     mDimension = dimension;
@@ -1152,8 +1118,7 @@ public:
     Vec4 currentDisplayValue = GetDisplayValue();
     Any stringElement = currentDisplayValue[i];
 
-    NumberManipulation* manip = new NumberManipulation(
-        event->GetMouse(), this, stringElement, screenPosition, i, NULL);
+    NumberManipulation* manip = new NumberManipulation(event->GetMouse(), this, stringElement, screenPosition, i, NULL);
     ConnectThisTo(manip, Events::NumberValueChanged, OnNumberValueChange);
     ConnectThisTo(manip, Events::NumberValueCommited, OnNumberValueCommited);
   }
@@ -1223,10 +1188,8 @@ public:
     for (uint i = 0; i < mDimension; ++i)
     {
       Vec3 position = Vec3(startX + cellSize * float(i), startY, 0);
-      Vec2 labelSize =
-          Vec2(elementLabelSize, PropertyViewUi::PropertySize - 2.0f);
-      Vec2 size = Vec2(cellSize - elementLabelSize,
-                       PropertyViewUi::PropertySize - 2.0f);
+      Vec2 labelSize = Vec2(elementLabelSize, PropertyViewUi::PropertySize - 2.0f);
+      Vec2 size = Vec2(cellSize - elementLabelSize, PropertyViewUi::PropertySize - 2.0f);
 
       Vec3 labelPosition = position;
 
@@ -1251,8 +1214,7 @@ class PropertyEditVectorN : public PropertyEditVector
 public:
   vectorType mCurrent;
 
-  PropertyEditVectorN(PropertyWidgetInitializer& initializer) :
-      PropertyEditVector(initializer, dimension)
+  PropertyEditVectorN(PropertyWidgetInitializer& initializer) : PropertyEditVector(initializer, dimension)
   {
     Refresh();
   }
@@ -1300,8 +1262,7 @@ public:
   Vec3 mEulerCurrent;
   bool mEulerMode;
 
-  PropertyEditRotation(PropertyWidgetInitializer& initializer) :
-      PropertyEditVector(initializer, 3)
+  PropertyEditRotation(PropertyWidgetInitializer& initializer) : PropertyEditVector(initializer, 3)
   {
     // We have to call refresh again because when in our base classes
     // constructor, it calls Refresh, which calls GetDisplayValue().
@@ -1374,8 +1335,7 @@ public:
 
   IconButton* mIconButton;
 
-  PropertyEditRotationBasis(PropertyWidgetInitializer& initializer) :
-      PropertyEditRotation(initializer)
+  PropertyEditRotationBasis(PropertyWidgetInitializer& initializer) : PropertyEditRotation(initializer)
   {
     mIconButton = new IconButton(this);
     mIconButton->SetIcon("Transform");
@@ -1392,8 +1352,7 @@ public:
 
   void OnEditBasis(Event* e)
   {
-    EditorRotationBasis* editor =
-        mProperty->HasInherited<EditorRotationBasis>();
+    EditorRotationBasis* editor = mProperty->HasInherited<EditorRotationBasis>();
 
     // Get the actual objects selected (deals with multi-properties
     Array<Handle> objects;
@@ -1433,8 +1392,7 @@ public:
     if (gizmoCog == nullptr)
     {
       // Otherwise create the gizmo archetype
-      Archetype* gizmoArchetype =
-          ArchetypeManager::GetInstance()->FindOrNull(editor->mArchetypeName);
+      Archetype* gizmoArchetype = ArchetypeManager::GetInstance()->FindOrNull(editor->mArchetypeName);
       if (gizmoArchetype == nullptr)
       {
         Error("Archetype '%s' not found.", editor->mArchetypeName.c_str());
@@ -1494,8 +1452,7 @@ public:
     {
       Vec3 position = Vec3(startX + cellSize * float(i), startY, 0);
       Vec2 labelSize = Vec2(elementLabelSize, PropertyViewUi::PropertySize);
-      Vec2 size =
-          Vec2(cellSize - elementLabelSize, PropertyViewUi::PropertySize);
+      Vec2 size = Vec2(cellSize - elementLabelSize, PropertyViewUi::PropertySize);
 
       Vec3 labelPosition = position;
 
@@ -1546,9 +1503,7 @@ public:
   BoundType* mPropertyType;
   ColorPicker* mColorPicker;
 
-  PropertyEditColor(PropertyWidgetInitializer& initializer) :
-      DirectProperty(initializer),
-      mColorPicker(nullptr)
+  PropertyEditColor(PropertyWidgetInitializer& initializer) : DirectProperty(initializer), mColorPicker(nullptr)
   {
     // Create the background
     mBackground = CreateAttached<Element>(cWhiteSquareBorder);
@@ -1664,8 +1619,7 @@ public:
     outerLayout.Size.x -= mEyeDropper->GetSize().x - 1.0f;
 
     Thickness border = Thickness::All(1);
-    LayoutResult innerLayout =
-        RemoveThickness(border, outerLayout.Size, outerLayout.Translation);
+    LayoutResult innerLayout = RemoveThickness(border, outerLayout.Size, outerLayout.Translation);
 
     PlaceWithLayout(outerLayout, mBackground);
     PlaceWithLayout(innerLayout, mColorDisplay);
@@ -1682,43 +1636,25 @@ public:
 
 void RegisterGeneralEditors()
 {
-  ZilchTypeId(String)->Add(
-      new MetaPropertyEditor(&CreateProperty<PropertyEditorString>));
-  ZilchTypeId(double)->Add(
-      new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
-  ZilchTypeId(float)->Add(
-      new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
-  ZilchTypeId(int)->Add(
-      new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
-  ZilchTypeId(bool)->Add(
-      new MetaPropertyEditor(&CreateProperty<PropertyEditorBool>));
+  ZilchTypeId(String)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorString>));
+  ZilchTypeId(double)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
+  ZilchTypeId(float)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
+  ZilchTypeId(int)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
+  ZilchTypeId(bool)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorBool>));
 
-  ZilchTypeId(IntVec2)->Add(new MetaPropertyEditor(
-      &CreateProperty<PropertyEditVectorN<IntVec2, int, 2>>));
-  ZilchTypeId(IntVec3)->Add(new MetaPropertyEditor(
-      &CreateProperty<PropertyEditVectorN<IntVec3, int, 3>>));
-  ZilchTypeId(IntVec4)->Add(new MetaPropertyEditor(
-      &CreateProperty<PropertyEditVectorN<IntVec4, int, 4>>));
-  ZilchTypeId(Vec2)->Add(new MetaPropertyEditor(
-      &CreateProperty<PropertyEditVectorN<Vec2, float, 2>>));
-  ZilchTypeId(Vec3)->Add(new MetaPropertyEditor(
-      &CreateProperty<PropertyEditVectorN<Vec3, float, 3>>));
-  ZilchTypeId(Vec4)->Add(
-      new MetaPropertyEditor(&CreateProperty<PropertyEditColor>));
-  ZilchTypeId(Quat)->Add(
-      new MetaPropertyEditor(&CreateProperty<PropertyEditRotation>));
-  ZilchTypeId(Enum)->Add(
-      new MetaPropertyEditor(&CreateProperty<PropertyEditorEnum>));
+  ZilchTypeId(IntVec2)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditVectorN<IntVec2, int, 2>>));
+  ZilchTypeId(IntVec3)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditVectorN<IntVec3, int, 3>>));
+  ZilchTypeId(IntVec4)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditVectorN<IntVec4, int, 4>>));
+  ZilchTypeId(Vec2)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditVectorN<Vec2, float, 2>>));
+  ZilchTypeId(Vec3)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditVectorN<Vec3, float, 3>>));
+  ZilchTypeId(Vec4)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditColor>));
+  ZilchTypeId(Quat)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditRotation>));
+  ZilchTypeId(Enum)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorEnum>));
 
-  ZilchTypeId(EditorSlider)
-      ->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorRange>));
-  ZilchTypeId(EditorRange)
-      ->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
-  ZilchTypeId(EditorRotationBasis)
-      ->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditRotationBasis>));
-  ZilchTypeId(EditorIndexedStringArray)
-      ->Add(
-          new MetaPropertyEditor(&CreateProperty<PropertyIndexedStringArray>));
+  ZilchTypeId(EditorSlider)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorRange>));
+  ZilchTypeId(EditorRange)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
+  ZilchTypeId(EditorRotationBasis)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditRotationBasis>));
+  ZilchTypeId(EditorIndexedStringArray)->Add(new MetaPropertyEditor(&CreateProperty<PropertyIndexedStringArray>));
 }
 
 } // namespace Zero

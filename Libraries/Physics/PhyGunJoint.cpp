@@ -105,8 +105,7 @@ void PhyGunJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData);
+  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData);
 }
 
 void PhyGunJoint::DebugDraw()
@@ -122,11 +121,9 @@ void PhyGunJoint::DebugDraw()
   Vec3 obj0Pos = obj0->GetWorldTranslation();
 
   // Draw lines from each object's center to its respective anchor
-  gDebugDraw->Add(
-      Debug::Line(obj0Pos, anchors.mWorldPoints[0]).Color(Color::White));
+  gDebugDraw->Add(Debug::Line(obj0Pos, anchors.mWorldPoints[0]).Color(Color::White));
   // Draw a line between the anchors
-  gDebugDraw->Add(Debug::Line(anchors.mWorldPoints[0], anchors.mWorldPoints[1])
-                      .Color(Color::Gray));
+  gDebugDraw->Add(Debug::Line(anchors.mWorldPoints[0], anchors.mWorldPoints[1]).Color(Color::Gray));
 
   DrawAngleAtomFragment(mReferenceAngle, GetCollider(0), GetCollider(1));
 
@@ -140,8 +137,7 @@ void PhyGunJoint::DebugDraw()
   DrawBasisFragment(obj0, obj0Rot);
 }
 
-uint PhyGunJoint::GetAtomIndexFilter(uint atomIndex,
-                                     real& desiredConstraintValue) const
+uint PhyGunJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   if (atomIndex < 3)

@@ -26,10 +26,7 @@ public:
   }
 
   //****************************************************************************
-  void Draw(DisplayRender* render,
-            Mat4Param parentTx,
-            ColorTransform& colorTx,
-            DrawParams& params)
+  void Draw(DisplayRender* render, Mat4Param parentTx, ColorTransform& colorTx, DrawParams& params)
   {
     if (mSize.x < 0 || mSize.y < 0)
       return;
@@ -42,8 +39,7 @@ public:
   }
 
   //****************************************************************************
-  void
-  DrawLines(DisplayRender* render, float offset, Vec3 axis, Vec2 displaySize)
+  void DrawLines(DisplayRender* render, float offset, Vec3 axis, Vec2 displaySize)
   {
     // Vec3 tangent = Math::Abs(Math::Cross(axis, Vec3::cZAxis));
     // Vec3 finalOffset = Math::FMod(offset, mHashSize) * axis;
@@ -76,11 +72,7 @@ public:
   Vec2 mLastLocalMousePos;
 
   //****************************************************************************
-  ScratchboardObjectMover(Mouse* mouse,
-                          Scratchboard* scratchBoard,
-                          Widget* widget,
-                          bool snapping,
-                          float snapFidelity) :
+  ScratchboardObjectMover(Mouse* mouse, Scratchboard* scratchBoard, Widget* widget, bool snapping, float snapFidelity) :
       MouseManipulation(mouse, scratchBoard)
   {
     mScratchboard = scratchBoard;
@@ -106,15 +98,11 @@ public:
     if (local.y < cScrollAreaSize)
       mScrollDirection += Vec3::cYAxis * (1.0f - (local.y / cScrollAreaSize));
     else if (mScratchboard->GetSize().y - local.y < cScrollAreaSize)
-      mScrollDirection -=
-          Vec3::cYAxis *
-          (1.0f - ((mScratchboard->GetSize().y - local.y) / cScrollAreaSize));
+      mScrollDirection -= Vec3::cYAxis * (1.0f - ((mScratchboard->GetSize().y - local.y) / cScrollAreaSize));
     if (local.x < cScrollAreaSize)
       mScrollDirection += Vec3::cXAxis * (1.0f - (local.x / cScrollAreaSize));
     else if (mScratchboard->GetSize().x - local.x < cScrollAreaSize)
-      mScrollDirection -=
-          Vec3::cXAxis *
-          (1.0f - ((mScratchboard->GetSize().x - local.x) / cScrollAreaSize));
+      mScrollDirection -= Vec3::cXAxis * (1.0f - ((mScratchboard->GetSize().x - local.x) / cScrollAreaSize));
 
     // Store the position for frame update
     mLastLocalMousePos = local;
@@ -157,8 +145,7 @@ public:
   Scratchboard* mScratchboard;
 
   //****************************************************************************
-  ScratchboardScroller(Mouse* mouse, Scratchboard* scratchboard) :
-      MouseManipulation(mouse, scratchboard)
+  ScratchboardScroller(Mouse* mouse, Scratchboard* scratchboard) : MouseManipulation(mouse, scratchboard)
   {
     mScratchboard = scratchboard;
   }
@@ -191,8 +178,7 @@ Scratchboard::Scratchboard(Composite* parent) : Composite(parent)
 
   // Create the line drawers
   mLightGridDrawer = new ScratchboardDrawer(this);
-  mBoldGridDrawer =
-      new ScratchboardDrawer(this, 2, ToByteColor(Vec4(0, 0, 0, 0.2f)));
+  mBoldGridDrawer = new ScratchboardDrawer(this, 2, ToByteColor(Vec4(0, 0, 0, 0.2f)));
 
   // Set the default grid size
   SetGridSize(Pixels(20));
@@ -230,13 +216,9 @@ void Scratchboard::Frame(Aabb& worldAabb, float panTime)
   MarkAsNeedsUpdate();
 }
 
-MouseManipulation* Scratchboard::StartObjectDrag(Mouse* mouse,
-                                                 Widget* object,
-                                                 bool snapping,
-                                                 float snapFidelity)
+MouseManipulation* Scratchboard::StartObjectDrag(Mouse* mouse, Widget* object, bool snapping, float snapFidelity)
 {
-  return new ScratchboardObjectMover(
-      mouse, this, object, snapping, snapFidelity);
+  return new ScratchboardObjectMover(mouse, this, object, snapping, snapFidelity);
 }
 
 bool Scratchboard::WithinView(Vec3Param graphPosition)
@@ -287,8 +269,7 @@ Composite* Scratchboard::GetClientArea()
   return mClientArea;
 }
 
-void Scratchboard::AttachChildWidget(Widget* widget,
-                                     AttachType::Enum attachType)
+void Scratchboard::AttachChildWidget(Widget* widget, AttachType::Enum attachType)
 {
   // Used to redirect attachments to the client area
   if (attachType == AttachType::Direct)
@@ -336,7 +317,7 @@ Aabb Scratchboard::GetObjectsAabb()
   if (mClientArea->mChildren.Empty())
     return Aabb(Vec3::cZero, Vec3::cZero);
   Array<Vec3> positions;
-  forRange(Widget & widget, mClientArea->GetChildren())
+  forRange (Widget& widget, mClientArea->GetChildren())
   {
     positions.PushBack(widget.GetTranslation());
   }

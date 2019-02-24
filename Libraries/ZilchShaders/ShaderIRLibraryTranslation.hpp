@@ -6,8 +6,7 @@ namespace Zero
 
 // Registered zilch function that doesn't have an actual implementation. No
 // function that uses this should be invoked.
-void UnTranslatedBoundFunction(Zilch::Call& call,
-                               Zilch::ExceptionReport& report);
+void UnTranslatedBoundFunction(Zilch::Call& call, Zilch::ExceptionReport& report);
 // Registered zilch function that doesn't have an implementation but shouldn't
 // throw an error. Currently needed for things like FixedArray that can get
 // their constructor called via pre-initialization when inspecting other
@@ -46,15 +45,12 @@ inline void ResolveSimpleFunction(ZilchSpirVFrontEnd* translator,
                                   Zilch::MemberAccessNode* memberAccessNode,
                                   ZilchSpirVFrontEndContext* context)
 {
-  ZilchShaderIRType* resultType =
-      translator->FindType(functionCallNode->ResultType, functionCallNode);
+  ZilchShaderIRType* resultType = translator->FindType(functionCallNode->ResultType, functionCallNode);
 
-  ZilchShaderIROp* result =
-      translator->BuildIROpNoBlockAdd(opType, resultType, context);
+  ZilchShaderIROp* result = translator->BuildIROpNoBlockAdd(opType, resultType, context);
   for (size_t i = 0; i < functionCallNode->Arguments.Size(); ++i)
   {
-    ZilchShaderIROp* arg = translator->WalkAndGetValueTypeResult(
-        functionCallNode->Arguments[i], context);
+    ZilchShaderIROp* arg = translator->WalkAndGetValueTypeResult(functionCallNode->Arguments[i], context);
     result->mArguments.PushBack(arg);
   }
   context->GetCurrentBlock()->AddOp(result);
@@ -127,13 +123,12 @@ void TranslateMatrixFullConstructor(ZilchSpirVFrontEnd* translator,
                                     Zilch::FunctionCallNode* fnCallNode,
                                     Zilch::StaticTypeNode* staticTypeNode,
                                     ZilchSpirVFrontEndContext* context);
-ZilchShaderIROp* RecursivelyTranslateCompositeSplatConstructor(
-    ZilchSpirVFrontEnd* translator,
-    Zilch::FunctionCallNode* fnCallNode,
-    Zilch::StaticTypeNode* staticTypeNode,
-    ZilchShaderIRType* type,
-    ZilchShaderIROp* splatValueOp,
-    ZilchSpirVFrontEndContext* context);
+ZilchShaderIROp* RecursivelyTranslateCompositeSplatConstructor(ZilchSpirVFrontEnd* translator,
+                                                               Zilch::FunctionCallNode* fnCallNode,
+                                                               Zilch::StaticTypeNode* staticTypeNode,
+                                                               ZilchShaderIRType* type,
+                                                               ZilchShaderIROp* splatValueOp,
+                                                               ZilchSpirVFrontEndContext* context);
 void TranslateCompositeSplatConstructor(ZilchSpirVFrontEnd* translator,
                                         Zilch::FunctionCallNode* fnCallNode,
                                         Zilch::StaticTypeNode* staticTypeNode,
@@ -191,11 +186,10 @@ void MatrixBackupFieldResolver(ZilchSpirVFrontEnd* translator,
 void TranslateQuaternionDefaultConstructor(ZilchSpirVFrontEnd* translator,
                                            Zilch::Type* zilchResultType,
                                            ZilchSpirVFrontEndContext* context);
-void TranslateQuaternionDefaultConstructor(
-    ZilchSpirVFrontEnd* translator,
-    Zilch::FunctionCallNode* fnCallNode,
-    Zilch::StaticTypeNode* staticTypeNode,
-    ZilchSpirVFrontEndContext* context);
+void TranslateQuaternionDefaultConstructor(ZilchSpirVFrontEnd* translator,
+                                           Zilch::FunctionCallNode* fnCallNode,
+                                           Zilch::StaticTypeNode* staticTypeNode,
+                                           ZilchSpirVFrontEndContext* context);
 void QuaternionBackupFieldResolver(ZilchSpirVFrontEnd* translator,
                                    Zilch::MemberAccessNode* memberAccessNode,
                                    ZilchSpirVFrontEndContext* context);
@@ -266,18 +260,10 @@ void ResolveStaticBinaryFunctionOp(ZilchSpirVFrontEnd* translator,
                                    Zilch::FunctionCallNode* functionCallNode,
                                    OpType opType,
                                    ZilchSpirVFrontEndContext* context);
-void RegisterArithmeticOps(ZilchSpirVFrontEnd* translator,
-                           ZilchShaderIRLibrary* shaderLibrary,
-                           TypeGroups& types);
-void RegisterConversionOps(ZilchSpirVFrontEnd* translator,
-                           ZilchShaderIRLibrary* shaderLibrary,
-                           TypeGroups& types);
-void RegisterLogicalOps(ZilchSpirVFrontEnd* translator,
-                        ZilchShaderIRLibrary* shaderLibrary,
-                        TypeGroups& types);
-void RegisterBitOps(ZilchSpirVFrontEnd* translator,
-                    ZilchShaderIRLibrary* shaderLibrary,
-                    TypeGroups& types);
+void RegisterArithmeticOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types);
+void RegisterConversionOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types);
+void RegisterLogicalOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types);
+void RegisterBitOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types);
 void RegisterGlsl450Extensions(ZilchShaderIRLibrary* shaderLibrary,
                                SpirVExtensionLibrary* extLibrary,
                                TypeGroups& types);
@@ -285,18 +271,11 @@ void AddGlslExtensionIntrinsicOps(Zilch::LibraryBuilder& builder,
                                   SpirVExtensionLibrary* extLibrary,
                                   Zilch::BoundType* type,
                                   TypeGroups& types);
-void RegisterShaderIntrinsics(ZilchSpirVFrontEnd* translator,
-                              ZilchShaderIRLibrary* shaderLibrary);
-void RegisterColorsOps(ZilchSpirVFrontEnd* translator,
-                       ZilchShaderIRLibrary* shaderLibrary,
-                       TypeGroups& types);
-void FixedArrayResolver(ZilchSpirVFrontEnd* translator,
-                        Zilch::BoundType* zilchFixedArrayType);
-void RuntimeArrayResolver(ZilchSpirVFrontEnd* translator,
-                          Zilch::BoundType* zilchRuntimeArrayType);
-void GeometryStreamInputResolver(ZilchSpirVFrontEnd* translator,
-                                 Zilch::BoundType* zilchFixedArrayType);
-void GeometryStreamOutputResolver(ZilchSpirVFrontEnd* translator,
-                                  Zilch::BoundType* zilchFixedArrayType);
+void RegisterShaderIntrinsics(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary);
+void RegisterColorsOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types);
+void FixedArrayResolver(ZilchSpirVFrontEnd* translator, Zilch::BoundType* zilchFixedArrayType);
+void RuntimeArrayResolver(ZilchSpirVFrontEnd* translator, Zilch::BoundType* zilchRuntimeArrayType);
+void GeometryStreamInputResolver(ZilchSpirVFrontEnd* translator, Zilch::BoundType* zilchFixedArrayType);
+void GeometryStreamOutputResolver(ZilchSpirVFrontEnd* translator, Zilch::BoundType* zilchFixedArrayType);
 
 } // namespace Zero

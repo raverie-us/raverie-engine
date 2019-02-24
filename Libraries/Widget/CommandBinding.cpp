@@ -13,13 +13,11 @@ MetaScriptTagAttribute::MetaScriptTagAttribute()
 {
 }
 
-void MetaScriptTagAttribute::PostProcess(Status& status,
-                                         ReflectionObject* owner)
+void MetaScriptTagAttribute::PostProcess(Status& status, ReflectionObject* owner)
 {
   if (mTags.Empty())
   {
-    String message =
-        "Tags are ' ' (space) delimited. Additionally: No tags are specified.";
+    String message = "Tags are ' ' (space) delimited. Additionally: No tags are specified.";
     status.SetFailed(message);
     return;
   }
@@ -35,11 +33,7 @@ void MetaScriptTagAttribute::PostProcess(Status& status,
 
     if (!IsValidFilename(tag, status))
     {
-      status.Message =
-          BuildString("Tags are ' ' (space) delimited. Additionally: '",
-                      tag,
-                      "' ",
-                      status.Message);
+      status.Message = BuildString("Tags are ' ' (space) delimited. Additionally: '", tag, "' ", status.Message);
       return;
     }
 
@@ -50,8 +44,7 @@ void MetaScriptTagAttribute::PostProcess(Status& status,
   // here.
   if (mTagSet.Empty())
   {
-    String message =
-        "Tags are ' ' (space) delimited. Additionally: No tags are specified.";
+    String message = "Tags are ' ' (space) delimited. Additionally: No tags are specified.";
     status.SetFailed(message);
     return;
   }
@@ -70,21 +63,15 @@ ZilchDefineType(MetaScriptShortcutAttribute, builder, type)
   ZilchBindField(mShift)->AddAttribute(PropertyAttributes::cOptional);
 }
 
-MetaScriptShortcutAttribute::MetaScriptShortcutAttribute() :
-    mCtrl(false),
-    mAlt(false),
-    mShift(false),
-    mKey("Unknown")
+MetaScriptShortcutAttribute::MetaScriptShortcutAttribute() : mCtrl(false), mAlt(false), mShift(false), mKey("Unknown")
 {
 }
 
-void MetaScriptShortcutAttribute::PostProcess(Status& status,
-                                              ReflectionObject* owner)
+void MetaScriptShortcutAttribute::PostProcess(Status& status, ReflectionObject* owner)
 {
   if (!owner->HasAttribute("Command"))
   {
-    String message =
-        "'Shortcut' attribute is dependent on the 'Command' attribute.";
+    String message = "'Shortcut' attribute is dependent on the 'Command' attribute.";
     status.SetFailed(message);
     return;
   }
@@ -177,10 +164,8 @@ void MetaScriptShortcutAttribute::PostProcess(Status& status,
       // currently being processed.
       if (foundCommand->Name != type->Name)
       {
-        String message = BuildString(foundCommand->Shortcut,
-                                     " is already used by the '",
-                                     foundCommand->Name,
-                                     "' command.");
+        String message =
+            BuildString(foundCommand->Shortcut, " is already used by the '", foundCommand->Name, "' command.");
         status.SetFailed(message);
         return;
       }

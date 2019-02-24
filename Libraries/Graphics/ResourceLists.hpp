@@ -25,8 +25,7 @@ public:
   GraphicsResourceList(const GraphicsResourceList& rhs);
   // Required by property interface, default doesn't exist because of
   // EventObject
-  GraphicsResourceList&
-  operator=(const GraphicsResourceList& graphicsResourceList);
+  GraphicsResourceList& operator=(const GraphicsResourceList& graphicsResourceList);
 
   // Interface required by ResourceListEditor
   /// Returns the IdName of all resources in the list.
@@ -52,9 +51,7 @@ public:
     if (mExpanded)
       *mExpanded = expanded;
   }
-  typedef void (*ListItemCallback)(GraphicsResourceList* resourceList,
-                                   String entryIdName,
-                                   Status& status);
+  typedef void (*ListItemCallback)(GraphicsResourceList* resourceList, String entryIdName, Status& status);
   ListItemCallback mListItemCallback;
 
   Array<String> mResourceIdNames;
@@ -124,9 +121,7 @@ public:
 };
 
 template <typename SelfResource, typename OtherResource>
-void ResourceListResourceAdded(SelfResource* selfResource,
-                               OtherResource* otherResource,
-                               String* listName = nullptr)
+void ResourceListResourceAdded(SelfResource* selfResource, OtherResource* otherResource, String* listName = nullptr)
 {
   // If the found resource has a matching name for an old entry then the id part
   // of this entry will be out of date Reassign the current resource's idName so
@@ -135,18 +130,15 @@ void ResourceListResourceAdded(SelfResource* selfResource,
     *listName = otherResource->ResourceIdName;
 
   // Function potentially called more than once if entry already exists
-  ErrorIf(otherResource->mReferencedByList.mResourceIdNames.Contains(
-              selfResource->ResourceIdName),
+  ErrorIf(otherResource->mReferencedByList.mResourceIdNames.Contains(selfResource->ResourceIdName),
           "Resource already in list.");
   // Add to the runtime list of the other resource
-  otherResource->mReferencedByList.mResourceIdNames.PushBack(
-      selfResource->ResourceIdName);
+  otherResource->mReferencedByList.mResourceIdNames.PushBack(selfResource->ResourceIdName);
 
   bool activeHandle = selfResource->mActiveResources.Contains(otherResource);
   // There is an error in our management of cross references if these ever don't
   // match
-  ErrorIf(activeHandle !=
-              otherResource->mActiveResources.Contains(selfResource),
+  ErrorIf(activeHandle != otherResource->mActiveResources.Contains(selfResource),
           "Material/RenderGroup cross reference mismatch.");
 
   // Do not add another entry if resources are already referencing each other
@@ -159,23 +151,18 @@ void ResourceListResourceAdded(SelfResource* selfResource,
 }
 
 template <typename SelfResource, typename OtherResource>
-void ResourceListResourceRemoved(SelfResource* selfResource,
-                                 OtherResource* otherResource)
+void ResourceListResourceRemoved(SelfResource* selfResource, OtherResource* otherResource)
 {
   // If other resource was in the serialized list then entry from runtime list
   // needs to be removed
-  if (selfResource->mSerializedList.mResourceIdNames.Contains(
-          otherResource->ResourceIdName))
+  if (selfResource->mSerializedList.mResourceIdNames.Contains(otherResource->ResourceIdName))
   {
-    ErrorIf(!otherResource->mReferencedByList.mResourceIdNames.Contains(
-                selfResource->ResourceIdName),
+    ErrorIf(!otherResource->mReferencedByList.mResourceIdNames.Contains(selfResource->ResourceIdName),
             "Resource not in list.");
-    otherResource->mReferencedByList.mResourceIdNames.EraseValue(
-        selfResource->ResourceIdName);
+    otherResource->mReferencedByList.mResourceIdNames.EraseValue(selfResource->ResourceIdName);
   }
 
-  ErrorIf(!otherResource->mActiveResources.Contains(selfResource),
-          "Resource not in list.");
+  ErrorIf(!otherResource->mActiveResources.Contains(selfResource), "Resource not in list.");
 
   // Remove active entry from other resource but not self resource
   // This method is expected to be called while iterating over self resource's
@@ -184,21 +171,17 @@ void ResourceListResourceRemoved(SelfResource* selfResource,
 }
 
 template <typename SelfResource, typename OtherResource>
-void ResourceListEntryAdded(SelfResource* selfResource,
-                            OtherResource* otherResource)
+void ResourceListEntryAdded(SelfResource* selfResource, OtherResource* otherResource)
 {
-  ErrorIf(otherResource->mReferencedByList.mResourceIdNames.Contains(
-              selfResource->ResourceIdName),
+  ErrorIf(otherResource->mReferencedByList.mResourceIdNames.Contains(selfResource->ResourceIdName),
           "Resource already in list.");
   // Add to the runtime list of the other resource
-  otherResource->mReferencedByList.mResourceIdNames.PushBack(
-      selfResource->ResourceIdName);
+  otherResource->mReferencedByList.mResourceIdNames.PushBack(selfResource->ResourceIdName);
 
   bool activeHandle = selfResource->mActiveResources.Contains(otherResource);
   // There is an error in our management of cross references if these ever don't
   // match
-  ErrorIf(activeHandle !=
-              otherResource->mActiveResources.Contains(selfResource),
+  ErrorIf(activeHandle != otherResource->mActiveResources.Contains(selfResource),
           "Material/RenderGroup cross reference mismatch.");
 
   // Do not add another entry if resources are already referencing each other
@@ -211,15 +194,12 @@ void ResourceListEntryAdded(SelfResource* selfResource,
 }
 
 template <typename SelfResource, typename OtherResource>
-void ResourceListEntryRemoved(SelfResource* selfResource,
-                              OtherResource* otherResource)
+void ResourceListEntryRemoved(SelfResource* selfResource, OtherResource* otherResource)
 {
-  ErrorIf(!otherResource->mReferencedByList.mResourceIdNames.Contains(
-              selfResource->ResourceIdName),
+  ErrorIf(!otherResource->mReferencedByList.mResourceIdNames.Contains(selfResource->ResourceIdName),
           "Resource not in list.");
   // Remove from the runtime list of the other resource
-  otherResource->mReferencedByList.mResourceIdNames.EraseValue(
-      selfResource->ResourceIdName);
+  otherResource->mReferencedByList.mResourceIdNames.EraseValue(selfResource->ResourceIdName);
 
   // There is an error in our management of cross references if these ever don't
   // match
@@ -228,8 +208,7 @@ void ResourceListEntryRemoved(SelfResource* selfResource,
           "Material/RenderGroup cross reference mismatch.");
 
   // Do not remove entries if still in other resource's list
-  if (!otherResource->mSerializedList.mResourceIdNames.Contains(
-          selfResource->ResourceIdName))
+  if (!otherResource->mSerializedList.mResourceIdNames.Contains(selfResource->ResourceIdName))
   {
     otherResource->mActiveResources.EraseValue(selfResource);
     selfResource->mActiveResources.EraseValue(otherResource);
@@ -239,8 +218,7 @@ void ResourceListEntryRemoved(SelfResource* selfResource,
 template <typename ResourceManagerType>
 void ResetIdName(String& idName)
 {
-  typename ResourceManagerType::ResourceType* resource =
-      ResourceManagerType::FindOrNull(idName);
+  typename ResourceManagerType::ResourceType* resource = ResourceManagerType::FindOrNull(idName);
   // Serialized list can have entries for removed resources.
   if (resource != nullptr)
     idName = resource->ResourceIdName;
@@ -249,19 +227,17 @@ void ResetIdName(String& idName)
 template <typename SelfResource, typename OtherManager>
 void ResourceListResetIdNames(Array<Resource*>& resources)
 {
-  forRange(Resource * resource, resources.All())
+  forRange (Resource* resource, resources.All())
   {
     SelfResource* selfResource = (SelfResource*)resource;
 
-    forRange(String & idName,
-             selfResource->mReferencedByList.mResourceIdNames.All())
-        ResetIdName<OtherManager>(idName);
+    forRange (String& idName, selfResource->mReferencedByList.mResourceIdNames.All())
+      ResetIdName<OtherManager>(idName);
 
     if (selfResource->IsWritable())
     {
-      forRange(String & idName,
-               selfResource->mSerializedList.mResourceIdNames.All())
-          ResetIdName<OtherManager>(idName);
+      forRange (String& idName, selfResource->mSerializedList.mResourceIdNames.All())
+        ResetIdName<OtherManager>(idName);
     }
   }
 }

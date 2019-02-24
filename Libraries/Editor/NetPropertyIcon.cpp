@@ -13,9 +13,7 @@ Tweakable(Vec4, EnabledNetPropertyIcon, Vec4(1, 1, 1, 1), cLocation);
 
 //                               NetPropertyIcon //
 
-NetPropertyIcon::NetPropertyIcon(Composite* parent,
-                                 HandleParam object,
-                                 Property* metaProperty) :
+NetPropertyIcon::NetPropertyIcon(Composite* parent, HandleParam object, Property* metaProperty) :
     Composite(parent),
     mMouseOver(false),
     mIcon(nullptr),
@@ -121,9 +119,8 @@ void NetPropertyIcon::OnMouseEnter(Event* event)
 
   // Has net property attribute?
   if (mProperty->HasAttribute(PropertyAttributes::cNetProperty))
-    toolTip->SetText(
-        "This property will always be replicated over the network. Specified "
-        "in script via the [NetProperty] attribute.");
+    toolTip->SetText("This property will always be replicated over the network. Specified "
+                     "in script via the [NetProperty] attribute.");
   else
   {
     // Property is enabled for network replication?
@@ -132,8 +129,7 @@ void NetPropertyIcon::OnMouseEnter(Event* event)
                        "Right click to choose a channel.");
     // Property is not enabled for network replication?
     else
-      toolTip->SetText(
-          "Left click to replicate this property over the network.");
+      toolTip->SetText("Left click to replicate this property over the network.");
 
     // Is mousing over
     mMouseOver = true;
@@ -144,10 +140,7 @@ void NetPropertyIcon::OnMouseEnter(Event* event)
   ToolTipPlacement placement;
   placement.SetScreenRect(GetParent()->GetParent()->GetScreenRect());
   placement.mHotSpot = mIcon->GetScreenRect().Center();
-  placement.SetPriority(IndicatorSide::Left,
-                        IndicatorSide::Right,
-                        IndicatorSide::Bottom,
-                        IndicatorSide::Top);
+  placement.SetPriority(IndicatorSide::Left, IndicatorSide::Right, IndicatorSide::Bottom, IndicatorSide::Top);
   toolTip->SetArrowTipTranslation(placement);
   mTooltip = toolTip;
 
@@ -295,8 +288,7 @@ void NetPropertyIcon::OnSearchCompleted(SearchViewEvent* event)
   OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
 
   // (Operation) Remove net property info
-  SetNetPropertyInfoChannel(
-      opQueue, netObject, componentType, propertyName, netChannelConfig);
+  SetNetPropertyInfoChannel(opQueue, netObject, componentType, propertyName, netChannelConfig);
 }
 
 //
@@ -364,10 +356,7 @@ bool ShouldDisplayNetPropertyIcon(HandleParam selectedObject)
   return false;
 }
 
-Widget* CreateNetPropertyIcon(Composite* parent,
-                              HandleParam object,
-                              Property* metaProperty,
-                              void* clientData)
+Widget* CreateNetPropertyIcon(Composite* parent, HandleParam object, Property* metaProperty, void* clientData)
 {
   // Is a component property?
   if (metaProperty && object.Get<Component*>())

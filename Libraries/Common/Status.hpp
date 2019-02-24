@@ -14,9 +14,7 @@ class StatusContext
 public:
   static void ZilchDoNotBind();
 
-  typedef void (*StatusFn)(StringParam message,
-                           const T& context,
-                           void* userData);
+  typedef void (*StatusFn)(StringParam message, const T& context, void* userData);
 
   StatusContext() :
       State(StatusState::Success),
@@ -105,9 +103,7 @@ public:
     return Succeeded();
   }
 
-  static void AssertCallback(StringParam message,
-                             const T& context,
-                             void* userData)
+  static void AssertCallback(StringParam message, const T& context, void* userData)
   {
     Error("%s", message.c_str());
   }
@@ -139,7 +135,6 @@ public:
 
 typedef StatusContext<u32> Status;
 
-#define StatusReturnIfFailed(Status, ...)                                      \
-  ReturnIf((Status).Failed(), __VA_ARGS__, "%s", (Status).Message.c_str())
+#define StatusReturnIfFailed(Status, ...) ReturnIf((Status).Failed(), __VA_ARGS__, "%s", (Status).Message.c_str())
 
 } // namespace Zero

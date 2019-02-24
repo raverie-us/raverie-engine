@@ -33,7 +33,7 @@ StringPool::~StringPool()
   // It is possible that the StringPool can be freed before the last few Strings
   // This only occurs post main (due to pre-main allocated strings)
   // We handle this by setting a special flag on the StringNode
-  forRange(StringNode * node, mPool.All())
+  forRange (StringNode* node, mPool.All())
   {
     node->HashCode = StringNode::StringPoolFreeHashCode;
   }
@@ -208,8 +208,7 @@ StringRange String::SubString(StringIterator begin, StringIterator end) const
   return All().SubString(begin, end);
 }
 
-StringRange String::SubStringFromByteIndices(size_t startIndex,
-                                             size_t endIndex) const
+StringRange String::SubStringFromByteIndices(size_t startIndex, size_t endIndex) const
 {
   return All().SubStringFromByteIndices(startIndex, endIndex);
 }
@@ -286,21 +285,16 @@ String* String::GetPreAllocatedCharacterStrings()
 // safety
 #define S(value) String(value, true)
   static String ascii[] = {
-      S(0),   S(1),   S(2),   S(3),   S(4),   S(5),   S(6),   S(7),   S(8),
-      S(9),   S(10),  S(11),  S(12),  S(13),  S(14),  S(15),  S(16),  S(17),
-      S(18),  S(19),  S(20),  S(21),  S(22),  S(23),  S(24),  S(25),  S(26),
-      S(27),  S(28),  S(29),  S(30),  S(31),  S(32),  S(33),  S(34),  S(35),
-      S(36),  S(37),  S(38),  S(39),  S(40),  S(41),  S(42),  S(43),  S(44),
-      S(45),  S(46),  S(47),  S(48),  S(49),  S(50),  S(51),  S(52),  S(53),
-      S(54),  S(55),  S(56),  S(57),  S(58),  S(59),  S(60),  S(61),  S(62),
-      S(63),  S(64),  S(65),  S(66),  S(67),  S(68),  S(69),  S(70),  S(71),
-      S(72),  S(73),  S(74),  S(75),  S(76),  S(77),  S(78),  S(79),  S(80),
-      S(81),  S(82),  S(83),  S(84),  S(85),  S(86),  S(87),  S(88),  S(89),
-      S(90),  S(91),  S(92),  S(93),  S(94),  S(95),  S(96),  S(97),  S(98),
-      S(99),  S(100), S(101), S(102), S(103), S(104), S(105), S(106), S(107),
-      S(108), S(109), S(110), S(111), S(112), S(113), S(114), S(115), S(116),
-      S(117), S(118), S(119), S(120), S(121), S(122), S(123), S(124), S(125),
-      S(126), S(127)};
+      S(0),   S(1),   S(2),   S(3),   S(4),   S(5),   S(6),   S(7),   S(8),   S(9),   S(10),  S(11),  S(12),
+      S(13),  S(14),  S(15),  S(16),  S(17),  S(18),  S(19),  S(20),  S(21),  S(22),  S(23),  S(24),  S(25),
+      S(26),  S(27),  S(28),  S(29),  S(30),  S(31),  S(32),  S(33),  S(34),  S(35),  S(36),  S(37),  S(38),
+      S(39),  S(40),  S(41),  S(42),  S(43),  S(44),  S(45),  S(46),  S(47),  S(48),  S(49),  S(50),  S(51),
+      S(52),  S(53),  S(54),  S(55),  S(56),  S(57),  S(58),  S(59),  S(60),  S(61),  S(62),  S(63),  S(64),
+      S(65),  S(66),  S(67),  S(68),  S(69),  S(70),  S(71),  S(72),  S(73),  S(74),  S(75),  S(76),  S(77),
+      S(78),  S(79),  S(80),  S(81),  S(82),  S(83),  S(84),  S(85),  S(86),  S(87),  S(88),  S(89),  S(90),
+      S(91),  S(92),  S(93),  S(94),  S(95),  S(96),  S(97),  S(98),  S(99),  S(100), S(101), S(102), S(103),
+      S(104), S(105), S(106), S(107), S(108), S(109), S(110), S(111), S(112), S(113), S(114), S(115), S(116),
+      S(117), S(118), S(119), S(120), S(121), S(122), S(123), S(124), S(125), S(126), S(127)};
 #undef S
   return ascii;
 }
@@ -335,8 +329,7 @@ public:
     // Note that we MUST use memcmp here and not strcmp because the temporary
     // string could not be null terminated (we could be constructing a string
     // from a range)
-    return temp.mSize == node->Size && temp.mHash == node->HashCode &&
-           memcmp(temp.mData, node->Data, temp.mSize) == 0;
+    return temp.mSize == node->Size && temp.mHash == node->HashCode && memcmp(temp.mData, node->Data, temp.mSize) == 0;
   }
 };
 
@@ -392,9 +385,7 @@ void String::Assign(StringNode* node)
   addRef();
 }
 
-void String::CreateAndAssignNode(const_pointer data,
-                                 size_type size,
-                                 size_t hash)
+void String::CreateAndAssignNode(const_pointer data, size_type size, size_t hash)
 {
   StringNode* node = AllocateNode(size);
   memcpy(node->Data, data, size);
@@ -432,7 +423,7 @@ void String::ComputeStringStats(StringStats& stats)
   stats.mTotalSize = 0;
   stats.mTotalCount = pool.mPool.Size();
 
-  forRange(StringNode * node, pool.mPool.All())
+  forRange (StringNode* node, pool.mPool.All())
   {
     stats.mTotalSize += node->Size;
   }
@@ -496,8 +487,7 @@ void StringNode::release()
 
   if (AtomicPreDecrement(&RefCount) == 0)
   {
-    ErrorIf(pool.mPool.FindValue(this, nullptr) == nullptr,
-            "Did not find node in pool");
+    ErrorIf(pool.mPool.FindValue(this, nullptr) == nullptr, "Did not find node in pool");
     pool.mPool.Erase(this);
     zDeallocate(this);
   }
@@ -512,8 +502,7 @@ bool StringNode::isEqual(StringNode* l, StringNode* r)
 {
   if (!(l == r))
   {
-    return l->Size == r->Size && l->HashCode == r->HashCode &&
-           memcmp(l->Data, r->Data, l->Size) == 0;
+    return l->Size == r->Size && l->HashCode == r->HashCode && memcmp(l->Data, r->Data, l->Size) == 0;
   }
   else
   {
@@ -539,8 +528,7 @@ StringNode* String::AllocateNode(size_type size)
 
 StringNode* String::AllocateNode(size_type memorySize, size_t subStringSize)
 {
-  ErrorIf(subStringSize > memorySize,
-          "Memory must be greater or equal to the sub-string");
+  ErrorIf(subStringSize > memorySize, "Memory must be greater or equal to the sub-string");
   const size_type nodeSize = sizeof(StringNode)    // size of the string node
                              - sizeof(value_type); // remove the extra
 
@@ -584,10 +572,7 @@ StringNode* String::GetNode() const
 }
 // Should be fine left as bytes despite UTF8
 // only used by Recursive Descent Parser working with bytes.
-String String::ReplaceSub(StringRange source,
-                          StringRange text,
-                          size_type start,
-                          size_type end)
+String String::ReplaceSub(StringRange source, StringRange text, size_type start, size_type end)
 {
   size_type sizeToRemove = end - start;
   size_type sizeToAdd = text.SizeInBytes();
@@ -618,8 +603,7 @@ String String::ReplaceSub(StringRange source,
   size_type sizeOfEndText = source.SizeInBytes() - end;
   if (sizeOfEndText)
   {
-    ZeroCStringCopy(
-        bufferPos, bufferEnd - bufferPos, source.Data() + end, sizeOfEndText);
+    ZeroCStringCopy(bufferPos, bufferEnd - bufferPos, source.Data() + end, sizeOfEndText);
     bufferPos += sizeOfEndText;
   }
 
@@ -648,14 +632,12 @@ StringRange String::FindLastOf(const StringRange& value) const
   return All().FindLastOf(value);
 }
 
-StringRange String::FindRangeExclusive(StringRangeParam startRange,
-                                       StringRangeParam endRange)
+StringRange String::FindRangeExclusive(StringRangeParam startRange, StringRangeParam endRange)
 {
   return All().FindRangeExclusive(startRange, endRange);
 }
 
-StringRange String::FindRangeInclusive(StringRangeParam startRange,
-                                       StringRangeParam endRange)
+StringRange String::FindRangeInclusive(StringRangeParam startRange, StringRangeParam endRange)
 {
   return All().FindRangeInclusive(startRange, endRange);
 }
@@ -680,18 +662,14 @@ bool String::IsAllWhitespace() const
   return All().IsAllWhitespace();
 }
 
-String String::Join(StringRangeParam separator,
-                    StringRangeParam string1,
-                    StringRangeParam string2)
+String String::Join(StringRangeParam separator, StringRangeParam string1, StringRangeParam string2)
 {
   StringRange values[2] = {string1, string2};
   return JoinInternal(separator, values, 2);
 }
 
-String String::Join(StringRangeParam separator,
-                    StringRangeParam string1,
-                    StringRangeParam string2,
-                    StringRangeParam string3)
+String
+String::Join(StringRangeParam separator, StringRangeParam string1, StringRangeParam string2, StringRangeParam string3)
 {
   StringRange values[3] = {string1, string2, string3};
   return JoinInternal(separator, values, 3);
@@ -707,9 +685,7 @@ String String::Join(StringRangeParam separator,
   return JoinInternal(separator, values, 4);
 }
 
-String String::Join(StringRangeParam separator,
-                    const String* strings,
-                    size_t stringCount)
+String String::Join(StringRangeParam separator, const String* strings, size_t stringCount)
 {
   Array<StringRange> values;
   values.Resize(stringCount);
@@ -722,9 +698,7 @@ String String::Join(StringRangeParam separator,
   return JoinInternal(separator, values.Begin(), stringCount);
 }
 
-String String::JoinInternal(StringRangeParam separator,
-                            const StringRange* values,
-                            size_t count)
+String String::JoinInternal(StringRangeParam separator, const StringRange* values, size_t count)
 {
   if (count == 0)
     return String();
@@ -760,8 +734,7 @@ String String::JoinInternal(StringRangeParam separator,
   return String(data, totalSize);
 }
 
-String String::Replace(StringRangeParam oldValue,
-                       StringRangeParam newValue) const
+String String::Replace(StringRangeParam oldValue, StringRangeParam newValue) const
 {
   return All().Replace(oldValue, newValue);
 }
@@ -776,9 +749,7 @@ bool String::StartsWith(StringRange startsWith, RuneComparer compare) const
   return StartsWith(All(), startsWith, compare);
 }
 
-bool String::StartsWith(StringRange source,
-                        StringRange startsWith,
-                        RuneComparer compare)
+bool String::StartsWith(StringRange source, StringRange startsWith, RuneComparer compare)
 {
   // If the string we're matching is larger than our string, then we don't match
   if (startsWith.SizeInBytes() > source.SizeInBytes())

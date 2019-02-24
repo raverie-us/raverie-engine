@@ -121,8 +121,7 @@ void IntVector4::operator*=(IntVec4Param rhs)
 
 void IntVector4::operator/=(IntVec4Param rhs)
 {
-  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0 || rhs.w == 0,
-          "Vector2 - Division by zero.");
+  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0 || rhs.w == 0, "Vector2 - Division by zero.");
   x /= rhs.x;
   y /= rhs.y;
   z /= rhs.z;
@@ -191,8 +190,7 @@ void IntVector4::ZeroOut(void)
 
 IntVector4 IntVector4::operator/(IntVec4Param rhs) const
 {
-  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0 || rhs.w == 0,
-          "IntVector4 - Division by zero.");
+  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0 || rhs.w == 0, "IntVector4 - Division by zero.");
   return IntVector4(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
 }
 
@@ -203,8 +201,7 @@ IntVector4 IntVector4::operator*(IntVec4Param rhs) const
 
 IntVector4 IntVector4::operator%(IntVec4Param rhs) const
 {
-  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0 || rhs.w == 0,
-          "IntVector4 - Mod by zero.");
+  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0 || rhs.w == 0, "IntVector4 - Mod by zero.");
   return IntVector4(x % rhs.x, y % rhs.y, z % rhs.z, w % rhs.w);
 }
 
@@ -215,24 +212,17 @@ IntVector4 operator*(int lhs, IntVec4Param rhs)
 
 IntVector4 Abs(IntVec4Param vec)
 {
-  return IntVector4(
-      Math::Abs(vec.x), Math::Abs(vec.y), Math::Abs(vec.z), Math::Abs(vec.w));
+  return IntVector4(Math::Abs(vec.x), Math::Abs(vec.y), Math::Abs(vec.z), Math::Abs(vec.w));
 }
 
 IntVector4 Min(IntVec4Param lhs, IntVec4Param rhs)
 {
-  return IntVector4(Math::Min(lhs.x, rhs.x),
-                    Math::Min(lhs.y, rhs.y),
-                    Math::Min(lhs.z, rhs.z),
-                    Math::Min(lhs.w, rhs.w));
+  return IntVector4(Math::Min(lhs.x, rhs.x), Math::Min(lhs.y, rhs.y), Math::Min(lhs.z, rhs.z), Math::Min(lhs.w, rhs.w));
 }
 
 IntVector4 Max(IntVec4Param lhs, IntVec4Param rhs)
 {
-  return IntVector4(Math::Max(lhs.x, rhs.x),
-                    Math::Max(lhs.y, rhs.y),
-                    Math::Max(lhs.z, rhs.z),
-                    Math::Max(lhs.w, rhs.w));
+  return IntVector4(Math::Max(lhs.x, rhs.x), Math::Max(lhs.y, rhs.y), Math::Max(lhs.z, rhs.z), Math::Max(lhs.w, rhs.w));
 }
 
 int Dot(IntVec4Param lhs, IntVec4Param rhs)

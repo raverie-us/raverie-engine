@@ -98,8 +98,7 @@ ZeroShared ProcessInfo FindProcess(StringParam processName);
 /// services. Allows an installer to restart this application when running. The
 /// application name is auto-added to the arguments. See the specific platform
 /// for flags.
-ZeroShared void RegisterApplicationRestartCommand(StringParam commandLineArgs,
-                                                  uint flags = 0);
+ZeroShared void RegisterApplicationRestartCommand(StringParam commandLineArgs, uint flags = 0);
 
 class SimpleProcess : public Process
 {
@@ -108,10 +107,8 @@ public:
 
   // Begin execution of another process. All output from this process
   // will be passed to the provided stream. This call will return immediately
-  void ExecProcess(StringParam debugName,
-                   StringParam commandLine,
-                   TextStream* stream = nullptr,
-                   bool showWindow = false);
+  void
+  ExecProcess(StringParam debugName, StringParam commandLine, TextStream* stream = nullptr, bool showWindow = false);
 
   // Wait for the process to close and read the rest of the output (returns the
   // exit code) Do not call this after closing a process

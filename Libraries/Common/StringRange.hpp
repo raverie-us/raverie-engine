@@ -63,10 +63,8 @@ public:
   bool Contains(StringRangeParam value) const;
   bool StartsWith(StringRangeParam value) const;
   bool EndsWith(StringRangeParam value) const;
-  StringRange FindRangeExclusive(StringRangeParam startRange,
-                                 StringRangeParam endRange) const;
-  StringRange FindRangeInclusive(StringRangeParam startRange,
-                                 StringRangeParam endRange) const;
+  StringRange FindRangeExclusive(StringRangeParam startRange, StringRangeParam endRange) const;
+  StringRange FindRangeInclusive(StringRangeParam startRange, StringRangeParam endRange) const;
   String Replace(StringRangeParam oldValue, StringRangeParam newValue) const;
   StringSplitRange Split(StringRangeParam separator) const;
   StringRange Trim() const;
@@ -78,8 +76,7 @@ public:
   bool IsAllUpper() const;
   bool IsAllWhitespace() const;
   StringRange SubString(StringIterator begin, StringIterator end) const;
-  StringRange SubStringFromByteIndices(size_t startIndex,
-                                       size_t endIndex) const;
+  StringRange SubStringFromByteIndices(size_t startIndex, size_t endIndex) const;
 
   cstr Data() const;
   bool Empty() const;
@@ -231,14 +228,12 @@ inline bool operator<(const String& left, cstr right)
 // String vs other StringRange
 inline bool operator==(const String& left, const StringRange& right)
 {
-  return left.SizeInBytes() == right.SizeInBytes() &&
-         strncmp(left.Data(), right.Data(), right.SizeInBytes()) == 0;
+  return left.SizeInBytes() == right.SizeInBytes() && strncmp(left.Data(), right.Data(), right.SizeInBytes()) == 0;
 }
 
 inline bool operator==(const StringRange& left, const String& right)
 {
-  return left.SizeInBytes() == right.SizeInBytes() &&
-         strncmp(left.Data(), right.Data(), left.SizeInBytes()) == 0;
+  return left.SizeInBytes() == right.SizeInBytes() && strncmp(left.Data(), right.Data(), left.SizeInBytes()) == 0;
 }
 
 inline bool operator<(const String& left, const StringRange& right)
@@ -254,14 +249,12 @@ inline bool operator<(const StringRange& left, const String& right)
 // range vs cstr
 inline bool operator==(const StringRange& left, cstr right)
 {
-  return left.SizeInBytes() == strlen(right) &&
-         strncmp(left.Data(), right, left.SizeInBytes()) == 0;
+  return left.SizeInBytes() == strlen(right) && strncmp(left.Data(), right, left.SizeInBytes()) == 0;
 }
 
 inline bool operator==(cstr left, const StringRange& right)
 {
-  return strlen(left) == right.SizeInBytes() &&
-         strncmp(left, right.Data(), right.SizeInBytes()) == 0;
+  return strlen(left) == right.SizeInBytes() && strncmp(left, right.Data(), right.SizeInBytes()) == 0;
 }
 
 inline bool operator!=(const StringRange& left, cstr right)
@@ -329,9 +322,7 @@ struct ZeroShared MoveWithoutDestructionOperator<String>
 String WordWrap(StringRange input, size_t maxLineLength);
 
 template <typename RangeType, typename PolicyType>
-String String::JoinRange(StringRangeParam separator,
-                         RangeType range,
-                         PolicyType policy)
+String String::JoinRange(StringRangeParam separator, RangeType range, PolicyType policy)
 {
   // First we need to know how big the range is, so copy the range and iterate
   // over to count

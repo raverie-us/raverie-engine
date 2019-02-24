@@ -75,8 +75,7 @@ String ProjectSettings::GetEditorContentFolder()
 void ProjectSettings::Save()
 {
   if (ProjectFile.Empty())
-    ProjectFile =
-        FilePath::CombineWithExtension(ProjectFolder, ProjectName, ".zeroproj");
+    ProjectFile = FilePath::CombineWithExtension(ProjectFolder, ProjectName, ".zeroproj");
 
   SaveToDataFile(*mOwner, ProjectFile);
 }
@@ -260,8 +259,8 @@ void ProjectDescription::Serialize(Serializer& stream)
   {
     // Build the comma delimited list of tags with their types
     StringBuilder builder;
-    forRange(StringParam tag, mProjectTags.All())
-        builder.Append(BuildString(tag, ":Project,"));
+    forRange (StringParam tag, mProjectTags.All())
+      builder.Append(BuildString(tag, ":Project,"));
 
     String Tags = builder.ToString();
     SerializeNameDefault(Tags, String());
@@ -302,11 +301,13 @@ String ProjectDescription::GetTagsString(StringParam splitChar)
 
   // Merge the tags into one list (and remove duplicates)
   TagList tags;
-  forRange(StringParam tag, mProjectTags.All()) tags.Insert(tag);
+  forRange (StringParam tag, mProjectTags.All())
+    tags.Insert(tag);
 
   // The tags are now in hashset order (random) so sort them alphabetically
   Array<String> sortedTags;
-  forRange(StringParam tag, tags.All()) sortedTags.PushBack(tag);
+  forRange (StringParam tag, tags.All())
+    sortedTags.PushBack(tag);
   Sort(sortedTags.All());
 
   // Now we can finally join all of the tags into one visual string
@@ -322,12 +323,10 @@ ZilchDefineType(WindowLaunchSettings, builder, type)
 
   // Disabled usage of launch options popup for now
   // ZilchBindFieldProperty(mUseLaunchOptionsPopup)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(
-      mLaunchFullscreen); //->ZeroFilterEquality(mUseLaunchOptionsPopup,
-                          // bool, false);
-  ZilchBindFieldProperty(
-      mWindowedResolution); //->ZeroFilterEquality(mUseLaunchOptionsPopup,
-                            // bool, false);
+  ZilchBindFieldProperty(mLaunchFullscreen);   //->ZeroFilterEquality(mUseLaunchOptionsPopup,
+                                               // bool, false);
+  ZilchBindFieldProperty(mWindowedResolution); //->ZeroFilterEquality(mUseLaunchOptionsPopup,
+                                               // bool, false);
 }
 
 void WindowLaunchSettings::Serialize(Serializer& stream)

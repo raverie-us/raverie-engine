@@ -36,8 +36,7 @@ void RunMainLoop(MainLoopFn callback, void* userData)
 {
   StopMainLoop();
 
-  ErrorIf(gIsMainLoopSet,
-          "We should not have a main loop set since we called 'StopMainLoop'");
+  ErrorIf(gIsMainLoopSet, "We should not have a main loop set since we called 'StopMainLoop'");
 
   // This *MUST* come before because we are haulting execution here.
   gIsMainLoopSet = true;

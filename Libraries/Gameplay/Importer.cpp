@@ -40,10 +40,8 @@ ImporterResult::Type Importer::CheckForImport()
 
   String applicationPath = GetApplication();
   String applicationName = FilePath::GetFileName(applicationPath);
-  String destinationApplication =
-      FilePath::Combine(mOutputDirectory, ZeroEngineExecutable);
-  if (applicationName != ZeroEngineExecutable &&
-      !FileExists(destinationApplication))
+  String destinationApplication = FilePath::Combine(mOutputDirectory, ZeroEngineExecutable);
+  if (applicationName != ZeroEngineExecutable && !FileExists(destinationApplication))
   {
     ZPrint("Copying exe to output directory\n");
 
@@ -62,8 +60,7 @@ ImporterResult::Type Importer::CheckForImport()
     // Extract critical blocking resources (loading, etc)
     Archive engineArchive(ArchiveMode::Decompressing);
     engineArchive.ReadBuffer(ArchiveReadFlags::All, buffer);
-    engineArchive.ExportToDirectory(ArchiveExportMode::OverwriteIfNewer,
-                                    mOutputDirectory);
+    engineArchive.ExportToDirectory(ArchiveExportMode::OverwriteIfNewer, mOutputDirectory);
 
     // Extract the project package
     byte* data = buffer.GetCurrent();
@@ -87,13 +84,10 @@ OsInt Importer::DoImport(ByteBufferBlock& buffer)
   Archive projectArchive(ArchiveMode::Decompressing);
 
   // Read all the entries
-  projectArchive.ReadBuffer(ArchiveReadFlags::Enum(ArchiveReadFlags::Entries |
-                                                   ArchiveReadFlags::Data),
-                            buffer);
+  projectArchive.ReadBuffer(ArchiveReadFlags::Enum(ArchiveReadFlags::Entries | ArchiveReadFlags::Data), buffer);
   // Only decompress and overwrite if the files are newer
   // this allows packaged exes to 'install' by running once
-  projectArchive.ExportToDirectory(ArchiveExportMode::OverwriteIfNewer,
-                                   mOutputDirectory);
+  projectArchive.ExportToDirectory(ArchiveExportMode::OverwriteIfNewer, mOutputDirectory);
   return 0;
 }
 

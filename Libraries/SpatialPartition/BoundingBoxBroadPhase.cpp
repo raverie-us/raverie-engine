@@ -13,8 +13,7 @@ void BoundingBoxBroadPhase::Serialize(Serializer& stream)
   mBoundingBox.Serialize(stream);
 }
 
-void BoundingBoxBroadPhase::CreateProxy(BroadPhaseProxy& proxy,
-                                        BroadPhaseData& data)
+void BoundingBoxBroadPhase::CreateProxy(BroadPhaseProxy& proxy, BroadPhaseData& data)
 {
   mBoundingBox.CreateProxy(proxy, data);
 }
@@ -41,8 +40,7 @@ void BoundingBoxBroadPhase::RemoveProxies(ProxyHandleArray& proxies)
     mBoundingBox.RemoveProxy(*range.Front());
 }
 
-void BoundingBoxBroadPhase::UpdateProxy(BroadPhaseProxy& proxy,
-                                        BroadPhaseData& data)
+void BoundingBoxBroadPhase::UpdateProxy(BroadPhaseProxy& proxy, BroadPhaseData& data)
 {
   mBoundingBox.UpdateProxy(proxy, data);
 }
@@ -62,22 +60,19 @@ void BoundingBoxBroadPhase::SelfQuery(ClientPairArray& results)
   results.Insert(results.End(), mDataPairs.All());
 }
 
-void BoundingBoxBroadPhase::Query(BroadPhaseData& data,
-                                  ClientPairArray& results)
+void BoundingBoxBroadPhase::Query(BroadPhaseData& data, ClientPairArray& results)
 {
   DefaultRange r = mBoundingBox.Query(data.mAabb);
   GetCollisions(data, results);
 }
 
-void BoundingBoxBroadPhase::BatchQuery(BroadPhaseDataArray& data,
-                                       ClientPairArray& results)
+void BoundingBoxBroadPhase::BatchQuery(BroadPhaseDataArray& data, ClientPairArray& results)
 {
   for (uint i = 0; i < data.Size(); ++i)
     GetCollisions(data[i], results);
 }
 
-void BoundingBoxBroadPhase::CastRay(CastDataParam castData,
-                                    ProxyCastResults& results)
+void BoundingBoxBroadPhase::CastRay(CastDataParam castData, ProxyCastResults& results)
 {
   SimpleRayCallback callback(mCastRayCallBack, &results);
 
@@ -86,19 +81,16 @@ void BoundingBoxBroadPhase::CastRay(CastDataParam castData,
     callback.Refine(range.Front(), castData);
 }
 
-void BoundingBoxBroadPhase::CastSegment(CastDataParam castData,
-                                        ProxyCastResults& results)
+void BoundingBoxBroadPhase::CastSegment(CastDataParam castData, ProxyCastResults& results)
 {
   SimpleSegmentCallback callback(mCastSegmentCallBack, &results);
 
-  BoundingBoxRange<void*, Segment> range =
-      mBoundingBox.Query(castData.GetSegment());
+  BoundingBoxRange<void*, Segment> range = mBoundingBox.Query(castData.GetSegment());
   for (; !range.Empty(); range.PopFront())
     callback.Refine(range.Front(), castData);
 }
 
-void BoundingBoxBroadPhase::CastAabb(CastDataParam castData,
-                                     ProxyCastResults& results)
+void BoundingBoxBroadPhase::CastAabb(CastDataParam castData, ProxyCastResults& results)
 {
   SimpleAabbCallback callback(mCastAabbCallBack, &results);
 
@@ -107,24 +99,20 @@ void BoundingBoxBroadPhase::CastAabb(CastDataParam castData,
     callback.Refine(range.Front(), castData);
 }
 
-void BoundingBoxBroadPhase::CastSphere(CastDataParam castData,
-                                       ProxyCastResults& results)
+void BoundingBoxBroadPhase::CastSphere(CastDataParam castData, ProxyCastResults& results)
 {
   SimpleSphereCallback callback(mCastSphereCallBack, &results);
 
-  BoundingBoxRange<void*, Sphere> range =
-      mBoundingBox.Query(castData.GetSphere());
+  BoundingBoxRange<void*, Sphere> range = mBoundingBox.Query(castData.GetSphere());
   for (; !range.Empty(); range.PopFront())
     callback.Refine(range.Front(), castData);
 }
 
-void BoundingBoxBroadPhase::CastFrustum(CastDataParam castData,
-                                        ProxyCastResults& results)
+void BoundingBoxBroadPhase::CastFrustum(CastDataParam castData, ProxyCastResults& results)
 {
   SimpleFrustumCallback callback(mCastFrustumCallBack, &results);
 
-  BoundingBoxRange<void*, Frustum> range =
-      mBoundingBox.Query(castData.GetFrustum());
+  BoundingBoxRange<void*, Frustum> range = mBoundingBox.Query(castData.GetFrustum());
   for (; !range.Empty(); range.PopFront())
     callback.Refine(range.Front(), castData);
 }
@@ -141,8 +129,7 @@ void BoundingBoxBroadPhase::RegisterCollisions()
   }
 }
 
-void BoundingBoxBroadPhase::GetCollisions(BroadPhaseData& data,
-                                          ClientPairArray& results)
+void BoundingBoxBroadPhase::GetCollisions(BroadPhaseData& data, ClientPairArray& results)
 {
   DefaultRange range = mBoundingBox.Query(data.mAabb);
   for (; !range.Empty(); range.PopFront())

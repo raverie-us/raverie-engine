@@ -83,8 +83,7 @@ public:
 
   /// Returns the combined net property name ("ComponentName_PropertyName"),
   /// else String().
-  static String GetCombinedNetPropertyName(Component* component,
-                                           StringParam propertyName);
+  static String GetCombinedNetPropertyName(Component* component, StringParam propertyName);
 
   /// [Client/Server] Returns true if the net object has the specified net
   /// property, else false.
@@ -103,10 +102,9 @@ public:
                               const String& netPropertyTypeName,
                               NetPropertyConfig* netPropertyConfig = nullptr);
   template <typename T>
-  NetProperty*
-  AddBasicNetProperty(const String& netPropertyName,
-                      T& propertyData,
-                      NetPropertyConfig* netPropertyConfig = nullptr)
+  NetProperty* AddBasicNetProperty(const String& netPropertyName,
+                                   T& propertyData,
+                                   NetPropertyConfig* netPropertyConfig = nullptr)
   {
     return AddBasicNetProperty(netPropertyName,
                                Variant(&propertyData),
@@ -116,14 +114,13 @@ public:
                                SetDataValue<T>,
                                netPropertyConfig);
   }
-  NetProperty*
-  AddBasicNetProperty(const String& netPropertyName,
-                      const Variant& propertyData,
-                      NativeType* nativeType,
-                      SerializeValueFn serializeValueFn,
-                      GetValueFn getValueFn,
-                      SetValueFn setValueFn,
-                      NetPropertyConfig* netPropertyConfig = nullptr);
+  NetProperty* AddBasicNetProperty(const String& netPropertyName,
+                                   const Variant& propertyData,
+                                   NativeType* nativeType,
+                                   SerializeValueFn serializeValueFn,
+                                   GetValueFn getValueFn,
+                                   SetValueFn setValueFn,
+                                   NetPropertyConfig* netPropertyConfig = nullptr);
 
   /// [Client/Server] Removes the specified net property.
   /// (Cannot be modified after net object component initialization)
@@ -182,23 +179,20 @@ public:
   /// Controls whether or not net channels should dispatch
   /// NetChannelOutgoingPropertyChange when an outgoing net property change is
   /// detected.
-  void
-  SetEventOnOutgoingPropertyChange(bool eventOnOutgoingPropertyChange = true);
+  void SetEventOnOutgoingPropertyChange(bool eventOnOutgoingPropertyChange = true);
   bool GetEventOnOutgoingPropertyChange() const;
 
   /// Controls whether or not net channels should dispatch
   /// NetChannelIncomingPropertyChange when an incoming net property change is
   /// accepted.
-  void
-  SetEventOnIncomingPropertyChange(bool eventOnIncomingPropertyChange = true);
+  void SetEventOnIncomingPropertyChange(bool eventOnIncomingPropertyChange = true);
   bool GetEventOnIncomingPropertyChange() const;
 
   /// Controls when net channels can modify their change authority.
   /// (Dynamic: Authority may be modified at any time, even after a net object
   /// is brought online) (Fixed: Authority may be modified only before a net
   /// object is brought online) (Cannot be modified at game runtime)
-  void
-  SetAuthorityMode(AuthorityMode::Enum authorityMode = AuthorityMode::Fixed);
+  void SetAuthorityMode(AuthorityMode::Enum authorityMode = AuthorityMode::Fixed);
   AuthorityMode::Enum GetAuthorityMode() const;
 
   /// Controls which peer has the authority to observe and replicate property
@@ -212,8 +206,7 @@ public:
   /// client. However, the server is also still responsible for other
   /// replication commands (such as object creation/destruction), and these WILL
   /// be replicated to the authority client.
-  void
-  SetAuthorityDefault(Authority::Enum authorityDefault = Authority::Server);
+  void SetAuthorityDefault(Authority::Enum authorityDefault = Authority::Server);
   Authority::Enum GetAuthorityDefault() const;
 
   /// Controls whether or not net channels will have their changes immediately
@@ -240,8 +233,7 @@ public:
   /// (Automatic: Detects changes automatically using comparisons)
   /// (Manumatic: Detects changes manually using change flags and automatically
   /// using comparisons)
-  void SetDetectionMode(
-      DetectionMode::Enum detectionMode = DetectionMode::Manumatic);
+  void SetDetectionMode(DetectionMode::Enum detectionMode = DetectionMode::Manumatic);
   DetectionMode::Enum GetDetectionMode() const;
 
   /// Controls the frame interval in which awake net channels are observed for
@@ -277,15 +269,13 @@ public:
   /// (All: Serialize all net properties)
   /// (Changed: Serialize only net properties that have changed, using bit flags
   /// in between) (Cannot be modified at game runtime)
-  void SetSerializationMode(
-      SerializationMode::Enum serializationMode = SerializationMode::Changed);
+  void SetSerializationMode(SerializationMode::Enum serializationMode = SerializationMode::Changed);
   SerializationMode::Enum GetSerializationMode() const;
 
   /// Controls whether or not net channel changes will be retransmitted should
   /// they get lost over the network. (Unreliable: Lost changes are not
   /// retransmitted) (Reliable: Lost changes are retransmitted)
-  void SetReliabilityMode(
-      ReliabilityMode::Enum reliabilityMode = ReliabilityMode::Reliable);
+  void SetReliabilityMode(ReliabilityMode::Enum reliabilityMode = ReliabilityMode::Reliable);
   ReliabilityMode::Enum GetReliabilityMode() const;
 
   /// Controls how net channel changes are to be ordered and released once

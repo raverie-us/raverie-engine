@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-void MultiConvexMeshRange::ConvexMeshObject::Support(Vec3Param direction,
-                                                     Vec3Ptr support) const
+void MultiConvexMeshRange::ConvexMeshObject::Support(Vec3Param direction, Vec3Ptr support) const
 {
   MultiConvexMesh* mesh = mCollider->mMesh;
   SubConvexMesh* subMesh = mesh->mMeshes[Index];
@@ -19,8 +18,7 @@ void MultiConvexMeshRange::ConvexMeshObject::Support(Vec3Param direction,
   *support = mCollider->TransformSupportPointToWorld(*support);
 }
 
-void MultiConvexMeshRange::ConvexMeshObject::GetCenter(
-    Vec3Ref worldCenter) const
+void MultiConvexMeshRange::ConvexMeshObject::GetCenter(Vec3Ref worldCenter) const
 {
   // Get the local-space center of the current sub-mesh
   SubConvexMesh* subMesh = mCollider->mMesh->mMeshes[Index];
@@ -31,8 +29,7 @@ void MultiConvexMeshRange::ConvexMeshObject::GetCenter(
   worldCenter = transform->TransformPoint(localCenter);
 }
 
-MultiConvexMeshRange::MultiConvexMeshRange(MultiConvexMeshCollider* collider,
-                                           const Aabb& worldAabb)
+MultiConvexMeshRange::MultiConvexMeshRange(MultiConvexMeshCollider* collider, const Aabb& worldAabb)
 {
   mIndex = 0;
   mCollider = collider;
@@ -148,8 +145,7 @@ real MultiConvexMeshCollider::ComputeWorldVolumeInternal()
   return worldVolume;
 }
 
-void MultiConvexMeshCollider::ComputeLocalInverseInertiaTensor(
-    real mass, Mat3Ref localInvInertia)
+void MultiConvexMeshCollider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia)
 {
   Vec3 worldScale = GetWorldScale();
   localInvInertia = mMesh->ComputeInvInertiaTensor(worldScale, mass);
@@ -196,15 +192,12 @@ void MultiConvexMeshCollider::OnMeshModified(Event* e)
   InternalSizeChanged();
 }
 
-MultiConvexMeshCollider::RangeType
-MultiConvexMeshCollider::GetOverlapRange(Aabb& worldAabb)
+MultiConvexMeshCollider::RangeType MultiConvexMeshCollider::GetOverlapRange(Aabb& worldAabb)
 {
   return RangeType(this, worldAabb);
 }
 
-bool MultiConvexMeshCollider::Cast(const Ray& worldRay,
-                                   ProxyResult& result,
-                                   BaseCastFilter& filter)
+bool MultiConvexMeshCollider::Cast(const Ray& worldRay, ProxyResult& result, BaseCastFilter& filter)
 {
   WorldTransformation* transform = GetWorldTransform();
   Ray localRay = worldRay.TransformInverse(transform->GetWorldMatrix());

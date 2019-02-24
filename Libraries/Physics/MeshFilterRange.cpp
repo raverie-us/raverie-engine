@@ -7,9 +7,7 @@ namespace Zero
 namespace Physics
 {
 
-MeshFilterRange::MeshFilterRange(const Vec3Array* vertices,
-                                 const IndexArray* indices,
-                                 const Aabb& aabb)
+MeshFilterRange::MeshFilterRange(const Vec3Array* vertices, const IndexArray* indices, const Aabb& aabb)
 {
   mIndex = 0;
   mVertices = vertices;

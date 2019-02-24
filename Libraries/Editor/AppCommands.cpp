@@ -70,8 +70,7 @@ VersionStatus::Type GlobalVersionStatus = VersionStatus::Unknown;
 
 void BuildVersion()
 {
-  String buildVersionString =
-      String::Format("BuildVersion: %s", GetBuildVersionName().c_str());
+  String buildVersionString = String::Format("BuildVersion: %s", GetBuildVersionName().c_str());
   ZPrintFilter(Filter::DefaultFilter, "%s\n", buildVersionString.c_str());
   OsShell* platform = Z::gEngine->has(OsShell);
   platform->SetClipboardText(buildVersionString);
@@ -79,8 +78,7 @@ void BuildVersion()
 
 void WriteBuildInfo()
 {
-  String sourceDir =
-      Z::gEngine->GetConfigCog()->has(MainConfig)->SourceDirectory;
+  String sourceDir = Z::gEngine->GetConfigCog()->has(MainConfig)->SourceDirectory;
   Environment* environment = Environment::GetInstance();
   String filePath = environment->GetParsedArgument("WriteBuildInfo");
   if (filePath.Empty() || filePath == "true")
@@ -117,9 +115,7 @@ void CrashEngine()
   Z::gEngine->CrashEngine();
 }
 
-void SortAndPrintMetaTypeList(StringBuilder& builder,
-                              Array<String>& names,
-                              cstr category)
+void SortAndPrintMetaTypeList(StringBuilder& builder, Array<String>& names, cstr category)
 {
   if (names.Empty())
     return;
@@ -128,7 +124,7 @@ void SortAndPrintMetaTypeList(StringBuilder& builder,
 
   builder.Append(category);
   builder.Append(":\n");
-  forRange(String & name, names.All())
+  forRange (String& name, names.All())
   {
     builder.Append("  ");
     builder.Append(name);
@@ -146,8 +142,7 @@ public:
 
   void OnScriptsCompiled(Event* e)
   {
-    ActionSequence* seq =
-        new ActionSequence(Z::gEditor, ActionExecuteMode::FrameUpdate);
+    ActionSequence* seq = new ActionSequence(Z::gEditor, ActionExecuteMode::FrameUpdate);
     // wait a little bit so we the scripts will be finished compiling (and
     // hooked up)
     seq->Add(new ActionDelay(0.1f));
@@ -188,29 +183,23 @@ void BindAppCommands(Cog* config, CommandManager* commands)
   commands->AddCommand("About", BindCommandFunction(ShowAbout), true);
 
   commands->AddCommand("Exit", BindCommandFunction(ExitEditor));
-  commands->AddCommand(
-      "ToggleFullScreen", BindCommandFunction(FullScreen), true);
+  commands->AddCommand("ToggleFullScreen", BindCommandFunction(FullScreen), true);
   commands->AddCommand("Restart", BindCommandFunction(Restart));
 
   commands->AddCommand("BuildVersion", BindCommandFunction(BuildVersion), true);
   commands->AddCommand("WriteBuildInfo", BindCommandFunction(WriteBuildInfo));
   commands->AddCommand("RunUnitTests", BindCommandFunction(RunUnitTests));
-  commands->AddCommand("RecordUnitTestFile",
-                       BindCommandFunction(RecordUnitTestFile));
-  commands->AddCommand("PlayUnitTestFile",
-                       BindCommandFunction(PlayUnitTestFile));
+  commands->AddCommand("RecordUnitTestFile", BindCommandFunction(RecordUnitTestFile));
+  commands->AddCommand("PlayUnitTestFile", BindCommandFunction(PlayUnitTestFile));
 
-  if (DeveloperConfig* devConfig =
-          Z::gEngine->GetConfigCog()->has(DeveloperConfig))
+  if (DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig))
   {
-    commands->AddCommand("OpenTestWidgets",
-                         BindCommandFunction(OpenTestWidgetsCommand));
+    commands->AddCommand("OpenTestWidgets", BindCommandFunction(OpenTestWidgetsCommand));
     commands->AddCommand("CrashEngine", BindCommandFunction(CrashEngine));
   }
   commands->AddCommand("Help", BindCommandFunction(OpenHelp), true);
   commands->AddCommand("ZeroHub", BindCommandFunction(OpenZeroHub), true);
-  commands->AddCommand(
-      "Documentation", BindCommandFunction(OpenDocumentation), true);
+  commands->AddCommand("Documentation", BindCommandFunction(OpenDocumentation), true);
 }
 
 } // namespace Zero

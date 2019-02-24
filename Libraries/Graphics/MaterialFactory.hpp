@@ -8,9 +8,7 @@ namespace Zero
 class MaterialFactory : public SimpleResourceFactory<Material, MaterialBlock>
 {
 public:
-  ZilchDeclareDerivedTypeExplicit(MaterialFactory,
-                                  MetaComposition,
-                                  TypeCopyMode::ReferenceType);
+  ZilchDeclareDerivedTypeExplicit(MaterialFactory, MetaComposition, TypeCopyMode::ReferenceType);
   static MaterialFactory* sInstance;
   static MaterialFactory* GetInstance()
   {
@@ -18,18 +16,13 @@ public:
   }
   MaterialFactory();
 
-  void MoveComponent(HandleParam owner,
-                     HandleParam componentToMove,
-                     uint destination) override;
+  void MoveComponent(HandleParam owner, HandleParam componentToMove, uint destination) override;
   uint GetComponentIndex(HandleParam owner, BoundType* componentType) override;
 
-  bool CanAddComponent(HandleParam owner,
-                       BoundType* typeToAdd,
-                       AddInfo* info = nullptr) override;
+  bool CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info = nullptr) override;
 
-  void UpdateRestrictedComponents(
-      HashMap<LibraryRef, ZilchShaderIRLibraryRef>& libraries,
-      ZilchFragmentTypeMap& fragmentTypes);
+  void UpdateRestrictedComponents(HashMap<LibraryRef, ZilchShaderIRLibraryRef>& libraries,
+                                  ZilchFragmentTypeMap& fragmentTypes);
 
   ShaderInputType::Enum GetShaderInputType(Type* type);
   typedef HashMap<Type*, ShaderInputType::Enum> ShaderInputTypeMap;

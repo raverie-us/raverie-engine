@@ -15,7 +15,7 @@ SystemObjectManager::SystemObjectManager()
 
 SystemObjectManager::~SystemObjectManager()
 {
-  forRange(ObjectInstance & objectInstance, Objects.Values())
+  forRange (ObjectInstance& objectInstance, Objects.Values())
   {
     if (objectInstance.Cleanup == ObjectCleanup::AutoDelete)
     {
@@ -24,9 +24,7 @@ SystemObjectManager::~SystemObjectManager()
   }
 }
 
-void SystemObjectManager::Add(Object* object,
-                              BoundType* metaType,
-                              ObjectCleanup::Enum cleanup)
+void SystemObjectManager::Add(Object* object, BoundType* metaType, ObjectCleanup::Enum cleanup)
 {
   ObjectInstance none = {object, metaType, cleanup};
   Objects.InsertOrError(metaType->Name, none);

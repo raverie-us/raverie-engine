@@ -6,17 +6,13 @@ namespace Zero
 
 inline u32 EndianSwap(u32 x)
 {
-  return (x >> 24) | ((x << 8) & 0x00FF0000) | ((x >> 8) & 0x0000FF00) |
-         (x << 24);
+  return (x >> 24) | ((x << 8) & 0x00FF0000) | ((x >> 8) & 0x0000FF00) | (x << 24);
 }
 
 inline u64 EndianSwap(u64 x)
 {
-  return (x >> 56) | ((x << 40) & 0x00FF000000000000ULL) |
-         ((x << 24) & 0x0000FF0000000000ULL) |
-         ((x << 8) & 0x000000FF00000000ULL) |
-         ((x >> 8) & 0x00000000FF000000ULL) |
-         ((x >> 24) & 0x0000000000FF0000ULL) |
+  return (x >> 56) | ((x << 40) & 0x00FF000000000000ULL) | ((x << 24) & 0x0000FF0000000000ULL) |
+         ((x << 8) & 0x000000FF00000000ULL) | ((x >> 8) & 0x00000000FF000000ULL) | ((x >> 24) & 0x0000000000FF0000ULL) |
          ((x >> 40) & 0x000000000000FF00ULL) | (x << 56);
 }
 
@@ -65,9 +61,7 @@ class FilterFileRegex : public FileFilter
 public:
   String mAccept;
   String mIgnore;
-  FilterFileRegex(StringParam accept, StringParam ignore) :
-      mAccept(accept),
-      mIgnore(ignore)
+  FilterFileRegex(StringParam accept, StringParam ignore) : mAccept(accept), mIgnore(ignore)
   {
   }
   FilterResult::Enum Filter(StringParam filename) override;
@@ -89,22 +83,16 @@ public:
 };
 
 // Move the contents of a folder.
-bool MoveFolderContents(StringParam dest,
-                        StringParam source,
-                        FileFilter* filter = 0);
+bool MoveFolderContents(StringParam dest, StringParam source, FileFilter* filter = 0);
 
 // Copy the contents of a folder.
-void CopyFolderContents(StringParam dest,
-                        StringParam source,
-                        FileFilter* filter = 0);
+void CopyFolderContents(StringParam dest, StringParam source, FileFilter* filter = 0);
 
 // Finds all files in the given path
 void FindFilesRecursively(StringParam path, Array<String>& foundFiles);
 
 // Finds files matching a filter in the given path
-void FindFilesRecursively(StringParam path,
-                          Array<String>& foundFiles,
-                          FileFilter* filter);
+void FindFilesRecursively(StringParam path, Array<String>& foundFiles, FileFilter* filter);
 
 // Get a time stamp.
 String GetTimeAndDateStamp();

@@ -91,10 +91,7 @@ class VertexAttribute
 {
 public:
   VertexAttribute(){};
-  VertexAttribute(VertexSemantic::Enum semantic,
-                  VertexElementType::Enum type,
-                  byte count,
-                  byte offset);
+  VertexAttribute(VertexSemantic::Enum semantic, VertexElementType::Enum type, byte count, byte offset);
 
   ByteEnum<VertexSemantic::Enum> mSemantic;
   ByteEnum<VertexElementType::Enum> mType;
@@ -167,14 +164,7 @@ DeclareEnum25(TextureFormat,
               Depth32fStencil8Pad24); // depth-stencil
 
 // Face identifiers for TextureCube, None is used for Texture2D
-DeclareEnum7(TextureFace,
-             None,
-             PositiveX,
-             PositiveY,
-             PositiveZ,
-             NegativeX,
-             NegativeY,
-             NegativeZ);
+DeclareEnum7(TextureFace, None, PositiveX, PositiveY, PositiveZ, NegativeX, NegativeY, NegativeZ);
 
 /// Block compression, lossy hardware supported formats with very high memory
 /// savings None - No compression will be used BC1 - RGB stored at 1/2 byte per
@@ -282,30 +272,18 @@ public:
 
 uint GetPixelSize(TextureFormat::Enum format);
 
-void SetPixelData(byte* data,
-                  uint index,
-                  Vec4 value,
-                  TextureFormat::Enum format);
-void ReadPixelData(byte* data,
-                   uint index,
-                   Vec4& value,
-                   TextureFormat::Enum format);
+void SetPixelData(byte* data, uint index, Vec4 value, TextureFormat::Enum format);
+void ReadPixelData(byte* data, uint index, Vec4& value, TextureFormat::Enum format);
 
 void SetPixelDataByte(byte* data, uint index, Vec4 value, uint elementCount);
 void SetPixelDataShort(byte* data, uint index, Vec4 value, uint elementCount);
-void SetPixelDataHalfFloat(byte* data,
-                           uint index,
-                           Vec4 value,
-                           uint elementCount);
+void SetPixelDataHalfFloat(byte* data, uint index, Vec4 value, uint elementCount);
 void SetPixelDataFloat(byte* data, uint index, Vec4 value, uint elementCount);
 void SetPixelDataGamma(byte* data, uint index, Vec4 value, uint elementCount);
 
 void ReadPixelDataByte(byte* data, uint index, Vec4& value, uint elementCount);
 void ReadPixelDataShort(byte* data, uint index, Vec4& value, uint elementCount);
-void ReadPixelDataHalfFloat(byte* data,
-                            uint index,
-                            Vec4& value,
-                            uint elementCount);
+void ReadPixelDataHalfFloat(byte* data, uint index, Vec4& value, uint elementCount);
 void ReadPixelDataFloat(byte* data, uint index, Vec4& value, uint elementCount);
 void ReadPixelDataGamma(byte* data, uint index, Vec4& value, uint elementCount);
 
@@ -315,47 +293,23 @@ bool IsFloatColorFormat(TextureFormat::Enum format);
 bool IsDepthFormat(TextureFormat::Enum format);
 bool IsDepthStencilFormat(TextureFormat::Enum format);
 
-void YInvertNonCompressed(byte* imageData,
-                          uint width,
-                          uint height,
-                          uint pixelSize);
-void YInvertBlockCompressed(byte* imageData,
-                            uint width,
-                            uint height,
-                            uint dataSize,
-                            TextureCompression::Enum compression);
+void YInvertNonCompressed(byte* imageData, uint width, uint height, uint pixelSize);
+void YInvertBlockCompressed(
+    byte* imageData, uint width, uint height, uint dataSize, TextureCompression::Enum compression);
 
-void BuildOrthographicTransformZero(Mat4& matrix,
-                                    float verticalSize,
-                                    float aspectRatio,
-                                    float nearDistance,
-                                    float farDistance);
-void BuildOrthographicTransformGl(Mat4& matrix,
-                                  float verticalSize,
-                                  float aspectRatio,
-                                  float nearDistance,
-                                  float farDistance);
-void BuildOrthographicTransformDx(Mat4& matrix,
-                                  float verticalSize,
-                                  float aspectRatio,
-                                  float nearDistance,
-                                  float farDistance);
+void BuildOrthographicTransformZero(
+    Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance);
+void BuildOrthographicTransformGl(
+    Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance);
+void BuildOrthographicTransformDx(
+    Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance);
 
-void BuildPerspectiveTransformZero(Mat4& matrix,
-                                   float verticalFov,
-                                   float aspectRatio,
-                                   float nearDistance,
-                                   float farDistance);
-void BuildPerspectiveTransformGl(Mat4& matrix,
-                                 float verticalFov,
-                                 float aspectRatio,
-                                 float nearDistance,
-                                 float farDistance);
-void BuildPerspectiveTransformDx(Mat4& matrix,
-                                 float verticalFov,
-                                 float aspectRatio,
-                                 float nearDistance,
-                                 float farDistance);
+void BuildPerspectiveTransformZero(
+    Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance);
+void BuildPerspectiveTransformGl(
+    Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance);
+void BuildPerspectiveTransformDx(
+    Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance);
 
 class Shader
 {
@@ -393,9 +347,7 @@ public:
 class ShaderInput
 {
 public:
-  ShaderInput() :
-      mShaderInputType(ShaderInputType::Invalid),
-      mSamplerSettings(0)
+  ShaderInput() : mShaderInputType(ShaderInputType::Invalid), mSamplerSettings(0)
   {
   }
 
@@ -499,16 +451,9 @@ public:
   virtual ~Renderer();
 
   // should move these to a file for api dependent utility functions
-  virtual void BuildOrthographicTransform(Mat4Ref matrix,
-                                          float size,
-                                          float aspect,
-                                          float nearPlane,
-                                          float farPlane) = 0;
-  virtual void BuildPerspectiveTransform(Mat4Ref matrix,
-                                         float fov,
-                                         float aspect,
-                                         float nearPlane,
-                                         float farPlane) = 0;
+  virtual void
+  BuildOrthographicTransform(Mat4Ref matrix, float size, float aspect, float nearPlane, float farPlane) = 0;
+  virtual void BuildPerspectiveTransform(Mat4Ref matrix, float fov, float aspect, float nearPlane, float farPlane) = 0;
   virtual bool YInvertImageData(TextureType::Enum type)
   {
     return false;
@@ -528,8 +473,7 @@ public:
 
   virtual bool GetLazyShaderCompilation() = 0;
   virtual void SetLazyShaderCompilation(bool isLazy) = 0;
-  virtual void AddShaders(Array<ShaderEntry>& entries,
-                          uint forceCompileBatchCount) = 0;
+  virtual void AddShaders(Array<ShaderEntry>& entries, uint forceCompileBatchCount) = 0;
   virtual void RemoveShaders(Array<ShaderEntry>& entries) = 0;
 
   virtual void SetVSync(bool vsync) = 0;
@@ -540,8 +484,7 @@ public:
   {
   }
 
-  virtual void DoRenderTasks(RenderTasks* renderTasks,
-                             RenderQueues* renderQueues) = 0;
+  virtual void DoRenderTasks(RenderTasks* renderTasks, RenderQueues* renderQueues) = 0;
 
   GraphicsDriverSupport mDriverSupport;
 
@@ -871,8 +814,7 @@ public:
                                  Vec2 uvAux0 = Vec2(0, 0),
                                  Vec2 uvAux1 = Vec2(1, 1));
 
-  void AddStreamedQuadView(
-      ViewNode& viewNode, Vec3 pos[4], Vec2 uv0, Vec2 uv1, Vec4 color);
+  void AddStreamedQuadView(ViewNode& viewNode, Vec3 pos[4], Vec2 uv0, Vec2 uv1, Vec4 color);
 
   Array<FrameBlock> mFrameBlocks;
   Array<ViewBlock> mViewBlocks;

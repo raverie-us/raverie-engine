@@ -26,11 +26,8 @@ public:
   // Particle Emitter Interface
 
   // Emit new particles
-  virtual int EmitParticles(ParticleList* particleList,
-                            float dt,
-                            Mat4Ref transform,
-                            Vec3Param velocity,
-                            float timeAlive) = 0;
+  virtual int
+  EmitParticles(ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param velocity, float timeAlive) = 0;
 
   // Reset the number of particles to emit back to EmitCount.
   virtual void ResetCount(){};
@@ -59,13 +56,9 @@ public:
   void Serialize(Serializer& stream) override;
 
   // Mix in Helpers
-  int GetParticleEmissionCount(ParticleList* particleList,
-                               float dt,
-                               float timeAlive);
-  Particle* CreateInitializedParticle(ParticleList* particleList,
-                                      int particle,
-                                      Mat4Ref transform,
-                                      Vec3Param emitterVelocity);
+  int GetParticleEmissionCount(ParticleList* particleList, float dt, float timeAlive);
+  Particle*
+  CreateInitializedParticle(ParticleList* particleList, int particle, Mat4Ref transform, Vec3Param emitterVelocity);
 
   /// Reset the number of particles to emit back to EmitCount.
   void ResetCount() override;

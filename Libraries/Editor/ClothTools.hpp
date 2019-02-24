@@ -9,12 +9,7 @@ class SpringSystem;
 class SpringSystemConnection;
 class SpringTools;
 
-DeclareEnum5(SpringSubTools,
-             Anchoring,
-             PointSelector,
-             SpringSelector,
-             SpringCreator,
-             RopeCreator);
+DeclareEnum5(SpringSubTools, Anchoring, PointSelector, SpringSelector, SpringCreator, RopeCreator);
 
 /// A sub-tool for spring systems. Is notified of basic mouse events as they
 /// happen.
@@ -41,17 +36,11 @@ public:
   SpringSystem* GetSystem();
   // Helper that finds out what point we would select on a spring system
   // from a ray (if we snap to the closest point on a triangle face)
-  bool RayCastSpringSystem(const Ray& ray,
-                           SpringSystem* system,
-                           Vec3& closestPoint,
-                           uint& index);
+  bool RayCastSpringSystem(const Ray& ray, SpringSystem* system, Vec3& closestPoint, uint& index);
   // Raycast against a cog and determine what point we hit.
   // If this is an object with a spring system then we'll snap to a
   // vertex position, otherwise we'll use the ray intersection point.
-  bool RayCastCog(ViewportMouseEvent* e,
-                  CogId& hitCog,
-                  Vec3& hitPoint,
-                  uint& hitIndex);
+  bool RayCastCog(ViewportMouseEvent* e, CogId& hitCog, Vec3& hitPoint, uint& hitIndex);
 
   // The current system that is selected (may be an invalid object)
   CogId mSelectedSystem;
@@ -68,9 +57,7 @@ public:
 
   // New interface function that tells you a frustum is being dragged with these
   // screen coordinates.
-  virtual void MouseDragFrustum(Viewport* viewport,
-                                Vec2Param upperLeftScreen,
-                                Vec2Param lowerRightScreen){};
+  virtual void MouseDragFrustum(Viewport* viewport, Vec2Param upperLeftScreen, Vec2Param lowerRightScreen){};
 
   void OnMouseDragStart(ViewportMouseEvent* e) override;
   void OnMouseDragMove(ViewportMouseEvent* e) override;
@@ -251,8 +238,7 @@ public:
   /// Returns whether or not the value is valid. For example, it could be
   /// invalid if this is a multi-selection and there is a conflict between
   /// the values on multiple objects.
-  PropertyState GetValue(HandleParam object,
-                         PropertyPathParam property) override;
+  PropertyState GetValue(HandleParam object, PropertyPathParam property) override;
 };
 
 /// <Commands>

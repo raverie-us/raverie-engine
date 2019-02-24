@@ -9,10 +9,7 @@ namespace Zero
 
 /// Intrusive slot map container. Uses an array of slots combined with
 // a unique id. Value Type MUST be a pointer.
-template <typename keyType,
-          typename dataType,
-          typename slotPolicy,
-          typename Allocator = DefaultAllocator>
+template <typename keyType, typename dataType, typename slotPolicy, typename Allocator = DefaultAllocator>
 class Slotmap : public AllocationContainer<Allocator>
 {
 public:
@@ -63,10 +60,7 @@ public:
     typedef dataType value_type;
     typedef data_type FrontResult;
 
-    range(pointer b, pointer e, this_type* owner) :
-        begin(b),
-        end(e),
-        owner(owner)
+    range(pointer b, pointer e, this_type* owner) : begin(b), end(e), owner(owner)
     {
     }
 
@@ -118,8 +112,7 @@ public:
 
     size_t* valueTableBase = (size_t*)mBegin;
     size_t* endOfValueTable = (size_t*)mEnd;
-    if ((size_t*)objPointer < endOfValueTable &&
-        (size_t*)objPointer >= valueTableBase)
+    if ((size_t*)objPointer < endOfValueTable && (size_t*)objPointer >= valueTableBase)
       return false;
     else
       return true;
@@ -237,8 +230,7 @@ public:
       if (newMaxSize == 0)
         newMaxSize = 4;
 
-      pointer newTable =
-          (pointer)mAllocator.Allocate(newMaxSize * sizeof(dataType));
+      pointer newTable = (pointer)mAllocator.Allocate(newMaxSize * sizeof(dataType));
 
       // Copy over old elements
       if (mMaxSize != 0)

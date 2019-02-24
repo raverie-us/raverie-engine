@@ -9,8 +9,7 @@ namespace Zero
 CogHashSetRange::CogHashSetRange() : CogHashSet::range()
 {
 }
-CogHashSetRange::CogHashSetRange(const CogHashSetRange::range& rhs) :
-    CogHashSet::range(rhs)
+CogHashSetRange::CogHashSetRange(const CogHashSetRange::range& rhs) : CogHashSet::range(rhs)
 {
 }
 

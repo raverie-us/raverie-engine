@@ -6,8 +6,8 @@ namespace Zero
 
 void DebugDrawStep::Draw()
 {
-#define ZeroDebugPrimitive(DebugType)                                          \
-  for (size_t i = 0; i < m##DebugType##List.Size(); ++i)                       \
+#define ZeroDebugPrimitive(DebugType)                                                                                  \
+  for (size_t i = 0; i < m##DebugType##List.Size(); ++i)                                                               \
     gDebugDraw->Add(m##DebugType##List[i]);
 #include "DebugPrimitives.inl"
 #undef ZeroDebugPrimitive

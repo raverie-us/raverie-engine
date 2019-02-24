@@ -54,10 +54,8 @@ Vec2 ScrollingGraph::GetDisplayInterval(Vec2 clientArea)
 Vec2 ScrollingGraph::SnapGraphPos(Vec2Param graphPos, Vec2Param clientArea)
 {
   Vec2 displayInterval = GetDisplayInterval(clientArea);
-  float x = Math::Round(graphPos.x * mGridScale.x / displayInterval.x) /
-            mGridScale.x * displayInterval.x;
-  float y = Math::Round(graphPos.y * mGridScale.y / displayInterval.y) /
-            mGridScale.y * displayInterval.y;
+  float x = Math::Round(graphPos.x * mGridScale.x / displayInterval.x) / mGridScale.x * displayInterval.x;
+  float y = Math::Round(graphPos.y * mGridScale.y / displayInterval.y) / mGridScale.y * displayInterval.y;
 
   return Vec2(x, y);
 }
@@ -102,8 +100,7 @@ void ScrollingGraph::PanToTranslation(Vec2Param graphPos, float animTime)
     ActionGroup* group = new ActionGroup();
 
     // Animate the Translation
-    Action* origin = AnimatePropertyGetSet(
-        ScrollingGraph, Translation, Ease::Quad::Out, this, animTime, graphPos);
+    Action* origin = AnimatePropertyGetSet(ScrollingGraph, Translation, Ease::Quad::Out, this, animTime, graphPos);
     group->Add(origin);
 
     // Add the action group
@@ -115,12 +112,8 @@ void ScrollingGraph::PanToTranslation(Vec2Param graphPos, float animTime)
   }
 }
 
-void ScrollingGraph::Frame(Vec2Param min,
-                           Vec2Param max,
-                           Vec2Param clientSize,
-                           IntVec2 axes,
-                           Vec2 pixelPadding,
-                           float animTime)
+void ScrollingGraph::Frame(
+    Vec2Param min, Vec2Param max, Vec2Param clientSize, IntVec2 axes, Vec2 pixelPadding, float animTime)
 {
   // Calculate the zoom without the padding
   Vec2 targetZoom = Zoom;
@@ -132,8 +125,7 @@ void ScrollingGraph::Frame(Vec2Param min,
 
   Vec2 targetOrigin = Translation;
   targetOrigin = -min + graphPadding;
-  targetZoom =
-      (clientSize / mPixelsPerUnit) / (graphPadding * 2.0f + max - min);
+  targetZoom = (clientSize / mPixelsPerUnit) / (graphPadding * 2.0f + max - min);
 
   targetOrigin.x = Math::Min(targetOrigin.x, 0.0f);
 
@@ -157,17 +149,11 @@ void ScrollingGraph::Frame(Vec2Param min,
     ActionGroup* group = new ActionGroup();
 
     // Animate the Origin
-    Action* origin = AnimatePropertyGetSet(ScrollingGraph,
-                                           Translation,
-                                           Ease::Quad::Out,
-                                           this,
-                                           animTime,
-                                           targetOrigin);
+    Action* origin = AnimatePropertyGetSet(ScrollingGraph, Translation, Ease::Quad::Out, this, animTime, targetOrigin);
     group->Add(origin);
 
     // Animate the Zoom
-    Action* zoom = AnimatePropertyGetSet(
-        ScrollingGraph, Zoom, Ease::Quad::Out, this, animTime, targetZoom);
+    Action* zoom = AnimatePropertyGetSet(ScrollingGraph, Zoom, Ease::Quad::Out, this, animTime, targetZoom);
     group->Add(zoom);
 
     // Add the action group
@@ -180,8 +166,7 @@ void ScrollingGraph::Frame(Vec2Param min,
   }
 }
 
-ScrollingGraph::range ScrollingGraph::GetWidthHashes(float clientWidth,
-                                                     bool halfHashes)
+ScrollingGraph::range ScrollingGraph::GetWidthHashes(float clientWidth, bool halfHashes)
 {
   // The range of units in local space we're displaying
   float displayRange = (clientWidth / mPixelsPerUnit.x) / Zoom.x;
@@ -191,8 +176,7 @@ ScrollingGraph::range ScrollingGraph::GetWidthHashes(float clientWidth,
   return range(Translation.x, displayRange, spacing, halfHashes, mGridScale.x);
 }
 
-ScrollingGraph::range ScrollingGraph::GetHeightHashes(float clientHeight,
-                                                      bool halfHashes)
+ScrollingGraph::range ScrollingGraph::GetHeightHashes(float clientHeight, bool halfHashes)
 {
   // The range of units in local space we're displaying
   float displayRange = (clientHeight / mPixelsPerUnit.y) / Zoom.y;
@@ -328,8 +312,7 @@ float ScrollingGraph::GetIntervalSize(float range, float clientSpace)
   return step;
 }
 
-ScrollingGraph::range::range(
-    float origin, float range, float spacing, bool halfHash, float gridScale)
+ScrollingGraph::range::range(float origin, float range, float spacing, bool halfHash, float gridScale)
 {
   mOrigin = origin * gridScale;
   mOffset = Math::FMod(mOrigin, spacing);

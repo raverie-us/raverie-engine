@@ -27,23 +27,18 @@ bool ShouldSolvePosition(Joint* joint)
 
   if (configOverride != nullptr)
   {
-    if (configOverride->mPositionCorrectionType ==
-        ConstraintPositionCorrection::Baumgarte)
+    if (configOverride->mPositionCorrectionType == ConstraintPositionCorrection::Baumgarte)
       return false;
-    else if (configOverride->mPositionCorrectionType ==
-             ConstraintPositionCorrection::PostStabilization)
+    else if (configOverride->mPositionCorrectionType == ConstraintPositionCorrection::PostStabilization)
       return true;
   }
 
-  if (config->mJointBlocks[jointType].mPositionCorrectionType ==
-      ConstraintPositionCorrection::Baumgarte)
+  if (config->mJointBlocks[jointType].mPositionCorrectionType == ConstraintPositionCorrection::Baumgarte)
     return false;
-  if (config->mJointBlocks[jointType].mPositionCorrectionType ==
-      ConstraintPositionCorrection::PostStabilization)
+  if (config->mJointBlocks[jointType].mPositionCorrectionType == ConstraintPositionCorrection::PostStabilization)
     return true;
 
-  return config->mPositionCorrectionType ==
-         PhysicsSolverPositionCorrection::PostStabilization;
+  return config->mPositionCorrectionType == PhysicsSolverPositionCorrection::PostStabilization;
 }
 
 void CollectContactsToSolve(IConstraintSolver::ContactList& inputList,
@@ -52,10 +47,8 @@ void CollectContactsToSolve(IConstraintSolver::ContactList& inputList,
 {
   // if the global + contact config say to use position correction then
   // solve all contacts with position correction
-  PhysicsSolverPositionCorrection::Enum globalCorrection =
-      config->mPositionCorrectionType;
-  ConstraintPositionCorrection::Enum contactCorrection =
-      config->mContactBlock.GetPositionCorrectionType();
+  PhysicsSolverPositionCorrection::Enum globalCorrection = config->mPositionCorrectionType;
+  ConstraintPositionCorrection::Enum contactCorrection = config->mContactBlock.GetPositionCorrectionType();
   if ((globalCorrection == PhysicsSolverPositionCorrection::PostStabilization &&
        contactCorrection != ConstraintPositionCorrection::Baumgarte) ||
       (contactCorrection == ConstraintPositionCorrection::PostStabilization))
@@ -70,12 +63,9 @@ void ContactUpdate(Contact* contact, Collider* c0, Collider* c1)
   for (uint i = 0; i < manifold->ContactCount; ++i)
   {
     ManifoldPoint& point = manifold->Contacts[i];
-    point.WorldPoints[0] =
-        JointHelpers::BodyRToWorldPoint(c0, point.BodyPoints[0]);
-    point.WorldPoints[1] =
-        JointHelpers::BodyRToWorldPoint(c1, point.BodyPoints[1]);
-    point.Penetration =
-        Math::Dot(point.WorldPoints[0] - point.WorldPoints[1], point.Normal);
+    point.WorldPoints[0] = JointHelpers::BodyRToWorldPoint(c0, point.BodyPoints[0]);
+    point.WorldPoints[1] = JointHelpers::BodyRToWorldPoint(c1, point.BodyPoints[1]);
+    point.Penetration = Math::Dot(point.WorldPoints[0] - point.WorldPoints[1], point.Normal);
   }
 }
 
@@ -117,14 +107,11 @@ void UpdateHierarchyTransform(RigidBody* body)
     RigidBody& childBody = childBodies.Front();
     UpdateHierarchyTransform(&childBody);
 
-    childBody.mRotationQuat = Math::ToQuaternion(
-        childBody.mPhysicsNode->GetTransform()->GetWorldRotation());
+    childBody.mRotationQuat = Math::ToQuaternion(childBody.mPhysicsNode->GetTransform()->GetWorldRotation());
   }
 }
 
-void ApplyPositionCorrection(RigidBody* body,
-                             Vec3Param linearOffset,
-                             Vec3Param angularOffset)
+void ApplyPositionCorrection(RigidBody* body, Vec3Param linearOffset, Vec3Param angularOffset)
 {
   // We need to use the kinematic body for velocity correction
   //(since we need its velocity), but we don't want to updated it during

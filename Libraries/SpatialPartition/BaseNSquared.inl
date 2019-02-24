@@ -24,8 +24,7 @@ void BaseNSquared<ClientDataType>::Serialize(Serializer& stream)
 }
 
 template <typename ClientDataType>
-void BaseNSquared<ClientDataType>::CreateProxy(BroadPhaseProxy& proxy,
-                                               DataType& data)
+void BaseNSquared<ClientDataType>::CreateProxy(BroadPhaseProxy& proxy, DataType& data)
 {
   uint index = GetNewProxyIndex();
   mData[index].mData = data;
@@ -42,8 +41,7 @@ void BaseNSquared<ClientDataType>::RemoveProxy(BroadPhaseProxy& proxy)
 }
 
 template <typename ClientDataType>
-void BaseNSquared<ClientDataType>::UpdateProxy(BroadPhaseProxy& proxy,
-                                               DataType& data)
+void BaseNSquared<ClientDataType>::UpdateProxy(BroadPhaseProxy& proxy, DataType& data)
 {
   uint index = proxy.ToU32();
   ErrorIf(mData[index].mValid == false, "Updating an invalid proxy.");

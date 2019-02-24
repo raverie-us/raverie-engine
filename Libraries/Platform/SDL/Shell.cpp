@@ -27,8 +27,8 @@ Keys::Enum SDLScancodeToKey(SDL_Scancode code)
 {
   switch (code)
   {
-#define ProcessInput(Scancode, Keycode, ZeroValue)                             \
-  case Scancode:                                                               \
+#define ProcessInput(Scancode, Keycode, ZeroValue)                                                                     \
+  case Scancode:                                                                                                       \
     return ZeroValue;
 #include "Keys.inl"
 #undef ProcessInput
@@ -61,8 +61,8 @@ SDL_Scancode KeyToSDLScancode(Keys::Enum key)
 {
   switch (key)
   {
-#define ProcessInput(Scancode, Keycode, ZeroValue)                             \
-  case ZeroValue:                                                              \
+#define ProcessInput(Scancode, Keycode, ZeroValue)                                                                     \
+  case ZeroValue:                                                                                                      \
     return Scancode;
 #include "Keys.inl"
 #undef ProcessInput
@@ -76,8 +76,8 @@ Keys::Enum SDLKeycodeToKey(SDL_Keycode code)
 {
   switch (code)
   {
-#define ProcessInput(Scancode, Keycode, ZeroValue)                             \
-  case Keycode:                                                                \
+#define ProcessInput(Scancode, Keycode, ZeroValue)                                                                     \
+  case Keycode:                                                                                                        \
     return ZeroValue;
 #include "Keys.inl"
 #undef ProcessInput
@@ -107,8 +107,8 @@ SDL_Keycode KeyToSDLKeycode(Keys::Enum key)
 {
   switch (key)
   {
-#define ProcessInput(Scancode, Keycode, ZeroValue)                             \
-  case ZeroValue:                                                              \
+#define ProcessInput(Scancode, Keycode, ZeroValue)                                                                     \
+  case ZeroValue:                                                                                                      \
     return Keycode;
 #include "Keys.inl"
 #undef ProcessInput
@@ -123,8 +123,8 @@ MouseButtons::Enum SDLToMouseButton(int button)
 {
   switch (button)
   {
-#define ProcessInput(VKValue, ZeroValue)                                       \
-  case VKValue:                                                                \
+#define ProcessInput(VKValue, ZeroValue)                                                                               \
+  case VKValue:                                                                                                        \
     return ZeroValue;
 #include "MouseButtons.inl"
 #undef ProcessInput
@@ -138,8 +138,8 @@ int MouseButtonToSDL(MouseButtons::Enum button)
 {
   switch (button)
   {
-#define ProcessInput(VKValue, ZeroValue)                                       \
-  case ZeroValue:                                                              \
+#define ProcessInput(VKValue, ZeroValue)                                                                               \
+  case ZeroValue:                                                                                                      \
     return VKValue;
 #include "MouseButtons.inl"
 #undef ProcessInput
@@ -149,10 +149,7 @@ int MouseButtonToSDL(MouseButtons::Enum button)
   return 0;
 }
 
-Shell::Shell() :
-    mCursor(Cursor::Arrow),
-    mMainWindow(nullptr),
-    mUserData(nullptr)
+Shell::Shell() : mCursor(Cursor::Arrow), mMainWindow(nullptr), mUserData(nullptr)
 {
   ZeroConstructPrivateData(ShellPrivateData);
 
@@ -196,10 +193,7 @@ IntRect Shell::GetPrimaryMonitorRectangle()
 
   SDL_Rect monitorRectangle;
   if (SDL_GetDisplayUsableBounds(displayIndex, &monitorRectangle) == 0)
-    return IntRect(monitorRectangle.x,
-                   monitorRectangle.y,
-                   monitorRectangle.w,
-                   monitorRectangle.h);
+    return IntRect(monitorRectangle.x, monitorRectangle.y, monitorRectangle.w, monitorRectangle.h);
 
   // Return a default monitor size since we failed.
   return IntRect(0, 0, cMinimumMonitorSize.x, cMinimumMonitorSize.y);
@@ -270,8 +264,7 @@ bool Shell::IsKeyDown(Keys::Enum key)
 
 bool Shell::IsMouseDown(MouseButtons::Enum button)
 {
-  return (SDL_GetMouseState(nullptr, nullptr) &
-          SDL_BUTTON(MouseButtonToSDL(button))) != 0;
+  return (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(MouseButtonToSDL(button))) != 0;
 }
 
 void Shell::SetMouseCursor(Cursor::Enum cursor)
@@ -391,16 +384,15 @@ void FileDialog(Shell* shell, FileDialogInfo& config, bool isOpen)
   };
 
   const char* title = isOpen ? "Open File - " : "Save File - ";
-  const char* message =
-      "SDL does not support file open/save dialogs.\n"
-      "As a workaround, you can copy a file path and click Clipboard.\n"
-      "You can use newlines to separate multiple files.\n";
+  const char* message = "SDL does not support file open/save dialogs.\n"
+                        "As a workaround, you can copy a file path and click Clipboard.\n"
+                        "You can use newlines to separate multiple files.\n";
 
   String fullTitle = BuildString(title, config.Title);
   String fullMessage = message;
 
-  forRange(FileDialogFilter & filter, config.mSearchFilters) fullMessage =
-      BuildString(fullMessage, "(", filter.mFilter, ") ", filter.mDescription);
+  forRange (FileDialogFilter& filter, config.mSearchFilters)
+    fullMessage = BuildString(fullMessage, "(", filter.mFilter, ") ", filter.mDescription);
 
   const SDL_MessageBoxData messageboxdata = {
       SDL_MESSAGEBOX_INFORMATION,
@@ -422,7 +414,7 @@ void FileDialog(Shell* shell, FileDialogInfo& config, bool isOpen)
   if (files.Empty())
     return;
 
-  forRange(StringRange fileRange, files.Split("\n"))
+  forRange (StringRange fileRange, files.Split("\n"))
   {
     config.mFiles.PushBack(fileRange.Trim());
   }
@@ -447,8 +439,7 @@ void Shell::SaveFile(FileDialogInfo& config)
 
 void Shell::ShowMessageBox(StringParam title, StringParam message)
 {
-  SDL_ShowSimpleMessageBox(
-      SDL_MESSAGEBOX_INFORMATION, title.c_str(), message.c_str(), nullptr);
+  SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, title.c_str(), message.c_str(), nullptr);
 }
 
 ShellWindow* GetShellWindowFromSDLId(Uint32 id)
@@ -457,8 +448,7 @@ ShellWindow* GetShellWindowFromSDLId(Uint32 id)
   if (!sdlWindow)
     return nullptr;
 
-  ShellWindow* window =
-      (ShellWindow*)SDL_GetWindowData(sdlWindow, cShellWindow);
+  ShellWindow* window = (ShellWindow*)SDL_GetWindowData(sdlWindow, cShellWindow);
   return window;
 }
 
@@ -512,8 +502,7 @@ void Shell::Update()
       case SDL_WINDOWEVENT_FOCUS_LOST:
 
         if (window->mOnFocusChanged)
-          window->mOnFocusChanged(
-              e.window.event == SDL_WINDOWEVENT_FOCUS_GAINED, window);
+          window->mOnFocusChanged(e.window.event == SDL_WINDOWEVENT_FOCUS_GAINED, window);
         break;
 
       case SDL_WINDOWEVENT_RESIZED:
@@ -543,15 +532,12 @@ void Shell::Update()
       DropFileInfo& info = self->mDropInfos[e.drop.windowID];
       if (e.type == SDL_DROPBEGIN)
       {
-        ErrorIf(
-            info.mBeganDropFiles,
-            "Got SDL_DROPBEGIN while another SDL_DROPBEGIN was in progress");
+        ErrorIf(info.mBeganDropFiles, "Got SDL_DROPBEGIN while another SDL_DROPBEGIN was in progress");
         info.mBeganDropFiles = true;
       }
       else if (e.type == SDL_DROPCOMPLETE)
       {
-        ErrorIf(!info.mBeganDropFiles,
-                "Got SDL_DROPCOMPLETE without a SDL_DROPBEGIN");
+        ErrorIf(!info.mBeganDropFiles, "Got SDL_DROPCOMPLETE without a SDL_DROPBEGIN");
         info.mBeganDropFiles = false;
       }
       else if (e.type == SDL_DROPFILE)
@@ -583,7 +569,8 @@ void Shell::Update()
         if (window && window->mOnTextTyped)
         {
           String text = e.text.text;
-          forRange(Rune rune, text) window->mOnTextTyped(rune, window);
+          forRange (Rune rune, text)
+            window->mOnTextTyped(rune, window);
         }
       }
       break;
@@ -593,36 +580,28 @@ void Shell::Update()
     {
       ShellWindow* window = GetShellWindowFromSDLId(e.key.windowID);
       if (window && window->mOnKeyDown)
-        window->mOnKeyDown(SDLKeycodeToKey(e.key.keysym.sym),
-                           e.key.keysym.scancode,
-                           e.key.repeat != 0,
-                           window);
+        window->mOnKeyDown(SDLKeycodeToKey(e.key.keysym.sym), e.key.keysym.scancode, e.key.repeat != 0, window);
       break;
     }
     case SDL_KEYUP:
     {
       ShellWindow* window = GetShellWindowFromSDLId(e.key.windowID);
       if (window && window->mOnKeyUp)
-        window->mOnKeyUp(
-            SDLKeycodeToKey(e.key.keysym.sym), e.key.keysym.scancode, window);
+        window->mOnKeyUp(SDLKeycodeToKey(e.key.keysym.sym), e.key.keysym.scancode, window);
       break;
     }
     case SDL_MOUSEBUTTONDOWN:
     {
       ShellWindow* window = GetShellWindowFromSDLId(e.button.windowID);
       if (window && window->mOnMouseDown)
-        window->mOnMouseDown(IntVec2(e.button.x, e.button.y),
-                             SDLToMouseButton(e.button.button),
-                             window);
+        window->mOnMouseDown(IntVec2(e.button.x, e.button.y), SDLToMouseButton(e.button.button), window);
       break;
     }
     case SDL_MOUSEBUTTONUP:
     {
       ShellWindow* window = GetShellWindowFromSDLId(e.button.windowID);
       if (window && window->mOnMouseUp)
-        window->mOnMouseUp(IntVec2(e.button.x, e.button.y),
-                           SDLToMouseButton(e.button.button),
-                           window);
+        window->mOnMouseUp(IntVec2(e.button.x, e.button.y), SDLToMouseButton(e.button.button), window);
       break;
     }
     case SDL_MOUSEMOTION:
@@ -633,8 +612,7 @@ void Shell::Update()
         if (window->mOnMouseMove)
           window->mOnMouseMove(IntVec2(e.motion.x, e.motion.y), window);
         if (window->mOnRawMouseChanged)
-          window->mOnRawMouseChanged(IntVec2(e.motion.xrel, e.motion.yrel),
-                                     window);
+          window->mOnRawMouseChanged(IntVec2(e.motion.xrel, e.motion.yrel), window);
       }
       break;
     }
@@ -652,11 +630,9 @@ void Shell::Update()
         // is mostly undefined per platform. We should probably refactor all
         // scroll wheel deltas to be in pixels scrolled.
         if (e.wheel.x && window->mOnMouseScrollX)
-          window->mOnMouseScrollX(
-              clientPosition, (float)Math::Sign(e.wheel.x), window);
+          window->mOnMouseScrollX(clientPosition, (float)Math::Sign(e.wheel.x), window);
         if (e.wheel.y && window->mOnMouseScrollY)
-          window->mOnMouseScrollY(
-              clientPosition, (float)Math::Sign(e.wheel.y), window);
+          window->mOnMouseScrollY(clientPosition, (float)Math::Sign(e.wheel.y), window);
       }
       break;
     }
@@ -676,8 +652,7 @@ void Shell::Update()
       Error("Not implemented");
       PlatformInputDevice* device = PlatformInputDeviceFromSDL(e.jaxis.which);
       if (device && mainWindow && mainWindow->mOnInputDeviceChanged)
-        mainWindow->mOnInputDeviceChanged(
-            *device, 0, Array<uint>(), DataBlock(), mainWindow);
+        mainWindow->mOnInputDeviceChanged(*device, 0, Array<uint>(), DataBlock(), mainWindow);
       break;
     }
     default:
@@ -693,16 +668,13 @@ const Array<PlatformInputDevice>& Shell::ScanInputDevices()
   return mInputDevices;
 }
 
-SDL_HitTestResult ShellWindowSDLHitTest(SDL_Window* window,
-                                        const SDL_Point* clientPoint,
-                                        void* userData)
+SDL_HitTestResult ShellWindowSDLHitTest(SDL_Window* window, const SDL_Point* clientPoint, void* userData)
 {
   ShellWindow* shellWindow = (ShellWindow*)userData;
 
   WindowBorderArea::Enum result = WindowBorderArea::None;
   if (shellWindow->mOnHitTest)
-    result = shellWindow->mOnHitTest(IntVec2(clientPoint->x, clientPoint->y),
-                                     shellWindow);
+    result = shellWindow->mOnHitTest(IntVec2(clientPoint->x, clientPoint->y), shellWindow);
 
   SDL_HitTestResult hitTestResult = SDL_HITTEST_NORMAL;
 
@@ -778,8 +750,7 @@ ShellWindow::ShellWindow(Shell* shell,
     mOnHitTest(nullptr),
     mOnInputDeviceChanged(nullptr)
 {
-  Uint32 sdlFlags =
-      SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_OPENGL;
+  Uint32 sdlFlags = SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_OPENGL;
   if (flags & WindowStyleFlags::NotVisible)
     sdlFlags |= SDL_WINDOW_HIDDEN;
   if (flags & WindowStyleFlags::Resizable)
@@ -791,12 +762,8 @@ ShellWindow::ShellWindow(Shell* shell,
     sdlFlags |= SDL_WINDOW_SKIP_TASKBAR;
 
   // Is the width and height in client space? SDL doesn't say...
-  SDL_Window* sdlWindow = SDL_CreateWindow(windowName.c_str(),
-                                           monitorClientPos.x,
-                                           monitorClientPos.y,
-                                           clientSize.x,
-                                           clientSize.y,
-                                           sdlFlags);
+  SDL_Window* sdlWindow = SDL_CreateWindow(
+      windowName.c_str(), monitorClientPos.x, monitorClientPos.y, clientSize.x, clientSize.y, sdlFlags);
   mHandle = sdlWindow;
 
   SDL_SetWindowHitTest(sdlWindow, &ShellWindowSDLHitTest, this);
@@ -805,8 +772,7 @@ ShellWindow::ShellWindow(Shell* shell,
 
   if (WindowStyleFlags::MainWindow & flags)
   {
-    ErrorIf(shell->mMainWindow != nullptr,
-            "Another main window already exists");
+    ErrorIf(shell->mMainWindow != nullptr, "Another main window already exists");
     shell->mMainWindow = this;
   }
   shell->mWindows.PushBack(this);
@@ -835,21 +801,15 @@ void ShellWindow::Destroy()
 IntRect ShellWindow::GetMonitorClientRectangle()
 {
   IntRect monitorClientRectangle;
-  SDL_GetWindowSize((SDL_Window*)mHandle,
-                    &monitorClientRectangle.SizeX,
-                    &monitorClientRectangle.SizeY);
-  SDL_GetWindowPosition((SDL_Window*)mHandle,
-                        &monitorClientRectangle.X,
-                        &monitorClientRectangle.Y);
+  SDL_GetWindowSize((SDL_Window*)mHandle, &monitorClientRectangle.SizeX, &monitorClientRectangle.SizeY);
+  SDL_GetWindowPosition((SDL_Window*)mHandle, &monitorClientRectangle.X, &monitorClientRectangle.Y);
   return monitorClientRectangle;
 }
 
 void ShellWindow::SetMonitorClientRectangle(const IntRect& monitorRectangle)
 {
-  SDL_SetWindowPosition(
-      (SDL_Window*)mHandle, monitorRectangle.X, monitorRectangle.Y);
-  SDL_SetWindowSize(
-      (SDL_Window*)mHandle, monitorRectangle.SizeX, monitorRectangle.SizeY);
+  SDL_SetWindowPosition((SDL_Window*)mHandle, monitorRectangle.X, monitorRectangle.Y);
+  SDL_SetWindowSize((SDL_Window*)mHandle, monitorRectangle.SizeX, monitorRectangle.SizeY);
   mClientSize = monitorRectangle.Size();
 }
 
@@ -873,8 +833,7 @@ IntRect ShellWindow::GetMonitorBorderedRectangle()
   return monitorBorderedRectangle;
 }
 
-void ShellWindow::SetMonitorBorderedRectangle(
-    const IntRect& monitorBorderedRectangle)
+void ShellWindow::SetMonitorBorderedRectangle(const IntRect& monitorBorderedRectangle)
 {
   int top = 0;
   int left = 0;
@@ -1026,8 +985,7 @@ void ShellWindow::SetState(WindowState::Enum windowState)
 
   case WindowState::Fullscreen:
   {
-    SDL_SetWindowFullscreen((SDL_Window*)mHandle,
-                            SDL_WINDOW_FULLSCREEN_DESKTOP);
+    SDL_SetWindowFullscreen((SDL_Window*)mHandle, SDL_WINDOW_FULLSCREEN_DESKTOP);
     break;
   }
 

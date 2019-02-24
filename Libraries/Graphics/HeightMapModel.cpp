@@ -59,8 +59,8 @@ void HeightMapModel::Initialize(CogInitializer& initializer)
   mMap = GetOwner()->has(HeightMap);
 
   // Loop through all the patches on the map
-  forRange(HeightPatch * patch, mMap->GetAllPatches())
-      CreateGraphicalPatchMesh(patch);
+  forRange (HeightPatch* patch, mMap->GetAllPatches())
+    CreateGraphicalPatchMesh(patch);
 
   RebuildLocalAabb();
 
@@ -75,8 +75,8 @@ void HeightMapModel::OnDestroy(uint flags)
   Graphical::OnDestroy(flags);
 
   // Have to manually clean up allocated weight textures
-  forRange(GraphicalHeightPatch & patch,
-           mGraphicalPatches.Values()) delete patch.mWeightTexture;
+  forRange (GraphicalHeightPatch& patch, mGraphicalPatches.Values())
+    delete patch.mWeightTexture;
 }
 
 Aabb HeightMapModel::GetLocalAabb()
@@ -84,11 +84,9 @@ Aabb HeightMapModel::GetLocalAabb()
   return mLocalAabb;
 }
 
-void HeightMapModel::ExtractFrameData(FrameNode& frameNode,
-                                      FrameBlock& frameBlock)
+void HeightMapModel::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
-  GraphicalEntryData* entryData =
-      ((GraphicalEntry*)frameNode.mGraphicalEntry)->mData;
+  GraphicalEntryData* entryData = ((GraphicalEntry*)frameNode.mGraphicalEntry)->mData;
 
   PatchIndex patchIndex = *(PatchIndex*)&entryData->mUtility;
   HeightPatch* heightPatch = mMap->GetPatchAtIndex(patchIndex);
@@ -101,12 +99,10 @@ void HeightMapModel::ExtractFrameData(FrameNode& frameNode,
 
   frameNode.mMaterialRenderData = mMaterial->mRenderData;
   frameNode.mMeshRenderData = graphicalPatch.mMesh->mRenderData;
-  frameNode.mTextureRenderData =
-      graphicalPatch.mWeightTexture->Image->mRenderData;
+  frameNode.mTextureRenderData = graphicalPatch.mWeightTexture->Image->mRenderData;
 
   frameNode.mLocalToWorld = mTransform->GetWorldMatrix();
-  frameNode.mLocalToWorldNormal = Math::BuildTransform(
-      mTransform->GetWorldRotation(), mTransform->GetWorldScale());
+  frameNode.mLocalToWorldNormal = Math::BuildTransform(mTransform->GetWorldRotation(), mTransform->GetWorldScale());
   frameNode.mLocalToWorldNormal.Invert().Transpose();
 
   frameNode.mObjectWorldPosition = mTransform->GetWorldTranslation();
@@ -114,27 +110,21 @@ void HeightMapModel::ExtractFrameData(FrameNode& frameNode,
   frameNode.mBoneMatrixRange = IndexRange(0, 0);
 }
 
-void HeightMapModel::ExtractViewData(ViewNode& viewNode,
-                                     ViewBlock& viewBlock,
-                                     FrameBlock& frameBlock)
+void HeightMapModel::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
 
   viewNode.mLocalToView = viewBlock.mWorldToView * frameNode.mLocalToWorld;
-  viewNode.mLocalToViewNormal =
-      Math::ToMatrix3(viewBlock.mWorldToView) * frameNode.mLocalToWorldNormal;
-  viewNode.mLocalToPerspective =
-      viewBlock.mViewToPerspective * viewNode.mLocalToView;
+  viewNode.mLocalToViewNormal = Math::ToMatrix3(viewBlock.mWorldToView) * frameNode.mLocalToWorldNormal;
+  viewNode.mLocalToPerspective = viewBlock.mViewToPerspective * viewNode.mLocalToView;
 }
 
-void HeightMapModel::MidPhaseQuery(Array<GraphicalEntry>& entries,
-                                   Camera& camera,
-                                   Frustum* frustum)
+void HeightMapModel::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Frustum* frustum)
 {
   typedef HashMap<HeightPatch*, GraphicalHeightPatch>::pair GraphicalPatchPair;
   if (frustum == nullptr)
   {
-    forRange(GraphicalPatchPair & pair, mGraphicalPatches.All())
+    forRange (GraphicalPatchPair& pair, mGraphicalPatches.All())
     {
       HeightPatch* heightPatch = pair.first;
       GraphicalHeightPatch& graphicalPatch = pair.second;
@@ -145,7 +135,7 @@ void HeightMapModel::MidPhaseQuery(Array<GraphicalEntry>& entries,
   else
   {
     Mat4 worldMatrix = mTransform->GetWorldMatrix();
-    forRange(GraphicalPatchPair & pair, mGraphicalPatches.All())
+    forRange (GraphicalPatchPair& pair, mGraphicalPatches.All())
     {
       HeightPatch* heightPatch = pair.first;
       GraphicalHeightPatch& graphicalPatch = pair.second;
@@ -176,10 +166,9 @@ String HeightMapModel::GetDefaultMaterialName()
   return "DefaultHeightMapMaterial";
 }
 
-void HeightMapModel::AddGraphicalPatchEntry(
-    Array<GraphicalEntry>& entries,
-    GraphicalHeightPatch& graphicalPatch,
-    PatchIndex index)
+void HeightMapModel::AddGraphicalPatchEntry(Array<GraphicalEntry>& entries,
+                                            GraphicalHeightPatch& graphicalPatch,
+                                            PatchIndex index)
 {
   GraphicalEntryData& entryData = graphicalPatch.mGraphicalEntryData;
   entryData.mGraphical = this;
@@ -213,8 +202,7 @@ void HeightMapModel::OnPatchRemoved(HeightMapEvent* event)
 {
   HeightPatch* heightPatch = event->Patch;
 
-  ErrorIf(!mGraphicalPatches.ContainsKey(heightPatch),
-          "No GraphicalHeightPatch found for HeightPatch.");
+  ErrorIf(!mGraphicalPatches.ContainsKey(heightPatch), "No GraphicalHeightPatch found for HeightPatch.");
   GraphicalHeightPatch& graphicalHeightPatch = mGraphicalPatches[heightPatch];
   delete graphicalHeightPatch.mWeightTexture;
   mGraphicalPatches.Erase(heightPatch);
@@ -234,11 +222,10 @@ void HeightMapModel::OnSave(HeightMapEvent* event)
   HeightMapSource* source = event->Source;
 
   typedef Pair<HeightPatch*, GraphicalHeightPatch> PairType;
-  forRange(PairType patchPair, mGraphicalPatches.All())
+  forRange (PairType patchPair, mGraphicalPatches.All())
   {
     GraphicalHeightPatch& patch = patchPair.second;
-    PatchLayer* layer =
-        source->GetLayerData(patchPair.first->Index, PatchLayerType::Weights);
+    PatchLayer* layer = source->GetLayerData(patchPair.first->Index, PatchLayerType::Weights);
     layer->LayerType = PatchLayerType::Weights;
     layer->ElementSize = sizeof(ByteColor);
     layer->Width = WeightTextureSize;
@@ -258,8 +245,8 @@ void HeightMapModel::RebuildLocalAabb()
   else
   {
     mLocalAabb.SetInvalid();
-    forRange(GraphicalHeightPatch & graphicalPatch, mGraphicalPatches.Values())
-        mLocalAabb.Combine(graphicalPatch.mLocalAabb);
+    forRange (GraphicalHeightPatch& graphicalPatch, mGraphicalPatches.Values())
+      mLocalAabb.Combine(graphicalPatch.mLocalAabb);
   }
 
   UpdateBroadPhaseAabb();
@@ -342,20 +329,15 @@ void HeightMapModel::CreateGraphicalPatchMesh(HeightPatch* heightPatch)
 
   if (graphicalPatch.mWeightTexture == nullptr)
   {
-    graphicalPatch.mWeightTexture =
-        new PixelBuffer(color, WeightTextureSize, WeightTextureSize);
-    graphicalPatch.mWeightTexture->Image->mAddressingX =
-        TextureAddressing::Clamp;
-    graphicalPatch.mWeightTexture->Image->mAddressingY =
-        TextureAddressing::Clamp;
-    graphicalPatch.mWeightTexture->Image->mFiltering =
-        TextureFiltering::Bilinear;
+    graphicalPatch.mWeightTexture = new PixelBuffer(color, WeightTextureSize, WeightTextureSize);
+    graphicalPatch.mWeightTexture->Image->mAddressingX = TextureAddressing::Clamp;
+    graphicalPatch.mWeightTexture->Image->mAddressingY = TextureAddressing::Clamp;
+    graphicalPatch.mWeightTexture->Image->mFiltering = TextureFiltering::Bilinear;
     graphicalPatch.mWeightTexture->Upload();
 
     if (mMap->mSource)
     {
-      PatchLayer* patchLayer = mMap->mSource->GetLayerData(
-          heightPatch->Index, PatchLayerType::Weights);
+      PatchLayer* patchLayer = mMap->mSource->GetLayerData(heightPatch->Index, PatchLayerType::Weights);
       if (patchLayer->Data)
         graphicalPatch.mWeightTexture->SetAll((byte*)patchLayer->Data);
     }

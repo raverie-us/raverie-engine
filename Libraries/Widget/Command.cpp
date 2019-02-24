@@ -54,9 +54,7 @@ ZilchDefineType(CommandEvent, builder, type)
   ZilchBindGetterProperty(Space);
 }
 
-CommandEvent::CommandEvent(Object* source, CommandManager* manager) :
-    ObjectEvent(source),
-    mManager(manager)
+CommandEvent::CommandEvent(Object* source, CommandManager* manager) : ObjectEvent(source), mManager(manager)
 {
 }
 
@@ -73,27 +71,18 @@ CommandExecuter* BuildMetaCommandExecuter(StringParam executionFunction)
 {
   // Parse the function string
   StringTokenRange tokens(executionFunction.All(), '.');
-  ReturnIf(tokens.Empty(),
-           nullptr,
-           "Bad execution function format '%s'",
-           executionFunction.c_str());
+  ReturnIf(tokens.Empty(), nullptr, "Bad execution function format '%s'", executionFunction.c_str());
 
   String object = tokens.Front();
   tokens.PopFront();
 
-  ReturnIf(tokens.Empty(),
-           nullptr,
-           "Bad execution function format '%s'",
-           executionFunction.c_str());
+  ReturnIf(tokens.Empty(), nullptr, "Bad execution function format '%s'", executionFunction.c_str());
 
   String functionName = tokens.Front();
 
   // Find object
   Object* systemObject = Z::gSystemObjects->FindObject(object);
-  ReturnIf(systemObject == nullptr,
-           nullptr,
-           "Failed to find system object '%s'",
-           object.c_str());
+  ReturnIf(systemObject == nullptr, nullptr, "Failed to find system object '%s'", object.c_str());
 
   // Find Function
   BoundType* metaType = ZilchVirtualTypeId(systemObject);
@@ -191,8 +180,7 @@ void Command::FillOutToolTip()
   if (!Description.Empty())
   {
     if (!Shortcut.Empty())
-      ToolTip = String::Format(
-          "%s - %s (%s)", Name.c_str(), Description.c_str(), Shortcut.c_str());
+      ToolTip = String::Format("%s - %s (%s)", Name.c_str(), Description.c_str(), Shortcut.c_str());
     else
       ToolTip = String::Format("%s - %s", Name.c_str(), Description.c_str());
   }
@@ -216,10 +204,7 @@ void Command::ExecuteCommand()
 {
   if (Z::gEngine->IsReadOnly() && !ReadOnly)
   {
-    DoNotifyWarning("Command",
-                    BuildString("Cannot execute command ",
-                                Name,
-                                " because we are in read-only mode"));
+    DoNotifyWarning("Command", BuildString("Cannot execute command ", Name, " because we are in read-only mode"));
     return;
   }
 
@@ -235,7 +220,7 @@ void CommandSearchProvider::Search(SearchData& search)
   DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig);
 
   String filterString = search.SearchString;
-  forRange(Command * command, mCommandSet->mCommands.All())
+  forRange (Command* command, mCommandSet->mCommands.All())
   {
     // Only show dev commands if dev config is present
     if (command->DevOnly && devConfig == nullptr)
@@ -251,28 +236,24 @@ String CommandSearchProvider::GetElementType(SearchViewResult& element)
   return CommandName;
 }
 
-void CommandSearchProvider::RunCommand(SearchView* searchView,
-                                       SearchViewResult& element)
+void CommandSearchProvider::RunCommand(SearchView* searchView, SearchViewResult& element)
 {
   Command* command = (Command*)element.Data;
   command->ExecuteCommand();
 }
 
-Composite* CommandSearchProvider::CreatePreview(Composite* parent,
-                                                SearchViewResult& element)
+Composite* CommandSearchProvider::CreatePreview(Composite* parent, SearchViewResult& element)
 {
   Command* command = (Command*)element.Data;
   return CreateTextPreview(parent, command->Description);
 }
 
-void CommandSearchProvider::FilterAddCommand(SearchData& search,
-                                             Command* command)
+void CommandSearchProvider::FilterAddCommand(SearchData& search, Command* command)
 {
   if (!CheckAndAddTags(search, command->TagList))
     return;
 
-  int priority = PartialMatch(
-      search.SearchString.All(), command->Name.All(), CaseInsensitiveCompare);
+  int priority = PartialMatch(search.SearchString.All(), command->Name.All(), CaseInsensitiveCompare);
   if (priority != cNoMatch)
   {
     SearchViewResult& result = search.Results.PushBack();
@@ -316,7 +297,7 @@ void CommandManager::LoadCommands(StringParam filename)
   {
     Array<Command*> commands;
     LoadPolymorphicSerialize("Commands", "commands", *stream, commands, this);
-    forRange(Command * command, commands.All())
+    forRange (Command* command, commands.All())
     {
       AddCommand(command);
     }
@@ -337,8 +318,8 @@ void CommandManager::LoadMenu(StringParam filename)
   if (status)
     stream->SerializeValue(menus);
 
-  forRange(MenuDefinition * menuDef, menus.All()) mMenus[menuDef->Name] =
-      menuDef;
+  forRange (MenuDefinition* menuDef, menus.All())
+    mMenus[menuDef->Name] = menuDef;
 }
 
 Command* CommandManager::CreateFromName(StringParam name)
@@ -346,9 +327,7 @@ Command* CommandManager::CreateFromName(StringParam name)
   return new Command();
 }
 
-Command* CommandManager::AddCommand(StringParam commandName,
-                                    CommandExecuter* executer,
-                                    bool readOnly)
+Command* CommandManager::AddCommand(StringParam commandName, CommandExecuter* executer, bool readOnly)
 {
   Command* existingCommand = mNamedCommands.FindValue(commandName, nullptr);
   if (existingCommand)
@@ -417,8 +396,7 @@ void CommandManager::RunParsedCommands()
 {
   Environment* environment = Environment::GetInstance();
   StringMap& arguments = environment->mParsedCommandLineArguments;
-  for (StringMap::range range = arguments.All(); !range.Empty();
-       range.PopFront())
+  for (StringMap::range range = arguments.All(); !range.Empty(); range.PopFront())
   {
     String commandName = range.Front().first;
     Command* command = GetCommand(commandName);
@@ -427,10 +405,7 @@ void CommandManager::RunParsedCommands()
   }
 }
 
-String CommandManager::BuildShortcutString(bool ctrl,
-                                           bool alt,
-                                           bool shift,
-                                           StringParam key)
+String CommandManager::BuildShortcutString(bool ctrl, bool alt, bool shift, StringParam key)
 {
   StringBuilder builder;
 
@@ -451,10 +426,8 @@ bool CommandManager::TestCommandKeyboardShortcuts(KeyboardEvent* event)
   if (event->Handled || event->Key == Keys::Unknown)
     return false;
 
-  String shortcut = BuildShortcutString(event->CtrlPressed,
-                                        event->AltPressed,
-                                        event->ShiftPressed,
-                                        event->mKeyboard->ToSymbol(event->Key));
+  String shortcut = BuildShortcutString(
+      event->CtrlPressed, event->AltPressed, event->ShiftPressed, event->mKeyboard->ToSymbol(event->Key));
 
   // ZPrint("Shortcut %s\n", shortcutString.c_str());
   Command* command = mShortcuts.FindValue(shortcut, nullptr);
@@ -472,8 +445,7 @@ bool CommandManager::IsShortcutReserved(StringParam validShortcut)
   return mShortcuts.FindValue(validShortcut, nullptr) != nullptr;
 }
 
-bool CommandManager::IsShortcutReserved(
-    bool ctrl, bool alt, bool shift, StringParam validKey, Command** out)
+bool CommandManager::IsShortcutReserved(bool ctrl, bool alt, bool shift, StringParam validKey, Command** out)
 {
   String shortcut = BuildShortcutString(ctrl, alt, shift, validKey);
 
@@ -498,12 +470,8 @@ bool CommandManager::ClearCommandShortcut(Command* command, bool sendEvents)
   return true;
 }
 
-bool CommandManager::UpdateCommandShortcut(StringParam commandName,
-                                           bool ctrl,
-                                           bool alt,
-                                           bool shift,
-                                           StringParam key,
-                                           bool sendEvents)
+bool CommandManager::UpdateCommandShortcut(
+    StringParam commandName, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents)
 {
   if (Command* command = mNamedCommands.FindValue(commandName, nullptr))
     return UpdateCommandShortcut(command, ctrl, alt, shift, key, sendEvents);
@@ -511,12 +479,8 @@ bool CommandManager::UpdateCommandShortcut(StringParam commandName,
   return false;
 }
 
-bool CommandManager::UpdateCommandShortcut(Command* command,
-                                           bool ctrl,
-                                           bool alt,
-                                           bool shift,
-                                           StringParam key,
-                                           bool sendEvents)
+bool CommandManager::UpdateCommandShortcut(
+    Command* command, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents)
 {
   String shortcut = BuildShortcutString(ctrl, alt, shift, key);
 
@@ -538,9 +502,7 @@ bool CommandManager::UpdateCommandShortcut(Command* command,
   return true;
 }
 
-bool CommandManager::UpdateCommandTags(StringParam commandName,
-                                       StringParam tags,
-                                       bool sendEvents)
+bool CommandManager::UpdateCommandTags(StringParam commandName, StringParam tags, bool sendEvents)
 {
   if (Command* command = mNamedCommands.FindValue(commandName, nullptr))
     return UpdateCommandTags(command, tags);
@@ -548,9 +510,7 @@ bool CommandManager::UpdateCommandTags(StringParam commandName,
   return false;
 }
 
-bool CommandManager::UpdateCommandTags(Command* command,
-                                       StringParam tags,
-                                       bool sendEvents)
+bool CommandManager::UpdateCommandTags(Command* command, StringParam tags, bool sendEvents)
 {
   if (command->Tags == tags)
     return false;
@@ -595,7 +555,7 @@ void CommandManager::BuildTagList(Command* command)
 
 void CommandManager::ValidateCommands()
 {
-  forRange(Command * command, mCommands.All())
+  forRange (Command* command, mCommands.All())
   {
     if (command->mExecuter)
       continue;

@@ -66,8 +66,7 @@ public:
   virtual bool HasFocus(GameSession* game) = 0;
 
   // Add a new resource
-  virtual Resource* AddResource(ResourceManager* resourceManager,
-                                ResourceAdd& resourceAdd) = 0;
+  virtual Resource* AddResource(ResourceManager* resourceManager, ResourceAdd& resourceAdd) = 0;
 
   // Determines if a new resource should be created, otherwise returns the
   // original
@@ -80,20 +79,14 @@ public:
                                        bool modified) = 0;
 
   // If there is a resource id conflict notify the editor
-  virtual void OnResourceIdConflict(ResourceEntry& resourceEntry,
-                                    Resource* previous) = 0;
+  virtual void OnResourceIdConflict(ResourceEntry& resourceEntry, Resource* previous) = 0;
 
   // Show an error in a text file or resource text file using the editor's text
   // editor
-  virtual void ShowTextError(StringParam file,
-                             int line,
-                             StringParam message) = 0;
+  virtual void ShowTextError(StringParam file, int line, StringParam message) = 0;
 
   // Show a text block
-  virtual void ShowTextBlock(StringParam name,
-                             StringRange text,
-                             int line,
-                             StringParam message) = 0;
+  virtual void ShowTextBlock(StringParam name, StringRange text, int line, StringParam message) = 0;
 
   virtual MetaSelection* GetActiveSelection() = 0;
 

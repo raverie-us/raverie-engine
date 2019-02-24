@@ -39,15 +39,12 @@ public:
   template <typename T>
   Any(const T& value,
       ExecutableState* state = nullptr,
-      P_DISABLE_IF(
-          (Zero::is_base_of<Type,
-                            typename Zero::remove_pointer<
-                                typename Zero::remove_const_and_volatile<
-                                    T>::type>::type>::value)))
+      P_DISABLE_IF((Zero::is_base_of<
+                    Type,
+                    typename Zero::remove_pointer<typename Zero::remove_const_and_volatile<T>::type>::type>::value)))
   {
     typedef typename TypeBinding::StripQualifiers<T>::Type UnqualifiedType;
-    const UnqualifiedType* pointer =
-        TypeBinding::ReferenceCast<T&, const UnqualifiedType*>::Cast((T&)value);
+    const UnqualifiedType* pointer = TypeBinding::ReferenceCast<T&, const UnqualifiedType*>::Cast((T&)value);
     BoundType* type = ZilchVirtualTypeId(pointer);
     type->IsInitializedAssert();
     ZilchTypeId(T)->IsInitializedAssert();
@@ -87,8 +84,7 @@ public:
   {
     if (this->StoredType == nullptr)
     {
-      ErrorIf(options == GetOptions::AssertOnNull,
-              "The value inside the Any was null");
+      ErrorIf(options == GetOptions::AssertOnNull, "The value inside the Any was null");
       return GetInvalid<T>();
     }
 

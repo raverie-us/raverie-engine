@@ -11,9 +11,7 @@ namespace Zero
 /// a consistent order such as in a property grid. Currently implemented as a
 /// hashmap of linked list nodes. Can be optimized later, meant as a quick and
 /// easy solution for now.
-template <typename KeyType,
-          typename ValueType,
-          typename SubSorter = less<KeyType>>
+template <typename KeyType, typename ValueType, typename SubSorter = less<KeyType>>
 class OrderedHashMap
 {
 public:

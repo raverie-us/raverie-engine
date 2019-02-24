@@ -16,43 +16,37 @@ public:
 class ScriptPreview : public IconPreview
 {
 public:
-  ScriptPreview(PreviewWidgetInitializer& initializer) :
-      IconPreview(initializer, "ScriptIcon"){};
+  ScriptPreview(PreviewWidgetInitializer& initializer) : IconPreview(initializer, "ScriptIcon"){};
 };
 
 class RenderGroupPreview : public IconPreview
 {
 public:
-  RenderGroupPreview(PreviewWidgetInitializer& initializer) :
-      IconPreview(initializer, "RenderGroupIcon"){};
+  RenderGroupPreview(PreviewWidgetInitializer& initializer) : IconPreview(initializer, "RenderGroupIcon"){};
 };
 
 class SoundPreview : public IconPreview
 {
 public:
-  SoundPreview(PreviewWidgetInitializer& initializer) :
-      IconPreview(initializer, "SoundIcon"){};
+  SoundPreview(PreviewWidgetInitializer& initializer) : IconPreview(initializer, "SoundIcon"){};
 };
 
 class NetworkingPreview : public IconPreview
 {
 public:
-  NetworkingPreview(PreviewWidgetInitializer& initializer) :
-      IconPreview(initializer, "NetworkingIcon"){};
+  NetworkingPreview(PreviewWidgetInitializer& initializer) : IconPreview(initializer, "NetworkingIcon"){};
 };
 
 class PhysicsPreview : public IconPreview
 {
 public:
-  PhysicsPreview(PreviewWidgetInitializer& initializer) :
-      IconPreview(initializer, "PhysicsIcon"){};
+  PhysicsPreview(PreviewWidgetInitializer& initializer) : IconPreview(initializer, "PhysicsIcon"){};
 };
 
 class LevelPreview : public IconPreview
 {
 public:
-  LevelPreview(PreviewWidgetInitializer& initializer) :
-      IconPreview(initializer, "LevelIcon"){};
+  LevelPreview(PreviewWidgetInitializer& initializer) : IconPreview(initializer, "LevelIcon"){};
 };
 
 class SoundCuePreview : public IconPreview
@@ -67,15 +61,13 @@ public:
 class PhysicsMaterialPreview : public IconPreview
 {
 public:
-  PhysicsMaterialPreview(PreviewWidgetInitializer& initializer) :
-      IconPreview(initializer, "PhysicsMaterial"){};
+  PhysicsMaterialPreview(PreviewWidgetInitializer& initializer) : IconPreview(initializer, "PhysicsMaterial"){};
 };
 
 class EmptyPreview : public IconPreview
 {
 public:
-  EmptyPreview(PreviewWidgetInitializer& initializer) :
-      IconPreview(initializer, "LargeFolder")
+  EmptyPreview(PreviewWidgetInitializer& initializer) : IconPreview(initializer, "LargeFolder")
   {
     mIcon->SetColor(Vec4(0, 0, 0, 0));
   }
@@ -258,15 +250,9 @@ class SampleCurveDrawer : public Widget
 public:
   SampleCurveDrawer(Composite* parent, HandleParam object);
 
-  void AddCurve(ViewBlock& viewBlock,
-                FrameBlock& frameBlock,
-                WidgetRect clipRect,
-                SampleCurve* curveObject);
-  void RenderUpdate(ViewBlock& viewBlock,
-                    FrameBlock& frameBlock,
-                    Mat4Param parentTx,
-                    ColorTransform colorTx,
-                    WidgetRect clipRect);
+  void AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, SampleCurve* curveObject);
+  void RenderUpdate(
+      ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect);
 
   Handle mObject;
 };
@@ -297,8 +283,7 @@ public:
 class SpaceArchetypePreview : public IconPreview
 {
 public:
-  SpaceArchetypePreview(PreviewWidgetInitializer& initializer,
-                        Archetype* archetype);
+  SpaceArchetypePreview(PreviewWidgetInitializer& initializer, Archetype* archetype);
   ~SpaceArchetypePreview();
 
   Handle GetEditObject() override;
@@ -309,8 +294,7 @@ public:
 class GameArchetypePreview : public IconPreview
 {
 public:
-  GameArchetypePreview(PreviewWidgetInitializer& initializer,
-                       Archetype* archetype);
+  GameArchetypePreview(PreviewWidgetInitializer& initializer, Archetype* archetype);
   ~GameArchetypePreview();
 
   Handle GetEditObject() override;

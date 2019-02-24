@@ -9,34 +9,26 @@ namespace Zilch
 static const int ExceptionJumpResult = 1729;
 
 template <>
-void VirtualMachine::GenericPow<Byte>(Byte& out,
-                                      const Byte& base,
-                                      const Byte& exponent)
+void VirtualMachine::GenericPow<Byte>(Byte& out, const Byte& base, const Byte& exponent)
 {
   out = (Byte)IntegralPower(base, exponent);
 }
 
 template <>
-void VirtualMachine::GenericPow<Integer>(Integer& out,
-                                         const Integer& base,
-                                         const Integer& exponent)
+void VirtualMachine::GenericPow<Integer>(Integer& out, const Integer& base, const Integer& exponent)
 {
   out = IntegralPower(base, exponent);
 }
 
 template <>
-inline void VirtualMachine::GenericPow<Integer2>(Integer2& out,
-                                                 const Integer2& base,
-                                                 const Integer2& exponent)
+inline void VirtualMachine::GenericPow<Integer2>(Integer2& out, const Integer2& base, const Integer2& exponent)
 {
   out.x = IntegralPower(base.x, exponent.x);
   out.y = IntegralPower(base.y, exponent.y);
 }
 
 template <>
-inline void VirtualMachine::GenericPow<Integer3>(Integer3& out,
-                                                 const Integer3& base,
-                                                 const Integer3& exponent)
+inline void VirtualMachine::GenericPow<Integer3>(Integer3& out, const Integer3& base, const Integer3& exponent)
 {
   out.x = IntegralPower(base.x, exponent.x);
   out.y = IntegralPower(base.y, exponent.y);
@@ -44,9 +36,7 @@ inline void VirtualMachine::GenericPow<Integer3>(Integer3& out,
 }
 
 template <>
-inline void VirtualMachine::GenericPow<Integer4>(Integer4& out,
-                                                 const Integer4& base,
-                                                 const Integer4& exponent)
+inline void VirtualMachine::GenericPow<Integer4>(Integer4& out, const Integer4& base, const Integer4& exponent)
 {
   out.x = IntegralPower(base.x, exponent.x);
   out.y = IntegralPower(base.y, exponent.y);
@@ -63,18 +53,14 @@ void VirtualMachine::GenericPow<DoubleInteger>(DoubleInteger& out,
 }
 
 template <>
-void VirtualMachine::GenericPow<Real2>(Real2& out,
-                                       const Real2& base,
-                                       const Real2& exponent)
+void VirtualMachine::GenericPow<Real2>(Real2& out, const Real2& base, const Real2& exponent)
 {
   out.x = std::pow(base.x, exponent.x);
   out.y = std::pow(base.y, exponent.y);
 }
 
 template <>
-void VirtualMachine::GenericPow<Real3>(Real3& out,
-                                       const Real3& base,
-                                       const Real3& exponent)
+void VirtualMachine::GenericPow<Real3>(Real3& out, const Real3& base, const Real3& exponent)
 {
   out.x = std::pow(base.x, exponent.x);
   out.y = std::pow(base.y, exponent.y);
@@ -82,9 +68,7 @@ void VirtualMachine::GenericPow<Real3>(Real3& out,
 }
 
 template <>
-void VirtualMachine::GenericPow<Real4>(Real4& out,
-                                       const Real4& base,
-                                       const Real4& exponent)
+void VirtualMachine::GenericPow<Real4>(Real4& out, const Real4& base, const Real4& exponent)
 {
   out.x = std::pow(base.x, exponent.x);
   out.y = std::pow(base.y, exponent.y);
@@ -93,34 +77,26 @@ void VirtualMachine::GenericPow<Real4>(Real4& out,
 }
 
 template <>
-void VirtualMachine::GenericMod<Real>(Real& out,
-                                      const Real& value,
-                                      const Real& mod)
+void VirtualMachine::GenericMod<Real>(Real& out, const Real& value, const Real& mod)
 {
   out = std::fmod(value, mod);
 }
 
 template <>
-void VirtualMachine::GenericMod<DoubleReal>(DoubleReal& out,
-                                            const DoubleReal& value,
-                                            const DoubleReal& mod)
+void VirtualMachine::GenericMod<DoubleReal>(DoubleReal& out, const DoubleReal& value, const DoubleReal& mod)
 {
   out = std::fmod(value, mod);
 }
 
 template <>
-void VirtualMachine::GenericMod<Real2>(Real2& out,
-                                       const Real2& value,
-                                       const Real2& mod)
+void VirtualMachine::GenericMod<Real2>(Real2& out, const Real2& value, const Real2& mod)
 {
   out.x = std::fmod(value.x, mod.x);
   out.y = std::fmod(value.y, mod.y);
 }
 
 template <>
-void VirtualMachine::GenericMod<Real3>(Real3& out,
-                                       const Real3& value,
-                                       const Real3& mod)
+void VirtualMachine::GenericMod<Real3>(Real3& out, const Real3& value, const Real3& mod)
 {
   out.x = std::fmod(value.x, mod.x);
   out.y = std::fmod(value.y, mod.y);
@@ -128,9 +104,7 @@ void VirtualMachine::GenericMod<Real3>(Real3& out,
 }
 
 template <>
-void VirtualMachine::GenericMod<Real4>(Real4& out,
-                                       const Real4& value,
-                                       const Real4& mod)
+void VirtualMachine::GenericMod<Real4>(Real4& out, const Real4& value, const Real4& mod)
 {
   out.x = std::fmod(value.x, mod.x);
   out.y = std::fmod(value.y, mod.y);
@@ -139,16 +113,14 @@ void VirtualMachine::GenericMod<Real4>(Real4& out,
 }
 
 template <>
-void VirtualMachine::GenericScalarPow<Integer2, Integer>(
-    Integer2& out, const Integer2& base, const Integer& exponent)
+void VirtualMachine::GenericScalarPow<Integer2, Integer>(Integer2& out, const Integer2& base, const Integer& exponent)
 {
   out.x = IntegralPower(base.x, exponent);
   out.y = IntegralPower(base.y, exponent);
 }
 
 template <>
-void VirtualMachine::GenericScalarPow<Integer3, Integer>(
-    Integer3& out, const Integer3& base, const Integer& exponent)
+void VirtualMachine::GenericScalarPow<Integer3, Integer>(Integer3& out, const Integer3& base, const Integer& exponent)
 {
   out.x = IntegralPower(base.x, exponent);
   out.y = IntegralPower(base.y, exponent);
@@ -156,8 +128,7 @@ void VirtualMachine::GenericScalarPow<Integer3, Integer>(
 }
 
 template <>
-void VirtualMachine::GenericScalarPow<Integer4, Integer>(
-    Integer4& out, const Integer4& base, const Integer& exponent)
+void VirtualMachine::GenericScalarPow<Integer4, Integer>(Integer4& out, const Integer4& base, const Integer& exponent)
 {
   out.x = IntegralPower(base.x, exponent);
   out.y = IntegralPower(base.y, exponent);
@@ -166,18 +137,14 @@ void VirtualMachine::GenericScalarPow<Integer4, Integer>(
 }
 
 template <>
-void VirtualMachine::GenericScalarPow<Real2, Real>(Real2& out,
-                                                   const Real2& base,
-                                                   const Real& exponent)
+void VirtualMachine::GenericScalarPow<Real2, Real>(Real2& out, const Real2& base, const Real& exponent)
 {
   out.x = std::pow(base.x, exponent);
   out.y = std::pow(base.y, exponent);
 }
 
 template <>
-void VirtualMachine::GenericScalarPow<Real3, Real>(Real3& out,
-                                                   const Real3& base,
-                                                   const Real& exponent)
+void VirtualMachine::GenericScalarPow<Real3, Real>(Real3& out, const Real3& base, const Real& exponent)
 {
   out.x = std::pow(base.x, exponent);
   out.y = std::pow(base.y, exponent);
@@ -185,9 +152,7 @@ void VirtualMachine::GenericScalarPow<Real3, Real>(Real3& out,
 }
 
 template <>
-void VirtualMachine::GenericScalarPow<Real4, Real>(Real4& out,
-                                                   const Real4& base,
-                                                   const Real& exponent)
+void VirtualMachine::GenericScalarPow<Real4, Real>(Real4& out, const Real4& base, const Real& exponent)
 {
   out.x = std::pow(base.x, exponent);
   out.y = std::pow(base.y, exponent);
@@ -196,18 +161,14 @@ void VirtualMachine::GenericScalarPow<Real4, Real>(Real4& out,
 }
 
 template <>
-void VirtualMachine::GenericScalarMod<Real2, Real>(Real2& out,
-                                                   const Real2& value,
-                                                   const Real& mod)
+void VirtualMachine::GenericScalarMod<Real2, Real>(Real2& out, const Real2& value, const Real& mod)
 {
   out.x = std::fmod(value.x, mod);
   out.y = std::fmod(value.y, mod);
 }
 
 template <>
-void VirtualMachine::GenericScalarMod<Real3, Real>(Real3& out,
-                                                   const Real3& value,
-                                                   const Real& mod)
+void VirtualMachine::GenericScalarMod<Real3, Real>(Real3& out, const Real3& value, const Real& mod)
 {
   out.x = std::fmod(value.x, mod);
   out.y = std::fmod(value.y, mod);
@@ -215,9 +176,7 @@ void VirtualMachine::GenericScalarMod<Real3, Real>(Real3& out,
 }
 
 template <>
-void VirtualMachine::GenericScalarMod<Real4, Real>(Real4& out,
-                                                   const Real4& value,
-                                                   const Real& mod)
+void VirtualMachine::GenericScalarMod<Real4, Real>(Real4& out, const Real4& value, const Real& mod)
 {
   out.x = std::fmod(value.x, mod);
   out.y = std::fmod(value.y, mod);
@@ -306,17 +265,14 @@ bool VirtualMachine::GenericIsZero<Real3>(const Real3& value)
 template <>
 bool VirtualMachine::GenericIsZero<Real4>(const Real4& value)
 {
-  return value.x == 0.0f || value.y == 0.0f || value.z == 0.0f ||
-         value.w == 0.0f;
+  return value.x == 0.0f || value.y == 0.0f || value.z == 0.0f || value.w == 0.0f;
 }
 
 // Get a reference to a member variable (field), given the place in the
 // registers that the handle exists, and the member index...
 template <typename T>
-ZeroForceInline T& GetField(PerFrameData* stackFrame,
-                            PerFrameData* reportFrame,
-                            OperandIndex handleOperand,
-                            size_t memberOperand)
+ZeroForceInline T&
+GetField(PerFrameData* stackFrame, PerFrameData* reportFrame, OperandIndex handleOperand, size_t memberOperand)
 {
   // Grab the handle to the object
   Handle& handle = *(Handle*)(stackFrame->Frame + handleOperand);
@@ -344,8 +300,7 @@ ZeroForceInline T& GetConstant(Function* function, OperandIndex constantOperand)
 {
   // Make sure the value we're grabbing is inside the constant buffer (error
   // checking)
-  ErrorIf(constantOperand < 0 ||
-              constantOperand + sizeof(T) > function->Constants.GetSize(),
+  ErrorIf(constantOperand < 0 || constantOperand + sizeof(T) > function->Constants.GetSize(),
           "The constant's position was outside the memory of the function's "
           "constants");
 
@@ -362,37 +317,27 @@ ZeroForceInline T& GetLocal(byte* frame, OperandIndex localOperand)
 
 // Get a particular static from an operand
 template <typename T>
-ZeroForceInline T& GetStatic(PerFrameData* stackFrame,
-                             PerFrameData* reportFrame,
-                             const Operand& operand)
+ZeroForceInline T& GetStatic(PerFrameData* stackFrame, PerFrameData* reportFrame, const Operand& operand)
 {
   // Look for the static memory in a map of the fields on our state
   // Static fields are done per executable state, so they get wiped each time we
   // quit
   ExecutableState* state = stackFrame->State;
-  return *(
-      T*)(state->GetStaticField(operand.StaticField, *reportFrame->Report) +
-          operand.FieldOffset);
+  return *(T*)(state->GetStaticField(operand.StaticField, *reportFrame->Report) + operand.FieldOffset);
 }
 
 // Get an operand (we don't know what type it is)
 template <typename T>
-ZeroForceInline T& GetOperand(PerFrameData* stackFrame,
-                              PerFrameData* reportFrame,
-                              const Operand& operand)
+ZeroForceInline T& GetOperand(PerFrameData* stackFrame, PerFrameData* reportFrame, const Operand& operand)
 {
   // Based on what kind of operand it is...
   switch (operand.Type)
   {
   case OperandType::Field:
-    return GetField<T>(stackFrame,
-                       reportFrame,
-                       operand.HandleConstantLocal,
-                       operand.FieldOffset);
+    return GetField<T>(stackFrame, reportFrame, operand.HandleConstantLocal, operand.FieldOffset);
 
   case OperandType::Constant:
-    return GetConstant<T>(stackFrame->CurrentFunction,
-                          operand.HandleConstantLocal);
+    return GetConstant<T>(stackFrame->CurrentFunction, operand.HandleConstantLocal);
 
   case OperandType::Local:
     return GetLocal<T>(stackFrame->Frame, operand.HandleConstantLocal);
@@ -446,11 +391,8 @@ ZeroForceInline void IfHandler(PerFrameData* stackFrame, const Opcode& opcode)
   }
 }
 
-ZeroForceInline void CopyHandlerEx(PerFrameData* ourFrame,
-                                   PerFrameData* topFrame,
-                                   const byte*& sourceOut,
-                                   byte*& destinationOut,
-                                   const CopyOpcode& op)
+ZeroForceInline void CopyHandlerEx(
+    PerFrameData* ourFrame, PerFrameData* topFrame, const byte*& sourceOut, byte*& destinationOut, const CopyOpcode& op)
 {
   // When we copy to parameters, it's always a destination
   // (we are placing parameters in the place they must go before we call)
@@ -558,8 +500,7 @@ void VirtualMachine::PatchDummy(Call& call, ExceptionReport& report)
 {
   // Default construct the return value
   byte* returnValue = call.GetReturnUnchecked();
-  call.GetFunction()->FunctionType->Return->GenericDefaultConstruct(
-      returnValue);
+  call.GetFunction()->FunctionType->Return->GenericDefaultConstruct(returnValue);
 }
 
 typedef void (*VirtualInstructionFn)(ExecutableState* state,
@@ -569,145 +510,137 @@ typedef void (*VirtualInstructionFn)(ExecutableState* state,
                                      PerFrameData* ourFrame,
                                      const Opcode& opcode);
 VirtualInstructionFn InstructionTable[Instruction::Count] = {0};
-#define ZilchVirtualInstruction(Name)                                          \
-  void VirtualMachine::Instruction##Name(ExecutableState* state,               \
-                                         Call& call,                           \
-                                         ExceptionReport& report,              \
-                                         size_t& programCounter,               \
-                                         PerFrameData* ourFrame,               \
+#define ZilchVirtualInstruction(Name)                                                                                  \
+  void VirtualMachine::Instruction##Name(ExecutableState* state,                                                       \
+                                         Call& call,                                                                   \
+                                         ExceptionReport& report,                                                      \
+                                         size_t& programCounter,                                                       \
+                                         PerFrameData* ourFrame,                                                       \
                                          const Opcode& opcode)
 
-#define ZilchCaseBinaryRValue2(                                                \
-    argType1, argType2, resultType, operation, expression)                     \
-  ZilchVirtualInstruction(operation##argType1)                                 \
-  {                                                                            \
-    const BinaryRValueOpcode& op = (const BinaryRValueOpcode&)opcode;          \
-    const argType1& left = GetOperand<argType1>(ourFrame, ourFrame, op.Left);  \
-    const argType2& right =                                                    \
-        GetOperand<argType2>(ourFrame, ourFrame, op.Right);                    \
-    resultType& output = GetLocal<resultType>(ourFrame->Frame, op.Output);     \
-    expression;                                                                \
-    programCounter += sizeof(BinaryRValueOpcode);                              \
+#define ZilchCaseBinaryRValue2(argType1, argType2, resultType, operation, expression)                                  \
+  ZilchVirtualInstruction(operation##argType1)                                                                         \
+  {                                                                                                                    \
+    const BinaryRValueOpcode& op = (const BinaryRValueOpcode&)opcode;                                                  \
+    const argType1& left = GetOperand<argType1>(ourFrame, ourFrame, op.Left);                                          \
+    const argType2& right = GetOperand<argType2>(ourFrame, ourFrame, op.Right);                                        \
+    resultType& output = GetLocal<resultType>(ourFrame->Frame, op.Output);                                             \
+    expression;                                                                                                        \
+    programCounter += sizeof(BinaryRValueOpcode);                                                                      \
   }
 
-#define ZilchCaseBinaryLValue2(argType1, argType2, operation, expression)      \
-  ZilchVirtualInstruction(operation##argType1)                                 \
-  {                                                                            \
-    const BinaryLValueOpcode& op = (const BinaryLValueOpcode&)opcode;          \
-    argType1& output = GetOperand<argType1>(ourFrame, ourFrame, op.Output);    \
-    const argType2& right =                                                    \
-        GetOperand<argType2>(ourFrame, ourFrame, op.Right);                    \
-    expression;                                                                \
-    programCounter += sizeof(BinaryLValueOpcode);                              \
+#define ZilchCaseBinaryLValue2(argType1, argType2, operation, expression)                                              \
+  ZilchVirtualInstruction(operation##argType1)                                                                         \
+  {                                                                                                                    \
+    const BinaryLValueOpcode& op = (const BinaryLValueOpcode&)opcode;                                                  \
+    argType1& output = GetOperand<argType1>(ourFrame, ourFrame, op.Output);                                            \
+    const argType2& right = GetOperand<argType2>(ourFrame, ourFrame, op.Right);                                        \
+    expression;                                                                                                        \
+    programCounter += sizeof(BinaryLValueOpcode);                                                                      \
   }
 
-#define ZilchCaseBinaryRValue(argType, resultType, operation, expression)      \
+#define ZilchCaseBinaryRValue(argType, resultType, operation, expression)                                              \
   ZilchCaseBinaryRValue2(argType, argType, resultType, operation, expression)
 
-#define ZilchCaseBinaryLValue(argType, operation, expression)                  \
+#define ZilchCaseBinaryLValue(argType, operation, expression)                                                          \
   ZilchCaseBinaryLValue2(argType, argType, operation, expression)
 
-#define ZilchCaseUnaryRValue(argType, resultType, operation, expression)       \
-  ZilchVirtualInstruction(operation##argType)                                  \
-  {                                                                            \
-    const UnaryRValueOpcode& op = (const UnaryRValueOpcode&)opcode;            \
-    const argType& operand =                                                   \
-        GetOperand<argType>(ourFrame, ourFrame, op.SingleOperand);             \
-    resultType& output = GetLocal<resultType>(ourFrame->Frame, op.Output);     \
-    expression;                                                                \
-    programCounter += sizeof(UnaryRValueOpcode);                               \
+#define ZilchCaseUnaryRValue(argType, resultType, operation, expression)                                               \
+  ZilchVirtualInstruction(operation##argType)                                                                          \
+  {                                                                                                                    \
+    const UnaryRValueOpcode& op = (const UnaryRValueOpcode&)opcode;                                                    \
+    const argType& operand = GetOperand<argType>(ourFrame, ourFrame, op.SingleOperand);                                \
+    resultType& output = GetLocal<resultType>(ourFrame->Frame, op.Output);                                             \
+    expression;                                                                                                        \
+    programCounter += sizeof(UnaryRValueOpcode);                                                                       \
   }
 
-#define ZilchCaseUnaryLValue(argType, operation, expression)                   \
-  ZilchVirtualInstruction(operation##argType)                                  \
-  {                                                                            \
-    const UnaryLValueOpcode& op = (const UnaryLValueOpcode&)opcode;            \
-    argType& operand =                                                         \
-        GetOperand<argType>(ourFrame, ourFrame, op.SingleOperand);             \
-    expression;                                                                \
-    programCounter += sizeof(UnaryLValueOpcode);                               \
+#define ZilchCaseUnaryLValue(argType, operation, expression)                                                           \
+  ZilchVirtualInstruction(operation##argType)                                                                          \
+  {                                                                                                                    \
+    const UnaryLValueOpcode& op = (const UnaryLValueOpcode&)opcode;                                                    \
+    argType& operand = GetOperand<argType>(ourFrame, ourFrame, op.SingleOperand);                                      \
+    expression;                                                                                                        \
+    programCounter += sizeof(UnaryLValueOpcode);                                                                       \
   }
 
-#define ZilchCaseConversion(fromType, toType, expression)                      \
-  ZilchVirtualInstruction(Convert##fromType##To##toType)                       \
-  {                                                                            \
-    const ConversionOpcode& op = (const ConversionOpcode&)opcode;              \
-    const fromType& value =                                                    \
-        GetOperand<fromType>(ourFrame, ourFrame, op.ToConvert);                \
-    toType& output = GetLocal<toType>(ourFrame->Frame, op.Output);             \
-    expression;                                                                \
-    programCounter += sizeof(ConversionOpcode);                                \
+#define ZilchCaseConversion(fromType, toType, expression)                                                              \
+  ZilchVirtualInstruction(Convert##fromType##To##toType)                                                               \
+  {                                                                                                                    \
+    const ConversionOpcode& op = (const ConversionOpcode&)opcode;                                                      \
+    const fromType& value = GetOperand<fromType>(ourFrame, ourFrame, op.ToConvert);                                    \
+    toType& output = GetLocal<toType>(ourFrame->Frame, op.Output);                                                     \
+    expression;                                                                                                        \
+    programCounter += sizeof(ConversionOpcode);                                                                        \
   }
 
-#define ZilchCaseSimpleCopy(T)                                                 \
-  ZilchVirtualInstruction(Copy##T)                                             \
-  {                                                                            \
-    PerFrameData* topFrame = state->StackFrames.Back();                        \
-    T* source;                                                                 \
-    T* destination;                                                            \
-    CopyHandler<T>(                                                            \
-        ourFrame, topFrame, source, destination, (const CopyOpcode&)opcode);   \
+#define ZilchCaseSimpleCopy(T)                                                                                         \
+  ZilchVirtualInstruction(Copy##T)                                                                                     \
+  {                                                                                                                    \
+    PerFrameData* topFrame = state->StackFrames.Back();                                                                \
+    T* source;                                                                                                         \
+    T* destination;                                                                                                    \
+    CopyHandler<T>(ourFrame, topFrame, source, destination, (const CopyOpcode&)opcode);                                \
   }
 
-#define ZilchCaseComplexCopy(T)                                                \
-  ZilchVirtualInstruction(Copy##T)                                             \
-  {                                                                            \
-    /* Grab the rest of the data */                                            \
-    const CopyOpcode& op = (const CopyOpcode&)opcode;                          \
-                                                                               \
-    /* Get the current frame on the top of the stack */                        \
-    PerFrameData* topFrame = state->StackFrames.Back();                        \
-                                                                               \
-    T* source;                                                                 \
-    T* destination;                                                            \
-    CopyHandler<T>(ourFrame, topFrame, source, destination, op);               \
-                                                                               \
-    /* We need to make sure we cleanup any primitives */                       \
-    /* If this is just a standard copy from our stack to our stack... */       \
-    switch (op.Mode)                                                           \
-    {                                                                          \
-    case CopyMode::Initialize:                                                 \
-    {                                                                          \
-      /* For any standard copy, if it's to the stack then */                   \
-      /* we just let our own stack frame clean it up */                        \
-      /* Note: Copies to properties are considered on the stack */             \
-      /* We don't queue cleans for field initializers because the destructors  \
-       * will clean those up */                                                \
-      OperandType::Enum destType = op.Destination.Type;                        \
-      if (destType != OperandType::Field &&                                    \
-          destType != OperandType::StaticField)                                \
-      {                                                                        \
-        /* Queue the destination to be cleaned up */                           \
-        ourFrame->Queue##T##Cleanup(destination);                              \
-      }                                                                        \
-      break;                                                                   \
-    }                                                                          \
-                                                                               \
-    case CopyMode::ToParameter:                                                \
-    {                                                                          \
-      /* For parameter copies, our stack frame will still clean it up */       \
-      /* but the cleanup must occur right after the function is called */      \
-      /* eg PopFrame (which will pop the top!) */                              \
-      topFrame->Queue##T##Cleanup(destination);                                \
-      break;                                                                   \
-    }                                                                          \
-                                                                               \
-    case CopyMode::FromReturn:                                                 \
-    {                                                                          \
-      /* Note: The primitive used here is actually the source primitive! */    \
-      /* See the comment above 'CopyHandler' */                                \
-      /* For returns, we need to clean up the primitive immediately after */   \
-      /* copy since that space could be reused by anyone else */               \
-      source->~T();                                                            \
-                                                                               \
-      /* We also need to queue our own frame to clean */                       \
-      /* up where we copied it to */                                           \
-      ourFrame->Queue##T##Cleanup(destination);                                \
-      break;                                                                   \
-    }                                                                          \
-    default:                                                                   \
-      break;                                                                   \
-    }                                                                          \
+#define ZilchCaseComplexCopy(T)                                                                                        \
+  ZilchVirtualInstruction(Copy##T)                                                                                     \
+  {                                                                                                                    \
+    /* Grab the rest of the data */                                                                                    \
+    const CopyOpcode& op = (const CopyOpcode&)opcode;                                                                  \
+                                                                                                                       \
+    /* Get the current frame on the top of the stack */                                                                \
+    PerFrameData* topFrame = state->StackFrames.Back();                                                                \
+                                                                                                                       \
+    T* source;                                                                                                         \
+    T* destination;                                                                                                    \
+    CopyHandler<T>(ourFrame, topFrame, source, destination, op);                                                       \
+                                                                                                                       \
+    /* We need to make sure we cleanup any primitives */                                                               \
+    /* If this is just a standard copy from our stack to our stack... */                                               \
+    switch (op.Mode)                                                                                                   \
+    {                                                                                                                  \
+    case CopyMode::Initialize:                                                                                         \
+    {                                                                                                                  \
+      /* For any standard copy, if it's to the stack then */                                                           \
+      /* we just let our own stack frame clean it up */                                                                \
+      /* Note: Copies to properties are considered on the stack */                                                     \
+      /* We don't queue cleans for field initializers because the destructors                                          \
+       * will clean those up */                                                                                        \
+      OperandType::Enum destType = op.Destination.Type;                                                                \
+      if (destType != OperandType::Field && destType != OperandType::StaticField)                                      \
+      {                                                                                                                \
+        /* Queue the destination to be cleaned up */                                                                   \
+        ourFrame->Queue##T##Cleanup(destination);                                                                      \
+      }                                                                                                                \
+      break;                                                                                                           \
+    }                                                                                                                  \
+                                                                                                                       \
+    case CopyMode::ToParameter:                                                                                        \
+    {                                                                                                                  \
+      /* For parameter copies, our stack frame will still clean it up */                                               \
+      /* but the cleanup must occur right after the function is called */                                              \
+      /* eg PopFrame (which will pop the top!) */                                                                      \
+      topFrame->Queue##T##Cleanup(destination);                                                                        \
+      break;                                                                                                           \
+    }                                                                                                                  \
+                                                                                                                       \
+    case CopyMode::FromReturn:                                                                                         \
+    {                                                                                                                  \
+      /* Note: The primitive used here is actually the source primitive! */                                            \
+      /* See the comment above 'CopyHandler' */                                                                        \
+      /* For returns, we need to clean up the primitive immediately after */                                           \
+      /* copy since that space could be reused by anyone else */                                                       \
+      source->~T();                                                                                                    \
+                                                                                                                       \
+      /* We also need to queue our own frame to clean */                                                               \
+      /* up where we copied it to */                                                                                   \
+      ourFrame->Queue##T##Cleanup(destination);                                                                        \
+      break;                                                                                                           \
+    }                                                                                                                  \
+    default:                                                                                                           \
+      break;                                                                                                           \
+    }                                                                                                                  \
   }
 
 // Note: These macros mirror those inside of InstructionEnum and Shared (for
@@ -717,137 +650,88 @@ VirtualInstructionFn InstructionTable[Instruction::Count] = {0};
 #define ZilchCopyCases(WithType) ZilchCaseSimpleCopy(WithType)
 
 // Equality and inequality
-#define ZilchEqualityCases(WithType, ResultType)                               \
-  ZilchCaseBinaryRValue(                                                       \
-      WithType, ResultType, TestInequality, output = left != right);           \
-  ZilchCaseBinaryRValue(                                                       \
-      WithType, ResultType, TestEquality, output = left == right);
+#define ZilchEqualityCases(WithType, ResultType)                                                                       \
+  ZilchCaseBinaryRValue(WithType, ResultType, TestInequality, output = left != right);                                 \
+  ZilchCaseBinaryRValue(WithType, ResultType, TestEquality, output = left == right);
 
 // Less and greater comparison
-#define ZilchComparisonCases(WithType, ResultType)                             \
-  ZilchCaseBinaryRValue(                                                       \
-      WithType, ResultType, TestLessThan, output = left < right);              \
-  ZilchCaseBinaryRValue(                                                       \
-      WithType, ResultType, TestLessThanOrEqualTo, output = left <= right);    \
-  ZilchCaseBinaryRValue(                                                       \
-      WithType, ResultType, TestGreaterThan, output = left > right);           \
-  ZilchCaseBinaryRValue(                                                       \
-      WithType, ResultType, TestGreaterThanOrEqualTo, output = left >= right);
+#define ZilchComparisonCases(WithType, ResultType)                                                                     \
+  ZilchCaseBinaryRValue(WithType, ResultType, TestLessThan, output = left < right);                                    \
+  ZilchCaseBinaryRValue(WithType, ResultType, TestLessThanOrEqualTo, output = left <= right);                          \
+  ZilchCaseBinaryRValue(WithType, ResultType, TestGreaterThan, output = left > right);                                 \
+  ZilchCaseBinaryRValue(WithType, ResultType, TestGreaterThanOrEqualTo, output = left >= right);
 
 // Generic numeric operators, copy, equality
-#define ZilchNumericCases(WithType, ComparisonType)                            \
-  ZilchCopyCases(WithType) ZilchEqualityCases(                                 \
-      WithType, ComparisonType) /* No case for unary plus */                   \
-      ZilchCaseUnaryRValue(WithType, WithType, Negate, output = -operand);     \
-  ZilchCaseUnaryLValue(WithType, Increment, GenericIncrement(operand));        \
-  ZilchCaseUnaryLValue(WithType, Decrement, GenericDecrement(operand));        \
-  ZilchCaseBinaryRValue(WithType, WithType, Add, output = left + right);       \
-  ZilchCaseBinaryRValue(WithType, WithType, Subtract, output = left - right);  \
-  ZilchCaseBinaryRValue(WithType, WithType, Multiply, output = left * right);  \
-  ZilchCaseBinaryRValue(                                                       \
-      WithType, WithType, Divide, if (GenericIsZero(right)) {                  \
-        state->ThrowException(report, "Attempted to divide by zero");          \
-        longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                 \
-      } output = left / right);                                                \
-  ZilchCaseBinaryRValue(                                                       \
-      WithType, WithType, Modulo, if (GenericIsZero(right)) {                  \
-        state->ThrowException(report, "Attempted to modulo by zero");          \
-        longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                 \
-      } GenericMod(output, left, right));                                      \
-  ZilchCaseBinaryRValue(                                                       \
-      WithType, WithType, Pow, GenericPow(output, left, right));               \
-  ZilchCaseBinaryLValue(WithType, AssignmentAdd, output += right);             \
-  ZilchCaseBinaryLValue(WithType, AssignmentSubtract, output -= right);        \
-  ZilchCaseBinaryLValue(WithType, AssignmentMultiply, output *= right);        \
-  ZilchCaseBinaryLValue(                                                       \
-      WithType, AssignmentDivide, if (GenericIsZero(right)) {                  \
-        state->ThrowException(report, "Attempted to divide by zero");          \
-        longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                 \
-      } output /= right);                                                      \
-  ZilchCaseBinaryLValue(                                                       \
-      WithType, AssignmentModulo, if (GenericIsZero(right)) {                  \
-        state->ThrowException(report, "Attempted to modulo by zero");          \
-        longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                 \
-      } GenericMod(output, output, right));                                    \
-  ZilchCaseBinaryLValue(                                                       \
-      WithType, AssignmentPow, GenericPow(output, output, right));
+#define ZilchNumericCases(WithType, ComparisonType)                                                                    \
+  ZilchCopyCases(WithType) ZilchEqualityCases(WithType, ComparisonType) /* No case for unary plus */                   \
+      ZilchCaseUnaryRValue(WithType, WithType, Negate, output = -operand);                                             \
+  ZilchCaseUnaryLValue(WithType, Increment, GenericIncrement(operand));                                                \
+  ZilchCaseUnaryLValue(WithType, Decrement, GenericDecrement(operand));                                                \
+  ZilchCaseBinaryRValue(WithType, WithType, Add, output = left + right);                                               \
+  ZilchCaseBinaryRValue(WithType, WithType, Subtract, output = left - right);                                          \
+  ZilchCaseBinaryRValue(WithType, WithType, Multiply, output = left * right);                                          \
+  ZilchCaseBinaryRValue(WithType, WithType, Divide, if (GenericIsZero(right)) {                                        \
+    state->ThrowException(report, "Attempted to divide by zero");                                                      \
+    longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                                                             \
+  } output = left / right);                                                                                            \
+  ZilchCaseBinaryRValue(WithType, WithType, Modulo, if (GenericIsZero(right)) {                                        \
+    state->ThrowException(report, "Attempted to modulo by zero");                                                      \
+    longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                                                             \
+  } GenericMod(output, left, right));                                                                                  \
+  ZilchCaseBinaryRValue(WithType, WithType, Pow, GenericPow(output, left, right));                                     \
+  ZilchCaseBinaryLValue(WithType, AssignmentAdd, output += right);                                                     \
+  ZilchCaseBinaryLValue(WithType, AssignmentSubtract, output -= right);                                                \
+  ZilchCaseBinaryLValue(WithType, AssignmentMultiply, output *= right);                                                \
+  ZilchCaseBinaryLValue(WithType, AssignmentDivide, if (GenericIsZero(right)) {                                        \
+    state->ThrowException(report, "Attempted to divide by zero");                                                      \
+    longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                                                             \
+  } output /= right);                                                                                                  \
+  ZilchCaseBinaryLValue(WithType, AssignmentModulo, if (GenericIsZero(right)) {                                        \
+    state->ThrowException(report, "Attempted to modulo by zero");                                                      \
+    longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                                                             \
+  } GenericMod(output, output, right));                                                                                \
+  ZilchCaseBinaryLValue(WithType, AssignmentPow, GenericPow(output, output, right));
 
 // Generic numeric operators, copy, equality, comparison
-#define ZilchScalarCases(WithType)                                             \
-  ZilchNumericCases(WithType, Boolean) ZilchComparisonCases(WithType, Boolean)
+#define ZilchScalarCases(WithType) ZilchNumericCases(WithType, Boolean) ZilchComparisonCases(WithType, Boolean)
 
 // Vector operations, generic numeric operators, copy, equality
-#define ZilchVectorCases(VectorType, ScalarType, ComparisonType)               \
-  ZilchNumericCases(VectorType, Boolean)                                       \
-      ZilchComparisonCases(VectorType, ComparisonType)                         \
-          ZilchCaseBinaryRValue2(VectorType,                                   \
-                                 ScalarType,                                   \
-                                 VectorType,                                   \
-                                 ScalarMultiply,                               \
-                                 output = left * right);                       \
-  ZilchCaseBinaryRValue2(                                                      \
-      VectorType,                                                              \
-      ScalarType,                                                              \
-      VectorType,                                                              \
-      ScalarDivide,                                                            \
-      if (GenericIsZero(right)) {                                              \
-        state->ThrowException(report, "Attempted to divide by zero");          \
-        longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                 \
-      } output = left / right);                                                \
-  ZilchCaseBinaryRValue2(                                                      \
-      VectorType,                                                              \
-      ScalarType,                                                              \
-      VectorType,                                                              \
-      ScalarModulo,                                                            \
-      if (GenericIsZero(right)) {                                              \
-        state->ThrowException(report, "Attempted to modulo by zero");          \
-        longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                 \
-      } GenericScalarMod(output, left, right));                                \
-  ZilchCaseBinaryRValue2(VectorType,                                           \
-                         ScalarType,                                           \
-                         VectorType,                                           \
-                         ScalarPow,                                            \
-                         GenericScalarPow(output, left, right));               \
-  ZilchCaseBinaryLValue2(                                                      \
-      VectorType, ScalarType, AssignmentScalarMultiply, output *= right);      \
-  ZilchCaseBinaryLValue2(                                                      \
-      VectorType,                                                              \
-      ScalarType,                                                              \
-      AssignmentScalarDivide,                                                  \
-      if (GenericIsZero(right)) {                                              \
-        state->ThrowException(report, "Attempted to divide by zero");          \
-        longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                 \
-      } output /= right);                                                      \
-  ZilchCaseBinaryLValue2(                                                      \
-      VectorType,                                                              \
-      ScalarType,                                                              \
-      AssignmentScalarModulo,                                                  \
-      if (GenericIsZero(right)) {                                              \
-        state->ThrowException(report, "Attempted to modulo by zero");          \
-        longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                 \
-      } GenericScalarMod(output, output, right));                              \
-  ZilchCaseBinaryLValue2(VectorType,                                           \
-                         ScalarType,                                           \
-                         AssignmentScalarPow,                                  \
-                         GenericScalarPow(output, output, right));
+#define ZilchVectorCases(VectorType, ScalarType, ComparisonType)                                                       \
+  ZilchNumericCases(VectorType, Boolean) ZilchComparisonCases(VectorType, ComparisonType)                              \
+      ZilchCaseBinaryRValue2(VectorType, ScalarType, VectorType, ScalarMultiply, output = left * right);               \
+  ZilchCaseBinaryRValue2(VectorType, ScalarType, VectorType, ScalarDivide, if (GenericIsZero(right)) {                 \
+    state->ThrowException(report, "Attempted to divide by zero");                                                      \
+    longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                                                             \
+  } output = left / right);                                                                                            \
+  ZilchCaseBinaryRValue2(VectorType, ScalarType, VectorType, ScalarModulo, if (GenericIsZero(right)) {                 \
+    state->ThrowException(report, "Attempted to modulo by zero");                                                      \
+    longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                                                             \
+  } GenericScalarMod(output, left, right));                                                                            \
+  ZilchCaseBinaryRValue2(VectorType, ScalarType, VectorType, ScalarPow, GenericScalarPow(output, left, right));        \
+  ZilchCaseBinaryLValue2(VectorType, ScalarType, AssignmentScalarMultiply, output *= right);                           \
+  ZilchCaseBinaryLValue2(VectorType, ScalarType, AssignmentScalarDivide, if (GenericIsZero(right)) {                   \
+    state->ThrowException(report, "Attempted to divide by zero");                                                      \
+    longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                                                             \
+  } output /= right);                                                                                                  \
+  ZilchCaseBinaryLValue2(VectorType, ScalarType, AssignmentScalarModulo, if (GenericIsZero(right)) {                   \
+    state->ThrowException(report, "Attempted to modulo by zero");                                                      \
+    longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                                                             \
+  } GenericScalarMod(output, output, right));                                                                          \
+  ZilchCaseBinaryLValue2(VectorType, ScalarType, AssignmentScalarPow, GenericScalarPow(output, output, right));
 
 // Special integral operators, generic numeric operators, copy, equality, and
 // comparison
-#define ZilchIntegralCases(WithType)                                           \
-  ZilchCaseUnaryRValue(WithType, WithType, BitwiseNot, output = ~operand);     \
-  ZilchCaseBinaryRValue(                                                       \
-      WithType, WithType, BitshiftLeft, output = left << right);               \
-  ZilchCaseBinaryRValue(                                                       \
-      WithType, WithType, BitshiftRight, output = left >> right);              \
-  ZilchCaseBinaryRValue(WithType, WithType, BitwiseOr, output = left | right); \
-  ZilchCaseBinaryRValue(                                                       \
-      WithType, WithType, BitwiseXor, output = left ^ right);                  \
-  ZilchCaseBinaryRValue(                                                       \
-      WithType, WithType, BitwiseAnd, output = left & right);                  \
-  ZilchCaseBinaryLValue(WithType, AssignmentBitshiftLeft, output <<= right);   \
-  ZilchCaseBinaryLValue(WithType, AssignmentBitshiftRight, output >>= right);  \
-  ZilchCaseBinaryLValue(WithType, AssignmentBitwiseOr, output |= right);       \
-  ZilchCaseBinaryLValue(WithType, AssignmentBitwiseXor, output ^= right);      \
+#define ZilchIntegralCases(WithType)                                                                                   \
+  ZilchCaseUnaryRValue(WithType, WithType, BitwiseNot, output = ~operand);                                             \
+  ZilchCaseBinaryRValue(WithType, WithType, BitshiftLeft, output = left << right);                                     \
+  ZilchCaseBinaryRValue(WithType, WithType, BitshiftRight, output = left >> right);                                    \
+  ZilchCaseBinaryRValue(WithType, WithType, BitwiseOr, output = left | right);                                         \
+  ZilchCaseBinaryRValue(WithType, WithType, BitwiseXor, output = left ^ right);                                        \
+  ZilchCaseBinaryRValue(WithType, WithType, BitwiseAnd, output = left & right);                                        \
+  ZilchCaseBinaryLValue(WithType, AssignmentBitshiftLeft, output <<= right);                                           \
+  ZilchCaseBinaryLValue(WithType, AssignmentBitshiftRight, output >>= right);                                          \
+  ZilchCaseBinaryLValue(WithType, AssignmentBitwiseOr, output |= right);                                               \
+  ZilchCaseBinaryLValue(WithType, AssignmentBitwiseXor, output ^= right);                                              \
   ZilchCaseBinaryLValue(WithType, AssignmentBitwiseAnd, output &= right);
 
 ZilchVirtualInstruction(InternalDebugBreakpoint)
@@ -938,11 +822,8 @@ ZilchVirtualInstruction(ToHandle)
     ourFrame->QueueHandleCleanup(&handle);
 
     // Initialize the stack handle to point at the given location
-    state->InitializeStackHandle(handle,
-                                 ourFrame->Frame +
-                                     op.ToHandle.HandleConstantLocal,
-                                 ourFrame->Scopes.Back(),
-                                 op.Type);
+    state->InitializeStackHandle(
+        handle, ourFrame->Frame + op.ToHandle.HandleConstantLocal, ourFrame->Scopes.Back(), op.Type);
   }
   else if (op.ToHandle.Type == OperandType::StaticField)
   {
@@ -966,8 +847,7 @@ ZilchVirtualInstruction(ToHandle)
 
     // Get the handle that holds the base of the member we're going to make a
     // handle to
-    const Handle& baseHandle =
-        *(Handle*)(ourFrame->Frame + op.ToHandle.HandleConstantLocal);
+    const Handle& baseHandle = *(Handle*)(ourFrame->Frame + op.ToHandle.HandleConstantLocal);
 
     // Make a copy from the base handle into our handle
     // This should properly handle incrementing a reference, if needed
@@ -993,8 +873,7 @@ ZilchVirtualInstruction(ToHandle)
 ZilchVirtualInstruction(CreateStaticDelegate)
 {
   // Grab the rest of the data
-  const CreateStaticDelegateOpcode& op =
-      (const CreateStaticDelegateOpcode&)opcode;
+  const CreateStaticDelegateOpcode& op = (const CreateStaticDelegateOpcode&)opcode;
 
   // Get the delegate that we're going to write to on the stack
   Delegate& delegate = *new (ourFrame->Frame + op.SaveLocal) Delegate();
@@ -1015,8 +894,7 @@ ZilchVirtualInstruction(CreateStaticDelegate)
 ZilchVirtualInstruction(CreateInstanceDelegate)
 {
   // Grab the rest of the data
-  const CreateInstanceDelegateOpcode& op =
-      (const CreateInstanceDelegateOpcode&)opcode;
+  const CreateInstanceDelegateOpcode& op = (const CreateInstanceDelegateOpcode&)opcode;
 
   // Get the delegate that we're going to write to on the stack
   Delegate& delegate = *new (ourFrame->Frame + op.SaveLocal) Delegate();
@@ -1031,14 +909,11 @@ ZilchVirtualInstruction(CreateInstanceDelegate)
 
   // If the function we're binding is virtual and we're not calling this
   // function 'non-virtually'
-  if (op.BoundFunction->IsVirtual && op.CanBeVirtual &&
-      thisHandle.StoredType != nullptr)
+  if (op.BoundFunction->IsVirtual && op.CanBeVirtual && thisHandle.StoredType != nullptr)
   {
     // Find the function on our derived type that matches the signature / name
-    Function* function =
-        thisHandle.StoredType->FindFunction(op.BoundFunction->Name,
-                                            op.BoundFunction->FunctionType,
-                                            FindMemberOptions::None);
+    Function* function = thisHandle.StoredType->FindFunction(
+        op.BoundFunction->Name, op.BoundFunction->FunctionType, FindMemberOptions::None);
     if (function != nullptr)
       delegate.BoundFunction = function;
     else
@@ -1099,12 +974,10 @@ ZilchVirtualInstruction(PrepForFunctionCall)
   }
 
   // Grab the rest of the data
-  const PrepForFunctionCallOpcode& op =
-      (const PrepForFunctionCallOpcode&)opcode;
+  const PrepForFunctionCallOpcode& op = (const PrepForFunctionCallOpcode&)opcode;
 
   // Retrieve the delegate that we have to invoke
-  const Delegate& delegate =
-      GetOperand<Delegate>(ourFrame, ourFrame, op.Delegate);
+  const Delegate& delegate = GetOperand<Delegate>(ourFrame, ourFrame, op.Delegate);
 
   // Lookup the function in the function array
   Function* functionToInvoke = delegate.BoundFunction;
@@ -1121,8 +994,7 @@ ZilchVirtualInstruction(PrepForFunctionCall)
   PerFrameData* topFrame = state->StackFrames.Back();
 
   // Create a new stack frame for our function
-  PerFrameData* newFrame =
-      state->PushFrame(topFrame->NextFrame, functionToInvoke);
+  PerFrameData* newFrame = state->PushFrame(topFrame->NextFrame, functionToInvoke);
 
   // If the stack frame was created in an error state, then attempt to throw
   // exceptions If this returns true (meaning exceptions were thrown) then we'll
@@ -1179,10 +1051,8 @@ ZilchVirtualInstruction(LocalObject)
   BoundType* createdType = op.CreatedType;
 
   // Allocate the object
-  Handle handle = state->AllocateStackObject(ourFrame->Frame + op.StackLocal,
-                                             ourFrame->Scopes.Back(),
-                                             createdType,
-                                             report);
+  Handle handle =
+      state->AllocateStackObject(ourFrame->Frame + op.StackLocal, ourFrame->Scopes.Back(), createdType, report);
 
   // If allocating the stack object threw an exception...
   if (report.HasThrownExceptions())
@@ -1191,8 +1061,7 @@ ZilchVirtualInstruction(LocalObject)
   }
 
   // Copy the handle to the stack
-  Handle* handleOnStack =
-      new (ourFrame->Frame + op.SaveHandleLocal) Handle(handle);
+  Handle* handleOnStack = new (ourFrame->Frame + op.SaveHandleLocal) Handle(handle);
 
   // We need to make sure we cleanup this handle
   ourFrame->QueueHandleCleanup(handleOnStack);
@@ -1211,8 +1080,7 @@ ZilchVirtualInstruction(NewObject)
   BoundType* createdType = op.CreatedType;
 
   // Allocate the object
-  Handle handle = state->AllocateHeapObject(
-      createdType, report, HeapFlags::ReferenceCounted);
+  Handle handle = state->AllocateHeapObject(createdType, report, HeapFlags::ReferenceCounted);
 
   // If allocating the stack object threw an exception...
   if (report.HasThrownExceptions())
@@ -1221,8 +1089,7 @@ ZilchVirtualInstruction(NewObject)
   }
 
   // Copy the handle to the stack
-  Handle* handleOnStack =
-      new (ourFrame->Frame + op.SaveHandleLocal) Handle(handle);
+  Handle* handleOnStack = new (ourFrame->Frame + op.SaveHandleLocal) Handle(handle);
 
   // We need to make sure we cleanup this handle
   ourFrame->QueueHandleCleanup(handleOnStack);
@@ -1235,15 +1102,13 @@ ZilchVirtualInstruction(NewObject)
 ZilchVirtualInstruction(PropertyDelegate)
 {
   // Grab the rest of the data
-  const CreatePropertyDelegateOpcode& op =
-      (const CreatePropertyDelegateOpcode&)opcode;
+  const CreatePropertyDelegateOpcode& op = (const CreatePropertyDelegateOpcode&)opcode;
 
   // Get the type that we're creating
   BoundType* createdType = op.CreatedType;
 
   // Allocate the object
-  Handle handle = state->AllocateDefaultConstructedHeapObject(
-      createdType, report, HeapFlags::ReferenceCounted);
+  Handle handle = state->AllocateDefaultConstructedHeapObject(createdType, report, HeapFlags::ReferenceCounted);
 
   // If allocating the stack object threw an exception...
   if (report.HasThrownExceptions())
@@ -1252,25 +1117,20 @@ ZilchVirtualInstruction(PropertyDelegate)
   }
 
   // Copy the handle to the stack
-  Handle* handleOnStack =
-      new (ourFrame->Frame + op.SaveHandleLocal) Handle(handle);
+  Handle* handleOnStack = new (ourFrame->Frame + op.SaveHandleLocal) Handle(handle);
 
   // We need to make sure we cleanup this handle
   ourFrame->QueueHandleCleanup(handleOnStack);
 
   // As long as nothing failed, the object we allocated should be a
   // 'PropertyDelegate' object
-  PropertyDelegateTemplate* propertyDelegate =
-      (PropertyDelegateTemplate*)handleOnStack->Dereference();
+  PropertyDelegateTemplate* propertyDelegate = (PropertyDelegateTemplate*)handleOnStack->Dereference();
 
   // Set the delegate's function index to the opcode's index
   propertyDelegate->Get.BoundFunction = op.ReferencedProperty->Get;
   propertyDelegate->Set.BoundFunction = op.ReferencedProperty->Set;
   propertyDelegate->ReferencedProperty =
-      Handle((const byte*)op.ReferencedProperty,
-             ZilchTypeId(Property),
-             nullptr,
-             state);
+      Handle((const byte*)op.ReferencedProperty, ZilchTypeId(Property), nullptr, state);
 
   // If this is a static property, then we don't have a this handle
   if (!op.ReferencedProperty->IsStatic)
@@ -1311,8 +1171,7 @@ ZilchVirtualInstruction(EndStringBuilder)
   state->StringBuilders.PopBack();
 
   // Copy the handle to the stack
-  Handle* handle = new (ourFrame->Frame + op.SaveStringHandleLocal)
-      Handle((byte*)&result, ZilchTypeId(String));
+  Handle* handle = new (ourFrame->Frame + op.SaveStringHandleLocal) Handle((byte*)&result, ZilchTypeId(String));
 
   // We need to make sure we cleanup this handle
   ourFrame->QueueHandleCleanup(handle);
@@ -1359,11 +1218,9 @@ ZilchVirtualInstruction(DeleteObject)
   if (result == false)
   {
     // The user handle type could not be deleted!
-    state->ThrowException(
-        report,
-        String::Format(
-            "We attempted to delete a '%s' handle, but we aren't allowed to",
-            handle.Manager->GetName().c_str()));
+    state->ThrowException(report,
+                          String::Format("We attempted to delete a '%s' handle, but we aren't allowed to",
+                                         handle.Manager->GetName().c_str()));
 
     // Jump back since we just threw an exception
     longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);
@@ -1411,8 +1268,7 @@ ZilchVirtualInstruction(TypeId)
   // returns IndirectionType. This behavior matches that of the Syntaxer for
   // TypeIdNode.
   byte* expressionResult = &GetOperand<byte>(ourFrame, ourFrame, op.Expression);
-  const Type* virtualType =
-      op.CompileTimeType->GenericGetSameVirtualTypeExceptAny(expressionResult);
+  const Type* virtualType = op.CompileTimeType->GenericGetSameVirtualTypeExceptAny(expressionResult);
 
   // This may not be necessary, but just in case we don't get a valid type
   // returned, assume its the compile time type
@@ -1420,10 +1276,8 @@ ZilchVirtualInstruction(TypeId)
     virtualType = op.CompileTimeType;
 
   // Create a handle in constant space for the type pointer
-  byte* handlePointer =
-      &GetLocal<byte>(ourFrame->Frame, op.SaveTypeHandleLocal);
-  *new (handlePointer)
-      Handle((byte*)virtualType, ZilchVirtualTypeId(virtualType));
+  byte* handlePointer = &GetLocal<byte>(ourFrame->Frame, op.SaveTypeHandleLocal);
+  *new (handlePointer) Handle((byte*)virtualType, ZilchVirtualTypeId(virtualType));
 
   programCounter += sizeof(TypeIdOpcode);
   return;
@@ -1470,12 +1324,11 @@ ZilchVirtualInstruction(ConvertFromAny)
   if (cast.IsValid == false || cast.RequiresCodeGeneration)
   {
     // Generate an error string that gives a lot of context clues
-    String error = String::Format(
-        "The 'any' value '%s' of type '%s' cannot be converted to a '%s'. The "
-        "type must match exactly or be directly convertable",
-        any.StoredType->GenericToString(any.Data).c_str(),
-        any.StoredType->ToString().c_str(),
-        op.RelatedType->ToString().c_str());
+    String error = String::Format("The 'any' value '%s' of type '%s' cannot be converted to a '%s'. The "
+                                  "type must match exactly or be directly convertable",
+                                  any.StoredType->GenericToString(any.Data).c_str(),
+                                  any.StoredType->ToString().c_str(),
+                                  op.RelatedType->ToString().c_str());
 
     // Throw an exception to let the user know the conversion was invalid
     state->ThrowException(report, error);
@@ -1506,8 +1359,7 @@ ZilchVirtualInstruction(ConvertDowncast)
 {
   // Grab the rest of the data
   const DowncastConversionOpcode& op = (const DowncastConversionOpcode&)opcode;
-  const Handle& toConvert =
-      GetOperand<Handle>(ourFrame, ourFrame, op.ToConvert);
+  const Handle& toConvert = GetOperand<Handle>(ourFrame, ourFrame, op.ToConvert);
 
   // Grab the output that we want to initialize either to a casted handle, or to
   // null
@@ -1555,8 +1407,7 @@ ZilchVirtualInstruction(ConvertStringToStringRangeExtended)
 {
   const ConversionOpcode& op = (const ConversionOpcode&)opcode;
 
-  const Handle& fromTypeHandle =
-      GetOperand<Handle>(ourFrame, ourFrame, op.ToConvert);
+  const Handle& fromTypeHandle = GetOperand<Handle>(ourFrame, ourFrame, op.ToConvert);
   const String* value = (String*)fromTypeHandle.Dereference();
 
   // Get the toType's memory
@@ -1572,8 +1423,7 @@ ZilchVirtualInstruction(ConvertStringToStringRangeExtended)
     // Construct a new handle for the string range
     Handle rangeHandle = call.GetState()->AllocateDefaultConstructedHeapObject(
         ZilchTypeId(StringRangeExtended), report, HeapFlags::ReferenceCounted);
-    StringRangeExtended& stringRange =
-        *(StringRangeExtended*)rangeHandle.Dereference();
+    StringRangeExtended& stringRange = *(StringRangeExtended*)rangeHandle.Dereference();
 
     stringRange.mRange = value->All();
     stringRange.mOriginalStringReference = *value;
@@ -1627,23 +1477,17 @@ ZilchCaseComplexCopy(Delegate);
 ZilchCaseComplexCopy(Any);
 
 // Primitive type instructions
-ZilchIntegralCases(Byte) ZilchScalarCases(Byte) ZilchIntegralCases(Integer)
-    ZilchScalarCases(Integer) ZilchVectorCases(Integer2, Integer, Boolean2)
-        ZilchVectorCases(Integer3, Integer, Boolean3) ZilchVectorCases(
-            Integer4, Integer, Boolean4) ZilchIntegralCases(Integer2)
-            ZilchIntegralCases(Integer3) ZilchIntegralCases(Integer4)
-                ZilchScalarCases(Real) ZilchVectorCases(Real2, Real, Boolean2)
-                    ZilchVectorCases(Real3, Real, Boolean3) ZilchVectorCases(
-                        Real4, Real, Boolean4) ZilchScalarCases(DoubleReal)
-                        ZilchIntegralCases(DoubleInteger)
-                            ZilchScalarCases(DoubleInteger)
+ZilchIntegralCases(Byte) ZilchScalarCases(Byte) ZilchIntegralCases(Integer) ZilchScalarCases(Integer)
+    ZilchVectorCases(Integer2, Integer, Boolean2) ZilchVectorCases(Integer3, Integer, Boolean3)
+        ZilchVectorCases(Integer4, Integer, Boolean4) ZilchIntegralCases(Integer2) ZilchIntegralCases(Integer3)
+            ZilchIntegralCases(Integer4) ZilchScalarCases(Real) ZilchVectorCases(Real2, Real, Boolean2)
+                ZilchVectorCases(Real3, Real, Boolean3) ZilchVectorCases(Real4, Real, Boolean4)
+                    ZilchScalarCases(DoubleReal) ZilchIntegralCases(DoubleInteger) ZilchScalarCases(DoubleInteger)
 
-                                ZilchEqualityCases(Boolean, Boolean)
-                                    ZilchEqualityCases(Handle, Boolean)
-                                        ZilchEqualityCases(Delegate, Boolean)
-                                            ZilchEqualityCases(Any, Boolean)
+                        ZilchEqualityCases(Boolean, Boolean) ZilchEqualityCases(Handle, Boolean)
+                            ZilchEqualityCases(Delegate, Boolean) ZilchEqualityCases(Any, Boolean)
 
-                                                ZilchCopyCases(Boolean)
+                                ZilchCopyCases(Boolean)
     // Handle, Delegate, and Value copy (assignment) operators are handled
     // specially above
 
@@ -1680,91 +1524,36 @@ ZilchCaseConversion(DoubleReal, Byte, output = (Byte)value);
 ZilchCaseConversion(DoubleReal, Integer, output = (Integer)value);
 ZilchCaseConversion(DoubleReal, DoubleInteger, output = (DoubleInteger)value);
 
-ZilchCaseConversion(Integer2,
-                    Real2,
-                    output = Real2((Real)value.x, (Real)value.y));
-ZilchCaseConversion(Integer2,
-                    Boolean2,
-                    output = Boolean2(value.x != 0, value.y != 0));
-ZilchCaseConversion(Real2,
-                    Integer2,
-                    output = Integer2((Integer)value.x, (Integer)value.y));
-ZilchCaseConversion(Real2,
-                    Boolean2,
-                    output = Boolean2(value.x != 0.0f, value.y != 0.0f));
-ZilchCaseConversion(Boolean2,
-                    Integer2,
-                    output = Integer2((Integer)value.x, (Integer)value.y));
-ZilchCaseConversion(Boolean2,
-                    Real2,
-                    output = Real2((Real)value.x, (Real)value.y));
+ZilchCaseConversion(Integer2, Real2, output = Real2((Real)value.x, (Real)value.y));
+ZilchCaseConversion(Integer2, Boolean2, output = Boolean2(value.x != 0, value.y != 0));
+ZilchCaseConversion(Real2, Integer2, output = Integer2((Integer)value.x, (Integer)value.y));
+ZilchCaseConversion(Real2, Boolean2, output = Boolean2(value.x != 0.0f, value.y != 0.0f));
+ZilchCaseConversion(Boolean2, Integer2, output = Integer2((Integer)value.x, (Integer)value.y));
+ZilchCaseConversion(Boolean2, Real2, output = Real2((Real)value.x, (Real)value.y));
 
-ZilchCaseConversion(Integer3,
-                    Real3,
-                    output = Real3((Real)value.x,
-                                   (Real)value.y,
-                                   (Real)value.z));
-ZilchCaseConversion(Integer3,
-                    Boolean3,
-                    output = Boolean3(value.x != 0,
-                                      value.y != 0,
-                                      value.z != 0));
-ZilchCaseConversion(Real3,
-                    Integer3,
-                    output = Integer3((Integer)value.x,
-                                      (Integer)value.y,
-                                      (Integer)value.z));
-ZilchCaseConversion(Real3,
-                    Boolean3,
-                    output = Boolean3(value.x != 0.0f,
-                                      value.y != 0.0f,
-                                      value.z != 0.0f));
-ZilchCaseConversion(Boolean3,
-                    Integer3,
-                    output = Integer3((Integer)value.x,
-                                      (Integer)value.y,
-                                      (Integer)value.z));
-ZilchCaseConversion(Boolean3,
-                    Real3,
-                    output = Real3((Real)value.x,
-                                   (Real)value.y,
-                                   (Real)value.z));
+ZilchCaseConversion(Integer3, Real3, output = Real3((Real)value.x, (Real)value.y, (Real)value.z));
+ZilchCaseConversion(Integer3, Boolean3, output = Boolean3(value.x != 0, value.y != 0, value.z != 0));
+ZilchCaseConversion(Real3, Integer3, output = Integer3((Integer)value.x, (Integer)value.y, (Integer)value.z));
+ZilchCaseConversion(Real3, Boolean3, output = Boolean3(value.x != 0.0f, value.y != 0.0f, value.z != 0.0f));
+ZilchCaseConversion(Boolean3, Integer3, output = Integer3((Integer)value.x, (Integer)value.y, (Integer)value.z));
+ZilchCaseConversion(Boolean3, Real3, output = Real3((Real)value.x, (Real)value.y, (Real)value.z));
 
-ZilchCaseConversion(
-    Integer4,
-    Real4,
-    output = Real4((Real)value.x, (Real)value.y, (Real)value.z, (Real)value.w));
-ZilchCaseConversion(
-    Integer4,
-    Boolean4,
-    output = Boolean4(value.x != 0, value.y != 0, value.z != 0, value.w != 0));
+ZilchCaseConversion(Integer4, Real4, output = Real4((Real)value.x, (Real)value.y, (Real)value.z, (Real)value.w));
+ZilchCaseConversion(Integer4, Boolean4, output = Boolean4(value.x != 0, value.y != 0, value.z != 0, value.w != 0));
 ZilchCaseConversion(Real4,
                     Integer4,
-                    output = Integer4((Integer)value.x,
-                                      (Integer)value.y,
-                                      (Integer)value.z,
-                                      (Integer)value.w));
+                    output = Integer4((Integer)value.x, (Integer)value.y, (Integer)value.z, (Integer)value.w));
 ZilchCaseConversion(Real4,
                     Boolean4,
-                    output = Boolean4(value.x != 0.0f,
-                                      value.y != 0.0f,
-                                      value.z != 0.0f,
-                                      value.w != 0.0f));
+                    output = Boolean4(value.x != 0.0f, value.y != 0.0f, value.z != 0.0f, value.w != 0.0f));
 ZilchCaseConversion(Boolean4,
                     Integer4,
-                    output = Integer4((Integer)value.x,
-                                      (Integer)value.y,
-                                      (Integer)value.z,
-                                      (Integer)value.w));
-ZilchCaseConversion(
-    Boolean4,
-    Real4,
-    output = Real4((Real)value.x, (Real)value.y, (Real)value.z, (Real)value.w));
+                    output = Integer4((Integer)value.x, (Integer)value.y, (Integer)value.z, (Integer)value.w));
+ZilchCaseConversion(Boolean4, Real4, output = Real4((Real)value.x, (Real)value.y, (Real)value.z, (Real)value.w));
 
 void VirtualMachine::InitializeJumpTable()
 {
-#define ZilchEnumValue(Name)                                                   \
-  InstructionTable[Instruction::Name] = &Instruction##Name;
+#define ZilchEnumValue(Name) InstructionTable[Instruction::Name] = &Instruction##Name;
 #include "InstructionsEnum.inl"
 #undef ZilchEnumValue
 }
@@ -1800,8 +1589,7 @@ void VirtualMachine::ExecuteNext(Call& call, ExceptionReport& report)
   byte* compactedOpcode = ourFrame->CurrentFunction->CompactedOpcode.Data();
   ZilchLastRunningOpcode = compactedOpcode;
   ZilchLastRunningFunction = ourFrame->CurrentFunction;
-  ZilchLastRunningOpcodeLength =
-      ourFrame->CurrentFunction->CompactedOpcode.Size();
+  ZilchLastRunningOpcodeLength = ourFrame->CurrentFunction->CompactedOpcode.Size();
 
   // Loop through all the opcodes in the function
   // We don't need to check for the end since the return opcode will exit this
@@ -1813,8 +1601,7 @@ void VirtualMachine::ExecuteNext(Call& call, ExceptionReport& report)
 
     // If any pre opcode callbacks are set then send the event
     state->SendOpcodeEvent(Events::OpcodePreStep, ourFrame);
-    InstructionTable[opcode.Instruction](
-        state, call, report, programCounter, ourFrame, opcode);
+    InstructionTable[opcode.Instruction](state, call, report, programCounter, ourFrame, opcode);
 
     // If any post opcode callbacks are set then send the event
     state->SendOpcodeEvent(Events::OpcodePostStep, ourFrame);
@@ -1848,15 +1635,13 @@ void VirtualMachine::PostDestructor(BoundType* boundType, byte* objectData)
   }
 }
 
-String VirtualMachine::UnknownEnumerationToString(const BoundType* type,
-                                                  const byte* data)
+String VirtualMachine::UnknownEnumerationToString(const BoundType* type, const byte* data)
 {
   Integer inputValue = *(const Integer*)data;
   return String::Format("%s (%d)", type->Name.c_str(), inputValue);
 }
 
-String VirtualMachine::EnumerationToString(const BoundType* type,
-                                           const byte* data)
+String VirtualMachine::EnumerationToString(const BoundType* type, const byte* data)
 {
   // Get the value of the enum
   Integer inputValue = *(const Integer*)data;
@@ -1869,11 +1654,8 @@ String VirtualMachine::EnumerationToString(const BoundType* type,
     Property* property = properties[i];
 
     // Error checking
-    ErrorIf(
-        property->Get == nullptr,
-        "The enum should have no properties that do not have a 'get' function");
-    ErrorIf(property->IsStatic == false,
-            "All properties on the enum should be static");
+    ErrorIf(property->Get == nullptr, "The enum should have no properties that do not have a 'get' function");
+    ErrorIf(property->IsStatic == false, "All properties on the enum should be static");
 
     // If this property's UserData matches our enum's value...
     if (property->Get->UserData == (void*)(uintptr_t)inputValue)
@@ -1915,8 +1697,7 @@ String VirtualMachine::FlagsToString(const BoundType* type, const byte* data)
     ErrorIf(property->Get == nullptr,
             "The flags should have no properties that do not have a 'get' "
             "function");
-    ErrorIf(property->IsStatic == false,
-            "All properties on the flags should be static");
+    ErrorIf(property->IsStatic == false, "All properties on the flags should be static");
 
     // Grab the value of this flag (may be multiple bits!)
     Integer flagValue = (Integer)(DoubleInteger)property->Get->UserData;

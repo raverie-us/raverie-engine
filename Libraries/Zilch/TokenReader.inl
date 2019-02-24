@@ -2246,8 +2246,7 @@ case '>':
     case '=':
     {
       lastAcceptedPos = this->Position;
-      outToken->TokenId =
-          Grammar::AssignmentRightShift /* AssignmentRightShift */;
+      outToken->TokenId = Grammar::AssignmentRightShift /* AssignmentRightShift */;
       acceptedToken = true;
 
       character = ReadCharacter();
@@ -2261,8 +2260,7 @@ case '>':
   case '=':
   {
     lastAcceptedPos = this->Position;
-    outToken->TokenId =
-        Grammar::GreaterThanOrEqualTo /* GreaterThanOrEqualTo */;
+    outToken->TokenId = Grammar::GreaterThanOrEqualTo /* GreaterThanOrEqualTo */;
     acceptedToken = true;
 
     character = ReadCharacter();
@@ -2574,8 +2572,7 @@ case '<':
     case '=':
     {
       lastAcceptedPos = this->Position;
-      outToken->TokenId =
-          Grammar::AssignmentLeftShift /* AssignmentLeftShift */;
+      outToken->TokenId = Grammar::AssignmentLeftShift /* AssignmentLeftShift */;
       acceptedToken = true;
 
       character = ReadCharacter();
@@ -2604,8 +2601,7 @@ case '$':
   case '=':
   {
     lastAcceptedPos = this->Position;
-    outToken->TokenId =
-        Grammar::AssignmentBitwiseXor /* AssignmentBitwiseXor */;
+    outToken->TokenId = Grammar::AssignmentBitwiseXor /* AssignmentBitwiseXor */;
     acceptedToken = true;
 
     character = ReadCharacter();
@@ -2668,8 +2664,7 @@ case '&':
   case '=':
   {
     lastAcceptedPos = this->Position;
-    outToken->TokenId =
-        Grammar::AssignmentBitwiseAnd /* AssignmentBitwiseAnd */;
+    outToken->TokenId = Grammar::AssignmentBitwiseAnd /* AssignmentBitwiseAnd */;
     acceptedToken = true;
 
     character = ReadCharacter();
@@ -2748,9 +2743,8 @@ case '[':
   tokenType = TokenCategory::Symbol;
 
   lastAcceptedPos = this->Position;
-  outToken->TokenId =
-      Grammar::BeginIndex /* BeginIndex, BeginTemplate, BeginAttribute,
-                             OldBeginInitializer */
+  outToken->TokenId = Grammar::BeginIndex /* BeginIndex, BeginTemplate, BeginAttribute,
+                                             OldBeginInitializer */
       ;
   acceptedToken = true;
 
@@ -2764,8 +2758,7 @@ case ']':
   tokenType = TokenCategory::Symbol;
 
   lastAcceptedPos = this->Position;
-  outToken->TokenId = Grammar::
-      EndIndex /* EndIndex, EndTemplate, EndAttribute, OldEndInitializer */;
+  outToken->TokenId = Grammar::EndIndex /* EndIndex, EndTemplate, EndAttribute, OldEndInitializer */;
   acceptedToken = true;
 
   character = ReadCharacter();
@@ -2778,9 +2771,8 @@ case '(':
   tokenType = TokenCategory::Symbol;
 
   lastAcceptedPos = this->Position;
-  outToken->TokenId =
-      Grammar::BeginFunctionCall /* BeginFunctionCall, BeginFunctionParameters,
-                                    BeginGroup */
+  outToken->TokenId = Grammar::BeginFunctionCall /* BeginFunctionCall, BeginFunctionParameters,
+                                                    BeginGroup */
       ;
   acceptedToken = true;
 
@@ -2794,8 +2786,7 @@ case ')':
   tokenType = TokenCategory::Symbol;
 
   lastAcceptedPos = this->Position;
-  outToken->TokenId = Grammar::
-      EndFunctionCall /* EndFunctionCall, EndFunctionParameters, EndGroup */;
+  outToken->TokenId = Grammar::EndFunctionCall /* EndFunctionCall, EndFunctionParameters, EndGroup */;
   acceptedToken = true;
 
   character = ReadCharacter();

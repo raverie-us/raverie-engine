@@ -128,8 +128,7 @@ void StickJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData);
+  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData);
 }
 
 void StickJoint::DebugDraw()
@@ -139,8 +138,7 @@ void StickJoint::DebugDraw()
   DrawAnchorAtomFragment(mAnchors, GetCollider(0), GetCollider(1));
 }
 
-uint StickJoint::GetAtomIndexFilter(uint atomIndex,
-                                    real& desiredConstraintValue) const
+uint StickJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   desiredConstraintValue = mLength;
   return LinearAxis;

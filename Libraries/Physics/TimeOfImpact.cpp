@@ -65,8 +65,7 @@ void ComputeDeepestPoint(GeometryData* data, Vec3Param normal, real dt)
   Quat deltaRotInv = ToQuaternion(data->axs, -data->ang * dt);
   data->shape.Support(Math::Multiply(deltaRotInv, normal), &data->rel);
   data->rel -= data->pos + data->shape.GetDeltaPosition();
-  data->rel =
-      Math::Multiply(data->shape.GetDeltaRotation().Inverted(), data->rel);
+  data->rel = Math::Multiply(data->shape.GetDeltaRotation().Inverted(), data->rel);
 }
 
 Vec3 PointAtTime(GeometryData* data, real dt)
@@ -75,30 +74,19 @@ Vec3 PointAtTime(GeometryData* data, real dt)
   return data->pos + data->vel * dt + Math::Multiply(data->rot, data->rel);
 }
 
-real Separation(GeometryData* objA,
-                GeometryData* objB,
-                Vec3Param normal,
-                real dt)
+real Separation(GeometryData* objA, GeometryData* objB, Vec3Param normal, real dt)
 {
   Vec3 pA = PointAtTime(objA, dt);
   Vec3 pB = PointAtTime(objB, dt);
   return normal.Dot(pB - pA);
 }
 
-real Bisection(GeometryData* objA,
-               GeometryData* objB,
-               Vec3Param normal,
-               real tMin,
-               real tMax)
+real Bisection(GeometryData* objA, GeometryData* objB, Vec3Param normal, real tMin, real tMax)
 {
   return (tMin + tMax) * 0.5f;
 }
 
-real FalsePosition(GeometryData* objA,
-                   GeometryData* objB,
-                   Vec3Param normal,
-                   real tMin,
-                   real tMax)
+real FalsePosition(GeometryData* objA, GeometryData* objB, Vec3Param normal, real tMin, real tMax)
 {
   real distA = Separation(objA, objB, normal, tMin);
   real distB = Separation(objA, objB, normal, tMax);
@@ -107,16 +95,10 @@ real FalsePosition(GeometryData* objA,
   return tMin + (tMax - tMin) * u;
 }
 
-real FindRoot(GeometryData* objA,
-              GeometryData* objB,
-              Vec3Param normal,
-              real tMin,
-              real tMax,
-              real lowerBound,
-              real upperBound)
+real FindRoot(
+    GeometryData* objA, GeometryData* objB, Vec3Param normal, real tMin, real tMax, real lowerBound, real upperBound)
 {
-  ErrorIf(Separation(objA, objB, normal, tMin) < upperBound ||
-              Separation(objA, objB, normal, tMax) > lowerBound,
+  ErrorIf(Separation(objA, objB, normal, tMin) < upperBound || Separation(objA, objB, normal, tMax) > lowerBound,
           "No valid root exists!");
 
   real t, separation;
@@ -148,11 +130,8 @@ void SetSupportShapeDeltas(GeometryData* objA, GeometryData* objB, real dt)
   objB->shape.SetDeltaRotation(ToQuaternion(objB->axs, objB->ang * dt));
 }
 
-bool BilateralAdvancement(GeometryData* objA,
-                          GeometryData* objB,
-                          real dt,
-                          real* impact,
-                          Intersection::Manifold* manifold)
+bool BilateralAdvancement(
+    GeometryData* objA, GeometryData* objB, real dt, real* impact, Intersection::Manifold* manifold)
 {
   Intersection::Gjk gjk;
   Intersection::Type intersection;
@@ -200,19 +179,15 @@ bool BilateralAdvancement(GeometryData* objA,
       // Current separation within threshold, advance forward for contact data
       else
       {
-        real relativeVelocity =
-            normal.Dot(objB->vel) +
-            objB->rel.Cross(normal).Dot(objB->axs * objB->ang) -
-            normal.Dot(objA->vel) -
-            objA->rel.Cross(normal).Dot(objA->axs * objA->ang);
+        real relativeVelocity = normal.Dot(objB->vel) + objB->rel.Cross(normal).Dot(objB->axs * objB->ang) -
+                                normal.Dot(objA->vel) - objA->rel.Cross(normal).Dot(objA->axs * objA->ang);
 
         // No relative velocity, objects are not getting closer on this axis
         if (relativeVelocity >= 0)
           return false;
 
         // Time step required to move just the epsilon difference
-        real incTime =
-            (separationPos + Intersection::Gjk::sEpsilon) / -relativeVelocity;
+        real incTime = (separationPos + Intersection::Gjk::sEpsilon) / -relativeVelocity;
 
         // Step forward to find intersection
         real testTime = root;
@@ -266,8 +241,7 @@ void TimeOfImpactInternal(TimeOfImpactData* data)
 
     Physics::Manifold manifold;
     manifold.SetPair(pair);
-    IntersectionToPhysicsManifold<ShapeTypeA, ShapeTypeB>(&iManifold,
-                                                          &manifold);
+    IntersectionToPhysicsManifold<ShapeTypeA, ShapeTypeB>(&iManifold, &manifold);
 
     data->ImpactTimes.PushBack(impactTime);
     data->Manifolds.PushBack(manifold);
@@ -296,8 +270,7 @@ void TimeOfImpactComplexInternal(TimeOfImpactData* data, bool parametersSwapped)
 
   Vec3 deltaVel = objB.vel - objA.vel;
   Sphere sphereB = data->ColliderB->mBoundingSphere;
-  Capsule sweptSphere(
-      sphereB.mCenter, sphereB.mCenter + deltaVel * data->Dt, sphereB.mRadius);
+  Capsule sweptSphere(sphereB.mCenter, sphereB.mCenter + deltaVel * data->Dt, sphereB.mRadius);
   SpaceFunctor functor(data->ColliderA);
   // this code only works when the complex object isn't rotating
   //(you basically can't midphase when the complex object is rotating)
@@ -326,8 +299,7 @@ void TimeOfImpactComplexInternal(TimeOfImpactData* data, bool parametersSwapped)
 
     Physics::Manifold manifold;
     manifold.SetPair(pair);
-    IntersectionToPhysicsManifold<decltype(worldShape), ShapeType>(&iManifold,
-                                                                   &manifold);
+    IntersectionToPhysicsManifold<decltype(worldShape), ShapeType>(&iManifold, &manifold);
     manifold.ContactId = shapeObject.Index;
     FixInternalEdges(complexCollider, &manifold, shapeObject.Index);
 
@@ -337,28 +309,21 @@ void TimeOfImpactComplexInternal(TimeOfImpactData* data, bool parametersSwapped)
 }
 
 template <typename ComplexType, typename ShapeType>
-void TimeOfImpactComplex(TimeOfImpactData* data,
-                         bool parametersSwapped,
-                         true_type)
+void TimeOfImpactComplex(TimeOfImpactData* data, bool parametersSwapped, true_type)
 {
-  TimeOfImpactComplexInternal<ComplexType, ShapeType, LocalFunctor>(
-      data, parametersSwapped);
+  TimeOfImpactComplexInternal<ComplexType, ShapeType, LocalFunctor>(data, parametersSwapped);
 }
 
 template <typename ComplexType, typename ShapeType>
-void TimeOfImpactComplex(TimeOfImpactData* data,
-                         bool parametersSwapped,
-                         false_type)
+void TimeOfImpactComplex(TimeOfImpactData* data, bool parametersSwapped, false_type)
 {
-  TimeOfImpactComplexInternal<ComplexType, ShapeType, WorldFunctor>(
-      data, parametersSwapped);
+  TimeOfImpactComplexInternal<ComplexType, ShapeType, WorldFunctor>(data, parametersSwapped);
 }
 
 template <typename ComplexType, typename ShapeType>
 void TimeOfImpactComplexA(TimeOfImpactData* data)
 {
-  TimeOfImpactComplex<ComplexType, ShapeType>(
-      data, false, typename ComplexType::RangeInLocalSpace());
+  TimeOfImpactComplex<ComplexType, ShapeType>(data, false, typename ComplexType::RangeInLocalSpace());
 }
 
 template <typename ComplexType, typename ShapeType>
@@ -366,20 +331,14 @@ void TimeOfImpactComplexB(TimeOfImpactData* data)
 {
   Math::Swap(data->ColliderA, data->ColliderB);
 
-  TimeOfImpactComplex<ComplexType, ShapeType>(
-      data, true, typename ComplexType::RangeInLocalSpace());
+  TimeOfImpactComplex<ComplexType, ShapeType>(data, true, typename ComplexType::RangeInLocalSpace());
 }
 
-template <typename ColliderType0,
-          typename ColliderType1,
-          typename SpaceFunctor0,
-          typename SpaceFunctor1>
+template <typename ColliderType0, typename ColliderType1, typename SpaceFunctor0, typename SpaceFunctor1>
 void TimeOfImpactComplexVsComplexInternal(TimeOfImpactData* data)
 {
-  ColliderType0* complexCollider0 =
-      static_cast<ColliderType0*>(data->ColliderA);
-  ColliderType1* complexCollider1 =
-      static_cast<ColliderType1*>(data->ColliderB);
+  ColliderType0* complexCollider0 = static_cast<ColliderType0*>(data->ColliderA);
+  ColliderType1* complexCollider1 = static_cast<ColliderType1*>(data->ColliderB);
 
   GeometryData objA, objB;
   GetGeometryData(data->ColliderA, &objA, data->LinearSweep);
@@ -396,8 +355,7 @@ void TimeOfImpactComplexVsComplexInternal(TimeOfImpactData* data)
   // bring the swept sphere of collider1 into collider0's local space as an aabb
   Vec3 deltaVel = objB.vel - objA.vel;
   Sphere sphereB = complexCollider1->mBoundingSphere;
-  Capsule sweptSphere1(
-      sphereB.mCenter, sphereB.mCenter + deltaVel * data->Dt, sphereB.mRadius);
+  Capsule sweptSphere1(sphereB.mCenter, sphereB.mCenter + deltaVel * data->Dt, sphereB.mRadius);
   // this code only works when the objects are not rotating
   //(you basically can't midphase when the complex object is rotating)
   Aabb aabb1InSpace0 = functor0.ToLocalAabb(ToAabb(sweptSphere1));
@@ -424,11 +382,9 @@ void TimeOfImpactComplexVsComplexInternal(TimeOfImpactData* data)
     // compute the swept sphere for the sub-shape of objectA (from its aabb)
     Aabb shape0WorldAabb = ToAabb(worldShape0);
     Vec3 halfExtents = shape0WorldAabb.GetHalfExtents();
-    real radius =
-        Math::Max(halfExtents.x, Math::Max(halfExtents.y, halfExtents.z));
+    real radius = Math::Max(halfExtents.x, Math::Max(halfExtents.y, halfExtents.z));
     Vec3 shape0Center = shape0WorldAabb.GetCenter();
-    Capsule sweptSphere0(
-        shape0Center, shape0Center - deltaVel * data->Dt, radius);
+    Capsule sweptSphere0(shape0Center, shape0Center - deltaVel * data->Dt, radius);
 
     // now we need to take each sub-shape in collider0 and check to
     // see what sub-shapes in collider1 they could hit
@@ -455,8 +411,7 @@ void TimeOfImpactComplexVsComplexInternal(TimeOfImpactData* data)
       real impactTime;
       Intersection::Manifold iManifold;
 
-      if (!BilateralAdvancement(
-              &objA, &objB, data->Dt, &impactTime, &iManifold))
+      if (!BilateralAdvancement(&objA, &objB, data->Dt, &impactTime, &iManifold))
         continue;
 
       ColliderPair pair;
@@ -465,8 +420,7 @@ void TimeOfImpactComplexVsComplexInternal(TimeOfImpactData* data)
 
       Physics::Manifold manifold;
       manifold.SetPair(pair);
-      IntersectionToPhysicsManifold<WorldShape0Type, WorldShape1Type>(
-          &iManifold, &manifold);
+      IntersectionToPhysicsManifold<WorldShape0Type, WorldShape1Type>(&iManifold, &manifold);
       // set the id of this item on the manifold
       //(just lexicographically pack the two indices together for now)
       manifold.ContactId = item0.Index << 16;
@@ -491,26 +445,14 @@ void TimeOfImpactComplexVsComplex(TimeOfImpactData* data)
   if (type0Local)
   {
     if (type1Local)
-      TimeOfImpactComplexVsComplexInternal<ColliderType0,
-                                           ColliderType1,
-                                           LocalFunctor,
-                                           LocalFunctor>(data);
+      TimeOfImpactComplexVsComplexInternal<ColliderType0, ColliderType1, LocalFunctor, LocalFunctor>(data);
     else
-      TimeOfImpactComplexVsComplexInternal<ColliderType0,
-                                           ColliderType1,
-                                           LocalFunctor,
-                                           WorldFunctor>(data);
+      TimeOfImpactComplexVsComplexInternal<ColliderType0, ColliderType1, LocalFunctor, WorldFunctor>(data);
   }
   else if (type1Local)
-    TimeOfImpactComplexVsComplexInternal<ColliderType0,
-                                         ColliderType1,
-                                         WorldFunctor,
-                                         LocalFunctor>(data);
+    TimeOfImpactComplexVsComplexInternal<ColliderType0, ColliderType1, WorldFunctor, LocalFunctor>(data);
   else
-    TimeOfImpactComplexVsComplexInternal<ColliderType0,
-                                         ColliderType1,
-                                         WorldFunctor,
-                                         WorldFunctor>(data);
+    TimeOfImpactComplexVsComplexInternal<ColliderType0, ColliderType1, WorldFunctor, WorldFunctor>(data);
 }
 
 void SetLookup(TimeOfImpactFunc func, uint colliderId1, uint colliderId2)
@@ -521,85 +463,47 @@ void SetLookup(TimeOfImpactFunc func, uint colliderId1, uint colliderId2)
 template <typename ShapeType>
 void SetLookups(uint colliderId)
 {
-  SetLookup(
-      TimeOfImpactInternal<ShapeType, Sphere>, colliderId, Collider::cSphere);
+  SetLookup(TimeOfImpactInternal<ShapeType, Sphere>, colliderId, Collider::cSphere);
   SetLookup(TimeOfImpactInternal<ShapeType, Obb>, colliderId, Collider::cBox);
-  SetLookup(TimeOfImpactInternal<ShapeType, Cylinder>,
-            colliderId,
-            Collider::cCylinder);
-  SetLookup(TimeOfImpactInternal<ShapeType, Ellipsoid>,
-            colliderId,
-            Collider::cEllipsoid);
-  SetLookup(
-      TimeOfImpactInternal<ShapeType, Capsule>, colliderId, Collider::cCapsule);
-  SetLookup(TimeOfImpactInternal<ShapeType, ConvexMeshShape>,
-            colliderId,
-            Collider::cConvexMesh);
+  SetLookup(TimeOfImpactInternal<ShapeType, Cylinder>, colliderId, Collider::cCylinder);
+  SetLookup(TimeOfImpactInternal<ShapeType, Ellipsoid>, colliderId, Collider::cEllipsoid);
+  SetLookup(TimeOfImpactInternal<ShapeType, Capsule>, colliderId, Collider::cCapsule);
+  SetLookup(TimeOfImpactInternal<ShapeType, ConvexMeshShape>, colliderId, Collider::cConvexMesh);
 }
 
 template <typename ComplexType>
 void SetComplexLookups(uint colliderId)
 {
-  SetLookup(
-      TimeOfImpactComplexA<ComplexType, Sphere>, colliderId, Collider::cSphere);
-  SetLookup(
-      TimeOfImpactComplexB<ComplexType, Sphere>, Collider::cSphere, colliderId);
+  SetLookup(TimeOfImpactComplexA<ComplexType, Sphere>, colliderId, Collider::cSphere);
+  SetLookup(TimeOfImpactComplexB<ComplexType, Sphere>, Collider::cSphere, colliderId);
 
   SetLookup(TimeOfImpactComplexA<ComplexType, Obb>, colliderId, Collider::cBox);
   SetLookup(TimeOfImpactComplexB<ComplexType, Obb>, Collider::cBox, colliderId);
 
-  SetLookup(TimeOfImpactComplexA<ComplexType, Cylinder>,
-            colliderId,
-            Collider::cCylinder);
-  SetLookup(TimeOfImpactComplexB<ComplexType, Cylinder>,
-            Collider::cCylinder,
-            colliderId);
+  SetLookup(TimeOfImpactComplexA<ComplexType, Cylinder>, colliderId, Collider::cCylinder);
+  SetLookup(TimeOfImpactComplexB<ComplexType, Cylinder>, Collider::cCylinder, colliderId);
 
-  SetLookup(TimeOfImpactComplexA<ComplexType, Ellipsoid>,
-            colliderId,
-            Collider::cEllipsoid);
-  SetLookup(TimeOfImpactComplexB<ComplexType, Ellipsoid>,
-            Collider::cEllipsoid,
-            colliderId);
+  SetLookup(TimeOfImpactComplexA<ComplexType, Ellipsoid>, colliderId, Collider::cEllipsoid);
+  SetLookup(TimeOfImpactComplexB<ComplexType, Ellipsoid>, Collider::cEllipsoid, colliderId);
 
-  SetLookup(TimeOfImpactComplexA<ComplexType, Capsule>,
-            colliderId,
-            Collider::cCapsule);
-  SetLookup(TimeOfImpactComplexB<ComplexType, Capsule>,
-            Collider::cCapsule,
-            colliderId);
+  SetLookup(TimeOfImpactComplexA<ComplexType, Capsule>, colliderId, Collider::cCapsule);
+  SetLookup(TimeOfImpactComplexB<ComplexType, Capsule>, Collider::cCapsule, colliderId);
 
-  SetLookup(TimeOfImpactComplexA<ComplexType, ConvexMeshShape>,
-            colliderId,
-            Collider::cConvexMesh);
-  SetLookup(TimeOfImpactComplexB<ComplexType, ConvexMeshShape>,
-            Collider::cConvexMesh,
-            colliderId);
+  SetLookup(TimeOfImpactComplexA<ComplexType, ConvexMeshShape>, colliderId, Collider::cConvexMesh);
+  SetLookup(TimeOfImpactComplexB<ComplexType, ConvexMeshShape>, Collider::cConvexMesh, colliderId);
 }
 
 template <typename ComplexType>
 void SetComplexVsComplexLookups(uint colliderId)
 {
-  SetLookup(TimeOfImpactComplexVsComplex<ComplexType, MultiConvexMeshCollider>,
-            colliderId,
-            Collider::cMultiConvexMesh);
-  SetLookup(TimeOfImpactComplexVsComplex<MultiConvexMeshCollider, ComplexType>,
-            Collider::cMultiConvexMesh,
-            colliderId);
+  SetLookup(TimeOfImpactComplexVsComplex<ComplexType, MultiConvexMeshCollider>, colliderId, Collider::cMultiConvexMesh);
+  SetLookup(TimeOfImpactComplexVsComplex<MultiConvexMeshCollider, ComplexType>, Collider::cMultiConvexMesh, colliderId);
 
-  SetLookup(TimeOfImpactComplexVsComplex<ComplexType, MeshCollider>,
-            colliderId,
-            Collider::cMesh);
-  SetLookup(TimeOfImpactComplexVsComplex<MeshCollider, ComplexType>,
-            Collider::cMesh,
-            colliderId);
+  SetLookup(TimeOfImpactComplexVsComplex<ComplexType, MeshCollider>, colliderId, Collider::cMesh);
+  SetLookup(TimeOfImpactComplexVsComplex<MeshCollider, ComplexType>, Collider::cMesh, colliderId);
 
-  SetLookup(TimeOfImpactComplexVsComplex<ComplexType, HeightMapCollider>,
-            colliderId,
-            Collider::cHeightMap);
-  SetLookup(TimeOfImpactComplexVsComplex<HeightMapCollider, ComplexType>,
-            Collider::cHeightMap,
-            colliderId);
+  SetLookup(TimeOfImpactComplexVsComplex<ComplexType, HeightMapCollider>, colliderId, Collider::cHeightMap);
+  SetLookup(TimeOfImpactComplexVsComplex<HeightMapCollider, ComplexType>, Collider::cHeightMap, colliderId);
 }
 
 void InitTimeOfImpactLookup()
@@ -615,8 +519,7 @@ void InitTimeOfImpactLookup()
   SetComplexLookups<MeshCollider>(Collider::cMesh);
   SetComplexLookups<HeightMapCollider>(Collider::cHeightMap);
 
-  SetComplexVsComplexLookups<MultiConvexMeshCollider>(
-      Collider::cMultiConvexMesh);
+  SetComplexVsComplexLookups<MultiConvexMeshCollider>(Collider::cMultiConvexMesh);
 }
 
 InvokeTimeOfImpactInit sInvokeInit;
@@ -628,8 +531,7 @@ namespace Zero
 
 void TimeOfImpact(TimeOfImpactData* data)
 {
-  TimeOfImpactFunc function =
-      sTimeOfImpactLookup[data->ColliderA->mType][data->ColliderB->mType];
+  TimeOfImpactFunc function = sTimeOfImpactLookup[data->ColliderA->mType][data->ColliderB->mType];
 
   if (function == nullptr)
   {

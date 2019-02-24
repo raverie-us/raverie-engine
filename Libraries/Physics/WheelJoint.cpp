@@ -127,10 +127,7 @@ void WheelJoint::UpdateAtoms()
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  UpdateAtomsFragment(this,
-                      sInfo.mAtomCount,
-                      moleculeData,
-                      DefaultAngularLimitPolicy<WheelJoint>());
+  UpdateAtomsFragment(this, sInfo.mAtomCount, moleculeData, DefaultAngularLimitPolicy<WheelJoint>());
 }
 
 uint WheelJoint::MoleculeCount() const
@@ -143,11 +140,7 @@ void WheelJoint::ComputeMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputeMoleculesFragment(this,
-                           molecules,
-                           sInfo.mAtomCount,
-                           moleculeData,
-                           DefaultAngularLimitPolicy<WheelJoint>());
+  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, DefaultAngularLimitPolicy<WheelJoint>());
 }
 
 void WheelJoint::WarmStart(MoleculeWalker& molecules)
@@ -175,11 +168,8 @@ void WheelJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(this,
-                                   molecules,
-                                   sInfo.mAtomCount,
-                                   moleculeData,
-                                   DefaultAngularLimitPolicy<WheelJoint>());
+  ComputePositionMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData, DefaultAngularLimitPolicy<WheelJoint>());
 }
 
 void WheelJoint::DebugDraw()
@@ -197,8 +187,7 @@ void WheelJoint::DebugDraw()
   DrawAxisAtomFragment(mShockAxes, mAnchors, GetCollider(0), GetCollider(1));
 }
 
-uint WheelJoint::GetAtomIndexFilter(uint atomIndex,
-                                    real& desiredConstraintValue) const
+uint WheelJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   if (atomIndex < 3)

@@ -6,10 +6,7 @@ namespace Zero
 
 String gClipboardText;
 
-Shell::Shell() :
-    mCursor(Cursor::Arrow),
-    mMainWindow(nullptr),
-    mUserData(nullptr)
+Shell::Shell() : mCursor(Cursor::Arrow), mMainWindow(nullptr), mUserData(nullptr)
 {
 }
 

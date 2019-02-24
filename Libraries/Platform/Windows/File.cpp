@@ -24,8 +24,7 @@ struct FilePrivateData
 const DWORD FILE_NO_SHARING = 0;
 SECURITY_ATTRIBUTES* NOSECURITY = NULL;
 
-cstr cBadFileMessage =
-    "The file is missing, not in that location, or is protected.";
+cstr cBadFileMessage = "The file is missing, not in that location, or is protected.";
 
 DWORD ToWindowsFileMode(FileMode::Enum mode)
 {
@@ -142,19 +141,11 @@ bool File::Open(StringParam filePath,
       sharingMode |= FILE_SHARE_DELETE;
   }
 
-  self->mHandle = ::CreateFileW(Widen(filePath).c_str(),
-                                fileMode,
-                                sharingMode,
-                                NOSECURITY,
-                                disposition,
-                                flags,
-                                NULL);
+  self->mHandle = ::CreateFileW(Widen(filePath).c_str(), fileMode, sharingMode, NOSECURITY, disposition, flags, NULL);
 
   if (status == nullptr)
   {
-    CheckWin(self->mHandle != INVALID_HANDLE_VALUE,
-             "Failed to open file %s.",
-             filePath.c_str());
+    CheckWin(self->mHandle != INVALID_HANDLE_VALUE, "Failed to open file %s.", filePath.c_str());
 
     ReturnIf(self->mHandle == INVALID_HANDLE_VALUE,
              false,
@@ -221,8 +212,7 @@ bool File::IsOpen()
 void File::Close()
 {
   ZeroGetPrivateData(FilePrivateData);
-  if (self->mOsfHandle != OSF_INVALID_HANDLE_VALUE ||
-      self->mHandle != INVALID_HANDLE_VALUE)
+  if (self->mOsfHandle != OSF_INVALID_HANDLE_VALUE || self->mHandle != INVALID_HANDLE_VALUE)
   {
     if (self->mOsfHandle != OSF_INVALID_HANDLE_VALUE)
       _close(self->mOsfHandle);
@@ -247,8 +237,7 @@ FilePosition File::Tell()
   move.QuadPart = 0;
 
   LARGE_INTEGER newPosition;
-  BOOL success =
-      SetFilePointerEx(self->mHandle, move, &newPosition, FILE_CURRENT);
+  BOOL success = SetFilePointerEx(self->mHandle, move, &newPosition, FILE_CURRENT);
 
   return newPosition.QuadPart;
 }
@@ -289,8 +278,7 @@ size_t File::Read(Status& status, byte* data, size_t sizeInBytes)
   {
     int errorCode = (int)GetLastError();
     String errorString = ToErrorString(errorCode);
-    String message = String::Format(
-        "Failed to read file '%s': %s", mFilePath.c_str(), errorString.c_str());
+    String message = String::Format("Failed to read file '%s': %s", mFilePath.c_str(), errorString.c_str());
     status.SetFailed(message, errorCode);
   }
   return bytesRead;
@@ -310,17 +298,14 @@ bool File::HasData(Status& status)
     byte buffer[2];
 
     DWORD bytesRead, bytesAvailable, bytesLeft;
-    bool result = PeekNamedPipe(
-        self->mHandle, buffer, 1, &bytesRead, &bytesAvailable, &bytesLeft);
+    bool result = PeekNamedPipe(self->mHandle, buffer, 1, &bytesRead, &bytesAvailable, &bytesLeft);
     if (result)
       status.SetSucceeded();
     else
     {
       int errorCode = (int)GetLastError();
       String errorString = ToErrorString(errorCode);
-      String message = String::Format("Failed to peek file '%s': %s",
-                                      mFilePath.c_str(),
-                                      errorString.c_str());
+      String message = String::Format("Failed to peek file '%s': %s", mFilePath.c_str(), errorString.c_str());
       status.SetFailed(message, errorCode);
     }
 

@@ -19,8 +19,7 @@ public:
 
   // ZilchDocumentResource Interface.
   void GetLibraries(Array<LibraryRef>& libraries) override;
-  void GetLibrariesRecursive(Array<LibraryRef>& libraries,
-                             ResourceLibrary* library);
+  void GetLibrariesRecursive(Array<LibraryRef>& libraries, ResourceLibrary* library);
 };
 
 // ZilchScriptLoader
@@ -42,12 +41,8 @@ public:
   ZilchScriptManager(BoundType* resourceType);
 
   // ResourceManager Interface
-  void ValidateNewName(Status& status,
-                       StringParam name,
-                       BoundType* optionalType) override;
-  void ValidateRawName(Status& status,
-                       StringParam name,
-                       BoundType* optionalType) override;
+  void ValidateNewName(Status& status, StringParam name, BoundType* optionalType) override;
+  void ValidateRawName(Status& status, StringParam name, BoundType* optionalType) override;
   String GetTemplateSourceFile(ResourceAdd& resourceAdd) override;
 
   // Internals
@@ -57,9 +52,7 @@ public:
                                   StringParam shortMessage,
                                   StringParam fullMessage,
                                   const CodeLocation& location);
-  static void DispatchZeroZilchError(const CodeLocation& location,
-                                     StringParam message,
-                                     Project* buildingProject);
+  static void DispatchZeroZilchError(const CodeLocation& location, StringParam message, Project* buildingProject);
 
   static void OnMemoryLeak(MemoryLeakEvent* event);
 

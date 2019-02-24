@@ -18,9 +18,7 @@ public:
   void Serialize(Serializer& stream) override;
 
   // ParticleAnimator Interface
-  void Animate(ParticleList* particleList,
-               float dt,
-               Mat4Ref transform) override;
+  void Animate(ParticleList* particleList, float dt, Mat4Ref transform) override;
 
 private:
   /// Constance force applied to particles.
@@ -57,9 +55,7 @@ public:
   void Serialize(Serializer& stream) override;
 
   // ParticleAnimator Interface
-  void Animate(ParticleList* particleList,
-               float dt,
-               Mat4Ref transform) override;
+  void Animate(ParticleList* particleList, float dt, Mat4Ref transform) override;
 
 private:
   float mWanderAngle;
@@ -80,9 +76,7 @@ public:
   void Serialize(Serializer& stream) override;
 
   // ParticleAnimator Interface
-  void Animate(ParticleList* particleList,
-               float dt,
-               Mat4Ref transform) override;
+  void Animate(ParticleList* particleList, float dt, Mat4Ref transform) override;
 
 private:
   friend class LinearParticleAnimator;
@@ -104,9 +98,7 @@ public:
   void Serialize(Serializer& stream) override;
 
   // ParticleAnimator Interface
-  void Animate(ParticleList* particleList,
-               float dt,
-               Mat4Ref transform) override;
+  void Animate(ParticleList* particleList, float dt, Mat4Ref transform) override;
 
 private:
   SystemSpace::Enum mPositionSpace;
@@ -130,9 +122,7 @@ public:
   void Serialize(Serializer& stream) override;
 
   // ParticleAnimator Interface
-  void Animate(ParticleList* particleList,
-               float dt,
-               Mat4Ref transform) override;
+  void Animate(ParticleList* particleList, float dt, Mat4Ref transform) override;
 
 private:
   Vec3 mAxis;
@@ -153,9 +143,7 @@ public:
   void Serialize(Serializer& stream) override;
 
   /// ParticleAnimator Interface.
-  void Animate(ParticleList* particleList,
-               float dt,
-               Mat4Ref transform) override;
+  void Animate(ParticleList* particleList, float dt, Mat4Ref transform) override;
 
   /// How much the particle will bounce during a collision. Values should be in
   /// the range of [0, 1], where 0 is an in-elastic collision and 1 is a fully
@@ -192,9 +180,7 @@ public:
   void OnAllObjectsCreated(CogInitializer& initializer) override;
 
   // ParticleAnimator Interface
-  void Animate(ParticleList* particleList,
-               float dt,
-               Mat4Ref transform) override;
+  void Animate(ParticleList* particleList, float dt, Mat4Ref transform) override;
 
   /// How much the particle will bounce during a collision. Values should be in
   /// the range of [0, 1], where 0 is an in-elastic collision and 1 is a fully

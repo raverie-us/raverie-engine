@@ -36,8 +36,7 @@ bool Delegate::operator!=(Zero::NullPointerType) const
 
 size_t Delegate::Hash() const
 {
-  ErrorIf(this->BoundFunction->Hash == 0,
-          "The function's hash was most likely not computed");
+  ErrorIf(this->BoundFunction->Hash == 0, "The function's hash was most likely not computed");
 
   // Hash the function first
   int hash = (int)(this->BoundFunction->Hash * 735977940532462813);
@@ -68,14 +67,11 @@ bool Delegate::IsNotNull() const
 
 Any Delegate::Invoke(const Array<Any>& arguments)
 {
-  ReturnIf(this->BoundFunction == nullptr,
-           Any(),
-           "Attempted to invoke a null delegate");
+  ReturnIf(this->BoundFunction == nullptr, Any(), "Attempted to invoke a null delegate");
 
   // This is unsafe, but we use a static assert (after the ArrayClass,
   // ZeroOffsetOf with 0) to guarantee it will work
-  ArrayClass<Any>* zilchArray =
-      reinterpret_cast<ArrayClass<Any>*>(const_cast<Array<Any>*>(&arguments));
+  ArrayClass<Any>* zilchArray = reinterpret_cast<ArrayClass<Any>*>(const_cast<Array<Any>*>(&arguments));
   return this->BoundFunction->Invoke(this->ThisHandle, zilchArray);
 }
 } // namespace Zilch

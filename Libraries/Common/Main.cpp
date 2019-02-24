@@ -5,24 +5,18 @@ namespace Zero
 {
 Array<String> gCommandLineArguments;
 
-void CommandLineToStringArray(Array<String>& strings,
-                              cstr* argv,
-                              int numberOfParameters)
+void CommandLineToStringArray(Array<String>& strings, cstr* argv, int numberOfParameters)
 {
   for (int i = 0; i < numberOfParameters; ++i)
     strings.PushBack(argv[i]);
 }
 
-void CommandLineToStringArray(Array<String>& strings,
-                              char** argv,
-                              int numberOfParameters)
+void CommandLineToStringArray(Array<String>& strings, char** argv, int numberOfParameters)
 {
-  return CommandLineToStringArray(
-      strings, const_cast<cstr*>(argv), numberOfParameters);
+  return CommandLineToStringArray(strings, const_cast<cstr*>(argv), numberOfParameters);
 }
 
-bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments,
-                                 Array<String>& commandLineArguments)
+bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments, Array<String>& commandLineArguments)
 {
   // First parameter is exe path
   if (commandLineArguments.Size() == 1)
@@ -43,8 +37,7 @@ bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments,
       size_t paramIndex = index + 1;
 
       // Is there a parameter?
-      if (paramIndex < commandLineArguments.Size() &&
-          commandLineArguments[paramIndex].Front() != '-')
+      if (paramIndex < commandLineArguments.Size() && commandLineArguments[paramIndex].Front() != '-')
       {
         StringRange parameter = commandLineArguments[paramIndex];
         parsedCommandLineArguments[optionName] = parameter;

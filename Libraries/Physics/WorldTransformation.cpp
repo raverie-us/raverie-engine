@@ -30,8 +30,7 @@ void WorldTransformation::SetTransform(Transform* transform)
 
 void WorldTransformation::ReadTransform(PhysicsNode* owner)
 {
-  ErrorIf(!mTransform,
-          "No transform object ever set on the physics world transform.");
+  ErrorIf(!mTransform, "No transform object ever set on the physics world transform.");
 
   PhysicsNode* parent = owner->mParent;
   RigidBody* body = owner->mBody;
@@ -41,15 +40,13 @@ void WorldTransformation::ReadTransform(PhysicsNode* owner)
   if (mTransform->GetInWorld())
   {
     mLocalScale = mTransform->GetWorldScale();
-    mLocalRotation =
-        Math::ToMatrix3(mTransform->GetWorldRotation().Normalized());
+    mLocalRotation = Math::ToMatrix3(mTransform->GetWorldRotation().Normalized());
     mLocalTranslation = mTransform->GetWorldTranslation();
   }
   else
   {
     mLocalScale = mTransform->GetLocalScale();
-    mLocalRotation =
-        Math::ToMatrix3(mTransform->GetLocalRotation().Normalized());
+    mLocalRotation = Math::ToMatrix3(mTransform->GetLocalRotation().Normalized());
     mLocalTranslation = mTransform->GetLocalTranslation();
   }
 
@@ -59,8 +56,7 @@ void WorldTransformation::ReadTransform(PhysicsNode* owner)
     mWorldOffset = TransformNormal(collider->mTranslationOffset);
 }
 
-void WorldTransformation::ComputeTransformation(WorldTransformation* parent,
-                                                PhysicsNode* owner)
+void WorldTransformation::ComputeTransformation(WorldTransformation* parent, PhysicsNode* owner)
 {
   // if we are marked as in world, we simply just build
   // up our world and body to world values from our local
@@ -69,8 +65,7 @@ void WorldTransformation::ComputeTransformation(WorldTransformation* parent,
     mWorldScale = mLocalScale;
     mWorldRotation = mLocalRotation;
     mWorldTranslation = mLocalTranslation;
-    mBodyToWorld =
-        Math::BuildTransform(mWorldTranslation, mWorldRotation, mWorldScale);
+    mBodyToWorld = Math::BuildTransform(mWorldTranslation, mWorldRotation, mWorldScale);
     if (owner->mCollider)
       mWorldOffset = TransformNormal(owner->mCollider->mTranslationOffset);
     return;
@@ -83,8 +78,7 @@ void WorldTransformation::ComputeTransformation(WorldTransformation* parent,
   // Our parent node will already have it's body to world cached so we can early
   // out there
 
-  Mat4 toWorldTransform =
-      Math::BuildTransform(mLocalTranslation, mLocalRotation, mLocalScale);
+  Mat4 toWorldTransform = Math::BuildTransform(mLocalTranslation, mLocalRotation, mLocalScale);
 
   // get the cog of the parent node (if we have a parent node)
   Cog* parentNodeCog = nullptr;
@@ -157,8 +151,7 @@ Vec3 WorldTransformation::GetLocalTranslation() const
 Mat4 WorldTransformation::GetWorldMatrix() const
 {
   Mat4 matrix;
-  matrix.BuildTransform(
-      mWorldTranslation + mWorldOffset, mWorldRotation, mWorldScale);
+  matrix.BuildTransform(mWorldTranslation + mWorldOffset, mWorldRotation, mWorldScale);
   return matrix;
 }
 
@@ -212,8 +205,7 @@ Vec3 WorldTransformation::InverseTransformNormal(Vec3Param normal) const
   return result / mWorldScale;
 }
 
-Vec3 WorldTransformation::InverseTransformSurfaceNormal(
-    Vec3Param direction) const
+Vec3 WorldTransformation::InverseTransformSurfaceNormal(Vec3Param direction) const
 {
   Vec3 result = Math::TransposedTransform(mWorldRotation, direction);
   return result * mWorldScale;

@@ -87,8 +87,7 @@ String ZilchPluginBuilder::GetSharedLibraryPlatformName()
 String ZilchPluginBuilder::GetSharedLibraryPlatformBuildName()
 {
   String platformName = GetSharedLibraryPlatformName();
-  String platformBuildName =
-      BuildString(platformName, "-", GetRevisionNumberString());
+  String platformBuildName = BuildString(platformName, "-", GetRevisionNumberString());
   return platformBuildName;
 }
 
@@ -96,11 +95,9 @@ String ZilchPluginBuilder::GetSharedLibraryExtension(bool includeDot)
 {
   String extension;
   if (includeDot)
-    extension =
-        BuildString(".", GetSharedLibraryPlatformBuildName(), "-zilchPlugin");
+    extension = BuildString(".", GetSharedLibraryPlatformBuildName(), "-zilchPlugin");
   else
-    extension =
-        BuildString(GetSharedLibraryPlatformBuildName(), "-zilchPlugin");
+    extension = BuildString(GetSharedLibraryPlatformBuildName(), "-zilchPlugin");
   return extension;
 }
 
@@ -136,10 +133,8 @@ void ZilchPluginBuilder::BuildContent(BuildOptions& buildOptions)
     return;
 
   String sharedLibraryFileName = GetSharedLibraryFileName();
-  String destFile =
-      FilePath::Combine(buildOptions.OutputPath, sharedLibraryFileName);
-  String sourceFile =
-      FilePath::Combine(buildOptions.SourcePath, sharedLibraryFileName);
+  String destFile = FilePath::Combine(buildOptions.OutputPath, sharedLibraryFileName);
+  String sourceFile = FilePath::Combine(buildOptions.SourcePath, sharedLibraryFileName);
 
   // We output a dummy empty shared library so that content won't get mad at us
   if (!FileExists(sourceFile))
@@ -164,13 +159,8 @@ void ZilchPluginBuilder::BuildListing(ResourceListing& listing)
   String destFile = GetSharedLibraryFileName();
   static const String LibraryLoaderType("ZilchPluginLibrary");
   uint order = Z::gContentSystem->LoadOrderMap.FindValue(LibraryLoaderType, 10);
-  listing.PushBack(ResourceEntry(order,
-                                 LibraryLoaderType,
-                                 Name,
-                                 destFile,
-                                 mSharedLibraryResourceId,
-                                 this->mOwner,
-                                 this));
+  listing.PushBack(
+      ResourceEntry(order, LibraryLoaderType, Name, destFile, mSharedLibraryResourceId, this->mOwner, this));
 }
 
 ContentItem* MakeZilchPluginContent(ContentInitializer& initializer)
@@ -189,20 +179,17 @@ ContentItem* MakeZilchPluginContent(ContentInitializer& initializer)
   // If the directory already exists
   if (DirectoryExists(codeDir))
   {
-    DoNotifyWarning(
-        "Zilch Plugin",
-        String::Format(
-            "The directory for the Zilch plugin '%s' already exists, "
-            "therefore we will not create the template project:\n  '%s'\n",
-            pluginName.c_str(),
-            codeDir.c_str()));
+    DoNotifyWarning("Zilch Plugin",
+                    String::Format("The directory for the Zilch plugin '%s' already exists, "
+                                   "therefore we will not create the template project:\n  '%s'\n",
+                                   pluginName.c_str(),
+                                   codeDir.c_str()));
     return content;
   }
 
   Cog* configCog = Z::gEngine->GetConfigCog();
   MainConfig* mainConfig = configCog->has(MainConfig);
-  String templateDir =
-      FilePath::Combine(mainConfig->DataDirectory, "ZilchCustomPluginTemplate");
+  String templateDir = FilePath::Combine(mainConfig->DataDirectory, "ZilchCustomPluginTemplate");
 
   // Some templates require generated guids which we will create and replace
   static const String ReplaceGuid("{11111111-1111-1111-1111-111111111111}");

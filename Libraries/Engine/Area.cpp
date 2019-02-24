@@ -160,8 +160,7 @@ void Area::SetLocalTranslation(Vec2Param translation)
   Vec3 localTranslation = mTransform->GetLocalTranslation();
 
   if (OperationQueue::IsListeningForSideEffects())
-    OperationQueue::RegisterSideEffect(
-        mTransform, "Translation", localTranslation);
+    OperationQueue::RegisterSideEffect(mTransform, "Translation", localTranslation);
 
   localTranslation = Vec3(translation, localTranslation.z);
   mTransform->SetLocalTranslation(localTranslation);
@@ -172,8 +171,7 @@ Vec2 Area::GetWorldTranslation()
   Vec2 localTranslation = ToVector2(mTransform->GetLocalTranslation());
 
   if (Transform* parent = mTransform->TransformParent)
-    localTranslation =
-        ToVector2(parent->TransformPointInverse(Vec3(localTranslation)));
+    localTranslation = ToVector2(parent->TransformPointInverse(Vec3(localTranslation)));
 
   return localTranslation;
 }
@@ -183,8 +181,7 @@ void Area::SetWorldTranslation(Vec2Param worldTranslation)
   Vec2 localTranslation = worldTranslation;
 
   if (Transform* parent = mTransform->TransformParent)
-    localTranslation =
-        ToVector2(parent->TransformPointInverse(Vec3(worldTranslation)));
+    localTranslation = ToVector2(parent->TransformPointInverse(Vec3(worldTranslation)));
 
   SetLocalTranslation(localTranslation);
 }
@@ -250,8 +247,7 @@ void Area::SetWorldLocation(Location::Enum location, Vec2Param worldTranslation)
   Vec2 localTranslation = worldTranslation;
 
   if (Transform* parent = mTransform->TransformParent)
-    localTranslation =
-        ToVector2(parent->TransformPointInverse(Vec3(worldTranslation)));
+    localTranslation = ToVector2(parent->TransformPointInverse(Vec3(worldTranslation)));
 
   SetLocalLocation(location, localTranslation);
 }

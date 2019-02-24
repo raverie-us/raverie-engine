@@ -12,8 +12,7 @@ DefineEvent(SpaceObjectsChanged);
 DefineEvent(SpaceDestroyed);
 } // namespace Events
 
-Memory::Pool* Space::sCogLists = new Memory::Pool(
-    "CogLists", Memory::GetNamedHeap("CogList"), sizeof(NameCogList), 64);
+Memory::Pool* Space::sCogLists = new Memory::Pool("CogLists", Memory::GetNamedHeap("CogList"), sizeof(NameCogList), 64);
 
 ZilchDefineType(Space, builder, type)
 {
@@ -87,8 +86,7 @@ bool Space::IsPreviewMode()
 
 bool Space::IsEditorOrPreviewMode()
 {
-  return mCreationFlags.IsSet(CreationFlags::Editing) ||
-         mCreationFlags.IsSet(CreationFlags::Preview);
+  return mCreationFlags.IsSet(CreationFlags::Editing) || mCreationFlags.IsSet(CreationFlags::Preview);
 }
 
 Cog* Space::Clone()
@@ -178,10 +176,7 @@ Cog* Space::CreateAt(StringParam source, Transform* transform)
   return CreateAt(source, translation, Math::ToQuaternion(rotation));
 }
 
-Cog* Space::CreateAt(StringParam source,
-                     Vec3Param position,
-                     QuatParam rotation,
-                     Vec3Param scale)
+Cog* Space::CreateAt(StringParam source, Vec3Param position, QuatParam rotation, Vec3Param scale)
 {
   CogCreationContext context(this, source);
 
@@ -360,9 +355,7 @@ Cog* Space::CreateLink(Archetype* archetype, Cog* objectA, Cog* objectB)
   return CreateNamedLink(archetype->ResourceIdName, objectA, objectB);
 }
 
-Cog* Space::CreateNamedLink(StringParam archetypeName,
-                            Cog* objectA,
-                            Cog* objectB)
+Cog* Space::CreateNamedLink(StringParam archetypeName, Cog* objectA, Cog* objectB)
 {
   if (objectA == nullptr || objectB == nullptr)
     return nullptr;
@@ -381,8 +374,7 @@ Cog* Space::CreateNamedLink(StringParam archetypeName,
 
   CogInitializer initializer(this);
   initializer.Context = &context;
-  Cog* cog =
-      Z::gFactory->BuildAndSerialize(ZilchTypeId(Cog), archetypeName, &context);
+  Cog* cog = Z::gFactory->BuildAndSerialize(ZilchTypeId(Cog), archetypeName, &context);
 
   if (cog == nullptr)
     return nullptr;
@@ -472,9 +464,7 @@ void Space::SaveLevelFile(StringParam filename)
   }
 }
 
-void Space::SerializeObjectsToSpace(CogInitializer& initializer,
-                                    CogCreationContext& context,
-                                    Serializer& loader)
+void Space::SerializeObjectsToSpace(CogInitializer& initializer, CogCreationContext& context, Serializer& loader)
 {
   bool hadCogs = loader.Start("Cogs", "cogs", StructureType::Object);
 
@@ -546,7 +536,7 @@ Cog* Space::FindFirstRootObjectByName(StringParam name)
   NameCogList* nameList = mNameMap.FindValue(name, nullptr);
   if (nameList)
   {
-    forRange(Cog & cog, nameList->All())
+    forRange (Cog& cog, nameList->All())
     {
       if (cog.GetParent() == nullptr)
         return &cog;
@@ -560,7 +550,7 @@ Cog* Space::FindLastRootObjectByName(StringParam name)
   NameCogList* nameList = mNameMap.FindValue(name, nullptr);
   if (nameList)
   {
-    forRange(Cog & cog, nameList->ReverseAll())
+    forRange (Cog& cog, nameList->ReverseAll())
     {
       if (cog.GetParent() == nullptr)
         return &cog;
@@ -597,15 +587,12 @@ void Space::LoadLevelFile(StringParam filePath)
     String fileName = FilePath::GetFileName(filePath);
 
     MarkNotModified();
-    ZPrintFilter(Filter::DefaultFilter,
-                 "Level file '%s' was loaded.\n",
-                 fileName.c_str());
+    ZPrintFilter(Filter::DefaultFilter, "Level file '%s' was loaded.\n", fileName.c_str());
     stream->EndPolymorphic();
   }
   else
   {
-    String message =
-        String::Format("Failed to load level file '%s'", filePath.c_str());
+    String message = String::Format("Failed to load level file '%s'", filePath.c_str());
     DoNotifyError("Load Failed", message);
   }
 
@@ -638,8 +625,7 @@ Level* Space::AddObjectsFromLevel(Level* level)
   if (level)
   {
     String levelPath = level->GetLoadPath();
-    String levelMessage =
-        String::Format("Loading Level From File %s", levelPath.c_str());
+    String levelMessage = String::Format("Loading Level From File %s", levelPath.c_str());
     PushErrorContext(levelMessage.c_str());
 
     Status status;
@@ -667,9 +653,7 @@ Level* Space::AddObjectsFromLevel(Level* level)
     }
     else
     {
-      String message = String::Format("Failed to load level '%s' %s",
-                                      level->Name.c_str(),
-                                      status.Message.c_str());
+      String message = String::Format("Failed to load level '%s' %s", level->Name.c_str(), status.Message.c_str());
       DoNotifyErrorWithContext(message);
       mIsLoadingLevel = false;
       return nullptr;
@@ -721,9 +705,7 @@ void Space::LoadLevel(Level* level)
 
   if (Level* pendingLoad = mPendingLevel)
   {
-    ZPrintFilter(Filter::DefaultFilter,
-                 "Already loading level '%s'\n",
-                 pendingLoad->ResourceIdName.c_str());
+    ZPrintFilter(Filter::DefaultFilter, "Already loading level '%s'\n", pendingLoad->ResourceIdName.c_str());
     return;
   }
 
@@ -735,9 +717,7 @@ void Space::LoadLevel(Level* level)
 
   if (!mLevelLoaded)
   {
-    ZPrintFilter(Filter::DefaultFilter,
-                 "Loading level '%s' directly.\n",
-                 level->Name.c_str());
+    ZPrintFilter(Filter::DefaultFilter, "Loading level '%s' directly.\n", level->Name.c_str());
 
     // No level has ever been loaded into this space. This is when a space has
     // just been created and no important objects are loaded.
@@ -746,9 +726,7 @@ void Space::LoadLevel(Level* level)
   }
   else
   {
-    ZPrintFilter(Filter::DefaultFilter,
-                 "Loading level '%s' delayed.\n",
-                 level->Name.c_str());
+    ZPrintFilter(Filter::DefaultFilter, "Loading level '%s' delayed.\n", level->Name.c_str());
 
     // Add all objects to the destroy list
     DestroyAll();

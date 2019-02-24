@@ -41,9 +41,7 @@ public:
 };
 
 // Open an add window
-AddResourceWindow* OpenAddWindow(BoundType* resourceType,
-                                 Window** window = nullptr,
-                                 StringParam resourceName = "");
+AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window = nullptr, StringParam resourceName = "");
 
 // Add Resource Window
 class AddResourceWindow : public Composite
@@ -186,9 +184,7 @@ private:
   void BuildContentLibraryList();
   void CreateNameToolTip(StringParam message);
   void RemoveNameToolTip();
-  void CreateTagToolTip(
-      StringParam message,
-      ToolTipColorScheme::Enum tagColor = ToolTipColorScheme::Default);
+  void CreateTagToolTip(StringParam message, ToolTipColorScheme::Enum tagColor = ToolTipColorScheme::Default);
   void RemoveTagToolTip();
   void OnTextTypedTag(Event*);
   void OnKeyDownNameField(KeyboardEvent* e);

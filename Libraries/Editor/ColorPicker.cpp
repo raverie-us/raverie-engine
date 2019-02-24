@@ -17,10 +17,7 @@ ZilchDefineType(ColorEvent, builder, type)
 
 void DrawCheckers(PixelBuffer* buffer, uint checkerSize);
 
-ColorDisplay::ColorDisplay(Composite* parent,
-                           uint pixelWidth,
-                           uint pixelHeight) :
-    Composite(parent)
+ColorDisplay::ColorDisplay(Composite* parent, uint pixelWidth, uint pixelHeight) : Composite(parent)
 {
   static const String className = "ColorPicker";
   mDefSet = GetDefinitionSet()->GetDefinitionSet(className);
@@ -94,8 +91,7 @@ ColorEyeDropper* OpenEyeDropper(Mouse* mouse, Composite* parent)
   return new ColorEyeDropper(mouse, parent);
 }
 
-ColorEyeDropper::ColorEyeDropper(Mouse* mouse, Composite* parent) :
-    MouseManipulation(mouse, parent)
+ColorEyeDropper::ColorEyeDropper(Mouse* mouse, Composite* parent) : MouseManipulation(mouse, parent)
 {
   mOwner = parent;
   mouse->SetCursor(Cursor::Cross);
@@ -129,10 +125,7 @@ public:
   Widget* mDisplay;
   SetCallback mCallback;
 
-  SliderManipulator(Mouse* mouse,
-                    ColorPicker* owner,
-                    Widget* display,
-                    SetCallback callback) :
+  SliderManipulator(Mouse* mouse, ColorPicker* owner, Widget* display, SetCallback callback) :
       MouseManipulation(mouse, owner)
   {
     mColorPicker = owner;
@@ -172,8 +165,7 @@ public:
   ColorPicker* mColorPicker;
   Widget* mDisplay;
 
-  BlockManipulator(Mouse* mouse, ColorPicker* owner, Widget* display) :
-      MouseManipulation(mouse, owner)
+  BlockManipulator(Mouse* mouse, ColorPicker* owner, Widget* display) : MouseManipulation(mouse, owner)
   {
     mColorPicker = owner;
     mDisplay = display;
@@ -254,8 +246,7 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
   mColorBlockSelection->SetDisplayOrigin(DisplayOrigin::Center);
   mColorBlockSelection->SetColor(ToFloatColor(Color::Black));
 
-  ConnectThisTo(
-      mColorBlockDisplay, Events::LeftMouseDown, OnColorBlockMouseDown);
+  ConnectThisTo(mColorBlockDisplay, Events::LeftMouseDown, OnColorBlockMouseDown);
 
   //---------------------------------------------------- Create the color slider
   // Create the color buffer
@@ -271,8 +262,7 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
   mColorSliderSelection->SetTranslation(Pixels(205, 0, 0));
   mColorSliderSelection->SetColor(ToFloatColor(Color::Black));
 
-  ConnectThisTo(
-      mColorSliderDisplay, Events::LeftMouseDown, OnColorSliderMouseDown);
+  ConnectThisTo(mColorSliderDisplay, Events::LeftMouseDown, OnColorSliderMouseDown);
 
   //---------------------------------------------------- Create the alpha slider
   // Create the color buffer
@@ -288,8 +278,7 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
   mAlphaSliderSelection->SetTranslation(Pixels(225, 0, 0));
   mAlphaSliderSelection->SetColor(ToFloatColor(Color::Black));
 
-  ConnectThisTo(
-      mAlphaSliderDisplay, Events::LeftMouseDown, OnAlphaSliderMouseDown);
+  ConnectThisTo(mAlphaSliderDisplay, Events::LeftMouseDown, OnAlphaSliderMouseDown);
 
   //---------------------------------------------------------- Create Text Boxes
   Vec3 offset = Pixels(250, 25, 0);
@@ -300,8 +289,7 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
 
     // Create the check-boxes
     mCheckBoxes[i] = new CheckBox(this);
-    mCheckBoxes[i]->SetTranslationAndSize(pos + Pixels(-7, 9, 0) + offset,
-                                          Vec2(0.08f, 0.08f));
+    mCheckBoxes[i]->SetTranslationAndSize(pos + Pixels(-7, 9, 0) + offset, Vec2(0.08f, 0.08f));
 
     // Create the label
     mLabels[i] = new Label(this);
@@ -325,8 +313,7 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
 
   // Connect to check boxes
   ConnectThisTo(mCheckBoxes[Hue], Events::ValueChanged, OnHueClicked);
-  ConnectThisTo(
-      mCheckBoxes[Saturation], Events::ValueChanged, OnSaturationClicked);
+  ConnectThisTo(mCheckBoxes[Saturation], Events::ValueChanged, OnSaturationClicked);
   ConnectThisTo(mCheckBoxes[Value], Events::ValueChanged, OnValueClicked);
   ConnectThisTo(mCheckBoxes[Red], Events::ValueChanged, OnRedClicked);
   ConnectThisTo(mCheckBoxes[Green], Events::ValueChanged, OnGreenClicked);
@@ -334,8 +321,7 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
 
   // Connect to text boxes
   ConnectThisTo(mTextBoxes[Hue], Events::TextBoxChanged, OnHueChanged);
-  ConnectThisTo(
-      mTextBoxes[Saturation], Events::TextBoxChanged, OnSaturationChanged);
+  ConnectThisTo(mTextBoxes[Saturation], Events::TextBoxChanged, OnSaturationChanged);
   ConnectThisTo(mTextBoxes[Value], Events::TextBoxChanged, OnValueChanged);
   ConnectThisTo(mTextBoxes[Red], Events::TextBoxChanged, OnRedChanged);
   ConnectThisTo(mTextBoxes[Green], Events::TextBoxChanged, OnGreenChanged);
@@ -360,8 +346,7 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
   mHdrTextBox = new TextBox(this);
   mHdrTextBox->SetText("1.0");
   mHdrTextBox->SetEditable(true);
-  mHdrTextBox->SetTranslationAndSize(Pixels(355.0f, 150.0f, 0.0f),
-                                     Pixels(40, 20));
+  mHdrTextBox->SetTranslationAndSize(Pixels(355.0f, 150.0f, 0.0f), Pixels(40, 20));
   ConnectThisTo(mHdrTextBox, Events::TextBoxChanged, OnHdrChanged);
 
   //------------------------------------------------------------- Create Hex Box
@@ -440,12 +425,8 @@ ColorPicker* ColorPicker::EditColor(Widget* target, Vec4 color)
       style.SetFlag(WindowStyleFlags::Close);
       style.SetFlag(WindowStyleFlags::ClientOnly);
 
-      OsWindow* window =
-          osShell->CreateOsWindow("TweakablesWindow",
-                                  size,
-                                  position,
-                                  target->GetRootWidget()->GetOsWindow(),
-                                  style.Field);
+      OsWindow* window = osShell->CreateOsWindow(
+          "TweakablesWindow", size, position, target->GetRootWidget()->GetOsWindow(), style.Field);
       window->SetMinClientSize(size);
 
       MainWindow* rootWidget = new MainWindow(window);
@@ -496,8 +477,7 @@ void ColorPicker::SetColor(ByteColor color)
 
 Vec4 ColorPicker::GetFloatColor()
 {
-  return Vec4(
-      mValues[Red] * mHdr, mValues[Green] * mHdr, mValues[Blue] * mHdr, mAlpha);
+  return Vec4(mValues[Red] * mHdr, mValues[Green] * mHdr, mValues[Blue] * mHdr, mAlpha);
 }
 
 void ColorPicker::SetColor4(Vec4Param color)
@@ -606,8 +586,7 @@ void ColorPicker::UpdateColorSlider()
     if (mMode == Hue)
       color = HSVToFloatColor(yPos, 1.0f, 1.0f);
     else if (mMode == Saturation)
-      color =
-          HSVToFloatColor(mValues[Hue], yPos, Math::Max(0.27f, mValues[Value]));
+      color = HSVToFloatColor(mValues[Hue], yPos, Math::Max(0.27f, mValues[Value]));
     else if (mMode == Value)
       color = HSVToFloatColor(mValues[Hue], mValues[Saturation], yPos);
     else // The mode is R, G, or B
@@ -705,8 +684,7 @@ void ColorPicker::UpdateTextBoxes()
   mHdrTextBox->SetText(String::Format("%1.2f", mHdr));
 
   // Update the hex text box
-  ByteColor color =
-      ToByteColor(Vec4(mValues[Blue], mValues[Green], mValues[Red], 0.0f));
+  ByteColor color = ToByteColor(Vec4(mValues[Blue], mValues[Green], mValues[Red], 0.0f));
   mHexTextBox->SetText(String::Format("%06X", color));
 }
 
@@ -902,8 +880,7 @@ void ColorPicker::SetColorBlockSelectionValue(Vec2Param val)
 Vec2 ColorPicker::GetColorBlockSelectionValue()
 {
   Vec3 curPos = mColorBlockSelection->GetTranslation();
-  return Vec2(curPos.x / cColorDisplaySize,
-              1.0f - curPos.y / cColorDisplaySize);
+  return Vec2(curPos.x / cColorDisplaySize, 1.0f - curPos.y / cColorDisplaySize);
 }
 
 void ColorPicker::SetColorSliderSelectionValue(float val)
@@ -961,18 +938,12 @@ void ColorPicker::OnEyeDropColorChagned(ColorEvent* event)
 
 void ColorPicker::OnColorSliderMouseDown(MouseEvent* event)
 {
-  new SliderManipulator(event->GetMouse(),
-                        this,
-                        mColorSliderDisplay,
-                        &ColorPicker::SetColorSliderSelectionValue);
+  new SliderManipulator(event->GetMouse(), this, mColorSliderDisplay, &ColorPicker::SetColorSliderSelectionValue);
 }
 
 void ColorPicker::OnAlphaSliderMouseDown(MouseEvent* event)
 {
-  new SliderManipulator(event->GetMouse(),
-                        this,
-                        mAlphaSliderDisplay,
-                        &ColorPicker::SetAlphaSliderSelectionValue);
+  new SliderManipulator(event->GetMouse(), this, mAlphaSliderDisplay, &ColorPicker::SetAlphaSliderSelectionValue);
 }
 
 void ColorPicker::OnColorBlockMouseDown(MouseEvent* event)

@@ -140,13 +140,10 @@ private:
   String GetFindRegex();
 
   // Advance an input string to the end of a line
-  static const char* MoveToEol(StringRange wholeString,
-                               const char* currentPosition,
-                               EolDirection::Enum direction);
+  static const char* MoveToEol(StringRange wholeString, const char* currentPosition, EolDirection::Enum direction);
 
   // Get the entire line as a string range
-  static StringRange GetWholeLine(StringRange wholeString,
-                                  const char* currentPosition);
+  static StringRange GetWholeLine(StringRange wholeString, const char* currentPosition);
 
   // Count the number of lines in a given string range
   static size_t CountLines(StringRange input);
@@ -162,8 +159,7 @@ private:
   typename T::pointer GetNext(T& list)
   {
     // If we're searching downward... (or we don't care about search direction)
-    if (mDirection->GetActive() == false ||
-        mDirection->GetSelectedItem() == Direction::Down)
+    if (mDirection->GetActive() == false || mDirection->GetSelectedItem() == Direction::Down)
     {
       return &list.Front();
     }
@@ -179,8 +175,7 @@ private:
   void PopNext(T& list)
   {
     // If we're searching downward... (or we don't care about search direction)
-    if (mDirection->GetActive() == false ||
-        mDirection->GetSelectedItem() == Direction::Down)
+    if (mDirection->GetActive() == false || mDirection->GetSelectedItem() == Direction::Down)
     {
       return list.PopFront();
     }

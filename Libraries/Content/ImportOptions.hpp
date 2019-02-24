@@ -34,13 +34,7 @@ DeclareEnum7(ScaleConversion,
              InchesToMeters,
              MetersToCentimeters,
              MetersToInches);
-DeclareEnum6(BasisType,
-             PositiveX,
-             PositiveY,
-             PositiveZ,
-             NegativeX,
-             NegativeY,
-             NegativeZ);
+DeclareEnum6(BasisType, PositiveX, PositiveY, PositiveZ, NegativeX, NegativeY, NegativeZ);
 
 const float cCentimetersToInchesScaleFactor = 0.3937f;
 const float cCentimetersToMetersScaleFactor = 0.01f;
@@ -96,8 +90,7 @@ public:
 class ShowNormalGenerationOptionsFilter : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(ShowNormalGenerationOptionsFilter,
-                   TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ShowNormalGenerationOptionsFilter, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 

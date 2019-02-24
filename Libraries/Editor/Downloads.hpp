@@ -8,8 +8,7 @@ class DownloadTaskJob : public BackgroundTaskJob
 {
 public:
   static BackgroundTask* DownloadToBuffer(StringParam url);
-  static BackgroundTask* DownloadToBuffer(StringParam url,
-                                          StringParam fileName);
+  static BackgroundTask* DownloadToBuffer(StringParam url, StringParam fileName);
 
   typedef DownloadTaskJob ZilchSelf;
   DownloadTaskJob(StringParam url, u64 forceCacheSeconds = 0);

@@ -45,17 +45,12 @@ ConstraintMolecule& MoleculeWalker::operator[](uint i)
   return *(ConstraintMolecule*)(mRawBuffer + i * mStride);
 }
 
-void MoleculeData::SetUp(AnchorAtom* anchor,
-                         const AngleAtom* angle,
-                         const Joint* joint)
+void MoleculeData::SetUp(AnchorAtom* anchor, const AngleAtom* angle, const Joint* joint)
 {
   SetUp(anchor, angle, joint->GetCollider(0), joint->GetCollider(1));
 }
 
-void MoleculeData::SetUp(AnchorAtom* anchor,
-                         const AngleAtom* angle,
-                         AxisAtom* axis,
-                         const Joint* joint)
+void MoleculeData::SetUp(AnchorAtom* anchor, const AngleAtom* angle, AxisAtom* axis, const Joint* joint)
 {
   Collider* collider0 = joint->GetCollider(0);
   Collider* collider1 = joint->GetCollider(1);
@@ -89,17 +84,12 @@ void MoleculeData::SetUp(AnchorAtom* anchor,
   }
 }
 
-void MoleculeData::SetUp(AnchorAtom* anchor,
-                         const AngleAtom* angle,
-                         Contact* contact)
+void MoleculeData::SetUp(AnchorAtom* anchor, const AngleAtom* angle, Contact* contact)
 {
   SetUp(anchor, angle, contact->GetCollider(0), contact->GetCollider(1));
 }
 
-void MoleculeData::SetUp(AnchorAtom* anchor,
-                         const AngleAtom* angle,
-                         Collider* collider1,
-                         Collider* collider2)
+void MoleculeData::SetUp(AnchorAtom* anchor, const AngleAtom* angle, Collider* collider1, Collider* collider2)
 {
   // compute the world values if the local ones were passed in
   if (anchor)
@@ -123,8 +113,7 @@ void MoleculeData::SetAngularBasis(Vec3Param axis)
 {
   // generate an orthonormal basis where the passed in axis is axis 2
   AngularAxes[2] = axis;
-  Math::GenerateOrthonormalBasis(
-      AngularAxes[2], AngularAxes + 0, AngularAxes + 1);
+  Math::GenerateOrthonormalBasis(AngularAxes[2], AngularAxes + 0, AngularAxes + 1);
 }
 
 void MoleculeData::SetAngularBases(Mat3Param basis)

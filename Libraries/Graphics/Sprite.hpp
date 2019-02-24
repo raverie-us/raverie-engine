@@ -33,9 +33,7 @@ public:
   // Internal
 
   Aabb GetViewPlaneAabb(Aabb localAabb);
-  void ComputeLocalToViewMatrix(Mat4& localToView,
-                                Mat4& localToWorld,
-                                Mat4& worldToView);
+  void ComputeLocalToViewMatrix(Mat4& localToView, Mat4& localToWorld, Mat4& worldToView);
 };
 
 /// A generated quad that addresses atlased image data for efficient frame-based
@@ -55,9 +53,7 @@ public:
 
   Aabb GetLocalAabb() override;
   void ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock) override;
-  void ExtractViewData(ViewNode& viewNode,
-                       ViewBlock& viewBlock,
-                       FrameBlock& frameBlock) override;
+  void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) override;
 
   // Properties
 
@@ -117,9 +113,7 @@ public:
 
   Aabb GetLocalAabb() override;
   void ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock) override;
-  void ExtractViewData(ViewNode& viewNode,
-                       ViewBlock& viewBlock,
-                       FrameBlock& frameBlock) override;
+  void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) override;
 
   // Properties
 
@@ -234,12 +228,8 @@ public:
 
   Aabb GetLocalAabb() override;
   void ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock) override;
-  void ExtractViewData(ViewNode& viewNode,
-                       ViewBlock& viewBlock,
-                       FrameBlock& frameBlock) override;
-  void MidPhaseQuery(Array<GraphicalEntry>& entries,
-                     Camera& camera,
-                     Frustum* frustum) override;
+  void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) override;
+  void MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Frustum* frustum) override;
   bool TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo) override;
 
   // Properties

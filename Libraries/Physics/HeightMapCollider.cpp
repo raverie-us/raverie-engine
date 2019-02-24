@@ -36,8 +36,7 @@ void HeightMapCollider::Initialize(CogInitializer& initializer)
   mMap = owner->has(HeightMap);
   ConnectThisTo(owner, Events::HeightMapPatchAdded, OnHeightMapPatchAdded);
   ConnectThisTo(owner, Events::HeightMapPatchRemoved, OnHeightMapPatchRemoved);
-  ConnectThisTo(
-      owner, Events::HeightMapPatchModified, OnHeightMapPatchModified);
+  ConnectThisTo(owner, Events::HeightMapPatchModified, OnHeightMapPatchModified);
 
   // Load all patches into memory
   ReloadAllPatches();
@@ -92,8 +91,7 @@ real HeightMapCollider::ComputeWorldVolumeInternal()
   return real(0);
 }
 
-void HeightMapCollider::ComputeLocalInverseInertiaTensor(
-    real mass, Mat3Ref localInvInertia)
+void HeightMapCollider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia)
 {
   // Height maps can't be dynamic
   localInvInertia.ZeroOut();
@@ -124,9 +122,7 @@ void HeightMapCollider::ClearCachedEdgeAdjacency()
   mInfoMap.Clear();
 }
 
-HeightMapCollider::HeightMapRangeWrapper::HeightMapRangeWrapper(HeightMap* map,
-                                                                Aabb& aabb,
-                                                                real thickness)
+HeightMapCollider::HeightMapRangeWrapper::HeightMapRangeWrapper(HeightMap* map, Aabb& aabb, real thickness)
 {
   mRange.SetLocal(map, aabb, thickness);
 }
@@ -136,12 +132,10 @@ void HeightMapCollider::HeightMapRangeWrapper::PopFront()
   mRange.PopFront();
 }
 
-HeightMapCollider::HeightMapRangeWrapper::InternalObject&
-HeightMapCollider::HeightMapRangeWrapper::Front()
+HeightMapCollider::HeightMapRangeWrapper::InternalObject& HeightMapCollider::HeightMapRangeWrapper::Front()
 {
   HeightMapAabbRange::TriangleInfo item = mRange.Front();
-  AbsoluteIndex absIndex =
-      mRange.mMap->GetAbsoluteIndex(item.mPatchIndex, item.mCellIndex);
+  AbsoluteIndex absIndex = mRange.mMap->GetAbsoluteIndex(item.mPatchIndex, item.mCellIndex);
   uint triIndex = mRange.mTriangleIndex;
 
   // Convert the triangle's info into a unique 32-bit key (change the key later
@@ -181,8 +175,7 @@ Triangle HeightMapCollider::GetTriangle(uint key)
   return triangles[triIndex];
 }
 
-HeightMapCollider::HeightMapRangeWrapper
-HeightMapCollider::GetOverlapRange(Aabb& localAabb)
+HeightMapCollider::HeightMapRangeWrapper HeightMapCollider::GetOverlapRange(Aabb& localAabb)
 {
   HeightMapRangeWrapper range(mMap, localAabb, mThickness);
   // This only needs to be set once and it will persist through all objects in
@@ -191,9 +184,7 @@ HeightMapCollider::GetOverlapRange(Aabb& localAabb)
   return range;
 }
 
-bool HeightMapCollider::Cast(const Ray& localRay,
-                             ProxyResult& result,
-                             BaseCastFilter& filter)
+bool HeightMapCollider::Cast(const Ray& localRay, ProxyResult& result, BaseCastFilter& filter)
 {
   // Cast a local ray (already transformed by the collision manager) against the
   // internal height map
@@ -216,8 +207,7 @@ bool HeightMapCollider::Cast(const Ray& localRay,
   // so we have to compute that ourself if it's requested
   if (filter.IsSet(BaseCastFilterFlags::GetContactNormal))
   {
-    Vec3 normal = Geometry::NormalFromPointOnTriangle(
-        result.mPoints[0], tri[0], tri[1], tri[2]);
+    Vec3 normal = Geometry::NormalFromPointOnTriangle(result.mPoints[0], tri[0], tri[1], tri[2]);
 
     // Since the normal only comes from the point on the object it will always
     // be the positive normal of the triangle. We want the normal to be the
@@ -231,10 +221,8 @@ bool HeightMapCollider::Cast(const Ray& localRay,
   }
 
   // Compute this triangle's key so we can look it back up if needed
-  AbsoluteIndex absIndex = mMap->GetAbsoluteIndex(range.mPatchRange.Front(),
-                                                  range.mCellRange.Front());
-  HeightMapCollider::TriangleIndexToKey(
-      absIndex, range.mTriangleIndex, result.ShapeIndex);
+  AbsoluteIndex absIndex = mMap->GetAbsoluteIndex(range.mPatchRange.Front(), range.mCellRange.Front());
+  HeightMapCollider::TriangleIndexToKey(absIndex, range.mTriangleIndex, result.ShapeIndex);
 
   return true;
 }
@@ -249,9 +237,7 @@ TriangleInfoMap* HeightMapCollider::GetInfoMap()
   return &mInfoMap;
 }
 
-void HeightMapCollider::TriangleIndexToKey(const AbsoluteIndex& absolueIndex,
-                                           uint triIndex,
-                                           uint& key)
+void HeightMapCollider::TriangleIndexToKey(const AbsoluteIndex& absolueIndex, uint triIndex, uint& key)
 {
   // set the top 16 bits to the y index and the bottom
   // 16 to the x axis (times 2 because of 2 triangles)
@@ -261,9 +247,7 @@ void HeightMapCollider::TriangleIndexToKey(const AbsoluteIndex& absolueIndex,
   key |= ((absolueIndex.y + 0x7fff) & mask) << 16;
 }
 
-void HeightMapCollider::KeyToTriangleIndex(uint key,
-                                           AbsoluteIndex& absolueIndex,
-                                           uint& triIndex)
+void HeightMapCollider::KeyToTriangleIndex(uint key, AbsoluteIndex& absolueIndex, uint& triIndex)
 {
   // Reconstruct indices
   int mask = 0xffff;

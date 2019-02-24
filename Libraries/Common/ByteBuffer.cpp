@@ -108,8 +108,7 @@ void ByteBuffer::Append(const byteType* data, size_t sizeInBytes)
 
 void ByteBuffer::Backup(size_t sizeInBytes)
 {
-  ErrorIf(sizeInBytes > mTotalSize,
-          "Attempting to back-up more than the total size of the ByteBuffer");
+  ErrorIf(sizeInBytes > mTotalSize, "Attempting to back-up more than the total size of the ByteBuffer");
 
   mTotalSize -= sizeInBytes;
 
@@ -142,11 +141,9 @@ byte& ByteBuffer::operator[](size_t index)
   return mBlocks[outerIndex][innerIndex];
 }
 
-void ByteBuffer::ExtractInto(byteType* byteBuffer,
-                             size_t bufferSizeInBytes) const
+void ByteBuffer::ExtractInto(byteType* byteBuffer, size_t bufferSizeInBytes) const
 {
-  ErrorIf(mTotalSize > bufferSizeInBytes,
-          "Buffer is not large enough for data.");
+  ErrorIf(mTotalSize > bufferSizeInBytes, "Buffer is not large enough for data.");
   if (mTotalSize > bufferSizeInBytes)
     return; // Do nothing
 
@@ -158,8 +155,7 @@ void ByteBuffer::ExtractInto(byteType* byteBuffer,
   Array<byteType*>::range blocks = mBlocks.All();
   for (; !blocks.Empty(); blocks.PopFront())
   {
-    size_t blockSize =
-        blocks.Front() == mCurBlockBuffer ? mCurBlockSize : mBlockSize;
+    size_t blockSize = blocks.Front() == mCurBlockBuffer ? mCurBlockSize : mBlockSize;
     memcpy(bufferPosition, blocks.Front(), blockSize);
     bufferPosition += mBlockSize;
   }
@@ -222,9 +218,7 @@ ByteBufferBlock::ByteBufferBlock(MoveReference<ByteBufferBlock> rhs) :
   rhs->mOwnsData = false;
 }
 
-ByteBufferBlock::ByteBufferBlock(const ByteBufferBlock& rhs) :
-    mSize(rhs.mSize),
-    mOwnsData(rhs.mOwnsData)
+ByteBufferBlock::ByteBufferBlock(const ByteBufferBlock& rhs) : mSize(rhs.mSize), mOwnsData(rhs.mOwnsData)
 {
   if (mOwnsData)
   {

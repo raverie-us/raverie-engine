@@ -53,8 +53,7 @@ size_t CodeLocation::GetHash()
 
 bool CodeLocation::IsSamePositionAndOrigin(const CodeLocation& rhs)
 {
-  return this->StartPosition == rhs.StartPosition &&
-         this->EndPosition == rhs.EndPosition && this->Origin == rhs.Origin;
+  return this->StartPosition == rhs.StartPosition && this->EndPosition == rhs.EndPosition && this->Origin == rhs.Origin;
 }
 
 bool CodeLocation::IsValid()
@@ -72,20 +71,17 @@ String CodeLocation::GetFormattedString(MessageFormat::Enum format) const
     // If we have no function name...
     if (this->Function.Empty())
     {
-      return String::Format("  In %s at line %d, character %d",
-                            this->Origin.c_str(),
-                            this->PrimaryLine,
-                            this->PrimaryCharacter);
+      return String::Format(
+          "  In %s at line %d, character %d", this->Origin.c_str(), this->PrimaryLine, this->PrimaryCharacter);
     }
     // Otherwise, a function name was provided
     else
     {
-      return String::Format(
-          "  In %s at line %d, character %d (within function %s)",
-          this->Origin.c_str(),
-          this->PrimaryLine,
-          this->PrimaryCharacter,
-          this->Function.c_str());
+      return String::Format("  In %s at line %d, character %d (within function %s)",
+                            this->Origin.c_str(),
+                            this->PrimaryLine,
+                            this->PrimaryCharacter,
+                            this->Function.c_str());
     }
   }
 
@@ -94,16 +90,13 @@ String CodeLocation::GetFormattedString(MessageFormat::Enum format) const
     // If we have no function name...
     if (this->Function.Empty())
     {
-      return String::Format(
-          "  File \"%s\", line %d", this->Origin.c_str(), this->PrimaryLine);
+      return String::Format("  File \"%s\", line %d", this->Origin.c_str(), this->PrimaryLine);
     }
     // Otherwise, a function name was provided
     else
     {
-      return String::Format("  File \"%s\", line %d, in %s",
-                            this->Origin.c_str(),
-                            this->PrimaryLine,
-                            this->Function.c_str());
+      return String::Format(
+          "  File \"%s\", line %d, in %s", this->Origin.c_str(), this->PrimaryLine, this->Function.c_str());
     }
   }
 
@@ -112,16 +105,12 @@ String CodeLocation::GetFormattedString(MessageFormat::Enum format) const
     // If we have no function name...
     if (this->Function.Empty())
     {
-      return String::Format(
-          "  %s(%d)", this->Origin.c_str(), this->PrimaryLine);
+      return String::Format("  %s(%d)", this->Origin.c_str(), this->PrimaryLine);
     }
     // Otherwise, a function name was provided
     else
     {
-      return String::Format("  %s(%d) in %s",
-                            this->Origin.c_str(),
-                            this->PrimaryLine,
-                            this->Function.c_str());
+      return String::Format("  %s(%d) in %s", this->Origin.c_str(), this->PrimaryLine, this->Function.c_str());
     }
   }
   }
@@ -136,8 +125,7 @@ String CodeLocation::GetFormattedString(MessageFormat::Enum format) const
 //  return this->CodeEntryId != 0;
 //}
 
-String CodeLocation::GetFormattedStringWithMessage(MessageFormat::Enum format,
-                                                   StringParam message) const
+String CodeLocation::GetFormattedStringWithMessage(MessageFormat::Enum format, StringParam message) const
 {
   // First, just get the formatted code location
   String formattedLocation = this->GetFormattedString(format);
@@ -175,8 +163,7 @@ String CodeLocation::GetFormattedStringWithMessage(MessageFormat::Enum format,
 
   // Tab in every line in the message, if requested
   StringBuilder builder;
-  for (Zero::StringSplitRange range = message.Split("\n");
-       range.Empty() == false;)
+  for (Zero::StringSplitRange range = message.Split("\n"); range.Empty() == false;)
   {
     // Grab the current line and immediately pop (this lets us know if we're at
     // the end so we don't Append an extra "\n")
@@ -195,11 +182,9 @@ String CodeLocation::GetFormattedStringWithMessage(MessageFormat::Enum format,
   String tabbedMessage = builder.ToString();
 
   // Make sure we got a string format from above
-  ErrorIf(strFormat == nullptr,
-          "Unhandled format type or the user passed in a garbage value");
+  ErrorIf(strFormat == nullptr, "Unhandled format type or the user passed in a garbage value");
 
   // Return the formatted location with the message attached
-  return String::Format(
-      strFormat, formattedLocation.c_str(), tabbedMessage.c_str());
+  return String::Format(strFormat, formattedLocation.c_str(), tabbedMessage.c_str());
 }
 } // namespace Zilch

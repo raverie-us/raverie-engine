@@ -20,15 +20,7 @@ DeclareEnum6(StatusCodeCogPath,
              RelativeToNotSet,
              CogsDoNotShareRoots);
 
-DeclareEnum8(CogPathTokenType,
-             Invalid,
-             Eof,
-             Separator,
-             Self,
-             Parent,
-             CurrentSpace,
-             NamedCog,
-             NamedSpace);
+DeclareEnum8(CogPathTokenType, Invalid, Eof, Separator, Self, Parent, CurrentSpace, NamedCog, NamedSpace);
 
 class CogPathToken
 {
@@ -93,10 +85,7 @@ public:
 
   // Internal
   bool Accept(CogPathTokenType::Enum type, String* output);
-  bool Expect(CogPathTokenType::Enum type,
-              String* output,
-              Status& status,
-              StringParam error);
+  bool Expect(CogPathTokenType::Enum type, String* output, Status& status, StringParam error);
 
   bool ParseSeparatedElement(Status& status, CogPathCompiled& output);
   bool ParseElement(Status& status, CogPathCompiled& output);
@@ -163,16 +152,9 @@ public:
   CogPath Clone();
 
   /// Use to Restore links in serialization
-  Cog* RestoreLink(CogInitializer& initializer,
-                   Component* component,
-                   StringParam propertyName);
-  Cog* RestoreLink(CogInitializer& initializer,
-                   Cog* owner,
-                   StringParam propertyName);
-  Cog* RestoreLink(CogInitializer& initializer,
-                   Cog* owner,
-                   Component* component,
-                   StringParam propertyName);
+  Cog* RestoreLink(CogInitializer& initializer, Component* component, StringParam propertyName);
+  Cog* RestoreLink(CogInitializer& initializer, Cog* owner, StringParam propertyName);
+  Cog* RestoreLink(CogInitializer& initializer, Cog* owner, Component* component, StringParam propertyName);
 
   /// Setting the cog manually may recompute the path if the option is set
   /// Getting the cog will return whatever cog we already resolved, or null (it
@@ -253,20 +235,10 @@ public:
                             CogPathPreference::Enum pref1,
                             CogPathPreference::Enum pref2,
                             bool ambiguityIsError);
-  static String ComputePath(Status& status,
-                            Cog* from,
-                            Cog* to,
-                            CogPathPreference::Enum pref,
-                            bool ambiguityIsError);
+  static String ComputePath(Status& status, Cog* from, Cog* to, CogPathPreference::Enum pref, bool ambiguityIsError);
 
-  static Cog* Resolve(Status& status,
-                      Cog* startFrom,
-                      StringParam path,
-                      bool ambiguityIsError);
-  static Cog* Resolve(Status& status,
-                      Cog* startFrom,
-                      const CogPathCompiled& path,
-                      bool ambiguityIsError);
+  static Cog* Resolve(Status& status, Cog* startFrom, StringParam path, bool ambiguityIsError);
+  static Cog* Resolve(Status& status, Cog* startFrom, const CogPathCompiled& path, bool ambiguityIsError);
 
   HandleOf<CogPathNode> mSharedNode;
 };
@@ -296,9 +268,7 @@ public:
   CogPathMetaComposition();
 
   virtual Handle GetComponent(HandleParam owner, BoundType* componentType);
-  bool CanAddComponent(HandleParam owner,
-                       BoundType* typeToAdd,
-                       AddInfo* info = nullptr) override;
+  bool CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info = nullptr) override;
 };
 
 class CogPathMetaSerialization : public MetaSerialization
@@ -306,10 +276,7 @@ class CogPathMetaSerialization : public MetaSerialization
 public:
   ZilchDeclareType(CogPathMetaSerialization, TypeCopyMode::ReferenceType);
 
-  bool SerializeReferenceProperty(BoundType* meta,
-                                  cstr fieldName,
-                                  Any& value,
-                                  Serializer& serializer) override;
+  bool SerializeReferenceProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer) override;
   void SetDefault(Type* type, Any& any) override;
   bool ConvertFromString(StringParam input, Any& output) override;
 };

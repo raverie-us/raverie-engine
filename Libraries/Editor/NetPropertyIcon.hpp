@@ -22,9 +22,7 @@ public:
   typedef NetPropertyIcon ZilchSelf;
 
   /// Constructor
-  NetPropertyIcon(Composite* parent,
-                  HandleParam object,
-                  Property* metaProperty);
+  NetPropertyIcon(Composite* parent, HandleParam object, Property* metaProperty);
 
   //
   // Composite Interface
@@ -77,9 +75,6 @@ public:
 bool ShouldDisplayNetPropertyIcon(HandleParam selection);
 
 /// Callback for adding custom icons to the property grid
-Widget* CreateNetPropertyIcon(Composite* parent,
-                              HandleParam object,
-                              Property* metaProperty,
-                              void* clientData);
+Widget* CreateNetPropertyIcon(Composite* parent, HandleParam object, Property* metaProperty, void* clientData);
 
 } // namespace Zero

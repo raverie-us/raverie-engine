@@ -12,9 +12,7 @@ class ReplicaProperty
 {
 public:
   /// Constructor
-  ReplicaProperty(const String& name,
-                  ReplicaPropertyType* replicaPropertyType,
-                  const Variant& propertyData);
+  ReplicaProperty(const String& name, ReplicaPropertyType* replicaPropertyType, const Variant& propertyData);
 
   /// Destructor
   REPLICA_PROPERTY_VIRTUAL ~ReplicaProperty();
@@ -150,46 +148,36 @@ public:
 
   /// Serializes the replica property
   /// Returns true if successful, else false
-  bool Serialize(BitStream& bitStream,
-                 ReplicationPhase::Enum replicationPhase,
-                 TimeMs timestamp) const;
+  bool Serialize(BitStream& bitStream, ReplicationPhase::Enum replicationPhase, TimeMs timestamp) const;
   /// Deserializes the replica property
   /// Returns true if successful, else false
-  bool Deserialize(const BitStream& bitStream,
-                   ReplicationPhase::Enum replicationPhase,
-                   TimeMs timestamp);
+  bool Deserialize(const BitStream& bitStream, ReplicationPhase::Enum replicationPhase, TimeMs timestamp);
 
   /// Data
   String mName;                              /// Replica property name
   ReplicaPropertyType* mReplicaPropertyType; /// Operating replica property type
   ReplicaChannel* mReplicaChannel;           /// Operating replica channel
-  Link<ReplicaProperty>
-      mIndexListLink;     /// Replica property index list link (may be null)
-  size_t* mIndexListSize; /// Replica property index list size (may be null)
-  Variant mPropertyData;  /// Property data interpreted by the user
-  Variant mLastValue;     /// Last observed property value
-  TimeMs
-      mLastChangeTimestamp; /// Timestamp indicating when this replica property
-                            /// was last changed (on any primitive member)
-  Variant mLastReceivedChangeValue; /// Last received property change value
-  TimeMs
-      mLastReceivedChangeTimestamp;  /// Last received property change timestamp
-  uint64 mLastReceivedChangeFrameId; /// Last received property change frame ID
-  Math::SplineCurve mSplineCurve[4]; /// Received property change value curve
-                                     /// (for each primitive member)
-  Math::BakedCurve mBakedCurve[4];   /// Received property change value curve
-                                     /// baked out (for each primitive member)
-  ConvergenceState::Enum
-      mConvergenceState; /// Convergence method currently being applied to this
-                         /// replica property
+  Link<ReplicaProperty> mIndexListLink;      /// Replica property index list link (may be null)
+  size_t* mIndexListSize;                    /// Replica property index list size (may be null)
+  Variant mPropertyData;                     /// Property data interpreted by the user
+  Variant mLastValue;                        /// Last observed property value
+  TimeMs mLastChangeTimestamp;               /// Timestamp indicating when this replica property
+                                             /// was last changed (on any primitive member)
+  Variant mLastReceivedChangeValue;          /// Last received property change value
+  TimeMs mLastReceivedChangeTimestamp;       /// Last received property change timestamp
+  uint64 mLastReceivedChangeFrameId;         /// Last received property change frame ID
+  Math::SplineCurve mSplineCurve[4];         /// Received property change value curve
+                                             /// (for each primitive member)
+  Math::BakedCurve mBakedCurve[4];           /// Received property change value curve
+                                             /// baked out (for each primitive member)
+  ConvergenceState::Enum mConvergenceState;  /// Convergence method currently being applied to this
+                                             /// replica property
 };
 
 /// Typedefs
 typedef UniquePointer<ReplicaProperty> ReplicaPropertyPtr;
-typedef ArraySet<ReplicaPropertyPtr, PointerSortPolicy<ReplicaPropertyPtr>>
-    ReplicaPropertySet;
-typedef InList<ReplicaProperty, &ReplicaProperty::mIndexListLink>
-    ReplicaPropertyList;
+typedef ArraySet<ReplicaPropertyPtr, PointerSortPolicy<ReplicaPropertyPtr>> ReplicaPropertySet;
+typedef InList<ReplicaProperty, &ReplicaProperty::mIndexListLink> ReplicaPropertyList;
 
 //                             ReplicaPropertyIndex //
 
@@ -297,10 +285,7 @@ public:
 
   /// Converges all scheduled replica properties of this type
   void ConvergeNow();
-  void ConvergeNow(bool active,
-                   ReplicaPropertyIndex& replicaPropertyIndex,
-                   TimeMs timestamp,
-                   uint64 frameId);
+  void ConvergeNow(bool active, ReplicaPropertyIndex& replicaPropertyIndex, TimeMs timestamp, uint64 frameId);
 
   /// Schedules the unscheduled replica property for change convergence
   void ScheduleProperty(ReplicaProperty* property);
@@ -332,8 +317,7 @@ public:
   /// Controls how replica properties are serialized
   /// (Only used with arithmetic replica property primitive-component types)
   /// (Cannot be modified after the replica property type has been made valid)
-  void SetSerializationMode(
-      SerializationMode::Enum serializationMode = SerializationMode::All);
+  void SetSerializationMode(SerializationMode::Enum serializationMode = SerializationMode::All);
   SerializationMode::Enum GetSerializationMode() const;
 
   /// Controls whether or not a floating-point replica property's
@@ -381,8 +365,7 @@ public:
   /// authoritative values to be sampled later locally (Only used with
   /// arithmetic replica property primitive-component types) (Cannot be modified
   /// after the replica property type has been made valid)
-  void SetInterpolationCurve(
-      Math::CurveType::Enum interpolationCurve = Math::CurveType::CatmullRom);
+  void SetInterpolationCurve(Math::CurveType::Enum interpolationCurve = Math::CurveType::CatmullRom);
   Math::CurveType::Enum GetInterpolationCurve() const;
 
   /// Controls the time offset from now to sample a replica property's
@@ -417,8 +400,7 @@ public:
   /// Replicator::OnReplicaChannelPropertyConvergenceStateChange when its
   /// convergence state changes (Only used with arithmetic replica property
   /// primitive-component types)
-  void SetNotifyOnConvergenceStateChange(
-      bool notifyOnConvergenceStateChange = false);
+  void SetNotifyOnConvergenceStateChange(bool notifyOnConvergenceStateChange = false);
   bool GetNotifyOnConvergenceStateChange() const;
 
   /// Controls the weight of an actively changing replica property's sampled
@@ -436,8 +418,7 @@ public:
   /// received property value immediately on rest) (Only used with arithmetic
   /// replica property primitive-component types) (Cannot be modified after the
   /// replica property type has been made valid)
-  void
-  SetRestingConvergenceDuration(TimeMs restingConvergenceDuration = TimeMs(50));
+  void SetRestingConvergenceDuration(TimeMs restingConvergenceDuration = TimeMs(50));
   TimeMs GetRestingConvergenceDuration() const;
 
   /// Controls the frame interval in which a replica property's locally
@@ -458,17 +439,16 @@ public:
   const Variant& GetSnapThreshold() const;
 
   /// Data
-  String mName;                       /// Replica property type name
-  NativeType* mNativeType;            /// Property type's native type
-  SerializeValueFn mSerializeValueFn; /// Property value serializer function
-  GetValueFn mGetValueFn;             /// Property value getter function
-  SetValueFn mSetValueFn;             /// Property value setter function
-  Replicator* mReplicator;            /// Operating replicator
-  ReplicaPropertyIndex mActivePropertyIndex; /// Active replica properties index
-  ReplicaPropertyIndex
-      mRestingPropertyIndex; /// Resting replica properties index
-  bool mUseDeltaThreshold;   /// Use delta threshold?
-  Variant mDeltaThreshold;   /// Delta threshold
+  String mName;                               /// Replica property type name
+  NativeType* mNativeType;                    /// Property type's native type
+  SerializeValueFn mSerializeValueFn;         /// Property value serializer function
+  GetValueFn mGetValueFn;                     /// Property value getter function
+  SetValueFn mSetValueFn;                     /// Property value setter function
+  Replicator* mReplicator;                    /// Operating replicator
+  ReplicaPropertyIndex mActivePropertyIndex;  /// Active replica properties index
+  ReplicaPropertyIndex mRestingPropertyIndex; /// Resting replica properties index
+  bool mUseDeltaThreshold;                    /// Use delta threshold?
+  Variant mDeltaThreshold;                    /// Delta threshold
   SerializationMode::Enum mSerializationMode; /// Serialization mode
   bool mUseHalfFloats;                        /// Use half floats?
   bool mUseQuantization;                      /// Use quantization?
@@ -479,19 +459,17 @@ public:
   TimeMs mSampleTimeOffset;                   /// Sample time offset from now
   TimeMs mExtrapolationLimit;                 /// Extrapolation time limit
   bool mUseConvergence;                       /// Use convergence?
-  bool mNotifyOnConvergenceStateChange; /// Notify on convergence state change?
-  float mActiveConvergenceWeight; /// Active convergence weight applied every
-                                  /// convergence interval
-  TimeMs mRestingConvergenceDuration; /// Resting convergence duration handled
-                                      /// every convergence interval
-  uint mConvergenceInterval;          /// Convergence interval
-  Variant mSnapThreshold;             /// Snap-instead-of-converge threshold
+  bool mNotifyOnConvergenceStateChange;       /// Notify on convergence state change?
+  float mActiveConvergenceWeight;             /// Active convergence weight applied every
+                                              /// convergence interval
+  TimeMs mRestingConvergenceDuration;         /// Resting convergence duration handled
+                                              /// every convergence interval
+  uint mConvergenceInterval;                  /// Convergence interval
+  Variant mSnapThreshold;                     /// Snap-instead-of-converge threshold
 };
 
 /// Typedefs
 typedef UniquePointer<ReplicaPropertyType> ReplicaPropertyTypePtr;
-typedef ArraySet<ReplicaPropertyTypePtr,
-                 PointerSortPolicy<ReplicaPropertyTypePtr>>
-    ReplicaPropertyTypeSet;
+typedef ArraySet<ReplicaPropertyTypePtr, PointerSortPolicy<ReplicaPropertyTypePtr>> ReplicaPropertyTypeSet;
 
 } // namespace Zero

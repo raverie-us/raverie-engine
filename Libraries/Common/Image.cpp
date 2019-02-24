@@ -101,14 +101,8 @@ void CopyImage(Image* dest, Image* source, int destX, int destY)
   CopyImage(dest, source, destX, destY, 0, 0, sourceWidth, sourceHeight);
 }
 
-void CopyImage(Image* dest,
-               Image* source,
-               int startDestX,
-               int startDestY,
-               int sourceX,
-               int sourceY,
-               int sizeX,
-               int sizeY)
+void CopyImage(
+    Image* dest, Image* source, int startDestX, int startDestY, int sourceX, int sourceY, int sizeX, int sizeY)
 {
   ImagePixel* destData = dest->Data;
   ImagePixel* sourceData = source->Data;
@@ -226,22 +220,18 @@ void FixAlphaHalo(Image* image)
   {
     FillRange& range = wFill[i];
     for (int w = range.start; w < range.end; ++w)
-      image->SetPixel(
-          w, range.hRef, 0x00FFFFFF & image->GetPixel(range.wRef, range.hRef));
+      image->SetPixel(w, range.hRef, 0x00FFFFFF & image->GetPixel(range.wRef, range.hRef));
   }
 
   for (unsigned i = 0; i < hFill.Size(); ++i)
   {
     FillRange& range = hFill[i];
     for (int w = 0; w < width; ++w)
-      image->SetPixel(
-          w, range.start, 0x00FFFFFF & image->GetPixel(w, range.hRef));
+      image->SetPixel(w, range.start, 0x00FFFFFF & image->GetPixel(w, range.hRef));
 
     range.hRef = range.start++;
     for (int h = range.start; h < range.end; ++h)
-      memcpy(&image->GetPixel(0, h),
-             &image->GetPixel(0, range.hRef),
-             width * sizeof(ImagePixel));
+      memcpy(&image->GetPixel(0, h), &image->GetPixel(0, range.hRef), width * sizeof(ImagePixel));
   }
 }
 
@@ -264,18 +254,13 @@ IntVec2 IntVec2Clamp(IntVec2 value, IntVec2 min, IntVec2 max)
   return value;
 }
 
-void FillPixelBorders(Image* image,
-                      IntVec2 topLeft,
-                      IntVec2 bottomRight,
-                      int borderWidth)
+void FillPixelBorders(Image* image, IntVec2 topLeft, IntVec2 bottomRight, int borderWidth)
 {
   IntVec2 borderTL = topLeft - IntVec2(borderWidth, borderWidth);
   IntVec2 borderBR = bottomRight + IntVec2(borderWidth, borderWidth);
 
-  borderTL = IntVec2Clamp(
-      borderTL, IntVec2(0, 0), IntVec2(image->Width - 1, image->Height - 1));
-  borderBR = IntVec2Clamp(
-      borderBR, IntVec2(0, 0), IntVec2(image->Width - 1, image->Height - 1));
+  borderTL = IntVec2Clamp(borderTL, IntVec2(0, 0), IntVec2(image->Width - 1, image->Height - 1));
+  borderBR = IntVec2Clamp(borderBR, IntVec2(0, 0), IntVec2(image->Width - 1, image->Height - 1));
 
   for (int y = borderTL.y; y <= borderBR.y; ++y)
   {
@@ -287,10 +272,7 @@ void FillPixelBorders(Image* image,
   }
 }
 
-void AddPixelBorders(Image* image,
-                     int frameWidth,
-                     int frameHeight,
-                     int borderWidth)
+void AddPixelBorders(Image* image, int frameWidth, int frameHeight, int borderWidth)
 {
   int width = image->Width;
   int height = image->Height;
@@ -313,19 +295,10 @@ void AddPixelBorders(Image* image,
       int sourceX = x * frameWidth;
       int destX = x * (frameWidth + borderWidth * 2) + borderWidth;
 
-      CopyImage(&output,
-                image,
-                destX,
-                destY,
-                sourceX,
-                sourceY,
-                frameWidth,
-                frameHeight);
+      CopyImage(&output, image, destX, destY, sourceX, sourceY, frameWidth, frameHeight);
 
-      FillPixelBorders(&output,
-                       IntVec2(destX, destY),
-                       IntVec2(destX + frameWidth - 1, destY + frameHeight - 1),
-                       borderWidth);
+      FillPixelBorders(
+          &output, IntVec2(destX, destY), IntVec2(destX + frameWidth - 1, destY + frameHeight - 1), borderWidth);
     }
   }
 

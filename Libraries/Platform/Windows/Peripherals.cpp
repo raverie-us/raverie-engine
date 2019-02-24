@@ -3,10 +3,8 @@
 
 namespace Zero
 {
-typedef DWORD(WINAPI* XInputGetState_T)(DWORD dwUserIndex,
-                                        XINPUT_STATE* pState);
-typedef DWORD(WINAPI* XInputSetState_T)(DWORD dwUserIndex,
-                                        XINPUT_VIBRATION* pVibration);
+typedef DWORD(WINAPI* XInputGetState_T)(DWORD dwUserIndex, XINPUT_STATE* pState);
+typedef DWORD(WINAPI* XInputSetState_T)(DWORD dwUserIndex, XINPUT_VIBRATION* pVibration);
 XInputGetState_T XInputGetState_P = NULL;
 XInputSetState_T XInputSetState_P = NULL;
 HMODULE XInputModule = NULL;
@@ -22,10 +20,8 @@ void InitializeGamepad()
   if (XInputModule)
   {
     ZPrint("Using XINPUT for gamepads.\n");
-    XInputGetState_P =
-        (XInputGetState_T)GetProcAddress(XInputModule, "XInputGetState");
-    XInputSetState_P =
-        (XInputSetState_T)GetProcAddress(XInputModule, "XInputSetState");
+    XInputGetState_P = (XInputGetState_T)GetProcAddress(XInputModule, "XInputGetState");
+    XInputSetState_P = (XInputSetState_T)GetProcAddress(XInputModule, "XInputSetState");
   }
   else
   {
@@ -47,8 +43,7 @@ bool GetGamepadState(size_t gamepadIndex, GamepadState* stateOut)
   if (!XInputModule || gamepadIndex >= cMaxGamepads)
     return false;
 
-  bool result = (*XInputGetState_P)(gamepadIndex, (XINPUT_STATE*)stateOut) ==
-                ERROR_SUCCESS;
+  bool result = (*XInputGetState_P)(gamepadIndex, (XINPUT_STATE*)stateOut) == ERROR_SUCCESS;
 
   if (!result)
     return false;

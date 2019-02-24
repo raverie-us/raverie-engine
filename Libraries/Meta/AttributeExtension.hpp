@@ -28,9 +28,7 @@ public:
   /// extra parameters that aren't registered here that we would otherwise throw
   /// an unknown attribute error. If the systems were combined, we could remove
   /// this extra flag.
-  void ProcessType(AttributeStatus& status,
-                   BoundType* type,
-                   bool ignoreUnkownAttributes = false);
+  void ProcessType(AttributeStatus& status, BoundType* type, bool ignoreUnkownAttributes = false);
 
   bool IsValidClassAttribute(StringParam name);
   bool IsValidPropertyAttribute(StringParam name);
@@ -48,8 +46,7 @@ public:
   AttributeExtension* RegisterClassExtension(AttributeExtension* extension);
   AttributeExtension* RegisterPropertyExtension(AttributeExtension* extension);
   AttributeExtension* RegisterFunctionExtension(AttributeExtension* extension);
-  AttributeExtension* RegisterExtension(AttributeExtension* extension,
-                                        ExtensionMap& extensionMap);
+  AttributeExtension* RegisterExtension(AttributeExtension* extension, ExtensionMap& extensionMap);
 
   /// All registered attributes.
   ExtensionMap mClassExtensions;
@@ -77,16 +74,13 @@ public:
   //----- Internals
   void ValidateType(Status& status, ReflectionObject* object);
   void ValidateStatic(Status& status, ReflectionObject* object);
-  void ValidateParameters(Status& status,
-                          HandleParam component,
-                          Attribute& attribute);
+  void ValidateParameters(Status& status, HandleParam component, Attribute& attribute);
 
   virtual BoundType* GetMetaComponentType()
   {
     return nullptr;
   }
-  virtual HandleOf<MetaAttribute>
-  AllocateMetaComponent(ReflectionObject* object)
+  virtual HandleOf<MetaAttribute> AllocateMetaComponent(ReflectionObject* object)
   {
     return nullptr;
   }
@@ -107,8 +101,7 @@ public:
   {
     return ZilchTypeId(T);
   }
-  HandleOf<MetaAttribute>
-  AllocateMetaComponent(ReflectionObject* object) override
+  HandleOf<MetaAttribute> AllocateMetaComponent(ReflectionObject* object) override
   {
     T* component = new T();
     object->Add(component);
@@ -116,24 +109,18 @@ public:
   }
 };
 
-#define RegisterClassAttribute(name)                                           \
-  AttributeExtensions::GetInstance()->RegisterClassExtension(                  \
-      new AttributeExtension(name))
-#define RegisterClassAttributeType(name, type)                                 \
-  AttributeExtensions::GetInstance()->RegisterClassExtension(                  \
-      new AttributeExtensionType<type>(name))
-#define RegisterPropertyAttribute(name)                                        \
-  AttributeExtensions::GetInstance()->RegisterPropertyExtension(               \
-      new AttributeExtension(name))
-#define RegisterPropertyAttributeType(name, type)                              \
-  AttributeExtensions::GetInstance()->RegisterPropertyExtension(               \
-      new AttributeExtensionType<type>(name))
-#define RegisterFunctionAttribute(name)                                        \
-  AttributeExtensions::GetInstance()->RegisterFunctionExtension(               \
-      new AttributeExtension(name))
-#define RegisterFunctionAttributeType(name, type)                              \
-  AttributeExtensions::GetInstance()->RegisterFunctionExtension(               \
-      new AttributeExtensionType<type>(name))
+#define RegisterClassAttribute(name)                                                                                   \
+  AttributeExtensions::GetInstance()->RegisterClassExtension(new AttributeExtension(name))
+#define RegisterClassAttributeType(name, type)                                                                         \
+  AttributeExtensions::GetInstance()->RegisterClassExtension(new AttributeExtensionType<type>(name))
+#define RegisterPropertyAttribute(name)                                                                                \
+  AttributeExtensions::GetInstance()->RegisterPropertyExtension(new AttributeExtension(name))
+#define RegisterPropertyAttributeType(name, type)                                                                      \
+  AttributeExtensions::GetInstance()->RegisterPropertyExtension(new AttributeExtensionType<type>(name))
+#define RegisterFunctionAttribute(name)                                                                                \
+  AttributeExtensions::GetInstance()->RegisterFunctionExtension(new AttributeExtension(name))
+#define RegisterFunctionAttributeType(name, type)                                                                      \
+  AttributeExtensions::GetInstance()->RegisterFunctionExtension(new AttributeExtensionType<type>(name))
 #define TypeMustBe(type) MustBeType(ZilchTypeId(type))
 
 } // namespace Zero

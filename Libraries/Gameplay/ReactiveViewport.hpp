@@ -65,10 +65,7 @@ public:
   ZilchDeclareType(ReactiveViewport, TypeCopyMode::ReferenceType);
 
   /// Constructor.
-  ReactiveViewport(Composite* parent,
-                   Space* space,
-                   Camera* camera,
-                   CameraViewport* cameraViewport);
+  ReactiveViewport(Composite* parent, Space* space, Camera* camera, CameraViewport* cameraViewport);
 
   /// Needed to reset mouse trap position when viewport resizes.
   void UpdateTransform() override;

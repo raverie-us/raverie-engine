@@ -12,16 +12,12 @@ String GetNameFromHandle(HandleParam object)
     return object.StoredType->Name;
 }
 
-void ChangeAndQueueProperty(OperationQueue* queue,
-                            HandleParam object,
-                            PropertyPathParam property,
-                            const Any& newValue)
+void ChangeAndQueueProperty(OperationQueue* queue, HandleParam object, PropertyPathParam property, const Any& newValue)
 {
   OperationQueue::StartListeningForSideEffects();
 
   Any curValue = property.GetValue(object);
-  PropertyOperation* propertyOperation =
-      new PropertyOperation(object, property, curValue, newValue);
+  PropertyOperation* propertyOperation = new PropertyOperation(object, property, curValue, newValue);
 
   ErrorIf(object == nullptr, "Invalid objects given to ChangeAndQueueProperty");
 
@@ -42,13 +38,9 @@ void ChangeAndQueueProperty(OperationQueue* queue,
   queue->EndBatch();
 }
 
-bool QueueRemoveComponent(OperationQueue* queue,
-                          HandleParam object,
-                          BoundType* componentType,
-                          bool ignoreDependencies)
+bool QueueRemoveComponent(OperationQueue* queue, HandleParam object, BoundType* componentType, bool ignoreDependencies)
 {
-  MetaComposition* composition =
-      object.StoredType->HasInherited<MetaComposition>();
+  MetaComposition* composition = object.StoredType->HasInherited<MetaComposition>();
 
   if (!ignoreDependencies)
   {
@@ -62,37 +54,26 @@ bool QueueRemoveComponent(OperationQueue* queue,
   }
 
   // Create the operation
-  AddRemoveComponentOperation* op = new AddRemoveComponentOperation(
-      object, componentType, ComponentOperation::Remove);
+  AddRemoveComponentOperation* op = new AddRemoveComponentOperation(object, componentType, ComponentOperation::Remove);
   op->Redo();
   queue->Queue(op);
   return true;
 }
 
-void QueueRemoveComponent(OperationQueue* queue,
-                          HandleParam object,
-                          BoundType* componentMeta,
-                          StringParam componentData,
-                          uint componentIndex)
+void QueueRemoveComponent(
+    OperationQueue* queue, HandleParam object, BoundType* componentMeta, StringParam componentData, uint componentIndex)
 {
   // Create the operation
   AddRemoveComponentOperation* op =
-      new AddRemoveComponentOperation(object,
-                                      componentMeta,
-                                      ComponentOperation::Remove,
-                                      componentData,
-                                      componentIndex);
+      new AddRemoveComponentOperation(object, componentMeta, ComponentOperation::Remove, componentData, componentIndex);
   queue->Queue(op);
   op->ComponentRemoved(object);
 }
 
-bool QueueAddComponent(OperationQueue* queue,
-                       HandleParam object,
-                       BoundType* componentType)
+bool QueueAddComponent(OperationQueue* queue, HandleParam object, BoundType* componentType)
 {
   // We need to look up the meta of the given component type
-  MetaComposition* composition =
-      object.StoredType->HasInherited<MetaComposition>();
+  MetaComposition* composition = object.StoredType->HasInherited<MetaComposition>();
 
   // We must check to see if adding this component is a valid operation
   // before queuing the operation
@@ -100,67 +81,52 @@ bool QueueAddComponent(OperationQueue* queue,
     return false;
 
   // Queue the operation
-  AddRemoveComponentOperation* op = new AddRemoveComponentOperation(
-      object, componentType, ComponentOperation::Add);
+  AddRemoveComponentOperation* op = new AddRemoveComponentOperation(object, componentType, ComponentOperation::Add);
   queue->Queue(op);
   op->Redo();
   queue->mCreationContexts.Finalize();
   return true;
 }
 
-void QueueAddComponent(OperationQueue* queue,
-                       HandleParam object,
-                       HandleParam component)
+void QueueAddComponent(OperationQueue* queue, HandleParam object, HandleParam component)
 {
-  AddRemoveComponentOperation* op = new AddRemoveComponentOperation(
-      object, component.StoredType, ComponentOperation::Add);
+  AddRemoveComponentOperation* op =
+      new AddRemoveComponentOperation(object, component.StoredType, ComponentOperation::Add);
   queue->Queue(op);
   op->ComponentAdded(object);
 }
 
-void QueueMoveComponent(OperationQueue* queue,
-                        HandleParam object,
-                        HandleParam component,
-                        uint index)
+void QueueMoveComponent(OperationQueue* queue, HandleParam object, HandleParam component, uint index)
 {
   Operation* op = new MoveComponentOperation(object, component, index);
   op->Redo();
   queue->Queue(op);
 }
 
-void MarkPropertyAsModified(OperationQueue* queue,
-                            HandleParam object,
-                            PropertyPathParam propertyPath)
+void MarkPropertyAsModified(OperationQueue* queue, HandleParam object, PropertyPathParam propertyPath)
 {
   Operation* op = new MarkPropertyModifiedOperation(object, propertyPath);
   op->Redo();
   queue->Queue(op);
 }
 
-void RevertProperty(OperationQueue* queue,
-                    HandleParam object,
-                    PropertyPathParam propertyPath)
+void RevertProperty(OperationQueue* queue, HandleParam object, PropertyPathParam propertyPath)
 {
   Operation* op = new RevertPropertyOperation(object, propertyPath);
   op->Redo();
   queue->Queue(op);
 }
 
-void RestoreLocallyRemovedChild(OperationQueue* queue,
-                                HandleParam parent,
-                                ObjectState::ChildId& childId)
+void RestoreLocallyRemovedChild(OperationQueue* queue, HandleParam parent, ObjectState::ChildId& childId)
 {
-  ReturnIf(parent.StoredType == nullptr,
-           ,
-           "We should always be given a valid parent handle");
+  ReturnIf(parent.StoredType == nullptr, , "We should always be given a valid parent handle");
 
   // First check dependencies before re-adding the child (e.g. if Transform and
   // Model were both locally removed, we cannot restore Model until Transform
   // has been restored)
   if (BoundType* childType = MetaDatabase::FindType(childId.mTypeName))
   {
-    MetaComposition* composition =
-        parent.StoredType->HasInherited<MetaComposition>();
+    MetaComposition* composition = parent.StoredType->HasInherited<MetaComposition>();
     ReturnIf(composition == nullptr, , "Object has no MetaComposition.");
 
     AddInfo addInfo;
@@ -185,8 +151,7 @@ void RestoreChildOrder(OperationQueue* queue, HandleParam object)
 
 MetaOperation::MetaOperation(HandleParam object) : mUndoHandle(object)
 {
-  if (MetaOperations* metaOp =
-          object.StoredType->HasInherited<MetaOperations>())
+  if (MetaOperations* metaOp = object.StoredType->HasInherited<MetaOperations>())
     mUndoClientData = metaOp->GetUndoData(object);
 }
 
@@ -196,8 +161,7 @@ void MetaOperation::Undo()
 
   ReturnIf(object.IsNull(), , "Cannot undo operation");
 
-  if (MetaOperations* metaOp =
-          object.StoredType->HasInherited<MetaOperations>())
+  if (MetaOperations* metaOp = object.StoredType->HasInherited<MetaOperations>())
     metaOp->RestoreUndoData(object, mUndoClientData);
 }
 
@@ -205,8 +169,7 @@ void MetaOperation::Redo()
 {
   Handle object = GetUndoObject();
 
-  if (MetaOperations* metaOp =
-          object.StoredType->HasInherited<MetaOperations>())
+  if (MetaOperations* metaOp = object.StoredType->HasInherited<MetaOperations>())
     metaOp->ObjectModified(object, false);
 }
 
@@ -221,26 +184,19 @@ ZilchDefineType(PropertyOperation, builder, type)
   ZilchBindFieldGetter(mValueAfter);
 }
 
-PropertyOperation::PropertyOperation(HandleParam object,
-                                     PropertyPathParam property,
-                                     AnyParam before,
-                                     AnyParam after) :
+PropertyOperation::PropertyOperation(HandleParam object, PropertyPathParam property, AnyParam before, AnyParam after) :
     MetaOperation(object),
     mPropertyPath(property)
 {
   MetaOwner* owner = object.StoredType->HasInherited<MetaOwner>();
   if (owner && owner->GetOwner(object).IsNotNull())
   {
-    mName = BuildString(GetNameFromHandle(owner->GetOwner(object)),
-                        ".",
-                        GetNameFromHandle(object),
-                        ".",
-                        property.GetStringPath());
+    mName = BuildString(
+        GetNameFromHandle(owner->GetOwner(object)), ".", GetNameFromHandle(object), ".", property.GetStringPath());
   }
   else
   {
-    mName =
-        BuildString(GetNameFromHandle(object), ".", property.GetStringPath());
+    mName = BuildString(GetNameFromHandle(object), ".", property.GetStringPath());
   }
 
   mValueBefore = before;
@@ -251,11 +207,8 @@ PropertyOperation::PropertyOperation(HandleParam object,
   LocalModifications* modifications = LocalModifications::GetInstance();
   mPropertyWasModified = modifications->IsPropertyModified(object, property);
 
-  ConnectThisTo(
-      MetaDatabase::GetInstance(), Events::MetaRemoved, OnMetaRemoved);
-  ConnectThisTo(ZilchManager::GetInstance(),
-                Events::ScriptsCompiledPrePatch,
-                OnScriptsCompiled);
+  ConnectThisTo(MetaDatabase::GetInstance(), Events::MetaRemoved, OnMetaRemoved);
+  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledPrePatch, OnScriptsCompiled);
 }
 
 PropertyOperation::~PropertyOperation()
@@ -275,13 +228,11 @@ void PropertyOperation::Undo()
     return;
 
   // Notify Meta that the property has changed
-  MetaOperations::NotifyPropertyModified(
-      instance, mPropertyPath, mValueBefore, mValueAfter, false);
+  MetaOperations::NotifyPropertyModified(instance, mPropertyPath, mValueBefore, mValueAfter, false);
 
   // Mark the property as modified
   LocalModifications* modifications = LocalModifications::GetInstance();
-  modifications->SetPropertyModified(
-      instance, mPropertyPath, mPropertyWasModified);
+  modifications->SetPropertyModified(instance, mPropertyPath, mPropertyWasModified);
 
   MetaOperation::Undo();
 }
@@ -305,8 +256,7 @@ void PropertyOperation::Redo()
   // Should we disable property side effects for the notification?
 
   // Notify Meta that the property has changed
-  MetaOperations::NotifyPropertyModified(
-      instance, mPropertyPath, mValueBefore, mValueAfter, false);
+  MetaOperations::NotifyPropertyModified(instance, mPropertyPath, mValueBefore, mValueAfter, false);
 }
 
 void PropertyOperation::UpdateValueAfter()
@@ -323,8 +273,7 @@ void PropertyOperation::OnScriptsCompiled(ZilchCompileEvent* e)
   BoundType* propertyType = Type::GetBoundType(mValueBefore.StoredType);
   if (BoundType* newType = e->GetReplacingType(propertyType))
   {
-    MetaSerialization* metaSerialize =
-        newType->HasInherited<MetaSerialization>();
+    MetaSerialization* metaSerialize = newType->HasInherited<MetaSerialization>();
     if (metaSerialize)
     {
       String stringBefore = metaSerialize->ConvertToString(mValueBefore);
@@ -342,8 +291,7 @@ void PropertyOperation::OnScriptsCompiled(ZilchCompileEvent* e)
   }
   else
   {
-    mInvalidReason = String::Format("The property type '%s' was removed",
-                                    propertyType->Name.c_str());
+    mInvalidReason = String::Format("The property type '%s' was removed", propertyType->Name.c_str());
   }
 
   // We can't update the values, so invalidate them
@@ -362,17 +310,15 @@ void PropertyOperation::OnMetaRemoved(MetaLibraryEvent* e)
   {
     mValueBefore = Any();
     mValueAfter = Any();
-    mInvalidReason = String::Format("The property type '%s' was removed",
-                                    propertyType->Name.c_str());
+    mInvalidReason = String::Format("The property type '%s' was removed", propertyType->Name.c_str());
   }
 }
 
-AddRemoveComponentOperation::AddRemoveComponentOperation(
-    HandleParam object,
-    BoundType* componentType,
-    ComponentOperation::Enum mode,
-    StringParam componentData,
-    uint componentIndex) :
+AddRemoveComponentOperation::AddRemoveComponentOperation(HandleParam object,
+                                                         BoundType* componentType,
+                                                         ComponentOperation::Enum mode,
+                                                         StringParam componentData,
+                                                         uint componentIndex) :
     MetaOperation(object),
     mComposition(object.StoredType),
     mComponentType(componentType),
@@ -381,20 +327,14 @@ AddRemoveComponentOperation::AddRemoveComponentOperation(
   mNotifyModified = true;
 
   if (mode == ComponentOperation::Add)
-    mName = BuildString(
-        "Add '", componentType->Name, "' to '", GetNameFromHandle(object), "'");
+    mName = BuildString("Add '", componentType->Name, "' to '", GetNameFromHandle(object), "'");
   else
-    mName = BuildString("Remove '",
-                        componentType->Name,
-                        "' from '",
-                        GetNameFromHandle(object),
-                        "'");
+    mName = BuildString("Remove '", componentType->Name, "' from '", GetNameFromHandle(object), "'");
 
   mMode = mode;
   mSerializationBuffer = componentData;
 
-  MetaComposition* composition =
-      object.StoredType->HasInherited<MetaComposition>();
+  MetaComposition* composition = object.StoredType->HasInherited<MetaComposition>();
 
   // Get the component index if it wasn't specified
   mComponentIndex = componentIndex;
@@ -407,8 +347,7 @@ AddRemoveComponentOperation::AddRemoveComponentOperation(
   {
     Handle component = composition->GetComponent(object, componentType);
     mComponentHandle.SetObject(component);
-    mRemovedObjectState =
-        LocalModifications::GetInstance()->TakeObjectState(component);
+    mRemovedObjectState = LocalModifications::GetInstance()->TakeObjectState(component);
   }
 }
 
@@ -465,8 +404,7 @@ void AddRemoveComponentOperation::AddComponentFromBuffer()
     modifications->ChildAdded(object, componentType);
 
     // Rebuild the object to reflect the changes
-    MetaDataInheritance* inheritance =
-        object.StoredType->HasInherited<MetaDataInheritance>();
+    MetaDataInheritance* inheritance = object.StoredType->HasInherited<MetaDataInheritance>();
     inheritance->RebuildObject(object);
 
     return;
@@ -516,8 +454,7 @@ void AddRemoveComponentOperation::AddComponentFromBuffer()
     componentInstance = composition->MakeObject(componentType);
 
     // Nothing else we can do at this point
-    ReturnIf(
-        componentInstance.IsNull(), , "Cannot create object, cannot undo.");
+    ReturnIf(componentInstance.IsNull(), , "Cannot create object, cannot undo.");
   }
 
   if (!mSerializationBuffer.Empty())
@@ -530,28 +467,20 @@ void AddRemoveComponentOperation::AddComponentFromBuffer()
     // Serialize the component with the saved data
     PolymorphicNode node;
     loader.GetPolymorphic(node);
-    ErrorIf(String(node.TypeName) != componentType->Name,
-            "Invalid node in file");
-    MetaSerialization* metaSerialize =
-        componentType->HasInherited<MetaSerialization>();
-    ErrorIf(metaSerialize == nullptr,
-            "Component did not have meta serialization");
+    ErrorIf(String(node.TypeName) != componentType->Name, "Invalid node in file");
+    MetaSerialization* metaSerialize = componentType->HasInherited<MetaSerialization>();
+    ErrorIf(metaSerialize == nullptr, "Component did not have meta serialization");
 
     if (metaSerialize)
       metaSerialize->SerializeObject(componentInstance, loader);
     loader.EndPolymorphic();
   }
 
-  MetaCreationContext* creationContext =
-      mQueue->mCreationContexts.GetContext(composition);
+  MetaCreationContext* creationContext = mQueue->mCreationContexts.GetContext(composition);
 
   // Add the component
   bool ignoreDependencies = true;
-  composition->AddComponent(object,
-                            componentInstance,
-                            (int)mComponentIndex,
-                            ignoreDependencies,
-                            creationContext);
+  composition->AddComponent(object, componentInstance, (int)mComponentIndex, ignoreDependencies, creationContext);
 
   Handle component = composition->GetComponent(object, componentType);
 
@@ -577,8 +506,7 @@ void AddRemoveComponentOperation::SaveComponentToBuffer()
   Handle object = MetaOperation::GetUndoObject();
   ReturnIf(object.IsNull(), , "Invalid undo object handle.");
   BoundType* componentType = mComponentType;
-  MetaComposition* composition =
-      mComposition; // componentType->HasInherited<MetaComposition>();
+  MetaComposition* composition = mComposition; // componentType->HasInherited<MetaComposition>();
 
   ReturnIf(composition == nullptr, , "Cannot get MetaComposition.");
 
@@ -586,10 +514,8 @@ void AddRemoveComponentOperation::SaveComponentToBuffer()
   Handle componentInstance = composition->GetComponent(object, componentType);
   ReturnIf(componentInstance.IsNull(), , "Invalid component handle.");
 
-  MetaSerialization* metaSerialize =
-      componentType->HasInherited<MetaSerialization>();
-  ReturnIf(
-      metaSerialize == nullptr, , "Cannot serialize component for Undo/Redo.");
+  MetaSerialization* metaSerialize = componentType->HasInherited<MetaSerialization>();
+  ReturnIf(metaSerialize == nullptr, , "Cannot serialize component for Undo/Redo.");
 
   // Serialize the component to our buffer
   TextSaver saver;
@@ -642,16 +568,10 @@ void AddRemoveComponentOperation::ComponentRemoved(HandleParam object)
     MetaOperations::NotifyComponentsModified(object);
 }
 
-MoveComponentOperation::MoveComponentOperation(HandleParam object,
-                                               HandleParam componentToMove,
-                                               uint destinationIndex) :
+MoveComponentOperation::MoveComponentOperation(HandleParam object, HandleParam componentToMove, uint destinationIndex) :
     MetaOperation(object)
 {
-  mName = BuildString("Move '",
-                      GetNameFromHandle(componentToMove),
-                      "' on '",
-                      GetNameFromHandle(object),
-                      "'");
+  mName = BuildString("Move '", GetNameFromHandle(componentToMove), "' on '", GetNameFromHandle(object), "'");
 
   mWasOrderLocallyModified = false;
   mComposition = object.StoredType;
@@ -713,15 +633,10 @@ void MoveComponentOperation::MoveComponent(uint from, uint to)
   mComposition->MoveComponent(object, componentToMove, to);
 }
 
-MarkPropertyModifiedOperation::MarkPropertyModifiedOperation(
-    HandleParam object, PropertyPathParam propertyPath) :
+MarkPropertyModifiedOperation::MarkPropertyModifiedOperation(HandleParam object, PropertyPathParam propertyPath) :
     MetaOperation(object)
 {
-  mName = BuildString("'",
-                      propertyPath.GetStringPath(),
-                      "' marked modified on '",
-                      GetNameFromHandle(object),
-                      "'");
+  mName = BuildString("'", propertyPath.GetStringPath(), "' marked modified on '", GetNameFromHandle(object), "'");
 
   mPropertyPath = propertyPath;
 }
@@ -748,23 +663,15 @@ void MarkPropertyModifiedOperation::SetModifiedState(bool state)
   LocalModifications* modifications = LocalModifications::GetInstance();
   modifications->SetPropertyModified(instance, mPropertyPath, state);
 
-  MetaDataInheritance* inheritance =
-      instance.StoredType->HasInherited<MetaDataInheritance>();
-  ReturnIf(inheritance == nullptr,
-           ,
-           "Must have data inheritance for this operation.");
+  MetaDataInheritance* inheritance = instance.StoredType->HasInherited<MetaDataInheritance>();
+  ReturnIf(inheritance == nullptr, , "Must have data inheritance for this operation.");
   inheritance->SetPropertyModified(instance, mPropertyPath, state);
 }
 
-RevertPropertyOperation::RevertPropertyOperation(
-    HandleParam object, PropertyPathParam propertyPath) :
+RevertPropertyOperation::RevertPropertyOperation(HandleParam object, PropertyPathParam propertyPath) :
     MetaOperation(object)
 {
-  mName = BuildString("Reverted '",
-                      propertyPath.GetStringPath(),
-                      "' value on '",
-                      GetNameFromHandle(object),
-                      "'");
+  mName = BuildString("Reverted '", propertyPath.GetStringPath(), "' value on '", GetNameFromHandle(object), "'");
 
   mPropertyToRevert = propertyPath;
   mOldValue = propertyPath.GetValue(object);
@@ -795,15 +702,13 @@ void RevertPropertyOperation::Redo()
 
   // Revert the property
   BoundType* instanceType = instance.StoredType;
-  if (MetaDataInheritance* inheritance =
-          instanceType->HasInherited<MetaDataInheritance>())
+  if (MetaDataInheritance* inheritance = instanceType->HasInherited<MetaDataInheritance>())
     inheritance->RevertProperty(instance, mPropertyToRevert);
 
   MetaOperation::Redo();
 }
 
-RestoreChildOperation::RestoreChildOperation(HandleParam parent,
-                                             ObjectState::ChildId& childId) :
+RestoreChildOperation::RestoreChildOperation(HandleParam parent, ObjectState::ChildId& childId) :
     MetaOperation(parent),
     mChildId(childId),
     mInheritance(parent.StoredType)
@@ -832,8 +737,7 @@ void RestoreChildOperation::Redo()
   {
 
     BoundType* parentType = parent.StoredType;
-    if (MetaDataInheritance* inheritance =
-            parentType->HasInherited<MetaDataInheritance>())
+    if (MetaDataInheritance* inheritance = parentType->HasInherited<MetaDataInheritance>())
       inheritance->RestoreRemovedChild(parent, mChildId);
   }
 

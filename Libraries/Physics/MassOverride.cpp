@@ -17,8 +17,7 @@ ZilchDefineType(MassOverride, builder, type)
   ZilchBindGetterSetter(InverseMass)->ZeroSerialize(real(1));
   // @MetaSerialization: Property needs to not cause rescans
   ZilchBindGetterSetterProperty(Mass);
-  ZilchBindGetterSetter(LocalInverseInertiaTensor)
-      ->ZeroSerialize(Mat3::cIdentity);
+  ZilchBindGetterSetter(LocalInverseInertiaTensor)->ZeroSerialize(Mat3::cIdentity);
   ZilchBindGetterSetter(LocalCenterOfMass)->ZeroSerialize(Vec3::cZero);
 
   // Runtime modifications (not serialized)
@@ -31,8 +30,7 @@ ZilchDefineType(MassOverride, builder, type)
 
 MassOverride::MassOverride()
 {
-  mFlags.SetFlag(MassOverrideStates::AutoComputeInertia |
-                 MassOverrideStates::AutoComputeCenterOfMass);
+  mFlags.SetFlag(MassOverrideStates::AutoComputeInertia | MassOverrideStates::AutoComputeCenterOfMass);
   mLocalCenterOfMass.ZeroOut();
 }
 
@@ -76,10 +74,8 @@ void MassOverride::SetInverseMass(real invMass)
   // Just always mark the inertia and center of mass as being changed for now
   if (OperationQueue::IsListeningForSideEffects())
   {
-    OperationQueue::RegisterSideEffect(
-        this, "LocalInverseInertiaTensor", GetLocalInverseInertiaTensor());
-    OperationQueue::RegisterSideEffect(
-        this, "LocalCenterOfMass", GetLocalCenterOfMass());
+    OperationQueue::RegisterSideEffect(this, "LocalInverseInertiaTensor", GetLocalInverseInertiaTensor());
+    OperationQueue::RegisterSideEffect(this, "LocalCenterOfMass", GetLocalCenterOfMass());
   }
 
   // If we auto compute inertia and this is a run-time set (not serialization)
@@ -110,10 +106,8 @@ void MassOverride::SetMass(real mass)
   // Mark all side effects
   if (OperationQueue::IsListeningForSideEffects())
   {
-    OperationQueue::RegisterSideEffect(
-        this, "LocalInverseInertiaTensor", GetLocalInverseInertiaTensor());
-    OperationQueue::RegisterSideEffect(
-        this, "LocalCenterOfMass", GetLocalCenterOfMass());
+    OperationQueue::RegisterSideEffect(this, "LocalInverseInertiaTensor", GetLocalInverseInertiaTensor());
+    OperationQueue::RegisterSideEffect(this, "LocalCenterOfMass", GetLocalCenterOfMass());
     OperationQueue::RegisterSideEffect(this, "InverseMass", GetInverseMass());
   }
 
@@ -178,10 +172,8 @@ void MassOverride::RecomputeMass()
   if (OperationQueue::IsListeningForSideEffects())
   {
     OperationQueue::RegisterSideEffect(this, "Mass", GetMass());
-    OperationQueue::RegisterSideEffect(
-        this, "LocalInverseInertiaTensor", GetLocalInverseInertiaTensor());
-    OperationQueue::RegisterSideEffect(
-        this, "LocalCenterOfMass", GetLocalCenterOfMass());
+    OperationQueue::RegisterSideEffect(this, "LocalInverseInertiaTensor", GetLocalInverseInertiaTensor());
+    OperationQueue::RegisterSideEffect(this, "LocalCenterOfMass", GetLocalCenterOfMass());
     OperationQueue::RegisterSideEffect(this, "InverseMass", GetInverseMass());
   }
 

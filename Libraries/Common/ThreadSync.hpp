@@ -61,9 +61,7 @@ public:
   InterprocessMutex();
   ~InterprocessMutex();
 
-  void Initialize(Status& status,
-                  const char* mutexName,
-                  bool failIfAlreadyExists = false);
+  void Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists = false);
 
 private:
   ZeroDeclarePrivateData(InterprocessMutex, 8);

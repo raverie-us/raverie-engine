@@ -29,9 +29,7 @@ static const bool cHotKeysEditable = false;
 class BindingConflictEvent : public Event
 {
 public:
-  BindingConflictEvent(CommandEntry* newCommand,
-                       CommandEntry* existingComnnad,
-                       HotKeyBinding* newBinding) :
+  BindingConflictEvent(CommandEntry* newCommand, CommandEntry* existingComnnad, HotKeyBinding* newBinding) :
       mNewCommand(newCommand),
       mExistingCommad(existingComnnad),
       mNewBinding(newBinding)
@@ -79,14 +77,10 @@ public:
       return;
 
     // Open script.
-    MetaResource* meta =
-        mCommand->mScriptComponentType->HasInherited<MetaResource>();
+    MetaResource* meta = mCommand->mScriptComponentType->HasInherited<MetaResource>();
     ResourceId resourceId = meta->mResourceId;
     Resource* resource = Z::gResources->GetResource(resourceId);
-    ReturnIf(resource == nullptr,
-             ,
-             "Could not find %s script",
-             mCommand->GetName().c_str());
+    ReturnIf(resource == nullptr, , "Could not find %s script", mCommand->GetName().c_str());
     Z::gEditor->EditResource(resource);
   }
 
@@ -99,15 +93,11 @@ public:
     if (!mCommand->ToolTip.Empty())
       toolTip = new ToolTip(this, mCommand->ToolTip);
     else
-      toolTip = new ToolTip(
-          this, BuildString("Edit '", mCommand->GetName(), "' script"));
+      toolTip = new ToolTip(this, BuildString("Edit '", mCommand->GetName(), "' script"));
 
     ToolTipPlacement placement;
     placement.SetScreenRect(mIcon->GetScreenRect());
-    placement.SetPriority(IndicatorSide::Left,
-                          IndicatorSide::Right,
-                          IndicatorSide::Bottom,
-                          IndicatorSide::Top);
+    placement.SetPriority(IndicatorSide::Left, IndicatorSide::Right, IndicatorSide::Bottom, IndicatorSide::Top);
 
     toolTip->SetArrowTipTranslation(placement);
   }
@@ -125,8 +115,7 @@ public:
 
   String mBindingStr;
 
-  BindingEditor(Composite* parent) :
-      InPlaceTextEditor(parent, 0) // InPlaceTextEditorFlags::EditOnDoubleClick)
+  BindingEditor(Composite* parent) : InPlaceTextEditor(parent, 0) // InPlaceTextEditorFlags::EditOnDoubleClick)
   {
     mModifier1 = Keys::Unknown;
     mModifier2 = Keys::Unknown;
@@ -163,11 +152,9 @@ public:
     if (!mEdit || mEdit->mEditTextField->mTakeFocusMode != FocusMode::Hard)
       return;
 
-    if (event->Key != Keys::Control && event->Key != Keys::Alt &&
-        event->Key != Keys::Shift)
+    if (event->Key != Keys::Control && event->Key != Keys::Alt && event->Key != Keys::Shift)
     {
-      if (mMainKey == Keys::Unknown && event->Key >= Keys::A &&
-          event->Key <= Keys::Decimal)
+      if (mMainKey == Keys::Unknown && event->Key >= Keys::A && event->Key <= Keys::Decimal)
       {
         mMainKey = event->Key;
 
@@ -189,8 +176,7 @@ public:
         return;
       }
     }
-    else if (event->Key == Keys::Control || event->Key == Keys::Alt ||
-             event->Key == Keys::Shift)
+    else if (event->Key == Keys::Control || event->Key == Keys::Alt || event->Key == Keys::Shift)
     {
       if (mModifier1 == Keys::Unknown)
         mModifier1 = event->Key;
@@ -206,8 +192,7 @@ public:
 
   void OnKeyUp(KeyboardEvent* event)
   {
-    if (!event->mKeyboard->KeyIsDown(Keys::Control) &&
-        !event->mKeyboard->KeyIsDown(Keys::Shift) &&
+    if (!event->mKeyboard->KeyIsDown(Keys::Control) && !event->mKeyboard->KeyIsDown(Keys::Shift) &&
         !event->mKeyboard->KeyIsDown(Keys::Alt))
     {
       mModifier1 = Keys::Unknown;
@@ -221,8 +206,7 @@ public:
     else if (mModifier1 == event->Key)
     {
       mModifier1 = Keys::Unknown;
-      if (event->mKeyboard->KeyIsDown(Keys::Control) &&
-          mModifier2 != Keys::Control)
+      if (event->mKeyboard->KeyIsDown(Keys::Control) && mModifier2 != Keys::Control)
         mModifier1 = Keys::Control;
       if (event->mKeyboard->KeyIsDown(Keys::Alt) && mModifier2 != Keys::Alt)
         mModifier1 = Keys::Alt;
@@ -232,8 +216,7 @@ public:
     else if (mModifier2 == event->Key)
     {
       mModifier2 = Keys::Unknown;
-      if (event->mKeyboard->KeyIsDown(Keys::Control) &&
-          mModifier1 != Keys::Control)
+      if (event->mKeyboard->KeyIsDown(Keys::Control) && mModifier1 != Keys::Control)
         mModifier2 = Keys::Control;
       if (event->mKeyboard->KeyIsDown(Keys::Alt) && mModifier1 != Keys::Alt)
         mModifier2 = Keys::Alt;
@@ -256,20 +239,11 @@ public:
     char m2[16];
     const char* pm2 = m2;
 
-    pm0 = (mMainKey == Keys::Unknown) ? "\0"
-                                      : HotKeyEditor::sKeyMap[mMainKey].c_str();
-    pm1 = (mModifier1 == Keys::Unknown)
-              ? "\0"
-              : HotKeyEditor::sKeyMap[mModifier1].c_str();
-    pm2 = (mModifier2 == Keys::Unknown)
-              ? "\0"
-              : HotKeyEditor::sKeyMap[mModifier2].c_str();
+    pm0 = (mMainKey == Keys::Unknown) ? "\0" : HotKeyEditor::sKeyMap[mMainKey].c_str();
+    pm1 = (mModifier1 == Keys::Unknown) ? "\0" : HotKeyEditor::sKeyMap[mModifier1].c_str();
+    pm2 = (mModifier2 == Keys::Unknown) ? "\0" : HotKeyEditor::sKeyMap[mModifier2].c_str();
 
-    out = BuildString(pm1,
-                      (pm1 && (pm2 || pm0)) ? " + " : "\0",
-                      pm2,
-                      (pm2 && pm0) ? " + " : "\0",
-                      pm0);
+    out = BuildString(pm1, (pm1 && (pm2 || pm0)) ? " + " : "\0", pm2, (pm2 && pm0) ? " + " : "\0", pm0);
   }
 
   void Edit()
@@ -305,9 +279,7 @@ public:
   }
 };
 
-ValueEditor* CreateCogCommandScriptEditor(Composite* parent,
-                                          AnyParam data,
-                                          u32 flags)
+ValueEditor* CreateCogCommandScriptEditor(Composite* parent, AnyParam data, u32 flags)
 {
   return new CogCommandScriptEditor(parent);
 }
@@ -319,22 +291,17 @@ ValueEditor* CreateBindingEditor(Composite* parent, AnyParam data, u32 flags)
 
 ValueEditor* CreateCommandEditor(Composite* parent, AnyParam data, u32 flags)
 {
-  return new InPlaceTextEditor(
-      parent, 0); //, InPlaceTextEditorFlags::EditOnDoubleClick);
+  return new InPlaceTextEditor(parent, 0); //, InPlaceTextEditorFlags::EditOnDoubleClick);
 }
 
-ValueEditor* CreateDescriptionEditor(Composite* parent,
-                                     AnyParam data,
-                                     u32 flags)
+ValueEditor* CreateDescriptionEditor(Composite* parent, AnyParam data, u32 flags)
 {
-  return new InPlaceTextEditor(
-      parent, 0); // InPlaceTextEditorFlags::EditOnDoubleClick);
+  return new InPlaceTextEditor(parent, 0); // InPlaceTextEditorFlags::EditOnDoubleClick);
 }
 
 ValueEditor* CreateTagEditor(Composite* parent, AnyParam data, u32 flags)
 {
-  return new InPlaceTextEditor(
-      parent, 0); // InPlaceTextEditorFlags::EditOnDoubleClick);
+  return new InPlaceTextEditor(parent, 0); // InPlaceTextEditorFlags::EditOnDoubleClick);
 }
 
 DeclareEnum3(FilterSearchMode, CommandName, BindingString, CommandTag);
@@ -402,8 +369,7 @@ public:
   {
     CommandEntry* row = ((CommandEntry*)dataEntry);
 
-    int priority =
-        PartialMatch(SubFilterString, row->mName.All(), CaseInsensitiveCompare);
+    int priority = PartialMatch(SubFilterString, row->mName.All(), CaseInsensitiveCompare);
     return priority != cNoMatch;
   }
 
@@ -411,8 +377,7 @@ public:
   {
     CommandEntry* row = ((CommandEntry*)dataEntry);
 
-    int priority = PartialMatch(
-        SubFilterString, row->mBindingStr.All(), CaseInsensitiveCompare);
+    int priority = PartialMatch(SubFilterString, row->mBindingStr.All(), CaseInsensitiveCompare);
     return priority != cNoMatch;
   }
 
@@ -420,8 +385,7 @@ public:
   {
     CommandEntry* row = ((CommandEntry*)dataEntry);
 
-    int priority =
-        PartialMatch(SubFilterString, row->mTags.All(), CaseInsensitiveCompare);
+    int priority = PartialMatch(SubFilterString, row->mTags.All(), CaseInsensitiveCompare);
     return priority != cNoMatch;
   }
 };
@@ -432,8 +396,7 @@ public:
   typedef TreeViewSearchHotKeys ZilchSelf;
   HotKeyFilter* mHotKeyFilter;
 
-  TreeViewSearchHotKeys(Composite* parent) :
-      TreeViewSearch(parent, nullptr, nullptr)
+  TreeViewSearchHotKeys(Composite* parent) : TreeViewSearch(parent, nullptr, nullptr)
   {
     mHotKeyFilter = new HotKeyFilter();
     mFiltered = mHotKeyFilter;
@@ -488,8 +451,7 @@ public:
   MetaSelection* mSelection;
   HotKeyCommands* mSource;
 
-  CogCommandSelection(MetaSelection* selection, HotKeyCommands* source) :
-      mSelection(selection)
+  CogCommandSelection(MetaSelection* selection, HotKeyCommands* source) : mSelection(selection)
   {
     mSource = source;
   }
@@ -525,8 +487,7 @@ public:
 
     Cog* object = ((CogCommand*)row->mZeroCommand)->mCog;
     if (object)
-      mSelection->SelectOnly(
-          object->GetComponentByName(row->mZeroCommand->Name));
+      mSelection->SelectOnly(object->GetComponentByName(row->mZeroCommand->Name));
   }
 
   void Deselect(DataIndex index) override
@@ -558,13 +519,13 @@ public:
   }
 };
 
-#define CommandSortFunctor(name, operation)                                    \
-  struct name : public binary_function<CommandEntry, CommandEntry, bool>       \
-  {                                                                            \
-    bool operator()(const CommandEntry& left, const CommandEntry& right) const \
-    {                                                                          \
-      return left.operation(right);                                            \
-    }                                                                          \
+#define CommandSortFunctor(name, operation)                                                                            \
+  struct name : public binary_function<CommandEntry, CommandEntry, bool>                                               \
+  {                                                                                                                    \
+    bool operator()(const CommandEntry& left, const CommandEntry& right) const                                         \
+    {                                                                                                                  \
+      return left.operation(right);                                                                                    \
+    }                                                                                                                  \
   };
 
 bool CommandEntry::operator<(const CommandEntry& rhs) const
@@ -582,9 +543,7 @@ bool CommandEntry::operator==(const Command& rhs) const
   return mName == rhs.Name;
 }
 
-CommandSortFunctor(
-    CompareCogCommand,
-    IsCogCommand) bool CommandEntry::IsCogCommand(const CommandEntry& rhs) const
+CommandSortFunctor(CompareCogCommand, IsCogCommand) bool CommandEntry::IsCogCommand(const CommandEntry& rhs) const
 {
   if (mIsACogCommand && !rhs.mIsACogCommand)
     return true;
@@ -596,10 +555,8 @@ CommandSortFunctor(
     return false;
 }
 
-CommandSortFunctor(
-    CompareNotCogCommand,
-    IsNotCogCommand) bool CommandEntry::IsNotCogCommand(const CommandEntry& rhs)
-    const
+CommandSortFunctor(CompareNotCogCommand,
+                   IsNotCogCommand) bool CommandEntry::IsNotCogCommand(const CommandEntry& rhs) const
 {
   if (!mIsACogCommand && rhs.mIsACogCommand)
     return true;
@@ -611,8 +568,7 @@ CommandSortFunctor(
     return false;
 }
 
-CommandSortFunctor(CompareCommandName, LessName) bool CommandEntry::LessName(
-    const CommandEntry& rhs) const
+CommandSortFunctor(CompareCommandName, LessName) bool CommandEntry::LessName(const CommandEntry& rhs) const
 {
   if (mName.Empty())
     return false;
@@ -622,9 +578,7 @@ CommandSortFunctor(CompareCommandName, LessName) bool CommandEntry::LessName(
     return mName < rhs.mName;
 }
 
-CommandSortFunctor(
-    CompareCommandBinding,
-    LessBinding) bool CommandEntry::LessBinding(const CommandEntry& rhs) const
+CommandSortFunctor(CompareCommandBinding, LessBinding) bool CommandEntry::LessBinding(const CommandEntry& rhs) const
 {
   if (mBindingStr.Empty())
     return false;
@@ -634,8 +588,7 @@ CommandSortFunctor(
     return mBindingStr < rhs.mBindingStr;
 }
 
-CommandSortFunctor(CompareCommandTags, LessTags) bool CommandEntry::LessTags(
-    const CommandEntry& rhs) const
+CommandSortFunctor(CompareCommandTags, LessTags) bool CommandEntry::LessTags(const CommandEntry& rhs) const
 {
   if (mTags.Empty())
     return false;
@@ -657,7 +610,7 @@ void HotKeyCommands::CopyCommandData(Array<Command*>& commands)
   if (!mCommand.Empty())
     return;
 
-  forRange(Command * command, commands.All())
+  forRange (Command* command, commands.All())
   {
     AddCommand(command);
   }
@@ -748,9 +701,7 @@ uint HotKeyCommands::ChildCount(DataEntry* dataEntry)
   return 0;
 }
 
-DataEntry* HotKeyCommands::GetChild(DataEntry* dataEntry,
-                                    uint index,
-                                    DataEntry* prev)
+DataEntry* HotKeyCommands::GetChild(DataEntry* dataEntry, uint index, DataEntry* prev)
 {
   if (index >= 0 && index < mCommand.Size())
   {
@@ -783,9 +734,7 @@ bool HotKeyCommands::IsExpandable(DataEntry* dataEntry)
   return false;
 }
 
-void HotKeyCommands::GetData(DataEntry* dataEntry,
-                             Any& variant,
-                             StringParam column)
+void HotKeyCommands::GetData(DataEntry* dataEntry, Any& variant, StringParam column)
 {
   CommandEntry* row = ((CommandEntry*)dataEntry);
 
@@ -814,9 +763,7 @@ void HotKeyCommands::GetData(DataEntry* dataEntry,
   }
 }
 
-bool HotKeyCommands::SetData(DataEntry* dataEntry,
-                             AnyParam variant,
-                             StringParam column)
+bool HotKeyCommands::SetData(DataEntry* dataEntry, AnyParam variant, StringParam column)
 {
   CommandEntry* row = ((CommandEntry*)dataEntry);
 
@@ -842,8 +789,7 @@ bool HotKeyCommands::SetData(DataEntry* dataEntry,
         if (mCommand[i].mName == row->mName)
           return false;
 
-        DispatchEvent(Events::BindingOverwrite,
-                      new BindingConflictEvent(row, &mCommand[i], binding));
+        DispatchEvent(Events::BindingOverwrite, new BindingConflictEvent(row, &mCommand[i], binding));
         return false;
       }
     }
@@ -903,31 +849,25 @@ HotKeyEditor::HotKeyEditor(Composite* parent) :
 
   if (!cNotUsingHotKeyResource)
   {
-    String userHotKeyFile = FilePath::Combine(GetUserDocumentsDirectory(),
-                                              "ZeroEditor",
-                                              "Default.HotKeyDataSet.data");
+    String userHotKeyFile = FilePath::Combine(GetUserDocumentsDirectory(), "ZeroEditor", "Default.HotKeyDataSet.data");
 
     if (!FileExists(userHotKeyFile))
     {
-      String
-          coreHotKeyFile; // =
-                          // HotKeyManager::GetDefault()->mContentItem->GetFullPath();
+      String coreHotKeyFile; // =
+                             // HotKeyManager::GetDefault()->mContentItem->GetFullPath();
 
       CopyFileInternal(userHotKeyFile, coreHotKeyFile);
     }
   }
 
-  ConnectThisTo(ZilchManager::GetInstance(),
-                Events::ScriptsCompiledPostPatch,
-                OnScriptsCompiled);
+  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledPostPatch, OnScriptsCompiled);
 
   CommandManager* commands = CommandManager::GetInstance();
   ConnectThisTo(commands, Events::CommandAdded, OnGlobalCommandAdded);
   ConnectThisTo(commands, Events::CommandRemoved, OnGlobalCommandRemoved);
   ConnectThisTo(commands, Events::CommandUpdated, OnGlobalCommandUpdated);
 
-  SetLayout(CreateStackLayout(
-      LayoutDirection::TopToBottom, Pixels(0, 2), Thickness::cZero));
+  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 2), Thickness::cZero));
 
   if (cHotKeysEditable)
     ConnectThisTo(mHotKeys, Events::CommandRenamed, OnRenamedCommand);
@@ -968,9 +908,7 @@ HotKeyEditor::HotKeyEditor(Composite* parent) :
   {
     mAddCommand = new TextButton(this);
     mAddCommand->SetText("Add Command");
-    mAddCommand->SetSizing(SizePolicy::Fixed,
-                           mAddCommand->GetMinSize() +
-                               mAddCommand->GetPadding().Size());
+    mAddCommand->SetSizing(SizePolicy::Fixed, mAddCommand->GetMinSize() + mAddCommand->GetPadding().Size());
     mAddCommand->mHorizontalAlignment = HorizontalAlignment::Right;
 
     ConnectThisTo(mAddCommand, Events::LeftMouseUp, OnAddCommand);
@@ -980,11 +918,9 @@ HotKeyEditor::HotKeyEditor(Composite* parent) :
     mHotKeySetDropdown->mHorizontalAlignment = HorizontalAlignment::Right;
     mHotKeySetDropdown->SetSizing(SizePolicy::Fixed, Pixels(150, 20));
 
-    ConnectThisTo(
-        mHotKeySetDropdown, Events::ItemSelected, OnCommandSetSelected);
+    ConnectThisTo(mHotKeySetDropdown, Events::ItemSelected, OnCommandSetSelected);
 
-    ConnectThisTo(
-        mHotKeys, Events::BindingOverwrite, OnConfirmBindingOverwrite);
+    ConnectThisTo(mHotKeys, Events::BindingOverwrite, OnConfirmBindingOverwrite);
   }
 
   // letters
@@ -1251,7 +1187,7 @@ void HotKeyEditor::OnCommandDelete(ObjectEvent* event)
   if (data->mSelection.Empty())
     return;
 
-  forRange(u64 selection, data->mSelection.All())
+  forRange (u64 selection, data->mSelection.All())
   {
     mHotKeys->mCommand.EraseAt((unsigned)selection);
     toErase.PushBack((unsigned)selection);
@@ -1291,8 +1227,7 @@ void HotKeyEditor::Sort(bool updateIndexes, CommandCompare::Enum sortBy)
 
   int i = 0;
   CommandSet::range sortRange = set.All();
-  while (sortRange[0].mName == cDefaultCommandString ||
-         sortRange[0].mBindingStr == cDefaultBindingString)
+  while (sortRange[0].mName == cDefaultCommandString || sortRange[0].mBindingStr == cDefaultBindingString)
   {
     sortRange.PopFront();
     ++i;
@@ -1303,39 +1238,24 @@ void HotKeyEditor::Sort(bool updateIndexes, CommandCompare::Enum sortBy)
   switch (sortBy)
   {
   case CommandCompare::IsCogCommand:
-    QuickSort(sortRange.Begin(),
-              sortRange.End(),
-              &sortRange.Front(),
-              CompareCogCommand());
+    QuickSort(sortRange.Begin(), sortRange.End(), &sortRange.Front(), CompareCogCommand());
     break;
 
   case CommandCompare::IsNotCogCommand:
-    QuickSort(sortRange.Begin(),
-              sortRange.End(),
-              &sortRange.Front(),
-              CompareNotCogCommand());
+    QuickSort(sortRange.Begin(), sortRange.End(), &sortRange.Front(), CompareNotCogCommand());
     break;
 
   case CommandCompare::None:
   case CommandCompare::CommandName:
-    QuickSort(sortRange.Begin(),
-              sortRange.End(),
-              &sortRange.Front(),
-              CompareCommandName());
+    QuickSort(sortRange.Begin(), sortRange.End(), &sortRange.Front(), CompareCommandName());
     break;
 
   case CommandCompare::CommandBinding:
-    QuickSort(sortRange.Begin(),
-              sortRange.End(),
-              &sortRange.Front(),
-              CompareCommandBinding());
+    QuickSort(sortRange.Begin(), sortRange.End(), &sortRange.Front(), CompareCommandBinding());
     break;
 
   case CommandCompare::CommandTags:
-    QuickSort(sortRange.Begin(),
-              sortRange.End(),
-              &sortRange.Front(),
-              CompareCommandTags());
+    QuickSort(sortRange.Begin(), sortRange.End(), &sortRange.Front(), CompareCommandTags());
     break;
   }
 
@@ -1402,9 +1322,7 @@ void HotKeyEditor::OnCommandTagsSort(MouseEvent* event)
   Refresh();
 }
 
-void HotKeyEditor::CreateCommandHeaderToolTip(Widget* source,
-                                              StringParam sortName,
-                                              Vec4Param color)
+void HotKeyEditor::CreateCommandHeaderToolTip(Widget* source, StringParam sortName, Vec4Param color)
 {
   mSortToolTip.SafeDestroy();
   mSortToolTip = new ToolTip(source);
@@ -1417,10 +1335,7 @@ void HotKeyEditor::CreateCommandHeaderToolTip(Widget* source,
 
   ToolTipPlacement placement;
   placement.SetScreenRect(source->GetScreenRect());
-  placement.SetPriority(IndicatorSide::Left,
-                        IndicatorSide::Right,
-                        IndicatorSide::Bottom,
-                        IndicatorSide::Top);
+  placement.SetPriority(IndicatorSide::Left, IndicatorSide::Right, IndicatorSide::Bottom, IndicatorSide::Top);
 
   toolTip->SetArrowTipTranslation(placement);
 }
@@ -1584,8 +1499,7 @@ void HotKeyEditor::OnCommandSetSelected(ObjectEvent* event)
 
 void HotKeyEditor::OnConfirmBindingOverwrite(BindingConflictEvent* event)
 {
-  String prompt(BuildString(
-      "Overwrite Command: \'", event->mExistingCommad->mName, "\'?"));
+  String prompt(BuildString("Overwrite Command: \'", event->mExistingCommad->mName, "\'?"));
   ModalConfirmAction* modal = new ModalConfirmAction(this, prompt);
   modal->mUserData = event;
 
@@ -1605,10 +1519,8 @@ void HotKeyEditor::OnModalOption(ModalConfirmEvent* event)
     effectedData->mExistingCommad->mMainKey = Keys::Unknown;
 
     effectedData->mNewCommand->mBindingStr = effectedData->mNewBinding->mString;
-    effectedData->mNewCommand->mModifier1 =
-        effectedData->mNewBinding->mModifier1;
-    effectedData->mNewCommand->mModifier2 =
-        effectedData->mNewBinding->mModifier2;
+    effectedData->mNewCommand->mModifier1 = effectedData->mNewBinding->mModifier1;
+    effectedData->mNewCommand->mModifier2 = effectedData->mNewBinding->mModifier2;
     effectedData->mNewCommand->mMainKey = effectedData->mNewBinding->mMainKey;
   }
   else
@@ -1656,8 +1568,7 @@ ZilchDefineType(HotKeyBinding, builder, type)
 void RegisterHotKeyEditors()
 {
   ValueEditorFactory* factory = ValueEditorFactory::GetInstance();
-  factory->RegisterEditor("CogCommandScriptEditor",
-                          CreateCogCommandScriptEditor);
+  factory->RegisterEditor("CogCommandScriptEditor", CreateCogCommandScriptEditor);
   factory->RegisterEditor("CommandEditor", CreateCommandEditor);
   factory->RegisterEditor("ShortcutEditor", CreateBindingEditor);
   factory->RegisterEditor("TagEditor", CreateTagEditor);

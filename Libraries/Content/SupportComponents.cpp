@@ -32,8 +32,7 @@ void ContentHistory::Initialize(ContentComposition* item)
 {
   mOwner = item;
 
-  SourceControl* sourceControl =
-      GetSourceControl(mOwner->mLibrary->SourceControlType);
+  SourceControl* sourceControl = GetSourceControl(mOwner->mLibrary->SourceControlType);
 
   // get the path to the meta file
   String path = mOwner->GetMetaFilePath();

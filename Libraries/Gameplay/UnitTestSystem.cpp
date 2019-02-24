@@ -45,16 +45,14 @@ WidgetPath::WidgetPath(Widget* toWidget, RootWidget* fromRoot)
   while (toWidget != fromRoot)
   {
     ReturnIf(toWidget == nullptr, , "Encountered a null widget");
-    ReturnIf(toWidget->mParent == nullptr,
-             ,
-             "Encountered a widget without a parent");
+    ReturnIf(toWidget->mParent == nullptr, , "Encountered a widget without a parent");
 
     WidgetChildId& id = mPath.PushBack();
     id.mName = toWidget->mName;
     id.mType = ZilchVirtualTypeId(toWidget);
     id.mIndex = 0;
 
-    forRange(Widget & sibling, toWidget->mParent->GetChildren())
+    forRange (Widget& sibling, toWidget->mParent->GetChildren())
     {
       if (&sibling == toWidget)
         break;
@@ -80,13 +78,12 @@ Widget* WidgetPath::Resolve(RootWidget* root)
   Widget* foundWidget = root;
 
   Array<WidgetChildId>::range path = mPath.All();
-  forRange(WidgetChildId & childId, path)
+  forRange (WidgetChildId& childId, path)
   {
     size_t index = 0;
-    forRange(Widget & childWidget, composite->GetChildren())
+    forRange (Widget& childWidget, composite->GetChildren())
     {
-      if (childWidget.GetName() == childId.mName &&
-          ZilchVirtualTypeId(&childWidget) == childId.mType)
+      if (childWidget.GetName() == childId.mName && ZilchVirtualTypeId(&childWidget) == childId.mType)
       {
         if (index == childId.mIndex)
         {
@@ -271,10 +268,8 @@ UnitTestSystem::UnitTestSystem() :
     mEventIndex(0),
     mFilesIndex(0)
 {
-  ConnectThisTo(
-      this, Events::UnitTestRecordFileSelected, OnUnitTestRecordFileSelected);
-  ConnectThisTo(
-      this, Events::UnitTestPlayFileSelected, OnUnitTestPlayFileSelected);
+  ConnectThisTo(this, Events::UnitTestRecordFileSelected, OnUnitTestRecordFileSelected);
+  ConnectThisTo(this, Events::UnitTestPlayFileSelected, OnUnitTestPlayFileSelected);
 }
 
 cstr UnitTestSystem::GetName()
@@ -354,8 +349,7 @@ void UnitTestSystem::RecordToZeroTestFile()
   config->Title = "Record Unit Test File";
   config->AddFilter("Zero Unit Test (*.zerotest)", "*.zerotest");
   config->mDefaultSaveExtension = "zerotest";
-  config->DefaultFileName =
-      BuildString(Z::gEngine->GetProjectSettings()->ProjectName, ".zerotest");
+  config->DefaultFileName = BuildString(Z::gEngine->GetProjectSettings()->ProjectName, ".zerotest");
   Z::gEngine->has(OsShell)->SaveFile(config);
 }
 
@@ -370,13 +364,10 @@ void UnitTestSystem::OnUnitTestRecordFileSelected(OsFileSelection* event)
 void UnitTestSystem::RecordToZeroTestFile(StringParam zeroTestFile)
 {
   String name = FilePath::GetFileNameWithoutExtension(zeroTestFile);
-  String directory =
-      FilePath::Combine(FilePath::GetDirectoryPath(zeroTestFile), name);
+  String directory = FilePath::Combine(FilePath::GetDirectoryPath(zeroTestFile), name);
   if (DirectoryExists(directory))
   {
-    DoNotifyError(
-        "UnitTestSystem",
-        "There must not be a directory of the same name next to the test file");
+    DoNotifyError("UnitTestSystem", "There must not be a directory of the same name next to the test file");
     return;
   }
 
@@ -402,16 +393,12 @@ void UnitTestSystem::RecordToZeroTestFile(StringParam zeroTestFile)
   info.mApplicationName = GetApplication();
 
   String oldProjectFileName = FilePath::GetFileName(settings->ProjectFile);
-  String oldBeginProjectFilePath =
-      FilePath::Combine(beginFolder, oldProjectFileName);
-  String oldEndProjectFilePath =
-      FilePath::Combine(endFolder, oldProjectFileName);
+  String oldBeginProjectFilePath = FilePath::Combine(beginFolder, oldProjectFileName);
+  String oldEndProjectFilePath = FilePath::Combine(endFolder, oldProjectFileName);
 
   String newProjectFileName = BuildString(name, cZeroProjWithDot);
-  String newBeginProjectFilePath =
-      FilePath::Combine(beginFolder, newProjectFileName);
-  String newEndProjectFilePath =
-      FilePath::Combine(endFolder, newProjectFileName);
+  String newBeginProjectFilePath = FilePath::Combine(beginFolder, newProjectFileName);
+  String newEndProjectFilePath = FilePath::Combine(endFolder, newProjectFileName);
 
   // Rename the project files to the same name as the zerotest file
   MoveFile(newBeginProjectFilePath, oldBeginProjectFilePath);
@@ -419,8 +406,7 @@ void UnitTestSystem::RecordToZeroTestFile(StringParam zeroTestFile)
 
   // When recording, we always make our modifications to the end project
   // (therefore the end becomes the final result)
-  info.mArguments = BuildString(
-      "-file \"", newEndProjectFilePath, "\" -safe -", cUnitTestRecordOption);
+  info.mArguments = BuildString("-file \"", newEndProjectFilePath, "\" -safe -", cUnitTestRecordOption);
 
   Process process;
   process.Start(status, info);
@@ -465,13 +451,10 @@ void UnitTestSystem::OnUnitTestPlayFileSelected(OsFileSelection* event)
 void UnitTestSystem::PlayFromZeroTestFile(StringParam zeroTestFile)
 {
   String name = FilePath::GetFileNameWithoutExtension(zeroTestFile);
-  String directory =
-      FilePath::Combine(FilePath::GetDirectoryPath(zeroTestFile), name);
+  String directory = FilePath::Combine(FilePath::GetDirectoryPath(zeroTestFile), name);
   if (DirectoryExists(directory))
   {
-    DoNotifyError(
-        "UnitTestSystem",
-        "There must not be a directory of the same name next to the test file");
+    DoNotifyError("UnitTestSystem", "There must not be a directory of the same name next to the test file");
     return;
   }
 
@@ -496,13 +479,10 @@ void UnitTestSystem::PlayFromZeroTestFile(StringParam zeroTestFile)
   // When playing back we always start from the beginning project (it should end
   // up the same as the end project)
   String projectFileName = BuildString(name, cZeroProjWithDot);
-  String beginProjectFilePath =
-      FilePath::Combine(beginProjectPath, projectFileName);
-  String endProjectFilePath =
-      FilePath::Combine(endProjectPath, projectFileName);
+  String beginProjectFilePath = FilePath::Combine(beginProjectPath, projectFileName);
+  String endProjectFilePath = FilePath::Combine(endProjectPath, projectFileName);
 
-  info.mArguments = BuildString(
-      "-file \"", beginProjectFilePath, "\" -safe -", cUnitTestPlayOption);
+  info.mArguments = BuildString("-file \"", beginProjectFilePath, "\" -safe -", cUnitTestPlayOption);
 
   Process process;
   process.Start(status, info);
@@ -530,8 +510,7 @@ void UnitTestSystem::SubProcessRecord()
 
   mMode = UnitTestMode::Recording;
 
-  mPlaybackFile.Open(
-      mRecordedEventsFile, FileMode::Append, FileAccessPattern::Sequential);
+  mPlaybackFile.Open(mRecordedEventsFile, FileMode::Append, FileAccessPattern::Sequential);
 }
 
 void UnitTestSystem::SubProcessPlay()
@@ -564,8 +543,7 @@ OsWindow* UnitTestSystem::SubProcessSetupWindow()
 {
   OsWindow* window = GetMainWindow();
   window->SetState(WindowState::Windowed);
-  window->SetStyle((WindowStyleFlags::Enum)(window->GetStyle() &
-                                            ~WindowStyleFlags::Resizable));
+  window->SetStyle((WindowStyleFlags::Enum)(window->GetStyle() & ~WindowStyleFlags::Resizable));
   window->SetClientSize(cWindowSize);
 
   IntVec2 monitorSize = Z::gEngine->has(OsShell)->GetPrimaryMonitorSize();
@@ -573,16 +551,12 @@ OsWindow* UnitTestSystem::SubProcessSetupWindow()
   window->SetMonitorClientPosition(centeredPosition);
 
   ProjectSettings* settings = Z::gEngine->GetProjectSettings();
-  mRecordedEventsFile =
-      FilePath::Combine(settings->ProjectFolder, "..", "Playback.data");
-  mRecordedFilesDirectory =
-      FilePath::Combine(settings->ProjectFolder, "..", "Files");
+  mRecordedEventsFile = FilePath::Combine(settings->ProjectFolder, "..", "Playback.data");
+  mRecordedFilesDirectory = FilePath::Combine(settings->ProjectFolder, "..", "Files");
   return window;
 }
 
-void UnitTestSystem::DiffDirectories(StringParam dir1,
-                                     StringParam dir2,
-                                     StringParam diffProgram)
+void UnitTestSystem::DiffDirectories(StringParam dir1, StringParam dir2, StringParam diffProgram)
 {
   HashSet<String> relativePaths1;
   HashSet<String> relativePaths2;
@@ -590,7 +564,7 @@ void UnitTestSystem::DiffDirectories(StringParam dir1,
   EnumerateFiles(dir1, String(), &relativePaths1);
   EnumerateFiles(dir2, String(), &relativePaths2);
 
-  forRange(StringParam relativePath, relativePaths1.All())
+  forRange (StringParam relativePath, relativePaths1.All())
   {
     // If both directories have this path...
     if (relativePaths2.Contains(relativePath))
@@ -610,42 +584,33 @@ void UnitTestSystem::DiffDirectories(StringParam dir1,
       String hash1 = Zilch::Sha1Builder::GetHashStringFromFile(status, path1);
       if (status.Failed())
       {
-        DoNotifyWarning(
-            "UnitTestSystem",
-            String::Format("Failed to open file: %s", status.Message.c_str()));
+        DoNotifyWarning("UnitTestSystem", String::Format("Failed to open file: %s", status.Message.c_str()));
         continue;
       }
 
       String hash2 = Zilch::Sha1Builder::GetHashStringFromFile(status, path2);
       if (status.Failed())
       {
-        DoNotifyWarning(
-            "UnitTestSystem",
-            String::Format("Failed to open file: %s", status.Message.c_str()));
+        DoNotifyWarning("UnitTestSystem", String::Format("Failed to open file: %s", status.Message.c_str()));
         continue;
       }
 
       if (hash1 != hash2)
       {
-        DoNotifyWarning(
-            "UnitTestSystem",
-            String::Format("Diff failed because file %s did not match",
-                           relativePath.c_str()));
+        DoNotifyWarning("UnitTestSystem",
+                        String::Format("Diff failed because file %s did not match", relativePath.c_str()));
         if (!diffProgram.Empty())
         {
           ProcessStartInfo info;
           info.mApplicationName = diffProgram;
-          info.mArguments =
-              BuildString("\"", path1.c_str(), "\" \"", path2.c_str(), "\"");
+          info.mArguments = BuildString("\"", path1.c_str(), "\" \"", path2.c_str(), "\"");
 
           Process process;
           process.Start(status, info);
 
           if (status.Failed())
           {
-            DoNotifyWarning("UnitTestSystem",
-                            String::Format("Failed run diff process: %s",
-                                           status.Message.c_str()));
+            DoNotifyWarning("UnitTestSystem", String::Format("Failed run diff process: %s", status.Message.c_str()));
             continue;
           }
         }
@@ -655,19 +620,15 @@ void UnitTestSystem::DiffDirectories(StringParam dir1,
     {
       DoNotifyWarning(
           "UnitTestSystem",
-          String::Format(
-              "Diff failed because file %s did not exist in both directories",
-              relativePath.c_str()));
+          String::Format("Diff failed because file %s did not exist in both directories", relativePath.c_str()));
     }
   }
 
-  forRange(StringParam relativePath, relativePaths2.All())
+  forRange (StringParam relativePath, relativePaths2.All())
   {
     DoNotifyWarning(
         "UnitTestSystem",
-        String::Format(
-            "Diff failed because file %s did not exist in both directories",
-            relativePath.c_str()));
+        String::Format("Diff failed because file %s did not exist in both directories", relativePath.c_str()));
   }
 }
 
@@ -692,9 +653,7 @@ void UnitTestSystem::EnumerateFiles(StringParam directory,
 RootWidget* UnitTestSystem::GetRootWidget()
 {
   InList<RootWidget>& rootWidgets = WidgetManager::GetInstance()->RootWidgets;
-  ReturnIf(rootWidgets.Empty(),
-           nullptr,
-           "Cannot use the UnitTestSystem without a RootWidget");
+  ReturnIf(rootWidgets.Empty(), nullptr, "Cannot use the UnitTestSystem without a RootWidget");
 
   // We only work with the main window (the first root widget)
   RootWidget* root = &rootWidgets.Front();
@@ -753,7 +712,7 @@ void UnitTestSystem::HookMouseDropEvent(OsMouseDropEvent& event)
 
   testEvent->mFileIndex = mFilesIndex;
 
-  forRange(String & file, testEvent->mEvent.Files)
+  forRange (String& file, testEvent->mEvent.Files)
   {
     RecordFile(file);
 
@@ -777,8 +736,7 @@ void UnitTestSystem::HookWindowEvent(OsWindowEvent& event)
   RecordEvent(testEvent);
 }
 
-void UnitTestSystem::RecordBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent,
-                                          OsMouseEvent* event)
+void UnitTestSystem::RecordBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, OsMouseEvent* event)
 {
   Vec2 clientPos = ToVec2(event->ClientPosition);
 
@@ -794,8 +752,7 @@ void UnitTestSystem::RecordBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent,
   if (size.x <= 0 || size.y <= 0)
     baseEvent->mNormalizedWidgetOffset = Vec2(0, 0);
   else
-    baseEvent->mNormalizedWidgetOffset =
-        (clientPos - widgetClientTopLeft) / size;
+    baseEvent->mNormalizedWidgetOffset = (clientPos - widgetClientTopLeft) / size;
 
   // Compute the path to the widget from the root via WidgetPath constructor
   baseEvent->mWidgetPath = WidgetPath(overWidget, root);
@@ -803,8 +760,7 @@ void UnitTestSystem::RecordBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent,
   RecordEvent(baseEvent);
 }
 
-void UnitTestSystem::ExecuteBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent,
-                                           OsMouseEvent* event)
+void UnitTestSystem::ExecuteBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, OsMouseEvent* event)
 {
   // If we can find a widget via the widget path, then use the normalized
   // coordinates to compute a new position from inside the widget. This helps to
@@ -815,10 +771,8 @@ void UnitTestSystem::ExecuteBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent,
   if (foundWidget != nullptr)
   {
     Vec2 newClientPosition =
-        foundWidget->ToScreen(Vec2::cZero) +
-        foundWidget->GetSize() * baseEvent->mNormalizedWidgetOffset;
-    event->ClientPosition =
-        IntVec2((int)newClientPosition.x, (int)newClientPosition.y);
+        foundWidget->ToScreen(Vec2::cZero) + foundWidget->GetSize() * baseEvent->mNormalizedWidgetOffset;
+    event->ClientPosition = IntVec2((int)newClientPosition.x, (int)newClientPosition.y);
   }
 
   // Update the emulated cursor position (purely visual that cannot be
@@ -834,8 +788,7 @@ void UnitTestSystem::RecordFile(StringParam sourceFile)
   String fileName = FilePath::GetFileName(sourceFile);
 
   String subDirectory = String::Format("Files%d", mFilesIndex);
-  String destinationDirectory =
-      FilePath::Combine(mRecordedFilesDirectory, subDirectory);
+  String destinationDirectory = FilePath::Combine(mRecordedFilesDirectory, subDirectory);
   String destinationFile = FilePath::Combine(destinationDirectory, fileName);
 
   CreateDirectoryAndParents(destinationDirectory);
@@ -845,8 +798,7 @@ void UnitTestSystem::RecordFile(StringParam sourceFile)
 String UnitTestSystem::GetRecordedFile(uint fileIndex, StringParam fileName)
 {
   String subDirectory = String::Format("Files%d", fileIndex);
-  String destinationDirectory =
-      FilePath::Combine(mRecordedFilesDirectory, subDirectory);
+  String destinationDirectory = FilePath::Combine(mRecordedFilesDirectory, subDirectory);
   return FilePath::Combine(destinationDirectory, fileName);
 }
 
@@ -871,7 +823,7 @@ void UnitTestSystem::RecordEvent(UnitTestEvent* e)
   e->Serialize(saver);
   saver.EndPolymorphic();
 
-  forRange(const ByteBuffer::Block& block, saver.mStream.Blocks())
+  forRange (const ByteBuffer::Block& block, saver.mStream.Blocks())
   {
     mPlaybackFile.Write(block.Data, block.Size);
   }

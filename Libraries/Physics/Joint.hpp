@@ -26,15 +26,7 @@ namespace Tags
 DeclareTag(Joint);
 }
 
-DeclareBitField8(JointFlags,
-                 OnIsland,
-                 Ghost,
-                 Valid,
-                 Active,
-                 SendsEvents,
-                 AutoSnaps,
-                 CollideConnected,
-                 Initialized);
+DeclareBitField8(JointFlags, OnIsland, Ghost, Valid, Active, SendsEvents, AutoSnaps, CollideConnected, Initialized);
 
 /// Joints connect two objects together with one or more constraints. A
 /// constraint is a mathematical rule that restricts object movement, typically
@@ -92,8 +84,7 @@ struct Joint : public Component
   };
   /// Fills out the molecules with fragment data for all constraints requiring
   /// position correction.
-  virtual void
-  ComputePositionMoleculesVirtual(Physics::MoleculeWalker& molecules){};
+  virtual void ComputePositionMoleculesVirtual(Physics::MoleculeWalker& molecules){};
   /// Gives each joint a chance to copy and data from the temp molecule buffer
   /// back into its internal storage (such as the total impulse for each
   /// constraint atom).
@@ -102,8 +93,7 @@ struct Joint : public Component
   /// Given an atom's index, get the desired constraint value (solution to the
   /// position constraint). Also returns the atom type (AtomFilter: Linear or
   /// Angular).
-  virtual uint GetAtomIndexFilterVirtual(uint atomIndex,
-                                         real& desiredConstraintValue) const;
+  virtual uint GetAtomIndexFilterVirtual(uint atomIndex, real& desiredConstraintValue) const;
   virtual void BatchEventsVirtual(){};
   // Type identification
   virtual JointEnums::JointTypes GetJointType() const
@@ -203,32 +193,24 @@ struct Joint : public Component
   // AnchorAtom helpers
   /// Helper to get/set a local point on an anchor atom.
   Vec3 GetLocalPointHelper(const Physics::AnchorAtom& anchor, uint index) const;
-  void SetLocalPointHelper(Physics::AnchorAtom& anchor,
-                           uint index,
-                           Vec3Param localPoint);
+  void SetLocalPointHelper(Physics::AnchorAtom& anchor, uint index, Vec3Param localPoint);
   /// Helpers to get/set world points on an anchor atom. The set for A/B are
   /// kept separate for marking side-effect properties.
   Vec3 GetWorldPointHelper(const Physics::AnchorAtom& anchor, uint index);
   void SetWorldPointAHelper(Physics::AnchorAtom& anchor, Vec3Param worldPoint);
   void SetWorldPointBHelper(Physics::AnchorAtom& anchor, Vec3Param worldPoint);
-  void SetWorldPointHelper(Physics::AnchorAtom& anchor,
-                           Vec3Param worldPoint,
-                           uint index);
+  void SetWorldPointHelper(Physics::AnchorAtom& anchor, Vec3Param worldPoint, uint index);
   /// Sets the position of the anchor on object A and B given a position in
   /// world space.
   void SetWorldPointsHelper(Physics::AnchorAtom& anchor, Vec3Param point);
   /// Helper function for when an object link point changes.
-  void ObjectLinkPointUpdatedHelper(Physics::AnchorAtom& anchor,
-                                    size_t edgeIndex,
-                                    Vec3Param localPoint);
+  void ObjectLinkPointUpdatedHelper(Physics::AnchorAtom& anchor, size_t edgeIndex, Vec3Param localPoint);
 
   //------------------------------------------------------------------- AxisAtom
   // helpers
   /// Helpers to get/set a local space axis for an axis atom
   Vec3 GetLocalAxisHelper(const Physics::AxisAtom& axisAtom, uint index) const;
-  void SetLocalAxisHelper(Physics::AxisAtom& axisAtom,
-                          uint index,
-                          Vec3Param localAxis);
+  void SetLocalAxisHelper(Physics::AxisAtom& axisAtom, uint index, Vec3Param localAxis);
   /// Helpers to get/set both local space axes from one world
   /// direction. Properly deals with marking side effects on both local axes.
   Vec3 GetWorldAxisHelper(const Physics::AxisAtom& axisAtom) const;
@@ -237,11 +219,8 @@ struct Joint : public Component
   //-------------------------------------------------------------------
   // AngleAtom helpers
   /// Helpers to get/set local space reference frames for an angle atom.
-  Quat GetLocalAngleHelper(const Physics::AngleAtom& angleAtom,
-                           uint index) const;
-  void SetLocalAngleHelper(Physics::AngleAtom& angleAtom,
-                           uint index,
-                           QuatParam localReferenceFrame);
+  Quat GetLocalAngleHelper(const Physics::AngleAtom& angleAtom, uint index) const;
+  void SetLocalAngleHelper(Physics::AngleAtom& angleAtom, uint index, QuatParam localReferenceFrame);
 
   /// Should baumgarte correction be used for the given joint type.
   bool GetShouldBaumgarteBeUsed(uint type) const;
@@ -368,113 +347,108 @@ struct Joint : public Component
 // interface can still exist, but there is a non-virtual interface that is
 // expected. This interface is called by certain solvers to avoid as much
 // virtual function overhead as possible.
-#define DeclareJointType(jointType)                                            \
-  ZilchDeclareType(jointType, TypeCopyMode::ReferenceType);                    \
-  static cstr JointName;                                                       \
-  static const JointEnums::JointTypes mJointType;                              \
-  static cstr StaticGetJointName();                                            \
-  cstr GetJointName() const override;                                          \
-  static JointEnums::JointTypes StaticGetJointType();                          \
-  JointEnums::JointTypes GetJointType() const override;                        \
-  void UpdateAtomsVirtual() override;                                          \
-  uint MoleculeCountVirtual() const override;                                  \
-  void ComputeMoleculesVirtual(Physics::MoleculeWalker& molecules) override;   \
-  void WarmStartVirtual(Physics::MoleculeWalker& molecules) override;          \
-  void SolveVirtual(Physics::MoleculeWalker& molecules) override;              \
-  void CommitVirtual(Physics::MoleculeWalker& molecules) override;             \
-  uint PositionMoleculeCountVirtual() const override;                          \
-  void ComputePositionMoleculesVirtual(Physics::MoleculeWalker& molecules)     \
-      override;                                                                \
-  void DebugDrawVirtual() override;                                            \
-  uint GetAtomIndexFilterVirtual(uint atomIndex, real& desiredConstraintValue) \
-      const override;                                                          \
-  void BatchEventsVirtual() override;                                          \
-  real GetLinearBaumgarte() const;                                             \
-  real GetAngularBaumgarte() const;                                            \
-  real GetLinearErrorCorrection() const;                                       \
+#define DeclareJointType(jointType)                                                                                    \
+  ZilchDeclareType(jointType, TypeCopyMode::ReferenceType);                                                            \
+  static cstr JointName;                                                                                               \
+  static const JointEnums::JointTypes mJointType;                                                                      \
+  static cstr StaticGetJointName();                                                                                    \
+  cstr GetJointName() const override;                                                                                  \
+  static JointEnums::JointTypes StaticGetJointType();                                                                  \
+  JointEnums::JointTypes GetJointType() const override;                                                                \
+  void UpdateAtomsVirtual() override;                                                                                  \
+  uint MoleculeCountVirtual() const override;                                                                          \
+  void ComputeMoleculesVirtual(Physics::MoleculeWalker& molecules) override;                                           \
+  void WarmStartVirtual(Physics::MoleculeWalker& molecules) override;                                                  \
+  void SolveVirtual(Physics::MoleculeWalker& molecules) override;                                                      \
+  void CommitVirtual(Physics::MoleculeWalker& molecules) override;                                                     \
+  uint PositionMoleculeCountVirtual() const override;                                                                  \
+  void ComputePositionMoleculesVirtual(Physics::MoleculeWalker& molecules) override;                                   \
+  void DebugDrawVirtual() override;                                                                                    \
+  uint GetAtomIndexFilterVirtual(uint atomIndex, real& desiredConstraintValue) const override;                         \
+  void BatchEventsVirtual() override;                                                                                  \
+  real GetLinearBaumgarte() const;                                                                                     \
+  real GetAngularBaumgarte() const;                                                                                    \
+  real GetLinearErrorCorrection() const;                                                                               \
   real GetAngularErrorCorrection() const;
 
-#define ImplementJointType(jointType)                                          \
-  cstr jointType::JointName = #jointType;                                      \
-  const JointEnums::JointTypes jointType::mJointType =                         \
-      JointEnums::jointType##Type;                                             \
-  cstr jointType::StaticGetJointName()                                         \
-  {                                                                            \
-    return JointName;                                                          \
-  }                                                                            \
-  cstr jointType::GetJointName() const                                         \
-  {                                                                            \
-    return JointName;                                                          \
-  }                                                                            \
-  JointEnums::JointTypes jointType::StaticGetJointType()                       \
-  {                                                                            \
-    return mJointType;                                                         \
-  };                                                                           \
-  JointEnums::JointTypes jointType::GetJointType() const                       \
-  {                                                                            \
-    return mJointType;                                                         \
-  };                                                                           \
-  void jointType::UpdateAtomsVirtual()                                         \
-  {                                                                            \
-    UpdateAtoms();                                                             \
-  }                                                                            \
-  uint jointType::MoleculeCountVirtual() const                                 \
-  {                                                                            \
-    return MoleculeCount();                                                    \
-  }                                                                            \
-  void jointType::ComputeMoleculesVirtual(Physics::MoleculeWalker& molecules)  \
-  {                                                                            \
-    ComputeMolecules(molecules);                                               \
-  }                                                                            \
-  void jointType::WarmStartVirtual(Physics::MoleculeWalker& molecules)         \
-  {                                                                            \
-    WarmStart(molecules);                                                      \
-  }                                                                            \
-  void jointType::SolveVirtual(Physics::MoleculeWalker& molecules)             \
-  {                                                                            \
-    Solve(molecules);                                                          \
-  }                                                                            \
-  void jointType::CommitVirtual(Physics::MoleculeWalker& molecules)            \
-  {                                                                            \
-    Commit(molecules);                                                         \
-  }                                                                            \
-  uint jointType::PositionMoleculeCountVirtual() const                         \
-  {                                                                            \
-    return PositionMoleculeCount();                                            \
-  };                                                                           \
-  void jointType::ComputePositionMoleculesVirtual(                             \
-      Physics::MoleculeWalker& molecules)                                      \
-  {                                                                            \
-    ComputePositionMolecules(molecules);                                       \
-  }                                                                            \
-  void jointType::DebugDrawVirtual()                                           \
-  {                                                                            \
-    DebugDraw();                                                               \
-  }                                                                            \
-  uint jointType::GetAtomIndexFilterVirtual(                                   \
-      uint atomIndex, real& desiredConstraintValue) const                      \
-  {                                                                            \
-    return GetAtomIndexFilter(atomIndex, desiredConstraintValue);              \
-  }                                                                            \
-  void jointType::BatchEventsVirtual()                                         \
-  {                                                                            \
-    BatchEvents();                                                             \
-  }                                                                            \
-  real jointType::GetLinearBaumgarte() const                                   \
-  {                                                                            \
-    return Joint::GetLinearBaumgarte(StaticGetJointType());                    \
-  }                                                                            \
-  real jointType::GetAngularBaumgarte() const                                  \
-  {                                                                            \
-    return Joint::GetAngularBaumgarte(StaticGetJointType());                   \
-  };                                                                           \
-  real jointType::GetLinearErrorCorrection() const                             \
-  {                                                                            \
-    return Joint::GetLinearErrorCorrection(StaticGetJointType());              \
-  }                                                                            \
-  real jointType::GetAngularErrorCorrection() const                            \
-  {                                                                            \
-    return Joint::GetAngularErrorCorrection(StaticGetJointType());             \
+#define ImplementJointType(jointType)                                                                                  \
+  cstr jointType::JointName = #jointType;                                                                              \
+  const JointEnums::JointTypes jointType::mJointType = JointEnums::jointType##Type;                                    \
+  cstr jointType::StaticGetJointName()                                                                                 \
+  {                                                                                                                    \
+    return JointName;                                                                                                  \
+  }                                                                                                                    \
+  cstr jointType::GetJointName() const                                                                                 \
+  {                                                                                                                    \
+    return JointName;                                                                                                  \
+  }                                                                                                                    \
+  JointEnums::JointTypes jointType::StaticGetJointType()                                                               \
+  {                                                                                                                    \
+    return mJointType;                                                                                                 \
+  };                                                                                                                   \
+  JointEnums::JointTypes jointType::GetJointType() const                                                               \
+  {                                                                                                                    \
+    return mJointType;                                                                                                 \
+  };                                                                                                                   \
+  void jointType::UpdateAtomsVirtual()                                                                                 \
+  {                                                                                                                    \
+    UpdateAtoms();                                                                                                     \
+  }                                                                                                                    \
+  uint jointType::MoleculeCountVirtual() const                                                                         \
+  {                                                                                                                    \
+    return MoleculeCount();                                                                                            \
+  }                                                                                                                    \
+  void jointType::ComputeMoleculesVirtual(Physics::MoleculeWalker& molecules)                                          \
+  {                                                                                                                    \
+    ComputeMolecules(molecules);                                                                                       \
+  }                                                                                                                    \
+  void jointType::WarmStartVirtual(Physics::MoleculeWalker& molecules)                                                 \
+  {                                                                                                                    \
+    WarmStart(molecules);                                                                                              \
+  }                                                                                                                    \
+  void jointType::SolveVirtual(Physics::MoleculeWalker& molecules)                                                     \
+  {                                                                                                                    \
+    Solve(molecules);                                                                                                  \
+  }                                                                                                                    \
+  void jointType::CommitVirtual(Physics::MoleculeWalker& molecules)                                                    \
+  {                                                                                                                    \
+    Commit(molecules);                                                                                                 \
+  }                                                                                                                    \
+  uint jointType::PositionMoleculeCountVirtual() const                                                                 \
+  {                                                                                                                    \
+    return PositionMoleculeCount();                                                                                    \
+  };                                                                                                                   \
+  void jointType::ComputePositionMoleculesVirtual(Physics::MoleculeWalker& molecules)                                  \
+  {                                                                                                                    \
+    ComputePositionMolecules(molecules);                                                                               \
+  }                                                                                                                    \
+  void jointType::DebugDrawVirtual()                                                                                   \
+  {                                                                                                                    \
+    DebugDraw();                                                                                                       \
+  }                                                                                                                    \
+  uint jointType::GetAtomIndexFilterVirtual(uint atomIndex, real& desiredConstraintValue) const                        \
+  {                                                                                                                    \
+    return GetAtomIndexFilter(atomIndex, desiredConstraintValue);                                                      \
+  }                                                                                                                    \
+  void jointType::BatchEventsVirtual()                                                                                 \
+  {                                                                                                                    \
+    BatchEvents();                                                                                                     \
+  }                                                                                                                    \
+  real jointType::GetLinearBaumgarte() const                                                                           \
+  {                                                                                                                    \
+    return Joint::GetLinearBaumgarte(StaticGetJointType());                                                            \
+  }                                                                                                                    \
+  real jointType::GetAngularBaumgarte() const                                                                          \
+  {                                                                                                                    \
+    return Joint::GetAngularBaumgarte(StaticGetJointType());                                                           \
+  };                                                                                                                   \
+  real jointType::GetLinearErrorCorrection() const                                                                     \
+  {                                                                                                                    \
+    return Joint::GetLinearErrorCorrection(StaticGetJointType());                                                      \
+  }                                                                                                                    \
+  real jointType::GetAngularErrorCorrection() const                                                                    \
+  {                                                                                                                    \
+    return Joint::GetAngularErrorCorrection(StaticGetJointType());                                                     \
   }
 
 } // namespace Zero

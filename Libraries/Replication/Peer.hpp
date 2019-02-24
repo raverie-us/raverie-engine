@@ -14,8 +14,7 @@ typedef void (*ProcessReceivedCustomPacketFn)(Peer* peer, InPacket& packet);
 /// Processes a custom message received by the link
 /// Return true to continue processing custom messages on this link, else false
 /// (will continue next update call)
-typedef bool (*ProcessReceivedCustomMessageFn)(PeerLink* link,
-                                               Message& message);
+typedef bool (*ProcessReceivedCustomMessageFn)(PeerLink* link, Message& message);
 
 //                                    Peer //
 
@@ -187,8 +186,7 @@ public:
   /// Sets the connect response policy this peer will use upon receiving an
   /// incoming connect request This affects how and when remote peers are able
   /// to initiate incoming links
-  void SetConnectResponseMode(ConnectResponseMode::Enum connectResponseMode =
-                                  ConnectResponseMode::Accept);
+  void SetConnectResponseMode(ConnectResponseMode::Enum connectResponseMode = ConnectResponseMode::Accept);
   /// Returns the connect response policy this peer will use upon receiving an
   /// incoming connect request
   ConnectResponseMode::Enum GetConnectResponseMode() const;
@@ -278,8 +276,7 @@ public:
   void ProcessReceivedCustomPacket(InPacket& packet);
 
   // Translate raw incoming packets into packets that can be processed
-  void TranslateRawPackets(Array<RawPacket>& rawPackets,
-                           Array<InPacket>& inPackets);
+  void TranslateRawPackets(Array<RawPacket>& rawPackets, Array<InPacket>& inPackets);
 
   /// Called before a packet is sent
   /// Return true to continue sending the packet, else false
@@ -303,20 +300,18 @@ public:
   void PushUserEventMessage(MoveReference<Message> message);
 
   /// Operating Data
-  Guid mGuid; /// Permanent GUID
-  ProcessReceivedCustomPacketFn
-      mProcessReceivedCustomPacketFn; /// ProcessReceivedCustomPacket user
-                                      /// function
-  ProcessReceivedCustomMessageFn
-      mProcessReceivedCustomMessageFn; /// ProcessReceivedCustomMessage user
-                                       /// function
-  IpAddress mIpv4Address;              /// IPv4 peer address
-  IpAddress mIpv6Address;              /// IPv6 peer address
-  Socket mIpv4Socket;                  /// IPv4 TCP/UDP socket
-  Socket mIpv6Socket;                  /// IPv6 TCP/UDP socket
-  InternetProtocol::Enum mInternetProtocol;   /// IP address protocol version
-  TransportProtocol::Enum mTransportProtocol; /// Transport layer protocol
-  void* mUserData;                            /// Optional user data
+  Guid mGuid;                                                     /// Permanent GUID
+  ProcessReceivedCustomPacketFn mProcessReceivedCustomPacketFn;   /// ProcessReceivedCustomPacket user
+                                                                  /// function
+  ProcessReceivedCustomMessageFn mProcessReceivedCustomMessageFn; /// ProcessReceivedCustomMessage user
+                                                                  /// function
+  IpAddress mIpv4Address;                                         /// IPv4 peer address
+  IpAddress mIpv6Address;                                         /// IPv6 peer address
+  Socket mIpv4Socket;                                             /// IPv4 TCP/UDP socket
+  Socket mIpv6Socket;                                             /// IPv6 TCP/UDP socket
+  InternetProtocol::Enum mInternetProtocol;                       /// IP address protocol version
+  TransportProtocol::Enum mTransportProtocol;                     /// Transport layer protocol
+  void* mUserData;                                                /// Optional user data
 
   /// Thread Data
   Atomic<bool> mFatalError;            /// Fatal error occurred?
@@ -332,21 +327,18 @@ public:
   uint64 mLocalFrameId; /// Local update frame ID
 
   /// Packet Data
-  Array<RawPacket> mIpv4RawPackets; /// Raw incoming IPv4 packets
-  mutable ThreadLock
-      mIpv4RawPacketsLock;          /// Raw incoming IPv4 packets thread lock
-  Array<RawPacket> mIpv6RawPackets; /// Raw incoming IPv6 packets
-  mutable ThreadLock
-      mIpv6RawPacketsLock;  /// Raw incoming IPv6 packets thread lock
-  BitStream mSendBitStream; /// Reusable outgoing packet bitstream
-  mutable ThreadLock mReceiveStatsLock;   /// Receive stats thread lock
-  Array<InPacket> mReleasedCustomPackets; /// Released incoming user packets
-  mutable ThreadLock
-      mReleasedCustomPacketsLock; /// Released incoming user packets thread lock
+  Array<RawPacket> mIpv4RawPackets;              /// Raw incoming IPv4 packets
+  mutable ThreadLock mIpv4RawPacketsLock;        /// Raw incoming IPv4 packets thread lock
+  Array<RawPacket> mIpv6RawPackets;              /// Raw incoming IPv6 packets
+  mutable ThreadLock mIpv6RawPacketsLock;        /// Raw incoming IPv6 packets thread lock
+  BitStream mSendBitStream;                      /// Reusable outgoing packet bitstream
+  mutable ThreadLock mReceiveStatsLock;          /// Receive stats thread lock
+  Array<InPacket> mReleasedCustomPackets;        /// Released incoming user packets
+  mutable ThreadLock mReleasedCustomPacketsLock; /// Released incoming user packets thread lock
 
   /// Link Data
-  PeerLinkSet mCreatedLinks; /// Links which were just created, need to be added
-  PeerLinkSet mLinks;        /// Links which are currently active
+  PeerLinkSet mCreatedLinks;   /// Links which were just created, need to be added
+  PeerLinkSet mLinks;          /// Links which are currently active
   PeerLinkSet mDestroyedLinks; /// Links which were just destroyed, need to be
                                /// removed and deleted
 
@@ -358,12 +350,10 @@ public:
                                  /// to be uninitialized and deleted
 
   /// Configuration Settings
-  Atomic<uint32> mLinkLimit; /// Maximum number of links this peer may have
-  Atomic<uint32>
-      mConnectionLimit; /// Maximum number of connected links this peer may have
-  Atomic<uint32>
-      mConnectResponseMode; /// Connect response policy this peer will use upon
-                            /// receiving an incoming connect request
+  Atomic<uint32> mLinkLimit;           /// Maximum number of links this peer may have
+  Atomic<uint32> mConnectionLimit;     /// Maximum number of connected links this peer may have
+  Atomic<uint32> mConnectResponseMode; /// Connect response policy this peer will use upon
+                                       /// receiving an incoming connect request
 
   /// Statistics
   Atomic<bool> mLinksUpdated; /// Links updated?

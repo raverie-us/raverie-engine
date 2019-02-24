@@ -7,8 +7,7 @@ namespace Zero
 class CycleDetection;
 
 /// Context class for detecting cycles in the static call graph.
-class CycleDetectionContext
-    : public Zilch::WalkerContext<CycleDetection, CycleDetectionContext>
+class CycleDetectionContext : public Zilch::WalkerContext<CycleDetection, CycleDetectionContext>
 {
 public:
   CycleDetectionContext();
@@ -59,35 +58,22 @@ class CycleDetection
 {
 public:
   CycleDetection(ZilchShaderSpirVSettings* settings);
-  bool Run(Zilch::SyntaxTree& syntaxTree,
-           ZilchShaderIRLibrary* library,
-           ShaderCompilationErrors* errors);
+  bool Run(Zilch::SyntaxTree& syntaxTree, ZilchShaderIRLibrary* library, ShaderCompilationErrors* errors);
 
 protected:
-  void PreWalkClassNode(Zilch::ClassNode*& node,
-                        CycleDetectionContext* context);
-  void PreWalkConstructor(Zilch::ConstructorNode*& node,
-                          CycleDetectionContext* context);
-  void PreWalkClassFunction(Zilch::FunctionNode*& node,
-                            CycleDetectionContext* context);
-  void PreWalkClassMemberVariable(Zilch::MemberVariableNode*& node,
-                                  CycleDetectionContext* context);
+  void PreWalkClassNode(Zilch::ClassNode*& node, CycleDetectionContext* context);
+  void PreWalkConstructor(Zilch::ConstructorNode*& node, CycleDetectionContext* context);
+  void PreWalkClassFunction(Zilch::FunctionNode*& node, CycleDetectionContext* context);
+  void PreWalkClassMemberVariable(Zilch::MemberVariableNode*& node, CycleDetectionContext* context);
 
   void WalkClassNode(Zilch::ClassNode*& node, CycleDetectionContext* context);
-  void WalkClassPreconstructor(Zilch::ClassNode*& node,
-                               CycleDetectionContext* context);
-  void WalkClassPreconstructor(Zilch::Function* preConstructor,
-                               CycleDetectionContext* context);
-  void WalkClassConstructor(Zilch::ConstructorNode*& node,
-                            CycleDetectionContext* context);
-  void WalkClassFunction(Zilch::FunctionNode*& node,
-                         CycleDetectionContext* context);
-  void WalkClassMemberVariable(Zilch::MemberVariableNode*& node,
-                               CycleDetectionContext* context);
-  void WalkMemberAccessNode(Zilch::MemberAccessNode*& node,
-                            CycleDetectionContext* context);
-  void WalkStaticTypeNode(Zilch::StaticTypeNode*& node,
-                          CycleDetectionContext* context);
+  void WalkClassPreconstructor(Zilch::ClassNode*& node, CycleDetectionContext* context);
+  void WalkClassPreconstructor(Zilch::Function* preConstructor, CycleDetectionContext* context);
+  void WalkClassConstructor(Zilch::ConstructorNode*& node, CycleDetectionContext* context);
+  void WalkClassFunction(Zilch::FunctionNode*& node, CycleDetectionContext* context);
+  void WalkClassMemberVariable(Zilch::MemberVariableNode*& node, CycleDetectionContext* context);
+  void WalkMemberAccessNode(Zilch::MemberAccessNode*& node, CycleDetectionContext* context);
+  void WalkStaticTypeNode(Zilch::StaticTypeNode*& node, CycleDetectionContext* context);
 
   void ReportError(CycleDetectionContext* context);
 

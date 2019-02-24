@@ -4,9 +4,7 @@
 namespace Zero
 {
 
-TextureProcessor::TextureProcessor(TextureContent* textureContent,
-                                   String outputPath,
-                                   String inputFile) :
+TextureProcessor::TextureProcessor(TextureContent* textureContent, String outputPath, String inputFile) :
     mTextureContent(textureContent),
     mOutputPath(outputPath),
     mFilename(FilePath::GetFileNameWithoutExtension(inputFile))
@@ -46,17 +44,14 @@ void TextureProcessor::ExtractAndImportTextures(const aiScene* scene)
   }
 }
 
-void TextureProcessor::CreateTexture(aiTexture* texture,
-                                     uint textureIndex,
-                                     StringParam extension)
+void TextureProcessor::CreateTexture(aiTexture* texture, uint textureIndex, StringParam extension)
 {
   Status status;
   String filename = BuildString(mFilename, ToString(textureIndex));
 
   // The member pcData holds the entire file data in memory, where mWidth is the
   // full length in bytes of pcData.
-  String filePath = FilePath::CombineWithExtension(
-      mOutputPath, filename, BuildString(".", extension));
+  String filePath = FilePath::CombineWithExtension(mOutputPath, filename, BuildString(".", extension));
   WriteToFile(filePath.c_str(), (byte*)texture->pcData, texture->mWidth);
 }
 

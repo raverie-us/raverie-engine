@@ -72,9 +72,7 @@ class ContextMenuEntry : public SafeId32EventObject
 public:
   ZilchDeclareType(ContextMenuEntry, TypeCopyMode::ReferenceType);
 
-  ContextMenuEntry(StringParam name = String(),
-                   StringParam icon = String(),
-                   bool readOnly = false);
+  ContextMenuEntry(StringParam name = String(), StringParam icon = String(), bool readOnly = false);
   virtual ~ContextMenuEntry();
 
   // Context Menu Entry Interface (for use in zilch and C++)
@@ -82,8 +80,7 @@ public:
   void AddEntry(ContextMenuEntry* entry);
   /// Adds a new entry with the provided name with an icon if one is provided to
   /// this menu entries children
-  ContextMenuEntry* AddEntry(StringParam name = String(),
-                             bool readOnly = false);
+  ContextMenuEntry* AddEntry(StringParam name = String(), bool readOnly = false);
   ContextMenuEntry* AddDivider();
   ContextMenuEntry* AddCommand(Command* command);
   ContextMenuEntry* AddCommandByName(StringParam commandName);
@@ -340,10 +337,10 @@ public:
   String mMenuName;
 };
 
-#define ConnectMenu(menu, optionName, function, readOnly)                      \
-  {                                                                            \
-    ContextMenuEntry* entry = menu->AddEntry(String(optionName), readOnly);    \
-    ConnectThisTo(entry, Zero::Events::MenuItemSelected, function);            \
+#define ConnectMenu(menu, optionName, function, readOnly)                                                              \
+  {                                                                                                                    \
+    ContextMenuEntry* entry = menu->AddEntry(String(optionName), readOnly);                                            \
+    ConnectThisTo(entry, Zero::Events::MenuItemSelected, function);                                                    \
   }
 
 template <typename ContextType>

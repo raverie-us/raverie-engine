@@ -37,9 +37,7 @@ struct SpriteOffset
   SpriteOffset()
   {
   }
-  SpriteOffset(HandleOf<SpriteSource> source, IntVec2 spriteOffset) :
-      sprite(source),
-      offset(spriteOffset)
+  SpriteOffset(HandleOf<SpriteSource> source, IntVec2 spriteOffset) : sprite(source), offset(spriteOffset)
   {
   }
 
@@ -90,10 +88,7 @@ public:
     bool Merge;
 
     Tile();
-    Tile(ResourceId archetype,
-         ResourceId sprite,
-         ResourceId collision,
-         bool mergable);
+    Tile(ResourceId archetype, ResourceId sprite, ResourceId collision, bool mergable);
 
     bool operator==(const Tile& tile) const;
 
@@ -140,12 +135,8 @@ public:
   void DrawContours(ByteColor color);
 
   TileStatus::Enum ValidTile(Tile tile);
-  TileStatus::Enum ValidArchetype(Archetype* archetype,
-                                  bool tilemapCollision,
-                                  bool tilemapSprites);
-  TileStatus::Enum ValidConfiguration(Cog* cog,
-                                      bool tilemapCollision,
-                                      bool tilemapSprites);
+  TileStatus::Enum ValidArchetype(Archetype* archetype, bool tilemapCollision, bool tilemapSprites);
+  TileStatus::Enum ValidConfiguration(Cog* cog, bool tilemapCollision, bool tilemapSprites);
 
 private:
   void Modified();

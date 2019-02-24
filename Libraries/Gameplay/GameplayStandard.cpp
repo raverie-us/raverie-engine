@@ -29,14 +29,10 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   ZilchInitializeEnum(PathFinderStatus);
 
   // Ranges
-  ZilchInitializeRangeAs(IndexedHalfEdgeMeshVertexArray::RangeType,
-                         "IndexedHalfEdgeMeshVertexArrayRange");
-  ZilchInitializeRangeAs(IndexedHalfEdgeMeshEdgeArray::RangeType,
-                         "IndexedHalfEdgeMeshEdgeArrayRange");
-  ZilchInitializeRangeAs(IndexedHalfEdgeFaceEdgeIndexArray::RangeType,
-                         "IndexedHalfEdgeFaceEdgeIndexArrayRange");
-  ZilchInitializeRangeAs(IndexedHalfEdgeMeshFaceArray::RangeType,
-                         "IndexedHalfEdgeMeshFaceArrayRange");
+  ZilchInitializeRangeAs(IndexedHalfEdgeMeshVertexArray::RangeType, "IndexedHalfEdgeMeshVertexArrayRange");
+  ZilchInitializeRangeAs(IndexedHalfEdgeMeshEdgeArray::RangeType, "IndexedHalfEdgeMeshEdgeArrayRange");
+  ZilchInitializeRangeAs(IndexedHalfEdgeFaceEdgeIndexArray::RangeType, "IndexedHalfEdgeFaceEdgeIndexArrayRange");
+  ZilchInitializeRangeAs(IndexedHalfEdgeMeshFaceArray::RangeType, "IndexedHalfEdgeMeshFaceArrayRange");
 
   // Events
   ZilchInitializeType(MouseEvent);

@@ -127,9 +127,7 @@ public:
   /// Tree Walking
   virtual DataEntry* Parent(DataEntry* dataEntry) = 0;
   virtual uint ChildCount(DataEntry* dataEntry) = 0;
-  virtual DataEntry* GetChild(DataEntry* dataEntry,
-                              uint index,
-                              DataEntry* prev) = 0;
+  virtual DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) = 0;
 
   /// Query to see if the data source has need for expandable rows.
   ///   Ex: The TreeView can check it's associated data source, and if this
@@ -149,12 +147,8 @@ public:
   }
 
   /// Data Base Cell Modification and Inspection
-  virtual void GetData(DataEntry* dataEntry,
-                       Any& variant,
-                       StringParam column) = 0;
-  virtual bool SetData(DataEntry* dataEntry,
-                       const Any& variant,
-                       StringParam column) = 0;
+  virtual void GetData(DataEntry* dataEntry, Any& variant, StringParam column) = 0;
+  virtual bool SetData(DataEntry* dataEntry, const Any& variant, StringParam column) = 0;
 
   /// Sorting
   /// Short children of entry by column. If the dataEntry is null, sort
@@ -162,22 +156,15 @@ public:
   virtual void Sort(DataEntry* dataEntry, StringParam column, bool sortFlip){};
 
   /// Tree Modification
-  virtual void CanMove(Status& status,
-                       DataEntry* source,
-                       DataEntry* destination,
-                       InsertMode::Type insertMode);
+  virtual void CanMove(Status& status, DataEntry* source, DataEntry* destination, InsertMode::Type insertMode);
   virtual void BeginBatchMove()
   {
   }
-  virtual bool Move(DataEntry* destinationEntry,
-                    DataEntry* movingEntry,
-                    InsertMode::Type insertMode)
+  virtual bool Move(DataEntry* destinationEntry, DataEntry* movingEntry, InsertMode::Type insertMode)
   {
     return false;
   }
-  virtual bool Move(DataEntry* destinationEntry,
-                    Array<DataIndex>& indicesToMove,
-                    InsertMode::Type insertMode);
+  virtual bool Move(DataEntry* destinationEntry, Array<DataIndex>& indicesToMove, InsertMode::Type insertMode);
   virtual void EndBatchMove()
   {
   }
@@ -194,9 +181,7 @@ public:
   }
 
   /// Allows the data source to handle custom drops on rows.
-  virtual void OnMetaDrop(MetaDropEvent* e,
-                          DataEntry* mouseOver,
-                          InsertMode::Enum mode)
+  virtual void OnMetaDrop(MetaDropEvent* e, DataEntry* mouseOver, InsertMode::Enum mode)
   {
   }
 };
@@ -226,14 +211,10 @@ public:
   DataIndex ToIndex(DataEntry* dataEntry) override;
   DataEntry* Parent(DataEntry* dataEntry) override;
   uint ChildCount(DataEntry* dataEntry) override;
-  DataEntry* GetChild(DataEntry* dataEntry,
-                      uint index,
-                      DataEntry* prev) override;
+  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override;
   bool IsExpandable(DataEntry* dataEntry) override;
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override;
-  bool SetData(DataEntry* dataEntry,
-               const Any& variant,
-               StringParam column) override;
+  bool SetData(DataEntry* dataEntry, const Any& variant, StringParam column) override;
 };
 
 /// Data Index Selection Object. Interface for managing a DataSource's
@@ -285,7 +266,8 @@ public:
 
   void GetSelected(Array<DataIndex>& selected) override
   {
-    forRange(u64 u, mSelection.All()) selected.PushBack(u);
+    forRange (u64 u, mSelection.All())
+      selected.PushBack(u);
   }
 
   bool IsSelected(DataIndex index) override

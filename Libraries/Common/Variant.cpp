@@ -11,8 +11,7 @@ Variant::Variant() : mNativeType(nullptr)
   InternalZeroLocalBuffer();
 }
 
-Variant::Variant(NativeType* nativeType, const void* valueAddress) :
-    mNativeType(nullptr)
+Variant::Variant(NativeType* nativeType, const void* valueAddress) : mNativeType(nullptr)
 {
   InternalZeroLocalBuffer();
   Assign(nativeType, valueAddress);
@@ -193,8 +192,7 @@ void Variant::Assign(NativeType* nativeType, const void* valueAddress)
   // Type is not both copy constructible and destructible?
   // (Unfortunately we must do this check at runtime as we don't have the static
   // C++ type here)
-  if (nativeType->mCopyConstructObjectFn == nullptr ||
-      nativeType->mDestructObjectFn == nullptr)
+  if (nativeType->mCopyConstructObjectFn == nullptr || nativeType->mDestructObjectFn == nullptr)
   {
     Error(String::Format("Unable to assign type '%s' to variant. - "
                          "Types assigned to variant must have both an "
@@ -479,14 +477,13 @@ void Variant::InternalDefaultConstructValue()
   if (mNativeType->mDefaultConstructObjectFn == nullptr)
   {
 #if VARIANT_ERROR_ON_MISSING_DEFAULT_CONSTRUCTOR
-    Error(String::Format(
-              "Unable to perform default construction for variant stored type "
-              "'%s'. Will be zero-initialized instead. - "
-              "An accessible default constructor was not defined and could not "
-              "be generated for the given type. "
-              "(Note: Zero-initialized is likely not a valid state for complex "
-              "types! This can result in undefined behavior!)",
-              mNativeType->mDebugTypeName)
+    Error(String::Format("Unable to perform default construction for variant stored type "
+                         "'%s'. Will be zero-initialized instead. - "
+                         "An accessible default constructor was not defined and could not "
+                         "be generated for the given type. "
+                         "(Note: Zero-initialized is likely not a valid state for complex "
+                         "types! This can result in undefined behavior!)",
+                         mNativeType->mDebugTypeName)
               .c_str());
 #endif
 
@@ -513,13 +510,12 @@ void Variant::InternalMoveConstructValue(void* source)
   if (mNativeType->mMoveConstructObjectFn == nullptr)
   {
 #if VARIANT_ERROR_ON_MISSING_MOVE_CONSTRUCTOR
-    Error(
-        String::Format("Unable to perform move construction for variant stored "
-                       "type '%s'. Will perform copy construction instead. - "
-                       "An accessible move constructor was not defined and "
-                       "could not be generated for the given type.",
-                       mNativeType->mDebugTypeName)
-            .c_str());
+    Error(String::Format("Unable to perform move construction for variant stored "
+                         "type '%s'. Will perform copy construction instead. - "
+                         "An accessible move constructor was not defined and "
+                         "could not be generated for the given type.",
+                         mNativeType->mDebugTypeName)
+              .c_str());
 #endif
 
     // Fallback behavior
@@ -562,14 +558,13 @@ size_t Variant::InternalHashStoredValue() const
   if (mNativeType->mHashObjectFn == nullptr)
   {
 #if VARIANT_ERROR_ON_MISSING_HASH_POLICY
-    Error(String::Format(
-              "Unable to perform hash operation for variant stored type '%s'. "
-              "Will return 0 instead. - "
-              "A valid HashPolicy was not defined and could not be generated "
-              "for the given type "
-              "(Adding a Hash function to the given type or defining a valid "
-              "HashPolicy for the given type should solve this problem).",
-              mNativeType->mDebugTypeName)
+    Error(String::Format("Unable to perform hash operation for variant stored type '%s'. "
+                         "Will return 0 instead. - "
+                         "A valid HashPolicy was not defined and could not be generated "
+                         "for the given type "
+                         "(Adding a Hash function to the given type or defining a valid "
+                         "HashPolicy for the given type should solve this problem).",
+                         mNativeType->mDebugTypeName)
               .c_str());
 #endif
 
@@ -587,12 +582,11 @@ String Variant::InternalStoredValueToString(bool shortFormat) const
   if (mNativeType->mObjectToStringFn == nullptr)
   {
 #if VARIANT_ERROR_ON_MISSING_TO_STRING_FUNCTION
-    Error(String::Format(
-              "Unable to perform object to string conversion for variant "
-              "stored type '%s'. Will return String() instead. - "
-              "A global ToString function was not defined and could not be "
-              "generated for the given type.",
-              mNativeType->mDebugTypeName)
+    Error(String::Format("Unable to perform object to string conversion for variant "
+                         "stored type '%s'. Will return String() instead. - "
+                         "A global ToString function was not defined and could not be "
+                         "generated for the given type.",
+                         mNativeType->mDebugTypeName)
               .c_str());
 #endif
 
@@ -610,12 +604,11 @@ void Variant::InternalStringToStoredValue(StringRange range)
   if (mNativeType->mStringToObjectFn == nullptr)
   {
 #if VARIANT_ERROR_ON_MISSING_TO_VALUE_FUNCTION
-    Error(String::Format(
-              "Unable to perform string to object conversion for variant "
-              "stored type '%s'. Will clear the variant instead. - "
-              "A global ToValue function was not defined and could not be "
-              "generated for the given type.",
-              mNativeType->mDebugTypeName)
+    Error(String::Format("Unable to perform string to object conversion for variant "
+                         "stored type '%s'. Will clear the variant instead. - "
+                         "A global ToValue function was not defined and could not be "
+                         "generated for the given type.",
+                         mNativeType->mDebugTypeName)
               .c_str());
 #endif
 

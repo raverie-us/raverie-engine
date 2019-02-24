@@ -57,10 +57,8 @@ public:
   }
 
   ZilchScriptBuilder() :
-      BaseTextBuilder(15,
-                      FileExtensionManager::GetZilchScriptTypeEntry()
-                          ->GetDefaultExtensionWithDot(),
-                      ZilchScriptResourceName)
+      BaseTextBuilder(
+          15, FileExtensionManager::GetZilchScriptTypeEntry()->GetDefaultExtensionWithDot(), ZilchScriptResourceName)
   {
   }
 };
@@ -78,10 +76,8 @@ public:
       // Increase the load order to 9 so that these load before materials
       // (since a material may need the block created from this fragment)
       :
-      BaseTextBuilder(9,
-                      FileExtensionManager::GetZilchFragmentTypeEntry()
-                          ->GetDefaultExtensionWithDot(),
-                      "ZilchFragment")
+      BaseTextBuilder(
+          9, FileExtensionManager::GetZilchFragmentTypeEntry()->GetDefaultExtensionWithDot(), "ZilchFragment")
   {
   }
 };

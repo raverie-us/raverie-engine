@@ -30,9 +30,7 @@ public:
   ZilchDeclareType(ObjectTransformGizmoEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
-  ObjectTransformGizmoEvent(Component* sourceGizmo,
-                            Cog* owner,
-                            ViewportMouseEvent* base);
+  ObjectTransformGizmoEvent(Component* sourceGizmo, Cog* owner, ViewportMouseEvent* base);
 
   Vec3 GetFinalLocalTranslation();
   Vec3 GetFinalLocalScale();

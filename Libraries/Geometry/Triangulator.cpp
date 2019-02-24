@@ -44,19 +44,15 @@ bool FillRule_All(s32 winding, s32 depth)
 
 typedef bool (*FillRuleFunc)(s32, s32);
 
-static const FillRuleFunc fillRuleFunctions[4] = {FillRule_NonZeroWinding,
-                                                  FillRule_EvenOddWinding,
-                                                  FillRule_All,
-                                                  FillRule_PositiveWinding};
+static const FillRuleFunc fillRuleFunctions[4] = {
+    FillRule_NonZeroWinding, FillRule_EvenOddWinding, FillRule_All, FillRule_PositiveWinding};
 
 bool EqualsExact(const Vec2& a, const Vec2& b)
 {
   return a.x == b.x && a.y == b.y;
 }
 
-bool IsVertexConvex(ContourVertex* curr,
-                    const Array<Vec2>& vertexBuffer,
-                    InList<ContourVertex>& vertices)
+bool IsVertexConvex(ContourVertex* curr, const Array<Vec2>& vertexBuffer, InList<ContourVertex>& vertices)
 {
   ContourVertex* prev = vertices.PrevWrap(curr);
   ContourVertex* next = vertices.NextWrap(curr);
@@ -68,17 +64,14 @@ bool IsVertexConvex(ContourVertex* curr,
   return Cross(p2 - p1, p3 - p1) > 0.000001f;
 };
 
-bool TriangulateMountain(const Array<Vec2>& vertexBuffer,
-                         Array<ContourVertex>& mountain,
-                         Array<uint>* indices)
+bool TriangulateMountain(const Array<Vec2>& vertexBuffer, Array<ContourVertex>& mountain, Array<uint>* indices)
 {
   // Build chain so that the first and last vertices create the base edge
   InList<ContourVertex> vertices;
   for (size_t i = 0; i < mountain.Size(); ++i)
   {
     ContourVertex* vertex = &mountain[i];
-    if (!vertices.Empty() && EqualsExact(vertexBuffer[vertex->Index],
-                                         vertexBuffer[vertices.Back().Index]))
+    if (!vertices.Empty() && EqualsExact(vertexBuffer[vertex->Index], vertexBuffer[vertices.Back().Index]))
     {
       continue;
     }
@@ -88,7 +81,7 @@ bool TriangulateMountain(const Array<Vec2>& vertexBuffer,
 
   // Build a separate list of convex vertices
   InList<ContourVertex, &ContourVertex::windingLink> convexList;
-  forRange(ContourVertex & curr, vertices.All())
+  forRange (ContourVertex& curr, vertices.All())
   {
     curr.IsReflex = !IsVertexConvex(&curr, vertexBuffer, vertices);
     if (!curr.IsReflex && !curr.IsBase)
@@ -113,15 +106,13 @@ bool TriangulateMountain(const Array<Vec2>& vertexBuffer,
     convexList.Erase(v2);
 
     // Removing the ear will potentially create new ears
-    if (v1->IsReflex && !v1->IsBase &&
-        IsVertexConvex(v1, vertexBuffer, vertices))
+    if (v1->IsReflex && !v1->IsBase && IsVertexConvex(v1, vertexBuffer, vertices))
     {
       v1->IsReflex = false;
       convexList.PushBack(v1);
     }
 
-    if (v3->IsReflex && !v3->IsBase &&
-        IsVertexConvex(v3, vertexBuffer, vertices))
+    if (v3->IsReflex && !v3->IsBase && IsVertexConvex(v3, vertexBuffer, vertices))
     {
       v3->IsReflex = false;
       convexList.PushBack(v3);
@@ -133,10 +124,7 @@ bool TriangulateMountain(const Array<Vec2>& vertexBuffer,
 
 } // namespace
 
-bool BuildSet(const TrapezoidMap& map,
-              Array<uint>* indices,
-              s32 seed,
-              FillRule::Type rule)
+bool BuildSet(const TrapezoidMap& map, Array<uint>* indices, s32 seed, FillRule::Type rule)
 {
   FillRuleFunc func = fillRuleFunctions[rule];
 
@@ -237,9 +225,7 @@ bool BuildSet(const TrapezoidMap& map,
             {
               prev = curr;
               alreadyUsedRight[map.mRegions.GetIndex(prev)] = true;
-              TrapezoidMap::RegionId next = curr->BotNeighbor[1] != -1
-                                                ? curr->BotNeighbor[1]
-                                                : curr->BotNeighbor[0];
+              TrapezoidMap::RegionId next = curr->BotNeighbor[1] != -1 ? curr->BotNeighbor[1] : curr->BotNeighbor[0];
 
               if (next == -1)
               {
@@ -255,9 +241,7 @@ bool BuildSet(const TrapezoidMap& map,
               // Add right edge endpoint
               vertex.Index = curr->TopVertex;
               mountain.PushBack(vertex);
-              TrapezoidMap::RegionId next = curr->TopNeighbor[1] != -1
-                                                ? curr->TopNeighbor[1]
-                                                : curr->TopNeighbor[0];
+              TrapezoidMap::RegionId next = curr->TopNeighbor[1] != -1 ? curr->TopNeighbor[1] : curr->TopNeighbor[0];
               if (next == -1)
               {
                 break;
@@ -296,11 +280,9 @@ bool BuildSet(const TrapezoidMap& map,
       {
         if (map.mTopIndex[region->LeftEdge] == map.mTopIndex[region->RightEdge])
         {
-          const TrapezoidMap::Region* below =
-              map.mRegions.GetElement(region->BotNeighbor[0]);
+          const TrapezoidMap::Region* below = map.mRegions.GetElement(region->BotNeighbor[0]);
 
-          if (!map.IsAboveInternal(map.mBotIndex[region->LeftEdge],
-                                   map.mBotIndex[region->RightEdge]))
+          if (!map.IsAboveInternal(map.mBotIndex[region->LeftEdge], map.mBotIndex[region->RightEdge]))
           {
             TrapezoidMap::VertexId baseId = map.mTopIndex[region->LeftEdge];
             mountain.Clear();
@@ -368,9 +350,7 @@ bool BuildSet(const TrapezoidMap& map,
             {
               prev = curr;
               alreadyUsedRight[map.mRegions.GetIndex(prev)] = true;
-              TrapezoidMap::RegionId next = curr->BotNeighbor[1] != -1
-                                                ? curr->BotNeighbor[1]
-                                                : curr->BotNeighbor[0];
+              TrapezoidMap::RegionId next = curr->BotNeighbor[1] != -1 ? curr->BotNeighbor[1] : curr->BotNeighbor[0];
 
               if (next == -1)
               {
@@ -386,9 +366,7 @@ bool BuildSet(const TrapezoidMap& map,
               // Add right edge endpoint
               vertex.Index = curr->TopVertex;
               mountain.PushBack(vertex);
-              TrapezoidMap::RegionId next = curr->TopNeighbor[1] != -1
-                                                ? curr->TopNeighbor[1]
-                                                : curr->TopNeighbor[0];
+              TrapezoidMap::RegionId next = curr->TopNeighbor[1] != -1 ? curr->TopNeighbor[1] : curr->TopNeighbor[0];
               if (next == -1)
               {
                 break;

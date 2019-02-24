@@ -37,10 +37,7 @@ class PropertyKeyIcon : public Composite
 {
 public:
   typedef PropertyKeyIcon ZilchSelf;
-  PropertyKeyIcon(Composite* parent,
-                  HandleParam object,
-                  Property* metaProperty,
-                  AnimationEditor* editor);
+  PropertyKeyIcon(Composite* parent, HandleParam object, Property* metaProperty, AnimationEditor* editor);
 
   void UpdateTransform() override;
 
@@ -203,9 +200,7 @@ public:
   /// Creates a key frame at the play head for the given property on the
   /// given instance. If newValue is NULL, it will query the component
   /// for the current value.
-  void CreateKeyFrameAtPlayHead(Property* property,
-                                HandleParam componentInstance,
-                                Any* newValue = nullptr);
+  void CreateKeyFrameAtPlayHead(Property* property, HandleParam componentInstance, Any* newValue = nullptr);
 
 private:
   /// The current error state.
@@ -256,8 +251,6 @@ private:
 
 Archetype* GetAnimationPreviewArchetype(Animation* animation);
 
-Cog* CreateAnimationPreview(Space* space,
-                            Animation* animation,
-                            Archetype* previewArchetype = NULL);
+Cog* CreateAnimationPreview(Space* space, Animation* animation, Archetype* previewArchetype = NULL);
 
 } // namespace Zero

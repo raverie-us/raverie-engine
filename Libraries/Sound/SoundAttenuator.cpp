@@ -13,8 +13,7 @@ ZilchDefineType(SoundAttenuatorDisplay, builder, type)
 
 String SoundAttenuatorDisplay::GetName(HandleParam object)
 {
-  SoundAttenuator* soundAtten =
-      object.Get<SoundAttenuator*>(GetOptions::AssertOnNull);
+  SoundAttenuator* soundAtten = object.Get<SoundAttenuator*>(GetOptions::AssertOnNull);
   return BuildString("SoundAttenuator: ", soundAtten->Name);
 }
 
@@ -36,19 +35,13 @@ ZilchDefineType(SoundAttenuator, builder, type)
 
   ZilchBindGetterSetterProperty(StartDistance);
   ZilchBindGetterSetterProperty(StopDistance);
-  ZilchBindGetterSetterProperty(MinAttenuatedVolume)
-      ->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
-  ZilchBindGetterSetterProperty(UseLowPassFilter)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(LowPassStartDistance)
-      ->ZeroFilterBool(mUseLowPassFilter);
-  ZilchBindGetterSetterProperty(LowPassCutoffFreq)
-      ->ZeroFilterBool(mUseLowPassFilter);
-  ZilchBindGetterSetterProperty(FalloffCurveType)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(MinAttenuatedVolume)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
+  ZilchBindGetterSetterProperty(UseLowPassFilter)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(LowPassStartDistance)->ZeroFilterBool(mUseLowPassFilter);
+  ZilchBindGetterSetterProperty(LowPassCutoffFreq)->ZeroFilterBool(mUseLowPassFilter);
+  ZilchBindGetterSetterProperty(FalloffCurveType)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindGetterSetterProperty(FalloffCurve)
-      ->ZeroFilterEquality(
-          mFalloffCurveType, FalloffCurveType::Enum, FalloffCurveType::Custom);
+      ->ZeroFilterEquality(mFalloffCurveType, FalloffCurveType::Enum, FalloffCurveType::Custom);
 }
 
 SoundAttenuator::SoundAttenuator() :
@@ -82,10 +75,8 @@ void SoundAttenuator::Serialize(Serializer& stream)
   SerializeNameDefault(mUseLowPassFilter, true);
   SerializeNameDefault(mLowPassStartDistance, 20.0f);
   SerializeNameDefault(mLowPassCutoffFreq, 1000.0f);
-  SerializeNullableResourceNameDefault(
-      mCustomFalloffCurve, CurveManager, nullptr);
-  SerializeEnumNameDefault(
-      FalloffCurveType, mFalloffCurveType, FalloffCurveType::Log);
+  SerializeNullableResourceNameDefault(mCustomFalloffCurve, CurveManager, nullptr);
+  SerializeEnumNameDefault(FalloffCurveType, mFalloffCurveType, FalloffCurveType::Log);
 }
 
 void SoundAttenuator::Initialize()
@@ -114,8 +105,7 @@ void SoundAttenuator::SetStartDistance(float value)
   mStartDistance = Math::Clamp(value, 0.0f, mStopDistance);
 
   // Update the attenuation information on all existing nodes
-  for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty();
-       nodes.PopFront())
+  for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
     nodes.Front().mNode->SetStartDistance(mStartDistance);
 }
 
@@ -129,8 +119,7 @@ void SoundAttenuator::SetStopDistance(float value)
   mStopDistance = Math::Max(value, mStartDistance);
 
   // Update the attenuation information on all existing nodes
-  for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty();
-       nodes.PopFront())
+  for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
     nodes.Front().mNode->SetEndDistance(mStopDistance);
 }
 
@@ -141,12 +130,10 @@ float SoundAttenuator::GetMinAttenuatedVolume()
 
 void SoundAttenuator::SetMinAttenuatedVolume(float value)
 {
-  mMinAttenuatedVolume =
-      Math::Clamp(value, 0.0f, AudioConstants::cMaxVolumeValue);
+  mMinAttenuatedVolume = Math::Clamp(value, 0.0f, AudioConstants::cMaxVolumeValue);
 
   // Update the attenuation information on all existing nodes
-  for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty();
-       nodes.PopFront())
+  for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
     nodes.Front().mNode->SetMinimumVolume(mMinAttenuatedVolume);
 }
 
@@ -175,15 +162,13 @@ void SoundAttenuator::SetFalloffCurve(SampleCurve* newCurve)
     curve->GetCurve(curveData);
 
     // Send the custom curve data to all existing nodes
-    for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty();
-         nodes.PopFront())
+    for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
       nodes.Front().mNode->SetCurveType(FalloffCurveType::Custom, &curveData);
   }
   else
   {
     // Set the custom curve data to null on all existing nodes
-    for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty();
-         nodes.PopFront())
+    for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
       nodes.Front().mNode->SetCurveType(FalloffCurveType::Custom, nullptr);
   }
 }
@@ -200,8 +185,7 @@ void SoundAttenuator::SetFalloffCurveType(FalloffCurveType::Enum newtype)
   if (newtype != FalloffCurveType::Custom)
   {
     // Set the curve type on all existing nodes
-    for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty();
-         nodes.PopFront())
+    for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
       nodes.Front().mNode->SetCurveType(newtype, nullptr);
   }
 }
@@ -216,8 +200,7 @@ void SoundAttenuator::SetUseLowPassFilter(bool useFilter)
   mUseLowPassFilter = useFilter;
 
   // Update all existing nodes
-  for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty();
-       nodes.PopFront())
+  for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
     nodes.Front().mNode->SetUsingLowPass(useFilter);
 }
 
@@ -231,8 +214,7 @@ void SoundAttenuator::SetLowPassStartDistance(float distance)
   mLowPassStartDistance = Math::Max(distance, 0.0f);
 
   // Update all existing nodes
-  for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty();
-       nodes.PopFront())
+  for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
     nodes.Front().mNode->SetLowPassDistance(distance);
 }
 
@@ -246,8 +228,7 @@ void SoundAttenuator::SetLowPassCutoffFreq(float frequency)
   mLowPassCutoffFreq = Math::Clamp(frequency, 0.0f, 20000.0f);
 
   // Update all existing nodes
-  for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty();
-       nodes.PopFront())
+  for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
     nodes.Front().mNode->SetLowPassCutoffFreq(frequency);
 }
 
@@ -260,14 +241,12 @@ void SoundAttenuator::UpdateCurve(Event* event)
   {
     CurveManager* manager = CurveManager::GetInstance();
     String& name = curve->Name;
-    if (name == manager->DefaultResourceName ||
-        name == manager->FallbackResourceName)
+    if (name == manager->DefaultResourceName || name == manager->FallbackResourceName)
       mCustomFalloffCurve = nullptr;
   }
 }
 
-SoundAttenuatorNode* SoundAttenuator::GetAttenuationNode(StringParam name,
-                                                         unsigned ID)
+SoundAttenuatorNode* SoundAttenuator::GetAttenuationNode(StringParam name, unsigned ID)
 {
   SoundAttenuatorNode* node;
   // If using a custom curve, create the SoundAttenuatorNode with that curve
@@ -276,14 +255,8 @@ SoundAttenuatorNode* SoundAttenuator::GetAttenuationNode(StringParam name,
     Array<Vec3> curve;
     mCustomFalloffCurve->GetCurve(curve);
 
-    node = new SoundAttenuatorNode(new AttenuatorNode(name,
-                                                      ID,
-                                                      Math::Vec3(0, 0, 0),
-                                                      mStartDistance,
-                                                      mStopDistance,
-                                                      mMinAttenuatedVolume,
-                                                      mFalloffCurveType,
-                                                      &curve));
+    node = new SoundAttenuatorNode(new AttenuatorNode(
+        name, ID, Math::Vec3(0, 0, 0), mStartDistance, mStopDistance, mMinAttenuatedVolume, mFalloffCurveType, &curve));
   }
   // Otherwise create it for the specified curve type
   else
@@ -317,7 +290,7 @@ void SoundAttenuator::RemoveAttenuationNode(SoundAttenuatorNode* node)
 bool SoundAttenuator::HasInput()
 {
   // If any of the SoundAttenuatorNodes has input, return true
-  forRange(SoundAttenuatorNode & node, mNodeList.All())
+  forRange (SoundAttenuatorNode& node, mNodeList.All())
   {
     if (node.mNode->GetHasInputs())
       return true;
@@ -330,11 +303,9 @@ bool SoundAttenuator::HasInput()
 
 ImplementResourceManager(SoundAttenuatorManager, SoundAttenuator);
 
-SoundAttenuatorManager::SoundAttenuatorManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+SoundAttenuatorManager::SoundAttenuatorManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
-  AddLoader("SoundAttenuator",
-            new TextDataFileLoader<SoundAttenuatorManager>());
+  AddLoader("SoundAttenuator", new TextDataFileLoader<SoundAttenuatorManager>());
   DefaultResourceName = "DefaultNoAttenuation";
   mCategory = "Sound";
   mCanAddFile = true;

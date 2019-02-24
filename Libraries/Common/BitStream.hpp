@@ -16,18 +16,12 @@
 /// Default memory allocation byte size
 /// Used if reserve is not called before first write
 #define BITSTREAM_DEFAULT_RESERVE_BYTES POW2(5)
-StaticAssertWithinRange(StaticAssertRange1,
-                        BYTES_TO_BITS(BITSTREAM_DEFAULT_RESERVE_BYTES),
-                        1,
-                        Bits(-1));
+StaticAssertWithinRange(StaticAssertRange1, BYTES_TO_BITS(BITSTREAM_DEFAULT_RESERVE_BYTES), 1, Bits(-1));
 
 /// Maximum memory allocation byte size
 #define BITSTREAM_MAX_SIZE_BITS 28
 #define BITSTREAM_MAX_BYTES POW2(BITSTREAM_MAX_SIZE_BITS)
-StaticAssertWithinRange(StaticAssertRange2,
-                        BYTES_TO_BITS(BITSTREAM_MAX_BYTES),
-                        1,
-                        Bits(-1));
+StaticAssertWithinRange(StaticAssertRange2, BYTES_TO_BITS(BITSTREAM_MAX_BYTES), 1, Bits(-1));
 
 namespace Zero
 {
@@ -195,17 +189,14 @@ public:
   /// all possible values) Returns the number of bits required to serialize the
   /// specified value
   template <Bits N, bool WrapAware, typename R>
-  static R_ENABLE_IF(is_enum_or_integral<R>::value, Bits)
-      MeasureQuantized(R minValue_, R maxValue_, R quantum_ = R(1));
+  static R_ENABLE_IF(is_enum_or_integral<R>::value, Bits) MeasureQuantized(R minValue_, R maxValue_, R quantum_ = R(1));
   /// Measures a user-defined value bound within an inclusive range discretized
   /// to the nearest quantum interval value (using only the bits necessary to
   /// represent all possible values) Returns the number of bits required to
   /// serialize the specified value
   template <typename R>
   static R_ENABLE_IF(!is_scalar<R>::value, Bits)
-      MeasureQuantized(const R& minValue_,
-                       const R& maxValue_,
-                       const R& quantum_);
+      MeasureQuantized(const R& minValue_, const R& maxValue_, const R& quantum_);
 
   //
   // Serialize Operations
@@ -216,18 +207,14 @@ public:
   inline Bits SerializeBit(SerializeDirection::Enum direction, bool& value);
   /// Serializes multiple bits
   /// Returns the number of bits serialized if successful, else 0
-  inline Bits SerializeBits(SerializeDirection::Enum direction,
-                            byte* data,
-                            Bits dataBits);
+  inline Bits SerializeBits(SerializeDirection::Enum direction, byte* data, Bits dataBits);
 
   /// Serializes a single byte
   /// Returns the number of bits serialized if successful, else 0
   inline Bits SerializeByte(SerializeDirection::Enum direction, uint8& value);
   /// Serializes multiple bytes
   /// Returns the number of bits serialized if successful, else 0
-  inline Bits SerializeBytes(SerializeDirection::Enum direction,
-                             byte* data,
-                             Bytes dataBytes);
+  inline Bits SerializeBytes(SerializeDirection::Enum direction, byte* data, Bytes dataBytes);
 
   /// Serializes a boolean value
   /// Returns the number of bits serialized if successful, else 0
@@ -252,14 +239,11 @@ public:
   /// Serializes a fixed array of values
   /// Returns the number of bits written if successful, else 0
   template <typename T>
-  Bits Serialize(SerializeDirection::Enum direction,
-                 const T* array,
-                 size_t size);
+  Bits Serialize(SerializeDirection::Enum direction, const T* array, size_t size);
   /// Serializes a UintN value
   /// Returns the number of bits serialized if successful, else 0
   template <Bits N, bool WrapAware>
-  Bits Serialize(SerializeDirection::Enum direction,
-                 UintN<N, WrapAware>& value);
+  Bits Serialize(SerializeDirection::Enum direction, UintN<N, WrapAware>& value);
   /// Serializes a user-defined value
   /// Returns the number of bits serialized if successful, else 0
   template <typename T>
@@ -271,46 +255,31 @@ public:
   /// necessary to represent all possible values) Returns the number of bits
   /// serialized if successful, else 0
   template <typename T, typename R>
-  R_ENABLE_IF(is_enum_or_integral<T>::value&& is_enum_or_integral<R>::value,
-              Bits)
-  SerializeQuantized(SerializeDirection::Enum direction,
-                     T& value_,
-                     R minValue_,
-                     R maxValue_,
-                     R quantum_ = R(1));
+  R_ENABLE_IF(is_enum_or_integral<T>::value&& is_enum_or_integral<R>::value, Bits)
+  SerializeQuantized(SerializeDirection::Enum direction, T& value_, R minValue_, R maxValue_, R quantum_ = R(1));
   /// Serializes a floating-point value bound within an inclusive range
   /// discretized to the nearest quantum interval value (using only the bits
   /// necessary to represent all possible values) Returns the number of bits
   /// serialized if successful, else 0
   template <typename T, typename R>
   R_ENABLE_IF(is_floating_point<T>::value, Bits)
-  SerializeQuantized(SerializeDirection::Enum direction,
-                     T& value_,
-                     R minValue_,
-                     R maxValue_,
-                     R quantum_ = R(0.0001));
+  SerializeQuantized(SerializeDirection::Enum direction, T& value_, R minValue_, R maxValue_, R quantum_ = R(0.0001));
   /// Serializes a UintN value bound within an inclusive range discretized to
   /// the nearest quantum interval value (using only the bits necessary to
   /// represent all possible values) Returns the number of bits serialized if
   /// successful, else 0
   template <Bits N, bool WrapAware, typename R>
   R_ENABLE_IF(is_enum_or_integral<R>::value, Bits)
-  SerializeQuantized(SerializeDirection::Enum direction,
-                     UintN<N, WrapAware>& value_,
-                     R minValue_,
-                     R maxValue_,
-                     R quantum_ = R(1));
+  SerializeQuantized(
+      SerializeDirection::Enum direction, UintN<N, WrapAware>& value_, R minValue_, R maxValue_, R quantum_ = R(1));
   /// Serializes a user-defined value bound within an inclusive range
   /// discretized to the nearest quantum interval value (using only the bits
   /// necessary to represent all possible values) Returns the number of bits
   /// serialized if successful, else 0
   template <typename T, typename R>
   R_ENABLE_IF(!is_scalar<T>::value, Bits)
-  SerializeQuantized(SerializeDirection::Enum direction,
-                     T& value_,
-                     const R& minValue_,
-                     const R& maxValue_,
-                     const R& quantum_);
+  SerializeQuantized(
+      SerializeDirection::Enum direction, T& value_, const R& minValue_, const R& maxValue_, const R& quantum_);
 
   //
   // Write Operations
@@ -397,20 +366,14 @@ public:
   /// else 0
   template <Bits N, bool WrapAware, typename R>
   R_ENABLE_IF(is_enum_or_integral<R>::value, Bits)
-  WriteQuantized(UintN<N, WrapAware> value_,
-                 R minValue_,
-                 R maxValue_,
-                 R quantum_ = R(1));
+  WriteQuantized(UintN<N, WrapAware> value_, R minValue_, R maxValue_, R quantum_ = R(1));
   /// Writes a user-defined value bound within an inclusive range discretized to
   /// the nearest quantum interval value (using only the bits necessary to
   /// represent all possible values) Returns the number of bits written if
   /// successful, else 0
   template <typename T, typename R>
   R_ENABLE_IF(!is_scalar<T>::value, Bits)
-  WriteQuantized(const T& value_,
-                 const R& minValue_,
-                 const R& maxValue_,
-                 const R& quantum_);
+  WriteQuantized(const T& value_, const R& minValue_, const R& maxValue_, const R& quantum_);
 
   /// Writes until a byte boundary is reached
   /// Returns the number of bits written
@@ -521,29 +484,20 @@ public:
   /// successful, else 0
   template <typename T, typename R>
   R_ENABLE_IF(is_floating_point<T>::value, Bits)
-  ReadQuantized(T& value_,
-                R minValue_,
-                R maxValue_,
-                R quantum_ = R(0.0001)) const;
+  ReadQuantized(T& value_, R minValue_, R maxValue_, R quantum_ = R(0.0001)) const;
   /// Reads a UintN value bound within an inclusive range discretized to the
   /// nearest quantum interval value (using only the bits necessary to represent
   /// all possible values) Returns the number of bits read if successful, else 0
   template <Bits N, bool WrapAware, typename R>
   R_ENABLE_IF(is_enum_or_integral<R>::value, Bits)
-  ReadQuantized(UintN<N, WrapAware>& value_,
-                R minValue_,
-                R maxValue_,
-                R quantum_ = R(1)) const;
+  ReadQuantized(UintN<N, WrapAware>& value_, R minValue_, R maxValue_, R quantum_ = R(1)) const;
   /// Reads a user-defined value bound within an inclusive range discretized to
   /// the nearest quantum interval value (using only the bits necessary to
   /// represent all possible values) Returns the number of bits read if
   /// successful, else 0
   template <typename T, typename R>
   R_ENABLE_IF(!is_scalar<T>::value, Bits)
-  ReadQuantized(T& value_,
-                const R& minValue_,
-                const R& maxValue_,
-                const R& quantum_) const;
+  ReadQuantized(T& value_, const R& minValue_, const R& maxValue_, const R& quantum_) const;
 
   /// Returns the byte length of the string to be read next (including null
   /// terminator), else 0

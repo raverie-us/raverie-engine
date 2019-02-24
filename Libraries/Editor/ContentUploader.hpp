@@ -51,12 +51,11 @@ public:
   typedef ContentExporterTileView ZilchSelf;
 
   ContentExporterTileView(ContentPackageExporter* parent);
-  TileViewWidget* CreateTileViewWidget(
-      Composite* parent,
-      StringParam name,
-      HandleParam instance,
-      DataIndex index,
-      PreviewImportance::Enum minImportance = PreviewImportance::None) override;
+  TileViewWidget* CreateTileViewWidget(Composite* parent,
+                                       StringParam name,
+                                       HandleParam instance,
+                                       DataIndex index,
+                                       PreviewImportance::Enum minImportance = PreviewImportance::None) override;
 
   void OnMetaDrop(MetaDropEvent* e);
 

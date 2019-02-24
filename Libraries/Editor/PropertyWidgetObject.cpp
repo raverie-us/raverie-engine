@@ -29,14 +29,11 @@ ZilchDefineType(PropertyWidgetObject, builder, type)
 {
 }
 
-PropertyWidgetObject::PropertyWidgetObject(
-    PropertyWidgetInitializer& initializer,
-    PropertyWidgetObject* parentWidgetObject,
-    StringParam removedTypeName) :
+PropertyWidgetObject::PropertyWidgetObject(PropertyWidgetInitializer& initializer,
+                                           PropertyWidgetObject* parentWidgetObject,
+                                           StringParam removedTypeName) :
     PropertyWidget(initializer,
-                   (initializer.ObjectNode && initializer.ObjectNode->mProperty)
-                       ? StyleMode::Regular
-                       : StyleMode::Node)
+                   (initializer.ObjectNode && initializer.ObjectNode->mProperty) ? StyleMode::Regular : StyleMode::Node)
 {
   mMouseOverTitle = false;
   mDragging = false;
@@ -85,8 +82,7 @@ PropertyWidgetObject::PropertyWidgetObject(
     if (initializer.ObjectNode)
     {
       if (MetaOwner* metaOwner = objectType->HasInherited<MetaOwner>())
-        mLocallyAdded = LocalModifications::GetInstance()->IsObjectLocallyAdded(
-            object, false);
+        mLocallyAdded = LocalModifications::GetInstance()->IsObjectLocallyAdded(object, false);
     }
   }
 
@@ -148,15 +144,13 @@ PropertyWidgetObject::PropertyWidgetObject(
         mEditScriptButton->mIconClickedColor = ToByteColor(Vec4(1, 1, 1, 0.8f));
 
         String message = "Edit Script Source";
-        Resource* resource =
-            Z::gResources->GetResource(metaResource->mResourceId);
+        Resource* resource = Z::gResources->GetResource(metaResource->mResourceId);
         ErrorIf(resource == nullptr, "Could not find resource to edit");
         if (resource)
           message = String::Format("Edit '%s' Script", resource->Name.c_str());
 
         mEditScriptButton->SetToolTip(message);
-        ConnectThisTo(
-            mEditScriptButton, Events::ButtonPressed, OnEditScriptPressed);
+        ConnectThisTo(mEditScriptButton, Events::ButtonPressed, OnEditScriptPressed);
         ConnectThisTo(mEditScriptButton, Events::MouseEnter, OnMouseEnterTitle);
       }
     }
@@ -175,8 +169,7 @@ PropertyWidgetObject::PropertyWidgetObject(
   // Expanded
   if (objectType)
   {
-    if (mExpandedTypes.Contains(GetExpandId()) ||
-        objectType->HasAttribute(ObjectAttributes::cExpanded))
+    if (mExpandedTypes.Contains(GetExpandId()) || objectType->HasAttribute(ObjectAttributes::cExpanded))
       OpenNode(false);
   }
 
@@ -190,7 +183,7 @@ PropertyWidgetObject::~PropertyWidgetObject()
   if (mParentWidgetObject == nullptr)
     SafeDelete(mNode);
 
-  forRange(PropertyWidget & child, ChildWidgets.All())
+  forRange (PropertyWidget& child, ChildWidgets.All())
   {
     child.Parent = nullptr;
     child.Destroy();
@@ -204,16 +197,13 @@ void PropertyWidgetObject::OnMouseEnterTitle(MouseEvent* event)
   mMouseOverTitle = true;
 
   if (mProxyIcon)
-    CreateTooltip(
-        "This Component type does not exist. Either the type was removed or "
-        "scripts aren't compiling. This is referred to as being proxied.",
-        ToolTipColorScheme::Yellow);
+    CreateTooltip("This Component type does not exist. Either the type was removed or "
+                  "scripts aren't compiling. This is referred to as being proxied.",
+                  ToolTipColorScheme::Yellow);
   if (mLocallyRemoved)
-    CreateTooltip("This Component has been locally removed from the Archetype",
-                  ToolTipColorScheme::Red);
+    CreateTooltip("This Component has been locally removed from the Archetype", ToolTipColorScheme::Red);
   if (mLocallyAdded)
-    CreateTooltip("This Component has been locally added to the Archetype",
-                  ToolTipColorScheme::Green);
+    CreateTooltip("This Component has been locally added to the Archetype", ToolTipColorScheme::Green);
   MarkAsNeedsUpdate();
 }
 
@@ -238,8 +228,7 @@ void PropertyWidgetObject::OnMouseEnterX(MouseEvent* e)
   // If it cannot be removed, notify the user
   String reason;
   if (mParentComposition)
-    mParentComposition->CanRemoveComponent(
-        parentInstance, selfInstance, reason);
+    mParentComposition->CanRemoveComponent(parentInstance, selfInstance, reason);
 
   // Values in MetaArray can always be removed, so no need to check here
 
@@ -251,9 +240,7 @@ void PropertyWidgetObject::OnMouseExitX(MouseEvent* e)
   RemoveRedHighlight();
 }
 
-void BuildPath(ObjectPropertyNode* node,
-               Handle& rootInstance,
-               PropertyPath& path)
+void BuildPath(ObjectPropertyNode* node, Handle& rootInstance, PropertyPath& path)
 {
   if (node->mObject.StoredType == nullptr)
     return;
@@ -296,8 +283,7 @@ void PropertyWidgetObject::RefreshLabel()
 
   if (mNode->IsPropertyGroup())
     text = mNode->mPropertyGroupName;
-  else if (MetaDisplay* display =
-               instance.StoredType->HasInherited<MetaDisplay>())
+  else if (MetaDisplay* display = instance.StoredType->HasInherited<MetaDisplay>())
     text = display->GetName(instance);
   else if (mNode && mNode->mProperty)
     text = mNode->mProperty->Name;
@@ -402,8 +388,7 @@ void PropertyWidgetObject::UpdateTransform()
     if (mLabel->GetSize().x < labelArea.x)
     {
       // Center the name
-      Vec2 namePos = SnapToPixels((mTitleBackground->GetSize() * 0.5f) -
-                                  (mLabel->GetSize() * 0.5f));
+      Vec2 namePos = SnapToPixels((mTitleBackground->GetSize() * 0.5f) - (mLabel->GetSize() * 0.5f));
       namePos.y = 0;
       if (mNode && mNode->mProperty)
         namePos.x = Pixels(14);
@@ -467,7 +452,7 @@ void PropertyWidgetObject::LayoutChildren(bool animate)
   float childWidth = mSize.x - PropertyViewUi::IndentSize * 2.0f;
 
   // Layout each child widget
-  forRange(PropertyWidget & child, ChildWidgets.All())
+  forRange (PropertyWidget& child, ChildWidgets.All())
   {
     bool childIsObject = (ZilchVirtualTypeId(&child) == widgetObjectType);
 
@@ -491,8 +476,7 @@ void PropertyWidgetObject::LayoutChildren(bool animate)
       {
         ActionSequence* sequence = new ActionSequence(&child);
         child.mDestination = Vec3(PropertyViewUi::IndentSize, currY, 0);
-        sequence->Add(MoveWidgetAction(
-            &child, child.mDestination, ComponentUi::OpenTime));
+        sequence->Add(MoveWidgetAction(&child, child.mDestination, ComponentUi::OpenTime));
       }
       else
       {
@@ -507,8 +491,7 @@ void PropertyWidgetObject::LayoutChildren(bool animate)
       child.SetTranslation(child.mDestination);
       // Remove an extra two pixels from the right side for aesthetics
       if (childIsObject)
-        child.SetSize(
-            Vec2(childWidth + PropertyViewUi::IndentSize, childHeight));
+        child.SetSize(Vec2(childWidth + PropertyViewUi::IndentSize, childHeight));
       else
         child.SetSize(Vec2(childWidth, childHeight));
     }
@@ -531,12 +514,10 @@ void PropertyWidgetObject::LayoutChildren(bool animate)
   {
     // If we don't have any children, just set our size to the title bar size
     if (ChildWidgets.Empty())
-      SetSize(Vec2(parentSize.x - PropertyViewUi::IndentSize * 2.0f,
-                   PropertyViewUi::ObjectSize));
+      SetSize(Vec2(parentSize.x - PropertyViewUi::IndentSize * 2.0f, PropertyViewUi::ObjectSize));
     // Otherwise, set our size to the total size of the children
     else
-      SetSize(Vec2(parentSize.x - PropertyViewUi::IndentSize * 2.0f,
-                   currY + PropertyViewUi::PropertySpacing));
+      SetSize(Vec2(parentSize.x - PropertyViewUi::IndentSize * 2.0f, currY + PropertyViewUi::PropertySpacing));
   }
 }
 
@@ -583,14 +564,11 @@ void PropertyWidgetObject::AnimateCloseNode()
 MetaPropertyEditor* GetPropertyEditor(Property* property)
 {
   // First check the property for an editor extension
-  if (EditorPropertyExtension* extension =
-          property->HasInherited<EditorPropertyExtension>())
+  if (EditorPropertyExtension* extension = property->HasInherited<EditorPropertyExtension>())
   {
     BoundType* extensionType = ZilchVirtualTypeId(extension);
-    MetaPropertyEditor* editor =
-        extensionType->HasInherited<MetaPropertyEditor>();
-    ErrorIf(editor == nullptr,
-            "Property extension didn't have a property Editor.");
+    MetaPropertyEditor* editor = extensionType->HasInherited<MetaPropertyEditor>();
+    ErrorIf(editor == nullptr, "Property extension didn't have a property Editor.");
     return editor;
   }
 
@@ -624,7 +602,7 @@ void PropertyWidgetObject::OpenNode(bool animate)
   initializer.ObjectNode = nullptr;
 
   // Expand properties
-  forRange(ObjectPropertyNode * propertyNode, mNode->mProperties.All())
+  forRange (ObjectPropertyNode* propertyNode, mNode->mProperties.All())
   {
     Property* property = propertyNode->mProperty;
 
@@ -635,14 +613,13 @@ void PropertyWidgetObject::OpenNode(bool animate)
     BoundType* propertyType = Type::GetBoundType(property->PropertyType);
 
     // Check to see if there's a custom filter hiding this property
-    if (MetaPropertyFilter* filter =
-            property->HasInherited<MetaPropertyFilter>())
+    if (MetaPropertyFilter* filter = property->HasInherited<MetaPropertyFilter>())
     {
       if (MetaSelection* selection = instance.Get<MetaSelection*>())
       {
         bool shouldShow = false;
 
-        forRange(Handle currInstance, selection->All())
+        forRange (Handle currInstance, selection->All())
         {
           shouldShow |= filter->Filter(property, currInstance);
           if (shouldShow)
@@ -675,8 +652,7 @@ void PropertyWidgetObject::OpenNode(bool animate)
       initializer.ObjectNode = propertyNode;
 
       // Create and add the editor
-      PropertyWidgetObject* nodeEdit =
-          new PropertyWidgetObject(initializer, this);
+      PropertyWidgetObject* nodeEdit = new PropertyWidgetObject(initializer, this);
       AddSubProperty(nodeEdit);
     }
   }
@@ -684,17 +660,16 @@ void PropertyWidgetObject::OpenNode(bool animate)
   initializer.Property = nullptr;
 
   // Expand Methods with no parameters
-  forRange(Function * function, mNode->mFunctions.All())
+  forRange (Function* function, mNode->mFunctions.All())
   {
     // Check to see if there's a custom filter hiding this function
-    if (MetaPropertyFilter* filter =
-            function->HasInherited<MetaPropertyFilter>())
+    if (MetaPropertyFilter* filter = function->HasInherited<MetaPropertyFilter>())
     {
       if (MetaSelection* selection = instance.Get<MetaSelection*>())
       {
         bool shouldShow = false;
 
-        forRange(Handle currInstance, selection->All())
+        forRange (Handle currInstance, selection->All())
         {
           shouldShow |= filter->Filter(function, currInstance);
           if (shouldShow)
@@ -712,20 +687,18 @@ void PropertyWidgetObject::OpenNode(bool animate)
       }
     }
 
-    PropertyEditAction* actionEdit =
-        new PropertyEditAction(initializer, function, instance);
+    PropertyEditAction* actionEdit = new PropertyEditAction(initializer, function, instance);
     AddSubProperty(actionEdit);
   }
 
   // Add Dynamically contained objects
-  forRange(ObjectPropertyNode * subNode, mNode->mContainedObjects.All())
+  forRange (ObjectPropertyNode* subNode, mNode->mContainedObjects.All())
   {
     // Set the sub node
     initializer.ObjectNode = subNode;
 
     // Create and add the editor
-    PropertyWidgetObject* nodeEdit =
-        new PropertyWidgetObject(initializer, this);
+    PropertyWidgetObject* nodeEdit = new PropertyWidgetObject(initializer, this);
     AddSubProperty(nodeEdit);
     mComponents.PushBack(nodeEdit);
   }
@@ -734,13 +707,12 @@ void PropertyWidgetObject::OpenNode(bool animate)
   LocalModifications* modifications = LocalModifications::GetInstance();
   if (ObjectState* state = modifications->GetObjectState(instance))
   {
-    forRange(ObjectState::ChildId removedChild, state->GetRemovedChildren())
+    forRange (ObjectState::ChildId removedChild, state->GetRemovedChildren())
     {
       initializer.ObjectNode = nullptr;
 
       // Create and add the editor
-      PropertyWidgetObject* nodeEdit =
-          new PropertyWidgetObject(initializer, this, removedChild.mTypeName);
+      PropertyWidgetObject* nodeEdit = new PropertyWidgetObject(initializer, this, removedChild.mTypeName);
       AddSubProperty(nodeEdit);
     }
   }
@@ -757,8 +729,7 @@ void PropertyWidgetObject::OpenNode(bool animate)
   if (canAdd)
   {
     initializer.ObjectNode = nullptr;
-    AddObjectWidget* nodeEdit =
-        new AddObjectWidget(initializer, this, mGrid, instance);
+    AddObjectWidget* nodeEdit = new AddObjectWidget(initializer, this, mGrid, instance);
     AddSubProperty(nodeEdit);
   }
 
@@ -777,7 +748,7 @@ void PropertyWidgetObject::OpenNode(bool animate)
   if (animate)
   {
     float currY = PropertyViewUi::ObjectSize + PropertyViewUi::PropertySpacing;
-    forRange(PropertyWidget & child, ChildWidgets.All())
+    forRange (PropertyWidget& child, ChildWidgets.All())
     {
       child.UpdateTransformExternal();
       float childHeight = child.mSize.y;
@@ -795,10 +766,8 @@ void PropertyWidgetObject::OpenNode(bool animate)
     GetActions()->Cancel();
     ActionSequence* sequence = new ActionSequence(this);
     Vec2 destinationSize = Vec2(mSize.x, currY);
-    sequence->Add(
-        SizeWidgetAction(this, destinationSize, ComponentUi::OpenTime));
-    sequence->Add(
-        new CallAction<ZilchSelf, &ZilchSelf::AnimationFinished>(this));
+    sequence->Add(SizeWidgetAction(this, destinationSize, ComponentUi::OpenTime));
+    sequence->Add(new CallAction<ZilchSelf, &ZilchSelf::AnimationFinished>(this));
   }
 }
 
@@ -806,8 +775,7 @@ void PropertyWidgetObject::RemoveSelf()
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Property View",
-                    "Cannot remove components while in read-only mode");
+    DoNotifyWarning("Property View", "Cannot remove components while in read-only mode");
     return;
   }
 
@@ -833,16 +801,14 @@ void PropertyWidgetObject::AnimateRemoveSelf()
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Property View",
-                    "Cannot remove components while in read-only mode");
+    DoNotifyWarning("Property View", "Cannot remove components while in read-only mode");
     return;
   }
 
   // Verify that the widget object exists
   if (mParentWidgetObject == nullptr)
   {
-    DoNotifyWarning("Can't remove component",
-                    "No object selected. Cannot remove component.");
+    DoNotifyWarning("Can't remove component", "No object selected. Cannot remove component.");
     return;
   }
   // Verify the parent composition isn't null (happens on arrays right now)
@@ -854,8 +820,7 @@ void PropertyWidgetObject::AnimateRemoveSelf()
 
   // If it cannot be removed, notify the user
   String reason;
-  if (mParentComposition->CanRemoveComponent(
-          parentInstance, selfInstance, reason) == false)
+  if (mParentComposition->CanRemoveComponent(parentInstance, selfInstance, reason) == false)
   {
     DoNotifyWarning("Can't remove component", reason);
     return;
@@ -870,19 +835,14 @@ void PropertyWidgetObject::AnimateRemoveSelf()
   // Animate ourself closed
   ActionSequence* sequence = new ActionSequence(this);
   Vec2 destinationSize = Vec2(mSize.x, 0);
-  sequence->Add(
-      SizeWidgetAction(this, destinationSize, ComponentUi::OpenTime * 3.0f));
+  sequence->Add(SizeWidgetAction(this, destinationSize, ComponentUi::OpenTime * 3.0f));
   sequence->Add(new CallAction<ZilchSelf, &ZilchSelf::RemoveSelf>(this));
 
   // Animate the title bar to red
   ActionSequence* colorSequence = new ActionSequence(this);
   Vec4 color = ToFloatColor(ByteColorRGBA(111, 47, 47, 255));
-  colorSequence->Add(AnimatePropertyGetSet(Element,
-                                           Color,
-                                           Ease::Quad::InOut,
-                                           mTitleBackground,
-                                           ComponentUi::OpenTime,
-                                           color));
+  colorSequence->Add(
+      AnimatePropertyGetSet(Element, Color, Ease::Quad::InOut, mTitleBackground, ComponentUi::OpenTime, color));
 }
 
 void PropertyWidgetObject::OnViewDoc(ObjectEvent* event)
@@ -950,8 +910,7 @@ void PropertyWidgetObject::OnRightClick(MouseEvent* event)
   {
     Handle parentObject = GetParentObject();
     BoundType* childType = MetaDatabase::FindType(mLocallyRemovedTypeName);
-    MetaComposition* composition =
-        parentObject.StoredType->HasInherited<MetaComposition>();
+    MetaComposition* composition = parentObject.StoredType->HasInherited<MetaComposition>();
     AddInfo addInfo;
 
     ContextMenuEntry* entry = menu->AddEntry("Restore");
@@ -1012,7 +971,7 @@ public:
     mParent = mDragObject->mParentWidgetObject;
     mParent->mDragging = true;
 
-    forRange(PropertyWidget & child, mParent->ChildWidgets.All())
+    forRange (PropertyWidget& child, mParent->ChildWidgets.All())
     {
       // Ignore nodes that aren't object widgets
       if (child.IsObjectWidget())
@@ -1100,8 +1059,7 @@ public:
       // Otherwise, snap to the top of it
       else
         newTranslation -= mDragObject->GetSize().y;
-      mDragObject->SetTranslation(
-          Vec3(PropertyViewUi::IndentSize, newTranslation, 0));
+      mDragObject->SetTranslation(Vec3(PropertyViewUi::IndentSize, newTranslation, 0));
     }
     else
     {
@@ -1110,10 +1068,8 @@ public:
 
       // Snap to the first and last component
       float min = mObjects.Front()->mDestination.y;
-      float max =
-          mObjects.Back()->mDestination.y + mObjects.Back()->GetSize().y;
-      yPos = Math::Clamp(
-          yPos, min - Pixels(2), max - mDragObject->GetSize().y + Pixels(2));
+      float max = mObjects.Back()->mDestination.y + mObjects.Back()->GetSize().y;
+      yPos = Math::Clamp(yPos, min - Pixels(2), max - mDragObject->GetSize().y + Pixels(2));
 
       // Set the object we're dragging to our position
       mDragObject->SetTranslation(Vec3(PropertyViewUi::IndentSize, yPos, 0));
@@ -1139,9 +1095,7 @@ public:
   /// against another object.
   /// The move index and testIndex will never be set to the same, unless
   /// both are invalid.
-  void GetDestinationIndex(float localMousePos,
-                           uint* moveIndex,
-                           uint* testIndex)
+  void GetDestinationIndex(float localMousePos, uint* moveIndex, uint* testIndex)
   {
     // Start both off as invalid
     *moveIndex = cInvalidIndex;
@@ -1228,8 +1182,8 @@ public:
     // Check to see if we can move this component
     Handle parent = mParent->mNode->mObject;
     Handle blocking;
-    bool canMove = mParent->mComposition->CanMoveComponent(
-        parent, mDragObject->mNode->mObject, swapIndex, blocking, message);
+    bool canMove =
+        mParent->mComposition->CanMoveComponent(parent, mDragObject->mNode->mObject, swapIndex, blocking, message);
 
     // If the component can be moved, there's no blocking index
     if (canMove)
@@ -1289,7 +1243,7 @@ public:
   //****************************************************************************
   PropertyWidgetObject* GetObjectNode(HandleParam instance)
   {
-    forRange(PropertyWidgetObject * child, mObjects.All())
+    forRange (PropertyWidgetObject* child, mObjects.All())
     {
       Handle currObject = child->mNode->mObject;
 
@@ -1321,8 +1275,7 @@ public:
     {
       if (Z::gEngine->IsReadOnly())
       {
-        DoNotifyWarning("Property View",
-                        "Cannot move components while in read-only mode");
+        DoNotifyWarning("Property View", "Cannot move components while in read-only mode");
         return;
       }
 
@@ -1331,8 +1284,7 @@ public:
         insertIndex += 1;
 
       Handle parent = mParent->mNode->mObject;
-      mParent->mComposition->MoveComponent(
-          parent, mDragObject->mNode->mObject, insertIndex);
+      mParent->mComposition->MoveComponent(parent, mDragObject->mNode->mObject, insertIndex);
     }
 
     // Animate back to the correct positions
@@ -1344,9 +1296,7 @@ public:
     // Let them animate then end the drag
     ActionSequence* sequence = new ActionSequence(mParent);
     sequence->Add(new ActionDelay(ComponentUi::OpenTime));
-    sequence->Add(
-        new CallAction<PropertyWidgetObject, &PropertyWidgetObject::EndDrag>(
-            mParent));
+    sequence->Add(new CallAction<PropertyWidgetObject, &PropertyWidgetObject::EndDrag>(mParent));
 
     // Destroy the manipulation
     this->Destroy();
@@ -1368,24 +1318,14 @@ void PropertyWidgetObject::HighlightRed(StringParam message)
   // Animate the title
   ActionSequence* seq = new ActionSequence(this);
   Vec4 color = ComponentUi::TitleRemove;
-  seq->Add(AnimatePropertyGetSet(Element,
-                                 Color,
-                                 Ease::Quad::InOut,
-                                 mTitleBackground,
-                                 ComponentUi::OpenTime,
-                                 color));
+  seq->Add(AnimatePropertyGetSet(Element, Color, Ease::Quad::InOut, mTitleBackground, ComponentUi::OpenTime, color));
 
   // Animate the background
   if (mBackground->GetVisible())
   {
     seq = new ActionSequence(this);
     color = ComponentUi::BackgroundRemove;
-    seq->Add(AnimatePropertyGetSet(Element,
-                                   Color,
-                                   Ease::Quad::InOut,
-                                   mBackground,
-                                   ComponentUi::OpenTime,
-                                   color));
+    seq->Add(AnimatePropertyGetSet(Element, Color, Ease::Quad::InOut, mBackground, ComponentUi::OpenTime, color));
   }
 
   // Only create a tooltip if the message is valid and we don't
@@ -1401,30 +1341,19 @@ void PropertyWidgetObject::RemoveRedHighlight()
   Vec4 color = ComponentUi::TitleColor;
   if (mMouseOverTitle)
     color = ComponentUi::TitleHighlight;
-  seq->Add(AnimatePropertyGetSet(Element,
-                                 Color,
-                                 Ease::Quad::InOut,
-                                 mTitleBackground,
-                                 ComponentUi::OpenTime,
-                                 color));
+  seq->Add(AnimatePropertyGetSet(Element, Color, Ease::Quad::InOut, mTitleBackground, ComponentUi::OpenTime, color));
   seq->Add(new CallAction<ZilchSelf, &ZilchSelf::AnimationFinished>(this));
 
   // Animate the background
   seq = new ActionSequence(this);
   color = ComponentUi::BackgroundColor;
-  seq->Add(AnimatePropertyGetSet(Element,
-                                 Color,
-                                 Ease::Quad::InOut,
-                                 mBackground,
-                                 ComponentUi::OpenTime,
-                                 color));
+  seq->Add(AnimatePropertyGetSet(Element, Color, Ease::Quad::InOut, mBackground, ComponentUi::OpenTime, color));
 
   // Destroy the tool tip
   mToolTip.SafeDestroy();
 }
 
-void PropertyWidgetObject::CreateTooltip(StringParam message,
-                                         ToolTipColorScheme::Enum color)
+void PropertyWidgetObject::CreateTooltip(StringParam message, ToolTipColorScheme::Enum color)
 {
   // Destroy it if one already exists
   mToolTip.SafeDestroy();
@@ -1439,12 +1368,8 @@ void PropertyWidgetObject::CreateTooltip(StringParam message,
   placement.SetScreenRect(mTitleBackground->GetScreenRect());
   placement.mScreenRect.RemoveThickness(Thickness(2, 2, 2, 2));
   // We want the hotspot to point at the remove icon
-  placement.mHotSpot =
-      mTitleBackground->GetScreenRect().Center() - Pixels(0, 1);
-  placement.SetPriority(IndicatorSide::Right,
-                        IndicatorSide::Left,
-                        IndicatorSide::Bottom,
-                        IndicatorSide::Top);
+  placement.mHotSpot = mTitleBackground->GetScreenRect().Center() - Pixels(0, 1);
+  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Bottom, IndicatorSide::Top);
   toolTip->SetArrowTipTranslation(placement);
 
   mToolTip = toolTip;
@@ -1456,13 +1381,11 @@ Handle PropertyWidgetObject::GetParentObject()
   return parentNode->mObject;
 }
 
-void PropertyWidgetObject::StartChildDrag(Mouse* mouse,
-                                          PropertyWidgetObject* child)
+void PropertyWidgetObject::StartChildDrag(Mouse* mouse, PropertyWidgetObject* child)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Property View",
-                    "Cannot move components while in read-only mode");
+    DoNotifyWarning("Property View", "Cannot move components while in read-only mode");
     return;
   }
 
@@ -1493,8 +1416,7 @@ void PropertyWidgetObject::EndDrag()
 uint PropertyWidgetObject::GetComponentIndex()
 {
   uint index = 0;
-  forRange(PropertyWidgetObject & component,
-           mParentWidgetObject->mComponents.All())
+  forRange (PropertyWidgetObject& component, mParentWidgetObject->mComponents.All())
   {
     if (&component == this)
       return index;
@@ -1520,8 +1442,7 @@ void PropertyWidgetObject::OnEditScriptPressed(Event* e)
   if (mNode->mObject.StoredType == nullptr)
     return;
 
-  ResourceId resourceId =
-      mNode->mObject.StoredType->HasInherited<MetaResource>()->mResourceId;
+  ResourceId resourceId = mNode->mObject.StoredType->HasInherited<MetaResource>()->mResourceId;
   Resource* resource = Z::gResources->GetResource(resourceId);
   ReturnIf(resource == nullptr, , "Could not find resource to edit");
   Z::gEditor->EditResource(resource);

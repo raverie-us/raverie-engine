@@ -50,12 +50,9 @@ DefineEvent(OnDestroy);
 DefineEvent(Closing);
 } // namespace Events
 
-String NamedMouseDown[] = {
-    Events::LeftMouseDown, Events::RightMouseDown, Events::MiddleMouseDown};
-String NamedMouseUp[] = {
-    Events::LeftMouseUp, Events::RightMouseUp, Events::MiddleMouseUp};
-String NamedMouseClick[] = {
-    Events::LeftClick, Events::RightClick, Events::MiddleClick};
+String NamedMouseDown[] = {Events::LeftMouseDown, Events::RightMouseDown, Events::MiddleMouseDown};
+String NamedMouseUp[] = {Events::LeftMouseUp, Events::RightMouseUp, Events::MiddleMouseUp};
+String NamedMouseClick[] = {Events::LeftClick, Events::RightClick, Events::MiddleClick};
 
 ZilchDefineType(FocusEvent, builder, type)
 {

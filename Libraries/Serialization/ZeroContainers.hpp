@@ -101,9 +101,7 @@ struct Trait<ArrayMap<keytype, valuetype>>
 template <>
 struct Policy<String>
 {
-  static inline bool Serialize(Serializer& serializer,
-                               cstr fieldName,
-                               String& stringValue)
+  static inline bool Serialize(Serializer& serializer, cstr fieldName, String& stringValue)
   {
     if (serializer.GetMode() == SerializerMode::Saving)
     {
@@ -141,12 +139,9 @@ template <typename first, typename second>
 struct Policy<Pair<first, second>>
 {
   typedef Pair<first, second> type;
-  static inline bool Serialize(Serializer& serializer,
-                               cstr fieldName,
-                               Pair<first, second>& pair)
+  static inline bool Serialize(Serializer& serializer, cstr fieldName, Pair<first, second>& pair)
   {
-    serializer.Start(
-        Trait<type>::TypeName(), fieldName, Serialization::Trait<type>::Type);
+    serializer.Start(Trait<type>::TypeName(), fieldName, Serialization::Trait<type>::Type);
     serializer.SerializeField("key", pair.first);
     serializer.SerializeField("value", pair.second);
     serializer.End(Trait<type>::TypeName(), Serialization::Trait<type>::Type);
@@ -159,8 +154,7 @@ void SaveSequence(Serializer& serializer, containerType& container)
 {
   uint containerSize = (uint)container.Size();
   serializer.ArraySize(containerSize);
-  ForEach(container.All(),
-          SerializeFunctor<typename containerType::value_type>(serializer));
+  ForEach(container.All(), SerializeFunctor<typename containerType::value_type>(serializer));
 }
 
 template <typename containerType>
@@ -169,8 +163,7 @@ void LoadSequence(Serializer& serializer, containerType& container)
   uint containerSize = 0;
   serializer.ArraySize(containerSize);
   container.Resize(containerSize);
-  ForEach(container.All(),
-          SerializeFunctor<typename containerType::value_type>(serializer));
+  ForEach(container.All(), SerializeFunctor<typename containerType::value_type>(serializer));
 }
 
 template <typename containerType>
@@ -188,12 +181,9 @@ void InsertSequence(Serializer& serializer, containerType& container)
 }
 
 template <typename type>
-static inline bool SerializeSequence(Serializer& stream,
-                                     cstr fieldName,
-                                     type& sequence)
+static inline bool SerializeSequence(Serializer& stream, cstr fieldName, type& sequence)
 {
-  bool started = stream.Start(
-      Trait<type>::TypeName(), fieldName, Serialization::Trait<type>::Type);
+  bool started = stream.Start(Trait<type>::TypeName(), fieldName, Serialization::Trait<type>::Type);
   if (started)
   {
     if (stream.GetMode() == SerializerMode::Saving)
@@ -210,12 +200,9 @@ static inline bool SerializeSequence(Serializer& stream,
 }
 
 template <typename type>
-inline bool SerializeSequenceInsert(Serializer& stream,
-                                    cstr fieldName,
-                                    type& sequence)
+inline bool SerializeSequenceInsert(Serializer& stream, cstr fieldName, type& sequence)
 {
-  bool started = stream.Start(
-      Trait<type>::TypeName(), fieldName, Serialization::Trait<type>::Type);
+  bool started = stream.Start(Trait<type>::TypeName(), fieldName, Serialization::Trait<type>::Type);
   if (started)
   {
     if (stream.GetMode() == SerializerMode::Saving)
@@ -236,9 +223,7 @@ struct Policy<Array<type>>
 {
   typedef Array<type> containertype;
 
-  static inline bool Serialize(Serializer& serializer,
-                               cstr fieldName,
-                               containertype& container)
+  static inline bool Serialize(Serializer& serializer, cstr fieldName, containertype& container)
   {
     return SerializeSequence(serializer, fieldName, container);
   }
@@ -248,9 +233,7 @@ template <typename type>
 struct Policy<PodArray<type>>
 {
   typedef PodArray<type> containertype;
-  static inline bool Serialize(Serializer& serializer,
-                               cstr fieldName,
-                               containertype& container)
+  static inline bool Serialize(Serializer& serializer, cstr fieldName, containertype& container)
   {
     return SerializeSequence(serializer, fieldName, container);
   }
@@ -260,9 +243,7 @@ template <typename keytype, typename valuetype>
 struct Policy<HashMap<keytype, valuetype>>
 {
   typedef HashMap<keytype, valuetype> containertype;
-  static inline bool Serialize(Serializer& serializer,
-                               cstr fieldName,
-                               containertype& container)
+  static inline bool Serialize(Serializer& serializer, cstr fieldName, containertype& container)
   {
     return SerializeSequenceInsert(serializer, fieldName, container);
   }
@@ -272,9 +253,7 @@ template <typename keytype, typename valuetype>
 struct Policy<UnsortedMap<keytype, valuetype>>
 {
   typedef UnsortedMap<keytype, valuetype> containertype;
-  static inline bool Serialize(Serializer& serializer,
-                               cstr fieldName,
-                               containertype& container)
+  static inline bool Serialize(Serializer& serializer, cstr fieldName, containertype& container)
   {
     return SerializeSequence(serializer, fieldName, container);
   }
@@ -284,9 +263,7 @@ template <typename type>
 struct Policy<HashSet<type>>
 {
   typedef HashSet<type> containertype;
-  static inline bool Serialize(Serializer& serializer,
-                               cstr fieldName,
-                               containertype& container)
+  static inline bool Serialize(Serializer& serializer, cstr fieldName, containertype& container)
   {
     return SerializeSequenceInsert(serializer, fieldName, container);
   }
@@ -296,9 +273,7 @@ template <typename keytype, typename valuetype>
 struct Policy<ArrayMap<keytype, valuetype>>
 {
   typedef ArrayMap<keytype, valuetype> containertype;
-  static inline bool Serialize(Serializer& serializer,
-                               cstr fieldName,
-                               containertype& container)
+  static inline bool Serialize(Serializer& serializer, cstr fieldName, containertype& container)
   {
     return SerializeSequence(serializer, fieldName, container);
   }

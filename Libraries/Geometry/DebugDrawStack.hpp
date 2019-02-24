@@ -9,11 +9,11 @@ namespace Zero
 class DebugDrawStep
 {
 public:
-#define ZeroDebugPrimitive(DebugType)                                          \
-  Array<Debug::DebugType> m##DebugType##List;                                  \
-  void Add(const Debug::DebugType& value)                                      \
-  {                                                                            \
-    m##DebugType##List.PushBack(value);                                        \
+#define ZeroDebugPrimitive(DebugType)                                                                                  \
+  Array<Debug::DebugType> m##DebugType##List;                                                                          \
+  void Add(const Debug::DebugType& value)                                                                              \
+  {                                                                                                                    \
+    m##DebugType##List.PushBack(value);                                                                                \
   }
 #include "DebugPrimitives.inl"
 #undef ZeroDebugPrimitive

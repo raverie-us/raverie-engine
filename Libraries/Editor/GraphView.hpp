@@ -125,21 +125,11 @@ private:
   Vec3 GetLabelPosition(uint labelNumber);
 
   /// Draw the label for each graph entry.
-  void DrawLabels(RenderFont* font,
-                  ViewBlock& viewBlock,
-                  FrameBlock& frameBlock,
-                  WidgetRect clipRect);
+  void DrawLabels(RenderFont* font, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
 
   /// Draw the line graph
-  void DrawLineGraph(Vec2Param size,
-                     ViewBlock& viewBlock,
-                     FrameBlock& frameBlock,
-                     WidgetRect clipRect);
-  void DrawGrid(Vec2Param size,
-                RenderFont* font,
-                ViewBlock& viewBlock,
-                FrameBlock& frameBlock,
-                WidgetRect clipRect);
+  void DrawLineGraph(Vec2Param size, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
+  void DrawGrid(Vec2Param size, RenderFont* font, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
 
   /// Draw the pie graph
   void DrawPieGraph();

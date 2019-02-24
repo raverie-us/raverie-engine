@@ -15,8 +15,7 @@ void DispatchCodeTranslatorScriptError(StringParam eventId,
     return;
 
   Resource* resource = (Resource*)location.CodeUserData;
-  DocumentResource* documentResource =
-      Type::DynamicCast<DocumentResource*>(resource);
+  DocumentResource* documentResource = Type::DynamicCast<DocumentResource*>(resource);
   if (resource == nullptr)
     return;
 
@@ -35,23 +34,19 @@ void OnZilchFragmentCompilationError(Zilch::ErrorEvent* e)
 {
   String shortMessage = e->ExactError;
   String fullMessage = e->GetFormattedMessage(Zilch::MessageFormat::Python);
-  DispatchCodeTranslatorScriptError(
-      Events::SyntaxError, shortMessage, fullMessage, e->Location);
+  DispatchCodeTranslatorScriptError(Events::SyntaxError, shortMessage, fullMessage, e->Location);
 }
 
 void OnZilchFragmentTranslationError(TranslationErrorEvent* e)
 {
   String fullMessage = e->GetFormattedMessage(Zilch::MessageFormat::Python);
-  DispatchCodeTranslatorScriptError(
-      Events::SyntaxError, e->mShortMessage, fullMessage, e->mLocation);
+  DispatchCodeTranslatorScriptError(Events::SyntaxError, e->mShortMessage, fullMessage, e->mLocation);
 }
 
-TranslatedShaderScriptEditor::TranslatedShaderScriptEditor(Composite* parent) :
-    ScriptEditor(parent)
+TranslatedShaderScriptEditor::TranslatedShaderScriptEditor(Composite* parent) : ScriptEditor(parent)
 {
   // mShaderGenerator = nullptr;
-  ConnectThisTo(
-      ZilchManager::GetInstance(), Events::ScriptsCompiledPostPatch, OnBuild);
+  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledPostPatch, OnBuild);
 }
 
 TranslatedShaderScriptEditor::~TranslatedShaderScriptEditor()
@@ -158,8 +153,7 @@ String TranslatedShaderScriptEditor::OnTranslate()
 //  shaderGenerator.CompileAndTranslateShaders();
 //}
 
-FragmentFileTranslatorScriptEditor::FragmentFileTranslatorScriptEditor(
-    Composite* parent) :
+FragmentFileTranslatorScriptEditor::FragmentFileTranslatorScriptEditor(Composite* parent) :
     TranslatedShaderScriptEditor(parent)
 {
   mFragment = nullptr;
@@ -206,8 +200,7 @@ String FragmentFileTranslatorScriptEditor::OnTranslate()
   // return result;
 }
 
-ZilchCompositorScriptEditor::ZilchCompositorScriptEditor(Composite* parent) :
-    TranslatedShaderScriptEditor(parent)
+ZilchCompositorScriptEditor::ZilchCompositorScriptEditor(Composite* parent) : TranslatedShaderScriptEditor(parent)
 {
   mMaterial = nullptr;
 }
@@ -234,8 +227,7 @@ String ZilchCompositorScriptEditor::OnTranslate()
   // return result;
 }
 
-TranslatedZilchCompositorScriptEditor::TranslatedZilchCompositorScriptEditor(
-    Composite* parent) :
+TranslatedZilchCompositorScriptEditor::TranslatedZilchCompositorScriptEditor(Composite* parent) :
     TranslatedShaderScriptEditor(parent)
 {
   mMaterial = nullptr;
@@ -293,14 +285,12 @@ String TranslatedZilchCompositorScriptEditor::OnTranslate()
   // pixelTranslation.mTranslation); return combinedTranslation;
 }
 
-void TranslatedZilchCompositorScriptEditor::SetDisplayMode(
-    TranslationDisplayMode::Enum displayMode)
+void TranslatedZilchCompositorScriptEditor::SetDisplayMode(TranslationDisplayMode::Enum displayMode)
 {
   mDisplayMode = displayMode;
 }
 
-BaseSplitScriptEditor::BaseSplitScriptEditor(Composite* parent) :
-    Composite(parent)
+BaseSplitScriptEditor::BaseSplitScriptEditor(Composite* parent) : Composite(parent)
 {
   // Can't called setup now as virtual functions won't properly be setup yet
 }
@@ -318,8 +308,7 @@ void BaseSplitScriptEditor::Setup()
   mTranslatedEditor->SetSizing(SizeAxis::X, SizePolicy::Flex, 200);
 
   ConnectThisTo(Z::gEditor, Events::Save, OnSaveCheck);
-  ConnectThisTo(
-      ZilchManager::GetInstance(), Events::ScriptsCompiledPostPatch, OnBuild);
+  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledPostPatch, OnBuild);
   ConnectThisTo(mTranslatedEditor, Events::LeftMouseDown, OnLeftMouseDown);
 }
 
@@ -414,8 +403,7 @@ void BaseSplitScriptEditor::OnLeftMouseDown(MouseEvent* e)
 //  return current;
 //}
 
-FragmentSplitScriptEditor::FragmentSplitScriptEditor(Composite* parent) :
-    BaseSplitScriptEditor(parent)
+FragmentSplitScriptEditor::FragmentSplitScriptEditor(Composite* parent) : BaseSplitScriptEditor(parent)
 {
   // This has to be called here so that the virtual functions will be properly
   // set
@@ -453,13 +441,11 @@ void FragmentSplitScriptEditor::Build()
 void FragmentSplitScriptEditor::SetResource(ZilchFragment* fragment)
 {
   mFragment = fragment;
-  FragmentFileTranslatorScriptEditor* editor =
-      (FragmentFileTranslatorScriptEditor*)mTranslatedEditor;
+  FragmentFileTranslatorScriptEditor* editor = (FragmentFileTranslatorScriptEditor*)mTranslatedEditor;
   editor->SetResource(fragment);
 }
 
-MaterialSplitScriptEditor::MaterialSplitScriptEditor(Composite* parent) :
-    BaseSplitScriptEditor(parent)
+MaterialSplitScriptEditor::MaterialSplitScriptEditor(Composite* parent) : BaseSplitScriptEditor(parent)
 {
   mDisplayMode = TranslationDisplayMode::Pixel;
   // This has to be called here so that the virtual functions will be properly
@@ -469,8 +455,7 @@ MaterialSplitScriptEditor::MaterialSplitScriptEditor(Composite* parent) :
 
 void MaterialSplitScriptEditor::SetTranslatedEditor()
 {
-  TranslatedZilchCompositorScriptEditor* editor =
-      new TranslatedZilchCompositorScriptEditor(this);
+  TranslatedZilchCompositorScriptEditor* editor = new TranslatedZilchCompositorScriptEditor(this);
   editor->mDisplayMode = mDisplayMode;
   mTranslatedEditor = editor;
 }
@@ -502,26 +487,21 @@ void MaterialSplitScriptEditor::Build()
 void MaterialSplitScriptEditor::SetResource(Material* material)
 {
   mMaterial = material;
-  TranslatedZilchCompositorScriptEditor* editor =
-      (TranslatedZilchCompositorScriptEditor*)mTranslatedEditor;
+  TranslatedZilchCompositorScriptEditor* editor = (TranslatedZilchCompositorScriptEditor*)mTranslatedEditor;
   editor->SetResource(material);
 }
 
-void MaterialSplitScriptEditor::SetDisplayMode(
-    TranslationDisplayMode::Enum displayMode)
+void MaterialSplitScriptEditor::SetDisplayMode(TranslationDisplayMode::Enum displayMode)
 {
   mDisplayMode = displayMode;
-  TranslatedZilchCompositorScriptEditor* editor =
-      (TranslatedZilchCompositorScriptEditor*)mTranslatedEditor;
+  TranslatedZilchCompositorScriptEditor* editor = (TranslatedZilchCompositorScriptEditor*)mTranslatedEditor;
   editor->SetDisplayMode(mDisplayMode);
 }
 
 // Tries to find a script window of a given name, if it cannot be found then it
 // is created.
 template <typename ScriptEditorType>
-ScriptEditorType* CreateScriptWindow(Editor* editor,
-                                     StringParam name,
-                                     uint lexerType)
+ScriptEditorType* CreateScriptWindow(Editor* editor, StringParam name, uint lexerType)
 {
   // get the center window (where we add all tabs to)
   Window* centerWindow = editor->GetCenterWindow();
@@ -558,17 +538,13 @@ struct ShaderFileBuilder
 
   Resource* GetResourceByName(StringParam name)
   {
-    return ZilchFragmentManager::GetInstance()->GetResource(
-        name, ResourceNotFound::ReturnNull);
+    return ZilchFragmentManager::GetInstance()->GetResource(name, ResourceNotFound::ReturnNull);
   }
 };
 
 template <typename Functor>
-void RunCodeTranslator(Editor* editor,
-                       Space* space,
-                       CodeTranslator* translator,
-                       Functor customFileBuilder,
-                       StringParam rerunCommand)
+void RunCodeTranslator(
+    Editor* editor, Space* space, CodeTranslator* translator, Functor customFileBuilder, StringParam rerunCommand)
 {
   // get the center window (where we add all tabs to)
   Window* centerWindow = editor->GetCenterWindow();
@@ -635,8 +611,7 @@ void RunCodeTranslator(Editor* editor,
     splitWindow->mSourceText->SetAllText(script->LoadTextData());
     splitWindow->mSourceText->SetScrolledPercentage(scrollPercent);
 
-    String fileText =
-        customFileBuilder.CreateFileWithContents(translatedCode, className);
+    String fileText = customFileBuilder.CreateFileWithContents(translatedCode, className);
 
     scrollPercent = splitWindow->mTranslatedText->GetScrolledPercentage();
     splitWindow->mTranslatedText->SetAllText(fileText);
@@ -648,14 +623,9 @@ CodeTranslatorListener::CodeTranslatorListener()
 {
   ConnectThisTo(Z::gEditor, "ComposeZilchMaterial", OnComposeZilchMaterial);
   ConnectThisTo(Z::gEditor, "TranslateZilchFragment", OnTranslateZilchFragment);
-  ConnectThisTo(
-      Z::gEditor, "TranslateZilchPixelMaterial", OnTranslateZilchPixelFragment);
-  ConnectThisTo(Z::gEditor,
-                "TranslateZilchGeometryMaterial",
-                OnTranslateZilchGeometryFragment);
-  ConnectThisTo(Z::gEditor,
-                "TranslateZilchVertexMaterial",
-                OnTranslateZilchVertexFragment);
+  ConnectThisTo(Z::gEditor, "TranslateZilchPixelMaterial", OnTranslateZilchPixelFragment);
+  ConnectThisTo(Z::gEditor, "TranslateZilchGeometryMaterial", OnTranslateZilchGeometryFragment);
+  ConnectThisTo(Z::gEditor, "TranslateZilchVertexMaterial", OnTranslateZilchVertexFragment);
 
   // ConnectThisTo(Z::gEditor, "TranslateZilchFragment",
   // OnTranslateZilchFragmentWithLineNumbers); ConnectThisTo(Z::gEditor,
@@ -670,8 +640,8 @@ void CreateFragmentTranslationWindow(ObjectEvent* e, StringParam baseWindowName)
 {
   Editor* editor = Z::gEditor;
   ZilchFragment* fragment = (ZilchFragment*)e->Source;
-  EditorType* scriptEditor = CreateScriptWindow<EditorType>(
-      editor, BuildString(baseWindowName, fragment->Name), Lexer::Shader);
+  EditorType* scriptEditor =
+      CreateScriptWindow<EditorType>(editor, BuildString(baseWindowName, fragment->Name), Lexer::Shader);
   scriptEditor->SetResource(fragment);
   scriptEditor->Build();
 }
@@ -683,8 +653,8 @@ void CreateMaterialTranslationWindow(ObjectEvent* e,
 {
   Editor* editor = Z::gEditor;
   Material* material = (Material*)e->Source;
-  EditorType* scriptEditor = CreateScriptWindow<EditorType>(
-      editor, BuildString(baseWindowName, material->Name), Lexer::Shader);
+  EditorType* scriptEditor =
+      CreateScriptWindow<EditorType>(editor, BuildString(baseWindowName, material->Name), Lexer::Shader);
   scriptEditor->SetDisplayMode(displayMode);
   scriptEditor->SetResource(material);
   scriptEditor->Build();
@@ -694,17 +664,15 @@ void CodeTranslatorListener::OnComposeZilchMaterial(ObjectEvent* e)
 {
   Editor* editor = Z::gEditor;
   Material* material = (Material*)e->Source;
-  ZilchCompositorScriptEditor* scriptEditor =
-      CreateScriptWindow<ZilchCompositorScriptEditor>(
-          editor, BuildString("CompositedMat", material->Name), Lexer::Zilch);
+  ZilchCompositorScriptEditor* scriptEditor = CreateScriptWindow<ZilchCompositorScriptEditor>(
+      editor, BuildString("CompositedMat", material->Name), Lexer::Zilch);
   scriptEditor->SetResource(material);
   scriptEditor->Build();
 }
 
 void CodeTranslatorListener::OnTranslateZilchFragment(ObjectEvent* e)
 {
-  CreateFragmentTranslationWindow<FragmentFileTranslatorScriptEditor>(
-      e, "Translated");
+  CreateFragmentTranslationWindow<FragmentFileTranslatorScriptEditor>(e, "Translated");
 }
 
 void CodeTranslatorListener::OnTranslateZilchPixelFragment(ObjectEvent* e)
@@ -725,30 +693,24 @@ void CodeTranslatorListener::OnTranslateZilchVertexFragment(ObjectEvent* e)
       e, TranslationDisplayMode::Vertex, "TranslatedVertexMat");
 }
 
-void CodeTranslatorListener::OnTranslateZilchFragmentWithLineNumbers(
-    ObjectEvent* e)
+void CodeTranslatorListener::OnTranslateZilchFragmentWithLineNumbers(ObjectEvent* e)
 {
   CreateFragmentTranslationWindow<FragmentSplitScriptEditor>(e, "Translated");
 }
 
-void CodeTranslatorListener::OnTranslateZilchPixelFragmentWithLineNumbers(
-    ObjectEvent* e)
+void CodeTranslatorListener::OnTranslateZilchPixelFragmentWithLineNumbers(ObjectEvent* e)
 {
-  CreateMaterialTranslationWindow<MaterialSplitScriptEditor>(
-      e, TranslationDisplayMode::Pixel, "TranslatedPixelMat");
+  CreateMaterialTranslationWindow<MaterialSplitScriptEditor>(e, TranslationDisplayMode::Pixel, "TranslatedPixelMat");
 }
 
-void CodeTranslatorListener::OnTranslateZilchVertexFragmentWithLineNumbers(
-    ObjectEvent* e)
+void CodeTranslatorListener::OnTranslateZilchVertexFragmentWithLineNumbers(ObjectEvent* e)
 {
-  CreateMaterialTranslationWindow<MaterialSplitScriptEditor>(
-      e, TranslationDisplayMode::Vertex, "TranslatedVertexMat");
+  CreateMaterialTranslationWindow<MaterialSplitScriptEditor>(e, TranslationDisplayMode::Vertex, "TranslatedVertexMat");
 }
 
 void CreateShaderTranslationDebugHelper(Editor* editor)
 {
-  ShaderTranslationDebugHelper* translatorWindow =
-      new ShaderTranslationDebugHelper(editor);
+  ShaderTranslationDebugHelper* translatorWindow = new ShaderTranslationDebugHelper(editor);
   editor->AddManagedWidget(translatorWindow, DockArea::Center, true);
   translatorWindow->SetSize(Vec2(500, 500));
 }
@@ -757,8 +719,7 @@ void BindCodeTranslatorCommands(Cog* configCog, CommandManager* commands)
 {
   // Ideally change this to add as a component later
   Z::gEditor->mCodeTranslatorListener = new CodeTranslatorListener();
-  commands->AddCommand("DebugShaderTranslation",
-                       BindCommandFunction(CreateShaderTranslationDebugHelper));
+  commands->AddCommand("DebugShaderTranslation", BindCommandFunction(CreateShaderTranslationDebugHelper));
 }
 
 } // namespace Zero

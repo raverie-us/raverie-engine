@@ -84,8 +84,7 @@ public:
   NetUserId mNetUserId;        ///< Network user identifier.
   CogHashSet mOwnedNetObjects; ///< Owned network objects.
   EventBundle mRequestBundle;  ///< [Server/Offline] Bundled request event data.
-  EventBundle
-      mResponseBundle; ///< [Server/Offline] Bundled response event data.
+  EventBundle mResponseBundle; ///< [Server/Offline] Bundled response event data.
 };
 
 //                               NetUserSortPolicy //
@@ -98,15 +97,13 @@ struct NetUserSortPolicy : public SortPolicy<CogId>
 
   /// Dereferences to NetUser component before comparing with another value.
   template <typename CompareType>
-  bool operator()(const value_type& lhs, const CompareType& rhs)
-      const // Intended for: CogId < NetUserId
+  bool operator()(const value_type& lhs, const CompareType& rhs) const // Intended for: CogId < NetUserId
   {
     // Get net user
     NetUser* lhsNetUser = static_cast<Cog*>(lhs)->has(NetUser);
     if (!lhsNetUser)
     {
-      DoNotifyException("NetUserSortPolicy",
-                        "Unable to compare Cogs - Missing NetUser component");
+      DoNotifyException("NetUserSortPolicy", "Unable to compare Cogs - Missing NetUser component");
       return false;
     }
 
@@ -121,8 +118,7 @@ struct NetUserSortPolicy : public SortPolicy<CogId>
     NetUser* rhsNetUser = static_cast<Cog*>(rhs)->has(NetUser);
     if (!lhsNetUser || !rhsNetUser)
     {
-      DoNotifyException("NetUserSortPolicy",
-                        "Unable to compare Cogs - Missing NetUser component");
+      DoNotifyException("NetUserSortPolicy", "Unable to compare Cogs - Missing NetUser component");
       return false;
     }
 
@@ -137,8 +133,7 @@ struct NetUserSortPolicy : public SortPolicy<CogId>
     NetUser* rhsNetUser = const_cast<Cog*>(rhs)->has(NetUser);
     if (!lhsNetUser || !rhsNetUser)
     {
-      DoNotifyException("NetUserSortPolicy",
-                        "Unable to compare Cogs - Missing NetUser component");
+      DoNotifyException("NetUserSortPolicy", "Unable to compare Cogs - Missing NetUser component");
       return false;
     }
 
@@ -154,8 +149,7 @@ struct NetUserSortPolicy : public SortPolicy<CogId>
     NetUser* lhsNetUser = static_cast<Cog*>(lhs)->has(NetUser);
     if (!lhsNetUser)
     {
-      DoNotifyException("NetUserSortPolicy",
-                        "Unable to compare Cogs - Missing NetUser component");
+      DoNotifyException("NetUserSortPolicy", "Unable to compare Cogs - Missing NetUser component");
       return false;
     }
 
@@ -170,8 +164,7 @@ struct NetUserSortPolicy : public SortPolicy<CogId>
     NetUser* rhsNetUser = static_cast<Cog*>(rhs)->has(NetUser);
     if (!lhsNetUser || !rhsNetUser)
     {
-      DoNotifyException("NetUserSortPolicy",
-                        "Unable to compare Cogs - Missing NetUser component");
+      DoNotifyException("NetUserSortPolicy", "Unable to compare Cogs - Missing NetUser component");
       return false;
     }
 
@@ -186,8 +179,7 @@ struct NetUserSortPolicy : public SortPolicy<CogId>
     NetUser* rhsNetUser = const_cast<Cog*>(rhs)->has(NetUser);
     if (!lhsNetUser || !rhsNetUser)
     {
-      DoNotifyException("NetUserSortPolicy",
-                        "Unable to compare Cogs - Missing NetUser component");
+      DoNotifyException("NetUserSortPolicy", "Unable to compare Cogs - Missing NetUser component");
       return false;
     }
 

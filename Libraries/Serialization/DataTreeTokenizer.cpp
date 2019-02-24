@@ -279,8 +279,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       else if (IsNumber(rune))
         currentState = TokenState::ScientificNotationFloat;
       else
-        status.SetFailed(
-            "Incomplete scientific notation. A number or +- should follow 'e'");
+        status.SetFailed("Incomplete scientific notation. A number or +- should follow 'e'");
       break;
     }
     //--------------------------------------------------------- Scientific

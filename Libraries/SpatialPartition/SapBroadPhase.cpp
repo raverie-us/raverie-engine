@@ -60,8 +60,7 @@ void SapBroadPhase::Query(BroadPhaseData& data, ClientPairArray& results)
   }
 }
 
-void SapBroadPhase::BatchQuery(BroadPhaseDataArray& data,
-                               ClientPairArray& results)
+void SapBroadPhase::BatchQuery(BroadPhaseDataArray& data, ClientPairArray& results)
 {
   for (uint i = 0; i < data.Size(); ++i)
     Query(data[i], results);
@@ -80,8 +79,7 @@ void SapBroadPhase::CastRay(CastDataParam castData, ProxyCastResults& results)
     callback.Refine(range.Front(), castData);
 }
 
-void SapBroadPhase::CastSegment(CastDataParam castData,
-                                ProxyCastResults& results)
+void SapBroadPhase::CastSegment(CastDataParam castData, ProxyCastResults& results)
 {
   SimpleSegmentCallback callback(mCastSegmentCallBack, &results);
   SapRange<void*, Segment> range = mSap.Query(castData.GetSegment());
@@ -97,8 +95,7 @@ void SapBroadPhase::CastAabb(CastDataParam castData, ProxyCastResults& results)
     callback.Refine(range.Front(), castData);
 }
 
-void SapBroadPhase::CastSphere(CastDataParam castData,
-                               ProxyCastResults& results)
+void SapBroadPhase::CastSphere(CastDataParam castData, ProxyCastResults& results)
 {
   SimpleSphereCallback callback(mCastSphereCallBack, &results);
   SapRange<void*, Sphere> range = mSap.Query(castData.GetSphere());
@@ -106,8 +103,7 @@ void SapBroadPhase::CastSphere(CastDataParam castData,
     callback.Refine(range.Front(), castData);
 }
 
-void SapBroadPhase::CastFrustum(CastDataParam castData,
-                                ProxyCastResults& results)
+void SapBroadPhase::CastFrustum(CastDataParam castData, ProxyCastResults& results)
 {
   SimpleFrustumCallback callback(mCastFrustumCallBack, &results);
   SapRange<void*, Frustum> range = mSap.Query(castData.GetFrustum());

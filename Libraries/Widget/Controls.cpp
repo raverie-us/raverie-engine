@@ -38,8 +38,7 @@ Spacer::Spacer(Composite* parent) : Widget(parent)
   SetName("Spacer");
 }
 
-Spacer::Spacer(Composite* parent, SizePolicy::Enum policy, Vec2Param size) :
-    Widget(parent)
+Spacer::Spacer(Composite* parent, SizePolicy::Enum policy, Vec2Param size) : Widget(parent)
 {
   mMinSize = Vec2(1, 1);
   SetSizing(policy, size);

@@ -87,8 +87,7 @@ public:
 
   /// Returns the entry associated with the given key. If no entry matches the
   /// key then the provided default is returned.
-  ResourceTableEntry* GetOrDefault(StringParam key,
-                                   ResourceTableEntry* defaultValue);
+  ResourceTableEntry* GetOrDefault(StringParam key, ResourceTableEntry* defaultValue);
   /// Returns the entry associated with the given key. If no entry matches the
   /// key then an exception is thrown.
   ResourceTableEntry* GetOrError(StringParam key);
@@ -162,9 +161,7 @@ public:
   // Add a new entry solely based upon a value. This is almost entirely used by
   // the ui when a new row is added.
   void AddNewEntry(StringParam value = String());
-  bool AddNewEntry(const ValueType& name,
-                   const ValueType& value,
-                   const WeightType& prob);
+  bool AddNewEntry(const ValueType& name, const ValueType& value, const WeightType& prob);
 
   /// Mark the table as having changes that need to be processed on the next
   /// sample.
@@ -175,9 +172,8 @@ public:
   void ValidateEntries();
   bool ValidateEntry(ResourceTableEntry* entry);
   bool ValidateEntryType(ResourceTableEntry* entry, bool throwException);
-  Resource* GetResource(
-      StringParam resourceIdName,
-      ResourceNotFound::Enum notFoundMode = ResourceNotFound::ReturnDefault);
+  Resource* GetResource(StringParam resourceIdName,
+                        ResourceNotFound::Enum notFoundMode = ResourceNotFound::ReturnDefault);
 
   /// List used to lookup entries by index.
   EntryList mEntryList;

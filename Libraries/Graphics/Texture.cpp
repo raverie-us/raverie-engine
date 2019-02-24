@@ -2,14 +2,14 @@
 
 #include "Precompiled.hpp"
 
-#define CheckProtected()                                                       \
-  if (mProtected)                                                              \
+#define CheckProtected()                                                                                               \
+  if (mProtected)                                                                                                      \
     return DoNotifyException("Error", "Cannot modify non-runtime Textures.");
 
-#define SetValue(member, value)                                                \
-  if (value == member)                                                         \
-    return;                                                                    \
-  member = value;                                                              \
+#define SetValue(member, value)                                                                                        \
+  if (value == member)                                                                                                 \
+    return;                                                                                                            \
+  member = value;                                                                                                      \
   mDirty = true;
 
 namespace Zero
@@ -36,8 +36,7 @@ ZilchDefineType(Texture, builder, type)
   ZilchBindGetterSetterProperty(CompareFunc);
 
   ZilchBindOverloadedMethod(Upload, ZilchInstanceOverload(void, TextureData&));
-  ZilchBindOverloadedMethod(
-      SubUpload, ZilchInstanceOverload(void, TextureData&, int, int));
+  ZilchBindOverloadedMethod(SubUpload, ZilchInstanceOverload(void, TextureData&, int, int));
 }
 
 HandleOf<Texture> Texture::CreateRuntime()
@@ -161,8 +160,7 @@ void Texture::SetMipMapping(TextureMipMapping::Enum mipMapping)
   CheckProtected();
 
   if (mipMapping == TextureMipMapping::PreGenerated)
-    return DoNotifyException(
-        "Error", "Cannot pre-generate mipmaps for a runtime Texture.");
+    return DoNotifyException("Error", "Cannot pre-generate mipmaps for a runtime Texture.");
 
   SetValue(mMipMapping, mipMapping);
 }
@@ -230,8 +228,7 @@ void Texture::SubUpload(TextureData& textureData, int xOffset, int yOffset)
   if (textureData.mFormat != mFormat)
     return DoNotifyException("Error", "Not the same format.");
 
-  if (xOffset + textureData.mWidth > mWidth ||
-      yOffset + textureData.mHeight > mHeight)
+  if (xOffset + textureData.mWidth > mWidth || yOffset + textureData.mHeight > mHeight)
     return DoNotifyException("Error", "Sub image goes outside texture bounds.");
 
   mMipCount = 1;
@@ -250,12 +247,7 @@ void Texture::SubUpload(TextureData& textureData, int xOffset, int yOffset)
   Z::gEngine->has(GraphicsEngine)->AddTexture(this, true, xOffset, yOffset);
 }
 
-void Texture::Upload(uint width,
-                     uint height,
-                     TextureFormat::Enum format,
-                     byte* data,
-                     uint size,
-                     bool copyData)
+void Texture::Upload(uint width, uint height, TextureFormat::Enum format, byte* data, uint size, bool copyData)
 {
   mWidth = width;
   mHeight = height;
@@ -319,8 +311,7 @@ void Texture::SubUpload(Image& image, int xOffset, int yOffset)
   if (mFormat != TextureFormat::RGBA8)
     return DoNotifyException("Error", "Texture is not RGBA8 format.");
 
-  if (xOffset + (uint)image.Width > mWidth ||
-      yOffset + (uint)image.Height > mHeight)
+  if (xOffset + (uint)image.Width > mWidth || yOffset + (uint)image.Height > mHeight)
     return DoNotifyException("Error", "Sub image goes outside texture bounds.");
 
   mMipCount = 1;
@@ -341,8 +332,7 @@ void Texture::SubUpload(Image& image, int xOffset, int yOffset)
 
 ImplementResourceManager(TextureManager, Texture);
 
-TextureManager::TextureManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+TextureManager::TextureManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   AddLoader(ZTexLoader, new TextureLoader());
 

@@ -100,10 +100,7 @@ struct ZeroShared Vector2
   static Vector2 Clamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue);
   /// Same as clamp, however it fills out whether or not anything was clamped.
   /// Useful when an assert message should be shown if anything was clamped.
-  static Vector2 DebugClamp(Vec2Param value,
-                            Vec2Param minValue,
-                            Vec2Param maxValue,
-                            bool& wasClamped);
+  static Vector2 DebugClamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue, bool& wasClamped);
 
   /// Return a copy of this vector with each element has been floored.
   static Vector2 Floor(Vec2Param value);
@@ -134,15 +131,12 @@ struct ZeroShared Vector2
   /// Projects the input vector onto a plane (the normal must be normalized)
   static Vector2 ProjectOnPlane(Vec2Param input, Vec2Param planeNormal);
   /// Calculates the reflection vector across a given vector.
-  static Vector2 ReflectAcrossVector(Vec2Param input,
-                                     Vec2Param normalizedVector);
+  static Vector2 ReflectAcrossVector(Vec2Param input, Vec2Param normalizedVector);
   /// Calculates the reflection vector across a given plane.
   static Vector2 ReflectAcrossPlane(Vec2Param input, Vec2Param planeNormal);
   /// Calculates the refraction vector through a plane given a certain index of
   /// refraction.
-  static Vector2 Refract(Vec2Param input,
-                         Vec2Param planeNormal,
-                         real refractionIndex);
+  static Vector2 Refract(Vec2Param input, Vec2Param planeNormal, real refractionIndex);
   /// Get the angle between the two vectors in radians.
   static real AngleBetween(Vec2Param a, Vec2Param b);
 
@@ -246,15 +240,10 @@ ZeroShared Vector2 Min(Vec2Param lhs, Vec2Param rhs);
 /// Returns a vector with the component-wise max between two vectors.
 ZeroShared Vector2 Max(Vec2Param lhs, Vec2Param rhs);
 /// Returns a vector where each component is clamped between min and max.
-ZeroShared Vector2 Clamp(Vec2Param value,
-                         Vec2Param minValue,
-                         Vec2Param maxValue);
+ZeroShared Vector2 Clamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue);
 /// Same as clamp, however it fills out whether or not anything was clamped.
 /// Useful when an assert message should be shown if anything was clamped.
-ZeroShared Vector2 DebugClamp(Vec2Param value,
-                              Vec2Param minValue,
-                              Vec2Param maxValue,
-                              bool& wasClamped);
+ZeroShared Vector2 DebugClamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue, bool& wasClamped);
 
 /// Return a copy of this vector with each element has been floored.
 ZeroShared Vector2 Floor(Vec2Param value);
@@ -278,24 +267,19 @@ ZeroShared Vector2 SlerpFast(Vec2Param start, Vec2Param end, real tValue);
 /// Same as Slerp except this function does not normalize the input vectors.
 /// This is the 'pure' mathematical Slerp function. This effectively traces
 /// along an ellipse defined by the two input vectors.
-ZeroShared Vector2 SlerpUnnormalized(Vec2Param start,
-                                     Vec2Param end,
-                                     real tValue);
+ZeroShared Vector2 SlerpUnnormalized(Vec2Param start, Vec2Param end, real tValue);
 
 /// Projects the input vector onto the given vector (must be normalized)
 ZeroShared Vector2 ProjectOnVector(Vec2Param input, Vec2Param normalizedVector);
 /// Projects the input vector onto a plane (the normal must be normalized)
 ZeroShared Vector2 ProjectOnPlane(Vec2Param input, Vec2Param planeNormal);
 /// Calculates the reflection vector across a given vector.
-ZeroShared Vector2 ReflectAcrossVector(Vec2Param input,
-                                       Vec2Param normalizedVector);
+ZeroShared Vector2 ReflectAcrossVector(Vec2Param input, Vec2Param normalizedVector);
 /// Calculates the reflection vector across a given plane.
 ZeroShared Vector2 ReflectAcrossPlane(Vec2Param input, Vec2Param planeNormal);
 /// Calculates the refraction vector through a plane given a certain index of
 /// refraction.
-ZeroShared Vector2 Refract(Vec2Param input,
-                           Vec2Param planeNormal,
-                           real refractionIndex);
+ZeroShared Vector2 Refract(Vec2Param input, Vec2Param planeNormal, real refractionIndex);
 /// Get the angle between the two vectors in radians.
 ZeroShared real AngleBetween(Vec2Param a, Vec2Param b);
 

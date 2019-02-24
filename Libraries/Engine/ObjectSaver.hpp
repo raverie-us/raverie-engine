@@ -33,34 +33,20 @@ public:
   void SaveFullObject(Object* object);
 
 private:
-  void SaveObject(Object* object,
-                  Object* propertyPathParent,
-                  PropertyPath& path,
-                  bool patching,
-                  InheritIdContext::Enum context);
+  void SaveObject(
+      Object* object, Object* propertyPathParent, PropertyPath& path, bool patching, InheritIdContext::Enum context);
 
   /// Save out the entire object.
   void SaveFullObjectInternal(Object* object);
 
   /// Save out only properties / child objects that are locally modified.
-  void SaveModifications(Object* object,
-                         Object* propertyPathParent,
-                         PropertyPath& path,
-                         InheritIdContext::Enum context);
+  void
+  SaveModifications(Object* object, Object* propertyPathParent, PropertyPath& path, InheritIdContext::Enum context);
 
-  void SaveProperties(Object* object,
-                      Object* propertyPathParent,
-                      PropertyPath& path,
-                      bool onlyModifiedProperties);
-  void SaveChildren(Object* object,
-                    Object* propertyPathParent,
-                    PropertyPath& path,
-                    bool onlyModifiedChildren);
+  void SaveProperties(Object* object, Object* propertyPathParent, PropertyPath& path, bool onlyModifiedProperties);
+  void SaveChildren(Object* object, Object* propertyPathParent, PropertyPath& path, bool onlyModifiedChildren);
 
-  void BuildPolymorphicInfo(PolymorphicInfo& info,
-                            Object* object,
-                            InheritIdContext::Enum context,
-                            bool patching);
+  void BuildPolymorphicInfo(PolymorphicInfo& info, Object* object, InheritIdContext::Enum context, bool patching);
 
   /// When we save an object starting in the middle of a hierarchy (e.g.
   /// uploading to Archetype on a Cog that's underneath another Archetype),

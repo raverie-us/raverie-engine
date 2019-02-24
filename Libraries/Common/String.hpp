@@ -122,8 +122,7 @@ public:
   bool operator!=(const String& right) const;
 
   StringRange SubString(StringIterator begin, StringIterator end) const;
-  StringRange SubStringFromByteIndices(size_t startIndex,
-                                       size_t endIndex) const;
+  StringRange SubStringFromByteIndices(size_t startIndex, size_t endIndex) const;
 
   ///////Iteration/////////////////////////
 
@@ -139,19 +138,14 @@ public:
 
   template <typename type>
   friend struct MoveWithoutDestructionOperator;
-  static String ReplaceSub(StringRange source,
-                           StringRange text,
-                           size_type start,
-                           size_type end);
+  static String ReplaceSub(StringRange source, StringRange text, size_type start, size_type end);
 
   StringRange FindFirstOf(Rune value) const;
   StringRange FindFirstOf(StringRangeParam value) const;
   StringRange FindLastOf(Rune value) const;
   StringRange FindLastOf(StringRangeParam value) const;
-  StringRange FindRangeExclusive(StringRangeParam startRange,
-                                 StringRangeParam endRange);
-  StringRange FindRangeInclusive(StringRangeParam startRange,
-                                 StringRangeParam endRange);
+  StringRange FindRangeExclusive(StringRangeParam startRange, StringRangeParam endRange);
+  StringRange FindRangeInclusive(StringRangeParam startRange, StringRangeParam endRange);
   Rune FindFirstNonWhitespaceRune() const;
   Rune FindLastNonWhitespaceRune() const;
 
@@ -162,37 +156,26 @@ public:
   bool IsAllWhitespace() const;
 
   /// Returns true if the string starts with the given text
-  bool StartsWith(StringRange startsWith,
-                  RuneComparer compare = CaseSensitiveCompare) const;
+  bool StartsWith(StringRange startsWith, RuneComparer compare = CaseSensitiveCompare) const;
 
   /// Returns true if the string starts with the given text
-  static bool StartsWith(StringRange source,
-                         StringRange startsWith,
-                         RuneComparer compare = CaseSensitiveCompare);
+  static bool StartsWith(StringRange source, StringRange startsWith, RuneComparer compare = CaseSensitiveCompare);
 
   static String Repeat(Rune rune, size_t numberOfTimes);
   bool Contains(StringRangeParam value) const;
   int CompareTo(StringRangeParam value) const;
   bool EndsWith(StringRangeParam value) const;
 
-  static String Join(StringRangeParam separator,
-                     StringRangeParam string1,
-                     StringRangeParam string2);
-  static String Join(StringRangeParam separator,
-                     StringRangeParam string1,
-                     StringRangeParam string2,
-                     StringRangeParam string3);
+  static String Join(StringRangeParam separator, StringRangeParam string1, StringRangeParam string2);
+  static String
+  Join(StringRangeParam separator, StringRangeParam string1, StringRangeParam string2, StringRangeParam string3);
   static String Join(StringRangeParam separator,
                      StringRangeParam string1,
                      StringRangeParam string2,
                      StringRangeParam string3,
                      StringRangeParam string4);
-  static String Join(StringRangeParam separator,
-                     const String* strings,
-                     size_t stringCount);
-  static String JoinInternal(StringRangeParam separator,
-                             const StringRange* values,
-                             size_t count);
+  static String Join(StringRangeParam separator, const String* strings, size_t stringCount);
+  static String JoinInternal(StringRangeParam separator, const StringRange* values, size_t count);
 
   // A simple policy (to be used with Join below) to convert a the value type of
   // a range of Strings to StringRanges (aka to convert range.Front() to a
@@ -207,9 +190,7 @@ public:
   // have a ToStringRange member function that takes the type of range.Front()
   // and returns a StringRange.
   template <typename RangeType, typename PolicyType>
-  static String JoinRange(StringRangeParam separator,
-                          RangeType range,
-                          PolicyType policy);
+  static String JoinRange(StringRangeParam separator, RangeType range, PolicyType policy);
 
   template <typename RangeType>
   static String JoinRange(StringRangeParam separator, RangeType range)

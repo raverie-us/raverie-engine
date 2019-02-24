@@ -49,27 +49,17 @@ DeclareEnum4(Verb, Default, Open, Edit, Run);
 
 // Open the file using the appropriate Os application or
 // launch an external application.
-ZeroShared void SystemOpenFile(cstr file,
-                               uint verb = Verb::Default,
-                               cstr parameters = nullptr,
-                               cstr workingDirectory = nullptr);
-ZeroShared bool SystemOpenFile(Status& status,
-                               cstr file,
-                               uint verb = Verb::Default,
-                               cstr parameters = nullptr,
-                               cstr workingDirectory = nullptr);
+ZeroShared void
+SystemOpenFile(cstr file, uint verb = Verb::Default, cstr parameters = nullptr, cstr workingDirectory = nullptr);
+ZeroShared bool SystemOpenFile(
+    Status& status, cstr file, uint verb = Verb::Default, cstr parameters = nullptr, cstr workingDirectory = nullptr);
 
 // Open the network file (including urls) using the appropriate
 // Os application or launch an external application
-ZeroShared void SystemOpenNetworkFile(cstr file,
-                                      uint verb = Verb::Default,
-                                      cstr parameters = nullptr,
-                                      cstr workingDirectory = nullptr);
-ZeroShared bool SystemOpenNetworkFile(Status& status,
-                                      cstr file,
-                                      uint verb = Verb::Default,
-                                      cstr parameters = nullptr,
-                                      cstr workingDirectory = nullptr);
+ZeroShared void
+SystemOpenNetworkFile(cstr file, uint verb = Verb::Default, cstr parameters = nullptr, cstr workingDirectory = nullptr);
+ZeroShared bool SystemOpenNetworkFile(
+    Status& status, cstr file, uint verb = Verb::Default, cstr parameters = nullptr, cstr workingDirectory = nullptr);
 
 // Get the memory status of the Os.
 ZeroShared void GetMemoryStatus(MemoryInfo& memoryInfo);
@@ -88,13 +78,13 @@ ZeroShared u64 GenerateUniqueId64();
 
 // Waits for expression to evaluate to true, checking approximately every
 // pollPeriod (in milliseconds)
-#define WaitUntil(expression, pollPeriod)                                      \
-  do                                                                           \
-  {                                                                            \
-    while (!(expression))                                                      \
-    {                                                                          \
-      Os::Sleep(pollPeriod);                                                   \
-    }                                                                          \
+#define WaitUntil(expression, pollPeriod)                                                                              \
+  do                                                                                                                   \
+  {                                                                                                                    \
+    while (!(expression))                                                                                              \
+    {                                                                                                                  \
+      Os::Sleep(pollPeriod);                                                                                           \
+    }                                                                                                                  \
   } while (gConditionalFalseConstant)
 
 } // namespace Zero

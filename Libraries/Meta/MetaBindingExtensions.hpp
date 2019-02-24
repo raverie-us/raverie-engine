@@ -142,43 +142,27 @@ namespace CommonGroups
 extern const String cAdvanced;
 } // namespace CommonGroups
 
-#define ZeroAdvancedGroup()                                                    \
-  AddAttribute(::Zero::PropertyAttributes::cGroup)                             \
-      ->AddParameter(::Zero::CommonGroups::cAdvanced)
+#define ZeroAdvancedGroup()                                                                                            \
+  AddAttribute(::Zero::PropertyAttributes::cGroup)->AddParameter(::Zero::CommonGroups::cAdvanced)
 
 // Uncategorized
 extern const String cInvalidTypeName;
 
-#define ZeroBindDocumented()                                                   \
-  type->AddAttribute(::Zero::ObjectAttributes::cDocumented)
-#define ZeroBindExpanded()                                                     \
-  type->AddAttribute(::Zero::ObjectAttributes::cExpanded)
+#define ZeroBindDocumented() type->AddAttribute(::Zero::ObjectAttributes::cDocumented)
+#define ZeroBindExpanded() type->AddAttribute(::Zero::ObjectAttributes::cExpanded)
 
-#define ZeroBindSetup(SetupMode)                                               \
-  type->HasOrAdd<::Zero::CogComponentMeta>(type)->mSetupMode = (SetupMode)
-#define ZeroBindDependency(Type)                                               \
-  type->HasOrAdd<::Zero::CogComponentMeta>(type)->mDependencies.Insert(        \
-      ZilchTypeId(Type))
-#define ZeroBindInterface(Type)                                                \
-  type->HasOrAdd<::Zero::CogComponentMeta>(type)->AddInterface(                \
-      ZilchTypeId(Type))
-#define ZeroBindTag(Tag)                                                       \
-  type->HasOrAdd<::Zero::CogComponentMeta>(type)->mTags.Insert(Tag)
-#define ZeroBindPropertyRename(oldName)                                        \
-  Add(new ::Zero::MetaPropertyRename(oldName))
+#define ZeroBindSetup(SetupMode) type->HasOrAdd<::Zero::CogComponentMeta>(type)->mSetupMode = (SetupMode)
+#define ZeroBindDependency(Type) type->HasOrAdd<::Zero::CogComponentMeta>(type)->mDependencies.Insert(ZilchTypeId(Type))
+#define ZeroBindInterface(Type) type->HasOrAdd<::Zero::CogComponentMeta>(type)->AddInterface(ZilchTypeId(Type))
+#define ZeroBindTag(Tag) type->HasOrAdd<::Zero::CogComponentMeta>(type)->mTags.Insert(Tag)
+#define ZeroBindPropertyRename(oldName) Add(new ::Zero::MetaPropertyRename(oldName))
 #define ZeroSetPropertyGroup(groupName) Add(new ::Zero::MetaGroup(groupName))
-#define ZeroLocalModificationOverride()                                        \
-  AddAttribute(::Zero::PropertyAttributes::cLocalModificationOverride)
+#define ZeroLocalModificationOverride() AddAttribute(::Zero::PropertyAttributes::cLocalModificationOverride)
 
-void BindEventSent(LibraryBuilder& builder,
-                   BoundType* boundType,
-                   StringParam eventName,
-                   BoundType* eventType);
-#define ZeroBindEvent(EventName, EventType)                                    \
-  BindEventSent(builder, type, (EventName), ZilchTypeId(EventType))
-#define ZeroBindExternalEvent(EventName, EventType, SenderType)                \
-  BindEventSent(                                                               \
-      builder, ZilchTypeId(SenderType), (EventName), ZilchTypeId(EventType))
+void BindEventSent(LibraryBuilder& builder, BoundType* boundType, StringParam eventName, BoundType* eventType);
+#define ZeroBindEvent(EventName, EventType) BindEventSent(builder, type, (EventName), ZilchTypeId(EventType))
+#define ZeroBindExternalEvent(EventName, EventType, SenderType)                                                        \
+  BindEventSent(builder, ZilchTypeId(SenderType), (EventName), ZilchTypeId(EventType))
 
 // Events
 namespace Events
@@ -207,15 +191,11 @@ public:
 
   // When a property is changed in the editor, this should be called to properly
   // send events or run any special functionality per object type.
-  static void NotifyPropertyModified(HandleParam object,
-                                     PropertyPathParam property,
-                                     AnyParam oldValue,
-                                     AnyParam newValue,
-                                     bool intermediateChange);
+  static void NotifyPropertyModified(
+      HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, bool intermediateChange);
   static void NotifyComponentsModified(HandleParam object);
   // Called when an object is modified in any way.
-  static void NotifyObjectModified(HandleParam object,
-                                   bool intermediateChange = false);
+  static void NotifyObjectModified(HandleParam object, bool intermediateChange = false);
 
   // Id used in the UndoMap for the operation system. Currently, this id needs
   // to be globally unique between everything that implements this function.
@@ -235,11 +215,8 @@ public:
   // 1. Cog instance with "CameraViewport/CameraPath/Path" as the PropertyPath
   // 2. CameraViewport instance with "CameraPath/Path" as the PropertyPath
   // 3. Path instance with "Path" as the PropertyPath
-  virtual void PropertyModified(HandleParam object,
-                                PropertyPathParam property,
-                                AnyParam oldValue,
-                                AnyParam newValue,
-                                bool intermediateChange);
+  virtual void PropertyModified(
+      HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, bool intermediateChange);
 
   // Called when any Component is added / moved / removed.
   virtual void ComponentsModified(HandleParam object);
@@ -269,10 +246,7 @@ class PropertyEvent : public Event
 public:
   ZilchDeclareType(PropertyEvent, TypeCopyMode::ReferenceType);
 
-  PropertyEvent(HandleParam object,
-                PropertyPathParam property,
-                AnyParam oldValue,
-                AnyParam newValue);
+  PropertyEvent(HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue);
 
   Handle mObject;
   const PropertyPath& mProperty;
@@ -416,20 +390,19 @@ public:
 #define hasAll(type) HasRange<type>()
 
 // Array Binding
-#define ZeroDefineArrayType(arrayType)                                         \
-  ZilchDefineTemplateType(ZeroMetaArray<arrayType>, builder, type)             \
-  {                                                                            \
-  }                                                                            \
-                                                                               \
-  ZilchDefineExternalBaseType(                                                 \
-      arrayType, TypeCopyMode::ReferenceType, builder, type)                   \
-  {                                                                            \
-    type->HandleManager = ZilchManagerId(PointerManager);                      \
-    type->Add(new ZeroMetaArray<arrayType>());                                 \
+#define ZeroDefineArrayType(arrayType)                                                                                 \
+  ZilchDefineTemplateType(ZeroMetaArray<arrayType>, builder, type)                                                     \
+  {                                                                                                                    \
+  }                                                                                                                    \
+                                                                                                                       \
+  ZilchDefineExternalBaseType(arrayType, TypeCopyMode::ReferenceType, builder, type)                                   \
+  {                                                                                                                    \
+    type->HandleManager = ZilchManagerId(PointerManager);                                                              \
+    type->Add(new ZeroMetaArray<arrayType>());                                                                         \
   }
 
-#define ZeroInitializeArrayTypeAs(arrayType, name)                             \
-  ZilchInitializeTypeAs(ZeroMetaArray<arrayType>, "ZeroMetaArray" name);       \
+#define ZeroInitializeArrayTypeAs(arrayType, name)                                                                     \
+  ZilchInitializeTypeAs(ZeroMetaArray<arrayType>, "ZeroMetaArray" name);                                               \
   ZilchInitializeExternalTypeAs(arrayType, name);
 
 // Meta Attribute

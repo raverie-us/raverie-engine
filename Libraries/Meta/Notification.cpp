@@ -18,11 +18,8 @@ ZilchDefineType(NotifyEvent, builder, type)
 {
 }
 
-void DoNotify(StringParam title,
-              StringParam message,
-              StringParam icon,
-              NotifyType::Enum type,
-              NotifyException::Enum expections)
+void DoNotify(
+    StringParam title, StringParam message, StringParam icon, NotifyType::Enum type, NotifyException::Enum expections)
 {
   Z::gNotifyCallbackStack.Back()(title, message, icon, type, expections);
 }
@@ -45,40 +42,30 @@ void DoNotifyWarning(StringParam title, StringParam message)
 
 void DoNotifyException(StringParam title, StringParam message)
 {
-  DoNotify(
-      title, message, "Warning", NotifyType::Error, NotifyException::Script);
+  DoNotify(title, message, "Warning", NotifyType::Error, NotifyException::Script);
 }
 
 void DoNotifyExceptionAssert(StringParam title, StringParam message)
 {
   WarnIf(true, "%s", message.c_str());
-  DoNotify(
-      title, message, "Warning", NotifyType::Error, NotifyException::Script);
+  DoNotify(title, message, "Warning", NotifyType::Error, NotifyException::Script);
 }
 
-void DefaultDoNotify(StringParam title,
-                     StringParam message,
-                     StringParam icon,
-                     NotifyType::Enum type,
-                     NotifyException::Enum exceptions)
+void DefaultDoNotify(
+    StringParam title, StringParam message, StringParam icon, NotifyType::Enum type, NotifyException::Enum exceptions)
 {
-  String finalMessage =
-      String::Format("%s: %s", title.c_str(), message.c_str());
+  String finalMessage = String::Format("%s: %s", title.c_str(), message.c_str());
   Error(finalMessage.c_str());
 }
 
-void IgnoreDoNotify(StringParam title,
-                    StringParam message,
-                    StringParam icon,
-                    NotifyType::Enum type,
-                    NotifyException::Enum exceptions)
+void IgnoreDoNotify(
+    StringParam title, StringParam message, StringParam icon, NotifyType::Enum type, NotifyException::Enum exceptions)
 {
   // We do nothing here, this is used to suppress notifications (such as when we
   // use previews)
 }
 
-TemporaryDoNotifyOverride::TemporaryDoNotifyOverride(
-    NotificationCallback callback)
+TemporaryDoNotifyOverride::TemporaryDoNotifyOverride(NotificationCallback callback)
 {
   mCallback = callback;
 

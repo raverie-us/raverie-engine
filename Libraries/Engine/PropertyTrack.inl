@@ -1,8 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 
 template <typename propertyType>
-AnimatePropertyType<propertyType>::AnimatePropertyType(
-    StringParam componentName, StringParam propertyName)
+AnimatePropertyType<propertyType>::AnimatePropertyType(StringParam componentName, StringParam propertyName)
 {
   mComponentName = componentName;
   mPropertyName = propertyName;
@@ -20,14 +19,12 @@ void AnimatePropertyType<propertyType>::Serialize(Serializer& stream)
 }
 
 template <typename propertyType>
-void AnimatePropertyType<propertyType>::LinkInstance(
-    PropertyTrackPlayData& data,
-    BlendTracks& tracks,
-    StringParam objectPath,
-    Cog* object)
+void AnimatePropertyType<propertyType>::LinkInstance(PropertyTrackPlayData& data,
+                                                     BlendTracks& tracks,
+                                                     StringParam objectPath,
+                                                     Cog* object)
 {
-  BoundType* componentMeta =
-      MetaDatabase::GetInstance()->FindType(mComponentName);
+  BoundType* componentMeta = MetaDatabase::GetInstance()->FindType(mComponentName);
 
   if (componentMeta == nullptr)
     return;
@@ -52,17 +49,15 @@ void AnimatePropertyType<propertyType>::LinkInstance(
 }
 
 template <typename propertyType>
-void AnimatePropertyType<propertyType>::UpdateFrame(
-    PropertyTrackPlayData& data,
-    TrackParams& params,
-    AnimationFrame& animationFrame)
+void AnimatePropertyType<propertyType>::UpdateFrame(PropertyTrackPlayData& data,
+                                                    TrackParams& params,
+                                                    AnimationFrame& animationFrame)
 {
   if (data.mBlend == NULL)
     return;
 
   KeyFrameT keyFrame;
-  InterpolateKeyFrame(
-      params.Time, data.mKeyframeIndex, this->mKeyFrames, keyFrame);
+  InterpolateKeyFrame(params.Time, data.mKeyframeIndex, this->mKeyFrames, keyFrame);
 
   animationFrame.Tracks[data.mBlend->Index].Active = true;
   animationFrame.Tracks[data.mBlend->Index].Value = keyFrame.KeyValue;
@@ -71,7 +66,7 @@ void AnimatePropertyType<propertyType>::UpdateFrame(
 template <typename propertyType>
 void AnimatePropertyType<propertyType>::GetKeyTimes(Array<float>& times)
 {
-  forRange(KeyFrameT & key, mKeyFrames.All())
+  forRange (KeyFrameT& key, mKeyFrames.All())
   {
     times.PushBack(key.Time);
   }
@@ -80,15 +75,14 @@ void AnimatePropertyType<propertyType>::GetKeyTimes(Array<float>& times)
 template <typename propertyType>
 void AnimatePropertyType<propertyType>::GetKeyValues(Array<Any>& values)
 {
-  forRange(KeyFrameT & key, mKeyFrames.All())
+  forRange (KeyFrameT& key, mKeyFrames.All())
   {
     values.PushBack(Any(key.KeyValue));
   }
 }
 
 template <typename propertyType>
-void AnimatePropertyType<propertyType>::InsertKey(PropertyTrackPlayData& data,
-                                                  float time)
+void AnimatePropertyType<propertyType>::InsertKey(PropertyTrackPlayData& data, float time)
 {
   BoundType* componentType = ZilchVirtualTypeId(data.mComponent);
   Property* property = componentType->GetProperty(mPropertyName);
@@ -140,29 +134,25 @@ void AnimatePropertyType<propertyType>::KeyFrameT::Serialize(Serializer& stream)
 }
 
 template <typename propertyType>
-AnimatePropertyValueType<propertyType>::AnimatePropertyValueType(
-    StringParam componentName, StringParam propertyName) :
+AnimatePropertyValueType<propertyType>::AnimatePropertyValueType(StringParam componentName, StringParam propertyName) :
     BaseType(componentName, propertyName)
 {
 }
 
 template <typename propertyType>
-propertyType
-AnimatePropertyValueType<propertyType>::VariantToType(AnyParam variant)
+propertyType AnimatePropertyValueType<propertyType>::VariantToType(AnyParam variant)
 {
   return variant.Get<propertyType>(GetOptions::AssertOnNull);
 }
 
 template <typename propertyType>
-AnimatePropertyRefType<propertyType>::AnimatePropertyRefType(
-    StringParam componentName, StringParam propertyName) :
+AnimatePropertyRefType<propertyType>::AnimatePropertyRefType(StringParam componentName, StringParam propertyName) :
     BaseType(componentName, propertyName)
 {
 }
 
 template <typename propertyType>
-propertyType*
-AnimatePropertyRefType<propertyType>::VariantToType(AnyParam variant)
+propertyType* AnimatePropertyRefType<propertyType>::VariantToType(AnyParam variant)
 {
   return variant.Get<propertyType*>(GetOptions::AssertOnNull);
 }

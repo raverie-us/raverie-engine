@@ -81,9 +81,7 @@ public:
 
   /// A helper that connects this connection to both receiver (tests for
   /// validation too)
-  void ConnectToReceiverAndDispatcher(StringParam eventId,
-                                      EventReceiver* receiver,
-                                      EventDispatcher* dispatcher);
+  void ConnectToReceiverAndDispatcher(StringParam eventId, EventReceiver* receiver, EventDispatcher* dispatcher);
 
   /// Removes this specific event connection from the dispatcher it is attached
   /// to
@@ -118,8 +116,7 @@ public:
 
 typedef InList<EventConnection, &EventConnection::DispatcherLink> DispatchList;
 typedef InList<EventConnection, &EventConnection::ReceiverLink> ReceiverList;
-typedef InList<EventConnection, &EventConnection::DisconnectLink>
-    DisconnectList;
+typedef InList<EventConnection, &EventConnection::DisconnectLink> DisconnectList;
 
 /// Object needed to receive events from other objects. Cleans up connections
 /// on destruction.
@@ -244,10 +241,7 @@ struct MemberFunctionConnection : public EventConnection
   FuncType MyFunction;
   classType* MyObject;
 
-  MemberFunctionConnection(EventDispatcher* dispatcher,
-                           StringParam eventId,
-                           classType* instance,
-                           FuncType func) :
+  MemberFunctionConnection(EventDispatcher* dispatcher, StringParam eventId, classType* instance, FuncType func) :
       EventConnection(dispatcher, eventId)
   {
     MyObject = instance;
@@ -278,25 +272,22 @@ DeclareEnum3(ConnectNotify, Exception, ExceptionAssert, Ignore)
                         ConnectNotify::Enum notify = ConnectNotify::Exception)
 {
   ReturnIf(dispatcherObject == nullptr, , "Dispatcher object is null");
-  ReturnIf(
-      receiver == nullptr || !receiver->GetReceiver(), , "Receiver is null");
+  ReturnIf(receiver == nullptr || !receiver->GetReceiver(), , "Receiver is null");
   EventDispatcher* dispatcher = dispatcherObject->GetDispatcher();
   ReturnIf(dispatcher == nullptr, , "Dispatcher is null");
 
   MemberFunctionConnection<classType, eventType>* connection =
-      new MemberFunctionConnection<classType, eventType>(
-          dispatcher, eventId, receiver, function);
+      new MemberFunctionConnection<classType, eventType>(dispatcher, eventId, receiver, function);
 
   if (!dispatcher->IsUniqueConnection(connection))
   {
     if (notify != ConnectNotify::Ignore)
     {
       String className = ZilchTypeId(targetType)->ToString();
-      String error =
-          String::Format("The event id '%s' already has a connection to this "
-                         "event handler for class %s",
-                         eventId.c_str(),
-                         className.c_str());
+      String error = String::Format("The event id '%s' already has a connection to this "
+                                    "event handler for class %s",
+                                    eventId.c_str(),
+                                    className.c_str());
       if (notify == ConnectNotify::ExceptionAssert)
         DoNotifyExceptionAssert("Duplicate Event Connection", error);
       else
@@ -315,32 +306,26 @@ DeclareEnum3(ConnectNotify, Exception, ExceptionAssert, Ignore)
           "The event type was never initialized using ZilchDeclareType / "
           "ZilchDefineType / ZilchInitializeType");
 
-  connection->ConnectToReceiverAndDispatcher(
-      eventId, receiver->GetReceiver(), dispatcher);
+  connection->ConnectToReceiverAndDispatcher(eventId, receiver->GetReceiver(), dispatcher);
 }
 
 #define DeclareEvent(name) extern const String name
 
 #define DefineEvent(name) const String name = #name
 
-#define ConnectThisTo(target, eventname, handle)                               \
-  do                                                                           \
-  {                                                                            \
-    ::Zero::Connect(target,                                                    \
-                    eventname,                                                 \
-                    this,                                                      \
-                    &ZilchSelf::handle,                                        \
-                    ::Zero::ConnectNotify::ExceptionAssert);                   \
+#define ConnectThisTo(target, eventname, handle)                                                                       \
+  do                                                                                                                   \
+  {                                                                                                                    \
+    ::Zero::Connect(target, eventname, this, &ZilchSelf::handle, ::Zero::ConnectNotify::ExceptionAssert);              \
   } while (false)
 
-#define DisconnectAll(sender, receiver)                                        \
-  sender->GetDispatcher()->Disconnect(receiver);
+#define DisconnectAll(sender, receiver) sender->GetDispatcher()->Disconnect(receiver);
 
-#define SignalObjectEvent(event)                                               \
-  do                                                                           \
-  {                                                                            \
-    ObjectEvent objectEvent(this);                                             \
-    GetOwner()->GetDispatcher()->Dispatch(event, &objectEvent);                \
+#define SignalObjectEvent(event)                                                                                       \
+  do                                                                                                                   \
+  {                                                                                                                    \
+    ObjectEvent objectEvent(this);                                                                                     \
+    GetOwner()->GetDispatcher()->Dispatch(event, &objectEvent);                                                        \
   } while (false)
 
 template <typename eventType>
@@ -349,9 +334,7 @@ struct StaticFunctionConnection : public EventConnection
   typedef void (*FuncType)(eventType*);
   typedef void (**FuncPointer)(eventType*);
   FuncType MyFunction;
-  StaticFunctionConnection(EventDispatcher* dispatcher,
-                           StringParam eventId,
-                           FuncType func) :
+  StaticFunctionConnection(EventDispatcher* dispatcher, StringParam eventId, FuncType func) :
       EventConnection(dispatcher, eventId)
   {
     MyFunction = func;

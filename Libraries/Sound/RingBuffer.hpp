@@ -25,9 +25,7 @@ public:
 
   // The number of elements in the buffer must be a power of 2, returns -1 if it
   // is not
-  int Initialize(unsigned elementSizeBytes,
-                 unsigned elementCountInBuffer,
-                 void* buffer);
+  int Initialize(unsigned elementSizeBytes, unsigned elementCountInBuffer, void* buffer);
   // Resets the indexes. Should only be called when not reading or writing to
   // buffer.
   void ResetBuffer();

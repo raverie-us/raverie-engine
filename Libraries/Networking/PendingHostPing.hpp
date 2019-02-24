@@ -7,8 +7,7 @@ namespace Zero
 //                               PendingHostPing //
 
 /// Network host ping type.
-DeclareEnum4(
-    HostPingType, DiscoverList, Refresh, RefreshList, MasterServerRefreshHost);
+DeclareEnum4(HostPingType, DiscoverList, Refresh, RefreshList, MasterServerRefreshHost);
 
 /// Pending host ping request.
 class PendingHostPing
@@ -52,24 +51,20 @@ public:
   void AddSendAttempt(uint sendAttemptId, TimeMs now);
 
   // Data
-  Network::Enum mNetwork; ///< Operating network.
-  TimeMs mCreationTime;   ///< Creation time.
-  TimeMs mLastSendTime;   ///< Last send attempt time.
-  ArrayMap<uint, TimeMs>
-      mSendAttempts; ///< Send attempts (send attempt ID, send time).
-  TimeMs mTimeout;   ///< Request time out.
-  HostPingType::Enum mHostPingType; ///< Host ping type.
-  Array<IpAddress>
-      mTheirIpAddresses; ///< Their IP addresses (as seen from our perspective).
-  uint mPingId;          ///< Unique ping request identifier.
-  EventBundle mPingBundle; ///< Our bundled ping request event data.
+  Network::Enum mNetwork;               ///< Operating network.
+  TimeMs mCreationTime;                 ///< Creation time.
+  TimeMs mLastSendTime;                 ///< Last send attempt time.
+  ArrayMap<uint, TimeMs> mSendAttempts; ///< Send attempts (send attempt ID, send time).
+  TimeMs mTimeout;                      ///< Request time out.
+  HostPingType::Enum mHostPingType;     ///< Host ping type.
+  Array<IpAddress> mTheirIpAddresses;   ///< Their IP addresses (as seen from our perspective).
+  uint mPingId;                         ///< Unique ping request identifier.
+  EventBundle mPingBundle;              ///< Our bundled ping request event data.
   ArraySet<IpAddress> mRespondingHosts; ///< Hosts that responded to our ping
                                         ///< (sorted by memory address).
 };
 
 /// Typedefs.
-typedef ArraySet<UniquePointer<PendingHostPing>,
-                 PointerSortPolicy<UniquePointer<PendingHostPing>>>
-    PendingHostPingSet;
+typedef ArraySet<UniquePointer<PendingHostPing>, PointerSortPolicy<UniquePointer<PendingHostPing>>> PendingHostPingSet;
 
 } // namespace Zero

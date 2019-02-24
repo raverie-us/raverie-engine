@@ -8,9 +8,7 @@ ZilchDefineType(MainPropertyView, builder, type)
 {
 }
 
-MainPropertyView::MainPropertyView(Composite* parent,
-                                   MetaSelection* selection,
-                                   OperationQueue* queue) :
+MainPropertyView::MainPropertyView(Composite* parent, MetaSelection* selection, OperationQueue* queue) :
     Composite(parent)
 {
   // The name of this widget
@@ -27,13 +25,11 @@ MainPropertyView::MainPropertyView(Composite* parent,
   // Default size
   SetSize(Pixels(280, 600));
 
-  this->SetLayout(CreateStackLayout(
-      LayoutDirection::TopToBottom, Pixels(0, 5), Thickness::cZero));
+  this->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 5), Thickness::cZero));
 
   // Create the row of buttons up top
   mButtonRow = new Composite(this);
-  mButtonRow->SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Pixels(2, 0), Thickness(1, 0, 0, 0)));
+  mButtonRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(2, 0), Thickness(1, 0, 0, 0)));
   {
     // Previous button
     IconButton* previousButton = new IconButton(mButtonRow);
@@ -123,8 +119,7 @@ void MainPropertyView::EditObject(HandleParam object, bool advanceHistory)
       if (selection->Count() > 1)
         mPropertyView->SetObject(selection, mMultiInterface);
       else
-        mPropertyView->SetObject(selection->GetPrimaryAs<Object>(),
-                                 mUndoInterface);
+        mPropertyView->SetObject(selection->GetPrimaryAs<Object>(), mUndoInterface);
     }
   }
   else
@@ -214,7 +209,7 @@ void MainPropertyView::OnExternalEdit(Event* e)
     return;
 
   // Open each resource with an external editor
-  forRange(Resource * resource, selection->AllOfType<Resource>())
+  forRange (Resource* resource, selection->AllOfType<Resource>())
   {
     EditResourceExternal(resource);
   }
@@ -227,7 +222,7 @@ void MainPropertyView::OnReloadContent(Event* e)
     return;
 
   // Reload each resource
-  forRange(Resource * resource, selection->AllOfType<Resource>())
+  forRange (Resource* resource, selection->AllOfType<Resource>())
   {
     ReloadResource(resource);
   }
@@ -298,15 +293,14 @@ void MainPropertyView::EditResources(MetaSelection* selection)
   uint count = 0;
 
   // Add all resources
-  forRange(Resource * resource, selection->AllOfType<Resource>())
+  forRange (Resource* resource, selection->AllOfType<Resource>())
   {
     bool addedSpecialEdit = false;
 
     if (count < cMaxItems)
     {
       // Create the preview widget
-      PreviewWidget* preview = group->AddPreviewWidget(
-          resource->Name, resource, PreviewImportance::High);
+      PreviewWidget* preview = group->AddPreviewWidget(resource->Name, resource, PreviewImportance::High);
 
       // If it's a resource, we want to edit the object from the preview
       if (preview && ZilchVirtualTypeId(resource)->IsA(ZilchTypeId(Archetype)))
@@ -388,8 +382,8 @@ Handle MainPropertyView::PreviewResource(HandleParam object)
     return Handle();
 
   // Create the preview widget
-  PreviewWidget* tile = ResourcePreview::CreatePreviewWidget(
-      mPreviewArea, resource->Name, resource, PreviewImportance::High);
+  PreviewWidget* tile =
+      ResourcePreview::CreatePreviewWidget(mPreviewArea, resource->Name, resource, PreviewImportance::High);
   mPreviewTile = tile;
 
   if (tile == nullptr)

@@ -140,20 +140,19 @@ void PrintProfileGraph();
 
 #if ZPROFILE_ENABLED
 
-#  define ProfileScopeFunction()                                               \
-    static Zero::Profile::Record __LocalRecord(__FUNCTION__);                  \
+#  define ProfileScopeFunction()                                                                                       \
+    static Zero::Profile::Record __LocalRecord(__FUNCTION__);                                                          \
     Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
 
-#  define ProfileScope(name)                                                   \
-    static Zero::Profile::Record __LocalRecord(name);                          \
+#  define ProfileScope(name)                                                                                           \
+    static Zero::Profile::Record __LocalRecord(name);                                                                  \
     Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
 
-#  define ProfileScopeTree(name, parentName, color)                            \
-    static Zero::Profile::Record __LocalRecord(name, parentName, color);       \
+#  define ProfileScopeTree(name, parentName, color)                                                                    \
+    static Zero::Profile::Record __LocalRecord(name, parentName, color);                                               \
     Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
 
-#  define ProfileScopeRecord(recordName)                                       \
-    Zero::Profile::ScopeTimer __ScopedBlock(&recordName);
+#  define ProfileScopeRecord(recordName) Zero::Profile::ScopeTimer __ScopedBlock(&recordName);
 
 #else
 

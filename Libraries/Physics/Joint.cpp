@@ -46,14 +46,12 @@ Joint::~Joint()
 
 void Joint::Serialize(Serializer& stream)
 {
-  uint mask = JointFlags::OnIsland | JointFlags::Ghost | JointFlags::Valid |
-              JointFlags::Initialized;
+  uint mask = JointFlags::OnIsland | JointFlags::Ghost | JointFlags::Valid | JointFlags::Initialized;
   SerializeBits(stream,
                 mFlags,
                 JointFlags::Names,
                 mask,
-                JointFlags::CollideConnected | JointFlags::Active |
-                    JointFlags::SendsEvents);
+                JointFlags::CollideConnected | JointFlags::Active | JointFlags::SendsEvents);
   real MaxImpulse;
   if (stream.GetMode() == SerializerMode::Loading)
   {
@@ -82,8 +80,7 @@ void Joint::OnAllObjectsCreated(CogInitializer& initializer)
 
   mFlags.SetFlag(JointFlags::Initialized);
   ConnectThisTo(GetOwner(), Events::ObjectLinkChanged, OnObjectLinkChanged);
-  ConnectThisTo(
-      GetOwner(), Events::ObjectLinkPointChanged, OnObjectLinkPointChanged);
+  ConnectThisTo(GetOwner(), Events::ObjectLinkPointChanged, OnObjectLinkPointChanged);
 
   // Always add to the space. This makes it easier to deal with partially
   // invalid joints being destroyed (and the space list is only there for easy
@@ -99,8 +96,7 @@ void Joint::OnAllObjectsCreated(CogInitializer& initializer)
   Physics::JointHelpers::ForceAwakeJoint(this);
 
   // We were dynamically created so try to compute some logical initial values
-  bool dynamicallyCreated =
-      (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
+  bool dynamicallyCreated = (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
   if (dynamicallyCreated)
     ComputeInitialConfiguration();
 }
@@ -160,8 +156,7 @@ void Joint::ComponentRemoved(BoundType* typeId, Component* component)
     Physics::JointHelpers::ForceAwakeJoint(this);
 }
 
-uint Joint::GetAtomIndexFilterVirtual(uint atomIndex,
-                                      real& desiredConstraintValue) const
+uint Joint::GetAtomIndexFilterVirtual(uint atomIndex, real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   return 0;
@@ -286,8 +281,7 @@ void Joint::Relink(uint index, Cog* cog)
   // If we were in a completely invalid state before being setup and now we're
   // in a valid state we need to update valid (but not active, that should only
   // ever be changed by the user)
-  bool isValid =
-      (mainEdge.mCollider != nullptr && otherEdge.mCollider != nullptr);
+  bool isValid = (mainEdge.mCollider != nullptr && otherEdge.mCollider != nullptr);
   SetValid(isValid);
 
   // Finally, let joints know that we relinked so any specific joint type
@@ -347,15 +341,12 @@ Cog* Joint::GetOtherObject(Cog* cog)
   return nullptr;
 }
 
-Vec3 Joint::GetLocalPointHelper(const Physics::AnchorAtom& anchor,
-                                uint index) const
+Vec3 Joint::GetLocalPointHelper(const Physics::AnchorAtom& anchor, uint index) const
 {
   return anchor[index];
 }
 
-void Joint::SetLocalPointHelper(Physics::AnchorAtom& anchor,
-                                uint index,
-                                Vec3Param localPoint)
+void Joint::SetLocalPointHelper(Physics::AnchorAtom& anchor, uint index, Vec3Param localPoint)
 {
   anchor[index] = localPoint;
   Physics::JointHelpers::ForceAwakeJoint(this);
@@ -373,8 +364,7 @@ Vec3 Joint::GetWorldPointHelper(const Physics::AnchorAtom& anchor, uint index)
   return Physics::JointHelpers::BodyRToWorldPoint(collider, anchor[index]);
 }
 
-void Joint::SetWorldPointAHelper(Physics::AnchorAtom& anchor,
-                                 Vec3Param worldPoint)
+void Joint::SetWorldPointAHelper(Physics::AnchorAtom& anchor, Vec3Param worldPoint)
 {
   // Register side-effect properties
   if (OperationQueue::IsListeningForSideEffects())
@@ -383,8 +373,7 @@ void Joint::SetWorldPointAHelper(Physics::AnchorAtom& anchor,
   SetWorldPointHelper(anchor, worldPoint, 0);
 }
 
-void Joint::SetWorldPointBHelper(Physics::AnchorAtom& anchor,
-                                 Vec3Param worldPoint)
+void Joint::SetWorldPointBHelper(Physics::AnchorAtom& anchor, Vec3Param worldPoint)
 {
   // Register side-effect properties
   if (OperationQueue::IsListeningForSideEffects())
@@ -393,16 +382,13 @@ void Joint::SetWorldPointBHelper(Physics::AnchorAtom& anchor,
   SetWorldPointHelper(anchor, worldPoint, 1);
 }
 
-void Joint::SetWorldPointHelper(Physics::AnchorAtom& anchor,
-                                Vec3Param worldPoint,
-                                uint index)
+void Joint::SetWorldPointHelper(Physics::AnchorAtom& anchor, Vec3Param worldPoint, uint index)
 {
   Collider* collider = GetCollider(index);
   if (collider == nullptr)
     return;
 
-  anchor[index] =
-      Physics::JointHelpers::WorldPointToBodyR(collider, worldPoint);
+  anchor[index] = Physics::JointHelpers::WorldPointToBodyR(collider, worldPoint);
   Physics::JointHelpers::ForceAwakeJoint(this);
   ObjectLink* objectLink = GetOwner()->has(ObjectLink);
   ErrorIf(objectLink == nullptr, "Joint is missing object link");
@@ -433,23 +419,18 @@ void Joint::SetWorldPointsHelper(Physics::AnchorAtom& anchor, Vec3Param point)
   Physics::JointHelpers::ForceAwakeJoint(this);
 }
 
-void Joint::ObjectLinkPointUpdatedHelper(Physics::AnchorAtom& anchor,
-                                         size_t edgeIndex,
-                                         Vec3Param localPoint)
+void Joint::ObjectLinkPointUpdatedHelper(Physics::AnchorAtom& anchor, size_t edgeIndex, Vec3Param localPoint)
 {
   anchor[edgeIndex] = localPoint;
   Physics::JointHelpers::ForceAwakeJoint(this);
 }
 
-Vec3 Joint::GetLocalAxisHelper(const Physics::AxisAtom& axisAtom,
-                               uint index) const
+Vec3 Joint::GetLocalAxisHelper(const Physics::AxisAtom& axisAtom, uint index) const
 {
   return axisAtom[index];
 }
 
-void Joint::SetLocalAxisHelper(Physics::AxisAtom& axisAtom,
-                               uint index,
-                               Vec3Param localAxis)
+void Joint::SetLocalAxisHelper(Physics::AxisAtom& axisAtom, uint index, Vec3Param localAxis)
 {
   if (localAxis == Vec3::cZero)
     return;
@@ -492,15 +473,12 @@ void Joint::SetWorldAxisHelper(Physics::AxisAtom& axisAtom, Vec3Param worldAxis)
   Physics::JointHelpers::ForceAwakeJoint(this);
 }
 
-Quat Joint::GetLocalAngleHelper(const Physics::AngleAtom& angleAtom,
-                                uint index) const
+Quat Joint::GetLocalAngleHelper(const Physics::AngleAtom& angleAtom, uint index) const
 {
   return angleAtom[index];
 }
 
-void Joint::SetLocalAngleHelper(Physics::AngleAtom& angleAtom,
-                                uint index,
-                                QuatParam localReferenceFrame)
+void Joint::SetLocalAngleHelper(Physics::AngleAtom& angleAtom, uint index, QuatParam localReferenceFrame)
 {
   angleAtom[index] = localReferenceFrame;
   Physics::JointHelpers::ForceAwakeJoint(this);
@@ -515,27 +493,22 @@ bool Joint::GetShouldBaumgarteBeUsed(uint type) const
   // Check for the config override component and use its override if it has one.
   if (configOverride != nullptr)
   {
-    if (configOverride->mPositionCorrectionType ==
-        ConstraintPositionCorrection::PostStabilization)
+    if (configOverride->mPositionCorrectionType == ConstraintPositionCorrection::PostStabilization)
       return false;
 
-    if (configOverride->mPositionCorrectionType ==
-        ConstraintPositionCorrection::Baumgarte)
+    if (configOverride->mPositionCorrectionType == ConstraintPositionCorrection::Baumgarte)
       return true;
   }
 
   // Check the block type for the given joint. If it specifies one correction
   // type then use that.
-  if (block.GetPositionCorrectionType() ==
-      ConstraintPositionCorrection::PostStabilization)
+  if (block.GetPositionCorrectionType() == ConstraintPositionCorrection::PostStabilization)
     return false;
-  if (block.GetPositionCorrectionType() ==
-      ConstraintPositionCorrection::Baumgarte)
+  if (block.GetPositionCorrectionType() == ConstraintPositionCorrection::Baumgarte)
     return true;
 
   // Otherwise check the global state.
-  if (config->mPositionCorrectionType ==
-      PhysicsSolverPositionCorrection::PostStabilization)
+  if (config->mPositionCorrectionType == PhysicsSolverPositionCorrection::PostStabilization)
     return false;
 
   return true;

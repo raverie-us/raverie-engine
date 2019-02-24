@@ -5,8 +5,7 @@ namespace Math
 {
 typedef Quaternion Quat;
 
-const Quaternion Quaternion::cIdentity =
-    Quaternion(real(0.0), real(0.0), real(0.0), real(1.0));
+const Quaternion Quaternion::cIdentity = Quaternion(real(0.0), real(0.0), real(0.0), real(1.0));
 
 Quaternion::Quaternion(real xx, real yy, real zz, real ww)
 {
@@ -101,8 +100,7 @@ Quaternion Quaternion::operator*(QuatParam rhs) const
 
 bool Quaternion::operator==(QuatParam rhs) const
 {
-  return Equal(x, rhs.x) && Equal(y, rhs.y) && Equal(z, rhs.z) &&
-         Equal(w, rhs.w);
+  return Equal(x, rhs.x) && Equal(y, rhs.y) && Equal(z, rhs.z) && Equal(w, rhs.w);
 }
 
 bool Quaternion::operator!=(QuatParam rhs) const
@@ -125,8 +123,7 @@ void Quaternion::Set(real xx, real yy, real zz, real ww)
 
 bool Quaternion::Valid() const
 {
-  return Math::IsValid(x) && Math::IsValid(y) && Math::IsValid(z) &&
-         Math::IsValid(w);
+  return Math::IsValid(x) && Math::IsValid(y) && Math::IsValid(z) && Math::IsValid(w);
 }
 
 Vector3& Quaternion::V3()
@@ -255,9 +252,7 @@ Quaternion Quaternion::Slerp(QuatParam start, QuatParam end, real tValue)
   return Quaternion::SlerpUnnormalized(startNormalized, endNormalized, tValue);
 }
 
-Quaternion Quaternion::SlerpUnnormalized(QuatParam start,
-                                         QuatParam end,
-                                         real tValue)
+Quaternion Quaternion::SlerpUnnormalized(QuatParam start, QuatParam end, real tValue)
 {
   //
   // Quaternion Interpolation With Extra Spins, pp. 96f, 461f
@@ -345,16 +340,11 @@ real Quaternion::AngleBetween(QuatParam a, QuatParam b)
   return angle;
 }
 
-Quaternion Quaternion::Integrate(QuatParam rotation,
-                                 Vec3Param angularVelocity,
-                                 real dt)
+Quaternion Quaternion::Integrate(QuatParam rotation, Vec3Param angularVelocity, real dt)
 {
   Quat result = rotation;
 
-  Quat velocityQuat(angularVelocity.x * dt,
-                    angularVelocity.y * dt,
-                    angularVelocity.z * dt,
-                    real(0.0));
+  Quat velocityQuat(angularVelocity.x * dt, angularVelocity.y * dt, angularVelocity.z * dt, real(0.0));
   velocityQuat *= rotation;
 
   result.x += real(0.5) * velocityQuat.x;
@@ -480,8 +470,7 @@ Quaternion CreateDiagonalizer(Mat3Param matrix)
   for (uint i = 0; i < cMaxSteps; ++i)
   {
     ToMatrix3(quat, &quatMatrix);
-    diagMatrix =
-        Multiply(Multiply(quatMatrix, matrix), quatMatrix.Transposed());
+    diagMatrix = Multiply(Multiply(quatMatrix, matrix), quatMatrix.Transposed());
 
     // Elements not on the diagonal
     Vector3 offDiag(diagMatrix(1, 2), diagMatrix(0, 2), diagMatrix(0, 1));
@@ -490,9 +479,7 @@ Quaternion CreateDiagonalizer(Mat3Param matrix)
     Vector3 magDiag = Abs(offDiag);
 
     // Index of the largest element
-    uint k = ((magDiag.x > magDiag.y) && (magDiag.x > magDiag.z))
-                 ? 0
-                 : ((magDiag.y > magDiag.z) ? 1 : 2);
+    uint k = ((magDiag.x > magDiag.y) && (magDiag.x > magDiag.z)) ? 0 : ((magDiag.y > magDiag.z) ? 1 : 2);
     uint k1 = (k + 1) % 3;
     uint k2 = (k + 2) % 3;
 
@@ -502,16 +489,14 @@ Quaternion CreateDiagonalizer(Mat3Param matrix)
       break;
     }
 
-    real theta =
-        (diagMatrix(k2, k2) - diagMatrix(k1, k1)) / (real(2.0) * offDiag[k]);
+    real theta = (diagMatrix(k2, k2) - diagMatrix(k1, k1)) / (real(2.0) * offDiag[k]);
     real sign = Math::GetSign(theta);
 
     // Make theta positive
     theta *= sign;
 
     // Large term in T
-    real thetaTerm =
-        theta < real(1e6) ? Math::Sqrt(Math::Sq(theta) + real(1.0)) : theta;
+    real thetaTerm = theta < real(1e6) ? Math::Sqrt(Math::Sq(theta) + real(1.0)) : theta;
 
     // Sign(T) / (|T| + sqrt(T^2 + 1))
     real t = sign / (theta + thetaTerm);

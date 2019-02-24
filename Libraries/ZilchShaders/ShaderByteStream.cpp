@@ -32,26 +32,20 @@ void ShaderStreamWriter::WriteInstruction(uint16 size, uint16 instruction)
   Write(size, instruction);
 }
 
-void ShaderStreamWriter::WriteInstruction(uint16 size,
-                                          uint16 instruction,
-                                          uint32 data0)
+void ShaderStreamWriter::WriteInstruction(uint16 size, uint16 instruction, uint32 data0)
 {
   Write(size, instruction);
   Write(data0);
 }
 
-void ShaderStreamWriter::WriteInstruction(uint16 size,
-                                          uint16 instruction,
-                                          uint32 data0,
-                                          uint32 data1)
+void ShaderStreamWriter::WriteInstruction(uint16 size, uint16 instruction, uint32 data0, uint32 data1)
 {
   Write(size, instruction);
   Write(data0);
   Write(data1);
 }
 
-void ShaderStreamWriter::WriteInstruction(
-    uint16 size, uint16 instruction, uint32 data0, uint32 data1, uint32 data2)
+void ShaderStreamWriter::WriteInstruction(uint16 size, uint16 instruction, uint32 data0, uint32 data1, uint32 data2)
 {
   Write(size, instruction);
   Write(data0);
@@ -59,8 +53,7 @@ void ShaderStreamWriter::WriteInstruction(
   Write(data2);
 }
 
-void ShaderStreamWriter::WriteInstruction(uint16 instruction,
-                                          Array<uint32>& args)
+void ShaderStreamWriter::WriteInstruction(uint16 instruction, Array<uint32>& args)
 {
   int16 size = (int16)args.Size() + 1;
   Write(size, instruction);

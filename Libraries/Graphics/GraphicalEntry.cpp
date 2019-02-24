@@ -49,11 +49,8 @@ ZilchDefineType(GraphicalSortEvent, builder, type)
   ZeroBindEvent(Events::GraphicalSort, GraphicalSortEvent);
 }
 
-s32 GetGraphicalSortValue(Graphical& graphical,
-                          GraphicalSortMethod::Enum sortMethod,
-                          Vec3 pos,
-                          Vec3 camPos,
-                          Vec3 camDir)
+s32 GetGraphicalSortValue(
+    Graphical& graphical, GraphicalSortMethod::Enum sortMethod, Vec3 pos, Vec3 camPos, Vec3 camDir)
 {
   s32 value = 0;
   float* floatValue = (float*)&value;

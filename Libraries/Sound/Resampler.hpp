@@ -12,9 +12,7 @@ public:
 
   void SetFactor(double factor);
   unsigned GetOutputFrameCount(unsigned inputFrames);
-  void SetInputBuffer(const float* inputSamples,
-                      unsigned frameCount,
-                      unsigned channels);
+  void SetInputBuffer(const float* inputSamples, unsigned frameCount, unsigned channels);
   bool GetNextFrame(float* output);
 
 private:

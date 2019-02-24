@@ -8,12 +8,11 @@ class ZilchSpirVFrontEnd;
 class ZilchSpirVFrontEndContext;
 class ZilchShaderExtensionImport;
 
-typedef void (*SpirVExtensionInstructionResolverFn)(
-    ZilchSpirVFrontEnd* translator,
-    Zilch::FunctionCallNode* functionCallNode,
-    Zilch::MemberAccessNode* memberAccessNode,
-    ZilchShaderExtensionImport* importLibraryIR,
-    ZilchSpirVFrontEndContext* context);
+typedef void (*SpirVExtensionInstructionResolverFn)(ZilchSpirVFrontEnd* translator,
+                                                    Zilch::FunctionCallNode* functionCallNode,
+                                                    Zilch::MemberAccessNode* memberAccessNode,
+                                                    ZilchShaderExtensionImport* importLibraryIR,
+                                                    ZilchSpirVFrontEndContext* context);
 
 class SpirVExtensionLibrary;
 
@@ -37,8 +36,7 @@ class SpirVExtensionLibrary
 {
 public:
   /// Creates an extension instruction that translates a given zilch function
-  SpirVExtensionInstruction* CreateExtInst(
-      Zilch::Function* zilchFn, SpirVExtensionInstructionResolverFn resolverFn);
+  SpirVExtensionInstruction* CreateExtInst(Zilch::Function* zilchFn, SpirVExtensionInstructionResolverFn resolverFn);
 
   /// The name of the library (mostly for debug)
   String mName;

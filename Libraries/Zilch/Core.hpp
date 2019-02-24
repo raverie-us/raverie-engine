@@ -111,9 +111,7 @@ public:
   BoundType* MatrixElementTypes[MaxMatrixElementTypes];
   // To perform certain generic matrix operations generically,
   // MultiplyAdd functions (a += b * c) are needed
-  typedef void (*MatrixMultiplyAddFunction)(byte* outData,
-                                            byte* inputA,
-                                            byte* inputB);
+  typedef void (*MatrixMultiplyAddFunction)(byte* outData, byte* inputA, byte* inputB);
   MatrixMultiplyAddFunction TypeMultiplyAddFunctions[MaxMatrixElementTypes];
 
   // A very special type that allows us to take a delegate of any type
@@ -148,12 +146,11 @@ private:
                                        const void* userData);
 
   // Instantiates a hash-map range template when requested
-  static BoundType*
-  InstantiateHashMapRange(LibraryBuilder& builder,
-                          StringParam baseName,
-                          StringParam fullyQualifiedName,
-                          const Array<Constant>& templateTypes,
-                          const void* userData);
+  static BoundType* InstantiateHashMapRange(LibraryBuilder& builder,
+                                            StringParam baseName,
+                                            StringParam fullyQualifiedName,
+                                            const Array<Constant>& templateTypes,
+                                            const void* userData);
 
   // Instantiates a pair template when requested
   static BoundType* InstantiateKeyValue(LibraryBuilder& builder,
@@ -163,12 +160,11 @@ private:
                                         const void* userData);
 
   // Instantiates a property delegate template when requested
-  static BoundType*
-  InstantiatePropertyDelegate(LibraryBuilder& builder,
-                              StringParam baseName,
-                              StringParam fullyQualifiedName,
-                              const Array<Constant>& templateTypes,
-                              const void* userData);
+  static BoundType* InstantiatePropertyDelegate(LibraryBuilder& builder,
+                                                StringParam baseName,
+                                                StringParam fullyQualifiedName,
+                                                const Array<Constant>& templateTypes,
+                                                const void* userData);
 
   // Privatized constructor (it's a singleton)
   Core();

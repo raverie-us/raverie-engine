@@ -7,8 +7,7 @@
 namespace Zilch
 {
 // The context we use to generate code
-class ZeroShared GeneratorContext
-    : public WalkerContext<CodeGenerator, GeneratorContext>
+class ZeroShared GeneratorContext : public WalkerContext<CodeGenerator, GeneratorContext>
 {
 public:
   // Store the current function that we're building
@@ -39,8 +38,7 @@ private:
   void ClassContext(ClassNode*& node, GeneratorContext* context);
 
   // Store the class in the code context
-  void ClassAndPreconstructorContext(ClassNode*& node,
-                                     GeneratorContext* context);
+  void ClassAndPreconstructorContext(ClassNode*& node, GeneratorContext* context);
 
   // Store the function in the code context
   void FunctionContext(GenericFunctionNode*& node, GeneratorContext* context);
@@ -52,16 +50,14 @@ private:
   void GenerateParameter(ParameterNode*& node, GeneratorContext* context);
 
   // Generate the storage for variables
-  void GenerateLocalVariable(LocalVariableNode*& node,
-                             GeneratorContext* context);
+  void GenerateLocalVariable(LocalVariableNode*& node, GeneratorContext* context);
 
   // Generate debug breakpoints
   void GenerateDebugBreak(DebugBreakNode*& node, GeneratorContext* context);
 
   // Generate the initialization of member variables (static and fields) and
   // also generate properties
-  void GenerateMemberVariable(MemberVariableNode*& node,
-                              GeneratorContext* context);
+  void GenerateMemberVariable(MemberVariableNode*& node, GeneratorContext* context);
 
   // Generate opcode for timeout statements
   void GenerateTimeout(TimeoutNode*& node, GeneratorContext* context);
@@ -70,8 +66,7 @@ private:
   void GenerateIfRoot(IfRootNode*& node, GeneratorContext* context);
 
   // Generate all the statements and the continue jumps inside
-  void GenerateLoopStatementsAndContinues(GeneratorContext* context,
-                                          LoopScopeNode* node);
+  void GenerateLoopStatementsAndContinues(GeneratorContext* context, LoopScopeNode* node);
 
   // Generate all the statements inside a node
   void GenerateStatements(GeneratorContext* context, ScopeNode* node);
@@ -106,38 +101,31 @@ private:
   void GenerateContinue(ContinueNode*& node, GeneratorContext* context);
 
   // Generate opcode for binary operations
-  void GenerateBinaryOperation(BinaryOperatorNode*& node,
-                               GeneratorContext* context);
+  void GenerateBinaryOperation(BinaryOperatorNode*& node, GeneratorContext* context);
 
   // Generate opcode for unary operations
-  void GenerateUnaryOperation(UnaryOperatorNode*& node,
-                              GeneratorContext* context);
+  void GenerateUnaryOperation(UnaryOperatorNode*& node, GeneratorContext* context);
 
   // Generate opcode for the unary property delegate operator
-  void GeneratePropertyDelegateOperation(PropertyDelegateOperatorNode*& node,
-                                         GeneratorContext* context);
+  void GeneratePropertyDelegateOperation(PropertyDelegateOperatorNode*& node, GeneratorContext* context);
 
   // Generate opcode for member accesses (function, data, etc)
   void GenerateMemberAccess(MemberAccessNode*& node, GeneratorContext* context);
 
   // Generate opcode for static data-member accesses
-  void GenerateStaticFieldAccess(MemberAccessNode*& node,
-                                 GeneratorContext* context);
+  void GenerateStaticFieldAccess(MemberAccessNode*& node, GeneratorContext* context);
 
   // Generate opcode for data-member accesses
   void GenerateFieldAccess(MemberAccessNode*& node, GeneratorContext* context);
 
   // Generate opcode for function-member accesses
-  void GenerateFunctionDelegateMemberAccess(MemberAccessNode*& node,
-                                            GeneratorContext* context);
+  void GenerateFunctionDelegateMemberAccess(MemberAccessNode*& node, GeneratorContext* context);
 
   // Generate opcode for property-member 'get'
-  void GeneratePropertyGetMemberAccess(MemberAccessNode*& node,
-                                       GeneratorContext* context);
+  void GeneratePropertyGetMemberAccess(MemberAccessNode*& node, GeneratorContext* context);
 
   // Generate opcode for property-member 'set'
-  void GeneratePropertySetMemberAccess(MemberAccessNode*& node,
-                                       GeneratorContext* context);
+  void GeneratePropertySetMemberAccess(MemberAccessNode*& node, GeneratorContext* context);
 
   // Generate opcode for the initializers in the initializer list (base, this,
   // etc)
@@ -174,11 +162,8 @@ private:
                                             DebugOrigin::Enum debug);
 
   // Create a static delegate for the given type or source
-  void CreateStaticDelegate(Function* caller,
-                            Function* toCall,
-                            Operand& delegateDest,
-                            const CodeLocation& location,
-                            DebugOrigin::Enum debug);
+  void CreateStaticDelegate(
+      Function* caller, Function* toCall, Operand& delegateDest, const CodeLocation& location, DebugOrigin::Enum debug);
 
   // Generate opcode for type-casts
   void GenerateTypeCast(TypeCastNode*& node, GeneratorContext* context);
@@ -190,8 +175,7 @@ private:
   void GenerateMemberId(MemberIdNode*& node, GeneratorContext* context);
 
   // Generate opcode for referencing local and parameter variables
-  void GenerateLocalVariableReference(LocalVariableReferenceNode*& node,
-                                      GeneratorContext* context);
+  void GenerateLocalVariableReference(LocalVariableReferenceNode*& node, GeneratorContext* context);
 
   // Generate opcode for return values
   void GenerateReturnValue(ReturnNode*& node, GeneratorContext* context);
@@ -219,8 +203,7 @@ private:
   void CollectValue(ValueNode*& node, GeneratorContext* context);
 
   // Collect all the string interpolant expressions
-  void GenerateStringInterpolants(StringInterpolantNode*& node,
-                                  GeneratorContext* context);
+  void GenerateStringInterpolants(StringInterpolantNode*& node, GeneratorContext* context);
 
   // Generate opcode for deleting objects in memory
   void GenerateDelete(DeleteNode*& node, GeneratorContext* context);
@@ -229,17 +212,14 @@ private:
   void GenerateThrow(ThrowNode*& node, GeneratorContext* context);
 
   // Finds all the new calls and generates opcode to create objects
-  void GenerateStaticTypeOrCreationCall(StaticTypeNode*& node,
-                                        GeneratorContext* context);
+  void GenerateStaticTypeOrCreationCall(StaticTypeNode*& node, GeneratorContext* context);
 
   // Invokes 'Add' and initializes members
-  void GenerateExpressionInitializer(ExpressionInitializerNode*& node,
-                                     GeneratorContext* context);
+  void GenerateExpressionInitializer(ExpressionInitializerNode*& node, GeneratorContext* context);
 
   // Perform all the expressions of the multi-expression, and then yield the
   // access to one of them
-  void GenerateMultiExpression(MultiExpressionNode*& node,
-                               GeneratorContext* context);
+  void GenerateMultiExpression(MultiExpressionNode*& node, GeneratorContext* context);
 
   // Allocate a local on a function (and setup an access to point at it)
   void CreateLocal(Function* function, size_t size, Operand& accessOut);
@@ -263,14 +243,10 @@ private:
                               DebugOrigin::Enum debugOrigin);
 
   // Determine the proper opcode for unary operations
-  void GenerateUnaryOp(Function* function,
-                       UnaryOperatorNode& node,
-                       DebugOrigin::Enum debugOrigin);
+  void GenerateUnaryOp(Function* function, UnaryOperatorNode& node, DebugOrigin::Enum debugOrigin);
 
   // Determine the proper opcode for conversion operations
-  void GenerateConversion(Function* function,
-                          TypeCastNode& node,
-                          DebugOrigin::Enum debugOrigin);
+  void GenerateConversion(Function* function, TypeCastNode& node, DebugOrigin::Enum debugOrigin);
 
   // Create a copy opcode
   void CreateCopyOpcode(Function* function,

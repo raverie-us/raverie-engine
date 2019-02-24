@@ -222,7 +222,7 @@ void ManipulatorTool::ZeroOutManipulator(Vec3Param center)
 bool ManipulatorTool::PrioritizeUiWidget(Array<Handle>::range& range)
 {
   Aabb aabb;
-  forRange(Handle & object, range.All())
+  forRange (Handle& object, range.All())
   {
     Cog* cog = object.Get<Cog*>();
     if (cog == nullptr)
@@ -248,8 +248,7 @@ bool ManipulatorTool::PrioritizeUiWidget(Array<Handle>::range& range)
   return true;
 }
 
-bool ManipulatorTool::CheckAlignment(Array<Handle>::range& range,
-                                     Vec3Param toolNormal)
+bool ManipulatorTool::CheckAlignment(Array<Handle>::range& range, Vec3Param toolNormal)
 {
   // If the tool normal is close enough to z-axis alignment, then
   // return false so that a WorldSpace rect is computed [ie, no tool
@@ -258,7 +257,7 @@ bool ManipulatorTool::CheckAlignment(Array<Handle>::range& range,
     return false;
 
   // Check if all objects have the same XY-plane alignment.
-  forRange(Handle handle, range)
+  forRange (Handle handle, range)
   {
     MetaTransform* mt = handle.StoredType->HasInherited<MetaTransform>();
     if (mt == nullptr)
@@ -268,8 +267,7 @@ bool ManipulatorTool::CheckAlignment(Array<Handle>::range& range,
     if (t.IsNull())
       continue;
 
-    Vec3 objectNormal =
-        Math::Multiply(t.GetWorldRotation(), Vec3::cZAxis).Normalized();
+    Vec3 objectNormal = Math::Multiply(t.GetWorldRotation(), Vec3::cZAxis).Normalized();
     float dot = toolNormal.Dot(objectNormal);
 
     // Normals aren't close enough to being aligned.
@@ -290,7 +288,7 @@ void ManipulatorTool::ComputeWorldToolRect(Array<Handle>::range& range,
   Array<Handle>::range objects = range;
 
   // World aabb encapsulating all other objects in the selection.
-  forRange(Handle handle, objects)
+  forRange (Handle handle, objects)
   {
     Aabb subAabb;
     // MetaTransform validity is handled internally in 'ExpandAabb'.
@@ -301,7 +299,7 @@ void ManipulatorTool::ComputeWorldToolRect(Array<Handle>::range& range,
 
   if (includeChildren)
   {
-    forRange(Handle handle, range)
+    forRange (Handle handle, range)
     {
       Aabb subAabb;
       // MetaTransform validity is handled internally in 'ExpandAabb'.
@@ -344,7 +342,7 @@ void ManipulatorTool::ComputeLocalToolRect(Array<Handle>::range& range,
   float* corners[4] = {&toolMin.x, &toolMin.y, &toolMax.x, &toolMax.y};
   Vec3 axes[4] = {-toolX, -toolY, toolX, toolY};
 
-  forRange(Handle handle, range)
+  forRange (Handle handle, range)
   {
     MetaTransform* mt = handle.StoredType->HasInherited<MetaTransform>();
     if (mt == nullptr)
@@ -370,8 +368,7 @@ void ManipulatorTool::ComputeLocalToolRect(Array<Handle>::range& range,
     // Proper 'subObb' with volume [ie, not just a point].
     if (extents.Dot(extents) > cToolEpsilon)
     {
-      Mat4 m = BuildTransform(
-          t.GetLocalTranslation(), t.GetLocalRotation(), t.GetLocalScale());
+      Mat4 m = BuildTransform(t.GetLocalTranslation(), t.GetLocalRotation(), t.GetLocalScale());
       Mat4 pm = t.GetParentWorldMatrix();
 
       center = Math::TransformPoint(Multiply(pm, m), subObb.GetCenter());
@@ -443,14 +440,12 @@ void ManipulatorTool::ComputeLocalToolRect(Array<Handle>::range& range,
   }
 }
 
-void ManipulatorTool::ExtractPrimary(Array<Handle>::range& range,
-                                     Handle& primaryOut)
+void ManipulatorTool::ExtractPrimary(Array<Handle>::range& range, Handle& primaryOut)
 {
   // Find the first object in the selection with a Transform.
-  forRange(Handle handle, range)
+  forRange (Handle handle, range)
   {
-    MetaTransform* metaTransform =
-        handle.StoredType->HasInherited<MetaTransform>();
+    MetaTransform* metaTransform = handle.StoredType->HasInherited<MetaTransform>();
     if (metaTransform == nullptr || metaTransform->GetInstance(handle).IsNull())
       continue;
 
@@ -464,7 +459,7 @@ void ManipulatorTool::CompileChildObjects(Cog* parent, Array<Handle>& children)
   if (parent == nullptr)
     return;
 
-  forRange(Cog & child, parent->GetChildren())
+  forRange (Cog& child, parent->GetChildren())
   {
     CompileChildObjects(&child, children);
     children.PushBack(child);
@@ -478,7 +473,7 @@ void ManipulatorTool::UpdateSelectedObjects()
   MetaSelection* selection = Z::gEditor->GetSelection();
 
   bool transformFound = false;
-  forRange(Handle handle, selection->All())
+  forRange (Handle handle, selection->All())
   {
     MetaTransform* transform = handle.StoredType->HasInherited<MetaTransform>();
     if (transform == nullptr)
@@ -495,8 +490,7 @@ void ManipulatorTool::UpdateSelectedObjects()
         {
           // Don't duplicate connections.
           if (!dispatcher->IsConnected(Events::ComponentsModified, this))
-            ConnectThisTo(
-                object, Events::ComponentsModified, OnComponentsChanged);
+            ConnectThisTo(object, Events::ComponentsModified, OnComponentsChanged);
         }
       }
     }
@@ -524,8 +518,7 @@ void ManipulatorTool::UpdateRectAndBasis()
           "ManipulationTool requires at least one object in the selection to "
           "have a Trasform");
 
-  MetaTransform* metaTransform =
-      primary.StoredType->HasInherited<MetaTransform>();
+  MetaTransform* metaTransform = primary.StoredType->HasInherited<MetaTransform>();
   MetaTransformInstance transform = metaTransform->GetInstance(primary);
 
   Quat primaryBasis = transform.GetWorldRotation();
@@ -555,8 +548,7 @@ void ManipulatorTool::UpdateRectAndBasis()
   mObbBasis = primaryBasis;
 
   objects = metaObjects.All();
-  ComputeLocalToolRect(
-      objects, toolNormal, pp, &aabb, mIncludeMode == IncludeMode::Children);
+  ComputeLocalToolRect(objects, toolNormal, pp, &aabb, mIncludeMode == IncludeMode::Children);
 
   // Couldn't calculate an aabb, try to compute one from the children of
   // the objects in the selection.
@@ -564,7 +556,7 @@ void ManipulatorTool::UpdateRectAndBasis()
   {
     // Gather up all the children.
     Array<Handle> children;
-    forRange(Handle handle, metaObjects.All())
+    forRange (Handle handle, metaObjects.All())
     {
       CompileChildObjects(handle.Get<Cog*>(), children);
     }
@@ -717,12 +709,10 @@ void ManipulatorTool::TestMouseMove(ViewportMouseEvent* event)
 
   for (uint i = 0; i <= 4; ++i)
   {
-    float scaledGripSize =
-        GizmoHelpers::GetViewScale(camera, middles[i]) * cGripSize;
+    float scaledGripSize = GizmoHelpers::GetViewScale(camera, middles[i]) * cGripSize;
     Vec3 boxSize(scaledGripSize, scaledGripSize, scaledGripSize);
 
-    Intersection::Type result = Intersection::RayObb(
-        mouseRay.Start, mouseRay.Direction, middles[i], boxSize, obbBasis);
+    Intersection::Type result = Intersection::RayObb(mouseRay.Start, mouseRay.Direction, middles[i], boxSize, obbBasis);
 
     if (result != Intersection::None)
     {
@@ -743,13 +733,10 @@ void ManipulatorTool::TestMouseMove(ViewportMouseEvent* event)
   for (uint i = 0; i < 4; ++i)
   {
     // Corner grips are double size.
-    float scaledGripSize = cCornerGripScalar *
-                           GizmoHelpers::GetViewScale(camera, corner[i]) *
-                           cGripSize;
+    float scaledGripSize = cCornerGripScalar * GizmoHelpers::GetViewScale(camera, corner[i]) * cGripSize;
     Vec3 boxSize(scaledGripSize, scaledGripSize, scaledGripSize);
 
-    Intersection::Type result = Intersection::RayObb(
-        mouseRay.Start, mouseRay.Direction, corner[i], boxSize, obbBasis);
+    Intersection::Type result = Intersection::RayObb(mouseRay.Start, mouseRay.Direction, corner[i], boxSize, obbBasis);
 
     if (result != Intersection::None)
     {
@@ -769,7 +756,7 @@ void ManipulatorTool::DuplicationObjects(Array<Handle>& metaObjects)
   MetaSelection* selection = Z::gEditor->GetSelection();
   selection->Clear(SendsEvents::False);
 
-  forRange(Handle object, metaObjects.All())
+  forRange (Handle object, metaObjects.All())
   {
     Cog* cog = object.Get<Cog*>();
     if (cog && CogSerialization::ShouldSave(*cog))
@@ -789,14 +776,13 @@ void ManipulatorTool::DuplicationObjects(Array<Handle>& metaObjects)
 
   metaObjects.Clear();
 
-  forRange(Handle handle, mNewObjects.All())
+  forRange (Handle handle, mNewObjects.All())
   {
     if (handle.IsNull())
       continue;
 
     // Valid manipulation objects must have a Transform.
-    MetaTransform* metaTransform =
-        handle.StoredType->HasInherited<MetaTransform>();
+    MetaTransform* metaTransform = handle.StoredType->HasInherited<MetaTransform>();
     if (!metaTransform)
       continue;
 
@@ -806,8 +792,7 @@ void ManipulatorTool::DuplicationObjects(Array<Handle>& metaObjects)
       {
         // Don't duplicate connections.
         if (!dispatcher->IsConnected(Events::ComponentsModified, this))
-          ConnectThisTo(
-              object, Events::ComponentsModified, OnComponentsChanged);
+          ConnectThisTo(object, Events::ComponentsModified, OnComponentsChanged);
       }
     }
 
@@ -825,8 +810,7 @@ void ManipulatorTool::DuplicationObjects(Array<Handle>& metaObjects)
   GetOwner()->DispatchUp(Events::GizmoObjectsDuplicated, &eventToSend);
 }
 
-void ManipulatorTool::AddTransformingObject(Handle target,
-                                            ManipulatorToolEvent& eventToSend)
+void ManipulatorTool::AddTransformingObject(Handle target, ManipulatorToolEvent& eventToSend)
 {
   if (Object* object = target.Get<Object*>())
   {
@@ -837,10 +821,8 @@ void ManipulatorTool::AddTransformingObject(Handle target,
   TransformingObject data;
   data.MetaObject = target;
 
-  MetaTransform* metaTransform =
-      target.StoredType->HasInherited<MetaTransform>();
-  ErrorIf(metaTransform == nullptr,
-          "No MetaTransform on object being transformed.");
+  MetaTransform* metaTransform = target.StoredType->HasInherited<MetaTransform>();
+  ErrorIf(metaTransform == nullptr, "No MetaTransform on object being transformed.");
 
   MetaTransformInstance transform = metaTransform->GetInstance(target);
 
@@ -901,8 +883,7 @@ void ManipulatorTool::OnMouseDragStart(ViewportMouseEvent* event)
   if (metaObjects.Empty())
     return;
 
-  if (mLocation == Location::Center && event->CtrlPressed &&
-      mDuplicateOnCtrlDrag)
+  if (mLocation == Location::Center && event->CtrlPressed && mDuplicateOnCtrlDrag)
     DuplicationObjects(metaObjects);
 
   mTransformingObjects.Clear();
@@ -912,8 +893,8 @@ void ManipulatorTool::OnMouseDragStart(ViewportMouseEvent* event)
   eventToSend.mStartWorldRectangle = mStartRect;
   eventToSend.mEndWorldRectangle = eventToSend.mStartWorldRectangle;
 
-  forRange(Handle target, metaObjects.All())
-      AddTransformingObject(target, eventToSend);
+  forRange (Handle target, metaObjects.All())
+    AddTransformingObject(target, eventToSend);
 }
 
 void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* event)
@@ -927,10 +908,8 @@ void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* event)
 
   // Compute tool plane movement/drag.
   Viewport* viewport = event->GetViewport();
-  Vec3 grabPosition = viewport->ScreenToWorldPlane(
-      mMouseDragStart, toolWorldNormal, mWorldGrabPoint);
-  Vec3 dragPosition = viewport->ScreenToWorldPlane(
-      event->Position, toolWorldNormal, mWorldGrabPoint);
+  Vec3 grabPosition = viewport->ScreenToWorldPlane(mMouseDragStart, toolWorldNormal, mWorldGrabPoint);
+  Vec3 dragPosition = viewport->ScreenToWorldPlane(event->Position, toolWorldNormal, mWorldGrabPoint);
   Vec3 movement = dragPosition - grabPosition;
 
   // Movement in world to local tool 2D space.
@@ -939,10 +918,8 @@ void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* event)
   Vec2 move2D(movement.x, movement.y);
 
   // Shift key modifies the snapping flag temporarily
-  bool nonShiftModified =
-      (mSnapping && Keyboard::Instance->KeyIsUp(Keys::Shift));
-  bool tempSnappingOn =
-      (!mSnapping && Keyboard::Instance->KeyIsDown(Keys::Shift));
+  bool nonShiftModified = (mSnapping && Keyboard::Instance->KeyIsUp(Keys::Shift));
+  bool tempSnappingOn = (!mSnapping && Keyboard::Instance->KeyIsDown(Keys::Shift));
 
   if ((nonShiftModified || tempSnappingOn))
     move2D = Snap(move2D, mSnapDistance);
@@ -961,17 +938,14 @@ void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* event)
     // If true:  1 * value = value [ie, use movement on axis].
     // If false: 0 * value =     0 [ie, no movement on axis].
     Vec2 moveOnAxis;
-    moveOnAxis.x =
-        (bool)(grabFlags & (DirectionFlags::Left | DirectionFlags::Right));
-    moveOnAxis.y =
-        (bool)(grabFlags & (DirectionFlags::Top | DirectionFlags::Bottom));
+    moveOnAxis.x = (bool)(grabFlags & (DirectionFlags::Left | DirectionFlags::Right));
+    moveOnAxis.y = (bool)(grabFlags & (DirectionFlags::Top | DirectionFlags::Bottom));
 
     move2D.x = moveOnAxis.x * move2D.x;
     move2D.y = moveOnAxis.y * move2D.y;
 
     // Maintain aspect ratio.
-    if (event->CtrlPressed && Keyboard::Instance->KeyIsDown(Keys::A) &&
-        moveOnAxis.x && moveOnAxis.y)
+    if (event->CtrlPressed && Keyboard::Instance->KeyIsDown(Keys::A) && moveOnAxis.x && moveOnAxis.y)
     {
       Vec2 grab2D = mStartRect.GetLocation(mLocation);
       Vec2 axis = grab2D - mStartRect.GetCenter();
@@ -1020,16 +994,13 @@ void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* event)
   // Current BottomLeft of tool rect in world space.
   mActiveOrigin3D = mStartCenter3D + Math::Multiply(mObbBasis, mActiveOrigin3D);
 
-  Vec3 oppositeGrab =
-      Vec3(mStartRect.GetLocation(Location::GetOpposite(mLocation)), 0);
+  Vec3 oppositeGrab = Vec3(mStartRect.GetLocation(Location::GetOpposite(mLocation)), 0);
   oppositeGrab -= Vec3(startCenter, 0);
   oppositeGrab = mStartCenter3D + Math::Multiply(mObbBasis, oppositeGrab);
 
   Property* areaSizeProperty = ZilchTypeId(Area)->GetProperty("Size");
-  Property* colliderOffsetProperty =
-      ZilchTypeId(BoxCollider)->GetProperty("Offset");
-  Property* colliderSizeProperty =
-      ZilchTypeId(BoxCollider)->GetProperty("Size");
+  Property* colliderOffsetProperty = ZilchTypeId(BoxCollider)->GetProperty("Offset");
+  Property* colliderSizeProperty = ZilchTypeId(BoxCollider)->GetProperty("Size");
 
   ManipulatorToolEvent eventToSend(event);
   eventToSend.mGrabLocation = mLocation;
@@ -1037,14 +1008,13 @@ void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* event)
   eventToSend.mEndWorldRectangle = mActiveRect;
 
   // Compute updated transforms for the objects the tool is affecting.
-  forRange(TransformingObject & target, mTransformingObjects.All())
+  forRange (TransformingObject& target, mTransformingObjects.All())
   {
     Handle handle = target.MetaObject;
     if (handle.IsNull())
       continue;
 
-    MetaTransform* metaTransform =
-        handle.StoredType->HasInherited<MetaTransform>();
+    MetaTransform* metaTransform = handle.StoredType->HasInherited<MetaTransform>();
     if (metaTransform == nullptr)
       continue;
 
@@ -1075,17 +1045,14 @@ void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* event)
     returnedSize = Math::Max(returnedSize, Vec2::cZero);
 
     Vec3 scaleChange(1);
-    scaleChange.x =
-        (startSize.x <= cSizeEpsilon) ? 1 : returnedSize.x / startSize.x;
-    scaleChange.y =
-        (startSize.y <= cSizeEpsilon) ? 1 : returnedSize.y / startSize.y;
+    scaleChange.x = (startSize.x <= cSizeEpsilon) ? 1 : returnedSize.x / startSize.x;
+    scaleChange.y = (startSize.y <= cSizeEpsilon) ? 1 : returnedSize.y / startSize.y;
 
     Vec3 newTranslation;
     if (mSelectedPoint == cMiddlePoint)
     {
       // Translation change in world.
-      newTranslation =
-          Math::Multiply(mObbBasis, Vec3(returnedCenter - startCenter, 0));
+      newTranslation = Math::Multiply(mObbBasis, Vec3(returnedCenter - startCenter, 0));
       newTranslation = target.StartWorldTranslation + newTranslation;
     }
     else
@@ -1116,19 +1083,15 @@ void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* event)
 
     if (dispatcher != nullptr)
     {
-      PropertyEvent propertyEvent(transform.mInstance,
-                                  transform.mLocalTranslation,
-                                  target.StartTranslation,
-                                  target.EndTranslation);
-      dispatcher->Dispatch(Events::PropertyModifiedIntermediate,
-                           &propertyEvent);
+      PropertyEvent propertyEvent(
+          transform.mInstance, transform.mLocalTranslation, target.StartTranslation, target.EndTranslation);
+      dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
     }
 
     if (Cog* cog = handle.Get<Cog*>())
     {
       // Only resize the area if children are not affected by manipulation
-      bool affectRootOnly =
-          (mIncludeMode == IncludeMode::OnlyRoot || cog->GetChildren().Empty());
+      bool affectRootOnly = (mIncludeMode == IncludeMode::OnlyRoot || cog->GetChildren().Empty());
 
       Area* area = cog->has(Area);
       if (area != nullptr && affectRootOnly)
@@ -1149,10 +1112,8 @@ void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* event)
 
         if (dispatcher != nullptr)
         {
-          PropertyEvent propertyEvent(
-              area, areaSizeProperty, target.StartSize, target.EndSize);
-          dispatcher->Dispatch(Events::PropertyModifiedIntermediate,
-                               &propertyEvent);
+          PropertyEvent propertyEvent(area, areaSizeProperty, target.StartSize, target.EndSize);
+          dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
         }
 
         // No need to update an object's BoxCollider if there isn't one, or if
@@ -1160,29 +1121,19 @@ void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* event)
         BoxCollider* collider = cog->has(BoxCollider);
         if (collider != nullptr && mSizeBoxCollider)
         {
-          Vec3 endOffset(area->OffsetOfOffset(Location::Center) *
-                         area->GetSize());
+          Vec3 endOffset(area->OffsetOfOffset(Location::Center) * area->GetSize());
           collider->SetOffset(endOffset);
 
-          Vec3 endSize(
-              target.EndSize.x, target.EndSize.y, target.StartColliderSize.z);
+          Vec3 endSize(target.EndSize.x, target.EndSize.y, target.StartColliderSize.z);
           collider->SetSize(endSize);
 
           if (dispatcher != nullptr)
           {
-            PropertyEvent propertyEvent1(collider,
-                                         colliderOffsetProperty,
-                                         target.StartColliderOffset,
-                                         endOffset);
-            dispatcher->Dispatch(Events::PropertyModifiedIntermediate,
-                                 &propertyEvent1);
+            PropertyEvent propertyEvent1(collider, colliderOffsetProperty, target.StartColliderOffset, endOffset);
+            dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent1);
 
-            PropertyEvent propertyEvent2(collider,
-                                         colliderSizeProperty,
-                                         target.StartColliderSize,
-                                         endSize);
-            dispatcher->Dispatch(Events::PropertyModifiedIntermediate,
-                                 &propertyEvent2);
+            PropertyEvent propertyEvent2(collider, colliderSizeProperty, target.StartColliderSize, endSize);
+            dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent2);
           }
         }
 
@@ -1196,12 +1147,8 @@ void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* event)
 
     if (dispatcher != nullptr)
     {
-      PropertyEvent propertyEvent(transform.mInstance,
-                                  transform.mLocalScale,
-                                  target.StartScale,
-                                  target.EndScale);
-      dispatcher->Dispatch(Events::PropertyModifiedIntermediate,
-                           &propertyEvent);
+      PropertyEvent propertyEvent(transform.mInstance, transform.mLocalScale, target.StartScale, target.EndScale);
+      dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
     }
   }
 
@@ -1212,10 +1159,8 @@ void ManipulatorTool::OnMouseDragEnd(ViewportMouseEvent* event)
 {
   Property* areaSizeProperty = ZilchTypeId(Area)->GetProperty("Size");
 
-  Property* colliderOffsetProperty =
-      ZilchTypeId(BoxCollider)->GetProperty("Offset");
-  Property* colliderSizeProperty =
-      ZilchTypeId(BoxCollider)->GetProperty("Size");
+  Property* colliderOffsetProperty = ZilchTypeId(BoxCollider)->GetProperty("Offset");
+  Property* colliderSizeProperty = ZilchTypeId(BoxCollider)->GetProperty("Size");
 
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
 
@@ -1228,7 +1173,7 @@ void ManipulatorTool::OnMouseDragEnd(ViewportMouseEvent* event)
   queue->BeginBatch();
   queue->SetActiveBatchName("MultiObject Manipulation");
 
-  forRange(TransformingObject & target, mTransformingObjects.All())
+  forRange (TransformingObject& target, mTransformingObjects.All())
   {
     Handle handle = target.MetaObject;
     if (handle.IsNull())
@@ -1243,8 +1188,7 @@ void ManipulatorTool::OnMouseDragEnd(ViewportMouseEvent* event)
     if (eventToSend.Handled || eventToSend.HandledEventScript)
       continue;
 
-    MetaTransform* metaTransform =
-        handle.StoredType->HasInherited<MetaTransform>();
+    MetaTransform* metaTransform = handle.StoredType->HasInherited<MetaTransform>();
     if (metaTransform == nullptr)
       continue;
 
@@ -1280,8 +1224,7 @@ void ManipulatorTool::OnMouseDragEnd(ViewportMouseEvent* event)
 
       // Single duplicated object proper hierarchy, emulates ctrl+c, ctrl+v
       // behavior.
-      if (mTransformingObjects.Size() == 1 &&
-          mDuplicateCorrectIndex != unsigned(-1))
+      if (mTransformingObjects.Size() == 1 && mDuplicateCorrectIndex != unsigned(-1))
       {
         MoveObjectIndex(queue, cog, mDuplicateCorrectIndex);
         mDuplicateCorrectIndex = unsigned(-1);
@@ -1295,8 +1238,7 @@ void ManipulatorTool::OnMouseDragEnd(ViewportMouseEvent* event)
       transform.SetLocalTranslation(target.StartTranslation);
 
       PropertyPath propertyPath(transform.mLocalTranslation);
-      ChangeAndQueueProperty(
-          queue, transform.mInstance, propertyPath, target.EndTranslation);
+      ChangeAndQueueProperty(queue, transform.mInstance, propertyPath, target.EndTranslation);
     }
 
     // Scale might have changed.
@@ -1306,8 +1248,7 @@ void ManipulatorTool::OnMouseDragEnd(ViewportMouseEvent* event)
       transform.SetLocalScale(target.StartScale);
 
       PropertyPath propertyPath(transform.mLocalScale);
-      ChangeAndQueueProperty(
-          queue, transform.mInstance, propertyPath, target.EndScale);
+      ChangeAndQueueProperty(queue, transform.mInstance, propertyPath, target.EndScale);
     }
 
     if (Cog* areaCog = handle.Get<Cog*>())
@@ -1328,15 +1269,13 @@ void ManipulatorTool::OnMouseDragEnd(ViewportMouseEvent* event)
         {
           collider->SetOffset(target.StartColliderOffset);
 
-          Vec3 endOffset(area->OffsetOfOffset(Location::Center) *
-                         area->GetSize());
+          Vec3 endOffset(area->OffsetOfOffset(Location::Center) * area->GetSize());
           PropertyPath offsetPath(collider, colliderOffsetProperty);
           ChangeAndQueueProperty(queue, areaCog, offsetPath, endOffset);
 
           collider->SetSize(target.StartColliderSize);
 
-          Vec3 endSize(
-              target.EndSize.x, target.EndSize.y, target.StartColliderSize.z);
+          Vec3 endSize(target.EndSize.x, target.EndSize.y, target.StartColliderSize.z);
           PropertyPath sizePath(collider, colliderSizeProperty);
           ChangeAndQueueProperty(queue, areaCog, sizePath, endSize);
         }
@@ -1396,11 +1335,7 @@ void ManipulatorTool::OnToolDraw(Event*)
     if (2 * i == (uint)mSelectedPoint)
       c = hoverColor;
 
-    gDebugDraw->Add(Debug::Box(middles[i], gripSize, mObbBasis)
-                        .Filled(true)
-                        .ViewScaled(true)
-                        .Color(c)
-                        .OnTop(true));
+    gDebugDraw->Add(Debug::Box(middles[i], gripSize, mObbBasis).Filled(true).ViewScaled(true).Color(c).OnTop(true));
   }
 
   Vec3 corner[] = {
@@ -1423,25 +1358,16 @@ void ManipulatorTool::OnToolDraw(Event*)
       c = hoverColor;
 
     // Corner grab spots.
-    gDebugDraw->Add(Debug::Circle(corner[i], axis, gripSize.x)
-                        .Filled(true)
-                        .ViewScaled(true)
-                        .Color(c)
-                        .OnTop(true));
+    gDebugDraw->Add(Debug::Circle(corner[i], axis, gripSize.x).Filled(true).ViewScaled(true).Color(c).OnTop(true));
   }
 
   // Entire tool fill.
   ByteColor triColor = ColorWithAlpha(toolColor, 0.05f);
-  gDebugDraw->Add(Debug::Triangle(corner[3], corner[2], corner[1])
-                      .Color(triColor)
-                      .Filled(true));
-  gDebugDraw->Add(Debug::Triangle(corner[3], corner[1], corner[0])
-                      .Color(triColor)
-                      .Filled(true));
+  gDebugDraw->Add(Debug::Triangle(corner[3], corner[2], corner[1]).Color(triColor).Filled(true));
+  gDebugDraw->Add(Debug::Triangle(corner[3], corner[1], corner[0]).Color(triColor).Filled(true));
 
   // Tool wireframe
-  gDebugDraw->Add(
-      Debug::Box(center, halfSize, mObbBasis).Color(toolColor).OnTop(true));
+  gDebugDraw->Add(Debug::Box(center, halfSize, mObbBasis).Color(toolColor).OnTop(true));
 }
 
 } // namespace Zero

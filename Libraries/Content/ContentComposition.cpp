@@ -26,30 +26,25 @@ ZilchDefineType(ContentMetaComposition, builder, type)
 {
 }
 
-ContentMetaComposition::ContentMetaComposition() :
-    MetaComposition(ZilchTypeId(ContentComponent))
+ContentMetaComposition::ContentMetaComposition() : MetaComposition(ZilchTypeId(ContentComponent))
 {
 }
 
 uint ContentMetaComposition::GetComponentCount(HandleParam owner)
 {
-  ContentComposition* comp =
-      owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
+  ContentComposition* comp = owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
   return comp->mComponents.Size();
 }
 
-Handle ContentMetaComposition::GetComponent(HandleParam owner,
-                                            BoundType* componentType)
+Handle ContentMetaComposition::GetComponent(HandleParam owner, BoundType* componentType)
 {
-  ContentComposition* comp =
-      owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
+  ContentComposition* comp = owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
   return comp->mComponentMap.FindValue(componentType, nullptr);
 }
 
 Handle ContentMetaComposition::GetComponentAt(HandleParam owner, uint index)
 {
-  ContentComposition* comp =
-      owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
+  ContentComposition* comp = owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
   return comp->mComponents[index];
 }
 
@@ -64,8 +59,7 @@ void ContentMetaComposition::AddComponent(HandleParam owner,
                                           bool ignoreDependencies,
                                           MetaCreationContext* creationContext)
 {
-  ContentComposition* cc =
-      owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
+  ContentComposition* cc = owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
   ContentComponent* component = componentToAdd.Get<ContentComponent*>();
 
   // set up the initializer for that component with our current content item
@@ -83,12 +77,9 @@ void ContentMetaComposition::AddComponent(HandleParam owner,
   component->Initialize(cc);
 }
 
-void ContentMetaComposition::RemoveComponent(HandleParam owner,
-                                             HandleParam componentToRemove,
-                                             bool ignoreDependencies)
+void ContentMetaComposition::RemoveComponent(HandleParam owner, HandleParam componentToRemove, bool ignoreDependencies)
 {
-  ContentComposition* cc =
-      owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
+  ContentComposition* cc = owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
   ContentComponent* component = componentToRemove.Get<ContentComponent*>();
   ReturnIf(component->mOwner != cc, , "Component belongs to different owner");
   cc->Builders.EraseValue(component);
@@ -109,7 +100,8 @@ ContentComposition::~ContentComposition()
 
 void ContentComposition::ClearComponents()
 {
-  forRange(ContentComponent * component, mComponents.All()) delete component;
+  forRange (ContentComponent* component, mComponents.All())
+    delete component;
 
   mComponents.Clear();
   mComponentMap.Clear();
@@ -120,8 +112,8 @@ void SerializeComponents(Serializer& stream, ContentComposition* contentItem)
 {
   if (stream.GetMode() == SerializerMode::Saving)
   {
-    forRange(ContentComponent * component, contentItem->mComponents.All())
-        stream.SerializePolymorphic(*component);
+    forRange (ContentComponent* component, contentItem->mComponents.All())
+      stream.SerializePolymorphic(*component);
   }
 
   if (stream.GetMode() == SerializerMode::Loading)
@@ -130,8 +122,7 @@ void SerializeComponents(Serializer& stream, ContentComposition* contentItem)
     while (stream.GetPolymorphic(node))
     {
       // create the component from the name of the node
-      ContentComponent* rc =
-          Z::gContentSystem->ComponentFactory.CreateFromName(node.TypeName);
+      ContentComponent* rc = Z::gContentSystem->ComponentFactory.CreateFromName(node.TypeName);
       if (rc)
       {
         rc->Serialize(stream);
@@ -163,7 +154,7 @@ void ContentComposition::AddComponent(ContentComponent* cc)
 
 bool ContentComposition::AnyNeedsBuilding(BuildOptions& options)
 {
-  forRange(BuilderComponent * bc, Builders.All())
+  forRange (BuilderComponent* bc, Builders.All())
   {
     if (bc->NeedsBuilding(options))
       return true;
@@ -174,7 +165,7 @@ bool ContentComposition::AnyNeedsBuilding(BuildOptions& options)
 void ContentComposition::BuildContent(BuildOptions& options)
 {
   bool anyBuilt = false;
-  forRange(BuilderComponent * bc, Builders.All())
+  forRange (BuilderComponent* bc, Builders.All())
   {
     if (bc->NeedsBuilding(options))
     {
@@ -194,7 +185,7 @@ void ContentComposition::Serialize(Serializer& stream)
 
 void ContentComposition::BuildListing(ResourceListing& listing)
 {
-  forRange(BuilderComponent * bc, Builders.All())
+  forRange (BuilderComponent* bc, Builders.All())
   {
     bc->BuildListing(listing);
   }
@@ -216,8 +207,8 @@ void ContentComposition::RemoveComponent(BoundType* componentType)
 
 void ContentComposition::OnInitialize()
 {
-  forRange(ContentComponent * component, mComponents.All())
-      component->Initialize(this);
+  forRange (ContentComponent* component, mComponents.All())
+    component->Initialize(this);
 
   mResourceIsContentItem = Builders.Size() == 1;
 }

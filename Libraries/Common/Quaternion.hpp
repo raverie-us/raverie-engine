@@ -108,9 +108,7 @@ struct ZeroShared Quaternion
   static Quaternion Slerp(QuatParam start, QuatParam end, real tValue);
   /// Spherical linear interpolation between two quaternions. Used to
   /// interpolate between two rotations. Assumes the inputs are normalized.
-  static Quaternion SlerpUnnormalized(QuatParam start,
-                                      QuatParam end,
-                                      real tValue);
+  static Quaternion SlerpUnnormalized(QuatParam start, QuatParam end, real tValue);
   /// Compute the exponential of a quaternion.
   static Quaternion Exponent(QuatParam value);
   /// Compute the logarithm of a quaternion.
@@ -119,9 +117,7 @@ struct ZeroShared Quaternion
   static real AngleBetween(QuatParam a, QuatParam b);
   /// Small angle approximation to rotate a quaternion with an angular
   /// velocity. Equivalent to integrating a rotation.
-  static Quaternion Integrate(QuatParam rotation,
-                              Vec3Param angularVelocity,
-                              real dt);
+  static Quaternion Integrate(QuatParam rotation, Vec3Param angularVelocity, real dt);
 
   real Dot(QuatParam rhs) const;
   real Length() const;
@@ -147,9 +143,7 @@ ZeroShared Quaternion Multiply(QuatParam lhs, QuatParam rhs);
 ZeroShared Vector3 Multiply(QuatParam lhs, Vec3Param rhs);
 ZeroShared Quaternion Lerp(QuatParam start, QuatParam end, real tValue);
 ZeroShared Quaternion Slerp(QuatParam start, QuatParam end, real tValue);
-ZeroShared Quaternion SlerpUnnormalized(QuatParam start,
-                                        QuatParam end,
-                                        real tValue);
+ZeroShared Quaternion SlerpUnnormalized(QuatParam start, QuatParam end, real tValue);
 ZeroShared real AngleBetween(QuatParam a, QuatParam b);
 
 ZeroShared Quaternion CreateDiagonalizer(Mat3Param matrix);

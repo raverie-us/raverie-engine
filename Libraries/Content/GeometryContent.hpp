@@ -88,8 +88,7 @@ class AnimationBuilder : public DirectBuilderComponent
 public:
   ZilchDeclareType(AnimationBuilder, TypeCopyMode::ReferenceType);
 
-  AnimationBuilder() :
-      DirectBuilderComponent(10, ".animset.data", "AnimationSet")
+  AnimationBuilder() : DirectBuilderComponent(10, ".animset.data", "AnimationSet")
   {
   }
 

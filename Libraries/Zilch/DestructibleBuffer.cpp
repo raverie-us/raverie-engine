@@ -25,9 +25,7 @@ DestructibleBuffer::DestructibleBuffer()
 {
 }
 
-DestructibleBuffer::DestructibleBuffer(const DestructibleBuffer& from) :
-    Entries(from.Entries),
-    Data(from.Data)
+DestructibleBuffer::DestructibleBuffer(const DestructibleBuffer& from) : Entries(from.Entries), Data(from.Data)
 {
   // We already directly copied over all the block array data (handed by its
   // copy constructor) Note: Untyped block array memcopies all its data over,
@@ -44,8 +42,7 @@ DestructibleBuffer::DestructibleBuffer(const DestructibleBuffer& from) :
     // Copy construct this element from its old memory to the new memory
     // (does not destruct the old or anything weird like that)
     DestructibleBuffer& fromNonConst = const_cast<DestructibleBuffer&>(from);
-    byte* fromElement =
-        fromNonConst.Data.GetAbsoluteElement(entry.AbsolutePosition);
+    byte* fromElement = fromNonConst.Data.GetAbsoluteElement(entry.AbsolutePosition);
     byte* toElement = this->Data.GetAbsoluteElement(entry.AbsolutePosition);
     entry.CopyConstructor(fromElement, toElement);
   }
@@ -57,8 +54,7 @@ DestructibleBuffer::~DestructibleBuffer()
   this->Clear();
 }
 
-DestructibleBuffer& DestructibleBuffer::
-operator=(const DestructibleBuffer& from)
+DestructibleBuffer& DestructibleBuffer::operator=(const DestructibleBuffer& from)
 {
   // Destruct ourselves and copy construct ourself again from the other one
   this->~DestructibleBuffer();
@@ -132,9 +128,7 @@ byte* DestructibleBuffer::Allocate(size_t size,
   return newData;
 }
 
-byte* DestructibleBuffer::WriteMemory(void* source,
-                                      size_t size,
-                                      DestructFn destructor)
+byte* DestructibleBuffer::WriteMemory(void* source, size_t size, DestructFn destructor)
 {
   // Allocate data and use the given destructor (it may be null)
   byte* newData = this->Allocate(size, destructor);
@@ -146,9 +140,7 @@ byte* DestructibleBuffer::WriteMemory(void* source,
   return newData;
 }
 
-byte* DestructibleBuffer::Read(size_t position,
-                               size_t length,
-                               size_t* nextPositionOut)
+byte* DestructibleBuffer::Read(size_t position, size_t length, size_t* nextPositionOut)
 {
   // Make sure we only jump by full aligned blocks
   length = AlignToBusWidth(length);

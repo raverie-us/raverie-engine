@@ -41,12 +41,9 @@ public:
 
 private:
   /// DataTreeLoader Interface.
-  PatchResolveMethod::Enum ResolveInheritedData(StringRange inheritId,
-                                                DataNode*& result) override;
-  DependencyAction::Enum ResolveDependencies(DataNode* parent,
-                                             DataNode* newChild,
-                                             DataNode** toReplace,
-                                             Status& status) override;
+  PatchResolveMethod::Enum ResolveInheritedData(StringRange inheritId, DataNode*& result) override;
+  DependencyAction::Enum
+  ResolveDependencies(DataNode* parent, DataNode* newChild, DataNode** toReplace, Status& status) override;
 };
 
 // Cached Modifications
@@ -71,9 +68,7 @@ public:
   void Combine(CachedModifications& modifications);
 
   void ApplyModificationsToObject(Object* object, bool combine = false);
-  void ApplyModificationsToChildObject(Object* rootObject,
-                                       Object* childObject,
-                                       bool combine);
+  void ApplyModificationsToChildObject(Object* rootObject, Object* childObject, bool combine);
 
   /// Any modifications that are stored on the object and the given cached
   /// modifications will be stored on this.
@@ -105,15 +100,10 @@ public:
   };
 
 private:
-  void ApplyModificationsToObjectInternal(Object* object,
-                                          ObjectNode* objectNode,
-                                          bool combine);
-  ObjectNode* StoreOverlappingModificationsInternal(Object* object,
-                                                    ObjectNode* node);
+  void ApplyModificationsToObjectInternal(Object* object, ObjectNode* objectNode, bool combine);
+  ObjectNode* StoreOverlappingModificationsInternal(Object* object, ObjectNode* node);
 
-  void ExtractInternal(DataNode* dataNode,
-                       ObjectNode* objectNode,
-                       PropertyPath& path);
+  void ExtractInternal(DataNode* dataNode, ObjectNode* objectNode, PropertyPath& path);
   ObjectNode* ExtractInternal(Object* object);
 
   ObjectNode* mRootObjectNode;

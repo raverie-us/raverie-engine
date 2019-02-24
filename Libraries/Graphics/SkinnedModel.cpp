@@ -28,10 +28,8 @@ void SkinnedModel::Initialize(CogInitializer& initializer)
   Graphical::Initialize(initializer);
   mSkeleton = nullptr;
 
-  ConnectThisTo(
-      MeshManager::GetInstance(), Events::ResourceModified, OnMeshModified);
-  ConnectThisTo(
-      &mSkeletonPath, Events::CogPathCogChanged, OnSkeletonPathChanged);
+  ConnectThisTo(MeshManager::GetInstance(), Events::ResourceModified, OnMeshModified);
+  ConnectThisTo(&mSkeletonPath, Events::CogPathCogChanged, OnSkeletonPathChanged);
 }
 
 void SkinnedModel::OnAllObjectsCreated(CogInitializer& initializer)
@@ -47,8 +45,8 @@ void SkinnedModel::DebugDraw()
   if (mSkeleton != nullptr && mSkeleton->GetOwner() != GetOwner())
   {
     Array<String> boneNames;
-    forRange(MeshBone & bone, mMesh->mBones.All())
-        boneNames.PushBack(bone.mName);
+    forRange (MeshBone& bone, mMesh->mBones.All())
+      boneNames.PushBack(bone.mName);
     mSkeleton->DebugDrawSkeleton(boneNames);
   }
 }
@@ -58,8 +56,7 @@ Aabb SkinnedModel::GetLocalAabb()
   return mMesh->mAabb;
 }
 
-void SkinnedModel::ExtractFrameData(FrameNode& frameNode,
-                                    FrameBlock& frameBlock)
+void SkinnedModel::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   Array<Mat4>& skinningBuffer = frameBlock.mRenderQueues->mSkinningBuffer;
   Array<uint>& indexRemapBuffer = frameBlock.mRenderQueues->mIndexRemapBuffer;
@@ -74,8 +71,7 @@ void SkinnedModel::ExtractFrameData(FrameNode& frameNode,
   frameNode.mTextureRenderData = nullptr;
 
   frameNode.mLocalToWorld = mTransform->GetWorldMatrix();
-  frameNode.mLocalToWorldNormal = Math::BuildTransform(
-      mTransform->GetWorldRotation(), mTransform->GetWorldScale());
+  frameNode.mLocalToWorldNormal = Math::BuildTransform(mTransform->GetWorldRotation(), mTransform->GetWorldScale());
   frameNode.mLocalToWorldNormal.Invert().Transpose();
 
   frameNode.mObjectWorldPosition = mTransform->GetWorldTranslation();
@@ -117,28 +113,23 @@ void SkinnedModel::ExtractFrameData(FrameNode& frameNode,
   // skinning as before, and accounting for the mesh's bind offset is just a
   // concatenation with the world matrix (world * bindOffsetInv)
   frameNode.mLocalToWorld = frameNode.mLocalToWorld * mMesh->mBindOffsetInv;
-  frameNode.mLocalToWorldNormal =
-      frameNode.mLocalToWorldNormal * Math::ToMatrix3(mMesh->mBindOffsetInv);
+  frameNode.mLocalToWorldNormal = frameNode.mLocalToWorldNormal * Math::ToMatrix3(mMesh->mBindOffsetInv);
 
-  frameNode.mBoneMatrixRange = mSkeleton->GetBoneTransforms(
-      skinningBuffer, frameBlock.mRenderQueues->mSkinningBufferVersion);
+  frameNode.mBoneMatrixRange =
+      mSkeleton->GetBoneTransforms(skinningBuffer, frameBlock.mRenderQueues->mSkinningBufferVersion);
 
   frameNode.mIndexRemapRange.start = indexRemapBuffer.Size();
   indexRemapBuffer.Append(mBoneIndexRemap.All());
   frameNode.mIndexRemapRange.end = indexRemapBuffer.Size();
 }
 
-void SkinnedModel::ExtractViewData(ViewNode& viewNode,
-                                   ViewBlock& viewBlock,
-                                   FrameBlock& frameBlock)
+void SkinnedModel::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
 
   viewNode.mLocalToView = viewBlock.mWorldToView * frameNode.mLocalToWorld;
-  viewNode.mLocalToViewNormal =
-      Math::ToMatrix3(viewBlock.mWorldToView) * frameNode.mLocalToWorldNormal;
-  viewNode.mLocalToPerspective =
-      viewBlock.mViewToPerspective * viewNode.mLocalToView;
+  viewNode.mLocalToViewNormal = Math::ToMatrix3(viewBlock.mWorldToView) * frameNode.mLocalToWorldNormal;
+  viewNode.mLocalToPerspective = viewBlock.mViewToPerspective * viewNode.mLocalToView;
 }
 
 bool SkinnedModel::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
@@ -184,7 +175,7 @@ void SkinnedModel::UpdateBoneIndexRemap()
   if (mSkeleton == nullptr)
     return;
 
-  forRange(MeshBone & bone, mMesh->mBones.All())
+  forRange (MeshBone& bone, mMesh->mBones.All())
   {
     // Remapped index is the index into mBoneIndexRemap
     if (mSkeleton->mNameMap.ContainsKey(bone.mName))

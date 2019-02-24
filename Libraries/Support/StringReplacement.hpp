@@ -41,13 +41,9 @@ typedef Replacements::range ReplaceRange;
 
 // Quickly replace any matching string with replace string in source string
 // outputting the replace text to the string builder.
-void Replace(StringBuilder& output,
-             Replacements& replacements,
-             StringParam source);
+void Replace(StringBuilder& output, Replacements& replacements, StringParam source);
 // Helper for replace
 String Replace(Replacements& replacements, StringParam source);
-String Replace(StringParam replaceThis,
-               StringParam withThis,
-               StringParam source);
+String Replace(StringParam replaceThis, StringParam withThis, StringParam source);
 
 } // namespace Zero

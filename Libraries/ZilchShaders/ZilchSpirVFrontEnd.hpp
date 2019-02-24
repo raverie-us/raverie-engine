@@ -6,8 +6,7 @@ namespace Zero
 
 class ZilchSpirVFrontEnd;
 
-class ZilchSpirVFrontEndContext
-    : public Zilch::WalkerContext<ZilchSpirVFrontEnd, ZilchSpirVFrontEndContext>
+class ZilchSpirVFrontEndContext : public Zilch::WalkerContext<ZilchSpirVFrontEnd, ZilchSpirVFrontEndContext>
 {
 public:
   ZilchSpirVFrontEndContext();
@@ -48,9 +47,7 @@ public:
   // library. Each ShaderType in the library will contain translated pieces of
   // the target language. These pieces can be put together into a final shader
   // with "BuildFinalShader".
-  bool Translate(Zilch::SyntaxTree& syntaxTree,
-                 ZilchShaderIRProject* project,
-                 ZilchShaderIRLibrary* library) override;
+  bool Translate(Zilch::SyntaxTree& syntaxTree, ZilchShaderIRProject* project, ZilchShaderIRLibrary* library) override;
 
   ZilchShaderIRType* MakeTypeInternal(ZilchShaderIRLibrary* shaderLibrary,
                                       ShaderIRTypeBaseType::Enum baseType,
@@ -72,27 +69,22 @@ public:
                                     StringParam typeName,
                                     Zilch::BoundType* zilchType,
                                     spv::StorageClass pointerStorageClass);
-  ZilchShaderIRType*
-  FindOrCreateInterfaceType(ZilchShaderIRLibrary* shaderLibrary,
-                            StringParam baseTypeName,
-                            Zilch::BoundType* zilchType,
-                            ShaderIRTypeBaseType::Enum baseType,
-                            spv::StorageClass storageClass);
-  ZilchShaderIRType*
-  FindOrCreateInterfaceType(ZilchShaderIRLibrary* shaderLibrary,
-                            Zilch::BoundType* zilchType,
-                            ShaderIRTypeBaseType::Enum baseType,
-                            spv::StorageClass storageClass);
-  ZilchShaderIRType*
-  FindOrCreatePointerInterfaceType(ZilchShaderIRLibrary* shaderLibrary,
-                                   ZilchShaderIRType* valueType,
-                                   spv::StorageClass storageClass);
-  ShaderIRTypeMeta*
-  MakeShaderTypeMeta(ZilchShaderIRType* shaderType,
-                     Zilch::NodeList<Zilch::AttributeNode>* nodeAttributeList);
+  ZilchShaderIRType* FindOrCreateInterfaceType(ZilchShaderIRLibrary* shaderLibrary,
+                                               StringParam baseTypeName,
+                                               Zilch::BoundType* zilchType,
+                                               ShaderIRTypeBaseType::Enum baseType,
+                                               spv::StorageClass storageClass);
+  ZilchShaderIRType* FindOrCreateInterfaceType(ZilchShaderIRLibrary* shaderLibrary,
+                                               Zilch::BoundType* zilchType,
+                                               ShaderIRTypeBaseType::Enum baseType,
+                                               spv::StorageClass storageClass);
+  ZilchShaderIRType* FindOrCreatePointerInterfaceType(ZilchShaderIRLibrary* shaderLibrary,
+                                                      ZilchShaderIRType* valueType,
+                                                      spv::StorageClass storageClass);
+  ShaderIRTypeMeta* MakeShaderTypeMeta(ZilchShaderIRType* shaderType,
+                                       Zilch::NodeList<Zilch::AttributeNode>* nodeAttributeList);
 
-  void ExtractZilchAsComments(Zilch::SyntaxNode*& node,
-                              ZilchSpirVFrontEndContext* context);
+  void ExtractZilchAsComments(Zilch::SyntaxNode*& node, ZilchSpirVFrontEndContext* context);
 
   // Parse and validate attributes for a type. If no locations are available
   // then the nodes will be null (e.g. native types).
@@ -109,10 +101,9 @@ public:
   void ParseAttributes(Zilch::Array<Zilch::Attribute>& zilchAttributes,
                        Zilch::NodeList<Zilch::AttributeNode>* attributeNodes,
                        ShaderIRFieldMeta* fieldMeta);
-  void
-  ParseZilchAttributes(Zilch::Array<Zilch::Attribute>& zilchAttributes,
-                       Zilch::NodeList<Zilch::AttributeNode>* attributeNodes,
-                       ShaderIRAttributeList& shaderAttributes);
+  void ParseZilchAttributes(Zilch::Array<Zilch::Attribute>& zilchAttributes,
+                            Zilch::NodeList<Zilch::AttributeNode>* attributeNodes,
+                            ShaderIRAttributeList& shaderAttributes);
   // Loads a zilch attribute into an IR attribute. Uses the node's location if
   // available.
   void ParseZilchAttribute(Zilch::Attribute& zilchAttribute,
@@ -121,10 +112,9 @@ public:
   // Validates that the given attribute list doesn't contain any invalid
   // attributes. Uses 'errorTypeName' to display what kind of thing (e.g.
   // field/function) owned these attributes.
-  void
-  ValidateAllowedAttributes(ShaderIRAttributeList& shaderAttributes,
-                            HashMap<String, AttributeInfo>& allowedAttributes,
-                            StringParam errorTypeName);
+  void ValidateAllowedAttributes(ShaderIRAttributeList& shaderAttributes,
+                                 HashMap<String, AttributeInfo>& allowedAttributes,
+                                 StringParam errorTypeName);
   void ValidateNameOverrideAttribute(ShaderIRAttribute* shaderAttribute);
   void ValidateSingleParamAttribute(ShaderIRAttribute* shaderAttribute,
                                     StringParam expectedParamName,
@@ -140,17 +130,11 @@ public:
   void ValidateAttributeExclusions(ShaderIRAttribute* shaderAttribute,
                                    ShaderIRAttributeList& shaderAttributeList,
                                    Array<String>& exclusions);
-  void ValidateHardwareBuiltIn(ShaderIRFieldMeta* fieldMeta,
-                               ShaderIRAttribute* shaderAttribute,
-                               bool isInput);
-  void ValidateAndParseComputeAttributeParameters(
-      ShaderIRAttribute* shaderAttribute, ShaderIRTypeMeta* typeMeta);
-  void ValidateLocalSize(ShaderIRAttributeParameter& param,
-                         int max,
-                         int& toStore);
+  void ValidateHardwareBuiltIn(ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* shaderAttribute, bool isInput);
+  void ValidateAndParseComputeAttributeParameters(ShaderIRAttribute* shaderAttribute, ShaderIRTypeMeta* typeMeta);
+  void ValidateLocalSize(ShaderIRAttributeParameter& param, int max, int& toStore);
 
-  String BuildFunctionTypeString(Zilch::Function* zilchFunction,
-                                 ZilchSpirVFrontEndContext* context);
+  String BuildFunctionTypeString(Zilch::Function* zilchFunction, ZilchSpirVFrontEndContext* context);
   String BuildFunctionTypeString(Zilch::BoundType* zilchReturnType,
                                  Array<Zilch::Type*>& signature,
                                  ZilchSpirVFrontEndContext* context);
@@ -163,62 +147,43 @@ public:
                             Zilch::BoundType* zilchReturnType,
                             Array<Zilch::Type*>& signature,
                             ZilchSpirVFrontEndContext* context);
-  ZilchShaderIRFunction*
-  GenerateIRFunction(Zilch::SyntaxNode* node,
-                     Zilch::NodeList<Zilch::AttributeNode>* nodeAttributeList,
-                     ZilchShaderIRType* owningType,
-                     Zilch::Function* zilchFunction,
-                     StringParam functionName,
-                     ZilchSpirVFrontEndContext* context);
+  ZilchShaderIRFunction* GenerateIRFunction(Zilch::SyntaxNode* node,
+                                            Zilch::NodeList<Zilch::AttributeNode>* nodeAttributeList,
+                                            ZilchShaderIRType* owningType,
+                                            Zilch::Function* zilchFunction,
+                                            StringParam functionName,
+                                            ZilchSpirVFrontEndContext* context);
   void AddImplements(Zilch::SyntaxNode* node,
                      Zilch::Function* zilchFunction,
                      ZilchShaderIRFunction* shaderFunction,
                      StringParam functionName,
                      ZilchSpirVFrontEndContext* context);
 
-  void CollectClassTypes(Zilch::ClassNode*& node,
-                         ZilchSpirVFrontEndContext* context);
-  void CollectEnumTypes(Zilch::EnumNode*& node,
-                        ZilchSpirVFrontEndContext* context);
+  void CollectClassTypes(Zilch::ClassNode*& node, ZilchSpirVFrontEndContext* context);
+  void CollectEnumTypes(Zilch::EnumNode*& node, ZilchSpirVFrontEndContext* context);
 
-  void PreWalkClassNode(Zilch::ClassNode*& node,
-                        ZilchSpirVFrontEndContext* context);
+  void PreWalkClassNode(Zilch::ClassNode*& node, ZilchSpirVFrontEndContext* context);
   void PreWalkTemplateTypes(ZilchSpirVFrontEndContext* context);
-  void PreWalkTemplateType(Zilch::BoundType* zilchType,
-                           ZilchSpirVFrontEndContext* context);
-  void PreWalkClassVariables(Zilch::MemberVariableNode*& node,
-                             ZilchSpirVFrontEndContext* context);
-  void AddRuntimeArray(Zilch::MemberVariableNode* node,
-                       ZilchShaderIRType* varType,
-                       ZilchSpirVFrontEndContext* context);
+  void PreWalkTemplateType(Zilch::BoundType* zilchType, ZilchSpirVFrontEndContext* context);
+  void PreWalkClassVariables(Zilch::MemberVariableNode*& node, ZilchSpirVFrontEndContext* context);
+  void AddRuntimeArray(Zilch::MemberVariableNode* node, ZilchShaderIRType* varType, ZilchSpirVFrontEndContext* context);
   void AddGlobalVariable(Zilch::MemberVariableNode* node,
                          ZilchShaderIRType* varType,
                          spv::StorageClass storageClass,
                          ZilchSpirVFrontEndContext* context);
-  void PreWalkClassConstructor(Zilch::ConstructorNode*& node,
-                               ZilchSpirVFrontEndContext* context);
-  void PreWalkClassFunction(Zilch::FunctionNode*& node,
-                            ZilchSpirVFrontEndContext* context);
-  void PreWalkMainFunction(Zilch::FunctionNode*& node,
-                           ZilchSpirVFrontEndContext* context);
+  void PreWalkClassConstructor(Zilch::ConstructorNode*& node, ZilchSpirVFrontEndContext* context);
+  void PreWalkClassFunction(Zilch::FunctionNode*& node, ZilchSpirVFrontEndContext* context);
+  void PreWalkMainFunction(Zilch::FunctionNode*& node, ZilchSpirVFrontEndContext* context);
   void PreWalkErrorCheck(ZilchSpirVFrontEndContext* context);
 
-  void WalkClassNode(Zilch::ClassNode*& node,
-                     ZilchSpirVFrontEndContext* context);
-  void WalkClassVariables(Zilch::MemberVariableNode*& node,
-                          ZilchSpirVFrontEndContext* context);
-  void GeneratePreConstructor(Zilch::ClassNode*& node,
-                              ZilchSpirVFrontEndContext* context);
-  void GenerateDefaultConstructor(Zilch::ClassNode*& node,
-                                  ZilchSpirVFrontEndContext* context);
-  void GenerateDummyMemberVariable(Zilch::ClassNode*& node,
-                                   ZilchSpirVFrontEndContext* context);
-  void GenerateStaticVariableInitializer(Zilch::MemberVariableNode*& node,
-                                         ZilchSpirVFrontEndContext* context);
-  void WalkClassConstructor(Zilch::ConstructorNode*& node,
-                            ZilchSpirVFrontEndContext* context);
-  void WalkClassFunction(Zilch::FunctionNode*& node,
-                         ZilchSpirVFrontEndContext* context);
+  void WalkClassNode(Zilch::ClassNode*& node, ZilchSpirVFrontEndContext* context);
+  void WalkClassVariables(Zilch::MemberVariableNode*& node, ZilchSpirVFrontEndContext* context);
+  void GeneratePreConstructor(Zilch::ClassNode*& node, ZilchSpirVFrontEndContext* context);
+  void GenerateDefaultConstructor(Zilch::ClassNode*& node, ZilchSpirVFrontEndContext* context);
+  void GenerateDummyMemberVariable(Zilch::ClassNode*& node, ZilchSpirVFrontEndContext* context);
+  void GenerateStaticVariableInitializer(Zilch::MemberVariableNode*& node, ZilchSpirVFrontEndContext* context);
+  void WalkClassConstructor(Zilch::ConstructorNode*& node, ZilchSpirVFrontEndContext* context);
+  void WalkClassFunction(Zilch::FunctionNode*& node, ZilchSpirVFrontEndContext* context);
 
   /// Sets selfVar to the default constructed value for the given type.
   void DefaultConstructType(Zilch::SyntaxNode* locationNode,
@@ -226,81 +191,58 @@ public:
                             ZilchShaderIROp* selfVar,
                             ZilchSpirVFrontEndContext* context);
   /// Generate the function parameters for a given function node.
-  void GenerateFunctionParameters(Zilch::GenericFunctionNode* node,
-                                  ZilchSpirVFrontEndContext* context);
+  void GenerateFunctionParameters(Zilch::GenericFunctionNode* node, ZilchSpirVFrontEndContext* context);
   /// Generate the function body (statements) for a given function node. May
   /// generate an entry point if needed.
-  void GenerateFunctionBody(Zilch::GenericFunctionNode* node,
-                            ZilchSpirVFrontEndContext* context);
+  void GenerateFunctionBody(Zilch::GenericFunctionNode* node, ZilchSpirVFrontEndContext* context);
   void GenerateEntryPoint(Zilch::GenericFunctionNode* node,
                           ZilchShaderIRFunction* function,
                           ZilchSpirVFrontEndContext* context);
 
-  void WalkFunctionCallNode(Zilch::FunctionCallNode*& node,
-                            ZilchSpirVFrontEndContext* context);
+  void WalkFunctionCallNode(Zilch::FunctionCallNode*& node, ZilchSpirVFrontEndContext* context);
   void WalkConstructorCallNode(Zilch::FunctionCallNode*& node,
                                Zilch::StaticTypeNode* constructorNode,
                                ZilchSpirVFrontEndContext* context);
   void WalkMemberAccessCallNode(Zilch::FunctionCallNode*& node,
                                 Zilch::MemberAccessNode* memberAccessNode,
                                 ZilchSpirVFrontEndContext* context);
-  void
-  WalkMemberAccessFunctionCallNode(Zilch::FunctionCallNode*& node,
-                                   Zilch::MemberAccessNode* memberAccessNode,
-                                   ZilchShaderIRFunction* shaderFunction,
-                                   ZilchSpirVFrontEndContext* context);
+  void WalkMemberAccessFunctionCallNode(Zilch::FunctionCallNode*& node,
+                                        Zilch::MemberAccessNode* memberAccessNode,
+                                        ZilchShaderIRFunction* shaderFunction,
+                                        ZilchSpirVFrontEndContext* context);
   void WalkMemberAccessFunctionCall(Array<IZilchShaderIR*>& arguments,
                                     Zilch::MemberAccessNode* memberAccessNode,
                                     ZilchShaderIRFunction* shaderFunction,
                                     ZilchSpirVFrontEndContext* context);
-  ZilchShaderIROp* GenerateFunctionCall(ZilchShaderIRFunction* shaderFunction,
-                                        ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* GenerateFunctionCall(ZilchShaderIRFunction* shaderFunction, ZilchSpirVFrontEndContext* context);
   ZilchShaderIROp* GenerateFunctionCall(BasicBlock* block,
                                         ZilchShaderIRFunction* shaderFunction,
                                         ZilchSpirVFrontEndContext* context);
-  void WalkMemberAccessExtensionInstructionCallNode(
-      Zilch::FunctionCallNode*& node,
-      Zilch::MemberAccessNode* memberAccessNode,
-      SpirVExtensionInstruction* extensionInstruction,
-      ZilchSpirVFrontEndContext* context);
+  void WalkMemberAccessExtensionInstructionCallNode(Zilch::FunctionCallNode*& node,
+                                                    Zilch::MemberAccessNode* memberAccessNode,
+                                                    SpirVExtensionInstruction* extensionInstruction,
+                                                    ZilchSpirVFrontEndContext* context);
 
-  void WalkLocalVariable(Zilch::LocalVariableNode*& node,
-                         ZilchSpirVFrontEndContext* context);
-  void WalkStaticTypeOrCreationCallNode(Zilch::StaticTypeNode*& node,
-                                        ZilchSpirVFrontEndContext* context);
-  void WalkExpressionInitializerNode(Zilch::ExpressionInitializerNode*& node,
-                                     ZilchSpirVFrontEndContext* context);
-  void WalkUnaryOperationNode(Zilch::UnaryOperatorNode*& node,
-                              ZilchSpirVFrontEndContext* context);
-  void WalkBinaryOperationNode(Zilch::BinaryOperatorNode*& node,
-                               ZilchSpirVFrontEndContext* context);
-  void WalkCastNode(Zilch::TypeCastNode*& node,
-                    ZilchSpirVFrontEndContext* context);
-  void WalkValueNode(Zilch::ValueNode*& node,
-                     ZilchSpirVFrontEndContext* context);
-  void WalkLocalRef(Zilch::LocalVariableReferenceNode*& node,
-                    ZilchSpirVFrontEndContext* context);
-  void WalkMemberAccessNode(Zilch::MemberAccessNode*& node,
-                            ZilchSpirVFrontEndContext* context);
-  void WalkMultiExpressionNode(Zilch::MultiExpressionNode*& node,
-                               ZilchSpirVFrontEndContext* context);
+  void WalkLocalVariable(Zilch::LocalVariableNode*& node, ZilchSpirVFrontEndContext* context);
+  void WalkStaticTypeOrCreationCallNode(Zilch::StaticTypeNode*& node, ZilchSpirVFrontEndContext* context);
+  void WalkExpressionInitializerNode(Zilch::ExpressionInitializerNode*& node, ZilchSpirVFrontEndContext* context);
+  void WalkUnaryOperationNode(Zilch::UnaryOperatorNode*& node, ZilchSpirVFrontEndContext* context);
+  void WalkBinaryOperationNode(Zilch::BinaryOperatorNode*& node, ZilchSpirVFrontEndContext* context);
+  void WalkCastNode(Zilch::TypeCastNode*& node, ZilchSpirVFrontEndContext* context);
+  void WalkValueNode(Zilch::ValueNode*& node, ZilchSpirVFrontEndContext* context);
+  void WalkLocalRef(Zilch::LocalVariableReferenceNode*& node, ZilchSpirVFrontEndContext* context);
+  void WalkMemberAccessNode(Zilch::MemberAccessNode*& node, ZilchSpirVFrontEndContext* context);
+  void WalkMultiExpressionNode(Zilch::MultiExpressionNode*& node, ZilchSpirVFrontEndContext* context);
 
-  void WalkIfRootNode(Zilch::IfRootNode*& node,
-                      ZilchSpirVFrontEndContext* context);
+  void WalkIfRootNode(Zilch::IfRootNode*& node, ZilchSpirVFrontEndContext* context);
   void WalkIfNode(Zilch::IfNode*& node, ZilchSpirVFrontEndContext* context);
-  void WalkBreakNode(Zilch::BreakNode*& node,
-                     ZilchSpirVFrontEndContext* context);
-  void WalkContinueNode(Zilch::ContinueNode*& node,
-                        ZilchSpirVFrontEndContext* context);
-  void WalkReturnNode(Zilch::ReturnNode*& node,
-                      ZilchSpirVFrontEndContext* context);
-  void WalkWhileNode(Zilch::WhileNode*& node,
-                     ZilchSpirVFrontEndContext* context);
-  void WalkDoWhileNode(Zilch::DoWhileNode*& node,
-                       ZilchSpirVFrontEndContext* context);
+  void WalkBreakNode(Zilch::BreakNode*& node, ZilchSpirVFrontEndContext* context);
+  void WalkContinueNode(Zilch::ContinueNode*& node, ZilchSpirVFrontEndContext* context);
+  void WalkReturnNode(Zilch::ReturnNode*& node, ZilchSpirVFrontEndContext* context);
+  void WalkWhileNode(Zilch::WhileNode*& node, ZilchSpirVFrontEndContext* context);
+  void WalkDoWhileNode(Zilch::DoWhileNode*& node, ZilchSpirVFrontEndContext* context);
   void WalkForNode(Zilch::ForNode*& node, ZilchSpirVFrontEndContext* context);
-  void WalkForEachNode(Zilch::ForEachNode*& node,
-                       ZilchSpirVFrontEndContext* context);
+  void WalkForEachNode(Zilch::ForEachNode*& node, ZilchSpirVFrontEndContext* context);
   void WalkLoopNode(Zilch::LoopNode*& node, ZilchSpirVFrontEndContext* context);
   // Loop helper functions
   void WalkGenericLoop(Zilch::SyntaxNode* initializerNode,
@@ -331,8 +273,7 @@ public:
   /// Walk a block and make sure that it has exactly one termination condition.
   /// If there's zero then a return will be added. If there's more than one then
   /// all instructions after the first terminator will be removed.
-  void FixBlockTerminators(BasicBlock* block,
-                           ZilchSpirVFrontEndContext* context);
+  void FixBlockTerminators(BasicBlock* block, ZilchSpirVFrontEndContext* context);
 
   /// Get the setter (if available) from a member access node.
   Zilch::Function* GetSetter(Zilch::MemberAccessNode* memberAccessNode);
@@ -347,95 +288,72 @@ public:
                      ZilchSpirVFrontEndContext* context);
 
   // Helpers to perform standard binary operations
-  IZilchShaderIR* PerformBinaryOp(Zilch::BinaryOperatorNode*& node,
-                                  OpType opType,
-                                  ZilchSpirVFrontEndContext* context);
+  IZilchShaderIR* PerformBinaryOp(Zilch::BinaryOperatorNode*& node, OpType opType, ZilchSpirVFrontEndContext* context);
   IZilchShaderIR* PerformBinaryOp(Zilch::BinaryOperatorNode*& node,
                                   OpType opType,
                                   IZilchShaderIR* lhs,
                                   IZilchShaderIR* rhs,
                                   ZilchSpirVFrontEndContext* context);
-  void PerformBinaryAssignmentOp(Zilch::BinaryOperatorNode*& node,
-                                 OpType opType,
-                                 ZilchSpirVFrontEndContext* context);
+  void PerformBinaryAssignmentOp(Zilch::BinaryOperatorNode*& node, OpType opType, ZilchSpirVFrontEndContext* context);
   void PerformBinaryAssignmentOp(Zilch::BinaryOperatorNode*& node,
                                  OpType opType,
                                  IZilchShaderIR* lhs,
                                  IZilchShaderIR* rhs,
                                  ZilchSpirVFrontEndContext* context);
   // Helpers to perform standard unary operations
-  IZilchShaderIR* PerformUnaryOp(Zilch::UnaryOperatorNode*& node,
-                                 OpType opType,
-                                 ZilchSpirVFrontEndContext* context);
+  IZilchShaderIR* PerformUnaryOp(Zilch::UnaryOperatorNode*& node, OpType opType, ZilchSpirVFrontEndContext* context);
   IZilchShaderIR* PerformUnaryIncDecOp(Zilch::UnaryOperatorNode*& node,
                                        IZilchShaderIR* constantOne,
                                        OpType opType,
                                        ZilchSpirVFrontEndContext* context);
   // Helpers to perform standard typecast operations
-  IZilchShaderIR* PerformTypeCast(Zilch::TypeCastNode*& node,
-                                  OpType opType,
-                                  ZilchSpirVFrontEndContext* context);
+  IZilchShaderIR* PerformTypeCast(Zilch::TypeCastNode*& node, OpType opType, ZilchSpirVFrontEndContext* context);
 
-  ZilchShaderIROp* GetIntegerConstant(int value,
-                                      ZilchSpirVFrontEndContext* context);
-  ZilchShaderIROp* GetConstant(ZilchShaderIRType* type,
-                               StringParam value,
-                               ZilchSpirVFrontEndContext* context);
-  ZilchShaderIROp* GetConstant(ZilchShaderIRType* type,
-                               Zilch::Any value,
-                               ZilchSpirVFrontEndContext* context);
-  ZilchShaderIROp*
-  ConstructCompositeFromScalar(BasicBlock* block,
-                               ZilchShaderIRType* compositeType,
-                               IZilchShaderIR* scalar,
-                               ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* GetIntegerConstant(int value, ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* GetConstant(ZilchShaderIRType* type, StringParam value, ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* GetConstant(ZilchShaderIRType* type, Zilch::Any value, ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* ConstructCompositeFromScalar(BasicBlock* block,
+                                                ZilchShaderIRType* compositeType,
+                                                IZilchShaderIR* scalar,
+                                                ZilchSpirVFrontEndContext* context);
 
   /// Create a specialization constant from a member variable node.
-  ZilchShaderIROp*
-  AddSpecializationConstant(Zilch::MemberVariableNode* node,
-                            ZilchShaderIRType* varType,
-                            ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* AddSpecializationConstant(Zilch::MemberVariableNode* node,
+                                             ZilchShaderIRType* varType,
+                                             ZilchSpirVFrontEndContext* context);
   /// Creates a specialization constant of the given type with the given unique
   /// lookup key. If a specialization constant is not a scalar, then it must be
   /// iteratively constructed from other specialization constants. If non-null,
   /// the given literal value will be used to initialize the constant (only
   /// valid for scalars).
-  ZilchShaderIROp* AddSpecializationConstantRecursively(
-      void* key,
-      ZilchShaderIRType* varType,
-      StringParam varName,
-      ZilchShaderIRConstantLiteral* literalValue,
-      Zilch::CodeLocation& codeLocation,
-      ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* AddSpecializationConstantRecursively(void* key,
+                                                        ZilchShaderIRType* varType,
+                                                        StringParam varName,
+                                                        ZilchShaderIRConstantLiteral* literalValue,
+                                                        Zilch::CodeLocation& codeLocation,
+                                                        ZilchSpirVFrontEndContext* context);
   /// Create a specialization constant of a given variable type. The given key
   /// should be a unique identifier for this variable that can be used to fetch
   /// the specialization constant again at a later time. A null key specifies
   /// that there is no key (this variable can't be looked up later). This is
   /// typically used for sub-constants. The OpType should be specified to choose
   /// between scalar and composite constants.
-  ZilchShaderIROp*
-  CreateSpecializationConstant(void* key,
-                               OpType opType,
-                               ZilchShaderIRType* varType,
-                               ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* CreateSpecializationConstant(void* key,
+                                                OpType opType,
+                                                ZilchShaderIRType* varType,
+                                                ZilchSpirVFrontEndContext* context);
 
   void ToAny(ZilchShaderIRType* type, StringParam value, Zilch::Any& result);
 
-  void ExtractDebugInfo(Zilch::SyntaxNode* node,
-                        ZilchShaderDebugInfo& debugInfo);
-  void GetLineAsComment(Zilch::SyntaxNode* node,
-                        ZilchShaderIRComments& comments);
-  BasicBlock* BuildBlock(StringParam labelDebugName,
-                         ZilchSpirVFrontEndContext* context);
-  BasicBlock* BuildBlockNoStack(StringParam labelDebugName,
-                                ZilchSpirVFrontEndContext* context);
+  void ExtractDebugInfo(Zilch::SyntaxNode* node, ZilchShaderDebugInfo& debugInfo);
+  void GetLineAsComment(Zilch::SyntaxNode* node, ZilchShaderIRComments& comments);
+  BasicBlock* BuildBlock(StringParam labelDebugName, ZilchSpirVFrontEndContext* context);
+  BasicBlock* BuildBlockNoStack(StringParam labelDebugName, ZilchSpirVFrontEndContext* context);
   ZilchShaderIROp* BuildIROpNoBlockAdd(OpType opType,
                                        ZilchShaderIRType* resultType,
                                        ZilchSpirVFrontEndContext* context);
-  ZilchShaderIROp* BuildIROp(BasicBlock* block,
-                             OpType opType,
-                             ZilchShaderIRType* resultType,
-                             ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp*
+  BuildIROp(BasicBlock* block, OpType opType, ZilchShaderIRType* resultType, ZilchSpirVFrontEndContext* context);
   ZilchShaderIROp* BuildIROp(BasicBlock* block,
                              OpType opType,
                              ZilchShaderIRType* resultType,
@@ -472,17 +390,15 @@ public:
                                          IZilchShaderIR* arg1,
                                          IZilchShaderIR* arg2,
                                          ZilchSpirVFrontEndContext* context);
-  ZilchShaderIROp*
-  BuildCurrentBlockAccessChain(ZilchShaderIRType* baseResultType,
-                               ZilchShaderIROp* selfInstance,
-                               IZilchShaderIR* arg0,
-                               ZilchSpirVFrontEndContext* context);
-  ZilchShaderIROp*
-  BuildCurrentBlockAccessChain(ZilchShaderIRType* baseResultType,
-                               ZilchShaderIROp* selfInstance,
-                               IZilchShaderIR* arg0,
-                               IZilchShaderIR* arg1,
-                               ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* BuildCurrentBlockAccessChain(ZilchShaderIRType* baseResultType,
+                                                ZilchShaderIROp* selfInstance,
+                                                IZilchShaderIR* arg0,
+                                                ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* BuildCurrentBlockAccessChain(ZilchShaderIRType* baseResultType,
+                                                ZilchShaderIROp* selfInstance,
+                                                IZilchShaderIR* arg0,
+                                                IZilchShaderIR* arg1,
+                                                ZilchSpirVFrontEndContext* context);
   ZilchShaderIROp* BuildDecorationOp(BasicBlock* block,
                                      IZilchShaderIR* decorationTarget,
                                      spv::Decoration decorationType,
@@ -505,37 +421,29 @@ public:
                                            ZilchSpirVFrontEndContext* context);
   ZilchShaderIRConstantLiteral* GetOrCreateConstantIntegerLiteral(int value);
   ZilchShaderIRConstantLiteral* GetOrCreateConstantLiteral(Zilch::Any value);
-  ZilchShaderIROp* BuildOpVariable(ZilchShaderIRType* resultType,
-                                   ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* BuildOpVariable(ZilchShaderIRType* resultType, ZilchSpirVFrontEndContext* context);
   ZilchShaderIROp* BuildOpVariable(BasicBlock* block,
                                    ZilchShaderIRType* resultType,
                                    int storageConstant,
                                    ZilchSpirVFrontEndContext* context);
-  IZilchShaderIR* WalkAndGetResult(Zilch::SyntaxNode* node,
-                                   ZilchSpirVFrontEndContext* context);
-  ZilchShaderIROp*
-  WalkAndGetValueTypeResult(BasicBlock* block,
-                            Zilch::SyntaxNode* node,
-                            ZilchSpirVFrontEndContext* context);
-  ZilchShaderIROp* WalkAndGetValueTypeResult(
-      Zilch::SyntaxNode* node, ZilchSpirVFrontEndContext* context);
+  IZilchShaderIR* WalkAndGetResult(Zilch::SyntaxNode* node, ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* WalkAndGetValueTypeResult(BasicBlock* block,
+                                             Zilch::SyntaxNode* node,
+                                             ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* WalkAndGetValueTypeResult(Zilch::SyntaxNode* node, ZilchSpirVFrontEndContext* context);
   // If this is an immediate then the op is returned. If the op is a pointer
   // than a load is generated and the load is returned.
-  ZilchShaderIROp*
-  GetOrGenerateValueTypeFromIR(BasicBlock* block,
-                               IZilchShaderIR* instruction,
-                               ZilchSpirVFrontEndContext* context);
-  ZilchShaderIROp* GetOrGenerateValueTypeFromIR(
-      IZilchShaderIR* instruction, ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* GetOrGenerateValueTypeFromIR(BasicBlock* block,
+                                                IZilchShaderIR* instruction,
+                                                ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* GetOrGenerateValueTypeFromIR(IZilchShaderIR* instruction, ZilchSpirVFrontEndContext* context);
   // If this is a pointer type (e.g. variable, parameter, etc...) then the op is
   // returned. Otherwise a new variable is generated, the immediate is stored
   // into it, and the variable is returned.
-  ZilchShaderIROp*
-  GetOrGeneratePointerTypeFromIR(BasicBlock* block,
-                                 IZilchShaderIR* instruction,
-                                 ZilchSpirVFrontEndContext* context);
-  ZilchShaderIROp* GetOrGeneratePointerTypeFromIR(
-      IZilchShaderIR* instruction, ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* GetOrGeneratePointerTypeFromIR(BasicBlock* block,
+                                                  IZilchShaderIR* instruction,
+                                                  ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* GetOrGeneratePointerTypeFromIR(IZilchShaderIR* instruction, ZilchSpirVFrontEndContext* context);
   // Build an op to store the source into the target. May generate OpStore or
   // OpCopyMemor depending on the type of source.
   ZilchShaderIROp* BuildStoreOp(IZilchShaderIR* target,
@@ -565,22 +473,20 @@ public:
                                  ZilchSpirVFrontEndContext* context);
 
   // Helpers
-  ZilchShaderIROp*
-  GenerateBoolToIntegerCast(BasicBlock* block,
-                            ZilchShaderIROp* source,
-                            ZilchShaderIRType* destType,
-                            ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* GenerateBoolToIntegerCast(BasicBlock* block,
+                                             ZilchShaderIROp* source,
+                                             ZilchShaderIRType* destType,
+                                             ZilchSpirVFrontEndContext* context);
   ZilchShaderIROp* GenerateFromBoolCast(BasicBlock* block,
                                         ZilchShaderIROp* source,
                                         ZilchShaderIRType* destType,
                                         IZilchShaderIR* zero,
                                         IZilchShaderIR* one,
                                         ZilchSpirVFrontEndContext* context);
-  ZilchShaderIROp*
-  GenerateIntegerToBoolCast(BasicBlock* block,
-                            ZilchShaderIROp* source,
-                            ZilchShaderIRType* destType,
-                            ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* GenerateIntegerToBoolCast(BasicBlock* block,
+                                             ZilchShaderIROp* source,
+                                             ZilchShaderIRType* destType,
+                                             ZilchSpirVFrontEndContext* context);
   ZilchShaderIROp* GenerateToBoolCast(BasicBlock* block,
                                       OpType op,
                                       ZilchShaderIROp* source,
@@ -596,8 +502,7 @@ public:
   ZilchShaderIRType* GetPointerValueType(ZilchShaderIROp* op);
   // Helper to check if the given type contains an attribute. If the type
   // doesn't have meta this returns false.
-  bool ContainsAttribute(ZilchShaderIRType* shaderType,
-                         StringParam attributeName);
+  bool ContainsAttribute(ZilchShaderIRType* shaderType, StringParam attributeName);
   // Check if a type contains the non-copyable attribute (returns true if
   // non-copyable). Throws an error if this type is non-copyable and optionally
   // generates a dummy variable.
@@ -606,11 +511,8 @@ public:
                                ZilchSpirVFrontEndContext* context,
                                bool generateDummyResult = true);
 
-  ZilchShaderIRType* FindType(Zilch::Type* type,
-                              Zilch::SyntaxNode* syntaxNode,
-                              bool reportErrors = true);
-  ZilchShaderIRType* FindType(Zilch::ExpressionNode* syntaxNode,
-                              bool reportErrors = true);
+  ZilchShaderIRType* FindType(Zilch::Type* type, Zilch::SyntaxNode* syntaxNode, bool reportErrors = true);
+  ZilchShaderIRType* FindType(Zilch::ExpressionNode* syntaxNode, bool reportErrors = true);
   // Validate that the result type of the given instruction (must be an op) is
   // of a certain type (e.g. pointer).
   bool ValidateResultType(IZilchShaderIR* instruction,
@@ -619,28 +521,20 @@ public:
                           bool throwException = true);
   /// Verifies that the given instruction can be written to. This includes
   /// checking for specialization constants.
-  bool ValidateLValue(ZilchShaderIROp* op,
-                      Zilch::CodeLocation& codeLocation,
-                      bool throwException = true);
+  bool ValidateLValue(ZilchShaderIROp* op, Zilch::CodeLocation& codeLocation, bool throwException = true);
 
   // Generates a dummy instruction based upon the result type of the given node.
   // Used to make translation not crash after errors.
-  IZilchShaderIR* GenerateDummyIR(Zilch::ExpressionNode* node,
-                                  ZilchSpirVFrontEndContext* context);
+  IZilchShaderIR* GenerateDummyIR(Zilch::ExpressionNode* node, ZilchSpirVFrontEndContext* context);
   // Send a translation error with a simple message (also marks the translation
   // as having failed)
-  void SendTranslationError(Zilch::CodeLocation& codeLocation,
-                            StringParam message);
-  void SendTranslationError(Zilch::CodeLocation& codeLocation,
-                            StringParam shortMsg,
-                            StringParam fullMsg);
+  void SendTranslationError(Zilch::CodeLocation& codeLocation, StringParam message);
+  void SendTranslationError(Zilch::CodeLocation& codeLocation, StringParam shortMsg, StringParam fullMsg);
   // Send a translation error. If the location is null then a dummy location is
   // used (e.g. native types).
-  void SendTranslationError(Zilch::CodeLocation* codeLocation,
-                            StringParam message);
+  void SendTranslationError(Zilch::CodeLocation* codeLocation, StringParam message);
 
-  typedef Zilch::BranchWalker<ZilchSpirVFrontEnd, ZilchSpirVFrontEndContext>
-      TranslatorBranchWalker;
+  typedef Zilch::BranchWalker<ZilchSpirVFrontEnd, ZilchSpirVFrontEndContext> TranslatorBranchWalker;
   TranslatorBranchWalker mWalker;
   SimpleZilchParser mZilchCommentParser;
   ZilchSpirVFrontEndContext* mContext;

@@ -33,10 +33,7 @@ ZilchDefineType(UpdateEvent, builder, type)
   ZilchBindFieldProperty(RealTimePassed);
 }
 
-UpdateEvent::UpdateEvent(float dt,
-                         float realDt,
-                         float timePassed,
-                         float realTimePassed) :
+UpdateEvent::UpdateEvent(float dt, float realDt, float timePassed, float realTimePassed) :
     Dt(dt),
     RealDt(realDt),
     TimePassed(timePassed),
@@ -184,8 +181,7 @@ void TimeSpace::Update(float dt)
     mScaledClampedTimePassed += mScaledClampedDt;
 
     EventDispatcher* dispatcher = GetOwner()->GetDispatcher();
-    UpdateEvent updateEvent(
-        mScaledClampedDt, mRealDt, mScaledClampedTimePassed, mRealTimePassed);
+    UpdateEvent updateEvent(mScaledClampedDt, mRealDt, mScaledClampedTimePassed, mRealTimePassed);
 
     {
       ProfileScopeTree("FrameUpdate", "TimeSystem", Color::PaleGoldenrod);
@@ -193,8 +189,7 @@ void TimeSpace::Update(float dt)
     }
 
     {
-      ProfileScopeTree(
-          "ActionFrameUpdateEvent", "TimeSystem", Color::BlueViolet);
+      ProfileScopeTree("ActionFrameUpdateEvent", "TimeSystem", Color::BlueViolet);
       dispatcher->Dispatch(Events::ActionFrameUpdate, &updateEvent);
     }
 
@@ -227,8 +222,7 @@ void TimeSpace::SetPaused(bool state)
 void TimeSpace::Step()
 {
   EventDispatcher* dispatcher = GetOwner()->GetDispatcher();
-  UpdateEvent updateEvent(
-      mScaledClampedDt, mRealDt, mScaledClampedTimePassed, mRealTimePassed);
+  UpdateEvent updateEvent(mScaledClampedDt, mRealDt, mScaledClampedTimePassed, mRealTimePassed);
 
   {
     ProfileScopeTree("SystemLogicUpdate", "TimeSystem", Color::RoyalBlue);
@@ -241,8 +235,7 @@ void TimeSpace::Step()
   }
 
   {
-    ProfileScopeTree(
-        "ActionLogicUpdateEvent", "TimeSystem", Color::BlanchedAlmond);
+    ProfileScopeTree("ActionLogicUpdateEvent", "TimeSystem", Color::BlanchedAlmond);
     dispatcher->Dispatch(Events::ActionLogicUpdate, &updateEvent);
   }
 }

@@ -9,13 +9,11 @@ namespace Events
 DefineEvent(ColorSchemeChanged);
 }
 
-void GetStringsTextConfig(HandleParam instance,
-                          Property* property,
-                          Array<String>& strings)
+void GetStringsTextConfig(HandleParam instance, Property* property, Array<String>& strings)
 {
   ColorScheme* colorScheme = instance.Get<ColorScheme*>();
-  forRange(auto& scheme, colorScheme->mAvailableSchemes.All())
-      strings.PushBack(scheme.first);
+  forRange (auto& scheme, colorScheme->mAvailableSchemes.All())
+    strings.PushBack(scheme.first);
 }
 
 ZilchDefineType(ColorScheme, builder, type)
@@ -23,8 +21,7 @@ ZilchDefineType(ColorScheme, builder, type)
   type->HandleManager = ZilchManagerId(PointerManager);
   type->Add(new MetaOperations());
 
-  ZilchBindGetterSetterProperty(ActiveScheme)
-      ->Add(new EditorIndexedStringArray(GetStringsTextConfig));
+  ZilchBindGetterSetterProperty(ActiveScheme)->Add(new EditorIndexedStringArray(GetStringsTextConfig));
 
   ZilchBindFieldProperty(Default);
   ZilchBindFieldProperty(Background);
@@ -51,15 +48,10 @@ ZilchDefineType(ColorScheme, builder, type)
   ZilchBindFieldProperty(TextMatchOutlineAlpha)->Add(new EditorSlider());
 
   ZilchBindGetterSetterProperty(SaveName);
-  ZilchBindMethodProperty(Save)->AddAttribute(
-      FunctionAttributes::cInvalidatesObject);
+  ZilchBindMethodProperty(Save)->AddAttribute(FunctionAttributes::cInvalidatesObject);
 }
 
-void ColorPropertyChanged(BoundType* meta,
-                          Property* property,
-                          ObjPtr instance,
-                          AnyParam oldValue,
-                          AnyParam newValue)
+void ColorPropertyChanged(BoundType* meta, Property* property, ObjPtr instance, AnyParam oldValue, AnyParam newValue)
 {
   ColorScheme* colorScheme = (ColorScheme*)instance;
   colorScheme->Modified();
@@ -97,10 +89,7 @@ ColorScheme::~ColorScheme()
 // ByteColor so swap the order for saving / loading
 uint ConvertByteColorHexOrder(const uint& inputColor)
 {
-  return ByteColorRGBA(((byte*)&inputColor)[2],
-                       ((byte*)&inputColor)[1],
-                       ((byte*)&inputColor)[0],
-                       0xFF);
+  return ByteColorRGBA(((byte*)&inputColor)[2], ((byte*)&inputColor)[1], ((byte*)&inputColor)[0], 0xFF);
 }
 
 void SerializeRGBColor(Serializer& stream, cstr fieldName, uint& colorValue)
@@ -119,18 +108,13 @@ void SerializeRGBColor(Serializer& stream, cstr fieldName, uint& colorValue)
   {
     const uint colorTripleSize = 6;
     char texBuffer[colorTripleSize + 1];
-    WriteToHexSize(texBuffer,
-                   colorTripleSize + 1,
-                   colorTripleSize,
-                   ConvertByteColorHexOrder(colorValue),
-                   true);
+    WriteToHexSize(texBuffer, colorTripleSize + 1, colorTripleSize, ConvertByteColorHexOrder(colorValue), true);
     StringRange stringRange = texBuffer;
     stream.StringField("Color", fieldName, stringRange);
   }
 }
 
-#define SerializeRGBColorName(fieldName)                                       \
-  SerializeRGBColor(stream, #fieldName, fieldName)
+#define SerializeRGBColorName(fieldName) SerializeRGBColor(stream, #fieldName, fieldName)
 
 void ColorScheme::Serialize(Serializer& stream)
 {
@@ -185,8 +169,7 @@ void ColorScheme::SetSaveName(StringParam name)
 
 void ColorScheme::UpdateConfig()
 {
-  TextEditorConfig* textConfig =
-      Z::gEngine->GetConfigCog()->has(TextEditorConfig);
+  TextEditorConfig* textConfig = Z::gEngine->GetConfigCog()->has(TextEditorConfig);
   textConfig->ColorScheme = mActiveName;
   SaveConfig();
 }
@@ -206,8 +189,7 @@ void ColorScheme::Save()
   }
 
   if (mFilePath.Empty())
-    mFilePath = FilePath::Combine(
-        GetUserDocumentsDirectory(), "ZeroEditor", "ColorSchemes");
+    mFilePath = FilePath::Combine(GetUserDocumentsDirectory(), "ZeroEditor", "ColorSchemes");
 
   CreateDirectoryAndParents(mFilePath);
   String filename = BuildString(mSaveName, ".data");
@@ -218,8 +200,7 @@ void ColorScheme::Save()
 
   // After saving a color scheme we need enumerate and add the new user color
   // schemes
-  String userSchemeDirectory = FilePath::Combine(
-      GetUserDocumentsDirectory(), "ZeroEditor", "ColorSchemes");
+  String userSchemeDirectory = FilePath::Combine(GetUserDocumentsDirectory(), "ZeroEditor", "ColorSchemes");
   Enumerate(userSchemeDirectory);
   // Set our active scheme to the new saved scheme
   SetActiveScheme(mSaveName);
@@ -254,14 +235,12 @@ void ColorScheme::LoadSchemes()
   MainConfig* mainConfig = configCog->has(MainConfig);
   TextEditorConfig* textConfig = configCog->has(TextEditorConfig);
 
-  String userColorSchemeDirectory = FilePath::Combine(
-      GetUserDocumentsDirectory(), "ZeroEditor", "ColorSchemes");
+  String userColorSchemeDirectory = FilePath::Combine(GetUserDocumentsDirectory(), "ZeroEditor", "ColorSchemes");
   Enumerate(userColorSchemeDirectory);
 
   // Default color schemes are loaded second to overwrite user schemes using the
   // same name
-  String defaultColorSchemeDirectory =
-      FilePath::Combine(mainConfig->DataDirectory, "ColorSchemes");
+  String defaultColorSchemeDirectory = FilePath::Combine(mainConfig->DataDirectory, "ColorSchemes");
   Enumerate(defaultColorSchemeDirectory);
 
   Load(textConfig->ColorScheme);
@@ -273,8 +252,7 @@ void ColorScheme::Enumerate(StringParam directoryPath)
   FileRange filesInDirectory(directoryPath);
   for (; !filesInDirectory.Empty(); filesInDirectory.PopFront())
   {
-    String filename =
-        FilePath::Combine(directoryPath, filesInDirectory.Front());
+    String filename = FilePath::Combine(directoryPath, filesInDirectory.Front());
     String name = FilePath::GetFileNameWithoutExtension(filename);
     mAvailableSchemes.SortedInsertOrOverride(name, filename);
   }

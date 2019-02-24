@@ -9,14 +9,7 @@ struct TransformProxyObjectEvent;
 
 struct ConstraintInfo;
 
-DeclareBitField7(CarWheelFlags,
-                 IsDriveWheel,
-                 IsInContact,
-                 InEditor,
-                 ChildedWheel,
-                 IsSliding,
-                 Is2DWheel,
-                 Active);
+DeclareBitField7(CarWheelFlags, IsDriveWheel, IsInContact, InEditor, ChildedWheel, IsSliding, Is2DWheel, Active);
 
 /// A wheel for a high speed physics based car. Each wheel contains properties
 /// to describe how to interact with the world (eg. spring forces, friction,

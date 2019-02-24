@@ -156,9 +156,7 @@ public:
 
 // Finder Algorithm Mesh
 class PathFinderAlgorithmMesh
-    : public PathFinderAlgorithm<PathFinderAlgorithmMesh,
-                                 NavMeshPolygonId,
-                                 PathFinderMeshNodeRange>
+    : public PathFinderAlgorithm<PathFinderAlgorithmMesh, NavMeshPolygonId, PathFinderMeshNodeRange>
 {
 public:
   PathFinderAlgorithmMesh();
@@ -177,13 +175,10 @@ public:
   NavMeshPolygonId AddPolygon(Array<u32>& vertices);
   NavMeshPolygonId AddPolygon(ArrayClass<u32>& vertices);
   NavMeshPolygonId AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2);
-  NavMeshPolygonId
-  AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2, u32 vertex3);
+  NavMeshPolygonId AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2, u32 vertex3);
 
   /// Adds an edge to the polygon with the given id.
-  NavMeshEdgeId AddEdgeToPolygon(NavMeshPolygonId polygonId,
-                                 u32 vertex0,
-                                 u32 vertex1);
+  NavMeshEdgeId AddEdgeToPolygon(NavMeshPolygonId polygonId, u32 vertex0, u32 vertex1);
 
   /// A higher cost of a polygon makes the A* algorithm less likely to traverse
   /// that polygon.
@@ -238,11 +233,8 @@ public:
   // PathFinder Interface
   Variant WorldPositionToNodeKey(Vec3Param worldPosition) override;
   Vec3 NodeKeyToWorldPosition(VariantParam nodeKey) override;
-  void FindPathGeneric(VariantParam start,
-                       VariantParam goal,
-                       Array<Variant>& pathOut) override;
-  HandleOf<PathFinderRequest>
-  FindPathGenericThreaded(VariantParam start, VariantParam goal) override;
+  void FindPathGeneric(VariantParam start, VariantParam goal, Array<Variant>& pathOut) override;
+  HandleOf<PathFinderRequest> FindPathGenericThreaded(VariantParam start, VariantParam goal) override;
   StringParam GetCustomEventName() override;
 
   // NavMesh Interface
@@ -259,8 +251,7 @@ public:
   NavMeshPolygonId AddPolygon(Array<u32>& vertices);
   NavMeshPolygonId AddPolygon(ArrayClass<u32>& vertices);
   NavMeshPolygonId AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2);
-  NavMeshPolygonId
-  AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2, u32 vertex3);
+  NavMeshPolygonId AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2, u32 vertex3);
 
   /// A higher cost of a polygon makes the A* algorithm less likely to traverse
   /// that polygon.
@@ -281,16 +272,14 @@ public:
 
   /// Finds a path between cell indices (or returns an empty array if no path
   /// could be found).
-  HandleOf<ArrayClass<Vec3>> FindPath(NavMeshPolygonId start,
-                                      NavMeshPolygonId goal);
+  HandleOf<ArrayClass<Vec3>> FindPath(NavMeshPolygonId start, NavMeshPolygonId goal);
   using ZilchBase::FindPath;
 
   /// Finds a path on another thread between cell indices.
   /// When the thread is completed, the events PathFinderGridCompleted or
   /// PathFinderGridFailed will be sent on both the returned PathFinderRequest
   /// and on the Cog that owns this component (on this.Owner).
-  HandleOf<PathFinderRequest> FindPathThreaded(NavMeshPolygonId start,
-                                               NavMeshPolygonId goal);
+  HandleOf<PathFinderRequest> FindPathThreaded(NavMeshPolygonId start, NavMeshPolygonId goal);
   using ZilchBase::FindPathThreaded;
 
   /// Returns the triangle closest to the given world position.

@@ -20,10 +20,8 @@ String CallStackSymbolInfos::ToString() const
     }
     else
     {
-      builder.Append(String::Format("%s (%d): %s\n",
-                                    symbolInfo.mFileName.c_str(),
-                                    symbolInfo.mLineNumber,
-                                    symbolInfo.mSymbolName.c_str()));
+      builder.Append(String::Format(
+          "%s (%d): %s\n", symbolInfo.mFileName.c_str(), symbolInfo.mLineNumber, symbolInfo.mSymbolName.c_str()));
     }
   }
 
@@ -35,9 +33,7 @@ void GetSymbolInfo(void* processHandle, SymbolInfo& symbolInfo)
   HANDLE process = (HANDLE)processHandle;
 
   // fill in all the junk needed for a SYMBOL_INFO structure
-  ULONG64 buffer[(sizeof(SYMBOL_INFO) + MAX_SYM_NAME * sizeof(TCHAR) +
-                  sizeof(ULONG64) - 1) /
-                 sizeof(ULONG64)] = {0};
+  ULONG64 buffer[(sizeof(SYMBOL_INFO) + MAX_SYM_NAME * sizeof(TCHAR) + sizeof(ULONG64) - 1) / sizeof(ULONG64)] = {0};
   PSYMBOL_INFO pSymbol = (PSYMBOL_INFO)buffer;
   pSymbol->SizeOfStruct = sizeof(SYMBOL_INFO);
   pSymbol->MaxNameLen = MAX_SYM_NAME;
@@ -51,17 +47,14 @@ void GetSymbolInfo(void* processHandle, SymbolInfo& symbolInfo)
 
   //(these functions annoy me....)
   // get the line from the saved address
-  SymGetLineFromAddr(
-      process, static_cast<DWORD>(returnAddress), &dwDisplacement, &line);
+  SymGetLineFromAddr(process, static_cast<DWORD>(returnAddress), &dwDisplacement, &line);
 
   // get the symbol from the address
   SymFromAddr(process, returnAddress, 0, pSymbol);
 
   // Get the module information
   HMODULE hmodule = NULL;
-  ::GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
-                      reinterpret_cast<LPCTSTR>(symbolInfo.mAddress),
-                      &hmodule);
+  ::GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, reinterpret_cast<LPCTSTR>(symbolInfo.mAddress), &hmodule);
   wchar_t modulePath[MAX_PATH];
   GetModuleFileName(hmodule, modulePath, MAX_PATH);
 
@@ -76,26 +69,20 @@ void GetSymbolInfo(void* processHandle, SymbolInfo& symbolInfo)
   symbolInfo.mModulePath = Narrow(modulePath);
   StringRange found = symbolInfo.mModulePath.FindLastOf('\\');
   if (!found.Empty())
-    symbolInfo.mModuleName = symbolInfo.mModulePath.SubString(
-        found.End(), symbolInfo.mModulePath.End());
+    symbolInfo.mModuleName = symbolInfo.mModulePath.SubString(found.End(), symbolInfo.mModulePath.End());
 
   found = symbolInfo.mModuleName.FindLastOf('.');
   if (found.Begin() < symbolInfo.mModuleName.End())
-    symbolInfo.mModuleName = symbolInfo.mModuleName.SubString(
-        symbolInfo.mModuleName.Begin(), found.Begin());
+    symbolInfo.mModuleName = symbolInfo.mModuleName.SubString(symbolInfo.mModuleName.Begin(), found.Begin());
 }
 
-size_t GetStackAddresses(CallStackAddresses& callStack,
-                         size_t stacksToCapture,
-                         size_t framesToSkip)
+size_t GetStackAddresses(CallStackAddresses& callStack, size_t stacksToCapture, size_t framesToSkip)
 {
-  callStack.mCaptureFrameCount = CaptureStackBackTrace(
-      framesToSkip, stacksToCapture, callStack.mAddresses, 0);
+  callStack.mCaptureFrameCount = CaptureStackBackTrace(framesToSkip, stacksToCapture, callStack.mAddresses, 0);
   return callStack.mCaptureFrameCount;
 }
 
-void GetStackInfo(CallStackAddresses& callStackAddresses,
-                  CallStackSymbolInfos& callStackSymbols)
+void GetStackInfo(CallStackAddresses& callStackAddresses, CallStackSymbolInfos& callStackSymbols)
 {
   HANDLE process = GetCurrentProcess();
   SymInitialize(process, nullptr, TRUE);
@@ -110,9 +97,7 @@ void GetStackInfo(CallStackAddresses& callStackAddresses,
   }
 }
 
-void SimpleStackWalker::ShowCallstack(void* context,
-                                      StringParam extraSymbolPaths,
-                                      int stacksToSkip)
+void SimpleStackWalker::ShowCallstack(void* context, StringParam extraSymbolPaths, int stacksToSkip)
 {
   HANDLE process = GetCurrentProcess();
   SymInitialize(process, extraSymbolPaths.c_str(), TRUE);
@@ -123,8 +108,7 @@ void SimpleStackWalker::ShowCallstack(void* context,
     const int maxStacks = 150;
     void* stacks[maxStacks];
     // This function fills out function pointers for the current stack
-    size_t capturedStacks =
-        CaptureStackBackTrace(stacksToSkip, maxStacks, stacks, 0);
+    size_t capturedStacks = CaptureStackBackTrace(stacksToSkip, maxStacks, stacks, 0);
 
     for (size_t i = 0; i < capturedStacks; ++i)
     {
@@ -214,10 +198,8 @@ void SimpleStackWalker::AddSymbolInformation(SymbolInfo& symbolInfo)
   }
   else
   {
-    mBuilder.Append(String::Format("%s (%d): %s\n",
-                                   symbolInfo.mFileName.c_str(),
-                                   symbolInfo.mLineNumber,
-                                   symbolInfo.mSymbolName.c_str()));
+    mBuilder.Append(String::Format(
+        "%s (%d): %s\n", symbolInfo.mFileName.c_str(), symbolInfo.mLineNumber, symbolInfo.mSymbolName.c_str()));
   }
 }
 

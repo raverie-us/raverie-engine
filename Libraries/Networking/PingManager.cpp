@@ -50,8 +50,7 @@ void PingManager::UpdatePendingPings()
     else
     {
       // Time to send another host ping message?
-      if (TimeMsToFloatSeconds(pendingHostPing.GetDurationSinceLastSendTime(
-              now)) >= mPingInterval)
+      if (TimeMsToFloatSeconds(pendingHostPing.GetDurationSinceLastSendTime(now)) >= mPingInterval)
       {
         // Send another host ping message
         bool result = SendHostPing(pendingHostPing, now);
@@ -101,8 +100,7 @@ bool PingManager::PingHost(Network::Enum network,
     PendingHostPing& pendingHostPing = *mPendingHostPings[i];
 
     // Same IP addresses and host ping type?
-    if (pendingHostPing.mTheirIpAddresses == theirIpAddresses &&
-        pendingHostPing.mHostPingType == hostPingType)
+    if (pendingHostPing.mTheirIpAddresses == theirIpAddresses && pendingHostPing.mHostPingType == hostPingType)
     {
       // Cancel previous pending host ping request
       if (mPingCancelledCallback)
@@ -116,17 +114,11 @@ bool PingManager::PingHost(Network::Enum network,
   // Get next unique ping ID
   uint pingId = AcquireNextRandomIncrementalId();
 
-  PendingHostPing* newPing = new PendingHostPing(network,
-                                                 now,
-                                                 timeout,
-                                                 hostPingType,
-                                                 theirIpAddresses,
-                                                 pingId,
-                                                 pingBundle);
+  PendingHostPing* newPing =
+      new PendingHostPing(network, now, timeout, hostPingType, theirIpAddresses, pingId, pingBundle);
 
   // Add to pending host pings set
-  PendingHostPingSet::pointer_bool_pair result =
-      mPendingHostPings.Insert(UniquePointer<PendingHostPing>(newPing));
+  PendingHostPingSet::pointer_bool_pair result = mPendingHostPings.Insert(UniquePointer<PendingHostPing>(newPing));
   if (!result.second) // Unable?
   {
     Assert(false);
@@ -164,7 +156,7 @@ bool PingManager::SendHostPing(PendingHostPing& pendingHostPing, TimeMs now)
   // Single port specified?
   bool sendResult = true;
 
-  forRange(IpAddress & theirIp, pendingHostPing.mTheirIpAddresses.All())
+  forRange (IpAddress& theirIp, pendingHostPing.mTheirIpAddresses.All())
   {
     // Do they have a non zero port?
     if (theirIp.GetPort() != 0)
@@ -178,9 +170,7 @@ bool PingManager::SendHostPing(PendingHostPing& pendingHostPing, TimeMs now)
     {
       // For All ports within our inclusive host range
       IpAddress ipAddress(theirIp);
-      for (uint i = mNetPeer->GetHostPortRangeStart();
-           i <= mNetPeer->GetHostPortRangeEnd();
-           ++i)
+      for (uint i = mNetPeer->GetHostPortRangeStart(); i <= mNetPeer->GetHostPortRangeEnd(); ++i)
       {
         // Send net host ping
         ipAddress.SetPort(i);
@@ -192,16 +182,13 @@ bool PingManager::SendHostPing(PendingHostPing& pendingHostPing, TimeMs now)
 
   // Error sending host ping?
   if (!sendResult)
-    DoNotifyWarning(
-        "Unable to ping hosts",
-        "There was an error sending one or more host ping messages");
+    DoNotifyWarning("Unable to ping hosts", "There was an error sending one or more host ping messages");
 
   // Complete
   return sendResult;
 }
 
-bool PingManager::ReceiveHostPing(const IpAddress& theirIpAddress,
-                                  const Message& message)
+bool PingManager::ReceiveHostPing(const IpAddress& theirIpAddress, const Message& message)
 {
   Assert(mNetPeer != nullptr);
   Assert(mNetPeer->IsOpen());
@@ -237,11 +224,8 @@ bool PingManager::ReceiveHostPing(const IpAddress& theirIpAddress,
   return handled;
 }
 
-bool PingManager::SendHostPong(const IpAddress& theirIpAddress,
-                               uint pingId,
-                               uint sendAttemptId,
-                               uint theirManagerId,
-                               BitStream& pongData)
+bool PingManager::SendHostPong(
+    const IpAddress& theirIpAddress, uint pingId, uint sendAttemptId, uint theirManagerId, BitStream& pongData)
 {
   Assert(mNetPeer != nullptr);
   Assert(mNetPeer->IsOpen());
@@ -265,16 +249,14 @@ bool PingManager::SendHostPong(const IpAddress& theirIpAddress,
   bool sendResult = true;
   if (!mNetPeer->Peer::Send(theirIpAddress, netHostPongMessage))
   {
-    DoNotifyWarning("Unable to pong host",
-                    "There was an error sending a host pong message");
+    DoNotifyWarning("Unable to pong host", "There was an error sending a host pong message");
     return false;
   }
 
   // Success
   return true;
 }
-bool PingManager::ReceiveHostPong(const IpAddress& theirIpAddress,
-                                  const Message& message)
+bool PingManager::ReceiveHostPong(const IpAddress& theirIpAddress, const Message& message)
 {
   Bits bitsPreviouslyRead = message.GetData().GetBitsRead();
 
@@ -306,8 +288,7 @@ bool PingManager::ReceiveHostPong(const IpAddress& theirIpAddress,
   }
 
   // Find pending host ping request via unique ping ID
-  UniquePointer<PendingHostPing>* pendingHostPingPtr =
-      mPendingHostPings.FindPointer(netHostPongData.mPingId);
+  UniquePointer<PendingHostPing>* pendingHostPingPtr = mPendingHostPings.FindPointer(netHostPongData.mPingId);
 
   if (!pendingHostPingPtr) // Unable?
   {
@@ -340,8 +321,7 @@ bool PingManager::ReceiveHostPong(const IpAddress& theirIpAddress,
   return true;
 }
 
-bool PingManager::ReceivePeerMessage(IpAddress const& theirIpAddress,
-                                     Message& peerMessage)
+bool PingManager::ReceivePeerMessage(IpAddress const& theirIpAddress, Message& peerMessage)
 {
   switch (peerMessage.GetType())
   {
@@ -364,8 +344,7 @@ bool PingManager::ReceivePeerMessage(IpAddress const& theirIpAddress,
   }
 }
 
-bool PingManager::ReceiveLinkMessage(IpAddress const& theirIpAddress,
-                                     Message& linkMessage)
+bool PingManager::ReceiveLinkMessage(IpAddress const& theirIpAddress, Message& linkMessage)
 {
   return false; // Pings make no use of Link messages (that's why they are
                 // pings). So we don't handle this message.

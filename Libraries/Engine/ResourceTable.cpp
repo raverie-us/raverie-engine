@@ -45,8 +45,7 @@ void ResourceTableEntry::SetValue(StringParam value)
 
 Resource* ResourceTableEntry::GetResource()
 {
-  Resource* resource =
-      Z::gResources->GetResourceByTypeAndName(mResourceType, mValue);
+  Resource* resource = Z::gResources->GetResourceByTypeAndName(mResourceType, mValue);
   return resource;
 }
 
@@ -96,20 +95,14 @@ ZilchDefineType(ResourceTable, builder, type)
   ZilchBindMethod(GetOrError);
   ZilchBindMethod(GetOrNull);
   // Array Get/Set
-  ZilchBindOverloadedMethod(Get,
-                            ZilchInstanceOverload(ResourceTableEntry*, int));
-  ZilchBindOverloadedMethod(
-      Set, ZilchInstanceOverload(void, int, ResourceTableEntry*));
+  ZilchBindOverloadedMethod(Get, ZilchInstanceOverload(ResourceTableEntry*, int));
+  ZilchBindOverloadedMethod(Set, ZilchInstanceOverload(void, int, ResourceTableEntry*));
   // HashSet Get/Set
-  ZilchBindOverloadedMethod(
-      Get, ZilchInstanceOverload(ResourceTableEntry*, ResourceTableEntry*));
-  ZilchBindOverloadedMethod(Set,
-                            ZilchInstanceOverload(void, ResourceTableEntry*));
+  ZilchBindOverloadedMethod(Get, ZilchInstanceOverload(ResourceTableEntry*, ResourceTableEntry*));
+  ZilchBindOverloadedMethod(Set, ZilchInstanceOverload(void, ResourceTableEntry*));
   // HashMap Get/Set
-  ZilchBindOverloadedMethod(
-      Get, ZilchInstanceOverload(ResourceTableEntry*, StringParam));
-  ZilchBindOverloadedMethod(
-      Set, ZilchInstanceOverload(void, StringParam, ResourceTableEntry*));
+  ZilchBindOverloadedMethod(Get, ZilchInstanceOverload(ResourceTableEntry*, StringParam));
+  ZilchBindOverloadedMethod(Set, ZilchInstanceOverload(void, StringParam, ResourceTableEntry*));
   ZilchBindMethod(RemoveAt);
   ZilchBindMethod(RemoveOrError);
   ZilchBindMethod(RemoveOrIgnore);
@@ -119,10 +112,8 @@ ZilchDefineType(ResourceTable, builder, type)
   ZilchBindMethod(Clear);
   ZilchBindGetterSetterProperty(ResourceType);
   ZilchBindGetterSetterProperty(MaxWeight);
-  ZilchBindOverloadedMethod(SampleIndex,
-                            ZilchInstanceOverload(uint, float, float));
-  ZilchBindOverloadedMethod(
-      Sample, ZilchInstanceOverload(ResourceTableEntry*, float, float));
+  ZilchBindOverloadedMethod(SampleIndex, ZilchInstanceOverload(uint, float, float));
+  ZilchBindOverloadedMethod(Sample, ZilchInstanceOverload(ResourceTableEntry*, float, float));
   ZilchBindMethod(ForceRebuild);
 }
 
@@ -192,8 +183,7 @@ void ResourceTable::AddOrError(ResourceTableEntry* entry)
   // If the item already exists then report an error
   if (didExist)
   {
-    String msg = String::Format("An entry with the name '%s' already exists",
-                                entry->mName.c_str());
+    String msg = String::Format("An entry with the name '%s' already exists", entry->mName.c_str());
     DoNotifyException("Invalid Add", msg);
   }
 }
@@ -235,8 +225,7 @@ bool ResourceTable::AddOrOverwrite(ResourceTableEntry* entry)
   return false;
 }
 
-ResourceTableEntry*
-ResourceTable::GetOrDefault(StringParam key, ResourceTableEntry* defaultValue)
+ResourceTableEntry* ResourceTable::GetOrDefault(StringParam key, ResourceTableEntry* defaultValue)
 {
   ResourceTableEntry* result = GetOrNull(key);
   // If the item doesn't exist then return the provided value
@@ -251,10 +240,7 @@ ResourceTableEntry* ResourceTable::GetOrError(StringParam key)
   // If the item doesn't exist then throw an exception
   if (result == nullptr)
   {
-    DoNotifyException(
-        "Invalid key",
-        String::Format("The key '%s' was not found within the map",
-                       key.c_str()));
+    DoNotifyException("Invalid key", String::Format("The key '%s' was not found within the map", key.c_str()));
     return nullptr;
   }
   return result;
@@ -345,9 +331,7 @@ void ResourceTable::Set(StringParam key, ResourceTableEntry* entry)
   // like a hash set. To do this, ensure that the entry's name matches the key.
   if (key != entry->mName)
   {
-    String msg = String::Format("Entry name '%s' must match key '%s'",
-                                entry->mName.c_str(),
-                                key.c_str());
+    String msg = String::Format("Entry name '%s' must match key '%s'", entry->mName.c_str(), key.c_str());
     DoNotifyException("Invalid Set", msg);
     return;
   }
@@ -376,8 +360,7 @@ void ResourceTable::RemoveOrError(StringParam key)
 {
   bool existed = RemoveOrIgnore(key);
   if (!existed)
-    DoNotifyException("Invalid Remove",
-                      String::Format("Key '%s' does not exists", key.c_str()));
+    DoNotifyException("Invalid Remove", String::Format("Key '%s' does not exists", key.c_str()));
 }
 
 bool ResourceTable::RemoveOrIgnore(StringParam key)
@@ -466,15 +449,13 @@ uint ResourceTable::SampleIndex(float random1, float random2)
   BuildIfOutOfDate();
 
   // Make sure the samples are in the correct range
-  if (random1 >= 1.000001f || random1 < -0.000001f || random2 >= 1.000001f ||
-      random2 < -0.000001f)
+  if (random1 >= 1.000001f || random1 < -0.000001f || random2 >= 1.000001f || random2 < -0.000001f)
   {
-    String msg = String::Format(
-        "Random values expected to be in the range "
-        "of [0,1), given %g and %g. Clamping values but this will "
-        "result in a incorrect distribution.",
-        random1,
-        random2);
+    String msg = String::Format("Random values expected to be in the range "
+                                "of [0,1), given %g and %g. Clamping values but this will "
+                                "result in a incorrect distribution.",
+                                random1,
+                                random2);
     DoNotifyWarning("Invalid random range.", msg);
   }
   random1 = Math::Clamp(random1, 0.0f, .999f);
@@ -528,9 +509,7 @@ void ResourceTable::AddNewEntry(StringParam value)
   AddNewEntry(entryName, entryValue, real(1.0));
 }
 
-bool ResourceTable::AddNewEntry(const ValueType& name,
-                                const ValueType& value,
-                                const WeightType& prob)
+bool ResourceTable::AddNewEntry(const ValueType& name, const ValueType& value, const WeightType& prob)
 {
   // Check to see if we already have an item by this name.
   // If so we can't add it so return false.
@@ -547,8 +526,7 @@ bool ResourceTable::AddNewEntry(const ValueType& name,
 
   // Grab the manager (if we're in string mode this fails, but that's
   // fine because then we'll just use the passed in value
-  ResourceManager* manager =
-      Z::gResources->Managers.FindValue(mResourceType, nullptr);
+  ResourceManager* manager = Z::gResources->Managers.FindValue(mResourceType, nullptr);
   if (manager != nullptr)
   {
     // If there was a manager, make sure that the given value is actually a
@@ -598,8 +576,7 @@ void ResourceTable::RebuildTable()
 void ResourceTable::ValidateEntries()
 {
   // Get a manager (if we don't find one then whatever we have must be valid)
-  ResourceManager* manager =
-      Z::gResources->Managers.FindValue(mResourceType, nullptr);
+  ResourceManager* manager = Z::gResources->Managers.FindValue(mResourceType, nullptr);
   if (manager == nullptr)
     return;
 
@@ -608,15 +585,12 @@ void ResourceTable::ValidateEntries()
   for (uint i = 0; i < mEntryList.Size(); ++i)
   {
     String resourceIdName = mEntryList[i]->mValue;
-    Resource* resource =
-        manager->GetResource(resourceIdName, ResourceNotFound::ReturnNull);
+    Resource* resource = manager->GetResource(resourceIdName, ResourceNotFound::ReturnNull);
     if (resource == nullptr)
     {
       ErrorContextObject materialBlockMsg("Loading Resource Table", this);
 
-      String msg = String::Format("Could not find %s '%s' in table.",
-                                  mResourceType.c_str(),
-                                  resourceIdName.c_str());
+      String msg = String::Format("Could not find %s '%s' in table.", mResourceType.c_str(), resourceIdName.c_str());
       DoNotifyErrorWithContext(msg);
     }
   }
@@ -625,29 +599,24 @@ void ResourceTable::ValidateEntries()
 bool ResourceTable::ValidateEntry(ResourceTableEntry* entry)
 {
   // Get a manager (if we don't find one then whatever we have must be valid)
-  ResourceManager* manager =
-      Z::gResources->Managers.FindValue(mResourceType, nullptr);
+  ResourceManager* manager = Z::gResources->Managers.FindValue(mResourceType, nullptr);
   if (manager == nullptr)
     return true;
 
-  Resource* resource =
-      manager->GetResource(entry->mValue, ResourceNotFound::ReturnNull);
+  Resource* resource = manager->GetResource(entry->mValue, ResourceNotFound::ReturnNull);
   if (resource == nullptr)
     return false;
   return true;
 }
 
-bool ResourceTable::ValidateEntryType(ResourceTableEntry* entry,
-                                      bool throwException)
+bool ResourceTable::ValidateEntryType(ResourceTableEntry* entry, bool throwException)
 {
   if (entry->mResourceType != mResourceType)
   {
     if (throwException)
     {
-      String msg =
-          String::Format("Entry type '%s' is invalid with table of type '%s'",
-                         entry->mResourceType.c_str(),
-                         mResourceType.c_str());
+      String msg = String::Format(
+          "Entry type '%s' is invalid with table of type '%s'", entry->mResourceType.c_str(), mResourceType.c_str());
       DoNotifyException("Invalid Entry Type", msg);
     }
     return false;
@@ -655,11 +624,9 @@ bool ResourceTable::ValidateEntryType(ResourceTableEntry* entry,
   return true;
 }
 
-Resource* ResourceTable::GetResource(StringParam resourceIdName,
-                                     ResourceNotFound::Enum notFoundMode)
+Resource* ResourceTable::GetResource(StringParam resourceIdName, ResourceNotFound::Enum notFoundMode)
 {
-  ResourceManager* manager =
-      Z::gResources->Managers.FindValue(mResourceType, nullptr);
+  ResourceManager* manager = Z::gResources->Managers.FindValue(mResourceType, nullptr);
   if (manager == nullptr)
     return nullptr;
 
@@ -668,8 +635,7 @@ Resource* ResourceTable::GetResource(StringParam resourceIdName,
 
 ImplementResourceManager(ResourceTableManager, ResourceTable);
 
-ResourceTableManager::ResourceTableManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+ResourceTableManager::ResourceTableManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   AddLoader("ResourceTable", new TextDataFileLoader<ResourceTableManager>());
   DefaultResourceName = "DefaultResourceTable";
@@ -687,7 +653,7 @@ ResourceTableManager::ResourceTableManager(BoundType* resourceType) :
 void ResourceTableManager::OnValidateTables(ResourceEvent* e)
 {
   // Validate all resource tables that were from the library that was just built
-  forRange(Resource * resource, AllResources())
+  forRange (Resource* resource, AllResources())
   {
     ResourceTable* table = static_cast<ResourceTable*>(resource);
 

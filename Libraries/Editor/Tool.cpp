@@ -26,11 +26,7 @@ public:
   Tool* mTool;
   HandleOf<Viewport> mViewport;
 
-  ToolMouseDrag(Composite* owner,
-                Mouse* mouse,
-                Tool* tool,
-                Viewport* viewport) :
-      MouseManipulation(mouse, owner)
+  ToolMouseDrag(Composite* owner, Mouse* mouse, Tool* tool, Viewport* viewport) : MouseManipulation(mouse, owner)
   {
     mTool = tool;
     mViewport = viewport;
@@ -53,8 +49,7 @@ public:
     if (viewport == nullptr)
       return;
 
-    bool valid = mTool->MouseDragMovement(
-        viewport, mMouseStartPosition, event->Position);
+    bool valid = mTool->MouseDragMovement(viewport, mMouseStartPosition, event->Position);
     if (!valid)
       this->Destroy();
   }
@@ -103,11 +98,8 @@ public:
   }
 };
 
-Component* Tool::GetOrCreateEditComponent(BoundType* componentType,
-                                          StringParam defaultName,
-                                          StringParam defaultArchetype,
-                                          CogId& lastEdited,
-                                          bool canCreate)
+Component* Tool::GetOrCreateEditComponent(
+    BoundType* componentType, StringParam defaultName, StringParam defaultArchetype, CogId& lastEdited, bool canCreate)
 {
   // Get the current selection
   MetaSelection* selection = Z::gEditor->GetSelection();

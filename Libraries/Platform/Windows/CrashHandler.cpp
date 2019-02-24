@@ -21,8 +21,7 @@ EXTERNC void* _AddressOfReturnAddress(void);
 EXTERNC void* _ReturnAddress(void);
 #endif
 
-void GetExceptionPointers(DWORD dwExceptionCode,
-                          EXCEPTION_POINTERS** ppExceptionPointers)
+void GetExceptionPointers(DWORD dwExceptionCode, EXCEPTION_POINTERS** ppExceptionPointers)
 {
   // The following code was taken from VC++ 8.0 CRT (invarg.c: line 104)
 
@@ -91,8 +90,7 @@ bool InvokeCustomMemoryCallback(MemoryRange& memoryRange)
   __try
   {
     // assumed to not be NULL, otherwise this wouldn't be called
-    return CrashHandler::mCustomMemoryCallback(
-        memoryRange, CrashHandler::mCustomMemoryUserData);
+    return CrashHandler::mCustomMemoryCallback(memoryRange, CrashHandler::mCustomMemoryUserData);
   }
   __except (EXCEPTION_EXECUTE_HANDLER)
   {
@@ -163,8 +161,7 @@ BOOL CALLBACK TestZeroMiniDumpCallback(PVOID pParam,
     if (pOutput->ModuleWriteFlags & ModuleWriteDataSeg)
     {
       // Yes, they are, but do we need them?
-      if (info->mStripModules == true &&
-          !IsDataSectionNeeded(pInput->Module.FullPath, info))
+      if (info->mStripModules == true && !IsDataSectionNeeded(pInput->Module.FullPath, info))
       {
         // This print seems to sometimes break the mini dump...
         // printf(L"Excluding module data sections: %s \n",
@@ -220,8 +217,7 @@ BOOL CALLBACK TestZeroMiniDumpCallback(PVOID pParam,
 
 LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS* pException)
 {
-  CrashHandler::mRunCrashHandlerCallback(
-      pException, true, CrashHandler::mRunCrashHandlerUserData);
+  CrashHandler::mRunCrashHandlerCallback(pException, true, CrashHandler::mRunCrashHandlerUserData);
 
   // Tell the exception handler that it should continue (we've done our work
   // here!)
@@ -270,10 +266,8 @@ void EnableCrashingOnCrashes()
   const DWORD EXCEPTION_SWALLOWING = 0x1;
 
   HMODULE kernel32 = LoadLibraryA("kernel32.dll");
-  tGetPolicy pGetPolicy =
-      (tGetPolicy)GetProcAddress(kernel32, "GetProcessUserModeExceptionPolicy");
-  tSetPolicy pSetPolicy =
-      (tSetPolicy)GetProcAddress(kernel32, "SetProcessUserModeExceptionPolicy");
+  tGetPolicy pGetPolicy = (tGetPolicy)GetProcAddress(kernel32, "GetProcessUserModeExceptionPolicy");
+  tSetPolicy pSetPolicy = (tSetPolicy)GetProcAddress(kernel32, "SetProcessUserModeExceptionPolicy");
   if (pGetPolicy && pSetPolicy)
   {
     DWORD dwFlags;
@@ -304,29 +298,25 @@ void CrashHandler::AppendToExtraSymbolPath(StringParam path)
     mExtraSymbolPath = BuildString(mExtraSymbolPath, ";", path);
 }
 
-void CrashHandler::SetCrashStartCallback(CrashStartCallback callback,
-                                         void* userData)
+void CrashHandler::SetCrashStartCallback(CrashStartCallback callback, void* userData)
 {
   mCrashStartCallback = callback;
   mCrashStartUserData = userData;
 }
 
-void CrashHandler::SetRunCrashHandlerCallback(RunCrashHandlerCallback callback,
-                                              void* userData)
+void CrashHandler::SetRunCrashHandlerCallback(RunCrashHandlerCallback callback, void* userData)
 {
   mRunCrashHandlerCallback = callback;
   mRunCrashHandlerUserData = userData;
 }
 
-void CrashHandler::SetPreMemoryDumpCallback(PreMemoryDumpCallback callback,
-                                            void* userData)
+void CrashHandler::SetPreMemoryDumpCallback(PreMemoryDumpCallback callback, void* userData)
 {
   mPreMemoryDumpCallback = callback;
   mPreMemoryDumpUserData = userData;
 }
 
-void CrashHandler::SetCustomMemoryCallback(CustomMemoryCallback callback,
-                                           void* userData)
+void CrashHandler::SetCustomMemoryCallback(CustomMemoryCallback callback, void* userData)
 {
   mCustomMemoryCallback = callback;
   mCustomMemoryUserData = userData;
@@ -338,15 +328,13 @@ void CrashHandler::SetLoggingCallback(LoggingCallback callback, void* userData)
   mLoggingUserData = userData;
 }
 
-void CrashHandler::SetupRescueCallback(FinalRescueCall rescueCall,
-                                       void* userData)
+void CrashHandler::SetupRescueCallback(FinalRescueCall rescueCall, void* userData)
 {
   mRescueCallback = rescueCall;
   mRescueUserData = userData;
 }
 
-void CrashHandler::SetSendCrashReportCallback(SendCrashReportCallback callback,
-                                              void* userData)
+void CrashHandler::SetSendCrashReportCallback(SendCrashReportCallback callback, void* userData)
 {
   mSendCrashReportCallback = callback;
   mSendCrashReportUserData = userData;
@@ -357,8 +345,7 @@ void CrashHandler::InvokeCrashStartCallback(CrashInfo& info)
   __try
   {
     if (CrashHandler::mCrashStartCallback != NULL)
-      CrashHandler::mCrashStartCallback(info,
-                                        CrashHandler::mCrashStartUserData);
+      CrashHandler::mCrashStartCallback(info, CrashHandler::mCrashStartUserData);
   }
   __except (EXCEPTION_EXECUTE_HANDLER)
   {
@@ -370,17 +357,14 @@ void CrashHandler::InvokePreMemoryDumpCallback()
   __try
   {
     if (CrashHandler::mPreMemoryDumpCallback != NULL)
-      CrashHandler::mPreMemoryDumpCallback(
-          CrashHandler::mPreMemoryDumpUserData);
+      CrashHandler::mPreMemoryDumpCallback(CrashHandler::mPreMemoryDumpUserData);
   }
   __except (EXCEPTION_EXECUTE_HANDLER)
   {
   }
 }
 
-void CrashHandler::WriteMiniDump(CrashHandlerParameters& params,
-                                 void* crashData,
-                                 CrashInfo& info)
+void CrashHandler::WriteMiniDump(CrashHandlerParameters& params, void* crashData, CrashInfo& info)
 {
   EXCEPTION_POINTERS* pException = (EXCEPTION_POINTERS*)crashData;
 
@@ -406,25 +390,13 @@ void CrashHandler::WriteMiniDump(CrashHandlerParameters& params,
     mci.CallbackParam = &info;
 
     // Create the handle for the file
-    HANDLE fileHandle =
-        CreateFile(dumpFileName,
-                   GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN,
-                   NULL);
+    HANDLE fileHandle = CreateFile(
+        dumpFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 
-    uint dumpType =
-        MiniDumpWithIndirectlyReferencedMemory | MiniDumpWithDataSegs;
+    uint dumpType = MiniDumpWithIndirectlyReferencedMemory | MiniDumpWithDataSegs;
     // Write the dump
-    MiniDumpWriteDump(GetCurrentProcess(),
-                      GetCurrentProcessId(),
-                      fileHandle,
-                      (MINIDUMP_TYPE)dumpType,
-                      &ExceptionParam,
-                      NULL,
-                      &mci);
+    MiniDumpWriteDump(
+        GetCurrentProcess(), GetCurrentProcessId(), fileHandle, (MINIDUMP_TYPE)dumpType, &ExceptionParam, NULL, &mci);
 
     // Close the file handle
     CloseHandle(fileHandle);
@@ -433,9 +405,7 @@ void CrashHandler::WriteMiniDump(CrashHandlerParameters& params,
   }
 }
 
-void WriteCallstack(CrashHandlerParameters& params,
-                    void* crashData,
-                    CrashInfo& info)
+void WriteCallstack(CrashHandlerParameters& params, void* crashData, CrashInfo& info)
 {
   const size_t MAX_TEMP_PATH = MAX_PATH - 14;
   wchar_t stackFileName[MAX_PATH] = {0};
@@ -451,16 +421,13 @@ void WriteCallstack(CrashHandlerParameters& params,
   // Create a temporary file name
   DWORD pathLength = GetTempPath(MAX_TEMP_PATH, stackFileName);
   ZeroStrCatW(stackFileName, MAX_TEMP_PATH, Widen(info.mStackName).c_str());
-  WriteToFile(
-      Narrow(stackFileName).c_str(), (byte*)stack.Data(), stack.SizeInBytes());
+  WriteToFile(Narrow(stackFileName).c_str(), (byte*)stack.Data(), stack.SizeInBytes());
 
   // Add the stack file to the parameters
   params.AddParameter("Stack", Narrow(stackFileName).c_str());
 }
 
-void CrashHandler::InvokeWriteCallstack(CrashHandlerParameters& params,
-                                        void* crashData,
-                                        CrashInfo& info)
+void CrashHandler::InvokeWriteCallstack(CrashHandlerParameters& params, void* crashData, CrashInfo& info)
 {
   __try
   {
@@ -473,14 +440,12 @@ void CrashHandler::InvokeWriteCallstack(CrashHandlerParameters& params,
   }
 }
 
-void CrashHandler::InvokeLoggingCallback(CrashHandlerParameters& params,
-                                         CrashInfo& info)
+void CrashHandler::InvokeLoggingCallback(CrashHandlerParameters& params, CrashInfo& info)
 {
   __try
   {
     if (CrashHandler::mLoggingCallback != NULL)
-      CrashHandler::mLoggingCallback(
-          params, info, CrashHandler::mLoggingUserData);
+      CrashHandler::mLoggingCallback(params, info, CrashHandler::mLoggingUserData);
   }
   __except (EXCEPTION_EXECUTE_HANDLER)
   {
@@ -505,8 +470,7 @@ void CrashHandler::InvokeSendCrashReport(CrashHandlerParameters& params)
   __try
   {
     if (CrashHandler::mSendCrashReportCallback != NULL)
-      CrashHandler::mSendCrashReportCallback(
-          params, CrashHandler::mSendCrashReportUserData);
+      CrashHandler::mSendCrashReportCallback(params, CrashHandler::mSendCrashReportUserData);
   }
   __except (EXCEPTION_EXECUTE_HANDLER)
   {
@@ -521,14 +485,11 @@ void CrashHandler::FatalError(int errorCode)
   EXCEPTION_POINTERS* exceptions = NULL;
   GetExceptionPointers(errorCode, &exceptions);
 
-  CrashHandler::mRunCrashHandlerCallback(
-      exceptions, false, CrashHandler::mRunCrashHandlerUserData);
+  CrashHandler::mRunCrashHandlerCallback(exceptions, false, CrashHandler::mRunCrashHandlerUserData);
   exit(errorCode);
 }
 
-void CrashHandler::DefaultRunCrashHandlerCallback(void* crashData,
-                                                  bool doRescueCall,
-                                                  void* userData)
+void CrashHandler::DefaultRunCrashHandlerCallback(void* crashData, bool doRescueCall, void* userData)
 {
   // Force string pool's spin lock to be released so we won't infinite loop
   String::DebugForceReleaseStringPoolLock();
@@ -542,8 +503,7 @@ void CrashHandler::DefaultRunCrashHandlerCallback(void* crashData,
   if (CrashHandler::mAutoRestart)
   {
     String appExe = GetApplication();
-    Os::SystemOpenFile(
-        appExe.c_str(), NULL, CrashHandler::mRestartCommandLine.c_str());
+    Os::SystemOpenFile(appExe.c_str(), NULL, CrashHandler::mRestartCommandLine.c_str());
 
     return;
   }
@@ -574,8 +534,7 @@ void CrashHandler::SetRestartCommandLine(StringRange commandLine)
 
 void CrashHandler::RestartOnCrash(bool state)
 {
-  ZPrint("Set to auto restart on crash with '%s'\n",
-         CrashHandler::mRestartCommandLine.c_str());
+  ZPrint("Set to auto restart on crash with '%s'\n", CrashHandler::mRestartCommandLine.c_str());
   CrashHandler::mAutoRestart = state;
 }
 
@@ -597,8 +556,7 @@ void* CrashHandler::mCustomMemoryUserData = NULL;
 CrashHandler::LoggingCallback CrashHandler::mLoggingCallback = NULL;
 void* CrashHandler::mLoggingUserData = NULL;
 
-CrashHandler::SendCrashReportCallback CrashHandler::mSendCrashReportCallback =
-    NULL;
+CrashHandler::SendCrashReportCallback CrashHandler::mSendCrashReportCallback = NULL;
 void* CrashHandler::mSendCrashReportUserData;
 
 CrashHandler::FinalRescueCall CrashHandler::mRescueCallback = NULL;

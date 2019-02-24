@@ -21,15 +21,14 @@ Sha1Builder::Sha1Builder()
 
 void Sha1Builder::RunUnitTests()
 {
-  const char* inputs[] = {
-      "abc",
-      "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
-      "A million repetitions of 'a'",
-      "The quick brown fox jumps over the lazy "
-      "dog.!@#$%^&**()_+-=[]{}:;',./<>?1234567890 The quick brown fox jumps "
-      "over the lazy dog.!@#$%^&**()_+-=[]{}:;',./<>?1234567890 The quick "
-      "brown fox jumps over the lazy "
-      "dog.!@#$%^&**()_+-=[]{}:;',./<>?1234567890"};
+  const char* inputs[] = {"abc",
+                          "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
+                          "A million repetitions of 'a'",
+                          "The quick brown fox jumps over the lazy "
+                          "dog.!@#$%^&**()_+-=[]{}:;',./<>?1234567890 The quick brown fox jumps "
+                          "over the lazy dog.!@#$%^&**()_+-=[]{}:;',./<>?1234567890 The quick "
+                          "brown fox jumps over the lazy "
+                          "dog.!@#$%^&**()_+-=[]{}:;',./<>?1234567890"};
 
   const char* outputs[] = {"A9993E364706816ABA3E25717850C26C9CD0D89D",
                            "84983E441C3BD26EBAAE4AA1F95129E5E54670F1",
@@ -57,8 +56,7 @@ void Sha1Builder::RunUnitTests()
     }
     String result = builder.OutputHashString();
 
-    ErrorIf(result != expectedOutput,
-            "The Sha1Builder returned an incorrect hash");
+    ErrorIf(result != expectedOutput, "The Sha1Builder returned an incorrect hash");
   }
 }
 
@@ -70,30 +68,27 @@ void Sha1Builder::RunUnitTests()
 #ifdef WORDS_BIGENDIAN
 #  define blk0(i) block->l[i]
 #else
-#  define blk0(i)                                                              \
-    (block->l[i] = (rol(block->l[i], 24) & 0xFF00FF00) |                       \
-                   (rol(block->l[i], 8) & 0x00FF00FF))
+#  define blk0(i) (block->l[i] = (rol(block->l[i], 24) & 0xFF00FF00) | (rol(block->l[i], 8) & 0x00FF00FF))
 #endif
-#define blk(i)                                                                 \
-  (block->l[i & 15] = rol(block->l[(i + 13) & 15] ^ block->l[(i + 8) & 15] ^   \
-                              block->l[(i + 2) & 15] ^ block->l[i & 15],       \
-                          1))
+#define blk(i)                                                                                                         \
+  (block->l[i & 15] =                                                                                                  \
+       rol(block->l[(i + 13) & 15] ^ block->l[(i + 8) & 15] ^ block->l[(i + 2) & 15] ^ block->l[i & 15], 1))
 
 /* (R0+R1), R2, R3, R4 are the different operations used in SHA1 */
-#define R0(v, w, x, y, z, i)                                                   \
-  z += ((w & (x ^ y)) ^ y) + blk0(i) + 0x5A827999 + rol(v, 5);                 \
+#define R0(v, w, x, y, z, i)                                                                                           \
+  z += ((w & (x ^ y)) ^ y) + blk0(i) + 0x5A827999 + rol(v, 5);                                                         \
   w = rol(w, 30);
-#define R1(v, w, x, y, z, i)                                                   \
-  z += ((w & (x ^ y)) ^ y) + blk(i) + 0x5A827999 + rol(v, 5);                  \
+#define R1(v, w, x, y, z, i)                                                                                           \
+  z += ((w & (x ^ y)) ^ y) + blk(i) + 0x5A827999 + rol(v, 5);                                                          \
   w = rol(w, 30);
-#define R2(v, w, x, y, z, i)                                                   \
-  z += (w ^ x ^ y) + blk(i) + 0x6ED9EBA1 + rol(v, 5);                          \
+#define R2(v, w, x, y, z, i)                                                                                           \
+  z += (w ^ x ^ y) + blk(i) + 0x6ED9EBA1 + rol(v, 5);                                                                  \
   w = rol(w, 30);
-#define R3(v, w, x, y, z, i)                                                   \
-  z += (((w | x) & y) | (w & x)) + blk(i) + 0x8F1BBCDC + rol(v, 5);            \
+#define R3(v, w, x, y, z, i)                                                                                           \
+  z += (((w | x) & y) | (w & x)) + blk(i) + 0x8F1BBCDC + rol(v, 5);                                                    \
   w = rol(w, 30);
-#define R4(v, w, x, y, z, i)                                                   \
-  z += (w ^ x ^ y) + blk(i) + 0xCA62C1D6 + rol(v, 5);                          \
+#define R4(v, w, x, y, z, i)                                                                                           \
+  z += (w ^ x ^ y) + blk(i) + 0xCA62C1D6 + rol(v, 5);                                                                  \
   w = rol(w, 30);
 
 // Hash a single 512-bit block (this is the core of the algorithm)
@@ -277,9 +272,7 @@ void Sha1Builder::OutputHash(byte* hashOut)
   for (i = 0; i < 8; i++)
   {
     // Endian independent
-    finalcount[i] =
-        (unsigned char)((this->Count[(i >= 4 ? 0 : 1)] >> ((3 - (i & 3)) * 8)) &
-                        255);
+    finalcount[i] = (unsigned char)((this->Count[(i >= 4 ? 0 : 1)] >> ((3 - (i & 3)) * 8)) & 255);
   }
 
   this->Append((const byte*)"\200", 1);
@@ -340,11 +333,7 @@ String Sha1Builder::GetHashStringFromFile(Status& status, StringParam fileName)
 {
   // Attempt to open the file
   File file;
-  file.Open(fileName,
-            Zero::FileMode::Read,
-            Zero::FileAccessPattern::Sequential,
-            Zero::FileShare::Read,
-            &status);
+  file.Open(fileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential, Zero::FileShare::Read, &status);
   if (status.Failed())
     return String();
 

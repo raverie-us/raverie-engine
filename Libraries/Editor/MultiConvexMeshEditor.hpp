@@ -29,18 +29,10 @@ public:
                     ColorTransform colorTx,
                     WidgetRect clipRect) override;
 
-  void DrawOuterContour(ViewBlock& viewBlock,
-                        FrameBlock& frameBlock,
-                        WidgetRect clipRect);
-  void DrawPoints(ViewBlock& viewBlock,
-                  FrameBlock& frameBlock,
-                  WidgetRect clipRect);
-  void DrawClosestPointOnEdge(ViewBlock& viewBlock,
-                              FrameBlock& frameBlock,
-                              WidgetRect clipRect);
-  void DrawAutoComputedContours(ViewBlock& viewBlock,
-                                FrameBlock& frameBlock,
-                                WidgetRect clipRect);
+  void DrawOuterContour(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
+  void DrawPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
+  void DrawClosestPointOnEdge(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
+  void DrawAutoComputedContours(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
 
   MultiConvexMeshEditor* mEditor;
 };
@@ -53,9 +45,7 @@ public:
   ZilchDeclareType(MultiConvexMeshPoint, TypeCopyMode::ReferenceType);
 
   MultiConvexMeshPoint(Composite* parent, MultiConvexMeshEditor* editor);
-  MultiConvexMeshPoint(Composite* parent,
-                       MultiConvexMeshEditor* editor,
-                       Vec3Param worldPoint);
+  MultiConvexMeshPoint(Composite* parent, MultiConvexMeshEditor* editor, Vec3Param worldPoint);
 
   void Setup(MultiConvexMeshEditor* editor, Vec3Param worldPoint);
 
@@ -134,8 +124,7 @@ DeclareEnum2(MultiConvexMeshAutoComputeMode, Alpha, Intensity);
 /// Contains the different settings that the user can modify.
 struct MultiConvexMeshPropertyViewInfo : public EventObject
 {
-  ZilchDeclareType(MultiConvexMeshPropertyViewInfo,
-                   TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MultiConvexMeshPropertyViewInfo, TypeCopyMode::ReferenceType);
 
   MultiConvexMeshPropertyViewInfo();
 
@@ -204,14 +193,9 @@ public:
   /// connecting to the new point.
   void AddPointAtScreenPosition(Vec2Param screenPosition);
   /// Adds a point at a given index. By default queues an undo operation.
-  MultiConvexMeshPoint* AddPointAt(uint index,
-                                   Vec3Param worldPosition,
-                                   bool queueUndo = true,
-                                   bool testMesh = true);
+  MultiConvexMeshPoint* AddPointAt(uint index, Vec3Param worldPosition, bool queueUndo = true, bool testMesh = true);
   /// Removes a point and queues an undo operation.
-  void RemovePoint(MultiConvexMeshPoint* point,
-                   bool queueUndo = true,
-                   bool testMesh = true);
+  void RemovePoint(MultiConvexMeshPoint* point, bool queueUndo = true, bool testMesh = true);
   /// Clear all points so the mesh is empty
   void ClearPoints(bool queueUndo = true);
   /// Auto compute a best guess for the sprite
@@ -274,8 +258,7 @@ public:
   static real SamplePixelAlpha(Vec2Param pixelCoord, void* userData);
   static real SamplePixelIntensity(Vec2Param pixelCoord, void* userData);
   static Vec2 SamplePixelWorldPosition(Vec2Param pixelCoord, void* userData);
-  static Vec2 SamplePixelWorldPositionAtCenter(Vec2Param pixelCoord,
-                                               void* userData);
+  static Vec2 SamplePixelWorldPositionAtCenter(Vec2Param pixelCoord, void* userData);
 
   /// Set the MultiConvexMesh currently being edited.
   void SetMultiConvexMesh(MultiConvexMesh* multiConvexMesh);

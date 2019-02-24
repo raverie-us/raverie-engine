@@ -24,9 +24,7 @@ ZilchDefineType(TextureData, builder, type)
   ZilchBindOverloadedMethod(Set, ZilchInstanceOverload(void, uint, uint, Vec4));
 }
 
-TextureData::TextureData(TextureFormat::Enum format, int width, int height) :
-    mPixelCount(0),
-    mData(nullptr)
+TextureData::TextureData(TextureFormat::Enum format, int width, int height) : mPixelCount(0), mData(nullptr)
 {
   if (IsColorFormat(format) == false)
   {

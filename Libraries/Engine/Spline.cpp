@@ -51,8 +51,7 @@ ZilchDefineType(SplineControlPoint, builder, type)
 
   Field* worldPosition = ZilchBindMemberAs(mPosition, "WorldPosition");
   worldPosition->AddAttribute(DeprecatedAttribute);
-  worldPosition->Description =
-      "This field is deprecated. Use Position instead.";
+  worldPosition->Description = "This field is deprecated. Use Position instead.";
 }
 
 SplineControlPoint::SplineControlPoint()
@@ -91,14 +90,12 @@ void SplineControlPoints::Add(const SplineControlPoint& controlPoint)
   mOwner->mIsModified = true;
 }
 
-void SplineControlPoints::Insert(int index,
-                                 const SplineControlPoint& controlPoint)
+void SplineControlPoints::Insert(int index, const SplineControlPoint& controlPoint)
 {
   int count = GetCount();
   if (index >= count)
   {
-    String msg = String::Format(
-        "Index %d is invalid. Array only contains %d elements.", index, count);
+    String msg = String::Format("Index %d is invalid. Array only contains %d elements.", index, count);
     DoNotifyException("Invalid index", msg);
     return;
   }
@@ -112,8 +109,7 @@ void SplineControlPoints::RemoveAt(int index)
   int count = GetCount();
   if (index >= count)
   {
-    String msg = String::Format(
-        "Index %d is invalid. Array only contains %d elements.", index, count);
+    String msg = String::Format("Index %d is invalid. Array only contains %d elements.", index, count);
     DoNotifyException("Invalid index", msg);
     return;
   }
@@ -127,8 +123,7 @@ SplineControlPoint SplineControlPoints::Get(int index) const
   int count = GetCount();
   if (index >= count)
   {
-    String msg = String::Format(
-        "Index %d is invalid. Array only contains %d elements.", index, count);
+    String msg = String::Format("Index %d is invalid. Array only contains %d elements.", index, count);
     DoNotifyException("Invalid index", msg);
     return Vec3::cZero;
   }
@@ -141,8 +136,7 @@ void SplineControlPoints::Set(int index, const SplineControlPoint& value)
   int count = GetCount();
   if (index >= count)
   {
-    String msg = String::Format(
-        "Index %d is invalid. Array only contains %d elements.", index, count);
+    String msg = String::Format("Index %d is invalid. Array only contains %d elements.", index, count);
     DoNotifyException("Invalid index", msg);
     return;
   }
@@ -173,8 +167,7 @@ ZilchDefineType(SplineBakedPoint, builder, type)
 
   Field* worldPosition = ZilchBindMemberAs(mPosition, "WorldPosition");
   worldPosition->AddAttribute(DeprecatedAttribute);
-  worldPosition->Description =
-      "This field is deprecated. Use Position instead.";
+  worldPosition->Description = "This field is deprecated. Use Position instead.";
 }
 
 SplineBakedPoint::SplineBakedPoint()
@@ -215,8 +208,7 @@ SplineBakedPoint SplineBakedPoints::Get(uint index) const
   size_t count = GetCount();
   if (index >= count)
   {
-    String msg = String::Format(
-        "Index %d is invalid. Array only contains %d elements.", index, count);
+    String msg = String::Format("Index %d is invalid. Array only contains %d elements.", index, count);
     DoNotifyException("Invalid index", msg);
     return Vec3::cZero;
   }

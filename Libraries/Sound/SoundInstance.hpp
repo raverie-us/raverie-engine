@@ -34,8 +34,7 @@ public:
   SoundInstanceEvent() : mSoundInstance(nullptr)
   {
   }
-  SoundInstanceEvent(const HandleOf<SoundInstance>& instance) :
-      mSoundInstance(instance)
+  SoundInstanceEvent(const HandleOf<SoundInstance>& instance) : mSoundInstance(instance)
   {
   }
 
@@ -56,11 +55,7 @@ class AudioFadeObject
 public:
   AudioFadeObject();
 
-  void StartFade(float startingVolume,
-                 unsigned startingIndex,
-                 unsigned fadeFrames,
-                 SoundAsset* asset,
-                 bool crossFade);
+  void StartFade(float startingVolume, unsigned startingIndex, unsigned fadeFrames, SoundAsset* asset, bool crossFade);
   void ApplyFade(float* buffer, unsigned howManyFrames);
   void GetMoreSamples();
 
@@ -133,11 +128,7 @@ class SoundInstance : public SimpleCollapseNode
 public:
   ZilchDeclareType(SoundInstance, TypeCopyMode::ReferenceType);
 
-  SoundInstance(Status& status,
-                SoundSpace* space,
-                SoundAsset* asset,
-                float volume,
-                float pitch);
+  SoundInstance(Status& status, SoundSpace* space, SoundAsset* asset, float volume, float pitch);
   ~SoundInstance();
 
   /// The volume adjustment of the SoundInstance, initially set by the
@@ -250,8 +241,7 @@ public:
   InstanceVolumeModifier* GetAvailableVolumeModThreaded();
   // Adds the requested number of audio frames to the back of the specified
   // buffer
-  bool GetOutputForThisMixThreaded(BufferType* buffer,
-                                   const unsigned numberOfChannels);
+  bool GetOutputForThisMixThreaded(BufferType* buffer, const unsigned numberOfChannels);
   // Gets the cumulative volume attenuation from all output nodes
   float GetAttenuationThisMixThreaded();
 
@@ -263,9 +253,7 @@ private:
                         ListenerNode* listener,
                         const bool firstRequest) override;
   // Fills the provided buffer with the audio data for the current mix
-  void AddSamplesToBufferThreaded(BufferType* buffer,
-                                  unsigned outputFrames,
-                                  unsigned outputChannels);
+  void AddSamplesToBufferThreaded(BufferType* buffer, unsigned outputFrames, unsigned outputChannels);
   // Resets back to the loop start point
   void LoopThreaded();
   // Translates the audio data in the array to the specified output channels,

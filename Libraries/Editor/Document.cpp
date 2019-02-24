@@ -75,8 +75,7 @@ void DocumentManager::AddDocument(Document* document)
 
 void DocumentManager::OnResourceRemoved(ResourceEvent* event)
 {
-  Document* document =
-      Documents.FindValue((u64)event->EventResource->mResourceId, nullptr);
+  Document* document = Documents.FindValue((u64)event->EventResource->mResourceId, nullptr);
   if (document)
   {
     ObjectEvent e(this);
@@ -89,8 +88,7 @@ void DocumentManager::OnResourceRemoved(ResourceEvent* event)
 
 void DocumentManager::OnResourceModified(ResourceEvent* event)
 {
-  Document* document =
-      Documents.FindValue((u64)event->EventResource->mResourceId, nullptr);
+  Document* document = Documents.FindValue((u64)event->EventResource->mResourceId, nullptr);
   if (document)
     document->ReloadEditor();
 }
@@ -128,8 +126,7 @@ DocumentResource* StringDocument::GetResource()
   return nullptr;
 }
 
-ResourceDocument::ResourceDocument(DocumentResource* resource) :
-    Document((u64)resource->mResourceId)
+ResourceDocument::ResourceDocument(DocumentResource* resource) : Document((u64)resource->mResourceId)
 {
   mResource = resource;
 }

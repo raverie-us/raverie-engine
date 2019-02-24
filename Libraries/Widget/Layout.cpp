@@ -54,9 +54,8 @@ LayoutResult AspectLayout(Vec2 aspect, Vec2 size)
   LayoutResult lr;
   float sourceRatio = aspect.x / aspect.y;
   float screenRatio = size.x / size.y;
-  Vec2 scaleAspect = sourceRatio < screenRatio
-                         ? Vec2(sourceRatio / screenRatio, 1)
-                         : Vec2(1, screenRatio / sourceRatio);
+  Vec2 scaleAspect =
+      sourceRatio < screenRatio ? Vec2(sourceRatio / screenRatio, 1) : Vec2(1, screenRatio / sourceRatio);
   lr.Size = size * scaleAspect;
   lr.Translation = ToVector3((size - lr.Size) * 0.5f);
   return lr;
@@ -77,12 +76,8 @@ Vec2 MaxMeasure(Composite* widget, LayoutArea data)
   return neededSize;
 }
 
-void CalculateAlignment(SizeAxis::Type axis,
-                        uint alignment,
-                        Vec2 areaSize,
-                        Vec3 areaPos,
-                        Vec2& childSize,
-                        Vec3& childTranslation)
+void CalculateAlignment(
+    SizeAxis::Type axis, uint alignment, Vec2 areaSize, Vec3 areaPos, Vec2& childSize, Vec3& childTranslation)
 {
   switch (alignment)
   {
@@ -96,8 +91,7 @@ void CalculateAlignment(SizeAxis::Type axis,
     break;
   case HorizontalAlignment::Center:
     // case VerticalAlignment::Center:
-    childTranslation[axis] =
-        areaPos[axis] + (areaSize[axis] / 2.0f) - (childSize[axis] / 2.0f);
+    childTranslation[axis] = areaPos[axis] + (areaSize[axis] / 2.0f) - (childSize[axis] / 2.0f);
     break;
   }
 }
@@ -183,12 +177,7 @@ Vec2 FillLayout::DoLayout(Composite* widget, LayoutArea data)
       if (policy.XPolicy == SizePolicy::Fixed)
         childSize.x = policy.Size.x;
 
-      CalculateAlignment(SizeAxis::X,
-                         child.mHorizontalAlignment,
-                         size,
-                         pos,
-                         childSize,
-                         childPos);
+      CalculateAlignment(SizeAxis::X, child.mHorizontalAlignment, size, pos, childSize, childPos);
     }
 
     if (policy.YPolicy == SizePolicy::Flex)
@@ -201,12 +190,7 @@ Vec2 FillLayout::DoLayout(Composite* widget, LayoutArea data)
       if (policy.YPolicy == SizePolicy::Fixed)
         childSize.y = policy.Size.y;
 
-      CalculateAlignment(SizeAxis::Y,
-                         child.mVerticalAlignment,
-                         size,
-                         pos,
-                         childSize,
-                         childPos);
+      CalculateAlignment(SizeAxis::Y, child.mVerticalAlignment, size, pos, childSize, childPos);
     }
 
     child.SetTranslationAndSize(childPos, childSize);
@@ -227,10 +211,7 @@ StackLayout::StackLayout(Thickness padding) : Layout(padding)
   Spacing = Vec2::cZero;
 }
 
-StackLayout::StackLayout(LayoutDirection::Enum direction,
-                         Vec2 spacing,
-                         Thickness padding) :
-    Layout(padding)
+StackLayout::StackLayout(LayoutDirection::Enum direction, Vec2 spacing, Thickness padding) : Layout(padding)
 {
   Direction = direction;
   Spacing = spacing;
@@ -267,10 +248,7 @@ Vec2 StackLayout::Measure(Composite* widget, LayoutArea data)
   return neededSize + Padding.Size();
 }
 
-float StackLayout::ComputeFlexRatio(float fixedSize,
-                                    float totalFlex,
-                                    float flexMinSize,
-                                    float totalSize)
+float StackLayout::ComputeFlexRatio(float fixedSize, float totalFlex, float flexMinSize, float totalSize)
 {
   float extraSize = totalSize - fixedSize - flexMinSize;
   // Only flex if there is extra space including min size used by flex controls
@@ -335,8 +313,7 @@ Vec2 StackLayout::DoLayout(Composite* widget, LayoutArea data)
   float flexRemainder = 0.0f;
 
   // Flex ratio
-  float flexRatio =
-      ComputeFlexRatio(fixedSize, totalFlex, flexMinSize, totalSize);
+  float flexRatio = ComputeFlexRatio(fixedSize, totalFlex, flexMinSize, totalSize);
 
   while (!children.Empty())
   {
@@ -388,16 +365,13 @@ Vec2 StackLayout::DoLayout(Composite* widget, LayoutArea data)
       if (opPolicy == SizePolicy::Fixed)
         childSize[opAxis] = policy.Size[opAxis];
 
-      uint alignment =
-          stackAxis ? child.mHorizontalAlignment : child.mVerticalAlignment;
-      CalculateAlignment(
-          opAxis, alignment, areaSize, offset, childSize, childTranslation);
+      uint alignment = stackAxis ? child.mHorizontalAlignment : child.mVerticalAlignment;
+      CalculateAlignment(opAxis, alignment, areaSize, offset, childSize, childTranslation);
     }
 
     // If the direction is reversed flip the translation
     if (direction > 0)
-      childTranslation[stackAxis] =
-          areaSize[stackAxis] - childSize[stackAxis] - offset[stackAxis];
+      childTranslation[stackAxis] = areaSize[stackAxis] - childSize[stackAxis] - offset[stackAxis];
 
     child.SetTranslationAndSize(childTranslation, childSize);
     child.UpdateTransformExternal();
@@ -417,23 +391,19 @@ Vec2 StackLayout::DoLayout(Composite* widget, LayoutArea data)
   return data.Size;
 }
 
-Layout* CreateStackLayout(LayoutDirection::Enum direction,
-                          Vec2Param spacing,
-                          const Thickness& padding)
+Layout* CreateStackLayout(LayoutDirection::Enum direction, Vec2Param spacing, const Thickness& padding)
 {
   return new StackLayout(direction, spacing, padding);
 }
 
 Layout* CreateStackLayout()
 {
-  return new StackLayout(
-      LayoutDirection::TopToBottom, Vec2::cZero, Thickness::cZero);
+  return new StackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness::cZero);
 }
 
 StackLayout* StackLayout::CreateRowLayout()
 {
-  return new StackLayout(
-      LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero);
+  return new StackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero);
 }
 
 ZilchDefineType(EdgeDockLayout, builder, type)
@@ -527,8 +497,8 @@ Vec2 DockLayout::DoLayout(Composite* widget, LayoutArea data)
     if (lastControl)
     {
       areaPos = Vec3(area[SlicesIndex::Left], area[SlicesIndex::Top], 0.0f);
-      areaSize = Vec2(area[SlicesIndex::Right] - area[SlicesIndex::Left],
-                      area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
+      areaSize =
+          Vec2(area[SlicesIndex::Right] - area[SlicesIndex::Left], area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
     }
     else
     {
@@ -542,8 +512,7 @@ Vec2 DockLayout::DoLayout(Composite* widget, LayoutArea data)
         float moveY = size.y;
         areaPos = Vec3(area[SlicesIndex::Left], area[SlicesIndex::Top], 0.0f);
         area[SlicesIndex::Top] += moveY;
-        areaSize =
-            Vec2(area[SlicesIndex::Right] - area[SlicesIndex::Left], moveY);
+        areaSize = Vec2(area[SlicesIndex::Right] - area[SlicesIndex::Left], moveY);
       }
       break;
 
@@ -551,11 +520,9 @@ Vec2 DockLayout::DoLayout(Composite* widget, LayoutArea data)
       case DockMode::DockBottom:
       {
         float moveY = size.y;
-        areaPos = Vec3(
-            area[SlicesIndex::Left], area[SlicesIndex::Bottom] - moveY, 0.0f);
+        areaPos = Vec3(area[SlicesIndex::Left], area[SlicesIndex::Bottom] - moveY, 0.0f);
         area[SlicesIndex::Bottom] -= moveY;
-        areaSize =
-            Vec2(area[SlicesIndex::Right] - area[SlicesIndex::Left], moveY);
+        areaSize = Vec2(area[SlicesIndex::Right] - area[SlicesIndex::Left], moveY);
       }
       break;
 
@@ -565,8 +532,7 @@ Vec2 DockLayout::DoLayout(Composite* widget, LayoutArea data)
         float moveX = size.x;
         areaPos = Vec3(area[SlicesIndex::Left], area[SlicesIndex::Top], 0);
         area[SlicesIndex::Left] += moveX;
-        areaSize =
-            Vec2(moveX, area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
+        areaSize = Vec2(moveX, area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
       }
       break;
 
@@ -574,11 +540,9 @@ Vec2 DockLayout::DoLayout(Composite* widget, LayoutArea data)
       case DockMode::DockRight:
       {
         float moveX = size.x;
-        areaPos = Vec3(
-            area[SlicesIndex::Right] - moveX, area[SlicesIndex::Top], 0.0f);
+        areaPos = Vec3(area[SlicesIndex::Right] - moveX, area[SlicesIndex::Top], 0.0f);
         area[SlicesIndex::Right] -= moveX;
-        areaSize =
-            Vec2(moveX, area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
+        areaSize = Vec2(moveX, area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
       }
       break;
       }
@@ -597,12 +561,7 @@ Vec2 DockLayout::DoLayout(Composite* widget, LayoutArea data)
     {
       if (policy.XPolicy == SizePolicy::Fixed)
         childSize.x = policy.Size.x;
-      CalculateAlignment(SizeAxis::X,
-                         child.mHorizontalAlignment,
-                         areaSize,
-                         areaPos,
-                         childSize,
-                         childPos);
+      CalculateAlignment(SizeAxis::X, child.mHorizontalAlignment, areaSize, areaPos, childSize, childPos);
     }
 
     if (policy.YPolicy == SizePolicy::Flex)
@@ -613,12 +572,7 @@ Vec2 DockLayout::DoLayout(Composite* widget, LayoutArea data)
     {
       if (policy.YPolicy == SizePolicy::Fixed)
         childSize.y = policy.Size.y;
-      CalculateAlignment(SizeAxis::Y,
-                         child.mVerticalAlignment,
-                         areaSize,
-                         areaPos,
-                         childSize,
-                         childPos);
+      CalculateAlignment(SizeAxis::Y, child.mVerticalAlignment, areaSize, areaPos, childSize, childPos);
     }
 
     child.SetTranslationAndSize(childPos, childSize);
@@ -666,9 +620,8 @@ Vec2 RatioLayout::DoLayout(Composite* widget, LayoutArea data)
 
     float sourceRatio = childSize.x / childSize.y;
 
-    Vec2 scaleAspect = sourceRatio < screenRatio
-                           ? Vec2(sourceRatio / screenRatio, 1)
-                           : Vec2(1, screenRatio / sourceRatio);
+    Vec2 scaleAspect =
+        sourceRatio < screenRatio ? Vec2(sourceRatio / screenRatio, 1) : Vec2(1, screenRatio / sourceRatio);
 
     Vec2 newSize = size * scaleAspect;
 
@@ -689,10 +642,8 @@ Vec2 RatioLayout::DoLayout(Composite* widget, LayoutArea data)
       newSize.y = policy.Size.y;
     }
 
-    CalculateAlignment(
-        SizeAxis::X, child.mHorizontalAlignment, size, pos, newSize, offset);
-    CalculateAlignment(
-        SizeAxis::Y, child.mVerticalAlignment, size, pos, newSize, offset);
+    CalculateAlignment(SizeAxis::X, child.mHorizontalAlignment, size, pos, newSize, offset);
+    CalculateAlignment(SizeAxis::Y, child.mVerticalAlignment, size, pos, newSize, offset);
 
     child.SetTranslationAndSize(offset, newSize);
     child.UpdateTransformExternal();
@@ -733,7 +684,7 @@ Vec2 GridLayout::DoLayout(Composite* widget, LayoutArea data)
   mPlacedTiles.Clear();
 
   // cell-clamp the children making them fit cleanly into cells
-  forRange(Widget & child, widget->GetChildren())
+  forRange (Widget& child, widget->GetChildren())
   {
     Vec2 childSize = child.GetSize();
     CellClamp(childSize);
@@ -744,7 +695,7 @@ Vec2 GridLayout::DoLayout(Composite* widget, LayoutArea data)
   widget->mChildren.Sort(GridNodeComparer);
 
   // position the children in the grid
-  forRange(Widget & child, widget->GetChildren())
+  forRange (Widget& child, widget->GetChildren())
   {
     Vec2 childSize = child.GetSize();
     CellClamp(childSize);
@@ -863,9 +814,7 @@ Layout* CreateRatioLayout()
   return new RatioLayout();
 }
 
-LayoutResult RemoveThickness(Thickness thickness,
-                             Vec2Param outerSize,
-                             Vec3Param offset)
+LayoutResult RemoveThickness(Thickness thickness, Vec2Param outerSize, Vec3Param offset)
 {
   LayoutResult r;
   r.Size.x = outerSize.x - (thickness.Left + thickness.Right);

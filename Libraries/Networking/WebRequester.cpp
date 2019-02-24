@@ -92,13 +92,13 @@ void AsyncWebRequest::CancelAllActiveRequests()
   // the destructor locking the list.
   Array<HandleOf<AsyncWebRequest>> requestsToCancel;
   mActiveRequestsLock.Lock();
-  forRange(AsyncWebRequest & request, mActiveRequests)
-      requestsToCancel.PushBack(&request);
+  forRange (AsyncWebRequest& request, mActiveRequests)
+    requestsToCancel.PushBack(&request);
   mActiveRequestsLock.Unlock();
 
   // Iterate through the list and cancel each request.
-  forRange(HandleOf<AsyncWebRequest> & request, requestsToCancel)
-      request->Cancel();
+  forRange (HandleOf<AsyncWebRequest>& request, requestsToCancel)
+    request->Cancel();
 
   // Destructing the temporary array should release the last handles to the
   // requests. If any others are still being held onto, they at least should not
@@ -115,8 +115,7 @@ String GetCacheFile(StringParam url)
   // Make sure the URL is encoded to a valid file-name.
   // We don't use post data or request headers here.
   String fileName = UrlParamEncode(url);
-  String cacheDirectory =
-      FilePath::Combine(GetTemporaryDirectory(), cCacheDirectory);
+  String cacheDirectory = FilePath::Combine(GetTemporaryDirectory(), cCacheDirectory);
   CreateDirectoryAndParents(cacheDirectory);
   String cacheFile = FilePath::Combine(cacheDirectory, fileName);
   return cacheFile;
@@ -208,13 +207,9 @@ AsyncWebRequest::AsyncWebRequest() :
   mRequest.mOnDataReceived = &OnDataReceived;
   mRequest.mOnComplete = &OnComplete;
 
-  ConnectThisTo(
-      this, Events::WebResponseHeadersInternal, OnWebResponseHeadersInternal);
-  ConnectThisTo(this,
-                Events::WebResponsePartialDataInternal,
-                OnWebResponsePartialDataInternal);
-  ConnectThisTo(
-      this, Events::WebResponseCompleteInternal, OnWebResponseCompleteInternal);
+  ConnectThisTo(this, Events::WebResponseHeadersInternal, OnWebResponseHeadersInternal);
+  ConnectThisTo(this, Events::WebResponsePartialDataInternal, OnWebResponsePartialDataInternal);
+  ConnectThisTo(this, Events::WebResponseCompleteInternal, OnWebResponseCompleteInternal);
 }
 
 bool AsyncWebRequest::SendCompletedCacheResponse(bool ignoreTime)
@@ -264,20 +259,17 @@ bool AsyncWebRequest::SendCompletedCacheResponse(bool ignoreTime)
   return false;
 }
 
-void AsyncWebRequest::OnHeadersReceived(const Array<String>& headers,
-                                        WebResponseCode::Enum code,
-                                        WebRequest* request)
+void AsyncWebRequest::OnHeadersReceived(const Array<String>& headers, WebResponseCode::Enum code, WebRequest* request)
 {
   // This can be called within a thread!
   AsyncWebRequest* self = (AsyncWebRequest*)request->mUserData;
 
   Matches matches;
   u64 totalBytesExpected = 0;
-  forRange(StringParam header, headers)
+  forRange (StringParam header, headers)
   {
     // Create a case insensitive regex to search for content length.
-    static const Regex cContentLengthRegex(
-        "content-length:\\s*([0-9]*)\\s*", RegexFlavor::EcmaScript, false);
+    static const Regex cContentLengthRegex("content-length:\\s*([0-9]*)\\s*", RegexFlavor::EcmaScript, false);
 
     cContentLengthRegex.Search(header, matches);
     if (matches.Size() == 2)
@@ -291,8 +283,7 @@ void AsyncWebRequest::OnHeadersReceived(const Array<String>& headers,
   toSend->mAsyncWebRequest = self;
   toSend->mVersion = self->mVersion;
   toSend->mTotalExpected = totalBytesExpected;
-  toSend->mProgressType =
-      totalBytesExpected ? ProgressType::Normal : ProgressType::Indeterminate;
+  toSend->mProgressType = totalBytesExpected ? ProgressType::Normal : ProgressType::Indeterminate;
   toSend->mResponseCode = code;
   toSend->mResponseHeaders = headers;
 
@@ -321,10 +312,7 @@ void AsyncWebRequest::OnWebResponseHeadersInternal(WebResponseEvent* event)
   DispatchEvent(Events::WebResponseHeaders, event);
 }
 
-void AsyncWebRequest::OnDataReceived(const byte* data,
-                                     size_t size,
-                                     u64 totalDownloaded,
-                                     WebRequest* request)
+void AsyncWebRequest::OnDataReceived(const byte* data, size_t size, u64 totalDownloaded, WebRequest* request)
 {
   // This can be called within a thread!
   AsyncWebRequest* self = (AsyncWebRequest*)request->mUserData;
@@ -347,8 +335,7 @@ void AsyncWebRequest::OnDataReceived(const byte* data,
   if (self->mSendEventsOnRequestThread)
     self->DispatchEvent(Events::WebResponsePartialDataInternal, toSend);
   else
-    Z::gDispatch->Dispatch(
-        self, Events::WebResponsePartialDataInternal, toSend);
+    Z::gDispatch->Dispatch(self, Events::WebResponsePartialDataInternal, toSend);
 }
 
 void AsyncWebRequest::OnWebResponsePartialDataInternal(WebResponseEvent* event)
@@ -367,9 +354,7 @@ void AsyncWebRequest::OnWebResponsePartialDataInternal(WebResponseEvent* event)
   mTotalDownloaded = event->mTotalDownloaded;
   event->mTotalExpected = mTotalExpected;
 
-  mProgress = mTotalExpected
-                  ? (float)(mTotalDownloaded / (double)mTotalExpected)
-                  : 0.0f;
+  mProgress = mTotalExpected ? (float)(mTotalDownloaded / (double)mTotalExpected) : 0.0f;
   event->mProgress = mProgress;
   event->mProgressType = mProgressType;
 
@@ -493,8 +478,7 @@ JsonValue* WebResponseEvent::ReadJson(Status& status)
 
   static const String cOrigin = "WebResponseEvent";
   CompilationErrors errors;
-  JsonValue* value = Zilch::JsonReader::ReadIntoTreeFromString(
-      errors, mData, cOrigin, nullptr);
+  JsonValue* value = Zilch::JsonReader::ReadIntoTreeFromString(errors, mData, cOrigin, nullptr);
   if (!value)
   {
     status.SetFailed("Failed to parse JSON");
@@ -541,8 +525,7 @@ void WebRequester::Initialize(CogInitializer& initializer)
 
 void WebRequester::Serialize(Serializer& stream)
 {
-  stream.SerializeFieldDefault(
-      "Url", mSerializedUrl, String(Urls::cUserWebRequesterDefault));
+  stream.SerializeFieldDefault("Url", mSerializedUrl, String(Urls::cUserWebRequesterDefault));
   SerializeNameDefault(mCancelOnDestruction, true);
 }
 
@@ -573,8 +556,8 @@ void WebRequester::Clear()
 void WebRequester::CancelActiveRequests()
 {
   // Cancel all active web requests.
-  forRange(HandleOf<AsyncWebRequest> & request, mActiveRequests)
-      request->Cancel();
+  forRange (HandleOf<AsyncWebRequest>& request, mActiveRequests)
+    request->Cancel();
   mActiveRequests.Clear();
 }
 
@@ -622,8 +605,7 @@ HandleOf<AsyncWebRequest> WebRequester::ReplaceRequest()
 
     request->mUrl = previousRequest->mUrl;
     request->mPostData = previousRequest->mPostData;
-    request->mAdditionalRequestHeaders =
-        previousRequest->mAdditionalRequestHeaders;
+    request->mAdditionalRequestHeaders = previousRequest->mAdditionalRequestHeaders;
   }
 
   return previousRequestHandle;

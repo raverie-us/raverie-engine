@@ -53,8 +53,8 @@ void Context::Add(HandleParam object, StringParam overrideName)
 
 void Context::Add(const Context& context)
 {
-  forRange(ContextMap::value_type entry, context.mContextMap.All())
-      Add(entry.second, entry.first);
+  forRange (ContextMap::value_type entry, context.mContextMap.All())
+    Add(entry.second, entry.first);
 }
 
 void Context::Remove(BoundType* boundType)
@@ -102,14 +102,10 @@ ZilchDefineType(ContextMenuEntry, builder, type)
   ZeroBindDocumented();
   ZilchBindConstructor();
 
-  ZilchBindOverloadedMethodAs(
-      AddEntry,
-      ZilchInstanceOverload(ContextMenuEntry*, StringParam, bool),
-      "AddEntry");
+  ZilchBindOverloadedMethodAs(AddEntry, ZilchInstanceOverload(ContextMenuEntry*, StringParam, bool), "AddEntry");
   ZilchBindMethod(AddDivider);
   ZilchBindMethod(AddCommandByName);
-  ZilchBindOverloadedMethodAs(
-      RemoveEntry, ZilchInstanceOverload(void, StringParam), "RemoveEntry");
+  ZilchBindOverloadedMethodAs(RemoveEntry, ZilchInstanceOverload(void, StringParam), "RemoveEntry");
 
   ZilchBindMethod(GetEntry);
   ZilchBindMethodAs(GetEntries, "Entries");
@@ -120,9 +116,7 @@ ZilchDefineType(ContextMenuEntry, builder, type)
   ZeroBindEvent(Events::ContextMenuCreated, ContextMenuEvent);
 }
 
-ContextMenuEntry::ContextMenuEntry(StringParam name,
-                                   StringParam icon,
-                                   bool readOnly) :
+ContextMenuEntry::ContextMenuEntry(StringParam name, StringParam icon, bool readOnly) :
     mName(name),
     mIcon(icon),
     mEnabled(true),
@@ -240,7 +234,7 @@ void ContextMenuEntry::Clear()
 
 ContextMenuEntry* ContextMenuEntry::GetEntry(StringParam name)
 {
-  forRange(ContextMenuEntry * entry, mChildren)
+  forRange (ContextMenuEntry* entry, mChildren)
   {
     if (entry->mName == name)
       return entry;
@@ -319,19 +313,15 @@ Widget* ContextMenuEntryDivider::Create(ContextMenu* parent)
 // ContextMenuEntryCommand
 ZilchDefineType(ContextMenuEntryCommand, builder, type)
 {
-  ZilchFullBindConstructor(
-      builder, type, ContextMenuEntryCommand, "commandName", StringParam);
+  ZilchFullBindConstructor(builder, type, ContextMenuEntryCommand, "commandName", StringParam);
   ZilchBindFieldProperty(mCommandName);
 }
 
-ContextMenuEntryCommand::ContextMenuEntryCommand(Command* command) :
-    mCommand(command)
+ContextMenuEntryCommand::ContextMenuEntryCommand(Command* command) : mCommand(command)
 {
 }
 
-ContextMenuEntryCommand::ContextMenuEntryCommand(StringParam commandName) :
-    mCommand(nullptr),
-    mCommandName(commandName)
+ContextMenuEntryCommand::ContextMenuEntryCommand(StringParam commandName) : mCommand(nullptr), mCommandName(commandName)
 {
 }
 
@@ -357,13 +347,11 @@ Widget* ContextMenuEntryCommand::Create(ContextMenu* parent)
 // ContextMenuEntryMenu
 ZilchDefineType(ContextMenuEntryMenu, builder, type)
 {
-  ZilchFullBindConstructor(
-      builder, type, ContextMenuEntryMenu, "menuName", StringParam);
+  ZilchFullBindConstructor(builder, type, ContextMenuEntryMenu, "menuName", StringParam);
   ZilchBindFieldProperty(mMenuName);
 }
 
-ContextMenuEntryMenu::ContextMenuEntryMenu(StringParam menuName) :
-    mMenuName(menuName)
+ContextMenuEntryMenu::ContextMenuEntryMenu(StringParam menuName) : mMenuName(menuName)
 {
 }
 
@@ -371,14 +359,10 @@ Widget* ContextMenuEntryMenu::Create(ContextMenu* parent)
 {
   DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig);
   CommandManager* commandManager = CommandManager::GetInstance();
-  MenuDefinition* menuDef =
-      commandManager->mMenus.FindValue(mMenuName, nullptr);
-  ReturnIf(menuDef == nullptr,
-           nullptr,
-           "Could not find menu definition '%s'",
-           mMenuName.c_str());
+  MenuDefinition* menuDef = commandManager->mMenus.FindValue(mMenuName, nullptr);
+  ReturnIf(menuDef == nullptr, nullptr, "Could not find menu definition '%s'", mMenuName.c_str());
 
-  forRange(String & name, menuDef->Entries.All())
+  forRange (String& name, menuDef->Entries.All())
   {
     // Divider
     if (name == Divider)
@@ -417,9 +401,7 @@ Widget* ContextMenuEntryMenu::Create(ContextMenu* parent)
   return nullptr;
 }
 
-ContextMenuItem::ContextMenuItem(Composite* parent, ContextMenuEntry* entry) :
-    Composite(parent),
-    mEntry(entry)
+ContextMenuItem::ContextMenuItem(Composite* parent, ContextMenuEntry* entry) : Composite(parent), mEntry(entry)
 {
   mName = entry->mName;
   mParentMenu = (ContextMenu*)parent;
@@ -428,8 +410,7 @@ ContextMenuItem::ContextMenuItem(Composite* parent, ContextMenuEntry* entry) :
 
   Thickness thickness(MenuUi::BorderPadding);
   thickness.Right = Pixels(2);
-  SetLayout(
-      CreateStackLayout(LayoutDirection::LeftToRight, Vec2(0, 0), thickness));
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2(0, 0), thickness));
 
   mCheck = CreateAttached<Element>("CheckIcon");
 
@@ -572,9 +553,7 @@ void ContextMenuItem::OnLeftClick(MouseEvent* event)
   if (Z::gEngine->IsReadOnly() && !mReadOnly)
   {
     DoNotifyWarning("Context Menu",
-                    BuildString("Cannot execute menu item ",
-                                mName,
-                                " because we are in read-only mode"));
+                    BuildString("Cannot execute menu item ", mName, " because we are in read-only mode"));
     return;
   }
 
@@ -626,8 +605,7 @@ ContextMenu::ContextMenu(Widget* target, ContextMenuEntry* rootEntry) :
 
   ConnectThisTo(mRootEntry, Events::MenuEntryModified, OnMenuEntriesModified);
   Thickness thickness(Pixels(2, 2));
-  SetLayout(
-      CreateStackLayout(LayoutDirection::TopToBottom, Vec2(0, 0), thickness));
+  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2(0, 0), thickness));
   SizeToContents();
 }
 
@@ -655,9 +633,7 @@ void ContextMenu::UpdateTransform()
 
   mGutter->SetColor(MenuUi::GutterColor);
   mGutter->SetSize(Vec2(Pixels(1), mSize.y - Pixels(3)));
-  mGutter->SetTranslation(Vec3(Vec2(MenuUi::BorderPadding).x - Pixels(4),
-                               Vec2(MenuUi::BorderPadding).y,
-                               0));
+  mGutter->SetTranslation(Vec3(Vec2(MenuUi::BorderPadding).x - Pixels(4), Vec2(MenuUi::BorderPadding).y, 0));
 
   if (mSubMenu)
   {
@@ -694,14 +670,14 @@ void ContextMenu::RebuildUi()
 {
   // Destroy any ContentMenuItems currently on the ContextMenu and rebuild the
   // UI
-  forRange(Widget * widget, mItems.All())
+  forRange (Widget* widget, mItems.All())
   {
     widget->Destroy();
   }
   mItems.Clear();
 
   // Create the menu UI from our entry list
-  forRange(ContextMenuEntry * entry, mRootEntry->mChildren.All())
+  forRange (ContextMenuEntry* entry, mRootEntry->mChildren.All())
   {
     entry->Create(this);
   }
@@ -878,9 +854,7 @@ ZilchDefineType(MenuBarItem, builder, type)
 {
 }
 
-MenuBarItem::MenuBarItem(Composite* parent) :
-    Composite(parent),
-    mContextMenu(nullptr)
+MenuBarItem::MenuBarItem(Composite* parent) : Composite(parent), mContextMenu(nullptr)
 {
   mMenuBar = (MenuBar*)parent;
   mBackground = CreateAttached<Element>(cHighlight);
@@ -895,16 +869,14 @@ void MenuBarItem::UpdateTransform()
 {
   mBackground->SetSize(mSize);
   mText->SetSize(mSize);
-  WidgetRect rect =
-      RemoveThicknessRect(Thickness(MenuUi::MenuBarItemPadding), mSize);
+  WidgetRect rect = RemoveThicknessRect(Thickness(MenuUi::MenuBarItemPadding), mSize);
   PlaceWithRect(rect, mText);
   Composite::UpdateTransform();
 }
 
 Vec2 MenuBarItem::GetMinSize()
 {
-  return ExpandSizeByThickness(Thickness(MenuUi::MenuBarItemPadding),
-                               mText->GetMinSize());
+  return ExpandSizeByThickness(Thickness(MenuUi::MenuBarItemPadding), mText->GetMinSize());
 }
 
 void MenuBarItem::OnLeftMouseDown(MouseEvent* mouseEvent)
@@ -928,8 +900,7 @@ void MenuBarItem::OnMouseEnter(MouseEvent* mouseEvent)
 void MenuBarItem::OpenContextMenu()
 {
   ContextMenu* contextMenu = new ContextMenu(this);
-  contextMenu->SetTranslation(this->GetScreenPosition() +
-                              Pixels(0, mSize.y, 0));
+  contextMenu->SetTranslation(this->GetScreenPosition() + Pixels(0, mSize.y, 0));
   contextMenu->AddZeroContextMenu(mName);
   contextMenu->SizeToContents();
   mContextMenu = contextMenu;
@@ -969,30 +940,21 @@ ZilchDefineType(MenuBar, builder, type)
 {
 }
 
-MenuBar::MenuBar(Composite* parent) :
-    Composite(parent),
-    mOpenMenuBarItem(nullptr)
+MenuBar::MenuBar(Composite* parent) : Composite(parent), mOpenMenuBarItem(nullptr)
 {
-  SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Vec2(9.0f, 0), Thickness(0, 0)));
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2(9.0f, 0), Thickness(0, 0)));
 }
 
 void MenuBar::LoadMenu(StringParam menuName)
 {
   CommandManager* commandManager = CommandManager::GetInstance();
   MenuDefinition* menuDef = commandManager->mMenus.FindValue(menuName, nullptr);
-  ReturnIf(menuDef == nullptr,
-           ,
-           "Could not find menu definition '%s'",
-           menuName.c_str());
+  ReturnIf(menuDef == nullptr, , "Could not find menu definition '%s'", menuName.c_str());
 
-  forRange(String & menuName, menuDef->Entries.All())
+  forRange (String& menuName, menuDef->Entries.All())
   {
-    MenuDefinition* menuDef =
-        commandManager->mMenus.FindValue(menuName, nullptr);
-    ErrorIf(menuDef == nullptr,
-            "Could not find menu definition '%s'",
-            menuName.c_str());
+    MenuDefinition* menuDef = commandManager->mMenus.FindValue(menuName, nullptr);
+    ErrorIf(menuDef == nullptr, "Could not find menu definition '%s'", menuName.c_str());
     if (menuDef)
     {
       MenuBarItem* entry = new MenuBarItem(this);

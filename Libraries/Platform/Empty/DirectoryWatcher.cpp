@@ -56,7 +56,8 @@ OsInt DirectoryWatcher::RunThreadEntryPoint()
   for (;;)
   {
     // Mark any existing file entries as not visited,
-    forRange(TrackedFile & fileEntry, fileEntries) fileEntry.mVisited = false;
+    forRange (TrackedFile& fileEntry, fileEntries)
+      fileEntry.mVisited = false;
 
     // Iterate over the watched directory and get all the file entries
     FileRange dir(mDirectoryToWatch);
@@ -99,7 +100,7 @@ OsInt DirectoryWatcher::RunThreadEntryPoint()
 
     // Check for entries that are no longer present, notify files as removed
     Array<TrackedFile> toRemove;
-    forRange(TrackedFile & fileEntry, fileEntries)
+    forRange (TrackedFile& fileEntry, fileEntries)
     {
       if (fileEntry.mVisited == false)
       {
@@ -112,7 +113,8 @@ OsInt DirectoryWatcher::RunThreadEntryPoint()
     }
 
     // Erase the removed files from being tracked
-    forRange(TrackedFile & fileEntry, toRemove) fileEntries.Erase(fileEntry);
+    forRange (TrackedFile& fileEntry, toRemove)
+      fileEntries.Erase(fileEntry);
   }
 }
 

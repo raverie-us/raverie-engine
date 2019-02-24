@@ -15,15 +15,13 @@ DecodedPacket::DecodedPacket(unsigned bufferSize) : mSamples(bufferSize)
 }
 
 DecodedPacket::DecodedPacket(const DecodedPacket& copy) :
-    mSamples(
-        MoveReference<Array<float>>(const_cast<DecodedPacket&>(copy).mSamples))
+    mSamples(MoveReference<Array<float>>(const_cast<DecodedPacket&>(copy).mSamples))
 {
 }
 
 DecodedPacket& DecodedPacket::operator=(const DecodedPacket& other)
 {
-  mSamples =
-      MoveReference<Array<float>>(const_cast<DecodedPacket&>(other).mSamples);
+  mSamples = MoveReference<Array<float>>(const_cast<DecodedPacket&>(other).mSamples);
   return *this;
 }
 
@@ -41,8 +39,7 @@ void SingleChannelPacketDecoder::InitializeDecoder()
     opus_decoder_destroy(mDecoder);
 
   int error;
-  mDecoder =
-      opus_decoder_create(cSystemSampleRate, PacketEncoder::cChannels, &error);
+  mDecoder = opus_decoder_create(cSystemSampleRate, PacketEncoder::cChannels, &error);
 }
 
 void SingleChannelPacketDecoder::DecodePacket(const byte* packetData,
@@ -52,37 +49,20 @@ void SingleChannelPacketDecoder::DecodePacket(const byte* packetData,
 {
   ReturnIf(!mDecoder, , "Tried to decode packet without initializing decoder");
 
-  numberOfSamples =
-      PacketDecoder::DecodePacket(packetData, dataSize, mDecoder, &decodedData);
+  numberOfSamples = PacketDecoder::DecodePacket(packetData, dataSize, mDecoder, &decodedData);
 }
 
 // Packet Decoder
 
-int PacketDecoder::DecodePacket(const byte* packetData,
-                                unsigned dataSize,
-                                OpusDecoder* decoder,
-                                float** decodedData)
+int PacketDecoder::DecodePacket(const byte* packetData, unsigned dataSize, OpusDecoder* decoder, float** decodedData)
 {
   *decodedData = new float[AudioFileEncoder::cPacketFrames];
-  return opus_decode_float(decoder,
-                           packetData,
-                           dataSize,
-                           *decodedData,
-                           AudioFileEncoder::cPacketFrames,
-                           0);
+  return opus_decode_float(decoder, packetData, dataSize, *decodedData, AudioFileEncoder::cPacketFrames, 0);
 }
 
-int PacketDecoder::DecodePacket(const byte* packetData,
-                                unsigned dataSize,
-                                OpusDecoder* decoder,
-                                float* decodedData)
+int PacketDecoder::DecodePacket(const byte* packetData, unsigned dataSize, OpusDecoder* decoder, float* decodedData)
 {
-  return opus_decode_float(decoder,
-                           packetData,
-                           dataSize,
-                           decodedData,
-                           AudioFileEncoder::cPacketFrames,
-                           0);
+  return opus_decode_float(decoder, packetData, dataSize, decodedData, AudioFileEncoder::cPacketFrames, 0);
 }
 
 int PacketDecoder::GetPacketDataSize(const byte* packetHeader)
@@ -98,17 +78,13 @@ int PacketDecoder::GetPacketDataSize(const byte* packetHeader)
     return (int)packHead.Size;
 }
 
-unsigned PacketDecoder::OpenAndReadHeader(Status& status,
-                                          const String& fileName,
-                                          File* file,
-                                          FileHeader* header)
+unsigned PacketDecoder::OpenAndReadHeader(Status& status, const String& fileName, File* file, FileHeader* header)
 {
   // Open the file
   file->Open(fileName, FileMode::Read, FileAccessPattern::Sequential);
   if (!file->IsOpen())
   {
-    status.SetFailed(
-        String::Format("Unable to open audio file %s", fileName.c_str()));
+    status.SetFailed(String::Format("Unable to open audio file %s", fileName.c_str()));
     return 0;
   }
 
@@ -117,8 +93,7 @@ unsigned PacketDecoder::OpenAndReadHeader(Status& status,
   // Check for an invalid size
   if (size < sizeof(FileHeader))
   {
-    status.SetFailed(
-        String::Format("Unable to read audio file %s", fileName.c_str()));
+    status.SetFailed(String::Format("Unable to read audio file %s", fileName.c_str()));
     return 0;
   }
 
@@ -127,8 +102,7 @@ unsigned PacketDecoder::OpenAndReadHeader(Status& status,
   // If the read failed, set the status message and return
   if (status.Failed())
   {
-    status.SetFailed(
-        String::Format("Unable to read from audio file %s", fileName.c_str()));
+    status.SetFailed(String::Format("Unable to read from audio file %s", fileName.c_str()));
     return 0;
   }
 
@@ -136,8 +110,7 @@ unsigned PacketDecoder::OpenAndReadHeader(Status& status,
   // buffer, and return
   if (header->Name[0] != 'Z' || header->Name[1] != 'E')
   {
-    status.SetFailed(String::Format("Audio file %s is an incorrect format",
-                                    fileName.c_str()));
+    status.SetFailed(String::Format("Audio file %s is an incorrect format", fileName.c_str()));
     return 0;
   }
 
@@ -145,9 +118,7 @@ unsigned PacketDecoder::OpenAndReadHeader(Status& status,
   return (unsigned)size - sizeof(FileHeader);
 }
 
-bool PacketDecoder::CreateDecoders(Status& status,
-                                   OpusDecoder** decoderArray,
-                                   int howMany)
+bool PacketDecoder::CreateDecoders(Status& status, OpusDecoder** decoderArray, int howMany)
 {
   int error;
   // Create a decoder for each channel
@@ -159,8 +130,7 @@ bool PacketDecoder::CreateDecoders(Status& status,
     if (error < 0)
     {
       // Set the failed message
-      status.SetFailed(String::Format("Error creating audio decoder: %s",
-                                      opus_strerror(error)));
+      status.SetFailed(String::Format("Error creating audio decoder: %s", opus_strerror(error)));
 
       // Remove any previously created decoders
       for (short j = 0; j < i; ++j)
@@ -319,8 +289,7 @@ bool AudioFileDecoder::DecodePacketThreaded()
       return false;
 
     // Decode the packet into the buffer for this channel
-    frames = PacketDecoder::DecodePacket(
-        packetData, packetDataSize, mDecoders[i], decodedPackets[i]);
+    frames = PacketDecoder::DecodePacket(packetData, packetDataSize, mDecoders[i], decodedPackets[i]);
 
     ErrorIf(frames < 0, opus_strerror(frames));
   }
@@ -338,8 +307,7 @@ bool AudioFileDecoder::DecodePacketThreaded()
 
       // Samples should be between [-1, +1] but it's possible
       // encoding caused the sample to jump beyond 1
-      ErrorIf(newPacket.mSamples[index] < -2.0f ||
-              newPacket.mSamples[index] > 2.0f);
+      ErrorIf(newPacket.mSamples[index] < -2.0f || newPacket.mSamples[index] > 2.0f);
     }
   }
 
@@ -452,17 +420,14 @@ void DecompressedDecoder::DecodingLoopThreaded()
 
 int DecompressedDecoder::GetNextPacket(byte* packetData)
 {
-  return PacketDecoder::GetPacketFromMemory(
-      packetData, mCompressedData, mDataSize, &mDataIndex);
+  return PacketDecoder::GetPacketFromMemory(packetData, mCompressedData, mDataSize, &mDataIndex);
 }
 
-void DecompressedDecoder::OpenAndReadFile(Status& status,
-                                          const String& fileName)
+void DecompressedDecoder::OpenAndReadFile(Status& status, const String& fileName)
 {
   File inputFile;
   FileHeader header;
-  mDataSize =
-      PacketDecoder::OpenAndReadHeader(status, fileName, &inputFile, &header);
+  mDataSize = PacketDecoder::OpenAndReadHeader(status, fileName, &inputFile, &header);
   if (mDataSize == 0)
     return;
 
@@ -570,11 +535,9 @@ void StreamingDecoder::DecodingLoopThreaded()
 int StreamingDecoder::GetNextPacket(byte* packetData)
 {
   if (mCompressedData)
-    return PacketDecoder::GetPacketFromMemory(
-        packetData, mCompressedData, mDataSize, &mDataIndex);
+    return PacketDecoder::GetPacketFromMemory(packetData, mCompressedData, mDataSize, &mDataIndex);
   else
-    return PacketDecoder::GetPacketFromFile(
-        packetData, mInputFile, &mFilePosition, mLock);
+    return PacketDecoder::GetPacketFromFile(packetData, mInputFile, &mFilePosition, mLock);
 }
 
 void StreamingDecoder::Reset()

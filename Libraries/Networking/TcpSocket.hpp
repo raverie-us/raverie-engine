@@ -67,9 +67,7 @@ public:
   ZilchDeclareType(ReceivedDataEvent, TypeCopyMode::ReferenceType);
 
   // Constructor
-  ReceivedDataEvent(const ConnectionData* connectionInfo,
-                    const byte* data,
-                    size_t size);
+  ReceivedDataEvent(const ConnectionData* connectionInfo, const byte* data, size_t size);
 
   // The data that was received (packet headers are not included in this data)
   PodArray<byte> Data;
@@ -208,18 +206,14 @@ public:
   /// Send a message to all connections.
   void SendBufferToAll(const byte* buffer, size_t size);
   /// Send a message to all connections except a particular connection index.
-  void SendBufferToAllExcept(const byte* buffer,
-                             size_t size,
-                             size_t exceptIndex);
+  void SendBufferToAllExcept(const byte* buffer, size_t size, size_t exceptIndex);
 
   /// Send an event to a specific connection index.
   void SendTo(StringParam eventId, SendableEvent* event, uint index);
   /// Send an event to all connections.
   void SendToAll(StringParam eventId, SendableEvent* event);
   /// Send an event to all connections except a particular connection index.
-  void SendToAllExcept(StringParam eventId,
-                       SendableEvent* event,
-                       uint exceptIndex);
+  void SendToAllExcept(StringParam eventId, SendableEvent* event, uint exceptIndex);
   /// Send an event to all connections and dispatch on self.
   void SendToAllAndSelf(StringParam eventId, SendableEvent* event);
 
@@ -256,9 +250,7 @@ private:
   void CloseConnection(uint index);
 
   // Extract a message into a buffer and return the number of bytes written
-  static size_t ExtractIntoBuffer(const BinaryBufferSaver& message,
-                                  byte* buffer,
-                                  size_t bufferSize);
+  static size_t ExtractIntoBuffer(const BinaryBufferSaver& message, byte* buffer, size_t bufferSize);
 
   // Send directly to a particular socket (if there's any queued data, this will
   // fail and instead queue up the data) If not all data is sent, it will also
@@ -291,19 +283,13 @@ private:
   void HandleOutgoingData();
 
   // Handle any protocols that we might have set
-  void HandleProtocols(const SocketData& socketData,
-                       const byte* buffer,
-                       size_t size);
+  void HandleProtocols(const SocketData& socketData, const byte* buffer, size_t size);
 
   // Handle the event protocol
-  void HandleEventProtocol(const SocketData& socketData,
-                           const byte* buffer,
-                           size_t size);
+  void HandleEventProtocol(const SocketData& socketData, const byte* buffer, size_t size);
 
   // Handle the guid protocol
-  void HandleGuidProtocol(const SocketData& socketData,
-                          const byte* buffer,
-                          size_t size);
+  void HandleGuidProtocol(const SocketData& socketData, const byte* buffer, size_t size);
 
   // Tells us the state of receiving data from a particular connection
   enum ReceiveState
@@ -321,13 +307,10 @@ private:
   void HandleChunks(SocketData& socketData, const byte* buffer, size_t size);
 
   // Determine what to do with the received data
-  void HandleReceivedData(const SocketData& socketData,
-                          const byte* buffer,
-                          size_t size);
+  void HandleReceivedData(const SocketData& socketData, const byte* buffer, size_t size);
 
   // Setup a packet (mainly the header)
-  void SetupPacket(TCPSocketMessageType::Enum messageType,
-                   PodArray<byte>& dataOut);
+  void SetupPacket(TCPSocketMessageType::Enum messageType, PodArray<byte>& dataOut);
 
   // Finish setting up the packet
   void FinalizePacket(PodArray<byte>& dataOut);
@@ -337,9 +320,7 @@ private:
   inline void MakeEventPacket(SendableEvent* event, PodArray<byte>& dataOut);
 
   // Make a user data packet and output the buffer
-  inline void MakeUserPacket(const byte* data,
-                             size_t size,
-                             PodArray<byte>& dataOut);
+  inline void MakeUserPacket(const byte* data, size_t size, PodArray<byte>& dataOut);
 
   // Make a guid packet
   inline void MakeGuidPacket(NetGuid guid, PodArray<byte>& dataOut);

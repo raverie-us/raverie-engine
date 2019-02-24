@@ -13,11 +13,7 @@ class SpriteFrameLayout
 {
 public:
   SpriteFrameLayout(uint frameCount, uint frameSizeX, uint frameSizeY);
-  SpriteFrameLayout(uint frameCount,
-                    uint frameSizeX,
-                    uint frameSizeY,
-                    uint sizeX,
-                    uint sizeY);
+  SpriteFrameLayout(uint frameCount, uint frameSizeX, uint frameSizeY, uint sizeX, uint sizeY);
 
   IntRect TotalSize;
   int FrameSizeX;
@@ -120,10 +116,7 @@ public:
 class SpriteTileViewWidget : public TileViewWidget
 {
 public:
-  SpriteTileViewWidget(Composite* parent,
-                       TileView* tileView,
-                       PreviewWidget* tileWidget,
-                       DataIndex dataIndex);
+  SpriteTileViewWidget(Composite* parent, TileView* tileView, PreviewWidget* tileWidget, DataIndex dataIndex);
 
   // TileViewWidget Event Handlers
   void OnMouseHover(MouseEvent* event) override;
@@ -137,12 +130,11 @@ public:
   SpriteFrameTileView(Composite* parent) : TileView(parent)
   {
   }
-  TileViewWidget* CreateTileViewWidget(
-      Composite* parent,
-      StringParam name,
-      HandleParam instance,
-      DataIndex index,
-      PreviewImportance::Enum minImportance = PreviewImportance::None) override;
+  TileViewWidget* CreateTileViewWidget(Composite* parent,
+                                       StringParam name,
+                                       HandleParam instance,
+                                       DataIndex index,
+                                       PreviewImportance::Enum minImportance = PreviewImportance::None) override;
 
   void OnMouseScroll(MouseEvent* event) override;
   void OnLeftMouseDrag(MouseDragEvent* e) override;
@@ -174,14 +166,10 @@ public:
   Handle ToHandle(DataEntry* dataEntry) override;
   DataEntry* Parent(DataEntry* dataEntry) override;
   uint ChildCount(DataEntry* dataEntry) override;
-  DataEntry* GetChild(DataEntry* dataEntry,
-                      uint index,
-                      DataEntry* prev) override;
+  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override;
   bool IsExpandable(DataEntry* dataEntry) override;
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override;
-  bool SetData(DataEntry* dataEntry,
-               const Any& variant,
-               StringParam column) override;
+  bool SetData(DataEntry* dataEntry, const Any& variant, StringParam column) override;
 
   SpriteFrame mRoot;
   Array<SpriteFrame*> mSpriteFrames;

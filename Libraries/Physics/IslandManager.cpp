@@ -70,9 +70,7 @@ void DestroyJoint(Contact* contact)
 }
 
 template <typename EdgeListType>
-void AddCompositeEdges(EdgeListType& edgeList,
-                       Island* island,
-                       ColliderStack& stack)
+void AddCompositeEdges(EdgeListType& edgeList, Island* island, ColliderStack& stack)
 {
   typename EdgeListType::range edgeRange = edgeList.All();
 
@@ -114,8 +112,7 @@ void AddCompositeColliders(Collider* collider, ColliderStack& stack)
   RigidBody* body = collider->GetActiveBody();
   if (body == nullptr)
     return;
-  RigidBody::CompositeColliderList::range colliderRange =
-      body->mColliders.All();
+  RigidBody::CompositeColliderList::range colliderRange = body->mColliders.All();
   for (; !colliderRange.Empty(); colliderRange.PopFront())
   {
     if (colliderRange.Front().mState.IsSet(ColliderFlags::OnIsland))
@@ -187,8 +184,7 @@ struct CompositeTraversal
     collider->GetActiveBody()->mState.ClearFlag(RigidBodyStates::Asleep);
 
     // don't extend the island over static or asleep objects
-    if (collider->GetActiveBody() == nullptr ||
-        !collider->GetActiveBody()->IsDynamic())
+    if (collider->GetActiveBody() == nullptr || !collider->GetActiveBody()->IsDynamic())
       return;
 
     AddCompositeEdges(collider->mJointEdges, island, stack);
@@ -358,8 +354,7 @@ void IslandManager::PostProcessIslands()
       continue;
     }
 
-    if (island->ColliderCount + mergeIsland->ColliderCount >=
-        ColliderMergeThreshold)
+    if (island->ColliderCount + mergeIsland->ColliderCount >= ColliderMergeThreshold)
     {
       largeEnoughIslands.PushBack(mergeIsland);
       mergeIsland = island;
@@ -463,17 +458,14 @@ void IslandManager::CreateCompactIslands(Policy policy, ColliderList& colliders)
     CreateCompactIslands(policy, NoPreProcessing(), colliders);
   else if (mPreProcessingType == PhysicsIslandPreProcessingMode::ColliderCount)
     CreateCompactIslands(policy, BasicPreProcessing(), colliders);
-  else if (mPreProcessingType ==
-           PhysicsIslandPreProcessingMode::ConstraintCount)
+  else if (mPreProcessingType == PhysicsIslandPreProcessingMode::ConstraintCount)
     CreateCompactIslands(policy, ConstraintCountPreProcessing(), colliders);
   else
     ErrorIf(true, "Invalid Pre-Processing type specified.");
 }
 
 template <typename Policy, typename PreProcessing>
-void IslandManager::CreateCompactIslands(Policy policy,
-                                         PreProcessing prePolicy,
-                                         ColliderList& colliders)
+void IslandManager::CreateCompactIslands(Policy policy, PreProcessing prePolicy, ColliderList& colliders)
 {
   ColliderStack stack;
   stack.SetAllocator(HeapAllocator(mSpace->mHeap));

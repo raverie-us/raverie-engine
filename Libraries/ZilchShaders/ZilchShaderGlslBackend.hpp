@@ -33,8 +33,7 @@ public:
   ZilchShaderGlslBackend();
 
   String GetExtension() override;
-  bool RunTranslationPass(ShaderTranslationPassResult& inputData,
-                          ShaderTranslationPassResult& outputData) override;
+  bool RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData) override;
   String GetErrorLog() override;
 
 protected:

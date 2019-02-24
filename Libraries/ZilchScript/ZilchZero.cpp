@@ -18,9 +18,7 @@ ZilchDefineType(ZilchComponent, builder, type)
   type->HasOrAdd<CogComponentMeta>(type)->mSetupMode = SetupMode::FromDataOnly;
 }
 
-void RestoreCogPathLinks(HandleParam object,
-                         Cog* owner,
-                         CogInitializer& initializer)
+void RestoreCogPathLinks(HandleParam object, Cog* owner, CogInitializer& initializer)
 {
   BoundType* cogPathType = ZilchTypeId(CogPath);
   BoundType* objectType = object.StoredType;
@@ -30,17 +28,14 @@ void RestoreCogPathLinks(HandleParam object,
   // effects (get/set) and generally always have a backing field, unless they
   // are generating a temporary, in which case a temporary CogPath doesn't make
   // sense to restore links on.
-  forRange(Field * field, objectType->GetFields())
+  forRange (Field* field, objectType->GetFields())
   {
-    BoundType* propertyType =
-        Type::DirectDynamicCast<BoundType*>(field->PropertyType);
+    BoundType* propertyType = Type::DirectDynamicCast<BoundType*>(field->PropertyType);
 
-    if (propertyType == nullptr ||
-        propertyType->CopyMode != TypeCopyMode::ReferenceType)
+    if (propertyType == nullptr || propertyType->CopyMode != TypeCopyMode::ReferenceType)
       continue;
 
-    if (field->HasAttribute(PropertyAttributes::cProperty) ||
-        field->HasAttribute(PropertyAttributes::cDisplay) ||
+    if (field->HasAttribute(PropertyAttributes::cProperty) || field->HasAttribute(PropertyAttributes::cDisplay) ||
         field->HasAttribute(PropertyAttributes::cDeprecatedEditable) ||
         field->HasAttribute(PropertyAttributes::cSerialize) ||
         field->HasAttribute(PropertyAttributes::cDeprecatedSerialized))
@@ -85,7 +80,7 @@ void PopulateDependencies(Component* component, Cog* owner)
   BoundType* componentType = ZilchTypeId(Component);
   BoundType* virtualBoundType = ZilchVirtualTypeId(component);
   // Walk through all properties on this Component
-  forRange(Property * property, virtualBoundType->GetProperties())
+  forRange (Property* property, virtualBoundType->GetProperties())
   {
     // This property isn't marked as a dependency so don't set it to anything.
     // This is likely an internal property that the user will set to something
@@ -97,8 +92,7 @@ void PopulateDependencies(Component* component, Cog* owner)
     {
       if (propertyType->IsA(componentType))
       {
-        Component* componentDependency =
-            owner->QueryComponentType(propertyType);
+        Component* componentDependency = owner->QueryComponentType(propertyType);
 
         if (componentDependency)
         {
@@ -107,12 +101,11 @@ void PopulateDependencies(Component* component, Cog* owner)
         }
         else
         {
-          String message = String::Format(
-              "The '%s' Component depends on the '%s' Component, "
-              "but the object '%s' does not have that Component.",
-              virtualBoundType->Name.c_str(),
-              propertyType->Name.c_str(),
-              owner->GetDescription().c_str());
+          String message = String::Format("The '%s' Component depends on the '%s' Component, "
+                                          "but the object '%s' does not have that Component.",
+                                          virtualBoundType->Name.c_str(),
+                                          propertyType->Name.c_str(),
+                                          owner->GetDescription().c_str());
           DoNotifyWarning("Cog missing dependencies", message);
         }
       }
@@ -128,12 +121,11 @@ void ZilchComponent::ScriptInitialize(CogInitializer& initializer)
   PopulateDependencies(this, this->GetOwner());
 
   // Walk all attributes and search for any RuntimeClones
-  forRange(Property * prop, thisType->GetProperties())
+  forRange (Property* prop, thisType->GetProperties())
   {
     Type* propertyType = prop->PropertyType;
     bool isResource = propertyType->IsA(ZilchTypeId(Resource));
-    if (isResource && prop->HasAttribute(PropertyAttributes::cRuntimeClone) &&
-        prop->Set != nullptr)
+    if (isResource && prop->HasAttribute(PropertyAttributes::cRuntimeClone) && prop->Set != nullptr)
     {
       Any val = prop->GetValue(this);
 
@@ -151,19 +143,17 @@ void ZilchComponent::ScriptInitialize(CogInitializer& initializer)
     BoundType* boundPropertyType = Type::GetBoundType(propertyType);
     if (boundPropertyType)
     {
-      bool isProperty =
-          prop->HasAttribute(PropertyAttributes::cProperty) ||
-          prop->HasAttribute(PropertyAttributes::cDisplay) ||
-          prop->HasAttribute(PropertyAttributes::cDeprecatedEditable) ||
-          prop->HasAttribute(PropertyAttributes::cSerialize) ||
-          prop->HasAttribute(PropertyAttributes::cDeprecatedSerialized);
+      bool isProperty = prop->HasAttribute(PropertyAttributes::cProperty) ||
+                        prop->HasAttribute(PropertyAttributes::cDisplay) ||
+                        prop->HasAttribute(PropertyAttributes::cDeprecatedEditable) ||
+                        prop->HasAttribute(PropertyAttributes::cSerialize) ||
+                        prop->HasAttribute(PropertyAttributes::cDeprecatedSerialized);
 
       bool isGetSetProperty = isProperty && prop->Get && prop->Set;
 
-      bool isHandleWithDefaultConstructor =
-          boundPropertyType->CopyMode == TypeCopyMode::ReferenceType &&
-          boundPropertyType->CreatableInScript &&
-          boundPropertyType->IsDefaultConstructable();
+      bool isHandleWithDefaultConstructor = boundPropertyType->CopyMode == TypeCopyMode::ReferenceType &&
+                                            boundPropertyType->CreatableInScript &&
+                                            boundPropertyType->IsDefaultConstructable();
 
       if (isGetSetProperty && isHandleWithDefaultConstructor)
       {
@@ -185,8 +175,7 @@ void ZilchComponent::ScriptInitialize(CogInitializer& initializer)
   else if (initializer.mGameSession != nullptr)
     editorMode = initializer.mGameSession->IsEditorMode();
 
-  if (!editorMode ||
-      thisType->HasAttributeInherited(ObjectAttributes::cRunInEditor))
+  if (!editorMode || thisType->HasAttributeInherited(ObjectAttributes::cRunInEditor))
   {
     Core& core = Core::GetInstance();
 
@@ -198,8 +187,7 @@ void ZilchComponent::ScriptInitialize(CogInitializer& initializer)
     Array<Type*> params;
     params.PushBack(cogInit);
     static String FunctionName("Initialize");
-    Function* function = thisType->FindFunction(
-        FunctionName, params, core.VoidType, FindMemberOptions::None);
+    Function* function = thisType->FindFunction(FunctionName, params, core.VoidType, FindMemberOptions::None);
 
     if (function != nullptr)
     {
@@ -219,8 +207,7 @@ void ZilchComponent::OnDestroy(uint flags)
 
   Core& core = Core::GetInstance();
   static String FunctionName("Destroyed");
-  Function* function = thisType->FindFunction(
-      FunctionName, Array<Type*>(), core.VoidType, FindMemberOptions::None);
+  Function* function = thisType->FindFunction(FunctionName, Array<Type*>(), core.VoidType, FindMemberOptions::None);
 
   if (function != nullptr)
   {
@@ -244,10 +231,7 @@ void ZilchComponent::DebugDraw()
   Zilch::Core& core = Zilch::Core::GetInstance();
   static String FunctionName("DebugDraw");
   Zilch::Function* function =
-      thisType->FindFunction(FunctionName,
-                             Array<Zilch::Type*>(),
-                             core.VoidType,
-                             Zilch::FindMemberOptions::None);
+      thisType->FindFunction(FunctionName, Array<Zilch::Type*>(), core.VoidType, Zilch::FindMemberOptions::None);
 
   // Do not want to re-invoke Component's DebugDraw, will not find
   // ZilchComponent's DebugDraw because it is not bound Still want find to look

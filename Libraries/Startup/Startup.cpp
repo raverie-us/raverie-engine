@@ -18,8 +18,7 @@ Engine* ZeroStartup::Initialize()
   mDebuggerListener = new DebuggerListener();
   Zero::Console::Add(mDebuggerListener);
 
-  mFileSystemInitializer =
-      new FileSystemInitializer(&PopulateVirtualFileSystemWithZip);
+  mFileSystemInitializer = new FileSystemInitializer(&PopulateVirtualFileSystemWithZip);
 
   // Mirror console output to a log file.
   mFileListener = new FileListener();
@@ -48,8 +47,7 @@ Engine* ZeroStartup::Initialize()
     Zero::Console::Add(mStdoutListener);
   }
 
-  CrashHandler::RestartOnCrash(
-      Environment::GetValue<bool>("autorestart", false));
+  CrashHandler::RestartOnCrash(Environment::GetValue<bool>("autorestart", false));
 
   CommonLibrary::Initialize();
 
@@ -66,8 +64,7 @@ Engine* ZeroStartup::Initialize()
   ZeroRegisterHandleManager(ContentComposition);
 
   // Graphics specific
-  ZeroRegisterThreadSafeReferenceCountedHandleManager(
-      ThreadSafeReferenceCounted);
+  ZeroRegisterThreadSafeReferenceCountedHandleManager(ThreadSafeReferenceCounted);
   ZeroRegisterThreadSafeReferenceCountedHandleManager(GraphicsBlendSettings);
   ZeroRegisterThreadSafeReferenceCountedHandleManager(GraphicsDepthSettings);
 
@@ -88,8 +85,7 @@ Engine* ZeroStartup::Initialize()
   MetaDatabase::Initialize();
 
   // Add the core library to the meta database
-  MetaDatabase::GetInstance()->AddNativeLibrary(
-      Core::GetInstance().GetLibrary());
+  MetaDatabase::GetInstance()->AddNativeLibrary(Core::GetInstance().GetLibrary());
 
   // Initialize Zero Libraries
   PlatformLibrary::Initialize();
@@ -124,14 +120,12 @@ Engine* ZeroStartup::Initialize()
 
   Tweakables::Load();
 
-  Shortcuts::GetInstance()->Load(FilePath::Combine(
-      Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory,
-      "Shortcuts.data"));
+  Shortcuts::GetInstance()->Load(
+      FilePath::Combine(Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory, "Shortcuts.data"));
 
   // Load documentation for all native libraries
-  DocumentationLibrary::GetInstance()->LoadDocumentation(FilePath::Combine(
-      Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory,
-      "Documentation.data"));
+  DocumentationLibrary::GetInstance()->LoadDocumentation(
+      FilePath::Combine(Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory, "Documentation.data"));
 
   ZPrint("Os: %s\n", Os::GetVersionString().c_str());
 
@@ -173,8 +167,7 @@ OsWindow* ZeroStartup::Startup(StartupOptions& options)
 
   if (options.mWindowSettingsFromProjectCog)
   {
-    WindowLaunchSettings* windowLaunch =
-        options.mWindowSettingsFromProjectCog->has(WindowLaunchSettings);
+    WindowLaunchSettings* windowLaunch = options.mWindowSettingsFromProjectCog->has(WindowLaunchSettings);
     if (windowLaunch != nullptr)
     {
       size = windowLaunch->mWindowedResolution;
@@ -182,8 +175,7 @@ OsWindow* ZeroStartup::Startup(StartupOptions& options)
         state = WindowState::Fullscreen;
     }
 
-    ProjectSettings* projectSettings =
-        options.mWindowSettingsFromProjectCog->has(ProjectSettings);
+    ProjectSettings* projectSettings = options.mWindowSettingsFromProjectCog->has(ProjectSettings);
     if (projectSettings != nullptr)
     {
       name = projectSettings->ProjectName;
@@ -207,8 +199,7 @@ OsWindow* ZeroStartup::Startup(StartupOptions& options)
     monitorClientPos = monitorRect.Center(size);
   }
 
-  OsWindow* mainWindow = osShell->CreateOsWindow(
-      name, size, monitorClientPos, nullptr, options.mWindowStyle);
+  OsWindow* mainWindow = osShell->CreateOsWindow(name, size, monitorClientPos, nullptr, options.mWindowStyle);
   mainWindow->SetMinClientSize(minSize);
   mainWindow->SetState(state);
 
@@ -224,8 +215,9 @@ OsWindow* ZeroStartup::Startup(StartupOptions& options)
 
   // Used for trapping the mouse.
   Z::gMouse->mActiveWindow = mainWindow;
-  
-  // Note that content and resources are loaded after CreateRenderer so that they may use the Renderer API to upload textures, meshes, etc.
+
+  // Note that content and resources are loaded after CreateRenderer so that they may use the Renderer API to upload
+  // textures, meshes, etc.
   return mainWindow;
 }
 

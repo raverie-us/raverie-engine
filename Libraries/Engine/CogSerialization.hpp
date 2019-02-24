@@ -24,9 +24,7 @@ public:
   static void SaveHierarchy(Serializer& serializer, Hierarchy* hierarchy);
   static void SaveSelection(Serializer& serializer, MetaSelection* selection);
 
-  static void LoadHierarchy(Serializer& serializer,
-                            CogCreationContext* context,
-                            Hierarchy* hierarchy);
+  static void LoadHierarchy(Serializer& serializer, CogCreationContext* context, Hierarchy* hierarchy);
 
   static String SaveToStringForCopy(Cog* cog);
 
@@ -129,8 +127,7 @@ public:
 
 // A function pointer that we use for checking a component should be serialized
 DeclareEnum2(SerializeCheck, Serialized, NotSerialized);
-typedef SerializeCheck::Enum (*ComponentCheckFn)(Cog* composition,
-                                                 Component* component);
+typedef SerializeCheck::Enum (*ComponentCheckFn)(Cog* composition, Component* component);
 
 DeclareEnum2(ContextMode, Creating, Saving);
 

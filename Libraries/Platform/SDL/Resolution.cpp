@@ -31,8 +31,7 @@ void Enumerate(Array<Resolution>& resolutions, uint bitDepth, Resolution aspect)
   if (displayIndex < 0)
   {
     String errorString = SDL_GetError();
-    Warn("Failed to get display index for the active window: %s",
-         errorString.c_str());
+    Warn("Failed to get display index for the active window: %s", errorString.c_str());
     return;
   }
 
@@ -41,8 +40,7 @@ void Enumerate(Array<Resolution>& resolutions, uint bitDepth, Resolution aspect)
   if (totalDisplayModes < 1)
   {
     String errorString = SDL_GetError();
-    Warn("Failed to get total display modes for the active display device: %s",
-         errorString.c_str());
+    Warn("Failed to get total display modes for the active display device: %s", errorString.c_str());
     return;
   }
 

@@ -112,8 +112,7 @@ void SoundEntry::Preview()
 
   // Create a new SoundInstance with no SoundSpace
   Status status;
-  SoundInstance* instance =
-      new SoundInstance(status, nullptr, mSound->mAsset, 1.0f, 0.0f);
+  SoundInstance* instance = new SoundInstance(status, nullptr, mSound->mAsset, 1.0f, 0.0f);
 
   if (!status.Failed())
   {
@@ -204,15 +203,13 @@ ZilchDefineType(SoundTagEntryDisplay, builder, type)
 
 String SoundTagEntryDisplay::GetName(HandleParam object)
 {
-  SoundTagEntry* soundTagEntry =
-      object.Get<SoundTagEntry*>(GetOptions::AssertOnNull);
+  SoundTagEntry* soundTagEntry = object.Get<SoundTagEntry*>(GetOptions::AssertOnNull);
   return BuildString("Tag: ", soundTagEntry->GetSoundTag()->Name);
 }
 
 String SoundTagEntryDisplay::GetDebugText(HandleParam object)
 {
-  SoundTagEntry* soundTagEntry =
-      object.Get<SoundTagEntry*>(GetOptions::AssertOnNull);
+  SoundTagEntry* soundTagEntry = object.Get<SoundTagEntry*>(GetOptions::AssertOnNull);
   return BuildString("Tag: ", soundTagEntry->GetSoundTag()->Name);
 }
 
@@ -274,24 +271,18 @@ ZilchDefineType(SoundCue, builder, type)
 
   ZilchBindGetterSetterProperty(PlayMode);
   ZilchBindGetterSetterProperty(SelectMode);
-  ZilchBindGetterSetterProperty(Volume)->Add(
-      new EditorSlider(0.0f, 2.0f, 0.01f));
-  ZilchBindGetterSetterProperty(Decibels)->Add(
-      new EditorSlider(-32.0f, 6.0f, 0.1f));
-  ZilchBindFieldProperty(mUseDecibelVariation)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(Volume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
+  ZilchBindGetterSetterProperty(Decibels)->Add(new EditorSlider(-32.0f, 6.0f, 0.1f));
+  ZilchBindFieldProperty(mUseDecibelVariation)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindGetterSetterProperty(VolumeVariation)
       ->Add(new EditorSlider(0.0f, 1.0f, 0.01f))
       ->ZeroFilterNotBool(mUseDecibelVariation);
   ZilchBindGetterSetterProperty(DecibelVariation)
       ->Add(new EditorSlider(0.0f, 6.0f, 0.1f))
       ->ZeroFilterBool(mUseDecibelVariation);
-  ZilchBindGetterSetterProperty(Pitch)->Add(
-      new EditorSlider(-2.0f, 2.0f, 0.1f));
-  ZilchBindGetterSetterProperty(Semitones)->Add(
-      new EditorSlider(-24.0f, 24.0f, 0.1f));
-  ZilchBindFieldProperty(mUseSemitoneVariation)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(Pitch)->Add(new EditorSlider(-2.0f, 2.0f, 0.1f));
+  ZilchBindGetterSetterProperty(Semitones)->Add(new EditorSlider(-24.0f, 24.0f, 0.1f));
+  ZilchBindFieldProperty(mUseSemitoneVariation)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindGetterSetterProperty(PitchVariation)
       ->Add(new EditorSlider(0.0f, 1.0f, 0.1f))
       ->ZeroFilterNotBool(mUseSemitoneVariation);
@@ -299,14 +290,10 @@ ZilchDefineType(SoundCue, builder, type)
       ->Add(new EditorSlider(0.0f, 12.0f, 0.1f))
       ->ZeroFilterBool(mUseSemitoneVariation);
   ZilchBindGetterSetterProperty(Attenuator);
-  ZilchBindFieldProperty(mShowMusicOptions)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(BeatsPerMinute)
-      ->ZeroFilterBool(mShowMusicOptions);
-  ZilchBindGetterSetterProperty(TimeSigBeats)
-      ->ZeroFilterBool(mShowMusicOptions);
-  ZilchBindGetterSetterProperty(TimeSigValue)
-      ->ZeroFilterBool(mShowMusicOptions);
+  ZilchBindFieldProperty(mShowMusicOptions)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(BeatsPerMinute)->ZeroFilterBool(mShowMusicOptions);
+  ZilchBindGetterSetterProperty(TimeSigBeats)->ZeroFilterBool(mShowMusicOptions);
+  ZilchBindGetterSetterProperty(TimeSigValue)->ZeroFilterBool(mShowMusicOptions);
 
   ZilchBindMethodProperty(Preview);
   ZilchBindMethodProperty(StopPreview);
@@ -436,8 +423,7 @@ float SoundCue::GetDecibelVariation()
 
 void SoundCue::SetDecibelVariation(float variation)
 {
-  mDecibelVariation =
-      Math::Clamp(variation, cMinDecibelsValue, cMaxDecibelsValue);
+  mDecibelVariation = Math::Clamp(variation, cMinDecibelsValue, cMaxDecibelsValue);
 }
 
 float SoundCue::GetPitch()
@@ -457,8 +443,7 @@ float SoundCue::GetSemitones()
 
 void SoundCue::SetSemitones(float newSemitones)
 {
-  mPitch = Math::Clamp(
-      SemitonesToPitch(newSemitones), cMinPitchValue, cMaxPitchValue);
+  mPitch = Math::Clamp(SemitonesToPitch(newSemitones), cMinPitchValue, cMaxPitchValue);
 }
 
 float SoundCue::GetPitchVariation()
@@ -534,8 +519,7 @@ void SoundCue::AddSoundTagEntry(SoundTag* tag)
   tagEntry.SetSoundTag(tag);
 }
 
-HandleOf<SoundInstance> SoundCue::PlayCueOnNode(HandleOf<SoundNode> outputNode,
-                                                bool startPaused)
+HandleOf<SoundInstance> SoundCue::PlayCueOnNode(HandleOf<SoundNode> outputNode, bool startPaused)
 {
   if (outputNode)
     return PlayCue(nullptr, outputNode, startPaused);
@@ -563,31 +547,26 @@ void SoundCue::StopPreview()
   Z::gSound->StopPreview();
 }
 
-HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space,
-                                          HandleOf<SoundNode> outputNode,
-                                          bool startPaused)
+HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, HandleOf<SoundNode> outputNode, bool startPaused)
 {
   // No sounds to choose from
   if (Sounds.Empty())
   {
-    DoNotifyWarning("Audio Warning",
-                    "Tried to play a SoundCue with no Sounds.");
+    DoNotifyWarning("Audio Warning", "Tried to play a SoundCue with no Sounds.");
     return nullptr;
   }
 
   // Get volume value
   float volume(mVolume);
   if (mUseDecibelVariation && mDecibelVariation > 0)
-    volume = DecibelsToVolume(
-        Z::gSound->mRandom.FloatVariance(GetDecibels(), mDecibelVariation));
+    volume = DecibelsToVolume(Z::gSound->mRandom.FloatVariance(GetDecibels(), mDecibelVariation));
   else if (!mUseDecibelVariation && mVolumeVariation > 0)
     volume = Z::gSound->mRandom.FloatVariance(mVolume, mVolumeVariation);
 
   // Get pitch value
   float pitch(mPitch);
   if (mUseSemitoneVariation && mSemitoneVariation > 0)
-    pitch = SemitonesToPitch(
-        Z::gSound->mRandom.FloatVariance(GetSemitones(), mSemitoneVariation));
+    pitch = SemitonesToPitch(Z::gSound->mRandom.FloatVariance(GetSemitones(), mSemitoneVariation));
   else if (!mUseSemitoneVariation && mPitchVariation > 0)
     pitch = Z::gSound->mRandom.FloatVariance(mPitch, mPitchVariation);
 
@@ -621,16 +600,13 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space,
   ErrorIf(!asset, "No sound asset when playing SoundCue");
   if (!asset)
   {
-    DoNotifyError("Audio Error",
-                  String::Format("No audio asset for Sound %s",
-                                 entry->GetSound()->Name.c_str()));
+    DoNotifyError("Audio Error", String::Format("No audio asset for Sound %s", entry->GetSound()->Name.c_str()));
     return nullptr;
   }
 
   // Create sound instance
   Status status;
-  SoundInstance* instance(
-      new SoundInstance(status, space, asset, volume, pitch));
+  SoundInstance* instance(new SoundInstance(status, space, asset, volume, pitch));
   if (status.Failed())
   {
     DoNotifyError("Audio Error", status.Message);
@@ -680,8 +656,7 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space,
 
 ImplementResourceManager(SoundCueManager, SoundCue);
 
-SoundCueManager::SoundCueManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+SoundCueManager::SoundCueManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   AddLoader("SoundCue", new TextDataFileLoader<SoundCueManager>());
   mCategory = "Sound";

@@ -80,8 +80,7 @@ bool EqualsExact(const T& a, const T& b)
 
 bool operator==(const Simplex& a, const Simplex& b)
 {
-  return EqualsExact(a.p1, b.p1) && EqualsExact(a.p2, b.p2) &&
-         a.alpha == b.alpha;
+  return EqualsExact(a.p1, b.p1) && EqualsExact(a.p2, b.p2) && a.alpha == b.alpha;
 }
 
 // Since edge could have already been divided we need to figure out where
@@ -96,8 +95,7 @@ void InsertPoint(Memory::Pool* pool,
 
   // If the point is not on the given edge do not Insert it
   // This will happen frequently when attempting to Insert touching points
-  if (Dot(axis, point - head->position) < float_t(0.0) ||
-      Dot(axis, point - tail->position) > float_t(0.0))
+  if (Dot(axis, point - head->position) < float_t(0.0) || Dot(axis, point - tail->position) > float_t(0.0))
   {
     return;
   }
@@ -140,8 +138,7 @@ void InsertPoint(Memory::Pool* pool,
   vertices->InsertBefore(vertex, newVertex);
 }
 
-Intersection::IntersectionType
-TestSegmentSegment(Vec2_t a1, Vec2_t a2, Vec2_t b1, Vec2_t b2, Vec2_t* output)
+Intersection::IntersectionType TestSegmentSegment(Vec2_t a1, Vec2_t a2, Vec2_t b1, Vec2_t b2, Vec2_t* output)
 {
   // L1 : a1 + t * v
   // L2 : b1 + s * w
@@ -297,9 +294,7 @@ bool Contains(const Simplex& simplex, const Vec2_t& p)
   return true;
 }
 
-f32 ComputeEdgeValue(Csg::Operation::Type operation,
-                     const Simplex& simplex,
-                     const Array<Simplex>& chain)
+f32 ComputeEdgeValue(Csg::Operation::Type operation, const Simplex& simplex, const Array<Simplex>& chain)
 {
   // Magic constants for Intersect, Union, Subtract
   static f32 operationTable[3][2] = {{1.f, 0.f}, {0.f, 1.f}, {1.f, 0.f}};
@@ -310,8 +305,7 @@ f32 ComputeEdgeValue(Csg::Operation::Type operation,
   // Check e is a directed edge of the other polygon
   for (size_t i = 0; i < chain.Size(); ++i)
   {
-    if (EqualsExact(chain[i].p1, simplex.p1) &&
-        EqualsExact(chain[i].p2, simplex.p2))
+    if (EqualsExact(chain[i].p1, simplex.p1) && EqualsExact(chain[i].p2, simplex.p2))
     {
       return desiredA;
     }
@@ -320,8 +314,7 @@ f32 ComputeEdgeValue(Csg::Operation::Type operation,
   // Check if -e is a directed edge of the other polygon
   for (size_t i = 0; i < chain.Size(); ++i)
   {
-    if (EqualsExact(chain[i].p2, simplex.p1) &&
-        EqualsExact(chain[i].p1, simplex.p2))
+    if (EqualsExact(chain[i].p2, simplex.p1) && EqualsExact(chain[i].p1, simplex.p2))
     {
       return desiredB;
     }
@@ -422,9 +415,7 @@ void Clean(ContourArray* contours, f32 angleTolerance, f32 distanceTolerance)
   }
 }
 
-void Transfer(InList<LinkedVertex<Vec2_t>>& vertices,
-              Array<Vec2_t>* contour,
-              Memory::Pool& pool)
+void Transfer(InList<LinkedVertex<Vec2_t>>& vertices, Array<Vec2_t>* contour, Memory::Pool& pool)
 {
   InList<LinkedVertex<Vec2_t>>::range r = vertices.All();
   contour->Clear();
@@ -454,8 +445,7 @@ void Subdivide(Array<Vec2_t>* polygonA, Array<Vec2_t>* polygonB)
   Array<LinkedVertex<Vec2_t>*> lookupB;
 
   size_t blocksPerPage = sizeA + sizeB;
-  Memory::Pool pool(
-      "Vertex Pool", nullptr, sizeof(LinkedVertex<Vec2_t>), blocksPerPage);
+  Memory::Pool pool("Vertex Pool", nullptr, sizeof(LinkedVertex<Vec2_t>), blocksPerPage);
 
   // Initialize vertex lists and array lookups
   lookupA.Resize(sizeA);
@@ -490,8 +480,8 @@ void Subdivide(Array<Vec2_t>* polygonA, Array<Vec2_t>* polygonB)
 
       // Compute edge/edge intersections
       Vec2_t point(float_t(0.0), float_t(0.0));
-      Intersection::IntersectionType result = TestSegmentSegment(
-          a1->position, a2->position, b1->position, b2->position, &point);
+      Intersection::IntersectionType result =
+          TestSegmentSegment(a1->position, a2->position, b1->position, b2->position, &point);
 
       // the intersection result between e1 and e2 is a line segment
       // We need to Insert the endpoints from each edge into the other polygon
@@ -511,13 +501,11 @@ void Subdivide(Array<Vec2_t>* polygonA, Array<Vec2_t>* polygonB)
         // is a vertex of e1 or e2
         // We only need to Insert this point into the polygon that does not
         // already contain this vertex
-        if (EqualsExact(point, a1->position) ||
-            EqualsExact(point, a2->position))
+        if (EqualsExact(point, a1->position) || EqualsExact(point, a2->position))
         {
           InsertPoint(&pool, &verticesB, b1, b2, point);
         }
-        else if (EqualsExact(point, b1->position) ||
-                 EqualsExact(point, b2->position))
+        else if (EqualsExact(point, b1->position) || EqualsExact(point, b2->position))
         {
           InsertPoint(&pool, &verticesA, a1, a2, point);
         }
@@ -537,8 +525,7 @@ void Subdivide(Array<Vec2_t>* polygonA, Array<Vec2_t>* polygonB)
   Transfer(verticesB, polygonB, pool);
 }
 
-void Subdivide(HighPrecisionContourArray* contoursA,
-               HighPrecisionContourArray* contoursB)
+void Subdivide(HighPrecisionContourArray* contoursA, HighPrecisionContourArray* contoursB)
 {
   for (size_t i = 0; i < contoursA->Size(); ++i)
   {
@@ -567,8 +554,7 @@ void Build(const HighPrecisionContourArray& contours, Array<Simplex>* chain)
 
       // Compute 2x the signed area of the triangle formed by the
       // simplex edge and the origin
-      float_t area =
-          simplex->p1.x * simplex->p2.y - simplex->p1.y * simplex->p2.x;
+      float_t area = simplex->p1.x * simplex->p2.y - simplex->p1.y * simplex->p2.x;
 
       if (area != float_t(0.0))
       {
@@ -595,8 +581,7 @@ void Build(const Array<Vec2_t>& contour, Array<Simplex>* chain)
 
     // Compute 2x the signed area of the triangle formed by the
     // simplex edge and the origin
-    float_t area =
-        simplex->p1.x * simplex->p2.y - simplex->p1.y * simplex->p2.x;
+    float_t area = simplex->p1.x * simplex->p2.y - simplex->p1.y * simplex->p2.x;
 
     if (area != float_t(0.0))
     {
@@ -661,9 +646,7 @@ void Select(Csg::Operation::Enum operation,
 }
 
 // Build contours from sets of unconnected simplices
-bool Merge(const Array<Simplex>& selectedA,
-           const Array<Simplex>& selectedB,
-           ContourArray* results)
+bool Merge(const Array<Simplex>& selectedA, const Array<Simplex>& selectedB, ContourArray* results)
 {
   Array<Simplex> edges;
   edges.Reserve(selectedA.Size() + selectedB.Size());
@@ -819,10 +802,8 @@ bool Operate(const OperationInput& input, ContourArray* results)
   ContourArray contoursA = *input.ContoursA;
   ContourArray contoursB = *input.ContoursB;
 
-  Internal::Clean(
-      &contoursA, input.CollinearAngleTolerance, input.DistanceTolerance);
-  Internal::Clean(
-      &contoursB, input.CollinearAngleTolerance, input.DistanceTolerance);
+  Internal::Clean(&contoursA, input.CollinearAngleTolerance, input.DistanceTolerance);
+  Internal::Clean(&contoursB, input.CollinearAngleTolerance, input.DistanceTolerance);
 
   HighPrecisionContourArray subdividedA;
   HighPrecisionContourArray subdividedB;
@@ -846,8 +827,7 @@ bool Operate(const OperationInput& input, ContourArray* results)
     return false;
   }
 
-  Internal::Clean(
-      results, input.CollinearAngleTolerance, input.DistanceTolerance);
+  Internal::Clean(results, input.CollinearAngleTolerance, input.DistanceTolerance);
 
   return true;
 }

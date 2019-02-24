@@ -14,9 +14,7 @@ public:
   ZilchDeclareType(NetProperty, TypeCopyMode::ReferenceType);
 
   /// Constructor.
-  NetProperty(const String& name,
-              NetPropertyType* netPropertyType,
-              const Variant& propertyData);
+  NetProperty(const String& name, NetPropertyType* netPropertyType, const Variant& propertyData);
 
   /// Destructor.
   ~NetProperty();
@@ -85,22 +83,21 @@ public:
 // Variant Configuration Helper Macros
 // TODO PLATFORM further investigate this macros usage, static constexpr float
 // does not compile on clang 3.7 so for now was changed to an int
-#define DeclareVariantGetSetForArithmeticTypes(                                \
-    property, defaultFloat, defaultInt)                                        \
-  DeclareVariantGetSetForType(property, Integer, int);                         \
-  DeclareVariantGetSetForType(property, DoubleInteger, s64);                   \
-  DeclareVariantGetSetForType(property, Integer2, Integer2);                   \
-  DeclareVariantGetSetForType(property, Integer3, Integer3);                   \
-  DeclareVariantGetSetForType(property, Integer4, Integer4);                   \
-  DeclareVariantGetSetForType(property, Real, float);                          \
-  DeclareVariantGetSetForType(property, DoubleReal, double);                   \
-  DeclareVariantGetSetForType(property, Real2, Real2);                         \
-  DeclareVariantGetSetForType(property, Real3, Real3);                         \
-  DeclareVariantGetSetForType(property, Real4, Real4);                         \
+#define DeclareVariantGetSetForArithmeticTypes(property, defaultFloat, defaultInt)                                     \
+  DeclareVariantGetSetForType(property, Integer, int);                                                                 \
+  DeclareVariantGetSetForType(property, DoubleInteger, s64);                                                           \
+  DeclareVariantGetSetForType(property, Integer2, Integer2);                                                           \
+  DeclareVariantGetSetForType(property, Integer3, Integer3);                                                           \
+  DeclareVariantGetSetForType(property, Integer4, Integer4);                                                           \
+  DeclareVariantGetSetForType(property, Real, float);                                                                  \
+  DeclareVariantGetSetForType(property, DoubleReal, double);                                                           \
+  DeclareVariantGetSetForType(property, Real2, Real2);                                                                 \
+  DeclareVariantGetSetForType(property, Real3, Real3);                                                                 \
+  DeclareVariantGetSetForType(property, Real4, Real4);                                                                 \
   DeclareVariantGetSetForType(property, Quaternion, Quaternion)
 
-#define DeclareVariantGetSetForType(property, typeName, type)                  \
-  void Set##property##typeName(type value);                                    \
+#define DeclareVariantGetSetForType(property, typeName, type)                                                          \
+  void Set##property##typeName(type value);                                                                            \
   type Get##property##typeName() const
 
 /// Network Property Configuration.
@@ -262,13 +259,13 @@ public:
   float mSampleTimeOffset;                    ///< Sample time offset from now.
   float mExtrapolationLimit;                  ///< Extrapolation time limit.
   bool mUseConvergence;                       ///< Use convergence?
-  bool mEventOnConvergenceStateChange; ///< Event on convergence state change?
-  float mActiveConvergenceWeight; ///< Active convergence weight applied every
-                                  ///< convergence interval.
-  float mRestingConvergenceDuration; ///< Resting convergence duration handled
-                                     ///< every convergence interval.
-  uint mConvergenceInterval;         ///< Convergence interval.
-  Variant mSnapThreshold;            ///< Snap-instead-of-converge threshold.
+  bool mEventOnConvergenceStateChange;        ///< Event on convergence state change?
+  float mActiveConvergenceWeight;             ///< Active convergence weight applied every
+                                              ///< convergence interval.
+  float mRestingConvergenceDuration;          ///< Resting convergence duration handled
+                                              ///< every convergence interval.
+  uint mConvergenceInterval;                  ///< Convergence interval.
+  Variant mSnapThreshold;                     ///< Snap-instead-of-converge threshold.
 };
 
 // Variant Configuration Helper Macros
@@ -356,12 +353,12 @@ public:
 /// Typedefs.
 typedef Array<NetPropertyInfo> NetPropertyInfoArray;
 
-#define DeclarePropertyFilterForType(typeName)                                 \
-  class PropertyFilter##typeName : public MetaPropertyFilter                   \
-  {                                                                            \
-  public:                                                                      \
-    ZilchDeclareType(PropertyFilter##typeName, TypeCopyMode::ReferenceType);   \
-    bool Filter(Member* prop, HandleParam instance) override;                  \
+#define DeclarePropertyFilterForType(typeName)                                                                         \
+  class PropertyFilter##typeName : public MetaPropertyFilter                                                           \
+  {                                                                                                                    \
+  public:                                                                                                              \
+    ZilchDeclareType(PropertyFilter##typeName, TypeCopyMode::ReferenceType);                                           \
+    bool Filter(Member* prop, HandleParam instance) override;                                                          \
   }
 
 // Variant Configuration Property Filters
@@ -383,16 +380,14 @@ DeclarePropertyFilterForType(String);
 class PropertyFilterMultiPrimitiveTypes : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(PropertyFilterMultiPrimitiveTypes,
-                   TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PropertyFilterMultiPrimitiveTypes, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
 class PropertyFilterFloatingPointTypes : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(PropertyFilterFloatingPointTypes,
-                   TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PropertyFilterFloatingPointTypes, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 

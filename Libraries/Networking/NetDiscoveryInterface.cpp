@@ -7,11 +7,7 @@ namespace Zero
 //
 // Responding host data constructors
 //
-RespondingHostData::RespondingHostData() :
-    mRoundTripTime(0),
-    mBasicHostInfo(),
-    mExtraHostInfo(),
-    mRefreshResult()
+RespondingHostData::RespondingHostData() : mRoundTripTime(0), mBasicHostInfo(), mExtraHostInfo(), mRefreshResult()
 {
 }
 
@@ -100,15 +96,13 @@ void NetDiscoveryInterface::CancelRefreshesNow()
       for (unsigned i = 0; i < mOpenHostRequests.Size(); i += 1)
       {
         OpenHostRequest& request = *mOpenHostRequests[i];
-        HandleCancelSingleHostRequest(
-            reinterpret_cast<SingleHostRequest&>(request));
+        HandleCancelSingleHostRequest(reinterpret_cast<SingleHostRequest&>(request));
         request.FlushHostRequest(*mNetPeer, *this);
       }
     }
     else if (mDiscoveryMode == NetDiscoveryMode::RefreshList)
     {
-      MultiHostRequest& multiHostRequest =
-          reinterpret_cast<MultiHostRequest&>(*mOpenHostRequests[0]);
+      MultiHostRequest& multiHostRequest = reinterpret_cast<MultiHostRequest&>(*mOpenHostRequests[0]);
       HandleCancelMultiHostRequest(multiHostRequest);
       multiHostRequest.FlushHostRequest(*mNetPeer, *this);
     }
@@ -137,8 +131,7 @@ void NetDiscoveryInterface::CancelIfRefreshingList()
     CancelRefreshes();
 }
 
-bool NetDiscoveryInterface::ReceivePeerMessage(IpAddress const& theirIpAddress,
-                                               Message& peerMessage)
+bool NetDiscoveryInterface::ReceivePeerMessage(IpAddress const& theirIpAddress, Message& peerMessage)
 {
   if (mPingManager.ReceivePeerMessage(theirIpAddress, peerMessage))
     return true;
@@ -155,14 +148,10 @@ void NetDiscoveryInterface::SetPingManagerCallbacks()
   // IpAddress const&, NetHostPingData&>( &NetDiscoveryInterface::HandlePing,
   // this);
 
-  mPingManager.SetPingCallback(
-      CreateCallback(&NetDiscoveryInterface::HandlePing, this));
-  mPingManager.SetPingCancelledCallback(
-      CreateCallback(&NetDiscoveryInterface::HandlePingCancelled, this));
-  mPingManager.SetPingTimeoutCallback(
-      CreateCallback(&NetDiscoveryInterface::HandlePingTimeout, this));
-  mPingManager.SetPongCallback(
-      CreateCallback(&NetDiscoveryInterface::HandlePong, this));
+  mPingManager.SetPingCallback(CreateCallback(&NetDiscoveryInterface::HandlePing, this));
+  mPingManager.SetPingCancelledCallback(CreateCallback(&NetDiscoveryInterface::HandlePingCancelled, this));
+  mPingManager.SetPingTimeoutCallback(CreateCallback(&NetDiscoveryInterface::HandlePingTimeout, this));
+  mPingManager.SetPongCallback(CreateCallback(&NetDiscoveryInterface::HandlePong, this));
 
   mPingManager.mPingInterval = mNetPeer->mHostPingInterval;
 }
@@ -173,12 +162,11 @@ void NetDiscoveryInterface::Initialize()
   SetPingManagerCallbacks();
 }
 
-SingleHostRequest*
-NetDiscoveryInterface::CreateSingleHostRequest(Network::Enum network,
-                                               bool allowDiscovery,
-                                               IpAddress const& theirIpAddress,
-                                               bool removeStaleHosts,
-                                               bool extraHostInfo)
+SingleHostRequest* NetDiscoveryInterface::CreateSingleHostRequest(Network::Enum network,
+                                                                  bool allowDiscovery,
+                                                                  IpAddress const& theirIpAddress,
+                                                                  bool removeStaleHosts,
+                                                                  bool extraHostInfo)
 {
   // TODO: Avoid duplicate single host requests. Cancel the duplicate refresh,
   // start again.
@@ -190,8 +178,7 @@ NetDiscoveryInterface::CreateSingleHostRequest(Network::Enum network,
   newRequest->mIpAddress = theirIpAddress;
   newRequest->mDiscoveryStage = NetDiscoveryStage::Unresponding;
   newRequest->mPreviouslyKnown =
-      mNetPeer->GetHostByAddress(network, theirIpAddress) !=
-      nullptr; // did we have this host before we refreshed it?
+      mNetPeer->GetHostByAddress(network, theirIpAddress) != nullptr; // did we have this host before we refreshed it?
   newRequest->mRemoveStaleHosts = removeStaleHosts;
   newRequest->mAquireExtraHostInfo = extraHostInfo;
 
@@ -207,27 +194,25 @@ NetDiscoveryInterface::CreateSingleHostRequest(Network::Enum network,
   return newRequest;
 }
 
-MultiHostRequest*
-NetDiscoveryInterface::CreateMultiHostRequest(Network::Enum network,
-                                              bool allowDiscovery,
-                                              bool removeStaleHosts,
-                                              bool extraHostInfo)
+MultiHostRequest* NetDiscoveryInterface::CreateMultiHostRequest(Network::Enum network,
+                                                                bool allowDiscovery,
+                                                                bool removeStaleHosts,
+                                                                bool extraHostInfo)
 {
   // Create Request
   MultiHostRequest* newRequest = new MultiHostRequest();
   newRequest->mNetwork = network;
   newRequest->mAllowDiscovery = allowDiscovery;
-  GetExpectedHosts(
-      network,
-      newRequest->mExpectedHosts); // get the hosts the multi host request is
-                                   // expecting. (if allow discovery is true,
-                                   // anyone can respond)
+  GetExpectedHosts(network,
+                   newRequest->mExpectedHosts); // get the hosts the multi host request is
+                                                // expecting. (if allow discovery is true,
+                                                // anyone can respond)
   newRequest->mDiscoveryStage = NetDiscoveryStage::Unresponding;
   newRequest->mRemoveStaleHosts = removeStaleHosts;
   newRequest->mAquireExtraHostInfo = extraHostInfo;
 
   // add initial response for this host.
-  forRange(IpAddress & hostIp, newRequest->mExpectedHosts.All())
+  forRange (IpAddress& hostIp, newRequest->mExpectedHosts.All())
   {
     mRespondingHostData.Insert(hostIp, RespondingHostData());
   }
@@ -238,8 +223,7 @@ NetDiscoveryInterface::CreateMultiHostRequest(Network::Enum network,
   return newRequest;
 }
 
-void NetDiscoveryInterface::GetExpectedHosts(
-    Network::Enum network, ArraySet<IpAddress>& outIpAddressList)
+void NetDiscoveryInterface::GetExpectedHosts(Network::Enum network, ArraySet<IpAddress>& outIpAddressList)
 {
   // Clear expect host list and get it anew from the netpeer.
   Assert(mNetPeer);
@@ -247,14 +231,13 @@ void NetDiscoveryInterface::GetExpectedHosts(
   outIpAddressList.Reserve(mNetPeer->GetHostList(network).Size());
 
   // Copy the IP addresses of the hosts that the netpeer has in the host list.
-  forRange(NetHost * host, mNetPeer->GetHostList(network))
+  forRange (NetHost* host, mNetPeer->GetHostList(network))
   {
     outIpAddressList.Insert(host->mIpAddress);
   }
 }
 
-void NetDiscoveryInterface::DispatchHost(IpAddress const& hostIp,
-                                         OpenHostRequest& hostRequest)
+void NetDiscoveryInterface::DispatchHost(IpAddress const& hostIp, OpenHostRequest& hostRequest)
 {
   NetHostUpdate event;
   RespondingHostData defaultHostData;
@@ -298,8 +281,7 @@ void NetDiscoveryInterface::DispatchHost(IpAddress const& hostIp,
   {
     netHost = mNetPeer->AddOrFindHost(hostRequest.mNetwork, hostIp);
   }
-  else if (hostData->mRefreshResult ==
-           NetRefreshResult::NoResponse) // not in list, doesn't go in list.
+  else if (hostData->mRefreshResult == NetRefreshResult::NoResponse) // not in list, doesn't go in list.
   {
     netHost = new NetHost();
     netHost->mIpAddress = hostIp;
@@ -349,18 +331,14 @@ void NetDiscoveryInterface::DispatchHost(IpAddress const& hostIp,
 
 MultiHostRequest* NetDiscoveryInterface::GetMultiHostRequest()
 {
-  Assert(mDiscoveryMode ==
-         NetDiscoveryMode::RefreshList); // should be in refresh list discovery
-                                         // mode.
-  Assert(
-      mOpenHostRequests.Size() ==
-      1); // should have exactly one open host request (a multi host request.)
+  Assert(mDiscoveryMode == NetDiscoveryMode::RefreshList); // should be in refresh list discovery
+                                                           // mode.
+  Assert(mOpenHostRequests.Size() == 1); // should have exactly one open host request (a multi host request.)
 
   return reinterpret_cast<MultiHostRequest*>(mOpenHostRequests[0].mPointer);
 }
 
-SingleHostRequest*
-NetDiscoveryInterface::GetSingleHostRequest(IpAddress const& thierIpAddress)
+SingleHostRequest* NetDiscoveryInterface::GetSingleHostRequest(IpAddress const& thierIpAddress)
 {
   if (mSingleHostRequests.ContainsKey(thierIpAddress))
   {
@@ -372,8 +350,7 @@ NetDiscoveryInterface::GetSingleHostRequest(IpAddress const& thierIpAddress)
   }
 }
 
-void NetDiscoveryInterface::TerminateInternalEvent(IpAddress const& eventIp,
-                                                   Event* event)
+void NetDiscoveryInterface::TerminateInternalEvent(IpAddress const& eventIp, Event* event)
 {
   // If an event Contains correspondence from a master server, then a lot of the
   // time we want to terminate the event so the client does not receive unwanted
@@ -439,13 +416,11 @@ IpAddress NetDiscoveryInterface::PongHelper(IpAddress const& theirIpAddress,
       return IpAddress(); // pong was fabricated, canceled or expired.
     hostRequest = singleHostRequest;
 
-    hostRequest->mDiscoveryStage = fromMasterServer
-                                       ? NetDiscoveryStage::BasicHostInfo
-                                       : NetDiscoveryStage::BasicHostInfoDirect;
+    hostRequest->mDiscoveryStage =
+        fromMasterServer ? NetDiscoveryStage::BasicHostInfo : NetDiscoveryStage::BasicHostInfoDirect;
   }
   // now actually store the data they delivered!
-  RespondingHostData* respondingHostData =
-      mRespondingHostData.FindPointer(pingedHostIp);
+  RespondingHostData* respondingHostData = mRespondingHostData.FindPointer(pingedHostIp);
 
   bool isFirstResponse = hostRequest->GetIsFirstResponseFrom(pingedHostIp);
 
@@ -475,33 +450,26 @@ IpAddress NetDiscoveryInterface::PongHelper(IpAddress const& theirIpAddress,
   respondingHostData->UpdateToBasic(fromMasterServer);
 
   // set round trip time.
-  respondingHostData->mRoundTripTime =
-      pendingHostPing.GetDurationSinceSendAttempt(
-          netHostPongData.mSendAttemptId, now);
+  respondingHostData->mRoundTripTime = pendingHostPing.GetDurationSinceSendAttempt(netHostPongData.mSendAttemptId, now);
 
   // At this point we have updated or added responding host data from the pong.
   return pingedHostIp;
 }
 
-bool NetDiscoveryInterface::PongIsForThisProject(
-    NetHostPongData const& netHostPongData,
-    PendingHostPing const& pendingHostPing)
+bool NetDiscoveryInterface::PongIsForThisProject(NetHostPongData const& netHostPongData,
+                                                 PendingHostPing const& pendingHostPing)
 {
-  return pendingHostPing.mHostPingType ==
-             HostPingType::MasterServerRefreshHost ||
+  return pendingHostPing.mHostPingType == HostPingType::MasterServerRefreshHost ||
          mNetPeer->GetOurProjectGuid() == netHostPongData.mProjectGuid;
 }
 
 void NetDiscoveryInterface::EndSingleRefresh(SingleHostRequest* hostRequest)
 {
   hostRequest->FlushHostRequest(*mNetPeer,
-                                *this); // Dispatches event. Creates net hosts.
-  mSingleHostRequests.Erase(
-      hostRequest->mIpAddress); // Removes map of IP to single host request.
-  mOpenHostRequests.EraseValue(
-      hostRequest); // Cleans up individual host refresh request.
-  mRespondingHostData.EraseValue(
-      hostRequest->mIpAddress); // Clean up responding host data.
+                                *this);                    // Dispatches event. Creates net hosts.
+  mSingleHostRequests.Erase(hostRequest->mIpAddress);      // Removes map of IP to single host request.
+  mOpenHostRequests.EraseValue(hostRequest);               // Cleans up individual host refresh request.
+  mRespondingHostData.EraseValue(hostRequest->mIpAddress); // Clean up responding host data.
 }
 
 //
@@ -515,8 +483,7 @@ void OpenHostRequest::FlushHost(NetPeer& netPeer,
   // dispatch single host events as needed.
   netDiscoveryInstance.DispatchHost(ipAddress, *this);
 
-  RespondingHostData* data =
-      netDiscoveryInstance.mRespondingHostData.FindPointer(ipAddress);
+  RespondingHostData* data = netDiscoveryInstance.mRespondingHostData.FindPointer(ipAddress);
   Assert(data); // data should not ever be null. the host data should have been
                 // created immediately after the host request was created.
                 // if assert fails, IpAddress could be wrong possibly?
@@ -535,8 +502,7 @@ void OpenHostRequest::FlushHost(NetPeer& netPeer,
 //  Single Host Request Implementation
 //
 
-void SingleHostRequest::FlushHostRequest(
-    NetPeer& netPeer, NetDiscoveryInterface& netDiscoveryInstance)
+void SingleHostRequest::FlushHostRequest(NetPeer& netPeer, NetDiscoveryInterface& netDiscoveryInstance)
 {
   FlushHost(netPeer, netDiscoveryInstance, mIpAddress);
 }
@@ -546,8 +512,7 @@ bool SingleHostRequest::IsNewHost(IpAddress const& hostIpAddress)
   // TODO: Verify what would be needed to be certain this is a new host for a
   // single host request. if we were not previously known, and now we are
   // discovered.
-  return mPreviouslyKnown == false && mAllowDiscovery &&
-         mDiscoveryStage != NetDiscoveryStage::Unresponding;
+  return mPreviouslyKnown == false && mAllowDiscovery && mDiscoveryStage != NetDiscoveryStage::Unresponding;
 }
 
 bool SingleHostRequest::IsStaleHost(IpAddress const& hostIpAddress)
@@ -568,8 +533,7 @@ bool SingleHostRequest::GetIsFirstResponseFrom(IpAddress const& pingedHostIp)
   return !mReceivedFirstResponse;
 }
 
-void SingleHostRequest::SetIsFirstResponseFrom(IpAddress const& pingedHostIp,
-                                               bool isFirstResponse)
+void SingleHostRequest::SetIsFirstResponseFrom(IpAddress const& pingedHostIp, bool isFirstResponse)
 {
   mReceivedFirstResponse = !isFirstResponse;
 }
@@ -578,16 +542,14 @@ void SingleHostRequest::SetIsFirstResponseFrom(IpAddress const& pingedHostIp,
 //  Multi Host Request Implementation
 //
 
-void MultiHostRequest::FlushHostRequest(
-    NetPeer& netPeer, NetDiscoveryInterface& netDiscoveryInstance)
+void MultiHostRequest::FlushHostRequest(NetPeer& netPeer, NetDiscoveryInterface& netDiscoveryInstance)
 {
   // Alias name so its easier to access.
-  ArrayMap<IpAddress, RespondingHostData>& respondingHostData =
-      netDiscoveryInstance.mRespondingHostData;
+  ArrayMap<IpAddress, RespondingHostData>& respondingHostData = netDiscoveryInstance.mRespondingHostData;
 
   // Operate on all responding host data in it.
   typedef Zero::Pair<Zero::IpAddress, Zero::RespondingHostData> HostDataPair;
-  forRange(HostDataPair & ipDataPair, respondingHostData.All())
+  forRange (HostDataPair& ipDataPair, respondingHostData.All())
   {
     FlushHost(netPeer, netDiscoveryInstance, ipDataPair.first);
   }
@@ -596,8 +558,7 @@ void MultiHostRequest::FlushHostRequest(
   NetHostListUpdate event;
   event.mNetwork = mNetwork;
 
-  Zero::String eventId = mAllowDiscovery ? Events::NetHostListDiscovered
-                                         : Events::NetHostListRefreshed;
+  Zero::String eventId = mAllowDiscovery ? Events::NetHostListDiscovered : Events::NetHostListRefreshed;
 
   netPeer.DispatchEvent(eventId, &event);
 }
@@ -610,8 +571,7 @@ bool MultiHostRequest::IsNewHost(IpAddress const& hostIpAddress)
 bool MultiHostRequest::IsStaleHost(IpAddress const& hostIpAddress)
 {
   // if we expected it, but did not get a response from it.
-  return mExpectedHosts.Contains(hostIpAddress) && mAllowDiscovery &&
-         !mRespondingHosts.Contains(hostIpAddress);
+  return mExpectedHosts.Contains(hostIpAddress) && mAllowDiscovery && !mRespondingHosts.Contains(hostIpAddress);
 }
 
 void MultiHostRequest::BeginExtraHostInfo()
@@ -627,8 +587,7 @@ bool MultiHostRequest::GetIsFirstResponseFrom(IpAddress const& pingedHostIp)
   return !mRespondingHosts.Contains(pingedHostIp);
 }
 
-void MultiHostRequest::SetIsFirstResponseFrom(IpAddress const& pingedHostIp,
-                                              bool isFirstResponse)
+void MultiHostRequest::SetIsFirstResponseFrom(IpAddress const& pingedHostIp, bool isFirstResponse)
 {
   if (isFirstResponse)
   {

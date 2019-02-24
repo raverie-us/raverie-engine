@@ -28,18 +28,12 @@ int CallMain()
   return main(argc, argv.Data());
 }
 
-int WINAPI wWinMain(HINSTANCE hInstance,
-                    HINSTANCE hPrevInstance,
-                    PWSTR pCmdLine,
-                    int nCmdShow)
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
   return CallMain();
 }
 
-int WINAPI WinMain(HINSTANCE hInstance,
-                   HINSTANCE hPrevInstance,
-                   PSTR pCmdLine,
-                   int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
 {
   return CallMain();
 }

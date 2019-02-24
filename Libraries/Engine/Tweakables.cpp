@@ -30,8 +30,7 @@ void TweakableSetter(Call& call, ExceptionReport& report)
     return;
   }
 
-  property->PropertyType->GenericCopyConstruct((byte*)property->UserData,
-                                               parameter);
+  property->PropertyType->GenericCopyConstruct((byte*)property->UserData, parameter);
 
   if (Tweakables::sModifiedCallback)
     (*Tweakables::sModifiedCallback)();
@@ -51,8 +50,7 @@ void TweakableGetter(Call& call, ExceptionReport& report)
   byte* returnLocation = call.GetReturnUnchecked();
   call.DisableReturnChecks();
 
-  returnType->GenericCopyConstruct(returnLocation,
-                                   (const byte*)property->UserData);
+  returnType->GenericCopyConstruct(returnLocation, (const byte*)property->UserData);
 }
 
 TweakableNode::TweakableNode(StringParam typeName)
@@ -82,8 +80,8 @@ void TweakableNode::Serialize(Serializer& stream)
   {
     DataTreeLoader& loader = *(DataTreeLoader*)(&stream);
 
-    forRange(TweakableProperty * property, mProperties.Values())
-        property->Serialize(loader);
+    forRange (TweakableProperty* property, mProperties.Values())
+      property->Serialize(loader);
 
     PolymorphicNode node;
     while (loader.GetPolymorphic(node))
@@ -203,15 +201,14 @@ Handle TweakablesComposition::GetComponentAt(HandleParam owner, uint index)
   return child;
 }
 
-Handle TweakablesComposition::GetComponent(HandleParam owner,
-                                           BoundType* componentType)
+Handle TweakablesComposition::GetComponent(HandleParam owner, BoundType* componentType)
 {
   // We have to search each node for the correct type Id
   // We could store them in another map to make this faster, however
   // it's only used for loading once in the editor and there won't be that many,
   // so it's not all that important
   TweakableNode* node = owner.Get<TweakableNode*>(GetOptions::AssertOnNull);
-  forRange(TweakableNode * child, node->Children.AllValues())
+  forRange (TweakableNode* child, node->Children.AllValues())
   {
     if (child->Meta == componentType)
       return child;

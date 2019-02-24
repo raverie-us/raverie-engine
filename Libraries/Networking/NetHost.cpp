@@ -23,12 +23,7 @@ ZilchDefineType(NetHost, builder, type)
   ZilchBindFieldGetterProperty(mExtraHostInfo);
 }
 
-NetHost::NetHost() :
-    mNetwork(Network::LAN),
-    mIpAddress(),
-    mRoundTripTime(0),
-    mBasicHostInfo(),
-    mExtraHostInfo()
+NetHost::NetHost() : mNetwork(Network::LAN), mIpAddress(), mRoundTripTime(0), mBasicHostInfo(), mExtraHostInfo()
 {
 }
 NetHost::NetHost(const IpAddress& ipAddress) :
@@ -91,8 +86,7 @@ uint NetHost::GetLatency() const
 NetHostRange::NetHostRange() : NetHostSet::range()
 {
 }
-NetHostRange::NetHostRange(const NetHostSet::range& rhs) :
-    NetHostSet::range(rhs)
+NetHostRange::NetHostRange(const NetHostSet::range& rhs) : NetHostSet::range(rhs)
 {
 }
 

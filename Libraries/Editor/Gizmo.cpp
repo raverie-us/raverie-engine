@@ -30,9 +30,7 @@ GizmoRayTestEvent::GizmoRayTestEvent() :
 {
 }
 
-void GizmoRayTestEvent::RegisterResult(Cog* gizmo,
-                                       float distance,
-                                       int pickingPriority)
+void GizmoRayTestEvent::RegisterResult(Cog* gizmo, float distance, int pickingPriority)
 {
   if (distance < mHitDistance && pickingPriority >= mPickingPriority)
   {
@@ -147,7 +145,7 @@ void ForwardGizmoEvent(Cog* cog, Event* e, bool forwardToChildren)
 
   if (forwardToChildren)
   {
-    forRange(Cog & child, cog->GetChildren())
+    forRange (Cog& child, cog->GetChildren())
     {
       if (Gizmo* childGizmo = child.has(Gizmo))
         childGizmo->ForwardEvent(e);
@@ -253,16 +251,13 @@ void GizmoSpace::OnMouseUpdate(ViewportMouseEvent* e)
           oldGizmo->mMouseOver = false;
 
         oldGizmoCog->DispatchEvent(Events::MouseExitGizmo, &oldGizmoEvent);
-        oldGizmoCog->DispatchEvent(Events::MouseExitGizmoHierarchy,
-                                   &oldGizmoEvent);
-        oldGizmoCog->DispatchUp(Events::MouseExitGizmoHierarchy,
-                                &oldGizmoEvent);
+        oldGizmoCog->DispatchEvent(Events::MouseExitGizmoHierarchy, &oldGizmoEvent);
+        oldGizmoCog->DispatchUp(Events::MouseExitGizmoHierarchy, &oldGizmoEvent);
       }
 
       // Mouse has entered the new Gizmo
       newGizmoCog->DispatchEvent(Events::MouseEnterGizmo, &newGizmoEvent);
-      newGizmoCog->DispatchEvent(Events::MouseEnterGizmoHierarchy,
-                                 &newGizmoEvent);
+      newGizmoCog->DispatchEvent(Events::MouseEnterGizmoHierarchy, &newGizmoEvent);
       newGizmoCog->DispatchUp(Events::MouseEnterGizmoHierarchy, &newGizmoEvent);
 
       mMouseOverGizmo = newGizmoCog;
@@ -297,7 +292,7 @@ void GizmoSpace::ForwardEvent(Event* e)
 
 void GizmoSpace::ForwardEventToAllGizmos(Event* e)
 {
-  forRange(CogId cogId, mRootGizmos.All())
+  forRange (CogId cogId, mRootGizmos.All())
   {
     if (Cog* cog = cogId)
     {

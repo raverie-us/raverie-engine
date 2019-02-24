@@ -55,9 +55,7 @@ public:
   /// Constructor.
   TagChainBase(Composite* parent);
 
-  virtual bool AddTag(StringParam tagName,
-                      bool removeable,
-                      bool sendsEvents = true);
+  virtual bool AddTag(StringParam tagName, bool removeable, bool sendsEvents = true);
   void GetTags(Array<String>& tags, bool includeNonRemoveable = true);
   void GetTags(HashSet<String>& tags, bool includeNonRemoveable = true);
   void ClearTags();
@@ -106,9 +104,7 @@ public:
   void UpdateTransform() override;
   Vec2 GetMinSize() override;
 
-  bool AddTag(StringParam tagName,
-              bool removeable,
-              bool sendsEvents = true) override;
+  bool AddTag(StringParam tagName, bool removeable, bool sendsEvents = true) override;
   void ClearSearch();
   void ClearTags();
 

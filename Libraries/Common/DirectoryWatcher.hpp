@@ -24,17 +24,13 @@ public:
     String FileName;
   };
 
-  typedef OsInt (*CallbackFunction)(void* callbackInstance,
-                                    FileOperationInfo& info);
+  typedef OsInt (*CallbackFunction)(void* callbackInstance, FileOperationInfo& info);
 
-  DirectoryWatcher(cstr directoryToWatch,
-                   CallbackFunction callback,
-                   void* callbackInstance);
+  DirectoryWatcher(cstr directoryToWatch, CallbackFunction callback, void* callbackInstance);
   ~DirectoryWatcher();
   void Shutdown();
 
-  template <typename classType,
-            OsInt (classType::*MemberFunction)(FileOperationInfo& info)>
+  template <typename classType, OsInt (classType::*MemberFunction)(FileOperationInfo& info)>
   static OsInt CallBackCreator(void* objectInstance, FileOperationInfo& info)
   {
     classType* object = (classType*)objectInstance;

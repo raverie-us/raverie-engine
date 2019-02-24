@@ -80,7 +80,7 @@ SearchData::~SearchData()
 
 void SearchData::Search()
 {
-  forRange(SearchProvider * provider, SearchProviders.All())
+  forRange (SearchProvider* provider, SearchProviders.All())
   {
     provider->Search(*this);
   }
@@ -88,10 +88,9 @@ void SearchData::Search()
 
 void SearchData::AddAvailableTagsToResults()
 {
-  forRange(StringParam tag, AvailableTags.All())
+  forRange (StringParam tag, AvailableTags.All())
   {
-    int priority =
-        PartialMatch(SearchString.All(), tag.All(), CaseInsensitiveCompare);
+    int priority = PartialMatch(SearchString.All(), tag.All(), CaseInsensitiveCompare);
     if (priority != cNoMatch && !ActiveTags.Contains(tag))
     {
       SearchViewResult& results = Results.PushBack();
@@ -142,10 +141,7 @@ void SearchViewElement::OnMouseMove(MouseEvent* event)
   mView->SetSelection(mIndex);
 }
 
-void SearchViewElement::Setup(SearchView* view,
-                              uint index,
-                              bool selected,
-                              SearchViewResult& element)
+void SearchViewElement::Setup(SearchView* view, uint index, bool selected, SearchViewResult& element)
 {
   mView = view;
 
@@ -193,14 +189,11 @@ ZilchDefineType(SearchView, builder, type)
 {
 }
 
-SearchView::SearchView(Composite* parent) :
-    Composite(parent),
-    mEventTerminated(false)
+SearchView::SearchView(Composite* parent) : Composite(parent), mEventTerminated(false)
 {
   static const String className = "ListBox";
   mDefSet = mDefSet->GetDefinitionSet(className);
-  this->SetLayout(CreateStackLayout(
-      LayoutDirection::TopToBottom, Pixels(0, 4), Thickness(0, 1, 0, 0)));
+  this->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 4), Thickness(0, 1, 0, 0)));
 
   mSelectedIndex = 0;
 
@@ -276,10 +269,7 @@ void SearchView::PositionToolTip()
   Vec2 topLeft = rect.TopLeft();
 
   placement.SetScreenRect(rect);
-  placement.SetPriority(IndicatorSide::Right,
-                        IndicatorSide::Left,
-                        IndicatorSide::Top,
-                        IndicatorSide::Bottom);
+  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Top, IndicatorSide::Bottom);
 
   toolTip->SetArrowTipTranslation(placement);
 
@@ -311,10 +301,7 @@ void SearchView::PositionAlternateToolTip()
   searchRect.X += 1.0f;
 
   placement.SetScreenRect(searchRect);
-  placement.SetPriority(IndicatorSide::Right,
-                        IndicatorSide::Left,
-                        IndicatorSide::Top,
-                        IndicatorSide::Bottom);
+  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Top, IndicatorSide::Bottom);
 
   alternateTip->SetArrowTipTranslation(placement);
 
@@ -349,10 +336,7 @@ void SearchView::ResolveVerticalToolTipOverlap()
   ToolTipPlacement placeItem;
   placeItem.SetScreenRect(itemRect);
 
-  placeItem.SetPriority(IndicatorSide::Right,
-                        IndicatorSide::Left,
-                        IndicatorSide::Top,
-                        IndicatorSide::Bottom);
+  placeItem.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Top, IndicatorSide::Bottom);
 
   toolTip->SetArrowTipTranslation(placeItem);
   // Keep the tooltip arrow next to the UI element associated with the tooltip.
@@ -396,8 +380,7 @@ void SearchView::MoveSelection(int change)
 
   if (mSearch->Results.Size() > 0)
   {
-    mSelectedIndex = Math::Clamp(
-        int(mSelectedIndex + change), 0, int(mSearch->Results.Size() - 1));
+    mSelectedIndex = Math::Clamp(int(mSelectedIndex + change), 0, int(mSearch->Results.Size() - 1));
     mSearchBar->mSearchIndex = mSelectedIndex;
     float location = float(mSelectedIndex) * SearchViewUi::RowSize;
     if (change > 0)
@@ -449,8 +432,7 @@ void SearchView::BuildResults()
 {
   Composite* window = GetBeforeRoot(this);
 
-  float allRowHeight =
-      Pixels(SearchViewUi::RowSize) * float(mSearch->Results.Size());
+  float allRowHeight = Pixels(SearchViewUi::RowSize) * float(mSearch->Results.Size());
 
   mArea->SetClientSize(Vec2(Pixels(10), allRowHeight));
 
@@ -473,9 +455,8 @@ void SearchView::BuildResults()
     bool needsAlternatePreview = false;
 
     // Add to the search preview widget, if applicable.
-    forRange(SearchProvider * provider, mSearch->SearchProviders.All())
-        needsAlternatePreview |=
-        provider->AddToAlternatePreview(mSearch, alternatePreviewWidget);
+    forRange (SearchProvider* provider, mSearch->SearchProviders.All())
+      needsAlternatePreview |= provider->AddToAlternatePreview(mSearch, alternatePreviewWidget);
 
     if (!needsAlternatePreview)
     {
@@ -503,8 +484,7 @@ void SearchView::BuildResults()
     SearchViewResult& result = mSearch->Results[mSelectedIndex];
 
     Composite* root = window->GetParent();
-    Composite* composite =
-        result.Interface->CreatePreview(window->GetParent(), result);
+    Composite* composite = result.Interface->CreatePreview(window->GetParent(), result);
     if (composite)
     {
       // Destroy the old list-item tooltip, if it exists.
@@ -521,8 +501,7 @@ void SearchView::BuildResults()
       bool matchWidth = mAlternateToolTip.IsNotNull();
       // Get the search-box tooltip's content size without padding,
       // as the list-item tooltip sets its own padding.
-      float width = (matchWidth) ? mAlternateToolTip->GetPaddedContentSize().x
-                                 : cPreviewSize;
+      float width = (matchWidth) ? mAlternateToolTip->GetPaddedContentSize().x : cPreviewSize;
 
       // Defer border-display to the parent's (tooltip) border.
       if (MultiLineText* content = Type::DynamicCast<MultiLineText*>(composite))
@@ -550,7 +529,7 @@ void SearchView::BuildResults()
 
   Vec4 areaRect = mArea->GetClientArea();
 
-  forRange(SearchViewElement * element, mElements.All())
+  forRange (SearchViewElement* element, mElements.All())
   {
     element->SetActive(false);
     element->Destroy();
@@ -560,14 +539,12 @@ void SearchView::BuildResults()
 
   uint firstVisible = uint(areaRect.y / Pixels(SearchViewUi::RowSize));
 
-  uint numberOfVisibleElements =
-      uint(areaRect.w / Pixels(SearchViewUi::RowSize));
+  uint numberOfVisibleElements = uint(areaRect.w / Pixels(SearchViewUi::RowSize));
 
   Composite* area = mArea->GetClientWidget();
 
   uint start = firstVisible;
-  uint end =
-      Math::Min(start + numberOfVisibleElements, (uint)mSearch->Results.Size());
+  uint end = Math::Min(start + numberOfVisibleElements, (uint)mSearch->Results.Size());
   for (uint i = start; i < end; ++i)
   {
     SearchViewResult& element = mSearch->Results[i];
@@ -594,14 +571,13 @@ bool SearchView::TakeFocusOverride()
 
 bool CheckTags(HashSet<String>& testTags, BoundType* type)
 {
-  forRange(CogComponentMeta * metaComponent, type->HasAll<CogComponentMeta>())
+  forRange (CogComponentMeta* metaComponent, type->HasAll<CogComponentMeta>())
   {
     if (CheckTags(testTags, metaComponent->mTags))
       return true;
   }
 
-  if (MetaScriptTagAttribute* tagAttribute =
-          type->HasInherited<MetaScriptTagAttribute>())
+  if (MetaScriptTagAttribute* tagAttribute = type->HasInherited<MetaScriptTagAttribute>())
   {
     if (CheckTags(testTags, tagAttribute->mTagSet))
       return true;
@@ -614,17 +590,16 @@ bool CheckAndAddTags(SearchData& search, BoundType* type)
 {
   if (CheckTags(search.ActiveTags, type))
   {
-    forRange(CogComponentMeta * metaComponent, type->HasAll<CogComponentMeta>())
+    forRange (CogComponentMeta* metaComponent, type->HasAll<CogComponentMeta>())
     {
-      forRange(String & tag, metaComponent->mTags.All())
-          search.AvailableTags.Insert(tag);
+      forRange (String& tag, metaComponent->mTags.All())
+        search.AvailableTags.Insert(tag);
     }
 
-    if (MetaScriptTagAttribute* tagAttribute =
-            type->HasInherited<MetaScriptTagAttribute>())
+    if (MetaScriptTagAttribute* tagAttribute = type->HasInherited<MetaScriptTagAttribute>())
     {
-      forRange(String & tag, tagAttribute->mTagSet.All())
-          search.AvailableTags.Insert(tag);
+      forRange (String& tag, tagAttribute->mTagSet.All())
+        search.AvailableTags.Insert(tag);
     }
 
     return true;
@@ -665,7 +640,7 @@ void SearchView::Search(StringParam text)
   mSearch->Results.Clear();
 
   // Collect all search results
-  forRange(SearchProvider * provider, mSearch->SearchProviders.All())
+  forRange (SearchProvider* provider, mSearch->SearchProviders.All())
   {
     provider->Search(*mSearch);
   }
@@ -706,8 +681,8 @@ void SearchView::OnKeyPressed(KeyboardEvent* event)
   }
   else if (event->Key == Keys::Enter && event->GetModifierPressed())
   {
-    forRange(SearchProvider * provider, mSearch->SearchProviders.All())
-        provider->AttemptAlternateSearchCompleted();
+    forRange (SearchProvider* provider, mSearch->SearchProviders.All())
+      provider->AttemptAlternateSearchCompleted();
   }
 }
 

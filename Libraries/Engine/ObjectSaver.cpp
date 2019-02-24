@@ -5,9 +5,7 @@ namespace Zero
 {
 
 // Object Saver
-ObjectSaver::ObjectSaver() :
-    mSerializeStart(nullptr),
-    mFullObjectOverride(false)
+ObjectSaver::ObjectSaver() : mSerializeStart(nullptr), mFullObjectOverride(false)
 {
 }
 
@@ -31,18 +29,14 @@ void ObjectSaver::SaveFullObject(Object* object)
   SaveObject(object, object, path, false, InheritIdContext::Instance);
 }
 
-void ObjectSaver::SaveObject(Object* object,
-                             Object* propertyPathParent,
-                             PropertyPath& path,
-                             bool patching,
-                             InheritIdContext::Enum context)
+void ObjectSaver::SaveObject(
+    Object* object, Object* propertyPathParent, PropertyPath& path, bool patching, InheritIdContext::Enum context)
 {
   // Check to see if we should serialize this object
   BoundType* objectType = ZilchVirtualTypeId(object);
 
   // Check to see if we should serialize this object
-  if (SerializationFilter* filter =
-          objectType->HasInherited<SerializationFilter>())
+  if (SerializationFilter* filter = objectType->HasInherited<SerializationFilter>())
   {
     if (filter->ShouldSerialize(object) == false)
       return;
@@ -58,8 +52,7 @@ void ObjectSaver::SaveObject(Object* object,
 
   // Start a new property path if this object stores local modifications
   PropertyPath localPath;
-  if (objectType->HasAttributeInherited(
-          ObjectAttributes::cStoreLocalModifications))
+  if (objectType->HasAttributeInherited(ObjectAttributes::cStoreLocalModifications))
     path = localPath;
 
   // If we're patching, continue to only save out modified properties
@@ -72,8 +65,7 @@ void ObjectSaver::SaveObject(Object* object,
   // If the given object inherits from another object, we want to save the
   // object out as a data patch
   String inheritId;
-  if (MetaDataInheritanceRoot* inheritance =
-          objectType->HasInherited<MetaDataInheritanceRoot>())
+  if (MetaDataInheritanceRoot* inheritance = objectType->HasInherited<MetaDataInheritanceRoot>())
     inheritId = inheritance->GetInheritId(object, context);
 
   if (inheritId.Empty() || mFullObjectOverride)
@@ -140,41 +132,34 @@ void ObjectSaver::SaveProperties(Object* object,
     LocalModifications* modifications = LocalModifications::GetInstance();
 
     // Only save out properties if the object had modifications
-    if (ObjectState* objectState =
-            modifications->GetObjectState(propertyPathParent))
+    if (ObjectState* objectState = modifications->GetObjectState(propertyPathParent))
     {
       BoundType* objectType = ZilchVirtualTypeId(object);
-      forRange(Property * metaProperty, objectType->GetProperties())
+      forRange (Property* metaProperty, objectType->GetProperties())
       {
         // Skip properties that aren't serialized (disabled until full meta
         // serialization refactor)
         // if(!metaProperty->Flags.IsSet(PropertyFlags::Serialized))
         // continue;
 
-        BoundType* propertyType =
-            Type::GetBoundType(metaProperty->PropertyType);
+        BoundType* propertyType = Type::GetBoundType(metaProperty->PropertyType);
 
         if (propertyType && !metaProperty->IsStatic &&
-            propertyType->HasAttributeInherited(
-                SerializationAttributes::cSerializationPrimitive) == nullptr)
+            propertyType->HasAttributeInherited(SerializationAttributes::cSerializationPrimitive) == nullptr)
         {
           path.AddPropertyToPath(metaProperty);
 
           Any objectValue = metaProperty->GetValue(object);
           Object* subObject = objectValue.Get<Object*>();
 
-          forRange(Property * subProperty, propertyType->GetProperties())
+          forRange (Property* subProperty, propertyType->GetProperties())
           {
             path.AddPropertyToPath(subProperty);
 
             if (objectState->IsPropertyModified(path))
             {
-              InnerStart(
-                  propertyType->Name.c_str(), metaProperty->Name.c_str(), 0);
-              InnerStart(propertyType->Name.c_str(),
-                         nullptr,
-                         StructureType::Object,
-                         true);
+              InnerStart(propertyType->Name.c_str(), metaProperty->Name.c_str(), 0);
+              InnerStart(propertyType->Name.c_str(), nullptr, StructureType::Object, true);
 
               path.PopEntry();
 
@@ -222,7 +207,7 @@ void ObjectSaver::SaveChildren(Object* object,
   LocalModifications* modifications = LocalModifications::GetInstance();
   ObjectState* objectState = modifications->GetObjectState(object);
 
-  forRange(Handle childHandle, composition->AllComponents(object))
+  forRange (Handle childHandle, composition->AllComponents(object))
   {
     Object* child = childHandle.Get<Object*>();
 
@@ -249,21 +234,15 @@ void ObjectSaver::SaveChildren(Object* object,
     }
     else
     {
-      SaveObject(child,
-                 propertyPathParent,
-                 path,
-                 onlyModifiedChildren,
-                 InheritIdContext::Instance);
+      SaveObject(child, propertyPathParent, path, onlyModifiedChildren, InheritIdContext::Instance);
     }
   }
 
   // Save out removed children
   if (objectState)
   {
-    forRange(ObjectState::ChildId removedChild,
-             objectState->GetRemovedChildren())
-        AddSubtractivePolymorphicNode(removedChild.mTypeName.c_str(),
-                                      removedChild.mId);
+    forRange (ObjectState::ChildId removedChild, objectState->GetRemovedChildren())
+      AddSubtractivePolymorphicNode(removedChild.mTypeName.c_str(), removedChild.mId);
   }
 }
 
@@ -282,13 +261,11 @@ void ObjectSaver::BuildPolymorphicInfo(PolymorphicInfo& info,
   // if(patching)
   {
     // Get the inheritance data
-    if (MetaDataInheritanceRoot* inheritance =
-            objectType->HasInherited<MetaDataInheritanceRoot>())
+    if (MetaDataInheritanceRoot* inheritance = objectType->HasInherited<MetaDataInheritanceRoot>())
       info.mInheritanceId = inheritance->GetInheritId(object, context);
 
     // Get the unique node id
-    if (MetaDataInheritance* inheritance =
-            objectType->HasInherited<MetaDataInheritance>())
+    if (MetaDataInheritance* inheritance = objectType->HasInherited<MetaDataInheritance>())
     {
       // We don't need the unique node id if it's the root object being saved
       // because it's only used for resolving child nodes

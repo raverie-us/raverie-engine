@@ -76,9 +76,7 @@ void ContactUpdate(Contact* contact, Collider* c0, Collider* c1);
 void UpdateHierarchyTransform(RigidBody* body);
 
 // Helper to apply the position correction to a body
-void ApplyPositionCorrection(RigidBody* body,
-                             Vec3Param linearOffset,
-                             Vec3Param angularOffset);
+void ApplyPositionCorrection(RigidBody* body, Vec3Param linearOffset, Vec3Param angularOffset);
 
 void ApplyPositionCorrection(RigidBody* b0,
                              RigidBody* b1,
@@ -88,9 +86,7 @@ void ApplyPositionCorrection(RigidBody* b0,
                              Vec3Param angularOffset1);
 
 template <typename JointType, typename UpdateFunctor>
-void JointBlockSolvePositions(JointType& joint,
-                              PositionSolverData& data,
-                              UpdateFunctor functor)
+void JointBlockSolvePositions(JointType& joint, PositionSolverData& data, UpdateFunctor functor)
 {
   ConstraintMolecule moleculeList[PostionCorrectionConstants::mMoleculeCount];
 
@@ -180,10 +176,8 @@ void JointBlockSolvePositions(JointType& joint,
 
     partialMass.PartialLinear0 = masses.mInvMass[0].Apply(j.Linear[0]);
     partialMass.PartialLinear1 = masses.mInvMass[1].Apply(j.Linear[1]);
-    partialMass.PartialAngular0 =
-        Math::Transform(masses.InverseInertia[0], j.Angular[0]);
-    partialMass.PartialAngular1 =
-        Math::Transform(masses.InverseInertia[1], j.Angular[1]);
+    partialMass.PartialAngular0 = Math::Transform(masses.InverseInertia[0], j.Angular[0]);
+    partialMass.PartialAngular1 = Math::Transform(masses.InverseInertia[1], j.Angular[1]);
   }
 
   // get the max linear and angular error correction that we can use
@@ -216,8 +210,7 @@ void JointBlockSolvePositions(JointType& joint,
     // have to pass in a real by reference, just pass a dummy in for now
     real dummy;
     // determine if we use the linear or angular error for this constraint
-    if (joint.GetAtomIndexFilter(moleculeList[y].mAtomIndex, dummy) ==
-        Joint::LinearAxis)
+    if (joint.GetAtomIndexFilter(moleculeList[y].mAtomIndex, dummy) == Joint::LinearAxis)
       maxError = maxLinearError;
     else
       maxError = maxAngularError;
@@ -259,12 +252,7 @@ void JointBlockSolvePositions(JointType& joint,
     }
   }
 
-  ApplyPositionCorrection(b0,
-                          b1,
-                          body0PosOffset,
-                          body0AngularOffset,
-                          body1PosOffset,
-                          body1AngularOffset);
+  ApplyPositionCorrection(b0, b1, body0PosOffset, body0AngularOffset, body1PosOffset, body1AngularOffset);
 }
 
 template <typename ListType, typename UpdateFunctor>
@@ -336,14 +324,12 @@ inline void SolveConstraintPosition(ListType& jointList, UpdateFunctor functor)
       if (b0 != nullptr)
       {
         pos0 = lambda * masses.mInvMass[0].Apply(mol.mJacobian.Linear[0]);
-        angular0 = lambda * Math::Transform(masses.InverseInertia[0],
-                                            mol.mJacobian.Angular[0]);
+        angular0 = lambda * Math::Transform(masses.InverseInertia[0], mol.mJacobian.Angular[0]);
       }
       if (b1 != nullptr)
       {
         pos1 = lambda * masses.mInvMass[1].Apply(mol.mJacobian.Linear[1]);
-        angular1 = lambda * Math::Transform(masses.InverseInertia[1],
-                                            mol.mJacobian.Angular[1]);
+        angular1 = lambda * Math::Transform(masses.InverseInertia[1], mol.mJacobian.Angular[1]);
       }
 
       ApplyPositionCorrection(b0, b1, pos0, angular0, pos1, angular1);

@@ -73,25 +73,20 @@ Vec3 ViewportMouseEvent::ToWorldViewPlane(float viewDepth)
   return viewport->ScreenToWorldViewPlane(Position, viewDepth);
 }
 
-Vec3 ViewportMouseEvent::ToWorldPlane(Vec3Param worldPlaneNormal,
-                                      Vec3Param worldPlanePosition)
+Vec3 ViewportMouseEvent::ToWorldPlane(Vec3Param worldPlaneNormal, Vec3Param worldPlanePosition)
 {
   Viewport* viewport = mViewport;
   if (viewport == nullptr)
     return Vec3::cZero;
 
-  return viewport->ScreenToWorldPlane(
-      Position, worldPlaneNormal, worldPlanePosition);
+  return viewport->ScreenToWorldPlane(Position, worldPlaneNormal, worldPlanePosition);
 }
 
 ZilchDefineType(ReactiveViewport, builder, type)
 {
 }
 
-ReactiveViewport::ReactiveViewport(Composite* parent,
-                                   Space* space,
-                                   Camera* camera,
-                                   CameraViewport* cameraViewport) :
+ReactiveViewport::ReactiveViewport(Composite* parent, Space* space, Camera* camera, CameraViewport* cameraViewport) :
     Viewport(parent, space, camera)
 {
   mReactiveRay = Ray(Vec3::cZero, Vec3::cZAxis);
@@ -157,9 +152,7 @@ ReactiveSpace* ReactiveViewport::GetReactiveSpace()
   {
     space->AddComponentByName("ReactiveSpace");
     reactiveSpace = space->has(ReactiveSpace);
-    ReturnIf(reactiveSpace == nullptr,
-             nullptr,
-             "Unable to add ReactiveSpace component");
+    ReturnIf(reactiveSpace == nullptr, nullptr, "Unable to add ReactiveSpace component");
   }
 
   return reactiveSpace;
@@ -179,8 +172,7 @@ void ReactiveViewport::OnMouseEnter(MouseEvent* e)
   ViewportMouseEvent viewportEvent(e);
   InitViewportEvent(viewportEvent);
 
-  mCamera->GetOwner()->GetDispatcher()->Dispatch(Events::MouseEnter,
-                                                 &viewportEvent);
+  mCamera->GetOwner()->GetDispatcher()->Dispatch(Events::MouseEnter, &viewportEvent);
 }
 
 void ReactiveViewport::OnMouseExit(MouseEvent* e)
@@ -370,14 +362,12 @@ void ReactiveViewport::UpdateOverObject(MouseEvent* e)
       ViewportMouseEvent viewportEvent(e);
       InitViewportEvent(viewportEvent);
 
-      oldOverObject->GetDispatcher()->Dispatch(Events::MouseExit,
-                                               &viewportEvent);
+      oldOverObject->GetDispatcher()->Dispatch(Events::MouseExit, &viewportEvent);
     }
   }
 }
 
-void ReactiveViewport::ForwardReactiveEvent(StringParam eventName,
-                                            MouseEvent* e)
+void ReactiveViewport::ForwardReactiveEvent(StringParam eventName, MouseEvent* e)
 {
   if (e->Handled)
     return;
@@ -470,8 +460,7 @@ void ReactiveViewport::InitViewportEvent(ViewportMouseEvent& viewportEvent)
 void ReactiveViewport::SetMouseTrapPosition(bool useMouseTrapPosition)
 {
   if (OsWindow* window = mRootWidget->GetOsWindow())
-    window->SetMouseTrapClientPosition(
-        Math::ToIntVec2(GetClientCenterPosition()), useMouseTrapPosition);
+    window->SetMouseTrapClientPosition(Math::ToIntVec2(GetClientCenterPosition()), useMouseTrapPosition);
 }
 
 Widget* ReactiveViewport::HitTest(Vec2 screenPoint, Widget* skip)
@@ -548,8 +537,7 @@ void GameWidget::OnKeyDown(KeyboardEvent* event)
   // the game In general, pressing number keys in the game should NOT change
   // tools, or Ctrl+S should not save
   Keys::Enum key = event->Key;
-  if (!editorMode && key != Keys::Escape &&
-      !(key >= Keys::F5 && key <= Keys::F12) &&
+  if (!editorMode && key != Keys::Escape && !(key >= Keys::F5 && key <= Keys::F12) &&
       !(event->CtrlPressed && event->ShiftPressed))
     event->Handled = true;
   if (event->HandledEventScript)
@@ -563,8 +551,7 @@ ReactiveViewport* GameWidget::GetViewportUnder(ReactiveViewport* current)
 
   while (currentWidget)
   {
-    ReactiveViewport* nextViewport =
-        Type::DynamicCast<ReactiveViewport*>(currentWidget);
+    ReactiveViewport* nextViewport = Type::DynamicCast<ReactiveViewport*>(currentWidget);
     if (nextViewport)
       return nextViewport;
 
@@ -588,8 +575,7 @@ void GameWidget::SetGameSession(GameSession* gameSession)
 void GameWidget::SaveScreenshot(StringParam filename)
 {
   mScreenshotFilename = filename;
-  ConnectThisTo(
-      Z::gEngine->has(GraphicsEngine), "UiRenderUpdate", OnUiRenderUpdate);
+  ConnectThisTo(Z::gEngine->has(GraphicsEngine), "UiRenderUpdate", OnUiRenderUpdate);
 }
 
 void GameWidget::OnUiRenderUpdate(Event* event)
@@ -609,14 +595,11 @@ void GameWidget::OnUiRenderUpdate(Event* event)
   Mat4 scale;
   scale.Scale(1.0f, -1.0f, 1.0f);
   viewBlock.mWorldToView = scale * translation;
-  BuildOrthographicTransformZero(
-      viewBlock.mViewToPerspective, size.y, size.x / size.y, -1.0f, 1.0f);
+  BuildOrthographicTransformZero(viewBlock.mViewToPerspective, size.y, size.x / size.y, -1.0f, 1.0f);
 
   Mat4 apiPerspective;
-  Z::gRenderer->BuildOrthographicTransform(
-      apiPerspective, size.y, size.x / size.y, -1.0f, 1.0f);
-  viewBlock.mZeroPerspectiveToApiPerspective =
-      apiPerspective * viewBlock.mViewToPerspective.Inverted();
+  Z::gRenderer->BuildOrthographicTransform(apiPerspective, size.y, size.x / size.y, -1.0f, 1.0f);
+  viewBlock.mZeroPerspectiveToApiPerspective = apiPerspective * viewBlock.mViewToPerspective.Inverted();
 
   ColorTransform colorTx = {Vec4(1.0f)};
   WidgetRect clipRect = {0, 0, size.x, size.y};
@@ -646,8 +629,7 @@ void GameWidget::OnUiRenderUpdate(Event* event)
   renderSettings.mScissorMode = ScissorMode::Enabled;
 
   RenderTaskHelper helper(renderTasks.mRenderTaskBuffer);
-  helper.AddRenderTaskClearTarget(
-      renderSettings, GetRootWidget()->mClearColor, 0, 0, 0);
+  helper.AddRenderTaskClearTarget(renderSettings, GetRootWidget()->mClearColor, 0, 0, 0);
   helper.AddRenderTaskRenderPass(renderSettings, 0, "ColorOutput", 0);
   renderTaskRange.mTaskCount = 2;
 
@@ -666,16 +648,13 @@ struct ViewportSorter
 
     if (leftViewport && rightViewport)
     {
-      CameraViewport* leftCameraViewport =
-          (CameraViewport*)leftViewport->mViewportInterface;
-      CameraViewport* rightCameraViewport =
-          (CameraViewport*)rightViewport->mViewportInterface;
+      CameraViewport* leftCameraViewport = (CameraViewport*)leftViewport->mViewportInterface;
+      CameraViewport* rightCameraViewport = (CameraViewport*)rightViewport->mViewportInterface;
 
       // Objects and Widgets are not delay destructed at the same time,
       // so make sure CameraViewports are still valid
       if (leftCameraViewport && rightCameraViewport)
-        return leftCameraViewport->mRenderOrder <
-               rightCameraViewport->mRenderOrder;
+        return leftCameraViewport->mRenderOrder < rightCameraViewport->mRenderOrder;
       else
         return (leftCameraViewport != nullptr);
     }

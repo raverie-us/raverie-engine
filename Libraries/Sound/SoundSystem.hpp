@@ -53,10 +53,7 @@ public:
   MidiEvent() : Channel(0), MIDINumber(0), Value(0)
   {
   }
-  MidiEvent(float channel, float number, float value) :
-      Channel(channel),
-      MIDINumber(number),
-      Value(value)
+  MidiEvent(float channel, float number, float value) : Channel(channel), MIDINumber(number), Value(value)
   {
   }
 

@@ -53,9 +53,7 @@ const uint cRightShape = 1;
   }
 */
 
-Type Mpr::Test(const SupportShape* shapeA,
-               const SupportShape* shapeB,
-               Intersection::Manifold* manifold)
+Type Mpr::Test(const SupportShape* shapeA, const SupportShape* shapeB, Intersection::Manifold* manifold)
 {
   Init(shapeA, shapeB, Discrete);
 
@@ -110,9 +108,7 @@ Type Mpr::Test(const SupportShape* shapeA,
 }
 
 /// Check to see if (and when) two moving shapes are intersecting
-Type Mpr::SweptTest(const SupportShape* shapeA,
-                    const SupportShape* shapeB,
-                    Intersection::Manifold* manifold)
+Type Mpr::SweptTest(const SupportShape* shapeA, const SupportShape* shapeB, Intersection::Manifold* manifold)
 {
   Init(shapeA, shapeB, Swept);
   CalculateTranslation();
@@ -419,8 +415,7 @@ bool Mpr::Refine(bool toSurface)
   for (uint i = 0; i < cRefinementIterations; ++i)
   {
     // Direction becomes face normal of portal, away from origin
-    mDirection = Geometry::GenerateNormal(
-        mCsoSupport[0], mCsoSupport[1], mCsoSupport[2]);
+    mDirection = Geometry::GenerateNormal(mCsoSupport[0], mCsoSupport[1], mCsoSupport[2]);
 
     // Usable face is the portal face
     if (!toSurface && OriginInsideTetrahedron())
@@ -458,23 +453,19 @@ bool Mpr::Refine(bool toSurface)
         v3 ----------------- v1
     */
 
-    Vec3 planeNormals[3] = {mCsoSupport[0] + toOrigin,
-                            mCsoSupport[1] + toOrigin,
-                            mCsoSupport[2] + toOrigin};
+    Vec3 planeNormals[3] = {mCsoSupport[0] + toOrigin, mCsoSupport[1] + toOrigin, mCsoSupport[2] + toOrigin};
     planeNormals[0] = Cross(planeNormals[0], n);
     planeNormals[1] = Cross(planeNormals[1], n);
     planeNormals[2] = Cross(planeNormals[2], n);
 
-    real planeDistances[3] = {Dot(planeNormals[0], toOrigin),
-                              Dot(planeNormals[1], toOrigin),
-                              Dot(planeNormals[2], toOrigin)};
+    real planeDistances[3] = {
+        Dot(planeNormals[0], toOrigin), Dot(planeNormals[1], toOrigin), Dot(planeNormals[2], toOrigin)};
 
     // Choose new portal!
 
     // Check in the positive region of v2 x vN and the negative region of
     // v1 x vN for the origin
-    if (planeDistances[1] > cRefinementEpsilon &&
-        planeDistances[0] < cRefinementEpsilon)
+    if (planeDistances[1] > cRefinementEpsilon && planeDistances[0] < cRefinementEpsilon)
     {
       // It's in the region defined by v1, v2, and vN
       Assign(3, 2);
@@ -483,8 +474,7 @@ bool Mpr::Refine(bool toSurface)
 
     // Check in the positive region of v1 x vN and the negative region of
     // v3 x vN for the origin
-    if (planeDistances[0] > cRefinementEpsilon &&
-        planeDistances[2] < cRefinementEpsilon)
+    if (planeDistances[0] > cRefinementEpsilon && planeDistances[2] < cRefinementEpsilon)
     {
       // It's in the region defined by v3, v1, and vN
       Assign(3, 1);
@@ -493,8 +483,7 @@ bool Mpr::Refine(bool toSurface)
 
     // Check in the positive region of v3 x vN and the negative region of
     // v2 x vN for the origin
-    if (planeDistances[2] > cRefinementEpsilon &&
-        planeDistances[1] < cRefinementEpsilon)
+    if (planeDistances[2] > cRefinementEpsilon && planeDistances[1] < cRefinementEpsilon)
     {
       // It's in the region defined by v2, v3, and vN
       Assign(3, 0);
@@ -510,9 +499,7 @@ bool Mpr::Refine(bool toSurface)
 }
 
 /// Initialize the algorithm before it is run
-void Mpr::Init(const SupportShape* shapeA,
-               const SupportShape* shapeB,
-               AlgorithmType algorithmType)
+void Mpr::Init(const SupportShape* shapeA, const SupportShape* shapeB, AlgorithmType algorithmType)
 {
   ErrorIf(shapeA == nullptr,
           "Physics::Mpr - Invalid shape pointer passed to the "
@@ -609,8 +596,7 @@ void Mpr::FillManifold(Intersection::Manifold& manifold)
 
   // Calculate the barycentric coordinates of the origin projected onto the
   // portal's face
-  Geometry::BarycentricTriangle(
-      point, mCsoSupport[0], mCsoSupport[1], mCsoSupport[2], &point);
+  Geometry::BarycentricTriangle(point, mCsoSupport[0], mCsoSupport[1], mCsoSupport[2], &point);
 
   Vec3 contactPoint = mLeftSupport[0] * point.x;
   contactPoint = Math::MultiplyAdd(contactPoint, mLeftSupport[1], point.y);
@@ -624,10 +610,7 @@ void Mpr::FillManifold(Intersection::Manifold& manifold)
   manifold.PointCount = 1;
 }
 
-bool Mpr::PortalFaceCheck(uint pointA,
-                          uint pointB,
-                          uint offPoint,
-                          bool& originRayNotInsidePortal)
+bool Mpr::PortalFaceCheck(uint pointA, uint pointB, uint offPoint, bool& originRayNotInsidePortal)
 {
   Vec3 vecA = mCsoSupport[pointA] - mCsoCenter;
   Vec3 vecB = mCsoSupport[pointB] - mCsoCenter;

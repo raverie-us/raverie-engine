@@ -20,8 +20,7 @@ bool LessThanX(Vec2Param left, Vec2Param right)
 
 real Determinant(Vec2Param pointA, Vec2Param pointB, Vec2Param pointC)
 {
-  return ((pointB.x - pointA.x) * (pointC.y - pointA.y)) -
-         ((pointC.x - pointA.x) * (pointB.y - pointA.y));
+  return ((pointB.x - pointA.x) * (pointC.y - pointA.y)) - ((pointC.x - pointA.x) * (pointB.y - pointA.y));
 }
 
 void DrawPoint(Vec2Param point, const ByteColor& color)
@@ -29,9 +28,7 @@ void DrawPoint(Vec2Param point, const ByteColor& color)
   Vec3 p = Vec3(point.x, point.y, real(0.0));
   // Circle drawn around target point.
   const Vec3 cCircleAxis = cWorldPlaneNormal;
-  Zero::gDebugDraw->Add(Zero::Debug::Circle(p, cCircleAxis, cPointRadius)
-                            .Color(color)
-                            .OnTop(true));
+  Zero::gDebugDraw->Add(Zero::Debug::Circle(p, cCircleAxis, cPointRadius).Color(color).OnTop(true));
 
   // Plus sign drawn with intersection at target point.
   const Vec3 cUpDown = Vec3::cYAxis * cPointRadius;
@@ -42,12 +39,8 @@ void DrawPoint(Vec2Param point, const ByteColor& color)
       p - cLeftRight, // Left
       p + cLeftRight, // Right
   };
-  Zero::gDebugDraw->Add(Zero::Debug::Line(circlePoints[0], circlePoints[1])
-                            .Color(color)
-                            .OnTop(true));
-  Zero::gDebugDraw->Add(Zero::Debug::Line(circlePoints[2], circlePoints[3])
-                            .Color(color)
-                            .OnTop(true));
+  Zero::gDebugDraw->Add(Zero::Debug::Line(circlePoints[0], circlePoints[1]).Color(color).OnTop(true));
+  Zero::gDebugDraw->Add(Zero::Debug::Line(circlePoints[2], circlePoints[3]).Color(color).OnTop(true));
 }
 
 void DrawLine(Vec2Param start, Vec2Param end, const ByteColor& color)
@@ -225,8 +218,7 @@ void Hull2D::DebugBuildStep(void)
         mDebugArray.PushBack(mNegativePoints[mDebugCounter]);
         // Only remove points if there are enough points to use to check for
         // convexity and if the last 3 points are NOT convex.
-        while (mDebugArray.Size() >= 3 &&
-               (ConvexCheck(mDebugArray) > real(0.0)))
+        while (mDebugArray.Size() >= 3 && (ConvexCheck(mDebugArray) > real(0.0)))
         {
           // Remove the next to last element.
           uint pointCount = uint(mDebugArray.Size());
@@ -267,8 +259,7 @@ void Hull2D::DebugBuildStep(void)
         mDebugArray.PushBack(mPositivePoints[mDebugCounter]);
         // Only remove points if there are enough points to use the check for
         // convexity and if the last 3 points are NOT convex.
-        while (mDebugArray.Size() >= 3 &&
-               (ConvexCheck(mDebugArray) < real(0.0)))
+        while (mDebugArray.Size() >= 3 && (ConvexCheck(mDebugArray) < real(0.0)))
         {
           // Remove the next to last element.
           uint pointCount = uint(mDebugArray.Size());
@@ -319,8 +310,7 @@ void Hull2D::Draw(void) const
     Vec3 nextPoint = Vec3(mPoints[j].x, mPoints[j].y, real(0.0));
 
     const ByteColor color = Color::Red;
-    Zero::gDebugDraw->Add(
-        Zero::Debug::Line(thisPoint, nextPoint).Color(color).OnTop(true));
+    Zero::gDebugDraw->Add(Zero::Debug::Line(thisPoint, nextPoint).Color(color).OnTop(true));
   }
 
   if (mUsingDebug)
@@ -332,8 +322,7 @@ void Hull2D::Draw(void) const
     uint pointCount = uint(mPoints.Size()) - 1;
     Vec3 start = Vec3(mPoints[0].x, mPoints[0].y, real(0.0));
     Vec3 end = Vec3(mPoints[pointCount].x, mPoints[pointCount].y, real(0.0));
-    Zero::gDebugDraw->Add(
-        Zero::Debug::Line(start, end).Color(Color::Yellow).OnTop(true));
+    Zero::gDebugDraw->Add(Zero::Debug::Line(start, end).Color(Color::Yellow).OnTop(true));
 
     pointCount = uint(mNegativePoints.Size());
     for (uint i = 0; i < pointCount; ++i)
@@ -353,9 +342,7 @@ void Hull2D::Draw(void) const
       {
         const Vec2& thisPoint = mPoints[mDebugArray[i]];
         const Vec2& nextPoint = mPoints[mDebugArray[i + 1]];
-        DrawLine(thisPoint,
-                 nextPoint,
-                 mDebugStep == 2 ? negativeColor : positiveColor);
+        DrawLine(thisPoint, nextPoint, mDebugStep == 2 ? negativeColor : positiveColor);
       }
     }
   }

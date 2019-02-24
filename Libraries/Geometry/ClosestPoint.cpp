@@ -12,9 +12,7 @@ const real cSegmentSegmentZero = real(0.000001);
 }
 
 // Find the closest point on a ray to the given point.
-Type ClosestPointOnRayToPoint(Vec3Param rayStart,
-                              Vec3Param rayDirection,
-                              Vec3Ptr point)
+Type ClosestPointOnRayToPoint(Vec3Param rayStart, Vec3Param rayDirection, Vec3Ptr point)
 {
   ErrorIf(point == nullptr,
           "Intersection - Null pointer passed, this function"
@@ -38,9 +36,7 @@ Type ClosestPointOnRayToPoint(Vec3Param rayStart,
 }
 
 // Find the closest point on a line segment to the given point.
-Type ClosestPointOnSegmentToPoint(Vec3Param segmentPointA,
-                                  Vec3Param segmentPointB,
-                                  Vec3Ptr point)
+Type ClosestPointOnSegmentToPoint(Vec3Param segmentPointA, Vec3Param segmentPointB, Vec3Ptr point)
 {
   ErrorIf(point == nullptr,
           "Intersection - Null pointer passed, this function"
@@ -81,16 +77,12 @@ Type ClosestPointOnSegmentToPoint(Vec3Param segmentPointA,
 // Find the closest point on an axis aligned bounding box to the given point.
 // The point returned will always be on the surface of the axis aligned bounding
 // box.
-Type ClosestPointOnAabbToPoint(Vec3Param aabbMinPoint,
-                               Vec3Param aabbMaxPoint,
-                               Vec3Ptr point)
+Type ClosestPointOnAabbToPoint(Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Ptr point)
 {
   ErrorIf(point == nullptr,
           "Intersection - Null pointer passed, this function"
           " needs a valid pointer.");
-  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) ||
-              (aabbMinPoint.y > aabbMaxPoint.y) ||
-              (aabbMinPoint.z > aabbMaxPoint.z),
+  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y) || (aabbMinPoint.z > aabbMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
           " than it's maximum point.");
 
@@ -173,10 +165,7 @@ Type ClosestPointOnAabbToPoint(Vec3Param aabbMinPoint,
 
 // Find the closest point on a capsule to the given point. The point returned
 // will always be on the surface of the capsule.
-Type ClosestPointOnCapsuleToPoint(Vec3Param capsulePointA,
-                                  Vec3Param capsulePointB,
-                                  real capsuleRadius,
-                                  Vec3Ptr point)
+Type ClosestPointOnCapsuleToPoint(Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Vec3Ptr point)
 {
   ErrorIf(point == nullptr,
           "Intersection - Null pointer passed, this function"
@@ -234,10 +223,7 @@ Type ClosestPointOnCapsuleToPoint(Vec3Param capsulePointA,
 
 // Find the closest point on an oriented bounding box to the given point. The
 // point returned will always be on the surface of the oriented bounding box.
-Type ClosestPointOnObbToPoint(Vec3Param obbCenter,
-                              Vec3Param obbHalfExtents,
-                              Mat3Param obbBasis,
-                              Vec3Ptr point)
+Type ClosestPointOnObbToPoint(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Vec3Ptr point)
 {
   ErrorIf(point == nullptr,
           "Intersection - Null pointer passed, this function"
@@ -245,8 +231,7 @@ Type ClosestPointOnObbToPoint(Vec3Param obbCenter,
 
   *point -= obbCenter;
   Math::TransposedTransform(obbBasis, point);
-  Type inOrOut =
-      ClosestPointOnAabbToPoint(-obbHalfExtents, obbHalfExtents, point);
+  Type inOrOut = ClosestPointOnAabbToPoint(-obbHalfExtents, obbHalfExtents, point);
   Math::Transform(obbBasis, point);
   *point += obbCenter;
   return inOrOut;
@@ -255,10 +240,7 @@ Type ClosestPointOnObbToPoint(Vec3Param obbCenter,
 // Find the closest point in or on an oriented bounding box to the given point.
 // The point returned can be inside or on the surface of the oriented bounding
 // box.
-Type ClosestPointInObbToPoint(Vec3Param obbCenter,
-                              Vec3Param obbHalfExtents,
-                              Mat3Param obbBasis,
-                              Vec3Ptr point)
+Type ClosestPointInObbToPoint(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Vec3Ptr point)
 {
   ErrorIf(point == nullptr,
           "Intersection - Null pointer passed, this function"
@@ -289,10 +271,7 @@ Type ClosestPointInObbToPoint(Vec3Param obbCenter,
 // Find the closest point in or on an oriented bounding box to the given point.
 // The point returned can be inside or on the surface of the oriented bounding
 // box.
-Type ClosestPointInObbToPoint(Vec3Param obbCenter,
-                              Vec3Param obbHalfExtents,
-                              const Vec3* obbAxes,
-                              Vec3Ptr point)
+Type ClosestPointInObbToPoint(Vec3Param obbCenter, Vec3Param obbHalfExtents, const Vec3* obbAxes, Vec3Ptr point)
 {
   ErrorIf(point == nullptr,
           "Intersection - Null pointer passed, this function"
@@ -321,9 +300,7 @@ Type ClosestPointInObbToPoint(Vec3Param obbCenter,
 
 // Find the closest point on a plane to the given point. Assumes that the plane
 // normal is normalized.
-Type ClosestPointOnPlaneToPoint(Vec3Param planeNormal,
-                                real planeDistance,
-                                Vec3Ptr point)
+Type ClosestPointOnPlaneToPoint(Vec3Param planeNormal, real planeDistance, Vec3Ptr point)
 {
   ErrorIf(point == nullptr,
           "Intersection - Null pointer passed, this function"
@@ -343,9 +320,7 @@ Type ClosestPointOnPlaneToPoint(Vec3Param planeNormal,
 
 // Find the closest point on a sphere to the given point. The point returned
 // will always be on the surface of the sphere.
-Type ClosestPointOnSphereToPoint(Vec3Param sphereCenter,
-                                 real sphereRadius,
-                                 Vec3Ptr point)
+Type ClosestPointOnSphereToPoint(Vec3Param sphereCenter, real sphereRadius, Vec3Ptr point)
 {
   ErrorIf(point == nullptr,
           "Intersection - Null pointer passed, this function"
@@ -414,8 +389,7 @@ Type ClosestPointOnTriangleToPoint(Vec3Param trianglePointA,
     // to be checked for degeneracy as the line AC will always be valid and the
     // vertex cases will catch anything else.
     if (denom == 0)
-      return ClosestPointOnSegmentToPoint(
-          trianglePointA, trianglePointC, point);
+      return ClosestPointOnSegmentToPoint(trianglePointA, trianglePointC, point);
 
     real v = d1 / denom;
     aToB *= v;

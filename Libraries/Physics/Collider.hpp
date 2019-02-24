@@ -48,8 +48,7 @@ public:
     cUpdate
   };
 
-  typedef InList<Physics::ContactEdge, &Physics::ContactEdge::ColliderLink>
-      ContactEdgeList;
+  typedef InList<Physics::ContactEdge, &Physics::ContactEdge::ColliderLink> ContactEdgeList;
   typedef InList<JointEdge, &JointEdge::ColliderLink> JointEdgeList;
 
   Collider();
@@ -96,8 +95,7 @@ public:
   /// Computes the local space (as in not rotated, the scale is still necessary
   /// but the translation is assumed to be zero) inertia tensor from the passed
   /// in mass.
-  virtual void ComputeLocalInverseInertiaTensor(real mass,
-                                                Mat3Ref localInvInertia);
+  virtual void ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia);
   /// Returns the location of the local space center of mass for this collider.
   /// For all symmetric colliders this is the origin, but for non-symmetric
   /// colliders this can change. This is needed for computing a rigid body's
@@ -206,8 +204,7 @@ public:
 
   /// Disconnect all events from the old material and connect to the new
   /// material.
-  void UpdatePhysicsMaterialConnections(PhysicsMaterial* oldMaterial,
-                                        PhysicsMaterial* newMaterial);
+  void UpdatePhysicsMaterialConnections(PhysicsMaterial* oldMaterial, PhysicsMaterial* newMaterial);
   /// The physics material we are using has been modified. Update mass from
   /// density. The event isn't used.
   void OnPhysicsMaterialModified(Event* e);
@@ -247,8 +244,7 @@ public:
   /// template argument is true (for efficiency to not build the string during
   /// normal collision detection)
   template <bool BuildReason>
-  bool ShouldCollideInternal(Collider* otherCollider,
-                             String* reasonForNotColliding);
+  bool ShouldCollideInternal(Collider* otherCollider, String* reasonForNotColliding);
 
   void UpdateMasslessColliderFlag();
   /// Does this collider belong in dynamic or static broadphase?

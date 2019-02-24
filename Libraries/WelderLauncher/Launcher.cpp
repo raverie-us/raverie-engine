@@ -26,8 +26,7 @@ Launcher::Launcher(OsWindow* window)
 
   mMainWindow = new MainWindow(mOsWindow);
 
-  LauncherConfig* versionConfig =
-      Z::gEngine->GetConfigCog()->has(LauncherConfig);
+  LauncherConfig* versionConfig = Z::gEngine->GetConfigCog()->has(LauncherConfig);
 
   LauncherWindow* launcher = new LauncherWindow(mMainWindow);
   launcher->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1);
@@ -44,10 +43,8 @@ Launcher::Launcher(OsWindow* window)
   }
 
   // If the user has no recent projects then display the new project's page
-  RecentProjects* recentProjects =
-      Z::gEngine->GetConfigCog()->has(RecentProjects);
-  if (recentProjects == nullptr ||
-      recentProjects->GetRecentProjectsCount() == 0)
+  RecentProjects* recentProjects = Z::gEngine->GetConfigCog()->has(RecentProjects);
+  if (recentProjects == nullptr || recentProjects->GetRecentProjectsCount() == 0)
   {
     LauncherCommunicationEvent toSend;
     launcher->DispatchEvent(Events::LauncherNewProject, &toSend);

@@ -210,10 +210,7 @@ public:
   void StartUndo();
   void EndUndo();
 
-  void InsertAutoCompleteText(const char* text,
-                              int length,
-                              int removeCount,
-                              int charOffset);
+  void InsertAutoCompleteText(const char* text, int length, int removeCount, int charOffset);
 
   //------------------------------------------------------------ Annotations
 
@@ -316,8 +313,7 @@ public:
   int GetRuneAt(int position);
   // Event Processing
   intptr_t SendEditor(unsigned int Msg, u64 wParam = 0, s64 lParam = 0);
-  void SetAStyle(
-      int style, ByteColor fore, ByteColor back, int size = 0, cstr face = 0);
+  void SetAStyle(int style, ByteColor fore, ByteColor back, int size = 0, cstr face = 0);
   // Send to derived classes
   virtual void OnNotify(Scintilla::SCNotification& scn);
 

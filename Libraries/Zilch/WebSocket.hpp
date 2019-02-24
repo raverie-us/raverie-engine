@@ -90,10 +90,7 @@ public:
   // This function will block until the entire packet is sent
   // It is safe to call this function from another thread (only one thread at a
   // time though)
-  void SendFullPacket(Status& status,
-                      const byte* data,
-                      size_t length,
-                      WebSocketPacketType::Enum packetType);
+  void SendFullPacket(Status& status, const byte* data, size_t length, WebSocketPacketType::Enum packetType);
 
   // Receives an entire packet of data into an array
   // This function will block until the entire packet is received, or an error
@@ -337,8 +334,7 @@ public:
   void Update();
 
   // Send a message to all connections
-  void SendPacketToAll(StringParam message,
-                       WebSocketPacketType::Enum packetType);
+  void SendPacketToAll(StringParam message, WebSocketPacketType::Enum packetType);
 
   // The maximum number of connections we'll accept
   size_t MaximumConnections;

@@ -112,8 +112,7 @@ void IntVector3::operator*=(IntVec3Param rhs)
 
 void IntVector3::operator/=(IntVec3Param rhs)
 {
-  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0,
-          "Vector2 - Division by zero.");
+  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0, "Vector2 - Division by zero.");
   x /= rhs.x;
   y /= rhs.y;
   z /= rhs.z;
@@ -179,8 +178,7 @@ void IntVector3::ZeroOut(void)
 
 IntVector3 IntVector3::operator/(IntVec3Param rhs) const
 {
-  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0,
-          "IntVector3 - Division by zero.");
+  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0, "IntVector3 - Division by zero.");
   return IntVector3(x / rhs.x, y / rhs.y, z / rhs.z);
 }
 
@@ -207,16 +205,12 @@ IntVector3 Abs(IntVec3Param vec)
 
 IntVector3 Min(IntVec3Param lhs, IntVec3Param rhs)
 {
-  return IntVector3(Math::Min(lhs.x, rhs.x),
-                    Math::Min(lhs.y, rhs.y),
-                    Math::Min(lhs.z, rhs.z));
+  return IntVector3(Math::Min(lhs.x, rhs.x), Math::Min(lhs.y, rhs.y), Math::Min(lhs.z, rhs.z));
 }
 
 IntVector3 Max(IntVec3Param lhs, IntVec3Param rhs)
 {
-  return IntVector3(Math::Max(lhs.x, rhs.x),
-                    Math::Max(lhs.y, rhs.y),
-                    Math::Max(lhs.z, rhs.z));
+  return IntVector3(Math::Max(lhs.x, rhs.x), Math::Max(lhs.y, rhs.y), Math::Max(lhs.z, rhs.z));
 }
 
 int Dot(IntVec3Param lhs, IntVec3Param rhs)

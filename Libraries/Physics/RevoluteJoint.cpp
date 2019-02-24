@@ -48,14 +48,11 @@ ZilchDefineType(RevoluteJoint, builder, type)
   // cleaner updating with gizmos
   // BindAngleAccessors();
   ZilchBindGetterSetterProperty(LocalBasisA)
-      ->Add(new EditorRotationBasis(
-          "RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b01));
+      ->Add(new EditorRotationBasis("RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b01));
   ZilchBindGetterSetterProperty(LocalBasisB)
-      ->Add(new EditorRotationBasis(
-          "RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b10));
+      ->Add(new EditorRotationBasis("RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b10));
   ZilchBindGetterSetterProperty(WorldBasis)
-      ->Add(new EditorRotationBasis(
-          "RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b11));
+      ->Add(new EditorRotationBasis("RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b11));
   ZilchBindGetterSetterProperty(FrameOfReference);
 
   ZilchBindMethod(SetWorldFrame);
@@ -133,10 +130,7 @@ void RevoluteJoint::UpdateAtoms()
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  UpdateAtomsFragment(this,
-                      sInfo.mAtomCount,
-                      moleculeData,
-                      DefaultAngularLimitPolicy<RevoluteJoint>());
+  UpdateAtomsFragment(this, sInfo.mAtomCount, moleculeData, DefaultAngularLimitPolicy<RevoluteJoint>());
 }
 
 uint RevoluteJoint::MoleculeCount() const
@@ -149,11 +143,7 @@ void RevoluteJoint::ComputeMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputeMoleculesFragment(this,
-                           molecules,
-                           sInfo.mAtomCount,
-                           moleculeData,
-                           DefaultAngularLimitPolicy<RevoluteJoint>());
+  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, DefaultAngularLimitPolicy<RevoluteJoint>());
 }
 
 void RevoluteJoint::WarmStart(MoleculeWalker& molecules)
@@ -181,11 +171,8 @@ void RevoluteJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(this,
-                                   molecules,
-                                   sInfo.mAtomCount,
-                                   moleculeData,
-                                   DefaultAngularLimitPolicy<RevoluteJoint>());
+  ComputePositionMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData, DefaultAngularLimitPolicy<RevoluteJoint>());
 }
 
 void RevoluteJoint::DebugDraw()
@@ -198,15 +185,12 @@ void RevoluteJoint::DebugDraw()
   if (collider0 == nullptr || collider1 == nullptr)
     return;
 
-  Mat3 basis0 =
-      collider0->GetWorldRotation() * Math::ToMatrix3(mReferenceAngle[0]);
-  Mat3 basis1 =
-      collider1->GetWorldRotation() * Math::ToMatrix3(mReferenceAngle[1]);
+  Mat3 basis0 = collider0->GetWorldRotation() * Math::ToMatrix3(mReferenceAngle[0]);
+  Mat3 basis1 = collider1->GetWorldRotation() * Math::ToMatrix3(mReferenceAngle[1]);
   DrawHinge(this, mAnchors, basis0, basis1, mPrimaryFrameIndex);
 }
 
-uint RevoluteJoint::GetAtomIndexFilter(uint atomIndex,
-                                       real& desiredConstraintValue) const
+uint RevoluteJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   if (atomIndex < 3)

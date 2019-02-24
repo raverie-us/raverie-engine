@@ -12,20 +12,13 @@
 /// preferable to use fewer bits declaring when it's size. But for extensibility
 /// purposes we allow larger sizes.)
 #define BITSTREAM_EXTENDED_SMALL_SIZE_BITS 12
-StaticAssertWithinRange(Range17,
-                        BITSTREAM_EXTENDED_SMALL_SIZE_BITS,
-                        1,
-                        UINTMAX_BITS);
+StaticAssertWithinRange(Range17, BITSTREAM_EXTENDED_SMALL_SIZE_BITS, 1, UINTMAX_BITS);
 
 /// BitStreamExtended "large" size bits.
 /// Determines the maximum bit size (bits written) a BitStreamExtended may be
 /// serialized with.
-#define BITSTREAM_EXTENDED_LARGE_SIZE_BITS                                     \
-  BITS_NEEDED_TO_REPRESENT(BYTES_TO_BITS(POW2(BITSTREAM_MAX_SIZE_BITS)) - 1)
-StaticAssertWithinRange(Range18,
-                        BITSTREAM_EXTENDED_LARGE_SIZE_BITS,
-                        1,
-                        UINTMAX_BITS);
+#define BITSTREAM_EXTENDED_LARGE_SIZE_BITS BITS_NEEDED_TO_REPRESENT(BYTES_TO_BITS(POW2(BITSTREAM_MAX_SIZE_BITS)) - 1)
+StaticAssertWithinRange(Range18, BITSTREAM_EXTENDED_LARGE_SIZE_BITS, 1, UINTMAX_BITS);
 
 namespace Zero
 {
@@ -33,21 +26,16 @@ namespace Zero
 //                              BitStreamExtended //
 
 /// BitStreamExtended size bits.
-static const Bits BitStreamExtendedSmallSizeBits =
-    BITSTREAM_EXTENDED_SMALL_SIZE_BITS;
-static const Bits BitStreamExtendedLargeSizeBits =
-    BITSTREAM_EXTENDED_LARGE_SIZE_BITS;
+static const Bits BitStreamExtendedSmallSizeBits = BITSTREAM_EXTENDED_SMALL_SIZE_BITS;
+static const Bits BitStreamExtendedLargeSizeBits = BITSTREAM_EXTENDED_LARGE_SIZE_BITS;
 
 /// BitStreamExtended size bits range.
 static const Bits BitStreamExtendedSmallSizeBitsMin = Bits(0);
-static const Bits BitStreamExtendedSmallSizeBitsMax =
-    Bits(POW2(BitStreamExtendedSmallSizeBits) - 1);
-static const Bits BitStreamExtendedSmallSizeIsLargeValue =
-    BitStreamExtendedSmallSizeBitsMax;
+static const Bits BitStreamExtendedSmallSizeBitsMax = Bits(POW2(BitStreamExtendedSmallSizeBits) - 1);
+static const Bits BitStreamExtendedSmallSizeIsLargeValue = BitStreamExtendedSmallSizeBitsMax;
 
 static const Bits BitStreamExtendedLargeSizeBitsMin = Bits(0);
-static const Bits BitStreamExtendedLargeSizeBitsMax =
-    Bits(POW2(BitStreamExtendedLargeSizeBits) - 1);
+static const Bits BitStreamExtendedLargeSizeBitsMax = Bits(POW2(BitStreamExtendedLargeSizeBits) - 1);
 
 /// Convenient, sliceable wrapper around BitStream.
 /// Provides explicit serialization for commonly used types.
@@ -109,52 +97,40 @@ public:
   static Bits MeasureIntegerQuantized(int minValue, int maxValue, int quantum);
 
   static Bits MeasureDoubleIntegerQuantized(s64 minValue, s64 maxValue);
-  static Bits MeasureDoubleIntegerQuantized(s64 minValue,
-                                            s64 maxValue,
-                                            s64 quantum);
+  static Bits MeasureDoubleIntegerQuantized(s64 minValue, s64 maxValue, s64 quantum);
 
-  static Bits MeasureInteger2Quantized(const Math::IntVector2& minValue,
-                                       const Math::IntVector2& maxValue);
+  static Bits MeasureInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue);
   static Bits MeasureInteger2Quantized(const Math::IntVector2& minValue,
                                        const Math::IntVector2& maxValue,
                                        const Math::IntVector2& quantum);
 
-  static Bits MeasureInteger3Quantized(const Math::IntVector3& minValue,
-                                       const Math::IntVector3& maxValue);
+  static Bits MeasureInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue);
   static Bits MeasureInteger3Quantized(const Math::IntVector3& minValue,
                                        const Math::IntVector3& maxValue,
                                        const Math::IntVector3& quantum);
 
-  static Bits MeasureInteger4Quantized(const Math::IntVector4& minValue,
-                                       const Math::IntVector4& maxValue);
+  static Bits MeasureInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue);
   static Bits MeasureInteger4Quantized(const Math::IntVector4& minValue,
                                        const Math::IntVector4& maxValue,
                                        const Math::IntVector4& quantum);
 
   static Bits MeasureRealQuantized(float minValue, float maxValue);
-  static Bits MeasureRealQuantized(float minValue,
-                                   float maxValue,
-                                   float quantum);
+  static Bits MeasureRealQuantized(float minValue, float maxValue, float quantum);
 
   static Bits MeasureDoubleRealQuantized(double minValue, double maxValue);
-  static Bits MeasureDoubleRealQuantized(double minValue,
-                                         double maxValue,
-                                         double quantum);
+  static Bits MeasureDoubleRealQuantized(double minValue, double maxValue, double quantum);
 
-  static Bits MeasureReal2Quantized(const Math::Vector2& minValue,
-                                    const Math::Vector2& maxValue);
+  static Bits MeasureReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue);
   static Bits MeasureReal2Quantized(const Math::Vector2& minValue,
                                     const Math::Vector2& maxValue,
                                     const Math::Vector2& quantum);
 
-  static Bits MeasureReal3Quantized(const Math::Vector3& minValue,
-                                    const Math::Vector3& maxValue);
+  static Bits MeasureReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue);
   static Bits MeasureReal3Quantized(const Math::Vector3& minValue,
                                     const Math::Vector3& maxValue,
                                     const Math::Vector3& quantum);
 
-  static Bits MeasureReal4Quantized(const Math::Vector4& minValue,
-                                    const Math::Vector4& maxValue);
+  static Bits MeasureReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue);
   static Bits MeasureReal4Quantized(const Math::Vector4& minValue,
                                     const Math::Vector4& maxValue,
                                     const Math::Vector4& quantum);
@@ -194,14 +170,10 @@ public:
   //
 
   void WriteIntegerQuantized(int value, int minValue, int maxValue);
-  void
-  WriteIntegerQuantized(int value, int minValue, int maxValue, int quantum);
+  void WriteIntegerQuantized(int value, int minValue, int maxValue, int quantum);
 
   void WriteDoubleIntegerQuantized(s64 value, s64 minValue, s64 maxValue);
-  void WriteDoubleIntegerQuantized(s64 value,
-                                   s64 minValue,
-                                   s64 maxValue,
-                                   s64 quantum);
+  void WriteDoubleIntegerQuantized(s64 value, s64 minValue, s64 maxValue, s64 quantum);
 
   void WriteInteger2Quantized(const Math::IntVector2& value,
                               const Math::IntVector2& minValue,
@@ -228,36 +200,24 @@ public:
                               const Math::IntVector4& quantum);
 
   void WriteRealQuantized(float value, float minValue, float maxValue);
-  void WriteRealQuantized(float value,
-                          float minValue,
-                          float maxValue,
-                          float quantum);
+  void WriteRealQuantized(float value, float minValue, float maxValue, float quantum);
 
   void WriteDoubleRealQuantized(double value, double minValue, double maxValue);
-  void WriteDoubleRealQuantized(double value,
-                                double minValue,
-                                double maxValue,
-                                double quantum);
+  void WriteDoubleRealQuantized(double value, double minValue, double maxValue, double quantum);
 
-  void WriteReal2Quantized(const Math::Vector2& value,
-                           const Math::Vector2& minValue,
-                           const Math::Vector2& maxValue);
+  void WriteReal2Quantized(const Math::Vector2& value, const Math::Vector2& minValue, const Math::Vector2& maxValue);
   void WriteReal2Quantized(const Math::Vector2& value,
                            const Math::Vector2& minValue,
                            const Math::Vector2& maxValue,
                            const Math::Vector2& quantum);
 
-  void WriteReal3Quantized(const Math::Vector3& value,
-                           const Math::Vector3& minValue,
-                           const Math::Vector3& maxValue);
+  void WriteReal3Quantized(const Math::Vector3& value, const Math::Vector3& minValue, const Math::Vector3& maxValue);
   void WriteReal3Quantized(const Math::Vector3& value,
                            const Math::Vector3& minValue,
                            const Math::Vector3& maxValue,
                            const Math::Vector3& quantum);
 
-  void WriteReal4Quantized(const Math::Vector4& value,
-                           const Math::Vector4& minValue,
-                           const Math::Vector4& maxValue);
+  void WriteReal4Quantized(const Math::Vector4& value, const Math::Vector4& minValue, const Math::Vector4& maxValue);
   void WriteReal4Quantized(const Math::Vector4& value,
                            const Math::Vector4& minValue,
                            const Math::Vector4& maxValue,
@@ -301,52 +261,40 @@ public:
   bool CanReadIntegerQuantized(int minValue, int maxValue, int quantum) const;
 
   bool CanReadDoubleIntegerQuantized(s64 minValue, s64 maxValue) const;
-  bool CanReadDoubleIntegerQuantized(s64 minValue,
-                                     s64 maxValue,
-                                     s64 quantum) const;
+  bool CanReadDoubleIntegerQuantized(s64 minValue, s64 maxValue, s64 quantum) const;
 
-  bool CanReadInteger2Quantized(const Math::IntVector2& minValue,
-                                const Math::IntVector2& maxValue) const;
+  bool CanReadInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue) const;
   bool CanReadInteger2Quantized(const Math::IntVector2& minValue,
                                 const Math::IntVector2& maxValue,
                                 const Math::IntVector2& quantum) const;
 
-  bool CanReadInteger3Quantized(const Math::IntVector3& minValue,
-                                const Math::IntVector3& maxValue) const;
+  bool CanReadInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue) const;
   bool CanReadInteger3Quantized(const Math::IntVector3& minValue,
                                 const Math::IntVector3& maxValue,
                                 const Math::IntVector3& quantum) const;
 
-  bool CanReadInteger4Quantized(const Math::IntVector4& minValue,
-                                const Math::IntVector4& maxValue) const;
+  bool CanReadInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue) const;
   bool CanReadInteger4Quantized(const Math::IntVector4& minValue,
                                 const Math::IntVector4& maxValue,
                                 const Math::IntVector4& quantum) const;
 
   bool CanReadRealQuantized(float minValue, float maxValue) const;
-  bool CanReadRealQuantized(float minValue,
-                            float maxValue,
-                            float quantum) const;
+  bool CanReadRealQuantized(float minValue, float maxValue, float quantum) const;
 
   bool CanReadDoubleRealQuantized(double minValue, double maxValue) const;
-  bool CanReadDoubleRealQuantized(double minValue,
-                                  double maxValue,
-                                  double quantum) const;
+  bool CanReadDoubleRealQuantized(double minValue, double maxValue, double quantum) const;
 
-  bool CanReadReal2Quantized(const Math::Vector2& minValue,
-                             const Math::Vector2& maxValue) const;
+  bool CanReadReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue) const;
   bool CanReadReal2Quantized(const Math::Vector2& minValue,
                              const Math::Vector2& maxValue,
                              const Math::Vector2& quantum) const;
 
-  bool CanReadReal3Quantized(const Math::Vector3& minValue,
-                             const Math::Vector3& maxValue) const;
+  bool CanReadReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue) const;
   bool CanReadReal3Quantized(const Math::Vector3& minValue,
                              const Math::Vector3& maxValue,
                              const Math::Vector3& quantum) const;
 
-  bool CanReadReal4Quantized(const Math::Vector4& minValue,
-                             const Math::Vector4& maxValue) const;
+  bool CanReadReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue) const;
   bool CanReadReal4Quantized(const Math::Vector4& minValue,
                              const Math::Vector4& maxValue,
                              const Math::Vector4& quantum) const;
@@ -391,20 +339,17 @@ public:
   s64 ReadDoubleIntegerQuantized(s64 minValue, s64 maxValue) const;
   s64 ReadDoubleIntegerQuantized(s64 minValue, s64 maxValue, s64 quantum) const;
 
-  Math::IntVector2 ReadInteger2Quantized(
-      const Math::IntVector2& minValue, const Math::IntVector2& maxValue) const;
+  Math::IntVector2 ReadInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue) const;
   Math::IntVector2 ReadInteger2Quantized(const Math::IntVector2& minValue,
                                          const Math::IntVector2& maxValue,
                                          const Math::IntVector2& quantum) const;
 
-  Math::IntVector3 ReadInteger3Quantized(
-      const Math::IntVector3& minValue, const Math::IntVector3& maxValue) const;
+  Math::IntVector3 ReadInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue) const;
   Math::IntVector3 ReadInteger3Quantized(const Math::IntVector3& minValue,
                                          const Math::IntVector3& maxValue,
                                          const Math::IntVector3& quantum) const;
 
-  Math::IntVector4 ReadInteger4Quantized(
-      const Math::IntVector4& minValue, const Math::IntVector4& maxValue) const;
+  Math::IntVector4 ReadInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue) const;
   Math::IntVector4 ReadInteger4Quantized(const Math::IntVector4& minValue,
                                          const Math::IntVector4& maxValue,
                                          const Math::IntVector4& quantum) const;
@@ -413,24 +358,19 @@ public:
   float ReadRealQuantized(float minValue, float maxValue, float quantum) const;
 
   double ReadDoubleRealQuantized(double minValue, double maxValue) const;
-  double ReadDoubleRealQuantized(double minValue,
-                                 double maxValue,
-                                 double quantum) const;
+  double ReadDoubleRealQuantized(double minValue, double maxValue, double quantum) const;
 
-  Math::Vector2 ReadReal2Quantized(const Math::Vector2& minValue,
-                                   const Math::Vector2& maxValue) const;
+  Math::Vector2 ReadReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue) const;
   Math::Vector2 ReadReal2Quantized(const Math::Vector2& minValue,
                                    const Math::Vector2& maxValue,
                                    const Math::Vector2& quantum) const;
 
-  Math::Vector3 ReadReal3Quantized(const Math::Vector3& minValue,
-                                   const Math::Vector3& maxValue) const;
+  Math::Vector3 ReadReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue) const;
   Math::Vector3 ReadReal3Quantized(const Math::Vector3& minValue,
                                    const Math::Vector3& maxValue,
                                    const Math::Vector3& quantum) const;
 
-  Math::Vector4 ReadReal4Quantized(const Math::Vector4& minValue,
-                                   const Math::Vector4& maxValue) const;
+  Math::Vector4 ReadReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue) const;
   Math::Vector4 ReadReal4Quantized(const Math::Vector4& minValue,
                                    const Math::Vector4& maxValue,
                                    const Math::Vector4& quantum) const;
@@ -465,9 +405,7 @@ public:
 /// Will not serialize the stored type ID, the deserializer must default
 /// construct the variant as the expected type before deserializing. Returns the
 /// number of bits serialized if successful, else 0.
-inline Bits SerializeKnownExtendedVariant(SerializeDirection::Enum direction,
-                                          BitStream& bitStream,
-                                          Variant& value)
+inline Bits SerializeKnownExtendedVariant(SerializeDirection::Enum direction, BitStream& bitStream, Variant& value)
 {
   // Get starting bits count
   Bits startBits = bitStream.GetBitsSerialized(direction);
@@ -503,8 +441,7 @@ inline Bits SerializeKnownExtendedVariant(SerializeDirection::Enum direction,
       uint enumValueMin = 0;
       uint enumValueMax = (enumValueCount == 0) ? 0 : (enumValueCount - 1);
 
-      return bitStream.SerializeQuantized(
-          direction, enumValue, enumValueMin, enumValueMax);
+      return bitStream.SerializeQuantized(direction, enumValue, enumValueMin, enumValueMax);
     }
     // Any is an resource type?
     else if (anyValue.StoredType->IsA(ZilchTypeId(Resource)))
@@ -518,8 +455,7 @@ inline Bits SerializeKnownExtendedVariant(SerializeDirection::Enum direction,
         Resource* resource = anyValue.Get<Resource*>();
 
         // Get resource ID
-        u64 resourceId =
-            (u64)(resource ? resource->mResourceId : ResourceId(0));
+        u64 resourceId = (u64)(resource ? resource->mResourceId : ResourceId(0));
 
         // Write resource ID
         if (!bitStream.Write(resourceId)) // Unable?
@@ -602,23 +538,18 @@ inline bool BitStreamCanSerializeType(Type* zilchType)
   // OR Is an enum?
   // OR Is a resource?
   // OR Is a bitstream extended?
-  return (basicNativeType != nullptr) || (zilchType->IsEnum()) ||
-         (zilchType->IsA(ZilchTypeId(Resource))) ||
+  return (basicNativeType != nullptr) || (zilchType->IsEnum()) || (zilchType->IsA(ZilchTypeId(Resource))) ||
          (zilchType == ZilchTypeId(BitStreamExtended));
 }
 
 /// Serializes a Variant.
 /// Returns the number of bits serialized if successful, else 0.
 template <>
-Bits Serialize<Variant>(SerializeDirection::Enum direction,
-                        BitStream& bitStream,
-                        Variant& value);
+Bits Serialize<Variant>(SerializeDirection::Enum direction, BitStream& bitStream, Variant& value);
 
 /// Serializes a BitStreamExtended.
 /// Returns the number of bits serialized if successful, else 0.
 template <>
-Bits Serialize<BitStreamExtended>(SerializeDirection::Enum direction,
-                                  BitStream& bitStream,
-                                  BitStreamExtended& value);
+Bits Serialize<BitStreamExtended>(SerializeDirection::Enum direction, BitStream& bitStream, BitStreamExtended& value);
 
 } // namespace Zero

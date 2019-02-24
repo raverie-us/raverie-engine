@@ -5,8 +5,7 @@ namespace Zero
 {
 
 // Direction of
-DeclareEnum4(
-    UiStackLayoutDirection, TopToBottom, BottomToTop, LeftToRight, RightToLeft);
+DeclareEnum4(UiStackLayoutDirection, TopToBottom, BottomToTop, LeftToRight, RightToLeft);
 
 class UiStackLayout : public UiLayout
 {
@@ -22,10 +21,7 @@ public:
   Vec2 Measure(Rectangle& rect) override;
   void DoLayout(Rectangle& rect, UiTransformUpdateEvent* e) override;
 
-  float ComputeFlexRatio(float fixedSize,
-                         float totalFlex,
-                         float flexMinSize,
-                         float totalSize);
+  float ComputeFlexRatio(float fixedSize, float totalFlex, float flexMinSize, float totalSize);
 
   /// The stack direction the child Widgets will be placed in.
   UiStackLayoutDirection::Enum GetStackDirection();

@@ -42,8 +42,7 @@ void CogRestoreState::StoreObjectState(Object* object)
   // have modifications in that Archetype required to create it in the proper
   // state. Apply those modifications to the object before saving it. These will
   // be cleared later
-  bool appliedArchetypeModifications =
-      CogSerialization::PreProcessForCopy(cog, mCachedModifications);
+  bool appliedArchetypeModifications = CogSerialization::PreProcessForCopy(cog, mCachedModifications);
 
   // Create a copy of our local modifications to restore later if pre-process
   // didn't
@@ -159,7 +158,7 @@ Object* CogRestoreState::RestoreObject()
   }
 
   // Update all selections
-  forRange(MetaSelection * selection, MetaSelection::GetAllSelections())
+  forRange (MetaSelection* selection, MetaSelection::GetAllSelections())
   {
     if (selection->Contains(oldObject))
     {
@@ -191,8 +190,7 @@ void CogRestoreState::DestroyObject(bool restoreSpaceModifiedState)
 
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Operations",
-                    "Cannot destroy objects when in read-only mode");
+    DoNotifyWarning("Operations", "Cannot destroy objects when in read-only mode");
     return;
   }
 
@@ -238,14 +236,14 @@ void CogRestoreState::RestoreSpaceModifiedState()
 void CogRestoreState::StoreChildUndoIds(Cog* object)
 {
   // Store all Components
-  forRange(Component * component, object->GetComponents())
+  forRange (Component* component, object->GetComponents())
   {
     UndoObjectId componentUndoId = Z::gUndoMap->GetUndoId(component);
     mChildUndoIds.PushBack(componentUndoId);
   }
 
   // Store all children
-  forRange(Cog & child, object->GetChildren())
+  forRange (Cog& child, object->GetChildren())
   {
     // Store the object
     UndoObjectId undoId = Z::gUndoMap->GetUndoId(child);
@@ -258,10 +256,9 @@ void CogRestoreState::StoreChildUndoIds(Cog* object)
 void CogRestoreState::RestoreChildUndoIds(Cog* object, uint& childIndex)
 {
   // Update the components
-  forRange(Component * component, object->GetComponents())
+  forRange (Component* component, object->GetComponents())
   {
-    ReturnIf(
-        childIndex >= mChildUndoIds.Size(), , "Invalid index in child Id's");
+    ReturnIf(childIndex >= mChildUndoIds.Size(), , "Invalid index in child Id's");
 
     // Update the undo handle
     UndoObjectId& componentUndoId = mChildUndoIds[childIndex];
@@ -271,10 +268,9 @@ void CogRestoreState::RestoreChildUndoIds(Cog* object, uint& childIndex)
   }
 
   // Update all children
-  forRange(Cog & child, object->GetChildren())
+  forRange (Cog& child, object->GetChildren())
   {
-    ReturnIf(
-        childIndex >= mChildUndoIds.Size(), , "Invalid index in child Id's");
+    ReturnIf(childIndex >= mChildUndoIds.Size(), , "Invalid index in child Id's");
 
     // Update the object
     UndoObjectId& undoId = mChildUndoIds[childIndex];

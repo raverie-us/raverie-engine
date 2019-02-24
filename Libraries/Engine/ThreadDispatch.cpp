@@ -19,10 +19,7 @@ ThreadDispatch::~ThreadDispatch()
   ClearEvents();
 }
 
-void ThreadDispatch::DispatchOn(HandleParam object,
-                                EventDispatcher* eventDispatcher,
-                                StringParam eventId,
-                                Event* event)
+void ThreadDispatch::DispatchOn(HandleParam object, EventDispatcher* eventDispatcher, StringParam eventId, Event* event)
 {
   QueuedEvent queuedEvent;
   queuedEvent.Object = object;
@@ -45,12 +42,11 @@ void ThreadDispatch::DispatchEvents()
   eventsToDispatch.Swap(mEvents);
   mLock.Unlock();
 
-  forRange(QueuedEvent & queuedEvent, eventsToDispatch.All())
+  forRange (QueuedEvent& queuedEvent, eventsToDispatch.All())
   {
     // Check to see if the object is still alive
     if (queuedEvent.Object.IsNull() == false)
-      queuedEvent.EventDispatcherOn->Dispatch(queuedEvent.EventId,
-                                              queuedEvent.EventToSend);
+      queuedEvent.EventDispatcherOn->Dispatch(queuedEvent.EventId, queuedEvent.EventToSend);
 
     // delete the event
     delete queuedEvent.EventToSend;
@@ -66,7 +62,7 @@ void ThreadDispatch::ClearEvents()
   eventsToDispatch.Swap(mEvents);
   mLock.Unlock();
 
-  forRange(QueuedEvent & queuedEvent, eventsToDispatch.All())
+  forRange (QueuedEvent& queuedEvent, eventsToDispatch.All())
   {
     delete queuedEvent.EventToSend;
   }
@@ -83,9 +79,7 @@ ObjectThreadDispatch::~ObjectThreadDispatch()
   ClearEvents();
 }
 
-void ObjectThreadDispatch::Dispatch(Object* object,
-                                    StringParam eventId,
-                                    Event* event)
+void ObjectThreadDispatch::Dispatch(Object* object, StringParam eventId, Event* event)
 {
   ObjectQueuedEvent queuedEvent;
   queuedEvent.EventToSend = event;
@@ -107,10 +101,9 @@ void ObjectThreadDispatch::DispatchEvents()
   eventsToDispatch.Swap(mEvents);
   mLock.Unlock();
 
-  forRange(ObjectQueuedEvent & queuedEvent, eventsToDispatch.All())
+  forRange (ObjectQueuedEvent& queuedEvent, eventsToDispatch.All())
   {
-    queuedEvent.EventDispatcherOn->Dispatch(queuedEvent.EventId,
-                                            queuedEvent.EventToSend);
+    queuedEvent.EventDispatcherOn->Dispatch(queuedEvent.EventId, queuedEvent.EventToSend);
 
     // Delete the event
     delete queuedEvent.EventToSend;
@@ -126,7 +119,7 @@ void ObjectThreadDispatch::ClearEvents()
   eventsToDispatch.Swap(mEvents);
   mLock.Unlock();
 
-  forRange(ObjectQueuedEvent & queuedEvent, eventsToDispatch.All())
+  forRange (ObjectQueuedEvent& queuedEvent, eventsToDispatch.All())
   {
     delete queuedEvent.EventToSend;
   }

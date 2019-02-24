@@ -157,7 +157,7 @@ void ButtonBase::OnHover(MouseEvent* event)
     ToolTip* toolTip = new ToolTip(this);
 
     bool hasText = false;
-    forRange(Command * command, mCommands.All())
+    forRange (Command* command, mCommands.All())
     {
       hasText |= (!command->ToolTip.Empty());
       if (hasText)
@@ -181,10 +181,7 @@ void ButtonBase::OnHover(MouseEvent* event)
 
       ToolTipPlacement placement;
       placement.SetScreenRect(GetScreenRect());
-      placement.SetPriority(IndicatorSide::Bottom,
-                            IndicatorSide::Right,
-                            IndicatorSide::Left,
-                            IndicatorSide::Top);
+      placement.SetPriority(IndicatorSide::Bottom, IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Top);
       toolTip->SetArrowTipTranslation(placement);
       // Temporary to fix jitter when the tool pops up
       toolTip->UpdateTransform();
@@ -263,8 +260,7 @@ ZilchDefineType(TextButton, builder, type)
 {
 }
 
-TextButton::TextButton(Composite* parent, StringParam textStyle) :
-    ButtonBase(parent, "TextButton")
+TextButton::TextButton(Composite* parent, StringParam textStyle) : ButtonBase(parent, "TextButton")
 {
   mButtonText = new Text(this, textStyle);
 
@@ -275,8 +271,7 @@ TextButton::TextButton(Composite* parent, StringParam textStyle) :
   mTextClickedColor = TextBUttonUi::TextClickedColor;
 }
 
-TextButton::TextButton(Composite* parent, StringParam fontName, uint fontSize) :
-    ButtonBase(parent, "TextButton")
+TextButton::TextButton(Composite* parent, StringParam fontName, uint fontSize) : ButtonBase(parent, "TextButton")
 {
   mButtonText = new Text(this, fontName, fontSize);
 
@@ -431,8 +426,7 @@ void IconButton::UpdateTransform()
 
   // Command can show themselves as active
   Command* primary = nullptr;
-  bool commandActive =
-      !mCommands.Empty() && (primary = mCommands[0]) && primary->IsActive();
+  bool commandActive = !mCommands.Empty() && (primary = mCommands[0]) && primary->IsActive();
 
   if (mMouseDown)
   {

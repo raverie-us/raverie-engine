@@ -84,13 +84,8 @@ public:
 };
 
 // Filter for allowable parent RenderGroups.
-bool ParentRenderGroupFilter(HandleParam object,
-                             Property* property,
-                             HandleParam result,
-                             Status& status);
+bool ParentRenderGroupFilter(HandleParam object, Property* property, HandleParam result, Status& status);
 // Callback for resource list property editor.
-void ListItemValidChild(GraphicsResourceList* resourceList,
-                        String entryIdName,
-                        Status& status);
+void ListItemValidChild(GraphicsResourceList* resourceList, String entryIdName, Status& status);
 
 } // namespace Zero

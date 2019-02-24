@@ -119,9 +119,7 @@ public:
   typedef ModalConfirmAction ZilchSelf;
 
   /// Constructor.
-  ModalConfirmAction(Composite* parent,
-                     StringParam title,
-                     float fadeInTime = 0.25f);
+  ModalConfirmAction(Composite* parent, StringParam title, float fadeInTime = 0.25f);
 
   void Close(float fadeOutTime = 0.15f) override;
 
@@ -165,9 +163,7 @@ public:
                      float fadeInTime = 0.25f);
 
   /// The actual helper that makes the buttons (do not call directly)
-  void CreateButtons(StringParam title,
-                     Array<String>& buttonNames,
-                     StringParam extraText);
+  void CreateButtons(StringParam title, Array<String>& buttonNames, StringParam extraText);
 
   void Close(float fadeOutTime = 0.15f) override;
 

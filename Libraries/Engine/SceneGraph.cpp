@@ -40,8 +40,8 @@ void SceneGraphSource::Serialize(Serializer& stream)
 
 void SceneGraphSource::MapNames()
 {
-  forRange(SceneGraphMaterial * mat, Materials.All())
-      MaterialsByName[mat->Name] = mat;
+  forRange (SceneGraphMaterial* mat, Materials.All())
+    MaterialsByName[mat->Name] = mat;
 }
 
 SceneGraphNode::SceneGraphNode()

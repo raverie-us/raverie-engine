@@ -32,9 +32,7 @@ TextureFormat::Enum ToImageFormat(int components, ImageBitDepth::Enum depth);
 // Gets the number of components and image bit depth from a given format.
 // If the format is not valid, then the components will be 0 and depth will be
 // None.
-void FromImageFormat(TextureFormat::Enum format,
-                     int* components,
-                     ImageBitDepth::Enum* depth);
+void FromImageFormat(TextureFormat::Enum format, int* components, ImageBitDepth::Enum* depth);
 
 // Returns a list of all the supported extensions, e.g. "png".
 const Array<String>& GetSupportedImageLoadExtensions();
@@ -111,14 +109,8 @@ void SaveImage(Status& status,
                uint height,
                TextureFormat::Enum format,
                ImageSaveFormat::Enum imageType = ImageSaveFormat::Png);
-void SaveImage(Status& status,
-               Stream* stream,
-               Image* image,
-               ImageSaveFormat::Enum imageType = ImageSaveFormat::Png);
-void SaveImage(Status& status,
-               File& file,
-               Image* image,
-               ImageSaveFormat::Enum imageType = ImageSaveFormat::Png);
+void SaveImage(Status& status, Stream* stream, Image* image, ImageSaveFormat::Enum imageType = ImageSaveFormat::Png);
+void SaveImage(Status& status, File& file, Image* image, ImageSaveFormat::Enum imageType = ImageSaveFormat::Png);
 void SaveImage(Status& status,
                StringParam filename,
                Image* image,

@@ -5,13 +5,8 @@ namespace Zero
 {
 
 // Mostly internal states used by point effects.
-DeclareBitField6(PointFlags,
-                 UseMaxDistance,
-                 LinearInterpolation,
-                 QuadraticInterpolation,
-                 ClampToMax,
-                 ContinueFalloff,
-                 NoEffect);
+DeclareBitField6(
+    PointFlags, UseMaxDistance, LinearInterpolation, QuadraticInterpolation, ClampToMax, ContinueFalloff, NoEffect);
 
 /// Common interface for all point effects. Used to attract or repel objects
 /// towards a central point. The strength of the effect is calculated as an

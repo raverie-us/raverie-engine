@@ -5,16 +5,8 @@ namespace Zero
 {
 
 // Location
-DeclareEnum9(Location,
-             TopLeft,
-             TopCenter,
-             TopRight,
-             CenterLeft,
-             Center,
-             CenterRight,
-             BottomLeft,
-             BottomCenter,
-             BottomRight);
+DeclareEnum9(
+    Location, TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight);
 
 // Extensions
 namespace Location
@@ -153,9 +145,7 @@ struct Rectangle
   void SetSize(Location::Enum origin, Vec2Param size);
   void ResizeToPoint(Location::Enum location, float position);
   void ResizeToPoint(Location::Enum location, Vec2Param position);
-  void ResizeToPoint(Location::Enum location,
-                     Vec2Param position,
-                     Vec2Param minSize);
+  void ResizeToPoint(Location::Enum location, Vec2Param position, Vec2Param minSize);
 
   void Expand(Vec2Param point);
 

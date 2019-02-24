@@ -20,9 +20,7 @@ Type AabbFrustumApproximation(Vec3Param aabbMinPoint,
                               const Vec4 frustumPlanes[6],
                               Manifold* manifold)
 {
-  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) ||
-              (aabbMinPoint.y > aabbMaxPoint.y) ||
-              (aabbMinPoint.z > aabbMaxPoint.z),
+  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y) || (aabbMinPoint.z > aabbMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
           " than it's maximum point.");
 
@@ -44,8 +42,7 @@ Type AabbFrustumApproximation(Vec3Param aabbMinPoint,
     // First check the box's point that's furthest in the direction of the
     // plane's normal
     Vec3 boxPoint = boxCenter + signs;
-    real signedDistance =
-        Geometry::SignedDistanceToPlane(boxPoint, *planeNormal, planeDistance);
+    real signedDistance = Geometry::SignedDistanceToPlane(boxPoint, *planeNormal, planeDistance);
     if (signedDistance < real(0.0))
     {
       return Outside;
@@ -56,14 +53,10 @@ Type AabbFrustumApproximation(Vec3Param aabbMinPoint,
 
 /// Intersect a frustum with an oriented bounding box. The 6 planes of the
 /// frustum are assumed to be pointing inwards.
-Type FrustumObbApproximation(const Vec4 frustumPlanes[6],
-                             Vec3Param obbCenter,
-                             Vec3Param obbHalfExtents,
-                             Mat3Param obbBasis,
-                             Manifold* manifold)
+Type FrustumObbApproximation(
+    const Vec4 frustumPlanes[6], Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Manifold* manifold)
 {
-  Vec3 obbBasisVectors[3] = {
-      obbBasis.GetBasis(0), obbBasis.GetBasis(1), obbBasis.GetBasis(2)};
+  Vec3 obbBasisVectors[3] = {obbBasis.GetBasis(0), obbBasis.GetBasis(1), obbBasis.GetBasis(2)};
   real intersectionIndex = real(-1.0);
   const Vec3* planeNormal = nullptr;
 
@@ -73,16 +66,12 @@ Type FrustumObbApproximation(const Vec4 frustumPlanes[6],
     real planeDistance = frustumPlanes[i][3];
 
     // Compute the projection interval radius of box onto L(t) = b.c + t * p.n
-    real radius =
-        obbHalfExtents[0] * Math::Abs(Dot(*planeNormal, obbBasisVectors[0]));
-    radius +=
-        obbHalfExtents[1] * Math::Abs(Dot(*planeNormal, obbBasisVectors[1]));
-    radius +=
-        obbHalfExtents[2] * Math::Abs(Dot(*planeNormal, obbBasisVectors[2]));
+    real radius = obbHalfExtents[0] * Math::Abs(Dot(*planeNormal, obbBasisVectors[0]));
+    radius += obbHalfExtents[1] * Math::Abs(Dot(*planeNormal, obbBasisVectors[1]));
+    radius += obbHalfExtents[2] * Math::Abs(Dot(*planeNormal, obbBasisVectors[2]));
 
     // Compute the signed distance of the box's center from the plane
-    real signedDistance =
-        Geometry::SignedDistanceToPlane(obbCenter, *planeNormal, planeDistance);
+    real signedDistance = Geometry::SignedDistanceToPlane(obbCenter, *planeNormal, planeDistance);
 
     // Intersection does not occur when the signed distance falls outside the
     //[-radius, +radius] interval
@@ -117,10 +106,7 @@ Type FrustumObbApproximation(const Vec4 frustumPlanes[6],
 
 /// Intersect a frustum with a plane. The 6 planes of the frustum are assumed to
 /// be pointing inwards.
-Type FrustumPlane(const Vec4 frustumPlanes[6],
-                  Vec3Param planeNormal,
-                  real planeDistance,
-                  Manifold* manifold)
+Type FrustumPlane(const Vec4 frustumPlanes[6], Vec3Param planeNormal, real planeDistance, Manifold* manifold)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -148,8 +134,7 @@ Type FrustumSphereApproximation(const Vec4 frustumPlanes[6],
 
     // Get the closest point on the plane to the sphere's center.
     Vec3 closestPoint = sphereCenter;
-    Type result =
-        ClosestPointOnPlaneToPoint(*planeNormal, planeDistance, &closestPoint);
+    Type result = ClosestPointOnPlaneToPoint(*planeNormal, planeDistance, &closestPoint);
 
     // Vector from closest point on plane to sphere's center
     Vec3 v = sphereCenter - closestPoint;
@@ -205,12 +190,9 @@ Type FrustumTriangle(const Vec4 frustumPlanes[6],
   for (uint i = 0; i < 6; ++i)
   {
     planeNormal = reinterpret_cast<const Vec3*>(&(frustumPlanes[i].x));
-    real a = Geometry::SignedDistanceToPlane(
-        trianglePointA, *planeNormal, frustumPlanes[i][3]);
-    real b = Geometry::SignedDistanceToPlane(
-        trianglePointB, *planeNormal, frustumPlanes[i][3]);
-    real c = Geometry::SignedDistanceToPlane(
-        trianglePointC, *planeNormal, frustumPlanes[i][3]);
+    real a = Geometry::SignedDistanceToPlane(trianglePointA, *planeNormal, frustumPlanes[i][3]);
+    real b = Geometry::SignedDistanceToPlane(trianglePointB, *planeNormal, frustumPlanes[i][3]);
+    real c = Geometry::SignedDistanceToPlane(trianglePointC, *planeNormal, frustumPlanes[i][3]);
 
     // Add up the signs (negative = -1, positive = 1) and check to see if the
     // points are all on the same side or if the triangle intersects the plane.

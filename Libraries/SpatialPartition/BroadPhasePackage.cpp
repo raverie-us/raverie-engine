@@ -75,12 +75,9 @@ void BroadPhasePackage::LoadFromStream(Serializer& stream)
 
   while (stream.GetPolymorphic(broadPhaseNode))
   {
-    BroadPhaseCreator* broadPhaseCreator =
-        Z::gBroadPhaseLibrary->GetCreatorBy(broadPhaseNode);
+    BroadPhaseCreator* broadPhaseCreator = Z::gBroadPhaseLibrary->GetCreatorBy(broadPhaseNode);
 
-    ErrorIf(broadPhaseCreator == nullptr,
-            "Invalid broad phase node %s.",
-            broadPhaseNode.TypeName.Data());
+    ErrorIf(broadPhaseCreator == nullptr, "Invalid broad phase node %s.", broadPhaseNode.TypeName.Data());
     if (broadPhaseCreator == nullptr)
       continue;
     // Create the broad phase.
@@ -116,9 +113,7 @@ void BroadPhasePackage::Draw(int level, uint debugFlags)
   mBroadPhases[BroadPhase::Static]->Draw(level, debugFlags);
 }
 
-void BroadPhasePackage::CreateProxy(uint type,
-                                    BroadPhaseProxy& proxy,
-                                    BroadPhaseData& data)
+void BroadPhasePackage::CreateProxy(uint type, BroadPhaseProxy& proxy, BroadPhaseData& data)
 {
   mBroadPhases[type]->CreateProxy(proxy, data);
 }
@@ -138,9 +133,7 @@ void BroadPhasePackage::RemoveProxies(uint type, ProxyHandleArray& proxies)
   mBroadPhases[type]->RemoveProxies(proxies);
 }
 
-void BroadPhasePackage::UpdateProxy(uint type,
-                                    BroadPhaseProxy& proxy,
-                                    BroadPhaseData& data)
+void BroadPhasePackage::UpdateProxy(uint type, BroadPhaseProxy& proxy, BroadPhaseData& data)
 {
   mBroadPhases[type]->UpdateProxy(proxy, data);
 }
@@ -160,14 +153,12 @@ void BroadPhasePackage::Query(BroadPhaseData& data, ClientPairArray& results)
   mBroadPhases[BroadPhase::Static]->Query(data, results);
 }
 
-void BroadPhasePackage::BatchQuery(BroadPhaseDataArray& data,
-                                   ClientPairArray& results)
+void BroadPhasePackage::BatchQuery(BroadPhaseDataArray& data, ClientPairArray& results)
 {
   mBroadPhases[BroadPhase::Static]->BatchQuery(data, results);
 }
 
-void BroadPhasePackage::QueryBoth(BroadPhaseData& data,
-                                  ClientPairArray& results)
+void BroadPhasePackage::QueryBoth(BroadPhaseData& data, ClientPairArray& results)
 {
   mBroadPhases[BroadPhase::Static]->Query(data, results);
   mBroadPhases[BroadPhase::Dynamic]->Query(data, results);
@@ -189,16 +180,13 @@ void BroadPhasePackage::Cleanup()
   mBroadPhases[BroadPhase::Static]->Cleanup();
 }
 
-void BroadPhasePackage::CastRay(Vec3Param startPos,
-                                Vec3Param direction,
-                                ProxyCastResults& results)
+void BroadPhasePackage::CastRay(Vec3Param startPos, Vec3Param direction, ProxyCastResults& results)
 {
   CastData rayData(startPos, direction);
   BaseCastFilter& filter = results.Filter;
-  const bool ignoreDynamic =
-      filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) &&
-      filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) &&
-      filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
+  const bool ignoreDynamic = filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) &&
+                             filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) &&
+                             filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
   const bool ignoreStatic = filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
 
   // If we aren't refining the ray, simply cast into both.
@@ -209,15 +197,13 @@ void BroadPhasePackage::CastRay(Vec3Param startPos,
     // Cast into the dynamic objects.
     if (!ignoreDynamic)
     {
-      CastIntoBroadphase(
-          BroadPhase::Dynamic, rayData, results, &IBroadPhase::CastRay);
+      CastIntoBroadphase(BroadPhase::Dynamic, rayData, results, &IBroadPhase::CastRay);
     }
 
     // Cast into the static objects.
     if (!ignoreStatic)
     {
-      CastIntoBroadphase(
-          BroadPhase::Static, rayData, results, &IBroadPhase::CastRay);
+      CastIntoBroadphase(BroadPhase::Static, rayData, results, &IBroadPhase::CastRay);
     }
   }
   else
@@ -234,8 +220,7 @@ void BroadPhasePackage::CastRay(Vec3Param startPos,
       CastData segmentData(startPos, collisionPoint);
 
       // Cast into the dynamic with this new segment
-      CastIntoBroadphase(
-          BroadPhase::Dynamic, segmentData, results, &IBroadPhase::CastSegment);
+      CastIntoBroadphase(BroadPhase::Dynamic, segmentData, results, &IBroadPhase::CastSegment);
 
       // If we still have room, merge the static results in.
       if (results.GetRemainingSize() > 0 && ignoreStatic == false)
@@ -243,36 +228,30 @@ void BroadPhasePackage::CastRay(Vec3Param startPos,
     }
     else
     {
-      CastIntoBroadphase(
-          BroadPhase::Dynamic, rayData, results, &IBroadPhase::CastRay);
+      CastIntoBroadphase(BroadPhase::Dynamic, rayData, results, &IBroadPhase::CastRay);
     }
   }
 }
 
-void BroadPhasePackage::CastSegment(Vec3Param startPos,
-                                    Vec3Param endPos,
-                                    ProxyCastResults& results)
+void BroadPhasePackage::CastSegment(Vec3Param startPos, Vec3Param endPos, ProxyCastResults& results)
 {
   CastData data(startPos, endPos);
 
   BaseCastFilter& filter = results.Filter;
-  const bool ignoreDynamic =
-      filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) &&
-      filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) &&
-      filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
+  const bool ignoreDynamic = filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) &&
+                             filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) &&
+                             filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
 
   // Cast into the dynamic objects.
   if (!ignoreDynamic)
   {
-    CastIntoBroadphase(
-        BroadPhase::Dynamic, data, results, &IBroadPhase::CastSegment);
+    CastIntoBroadphase(BroadPhase::Dynamic, data, results, &IBroadPhase::CastSegment);
   }
 
   // Cast into the static objects.
   if (!results.Filter.IsSet(BaseCastFilterFlags::IgnoreStatic))
   {
-    CastIntoBroadphase(
-        BroadPhase::Static, data, results, &IBroadPhase::CastSegment);
+    CastIntoBroadphase(BroadPhase::Static, data, results, &IBroadPhase::CastSegment);
   }
 }
 
@@ -281,75 +260,64 @@ void BroadPhasePackage::CastAabb(const Aabb& aabb, ProxyCastResults& results)
   CastData data(aabb);
 
   BaseCastFilter& filter = results.Filter;
-  const bool ignoreDynamic =
-      filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) &&
-      filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) &&
-      filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
+  const bool ignoreDynamic = filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) &&
+                             filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) &&
+                             filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
 
   // Cast into the dynamic objects.
   if (!ignoreDynamic)
   {
-    CastIntoBroadphase(
-        BroadPhase::Dynamic, data, results, &IBroadPhase::CastAabb);
+    CastIntoBroadphase(BroadPhase::Dynamic, data, results, &IBroadPhase::CastAabb);
   }
 
   // Cast into the static objects.
   if (!results.Filter.IsSet(BaseCastFilterFlags::IgnoreStatic))
   {
-    CastIntoBroadphase(
-        BroadPhase::Static, data, results, &IBroadPhase::CastAabb);
+    CastIntoBroadphase(BroadPhase::Static, data, results, &IBroadPhase::CastAabb);
   }
 }
 
-void BroadPhasePackage::CastSphere(const Sphere& sphere,
-                                   ProxyCastResults& results)
+void BroadPhasePackage::CastSphere(const Sphere& sphere, ProxyCastResults& results)
 {
   CastData data(sphere);
 
   BaseCastFilter& filter = results.Filter;
-  const bool ignoreDynamic =
-      filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) &&
-      filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) &&
-      filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
+  const bool ignoreDynamic = filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) &&
+                             filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) &&
+                             filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
 
   // Cast into the dynamic objects.
   if (!ignoreDynamic)
   {
-    CastIntoBroadphase(
-        BroadPhase::Dynamic, data, results, &IBroadPhase::CastSphere);
+    CastIntoBroadphase(BroadPhase::Dynamic, data, results, &IBroadPhase::CastSphere);
   }
 
   // Cast into the static objects.
   if (!results.Filter.IsSet(BaseCastFilterFlags::IgnoreStatic))
   {
-    CastIntoBroadphase(
-        BroadPhase::Static, data, results, &IBroadPhase::CastSphere);
+    CastIntoBroadphase(BroadPhase::Static, data, results, &IBroadPhase::CastSphere);
   }
 }
 
-void BroadPhasePackage::CastFrustum(const Frustum& frustum,
-                                    ProxyCastResults& results)
+void BroadPhasePackage::CastFrustum(const Frustum& frustum, ProxyCastResults& results)
 {
   CastData data(frustum);
 
   BaseCastFilter& filter = results.Filter;
-  const bool ignoreDynamic =
-      filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) &&
-      filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) &&
-      filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
+  const bool ignoreDynamic = filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) &&
+                             filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) &&
+                             filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
 
   // Cast into the dynamic objects.
   if (!ignoreDynamic)
   {
-    CastIntoBroadphase(
-        BroadPhase::Dynamic, data, results, &IBroadPhase::CastFrustum);
+    CastIntoBroadphase(BroadPhase::Dynamic, data, results, &IBroadPhase::CastFrustum);
   }
 
   // Cast into the static objects.
   if (!results.Filter.IsSet(BaseCastFilterFlags::IgnoreStatic))
   {
-    CastIntoBroadphase(
-        BroadPhase::Static, data, results, &IBroadPhase::CastFrustum);
+    CastIntoBroadphase(BroadPhase::Static, data, results, &IBroadPhase::CastFrustum);
   }
 }
 
@@ -361,13 +329,10 @@ void BroadPhasePackage::CastIntoBroadphase(uint broadPhaseType,
   (mBroadPhases[broadPhaseType]->*func)(data, results);
 }
 
-bool BroadPhasePackage::GetFirstContactInStatic(CastDataParam rayData,
-                                                Vec3& point,
-                                                ProxyCastResults& results)
+bool BroadPhasePackage::GetFirstContactInStatic(CastDataParam rayData, Vec3& point, ProxyCastResults& results)
 {
   // Cast the ray into the static
-  CastIntoBroadphase(
-      BroadPhase::Static, rayData, results, &IBroadPhase::CastRay);
+  CastIntoBroadphase(BroadPhase::Static, rayData, results, &IBroadPhase::CastRay);
 
   // Grab the results
   ProxyCastResults::range r = results.All();

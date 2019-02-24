@@ -52,8 +52,7 @@ Property* PropertyHandle::GetProperty() const
   // have been moved from our type to a base type, and it's now a different
   // property. This Handle should not return that new property.
   if (BoundType* owner = mOwner)
-    return owner->FindProperty(mName,
-                               FindMemberOptions::DoNotIncludeBaseClasses);
+    return owner->FindProperty(mName, FindMemberOptions::DoNotIncludeBaseClasses);
   return nullptr;
 }
 

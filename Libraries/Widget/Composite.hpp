@@ -28,8 +28,7 @@ class Composite : public Widget
 public:
   ZilchDeclareType(Composite, TypeCopyMode::ReferenceType);
 
-  Composite(Composite* parent,
-            AttachType::Enum attachType = AttachType::Normal);
+  Composite(Composite* parent, AttachType::Enum attachType = AttachType::Normal);
   ~Composite();
 
   void OnDestroy() override;
@@ -61,8 +60,7 @@ public:
   // Composite interface
 
   // Attach a child widget
-  virtual void AttachChildWidget(
-      Widget* child, AttachType::Enum attachType = AttachType::Normal);
+  virtual void AttachChildWidget(Widget* child, AttachType::Enum attachType = AttachType::Normal);
 
   void RenderUpdate(ViewBlock& viewBlock,
                     FrameBlock& frameBlock,
@@ -102,18 +100,13 @@ private:
 DeclareEnum3(UiTraversal, DirectDescendantsOnly, DepthFirst, BreadthFirst);
 
 // Find any child widget by class
-Widget* FindWidgetByName(StringParam name,
-                         UiTraversal::Enum traversalType,
-                         size_t index,
-                         Widget* parent);
+Widget* FindWidgetByName(StringParam name, UiTraversal::Enum traversalType, size_t index, Widget* parent);
 
 // Colored Composite
 class ColoredComposite : public Composite
 {
 public:
-  ColoredComposite(Composite* parent,
-                   Vec4Param color,
-                   AttachType::Enum attachType = AttachType::Normal);
+  ColoredComposite(Composite* parent, Vec4Param color, AttachType::Enum attachType = AttachType::Normal);
   void UpdateTransform() override;
 
   Element* mBackground;

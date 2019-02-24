@@ -9,8 +9,7 @@ ShaderIRAttributeParameter::ShaderIRAttributeParameter()
   mNode = nullptr;
 }
 
-ShaderIRAttributeParameter::ShaderIRAttributeParameter(
-    Zilch::AttributeParameter& param, Zilch::SyntaxNode* node)
+ShaderIRAttributeParameter::ShaderIRAttributeParameter(Zilch::AttributeParameter& param, Zilch::SyntaxNode* node)
 {
   mParameter = param;
   mNode = node;
@@ -87,8 +86,7 @@ void ShaderIRAttributeParameter::SetLocationNode(Zilch::SyntaxNode* node)
   mNode = node;
 }
 
-Zilch::AttributeParameter&
-ShaderIRAttributeParameter::GetZilchAttributeParameter()
+Zilch::AttributeParameter& ShaderIRAttributeParameter::GetZilchAttributeParameter()
 {
   return mParameter;
 }
@@ -99,16 +97,14 @@ ShaderIRAttribute::ShaderIRAttribute()
   mImplicitAttribute = false;
 }
 
-ShaderIRAttribute::ShaderIRAttribute(StringParam attributeName,
-                                     Zilch::SyntaxNode* locationNode)
+ShaderIRAttribute::ShaderIRAttribute(StringParam attributeName, Zilch::SyntaxNode* locationNode)
 {
   mNode = locationNode;
   mAttributeName = attributeName;
   mImplicitAttribute = false;
 }
 
-ShaderIRAttributeParameter*
-ShaderIRAttribute::FindFirstParameter(StringParam name)
+ShaderIRAttributeParameter* ShaderIRAttribute::FindFirstParameter(StringParam name)
 {
   for (size_t i = 0; i < mParameters.Size(); ++i)
   {
@@ -129,8 +125,7 @@ ShaderIRAttributeList::NamedRange::NamedRange()
 {
 }
 
-ShaderIRAttributeList::NamedRange::NamedRange(StringParam attributeToFind,
-                                              const Range& range)
+ShaderIRAttributeList::NamedRange::NamedRange(StringParam attributeToFind, const Range& range)
 {
   mRange = range;
   mAttributeToFind = attributeToFind;
@@ -163,8 +158,7 @@ void ShaderIRAttributeList::NamedRange::SkipAttributes()
   }
 }
 
-ShaderIRAttribute* ShaderIRAttributeList::AddAttribute(
-    StringParam attributeName, Zilch::AttributeNode* node)
+ShaderIRAttribute* ShaderIRAttributeList::AddAttribute(StringParam attributeName, Zilch::AttributeNode* node)
 {
   ShaderIRAttribute* attribute = &mAttributes.PushBack();
   attribute->mAttributeName = attributeName;
@@ -172,14 +166,12 @@ ShaderIRAttribute* ShaderIRAttributeList::AddAttribute(
   return attribute;
 }
 
-ShaderIRAttributeList::NamedRange
-ShaderIRAttributeList::FindAttributes(StringParam attributeName)
+ShaderIRAttributeList::NamedRange ShaderIRAttributeList::FindAttributes(StringParam attributeName)
 {
   return NamedRange(attributeName, mAttributes.All());
 }
 
-ShaderIRAttribute*
-ShaderIRAttributeList::FindFirstAttribute(StringParam attributeName)
+ShaderIRAttribute* ShaderIRAttributeList::FindFirstAttribute(StringParam attributeName)
 {
   NamedRange range = FindAttributes(attributeName);
   if (!range.Empty())

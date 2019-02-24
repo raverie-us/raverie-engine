@@ -8,12 +8,10 @@ String GetTypeInFile(StringParam fileName)
 {
   Status status;
   File file;
-  bool loaded = file.Open(
-      fileName.c_str(), FileMode::Read, FileAccessPattern::Sequential);
+  bool loaded = file.Open(fileName.c_str(), FileMode::Read, FileAccessPattern::Sequential);
   if (!loaded)
   {
-    ErrorIf(
-        true, "Failed to load file. Could not open file %s", fileName.c_str());
+    ErrorIf(true, "Failed to load file. Could not open file %s", fileName.c_str());
     return String();
   }
 
@@ -35,15 +33,12 @@ String GetTypeInFile(StringParam fileName)
   return String();
 }
 
-Serializer* GetLoaderStreamDataBlock(Status& status,
-                                     DataBlock block,
-                                     DataFileFormat::Enum format)
+Serializer* GetLoaderStreamDataBlock(Status& status, DataBlock block, DataFileFormat::Enum format)
 {
   if (format == DataFileFormat::Text)
   {
     DataTreeLoader* loader = new DataTreeLoader();
-    StringRange range(
-        (char*)block.Data, (char*)block.Data, (char*)block.Data + block.Size);
+    StringRange range((char*)block.Data, (char*)block.Data, (char*)block.Data + block.Size);
     loader->OpenBuffer(status, range);
     return loader;
   }
@@ -56,9 +51,7 @@ Serializer* GetLoaderStreamDataBlock(Status& status,
   }
 }
 
-Serializer* GetLoaderStreamFile(Status& status,
-                                StringParam fileName,
-                                DataFileFormat::Enum format)
+Serializer* GetLoaderStreamFile(Status& status, StringParam fileName, DataFileFormat::Enum format)
 {
   if (FileExists(fileName))
   {
@@ -85,16 +78,13 @@ Serializer* GetLoaderStreamFile(Status& status,
   }
   else
   {
-    status.SetFailed(BuildString("File Not Found ", fileName),
-                     FileSystemErrors::FileNotFound);
+    status.SetFailed(BuildString("File Not Found ", fileName), FileSystemErrors::FileNotFound);
   }
 
   return NULL;
 }
 
-Serializer* GetSaverStreamFile(Status& status,
-                               StringParam fileName,
-                               DataFileFormat::Enum format)
+Serializer* GetSaverStreamFile(Status& status, StringParam fileName, DataFileFormat::Enum format)
 {
   if (format == DataFileFormat::Text)
   {

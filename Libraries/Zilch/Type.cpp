@@ -4,110 +4,41 @@
 
 namespace Zilch
 {
-ZilchDefineExternalBaseType(Members::Enum,
-                            TypeCopyMode::ValueType,
-                            builder,
-                            type)
+ZilchDefineExternalBaseType(Members::Enum, TypeCopyMode::ValueType, builder, type)
 {
   ZilchFullBindEnum(builder, type, SpecialType::Flags);
   ZilchFullBindEnumValue(builder, type, Members::Instance, "Instance");
   ZilchFullBindEnumValue(builder, type, Members::Static, "Static");
   ZilchFullBindEnumValue(builder, type, Members::Inherited, "Inherited");
   ZilchFullBindEnumValue(builder, type, Members::Extension, "Extension");
-  ZilchFullBindEnumValue(
-      builder, type, Members::InstanceStatic, "InstanceStatic");
-  ZilchFullBindEnumValue(builder,
-                         type,
-                         Members::InheritedInstanceStatic,
-                         "InheritedInstanceStatic");
-  ZilchFullBindEnumValue(
-      builder, type, Members::InheritedInstance, "InheritedInstance");
-  ZilchFullBindEnumValue(
-      builder, type, Members::InheritedStatic, "InheritedStatic");
+  ZilchFullBindEnumValue(builder, type, Members::InstanceStatic, "InstanceStatic");
+  ZilchFullBindEnumValue(builder, type, Members::InheritedInstanceStatic, "InheritedInstanceStatic");
+  ZilchFullBindEnumValue(builder, type, Members::InheritedInstance, "InheritedInstance");
+  ZilchFullBindEnumValue(builder, type, Members::InheritedStatic, "InheritedStatic");
   ZilchFullBindEnumValue(builder, type, Members::All, "All");
 }
 
 ZilchDefineType(Type, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
-  ZilchFullBindMethod(
-      builder, type, &Type::IsA, ZilchNoOverload, "IsA", "baseType");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Type::IsCastableTo,
-                      ZilchNoOverload,
-                      "IsCastableTo",
-                      "toType");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Type::IsRawCastableTo,
-                      ZilchNoOverload,
-                      "IsRawCastableTo",
-                      "toType");
+  ZilchFullBindMethod(builder, type, &Type::IsA, ZilchNoOverload, "IsA", "baseType");
+  ZilchFullBindMethod(builder, type, &Type::IsCastableTo, ZilchNoOverload, "IsCastableTo", "toType");
+  ZilchFullBindMethod(builder, type, &Type::IsRawCastableTo, ZilchNoOverload, "IsRawCastableTo", "toType");
 
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &Type::ToString,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "Name");
+  ZilchFullBindGetterSetter(builder, type, &Type::ToString, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "Name");
 
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &Type::IsHandle,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "IsHandle");
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &Type::IsValue,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "IsValue");
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &Type::IsDelegate,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "IsDelegate");
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &Type::IsEnum,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "IsEnum");
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &Type::IsFlags,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "IsFlags");
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &Type::IsEnumOrFlags,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "IsEnumOrFlags");
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &Type::IsAny,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "IsAny");
+  ZilchFullBindGetterSetter(
+      builder, type, &Type::IsHandle, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "IsHandle");
+  ZilchFullBindGetterSetter(builder, type, &Type::IsValue, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "IsValue");
+  ZilchFullBindGetterSetter(
+      builder, type, &Type::IsDelegate, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "IsDelegate");
+  ZilchFullBindGetterSetter(builder, type, &Type::IsEnum, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "IsEnum");
+  ZilchFullBindGetterSetter(builder, type, &Type::IsFlags, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "IsFlags");
+  ZilchFullBindGetterSetter(
+      builder, type, &Type::IsEnumOrFlags, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "IsEnumOrFlags");
+  ZilchFullBindGetterSetter(builder, type, &Type::IsAny, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "IsAny");
 
-  ZilchFullBindField(builder,
-                     type,
-                     &BoundType::SourceLibrary,
-                     "Library",
-                     PropertyBinding::Get);
+  ZilchFullBindField(builder, type, &BoundType::SourceLibrary, "Library", PropertyBinding::Get);
 }
 
 ZilchDefineType(AnyType, builder, type)
@@ -118,59 +49,33 @@ ZilchDefineType(AnyType, builder, type)
 ZilchDefineType(IndirectionType, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
-  ZilchFullBindField(builder,
-                     type,
-                     &IndirectionType::ReferencedType,
-                     "ReferencedType",
-                     PropertyBinding::Get);
+  ZilchFullBindField(builder, type, &IndirectionType::ReferencedType, "ReferencedType", PropertyBinding::Get);
 }
 
 ZilchDefineType(DelegateType, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
 
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &DelegateType::GetSignatureString,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "Signature");
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &DelegateType::GetParameters,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "Parameters");
-  ZilchFullBindField(
-      builder, type, &DelegateType::Return, "Return", PropertyBinding::Get);
+  ZilchFullBindGetterSetter(
+      builder, type, &DelegateType::GetSignatureString, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "Signature");
+  ZilchFullBindGetterSetter(
+      builder, type, &DelegateType::GetParameters, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "Parameters");
+  ZilchFullBindField(builder, type, &DelegateType::Return, "Return", PropertyBinding::Get);
 }
 
 ZilchDefineType(DelegateParameter, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
-  ZilchFullBindField(
-      builder, type, &DelegateParameter::Name, "Name", PropertyBinding::Get);
-  ZilchFullBindField(builder,
-                     type,
-                     &DelegateParameter::ParameterType,
-                     "Type",
-                     PropertyBinding::Get);
+  ZilchFullBindField(builder, type, &DelegateParameter::Name, "Name", PropertyBinding::Get);
+  ZilchFullBindField(builder, type, &DelegateParameter::ParameterType, "Type", PropertyBinding::Get);
 }
 
 ZilchDefineType(BoundType, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
-  ZilchFullBindField(
-      builder, type, &BoundType::BaseType, "BaseType", PropertyBinding::Get);
-  ZilchFullBindField(builder,
-                     type,
-                     &BoundType::TemplateBaseName,
-                     "TemplateBaseName",
-                     PropertyBinding::Get);
-  ZilchFullBindField(
-      builder, type, &BoundType::Native, "IsNative", PropertyBinding::Get);
+  ZilchFullBindField(builder, type, &BoundType::BaseType, "BaseType", PropertyBinding::Get);
+  ZilchFullBindField(builder, type, &BoundType::TemplateBaseName, "TemplateBaseName", PropertyBinding::Get);
+  ZilchFullBindField(builder, type, &BoundType::Native, "IsNative", PropertyBinding::Get);
   ZilchFullBindGetterSetter(builder,
                             type,
                             &BoundType::IsTypeOrBaseNative,
@@ -179,16 +84,8 @@ ZilchDefineType(BoundType, builder, type)
                             ZilchNoOverload,
                             "IsTypeOrBaseNative");
 
-  ZilchFullBindField(builder,
-                     type,
-                     &BoundType::Destructor,
-                     "Destructor",
-                     PropertyBinding::Get);
-  ZilchFullBindField(builder,
-                     type,
-                     &BoundType::PreConstructor,
-                     "PreConstructor",
-                     PropertyBinding::Get);
+  ZilchFullBindField(builder, type, &BoundType::Destructor, "Destructor", PropertyBinding::Get);
+  ZilchFullBindField(builder, type, &BoundType::PreConstructor, "PreConstructor", PropertyBinding::Get);
 
   ZilchFullBindMethod(builder,
                       type,
@@ -252,25 +149,20 @@ ZilchDefineType(BoundType, builder, type)
                       (MemberRange<Property>(BoundType::*)(Members::Enum)),
                       "GetProperties",
                       "options");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &BoundType::GetFields,
-                      (MemberRange<Field>(BoundType::*)(Members::Enum)),
-                      "GetFields",
-                      "options");
+  ZilchFullBindMethod(
+      builder, type, &BoundType::GetFields, (MemberRange<Field>(BoundType::*)(Members::Enum)), "GetFields", "options");
   ZilchFullBindMethod(builder,
                       type,
                       &BoundType::GetFunctions,
                       (MemberRange<Function>(BoundType::*)(Members::Enum)),
                       "GetFunctions",
                       "options");
-  ZilchFullBindMethod(
-      builder,
-      type,
-      &BoundType::GetFunctions,
-      (MemberRange<Function>(BoundType::*)(StringParam, Members::Enum)),
-      "GetFunctions",
-      "name, options");
+  ZilchFullBindMethod(builder,
+                      type,
+                      &BoundType::GetFunctions,
+                      (MemberRange<Function>(BoundType::*)(StringParam, Members::Enum)),
+                      "GetFunctions",
+                      "name, options");
   ZilchFullBindMethod(builder,
                       type,
                       &BoundType::GetMembers,
@@ -283,96 +175,73 @@ ZilchDefineType(BoundType, builder, type)
                       (GetterSetter * (BoundType::*)(StringParam)),
                       "GetGetterSetter",
                       "name");
-  ZilchFullBindMethod(
-      builder,
-      type,
-      &BoundType::GetGetterSetter,
-      (GetterSetter * (BoundType::*)(StringParam, Members::Enum)),
-      "GetGetterSetter",
-      "name, options");
-  ZilchFullBindMethod(
-      builder,
-      type,
-      &BoundType::GetGetterSetter,
-      (GetterSetter * (BoundType::*)(StringParam, Type*, Members::Enum)),
-      "GetGetterSetter",
-      "name, declaredType, options");
   ZilchFullBindMethod(builder,
                       type,
-                      &BoundType::GetProperty,
-                      (Property * (BoundType::*)(StringParam)),
-                      "GetProperty",
-                      "name");
+                      &BoundType::GetGetterSetter,
+                      (GetterSetter * (BoundType::*)(StringParam, Members::Enum)),
+                      "GetGetterSetter",
+                      "name, options");
+  ZilchFullBindMethod(builder,
+                      type,
+                      &BoundType::GetGetterSetter,
+                      (GetterSetter * (BoundType::*)(StringParam, Type*, Members::Enum)),
+                      "GetGetterSetter",
+                      "name, declaredType, options");
+  ZilchFullBindMethod(
+      builder, type, &BoundType::GetProperty, (Property * (BoundType::*)(StringParam)), "GetProperty", "name");
   ZilchFullBindMethod(builder,
                       type,
                       &BoundType::GetProperty,
                       (Property * (BoundType::*)(StringParam, Members::Enum)),
                       "GetProperty",
                       "name, options");
-  ZilchFullBindMethod(
-      builder,
-      type,
-      &BoundType::GetProperty,
-      (Property * (BoundType::*)(StringParam, Type*, Members::Enum)),
-      "GetProperty",
-      "name, declaredType, options");
   ZilchFullBindMethod(builder,
                       type,
-                      &BoundType::GetField,
-                      (Field * (BoundType::*)(StringParam)),
-                      "GetField",
-                      "name");
+                      &BoundType::GetProperty,
+                      (Property * (BoundType::*)(StringParam, Type*, Members::Enum)),
+                      "GetProperty",
+                      "name, declaredType, options");
+  ZilchFullBindMethod(builder, type, &BoundType::GetField, (Field * (BoundType::*)(StringParam)), "GetField", "name");
   ZilchFullBindMethod(builder,
                       type,
                       &BoundType::GetField,
                       (Field * (BoundType::*)(StringParam, Members::Enum)),
                       "GetField",
                       "name, options");
-  ZilchFullBindMethod(
-      builder,
-      type,
-      &BoundType::GetField,
-      (Field * (BoundType::*)(StringParam, Type*, Members::Enum)),
-      "GetField",
-      "name, declaredType, options");
   ZilchFullBindMethod(builder,
                       type,
-                      &BoundType::GetFunction,
-                      (Function * (BoundType::*)(StringParam)),
-                      "GetFunction",
-                      "name");
+                      &BoundType::GetField,
+                      (Field * (BoundType::*)(StringParam, Type*, Members::Enum)),
+                      "GetField",
+                      "name, declaredType, options");
+  ZilchFullBindMethod(
+      builder, type, &BoundType::GetFunction, (Function * (BoundType::*)(StringParam)), "GetFunction", "name");
   ZilchFullBindMethod(builder,
                       type,
                       &BoundType::GetFunction,
                       (Function * (BoundType::*)(StringParam, Members::Enum)),
                       "GetFunction",
                       "name, options");
-  ZilchFullBindMethod(
-      builder,
-      type,
-      &BoundType::GetFunction,
-      (Function * (BoundType::*)(StringParam, DelegateType*, Members::Enum)),
-      "GetFunction",
-      "name, signatureType, options");
   ZilchFullBindMethod(builder,
                       type,
-                      &BoundType::GetMember,
-                      (Member * (BoundType::*)(StringParam)),
-                      "GetMember",
-                      "name");
+                      &BoundType::GetFunction,
+                      (Function * (BoundType::*)(StringParam, DelegateType*, Members::Enum)),
+                      "GetFunction",
+                      "name, signatureType, options");
+  ZilchFullBindMethod(
+      builder, type, &BoundType::GetMember, (Member * (BoundType::*)(StringParam)), "GetMember", "name");
   ZilchFullBindMethod(builder,
                       type,
                       &BoundType::GetMember,
                       (Member * (BoundType::*)(StringParam, Members::Enum)),
                       "GetMember",
                       "name, options");
-  ZilchFullBindMethod(
-      builder,
-      type,
-      &BoundType::GetMember,
-      (Member * (BoundType::*)(StringParam, Type*, Members::Enum)),
-      "GetMember",
-      "name, declaredType, options");
+  ZilchFullBindMethod(builder,
+                      type,
+                      &BoundType::GetMember,
+                      (Member * (BoundType::*)(StringParam, Type*, Members::Enum)),
+                      "GetMember",
+                      "name, declaredType, options");
   ZilchFullBindMethod(builder,
                       type,
                       &BoundType::GetDefaultConstructor,
@@ -455,8 +324,7 @@ bool Type::IsHandleType(Type* type)
   BoundType* boundType = Type::DynamicCast<BoundType*>(type);
 
   // If the type is a handle...
-  return boundType != nullptr &&
-         boundType->CopyMode == TypeCopyMode::ReferenceType;
+  return boundType != nullptr && boundType->CopyMode == TypeCopyMode::ReferenceType;
 }
 
 bool Type::IsValueType(Type* type)
@@ -481,8 +349,7 @@ bool Type::IsEnumType(Type* type)
   BoundType* boundType = Type::DynamicCast<BoundType*>(type);
 
   // If the type is a bound type set to enumeration...
-  return boundType != nullptr &&
-         boundType->SpecialType == SpecialType::Enumeration;
+  return boundType != nullptr && boundType->SpecialType == SpecialType::Enumeration;
 }
 
 bool Type::IsFlagsType(Type* type)
@@ -501,8 +368,7 @@ bool Type::IsEnumOrFlagsType(Type* type)
 
   // If the type is a bound type set to flags or enumeration...
   return boundType != nullptr &&
-         (boundType->SpecialType == SpecialType::Flags ||
-          boundType->SpecialType == SpecialType::Enumeration);
+         (boundType->SpecialType == SpecialType::Flags || boundType->SpecialType == SpecialType::Enumeration);
 }
 
 bool Type::IsAnyType(Type* type)
@@ -537,8 +403,7 @@ BoundType* Type::GetBoundType(Type* handleType)
   // An indirection type is generally a struct with the 'ref' keyword before it
   // (making it a handle type) We can access members on indirection types by
   // going through the referenced bound type
-  IndirectionType* indirectionType =
-      Type::DynamicCast<IndirectionType*>(handleType);
+  IndirectionType* indirectionType = Type::DynamicCast<IndirectionType*>(handleType);
   if (indirectionType != nullptr)
     return indirectionType->ReferencedType;
 
@@ -549,8 +414,7 @@ BoundType* Type::GetBoundType(Type* handleType)
 BoundType* Type::GetHandleType(Type* handleType)
 {
   // See if the type is an indirection type...
-  IndirectionType* indirectionType =
-      Type::DynamicCast<IndirectionType*>(handleType);
+  IndirectionType* indirectionType = Type::DynamicCast<IndirectionType*>(handleType);
 
   // If so, then it is a handle!
   if (indirectionType != nullptr)
@@ -560,8 +424,7 @@ BoundType* Type::GetHandleType(Type* handleType)
   BoundType* boundType = Type::DynamicCast<BoundType*>(handleType);
 
   // If the type is a handle...
-  if (boundType != nullptr &&
-      boundType->CopyMode == TypeCopyMode::ReferenceType)
+  if (boundType != nullptr && boundType->CopyMode == TypeCopyMode::ReferenceType)
     return boundType;
 
   // If it was neither, then it is not a handle type
@@ -879,8 +742,7 @@ Type* IndirectionType::GenericGetVirtualType(const byte* value) const
   return handle->StoredType;
 }
 
-Type* IndirectionType::GenericGetSameVirtualTypeExceptAny(
-    const byte* value) const
+Type* IndirectionType::GenericGetSameVirtualTypeExceptAny(const byte* value) const
 {
   // We override this functionality because our GenericGetVirtualType may return
   // a BoundType/ Since this is supposed to be the 'SameType' we want to
@@ -1098,7 +960,7 @@ BoundType::~BoundType()
     list.Lock.Unlock();
   }
 
-  ZilchForEach(SendsEvent * sendsEvent, this->SendsEvents)
+  ZilchForEach (SendsEvent* sendsEvent, this->SendsEvents)
   {
     delete sendsEvent;
   }
@@ -1130,10 +992,8 @@ size_t BoundType::GetCopyableSize() const
 size_t BoundType::GetAllocatedSize() const
 {
   // Return the size of the class since it's already been computed
-  ErrorIf(
-      this->Size == UndeterminedSize &&
-          this->SourceLibrary->TolerantMode == false,
-      "Attempting to get the size of a class when it has not been determined!");
+  ErrorIf(this->Size == UndeterminedSize && this->SourceLibrary->TolerantMode == false,
+          "Attempting to get the size of a class when it has not been determined!");
   return this->Size;
 }
 
@@ -1300,15 +1160,13 @@ Any BoundType::InstantiatePreConstructedObject()
   ExecutableState* state = ExecutableState::CallingState;
   if (this->CreatableInScript == false)
   {
-    String message = String::Format(
-        "The type %s cannot be allocated within script", this->Name.c_str());
+    String message = String::Format("The type %s cannot be allocated within script", this->Name.c_str());
     state->ThrowException(message);
     return Any();
   }
 
   ExceptionReport& report = state->GetCallingReport();
-  Handle result =
-      state->AllocateHeapObject(this, report, HeapFlags::ReferenceCounted);
+  Handle result = state->AllocateHeapObject(this, report, HeapFlags::ReferenceCounted);
   return result;
 }
 
@@ -1341,12 +1199,10 @@ bool BoundType::HasNativeBinding()
 
 bool BoundType::IsDefaultConstructable()
 {
-  const FunctionArray* constructors =
-      this->GetOverloadedInheritedConstructors();
+  const FunctionArray* constructors = this->GetOverloadedInheritedConstructors();
   if (constructors != nullptr && constructors->Empty() == false)
   {
-    Function* defaultConstructor =
-        BoundType::GetDefaultConstructor(constructors);
+    Function* defaultConstructor = BoundType::GetDefaultConstructor(constructors);
     if (defaultConstructor != nullptr)
     {
       return true;
@@ -1417,8 +1273,7 @@ MemberRange<Function> BoundType::GetFunctions(Members::Enum options)
   return this->GetFunctions(String(), options);
 }
 
-MemberRange<Function> BoundType::GetFunctions(StringParam name,
-                                              Members::Enum options)
+MemberRange<Function> BoundType::GetFunctions(StringParam name, Members::Enum options)
 {
   return MemberRange<Function>(this, name, nullptr, options);
 }
@@ -1438,15 +1293,12 @@ GetterSetter* BoundType::GetGetterSetter(StringParam name)
   return this->GetGetterSetter(name, Members::All);
 }
 
-GetterSetter* BoundType::GetGetterSetter(StringParam name,
-                                         Members::Enum options)
+GetterSetter* BoundType::GetGetterSetter(StringParam name, Members::Enum options)
 {
   return this->GetGetterSetter(name, nullptr, options);
 }
 
-GetterSetter* BoundType::GetGetterSetter(StringParam name,
-                                         Type* declaredType,
-                                         Members::Enum options)
+GetterSetter* BoundType::GetGetterSetter(StringParam name, Type* declaredType, Members::Enum options)
 {
   return MemberRange<GetterSetter>(this, name, declaredType, options).First();
 }
@@ -1461,9 +1313,7 @@ Property* BoundType::GetProperty(StringParam name, Members::Enum options)
   return this->GetProperty(name, nullptr, options);
 }
 
-Property* BoundType::GetProperty(StringParam name,
-                                 Type* declaredType,
-                                 Members::Enum options)
+Property* BoundType::GetProperty(StringParam name, Type* declaredType, Members::Enum options)
 {
   return MemberRange<Property>(this, name, declaredType, options).First();
 }
@@ -1478,9 +1328,7 @@ Field* BoundType::GetField(StringParam name, Members::Enum options)
   return this->GetField(name, nullptr, options);
 }
 
-Field* BoundType::GetField(StringParam name,
-                           Type* declaredType,
-                           Members::Enum options)
+Field* BoundType::GetField(StringParam name, Type* declaredType, Members::Enum options)
 {
   return MemberRange<Field>(this, name, declaredType, options).First();
 }
@@ -1495,9 +1343,7 @@ Function* BoundType::GetFunction(StringParam name, Members::Enum options)
   return this->GetFunction(name, nullptr, options);
 }
 
-Function* BoundType::GetFunction(StringParam name,
-                                 DelegateType* type,
-                                 Members::Enum options)
+Function* BoundType::GetFunction(StringParam name, DelegateType* type, Members::Enum options)
 {
   return MemberRange<Function>(this, name, type, options).First();
 }
@@ -1512,9 +1358,7 @@ Member* BoundType::GetMember(StringParam name, Members::Enum options)
   return this->GetMember(name, nullptr, options);
 }
 
-Member* BoundType::GetMember(StringParam name,
-                             Type* declaredType,
-                             Members::Enum options)
+Member* BoundType::GetMember(StringParam name, Type* declaredType, Members::Enum options)
 {
   return MemberRange<Member>(this, name, declaredType, options).First();
 }
@@ -1527,8 +1371,7 @@ Function* BoundType::GetDefaultConstructor()
 Function* BoundType::GetDefaultConstructor(bool inherited)
 {
   if (inherited)
-    return BoundType::GetDefaultConstructor(
-        this->GetOverloadedInheritedConstructors());
+    return BoundType::GetDefaultConstructor(this->GetOverloadedInheritedConstructors());
   else
     return BoundType::GetDefaultConstructor(&this->Constructors);
 }
@@ -1545,7 +1388,7 @@ Function* BoundType::GetConstructor(DelegateType* type, bool inherited)
   if (constructors == nullptr)
     return nullptr;
 
-  ZilchForEach(Function * constructor, *constructors)
+  ZilchForEach (Function* constructor, *constructors)
   {
     if (constructor->FunctionType == type)
       return constructor;
@@ -1621,9 +1464,7 @@ Function* BoundType::GetCopyConstructor(const FunctionArray* constructors)
   return nullptr;
 }
 
-Function* BoundType::FindFunction(StringParam name,
-                                  DelegateType* type,
-                                  FindMemberOptions::Flags options) const
+Function* BoundType::FindFunction(StringParam name, DelegateType* type, FindMemberOptions::Flags options) const
 {
   // The map of functions we'll look in (either static or instance)
   const FunctionMultiMap* functions = nullptr;
@@ -1662,8 +1503,7 @@ Function* BoundType::FindFunction(StringParam name,
   else
   {
     // If we're not searching base classes, just return out
-    if (options & FindMemberOptions::DoNotIncludeBaseClasses ||
-        this->BaseType == nullptr)
+    if (options & FindMemberOptions::DoNotIncludeBaseClasses || this->BaseType == nullptr)
       return nullptr;
     else
       // Walk up the base class looking for that same function
@@ -1673,8 +1513,7 @@ Function* BoundType::FindFunction(StringParam name,
   return nullptr;
 }
 
-Property* BoundType::FindProperty(StringParam name,
-                                  FindMemberOptions::Flags options) const
+Property* BoundType::FindProperty(StringParam name, FindMemberOptions::Flags options) const
 {
   // The map of properties and fields we'll look in (either static or instance)
   const GetterSetterMap* properties = nullptr;
@@ -1707,8 +1546,7 @@ Property* BoundType::FindProperty(StringParam name,
   else
   {
     // If we're not searching base classes, just return out
-    if (options & FindMemberOptions::DoNotIncludeBaseClasses ||
-        this->BaseType == nullptr)
+    if (options & FindMemberOptions::DoNotIncludeBaseClasses || this->BaseType == nullptr)
       return nullptr;
     // Otherwise, walk up the base classes
     else
@@ -1784,19 +1622,16 @@ Function* BoundType::FindFunction(StringParam name,
   else
   {
     // If we're not searching base classes, just return out
-    if (options & FindMemberOptions::DoNotIncludeBaseClasses ||
-        this->BaseType == nullptr)
+    if (options & FindMemberOptions::DoNotIncludeBaseClasses || this->BaseType == nullptr)
       return nullptr;
     else
-      return this->BaseType->FindFunction(
-          name, parameters, returnType, options);
+      return this->BaseType->FindFunction(name, parameters, returnType, options);
   }
 
   return nullptr;
 }
 
-const FunctionArray*
-BoundType::GetOverloadedInstanceFunctions(StringParam name) const
+const FunctionArray* BoundType::GetOverloadedInstanceFunctions(StringParam name) const
 {
   // Attempt to find the array
   const FunctionArray* found = this->InstanceFunctions.FindPointer(name);
@@ -1812,8 +1647,7 @@ BoundType::GetOverloadedInstanceFunctions(StringParam name) const
   return found;
 }
 
-const FunctionArray*
-BoundType::GetOverloadedStaticFunctions(StringParam name) const
+const FunctionArray* BoundType::GetOverloadedStaticFunctions(StringParam name) const
 {
   // Attempt to find the array
   const FunctionArray* found = this->StaticFunctions.FindPointer(name);
@@ -2017,9 +1851,8 @@ AddMemberResult::Enum BoundType::AddRawGetterSetter(GetterSetter* property)
 
   // Map the name of the property to the property itself
   bool inserted = map.InsertNoOverwrite(property->Name, property);
-  ErrorIf(inserted == false,
-          "Another property with the same name (%s) was added to the BoundType",
-          property->Name.c_str());
+  ErrorIf(
+      inserted == false, "Another property with the same name (%s) was added to the BoundType", property->Name.c_str());
 
   // Add the property to the list of all properties
   this->AllProperties.PushBack(property);
@@ -2039,9 +1872,7 @@ AddMemberResult::Enum BoundType::AddRawField(Field* field)
 
   // Map the name of the field to the field itself
   bool inserted = map.InsertNoOverwrite(field->Name, field);
-  ErrorIf(inserted == false,
-          "Another member with the same name (%s) was added to the BoundType",
-          field->Name.c_str());
+  ErrorIf(inserted == false, "Another member with the same name (%s) was added to the BoundType", field->Name.c_str());
 
   // Add the member to the list of all properties
   this->AllProperties.PushBack(field);
@@ -2078,17 +1909,11 @@ FunctionMultiMap& BoundType::GetFunctionMap(bool isStatic)
     return this->InstanceFunctions;
 }
 
-DelegateParameter::DelegateParameter() :
-    ParameterType(nullptr),
-    StackOffset(0),
-    Index(0)
+DelegateParameter::DelegateParameter() : ParameterType(nullptr), StackOffset(0), Index(0)
 {
 }
 
-DelegateParameter::DelegateParameter(Type* type) :
-    ParameterType(type),
-    StackOffset(0),
-    Index(0)
+DelegateParameter::DelegateParameter(Type* type) : ParameterType(type), StackOffset(0), Index(0)
 {
 }
 
@@ -2138,8 +1963,7 @@ GuidType DelegateType::Hash() const
   return result;
 }
 
-void DelegateType::BuildParameterString(StringBuilder& builder,
-                                        bool declaredNames) const
+void DelegateType::BuildParameterString(StringBuilder& builder, bool declaredNames) const
 {
   // Output the opening argument parentheses
   builder.Append("(");
@@ -2176,8 +2000,7 @@ void DelegateType::BuildParameterString(StringBuilder& builder,
   builder.Append(")");
 }
 
-void DelegateType::BuildSignatureString(StringBuilder& builder,
-                                        bool declaredNames) const
+void DelegateType::BuildSignatureString(StringBuilder& builder, bool declaredNames) const
 {
   // Build the parameter portion first
   this->BuildParameterString(builder, declaredNames);

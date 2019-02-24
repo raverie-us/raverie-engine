@@ -26,14 +26,12 @@ void LoadTexture(StringParam filename, Texture* texture)
     return;
 
   // Check for compression support and fallback to downsized texture if needed
-  if (header.mCompression != TextureCompression::None &&
-      Z::gRenderer->mDriverSupport.mTextureCompression == false)
+  if (header.mCompression != TextureCompression::None && Z::gRenderer->mDriverSupport.mTextureCompression == false)
   {
     // If a texture is compressed, the data file will have an uncompressed
     // version of the texture after the compressed data, including a separate
     // file header
-    uint dataSizeToSkip =
-        header.mMipCount * sizeof(MipHeader) + header.mTotalDataSize;
+    uint dataSizeToSkip = header.mMipCount * sizeof(MipHeader) + header.mTotalDataSize;
     file.Seek(dataSizeToSkip, SeekOrigin::Current);
 
     // Read new header

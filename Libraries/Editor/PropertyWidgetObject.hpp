@@ -134,8 +134,7 @@ public:
   InList<PropertyWidget> ChildWidgets;
 
   Link<PropertyWidgetObject> mComponentLink;
-  typedef InList<PropertyWidgetObject, &PropertyWidgetObject::mComponentLink>
-      ComponentList;
+  typedef InList<PropertyWidgetObject, &PropertyWidgetObject::mComponentLink> ComponentList;
   ComponentList mComponents;
 
   /// Custom ui attached to the bottom of this object.

@@ -14,8 +14,7 @@ Handle GetActingObject(HandleParam componentOrSelection, HandleParam object)
 
   BoundType* objectType = componentOrSelection.StoredType;
 
-  MetaComposition* composition =
-      object.StoredType->HasInherited<MetaComposition>();
+  MetaComposition* composition = object.StoredType->HasInherited<MetaComposition>();
   ReturnIf(composition == nullptr,
            Handle(),
            "The object that was selected had no Composition. Currently this is "
@@ -24,9 +23,7 @@ Handle GetActingObject(HandleParam componentOrSelection, HandleParam object)
   return composition->GetComponent(object, objectType);
 }
 
-MultiPropertyInterface::MultiPropertyInterface(OperationQueue* queue,
-                                               MetaSelection* selection) :
-    PropertyToUndo(queue)
+MultiPropertyInterface::MultiPropertyInterface(OperationQueue* queue, MetaSelection* selection) : PropertyToUndo(queue)
 {
   mOperationQueue = queue;
   mSelection = selection;
@@ -99,12 +96,11 @@ void MultiPropertyInterface::ChangeProperty(HandleParam object,
   if (action == PropertyAction::Commit)
   {
     mOperationQueue->BeginBatch();
-    mOperationQueue->SetActiveBatchName(
-        "MultiPropertyInterface_ChangeProperty");
+    mOperationQueue->SetActiveBatchName("MultiPropertyInterface_ChangeProperty");
   }
 
   // Change the property on each object in the selection
-  forRange(Object * instance, mSelection->AllOfType<Object>())
+  forRange (Object* instance, mSelection->AllOfType<Object>())
   {
     // Get the acting object (either cog or component)
     Handle actingObject = GetActingObject(object, instance);
@@ -117,40 +113,33 @@ void MultiPropertyInterface::ChangeProperty(HandleParam object,
     // have to check the HashId of the property. If the property is expecting
     // a quaternion, we have to resolve conflicts, and convert back to a quat
     if (metaProp->PropertyType == ZilchTypeId(Quat))
-      ChangeRotationValue(
-          mOperationQueue, actingObject, property, state, action);
+      ChangeRotationValue(mOperationQueue, actingObject, property, state, action);
     else if (state.Value.Is<Vec2>())
-      ChangeVectorValue<Vec2, 2>(
-          mOperationQueue, actingObject, property, state, action);
+      ChangeVectorValue<Vec2, 2>(mOperationQueue, actingObject, property, state, action);
     else if (state.Value.Is<Vec3>())
-      ChangeVectorValue<Vec3, 3>(
-          mOperationQueue, actingObject, property, state, action);
+      ChangeVectorValue<Vec3, 3>(mOperationQueue, actingObject, property, state, action);
     else if (state.Value.Is<Vec4>())
-      ChangeVectorValue<Vec4, 4>(
-          mOperationQueue, actingObject, property, state, action);
+      ChangeVectorValue<Vec4, 4>(mOperationQueue, actingObject, property, state, action);
     // If it's immediate, just set the value
     else if (action == PropertyAction::Preview)
       property.SetValue(actingObject, state.Value);
     // Otherwise, queue an operation
     else
-      ChangeAndQueueProperty(
-          mOperationQueue, actingObject, property, state.Value);
+      ChangeAndQueueProperty(mOperationQueue, actingObject, property, state.Value);
 
     Handle leaf = property.GetLeafInstance(actingObject);
     Any oldValue = metaProp->GetValue(leaf);
-    SendPropertyModifiedOnGrid(
-        actingObject, property, oldValue, state.Value, action);
+    SendPropertyModifiedOnGrid(actingObject, property, oldValue, state.Value, action);
   }
 
   if (action == PropertyAction::Commit)
     mOperationQueue->EndBatch();
 }
 
-void MultiPropertyInterface::MarkPropertyModified(HandleParam object,
-                                                  PropertyPathParam property)
+void MultiPropertyInterface::MarkPropertyModified(HandleParam object, PropertyPathParam property)
 {
   mOperationQueue->BeginBatch();
-  forRange(Handle instance, mSelection->All())
+  forRange (Handle instance, mSelection->All())
   {
     Handle actingObject = GetActingObject(object, instance);
     ContinueIf(actingObject.IsNull(), "The actingObject was null");
@@ -159,11 +148,10 @@ void MultiPropertyInterface::MarkPropertyModified(HandleParam object,
   mOperationQueue->EndBatch();
 }
 
-void MultiPropertyInterface::RevertProperty(HandleParam object,
-                                            PropertyPathParam property)
+void MultiPropertyInterface::RevertProperty(HandleParam object, PropertyPathParam property)
 {
   mOperationQueue->BeginBatch();
-  forRange(Handle instance, mSelection->All())
+  forRange (Handle instance, mSelection->All())
   {
     Handle actingObject = GetActingObject(object, instance);
     ContinueIf(actingObject.IsNull(), "The actingObject was null");
@@ -195,17 +183,15 @@ void FinalizeVectorState(PropertyState& state, uint dimensions)
 }
 
 template <typename VectorType, uint Dimensions>
-PropertyState GetVectorValue(MetaSelection* selection,
-                             AnyParam firstValue,
-                             HandleParam object,
-                             PropertyPathParam property)
+PropertyState
+GetVectorValue(MetaSelection* selection, AnyParam firstValue, HandleParam object, PropertyPathParam property)
 {
   // Compare each value with the value of the first object
   VectorType firstVec = firstValue.Get<VectorType>();
 
   PropertyState state(firstValue);
 
-  forRange(Object * instance, selection->AllOfType<Object>())
+  forRange (Object* instance, selection->AllOfType<Object>())
   {
     Handle actingObject = GetActingObject(object, instance);
     ContinueIf(actingObject.IsNull(), "The actingObject was null");
@@ -228,10 +214,8 @@ PropertyState GetVectorValue(MetaSelection* selection,
   return state;
 }
 
-PropertyState GetRotationValue(MetaSelection* selection,
-                               Any& firstValue,
-                               HandleParam object,
-                               PropertyPathParam property)
+PropertyState
+GetRotationValue(MetaSelection* selection, Any& firstValue, HandleParam object, PropertyPathParam property)
 {
   /// For rotations, we can only resolve partial conflicts as Euler Angles,
   /// not as quaternions, so we must convert
@@ -239,7 +223,7 @@ PropertyState GetRotationValue(MetaSelection* selection,
 
   PropertyState state(firstEuler);
 
-  forRange(Object * instance, selection->AllOfType<Object>())
+  forRange (Object* instance, selection->AllOfType<Object>())
   {
     Handle actingObject = GetActingObject(object, instance);
     ContinueIf(actingObject.IsNull(), "The actingObject was null");
@@ -262,16 +246,14 @@ PropertyState GetRotationValue(MetaSelection* selection,
   return state;
 }
 
-PropertyState MultiPropertyInterface::GetValue(HandleParam multiObject,
-                                               PropertyPathParam property)
+PropertyState MultiPropertyInterface::GetValue(HandleParam multiObject, PropertyPathParam property)
 {
   // Default case
   if (mSelection->Count() == 0)
     return PropertyState();
 
   // Get the acting object (either cog or component)
-  Handle actingObject =
-      GetActingObject(multiObject, mSelection->GetPrimaryAs<Object>());
+  Handle actingObject = GetActingObject(multiObject, mSelection->GetPrimaryAs<Object>());
 
   // Do nothing if it's invalid
   if (actingObject.IsNull())
@@ -283,18 +265,15 @@ PropertyState MultiPropertyInterface::GetValue(HandleParam multiObject,
 
   /// If it's a vector type, we want to check for partial conflicts
   if (firstValue.Is<Vec2>())
-    return GetVectorValue<Vec2, 2>(
-        mSelection, firstValue, multiObject, property);
+    return GetVectorValue<Vec2, 2>(mSelection, firstValue, multiObject, property);
   if (firstValue.Is<Vec3>())
-    return GetVectorValue<Vec3, 3>(
-        mSelection, firstValue, multiObject, property);
+    return GetVectorValue<Vec3, 3>(mSelection, firstValue, multiObject, property);
   if (firstValue.Is<Vec4>())
-    return GetVectorValue<Vec4, 4>(
-        mSelection, firstValue, multiObject, property);
+    return GetVectorValue<Vec4, 4>(mSelection, firstValue, multiObject, property);
   if (firstValue.Is<Quat>())
     return GetRotationValue(mSelection, firstValue, multiObject, property);
 
-  forRange(Object * subObject, mSelection->AllOfType<Object>())
+  forRange (Object* subObject, mSelection->AllOfType<Object>())
   {
     actingObject = GetActingObject(multiObject, subObject);
     ContinueIf(actingObject.IsNull(), "The actingObject was null");
@@ -316,8 +295,7 @@ PropertyState MultiPropertyInterface::GetValue(HandleParam multiObject,
   return PropertyState(firstValue);
 }
 
-void MultiPropertyInterface::InvokeFunction(HandleParam object,
-                                            Function* function)
+void MultiPropertyInterface::InvokeFunction(HandleParam object, Function* function)
 {
   // We want all add operations to be part of the same operation group
   mOperationQueue->BeginBatch();
@@ -328,10 +306,9 @@ void MultiPropertyInterface::InvokeFunction(HandleParam object,
   else
     name = object.StoredType->Name;
 
-  mOperationQueue->SetActiveBatchName(
-      BuildString("Invoke '", function->Name, "' on '", name, "'"));
+  mOperationQueue->SetActiveBatchName(BuildString("Invoke '", function->Name, "' on '", name, "'"));
 
-  forRange(Object * instance, mSelection->AllOfType<Object>())
+  forRange (Object* instance, mSelection->AllOfType<Object>())
   {
     Handle actingObject = GetActingObject(object, instance);
     ContinueIf(actingObject.IsNull(), "The actingObject was null");
@@ -342,19 +319,18 @@ void MultiPropertyInterface::InvokeFunction(HandleParam object,
   mOperationQueue->EndBatch();
 }
 
-HandleOf<MetaComposition>
-MultiPropertyInterface::GetMetaComposition(BoundType* objectType)
+HandleOf<MetaComposition> MultiPropertyInterface::GetMetaComposition(BoundType* objectType)
 {
   // If the object itself doesn't have a meta composition, we don't want to
   // return our custom one
-  if (MetaComposition* objectComposition =
-          objectType->HasInherited<MetaComposition>())
+  if (MetaComposition* objectComposition = objectType->HasInherited<MetaComposition>())
     return new MultiMetaComposition(this, objectType, mOperationQueue);
   return nullptr;
 }
 
-ObjectPropertyNode* MultiPropertyInterface::BuildObjectTree(
-    ObjectPropertyNode* parent, HandleParam object, Property* objectProperty)
+ObjectPropertyNode* MultiPropertyInterface::BuildObjectTree(ObjectPropertyNode* parent,
+                                                            HandleParam object,
+                                                            Property* objectProperty)
 {
   // We only want to special case this if it's the selection object
   if (!object.Get<MetaSelection*>())
@@ -365,8 +341,7 @@ ObjectPropertyNode* MultiPropertyInterface::BuildObjectTree(
     return NULL;
 
   // Create a new node for this object
-  ObjectPropertyNode* node =
-      new ObjectPropertyNode(parent, object, objectProperty);
+  ObjectPropertyNode* node = new ObjectPropertyNode(parent, object, objectProperty);
 
   // Set the custom composition (if it exists)
   node->mComposition = GetMetaComposition(targetType);
@@ -374,14 +349,12 @@ ObjectPropertyNode* MultiPropertyInterface::BuildObjectTree(
 
   // Check for displayed attribute as well as Property attribute (Property
   // implies displayed)
-  forRange(Property * property, targetType->GetProperties())
+  forRange (Property* property, targetType->GetProperties())
   {
-    if (property->HasAttribute(PropertyAttributes::cProperty) ||
-        property->HasAttribute(PropertyAttributes::cDisplay) ||
+    if (property->HasAttribute(PropertyAttributes::cProperty) || property->HasAttribute(PropertyAttributes::cDisplay) ||
         property->HasAttribute(PropertyAttributes::cDeprecatedEditable))
     {
-      if (EditorPropertyExtension* extension =
-              property->HasInherited<EditorPropertyExtension>())
+      if (EditorPropertyExtension* extension = property->HasInherited<EditorPropertyExtension>())
         node->mProperties.PushBack(new ObjectPropertyNode(node, property));
       else if (property->PropertyType->HasInherited<MetaPropertyEditor>())
         node->mProperties.PushBack(new ObjectPropertyNode(node, property));
@@ -389,11 +362,10 @@ ObjectPropertyNode* MultiPropertyInterface::BuildObjectTree(
   }
 
   // Add Methods with no parameters to this node
-  forRange(Function * function, targetType->GetFunctions())
+  forRange (Function* function, targetType->GetFunctions())
   {
     // Don't want to add hidden methods
-    if (function->HasAttribute(FunctionAttributes::cProperty) ||
-        function->HasAttribute(FunctionAttributes::cDisplay))
+    if (function->HasAttribute(FunctionAttributes::cProperty) || function->HasAttribute(FunctionAttributes::cDisplay))
     {
       // METAREFACTOR - 0 param
       // We can only display methods with 0 parameters
@@ -405,7 +377,7 @@ ObjectPropertyNode* MultiPropertyInterface::BuildObjectTree(
   // Add dynamically contained objects to this node
   if (MetaComposition* composition = node->mComposition)
   {
-    forRange(Handle component, composition->AllComponents(object))
+    forRange (Handle component, composition->AllComponents(object))
     {
       // Don't show hidden sub objects
       if (component.StoredType->HasAttribute(ObjectAttributes::cHidden))
@@ -420,12 +392,11 @@ ObjectPropertyNode* MultiPropertyInterface::BuildObjectTree(
   return node;
 }
 
-void MultiPropertyInterface::GetObjects(HandleParam instance,
-                                        Array<Handle>& objects)
+void MultiPropertyInterface::GetObjects(HandleParam instance, Array<Handle>& objects)
 {
   objects.Reserve(mSelection->Count());
-  forRange(Object * instance, mSelection->AllOfType<Object>())
-      objects.PushBack(instance);
+  forRange (Object* instance, mSelection->AllOfType<Object>())
+    objects.PushBack(instance);
 }
 
 BoundType* MultiPropertyInterface::GetTargetType()
@@ -434,7 +405,7 @@ BoundType* MultiPropertyInterface::GetTargetType()
   Handle primary = mSelection->GetPrimaryAs<Object>();
   BoundType* targetMeta = primary.StoredType;
 
-  forRange(Object * object, mSelection->AllOfType<Object>())
+  forRange (Object* object, mSelection->AllOfType<Object>())
   {
     if (targetMeta != ZilchVirtualTypeId(object))
       return NULL;
@@ -458,7 +429,7 @@ void MultiPropertyInterface::CaptureState(PropertyStateCapture& capture,
                                           PropertyPathParam property)
 {
   // For every selected object capture the state
-  forRange(Object * objectInstance, mSelection->AllOfType<Object>())
+  forRange (Object* objectInstance, mSelection->AllOfType<Object>())
   {
     // Get the component selected
     Handle actingObject = GetActingObject(multiObject, objectInstance);
@@ -493,8 +464,7 @@ uint MultiMetaComposition::GetComponentCount(HandleParam object)
 Handle MultiMetaComposition::GetComponentAt(HandleParam object, uint index)
 {
   MetaSelection* selection = object.Get<MetaSelection*>();
-  ReturnIf(
-      selection == nullptr, Handle(), "The object was not a MetaSelection");
+  ReturnIf(selection == nullptr, Handle(), "The object was not a MetaSelection");
 
   // It's the index into the shared component list
   Array<BoundType*> sharedComponents;
@@ -506,8 +476,7 @@ Handle MultiMetaComposition::GetComponentAt(HandleParam object, uint index)
   BoundType* componentType = sharedComponents[index];
   Handle primary = selection->GetPrimaryAs<Object>();
 
-  Handle component =
-      mContainedComposition->GetComponent(primary, componentType);
+  Handle component = mContainedComposition->GetComponent(primary, componentType);
 
   // If the shared component is an interface type, we want the handle to be that
   // exact type, not the more derived type returned from GetComponent
@@ -516,54 +485,42 @@ Handle MultiMetaComposition::GetComponentAt(HandleParam object, uint index)
   return component;
 }
 
-bool MultiMetaComposition::CanAddComponent(HandleParam object,
-                                           BoundType* typeToAdd,
-                                           AddInfo* info)
+bool MultiMetaComposition::CanAddComponent(HandleParam object, BoundType* typeToAdd, AddInfo* info)
 {
   MetaSelection* selection = object.Get<MetaSelection*>();
   ReturnIf(selection == nullptr, false, "The object was not a MetaSelection");
 
   // Check if it can be added to each object in the selection
-  forRange(Handle instance, selection->All())
+  forRange (Handle instance, selection->All())
   {
-    if (mContainedComposition->CanAddComponent(instance, typeToAdd, info) ==
-        false)
+    if (mContainedComposition->CanAddComponent(instance, typeToAdd, info) == false)
       return false;
   }
 
   return true;
 }
 
-void MultiMetaComposition::AddComponent(HandleParam object,
-                                        BoundType* typeToAdd,
-                                        int index,
-                                        bool ignoreDependencies,
-                                        MetaCreationContext* creationContext)
+void MultiMetaComposition::AddComponent(
+    HandleParam object, BoundType* typeToAdd, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   // Add the component to each object in the selection
   MetaSelection* selection = object.Get<MetaSelection*>();
   ReturnIf(selection == nullptr, , "The object was not a MetaSelection");
 
-  ErrorIf(
-      index != -1,
-      "Adding Components at an index through multi-select is not supported");
+  ErrorIf(index != -1, "Adding Components at an index through multi-select is not supported");
 
   // We want all add operations to be part of the same operation group
   mOperationQueue->BeginBatch();
 
-  mOperationQueue->SetActiveBatchName(
-      BuildString("Add '", typeToAdd->Name, "to objects"));
+  mOperationQueue->SetActiveBatchName(BuildString("Add '", typeToAdd->Name, "to objects"));
 
-  forRange(Handle currentObject, selection->All())
-      UndoMetaComposition::AddComponent(
-          currentObject, typeToAdd, index, ignoreDependencies, creationContext);
+  forRange (Handle currentObject, selection->All())
+    UndoMetaComposition::AddComponent(currentObject, typeToAdd, index, ignoreDependencies, creationContext);
 
   mOperationQueue->EndBatch();
 }
 
-bool MultiMetaComposition::CanRemoveComponent(HandleParam object,
-                                              HandleParam component,
-                                              String& reason)
+bool MultiMetaComposition::CanRemoveComponent(HandleParam object, HandleParam component, String& reason)
 {
   // Check if we can remove the component type from each object in the selection
   MetaSelection* selection = object.Get<MetaSelection*>();
@@ -571,20 +528,17 @@ bool MultiMetaComposition::CanRemoveComponent(HandleParam object,
 
   BoundType* componentType = component.StoredType;
 
-  forRange(Handle currentObject, selection->All())
+  forRange (Handle currentObject, selection->All())
   {
     // If we cannot remove the component on this object, we can't remove any
-    if (mContainedComposition->CanRemoveComponent(
-            currentObject, componentType, reason) == false)
+    if (mContainedComposition->CanRemoveComponent(currentObject, componentType, reason) == false)
       return false;
   }
 
   return true;
 }
 
-void MultiMetaComposition::RemoveComponent(HandleParam object,
-                                           HandleParam component,
-                                           bool ignoreDependencies)
+void MultiMetaComposition::RemoveComponent(HandleParam object, HandleParam component, bool ignoreDependencies)
 {
   // Remove the component type from each object in the selection
   MetaSelection* selection = object.Get<MetaSelection*>();
@@ -595,41 +549,37 @@ void MultiMetaComposition::RemoveComponent(HandleParam object,
 
   BoundType* componentType = component.StoredType;
 
-  mOperationQueue->SetActiveBatchName(
-      BuildString("Remove '", componentType->Name, "from objects"));
+  mOperationQueue->SetActiveBatchName(BuildString("Remove '", componentType->Name, "from objects"));
 
-  forRange(Handle currentObject, selection->All())
+  forRange (Handle currentObject, selection->All())
   {
     Handle component = GetComponent(currentObject, componentType);
-    UndoMetaComposition::RemoveComponent(
-        currentObject, component, ignoreDependencies);
+    UndoMetaComposition::RemoveComponent(currentObject, component, ignoreDependencies);
   }
 
   mOperationQueue->EndBatch();
 }
 
-void MultiMetaComposition::Enumerate(Array<BoundType*>& addTypes,
-                                     EnumerateAction::Enum action,
-                                     HandleParam object)
+void MultiMetaComposition::Enumerate(Array<BoundType*>& addTypes, EnumerateAction::Enum action, HandleParam object)
 {
   MetaSelection* selection = object.Get<MetaSelection*>();
   ReturnIf(selection == nullptr, , "The object was not a MetaSelection");
 
   // Only show the types that all compositions can add / enumerate
   HashMap<BoundType*, uint> filteredList;
-  forRange(Object * instance, selection->AllOfType<Object>())
+  forRange (Object* instance, selection->AllOfType<Object>())
   {
     // Get the addable types for the current object
     Array<BoundType*> currentAddTypes;
     mContainedComposition->Enumerate(currentAddTypes, action, instance);
 
     // Add each type into the hash map and increment its count
-    forRange(BoundType * metaType, currentAddTypes.All())
-        filteredList[metaType]++;
+    forRange (BoundType* metaType, currentAddTypes.All())
+      filteredList[metaType]++;
   }
 
   // Add each entry if it's addable for each object
-  forRange(auto& entry, filteredList.All())
+  forRange (auto& entry, filteredList.All())
   {
     if (entry.second == selection->Count())
       addTypes.PushBack(entry.first);
@@ -640,12 +590,11 @@ BoundType* FindCommonInterface(HashMap<BoundType*, uint>& sharedComponentMap,
                                uint selectionCount,
                                BoundType* componentType)
 {
-  forRange(CogComponentMeta * meta, componentType->HasAll<CogComponentMeta>())
+  forRange (CogComponentMeta* meta, componentType->HasAll<CogComponentMeta>())
   {
-    forRange(BoundType * interfaceType, meta->mInterfaces)
+    forRange (BoundType* interfaceType, meta->mInterfaces)
     {
-      uint interfaceCount =
-          sharedComponentMap.FindValue(interfaceType, uint(-1));
+      uint interfaceCount = sharedComponentMap.FindValue(interfaceType, uint(-1));
       if (interfaceCount == selectionCount)
         return interfaceType;
     }
@@ -654,8 +603,7 @@ BoundType* FindCommonInterface(HashMap<BoundType*, uint>& sharedComponentMap,
   return nullptr;
 }
 
-void MultiMetaComposition::GetSharedComponents(
-    MetaSelection* selection, Array<BoundType*>& sharedComponents)
+void MultiMetaComposition::GetSharedComponents(MetaSelection* selection, Array<BoundType*>& sharedComponents)
 {
   ReturnIf(selection == nullptr, , "The MetaSelection was null");
   Handle primary = selection->GetPrimary();
@@ -668,7 +616,7 @@ void MultiMetaComposition::GetSharedComponents(
   // then you know that all objects have that component
   HashMap<BoundType*, uint> sharedComponentMap;
 
-  forRange(Handle object, selection->All())
+  forRange (Handle object, selection->All())
   {
     // Add each component
     uint componentCount = mContainedComposition->GetComponentCount(object);
@@ -679,11 +627,10 @@ void MultiMetaComposition::GetSharedComponents(
       sharedComponentMap[componentType]++;
 
       // Add interfaces
-      forRange(CogComponentMeta * meta,
-               componentType->HasAll<CogComponentMeta>())
+      forRange (CogComponentMeta* meta, componentType->HasAll<CogComponentMeta>())
       {
-        forRange(BoundType * interfaceType, meta->mInterfaces)
-            sharedComponentMap[interfaceType]++;
+        forRange (BoundType* interfaceType, meta->mInterfaces)
+          sharedComponentMap[interfaceType]++;
       }
     }
   }
@@ -709,8 +656,7 @@ void MultiMetaComposition::GetSharedComponents(
     {
       // If not all objects had this component, walk the interfaces to find a
       // common interface
-      BoundType* interface = FindCommonInterface(
-          sharedComponentMap, selection->Count(), componentType);
+      BoundType* interface = FindCommonInterface(sharedComponentMap, selection->Count(), componentType);
       if (interface)
         sharedComponents.PushBack(interface);
     }

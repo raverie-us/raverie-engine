@@ -281,9 +281,7 @@ bool Message::IsFinalFragment() const
 }
 
 template <>
-Bits Serialize<Message>(SerializeDirection::Enum direction,
-                        BitStream& bitStream,
-                        Message& message)
+Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream, Message& message)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -300,15 +298,13 @@ Bits Serialize<Message>(SerializeDirection::Enum direction,
     //
 
     // Write message type
-    Bits bits1 =
-        bitStream.WriteQuantized(message.mType, MessageTypeMin, MessageTypeMax);
+    Bits bits1 = bitStream.WriteQuantized(message.mType, MessageTypeMin, MessageTypeMax);
 
     // Write message sequence ID
     Bits bits2 = bitStream.Write(message.mSequenceId);
 
     // Write message data size
-    Bits bits3 = bitStream.WriteQuantized(
-        message.mData.GetBitsWritten(), MinMessageDataBits, MaxMessageDataBits);
+    Bits bits3 = bitStream.WriteQuantized(message.mData.GetBitsWritten(), MinMessageDataBits, MaxMessageDataBits);
 
     // Write 'Has timestamp?' flag
     bool hasTimestamp = message.HasTimestamp();
@@ -319,8 +315,7 @@ Bits Serialize<Message>(SerializeDirection::Enum direction,
     if (hasTimestamp)
     {
       // Write timestamp
-      bits5 = bitStream.WriteQuantized(
-          message.mTimestamp, MessageTimestampMin, MessageTimestampMax);
+      bits5 = bitStream.WriteQuantized(message.mTimestamp, MessageTimestampMin, MessageTimestampMax);
     }
 
     // Write 'Is channeled?' flag
@@ -381,20 +376,14 @@ Bits Serialize<Message>(SerializeDirection::Enum direction,
     //
 
     // Read message type
-    ReturnIf(
-        !bitStream.ReadQuantized(message.mType, MessageTypeMin, MessageTypeMax),
-        0,
-        "");
+    ReturnIf(!bitStream.ReadQuantized(message.mType, MessageTypeMin, MessageTypeMax), 0, "");
 
     // Read message sequence ID
     ReturnIf(!bitStream.Read(message.mSequenceId), 0, "");
 
     // Read message data size
     Bits dataSize = 0;
-    ReturnIf(!bitStream.ReadQuantized(
-                 dataSize, MinMessageDataBits, MaxMessageDataBits),
-             0,
-             "");
+    ReturnIf(!bitStream.ReadQuantized(dataSize, MinMessageDataBits, MaxMessageDataBits), 0, "");
 
     // Read 'Has timestamp?' flag
     bool hasTimestamp;
@@ -404,11 +393,7 @@ Bits Serialize<Message>(SerializeDirection::Enum direction,
     if (hasTimestamp)
     {
       // Read timestamp
-      ReturnIf(!bitStream.ReadQuantized(message.mTimestamp,
-                                        MessageTimestampMin,
-                                        MessageTimestampMax),
-               0,
-               "");
+      ReturnIf(!bitStream.ReadQuantized(message.mTimestamp, MessageTimestampMin, MessageTimestampMax), 0, "");
     }
 
     // Read 'Is channeled?' flag
@@ -483,8 +468,7 @@ OutMessage::OutMessage(MoveReference<Message> message,
   mSequenceId = sequenceId;
 }
 
-OutMessage::OutMessage(const OutMessage& rhs,
-                       MoveReference<Message> takeThisMessageInstead) :
+OutMessage::OutMessage(const OutMessage& rhs, MoveReference<Message> takeThisMessageInstead) :
     Message(ZeroMove(takeThisMessageInstead)),
     mReliable(rhs.mReliable),
     mTransferMode(rhs.mTransferMode),
@@ -622,9 +606,7 @@ OutMessage OutMessage::TakeFragment(Bits dataSize)
 FragmentedMessage::FragmentedMessage() : mFragments(), mFinalFragmentIndex(0)
 {
 }
-FragmentedMessage::FragmentedMessage(MoveReference<Message> fragment) :
-    mFragments(),
-    mFinalFragmentIndex(0)
+FragmentedMessage::FragmentedMessage(MoveReference<Message> fragment) : mFragments(), mFinalFragmentIndex(0)
 {
   // Add first fragment
   AddInternal(ZeroMove(fragment));
@@ -638,18 +620,15 @@ FragmentedMessage::FragmentedMessage(MoveReference<FragmentedMessage> rhs) :
 
 bool FragmentedMessage::operator==(const FragmentedMessage& rhs) const
 {
-  return mFragments.Front().GetSequenceId() ==
-         rhs.mFragments.Front().GetSequenceId();
+  return mFragments.Front().GetSequenceId() == rhs.mFragments.Front().GetSequenceId();
 }
 bool FragmentedMessage::operator!=(const FragmentedMessage& rhs) const
 {
-  return mFragments.Front().GetSequenceId() !=
-         rhs.mFragments.Front().GetSequenceId();
+  return mFragments.Front().GetSequenceId() != rhs.mFragments.Front().GetSequenceId();
 }
 bool FragmentedMessage::operator<(const FragmentedMessage& rhs) const
 {
-  return mFragments.Front().GetSequenceId() <
-         rhs.mFragments.Front().GetSequenceId();
+  return mFragments.Front().GetSequenceId() < rhs.mFragments.Front().GetSequenceId();
 }
 bool FragmentedMessage::operator==(MessageSequenceId rhs) const
 {
@@ -680,12 +659,10 @@ void FragmentedMessage::Add(MoveReference<Message> fragment)
   // and Should not be a duplicate fragment,
   // and If we have a final fragment, this fragment neither claims to be the
   // final fragment and it's index is less than the final fragment index.
-  Assert(fragment->IsFragment() &&
-         fragment->GetSequenceId() == mFragments.Front().GetSequenceId() &&
+  Assert(fragment->IsFragment() && fragment->GetSequenceId() == mFragments.Front().GetSequenceId() &&
          !IsDuplicate(*fragment) &&
          (mFinalFragmentIndex != 0
-              ? (!fragment->IsFinalFragment() &&
-                 fragment->GetFragmentIndex() < mFinalFragmentIndex)
+              ? (!fragment->IsFinalFragment() && fragment->GetFragmentIndex() < mFinalFragmentIndex)
               : true));
 
   // Add fragment
@@ -694,8 +671,7 @@ void FragmentedMessage::Add(MoveReference<Message> fragment)
 
 bool FragmentedMessage::IsComplete() const
 {
-  return (mFinalFragmentIndex != 0 &&
-          (mFragments.Size() == (mFinalFragmentIndex + 1).value()));
+  return (mFinalFragmentIndex != 0 && (mFragments.Size() == (mFinalFragmentIndex + 1).value()));
 }
 
 Message FragmentedMessage::Reconstruct()
@@ -706,9 +682,7 @@ Message FragmentedMessage::Reconstruct()
   Message result(mFragments.Front(), true);
 
   // Append all fragment data in order
-  for (FragmentSet::iterator iter = mFragments.Begin();
-       iter != mFragments.End();
-       ++iter)
+  for (FragmentSet::iterator iter = mFragments.Begin(); iter != mFragments.End(); ++iter)
   {
     Bits bitsWritten = result.mData.AppendAll(iter->mData);
     ErrorIf(bitsWritten != iter->mData.GetBitsWritten());

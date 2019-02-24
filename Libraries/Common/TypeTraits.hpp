@@ -48,8 +48,7 @@ struct is_same_helper<TypeA, TypeA>
 /// Provides a constant defined as true if TypeA and TypeB are the same exact
 /// type, else defined as false
 template <typename TypeA, typename TypeB>
-struct is_same
-    : public integral_constant<bool, (is_same_helper<TypeA, TypeB>::value)>
+struct is_same : public integral_constant<bool, (is_same_helper<TypeA, TypeB>::value)>
 {
 };
 
@@ -64,8 +63,7 @@ static false_type is_base_of_helper(...);
 
 /// Provides a constant defined as true if DerivedType derives from BaseType
 template <typename BaseType, typename DerivedType>
-struct is_base_of
-    : public decltype(is_base_of_helper<BaseType>((DerivedType*)nullptr))
+struct is_base_of : public decltype(is_base_of_helper<BaseType>((DerivedType*)nullptr))
 {
 };
 
@@ -381,10 +379,7 @@ struct is_member_pointer_helper<T U::*> : public true_type
 /// defined as false
 template <typename T>
 struct is_member_pointer
-    : public integral_constant<
-          bool,
-          (is_member_pointer_helper<
-              typename remove_const_and_volatile<T>::type>::value)>
+    : public integral_constant<bool, (is_member_pointer_helper<typename remove_const_and_volatile<T>::type>::value)>
 {
 };
 
@@ -414,8 +409,7 @@ struct is_union_or_class_helper
 /// Provides a constant defined as true if T is a union or class type, else
 /// defined as false
 template <typename T>
-struct is_union_or_class
-    : public integral_constant<bool, (is_union_or_class_helper<T>::value)>
+struct is_union_or_class : public integral_constant<bool, (is_union_or_class_helper<T>::value)>
 {
 };
 
@@ -425,46 +419,38 @@ struct is_union_or_class
 /// false
 template <typename T>
 struct is_enum
-    : public integral_constant<
-          bool,
-          (!is_void<T>::value && !is_integral<T>::value &&
-           !is_floating_point<T>::value && !is_array<T>::value &&
-           !is_pointer<T>::value && !is_reference<T>::value &&
-           !is_member_pointer<T>::value && !is_union_or_class<T>::value
-           /*&& !is_function< T >::value*/)>
+    : public integral_constant<bool,
+                               (!is_void<T>::value && !is_integral<T>::value && !is_floating_point<T>::value &&
+                                !is_array<T>::value && !is_pointer<T>::value && !is_reference<T>::value &&
+                                !is_member_pointer<T>::value && !is_union_or_class<T>::value
+                                /*&& !is_function< T >::value*/)>
 {
 };
 
 /// Use SFINAE to detect if we have a member
 /// This must be a macro because the name of the member cannot be provided as a
 /// template argument
-#define ZeroDeclareHasMemberTrait(TypeTraitName, MemberName)                   \
-  template <typename ZilchT>                                                   \
-  static ::Zero::true_type check_##TypeTraitName(                              \
-      decltype(&ZilchT::MemberName)*);                                         \
-  template <typename ZilchT>                                                   \
-  static ::Zero::false_type check_##TypeTraitName(...);                        \
-  template <typename ZilchT>                                                   \
-  struct TypeTraitName                                                         \
-      : public decltype(check_##TypeTraitName<ZilchT>(nullptr))                \
-  {                                                                            \
+#define ZeroDeclareHasMemberTrait(TypeTraitName, MemberName)                                                           \
+  template <typename ZilchT>                                                                                           \
+  static ::Zero::true_type check_##TypeTraitName(decltype(&ZilchT::MemberName)*);                                      \
+  template <typename ZilchT>                                                                                           \
+  static ::Zero::false_type check_##TypeTraitName(...);                                                                \
+  template <typename ZilchT>                                                                                           \
+  struct TypeTraitName : public decltype(check_##TypeTraitName<ZilchT>(nullptr))                                       \
+  {                                                                                                                    \
   };
 
 /// Provides a constant defined as true if T is an enum or integral type, else
 /// defined as false
 template <typename T>
-struct is_enum_or_integral
-    : public integral_constant<bool,
-                               (is_enum<T>::value || is_integral<T>::value)>
+struct is_enum_or_integral : public integral_constant<bool, (is_enum<T>::value || is_integral<T>::value)>
 {
 };
 
 /// Provides a constant defined as true if T is an arithmetic (integral or
 /// floating point) type, else defined as false
 template <typename T>
-struct is_arithmetic : public integral_constant<bool,
-                                                (is_integral<T>::value ||
-                                                 is_floating_point<T>::value)>
+struct is_arithmetic : public integral_constant<bool, (is_integral<T>::value || is_floating_point<T>::value)>
 {
 };
 
@@ -472,20 +458,16 @@ struct is_arithmetic : public integral_constant<bool,
 /// or nullptr_t) type, else defined as false
 template <typename T>
 struct is_fundamental
-    : public integral_constant<bool,
-                               (is_arithmetic<T>::value || is_void<T>::value ||
-                                is_null_pointer<T>::value)>
+    : public integral_constant<bool, (is_arithmetic<T>::value || is_void<T>::value || is_null_pointer<T>::value)>
 {
 };
 
 /// Provides a constant defined as true if T is a scalar (arithmetic, enum,
 /// pointer, or nullptr_t) type, else defined as false
 template <typename T>
-struct is_scalar
-    : public integral_constant<bool,
-                               (is_arithmetic<T>::value || is_enum<T>::value ||
-                                is_pointer<T>::value ||
-                                is_null_pointer<T>::value)>
+struct is_scalar : public integral_constant<bool,
+                                            (is_arithmetic<T>::value || is_enum<T>::value || is_pointer<T>::value ||
+                                             is_null_pointer<T>::value)>
 {
 };
 
@@ -499,8 +481,7 @@ struct is_pod : public integral_constant<bool, (is_scalar<T>::value)>
 /// Provides a constant defined as true if T has a trivial constructor, else
 /// defined as false
 template <typename T>
-struct has_trivial_constructor
-    : public integral_constant<bool, is_pod<T>::value>
+struct has_trivial_constructor : public integral_constant<bool, is_pod<T>::value>
 {
 };
 /// Provides a constant defined as true if T has a trivial copy constructor,
@@ -593,59 +574,41 @@ struct disable_if<false, Type>
 
 /// Enable If via Class Template Parameter
 #define TC_ENABLE_IF(Condition) typename Zero::enable_if<(Condition)>::type
-#define TC_ENABLE_IF_IS_SAME(TypeA, TypeB)                                     \
-  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type
+#define TC_ENABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type
 #define TC_DISABLE_IF(Condition) typename Zero::disable_if<(Condition)>::type
-#define TC_DISABLE_IF_IS_SAME(TypeA, TypeB)                                    \
-  typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type
+#define TC_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type
 
 /// Enable If via Function Template Parameter (Declaration)
-#define TF_ENABLE_IF(Condition)                                                \
-  typename Zero::enable_if<(Condition)>::type* = nullptr
-#define TF_ENABLE_IF_IS_SAME(TypeA, TypeB)                                     \
-  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* =      \
-      nullptr
-#define TF_DISABLE_IF(Condition)                                               \
-  typename Zero::disable_if<(Condition)>::type* = nullptr
-#define TF_DISABLE_IF_IS_SAME(TypeA, TypeB)                                    \
-  typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* =     \
-      nullptr
+#define TF_ENABLE_IF(Condition) typename Zero::enable_if<(Condition)>::type* = nullptr
+#define TF_ENABLE_IF_IS_SAME(TypeA, TypeB)                                                                             \
+  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
+#define TF_DISABLE_IF(Condition) typename Zero::disable_if<(Condition)>::type* = nullptr
+#define TF_DISABLE_IF_IS_SAME(TypeA, TypeB)                                                                            \
+  typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
 
 /// Enable If via Function Template Parameter (Definition)
 #define TF_ENABLE_IF_DEF(Condition) typename Zero::enable_if<(Condition)>::type*
-#define TF_ENABLE_IF_IS_SAME_DEF(TypeA, TypeB)                                 \
-  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type*
-#define TF_DISABLE_IF_DEF(Condition)                                           \
-  typename Zero::disable_if<(Condition)>::type*
-#define TF_DISABLE_IF_IS_SAME_DEF(TypeA, TypeB)                                \
-  typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type*
+#define TF_ENABLE_IF_IS_SAME_DEF(TypeA, TypeB) typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type*
+#define TF_DISABLE_IF_DEF(Condition) typename Zero::disable_if<(Condition)>::type*
+#define TF_DISABLE_IF_IS_SAME_DEF(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type*
 
 /// Enable If via Function Return Type
-#define R_ENABLE_IF(Condition, ReturnType)                                     \
-  typename Zero::enable_if<(Condition), ReturnType>::type
-#define R_DISABLE_IF(Condition, ReturnType)                                    \
-  typename Zero::disable_if<(Condition), ReturnType>::type
+#define R_ENABLE_IF(Condition, ReturnType) typename Zero::enable_if<(Condition), ReturnType>::type
+#define R_DISABLE_IF(Condition, ReturnType) typename Zero::disable_if<(Condition), ReturnType>::type
 
 /// Enable If via Function Parameter (Declaration)
-#define P_ENABLE_IF(Condition)                                                 \
-  typename Zero::enable_if<(Condition)>::type* = nullptr
-#define P_ENABLE_IF_IS_SAME(TypeA, TypeB)                                      \
-  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* =      \
-      nullptr
-#define P_DISABLE_IF(Condition)                                                \
-  typename Zero::disable_if<(Condition)>::type* = nullptr
-#define P_DISABLE_IF_IS_SAME(TypeA, TypeB)                                     \
-  typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* =     \
-      nullptr
+#define P_ENABLE_IF(Condition) typename Zero::enable_if<(Condition)>::type* = nullptr
+#define P_ENABLE_IF_IS_SAME(TypeA, TypeB)                                                                              \
+  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
+#define P_DISABLE_IF(Condition) typename Zero::disable_if<(Condition)>::type* = nullptr
+#define P_DISABLE_IF_IS_SAME(TypeA, TypeB)                                                                             \
+  typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
 
 /// Enable If via Function Parameter (Definition)
 #define P_ENABLE_IF_DEF(Condition) typename Zero::enable_if<(Condition)>::type*
-#define P_ENABLE_IF_IS_SAME_DEF(TypeA, TypeB)                                  \
-  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type*
-#define P_DISABLE_IF_DEF(Condition)                                            \
-  typename Zero::disable_if<(Condition)>::type*
-#define P_DISABLE_IF_IS_SAME_DEF(TypeA, TypeB)                                 \
-  typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type*
+#define P_ENABLE_IF_IS_SAME_DEF(TypeA, TypeB) typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type*
+#define P_DISABLE_IF_DEF(Condition) typename Zero::disable_if<(Condition)>::type*
+#define P_DISABLE_IF_IS_SAME_DEF(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type*
 
 //
 // Make Signed/Unsigned
@@ -891,8 +854,7 @@ struct remove_reference<MoveReference<T>&&>
 template <typename T>
 struct remove_reference_const_and_volatile
 {
-  typedef typename remove_reference<
-      typename remove_const_and_volatile<T>::type>::type type;
+  typedef typename remove_reference<typename remove_const_and_volatile<T>::type>::type type;
 };
 
 //
@@ -928,22 +890,16 @@ struct ZeroMoveHelper;
 
 // Is built-in type?
 template <typename T>
-struct ZeroMoveHelper<
-    T,
-    TC_ENABLE_IF(is_scalar<typename remove_const_and_volatile<T>::type>::value)>
+struct ZeroMoveHelper<T, TC_ENABLE_IF(is_scalar<typename remove_const_and_volatile<T>::type>::value)>
 {
   typedef T type;
 };
 
 // Is user type?
 template <typename T>
-struct ZeroMoveHelper<
-    T,
-    TC_ENABLE_IF(
-        !is_scalar<typename remove_const_and_volatile<T>::type>::value)>
+struct ZeroMoveHelper<T, TC_ENABLE_IF(!is_scalar<typename remove_const_and_volatile<T>::type>::value)>
 {
-  typedef MoveReference<typename remove_reference_const_and_volatile<T>::type>
-      type;
+  typedef MoveReference<typename remove_reference_const_and_volatile<T>::type> type;
 };
 
 /// Creates a move reference
@@ -972,8 +928,7 @@ struct has_default_constructor_helper
 /// Provides a constant defined as true if T has a default constructor, else
 /// defined as false
 template <typename T>
-struct has_default_constructor
-    : public integral_constant<bool, (has_default_constructor_helper<T>::value)>
+struct has_default_constructor : public integral_constant<bool, (has_default_constructor_helper<T>::value)>
 {
 };
 
@@ -1020,8 +975,7 @@ struct has_move_constructor_helper
 /// Provides a constant defined as true if T has a move constructor, else
 /// defined as false
 template <typename T>
-struct has_move_constructor
-    : public integral_constant<bool, (has_move_constructor_helper<T>::value)>
+struct has_move_constructor : public integral_constant<bool, (has_move_constructor_helper<T>::value)>
 {
 };
 
@@ -1034,8 +988,7 @@ template <typename T>
 struct has_destructor_helper
 {
   template <typename T2>
-  static yes Test(int param[sizeof(((T2*)nullptr)->~T2(),
-                                   5 /*arbitrary value for param size*/)]);
+  static yes Test(int param[sizeof(((T2*)nullptr)->~T2(), 5 /*arbitrary value for param size*/)]);
   template <typename T2>
   static no Test(...);
 
@@ -1045,8 +998,7 @@ struct has_destructor_helper
 /// Provides a constant defined as true if T has a destructor, else defined as
 /// false
 template <typename T>
-struct has_destructor
-    : public integral_constant<bool, (has_destructor_helper<T>::value)>
+struct has_destructor : public integral_constant<bool, (has_destructor_helper<T>::value)>
 {
 };
 

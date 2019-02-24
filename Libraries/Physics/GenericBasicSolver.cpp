@@ -106,14 +106,10 @@ void GenericBasicSolver::WarmStart()
     ConstraintObjectData& obj1 = mObjects[entry.Obj1Index];
     ConstraintObjectData& obj2 = mObjects[entry.Obj2Index];
 
-    Vec3 lineaerImpulse1 =
-        entry.Fragment.mJacobian.Linear[0] * entry.Fragment.mImpulse;
-    Vec3 lineaerImpulse2 =
-        entry.Fragment.mJacobian.Linear[1] * entry.Fragment.mImpulse;
-    Vec3 angularImpulse1 =
-        entry.Fragment.mJacobian.Angular[0] * entry.Fragment.mImpulse;
-    Vec3 angularImpulse2 =
-        entry.Fragment.mJacobian.Angular[1] * entry.Fragment.mImpulse;
+    Vec3 lineaerImpulse1 = entry.Fragment.mJacobian.Linear[0] * entry.Fragment.mImpulse;
+    Vec3 lineaerImpulse2 = entry.Fragment.mJacobian.Linear[1] * entry.Fragment.mImpulse;
+    Vec3 angularImpulse1 = entry.Fragment.mJacobian.Angular[0] * entry.Fragment.mImpulse;
+    Vec3 angularImpulse2 = entry.Fragment.mJacobian.Angular[1] * entry.Fragment.mImpulse;
     obj1.ApplyImpulse(lineaerImpulse1, angularImpulse1);
     obj2.ApplyImpulse(lineaerImpulse2, angularImpulse2);
   }
@@ -134,10 +130,7 @@ void GenericBasicSolver::IterateVelocities(uint iteration)
     ConstraintObjectData& obj1 = mObjects[entry.Obj1Index];
     ConstraintObjectData& obj2 = mObjects[entry.Obj2Index];
 
-    JointVelocity velocity(obj1.Velocity,
-                           obj1.AngularVelocity,
-                           obj2.Velocity,
-                           obj2.AngularVelocity);
+    JointVelocity velocity(obj1.Velocity, obj1.AngularVelocity, obj2.Velocity, obj2.AngularVelocity);
     real lambda = ComputeLambda(entry.Fragment, velocity);
 
     // apply the constraint
@@ -161,9 +154,7 @@ void GenericBasicSolver::SolvePositions()
   CollectJointsToSolve(mJoints, jointsToSolve);
   CollectContactsToSolve(mContacts, contactsToSolve, mSolverConfig);
 
-  for (uint iterationCount = 0;
-       iterationCount < GetSolverPositionIterationCount();
-       ++iterationCount)
+  for (uint iterationCount = 0; iterationCount < GetSolverPositionIterationCount(); ++iterationCount)
   {
     BlockSolvePositions(jointsToSolve, EmptyUpdate<Joint>);
     BlockSolvePositions(contactsToSolve, ContactUpdate);
@@ -243,8 +234,7 @@ void GenericBasicSolver::ConstraintObjectData::SetBody(RigidBody* body)
   InverseInertiaTensor = body->mInvInertia.GetInvWorldTensor();
 }
 
-void GenericBasicSolver::ConstraintObjectData::ApplyImpulse(Vec3Param linear,
-                                                            Vec3Param angular)
+void GenericBasicSolver::ConstraintObjectData::ApplyImpulse(Vec3Param linear, Vec3Param angular)
 {
   Velocity += mInvMass.Apply(linear);
   AngularVelocity += Math::Transform(InverseInertiaTensor, angular);
@@ -260,8 +250,7 @@ void GenericBasicSolver::ConstraintObjectData::CommitVelocities()
 }
 
 template <typename JointType>
-void GenericBasicSolver::CreateEntry(JointType& joint,
-                                     MoleculeWalker& fragments)
+void GenericBasicSolver::CreateEntry(JointType& joint, MoleculeWalker& fragments)
 {
   uint fragmentCount = joint.MoleculeCountVirtual();
 
@@ -301,8 +290,7 @@ void GenericBasicSolver::CreateEntriesandObjects()
     uint obj2Index = FindRigidBodyIndex(joint.GetCollider(1));
     for (uint i = 0; i < fragmentCount; ++i)
     {
-      ConstraintEntry& entry =
-          *reinterpret_cast<ConstraintEntry*>(&fragments[i]);
+      ConstraintEntry& entry = *reinterpret_cast<ConstraintEntry*>(&fragments[i]);
       entry.Obj1Index = obj1Index;
       entry.Obj2Index = obj2Index;
     }
@@ -322,8 +310,7 @@ void GenericBasicSolver::CreateEntriesandObjects()
     uint obj2Index = FindRigidBodyIndex(contact.GetCollider(1));
     for (uint i = 0; i < fragmentCount; ++i)
     {
-      ConstraintEntry& entry =
-          *reinterpret_cast<ConstraintEntry*>(&fragments[i]);
+      ConstraintEntry& entry = *reinterpret_cast<ConstraintEntry*>(&fragments[i]);
       entry.Obj1Index = obj1Index;
       entry.Obj2Index = obj2Index;
     }

@@ -47,9 +47,7 @@ private:
   bool Refine(bool onSurface);
 
   /// Initialize the algorithm before it is run
-  void Init(const SupportShape* shapeA,
-            const SupportShape* shapeB,
-            AlgorithmType algorithmType);
+  void Init(const SupportShape* shapeA, const SupportShape* shapeB, AlgorithmType algorithmType);
 
   /// Swap the two support points at the given indexes
   void Swap(uint a, uint b);
@@ -73,10 +71,7 @@ private:
   /// Fill the manifold with all of the information about the collision
   void FillManifold(Intersection::Manifold& manifold);
 
-  bool PortalFaceCheck(uint pointA,
-                       uint pointB,
-                       uint offPoint,
-                       bool& originRayNotInsidePortal);
+  bool PortalFaceCheck(uint pointA, uint pointB, uint offPoint, bool& originRayNotInsidePortal);
 
   Vec3 mCenter[2];
   Vec3 mCsoCenter;

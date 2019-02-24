@@ -33,10 +33,7 @@ class EmitterNode : public SoundNode
 public:
   ZilchDeclareType(EmitterNode, TypeCopyMode::ReferenceType);
 
-  EmitterNode(StringParam name,
-              const unsigned ID,
-              Vec3Param position,
-              Vec3Param velocity);
+  EmitterNode(StringParam name, const unsigned ID, Vec3Param position, Vec3Param velocity);
 
   // Pauses and resumes all output (doesn't process inputs while paused)
   void SetPausedThreaded(bool paused);
@@ -45,8 +42,7 @@ public:
   // Sets the emitter's current orientation
   void SetForwardDirectionThreaded(const Vec3 forwardDirection);
   // Sets the angle for a directional emitter
-  void SetDirectionalAngleThreaded(const float angleInDegrees,
-                                   const float reducedVolume);
+  void SetDirectionalAngleThreaded(const float angleInDegrees, const float reducedVolume);
 
 private:
   // Note: all functions and data below should be accessed only on the mix

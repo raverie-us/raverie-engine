@@ -54,8 +54,7 @@ void TransformAction::CommitState(PhysicsNode* node)
   // calculation will get partial values. To avoid that the positions are only
   // updated once a frame (see UpdateKinematicVelocities).
   if (body != nullptr && mState & KinematicVelocity)
-    body->ComputeVelocities(
-        oldTranslation, oldRotation, body->mSpace->mIterationDt);
+    body->ComputeVelocities(oldTranslation, oldRotation, body->mSpace->mIterationDt);
 }
 
 void TransformAction::EmptyState()
@@ -252,20 +251,14 @@ uint BroadPhaseAction::BroadPhaseToRemoveFrom() const
 
 void BroadPhaseAction::Validate()
 {
-  ErrorIf(IsSet(DynamicRemoval) && !IsSet(CurrStateDynamic),
-          "Removing Dynamic when this object was never dynamic.");
-  ErrorIf(IsSet(StaticRemoval) && !IsSet(CurrStateStatic),
-          "Removing Static when this object was never static.");
-  ErrorIf(IsSet(DynamicRemoval) && IsSet(StaticRemoval),
-          "Removing from static and dynamic in same action.");
-  ErrorIf(IsSet(DynamicInsert) && IsSet(StaticInsert),
-          "Inserting to static and dynamic in same action.");
+  ErrorIf(IsSet(DynamicRemoval) && !IsSet(CurrStateDynamic), "Removing Dynamic when this object was never dynamic.");
+  ErrorIf(IsSet(StaticRemoval) && !IsSet(CurrStateStatic), "Removing Static when this object was never static.");
+  ErrorIf(IsSet(DynamicRemoval) && IsSet(StaticRemoval), "Removing from static and dynamic in same action.");
+  ErrorIf(IsSet(DynamicInsert) && IsSet(StaticInsert), "Inserting to static and dynamic in same action.");
 
-  ErrorIf(IsSet(DynamicRemoval) && IsSet(DynamicInsert),
-          "Cannot remove and Insert an object simultaneously.");
+  ErrorIf(IsSet(DynamicRemoval) && IsSet(DynamicInsert), "Cannot remove and Insert an object simultaneously.");
 
-  ErrorIf(IsSet(StaticRemoval) && IsSet(StaticInsert),
-          "Cannot remove and Insert an object simultaneously.");
+  ErrorIf(IsSet(StaticRemoval) && IsSet(StaticInsert), "Cannot remove and Insert an object simultaneously.");
 }
 
 } // namespace Physics

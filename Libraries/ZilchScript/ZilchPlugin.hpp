@@ -85,12 +85,8 @@ public:
   ~ZilchPluginSourceManager();
 
   // ResourceManager Interface
-  void ValidateNewName(Status& status,
-                       StringParam name,
-                       BoundType* optionalType) override;
-  void ValidateRawName(Status& status,
-                       StringParam name,
-                       BoundType* optionalType) override;
+  void ValidateNewName(Status& status, StringParam name, BoundType* optionalType) override;
+  void ValidateRawName(Status& status, StringParam name, BoundType* optionalType) override;
 
   void OnResourceEvent(ResourceEvent* event);
 

@@ -6,10 +6,7 @@ namespace Zero
 {
 // Threaded Volume Modifier
 
-InstanceVolumeModifier::InstanceVolumeModifier() :
-    mCurrentVolume(1.0f),
-    mLifetimeFrames(0),
-    mLifetimeFrameCounter(0)
+InstanceVolumeModifier::InstanceVolumeModifier() : mCurrentVolume(1.0f), mLifetimeFrames(0), mLifetimeFrameCounter(0)
 {
 }
 
@@ -29,8 +26,7 @@ void InstanceVolumeModifier::ApplyVolume(float* sampleBuffer,
   }
 
   // If not interpolating and volume is close to 1.0, don't do anything
-  if (Interpolator.Finished() &&
-      AudioConstants::IsWithinLimit(mCurrentVolume, 1.0f, 0.01f))
+  if (Interpolator.Finished() && AudioConstants::IsWithinLimit(mCurrentVolume, 1.0f, 0.01f))
     return;
 
   // If we are not interpolating, apply the same volume to all samples

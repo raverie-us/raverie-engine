@@ -27,7 +27,7 @@ BuildEvent::BuildEvent() : Dependencies(nullptr)
 
 LibraryRef BuildEvent::FindLibrary(StringParam name)
 {
-  ZilchForEach(LibraryRef library, *this->Dependencies)
+  ZilchForEach (LibraryRef library, *this->Dependencies)
   {
     if (library->Name == name)
       return library;
@@ -69,21 +69,14 @@ void Plugin::Uninitialize()
 {
 }
 
-LibraryRef Plugin::LoadFromFile(Status& status,
-                                Module& dependencies,
-                                StringParam filePath,
-                                void* userData)
+LibraryRef Plugin::LoadFromFile(Status& status, Module& dependencies, StringParam filePath, void* userData)
 {
   // In order to not lock the library and support dynamic reloading, we make a
   // copy of any plugin files Ideally we want to load the same libraries and not
   // duplicate code loading, therefore we use the hash of the library to
   // uniquely identify it
   File file;
-  file.Open(filePath,
-            Zero::FileMode::Read,
-            Zero::FileAccessPattern::Sequential,
-            Zero::FileShare::Read,
-            &status);
+  file.Open(filePath, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential, Zero::FileShare::Read, &status);
   if (status.Failed())
   {
     status.SetFailed("We failed to open the plugin file for Read only access "
@@ -104,11 +97,9 @@ LibraryRef Plugin::LoadFromFile(Status& status,
   file.Close();
 
   // Copy the library to a new temporary location
-  StringRange pluginName =
-      Zero::FilePath::GetFileNameWithoutExtension(filePath);
+  StringRange pluginName = Zero::FilePath::GetFileNameWithoutExtension(filePath);
   String fileName = BuildString(pluginName, ".", sha1Hash, ".zilchPlugin");
-  String pluginLocation =
-      Zero::FilePath::Combine(Zero::GetTemporaryDirectory(), fileName);
+  String pluginLocation = Zero::FilePath::Combine(Zero::GetTemporaryDirectory(), fileName);
 
   // Only copy if the file doesn't already exist
   if (Zero::FileExists(pluginLocation) == false)
@@ -134,8 +125,7 @@ LibraryRef Plugin::LoadFromFile(Status& status,
   }
 
   // Look for the create plugin functionality, early out if we don't find it
-  CreateZilchPluginFn createPlugin =
-      (CreateZilchPluginFn)lib->GetFunctionByName("CreateZilchPlugin");
+  CreateZilchPluginFn createPlugin = (CreateZilchPluginFn)lib->GetFunctionByName("CreateZilchPlugin");
   if (createPlugin == nullptr)
   {
     status.SetFailed("The 'CreateZilchPlugin' function was not exported within "
@@ -168,11 +158,8 @@ LibraryRef Plugin::LoadFromFile(Status& status,
   return pluginLibrary;
 }
 
-void Plugin::LoadFromDirectory(Status& status,
-                               Module& dependencies,
-                               Array<LibraryRef>& pluginsOut,
-                               StringParam directory,
-                               void* userData)
+void Plugin::LoadFromDirectory(
+    Status& status, Module& dependencies, Array<LibraryRef>& pluginsOut, StringParam directory, void* userData)
 {
   // Walk through all the files in the directory looking for anything ending
   // with .zilchPlugin
@@ -187,8 +174,7 @@ void Plugin::LoadFromDirectory(Status& status,
     if (Zero::FilePath::GetExtension(fileEntry.mFileName) == PluginExtension)
     {
       // Attempt to load the plugin (this may fail!)
-      LibraryRef pluginLibrary =
-          LoadFromFile(status, dependencies, filePath, userData);
+      LibraryRef pluginLibrary = LoadFromFile(status, dependencies, filePath, userData);
 
       // If we successfully created a plugin, then output it
       if (pluginLibrary != nullptr)
@@ -226,8 +212,7 @@ void CreateAllocatingHandle(Handle& handle, void* pointer)
   ExecutableState* state = ExecutableState::GetCallingState();
   handle.StoredType = state->AllocatingType;
   handle.Manager = state->PointerObjects;
-  state->PointerObjects->ObjectToHandle(
-      (const byte*)pointer, handle.StoredType, handle);
+  state->PointerObjects->ObjectToHandle((const byte*)pointer, handle.StoredType, handle);
 }
 
 PluginStubLibrary& PluginStubLibrary::GetInstance()
@@ -266,9 +251,7 @@ void NameMangler::MangleLibrary(LibraryRef library)
   }
 }
 
-Function* NameMangler::FindFunction(GuidType functionHash,
-                                    const char* functionName,
-                                    StringParam typeName)
+Function* NameMangler::FindFunction(GuidType functionHash, const char* functionName, StringParam typeName)
 {
   Function* function = this->HashToFunction.FindValue(functionHash, nullptr);
   ErrorIf(ZilchDebugPluginLinking && function == nullptr,
@@ -295,9 +278,7 @@ GuidType NameMangler::GetDelegateTypeId(DelegateType* type)
 BoundType* FindLibraryType(LibraryRef library, const char* name)
 {
   BoundType* type = library->BoundTypes.FindValue(name, nullptr);
-  ErrorIf(ZilchDebugPluginLinking && type == nullptr,
-          "Unable to find the %s type",
-          name);
+  ErrorIf(ZilchDebugPluginLinking && type == nullptr, "Unable to find the %s type", name);
   return type;
 }
 
@@ -305,9 +286,7 @@ NativeName::NativeName()
 {
 }
 
-NativeName::NativeName(StringParam className,
-                       StringParam parameterName,
-                       StringParam returnName) :
+NativeName::NativeName(StringParam className, StringParam parameterName, StringParam returnName) :
     Class(className),
     Parameter(parameterName),
     Return(returnName)
@@ -319,183 +298,115 @@ NativeStubCode::NativeStubCode() : Libraries(nullptr)
   // Because some of the types that we have bound already exist within the Zero
   // or Zilch namespace then when we generate code for them, we want to redirect
   // them to use the special type names specified here
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Any), NativeName("Any", "const Zilch::Any&", "Zilch::Any"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Handle),
-      NativeName("Handle", "const Zilch::Handle&", "Zilch::Handle"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Delegate),
-      NativeName("Delegate", "const Zilch::Delegate&", "Zilch::Delegate"));
+  this->TypeToCppName.Insert(ZilchTypeId(Any), NativeName("Any", "const Zilch::Any&", "Zilch::Any"));
+  this->TypeToCppName.Insert(ZilchTypeId(Handle), NativeName("Handle", "const Zilch::Handle&", "Zilch::Handle"));
+  this->TypeToCppName.Insert(ZilchTypeId(Delegate),
+                             NativeName("Delegate", "const Zilch::Delegate&", "Zilch::Delegate"));
 
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Member),
-      NativeName("Member", "Zilch::Member*", "Zilch::HandleOf<Zilch::Member>"));
+  this->TypeToCppName.Insert(ZilchTypeId(Member),
+                             NativeName("Member", "Zilch::Member*", "Zilch::HandleOf<Zilch::Member>"));
   this->TypeToCppName.Insert(ZilchTypeId(Property),
-                             NativeName("Property",
-                                        "Zilch::Property*",
-                                        "Zilch::HandleOf<Zilch::Property>"));
+                             NativeName("Property", "Zilch::Property*", "Zilch::HandleOf<Zilch::Property>"));
   this->TypeToCppName.Insert(
       ZilchTypeId(GetterSetter),
-      NativeName("GetterSetter",
-                 "Zilch::GetterSetter*",
-                 "Zilch::HandleOf<Zilch::GetterSetter>"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Field),
-      NativeName("Field", "Zilch::Field*", "Zilch::HandleOf<Zilch::Field>"));
+      NativeName("GetterSetter", "Zilch::GetterSetter*", "Zilch::HandleOf<Zilch::GetterSetter>"));
+  this->TypeToCppName.Insert(ZilchTypeId(Field), NativeName("Field", "Zilch::Field*", "Zilch::HandleOf<Zilch::Field>"));
   this->TypeToCppName.Insert(ZilchTypeId(Function),
-                             NativeName("Function",
-                                        "Zilch::Function*",
-                                        "Zilch::HandleOf<Zilch::Function>"));
+                             NativeName("Function", "Zilch::Function*", "Zilch::HandleOf<Zilch::Function>"));
 
-  this->TypeToCppName.Insert(ZilchTypeId(Void),
-                             NativeName("Void", "void", "void"));
+  this->TypeToCppName.Insert(ZilchTypeId(Void), NativeName("Void", "void", "void"));
 
-  this->TypeToCppName.Insert(ZilchTypeId(Boolean),
-                             NativeName("Boolean", "bool", "bool"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Boolean2),
-      NativeName("Boolean2", "const Zilch::Boolean2&", "Zilch::Boolean2"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Boolean3),
-      NativeName("Boolean3", "const Zilch::Boolean3&", "Zilch::Boolean3"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Boolean4),
-      NativeName("Boolean4", "const Zilch::Boolean4&", "Zilch::Boolean4"));
+  this->TypeToCppName.Insert(ZilchTypeId(Boolean), NativeName("Boolean", "bool", "bool"));
+  this->TypeToCppName.Insert(ZilchTypeId(Boolean2),
+                             NativeName("Boolean2", "const Zilch::Boolean2&", "Zilch::Boolean2"));
+  this->TypeToCppName.Insert(ZilchTypeId(Boolean3),
+                             NativeName("Boolean3", "const Zilch::Boolean3&", "Zilch::Boolean3"));
+  this->TypeToCppName.Insert(ZilchTypeId(Boolean4),
+                             NativeName("Boolean4", "const Zilch::Boolean4&", "Zilch::Boolean4"));
 
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Byte), NativeName("Byte", "unsigned char", "unsigned char"));
+  this->TypeToCppName.Insert(ZilchTypeId(Byte), NativeName("Byte", "unsigned char", "unsigned char"));
 
-  this->TypeToCppName.Insert(ZilchTypeId(Integer),
-                             NativeName("Integer", "int", "int"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Integer2),
-      NativeName("Integer2", "const Zilch::Integer2&", "Zilch::Integer2"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Integer3),
-      NativeName("Integer3", "const Zilch::Integer3&", "Zilch::Integer3"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Integer4),
-      NativeName("Integer4", "const Zilch::Integer4&", "Zilch::Integer4"));
+  this->TypeToCppName.Insert(ZilchTypeId(Integer), NativeName("Integer", "int", "int"));
+  this->TypeToCppName.Insert(ZilchTypeId(Integer2),
+                             NativeName("Integer2", "const Zilch::Integer2&", "Zilch::Integer2"));
+  this->TypeToCppName.Insert(ZilchTypeId(Integer3),
+                             NativeName("Integer3", "const Zilch::Integer3&", "Zilch::Integer3"));
+  this->TypeToCppName.Insert(ZilchTypeId(Integer4),
+                             NativeName("Integer4", "const Zilch::Integer4&", "Zilch::Integer4"));
 
-  this->TypeToCppName.Insert(ZilchTypeId(Real),
-                             NativeName("Real", "float", "float"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Real2),
-      NativeName("Real2", "const Zilch::Real2&", "Zilch::Real2"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Real3),
-      NativeName("Real3", "const Zilch::Real3&", "Zilch::Real3"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Real4),
-      NativeName("Real4", "const Zilch::Real4&", "Zilch::Real4"));
+  this->TypeToCppName.Insert(ZilchTypeId(Real), NativeName("Real", "float", "float"));
+  this->TypeToCppName.Insert(ZilchTypeId(Real2), NativeName("Real2", "const Zilch::Real2&", "Zilch::Real2"));
+  this->TypeToCppName.Insert(ZilchTypeId(Real3), NativeName("Real3", "const Zilch::Real3&", "Zilch::Real3"));
+  this->TypeToCppName.Insert(ZilchTypeId(Real4), NativeName("Real4", "const Zilch::Real4&", "Zilch::Real4"));
 
   this->TypeToCppName.Insert(ZilchTypeId(Quaternion),
-                             NativeName("Quaternion",
-                                        "const Zilch::Quaternion&",
-                                        "Zilch::Quaternion"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Real3x3),
-      NativeName("Real3x3", "const Zilch::Real3x3&", "Zilch::Real3x3"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(Real4x4),
-      NativeName("Real4x4", "const Zilch::Real4x4&", "Zilch::Real4x4"));
+                             NativeName("Quaternion", "const Zilch::Quaternion&", "Zilch::Quaternion"));
+  this->TypeToCppName.Insert(ZilchTypeId(Real3x3), NativeName("Real3x3", "const Zilch::Real3x3&", "Zilch::Real3x3"));
+  this->TypeToCppName.Insert(ZilchTypeId(Real4x4), NativeName("Real4x4", "const Zilch::Real4x4&", "Zilch::Real4x4"));
 
-  this->TypeToCppName.Insert(
-      ZilchTypeId(String),
-      NativeName("String", "const Zilch::String&", "Zilch::String"));
+  this->TypeToCppName.Insert(ZilchTypeId(String), NativeName("String", "const Zilch::String&", "Zilch::String"));
 
-  this->TypeToCppName.Insert(ZilchTypeId(DoubleReal),
-                             NativeName("DoubleReal", "double", "double"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(DoubleInteger),
-      NativeName("DoubleInteger", "long long", "long long"));
+  this->TypeToCppName.Insert(ZilchTypeId(DoubleReal), NativeName("DoubleReal", "double", "double"));
+  this->TypeToCppName.Insert(ZilchTypeId(DoubleInteger), NativeName("DoubleInteger", "long long", "long long"));
 
   this->TypeToCppName.Insert(ZilchTypeId(Members::Enum),
-                             NativeName("Members::Enum",
-                                        "Zilch::Members::Enum",
-                                        "Zilch::Members::Enum"));
+                             NativeName("Members::Enum", "Zilch::Members::Enum", "Zilch::Members::Enum"));
   this->TypeToCppName.Insert(ZilchTypeId(FileMode::Enum),
-                             NativeName("FileMode::Enum",
-                                        "Zilch::FileMode::Enum",
-                                        "Zilch::FileMode::Enum"));
-  this->TypeToCppName.Insert(ZilchTypeId(StreamCapabilities::Enum),
-                             NativeName("StreamCapabilities::Enum",
-                                        "Zilch::StreamCapabilities::Enum",
-                                        "Zilch::StreamCapabilities::Enum"));
-  this->TypeToCppName.Insert(ZilchTypeId(StreamOrigin::Enum),
-                             NativeName("StreamOrigin::Enum",
-                                        "Zilch::StreamOrigin::Enum",
-                                        "Zilch::StreamOrigin::Enum"));
+                             NativeName("FileMode::Enum", "Zilch::FileMode::Enum", "Zilch::FileMode::Enum"));
+  this->TypeToCppName.Insert(
+      ZilchTypeId(StreamCapabilities::Enum),
+      NativeName("StreamCapabilities::Enum", "Zilch::StreamCapabilities::Enum", "Zilch::StreamCapabilities::Enum"));
+  this->TypeToCppName.Insert(
+      ZilchTypeId(StreamOrigin::Enum),
+      NativeName("StreamOrigin::Enum", "Zilch::StreamOrigin::Enum", "Zilch::StreamOrigin::Enum"));
 
   this->TypeToCppName.Insert(ZilchTypeId(EventsClass),
-                             NativeName("EventsClass",
-                                        "const Zilch::EventsClass&",
-                                        "Zilch::EventsClass"));
+                             NativeName("EventsClass", "const Zilch::EventsClass&", "Zilch::EventsClass"));
   this->TypeToCppName.Insert(ZilchTypeId(FilePathClass),
-                             NativeName("FilePathClass",
-                                        "const Zilch::FilePathClass&",
-                                        "Zilch::FilePathClass"));
+                             NativeName("FilePathClass", "const Zilch::FilePathClass&", "Zilch::FilePathClass"));
   this->TypeToCppName.Insert(ZilchTypeId(IStreamClass),
-                             NativeName("IStreamClass",
-                                        "const Zilch::IStreamClass&",
-                                        "Zilch::IStreamClass"));
+                             NativeName("IStreamClass", "const Zilch::IStreamClass&", "Zilch::IStreamClass"));
   this->TypeToCppName.Insert(ZilchTypeId(FileStreamClass),
-                             NativeName("FileStreamClass",
-                                        "const Zilch::FileStreamClass&",
-                                        "Zilch::FileStreamClass"));
-  this->TypeToCppName.Insert(ZilchTypeId(StringBuilderExtended),
-                             NativeName("StringBuilderExtended",
-                                        "const Zilch::StringBuilderExtended&",
-                                        "Zilch::StringBuilderExtended"));
-  this->TypeToCppName.Insert(ZilchTypeId(StringRangeExtended),
-                             NativeName("StringRangeExtended",
-                                        "const Zilch::StringRangeExtended&",
-                                        "Zilch::StringRangeExtended"));
+                             NativeName("FileStreamClass", "const Zilch::FileStreamClass&", "Zilch::FileStreamClass"));
   this->TypeToCppName.Insert(
-      ZilchTypeId(StringSplitRangeExtended),
-      NativeName("StringSplitRangeExtended",
-                 "const Zilch::StringSplitRangeExtended&",
-                 "Zilch::StringSplitRangeExtended"));
+      ZilchTypeId(StringBuilderExtended),
+      NativeName("StringBuilderExtended", "const Zilch::StringBuilderExtended&", "Zilch::StringBuilderExtended"));
+  this->TypeToCppName.Insert(
+      ZilchTypeId(StringRangeExtended),
+      NativeName("StringRangeExtended", "const Zilch::StringRangeExtended&", "Zilch::StringRangeExtended"));
+  this->TypeToCppName.Insert(ZilchTypeId(StringSplitRangeExtended),
+                             NativeName("StringSplitRangeExtended",
+                                        "const Zilch::StringSplitRangeExtended&",
+                                        "Zilch::StringSplitRangeExtended"));
 
   this->TypeToCppName.Insert(ZilchTypeId(ColorClass),
-                             NativeName("ColorClass",
-                                        "const Zilch::ColorClass&",
-                                        "Zilch::ColorClass"));
+                             NativeName("ColorClass", "const Zilch::ColorClass&", "Zilch::ColorClass"));
   this->TypeToCppName.Insert(ZilchTypeId(ColorsClass),
-                             NativeName("ColorsClass",
-                                        "const Zilch::ColorsClass&",
-                                        "Zilch::ColorsClass"));
+                             NativeName("ColorsClass", "const Zilch::ColorsClass&", "Zilch::ColorsClass"));
 
-  this->TypeToCppName.Insert(ZilchTypeId(ParameterArray::range),
-                             NativeName("ParameterArray::range",
-                                        "const Zilch::ParameterArray::range&",
-                                        "Zilch::ParameterArray::range"));
   this->TypeToCppName.Insert(
-      ZilchTypeId(MemberRange<Member>),
-      NativeName("MemberRange<Zilch::Member>",
-                 "const Zilch::MemberRange<Zilch::Member>&",
-                 "Zilch::MemberRange<Zilch::Member>"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(MemberRange<Property>),
-      NativeName("MemberRange<Zilch::Property>",
-                 "const Zilch::MemberRange<Zilch::Property>&",
-                 "Zilch::MemberRange<Zilch::Property>"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(MemberRange<GetterSetter>),
-      NativeName("MemberRange<Zilch::GetterSetter>",
-                 "const Zilch::MemberRange<Zilch::GetterSetter>&",
-                 "Zilch::MemberRange<Zilch::GetterSetter>"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(MemberRange<Field>),
-      NativeName("MemberRange<Zilch::Field>",
-                 "const Zilch::MemberRange<Zilch::Field>&",
-                 "Zilch::MemberRange<Zilch::Field>"));
-  this->TypeToCppName.Insert(
-      ZilchTypeId(MemberRange<Function>),
-      NativeName("MemberRange<Zilch::Function>",
-                 "const Zilch::MemberRange<Zilch::Function>&",
-                 "Zilch::MemberRange<Zilch::Function>"));
+      ZilchTypeId(ParameterArray::range),
+      NativeName("ParameterArray::range", "const Zilch::ParameterArray::range&", "Zilch::ParameterArray::range"));
+  this->TypeToCppName.Insert(ZilchTypeId(MemberRange<Member>),
+                             NativeName("MemberRange<Zilch::Member>",
+                                        "const Zilch::MemberRange<Zilch::Member>&",
+                                        "Zilch::MemberRange<Zilch::Member>"));
+  this->TypeToCppName.Insert(ZilchTypeId(MemberRange<Property>),
+                             NativeName("MemberRange<Zilch::Property>",
+                                        "const Zilch::MemberRange<Zilch::Property>&",
+                                        "Zilch::MemberRange<Zilch::Property>"));
+  this->TypeToCppName.Insert(ZilchTypeId(MemberRange<GetterSetter>),
+                             NativeName("MemberRange<Zilch::GetterSetter>",
+                                        "const Zilch::MemberRange<Zilch::GetterSetter>&",
+                                        "Zilch::MemberRange<Zilch::GetterSetter>"));
+  this->TypeToCppName.Insert(ZilchTypeId(MemberRange<Field>),
+                             NativeName("MemberRange<Zilch::Field>",
+                                        "const Zilch::MemberRange<Zilch::Field>&",
+                                        "Zilch::MemberRange<Zilch::Field>"));
+  this->TypeToCppName.Insert(ZilchTypeId(MemberRange<Function>),
+                             NativeName("MemberRange<Zilch::Function>",
+                                        "const Zilch::MemberRange<Zilch::Function>&",
+                                        "Zilch::MemberRange<Zilch::Function>"));
 }
 
 NativeName NativeStubCode::GetCppTypeName(Type* type)
@@ -514,8 +425,7 @@ NativeName NativeStubCode::GetCppTypeName(Type* type)
 
   // Remove any invalid characters from the type name (that's what \0 means
   // here)
-  String name =
-      LibraryBuilder::FixIdentifier(type->ToString(), TokenCheck::None, '\0');
+  String name = LibraryBuilder::FixIdentifier(type->ToString(), TokenCheck::None, '\0');
 
   // If the generated type is not from our currently library, then qualify it
   // with a
@@ -566,8 +476,7 @@ NativeName NativeStubCode::GetCppTypeName(Type* type)
   return nativeNameResult;
 }
 
-void NativeStubCode::WriteParameters(ZilchCodeBuilder& builder,
-                                     DelegateType* delegateType)
+void NativeStubCode::WriteParameters(ZilchCodeBuilder& builder, DelegateType* delegateType)
 {
   builder.Write("(");
 
@@ -586,8 +495,7 @@ void NativeStubCode::WriteParameters(ZilchCodeBuilder& builder,
   builder.Write(")");
 }
 
-void NativeStubCode::WriteDescription(ZilchCodeBuilder& builder,
-                                      ReflectionObject* object)
+void NativeStubCode::WriteDescription(ZilchCodeBuilder& builder, ReflectionObject* object)
 {
   if (object->Description.Empty() == false)
   {
@@ -600,8 +508,7 @@ String GetCoreNamespace()
 {
   // Define types if this is not the Core library (which has already defined its
   // types)
-  static const String CoreNamespace =
-      Core::GetInstance().GetLibrary()->GetPluginNamespace();
+  static const String CoreNamespace = Core::GetInstance().GetLibrary()->GetPluginNamespace();
   return CoreNamespace;
 }
 
@@ -645,7 +552,7 @@ String NativeStubCode::GenerateHpp()
     builder.WriteLineIndented();
 
     // Forward declarations
-    ZilchForEach(BoundType * type, this->TypesInDependencyOrder)
+    ZilchForEach (BoundType* type, this->TypesInDependencyOrder)
     {
       String typeName = this->GetCppTypeName(type).Class;
 
@@ -657,7 +564,7 @@ String NativeStubCode::GenerateHpp()
     builder.WriteLineIndented();
 
     // Outputting all the declarations for all the types (in order)
-    ZilchForEach(BoundType * type, this->TypesInDependencyOrder)
+    ZilchForEach (BoundType* type, this->TypesInDependencyOrder)
     {
       this->WriteDescription(builder, type);
 
@@ -692,9 +599,8 @@ String NativeStubCode::GenerateHpp()
       builder.Write(baseName);
       builder.Write(" ZilchBase;");
       builder.WriteLineIndented();
-      builder.Write(
-          "Zilch::BoundType* ZilchGetDerivedType() const { return "
-          "ZilchTypeId(ZilchSelf)->GetBindingVirtualTypeFromInstance(this); }");
+      builder.Write("Zilch::BoundType* ZilchGetDerivedType() const { return "
+                    "ZilchTypeId(ZilchSelf)->GetBindingVirtualTypeFromInstance(this); }");
       builder.WriteLineIndented();
       builder.WriteLineIndented();
 
@@ -707,8 +613,7 @@ String NativeStubCode::GenerateHpp()
       {
         Function* function = type->AllFunctions[j];
 
-        String functionName = LibraryBuilder::FixIdentifier(
-            function->Name, TokenCheck::RemoveOuterBrackets);
+        String functionName = LibraryBuilder::FixIdentifier(function->Name, TokenCheck::RemoveOuterBrackets);
 
         this->WriteDescription(builder, function);
 
@@ -868,9 +773,9 @@ String NativeStubCode::GenerateCpp()
 
     // Unique function calling signatures (independent of actual method names)
     HashSet<DelegateType*, DelegateTypePolicy> delegates;
-    ZilchForEach(const LibraryRef& library, *this->Libraries)
+    ZilchForEach (const LibraryRef& library, *this->Libraries)
     {
-      ZilchForEach(Function * function, library->OwnedFunctions)
+      ZilchForEach (Function* function, library->OwnedFunctions)
       {
         DelegateType* delegateType = function->FunctionType;
         if (delegates.Contains(delegateType))
@@ -888,14 +793,12 @@ String NativeStubCode::GenerateCpp()
         bool isReturnVoid = (delegateType->Return == ZilchTypeId(void));
         String defaultReturn;
         if (isReturnVoid == false)
-          defaultReturn =
-              String::Format(" %s()", returnTypeName.Return.c_str());
+          defaultReturn = String::Format(" %s()", returnTypeName.Return.c_str());
 
         builder.Write(returnTypeName.Return);
         builder.WriteSpace();
 
-        GuidType cachedDelegateId =
-            this->Mangler.GetDelegateTypeId(delegateType);
+        GuidType cachedDelegateId = this->Mangler.GetDelegateTypeId(delegateType);
         builder.Write('_');
         builder.Write(cachedDelegateId);
 
@@ -905,8 +808,7 @@ String NativeStubCode::GenerateCpp()
         {
           builder.Write(", ");
           DelegateParameter& parameter = delegateType->Parameters[k];
-          builder.Write(
-              this->GetCppTypeName(parameter.ParameterType).Parameter);
+          builder.Write(this->GetCppTypeName(parameter.ParameterType).Parameter);
           builder.WriteSpace();
           builder.Write(parameter.GetNameOrGenerate());
         }
@@ -917,8 +819,7 @@ String NativeStubCode::GenerateCpp()
 
         builder.Write("ReturnIf(function == nullptr,");
         builder.Write(defaultReturn);
-        builder.WriteLineIndented(
-            ", \"The function does not exist (it may have been removed)\");");
+        builder.WriteLineIndented(", \"The function does not exist (it may have been removed)\");");
 
         builder.WriteLineIndented("Zilch::ExecutableState* __state = "
                                   "Zilch::ExecutableState::GetCallingState();");
@@ -932,16 +833,14 @@ String NativeStubCode::GenerateCpp()
 
         builder.WriteLineIndented("if (thisHandle != nullptr)");
         builder.WriteIndent();
-        builder.WriteLineIndented(
-            "__call.Set<Zilch::Handle>(Zilch::Call::This, *thisHandle);");
+        builder.WriteLineIndented("__call.Set<Zilch::Handle>(Zilch::Call::This, *thisHandle);");
 
         for (size_t k = 0; k < delegateType->Parameters.Size(); ++k)
         {
           DelegateParameter& parameter = delegateType->Parameters[k];
 
           builder.Write("__call.Set<");
-          builder.Write(
-              this->GetCppTypeName(parameter.ParameterType).Parameter);
+          builder.Write(this->GetCppTypeName(parameter.ParameterType).Parameter);
           builder.Write(">(");
           builder.Write((Integer)k);
           builder.Write(", ");
@@ -977,7 +876,7 @@ String NativeStubCode::GenerateCpp()
     }
 
     // Emit all types and all functions for those types
-    ZilchForEach(BoundType * type, this->TypesInDependencyOrder)
+    ZilchForEach (BoundType* type, this->TypesInDependencyOrder)
     {
       NativeName name = this->GetCppTypeName(type);
       String typeName = name.Class;
@@ -1042,11 +941,9 @@ String NativeStubCode::GenerateCpp()
           builder.WriteLineIndented();
 
           builder.WriteLineIndented("Zilch::Handle thisHandle;");
-          builder.WriteLineIndented(
-              "Zilch::CreateAllocatingHandle(thisHandle, this);");
+          builder.WriteLineIndented("Zilch::CreateAllocatingHandle(thisHandle, this);");
 
-          GuidType cachedDelegateId =
-              this->Mangler.GetDelegateTypeId(delegateType);
+          GuidType cachedDelegateId = this->Mangler.GetDelegateTypeId(delegateType);
           builder.Write("_");
           builder.Write(cachedDelegateId);
           builder.Write("(&thisHandle, _");
@@ -1103,8 +1000,7 @@ String NativeStubCode::GenerateCpp()
         builder.BeginScope(ScopeType::Function);
         builder.WriteLineIndented();
 
-        GuidType cachedDelegateId =
-            this->Mangler.GetDelegateTypeId(delegateType);
+        GuidType cachedDelegateId = this->Mangler.GetDelegateTypeId(delegateType);
 
         if (function->This != nullptr)
         {
@@ -1156,13 +1052,12 @@ String NativeStubCode::GenerateCpp()
   builder.BeginScope(ScopeType::Function);
   builder.WriteLineIndented();
 
-  builder.Write(
-      "Zilch::NativeBindingList::SetBuildingLibraryForThisThread(true);");
+  builder.Write("Zilch::NativeBindingList::SetBuildingLibraryForThisThread(true);");
   builder.WriteLineIndented();
 
   builder.WriteLineIndented("Zilch::NameMangler mangler;");
 
-  ZilchForEach(const LibraryRef& library, *this->Libraries)
+  ZilchForEach (const LibraryRef& library, *this->Libraries)
   {
     builder.BeginScope(ScopeType::Block);
     builder.WriteLineIndented();
@@ -1173,16 +1068,14 @@ String NativeStubCode::GenerateCpp()
 
     builder.WriteLineIndented("Zilch::BoundType* type = nullptr;");
 
-    builder.WriteLineIndented(
-        "Zilch::LibraryRef library = event->FindLibrary(libraryName);");
-    builder.WriteLineIndented(
-        "ReturnIf(library == nullptr, false, \"Unable to find the library %s "
-        "in the list of dependencies\", libraryName);");
+    builder.WriteLineIndented("Zilch::LibraryRef library = event->FindLibrary(libraryName);");
+    builder.WriteLineIndented("ReturnIf(library == nullptr, false, \"Unable to find the library %s "
+                              "in the list of dependencies\", libraryName);");
 
     builder.WriteLineIndented("mangler.MangleLibrary(library);");
 
     // Loop through all types created in this library
-    ZilchForEach(Type * type, library->OwnedTypes)
+    ZilchForEach (Type* type, library->OwnedTypes)
     {
       // Only consider bound types...
       BoundType* boundType = Type::DynamicCast<BoundType*>(type);
@@ -1200,11 +1093,9 @@ String NativeStubCode::GenerateCpp()
       bool isValueType = Type::IsValueType(type);
       String typeName = this->GetCppTypeName(type).Class;
 
-      String qualifiedTypeName =
-          String::Format("%s::%s", this->Namespace.c_str(), typeName.c_str());
+      String qualifiedTypeName = String::Format("%s::%s", this->Namespace.c_str(), typeName.c_str());
 
-      bool shouldPatchType = this->Namespace == GetCoreNamespace() &&
-                                 boundType->HasNativeBinding() ||
+      bool shouldPatchType = this->Namespace == GetCoreNamespace() && boundType->HasNativeBinding() ||
                              this->Namespace != GetCoreNamespace();
 
       if (shouldPatchType)
@@ -1255,8 +1146,7 @@ String NativeStubCode::GenerateCpp()
   }
 
   builder.WriteLineIndented();
-  builder.Write(
-      "Zilch::NativeBindingList::SetBuildingLibraryForThisThread(false);");
+  builder.Write("Zilch::NativeBindingList::SetBuildingLibraryForThisThread(false);");
   builder.WriteLineIndented();
 
   builder.WriteLineIndented();
@@ -1279,7 +1169,7 @@ String NativeStubCode::Generate(const LibraryArray& libraries)
 {
   this->Libraries = &libraries;
 
-  ZilchForEach(const LibraryRef& library, libraries)
+  ZilchForEach (const LibraryRef& library, libraries)
   {
     if (this->Namespace.Empty())
     {
@@ -1297,8 +1187,7 @@ String NativeStubCode::Generate(const LibraryArray& libraries)
     this->Filename = "Core";
   }
 
-  ComputeTypesInDependencyOrder(
-      libraries, this->LibrarySet, this->TypesInDependencyOrder);
+  ComputeTypesInDependencyOrder(libraries, this->LibrarySet, this->TypesInDependencyOrder);
 
   this->Hpp = this->GenerateHpp();
   this->Cpp = this->GenerateCpp();

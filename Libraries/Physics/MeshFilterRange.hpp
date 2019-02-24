@@ -23,9 +23,7 @@ struct MeshFilterRange
 
   typedef Array<uint> IndexArray;
 
-  MeshFilterRange(const Vec3Array* vertices,
-                  const IndexArray* indices,
-                  const Aabb& aabb);
+  MeshFilterRange(const Vec3Array* vertices, const IndexArray* indices, const Aabb& aabb);
 
   void SkipDead();
 

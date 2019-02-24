@@ -44,13 +44,11 @@ void GetSymbolInfo(void* processHandle, SymbolInfo& symbolInfo);
 /// Capture the current callstack into memory addresses. This is more efficient
 /// than actually looking up symbol information which can be done at a later
 /// time. Default frames to skip is 1 so that this function is ignored.
-size_t
-GetStackAddresses(CallStackAddresses& callStack,
-                  size_t stacksToCapture = CallStackAddresses::mMaxCallstacks,
-                  size_t framesToSkip = 1);
+size_t GetStackAddresses(CallStackAddresses& callStack,
+                         size_t stacksToCapture = CallStackAddresses::mMaxCallstacks,
+                         size_t framesToSkip = 1);
 /// Convert the stack address pointers to the actual symbol information.
-void GetStackInfo(CallStackAddresses& callStackAddresses,
-                  CallStackSymbolInfos& callStackSymbols);
+void GetStackInfo(CallStackAddresses& callStackAddresses, CallStackSymbolInfos& callStackSymbols);
 
 // A simple stack walker that isn't fully flushed out but is much easier to
 // follow than the StackWalker class.
@@ -59,9 +57,7 @@ class SimpleStackWalker
 public:
   virtual ~SimpleStackWalker(){};
 
-  void ShowCallstack(void* context,
-                     StringParam extraSymbolPaths = String(),
-                     int stacksToSkip = 1);
+  void ShowCallstack(void* context, StringParam extraSymbolPaths = String(), int stacksToSkip = 1);
   virtual void AddSymbolInformation(SymbolInfo& symbolInfo);
   virtual String GetFinalOutput();
 

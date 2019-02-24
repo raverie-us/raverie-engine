@@ -30,12 +30,7 @@ void LoadHdr(Status& status,
              uint* height,
              TextureFormat::Enum* format,
              TextureFormat::Enum requireFormat = TextureFormat::None);
-void SaveHdr(Status& status,
-             Stream* stream,
-             const byte* image,
-             uint width,
-             uint height,
-             TextureFormat::Enum format);
+void SaveHdr(Status& status, Stream* stream, const byte* image, uint width, uint height, TextureFormat::Enum format);
 
 void RgbeToRgb32f(byte* rgbe, float* rgb32f);
 void Rgb32fToRgbe(float* rgb32f, byte* rgbe);

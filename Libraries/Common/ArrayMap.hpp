@@ -18,13 +18,11 @@ struct PairSortPolicy
 
   /// Sorts according to key
   template <typename KeyCompareType>
-  bool operator()(const value_type& leftPair,
-                  const KeyCompareType& searchKey) const
+  bool operator()(const value_type& leftPair, const KeyCompareType& searchKey) const
   {
     return leftPair.first < searchKey;
   }
-  bool operator()(const value_type& leftPair,
-                  const value_type& searchPair) const
+  bool operator()(const value_type& leftPair, const value_type& searchPair) const
   {
     return leftPair.first < searchPair.first;
   }
@@ -163,8 +161,7 @@ public:
   }
 
   /// Move Constructor
-  ArrayMap(MoveReference<this_type> rhs) :
-      base_type(ZeroMove(static_cast<base_type&>(*rhs)))
+  ArrayMap(MoveReference<this_type> rhs) : base_type(ZeroMove(static_cast<base_type&>(*rhs)))
   {
   }
 
@@ -211,8 +208,7 @@ public:
 
   /// Returns the equivalent element in the array, else ifNotFound
   template <typename KeyCompareType>
-  const_reference FindPairValue(const KeyCompareType& searchKey,
-                                const_reference ifNotFound) const
+  const_reference FindPairValue(const KeyCompareType& searchKey, const_reference ifNotFound) const
   {
     return base_type::FindValue(searchKey, ifNotFound);
   }
@@ -232,8 +228,7 @@ public:
 
   /// Returns the key of the equivalent element in the array, else ifNotFound
   template <typename KeyCompareType>
-  const_key_reference FindKeyValue(const KeyCompareType& searchKey,
-                                   const_key_reference ifNotFound) const
+  const_key_reference FindKeyValue(const KeyCompareType& searchKey, const_key_reference ifNotFound) const
   {
     // Find instance
     size_type index = base_type::FindIndex(searchKey);
@@ -258,8 +253,7 @@ public:
 
   /// Returns the data of the equivalent element in the array, else ifNotFound
   template <typename KeyCompareType>
-  const_data_reference FindValue(const KeyCompareType& searchKey,
-                                 const_data_reference ifNotFound) const
+  const_data_reference FindValue(const KeyCompareType& searchKey, const_data_reference ifNotFound) const
   {
     // Find instance
     size_type index = base_type::FindIndex(searchKey);
@@ -277,14 +271,11 @@ public:
   /// Returns a pair consisting of a pointer to the inserted element (or the
   /// equivalent element which prevented it's insertion), and a bool which will
   /// be true if the insertion took place, else false if no changes were made
-  pointer_bool_pair FindOrInsert(const_key_reference key,
-                                 const_data_reference data)
+  pointer_bool_pair FindOrInsert(const_key_reference key, const_data_reference data)
   {
     // Get lower bound
-    iterator position =
-        LowerBound(base_type::All(), key, base_type::mSorter).Begin();
-    if (position != base_type::End() &&
-        base_type::mSorter.Equal(*position, key)) // Found?
+    iterator position = LowerBound(base_type::All(), key, base_type::mSorter).Begin();
+    if (position != base_type::End() && base_type::mSorter.Equal(*position, key)) // Found?
       return pointer_bool_pair(position, false);
     else
     {
@@ -295,14 +286,11 @@ public:
       return pointer_bool_pair(base_type::mData + index, true);
     }
   }
-  pointer_bool_pair FindOrInsert(const_key_reference key,
-                                 MoveReference<data_type> data)
+  pointer_bool_pair FindOrInsert(const_key_reference key, MoveReference<data_type> data)
   {
     // Get lower bound
-    iterator position =
-        LowerBound(base_type::All(), key, base_type::mSorter).Begin();
-    if (position != base_type::End() &&
-        base_type::mSorter.Equal(*position, key)) // Found?
+    iterator position = LowerBound(base_type::All(), key, base_type::mSorter).Begin();
+    if (position != base_type::End() && base_type::mSorter.Equal(*position, key)) // Found?
       return pointer_bool_pair(position, false);
     else
     {
@@ -318,10 +306,8 @@ public:
   data_reference FindOrInsert(const_key_reference key)
   {
     // Get lower bound
-    iterator position =
-        LowerBound(base_type::All(), key, base_type::mSorter).Begin();
-    if (position != base_type::End() &&
-        base_type::mSorter.Equal(*position, key)) // Found?
+    iterator position = LowerBound(base_type::All(), key, base_type::mSorter).Begin();
+    if (position != base_type::End() && base_type::mSorter.Equal(*position, key)) // Found?
       return position->second;
     else
     {
@@ -342,8 +328,7 @@ public:
     value_type value = value_type(key, data);
     return base_type::Insert(ZeroMove(value));
   }
-  pointer_bool_pair Insert(const_key_reference key,
-                           MoveReference<data_type> data)
+  pointer_bool_pair Insert(const_key_reference key, MoveReference<data_type> data)
   {
     value_type value = value_type(key, ZeroMove(data));
     return base_type::Insert(ZeroMove(value));
@@ -354,14 +339,12 @@ public:
   /// a pointer to the inserted element (or the equivalent element which was
   /// assigned to), and a bool which will be true if the insertion took place,
   /// else false if the assignment took place
-  pointer_bool_pair InsertOrAssign(const_key_reference key,
-                                   const_data_reference data)
+  pointer_bool_pair InsertOrAssign(const_key_reference key, const_data_reference data)
   {
     value_type value = value_type(key, data);
     return base_type::InsertOrAssign(ZeroMove(value));
   }
-  pointer_bool_pair InsertOrAssign(const_key_reference key,
-                                   MoveReference<data_type> data)
+  pointer_bool_pair InsertOrAssign(const_key_reference key, MoveReference<data_type> data)
   {
     value_type value = value_type(key, ZeroMove(data));
     return base_type::InsertOrAssign(ZeroMove(value));

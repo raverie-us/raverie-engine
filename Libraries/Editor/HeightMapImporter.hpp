@@ -41,10 +41,7 @@ private:
   Vec2 ScaleGridSizeToImage();
   Vec2 ScaleGridSizeToArea();
   void GenerateHeightMap(Event* e);
-  float CalculateAveragePixelHeight(uint column,
-                                    uint row,
-                                    uint patchCellX,
-                                    uint patchCellY);
+  float CalculateAveragePixelHeight(uint column, uint row, uint patchCellX, uint patchCellY);
 
   void OnMouseDown(MouseEvent* e);
   void OnClosePressed(Event* e);
@@ -99,12 +96,8 @@ public:
                     ColorTransform colorTx,
                     WidgetRect clipRect) override;
   void SetupGrid(FrameBlock& frameBlock, Mat4Param localToView);
-  void SetupLines(FrameBlock& frameBlock,
-                  uint axis,
-                  float spacing,
-                  Vec2 totalSize,
-                  Mat4Param localToView,
-                  uint lineCount);
+  void
+  SetupLines(FrameBlock& frameBlock, uint axis, float spacing, Vec2 totalSize, Mat4Param localToView, uint lineCount);
 
 private:
   Vec4 mLineColor;
@@ -115,9 +108,7 @@ private:
 class DragSizeManipulator : public MouseManipulation
 {
 public:
-  DragSizeManipulator(Mouse* mouse,
-                      Composite* relative,
-                      HeightMapImporter* importer);
+  DragSizeManipulator(Mouse* mouse, Composite* relative, HeightMapImporter* importer);
   ~DragSizeManipulator(){};
 
   void OnMouseUpdate(MouseEvent* event);

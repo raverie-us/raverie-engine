@@ -12,8 +12,7 @@ class ByteBuffer;
 class ByteBufferBlock;
 class FileFilter;
 
-int RawDeflate(
-    byte* outputData, uint outsize, byte* inputData, uint inSize, int level);
+int RawDeflate(byte* outputData, uint outsize, byte* inputData, uint inSize, int level);
 int RawInflate(byte* outputData, uint outSize, byte* inputData, uint inSize);
 
 struct ArchiveEntry
@@ -39,21 +38,19 @@ struct ArchiveEntry
 // Should the files be stored in a compressed or decompressed state?
 DeclareEnum2(ArchiveMode, Compressing, Decompressing);
 
-DeclareBitField3(
-    ArchiveReadFlags,
-    // Read entries name, size, and offset
-    Entries,
-    // Read entry data into allocated memory (Entries need to be set)
-    Data,
-    // Decompress entries (Data needs to be set)
-    Decompress)
+DeclareBitField3(ArchiveReadFlags,
+                 // Read entries name, size, and offset
+                 Entries,
+                 // Read entry data into allocated memory (Entries need to be set)
+                 Data,
+                 // Decompress entries (Data needs to be set)
+                 Decompress)
 
     DeclareEnum2(ArchiveExportMode, Overwrite, OverwriteIfNewer);
 
 namespace ArchiveReadFlags
 {
-static const ArchiveReadFlags::Enum All =
-    ArchiveReadFlags::Enum(Entries | Data | Decompress);
+static const ArchiveReadFlags::Enum All = ArchiveReadFlags::Enum(Entries | Data | Decompress);
 }
 
 namespace CompressionLevel
@@ -68,17 +65,14 @@ const uint MaxCompression = 9;
 class Archive
 {
 public:
-  Archive(ArchiveMode::Enum mode,
-          uint compressionLevel = CompressionLevel::DefaultCompression);
+  Archive(ArchiveMode::Enum mode, uint compressionLevel = CompressionLevel::DefaultCompression);
   ~Archive();
 
   // Adding Files in Compressing mode
 
   // Directory Logic
-  void ArchiveDirectory(Status& status,
-                        StringParam path,
-                        StringParam parentPath = String(),
-                        FileFilter* test = nullptr);
+  void
+  ArchiveDirectory(Status& status, StringParam path, StringParam parentPath = String(), FileFilter* test = nullptr);
 
   // Export
   void ExportToDirectory(ArchiveExportMode::Enum exportMode, StringParam path);

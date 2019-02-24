@@ -63,8 +63,7 @@ bool ShowPremultipliedAlphaFilter::Filter(Member* prop, HandleParam instance)
   if (info == nullptr)
     return true;
 
-  return info->mLoadFormat == "RGBA8" || info->mLoadFormat == "RGBA16" ||
-         info->mLoadFormat == "SRGB8A8";
+  return info->mLoadFormat == "RGBA8" || info->mLoadFormat == "RGBA16" || info->mLoadFormat == "SRGB8A8";
 }
 
 ZilchDefineType(ShowGammaCorrectionFilter, builder, type)
@@ -99,10 +98,8 @@ ZilchDefineType(TextureBuilder, builder, type)
   ZilchBindFieldProperty(mAnisotropy);
   ZilchBindFieldProperty(mMipMapping);
   ZilchBindGetterSetterProperty(HalfScaleCount);
-  ZilchBindFieldProperty(mPremultipliedAlpha)
-      ->Add(new ShowPremultipliedAlphaFilter());
-  ZilchBindFieldProperty(mGammaCorrection)
-      ->Add(new ShowGammaCorrectionFilter());
+  ZilchBindFieldProperty(mPremultipliedAlpha)->Add(new ShowPremultipliedAlphaFilter());
+  ZilchBindFieldProperty(mGammaCorrection)->Add(new ShowGammaCorrectionFilter());
 }
 
 void TextureBuilder::Serialize(Serializer& stream)
@@ -111,18 +108,12 @@ void TextureBuilder::Serialize(Serializer& stream)
   SerializeName(mResourceId);
 
   SerializeEnumNameDefault(TextureType, mType, TextureType::Texture2D);
-  SerializeEnumNameDefault(
-      TextureCompression, mCompression, TextureCompression::None);
-  SerializeEnumNameDefault(
-      TextureAddressing, mAddressingX, TextureAddressing::Repeat);
-  SerializeEnumNameDefault(
-      TextureAddressing, mAddressingY, TextureAddressing::Repeat);
-  SerializeEnumNameDefault(
-      TextureFiltering, mFiltering, TextureFiltering::Trilinear);
-  SerializeEnumNameDefault(
-      TextureAnisotropy, mAnisotropy, TextureAnisotropy::x16);
-  SerializeEnumNameDefault(
-      TextureMipMapping, mMipMapping, TextureMipMapping::PreGenerated);
+  SerializeEnumNameDefault(TextureCompression, mCompression, TextureCompression::None);
+  SerializeEnumNameDefault(TextureAddressing, mAddressingX, TextureAddressing::Repeat);
+  SerializeEnumNameDefault(TextureAddressing, mAddressingY, TextureAddressing::Repeat);
+  SerializeEnumNameDefault(TextureFiltering, mFiltering, TextureFiltering::Trilinear);
+  SerializeEnumNameDefault(TextureAnisotropy, mAnisotropy, TextureAnisotropy::x16);
+  SerializeEnumNameDefault(TextureMipMapping, mMipMapping, TextureMipMapping::PreGenerated);
   SerializeNameDefault(mHalfScaleCount, 0);
   SerializeNameDefault(mPremultipliedAlpha, false);
   SerializeNameDefault(mGammaCorrection, false);
@@ -163,8 +154,7 @@ void TextureBuilder::Generate(ContentInitializer& initializer)
   }
   else if (filename.Contains("normal"))
     mCompression = TextureCompression::BC5;
-  else if ((filename.Contains("metallic") || filename.Contains("metalness")) &&
-           filename.Contains("roughness"))
+  else if ((filename.Contains("metallic") || filename.Contains("metalness")) && filename.Contains("roughness"))
     mCompression = TextureCompression::BC5;
   else if (filename.Contains("metallic") || filename.Contains("metalness"))
     mCompression = TextureCompression::BC4;
@@ -183,16 +173,13 @@ void TextureBuilder::BuildListing(ResourceListing& listing)
 {
   String loader = ZTexLoader;
   String destFile = GetOutputFile();
-  listing.PushBack(ResourceEntry(
-      0, loader, Name, destFile, mResourceId, this->mOwner, this));
+  listing.PushBack(ResourceEntry(0, loader, Name, destFile, mResourceId, this->mOwner, this));
 }
 
 void TextureBuilder::BuildContent(BuildOptions& buildOptions)
 {
-  String inputFile =
-      FilePath::Combine(buildOptions.SourcePath, mOwner->Filename);
-  String outputFile =
-      FilePath::Combine(buildOptions.OutputPath, GetOutputFile());
+  String inputFile = FilePath::Combine(buildOptions.SourcePath, mOwner->Filename);
+  String outputFile = FilePath::Combine(buildOptions.OutputPath, GetOutputFile());
 
   TextureImporter importer(inputFile, outputFile, String());
 

@@ -120,16 +120,11 @@ void SamplerSettings::FillDefaults(u32& samplerSettings, u32 defaultSettings)
   // Each value from defaults is multiplied by whether or not the check bit is
   // already present in the settings If settings already has a particular value
   // set then 0 is or'd, resulting in no change
-  samplerSettings |= (defaultSettings & 0x0000000F) *
-                     (u32)((samplerSettings & 0x00000008) == 0);
-  samplerSettings |= (defaultSettings & 0x000000F0) *
-                     (u32)((samplerSettings & 0x00000080) == 0);
-  samplerSettings |= (defaultSettings & 0x00000F00) *
-                     (u32)((samplerSettings & 0x00000800) == 0);
-  samplerSettings |= (defaultSettings & 0x0000F000) *
-                     (u32)((samplerSettings & 0x00008000) == 0);
-  samplerSettings |= (defaultSettings & 0x000F0000) *
-                     (u32)((samplerSettings & 0x00080000) == 0);
+  samplerSettings |= (defaultSettings & 0x0000000F) * (u32)((samplerSettings & 0x00000008) == 0);
+  samplerSettings |= (defaultSettings & 0x000000F0) * (u32)((samplerSettings & 0x00000080) == 0);
+  samplerSettings |= (defaultSettings & 0x00000F00) * (u32)((samplerSettings & 0x00000800) == 0);
+  samplerSettings |= (defaultSettings & 0x0000F000) * (u32)((samplerSettings & 0x00008000) == 0);
+  samplerSettings |= (defaultSettings & 0x000F0000) * (u32)((samplerSettings & 0x00080000) == 0);
 }
 
 uint GetPixelSize(TextureFormat::Enum format)
@@ -191,10 +186,7 @@ uint GetPixelSize(TextureFormat::Enum format)
   }
 }
 
-void SetPixelData(byte* data,
-                  uint index,
-                  Vec4 value,
-                  TextureFormat::Enum format)
+void SetPixelData(byte* data, uint index, Vec4 value, TextureFormat::Enum format)
 {
   switch (format)
   {
@@ -262,10 +254,7 @@ void SetPixelData(byte* data,
   }
 }
 
-void ReadPixelData(byte* data,
-                   uint index,
-                   Vec4& value,
-                   TextureFormat::Enum format)
+void ReadPixelData(byte* data, uint index, Vec4& value, TextureFormat::Enum format)
 {
   switch (format)
   {
@@ -340,17 +329,13 @@ void SetPixelDataByte(byte* data, uint index, Vec4 value, uint elementCount)
   switch (elementCount)
   {
   case 4:
-    ((byte*)(data + index))[3] =
-        (byte)Math::Min(maxByte, (uint)(Math::Max(value.w, 0.0f) * normFactor));
+    ((byte*)(data + index))[3] = (byte)Math::Min(maxByte, (uint)(Math::Max(value.w, 0.0f) * normFactor));
   case 3:
-    ((byte*)(data + index))[2] =
-        (byte)Math::Min(maxByte, (uint)(Math::Max(value.z, 0.0f) * normFactor));
+    ((byte*)(data + index))[2] = (byte)Math::Min(maxByte, (uint)(Math::Max(value.z, 0.0f) * normFactor));
   case 2:
-    ((byte*)(data + index))[1] =
-        (byte)Math::Min(maxByte, (uint)(Math::Max(value.y, 0.0f) * normFactor));
+    ((byte*)(data + index))[1] = (byte)Math::Min(maxByte, (uint)(Math::Max(value.y, 0.0f) * normFactor));
   case 1:
-    ((byte*)(data + index))[0] =
-        (byte)Math::Min(maxByte, (uint)(Math::Max(value.x, 0.0f) * normFactor));
+    ((byte*)(data + index))[0] = (byte)Math::Min(maxByte, (uint)(Math::Max(value.x, 0.0f) * normFactor));
   }
 }
 
@@ -361,24 +346,17 @@ void SetPixelDataShort(byte* data, uint index, Vec4 value, uint elementCount)
   switch (elementCount)
   {
   case 4:
-    ((u16*)(data + index))[3] =
-        (u16)Math::Min(maxShort, (uint)(Math::Max(value.w, 0.0f) * normFactor));
+    ((u16*)(data + index))[3] = (u16)Math::Min(maxShort, (uint)(Math::Max(value.w, 0.0f) * normFactor));
   case 3:
-    ((u16*)(data + index))[2] =
-        (u16)Math::Min(maxShort, (uint)(Math::Max(value.z, 0.0f) * normFactor));
+    ((u16*)(data + index))[2] = (u16)Math::Min(maxShort, (uint)(Math::Max(value.z, 0.0f) * normFactor));
   case 2:
-    ((u16*)(data + index))[1] =
-        (u16)Math::Min(maxShort, (uint)(Math::Max(value.y, 0.0f) * normFactor));
+    ((u16*)(data + index))[1] = (u16)Math::Min(maxShort, (uint)(Math::Max(value.y, 0.0f) * normFactor));
   case 1:
-    ((u16*)(data + index))[0] =
-        (u16)Math::Min(maxShort, (uint)(Math::Max(value.x, 0.0f) * normFactor));
+    ((u16*)(data + index))[0] = (u16)Math::Min(maxShort, (uint)(Math::Max(value.x, 0.0f) * normFactor));
   }
 }
 
-void SetPixelDataHalfFloat(byte* data,
-                           uint index,
-                           Vec4 value,
-                           uint elementCount)
+void SetPixelDataHalfFloat(byte* data, uint index, Vec4 value, uint elementCount)
 {
   switch (elementCount)
   {
@@ -416,20 +394,16 @@ void SetPixelDataGamma(byte* data, uint index, Vec4 value, uint elementCount)
   switch (elementCount)
   {
   case 4:
-    ((byte*)(data + index))[3] =
-        (byte)Math::Min(maxByte, (uint)(Math::Max(value.w, 0.0f) * normFactor));
+    ((byte*)(data + index))[3] = (byte)Math::Min(maxByte, (uint)(Math::Max(value.w, 0.0f) * normFactor));
   case 3:
-    ((byte*)(data + index))[2] = (byte)Math::Min(
-        maxByte,
-        (uint)(Math::Pow(Math::Max(value.z, 0.0f), gammaPower) * normFactor));
+    ((byte*)(data + index))[2] =
+        (byte)Math::Min(maxByte, (uint)(Math::Pow(Math::Max(value.z, 0.0f), gammaPower) * normFactor));
   case 2:
-    ((byte*)(data + index))[1] = (byte)Math::Min(
-        maxByte,
-        (uint)(Math::Pow(Math::Max(value.y, 0.0f), gammaPower) * normFactor));
+    ((byte*)(data + index))[1] =
+        (byte)Math::Min(maxByte, (uint)(Math::Pow(Math::Max(value.y, 0.0f), gammaPower) * normFactor));
   case 1:
-    ((byte*)(data + index))[0] = (byte)Math::Min(
-        maxByte,
-        (uint)(Math::Pow(Math::Max(value.x, 0.0f), gammaPower) * normFactor));
+    ((byte*)(data + index))[0] =
+        (byte)Math::Min(maxByte, (uint)(Math::Pow(Math::Max(value.x, 0.0f), gammaPower) * normFactor));
   }
 }
 
@@ -477,10 +451,7 @@ void ReadPixelDataShort(byte* data, uint index, Vec4& value, uint elementCount)
   }
 }
 
-void ReadPixelDataHalfFloat(byte* data,
-                            uint index,
-                            Vec4& value,
-                            uint elementCount)
+void ReadPixelDataHalfFloat(byte* data, uint index, Vec4& value, uint elementCount)
 {
   switch (elementCount)
   {
@@ -523,19 +494,13 @@ void ReadPixelDataGamma(byte* data, uint index, Vec4& value, uint elementCount)
     value.w = ((byte*)(data + index))[3] * normFactor * (1 - isOne) + isOne;
   case 3:
     isOne = ((byte*)(data + index))[2] / maxByte;
-    value.z = Math::Pow(((byte*)(data + index))[2] * normFactor, gammaPower) *
-                  (1 - isOne) +
-              isOne;
+    value.z = Math::Pow(((byte*)(data + index))[2] * normFactor, gammaPower) * (1 - isOne) + isOne;
   case 2:
     isOne = ((byte*)(data + index))[1] / maxByte;
-    value.y = Math::Pow(((byte*)(data + index))[1] * normFactor, gammaPower) *
-                  (1 - isOne) +
-              isOne;
+    value.y = Math::Pow(((byte*)(data + index))[1] * normFactor, gammaPower) * (1 - isOne) + isOne;
   case 1:
     isOne = ((byte*)(data + index))[0] / maxByte;
-    value.x = Math::Pow(((byte*)(data + index))[0] * normFactor, gammaPower) *
-                  (1 - isOne) +
-              isOne;
+    value.x = Math::Pow(((byte*)(data + index))[0] * normFactor, gammaPower) * (1 - isOne) + isOne;
   }
 }
 
@@ -646,10 +611,8 @@ void YInvertBC3Block(byte* block)
   u32 indices0_7 = block[2] + 256 * (block[3] + 256 * block[4]);
   u32 indices8_15 = block[5] + 256 * (block[6] + 256 * block[7]);
 
-  indices0_7 =
-      ((indices0_7 & 0x00fff000) >> 12) | ((indices0_7 & 0x00000fff) << 12);
-  indices8_15 =
-      ((indices8_15 & 0x00fff000) >> 12) | ((indices8_15 & 0x00000fff) << 12);
+  indices0_7 = ((indices0_7 & 0x00fff000) >> 12) | ((indices0_7 & 0x00000fff) << 12);
+  indices8_15 = ((indices8_15 & 0x00fff000) >> 12) | ((indices8_15 & 0x00000fff) << 12);
 
   block[2] = (indices8_15 & 0x000000ff);
   block[3] = (indices8_15 & 0x0000ff00) >> 8;
@@ -683,15 +646,12 @@ void YInvertBC6Mode10Block(byte* block)
   }
   else if (cPartitionPatterns[partition].mImplicit0Bottom)
   {
-    indices8_15 =
-        ((indices8_15 & 0x007ffffc) << 1) | (indices8_15 & 0x00000003);
+    indices8_15 = ((indices8_15 & 0x007ffffc) << 1) | (indices8_15 & 0x00000003);
   }
 
   // Swap indices
-  indices0_7 =
-      ((indices0_7 & 0x00fff000) >> 12) | ((indices0_7 & 0x00000fff) << 12);
-  indices8_15 =
-      ((indices8_15 & 0x00fff000) >> 12) | ((indices8_15 & 0x00000fff) << 12);
+  indices0_7 = ((indices0_7 & 0x00fff000) >> 12) | ((indices0_7 & 0x00000fff) << 12);
+  indices8_15 = ((indices8_15 & 0x00fff000) >> 12) | ((indices8_15 & 0x00000fff) << 12);
   Math::Swap(indices0_7, indices8_15);
 
   // Determine which endpoints need to be swapped from partition flip and
@@ -711,22 +671,18 @@ void YInvertBC6Mode10Block(byte* block)
   // Invert index values to get implicit 0's in the required locations
   if (swapEndpoints0AB)
   {
-    indices0_7 =
-        (~indices0_7 & ~cPartitionPatterns[newPartition].mIndexBits0_7) |
-        (indices0_7 & cPartitionPatterns[newPartition].mIndexBits0_7);
-    indices8_15 =
-        (~indices8_15 & ~cPartitionPatterns[newPartition].mIndexBits8_15) |
-        (indices8_15 & cPartitionPatterns[newPartition].mIndexBits8_15);
+    indices0_7 = (~indices0_7 & ~cPartitionPatterns[newPartition].mIndexBits0_7) |
+                 (indices0_7 & cPartitionPatterns[newPartition].mIndexBits0_7);
+    indices8_15 = (~indices8_15 & ~cPartitionPatterns[newPartition].mIndexBits8_15) |
+                  (indices8_15 & cPartitionPatterns[newPartition].mIndexBits8_15);
   }
 
   if (swapEndpoints1AB)
   {
-    indices0_7 =
-        (~indices0_7 & cPartitionPatterns[newPartition].mIndexBits0_7) |
-        (indices0_7 & ~cPartitionPatterns[newPartition].mIndexBits0_7);
-    indices8_15 =
-        (~indices8_15 & cPartitionPatterns[newPartition].mIndexBits8_15) |
-        (indices8_15 & ~cPartitionPatterns[newPartition].mIndexBits8_15);
+    indices0_7 = (~indices0_7 & cPartitionPatterns[newPartition].mIndexBits0_7) |
+                 (indices0_7 & ~cPartitionPatterns[newPartition].mIndexBits0_7);
+    indices8_15 = (~indices8_15 & cPartitionPatterns[newPartition].mIndexBits8_15) |
+                  (indices8_15 & ~cPartitionPatterns[newPartition].mIndexBits8_15);
   }
 
   // Remove implicit 0's
@@ -737,8 +693,7 @@ void YInvertBC6Mode10Block(byte* block)
   }
   else if (cPartitionPatterns[newPartition].mImplicit0Bottom)
   {
-    indices8_15 = (indices8_15 & 0x00fffff8) | (indices8_15 & 0x00000003) << 1 |
-                  (indices0_7 & 0x00800000) >> 23;
+    indices8_15 = (indices8_15 & 0x00fffff8) | (indices8_15 & 0x00000003) << 1 | (indices0_7 & 0x00800000) >> 23;
     indices0_7 = (indices0_7 & 0x007fffff) << 1;
   }
   else
@@ -769,17 +724,13 @@ void YInvertBC6Mode10Block(byte* block)
 
     byte g0A = (block[2] & 0x1f) << 1 | (block[1] & 0x80) >> 7;
     byte g0B = (block[6] & 0x07) << 3 | (block[5] & 0xe0) >> 5;
-    byte g1A =
-        (block[2] & 0x20) | (block[3] & 0x01) << 4 | (block[5] & 0x1e) >> 1;
-    byte g1B = (block[3] & 0x80) >> 2 | (block[1] & 0x08) << 1 |
-               (block[6] & 0x78) >> 3;
+    byte g1A = (block[2] & 0x20) | (block[3] & 0x01) << 4 | (block[5] & 0x1e) >> 1;
+    byte g1B = (block[3] & 0x80) >> 2 | (block[1] & 0x08) << 1 | (block[6] & 0x78) >> 3;
 
     byte b0A = (block[3] & 0x7e) >> 1;
     byte b0B = (block[7] & 0x1f) << 1 | (block[6] & 0x80) >> 7;
-    byte b1A = (block[2] & 0x40) >> 1 | (block[1] & 0x40) >> 2 |
-               (block[8] & 0x01) << 3 | (block[7] & 0xe0) >> 5;
-    byte b1B = (block[4] & 0x02) << 4 | (block[4] & 0x04) << 2 |
-               (block[4] & 0x01) << 3 | (block[2] & 0x80) >> 5 |
+    byte b1A = (block[2] & 0x40) >> 1 | (block[1] & 0x40) >> 2 | (block[8] & 0x01) << 3 | (block[7] & 0xe0) >> 5;
+    byte b1B = (block[4] & 0x02) << 4 | (block[4] & 0x04) << 2 | (block[4] & 0x01) << 3 | (block[2] & 0x80) >> 5 |
                (block[1] & 0x30) >> 4;
 
     // Other swaps assume this swap will happen first if it's needed
@@ -809,13 +760,10 @@ void YInvertBC6Mode10Block(byte* block)
 
     // Write new endpoints
     block[0] = (r0A & 0x07) << 5 | (block[0] & 0x1f);
-    block[1] = (g0A & 0x01) << 7 | (b1A & 0x10) << 2 | (b1B & 0x03) << 4 |
-               (g1B & 0x10) >> 1 | (r0A & 0x38) >> 3;
-    block[2] = (b1B & 0x04) << 5 | (b1A & 0x20) << 1 | (g1A & 0x20) |
-               (g0A & 0x3e) >> 1;
+    block[1] = (g0A & 0x01) << 7 | (b1A & 0x10) << 2 | (b1B & 0x03) << 4 | (g1B & 0x10) >> 1 | (r0A & 0x38) >> 3;
+    block[2] = (b1B & 0x04) << 5 | (b1A & 0x20) << 1 | (g1A & 0x20) | (g0A & 0x3e) >> 1;
     block[3] = (g1B & 0x20) << 2 | (b0A & 0x3f) << 1 | (g1A & 0x10) >> 4;
-    block[4] = (r0B & 0x1f) << 3 | (b1B & 0x10) >> 2 | (b1B & 0x20) >> 4 |
-               (b1B & 0x08) >> 3;
+    block[4] = (r0B & 0x1f) << 3 | (b1B & 0x10) >> 2 | (b1B & 0x20) >> 4 | (b1B & 0x08) >> 3;
     block[5] = (g0B & 0x07) << 5 | (g1A & 0x0f) << 1 | (r0B & 0x20) >> 5;
     block[6] = (b0B & 0x01) << 7 | (g1B & 0x0f) << 3 | (g0B & 0x38) >> 3;
     block[7] = (b1A & 0x07) << 5 | (b0B & 0x3e) >> 1;
@@ -839,10 +787,8 @@ void YInvertBC6Mode10Block(byte* block)
 void YInvertBC6Mode11Block(byte* block)
 {
   // Swap indices
-  u32 indices0_7 =
-      block[14] + 256 * (block[15] + 256 * (block[12] + 256 * block[13]));
-  u32 indices8_15 =
-      block[10] + 256 * (block[11] + 256 * (block[8] + 256 * block[9]));
+  u32 indices0_7 = block[14] + 256 * (block[15] + 256 * (block[12] + 256 * block[13]));
+  u32 indices8_15 = block[10] + 256 * (block[11] + 256 * (block[8] + 256 * block[9]));
 
   // Fill implicit 0 from index0
   indices8_15 = (indices8_15 & 0xfff0ffff) | ((indices8_15 & 0x000e0000) >> 1);
@@ -857,14 +803,10 @@ void YInvertBC6Mode11Block(byte* block)
     indices8_15 = ~indices8_15;
 
     // Swap endpoints
-    u32 endpointA =
-        block[5] +
-        256 * (block[6] + 256 * (block[7] + 256 * (block[8] & 0x01)));
+    u32 endpointA = block[5] + 256 * (block[6] + 256 * (block[7] + 256 * (block[8] & 0x01)));
     endpointA = (endpointA << 5) | (block[4] >> 3);
 
-    u32 endpointB =
-        block[1] +
-        256 * (block[2] + 256 * (block[3] + 256 * (block[4] & 0x07)));
+    u32 endpointB = block[1] + 256 * (block[2] + 256 * (block[3] + 256 * (block[4] & 0x07)));
     endpointB = (endpointB << 3) | (block[0] >> 5);
 
     // Write new endpoints
@@ -880,8 +822,7 @@ void YInvertBC6Mode11Block(byte* block)
   }
 
   // Write new indices
-  block[8] = (indices0_7 & 0x000000f0) | ((indices0_7 & 0x00000007) << 1) |
-             (block[8] & 0x01);
+  block[8] = (indices0_7 & 0x000000f0) | ((indices0_7 & 0x00000007) << 1) | (block[8] & 0x01);
   block[9] = (indices0_7 & 0x0000ff00) >> 8;
   block[10] = (indices0_7 & 0x00ff0000) >> 16;
   block[11] = (indices0_7 & 0xff000000) >> 24;
@@ -891,10 +832,7 @@ void YInvertBC6Mode11Block(byte* block)
   block[15] = (indices8_15 & 0xff000000) >> 24;
 }
 
-void YInvertNonCompressed(byte* imageData,
-                          uint width,
-                          uint height,
-                          uint pixelSize)
+void YInvertNonCompressed(byte* imageData, uint width, uint height, uint pixelSize)
 {
   uint byteWidth = width * pixelSize;
 
@@ -909,11 +847,8 @@ void YInvertNonCompressed(byte* imageData,
   }
 }
 
-void YInvertBlockCompressed(byte* imageData,
-                            uint width,
-                            uint height,
-                            uint dataSize,
-                            TextureCompression::Enum compression)
+void YInvertBlockCompressed(
+    byte* imageData, uint width, uint height, uint dataSize, TextureCompression::Enum compression)
 {
   ReturnIf((width >= 3 && width % 4 != 0) || (height >= 3 && height % 4 != 0),
            ,
@@ -926,9 +861,7 @@ void YInvertBlockCompressed(byte* imageData,
   uint bytesPerRow = dataSize / numRows;
 
   uint blockSize = GetBlockSize(compression);
-  ReturnIf(width / 4 * blockSize != bytesPerRow,
-           ,
-           "Invalid image dimensions for compressed size");
+  ReturnIf(width / 4 * blockSize != bytesPerRow, , "Invalid image dimensions for compressed size");
 
   // Invert rows
   for (uint i = 0; i < numRows / 2; ++i)
@@ -1027,15 +960,11 @@ void YInvertBlockCompressed(byte* imageData,
   }
 }
 
-void BuildOrthographicTransformZero(Mat4& matrix,
-                                    float verticalSize,
-                                    float aspectRatio,
-                                    float nearDistance,
-                                    float farDistance)
+void BuildOrthographicTransformZero(
+    Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance)
 {
   // Zero maps NDC [-1,-1,-1] to [1,1,1] ([l,b,n] to [r,t,f])
-  BuildOrthographicTransformGl(
-      matrix, verticalSize, aspectRatio, nearDistance, farDistance);
+  BuildOrthographicTransformGl(matrix, verticalSize, aspectRatio, nearDistance, farDistance);
 }
 
 // Column major formula for NDC [-1,-1,-1] to [1,1,1] ([l,b,n] to [r,t,f])
@@ -1043,11 +972,8 @@ void BuildOrthographicTransformZero(Mat4& matrix,
 // |  0   1/t    0             0      |
 // |  0    0   -2/(f-n)  -(f+n)/(f-n) |
 // |  0    0     0             1      |
-void BuildOrthographicTransformGl(Mat4& matrix,
-                                  float verticalSize,
-                                  float aspectRatio,
-                                  float nearDistance,
-                                  float farDistance)
+void BuildOrthographicTransformGl(
+    Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance)
 {
   matrix = Mat4::cIdentity;
 
@@ -1072,11 +998,8 @@ void BuildOrthographicTransformGl(Mat4& matrix,
 // |  0   1/t    0             0      |
 // |  0    0   -1/(f-n)      -n/(f-n) |
 // |  0    0     0             1      |
-void BuildOrthographicTransformDx(Mat4& matrix,
-                                  float verticalSize,
-                                  float aspectRatio,
-                                  float nearDistance,
-                                  float farDistance)
+void BuildOrthographicTransformDx(
+    Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance)
 {
   matrix = Mat4::cIdentity;
 
@@ -1096,15 +1019,11 @@ void BuildOrthographicTransformDx(Mat4& matrix,
   matrix.m23 = -nearDistance / depth;
 }
 
-void BuildPerspectiveTransformZero(Mat4& matrix,
-                                   float verticalFov,
-                                   float aspectRatio,
-                                   float nearDistance,
-                                   float farDistance)
+void BuildPerspectiveTransformZero(
+    Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance)
 {
   // Zero maps NDC [-1,-1,-1] to [1,1,1] ([l,b,n] to [r,t,f])
-  BuildPerspectiveTransformGl(
-      matrix, verticalFov, aspectRatio, nearDistance, farDistance);
+  BuildPerspectiveTransformGl(matrix, verticalFov, aspectRatio, nearDistance, farDistance);
 }
 
 // Column major formula for NDC [-1,-1,-1] to [1,1,1] ([l,b,n] to [r,t,f])
@@ -1112,11 +1031,8 @@ void BuildPerspectiveTransformZero(Mat4& matrix,
 // |  0   n/t        0           0      |
 // |  0    0   -(f+n)/(f-n)  -2fn/(f-n) |
 // |  0    0        -1           0      |
-void BuildPerspectiveTransformGl(Mat4& matrix,
-                                 float verticalFov,
-                                 float aspectRatio,
-                                 float nearDistance,
-                                 float farDistance)
+void BuildPerspectiveTransformGl(
+    Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance)
 {
   matrix = Mat4::cIdentity;
 
@@ -1154,11 +1070,8 @@ void BuildPerspectiveTransformGl(Mat4& matrix,
 // |  0   n/t        0           0      |
 // |  0    0       -f/(f-n)   -fn/(f-n) |
 // |  0    0        -1           0      |
-void BuildPerspectiveTransformDx(Mat4& matrix,
-                                 float verticalFov,
-                                 float aspectRatio,
-                                 float nearDistance,
-                                 float farDistance)
+void BuildPerspectiveTransformDx(
+    Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance)
 {
   matrix = Mat4::cIdentity;
 
@@ -1353,8 +1266,7 @@ void DepthSettings::SetDepthWrite(TextureCompareFunc::Enum depthCompareFunc)
   mDepthCompareFunc = depthCompareFunc;
 }
 
-void DepthSettings::SetStencilTestMode(
-    TextureCompareFunc::Enum stencilCompareFunc)
+void DepthSettings::SetStencilTestMode(TextureCompareFunc::Enum stencilCompareFunc)
 {
   mStencilMode = StencilMode::Enabled;
   mStencilCompareFunc = stencilCompareFunc;
@@ -1455,29 +1367,19 @@ void RenderQueues::Clear()
   mBlendSettingsOverrides.Clear();
 }
 
-void RenderQueues::AddStreamedLineRect(ViewNode& viewNode,
-                                       Vec3 pos0,
-                                       Vec3 pos1,
-                                       Vec2 uv0,
-                                       Vec2 uv1,
-                                       Vec4 color,
-                                       Vec2 uvAux0,
-                                       Vec2 uvAux1)
+void RenderQueues::AddStreamedLineRect(
+    ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 uvAux0, Vec2 uvAux1)
 {
-  StreamedVertex v0(
-      Math::TransformPoint(viewNode.mLocalToView, pos0), uv0, color, uvAux0);
-  StreamedVertex v1(
-      Math::TransformPoint(viewNode.mLocalToView, Vec3(pos0.x, pos1.y, 0)),
-      Vec2(uv0.x, uv1.y),
-      color,
-      Vec2(uvAux0.x, uvAux1.y));
-  StreamedVertex v2(
-      Math::TransformPoint(viewNode.mLocalToView, pos1), uv1, color, uvAux1);
-  StreamedVertex v3(
-      Math::TransformPoint(viewNode.mLocalToView, Vec3(pos1.x, pos0.y, 0)),
-      Vec2(uv1.x, uv0.y),
-      color,
-      Vec2(uvAux1.x, uvAux0.y));
+  StreamedVertex v0(Math::TransformPoint(viewNode.mLocalToView, pos0), uv0, color, uvAux0);
+  StreamedVertex v1(Math::TransformPoint(viewNode.mLocalToView, Vec3(pos0.x, pos1.y, 0)),
+                    Vec2(uv0.x, uv1.y),
+                    color,
+                    Vec2(uvAux0.x, uvAux1.y));
+  StreamedVertex v2(Math::TransformPoint(viewNode.mLocalToView, pos1), uv1, color, uvAux1);
+  StreamedVertex v3(Math::TransformPoint(viewNode.mLocalToView, Vec3(pos1.x, pos0.y, 0)),
+                    Vec2(uv1.x, uv0.y),
+                    color,
+                    Vec2(uvAux1.x, uvAux0.y));
 
   mStreamedVertices.PushBack(v0);
   mStreamedVertices.PushBack(v1);
@@ -1488,34 +1390,23 @@ void RenderQueues::AddStreamedLineRect(ViewNode& viewNode,
   mStreamedVertices.PushBack(v3);
   mStreamedVertices.PushBack(v0);
 
-  viewNode.mStreamedVertexCount =
-      mStreamedVertices.Size() - viewNode.mStreamedVertexStart;
+  viewNode.mStreamedVertexCount = mStreamedVertices.Size() - viewNode.mStreamedVertexStart;
   viewNode.mStreamedVertexType = PrimitiveType::Lines;
 }
 
-void RenderQueues::AddStreamedQuad(ViewNode& viewNode,
-                                   Vec3 pos0,
-                                   Vec3 pos1,
-                                   Vec2 uv0,
-                                   Vec2 uv1,
-                                   Vec4 color,
-                                   Vec2 uvAux0,
-                                   Vec2 uvAux1)
+void RenderQueues::AddStreamedQuad(
+    ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 uvAux0, Vec2 uvAux1)
 {
-  StreamedVertex v0(
-      Math::TransformPoint(viewNode.mLocalToView, pos0), uv0, color, uvAux0);
-  StreamedVertex v1(
-      Math::TransformPoint(viewNode.mLocalToView, Vec3(pos0.x, pos1.y, 0)),
-      Vec2(uv0.x, uv1.y),
-      color,
-      Vec2(uvAux0.x, uvAux1.y));
-  StreamedVertex v2(
-      Math::TransformPoint(viewNode.mLocalToView, pos1), uv1, color, uvAux1);
-  StreamedVertex v3(
-      Math::TransformPoint(viewNode.mLocalToView, Vec3(pos1.x, pos0.y, 0)),
-      Vec2(uv1.x, uv0.y),
-      color,
-      Vec2(uvAux1.x, uvAux0.y));
+  StreamedVertex v0(Math::TransformPoint(viewNode.mLocalToView, pos0), uv0, color, uvAux0);
+  StreamedVertex v1(Math::TransformPoint(viewNode.mLocalToView, Vec3(pos0.x, pos1.y, 0)),
+                    Vec2(uv0.x, uv1.y),
+                    color,
+                    Vec2(uvAux0.x, uvAux1.y));
+  StreamedVertex v2(Math::TransformPoint(viewNode.mLocalToView, pos1), uv1, color, uvAux1);
+  StreamedVertex v3(Math::TransformPoint(viewNode.mLocalToView, Vec3(pos1.x, pos0.y, 0)),
+                    Vec2(uv1.x, uv0.y),
+                    color,
+                    Vec2(uvAux1.x, uvAux0.y));
 
   mStreamedVertices.PushBack(v0);
   mStreamedVertices.PushBack(v1);
@@ -1524,19 +1415,11 @@ void RenderQueues::AddStreamedQuad(ViewNode& viewNode,
   mStreamedVertices.PushBack(v3);
   mStreamedVertices.PushBack(v0);
 
-  viewNode.mStreamedVertexCount =
-      mStreamedVertices.Size() - viewNode.mStreamedVertexStart;
+  viewNode.mStreamedVertexCount = mStreamedVertices.Size() - viewNode.mStreamedVertexStart;
 }
 
-void RenderQueues::AddStreamedQuadTiled(ViewNode& viewNode,
-                                        Vec3 pos0,
-                                        Vec3 pos1,
-                                        Vec2 uv0,
-                                        Vec2 uv1,
-                                        Vec4 color,
-                                        Vec2 tileSize,
-                                        Vec2 uvAux0,
-                                        Vec2 uvAux1)
+void RenderQueues::AddStreamedQuadTiled(
+    ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 tileSize, Vec2 uvAux0, Vec2 uvAux1)
 {
   Vec2 size = Vec2(pos1.x - pos0.x, pos0.y - pos1.y);
   Vec2 tiles = size / tileSize;
@@ -1557,8 +1440,7 @@ void RenderQueues::AddStreamedQuadTiled(ViewNode& viewNode,
       Vec3 newPos0 = pos0 + posOffset;
       Vec3 newPos1 = newPos0 + Vec3(tileSize.x, -tileSize.y, 0);
 
-      AddStreamedQuad(
-          viewNode, newPos0, newPos1, uv0, uv1, color, uvAux0, uvAux1);
+      AddStreamedQuad(viewNode, newPos0, newPos1, uv0, uv1, color, uvAux0, uvAux1);
     }
   }
   // Bottom edge
@@ -1570,8 +1452,7 @@ void RenderQueues::AddStreamedQuadTiled(ViewNode& viewNode,
     Vec2 newUv1 = uv0 + Vec2(1, remainderY) * uvSignedSize;
     Vec2 newUvAux1 = uvAux0 + Vec2(1, remainderY) * uvAuxSignedSize;
 
-    AddStreamedQuad(
-        viewNode, newPos0, newPos1, uv0, newUv1, color, uvAux0, newUvAux1);
+    AddStreamedQuad(viewNode, newPos0, newPos1, uv0, newUv1, color, uvAux0, newUvAux1);
   }
   // Right edge
   for (uint y = 0; y < (uint)tiles.y; ++y)
@@ -1582,22 +1463,18 @@ void RenderQueues::AddStreamedQuadTiled(ViewNode& viewNode,
     Vec2 newUv1 = uv0 + Vec2(remainderX, 1) * uvSignedSize;
     Vec2 newUvAux1 = uvAux0 + Vec2(remainderX, 1) * uvAuxSignedSize;
 
-    AddStreamedQuad(
-        viewNode, newPos0, newPos1, uv0, newUv1, color, uvAux0, newUvAux1);
+    AddStreamedQuad(viewNode, newPos0, newPos1, uv0, newUv1, color, uvAux0, newUvAux1);
   }
   // Corner
   if (remainderX > 0.0f && remainderY > 0.0f)
   {
-    Vec3 posOffset =
-        Vec3(tileSize * Vec2((float)(uint)tiles.x, -(float)(uint)tiles.y), 0);
+    Vec3 posOffset = Vec3(tileSize * Vec2((float)(uint)tiles.x, -(float)(uint)tiles.y), 0);
     Vec3 newPos0 = pos0 + posOffset;
-    Vec3 newPos1 =
-        newPos0 + Vec3(remainderX * tileSize.x, -remainderY * tileSize.y, 0);
+    Vec3 newPos1 = newPos0 + Vec3(remainderX * tileSize.x, -remainderY * tileSize.y, 0);
     Vec2 newUv1 = uv0 + Vec2(remainderX, remainderY) * uvSignedSize;
     Vec2 newUvAux1 = uvAux0 + Vec2(remainderX, remainderY) * uvAuxSignedSize;
 
-    AddStreamedQuad(
-        viewNode, newPos0, newPos1, uv0, newUv1, color, uvAux0, newUvAux1);
+    AddStreamedQuad(viewNode, newPos0, newPos1, uv0, newUv1, color, uvAux0, newUvAux1);
   }
 }
 
@@ -1612,23 +1489,11 @@ void RenderQueues::AddStreamedQuadNineSliced(ViewNode& viewNode,
                                              Vec2 uvAux0,
                                              Vec2 uvAux1)
 {
-  Vec4 posX = Vec4(pos0.x,
-                   pos0.x + posSlices[NineSlices::Left],
-                   pos1.x - posSlices[NineSlices::Right],
-                   pos1.x);
-  Vec4 posY = Vec4(pos0.y,
-                   pos0.y - posSlices[NineSlices::Top],
-                   pos1.y + posSlices[NineSlices::Bottom],
-                   pos1.y);
+  Vec4 posX = Vec4(pos0.x, pos0.x + posSlices[NineSlices::Left], pos1.x - posSlices[NineSlices::Right], pos1.x);
+  Vec4 posY = Vec4(pos0.y, pos0.y - posSlices[NineSlices::Top], pos1.y + posSlices[NineSlices::Bottom], pos1.y);
 
-  Vec4 uvX = Vec4(uv0.x,
-                  uv0.x + uvSlices[NineSlices::Left],
-                  uv1.x - uvSlices[NineSlices::Right],
-                  uv1.x);
-  Vec4 uvY = Vec4(uv0.y,
-                  uv0.y + uvSlices[NineSlices::Top],
-                  uv1.y - uvSlices[NineSlices::Bottom],
-                  uv1.y);
+  Vec4 uvX = Vec4(uv0.x, uv0.x + uvSlices[NineSlices::Left], uv1.x - uvSlices[NineSlices::Right], uv1.x);
+  Vec4 uvY = Vec4(uv0.y, uv0.y + uvSlices[NineSlices::Top], uv1.y - uvSlices[NineSlices::Bottom], uv1.y);
 
   float denomX = posX.w - posX.x;
   float denomY = posY.w - posY.x;
@@ -1657,8 +1522,7 @@ void RenderQueues::AddStreamedQuadNineSliced(ViewNode& viewNode,
   {
     float middle = (posY.w + posY.x) * 0.5f;
     // Axis direction can be either way
-    middle = Math::Clamp(
-        middle, Math::Min(posY.y, posY.z), Math::Max(posY.y, posY.z));
+    middle = Math::Clamp(middle, Math::Min(posY.y, posY.z), Math::Max(posY.y, posY.z));
 
     // Interpolant values to compute new uv coordinates.
     float t1 = (middle - posY.x) / (posY.y - posY.x);
@@ -1688,8 +1552,7 @@ void RenderQueues::AddStreamedQuadNineSliced(ViewNode& viewNode,
   {
     for (uint x = 0; x < 4; ++x)
     {
-      StreamedVertex vertex(Math::TransformPoint(viewNode.mLocalToView,
-                                                 Vec3(posX[x], posY[y], 0)),
+      StreamedVertex vertex(Math::TransformPoint(viewNode.mLocalToView, Vec3(posX[x], posY[y], 0)),
                             Vec2(uvX[x], uvY[y]),
                             color,
                             Vec2(uvAuxX[x], uvAuxY[y]));
@@ -1711,12 +1574,10 @@ void RenderQueues::AddStreamedQuadNineSliced(ViewNode& viewNode,
     }
   }
 
-  viewNode.mStreamedVertexCount =
-      mStreamedVertices.Size() - viewNode.mStreamedVertexStart;
+  viewNode.mStreamedVertexCount = mStreamedVertices.Size() - viewNode.mStreamedVertexStart;
 }
 
-void RenderQueues::AddStreamedQuadView(
-    ViewNode& viewNode, Vec3 pos[4], Vec2 uv0, Vec2 uv1, Vec4 color)
+void RenderQueues::AddStreamedQuadView(ViewNode& viewNode, Vec3 pos[4], Vec2 uv0, Vec2 uv1, Vec4 color)
 {
   StreamedVertex v0(pos[0], uv0, color, Vec2(0, 0));
   StreamedVertex v1(pos[1], Vec2(uv0.x, uv1.y), color, Vec2(0, 1));
@@ -1730,8 +1591,7 @@ void RenderQueues::AddStreamedQuadView(
   mStreamedVertices.PushBack(v3);
   mStreamedVertices.PushBack(v0);
 
-  viewNode.mStreamedVertexCount =
-      mStreamedVertices.Size() - viewNode.mStreamedVertexStart;
+  viewNode.mStreamedVertexCount = mStreamedVertices.Size() - viewNode.mStreamedVertexStart;
 }
 
 RenderTaskBuffer::RenderTaskBuffer() : mTaskCount(0), mCurrentIndex(0)

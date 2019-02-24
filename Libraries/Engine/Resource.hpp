@@ -66,12 +66,8 @@ public:
   }
 
   // HandleManager interface
-  void Allocate(BoundType* type,
-                Handle& handleToInitialize,
-                size_t customFlags) override;
-  void ObjectToHandle(const byte* object,
-                      BoundType* type,
-                      Handle& handleToInitialize) override;
+  void Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags) override;
+  void ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize) override;
   byte* HandleToObject(const Handle& handle) override;
   void AddReference(const Handle& handle) override;
   ReleaseResult::Enum ReleaseReference(const Handle& handle) override;
@@ -172,8 +168,7 @@ public:
 
   bool HasTag(StringParam tag);
 
-  virtual void GetDependencies(HashSet<ContentItem*>& dependencies,
-                               HandleParam instance = nullptr);
+  virtual void GetDependencies(HashSet<ContentItem*>& dependencies, HandleParam instance = nullptr);
 
   virtual DataNode* GetDataTree();
 
@@ -267,9 +262,7 @@ class ResourceMetaSerialization : public MetaSerialization
 {
 public:
   ZilchDeclareType(ResourceMetaSerialization, TypeCopyMode::ReferenceType);
-  void SerializeProperty(HandleParam instance,
-                         Property* property,
-                         Serializer& serializer) override;
+  void SerializeProperty(HandleParam instance, Property* property, Serializer& serializer) override;
   void SetDefault(Type* type, Any& any) override;
 
   String ConvertToString(AnyParam input) override;
@@ -305,8 +298,7 @@ class DataResourceInheritance : public MetaDataInheritanceRoot
 {
 public:
   ZilchDeclareType(DataResourceInheritance, TypeCopyMode::ReferenceType);
-  String GetInheritId(HandleParam object,
-                      InheritIdContext::Enum context) override;
+  String GetInheritId(HandleParam object, InheritIdContext::Enum context) override;
   void SetInheritId(HandleParam object, StringParam inheritId) override;
   bool ShouldStoreLocalModifications(HandleParam object) override;
   void RebuildObject(HandleParam object) override
@@ -326,27 +318,27 @@ public:
   void RestoreUndoData(HandleParam object, AnyParam undoData);
 };
 
-#define ResourceProperty(type, name)                                           \
-  HandleOf<type> m##name;                                                      \
-  type* Get##name()                                                            \
-  {                                                                            \
-    return m##name;                                                            \
-  }                                                                            \
-  void Set##name(type* newResource)                                            \
-  {                                                                            \
-    if (newResource)                                                           \
-      m##name = newResource;                                                   \
+#define ResourceProperty(type, name)                                                                                   \
+  HandleOf<type> m##name;                                                                                              \
+  type* Get##name()                                                                                                    \
+  {                                                                                                                    \
+    return m##name;                                                                                                    \
+  }                                                                                                                    \
+  void Set##name(type* newResource)                                                                                    \
+  {                                                                                                                    \
+    if (newResource)                                                                                                   \
+      m##name = newResource;                                                                                           \
   }
 
-#define ResourceHandleProperty(type, name)                                     \
-  HandleOf<type> m##name;                                                      \
-  type* Get##name()                                                            \
-  {                                                                            \
-    return m##name;                                                            \
-  }                                                                            \
-  void Set##name(type* newResource)                                            \
-  {                                                                            \
-    m##name = newResource;                                                     \
+#define ResourceHandleProperty(type, name)                                                                             \
+  HandleOf<type> m##name;                                                                                              \
+  type* Get##name()                                                                                                    \
+  {                                                                                                                    \
+    return m##name;                                                                                                    \
+  }                                                                                                                    \
+  void Set##name(type* newResource)                                                                                    \
+  {                                                                                                                    \
+    m##name = newResource;                                                                                             \
   }
 
 } // namespace Zero

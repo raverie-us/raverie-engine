@@ -156,9 +156,7 @@ String Browser::GetUrl()
   return mLastSetUrl;
 }
 
-void Browser::ExecuteScriptFromLocation(StringParam script,
-                                        StringParam url,
-                                        int line)
+void Browser::ExecuteScriptFromLocation(StringParam script, StringParam url, int line)
 {
 }
 
@@ -170,8 +168,7 @@ void Browser::SimulateTextTyped(int character, BrowserModifiers::Enum modifiers)
 {
 }
 
-void Browser::SimulateMouseMove(Math::IntVec2Param localPosition,
-                                BrowserModifiers::Enum modifiers)
+void Browser::SimulateMouseMove(Math::IntVec2Param localPosition, BrowserModifiers::Enum modifiers)
 {
 }
 

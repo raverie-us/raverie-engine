@@ -43,25 +43,19 @@ const uint RedMask = MaxByte << RedOffset;
 const float InvFactor = 1.0f / 255.0f;
 } // namespace CS
 
-#define ByteColorRGBA(r, g, b, a)                                              \
-  ((ByteColor)((((a)&CS::MaxByte) << CS::AlphaOffset) |                        \
-               (((r)&CS::MaxByte) << CS::RedOffset) |                          \
-               (((g)&CS::MaxByte) << CS::GreenOffset) |                        \
-               ((b)&CS::MaxByte) << CS::BlueOffset))
+#define ByteColorRGBA(r, g, b, a)                                                                                      \
+  ((ByteColor)((((a)&CS::MaxByte) << CS::AlphaOffset) | (((r)&CS::MaxByte) << CS::RedOffset) |                         \
+               (((g)&CS::MaxByte) << CS::GreenOffset) | ((b)&CS::MaxByte) << CS::BlueOffset))
 
-#define FloatColorRGBA(r, g, b, a)                                             \
-  Math::Vec4(float(r) * CS::InvFactor,                                         \
-             float(g) * CS::InvFactor,                                         \
-             float(b) * CS::InvFactor,                                         \
-             float(a) * CS::InvFactor)
+#define FloatColorRGBA(r, g, b, a)                                                                                     \
+  Math::Vec4(float(r) * CS::InvFactor, float(g) * CS::InvFactor, float(b) * CS::InvFactor, float(a) * CS::InvFactor)
 
 inline Math::Vec4 ToFloatColor(ByteColor color)
 {
-  return Math::Vec4(
-      float(((color)&CS::RedMask) >> CS::RedOffset) * CS::InvFactor,
-      float(((color)&CS::GreenMask) >> CS::GreenOffset) * CS::InvFactor,
-      float(((color)&CS::BlueMask) >> CS::BlueOffset) * CS::InvFactor,
-      float(((color)&CS::AlphaMask) >> CS::AlphaOffset) * CS::InvFactor);
+  return Math::Vec4(float(((color)&CS::RedMask) >> CS::RedOffset) * CS::InvFactor,
+                    float(((color)&CS::GreenMask) >> CS::GreenOffset) * CS::InvFactor,
+                    float(((color)&CS::BlueMask) >> CS::BlueOffset) * CS::InvFactor,
+                    float(((color)&CS::AlphaMask) >> CS::AlphaOffset) * CS::InvFactor);
 }
 
 inline ByteColor ToByteColor(Math::Vec4 color)
@@ -231,8 +225,7 @@ const ByteColor TextBlack = ByteColorRGBA(0, 0, 0, 128);
 
 namespace Color
 {
-#define DefineColor(name, r, g, b, a)                                          \
-  const ByteColor name = ByteColorRGBA(r, g, b, a);
+#define DefineColor(name, r, g, b, a) const ByteColor name = ByteColorRGBA(r, g, b, a);
 #include "ColorDefinitions.hpp"
 #undef DefineColor
 } // namespace Color

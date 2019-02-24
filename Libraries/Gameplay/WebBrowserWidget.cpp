@@ -24,19 +24,16 @@ ZilchDefineType(WebBrowserWidget, builder, type)
 {
 }
 
-WebBrowserWidget::WebBrowserWidget(Composite* composite,
-                                   const WebBrowserSetup& setup) :
+WebBrowserWidget::WebBrowserWidget(Composite* composite, const WebBrowserSetup& setup) :
     Composite(composite),
     mIsPopup(false)
 {
   mBrowser = WebBrowser::Create(setup);
-  SetLayout(new StackLayout(LayoutDirection::TopToBottom,
-                            Vec2(WebBrowserUi::ElementSpacing)));
+  SetLayout(new StackLayout(LayoutDirection::TopToBottom, Vec2(WebBrowserUi::ElementSpacing)));
 
   mAddressBar = new Composite(this);
   mAddressBar->SetDockMode(DockMode::DockTop);
-  mAddressBar->SetLayout(new StackLayout(LayoutDirection::LeftToRight,
-                                         Vec2(WebBrowserUi::ButtonSpacing)));
+  mAddressBar->SetLayout(new StackLayout(LayoutDirection::LeftToRight, Vec2(WebBrowserUi::ButtonSpacing)));
 
   mBack = new IconButton(mAddressBar);
   mBack->SetSizing(SizeAxis::X, SizePolicy::Fixed, WebBrowserUi::ButtonWidth);
@@ -45,8 +42,7 @@ WebBrowserWidget::WebBrowserWidget(Composite* composite,
   ConnectThisTo(mBack, Events::ButtonPressed, OnBackPressed);
 
   mForward = new IconButton(mAddressBar);
-  mForward->SetSizing(
-      SizeAxis::X, SizePolicy::Fixed, WebBrowserUi::ButtonWidth);
+  mForward->SetSizing(SizeAxis::X, SizePolicy::Fixed, WebBrowserUi::ButtonWidth);
   mForward->SetIcon("NextObject");
   mForward->SetToolTip("Go forward to the next page");
   ConnectThisTo(mForward, Events::ButtonPressed, OnForwardPressed);
@@ -69,9 +65,7 @@ WebBrowserWidget::WebBrowserWidget(Composite* composite,
   mBrowserView->SetTexture(browser->GetTexture());
 
   // If we ever gain focus on any other widget, tell the browser it lost focus.
-  ConnectThisTo(GetRootWidget(),
-                Events::FocusGainedHierarchy,
-                OnRootFocusGainedHierarchy);
+  ConnectThisTo(GetRootWidget(), Events::FocusGainedHierarchy, OnRootFocusGainedHierarchy);
 
   mStatusBar = new TextBox(this);
   mStatusBar->SetEditable(false);
@@ -89,16 +83,11 @@ WebBrowserWidget::WebBrowserWidget(Composite* composite,
   ConnectThisTo(browser, Events::WebBrowserPopup, OnWebBrowserPopup);
   ConnectThisTo(browser, Events::WebBrowserPointQuery, OnWebBrowserPointQuery);
   ConnectThisTo(browser, Events::WebBrowserUrlChanged, OnWebBrowserUrlChanged);
-  ConnectThisTo(
-      browser, Events::WebBrowserCursorChanged, OnWebBrowserCursorChanged);
-  ConnectThisTo(
-      browser, Events::WebBrowserTitleChanged, OnWebBrowserTitleChanged);
-  ConnectThisTo(
-      browser, Events::WebBrowserStatusChanged, OnWebBrowserStatusChanged);
-  ConnectThisTo(
-      browser, Events::WebBrowserConsoleMessage, OnWebBrowserConsoleMessage);
-  ConnectThisTo(
-      browser, Events::WebBrowserDownloadStarted, OnWebBrowserDownloadStarted);
+  ConnectThisTo(browser, Events::WebBrowserCursorChanged, OnWebBrowserCursorChanged);
+  ConnectThisTo(browser, Events::WebBrowserTitleChanged, OnWebBrowserTitleChanged);
+  ConnectThisTo(browser, Events::WebBrowserStatusChanged, OnWebBrowserStatusChanged);
+  ConnectThisTo(browser, Events::WebBrowserConsoleMessage, OnWebBrowserConsoleMessage);
+  ConnectThisTo(browser, Events::WebBrowserDownloadStarted, OnWebBrowserDownloadStarted);
 
   ConnectThisTo(mBrowserView, Events::FocusGained, OnBrowserViewFocusGained);
   ConnectThisTo(mBrowserView, Events::FocusLost, OnBrowserViewFocusLost);
@@ -202,8 +191,7 @@ void WebBrowserWidget::OnWebBrowserPointQuery(WebBrowserPointQueryEvent* event)
 {
   Vec2 browserClient = Math::ToVec2(event->mBrowserPixelPosition);
   Vec2 zeroClient = mBrowserView->ToScreen(browserClient);
-  IntVec2 desktopScreen = GetRootWidget()->GetOsWindow()->ClientToMonitor(
-      Math::ToIntVec2(zeroClient));
+  IntVec2 desktopScreen = GetRootWidget()->GetOsWindow()->ClientToMonitor(Math::ToIntVec2(zeroClient));
   event->mMonitorPixelPosition = desktopScreen;
 }
 
@@ -219,8 +207,7 @@ void WebBrowserWidget::OnForwardPressed(ObjectEvent* event)
 
 void WebBrowserWidget::OnReloadPressed(ObjectEvent* event)
 {
-  bool useCache = !(Keyboard::Instance->KeyIsDown(Keys::Shift) ||
-                    Keyboard::Instance->KeyIsDown(Keys::Control));
+  bool useCache = !(Keyboard::Instance->KeyIsDown(Keys::Shift) || Keyboard::Instance->KeyIsDown(Keys::Control));
   mBrowser->Reload(useCache);
 }
 
@@ -286,8 +273,7 @@ void WebBrowserWidget::OnWebBrowserConsoleMessage(WebBrowserConsoleEvent* event)
 void OnPackageDownloadCallback(BackgroundTask* task, Job* job)
 {
   DownloadTaskJob* downloadJob = (DownloadTaskJob*)job;
-  String location =
-      FilePath::Combine(GetTemporaryDirectory(), downloadJob->mName);
+  String location = FilePath::Combine(GetTemporaryDirectory(), downloadJob->mName);
   WriteStringRangeToFile(location, downloadJob->GetData());
 
   ContentImporter::OpenImportWindow(location);
@@ -296,17 +282,14 @@ void OnPackageDownloadCallback(BackgroundTask* task, Job* job)
 void OnGenericDownloadCallback(BackgroundTask* task, Job* job)
 {
   DownloadTaskJob* downloadJob = (DownloadTaskJob*)job;
-  String location =
-      FilePath::Combine(GetTemporaryDirectory(), downloadJob->mName);
+  String location = FilePath::Combine(GetTemporaryDirectory(), downloadJob->mName);
   WriteStringRangeToFile(location, downloadJob->GetData());
   Os::SystemOpenFile(location.c_str());
 }
 
-void WebBrowserWidget::OnWebBrowserDownloadStarted(
-    WebBrowserDownloadEvent* event)
+void WebBrowserWidget::OnWebBrowserDownloadStarted(WebBrowserDownloadEvent* event)
 {
-  BackgroundTask* task =
-      DownloadTaskJob::DownloadToBuffer(event->mUrl, event->mSuggestedFileName);
+  BackgroundTask* task = DownloadTaskJob::DownloadToBuffer(event->mUrl, event->mSuggestedFileName);
 
   String extension = FilePath::GetExtension(event->mSuggestedFileName);
 
@@ -368,45 +351,36 @@ void WebBrowserWidget::OnTextTyped(KeyboardTextEvent* event)
 
 void WebBrowserWidget::OnMouseMove(MouseEvent* event)
 {
-  IntVec2 localPosition =
-      Math::ToIntVec2(mBrowserView->ToLocal(event->Position));
+  IntVec2 localPosition = Math::ToIntVec2(mBrowserView->ToLocal(event->Position));
   mBrowser->SimulateMouseMove(localPosition, GetModifiers(event));
   event->Handled = true;
 }
 
 void WebBrowserWidget::OnMouseDown(MouseEvent* event)
 {
-  IntVec2 localPosition =
-      Math::ToIntVec2(mBrowserView->ToLocal(event->Position));
-  mBrowser->SimulateMouseClick(
-      localPosition, event->Button, true, GetModifiers(event));
+  IntVec2 localPosition = Math::ToIntVec2(mBrowserView->ToLocal(event->Position));
+  mBrowser->SimulateMouseClick(localPosition, event->Button, true, GetModifiers(event));
   event->Handled = true;
 }
 
 void WebBrowserWidget::OnMouseUp(MouseEvent* event)
 {
-  IntVec2 localPosition =
-      Math::ToIntVec2(mBrowserView->ToLocal(event->Position));
-  mBrowser->SimulateMouseClick(
-      localPosition, event->Button, false, GetModifiers(event));
+  IntVec2 localPosition = Math::ToIntVec2(mBrowserView->ToLocal(event->Position));
+  mBrowser->SimulateMouseClick(localPosition, event->Button, false, GetModifiers(event));
   event->Handled = true;
 }
 
 void WebBrowserWidget::OnMouseDoubleClick(MouseEvent* event)
 {
-  IntVec2 localPosition =
-      Math::ToIntVec2(mBrowserView->ToLocal(event->Position));
-  mBrowser->SimulateMouseDoubleClick(
-      localPosition, event->Button, GetModifiers(event));
+  IntVec2 localPosition = Math::ToIntVec2(mBrowserView->ToLocal(event->Position));
+  mBrowser->SimulateMouseDoubleClick(localPosition, event->Button, GetModifiers(event));
   event->Handled = true;
 }
 
 void WebBrowserWidget::OnMouseScroll(MouseEvent* event)
 {
-  IntVec2 localPosition =
-      Math::ToIntVec2(mBrowserView->ToLocal(event->Position));
-  mBrowser->SimulateMouseScroll(
-      localPosition, event->Scroll, GetModifiers(event));
+  IntVec2 localPosition = Math::ToIntVec2(mBrowserView->ToLocal(event->Position));
+  mBrowser->SimulateMouseScroll(localPosition, event->Scroll, GetModifiers(event));
   event->Handled = true;
 }
 

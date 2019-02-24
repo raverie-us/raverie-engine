@@ -13,9 +13,7 @@
 #else
 #  include <unistd.h>
 #  include <dirent.h>
-#  define ZeroAllPermissions                                                   \
-    (S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH |     \
-     S_IXOTH)
+#  define ZeroAllPermissions (S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IXOTH)
 #endif
 
 namespace Zero
@@ -29,8 +27,7 @@ bool cFileSystemCaseSensitive = false;
 static const String cCurrentDirectory(".");
 static const String cParentDirectory("..");
 
-FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback,
-                                             void* userData)
+FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback, void* userData)
 {
 #if defined(PLATFORM_EMSCRIPTEN)
   // Calling this will allow the outside product to populate the
@@ -44,9 +41,7 @@ FileSystemInitializer::~FileSystemInitializer()
 {
 }
 
-void AddVirtualFileSystemEntry(StringParam absolutePath,
-                               DataBlock* stealData,
-                               TimeType modifiedTime)
+void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, TimeType modifiedTime)
 {
   ErrorIf(!PathIsRooted(absolutePath),
           "The given path should have been an absolute/rooted path '%s'",
@@ -54,8 +49,7 @@ void AddVirtualFileSystemEntry(StringParam absolutePath,
 
   // Create our entries for our files based on name, data, and modified time
   // If the size is 0, then it's a directory
-  if (stealData == nullptr || stealData->Data == nullptr ||
-      stealData->Size == 0)
+  if (stealData == nullptr || stealData->Data == nullptr || stealData->Size == 0)
   {
     CreateDirectoryAndParents(absolutePath);
   }
@@ -82,9 +76,7 @@ void AddVirtualFileSystemEntry(StringParam absolutePath,
                (int)FileExists(absolutePath));
 
       size_t written = fwrite(stealData->Data, 1, stealData->Size, file);
-      ErrorIf(written != stealData->Size,
-              "Could not write all data to file '%s'",
-              absolutePath.c_str());
+      ErrorIf(written != stealData->Size, "Could not write all data to file '%s'", absolutePath.c_str());
 
       fclose(file);
       struct utimbuf times;
@@ -194,9 +186,7 @@ void CreateDirectory(StringParam dest)
   {
     // If the error is anything except already exists
     if (errno != EEXIST)
-      ZPrint("Failed to create directory '%s': %s\n",
-             dest.c_str(),
-             strerror(errno));
+      ZPrint("Failed to create directory '%s': %s\n", dest.c_str(), strerror(errno));
   }
 }
 
@@ -349,9 +339,8 @@ String GetTemporaryDirectory()
 String GetApplication()
 {
   // The first entry in the command line arguments should be our executable.
-  ReturnIf(gCommandLineArguments.Empty(),
-           "/Main.app",
-           "The command line arguments should not be empty, were they set?");
+  ReturnIf(
+      gCommandLineArguments.Empty(), "/Main.app", "The command line arguments should not be empty, were they set?");
   return gCommandLineArguments.Front();
 }
 

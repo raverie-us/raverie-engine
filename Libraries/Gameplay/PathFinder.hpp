@@ -30,16 +30,11 @@ public:
   class PathFinderNode : public PriorityNode<float>
   {
   public:
-    PathFinderNode(NodeKeyParam nodeKey) :
-        mKey(nodeKey),
-        mCameFrom(nullptr),
-        mCostSoFar(0)
+    PathFinderNode(NodeKeyParam nodeKey) : mKey(nodeKey), mCameFrom(nullptr), mCostSoFar(0)
     {
     }
 
-    PathFinderNode(NodeKeyParam nodeKey,
-                   PathFinderNode* cameFrom,
-                   float costSoFar) :
+    PathFinderNode(NodeKeyParam nodeKey, PathFinderNode* cameFrom, float costSoFar) :
         mKey(nodeKey),
         mCameFrom(cameFrom),
         mCostSoFar(costSoFar)
@@ -65,8 +60,7 @@ public:
     if (!self->QueryIsValid(start) || !self->QueryIsValid(goal))
       return;
 
-    Memory::Pool pool(
-        "PathFinderNodePool", nullptr, sizeof(PathFinderNode), 128, true);
+    Memory::Pool pool("PathFinderNodePool", nullptr, sizeof(PathFinderNode), 128, true);
 
     PriorityQueue<PathFinderNode> frontier(100);
     HashMap<NodeKey, PathFinderNode*> keyToNode;
@@ -98,25 +92,21 @@ public:
       }
 
       typedef Pair<NodeKey, float> NodeCostPair;
-      forRange(const NodeCostPair& next,
-               self->QueryNeighbors(currentNode->mKey))
+      forRange (const NodeCostPair& next, self->QueryNeighbors(currentNode->mKey))
       {
         float newCost = currentNode->mCostSoFar + next.second;
         PathFinderNode*& nextNode = keyToNode[next.first];
         if (!nextNode)
         {
-          nextNode = pool.AllocateType<PathFinderNode>(
-              next.first, currentNode, newCost);
-          float priority =
-              newCost + self->QueryHeuristic(next.first, goal) * cTieBreaker;
+          nextNode = pool.AllocateType<PathFinderNode>(next.first, currentNode, newCost);
+          float priority = newCost + self->QueryHeuristic(next.first, goal) * cTieBreaker;
           frontier.Enqueue(nextNode, priority);
         }
         else if (newCost < nextNode->mCostSoFar)
         {
           nextNode->mCameFrom = currentNode;
           nextNode->mCostSoFar = newCost;
-          float priority =
-              newCost + self->QueryHeuristic(next.first, goal) * cTieBreaker;
+          float priority = newCost + self->QueryHeuristic(next.first, goal) * cTieBreaker;
           if (frontier.Contains(nextNode))
             frontier.UpdatePriority(nextNode, priority);
           else
@@ -152,22 +142,18 @@ public:
 
   // Helper functions that the derived class implements that will path find
   // between world positions. If we fail to find a path the array will be empty.
-  virtual void FindPathGeneric(VariantParam start,
-                               VariantParam goal,
-                               Array<Variant>& pathOut) = 0;
-  virtual HandleOf<PathFinderRequest>
-  FindPathGenericThreaded(VariantParam start, VariantParam goal) = 0;
+  virtual void FindPathGeneric(VariantParam start, VariantParam goal, Array<Variant>& pathOut) = 0;
+  virtual HandleOf<PathFinderRequest> FindPathGenericThreaded(VariantParam start, VariantParam goal) = 0;
 
   // A custom event name used to differentiate the derived
   // class event (e.g. PathFinderGridFinished or PathFinderNavMeshFinished).
   virtual StringParam GetCustomEventName() = 0;
 
   template <typename NodeKey, typename Algorithm>
-  HandleOf<ArrayClass<NodeKey>>
-  FindPathHelper(CopyOnWriteHandle<Algorithm>& algorithm,
-                 const NodeKey& start,
-                 const NodeKey& goal,
-                 size_t maxIterations)
+  HandleOf<ArrayClass<NodeKey>> FindPathHelper(CopyOnWriteHandle<Algorithm>& algorithm,
+                                               const NodeKey& start,
+                                               const NodeKey& goal,
+                                               size_t maxIterations)
   {
     HandleOf<ArrayClass<NodeKey>> array = ZilchAllocate(ArrayClass<NodeKey>);
     algorithm->FindNodePath(start, goal, array->NativeArray, maxIterations);
@@ -182,20 +168,17 @@ public:
                              size_t maxIterations)
   {
     Array<NodeKey> path;
-    algorithm->FindNodePath(start.GetOrDefault<NodeKey>(),
-                            goal.GetOrDefault<NodeKey>(),
-                            path,
-                            maxIterations);
+    algorithm->FindNodePath(start.GetOrDefault<NodeKey>(), goal.GetOrDefault<NodeKey>(), path, maxIterations);
 
-    forRange(const NodeKey& nodeKey, path) pathOut.PushBack(Variant(nodeKey));
+    forRange (const NodeKey& nodeKey, path)
+      pathOut.PushBack(Variant(nodeKey));
   }
 
   template <typename NodeKey, typename Algorithm>
-  HandleOf<PathFinderRequest>
-  FindPathThreadedHelper(CopyOnWriteHandle<Algorithm>& algorithm,
-                         const NodeKey& start,
-                         const NodeKey& goal,
-                         size_t maxIterations)
+  HandleOf<PathFinderRequest> FindPathThreadedHelper(CopyOnWriteHandle<Algorithm>& algorithm,
+                                                     const NodeKey& start,
+                                                     const NodeKey& goal,
+                                                     size_t maxIterations)
   {
     typedef PathFinderJob<NodeKey, Algorithm> PathFinderAlgorithmJob;
     PathFinderAlgorithmJob* job = new PathFinderAlgorithmJob();
@@ -214,31 +197,25 @@ public:
   }
 
   template <typename NodeKey, typename Algorithm>
-  HandleOf<PathFinderRequest>
-  GenericFindPathThreadedHelper(CopyOnWriteHandle<Algorithm>& algorithm,
-                                VariantParam start,
-                                VariantParam goal,
-                                size_t maxIterations)
+  HandleOf<PathFinderRequest> GenericFindPathThreadedHelper(CopyOnWriteHandle<Algorithm>& algorithm,
+                                                            VariantParam start,
+                                                            VariantParam goal,
+                                                            size_t maxIterations)
   {
     return FindPathThreadedHelper<NodeKey, Algorithm>(
-        algorithm,
-        start.GetOrDefault<NodeKey>(),
-        goal.GetOrDefault<NodeKey>(),
-        maxIterations);
+        algorithm, start.GetOrDefault<NodeKey>(), goal.GetOrDefault<NodeKey>(), maxIterations);
   }
 
   /// Finds a path between world positions (or returns an empty array if no path
   /// could be found).
-  HandleOf<ArrayClass<Vec3>> FindPath(Vec3Param worldStart,
-                                      Vec3Param worldGoal);
+  HandleOf<ArrayClass<Vec3>> FindPath(Vec3Param worldStart, Vec3Param worldGoal);
 
   /// Finds a path on another thread between the closest nodes to the given
   /// world positions. When the thread is completed, the events
   /// PathFinderGridCompleted or PathFinderGridFailed will be sent on both the
   /// returned PathFinderRequest and on the Cog that owns this component (on
   /// this.Owner).
-  HandleOf<PathFinderRequest> FindPathThreaded(Vec3Param worldStart,
-                                               Vec3Param worldGoal);
+  HandleOf<PathFinderRequest> FindPathThreaded(Vec3Param worldStart, Vec3Param worldGoal);
 
   /// The number of iterations we allow for the path finding algorithm before we
   /// terminate it. This prevents infinite loops when we have an unbounded
@@ -309,9 +286,7 @@ public:
 
   Variant GenericGetPathNode(size_t index) override
   {
-    ReturnIf(index >= mPath.Size(),
-             Variant(NodeKey()),
-             "Invalid index given to generic GetPathNode");
+    ReturnIf(index >= mPath.Size(), Variant(NodeKey()), "Invalid index given to generic GetPathNode");
     return Variant(mPath[index]);
   }
 
@@ -349,10 +324,7 @@ template <typename NodeKey, typename Algorithm>
 class PathFinderJob : public Job
 {
 public:
-  PathFinderJob() :
-      mMaxIterations((size_t)-1),
-      mCancel(false),
-      mMainThreadPathFinderDispatcher(nullptr)
+  PathFinderJob() : mMaxIterations((size_t)-1), mCancel(false), mMainThreadPathFinderDispatcher(nullptr)
   {
   }
 
@@ -365,8 +337,7 @@ public:
     toSend->mStart = mStart;
     toSend->mGoal = mGoal;
     toSend->mRequest = mRequest;
-    mAlgorithm->FindNodePath(
-        mStart, mGoal, toSend->mPath, mMaxIterations, &mCancel);
+    mAlgorithm->FindNodePath(mStart, mGoal, toSend->mPath, mMaxIterations, &mCancel);
 
     // We may have cancelled right as the path was finished
     if (mCancel)
@@ -374,10 +345,8 @@ public:
 
     toSend->mDuration = (float)timer.UpdateAndGetTime();
 
-    Z::gDispatch->DispatchOn(mMainThreadPathFinder,
-                             mMainThreadPathFinderDispatcher,
-                             Events::PathFinderFinishedGeneric,
-                             toSend);
+    Z::gDispatch->DispatchOn(
+        mMainThreadPathFinder, mMainThreadPathFinderDispatcher, Events::PathFinderFinishedGeneric, toSend);
   }
 
   int Cancel() override

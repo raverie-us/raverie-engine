@@ -111,10 +111,8 @@ HdrHeaderGrammar::HdrHeaderGrammar()
   start |= P("FirstComment", P(comment)) << *statement << dimensions;
   statement |= P(comment) | variable;
   variable |= P("Name", P(token)) << P("Value", P(assignment));
-  dimensions |= P("YSign", P(sign))
-                << P("YName", P(token)) << P("YDim", P(token))
-                << P("XSign", P(sign)) << P("XName", P(token))
-                << P("XDim", P(token));
+  dimensions |= P("YSign", P(sign)) << P("YName", P(token)) << P("YDim", P(token)) << P("XSign", P(sign))
+                                    << P("XName", P(token)) << P("XDim", P(token));
 
   mTokenStart = &tokenStart;
   mStartRule = &start;
@@ -123,8 +121,7 @@ HdrHeaderGrammar::HdrHeaderGrammar()
 class HdrHeaderParser
 {
 public:
-  static bool
-  Parse(Status& status, StringParam header, uint& width, uint& height);
+  static bool Parse(Status& status, StringParam header, uint& width, uint& height);
 
   // Only grabbing values on EndRule
   void StartRule(GrammarRule<Token>* rule)
@@ -149,16 +146,12 @@ public:
   String mHeight;
 };
 
-bool HdrHeaderParser::Parse(Status& status,
-                            StringParam header,
-                            uint& width,
-                            uint& height)
+bool HdrHeaderParser::Parse(Status& status, StringParam header, uint& width, uint& height)
 {
   HdrHeaderGrammar& grammar = HdrHeaderGrammar::GetInstance();
 
   TokenStream<> tokenStream;
-  tokenStream.mRange =
-      TokenRange<>(grammar.mTokenGrammar, *grammar.mTokenStart, header);
+  tokenStream.mRange = TokenRange<>(grammar.mTokenGrammar, *grammar.mTokenStart, header);
 
   HdrHeaderParser hdrHeaderParser;
 
@@ -171,8 +164,7 @@ bool HdrHeaderParser::Parse(Status& status,
 
   if (hdrHeaderParser.mFileIdentifier != "#?RADIANCE")
   {
-    status.SetFailed(
-        "File is not an HDR image, file did not start with '#?RADIANCE'");
+    status.SetFailed("File is not an HDR image, file did not start with '#?RADIANCE'");
     return false;
   }
 
@@ -284,14 +276,11 @@ void ParseHdrHeader(Status& status, Stream* stream, uint& width, uint& height)
 }
 
 // Used to make sure no data reads go out of bounds
-#define ValidateRead(data, endData, count)                                     \
-  if (data + (count) > endData)                                                \
+#define ValidateRead(data, endData, count)                                                                             \
+  if (data + (count) > endData)                                                                                        \
     return false;
 
-bool DecodeHdrScanline(byte*& imageData,
-                       const byte* endData,
-                       uint imageWidth,
-                       byte* scanline)
+bool DecodeHdrScanline(byte*& imageData, const byte* endData, uint imageWidth, byte* scanline)
 {
   uint index = 0;
   ValidateRead(imageData, endData, index + 4);
@@ -358,8 +347,7 @@ bool IsHdr(Stream* stream)
   byte* buffer = (byte*)alloca(signatureSize);
   size_t amountRead = stream->Read(buffer, signatureSize);
   stream->Seek(0);
-  return amountRead == signatureSize &&
-         memcmp(buffer, cHdrSignature.Data(), signatureSize) == 0;
+  return amountRead == signatureSize && memcmp(buffer, cHdrSignature.Data(), signatureSize) == 0;
 }
 
 bool ReadHdrInfo(Stream* stream, ImageInfo& info)
@@ -415,8 +403,7 @@ void LoadHdr(Status& status,
   const byte* endData = imageData + size;
 
   // Allocate full size of final image
-  float* outputImage =
-      (float*)zAllocate(sizeof(float) * imageWidth * imageHeight * 3);
+  float* outputImage = (float*)zAllocate(sizeof(float) * imageWidth * imageHeight * 3);
 
   if (!outputImage)
   {
@@ -460,12 +447,7 @@ void LoadHdr(Status& status,
   *format = TextureFormat::RGB32f;
 }
 
-void SaveHdr(Status& status,
-             Stream* stream,
-             const byte* image,
-             uint width,
-             uint height,
-             TextureFormat::Enum format)
+void SaveHdr(Status& status, Stream* stream, const byte* image, uint width, uint height, TextureFormat::Enum format)
 {
   if (!IsHdrSaveFormat(format))
   {

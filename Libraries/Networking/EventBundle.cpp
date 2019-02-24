@@ -16,8 +16,7 @@ ZilchDefineType(EventBundleMetaComposition, builder, type)
 // MetaComposition Interface
 //
 
-EventBundleMetaComposition::EventBundleMetaComposition() :
-    MetaComposition(ZilchTypeId(Event))
+EventBundleMetaComposition::EventBundleMetaComposition() : MetaComposition(ZilchTypeId(Event))
 {
   mSupportsComponentAddition = false;
 }
@@ -32,8 +31,7 @@ uint EventBundleMetaComposition::GetComponentCount(HandleParam instance)
   return eventBundle->GetEventCount();
 }
 
-Handle EventBundleMetaComposition::GetComponentAt(HandleParam instance,
-                                                  uint index)
+Handle EventBundleMetaComposition::GetComponentAt(HandleParam instance, uint index)
 {
   // Get event bundle instance
   EventBundle* eventBundle = instance.Get<EventBundle*>();
@@ -42,8 +40,7 @@ Handle EventBundleMetaComposition::GetComponentAt(HandleParam instance,
   return Handle(eventBundle->GetEventByIndex(index));
 }
 
-Handle EventBundleMetaComposition::GetComponent(HandleParam instance,
-                                                BoundType* boundType)
+Handle EventBundleMetaComposition::GetComponent(HandleParam instance, BoundType* boundType)
 {
   // *** Note: At the moment this is our only MetaComposition function actually
   // being used ***
@@ -55,8 +52,7 @@ Handle EventBundleMetaComposition::GetComponent(HandleParam instance,
   return Handle(eventBundle->GetEventByType(boundType));
 }
 
-uint EventBundleMetaComposition::GetComponentIndex(HandleParam instance,
-                                                   BoundType* boundType)
+uint EventBundleMetaComposition::GetComponentIndex(HandleParam instance, BoundType* boundType)
 {
   // Get event bundle instance
   EventBundle* eventBundle = instance.Get<EventBundle*>();
@@ -65,12 +61,11 @@ uint EventBundleMetaComposition::GetComponentIndex(HandleParam instance,
   return eventBundle->GetEventIndexByType(boundType);
 }
 
-void EventBundleMetaComposition::AddComponent(
-    HandleParam instance,
-    HandleParam subObject,
-    int index,
-    bool ignoreDependencies,
-    MetaCreationContext* creationContext)
+void EventBundleMetaComposition::AddComponent(HandleParam instance,
+                                              HandleParam subObject,
+                                              int index,
+                                              bool ignoreDependencies,
+                                              MetaCreationContext* creationContext)
 {
   // Get event bundle instance
   EventBundle* eventBundle = instance.Get<EventBundle*>();
@@ -82,9 +77,7 @@ void EventBundleMetaComposition::AddComponent(
   eventBundle->AddEvent(event);
 }
 
-void EventBundleMetaComposition::RemoveComponent(HandleParam instance,
-                                                 HandleParam subObject,
-                                                 bool ignoreDependencies)
+void EventBundleMetaComposition::RemoveComponent(HandleParam instance, HandleParam subObject, bool ignoreDependencies)
 {
   BoundType* typeToRemove = subObject.StoredType;
 
@@ -97,9 +90,7 @@ void EventBundleMetaComposition::RemoveComponent(HandleParam instance,
 
   // Remove event by type ID from event bundle
   bool success = eventBundle->RemoveEventByType(typeToRemove);
-  ErrorIf(
-      success == false,
-      "Unable to remove event by type ID from event bundle - Event not found");
+  ErrorIf(success == false, "Unable to remove event by type ID from event bundle - Event not found");
 }
 
 //                                 EventBundle //
@@ -199,8 +190,7 @@ EventBundle::EventBundle(const EventBundle& rhs) :
     const_cast<EventBundle&>(rhs).SerializeEventsToBitStream();
 
   // Copy bitstream
-  static_cast<BitStream&>(mBitStream) =
-      static_cast<const BitStream&>(rhs.mBitStream);
+  static_cast<BitStream&>(mBitStream) = static_cast<const BitStream&>(rhs.mBitStream);
   mNeedToDeserialize = true; // (Our bitstream has been modified)
 }
 
@@ -223,8 +213,7 @@ EventBundle& EventBundle::operator=(const EventBundle& rhs)
     const_cast<EventBundle&>(rhs).SerializeEventsToBitStream();
 
   // Copy bitstream
-  static_cast<BitStream&>(mBitStream) =
-      static_cast<const BitStream&>(rhs.mBitStream);
+  static_cast<BitStream&>(mBitStream) = static_cast<const BitStream&>(rhs.mBitStream);
   mNeedToDeserialize = true; // (Our bitstream has been modified)
 
   return *this;
@@ -315,8 +304,7 @@ Event* EventBundle::GetEventByTypeName(StringParam eventTypeName)
 
   // Find event by type name
   for (uint i = 0; i < mEvents.Size(); ++i)
-    if (ZilchVirtualTypeId(static_cast<Event*>(mEvents[i]))->Name ==
-        eventTypeName) // Found?
+    if (ZilchVirtualTypeId(static_cast<Event*>(mEvents[i]))->Name == eventTypeName) // Found?
     {
       // Return event by index
       return GetEventByIndex(i);
@@ -334,8 +322,7 @@ Event* EventBundle::GetEventByType(BoundType* eventType)
 
   // Find event by type ID
   for (uint i = 0; i < mEvents.Size(); ++i)
-    if (ZilchVirtualTypeId(static_cast<Event*>(mEvents[i])) ==
-        eventType) // Found?
+    if (ZilchVirtualTypeId(static_cast<Event*>(mEvents[i])) == eventType) // Found?
     {
       // Return event by index
       return GetEventByIndex(i);
@@ -420,8 +407,7 @@ bool EventBundle::RemoveEventByTypeName(StringParam eventTypeName)
 
   // Find event by type name
   for (uint i = 0; i < mEvents.Size(); ++i)
-    if (ZilchVirtualTypeId(static_cast<Event*>(mEvents[i]))->Name ==
-        eventTypeName) // Found?
+    if (ZilchVirtualTypeId(static_cast<Event*>(mEvents[i]))->Name == eventTypeName) // Found?
     {
       // Remove event by index
       return RemoveEventByIndex(i);
@@ -439,8 +425,7 @@ bool EventBundle::RemoveEventByType(BoundType* eventType)
 
   // Find event by type ID
   for (uint i = 0; i < mEvents.Size(); ++i)
-    if (ZilchVirtualTypeId(static_cast<Event*>(mEvents[i])) ==
-        eventType) // Found?
+    if (ZilchVirtualTypeId(static_cast<Event*>(mEvents[i])) == eventType) // Found?
     {
       // Remove event by index
       return RemoveEventByIndex(i);
@@ -502,7 +487,8 @@ bool EventBundle::SerializeEventsToBitStream()
   mBitStream.Clear(false);
 
   // Write all events to bitstream
-  forRange(Event * event, mEvents.All()) mBitStream.WriteEvent(event);
+  forRange (Event* event, mEvents.All())
+    mBitStream.WriteEvent(event);
 
   // Success
   return true;
@@ -513,9 +499,8 @@ bool EventBundle::DeserializeBitStreamToEvents()
   // Gamesession not set?
   if (!mGameSession)
   {
-    DoNotifyException(
-        "Invalid EventBundle Operation",
-        "EventBundle needs a GameSession in order to deserialize Events");
+    DoNotifyException("Invalid EventBundle Operation",
+                      "EventBundle needs a GameSession in order to deserialize Events");
     return false;
   }
 
@@ -535,9 +520,7 @@ bool EventBundle::DeserializeBitStreamToEvents()
     HandleOf<Event> event = mBitStream.ReadEvent(mGameSession);
     if (!event) // Unable?
     {
-      DoNotifyError(
-          "Failed EventBundle Operation",
-          "Error deserializing an Event contained in the EventBundle");
+      DoNotifyError("Failed EventBundle Operation", "Error deserializing an Event contained in the EventBundle");
       return false;
     }
 

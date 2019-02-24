@@ -54,9 +54,7 @@ public:
   void ClearModifications(HandleParam object, bool retainOverrideProperties);
   /// The 'cachedData' is strictly for performance to save allocations when this
   /// function is called multiple times.
-  void ClearModifications(bool retainOverrideProperties,
-                          HandleParam object,
-                          ModifiedProperties& cachedMemory);
+  void ClearModifications(bool retainOverrideProperties, HandleParam object, ModifiedProperties& cachedMemory);
 
   /// Property modifications.
   bool IsPropertyModified(PropertyPathParam property);
@@ -92,15 +90,11 @@ public:
 class LocalModifications : public ExplicitSingleton<LocalModifications, Object>
 {
 public:
-  ObjectState* GetObjectState(HandleParam object,
-                              bool createNew = false,
-                              bool validateStorage = true);
+  ObjectState* GetObjectState(HandleParam object, bool createNew = false, bool validateStorage = true);
 
   /// Is the object modified in any way? Checks IsSelfModified and
   /// IsChildrenModified.
-  bool IsModified(HandleParam object,
-                  bool checkHierarchy,
-                  bool ignoreOverrideProperties);
+  bool IsModified(HandleParam object, bool checkHierarchy, bool ignoreOverrideProperties);
 
   /// Finds the closest parent (or itself) that inherits from other data. This
   /// will not recurse past parents that inherit from data. See the comment in
@@ -110,9 +104,7 @@ public:
   Handle GetClosestInheritedObject(HandleParam object, bool checkParents);
 
   /// Clear all modifications on the given object.
-  void ClearModifications(HandleParam object,
-                          bool clearChildren,
-                          bool retainOverrideProperties);
+  void ClearModifications(HandleParam object, bool clearChildren, bool retainOverrideProperties);
   /// The 'cachedData' is strictly for performance to save allocations as it
   /// recurses.
   void ClearModifications(HandleParam object,
@@ -122,17 +114,13 @@ public:
 
   /// Property modifications.
   bool IsPropertyModified(HandleParam object, PropertyPathParam property);
-  void SetPropertyModified(HandleParam object,
-                           PropertyPathParam property,
-                           bool state);
+  void SetPropertyModified(HandleParam object, PropertyPathParam property, bool state);
 
   /// Child modifications.
   void ChildAdded(HandleParam object, ObjectState::ChildIdParam childId);
   void ChildRemoved(HandleParam object, ObjectState::ChildIdParam childId);
-  bool IsChildLocallyAdded(HandleParam object,
-                           ObjectState::ChildIdParam childId);
-  bool IsChildLocallyRemoved(HandleParam object,
-                             ObjectState::ChildIdParam childId);
+  bool IsChildLocallyAdded(HandleParam object, ObjectState::ChildIdParam childId);
+  bool IsChildLocallyRemoved(HandleParam object, ObjectState::ChildIdParam childId);
   bool IsObjectLocallyAdded(HandleParam object, bool recursivelyCheckParents);
   bool IsChildOrderModified(HandleParam object);
   void SetChildOrderModified(HandleParam object, bool state);
@@ -146,10 +134,8 @@ public:
   void CombineObjectState(HandleParam object, ObjectState* objectState);
 
 private:
-  bool IsModified(HandleParam object,
-                  HandleParam propertyPathParent,
-                  bool checkHierarchy,
-                  bool ignoreOverrideProperties);
+  bool
+  IsModified(HandleParam object, HandleParam propertyPathParent, bool checkHierarchy, bool ignoreOverrideProperties);
   HashMap<Handle, ObjectState*> mObjectStates;
 };
 
@@ -178,15 +164,10 @@ public:
   /// Resources.
   virtual bool ShouldStoreLocalModifications(HandleParam object);
   virtual void Revert(HandleParam object);
-  virtual bool CanPropertyBeReverted(HandleParam object,
-                                     PropertyPathParam propertyPath);
-  virtual void RevertProperty(HandleParam object,
-                              PropertyPathParam propertyPath);
-  virtual void RestoreRemovedChild(HandleParam parent,
-                                   ObjectState::ChildId childId);
-  virtual void SetPropertyModified(HandleParam object,
-                                   PropertyPathParam propertyPath,
-                                   bool state);
+  virtual bool CanPropertyBeReverted(HandleParam object, PropertyPathParam propertyPath);
+  virtual void RevertProperty(HandleParam object, PropertyPathParam propertyPath);
+  virtual void RestoreRemovedChild(HandleParam parent, ObjectState::ChildId childId);
+  virtual void SetPropertyModified(HandleParam object, PropertyPathParam propertyPath, bool state);
 
   /// When a modification of an object is being reverted, the object has to be
   /// rebuilt to properly get the old value. This function should basically
@@ -209,8 +190,7 @@ public:
   ZilchDeclareType(MetaDataInheritanceRoot, TypeCopyMode::ReferenceType);
 
   /// The id this object inherits from.
-  virtual String GetInheritId(HandleParam object,
-                              InheritIdContext::Enum context) = 0;
+  virtual String GetInheritId(HandleParam object, InheritIdContext::Enum context) = 0;
   virtual void SetInheritId(HandleParam object, StringParam inheritId) = 0;
 };
 

@@ -202,8 +202,7 @@ EM_JS(void, IFrameExecute, (int32_t id, const char* script), {
     return console.error('No iframe found with id ' + id);
   var scriptStr = UTF8ToString(script);
 
-  (function(document, location) { eval(scriptStr); })(iframe.contentWindow,
-                                                      iframe.contentDocument);
+  (function(document, location) { eval(scriptStr); })(iframe.contentWindow, iframe.contentDocument);
 });
 
 String ToCssRgba(Vec4Param color)
@@ -234,11 +233,9 @@ Browser::Browser(const BrowserSetup& setup) :
 
   IFrameCreate((int32_t)mHandle);
   IFrameSetSize((int32_t)mHandle, mSize.x, mSize.y);
-  IFrameSetClientPosition(
-      (int32_t)mHandle, mClientPosition.x, mClientPosition.y);
+  IFrameSetClientPosition((int32_t)mHandle, mClientPosition.x, mClientPosition.y);
   IFrameSetUrl((int32_t)mHandle, mLastSetUrl.c_str());
-  IFrameSetBackgroundColor((int32_t)mHandle,
-                           ToCssRgba(mBackgroundColor).c_str());
+  IFrameSetBackgroundColor((int32_t)mHandle, ToCssRgba(mBackgroundColor).c_str());
   IFrameSetTransparent((int32_t)mHandle, (int32_t)mTransparent);
 }
 
@@ -426,9 +423,7 @@ String Browser::GetUrl()
   return mLastSetUrl;
 }
 
-void Browser::ExecuteScriptFromLocation(StringParam script,
-                                        StringParam url,
-                                        int line)
+void Browser::ExecuteScriptFromLocation(StringParam script, StringParam url, int line)
 {
   IFrameExecute((int32_t)mHandle, script.c_str());
 }
@@ -441,8 +436,7 @@ void Browser::SimulateTextTyped(int character, BrowserModifiers::Enum modifiers)
 {
 }
 
-void Browser::SimulateMouseMove(Math::IntVec2Param localPosition,
-                                BrowserModifiers::Enum modifiers)
+void Browser::SimulateMouseMove(Math::IntVec2Param localPosition, BrowserModifiers::Enum modifiers)
 {
 }
 

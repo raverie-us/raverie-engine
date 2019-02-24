@@ -20,8 +20,7 @@ int EmitParticles(ParticleSystem* main,
     Vec3 newPosition = GetTranslationFrom(transform);
     Vec3 emitterVelocity = newPosition - emitter->mLastFramePosition;
 
-    particlesEmitted = emitter->EmitParticles(
-        particleList, dt, transform, emitterVelocity, timeAlive);
+    particlesEmitted = emitter->EmitParticles(particleList, dt, transform, emitterVelocity, timeAlive);
     emitter->mLastFramePosition = newPosition;
   }
   else
@@ -29,19 +28,15 @@ int EmitParticles(ParticleSystem* main,
     Vec3 newPosition = GetTranslationFrom(parentTransform);
     Vec3 emitterVelocity = newPosition - emitter->mLastFramePosition;
 
-    particlesEmitted = emitter->EmitParticles(
-        particleList, dt, parentTransform, emitterVelocity, timeAlive);
+    particlesEmitted = emitter->EmitParticles(particleList, dt, parentTransform, emitterVelocity, timeAlive);
     emitter->mLastFramePosition = newPosition;
   }
 
   return particlesEmitted;
 }
 
-void RunAnimator(ParticleSystem* main,
-                 ParticleAnimator* animator,
-                 ParticleList* particleList,
-                 float dt,
-                 Mat4Ref parentTransform)
+void RunAnimator(
+    ParticleSystem* main, ParticleAnimator* animator, ParticleList* particleList, float dt, Mat4Ref parentTransform)
 {
   // Could not find anywhere that ParticleAnimator::mTransform was being
   // initialized, so I removed it
@@ -123,9 +118,7 @@ void ParticleSystem::Initialize(CogInitializer& initializer)
   if (Z::gRuntimeEditor)
   {
     Z::gRuntimeEditor->Visualize(this, "SpriteParticleSystem");
-    ConnectThisTo(Z::gRuntimeEditor->GetActiveSelection(),
-                  Events::SelectionFinal,
-                  OnSelectionFinal);
+    ConnectThisTo(Z::gRuntimeEditor->GetActiveSelection(), Events::SelectionFinal, OnSelectionFinal);
   }
 
   if (mPreviewInEditor && GetSpace()->IsEditorMode())
@@ -306,10 +299,10 @@ void ParticleSystem::Clear()
   mParticleList.ClearDestroyed();
   mParticleList.FreeParticles();
 
-  forRange(ParticleEmitter & emitter, mEmitters.All()) emitter.ResetCount();
+  forRange (ParticleEmitter& emitter, mEmitters.All())
+    emitter.ResetCount();
 
-  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty();
-       r.PopFront())
+  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty(); r.PopFront())
     r.Front().Clear();
 }
 
@@ -344,16 +337,14 @@ uint ParticleSystem::BaseUpdate(float dt)
   int emitCount = 0;
   Particle* oldFront = mParticleList.Particles;
   for (EmitterList::range r = mEmitters.All(); !r.Empty(); r.PopFront())
-    emitCount += EmitParticles(
-        this, &r.Front(), &mParticleList, dt, worldTransform, mTimeAlive);
+    emitCount += EmitParticles(this, &r.Front(), &mParticleList, dt, worldTransform, mTimeAlive);
 
   // Send out an event if particles were spawned
   if (emitCount > 0)
   {
     ParticleEvent eventToSend;
     eventToSend.mNewParticleCount = (uint)emitCount;
-    eventToSend.mNewParticles =
-        ParticleList::range(mParticleList.Particles, oldFront);
+    eventToSend.mNewParticles = ParticleList::range(mParticleList.Particles, oldFront);
     GetOwner()->DispatchEvent(Events::ParticlesSpawned, &eventToSend);
   }
 
@@ -361,16 +352,13 @@ uint ParticleSystem::BaseUpdate(float dt)
   for (AnimatorList::range r = mAnimators.All(); !r.Empty(); r.PopFront())
     RunAnimator(this, &r.Front(), &mParticleList, dt, worldTransform);
 
-  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty();
-       r.PopFront())
+  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty(); r.PopFront())
     r.Front().ChildUpdate(dt, &mParticleList, emitCount);
 
   return emitCount;
 }
 
-void ParticleSystem::ChildUpdate(float dt,
-                                 ParticleList* parentList,
-                                 uint parentEmitCount)
+void ParticleSystem::ChildUpdate(float dt, ParticleList* parentList, uint parentEmitCount)
 {
   uint emitCount = 0;
   Mat4 worldTransform = mTransform->GetWorldMatrix();
@@ -382,11 +370,7 @@ void ParticleSystem::ChildUpdate(float dt,
     SetTranslationOn(&worldTransform, particle->Position);
 
     for (EmitterList::range r = mEmitters.All(); !r.Empty(); r.PopFront())
-      emitCount += r.Front().EmitParticles(&mParticleList,
-                                           dt,
-                                           worldTransform,
-                                           particle->Velocity,
-                                           particle->Time);
+      emitCount += r.Front().EmitParticles(&mParticleList, dt, worldTransform, particle->Velocity, particle->Time);
 
     particle = particle->Next;
   }
@@ -394,8 +378,7 @@ void ParticleSystem::ChildUpdate(float dt,
   for (AnimatorList::range r = mAnimators.All(); !r.Empty(); r.PopFront())
     RunAnimator(this, &r.Front(), &mParticleList, dt, worldTransform);
 
-  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty();
-       r.PopFront())
+  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty(); r.PopFront())
     r.Front().ChildUpdate(dt, &mParticleList, emitCount);
 
   mParticleList.ClearDestroyed();
@@ -439,8 +422,7 @@ void ParticleSystem::UpdateLifetimes(float dt)
     }
   }
 
-  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty();
-       r.PopFront())
+  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty(); r.PopFront())
     r.Front().UpdateLifetimes(dt);
 }
 

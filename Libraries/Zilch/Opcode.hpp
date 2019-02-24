@@ -119,9 +119,7 @@ public:
   explicit Operand(OperandIndex local);
 
   // Construct from a primary index, secondary index, and an access type
-  Operand(OperandIndex handleConstantLocal,
-          size_t field,
-          OperandType::Enum type);
+  Operand(OperandIndex handleConstantLocal, size_t field, OperandType::Enum type);
 
   // What type of operand are we trying to access?
   OperandType::Enum Type;
@@ -405,10 +403,7 @@ class ZeroShared DebugOperand
 {
 public:
   DebugOperand();
-  DebugOperand(size_t offset,
-               DebugPrimitive::Enum primitive,
-               bool isLocal,
-               StringParam name);
+  DebugOperand(size_t offset, DebugPrimitive::Enum primitive, bool isLocal, StringParam name);
   size_t OperandOffset;
   DebugPrimitive::Enum Primitive;
   bool IsLocalOnly;

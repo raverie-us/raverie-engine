@@ -30,10 +30,6 @@ public:
 LayoutProxy* CreateLayoutProxy(Widget* widget);
 
 /// Proxies and animates the given widget in.
-LayoutProxy* ProxyAndAnimateIn(Widget* widget,
-                               Vec3Param startPos,
-                               float translateTime,
-                               float fadeInTime,
-                               float delay);
+LayoutProxy* ProxyAndAnimateIn(Widget* widget, Vec3Param startPos, float translateTime, float fadeInTime, float delay);
 
 } // namespace Zero

@@ -115,8 +115,7 @@ public:
 
   void SimulateKey(int key, bool down, BrowserModifiers::Enum modifiers);
   void SimulateTextTyped(int character, BrowserModifiers::Enum modifiers);
-  void SimulateMouseMove(Math::IntVec2Param localPosition,
-                         BrowserModifiers::Enum modifiers);
+  void SimulateMouseMove(Math::IntVec2Param localPosition, BrowserModifiers::Enum modifiers);
   void SimulateMouseClick(Math::IntVec2Param localPosition,
                           MouseButtons::Enum button,
                           bool down,
@@ -124,9 +123,7 @@ public:
   void SimulateMouseDoubleClick(Math::IntVec2Param localPosition,
                                 MouseButtons::Enum button,
                                 BrowserModifiers::Enum modifiers);
-  void SimulateMouseScroll(Math::IntVec2Param localPosition,
-                           Math::Vec2Param delta,
-                           BrowserModifiers::Enum modifiers);
+  void SimulateMouseScroll(Math::IntVec2Param localPosition, Math::Vec2Param delta, BrowserModifiers::Enum modifiers);
 
   // This must be called before any browsers are created
   static void PlatformCreate();
@@ -147,21 +144,13 @@ public:
   void (*mOnPointQuery)(Math::IntVec2Param browserPixelPosition,
                         Math::IntVec2* monitorPixelPositionOut,
                         Browser* browser);
-  void (*mOnConsoleMessage)(StringParam message,
-                            StringParam source,
-                            int line,
-                            bool* handledOut,
-                            Browser* browser);
+  void (*mOnConsoleMessage)(StringParam message, StringParam source, int line, bool* handledOut, Browser* browser);
   void (*mOnStatusChanged)(StringParam text, Browser* browser);
   void (*mOnTitleChanged)(StringParam text, Browser* browser);
   void (*mOnUrlChanged)(StringParam url, bool* handledOut, Browser* browser);
   void (*mOnCursorChanged)(Cursor::Enum cursor, Browser* browser);
-  void (*mOnDownloadStarted)(BrowserDownload& download,
-                             bool* cancelOut,
-                             Browser* browser);
-  void (*mOnDownloadUpdated)(const BrowserDownload& download,
-                             bool* cancelOut,
-                             Browser* browser);
+  void (*mOnDownloadStarted)(BrowserDownload& download, bool* cancelOut, Browser* browser);
+  void (*mOnDownloadUpdated)(const BrowserDownload& download, bool* cancelOut, Browser* browser);
 
   void* mUserData;
 

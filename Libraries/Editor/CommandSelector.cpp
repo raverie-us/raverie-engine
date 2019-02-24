@@ -8,8 +8,7 @@ ZilchDefineType(GeneralSearchView, builder, type)
 {
 }
 
-GeneralSearchView::GeneralSearchView(Composite* parent, Widget* returnFocus) :
-    Composite(parent)
+GeneralSearchView::GeneralSearchView(Composite* parent, Widget* returnFocus) : Composite(parent)
 {
   mReturnFocus = returnFocus;
   this->SetLayout(CreateStackLayout());
@@ -18,8 +17,7 @@ GeneralSearchView::GeneralSearchView(Composite* parent, Widget* returnFocus) :
   commandCaptureEvent.ActiveSet = CommandManager::GetInstance();
 
   if (returnFocus)
-    returnFocus->DispatchBubble(Events::CommandCaptureContext,
-                                &commandCaptureEvent);
+    returnFocus->DispatchBubble(Events::CommandCaptureContext, &commandCaptureEvent);
 
   mSearchView = new SearchView(this);
   mSearchView->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
@@ -79,16 +77,14 @@ void GeneralSearchView::OnCancel(SearchViewEvent* event)
 
 // FloatingSearchView
 
-FloatingSearchView::FloatingSearchView(Widget* popUp) :
-    PopUp(popUp, PopUpCloseMode::MouseDistance)
+FloatingSearchView::FloatingSearchView(Widget* popUp) : PopUp(popUp, PopUpCloseMode::MouseDistance)
 {
   mView = new SearchView(this);
 }
 
 void FloatingSearchView::UpdateTransform()
 {
-  LayoutResult r =
-      RemoveThickness(Thickness(Pixels(1, 1, 1, 1)), this->GetSize());
+  LayoutResult r = RemoveThickness(Thickness(Pixels(1, 1, 1, 1)), this->GetSize());
   mView->SetTranslation(r.Translation);
   mView->SetSize(r.Size);
   PopUp::UpdateTransform();

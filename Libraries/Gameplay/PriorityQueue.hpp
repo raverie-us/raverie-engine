@@ -123,9 +123,7 @@ public:
     size_t originalSize = mNodes.Size();
     mNodes.Resize(maxNodes + 1);
 
-    memset(mNodes.Data() + originalSize,
-           0,
-           (maxNodes - originalSize + 1) * sizeof(Node*));
+    memset(mNodes.Data() + originalSize, 0, (maxNodes - originalSize + 1) * sizeof(Node*));
   }
 
   Node* Front()
@@ -137,8 +135,7 @@ public:
   void UpdatePriority(Node* node, float priority)
   {
     ErrorIf(node == nullptr, "Node is null");
-    ErrorIf(!Contains(node),
-            "Cannot call UpdatePriority() on a node which is not enqueued");
+    ErrorIf(!Contains(node), "Cannot call UpdatePriority() on a node which is not enqueued");
 
     node->mPriority = priority;
     OnNodeUpdated(node);
@@ -150,8 +147,7 @@ public:
   void Remove(Node* node)
   {
     ErrorIf(node == nullptr, "Node is null");
-    ErrorIf(!Contains(node),
-            "Cannot call Remove() on a node which is not enqueued");
+    ErrorIf(!Contains(node), "Cannot call Remove() on a node which is not enqueued");
 
     // If the node is already the last node, we can remove it immediately
     if (node->mQueueIndex == mNodeCount)
@@ -382,14 +378,12 @@ private:
       if (mNodes[i] != nullptr)
       {
         size_t childLeftIndex = 2 * i;
-        if (childLeftIndex < mNodes.Size() &&
-            mNodes[childLeftIndex] != nullptr &&
+        if (childLeftIndex < mNodes.Size() && mNodes[childLeftIndex] != nullptr &&
             HasHigherPriority(mNodes[childLeftIndex], mNodes[i]))
           return false;
 
         size_t childRightIndex = childLeftIndex + 1;
-        if (childRightIndex < mNodes.Size() &&
-            mNodes[childRightIndex] != nullptr &&
+        if (childRightIndex < mNodes.Size() && mNodes[childRightIndex] != nullptr &&
             HasHigherPriority(mNodes[childRightIndex], mNodes[i]))
           return false;
       }

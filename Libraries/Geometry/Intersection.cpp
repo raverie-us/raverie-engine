@@ -6,10 +6,8 @@ namespace Intersection
 
 uint Manifold::cMaxPoints = 4;
 
-const Interval Interval::cInfinite =
-    Interval(-Math::PositiveMax(), Math::PositiveMax());
-const Interval Interval::cInvalid =
-    Interval(Math::PositiveMax(), -Math::PositiveMax());
+const Interval Interval::cInfinite = Interval(-Math::PositiveMax(), Math::PositiveMax());
+const Interval Interval::cInvalid = Interval(Math::PositiveMax(), -Math::PositiveMax());
 
 namespace
 {
@@ -123,9 +121,7 @@ SupportShape::SupportShape()
   mDeltaRotation = Quat::cIdentity;
 }
 
-SupportShape::SupportShape(Vec3Param center,
-                           SupportFunction support,
-                           void* data) :
+SupportShape::SupportShape(Vec3Param center, SupportFunction support, void* data) :
     mCenter(center),
     mSupportFunction(support),
     mData(data)
@@ -182,13 +178,9 @@ void SupportShape::SetDeltaRotation(Quat rot)
   mDeltaRotation = rot;
 }
 
-Type AabbFaceNormalFromPoint(Vec3Param aabbMinPoint,
-                             Vec3Param aabbMaxPoint,
-                             Vec3Ref point)
+Type AabbFaceNormalFromPoint(Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Ref point)
 {
-  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) ||
-              (aabbMinPoint.y > aabbMaxPoint.y) ||
-              (aabbMinPoint.z > aabbMaxPoint.z),
+  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y) || (aabbMinPoint.z > aabbMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
           " than it's maximum point.");
 
@@ -212,14 +204,10 @@ Type AabbFaceNormalFromPoint(Vec3Param aabbMinPoint,
 }
 
 /// Not used but useful.
-Type ObbFaceNormalFromPoint(Vec3Param obbCenter,
-                            Vec3Param obbHalfExtents,
-                            Mat3Param obbBasis,
-                            Vec3Ref point)
+Type ObbFaceNormalFromPoint(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Vec3Ref point)
 {
   Type inOrOut = Inside;
-  Vec3 obbAxes[3] = {
-      obbBasis.GetBasis(0), obbBasis.GetBasis(1), obbBasis.GetBasis(2)};
+  Vec3 obbAxes[3] = {obbBasis.GetBasis(0), obbBasis.GetBasis(1), obbBasis.GetBasis(2)};
   Vec3 obbToPoint = point - obbCenter;
 
   point.Set(real(0.0), real(0.0), real(0.0));
@@ -254,34 +242,29 @@ Type AabbAabb(Vec3Param aabbOneMinPoint,
               Vec3Param aabbTwoMaxPoint,
               Manifold* manifold)
 {
-  ErrorIf((aabbOneMinPoint.x > aabbOneMaxPoint.x) ||
-              (aabbOneMinPoint.y > aabbOneMaxPoint.y) ||
+  ErrorIf((aabbOneMinPoint.x > aabbOneMaxPoint.x) || (aabbOneMinPoint.y > aabbOneMaxPoint.y) ||
               (aabbOneMinPoint.z > aabbOneMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
           " than it's maximum point.");
-  ErrorIf((aabbTwoMinPoint.x > aabbTwoMaxPoint.x) ||
-              (aabbTwoMinPoint.y > aabbTwoMaxPoint.y) ||
+  ErrorIf((aabbTwoMinPoint.x > aabbTwoMaxPoint.x) || (aabbTwoMinPoint.y > aabbTwoMaxPoint.y) ||
               (aabbTwoMinPoint.z > aabbTwoMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
           " than it's maximum point.");
 
   // Separated along x-axis?
-  if (aabbOneMaxPoint.x < aabbTwoMinPoint.x ||
-      aabbOneMinPoint.x > aabbTwoMaxPoint.x)
+  if (aabbOneMaxPoint.x < aabbTwoMinPoint.x || aabbOneMinPoint.x > aabbTwoMaxPoint.x)
   {
     return None;
   }
 
   // Separated along y-axis?
-  if (aabbOneMaxPoint.y < aabbTwoMinPoint.y ||
-      aabbOneMinPoint.y > aabbTwoMaxPoint.y)
+  if (aabbOneMaxPoint.y < aabbTwoMinPoint.y || aabbOneMinPoint.y > aabbTwoMaxPoint.y)
   {
     return None;
   }
 
   // Separated along z-axis?
-  if (aabbOneMaxPoint.z < aabbTwoMinPoint.z ||
-      aabbOneMinPoint.z > aabbTwoMaxPoint.z)
+  if (aabbOneMaxPoint.z < aabbTwoMinPoint.z || aabbOneMinPoint.z > aabbTwoMaxPoint.z)
   {
     return None;
   }
@@ -294,12 +277,9 @@ Type AabbAabb(Vec3Param aabbOneMinPoint,
     closestPoint *= real(0.25);
     manifold->PointAt(0).Points[0] = closestPoint;
     manifold->PointAt(0).Points[1] = closestPoint;
-    ClosestPointOnAabbToPoint(
-        aabbOneMinPoint, aabbOneMaxPoint, &(manifold->PointAt(0).Points[0]));
-    ClosestPointOnAabbToPoint(
-        aabbTwoMinPoint, aabbTwoMaxPoint, &(manifold->PointAt(0).Points[1]));
-    closestPoint =
-        manifold->PointAt(0).Points[1] - manifold->PointAt(0).Points[0];
+    ClosestPointOnAabbToPoint(aabbOneMinPoint, aabbOneMaxPoint, &(manifold->PointAt(0).Points[0]));
+    ClosestPointOnAabbToPoint(aabbTwoMinPoint, aabbTwoMaxPoint, &(manifold->PointAt(0).Points[1]));
+    closestPoint = manifold->PointAt(0).Points[1] - manifold->PointAt(0).Points[0];
     if (cGeometrySafeChecks)
     {
       manifold->PointAt(0).Depth = AttemptNormalize(closestPoint);
@@ -309,12 +289,10 @@ Type AabbAabb(Vec3Param aabbOneMinPoint,
       if (Math::IsZero(manifold->PointAt(0).Depth))
       {
         // Center of AABB one
-        Vec3 oneCenter =
-            (aabbOneMaxPoint - aabbOneMinPoint) * real(0.5) + aabbOneMinPoint;
+        Vec3 oneCenter = (aabbOneMaxPoint - aabbOneMinPoint) * real(0.5) + aabbOneMinPoint;
 
         // Center of AABB two
-        closestPoint = (aabbTwoMaxPoint - aabbTwoMinPoint) * real(0.5) +
-                       aabbTwoMinPoint - oneCenter;
+        closestPoint = (aabbTwoMaxPoint - aabbTwoMinPoint) * real(0.5) + aabbTwoMinPoint - oneCenter;
 
         uint longestAxis = uint(-1);
         real axisLength = real(-1.0);
@@ -364,9 +342,7 @@ Type AabbCapsule(Vec3Param aabbMinPoint,
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
-  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) ||
-              (aabbMinPoint.y > aabbMaxPoint.y) ||
-              (aabbMinPoint.z > aabbMaxPoint.z),
+  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y) || (aabbMinPoint.z > aabbMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
           " than it's maximum point.");
   if (manifold != nullptr)
@@ -384,9 +360,7 @@ Type AabbObb(Vec3Param aabbMinPoint,
              Mat3Param obbBasis,
              Manifold* manifold)
 {
-  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) ||
-              (aabbMinPoint.y > aabbMaxPoint.y) ||
-              (aabbMinPoint.z > aabbMaxPoint.z),
+  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y) || (aabbMinPoint.z > aabbMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
           " than it's maximum point.");
 
@@ -395,26 +369,15 @@ Type AabbObb(Vec3Param aabbMinPoint,
   Mat3 aabbBasis = Mat3::cIdentity;
 
   // Code reuse. :D
-  Type result = ObbObb(aabbCenter,
-                       aabbHalfExtents,
-                       aabbBasis,
-                       obbCenter,
-                       obbHalfExtents,
-                       obbBasis,
-                       manifold);
+  Type result = ObbObb(aabbCenter, aabbHalfExtents, aabbBasis, obbCenter, obbHalfExtents, obbBasis, manifold);
   return result;
 }
 
 // Intersect an axis aligned bounding box with a plane.
-Type AabbPlane(Vec3Param aabbMinPoint,
-               Vec3Param aabbMaxPoint,
-               Vec3Param planeNormal,
-               real planeDistance,
-               Manifold* manifold)
+Type AabbPlane(
+    Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Param planeNormal, real planeDistance, Manifold* manifold)
 {
-  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) ||
-              (aabbMinPoint.y > aabbMaxPoint.y) ||
-              (aabbMinPoint.z > aabbMaxPoint.z),
+  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y) || (aabbMinPoint.z > aabbMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
           " than it's maximum point.");
 
@@ -425,13 +388,11 @@ Type AabbPlane(Vec3Param aabbMinPoint,
   if (manifold == nullptr)
   {
     // Compute the projection interval radius of box onto L(t) = b.c + t * p.n
-    real radius = halfExtents.x * Math::Abs(planeNormal.x) +
-                  halfExtents.y * Math::Abs(planeNormal.y) +
+    real radius = halfExtents.x * Math::Abs(planeNormal.x) + halfExtents.y * Math::Abs(planeNormal.y) +
                   halfExtents.z * Math::Abs(planeNormal.z);
 
     // Compute the signed distance of the box's center from the plane
-    real signedDistance =
-        Geometry::SignedDistanceToPlane(center, planeNormal, planeDistance);
+    real signedDistance = Geometry::SignedDistanceToPlane(center, planeNormal, planeDistance);
 
     // Intersection occurs when the signed distance falls within the
     //[-radius, +radius] interval
@@ -446,27 +407,20 @@ Type AabbPlane(Vec3Param aabbMinPoint,
 
   // Might be a teeny bit slower than writing the special case for AABB-plane
   // but it works for now.
-  return ObbPlane(
-      center, halfExtents, aabbBasis, planeNormal, planeDistance, manifold);
+  return ObbPlane(center, halfExtents, aabbBasis, planeNormal, planeDistance, manifold);
 }
 
 // Intersect an axis aligned bounding box with a sphere.
-Type AabbSphere(Vec3Param aabbMinPoint,
-                Vec3Param aabbMaxPoint,
-                Vec3Param sphereCenter,
-                real sphereRadius,
-                Manifold* manifold)
+Type AabbSphere(
+    Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Param sphereCenter, real sphereRadius, Manifold* manifold)
 {
-  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) ||
-              (aabbMinPoint.y > aabbMaxPoint.y) ||
-              (aabbMinPoint.z > aabbMaxPoint.z),
+  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y) || (aabbMinPoint.z > aabbMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
           " than it's maximum point.");
 
   // Get the closest point on the AABB's surface to the sphere's center
   Vec3 closestPoint = sphereCenter;
-  Type result =
-      ClosestPointOnAabbToPoint(aabbMinPoint, aabbMaxPoint, &closestPoint);
+  Type result = ClosestPointOnAabbToPoint(aabbMinPoint, aabbMaxPoint, &closestPoint);
 
   // If the point was found to be outside of the AABB then the sphere's center
   // is outside of the AABB
@@ -559,21 +513,14 @@ Type AabbTriangle(Vec3Param aabbMinPoint,
                   Vec3Param trianglePointC,
                   Manifold* manifold)
 {
-  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) ||
-              (aabbMinPoint.y > aabbMaxPoint.y) ||
-              (aabbMinPoint.z > aabbMaxPoint.z),
+  ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y) || (aabbMinPoint.z > aabbMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
           " than it's maximum point.");
 
   Vec3 aabbHalfExtents = (aabbMaxPoint - aabbMinPoint) * real(0.5);
   Vec3 aabbCenter = aabbMinPoint + aabbHalfExtents;
-  Type result = ObbTriangle(aabbCenter,
-                            aabbHalfExtents,
-                            Mat3::cIdentity,
-                            trianglePointA,
-                            trianglePointB,
-                            trianglePointC,
-                            manifold);
+  Type result = ObbTriangle(
+      aabbCenter, aabbHalfExtents, Mat3::cIdentity, trianglePointA, trianglePointB, trianglePointC, manifold);
   return result;
 }
 
@@ -588,12 +535,8 @@ Type CapsuleCapsule(Vec3Param capsuleOnePointA,
 {
   Vec3 capsuleOnePoint;
   Vec3 capsuleTwoPoint;
-  ClosestPointsOfTwoSegments(capsuleOnePointA,
-                             capsuleOnePointB,
-                             capsuleTwoPointA,
-                             capsuleTwoPointB,
-                             &capsuleOnePoint,
-                             &capsuleTwoPoint);
+  ClosestPointsOfTwoSegments(
+      capsuleOnePointA, capsuleOnePointB, capsuleTwoPointA, capsuleTwoPointB, &capsuleOnePoint, &capsuleTwoPoint);
   Vec3 oneToTwo = capsuleTwoPoint - capsuleOnePoint;
   real radiiSum = capsuleOneRadius + capsuleTwoRadius;
 
@@ -629,14 +572,12 @@ Type CapsuleCapsule(Vec3Param capsuleOnePointA,
     // Point on capsule one is the closest point on capsule one's segment plus
     // the normal scaled by capsule one's radius
     manifold->PointAt(0).Points[0] = capsuleOnePoint;
-    manifold->PointAt(0).Points[0] = Math::MultiplyAdd(
-        manifold->PointAt(0).Points[0], oneToTwo, capsuleOneRadius);
+    manifold->PointAt(0).Points[0] = Math::MultiplyAdd(manifold->PointAt(0).Points[0], oneToTwo, capsuleOneRadius);
 
     // Point on capsule two is the closest point on capsule two's segment plus
     // the negated normal scaled by capsule two's radius
     manifold->PointAt(0).Points[1] = capsuleTwoPoint;
-    manifold->PointAt(0).Points[1] = Math::MultiplyAdd(
-        manifold->PointAt(0).Points[1], oneToTwo, -capsuleTwoRadius);
+    manifold->PointAt(0).Points[1] = Math::MultiplyAdd(manifold->PointAt(0).Points[1], oneToTwo, -capsuleTwoRadius);
   }
   return Point;
 }
@@ -702,8 +643,7 @@ Type CapsuleSphere(Vec3Param capsulePointA,
                    Manifold* manifold)
 {
   Vec3 closestPoint = sphereCenter;
-  Type result = ClosestPointOnCapsuleToPoint(
-      capsulePointA, capsulePointB, capsuleRadius, &closestPoint);
+  Type result = ClosestPointOnCapsuleToPoint(capsulePointA, capsulePointB, capsuleRadius, &closestPoint);
 
 #ifdef VisualizeCapsuleSphere
   Zero::gDebugDraw->Add(Zero::Debug::LineCross(closestPoint, real(0.5)));
@@ -765,8 +705,7 @@ Type CapsuleSphere(Vec3Param capsulePointA,
 
 #ifdef VisualizeCapsuleSphere
     Zero::gDebugDraw->Add(Zero::Debug::Sphere(v, real(0.1)).Color(Color::Red));
-    Zero::gDebugDraw->Add(
-        Zero::Debug::Sphere(closestPoint, real(0.1)).Color(Color::Blue));
+    Zero::gDebugDraw->Add(Zero::Debug::Sphere(closestPoint, real(0.1)).Color(Color::Blue));
 #endif
 
     manifold->PointCount = 1;
@@ -834,10 +773,7 @@ Type PlanePlane(Vec3Param planeOneNormal,
 
 // Intersect a plane with a plane with plane. If intersection data is desired,
 // the point of collision is returned (if there is one).
-Type PlanePlanePlane(Vec4Param planeA,
-                     Vec4Param planeB,
-                     Vec4Param planeC,
-                     Manifold* manifold)
+Type PlanePlanePlane(Vec4Param planeA, Vec4Param planeB, Vec4Param planeC, Manifold* manifold)
 {
   const Vec3* planeNormals[3] = {reinterpret_cast<const Vec3*>(&(planeA.x)),
                                  reinterpret_cast<const Vec3*>(&(planeB.x)),
@@ -853,8 +789,7 @@ Type PlanePlanePlane(Vec4Param planeA,
   if (manifold != nullptr)
   {
     u *= planeA[3];
-    u += Cross(*(planeNormals[0]),
-               planeC[3] * *(planeNormals[1]) - planeB[3] * *(planeNormals[2]));
+    u += Cross(*(planeNormals[0]), planeC[3] * *(planeNormals[1]) - planeB[3] * *(planeNormals[2]));
     u /= denom;
     manifold->PointAt(0).Points[0] = u;
   }
@@ -862,11 +797,8 @@ Type PlanePlanePlane(Vec4Param planeA,
 }
 
 // Intersect a plane with a sphere.
-Type PlaneSphere(Vec3Param planeNormal,
-                 real planeDistance,
-                 Vec3Param sphereCenter,
-                 real sphereRadius,
-                 Manifold* manifold)
+Type PlaneSphere(
+    Vec3Param planeNormal, real planeDistance, Vec3Param sphereCenter, real sphereRadius, Manifold* manifold)
 {
   // Get the closest point on the plane to the sphere's center.
   Vec3 closestPoint = sphereCenter;
@@ -989,8 +921,7 @@ Type SphereTriangle(Vec3Param sphereCenter,
                     Manifold* manifold)
 {
   Vec3 closestPoint = sphereCenter;
-  ClosestPointOnTriangleToPoint(
-      trianglePointA, trianglePointB, trianglePointC, &closestPoint);
+  ClosestPointOnTriangleToPoint(trianglePointA, trianglePointB, trianglePointC, &closestPoint);
 
   // Vector from sphere's center to the closest point on the triangle
   Vec3 v = closestPoint - sphereCenter;
@@ -1050,18 +981,15 @@ Type TriangleTriangle(Vec3Param triOnePointA,
 {
   //----------------------------------------------------------------------------
   // Compute the plane equation of triangle A.
-  Vec3 planeNormalOne =
-      Geometry::GenerateNormal(triOnePointA, triOnePointB, triOnePointC);
+  Vec3 planeNormalOne = Geometry::GenerateNormal(triOnePointA, triOnePointB, triOnePointC);
   real planeDistanceOne = Dot(planeNormalOne, triOnePointA);
 
   // Exit with no intersection if the vertices of triangle B are on the same
   // side of this plane. Save these results for later usage.
-  Type pointSideOne[3] = {
-      PointPlane(triTwoPointA, planeNormalOne, planeDistanceOne),
-      PointPlane(triTwoPointB, planeNormalOne, planeDistanceOne),
-      PointPlane(triTwoPointC, planeNormalOne, planeDistanceOne)};
-  if ((pointSideOne[0] == pointSideOne[1]) &&
-      (pointSideOne[0] == pointSideOne[2]) &&
+  Type pointSideOne[3] = {PointPlane(triTwoPointA, planeNormalOne, planeDistanceOne),
+                          PointPlane(triTwoPointB, planeNormalOne, planeDistanceOne),
+                          PointPlane(triTwoPointC, planeNormalOne, planeDistanceOne)};
+  if ((pointSideOne[0] == pointSideOne[1]) && (pointSideOne[0] == pointSideOne[2]) &&
       (pointSideOne[1] == pointSideOne[2]))
   {
     return None;
@@ -1069,18 +997,15 @@ Type TriangleTriangle(Vec3Param triOnePointA,
 
   //----------------------------------------------------------------------------
   // Compute the plane equation of triangle B.
-  Vec3 planeNormalTwo =
-      Geometry::GenerateNormal(triTwoPointA, triTwoPointB, triTwoPointC);
+  Vec3 planeNormalTwo = Geometry::GenerateNormal(triTwoPointA, triTwoPointB, triTwoPointC);
   real planeDistanceTwo = Dot(planeNormalTwo, triTwoPointA);
 
   // Exit with no intersection if the vertices of triangle A are on the same
   // side of this plane. Save these results for later usage.
-  Type pointSideTwo[3] = {
-      PointPlane(triOnePointA, planeNormalTwo, planeDistanceTwo),
-      PointPlane(triOnePointB, planeNormalTwo, planeDistanceTwo),
-      PointPlane(triOnePointC, planeNormalTwo, planeDistanceTwo)};
-  if ((pointSideTwo[0] == pointSideTwo[1]) &&
-      (pointSideTwo[0] == pointSideTwo[2]) &&
+  Type pointSideTwo[3] = {PointPlane(triOnePointA, planeNormalTwo, planeDistanceTwo),
+                          PointPlane(triOnePointB, planeNormalTwo, planeDistanceTwo),
+                          PointPlane(triOnePointC, planeNormalTwo, planeDistanceTwo)};
+  if ((pointSideTwo[0] == pointSideTwo[1]) && (pointSideTwo[0] == pointSideTwo[2]) &&
       (pointSideTwo[1] == pointSideTwo[2]))
   {
     return None;
@@ -1089,34 +1014,23 @@ Type TriangleTriangle(Vec3Param triOnePointA,
   //----------------------------------------------------------------------------
   // Compute the line L of intersection between the two planes.
   Manifold planesInfo;
-  PlanePlane(planeNormalOne,
-             planeDistanceOne,
-             planeNormalTwo,
-             planeDistanceTwo,
-             &planesInfo);
-  Vec3 line =
-      Abs(planesInfo.PointAt(0).Points[0] - planesInfo.PointAt(0).Points[1]);
+  PlanePlane(planeNormalOne, planeDistanceOne, planeNormalTwo, planeDistanceTwo, &planesInfo);
+  Vec3 line = Abs(planesInfo.PointAt(0).Points[0] - planesInfo.PointAt(0).Points[1]);
 
   // Determine which principal coordinate axis is most parallel with the
   // intersection line L.
-  uint axis =
-      (line.x > line.y && line.x > line.z) ? 0 : (line.y > line.z ? 1 : 2);
+  uint axis = (line.x > line.y && line.x > line.z) ? 0 : (line.y > line.z ? 1 : 2);
 
   // Compute scalar intersection intervals for each triangle with L, as
   // projected onto this principal axis.
   real projOne[2];
-  projOne[0] = Math::Min(Math::Min(triOnePointA[axis], triOnePointB[axis]),
-                         triOnePointC[axis]);
-  projOne[1] = Math::Max(Math::Max(triOnePointA[axis], triOnePointB[axis]),
-                         triOnePointC[axis]);
+  projOne[0] = Math::Min(Math::Min(triOnePointA[axis], triOnePointB[axis]), triOnePointC[axis]);
+  projOne[1] = Math::Max(Math::Max(triOnePointA[axis], triOnePointB[axis]), triOnePointC[axis]);
 
   real projTwo[2];
-  projTwo[0] = Math::Min(Math::Min(triTwoPointA[axis], triTwoPointA[axis]),
-                         triTwoPointA[axis]);
-  projTwo[1] = Math::Max(Math::Max(triTwoPointA[axis], triTwoPointA[axis]),
-                         triTwoPointA[axis]);
-  real proj[2] = {Math::Max(projOne[0], projTwo[0]),
-                  Math::Min(projOne[1], projTwo[1])};
+  projTwo[0] = Math::Min(Math::Min(triTwoPointA[axis], triTwoPointA[axis]), triTwoPointA[axis]);
+  projTwo[1] = Math::Max(Math::Max(triTwoPointA[axis], triTwoPointA[axis]), triTwoPointA[axis]);
+  real proj[2] = {Math::Max(projOne[0], projTwo[0]), Math::Min(projOne[1], projTwo[1])};
 
   //----------------------------------------------------------------------------
   // The triangles intersect if the intersection intervals overlap; otherwise,

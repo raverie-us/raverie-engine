@@ -38,9 +38,7 @@ public:
   /// Adds an attribute to the definition of the vertices that are to be stored.
   /// Add the attributes in the order that they should be stored in memory on a
   /// vertex.
-  void AddAttribute(VertexSemantic::Enum semantic,
-                    VertexElementType::Enum elementType,
-                    uint elementCount);
+  void AddAttribute(VertexSemantic::Enum semantic, VertexElementType::Enum elementType, uint elementCount);
 
   /// Returns a range of attribute semantics in the order that they were added.
   VertexSemanticRange GetAttributes();
@@ -89,17 +87,11 @@ public:
   Vec4 GetVertexData(uint vertexIndex, VertexSemantic::Enum semantic);
   /// Gets the data of an attribute of a vertex, throws exception if attribute
   /// info doesn't match or read is invalid.
-  Vec4 GetVertexData(uint vertexIndex,
-                     VertexSemantic::Enum semantic,
-                     VertexElementType::Enum type,
-                     uint count);
+  Vec4 GetVertexData(uint vertexIndex, VertexSemantic::Enum semantic, VertexElementType::Enum type, uint count);
 
   /// Returns false if GetVertexData() would throw an exception with the same
   /// arguments.
-  bool IsValidVertexData(uint vertexIndex,
-                         VertexSemantic::Enum semantic,
-                         VertexElementType::Enum type,
-                         uint count);
+  bool IsValidVertexData(uint vertexIndex, VertexSemantic::Enum semantic, VertexElementType::Enum type, uint count);
 
   /// Clears all added attributes from the vertex definition so they can be
   /// redefined.
@@ -124,9 +116,7 @@ public:
   void Grow(uint minExtra);
   VertexAttribute GetAttribute(VertexSemantic::Enum semantic);
   uint GetElementSize(VertexElementType::Enum type);
-  void ReadVertexData(byte* vertexData,
-                      VertexAttribute& attribute,
-                      Vec4& output);
+  void ReadVertexData(byte* vertexData, VertexAttribute& attribute, Vec4& output);
   void CopyTo(VertexBuffer& target);
 
   template <typename T>
@@ -258,11 +248,8 @@ public:
   bool TestFrustum(const Frustum& frustum);
 
   template <typename T>
-  bool GetPrimitiveData(uint primitiveIndex,
-                        VertexSemantic::Enum semantic,
-                        VertexElementType::Enum type,
-                        uint count,
-                        T* data);
+  bool GetPrimitiveData(
+      uint primitiveIndex, VertexSemantic::Enum semantic, VertexElementType::Enum type, uint count, T* data);
 
   MeshRenderData* mRenderData;
 
@@ -273,11 +260,8 @@ public:
 };
 
 template <typename T>
-bool Mesh::GetPrimitiveData(uint primitiveIndex,
-                            VertexSemantic::Enum semantic,
-                            VertexElementType::Enum type,
-                            uint count,
-                            T* data)
+bool Mesh::GetPrimitiveData(
+    uint primitiveIndex, VertexSemantic::Enum semantic, VertexElementType::Enum type, uint count, T* data)
 {
   bool result = true;
   uint i0 = 0, i1 = 0, i2 = 0;

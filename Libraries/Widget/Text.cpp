@@ -22,8 +22,7 @@ Text::Text(Composite* parent, StringParam style) : Widget(parent)
   mClipText = true;
 }
 
-Text::Text(Composite* parent, StringParam fontName, uint fontSize) :
-    Widget(parent)
+Text::Text(Composite* parent, StringParam fontName, uint fontSize) : Widget(parent)
 {
   mFont = FontManager::GetInstance()->GetRenderFont(fontName, fontSize, 0);
   mSize = mFont->MeasureText(" ", 1.0f);
@@ -50,11 +49,8 @@ void Text::SetMultiLine(bool multiLine)
   mMultiline = multiLine;
 }
 
-void Text::RenderUpdate(ViewBlock& viewBlock,
-                        FrameBlock& frameBlock,
-                        Mat4Param parentTx,
-                        ColorTransform colorTx,
-                        WidgetRect clipRect)
+void Text::RenderUpdate(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -63,30 +59,20 @@ void Text::RenderUpdate(ViewBlock& viewBlock,
 
   Vec4 color = mFontColor * mColor * colorTx.ColorMultiply;
 
-  ViewNode& viewNode =
-      AddRenderNodes(viewBlock, frameBlock, clipRect, mFont->mTexture);
+  ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, mFont->mTexture);
   FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNode, color);
 
   if (mMultiline)
-    ProcessTextRange(
-        fontProcessor, mFont, mText, Vec2::cZero, mAlign, Vec2(1, 1), mSize);
+    ProcessTextRange(fontProcessor, mFont, mText, Vec2::cZero, mAlign, Vec2(1, 1), mSize);
   else
-    AddTextRange(fontProcessor,
-                 mFont,
-                 mText,
-                 Vec2::cZero,
-                 mAlign,
-                 Vec2(1, 1),
-                 mSize,
-                 mClipText);
+    AddTextRange(fontProcessor, mFont, mText, Vec2::cZero, mAlign, Vec2(1, 1), mSize, mClipText);
 }
 
 Vec2 Text::GetBoundedSize(float maxWidth, float maxHeight)
 {
   FontProcessorNoRender noRender;
   Vec2 limitedSize = Vec2(maxWidth, maxHeight);
-  return ProcessTextRange(
-      noRender, mFont, mText, Vec2(0, 0), mAlign, Vec2(1, 1), limitedSize);
+  return ProcessTextRange(noRender, mFont, mText, Vec2(0, 0), mAlign, Vec2(1, 1), limitedSize);
 }
 
 bool Text::IsTextClipped()
@@ -119,8 +105,7 @@ ZilchDefineType(Label, builder, type)
 {
 }
 
-Label::Label(Composite* parent, StringParam style, StringParam text) :
-    Composite(parent)
+Label::Label(Composite* parent, StringParam style, StringParam text) : Composite(parent)
 {
   FinishInitialize(style);
   SetText(text);

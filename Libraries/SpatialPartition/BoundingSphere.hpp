@@ -8,34 +8,23 @@ namespace Zero
 /// BroadPhase. This range is templated to check the Spheres against the
 /// provided QueryType using the provided policy. This range becomes invalidated
 /// when the BroadPhase is changed.
-template <typename ClientDataType,
-          typename QueryType,
-          typename PolicyType = BroadPhasePolicy<QueryType, Sphere>>
-struct BoundingSphereRange
-    : public BroadPhaseArrayRange<
-          ClientDataType,
-          QueryType,
-          PolicyType,
-          SphereQueryCheck<ClientDataType, QueryType, PolicyType>>
+template <typename ClientDataType, typename QueryType, typename PolicyType = BroadPhasePolicy<QueryType, Sphere>>
+struct BoundingSphereRange : public BroadPhaseArrayRange<ClientDataType,
+                                                         QueryType,
+                                                         PolicyType,
+                                                         SphereQueryCheck<ClientDataType, QueryType, PolicyType>>
 {
   typedef SphereQueryCheck<ClientDataType, QueryType, PolicyType> QueryCheck;
-  typedef BroadPhaseArrayRange<ClientDataType,
-                               QueryType,
-                               PolicyType,
-                               QueryCheck>
-      BaseType;
+  typedef BroadPhaseArrayRange<ClientDataType, QueryType, PolicyType, QueryCheck> BaseType;
 
   /// Constructs a range using the default Policy.
-  BoundingSphereRange(typename BaseType::ObjectArray* data,
-                      const QueryType& queryObj) :
+  BoundingSphereRange(typename BaseType::ObjectArray* data, const QueryType& queryObj) :
       BaseType(data, queryObj, PolicyType())
   {
   }
 
   /// Constructs a range using the policy type passed in.
-  BoundingSphereRange(typename BaseType::ObjectArray* data,
-                      const QueryType& queryObj,
-                      PolicyType policy) :
+  BoundingSphereRange(typename BaseType::ObjectArray* data, const QueryType& queryObj, PolicyType policy) :
       BaseType(data, queryObj, policy)
   {
   }
@@ -44,13 +33,9 @@ struct BoundingSphereRange
 /// A range for iterating through the self pairs of the BoundingSphere
 /// BroadPhase. This range becomes invalidated when the BroadPhase is changed.
 template <typename ClientDataType>
-struct BoundingSpherePairRange
-    : public BroadPhaseArrayPairRange<ClientDataType,
-                                      SphereQueryPairCheck<ClientDataType>>
+struct BoundingSpherePairRange : public BroadPhaseArrayPairRange<ClientDataType, SphereQueryPairCheck<ClientDataType>>
 {
-  typedef BroadPhaseArrayPairRange<ClientDataType,
-                                   SphereQueryPairCheck<ClientDataType>>
-      BaseType;
+  typedef BroadPhaseArrayPairRange<ClientDataType, SphereQueryPairCheck<ClientDataType>> BaseType;
 
   BoundingSpherePairRange(typename BaseType::ObjectArray* data) : BaseType(data)
   {
@@ -75,19 +60,16 @@ public:
   /// determines if the queryObj and a Sphere overlap through a function called
   /// Overlap.
   template <typename QueryType, typename Policy>
-  BoundingSphereRange<ClientDataType, QueryType, Policy>
-  QueryWithPolicy(const QueryType& queryObj, Policy policy)
+  BoundingSphereRange<ClientDataType, QueryType, Policy> QueryWithPolicy(const QueryType& queryObj, Policy policy)
   {
-    return BoundingSphereRange<ClientDataType, QueryType, Policy>(
-        &mData, queryObj, policy);
+    return BoundingSphereRange<ClientDataType, QueryType, Policy>(&mData, queryObj, policy);
   }
 
   /// Returns a range to iterate through any cast on this BroadPhase. The policy
   /// is defaulted to BroadPhasePolicy<QueryType, Sphere>. This assumes that
   /// there is a Overlap function in the extended intersection for this test.
   template <typename QueryType>
-  BoundingSphereRange<ClientDataType, QueryType>
-  Query(const QueryType& queryObj)
+  BoundingSphereRange<ClientDataType, QueryType> Query(const QueryType& queryObj)
   {
     BroadPhasePolicy<QueryType, Sphere> policy;
     return QueryWithPolicy(queryObj, policy);

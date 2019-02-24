@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-const WidgetRect WidgetRect::cZero =
-    WidgetRect::CenterAndSize(Vec2(0, 0), Vec2(0, 0));
+const WidgetRect WidgetRect::cZero = WidgetRect::CenterAndSize(Vec2(0, 0), Vec2(0, 0));
 
 WidgetRect WidgetRect::PointAndSize(Vec2Param point, Vec2Param size)
 {
@@ -86,8 +85,8 @@ bool WidgetRect::Contains(Vec2Param point) const
 
 bool WidgetRect::Overlap(const WidgetRect& other) const
 {
-  bool nooverlap = (X > other.X + other.SizeX) || (Y > other.Y + other.SizeY) ||
-                   (other.X > X + SizeX) || (other.Y > Y + SizeY);
+  bool nooverlap =
+      (X > other.X + other.SizeX) || (Y > other.Y + other.SizeY) || (other.X > X + SizeX) || (other.Y > Y + SizeY);
 
   return !nooverlap;
 }
@@ -185,8 +184,7 @@ Mat4 Invert2D(Mat4Param mat)
 
 Vec2 ExpandSizeByThickness(Thickness thickness, Vec2Param size)
 {
-  Vec2 addBorder(thickness.Left + thickness.Right,
-                 thickness.Top + thickness.Bottom);
+  Vec2 addBorder(thickness.Left + thickness.Right, thickness.Top + thickness.Bottom);
   return addBorder + size;
 }
 

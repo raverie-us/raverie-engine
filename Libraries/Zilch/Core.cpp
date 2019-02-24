@@ -6,8 +6,7 @@ namespace Zilch
 {
 ZilchDefineType(Enum, builder, type)
 {
-  ErrorIf(sizeof(Enum) != sizeof(Integer),
-          "The base Enum must be the same size as Integer");
+  ErrorIf(sizeof(Enum) != sizeof(Integer), "The base Enum must be the same size as Integer");
   type->SpecialType = SpecialType::Enumeration;
   type->ToStringFunction = &ZZ::VirtualMachine::UnknownEnumerationToString;
 }
@@ -29,9 +28,7 @@ Core* Core::Instance = nullptr;
 
 void Core::InitializeInstance()
 {
-  ReturnIf(Instance != nullptr,
-           ,
-           "Can't initialize a static library more than once");
+  ReturnIf(Instance != nullptr, , "Can't initialize a static library more than once");
   Instance = new Core();
 }
 
@@ -43,8 +40,7 @@ void Core::Destroy()
 
 Core& Core::GetInstance()
 {
-  ErrorIf(Instance == nullptr,
-          "Attempted to get an uninitialized singleton static library");
+  ErrorIf(Instance == nullptr, "Attempted to get an uninitialized singleton static library");
   return *Instance;
 }
 
@@ -160,9 +156,7 @@ void VectorScalarConstructor(Call& call, ExceptionReport& report)
 }
 
 template <size_t Components, typename ComponentType>
-void GenerateVectorScalarConstructor(LibraryBuilder& builder,
-                                     BoundType* type,
-                                     BoundType* scalarType)
+void GenerateVectorScalarConstructor(LibraryBuilder& builder, BoundType* type, BoundType* scalarType)
 {
   // We only have one parameter
   ParameterArray parameters;
@@ -171,8 +165,7 @@ void GenerateVectorScalarConstructor(LibraryBuilder& builder,
   scalarParam.Name = "scalar";
 
   // Bind constructors to the vector types
-  builder.AddBoundConstructor(
-      type, VectorScalarConstructor<Components, ComponentType>, parameters);
+  builder.AddBoundConstructor(type, VectorScalarConstructor<Components, ComponentType>, parameters);
 }
 
 template <size_t Components, typename ComponentType>
@@ -196,8 +189,7 @@ void VectorComponentConstructor(Call& call, ExceptionReport& report)
   for (size_t i = 0; i < Components; ++i)
   {
     // Grab the current value of the stack
-    ComponentType value =
-        *(ComponentType*)(stackValues + i * alignedComponentSize);
+    ComponentType value = *(ComponentType*)(stackValues + i * alignedComponentSize);
 
     // Treat ourself like a contiguous array and directly set our members
     self[i] = value;
@@ -239,11 +231,10 @@ void VectorGet(Call& call, ExceptionReport& report)
   // Make sure the index is within range
   if (index < 0 || index >= Components)
   {
-    call.GetState()->ThrowException(
-        report,
-        String::Format("The index used to access a component of a vector was "
-                       "out of range [0-%d].",
-                       Components - 1));
+    call.GetState()->ThrowException(report,
+                                    String::Format("The index used to access a component of a vector was "
+                                                   "out of range [0-%d].",
+                                                   Components - 1));
     return;
   }
 
@@ -268,11 +259,10 @@ void VectorSet(Call& call, ExceptionReport& report)
   // Make sure the index is within range
   if (index < 0 || index >= Components)
   {
-    call.GetState()->ThrowException(
-        report,
-        String::Format("The index used to access a component of a vector was "
-                       "out of range [0-%d]",
-                       Components - 1));
+    call.GetState()->ThrowException(report,
+                                    String::Format("The index used to access a component of a vector was "
+                                                   "out of range [0-%d]",
+                                                   Components - 1));
     return;
   }
 
@@ -455,10 +445,9 @@ void QuaternionInvert(Call& call, ExceptionReport& report)
   // We can't invert a zero length quaternion
   if (lengthSq == 0.0f)
   {
-    call.GetState()->ThrowException(
-        report,
-        "Attempting to invert a zero length quaternion which would result in a "
-        "0 division.");
+    call.GetState()->ThrowException(report,
+                                    "Attempting to invert a zero length quaternion which would result in a "
+                                    "0 division.");
     return;
   }
   Real inverseLengthSq = 1.0f / lengthSq;
@@ -639,9 +628,7 @@ void VectorSwizzleGet(Call& call, ExceptionReport& report)
 }
 
 template <size_t Components, typename ComponentType>
-void GenerateVectorSwizzles(LibraryBuilder& builder,
-                            BoundType* type,
-                            BoundType* componentTypes[Core::MaxComponents])
+void GenerateVectorSwizzles(LibraryBuilder& builder, BoundType* type, BoundType* componentTypes[Core::MaxComponents])
 {
   char componentNamesSet[2][4] = {{'X', 'Y', 'Z', 'W'}, {'R', 'G', 'B', 'A'}};
 
@@ -704,8 +691,7 @@ void GenerateVectorSwizzles(LibraryBuilder& builder,
           size_t offset = componentIndex[0] * sizeof(ComponentType);
 
           // Add the swizzle field
-          property = builder.AddBoundField(
-              type, name, sizeType, offset, MemberOptions::None);
+          property = builder.AddBoundField(type, name, sizeType, offset, MemberOptions::None);
         }
         // It must be a property then
         else
@@ -718,21 +704,20 @@ void GenerateVectorSwizzles(LibraryBuilder& builder,
           // user data pointer
           size_t& order = *(size_t*)&orderUserData;
 
-          order = count | (componentIndex[0] << 3) | (componentIndex[1] << 5) |
-                  (componentIndex[2] << 7) | (componentIndex[3] << 9);
+          order = count | (componentIndex[0] << 3) | (componentIndex[1] << 5) | (componentIndex[2] << 7) |
+                  (componentIndex[3] << 9);
 
           // As long as we have no duplicate components, we
           // can at least make it a read/write property (with a get/set)
           if (noDuplicateComponents)
           {
             // Add the get/set property
-            property =
-                builder.AddBoundGetterSetter(type,
-                                             name,
-                                             sizeType,
-                                             VectorSwizzleSet<ComponentType>,
-                                             VectorSwizzleGet<ComponentType>,
-                                             MemberOptions::None);
+            property = builder.AddBoundGetterSetter(type,
+                                                    name,
+                                                    sizeType,
+                                                    VectorSwizzleSet<ComponentType>,
+                                                    VectorSwizzleGet<ComponentType>,
+                                                    MemberOptions::None);
 
             // Store the userdata on the property get/set functions
             property->Get->UserData = orderUserData;
@@ -741,13 +726,8 @@ void GenerateVectorSwizzles(LibraryBuilder& builder,
           else
           {
             // Add the get (read only) property
-            property =
-                builder.AddBoundGetterSetter(type,
-                                             name,
-                                             sizeType,
-                                             nullptr,
-                                             VectorSwizzleGet<ComponentType>,
-                                             MemberOptions::None);
+            property = builder.AddBoundGetterSetter(
+                type, name, sizeType, nullptr, VectorSwizzleGet<ComponentType>, MemberOptions::None);
 
             // Store the userdata on the property get function
             property->Get->UserData = orderUserData;
@@ -764,10 +744,9 @@ void GenerateVectorSwizzles(LibraryBuilder& builder,
 }
 
 template <size_t Components, typename ComponentType>
-void GenerateVectorComponentConstructors(
-    LibraryBuilder& builder,
-    BoundType* type,
-    BoundType* componentTypes[Core::MaxComponents])
+void GenerateVectorComponentConstructors(LibraryBuilder& builder,
+                                         BoundType* type,
+                                         BoundType* componentTypes[Core::MaxComponents])
 {
   // We're generating constructors for a fixed number of components (a specific
   // vector type)
@@ -809,10 +788,7 @@ void GenerateVectorComponentConstructors(
         }
 
         // Finally, add the constructor to both our type and the library itself
-        builder.AddBoundConstructor(
-            type,
-            VectorComponentConstructor<Components, ComponentType>,
-            parameters);
+        builder.AddBoundConstructor(type, VectorComponentConstructor<Components, ComponentType>, parameters);
       }
     }
     // Walk through all possible constructor permutations
@@ -820,12 +796,11 @@ void GenerateVectorComponentConstructors(
   }
 }
 
-BoundType*
-Core::InstantiatePropertyDelegate(LibraryBuilder& builder,
-                                  StringParam baseName,
-                                  StringParam fullyQualifiedName,
-                                  const Array<Constant>& templateTypes,
-                                  const void* userData)
+BoundType* Core::InstantiatePropertyDelegate(LibraryBuilder& builder,
+                                             StringParam baseName,
+                                             StringParam fullyQualifiedName,
+                                             const Array<Constant>& templateTypes,
+                                             const void* userData)
 {
   // Get the type that we're getting / setting
   Type* innerType = templateTypes.Front().TypeValue;
@@ -838,37 +813,23 @@ Core::InstantiatePropertyDelegate(LibraryBuilder& builder,
   setParameter.Name = "value";
   setParameter.ParameterType = innerType;
 
-  DelegateType* setDelegateType =
-      builder.GetDelegateType(setParameters, core.VoidType);
-  DelegateType* getDelegateType =
-      builder.GetDelegateType(ParameterArray(), innerType);
+  DelegateType* setDelegateType = builder.GetDelegateType(setParameters, core.VoidType);
+  DelegateType* getDelegateType = builder.GetDelegateType(ParameterArray(), innerType);
 
-  BoundType* type = builder.AddBoundType(baseName,
-                                         fullyQualifiedName,
-                                         TypeCopyMode::ReferenceType,
-                                         sizeof(PropertyDelegateTemplate));
+  BoundType* type =
+      builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(PropertyDelegateTemplate));
+  builder.AddBoundField(type, "Set", setDelegateType, ZeroOffsetOf(PropertyDelegateTemplate, Set), MemberOptions::None);
+  builder.AddBoundField(type, "Get", getDelegateType, ZeroOffsetOf(PropertyDelegateTemplate, Get), MemberOptions::None);
   builder.AddBoundField(type,
-                        "Set",
-                        setDelegateType,
-                        ZeroOffsetOf(PropertyDelegateTemplate, Set),
+                        "Property",
+                        ZilchTypeId(Property),
+                        ZeroOffsetOf(PropertyDelegateTemplate, ReferencedProperty),
                         MemberOptions::None);
   builder.AddBoundField(type,
-                        "Get",
-                        getDelegateType,
-                        ZeroOffsetOf(PropertyDelegateTemplate, Get),
+                        "Instance",
+                        ZilchTypeId(Any),
+                        ZeroOffsetOf(PropertyDelegateTemplate, ReferencedProperty),
                         MemberOptions::None);
-  builder.AddBoundField(
-      type,
-      "Property",
-      ZilchTypeId(Property),
-      ZeroOffsetOf(PropertyDelegateTemplate, ReferencedProperty),
-      MemberOptions::None);
-  builder.AddBoundField(
-      type,
-      "Instance",
-      ZilchTypeId(Any),
-      ZeroOffsetOf(PropertyDelegateTemplate, ReferencedProperty),
-      MemberOptions::None);
 
   // Bind the constructor
   ZilchFullBindDestructor(builder, type, PropertyDelegateTemplate);
@@ -918,8 +879,7 @@ void SubStringFromRuneIndices(Call& call, ExceptionReport& report)
   }
   if ((endIndice - startIndice) < 0)
   {
-    call.GetState()->ThrowException(
-        report, "A negative substring length is not supported.");
+    call.GetState()->ThrowException(report, "A negative substring length is not supported.");
     return;
   }
   StringIterator stringStart = self.Begin() + startIndice;
@@ -947,8 +907,7 @@ void SubStringBytes(Call& call, ExceptionReport& report)
   }
   if (length < 0)
   {
-    call.GetState()->ThrowException(
-        report, "A negative substring length is not supported.");
+    call.GetState()->ThrowException(report, "A negative substring length is not supported.");
     return;
   }
   cstr stringStart = self.c_str() + start;
@@ -959,11 +918,10 @@ void SubStringBytes(Call& call, ExceptionReport& report)
 
 void StringGetRune(Call& call, ExceptionReport& report)
 {
-  call.GetState()->ThrowException(
-      report,
-      "String operator Get is deprecated. "
-      "To iterate through a String use a StringRange (.All) or StringIterator "
-      "(.Begin).");
+  call.GetState()->ThrowException(report,
+                                  "String operator Get is deprecated. "
+                                  "To iterate through a String use a StringRange (.All) or StringIterator "
+                                  "(.Begin).");
 }
 
 void StringRuneIteratorFromByteIndex(Call& call, ExceptionReport& report)
@@ -971,8 +929,7 @@ void StringRuneIteratorFromByteIndex(Call& call, ExceptionReport& report)
   String& self = call.Get<String&>(Call::This);
   int byteIndex = call.Get<int>(0);
 
-  StringRangeExtended::RuneIteratorFromByteIndexInternal(
-      call, report, self, self.All(), byteIndex);
+  StringRangeExtended::RuneIteratorFromByteIndexInternal(call, report, self, self.All(), byteIndex);
 }
 
 void StringRuneIteratorFromRuneIndex(Call& call, ExceptionReport& report)
@@ -980,8 +937,7 @@ void StringRuneIteratorFromRuneIndex(Call& call, ExceptionReport& report)
   String& self = call.Get<String&>(Call::This);
   int runeIndex = call.Get<int>(0);
 
-  StringRangeExtended::RuneIteratorFromRuneIndexInternal(
-      call, report, self, self.All(), runeIndex);
+  StringRangeExtended::RuneIteratorFromRuneIndexInternal(call, report, self, self.All(), runeIndex);
 }
 
 void StringEmpty(Call& call, ExceptionReport& report)
@@ -1033,11 +989,10 @@ void StringByteCount(Call& call, ExceptionReport& report)
 
 void StringCountLegacy(Call& call, ExceptionReport& report)
 {
-  call.GetState()->ThrowException(
-      report,
-      "Count is deprecated. If you want the number of bytes in a String use "
-      "ByteCount. "
-      "If you want the number of runes in the String call ComputeRuneCount.");
+  call.GetState()->ThrowException(report,
+                                  "Count is deprecated. If you want the number of bytes in a String use "
+                                  "ByteCount. "
+                                  "If you want the number of runes in the String call ComputeRuneCount.");
 }
 
 void StringComputeRuneCount(Call& call, ExceptionReport& report)
@@ -1163,8 +1118,7 @@ void StringTrimStart(Call& call, ExceptionReport& report)
 {
   String& self = call.Get<String&>(Call::This);
 
-  StringRangeExtended::SetResultStringRange(
-      call, report, self, self.TrimStart());
+  StringRangeExtended::SetResultStringRange(call, report, self, self.TrimStart());
 }
 
 void StringTrimEnd(Call& call, ExceptionReport& report)
@@ -1269,8 +1223,7 @@ void JoinTwoStrings(Call& call, ExceptionReport& report)
   if (report.HasThrownExceptions())
     return;
 
-  String result =
-      Zero::String::Join(separator->mRange, first->mRange, second->mRange);
+  String result = Zero::String::Join(separator->mRange, first->mRange, second->mRange);
   call.Set(Call::Return, &result);
 }
 
@@ -1284,8 +1237,7 @@ void JoinThreeStrings(Call& call, ExceptionReport& report)
   if (report.HasThrownExceptions())
     return;
 
-  String result = Zero::String::Join(
-      separator->mRange, first->mRange, second->mRange, third->mRange);
+  String result = Zero::String::Join(separator->mRange, first->mRange, second->mRange, third->mRange);
   call.Set(Call::Return, &result);
 }
 
@@ -1300,11 +1252,7 @@ void JoinFourStrings(Call& call, ExceptionReport& report)
   if (report.HasThrownExceptions())
     return;
 
-  String result = Zero::String::Join(separator->mRange,
-                                     first->mRange,
-                                     second->mRange,
-                                     third->mRange,
-                                     fourth->mRange);
+  String result = Zero::String::Join(separator->mRange, first->mRange, second->mRange, third->mRange, fourth->mRange);
   call.Set(Call::Return, &result);
 }
 
@@ -1319,8 +1267,7 @@ void StringSplit(Call& call, ExceptionReport& report)
   // if(ValidateRange(self->mOriginalStringReference, self->mRange) == false)
   //  return;
 
-  StringRangeExtended::SetResultStringSplitRange(
-      call, report, self, self.Split(separatorStr->mRange));
+  StringRangeExtended::SetResultStringSplitRange(call, report, self, self.Split(separatorStr->mRange));
 }
 
 void StringRangeIsNullOrEmpty(Call& call, ExceptionReport& report)
@@ -1355,9 +1302,7 @@ public:
   FormatCState* TransitionTo;
 
   // Create an edge that looks for any of the given characters
-  FormatCEdge(cstr name, size_t charcterCount, ...) :
-      Name(name),
-      TransitionTo(nullptr)
+  FormatCEdge(cstr name, size_t charcterCount, ...) : Name(name), TransitionTo(nullptr)
   {
     va_list args;
     va_start(args, charcterCount);
@@ -1365,8 +1310,7 @@ public:
     for (size_t i = 0; i < charcterCount; ++i)
     {
       int character = va_arg(args, int);
-      this->Characters.InsertOrError(character,
-                                     "Two characters mapped to the same edge");
+      this->Characters.InsertOrError(character, "Two characters mapped to the same edge");
     }
 
     va_end(args);
@@ -1404,49 +1348,17 @@ static FormatCState FormatCStateParsedPrecisionNumber("ParsedPrecisionNumber");
 static FormatCState FormatCStateParsedSpecifier("ParsedSpecifier");
 
 static FormatCEdge FormatCEdgeFlags("Flags", 5, '-', '+', ' ', '#', '0');
-static FormatCEdge
-    FormatCEdgeFlagsLoop("FlagsLoop", 5, '-', '+', ' ', '#', '0');
+static FormatCEdge FormatCEdgeFlagsLoop("FlagsLoop", 5, '-', '+', ' ', '#', '0');
 static FormatCEdge FormatCEdgeWidthStar("WidthStar", 1, '*');
-static FormatCEdge FormatCEdgeWidthNumber(
-    "WidthNumber", 10, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
-static FormatCEdge FormatCEdgeWidthNumberLoop(
-    "WidthNumberLoop", 10, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+static FormatCEdge FormatCEdgeWidthNumber("WidthNumber", 10, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+static FormatCEdge FormatCEdgeWidthNumberLoop("WidthNumberLoop", 10, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 static FormatCEdge FormatCEdgePrecisionDot("PrecisionDot", 1, '.');
 static FormatCEdge FormatCEdgePrecisionStar("PrecisionStar", 1, '*');
-static FormatCEdge FormatCEdgePrecisionNumber(
-    "PrecisionNumber", 10, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
-static FormatCEdge FormatCEdgePrecisionNumberLoop("PrecisionNumberLoop",
-                                                  10,
-                                                  '0',
-                                                  '1',
-                                                  '2',
-                                                  '3',
-                                                  '4',
-                                                  '5',
-                                                  '6',
-                                                  '7',
-                                                  '8',
-                                                  '9');
-static FormatCEdge FormatCEdgeSpecifiers("Specifiers",
-                                         18,
-                                         'd',
-                                         'i',
-                                         'u',
-                                         'o',
-                                         'x',
-                                         'X',
-                                         'f',
-                                         'F',
-                                         'e',
-                                         'E',
-                                         'g',
-                                         'G',
-                                         'a',
-                                         'A',
-                                         'c',
-                                         's',
-                                         'p',
-                                         '%');
+static FormatCEdge FormatCEdgePrecisionNumber("PrecisionNumber", 10, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+static FormatCEdge
+    FormatCEdgePrecisionNumberLoop("PrecisionNumberLoop", 10, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+static FormatCEdge FormatCEdgeSpecifiers(
+    "Specifiers", 18, 'd', 'i', 'u', 'o', 'x', 'X', 'f', 'F', 'e', 'E', 'g', 'G', 'a', 'A', 'c', 's', 'p', '%');
 
 static void InitializeFormatCStates()
 {
@@ -1496,8 +1408,7 @@ static void InitializeFormatCStates()
     FormatCStateParsedPrecisionNumber.Edges.PushBack(&FormatCEdgeSpecifiers);
 
     // Make sure the precision number edge loops back to itself
-    FormatCStateParsedPrecisionNumber.Edges.PushBack(
-        &FormatCEdgePrecisionNumberLoop);
+    FormatCStateParsedPrecisionNumber.Edges.PushBack(&FormatCEdgePrecisionNumberLoop);
 
     /**** Edges ****/
     FormatCEdgeFlags.TransitionTo = &FormatCStateParsedFlags;
@@ -1507,10 +1418,8 @@ static void InitializeFormatCStates()
     FormatCEdgeWidthNumberLoop.TransitionTo = &FormatCStateParsedWidthNumber;
     FormatCEdgePrecisionDot.TransitionTo = &FormatCStateParsedPrecisionDot;
     FormatCEdgePrecisionStar.TransitionTo = &FormatCStateParsedPrecisionStar;
-    FormatCEdgePrecisionNumber.TransitionTo =
-        &FormatCStateParsedPrecisionNumber;
-    FormatCEdgePrecisionNumberLoop.TransitionTo =
-        &FormatCStateParsedPrecisionNumber;
+    FormatCEdgePrecisionNumber.TransitionTo = &FormatCStateParsedPrecisionNumber;
+    FormatCEdgePrecisionNumberLoop.TransitionTo = &FormatCStateParsedPrecisionNumber;
     FormatCEdgeSpecifiers.TransitionTo = &FormatCStateParsedSpecifier;
   }
 }
@@ -1527,8 +1436,7 @@ enum Enum
 }
 
 template <typename T>
-int FormatCSprintf(
-    char* buffer, cstr format, int widthStar, int precisionStar, T value)
+int FormatCSprintf(char* buffer, cstr format, int widthStar, int precisionStar, T value)
 {
   // If no buffer was provided, it means we're just counting the length
   if (buffer == nullptr)
@@ -1574,19 +1482,17 @@ void FormatCPrint(ExecutableState* state,
   Type* argumentType = argument.StoredType;
 
   // First, get the length that the printf would output
-  int sprintfLength =
-      FormatCSprintf(nullptr, format.c_str(), widthStar, precisionStar, value);
+  int sprintfLength = FormatCSprintf(nullptr, format.c_str(), widthStar, precisionStar, value);
 
   // If the print failed, let the user know
   if (sprintfLength < 0)
   {
-    state->ThrowException(
-        report,
-        String::Format("The format specifier '%s' was invalid. The argument "
-                       "was '%s' of type '%s'.",
-                       format.c_str(),
-                       argument.ToString().c_str(),
-                       argumentType->ToString().c_str()));
+    state->ThrowException(report,
+                          String::Format("The format specifier '%s' was invalid. The argument "
+                                         "was '%s' of type '%s'.",
+                                         format.c_str(),
+                                         argument.ToString().c_str(),
+                                         argumentType->ToString().c_str()));
     return;
   }
 
@@ -1604,19 +1510,17 @@ void FormatCPrint(ExecutableState* state,
 
   // Now that we've sized our buffer to fit the text, actually print out to the
   // buffer
-  sprintfLength = FormatCSprintf(
-      temporaryBuffer.Data(), format.c_str(), widthStar, precisionStar, value);
+  sprintfLength = FormatCSprintf(temporaryBuffer.Data(), format.c_str(), widthStar, precisionStar, value);
 
   // This should basically never happen... but just in case it does!
   if (sprintfLength < 0)
   {
-    state->ThrowException(
-        report,
-        String::Format("The format specifier '%s' was invalid. The argument "
-                       "was '%s' of type '%s'.",
-                       format.c_str(),
-                       argument.ToString().c_str(),
-                       argumentType->ToString().c_str()));
+    state->ThrowException(report,
+                          String::Format("The format specifier '%s' was invalid. The argument "
+                                         "was '%s' of type '%s'.",
+                                         format.c_str(),
+                                         argument.ToString().c_str(),
+                                         argumentType->ToString().c_str()));
     return;
   }
 
@@ -1642,8 +1546,7 @@ void StringFormatC(Call& call, ExceptionReport& report)
   // Create a stack array to hold all the arguments we read off the Zilch stack
   // The 'Any' type can hold any value from Zilch, including primitives and
   // classes
-  const Any** arguments =
-      (const Any**)alloca(sizeof(const Any*) * argumentCount);
+  const Any** arguments = (const Any**)alloca(sizeof(const Any*) * argumentCount);
 
   // Read each argument off the stack
   for (size_t i = 0; i < argumentCount; ++i)
@@ -1727,11 +1630,8 @@ void StringFormatC(Call& call, ExceptionReport& report)
         // specifier
         if (transitioned == false)
         {
-          state->ThrowException(
-              report,
-              BuildString("Invalid or unsupported format specifier: '",
-                          formatSpecifierRange,
-                          "'."));
+          state->ThrowException(report,
+                                BuildString("Invalid or unsupported format specifier: '", formatSpecifierRange, "'."));
           return;
         }
         // If we reached the end (parsed the format specifier)
@@ -1792,10 +1692,9 @@ void StringFormatC(Call& call, ExceptionReport& report)
               // So long as we haven't run out of arguments...
               if (argumentIndex >= argumentCount)
               {
-                state->ThrowException(
-                    report,
-                    "There are more '%' format specifiers or '*' operators "
-                    "then there are arguments.");
+                state->ThrowException(report,
+                                      "There are more '%' format specifiers or '*' operators "
+                                      "then there are arguments.");
                 return;
               }
 
@@ -1821,16 +1720,14 @@ void StringFormatC(Call& call, ExceptionReport& report)
 
                 // Let the user know about the * requiring an integer argument,
                 // including as much info as possible
-                state->ThrowException(
-                    report,
-                    String::Format(
-                        "When using * for %s an Integer must be provided "
-                        "before the argument, instead we found '%s' of type "
-                        "'%s' for the '%s' format specifier.",
-                        starType,
-                        argument.ToString().c_str(),
-                        argumentType->ToString().c_str(),
-                        formatSpecifierRange.Data()));
+                state->ThrowException(report,
+                                      String::Format("When using * for %s an Integer must be provided "
+                                                     "before the argument, instead we found '%s' of type "
+                                                     "'%s' for the '%s' format specifier.",
+                                                     starType,
+                                                     argument.ToString().c_str(),
+                                                     argumentType->ToString().c_str(),
+                                                     formatSpecifierRange.Data()));
                 return;
               }
 
@@ -1866,10 +1763,9 @@ void StringFormatC(Call& call, ExceptionReport& report)
             // character, which is the format specifier that told us it was an
             // integer
             StringIterator lastrune = formatSpecifierRange.End() - 1;
-            String integralFormatSpecifierString =
-                BuildString(StringRange(formatSpecifierRange.Begin(), lastrune),
-                            "ll",
-                            StringRange(lastrune, formatSpecifierRange.End()));
+            String integralFormatSpecifierString = BuildString(StringRange(formatSpecifierRange.Begin(), lastrune),
+                                                               "ll",
+                                                               StringRange(lastrune, formatSpecifierRange.End()));
 
             // Convert as many types as we can to the DoubleInteger value
             DoubleInteger value = 0;
@@ -1887,14 +1783,12 @@ void StringFormatC(Call& call, ExceptionReport& report)
               value = (DoubleInteger) * (DoubleReal*)argumentData;
             else
               // Anything else must be an error since we don't know what it is
-              return state->ThrowException(
-                  report,
-                  String::Format(
-                      "The format specifier '%s' requires an integral or real "
-                      "type, instead we got '%s' of type '%s'.",
-                      formatSpecifierRange.Data(),
-                      argument.ToString().c_str(),
-                      argumentType->ToString().c_str()));
+              return state->ThrowException(report,
+                                           String::Format("The format specifier '%s' requires an integral or real "
+                                                          "type, instead we got '%s' of type '%s'.",
+                                                          formatSpecifierRange.Data(),
+                                                          argument.ToString().c_str(),
+                                                          argumentType->ToString().c_str()));
 
             // Print the value out and store it in the builder (this can throw
             // an exception)
@@ -1929,14 +1823,12 @@ void StringFormatC(Call& call, ExceptionReport& report)
               value = (DoubleReal) * (DoubleReal*)argumentData;
             else
               // Anything else must be an error since we don't know what it is
-              return state->ThrowException(
-                  report,
-                  String::Format(
-                      "The format specifier '%s' requires an integral or real "
-                      "type, instead we got '%s' of type '%s'.",
-                      formatSpecifierRange.Data(),
-                      argument.ToString().c_str(),
-                      argumentType->ToString().c_str()));
+              return state->ThrowException(report,
+                                           String::Format("The format specifier '%s' requires an integral or real "
+                                                          "type, instead we got '%s' of type '%s'.",
+                                                          formatSpecifierRange.Data(),
+                                                          argument.ToString().c_str(),
+                                                          argumentType->ToString().c_str()));
 
             // Print the value out and store it in the builder (this can throw
             // an exception)
@@ -1999,14 +1891,12 @@ void StringFormatC(Call& call, ExceptionReport& report)
             // If we didn't detect the type of value, throw an exception
             if (isValidValue == false)
             {
-              state->ThrowException(
-                  report,
-                  String::Format(
-                      "The format specifier '%s' requires a class, ref struct, "
-                      "or delegate type. Instead we got '%s' of type '%s'.",
-                      formatSpecifierRange.Data(),
-                      argument.ToString().c_str(),
-                      argumentType->ToString().c_str()));
+              state->ThrowException(report,
+                                    String::Format("The format specifier '%s' requires a class, ref struct, "
+                                                   "or delegate type. Instead we got '%s' of type '%s'.",
+                                                   formatSpecifierRange.Data(),
+                                                   argument.ToString().c_str(),
+                                                   argumentType->ToString().c_str()));
               return;
             }
 
@@ -2079,16 +1969,12 @@ cstr TrueFalseCstr(Boolean value)
 
 String Boolean2ToString(Boolean2Param value)
 {
-  return String::Format(
-      "(%s, %s)", TrueFalseCstr(value.x), TrueFalseCstr(value.y));
+  return String::Format("(%s, %s)", TrueFalseCstr(value.x), TrueFalseCstr(value.y));
 }
 
 String Boolean3ToString(Boolean3Param value)
 {
-  return String::Format("(%s, %s, %s)",
-                        TrueFalseCstr(value.x),
-                        TrueFalseCstr(value.y),
-                        TrueFalseCstr(value.z));
+  return String::Format("(%s, %s, %s)", TrueFalseCstr(value.x), TrueFalseCstr(value.y), TrueFalseCstr(value.z));
 }
 
 String Boolean4ToString(Boolean4Param value)
@@ -2158,19 +2044,18 @@ String QuaternionToString(QuaternionParam value)
 
   // Print out the quaternion, then the Euler Angles form, then the Axis/Angle
   // form
-  return String::Format(
-      "(%g, %g, %g, %g), Euler: (%g, %g, %g), Axis: (%g, %g, %g), Angle: %g",
-      value.x,
-      value.y,
-      value.z,
-      value.w,
-      angles.Angles.x,
-      angles.Angles.y,
-      angles.Angles.z,
-      axis.x,
-      axis.y,
-      axis.z,
-      angle);
+  return String::Format("(%g, %g, %g, %g), Euler: (%g, %g, %g), Axis: (%g, %g, %g), Angle: %g",
+                        value.x,
+                        value.y,
+                        value.z,
+                        value.w,
+                        angles.Angles.x,
+                        angles.Angles.y,
+                        angles.Angles.z,
+                        axis.x,
+                        axis.y,
+                        axis.z,
+                        angle);
 }
 
 String DoubleIntegerToString(DoubleInteger value)
@@ -2446,15 +2331,11 @@ void VectorCount(Call& call, ExceptionReport& report)
   call.Set(Call::Return, dimension);
 }
 
-void SetVectorAxis(byte* returnData,
-                   VectorUserData& userData,
-                   size_t axis,
-                   size_t typeIndex)
+void SetVectorAxis(byte* returnData, VectorUserData& userData, size_t axis, size_t typeIndex)
 {
   // Get the element type of the vector (Real, Integer, etc...)
   Core& core = Core::GetInstance();
-  BoundType* elementType =
-      core.VectorScalarBoundTypes[userData.ElementTypeIndex];
+  BoundType* elementType = core.VectorScalarBoundTypes[userData.ElementTypeIndex];
 
   size_t elementSize = elementType->Size;
   for (size_t i = 0; i < userData.Count; ++i)
@@ -2477,8 +2358,7 @@ void VectorGetAxis(Call& call, ExceptionReport& report)
   call.DisableReturnChecks();
 
   // Get the user data for the vector and what axis to operate on
-  VectorUserData& userData =
-      call.GetFunction()->ComplexUserData.ReadObject<VectorUserData>(0);
+  VectorUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<VectorUserData>(0);
   Integer axis = call.Get<Integer>(0);
 
   // Set the return data to be a vector of all zero except for the specified
@@ -2493,8 +2373,7 @@ void VectorAxisFunction(Call& call, ExceptionReport& report)
 
   // Get the user data for the vector and what axis to operate on (from the
   // regular user data)
-  VectorUserData& userData =
-      call.GetFunction()->ComplexUserData.ReadObject<VectorUserData>(0);
+  VectorUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<VectorUserData>(0);
   size_t axis = (size_t)(call.GetFunction()->UserData);
 
   // Set the return data to be a vector of all zero except for the specified
@@ -2508,13 +2387,11 @@ void VectorZeroFunction(Call& call, ExceptionReport& report)
   call.DisableReturnChecks();
 
   // Get the user data for the function
-  VectorUserData& userData =
-      call.GetFunction()->ComplexUserData.ReadObject<VectorUserData>(0);
+  VectorUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<VectorUserData>(0);
 
   // Get the element type of the vector (Real, Integer, etc...)
   Core& core = Core::GetInstance();
-  BoundType* elementType =
-      core.VectorScalarBoundTypes[userData.ElementTypeIndex];
+  BoundType* elementType = core.VectorScalarBoundTypes[userData.ElementTypeIndex];
 
   // Set the entire array to zero (based upon the size of the element type and
   // the number of elements)
@@ -2527,16 +2404,13 @@ void VectorOneFunction(Call& call, ExceptionReport& report)
   call.DisableReturnChecks();
 
   // Get the user data for the function
-  VectorUserData& userData =
-      call.GetFunction()->ComplexUserData.ReadObject<VectorUserData>(0);
+  VectorUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<VectorUserData>(0);
 
   // Get the element type of the vector (Real, Integer, etc...)
   Core& core = Core::GetInstance();
 
-  BoundType* elementType =
-      core.VectorScalarBoundTypes[userData.ElementTypeIndex];
-  Core::ScalarTypeOneFunction oneFunction =
-      core.ScalarTypeOneFunctions[userData.ElementTypeIndex];
+  BoundType* elementType = core.VectorScalarBoundTypes[userData.ElementTypeIndex];
+  Core::ScalarTypeOneFunction oneFunction = core.ScalarTypeOneFunctions[userData.ElementTypeIndex];
   // Set the entire array to one based upon a callback function for the bound
   // type
   byte* returnData = call.GetReturnUnchecked();
@@ -2549,9 +2423,7 @@ void VectorOneFunction(Call& call, ExceptionReport& report)
 
 // Splats a function of the type Scalar Fn(Scalar) to
 // Vec(n) Fn(Vec(n)) (vector could be of whatever scalar type is)
-template <size_t Components,
-          typename ScalarType,
-          ScalarType (*Function)(ScalarType)>
+template <size_t Components, typename ScalarType, ScalarType (*Function)(ScalarType)>
 void SplatVecToVec(Call& call, ExceptionReport& report)
 {
   // Get a pointer to our input vector
@@ -2571,10 +2443,7 @@ void SplatVecToVec(Call& call, ExceptionReport& report)
 
 // Splats a function of the type Scalar Fn(Scalar) to
 // Vec(n) Fn(Vec(n), a) (vector could be of whatever scalar type is)
-template <size_t Components,
-          typename ScalarType,
-          typename ExtraA,
-          ScalarType (*Function)(ScalarType, ExtraA)>
+template <size_t Components, typename ScalarType, typename ExtraA, ScalarType (*Function)(ScalarType, ExtraA)>
 void SplatVecToVecOneExtra(Call& call, ExceptionReport& report)
 {
   // Get a pointer to our input vector
@@ -2627,9 +2496,7 @@ void SplatVecToVecTwoExtra(Call& call, ExceptionReport& report)
 // Vec(n) Fn(Vec(n)). The function being splatted is a Scalar Fn(Scalar)
 // function that has been altered to return if it failed so an exception
 // can be thrown.
-template <size_t Components,
-          typename ScalarType,
-          bool (*Function)(ScalarType, ScalarType&)>
+template <size_t Components, typename ScalarType, bool (*Function)(ScalarType, ScalarType&)>
 void SplatVecToVecWithError(Call& call, ExceptionReport& report)
 {
   // Get a pointer to our input vector
@@ -2662,9 +2529,7 @@ void SplatVecToVecWithError(Call& call, ExceptionReport& report)
 
 // Splats a function of the type Scalar Fn(Scalar, Scalar) to
 // Vec(n) Fn(Vec(n), Vec(n)) (vector could be of whatever scalar type is)
-template <size_t Components,
-          typename ScalarType,
-          ScalarType (*Function)(ScalarType, ScalarType)>
+template <size_t Components, typename ScalarType, ScalarType (*Function)(ScalarType, ScalarType)>
 void SplatTwoVecToVec(Call& call, ExceptionReport& report)
 {
   // Get a pointer to our input vector
@@ -2686,9 +2551,7 @@ void SplatTwoVecToVec(Call& call, ExceptionReport& report)
 // Splats a function of the type Scalar Fn(Scalar, Scalar, Scalar) to
 // Vec(n) Fn(Vec(n), Vec(n), Vec(n)) (vector could be of whatever scalar type
 // is)
-template <size_t Components,
-          typename ScalarType,
-          ScalarType (*Function)(ScalarType, ScalarType, ScalarType)>
+template <size_t Components, typename ScalarType, ScalarType (*Function)(ScalarType, ScalarType, ScalarType)>
 void SplatThreeVecToVec(Call& call, ExceptionReport& report)
 {
   // Get a pointer to our input vector
@@ -2710,9 +2573,7 @@ void SplatThreeVecToVec(Call& call, ExceptionReport& report)
 
 // Splats a function of the type Scalar Fn(Scalar, Scalar, Real) to
 // Vec(n) Fn(Vec(n), Vec(n), Real) (vector could be of whatever scalar type is)
-template <size_t Components,
-          typename ScalarType,
-          ScalarType (*Function)(ScalarType, ScalarType, Real)>
+template <size_t Components, typename ScalarType, ScalarType (*Function)(ScalarType, ScalarType, Real)>
 void SplatTwoVecAndRealToVec(Call& call, ExceptionReport& report)
 {
   // Get pointers to the two vectors
@@ -2732,551 +2593,354 @@ void SplatTwoVecAndRealToVec(Call& call, ExceptionReport& report)
   }
 }
 
-#define ZilchSplatAllVectorOperationsAs(ZilchBuilder,                          \
-                                        ZilchType,                             \
-                                        NamespaceAndClass,                     \
-                                        type,                                  \
-                                        Method,                                \
-                                        Name,                                  \
-                                        UserDescription)                       \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(ZilchType,                                             \
-                        Name,                                                  \
-                        SplatVecToVec<1, type, NamespaceAndClass::Method>,     \
-                        OneParameter(this->type##Type),                        \
-                        this->type##Type,                                      \
-                        FunctionOptions::Static)                               \
-      ->Description = ZilchDocumentString(UserDescription);                    \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(ZilchType,                                             \
-                        Name,                                                  \
-                        SplatVecToVec<2, type, NamespaceAndClass::Method>,     \
-                        OneParameter(this->type##2Type),                       \
-                        this->type##2Type,                                     \
-                        FunctionOptions::Static)                               \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));             \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(ZilchType,                                             \
-                        Name,                                                  \
-                        SplatVecToVec<3, type, NamespaceAndClass::Method>,     \
-                        OneParameter(this->type##3Type),                       \
-                        this->type##3Type,                                     \
-                        FunctionOptions::Static)                               \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));             \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(ZilchType,                                             \
-                        Name,                                                  \
-                        SplatVecToVec<4, type, NamespaceAndClass::Method>,     \
-                        OneParameter(this->type##4Type),                       \
-                        this->type##4Type,                                     \
-                        FunctionOptions::Static)                               \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));
+#define ZilchSplatAllVectorOperationsAs(                                                                               \
+    ZilchBuilder, ZilchType, NamespaceAndClass, type, Method, Name, UserDescription)                                   \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatVecToVec<1, type, NamespaceAndClass::Method>,                                             \
+                        OneParameter(this->type##Type),                                                                \
+                        this->type##Type,                                                                              \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(UserDescription);                                                            \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatVecToVec<2, type, NamespaceAndClass::Method>,                                             \
+                        OneParameter(this->type##2Type),                                                               \
+                        this->type##2Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatVecToVec<3, type, NamespaceAndClass::Method>,                                             \
+                        OneParameter(this->type##3Type),                                                               \
+                        this->type##3Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatVecToVec<4, type, NamespaceAndClass::Method>,                                             \
+                        OneParameter(this->type##4Type),                                                               \
+                        this->type##4Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define ZilchSplatNamedAllVectorOperationsTwoExtraAs(ZilchBuilder,             \
-                                                     ZilchType,                \
-                                                     NamespaceAndClass,        \
-                                                     type,                     \
-                                                     typeA,                    \
-                                                     typeB,                    \
-                                                     Method,                   \
-                                                     Name,                     \
-                                                     p1,                       \
-                                                     p2,                       \
-                                                     p3,                       \
-                                                     UserDescription)          \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(ZilchType,                                             \
-                        Name,                                                  \
-                        SplatVecToVecTwoExtra<1,                               \
-                                              type,                            \
-                                              typeA,                           \
-                                              typeB,                           \
-                                              NamespaceAndClass::Method>,      \
-                        ThreeParameters(this->type##Type,                      \
-                                        p1,                                    \
-                                        ZilchTypeId(typeA),                    \
-                                        p2,                                    \
-                                        ZilchTypeId(typeB),                    \
-                                        p3),                                   \
-                        this->type##Type,                                      \
-                        FunctionOptions::Static)                               \
-      ->Description = ZilchDocumentString(UserDescription);                    \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(ZilchType,                                             \
-                        Name,                                                  \
-                        SplatVecToVecTwoExtra<2,                               \
-                                              type,                            \
-                                              typeA,                           \
-                                              typeB,                           \
-                                              NamespaceAndClass::Method>,      \
-                        ThreeParameters(this->type##2Type,                     \
-                                        p1,                                    \
-                                        ZilchTypeId(typeA),                    \
-                                        p2,                                    \
-                                        ZilchTypeId(typeB),                    \
-                                        p3),                                   \
-                        this->type##2Type,                                     \
-                        FunctionOptions::Static)                               \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));             \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(ZilchType,                                             \
-                        Name,                                                  \
-                        SplatVecToVecTwoExtra<3,                               \
-                                              type,                            \
-                                              typeA,                           \
-                                              typeB,                           \
-                                              NamespaceAndClass::Method>,      \
-                        ThreeParameters(this->type##3Type,                     \
-                                        p1,                                    \
-                                        ZilchTypeId(typeA),                    \
-                                        p2,                                    \
-                                        ZilchTypeId(typeB),                    \
-                                        p3),                                   \
-                        this->type##3Type,                                     \
-                        FunctionOptions::Static)                               \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));             \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(ZilchType,                                             \
-                        Name,                                                  \
-                        SplatVecToVecTwoExtra<4,                               \
-                                              type,                            \
-                                              typeA,                           \
-                                              typeB,                           \
-                                              NamespaceAndClass::Method>,      \
-                        ThreeParameters(this->type##4Type,                     \
-                                        p1,                                    \
-                                        ZilchTypeId(typeA),                    \
-                                        p2,                                    \
-                                        ZilchTypeId(typeB),                    \
-                                        p3),                                   \
-                        this->type##4Type,                                     \
-                        FunctionOptions::Static)                               \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));
+#define ZilchSplatNamedAllVectorOperationsTwoExtraAs(                                                                  \
+    ZilchBuilder, ZilchType, NamespaceAndClass, type, typeA, typeB, Method, Name, p1, p2, p3, UserDescription)         \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatVecToVecTwoExtra<1, type, typeA, typeB, NamespaceAndClass::Method>,                       \
+                        ThreeParameters(this->type##Type, p1, ZilchTypeId(typeA), p2, ZilchTypeId(typeB), p3),         \
+                        this->type##Type,                                                                              \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(UserDescription);                                                            \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatVecToVecTwoExtra<2, type, typeA, typeB, NamespaceAndClass::Method>,                       \
+                        ThreeParameters(this->type##2Type, p1, ZilchTypeId(typeA), p2, ZilchTypeId(typeB), p3),        \
+                        this->type##2Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatVecToVecTwoExtra<3, type, typeA, typeB, NamespaceAndClass::Method>,                       \
+                        ThreeParameters(this->type##3Type, p1, ZilchTypeId(typeA), p2, ZilchTypeId(typeB), p3),        \
+                        this->type##3Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatVecToVecTwoExtra<4, type, typeA, typeB, NamespaceAndClass::Method>,                       \
+                        ThreeParameters(this->type##4Type, p1, ZilchTypeId(typeA), p2, ZilchTypeId(typeB), p3),        \
+                        this->type##4Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define ZilchSplatNamedAllVectorOperationsOneExtraAs(ZilchBuilder,             \
-                                                     ZilchType,                \
-                                                     NamespaceAndClass,        \
-                                                     type,                     \
-                                                     typeA,                    \
-                                                     Method,                   \
-                                                     Name,                     \
-                                                     p1,                       \
-                                                     p2,                       \
-                                                     UserDescription)          \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          Name,                                                                \
-          SplatVecToVecOneExtra<1, type, typeA, NamespaceAndClass::Method>,    \
-          TwoParameters(this->type##Type, p1, ZilchTypeId(typeA), p2),         \
-          this->type##Type,                                                    \
-          FunctionOptions::Static)                                             \
-      ->Description = ZilchDocumentString(UserDescription);                    \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          Name,                                                                \
-          SplatVecToVecOneExtra<2, type, typeA, NamespaceAndClass::Method>,    \
-          TwoParameters(this->type##2Type, p1, ZilchTypeId(typeA), p2),        \
-          this->type##2Type,                                                   \
-          FunctionOptions::Static)                                             \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));             \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          Name,                                                                \
-          SplatVecToVecOneExtra<3, type, typeA, NamespaceAndClass::Method>,    \
-          TwoParameters(this->type##3Type, p1, ZilchTypeId(typeA), p2),        \
-          this->type##3Type,                                                   \
-          FunctionOptions::Static)                                             \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));             \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          Name,                                                                \
-          SplatVecToVecOneExtra<4, type, typeA, NamespaceAndClass::Method>,    \
-          TwoParameters(this->type##4Type, p1, ZilchTypeId(typeA), p2),        \
-          this->type##4Type,                                                   \
-          FunctionOptions::Static)                                             \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));
+#define ZilchSplatNamedAllVectorOperationsOneExtraAs(                                                                  \
+    ZilchBuilder, ZilchType, NamespaceAndClass, type, typeA, Method, Name, p1, p2, UserDescription)                    \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatVecToVecOneExtra<1, type, typeA, NamespaceAndClass::Method>,                              \
+                        TwoParameters(this->type##Type, p1, ZilchTypeId(typeA), p2),                                   \
+                        this->type##Type,                                                                              \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(UserDescription);                                                            \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatVecToVecOneExtra<2, type, typeA, NamespaceAndClass::Method>,                              \
+                        TwoParameters(this->type##2Type, p1, ZilchTypeId(typeA), p2),                                  \
+                        this->type##2Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatVecToVecOneExtra<3, type, typeA, NamespaceAndClass::Method>,                              \
+                        TwoParameters(this->type##3Type, p1, ZilchTypeId(typeA), p2),                                  \
+                        this->type##3Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatVecToVecOneExtra<4, type, typeA, NamespaceAndClass::Method>,                              \
+                        TwoParameters(this->type##4Type, p1, ZilchTypeId(typeA), p2),                                  \
+                        this->type##4Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define ZilchSplatNamedAllVectorOperationsAs(ZilchBuilder,                     \
-                                             ZilchType,                        \
-                                             NamespaceAndClass,                \
-                                             type,                             \
-                                             Method,                           \
-                                             FunctionName,                     \
-                                             ParamName,                        \
-                                             UserDescription)                  \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(ZilchType,                                             \
-                        FunctionName,                                          \
-                        SplatVecToVec<1, type, NamespaceAndClass::Method>,     \
-                        OneParameter(this->type##Type, ParamName),             \
-                        this->type##Type,                                      \
-                        FunctionOptions::Static)                               \
-      ->Description = ZilchDocumentString(UserDescription);                    \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(ZilchType,                                             \
-                        FunctionName,                                          \
-                        SplatVecToVec<2, type, NamespaceAndClass::Method>,     \
-                        OneParameter(this->type##2Type, ParamName),            \
-                        this->type##2Type,                                     \
-                        FunctionOptions::Static)                               \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));             \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(ZilchType,                                             \
-                        FunctionName,                                          \
-                        SplatVecToVec<3, type, NamespaceAndClass::Method>,     \
-                        OneParameter(this->type##3Type, ParamName),            \
-                        this->type##3Type,                                     \
-                        FunctionOptions::Static)                               \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));             \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(ZilchType,                                             \
-                        FunctionName,                                          \
-                        SplatVecToVec<4, type, NamespaceAndClass::Method>,     \
-                        OneParameter(this->type##4Type, ParamName),            \
-                        this->type##4Type,                                     \
-                        FunctionOptions::Static)                               \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));
+#define ZilchSplatNamedAllVectorOperationsAs(                                                                          \
+    ZilchBuilder, ZilchType, NamespaceAndClass, type, Method, FunctionName, ParamName, UserDescription)                \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        FunctionName,                                                                                  \
+                        SplatVecToVec<1, type, NamespaceAndClass::Method>,                                             \
+                        OneParameter(this->type##Type, ParamName),                                                     \
+                        this->type##Type,                                                                              \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(UserDescription);                                                            \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        FunctionName,                                                                                  \
+                        SplatVecToVec<2, type, NamespaceAndClass::Method>,                                             \
+                        OneParameter(this->type##2Type, ParamName),                                                    \
+                        this->type##2Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        FunctionName,                                                                                  \
+                        SplatVecToVec<3, type, NamespaceAndClass::Method>,                                             \
+                        OneParameter(this->type##3Type, ParamName),                                                    \
+                        this->type##3Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        FunctionName,                                                                                  \
+                        SplatVecToVec<4, type, NamespaceAndClass::Method>,                                             \
+                        OneParameter(this->type##4Type, ParamName),                                                    \
+                        this->type##4Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define ZilchSplatAllVectorOperationsWithErrorAs(ZilchBuilder,                 \
-                                                 ZilchType,                    \
-                                                 NamespaceAndClass,            \
-                                                 type,                         \
-                                                 Method,                       \
-                                                 FunctionName,                 \
-                                                 ErrorFormatString)            \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          FunctionName,                                                        \
-          SplatVecToVecWithError<1, type, NamespaceAndClass::Method>,          \
-          OneParameter(this->type##Type),                                      \
-          this->type##Type,                                                    \
-          FunctionOptions::Static)                                             \
-      ->UserData = ErrorFormatString;                                          \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          FunctionName,                                                        \
-          SplatVecToVecWithError<2, type, NamespaceAndClass::Method>,          \
-          OneParameter(this->type##2Type),                                     \
-          this->type##2Type,                                                   \
-          FunctionOptions::Static)                                             \
-      ->UserData = ErrorFormatString;                                          \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          FunctionName,                                                        \
-          SplatVecToVecWithError<3, type, NamespaceAndClass::Method>,          \
-          OneParameter(this->type##3Type),                                     \
-          this->type##3Type,                                                   \
-          FunctionOptions::Static)                                             \
-      ->UserData = ErrorFormatString;                                          \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          FunctionName,                                                        \
-          SplatVecToVecWithError<4, type, NamespaceAndClass::Method>,          \
-          OneParameter(this->type##4Type),                                     \
-          this->type##4Type,                                                   \
-          FunctionOptions::Static)                                             \
+#define ZilchSplatAllVectorOperationsWithErrorAs(                                                                      \
+    ZilchBuilder, ZilchType, NamespaceAndClass, type, Method, FunctionName, ErrorFormatString)                         \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        FunctionName,                                                                                  \
+                        SplatVecToVecWithError<1, type, NamespaceAndClass::Method>,                                    \
+                        OneParameter(this->type##Type),                                                                \
+                        this->type##Type,                                                                              \
+                        FunctionOptions::Static)                                                                       \
+      ->UserData = ErrorFormatString;                                                                                  \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        FunctionName,                                                                                  \
+                        SplatVecToVecWithError<2, type, NamespaceAndClass::Method>,                                    \
+                        OneParameter(this->type##2Type),                                                               \
+                        this->type##2Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->UserData = ErrorFormatString;                                                                                  \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        FunctionName,                                                                                  \
+                        SplatVecToVecWithError<3, type, NamespaceAndClass::Method>,                                    \
+                        OneParameter(this->type##3Type),                                                               \
+                        this->type##3Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->UserData = ErrorFormatString;                                                                                  \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        FunctionName,                                                                                  \
+                        SplatVecToVecWithError<4, type, NamespaceAndClass::Method>,                                    \
+                        OneParameter(this->type##4Type),                                                               \
+                        this->type##4Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
       ->UserData = ErrorFormatString;
 
-#define ZilchSplatNamedAllVectorOperationsWithErrorAs(ZilchBuilder,            \
-                                                      ZilchType,               \
-                                                      NamespaceAndClass,       \
-                                                      type,                    \
-                                                      Method,                  \
-                                                      FunctionName,            \
-                                                      ParamName,               \
-                                                      ErrorFormatString)       \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          FunctionName,                                                        \
-          SplatVecToVecWithError<1, type, NamespaceAndClass::Method>,          \
-          OneParameter(this->type##Type, ParamName),                           \
-          this->type##Type,                                                    \
-          FunctionOptions::Static)                                             \
-      ->UserData = ErrorFormatString;                                          \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          FunctionName,                                                        \
-          SplatVecToVecWithError<2, type, NamespaceAndClass::Method>,          \
-          OneParameter(this->type##2Type, ParamName),                          \
-          this->type##2Type,                                                   \
-          FunctionOptions::Static)                                             \
-      ->UserData = ErrorFormatString;                                          \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          FunctionName,                                                        \
-          SplatVecToVecWithError<3, type, NamespaceAndClass::Method>,          \
-          OneParameter(this->type##3Type, ParamName),                          \
-          this->type##3Type,                                                   \
-          FunctionOptions::Static)                                             \
-      ->UserData = ErrorFormatString;                                          \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          FunctionName,                                                        \
-          SplatVecToVecWithError<4, type, NamespaceAndClass::Method>,          \
-          OneParameter(this->type##4Type, ParamName),                          \
-          this->type##4Type,                                                   \
-          FunctionOptions::Static)                                             \
+#define ZilchSplatNamedAllVectorOperationsWithErrorAs(                                                                 \
+    ZilchBuilder, ZilchType, NamespaceAndClass, type, Method, FunctionName, ParamName, ErrorFormatString)              \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        FunctionName,                                                                                  \
+                        SplatVecToVecWithError<1, type, NamespaceAndClass::Method>,                                    \
+                        OneParameter(this->type##Type, ParamName),                                                     \
+                        this->type##Type,                                                                              \
+                        FunctionOptions::Static)                                                                       \
+      ->UserData = ErrorFormatString;                                                                                  \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        FunctionName,                                                                                  \
+                        SplatVecToVecWithError<2, type, NamespaceAndClass::Method>,                                    \
+                        OneParameter(this->type##2Type, ParamName),                                                    \
+                        this->type##2Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->UserData = ErrorFormatString;                                                                                  \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        FunctionName,                                                                                  \
+                        SplatVecToVecWithError<3, type, NamespaceAndClass::Method>,                                    \
+                        OneParameter(this->type##3Type, ParamName),                                                    \
+                        this->type##3Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->UserData = ErrorFormatString;                                                                                  \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        FunctionName,                                                                                  \
+                        SplatVecToVecWithError<4, type, NamespaceAndClass::Method>,                                    \
+                        OneParameter(this->type##4Type, ParamName),                                                    \
+                        this->type##4Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
       ->UserData = ErrorFormatString;
 
-#define ZilchSplatAllTwoVecToVecAs(ZilchBuilder,                               \
-                                   ZilchType,                                  \
-                                   NamespaceAndClass,                          \
-                                   type,                                       \
-                                   Method,                                     \
-                                   Name,                                       \
-                                   UserDescription)                            \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(ZilchType,                                             \
-                        Name,                                                  \
-                        SplatTwoVecToVec<1, type, NamespaceAndClass::Method>,  \
-                        TwoParameters(this->type##Type),                       \
-                        this->type##Type,                                      \
-                        FunctionOptions::Static)                               \
-      ->Description = ZilchDocumentString(UserDescription);                    \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(ZilchType,                                             \
-                        Name,                                                  \
-                        SplatTwoVecToVec<2, type, NamespaceAndClass::Method>,  \
-                        TwoParameters(this->type##2Type),                      \
-                        this->type##2Type,                                     \
-                        FunctionOptions::Static)                               \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));             \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(ZilchType,                                             \
-                        Name,                                                  \
-                        SplatTwoVecToVec<3, type, NamespaceAndClass::Method>,  \
-                        TwoParameters(this->type##3Type),                      \
-                        this->type##3Type,                                     \
-                        FunctionOptions::Static)                               \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));             \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(ZilchType,                                             \
-                        Name,                                                  \
-                        SplatTwoVecToVec<4, type, NamespaceAndClass::Method>,  \
-                        TwoParameters(this->type##4Type),                      \
-                        this->type##4Type,                                     \
-                        FunctionOptions::Static)                               \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));
+#define ZilchSplatAllTwoVecToVecAs(ZilchBuilder, ZilchType, NamespaceAndClass, type, Method, Name, UserDescription)    \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatTwoVecToVec<1, type, NamespaceAndClass::Method>,                                          \
+                        TwoParameters(this->type##Type),                                                               \
+                        this->type##Type,                                                                              \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(UserDescription);                                                            \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatTwoVecToVec<2, type, NamespaceAndClass::Method>,                                          \
+                        TwoParameters(this->type##2Type),                                                              \
+                        this->type##2Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatTwoVecToVec<3, type, NamespaceAndClass::Method>,                                          \
+                        TwoParameters(this->type##3Type),                                                              \
+                        this->type##3Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatTwoVecToVec<4, type, NamespaceAndClass::Method>,                                          \
+                        TwoParameters(this->type##4Type),                                                              \
+                        this->type##4Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define ZilchSplatNamedAllTwoVecToVecAs(ZilchBuilder,                          \
-                                        ZilchType,                             \
-                                        NamespaceAndClass,                     \
-                                        type,                                  \
-                                        Method,                                \
-                                        FunctionName,                          \
-                                        Param1Name,                            \
-                                        Param2Name,                            \
-                                        UserDescription)                       \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          FunctionName,                                                        \
-          SplatTwoVecToVec<1, type, NamespaceAndClass::Method>,                \
-          TwoParameters(                                                       \
-              this->type##Type, Param1Name, this->type##Type, Param2Name),     \
-          this->type##Type,                                                    \
-          FunctionOptions::Static)                                             \
-      ->Description = ZilchDocumentString(UserDescription);                    \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          FunctionName,                                                        \
-          SplatTwoVecToVec<2, type, NamespaceAndClass::Method>,                \
-          TwoParameters(                                                       \
-              this->type##2Type, Param1Name, this->type##2Type, Param2Name),   \
-          this->type##2Type,                                                   \
-          FunctionOptions::Static)                                             \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));             \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          FunctionName,                                                        \
-          SplatTwoVecToVec<3, type, NamespaceAndClass::Method>,                \
-          TwoParameters(                                                       \
-              this->type##3Type, Param1Name, this->type##3Type, Param2Name),   \
-          this->type##3Type,                                                   \
-          FunctionOptions::Static)                                             \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));             \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          FunctionName,                                                        \
-          SplatTwoVecToVec<4, type, NamespaceAndClass::Method>,                \
-          TwoParameters(                                                       \
-              this->type##4Type, Param1Name, this->type##4Type, Param2Name),   \
-          this->type##4Type,                                                   \
-          FunctionOptions::Static)                                             \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));
+#define ZilchSplatNamedAllTwoVecToVecAs(                                                                               \
+    ZilchBuilder, ZilchType, NamespaceAndClass, type, Method, FunctionName, Param1Name, Param2Name, UserDescription)   \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        FunctionName,                                                                                  \
+                        SplatTwoVecToVec<1, type, NamespaceAndClass::Method>,                                          \
+                        TwoParameters(this->type##Type, Param1Name, this->type##Type, Param2Name),                     \
+                        this->type##Type,                                                                              \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(UserDescription);                                                            \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        FunctionName,                                                                                  \
+                        SplatTwoVecToVec<2, type, NamespaceAndClass::Method>,                                          \
+                        TwoParameters(this->type##2Type, Param1Name, this->type##2Type, Param2Name),                   \
+                        this->type##2Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        FunctionName,                                                                                  \
+                        SplatTwoVecToVec<3, type, NamespaceAndClass::Method>,                                          \
+                        TwoParameters(this->type##3Type, Param1Name, this->type##3Type, Param2Name),                   \
+                        this->type##3Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        FunctionName,                                                                                  \
+                        SplatTwoVecToVec<4, type, NamespaceAndClass::Method>,                                          \
+                        TwoParameters(this->type##4Type, Param1Name, this->type##4Type, Param2Name),                   \
+                        this->type##4Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define ZilchSplatAllThreeVecToVecAs(ZilchBuilder,                             \
-                                     ZilchType,                                \
-                                     NamespaceAndClass,                        \
-                                     type,                                     \
-                                     Method,                                   \
-                                     Name,                                     \
-                                     p1,                                       \
-                                     p2,                                       \
-                                     p3,                                       \
-                                     UserDescription)                          \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          Name,                                                                \
-          SplatThreeVecToVec<1, type, NamespaceAndClass::Method>,              \
-          ThreeParameters(this->type##Type,                                    \
-                          p1,                                                  \
-                          this->type##Type,                                    \
-                          p2,                                                  \
-                          this->type##Type,                                    \
-                          p3),                                                 \
-          this->type##Type,                                                    \
-          FunctionOptions::Static)                                             \
-      ->Description = ZilchDocumentString(UserDescription);                    \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          Name,                                                                \
-          SplatThreeVecToVec<2, type, NamespaceAndClass::Method>,              \
-          ThreeParameters(this->type##2Type,                                   \
-                          p1,                                                  \
-                          this->type##2Type,                                   \
-                          p2,                                                  \
-                          this->type##2Type,                                   \
-                          p3),                                                 \
-          this->type##2Type,                                                   \
-          FunctionOptions::Static)                                             \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));             \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          Name,                                                                \
-          SplatThreeVecToVec<3, type, NamespaceAndClass::Method>,              \
-          ThreeParameters(this->type##3Type,                                   \
-                          p1,                                                  \
-                          this->type##3Type,                                   \
-                          p2,                                                  \
-                          this->type##3Type,                                   \
-                          p3),                                                 \
-          this->type##3Type,                                                   \
-          FunctionOptions::Static)                                             \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));             \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          Name,                                                                \
-          SplatThreeVecToVec<4, type, NamespaceAndClass::Method>,              \
-          ThreeParameters(this->type##4Type,                                   \
-                          p1,                                                  \
-                          this->type##4Type,                                   \
-                          p2,                                                  \
-                          this->type##4Type,                                   \
-                          p3),                                                 \
-          this->type##4Type,                                                   \
-          FunctionOptions::Static)                                             \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));
+#define ZilchSplatAllThreeVecToVecAs(                                                                                  \
+    ZilchBuilder, ZilchType, NamespaceAndClass, type, Method, Name, p1, p2, p3, UserDescription)                       \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatThreeVecToVec<1, type, NamespaceAndClass::Method>,                                        \
+                        ThreeParameters(this->type##Type, p1, this->type##Type, p2, this->type##Type, p3),             \
+                        this->type##Type,                                                                              \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(UserDescription);                                                            \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatThreeVecToVec<2, type, NamespaceAndClass::Method>,                                        \
+                        ThreeParameters(this->type##2Type, p1, this->type##2Type, p2, this->type##2Type, p3),          \
+                        this->type##2Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatThreeVecToVec<3, type, NamespaceAndClass::Method>,                                        \
+                        ThreeParameters(this->type##3Type, p1, this->type##3Type, p2, this->type##3Type, p3),          \
+                        this->type##3Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatThreeVecToVec<4, type, NamespaceAndClass::Method>,                                        \
+                        ThreeParameters(this->type##4Type, p1, this->type##4Type, p2, this->type##4Type, p3),          \
+                        this->type##4Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define ZilchSplatAllTwoVecAndRealToVecAs(ZilchBuilder,                        \
-                                          ZilchType,                           \
-                                          NamespaceAndClass,                   \
-                                          type,                                \
-                                          Method,                              \
-                                          Name,                                \
-                                          p1,                                  \
-                                          p2,                                  \
-                                          p3,                                  \
-                                          UserDescription)                     \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          Name,                                                                \
-          SplatTwoVecAndRealToVec<1, type, NamespaceAndClass::Method>,         \
-          ThreeParameters(this->type##Type,                                    \
-                          p1,                                                  \
-                          this->type##Type,                                    \
-                          p2,                                                  \
-                          this->type##Type,                                    \
-                          p3),                                                 \
-          this->type##Type,                                                    \
-          FunctionOptions::Static)                                             \
-      ->Description = ZilchDocumentString(UserDescription);                    \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          Name,                                                                \
-          SplatTwoVecAndRealToVec<2, type, NamespaceAndClass::Method>,         \
-          ThreeParameters(this->type##2Type,                                   \
-                          p1,                                                  \
-                          this->type##2Type,                                   \
-                          p2,                                                  \
-                          this->type##Type,                                    \
-                          p3),                                                 \
-          this->type##2Type,                                                   \
-          FunctionOptions::Static)                                             \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));             \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          Name,                                                                \
-          SplatTwoVecAndRealToVec<3, type, NamespaceAndClass::Method>,         \
-          ThreeParameters(this->type##3Type,                                   \
-                          p1,                                                  \
-                          this->type##3Type,                                   \
-                          p2,                                                  \
-                          this->type##Type,                                    \
-                          p3),                                                 \
-          this->type##3Type,                                                   \
-          FunctionOptions::Static)                                             \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));             \
-  ZilchBuilder                                                                 \
-      .AddBoundFunction(                                                       \
-          ZilchType,                                                           \
-          Name,                                                                \
-          SplatTwoVecAndRealToVec<4, type, NamespaceAndClass::Method>,         \
-          ThreeParameters(this->type##4Type,                                   \
-                          p1,                                                  \
-                          this->type##4Type,                                   \
-                          p2,                                                  \
-                          this->type##Type,                                    \
-                          p3),                                                 \
-          this->type##4Type,                                                   \
-          FunctionOptions::Static)                                             \
-      ->Description = ZilchDocumentString(                                     \
-      BuildString(UserDescription, " Performed component-wise."));
+#define ZilchSplatAllTwoVecAndRealToVecAs(                                                                             \
+    ZilchBuilder, ZilchType, NamespaceAndClass, type, Method, Name, p1, p2, p3, UserDescription)                       \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatTwoVecAndRealToVec<1, type, NamespaceAndClass::Method>,                                   \
+                        ThreeParameters(this->type##Type, p1, this->type##Type, p2, this->type##Type, p3),             \
+                        this->type##Type,                                                                              \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(UserDescription);                                                            \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatTwoVecAndRealToVec<2, type, NamespaceAndClass::Method>,                                   \
+                        ThreeParameters(this->type##2Type, p1, this->type##2Type, p2, this->type##Type, p3),           \
+                        this->type##2Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatTwoVecAndRealToVec<3, type, NamespaceAndClass::Method>,                                   \
+                        ThreeParameters(this->type##3Type, p1, this->type##3Type, p2, this->type##Type, p3),           \
+                        this->type##3Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
+  ZilchBuilder                                                                                                         \
+      .AddBoundFunction(ZilchType,                                                                                     \
+                        Name,                                                                                          \
+                        SplatTwoVecAndRealToVec<4, type, NamespaceAndClass::Method>,                                   \
+                        ThreeParameters(this->type##4Type, p1, this->type##4Type, p2, this->type##Type, p3),           \
+                        this->type##4Type,                                                                             \
+                        FunctionOptions::Static)                                                                       \
+      ->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
 // Splat a zero parameter function across a vector/matrix.
 template <typename ResultType, typename FunctionPointer, FunctionPointer Fn>
@@ -3337,11 +3001,7 @@ template <typename ScalarType0,
           ResultType (*Function)(FnScalarType0)>
 void FullOneParameterSplatAs(Call& call, ExceptionReport& report)
 {
-  FullOneParameterSplat<ScalarType0,
-                        ResultType,
-                        ScalarType0Offset,
-                        decltype(Function),
-                        Function>(call, report);
+  FullOneParameterSplat<ScalarType0, ResultType, ScalarType0Offset, decltype(Function), Function>(call, report);
 }
 
 // Splats a function of the type Result Fn(Scalar0, Scalar1).
@@ -3375,8 +3035,7 @@ void FullTwoParameterSplat(Call& call, ExceptionReport& report)
     // Call the function bound function
     // (the offset is used to generically control if an input should be only one
     // scalar or another vector type)
-    result[i] =
-        Fn(input0[i * ScalarType0Offset], input1[i * ScalarType1Offset]);
+    result[i] = Fn(input0[i * ScalarType0Offset], input1[i * ScalarType1Offset]);
   }
 }
 
@@ -3436,9 +3095,7 @@ void FullThreeParameterSplat(Call& call, ExceptionReport& report)
     // Call the function bound function
     // (the offset is used to generically control if an input should be only one
     // scalar or another vector type)
-    result[i] = Fn(input0[i * ScalarType0Offset],
-                   input1[i * ScalarType1Offset],
-                   input2[i * ScalarType2Offset]);
+    result[i] = Fn(input0[i * ScalarType0Offset], input1[i * ScalarType1Offset], input2[i * ScalarType2Offset]);
   }
 }
 
@@ -3487,8 +3144,7 @@ public:
 
 void AllNonZero(Call& call, ExceptionReport& report)
 {
-  SplatWithErrorUserData& userData =
-      call.GetFunction()->ComplexUserData.ReadObject<SplatWithErrorUserData>(0);
+  SplatWithErrorUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<SplatWithErrorUserData>(0);
 
   size_t elementSize = userData.Type->Size / userData.Size;
 
@@ -3510,8 +3166,7 @@ void AllNonZero(Call& call, ExceptionReport& report)
 
 void AnyNonZero(Call& call, ExceptionReport& report)
 {
-  SplatWithErrorUserData& userData =
-      call.GetFunction()->ComplexUserData.ReadObject<SplatWithErrorUserData>(0);
+  SplatWithErrorUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<SplatWithErrorUserData>(0);
 
   size_t elementSize = userData.Type->Size / userData.Size;
 
@@ -3541,8 +3196,7 @@ void AnyNonZero(Call& call, ExceptionReport& report)
 template <typename ScalarType, bool (*Function)(ScalarType, ScalarType&)>
 void SimpleSplatWithError(Call& call, ExceptionReport& report)
 {
-  SplatWithErrorUserData& userData =
-      call.GetFunction()->ComplexUserData.ReadObject<SplatWithErrorUserData>(0);
+  SplatWithErrorUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<SplatWithErrorUserData>(0);
 
   // Get a pointer to our input vector
   ScalarType* input = (ScalarType*)call.GetParameterUnchecked(0);
@@ -3584,8 +3238,7 @@ template <typename ScalarType0,
           bool (*Function)(ScalarType0, ScalarType1, ResultType&)>
 void FullTwoParameterSplatWithError(Call& call, ExceptionReport& report)
 {
-  SplatWithErrorUserData& userData =
-      call.GetFunction()->ComplexUserData.ReadObject<SplatWithErrorUserData>(0);
+  SplatWithErrorUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<SplatWithErrorUserData>(0);
 
   // Get a pointer to our input vector
   ScalarType0* input0 = (ScalarType0*)call.GetParameterUnchecked(0);
@@ -3600,9 +3253,7 @@ void FullTwoParameterSplatWithError(Call& call, ExceptionReport& report)
   for (size_t i = 0; i < userData.Size; ++i)
   {
     // Call the function on the single input (splat)
-    success = Function(input0[i * ScalarType0Offset],
-                       input1[i * ScalarType0Offset],
-                       result[i]);
+    success = Function(input0[i * ScalarType0Offset], input1[i * ScalarType0Offset], result[i]);
 
     // If the function failed for whatever reason then throw an exception
     if (success == false)
@@ -3612,196 +3263,124 @@ void FullTwoParameterSplatWithError(Call& call, ExceptionReport& report)
       cstr errFormat = userData.ErrorFormat;
       String input0AsString = userData.Type->GenericToString((byte*)input0);
       String input1AsString = userData.Type->GenericToString((byte*)input1);
-      String msg = String::Format(
-          errFormat, input0AsString.c_str(), input1AsString.c_str());
+      String msg = String::Format(errFormat, input0AsString.c_str(), input1AsString.c_str());
       call.GetState()->ThrowException(report, msg);
       return;
     }
   }
 }
 
-#define ZilchSetUserDataAndDescription(                                        \
-    function, boundType, scalarBoundType, docString)                           \
-  f->UserData = (void*)(boundType->Size / scalarBoundType->Size);              \
-  if (boundType == scalarBoundType)                                            \
-    f->Description = ZilchDocumentString(docString);                           \
-  else                                                                         \
-    f->Description = ZilchDocumentString(                                      \
-        BuildString(docString, " Performed component-wise."));
+#define ZilchSetUserDataAndDescription(function, boundType, scalarBoundType, docString)                                \
+  f->UserData = (void*)(boundType->Size / scalarBoundType->Size);                                                      \
+  if (boundType == scalarBoundType)                                                                                    \
+    f->Description = ZilchDocumentString(docString);                                                                   \
+  else                                                                                                                 \
+    f->Description = ZilchDocumentString(BuildString(docString, " Performed component-wise."));
 
-#define ZilchComplexOneParameterSplatBinder(                                   \
-    scalarType0, returnType, offset0, function)                                \
-  FullOneParameterSplatAs<scalarType0,                                         \
-                          returnType,                                          \
-                          scalarType0,                                         \
-                          offset0,                                             \
-                          function>
+#define ZilchComplexOneParameterSplatBinder(scalarType0, returnType, offset0, function)                                \
+  FullOneParameterSplatAs<scalarType0, returnType, scalarType0, offset0, function>
 
-#define ZilchBindBasicSplat(builder,                                           \
-                            owner,                                             \
-                            scalarType,                                        \
-                            scalarBoundType,                                   \
-                            functionName,                                      \
-                            function,                                          \
-                            boundType,                                         \
-                            parameters,                                        \
-                            docString)                                         \
-  {                                                                            \
-    Zilch::BoundFn boundFn = ZilchComplexOneParameterSplatBinder(              \
-        scalarType, scalarType, 1, function);                                  \
-    Function* f = builder.AddBoundFunction(owner,                              \
-                                           functionName,                       \
-                                           boundFn,                            \
-                                           parameters,                         \
-                                           boundType,                          \
-                                           FunctionOptions::Static);           \
-    ZilchSetUserDataAndDescription(f, boundType, scalarBoundType, docString);  \
+#define ZilchBindBasicSplat(                                                                                           \
+    builder, owner, scalarType, scalarBoundType, functionName, function, boundType, parameters, docString)             \
+  {                                                                                                                    \
+    Zilch::BoundFn boundFn = ZilchComplexOneParameterSplatBinder(scalarType, scalarType, 1, function);                 \
+    Function* f =                                                                                                      \
+        builder.AddBoundFunction(owner, functionName, boundFn, parameters, boundType, FunctionOptions::Static);        \
+    ZilchSetUserDataAndDescription(f, boundType, scalarBoundType, docString);                                          \
   }
 
-#define ZilchBindBasicSplatWithError(builder,                                  \
-                                     owner,                                    \
-                                     scalarType,                               \
-                                     scalarBoundType,                          \
-                                     functionName,                             \
-                                     function,                                 \
-                                     boundType,                                \
-                                     parameters,                               \
-                                     docString,                                \
-                                     errorFormat)                              \
-  {                                                                            \
-    Function* f =                                                              \
-        builder.AddBoundFunction(owner,                                        \
-                                 functionName,                                 \
-                                 SimpleSplatWithError<scalarType, function>,   \
-                                 parameters,                                   \
-                                 boundType,                                    \
-                                 FunctionOptions::Static);                     \
-    SplatWithErrorUserData userData(                                           \
-        boundType->Size / scalarBoundType->Size, errorFormat, boundType);      \
-    f->ComplexUserData.WriteObject(userData);                                  \
-    if (boundType == scalarBoundType)                                          \
-      f->Description = ZilchDocumentString(docString);                         \
-    else                                                                       \
-      f->Description = ZilchDocumentString(                                    \
-          BuildString(docString, " Performed component-wise."));               \
+#define ZilchBindBasicSplatWithError(builder,                                                                          \
+                                     owner,                                                                            \
+                                     scalarType,                                                                       \
+                                     scalarBoundType,                                                                  \
+                                     functionName,                                                                     \
+                                     function,                                                                         \
+                                     boundType,                                                                        \
+                                     parameters,                                                                       \
+                                     docString,                                                                        \
+                                     errorFormat)                                                                      \
+  {                                                                                                                    \
+    Function* f = builder.AddBoundFunction(owner,                                                                      \
+                                           functionName,                                                               \
+                                           SimpleSplatWithError<scalarType, function>,                                 \
+                                           parameters,                                                                 \
+                                           boundType,                                                                  \
+                                           FunctionOptions::Static);                                                   \
+    SplatWithErrorUserData userData(boundType->Size / scalarBoundType->Size, errorFormat, boundType);                  \
+    f->ComplexUserData.WriteObject(userData);                                                                          \
+    if (boundType == scalarBoundType)                                                                                  \
+      f->Description = ZilchDocumentString(docString);                                                                 \
+    else                                                                                                               \
+      f->Description = ZilchDocumentString(BuildString(docString, " Performed component-wise."));                      \
   }
 
-#define ZilchComplexTwoParameterSplatBinder(                                   \
-    scalarType0, scalarType1, returnType, offset0, offset1, function)          \
-  FullTwoParameterSplatAs<scalarType0,                                         \
-                          scalarType1,                                         \
-                          returnType,                                          \
-                          scalarType0,                                         \
-                          scalarType1,                                         \
-                          offset0,                                             \
-                          offset1,                                             \
-                          function>
+#define ZilchComplexTwoParameterSplatBinder(scalarType0, scalarType1, returnType, offset0, offset1, function)          \
+  FullTwoParameterSplatAs<scalarType0, scalarType1, returnType, scalarType0, scalarType1, offset0, offset1, function>
 
-#define ZilchBindBasicTwoParamSplat(builder,                                   \
-                                    owner,                                     \
-                                    scalarType,                                \
-                                    scalarBoundType,                           \
-                                    functionName,                              \
-                                    function,                                  \
-                                    boundType,                                 \
-                                    parameters,                                \
-                                    docString)                                 \
-  {                                                                            \
-    Zilch::BoundFn boundFn = ZilchComplexTwoParameterSplatBinder(              \
-        scalarType, scalarType, scalarType, 1, 1, function);                   \
-    Function* f = builder.AddBoundFunction(owner,                              \
-                                           functionName,                       \
-                                           boundFn,                            \
-                                           parameters,                         \
-                                           boundType,                          \
-                                           FunctionOptions::Static);           \
-    ZilchSetUserDataAndDescription(f, boundType, scalarBoundType, docString);  \
+#define ZilchBindBasicTwoParamSplat(                                                                                   \
+    builder, owner, scalarType, scalarBoundType, functionName, function, boundType, parameters, docString)             \
+  {                                                                                                                    \
+    Zilch::BoundFn boundFn = ZilchComplexTwoParameterSplatBinder(scalarType, scalarType, scalarType, 1, 1, function);  \
+    Function* f =                                                                                                      \
+        builder.AddBoundFunction(owner, functionName, boundFn, parameters, boundType, FunctionOptions::Static);        \
+    ZilchSetUserDataAndDescription(f, boundType, scalarBoundType, docString);                                          \
   }
 
-#define ZilchBindBasicTwoParamSplatWithError(builder,                          \
-                                             owner,                            \
-                                             scalarType,                       \
-                                             scalarBoundType,                  \
-                                             functionName,                     \
-                                             function,                         \
-                                             boundType,                        \
-                                             parameters,                       \
-                                             docString,                        \
-                                             errorFormat)                      \
-  {                                                                            \
-    Zilch::BoundFn boundFn = FullTwoParameterSplatWithError<scalarType,        \
-                                                            scalarType,        \
-                                                            scalarType,        \
-                                                            1,                 \
-                                                            1,                 \
-                                                            function>;         \
-    Function* f = builder.AddBoundFunction(owner,                              \
-                                           functionName,                       \
-                                           boundFn,                            \
-                                           parameters,                         \
-                                           boundType,                          \
-                                           FunctionOptions::Static);           \
-    SplatWithErrorUserData userData(                                           \
-        boundType->Size / scalarBoundType->Size, errorFormat, boundType);      \
-    f->ComplexUserData.WriteObject(userData);                                  \
-    if (boundType == scalarBoundType)                                          \
-      f->Description = ZilchDocumentString(docString);                         \
-    else                                                                       \
-      f->Description = ZilchDocumentString(                                    \
-          BuildString(docString, " Performed component-wise."));               \
+#define ZilchBindBasicTwoParamSplatWithError(builder,                                                                  \
+                                             owner,                                                                    \
+                                             scalarType,                                                               \
+                                             scalarBoundType,                                                          \
+                                             functionName,                                                             \
+                                             function,                                                                 \
+                                             boundType,                                                                \
+                                             parameters,                                                               \
+                                             docString,                                                                \
+                                             errorFormat)                                                              \
+  {                                                                                                                    \
+    Zilch::BoundFn boundFn = FullTwoParameterSplatWithError<scalarType, scalarType, scalarType, 1, 1, function>;       \
+    Function* f =                                                                                                      \
+        builder.AddBoundFunction(owner, functionName, boundFn, parameters, boundType, FunctionOptions::Static);        \
+    SplatWithErrorUserData userData(boundType->Size / scalarBoundType->Size, errorFormat, boundType);                  \
+    f->ComplexUserData.WriteObject(userData);                                                                          \
+    if (boundType == scalarBoundType)                                                                                  \
+      f->Description = ZilchDocumentString(docString);                                                                 \
+    else                                                                                                               \
+      f->Description = ZilchDocumentString(BuildString(docString, " Performed component-wise."));                      \
   }
 
-#define ZilchFullThreeParameterSplatBinder(                                    \
-    Type0, Type1, Type2, ReturnType, Offset0, Offset1, Offset2, BoundFunction) \
-  FullThreeParameterSplat<Type0,                                               \
-                          Type1,                                               \
-                          Type2,                                               \
-                          ReturnType,                                          \
-                          Offset0,                                             \
-                          Offset1,                                             \
-                          Offset2,                                             \
-                          decltype(BoundFunction),                             \
+#define ZilchFullThreeParameterSplatBinder(Type0, Type1, Type2, ReturnType, Offset0, Offset1, Offset2, BoundFunction)  \
+  FullThreeParameterSplat<Type0,                                                                                       \
+                          Type1,                                                                                       \
+                          Type2,                                                                                       \
+                          ReturnType,                                                                                  \
+                          Offset0,                                                                                     \
+                          Offset1,                                                                                     \
+                          Offset2,                                                                                     \
+                          decltype(BoundFunction),                                                                     \
                           BoundFunction>
 
-#define ZilchComplexThreeParameterSplatBinder(scalarType0,                     \
-                                              scalarType1,                     \
-                                              scalarType2,                     \
-                                              returnType,                      \
-                                              offset0,                         \
-                                              offset1,                         \
-                                              offset2,                         \
-                                              function)                        \
-  FullThreeParameterSplatAs<scalarType0,                                       \
-                            scalarType1,                                       \
-                            scalarType2,                                       \
-                            returnType,                                        \
-                            scalarType0,                                       \
-                            scalarType1,                                       \
-                            scalarType2,                                       \
-                            offset0,                                           \
-                            offset1,                                           \
-                            offset2,                                           \
+#define ZilchComplexThreeParameterSplatBinder(                                                                         \
+    scalarType0, scalarType1, scalarType2, returnType, offset0, offset1, offset2, function)                            \
+  FullThreeParameterSplatAs<scalarType0,                                                                               \
+                            scalarType1,                                                                               \
+                            scalarType2,                                                                               \
+                            returnType,                                                                                \
+                            scalarType0,                                                                               \
+                            scalarType1,                                                                               \
+                            scalarType2,                                                                               \
+                            offset0,                                                                                   \
+                            offset1,                                                                                   \
+                            offset2,                                                                                   \
                             function>
 
-#define ZilchBindBasicThreeParamSplat(builder,                                 \
-                                      owner,                                   \
-                                      scalarType,                              \
-                                      scalarBoundType,                         \
-                                      functionName,                            \
-                                      function,                                \
-                                      boundType,                               \
-                                      parameters,                              \
-                                      docString)                               \
-  {                                                                            \
-    Zilch::BoundFn boundFn = ZilchComplexThreeParameterSplatBinder(            \
-        scalarType, scalarType, scalarType, scalarType, 1, 1, 1, function);    \
-    Function* f = builder.AddBoundFunction(owner,                              \
-                                           functionName,                       \
-                                           boundFn,                            \
-                                           parameters,                         \
-                                           boundType,                          \
-                                           FunctionOptions::Static);           \
-    ZilchSetUserDataAndDescription(f, boundType, scalarBoundType, docString);  \
+#define ZilchBindBasicThreeParamSplat(                                                                                 \
+    builder, owner, scalarType, scalarBoundType, functionName, function, boundType, parameters, docString)             \
+  {                                                                                                                    \
+    Zilch::BoundFn boundFn =                                                                                           \
+        ZilchComplexThreeParameterSplatBinder(scalarType, scalarType, scalarType, scalarType, 1, 1, 1, function);      \
+    Function* f =                                                                                                      \
+        builder.AddBoundFunction(owner, functionName, boundFn, parameters, boundType, FunctionOptions::Static);        \
+    ZilchSetUserDataAndDescription(f, boundType, scalarBoundType, docString);                                          \
   }
 
 void Core::SetupBindingString(LibraryBuilder& builder)
@@ -3848,9 +3427,8 @@ void Core::SetupBindingString(LibraryBuilder& builder)
                         TwoParameters(integerType, "startIndex", "endIndex"),
                         stringType,
                         FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Creates a substring from start and end indices. WARNING: this may be "
-      "slow as finding an index for a UTF8 string requires a linear search.");
+      ->Description = ZilchDocumentString("Creates a substring from start and end indices. WARNING: this may be "
+                                          "slow as finding an index for a UTF8 string requires a linear search.");
   builder
       .AddBoundFunction(stringType,
                         Zilch::OperatorGet,
@@ -3858,21 +3436,18 @@ void Core::SetupBindingString(LibraryBuilder& builder)
                         OneParameter(integerType, "index"),
                         ZilchTypeId(Rune),
                         FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "String operator Get is deprecated. To iterate through a String use a "
-      "StringRange (.All) or StringIterator (.Begin).");
+      ->Description = ZilchDocumentString("String operator Get is deprecated. To iterate through a String use a "
+                                          "StringRange (.All) or StringIterator (.Begin).");
   builder
-      .AddBoundFunction(
-          stringType,
-          "SubStringBytes",
-          SubStringBytes,
-          TwoParameters(integerType, "startByteIndex", "lengthInBytes"),
-          stringRangeType,
-          FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Constructs a substring based upon a number of bytes. WARNING: strings "
-      "are UTF8 so indexing by bytes could produce unexpected results on "
-      "non-ascii strings.");
+      .AddBoundFunction(stringType,
+                        "SubStringBytes",
+                        SubStringBytes,
+                        TwoParameters(integerType, "startByteIndex", "lengthInBytes"),
+                        stringRangeType,
+                        FunctionOptions::None)
+      ->Description = ZilchDocumentString("Constructs a substring based upon a number of bytes. WARNING: strings "
+                                          "are UTF8 so indexing by bytes could produce unexpected results on "
+                                          "non-ascii strings.");
   builder
       .AddBoundFunction(stringType,
                         "RuneIteratorFromByteIndex",
@@ -3880,10 +3455,9 @@ void Core::SetupBindingString(LibraryBuilder& builder)
                         OneParameter(integerType, "byteIndex"),
                         runeIteratorType,
                         FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Finds the iterator from a byte index. WARNING: Strings are UTF8 and "
-      "constructing an iterator from bytes indices can make an iterator in the "
-      "middle of a rune.");
+      ->Description = ZilchDocumentString("Finds the iterator from a byte index. WARNING: Strings are UTF8 and "
+                                          "constructing an iterator from bytes indices can make an iterator in the "
+                                          "middle of a rune.");
   builder
       .AddBoundFunction(stringType,
                         "RuneIteratorFromRuneIndex",
@@ -3891,91 +3465,31 @@ void Core::SetupBindingString(LibraryBuilder& builder)
                         OneParameter(integerType, "runeIndex"),
                         runeIteratorType,
                         FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Finds the iterator from a rune index. WARNING: this may be slow as "
-      "finding an iterator from rune index requires a linear search.");
+      ->Description = ZilchDocumentString("Finds the iterator from a rune index. WARNING: this may be slow as "
+                                          "finding an iterator from rune index requires a linear search.");
+  builder.AddBoundGetterSetter(stringType, "Empty", booleanType, nullptr, StringEmpty, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Returns true if the string is emtpy.");
+  builder.AddBoundGetterSetter(stringType, "IsNotEmpty", booleanType, nullptr, StringIsNotEmpty, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Returns true if the string is not empty.");
+  builder.AddBoundGetterSetter(stringType, "Begin", runeIteratorType, nullptr, StringBegin, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Returns the RuneIterator at the start of this string.");
+  builder.AddBoundGetterSetter(stringType, "End", runeIteratorType, nullptr, StringEnd, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Returns the RuneIterator at the end (one past the "
+                                          "last Rune) of this string.");
+  builder.AddBoundGetterSetter(stringType, "All", stringRangeType, nullptr, StringAll, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Converts the string into a string range.");
+  builder.AddBoundGetterSetter(stringType, "ByteCount", integerType, nullptr, StringByteCount, MemberOptions::None)
+      ->Description = ZilchDocumentString("Returns the number of bytes in the string.");
+  builder.AddBoundGetterSetter(stringType, "Count", integerType, nullptr, StringCountLegacy, MemberOptions::None)
+      ->Description = ZilchDocumentString("Returns the number of bytes in the string.");
   builder
-      .AddBoundGetterSetter(stringType,
-                            "Empty",
-                            booleanType,
-                            nullptr,
-                            StringEmpty,
-                            FunctionOptions::None)
-      ->Description =
-      ZilchDocumentString("Returns true if the string is emtpy.");
+      .AddBoundFunction(
+          stringType, "ComputeRuneCount", StringComputeRuneCount, ParameterArray(), integerType, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Compute the number of runes in the string.");
   builder
-      .AddBoundGetterSetter(stringType,
-                            "IsNotEmpty",
-                            booleanType,
-                            nullptr,
-                            StringIsNotEmpty,
-                            FunctionOptions::None)
-      ->Description =
-      ZilchDocumentString("Returns true if the string is not empty.");
-  builder
-      .AddBoundGetterSetter(stringType,
-                            "Begin",
-                            runeIteratorType,
-                            nullptr,
-                            StringBegin,
-                            FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Returns the RuneIterator at the start of this string.");
-  builder
-      .AddBoundGetterSetter(stringType,
-                            "End",
-                            runeIteratorType,
-                            nullptr,
-                            StringEnd,
-                            FunctionOptions::None)
-      ->Description =
-      ZilchDocumentString("Returns the RuneIterator at the end (one past the "
-                          "last Rune) of this string.");
-  builder
-      .AddBoundGetterSetter(stringType,
-                            "All",
-                            stringRangeType,
-                            nullptr,
-                            StringAll,
-                            FunctionOptions::None)
-      ->Description =
-      ZilchDocumentString("Converts the string into a string range.");
-  builder
-      .AddBoundGetterSetter(stringType,
-                            "ByteCount",
-                            integerType,
-                            nullptr,
-                            StringByteCount,
-                            MemberOptions::None)
-      ->Description =
-      ZilchDocumentString("Returns the number of bytes in the string.");
-  builder
-      .AddBoundGetterSetter(stringType,
-                            "Count",
-                            integerType,
-                            nullptr,
-                            StringCountLegacy,
-                            MemberOptions::None)
-      ->Description =
-      ZilchDocumentString("Returns the number of bytes in the string.");
-  builder
-      .AddBoundFunction(stringType,
-                        "ComputeRuneCount",
-                        StringComputeRuneCount,
-                        ParameterArray(),
-                        integerType,
-                        FunctionOptions::None)
-      ->Description =
-      ZilchDocumentString("Compute the number of runes in the string.");
-  builder
-      .AddBoundFunction(stringType,
-                        "Concatenate",
-                        StringConcatenate,
-                        TwoParameters(stringType),
-                        stringType,
-                        FunctionOptions::Static)
-      ->Description =
-      ZilchDocumentString("Combines the two strings into a new string.");
+      .AddBoundFunction(
+          stringType, "Concatenate", StringConcatenate, TwoParameters(stringType), stringType, FunctionOptions::Static)
+      ->Description = ZilchDocumentString("Combines the two strings into a new string.");
   builder
       .AddBoundFunction(stringType,
                         "Concatenate",
@@ -3983,34 +3497,19 @@ void Core::SetupBindingString(LibraryBuilder& builder)
                         TwoParameters(stringRangeType),
                         stringType,
                         FunctionOptions::Static)
-      ->Description =
-      ZilchDocumentString("Combines the two string ranges into a new string.");
+      ->Description = ZilchDocumentString("Combines the two string ranges into a new string.");
   builder
-      .AddBoundFunction(stringType,
-                        "FromRune",
-                        StringFromRuneValue,
-                        OneParameter(integerType),
-                        stringType,
-                        FunctionOptions::Static)
-      ->Description = ZilchDocumentString(
-      "Constructs a string from the utf-8 code point of a rune.");
+      .AddBoundFunction(
+          stringType, "FromRune", StringFromRuneValue, OneParameter(integerType), stringType, FunctionOptions::Static)
+      ->Description = ZilchDocumentString("Constructs a string from the utf-8 code point of a rune.");
   builder
-      .AddBoundFunction(stringType,
-                        "FromRune",
-                        StringFromRune,
-                        OneParameter(runeType),
-                        stringType,
-                        FunctionOptions::Static)
+      .AddBoundFunction(
+          stringType, "FromRune", StringFromRune, OneParameter(runeType), stringType, FunctionOptions::Static)
       ->Description = ZilchDocumentString("Constructs a string from a rune.");
   builder
-      .AddBoundFunction(stringType,
-                        "Contains",
-                        StringContains,
-                        OneParameter(stringRangeType),
-                        booleanType,
-                        FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Returns if the string Contains the specified substring.");
+      .AddBoundFunction(
+          stringType, "Contains", StringContains, OneParameter(stringRangeType), booleanType, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Returns if the string Contains the specified substring.");
   builder
       .AddBoundFunction(stringType,
                         "Compare",
@@ -4018,9 +3517,8 @@ void Core::SetupBindingString(LibraryBuilder& builder)
                         TwoParameters(stringType, "left", "right"),
                         integerType,
                         FunctionOptions::Static)
-      ->Description =
-      ZilchDocumentString("Compares the two strings and returns an integer to "
-                          "denote their relative sort order.");
+      ->Description = ZilchDocumentString("Compares the two strings and returns an integer to "
+                                          "denote their relative sort order.");
   builder
       .AddBoundFunction(stringRangeType,
                         "Compare",
@@ -4028,80 +3526,34 @@ void Core::SetupBindingString(LibraryBuilder& builder)
                         TwoParameters(stringRangeType, "left", "right"),
                         integerType,
                         FunctionOptions::Static)
-      ->Description =
-      ZilchDocumentString("Compares the two string ranges and returns an "
-                          "integer to denote their relative sort order.");
+      ->Description = ZilchDocumentString("Compares the two string ranges and returns an "
+                                          "integer to denote their relative sort order.");
   builder
-      .AddBoundFunction(stringType,
-                        "CompareTo",
-                        StringCompareTo,
-                        OneParameter(stringRangeType),
-                        integerType,
-                        FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Compares this string to the given string and returns an integer to "
-      "denote their relative sort order.");
+      .AddBoundFunction(
+          stringType, "CompareTo", StringCompareTo, OneParameter(stringRangeType), integerType, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Compares this string to the given string and returns an integer to "
+                                          "denote their relative sort order.");
   builder
-      .AddBoundFunction(stringType,
-                        "StartsWith",
-                        StringStartsWith,
-                        OneParameter(stringRangeType),
-                        booleanType,
-                        FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Returns if the string starts with the specified substring.");
+      .AddBoundFunction(
+          stringType, "StartsWith", StringStartsWith, OneParameter(stringRangeType), booleanType, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Returns if the string starts with the specified substring.");
   builder
-      .AddBoundFunction(stringType,
-                        "EndsWith",
-                        StringEndsWith,
-                        OneParameter(stringRangeType),
-                        booleanType,
-                        FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Returns if the string ends with the specified substring.");
+      .AddBoundFunction(
+          stringType, "EndsWith", StringEndsWith, OneParameter(stringRangeType), booleanType, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Returns if the string ends with the specified substring.");
   builder
-      .AddBoundFunction(stringType,
-                        "TrimStart",
-                        StringTrimStart,
-                        ParameterArray(),
-                        stringRangeType,
-                        FunctionOptions::None)
+      .AddBoundFunction(
+          stringType, "TrimStart", StringTrimStart, ParameterArray(), stringRangeType, FunctionOptions::None)
       ->Description = ZilchDocumentString("Trims all leading whitespace.");
   builder
-      .AddBoundFunction(stringType,
-                        "TrimEnd",
-                        StringTrimEnd,
-                        ParameterArray(),
-                        stringRangeType,
-                        FunctionOptions::None)
+      .AddBoundFunction(stringType, "TrimEnd", StringTrimEnd, ParameterArray(), stringRangeType, FunctionOptions::None)
       ->Description = ZilchDocumentString("Trims all trailing whitespace.");
-  builder
-      .AddBoundFunction(stringType,
-                        "Trim",
-                        StringTrim,
-                        ParameterArray(),
-                        stringRangeType,
-                        FunctionOptions::None)
-      ->Description =
-      ZilchDocumentString("Trims all leading and trailing whitespace.");
-  builder
-      .AddBoundFunction(stringType,
-                        "ToLower",
-                        StringToLower,
-                        ParameterArray(),
-                        stringType,
-                        FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Returns a copy of the string that has been converted to lowercase.");
-  builder
-      .AddBoundFunction(stringType,
-                        "ToUpper",
-                        StringToUpper,
-                        ParameterArray(),
-                        stringType,
-                        FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Returns a copy of the string that has been converted to uppercase.");
+  builder.AddBoundFunction(stringType, "Trim", StringTrim, ParameterArray(), stringRangeType, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Trims all leading and trailing whitespace.");
+  builder.AddBoundFunction(stringType, "ToLower", StringToLower, ParameterArray(), stringType, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Returns a copy of the string that has been converted to lowercase.");
+  builder.AddBoundFunction(stringType, "ToUpper", StringToUpper, ParameterArray(), stringType, FunctionOptions::None)
+      ->Description = ZilchDocumentString("Returns a copy of the string that has been converted to uppercase.");
   builder
       .AddBoundFunction(stringType,
                         "Replace",
@@ -4109,31 +3561,26 @@ void Core::SetupBindingString(LibraryBuilder& builder)
                         TwoParameters(stringRangeType, "oldValue", "newValue"),
                         stringType,
                         FunctionOptions::None)
-      ->Description =
-      ZilchDocumentString("Returns a new string with all occurances of a "
-                          "substrings replaced with another substring.");
+      ->Description = ZilchDocumentString("Returns a new string with all occurances of a "
+                                          "substrings replaced with another substring.");
   builder
-      .AddBoundFunction(
-          stringType,
-          "FindRangeInclusive",
-          StringFindRangeInclusive,
-          TwoParameters(stringRangeType, "startRange", "endRange"),
-          stringRangeType,
-          FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Finds the first StringRange that starts with 'startRange' and ends with "
-      "'endRange'. This substring includes 'startRange' and 'endRange'.");
+      .AddBoundFunction(stringType,
+                        "FindRangeInclusive",
+                        StringFindRangeInclusive,
+                        TwoParameters(stringRangeType, "startRange", "endRange"),
+                        stringRangeType,
+                        FunctionOptions::None)
+      ->Description = ZilchDocumentString("Finds the first StringRange that starts with 'startRange' and ends with "
+                                          "'endRange'. This substring includes 'startRange' and 'endRange'.");
   builder
-      .AddBoundFunction(
-          stringType,
-          "FindRangeExclusive",
-          StringFindRangeExclusive,
-          TwoParameters(stringRangeType, "startRange", "endRange"),
-          stringRangeType,
-          FunctionOptions::None)
-      ->Description = ZilchDocumentString(
-      "Finds the first StringRange that starts with 'startRange' and ends with "
-      "'endRange'. This substring excludes 'startRange' and 'endRange'.");
+      .AddBoundFunction(stringType,
+                        "FindRangeExclusive",
+                        StringFindRangeExclusive,
+                        TwoParameters(stringRangeType, "startRange", "endRange"),
+                        stringRangeType,
+                        FunctionOptions::None)
+      ->Description = ZilchDocumentString("Finds the first StringRange that starts with 'startRange' and ends with "
+                                          "'endRange'. This substring excludes 'startRange' and 'endRange'.");
   builder
       .AddBoundFunction(stringType,
                         "FindFirstOf",
@@ -4141,9 +3588,8 @@ void Core::SetupBindingString(LibraryBuilder& builder)
                         OneParameter(stringRangeType),
                         stringRangeType,
                         FunctionOptions::None)
-      ->Description =
-      ZilchDocumentString("Returns a StringRange that Contains the first "
-                          "occurrence of given StringRange.");
+      ->Description = ZilchDocumentString("Returns a StringRange that Contains the first "
+                                          "occurrence of given StringRange.");
   builder
       .AddBoundFunction(stringType,
                         "FindLastOf",
@@ -4151,44 +3597,32 @@ void Core::SetupBindingString(LibraryBuilder& builder)
                         OneParameter(stringRangeType),
                         stringRangeType,
                         FunctionOptions::None)
-      ->Description =
-      ZilchDocumentString("Returns a StringRange that Contains the last "
-                          "occurrence of given StringRange.");
+      ->Description = ZilchDocumentString("Returns a StringRange that Contains the last "
+                                          "occurrence of given StringRange.");
   builder
-      .AddBoundFunction(
-          stringType,
-          "Join",
-          JoinTwoStrings,
-          ThreeParameters(stringRangeType, "separator", "value0", "value1"),
-          stringType,
-          FunctionOptions::Static)
-      ->Description = ZilchDocumentString(
-      "Concatenates the given strings with the given separator string.");
+      .AddBoundFunction(stringType,
+                        "Join",
+                        JoinTwoStrings,
+                        ThreeParameters(stringRangeType, "separator", "value0", "value1"),
+                        stringType,
+                        FunctionOptions::Static)
+      ->Description = ZilchDocumentString("Concatenates the given strings with the given separator string.");
   builder
-      .AddBoundFunction(
-          stringType,
-          "Join",
-          JoinThreeStrings,
-          FourParameters(
-              stringRangeType, "separator", "value0", "value1", "value2"),
-          stringType,
-          FunctionOptions::Static)
-      ->Description = ZilchDocumentString(
-      "Concatenates the given strings with the given separator string.");
+      .AddBoundFunction(stringType,
+                        "Join",
+                        JoinThreeStrings,
+                        FourParameters(stringRangeType, "separator", "value0", "value1", "value2"),
+                        stringType,
+                        FunctionOptions::Static)
+      ->Description = ZilchDocumentString("Concatenates the given strings with the given separator string.");
   builder
       .AddBoundFunction(stringType,
                         "Join",
                         JoinFourStrings,
-                        FiveParameters(stringRangeType,
-                                       "separator",
-                                       "value0",
-                                       "value1",
-                                       "value2",
-                                       "value3"),
+                        FiveParameters(stringRangeType, "separator", "value0", "value1", "value2", "value3"),
                         stringType,
                         FunctionOptions::Static)
-      ->Description = ZilchDocumentString(
-      "Concatenates the given strings with the given separator string.");
+      ->Description = ZilchDocumentString("Concatenates the given strings with the given separator string.");
   builder
       .AddBoundFunction(stringType,
                         "Split",
@@ -4196,9 +3630,8 @@ void Core::SetupBindingString(LibraryBuilder& builder)
                         OneParameter(stringRangeType, "separator"),
                         splitRangeType,
                         FunctionOptions::None)
-      ->Description =
-      ZilchDocumentString("Splits the string, according to the separator "
-                          "string, into a range of substrings.");
+      ->Description = ZilchDocumentString("Splits the string, according to the separator "
+                                          "string, into a range of substrings.");
   builder
       .AddBoundFunction(stringType,
                         "IsNullOrEmpty",
@@ -4206,8 +3639,7 @@ void Core::SetupBindingString(LibraryBuilder& builder)
                         OneParameter(stringRangeType),
                         booleanType,
                         FunctionOptions::Static)
-      ->Description =
-      ZilchDocumentString("Returns if the given string is null or empty.");
+      ->Description = ZilchDocumentString("Returns if the given string is null or empty.");
   builder
       .AddBoundFunction(stringType,
                         "IsNullOrWhitespace",
@@ -4215,8 +3647,7 @@ void Core::SetupBindingString(LibraryBuilder& builder)
                         OneParameter(stringRangeType),
                         booleanType,
                         FunctionOptions::Static)
-      ->Description = ZilchDocumentString(
-      "Returns if the given string is null, empty, or all whitespace.");
+      ->Description = ZilchDocumentString("Returns if the given string is null, empty, or all whitespace.");
 
   // Bind the FormatC function which has "variadic arguments"
   ParameterArray parameters;
@@ -4228,62 +3659,27 @@ void Core::SetupBindingString(LibraryBuilder& builder)
     DelegateParameter& parameter = parameters.PushBack();
     parameter.ParameterType = ZilchTypeId(Any);
     Function* formatFunction =
-        builder.AddBoundFunction(stringType,
-                                 "FormatC",
-                                 StringFormatC,
-                                 parameters,
-                                 stringType,
-                                 FunctionOptions::Static);
+        builder.AddBoundFunction(stringType, "FormatC", StringFormatC, parameters, stringType, FunctionOptions::Static);
     formatFunction->UserData = (void*)(i + 1);
   }
 
   this->StringType = stringType;
   this->StringRangeType = stringRangeType;
-  ZilchFullBindMethod(builder,
-                      byteType,
-                      &ZilchParseByte,
-                      ZilchNoOverload,
-                      "Parse",
-                      ZilchNoNames)
-      ->Description =
+  ZilchFullBindMethod(builder, byteType, &ZilchParseByte, ZilchNoOverload, "Parse", ZilchNoNames)->Description =
       ZilchDocumentString("Attempt to convert the given StringRange to a Byte. "
                           "If parsing fails 0 is returned.");
-  ZilchFullBindMethod(builder,
-                      integerType,
-                      &ZilchParseInteger,
-                      ZilchNoOverload,
-                      "Parse",
-                      ZilchNoNames)
-      ->Description =
+  ZilchFullBindMethod(builder, integerType, &ZilchParseInteger, ZilchNoOverload, "Parse", ZilchNoNames)->Description =
       ZilchDocumentString("Attempt to convert the given StringRange to an "
                           "Integer. If parsing fails 0 is returned.");
-  ZilchFullBindMethod(builder,
-                      doubleIntegerType,
-                      &ZilchParseDoubleInteger,
-                      ZilchNoOverload,
-                      "Parse",
-                      ZilchNoNames)
-      ->Description =
-      ZilchDocumentString("Attempt to convert the given StringRange to a "
-                          "DoubleInteger. If parsing fails 0 is returned.");
-  ZilchFullBindMethod(builder,
-                      realType,
-                      &ZilchParseReal,
-                      ZilchNoOverload,
-                      "Parse",
-                      ZilchNoNames)
-      ->Description =
+  ZilchFullBindMethod(builder, doubleIntegerType, &ZilchParseDoubleInteger, ZilchNoOverload, "Parse", ZilchNoNames)
+      ->Description = ZilchDocumentString("Attempt to convert the given StringRange to a "
+                                          "DoubleInteger. If parsing fails 0 is returned.");
+  ZilchFullBindMethod(builder, realType, &ZilchParseReal, ZilchNoOverload, "Parse", ZilchNoNames)->Description =
       ZilchDocumentString("Attempt to convert the given StringRange to a Real. "
                           "If parsing fails 0 is returned.");
-  ZilchFullBindMethod(builder,
-                      doubleRealType,
-                      &ZilchParseDoubleReal,
-                      ZilchNoOverload,
-                      "Parse",
-                      ZilchNoNames)
-      ->Description =
-      ZilchDocumentString("Attempt to convert the given StringRange to a "
-                          "DoubleReal. If parsing fails 0 is returned.");
+  ZilchFullBindMethod(builder, doubleRealType, &ZilchParseDoubleReal, ZilchNoOverload, "Parse", ZilchNoNames)
+      ->Description = ZilchDocumentString("Attempt to convert the given StringRange to a "
+                                          "DoubleReal. If parsing fails 0 is returned.");
 
   // Bind any stringify functions
   byteType->ToStringFunction = ByteToString;
@@ -4328,37 +3724,23 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
   BoundType* real4x4Type = ZilchTypeId(Real4x4);
 
   // Add ourselves to the library
-  BoundType* math =
-      builder.AddBoundType("Math", TypeCopyMode::ReferenceType, 0);
+  BoundType* math = builder.AddBoundType("Math", TypeCopyMode::ReferenceType, 0);
   MathType = math;
 
   // Bind default constructors to the vector types
-  builder.AddBoundDefaultConstructor(booleanType,
-                                     VectorDefaultConstructor<1, Boolean>);
-  builder.AddBoundDefaultConstructor(boolean2Type,
-                                     VectorDefaultConstructor<2, Boolean>);
-  builder.AddBoundDefaultConstructor(boolean3Type,
-                                     VectorDefaultConstructor<3, Boolean>);
-  builder.AddBoundDefaultConstructor(boolean4Type,
-                                     VectorDefaultConstructor<4, Boolean>);
-  builder.AddBoundDefaultConstructor(integerType,
-                                     VectorDefaultConstructor<1, Integer>);
-  builder.AddBoundDefaultConstructor(integer2Type,
-                                     VectorDefaultConstructor<2, Integer>);
-  builder.AddBoundDefaultConstructor(integer3Type,
-                                     VectorDefaultConstructor<3, Integer>);
-  builder.AddBoundDefaultConstructor(integer4Type,
-                                     VectorDefaultConstructor<4, Integer>);
-  builder.AddBoundDefaultConstructor(realType,
-                                     VectorDefaultConstructor<1, Real>);
-  builder.AddBoundDefaultConstructor(real2Type,
-                                     VectorDefaultConstructor<2, Real>);
-  builder.AddBoundDefaultConstructor(real3Type,
-                                     VectorDefaultConstructor<3, Real>);
-  builder.AddBoundDefaultConstructor(real4Type,
-                                     VectorDefaultConstructor<4, Real>);
-  builder.AddBoundDefaultConstructor(quaternionType,
-                                     QuaternionDefaultConstructor);
+  builder.AddBoundDefaultConstructor(booleanType, VectorDefaultConstructor<1, Boolean>);
+  builder.AddBoundDefaultConstructor(boolean2Type, VectorDefaultConstructor<2, Boolean>);
+  builder.AddBoundDefaultConstructor(boolean3Type, VectorDefaultConstructor<3, Boolean>);
+  builder.AddBoundDefaultConstructor(boolean4Type, VectorDefaultConstructor<4, Boolean>);
+  builder.AddBoundDefaultConstructor(integerType, VectorDefaultConstructor<1, Integer>);
+  builder.AddBoundDefaultConstructor(integer2Type, VectorDefaultConstructor<2, Integer>);
+  builder.AddBoundDefaultConstructor(integer3Type, VectorDefaultConstructor<3, Integer>);
+  builder.AddBoundDefaultConstructor(integer4Type, VectorDefaultConstructor<4, Integer>);
+  builder.AddBoundDefaultConstructor(realType, VectorDefaultConstructor<1, Real>);
+  builder.AddBoundDefaultConstructor(real2Type, VectorDefaultConstructor<2, Real>);
+  builder.AddBoundDefaultConstructor(real3Type, VectorDefaultConstructor<3, Real>);
+  builder.AddBoundDefaultConstructor(real4Type, VectorDefaultConstructor<4, Real>);
+  builder.AddBoundDefaultConstructor(quaternionType, QuaternionDefaultConstructor);
 
   // The scalar constructors
   {
@@ -4368,22 +3750,14 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
     scalarParam.Name = "scalar";
 
     // Bind constructors to the vector types
-    GenerateVectorScalarConstructor<1, Boolean>(
-        builder, booleanType, booleanType);
-    GenerateVectorScalarConstructor<2, Boolean>(
-        builder, boolean2Type, booleanType);
-    GenerateVectorScalarConstructor<3, Boolean>(
-        builder, boolean3Type, booleanType);
-    GenerateVectorScalarConstructor<4, Boolean>(
-        builder, boolean4Type, booleanType);
-    GenerateVectorScalarConstructor<1, Integer>(
-        builder, integerType, integerType);
-    GenerateVectorScalarConstructor<2, Integer>(
-        builder, integer2Type, integerType);
-    GenerateVectorScalarConstructor<3, Integer>(
-        builder, integer3Type, integerType);
-    GenerateVectorScalarConstructor<4, Integer>(
-        builder, integer4Type, integerType);
+    GenerateVectorScalarConstructor<1, Boolean>(builder, booleanType, booleanType);
+    GenerateVectorScalarConstructor<2, Boolean>(builder, boolean2Type, booleanType);
+    GenerateVectorScalarConstructor<3, Boolean>(builder, boolean3Type, booleanType);
+    GenerateVectorScalarConstructor<4, Boolean>(builder, boolean4Type, booleanType);
+    GenerateVectorScalarConstructor<1, Integer>(builder, integerType, integerType);
+    GenerateVectorScalarConstructor<2, Integer>(builder, integer2Type, integerType);
+    GenerateVectorScalarConstructor<3, Integer>(builder, integer3Type, integerType);
+    GenerateVectorScalarConstructor<4, Integer>(builder, integer4Type, integerType);
     GenerateVectorScalarConstructor<1, Real>(builder, realType, realType);
     GenerateVectorScalarConstructor<2, Real>(builder, real2Type, realType);
     GenerateVectorScalarConstructor<3, Real>(builder, real3Type, realType);
@@ -4393,26 +3767,16 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
 
   // Generate the different permutations of constructors (no need to do the
   // singles, they only have the scalar/default constructors)
-  GenerateVectorComponentConstructors<2, Boolean>(
-      builder, boolean2Type, this->BooleanTypes);
-  GenerateVectorComponentConstructors<3, Boolean>(
-      builder, boolean3Type, this->BooleanTypes);
-  GenerateVectorComponentConstructors<4, Boolean>(
-      builder, boolean4Type, this->BooleanTypes);
-  GenerateVectorComponentConstructors<2, Integer>(
-      builder, integer2Type, this->IntegerTypes);
-  GenerateVectorComponentConstructors<3, Integer>(
-      builder, integer3Type, this->IntegerTypes);
-  GenerateVectorComponentConstructors<4, Integer>(
-      builder, integer4Type, this->IntegerTypes);
-  GenerateVectorComponentConstructors<2, Real>(
-      builder, real2Type, this->RealTypes);
-  GenerateVectorComponentConstructors<3, Real>(
-      builder, real3Type, this->RealTypes);
-  GenerateVectorComponentConstructors<4, Real>(
-      builder, real4Type, this->RealTypes);
-  GenerateVectorComponentConstructors<4, Real>(
-      builder, quaternionType, this->RealTypes);
+  GenerateVectorComponentConstructors<2, Boolean>(builder, boolean2Type, this->BooleanTypes);
+  GenerateVectorComponentConstructors<3, Boolean>(builder, boolean3Type, this->BooleanTypes);
+  GenerateVectorComponentConstructors<4, Boolean>(builder, boolean4Type, this->BooleanTypes);
+  GenerateVectorComponentConstructors<2, Integer>(builder, integer2Type, this->IntegerTypes);
+  GenerateVectorComponentConstructors<3, Integer>(builder, integer3Type, this->IntegerTypes);
+  GenerateVectorComponentConstructors<4, Integer>(builder, integer4Type, this->IntegerTypes);
+  GenerateVectorComponentConstructors<2, Real>(builder, real2Type, this->RealTypes);
+  GenerateVectorComponentConstructors<3, Real>(builder, real3Type, this->RealTypes);
+  GenerateVectorComponentConstructors<4, Real>(builder, real4Type, this->RealTypes);
+  GenerateVectorComponentConstructors<4, Real>(builder, quaternionType, this->RealTypes);
 
   // Generate swizzles for all of our vector types
   GenerateVectorSwizzles<1, Boolean>(builder, booleanType, this->BooleanTypes);
@@ -4431,109 +3795,38 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
 
   // Every vector gets a count which tells you how many elements there are, for
   // generic programming
-  builder
-      .AddBoundGetterSetter(booleanType,
-                            "Count",
-                            this->IntegerType,
-                            nullptr,
-                            VectorCount<1>,
-                            FunctionOptions::None)
+  builder.AddBoundGetterSetter(booleanType, "Count", this->IntegerType, nullptr, VectorCount<1>, FunctionOptions::None)
       ->IsHidden = true;
   builder
-      .AddBoundGetterSetter(boolean2Type,
-                            "Count",
-                            this->IntegerType,
-                            nullptr,
-                            VectorCount<2>,
-                            FunctionOptions::None)
+      .AddBoundGetterSetter(boolean2Type, "Count", this->IntegerType, nullptr, VectorCount<2>, FunctionOptions::None)
       ->IsHidden = true;
   builder
-      .AddBoundGetterSetter(boolean3Type,
-                            "Count",
-                            this->IntegerType,
-                            nullptr,
-                            VectorCount<3>,
-                            FunctionOptions::None)
+      .AddBoundGetterSetter(boolean3Type, "Count", this->IntegerType, nullptr, VectorCount<3>, FunctionOptions::None)
       ->IsHidden = true;
   builder
-      .AddBoundGetterSetter(boolean4Type,
-                            "Count",
-                            this->IntegerType,
-                            nullptr,
-                            VectorCount<4>,
-                            FunctionOptions::None)
+      .AddBoundGetterSetter(boolean4Type, "Count", this->IntegerType, nullptr, VectorCount<4>, FunctionOptions::None)
+      ->IsHidden = true;
+  builder.AddBoundGetterSetter(integerType, "Count", this->IntegerType, nullptr, VectorCount<1>, FunctionOptions::None)
       ->IsHidden = true;
   builder
-      .AddBoundGetterSetter(integerType,
-                            "Count",
-                            this->IntegerType,
-                            nullptr,
-                            VectorCount<1>,
-                            FunctionOptions::None)
+      .AddBoundGetterSetter(integer2Type, "Count", this->IntegerType, nullptr, VectorCount<2>, FunctionOptions::None)
       ->IsHidden = true;
   builder
-      .AddBoundGetterSetter(integer2Type,
-                            "Count",
-                            this->IntegerType,
-                            nullptr,
-                            VectorCount<2>,
-                            FunctionOptions::None)
+      .AddBoundGetterSetter(integer3Type, "Count", this->IntegerType, nullptr, VectorCount<3>, FunctionOptions::None)
       ->IsHidden = true;
   builder
-      .AddBoundGetterSetter(integer3Type,
-                            "Count",
-                            this->IntegerType,
-                            nullptr,
-                            VectorCount<3>,
-                            FunctionOptions::None)
+      .AddBoundGetterSetter(integer4Type, "Count", this->IntegerType, nullptr, VectorCount<4>, FunctionOptions::None)
+      ->IsHidden = true;
+  builder.AddBoundGetterSetter(realType, "Count", this->IntegerType, nullptr, VectorCount<1>, FunctionOptions::None)
+      ->IsHidden = true;
+  builder.AddBoundGetterSetter(real2Type, "Count", this->IntegerType, nullptr, VectorCount<2>, FunctionOptions::None)
+      ->IsHidden = true;
+  builder.AddBoundGetterSetter(real3Type, "Count", this->IntegerType, nullptr, VectorCount<3>, FunctionOptions::None)
+      ->IsHidden = true;
+  builder.AddBoundGetterSetter(real4Type, "Count", this->IntegerType, nullptr, VectorCount<4>, FunctionOptions::None)
       ->IsHidden = true;
   builder
-      .AddBoundGetterSetter(integer4Type,
-                            "Count",
-                            this->IntegerType,
-                            nullptr,
-                            VectorCount<4>,
-                            FunctionOptions::None)
-      ->IsHidden = true;
-  builder
-      .AddBoundGetterSetter(realType,
-                            "Count",
-                            this->IntegerType,
-                            nullptr,
-                            VectorCount<1>,
-                            FunctionOptions::None)
-      ->IsHidden = true;
-  builder
-      .AddBoundGetterSetter(real2Type,
-                            "Count",
-                            this->IntegerType,
-                            nullptr,
-                            VectorCount<2>,
-                            FunctionOptions::None)
-      ->IsHidden = true;
-  builder
-      .AddBoundGetterSetter(real3Type,
-                            "Count",
-                            this->IntegerType,
-                            nullptr,
-                            VectorCount<3>,
-                            FunctionOptions::None)
-      ->IsHidden = true;
-  builder
-      .AddBoundGetterSetter(real4Type,
-                            "Count",
-                            this->IntegerType,
-                            nullptr,
-                            VectorCount<4>,
-                            FunctionOptions::None)
-      ->IsHidden = true;
-  builder
-      .AddBoundGetterSetter(quaternionType,
-                            "Count",
-                            this->IntegerType,
-                            nullptr,
-                            VectorCount<4>,
-                            FunctionOptions::None)
+      .AddBoundGetterSetter(quaternionType, "Count", this->IntegerType, nullptr, VectorCount<4>, FunctionOptions::None)
       ->IsHidden = true;
 
   // Bind the get functions for vectors (indexing)
@@ -4714,72 +4007,46 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
       Function* fn = nullptr;
 
       // Add a get property for the number of elements in the vector
-      prop = builder.AddBoundGetterSetter(vectorType,
-                                          "Count",
-                                          integerType,
-                                          nullptr,
-                                          VectorCount,
-                                          FunctionOptions::Static);
+      prop =
+          builder.AddBoundGetterSetter(vectorType, "Count", integerType, nullptr, VectorCount, FunctionOptions::Static);
       *(size_t*)(&prop->Get->UserData) = userData.Count;
-      prop->Description =
-          ZilchDocumentString("The number of elements in the vector.");
+      prop->Description = ZilchDocumentString("The number of elements in the vector.");
 
       // Add a method to get an axis by index
-      fn = builder.AddBoundFunction(vectorType,
-                                    "GetAxis",
-                                    VectorGetAxis,
-                                    OneParameter(integerType),
-                                    vectorType,
-                                    FunctionOptions::Static);
+      fn = builder.AddBoundFunction(
+          vectorType, "GetAxis", VectorGetAxis, OneParameter(integerType), vectorType, FunctionOptions::Static);
       fn->ComplexUserData.WriteObject(userData);
-      fn->Description =
-          ZilchDocumentString("Returns an axis vector from the given index "
-                              "(ie. 0 is XAxis, 1 is YAxis, etc...");
+      fn->Description = ZilchDocumentString("Returns an axis vector from the given index "
+                                            "(ie. 0 is XAxis, 1 is YAxis, etc...");
 
       // Add a property for the zero vector
-      prop = builder.AddBoundGetterSetter(vectorType,
-                                          "Zero",
-                                          vectorType,
-                                          nullptr,
-                                          VectorZeroFunction,
-                                          FunctionOptions::Static);
+      prop = builder.AddBoundGetterSetter(
+          vectorType, "Zero", vectorType, nullptr, VectorZeroFunction, FunctionOptions::Static);
       prop->Get->ComplexUserData.WriteObject(userData);
-      prop->Description = ZilchDocumentString(
-          "The zero vector (a vector containing all zeroes).");
+      prop->Description = ZilchDocumentString("The zero vector (a vector containing all zeroes).");
 
       // Add a property for the one vector
-      prop = builder.AddBoundGetterSetter(vectorType,
-                                          "One",
-                                          vectorType,
-                                          nullptr,
-                                          VectorOneFunction,
-                                          FunctionOptions::Static);
+      prop = builder.AddBoundGetterSetter(
+          vectorType, "One", vectorType, nullptr, VectorOneFunction, FunctionOptions::Static);
       prop->Get->ComplexUserData.WriteObject(userData);
-      prop->Description =
-          ZilchDocumentString("The one vector (a vector containing all ones).");
+      prop->Description = ZilchDocumentString("The one vector (a vector containing all ones).");
 
       // Add a property for each axis (e.g. Real3.XAxis, Real3.YAxis, etc...)
       for (size_t axis = 0; axis <= dimension; ++axis)
       {
-        prop = builder.AddBoundGetterSetter(vectorType,
-                                            axes[axis],
-                                            vectorType,
-                                            nullptr,
-                                            VectorAxisFunction,
-                                            FunctionOptions::Static);
+        prop = builder.AddBoundGetterSetter(
+            vectorType, axes[axis], vectorType, nullptr, VectorAxisFunction, FunctionOptions::Static);
         prop->Get->UserData = (void*)axis;
         prop->Get->ComplexUserData.WriteObject(userData);
       }
 
       // Simple helper macro to make binding the below splats easier
-#define ZilchNoParameterSplat(                                                 \
-    builder, type, name, scalarType, fn, count, description)                   \
-  {                                                                            \
-    BoundFn boundFn = FullNoParameterSplatAs<scalarType, fn>;                  \
-    prop = builder.AddBoundGetterSetter(                                       \
-        type, name, type, nullptr, boundFn, FunctionOptions::Static);          \
-    prop->Get->UserData = (void*)count;                                        \
-    prop->Description = ZilchDocumentString(description);                      \
+#define ZilchNoParameterSplat(builder, type, name, scalarType, fn, count, description)                                 \
+  {                                                                                                                    \
+    BoundFn boundFn = FullNoParameterSplatAs<scalarType, fn>;                                                          \
+    prop = builder.AddBoundGetterSetter(type, name, type, nullptr, boundFn, FunctionOptions::Static);                  \
+    prop->Get->UserData = (void*)count;                                                                                \
+    prop->Description = ZilchDocumentString(description);                                                              \
   }
 
       // Add splats for the extremal values for types that matter (Real and
@@ -4859,15 +4126,9 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
   }
   // Add getters for the extremal values for types that don't matter (Byte,
   // DoubleReal, and DoubleInteger)
-  ZilchFullBindGetterSetter(builder,
-                            byteType,
-                            &ZilchBytePositiveMax,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "PositiveMax")
-      ->Description = ZilchDocumentString(
-      "The largest (most positive) value that can be represented by a Byte.");
+  ZilchFullBindGetterSetter(
+      builder, byteType, &ZilchBytePositiveMax, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "PositiveMax")
+      ->Description = ZilchDocumentString("The largest (most positive) value that can be represented by a Byte.");
   ZilchFullBindGetterSetter(builder,
                             byteType,
                             &ZilchBytePositiveValueClosestToZero,
@@ -4875,8 +4136,7 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                             ZilchNoSetter,
                             ZilchNoOverload,
                             "PositiveValueClosestToZero")
-      ->Description = ZilchDocumentString(
-      "The positive value closest to zero that can be represented by a Byte.");
+      ->Description = ZilchDocumentString("The positive value closest to zero that can be represented by a Byte.");
   ZilchFullBindGetterSetter(builder,
                             doubleRealType,
                             &ZilchDoubleRealPositiveMax,
@@ -4884,9 +4144,8 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                             ZilchNoSetter,
                             ZilchNoOverload,
                             "PositiveMax")
-      ->Description =
-      ZilchDocumentString("The largest (most positive) value that can be "
-                          "represented by a DoubleReal.");
+      ->Description = ZilchDocumentString("The largest (most positive) value that can be "
+                                          "represented by a DoubleReal.");
   ZilchFullBindGetterSetter(builder,
                             doubleRealType,
                             &ZilchDoubleRealPositiveValueClosestToZero,
@@ -4894,9 +4153,8 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                             ZilchNoSetter,
                             ZilchNoOverload,
                             "PositiveValueClosestToZero")
-      ->Description =
-      ZilchDocumentString("The positive value closest to zero that can be "
-                          "represented by a DoubleReal.");
+      ->Description = ZilchDocumentString("The positive value closest to zero that can be "
+                                          "represented by a DoubleReal.");
   ZilchFullBindGetterSetter(builder,
                             doubleRealType,
                             &ZilchDoubleRealNegativeValueClosestToZero,
@@ -4904,9 +4162,8 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                             ZilchNoSetter,
                             ZilchNoOverload,
                             "NegativeValueClosestToZero")
-      ->Description =
-      ZilchDocumentString("The negative value closest to zero that can be "
-                          "represented by a DoubleReal.");
+      ->Description = ZilchDocumentString("The negative value closest to zero that can be "
+                                          "represented by a DoubleReal.");
   ZilchFullBindGetterSetter(builder,
                             doubleRealType,
                             &ZilchDoubleRealNegativeMin,
@@ -4914,9 +4171,8 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                             ZilchNoSetter,
                             ZilchNoOverload,
                             "NegativeMin")
-      ->Description =
-      ZilchDocumentString("The smallest (most negative) value that can be "
-                          "represented by a DoubleReal.");
+      ->Description = ZilchDocumentString("The smallest (most negative) value that can be "
+                                          "represented by a DoubleReal.");
   ZilchFullBindGetterSetter(builder,
                             doubleIntegerType,
                             &ZilchDoubleIntegerPositiveMax,
@@ -4924,9 +4180,8 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                             ZilchNoSetter,
                             ZilchNoOverload,
                             "PositiveMax")
-      ->Description =
-      ZilchDocumentString("The largest (most positive) value that can be "
-                          "represented by a DoubleInteger.");
+      ->Description = ZilchDocumentString("The largest (most positive) value that can be "
+                                          "represented by a DoubleInteger.");
   ZilchFullBindGetterSetter(builder,
                             doubleIntegerType,
                             &ZilchDoubleIntegerPositiveValueClosestToZero,
@@ -4934,9 +4189,8 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                             ZilchNoSetter,
                             ZilchNoOverload,
                             "PositiveValueClosestToZero")
-      ->Description =
-      ZilchDocumentString("The positive value closest to zero that can be "
-                          "represented by a DoubleInteger.");
+      ->Description = ZilchDocumentString("The positive value closest to zero that can be "
+                                          "represented by a DoubleInteger.");
   ZilchFullBindGetterSetter(builder,
                             doubleIntegerType,
                             &ZilchDoubleIntegerNegativeValueClosestToZero,
@@ -4944,9 +4198,8 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                             ZilchNoSetter,
                             ZilchNoOverload,
                             "NegativeValueClosestToZero")
-      ->Description =
-      ZilchDocumentString("The negative value closest to zero that can be "
-                          "represented by a DoubleInteger.");
+      ->Description = ZilchDocumentString("The negative value closest to zero that can be "
+                                          "represented by a DoubleInteger.");
   ZilchFullBindGetterSetter(builder,
                             doubleIntegerType,
                             &ZilchDoubleIntegerNegativeMin,
@@ -4954,100 +4207,51 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                             ZilchNoSetter,
                             ZilchNoOverload,
                             "NegativeMin")
-      ->Description =
-      ZilchDocumentString("The smallest (most negative) value that can be "
-                          "represented by a DoubleInteger.");
+      ->Description = ZilchDocumentString("The smallest (most negative) value that can be "
+                                          "represented by a DoubleInteger.");
 
   // Quaternion static bindings
   {
     Property* prop = nullptr;
 
     // Add a get property for the number of elements in the vector
-    prop = builder.AddBoundGetterSetter(quaternionType,
-                                        "Count",
-                                        integerType,
-                                        nullptr,
-                                        VectorCount,
-                                        FunctionOptions::Static);
+    prop = builder.AddBoundGetterSetter(
+        quaternionType, "Count", integerType, nullptr, VectorCount, FunctionOptions::Static);
     *(size_t*)(&prop->Get->UserData) = 4;
-    prop->Description =
-        ZilchDocumentString("The number of elements in the quaternion.");
+    prop->Description = ZilchDocumentString("The number of elements in the quaternion.");
   }
 
   FunctionOptions::Enum options = FunctionOptions::Static;
 
   // ZilchFullBindMethod(builder, math, (Real3 (*)(Real3Param, Real3Param,
   // Real)) &Math::RotateVector
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::RotateVector,
-                      ZilchNoOverload,
-                      "RotateVector",
-                      "vector, axis, radians")
-      ->Description = ZilchDocumentString(
-      "Rotate a vector about an axis by the given radians.");
+  ZilchFullBindMethod(builder, math, &Math::RotateVector, ZilchNoOverload, "RotateVector", "vector, axis, radians")
+      ->Description = ZilchDocumentString("Rotate a vector about an axis by the given radians.");
 
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::AngleBetween,
-                      (Real(*)(Real2Param, Real2Param)),
-                      "AngleBetween",
-                      ZilchNoNames)
-      ->Description =
-      ZilchDocumentString("Returns the angle between two Real2s in radians.");
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::AngleBetween,
-                      (Real(*)(Real3Param, Real3Param)),
-                      "AngleBetween",
-                      ZilchNoNames)
-      ->Description =
-      ZilchDocumentString("Returns the angle between two Real3s in radians.");
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::AngleBetween,
-                      (Real(*)(Real4Param, Real4Param)),
-                      "AngleBetween",
-                      ZilchNoNames)
-      ->Description =
-      ZilchDocumentString("Returns the angle between two Real4s in radians.");
+  ZilchFullBindMethod(
+      builder, math, &Math::AngleBetween, (Real(*)(Real2Param, Real2Param)), "AngleBetween", ZilchNoNames)
+      ->Description = ZilchDocumentString("Returns the angle between two Real2s in radians.");
+  ZilchFullBindMethod(
+      builder, math, &Math::AngleBetween, (Real(*)(Real3Param, Real3Param)), "AngleBetween", ZilchNoNames)
+      ->Description = ZilchDocumentString("Returns the angle between two Real3s in radians.");
+  ZilchFullBindMethod(
+      builder, math, &Math::AngleBetween, (Real(*)(Real4Param, Real4Param)), "AngleBetween", ZilchNoNames)
+      ->Description = ZilchDocumentString("Returns the angle between two Real4s in radians.");
 
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::AngleBetween,
-                      (Real(*)(QuaternionParam, QuaternionParam)),
-                      "AngleBetween",
-                      ZilchNoNames)
-      ->Description = ZilchDocumentString(
-      "Returns the angle between two Quaternions in radians.");
+  ZilchFullBindMethod(
+      builder, math, &Math::AngleBetween, (Real(*)(QuaternionParam, QuaternionParam)), "AngleBetween", ZilchNoNames)
+      ->Description = ZilchDocumentString("Returns the angle between two Quaternions in radians.");
 
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::Slerp,
-                      (Real2(*)(Real2Param, Real2Param, Real)),
-                      "Slerp",
-                      "start, end, t")
-      ->Description =
-      ZilchDocumentString("Spherical linear interpolation. Used to interpolate "
-                          "between two vectors by the parameter t.");
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::Slerp,
-                      (Real3(*)(Real3Param, Real3Param, Real)),
-                      "Slerp",
-                      "start, end, t")
-      ->Description =
-      ZilchDocumentString("Spherical linear interpolation. Used to interpolate "
-                          "between two vectors by the parameter t.");
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::Slerp,
-                      (Quaternion(*)(QuaternionParam, QuaternionParam, Real)),
-                      "Slerp",
-                      "start, end, t")
-      ->Description =
-      ZilchDocumentString("Spherical linear interpolation. Used to interpolate "
-                          "between two rotations by the parameter t.");
+  ZilchFullBindMethod(builder, math, &Math::Slerp, (Real2(*)(Real2Param, Real2Param, Real)), "Slerp", "start, end, t")
+      ->Description = ZilchDocumentString("Spherical linear interpolation. Used to interpolate "
+                                          "between two vectors by the parameter t.");
+  ZilchFullBindMethod(builder, math, &Math::Slerp, (Real3(*)(Real3Param, Real3Param, Real)), "Slerp", "start, end, t")
+      ->Description = ZilchDocumentString("Spherical linear interpolation. Used to interpolate "
+                                          "between two vectors by the parameter t.");
+  ZilchFullBindMethod(
+      builder, math, &Math::Slerp, (Quaternion(*)(QuaternionParam, QuaternionParam, Real)), "Slerp", "start, end, t")
+      ->Description = ZilchDocumentString("Spherical linear interpolation. Used to interpolate "
+                                          "between two rotations by the parameter t.");
 
   ZilchFullBindMethod(builder,
                       math,
@@ -5055,24 +4259,22 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                       (Real2(*)(Real2Param, Real2Param, Real)),
                       "SlerpUnnormalized",
                       "start, end, t")
-      ->Description =
-      ZilchDocumentString("Spherical linear interpolation. Used to interpolate "
-                          "between two vectors by the parameter t. This is "
-                          "the 'pure' mathematical Slerp function that works "
-                          "on un-normalized input. This effectively traces "
-                          "along an ellipse defined by the two input vectors.");
+      ->Description = ZilchDocumentString("Spherical linear interpolation. Used to interpolate "
+                                          "between two vectors by the parameter t. This is "
+                                          "the 'pure' mathematical Slerp function that works "
+                                          "on un-normalized input. This effectively traces "
+                                          "along an ellipse defined by the two input vectors.");
   ZilchFullBindMethod(builder,
                       math,
                       &Math::SlerpUnnormalized,
                       (Real3(*)(Real3Param, Real3Param, Real)),
                       "SlerpUnnormalized",
                       "start, end, t")
-      ->Description =
-      ZilchDocumentString("Spherical linear interpolation. Used to interpolate "
-                          "between two vectors by the parameter t. This is "
-                          "the 'pure' mathematical Slerp function that works "
-                          "on un-normalized input. This effectively traces "
-                          "along an ellipse defined by the two input vectors.");
+      ->Description = ZilchDocumentString("Spherical linear interpolation. Used to interpolate "
+                                          "between two vectors by the parameter t. This is "
+                                          "the 'pure' mathematical Slerp function that works "
+                                          "on un-normalized input. This effectively traces "
+                                          "along an ellipse defined by the two input vectors.");
 
   ZilchFullBindMethod(builder,
                       math,
@@ -5080,8 +4282,7 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                       (Real2(*)(Real2Param, Real2Param, Real)),
                       "RotateTowards",
                       "p0, p1, maxRadians")
-      ->Description = ZilchDocumentString(
-      "Rotate a vector towards another vector changing at most maxRadians.");
+      ->Description = ZilchDocumentString("Rotate a vector towards another vector changing at most maxRadians.");
 
   ZilchFullBindMethod(builder,
                       math,
@@ -5089,8 +4290,7 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                       (Real3(*)(Real3Param, Real3Param, Real)),
                       "RotateTowards",
                       "p0, p1, maxRadians")
-      ->Description = ZilchDocumentString(
-      "Rotate a vector towards another vector changing at most maxRadians.");
+      ->Description = ZilchDocumentString("Rotate a vector towards another vector changing at most maxRadians.");
 
   ZilchFullBindMethod(builder,
                       math,
@@ -5098,22 +4298,13 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                       (Quaternion(*)(QuaternionParam, QuaternionParam, Real)),
                       "RotateTowards",
                       "p0, p1, maxRadians")
-      ->Description =
-      ZilchDocumentString("Rotate a quaternion towards another quaternion "
-                          "changing at most maxRadians.");
+      ->Description = ZilchDocumentString("Rotate a quaternion towards another quaternion "
+                                          "changing at most maxRadians.");
 
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::SignedAngle,
-                      ZilchNoOverload,
-                      "SignedAngle",
-                      "p0, p1, up")
-      ->Description = ZilchDocumentString(
-      "Get the rotation angle between two vectors in radians.");
+  ZilchFullBindMethod(builder, math, &Math::SignedAngle, ZilchNoOverload, "SignedAngle", "p0, p1, up")->Description =
+      ZilchDocumentString("Get the rotation angle between two vectors in radians.");
 
-  ZilchFullBindMethod(
-      builder, math, &Math::Angle2D, ZilchNoOverload, "Angle2D", ZilchNoNames)
-      ->Description =
+  ZilchFullBindMethod(builder, math, &Math::Angle2D, ZilchNoOverload, "Angle2D", ZilchNoNames)->Description =
       ZilchDocumentString("Computes the angle (in radians) about the z-axis "
                           "between the vector and the x-axis.");
 
@@ -5123,24 +4314,21 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                       (Real2(*)(Real2Param, Real2Param)),
                       "ProjectOnVector",
                       "toBeProjected, normalizedVector")
-      ->Description = ZilchDocumentString(
-      "Projects the input vector onto the given normalized vector.");
+      ->Description = ZilchDocumentString("Projects the input vector onto the given normalized vector.");
   ZilchFullBindMethod(builder,
                       math,
                       &Math::ProjectOnVector,
                       (Real3(*)(Real3Param, Real3Param)),
                       "ProjectOnVector",
                       "toBeProjected, normalizedVector")
-      ->Description = ZilchDocumentString(
-      "Projects the input vector onto the given normalized vector.");
+      ->Description = ZilchDocumentString("Projects the input vector onto the given normalized vector.");
   ZilchFullBindMethod(builder,
                       math,
                       &Math::ProjectOnVector,
                       (Real4(*)(Real4Param, Real4Param)),
                       "ProjectOnVector",
                       "toBeProjected, normalizedVector")
-      ->Description = ZilchDocumentString(
-      "Projects the input vector onto the given normalized vector.");
+      ->Description = ZilchDocumentString("Projects the input vector onto the given normalized vector.");
   // Legacy project function (mostly to not break things like the swept
   // controller)
   ZilchFullBindMethod(builder,
@@ -5149,9 +4337,8 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                       (Real3(*)(Real3Param, Real3Param)),
                       "Project",
                       "toBeProjected, normalizedVector")
-      ->Description = ZilchDocumentString(
-      "Projects the input vector onto the given normalized vector. Note: This "
-      "function is legacy. Instead call ProjectOnVector.");
+      ->Description = ZilchDocumentString("Projects the input vector onto the given normalized vector. Note: This "
+                                          "function is legacy. Instead call ProjectOnVector.");
 
   ZilchFullBindMethod(builder,
                       math,
@@ -5159,24 +4346,21 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                       (Real2(*)(Real2Param, Real2Param)),
                       "ProjectOnPlane",
                       "toBeProjected, planeNormal")
-      ->Description = ZilchDocumentString(
-      "Projects the input vector onto plane defined by the given normal.");
+      ->Description = ZilchDocumentString("Projects the input vector onto plane defined by the given normal.");
   ZilchFullBindMethod(builder,
                       math,
                       &Math::ProjectOnPlane,
                       (Real3(*)(Real3Param, Real3Param)),
                       "ProjectOnPlane",
                       "toBeProjected, planeNormal")
-      ->Description = ZilchDocumentString(
-      "Projects the input vector onto plane defined by the given normal.");
+      ->Description = ZilchDocumentString("Projects the input vector onto plane defined by the given normal.");
   ZilchFullBindMethod(builder,
                       math,
                       &Math::ProjectOnPlane,
                       (Real4(*)(Real4Param, Real4Param)),
                       "ProjectOnPlane",
                       "toBeProjected, planeNormal")
-      ->Description = ZilchDocumentString(
-      "Projects the input vector onto plane defined by the given normal.");
+      ->Description = ZilchDocumentString("Projects the input vector onto plane defined by the given normal.");
 
   ZilchFullBindMethod(builder,
                       math,
@@ -5184,27 +4368,24 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                       (Real2(*)(Real2Param, Real2Param)),
                       "ReflectAcrossPlane",
                       "toBeReflected, planeNormal")
-      ->Description =
-      ZilchDocumentString("Reflects the input vector across the plane defined "
-                          "by the given normal.");
+      ->Description = ZilchDocumentString("Reflects the input vector across the plane defined "
+                                          "by the given normal.");
   ZilchFullBindMethod(builder,
                       math,
                       &Math::ReflectAcrossPlane,
                       (Real3(*)(Real3Param, Real3Param)),
                       "ReflectAcrossPlane",
                       "toBeReflected, planeNormal")
-      ->Description =
-      ZilchDocumentString("Reflects the input vector across the plane defined "
-                          "by the given normal.");
+      ->Description = ZilchDocumentString("Reflects the input vector across the plane defined "
+                                          "by the given normal.");
   ZilchFullBindMethod(builder,
                       math,
                       &Math::ReflectAcrossPlane,
                       (Real4(*)(Real4Param, Real4Param)),
                       "ReflectAcrossPlane",
                       "toBeReflected, planeNormal")
-      ->Description =
-      ZilchDocumentString("Reflects the input vector across the plane defined "
-                          "by the given normal.");
+      ->Description = ZilchDocumentString("Reflects the input vector across the plane defined "
+                                          "by the given normal.");
 
   ZilchFullBindMethod(builder,
                       math,
@@ -5212,24 +4393,21 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                       (Real2(*)(Real2Param, Real2Param)),
                       "ReflectAcrossVector",
                       "toBeReflected, vector")
-      ->Description =
-      ZilchDocumentString("Reflects the input vector across the given vector.");
+      ->Description = ZilchDocumentString("Reflects the input vector across the given vector.");
   ZilchFullBindMethod(builder,
                       math,
                       &Math::ReflectAcrossVector,
                       (Real3(*)(Real3Param, Real3Param)),
                       "ReflectAcrossVector",
                       "toBeReflected, vector")
-      ->Description =
-      ZilchDocumentString("Reflects the input vector across the given vector.");
+      ->Description = ZilchDocumentString("Reflects the input vector across the given vector.");
   ZilchFullBindMethod(builder,
                       math,
                       &Math::ReflectAcrossVector,
                       (Real4(*)(Real4Param, Real4Param)),
                       "ReflectAcrossVector",
                       "toBeReflected, vector")
-      ->Description =
-      ZilchDocumentString("Reflects the input vector across the given vector.");
+      ->Description = ZilchDocumentString("Reflects the input vector across the given vector.");
 
   ZilchFullBindMethod(builder,
                       math,
@@ -5237,436 +4415,202 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                       (Real2(*)(Real2Param, Real2Param, Real)),
                       "Refract",
                       "toBeRefracted, planeNormal, refractionIndex")
-      ->Description =
-      ZilchDocumentString("Calculates the refraction vector through a plane "
-                          "given a certain index of refraction.");
+      ->Description = ZilchDocumentString("Calculates the refraction vector through a plane "
+                                          "given a certain index of refraction.");
   ZilchFullBindMethod(builder,
                       math,
                       &Math::Refract,
                       (Real3(*)(Real3Param, Real3Param, Real)),
                       "Refract",
                       "toBeRefracted, planeNormal, refractionIndex")
-      ->Description =
-      ZilchDocumentString("Calculates the refraction vector through a plane "
-                          "given a certain index of refraction.");
+      ->Description = ZilchDocumentString("Calculates the refraction vector through a plane "
+                                          "given a certain index of refraction.");
   ZilchFullBindMethod(builder,
                       math,
                       &Math::Refract,
                       (Real4(*)(Real4Param, Real4Param, Real)),
                       "Refract",
                       "toBeRefracted, planeNormal, refractionIndex")
-      ->Description =
-      ZilchDocumentString("Calculates the refraction vector through a plane "
-                          "given a certain index of refraction.");
+      ->Description = ZilchDocumentString("Calculates the refraction vector through a plane "
+                                          "given a certain index of refraction.");
 
   // Lots of quaternion construction functions
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::ToQuaternion,
-                      (Quaternion(*)(Real3Param, Real)),
-                      "ToQuaternion",
-                      "axis, radians")
-      ->Description =
-      ZilchDocumentString("Generates the quaternion that rotates about the "
-                          "axis vector by the given radians.");
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::ToQuaternion,
-                      (Quaternion(*)(Real3Param, Real)),
-                      "AxisAngle",
-                      "axis, radians")
-      ->Description =
-      ZilchDocumentString("Generates the quaternion that rotates about the "
-                          "axis vector by the given radians.");
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::ToQuaternion,
-                      (Quaternion(*)(Real3Param, Real3Param)),
-                      "ToQuaternion",
-                      "facing, up")
-      ->Description =
-      ZilchDocumentString("Generates the orientation represented by the given "
-                          "facing and up vectors.");
+  ZilchFullBindMethod(
+      builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3Param, Real)), "ToQuaternion", "axis, radians")
+      ->Description = ZilchDocumentString("Generates the quaternion that rotates about the "
+                                          "axis vector by the given radians.");
+  ZilchFullBindMethod(
+      builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3Param, Real)), "AxisAngle", "axis, radians")
+      ->Description = ZilchDocumentString("Generates the quaternion that rotates about the "
+                                          "axis vector by the given radians.");
+  ZilchFullBindMethod(
+      builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3Param, Real3Param)), "ToQuaternion", "facing, up")
+      ->Description = ZilchDocumentString("Generates the orientation represented by the given "
+                                          "facing and up vectors.");
   ZilchFullBindMethod(builder,
                       math,
                       &Math::ToQuaternion,
                       (Quaternion(*)(Real3Param, Real3Param, Real3Param)),
                       "ToQuaternion",
                       "facing, up, right")
-      ->Description =
-      ZilchDocumentString("Generates the orientation represented by the given "
-                          "facing, up, and right vectors.");
+      ->Description = ZilchDocumentString("Generates the orientation represented by the given "
+                                          "facing, up, and right vectors.");
   ZilchFullBindMethod(builder,
                       math,
                       &Math::ToQuaternion,
                       (Quaternion(*)(Real, Real, Real)),
                       "ToQuaternion",
                       "xRadians, yRadians, zRadians")
-      ->Description = ZilchDocumentString(
-      "Generates the orientation from the given Euler angles.");
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::ToQuaternion,
-                      (Quaternion(*)(Real3Param)),
-                      "ToQuaternion",
-                      "eulerRadians")
-      ->Description = ZilchDocumentString(
-      "Generates the orientation from the given Euler angle vector");
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::ToQuaternion,
-                      (Quaternion(*)(Real3Param)),
-                      "Euler",
-                      "eulerRadians")
-      ->Description = ZilchDocumentString(
-      "Generates the orientation from the given Euler angle vector");
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::ToQuaternion,
-                      (Quaternion(*)(Real3x3Param)),
-                      "ToQuaternion",
-                      "rotationMatrix")
-      ->Description =
-      ZilchDocumentString("Converts a rotation matrix into a quaternion.");
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::RotationQuaternionBetween,
-                      ZilchNoOverload,
-                      "RotationQuaternionBetween",
-                      "start, end")
-      ->Description = ZilchDocumentString(
-      "Generates the quaternion that rotates from parameter 1 to parameter 2.");
+      ->Description = ZilchDocumentString("Generates the orientation from the given Euler angles.");
+  ZilchFullBindMethod(builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3Param)), "ToQuaternion", "eulerRadians")
+      ->Description = ZilchDocumentString("Generates the orientation from the given Euler angle vector");
+  ZilchFullBindMethod(builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3Param)), "Euler", "eulerRadians")
+      ->Description = ZilchDocumentString("Generates the orientation from the given Euler angle vector");
+  ZilchFullBindMethod(
+      builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3x3Param)), "ToQuaternion", "rotationMatrix")
+      ->Description = ZilchDocumentString("Converts a rotation matrix into a quaternion.");
+  ZilchFullBindMethod(
+      builder, math, &Math::RotationQuaternionBetween, ZilchNoOverload, "RotationQuaternionBetween", "start, end")
+      ->Description = ZilchDocumentString("Generates the quaternion that rotates from parameter 1 to parameter 2.");
 
   // Conversion to Real3x3 from various rotation formats
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::ToMatrix3,
-                      (Real3x3(*)(Real3Param, Real)),
-                      "ToReal3x3",
-                      "axis, radians")
-      ->Description =
-      ZilchDocumentString("Generates the three dimensional rotation matrix "
-                          "that rotates about 'axis' by 'radians'.");
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::ToMatrix3,
-                      (Real3x3(*)(Real3Param, Real3Param)),
-                      "ToReal3x3",
-                      "facing, up")
-      ->Description =
-      ZilchDocumentString("Generates the orientation represented by the given "
-                          "facing and up vectors.");
+  ZilchFullBindMethod(builder, math, &Math::ToMatrix3, (Real3x3(*)(Real3Param, Real)), "ToReal3x3", "axis, radians")
+      ->Description = ZilchDocumentString("Generates the three dimensional rotation matrix "
+                                          "that rotates about 'axis' by 'radians'.");
+  ZilchFullBindMethod(builder, math, &Math::ToMatrix3, (Real3x3(*)(Real3Param, Real3Param)), "ToReal3x3", "facing, up")
+      ->Description = ZilchDocumentString("Generates the orientation represented by the given "
+                                          "facing and up vectors.");
   ZilchFullBindMethod(builder,
                       math,
                       &Math::ToMatrix3,
                       (Real3x3(*)(Real3Param, Real3Param, Real3Param)),
                       "ToReal3x3",
                       "facing, up, right")
-      ->Description =
-      ZilchDocumentString("Generates the orientation represented by the given "
-                          "facing, up, and right vectors.");
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::ToMatrix3,
-                      (Real3x3(*)(Real, Real, Real)),
-                      "ToReal3x3",
-                      "xRadians, yRadians, zRadians")
-      ->Description = ZilchDocumentString(
-      "Generates the orientation from the given Euler angles.");
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::ToMatrix3,
-                      (Real3x3(*)(QuaternionParam)),
-                      "ToReal3x3",
-                      "rotation")
-      ->Description =
-      ZilchDocumentString("Converts a quaternion into a rotation matrix.");
+      ->Description = ZilchDocumentString("Generates the orientation represented by the given "
+                                          "facing, up, and right vectors.");
+  ZilchFullBindMethod(
+      builder, math, &Math::ToMatrix3, (Real3x3(*)(Real, Real, Real)), "ToReal3x3", "xRadians, yRadians, zRadians")
+      ->Description = ZilchDocumentString("Generates the orientation from the given Euler angles.");
+  ZilchFullBindMethod(builder, math, &Math::ToMatrix3, (Real3x3(*)(QuaternionParam)), "ToReal3x3", "rotation")
+      ->Description = ZilchDocumentString("Converts a quaternion into a rotation matrix.");
 
-  builder
-      .AddBoundFunction(math,
-                        "Dot",
-                        VectorDotProduct<2>,
-                        TwoParameters(this->Real2Type),
-                        this->RealType,
-                        options)
+  builder.AddBoundFunction(math, "Dot", VectorDotProduct<2>, TwoParameters(this->Real2Type), this->RealType, options)
+      ->Description = ZilchDocumentString("The vector dot product");
+  builder.AddBoundFunction(math, "Dot", VectorDotProduct<3>, TwoParameters(this->Real3Type), this->RealType, options)
+      ->Description = ZilchDocumentString("The vector dot product");
+  builder.AddBoundFunction(math, "Dot", VectorDotProduct<4>, TwoParameters(this->Real4Type), this->RealType, options)
       ->Description = ZilchDocumentString("The vector dot product");
   builder
-      .AddBoundFunction(math,
-                        "Dot",
-                        VectorDotProduct<3>,
-                        TwoParameters(this->Real3Type),
-                        this->RealType,
-                        options)
-      ->Description = ZilchDocumentString("The vector dot product");
-  builder
-      .AddBoundFunction(math,
-                        "Dot",
-                        VectorDotProduct<4>,
-                        TwoParameters(this->Real4Type),
-                        this->RealType,
-                        options)
-      ->Description = ZilchDocumentString("The vector dot product");
-  builder
-      .AddBoundFunction(math,
-                        "Dot",
-                        VectorDotProduct<4>,
-                        TwoParameters(this->QuaternionType),
-                        this->RealType,
-                        options)
+      .AddBoundFunction(math, "Dot", VectorDotProduct<4>, TwoParameters(this->QuaternionType), this->RealType, options)
       ->Description = ZilchDocumentString("The vector dot product");
 
   builder
-      .AddBoundFunction(math,
-                        "Cross",
-                        Vector3CrossProduct,
-                        TwoParameters(this->Real3Type),
-                        this->Real3Type,
-                        options)
-      ->Description = ZilchDocumentString(
-      "The vector cross product. Creates a new vector perpendicular to p0 and "
-      "p1 using the right hand rule.");
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::Cross,
-                      (float (*)(Real2Param, Real2Param)),
-                      "Cross",
-                      ZilchNoNames)
-      ->Description =
-      ZilchDocumentString("2D cross product. Equivalent to Cross(Real3(p0.x, "
-                          "p0.y, 0), Real3(p1.x, p1.y, 0)).");
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::Cross,
-                      (Real2(*)(float, Real2Param)),
-                      "Cross",
-                      ZilchNoNames)
-      ->Description =
+      .AddBoundFunction(math, "Cross", Vector3CrossProduct, TwoParameters(this->Real3Type), this->Real3Type, options)
+      ->Description = ZilchDocumentString("The vector cross product. Creates a new vector perpendicular to p0 and "
+                                          "p1 using the right hand rule.");
+  ZilchFullBindMethod(builder, math, &Math::Cross, (float (*)(Real2Param, Real2Param)), "Cross", ZilchNoNames)
+      ->Description = ZilchDocumentString("2D cross product. Equivalent to Cross(Real3(p0.x, "
+                                          "p0.y, 0), Real3(p1.x, p1.y, 0)).");
+  ZilchFullBindMethod(builder, math, &Math::Cross, (Real2(*)(float, Real2Param)), "Cross", ZilchNoNames)->Description =
       ZilchDocumentString("2D cross product. Equivalent to Cross(Real3(0, 0, "
                           "p0), Real3(p1.x, p1.y, 0)).");
-  ZilchFullBindMethod(builder,
-                      math,
-                      &Math::Cross,
-                      (Real2(*)(Real2Param, float)),
-                      "Cross",
-                      ZilchNoNames)
-      ->Description =
+  ZilchFullBindMethod(builder, math, &Math::Cross, (Real2(*)(Real2Param, float)), "Cross", ZilchNoNames)->Description =
       ZilchDocumentString("2D cross product. Equivalent to Cross(Real3(p0.x, "
                           "p0.y, 0), Real3(0, 0, p1)).");
 
+  builder.AddBoundFunction(math, "LengthSq", VectorLengthSq<2>, OneParameter(this->Real2Type), this->RealType, options)
+      ->Description = ZilchDocumentString("The squared length of the vector. Used to avoid a "
+                                          "square root when possible.");
+  builder.AddBoundFunction(math, "LengthSq", VectorLengthSq<3>, OneParameter(this->Real3Type), this->RealType, options)
+      ->Description = ZilchDocumentString("The squared length of the vector. Used to avoid a "
+                                          "square root when possible.");
+  builder.AddBoundFunction(math, "LengthSq", VectorLengthSq<4>, OneParameter(this->Real4Type), this->RealType, options)
+      ->Description = ZilchDocumentString("The squared length of the vector. Used to avoid a "
+                                          "square root when possible.");
   builder
-      .AddBoundFunction(math,
-                        "LengthSq",
-                        VectorLengthSq<2>,
-                        OneParameter(this->Real2Type),
-                        this->RealType,
-                        options)
-      ->Description =
-      ZilchDocumentString("The squared length of the vector. Used to avoid a "
-                          "square root when possible.");
-  builder
-      .AddBoundFunction(math,
-                        "LengthSq",
-                        VectorLengthSq<3>,
-                        OneParameter(this->Real3Type),
-                        this->RealType,
-                        options)
-      ->Description =
-      ZilchDocumentString("The squared length of the vector. Used to avoid a "
-                          "square root when possible.");
-  builder
-      .AddBoundFunction(math,
-                        "LengthSq",
-                        VectorLengthSq<4>,
-                        OneParameter(this->Real4Type),
-                        this->RealType,
-                        options)
-      ->Description =
-      ZilchDocumentString("The squared length of the vector. Used to avoid a "
-                          "square root when possible.");
-  builder
-      .AddBoundFunction(math,
-                        "LengthSq",
-                        VectorLengthSq<4>,
-                        OneParameter(this->QuaternionType),
-                        this->RealType,
-                        options)
-      ->Description =
-      ZilchDocumentString("The squared length of the vector. Used to avoid a "
-                          "square root when possible.");
+      .AddBoundFunction(
+          math, "LengthSq", VectorLengthSq<4>, OneParameter(this->QuaternionType), this->RealType, options)
+      ->Description = ZilchDocumentString("The squared length of the vector. Used to avoid a "
+                                          "square root when possible.");
 
-  builder
-      .AddBoundFunction(math,
-                        "Length",
-                        VectorLength<2>,
-                        OneParameter(this->Real2Type),
-                        this->RealType,
-                        options)
+  builder.AddBoundFunction(math, "Length", VectorLength<2>, OneParameter(this->Real2Type), this->RealType, options)
+      ->Description = ZilchDocumentString("The length of the vector.");
+  builder.AddBoundFunction(math, "Length", VectorLength<3>, OneParameter(this->Real3Type), this->RealType, options)
+      ->Description = ZilchDocumentString("The length of the vector.");
+  builder.AddBoundFunction(math, "Length", VectorLength<4>, OneParameter(this->Real4Type), this->RealType, options)
       ->Description = ZilchDocumentString("The length of the vector.");
   builder
-      .AddBoundFunction(math,
-                        "Length",
-                        VectorLength<3>,
-                        OneParameter(this->Real3Type),
-                        this->RealType,
-                        options)
-      ->Description = ZilchDocumentString("The length of the vector.");
-  builder
-      .AddBoundFunction(math,
-                        "Length",
-                        VectorLength<4>,
-                        OneParameter(this->Real4Type),
-                        this->RealType,
-                        options)
-      ->Description = ZilchDocumentString("The length of the vector.");
-  builder
-      .AddBoundFunction(math,
-                        "Length",
-                        VectorLength<4>,
-                        OneParameter(this->QuaternionType),
-                        this->RealType,
-                        options)
+      .AddBoundFunction(math, "Length", VectorLength<4>, OneParameter(this->QuaternionType), this->RealType, options)
       ->Description = ZilchDocumentString("The length of the vector.");
 
   builder
-      .AddBoundFunction(math,
-                        "Distance",
-                        VectorDistance<2>,
-                        TwoParameters(this->Real2Type),
-                        this->RealType,
-                        options)
-      ->Description =
-      ZilchDocumentString("Returns the distance between two points.");
+      .AddBoundFunction(math, "Distance", VectorDistance<2>, TwoParameters(this->Real2Type), this->RealType, options)
+      ->Description = ZilchDocumentString("Returns the distance between two points.");
   builder
-      .AddBoundFunction(math,
-                        "Distance",
-                        VectorDistance<3>,
-                        TwoParameters(this->Real3Type),
-                        this->RealType,
-                        options)
-      ->Description =
-      ZilchDocumentString("Returns the distance between two points.");
+      .AddBoundFunction(math, "Distance", VectorDistance<3>, TwoParameters(this->Real3Type), this->RealType, options)
+      ->Description = ZilchDocumentString("Returns the distance between two points.");
   builder
-      .AddBoundFunction(math,
-                        "Distance",
-                        VectorDistance<4>,
-                        TwoParameters(this->Real4Type),
-                        this->RealType,
-                        options)
-      ->Description =
-      ZilchDocumentString("Returns the distance between two points.");
+      .AddBoundFunction(math, "Distance", VectorDistance<4>, TwoParameters(this->Real4Type), this->RealType, options)
+      ->Description = ZilchDocumentString("Returns the distance between two points.");
   builder
-      .AddBoundFunction(math,
-                        "DistanceSq",
-                        VectorDistanceSq<2>,
-                        TwoParameters(this->Real2Type),
-                        this->RealType,
-                        options)
-      ->Description =
-      ZilchDocumentString("Returns the squared distance between two points.");
+      .AddBoundFunction(
+          math, "DistanceSq", VectorDistanceSq<2>, TwoParameters(this->Real2Type), this->RealType, options)
+      ->Description = ZilchDocumentString("Returns the squared distance between two points.");
   builder
-      .AddBoundFunction(math,
-                        "DistanceSq",
-                        VectorDistanceSq<3>,
-                        TwoParameters(this->Real3Type),
-                        this->RealType,
-                        options)
-      ->Description =
-      ZilchDocumentString("Returns the squared distance between two points.");
+      .AddBoundFunction(
+          math, "DistanceSq", VectorDistanceSq<3>, TwoParameters(this->Real3Type), this->RealType, options)
+      ->Description = ZilchDocumentString("Returns the squared distance between two points.");
   builder
-      .AddBoundFunction(math,
-                        "DistanceSq",
-                        VectorDistanceSq<4>,
-                        TwoParameters(this->Real4Type),
-                        this->RealType,
-                        options)
-      ->Description =
-      ZilchDocumentString("Returns the squared distance between two points.");
+      .AddBoundFunction(
+          math, "DistanceSq", VectorDistanceSq<4>, TwoParameters(this->Real4Type), this->RealType, options)
+      ->Description = ZilchDocumentString("Returns the squared distance between two points.");
+
+  builder
+      .AddBoundFunction(math, "Normalize", VectorNormalize<2>, OneParameter(this->Real2Type), this->Real2Type, options)
+      ->Description = ZilchDocumentString("Returns a vector that points in the same direction "
+                                          "but has a length of 1.");
+  builder
+      .AddBoundFunction(math, "Normalize", VectorNormalize<3>, OneParameter(this->Real3Type), this->Real3Type, options)
+      ->Description = ZilchDocumentString("Returns a vector that points in the same direction "
+                                          "but has a length of 1.");
+  builder
+      .AddBoundFunction(math, "Normalize", VectorNormalize<4>, OneParameter(this->Real4Type), this->Real4Type, options)
+      ->Description = ZilchDocumentString("Returns a vector that points in the same direction "
+                                          "but has a length of 1.");
+  builder
+      .AddBoundFunction(
+          math, "Normalize", VectorNormalize<4>, OneParameter(this->QuaternionType), this->QuaternionType, options)
+      ->Description = ZilchDocumentString("Returns a unit quaternion that represents a pure rotation.");
+
+  builder.AddBoundGetterSetter(math, "Pi", this->RealType, nullptr, Pi, MemberOptions::Static);
+  builder.AddBoundGetterSetter(math, "E", this->RealType, nullptr, E, MemberOptions::Static)->Description =
+      ZilchDocumentString("Euler's number.");
 
   builder
       .AddBoundFunction(math,
-                        "Normalize",
-                        VectorNormalize<2>,
-                        OneParameter(this->Real2Type),
-                        this->Real2Type,
-                        options)
-      ->Description =
-      ZilchDocumentString("Returns a vector that points in the same direction "
-                          "but has a length of 1.");
+                        "Multiply",
+                        QuaternionMultiplyQuaternion,
+                        TwoParameters(this->QuaternionType, "by", this->QuaternionType, "the"),
+                        this->QuaternionType,
+                        FunctionOptions::Static)
+      ->Description = ZilchDocumentString("Creates a new rotation that represents rotating by "
+                                          "parameter 2 and then parameter 1.");
   builder
       .AddBoundFunction(math,
-                        "Normalize",
-                        VectorNormalize<3>,
-                        OneParameter(this->Real3Type),
+                        "Multiply",
+                        QuaternionMultiplyVector3,
+                        TwoParameters(this->QuaternionType, "by", this->Real3Type, "the"),
                         this->Real3Type,
-                        options)
-      ->Description =
-      ZilchDocumentString("Returns a vector that points in the same direction "
-                          "but has a length of 1.");
-  builder
-      .AddBoundFunction(math,
-                        "Normalize",
-                        VectorNormalize<4>,
-                        OneParameter(this->Real4Type),
-                        this->Real4Type,
-                        options)
-      ->Description =
-      ZilchDocumentString("Returns a vector that points in the same direction "
-                          "but has a length of 1.");
-  builder
-      .AddBoundFunction(math,
-                        "Normalize",
-                        VectorNormalize<4>,
-                        OneParameter(this->QuaternionType),
-                        this->QuaternionType,
-                        options)
-      ->Description = ZilchDocumentString(
-      "Returns a unit quaternion that represents a pure rotation.");
-
-  builder.AddBoundGetterSetter(
-      math, "Pi", this->RealType, nullptr, Pi, MemberOptions::Static);
-  builder
-      .AddBoundGetterSetter(
-          math, "E", this->RealType, nullptr, E, MemberOptions::Static)
-      ->Description = ZilchDocumentString("Euler's number.");
-
+                        FunctionOptions::Static)
+      ->Description = ZilchDocumentString("Creates a new vector that represents parameter 2 "
+                                          "being rotated by parameter 1.");
   builder
       .AddBoundFunction(
-          math,
-          "Multiply",
-          QuaternionMultiplyQuaternion,
-          TwoParameters(
-              this->QuaternionType, "by", this->QuaternionType, "the"),
-          this->QuaternionType,
-          FunctionOptions::Static)
-      ->Description =
-      ZilchDocumentString("Creates a new rotation that represents rotating by "
-                          "parameter 2 and then parameter 1.");
-  builder
-      .AddBoundFunction(
-          math,
-          "Multiply",
-          QuaternionMultiplyVector3,
-          TwoParameters(this->QuaternionType, "by", this->Real3Type, "the"),
-          this->Real3Type,
-          FunctionOptions::Static)
-      ->Description =
-      ZilchDocumentString("Creates a new vector that represents parameter 2 "
-                          "being rotated by parameter 1.");
-  builder
-      .AddBoundFunction(math,
-                        "Invert",
-                        QuaternionInvert,
-                        OneParameter(this->QuaternionType),
-                        this->QuaternionType,
-                        options)
+          math, "Invert", QuaternionInvert, OneParameter(this->QuaternionType), this->QuaternionType, options)
       ->Description = ZilchDocumentString("Returns the inverse rotation.");
 
-  builder.AddBoundGetterSetter(quaternionType,
-                               "Identity",
-                               this->QuaternionType,
-                               nullptr,
-                               QuaternionIdentity,
-                               MemberOptions::Static);
+  builder.AddBoundGetterSetter(
+      quaternionType, "Identity", this->QuaternionType, nullptr, QuaternionIdentity, MemberOptions::Static);
 
   CreateMatrixTypes(builder);
 
@@ -5685,48 +4629,34 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                         boundType,
                         OneParameter(boundType),
                         "Returns the absolute value of value.");
-    ZilchBindBasicSplatWithError(
-        builder,
-        math,
-        Real,
-        realType,
-        "ACos",
-        Math::SafeArcCos,
-        boundType,
-        OneParameter(boundType, "units"),
-        "The transcendental function arc-cosine",
-        "ACos of '%s' is invalid. Values must be in the range [-1, 1].");
-    f = builder.AddBoundFunction(math,
-                                 "AllNonZero",
-                                 AllNonZero,
-                                 OneParameter(boundType),
-                                 booleanType,
-                                 FunctionOptions::Static);
-    f->Description =
-        ZilchDocumentString("Returns true if all values are not zero.");
-    f->ComplexUserData.WriteObject(SplatWithErrorUserData(
-        boundType->Size / realType->Size, nullptr, boundType));
-    f = builder.AddBoundFunction(math,
-                                 "AnyNonZero",
-                                 AnyNonZero,
-                                 OneParameter(boundType),
-                                 booleanType,
-                                 FunctionOptions::Static);
-    f->Description =
-        ZilchDocumentString("Returns true if any value is not zero.");
-    f->ComplexUserData.WriteObject(SplatWithErrorUserData(
-        boundType->Size / realType->Size, nullptr, boundType));
-    ZilchBindBasicSplatWithError(
-        builder,
-        math,
-        Real,
-        realType,
-        "ASin",
-        Math::SafeArcSin,
-        boundType,
-        OneParameter(boundType, "units"),
-        "The transcendental function arc-sine",
-        "ASin of '%s' is invalid. Values must be in the range [-1, 1].");
+    ZilchBindBasicSplatWithError(builder,
+                                 math,
+                                 Real,
+                                 realType,
+                                 "ACos",
+                                 Math::SafeArcCos,
+                                 boundType,
+                                 OneParameter(boundType, "units"),
+                                 "The transcendental function arc-cosine",
+                                 "ACos of '%s' is invalid. Values must be in the range [-1, 1].");
+    f = builder.AddBoundFunction(
+        math, "AllNonZero", AllNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
+    f->Description = ZilchDocumentString("Returns true if all values are not zero.");
+    f->ComplexUserData.WriteObject(SplatWithErrorUserData(boundType->Size / realType->Size, nullptr, boundType));
+    f = builder.AddBoundFunction(
+        math, "AnyNonZero", AnyNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
+    f->Description = ZilchDocumentString("Returns true if any value is not zero.");
+    f->ComplexUserData.WriteObject(SplatWithErrorUserData(boundType->Size / realType->Size, nullptr, boundType));
+    ZilchBindBasicSplatWithError(builder,
+                                 math,
+                                 Real,
+                                 realType,
+                                 "ASin",
+                                 Math::SafeArcSin,
+                                 boundType,
+                                 OneParameter(boundType, "units"),
+                                 "The transcendental function arc-sine",
+                                 "ASin of '%s' is invalid. Values must be in the range [-1, 1].");
     ZilchBindBasicSplat(builder,
                         math,
                         Real,
@@ -5737,73 +4667,54 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                         OneParameter(boundType, "units"),
                         "The transcendental function arc-tangent. The return "
                         "type is in radians.");
-    ZilchBindBasicTwoParamSplat(
-        builder,
-        math,
-        Real,
-        realType,
-        "ATan2",
-        Math::ArcTan2,
-        boundType,
-        TwoParameters(boundType, "y", "x"),
-        "Performs the arc-tangent using the signs of x and y to determine what "
-        "quadrant the angle lies in. Returns a value in the range of [-pi, "
-        "pi]. The return type is in radians.");
-    ZilchBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Ceil",
-                        Math::Ceil,
-                        boundType,
-                        OneParameter(boundType),
-                        "Rounds value upward.");
+    ZilchBindBasicTwoParamSplat(builder,
+                                math,
+                                Real,
+                                realType,
+                                "ATan2",
+                                Math::ArcTan2,
+                                boundType,
+                                TwoParameters(boundType, "y", "x"),
+                                "Performs the arc-tangent using the signs of x and y to determine what "
+                                "quadrant the angle lies in. Returns a value in the range of [-pi, "
+                                "pi]. The return type is in radians.");
+    ZilchBindBasicSplat(
+        builder, math, Real, realType, "Ceil", Math::Ceil, boundType, OneParameter(boundType), "Rounds value upward.");
+    f = builder.AddBoundFunction(math,
+                                 "Ceil",
+                                 ZilchComplexTwoParameterSplatBinder(Real, Integer, Real, 1, 0, Math::Ceil),
+                                 TwoParameters(boundType, "value", integerType, "places"),
+                                 boundType,
+                                 FunctionOptions::Static);
+    ZilchSetUserDataAndDescription(f,
+                                   boundType,
+                                   realType,
+                                   "Rounds value upward. The place represents where in the number we want "
+                                   "to perform rounding (0 is the 1s place, 1 is the 10s place, -1 is the "
+                                   "tenths place, etc).");
     f = builder.AddBoundFunction(
         math,
         "Ceil",
-        ZilchComplexTwoParameterSplatBinder(
-            Real, Integer, Real, 1, 0, Math::Ceil),
-        TwoParameters(boundType, "value", integerType, "places"),
+        ZilchComplexThreeParameterSplatBinder(Real, Integer, Integer, Real, 1, 0, 0, Math::Ceil),
+        ThreeParameters(boundType, "value", integerType, "places", integerType, "numericalBase"),
         boundType,
         FunctionOptions::Static);
-    ZilchSetUserDataAndDescription(
-        f,
-        boundType,
-        realType,
-        "Rounds value upward. The place represents where in the number we want "
-        "to perform rounding (0 is the 1s place, 1 is the 10s place, -1 is the "
-        "tenths place, etc).");
-    f = builder.AddBoundFunction(
-        math,
-        "Ceil",
-        ZilchComplexThreeParameterSplatBinder(
-            Real, Integer, Integer, Real, 1, 0, 0, Math::Ceil),
-        ThreeParameters(boundType,
-                        "value",
-                        integerType,
-                        "places",
-                        integerType,
-                        "numericalBase"),
-        boundType,
-        FunctionOptions::Static);
-    ZilchSetUserDataAndDescription(
-        f,
-        boundType,
-        realType,
-        "Rounds value upward. The place represents where in the number we want "
-        "to perform rounding (0 is the 1s place, 1 is the 10s place, -1 is the "
-        "tenths place, etc).");
+    ZilchSetUserDataAndDescription(f,
+                                   boundType,
+                                   realType,
+                                   "Rounds value upward. The place represents where in the number we want "
+                                   "to perform rounding (0 is the 1s place, 1 is the 10s place, -1 is the "
+                                   "tenths place, etc).");
 
-    ZilchBindBasicThreeParamSplat(
-        builder,
-        math,
-        Real,
-        realType,
-        "Clamp",
-        Math::Clamp<Real>,
-        boundType,
-        ThreeParameters(boundType, "value", "min", "max"),
-        "Limits the value between the provided min and max.");
+    ZilchBindBasicThreeParamSplat(builder,
+                                  math,
+                                  Real,
+                                  realType,
+                                  "Clamp",
+                                  Math::Clamp<Real>,
+                                  boundType,
+                                  ThreeParameters(boundType, "value", "min", "max"),
+                                  "Limits the value between the provided min and max.");
     ZilchBindBasicSplat(builder,
                         math,
                         Real,
@@ -5822,26 +4733,24 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                         boundType,
                         OneParameter(boundType, "radians"),
                         "The hyperbolic cosine function.");
-    ZilchBindBasicSplat(
-        builder,
-        math,
-        Real,
-        realType,
-        "Exp",
-        Math::Exp,
-        boundType,
-        OneParameter(boundType),
-        "Returns the base-e exponentiation of value, which is e^value.");
-    ZilchBindBasicSplat(
-        builder,
-        math,
-        Real,
-        realType,
-        "Exp2",
-        Math::Exp2,
-        boundType,
-        OneParameter(boundType),
-        "Returns the base-2 exponentiation of value, which is 2^value.");
+    ZilchBindBasicSplat(builder,
+                        math,
+                        Real,
+                        realType,
+                        "Exp",
+                        Math::Exp,
+                        boundType,
+                        OneParameter(boundType),
+                        "Returns the base-e exponentiation of value, which is e^value.");
+    ZilchBindBasicSplat(builder,
+                        math,
+                        Real,
+                        realType,
+                        "Exp2",
+                        Math::Exp2,
+                        boundType,
+                        OneParameter(boundType),
+                        "Returns the base-2 exponentiation of value, which is 2^value.");
     ZilchBindBasicSplat(builder,
                         math,
                         Real,
@@ -5852,126 +4761,89 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                         OneParameter(boundType),
                         "Rounds value downward.");
 
+    f = builder.AddBoundFunction(math,
+                                 "Floor",
+                                 ZilchComplexTwoParameterSplatBinder(Real, Integer, Real, 1, 0, Math::Floor),
+                                 TwoParameters(boundType, "value", integerType, "places"),
+                                 boundType,
+                                 FunctionOptions::Static);
+    ZilchSetUserDataAndDescription(f,
+                                   boundType,
+                                   realType,
+                                   "Rounds value downward. The place represents where in the number we "
+                                   "want to perform rounding (0 is the 1s place, 1 is the 10s place, -1 "
+                                   "is the tenths place, etc).");
     f = builder.AddBoundFunction(
         math,
         "Floor",
-        ZilchComplexTwoParameterSplatBinder(
-            Real, Integer, Real, 1, 0, Math::Floor),
-        TwoParameters(boundType, "value", integerType, "places"),
+        ZilchComplexThreeParameterSplatBinder(Real, Integer, Integer, Real, 1, 0, 0, Math::Floor),
+        ThreeParameters(boundType, "value", integerType, "places", integerType, "numericalBase"),
         boundType,
         FunctionOptions::Static);
-    ZilchSetUserDataAndDescription(
-        f,
-        boundType,
-        realType,
-        "Rounds value downward. The place represents where in the number we "
-        "want to perform rounding (0 is the 1s place, 1 is the 10s place, -1 "
-        "is the tenths place, etc).");
-    f = builder.AddBoundFunction(
-        math,
-        "Floor",
-        ZilchComplexThreeParameterSplatBinder(
-            Real, Integer, Integer, Real, 1, 0, 0, Math::Floor),
-        ThreeParameters(boundType,
-                        "value",
-                        integerType,
-                        "places",
-                        integerType,
-                        "numericalBase"),
-        boundType,
-        FunctionOptions::Static);
-    ZilchSetUserDataAndDescription(
-        f,
-        boundType,
-        realType,
-        "Rounds value downward. The place represents where in the number we "
-        "want to perform rounding (0 is the 1s place, 1 is the 10s place, -1 "
-        "is the tenths place, etc).");
+    ZilchSetUserDataAndDescription(f,
+                                   boundType,
+                                   realType,
+                                   "Rounds value downward. The place represents where in the number we "
+                                   "want to perform rounding (0 is the 1s place, 1 is the 10s place, -1 "
+                                   "is the tenths place, etc).");
 
-    ZilchBindBasicTwoParamSplatWithError(
-        builder,
-        math,
-        Real,
-        realType,
-        "FMod",
-        Math::SafeFMod,
-        boundType,
-        TwoParameters(boundType, "numerator", "denominator"),
-        "Returns the floating-point remainder of numerator/denominator "
-        "(rounded towards zero).",
-        "Fmod(%s, %s) is invalid because the denominator would produce a zero "
-        "division");
-    ZilchBindBasicSplat(
-        builder,
-        math,
-        Real,
-        realType,
-        "Frac",
-        Math::Fractional,
-        boundType,
-        OneParameter(boundType),
-        "Returns the fractional part of value, a value between 0 and 1.");
+    ZilchBindBasicTwoParamSplatWithError(builder,
+                                         math,
+                                         Real,
+                                         realType,
+                                         "FMod",
+                                         Math::SafeFMod,
+                                         boundType,
+                                         TwoParameters(boundType, "numerator", "denominator"),
+                                         "Returns the floating-point remainder of numerator/denominator "
+                                         "(rounded towards zero).",
+                                         "Fmod(%s, %s) is invalid because the denominator would produce a zero "
+                                         "division");
+    ZilchBindBasicSplat(builder,
+                        math,
+                        Real,
+                        realType,
+                        "Frac",
+                        Math::Fractional,
+                        boundType,
+                        OneParameter(boundType),
+                        "Returns the fractional part of value, a value between 0 and 1.");
 
     f = builder.AddBoundFunction(
         math,
         "Lerp",
-        ZilchComplexThreeParameterSplatBinder(
-            Real, Real, Real, Real, 1, 1, 1, Zilch::Lerp<Real>),
+        ZilchComplexThreeParameterSplatBinder(Real, Real, Real, Real, 1, 1, 1, Zilch::Lerp<Real>),
         ThreeParameters(boundType, "start", boundType, "end", boundType, "t"),
         boundType,
         FunctionOptions::Static);
-    ZilchSetUserDataAndDescription(
-        f,
-        boundType,
-        realType,
-        "Linearly interpolates from start to end by the fraction t. T of 0 is "
-        "start and t of 1 is end.");
+    ZilchSetUserDataAndDescription(f,
+                                   boundType,
+                                   realType,
+                                   "Linearly interpolates from start to end by the fraction t. T of 0 is "
+                                   "start and t of 1 is end.");
     // Add another version for lerp that is always of real type
     if (boundType != realType)
     {
       f = builder.AddBoundFunction(
           math,
           "Lerp",
-          ZilchComplexThreeParameterSplatBinder(
-              Real, Real, Real, Real, 1, 1, 0, Zilch::Lerp<Real>),
+          ZilchComplexThreeParameterSplatBinder(Real, Real, Real, Real, 1, 1, 0, Zilch::Lerp<Real>),
           ThreeParameters(boundType, "start", boundType, "end", realType, "t"),
           boundType,
           FunctionOptions::Static);
-      ZilchSetUserDataAndDescription(
-          f,
-          boundType,
-          realType,
-          "Linearly interpolates from start to end by the fraction t. T of 0 "
-          "is start and t of 1 is end.");
+      ZilchSetUserDataAndDescription(f,
+                                     boundType,
+                                     realType,
+                                     "Linearly interpolates from start to end by the fraction t. T of 0 "
+                                     "is start and t of 1 is end.");
     }
 
-    ZilchBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Log",
-                        Math::Log,
-                        boundType,
-                        OneParameter(boundType),
-                        "Base e logarithm.");
-    ZilchBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Log10",
-                        Math::Log10,
-                        boundType,
-                        OneParameter(boundType),
-                        "Base 10 logarithm.");
-    ZilchBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Log2",
-                        Math::Log2,
-                        boundType,
-                        OneParameter(boundType),
-                        "Base 2 logarithm.");
+    ZilchBindBasicSplat(
+        builder, math, Real, realType, "Log", Math::Log, boundType, OneParameter(boundType), "Base e logarithm.");
+    ZilchBindBasicSplat(
+        builder, math, Real, realType, "Log10", Math::Log10, boundType, OneParameter(boundType), "Base 10 logarithm.");
+    ZilchBindBasicSplat(
+        builder, math, Real, realType, "Log2", Math::Log2, boundType, OneParameter(boundType), "Base 2 logarithm.");
     ZilchBindBasicTwoParamSplat(builder,
                                 math,
                                 Real,
@@ -5990,16 +4862,15 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                                 boundType,
                                 TwoParameters(boundType),
                                 "Returns whichever value is smaller.");
-    ZilchBindBasicTwoParamSplat(
-        builder,
-        math,
-        Real,
-        realType,
-        "Pow",
-        Math::Pow,
-        boundType,
-        TwoParameters(boundType, "base", "exponent"),
-        "Returns base raised to the power of the exponent.");
+    ZilchBindBasicTwoParamSplat(builder,
+                                math,
+                                Real,
+                                realType,
+                                "Pow",
+                                Math::Pow,
+                                boundType,
+                                TwoParameters(boundType, "base", "exponent"),
+                                "Returns base raised to the power of the exponent.");
 
     ZilchBindBasicSplat(builder,
                         math,
@@ -6010,41 +4881,31 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                         boundType,
                         OneParameter(boundType),
                         "Returns the integer value closest to value.");
+    f = builder.AddBoundFunction(math,
+                                 "Round",
+                                 ZilchComplexTwoParameterSplatBinder(Real, Integer, Real, 1, 0, Math::Round),
+                                 TwoParameters(boundType, "value", integerType, "places"),
+                                 boundType,
+                                 FunctionOptions::Static);
+    ZilchSetUserDataAndDescription(f,
+                                   boundType,
+                                   realType,
+                                   "Returns the integer value closest to value. The place represents "
+                                   "where in the number we want to perform rounding (0 is the 1s place, 1 "
+                                   "is the 10s place, -1 is the tenths place, etc).");
     f = builder.AddBoundFunction(
         math,
         "Round",
-        ZilchComplexTwoParameterSplatBinder(
-            Real, Integer, Real, 1, 0, Math::Round),
-        TwoParameters(boundType, "value", integerType, "places"),
+        ZilchComplexThreeParameterSplatBinder(Real, Integer, Integer, Real, 1, 0, 0, Math::Round),
+        ThreeParameters(boundType, "value", integerType, "places", integerType, "numericalBase"),
         boundType,
         FunctionOptions::Static);
-    ZilchSetUserDataAndDescription(
-        f,
-        boundType,
-        realType,
-        "Returns the integer value closest to value. The place represents "
-        "where in the number we want to perform rounding (0 is the 1s place, 1 "
-        "is the 10s place, -1 is the tenths place, etc).");
-    f = builder.AddBoundFunction(
-        math,
-        "Round",
-        ZilchComplexThreeParameterSplatBinder(
-            Real, Integer, Integer, Real, 1, 0, 0, Math::Round),
-        ThreeParameters(boundType,
-                        "value",
-                        integerType,
-                        "places",
-                        integerType,
-                        "numericalBase"),
-        boundType,
-        FunctionOptions::Static);
-    ZilchSetUserDataAndDescription(
-        f,
-        boundType,
-        realType,
-        "Returns the integer value closest to value. The place represents "
-        "where in the number we want to perform rounding (0 is the 1s place, 1 "
-        "is the 10s place, -1 is the tenths place, etc).");
+    ZilchSetUserDataAndDescription(f,
+                                   boundType,
+                                   realType,
+                                   "Returns the integer value closest to value. The place represents "
+                                   "where in the number we want to perform rounding (0 is the 1s place, 1 "
+                                   "is the 10s place, -1 is the tenths place, etc).");
 
     ZilchBindBasicSplat(builder,
                         math,
@@ -6066,18 +4927,13 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                         OneParameter(boundType),
                         "Limits the value between 0 and 1");
 
-    f = builder.AddBoundFunction(
-        math,
-        "Sign",
-        ZilchComplexOneParameterSplatBinder(Real, Integer, 1, Math::Sign),
-        OneParameter(boundType),
-        boundIntegerType,
-        FunctionOptions::Static);
-    ZilchSetUserDataAndDescription(
-        f,
-        boundType,
-        realType,
-        "Returns the sign of the value as either 1 or -1.");
+    f = builder.AddBoundFunction(math,
+                                 "Sign",
+                                 ZilchComplexOneParameterSplatBinder(Real, Integer, 1, Math::Sign),
+                                 OneParameter(boundType),
+                                 boundIntegerType,
+                                 FunctionOptions::Static);
+    ZilchSetUserDataAndDescription(f, boundType, realType, "Returns the sign of the value as either 1 or -1.");
 
     ZilchBindBasicSplat(builder,
                         math,
@@ -6101,57 +4957,51 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
     f = builder.AddBoundFunction(
         math,
         "SmoothStep",
-        ZilchFullThreeParameterSplatBinder(
-            Real, Real, Real, Real, 1, 1, 1, Math::SmoothStep<Real>),
+        ZilchFullThreeParameterSplatBinder(Real, Real, Real, Real, 1, 1, 1, Math::SmoothStep<Real>),
         ThreeParameters(boundType, "min", boundType, "max", boundType, "x"),
         boundType,
         FunctionOptions::Static);
-    ZilchSetUserDataAndDescription(
-        f,
-        boundType,
-        realType,
-        "Returns a smooth Hermite interpolation between 0 and 1 if x is "
-        "in-between min and max.");
+    ZilchSetUserDataAndDescription(f,
+                                   boundType,
+                                   realType,
+                                   "Returns a smooth Hermite interpolation between 0 and 1 if x is "
+                                   "in-between min and max.");
     // Add another version for smoothstep that is always of real type
     if (boundType != realType)
     {
       f = builder.AddBoundFunction(
           math,
           "SmoothStep",
-          ZilchFullThreeParameterSplatBinder(
-              Real, Real, Real, Real, 1, 1, 0, Math::SmoothStep<Real>),
+          ZilchFullThreeParameterSplatBinder(Real, Real, Real, Real, 1, 1, 0, Math::SmoothStep<Real>),
           ThreeParameters(boundType, "min", boundType, "max", realType, "t"),
           boundType,
           FunctionOptions::Static);
-      ZilchSetUserDataAndDescription(
-          f,
-          boundType,
-          realType,
-          "Returns a smooth Hermite interpolation between 0 and 1 if t is "
-          "in-between min and max.");
+      ZilchSetUserDataAndDescription(f,
+                                     boundType,
+                                     realType,
+                                     "Returns a smooth Hermite interpolation between 0 and 1 if t is "
+                                     "in-between min and max.");
     }
 
-    ZilchBindBasicSplatWithError(
-        builder,
-        math,
-        Real,
-        realType,
-        "Sqrt",
-        Math::SafeSqrt,
-        boundType,
-        OneParameter(boundType),
-        "Computes the square root",
-        "Sqrt of the negative number '%s' is invalid.");
-    ZilchBindBasicTwoParamSplat(
-        builder,
-        math,
-        Real,
-        realType,
-        "Step",
-        Math::Step,
-        boundType,
-        TwoParameters(boundType, "y", "x"),
-        "If y <= x then 1 is returned, otherwise 0 is returned.")
+    ZilchBindBasicSplatWithError(builder,
+                                 math,
+                                 Real,
+                                 realType,
+                                 "Sqrt",
+                                 Math::SafeSqrt,
+                                 boundType,
+                                 OneParameter(boundType),
+                                 "Computes the square root",
+                                 "Sqrt of the negative number '%s' is invalid.");
+    ZilchBindBasicTwoParamSplat(builder,
+                                math,
+                                Real,
+                                realType,
+                                "Step",
+                                Math::Step,
+                                boundType,
+                                TwoParameters(boundType, "y", "x"),
+                                "If y <= x then 1 is returned, otherwise 0 is returned.")
         ZilchBindBasicSplat(builder,
                             math,
                             Real,
@@ -6198,51 +5048,40 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                         boundType,
                         OneParameter(boundType),
                         "Rounds value towards zero.");
+    f = builder.AddBoundFunction(math,
+                                 "Truncate",
+                                 ZilchComplexTwoParameterSplatBinder(Real, Integer, Real, 1, 0, Math::Truncate),
+                                 TwoParameters(boundType, "value", integerType, "places"),
+                                 boundType,
+                                 FunctionOptions::Static);
+    ZilchSetUserDataAndDescription(f,
+                                   boundType,
+                                   realType,
+                                   "Rounds value towards zero. The place represents where in the number "
+                                   "we want to perform rounding (0 is the 1s place, 1 is the 10s place, "
+                                   "-1 is the tenths place, etc).");
     f = builder.AddBoundFunction(
         math,
         "Truncate",
-        ZilchComplexTwoParameterSplatBinder(
-            Real, Integer, Real, 1, 0, Math::Truncate),
-        TwoParameters(boundType, "value", integerType, "places"),
+        ZilchComplexThreeParameterSplatBinder(Real, Integer, Integer, Real, 1, 0, 0, Math::Truncate),
+        ThreeParameters(boundType, "value", integerType, "places", integerType, "numericalBase"),
         boundType,
         FunctionOptions::Static);
-    ZilchSetUserDataAndDescription(
-        f,
-        boundType,
-        realType,
-        "Rounds value towards zero. The place represents where in the number "
-        "we want to perform rounding (0 is the 1s place, 1 is the 10s place, "
-        "-1 is the tenths place, etc).");
-    f = builder.AddBoundFunction(
-        math,
-        "Truncate",
-        ZilchComplexThreeParameterSplatBinder(
-            Real, Integer, Integer, Real, 1, 0, 0, Math::Truncate),
-        ThreeParameters(boundType,
-                        "value",
-                        integerType,
-                        "places",
-                        integerType,
-                        "numericalBase"),
-        boundType,
-        FunctionOptions::Static);
-    ZilchSetUserDataAndDescription(
-        f,
-        boundType,
-        realType,
-        "Rounds value towards zero. The place represents where in the number "
-        "we want to perform rounding (0 is the 1s place, 1 is the 10s place, "
-        "-1 is the tenths place, etc).");
+    ZilchSetUserDataAndDescription(f,
+                                   boundType,
+                                   realType,
+                                   "Rounds value towards zero. The place represents where in the number "
+                                   "we want to perform rounding (0 is the 1s place, 1 is the 10s place, "
+                                   "-1 is the tenths place, etc).");
 
     // Approximately Equal
     BoundType* resultMatrixType = AllBooleanTypes[i];
-    f = builder.AddBoundFunction(
-        math,
-        "ApproximatelyEqual",
-        RealApproximatelyEqual,
-        ThreeParameters(boundType, "p0", boundType, "p1", realType, "epsilon"),
-        resultMatrixType,
-        FunctionOptions::Static);
+    f = builder.AddBoundFunction(math,
+                                 "ApproximatelyEqual",
+                                 RealApproximatelyEqual,
+                                 ThreeParameters(boundType, "p0", boundType, "p1", realType, "epsilon"),
+                                 resultMatrixType,
+                                 FunctionOptions::Static);
     ZilchSetUserDataAndDescription(f,
                                    boundType,
                                    realType,
@@ -6266,36 +5105,23 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                         boundType,
                         OneParameter(boundType),
                         "Returns the absolute value of value.");
-    f = builder.AddBoundFunction(math,
-                                 "AllNonZero",
-                                 AllNonZero,
-                                 OneParameter(boundType),
-                                 booleanType,
-                                 FunctionOptions::Static);
-    f->Description =
-        ZilchDocumentString("Returns true if all values are not zero.");
-    f->ComplexUserData.WriteObject(SplatWithErrorUserData(
-        boundType->Size / integerType->Size, nullptr, boundType));
-    f = builder.AddBoundFunction(math,
-                                 "AnyNonZero",
-                                 AnyNonZero,
-                                 OneParameter(boundType),
-                                 booleanType,
-                                 FunctionOptions::Static);
-    f->Description =
-        ZilchDocumentString("Returns true if any value is not zero.");
-    f->ComplexUserData.WriteObject(SplatWithErrorUserData(
-        boundType->Size / integerType->Size, nullptr, boundType));
-    ZilchBindBasicThreeParamSplat(
-        builder,
-        math,
-        Integer,
-        integerType,
-        "Clamp",
-        Math::Clamp<Integer>,
-        boundType,
-        ThreeParameters(boundType, "value", "min", "max"),
-        "Limits the value between the provided min and max.");
+    f = builder.AddBoundFunction(
+        math, "AllNonZero", AllNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
+    f->Description = ZilchDocumentString("Returns true if all values are not zero.");
+    f->ComplexUserData.WriteObject(SplatWithErrorUserData(boundType->Size / integerType->Size, nullptr, boundType));
+    f = builder.AddBoundFunction(
+        math, "AnyNonZero", AnyNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
+    f->Description = ZilchDocumentString("Returns true if any value is not zero.");
+    f->ComplexUserData.WriteObject(SplatWithErrorUserData(boundType->Size / integerType->Size, nullptr, boundType));
+    ZilchBindBasicThreeParamSplat(builder,
+                                  math,
+                                  Integer,
+                                  integerType,
+                                  "Clamp",
+                                  Math::Clamp<Integer>,
+                                  boundType,
+                                  ThreeParameters(boundType, "value", "min", "max"),
+                                  "Limits the value between the provided min and max.");
     ZilchBindBasicSplat(builder,
                         math,
                         Integer,
@@ -6340,25 +5166,14 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
     BoundType* boundType = AllBooleanTypes[i];
     Function* f = nullptr;
 
-    f = builder.AddBoundFunction(math,
-                                 "AllNonZero",
-                                 AllNonZero,
-                                 OneParameter(boundType),
-                                 booleanType,
-                                 FunctionOptions::Static);
-    f->Description =
-        ZilchDocumentString("Returns true if all values are true.");
-    f->ComplexUserData.WriteObject(SplatWithErrorUserData(
-        boundType->Size / booleanType->Size, nullptr, boundType));
-    f = builder.AddBoundFunction(math,
-                                 "AnyNonZero",
-                                 AnyNonZero,
-                                 OneParameter(boundType),
-                                 booleanType,
-                                 FunctionOptions::Static);
+    f = builder.AddBoundFunction(
+        math, "AllNonZero", AllNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
+    f->Description = ZilchDocumentString("Returns true if all values are true.");
+    f->ComplexUserData.WriteObject(SplatWithErrorUserData(boundType->Size / booleanType->Size, nullptr, boundType));
+    f = builder.AddBoundFunction(
+        math, "AnyNonZero", AnyNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
     f->Description = ZilchDocumentString("Returns true if any value is true.");
-    f->ComplexUserData.WriteObject(SplatWithErrorUserData(
-        boundType->Size / booleanType->Size, nullptr, boundType));
+    f->ComplexUserData.WriteObject(SplatWithErrorUserData(boundType->Size / booleanType->Size, nullptr, boundType));
   }
 }
 
@@ -6409,20 +5224,14 @@ void Core::SetupBinding(LibraryBuilder& builder)
   BoundType* real3x3Type = ZilchTypeId(Real3x3);
   BoundType* real4x4Type = ZilchTypeId(Real4x4);
 
-  BoundType* anyHandleType =
-      builder.AddBoundType("AnyHandle", TypeCopyMode::ReferenceType, 0, 0);
-  BoundType* nullType =
-      builder.AddBoundType("Null", TypeCopyMode::ReferenceType, 0, 0);
-  BoundType* voidType =
-      builder.AddBoundType("Void", TypeCopyMode::ValueType, 0, 0);
-  BoundType* errorType =
-      builder.AddBoundType("[ErrorType]", TypeCopyMode::ValueType, 0, 0);
-  BoundType* overloadedMethodsType = builder.AddBoundType(
-      "[MultipleMethodsOfTheSameName]", TypeCopyMode::ValueType, 0, 0);
-  DelegateType* anyDelegateType =
-      builder.GetDelegateType(ParameterArray(), voidType);
-  DelegateType* errorDelegateType =
-      builder.GetDelegateType(ParameterArray(), errorType);
+  BoundType* anyHandleType = builder.AddBoundType("AnyHandle", TypeCopyMode::ReferenceType, 0, 0);
+  BoundType* nullType = builder.AddBoundType("Null", TypeCopyMode::ReferenceType, 0, 0);
+  BoundType* voidType = builder.AddBoundType("Void", TypeCopyMode::ValueType, 0, 0);
+  BoundType* errorType = builder.AddBoundType("[ErrorType]", TypeCopyMode::ValueType, 0, 0);
+  BoundType* overloadedMethodsType =
+      builder.AddBoundType("[MultipleMethodsOfTheSameName]", TypeCopyMode::ValueType, 0, 0);
+  DelegateType* anyDelegateType = builder.GetDelegateType(ParameterArray(), voidType);
+  DelegateType* errorDelegateType = builder.GetDelegateType(ParameterArray(), errorType);
 
   // Store the primitive types as global constants
   this->ByteType = byteType;
@@ -6492,18 +5301,9 @@ void Core::SetupBinding(LibraryBuilder& builder)
   ScalarTypeOneFunctions[VectorScalarTypes::Integer] = ScalarTypeIntegerOne;
   ScalarTypeOneFunctions[VectorScalarTypes::Boolean] = ScalarTypeBooleanOne;
 
-  ZilchFullBindMethod(builder,
-                      this->IntegerType,
-                      &ReinterpretRealToInteger,
-                      ZilchNoOverload,
-                      "Reinterpret",
-                      ZilchNoNames);
-  ZilchFullBindMethod(builder,
-                      this->RealType,
-                      &ReinterpretIntegerToReal,
-                      ZilchNoOverload,
-                      "Reinterpret",
-                      ZilchNoNames);
+  ZilchFullBindMethod(
+      builder, this->IntegerType, &ReinterpretRealToInteger, ZilchNoOverload, "Reinterpret", ZilchNoNames);
+  ZilchFullBindMethod(builder, this->RealType, &ReinterpretIntegerToReal, ZilchNoOverload, "Reinterpret", ZilchNoNames);
 
   // Create the one special any type (there should only ever be one
   // instantiation of this!)
@@ -6514,32 +5314,24 @@ void Core::SetupBinding(LibraryBuilder& builder)
   // Add the array template instantiator
   StringArray arrayArguments;
   arrayArguments.PushBack("Type");
-  builder.AddTemplateInstantiator(
-      "Property", InstantiatePropertyDelegate, arrayArguments, nullptr);
-  builder.AddTemplateInstantiator(
-      "Array", InstantiateArray, arrayArguments, nullptr);
+  builder.AddTemplateInstantiator("Property", InstantiatePropertyDelegate, arrayArguments, nullptr);
+  builder.AddTemplateInstantiator("Array", InstantiateArray, arrayArguments, nullptr);
 
   StringArray keyValueArguments;
   keyValueArguments.PushBack("Key");
   keyValueArguments.PushBack("Value");
 
   // Add the hash-map template instantiator
+  builder.AddTemplateInstantiator("HashMap", InstantiateHashMap, keyValueArguments, nullptr);
   builder.AddTemplateInstantiator(
-      "HashMap", InstantiateHashMap, keyValueArguments, nullptr);
-  builder.AddTemplateInstantiator("HashMapRange",
-                                  InstantiateHashMapRange,
-                                  keyValueArguments,
-                                  (void*)(size_t)HashMapRangeMode::Pair);
-  builder.AddTemplateInstantiator("HashMapKeyRange",
-                                  InstantiateHashMapRange,
-                                  StringArray(ZeroInit, "Key"),
-                                  (void*)(size_t)HashMapRangeMode::Key);
+      "HashMapRange", InstantiateHashMapRange, keyValueArguments, (void*)(size_t)HashMapRangeMode::Pair);
+  builder.AddTemplateInstantiator(
+      "HashMapKeyRange", InstantiateHashMapRange, StringArray(ZeroInit, "Key"), (void*)(size_t)HashMapRangeMode::Key);
   builder.AddTemplateInstantiator("HashMapValueRange",
                                   InstantiateHashMapRange,
                                   StringArray(ZeroInit, "Value"),
                                   (void*)(size_t)HashMapRangeMode::Value);
-  builder.AddTemplateInstantiator(
-      "KeyValue", InstantiateKeyValue, keyValueArguments, nullptr);
+  builder.AddTemplateInstantiator("KeyValue", InstantiateKeyValue, keyValueArguments, nullptr);
 
   SetupBindingString(builder);
   SetupBindingMath(builder);
@@ -6650,8 +5442,8 @@ void Core::SetupBinding(LibraryBuilder& builder)
   ZilchInitializeType(Zero::ProcessStartInfo);
   ZilchInitializeType(ProcessClass);
 
-  forRange(BoundType * boundType, builder.BoundTypes.Values())
-      boundType->AddAttribute(ExportDocumentation);
+  forRange (BoundType* boundType, builder.BoundTypes.Values())
+    boundType->AddAttribute(ExportDocumentation);
 }
 
 StackEntry::StackEntry() : ExecutingFunction(nullptr)
@@ -6725,8 +5517,7 @@ ZilchDefineType(Exception, builder, type)
   ZilchFullBindConstructor(builder, type, Exception, nullptr);
   ZilchFullBindConstructor(builder, type, Exception, nullptr, StringParam);
 
-  ZilchFullBindField(
-      builder, type, &Exception::Message, "Message", PropertyBinding::GetSet);
+  ZilchFullBindField(builder, type, &Exception::Message, "Message", PropertyBinding::GetSet);
   // ZilchFullBindMethod(GetFormattedMessage);
 }
 
@@ -6742,8 +5533,7 @@ String Exception::GetFormattedMessage(MessageFormat::Enum format)
 {
   // Create a string builder to output the exception message and stack trace
   StringBuilder builder;
-  builder.Append(
-      "********************** Zilch Exception **********************\n");
+  builder.Append("********************** Zilch Exception **********************\n");
 
   // Convert the stack trace into a string and Append it to our output
   String traceOutput = this->Trace.GetFormattedMessage(format);
@@ -6758,8 +5548,7 @@ String Exception::GetFormattedMessage(MessageFormat::Enum format)
   }
 
   // Print the end of the exception
-  builder.Append(
-      "*************************************************************\n");
+  builder.Append("*************************************************************\n");
 
   // Now return the full error message
   return builder.ToString();

@@ -17,8 +17,7 @@ public:
             cstr file,
             DataVersion::Enum version = DataVersion::Current,
             FileMode::Enum fileMode = FileMode::Write);
-  bool OpenBuffer(DataVersion::Enum version = DataVersion::Current,
-                  FileMode::Enum fileMode = FileMode::Write);
+  bool OpenBuffer(DataVersion::Enum version = DataVersion::Current, FileMode::Enum fileMode = FileMode::Write);
   uint GetBufferSize();
   String GetString();
 
@@ -35,10 +34,7 @@ public:
   void AddSubtractivePolymorphicNode(cstr typeName, Guid nodeId = 0) override;
 
   // Standard Serialization
-  bool InnerStart(cstr typeName,
-                  cstr fieldName,
-                  StructType structType,
-                  bool ignoreTabs = false);
+  bool InnerStart(cstr typeName, cstr fieldName, StructType structType, bool ignoreTabs = false);
   void InnerEnd(cstr typeName, StructType structType);
 
   // Fundamental Serialization
@@ -51,33 +47,20 @@ public:
     return result;
   }
 
-  bool SimpleField(cstr typeName,
-                   cstr fieldName,
-                   StringRange& stringRange) override;
+  bool SimpleField(cstr typeName, cstr fieldName, StringRange& stringRange) override;
 
-  bool StringField(cstr typeName,
-                   cstr fieldName,
-                   StringRange& stringRange) override;
+  bool StringField(cstr typeName, cstr fieldName, StringRange& stringRange) override;
 
   // Array Serialization
-  bool ArrayField(cstr typeName,
-                  cstr fieldName,
-                  byte* data,
-                  ArrayType arrayType,
-                  uint numberOfElements,
-                  uint sizeOftype) override;
+  bool ArrayField(
+      cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype) override;
 
   void ArraySize(uint& arraySize){};
 
   // Enum Serialization
-  bool EnumField(cstr enumTypeName,
-                 cstr fieldName,
-                 uint& enumValue,
-                 BoundType* type) override;
+  bool EnumField(cstr enumTypeName, cstr fieldName, uint& enumValue, BoundType* type) override;
 
-  void SaveAttribute(StringParam name,
-                     StringParam value = "",
-                     bool stringValue = false);
+  void SaveAttribute(StringParam name, StringParam value = "", bool stringValue = false);
 
   void SaveFileVersion();
 

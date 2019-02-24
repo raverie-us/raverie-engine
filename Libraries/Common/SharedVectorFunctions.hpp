@@ -6,32 +6,28 @@ namespace Math
 
 // Projects the input vector onto the given vector (must be normalized)
 template <typename VectorType>
-ZeroSharedTemplate VectorType GenericProjectOnVector(
-    const VectorType& input, const VectorType& normalizedVector)
+ZeroSharedTemplate VectorType GenericProjectOnVector(const VectorType& input, const VectorType& normalizedVector)
 {
   return normalizedVector * Math::Dot(input, normalizedVector);
 }
 
 // Projects the input vector onto a plane (the normal must be normalized)
 template <typename VectorType>
-ZeroSharedTemplate VectorType
-GenericProjectOnPlane(const VectorType& input, const VectorType& planeNormal)
+ZeroSharedTemplate VectorType GenericProjectOnPlane(const VectorType& input, const VectorType& planeNormal)
 {
   return input - GenericProjectOnVector(input, planeNormal);
 }
 
 /// Calculates the reflection vector across a given plane.
 template <typename VectorType>
-ZeroSharedTemplate VectorType GenericReflectAcrossPlane(
-    const VectorType& input, const VectorType& planeNormal)
+ZeroSharedTemplate VectorType GenericReflectAcrossPlane(const VectorType& input, const VectorType& planeNormal)
 {
   return input - 2 * GenericProjectOnVector(input, planeNormal);
 }
 
 /// Calculates the reflection vector across a given vector.
 template <typename VectorType>
-ZeroSharedTemplate VectorType GenericReflectAcrossVector(
-    const VectorType& input, const VectorType& planeNormal)
+ZeroSharedTemplate VectorType GenericReflectAcrossVector(const VectorType& input, const VectorType& planeNormal)
 {
   return 2 * GenericProjectOnVector(input, planeNormal) - input;
 }
@@ -44,13 +40,11 @@ ZeroSharedTemplate VectorType GenericRefract(const VectorType& incidentVector,
                                              real refractionIndex)
 {
   real iDotN = Math::Dot(incidentVector, planeNormal);
-  real r = real(1.0) -
-           refractionIndex * refractionIndex * (real(1.0) - iDotN * iDotN);
+  real r = real(1.0) - refractionIndex * refractionIndex * (real(1.0) - iDotN * iDotN);
   if (r < 0)
     return VectorType::cZero;
 
-  return refractionIndex * incidentVector -
-         planeNormal * (refractionIndex * iDotN + Math::Sqrt(r));
+  return refractionIndex * incidentVector - planeNormal * (refractionIndex * iDotN + Math::Sqrt(r));
 }
 
 // Equal to Cos(ToRadius(1))
@@ -62,9 +56,7 @@ const float cSlerpParallelEpsilon = 0.999849f;
 // the data-set has been pre-emptively cleaned up so that multiple validation
 // checks are done 'offline' and all calls can be fast.
 template <typename VectorType>
-VectorType FastGeometricSlerp(const VectorType& start,
-                              const VectorType& end,
-                              real t)
+VectorType FastGeometricSlerp(const VectorType& start, const VectorType& end, real t)
 {
   real cosTheta = Math::Dot(start, end);
   // Clamp for float errors (ACos can't handle values outside [-1, 1]
@@ -89,9 +81,7 @@ VectorType FastGeometricSlerp(const VectorType& start,
 // Geometric Slerp between two vectors. This version will check for any possible
 // degeneracy cases and normalize the input vectors.
 template <typename VectorType>
-VectorType SafeGeometricSlerp(const VectorType& startUnNormalized,
-                              const VectorType& endUnNormalized,
-                              real t)
+VectorType SafeGeometricSlerp(const VectorType& startUnNormalized, const VectorType& endUnNormalized, real t)
 {
   VectorType start = Math::AttemptNormalized(startUnNormalized);
   VectorType end = Math::AttemptNormalized(endUnNormalized);
@@ -142,9 +132,7 @@ VectorType SafeGeometricSlerp(const VectorType& startUnNormalized,
 // Slerp function. This effectively traces along an ellipse defined by the two
 // input vectors.
 template <typename VectorType>
-VectorType SafeGeometricSlerpUnnormalized(const VectorType& start,
-                                          const VectorType& end,
-                                          real t)
+VectorType SafeGeometricSlerpUnnormalized(const VectorType& start, const VectorType& end, real t)
 {
   real startLength = Math::Length(start);
   real endLength = Math::Length(end);

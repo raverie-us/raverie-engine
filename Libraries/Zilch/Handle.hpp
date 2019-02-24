@@ -61,9 +61,7 @@ public:
   Handle(nullptr_t);
 
   template <typename T>
-  Handle(const T& value,
-         HandleManager* manager = nullptr,
-         ExecutableState* state = nullptr);
+  Handle(const T& value, HandleManager* manager = nullptr, ExecutableState* state = nullptr);
 
   // HandleOf is special cased because C++ chooses the templated constructor
   // over the copy constructor.
@@ -87,10 +85,7 @@ public:
   // This will invoke ObjectToHandle on the handle manager
   // The 'data' passed in should be a pointer to the object (the same as that
   // returned from Dereference)
-  Handle(const byte* data,
-         BoundType* type,
-         HandleManager* manager = nullptr,
-         ExecutableState* state = nullptr);
+  Handle(const byte* data, BoundType* type, HandleManager* manager = nullptr, ExecutableState* state = nullptr);
 
   // Destructor
   ~Handle();
@@ -150,10 +145,7 @@ public:
   void ReleaseAndClearForBinding();
 
 private:
-  void Initialize(const byte* data,
-                  BoundType* type,
-                  HandleManager* manager,
-                  ExecutableState* state = nullptr);
+  void Initialize(const byte* data, BoundType* type, HandleManager* manager, ExecutableState* state = nullptr);
 
   // Clear the handle to a null handle
   // Warning: This does not do reference counting or properly delete the object!

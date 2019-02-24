@@ -5,25 +5,17 @@ namespace Zero
 {
 
 bool NeedToBuild(StringParam source, StringParam destination);
-bool NeedToBuild(BuildOptions& options,
-                 StringParam source,
-                 StringParam destination);
+bool NeedToBuild(BuildOptions& options, StringParam source, StringParam destination);
 
 /// Check the file modified time of the meta file and output file.
-bool CheckFileAndMeta(BuildOptions& options,
-                      StringParam sourceFile,
-                      StringParam destFile);
+bool CheckFileAndMeta(BuildOptions& options, StringParam sourceFile, StringParam destFile);
 
 /// Check the output file against the tool file.
-bool CheckToolFile(BuildOptions& options,
-                   StringParam outputFile,
-                   StringParam toolFile);
+bool CheckToolFile(BuildOptions& options, StringParam outputFile, StringParam toolFile);
 
 /// Check the file modified time and file size. If the source file is newer or a
 /// different size then the file needs to be built.
-bool CheckFileMetaAndSize(BuildOptions& options,
-                          StringParam sourceFile,
-                          StringParam destFile);
+bool CheckFileMetaAndSize(BuildOptions& options, StringParam sourceFile, StringParam destFile);
 
 template <typename type>
 ContentItem* MakeContentItemFromFile(ContentInitializer& initializer)
@@ -48,8 +40,7 @@ void AddContentComponent(ContentSystem* system)
 {
   // METAREFACTOR - replace with generic meta composition
   BoundType* contentType = ZilchTypeId(type);
-  system->ComponentFactory.Creators[contentType->Name] =
-      MakeContentComponentT<type>;
+  system->ComponentFactory.Creators[contentType->Name] = MakeContentComponentT<type>;
   system->ContentComponents[contentType->Name] = contentType;
   // contentType->CreateObject = CreateObjectFunctionTemplate<type>;
 }
@@ -59,8 +50,7 @@ void AddContent(ContentSystem* system)
 {
   // METAREFACTOR - replace with generic meta composition
   BoundType* contentType = ZilchTypeId(type);
-  system->Creators[contentType->Name] =
-      ContentTypeEntry(contentType, MakeContentItemT<type>);
+  system->Creators[contentType->Name] = ContentTypeEntry(contentType, MakeContentItemT<type>);
 }
 
 // Compression Level

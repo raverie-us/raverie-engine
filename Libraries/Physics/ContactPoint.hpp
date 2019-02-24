@@ -19,9 +19,7 @@ struct ContactPoint
 
   ContactPoint();
 
-  void Set(const Physics::Manifold* manifold,
-           const Physics::ManifoldPoint* manifoldPoint,
-           uint objectIndex);
+  void Set(const Physics::Manifold* manifold, const Physics::ManifoldPoint* manifoldPoint, uint objectIndex);
 
   /// The point in local space of myself in this collision.
   Vec3 GetLocalPoint();

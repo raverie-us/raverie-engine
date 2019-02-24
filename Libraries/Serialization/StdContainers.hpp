@@ -38,9 +38,7 @@ struct Trait<StlString>
 template <>
 struct Policy<StlString>
 {
-  static inline bool Serialize(Serializer& serializer,
-                               cstr fieldName,
-                               StlString& stringValue)
+  static inline bool Serialize(Serializer& serializer, cstr fieldName, StlString& stringValue)
   {
     if (serializer.GetMode() == SerializerMode::Saving)
     {
@@ -80,12 +78,9 @@ template <typename first, typename second>
 struct Policy<std::pair<first, second>>
 {
   typedef std::pair<first, second> containertype;
-  static inline bool Serialize(Serializer& serializer,
-                               cstr fieldName,
-                               std::pair<first, second>& pair)
+  static inline bool Serialize(Serializer& serializer, cstr fieldName, std::pair<first, second>& pair)
   {
-    serializer.Start(
-        Trait<containertype>::TypeName(), fieldName, StructureType::Object);
+    serializer.Start(Trait<containertype>::TypeName(), fieldName, StructureType::Object);
     serializer.SerializeField("key", pair.first);
     serializer.SerializeField("value", pair.second);
     serializer.End(Trait<containertype>::TypeName(), StructureType::Object);
@@ -97,12 +92,9 @@ template <typename first, typename second>
 struct Policy<std::pair<const first, second>>
 {
   typedef std::pair<const first, second> containertype;
-  static inline bool Serialize(Serializer& serializer,
-                               cstr fieldName,
-                               std::pair<const first, second>& pair)
+  static inline bool Serialize(Serializer& serializer, cstr fieldName, std::pair<const first, second>& pair)
   {
-    serializer.Start(
-        Trait<containertype>::TypeName(), fieldName, StructureType::Object);
+    serializer.Start(Trait<containertype>::TypeName(), fieldName, StructureType::Object);
     serializer.SerializeField("key", const_cast<first&>(pair.first));
     serializer.SerializeField("value", pair.second);
     serializer.End(Trait<containertype>::TypeName(), StructureType::Object);
@@ -116,9 +108,7 @@ void StdSaveSequence(Serializer& serializer, containerType& container)
   uint containerSize = container.size();
   serializer.ArraySize(containerSize);
   std::for_each(
-      container.begin(),
-      container.end(),
-      StdSerializeFunctor<typename containerType::value_type>(serializer));
+      container.begin(), container.end(), StdSerializeFunctor<typename containerType::value_type>(serializer));
 }
 
 template <typename containerType>
@@ -128,9 +118,7 @@ void StdLoadSequence(Serializer& serializer, containerType& container)
   serializer.ArraySize(containerSize);
   container.resize(containerSize);
   std::for_each(
-      container.begin(),
-      container.end(),
-      StdSerializeFunctor<typename containerType::value_type>(serializer));
+      container.begin(), container.end(), StdSerializeFunctor<typename containerType::value_type>(serializer));
 }
 
 template <typename containerType>
@@ -151,9 +139,7 @@ template <typename type>
 struct Policy<std::vector<type>>
 {
   typedef std::vector<type> containertype;
-  static bool Serialize(Serializer& stream,
-                        cstr fieldName,
-                        containertype& container)
+  static bool Serialize(Serializer& stream, cstr fieldName, containertype& container)
   {
     bool started = stream.Start("Array", fieldName, StructureType::Array);
     if (started)
@@ -176,9 +162,7 @@ template <typename keytype, typename valuetype>
 struct Policy<std::map<keytype, valuetype>>
 {
   typedef std::map<keytype, valuetype> containertype;
-  static bool Serialize(Serializer& stream,
-                        cstr fieldName,
-                        containertype& container)
+  static bool Serialize(Serializer& stream, cstr fieldName, containertype& container)
   {
     bool started = stream.Start("Map", fieldName, StructureType::Array);
     if (started)
@@ -201,9 +185,7 @@ template <typename type>
 struct Policy<std::set<type>>
 {
   typedef std::set<type> containertype;
-  static bool Serialize(Serializer& stream,
-                        cstr fieldName,
-                        containertype& container)
+  static bool Serialize(Serializer& stream, cstr fieldName, containertype& container)
   {
     bool started = stream.Start("Array", fieldName, StructureType::Array);
     if (started)

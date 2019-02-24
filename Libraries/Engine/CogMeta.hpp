@@ -38,22 +38,16 @@ public:
   }
 
   /// MetaDataInheritanceRoot Interface.
-  String GetInheritId(HandleParam object,
-                      InheritIdContext::Enum context) override;
+  String GetInheritId(HandleParam object, InheritIdContext::Enum context) override;
   void SetInheritId(HandleParam object, StringParam inheritId) override;
 
   /// MetaDataInheritance Interface.
   Guid GetUniqueId(HandleParam object) override;
   void Revert(HandleParam object) override;
-  bool CanPropertyBeReverted(HandleParam object,
-                             PropertyPathParam propertyPath) override;
-  void RevertProperty(HandleParam object,
-                      PropertyPathParam propertyPath) override;
-  void RestoreRemovedChild(HandleParam parent,
-                           ObjectState::ChildId childId) override;
-  void SetPropertyModified(HandleParam object,
-                           PropertyPathParam propertyPath,
-                           bool state) override;
+  bool CanPropertyBeReverted(HandleParam object, PropertyPathParam propertyPath) override;
+  void RevertProperty(HandleParam object, PropertyPathParam propertyPath) override;
+  void RestoreRemovedChild(HandleParam parent, ObjectState::ChildId childId) override;
+  void SetPropertyModified(HandleParam object, PropertyPathParam propertyPath, bool state) override;
   void RebuildObject(HandleParam object) override;
 };
 
@@ -94,10 +88,7 @@ class CogMetaSerialization : public MetaSerialization
 public:
   ZilchDeclareType(CogMetaSerialization, TypeCopyMode::ReferenceType);
 
-  bool SerializeReferenceProperty(BoundType* propertyType,
-                                  cstr fieldName,
-                                  Any& value,
-                                  Serializer& serializer) override;
+  bool SerializeReferenceProperty(BoundType* propertyType, cstr fieldName, Any& value, Serializer& serializer) override;
   void AddCustomAttributes(HandleParam object, TextSaver* saver) override;
 
   /// ContextIds are currently only for levels, so when saving out an Archetype

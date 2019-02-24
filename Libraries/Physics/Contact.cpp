@@ -187,8 +187,7 @@ uint Contact::MoleculeCount() const
 
 void ComputeContactLimits(Contact* contact, MoleculeWalker& fragments)
 {
-  real frictionRatio =
-      contact->mManifold->DynamicFriction / contact->GetContactCount();
+  real frictionRatio = contact->mManifold->DynamicFriction / contact->GetContactCount();
   real frictionMax = frictionRatio * fragments[0].mImpulse;
 
   fragments[0].SetLimit(real(0.0), Math::PositiveMax());
@@ -196,19 +195,14 @@ void ComputeContactLimits(Contact* contact, MoleculeWalker& fragments)
   fragments[2].SetLimit(-frictionMax, frictionMax);
 }
 
-void ComputeContactFragments(Contact* contact,
-                             MoleculeWalker& fragments,
-                             uint atomCount,
-                             MoleculeData& data,
-                             real restitutionBias)
+void ComputeContactFragments(
+    Contact* contact, MoleculeWalker& fragments, uint atomCount, MoleculeData& data, real restitutionBias)
 {
   real baumgarte = contact->GetLinearBaumgarte();
   JointMass masses;
-  JointHelpers::GetMasses(
-      contact->GetCollider(0), contact->GetCollider(1), masses);
+  JointHelpers::GetMasses(contact->GetCollider(0), contact->GetCollider(1), masses);
 
-  real frictionRatio =
-      contact->mManifold->DynamicFriction / contact->GetContactCount();
+  real frictionRatio = contact->mManifold->DynamicFriction / contact->GetContactCount();
   real frictionMax = frictionRatio * fragments[0].mImpulse;
 
   real mass;
@@ -241,8 +235,7 @@ void Contact::ComputeMolecules(MoleculeWalker& fragments)
 {
   uint contactCount = GetContactCount();
 
-  real velocityThreshold =
-      mSolver->mSolverConfig->mVelocityRestitutionThreshold;
+  real velocityThreshold = mSolver->mSolverConfig->mVelocityRestitutionThreshold;
   real baumgarte = GetLinearBaumgarte();
 
   for (uint i = 0; i < contactCount; ++i)
@@ -251,8 +244,7 @@ void Contact::ComputeMolecules(MoleculeWalker& fragments)
 
     fragments[0].mImpulse = contact.AccumulatedImpulse[0];
     real slop = mSolver->mSolverConfig->mContactBlock.GetSlop();
-    fragments[0].mError =
-        -Math::Max(mManifold->Contacts[i].Penetration - slop, real(0.0));
+    fragments[0].mError = -Math::Max(mManifold->Contacts[i].Penetration - slop, real(0.0));
     // compute restitution as a bias term based upon the separating velocity
     real relativeVelocity = mManifold->GetSeparatingVelocity(i);
     real restitutionBias = real(0.0);
@@ -275,10 +267,7 @@ void Contact::ComputeMolecules(MoleculeWalker& fragments)
     fragmentData.SetUp(&mAnchors, nullptr, this);
     fragmentData.LinearAxes[0] = contact.Normal;
 
-    mManifold->GetTangents(mSolver->mSolverConfig,
-                           i,
-                           fragmentData.LinearAxes[1],
-                           fragmentData.LinearAxes[2]);
+    mManifold->GetTangents(mSolver->mSolverConfig, i, fragmentData.LinearAxes[1], fragmentData.LinearAxes[2]);
     fragmentData.SetAngularIdentity();
 
     ComputeContactFragments(this, fragments, 3, fragmentData, restitutionBias);
@@ -305,18 +294,15 @@ void Contact::Solve(MoleculeWalker& fragments)
     real lambda;
 
     lambda = ComputeLambda(fragments[0], velocities);
-    JointHelpers::ApplyConstraintImpulse(
-        masses, velocities, fragments[0].mJacobian, lambda);
+    JointHelpers::ApplyConstraintImpulse(masses, velocities, fragments[0].mJacobian, lambda);
 
     ComputeContactLimits(this, fragments);
 
     lambda = ComputeLambda(fragments[1], velocities);
-    JointHelpers::ApplyConstraintImpulse(
-        masses, velocities, fragments[1].mJacobian, lambda);
+    JointHelpers::ApplyConstraintImpulse(masses, velocities, fragments[1].mJacobian, lambda);
 
     lambda = ComputeLambda(fragments[2], velocities);
-    JointHelpers::ApplyConstraintImpulse(
-        masses, velocities, fragments[2].mJacobian, lambda);
+    JointHelpers::ApplyConstraintImpulse(masses, velocities, fragments[2].mJacobian, lambda);
 
     fragments += 3;
   }
@@ -344,24 +330,10 @@ void Contact::SolveSse(MoleculeWalker& fragments)
   SimVec m1 = Simd::UnAlignedLoad(masses.mInvMass[1].GetInvMasses().array);
   Mat3Param invM0 = masses.InverseInertia[0];
   Mat3Param invM1 = masses.InverseInertia[1];
-  SimMat3 i0 = Simd::SetMat3(invM0.m00,
-                             invM0.m01,
-                             invM0.m02,
-                             invM0.m10,
-                             invM0.m11,
-                             invM0.m12,
-                             invM0.m20,
-                             invM0.m21,
-                             invM0.m22);
-  SimMat3 i1 = Simd::SetMat3(invM1.m00,
-                             invM1.m01,
-                             invM1.m02,
-                             invM1.m10,
-                             invM1.m11,
-                             invM1.m12,
-                             invM1.m20,
-                             invM1.m21,
-                             invM1.m22);
+  SimMat3 i0 =
+      Simd::SetMat3(invM0.m00, invM0.m01, invM0.m02, invM0.m10, invM0.m11, invM0.m12, invM0.m20, invM0.m21, invM0.m22);
+  SimMat3 i1 =
+      Simd::SetMat3(invM1.m00, invM1.m01, invM1.m02, invM1.m10, invM1.m11, invM1.m12, invM1.m20, invM1.m21, invM1.m22);
 
   for (uint i = 0; i < contactCount; ++i)
   {
@@ -467,13 +439,11 @@ void Contact::DebugDraw()
     ManifoldPoint& contact = mManifold->Contacts[i];
     gDebugDraw->Add(Debug::Sphere(contact.WorldPoints[0], real(0.2)));
     gDebugDraw->Add(Debug::Sphere(contact.WorldPoints[1], real(0.2)));
-    gDebugDraw->Add(Debug::Line(contact.WorldPoints[0],
-                                contact.WorldPoints[0] + contact.Normal));
+    gDebugDraw->Add(Debug::Line(contact.WorldPoints[0], contact.WorldPoints[0] + contact.Normal));
   }
 }
 
-uint Contact::GetAtomIndexFilter(uint atomIndex,
-                                 real& desiredConstraintValue) const
+uint Contact::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   desiredConstraintValue = real(0.0);
   return Joint::LinearAxis;
@@ -483,14 +453,11 @@ bool Contact::GetShouldBaumgarteBeUsed() const
 {
   PhysicsSolverConfig* config = mSolver->mSolverConfig;
   ConstraintConfigBlock& block = config->GetContactBlock();
-  if (block.GetPositionCorrectionType() ==
-      ConstraintPositionCorrection::Inherit)
+  if (block.GetPositionCorrectionType() == ConstraintPositionCorrection::Inherit)
   {
-    return config->GetPositionCorrectionType() ==
-           PhysicsSolverPositionCorrection::Baumgarte;
+    return config->GetPositionCorrectionType() == PhysicsSolverPositionCorrection::Baumgarte;
   }
-  return block.GetPositionCorrectionType() ==
-         ConstraintPositionCorrection::Baumgarte;
+  return block.GetPositionCorrectionType() == ConstraintPositionCorrection::Baumgarte;
 }
 
 real Contact::GetLinearBaumgarte() const

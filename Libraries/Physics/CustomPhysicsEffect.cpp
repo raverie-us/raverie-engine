@@ -34,8 +34,7 @@ ZilchDefineType(CustomPhysicsEffect, builder, type)
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDocumented();
 
-  ZeroBindEvent(Events::CustomPhysicsEffectPrecalculatePhase,
-                CustomPhysicsEffectEvent);
+  ZeroBindEvent(Events::CustomPhysicsEffectPrecalculatePhase, CustomPhysicsEffectEvent);
   ZeroBindEvent(Events::ApplyCustomPhysicsEffect, CustomPhysicsEffectEvent);
 }
 
@@ -59,8 +58,7 @@ void CustomPhysicsEffect::PreCalculate(real dt)
   toSend.mEffect = this;
   toSend.mRigidBody = nullptr;
   toSend.mDt = dt;
-  GetOwner()->DispatchEvent(Events::CustomPhysicsEffectPrecalculatePhase,
-                            &toSend);
+  GetOwner()->DispatchEvent(Events::CustomPhysicsEffectPrecalculatePhase, &toSend);
 }
 
 void CustomPhysicsEffect::ApplyEffect(RigidBody* obj, real dt)

@@ -44,8 +44,7 @@ ModalConfirmEvent::ModalConfirmEvent()
   mUserData = nullptr;
 }
 
-Modal::Modal(Composite* parent, float fadeInTime) :
-    Composite(parent, AttachType::Direct)
+Modal::Modal(Composite* parent, float fadeInTime) : Composite(parent, AttachType::Direct)
 {
   mCloseOnBackgroundClicked = true;
   mCloseOnEscape = true;
@@ -104,8 +103,7 @@ void Modal::OnKeyDown(KeyboardEvent* e)
     Close();
 }
 
-ModalStrip::ModalStrip(Composite* parent, float fadeInTime) :
-    Modal(parent, fadeInTime)
+ModalStrip::ModalStrip(Composite* parent, float fadeInTime) : Modal(parent, fadeInTime)
 {
   mStrip = CreateAttached<Element>(cWhiteSquare);
   mStrip->SetColor(ModalUi::StipColor);
@@ -164,9 +162,7 @@ void ModalStrip::SetStripHeight(ModalSizeMode::Type mode, float height)
   MarkAsNeedsUpdate();
 }
 
-ModalConfirmAction::ModalConfirmAction(Composite* parent,
-                                       StringParam title,
-                                       float fadeInTime) :
+ModalConfirmAction::ModalConfirmAction(Composite* parent, StringParam title, float fadeInTime) :
     ModalStrip(parent, fadeInTime)
 {
   mCloseOnSelection = true;
@@ -185,8 +181,7 @@ ModalConfirmAction::ModalConfirmAction(Composite* parent,
     ProxyAndAnimateIn(mTitle, Pixels(-400, 0, 0), 0.22f, 0.1f, 0);
 
     Composite* buttons = new Composite(center);
-    buttons->SetLayout(CreateStackLayout(
-        LayoutDirection::LeftToRight, Pixels(15, 0), Thickness::cZero));
+    buttons->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(15, 0), Thickness::cZero));
     {
       // Spacer to right justify the buttons
       new Spacer(buttons);
@@ -261,21 +256,15 @@ bool ModalConfirmAction::TakeFocusOverride()
 }
 
 // ModalButtonsAction Action
-ModalButtonsAction::ModalButtonsAction(Composite* parent,
-                                       StringParam title,
-                                       Array<String>& buttonNames,
-                                       StringParam extraText,
-                                       float fadeInTime) :
+ModalButtonsAction::ModalButtonsAction(
+    Composite* parent, StringParam title, Array<String>& buttonNames, StringParam extraText, float fadeInTime) :
     ModalStrip(parent, fadeInTime)
 {
   CreateButtons(title, buttonNames, extraText);
 }
 
-ModalButtonsAction::ModalButtonsAction(Composite* parent,
-                                       StringParam title,
-                                       StringParam buttonName,
-                                       StringParam extraText,
-                                       float fadeInTime) :
+ModalButtonsAction::ModalButtonsAction(
+    Composite* parent, StringParam title, StringParam buttonName, StringParam extraText, float fadeInTime) :
     ModalStrip(parent, fadeInTime)
 {
   Array<String> buttonNames;
@@ -283,9 +272,7 @@ ModalButtonsAction::ModalButtonsAction(Composite* parent,
   CreateButtons(title, buttonNames, extraText);
 }
 
-void ModalButtonsAction::CreateButtons(StringParam title,
-                                       Array<String>& buttonNames,
-                                       StringParam extraText)
+void ModalButtonsAction::CreateButtons(StringParam title, Array<String>& buttonNames, StringParam extraText)
 {
   SetStripHeight(ModalSizeMode::Fixed, ModalUi::StripHeight + Pixels(30));
   mCloseOnSelection = true;
@@ -306,11 +293,9 @@ void ModalButtonsAction::CreateButtons(StringParam title,
     if (!extraText.Empty())
     {
       Composite* extraTextComposite = new Composite(center);
-      extraTextComposite->SetLayout(CreateStackLayout(
-          LayoutDirection::LeftToRight, Pixels(15, 0), Thickness::cZero));
+      extraTextComposite->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(15, 0), Thickness::cZero));
       extraTextComposite->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
-      Label* extraTextUi =
-          new Label(extraTextComposite, "ModalConfirmExtraText");
+      Label* extraTextUi = new Label(extraTextComposite, "ModalConfirmExtraText");
       // Hardcoded max to prevent things from scrolling off the side because
       // text resizing is really bad (forces things outside the max layout size)
       extraTextUi->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(1024));
@@ -321,8 +306,7 @@ void ModalButtonsAction::CreateButtons(StringParam title,
     }
 
     Composite* buttons = new Composite(center);
-    buttons->SetLayout(CreateStackLayout(
-        LayoutDirection::LeftToRight, Pixels(15, 0), Thickness(10, 0)));
+    buttons->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(15, 0), Thickness(10, 0)));
 
     // Spacer to right justify the buttons
     new Spacer(buttons);

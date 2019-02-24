@@ -84,9 +84,7 @@ struct ZeroSharedTemplate Pair
   {
   }
 
-  Pair(const type0& value0, MoveReference<type1> value1) :
-      first(value0),
-      second(ZeroMove(value1))
+  Pair(const type0& value0, MoveReference<type1> value1) : first(value0), second(ZeroMove(value1))
   {
   }
 
@@ -151,20 +149,16 @@ struct MoveWithoutDestructionOperator
 template <typename first, typename second>
 struct MoveWithoutDestructionOperator<Pair<first, second>>
 {
-  static inline void MoveWithoutDestruction(Pair<first, second>* dest,
-                                            Pair<first, second>* source)
+  static inline void MoveWithoutDestruction(Pair<first, second>* dest, Pair<first, second>* source)
   {
-    MoveWithoutDestructionOperator<first>::MoveWithoutDestruction(
-        &dest->first, &source->first);
-    MoveWithoutDestructionOperator<second>::MoveWithoutDestruction(
-        &dest->second, &source->second);
+    MoveWithoutDestructionOperator<first>::MoveWithoutDestruction(&dest->first, &source->first);
+    MoveWithoutDestructionOperator<second>::MoveWithoutDestruction(&dest->second, &source->second);
   }
 };
 
 /// Move values from source array to new array using move
 template <typename type>
-inline void
-UninitializedMove(type* dest, type* source, size_t size, false_type /*isPod*/)
+inline void UninitializedMove(type* dest, type* source, size_t size, false_type /*isPod*/)
 {
   type* destEnd = dest + size;
   while (dest != destEnd)
@@ -176,17 +170,13 @@ UninitializedMove(type* dest, type* source, size_t size, false_type /*isPod*/)
 }
 
 template <typename type>
-inline void
-UninitializedMove(type* dest, type* source, size_t size, true_type /*isPod*/)
+inline void UninitializedMove(type* dest, type* source, size_t size, true_type /*isPod*/)
 {
   memmove(dest, source, sizeof(type) * size);
 }
 
 template <typename type>
-inline void UninitializedMoveRev(type* dest,
-                                 type* source,
-                                 size_t size,
-                                 false_type /*isPod*/)
+inline void UninitializedMoveRev(type* dest, type* source, size_t size, false_type /*isPod*/)
 {
   type* destEnd = dest + size;
   type* sourceEnd = source + size;
@@ -194,22 +184,19 @@ inline void UninitializedMoveRev(type* dest,
   {
     --destEnd;
     --sourceEnd;
-    MoveWithoutDestructionOperator<type>::MoveWithoutDestruction(destEnd,
-                                                                 sourceEnd);
+    MoveWithoutDestructionOperator<type>::MoveWithoutDestruction(destEnd, sourceEnd);
     --size;
   }
 }
 
 template <typename type>
-inline void
-UninitializedMoveRev(type* dest, type* source, size_t size, true_type /*isPod*/)
+inline void UninitializedMoveRev(type* dest, type* source, size_t size, true_type /*isPod*/)
 {
   memmove(dest, source, sizeof(type) * size);
 }
 
 template <typename type>
-inline void
-UninitializedCopy(type* dest, type* source, size_t size, false_type /*isPod*/)
+inline void UninitializedCopy(type* dest, type* source, size_t size, false_type /*isPod*/)
 {
   type* destEnd = dest + size;
   while (dest != destEnd)
@@ -221,8 +208,7 @@ UninitializedCopy(type* dest, type* source, size_t size, false_type /*isPod*/)
 }
 
 template <typename type>
-inline void
-UninitializedCopy(type* dest, type* source, size_t size, true_type /*isPod*/)
+inline void UninitializedCopy(type* dest, type* source, size_t size, true_type /*isPod*/)
 {
   memcpy(dest, source, sizeof(type) * size);
 }
@@ -288,9 +274,7 @@ inline void UninitializedFill(type* dest, size_t size, false_type /*isPod*/)
 }
 
 template <typename type>
-inline void UninitializedFill(type* /*dest*/,
-                              size_t /*size*/,
-                              true_type /*isPod*/)
+inline void UninitializedFill(type* /*dest*/, size_t /*size*/, true_type /*isPod*/)
 {
   // do nothing for pod types
 }
@@ -307,9 +291,7 @@ inline void DestroyElements(type* begin, size_t size, false_type /*isPod*/)
 }
 
 template <typename type>
-inline void DestroyElements(type* /*begin*/,
-                            size_t /*size*/,
-                            true_type /*isPod*/)
+inline void DestroyElements(type* /*begin*/, size_t /*size*/, true_type /*isPod*/)
 {
   // do nothing for pod types
 }
@@ -412,9 +394,7 @@ struct ConstPointerRange
   }
 
   // Construct a range with a pointer and a size.
-  ConstPointerRange(iterator pbegin, size_t size) :
-      begin(pbegin),
-      end(pbegin + size)
+  ConstPointerRange(iterator pbegin, size_t size) : begin(pbegin), end(pbegin + size)
   {
   }
 
@@ -489,8 +469,7 @@ struct PointerRange
 };
 
 template <typename iteratorType>
-IteratorTypedRange<iteratorType> BuildRange(iteratorType begin,
-                                            iteratorType end)
+IteratorTypedRange<iteratorType> BuildRange(iteratorType begin, iteratorType end)
 {
   return IteratorTypedRange<iteratorType>(begin, end);
 }
@@ -581,8 +560,7 @@ struct ZeroSharedTemplate has_equality_operator_helper
 /// Provides a constant defined as true if T has an equality operator, else
 /// defined as false
 template <typename T>
-struct ZeroSharedTemplate has_equality_operator
-    : public integral_constant<bool, has_equality_operator_helper<T>::value>
+struct ZeroSharedTemplate has_equality_operator : public integral_constant<bool, has_equality_operator_helper<T>::value>
 {
 };
 
@@ -613,8 +591,7 @@ struct ZeroSharedTemplate ComparePolicy
 /// Available for instantiation if T has an accessible self-type equality
 /// operator
 template <typename T>
-struct ZeroSharedTemplate
-    ComparePolicy<T, TC_ENABLE_IF(has_equality_operator<T>::value)>
+struct ZeroSharedTemplate ComparePolicy<T, TC_ENABLE_IF(has_equality_operator<T>::value)>
 {
 public:
   inline bool Equal(const T& left, const T& right) const
@@ -656,9 +633,8 @@ struct ZeroSharedTemplate has_valid_compare_policy_helper
   typedef struct ComparePolicy<T> ComparePolicyT;
 
   template <typename T2>
-  static inline yes Test(static_verify_function_signature<
-                         bool (ComparePolicyT::*)(const T2&, const T2&) const,
-                         &ComparePolicyT::Equal>*);
+  static inline yes
+  Test(static_verify_function_signature<bool (ComparePolicyT::*)(const T2&, const T2&) const, &ComparePolicyT::Equal>*);
   template <typename T2>
   static inline no Test(...);
 

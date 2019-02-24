@@ -3,9 +3,7 @@
 
 namespace Zero
 {
-void Stream::ReadMemoryBlock(Status& status,
-                             ByteBufferBlock& block,
-                             size_t sizeInBytes)
+void Stream::ReadMemoryBlock(Status& status, ByteBufferBlock& block, size_t sizeInBytes)
 {
   byte* data = (byte*)zAllocate(sizeInBytes);
   if (data == nullptr)
@@ -41,9 +39,7 @@ size_t Stream::Peek(byte* data, size_t sizeInBytes)
   return result;
 }
 
-void Stream::PeekMemoryBlock(Status& status,
-                             ByteBufferBlock& block,
-                             size_t size)
+void Stream::PeekMemoryBlock(Status& status, ByteBufferBlock& block, size_t size)
 {
   u64 position = Tell();
   ReadMemoryBlock(status, block, size);
@@ -82,30 +78,23 @@ FixedMemoryStream::FixedMemoryStream() : FixedMemoryStream(nullptr, 0)
 {
 }
 
-FixedMemoryStream::FixedMemoryStream(byte* data, size_t size) :
-    mData(data),
-    mSize(size),
-    mCurrent(0)
+FixedMemoryStream::FixedMemoryStream(byte* data, size_t size) : mData(data), mSize(size), mCurrent(0)
 {
 }
 
-FixedMemoryStream::FixedMemoryStream(ByteBuffer::Block& block) :
-    FixedMemoryStream(block.Data, block.Size)
+FixedMemoryStream::FixedMemoryStream(ByteBuffer::Block& block) : FixedMemoryStream(block.Data, block.Size)
 {
 }
 
-FixedMemoryStream::FixedMemoryStream(DataBlock& block) :
-    FixedMemoryStream(block.Data, block.Size)
+FixedMemoryStream::FixedMemoryStream(DataBlock& block) : FixedMemoryStream(block.Data, block.Size)
 {
 }
 
-FixedMemoryStream::FixedMemoryStream(ByteBufferBlock& block) :
-    FixedMemoryStream(block.GetBegin(), block.Size())
+FixedMemoryStream::FixedMemoryStream(ByteBufferBlock& block) : FixedMemoryStream(block.GetBegin(), block.Size())
 {
 }
 
-FixedMemoryStream::FixedMemoryStream(StringParam string) :
-    FixedMemoryStream((byte*)string.Data(), string.SizeInBytes())
+FixedMemoryStream::FixedMemoryStream(StringParam string) : FixedMemoryStream((byte*)string.Data(), string.SizeInBytes())
 {
 }
 
@@ -188,9 +177,7 @@ void FixedMemoryStream::Flush()
 {
 }
 
-void FixedMemoryStream::ReadMemoryBlock(Status& status,
-                                        ByteBufferBlock& block,
-                                        size_t sizeInBytes)
+void FixedMemoryStream::ReadMemoryBlock(Status& status, ByteBufferBlock& block, size_t sizeInBytes)
 {
   if (!HasData())
   {
@@ -220,14 +207,12 @@ ByteBufferMemoryStream::ByteBufferMemoryStream(const ByteBuffer::Block& block) :
 {
 }
 
-ByteBufferMemoryStream::ByteBufferMemoryStream(const DataBlock& block) :
-    ByteBufferMemoryStream(block.Data, block.Size)
+ByteBufferMemoryStream::ByteBufferMemoryStream(const DataBlock& block) : ByteBufferMemoryStream(block.Data, block.Size)
 {
 }
 
 ByteBufferMemoryStream::ByteBufferMemoryStream(const ByteBufferBlock& block) :
-    ByteBufferMemoryStream(const_cast<ByteBufferBlock&>(block).GetBegin(),
-                           const_cast<ByteBufferBlock&>(block).Size())
+    ByteBufferMemoryStream(const_cast<ByteBufferBlock&>(block).GetBegin(), const_cast<ByteBufferBlock&>(block).Size())
 {
 }
 
@@ -287,8 +272,7 @@ ArrayByteMemoryStream::ArrayByteMemoryStream()
 {
 }
 
-ArrayByteMemoryStream::ArrayByteMemoryStream(const byte* data, size_t size) :
-    mCurrent(0)
+ArrayByteMemoryStream::ArrayByteMemoryStream(const byte* data, size_t size) : mCurrent(0)
 {
   mBuffer.Insert(mBuffer.Begin(), data, data + size);
 }
@@ -298,14 +282,12 @@ ArrayByteMemoryStream::ArrayByteMemoryStream(const ByteBuffer::Block& block) :
 {
 }
 
-ArrayByteMemoryStream::ArrayByteMemoryStream(const DataBlock& block) :
-    ArrayByteMemoryStream(block.Data, block.Size)
+ArrayByteMemoryStream::ArrayByteMemoryStream(const DataBlock& block) : ArrayByteMemoryStream(block.Data, block.Size)
 {
 }
 
 ArrayByteMemoryStream::ArrayByteMemoryStream(const ByteBufferBlock& block) :
-    ArrayByteMemoryStream(const_cast<ByteBufferBlock&>(block).GetBegin(),
-                          const_cast<ByteBufferBlock&>(block).Size())
+    ArrayByteMemoryStream(const_cast<ByteBufferBlock&>(block).GetBegin(), const_cast<ByteBufferBlock&>(block).Size())
 {
 }
 
@@ -393,9 +375,7 @@ void ArrayByteMemoryStream::Flush()
 {
 }
 
-void ArrayByteMemoryStream::ReadMemoryBlock(Status& status,
-                                            ByteBufferBlock& block,
-                                            size_t sizeInBytes)
+void ArrayByteMemoryStream::ReadMemoryBlock(Status& status, ByteBufferBlock& block, size_t sizeInBytes)
 {
   if (!HasData())
   {

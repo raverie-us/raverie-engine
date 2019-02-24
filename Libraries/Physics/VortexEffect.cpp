@@ -13,20 +13,14 @@ ZilchDefineType(VortexEffect, builder, type)
   ZilchBindGetterSetterProperty(LocalAxis)->ZeroSerialize(true);
   ZilchBindGetterSetterProperty(MinDistance)->ZeroSerialize(real(1));
   ZilchBindGetterSetterProperty(MaxDistance)->ZeroSerialize(real(5));
-  ZilchBindGetterSetterProperty(TwistStrengthAtMinDistance)
-      ->ZeroSerialize(real(10));
-  ZilchBindGetterSetterProperty(TwistStrengthAtMaxDistance)
-      ->ZeroSerialize(real(2));
-  ZilchBindGetterSetterProperty(InwardStrengthAtMinDistance)
-      ->ZeroSerialize(real(2));
-  ZilchBindGetterSetterProperty(InwardStrengthAtMaxDistance)
-      ->ZeroSerialize(real(10));
+  ZilchBindGetterSetterProperty(TwistStrengthAtMinDistance)->ZeroSerialize(real(10));
+  ZilchBindGetterSetterProperty(TwistStrengthAtMaxDistance)->ZeroSerialize(real(2));
+  ZilchBindGetterSetterProperty(InwardStrengthAtMinDistance)->ZeroSerialize(real(2));
+  ZilchBindGetterSetterProperty(InwardStrengthAtMaxDistance)->ZeroSerialize(real(10));
   ZilchBindGetterSetterProperty(VortexAxis)->ZeroSerialize(Vec3(0, 1, 0));
   ZilchBindGetterProperty(WorldVortexAxis);
-  ZilchBindGetterSetterProperty(InterpolationType)
-      ->ZeroSerialize(PhysicsEffectInterpolationType::Linear);
-  ZilchBindGetterSetterProperty(EndCondition)
-      ->ZeroSerialize(PhysicsEffectEndCondition::ClampToMax);
+  ZilchBindGetterSetterProperty(InterpolationType)->ZeroSerialize(PhysicsEffectInterpolationType::Linear);
+  ZilchBindGetterSetterProperty(EndCondition)->ZeroSerialize(PhysicsEffectEndCondition::ClampToMax);
 }
 
 VortexEffect::VortexEffect()
@@ -74,9 +68,7 @@ void VortexEffect::DebugDraw()
   // Draw the inner and outer distance rings
   DrawRing(point, axisMin, mMinDistance, 3, tMin, Color::Red);
   DrawRing(point, axisMax, mMaxDistance, 3, tMax, Color::Green);
-  gDebugDraw->Add(Debug::Line(point, point + axis)
-                      .Color(Color::Black)
-                      .HeadSize(real(0.1f)));
+  gDebugDraw->Add(Debug::Line(point, point + axis).Color(Color::Black).HeadSize(real(0.1f)));
 
   // Draw the inward forces
 
@@ -102,12 +94,8 @@ void VortexEffect::DebugDraw()
 
     Vec3 p0 = point + offset * mMinDistance;
     Vec3 p1 = point + offset * mMaxDistance;
-    gDebugDraw->Add(Debug::Line(p0, p0 + offset * minForce)
-                        .HeadSize(0.1f)
-                        .Color(Color::Red));
-    gDebugDraw->Add(Debug::Line(p1, p1 + offset * maxForce)
-                        .HeadSize(0.1f)
-                        .Color(Color::Green));
+    gDebugDraw->Add(Debug::Line(p0, p0 + offset * minForce).HeadSize(0.1f).Color(Color::Red));
+    gDebugDraw->Add(Debug::Line(p1, p1 + offset * maxForce).HeadSize(0.1f).Color(Color::Green));
   }
 }
 
@@ -186,8 +174,7 @@ void VortexEffect::ComputeVortexInformation()
   // If we use a local axis then transform both the center and axis at the same
   // time (more efficient)
   if (mVortexStates.IsSet(VortexFlags::LocalAxis))
-    TransformLocalDirectionAndPointToWorld(mWorldVortexCenter,
-                                           mWorldVortexAxis);
+    TransformLocalDirectionAndPointToWorld(mWorldVortexCenter, mWorldVortexAxis);
   // Otherwise only transform the center
   else
     mWorldVortexCenter = TransformLocalPointToWorld(mWorldVortexCenter);
@@ -195,9 +182,7 @@ void VortexEffect::ComputeVortexInformation()
   mWorldVortexAxis.AttemptNormalize();
 }
 
-void VortexEffect::GetStrengthValues(real t,
-                                     real& twistForce,
-                                     real& inwardForce)
+void VortexEffect::GetStrengthValues(real t, real& twistForce, real& inwardForce)
 {
   real alteredT = t;
   // Update t if we use quadratic interpolation
@@ -207,10 +192,8 @@ void VortexEffect::GetStrengthValues(real t,
   }
 
   // Compute the interpolated forces
-  twistForce = Math::Lerp(
-      mTwistStrengthAtMinDistance, mTwistStrengthAtMaxDistance, alteredT);
-  inwardForce = Math::Lerp(
-      mInwardStrengthAtMinDistance, mInwardStrengthAtMaxDistance, alteredT);
+  twistForce = Math::Lerp(mTwistStrengthAtMinDistance, mTwistStrengthAtMaxDistance, alteredT);
+  inwardForce = Math::Lerp(mInwardStrengthAtMinDistance, mInwardStrengthAtMaxDistance, alteredT);
 }
 
 bool VortexEffect::GetLocalAxis()
@@ -351,8 +334,7 @@ PhysicsEffectEndCondition::Enum VortexEffect::GetEndCondition()
 void VortexEffect::SetEndCondition(PhysicsEffectEndCondition::Enum condition)
 {
   // Convert the enum representation of our end condition to the bitfield
-  mVortexStates.ClearFlag(VortexFlags::ContinueFalloff | VortexFlags::NoEffect |
-                          VortexFlags::ClampToMax);
+  mVortexStates.ClearFlag(VortexFlags::ContinueFalloff | VortexFlags::NoEffect | VortexFlags::ClampToMax);
   if (condition == PhysicsEffectEndCondition::NoEffect)
     mVortexStates.SetFlag(VortexFlags::NoEffect);
   else if (condition == PhysicsEffectEndCondition::ContinueFalloff)
@@ -368,8 +350,7 @@ PhysicsEffectInterpolationType::Enum VortexEffect::GetInterpolationType()
   return mInterpolationType;
 }
 
-void VortexEffect::SetInterpolationType(
-    PhysicsEffectInterpolationType::Enum type)
+void VortexEffect::SetInterpolationType(PhysicsEffectInterpolationType::Enum type)
 {
   mInterpolationType = type;
   // Make sure to wake-up objects if we do that on effect change

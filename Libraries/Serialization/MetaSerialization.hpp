@@ -7,11 +7,9 @@ namespace Zero
 struct PolymorphicNode;
 
 // See SerializationAttributes::cSerializationPrimitive
-#define ZeroBindSerializationPrimitive()                                       \
-  type->AddAttribute(SerializationAttributes::cSerializationPrimitive)
-#define ZeroBindSerializationPrimitiveExternal(type)                           \
-  ZilchTypeId(type)->AddAttribute(                                             \
-      SerializationAttributes::cSerializationPrimitive)
+#define ZeroBindSerializationPrimitive() type->AddAttribute(SerializationAttributes::cSerializationPrimitive)
+#define ZeroBindSerializationPrimitiveExternal(type)                                                                   \
+  ZilchTypeId(type)->AddAttribute(SerializationAttributes::cSerializationPrimitive)
 
 // Meta Serialization
 class MetaSerialization : public ReferenceCountedEventObject
@@ -19,18 +17,10 @@ class MetaSerialization : public ReferenceCountedEventObject
 public:
   ZilchDeclareType(MetaSerialization, TypeCopyMode::ReferenceType);
 
-  virtual void SerializeProperty(HandleParam instance,
-                                 Property* property,
-                                 Serializer& serializer);
+  virtual void SerializeProperty(HandleParam instance, Property* property, Serializer& serializer);
 
-  virtual bool SerializePrimitiveProperty(BoundType* propertyType,
-                                          cstr fieldName,
-                                          Any& value,
-                                          Serializer& serializer);
-  virtual bool SerializeReferenceProperty(BoundType* propertyType,
-                                          cstr fieldName,
-                                          Any& value,
-                                          Serializer& serializer);
+  virtual bool SerializePrimitiveProperty(BoundType* propertyType, cstr fieldName, Any& value, Serializer& serializer);
+  virtual bool SerializeReferenceProperty(BoundType* propertyType, cstr fieldName, Any& value, Serializer& serializer);
 
   // The default serialize object assumes that the value inherits from Zero's
   // Object class
@@ -62,10 +52,7 @@ public:
 
   EnumMetaSerialization(BoundType* enumType);
 
-  bool SerializePrimitiveProperty(BoundType* meta,
-                                  cstr fieldName,
-                                  Any& value,
-                                  Serializer& serializer) override;
+  bool SerializePrimitiveProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer) override;
   void SetDefault(Type* type, Any& any) override;
   String ConvertToString(AnyParam input) override;
   bool ConvertFromString(StringParam input, Any& output) override;
@@ -80,10 +67,7 @@ class PrimitiveMetaSerialization : public MetaSerialization
 public:
   ZilchDeclareType(PrimitiveMetaSerialization, TypeCopyMode::ReferenceType);
 
-  bool SerializePrimitiveProperty(BoundType* meta,
-                                  cstr fieldName,
-                                  Any& value,
-                                  Serializer& serializer) override;
+  bool SerializePrimitiveProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer) override;
   String ConvertToString(AnyParam input) override;
   bool ConvertFromString(StringParam input, Any& output) override;
 };
@@ -94,10 +78,7 @@ class MetaStringSerialization : public MetaSerialization
 public:
   ZilchDeclareType(MetaStringSerialization, TypeCopyMode::ReferenceType);
 
-  bool SerializeReferenceProperty(BoundType* propertyType,
-                                  cstr fieldName,
-                                  Any& value,
-                                  Serializer& serializer) override;
+  bool SerializeReferenceProperty(BoundType* propertyType, cstr fieldName, Any& value, Serializer& serializer) override;
   String ConvertToString(AnyParam input) override;
   bool ConvertFromString(StringParam input, Any& output) override;
 };
@@ -124,9 +105,7 @@ bool SerializeAny(cstr fieldName, Any& value, Serializer& serializer);
 bool SerializeVariant(cstr fieldName, Variant& value, Serializer& serializer);
 
 /// Serialize a Meta Property on an object
-void SerializeProperty(HandleParam instance,
-                       Property* property,
-                       Serializer& serializer);
+void SerializeProperty(HandleParam instance, Property* property, Serializer& serializer);
 
 /// Serialize all components and properties on an object
 void MetaSerializeObject(HandleParam instance, Serializer& serializer);
@@ -157,9 +136,7 @@ struct Policy<Any>
 template <>
 struct Policy<Variant>
 {
-  static inline bool Serialize(Serializer& stream,
-                               cstr fieldName,
-                               Variant& value)
+  static inline bool Serialize(Serializer& stream, cstr fieldName, Variant& value)
   {
     return SerializeVariant(fieldName, value, stream);
   }
@@ -167,21 +144,21 @@ struct Policy<Variant>
 
 } // namespace Serialization
 
-#define ZeroSerialize(DefaultValue)                                            \
-  AddAttributeChainable(PropertyAttributes::cSerialize)                        \
-      ->Add(new MetaSerializedProperty(DefaultValue))
+#define ZeroSerialize(DefaultValue)                                                                                    \
+  AddAttributeChainable(PropertyAttributes::cSerialize)->Add(new MetaSerializedProperty(DefaultValue))
 
 template <typename T>
-bool PrimitiveMetaSerialization<T>::SerializePrimitiveProperty(
-    BoundType* meta, cstr fieldName, Any& value, Serializer& serializer)
+bool PrimitiveMetaSerialization<T>::SerializePrimitiveProperty(BoundType* meta,
+                                                               cstr fieldName,
+                                                               Any& value,
+                                                               Serializer& serializer)
 {
   if (serializer.GetMode() == SerializerMode::Saving)
   {
     if (value.IsNotNull())
     {
       T localValue = value.Get<T>();
-      return Serialization::Policy<T>::Serialize(
-          serializer, fieldName, localValue);
+      return Serialization::Policy<T>::Serialize(serializer, fieldName, localValue);
     }
     return true;
   }
@@ -199,8 +176,7 @@ bool PrimitiveMetaSerialization<T>::SerializePrimitiveProperty(
 }
 
 template <typename T>
-bool PrimitiveMetaSerialization<T>::ConvertFromString(StringParam input,
-                                                      Any& output)
+bool PrimitiveMetaSerialization<T>::ConvertFromString(StringParam input, Any& output)
 {
   T value = T();
   ToValue(input.c_str(), value);

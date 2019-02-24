@@ -15,12 +15,9 @@ size_t gMemoryRangesWritten = 0;
 
 void LauncherCrashStartCallback(CrashInfo& info, void* userData)
 {
-  info.mDumpName =
-      BuildString("ZeroLauncherDump_", gEngineStartTime.c_str(), ".dmp");
-  info.mLogName =
-      BuildString("ZeroLauncherLog_", gEngineStartTime.c_str(), ".txt");
-  info.mStackName =
-      BuildString("ZeroLauncherStack_", gEngineStartTime.c_str(), ".txt");
+  info.mDumpName = BuildString("ZeroLauncherDump_", gEngineStartTime.c_str(), ".dmp");
+  info.mLogName = BuildString("ZeroLauncherLog_", gEngineStartTime.c_str(), ".txt");
+  info.mStackName = BuildString("ZeroLauncherStack_", gEngineStartTime.c_str(), ".txt");
   info.mModuleName = "ZeroLauncher";
   info.mStripModules = true;
 
@@ -49,9 +46,7 @@ bool LauncherCrashCustomMemoryCallback(MemoryRange& memRange, void* userData)
   return true;
 }
 
-void LauncherCrashLoggingCallback(CrashHandlerParameters& params,
-                                  CrashInfo& info,
-                                  void* userData)
+void LauncherCrashLoggingCallback(CrashHandlerParameters& params, CrashInfo& info, void* userData)
 {
   String tempDirectory = GetTemporaryDirectory();
 
@@ -72,13 +67,11 @@ String LauncherGetToolsPath()
 {
   if (Z::gContentSystem && !Z::gContentSystem->ToolPath.Empty())
   {
-    return FilePath::Combine(Z::gContentSystem->ToolPath,
-                             "ZeroCrashHandler.exe");
+    return FilePath::Combine(Z::gContentSystem->ToolPath, "ZeroCrashHandler.exe");
   }
   else
   {
-    return FilePath::Combine(
-        GetApplicationDirectory(), "Tools", "ZeroCrashHandler.exe");
+    return FilePath::Combine(GetApplicationDirectory(), "Tools", "ZeroCrashHandler.exe");
   }
 }
 
@@ -102,8 +95,7 @@ void LauncherSendCrashReport(CrashHandlerParameters& params, void* userData)
   String crashToolPathA = LauncherGetToolsPath();
 
   Status status;
-  bool success = Os::SystemOpenFile(
-      status, crashToolPathA.c_str(), NULL, paramString.c_str());
+  bool success = Os::SystemOpenFile(status, crashToolPathA.c_str(), NULL, paramString.c_str());
 }
 
 } // namespace Zero

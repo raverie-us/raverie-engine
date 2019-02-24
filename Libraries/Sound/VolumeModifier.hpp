@@ -15,18 +15,11 @@ public:
   InstanceVolumeModifier();
 
   // Applies this modification to a buffer of samples.
-  void ApplyVolume(float* sampleBuffer,
-                   const unsigned bufferSize,
-                   const unsigned channels);
+  void ApplyVolume(float* sampleBuffer, const unsigned bufferSize, const unsigned channels);
   // Resets the modifier with new volume and time data.
-  void Reset(const float startVolume,
-             const float endVolume,
-             const float changeTime,
-             const float lifetime);
-  void Reset(const float startVolume,
-             const float endVolume,
-             const unsigned changeFrames,
-             const unsigned lifetimeFrames);
+  void Reset(const float startVolume, const float endVolume, const float changeTime, const float lifetime);
+  void
+  Reset(const float startVolume, const float endVolume, const unsigned changeFrames, const unsigned lifetimeFrames);
   // Gets the current volume
   float GetCurrentVolume();
   // Gets the volume at a specified number of frames ahead

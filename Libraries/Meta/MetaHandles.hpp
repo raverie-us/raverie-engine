@@ -54,14 +54,12 @@ public:
 };
 
 template <typename ComponentType>
-MetaComponentHandle<ComponentType>::MetaComponentHandle(BoundType* owner) :
-    mOwner(owner)
+MetaComponentHandle<ComponentType>::MetaComponentHandle(BoundType* owner) : mOwner(owner)
 {
 }
 
 template <typename ComponentType>
-MetaComponentHandle<ComponentType>::MetaComponentHandle(
-    ComponentType* metaComponent)
+MetaComponentHandle<ComponentType>::MetaComponentHandle(ComponentType* metaComponent)
 {
   if (metaComponent)
     mOwner = metaComponent->mOwner;

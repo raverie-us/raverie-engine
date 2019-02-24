@@ -14,47 +14,22 @@ ZilchDefineType(Member, builder, type)
 {
   type->CopyMode = TypeCopyMode::ReferenceType;
   type->HandleManager = ZilchManagerId(PointerManager);
-  ZilchFullBindField(
-      builder, type, &Member::Name, "Name", PropertyBinding::Get);
-  ZilchFullBindField(
-      builder, type, &Member::Owner, "Owner", PropertyBinding::Get);
-  ZilchFullBindField(
-      builder, type, &Member::IsStatic, "IsStatic", PropertyBinding::Get);
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &Member::GetOwningLibrary,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "Library");
-  ZilchFullBindGetterSetter(builder,
-                            type,
-                            &Member::GetTypeOrNull,
-                            ZilchNoOverload,
-                            ZilchNoSetter,
-                            ZilchNoOverload,
-                            "Type");
+  ZilchFullBindField(builder, type, &Member::Name, "Name", PropertyBinding::Get);
+  ZilchFullBindField(builder, type, &Member::Owner, "Owner", PropertyBinding::Get);
+  ZilchFullBindField(builder, type, &Member::IsStatic, "IsStatic", PropertyBinding::Get);
+  ZilchFullBindGetterSetter(
+      builder, type, &Member::GetOwningLibrary, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "Library");
+  ZilchFullBindGetterSetter(
+      builder, type, &Member::GetTypeOrNull, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "Type");
 }
 
 ZilchDefineType(Property, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
-  ZilchFullBindField(
-      builder, type, &Property::Get, "Getter", PropertyBinding::Get);
-  ZilchFullBindField(
-      builder, type, &Property::Set, "Setter", PropertyBinding::Get);
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Property::GetValue,
-                      ZilchNoOverload,
-                      "GetValue",
-                      "instance");
-  ZilchFullBindMethod(builder,
-                      type,
-                      &Property::SetValue,
-                      ZilchNoOverload,
-                      "SetValue",
-                      "instance, value");
+  ZilchFullBindField(builder, type, &Property::Get, "Getter", PropertyBinding::Get);
+  ZilchFullBindField(builder, type, &Property::Set, "Setter", PropertyBinding::Get);
+  ZilchFullBindMethod(builder, type, &Property::GetValue, ZilchNoOverload, "GetValue", "instance");
+  ZilchFullBindMethod(builder, type, &Property::SetValue, ZilchNoOverload, "SetValue", "instance, value");
 }
 
 ZilchDefineType(GetterSetter, builder, type)
@@ -169,45 +144,31 @@ String Constant::ToString() const
   return String();
 }
 
-AttributeParameter::AttributeParameter(StringParam name, StringParam value) :
-    Constant(value),
-    Name(name)
+AttributeParameter::AttributeParameter(StringParam name, StringParam value) : Constant(value), Name(name)
 {
 }
 
-AttributeParameter::AttributeParameter(StringParam name, Integer value) :
-    Constant(value),
-    Name(name)
+AttributeParameter::AttributeParameter(StringParam name, Integer value) : Constant(value), Name(name)
 {
 }
 
-AttributeParameter::AttributeParameter(StringParam name, DoubleInteger value) :
-    Constant(value),
-    Name(name)
+AttributeParameter::AttributeParameter(StringParam name, DoubleInteger value) : Constant(value), Name(name)
 {
 }
 
-AttributeParameter::AttributeParameter(StringParam name, Real value) :
-    Constant(value),
-    Name(name)
+AttributeParameter::AttributeParameter(StringParam name, Real value) : Constant(value), Name(name)
 {
 }
 
-AttributeParameter::AttributeParameter(StringParam name, DoubleReal value) :
-    Constant(value),
-    Name(name)
+AttributeParameter::AttributeParameter(StringParam name, DoubleReal value) : Constant(value), Name(name)
 {
 }
 
-AttributeParameter::AttributeParameter(StringParam name, Boolean value) :
-    Constant(value),
-    Name(name)
+AttributeParameter::AttributeParameter(StringParam name, Boolean value) : Constant(value), Name(name)
 {
 }
 
-AttributeParameter::AttributeParameter(StringParam name, Zilch::Type* value) :
-    Constant(value),
-    Name(name)
+AttributeParameter::AttributeParameter(StringParam name, Zilch::Type* value) : Constant(value), Name(name)
 {
 }
 
@@ -358,12 +319,10 @@ bool Member::ValidateInstanceHandle(const Any& instance, Handle& thisHandle)
     if (type->IsA(this->Owner))
     {
       BoundType* boundType = Type::DynamicCast<BoundType*>(type);
-      if (boundType != nullptr &&
-          boundType->CopyMode == TypeCopyMode::ValueType)
+      if (boundType != nullptr && boundType->CopyMode == TypeCopyMode::ValueType)
       {
         ZeroTodo("This is unsafe, should this be allocated and boxed?");
-        HandleManager* manager = HandleManagers::GetInstance().GetManager(
-            ZilchManagerId(PointerManager));
+        HandleManager* manager = HandleManagers::GetInstance().GetManager(ZilchManagerId(PointerManager));
         thisHandle.StoredType = boundType;
         thisHandle.Manager = manager;
         manager->ObjectToHandle(instance.GetData(), boundType, thisHandle);
@@ -393,11 +352,7 @@ MemberOptions::Enum Member::GetMemberOptions()
   return MemberOptions::None;
 }
 
-Property::Property() :
-    IsHiddenWhenNull(false),
-    Get(nullptr),
-    Set(nullptr),
-    PropertyType(nullptr)
+Property::Property() : IsHiddenWhenNull(false), Get(nullptr), Set(nullptr), PropertyType(nullptr)
 {
 }
 
@@ -462,8 +417,7 @@ void Property::SetValue(const Any& instance, const Any& value)
   // Note that if the types are the same, a cast always technically exists of
   // 'Raw' type This ALSO gives us an invalid cast and handles if the user gave
   // us a empty any (with a null StoredType)
-  CastOperator cast =
-      Shared::GetInstance().GetCastOperator(argumentType, expectedType);
+  CastOperator cast = Shared::GetInstance().GetCastOperator(argumentType, expectedType);
   if (cast.IsValid == false || cast.Operation != CastOperation::Raw)
   {
     static String NullString("null");
@@ -474,11 +428,10 @@ void Property::SetValue(const Any& instance, const Any& value)
     else
       argumentTypeName = NullString;
 
-    String message =
-        String::Format("The setter expected the type '%s' but was given '%s' "
-                       "(which could not be raw-converted)",
-                       expectedType->ToString().c_str(),
-                       argumentTypeName.c_str());
+    String message = String::Format("The setter expected the type '%s' but was given '%s' "
+                                    "(which could not be raw-converted)",
+                                    expectedType->ToString().c_str(),
+                                    argumentTypeName.c_str());
     return state->ThrowException(message);
   }
 
@@ -506,10 +459,7 @@ Field::Field() : Offset(0), Initializer(nullptr)
 {
 }
 
-Variable::Variable() :
-    Owner(nullptr),
-    Local(0),
-    ResultType(Core::GetInstance().ErrorType)
+Variable::Variable() : Owner(nullptr), Local(0), ResultType(Core::GetInstance().ErrorType)
 {
 }
 
@@ -530,9 +480,7 @@ SendsEvent::SendsEvent() :
 {
 }
 
-SendsEvent::SendsEvent(BoundType* owner,
-                       StringParam name,
-                       BoundType* sentType) :
+SendsEvent::SendsEvent(BoundType* owner, StringParam name, BoundType* sentType) :
     Name(name),
     SentType(sentType),
     Owner(owner),

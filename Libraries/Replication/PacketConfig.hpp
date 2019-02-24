@@ -37,9 +37,8 @@ typedef UintN<PacketSequenceIdBits, true> PacketSequenceId;
 
 /// Minimum packet header size
 static const Bits MinPacketHeaderBits = ProtocolIdBits /// Packet protocol ID
-                                        + 1; /// Packet 'Is standalone?' flag
+                                        + 1;           /// Packet 'Is standalone?' flag
 
 /// Maximum packet header size
-static const Bits MaxPacketHeaderBits =
-    MinPacketHeaderBits + PacketSequenceIdBits; /// Packet sequence ID
+static const Bits MaxPacketHeaderBits = MinPacketHeaderBits + PacketSequenceIdBits; /// Packet sequence ID
 } // namespace Zero

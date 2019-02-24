@@ -46,8 +46,7 @@ public:
   // Sets the minimum volume reached at the furthest distance
   void SetMinimumVolume(float volume);
   // Sets the curve type used by the attenuator
-  void SetCurveType(const FalloffCurveType::Enum type,
-                    Array<Math::Vec3>* customCurveData);
+  void SetCurveType(const FalloffCurveType::Enum type, Array<Math::Vec3>* customCurveData);
   // Sets whether the attenuator should apply a low pass filter
   void SetUsingLowPass(bool useLowPass);
   // Sets the distance to start applying the low pass filter
@@ -65,8 +64,7 @@ private:
   void UpdateDistanceInterpolator();
   void UpdateLowPassInterpolator();
 
-  typedef Zero::HashMap<ListenerNode*, AttenuationPerListener*>
-      DataPerListenerMapType;
+  typedef Zero::HashMap<ListenerNode*, AttenuationPerListener*> DataPerListenerMapType;
 
   // Previous volume and low pass for each listener
   DataPerListenerMapType DataPerListener;

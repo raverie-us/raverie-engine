@@ -51,8 +51,7 @@ ZilchDefineType(UiWidgetCastResultsRange, builder, type)
   ZilchBindMethod(Size);
 }
 
-UiWidgetCastResultsRange::UiWidgetCastResultsRange(
-    const UiWidgetArray& overlappingWidgets) :
+UiWidgetCastResultsRange::UiWidgetCastResultsRange(const UiWidgetArray& overlappingWidgets) :
     mOverlappingWidgets(overlappingWidgets),
     mIndex(0)
 {
@@ -108,12 +107,9 @@ ZilchDefineType(UiWidget, builder, type)
   ZilchBindGetterSetterProperty(Visible);
   ZilchBindGetterSetterProperty(Interactive);
   ZilchBindGetterSetterProperty(OnTop);
-  ZilchBindGetterSetterProperty(LocalTranslation)
-      ->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(WorldTranslation)
-      ->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(Size)->AddAttribute(
-      PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(LocalTranslation)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(WorldTranslation)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(Size)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
 
   ZilchBindGetterSetter(LocalRectangle);
   ZilchBindGetterSetter(WorldRectangle);
@@ -160,39 +156,21 @@ ZilchDefineType(UiWidget, builder, type)
 
   static const String sLayoutGroup = "Layout";
 
-  ZilchBindGetterSetterProperty(SizePolicyX)
-      ->ZeroSetPropertyGroup(sLayoutGroup)
-      ->ZeroLocalModificationOverride();
-  ZilchBindGetterSetterProperty(SizePolicyY)
-      ->ZeroSetPropertyGroup(sLayoutGroup)
-      ->ZeroLocalModificationOverride();
-  ZilchBindFieldProperty(mFlexSize)
-      ->ZeroSetPropertyGroup(sLayoutGroup)
-      ->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(SizePolicyX)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(SizePolicyY)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindFieldProperty(mFlexSize)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
 
-  ZilchBindGetterSetterProperty(VerticalAlignment)
-      ->ZeroSetPropertyGroup(sLayoutGroup)
-      ->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(VerticalAlignment)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
   ZilchBindGetterSetterProperty(HorizontalAlignment)
       ->ZeroSetPropertyGroup(sLayoutGroup)
       ->ZeroLocalModificationOverride();
 
-  ZilchBindGetterSetterProperty(MarginLeft)
-      ->ZeroSetPropertyGroup(sLayoutGroup)
-      ->ZeroLocalModificationOverride();
-  ZilchBindGetterSetterProperty(MarginTop)
-      ->ZeroSetPropertyGroup(sLayoutGroup)
-      ->ZeroLocalModificationOverride();
-  ZilchBindGetterSetterProperty(MarginRight)
-      ->ZeroSetPropertyGroup(sLayoutGroup)
-      ->ZeroLocalModificationOverride();
-  ZilchBindGetterSetterProperty(MarginBottom)
-      ->ZeroSetPropertyGroup(sLayoutGroup)
-      ->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(MarginLeft)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(MarginTop)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(MarginRight)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(MarginBottom)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
 
-  ZilchBindGetterSetterProperty(DockMode)
-      ->ZeroSetPropertyGroup(sLayoutGroup)
-      ->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(DockMode)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
   ZilchBindGetterSetterProperty(CanTakeFocus);
   ZilchBindGetter(MouseOver);
   ZilchBindGetter(MouseOverHierarchy);
@@ -228,10 +206,10 @@ UiWidget::~UiWidget()
 void UiWidget::Serialize(Serializer& stream)
 {
   // Serialize flags
-  u32 flagMask = UiWidgetFlags::MouseOver | UiWidgetFlags::MouseOverHierarchy |
-                 UiWidgetFlags::HasFocus | UiWidgetFlags::HierarchyHasFocus;
-  u32 flagDefaults = UiWidgetFlags::Active | UiWidgetFlags::Visible |
-                     UiWidgetFlags::Interactive | UiWidgetFlags::InLayout;
+  u32 flagMask = UiWidgetFlags::MouseOver | UiWidgetFlags::MouseOverHierarchy | UiWidgetFlags::HasFocus |
+                 UiWidgetFlags::HierarchyHasFocus;
+  u32 flagDefaults =
+      UiWidgetFlags::Active | UiWidgetFlags::Visible | UiWidgetFlags::Interactive | UiWidgetFlags::InLayout;
   SerializeBits(stream, mFlags, UiWidgetFlags::Names, flagMask, flagDefaults);
 
   SerializeNameDefault(mLocalColor, Vec4(1));
@@ -240,10 +218,8 @@ void UiWidget::Serialize(Serializer& stream)
   SerializeEnumNameDefault(UiSizePolicy, mSizePolicyY, UiSizePolicy::Auto);
   SerializeNameDefault(mFlexSize, Vec2(1));
   SerializeNameDefault(mAbsoluteMinSize, Vec2(1));
-  SerializeEnumNameDefault(
-      UiVerticalAlignment, mVerticalAlignment, UiVerticalAlignment::Top);
-  SerializeEnumNameDefault(
-      UiHorizontalAlignment, mHorizontalAlignment, UiHorizontalAlignment::Left);
+  SerializeEnumNameDefault(UiVerticalAlignment, mVerticalAlignment, UiVerticalAlignment::Top);
+  SerializeEnumNameDefault(UiHorizontalAlignment, mHorizontalAlignment, UiHorizontalAlignment::Left);
   stream.SerializeFieldDefault("MarginLeft", mMargins.Left, 0.0f);
   stream.SerializeFieldDefault("MarginTop", mMargins.Top, 0.0f);
   stream.SerializeFieldDefault("MarginRight", mMargins.Right, 0.0f);
@@ -258,11 +234,9 @@ void UiWidget::Initialize(CogInitializer& initializer)
   mArea = GetOwner()->has(Area);
 
   ConnectThisTo(GetOwner(), Events::AreaChanged, OnAreaChanged);
-  ConnectThisTo(
-      GetOwner(), Events::ChildrenOrderChanged, OnChildrenOrderChanged);
+  ConnectThisTo(GetOwner(), Events::ChildrenOrderChanged, OnChildrenOrderChanged);
   ConnectThisTo(GetOwner(), Events::PropertyModified, OnPropertyModified);
-  ConnectThisTo(
-      GetOwner(), Events::PropertyModifiedIntermediate, OnPropertyModified);
+  ConnectThisTo(GetOwner(), Events::PropertyModifiedIntermediate, OnPropertyModified);
 
   // Add ourself to the roots on top list for picking
   if (GetOnTop())
@@ -418,9 +392,7 @@ void UiWidget::SizeToContentsIfAuto()
   }
 }
 
-UiWidget* UiWidget::CastPoint(Vec2Param worldPoint,
-                              UiWidget* ignore,
-                              bool interactiveOnly)
+UiWidget* UiWidget::CastPoint(Vec2Param worldPoint, UiWidget* ignore, bool interactiveOnly)
 {
   // Check to see if it's ignoring this widget or any children
   if (ignore == this)
@@ -442,7 +414,7 @@ UiWidget* UiWidget::CastPoint(Vec2Param worldPoint,
 
   // The children further down in the hierarchy are displayed in front, so we
   // want to walk the children in reverse to find the front most first
-  forRange(UiWidget & child, GetChildrenReverse())
+  forRange (UiWidget& child, GetChildrenReverse())
   {
     UiWidget* hit = child.CastPoint(worldPoint, ignore, interactiveOnly);
     if (hit)
@@ -461,11 +433,8 @@ UiWidget* UiWidget::CastPoint(Vec2Param worldPoint,
   return nullptr;
 }
 
-void CastRectInternal(UiWidget* widget,
-                      RectangleParam worldRect,
-                      UiWidget* ignore,
-                      bool interactiveOnly,
-                      UiWidgetArray& overlapping)
+void CastRectInternal(
+    UiWidget* widget, RectangleParam worldRect, UiWidget* ignore, bool interactiveOnly, UiWidgetArray& overlapping)
 {
   // Skip ignored widget
   if (widget == ignore)
@@ -484,13 +453,11 @@ void CastRectInternal(UiWidget* widget,
     return;
 
   // Walk children
-  forRange(UiWidget & child, widget->GetChildren())
-      CastRectInternal(&child, worldRect, ignore, interactiveOnly, overlapping);
+  forRange (UiWidget& child, widget->GetChildren())
+    CastRectInternal(&child, worldRect, ignore, interactiveOnly, overlapping);
 }
 
-UiWidgetCastResultsRange UiWidget::CastRect(RectangleParam worldRect,
-                                            UiWidget* ignore,
-                                            bool interactiveOnly)
+UiWidgetCastResultsRange UiWidget::CastRect(RectangleParam worldRect, UiWidget* ignore, bool interactiveOnly)
 {
   UiWidgetArray overlapping;
   overlapping.Reserve(15);
@@ -562,8 +529,7 @@ void UiWidget::SetLocalTranslation(Vec2Param translation)
   Vec3 localTranslation = mTransform->GetLocalTranslation();
 
   if (OperationQueue::IsListeningForSideEffects())
-    OperationQueue::RegisterSideEffect(
-        mTransform, "Translation", localTranslation);
+    OperationQueue::RegisterSideEffect(mTransform, "Translation", localTranslation);
 
   Vec3 newPos = Vec3(Snap(translation, cUiWidgetSnapSize), localTranslation.z);
 
@@ -583,8 +549,7 @@ void UiWidget::SetWorldTranslation(Vec2Param worldTranslation)
     localTranslation = mParent->TransformPointInverse(worldTranslation);
 
   if (OperationQueue::IsListeningForSideEffects())
-    OperationQueue::RegisterSideEffect(
-        this, "LocalTranslation", localTranslation);
+    OperationQueue::RegisterSideEffect(this, "LocalTranslation", localTranslation);
 
   SetLocalTranslation(localTranslation);
 }
@@ -621,8 +586,7 @@ Vec2 UiWidget::GetLocalLocation(Location::Enum location)
   return GetLocalTranslation() + Math::Floor(offset * GetSize());
 }
 
-void UiWidget::SetLocalLocation(Location::Enum location,
-                                Vec2Param localTranslation)
+void UiWidget::SetLocalLocation(Location::Enum location, Vec2Param localTranslation)
 {
   Vec2 offset = mArea->OffsetOfOffset(location);
   Vec2 size = GetSize();
@@ -639,8 +603,7 @@ Vec2 UiWidget::GetWorldLocation(Location::Enum location)
   return localTranslation;
 }
 
-void UiWidget::SetWorldLocation(Location::Enum location,
-                                Vec2Param worldTranslation)
+void UiWidget::SetWorldLocation(Location::Enum location, Vec2Param worldTranslation)
 {
   Vec2 localTranslation = worldTranslation;
   if (mParent)
@@ -801,7 +764,7 @@ void UiWidget::Update(UiTransformUpdateEvent* e)
     else
     {
       // Update our active children
-      forRange(UiWidget & child, GetChildren())
+      forRange (UiWidget& child, GetChildren())
       {
         if (child.GetActive())
         {
@@ -835,11 +798,10 @@ bool ParentSelected(Cog* selected, Cog* cog)
 void UiWidget::MoveChildrenToFront(float& currWorldDepth, float amount)
 {
   // Recurse down
-  forRange(UiWidget & childWidget, mChildren.All())
+  forRange (UiWidget& childWidget, mChildren.All())
   {
     Cog* selectedObject = GetRoot()->mDebugSelectedWidget.GetOwner();
-    bool parentSelected =
-        ParentSelected(selectedObject, childWidget.GetOwner());
+    bool parentSelected = ParentSelected(selectedObject, childWidget.GetOwner());
 
     Vec3 pos = childWidget.mTransform->GetWorldTranslation();
     float desiredPos = currWorldDepth;
@@ -952,8 +914,7 @@ void UiWidget::SetInLayout(bool state)
   // scale back to their previous values
   if (OperationQueue::IsListeningForSideEffects())
   {
-    OperationQueue::RegisterSideEffect(
-        this, PropertyPath("LocalTranslation"), GetLocalTranslation());
+    OperationQueue::RegisterSideEffect(this, PropertyPath("LocalTranslation"), GetLocalTranslation());
     OperationQueue::RegisterSideEffect(this, PropertyPath("Size"), GetSize());
     OperationQueue::RegisterSideEffect(mArea, PropertyPath("Size"), GetSize());
   }
@@ -1093,8 +1054,7 @@ void UiWidget::SetOnTop(bool state)
     // The root widget cannot be on top
     if (rootWidget->GetOwner() == GetOwner())
     {
-      DoNotifyWarning("Cannot set OnTop",
-                      "The root widget cannot be set to on top");
+      DoNotifyWarning("Cannot set OnTop", "The root widget cannot be set to on top");
       return;
     }
 

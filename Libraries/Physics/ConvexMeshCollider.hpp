@@ -23,8 +23,7 @@ public:
   // Collider Interface
   void ComputeWorldAabbInternal() override;
   real ComputeWorldVolumeInternal() override;
-  void ComputeLocalInverseInertiaTensor(real mass,
-                                        Mat3Ref localInvInertia) override;
+  void ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia) override;
   void RebuildModifiedResources() override;
 
   Vec3 GetColliderLocalCenterOfMass() const override;

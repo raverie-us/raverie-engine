@@ -68,8 +68,7 @@ public:
     // This is a hack we have to do because member pointers are stupid and don't
     // respect the mutable flag We basically use this typedef and cast our
     // reference type to a different type then it really is
-    typedef typename RefType::ReferencedType::RefLinkType::SharedType
-        ChangedRefType;
+    typedef typename RefType::ReferencedType::RefLinkType::SharedType ChangedRefType;
     typedef typename RefType::ReferencedType::RefLinkType::ForType ChangedType;
 
     ChangedRefType* changedRef = (ChangedRefType*)ref;
@@ -85,8 +84,7 @@ public:
     // This is a hack we have to do because member pointers are stupid and don't
     // respect the mutable flag We basically use this typedef and cast our
     // reference type to a different type then it really is
-    typedef
-        typename RefType::ReferencedType::RefLinkType::SharedType ChangedType;
+    typedef typename RefType::ReferencedType::RefLinkType::SharedType ChangedType;
 
     // Unlink ourselves from the list
     InList<ChangedType, &ChangedType::InternalLink>::Unlink((ChangedType*)ref);
@@ -131,9 +129,7 @@ public:
 // 'ZilchRefLink(YourClass);' member, which is intrusively
 // used as the reference count. This approach decreases memory
 // allocation and adds very little to the shared object itself
-template <typename Type,
-          typename ModePolicy = NormalPolicy,
-          typename DeletePolicy = StandardDelete<Type>>
+template <typename Type, typename ModePolicy = NormalPolicy, typename DeletePolicy = StandardDelete<Type>>
 class ZeroSharedTemplate Ref
 {
 public:
@@ -147,9 +143,7 @@ public:
   }
 
   // Construct the object that we are going to point to and pass it in
-  Ref(Type* object,
-      DeletePolicy deletor = DeletePolicy(),
-      ModePolicy mode = ModePolicy())
+  Ref(Type* object, DeletePolicy deletor = DeletePolicy(), ModePolicy mode = ModePolicy())
   {
     // Store the deletor away so we can use it later
     this->Deletor = deletor;
@@ -326,11 +320,8 @@ public:
 
   // Copy over the information from another object and increment the reference
   // to it
-  template <typename TypeOrDerived,
-            typename OtherModePolicy,
-            typename OtherDeletePolicy>
-  inline void
-  CopyFrom(const Ref<TypeOrDerived, OtherModePolicy, OtherDeletePolicy>& other)
+  template <typename TypeOrDerived, typename OtherModePolicy, typename OtherDeletePolicy>
+  inline void CopyFrom(const Ref<TypeOrDerived, OtherModePolicy, OtherDeletePolicy>& other)
   {
     // Straight up copy over the info we need
     this->Object = other.Object;
@@ -382,8 +373,7 @@ public:
   size_t RefCount() const
   {
     size_t count = 0;
-    forRange(SharedType & child,
-             const_cast<RefLink*>(this)->SharedReferences.All())
+    forRange (SharedType& child, const_cast<RefLink*>(this)->SharedReferences.All())
     {
       ++count;
     }
@@ -393,17 +383,17 @@ public:
 
 // A macro that creates an intrusive reference link
 // This is typically placed at the end of your class
-#  define ZilchRefLink(type)                                                   \
-  public:                                                                      \
-    typedef ::Zilch::RefLink<const type> RefLinkType;                          \
+#  define ZilchRefLink(type)                                                                                           \
+  public:                                                                                                              \
+    typedef ::Zilch::RefLink<const type> RefLinkType;                                                                  \
     mutable RefLinkType Referencers;
 
 // If a particular object is going to be used as a referencer,
 // we use a trick that lets the Visual Studio debugger show our
 // object, but it needs to be virtual for the trick to work
-#  define ZilchDebuggableReferencer()                                          \
-    virtual void z() const                                                     \
-    {                                                                          \
+#  define ZilchDebuggableReferencer()                                                                                  \
+    virtual void z() const                                                                                             \
+    {                                                                                                                  \
     }
 } // namespace Zilch
 

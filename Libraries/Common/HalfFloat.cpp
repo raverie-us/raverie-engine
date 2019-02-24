@@ -12,8 +12,7 @@ u16 HalfFloatConverter::ToHalfFloat(float float32)
   HalfFloatConverter& converter = HalfFloatConverter::GetInstance();
 
   u32 f = *(u32*)(void*)&float32;
-  return converter.mBaseTable[(f >> 23) & 0x1FF] +
-         ((f & 0x007FFFFF) >> converter.mShiftTable[(f >> 23) & 0x1FF]);
+  return converter.mBaseTable[(f >> 23) & 0x1FF] + ((f & 0x007FFFFF) >> converter.mShiftTable[(f >> 23) & 0x1FF]);
 }
 
 float HalfFloatConverter::ToFloat(u16 float16)
@@ -21,9 +20,8 @@ float HalfFloatConverter::ToFloat(u16 float16)
   HalfFloatConverter& converter = HalfFloatConverter::GetInstance();
 
   u16 h = float16;
-  u32 f = converter
-              .mMantissaTable[converter.mOffsetTable[(h >> 10)] + (h & 0x3FF)] +
-          converter.mExponentTable[(h >> 10)];
+  u32 f =
+      converter.mMantissaTable[converter.mOffsetTable[(h >> 10)] + (h & 0x3FF)] + converter.mExponentTable[(h >> 10)];
   return *(float*)(void*)&f;
 }
 

@@ -28,10 +28,7 @@ void SetStrings(HWND comboBox, rangeType inputRange)
   for (; !inputRange.Empty(); inputRange.PopFront())
   {
     // Add string to combobox.
-    SendMessage(comboBox,
-                (UINT)CB_ADDSTRING,
-                (WPARAM)0,
-                (LPARAM)Widen(ToString(inputRange.Front())).c_str());
+    SendMessage(comboBox, (UINT)CB_ADDSTRING, (WPARAM)0, (LPARAM)Widen(ToString(inputRange.Front())).c_str());
   }
 }
 

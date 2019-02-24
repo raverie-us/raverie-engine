@@ -14,18 +14,10 @@ public:
   {
   }
 
-  void BuildOrthographicTransform(Mat4Ref matrix,
-                                  float size,
-                                  float aspect,
-                                  float nearPlane,
-                                  float farPlane) override
+  void BuildOrthographicTransform(Mat4Ref matrix, float size, float aspect, float nearPlane, float farPlane) override
   {
   }
-  void BuildPerspectiveTransform(Mat4Ref matrix,
-                                 float fov,
-                                 float aspect,
-                                 float nearPlane,
-                                 float farPlane) override
+  void BuildPerspectiveTransform(Mat4Ref matrix, float fov, float aspect, float nearPlane, float farPlane) override
   {
   }
   bool YInvertImageData(TextureType::Enum type) override
@@ -72,8 +64,7 @@ public:
   void SetLazyShaderCompilation(bool isLazy) override
   {
   }
-  void AddShaders(Array<ShaderEntry>& entries,
-                  uint forceCompileBatchCount) override
+  void AddShaders(Array<ShaderEntry>& entries, uint forceCompileBatchCount) override
   {
   }
   void RemoveShaders(Array<ShaderEntry>& entries) override
@@ -92,8 +83,7 @@ public:
   {
   }
 
-  void DoRenderTasks(RenderTasks* renderTasks,
-                     RenderQueues* renderQueues) override
+  void DoRenderTasks(RenderTasks* renderTasks, RenderQueues* renderQueues) override
   {
   }
 };

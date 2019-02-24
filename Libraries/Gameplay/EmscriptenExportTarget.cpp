@@ -24,8 +24,7 @@ HashSet<String>& EmscriptenExportTarget::GetAdditionalExcludedFiles()
   return files;
 }
 
-EmscriptenExportTarget::EmscriptenExportTarget(Exporter* exporter,
-                                               String targetName) :
+EmscriptenExportTarget::EmscriptenExportTarget(Exporter* exporter, String targetName) :
     ExportTarget(exporter, targetName)
 {
 }
@@ -34,8 +33,7 @@ void EmscriptenExportTarget::ExportApplication()
 {
   {
     TimerBlock block("Exported Project");
-    String outputDirectory =
-        FilePath::Combine(GetTemporaryDirectory(), "Web", "ZeroExport");
+    String outputDirectory = FilePath::Combine(GetTemporaryDirectory(), "Web", "ZeroExport");
 
     Status status;
     mExporter->CopyContent(status, outputDirectory, this);
@@ -63,14 +61,11 @@ void EmscriptenExportTarget::ExportApplication()
     ReturnIf(!configCog, , "Unable to get the config cog");
     MainConfig* mainConfig = configCog->has(MainConfig);
     ReturnIf(!mainConfig, , "Unable to get the MainConfig on the config cog");
-    String webBuildPath =
-        FilePath::Combine(mainConfig->DataDirectory, "WebBuild");
+    String webBuildPath = FilePath::Combine(mainConfig->DataDirectory, "WebBuild");
 
     if (!DirectoryExists(webBuildPath))
     {
-      DoNotifyError(
-          "Web Build",
-          "The WebBuild directory does not exist inside the Data directory.");
+      DoNotifyError("Web Build", "The WebBuild directory does not exist inside the Data directory.");
       return;
     }
 
@@ -79,8 +74,7 @@ void EmscriptenExportTarget::ExportApplication()
     while (!webBuildFiles.Empty())
     {
       FileEntry entry = webBuildFiles.FrontEntry();
-      String targetFile =
-          FilePath::Combine(mExporter->mOutputDirectory, entry.mFileName);
+      String targetFile = FilePath::Combine(mExporter->mOutputDirectory, entry.mFileName);
       if (FileExists(targetFile))
         DeleteFile(targetFile);
       CopyFile(targetFile, entry.GetFullPath());
@@ -89,8 +83,7 @@ void EmscriptenExportTarget::ExportApplication()
 
     // ZeroEditor.data is the name that the web build expects the virtual file
     // system to be
-    String zipOut =
-        FilePath::Combine(mExporter->mOutputDirectory, "ZeroEditor.data");
+    String zipOut = FilePath::Combine(mExporter->mOutputDirectory, "ZeroEditor.data");
     if (FileExists(zipOut))
       DeleteFile(zipOut);
     virtualFileSystem.WriteZipFile(zipOut);
@@ -106,16 +99,14 @@ void EmscriptenExportTarget::ExportApplication()
 
     if (fileContent.Empty())
     {
-      DoNotifyWarning("Web Build",
-                      "Failed to read ZeroEditor.js, aborting export");
+      DoNotifyWarning("Web Build", "Failed to read ZeroEditor.js, aborting export");
       return;
     }
 
     // Find the text to replace
     StringRange end = fileContent.FindFirstOf("\"end\": ");
     StringRange filename = fileContent.FindFirstOf(", \"filename\":");
-    StringRange remotePackageSize =
-        fileContent.FindFirstOf("\"remote_package_size\": ");
+    StringRange remotePackageSize = fileContent.FindFirstOf("\"remote_package_size\": ");
     StringRange packageUuid = fileContent.FindFirstOf(", \"package_uuid\":");
 
     // Using the above saved locations of content within the ZeroEditor.js file
@@ -123,31 +114,22 @@ void EmscriptenExportTarget::ExportApplication()
     StringBuilder zeroJsBuilder;
     zeroJsBuilder.Append(fileContent.SubString(fileContent.Begin(), end.End()));
     zeroJsBuilder.Append(ToString(zipSize));
-    zeroJsBuilder.Append(
-        fileContent.SubString(filename.Begin(), remotePackageSize.End()));
+    zeroJsBuilder.Append(fileContent.SubString(filename.Begin(), remotePackageSize.End()));
     zeroJsBuilder.Append(ToString(zipSize));
-    zeroJsBuilder.Append(
-        fileContent.SubString(packageUuid.Begin(), fileContent.End()));
+    zeroJsBuilder.Append(fileContent.SubString(packageUuid.Begin(), fileContent.End()));
 
     // Write out the updated ZeroEditor.js file contents to our export location
     String outputZeroJsFile = zeroJsBuilder.ToString();
     File outputFile;
-    String zeroEditorJsPath =
-        FilePath::Combine(mExporter->mOutputDirectory, "ZeroEditor.js");
-    outputFile.Open(zeroEditorJsPath,
-                    FileMode::Write,
-                    FileAccessPattern::Sequential,
-                    FileShare::Unspecified,
-                    &status);
+    String zeroEditorJsPath = FilePath::Combine(mExporter->mOutputDirectory, "ZeroEditor.js");
+    outputFile.Open(zeroEditorJsPath, FileMode::Write, FileAccessPattern::Sequential, FileShare::Unspecified, &status);
     if (status.Failed())
     {
-      DoNotifyWarning("File Write Error",
-                      "Failed to write ZeroEditor.js, aborting export");
+      DoNotifyWarning("File Write Error", "Failed to write ZeroEditor.js, aborting export");
       return;
     }
 
-    outputFile.Write((byte*)outputZeroJsFile.Data(),
-                     outputZeroJsFile.SizeInBytes());
+    outputFile.Write((byte*)outputZeroJsFile.Data(), outputZeroJsFile.SizeInBytes());
     outputFile.Close();
   }
 

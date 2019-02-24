@@ -8,9 +8,7 @@ namespace Zero
 
 // OwnedArray
 
-template <typename type,
-          typename Allocator = DefaultAllocator,
-          typename value_tt = StandardTraits<type>>
+template <typename type, typename Allocator = DefaultAllocator, typename value_tt = StandardTraits<type>>
 class ZeroSharedTemplate OwnedArray : public Array<type, Allocator, value_tt>
 {
 public:

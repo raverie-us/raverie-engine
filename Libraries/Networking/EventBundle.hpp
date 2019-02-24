@@ -36,9 +36,7 @@ public:
                     int index,
                     bool ignoreDependencies,
                     MetaCreationContext* creationContext) override;
-  void RemoveComponent(HandleParam instance,
-                       HandleParam subObject,
-                       bool ignoreDependencies) override;
+  void RemoveComponent(HandleParam instance, HandleParam subObject, bool ignoreDependencies) override;
 };
 
 //                                 EventBundle //
@@ -125,15 +123,14 @@ private:
   bool DeserializeBitStreamToEvents();
 
   // Data
-  GameSession*
-      mGameSession; ///< Operating game session (needed to create events).
+  GameSession* mGameSession;    ///< Operating game session (needed to create events).
   BitStreamExtended mBitStream; ///< Serialized event objects.
-  EventArray mEvents; ///< Deserialized event objects (Note: We own the memory
-                      ///< for these events).
-  bool mNeedToSerialize; ///< We need to serialize our modified events to update
-                         ///< our bitstream.
-  bool mNeedToDeserialize; ///< We need to deserialize our modified bitstream to
-                           ///< update our events.
+  EventArray mEvents;           ///< Deserialized event objects (Note: We own the memory
+                                ///< for these events).
+  bool mNeedToSerialize;        ///< We need to serialize our modified events to update
+                                ///< our bitstream.
+  bool mNeedToDeserialize;      ///< We need to deserialize our modified bitstream to
+                                ///< update our events.
 };
 
 } // namespace Zero

@@ -28,14 +28,9 @@ public:
 
   /// Creates an IP address identifying the specified IPv4/IPv6 host and port
   /// Will block until host name resolution completes or times out
-  IpAddress(Status& status,
-            StringParam host,
-            uint port,
-            InternetProtocol::Enum internetProtocol);
+  IpAddress(Status& status, StringParam host, uint port, InternetProtocol::Enum internetProtocol);
   IpAddress(Status& status, StringParam host, uint port);
-  IpAddress(StringParam host,
-            uint port,
-            InternetProtocol::Enum internetProtocol);
+  IpAddress(StringParam host, uint port, InternetProtocol::Enum internetProtocol);
   IpAddress(StringParam host, uint port);
 
   /// Copy Constructors
@@ -66,9 +61,7 @@ public:
   /// Specifying InternetProtocol::Unspecified will attempt to resolve IPv6
   /// first, then IPv4 Will block until host name resolution completes or times
   /// out
-  void SetHost(Status& status,
-               StringParam host,
-               InternetProtocol::Enum internetProtocol);
+  void SetHost(Status& status, StringParam host, InternetProtocol::Enum internetProtocol);
   void SetHost(Status& status, StringParam host);
   void SetHost(StringParam host, InternetProtocol::Enum internetProtocol);
   void SetHost(StringParam host);
@@ -91,9 +84,7 @@ public:
 
   // Friends
   template <typename IpAddress>
-  friend Bits Serialize(SerializeDirection::Enum direction,
-                        BitStream& bitStream,
-                        IpAddress& ipAddress);
+  friend Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, IpAddress& ipAddress);
 };
 
 /// Serializes an IP address
@@ -104,8 +95,7 @@ inline ZeroShared Bits Serialize<IpAddress>(SerializeDirection::Enum direction,
                                             IpAddress& ipAddress)
 {
   // Serialize socket address
-  Bits result =
-      Serialize(direction, bitStream, static_cast<SocketAddress&>(ipAddress));
+  Bits result = Serialize(direction, bitStream, static_cast<SocketAddress&>(ipAddress));
 
   // Read operation?
   if (direction == SerializeDirection::Read)

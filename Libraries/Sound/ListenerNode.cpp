@@ -13,9 +13,7 @@ ZilchDefineType(ListenerNode, builder, type)
 {
 }
 
-ListenerNode::ListenerNode(Zero::StringParam name,
-                           unsigned ID,
-                           ListenerWorldPositionInfo positionInfo) :
+ListenerNode::ListenerNode(Zero::StringParam name, unsigned ID, ListenerWorldPositionInfo positionInfo) :
     SoundNode(name, ID, false, false),
     mActive(true),
     mAttenuationScale(1.0f),
@@ -36,15 +34,12 @@ ListenerNode::~ListenerNode()
 
 void ListenerNode::SetPositionData(ListenerWorldPositionInfo positionInfo)
 {
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&ListenerNode::SetPositionDataThreaded, this, positionInfo),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&ListenerNode::SetPositionDataThreaded, this, positionInfo), this);
 }
 
 void ListenerNode::SetActive(const bool active)
 {
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&ListenerNode::SetActiveThreaded, this, active), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&ListenerNode::SetActiveThreaded, this, active), this);
 }
 
 bool ListenerNode::GetActive()
@@ -62,22 +57,17 @@ void ListenerNode::SetAttenuationScale(float scale)
   mAttenuationScale.Set(scale, AudioThreads::MainThread);
 }
 
-Math::Vec3
-ListenerNode::GetRelativePositionThreaded(Math::Vec3Param otherPosition)
+Math::Vec3 ListenerNode::GetRelativePositionThreaded(Math::Vec3Param otherPosition)
 {
-  return Math::Transform(mWorldToLocalThreaded,
-                         (otherPosition - mPositionWorldThreaded));
+  return Math::Transform(mWorldToLocalThreaded, (otherPosition - mPositionWorldThreaded));
 }
 
-Math::Vec3
-ListenerNode::GetRelativeVelocityThreaded(Math::Vec3Param otherVelocity)
+Math::Vec3 ListenerNode::GetRelativeVelocityThreaded(Math::Vec3Param otherVelocity)
 {
-  return Math::Transform(mWorldToLocalThreaded,
-                         (otherVelocity - mVelocityWorldThreaded));
+  return Math::Transform(mWorldToLocalThreaded, (otherVelocity - mVelocityWorldThreaded));
 }
 
-Math::Vec3
-ListenerNode::GetRelativeFacingThreaded(Math::Vec3Param facingDirection)
+Math::Vec3 ListenerNode::GetRelativeFacingThreaded(Math::Vec3Param facingDirection)
 {
   return Math::Transform(mWorldToLocalThreaded, facingDirection);
 }
@@ -88,8 +78,7 @@ bool ListenerNode::GetOutputSamples(BufferType* outputBuffer,
                                     const bool firstRequest)
 {
   // Get input
-  bool isThereOutput =
-      AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, this);
+  bool isThereOutput = AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, this);
 
   // If not active, can return
   if (mActive.Get() != cTrue)
@@ -129,9 +118,7 @@ bool ListenerNode::GetOutputSamples(BufferType* outputBuffer,
             mActive.Set(cFalse);
 
             // Set rest of buffer to 0
-            memset(outputBuffer->Data() + i,
-                   0,
-                   sizeof(float) * outputBuffer->Size() - i);
+            memset(outputBuffer->Data() + i, 0, sizeof(float) * outputBuffer->Size() - i);
 
             // Don't need to do more
             break;
@@ -151,8 +138,7 @@ bool ListenerNode::GetOutputSamples(BufferType* outputBuffer,
   return isThereOutput;
 }
 
-void ListenerNode::SetPositionDataThreaded(
-    ListenerWorldPositionInfo positionInfo)
+void ListenerNode::SetPositionDataThreaded(ListenerWorldPositionInfo positionInfo)
 {
   mPositionWorldThreaded = positionInfo.mPosition;
   mVelocityWorldThreaded = positionInfo.mVelocity;
@@ -161,8 +147,7 @@ void ListenerNode::SetPositionDataThreaded(
   Vec3 by = positionInfo.mWorldMatrix.BasisY();
   Vec3 bz = positionInfo.mWorldMatrix.BasisZ();
 
-  mWorldToLocalThreaded =
-      Math::Mat3(bz.x, bz.y, bz.z, by.x, by.y, by.z, -bx.x, -bx.y, -bx.z);
+  mWorldToLocalThreaded = Math::Mat3(bz.x, bz.y, bz.z, by.x, by.y, by.z, -bx.x, -bx.y, -bx.z);
 }
 
 void ListenerNode::SetActiveThreaded(bool active)

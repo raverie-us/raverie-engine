@@ -60,10 +60,7 @@ struct Frame
   }
 };
 
-TrapezoidMap::TrapezoidMap(const Array<Vec2>& vertices,
-                           const Array<uint>& contours,
-                           s32 edgeCount,
-                           s32 seed) :
+TrapezoidMap::TrapezoidMap(const Array<Vec2>& vertices, const Array<uint>& contours, s32 edgeCount, s32 seed) :
     mNodes(vertices.Size() * 4 + 1 + vertices.Size() * 2),
     mRegions(vertices.Size() * 2 + 1 + 1),
     mRandom(seed),
@@ -110,9 +107,7 @@ TrapezoidMap::TrapezoidMap(const Array<Vec2>& vertices,
     size_t size = contours[i];
     if (size > 0)
     {
-      s8 winding =
-          Geometry::DetermineWindingOrder(&mVertices[offset], size) >= 0.f ? 1
-                                                                           : -1;
+      s8 winding = Geometry::DetermineWindingOrder(&mVertices[offset], size) >= 0.f ? 1 : -1;
       for (size_t j = 0; j < size; ++j)
       {
         mContourId[j + offset] = i;
@@ -380,9 +375,7 @@ TrapezoidMap::TrapezoidMap(const Array<Vec2>& vertices,
           // Only consider regions with uninitialized depths
           if (neighbor->Depth == -1)
           {
-            next.PushBack(Frame(neighborId,
-                                depth + 1,
-                                winding + mWindingOrder[region->RightEdge]));
+            next.PushBack(Frame(neighborId, depth + 1, winding + mWindingOrder[region->RightEdge]));
           }
         }
 
@@ -396,9 +389,7 @@ TrapezoidMap::TrapezoidMap(const Array<Vec2>& vertices,
           // Only consider regions with uninitialized depths
           if (neighbor->Depth == -1)
           {
-            next.PushBack(Frame(neighborId,
-                                depth + 1,
-                                winding + mWindingOrder[region->LeftEdge]));
+            next.PushBack(Frame(neighborId, depth + 1, winding + mWindingOrder[region->LeftEdge]));
           }
         }
       }
@@ -411,8 +402,7 @@ bool TrapezoidMap::IsValid() const
   return mIsValid;
 }
 
-bool TrapezoidMap::IsAboveInternal(TrapezoidMap::VertexId idA,
-                                   TrapezoidMap::VertexId idB) const
+bool TrapezoidMap::IsAboveInternal(TrapezoidMap::VertexId idA, TrapezoidMap::VertexId idB) const
 {
   const Vec2& a = mVertices[idA];
   const Vec2& b = mVertices[idB];
@@ -470,9 +460,7 @@ bool TrapezoidMap::IsLeft(EdgeId start, EdgeId end, const Vec2& point) const
   return Cross(p2 - p1, point - p1) > 0.f;
 }
 
-bool TrapezoidMap::IsLeftInternal(EdgeId start,
-                                  EdgeId end,
-                                  VertexId pointId) const
+bool TrapezoidMap::IsLeftInternal(EdgeId start, EdgeId end, VertexId pointId) const
 {
   VertexId bot = start;
   VertexId top = mEndIndex[mFarthestEnd[bot]];
@@ -534,8 +522,7 @@ const TrapezoidMap::Region* TrapezoidMap::Query(const Vec2& point) const
   return QueryFrom(mRoot, point);
 }
 
-const TrapezoidMap::Region* TrapezoidMap::QueryFrom(NodeId rootId,
-                                                    const Vec2& point) const
+const TrapezoidMap::Region* TrapezoidMap::QueryFrom(NodeId rootId, const Vec2& point) const
 {
   const Node* node = mNodes.GetElement(rootId);
   while (node->Type != Node::Region)
@@ -558,8 +545,7 @@ const TrapezoidMap::Region* TrapezoidMap::QueryFrom(NodeId rootId,
   return mRegions.GetElement(node->Value);
 }
 
-const TrapezoidMap::Region* TrapezoidMap::QueryInternal(NodeId rootId,
-                                                        VertexId vertexId) const
+const TrapezoidMap::Region* TrapezoidMap::QueryInternal(NodeId rootId, VertexId vertexId) const
 {
   const Node* node = mNodes.GetElement(rootId);
   while (node->Type != Node::Region)
@@ -583,8 +569,7 @@ const TrapezoidMap::Region* TrapezoidMap::QueryInternal(NodeId rootId,
 
 // Find the common top point shared by the edge dividing the two given
 // regions
-TrapezoidMap::VertexId TrapezoidMap::FindCommonTopPoint(RegionId indexL,
-                                                        RegionId indexR)
+TrapezoidMap::VertexId TrapezoidMap::FindCommonTopPoint(RegionId indexL, RegionId indexR)
 {
   Region* L = mRegions.GetElement(indexL);
   Region* R = mRegions.GetElement(indexR);
@@ -608,8 +593,7 @@ TrapezoidMap::VertexId TrapezoidMap::FindCommonTopPoint(RegionId indexL,
 }
 
 // Finds the region below the current one along a given edge
-TrapezoidMap::RegionId TrapezoidMap::FindRegionBelow(RegionId regionIndex,
-                                                     EdgeId edgeStart)
+TrapezoidMap::RegionId TrapezoidMap::FindRegionBelow(RegionId regionIndex, EdgeId edgeStart)
 {
   Region* O = mRegions.GetElement(regionIndex);
 
@@ -638,8 +622,7 @@ TrapezoidMap::RegionId TrapezoidMap::FindRegionBelow(RegionId regionIndex,
     return -1;
   }
 
-  return IsLeftInternal(edgeStart, edgeEnd, topIndex) ? O->BotNeighbor[1]
-                                                      : O->BotNeighbor[0];
+  return IsLeftInternal(edgeStart, edgeEnd, topIndex) ? O->BotNeighbor[1] : O->BotNeighbor[0];
 }
 
 // Key:
@@ -650,12 +633,8 @@ TrapezoidMap::RegionId TrapezoidMap::FindRegionBelow(RegionId regionIndex,
 // R = new right region
 // +... = new edge
 // |... = existing edge
-bool TrapezoidMap::UpdateAbove(Region* O,
-                               RegionId indexL,
-                               RegionId indexR,
-                               VertexId topEdgeIndex,
-                               RegionId leftParent,
-                               RegionId rightParent)
+bool TrapezoidMap::UpdateAbove(
+    Region* O, RegionId indexL, RegionId indexR, VertexId topEdgeIndex, RegionId leftParent, RegionId rightParent)
 {
   // If a region has only 1 top region we will refer to it as A
   RegionId indexA = O->TopNeighbor[0];
@@ -1107,27 +1086,15 @@ bool TrapezoidMap::InsertEdge(EdgeId edgeId)
     }
 
     bool result;
-    result = UpdateAbove(&originalCopy,
-                         leftRegionId,
-                         rightRegionId,
-                         topEdgeIndex,
-                         floatL,
-                         floatR);
+    result = UpdateAbove(&originalCopy, leftRegionId, rightRegionId, topEdgeIndex, floatL, floatR);
     if (result == false)
     {
       // ErrorIf(true);
       return false;
     }
 
-    bool isLast =
-        next == -1 || mRegions.GetElement(next)->TopVertex == botEdgeIndex;
-    result = UpdateBelow(&originalCopy,
-                         leftRegionId,
-                         rightRegionId,
-                         edgeId,
-                         &floatL,
-                         &floatR,
-                         isLast);
+    bool isLast = next == -1 || mRegions.GetElement(next)->TopVertex == botEdgeIndex;
+    result = UpdateBelow(&originalCopy, leftRegionId, rightRegionId, edgeId, &floatL, &floatR, isLast);
     if (result == false)
     {
       // ErrorIf(true);
@@ -1158,8 +1125,7 @@ bool TrapezoidMap::InsertEdge(EdgeId edgeId)
 
 // If they are the same, merge this region with the one above it and update
 // the tree and graph accordingly
-TrapezoidMap::NodeId TrapezoidMap::MergeAbove(RegionId regionId,
-                                              RegionId* parent)
+TrapezoidMap::NodeId TrapezoidMap::MergeAbove(RegionId regionId, RegionId* parent)
 {
   Region* curr = mRegions.GetElement(regionId);
 

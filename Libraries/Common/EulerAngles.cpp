@@ -8,17 +8,12 @@ EulerAngles::EulerAngles(EulerOrderParam order) : Order(order)
   //
 }
 
-EulerAngles::EulerAngles(Vec3Param xyzRotation, EulerOrderParam order) :
-    Angles(xyzRotation),
-    Order(order)
+EulerAngles::EulerAngles(Vec3Param xyzRotation, EulerOrderParam order) : Angles(xyzRotation), Order(order)
 {
   //
 }
 
-EulerAngles::EulerAngles(real xRotation,
-                         real yRotation,
-                         real zRotation,
-                         EulerOrderParam order) :
+EulerAngles::EulerAngles(real xRotation, real yRotation, real zRotation, EulerOrderParam order) :
     Angles(xRotation, yRotation, zRotation),
     Order(order)
 {
@@ -35,8 +30,7 @@ EulerAngles::EulerAngles(Mat4Param matrix, EulerOrderParam order) : Order(order)
   Math::ToEulerAngles(matrix, this);
 }
 
-EulerAngles::EulerAngles(QuatParam quaternion, EulerOrderParam order) :
-    Order(order)
+EulerAngles::EulerAngles(QuatParam quaternion, EulerOrderParam order) : Order(order)
 {
   Math::ToEulerAngles(quaternion, this);
 }

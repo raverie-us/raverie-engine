@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-PropertyState TilePaletteProperty::GetValue(HandleParam object,
-                                            PropertyPathParam propertyPath)
+PropertyState TilePaletteProperty::GetValue(HandleParam object, PropertyPathParam propertyPath)
 {
   TilePaletteView* paletteView = object.Get<TilePaletteView*>();
 

@@ -22,9 +22,8 @@ String ZilchShaderGlslBackend::GetExtension()
   return "glsl";
 }
 
-bool ZilchShaderGlslBackend::RunTranslationPass(
-    ShaderTranslationPassResult& inputData,
-    ShaderTranslationPassResult& outputData)
+bool ZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult& inputData,
+                                                ShaderTranslationPassResult& outputData)
 {
   mErrorLog.Clear();
 
@@ -66,8 +65,7 @@ bool ZilchShaderGlslBackend::RunTranslationPass(
   internalData.mResources = &resources;
   // Extract reflection data now that we've done all modifications
   ExtractResourceReflectionData(internalData);
-  outputData.mReflectionData.mShaderTypeName =
-      inputData.mReflectionData.mShaderTypeName;
+  outputData.mReflectionData.mShaderTypeName = inputData.mReflectionData.mShaderTypeName;
 
   bool success = true;
   try
@@ -89,8 +87,7 @@ String ZilchShaderGlslBackend::GetErrorLog()
   return mErrorLog;
 }
 
-void ZilchShaderGlslBackend::FixInterfaceBlockNames(
-    GlslBackendInternalData& internalData)
+void ZilchShaderGlslBackend::FixInterfaceBlockNames(GlslBackendInternalData& internalData)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
   spirv_cross::ShaderResources* resources = internalData.mResources;
@@ -103,8 +100,7 @@ void ZilchShaderGlslBackend::FixInterfaceBlockNames(
   // these can be identified is that they don't contain a decoration for
   // location.
   spv::ExecutionModel executionMode = compiler->get_execution_model();
-  if (!resources->stage_inputs.empty() &&
-      executionMode != spv::ExecutionModelVertex)
+  if (!resources->stage_inputs.empty() && executionMode != spv::ExecutionModelVertex)
   {
     for (size_t i = 0; i < resources->stage_inputs.size(); ++i)
     {
@@ -116,8 +112,7 @@ void ZilchShaderGlslBackend::FixInterfaceBlockNames(
       }
     }
   }
-  if (!resources->stage_outputs.empty() &&
-      executionMode != spv::ExecutionModelFragment)
+  if (!resources->stage_outputs.empty() && executionMode != spv::ExecutionModelFragment)
   {
     int id = resources->stage_outputs[0].base_type_id;
     for (size_t i = 0; i < resources->stage_outputs.size(); ++i)
@@ -132,8 +127,7 @@ void ZilchShaderGlslBackend::FixInterfaceBlockNames(
   }
 }
 
-void ZilchShaderGlslBackend::FindUsedSampledImageBindings(
-    GlslBackendInternalData& internalData)
+void ZilchShaderGlslBackend::FindUsedSampledImageBindings(GlslBackendInternalData& internalData)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
   spirv_cross::ShaderResources* resources = internalData.mResources;
@@ -141,31 +135,26 @@ void ZilchShaderGlslBackend::FindUsedSampledImageBindings(
   // Get all used sampled image ids (so we can add ids to new sampled images)
   for (auto& resource : resources->sampled_images)
   {
-    unsigned binding =
-        compiler->get_decoration(resource.id, spv::DecorationBinding);
+    unsigned binding = compiler->get_decoration(resource.id, spv::DecorationBinding);
     internalData.mImageBindings.Insert(binding);
   }
   for (auto& resource : resources->separate_images)
   {
-    unsigned binding =
-        compiler->get_decoration(resource.id, spv::DecorationBinding);
+    unsigned binding = compiler->get_decoration(resource.id, spv::DecorationBinding);
     internalData.mImageBindings.Insert(binding);
   }
   for (auto& resource : resources->separate_samplers)
   {
-    unsigned binding =
-        compiler->get_decoration(resource.id, spv::DecorationBinding);
+    unsigned binding = compiler->get_decoration(resource.id, spv::DecorationBinding);
     internalData.mImageBindings.Insert(binding);
   }
 }
 
-void ZilchShaderGlslBackend::HandleCompiledSampledImages(
-    GlslBackendInternalData& internalData)
+void ZilchShaderGlslBackend::HandleCompiledSampledImages(GlslBackendInternalData& internalData)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
   spirv_cross::ShaderResources* resources = internalData.mResources;
-  ShaderStageInterfaceReflection& stageReflection =
-      internalData.mOutputResult->mReflectionData;
+  ShaderStageInterfaceReflection& stageReflection = internalData.mOutputResult->mReflectionData;
 
   // Give the remapped combined samplers new names.
   int id = 0;
@@ -182,10 +171,8 @@ void ZilchShaderGlslBackend::HandleCompiledSampledImages(
     // Add mappings for the image and sampler saying that they
     // both mapped to this new sampled image
     String zeroFullName = fullName.c_str();
-    stageReflection.mImageRemappings[imageName.c_str()]
-        .mSampledImageRemappings.PushBack(zeroFullName);
-    stageReflection.mSamplerRemappings[samplerName.c_str()]
-        .mSampledImageRemappings.PushBack(zeroFullName);
+    stageReflection.mImageRemappings[imageName.c_str()].mSampledImageRemappings.PushBack(zeroFullName);
+    stageReflection.mSamplerRemappings[samplerName.c_str()].mSampledImageRemappings.PushBack(zeroFullName);
 
     // Mark this as a generated sampled image so we can make
     // sure to add this to the final reflection data.
@@ -203,10 +190,9 @@ void ZilchShaderGlslBackend::HandleCompiledSampledImages(
 // Any type that isn't a struct doesn't have a name returned from spirv_cross.
 // To generate this name (mostly for debug) we have to make a large conditional
 // table to map this to zero's names.
-void ZilchShaderGlslBackend::PopulateTypeName(
-    GlslBackendInternalData& internalData,
-    spirv_cross::SPIRType& spirVType,
-    ShaderResourceReflectionData& reflectionData)
+void ZilchShaderGlslBackend::PopulateTypeName(GlslBackendInternalData& internalData,
+                                              spirv_cross::SPIRType& spirVType,
+                                              ShaderResourceReflectionData& reflectionData)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
 
@@ -233,17 +219,14 @@ void ZilchShaderGlslBackend::PopulateTypeName(
     if (spirVType.image.depth)
     {
       if (spirVType.image.dim == spv::Dim2D)
-        reflectionData.mTypeName =
-            ZilchTypeId(Zilch::SampledDepthImage2d)->ToString();
+        reflectionData.mTypeName = ZilchTypeId(Zilch::SampledDepthImage2d)->ToString();
     }
     else
     {
       if (spirVType.image.dim == spv::Dim2D)
-        reflectionData.mTypeName =
-            ZilchTypeId(Zilch::SampledImage2d)->ToString();
+        reflectionData.mTypeName = ZilchTypeId(Zilch::SampledImage2d)->ToString();
       else if (spirVType.image.dim == spv::DimCube)
-        reflectionData.mTypeName =
-            ZilchTypeId(Zilch::SampledImageCube)->ToString();
+        reflectionData.mTypeName = ZilchTypeId(Zilch::SampledImageCube)->ToString();
     }
   }
   else if (spirVType.basetype == spirv_cross::SPIRType::Sampler)
@@ -266,44 +249,36 @@ void ZilchShaderGlslBackend::PopulateTypeName(
 
     // Append dimensionality
     if (spirVType.columns > 1)
-      dimensionStr =
-          String::Format("%dx%d", spirVType.columns, spirVType.vecsize);
+      dimensionStr = String::Format("%dx%d", spirVType.columns, spirVType.vecsize);
     else if (spirVType.vecsize > 1)
       dimensionStr = ToString(spirVType.vecsize);
 
     if (!dimensionStr.Empty())
-      reflectionData.mTypeName =
-          BuildString(reflectionData.mTypeName, dimensionStr);
+      reflectionData.mTypeName = BuildString(reflectionData.mTypeName, dimensionStr);
   }
   // @JoshD: Deal with arrays later?
 }
 
-void ZilchShaderGlslBackend::PopulateMemberTypeInfo(
-    GlslBackendInternalData& internalData,
-    spirv_cross::SPIRType& parentType,
-    int memberIndex,
-    ShaderResourceReflectionData& reflectionData,
-    bool isInterfaceType)
+void ZilchShaderGlslBackend::PopulateMemberTypeInfo(GlslBackendInternalData& internalData,
+                                                    spirv_cross::SPIRType& parentType,
+                                                    int memberIndex,
+                                                    ShaderResourceReflectionData& reflectionData,
+                                                    bool isInterfaceType)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
 
-  spirv_cross::SPIRType memberType =
-      compiler->get_type(parentType.member_types[memberIndex]);
+  spirv_cross::SPIRType memberType = compiler->get_type(parentType.member_types[memberIndex]);
   PopulateTypeName(internalData, memberType, reflectionData);
-  reflectionData.mInstanceName =
-      compiler->get_member_name(parentType.self, memberIndex).c_str();
-  reflectionData.mSizeInBytes =
-      compiler->get_declared_struct_member_size(parentType, memberIndex);
+  reflectionData.mInstanceName = compiler->get_member_name(parentType.self, memberIndex).c_str();
+  reflectionData.mSizeInBytes = compiler->get_declared_struct_member_size(parentType, memberIndex);
 
   reflectionData.mStride = 0;
   // Get array stride
   if (!memberType.array.empty())
-    reflectionData.mStride =
-        compiler->type_struct_member_array_stride(parentType, memberIndex);
+    reflectionData.mStride = compiler->type_struct_member_array_stride(parentType, memberIndex);
   // Get matrix stride
   if (memberType.columns > 1)
-    reflectionData.mStride =
-        compiler->type_struct_member_matrix_stride(parentType, memberIndex);
+    reflectionData.mStride = compiler->type_struct_member_matrix_stride(parentType, memberIndex);
 
   // If this is an interface type then the call to type_struct_member_offset
   // will throw an exception. Also interface types don't actually have valid
@@ -312,15 +287,13 @@ void ZilchShaderGlslBackend::PopulateMemberTypeInfo(
   if (isInterfaceType)
     reflectionData.mOffsetInBytes = 0;
   else
-    reflectionData.mOffsetInBytes =
-        compiler->type_struct_member_offset(parentType, memberIndex);
+    reflectionData.mOffsetInBytes = compiler->type_struct_member_offset(parentType, memberIndex);
 }
 
-void ZilchShaderGlslBackend::PopulateTypeInfo(
-    GlslBackendInternalData& internalData,
-    spirv_cross::SPIRType& spirvType,
-    ShaderResourceReflectionData& reflectionData,
-    bool isInterfaceType)
+void ZilchShaderGlslBackend::PopulateTypeInfo(GlslBackendInternalData& internalData,
+                                              spirv_cross::SPIRType& spirvType,
+                                              ShaderResourceReflectionData& reflectionData,
+                                              bool isInterfaceType)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
   PopulateTypeName(internalData, spirvType, reflectionData);
@@ -331,18 +304,16 @@ void ZilchShaderGlslBackend::PopulateTypeInfo(
   if (isInterfaceType)
   {
     size_t baseTypeByteSize = spirvType.width / 8;
-    reflectionData.mSizeInBytes =
-        spirvType.columns * spirvType.vecsize * baseTypeByteSize;
+    reflectionData.mSizeInBytes = spirvType.columns * spirvType.vecsize * baseTypeByteSize;
   }
   else
     reflectionData.mSizeInBytes = compiler->get_declared_struct_size(spirvType);
 }
 
-void ZilchShaderGlslBackend::ExtractResourceReflection(
-    GlslBackendInternalData& internalData,
-    spirv_cross::Resource& resource,
-    Array<ShaderStageResource>& results,
-    bool isInterfaceType)
+void ZilchShaderGlslBackend::ExtractResourceReflection(GlslBackendInternalData& internalData,
+                                                       spirv_cross::Resource& resource,
+                                                       Array<ShaderStageResource>& results,
+                                                       bool isInterfaceType)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
   spirv_cross::ShaderResources* resources = internalData.mResources;
@@ -375,66 +346,46 @@ void ZilchShaderGlslBackend::ExtractResourceReflection(
   reflectionData.mInstanceName = compiler->get_name(resource.id).c_str();
   PopulateTypeInfo(internalData, spirvType, reflectionData, isInterfaceType);
   // Grab decorations
-  reflectionData.mBinding =
-      compiler->get_decoration(resource.id, spv::DecorationBinding);
-  reflectionData.mLocation =
-      compiler->get_decoration(resource.id, spv::DecorationLocation);
-  reflectionData.mDescriptorSet =
-      compiler->get_decoration(resource.id, spv::DecorationDescriptorSet);
+  reflectionData.mBinding = compiler->get_decoration(resource.id, spv::DecorationBinding);
+  reflectionData.mLocation = compiler->get_decoration(resource.id, spv::DecorationLocation);
+  reflectionData.mDescriptorSet = compiler->get_decoration(resource.id, spv::DecorationDescriptorSet);
 
   // Walk all members
   for (size_t i = 0; i < spirvType.member_types.size(); ++i)
   {
     ShaderResourceReflectionData& memberReflection = stageResource.mMembers[i];
     // Populate the member reflection data (offset, size, etc...)
-    PopulateMemberTypeInfo(
-        internalData, spirvType, i, memberReflection, isInterfaceType);
+    PopulateMemberTypeInfo(internalData, spirvType, i, memberReflection, isInterfaceType);
     // Add a string to member index mapping
     stageResource.mLookupMap[memberReflection.mInstanceName] = i;
   }
 }
 
-void ZilchShaderGlslBackend::ExtractResourcesReflection(
-    GlslBackendInternalData& internalData,
-    std::vector<spirv_cross::Resource>& resources,
-    Array<ShaderStageResource>& results,
-    bool isInterfaceType)
+void ZilchShaderGlslBackend::ExtractResourcesReflection(GlslBackendInternalData& internalData,
+                                                        std::vector<spirv_cross::Resource>& resources,
+                                                        Array<ShaderStageResource>& results,
+                                                        bool isInterfaceType)
 {
   // Extract each resource independently
   for (size_t i = 0; i < resources.size(); ++i)
-    ExtractResourceReflection(
-        internalData, resources[i], results, isInterfaceType);
+    ExtractResourceReflection(internalData, resources[i], results, isInterfaceType);
 }
 
-void ZilchShaderGlslBackend::ExtractResourceReflectionData(
-    GlslBackendInternalData& internalData)
+void ZilchShaderGlslBackend::ExtractResourceReflectionData(GlslBackendInternalData& internalData)
 {
-  ShaderStageInterfaceReflection& stageReflection =
-      internalData.mOutputResult->mReflectionData;
+  ShaderStageInterfaceReflection& stageReflection = internalData.mOutputResult->mReflectionData;
   spirv_cross::ShaderResources* resources = internalData.mResources;
 
   // Uniform buffers and sampled images must be extracted since the client must
   // actually hook up bindings
-  ExtractResourcesReflection(internalData,
-                             resources->uniform_buffers,
-                             stageReflection.mUniforms,
-                             false);
-  ExtractResourcesReflection(internalData,
-                             resources->sampled_images,
-                             stageReflection.mSampledImages,
-                             true);
+  ExtractResourcesReflection(internalData, resources->uniform_buffers, stageReflection.mUniforms, false);
+  ExtractResourcesReflection(internalData, resources->sampled_images, stageReflection.mSampledImages, true);
   // Inputs/outputs aren't really necessary (potentially vertex attributes are)
   // but they're also extracted for completeness. Some data on these can't fully
   // be extracted since these types aren't backed in the same way by physical
   // memory.
-  ExtractResourcesReflection(internalData,
-                             resources->stage_inputs,
-                             stageReflection.mStageInputs,
-                             true);
-  ExtractResourcesReflection(internalData,
-                             resources->stage_outputs,
-                             stageReflection.mStageOutputs,
-                             true);
+  ExtractResourcesReflection(internalData, resources->stage_inputs, stageReflection.mStageInputs, true);
+  ExtractResourcesReflection(internalData, resources->stage_outputs, stageReflection.mStageOutputs, true);
 
   // We already dealt with the Image/Sampler -> SampledImage remappings when
   // extracting resource info. We didn't however deal with non-remapped sampled
@@ -442,22 +393,14 @@ void ZilchShaderGlslBackend::ExtractResourceReflectionData(
   // that they mapped to themselves.
   for (size_t i = 0; i < stageReflection.mSampledImages.Size(); ++i)
   {
-    String name =
-        stageReflection.mSampledImages[i].mReflectionData.mInstanceName;
+    String name = stageReflection.mSampledImages[i].mReflectionData.mInstanceName;
     if (internalData.mGeneratedSampledImage.Contains(name))
       continue;
-    stageReflection.mSampledImageRemappings[name]
-        .mSampledImageRemappings.PushBack(name);
+    stageReflection.mSampledImageRemappings[name].mSampledImageRemappings.PushBack(name);
     internalData.mGeneratedSampledImage.Insert(name);
   }
-  ExtractResourcesReflection(internalData,
-                             resources->storage_buffers,
-                             stageReflection.mStructedStorageBuffers,
-                             false);
-  ExtractResourcesReflection(internalData,
-                             resources->storage_images,
-                             stageReflection.mStorageImages,
-                             true);
+  ExtractResourcesReflection(internalData, resources->storage_buffers, stageReflection.mStructedStorageBuffers, false);
+  ExtractResourcesReflection(internalData, resources->storage_images, stageReflection.mStorageImages, true);
 }
 
 } // namespace Zero

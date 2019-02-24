@@ -39,8 +39,7 @@ public:
   /// through a function called Overlap. Most implementations should just
   /// call Query which uses the policy BroadPhasePolicy<QueryType,Aabb>.
   template <typename QueryType, typename PolicyType>
-  SapRange<ClientDataType, QueryType> QueryWithPolicy(const QueryType& queryObj,
-                                                      PolicyType policy);
+  SapRange<ClientDataType, QueryType> QueryWithPolicy(const QueryType& queryObj, PolicyType policy);
 
   /// The same functionality as the QueryWithPolicy function except
   /// the Policy is implied from the QueryType. The policy will be

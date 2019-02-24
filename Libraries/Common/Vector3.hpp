@@ -99,10 +99,7 @@ struct ZeroShared Vector3
   static Vector3 Clamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue);
   /// Same as clamp, however it fills out whether or not anything was clamped.
   /// Useful when an assert message should be shown if anything was clamped.
-  static Vector3 DebugClamp(Vec3Param value,
-                            Vec3Param minValue,
-                            Vec3Param maxValue,
-                            bool& wasClamped);
+  static Vector3 DebugClamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue, bool& wasClamped);
 
   /// Return a copy of this vector with each element has been floored.
   static Vector3 Floor(Vec3Param value);
@@ -132,15 +129,12 @@ struct ZeroShared Vector3
   /// Projects the input vector onto a plane (the normal must be normalized)
   static Vector3 ProjectOnPlane(Vec3Param input, Vec3Param planeNormal);
   /// Calculates the reflection vector across a given vector.
-  static Vector3 ReflectAcrossVector(Vec3Param input,
-                                     Vec3Param normalizedVector);
+  static Vector3 ReflectAcrossVector(Vec3Param input, Vec3Param normalizedVector);
   /// Calculates the reflection vector across a given plane.
   static Vector3 ReflectAcrossPlane(Vec3Param input, Vec3Param planeNormal);
   /// Calculates the refraction vector through a plane given a certain index of
   /// refraction.
-  static Vector3 Refract(Vec3Param input,
-                         Vec3Param planeNormal,
-                         real refractionIndex);
+  static Vector3 Refract(Vec3Param input, Vec3Param planeNormal, real refractionIndex);
   /// Get the angle between the two vectors in radians.
   static real AngleBetween(Vec3Param a, Vec3Param b);
 
@@ -241,15 +235,10 @@ ZeroShared Vector3 Min(Vec3Param lhs, Vec3Param rhs);
 /// Returns a vector with the component-wise max between two vectors.
 ZeroShared Vector3 Max(Vec3Param lhs, Vec3Param rhs);
 /// Returns a vector where each component is clamped between min and max.
-ZeroShared Vector3 Clamp(Vec3Param value,
-                         Vec3Param minValue,
-                         Vec3Param maxValue);
+ZeroShared Vector3 Clamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue);
 /// Same as clamp, however it fills out whether or not anything was clamped.
 /// Useful when an assert message should be shown if anything was clamped.
-ZeroShared Vector3 DebugClamp(Vec3Param value,
-                              Vec3Param minValue,
-                              Vec3Param maxValue,
-                              bool& wasClamped);
+ZeroShared Vector3 DebugClamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue, bool& wasClamped);
 
 /// Return a copy of this vector with each element has been floored.
 ZeroShared Vector3 Floor(Vec3Param value);
@@ -273,24 +262,19 @@ ZeroShared Vector3 SlerpFast(Vec3Param start, Vec3Param end, real tValue);
 /// Same as Slerp except this function does not normalize the input vectors.
 /// This is the 'pure' mathematical Slerp function. This effectively traces
 /// along an ellipse defined by the two input vectors.
-ZeroShared Vector3 SlerpUnnormalized(Vec3Param start,
-                                     Vec3Param end,
-                                     real tValue);
+ZeroShared Vector3 SlerpUnnormalized(Vec3Param start, Vec3Param end, real tValue);
 
 /// Projects the input vector onto the given vector (must be normalized)
 ZeroShared Vector3 ProjectOnVector(Vec3Param input, Vec3Param normalizedVector);
 /// Projects the input vector onto a plane (the normal must be normalized)
 ZeroShared Vector3 ProjectOnPlane(Vec3Param input, Vec3Param planeNormal);
 /// Calculates the reflection vector across a given vector.
-ZeroShared Vector3 ReflectAcrossVector(Vec3Param input,
-                                       Vec3Param normalizedVector);
+ZeroShared Vector3 ReflectAcrossVector(Vec3Param input, Vec3Param normalizedVector);
 /// Calculates the reflection vector across a given plane.
 ZeroShared Vector3 ReflectAcrossPlane(Vec3Param input, Vec3Param planeNormal);
 /// Calculates the refraction vector through a plane given a certain index of
 /// refraction.
-ZeroShared Vector3 Refract(Vec3Param input,
-                           Vec3Param planeNormal,
-                           real refractionIndex);
+ZeroShared Vector3 Refract(Vec3Param input, Vec3Param planeNormal, real refractionIndex);
 /// Get the angle between the two vectors in radians.
 ZeroShared real AngleBetween(Vec3Param a, Vec3Param b);
 
@@ -322,9 +306,7 @@ ZeroShared bool AllGreater(Vec3Param lhs, Vec3Param rhs);
 /// Returns if any value in lhs is greater than any value in rhs
 ZeroShared bool AnyGreater(Vec3Param lhs, Vec3Param rhs);
 
-ZeroShared real DistanceToLineSq(Vec3Param start,
-                                 Vec3Param end,
-                                 Vec3Param point);
+ZeroShared real DistanceToLineSq(Vec3Param start, Vec3Param end, Vec3Param point);
 
 } // namespace Math
 

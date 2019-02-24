@@ -15,8 +15,8 @@ DeclareBitField7(TransformUpdateFlags,
                  Scale,            // Scale was modified
                  GizmoIncremental, // The gizmo is currently active and moving
                  GizmoFinish,      // The gizmo has finished its operation
-                 Physics,    // Transform was changed by the physics update
-                 Animation); // Transform was changed by an animation playing
+                 Physics,          // Transform was changed by the physics update
+                 Animation);       // Transform was changed by an animation playing
 
 /// Transform component class. The transform component provides the
 /// position, rotation and scale of an object.
@@ -50,9 +50,7 @@ public:
 
   /// Sets up the TransformUpdateInfo with the delta
   /// transformation that goes from oldWorldMat to newWorldMat.
-  void ComputeDeltaTransform(TransformUpdateInfo& info,
-                             Mat4Param oldWorldMat,
-                             Mat4Param newWorldMat);
+  void ComputeDeltaTransform(TransformUpdateInfo& info, Mat4Param oldWorldMat, Mat4Param newWorldMat);
   void Update(uint flags);
   /// Send the TransformUpdateInfo and compute the delta transform from
   /// the old transform to the current transform (mostly for the gizmo).
@@ -189,18 +187,11 @@ public:
 /// Transform Utility
 Vec3 GetTranslationFrom(Mat4Param mat);
 void SetTranslationOn(Mat4* mat, Vec3Param newTraslation);
-Aabb FromTransformAndExtents(Transform* transform,
-                             Vec3Param extents,
-                             Vec3Param translation = Vec3::cZero);
-Aabb FromMatrix(Mat4Param worldMatrix,
-                Vec3Param extents,
-                Vec3Param translation);
+Aabb FromTransformAndExtents(Transform* transform, Vec3Param extents, Vec3Param translation = Vec3::cZero);
+Aabb FromMatrix(Mat4Param worldMatrix, Vec3Param extents, Vec3Param translation);
 
 DeclareEnum2(Facing, NegativeZ, PositiveZ);
-void SetRotationLookAt(Transform* transform,
-                       Vec3 point,
-                       Vec3 up,
-                       Facing::Enum facing);
+void SetRotationLookAt(Transform* transform, Vec3 point, Vec3 up, Facing::Enum facing);
 Quat LookAt(Vec3 eyePoint, Vec3 lookAtPoint, Vec3 up, Facing::Enum facing);
 Quat LookTowards(Vec3 direction, Vec3 up, Facing::Enum facing);
 

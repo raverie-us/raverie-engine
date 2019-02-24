@@ -46,9 +46,7 @@ void WarmStartFragmentList(ListType& jointList, MoleculeWalker& molecules)
 }
 
 template <typename ListType>
-void IterateVelocitiesFragmentList(ListType& jointList,
-                                   MoleculeWalker& molecules,
-                                   uint iteration)
+void IterateVelocitiesFragmentList(ListType& jointList, MoleculeWalker& molecules, uint iteration)
 {
   typename ListType::range jointRange = jointList.All();
   while (!jointRange.Empty())

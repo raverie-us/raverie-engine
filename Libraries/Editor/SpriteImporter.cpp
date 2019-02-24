@@ -5,19 +5,15 @@ namespace Zero
 {
 
 // Grid Area
-PixelGridArea::PixelGridArea(Composite* parent, SpriteSheetImporter* owner) :
-    Widget(parent)
+PixelGridArea::PixelGridArea(Composite* parent, SpriteSheetImporter* owner) : Widget(parent)
 {
   this->SetInteractive(true);
   this->SetTakeFocusMode(FocusMode::Hard);
   mOwner = owner;
 }
 
-void PixelGridArea::RenderUpdate(ViewBlock& viewBlock,
-                                 FrameBlock& frameBlock,
-                                 Mat4Param parentTx,
-                                 ColorTransform colorTx,
-                                 WidgetRect clipRect)
+void PixelGridArea::RenderUpdate(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
   mOwner->DrawRedirect(viewBlock, frameBlock, mWorldTx, colorTx, clipRect);
@@ -100,8 +96,7 @@ SpriteSheetImporter::SpriteSheetImporter(Composite* parent) : Composite(parent)
   mSourceDisplay->SetSize(Pixels(200, 200));
 
   Composite* bottom = new Composite(this);
-  bottom->SetLayout(CreateStackLayout(
-      LayoutDirection::RightToLeft, Pixels(10, 0), Thickness(10, 4, 10, 4)));
+  bottom->SetLayout(CreateStackLayout(LayoutDirection::RightToLeft, Pixels(10, 0), Thickness(10, 4, 10, 4)));
 
   TextButton* button;
   button = new TextButton(bottom);
@@ -143,8 +138,7 @@ SpriteSheetImporter::SpriteSheetImporter(Composite* parent) : Composite(parent)
   ConnectThisTo(mGrid, Events::LeftMouseDown, OnLeftMouseDownGrid);
   ConnectThisTo(mGrid, Events::RightMouseDown, OnRightMouseDownGrid);
   ConnectThisTo(mGrid, Events::MouseMove, OnMouseMoveGrid);
-  ConnectThisTo(
-      mScrollArea->GetClientWidget(), Events::MouseScroll, OnMouseScrollGrid);
+  ConnectThisTo(mScrollArea->GetClientWidget(), Events::MouseScroll, OnMouseScrollGrid);
 
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
   ConnectThisTo(this, Events::KeyRepeated, OnKeyDown);
@@ -153,12 +147,8 @@ SpriteSheetImporter::SpriteSheetImporter(Composite* parent) : Composite(parent)
   mPropertyView->ActivateAutoUpdate();
 }
 
-void SpriteSheetImporter::ComputeFrameWidthAndCount(int& frameSize,
-                                                    int& frameCount,
-                                                    int newFrameSize,
-                                                    int spacing,
-                                                    int sourceSize,
-                                                    int offset)
+void SpriteSheetImporter::ComputeFrameWidthAndCount(
+    int& frameSize, int& frameCount, int newFrameSize, int spacing, int sourceSize, int offset)
 {
   frameSize = Math::Clamp(newFrameSize, (int)cMinFrameSize, sourceSize);
   int fullFrameSize = frameSize + spacing;
@@ -175,9 +165,8 @@ void SpriteSheetImporter::UpdateTexture()
   if (!mSourceTextrue)
     mSourceTextrue = Texture::CreateRuntime();
 
-  TextureFiltering::Enum filtering = Sampling == SpriteSampling::Nearest
-                                         ? TextureFiltering::Nearest
-                                         : TextureFiltering::Bilinear;
+  TextureFiltering::Enum filtering =
+      Sampling == SpriteSampling::Nearest ? TextureFiltering::Nearest : TextureFiltering::Bilinear;
   mSourceTextrue->SetFiltering(filtering);
 
   byte* data = (byte*)mSourcePixels.Data;
@@ -219,11 +208,9 @@ void SpriteSheetImporter::LoadImages(Array<String>& files)
     bool notFirstFrame = i != 0;
     if (notFirstFrame)
     {
-      if (frameImage.Width != images[0].Width ||
-          frameImage.Height != images[0].Height)
+      if (frameImage.Width != images[0].Width || frameImage.Height != images[0].Height)
       {
-        DoNotifyError("Importing",
-                      "All images must be the same width and height.");
+        DoNotifyError("Importing", "All images must be the same width and height.");
         Close();
         return;
       }
@@ -231,23 +218,14 @@ void SpriteSheetImporter::LoadImages(Array<String>& files)
   }
 
   // Copy all frames out to an image for editing
-  SpriteFrameLayout frameLayout(
-      files.Size(), images[0].Width, images[0].Height);
-  mSourcePixels.Allocate(frameLayout.TotalSize.SizeX,
-                         frameLayout.TotalSize.SizeY);
+  SpriteFrameLayout frameLayout(files.Size(), images[0].Width, images[0].Height);
+  mSourcePixels.Allocate(frameLayout.TotalSize.SizeX, frameLayout.TotalSize.SizeY);
 
   for (uint i = 0; i < files.Size(); ++i)
   {
     Image& frameImage = images[i];
     IntRect place = frameLayout.GetFrame(i);
-    CopyImage(&mSourcePixels,
-              &frameImage,
-              place.X,
-              place.Y,
-              0,
-              0,
-              place.SizeX,
-              place.SizeY);
+    CopyImage(&mSourcePixels, &frameImage, place.X, place.Y, 0, 0, place.SizeX, place.SizeY);
   }
 
   // Use file name as name for sprite
@@ -272,8 +250,7 @@ void SpriteSheetImporter::LoadSprite(SpriteSource* spriteSource)
   }
 
   Status status;
-  Zero::LoadImage(
-      status, spriteSource->mContentItem->GetFullPath(), &mSourcePixels);
+  Zero::LoadImage(status, spriteSource->mContentItem->GetFullPath(), &mSourcePixels);
   if (!status)
   {
     DoNotifyStatus(status);
@@ -298,8 +275,7 @@ void SpriteSheetImporter::LoadImage(StringParam filename)
     return;
   }
 
-  if (mSourcePixels.Width > cMaxSpriteSize ||
-      mSourcePixels.Height > cMaxSpriteSize)
+  if (mSourcePixels.Width > cMaxSpriteSize || mSourcePixels.Height > cMaxSpriteSize)
   {
     DoNotifyError("Import", "Image is too large");
     Close();
@@ -367,8 +343,7 @@ void SpriteSheetImporter::AddAllFrames()
   {
     for (int x = 0; x < FramesX; ++x)
     {
-      IntRect rect = {
-          OffsetX + x * strideX, OffsetY + y * strideY, FrameSizeX, FrameSizeY};
+      IntRect rect = {OffsetX + x * strideX, OffsetY + y * strideY, FrameSizeX, FrameSizeY};
       FrameArea frameArea = {false, rect};
       mFrames.PushBack(frameArea);
     }
@@ -380,11 +355,10 @@ void SpriteSheetImporter::AddAllFrames()
 void SpriteSheetImporter::UpdatePreview()
 {
   mPreviewSprite->mFrames.Clear();
-  forRange(FrameArea & selection, mFrames.All())
+  forRange (FrameArea& selection, mFrames.All())
   {
     TextureArea area;
-    area.mUvRect = ComputeTextureRect(
-        selection.Rect, Vec2(float(SourceSizeX), float(SourceSizeY)));
+    area.mUvRect = ComputeTextureRect(selection.Rect, Vec2(float(SourceSizeX), float(SourceSizeY)));
     area.mTexture = mSourceTextrue;
     mPreviewSprite->mFrames.PushBack(area);
   }
@@ -405,9 +379,7 @@ void SpriteSheetImporter::OnClearPressed(ObjectEvent* event)
   SetImportFrames(ImportFrames::SelectedFrames);
 }
 
-void SpriteSheetImporter::SaveDataToSpriteSource(SpriteSource* sprite,
-                                                 IntRect frameSize,
-                                                 uint numberOfFrames)
+void SpriteSheetImporter::SaveDataToSpriteSource(SpriteSource* sprite, IntRect frameSize, uint numberOfFrames)
 {
   Vec2 origin = ComputeOrigin(mOrigin, frameSize.SizeX, frameSize.SizeY);
 
@@ -424,13 +396,10 @@ void SpriteSheetImporter::SaveDataToSpriteSource(SpriteSource* sprite,
   sprite->mContentItem->SaveContent();
 }
 
-SpriteSource* SpriteSheetImporter::AddSpriteResource(StringParam name,
-                                                     Image& output,
-                                                     IntRect frameSize,
-                                                     uint numberOfFrames)
+SpriteSource*
+SpriteSheetImporter::AddSpriteResource(StringParam name, Image& output, IntRect frameSize, uint numberOfFrames)
 {
-  String fileName =
-      FilePath::Combine(GetTemporaryDirectory(), "SpriteTemp.png");
+  String fileName = FilePath::Combine(GetTemporaryDirectory(), "SpriteTemp.png");
 
   Status status;
   Zero::SaveImage(status, fileName, &output, ImageSaveFormat::Png);
@@ -448,8 +417,7 @@ SpriteSource* SpriteSheetImporter::AddSpriteResource(StringParam name,
   addContent.ExternalFile = fileName;
   addContent.OnContentFileConflict = ContentFileConflict::FindNewName;
 
-  ContentItem* newContentItem =
-      Z::gContentSystem->AddContentItemToLibrary(status, addContent);
+  ContentItem* newContentItem = Z::gContentSystem->AddContentItemToLibrary(status, addContent);
   if (status.Failed())
   {
     DoNotifyError("Sprite Import Failed", status.Message);
@@ -480,14 +448,11 @@ SpriteSource* SpriteSheetImporter::AddSpriteResource(StringParam name,
   Z::gContentSystem->BuildContentItems(status, contentToBuild, package);
   DoNotifyStatus(status);
 
-  ResourceLibrary* resourceLibrary =
-      Z::gResources->GetResourceLibrary(addContent.Library->Name);
+  ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(addContent.Library->Name);
   Z::gResources->ReloadPackage(resourceLibrary, &package);
 
-  ErrorIf(package.Resources.Size() != 1,
-          "Should only be a single SpriteSource built.");
-  SpriteSource* spriteSource = (SpriteSource*)Z::gResources->GetResource(
-      package.Resources.Front().mResourceId);
+  ErrorIf(package.Resources.Size() != 1, "Should only be a single SpriteSource built.");
+  SpriteSource* spriteSource = (SpriteSource*)Z::gResources->GetResource(package.Resources.Front().mResourceId);
 
   return spriteSource;
 }
@@ -531,14 +496,7 @@ bool SpriteSheetImporter::AddFramesAsSprites()
     } while (SpriteSourceManager::FindOrNull(subName) != NULL);
 
     FrameArea& frame = mFrames[i];
-    CopyImage(&output,
-              &mSourcePixels,
-              0,
-              0,
-              frame.Rect.X,
-              frame.Rect.Y,
-              frame.Rect.SizeX,
-              frame.Rect.SizeY);
+    CopyImage(&output, &mSourcePixels, 0, 0, frame.Rect.X, frame.Rect.Y, frame.Rect.SizeX, frame.Rect.SizeY);
 
     if (UseAlphaColorKey)
       SetColorToAlpha(&output, ToByteColor(AlphaColor));
@@ -562,8 +520,7 @@ bool SpriteSheetImporter::AddFramesAsSprites()
       IntVec2 gridIndex = GetGridIndex(mFrames[i].Rect.TopLeft());
 
       // Map the tile
-      TileMap::Tile tile(
-          archetype->mResourceId, sprite->mResourceId, mesh->mResourceId, true);
+      TileMap::Tile tile(archetype->mResourceId, sprite->mResourceId, mesh->mResourceId, true);
       tilePalette->mData[gridIndex] = tile;
     }
 
@@ -590,8 +547,7 @@ bool SpriteSheetImporter::AddMultiFrameSprite()
 
   SpriteFrameLayout frameLayout(frameCount, FrameSizeX, FrameSizeY);
 
-  if (frameLayout.TotalSize.SizeX > cMaxSpriteSize ||
-      frameLayout.TotalSize.SizeY > cMaxSpriteSize)
+  if (frameLayout.TotalSize.SizeX > cMaxSpriteSize || frameLayout.TotalSize.SizeY > cMaxSpriteSize)
   {
     DoNotifyError("Error", "Sprite is too large, must be within 4096x4096.");
     return false;
@@ -617,8 +573,7 @@ bool SpriteSheetImporter::AddMultiFrameSprite()
   if (UseAlphaColorKey)
     SetColorToAlpha(&output, ToByteColor(AlphaColor));
 
-  SpriteSource* source =
-      AddSpriteResource(Name, output, frameLayout.GetFrame(0), mFrames.Size());
+  SpriteSource* source = AddSpriteResource(Name, output, frameLayout.GetFrame(0), mFrames.Size());
   if (source == nullptr)
     return false;
 
@@ -705,7 +660,7 @@ void SpriteSheetImporter::OnKeyDown(KeyboardEvent* keyEvent)
   if (keyEvent->Key == Keys::Delete)
   {
     Array<FrameArea> framesToKeep;
-    forRange(FrameArea & frameArea, mFrames.All())
+    forRange (FrameArea& frameArea, mFrames.All())
     {
       if (!frameArea.Active)
         framesToKeep.PushBack(frameArea);
@@ -821,7 +776,8 @@ void SpriteSheetImporter::OnLeftMouseDownGrid(MouseEvent* mouseEvent)
   // Multi select only if shift
   if (!mouseEvent->ShiftPressed)
   {
-    forRange(FrameArea & selection, mFrames.All()) selection.Active = false;
+    forRange (FrameArea& selection, mFrames.All())
+      selection.Active = false;
   }
 
   int frameIndex = 0;
@@ -857,8 +813,7 @@ void SpriteSheetImporter::OnRightMouseDownGrid(MouseEvent* mouseEvent)
 
 void SpriteSheetImporter::UpdateZoomedSize()
 {
-  Vec2 imageDisplaySize =
-      Pixels(float(SourceSizeX), float(SourceSizeY)) * mZoom;
+  Vec2 imageDisplaySize = Pixels(float(SourceSizeX), float(SourceSizeY)) * mZoom;
   mSourceDisplay->SetSize(imageDisplaySize);
   mGrid->SetSize(imageDisplaySize);
   mImageBackground->SetSize(imageDisplaySize);
@@ -890,25 +845,19 @@ void SpriteSheetImporter::DrawLines(Array<StreamedVertex>& lines,
     Vec3 end = start;
     end[!axis] += totalSize[!axis];
 
-    lines.PushBack(StreamedVertex(
-        SnapToPixels(start * zoom) + Pixels(0.5, 0.5, 0), Vec2(0, 0), color));
-    lines.PushBack(StreamedVertex(
-        SnapToPixels(end * zoom) + Pixels(0.5, 0.5, 0), Vec2(0, 0), color));
+    lines.PushBack(StreamedVertex(SnapToPixels(start * zoom) + Pixels(0.5, 0.5, 0), Vec2(0, 0), color));
+    lines.PushBack(StreamedVertex(SnapToPixels(end * zoom) + Pixels(0.5, 0.5, 0), Vec2(0, 0), color));
   }
 }
 
-void SpriteSheetImporter::DrawRedirect(ViewBlock& viewBlock,
-                                       FrameBlock& frameBlock,
-                                       Mat4Param parentTx,
-                                       ColorTransform colorTx,
-                                       WidgetRect clipRect)
+void SpriteSheetImporter::DrawRedirect(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Mat4 oldWorldTx = mWorldTx;
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
   Vec2 frameSize = Pixels(float(FrameSizeX), float(FrameSizeY));
-  Vec2 spacing =
-      Pixels(float(FrameSizeX + SpacingX), float(FrameSizeY + SpacingY));
+  Vec2 spacing = Pixels(float(FrameSizeX + SpacingX), float(FrameSizeY + SpacingY));
   Vec2 offset = Pixels(float(OffsetX), float(OffsetY));
 
   uint cellsX = FramesX;
@@ -922,25 +871,12 @@ void SpriteSheetImporter::DrawRedirect(ViewBlock& viewBlock,
   DrawLines(lines, 1, mZoom, spacing.y, usedSize, offset, cellsY);
 
   if (SpacingX > 0.0f)
-    DrawLines(lines,
-              0,
-              mZoom,
-              spacing.x,
-              usedSize,
-              offset + Vec2(frameSize.x, 0),
-              cellsX - 1);
+    DrawLines(lines, 0, mZoom, spacing.x, usedSize, offset + Vec2(frameSize.x, 0), cellsX - 1);
 
   if (SpacingY > 0.0f)
-    DrawLines(lines,
-              1,
-              mZoom,
-              spacing.y,
-              usedSize,
-              offset + Vec2(0, frameSize.y),
-              cellsY - 1);
+    DrawLines(lines, 1, mZoom, spacing.y, usedSize, offset + Vec2(0, frameSize.y), cellsY - 1);
 
-  CreateRenderData(
-      viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
+  CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
 
   ByteColor color = Color::Red;
   SetAlphaByte(color, 80);
@@ -950,56 +886,38 @@ void SpriteSheetImporter::DrawRedirect(ViewBlock& viewBlock,
 
   RenderQueues* renderQueues = frameBlock.mRenderQueues;
   static Texture* white = TextureManager::FindOrNull("White");
-  static RenderFont* font =
-      FontManager::GetInstance()->GetRenderFont("NotoSans-Regular", 11, 0);
+  static RenderFont* font = FontManager::GetInstance()->GetRenderFont("NotoSans-Regular", 11, 0);
 
-  ViewNode& viewNodeQuads =
-      AddRenderNodes(viewBlock, frameBlock, clipRect, white);
+  ViewNode& viewNodeQuads = AddRenderNodes(viewBlock, frameBlock, clipRect, white);
 
   // Draw the selected frames
   // Only draw the frame selected boxes in selected frame to prevent clutter
   if (mImportFrames == ImportFrames::SelectedFrames)
   {
-    forRange(FrameArea & frameArea, mFrames.All())
+    forRange (FrameArea& frameArea, mFrames.All())
     {
-      Vec3 t =
-          Pixels(float(frameArea.Rect.X), float(frameArea.Rect.Y), 0) * mZoom;
-      Vec3 s =
-          Pixels(float(frameArea.Rect.SizeX), float(frameArea.Rect.SizeY), 0) *
-          mZoom;
+      Vec3 t = Pixels(float(frameArea.Rect.X), float(frameArea.Rect.Y), 0) * mZoom;
+      Vec3 s = Pixels(float(frameArea.Rect.SizeX), float(frameArea.Rect.SizeY), 0) * mZoom;
 
       if (frameArea.Active)
-        renderQueues->AddStreamedQuad(viewNodeQuads,
-                                      t,
-                                      t + s,
-                                      Vec2(0, 0),
-                                      Vec2(1, 1),
-                                      ToFloatColor(colorSelect));
+        renderQueues->AddStreamedQuad(viewNodeQuads, t, t + s, Vec2(0, 0), Vec2(1, 1), ToFloatColor(colorSelect));
       else
-        renderQueues->AddStreamedQuad(viewNodeQuads,
-                                      t,
-                                      t + s,
-                                      Vec2(0, 0),
-                                      Vec2(1, 1),
-                                      ToFloatColor(color));
+        renderQueues->AddStreamedQuad(viewNodeQuads, t, t + s, Vec2(0, 0), Vec2(1, 1), ToFloatColor(color));
     }
   }
 
-  ViewNode& viewNodeText =
-      AddRenderNodes(viewBlock, frameBlock, clipRect, font->mTexture);
-  FontProcessor fontProcessor(
-      renderQueues, &viewNodeText, ToFloatColor(Color::Black));
+  ViewNode& viewNodeText = AddRenderNodes(viewBlock, frameBlock, clipRect, font->mTexture);
+  FontProcessor fontProcessor(renderQueues, &viewNodeText, ToFloatColor(Color::Black));
 
   // Draw a number over each frame
   uint i = 0;
-  forRange(FrameArea & frameArea, mFrames.All())
+  forRange (FrameArea& frameArea, mFrames.All())
   {
     Vec2 t = Pixels(float(frameArea.Rect.X), float(frameArea.Rect.Y));
     Vec2 s = Pixels(float(frameArea.Rect.SizeX), float(frameArea.Rect.SizeY));
 
     String name = String::Format("%d", i);
-    ProcessTextRange(
-        fontProcessor, font, name, t * mZoom, TextAlign::Left, Vec2(1, 1), s);
+    ProcessTextRange(fontProcessor, font, name, t * mZoom, TextAlign::Left, Vec2(1, 1), s);
 
     ++i;
   }
@@ -1009,7 +927,7 @@ void SpriteSheetImporter::DrawRedirect(ViewBlock& viewBlock,
 
 void SpriteSheetImporter::NudgePosition(IntVec2 move)
 {
-  forRange(FrameArea & frameArea, mFrames.All())
+  forRange (FrameArea& frameArea, mFrames.All())
   {
     if (frameArea.Active)
     {
@@ -1107,8 +1025,7 @@ int SpriteSheetImporter::GetFrameWidth()
 }
 void SpriteSheetImporter::SetFrameWidth(int frameSizeX)
 {
-  ComputeFrameWidthAndCount(
-      FrameSizeX, FramesX, frameSizeX, SpacingX, SourceSizeX, OffsetX);
+  ComputeFrameWidthAndCount(FrameSizeX, FramesX, frameSizeX, SpacingX, SourceSizeX, OffsetX);
   CheckFrames();
 }
 
@@ -1118,8 +1035,7 @@ int SpriteSheetImporter::GetFrameHeight()
 }
 void SpriteSheetImporter::SetFrameHeight(int frameSizeY)
 {
-  ComputeFrameWidthAndCount(
-      FrameSizeY, FramesY, frameSizeY, SpacingY, SourceSizeY, OffsetY);
+  ComputeFrameWidthAndCount(FrameSizeY, FramesY, frameSizeY, SpacingY, SourceSizeY, OffsetY);
   CheckFrames();
 }
 
@@ -1292,8 +1208,7 @@ void SpriteSheetImport(SpriteSource* spriteSource)
 {
   SpriteSheetImporter* importer = CreateImporter();
   importer->LoadImage(
-      FilePath::Combine(spriteSource->mContentItem->mLibrary->SourcePath,
-                        spriteSource->mContentItem->Filename));
+      FilePath::Combine(spriteSource->mContentItem->mLibrary->SourcePath, spriteSource->mContentItem->Filename));
 
   // This usage doesn't work properly
   // importer->LoadSprite(spriteSource);

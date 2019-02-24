@@ -41,9 +41,7 @@ BackgroundTaskJob::BackgroundTaskJob()
   mTask = nullptr;
 }
 
-void BackgroundTaskJob::UpdateProgress(StringParam taskName,
-                                       float percentComplete,
-                                       StringParam progressText)
+void BackgroundTaskJob::UpdateProgress(StringParam taskName, float percentComplete, StringParam progressText)
 {
   BackgroundTaskEvent* eventToSend = new BackgroundTaskEvent(mTask);
   eventToSend->Name = taskName;
@@ -120,8 +118,7 @@ void BackgroundTask::Execute()
   e.Name = mName;
   e.ProgressText = mProgressText;
   e.PercentComplete = mPercentComplete;
-  Z::gBackgroundTasks->GetDispatcher()->Dispatch(Events::BackgroundTaskStarted,
-                                                 &e);
+  Z::gBackgroundTasks->GetDispatcher()->Dispatch(Events::BackgroundTaskStarted, &e);
 }
 
 void BackgroundTask::OnEngineUpdate(UpdateEvent* event)
@@ -145,8 +142,7 @@ bool BackgroundTask::IsCompleted()
 
 Job* BackgroundTask::GetFinishedJob()
 {
-  if (mState == BackgroundTaskState::Completed ||
-      mState == BackgroundTaskState::Failed)
+  if (mState == BackgroundTaskState::Completed || mState == BackgroundTaskState::Failed)
     return mJob;
   return nullptr;
 }
@@ -199,8 +195,7 @@ BackgroundTasks::~BackgroundTasks()
   DeleteObjectsInContainer(mActiveTasks);
 }
 
-BackgroundTask* BackgroundTasks::Execute(BackgroundTaskJob* job,
-                                         StringParam taskName)
+BackgroundTask* BackgroundTasks::Execute(BackgroundTaskJob* job, StringParam taskName)
 {
   // Create and execute the task
   BackgroundTask* task = CreateTask(job);

@@ -32,9 +32,7 @@ public:
   void Update();
 
   /// RootWidget overrides this to account for OnTop widgets.
-  UiWidget* CastPoint(Vec2Param worldPoint,
-                      UiWidget* ignore = nullptr,
-                      bool interactiveOnly = false) override;
+  UiWidget* CastPoint(Vec2Param worldPoint, UiWidget* ignore = nullptr, bool interactiveOnly = false) override;
 
   //---------------------------------------------------------------------------
   // Keyboard Events
@@ -56,9 +54,7 @@ public:
   /// Used to update mouse hover and double click timing.
   void UpdateMouseTimers(float dt, ViewportMouseEvent* e);
 
-  void BuildMouseEvent(ViewportMouseEvent* e,
-                       Vec2Param rootPoint,
-                       MouseButtons::Enum button = MouseButtons::None);
+  void BuildMouseEvent(ViewportMouseEvent* e, Vec2Param rootPoint, MouseButtons::Enum button = MouseButtons::None);
 
   ///
   void PerformMouseEvent(ViewportMouseEvent* e);
@@ -89,10 +85,7 @@ public:
   // Rendering
   /// Renders the Ui to the given color render target. The depth render target
   /// must have stencil.
-  void Render(RenderTasksEvent* e,
-              RenderTarget* color,
-              RenderTarget* depth,
-              MaterialBlock* renderPass);
+  void Render(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth, MaterialBlock* renderPass);
 
   //-------------- Internals
   typedef Pair<UiWidget*, Vec4> CachedFloatingWidget;
@@ -113,10 +106,7 @@ public:
                     uint stencilIncrement);
 
   /// Clears the GraphicalRangeInterface and
-  void FlushGraphicals(RenderTasksEvent* e,
-                       RenderTarget* color,
-                       RenderTarget* depth,
-                       MaterialBlock* renderPass);
+  void FlushGraphicals(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth, MaterialBlock* renderPass);
 
   /// All objects to be rendered will be added to this list.
   GraphicalRangeInterface mGraphicals;

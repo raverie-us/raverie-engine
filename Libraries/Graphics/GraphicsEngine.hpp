@@ -43,9 +43,7 @@ public:
   TextureToFile()
   {
   }
-  TextureToFile(HandleOf<Texture> texture, StringParam filename) :
-      mTexture(texture),
-      mFilename(filename)
+  TextureToFile(HandleOf<Texture> texture, StringParam filename) : mTexture(texture), mFilename(filename)
   {
   }
   HandleOf<Texture> mTexture;
@@ -96,10 +94,7 @@ public:
   void DestroyRenderer();
   void AddMaterial(Material* material);
   void AddMesh(Mesh* mesh);
-  void AddTexture(Texture* texture,
-                  bool subImage = false,
-                  uint xOffset = 0,
-                  uint yOffset = 0);
+  void AddTexture(Texture* texture, bool subImage = false, uint xOffset = 0, uint yOffset = 0);
   void RemoveMaterial(Material* material);
   void RemoveMesh(Mesh* mesh);
   void RemoveTexture(Texture* texture);
@@ -131,25 +126,19 @@ public:
   void AddComposite(Material* material);
   void RemoveComposite(StringParam compositeName);
 
-  Shader* GetOrCreateShader(StringParam coreVertex,
-                            StringParam composite,
-                            StringParam renderPass,
-                            ShaderMap& shaderMap);
+  Shader*
+  GetOrCreateShader(StringParam coreVertex, StringParam composite, StringParam renderPass, ShaderMap& shaderMap);
   void FindShadersToCompile(Array<String>& coreVertexRange,
                             Array<String>& compositeRange,
                             Array<String>& renderPassRange,
                             ShaderSetMap& testMap,
                             uint index,
                             ShaderSet& shaders);
-  void FindShadersToRemove(Array<String>& elementRange,
-                           ShaderSetMap& testMap,
-                           ShaderSet& shaders);
+  void FindShadersToRemove(Array<String>& elementRange, ShaderSetMap& testMap, ShaderSet& shaders);
 
   void AddToShaderMaps(ShaderSet& shaders);
   void RemoveFromShaderMaps(ShaderSet& shaders);
-  void RemoveFromShaderMap(ShaderSetMap& shaderMap,
-                           StringParam elementName,
-                           Shader* shader);
+  void RemoveFromShaderMap(ShaderSetMap& shaderMap, StringParam elementName, Shader* shader);
 
   void ForceCompileAllShaders();
 
@@ -157,11 +146,10 @@ public:
 
   ZilchFragmentType::Enum GetFragmentType(MaterialBlock* materialBlock);
 
-  HandleOf<RenderTarget>
-  GetRenderTarget(uint width,
-                  uint height,
-                  TextureFormat::Enum format,
-                  SamplerSettings samplerSettings = SamplerSettings());
+  HandleOf<RenderTarget> GetRenderTarget(uint width,
+                                         uint height,
+                                         TextureFormat::Enum format,
+                                         SamplerSettings samplerSettings = SamplerSettings());
   HandleOf<RenderTarget> GetRenderTarget(HandleOf<Texture> texture);
   void ClearRenderTargets();
 
@@ -178,8 +166,7 @@ public:
   void OnScriptsCompiledPostPatch(ZilchCompileEvent* event);
   void OnScriptCompilationFailed(Event* event);
 
-  void UpdateUniqueComposites(Material* material,
-                              UniqueCompositeOp::Enum uniqueCompositeOp);
+  void UpdateUniqueComposites(Material* material, UniqueCompositeOp::Enum uniqueCompositeOp);
 
   void CompileShaders();
 

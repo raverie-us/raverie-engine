@@ -488,10 +488,7 @@ SimInline SimMat4 BuildTranslation(SimVecParam translation)
   return m;
 }
 
-SimInline SimMat4 BuildTransform(SimVecParam translation,
-                                 SimVecParam axis,
-                                 scalar angle,
-                                 SimVecParam scale)
+SimInline SimMat4 BuildTransform(SimVecParam translation, SimVecParam axis, scalar angle, SimVecParam scale)
 {
   SimMat4 m = BuildRotation(axis, angle);
   m.columns[0] = Multiply(m.columns[0], SplatX(scale));
@@ -504,9 +501,7 @@ SimInline SimMat4 BuildTransform(SimVecParam translation,
   return m;
 }
 
-SimInline SimMat4 BuildTransform(SimVecParam translation,
-                                 SimVecParam quat,
-                                 SimVecParam scale)
+SimInline SimMat4 BuildTransform(SimVecParam translation, SimVecParam quat, SimVecParam scale)
 {
   SimMat4 m = BuildRotation(quat);
   m.columns[0] = Multiply(m.columns[0], SplatX(scale));
@@ -519,9 +514,7 @@ SimInline SimMat4 BuildTransform(SimVecParam translation,
   return m;
 }
 
-SimInline SimMat4 BuildTransform(SimVecParam translation,
-                                 SimMat4Param rot,
-                                 SimVecParam scale)
+SimInline SimMat4 BuildTransform(SimVecParam translation, SimMat4Param rot, SimVecParam scale)
 {
   SimMat4 m;
   m.columns[0] = AndVec(Multiply(rot.columns[0], SplatX(scale)), gSimVec3Mask);
@@ -618,12 +611,9 @@ SimInline SimMat4 AffineInverseWithScale4x4(SimMat4Param transform)
   SimMat4 invScale;
   // invert the scale by dividing each column by its squared length (so the
   // length is 1/length)
-  invScale.columns[0] =
-      Divide(transform.columns[0], LengthSq4(transform.columns[0]));
-  invScale.columns[1] =
-      Divide(transform.columns[1], LengthSq4(transform.columns[1]));
-  invScale.columns[2] =
-      Divide(transform.columns[2], LengthSq4(transform.columns[2]));
+  invScale.columns[0] = Divide(transform.columns[0], LengthSq4(transform.columns[0]));
+  invScale.columns[1] = Divide(transform.columns[1], LengthSq4(transform.columns[1]));
+  invScale.columns[2] = Divide(transform.columns[2], LengthSq4(transform.columns[2]));
 
   // get the 3x3 inverse of the scale and the rotation
   SimMat4 m = TransposeUpper3x3(invScale);

@@ -41,8 +41,7 @@ bool HeightMapSubTool::MouseScroll(HeightMap* map, ViewportMouseEvent* e)
 void HeightMapSubTool::Draw(HeightMap* map)
 {
   const float CrossScale = 0.2f;
-  gDebugDraw->Add(Debug::LineCross(map->GetWorldPosition(mLocalToolPosition),
-                                   map->GetUnitsPerPatch() * CrossScale));
+  gDebugDraw->Add(Debug::LineCross(map->GetWorldPosition(mLocalToolPosition), map->GetUnitsPerPatch() * CrossScale));
 }
 
 /// Meta
@@ -109,15 +108,13 @@ bool HeightManipulationTool::LeftMouseUp(HeightMap* map, ViewportMouseEvent* e)
   return true;
 }
 
-bool HeightManipulationTool::LeftMouseDown(HeightMap* map,
-                                           ViewportMouseEvent* e)
+bool HeightManipulationTool::LeftMouseDown(HeightMap* map, ViewportMouseEvent* e)
 {
   PerformQuery(map, e);
   return true;
 }
 
-void HeightManipulationTool::LeftMouseMove(HeightMap* map,
-                                           ViewportMouseEvent* e)
+void HeightManipulationTool::LeftMouseMove(HeightMap* map, ViewportMouseEvent* e)
 {
   PerformQuery(map, e);
 }
@@ -183,12 +180,8 @@ void HeightManipulationTool::Draw(HeightMap* map)
 
   // Draw the radius and feather for the brush
   gDebugDraw->Add(
-      Debug::Circle(map->GetWorldPosition(mLocalToolPosition), upAxis, mRadius)
-          .OnTop(true)
-          .Color(Color::Red));
-  gDebugDraw->Add(Debug::Circle(map->GetWorldPosition(mLocalToolPosition),
-                                upAxis,
-                                mRadius + mFeatherRadius)
+      Debug::Circle(map->GetWorldPosition(mLocalToolPosition), upAxis, mRadius).OnTop(true).Color(Color::Red));
+  gDebugDraw->Add(Debug::Circle(map->GetWorldPosition(mLocalToolPosition), upAxis, mRadius + mFeatherRadius)
                       .OnTop(true)
                       .Color(Color::Green));
 }
@@ -207,8 +200,7 @@ RaiseLowerTool::RaiseLowerTool()
   mRelative = true;
 }
 
-void RaiseLowerTool::ApplyToCells(HeightMapCellRange& range,
-                                  ViewportMouseEvent* e)
+void RaiseLowerTool::ApplyToCells(HeightMapCellRange& range, ViewportMouseEvent* e)
 {
   // By default, we are raising the height map
   float direction = 1.0f;
@@ -223,7 +215,7 @@ void RaiseLowerTool::ApplyToCells(HeightMapCellRange& range,
       mOperation->mName = "HeightMapLower";
   }
 
-  forRange(HeightMapCell cell, range)
+  forRange (HeightMapCell cell, range)
   {
     // Get a modifiable reference to the current height of the cell
     float& height = cell.Patch->GetHeight(cell.Index);
@@ -273,8 +265,8 @@ inline void SampleAverage(HeightMap* map,
   float sample;
 
   // If the cell index is still within our patch
-  if (inPatchIndex.x >= 0 && inPatchIndex.y >= 0 &&
-      inPatchIndex.x < HeightPatch::Size && inPatchIndex.y < HeightPatch::Size)
+  if (inPatchIndex.x >= 0 && inPatchIndex.y >= 0 && inPatchIndex.x < HeightPatch::Size &&
+      inPatchIndex.y < HeightPatch::Size)
   {
     // Get the current sample (in our own patch)
     sample = cell.Patch->GetHeight(inPatchIndex);
@@ -306,8 +298,7 @@ void SmoothSharpenTool::DetermineSamples(HeightMap* map)
 {
   // Using the radius of the tool and the patch size, determine a base number of
   // samples
-  const int samples =
-      int((mRadius / map->GetUnitsPerPatch()) * 0.1f * HeightPatch::Size);
+  const int samples = int((mRadius / map->GetUnitsPerPatch()) * 0.1f * HeightPatch::Size);
 
   // We only start the random samples when our sample size reaches 3
   mRandomSamples = Math::Max(samples - 3, 0);
@@ -350,22 +341,20 @@ void SmoothSharpenTool::Smooth(HeightMapCellRange& range)
 
   // Compute the max distance that random samples can go
   int randomDistance = this->mRandomSampleDistance;
-  const float maxRandomDistance = Math::Sqrt(
-      float(randomDistance * randomDistance + randomDistance * randomDistance));
+  const float maxRandomDistance = Math::Sqrt(float(randomDistance * randomDistance + randomDistance * randomDistance));
 
   // Pull members into locals
   int uniformSamples = mUniformSamples;
   int randomSamples = mRandomSamples;
 
-  forRange(HeightMapCell cell, range)
+  forRange (HeightMapCell cell, range)
   {
     // Get a modifiable reference to the current height of the cell
     float& height = cell.Patch->GetHeight(cell.Index);
 
     // Get the absolute index of the cell
     AbsoluteIndex index = cell.Patch->Index * HeightPatch::Size +
-                          CellIndex(cell.Index.x - HeightPatch::Size / 2,
-                                    cell.Index.y - HeightPatch::Size / 2);
+                          CellIndex(cell.Index.x - HeightPatch::Size / 2, cell.Index.y - HeightPatch::Size / 2);
 
     // Store totals for averaging
     float totalHeight = 0.0f;
@@ -377,14 +366,7 @@ void SmoothSharpenTool::Smooth(HeightMapCellRange& range)
       for (int dx = -uniformSamples; dx <= uniformSamples; ++dx)
       {
         // Sample and average the amounts
-        SampleAverage(range.mHeightMap,
-                      dx,
-                      dy,
-                      1.0f,
-                      cell,
-                      index,
-                      totalHeight,
-                      totalWeight);
+        SampleAverage(range.mHeightMap, dx, dy, 1.0f, cell, index, totalHeight, totalWeight);
       }
     }
 
@@ -404,14 +386,7 @@ void SmoothSharpenTool::Smooth(HeightMapCellRange& range)
         float influence = (maxRandomDistance - distance) / maxRandomDistance;
 
         // Sample and average the amounts
-        SampleAverage(range.mHeightMap,
-                      dx,
-                      dy,
-                      influence,
-                      cell,
-                      index,
-                      totalHeight,
-                      totalWeight);
+        SampleAverage(range.mHeightMap, dx, dy, influence, cell, index, totalHeight, totalWeight);
 
         // We let the middle influence the random samples more
         const float MiddleInfluence = 0.25f;
@@ -448,7 +423,7 @@ void SmoothSharpenTool::Sharpen(HeightMapCellRange& range)
   if (cAllowUndo)
     mOperation->mName = "HeightMapSharpen";
 
-  forRange(HeightMapCell cell, range)
+  forRange (HeightMapCell cell, range)
   {
     // Get a modifiable reference to the current height of the cell
     float& height = cell.Patch->GetHeight(cell.Index);
@@ -463,7 +438,7 @@ void SmoothSharpenTool::Sharpen(HeightMapCellRange& range)
     // Compute the average height
     float averageHeight = totalHeight / totalWeight;
 
-    forRange(HeightMapCell cell, range)
+    forRange (HeightMapCell cell, range)
     {
       // Get a modifiable reference to the current height of the cell
       float& height = cell.Patch->GetHeight(cell.Index);
@@ -482,8 +457,7 @@ void SmoothSharpenTool::Sharpen(HeightMapCellRange& range)
   }
 }
 
-void SmoothSharpenTool::ApplyToCells(HeightMapCellRange& range,
-                                     ViewportMouseEvent* e)
+void SmoothSharpenTool::ApplyToCells(HeightMapCellRange& range, ViewportMouseEvent* e)
 {
   if (e->ShiftPressed)
     Sharpen(range);
@@ -515,7 +489,7 @@ void FlattenTool::ApplyToCells(HeightMapCellRange& range, ViewportMouseEvent* e)
   if (cAllowUndo)
     mOperation->mName = "HeightMapFlatten";
 
-  forRange(HeightMapCell cell, range)
+  forRange (HeightMapCell cell, range)
   {
     // Get a modifiable reference to the current height of the cell
     float& height = cell.Patch->GetHeight(cell.Index);
@@ -583,8 +557,7 @@ bool CreateDestroyTool::LeftMouseDown(HeightMap* map, ViewportMouseEvent* e)
     if (mOperation == nullptr)
       mOperation = new HeightPatchUndoRedo(map);
 
-    mOperation->SetNoise(
-        mUsePerlinNoise, mBaseHeight, mPerlinFrequency, mPerlinAmplitude);
+    mOperation->SetNoise(mUsePerlinNoise, mBaseHeight, mPerlinFrequency, mPerlinAmplitude);
   }
 
   // Create with click destroy with shift click
@@ -604,8 +577,7 @@ bool CreateDestroyTool::LeftMouseDown(HeightMap* map, ViewportMouseEvent* e)
 
     if (mUsePerlinNoise)
     {
-      map->ApplyNoiseToPatch(
-          patch, mBaseHeight, mPerlinFrequency, mPerlinAmplitude);
+      map->ApplyNoiseToPatch(patch, mBaseHeight, mPerlinFrequency, mPerlinAmplitude);
     }
     else
     {
@@ -715,12 +687,8 @@ void WeightPainterTool::Draw(HeightMap* map)
 
   // Draw the radius and feather for the brush
   gDebugDraw->Add(
-      Debug::Circle(map->GetWorldPosition(mLocalToolPosition), upAxis, mRadius)
-          .OnTop(true)
-          .Color(Color::Red));
-  gDebugDraw->Add(Debug::Circle(map->GetWorldPosition(mLocalToolPosition),
-                                upAxis,
-                                mRadius + mFeatherRadius)
+      Debug::Circle(map->GetWorldPosition(mLocalToolPosition), upAxis, mRadius).OnTop(true).Color(Color::Red));
+  gDebugDraw->Add(Debug::Circle(map->GetWorldPosition(mLocalToolPosition), upAxis, mRadius + mFeatherRadius)
                       .OnTop(true)
                       .Color(Color::Green));
 }
@@ -748,8 +716,7 @@ ByteColor ChangeWeights(ByteColor current, uint channel, float change)
 
   // Change all channel by the amount added to the target channel
   // using their original weights to balance it
-  float otherChange =
-      (otherTotal != 0.0f) ? (1.0f / otherTotal) * -targetChange : 0;
+  float otherChange = (otherTotal != 0.0f) ? (1.0f / otherTotal) * -targetChange : 0;
 
   // Rebalance weights
   for (uint i = 0; i < 4; ++i)
@@ -818,8 +785,7 @@ void WeightPainterTool::Paint(HeightMap* map)
 
       if (patch)
       {
-        GraphicalHeightPatch* graphicalPatch =
-            heightMapModel->mGraphicalPatches.FindPointer(patch, nullptr);
+        GraphicalHeightPatch* graphicalPatch = heightMapModel->mGraphicalPatches.FindPointer(patch, nullptr);
         if (graphicalPatch == nullptr)
           continue;
 
@@ -829,8 +795,7 @@ void WeightPainterTool::Paint(HeightMap* map)
         patchPosition = patchPosition + pixelOffset;
 
         uint textureSize = 128;
-        float pixelToUint =
-            (1.0f / float(textureSize)) * map->GetUnitsPerPatch();
+        float pixelToUint = (1.0f / float(textureSize)) * map->GetUnitsPerPatch();
 
         for (uint x = 0; x < textureSize; ++x)
         {
@@ -839,25 +804,20 @@ void WeightPainterTool::Paint(HeightMap* map)
             ByteColor currentW = graphicalPatch->mWeightTexture->GetPixel(x, y);
             ByteColor preDeltaWeight = currentW;
 
-            Vec2 pixelPosition =
-                patchPosition + Vec2(float(x), float(y)) * pixelToUint;
+            Vec2 pixelPosition = patchPosition + Vec2(float(x), float(y)) * pixelToUint;
 
-            float distanceToBrush =
-                Math::Distance(pixelPosition, brushPosition);
+            float distanceToBrush = Math::Distance(pixelPosition, brushPosition);
 
-            float influence =
-                FeatherInfluence(distanceToBrush, mRadius, mFeatherRadius);
+            float influence = FeatherInfluence(distanceToBrush, mRadius, mFeatherRadius);
 
             if (distanceToBrush < totalRadius)
             {
-              currentW = ChangeWeights(
-                  currentW, mTextureChannel, influence * mStrength);
+              currentW = ChangeWeights(currentW, mTextureChannel, influence * mStrength);
 
               graphicalPatch->mWeightTexture->SetPixel(x, y, currentW);
 
               if (cAllowUndo)
-                mOperation->AddPixel(
-                    patch->Index, x, y, preDeltaWeight, currentW);
+                mOperation->AddPixel(patch->Index, x, y, preDeltaWeight, currentW);
             }
           }
         }
@@ -878,8 +838,7 @@ ZilchDefineType(HeightMapTool, builder, type)
   ZilchBindFieldProperty(mShowCellIndex)->ZeroAdvancedGroup();
   ZilchBindFieldProperty(mCellIndexType)->ZeroAdvancedGroup();
 
-  ZilchBindGetterSetterProperty(CurrentTool) 
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(CurrentTool)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindFieldProperty(mSubTool);
 }
 
@@ -926,9 +885,7 @@ void HeightMapTool::SetEditingMap(CogId cog, HeightMap* map)
   }
 }
 
-bool HeightMapTool::SetupLocalPosition(HeightMap* map,
-                                       Viewport* viewport,
-                                       ViewportMouseEvent* e)
+bool HeightMapTool::SetupLocalPosition(HeightMap* map, Viewport* viewport, ViewportMouseEvent* e)
 {
   using namespace Intersection;
 
@@ -947,9 +904,7 @@ bool HeightMapTool::SetupLocalPosition(HeightMap* map,
 
   if (range.Empty())
   {
-    if (RayPlane(
-            localRay.Start, localRay.Direction, Vec3::cYAxis, 0.0f, &point) ==
-        Intersection::None)
+    if (RayPlane(localRay.Start, localRay.Direction, Vec3::cYAxis, 0.0f, &point) == Intersection::None)
     {
       return false;
     }
@@ -978,8 +933,7 @@ void HeightMapTool::Initialize(CogInitializer& initializer)
 
 void HeightMapTool::OnToolActivate(Event*)
 {
-  ConnectThisTo(
-      Z::gEditor->GetSelection(), Events::SelectionFinal, OnSelectionFinal);
+  ConnectThisTo(Z::gEditor->GetSelection(), Events::SelectionFinal, OnSelectionFinal);
 
   HeightMap* heightMap = GetHeightMap();
   if (heightMap)
@@ -1069,8 +1023,7 @@ void HeightMapTool::OnLeftMouseDown(ViewportMouseEvent* e)
   Viewport* viewport = e->GetViewport();
 
   // Set the local position on the sub tool and forward the event
-  e->Handled =
-      SetupLocalPosition(map, viewport, e) && mSubTool->LeftMouseDown(map, e);
+  e->Handled = SetupLocalPosition(map, viewport, e) && mSubTool->LeftMouseDown(map, e);
 
   // Capture/Claim the mouse
   if (e->Handled)
@@ -1090,8 +1043,7 @@ void HeightMapTool::OnLeftMouseUp(ViewportMouseEvent* e)
   Viewport* viewport = e->GetViewport();
 
   // Set the local position on the sub tool and forward the event
-  e->Handled =
-      SetupLocalPosition(map, viewport, e) && mSubTool->LeftMouseUp(map, e);
+  e->Handled = SetupLocalPosition(map, viewport, e) && mSubTool->LeftMouseUp(map, e);
 }
 
 void HeightMapTool::OnMouseMove(ViewportMouseEvent* e)
@@ -1124,8 +1076,7 @@ void HeightMapTool::OnMouseScroll(ViewportMouseEvent* e)
   Viewport* viewport = e->GetViewport();
 
   // Set the local position on the sub tool and forward the event
-  e->Handled =
-      SetupLocalPosition(map, viewport, e) && mSubTool->MouseScroll(map, e);
+  e->Handled = SetupLocalPosition(map, viewport, e) && mSubTool->MouseScroll(map, e);
 
   // Capture/Claim the mouse
   if (e->Handled)
@@ -1198,7 +1149,7 @@ void HeightMapTool::DrawDebugIndexes()
   else if (mCellIndexType == CellIndexType::Absoulte)
     cellIndexFn = &HeightMap::GetNearestAbsoluteIndexFromLocal;
 
-  forRange(HeightPatch * patch, map->GetAllPatches())
+  forRange (HeightPatch* patch, map->GetAllPatches())
   {
     if (mShowPatchIndex)
     {
@@ -1206,19 +1157,16 @@ void HeightMapTool::DrawDebugIndexes()
       sprintf(buffer, "(%d,%d)", patch->Index.x, patch->Index.y);
 
       Vec3 p0(map->GetWorldPosition(patch->Index));
-      gDebugDraw->Add(sID,
-                      Debug::Text(p0, 0.3f, buffer)
-                          .Color(Color::MediumSpringGreen)
-                          .OnTop(true)
-                          .ViewAligned(true)
-                          .ViewScaled(true));
+      gDebugDraw->Add(
+          sID,
+          Debug::Text(p0, 0.3f, buffer).Color(Color::MediumSpringGreen).OnTop(true).ViewAligned(true).ViewScaled(true));
     }
 
     if (!mShowCellIndex)
       continue;
 
     map->GetHeightPatchVertices(patch, vertices);
-    forRange(Vec3 & vertex, vertices.All())
+    forRange (Vec3& vertex, vertices.All())
     {
       Vec3 p0(transform->TransformPoint(vertex));
       IntVec2 index = (map->*cellIndexFn)(Vec2(vertex.x, vertex.z));
@@ -1227,11 +1175,7 @@ void HeightMapTool::DrawDebugIndexes()
       sprintf(buffer, "(%d,%d)", index.x, index.y);
 
       gDebugDraw->Add(sID,
-                      Debug::Text(p0, 0.3f, buffer)
-                          .Color(Color::Black)
-                          .OnTop(true)
-                          .ViewAligned(true)
-                          .ViewScaled(true));
+                      Debug::Text(p0, 0.3f, buffer).Color(Color::Black).OnTop(true).ViewAligned(true).ViewScaled(true));
     }
   }
 }
@@ -1262,21 +1206,12 @@ HeightMap* HeightMapTool::GetHeightMap()
 {
   // Disabled creation
   HeightMap* heightMap = static_cast<HeightMap*>(
-      Tool::GetOrCreateEditComponent(ZilchTypeId(HeightMap),
-                                     cHeightMapName,
-                                     cHeightMapArchetype,
-                                     mLastEdited,
-                                     false));
+      Tool::GetOrCreateEditComponent(ZilchTypeId(HeightMap), cHeightMapName, cHeightMapArchetype, mLastEdited, false));
   if (heightMap == NULL && mAddHeightMapWidget.IsNull())
   {
-    mAddHeightMapWidget =
-        Tool::CreateViewportTextWidget("No HeightMap Object, Add New +");
-    ConnectThisTo((ViewportTextWidget*)mAddHeightMapWidget,
-                  Events::LeftClick,
-                  OnLeftClickAddHeightMapWidget);
-    ConnectThisTo((ViewportTextWidget*)mAddHeightMapWidget,
-                  Events::LeftMouseUp,
-                  OnLeftMouseUpAddHeightMapWidget);
+    mAddHeightMapWidget = Tool::CreateViewportTextWidget("No HeightMap Object, Add New +");
+    ConnectThisTo((ViewportTextWidget*)mAddHeightMapWidget, Events::LeftClick, OnLeftClickAddHeightMapWidget);
+    ConnectThisTo((ViewportTextWidget*)mAddHeightMapWidget, Events::LeftMouseUp, OnLeftMouseUpAddHeightMapWidget);
   }
   return heightMap;
 }
@@ -1294,9 +1229,7 @@ void HeightMapTool::SetCurrentTool(HeightTool::Enum tool)
   mSubTool = mSubTools[(uint)tool];
 }
 
-HeightMapMouseCapture::HeightMapMouseCapture(Mouse* mouse,
-                                             Viewport* viewport,
-                                             HeightMapTool* tool) :
+HeightMapMouseCapture::HeightMapMouseCapture(Mouse* mouse, Viewport* viewport, HeightMapTool* tool) :
     MouseManipulation(mouse, viewport)
 {
   mViewport = (ReactiveViewport*)viewport;

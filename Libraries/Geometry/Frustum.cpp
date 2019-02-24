@@ -28,8 +28,7 @@ Plane& Frustum::Get(uint index)
 {
   if (index >= 6)
   {
-    String msg = String::Format(
-        "Index %d is invalid. Frustums only have 6 planes.", index);
+    String msg = String::Format("Index %d is invalid. Frustums only have 6 planes.", index);
     Error("Invalid Index", msg.c_str());
     return Planes[0];
   }
@@ -41,8 +40,7 @@ void Frustum::Set(uint index, const Plane& plane)
 {
   if (index >= 6)
   {
-    String msg = String::Format(
-        "Index %d is invalid. Frustums only have 6 planes.", index);
+    String msg = String::Format("Index %d is invalid. Frustums only have 6 planes.", index);
     Error("Invalid Index", msg.c_str());
     return;
   }
@@ -76,10 +74,7 @@ void Frustum::Generate(Vec3 points[8])
   Planes[5].Set(normalF, v0);
 }
 
-void Frustum::Generate(Vec3Param frontCenter,
-                       Vec3Param direction,
-                       Vec3Param up,
-                       Vec3Param dimensions)
+void Frustum::Generate(Vec3Param frontCenter, Vec3Param direction, Vec3Param up, Vec3Param dimensions)
 {
   Vec3 right = Cross(direction, up);
 
@@ -100,12 +95,7 @@ void Frustum::Generate(Vec3Param frontCenter,
   // Draw(points, 10.0f);
 }
 
-void Frustum::Generate(Vec3Param position,
-                       Mat3Param basis,
-                       float near,
-                       float far,
-                       float aspect,
-                       float fov)
+void Frustum::Generate(Vec3Param position, Mat3Param basis, float near, float far, float aspect, float fov)
 {
   Vec3 basisX = basis.BasisX();
   Vec3 basisY = basis.BasisY();
@@ -284,8 +274,7 @@ Frustum Frustum::Transform(Mat4Param transformation) const
     Vec3 normal = Planes[i].GetNormal();
     Vec3 point = Planes[i].GetDistance() * normal;
 
-    Vec3 newNormal =
-        Math::TransformNormal(invTransposedTransform, normal).Normalized();
+    Vec3 newNormal = Math::TransformNormal(invTransposedTransform, normal).Normalized();
     Vec3 newPoint = Math::TransformPoint(transformation, point);
 
     ret.Planes[i].Set(newNormal, newPoint);
@@ -311,8 +300,7 @@ Frustum Frustum::TransformInverse(Mat4Param transformation) const
     Vec3 normal = Planes[i].GetNormal();
     Vec3 point = Planes[i].GetDistance() * normal;
 
-    Vec3 newNormal =
-        Math::TransformNormal(transposedTransform, normal).Normalized();
+    Vec3 newNormal = Math::TransformNormal(transposedTransform, normal).Normalized();
     Vec3 newPoint = Math::TransformPoint(invTransform, point);
 
     ret.Planes[i].Set(newNormal, newPoint);
@@ -343,8 +331,7 @@ void Frustum::PointsAtDepth(Vec3 boxPoints[4], float depth) const
 
   // Intersect plane at depth with edge ray
   Intersection::IntersectionPoint point;
-  Intersection::RayPlane(
-      edgeStart, edgeDir, plane.GetNormal(), plane.GetDistance(), &point);
+  Intersection::RayPlane(edgeStart, edgeDir, plane.GetNormal(), plane.GetDistance(), &point);
 
   // All edges have the same normalized t
   float t = point.T;

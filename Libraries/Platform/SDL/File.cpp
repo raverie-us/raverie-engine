@@ -103,8 +103,7 @@ void File::Open(Status& status, FILE* file, FileMode::Enum mode)
   if (self->mFileData == nullptr)
   {
     String errorString = SDL_GetError();
-    String message =
-        String::Format("Failed to open file: %s", errorString.c_str());
+    String message = String::Format("Failed to open file: %s", errorString.c_str());
     status.SetFailed(message);
     return;
   }

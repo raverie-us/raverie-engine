@@ -22,8 +22,7 @@ ZilchDefineType(Material, builder, type)
   ZilchBindFieldGetterPropertyAs(mSerializedList, "RenderGroups");
   ZilchBindFieldGetterProperty(mReferencedByList);
 
-  ZilchBindGetterProperty(CompositionLabel)
-      ->Add(new CompositionLabelExtension());
+  ZilchBindGetterProperty(CompositionLabel)->Add(new CompositionLabelExtension());
 }
 
 Material::Material() :
@@ -38,8 +37,7 @@ Material::Material() :
   mReferencedByList.mDisplayName = "ReferencedBy";
   mReferencedByList.mReadOnly = true;
 
-  mSerializedList.mExpanded =
-      &GraphicsResourceList::mMaterialSerializedExpanded;
+  mSerializedList.mExpanded = &GraphicsResourceList::mMaterialSerializedExpanded;
   mReferencedByList.mExpanded = &GraphicsResourceList::mMaterialRuntimeExpanded;
 }
 
@@ -50,8 +48,7 @@ Material::~Material()
 void Material::Serialize(Serializer& stream)
 {
   // Must serialize before polymorphic data
-  stream.SerializeFieldDefault(
-      "RenderGroups", mSerializedList.mResourceIdNames, Array<String>());
+  stream.SerializeFieldDefault("RenderGroups", mSerializedList.mResourceIdNames, Array<String>());
 
   SerializeMaterialBlocks(stream);
 }
@@ -60,7 +57,7 @@ void Material::SerializeMaterialBlocks(Serializer& stream)
 {
   if (stream.GetMode() == SerializerMode::Saving)
   {
-    forRange(MaterialBlockHandle block, mMaterialBlocks.All())
+    forRange (MaterialBlockHandle block, mMaterialBlocks.All())
     {
       stream.StartPolymorphic(block);
       block->Serialize(stream);
@@ -75,18 +72,16 @@ void Material::SerializeMaterialBlocks(Serializer& stream)
     {
       MaterialBlockHandle block;
 
-      BoundType* materialNodeType =
-          MetaDatabase::FindType(materialNode.TypeName);
+      BoundType* materialNodeType = MetaDatabase::FindType(materialNode.TypeName);
 
       // Notify them of data loss if we cannot proxy
       if (materialNodeType && materialNodeType->IsA(materialBlockType) == false)
       {
-        String message = String::Format(
-            "A Fragment with the type name %s could not be proxied "
-            "because a type with that name already exists. Data will be lost "
-            "where this Fragment is "
-            "used if the project is saved",
-            materialNode.TypeName.mBegin);
+        String message = String::Format("A Fragment with the type name %s could not be proxied "
+                                        "because a type with that name already exists. Data will be lost "
+                                        "where this Fragment is "
+                                        "used if the project is saved",
+                                        materialNode.TypeName.mBegin);
         DoNotifyError("Could not proxy Material Fragment", message);
         stream.EndPolymorphic();
         continue;
@@ -98,8 +93,8 @@ void Material::SerializeMaterialBlocks(Serializer& stream)
       if (materialNodeType == nullptr)
       {
         // Create a proxy component
-        BoundType* proxyType = ProxyObject<MaterialBlock>::CreateProxyType(
-            materialNode.TypeName, ProxyReason::TypeDidntExist);
+        BoundType* proxyType =
+            ProxyObject<MaterialBlock>::CreateProxyType(materialNode.TypeName, ProxyReason::TypeDidntExist);
         block = ZilchAllocate(MaterialBlock, proxyType);
 
         EngineLibraryExtensions::FindProxiedTypeOrigin(proxyType);
@@ -124,17 +119,14 @@ void Material::SerializeMaterialBlocks(Serializer& stream)
 
 void Material::Initialize()
 {
-  ConnectThisTo(
-      &mSerializedList, Events::ResourceListItemAdded, OnResourceListItemAdded);
-  ConnectThisTo(&mSerializedList,
-                Events::ResourceListItemRemoved,
-                OnResourceListItemRemoved);
+  ConnectThisTo(&mSerializedList, Events::ResourceListItemAdded, OnResourceListItemAdded);
+  ConnectThisTo(&mSerializedList, Events::ResourceListItemRemoved, OnResourceListItemRemoved);
 }
 
 void Material::Unload()
 {
-  forRange(HandleOf<MaterialBlock> handle, mMaterialBlocks.All())
-      handle.Delete();
+  forRange (HandleOf<MaterialBlock> handle, mMaterialBlocks.All())
+    handle.Delete();
 
   mMaterialBlocks.Clear();
 }
@@ -149,16 +141,13 @@ HandleOf<Material> Material::RuntimeClone()
   HandleOf<Material> resourceHandle = DataResource::Clone();
   Material* resource = resourceHandle;
 
-  ReturnIf(resource == nullptr,
-           nullptr,
-           "Failed to clone the material, returning null");
+  ReturnIf(resource == nullptr, nullptr, "Failed to clone the material, returning null");
 
   resource->mCompositeName = mCompositeName;
 
   // Add the runtime list to the clone's list so that library resources don't
   // have to be modified and all effective connections are preserved
-  resource->mSerializedList.mResourceIdNames.Append(
-      mReferencedByList.mResourceIdNames.All());
+  resource->mSerializedList.mResourceIdNames.Append(mReferencedByList.mResourceIdNames.All());
 
   ResourceEvent event(mManager, resource);
   mManager->DispatchEvent(Events::ResourceAdded, &event);
@@ -234,30 +223,27 @@ bool Material::Remove(MaterialBlockHandle block)
 
 void Material::OnResourceListItemAdded(ResourceListEvent* event)
 {
-  RenderGroup* renderGroup =
-      RenderGroupManager::FindOrNull(event->mResourceIdName);
+  RenderGroup* renderGroup = RenderGroupManager::FindOrNull(event->mResourceIdName);
   if (renderGroup != nullptr)
     ResourceListEntryAdded(this, renderGroup);
 }
 
 void Material::OnResourceListItemRemoved(ResourceListEvent* event)
 {
-  RenderGroup* renderGroup =
-      RenderGroupManager::FindOrNull(event->mResourceIdName);
+  RenderGroup* renderGroup = RenderGroupManager::FindOrNull(event->mResourceIdName);
   if (renderGroup != nullptr)
     ResourceListEntryRemoved(this, renderGroup);
 }
 
-IndexRange Material::AddShaderInputs(Array<ShaderInput>& shaderInputs,
-                                     uint version)
+IndexRange Material::AddShaderInputs(Array<ShaderInput>& shaderInputs, uint version)
 {
   if (mPropertiesChanged == false && mInputRangeVersion == version)
     return mCachedInputRange;
 
   mCachedInputRange.start = shaderInputs.Size();
 
-  forRange(MaterialBlock * block, mMaterialBlocks.All())
-      block->AddShaderInputs(shaderInputs);
+  forRange (MaterialBlock* block, mMaterialBlocks.All())
+    block->AddShaderInputs(shaderInputs);
 
   mCachedInputRange.end = shaderInputs.Size();
 
@@ -275,16 +261,15 @@ void Material::UpdateCompositeName()
   bool hasGeometry = false;
 
   // Material fragments
-  forRange(MaterialBlockHandle block, mMaterialBlocks.All())
+  forRange (MaterialBlockHandle block, mMaterialBlocks.All())
   {
     // Check if fragment had a restricted attribute added
     if (factory->mRestrictedComponents.Contains(block.StoredType))
     {
-      String warning =
-          String::Format("Fragment '%s' cannot be added to Materials and will "
-                         "have no effect on '%s'.",
-                         block.StoredType->Name.c_str(),
-                         Name.c_str());
+      String warning = String::Format("Fragment '%s' cannot be added to Materials and will "
+                                      "have no effect on '%s'.",
+                                      block.StoredType->Name.c_str(),
+                                      Name.c_str());
       DoNotifyWarning("Restricted Fragment", warning);
       continue;
     }
@@ -294,11 +279,10 @@ void Material::UpdateCompositeName()
     {
       if (hasGeometry)
       {
-        String warning =
-            String::Format("Geometry Fragment '%s' cannot be added to Material "
-                           "'%s', a Geometry Fragment is already present.",
-                           block.StoredType->Name.c_str(),
-                           Name.c_str());
+        String warning = String::Format("Geometry Fragment '%s' cannot be added to Material "
+                                        "'%s', a Geometry Fragment is already present.",
+                                        block.StoredType->Name.c_str(),
+                                        Name.c_str());
         DoNotifyWarning("Multiple Geometry Fragments", warning);
         continue;
       }
@@ -322,8 +306,7 @@ void Material::UpdateCompositeName()
 
 ImplementResourceManager(MaterialManager, Material);
 
-MaterialManager::MaterialManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+MaterialManager::MaterialManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   AddLoader("Material", new ObjectInheritanceFileLoader<MaterialManager>());
 
@@ -338,8 +321,7 @@ MaterialManager::MaterialManager(BoundType* resourceType) :
   mExtension = DataResourceExtension;
 }
 
-void MaterialManager::ResourceDuplicated(Resource* resource,
-                                         Resource* duplicate)
+void MaterialManager::ResourceDuplicated(Resource* resource, Resource* duplicate)
 {
   Material* material = (Material*)resource;
   Material* dupMaterial = (Material*)duplicate;
@@ -351,7 +333,7 @@ void MaterialManager::ResourceDuplicated(Resource* resource,
 
   // If any resources are not writable then they are added to the duplicate
   // instead so the content item needs to be re-saved
-  forRange(StringParam resourceIdName, material->mReferencedByList.GetIdNames())
+  forRange (StringParam resourceIdName, material->mReferencedByList.GetIdNames())
   {
     RenderGroup* renderGroup = RenderGroupManager::FindOrNull(resourceIdName);
 
@@ -364,8 +346,7 @@ void MaterialManager::ResourceDuplicated(Resource* resource,
         if (Z::gRuntimeEditor != nullptr)
           MetaOperations::NotifyObjectModified(renderGroup);
       }
-      else if (dupMaterial->mSerializedList.mResourceIdNames.Contains(
-                   resourceIdName) == false)
+      else if (dupMaterial->mSerializedList.mResourceIdNames.Contains(resourceIdName) == false)
       {
         dupMaterial->mSerializedList.AddResource(resourceIdName);
       }
@@ -381,7 +362,7 @@ void MaterialManager::ReInitializeRemoveComponents()
 
   mReInitializeQueue.BeginBatch();
 
-  forRange(Resource * resource, AllResources())
+  forRange (Resource* resource, AllResources())
   {
     Material* material = (Material*)resource;
     Material::MaterialBlockArray::range range = material->mMaterialBlocks.All();
@@ -390,8 +371,8 @@ void MaterialManager::ReInitializeRemoveComponents()
       MaterialBlock* materialBlock = range.Back();
       BoundType* blockType = ZilchVirtualTypeId(materialBlock);
 
-      AddRemoveComponentOperation* op = new AddRemoveComponentOperation(
-          material, blockType, ComponentOperation::Remove);
+      AddRemoveComponentOperation* op =
+          new AddRemoveComponentOperation(material, blockType, ComponentOperation::Remove);
       op->mNotifyModified = false;
       op->Redo();
       mReInitializeQueue.Queue(op);

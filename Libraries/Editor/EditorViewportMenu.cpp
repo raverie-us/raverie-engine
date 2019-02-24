@@ -12,8 +12,7 @@ Tweakable(float, MouseOffSpeed, 0.4f, cLocation);
 Tweakable(Vec4, BackgroundColor, Vec4(1, 1, 1, 1), cLocation);
 } // namespace ViewportMenuUi
 
-ViewportMenuButton::ViewportMenuButton(Composite* parent) :
-    ButtonBase(parent, "TextButton")
+ViewportMenuButton::ViewportMenuButton(Composite* parent) : ButtonBase(parent, "TextButton")
 {
   mIcon = NULL;
   mText = NULL;
@@ -34,8 +33,7 @@ void ViewportMenuButton::UpdateTransform()
     float expandLeft = mExpandIcon->mTranslation.x;
 
     Vec2 minSize = activeWidget->GetMinSize();
-    WidgetRect rect =
-        WidgetRect::PointAndSize(mSize * 0.5f - minSize * 0.5f, minSize);
+    WidgetRect rect = WidgetRect::PointAndSize(mSize * 0.5f - minSize * 0.5f, minSize);
     if (rect.Right() > expandLeft)
       rect.X -= (rect.Right() - expandLeft + Pixels(3));
     activeWidget->SetTranslation(ToVector3(rect.TopLeft()));
@@ -56,9 +54,7 @@ void ViewportMenuButton::SetIcon(StringParam icon)
   mIcon = CreateAttached<Element>(icon);
 }
 
-EditorViewportMenu::EditorViewportMenu(EditorViewport* viewport) :
-    Composite(viewport),
-    mViewport(viewport)
+EditorViewportMenu::EditorViewportMenu(EditorViewport* viewport) : Composite(viewport), mViewport(viewport)
 {
   SetName("EditorViewportMenu");
 
@@ -69,9 +65,7 @@ EditorViewportMenu::EditorViewportMenu(EditorViewport* viewport) :
   // Default to mouse off
   SetColor(Vec4(1, 1, 1, ViewportMenuUi::MouseOffTransparency));
 
-  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight,
-                              Pixels(8, 0),
-                              Thickness(Pixels(4, 2, 0, 2))));
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(8, 0), Thickness(Pixels(4, 2, 0, 2))));
 
   // Camera mode
   mCameraMode = new ToggleIconButton(this);
@@ -87,8 +81,7 @@ EditorViewportMenu::EditorViewportMenu(EditorViewport* viewport) :
   mPerspectiveMode->SetDisabledIcon("Orthographic");
   mPerspectiveMode->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(19));
   mPerspectiveMode->SetToolTip("Perspective Mode");
-  ConnectThisTo(
-      mPerspectiveMode, Events::ButtonPressed, OnPerspectiveModePressed);
+  ConnectThisTo(mPerspectiveMode, Events::ButtonPressed, OnPerspectiveModePressed);
 
   // Camera options
   mCameraButton = new ViewportMenuButton(this);
@@ -121,7 +114,7 @@ void EditorViewportMenu::UpdateTransform()
 void EditorViewportMenu::InitializeFromSpace(Space* space)
 {
   bool gridsActive = false;
-  forRange(Cog & object, space->AllObjects())
+  forRange (Cog& object, space->AllObjects())
   {
     if (GridDraw* grid = object.has(GridDraw))
     {
@@ -171,10 +164,8 @@ void EditorViewportMenu::FadeIn()
   Vec4 color(1, 1, 1, 1);
   float t = ViewportMenuUi::MouseOffSpeed;
 
-  ActionSequence* seq =
-      new ActionSequence(this, ActionExecuteMode::FrameUpdate);
-  seq->Add(
-      AnimatePropertyGetSet(Widget, Color, Ease::Quad::InOut, this, t, color));
+  ActionSequence* seq = new ActionSequence(this, ActionExecuteMode::FrameUpdate);
+  seq->Add(AnimatePropertyGetSet(Widget, Color, Ease::Quad::InOut, this, t, color));
 }
 
 void EditorViewportMenu::FadeOut()
@@ -182,10 +173,8 @@ void EditorViewportMenu::FadeOut()
   Vec4 color(1, 1, 1, ViewportMenuUi::MouseOffTransparency);
   float t = ViewportMenuUi::MouseOffSpeed;
 
-  ActionSequence* seq =
-      new ActionSequence(this, ActionExecuteMode::FrameUpdate);
-  seq->Add(
-      AnimatePropertyGetSet(Widget, Color, Ease::Quad::InOut, this, t, color));
+  ActionSequence* seq = new ActionSequence(this, ActionExecuteMode::FrameUpdate);
+  seq->Add(AnimatePropertyGetSet(Widget, Color, Ease::Quad::InOut, this, t, color));
 }
 
 void EditorViewportMenu::OnCameraModePressed(Event* e)
@@ -221,8 +210,7 @@ void EditorViewportMenu::OnPerspectiveModePressed(Event* e)
 void EditorViewportMenu::OnCameraButtonPressed(Event* e)
 {
   ContextMenu* contextMenu = new ContextMenu(mCameraButton);
-  contextMenu->SetTranslation(mCameraButton->GetScreenPosition() +
-                              Pixels(0, mCameraButton->mSize.y, 0));
+  contextMenu->SetTranslation(mCameraButton->GetScreenPosition() + Pixels(0, mCameraButton->mSize.y, 0));
   contextMenu->AddCommandByName("ResetCamera");
   contextMenu->AddDivider();
   contextMenu->AddCommandByName("AlignSelectedCameraToCamera");
@@ -241,7 +229,7 @@ void EditorViewportMenu::OnGridButtonPressed(Event* e)
 
   bool gridFound = false;
   bool active = mGridButton->GetEnabled();
-  forRange(Cog & object, space->AllObjects())
+  forRange (Cog& object, space->AllObjects())
   {
     if (GridDraw* grid = object.has(GridDraw))
     {
@@ -256,8 +244,7 @@ void EditorViewportMenu::OnGridButtonPressed(Event* e)
     if (Cog* camCog = mViewport->mEditorCamera)
     {
       // Add the grid draw to the level settings object
-      Cog* levelSettings =
-          space->FindObjectByName(SpecialCogNames::LevelSettings);
+      Cog* levelSettings = space->FindObjectByName(SpecialCogNames::LevelSettings);
       levelSettings->AddComponentByType(ZilchTypeId(GridDraw));
       GridDraw* grid = levelSettings->has(GridDraw);
 

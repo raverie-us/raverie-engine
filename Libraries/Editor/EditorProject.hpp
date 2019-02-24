@@ -25,10 +25,7 @@ void NewProject();
 void OpenProject();
 
 void UnloadProject(Editor* editor, Cog* projectCog);
-void LoadProject(Editor* editor,
-                 Cog* projectCog,
-                 StringParam path,
-                 StringParam projectFile);
+void LoadProject(Editor* editor, Cog* projectCog, StringParam path, StringParam projectFile);
 
 /// This composite takes care of communicating with the launcher for the
 /// purposes of the open/new projects dialog. Since this takes place via a tcp

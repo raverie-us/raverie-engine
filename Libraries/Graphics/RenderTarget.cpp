@@ -5,10 +5,7 @@
 namespace Zero
 {
 
-ZilchDefineExternalBaseType(SamplerSettings,
-                            TypeCopyMode::ReferenceType,
-                            builder,
-                            type)
+ZilchDefineExternalBaseType(SamplerSettings, TypeCopyMode::ReferenceType, builder, type)
 {
   ZeroBindDocumented();
 
@@ -42,16 +39,15 @@ RenderTarget::~RenderTarget()
 void RenderTarget::Release()
 {
   if (mTexture->mProtected == false)
-    return DoNotifyException(
-        "Error", "Cannot release RenderTargets that use runtime Textures.");
+    return DoNotifyException("Error", "Cannot release RenderTargets that use runtime Textures.");
 
   mManager->ClearRenderTarget(this);
 }
 
 void RenderTargetManager::Shutdown()
 {
-  forRange(RenderTarget * renderTarget,
-           mRenderTargets.All()) delete renderTarget;
+  forRange (RenderTarget* renderTarget, mRenderTargets.All())
+    delete renderTarget;
   mRenderTargets.Clear();
 
   mUsedTextures.Clear();
@@ -59,11 +55,10 @@ void RenderTargetManager::Shutdown()
   mUnusedTextures.Clear();
 }
 
-HandleOf<RenderTarget>
-RenderTargetManager::GetRenderTarget(uint width,
-                                     uint height,
-                                     TextureFormat::Enum format,
-                                     SamplerSettings samplerSettings)
+HandleOf<RenderTarget> RenderTargetManager::GetRenderTarget(uint width,
+                                                            uint height,
+                                                            TextureFormat::Enum format,
+                                                            SamplerSettings samplerSettings)
 {
   RenderTarget* renderTarget = new RenderTarget(this);
   mRenderTargets.PushBack(renderTarget);
@@ -100,8 +95,7 @@ RenderTargetManager::GetRenderTarget(uint width,
   return renderTarget;
 }
 
-HandleOf<RenderTarget>
-RenderTargetManager::GetRenderTarget(HandleOf<Texture> texture)
+HandleOf<RenderTarget> RenderTargetManager::GetRenderTarget(HandleOf<Texture> texture)
 {
   if (texture == nullptr)
   {
@@ -111,8 +105,7 @@ RenderTargetManager::GetRenderTarget(HandleOf<Texture> texture)
 
   if (texture->mProtected)
   {
-    DoNotifyException("Error",
-                      "Cannot create RenderTarget from a non-runtime Texture.");
+    DoNotifyException("Error", "Cannot create RenderTarget from a non-runtime Texture.");
     return nullptr;
   }
   RenderTarget* renderTarget = new RenderTarget(this);
@@ -144,14 +137,13 @@ void RenderTargetManager::ClearRenderTarget(RenderTarget* renderTarget)
 void RenderTargetManager::ClearRenderTargets()
 {
   // Delete RenderTargets to invalidate any handles that might be held in script
-  forRange(RenderTarget * renderTarget,
-           mRenderTargets.All()) delete renderTarget;
+  forRange (RenderTarget* renderTarget, mRenderTargets.All())
+    delete renderTarget;
   mRenderTargets.Clear();
 
   // Move textures to available list
-  forRange(RenderTargetTexture & renderTargetTexture, mUsedTextures.All())
-      mAvailableTextures[renderTargetTexture.mLookupId]
-          .PushBack(renderTargetTexture);
+  forRange (RenderTargetTexture& renderTargetTexture, mUsedTextures.All())
+    mAvailableTextures[renderTargetTexture.mLookupId].PushBack(renderTargetTexture);
   mUsedTextures.Clear();
 }
 
@@ -177,8 +169,7 @@ u64 RenderTargetManager::MakeLookupId(uint width,
   return lookupId;
 }
 
-HandleOf<Texture> RenderTargetManager::FindTexture(
-    u64 lookupId, RenderTargetTextureMap& textureMap)
+HandleOf<Texture> RenderTargetManager::FindTexture(u64 lookupId, RenderTargetTextureMap& textureMap)
 {
   if (textureMap.ContainsKey(lookupId))
   {

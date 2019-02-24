@@ -21,10 +21,7 @@ extern "C" EMSCRIPTEN_KEEPALIVE void* _Znwj(unsigned int n)
   return malloc((size_t)n);
 }
 
-int vsprintf_s(char* buffer,
-               size_t numberOfElements,
-               const char* format,
-               va_list args)
+int vsprintf_s(char* buffer, size_t numberOfElements, const char* format, va_list args)
 {
   return vsnprintf(buffer, numberOfElements, format, args);
 }
@@ -38,10 +35,7 @@ int sprintf_s(char* buffer, size_t numberOfElements, const char* format, ...)
   return result;
 }
 
-int swprintf_s(wchar_t* buffer,
-               size_t numberOfElements,
-               const wchar_t* format,
-               ...)
+int swprintf_s(wchar_t* buffer, size_t numberOfElements, const wchar_t* format, ...)
 {
   va_list args;
   va_start(args, format);
@@ -117,14 +111,12 @@ errno_t strncpy_s(char* dest, rsize_t destsz, const char* src, rsize_t count)
 
 void glDrawBuffer(GLenum buf)
 {
-  GLenum drawBuffers[8] = {
-      buf, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE};
+  GLenum drawBuffers[8] = {buf, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE};
   glDrawBuffers(1, drawBuffers);
 }
 
-static const char* const cInvalidWebGl =
-    "This function should not be called when running Emscripten: WebGL "
-    "functionality was not properly queried";
+static const char* const cInvalidWebGl = "This function should not be called when running Emscripten: WebGL "
+                                         "functionality was not properly queried";
 
 void glBlendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
 {
@@ -136,8 +128,7 @@ void glBlendEquationi(GLuint buf, GLenum mode)
   Error(cInvalidWebGl);
 }
 
-void glBlendFuncSeparatei(
-    GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
+void glBlendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
 {
   Error(cInvalidWebGl);
 }
@@ -202,17 +193,13 @@ extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenFileDropHandler(char* fileBuffer)
   free(fileBuffer);
 }
 
-EM_JS(void,
-      EmscriptenShellOpenFileBegin,
-      (bool multiple, const char* accept, void* configPointer),
-      {
-        if (!document)
-          return;
-        shellOpenFile(multiple, UTF8ToString(accept), configPointer);
-      });
+EM_JS(void, EmscriptenShellOpenFileBegin, (bool multiple, const char* accept, void* configPointer), {
+  if (!document)
+    return;
+  shellOpenFile(multiple, UTF8ToString(accept), configPointer);
+});
 
-extern "C" EMSCRIPTEN_KEEPALIVE void
-EmscriptenShellOpenFileEnd(char* fileBuffer, void* configPointer)
+extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenShellOpenFileEnd(char* fileBuffer, void* configPointer)
 {
   FileDialogInfo& config = *(FileDialogInfo*)configPointer;
 
@@ -244,17 +231,16 @@ void Shell::OpenFile(FileDialogInfo& config)
 {
   // We have no way of selecting a folder, so for now we just enable
   // multi-select.
-  bool multiple = config.Flags & FileDialogFlags::MultiSelect ||
-                  config.Flags & FileDialogFlags::Folder;
+  bool multiple = config.Flags & FileDialogFlags::MultiSelect || config.Flags & FileDialogFlags::Folder;
 
   StringBuilder acceptExtensions;
-  forRange(FileDialogFilter & filter, config.mSearchFilters)
+  forRange (FileDialogFilter& filter, config.mSearchFilters)
   {
     if (acceptExtensions.GetSize() != 0)
       acceptExtensions.Append(',');
 
     // Filter out all the wildcard stars '*' since html input does not use them.
-    forRange(Rune rune, filter.mFilter)
+    forRange (Rune rune, filter.mFilter)
     {
       if (rune == ';')
         acceptExtensions.Append(',');

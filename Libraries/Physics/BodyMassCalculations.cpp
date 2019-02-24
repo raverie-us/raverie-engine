@@ -118,12 +118,10 @@ struct InertiaComputationFunctor
 
     // get the world space inertia tensor
     Mat3 inertiaTensorM = invInertiaTensor.SafeInverted();
-    Mat3 inertiaTensorW =
-        worldOrientation * inertiaTensorM * worldOrientationInv;
+    Mat3 inertiaTensorW = worldOrientation * inertiaTensorM * worldOrientationInv;
 
     Vec3 worldCenterOfMass = collider->GetColliderWorldCenterOfMass();
-    Geometry::CombineInertiaTensor(
-        mInertiaTensor, mCenterMass, inertiaTensorW, worldCenterOfMass, mass);
+    Geometry::CombineInertiaTensor(mInertiaTensor, mCenterMass, inertiaTensorW, worldCenterOfMass, mass);
   }
 
   bool GetResults(Mat3Ref invInertiaM, RigidBody* body)
@@ -173,8 +171,7 @@ void Recurse(RigidBody* body, Functor& functor)
     stack.PopBack();
 
     // deal with all direct colliders of this body
-    RigidBody::CompositeColliderList::range range =
-        currentBody->mColliders.All();
+    RigidBody::CompositeColliderList::range range = currentBody->mColliders.All();
     for (; !range.Empty(); range.PopFront())
       functor(&range.Front(), currentBody);
 
@@ -196,12 +193,10 @@ void InternalComputeMass(RigidBody* body, Vec3Ref centerOfMass, real& invMass)
   // has the center of mass locked, there's no point in computing anything since
   // we're overriding it all anyways
   MassOverride* massOverride = body->GetOwner()->has(MassOverride);
-  if (massOverride && massOverride->GetActive() &&
-      !massOverride->GetAutoComputeCenterOfMass())
+  if (massOverride && massOverride->GetActive() && !massOverride->GetAutoComputeCenterOfMass())
   {
     // center of mass is in world space, so make sure to transform it
-    centerOfMass =
-        transformation->TransformPoint(massOverride->GetLocalCenterOfMass());
+    centerOfMass = transformation->TransformPoint(massOverride->GetLocalCenterOfMass());
     invMass = massOverride->GetInverseMass();
     return;
   }
@@ -269,8 +264,7 @@ void ComputeMass(RigidBody* body)
   // compute the position offset from the center of mass to the
   // position of the parent collider in it's body space (only rotation).
   body->mPositionOffset = transform->GetWorldTranslation() - centerOfMass;
-  body->mPositionOffset = Math::TransposedTransform(
-      transform->GetWorldRotation(), body->mPositionOffset);
+  body->mPositionOffset = Math::TransposedTransform(transform->GetWorldRotation(), body->mPositionOffset);
 
   // We need to have infinite mass to be kinematic but we needed to compute
   // where the center of mass was. This requires computing the inverse mass.
@@ -292,14 +286,12 @@ void ComputeInertia(RigidBody* body)
   MassOverride* massOverride = body->GetOwner()->has(MassOverride);
   if (massOverride && massOverride->GetActive())
   {
-    body->mInvInertia.SetInvTensorModel(
-        massOverride->GetLocalInverseInertiaTensor());
+    body->mInvInertia.SetInvTensorModel(massOverride->GetLocalInverseInertiaTensor());
     return;
   }
 
   // compute the inertia
-  InertiaComputationFunctor inertiaFunctor(
-      body->InternalGetWorldCenterOfMass());
+  InertiaComputationFunctor inertiaFunctor(body->InternalGetWorldCenterOfMass());
   Recurse(body, inertiaFunctor);
 
   Mat3 invInertiaM;

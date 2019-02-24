@@ -13,9 +13,7 @@ bool NeedToBuild(StringParam source, StringParam destination)
   return !(CheckFileTime(destination, source) >= 0);
 }
 
-bool NeedToBuild(BuildOptions& options,
-                 StringParam source,
-                 StringParam destination)
+bool NeedToBuild(BuildOptions& options, StringParam source, StringParam destination)
 {
   if (options.BuildMode == BuildMode::Incremental)
   {
@@ -27,9 +25,7 @@ bool NeedToBuild(BuildOptions& options,
       if (options.Verbosity == Verbosity::Detailed)
       {
         String msg =
-            String::Format("Needs to build because '%s' is newer than '%s'\n",
-                           source.c_str(),
-                           destination.c_str());
+            String::Format("Needs to build because '%s' is newer than '%s'\n", source.c_str(), destination.c_str());
         options.BuildTextStream->Write(msg.c_str());
       }
       return true;
@@ -38,10 +34,7 @@ bool NeedToBuild(BuildOptions& options,
     {
       if (options.Verbosity == Verbosity::Detailed)
       {
-        String msg =
-            String::Format("File '%s' is up to date relative to '%s'\n",
-                           destination.c_str(),
-                           source.c_str());
+        String msg = String::Format("File '%s' is up to date relative to '%s'\n", destination.c_str(), source.c_str());
         options.BuildTextStream->Write(msg.c_str());
       }
       return false;
@@ -54,9 +47,7 @@ bool NeedToBuild(BuildOptions& options,
   }
 }
 
-bool CheckFileAndMeta(BuildOptions& options,
-                      StringParam sourceFile,
-                      StringParam destFile)
+bool CheckFileAndMeta(BuildOptions& options, StringParam sourceFile, StringParam destFile)
 {
   String metaFile = BuildString(sourceFile, ".meta");
   bool fileOutOfDate = NeedToBuild(options, sourceFile, destFile);
@@ -64,9 +55,7 @@ bool CheckFileAndMeta(BuildOptions& options,
   return fileOutOfDate || metaFileOutOfDate;
 }
 
-bool CheckToolFile(BuildOptions& options,
-                   StringParam outputFile,
-                   StringParam toolFile)
+bool CheckToolFile(BuildOptions& options, StringParam outputFile, StringParam toolFile)
 {
   String toolFileFull = FilePath::Combine(options.ToolPath, toolFile);
   String destFileFull = FilePath::Combine(options.OutputPath, outputFile);
@@ -81,9 +70,7 @@ bool FileSizeDiffers(cstr destination, cstr source)
   return sizeA != sizeB;
 }
 
-bool CheckFileMetaAndSize(BuildOptions& options,
-                          StringParam sourceFile,
-                          StringParam destFile)
+bool CheckFileMetaAndSize(BuildOptions& options, StringParam sourceFile, StringParam destFile)
 {
   if (CheckFileAndMeta(options, sourceFile, destFile))
     return true;

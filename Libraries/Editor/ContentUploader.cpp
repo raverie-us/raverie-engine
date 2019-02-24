@@ -69,9 +69,7 @@ public:
   }
 
   //****************************************************************************
-  DataEntry* GetChild(DataEntry* dataEntry,
-                      uint index,
-                      DataEntry* prev) override
+  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
   {
     if (dataEntry == mRoot)
       return mEntries[index];
@@ -90,16 +88,13 @@ public:
     ContentItem* contentItem = (ContentItem*)dataEntry;
     if (column == CommonColumns::Name)
     {
-      String name =
-          FilePath::GetFileNameWithoutExtension(contentItem->Filename);
+      String name = FilePath::GetFileNameWithoutExtension(contentItem->Filename);
       variant = name;
     }
   }
 
   //****************************************************************************
-  bool SetData(DataEntry* dataEntry,
-               AnyParam variant,
-               StringParam column) override
+  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
   {
     return false;
   }
@@ -140,14 +135,12 @@ void ContentExportTile::UpdateTransform()
     mMissingText->SizeToContents();
     // Y offset by the titlebar's height to place below it
     Vec2 textbarOffset = Vec2(0, cTileViewNameOffset);
-    WidgetRect textRect =
-        WidgetRect::PointAndSize(textbarOffset, backgroundSize);
+    WidgetRect textRect = WidgetRect::PointAndSize(textbarOffset, backgroundSize);
     // Place both the text and its background below the titlebar
     PlaceCenterToRect(textRect, mMissingTextBackground);
     PlaceCenterToRect(textRect, mMissingText);
 
-    mMissingText->mTranslation.x =
-        Math::Max(mMissingText->mTranslation.x, 0.0f);
+    mMissingText->mTranslation.x = Math::Max(mMissingText->mTranslation.x, 0.0f);
     mMissingText->mSize.x = Math::Min(mMissingText->mSize.x, mSize.x);
   }
 
@@ -174,8 +167,7 @@ void ContentExportTile::CheckForDependencies()
     MarkAsNeedsUpdate();
 }
 
-void ContentExportTile::GetMissingDependencies(
-    HashSet<ContentItem*>& missingDependencies)
+void ContentExportTile::GetMissingDependencies(HashSet<ContentItem*>& missingDependencies)
 {
   // Build the listing of all resources made by this content item
   ResourceListing listing;
@@ -185,7 +177,7 @@ void ContentExportTile::GetMissingDependencies(
   Handle instance = GetEditObject();
 
   // Get the dependencies from each resource
-  forRange(ResourceEntry & entry, listing.All())
+  forRange (ResourceEntry& entry, listing.All())
   {
     Resource* resource = Z::gResources->GetResource(entry.mResourceId);
     resource->GetDependencies(missingDependencies, instance);
@@ -193,7 +185,7 @@ void ContentExportTile::GetMissingDependencies(
 
   // Check for core resources in our dependencies list
   HashSet<ContentItem*> toRemove;
-  forRange(ContentItem * item, missingDependencies)
+  forRange (ContentItem* item, missingDependencies)
   {
     if (item->mLibrary->GetReadOnly())
       toRemove.Insert(item);
@@ -201,12 +193,12 @@ void ContentExportTile::GetMissingDependencies(
 
   // Remove core resources from the dependencies list as they don't need to be
   // exported
-  forRange(ContentItem * item, toRemove)
+  forRange (ContentItem* item, toRemove)
   {
     missingDependencies.Erase(item);
   }
 
-  forRange(ContentItem * dependency, missingDependencies.All())
+  forRange (ContentItem* dependency, missingDependencies.All())
   {
     // If it already contains the content item, we can remove it from the list
     if (mExporter->mContentItems.Contains(dependency))
@@ -214,7 +206,7 @@ void ContentExportTile::GetMissingDependencies(
   }
 
   // Remove the dependencies already listed in the content items
-  forRange(ContentItem * item, toRemove)
+  forRange (ContentItem* item, toRemove)
   {
     missingDependencies.Erase(item);
   }
@@ -237,7 +229,7 @@ void ContentExportTile::OnAddDependencies(Event* e)
   HashSet<ContentItem*> missingDependencies;
   GetMissingDependencies(missingDependencies);
 
-  forRange(ContentItem * dependency, missingDependencies.All())
+  forRange (ContentItem* dependency, missingDependencies.All())
   {
     mExporter->mContentItems.PushBack(dependency);
   }
@@ -253,9 +245,7 @@ void ContentExportTile::OnRemove(Event* e)
   mParent->DispatchBubble("RemoveSelectedItems", e);
 }
 
-ContentExporterTileView::ContentExporterTileView(
-    ContentPackageExporter* parent) :
-    TileView(parent)
+ContentExporterTileView::ContentExporterTileView(ContentPackageExporter* parent) : TileView(parent)
 {
   ConnectThisTo(this, Events::MetaDrop, OnMetaDrop);
   ConnectThisTo(this, Events::MetaDropTest, OnMetaDrop);
@@ -276,23 +266,17 @@ Resource* GetFirstResource(ContentItem* contentItem)
 }
 
 TileViewWidget* ContentExporterTileView::CreateTileViewWidget(
-    Composite* parent,
-    StringParam name,
-    HandleParam instance,
-    DataIndex index,
-    PreviewImportance::Enum minImportance)
+    Composite* parent, StringParam name, HandleParam instance, DataIndex index, PreviewImportance::Enum minImportance)
 {
   // We need to pull out a resource from the content item to display a preview
   ContentItem* contentItem = instance.Get<ContentItem*>();
   Resource* firstResource = GetFirstResource(contentItem);
 
-  PreviewWidget* tileWidget = ResourcePreview::CreatePreviewWidget(
-      parent, name, firstResource, minImportance);
+  PreviewWidget* tileWidget = ResourcePreview::CreatePreviewWidget(parent, name, firstResource, minImportance);
   if (tileWidget == nullptr)
     return nullptr;
 
-  return new ContentExportTile(
-      parent, this, tileWidget, index, mExporter, contentItem);
+  return new ContentExportTile(parent, this, tileWidget, index, mExporter, contentItem);
 }
 
 void ContentExporterTileView::OnMetaDrop(MetaDropEvent* e)
@@ -323,11 +307,9 @@ void ContentExporterTileView::OnMetaDrop(MetaDropEvent* e)
   }
 }
 
-ContentPackageExporter::ContentPackageExporter(Composite* parent) :
-    Composite(parent)
+ContentPackageExporter::ContentPackageExporter(Composite* parent) : Composite(parent)
 {
-  SetLayout(CreateStackLayout(
-      LayoutDirection::LeftToRight, Vec2::cZero, Thickness(4, 0, 4, 0)));
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness(4, 0, 4, 0)));
   this->SetMinSize(Pixels(800, 600));
 
   mTileView = new ContentExporterTileView(this);
@@ -342,8 +324,7 @@ ContentPackageExporter::ContentPackageExporter(Composite* parent) :
   splitter->SetInteractive(false);
 
   Composite* right = new Composite(this);
-  right->SetLayout(CreateStackLayout(
-      LayoutDirection::TopToBottom, Vec2::cZero, Thickness(4, 0, 4, 0)));
+  right->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness(4, 0, 4, 0)));
 
   mPropertyView = new PropertyView(right);
   mPropertyView->SetObject(&mTempPackage);
@@ -395,8 +376,7 @@ void ContentPackageExporter::OnExportPressed(Event* e)
 
   if (mContentItems.Empty())
   {
-    DoNotifyWarning("Cannot export content package",
-                    "No content items selected.");
+    DoNotifyWarning("Cannot export content package", "No content items selected.");
     return;
   }
 
@@ -426,7 +406,7 @@ void ContentPackageExporter::OnExportFileSelected(OsFileSelection* e)
   ContentPackageListing listing;
 
   // Add all the content items to the listing
-  forRange(ContentItem * item, mContentItems.All())
+  forRange (ContentItem* item, mContentItems.All())
   {
     listing.Location = item->mLibrary->SourcePath;
     String filename = item->GetFullPath();
@@ -478,13 +458,13 @@ void ContentPackageExporter::RemoveSelectedItems(Event*)
   selection->GetSelected(selected);
 
   Array<ContentItem*> toRemove;
-  forRange(DataIndex & index, selected)
+  forRange (DataIndex& index, selected)
   {
     ContentItem* item = (ContentItem*)mSource->ToEntry(index);
     toRemove.PushBack(item);
   }
 
-  forRange(ContentItem * content, toRemove.All())
+  forRange (ContentItem* content, toRemove.All())
   {
     mContentItems.EraseValue(content);
   }

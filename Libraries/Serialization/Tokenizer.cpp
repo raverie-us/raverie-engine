@@ -11,8 +11,7 @@ bool IsWord(Rune r)
 
 bool IsWordLegacy(Rune r)
 {
-  return IsAlpha(r) || IsDigit(r) || r.value == '_' || r.value == '.' ||
-         r.value == '[' || r.value == ']';
+  return IsAlpha(r) || IsDigit(r) || r.value == '_' || r.value == '.' || r.value == '[' || r.value == ']';
 }
 
 bool IsNumeric(Rune r)
@@ -22,8 +21,7 @@ bool IsNumeric(Rune r)
 
 bool IsNumericHex(Rune r)
 {
-  return IsDigit(r) || r.value == '.' || r.value == '-' || r.value == '+' ||
-         (r.value >= 'a' && r.value <= 'f') ||
+  return IsDigit(r) || r.value == '.' || r.value == '-' || r.value == '+' || (r.value >= 'a' && r.value <= 'f') ||
          (r.value >= 'A' && r.value <= 'F');
 }
 
@@ -78,9 +76,7 @@ StringRange MergeFront(StringRangeParam a, StringRangeParam b)
   return StringRange(a.Begin(), b.Begin());
 }
 
-void ExtractToken(TempToken& token,
-                  TempToken::TokenType type,
-                  StringRange& range)
+void ExtractToken(TempToken& token, TempToken::TokenType type, StringRange& range)
 {
   token.Text = range;
   token.Type = type;
@@ -216,8 +212,7 @@ bool Tokenizer::ReadWord(TempToken& token)
 {
   // read until the end of the word
   StringRange& text = mPosition;
-  StringRange endOfWord =
-      LegacyWordParse ? while_is(text, IsWordLegacy) : while_is(text, IsWord);
+  StringRange endOfWord = LegacyWordParse ? while_is(text, IsWordLegacy) : while_is(text, IsWord);
   // make the substring of the word and set it in the token
   token.Assign(TempToken::Word, MergeFront(text, endOfWord));
   mPosition = endOfWord;
@@ -234,8 +229,7 @@ bool Tokenizer::ReadNumber(TempToken& token)
   m.PopFront();
 
   // read the entire number, if hex is allowed then allow hex characters
-  StringRange endOfWord =
-      AllowHex ? while_is(m, IsNumericHex) : while_is(m, IsNumeric);
+  StringRange endOfWord = AllowHex ? while_is(m, IsNumericHex) : while_is(m, IsNumeric);
 
   token.Assign(TempToken::Number, MergeFront(text, endOfWord));
   mPosition = endOfWord;

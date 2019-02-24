@@ -16,15 +16,8 @@ struct JacobiSolver
     mErrorTolerance = real(.001f);
   }
 
-  template <typename MatrixType,
-            typename VectorType,
-            typename PolicyType,
-            typename ErrorCallbackType>
-  void Solve(MatrixType& A,
-             VectorType& b,
-             VectorType& x0,
-             PolicyType& policy,
-             ErrorCallbackType& errCallback)
+  template <typename MatrixType, typename VectorType, typename PolicyType, typename ErrorCallbackType>
+  void Solve(MatrixType& A, VectorType& b, VectorType& x0, PolicyType& policy, ErrorCallbackType& errCallback)
   {
     uint dimension = policy.GetDimension(b);
     uint iteration;

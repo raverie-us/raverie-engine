@@ -40,10 +40,7 @@ class TileViewWidget : public Composite
 public:
   ZilchDeclareType(TileViewWidget, TypeCopyMode::ReferenceType);
 
-  TileViewWidget(Composite* parent,
-                 TileView* tileView,
-                 PreviewWidget* tileWidget,
-                 DataIndex dataIndex);
+  TileViewWidget(Composite* parent, TileView* tileView, PreviewWidget* tileWidget, DataIndex dataIndex);
   ~TileViewWidget();
 
   DataIndex GetDataIndex();
@@ -122,12 +119,11 @@ public:
   float GetItemSize();
   void SetItemSize(float size);
 
-  virtual TileViewWidget* CreateTileViewWidget(
-      Composite* parent,
-      StringParam name,
-      HandleParam instance,
-      DataIndex index,
-      PreviewImportance::Enum minImportance = PreviewImportance::None);
+  virtual TileViewWidget* CreateTileViewWidget(Composite* parent,
+                                               StringParam name,
+                                               HandleParam instance,
+                                               DataIndex index,
+                                               PreviewImportance::Enum minImportance = PreviewImportance::None);
 
   ScrollArea* GetScrollArea();
 

@@ -24,9 +24,7 @@ void MultiManager::ManageWidget(Widget* widget)
   }
 }
 
-Window* MultiManager::AddManagedWidget(Widget* widget,
-                                       DockArea::Enum dockArea,
-                                       bool visible)
+Window* MultiManager::AddManagedWidget(Widget* widget, DockArea::Enum dockArea, bool visible)
 {
   LayoutInfo info;
   info.Area = dockArea;
@@ -62,8 +60,8 @@ Widget* MultiManager::FindWidgetWith(HandleParam searchObject)
   WindowTabEvent event;
   event.SearchObject = searchObject;
 
-  forRange(Widget * child, ManagedWidgets.All())
-      child->DispatchBubble(Events::TabFind, &event);
+  forRange (Widget* child, ManagedWidgets.All())
+    child->DispatchBubble(Events::TabFind, &event);
 
   return event.TabWidgetFound;
 }
@@ -74,8 +72,8 @@ Widget* MultiManager::FindWidget(StringParam name)
   WindowTabEvent event;
   event.Name = name;
 
-  forRange(Widget * child, ManagedWidgets.All())
-      child->DispatchBubble(Events::TabFind, &event);
+  forRange (Widget* child, ManagedWidgets.All())
+    child->DispatchBubble(Events::TabFind, &event);
 
   return event.TabWidgetFound;
 }
@@ -201,18 +199,15 @@ void MultiManager::Transfer(TabWidget* tabWidget, Widget* widget)
     Window* currentWindow = tabWidget->mTabArea->mParentWindow;
 
     // Open window on current location
-    IntVec2 windowPos =
-        ToIntVec2(ToVector2(currentWindow->GetScreenPosition()));
+    IntVec2 windowPos = ToIntVec2(ToVector2(currentWindow->GetScreenPosition()));
     windowPos += currentOsWindow->GetMonitorClientPosition();
     IntVec2 windowSize = Math::ToIntVec2(currentWindow->GetSize());
     String name = tabWidget->mTitle->GetText();
 
     // Create a new top level window
     WindowStyleFlags::Enum windowFlags = (WindowStyleFlags::Enum)(
-        WindowStyleFlags::Resizable | WindowStyleFlags::OnTaskBar |
-        WindowStyleFlags::ClientOnly);
-    OsWindow* newOsWindow = shell->CreateOsWindow(
-        name, windowSize, windowPos, currentOsWindow, windowFlags);
+        WindowStyleFlags::Resizable | WindowStyleFlags::OnTaskBar | WindowStyleFlags::ClientOnly);
+    OsWindow* newOsWindow = shell->CreateOsWindow(name, windowSize, windowPos, currentOsWindow, windowFlags);
     newOsWindow->SetMinClientSize(IntVec2(500, 500));
     MainWindow* rootWidget = new MainWindow(newOsWindow);
     rootWidget->SetTitle(name);

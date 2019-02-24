@@ -23,13 +23,9 @@ TextSaver::~TextSaver()
   Close();
 }
 
-void TextSaver::Open(Status& status,
-                     cstr file,
-                     DataVersion::Enum version,
-                     FileMode::Enum fileMode)
+void TextSaver::Open(Status& status, cstr file, DataVersion::Enum version, FileMode::Enum fileMode)
 {
-  ErrorIf(fileMode != FileMode::Write && fileMode != FileMode::Append,
-          "FileMode must be Write or Append.");
+  ErrorIf(fileMode != FileMode::Write && fileMode != FileMode::Append, "FileMode must be Write or Append.");
 
   Close();
   SetFlags();
@@ -46,8 +42,7 @@ void TextSaver::Open(Status& status,
 
 bool TextSaver::OpenBuffer(DataVersion::Enum version, FileMode::Enum fileMode)
 {
-  ErrorIf(fileMode != FileMode::Write && fileMode != FileMode::Append,
-          "FileMode must be Write or Append.");
+  ErrorIf(fileMode != FileMode::Write && fileMode != FileMode::Append, "FileMode must be Write or Append.");
 
   Close();
   SetFlags();
@@ -95,8 +90,7 @@ void TextSaver::Close()
   {
     File file;
 
-    bool opened =
-        file.Open(mFilename.c_str(), mWriteMode, FileAccessPattern::Sequential);
+    bool opened = file.Open(mFilename.c_str(), mWriteMode, FileAccessPattern::Sequential);
     ErrorIf(!opened, "Failed to open file for text output");
     if (opened)
     {
@@ -123,10 +117,7 @@ void TextSaver::Close()
   mStream.Deallocate();
 }
 
-bool TextSaver::InnerStart(cstr typeName,
-                           cstr fieldName,
-                           StructType structType,
-                           bool ignoreTabs)
+bool TextSaver::InnerStart(cstr typeName, cstr fieldName, StructType structType, bool ignoreTabs)
 {
   bool field = false;
   if (fieldName)
@@ -276,9 +267,7 @@ void TextSaver::InnerEnd(cstr typeName, StructType structType)
   }
 }
 
-bool TextSaver::SimpleField(cstr typeName,
-                            cstr fieldName,
-                            StringRange& stringRange)
+bool TextSaver::SimpleField(cstr typeName, cstr fieldName, StringRange& stringRange)
 {
   Start(typeName, fieldName, StructureType::Value);
 
@@ -308,9 +297,7 @@ bool TextSaver::SimpleField(cstr typeName,
   return true;
 }
 
-bool TextSaver::StringField(cstr typeName,
-                            cstr fieldName,
-                            StringRange& stringRange)
+bool TextSaver::StringField(cstr typeName, cstr fieldName, StringRange& stringRange)
 {
   Start(typeName, fieldName, StructureType::Value);
   // Start with a "
@@ -359,8 +346,7 @@ void TextSaver::StartPolymorphicInternal(const PolymorphicInfo& info)
   Tabs();
 
   bool additive = info.mFlags.IsSet(PolymorphicSaveFlags::LocallyAdded);
-  bool orderOverride =
-      info.mFlags.IsSet(PolymorphicSaveFlags::ChildOrderOverride);
+  bool orderOverride = info.mFlags.IsSet(PolymorphicSaveFlags::ChildOrderOverride);
 
   if (mVersion == DataVersion::Legacy)
   {
@@ -401,8 +387,7 @@ void TextSaver::StartPolymorphicInternal(const PolymorphicInfo& info)
     if (info.mUniqueNodeId != PolymorphicNode::cInvalidUniqueNodeId)
       SaveAttribute(SerializationAttributes::Id, ToString(info.mUniqueNodeId));
     if (!info.mInheritanceId.Empty())
-      SaveAttribute(
-          SerializationAttributes::InheritId, info.mInheritanceId, true);
+      SaveAttribute(SerializationAttributes::InheritId, info.mInheritanceId, true);
     if (additive)
       SaveAttribute(SerializationAttributes::LocallyAdded);
     if (orderOverride)
@@ -411,8 +396,7 @@ void TextSaver::StartPolymorphicInternal(const PolymorphicInfo& info)
     Handle object = info.mObject;
     if (object.StoredType)
     {
-      if (MetaSerialization* metaSerialization =
-              object.StoredType->HasInherited<MetaSerialization>())
+      if (MetaSerialization* metaSerialization = object.StoredType->HasInherited<MetaSerialization>())
         metaSerialization->AddCustomAttributes(object, this);
     }
   }
@@ -499,12 +483,8 @@ bool WriteArrayText(StringBuilder& os, type* data, uint numberOfElements)
   return result;
 }
 
-bool TextSaver::ArrayField(cstr typeName,
-                           cstr fieldName,
-                           byte* data,
-                           ArrayType arrayType,
-                           uint numberOfElements,
-                           uint sizeOftype)
+bool TextSaver::ArrayField(
+    cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype)
 {
   bool result = true;
 
@@ -535,10 +515,7 @@ bool TextSaver::ArrayField(cstr typeName,
   return result;
 }
 
-bool TextSaver::EnumField(cstr enumTypeName,
-                          cstr fieldName,
-                          uint& enumValue,
-                          BoundType* type)
+bool TextSaver::EnumField(cstr enumTypeName, cstr fieldName, uint& enumValue, BoundType* type)
 {
   InnerStart(enumTypeName, fieldName, StructureType::Value);
   Array<String>& strings = type->EnumValueToStrings[(Integer)enumValue];
@@ -566,9 +543,7 @@ bool TextSaver::EnumField(cstr enumTypeName,
   return true;
 }
 
-void TextSaver::SaveAttribute(StringParam name,
-                              StringParam value,
-                              bool stringValue)
+void TextSaver::SaveAttribute(StringParam name, StringParam value, bool stringValue)
 {
   mStream << "[";
   mStream << name;

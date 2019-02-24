@@ -43,13 +43,13 @@ AttenuatorNode::AttenuatorNode(StringParam name,
     DistanceInterpolator.SetCurve(curveType);
 
   // Set the low pass interpolator
-  LowPassInterpolator.SetValues(
-      cLowPassCutoffHighValue, cLowPassCutoffLowValue, endDistance * 0.5f);
+  LowPassInterpolator.SetValues(cLowPassCutoffHighValue, cLowPassCutoffLowValue, endDistance * 0.5f);
 }
 
 AttenuatorNode::~AttenuatorNode()
 {
-  forRange(AttenuationPerListener * data, DataPerListener.Values()) delete data;
+  forRange (AttenuationPerListener* data, DataPerListener.Values())
+    delete data;
 }
 
 void AttenuatorNode::SetPosition(Math::Vec3Param position)
@@ -60,40 +60,32 @@ void AttenuatorNode::SetPosition(Math::Vec3Param position)
 void AttenuatorNode::SetStartDistance(float distance)
 {
   mAttenStartDist.Set(distance, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&AttenuatorNode::UpdateDistanceInterpolator, this), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&AttenuatorNode::UpdateDistanceInterpolator, this), this);
 }
 
 void AttenuatorNode::SetEndDistance(float distance)
 {
   mAttenEndDist.Set(distance, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&AttenuatorNode::UpdateDistanceInterpolator, this), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&AttenuatorNode::UpdateDistanceInterpolator, this), this);
 }
 
 void AttenuatorNode::SetMinimumVolume(float volume)
 {
   mMinimumVolume.Set(volume, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&AttenuatorNode::UpdateDistanceInterpolator, this), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&AttenuatorNode::UpdateDistanceInterpolator, this), this);
 }
 
-void AttenuatorNode::SetCurveType(const FalloffCurveType::Enum type,
-                                  Array<Math::Vec3>* customCurveData)
+void AttenuatorNode::SetCurveType(const FalloffCurveType::Enum type, Array<Math::Vec3>* customCurveData)
 {
   if (customCurveData)
     // Interpolator will delete curve on destruction or when replaced with
     // another curve
-    Z::gSound->Mixer.AddTask(
-        CreateFunctor(&InterpolatingObject::SetCustomCurve,
-                      &DistanceInterpolator,
-                      new Array<Math::Vec3>(*customCurveData)),
-        this);
-  else
-    Z::gSound->Mixer.AddTask(CreateFunctor(&InterpolatingObject::SetCurve,
+    Z::gSound->Mixer.AddTask(CreateFunctor(&InterpolatingObject::SetCustomCurve,
                                            &DistanceInterpolator,
-                                           type),
+                                           new Array<Math::Vec3>(*customCurveData)),
                              this);
+  else
+    Z::gSound->Mixer.AddTask(CreateFunctor(&InterpolatingObject::SetCurve, &DistanceInterpolator, type), this);
 }
 
 void AttenuatorNode::SetUsingLowPass(const bool useLowPass)
@@ -104,15 +96,13 @@ void AttenuatorNode::SetUsingLowPass(const bool useLowPass)
 void AttenuatorNode::SetLowPassDistance(const float distance)
 {
   mLowPassDistance.Set(distance, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&AttenuatorNode::UpdateLowPassInterpolator, this), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&AttenuatorNode::UpdateLowPassInterpolator, this), this);
 }
 
 void AttenuatorNode::SetLowPassCutoffFreq(const float frequency)
 {
   mLowPassCutoff.Set(frequency, AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&AttenuatorNode::UpdateLowPassInterpolator, this), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&AttenuatorNode::UpdateLowPassInterpolator, this), this);
 }
 
 bool AttenuatorNode::GetOutputSamples(BufferType* outputBuffer,
@@ -134,8 +124,7 @@ bool AttenuatorNode::GetOutputSamples(BufferType* outputBuffer,
   }
 
   // Get the relative position with the listener
-  Math::Vec3 relativePosition = listener->GetRelativePositionThreaded(
-      mPosition.Get(AudioThreads::MixThread));
+  Math::Vec3 relativePosition = listener->GetRelativePositionThreaded(mPosition.Get(AudioThreads::MixThread));
   // Save the distance value
   float distance = relativePosition.Length();
 
@@ -148,8 +137,7 @@ bool AttenuatorNode::GetOutputSamples(BufferType* outputBuffer,
 
   // If we are outside the max distance and the minimum volume is zero, there is
   // no audio
-  if (distance >= mAttenEndDist.Get(AudioThreads::MixThread) &&
-      mMinimumVolume.Get(AudioThreads::MixThread) == 0.0f)
+  if (distance >= mAttenEndDist.Get(AudioThreads::MixThread) && mMinimumVolume.Get(AudioThreads::MixThread) == 0.0f)
     return false;
 
   float attenuatedVolume;
@@ -163,14 +151,11 @@ bool AttenuatorNode::GetOutputSamples(BufferType* outputBuffer,
     attenuatedVolume = 1.0f;
   // If the attenuation start and end are too close together than just use end
   // volume
-  else if (mAttenEndDist.Get(AudioThreads::MixThread) -
-               mAttenStartDist.Get(AudioThreads::MixThread) <=
-           0.1f)
+  else if (mAttenEndDist.Get(AudioThreads::MixThread) - mAttenStartDist.Get(AudioThreads::MixThread) <= 0.1f)
     attenuatedVolume = mMinimumVolume.Get(AudioThreads::MixThread);
   // Otherwise, get the value using the falloff curve on the interpolator
   else
-    attenuatedVolume = DistanceInterpolator.ValueAtDistance(
-        distance - mAttenStartDist.Get(AudioThreads::MixThread));
+    attenuatedVolume = DistanceInterpolator.ValueAtDistance(distance - mAttenStartDist.Get(AudioThreads::MixThread));
 
   // Check if the listener needs to be added to the map
   if (!DataPerListener.FindValue(listener, nullptr))
@@ -180,18 +165,13 @@ bool AttenuatorNode::GetOutputSamples(BufferType* outputBuffer,
 
   // Apply volume adjustment to each frame of samples
   InterpolatingObject volume;
-  volume.SetValues(listenerData.PreviousVolume,
-                   attenuatedVolume,
-                   bufferSize / numberOfChannels);
-  for (BufferRange outputRange = outputBuffer->All(),
-                   inputRange = mInputSamplesThreaded.All();
-       !outputRange.Empty();)
+  volume.SetValues(listenerData.PreviousVolume, attenuatedVolume, bufferSize / numberOfChannels);
+  for (BufferRange outputRange = outputBuffer->All(), inputRange = mInputSamplesThreaded.All(); !outputRange.Empty();)
   {
     float frameVolume = volume.NextValue();
 
     // Copy samples from input buffer and apply volume adjustment
-    for (unsigned j = 0; j < numberOfChannels;
-         ++j, outputRange.PopFront(), inputRange.PopFront())
+    for (unsigned j = 0; j < numberOfChannels; ++j, outputRange.PopFront(), inputRange.PopFront())
       outputRange.Front() = inputRange.Front() * frameVolume;
   }
 
@@ -199,22 +179,18 @@ bool AttenuatorNode::GetOutputSamples(BufferType* outputBuffer,
   listenerData.PreviousVolume = attenuatedVolume;
 
   // Check if using low pass filter
-  if (mUseLowPass.Get(AudioThreads::MixThread) &&
-      distance > mLowPassDistance.Get(AudioThreads::MixThread))
+  if (mUseLowPass.Get(AudioThreads::MixThread) && distance > mLowPassDistance.Get(AudioThreads::MixThread))
   {
     // Find cutoff frequency for this distance (will return end value if
     // distance is past AttenEndDist)
-    float cutoffFreq = LowPassInterpolator.ValueAtDistance(
-        distance - mLowPassDistance.Get(AudioThreads::MixThread));
+    float cutoffFreq = LowPassInterpolator.ValueAtDistance(distance - mLowPassDistance.Get(AudioThreads::MixThread));
 
     // Set the cutoff frequency on the filter
     listenerData.LowPass.SetCutoffFrequency(cutoffFreq);
 
     // Apply the filter to each frame of audio samples
-    listenerData.LowPass.ProcessBuffer(outputBuffer->Data(),
-                                       outputBuffer->Data(),
-                                       numberOfChannels,
-                                       outputBuffer->Size());
+    listenerData.LowPass.ProcessBuffer(
+        outputBuffer->Data(), outputBuffer->Data(), numberOfChannels, outputBuffer->Size());
   }
 
   AddBypassThreaded(outputBuffer);
@@ -227,13 +203,13 @@ float AttenuatorNode::GetVolumeChangeFromOutputsThreaded()
   float volume = 0.0f;
 
   // Get all volumes from outputs
-  forRange(HandleOf<SoundNode> node, GetOutputs(AudioThreads::MixThread)->All())
-      volume += node->GetVolumeChangeFromOutputsThreaded();
+  forRange (HandleOf<SoundNode> node, GetOutputs(AudioThreads::MixThread)->All())
+    volume += node->GetVolumeChangeFromOutputsThreaded();
 
   // If there are multiple listeners, the sounds they hear are added together
   float attenuatorVolume = 0.0f;
-  forRange(AttenuationPerListener * data, DataPerListener.Values())
-      attenuatorVolume += data->PreviousVolume;
+  forRange (AttenuationPerListener* data, DataPerListener.Values())
+    attenuatorVolume += data->PreviousVolume;
 
   // Return the output volume modified by this node's volume
   return volume * attenuatorVolume;
@@ -254,20 +230,18 @@ void AttenuatorNode::RemoveListenerThreaded(SoundEvent* event)
 
 void AttenuatorNode::UpdateDistanceInterpolator()
 {
-  DistanceInterpolator.SetValues(
-      1.0f,
-      mMinimumVolume.Get(AudioThreads::MixThread),
-      mAttenEndDist.Get(AudioThreads::MixThread) -
-          mAttenStartDist.Get(AudioThreads::MixThread));
+  DistanceInterpolator.SetValues(1.0f,
+                                 mMinimumVolume.Get(AudioThreads::MixThread),
+                                 mAttenEndDist.Get(AudioThreads::MixThread) -
+                                     mAttenStartDist.Get(AudioThreads::MixThread));
 }
 
 void AttenuatorNode::UpdateLowPassInterpolator()
 {
-  LowPassInterpolator.SetValues(
-      cLowPassCutoffHighValue,
-      mLowPassCutoff.Get(AudioThreads::MixThread),
-      mAttenEndDist.Get(AudioThreads::MixThread) -
-          mAttenStartDist.Get(AudioThreads::MixThread));
+  LowPassInterpolator.SetValues(cLowPassCutoffHighValue,
+                                mLowPassCutoff.Get(AudioThreads::MixThread),
+                                mAttenEndDist.Get(AudioThreads::MixThread) -
+                                    mAttenStartDist.Get(AudioThreads::MixThread));
 }
 
 } // namespace Zero

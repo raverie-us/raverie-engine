@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-GetVersionListingTaskJob::GetVersionListingTaskJob(StringParam url) :
-    DownloadTaskJob(url, cCacheSeconds)
+GetVersionListingTaskJob::GetVersionListingTaskJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
 {
 }
 
@@ -36,15 +35,12 @@ void GetVersionListingTaskJob::PopulatePackageList()
   static const String cOrigin = "GetVersionListingTaskJob";
   String jsonData = GetData();
   CompilationErrors errors;
-  JsonValue* jsonReleases =
-      JsonReader::ReadIntoTreeFromString(errors, jsonData, cOrigin, nullptr);
-  ReturnIf(
-      jsonReleases == nullptr, , "Invalid JsonValue created from GitHub API");
+  JsonValue* jsonReleases = JsonReader::ReadIntoTreeFromString(errors, jsonData, cOrigin, nullptr);
+  ReturnIf(jsonReleases == nullptr, , "Invalid JsonValue created from GitHub API");
 
   Space* space = Z::gEngine->GetEngineSpace();
 
-  Archetype* emptyArchetype =
-      ArchetypeManager::FindOrNull(CoreArchetypes::Empty);
+  Archetype* emptyArchetype = ArchetypeManager::FindOrNull(CoreArchetypes::Empty);
   ReturnIf(emptyArchetype == nullptr, , "Unable to find empty Cog Archetype");
 
   static const String cJsonAssets("assets");
@@ -58,11 +54,10 @@ void GetVersionListingTaskJob::PopulatePackageList()
 
   // Tags.Major.Minor.Patch.Revision.ShortChangeset-Platform.Extension
   // Example: ZeroEngineSetup.1.5.0.1501.fb02756c46a4-Win32.zerobuild
-  static const Regex cNameRegex(
-      "([a-zA-Z0-9_,]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9a-"
-      "fA-F]+)\\-([a-zA-Z0-9_]+)\\.([a-zA-Z0-9_]+)");
+  static const Regex cNameRegex("([a-zA-Z0-9_,]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9a-"
+                                "fA-F]+)\\-([a-zA-Z0-9_]+)\\.([a-zA-Z0-9_]+)");
 
-  forRange(JsonValue * jsonRelease, jsonReleases->ArrayElements)
+  forRange (JsonValue* jsonRelease, jsonReleases->ArrayElements)
   {
     JsonValue* jsonAssets = jsonRelease->GetMember(cJsonAssets);
 
@@ -70,7 +65,7 @@ void GetVersionListingTaskJob::PopulatePackageList()
       continue;
 
     // There should only be one, but this is safest to do.
-    forRange(JsonValue * jsonAsset, jsonAssets->ArrayElements)
+    forRange (JsonValue* jsonAsset, jsonAssets->ArrayElements)
     {
       String name = jsonAsset->MemberAsString(cJsonName);
 
@@ -101,19 +96,16 @@ void GetVersionListingTaskJob::PopulatePackageList()
       zeroBuildContent->mBuildId.mPlatform = matches[7].All();
       zeroBuildContent->mPackageExtension = matches[8].All();
 
-      zeroBuildContent->mChangeSetDate =
-          jsonAsset->MemberAsString(cJsonUpdatedAt);
+      zeroBuildContent->mChangeSetDate = jsonAsset->MemberAsString(cJsonUpdatedAt);
 
       // Remove the time portion (otherwise, the date is in the exact format we
       // expect: YYYY-MM-DD).
       StringIterator begin = zeroBuildContent->mChangeSetDate.Begin();
-      StringIterator end =
-          zeroBuildContent->mChangeSetDate.FindFirstOf(Rune('T')).Begin();
+      StringIterator end = zeroBuildContent->mChangeSetDate.FindFirstOf(Rune('T')).Begin();
       if (!end.Empty())
         zeroBuildContent->mChangeSetDate = StringRange(begin, end);
 
-      zeroBuildContent->mDownloadUrl =
-          jsonAsset->MemberAsString(cJsonDownloadUrl);
+      zeroBuildContent->mDownloadUrl = jsonAsset->MemberAsString(cJsonDownloadUrl);
 
       // Parse tags or anything else that we just populated (normally happens
       // during Initialize).
@@ -122,16 +114,14 @@ void GetVersionListingTaskJob::PopulatePackageList()
       String releaseNotes = jsonRelease->MemberAsString(cJsonBody);
       if (!releaseNotes.Empty())
       {
-        ZeroBuildReleaseNotes* zeroBuildReleaseNotes =
-            HasOrAdd<ZeroBuildReleaseNotes>(cog);
+        ZeroBuildReleaseNotes* zeroBuildReleaseNotes = HasOrAdd<ZeroBuildReleaseNotes>(cog);
         zeroBuildReleaseNotes->mNotes = jsonRelease->MemberAsString(cJsonBody);
       }
     }
   }
 }
 
-DownloadImageTaskJob::DownloadImageTaskJob(StringParam url) :
-    DownloadTaskJob(url, cCacheSeconds)
+DownloadImageTaskJob::DownloadImageTaskJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
 {
   mImageWasInvalid = false;
 }
@@ -149,10 +139,7 @@ void DownloadImageTaskJob::OnReponse(WebResponseEvent* event)
   {
     // just save the data
     Status status;
-    LoadImage(status,
-              (byte*)event->mData.Data(),
-              event->mData.SizeInBytes(),
-              &mImage);
+    LoadImage(status, (byte*)event->mData.Data(), event->mData.SizeInBytes(), &mImage);
 
     if (status.Failed())
     {
@@ -171,8 +158,7 @@ void DownloadImageTaskJob::OnReponse(WebResponseEvent* event)
   UpdateDownloadProgress();
 }
 
-LoadImageFromDiskTaskJob::LoadImageFromDiskTaskJob(StringParam path) :
-    DownloadImageTaskJob(path)
+LoadImageFromDiskTaskJob::LoadImageFromDiskTaskJob(StringParam path) : DownloadImageTaskJob(path)
 {
   mPath = path;
 }
@@ -198,8 +184,7 @@ void LoadImageFromDiskTaskJob::Execute()
   UpdateProgress(GetName(), 1.0f);
 }
 
-GetDataTaskJob::GetDataTaskJob(StringParam url) :
-    DownloadTaskJob(url, cCacheSeconds)
+GetDataTaskJob::GetDataTaskJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
 {
 }
 
@@ -227,8 +212,7 @@ void GetDataTaskJob::OnReponse(WebResponseEvent* event)
   UpdateDownloadProgress();
 }
 
-DownloadStandaloneTaskJob::DownloadStandaloneTaskJob(StringParam url) :
-    DownloadTaskJob(url, cCacheSeconds)
+DownloadStandaloneTaskJob::DownloadStandaloneTaskJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
 {
 }
 
@@ -251,8 +235,7 @@ void DownloadStandaloneTaskJob::OnReponse(WebResponseEvent* event)
     // Validate that we got any data (otherwise archive fails)
     if (data.SizeInBytes() == 0)
     {
-      String msg = String::Format("Download of build from url '%s' failed",
-                                  mRequest->mUrl.c_str());
+      String msg = String::Format("Download of build from url '%s' failed", mRequest->mUrl.c_str());
       DoNotifyWarning("Download failed", msg);
       return;
     }
@@ -332,9 +315,7 @@ void InstallBuildTaskJob::InstallBuild()
   mState = BackgroundTaskState::Completed;
 }
 
-DeleteDirectoryJob::DeleteDirectoryJob(StringParam directory,
-                                       StringParam rootDirectory,
-                                       bool recursivelyDeleteEmpty)
+DeleteDirectoryJob::DeleteDirectoryJob(StringParam directory, StringParam rootDirectory, bool recursivelyDeleteEmpty)
 {
   mDirectory = directory;
   mRootDirectory = rootDirectory;
@@ -347,8 +328,7 @@ void DeleteDirectoryJob::Execute()
     return;
 
   // Try to preserve the user's marked bad data if it existed
-  String markedBadPath =
-      FilePath::CombineWithExtension(mDirectory, "VersionMarkedBad", ".txt");
+  String markedBadPath = FilePath::CombineWithExtension(mDirectory, "VersionMarkedBad", ".txt");
   String markedBadData;
   if (FileExists(markedBadPath))
     markedBadData = ReadFileIntoString(markedBadPath);
@@ -360,8 +340,7 @@ void DeleteDirectoryJob::Execute()
   if (mRecursivelyDeleteEmpty)
   {
     String parentDir = FilePath::GetDirectoryPath(mDirectory);
-    while (!parentDir.Empty() && mRootDirectory != parentDir &&
-           FileRange(parentDir).Empty())
+    while (!parentDir.Empty() && mRootDirectory != parentDir && FileRange(parentDir).Empty())
     {
       DeleteDirectory(parentDir);
       parentDir = FilePath::GetDirectoryPath(parentDir);
@@ -379,8 +358,7 @@ void DeleteDirectoryJob::Execute()
   UpdateProgress("DeleteDirectory", 1.0f);
 }
 
-GetTemplateListingTaskJob::GetTemplateListingTaskJob(StringParam url) :
-    DownloadTaskJob(url, cCacheSeconds)
+GetTemplateListingTaskJob::GetTemplateListingTaskJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
 {
 }
 
@@ -411,15 +389,12 @@ void GetTemplateListingTaskJob::PopulateTemplateList()
   static const String cOrigin = "GetTemplateListingTaskJob";
   String jsonData = GetData();
   CompilationErrors errors;
-  JsonValue* jsonReleases =
-      JsonReader::ReadIntoTreeFromString(errors, jsonData, cOrigin, nullptr);
-  ReturnIf(
-      jsonReleases == nullptr, , "Invalid JsonValue created from GitHub API");
+  JsonValue* jsonReleases = JsonReader::ReadIntoTreeFromString(errors, jsonData, cOrigin, nullptr);
+  ReturnIf(jsonReleases == nullptr, , "Invalid JsonValue created from GitHub API");
 
   Space* space = Z::gEngine->GetEngineSpace();
 
-  Archetype* emptyArchetype =
-      ArchetypeManager::FindOrNull(CoreArchetypes::Empty);
+  Archetype* emptyArchetype = ArchetypeManager::FindOrNull(CoreArchetypes::Empty);
   ReturnIf(emptyArchetype == nullptr, , "Unable to find empty Cog Archetype");
 
   static const String cJsonAssets("assets");
@@ -431,11 +406,10 @@ void GetTemplateListingTaskJob::PopulateTemplateList()
   // Find a string that is _VersionNumber, this can include '.' ',' and '-' in
   // order to specify ranges The expected file name is SKU_UserId_BuildId where
   // _UserId is optional.
-  static const Regex cNameRegex(
-      "(\\w+)(_[\\w\\d\\.\\,\\-]+)?_([\\w\\d\\.\\,\\-]+)\\.zerotemplate");
+  static const Regex cNameRegex("(\\w+)(_[\\w\\d\\.\\,\\-]+)?_([\\w\\d\\.\\,\\-]+)\\.zerotemplate");
   static const size_t cNameRegexMatches = 4;
 
-  forRange(JsonValue * jsonRelease, jsonReleases->ArrayElements)
+  forRange (JsonValue* jsonRelease, jsonReleases->ArrayElements)
   {
     JsonValue* jsonAssets = jsonRelease->GetMember(cJsonAssets);
 
@@ -443,7 +417,7 @@ void GetTemplateListingTaskJob::PopulateTemplateList()
       continue;
 
     // There should only be one, but this is safest to do.
-    forRange(JsonValue * jsonAsset, jsonAssets->ArrayElements)
+    forRange (JsonValue* jsonAsset, jsonAssets->ArrayElements)
     {
       String name = jsonAsset->MemberAsString(cJsonName);
 
@@ -477,8 +451,7 @@ void GetTemplateListingTaskJob::PopulateTemplateList()
 
       // The icon url is always the same as the template url, but with a png
       // extension instead.
-      zeroTemplate->mIconUrl =
-          zeroTemplate->mDownloadUrl.Replace(".zerotemplate", ".png");
+      zeroTemplate->mIconUrl = zeroTemplate->mDownloadUrl.Replace(".zerotemplate", ".png");
 
       zeroTemplate->mDisplayName = jsonRelease->MemberAsString(cJsonName);
       zeroTemplate->mDescription = jsonRelease->MemberAsString(cJsonBody);
@@ -490,8 +463,7 @@ void GetTemplateListingTaskJob::PopulateTemplateList()
   }
 }
 
-DownloadTemplateTaskJob::DownloadTemplateTaskJob(StringParam templateUrl,
-                                                 TemplateProject* project) :
+DownloadTemplateTaskJob::DownloadTemplateTaskJob(StringParam templateUrl, TemplateProject* project) :
     DownloadTaskJob(templateUrl, cCacheSeconds)
 {
   mTemplate = project;
@@ -521,31 +493,24 @@ void DownloadTemplateTaskJob::OnReponse(WebResponseEvent* event)
 
   // Save the template meta file
   FilePath::GetFileNameWithoutExtension(mTemplateNameWithoutExtension);
-  String metaFilePath = FilePath::CombineWithExtension(
-      mTemplateInstallLocation, mTemplateNameWithoutExtension, ".meta");
-  WriteToFile(metaFilePath.c_str(),
-              (byte*)mMetaContents.c_str(),
-              mMetaContents.SizeInBytes());
+  String metaFilePath =
+      FilePath::CombineWithExtension(mTemplateInstallLocation, mTemplateNameWithoutExtension, ".meta");
+  WriteToFile(metaFilePath.c_str(), (byte*)mMetaContents.c_str(), mMetaContents.SizeInBytes());
 
   // Save the template zip
-  String templateFilePath =
-      FilePath::CombineWithExtension(mTemplateInstallLocation,
-                                     mTemplateNameWithoutExtension,
-                                     TemplateProject::mExtensionWithDot);
-  WriteToFile(
-      templateFilePath.c_str(), (byte*)data.c_str(), data.SizeInBytes());
+  String templateFilePath = FilePath::CombineWithExtension(
+      mTemplateInstallLocation, mTemplateNameWithoutExtension, TemplateProject::mExtensionWithDot);
+  WriteToFile(templateFilePath.c_str(), (byte*)data.c_str(), data.SizeInBytes());
 
   // Save the icon image
-  String iconFilePath =
-      FilePath::Combine(mTemplateInstallLocation, zeroTemplate->mIconUrl);
+  String iconFilePath = FilePath::Combine(mTemplateInstallLocation, zeroTemplate->mIconUrl);
   Status status;
   SaveImage(status, iconFilePath, &mTemplate->mIconImage, ImageSaveFormat::Png);
 
   mState = BackgroundTaskState::Completed;
 }
 
-DownloadAndCreateTemplateTaskJob::DownloadAndCreateTemplateTaskJob(
-    StringParam templateUrl, TemplateProject* project) :
+DownloadAndCreateTemplateTaskJob::DownloadAndCreateTemplateTaskJob(StringParam templateUrl, TemplateProject* project) :
     DownloadTemplateTaskJob(templateUrl, project)
 {
 }
@@ -574,8 +539,7 @@ void DownloadAndCreateTemplateTaskJob::OnReponse(WebResponseEvent* event)
   // Nothing to do here (we can only run serialization on the main thread)
 }
 
-CachedProject* DownloadAndCreateTemplateTaskJob::GetOrCreateCachedProject(
-    ProjectCache* projectCache)
+CachedProject* DownloadAndCreateTemplateTaskJob::GetOrCreateCachedProject(ProjectCache* projectCache)
 {
   // The cached project was already created, just return it
   if (mCachedProject != nullptr)
@@ -594,14 +558,11 @@ CachedProject* DownloadAndCreateTemplateTaskJob::GetOrCreateCachedProject(
   // delete the old file.
   String templatePath = GetTemporaryDirectory();
   String templateFilePath =
-      FilePath::CombineWithExtension(templatePath,
-                                     mTemplateNameWithoutExtension,
-                                     TemplateProject::mExtensionWithDot);
+      FilePath::CombineWithExtension(templatePath, mTemplateNameWithoutExtension, TemplateProject::mExtensionWithDot);
   if (FileExists(templateFilePath))
     DeleteFile(templateFilePath);
   String data = GetData();
-  WriteToFile(
-      templateFilePath.c_str(), (byte*)data.c_str(), data.SizeInBytes());
+  WriteToFile(templateFilePath.c_str(), (byte*)data.c_str(), data.SizeInBytes());
 
   // From the downloaded file, create the project
   CreateFromTemplateFile(templateFilePath, projectCache);
@@ -609,14 +570,12 @@ CachedProject* DownloadAndCreateTemplateTaskJob::GetOrCreateCachedProject(
   return mCachedProject;
 }
 
-void DownloadAndCreateTemplateTaskJob::CreateFromTemplateFile(
-    StringParam templateFilePath, ProjectCache* projectCache)
+void DownloadAndCreateTemplateTaskJob::CreateFromTemplateFile(StringParam templateFilePath, ProjectCache* projectCache)
 {
   // Create the project from the template
-  String projectFolder =
-      FilePath::Combine(mProjectInstallLocation, mProjectName);
-  mCachedProject = projectCache->CreateProjectFromTemplate(
-      mProjectName, projectFolder, templateFilePath, mBuildId, mProjectTags);
+  String projectFolder = FilePath::Combine(mProjectInstallLocation, mProjectName);
+  mCachedProject =
+      projectCache->CreateProjectFromTemplate(mProjectName, projectFolder, templateFilePath, mBuildId, mProjectTags);
 
   if (mCachedProject == nullptr)
     mState = BackgroundTaskState::Failed;
@@ -624,8 +583,8 @@ void DownloadAndCreateTemplateTaskJob::CreateFromTemplateFile(
     mState = BackgroundTaskState::Completed;
 }
 
-DownloadLauncherPatchInstallerJob::DownloadLauncherPatchInstallerJob(
-    StringParam url, StringParam rootDownloadLocation) :
+DownloadLauncherPatchInstallerJob::DownloadLauncherPatchInstallerJob(StringParam url,
+                                                                     StringParam rootDownloadLocation) :
     DownloadTaskJob(url, cCacheSeconds)
 {
   mRootDownloadLocation = rootDownloadLocation;
@@ -678,8 +637,7 @@ void DownloadLauncherPatchInstallerJob::OnReponse(WebResponseEvent* event)
 String DownloadLauncherPatchInstallerJob::FindPatchId(Archive& archive)
 {
   // Find the version id file and return it's contents
-  for (Archive::range range = archive.GetEntries(); !range.Empty();
-       range.PopFront())
+  for (Archive::range range = archive.GetEntries(); !range.Empty(); range.PopFront())
   {
     ArchiveEntry& entry = range.Front();
     if (entry.Name != "ZeroLauncherVersionId.txt")
@@ -692,8 +650,7 @@ String DownloadLauncherPatchInstallerJob::FindPatchId(Archive& archive)
   return String();
 }
 
-DownloadLauncherMajorInstallerJob::DownloadLauncherMajorInstallerJob(
-    StringParam url) :
+DownloadLauncherMajorInstallerJob::DownloadLauncherMajorInstallerJob(StringParam url) :
     DownloadTaskJob(url, cCacheSeconds)
 {
   mIsNewInstallerAvailable = false;
@@ -721,8 +678,7 @@ void DownloadLauncherMajorInstallerJob::OnReponse(WebResponseEvent* event)
   mIsNewInstallerAvailable = true;
   // Write the installer to a temp location
   String temporaryDirectory = GetTemporaryDirectory();
-  mInstallerPath =
-      FilePath::Combine(temporaryDirectory, "ZeroLauncherInstaller.exe");
+  mInstallerPath = FilePath::Combine(temporaryDirectory, "ZeroLauncherInstaller.exe");
   if (FileExists(mInstallerPath))
     DeleteFile(mInstallerPath);
 
@@ -730,8 +686,7 @@ void DownloadLauncherMajorInstallerJob::OnReponse(WebResponseEvent* event)
   mState = BackgroundTaskState::Completed;
 }
 
-BackupProjectJob::BackupProjectJob(StringParam projectPath,
-                                   StringParam destFilePath)
+BackupProjectJob::BackupProjectJob(StringParam projectPath, StringParam destFilePath)
 {
   mOpenDirectoryOnCompletion = true;
   mProjectPath = projectPath;
@@ -770,9 +725,7 @@ void BackupProjectJob::Execute()
     Os::SystemOpenFile(targetDirector.c_str());
 }
 
-void BackupProjectJob::GetFileList(StringParam path,
-                                   StringParam parentPath,
-                                   Array<ArchiveData>& fileList)
+void BackupProjectJob::GetFileList(StringParam path, StringParam parentPath, Array<ArchiveData>& fileList)
 {
   FileRange fileRange(path);
   for (; !fileRange.Empty(); fileRange.PopFront())

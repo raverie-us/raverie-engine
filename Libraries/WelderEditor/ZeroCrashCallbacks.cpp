@@ -49,9 +49,7 @@ bool CrashCustomMemoryCallback(MemoryRange& memRange, void* userData)
   return true;
 }
 
-void CrashLoggingCallback(CrashHandlerParameters& params,
-                          CrashInfo& info,
-                          void* userData)
+void CrashLoggingCallback(CrashHandlerParameters& params, CrashInfo& info, void* userData)
 {
   String tempDirectory = GetTemporaryDirectory();
 
@@ -64,16 +62,14 @@ void CrashLoggingCallback(CrashHandlerParameters& params,
   {
     StackEntry& entry = stackTrace.Stack[i];
     // Print the location of the crash to the log
-    String location =
-        entry.Location.GetFormattedString(Zilch::MessageFormat::Python);
+    String location = entry.Location.GetFormattedString(Zilch::MessageFormat::Python);
     ZPrint("%s\n", location.c_str());
 
     // Only append scripts so we can attach them to crashes
     if (entry.Location.IsNative)
       continue;
 
-    String fileName =
-        FilePath::GetFileNameWithoutExtension(entry.Location.Origin);
+    String fileName = FilePath::GetFileNameWithoutExtension(entry.Location.Origin);
     // Collect each file only once
     fileNamesToFileContents[fileName] = entry.Location.Code;
   }
@@ -109,13 +105,11 @@ String GetToolsPath()
 {
   if (Z::gContentSystem && !Z::gContentSystem->ToolPath.Empty())
   {
-    return FilePath::Combine(Z::gContentSystem->ToolPath,
-                             "ZeroCrashHandler.exe");
+    return FilePath::Combine(Z::gContentSystem->ToolPath, "ZeroCrashHandler.exe");
   }
   else
   {
-    return FilePath::Combine(
-        GetApplicationDirectory(), "Tools", "ZeroCrashHandler.exe");
+    return FilePath::Combine(GetApplicationDirectory(), "Tools", "ZeroCrashHandler.exe");
   }
 }
 
@@ -139,17 +133,14 @@ void SendCrashReport(CrashHandlerParameters& params, void* userData)
   String crashToolPathA = GetToolsPath();
 
   Status status;
-  bool success = Os::SystemOpenFile(
-      status, crashToolPathA.c_str(), NULL, paramString.c_str());
+  bool success = Os::SystemOpenFile(status, crashToolPathA.c_str(), NULL, paramString.c_str());
 
   if (success == true)
     return;
 
   // May be exported try other path
-  String crashToolPathB = FilePath::Combine(
-      GetTemporaryDirectory(), "Zero", "Tools", "ZeroCrashHandler.exe");
-  success = Os::SystemOpenFile(
-      status, crashToolPathB.c_str(), NULL, paramString.c_str());
+  String crashToolPathB = FilePath::Combine(GetTemporaryDirectory(), "Zero", "Tools", "ZeroCrashHandler.exe");
+  success = Os::SystemOpenFile(status, crashToolPathB.c_str(), NULL, paramString.c_str());
 }
 
 } // namespace Zero

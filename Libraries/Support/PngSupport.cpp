@@ -9,9 +9,7 @@ namespace Zero
 const uint PngSignatureSize = 8;
 
 // Read data from any Stream
-static void StreamReadData(png_structp pngPtr,
-                           png_bytep data,
-                           png_size_t length)
+static void StreamReadData(png_structp pngPtr, png_bytep data, png_size_t length)
 {
   png_voidp ioPtr = png_get_io_ptr(pngPtr);
   Stream* stream = (Stream*)ioPtr;
@@ -19,9 +17,7 @@ static void StreamReadData(png_structp pngPtr,
 }
 
 // Write data to any Stream
-static void StreamWriteData(png_structp pngPtr,
-                            png_bytep data,
-                            png_size_t length)
+static void StreamWriteData(png_structp pngPtr, png_bytep data, png_size_t length)
 {
   png_voidp ioPtr = png_get_io_ptr(pngPtr);
   Stream* stream = (Stream*)ioPtr;
@@ -51,8 +47,7 @@ bool ReadPngInfo(Stream* stream, ImageInfo& info)
   if (!IsPng(stream))
     return false;
 
-  png_structp pngPtr =
-      png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+  png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
   png_infop infoPtr = png_create_info_struct(pngPtr);
 
   if (setjmp(png_jmpbuf(pngPtr)))
@@ -121,8 +116,7 @@ void LoadPng(Status& status,
   // you can supply null for the last three parameters.  We also supply the
   // the compiler header file version, so that we know if the application
   // was compiled with a compatible version of the library.  REQUIRED
-  png_structp pngPtr =
-      png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+  png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
   if (pngPtr == nullptr)
   {
     status.SetFailed("Can not read png file");
@@ -164,15 +158,7 @@ void LoadPng(Status& status,
 
   png_uint_32 readWidth, readHeight;
   int readDepth, colorType, interlaceType;
-  png_get_IHDR(pngPtr,
-               infoPtr,
-               &readWidth,
-               &readHeight,
-               &readDepth,
-               &colorType,
-               &interlaceType,
-               nullptr,
-               nullptr);
+  png_get_IHDR(pngPtr, infoPtr, &readWidth, &readHeight, &readDepth, &colorType, &interlaceType, nullptr, nullptr);
 
   // Strip 16 bits/color files down to 8 bits/color.
   if (requireFormat == TextureFormat::RGBA8)
@@ -203,8 +189,7 @@ void LoadPng(Status& status,
     png_set_tRNS_to_alpha(pngPtr);
 
   // Expand grayscale images to RGB/RGBA
-  if (colorType == PNG_COLOR_TYPE_GRAY ||
-      colorType == PNG_COLOR_TYPE_GRAY_ALPHA)
+  if (colorType == PNG_COLOR_TYPE_GRAY || colorType == PNG_COLOR_TYPE_GRAY_ALPHA)
     png_set_gray_to_rgb(pngPtr);
 
   // Add filler (or alpha) byte (before/after each RGB triplet)
@@ -247,12 +232,7 @@ void LoadPng(Status& status,
     *format = TextureFormat::RGBA8;
 }
 
-void SavePng(Status& status,
-             Stream* stream,
-             const byte* image,
-             uint width,
-             uint height,
-             TextureFormat::Enum format)
+void SavePng(Status& status, Stream* stream, const byte* image, uint width, uint height, TextureFormat::Enum format)
 {
   if (!IsPngSaveFormat(format))
   {
@@ -267,8 +247,7 @@ void SavePng(Status& status,
   }
 
   // Initialize the write struct
-  png_structp png_ptr =
-      png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+  png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 
   // Initialize the info struct.
   png_infop pngInfo = png_create_info_struct(png_ptr);

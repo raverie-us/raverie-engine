@@ -14,8 +14,7 @@ struct MatchesPrivateData;
 class StringBuilder;
 
 // The flavor of regular expressions
-DeclareEnum6(
-    RegexFlavor, EcmaScript, PosixBasic, PosixExtended, Awk, Grep, Egrep);
+DeclareEnum6(RegexFlavor, EcmaScript, PosixBasic, PosixExtended, Awk, Grep, Egrep);
 
 // Any flags we want to give to the regex (generally used for searching)
 DeclareBitField1(RegexFlags, MatchNotNull);
@@ -95,18 +94,14 @@ public:
 
   // Search a given string and return matches (clears matches that are passed
   // in)
-  void Search(StringRange text,
-              Matches& matches,
-              RegexFlags::Type flags = RegexFlags::None) const;
+  void Search(StringRange text, Matches& matches, RegexFlags::Type flags = RegexFlags::None) const;
 
   // Replace all matches in a given string
   String Replace(StringRange source, StringRange replaceWith) const;
 
   // Escape a string so that it can be used directly in a regex, typically for
   // finding exactly that string
-  static String Escape(StringRange input,
-                       EscapeMode::Enum mode,
-                       RegexFlavor::Enum flavor = RegexFlavor::EcmaScript);
+  static String Escape(StringRange input, EscapeMode::Enum mode, RegexFlavor::Enum flavor = RegexFlavor::EcmaScript);
 
   // Validate the regular expression
   static bool Validate(StringRange regex,

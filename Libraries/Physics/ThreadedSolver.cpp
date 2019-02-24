@@ -25,9 +25,7 @@ namespace Physics
 {
 
 template <typename JointList>
-void ThreadSolveFunction(JointList& joints,
-                         MoleculeWalker molecules,
-                         uint startIndex)
+void ThreadSolveFunction(JointList& joints, MoleculeWalker molecules, uint startIndex)
 {
   MoleculeWalker mols = molecules;
   mols += startIndex;
@@ -110,8 +108,7 @@ void ThreadedSolver::Clear()
   ClearFragmentList(mJoints);
   ClearFragmentList(mContacts);
 
-  GroupOperationFragment<ContactList>(mContactPhases,
-                                      ClearFragmentList<ContactList>);
+  GroupOperationFragment<ContactList>(mContactPhases, ClearFragmentList<ContactList>);
   GroupOperationFragment<JointList>(mJointPhases, ClearFragmentList<JointList>);
 
   mJointPhases.Clear();
@@ -127,10 +124,8 @@ void ThreadedSolver::UpdateData()
   SplitConstraints(mContacts, mContactPhases);
   SplitConstraints(mJoints, mJointPhases);
 
-  GroupOperationParamFragment<ContactList>(
-      mContactPhases, molecules, UpdateDataFragmentList<ContactList>);
-  GroupOperationParamFragment<JointList>(
-      mJointPhases, molecules, UpdateDataFragmentList<JointList>);
+  GroupOperationParamFragment<ContactList>(mContactPhases, molecules, UpdateDataFragmentList<ContactList>);
+  GroupOperationParamFragment<JointList>(mJointPhases, molecules, UpdateDataFragmentList<JointList>);
 }
 
 void ThreadedSolver::WarmStart()
@@ -140,10 +135,8 @@ void ThreadedSolver::WarmStart()
 
   MoleculeWalker molecules(mMolecules.Data(), sizeof(ConstraintMolecule), 0);
 
-  GroupOperationParamFragment<ContactList>(
-      mContactPhases, molecules, WarmStartFragmentList<ContactList>);
-  GroupOperationParamFragment<JointList>(
-      mJointPhases, molecules, WarmStartFragmentList<JointList>);
+  GroupOperationParamFragment<ContactList>(mContactPhases, molecules, WarmStartFragmentList<ContactList>);
+  GroupOperationParamFragment<JointList>(mJointPhases, molecules, WarmStartFragmentList<JointList>);
 }
 
 void ThreadedSolver::SolveVelocities()
@@ -158,25 +151,17 @@ void ThreadedSolver::IterateVelocities(uint iteration)
   MoleculeWalker molecules(mMolecules.Data(), sizeof(ConstraintMolecule), 0);
 
   GroupOperationTwoParamFragment<ContactList>(
-      mContactPhases,
-      molecules,
-      iteration,
-      IterateVelocitiesFragmentList<ContactList>);
+      mContactPhases, molecules, iteration, IterateVelocitiesFragmentList<ContactList>);
   GroupOperationTwoParamFragment<JointList>(
-      mJointPhases,
-      molecules,
-      iteration,
-      IterateVelocitiesFragmentList<JointList>);
+      mJointPhases, molecules, iteration, IterateVelocitiesFragmentList<JointList>);
 }
 
 void ThreadedSolver::SolvePositions()
 {
   // first have to re-collect all of the joints and contacts so we
   // can prune out the ones we don't solve positions on
-  GroupOperationParamFragment<ContactList>(
-      mContactPhases, mContacts, CollectJoints<ContactList>);
-  GroupOperationParamFragment<JointList>(
-      mJointPhases, mJoints, CollectJoints<JointList>);
+  GroupOperationParamFragment<ContactList>(mContactPhases, mContacts, CollectJoints<ContactList>);
+  GroupOperationParamFragment<JointList>(mJointPhases, mJoints, CollectJoints<JointList>);
 
   // Could in theory split back onto lists to thread, but that's a rather
   // expensive operation. Maybe just prune each list, but unfortunately then
@@ -191,9 +176,7 @@ void ThreadedSolver::SolvePositions()
   CollectJointsToSolve(mJoints, jointsToSolve);
   CollectContactsToSolve(mContacts, contactsToSolve, mSolverConfig);
 
-  for (uint iterationCount = 0;
-       iterationCount < GetSolverPositionIterationCount();
-       ++iterationCount)
+  for (uint iterationCount = 0; iterationCount < GetSolverPositionIterationCount(); ++iterationCount)
   {
     BlockSolvePositions(jointsToSolve, EmptyUpdate<Joint>);
     BlockSolvePositions(contactsToSolve, ContactUpdate);
@@ -211,24 +194,19 @@ void ThreadedSolver::Commit()
 {
   MoleculeWalker molecules(mMolecules.Data(), sizeof(ConstraintMolecule), 0);
 
-  GroupOperationParamFragment<ContactList>(
-      mContactPhases, molecules, CommitFragmentList<ContactList>);
-  GroupOperationParamFragment<JointList>(
-      mJointPhases, molecules, CommitFragmentList<JointList>);
+  GroupOperationParamFragment<ContactList>(mContactPhases, molecules, CommitFragmentList<ContactList>);
+  GroupOperationParamFragment<JointList>(mJointPhases, molecules, CommitFragmentList<JointList>);
 }
 
 void ThreadedSolver::BatchEvents()
 {
-  GroupOperationFragment<JointList>(mJointPhases,
-                                    BatchEventsFragmentList<JointList>);
+  GroupOperationFragment<JointList>(mJointPhases, BatchEventsFragmentList<JointList>);
 }
 
 void ThreadedSolver::DrawJoints(uint debugFlag)
 {
-  GroupOperationFragment<ContactList>(mContactPhases,
-                                      DrawJointsFragmentList<ContactList>);
-  GroupOperationFragment<JointList>(mJointPhases,
-                                    DrawJointsFragmentList<JointList>);
+  GroupOperationFragment<ContactList>(mContactPhases, DrawJointsFragmentList<ContactList>);
+  GroupOperationFragment<JointList>(mJointPhases, DrawJointsFragmentList<JointList>);
 }
 
 } // namespace Physics

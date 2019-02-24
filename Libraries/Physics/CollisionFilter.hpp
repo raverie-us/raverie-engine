@@ -4,13 +4,8 @@
 namespace Zero
 {
 
-DeclareBitField6(FilterFlags,
-                 SkipResolution,
-                 SkipDetectingCollision,
-                 StartEvent,
-                 EndEvent,
-                 PersistedEvent,
-                 PreSolveEvent);
+DeclareBitField6(
+    FilterFlags, SkipResolution, SkipDetectingCollision, StartEvent, EndEvent, PersistedEvent, PreSolveEvent);
 
 /// Controls what parts of collision detection/resolution are run for a
 /// CollisionGroup pair. <param name="SkipDetection">Don't run collision
@@ -18,10 +13,7 @@ DeclareBitField6(FilterFlags,
 /// name="SkipResolution">Don't run collision resolution. Detection will still
 /// be run so events might be sent out.</param> <param name="Resolve">Run both
 /// collision detection and resolution as normal.</param>
-DeclareEnum3(CollisionFilterCollisionFlags,
-             SkipDetection,
-             SkipResolution,
-             Resolve);
+DeclareEnum3(CollisionFilterCollisionFlags, SkipDetection, SkipResolution, Resolve);
 
 /// Returns a display string for the filter
 String GroupFilterDisplay(CollisionFilter* filter);

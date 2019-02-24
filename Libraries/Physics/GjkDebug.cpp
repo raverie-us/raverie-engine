@@ -89,12 +89,9 @@ void GjkDebug::DebugDraw(void)
     return;
 
   // Origin lines
-  gDebugDraw->Add(
-      Debug::Line(Vec3(0.5f, 0, 0), Vec3(-0.5f, 0, 0)).Color(Color::Red));
-  gDebugDraw->Add(
-      Debug::Line(Vec3(0, 0.5f, 0), Vec3(0, -0.5f, 0)).Color(Color::Green));
-  gDebugDraw->Add(
-      Debug::Line(Vec3(0, 0, 0.5f), Vec3(0, 0, -0.5f)).Color(Color::Blue));
+  gDebugDraw->Add(Debug::Line(Vec3(0.5f, 0, 0), Vec3(-0.5f, 0, 0)).Color(Color::Red));
+  gDebugDraw->Add(Debug::Line(Vec3(0, 0.5f, 0), Vec3(0, -0.5f, 0)).Color(Color::Green));
+  gDebugDraw->Add(Debug::Line(Vec3(0, 0, 0.5f), Vec3(0, 0, -0.5f)).Color(Color::Blue));
 
   // ComputeCSO();
 
@@ -119,10 +116,8 @@ void GjkDebug::DebugDraw(void)
   Intersection::Gjk gjk;
   Intersection::Type type;
 
-  Intersection::SupportShape shapeA =
-      GetOwner()->has(Collider)->GetSupportShape(true);
-  Intersection::SupportShape shapeB =
-      mOtherObject.has(Collider)->GetSupportShape(true);
+  Intersection::SupportShape shapeA = GetOwner()->has(Collider)->GetSupportShape(true);
+  Intersection::SupportShape shapeB = mOtherObject.has(Collider)->GetSupportShape(true);
 
   // real dt = 2.0855958f;
   Transform* transformA = GetOwner()->has(Transform);
@@ -168,15 +163,10 @@ void GjkDebug::DebugDraw(void)
   gjk.DrawDebug(0);
   if (type != Intersection::None)
   {
-    gDebugDraw->Add(Debug::Sphere(manifold.Points[0].Points[0], 0.01f)
-                        .Color(Color::Red)
-                        .OnTop(true));
-    gDebugDraw->Add(Debug::Sphere(manifold.Points[0].Points[1], 0.01f)
-                        .Color(Color::Red)
-                        .OnTop(true));
+    gDebugDraw->Add(Debug::Sphere(manifold.Points[0].Points[0], 0.01f).Color(Color::Red).OnTop(true));
+    gDebugDraw->Add(Debug::Sphere(manifold.Points[0].Points[1], 0.01f).Color(Color::Red).OnTop(true));
 
-    gDebugDraw->Add(Debug::Line(manifold.Points[0].Points[0],
-                                manifold.Points[0].Points[0] + manifold.Normal)
+    gDebugDraw->Add(Debug::Line(manifold.Points[0].Points[0], manifold.Points[0].Points[0] + manifold.Normal)
                         .Color(Color::Red)
                         .OnTop(true));
   }
@@ -194,37 +184,31 @@ void GjkDebug::DebugDraw(void)
       gDebugDraw->Add(Debug::Sphere(points[0].cso, 0.01f).Color(simplexColor));
       break;
     case 2:
-      gDebugDraw->Add(
-          Debug::Line(points[0].cso, points[1].cso).Color(simplexColor));
+      gDebugDraw->Add(Debug::Line(points[0].cso, points[1].cso).Color(simplexColor));
       break;
     case 3:
-      gDebugDraw->Add(
-          Debug::Triangle(points[0].cso, points[1].cso, points[2].cso)
-              .Color(simplexColor)
-              .Border(true)
-              .Alpha((unsigned)mOpacitySimplex));
+      gDebugDraw->Add(Debug::Triangle(points[0].cso, points[1].cso, points[2].cso)
+                          .Color(simplexColor)
+                          .Border(true)
+                          .Alpha((unsigned)mOpacitySimplex));
       break;
     case 4:
-      gDebugDraw->Add(
-          Debug::Triangle(points[0].cso, points[1].cso, points[2].cso)
-              .Color(simplexColor)
-              .Border(true)
-              .Alpha((unsigned)mOpacitySimplex));
-      gDebugDraw->Add(
-          Debug::Triangle(points[0].cso, points[2].cso, points[3].cso)
-              .Color(simplexColor)
-              .Border(true)
-              .Alpha((unsigned)mOpacitySimplex));
-      gDebugDraw->Add(
-          Debug::Triangle(points[0].cso, points[3].cso, points[1].cso)
-              .Color(simplexColor)
-              .Border(true)
-              .Alpha((unsigned)mOpacitySimplex));
-      gDebugDraw->Add(
-          Debug::Triangle(points[1].cso, points[2].cso, points[3].cso)
-              .Color(simplexColor)
-              .Border(true)
-              .Alpha((unsigned)mOpacitySimplex));
+      gDebugDraw->Add(Debug::Triangle(points[0].cso, points[1].cso, points[2].cso)
+                          .Color(simplexColor)
+                          .Border(true)
+                          .Alpha((unsigned)mOpacitySimplex));
+      gDebugDraw->Add(Debug::Triangle(points[0].cso, points[2].cso, points[3].cso)
+                          .Color(simplexColor)
+                          .Border(true)
+                          .Alpha((unsigned)mOpacitySimplex));
+      gDebugDraw->Add(Debug::Triangle(points[0].cso, points[3].cso, points[1].cso)
+                          .Color(simplexColor)
+                          .Border(true)
+                          .Alpha((unsigned)mOpacitySimplex));
+      gDebugDraw->Add(Debug::Triangle(points[1].cso, points[2].cso, points[3].cso)
+                          .Color(simplexColor)
+                          .Border(true)
+                          .Alpha((unsigned)mOpacitySimplex));
       break;
     }
   }

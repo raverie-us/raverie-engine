@@ -20,22 +20,19 @@ ZilchDefineType(FilePathClass, builder, type)
                       "CombineDirectories",
                       "dir0, dir1, dir2")
       ->Description = FilePathClass::CombineDirectoriesDocumentation();
-  ZilchFullBindMethod(
-      builder,
-      type,
-      &FilePathClass::CombineDirectories,
-      (String(*)(StringParam, StringParam, StringParam, StringParam)),
-      "CombineDirectories",
-      "dir0, dir1, dir2, dir3")
+  ZilchFullBindMethod(builder,
+                      type,
+                      &FilePathClass::CombineDirectories,
+                      (String(*)(StringParam, StringParam, StringParam, StringParam)),
+                      "CombineDirectories",
+                      "dir0, dir1, dir2, dir3")
       ->Description = FilePathClass::CombineDirectoriesDocumentation();
-  ZilchFullBindMethod(
-      builder,
-      type,
-      &FilePathClass::CombineDirectories,
-      (String(*)(
-          StringParam, StringParam, StringParam, StringParam, StringParam)),
-      "CombineDirectories",
-      "dir0, dir1, dir2, dir3, dir4")
+  ZilchFullBindMethod(builder,
+                      type,
+                      &FilePathClass::CombineDirectories,
+                      (String(*)(StringParam, StringParam, StringParam, StringParam, StringParam)),
+                      "CombineDirectories",
+                      "dir0, dir1, dir2, dir3, dir4")
       ->Description = FilePathClass::CombineDirectoriesDocumentation();
 
   ZilchFullBindMethod(builder,
@@ -52,22 +49,19 @@ ZilchDefineType(FilePathClass, builder, type)
                       "CombineDirectoriesAndFile",
                       "dir0, dir1, fileName")
       ->Description = FilePathClass::CombineDirectoriesAndFileDocumentation();
-  ZilchFullBindMethod(
-      builder,
-      type,
-      &FilePathClass::CombineDirectoriesAndFile,
-      (String(*)(StringParam, StringParam, StringParam, StringParam)),
-      "CombineDirectoriesAndFile",
-      "dir0, dir1, dir2, fileName")
+  ZilchFullBindMethod(builder,
+                      type,
+                      &FilePathClass::CombineDirectoriesAndFile,
+                      (String(*)(StringParam, StringParam, StringParam, StringParam)),
+                      "CombineDirectoriesAndFile",
+                      "dir0, dir1, dir2, fileName")
       ->Description = FilePathClass::CombineDirectoriesAndFileDocumentation();
-  ZilchFullBindMethod(
-      builder,
-      type,
-      &FilePathClass::CombineDirectoriesAndFile,
-      (String(*)(
-          StringParam, StringParam, StringParam, StringParam, StringParam)),
-      "CombineDirectoriesAndFile",
-      "dir0, dir1, dir2, dir3, fileName")
+  ZilchFullBindMethod(builder,
+                      type,
+                      &FilePathClass::CombineDirectoriesAndFile,
+                      (String(*)(StringParam, StringParam, StringParam, StringParam, StringParam)),
+                      "CombineDirectoriesAndFile",
+                      "dir0, dir1, dir2, dir3, fileName")
       ->Description = FilePathClass::CombineDirectoriesAndFileDocumentation();
 
   //// Bind the array version of Combine
@@ -91,26 +85,13 @@ ZilchDefineType(FilePathClass, builder, type)
                             "DirectorySeparator")
       ->Description = FilePathClass::DirectorySeparatorDocumentation();
 
-  ZilchFullBindMethod(builder,
-                      type,
-                      &FilePathClass::ChangeExtension,
-                      ZilchNoOverload,
-                      "ChangeExtension",
-                      ZilchNoNames)
+  ZilchFullBindMethod(builder, type, &FilePathClass::ChangeExtension, ZilchNoOverload, "ChangeExtension", ZilchNoNames)
       ->Description = FilePathClass::ChangeExtensionDocumentation();
-  ZilchFullBindMethod(builder,
-                      type,
-                      &FilePathClass::GetExtensionWithDot,
-                      ZilchNoOverload,
-                      "GetExtensionWithDot",
-                      ZilchNoNames)
+  ZilchFullBindMethod(
+      builder, type, &FilePathClass::GetExtensionWithDot, ZilchNoOverload, "GetExtensionWithDot", ZilchNoNames)
       ->Description = FilePathClass::GetExtensionWithDotDocumentation();
-  ZilchFullBindMethod(builder,
-                      type,
-                      &FilePathClass::GetExtensionWithoutDot,
-                      ZilchNoOverload,
-                      "GetExtensionWithoutDot",
-                      ZilchNoNames)
+  ZilchFullBindMethod(
+      builder, type, &FilePathClass::GetExtensionWithoutDot, ZilchNoOverload, "GetExtensionWithoutDot", ZilchNoNames)
       ->Description = FilePathClass::GetExtensionWithoutDotDocumentation();
   ZilchFullBindMethod(builder,
                       type,
@@ -133,30 +114,20 @@ ZilchDefineType(FilePathClass, builder, type)
                       ZilchNoOverload,
                       "AddTrailingDirectorySeparator",
                       ZilchNoNames)
-      ->Description =
-      FilePathClass::AddTrailingDirectorySeparatorDocumentation();
+      ->Description = FilePathClass::AddTrailingDirectorySeparatorDocumentation();
   ZilchFullBindMethod(builder,
                       type,
                       &FilePathClass::RemoveTrailingDirectorySeparator,
                       ZilchNoOverload,
                       "RemoveTrailingDirectorySeparator",
                       ZilchNoNames)
-      ->Description =
-      FilePathClass::RemoveTrailingDirectorySeparatorDocumentation();
+      ->Description = FilePathClass::RemoveTrailingDirectorySeparatorDocumentation();
 
-  ZilchFullBindMethod(builder,
-                      type,
-                      &FilePathClass::GetDirectoryPath,
-                      ZilchNoOverload,
-                      "GetDirectoryPath",
-                      ZilchNoNames)
+  ZilchFullBindMethod(
+      builder, type, &FilePathClass::GetDirectoryPath, ZilchNoOverload, "GetDirectoryPath", ZilchNoNames)
       ->Description = FilePathClass::GetDirectoryPathDocumentation();
-  ZilchFullBindMethod(builder,
-                      type,
-                      &FilePathClass::GetDirectoryName,
-                      ZilchNoOverload,
-                      "GetDirectoryName",
-                      ZilchNoNames)
+  ZilchFullBindMethod(
+      builder, type, &FilePathClass::GetDirectoryName, ZilchNoOverload, "GetDirectoryName", ZilchNoNames)
       ->Description = FilePathClass::GetDirectoryNameDocumentation();
   ZilchFullBindMethod(builder,
                       type,
@@ -164,22 +135,15 @@ ZilchDefineType(FilePathClass, builder, type)
                       ZilchNoOverload,
                       "GetCanonicalizedPathFromAbsolutePath",
                       ZilchNoNames)
-      ->Description =
-      FilePathClass::GetCanonicalizedPathFromAbsolutePathDocumentation();
+      ->Description = FilePathClass::GetCanonicalizedPathFromAbsolutePathDocumentation();
   ZilchFullBindMethod(builder,
                       type,
                       &FilePathClass::GetComparablePathFromAbsolutePath,
                       ZilchNoOverload,
                       "GetComparablePathFromAbsolutePath",
                       ZilchNoNames)
-      ->Description =
-      FilePathClass::GetComparablePathFromAbsolutePathDocumentation();
-  ZilchFullBindMethod(builder,
-                      type,
-                      &FilePathClass::IsRelative,
-                      ZilchNoOverload,
-                      "IsRelative",
-                      ZilchNoNames)
+      ->Description = FilePathClass::GetComparablePathFromAbsolutePathDocumentation();
+  ZilchFullBindMethod(builder, type, &FilePathClass::IsRelative, ZilchNoOverload, "IsRelative", ZilchNoNames)
       ->Description = FilePathClass::IsRelativeDocumentation();
 
   ZilchFullBindGetterSetter(builder,
@@ -238,59 +202,40 @@ String FilePathClass::CombineDirectories(StringParam dir0, StringParam dir1)
   return AddTrailingDirectorySeparator(Zero::FilePath::Combine(dir0, dir1));
 }
 
-String FilePathClass::CombineDirectories(StringParam dir0,
-                                         StringParam dir1,
-                                         StringParam dir2)
+String FilePathClass::CombineDirectories(StringParam dir0, StringParam dir1, StringParam dir2)
 {
-  return AddTrailingDirectorySeparator(
-      Zero::FilePath::Combine(dir0, dir1, dir2));
+  return AddTrailingDirectorySeparator(Zero::FilePath::Combine(dir0, dir1, dir2));
 }
 
-String FilePathClass::CombineDirectories(StringParam dir0,
-                                         StringParam dir1,
-                                         StringParam dir2,
-                                         StringParam dir3)
+String FilePathClass::CombineDirectories(StringParam dir0, StringParam dir1, StringParam dir2, StringParam dir3)
 {
-  return AddTrailingDirectorySeparator(
-      Zero::FilePath::Combine(dir0, dir1, dir2, dir3));
+  return AddTrailingDirectorySeparator(Zero::FilePath::Combine(dir0, dir1, dir2, dir3));
 }
 
-String FilePathClass::CombineDirectories(StringParam dir0,
-                                         StringParam dir1,
-                                         StringParam dir2,
-                                         StringParam dir3,
-                                         StringParam dir4)
+String FilePathClass::CombineDirectories(
+    StringParam dir0, StringParam dir1, StringParam dir2, StringParam dir3, StringParam dir4)
 {
-  return AddTrailingDirectorySeparator(
-      Zero::FilePath::Combine(dir0, dir1, dir2, dir3, dir4));
+  return AddTrailingDirectorySeparator(Zero::FilePath::Combine(dir0, dir1, dir2, dir3, dir4));
 }
 
-String FilePathClass::CombineDirectoriesAndFile(StringParam dir0,
-                                                StringParam fileName)
+String FilePathClass::CombineDirectoriesAndFile(StringParam dir0, StringParam fileName)
 {
   return Zero::FilePath::Combine(dir0, fileName);
 }
 
-String FilePathClass::CombineDirectoriesAndFile(StringParam dir0,
-                                                StringParam dir1,
-                                                StringParam fileName)
+String FilePathClass::CombineDirectoriesAndFile(StringParam dir0, StringParam dir1, StringParam fileName)
 {
   return Zero::FilePath::Combine(dir0, dir1, fileName);
 }
 
-String FilePathClass::CombineDirectoriesAndFile(StringParam dir0,
-                                                StringParam dir1,
-                                                StringParam dir2,
-                                                StringParam fileName)
+String
+FilePathClass::CombineDirectoriesAndFile(StringParam dir0, StringParam dir1, StringParam dir2, StringParam fileName)
 {
   return Zero::FilePath::Combine(dir0, dir1, dir2, fileName);
 }
 
-String FilePathClass::CombineDirectoriesAndFile(StringParam dir0,
-                                                StringParam dir1,
-                                                StringParam dir2,
-                                                StringParam dir3,
-                                                StringParam fileName)
+String FilePathClass::CombineDirectoriesAndFile(
+    StringParam dir0, StringParam dir1, StringParam dir2, StringParam dir3, StringParam fileName)
 {
   return Zero::FilePath::Combine(dir0, dir1, dir2, dir3, fileName);
 }
@@ -321,8 +266,7 @@ String FilePathClass::ChangeExtension(StringParam path, StringParam extension)
 
   // Concatenate the path and extension together (both should not have the dot,
   // so add it in ourselves)
-  return BuildString(
-      pathRangeWithoutExtension, ".", extensionRangeWithoutLeadingDot);
+  return BuildString(pathRangeWithoutExtension, ".", extensionRangeWithoutLeadingDot);
 }
 
 String FilePathClass::GetExtensionWithDot(StringParam path)
@@ -399,14 +343,12 @@ String FilePathClass::GetDirectoryName(StringParam path)
   return Zero::FilePath::GetDirectoryName(path);
 }
 
-String
-FilePathClass::GetCanonicalizedPathFromAbsolutePath(StringParam absolutePath)
+String FilePathClass::GetCanonicalizedPathFromAbsolutePath(StringParam absolutePath)
 {
   // We want to check if it has an ending separator because our
   // FilePathClass::Normalize removes it (but we want it to be added back in)
   bool hasEndingSeparator = false;
-  if (absolutePath.SizeInBytes() > 0 &&
-      (absolutePath.Back() == '\\' || absolutePath.Back() == '/'))
+  if (absolutePath.SizeInBytes() > 0 && (absolutePath.Back() == '\\' || absolutePath.Back() == '/'))
     hasEndingSeparator = true;
 
   // Our path normalizationg changes all slashes to be the OS slashes, and

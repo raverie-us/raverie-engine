@@ -35,17 +35,9 @@ struct Frustum
 
   /// Generates a Frustum from the give points.  Point order is described above.
   void Generate(Vec3 points[8]);
-  void Generate(Vec3Param frontCenter,
-                Vec3Param direction,
-                Vec3Param up,
-                Vec3Param dimensions);
+  void Generate(Vec3Param frontCenter, Vec3Param direction, Vec3Param up, Vec3Param dimensions);
   /// Implicitly builds frustum down -Z
-  void Generate(Vec3Param position,
-                Mat3Param basis,
-                float near,
-                float far,
-                float aspect,
-                float fov);
+  void Generate(Vec3Param position, Mat3Param basis, float near, float far, float aspect, float fov);
 
   /// Calculates the 8 points of the Aabb.
   void GetPoints(Vec3 points[8]) const;

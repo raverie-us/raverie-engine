@@ -3,10 +3,10 @@
 #include "Precompiled.hpp"
 
 // For all properties that affect the perspective transforms
-#define SetPerspectiveProperty(member, value)                                  \
-  if (value == member)                                                         \
-    return;                                                                    \
-  member = value;                                                              \
+#define SetPerspectiveProperty(member, value)                                                                          \
+  if (value == member)                                                                                                 \
+    return;                                                                                                            \
+  member = value;                                                                                                      \
   mDirtyPerspective = true;
 
 namespace Zero
@@ -27,13 +27,10 @@ ZilchDefineType(Camera, builder, type)
 
   ZilchBindGetterSetterProperty(NearPlane);
   ZilchBindGetterSetterProperty(FarPlane);
-  ZilchBindGetterSetterProperty(PerspectiveMode)
-      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(PerspectiveMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindGetterSetterProperty(FieldOfView)
       ->Add(new EditorSlider(45, 135, 1))
-      ->ZeroFilterEquality(mPerspectiveMode,
-                           PerspectiveMode::Enum,
-                           PerspectiveMode::Perspective);
+      ->ZeroFilterEquality(mPerspectiveMode, PerspectiveMode::Enum, PerspectiveMode::Perspective);
   ZilchBindGetterSetterProperty(Size)->ZeroFilterEquality(
       mPerspectiveMode, PerspectiveMode::Enum, PerspectiveMode::Orthographic);
 
@@ -49,8 +46,7 @@ void Camera::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mNearPlane, 0.5f);
   SerializeNameDefault(mFarPlane, 100.0f);
-  SerializeEnumNameDefault(
-      PerspectiveMode, mPerspectiveMode, PerspectiveMode::Perspective);
+  SerializeEnumNameDefault(PerspectiveMode, mPerspectiveMode, PerspectiveMode::Perspective);
   SerializeNameDefault(mFieldOfView, 45.0f);
   SerializeNameDefault(mSize, 20.0f);
 }
@@ -190,23 +186,15 @@ Mat4 Camera::GetPerspectiveTransform()
 
   if (mPerspectiveMode == PerspectiveMode::Perspective)
   {
-    BuildPerspectiveTransformZero(mViewToPerspective,
-                                  Math::DegToRad(mFieldOfView),
-                                  mAspectRatio,
-                                  mNearPlane,
-                                  mFarPlane);
-    Z::gRenderer->BuildPerspectiveTransform(mViewToApiPerspective,
-                                            Math::DegToRad(mFieldOfView),
-                                            mAspectRatio,
-                                            mNearPlane,
-                                            mFarPlane);
+    BuildPerspectiveTransformZero(
+        mViewToPerspective, Math::DegToRad(mFieldOfView), mAspectRatio, mNearPlane, mFarPlane);
+    Z::gRenderer->BuildPerspectiveTransform(
+        mViewToApiPerspective, Math::DegToRad(mFieldOfView), mAspectRatio, mNearPlane, mFarPlane);
   }
   else
   {
-    BuildOrthographicTransformZero(
-        mViewToPerspective, mSize, mAspectRatio, mNearPlane, mFarPlane);
-    Z::gRenderer->BuildOrthographicTransform(
-        mViewToApiPerspective, mSize, mAspectRatio, mNearPlane, mFarPlane);
+    BuildOrthographicTransformZero(mViewToPerspective, mSize, mAspectRatio, mNearPlane, mFarPlane);
+    Z::gRenderer->BuildOrthographicTransform(mViewToApiPerspective, mSize, mAspectRatio, mNearPlane, mFarPlane);
   }
 
   mDirtyPerspective = false;
@@ -222,8 +210,7 @@ Mat4 Camera::GetApiPerspectiveTransform()
 
 void Camera::GetViewData(ViewBlock& block)
 {
-  ErrorIf(mViewportInterface == nullptr,
-          "Invalid Camera to get view data from.");
+  ErrorIf(mViewportInterface == nullptr, "Invalid Camera to get view data from.");
 
   SetAspectRatio(mViewportInterface->GetAspectRatio());
 
@@ -231,16 +218,14 @@ void Camera::GetViewData(ViewBlock& block)
   block.mViewToPerspective = GetPerspectiveTransform();
 
   Mat4 apiPerspective = GetApiPerspectiveTransform();
-  block.mZeroPerspectiveToApiPerspective =
-      apiPerspective * block.mViewToPerspective.SafeInverted();
+  block.mZeroPerspectiveToApiPerspective = apiPerspective * block.mViewToPerspective.SafeInverted();
 
   block.mNearPlane = mNearPlane;
   block.mFarPlane = mFarPlane;
 
   Vec2 viewportSize = mViewportInterface->GetViewportSize();
   block.mViewportSize = viewportSize;
-  block.mInverseViewportSize =
-      Vec2(1.0f / viewportSize.x, 1.0f / viewportSize.y);
+  block.mInverseViewportSize = Vec2(1.0f / viewportSize.x, 1.0f / viewportSize.y);
 
   block.mEyePosition = GetWorldTranslation();
   block.mEyeDirection = GetWorldDirection();
@@ -260,12 +245,7 @@ Frustum Camera::GetFrustum(float aspect) const
   Frustum f;
 
   if (mPerspectiveMode == PerspectiveMode::Perspective)
-    f.Generate(position,
-               rotation,
-               mNearPlane,
-               mFarPlane,
-               aspect,
-               Math::DegToRad(mFieldOfView));
+    f.Generate(position, rotation, mNearPlane, mFarPlane, aspect, Math::DegToRad(mFieldOfView));
   else
     f.Generate(position - rotation.BasisZ() * mNearPlane,
                -rotation.BasisZ(),

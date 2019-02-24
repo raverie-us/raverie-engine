@@ -36,13 +36,11 @@ ZilchDefineType(LauncherBuildEvent, builder, type)
 {
 }
 
-BuildStatusView::BuildStatusView(Composite* parent, ZeroBuild* version) :
-    Composite(parent)
+BuildStatusView::BuildStatusView(Composite* parent, ZeroBuild* version) : Composite(parent)
 {
   mBuild = nullptr;
 
-  SetLayout(CreateStackLayout(
-      LayoutDirection::TopToBottom, Pixels(0, -3), Thickness::cZero));
+  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, -3), Thickness::cZero));
 
   mBuildText = new Text(this, mLauncherRegularFont, 11);
   mBuildText->SetColor(BuildStatusUi::TextColor);
@@ -153,16 +151,12 @@ void BuildStatusView::OnBuildStateChanged(Event*)
   DispatchEvent(Events::BuildStateChanged, &toSend);
 }
 
-BuildList::BuildList(Composite* parent,
-                     VersionSelector* versionSelector,
-                     ZeroBuild* selected,
-                     bool installedOnly) :
+BuildList::BuildList(Composite* parent, VersionSelector* versionSelector, ZeroBuild* selected, bool installedOnly) :
     Composite(parent),
     mSelected(selected),
     mVersionSelector(versionSelector)
 {
-  SetLayout(CreateStackLayout(
-      LayoutDirection::TopToBottom, Pixels(0, 1), Thickness(1, 1, 1, 1)));
+  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 1), Thickness(1, 1, 1, 1)));
 
   mBorder = CreateAttached<Element>(cWhiteSquareBorder);
   mBorder->SetColor(Vec4(0, 0, 0, 1));
@@ -181,10 +175,8 @@ BuildList::BuildList(Composite* parent,
     installLatest->SetText("+ INSTALL LATEST");
     installLatest->mBorder->SetVisible(false);
     installLatest->mBackgroundColor = ToByteColor(Vec4(1, 1, 1, 0));
-    installLatest->mBackgroundHoverColor =
-        ToByteColor(BuildStatusUi::ListBackgroundHighlight);
-    installLatest->mBackgroundClickedColor =
-        ToByteColor(BuildStatusUi::ListBackgroundClicked);
+    installLatest->mBackgroundHoverColor = ToByteColor(BuildStatusUi::ListBackgroundHighlight);
+    installLatest->mBackgroundClickedColor = ToByteColor(BuildStatusUi::ListBackgroundClicked);
     installLatest->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(20));
 
     latestHeight += installLatest->GetSize().y + Pixels(3);
@@ -205,7 +197,7 @@ BuildList::BuildList(Composite* parent,
   Composite* clientArea = mScrollArea->GetClientWidget();
 
   ZeroBuildTagPolicy policy(mVersionSelector->mConfig);
-  forRange(ZeroBuild * version, versionSelector->mVersions.All())
+  forRange (ZeroBuild* version, versionSelector->mVersions.All())
   {
     // Check if we should include this build (fitlers things like platform,
     // branches, etc...)
@@ -320,7 +312,7 @@ void BuildList::OnMouseMove(MouseEvent* e)
 void BuildList::OnMouseExitScrollArea(MouseEvent* e)
 {
   // Remove the highlight on all backgrounds
-  forRange(Entry & entry, mEntries.All())
+  forRange (Entry& entry, mEntries.All())
   {
     if (entry.second->mBuild == mSelected)
       entry.first->SetColor(BuildStatusUi::ListBackgroundSelected);
@@ -366,9 +358,7 @@ int BuildList::IndexFromPosition(Vec2Param localPosition)
   return int(index);
 }
 
-BuildSelector::BuildSelector(Composite* parent,
-                             VersionSelector* versionSelector,
-                             ZeroBuild* version) :
+BuildSelector::BuildSelector(Composite* parent, VersionSelector* versionSelector, ZeroBuild* version) :
     Composite(parent),
     mVersionSelector(versionSelector)
 {
@@ -403,8 +393,7 @@ void BuildSelector::UpdateTransform()
   Vec3 pos(0, 2, 0);
   pos.x = mSize.x - Pixels(15) - mCurrentBuild->GetSize().x;
   mCurrentBuild->SetTranslation(pos);
-  Vec3 arrowPosition =
-      Vec3(BuildStatusUi::BuildSelectorSize.mValue.x - Pixels(13), 7, 0);
+  Vec3 arrowPosition = Vec3(BuildStatusUi::BuildSelectorSize.mValue.x - Pixels(13), 7, 0);
   mArrow->SetTranslation(arrowPosition);
 
   Composite::UpdateTransform();
@@ -455,8 +444,7 @@ void BuildSelector::OnLeftMouseDown(MouseEvent* e)
 
   // we want to ignore the currently selected build
   Composite* popUp = GetRootWidget()->GetPopUp();
-  BuildList* list =
-      new BuildList(popUp, mVersionSelector, GetBuild(), mInstalledOnly);
+  BuildList* list = new BuildList(popUp, mVersionSelector, GetBuild(), mInstalledOnly);
 
   Vec3 translation = GetScreenPosition();
   translation.y -= list->GetSize().y;

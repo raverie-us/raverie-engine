@@ -16,8 +16,7 @@ public:
   ZilchDeclareInheritableType(ProxyObject, TypeCopyMode::ReferenceType);
 
   // Creates a type
-  static BoundType* CreateProxyType(StringParam typeName,
-                                    ProxyReason::Enum reason);
+  static BoundType* CreateProxyType(StringParam typeName, ProxyReason::Enum reason);
 
   ProxyObject();
   ~ProxyObject();
@@ -27,14 +26,11 @@ public:
 };
 
 template <typename ComponentType>
-BoundType* ProxyObject<ComponentType>::CreateProxyType(StringParam typeName,
-                                                       ProxyReason::Enum reason)
+BoundType* ProxyObject<ComponentType>::CreateProxyType(StringParam typeName, ProxyReason::Enum reason)
 {
   // Build the new type
   LibraryBuilder builder(typeName);
-  BoundType* type = builder.AddBoundType(typeName,
-                                         TypeCopyMode::ReferenceType,
-                                         sizeof(ProxyObject<ComponentType>));
+  BoundType* type = builder.AddBoundType(typeName, TypeCopyMode::ReferenceType, sizeof(ProxyObject<ComponentType>));
 
   type->BaseType = ZilchTypeId(ComponentType);
 
@@ -66,8 +62,7 @@ ProxyObject<ComponentType>::~ProxyObject()
 template <typename ComponentType>
 void ProxyObject<ComponentType>::Serialize(Serializer& stream)
 {
-  ErrorIf(stream.GetType() != SerializerType::Text,
-          "Proxies serialized to Binary is not supported.");
+  ErrorIf(stream.GetType() != SerializerType::Text, "Proxies serialized to Binary is not supported.");
 
   if (stream.GetMode() == SerializerMode::Loading)
   {
@@ -83,8 +78,8 @@ void ProxyObject<ComponentType>::Serialize(Serializer& stream)
     // mProxiedData stored the Component node, and it should have already been
     // opened in the serializer once this function has been called, so we just
     // want to save out the child nodes
-    forRange(DataNode & child, mProxiedData->GetChildren())
-        child.SaveToStream(stream);
+    forRange (DataNode& child, mProxiedData->GetChildren())
+      child.SaveToStream(stream);
   }
 }
 

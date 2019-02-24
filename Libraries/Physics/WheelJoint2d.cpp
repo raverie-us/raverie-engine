@@ -114,8 +114,7 @@ void WheelJoint2d::ComputeMoleculeData(MoleculeData& moleculeData)
   worldShockAxes.mWorldAxes[0].z = 0;
   worldShockAxes.mWorldAxes[0].AttemptNormalize();
   moleculeData.LinearAxes[1] = worldShockAxes.mWorldAxes[0];
-  moleculeData.LinearAxes[0] =
-      Math::Cross(moleculeData.LinearAxes[1], Vec3::cZAxis);
+  moleculeData.LinearAxes[0] = Math::Cross(moleculeData.LinearAxes[1], Vec3::cZAxis);
   moleculeData.AngularAxes[0] = Vec3::cZAxis;
   moleculeData.Set2dBases(this);
 }
@@ -149,8 +148,7 @@ void WheelJoint2d::ComputeMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputeMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData, FragmentPolicy());
+  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, FragmentPolicy());
 }
 
 void WheelJoint2d::WarmStart(MoleculeWalker& molecules)
@@ -178,8 +176,7 @@ void WheelJoint2d::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData, FragmentPolicy());
+  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, FragmentPolicy());
 }
 
 void WheelJoint2d::DebugDraw()
@@ -191,8 +188,7 @@ void WheelJoint2d::DebugDraw()
   DrawAxisAtomFragment(mShockAxes, mAnchors, GetCollider(0), GetCollider(1));
 }
 
-uint WheelJoint2d::GetAtomIndexFilter(uint atomIndex,
-                                      real& desiredConstraintValue) const
+uint WheelJoint2d::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   if (atomIndex < 2)

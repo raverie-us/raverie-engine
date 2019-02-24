@@ -4,11 +4,7 @@
 namespace Zero
 {
 
-DeclareEnum4(FileSystemErrors,
-             FileNotFound,
-             FileNotAccessible,
-             FileNotWritable,
-             FileLocked);
+DeclareEnum4(FileSystemErrors, FileNotFound, FileNotAccessible, FileNotWritable, FileLocked);
 
 ZeroShared extern const Rune cDirectorySeparatorRune;
 ZeroShared extern const char cDirectorySeparatorCstr[];
@@ -21,17 +17,14 @@ class FileSystemInitializer
 {
 public:
   typedef void (*PopulateVirtualFileSystem)(void* userData);
-  FileSystemInitializer(PopulateVirtualFileSystem callback = nullptr,
-                        void* userData = nullptr);
+  FileSystemInitializer(PopulateVirtualFileSystem callback = nullptr, void* userData = nullptr);
   ~FileSystemInitializer();
 };
 
 /// Creates a virtual file or directory (only when running in virtual mode).
 /// An empty/0-size or null data block indicates a directory rather than a file.
 /// Only called during the PopulateVirtualFileSystem callback.
-ZeroShared void AddVirtualFileSystemEntry(StringParam absolutePath,
-                                          DataBlock* stealData,
-                                          TimeType modifiedTime);
+ZeroShared void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, TimeType modifiedTime);
 
 /// Called when we want to ensure that files that have been written are
 /// persisted/saved to a location that can be recalled. Note that not every

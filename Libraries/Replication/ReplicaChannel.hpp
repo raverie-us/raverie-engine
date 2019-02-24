@@ -75,9 +75,7 @@ public:
 
   /// Observes the replica channel and replicates any changes (if configured to
   /// do so) Returns true if successful, else false
-  bool ObserveAndReplicateChanges(bool forceObservation = false,
-                                  bool forceReplication = false,
-                                  bool isRelay = false);
+  bool ObserveAndReplicateChanges(bool forceObservation = false, bool forceReplication = false, bool isRelay = false);
   bool ObserveAndReplicateChanges(TimeMs timestamp,
                                   uint64 frameId,
                                   bool forceObservation = false,
@@ -126,8 +124,7 @@ public:
   /// else false
   bool HasReplicaProperty(const String& replicaPropertyName) const;
   /// Returns the specified replica property, else nullptr
-  const ReplicaProperty*
-  GetReplicaProperty(const String& replicaPropertyName) const;
+  const ReplicaProperty* GetReplicaProperty(const String& replicaPropertyName) const;
   ReplicaProperty* GetReplicaProperty(const String& replicaPropertyName);
   /// Returns all replica properties managed by the replica channel
   const ReplicaPropertySet& GetReplicaProperties() const;
@@ -166,38 +163,30 @@ public:
 
   /// Serializes the replica channel
   /// Returns true if successful, else false
-  bool Serialize(BitStream& bitStream,
-                 ReplicationPhase::Enum replicationPhase,
-                 TimeMs timestamp) const;
+  bool Serialize(BitStream& bitStream, ReplicationPhase::Enum replicationPhase, TimeMs timestamp) const;
   /// Deserializes the replica channel
   /// Returns true if successful, else false
-  bool Deserialize(const BitStream& bitStream,
-                   ReplicationPhase::Enum replicationPhase,
-                   TimeMs timestamp);
+  bool Deserialize(const BitStream& bitStream, ReplicationPhase::Enum replicationPhase, TimeMs timestamp);
 
   /// Data
   String mName;                            /// Replica channel name
   ReplicaChannelType* mReplicaChannelType; /// Operating replica channel type
   Replica* mReplica;                       /// Operating replica
-  Link<ReplicaChannel>
-      mIndexListLink;     /// Replica channel index list link (may be null)
-  size_t* mIndexListSize; /// Replica channel index list size (may be null)
-  bool mIsNapping;        /// Is the replica channel napping?
-  bool mChangeFlag;       /// Manual change flag
-  TimeMs
-      mLastChangeTimestamp;   /// Timestamp indicating when this replica channel
-                              /// was last changed (on any replica property)
-  uint64 mLastChangeFrameId;  /// Frame ID of the last detected change
-  Authority::Enum mAuthority; /// Change authority
-  ReplicaPropertySet mReplicaProperties; /// Replica properties
+  Link<ReplicaChannel> mIndexListLink;     /// Replica channel index list link (may be null)
+  size_t* mIndexListSize;                  /// Replica channel index list size (may be null)
+  bool mIsNapping;                         /// Is the replica channel napping?
+  bool mChangeFlag;                        /// Manual change flag
+  TimeMs mLastChangeTimestamp;             /// Timestamp indicating when this replica channel
+                                           /// was last changed (on any replica property)
+  uint64 mLastChangeFrameId;               /// Frame ID of the last detected change
+  Authority::Enum mAuthority;              /// Change authority
+  ReplicaPropertySet mReplicaProperties;   /// Replica properties
 };
 
 /// Typedefs
 typedef UniquePointer<ReplicaChannel> ReplicaChannelPtr;
-typedef ArraySet<ReplicaChannelPtr, PointerSortPolicy<ReplicaChannelPtr>>
-    ReplicaChannelSet;
-typedef InList<ReplicaChannel, &ReplicaChannel::mIndexListLink>
-    ReplicaChannelList;
+typedef ArraySet<ReplicaChannelPtr, PointerSortPolicy<ReplicaChannelPtr>> ReplicaChannelSet;
+typedef InList<ReplicaChannel, &ReplicaChannel::mIndexListLink> ReplicaChannelList;
 
 //                             ReplicaChannelIndex //
 
@@ -290,9 +279,7 @@ public:
   /// Observes all scheduled replica channels of this type and replicates any
   /// changes
   void ObserveAndReplicateChanges();
-  void ObserveAndReplicateChanges(ReplicaChannelIndex& replicaChannelIndex,
-                                  TimeMs timestamp,
-                                  uint64 frameId);
+  void ObserveAndReplicateChanges(ReplicaChannelIndex& replicaChannelIndex, TimeMs timestamp, uint64 frameId);
 
   /// Schedules the unscheduled replica channel for change observation
   void ScheduleChannel(ReplicaChannel* channel);
@@ -318,27 +305,23 @@ public:
   /// Controls whether or not replica channels should call
   /// Replicator::OnReplicaChannelPropertyChange when an outgoing replica
   /// property change is detected
-  void SetNotifyOnOutgoingPropertyChange(
-      bool notifyOnOutgoingPropertyChange = false);
+  void SetNotifyOnOutgoingPropertyChange(bool notifyOnOutgoingPropertyChange = false);
   bool GetNotifyOnOutgoingPropertyChange() const;
 
   /// Controls whether or not replica channels should call
   /// Replicator::OnReplicaChannelPropertyChange when an incoming replica
   /// property change is accepted
-  void SetNotifyOnIncomingPropertyChange(
-      bool notifyOnIncomingPropertyChange = false);
+  void SetNotifyOnIncomingPropertyChange(bool notifyOnIncomingPropertyChange = false);
   bool GetNotifyOnIncomingPropertyChange() const;
 
   /// Controls when replica channels can modify their change authority
   /// (Cannot be modified after the replica channel type has been made valid)
-  void
-  SetAuthorityMode(AuthorityMode::Enum authorityMode = AuthorityMode::Fixed);
+  void SetAuthorityMode(AuthorityMode::Enum authorityMode = AuthorityMode::Fixed);
   AuthorityMode::Enum GetAuthorityMode() const;
 
   /// Controls which replicator has the authority to observe and replicate
   /// property changes on each replica channel by default
-  void
-  SetAuthorityDefault(Authority::Enum authorityDefault = Authority::Server);
+  void SetAuthorityDefault(Authority::Enum authorityDefault = Authority::Server);
   Authority::Enum GetAuthorityDefault() const;
 
   /// Controls whether or not replica channels will have their changes
@@ -360,8 +343,7 @@ public:
   uint GetAwakeDuration() const;
 
   /// Controls how replica channel changes are detected
-  void SetDetectionMode(
-      DetectionMode::Enum detectionMode = DetectionMode::Manumatic);
+  void SetDetectionMode(DetectionMode::Enum detectionMode = DetectionMode::Manumatic);
   DetectionMode::Enum GetDetectionMode() const;
 
   /// Controls the frame interval in which awake replica channels are observed
@@ -378,20 +360,17 @@ public:
 
   /// Controls when replica channels are serialized
   /// (Cannot be modified after the replica channel type has been made valid)
-  void
-  SetSerializationFlags(uint serializationFlags = SerializationFlags::Default);
+  void SetSerializationFlags(uint serializationFlags = SerializationFlags::Default);
   uint GetSerializationFlags() const;
 
   /// Controls how replica channels are serialized
   /// (Cannot be modified after the replica channel type has been made valid)
-  void SetSerializationMode(
-      SerializationMode::Enum serializationMode = SerializationMode::Changed);
+  void SetSerializationMode(SerializationMode::Enum serializationMode = SerializationMode::Changed);
   SerializationMode::Enum GetSerializationMode() const;
 
   /// Controls whether or not replica channel changes will be retransmitted
   /// should they get lost over the network
-  void SetReliabilityMode(
-      ReliabilityMode::Enum reliabilityMode = ReliabilityMode::Reliable);
+  void SetReliabilityMode(ReliabilityMode::Enum reliabilityMode = ReliabilityMode::Reliable);
   ReliabilityMode::Enum GetReliabilityMode() const;
 
   /// Controls how replica channel changes are to be ordered and released once
@@ -409,33 +388,31 @@ public:
   bool GetAccurateTimestampOnChange() const;
 
   /// Data
-  String mName;                             /// Replica channel type name
-  Replicator* mReplicator;                  /// Operating replicator
-  ReplicaChannelIndex mAwakeChannelIndex;   /// Awake replica channels index
-  ReplicaChannelIndex mNappingChannelIndex; /// Napping replica channels index
-  bool mDetectOutgoingChanges;              /// Detect outgoing changes?
-  bool mAcceptIncomingChanges;              /// Accept incoming changes?
-  bool mNotifyOnOutgoingPropertyChange; /// Notify on outgoing property change?
-  bool mNotifyOnIncomingPropertyChange; /// Notify on incoming property change?
-  AuthorityMode::Enum mAuthorityMode;   /// Change authority mode
-  Authority::Enum mAuthorityDefault;    /// Change authority default
-  bool mAllowRelay;                     /// Allow relay?
-  bool mAllowNapping;                   /// Allow napping?
-  uint mAwakeDuration;                  /// Awake duration frame interval
-  DetectionMode::Enum mDetectionMode;   /// Change detection mode
-  uint mAwakeDetectionInterval; /// Awake change detection frame interval
-  uint mNapDetectionInterval;   /// Napping change detection frame interval
+  String mName;                                 /// Replica channel type name
+  Replicator* mReplicator;                      /// Operating replicator
+  ReplicaChannelIndex mAwakeChannelIndex;       /// Awake replica channels index
+  ReplicaChannelIndex mNappingChannelIndex;     /// Napping replica channels index
+  bool mDetectOutgoingChanges;                  /// Detect outgoing changes?
+  bool mAcceptIncomingChanges;                  /// Accept incoming changes?
+  bool mNotifyOnOutgoingPropertyChange;         /// Notify on outgoing property change?
+  bool mNotifyOnIncomingPropertyChange;         /// Notify on incoming property change?
+  AuthorityMode::Enum mAuthorityMode;           /// Change authority mode
+  Authority::Enum mAuthorityDefault;            /// Change authority default
+  bool mAllowRelay;                             /// Allow relay?
+  bool mAllowNapping;                           /// Allow napping?
+  uint mAwakeDuration;                          /// Awake duration frame interval
+  DetectionMode::Enum mDetectionMode;           /// Change detection mode
+  uint mAwakeDetectionInterval;                 /// Awake change detection frame interval
+  uint mNapDetectionInterval;                   /// Napping change detection frame interval
   SerializationFlags::Enum mSerializationFlags; /// Serialization flags
   SerializationMode::Enum mSerializationMode;   /// Serialization mode
-  ReliabilityMode::Enum mReliabilityMode; /// Change message reliability mode
-  TransferMode::Enum mTransferMode;       /// Change message transfer mode
-  bool mAccurateTimestampOnChange;        /// Accurate timestamp when changed?
+  ReliabilityMode::Enum mReliabilityMode;       /// Change message reliability mode
+  TransferMode::Enum mTransferMode;             /// Change message transfer mode
+  bool mAccurateTimestampOnChange;              /// Accurate timestamp when changed?
 };
 
 /// Typedefs
 typedef UniquePointer<ReplicaChannelType> ReplicaChannelTypePtr;
-typedef ArraySet<ReplicaChannelTypePtr,
-                 PointerSortPolicy<ReplicaChannelTypePtr>>
-    ReplicaChannelTypeSet;
+typedef ArraySet<ReplicaChannelTypePtr, PointerSortPolicy<ReplicaChannelTypePtr>> ReplicaChannelTypeSet;
 
 } // namespace Zero

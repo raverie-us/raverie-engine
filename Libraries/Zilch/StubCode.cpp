@@ -14,8 +14,8 @@ String StubCode::Finalize()
   String finalCode = this->Builder.ToString();
 
   // Walk through all native locations and set the code portion
-  ZilchForEach(CodeLocation * location, this->NativeLocations) location->Code =
-      finalCode;
+  ZilchForEach (CodeLocation* location, this->NativeLocations)
+    location->Code = finalCode;
 
   return finalCode;
 }
@@ -90,17 +90,13 @@ void StubCode::Generate(BoundType* type)
   if (type->BaseType != nullptr && !type->IsEnumOrFlags())
   {
     codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::Inheritance,
-        format.SpaceStyleInheritanceColon,
-        format.SpaceStyleGlobalDefaultColon);
+        Grammar::Inheritance, format.SpaceStyleInheritanceColon, format.SpaceStyleGlobalDefaultColon);
     codeBuilder.Write(type->BaseType->Name);
 
-    ZilchForEach(BoundType * interfaceType, type->InterfaceTypes)
+    ZilchForEach (BoundType* interfaceType, type->InterfaceTypes)
     {
       codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-          Grammar::ArgumentSeparator,
-          format.SpaceStyleInheritanceComma,
-          format.SpaceStyleGlobalDefaultComma);
+          Grammar::ArgumentSeparator, format.SpaceStyleInheritanceComma, format.SpaceStyleGlobalDefaultComma);
       codeBuilder.Write(interfaceType->Name);
     }
   }
@@ -110,14 +106,14 @@ void StubCode::Generate(BoundType* type)
 
   SendsEventArray sendsEventsSorted = type->SendsEvents;
   Sort(sendsEventsSorted.All(), SendsEventSorter);
-  ZilchForEach(SendsEvent * sendsEvent, sendsEventsSorted)
+  ZilchForEach (SendsEvent* sendsEvent, sendsEventsSorted)
   {
     this->Generate(sendsEvent);
   }
 
   PropertyArray allPropertiesSorted = type->AllProperties;
   Sort(allPropertiesSorted.All(), PropertySorter);
-  ZilchForEach(Property * property, allPropertiesSorted)
+  ZilchForEach (Property* property, allPropertiesSorted)
   {
     this->Generate(property);
   }
@@ -136,7 +132,7 @@ void StubCode::Generate(FunctionArray& functions)
   // Loop through all the provided functions
   FunctionArray functionsSorted = functions;
   Sort(functionsSorted.All(), FunctionSorter);
-  ZilchForEach(Function * function, functionsSorted)
+  ZilchForEach (Function* function, functionsSorted)
   {
     this->Generate(function);
   }
@@ -177,15 +173,12 @@ void StubCode::Generate(Function* function)
     this->EndNativeLocation(function->NameLocation);
   }
 
-  codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::BeginFunctionParameters,
-      format.SpaceStyleFunctionDefinitionBeginParenthesis,
-      format.SpaceStyleGlobalDefaultParenthesis);
+  codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginFunctionParameters,
+                                             format.SpaceStyleFunctionDefinitionBeginParenthesis,
+                                             format.SpaceStyleGlobalDefaultParenthesis);
 
   int parameterIndex = 0;
-  ZilchForRange(DelegateParameter & parameter,
-                parameterRange,
-                function->FunctionType->Parameters)
+  ZilchForRange (DelegateParameter& parameter, parameterRange, function->FunctionType->Parameters)
   {
     String paramName = parameter.Name;
     if (paramName.Empty())
@@ -198,31 +191,24 @@ void StubCode::Generate(Function* function)
 
     codeBuilder.Write(paramName);
     codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::TypeSpecifier,
-        format.SpaceStyleTypeColon,
-        format.SpaceStyleGlobalDefaultColon);
+        Grammar::TypeSpecifier, format.SpaceStyleTypeColon, format.SpaceStyleGlobalDefaultColon);
     codeBuilder.Write(parameter.ParameterType->ToString());
 
     if (parameterRange.Empty() == false)
       codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-          Grammar::ArgumentSeparator,
-          format.SpaceStyleFunctionCallParameterComma,
-          format.SpaceStyleGlobalDefaultComma);
+          Grammar::ArgumentSeparator, format.SpaceStyleFunctionCallParameterComma, format.SpaceStyleGlobalDefaultComma);
     ++parameterIndex;
   }
 
-  codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::EndFunctionParameters,
-      format.SpaceStyleFunctionDefinitionEndParenthesis,
-      format.SpaceStyleGlobalDefaultParenthesis);
+  codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndFunctionParameters,
+                                             format.SpaceStyleFunctionDefinitionEndParenthesis,
+                                             format.SpaceStyleGlobalDefaultParenthesis);
 
   // Write out the return type if it's not void
   if (function->FunctionType->Return != ZilchTypeId(void))
   {
     codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::TypeSpecifier,
-        format.SpaceStyleTypeColon,
-        format.SpaceStyleGlobalDefaultColon);
+        Grammar::TypeSpecifier, format.SpaceStyleTypeColon, format.SpaceStyleGlobalDefaultColon);
     codeBuilder.Write(function->FunctionType->Return->ToString());
   }
 
@@ -249,9 +235,7 @@ void StubCode::Generate(SendsEvent* sends)
   this->EndNativeLocation(sends->NameLocation);
 
   codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::TypeSpecifier,
-      format.SpaceStyleTypeColon,
-      format.SpaceStyleGlobalDefaultColon);
+      Grammar::TypeSpecifier, format.SpaceStyleTypeColon, format.SpaceStyleGlobalDefaultColon);
   codeBuilder.Write(sends->SentType->ToString());
   codeBuilder.WriteKeywordOrSymbol(Grammar::StatementSeparator);
   this->EndNativeLocation(sends->Location);
@@ -276,9 +260,7 @@ void StubCode::Generate(Property* property)
   this->EndNativeLocation(property->NameLocation);
 
   codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::TypeSpecifier,
-      format.SpaceStyleTypeColon,
-      format.SpaceStyleGlobalDefaultColon);
+      Grammar::TypeSpecifier, format.SpaceStyleTypeColon, format.SpaceStyleGlobalDefaultColon);
   codeBuilder.Write(property->PropertyType->ToString());
 
   // If type is a field (no get/set, just a raw data member)
@@ -387,17 +369,15 @@ void StubCode::GenerateHeader(ReflectionObject* object)
   GenerateHeader(object, object->Attributes);
 }
 
-void StubCode::GenerateHeader(ReflectionObject* object,
-                              Array<Attribute>& attributes)
+void StubCode::GenerateHeader(ReflectionObject* object, Array<Attribute>& attributes)
 {
   ZilchCodeBuilder& codeBuilder = this->Builder;
   CodeFormat& format = codeBuilder.Format;
 
   // We don't actually have a grammar symbol for single line comment (we should
   // probably make it one...)
-  String wrappedDescription =
-      Zero::WordWrap(object->Description, format.CommentWordWrapLength);
-  ZilchForEach(StringRange line, wrappedDescription.Split("\n"))
+  String wrappedDescription = Zero::WordWrap(object->Description, format.CommentWordWrapLength);
+  ZilchForEach (StringRange line, wrappedDescription.Split("\n"))
   {
     codeBuilder.WriteSingleLineComment(line);
     codeBuilder.WriteLineIndented();
@@ -407,7 +387,7 @@ void StubCode::GenerateHeader(ReflectionObject* object,
            "because it may not exist inside 'Attributes'");
 
   // Write out all attributes
-  ZilchForEach(Attribute & attribute, attributes)
+  ZilchForEach (Attribute& attribute, attributes)
   {
     codeBuilder.WriteKeywordOrSymbol(Grammar::BeginAttribute);
     codeBuilder.Write(attribute.Name);
@@ -424,18 +404,15 @@ void StubCode::GenerateHeader(ReflectionObject* object,
         {
           codeBuilder.Write(parameter.Name);
           codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-              Grammar::NameSpecifier,
-              format.SpaceStyleNamedArgumentColon,
-              format.SpaceStyleGlobalDefaultColon);
+              Grammar::NameSpecifier, format.SpaceStyleNamedArgumentColon, format.SpaceStyleGlobalDefaultColon);
         }
 
         codeBuilder.Write(parameter.ToString());
 
         if (i != lastParameter)
-          codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-              Grammar::ArgumentSeparator,
-              format.SpaceStyleFunctionCallParameterComma,
-              format.SpaceStyleGlobalDefaultComma);
+          codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::ArgumentSeparator,
+                                                     format.SpaceStyleFunctionCallParameterComma,
+                                                     format.SpaceStyleGlobalDefaultComma);
       }
 
       codeBuilder.WriteKeywordOrSymbol(Grammar::EndFunctionCall);

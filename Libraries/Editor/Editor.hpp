@@ -101,9 +101,7 @@ public:
 
   Widget* ShowWindow(StringParam name);
   Widget* HideWindow(StringParam name);
-  Window* AddManagedWidget(Widget* widget,
-                           DockArea::Enum dockArea,
-                           bool visible = true);
+  Window* AddManagedWidget(Widget* widget, DockArea::Enum dockArea, bool visible = true);
 
   void CreateDockableWindow(StringParam windowName,
                             CameraViewport* cameraViewport,
@@ -189,21 +187,16 @@ public:
   void AddResource();
 
   // Add a new resource type of given type
-  void AddResourceType(BoundType* resourceType,
-                       ContentLibrary* library = nullptr,
-                       StringParam resourceName = "");
+  void AddResourceType(BoundType* resourceType, ContentLibrary* library = nullptr, StringParam resourceName = "");
 
   // Open a text file if it is a resource it will open as that resource
   virtual DocumentEditor* OpenTextFileAuto(StringParam file) = 0;
   // Open a string in the text editor for debugging data dumps etc
-  virtual DocumentEditor* OpenTextString(StringParam name,
-                                         StringParam text,
-                                         StringParam extension = String()) = 0;
+  virtual DocumentEditor* OpenTextString(StringParam name, StringParam text, StringParam extension = String()) = 0;
   // Open a text file for text editing
   virtual DocumentEditor* OpenTextFile(StringParam filename) = 0;
   // Open a document resource for text editing
-  virtual DocumentEditor*
-  OpenDocumentResource(DocumentResource* docResource) = 0;
+  virtual DocumentEditor* OpenDocumentResource(DocumentResource* docResource) = 0;
 
   // Undo last change.
   void Undo();
@@ -259,9 +252,7 @@ public:
   typedef Array<HandleOf<GameSession>> GameArray;
   typedef GameArray::range GameRange;
   void DisplayGameSession(StringParam name, GameSession* gameSession);
-  GameSession* PlayGame(PlayGameOptions::Enum options,
-                        bool takeFocus = true,
-                        bool startGame = true);
+  GameSession* PlayGame(PlayGameOptions::Enum options, bool takeFocus = true, bool startGame = true);
   GameSession* PlaySingleGame();
   GameSession* PlayNewGame();
   void ZoomOnGame(GameSession* gameSession);

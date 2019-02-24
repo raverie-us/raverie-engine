@@ -17,11 +17,8 @@ void ShaderInputSetValue(ShaderInput& input, AnyParam value)
   }
   else if (value.IsNotNull())
   {
-    ErrorIf(value.StoredType->GetAllocatedSize() > ShaderInput::MaxSize,
-            "Type cannot be stored in ShaderInput.");
-    memcpy(input.mValue,
-           value.Dereference(),
-           value.StoredType->GetAllocatedSize());
+    ErrorIf(value.StoredType->GetAllocatedSize() > ShaderInput::MaxSize, "Type cannot be stored in ShaderInput.");
+    memcpy(input.mValue, value.Dereference(), value.StoredType->GetAllocatedSize());
   }
   else
   {

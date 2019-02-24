@@ -17,15 +17,9 @@ OsInt DirectoryWatcher::RunThreadEntryPoint()
   const OsInt flags = FILE_FLAG_OVERLAPPED | FILE_FLAG_BACKUP_SEMANTICS;
 
   // Create the directory handle
-  OsHandle dirHandle = CreateFileW(Widen(mDirectoryToWatch).c_str(),
-                                   FILE_LIST_DIRECTORY,
-                                   shareAll,
-                                   NULL,
-                                   OPEN_EXISTING,
-                                   flags,
-                                   NULL);
-  CheckWin(dirHandle != INVALID_HANDLE_VALUE,
-           "Failed to create directory handle.");
+  OsHandle dirHandle =
+      CreateFileW(Widen(mDirectoryToWatch).c_str(), FILE_LIST_DIRECTORY, shareAll, NULL, OPEN_EXISTING, flags, NULL);
+  CheckWin(dirHandle != INVALID_HANDLE_VALUE, "Failed to create directory handle.");
   if (dirHandle == INVALID_HANDLE_VALUE)
     return (OsInt)-1;
 
@@ -43,24 +37,16 @@ OsInt DirectoryWatcher::RunThreadEntryPoint()
     OsInt bytesReturned = 0;
 
     // Looking for file updates, additions, and removal.
-    OsInt filterFlags =
-        FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_LAST_WRITE;
+    OsInt filterFlags = FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_LAST_WRITE;
 
-    ReadDirectoryChangesW(dirHandle,
-                          fileNotifyBuffer,
-                          cBufferSize,
-                          TRUE,
-                          filterFlags,
-                          &bytesReturned,
-                          IoGetOverlap(readDir),
-                          NULL);
+    ReadDirectoryChangesW(
+        dirHandle, fileNotifyBuffer, cBufferSize, TRUE, filterFlags, &bytesReturned, IoGetOverlap(readDir), NULL);
     OsInt result = WaitForIoCompletion(readDir);
 
     if (result == IoFinished)
     {
       // Overlapped Io has finished process events.
-      OsInt overlapResult = GetOverlappedResult(
-          dirHandle, IoGetOverlap(readDir), &bytesReturned, TRUE);
+      OsInt overlapResult = GetOverlappedResult(dirHandle, IoGetOverlap(readDir), &bytesReturned, TRUE);
 
       // Iterate through the directory event buffer.
       byte* buffer = (byte*)fileNotifyBuffer;
@@ -75,14 +61,8 @@ OsInt DirectoryWatcher::RunThreadEntryPoint()
 
         // FileNameLength is in bytes so divide by size of WCHAR
         uint characterLength = notify.FileNameLength / sizeof(WCHAR);
-        WideCharToMultiByte(CP_ACP,
-                            0,
-                            notify.FileName,
-                            notify.FileNameLength,
-                            asciFilename,
-                            cFileNameBufferSize,
-                            "?",
-                            NULL);
+        WideCharToMultiByte(
+            CP_ACP, 0, notify.FileName, notify.FileNameLength, asciFilename, cFileNameBufferSize, "?", NULL);
 
         FileOperationInfo info;
         info.FileName = String(asciFilename, characterLength);

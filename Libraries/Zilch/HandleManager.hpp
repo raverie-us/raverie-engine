@@ -40,8 +40,7 @@ public:
   // If the shared manager cannot be found, it will use the executable state
   // Note that if the executable state is not passed in, an assert will fire and
   // the default PointerManager will be returned
-  HandleManager* GetManager(HandleManagerId id,
-                            ExecutableState* state = nullptr);
+  HandleManager* GetManager(HandleManagerId id, ExecutableState* state = nullptr);
 
   // Get a unique creator function
   CreateHandleManagerFn GetUniqueCreator(HandleManagerId index);
@@ -78,8 +77,7 @@ public:
 
 // Auto-increment the handle manager index as we register more managers
 template <typename T>
-ZeroSharedTemplate const HandleManagerId HandleManagerGuid<T>::Id =
-    HandleManagers::GetInstance().GetNextId();
+ZeroSharedTemplate const HandleManagerId HandleManagerGuid<T>::Id = HandleManagers::GetInstance().GetNextId();
 
 // Get the id of a handle manager
 #  define ZilchManagerId(Type) Zilch::HandleManagerGuid<Type>::Id
@@ -87,15 +85,13 @@ ZeroSharedTemplate const HandleManagerId HandleManagerGuid<T>::Id =
 // Creates and registers a shared handle manager
 // Any extra arguments will be given to the constructor of your type
 // Shared handle managers MUST be implemented in a thread safe fashion
-#  define ZilchRegisterSharedHandleManager(Type)                               \
-    Zilch::HandleManagers::GetInstance().AddSharedManager(                     \
-        ZilchManagerId(Type), new Type(nullptr))
+#  define ZilchRegisterSharedHandleManager(Type)                                                                       \
+    Zilch::HandleManagers::GetInstance().AddSharedManager(ZilchManagerId(Type), new Type(nullptr))
 
 // Registers a unique (per ExecutableState) handle manager
 // The types registered are expected to have a default constructor
-#  define ZilchRegisterUniqueHandleManager(Type)                               \
-    Zilch::HandleManagers::GetInstance().AddUniqueCreator(                     \
-        ZilchManagerId(Type), Zilch::HandleManagerCreator<Type>)
+#  define ZilchRegisterUniqueHandleManager(Type)                                                                       \
+    Zilch::HandleManagers::GetInstance().AddUniqueCreator(ZilchManagerId(Type), Zilch::HandleManagerCreator<Type>)
 
 // The result we get back from releasing a reference to a handle object
 namespace ReleaseResult
@@ -131,9 +127,7 @@ public:
   // from Dereferencing the handle Note that the only portion of the handle the
   // needs to be initialized is the Data field, and that the handle will have
   // been memory cleared to all 0 (the Type and Manager will be set externally)
-  virtual void ObjectToHandle(const byte* object,
-                              BoundType* type,
-                              Handle& handleToInitialize) = 0;
+  virtual void ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize) = 0;
 
   // Dereference the user-data stored on the handle and
   // turn it into an instance pointer to the user's object
@@ -150,9 +144,7 @@ public:
   // the handle the needs to be initialized is the Data field, and that the
   // handle will have been memory cleared to all 0 (the Type and Manager will be
   // set externally)
-  virtual void Allocate(BoundType* type,
-                        Handle& handleToInitialize,
-                        size_t customFlags);
+  virtual void Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags);
 
   // Delete all references to stored objects (if we have any allocated)
   // This is called while the ExecutableState is being torn down, before we
@@ -200,10 +192,7 @@ public:
   // otherwise The default behavior is to compare the dereferenced pointers
   // Since this check is only done after the handles have already been
   // dereferenced, we also pass in the dereferenced byte pointers we received
-  virtual bool IsEqual(const Handle& handleLhs,
-                       const Handle& handleRhs,
-                       const byte* objectLhs,
-                       const byte* objectRhs);
+  virtual bool IsEqual(const Handle& handleLhs, const Handle& handleRhs, const byte* objectLhs, const byte* objectRhs);
 
 public:
   // The executable state (only used in the case that we're not shared)
@@ -294,13 +283,9 @@ public:
   // HandleManager interface
   HeapManager(ExecutableState* state);
   String GetName() override;
-  void Allocate(BoundType* type,
-                Handle& handleToInitialize,
-                size_t customFlags) override;
+  void Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags) override;
   byte* HandleToObject(const Handle& handle) override;
-  void ObjectToHandle(const byte* object,
-                      BoundType* type,
-                      Handle& handleToInitialize) override;
+  void ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize) override;
   void DeleteAll(ExecutableState* state) override;
   void Delete(const Handle& handle) override;
   bool CanDelete(const Handle& handle) override;
@@ -342,13 +327,9 @@ public:
   // HandleManager interface
   StackManager(ExecutableState* state);
   String GetName() override;
-  void Allocate(BoundType* type,
-                Handle& handleToInitialize,
-                size_t customFlags) override;
+  void Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags) override;
   byte* HandleToObject(const Handle& handle) override;
-  void ObjectToHandle(const byte* object,
-                      BoundType* type,
-                      Handle& handleToInitialize) override;
+  void ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize) override;
 };
 
 // This manages insertion of pointers into the language, which are assumed to be
@@ -359,15 +340,11 @@ public:
   // HandleManager interface
   PointerManager(ExecutableState* state);
   String GetName() override;
-  void Allocate(BoundType* type,
-                Handle& handleToInitialize,
-                size_t customFlags) override;
+  void Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags) override;
   void Delete(const Handle& handle) override;
   bool CanDelete(const Handle& handle) override;
   byte* HandleToObject(const Handle& handle) override;
-  void ObjectToHandle(const byte* object,
-                      BoundType* type,
-                      Handle& handleToInitialize) override;
+  void ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize) override;
 };
 
 // This manages string nodes for the string class, which is always a reference
@@ -379,23 +356,15 @@ public:
   StringManager(ExecutableState* state);
   String GetName() override;
   size_t Hash(const Handle& handle) override;
-  void Allocate(BoundType* type,
-                Handle& handleToInitialize,
-                size_t customFlags) override;
+  void Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags) override;
   byte* HandleToObject(const Handle& handle) override;
-  void ObjectToHandle(const byte* object,
-                      BoundType* type,
-                      Handle& handleToInitialize) override;
+  void ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize) override;
   void AddReference(const Handle& handle) override;
   ReleaseResult::Enum ReleaseReference(const Handle& handle) override;
-  bool IsEqual(const Handle& handleLhs,
-               const Handle& handleRhs,
-               const byte* objectLhs,
-               const byte* objectRhs) override;
+  bool IsEqual(const Handle& handleLhs, const Handle& handleRhs, const byte* objectLhs, const byte* objectRhs) override;
 };
-static_assert(
-    sizeof(String) <= HandleUserDataSize,
-    "The String class must fit within Handle::Data (make handle Data bigger)");
+static_assert(sizeof(String) <= HandleUserDataSize,
+              "The String class must fit within Handle::Data (make handle Data bigger)");
 } // namespace Zilch
 
 #endif

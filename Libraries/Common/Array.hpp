@@ -14,9 +14,7 @@ namespace Zero
 /// Linear time for insertion and removal at beginning or middle.
 /// This array is also optimized to use pod conventions (memcpy, no destructors)
 /// on fundamental types or types with proper type traits.(see TypeTraits).
-template <typename ValueType,
-          typename Allocator = DefaultAllocator,
-          typename value_tt = StandardTraits<ValueType>>
+template <typename ValueType, typename Allocator = DefaultAllocator, typename value_tt = StandardTraits<ValueType>>
 class ZeroSharedTemplate Array : public AllocationContainer<Allocator>
 {
 public:
@@ -135,11 +133,7 @@ public:
   }
 
   /// Copy Constructor
-  Array(const this_type& other) :
-      base_type(other),
-      mData(nullptr),
-      mCapacity(other.mSize),
-      mSize(other.mSize)
+  Array(const this_type& other) : base_type(other), mData(nullptr), mCapacity(other.mSize), mSize(other.mSize)
   {
     if (other.mSize != 0)
     {
@@ -167,36 +161,24 @@ public:
   }
 
   /// Constructs an array of the specified size with copy constructed values
-  Array(size_type size, const_reference fillType) :
-      mData(nullptr),
-      mCapacity(0),
-      mSize(0)
+  Array(size_type size, const_reference fillType) : mData(nullptr), mCapacity(0), mSize(0)
   {
     ChangeCapacity(size);
     UninitializedFill(mData, size, fillType);
     mSize = size;
   }
-  Array(ContainerInitializerDummy*, const_reference p0) :
-      mData(nullptr),
-      mCapacity(0),
-      mSize(0)
+  Array(ContainerInitializerDummy*, const_reference p0) : mData(nullptr), mCapacity(0), mSize(0)
   {
     Reserve(1);
     PushBack(p0);
   }
-  Array(ContainerInitializerDummy*, const_reference p0, const_reference p1) :
-      mData(nullptr),
-      mCapacity(0),
-      mSize(0)
+  Array(ContainerInitializerDummy*, const_reference p0, const_reference p1) : mData(nullptr), mCapacity(0), mSize(0)
   {
     Reserve(2);
     PushBack(p0);
     PushBack(p1);
   }
-  Array(ContainerInitializerDummy*,
-        const_reference p0,
-        const_reference p1,
-        const_reference p2) :
+  Array(ContainerInitializerDummy*, const_reference p0, const_reference p1, const_reference p2) :
       mData(nullptr),
       mCapacity(0),
       mSize(0)
@@ -206,11 +188,7 @@ public:
     PushBack(p1);
     PushBack(p2);
   }
-  Array(ContainerInitializerDummy*,
-        const_reference p0,
-        const_reference p1,
-        const_reference p2,
-        const_reference p3) :
+  Array(ContainerInitializerDummy*, const_reference p0, const_reference p1, const_reference p2, const_reference p3) :
       mData(nullptr),
       mCapacity(0),
       mSize(0)
@@ -647,8 +625,7 @@ public:
       where = mData;
     }
 
-    ErrorIf(where < mData || where > mData + mSize,
-            "Access array out of bounds.");
+    ErrorIf(where < mData || where > mData + mSize, "Access array out of bounds.");
 
     size_type elementsToInsert = inputRange.Length();
 
@@ -673,8 +650,7 @@ public:
       where = mData;
     }
 
-    ErrorIf(where < mData || where > mData + mSize,
-            "Access array out of bounds.");
+    ErrorIf(where < mData || where > mData + mSize, "Access array out of bounds.");
 
     size_type elementsToInsert = inputRange->Length();
 
@@ -707,15 +683,13 @@ public:
   /// Inserts an element before the specified position in the array
   void Insert(pointer where, const_reference value)
   {
-    ErrorIf(where < mData || where > mData + mSize,
-            "Access array out of bounds.");
+    ErrorIf(where < mData || where > mData + mSize, "Access array out of bounds.");
     ConstPointerRange<value_type> singleValue(&value, &value + 1);
     Insert(where, singleValue);
   }
   void Insert(pointer where, MoveReference<value_type> value)
   {
-    ErrorIf(where < mData || where > mData + mSize,
-            "Access array out of bounds.");
+    ErrorIf(where < mData || where > mData + mSize, "Access array out of bounds.");
     PointerRange<value_type> singleValue(&value, &value + 1);
     Insert(where, ZeroMove(singleValue));
   }
@@ -750,8 +724,7 @@ public:
   }
   pointer Erase(pointer where)
   {
-    ErrorIf(where < mData || where > mData + mSize,
-            "Access array out of bounds.");
+    ErrorIf(where < mData || where > mData + mSize, "Access array out of bounds.");
     EraseElements(where, 1);
     if (!Empty())
       return where; // safe memory is not reallocated
@@ -870,8 +843,7 @@ protected:
         newCapacity = neededCapacity;
       }
 
-      pointer newData =
-          (pointer)mAllocator.Allocate(newCapacity * sizeof(value_type));
+      pointer newData = (pointer)mAllocator.Allocate(newCapacity * sizeof(value_type));
       size_type firstBlockSize = where - mData;
       size_type secondBlockSize = End() - where;
       pointer startOfSecondBlock = newData + firstBlockSize + numberOfElements;
@@ -881,16 +853,12 @@ protected:
       {
         // Copy over first block of data
         if (firstBlockSize != 0)
-          UninitializedMove(
-              startOfFirstBlock, mData, firstBlockSize, typePodMove());
+          UninitializedMove(startOfFirstBlock, mData, firstBlockSize, typePodMove());
 
         // Copy over second block of data
         if (secondBlockSize != 0)
         {
-          UninitializedMove(startOfSecondBlock,
-                            mData + firstBlockSize,
-                            secondBlockSize,
-                            typePodMove());
+          UninitializedMove(startOfSecondBlock, mData + firstBlockSize, secondBlockSize, typePodMove());
         }
       }
 
@@ -911,8 +879,7 @@ protected:
       // Watch out we have an overlapped write
       if (elementsToMove != 0)
       {
-        UninitializedMoveRev(
-            where + numberOfElements, where, elementsToMove, typePodMove());
+        UninitializedMoveRev(where + numberOfElements, where, elementsToMove, typePodMove());
       }
       return where;
     }
@@ -928,8 +895,7 @@ protected:
 
     if (elementsToMove > 0)
     {
-      UninitializedMove(
-          where, where + numberOfElements, elementsToMove, typePodMove());
+      UninitializedMove(where, where + numberOfElements, elementsToMove, typePodMove());
     }
 
     mSize -= numberOfElements;
@@ -970,8 +936,7 @@ protected:
       return;
 
     // Allocate the new buffer size
-    pointer newData =
-        (pointer)mAllocator.Allocate(newCapacity * sizeof(value_type));
+    pointer newData = (pointer)mAllocator.Allocate(newCapacity * sizeof(value_type));
 
     // copy everything in mSize above. resize call above shrinks if necessary.
     if (mSize != 0)
@@ -999,8 +964,7 @@ protected:
 
 /// PodArray is the same as Array except Pod conventions are forced on
 template <typename ValueType, typename Allocator = DefaultAllocator>
-class ZeroSharedTemplate PodArray
-    : public Array<ValueType, Allocator, PodOverride>
+class ZeroSharedTemplate PodArray : public Array<ValueType, Allocator, PodOverride>
 {
 public:
   typedef Array<ValueType, Allocator, PodOverride> base_type;
@@ -1019,9 +983,8 @@ public:
 template <typename ValueType, typename Allocator, typename tt_traits>
 struct MoveWithoutDestructionOperator<Array<ValueType, Allocator, tt_traits>>
 {
-  static inline void
-  MoveWithoutDestruction(Array<ValueType, Allocator, tt_traits>* dest,
-                         Array<ValueType, Allocator, tt_traits>* source)
+  static inline void MoveWithoutDestruction(Array<ValueType, Allocator, tt_traits>* dest,
+                                            Array<ValueType, Allocator, tt_traits>* source)
   {
     dest->mData = source->mData;
     dest->mCapacity = source->mCapacity;

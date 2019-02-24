@@ -77,9 +77,7 @@ public:
     return 0;
   }
 
-  DataEntry* GetChild(DataEntry* dataEntry,
-                      uint index,
-                      DataEntry* prev) override
+  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
   {
     ScriptError* root = mErrors[0];
     if (dataEntry == root)
@@ -126,9 +124,7 @@ public:
     }
   }
 
-  bool SetData(DataEntry* dataEntry,
-               AnyParam variant,
-               StringParam column) override
+  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
   {
     // Cannot modify anything
     return false;
@@ -155,7 +151,7 @@ ErrorList::~ErrorList()
 
 void ErrorList::ClearErrors()
 {
-  forRange(ScriptError * error, mSource->mErrors.All())
+  forRange (ScriptError* error, mSource->mErrors.All())
   {
     delete error;
   }
@@ -182,8 +178,7 @@ void ErrorList::UpdateTransform()
 
 void ErrorList::BuildFormat(TreeFormatting& formatting)
 {
-  formatting.Flags.SetFlag(FormatFlags::ShowHeaders |
-                           FormatFlags::ShowSeparators);
+  formatting.Flags.SetFlag(FormatFlags::ShowHeaders | FormatFlags::ShowSeparators);
 
   // Icon
   ColumnFormat* format = &formatting.Columns.PushBack();

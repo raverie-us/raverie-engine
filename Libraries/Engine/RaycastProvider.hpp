@@ -64,16 +64,10 @@ public:
   /// Constructor for a raycast (1 point in screen space)
   CastInfo(Space* targetSpace, Cog* cameraCog, Vec2Param mousePosition);
   /// Constructor for a frustum cast (2 points in screen space)
-  CastInfo(Space* targetSpace,
-           Cog* cameraCog,
-           Vec2Param dragStart,
-           Vec2Param dragEnd);
+  CastInfo(Space* targetSpace, Cog* cameraCog, Vec2Param dragStart, Vec2Param dragEnd);
 
   /// Helper for construction
-  void SetInfo(Space* targetSpace,
-               Cog* cameraCog,
-               Vec2Param dragStart,
-               Vec2Param dragEnd);
+  void SetInfo(Space* targetSpace, Cog* cameraCog, Vec2Param dragStart, Vec2Param dragEnd);
 
   /// The space that is being casted in.
   Space* mTargetSpace;
@@ -105,14 +99,10 @@ public:
 
   /// Fills out the hit items from a raycast into the result list.
   /// The list should be set to the desired capacity beforehand.
-  virtual void RayCast(Ray& ray,
-                       CastInfo& castInfo,
-                       RaycastResultList& results) = 0;
+  virtual void RayCast(Ray& ray, CastInfo& castInfo, RaycastResultList& results) = 0;
   /// Fills out the hit items from a frustum into the result list.
   /// The list should be set to the desired capacity beforehand.
-  virtual void FrustumCast(Frustum& frustum,
-                           CastInfo& castInfo,
-                           RaycastResultList& results) = 0;
+  virtual void FrustumCast(Frustum& frustum, CastInfo& castInfo, RaycastResultList& results) = 0;
 
   /// Whether or not this provider is active. Used to fully disable the
   /// provider.
@@ -139,9 +129,7 @@ public:
   void RayCast(Ray& ray, CastInfo& castInfo, RaycastResultList& results);
   /// Performs a frustum cast through all providers.
   /// The list should be set to the desired capacity beforehand.
-  void FrustumCast(Frustum& frustum,
-                   CastInfo& castInfo,
-                   RaycastResultList& results);
+  void FrustumCast(Frustum& frustum, CastInfo& castInfo, RaycastResultList& results);
 
   typedef Array<RaycastProvider*> ProviderArray;
   ProviderArray mProviders;

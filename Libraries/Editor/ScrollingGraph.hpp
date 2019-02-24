@@ -50,11 +50,7 @@ public:
   //---------------------------------------------------------------------- range
   struct range
   {
-    range(float origin,
-          float range,
-          float spacing,
-          bool halfHash,
-          float gridScale);
+    range(float origin, float range, float spacing, bool halfHash, float gridScale);
     HashMark Front();
     void PopFront();
     bool Empty();

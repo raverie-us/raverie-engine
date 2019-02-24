@@ -35,8 +35,7 @@ Debugger::Debugger() :
     WasLastDisallowedBreak(false)
 {
   // We want to know when the console writes anything
-  EventConnect(
-      &Console::Events, Events::ConsoleWrite, &Debugger::OnConsoleWrite, this);
+  EventConnect(&Console::Events, Events::ConsoleWrite, &Debugger::OnConsoleWrite, this);
 
   // Attach to the state
   ExecutableState* state = ExecutableState::CallingState;
@@ -107,8 +106,7 @@ CodeEntry* Debugger::FindCodeEntry(StringParam origin)
   return nullptr;
 }
 
-Any Debugger::QueryExpression(StringParam expression,
-                              Array<QueryResult>& results)
+Any Debugger::QueryExpression(StringParam expression, Array<QueryResult>& results)
 {
   // Don't query an expression if we're not in a breakpoint
   if (!this->IsBreakpointed)
@@ -218,8 +216,7 @@ Any Debugger::QueryExpression(StringParam expression,
           HashMap<String, String> evaluatedProperties;
 
           // Check to see if the type is a bound type
-          BoundType* boundType =
-              Type::DynamicCast<BoundType*>(currentValue.StoredType);
+          BoundType* boundType = Type::DynamicCast<BoundType*>(currentValue.StoredType);
 
           // If the type is a bound type...
           while (boundType != nullptr)
@@ -232,8 +229,7 @@ Any Debugger::QueryExpression(StringParam expression,
               Property* property = properties[i];
 
               // If it's a static or hidden property, skip it
-              if (property->IsStatic || property->IsHidden ||
-                  property->Get == nullptr)
+              if (property->IsStatic || property->IsHidden || property->Get == nullptr)
                 continue;
 
               Any propertyResult = property->Get->Invoke(currentValue);
@@ -256,8 +252,7 @@ Any Debugger::QueryExpression(StringParam expression,
                 QueryResult& result = results.PushBack();
                 result.Name = property->Name;
                 result.Value = propertyValue;
-                result.Expandable =
-                    HasDebuggableProperties(propertyResult.StoredType);
+                result.Expandable = HasDebuggableProperties(propertyResult.StoredType);
               }
             }
 
@@ -380,14 +375,12 @@ void Debugger::OnConsoleWrite(ConsoleEvent* event)
 
 void Debugger::OnEnterFunction(OpcodeEvent* e)
 {
-  ErrorIf(this->IsBreakpointed,
-          "We should not be able to get in here when in a breakpoint");
+  ErrorIf(this->IsBreakpointed, "We should not be able to get in here when in a breakpoint");
 }
 
 void Debugger::OnExitFunction(OpcodeEvent* e)
 {
-  ErrorIf(this->IsBreakpointed,
-          "We should not be able to get in here when in a breakpoint");
+  ErrorIf(this->IsBreakpointed, "We should not be able to get in here when in a breakpoint");
 }
 
 void Debugger::OnException(ExceptionEvent* e)
@@ -397,15 +390,13 @@ void Debugger::OnException(ExceptionEvent* e)
     return;
 
   this->Pause();
-  CodeLocation location =
-      e->ThrownException->Trace.GetMostRecentNonNativeLocation();
+  CodeLocation location = e->ThrownException->Trace.GetMostRecentNonNativeLocation();
   this->Breakpoint(location);
 }
 
 void Debugger::OnOpcodePreStep(OpcodeEvent* e)
 {
-  ErrorIf(this->IsBreakpointed,
-          "We should not be able to get in here when in a breakpoint");
+  ErrorIf(this->IsBreakpointed, "We should not be able to get in here when in a breakpoint");
 
   // Make sure we pump incoming messages
   this->Update();
@@ -428,11 +419,9 @@ void Debugger::OnOpcodePreStep(OpcodeEvent* e)
 
   // Figure out if we changed to a new line by entering this opcode
   bool isNewLineOrFileFromLastLocation =
-      location.StartLine != this->LastLocation.StartLine ||
-      location.Origin != this->LastLocation.Origin;
+      location.StartLine != this->LastLocation.StartLine || location.Origin != this->LastLocation.Origin;
   bool isNewLineOrFileFromStepLocation =
-      location.StartLine != this->StepLocation.StartLine ||
-      location.Origin != this->StepLocation.Origin;
+      location.StartLine != this->StepLocation.StartLine || location.Origin != this->StepLocation.Origin;
 
   // Store the last code location so we can step by single lines
   this->LastLocation = location;
@@ -471,8 +460,7 @@ void Debugger::OnOpcodePreStep(OpcodeEvent* e)
   {
     // If we're in the same state that we wanted to step out, and the call stack
     // depth is less than what we started at
-    if (isNewLineOrFileFromStepLocation &&
-        state->StackFrames.Size() < this->StepOutOverCallStackDepth)
+    if (isNewLineOrFileFromStepLocation && state->StackFrames.Size() < this->StepOutOverCallStackDepth)
     {
       // Not necessary, but lets just clear the state and depth to make things
       // clearer
@@ -490,8 +478,7 @@ void Debugger::OnOpcodePreStep(OpcodeEvent* e)
   {
     // If we're in the same state that we wanted to step over, and the call
     // stack depth is the same as what we started at
-    if (isNewLineOrFileFromStepLocation &&
-        state->StackFrames.Size() <= this->StepOutOverCallStackDepth)
+    if (isNewLineOrFileFromStepLocation && state->StackFrames.Size() <= this->StepOutOverCallStackDepth)
     {
       // Not necessary, but lets just clear the state and depth to make things
       // clearer
@@ -515,8 +502,7 @@ void Debugger::OnOpcodePreStep(OpcodeEvent* e)
   if (isNewLineOrFileFromLastLocation && actionPausedExecution == false)
   {
     // Grab the breakpoint line list by code location/id and state
-    HashMap<String, HashSet<size_t>>::range result =
-        this->Breakpoints.Find(location.Origin);
+    HashMap<String, HashSet<size_t>>::range result = this->Breakpoints.Find(location.Origin);
     if (!result.Empty())
     {
       HashSet<size_t>& breakpointedLines = result.Front().second;
@@ -562,8 +548,7 @@ void Debugger::DetachCallbacks()
 
 void Debugger::UpdateAttach()
 {
-  if (this->Breakpoints.Empty() && this->Action == DebuggerAction::Resume ||
-      this->IsBreakpointed)
+  if (this->Breakpoints.Empty() && this->Action == DebuggerAction::Resume || this->IsBreakpointed)
     this->DetachCallbacks();
   else
     this->AttachCallbacks();
@@ -571,8 +556,7 @@ void Debugger::UpdateAttach()
 
 void Debugger::Breakpoint(const CodeLocation& codeLocation)
 {
-  ErrorIf(this->IsBreakpointed,
-          "We should not be able to get in here when in a breakpoint");
+  ErrorIf(this->IsBreakpointed, "We should not be able to get in here when in a breakpoint");
 
   ExecutableState* state = ExecutableState::CallingState;
 

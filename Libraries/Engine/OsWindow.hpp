@@ -129,8 +129,7 @@ public:
   void SetMouseTrap(bool trapped);
   IntVec2 GetMouseTrapMonitorPosition();
   /// Used to override the trapped position.
-  void SetMouseTrapClientPosition(IntVec2 clientPosition,
-                                  bool useCustomPosition);
+  void SetMouseTrapClientPosition(IntVec2 clientPosition, bool useCustomPosition);
 
   OsHandle GetWindowHandle();
 
@@ -158,12 +157,8 @@ public:
 
   // Internal
 
-  void FillKeyboardEvent(Keys::Enum key,
-                         KeyState::Enum keyState,
-                         KeyboardEvent& keyEvent);
-  void FillMouseEvent(IntVec2Param clientPosition,
-                      MouseButtons::Enum mouseButton,
-                      OsMouseEvent& mouseEvent);
+  void FillKeyboardEvent(Keys::Enum key, KeyState::Enum keyState, KeyboardEvent& keyEvent);
+  void FillMouseEvent(IntVec2Param clientPosition, MouseButtons::Enum mouseButton, OsMouseEvent& mouseEvent);
 
   // ShellWindow interface
   static void ShellWindowOnClose(ShellWindow* window);
@@ -172,42 +167,22 @@ public:
                                           const Array<String>& files,
                                           ShellWindow* window);
   static void ShellWindowOnFrozenUpdate(ShellWindow* window);
-  static void ShellWindowOnClientSizeChanged(Math::IntVec2Param clientSize,
-                                             ShellWindow* window);
+  static void ShellWindowOnClientSizeChanged(Math::IntVec2Param clientSize, ShellWindow* window);
   static void ShellWindowOnMinimized(ShellWindow* window);
   static void ShellWindowOnRestored(ShellWindow* window);
   static void ShellWindowOnTextTyped(Rune rune, ShellWindow* window);
-  static void ShellWindowOnKeyDown(Keys::Enum key,
-                                   uint osKey,
-                                   bool repeated,
-                                   ShellWindow* window);
-  static void ShellWindowOnKeyUp(Keys::Enum key,
-                                 uint osKey,
-                                 ShellWindow* window);
-  static void ShellWindowOnMouseDown(Math::IntVec2Param clientPosition,
-                                     MouseButtons::Enum button,
-                                     ShellWindow* window);
-  static void ShellWindowOnMouseUp(Math::IntVec2Param clientPosition,
-                                   MouseButtons::Enum button,
-                                   ShellWindow* window);
-  static void ShellWindowOnMouseMove(Math::IntVec2Param clientPosition,
-                                     ShellWindow* window);
-  static void ShellWindowOnMouseScrollY(Math::IntVec2Param clientPosition,
-                                        float scrollAmount,
-                                        ShellWindow* window);
-  static void ShellWindowOnMouseScrollX(Math::IntVec2Param clientPosition,
-                                        float scrollAmount,
-                                        ShellWindow* window);
+  static void ShellWindowOnKeyDown(Keys::Enum key, uint osKey, bool repeated, ShellWindow* window);
+  static void ShellWindowOnKeyUp(Keys::Enum key, uint osKey, ShellWindow* window);
+  static void ShellWindowOnMouseDown(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window);
+  static void ShellWindowOnMouseUp(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window);
+  static void ShellWindowOnMouseMove(Math::IntVec2Param clientPosition, ShellWindow* window);
+  static void ShellWindowOnMouseScrollY(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
+  static void ShellWindowOnMouseScrollX(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
   static void ShellWindowOnDevicesChanged(ShellWindow* window);
-  static void ShellWindowOnRawMouseChanged(Math::IntVec2Param movement,
-                                           ShellWindow* window);
-  static WindowBorderArea::Enum
-  ShellWindowOnHitTest(Math::IntVec2Param clientPosition, ShellWindow* window);
-  static void ShellWindowOnInputDeviceChanged(PlatformInputDevice& device,
-                                              uint buttons,
-                                              const Array<uint>& axes,
-                                              const DataBlock& data,
-                                              ShellWindow* window);
+  static void ShellWindowOnRawMouseChanged(Math::IntVec2Param movement, ShellWindow* window);
+  static WindowBorderArea::Enum ShellWindowOnHitTest(Math::IntVec2Param clientPosition, ShellWindow* window);
+  static void ShellWindowOnInputDeviceChanged(
+      PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data, ShellWindow* window);
 
   // If the mouse is currently trapped (not visible and centered on the window).
   bool mMouseTrapped;

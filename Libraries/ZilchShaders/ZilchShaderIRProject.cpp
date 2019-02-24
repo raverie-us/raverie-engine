@@ -10,9 +10,7 @@ ZilchShaderIRProject::ZilchShaderIRProject(StringParam projectName)
   mCompiledSuccessfully = false;
 }
 
-void ZilchShaderIRProject::AddCodeFromString(StringParam code,
-                                             StringParam codeLocation,
-                                             void* userData)
+void ZilchShaderIRProject::AddCodeFromString(StringParam code, StringParam codeLocation, void* userData)
 {
   CodeEntry& entry = mCodeEntries.PushBack();
   entry.mCode = code;
@@ -24,11 +22,7 @@ void ZilchShaderIRProject::AddCodeFromFile(StringParam filePath, void* userData)
 {
   File file;
   Status status;
-  file.Open(filePath,
-            FileMode::Read,
-            FileAccessPattern::Sequential,
-            FileShare::Read,
-            &status);
+  file.Open(filePath, FileMode::Read, FileAccessPattern::Sequential, FileShare::Read, &status);
 
   String code = ReadFileIntoString(filePath);
   AddCodeFromString(code, filePath, userData);
@@ -41,11 +35,10 @@ void ZilchShaderIRProject::Clear()
   ComplexUserData.Clear();
 }
 
-bool ZilchShaderIRProject::CompileTree(
-    Zilch::Module& zilchDependencies,
-    Zilch::LibraryRef& zilchLibrary,
-    Zilch::SyntaxTree& syntaxTree,
-    Zilch::Array<Zilch::UserToken>& tokensOut)
+bool ZilchShaderIRProject::CompileTree(Zilch::Module& zilchDependencies,
+                                       Zilch::LibraryRef& zilchLibrary,
+                                       Zilch::SyntaxTree& syntaxTree,
+                                       Zilch::Array<Zilch::UserToken>& tokensOut)
 {
   // Add all of the source code to the zilch project
   Zilch::Project zilchProject;
@@ -57,12 +50,8 @@ bool ZilchShaderIRProject::CompileTree(
 
   // Compile the source code into a syntax tree
   Zilch::LibraryBuilder libraryBuilder(mProjectName);
-  bool compiledSuccessfully =
-      zilchProject.CompileCheckedSyntaxTree(syntaxTree,
-                                            libraryBuilder,
-                                            tokensOut,
-                                            zilchDependencies,
-                                            Zilch::EvaluationMode::Project);
+  bool compiledSuccessfully = zilchProject.CompileCheckedSyntaxTree(
+      syntaxTree, libraryBuilder, tokensOut, zilchDependencies, Zilch::EvaluationMode::Project);
 
   // If it failed to compile then don't build the library
   if (!compiledSuccessfully)
@@ -75,8 +64,8 @@ bool ZilchShaderIRProject::CompileTree(
   return compiledSuccessfully;
 }
 
-ZilchShaderIRLibraryRef ZilchShaderIRProject::CompileAndTranslate(
-    ZilchShaderIRModuleRef& dependencies, BaseShaderIRTranslator* translator)
+ZilchShaderIRLibraryRef ZilchShaderIRProject::CompileAndTranslate(ZilchShaderIRModuleRef& dependencies,
+                                                                  BaseShaderIRTranslator* translator)
 {
   // Reset the error state
   mErrorTriggered = false;
@@ -99,12 +88,8 @@ ZilchShaderIRLibraryRef ZilchShaderIRProject::CompileAndTranslate(
   Zilch::Array<Zilch::UserToken> tokensOut;
   Zilch::SyntaxTree syntaxTree;
   Zilch::LibraryBuilder libraryBuilder(mProjectName);
-  mCompiledSuccessfully =
-      zilchProject.CompileCheckedSyntaxTree(syntaxTree,
-                                            libraryBuilder,
-                                            tokensOut,
-                                            zilchDependencies,
-                                            Zilch::EvaluationMode::Project);
+  mCompiledSuccessfully = zilchProject.CompileCheckedSyntaxTree(
+      syntaxTree, libraryBuilder, tokensOut, zilchDependencies, Zilch::EvaluationMode::Project);
 
   // If it failed to compile then don't build the library
   if (!mCompiledSuccessfully)
@@ -146,15 +131,12 @@ ZilchShaderIRLibraryRef ZilchShaderIRProject::CompileAndTranslate(
 void ZilchShaderIRProject::BuildZilchProject(Zilch::Project& zilchProject)
 {
   for (size_t i = 0; i < mCodeEntries.Size(); ++i)
-    zilchProject.AddCodeFromString(mCodeEntries[i].mCode,
-                                   mCodeEntries[i].mCodeLocation,
-                                   mCodeEntries[i].mUserData);
+    zilchProject.AddCodeFromString(mCodeEntries[i].mCode, mCodeEntries[i].mCodeLocation, mCodeEntries[i].mUserData);
   zilchProject.UserData = UserData;
   zilchProject.ComplexUserData = ComplexUserData;
 }
 
-void ZilchShaderIRProject::PopulateZilchModule(
-    Zilch::Module& zilchDependencies, ZilchShaderIRModuleRef& dependencies)
+void ZilchShaderIRProject::PopulateZilchModule(Zilch::Module& zilchDependencies, ZilchShaderIRModuleRef& dependencies)
 {
   // Handle having no dependencies
   if (dependencies == nullptr)
@@ -184,12 +166,9 @@ void ZilchShaderIRProject::PopulateZilchModule(
       continue;
 
     // Otherwise walk all dependent shader libraries
-    for (size_t subIndex = 0;
-         subIndex < dependencyLibrary->mDependencies->Size();
-         ++subIndex)
+    for (size_t subIndex = 0; subIndex < dependencyLibrary->mDependencies->Size(); ++subIndex)
     {
-      ZilchShaderIRLibrary* subLibrary =
-          (*dependencyLibrary->mDependencies)[subIndex];
+      ZilchShaderIRLibrary* subLibrary = (*dependencyLibrary->mDependencies)[subIndex];
       Zilch::Library* subZilchLibrary = subLibrary->mZilchLibrary;
 
       // Basic error Checking
@@ -198,8 +177,7 @@ void ZilchShaderIRProject::PopulateZilchModule(
         Error("Cannot have a null library as a dependency");
         continue;
       }
-      ErrorIf(subLibrary->mTranslated == false,
-              "Dependency was not already compiled somehow");
+      ErrorIf(subLibrary->mTranslated == false, "Dependency was not already compiled somehow");
 
       // If we've already walked this library then ignore it
       if (visitedZilchDependencies.Contains(subZilchLibrary))
@@ -213,8 +191,7 @@ void ZilchShaderIRProject::PopulateZilchModule(
   }
 }
 
-void ZilchShaderIRProject::CollectLibraryDefaultValues(
-    ZilchShaderIRLibraryRef libraryRef, Zilch::Module& zilchModule)
+void ZilchShaderIRProject::CollectLibraryDefaultValues(ZilchShaderIRLibraryRef libraryRef, Zilch::Module& zilchModule)
 {
   ZilchShaderIRLibrary* library = libraryRef;
   // Link the module together to get an executable state we can run (to find
@@ -238,8 +215,7 @@ void ZilchShaderIRProject::CollectLibraryDefaultValues(
     // Default construct this type
     Zilch::ExceptionReport report;
     Zilch::Handle preconstructedObject =
-        state->AllocateDefaultConstructedHeapObject(
-            zilchType, report, Zilch::HeapFlags::NonReferenceCounted);
+        state->AllocateDefaultConstructedHeapObject(zilchType, report, Zilch::HeapFlags::NonReferenceCounted);
 
     for (size_t i = 0; i < typeMeta->mFields.Size(); ++i)
     {
@@ -254,8 +230,7 @@ void ZilchShaderIRProject::CollectLibraryDefaultValues(
       if (isStatic)
         options = Zilch::FindMemberOptions::Static;
 
-      Zilch::Property* zilchProperty =
-          zilchType->FindProperty(fieldMeta->mZilchName, options);
+      Zilch::Property* zilchProperty = zilchType->FindProperty(fieldMeta->mZilchName, options);
       // Validate that the property exists in zilch. This might not exist if the
       // property is entirely generated in shaders (such as the dummy)
       if (zilchProperty == nullptr)
@@ -277,8 +252,7 @@ void ZilchShaderIRProject::CollectLibraryDefaultValues(
 
       // Extract the return value of the property's Get call and store it as an
       // Zilch::Any on our ShaderType
-      fieldMeta->mDefaultValueVariant =
-          Zilch::Any(call.GetReturnUnchecked(), zilchProperty->GetTypeOrNull());
+      fieldMeta->mDefaultValueVariant = Zilch::Any(call.GetReturnUnchecked(), zilchProperty->GetTypeOrNull());
     }
   }
   delete state;

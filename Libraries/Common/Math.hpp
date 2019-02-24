@@ -32,20 +32,17 @@ ZeroShared void ToAxisAngle(QuatParam quaternion, Vec3Ptr axis, real* radians);
 
 /// Convert a 3x3 matrix to a set of Euler angles (in radians). The desired
 /// order of the rotations is expected to be in the given Euler angle structure.
-ZeroShared EulerAngles
-ToEulerAngles(Mat3Param matrix, EulerOrders::Enum order = EulerOrders::XYZs);
+ZeroShared EulerAngles ToEulerAngles(Mat3Param matrix, EulerOrders::Enum order = EulerOrders::XYZs);
 ZeroShared void ToEulerAngles(Mat3Param matrix, EulerAnglesPtr eulerAngles);
 
 /// Convert a 4x4 matrix to a set of Euler angles in radians. The desired order
 /// of the rotations is expected to be in the given Euler angle structure.
-ZeroShared EulerAngles
-ToEulerAngles(Mat4Param matrix, EulerOrders::Enum order = EulerOrders::XYZs);
+ZeroShared EulerAngles ToEulerAngles(Mat4Param matrix, EulerOrders::Enum order = EulerOrders::XYZs);
 ZeroShared void ToEulerAngles(Mat4Param matrix, EulerAnglesPtr eulerAngles);
 
 /// Convert a quaternion to a set of Euler angles (in radians). The desired
 /// order of the rotations is expected to be in the given Euler angle structure.
-ZeroShared EulerAngles ToEulerAngles(
-    QuatParam quaternion, EulerOrders::Enum order = EulerOrders::XYZs);
+ZeroShared EulerAngles ToEulerAngles(QuatParam quaternion, EulerOrders::Enum order = EulerOrders::XYZs);
 ZeroShared void ToEulerAngles(QuatParam quaternion, EulerAnglesPtr eulerAngles);
 
 /// Converts from Vector3 to Vector2, removing the z component of the Vector3.
@@ -157,9 +154,7 @@ ZeroShared Quaternion ToQuaternion(Mat4Param matrix);
 ZeroShared void ToQuaternion(Mat4Param matrix, QuatPtr quaternion);
 
 ZeroShared Quaternion ToQuaternion(Vec3Param facing, Vec3Param up);
-ZeroShared Quaternion ToQuaternion(Vec3Param facing,
-                                   Vec3Param up,
-                                   Vec3Param right);
+ZeroShared Quaternion ToQuaternion(Vec3Param facing, Vec3Param up, Vec3Param right);
 /// Generates a quaternion from the x,y,z axis angles.
 ZeroShared Quaternion ToQuaternion(real x, real y, real z);
 /// Generates the quaternion that rotates start to end.
@@ -177,9 +172,7 @@ ZeroShared Vec3 GeneratePerpendicularVector(Vec3Param input);
 ZeroShared void GenerateOrthonormalBasis(Vec3Param w, Vec3Ptr u, Vec3Ptr v);
 
 /// Doesn't blow up on zero vectors
-ZeroShared void DebugGenerateOrthonormalBasis(Vec3Param w,
-                                              Vec3Ptr u,
-                                              Vec3Ptr v);
+ZeroShared void DebugGenerateOrthonormalBasis(Vec3Param w, Vec3Ptr u, Vec3Ptr v);
 
 /// Converts a 32-bit float into a compressed 16-bit floating point value;
 /// referenced from Insomniac Games math library.

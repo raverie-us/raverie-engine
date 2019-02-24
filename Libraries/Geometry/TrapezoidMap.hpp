@@ -86,10 +86,7 @@ public:
   };
 
 public:
-  TrapezoidMap(const Array<Vec2>& vertices,
-               const Array<uint>& contours,
-               s32 maxEdges,
-               s32 seed);
+  TrapezoidMap(const Array<Vec2>& vertices, const Array<uint>& contours, s32 maxEdges, s32 seed);
 
   // Gets the region that the query point lies inside
   const Region* Query(const Vec2& point) const;
@@ -163,13 +160,7 @@ public:
                    RegionId leftParent,
                    RegionId rightParent);
 
-  bool UpdateBelow(Region* O,
-                   RegionId indexL,
-                   RegionId indexR,
-                   EdgeId botEdgeIndex,
-                   RegionId*,
-                   RegionId*,
-                   bool isLast);
+  bool UpdateBelow(Region* O, RegionId indexL, RegionId indexR, EdgeId botEdgeIndex, RegionId*, RegionId*, bool isLast);
 
   bool IsLeft(EdgeId edgeStart, EdgeId edgeEnd, const Vec2& point) const;
   bool IsLeftInternal(EdgeId edgeStart, EdgeId edgeEnd, VertexId pointId) const;

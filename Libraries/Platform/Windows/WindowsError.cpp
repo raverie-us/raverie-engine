@@ -16,15 +16,14 @@ Zero::String ToErrorString(uint errorCode)
   LPVOID messageBuffer = nullptr;
 
   // Look up windows error string.
-  DWORD numberOfChars = FormatMessageA(
-      FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
-          FORMAT_MESSAGE_IGNORE_INSERTS,
-      NULL,
-      error,
-      MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-      (LPSTR)&messageBuffer,
-      0,
-      NULL);
+  DWORD numberOfChars =
+      FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                     NULL,
+                     error,
+                     MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                     (LPSTR)&messageBuffer,
+                     0,
+                     NULL);
 
   Zero::String string((const char*)messageBuffer);
   LocalFree(messageBuffer);
@@ -41,21 +40,18 @@ Zero::String ToErrorString(uint errorCode)
   // Add extra error message data
   if (errorCode == ERROR_MOD_NOT_FOUND)
   {
-    string = BuildString(
-        string,
-        "This may be because a dependent dll or exe could not be loaded. "
-        "Make sure that all executables and dlls have NOT been renamed");
+    string = BuildString(string,
+                         "This may be because a dependent dll or exe could not be loaded. "
+                         "Make sure that all executables and dlls have NOT been renamed");
   }
 
   if (numberOfChars == 0)
-    string = Zero::String::Format(
-        "Error occurred with code: %d (hex %x)", errorCode, errorCode);
+    string = Zero::String::Format("Error occurred with code: %d (hex %x)", errorCode, errorCode);
 
   return string;
 }
 
-void FillWindowsErrorStatus(Zero::Status& status,
-                            const char* windowsFunctionName)
+void FillWindowsErrorStatus(Zero::Status& status, const char* windowsFunctionName)
 {
   // If we already failed, don't bother adding more
   if (status.Failed())
@@ -65,10 +61,7 @@ void FillWindowsErrorStatus(Zero::Status& status,
   if (errorCode != 0)
   {
     if (windowsFunctionName)
-      status.SetFailed(
-          BuildString(
-              ToErrorString(errorCode), " (at ", windowsFunctionName, ")"),
-          errorCode);
+      status.SetFailed(BuildString(ToErrorString(errorCode), " (at ", windowsFunctionName, ")"), errorCode);
     else
       status.SetFailed(ToErrorString(errorCode), errorCode);
   }

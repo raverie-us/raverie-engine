@@ -17,10 +17,7 @@ class EditorViewport;
 
 struct SelectionResult
 {
-  SelectionResult(Cog* hit, Vec3 position, Vec3 normal) :
-      Object(hit),
-      Position(position),
-      Normal(normal)
+  SelectionResult(Cog* hit, Vec3 position, Vec3 normal) : Object(hit), Position(position), Normal(normal)
   {
   }
 
@@ -83,11 +80,8 @@ class Tool : public EventObject
 public:
   ZilchDeclareType(Tool, TypeCopyMode::ReferenceType);
 
-  static Component* GetOrCreateEditComponent(BoundType* meta,
-                                             StringParam defaultName,
-                                             StringParam defaultArchetype,
-                                             CogId& lastEdited,
-                                             bool canCreate = true);
+  static Component* GetOrCreateEditComponent(
+      BoundType* meta, StringParam defaultName, StringParam defaultArchetype, CogId& lastEdited, bool canCreate = true);
   static ViewportTextWidget* CreateViewportTextWidget(StringParam text);
 
   virtual void Initialize()
@@ -156,15 +150,11 @@ public:
   virtual void StartDrag(Viewport* viewport, Vec2Param mouseStart)
   {
   }
-  virtual bool MouseDragMovement(Viewport* viewport,
-                                 Vec2Param mouseStart,
-                                 Vec2Param newPosition)
+  virtual bool MouseDragMovement(Viewport* viewport, Vec2Param mouseStart, Vec2Param newPosition)
   {
     return false;
   }
-  virtual void MouseDragUpdate(Viewport* viewport,
-                               Vec2Param mouseStart,
-                               Vec2Param newPosition){};
+  virtual void MouseDragUpdate(Viewport* viewport, Vec2Param mouseStart, Vec2Param newPosition){};
   virtual void EndDrag(Viewport* viewport)
   {
   }
@@ -203,8 +193,6 @@ void ColliderRayCast(Viewport* viewport,
                      Vec2Param mousePosition,
                      ColliderRayCastResult& result,
                      BaseCastFilter* filter = nullptr);
-void BeginSelectDrag(EditorViewport* viewport,
-                     MouseEvent* event,
-                     SelectTool* tool);
+void BeginSelectDrag(EditorViewport* viewport, MouseEvent* event, SelectTool* tool);
 
 } // namespace Zero

@@ -14,9 +14,7 @@ public:
   Tokenizer(CompilationErrors& errors);
 
   // Parse data from a null terminated memory pointer
-  bool Parse(const CodeEntry& entry,
-             Array<UserToken>& tokensOut,
-             Array<UserToken>& commentsOut);
+  bool Parse(const CodeEntry& entry, Array<UserToken>& tokensOut, Array<UserToken>& commentsOut);
 
   // Finalizes a token stream
   void Finalize(Array<UserToken>& tokensOut);
@@ -40,26 +38,17 @@ private:
   bool DiffString(const char* string);
 
   // Attempts to read a keyword or a symbol (any non-varying token)
-  inline bool ReadKeywordOrSymbol(UserToken* outToken,
-                                  size_t& lastAcceptedPos,
-                                  char& character,
-                                  TokenCategory::Enum& tokenType);
+  inline bool
+  ReadKeywordOrSymbol(UserToken* outToken, size_t& lastAcceptedPos, char& character, TokenCategory::Enum& tokenType);
 
   // Attempt to read an identifier
-  bool ReadIdentifier(UserToken* outToken,
-                      bool startedFromKeyword,
-                      size_t& lastAcceptedPos,
-                      char& character);
+  bool ReadIdentifier(UserToken* outToken, bool startedFromKeyword, size_t& lastAcceptedPos, char& character);
 
   // Attempt to read a number (both real or integer)
-  bool ReadNumber(UserToken* outToken,
-                  size_t& lastAcceptedPos,
-                  char& character);
+  bool ReadNumber(UserToken* outToken, size_t& lastAcceptedPos, char& character);
 
   // Attempt to read a string
-  bool ReadString(UserToken* outToken,
-                  size_t& lastAcceptedPos,
-                  char& character);
+  bool ReadString(UserToken* outToken, size_t& lastAcceptedPos, char& character);
 
   // Attempts to read a token
   bool ReadToken(UserToken* outToken);
@@ -71,8 +60,7 @@ private:
   String SkipToEndOfLine();
 
   // Parse the data
-  bool ParseInternal(Array<UserToken>& tokensOut,
-                     Array<UserToken>& commentsOut);
+  bool ParseInternal(Array<UserToken>& tokensOut, Array<UserToken>& commentsOut);
 
 public:
   // When set, we will parse the special '`' characters in strings to mean

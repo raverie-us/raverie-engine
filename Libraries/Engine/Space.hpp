@@ -78,10 +78,7 @@ public:
   Cog* CreateAt(StringParam source, Vec3Param position);
   Cog* CreateAt(StringParam source, Vec3Param position, QuatParam rotation);
   Cog* CreateAt(StringParam source, Vec3Param position, Vec3Param scale);
-  Cog* CreateAt(StringParam source,
-                Vec3Param position,
-                QuatParam rotation,
-                Vec3Param scale);
+  Cog* CreateAt(StringParam source, Vec3Param position, QuatParam rotation, Vec3Param scale);
 
   // Create an object link between two objects
   Cog* CreateLink(Archetype* archetype, Cog* objectA, Cog* objectB);
@@ -228,9 +225,7 @@ public:
   // Is the space currently in the process of loading a level right now.
   bool mIsLoadingLevel;
 
-  void SerializeObjectsToSpace(CogInitializer& initializer,
-                               CogCreationContext& context,
-                               Serializer& loader);
+  void SerializeObjectsToSpace(CogInitializer& initializer, CogCreationContext& context, Serializer& loader);
 
   friend class Cog;
   friend class CogInitializer;

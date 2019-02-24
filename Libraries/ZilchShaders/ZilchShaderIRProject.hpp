@@ -12,9 +12,7 @@ class ZilchShaderIRProject : public ShaderCompilationErrors
 public:
   ZilchShaderIRProject(StringParam projectName);
 
-  void AddCodeFromString(StringParam code,
-                         StringParam codeLocation,
-                         void* userData = nullptr);
+  void AddCodeFromString(StringParam code, StringParam codeLocation, void* userData = nullptr);
   void AddCodeFromFile(StringParam filePath, void* userData = nullptr);
 
   /// Clear the code from this library
@@ -25,8 +23,7 @@ public:
                    Zilch::SyntaxTree& syntaxTree,
                    Zilch::Array<Zilch::UserToken>& tokensOut);
   /// Compiles and translates this project into a library.
-  ZilchShaderIRLibraryRef CompileAndTranslate(
-      ZilchShaderIRModuleRef& dependencies, BaseShaderIRTranslator* translator);
+  ZilchShaderIRLibraryRef CompileAndTranslate(ZilchShaderIRModuleRef& dependencies, BaseShaderIRTranslator* translator);
 
   struct CodeEntry
   {
@@ -37,10 +34,8 @@ public:
 
   // Private Interface
   void BuildZilchProject(Zilch::Project& zilchProject);
-  void PopulateZilchModule(Zilch::Module& zilchDependencies,
-                           ZilchShaderIRModuleRef& dependencies);
-  void CollectLibraryDefaultValues(ZilchShaderIRLibraryRef libraryRef,
-                                   Zilch::Module& zilchModule);
+  void PopulateZilchModule(Zilch::Module& zilchDependencies, ZilchShaderIRModuleRef& dependencies);
+  void CollectLibraryDefaultValues(ZilchShaderIRLibraryRef libraryRef, Zilch::Module& zilchModule);
 
   Array<CodeEntry> mCodeEntries;
   String mProjectName;

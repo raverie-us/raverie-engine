@@ -25,31 +25,31 @@ protected:
   }
 };
 
-#define ZeroDeclareExplicitSingletonContents(T)                                \
-public:                                                                        \
-  static T* GetInstance()                                                      \
-  {                                                                            \
-    return mInstance;                                                          \
-  }                                                                            \
-                                                                               \
-  static void Initialize()                                                     \
-  {                                                                            \
-    ReturnIf(mInstance != nullptr,                                             \
-             ,                                                                 \
-             "The singleton is being "                                         \
-             "initialized more than once");                                    \
-    mInstance = new T();                                                       \
-  }                                                                            \
-                                                                               \
-  static void Destroy()                                                        \
-  {                                                                            \
-    delete mInstance;                                                          \
-    mInstance = nullptr;                                                       \
-  }                                                                            \
-                                                                               \
-private:                                                                       \
-  static T* mInstance;                                                         \
-                                                                               \
+#define ZeroDeclareExplicitSingletonContents(T)                                                                        \
+public:                                                                                                                \
+  static T* GetInstance()                                                                                              \
+  {                                                                                                                    \
+    return mInstance;                                                                                                  \
+  }                                                                                                                    \
+                                                                                                                       \
+  static void Initialize()                                                                                             \
+  {                                                                                                                    \
+    ReturnIf(mInstance != nullptr,                                                                                     \
+             ,                                                                                                         \
+             "The singleton is being "                                                                                 \
+             "initialized more than once");                                                                            \
+    mInstance = new T();                                                                                               \
+  }                                                                                                                    \
+                                                                                                                       \
+  static void Destroy()                                                                                                \
+  {                                                                                                                    \
+    delete mInstance;                                                                                                  \
+    mInstance = nullptr;                                                                                               \
+  }                                                                                                                    \
+                                                                                                                       \
+private:                                                                                                               \
+  static T* mInstance;                                                                                                 \
+                                                                                                                       \
 public:
 
 #define ZeroDefineExplicitSingletonContents(T) T* T::mInstance = nullptr;

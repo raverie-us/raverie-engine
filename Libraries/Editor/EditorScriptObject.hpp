@@ -65,12 +65,8 @@ EditorScriptObjects<DataType>::EditorScriptObjects(StringParam attributeName) :
 {
   ConnectThisTo(Z::gEditor, Events::ProjectLoaded, OnProjectLoaded);
 
-  ConnectThisTo(ZilchManager::GetInstance(),
-                Events::ScriptsCompiledPostPatch,
-                OnScriptsCompiled);
-  ConnectThisTo(ZilchScriptManager::GetInstance(),
-                Events::ResourceRemoved,
-                OnScriptRemoved);
+  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledPostPatch, OnScriptsCompiled);
+  ConnectThisTo(ZilchScriptManager::GetInstance(), Events::ResourceRemoved, OnScriptRemoved);
 }
 
 template <typename DataType>
@@ -184,8 +180,7 @@ void EditorScriptObjects<DataType>::RemoveObject(Archetype* archetype)
       // Now that the object is no longer created from the Archetype,
       // there could still be a script component with 'autoRegister', so we
       // have to attempt to update this object with the autoRegister
-      if (BoundType* componentType =
-              MetaDatabase::GetInstance()->FindType(currObject->GetName()))
+      if (BoundType* componentType = MetaDatabase::GetInstance()->FindType(currObject->GetName()))
       {
         if (IsAutoRegister(componentType))
         {
@@ -209,8 +204,7 @@ template <typename DataType>
 void EditorScriptObjects<DataType>::OnProjectLoaded(Event*)
 {
   // Walk all resources
-  forRange(Resource * resource,
-           ArchetypeManager::GetInstance()->ResourceIdMap.Values())
+  forRange (Resource* resource, ArchetypeManager::GetInstance()->ResourceIdMap.Values())
   {
     // Skip core resources
     if (!resource->IsWritable())
@@ -221,29 +215,20 @@ void EditorScriptObjects<DataType>::OnProjectLoaded(Event*)
       AddOrUpdate((Archetype*)resource);
   }
 
-  ConnectThisTo(ArchetypeManager::GetInstance(),
-                Events::ResourceTagsModified,
-                OnArchetypeModified);
-  ConnectThisTo(ArchetypeManager::GetInstance(),
-                Events::ResourceRemoved,
-                OnArchetypeModified);
-  ConnectThisTo(ArchetypeManager::GetInstance(),
-                Events::ResourceAdded,
-                OnArchetypeModified);
-  ConnectThisTo(ArchetypeManager::GetInstance(),
-                Events::ResourceReload,
-                OnArchetypeModified);
+  ConnectThisTo(ArchetypeManager::GetInstance(), Events::ResourceTagsModified, OnArchetypeModified);
+  ConnectThisTo(ArchetypeManager::GetInstance(), Events::ResourceRemoved, OnArchetypeModified);
+  ConnectThisTo(ArchetypeManager::GetInstance(), Events::ResourceAdded, OnArchetypeModified);
+  ConnectThisTo(ArchetypeManager::GetInstance(), Events::ResourceReload, OnArchetypeModified);
 }
 
 template <typename DataType>
 void EditorScriptObjects<DataType>::OnScriptsCompiled(Event*)
 {
   Array<BoundType*> components;
-  MetaComposition* composition =
-      ZilchTypeId(Cog)->HasInherited<MetaComposition>();
+  MetaComposition* composition = ZilchTypeId(Cog)->HasInherited<MetaComposition>();
   composition->Enumerate(components, EnumerateAction::All);
 
-  forRange(BoundType * componentType, components.All())
+  forRange (BoundType* componentType, components.All())
   {
     if (IsAutoRegister(componentType))
     {
@@ -267,8 +252,7 @@ void EditorScriptObjects<DataType>::OnScriptsCompiled(Event*)
   {
     DataType* currObject = GetObject(i);
 
-    if (currObject && currObject->mScriptComponentType &&
-        !components.Contains(currObject->mScriptComponentType))
+    if (currObject && currObject->mScriptComponentType && !components.Contains(currObject->mScriptComponentType))
     {
       RemoveObject(currObject);
 
@@ -283,11 +267,10 @@ template <typename DataType>
 void EditorScriptObjects<DataType>::OnScriptRemoved(ResourceEvent* e)
 {
   Array<BoundType*> components;
-  MetaComposition* composition =
-      ZilchTypeId(Cog)->HasInherited<MetaComposition>();
+  MetaComposition* composition = ZilchTypeId(Cog)->HasInherited<MetaComposition>();
   composition->Enumerate(components, EnumerateAction::All);
 
-  forRange(BoundType * componentType, components.All())
+  forRange (BoundType* componentType, components.All())
   {
     MetaResource* metaResource = componentType->HasInherited<MetaResource>();
     if (metaResource == nullptr)
@@ -345,13 +328,13 @@ bool EditorScriptObjects<DataType>::IsAutoRegister(BoundType* componentType)
     return false;
 
   // It must have the correct attribute
-  forRange(Attribute & attribute, componentType->Attributes.All())
+  forRange (Attribute& attribute, componentType->Attributes.All())
   {
     if (attribute.Name != mAttributeName)
       continue;
 
     // Check to see if auto is enabled
-    forRange(AttributeParameter & parameter, attribute.Parameters.All())
+    forRange (AttributeParameter& parameter, attribute.Parameters.All())
     {
       if (parameter.Name == mAutoRegister && parameter.BooleanValue)
         return true;

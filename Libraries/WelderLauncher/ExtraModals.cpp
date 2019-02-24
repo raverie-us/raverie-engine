@@ -4,8 +4,9 @@
 namespace Zero
 {
 
-ModalBackgroundTaskProgessBar::ModalBackgroundTaskProgessBar(
-    Composite* parent, StringParam title, BackgroundTask* progressListener) :
+ModalBackgroundTaskProgessBar::ModalBackgroundTaskProgessBar(Composite* parent,
+                                                             StringParam title,
+                                                             BackgroundTask* progressListener) :
     ModalStrip(parent)
 {
   mCloseOnComplete = true;
@@ -33,8 +34,7 @@ ModalBackgroundTaskProgessBar::ModalBackgroundTaskProgessBar(
 
   // Spacer
   new Spacer(mStripArea);
-  ConnectThisTo(
-      progressListener, Events::BackgroundTaskUpdated, OnProgressUpdated);
+  ConnectThisTo(progressListener, Events::BackgroundTaskUpdated, OnProgressUpdated);
   ConnectThisTo(progressListener, Events::BackgroundTaskCompleted, OnTaskEnded);
   ConnectThisTo(progressListener, Events::BackgroundTaskFailed, OnTaskEnded);
 }

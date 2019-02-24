@@ -42,9 +42,7 @@ void ExternalLibrary::Unload()
 
 void* ExternalLibrary::GetFunctionByName(cstr name)
 {
-  ReturnIf(mHandle == NULL,
-           NULL,
-           "Attempting to get a function from an invalid library");
+  ReturnIf(mHandle == NULL, NULL, "Attempting to get a function from an invalid library");
 
   return (void*)GetProcAddress((HMODULE)mHandle, name);
 }

@@ -10,8 +10,7 @@ class Stream
 {
 public:
   virtual u64 Size() = 0;
-  virtual bool Seek(u64 filePosition,
-                    SeekOrigin::Enum origin = SeekOrigin::Begin) = 0;
+  virtual bool Seek(u64 filePosition, SeekOrigin::Enum origin = SeekOrigin::Begin) = 0;
   virtual u64 Tell() = 0;
   virtual size_t Write(byte* data, size_t sizeInBytes) = 0;
   virtual size_t Read(byte* data, size_t sizeInBytes) = 0;
@@ -25,9 +24,7 @@ public:
   // the Stream should not be written to while the user is holding the
   // ByteBufferBlock as it may invalidate (e.g. ArrayByteMemoryStream...). Note
   // that reading 0 bytes will NOT set status to Failed.
-  virtual void ReadMemoryBlock(Status& status,
-                               ByteBufferBlock& block,
-                               size_t size);
+  virtual void ReadMemoryBlock(Status& status, ByteBufferBlock& block, size_t size);
 
   // Helper non virtual functions
   // These functions assert if they're outside the range (and return 0 / write
@@ -53,8 +50,7 @@ public:
   FixedMemoryStream(StringParam string);
 
   u64 Size() override;
-  bool Seek(u64 filePosition,
-            SeekOrigin::Enum origin = SeekOrigin::Begin) override;
+  bool Seek(u64 filePosition, SeekOrigin::Enum origin = SeekOrigin::Begin) override;
   u64 Tell() override;
   size_t Write(byte* data, size_t sizeInBytes) override;
   size_t Read(byte* data, size_t sizeInBytes) override;
@@ -63,9 +59,7 @@ public:
   void Flush() override;
 
   // We optimize this case by returning non-owned memory instantly (no memcpy).
-  void ReadMemoryBlock(Status& status,
-                       ByteBufferBlock& block,
-                       size_t sizeInBytes) override;
+  void ReadMemoryBlock(Status& status, ByteBufferBlock& block, size_t sizeInBytes) override;
 
   // Internal
   byte* mData;
@@ -84,8 +78,7 @@ public:
   ByteBufferMemoryStream(const Array<byte>& block);
 
   u64 Size() override;
-  bool Seek(u64 filePosition,
-            SeekOrigin::Enum origin = SeekOrigin::Begin) override;
+  bool Seek(u64 filePosition, SeekOrigin::Enum origin = SeekOrigin::Begin) override;
   u64 Tell() override;
   size_t Write(byte* data, size_t sizeInBytes) override;
   size_t Read(byte* data, size_t sizeInBytes) override;
@@ -108,8 +101,7 @@ public:
   ArrayByteMemoryStream(const Array<byte>& block);
 
   u64 Size() override;
-  bool Seek(u64 filePosition,
-            SeekOrigin::Enum origin = SeekOrigin::Begin) override;
+  bool Seek(u64 filePosition, SeekOrigin::Enum origin = SeekOrigin::Begin) override;
   u64 Tell() override;
   size_t Write(byte* data, size_t sizeInBytes) override;
   size_t Read(byte* data, size_t sizeInBytes) override;
@@ -118,9 +110,7 @@ public:
   void Flush() override;
 
   // We optimize this case by returning non-owned memory instantly (no memcpy).
-  void ReadMemoryBlock(Status& status,
-                       ByteBufferBlock& block,
-                       size_t sizeInBytes) override;
+  void ReadMemoryBlock(Status& status, ByteBufferBlock& block, size_t sizeInBytes) override;
 
   // Internal
   Array<byte> mBuffer;

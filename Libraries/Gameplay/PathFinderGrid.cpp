@@ -13,8 +13,7 @@ static const float cSqrt1 = (float)sqrt(1);
 static const float cSqrt2 = (float)sqrt(2);
 static const float cSqrt3 = (float)sqrt(3);
 
-PathFinderGridNodeRange::PathFinderGridNodeRange(PathFinderAlgorithmGrid* grid,
-                                                 IntVec3Param center) :
+PathFinderGridNodeRange::PathFinderGridNodeRange(PathFinderAlgorithmGrid* grid, IntVec3Param center) :
     mGrid(grid),
     mCenter(center),
     mIndex(0),
@@ -120,8 +119,7 @@ PathFinderAlgorithmGrid::PathFinderAlgorithmGrid() : mDiagonalMovement(true)
 {
 }
 
-PathFinderGridNodeRange
-PathFinderAlgorithmGrid::QueryNeighbors(IntVec3Param node)
+PathFinderGridNodeRange PathFinderAlgorithmGrid::QueryNeighbors(IntVec3Param node)
 {
   return PathFinderGridNodeRange(this, node);
 }
@@ -131,8 +129,7 @@ bool PathFinderAlgorithmGrid::QueryIsValid(IntVec3Param node)
   return !GetCollision(node);
 }
 
-float PathFinderAlgorithmGrid::QueryHeuristic(IntVec3Param node,
-                                              IntVec3Param goal)
+float PathFinderAlgorithmGrid::QueryHeuristic(IntVec3Param node, IntVec3Param goal)
 {
   int dx = Math::Abs(node.x - goal.x);
   int dy = Math::Abs(node.y - goal.y);
@@ -223,22 +220,12 @@ ZilchDefineType(PathFinderGrid, builder, type)
   ZeroBindDependency(Transform);
   ZeroBindEvent(Events::PathFinderGridFinished, PathFinderEvent<IntVec3>);
 
-  ZilchBindOverloadedMethod(FindPath,
-                            ZilchInstanceOverload(HandleOf<ArrayClass<IntVec3>>,
-                                                  IntVec3Param,
-                                                  IntVec3Param));
-  ZilchBindOverloadedMethod(FindPath,
-                            ZilchInstanceOverload(HandleOf<ArrayClass<Real3>>,
-                                                  Real3Param,
-                                                  Real3Param));
+  ZilchBindOverloadedMethod(FindPath, ZilchInstanceOverload(HandleOf<ArrayClass<IntVec3>>, IntVec3Param, IntVec3Param));
+  ZilchBindOverloadedMethod(FindPath, ZilchInstanceOverload(HandleOf<ArrayClass<Real3>>, Real3Param, Real3Param));
   ZilchBindOverloadedMethod(FindPathThreaded,
-                            ZilchInstanceOverload(HandleOf<PathFinderRequest>,
-                                                  IntVec3Param,
-                                                  IntVec3Param));
+                            ZilchInstanceOverload(HandleOf<PathFinderRequest>, IntVec3Param, IntVec3Param));
   ZilchBindOverloadedMethod(FindPathThreaded,
-                            ZilchInstanceOverload(HandleOf<PathFinderRequest>,
-                                                  Real3Param,
-                                                  Real3Param));
+                            ZilchInstanceOverload(HandleOf<PathFinderRequest>, Real3Param, Real3Param));
 
   ZilchBindMethod(SetCollision);
   ZilchBindMethod(GetCollision);
@@ -277,7 +264,7 @@ void PathFinderGrid::Initialize(CogInitializer& initializer)
 
 void PathFinderGrid::DebugDraw()
 {
-  forRange(const auto& pair, mGrid->mCells.All())
+  forRange (const auto& pair, mGrid->mCells.All())
   {
     Vec4 color;
     if (pair.second.mCollision)
@@ -302,28 +289,22 @@ void PathFinderGrid::DebugDraw()
   }
 }
 
-HandleOf<ArrayClass<IntVec3>> PathFinderGrid::FindPath(IntVec3Param start,
-                                                       IntVec3Param goal)
+HandleOf<ArrayClass<IntVec3>> PathFinderGrid::FindPath(IntVec3Param start, IntVec3Param goal)
 {
-  return FindPathHelper<IntVec3, PathFinderAlgorithmGrid>(
-      mGrid, start, goal, mMaxIterations);
+  return FindPathHelper<IntVec3, PathFinderAlgorithmGrid>(mGrid, start, goal, mMaxIterations);
 }
 
-HandleOf<ArrayClass<Vec3>> PathFinderGrid::FindPath(Vec3Param worldStart,
-                                                    Vec3Param worldGoal)
+HandleOf<ArrayClass<Vec3>> PathFinderGrid::FindPath(Vec3Param worldStart, Vec3Param worldGoal)
 {
   return ZilchBase::FindPath(worldStart, worldGoal);
 }
 
-HandleOf<PathFinderRequest> PathFinderGrid::FindPathThreaded(IntVec3Param start,
-                                                             IntVec3Param goal)
+HandleOf<PathFinderRequest> PathFinderGrid::FindPathThreaded(IntVec3Param start, IntVec3Param goal)
 {
-  return FindPathThreadedHelper<IntVec3, PathFinderAlgorithmGrid>(
-      mGrid, start, goal, mMaxIterations);
+  return FindPathThreadedHelper<IntVec3, PathFinderAlgorithmGrid>(mGrid, start, goal, mMaxIterations);
 }
 
-HandleOf<PathFinderRequest>
-PathFinderGrid::FindPathThreaded(Vec3Param worldStart, Vec3Param worldGoal)
+HandleOf<PathFinderRequest> PathFinderGrid::FindPathThreaded(Vec3Param worldStart, Vec3Param worldGoal)
 {
   return ZilchBase::FindPathThreaded(worldStart, worldGoal);
 }
@@ -375,19 +356,14 @@ Vec3 PathFinderGrid::NodeKeyToWorldPosition(VariantParam nodeKey)
   return CellIndexToWorldPosition((IntVec3)nodeKey);
 }
 
-void PathFinderGrid::FindPathGeneric(VariantParam start,
-                                     VariantParam goal,
-                                     Array<Variant>& pathOut)
+void PathFinderGrid::FindPathGeneric(VariantParam start, VariantParam goal, Array<Variant>& pathOut)
 {
-  GenericFindPathHelper<IntVec3, PathFinderAlgorithmGrid>(
-      mGrid, start, goal, pathOut, mMaxIterations);
+  GenericFindPathHelper<IntVec3, PathFinderAlgorithmGrid>(mGrid, start, goal, pathOut, mMaxIterations);
 }
 
-HandleOf<PathFinderRequest>
-PathFinderGrid::FindPathGenericThreaded(VariantParam start, VariantParam goal)
+HandleOf<PathFinderRequest> PathFinderGrid::FindPathGenericThreaded(VariantParam start, VariantParam goal)
 {
-  return GenericFindPathThreadedHelper<IntVec3, PathFinderAlgorithmGrid>(
-      mGrid, start, goal, mMaxIterations);
+  return GenericFindPathThreadedHelper<IntVec3, PathFinderAlgorithmGrid>(mGrid, start, goal, mMaxIterations);
 }
 
 StringParam PathFinderGrid::GetCustomEventName()

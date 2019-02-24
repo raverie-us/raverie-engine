@@ -55,10 +55,7 @@ void HeightPatch::SetHeight(CellIndex index, float height)
   Heights[linearIndex] = height;
 }
 
-HeightMapCellRange::HeightMapCellRange(HeightMap* heightMap,
-                                       Vec2 position,
-                                       real radius,
-                                       real feather) :
+HeightMapCellRange::HeightMapCellRange(HeightMap* heightMap, Vec2 position, real radius, real feather) :
     mHeightMap(heightMap),
     mToolPosition(position),
     mRadius(radius),
@@ -76,10 +73,7 @@ HeightMapCellRange::HeightMapCellRange(HeightMap* heightMap,
   Reset();
 }
 
-HeightMapCellRange::HeightMapCellRange(PatchMapCopy& patchMap,
-                                       Vec2 toolPosition,
-                                       real radius,
-                                       real feather)
+HeightMapCellRange::HeightMapCellRange(PatchMapCopy& patchMap, Vec2 toolPosition, real radius, real feather)
 {
 }
 
@@ -136,13 +130,10 @@ void HeightMapCellRange::SkipDeadPatches()
   Vec2 cellMin = (Math::Max(patchMin, mAabbMin) - mPatchOffset) / mCellSize;
   Vec2 cellMax = (Math::Min(patchMax, mAabbMax) - mPatchOffset) / mCellSize;
 
-  mCellIndexMin =
-      CellIndex(int(Math::Ceil(cellMin.x)), int(Math::Ceil(cellMin.y)));
-  mCellIndexMax =
-      CellIndex(int(Math::Floor(cellMax.x)), int(Math::Floor(cellMax.y)));
+  mCellIndexMin = CellIndex(int(Math::Ceil(cellMin.x)), int(Math::Ceil(cellMin.y)));
+  mCellIndexMax = CellIndex(int(Math::Floor(cellMax.x)), int(Math::Floor(cellMax.y)));
 
-  mCellIndexMin = Math::Min(
-      mCellIndexMin, CellIndex(HeightPatch::Size - 1, HeightPatch::Size - 1));
+  mCellIndexMin = Math::Min(mCellIndexMin, CellIndex(HeightPatch::Size - 1, HeightPatch::Size - 1));
   mCellIndexMax = Math::Max(mCellIndexMax, CellIndex(0, 0));
 
   mCellIndex = mCellIndexMin;
@@ -170,8 +161,7 @@ void HeightMapCellRange::GetNextCell()
 
 void HeightMapCellRange::GetInfluence()
 {
-  Vec2 cellPosition =
-      Vec2((real)mCellIndex.x, (real)mCellIndex.y) * mCellSize + mPatchOffset;
+  Vec2 cellPosition = Vec2((real)mCellIndex.x, (real)mCellIndex.y) * mCellSize + mPatchOffset;
   real distance = Math::Distance(cellPosition, mToolPosition);
   mInfluence = FeatherInfluence(distance, mRadius, mFeather);
 }
@@ -198,8 +188,7 @@ const Vec3 HeightMap::UpVector = Vec3(0, 1, 0);
 // Cell index limits account for generating padded vertex data
 const CellIndex HeightMap::sCellIndexMin = CellIndex(0, 0);
 const CellIndex HeightMap::sCellIndexMax =
-    CellIndex(HeightPatch::PaddedNumVerticesPerSide - 1,
-              HeightPatch::PaddedNumVerticesPerSide - 1);
+    CellIndex(HeightPatch::PaddedNumVerticesPerSide - 1, HeightPatch::PaddedNumVerticesPerSide - 1);
 
 ZilchDefineType(HeightMap, builder, type)
 {
@@ -283,12 +272,9 @@ void HeightMap::SignalAllPatchesModified()
   }
 }
 
-float HeightMap::SampleHeight(Vec3Param worldPosition,
-                              float defaultValue,
-                              Vec3* worldNormal)
+float HeightMap::SampleHeight(Vec3Param worldPosition, float defaultValue, Vec3* worldNormal)
 {
-  return SampleHeight(
-      GetLocalPosition(worldPosition), defaultValue, worldNormal);
+  return SampleHeight(GetLocalPosition(worldPosition), defaultValue, worldNormal);
 }
 
 float HeightMap::GetWorldPointHeight(Vec3Param worldPosition)
@@ -303,9 +289,7 @@ Vec3 HeightMap::GetWorldUp()
   return mTransform->TransformNormal(UpVector);
 }
 
-float HeightMap::SampleHeight(Vec2Param localPosition,
-                              float defaultValue,
-                              Vec3* worldNormal)
+float HeightMap::SampleHeight(Vec2Param localPosition, float defaultValue, Vec3* worldNormal)
 {
   // 0-------3
   // | \     |
@@ -365,11 +349,9 @@ float HeightMap::SampleHeight(Vec2Param localPosition,
     Vec3 localHeightPosition(localPosition.x, finalHeight, localPosition.y);
 
     if (lowerTriangle)
-      *worldNormal = Math::Cross(localHeightPos2 - localHeightPos0,
-                                 localHeightPosition - localHeightPos0);
+      *worldNormal = Math::Cross(localHeightPos2 - localHeightPos0, localHeightPosition - localHeightPos0);
     else
-      *worldNormal = Math::Cross(localHeightPosition - localHeightPos0,
-                                 localHeightPos2 - localHeightPos0);
+      *worldNormal = Math::Cross(localHeightPosition - localHeightPos0, localHeightPos2 - localHeightPos0);
 
     worldNormal->AttemptNormalize();
     *worldNormal = mTransform->TransformNormal(*worldNormal);
@@ -378,8 +360,7 @@ float HeightMap::SampleHeight(Vec2Param localPosition,
   return finalHeight;
 }
 
-float HeightMap::SampleHeight(AbsoluteIndexParam absoluteIndex,
-                              float defaultValue)
+float HeightMap::SampleHeight(AbsoluteIndexParam absoluteIndex, float defaultValue)
 {
   // Determine the patch index
   PatchIndex patchIndex;
@@ -388,10 +369,8 @@ float HeightMap::SampleHeight(AbsoluteIndexParam absoluteIndex,
 
   // Determine the cell index
   CellIndex cellIndex;
-  cellIndex.x = absoluteIndex.x - patchIndex.x * HeightPatch::Size +
-                HeightPatch::Size / 2;
-  cellIndex.y = absoluteIndex.y - patchIndex.y * HeightPatch::Size +
-                HeightPatch::Size / 2;
+  cellIndex.x = absoluteIndex.x - patchIndex.x * HeightPatch::Size + HeightPatch::Size / 2;
+  cellIndex.y = absoluteIndex.y - patchIndex.y * HeightPatch::Size + HeightPatch::Size / 2;
 
   HeightPatch* patch = mPatches.FindValue(patchIndex, nullptr);
   // If the given patch exists then sample its height
@@ -503,39 +482,33 @@ PatchIndex HeightMap::GetPatchIndexFromLocal(Vec2Param localPosition)
   return index;
 }
 
-AbsoluteIndex
-HeightMap::GetNearestAbsoluteIndexFromWorld(Vec3Param worldPosition)
+AbsoluteIndex HeightMap::GetNearestAbsoluteIndexFromWorld(Vec3Param worldPosition)
 {
   // Now get the index from the local space position and return it
   return GetNearestAbsoluteIndexFromLocal(GetLocalPosition(worldPosition));
 }
 
-AbsoluteIndex
-HeightMap::GetNearestAbsoluteIndexFromLocal(Vec2Param localPosition)
+AbsoluteIndex HeightMap::GetNearestAbsoluteIndexFromLocal(Vec2Param localPosition)
 {
   // Get the x and y in patch space
   float x = localPosition.x / mUnitsPerPatch;
   float y = localPosition.y / mUnitsPerPatch;
 
   // Return the index
-  return AbsoluteIndex((int)Math::Round(x * HeightPatch::Size),
-                       (int)Math::Round(y * HeightPatch::Size));
+  return AbsoluteIndex((int)Math::Round(x * HeightPatch::Size), (int)Math::Round(y * HeightPatch::Size));
 }
 
-AbsoluteIndex
-HeightMap::GetFlooredAbsoluteIndexFromLocal(Vec2Param localPosition)
+AbsoluteIndex HeightMap::GetFlooredAbsoluteIndexFromLocal(Vec2Param localPosition)
 {
   // Get the x and y in patch space
   float x = localPosition.x / mUnitsPerPatch;
   float y = localPosition.y / mUnitsPerPatch;
 
   // Return the index
-  return AbsoluteIndex((int)Math::Floor(x * HeightPatch::Size),
-                       (int)Math::Floor(y * HeightPatch::Size));
+  return AbsoluteIndex((int)Math::Floor(x * HeightPatch::Size), (int)Math::Floor(y * HeightPatch::Size));
 }
 
-Vec2 HeightMap::GetLocalPositionFromAbsoluteIndex(
-    AbsoluteIndexParam absoluteIndex)
+Vec2 HeightMap::GetLocalPositionFromAbsoluteIndex(AbsoluteIndexParam absoluteIndex)
 {
   Vec2 localPosition((float)absoluteIndex.x, (float)absoluteIndex.y);
   localPosition /= (float)HeightPatch::Size;
@@ -543,13 +516,11 @@ Vec2 HeightMap::GetLocalPositionFromAbsoluteIndex(
   return localPosition;
 }
 
-AbsoluteIndex HeightMap::GetAbsoluteIndex(PatchIndex patchIndex,
-                                          CellIndex cellIndex)
+AbsoluteIndex HeightMap::GetAbsoluteIndex(PatchIndex patchIndex, CellIndex cellIndex)
 {
   // Compute the absolute index
   return AbsoluteIndex(patchIndex * HeightPatch::Size +
-                       CellIndex(cellIndex.x - HeightPatch::Size / 2,
-                                 cellIndex.y - HeightPatch::Size / 2));
+                       CellIndex(cellIndex.x - HeightPatch::Size / 2, cellIndex.y - HeightPatch::Size / 2));
 }
 
 PatchIndex HeightMap::GetPatchIndex(AbsoluteIndexParam absoluteIndex)
@@ -577,36 +548,27 @@ CellIndex HeightMap::GetCellIndex(AbsoluteIndexParam absoluteIndex)
 
   // Determine the cell index
   CellIndex cellIndex;
-  cellIndex.x = absoluteIndex.x - patchIndex.x * HeightPatch::Size +
-                HeightPatch::Size / 2;
-  cellIndex.y = absoluteIndex.y - patchIndex.y * HeightPatch::Size +
-                HeightPatch::Size / 2;
+  cellIndex.x = absoluteIndex.x - patchIndex.x * HeightPatch::Size + HeightPatch::Size / 2;
+  cellIndex.y = absoluteIndex.y - patchIndex.y * HeightPatch::Size + HeightPatch::Size / 2;
   return cellIndex;
 }
 
-CellIndex HeightMap::GetCellIndex(AbsoluteIndexParam absoluteIndex,
-                                  PatchIndexParam patchIndex)
+CellIndex HeightMap::GetCellIndex(AbsoluteIndexParam absoluteIndex, PatchIndexParam patchIndex)
 {
   // Determine the cell index
   CellIndex cellIndex;
-  cellIndex.x = absoluteIndex.x - patchIndex.x * HeightPatch::Size +
-                HeightPatch::Size / 2;
-  cellIndex.y = absoluteIndex.y - patchIndex.y * HeightPatch::Size +
-                HeightPatch::Size / 2;
+  cellIndex.x = absoluteIndex.x - patchIndex.x * HeightPatch::Size + HeightPatch::Size / 2;
+  cellIndex.y = absoluteIndex.y - patchIndex.y * HeightPatch::Size + HeightPatch::Size / 2;
   return cellIndex;
 }
 
-void HeightMap::GetPatchAndCellIndex(AbsoluteIndexParam absoluteIndex,
-                                     PatchIndex& patchIndex,
-                                     CellIndex& cellIndex)
+void HeightMap::GetPatchAndCellIndex(AbsoluteIndexParam absoluteIndex, PatchIndex& patchIndex, CellIndex& cellIndex)
 {
   patchIndex = GetPatchIndex(absoluteIndex);
 
   // Determine the cell index
-  cellIndex.x = absoluteIndex.x - patchIndex.x * HeightPatch::Size +
-                HeightPatch::Size / 2;
-  cellIndex.y = absoluteIndex.y - patchIndex.y * HeightPatch::Size +
-                HeightPatch::Size / 2;
+  cellIndex.x = absoluteIndex.x - patchIndex.x * HeightPatch::Size + HeightPatch::Size / 2;
+  cellIndex.y = absoluteIndex.y - patchIndex.y * HeightPatch::Size + HeightPatch::Size / 2;
 }
 
 Vec3 HeightMap::GetWorldPosition(Vec2Param localPosition)
@@ -615,8 +577,7 @@ Vec3 HeightMap::GetWorldPosition(Vec2Param localPosition)
   float height = SampleHeight(localPosition, 0);
 
   // The y will be the height of the map
-  return mTransform->TransformPoint(
-      Vec3(localPosition.x, height, localPosition.y));
+  return mTransform->TransformPoint(Vec3(localPosition.x, height, localPosition.y));
 }
 
 Vec2 HeightMap::GetLocalPosition(Vec3Param worldPosition)
@@ -631,8 +592,7 @@ Vec2 HeightMap::GetLocalPosition(Vec3Param worldPosition)
 Vec3 HeightMap::GetWorldPosition(PatchIndexParam index)
 {
   Vec2 localPosition = GetLocalPosition(index);
-  return mTransform->TransformPoint(
-      Vec3(localPosition.x, 0.0f, localPosition.y));
+  return mTransform->TransformPoint(Vec3(localPosition.x, 0.0f, localPosition.y));
 }
 
 Vec2 HeightMap::GetLocalPosition(PatchIndexParam index)
@@ -640,10 +600,7 @@ Vec2 HeightMap::GetLocalPosition(PatchIndexParam index)
   return Vec2(index.x * mUnitsPerPatch, index.y * mUnitsPerPatch);
 }
 
-void HeightMap::ApplyNoiseToPatch(HeightPatch* patch,
-                                  float baseHeight,
-                                  float frequency,
-                                  float amplitude)
+void HeightMap::ApplyNoiseToPatch(HeightPatch* patch, float baseHeight, float frequency, float amplitude)
 {
   // We scale the frequency because we're using whole units (integers) rather
   // than floats
@@ -656,13 +613,11 @@ void HeightMap::ApplyNoiseToPatch(HeightPatch* patch,
     {
       // Compute the cell and absolute index
       CellIndex cellIndex(x, y);
-      AbsoluteIndex absoluteIndex =
-          patch->Index * HeightPatch::Size + cellIndex;
+      AbsoluteIndex absoluteIndex = patch->Index * HeightPatch::Size + cellIndex;
 
       // Compute the height based off the noise function
-      float noiseHeight =
-          PerlinNoise((float)absoluteIndex.x * frequency * FrequencyScale,
-                      (float)absoluteIndex.y * frequency * FrequencyScale);
+      float noiseHeight = PerlinNoise((float)absoluteIndex.x * frequency * FrequencyScale,
+                                      (float)absoluteIndex.y * frequency * FrequencyScale);
 
       // Add in the base height
       float height = baseHeight + noiseHeight * amplitude;
@@ -731,9 +686,7 @@ HeightPatch* HeightMap::GetPatchAtIndex(PatchIndexParam index)
   return mPatches.FindValue(index, NULL);
 }
 
-void HeightMap::GetQuadAtIndex(AbsoluteIndex index,
-                               Triangle triangles[2],
-                               uint& count)
+void HeightMap::GetQuadAtIndex(AbsoluteIndex index, Triangle triangles[2], uint& count)
 {
   // Break down absolute index
   PatchIndex patchIndex;
@@ -756,18 +709,10 @@ void HeightMap::GetQuadAtIndex(AbsoluteIndex index,
   Vec2 cellPos = cellCenter;
 
   // get the heights of the four corners of the cell
-  real h00 =
-      SampleHeight(GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 0)),
-                   Math::cInfinite);
-  real h01 =
-      SampleHeight(GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 1)),
-                   Math::cInfinite);
-  real h10 =
-      SampleHeight(GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 0)),
-                   Math::cInfinite);
-  real h11 =
-      SampleHeight(GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 1)),
-                   Math::cInfinite);
+  real h00 = SampleHeight(GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 0)), Math::cInfinite);
+  real h01 = SampleHeight(GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 1)), Math::cInfinite);
+  real h10 = SampleHeight(GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 0)), Math::cInfinite);
+  real h11 = SampleHeight(GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 1)), Math::cInfinite);
 
   // create local vertices for the four corners of the cell
   Vec3 p00 = Vec3(cellPos.x - cellSize.x, h00, cellPos.y - cellSize.y);
@@ -834,8 +779,7 @@ void HeightMap::SignalPatchModified(HeightPatch* patch, Vec2 min, Vec2 max)
   SendPatchEvent(Events::HeightMapPatchModified, patch);
 }
 
-void HeightMap::GetPaddedHeightPatchVertices(HeightPatch* patch,
-                                             Array<Vec3>& outVertices)
+void HeightMap::GetPaddedHeightPatchVertices(HeightPatch* patch, Array<Vec3>& outVertices)
 {
   Array<Vec3>* vertices = mCachedPatchVertices.FindPointer(patch->Index);
   if (vertices)
@@ -849,8 +793,7 @@ void HeightMap::GetPaddedHeightPatchVertices(HeightPatch* patch,
   }
 }
 
-void HeightMap::GetHeightPatchVertices(HeightPatch* patch,
-                                       Array<Vec3>& outVertices)
+void HeightMap::GetHeightPatchVertices(HeightPatch* patch, Array<Vec3>& outVertices)
 {
   const uint paddedWidth = HeightPatch::PaddedNumVerticesPerSide;
   const uint paddedSize = HeightPatch::PaddedNumVerticesTotal;
@@ -906,16 +849,14 @@ HeightMapRayRange HeightMap::CastWorldRay(const Ray& ray, float maxT)
   return range;
 }
 
-HeightMapAabbRange HeightMap::GetLocalAabbRange(const Aabb& aabb,
-                                                real thickness)
+HeightMapAabbRange HeightMap::GetLocalAabbRange(const Aabb& aabb, real thickness)
 {
   HeightMapAabbRange range;
   range.SetLocal(this, aabb, thickness);
   return range;
 }
 
-HeightMapAabbRange HeightMap::GetWorldAabbRange(const Aabb& aabb,
-                                                real thickness)
+HeightMapAabbRange HeightMap::GetWorldAabbRange(const Aabb& aabb, real thickness)
 {
   HeightMapAabbRange range;
   range.SetWorld(this, aabb, thickness);
@@ -926,27 +867,24 @@ void HeightMap::SaveToHeightMapSource(Serializer& stream)
 {
   HeightMapSourceManager* manager = HeightMapSourceManager::GetInstance();
 
-  CogSavingContext* context =
-      (CogSavingContext*)stream.GetSerializationContext();
+  CogSavingContext* context = (CogSavingContext*)stream.GetSerializationContext();
   Archetype* archetype = context ? (Archetype*)context->SavingArchetype : 0;
 
   if (Z::gRuntimeEditor)
-    mSource = (HeightMapSource*)Z::gRuntimeEditor->NewResourceOnWrite(
-        HeightMapSourceManager::GetInstance(),
-        ZilchTypeId(HeightMap),
-        "Source",
-        GetSpace(),
-        mSource,
-        archetype,
-        mModified);
+    mSource = (HeightMapSource*)Z::gRuntimeEditor->NewResourceOnWrite(HeightMapSourceManager::GetInstance(),
+                                                                      ZilchTypeId(HeightMap),
+                                                                      "Source",
+                                                                      GetSpace(),
+                                                                      mSource,
+                                                                      archetype,
+                                                                      mModified);
 
   if (mSource)
   {
-    forRange(PatchMap::value_type patchPair, mPatches.All())
+    forRange (PatchMap::value_type patchPair, mPatches.All())
     {
       HeightPatch* patch = patchPair.second;
-      PatchLayer* layer =
-          mSource->GetLayerData(patchPair.first, PatchLayerType::Height);
+      PatchLayer* layer = mSource->GetLayerData(patchPair.first, PatchLayerType::Height);
       layer->LayerType = PatchLayerType::Height;
       layer->ElementSize = sizeof(float);
       layer->Width = HeightPatch::Size;
@@ -974,7 +912,7 @@ void HeightMap::LoadFromHeightMapSource(Serializer& stream)
   if (!mSource)
     return;
 
-  forRange(PatchData * data, mSource->mData.Values())
+  forRange (PatchData* data, mSource->mData.Values())
   {
     PatchLayer* layer = data->Layers.FindValue(PatchLayerType::Height, NULL);
     if (layer)
@@ -983,8 +921,7 @@ void HeightMap::LoadFromHeightMapSource(Serializer& stream)
       patch = new HeightPatch();
       patch->Index = data->Index;
 
-      uint memorySize = sizeof(HeightPatch::HeightValueType) *
-                        HeightPatch::Size * HeightPatch::Size;
+      uint memorySize = sizeof(HeightPatch::HeightValueType) * HeightPatch::Size * HeightPatch::Size;
       memcpy(patch->Heights, layer->Data, memorySize);
 
       UpdatePatch(patch);
@@ -992,8 +929,7 @@ void HeightMap::LoadFromHeightMapSource(Serializer& stream)
   }
 
   // Get space object is being created in
-  CogCreationContext* context =
-      (CogCreationContext*)stream.GetSerializationContext();
+  CogCreationContext* context = (CogCreationContext*)stream.GetSerializationContext();
   Space* space = context->mSpace;
   if (!space)
     return;
@@ -1004,8 +940,7 @@ void HeightMap::LoadFromHeightMapSource(Serializer& stream)
   // Get the level that owns this resource
   String resourceIdName = mSource->GetBuilder()->GetResourceOwner();
   LevelManager* levelManager = LevelManager::GetInstance();
-  Resource* levelOwner =
-      levelManager->GetResource(resourceIdName, ResourceNotFound::ReturnNull);
+  Resource* levelOwner = levelManager->GetResource(resourceIdName, ResourceNotFound::ReturnNull);
 
   // If being loaded into a different level, mark space as modified after load
   if (levelOwner && levelOwner != space->GetCurrentLevel())
@@ -1056,21 +991,16 @@ void HeightMap::UpdatePatchVertices(HeightPatch* patch, Vec2 min, Vec2 max)
   if (vertices)
   {
     // Plus one quad for updating padded area
-    Vec2 patchMin = localPosition - Vec2(1, 1) * unitsPerCell *
-                                        (HeightPatch::NumQuadsPerSide / 2 + 1);
-    Vec2 patchMax = localPosition + Vec2(1, 1) * unitsPerCell *
-                                        (HeightPatch::NumQuadsPerSide / 2 + 1);
+    Vec2 patchMin = localPosition - Vec2(1, 1) * unitsPerCell * (HeightPatch::NumQuadsPerSide / 2 + 1);
+    Vec2 patchMax = localPosition + Vec2(1, 1) * unitsPerCell * (HeightPatch::NumQuadsPerSide / 2 + 1);
 
     Vec2 cellMin = (Math::Max(patchMin, min) - patchMin) / unitsPerCell;
     Vec2 cellMax = (Math::Min(patchMax, max) - patchMin) / unitsPerCell;
 
-    CellIndex cellIndexMin =
-        CellIndex(int(Math::Ceil(cellMin.x)), int(Math::Ceil(cellMin.y)));
-    CellIndex cellIndexMax =
-        CellIndex(int(Math::Floor(cellMax.x)), int(Math::Floor(cellMax.y)));
+    CellIndex cellIndexMin = CellIndex(int(Math::Ceil(cellMin.x)), int(Math::Ceil(cellMin.y)));
+    CellIndex cellIndexMax = CellIndex(int(Math::Floor(cellMax.x)), int(Math::Floor(cellMax.y)));
 
-    ComputePaddedHeightPatchVertices(
-        patch, *vertices, cellIndexMin, cellIndexMax);
+    ComputePaddedHeightPatchVertices(patch, *vertices, cellIndexMin, cellIndexMax);
   }
   else
   {
@@ -1101,10 +1031,8 @@ void HeightMap::UpdateAdjacentPatches(HeightPatch* patch)
   // Get patch bounds so adjacent patches only update their appropriate seems
   Vec2 localPosition = GetLocalPosition(patch->Index);
   real unitsPerCell = mUnitsPerPatch / HeightPatch::NumQuadsPerSide;
-  Vec2 patchMin = localPosition - Vec2(1, 1) * unitsPerCell *
-                                      (HeightPatch::NumQuadsPerSide / 2 + 1);
-  Vec2 patchMax = localPosition + Vec2(1, 1) * unitsPerCell *
-                                      (HeightPatch::NumQuadsPerSide / 2 + 1);
+  Vec2 patchMin = localPosition - Vec2(1, 1) * unitsPerCell * (HeightPatch::NumQuadsPerSide / 2 + 1);
+  Vec2 patchMax = localPosition + Vec2(1, 1) * unitsPerCell * (HeightPatch::NumQuadsPerSide / 2 + 1);
 
   // Loop through all adjacent patches
   for (size_t i = 0; i < NumAdjacentPatches; ++i)
@@ -1149,29 +1077,19 @@ void HeightMap::MakePaddedHeightBuffer(HeightPatch* patch, real* heights)
   real* seStart2 = sStart2 + size;
 
   // Adjacent patches
-  HeightPatch* nwPatch =
-      mPatches.FindValue(patchIndex + PatchIndex(-1, -1), nullptr);
-  HeightPatch* nPatch =
-      mPatches.FindValue(patchIndex + PatchIndex(0, -1), nullptr);
-  HeightPatch* nePatch =
-      mPatches.FindValue(patchIndex + PatchIndex(1, -1), nullptr);
-  HeightPatch* wPatch =
-      mPatches.FindValue(patchIndex + PatchIndex(-1, 0), nullptr);
-  HeightPatch* ePatch =
-      mPatches.FindValue(patchIndex + PatchIndex(1, 0), nullptr);
-  HeightPatch* swPatch =
-      mPatches.FindValue(patchIndex + PatchIndex(-1, 1), nullptr);
-  HeightPatch* sPatch =
-      mPatches.FindValue(patchIndex + PatchIndex(0, 1), nullptr);
-  HeightPatch* sePatch =
-      mPatches.FindValue(patchIndex + PatchIndex(1, 1), nullptr);
+  HeightPatch* nwPatch = mPatches.FindValue(patchIndex + PatchIndex(-1, -1), nullptr);
+  HeightPatch* nPatch = mPatches.FindValue(patchIndex + PatchIndex(0, -1), nullptr);
+  HeightPatch* nePatch = mPatches.FindValue(patchIndex + PatchIndex(1, -1), nullptr);
+  HeightPatch* wPatch = mPatches.FindValue(patchIndex + PatchIndex(-1, 0), nullptr);
+  HeightPatch* ePatch = mPatches.FindValue(patchIndex + PatchIndex(1, 0), nullptr);
+  HeightPatch* swPatch = mPatches.FindValue(patchIndex + PatchIndex(-1, 1), nullptr);
+  HeightPatch* sPatch = mPatches.FindValue(patchIndex + PatchIndex(0, 1), nullptr);
+  HeightPatch* sePatch = mPatches.FindValue(patchIndex + PatchIndex(1, 1), nullptr);
 
   // middle
   {
     for (uint i = 0; i < size; ++i)
-      memcpy(mStart + i * paddedSize,
-             patch->Heights + i * size,
-             size * sizeof(real));
+      memcpy(mStart + i * paddedSize, patch->Heights + i * size, size * sizeof(real));
   }
 
   // north edge
@@ -1382,20 +1300,12 @@ float FeatherInfluence(float distance, float radius, float featherRadius)
   }
 }
 
-CellRayRange::CellRayRange(HeightMap* map,
-                           PatchIndex index,
-                           Vec2Param rayStart,
-                           Vec2Param rayDir,
-                           real maxT)
+CellRayRange::CellRayRange(HeightMap* map, PatchIndex index, Vec2Param rayStart, Vec2Param rayDir, real maxT)
 {
   Set(map, index, rayStart, rayDir, maxT);
 }
 
-void CellRayRange::Set(HeightMap* map,
-                       PatchIndex index,
-                       Vec2Param rayStart,
-                       Vec2Param rayDir,
-                       real maxT)
+void CellRayRange::Set(HeightMap* map, PatchIndex index, Vec2Param rayStart, Vec2Param rayDir, real maxT)
 {
   mMaxT = maxT;
   mMap = map;
@@ -1407,8 +1317,7 @@ void CellRayRange::Set(HeightMap* map,
 
   // get the center, size and start (bottom left) of this patch
   Vec2 patchPos = mMap->GetLocalPosition(mPatchIndex);
-  Vec2 patchHalfExtents =
-      Vec2(mMap->mUnitsPerPatch, mMap->mUnitsPerPatch) * .5f;
+  Vec2 patchHalfExtents = Vec2(mMap->mUnitsPerPatch, mMap->mUnitsPerPatch) * .5f;
   Vec2 patchStart = patchPos - patchHalfExtents;
   Vec2 patchEnd = patchPos + patchHalfExtents;
   mPatchStart = patchStart;
@@ -1427,10 +1336,8 @@ void CellRayRange::Set(HeightMap* map,
   // now convert that position to a cell index and clamp between
   // our min and max bounds for a cell (to deal with floating point)
   real cellSizeScalar = mMap->mUnitsPerPatch / HeightPatch::Size;
-  mCellIndex.x =
-      Math::Clamp((int)Math::Floor(localPoint.x / cellSizeScalar), 0, 31);
-  mCellIndex.y =
-      Math::Clamp((int)Math::Floor(localPoint.y / cellSizeScalar), 0, 31);
+  mCellIndex.x = Math::Clamp((int)Math::Floor(localPoint.x / cellSizeScalar), 0, 31);
+  mCellIndex.y = Math::Clamp((int)Math::Floor(localPoint.y / cellSizeScalar), 0, 31);
 }
 
 Vec2 CellRayRange::GetCurrentCellCenter()
@@ -1454,8 +1361,7 @@ Vec2 CellRayRange::GetNextTValues()
   // Size(to get to the center)) but then we have to offset this in the
   // direction we are searching by half a cell so we get the edges
   real cellSizeScalar = mMap->mUnitsPerPatch / HeightPatch::Size;
-  Vec2 cellRayDirOffset =
-      Vec2(cellSizeScalar * mStepX, cellSizeScalar * mStepY) * .5f;
+  Vec2 cellRayDirOffset = Vec2(cellSizeScalar * mStepX, cellSizeScalar * mStepY) * .5f;
   Vec2 cellPos = GetCurrentCellCenter() + cellRayDirOffset;
 
   Vec2 t = CellRayRange::IntersectPlane(cellPos, mRayStart, mRayDir);
@@ -1489,16 +1395,13 @@ bool CellRayRange::Empty()
 {
   // if we are out of the patch bounds or we have exceeded our max tValue, then
   // we are empty
-  if (mCellIndex.x < 0 || mCellIndex.y < 0 ||
-      mCellIndex.x >= HeightPatch::Size || mCellIndex.y >= HeightPatch::Size ||
+  if (mCellIndex.x < 0 || mCellIndex.y < 0 || mCellIndex.x >= HeightPatch::Size || mCellIndex.y >= HeightPatch::Size ||
       mCurrT >= mMaxT)
     return true;
   return false;
 }
 
-Vec2 CellRayRange::IntersectPlane(Vec2Param planeDistance,
-                                  Vec2Param rayStart,
-                                  Vec2Param rayDir)
+Vec2 CellRayRange::IntersectPlane(Vec2Param planeDistance, Vec2Param rayStart, Vec2Param rayDir)
 {
   // the numerator in computing the distance
   Vec2 num = planeDistance - rayStart;
@@ -1519,9 +1422,7 @@ HeightMapQueryCache::HeightMapQueryCache()
   mCachedPatch = NULL;
 }
 
-float HeightMapQueryCache::SampleHeight(HeightMap* map,
-                                        PatchIndexParam patchIndex,
-                                        CellIndexParam cellIndex)
+float HeightMapQueryCache::SampleHeight(HeightMap* map, PatchIndexParam patchIndex, CellIndexParam cellIndex)
 {
   AbsoluteIndex absIndex = map->GetAbsoluteIndex(patchIndex, cellIndex);
   PatchIndex realPatchIndex;
@@ -1538,14 +1439,12 @@ float HeightMapQueryCache::SampleHeight(HeightMap* map,
   return mCachedPatch->GetHeight(realCellIndex);
 }
 
-PatchRayRange::PatchRayRange(
-    HeightMap* map, Vec2Param rayStart, Vec2Param rayDir, real minT, real maxT)
+PatchRayRange::PatchRayRange(HeightMap* map, Vec2Param rayStart, Vec2Param rayDir, real minT, real maxT)
 {
   Set(map, rayStart, rayDir, minT, maxT);
 }
 
-void PatchRayRange::Set(
-    HeightMap* map, Vec2Param rayStart, Vec2Param rayDir, real minT, real maxT)
+void PatchRayRange::Set(HeightMap* map, Vec2Param rayStart, Vec2Param rayDir, real minT, real maxT)
 {
   mMap = map;
 
@@ -1597,13 +1496,11 @@ void PatchRayRange::GetNextPatch()
 {
   real unitsPerPatch = mMap->mUnitsPerPatch;
   // get the local center of the next patch
-  Vec2 localPos =
-      mMap->GetLocalPosition(mCurrPatchIndex + PatchIndex(mStepX, mStepY));
+  Vec2 localPos = mMap->GetLocalPosition(mCurrPatchIndex + PatchIndex(mStepX, mStepY));
   // we need to compare t values with the start of the patch though, so offset
   // by half the patch size in the opposite direction we are searching from
   Vec2 halfOffset = Vec2(unitsPerPatch * mStepX, unitsPerPatch * mStepY) * .5f;
-  Vec2 tValues =
-      CellRayRange::IntersectPlane(localPos - halfOffset, mRayStart, mRayDir);
+  Vec2 tValues = CellRayRange::IntersectPlane(localPos - halfOffset, mRayStart, mRayDir);
   // advance in the direction that we hit first
   if (tValues.x < tValues.y)
   {
@@ -1671,12 +1568,7 @@ void HeightMapRayRange::SetUp(float maxT)
   // the min and max range that we will consider against this
   // map then clamp the max to what was passed in
   float mapMin, mapMax;
-  GetTMinMaxRange(mLocalRayStart,
-                  mLocalRayDir,
-                  mProjectedRayStart,
-                  mProjectedRayDir,
-                  mapMin,
-                  mapMax);
+  GetTMinMaxRange(mLocalRayStart, mLocalRayDir, mProjectedRayStart, mProjectedRayDir, mapMin, mapMax);
   mMaxT = Math::Min(mapMax, maxT);
 
   // set up the initial patch range
@@ -1686,19 +1578,14 @@ void HeightMapRayRange::SetUp(float maxT)
   // iterate until we actually have triangles we hit
   if (!Empty())
   {
-    mCellRange.Set(
-        mMap, mPatchRange.Front(), mProjectedRayStart, mProjectedRayDir, mMaxT);
+    mCellRange.Set(mMap, mPatchRange.Front(), mProjectedRayStart, mProjectedRayDir, mMaxT);
     LoadTriangles();
     LoadUntilValidTriangles();
   }
 }
 
-void HeightMapRayRange::GetTMinMaxRange(Vec3Param localRayStart,
-                                        Vec3Param localRayDir,
-                                        Vec2Param rayStart,
-                                        Vec2Param rayDir,
-                                        float& minT,
-                                        float& maxT)
+void HeightMapRayRange::GetTMinMaxRange(
+    Vec3Param localRayStart, Vec3Param localRayDir, Vec2Param rayStart, Vec2Param rayDir, float& minT, float& maxT)
 {
   // if the raycast is straight down, then the projected ray will cause some bad
   // things to happen. Just set a simple set of bounds for the min/max so that
@@ -1721,8 +1608,7 @@ void HeightMapRayRange::GetTMinMaxRange(Vec3Param localRayStart,
   PatchIndex max = PatchIndex(0, 0);
   real maxHeight = -Math::PositiveMax();
   real minHeight = Math::PositiveMax();
-  for (PatchMap::valuerange range = mMap->GetAllPatches(); !range.Empty();
-       range.PopFront())
+  for (PatchMap::valuerange range = mMap->GetAllPatches(); !range.Empty(); range.PopFront())
   {
     if (range.Front() == NULL)
       continue;
@@ -1752,8 +1638,7 @@ void HeightMapRayRange::GetTMinMaxRange(Vec3Param localRayStart,
   Vec2 maxLocal = mMap->GetLocalPosition(max) + patchSize;
 
   Intersection::Interval interval;
-  if (Intersection::RayAabb(rayStart, rayDir, minLocal, maxLocal, &interval) ==
-      Intersection::None)
+  if (Intersection::RayAabb(rayStart, rayDir, minLocal, maxLocal, &interval) == Intersection::None)
   {
     interval.Min = 0;
     interval.Max = real(-1.0);
@@ -1766,18 +1651,14 @@ void HeightMapRayRange::GetTMinMaxRange(Vec3Param localRayStart,
   // cast the local ray against full aabb and then limit to that range
   //(use the interval test because the point test can return p0 = p1 when the
   // ray starts inside the aabb
-  if (Intersection::RayAabb(
-          localRayStart, localRayDir, aabbMin, aabbMax, &interval) !=
-      Intersection::None)
+  if (Intersection::RayAabb(localRayStart, localRayDir, aabbMin, aabbMax, &interval) != Intersection::None)
   {
     Vec3 p0 = localRayStart + (localRayDir * interval.Min);
     Vec3 p1 = localRayStart + (localRayDir * interval.Max);
     Vec2 projectedPoint0 = Vec2(p0.x, p0.z);
     Vec2 projectedPoint1 = Vec2(p1.x, p1.z);
-    real projectedMinT =
-        (projectedPoint0 - rayStart).Length() / rayDir.Length();
-    real projectedMaxT =
-        (projectedPoint1 - rayStart).Length() / rayDir.Length();
+    real projectedMinT = (projectedPoint0 - rayStart).Length() / rayDir.Length();
+    real projectedMaxT = (projectedPoint1 - rayStart).Length() / rayDir.Length();
     minT = Math::Max(minT, projectedMinT);
     maxT = Math::Min(maxT, projectedMaxT);
   }
@@ -1846,8 +1727,7 @@ void HeightMapRayRange::LoadNext()
     if (mPatchRange.Empty())
       return;
     // we had a valid patch, set up our cell range for the new patch
-    mCellRange.Set(
-        mMap, mPatchRange.Front(), mProjectedRayStart, mProjectedRayDir, mMaxT);
+    mCellRange.Set(mMap, mPatchRange.Front(), mProjectedRayStart, mProjectedRayDir, mMaxT);
   }
   // we have a new cell to process, load the triangles from it
   LoadTriangles();
@@ -1855,10 +1735,7 @@ void HeightMapRayRange::LoadNext()
 
 void HeightMapRayRange::LoadTriangles()
 {
-  ReturnIf(
-      mPatchRange.Empty(),
-      ,
-      "The patch range for HeightMapRayRange was empty and it never should be");
+  ReturnIf(mPatchRange.Empty(), , "The patch range for HeightMapRayRange was empty and it never should be");
   // This isn't actually an error when you look straight up-down and the maxT
   // value is 0
   if (mCellRange.Empty())
@@ -1872,18 +1749,10 @@ void HeightMapRayRange::LoadTriangles()
   Vec2 cellSize = Vec2(cellSizeScalar, cellSizeScalar) * .5f;
 
   // get the heights of the four corners of the cell
-  real h00 = mMap->SampleHeight(
-      mMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 0)),
-      Math::cInfinite);
-  real h01 = mMap->SampleHeight(
-      mMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 1)),
-      Math::cInfinite);
-  real h10 = mMap->SampleHeight(
-      mMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 0)),
-      Math::cInfinite);
-  real h11 = mMap->SampleHeight(
-      mMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 1)),
-      Math::cInfinite);
+  real h00 = mMap->SampleHeight(mMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 0)), Math::cInfinite);
+  real h01 = mMap->SampleHeight(mMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 1)), Math::cInfinite);
+  real h10 = mMap->SampleHeight(mMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 0)), Math::cInfinite);
+  real h11 = mMap->SampleHeight(mMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 1)), Math::cInfinite);
 
   // create local vertices for the four corners of the cell
   Vec3 p00 = Vec3(cellPos.x - cellSize.x, h00, cellPos.y - cellSize.y);
@@ -1913,11 +1782,9 @@ void HeightMapRayRange::LoadTriangles()
   real epsilon = real(0.001);
   Intersection::IntersectionPoint point1, point2;
   if (tri1Valid)
-    type1 = Intersection::RayTriangle(
-        mLocalRayStart, mLocalRayDir, p00, p01, p10, &point1, epsilon);
+    type1 = Intersection::RayTriangle(mLocalRayStart, mLocalRayDir, p00, p01, p10, &point1, epsilon);
   if (tri2Valid)
-    type2 = Intersection::RayTriangle(
-        mLocalRayStart, mLocalRayDir, p10, p01, p11, &point2, epsilon);
+    type2 = Intersection::RayTriangle(mLocalRayStart, mLocalRayDir, p10, p01, p11, &point2, epsilon);
 
   // we need to determine how many of the triangles were actually hit,
   // store them, and in t first order.
@@ -1954,9 +1821,7 @@ HeightMapAabbRange::HeightMapAabbRange()
   mSkipNonCollidingCells = true;
 }
 
-void HeightMapAabbRange::SetLocal(HeightMap* map,
-                                  const Aabb& aabb,
-                                  real thickness)
+void HeightMapAabbRange::SetLocal(HeightMap* map, const Aabb& aabb, real thickness)
 {
   mMap = map;
   mThickness = thickness;
@@ -1966,9 +1831,7 @@ void HeightMapAabbRange::SetLocal(HeightMap* map,
   SetUp();
 }
 
-void HeightMapAabbRange::SetWorld(HeightMap* map,
-                                  const Aabb& aabb,
-                                  real thickness)
+void HeightMapAabbRange::SetWorld(HeightMap* map, const Aabb& aabb, real thickness)
 {
   mMap = map;
   mThickness = thickness;
@@ -2055,8 +1918,7 @@ void HeightMapAabbRange::GetCellIndices()
 {
   // get the center, size and start (bottom left) of this patch
   Vec2 patchPos = mMap->GetLocalPosition(mCurrentTriangle.mPatchIndex);
-  Vec2 patchHalfExtents =
-      Vec2(mMap->mUnitsPerPatch, mMap->mUnitsPerPatch) * .5f;
+  Vec2 patchHalfExtents = Vec2(mMap->mUnitsPerPatch, mMap->mUnitsPerPatch) * .5f;
   Vec2 patchStart = patchPos - patchHalfExtents;
   Vec2 patchEnd = patchPos + patchHalfExtents;
   // convert the aabb positions to the coordinate frame of the patch
@@ -2066,14 +1928,10 @@ void HeightMapAabbRange::GetCellIndices()
   // now convert that position to a cell index and clamp between
   // our min and max bounds for a cell (to deal with floating point)
   real cellSizeScalar = mMap->mUnitsPerPatch / HeightPatch::Size;
-  mMinCell.x =
-      Math::Clamp((int)Math::Floor(localMin.x / cellSizeScalar), 0, 31);
-  mMinCell.y =
-      Math::Clamp((int)Math::Floor(localMin.y / cellSizeScalar), 0, 31);
-  mMaxCell.x =
-      Math::Clamp((int)Math::Floor(localMax.x / cellSizeScalar), 0, 31);
-  mMaxCell.y =
-      Math::Clamp((int)Math::Floor(localMax.y / cellSizeScalar), 0, 31);
+  mMinCell.x = Math::Clamp((int)Math::Floor(localMin.x / cellSizeScalar), 0, 31);
+  mMinCell.y = Math::Clamp((int)Math::Floor(localMin.y / cellSizeScalar), 0, 31);
+  mMaxCell.x = Math::Clamp((int)Math::Floor(localMax.x / cellSizeScalar), 0, 31);
+  mMaxCell.y = Math::Clamp((int)Math::Floor(localMax.y / cellSizeScalar), 0, 31);
   // set the starting value to be the min
   mCurrentTriangle.mCellIndex = mMinCell;
 }
@@ -2123,8 +1981,7 @@ void HeightMapAabbRange::LoadTriangles()
 
   // get the center, size and start (bottom left) of this patch
   Vec2 patchPos = mMap->GetLocalPosition(patchIndex);
-  Vec2 patchHalfExtents =
-      Vec2(mMap->mUnitsPerPatch, mMap->mUnitsPerPatch) * .5f;
+  Vec2 patchHalfExtents = Vec2(mMap->mUnitsPerPatch, mMap->mUnitsPerPatch) * .5f;
   Vec2 patchStart = patchPos - patchHalfExtents;
   // To get a cell center, we have to start at the patch bottom left, offset by
   // the cell index scaled by each cell size. This gets us the bottom left of a
@@ -2138,18 +1995,10 @@ void HeightMapAabbRange::LoadTriangles()
   Vec2 cellPos = cellCenter;
 
   // get the heights of the four corners of the cell
-  real h00 = mMap->SampleHeight(
-      mMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 0)),
-      Math::cInfinite);
-  real h01 = mMap->SampleHeight(
-      mMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 1)),
-      Math::cInfinite);
-  real h10 = mMap->SampleHeight(
-      mMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 0)),
-      Math::cInfinite);
-  real h11 = mMap->SampleHeight(
-      mMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 1)),
-      Math::cInfinite);
+  real h00 = mMap->SampleHeight(mMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 0)), Math::cInfinite);
+  real h01 = mMap->SampleHeight(mMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 1)), Math::cInfinite);
+  real h10 = mMap->SampleHeight(mMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 0)), Math::cInfinite);
+  real h11 = mMap->SampleHeight(mMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 1)), Math::cInfinite);
 
   // create local vertices for the four corners of the cell
   Vec3 p00 = Vec3(cellPos.x - cellSize.x, h00, cellPos.y - cellSize.y);
@@ -2274,8 +2123,7 @@ void HeightMap::SaveToObj(StringParam fileName, HeightMap* heightMap)
 {
   // Attempt to open the file
   File file;
-  bool opened = file.Open(
-      fileName.c_str(), FileMode::Write, FileAccessPattern::Sequential);
+  bool opened = file.Open(fileName.c_str(), FileMode::Write, FileAccessPattern::Sequential);
 
   // Can't do anything if it didn't open
   if (!opened)
@@ -2295,7 +2143,7 @@ void HeightMap::SaveToObj(StringParam fileName, HeightMap* heightMap)
   uint indexOffset = 0;
 
   // Save out each patch
-  forRange(PatchMap::value_type patchPair, heightMap->mPatches.All())
+  forRange (PatchMap::value_type patchPair, heightMap->mPatches.All())
   {
     HeightPatch* patch = patchPair.second;
 
@@ -2342,10 +2190,7 @@ void HeightMap::SaveToObj(StringParam fileName, HeightMap* heightMap)
 
       // Write the triangle out to the file
       // + 1 is because the .obj file format isn't 0 based
-      String triLine = String::Format("f %i %i %i\n",
-                                      i0 + 1 + indexOffset,
-                                      i1 + 1 + indexOffset,
-                                      i2 + 1 + indexOffset);
+      String triLine = String::Format("f %i %i %i\n", i0 + 1 + indexOffset, i1 + 1 + indexOffset, i2 + 1 + indexOffset);
       file.Write((byte*)triLine.Data(), triLine.SizeInBytes());
     }
 

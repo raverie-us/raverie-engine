@@ -20,9 +20,7 @@ DefineTag(Resource);
 const String cNullResource = "null";
 
 // Resource Handle Manager
-void ResourceHandleManager::Allocate(BoundType* type,
-                                     Handle& handleToInitialize,
-                                     size_t customFlags)
+void ResourceHandleManager::Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags)
 {
   handleToInitialize.Flags |= HandleFlags::NoReferenceCounting;
 
@@ -33,9 +31,7 @@ void ResourceHandleManager::Allocate(BoundType* type,
   data.mId = 0;
 }
 
-void ResourceHandleManager::ObjectToHandle(const byte* object,
-                                           BoundType* type,
-                                           Handle& handleToInitialize)
+void ResourceHandleManager::ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize)
 {
   if (object == nullptr)
     return;
@@ -64,13 +60,11 @@ void ResourceHandleManager::AddReference(const Handle& handle)
     instance->AddReference();
 }
 
-ReleaseResult::Enum
-ResourceHandleManager::ReleaseReference(const Handle& handle)
+ReleaseResult::Enum ResourceHandleManager::ReleaseReference(const Handle& handle)
 {
   if (Resource* instance = GetResource(handle, false))
   {
-    ErrorIf(instance == nullptr,
-            "I think this should be null when unloading a ResourceLibrary");
+    ErrorIf(instance == nullptr, "I think this should be null when unloading a ResourceLibrary");
     instance->Release();
   }
   return ReleaseResult::TakeNoAction;
@@ -97,8 +91,7 @@ bool ResourceHandleManager::CanDelete(const Handle& handle)
   return false;
 }
 
-Resource* ResourceHandleManager::GetResource(const Handle& handle,
-                                             bool resolveThroughManagerOnNull)
+Resource* ResourceHandleManager::GetResource(const Handle& handle, bool resolveThroughManagerOnNull)
 {
   ResourceHandleData& data = *(ResourceHandleData*)(handle.Data);
 
@@ -116,8 +109,7 @@ Resource* ResourceHandleManager::GetResource(const Handle& handle,
 
   if (resource == nullptr && resolveThroughManagerOnNull)
   {
-    if (ResourceManager* manager =
-            Z::gResources->GetResourceManager(handle.StoredType))
+    if (ResourceManager* manager = Z::gResources->GetResourceManager(handle.StoredType))
       resource = manager->GetFallbackResource();
   }
   return resource;
@@ -137,10 +129,7 @@ void SaveResource(cstr fieldName, Resource* resource, Serializer& serializer)
   serializer.StringField("string", fieldName, resourceIdAndName);
 }
 
-void LoadResource(HandleParam instance,
-                  Property* property,
-                  Type* resourceType,
-                  StringRange resourceIdName)
+void LoadResource(HandleParam instance, Property* property, Type* resourceType, StringRange resourceIdName)
 {
   // If it's null, do not default
   if (resourceIdName == cNullResource)
@@ -153,11 +142,9 @@ void LoadResource(HandleParam instance,
   Resource* resource;
 
   // Try to find the resource or use default if it is not found
-  ResourceManager* resourceManger =
-      Z::gResources->Managers.FindValue(resourceType->ToString(), nullptr);
+  ResourceManager* resourceManger = Z::gResources->Managers.FindValue(resourceType->ToString(), nullptr);
   if (resourceManger)
-    resource = resourceManger->GetResource(resourceIdName,
-                                           ResourceNotFound::ReturnNull);
+    resource = resourceManger->GetResource(resourceIdName, ResourceNotFound::ReturnNull);
   else
     resource = Z::gResources->GetResourceByName(resourceIdName);
 
@@ -169,8 +156,7 @@ void LoadResource(HandleParam instance,
   else
   {
     // Serialize failed resource is missing so use default resource
-    ResourceManager* resourceManger =
-        Z::gResources->Managers.FindValue(resourceType->ToString(), nullptr);
+    ResourceManager* resourceManger = Z::gResources->Managers.FindValue(resourceType->ToString(), nullptr);
     if (resourceManger)
       property->SetValue(instance, resourceManger->GetDefaultResource());
   }
@@ -181,9 +167,7 @@ ZilchDefineType(ResourceMetaSerialization, builder, type)
 {
 }
 
-void ResourceMetaSerialization::SerializeProperty(HandleParam instance,
-                                                  Property* property,
-                                                  Serializer& serializer)
+void ResourceMetaSerialization::SerializeProperty(HandleParam instance, Property* property, Serializer& serializer)
 {
   Type* resourceType = property->PropertyType;
   cstr fieldName = property->Name.c_str();
@@ -205,8 +189,7 @@ void ResourceMetaSerialization::SerializeProperty(HandleParam instance,
 
 void ResourceMetaSerialization::SetDefault(Type* type, Any& any)
 {
-  ResourceManager* manager =
-      Z::gResources->Managers.FindValue(type->ToString(), nullptr);
+  ResourceManager* manager = Z::gResources->Managers.FindValue(type->ToString(), nullptr);
   if (manager != nullptr)
   {
     Resource* defaultResource = manager->GetDefaultResource();
@@ -227,8 +210,7 @@ String ResourceMetaSerialization::ConvertToString(AnyParam input)
   return String();
 }
 
-bool ResourceMetaSerialization::ConvertFromString(StringParam input,
-                                                  Any& output)
+bool ResourceMetaSerialization::ConvertFromString(StringParam input, Any& output)
 {
   // 'output' can be null, but null is a valid result so return true.
   output = Z::gResources->GetResourceByName(input);
@@ -285,8 +267,7 @@ String ResourceDisplayFunctions::GetDebugText(HandleParam object)
   return builder.ToString();
 }
 
-Memory::Heap* Resource::sHeap =
-    new Memory::Heap("ResourceObjects", Memory::GetRoot());
+Memory::Heap* Resource::sHeap = new Memory::Heap("ResourceObjects", Memory::GetRoot());
 
 ZilchDefineType(Resource, builder, type)
 {
@@ -334,8 +315,7 @@ Resource::Resource()
 HandleOf<Resource> Resource::Clone()
 {
   BoundType* type = ZilchVirtualTypeId(this);
-  String msg =
-      String::Format("%s's cannot be runtime cloned", type->Name.c_str());
+  String msg = String::Format("%s's cannot be runtime cloned", type->Name.c_str());
   DoNotifyException("Failed to clone Resource", msg);
   return nullptr;
 }
@@ -352,7 +332,7 @@ Resource* Resource::GetBaseResource()
 
 bool Resource::InheritsFrom(Resource* baseResource)
 {
-  forRange(Resource * curr, GetBaseResources())
+  forRange (Resource* curr, GetBaseResources())
   {
     if (curr == baseResource)
       return true;
@@ -412,8 +392,7 @@ int Resource::Release()
   return referenceCount;
 }
 
-void Resource::GetDependencies(HashSet<ContentItem*>& dependencies,
-                               HandleParam instance)
+void Resource::GetDependencies(HashSet<ContentItem*>& dependencies, HandleParam instance)
 {
   Handle resourceInstance = instance;
   if (resourceInstance.IsNull())
@@ -424,7 +403,7 @@ void Resource::GetDependencies(HashSet<ContentItem*>& dependencies,
   GetResourcesFromProperties(resourceInstance, usedResources);
 
   // Filter runtime and non-writable resources
-  forRange(Resource * resource, usedResources.All())
+  forRange (Resource* resource, usedResources.All())
   {
     if (resource->IsWritable() && !resource->IsRuntime())
     {
@@ -454,7 +433,7 @@ void Resource::GetTags(HashSet<String>& tags)
   temp.Clear();
   GetTags(temp, temp);
 
-  forRange(String tag, temp.All())
+  forRange (String tag, temp.All())
   {
     tags.Insert(tag);
   }
@@ -477,7 +456,7 @@ void Resource::AddTags(HashSet<String>& tags)
 {
   Array<String> tagArray;
   GetTags(tagArray);
-  forRange(String tag, tagArray.All())
+  forRange (String tag, tagArray.All())
   {
     tags.Insert(tag);
   }
@@ -525,8 +504,7 @@ bool Resource::IsWritable()
     // Check dev config to override what the content item says
     if (!isWritable)
     {
-      if (DeveloperConfig* devConfig =
-              Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
+      if (DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
         isWritable = devConfig->mCanModifyReadOnlyResources;
     }
 
@@ -641,8 +619,7 @@ ZilchDefineType(DataResourceInheritance, builder, type)
 {
 }
 
-String DataResourceInheritance::GetInheritId(HandleParam object,
-                                             InheritIdContext::Enum context)
+String DataResourceInheritance::GetInheritId(HandleParam object, InheritIdContext::Enum context)
 {
   DataResource* resource = object.Get<DataResource*>();
   if (context == InheritIdContext::Definition)
@@ -650,8 +627,7 @@ String DataResourceInheritance::GetInheritId(HandleParam object,
   return String();
 }
 
-void DataResourceInheritance::SetInheritId(HandleParam object,
-                                           StringParam inheritId)
+void DataResourceInheritance::SetInheritId(HandleParam object, StringParam inheritId)
 {
   DataResource* resource = object.Get<DataResource*>();
   resource->mBaseResourceIdName = inheritId;
@@ -677,8 +653,7 @@ u64 ResourceMetaOperations::GetUndoHandleId(HandleParam object)
 Any ResourceMetaOperations::GetUndoData(HandleParam object)
 {
   Resource* resource = object.Get<Resource*>(GetOptions::AssertOnNull);
-  bool isModified =
-      Z::gResources->mModifiedResources.Contains(resource->mResourceId);
+  bool isModified = Z::gResources->mModifiedResources.Contains(resource->mResourceId);
 
   // Temporary until we fix issues with how this works
   isModified = true;
@@ -686,8 +661,7 @@ Any ResourceMetaOperations::GetUndoData(HandleParam object)
   return isModified;
 }
 
-void ResourceMetaOperations::ObjectModified(HandleParam object,
-                                            bool intermediateChange)
+void ResourceMetaOperations::ObjectModified(HandleParam object, bool intermediateChange)
 {
   MetaOperations::ObjectModified(object, intermediateChange);
 
@@ -701,8 +675,7 @@ void ResourceMetaOperations::ObjectModified(HandleParam object,
   // We used to dispatch an event on the Manager. Should we?
 }
 
-void ResourceMetaOperations::RestoreUndoData(HandleParam object,
-                                             AnyParam undoData)
+void ResourceMetaOperations::RestoreUndoData(HandleParam object, AnyParam undoData)
 {
   Resource* resource = object.Get<Resource*>(GetOptions::AssertOnNull);
   bool wasModified = undoData.Get<bool>();

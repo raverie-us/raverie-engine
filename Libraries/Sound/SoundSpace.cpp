@@ -110,8 +110,7 @@ void SoundSpace::SetMuteAudio(bool mute)
 
 void SoundSpace::InterpolateVolume(float value, float interpolationTime)
 {
-  mSoundNodeOutput->InterpolateVolume(Math::Max(value, 0.0f),
-                                      interpolationTime);
+  mSoundNodeOutput->InterpolateVolume(Math::Max(value, 0.0f), interpolationTime);
 }
 
 float SoundSpace::GetDecibels()
@@ -126,8 +125,7 @@ void SoundSpace::SetDecibels(float decibels)
 
 void SoundSpace::InterpolateDecibels(float decibels, float interpolationTime)
 {
-  mSoundNodeOutput->InterpolateVolume(DecibelsToVolume(decibels),
-                                      interpolationTime);
+  mSoundNodeOutput->InterpolateVolume(DecibelsToVolume(decibels), interpolationTime);
 }
 
 float SoundSpace::GetPitch()
@@ -272,8 +270,7 @@ void SoundSpace::Update()
   }
 
   // Update emitters
-  for (InList<SoundEmitter>::range r = mEmitters.All(); !r.Empty();
-       r.PopFront())
+  for (InList<SoundEmitter>::range r = mEmitters.All(); !r.Empty(); r.PopFront())
     r.Front().Update(dt);
 
   // Update listeners

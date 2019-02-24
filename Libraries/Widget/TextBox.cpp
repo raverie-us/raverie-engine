@@ -231,8 +231,7 @@ void TextBox::UpdateTransform()
   else
     mBorder->SetColor(ToFloatColor(mBorderColor));
 
-  LayoutResult lr = RemoveThickness(
-      borderThickness, mSize - Vec2(mTextOffset, 0), Vec3(mTextOffset, 0, 0));
+  LayoutResult lr = RemoveThickness(borderThickness, mSize - Vec2(mTextOffset, 0), Vec3(mTextOffset, 0, 0));
   lr.Translation.y = SnapToPixels(lr.Translation.y);
   mEditTextField->SetTranslation(lr.Translation);
   mEditTextField->SetSize(lr.Size);
@@ -293,16 +292,13 @@ void TextBox::SetPassword(bool passwordMode)
   mEditTextField->mPassword = passwordMode;
 }
 
-TextBoxButton::TextBoxButton(Composite* parent, StringParam iconName) :
-    TextBox(parent)
+TextBoxButton::TextBoxButton(Composite* parent, StringParam iconName) : TextBox(parent)
 {
   mButton = new IconButton(this);
   mButton->SetIcon(iconName);
   mButton->mBackgroundColor = ToByteColor(TextBoxButtonUi::BackgroundColor);
-  mButton->mBackgroundHoverColor =
-      ToByteColor(TextBoxButtonUi::BackgroundHover);
-  mButton->mBackgroundClickedColor =
-      ToByteColor(TextBoxButtonUi::BackgroundClicked);
+  mButton->mBackgroundHoverColor = ToByteColor(TextBoxButtonUi::BackgroundHover);
+  mButton->mBackgroundClickedColor = ToByteColor(TextBoxButtonUi::BackgroundClicked);
   mButton->mBorder->SetVisible(false);
 }
 
@@ -325,8 +321,7 @@ ZilchDefineType(MultiLineText, builder, type)
 {
 }
 
-MultiLineText::MultiLineText(Composite* parent, StringParam textStyle) :
-    Composite(parent)
+MultiLineText::MultiLineText(Composite* parent, StringParam textStyle) : Composite(parent)
 {
   String style = textStyle;
   if (style.Empty())
@@ -336,10 +331,7 @@ MultiLineText::MultiLineText(Composite* parent, StringParam textStyle) :
   Initialize(text);
 }
 
-MultiLineText::MultiLineText(Composite* parent,
-                             StringParam font,
-                             uint fontSize) :
-    Composite(parent)
+MultiLineText::MultiLineText(Composite* parent, StringParam font, uint fontSize) : Composite(parent)
 {
   Text* text = new Text(this, font, fontSize);
   Initialize(text);

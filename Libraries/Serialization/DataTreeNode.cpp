@@ -4,12 +4,9 @@
 namespace Zero
 {
 
-DataNode* FindMatchingChildNode(DataNode* parent,
-                                DataNode* nodeToMatch,
-                                uint childIndex);
+DataNode* FindMatchingChildNode(DataNode* parent, DataNode* nodeToMatch, uint childIndex);
 
-Memory::Pool* DataNode::sPool =
-    new Memory::Pool("DataTree", Memory::GetRoot(), sizeof(DataNode), 5000);
+Memory::Pool* DataNode::sPool = new Memory::Pool("DataTree", Memory::GetRoot(), sizeof(DataNode), 5000);
 
 void* DataNode::operator new(size_t size)
 {
@@ -129,7 +126,7 @@ DataNode* DataNode::FindChildWithName(StringRange name)
       name.PopFront();
   }
 
-  forRange(DataNode & node, mChildren.All())
+  forRange (DataNode& node, mChildren.All())
   {
     if (name == node.mPropertyName)
       return &node;
@@ -157,12 +154,10 @@ DataNode* DataNode::FindChildWithTypeName(StringRange typeName)
   return FindChildWithTypeName(typeName, "", foundDuplicate);
 }
 
-DataNode* DataNode::FindChildWithTypeName(StringRange typeName,
-                                          StringRange name,
-                                          bool& foundDuplicate)
+DataNode* DataNode::FindChildWithTypeName(StringRange typeName, StringRange name, bool& foundDuplicate)
 {
   DataNode* result = nullptr;
-  forRange(DataNode & node, mChildren.All())
+  forRange (DataNode& node, mChildren.All())
   {
     if (typeName == node.mTypeName && name == node.mPropertyName)
     {
@@ -182,7 +177,7 @@ DataNode* DataNode::FindChildWithTypeName(StringRange typeName,
 
 DataNode* DataNode::FindChildWithUniqueNodeId(Guid childId)
 {
-  forRange(DataNode & child, mChildren.All())
+  forRange (DataNode& child, mChildren.All())
   {
     if (child.mUniqueNodeId == childId)
       return &child;
@@ -215,7 +210,7 @@ bool DataNode::IsProperty()
 
 bool DataNode::HasChildProperties()
 {
-  forRange(DataNode & child, GetChildren())
+  forRange (DataNode& child, GetChildren())
   {
     if (!child.mPropertyName.Empty())
       return true;
@@ -230,12 +225,8 @@ void DataNode::Patch(DataNode* patchNode, DataTreeContext& c)
   if (this->mNodeType != patchNode->mNodeType)
   {
     c.Error = true;
-    String parseError =
-        String::Format("Nodes with name \"%s\" were of different types.",
-                       this->mPropertyName.c_str());
-    c.Message = String::Format("Error patching file '%s' . Error: %s",
-                               c.Filename.c_str(),
-                               parseError.c_str());
+    String parseError = String::Format("Nodes with name \"%s\" were of different types.", this->mPropertyName.c_str());
+    c.Message = String::Format("Error patching file '%s' . Error: %s", c.Filename.c_str(), parseError.c_str());
     Error("%s", c.Message.c_str());
     return;
   }
@@ -244,11 +235,10 @@ void DataNode::Patch(DataNode* patchNode, DataTreeContext& c)
   {
     // Copy attributes
     mAttributes.Reserve(mAttributes.Size() + patchNode->mAttributes.Size());
-    forRange(DataAttribute & attribute, patchNode->mAttributes.All())
-        mAttributes.PushBack(attribute);
+    forRange (DataAttribute& attribute, patchNode->mAttributes.All())
+      mAttributes.PushBack(attribute);
 
-    bool childOrderOverride =
-        patchNode->mFlags.IsSet(DataNodeFlags::ChildOrderOverride);
+    bool childOrderOverride = patchNode->mFlags.IsSet(DataNodeFlags::ChildOrderOverride);
 
     // Copy over the flag to the final node as the patch node will be destroyed
     if (childOrderOverride)
@@ -263,7 +253,7 @@ void DataNode::Patch(DataNode* patchNode, DataTreeContext& c)
     DataNode* ourPreviousValidChild = nullptr;
 
     // Properties should never be re-ordered, only polymorphic children
-    forRange(DataNode & child, GetChildren())
+    forRange (DataNode& child, GetChildren())
     {
       if (!child.IsProperty())
         break;
@@ -278,13 +268,11 @@ void DataNode::Patch(DataNode* patchNode, DataTreeContext& c)
       // Attempt to remove the child
       if (patchChild->mPatchState == PatchState::ShouldRemove)
       {
-        ErrorIf(patchChild->mNodeType != DataNodeType::Object,
-                "Only collections can be locally removed.");
+        ErrorIf(patchChild->mNodeType != DataNodeType::Object, "Only collections can be locally removed.");
 
         // Record that it was removed
 
-        RemovedNode removed = {patchChild->mTypeName.All(),
-                               patchChild->mUniqueNodeId};
+        RemovedNode removed = {patchChild->mTypeName.All(), patchChild->mUniqueNodeId};
         mRemovedChildren.PushBack(removed);
 
         // A child was removed
@@ -311,8 +299,7 @@ void DataNode::Patch(DataNode* patchNode, DataTreeContext& c)
 
           // I don't think we even have to do this step if childOrderOverride is
           // set because All the dependencies will be
-          DependencyAction::Enum action = c.Loader->ResolveDependencies(
-              this, patchChild, &toReplace, addStatus);
+          DependencyAction::Enum action = c.Loader->ResolveDependencies(this, patchChild, &toReplace, addStatus);
 
           if (action == DependencyAction::Add)
           {
@@ -386,7 +373,7 @@ void DataNode::Patch(DataNode* patchNode, DataTreeContext& c)
         // the first node we see that's locally added, but we also want to mark
         // the Cog node as locally added, so we're walking the children here to
         // see if there are more locally added
-        forRange(DataNode & addedChild, patchChild->GetChildren())
+        forRange (DataNode& addedChild, patchChild->GetChildren())
         {
           if (addedChild.mFlags.IsSet(DataNodeFlags::LocallyAdded))
             addedChild.mPatchState = PatchState::Added;
@@ -428,11 +415,8 @@ void DataNode::Patch(DataNode* patchNode, DataTreeContext& c)
     {
       c.Error = true;
       String parseError =
-          String::Format("Nodes with name \"%s\" were of different types.",
-                         this->mPropertyName.c_str());
-      c.Message = String::Format("Error patching file '%s' . Error: %s",
-                                 c.Filename.c_str(),
-                                 parseError.c_str());
+          String::Format("Nodes with name \"%s\" were of different types.", this->mPropertyName.c_str());
+      c.Message = String::Format("Error patching file '%s' . Error: %s", c.Filename.c_str(), parseError.c_str());
       ErrorIf(true, c.Message.c_str());
       return;
     }
@@ -445,8 +429,8 @@ void DataNode::Patch(DataNode* patchNode, DataTreeContext& c)
 void DataNode::SetPatchStateRecursive(PatchState::Enum state)
 {
   mPatchState = state;
-  forRange(DataNode & child, mChildren.All())
-      child.SetPatchStateRecursive(state);
+  forRange (DataNode& child, mChildren.All())
+    child.SetPatchStateRecursive(state);
 }
 
 void DataNode::PlaceAfterSibling(DataNode* sibling)
@@ -488,7 +472,8 @@ void DataNode::ClearPatchState()
   mRemovedChildren.Clear();
   mFlags.ClearFlag(DataNodeFlags::LocallyAdded);
   mPatchState = PatchState::None;
-  forRange(DataNode & child, GetChildren()) child.ClearPatchState();
+  forRange (DataNode& child, GetChildren())
+    child.ClearPatchState();
 }
 
 DataNode* DataNode::Clone()
@@ -510,7 +495,7 @@ DataNode* DataNode::Clone()
   clone->mRemovedChildren.Assign(mRemovedChildren.All());
 
   // Clone our children
-  forRange(DataNode & child, mChildren.All())
+  forRange (DataNode& child, mChildren.All())
   {
     DataNode* childClone = child.Clone();
     childClone->AttachTo(clone);
@@ -523,17 +508,14 @@ bool IsVectorType(StringParam typeName)
 {
   BoundType* propertyType = MetaDatabase::FindType(typeName);
 
-  return (
-      propertyType == ZilchTypeId(Vec2) || propertyType == ZilchTypeId(Vec3) ||
-      propertyType == ZilchTypeId(Vec4) || propertyType == ZilchTypeId(Quat));
+  return (propertyType == ZilchTypeId(Vec2) || propertyType == ZilchTypeId(Vec3) || propertyType == ZilchTypeId(Vec4) ||
+          propertyType == ZilchTypeId(Quat));
 }
 
 void DataNode::SaveToStream(Serializer& stream)
 {
-  ErrorIf(stream.GetMode() != SerializerMode::Saving,
-          "Must be a saving serializer");
-  ErrorIf(stream.GetType() != SerializerType::Text,
-          "Must be a text serializer");
+  ErrorIf(stream.GetMode() != SerializerMode::Saving, "Must be a saving serializer");
+  ErrorIf(stream.GetType() != SerializerType::Text, "Must be a text serializer");
   TextSaver& textStream = *(TextSaver*)(&stream);
 
   if (IsProperty())
@@ -562,7 +544,7 @@ void DataNode::SaveToStream(Serializer& stream)
       if (IsVectorType(this->mTypeName))
       {
         uint childIndex = 0;
-        forRange(DataNode & child, GetChildren())
+        forRange (DataNode& child, GetChildren())
         {
           textStream.mStream.Append(child.mTextValue);
           if (childIndex < mNumberOfChildren - 1)
@@ -572,7 +554,8 @@ void DataNode::SaveToStream(Serializer& stream)
       }
       else
       {
-        forRange(DataNode & child, GetChildren()) child.SaveToStream(stream);
+        forRange (DataNode& child, GetChildren())
+          child.SaveToStream(stream);
       }
       builder.Append("}\n");
     }
@@ -587,16 +570,15 @@ void DataNode::SaveToStream(Serializer& stream)
   {
     stream.StartPolymorphic(mTypeName.c_str());
 
-    forRange(DataNode & child, GetChildren()) child.SaveToStream(stream);
+    forRange (DataNode& child, GetChildren())
+      child.SaveToStream(stream);
 
     stream.EndPolymorphic();
   }
 }
 
-DataNode* FindRenamedNode(StringParam className,
-                          StringParam propertyTypeName,
-                          StringParam propertyName,
-                          DataNode* parent)
+DataNode*
+FindRenamedNode(StringParam className, StringParam propertyTypeName, StringParam propertyName, DataNode* parent)
 {
   bool foundDuplicate;
 
@@ -609,8 +591,7 @@ DataNode* FindRenamedNode(StringParam className,
 
     if (MetaPropertyRename* rename = property->Has<MetaPropertyRename>())
     {
-      if (DataNode* node = parent->FindChildWithTypeName(
-              propertyTypeName, rename->mOldName, foundDuplicate))
+      if (DataNode* node = parent->FindChildWithTypeName(propertyTypeName, rename->mOldName, foundDuplicate))
       {
         // Rename the old node so that serialization reads the new name
         node->mPropertyName = propertyName;
@@ -622,9 +603,7 @@ DataNode* FindRenamedNode(StringParam className,
   return nullptr;
 }
 
-DataNode* FindMatchingChildNode(DataNode* parent,
-                                DataNode* nodeToMatch,
-                                uint childIndex)
+DataNode* FindMatchingChildNode(DataNode* parent, DataNode* nodeToMatch, uint childIndex)
 {
   DataNode* result = nullptr;
   StringRange typeName = nodeToMatch->mTypeName.All();
@@ -656,8 +635,7 @@ DataNode* FindMatchingChildNode(DataNode* parent,
   }
 
   // If it's an array, resolve it by index
-  ErrorIf(nodeToMatch->mParent->mNodeType != DataNodeType::Object,
-          "Mismatched parents.");
+  ErrorIf(nodeToMatch->mParent->mNodeType != DataNodeType::Object, "Mismatched parents.");
   DataNode* nodeToMatchParent = nodeToMatch->mParent;
 
   if (nodeToMatchParent->IsArray())
@@ -732,10 +710,7 @@ DataNode* FindMatchingChildNode(DataNode* parent,
 //        }
 //      }
 //
-bool PatchDataTree(DataNode*& node,
-                   DataTreeLoader* loader,
-                   DataTreeContext& c,
-                   bool withinPatch)
+bool PatchDataTree(DataNode*& node, DataTreeLoader* loader, DataTreeContext& c, bool withinPatch)
 {
   String inheritId = node->mInheritedFromId;
   bool validInherit = !inheritId.Empty();
@@ -771,8 +746,7 @@ bool PatchDataTree(DataNode*& node,
   {
     // Get the patch tree
     DataNode* newNode = nullptr;
-    PatchResolveMethod::Enum resolveMethod =
-        loader->ResolveInheritedData(inheritId, newNode);
+    PatchResolveMethod::Enum resolveMethod = loader->ResolveInheritedData(inheritId, newNode);
 
     if (newNode)
     {
@@ -785,8 +759,7 @@ bool PatchDataTree(DataNode*& node,
 
       // Store what the node was inherited from
       newNode->mInheritedFromId = inheritId;
-      ErrorIf(resolveMethod == PatchResolveMethod::Error,
-              "Do not return a tree if there was an error.");
+      ErrorIf(resolveMethod == PatchResolveMethod::Error, "Do not return a tree if there was an error.");
       ErrorIf(resolveMethod == PatchResolveMethod::RemoveNode,
               "Do not return a tree if you want to remove the old one.");
     }
@@ -795,8 +768,7 @@ bool PatchDataTree(DataNode*& node,
     if (resolveMethod == PatchResolveMethod::Error)
     {
       c.Error = true;
-      c.Message =
-          String::Format("Unspecified patch error for %s", inheritId.c_str());
+      c.Message = String::Format("Unspecified patch error for %s", inheritId.c_str());
       return false;
     }
 
@@ -851,8 +823,7 @@ uint GetFileVersion(StringRange fileData)
 
   // Find the value of the version attribute
   StringRange attributeValue = fileData.FindRangeExclusive("Version:", "]");
-  ErrorIf(attributeValue.Empty(),
-          "The first file attribute was not the version.");
+  ErrorIf(attributeValue.Empty(), "The first file attribute was not the version.");
 
   uint version;
   ToValue(attributeValue, version);
@@ -897,12 +868,8 @@ void Compare(DataNode* lhs, DataNode* rhs)
   }
 }
 
-bool ReadDataSet(Status& status,
-                 StringRange data,
-                 StringParam source,
-                 DataTreeLoader* loader,
-                 uint* fileVersion,
-                 DataNode* fileRoot)
+bool ReadDataSet(
+    Status& status, StringRange data, StringParam source, DataTreeLoader* loader, uint* fileVersion, DataNode* fileRoot)
 {
   DataTreeContext parseContext;
   parseContext.Filename = source;
@@ -931,8 +898,7 @@ bool ReadDataSet(Status& status,
   // Failed to read file
   if (fileRoot->mChildren.Empty())
   {
-    status.SetFailed("Failed to parse root element.",
-                     ParseErrorCodes::ParsingError);
+    status.SetFailed("Failed to parse root element.", ParseErrorCodes::ParsingError);
     return false;
   }
 

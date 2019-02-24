@@ -8,9 +8,7 @@ namespace Zero
 // multiple manifolds, all shapes have to deal with that possibility
 // so they use the code below.
 template <typename Shape1Type, typename Shape2Type>
-bool CollideCollidersSingleResult(Collider* collider1,
-                                  Collider* collider2,
-                                  Physics::Manifold* manifold)
+bool CollideCollidersSingleResult(Collider* collider1, Collider* collider2, Physics::Manifold* manifold)
 {
   // convert the collider's to their corresponding shapes
   Shape1Type shape1;
@@ -43,9 +41,7 @@ bool CollideCollidersSingleResult(Collider* collider1,
 /// against each other. This will test for intersection between
 /// the colliders then fill out the manifold.
 template <typename Shape1Type, typename Shape2Type>
-bool CollideColliders(Collider* collider1,
-                      Collider* collider2,
-                      PodArray<Physics::Manifold>* manifolds)
+bool CollideColliders(Collider* collider1, Collider* collider2, PodArray<Physics::Manifold>* manifolds)
 {
   // convert the collider's to their corresponding shapes
   Shape1Type shape1;
@@ -85,9 +81,7 @@ bool CollideColliders(Collider* collider1,
 /// No longer used since meshes have a shape type, might still be useful to
 /// specialize something to Mpr so it is being left in. (Testing results between
 /// the two)
-inline bool CollideMprColliders(Collider* collider1,
-                                Collider* collider2,
-                                PodArray<Physics::Manifold>* manifolds)
+inline bool CollideMprColliders(Collider* collider1, Collider* collider2, PodArray<Physics::Manifold>* manifolds)
 {
   // Test for collision.
   Intersection::SupportShape a = collider1->GetSupportShape();
@@ -127,10 +121,7 @@ inline bool CollideMprColliders(Collider* collider1,
 /// they need to collide with an internal type but need to make a manifold
 /// with itself).
 template <typename Shape1Type, typename Shape2Type>
-bool CollideVsShape(Shape1Type& shape,
-                    Collider* shapeCollider,
-                    Collider* collider,
-                    Physics::Manifold* manifold)
+bool CollideVsShape(Shape1Type& shape, Collider* shapeCollider, Collider* collider, Physics::Manifold* manifold)
 {
   Shape2Type shape2;
   ColliderToShape(collider, shape2);
@@ -190,10 +181,7 @@ bool OverlapVsShape(const Shape1Type& shape, Collider* collider)
 /// and CollideVsShape is that this deals with a proxy result instead of a
 /// manifold. Saves the user the trouble of converting the manifold.
 template <typename CastType, typename Shape2Type>
-bool CastVsShape(const CastType& castShape,
-                 Collider* collider,
-                 ProxyResult* result,
-                 BaseCastFilter& filter)
+bool CastVsShape(const CastType& castShape, Collider* collider, ProxyResult* result, BaseCastFilter& filter)
 {
   Shape2Type shape2;
   ColliderToShape(collider, shape2);
@@ -205,19 +193,14 @@ bool CastVsShape(const CastType& castShape,
     if (!CastShapes(castShape, shape2, &iManifold))
       return false;
 
-    if (filter.IsSet(BaseCastFilterFlags::IgnoreInternalCasts) &&
-        iManifold.PointCount == 1)
+    if (filter.IsSet(BaseCastFilterFlags::IgnoreInternalCasts) && iManifold.PointCount == 1)
       return false;
 
     // fill out the ProxyResult from the intersection results
     result->mObjectHit = collider;
     ManifoldToProxyResult(castShape, collider, &iManifold, result);
     // should check the filter here...(JoshD questions)
-    GetNormalFromPointOnShape(castShape,
-                              shape2,
-                              collider,
-                              result->mPoints[0],
-                              result->mContactNormal);
+    GetNormalFromPointOnShape(castShape, shape2, collider, result->mPoints[0], result->mContactNormal);
     return true;
   }
 

@@ -25,9 +25,7 @@ struct SphereQueryCheck
   typedef BaseBroadPhaseData<ClientDataType> DataType;
   typedef Array<DataType> DataTypeArray;
 
-  SphereQueryCheck(const QueryType& queryObj, Policy policy) :
-      mQueryObj(queryObj),
-      mPolicy(policy)
+  SphereQueryCheck(const QueryType& queryObj, Policy policy) : mQueryObj(queryObj), mPolicy(policy)
   {
   }
 
@@ -48,9 +46,7 @@ struct BoxQueryCheck
   typedef BaseBroadPhaseData<ClientDataType> DataType;
   typedef Array<DataType> DataTypeArray;
 
-  BoxQueryCheck(const QueryType& queryObj, Policy policy) :
-      mQueryObj(queryObj),
-      mPolicy(policy)
+  BoxQueryCheck(const QueryType& queryObj, Policy policy) : mQueryObj(queryObj), mPolicy(policy)
   {
   }
 
@@ -109,8 +105,7 @@ struct BoxQueryPairCheck
 template <typename ClientDataType,
           typename QueryType = void*,
           typename Policy = void*,
-          typename QueryCheck =
-              BasicQueryCheck<ClientDataType, QueryType, Policy>>
+          typename QueryCheck = BasicQueryCheck<ClientDataType, QueryType, Policy>>
 struct BroadPhaseArrayRange : public QueryCheck
 {
   typedef ClientDataType ClientDataTypeDef;
@@ -124,9 +119,7 @@ struct BroadPhaseArrayRange : public QueryCheck
     mIndex = SkipDead();
   }
 
-  BroadPhaseArrayRange(ObjectArray* data,
-                       const QueryType& queryObj,
-                       Policy policy) :
+  BroadPhaseArrayRange(ObjectArray* data, const QueryType& queryObj, Policy policy) :
       QueryCheck(queryObj, policy),
       mData(data)
   {
@@ -257,10 +250,8 @@ struct BroadPhaseTreeRange
         return;
 
       // otherwise push both children onto the stack (if both are nodes)
-      ErrorIf(node->mChild1 == nullptr,
-              "Child 1 of an internal node should never be null.");
-      ErrorIf(node->mChild2 == nullptr,
-              "Child 2 of an internal node should never be null.");
+      ErrorIf(node->mChild1 == nullptr, "Child 1 of an internal node should never be null.");
+      ErrorIf(node->mChild2 == nullptr, "Child 2 of an internal node should never be null.");
 
       nodes.PopBack();
       nodes.PushBack(node->mChild1);
@@ -277,8 +268,7 @@ struct BroadPhaseTreeRange
 /// underlying structure is an array. Used to perform casts and queries
 /// against the BroadPhase. Any specific implementation should provide a
 /// CheckPolicy function in place of the basic query check.
-template <typename ClientDataType,
-          typename QueryCheck = BasicQueryPairCheck<ClientDataType>>
+template <typename ClientDataType, typename QueryCheck = BasicQueryPairCheck<ClientDataType>>
 struct BroadPhaseArrayPairRange : public QueryCheck
 {
   typedef BaseBroadPhaseData<ClientDataType> DataType;
@@ -362,9 +352,7 @@ struct BroadPhaseArrayPairRange : public QueryCheck
   PairType mPair;
 };
 
-template <typename TreeType,
-          typename QueryCheck =
-              BasicQueryPairCheck<typename TreeType::ClientDataTypeDef>>
+template <typename TreeType, typename QueryCheck = BasicQueryPairCheck<typename TreeType::ClientDataTypeDef>>
 struct BroadPhaseTreeSelfRange : public QueryCheck
 {
   typedef TreeType TreeTypeDef;
@@ -493,30 +481,26 @@ struct BroadPhaseTreeSelfRange : public QueryCheck
 // everywhere we do a cast. This range attempts to simplify things from the
 // users perspective. Unfortunately, this range cannot be used multiple
 // times in the same scope.
-#define forRangeBroadphaseTree(treeType, tree, queryType, queryObj)            \
-  Array<treeType::NodeType*, LocalStackAllocator> nodeArray_;                  \
-  uint totalProxyCount_ = tree.GetTotalProxyCount();                           \
-  LocalStackAllocator stackAllocator_(                                         \
-      alloca(totalProxyCount_ * sizeof(void*)));                               \
-  nodeArray_.SetAllocator(stackAllocator_);                                    \
-  nodeArray_.Reserve(totalProxyCount_);                                        \
-  typedef decltype(tree.Query(queryObj, nodeArray_)) _RangeType;               \
-  _RangeType range = tree.Query(queryObj, nodeArray_);                         \
+#define forRangeBroadphaseTree(treeType, tree, queryType, queryObj)                                                    \
+  Array<treeType::NodeType*, LocalStackAllocator> nodeArray_;                                                          \
+  uint totalProxyCount_ = tree.GetTotalProxyCount();                                                                   \
+  LocalStackAllocator stackAllocator_(alloca(totalProxyCount_ * sizeof(void*)));                                       \
+  nodeArray_.SetAllocator(stackAllocator_);                                                                            \
+  nodeArray_.Reserve(totalProxyCount_);                                                                                \
+  typedef decltype(tree.Query(queryObj, nodeArray_)) _RangeType;                                                       \
+  _RangeType range = tree.Query(queryObj, nodeArray_);                                                                 \
   for (; !range.Empty(); range.PopFront())
 
 // Same as above, but allows the user to provide a policy object to customize
 // how we check a node against the query object type.
-#define forRangeBroadphaseTreePolicy(                                          \
-    treeType, tree, queryType, queryObj, policy)                               \
-  Array<treeType::NodeType*, LocalStackAllocator> nodeArray_;                  \
-  uint totalProxyCount_ = tree.GetTotalProxyCount();                           \
-  LocalStackAllocator stackAllocator_(                                         \
-      alloca(totalProxyCount_ * sizeof(void*)));                               \
-  nodeArray_.SetAllocator(stackAllocator_);                                    \
-  nodeArray_.Reserve(totalProxyCount_);                                        \
-  typedef decltype(                                                            \
-      tree.QueryWithPolicy(queryObj, nodeArray_, policy)) _RangeType;          \
-  _RangeType range = tree.QueryWithPolicy(queryObj, nodeArray_, policy);       \
+#define forRangeBroadphaseTreePolicy(treeType, tree, queryType, queryObj, policy)                                      \
+  Array<treeType::NodeType*, LocalStackAllocator> nodeArray_;                                                          \
+  uint totalProxyCount_ = tree.GetTotalProxyCount();                                                                   \
+  LocalStackAllocator stackAllocator_(alloca(totalProxyCount_ * sizeof(void*)));                                       \
+  nodeArray_.SetAllocator(stackAllocator_);                                                                            \
+  nodeArray_.Reserve(totalProxyCount_);                                                                                \
+  typedef decltype(tree.QueryWithPolicy(queryObj, nodeArray_, policy)) _RangeType;                                     \
+  _RangeType range = tree.QueryWithPolicy(queryObj, nodeArray_, policy);                                               \
   for (; !range.Empty(); range.PopFront())
 
 } // namespace Zero

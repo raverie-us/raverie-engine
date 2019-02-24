@@ -16,15 +16,13 @@ void BlockVector3::SetSize(uint size)
 
 Vector3& BlockVector3::operator[](uint index)
 {
-  ErrorIf(index > mBlocks.Size(),
-          "Math::BlockVector3 - Subscript out of range.");
+  ErrorIf(index > mBlocks.Size(), "Math::BlockVector3 - Subscript out of range.");
   return mBlocks[index];
 }
 
 Vector3 BlockVector3::operator[](uint index) const
 {
-  ErrorIf(index > mBlocks.Size(),
-          "Math::BlockVector3 - Subscript out of range.");
+  ErrorIf(index > mBlocks.Size(), "Math::BlockVector3 - Subscript out of range.");
   return mBlocks[index];
 }
 
@@ -44,8 +42,7 @@ void BlockVector3::operator*=(real rhs)
 
 void BlockVector3::operator+=(const BlockVector3& rhs)
 {
-  ErrorIf(rhs.mBlocks.Size() != mBlocks.Size(),
-          "Cannot add two block vectors of different dimensions");
+  ErrorIf(rhs.mBlocks.Size() != mBlocks.Size(), "Cannot add two block vectors of different dimensions");
 
   for (uint i = 0; i < mBlocks.Size(); ++i)
     mBlocks[i] += rhs.mBlocks[i];
@@ -53,8 +50,7 @@ void BlockVector3::operator+=(const BlockVector3& rhs)
 
 void BlockVector3::operator-=(const BlockVector3& rhs)
 {
-  ErrorIf(rhs.mBlocks.Size() != mBlocks.Size(),
-          "Cannot subtract two block vectors of different dimensions");
+  ErrorIf(rhs.mBlocks.Size() != mBlocks.Size(), "Cannot subtract two block vectors of different dimensions");
 
   for (uint i = 0; i < mBlocks.Size(); ++i)
     mBlocks[i] -= rhs.mBlocks[i];
@@ -99,16 +95,14 @@ void BlockMatrix3::SetSize(uint size)
 
 Matrix3 BlockMatrix3::operator()(uint row, uint col) const
 {
-  ErrorIf(row > mBlocks.Size() || col > mBlocks.Size(),
-          "Math::BlockMatrix3 - Subscript out of range.");
+  ErrorIf(row > mBlocks.Size() || col > mBlocks.Size(), "Math::BlockMatrix3 - Subscript out of range.");
 
   return mBlocks[row][col];
 }
 
 Matrix3& BlockMatrix3::operator()(uint row, uint col)
 {
-  ErrorIf(row > mBlocks.Size() || col > mBlocks.Size(),
-          "Math::BlockMatrix3 - Subscript out of range.");
+  ErrorIf(row > mBlocks.Size() || col > mBlocks.Size(), "Math::BlockMatrix3 - Subscript out of range.");
 
   return mBlocks[row][col];
 }
@@ -116,8 +110,7 @@ Matrix3& BlockMatrix3::operator()(uint row, uint col)
 real& BlockMatrix3::GlobalIndex(uint row, uint col)
 {
   uint size = mBlocks.Size() * 3;
-  ErrorIf(row > size || col > size,
-          "Math::BlockMatrix3 - Subscript out of range.");
+  ErrorIf(row > size || col > size, "Math::BlockMatrix3 - Subscript out of range.");
 
   int blockRow = row / 3;
   int blockCol = col / 3;

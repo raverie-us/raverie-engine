@@ -21,8 +21,7 @@ public:
   virtual float Sample()
   {
     mRecord->Update();
-    float timeInS = Profile::ProfileSystem::Instance->GetTimeInSeconds(
-        (Profile::ProfileTime)mRecord->SmoothAverage());
+    float timeInS = Profile::ProfileSystem::Instance->GetTimeInSeconds((Profile::ProfileTime)mRecord->SmoothAverage());
 
     // Convert to milliseconds
     float ms = timeInS * 1000.0f;
@@ -52,8 +51,7 @@ public:
   {
     if (mStats->mPossibleCollisionsReturned == 0)
       return 0.0f;
-    float percentageCorrect = float(mStats->mActualCollisions) /
-                              float(mStats->mPossibleCollisionsReturned);
+    float percentageCorrect = float(mStats->mActualCollisions) / float(mStats->mPossibleCollisionsReturned);
 
     return 1.0f - percentageCorrect;
   }
@@ -100,8 +98,7 @@ BroadPhaseEditor::BroadPhaseEditor(Editor* parent) : Composite(parent)
     IconButton* addButton = mAddButtons[BroadPhase::Dynamic];
     ConnectThisTo(addButton, Events::ButtonPressed, DynamicAddButtonPressed);
     IconButton* removeButton = mRemoveButtons[BroadPhase::Dynamic];
-    ConnectThisTo(
-        removeButton, Events::ButtonPressed, DynamicRemoveButtonPressed);
+    ConnectThisTo(removeButton, Events::ButtonPressed, DynamicRemoveButtonPressed);
 
     // Add a spacer in between
     Spacer* spacer = new Spacer(dynamicStatic);
@@ -114,8 +111,7 @@ BroadPhaseEditor::BroadPhaseEditor(Editor* parent) : Composite(parent)
     addButton = mAddButtons[BroadPhase::Static];
     ConnectThisTo(addButton, Events::ButtonPressed, StaticAddButtonPressed);
     removeButton = mRemoveButtons[BroadPhase::Static];
-    ConnectThisTo(
-        removeButton, Events::ButtonPressed, StaticRemoveButtonPressed);
+    ConnectThisTo(removeButton, Events::ButtonPressed, StaticRemoveButtonPressed);
   }
 
   for (uint i = 0; i < BPStats::Size; ++i)
@@ -187,8 +183,7 @@ BroadPhaseTracker* BroadPhaseEditor::CreateTracker()
   return tracker;
 }
 
-void BroadPhaseEditor::AddBroadPhasesToTracker(BroadPhase::Type type,
-                                               BroadPhaseTracker* tracker)
+void BroadPhaseEditor::AddBroadPhasesToTracker(BroadPhase::Type type, BroadPhaseTracker* tracker)
 {
   for (uint i = 0; i < mActiveBroadPhases[type].Size(); ++i)
   {
@@ -204,8 +199,7 @@ void BroadPhaseEditor::AddBroadPhasesToTracker(BroadPhase::Type type,
   }
 }
 
-void BroadPhaseEditor::CreateGraphs(BroadPhase::Type type,
-                                    BroadPhaseTracker* tracker)
+void BroadPhaseEditor::CreateGraphs(BroadPhase::Type type, BroadPhaseTracker* tracker)
 {
   // Create the graph for percentage correct
   Widget* statsGraph = CreateStatsGraphWidget(type, tracker);
@@ -253,8 +247,7 @@ Widget* BroadPhaseEditor::CreateRecordGraphWidget(BroadPhase::Type type,
   return graph;
 }
 
-Widget* BroadPhaseEditor::CreateStatsGraphWidget(BroadPhase::Type type,
-                                                 BroadPhaseTracker* tracker)
+Widget* BroadPhaseEditor::CreateStatsGraphWidget(BroadPhase::Type type, BroadPhaseTracker* tracker)
 {
   // Create a graph
   GraphView* graph = new GraphView(mEditor);
@@ -277,9 +270,7 @@ Widget* BroadPhaseEditor::CreateStatsGraphWidget(BroadPhase::Type type,
   return graph;
 }
 
-Composite* BroadPhaseEditor::BuildPropertyGrid(StringParam label,
-                                               BroadPhase::Type type,
-                                               Composite* parent)
+Composite* BroadPhaseEditor::BuildPropertyGrid(StringParam label, BroadPhase::Type type, Composite* parent)
 {
   // Create the encasing composite
   Composite* composite = new Composite(parent);
@@ -301,8 +292,7 @@ Composite* BroadPhaseEditor::BuildPropertyGrid(StringParam label,
       comboBox->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
 
       // Enumerate the names
-      Z::gBroadPhaseLibrary->EnumerateNamesOfType(
-          type, mBroadPhaseNames[type].Strings);
+      Z::gBroadPhaseLibrary->EnumerateNamesOfType(type, mBroadPhaseNames[type].Strings);
 
       // Set the data source
       comboBox->SetListSource(&mBroadPhaseNames[type]);

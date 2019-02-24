@@ -71,18 +71,12 @@ void Sap<ClientDataType>::CreateProxies(DataObjectArray& objects)
     mBoxes[index] = box;
 
     // push the new endpoints onto lists for each axis
-    newEndpoints[0].PushBack(
-        EndPointType(GetBoxMin(0, index), true, box.mMins[0]));
-    newEndpoints[0].PushBack(
-        EndPointType(GetBoxMax(0, index), false, box.mMaxs[0]));
-    newEndpoints[1].PushBack(
-        EndPointType(GetBoxMin(1, index), true, box.mMins[1]));
-    newEndpoints[1].PushBack(
-        EndPointType(GetBoxMax(1, index), false, box.mMaxs[1]));
-    newEndpoints[2].PushBack(
-        EndPointType(GetBoxMin(2, index), true, box.mMins[2]));
-    newEndpoints[2].PushBack(
-        EndPointType(GetBoxMax(2, index), false, box.mMaxs[2]));
+    newEndpoints[0].PushBack(EndPointType(GetBoxMin(0, index), true, box.mMins[0]));
+    newEndpoints[0].PushBack(EndPointType(GetBoxMax(0, index), false, box.mMaxs[0]));
+    newEndpoints[1].PushBack(EndPointType(GetBoxMin(1, index), true, box.mMins[1]));
+    newEndpoints[1].PushBack(EndPointType(GetBoxMax(1, index), false, box.mMaxs[1]));
+    newEndpoints[2].PushBack(EndPointType(GetBoxMin(2, index), true, box.mMins[2]));
+    newEndpoints[2].PushBack(EndPointType(GetBoxMax(2, index), false, box.mMaxs[2]));
 
     // keep track of this index so later we can not add pairs between
     // two objects that already existed
@@ -200,16 +194,14 @@ void Sap<ClientDataType>::UpdateProxies(DataObjectArray& objects)
 
 template <typename ClientDataType>
 template <typename QueryType, typename PolicyType>
-SapRange<ClientDataType, QueryType> Sap<ClientDataType>::QueryWithPolicy(
-    const QueryType& queryObj, PolicyType policy)
+SapRange<ClientDataType, QueryType> Sap<ClientDataType>::QueryWithPolicy(const QueryType& queryObj, PolicyType policy)
 {
   return SapRange<ClientDataType, QueryType>(&mBoxes, queryObj, policy);
 }
 
 template <typename ClientDataType>
 template <typename QueryType>
-SapRange<ClientDataType, QueryType>
-Sap<ClientDataType>::Query(const QueryType& queryObj)
+SapRange<ClientDataType, QueryType> Sap<ClientDataType>::Query(const QueryType& queryObj)
 {
   return SapRange<ClientDataType, QueryType>(&mBoxes, queryObj);
 }
@@ -247,15 +239,9 @@ void Sap<ClientDataType>::Draw(int level, uint debugDrawFlags)
 {
   // Draw the axis
   Vec3 drawAxis(0, real(level), 0);
-  gDebugDraw->Add(
-      Debug::Line(drawAxis - Vec3(20, 0, 0), drawAxis + Vec3(20, 0, 0))
-          .Color(Color::MediumAquamarine));
-  gDebugDraw->Add(
-      Debug::Line(drawAxis - Vec3(0, 20, 0), drawAxis + Vec3(0, 20, 0))
-          .Color(Color::MediumAquamarine));
-  gDebugDraw->Add(
-      Debug::Line(drawAxis - Vec3(0, 0, 20), drawAxis + Vec3(0, 0, 20))
-          .Color(Color::MediumAquamarine));
+  gDebugDraw->Add(Debug::Line(drawAxis - Vec3(20, 0, 0), drawAxis + Vec3(20, 0, 0)).Color(Color::MediumAquamarine));
+  gDebugDraw->Add(Debug::Line(drawAxis - Vec3(0, 20, 0), drawAxis + Vec3(0, 20, 0)).Color(Color::MediumAquamarine));
+  gDebugDraw->Add(Debug::Line(drawAxis - Vec3(0, 0, 20), drawAxis + Vec3(0, 0, 20)).Color(Color::MediumAquamarine));
 
   typename Array<BoxType>::range r = mBoxes.All();
   while (!r.Empty())
@@ -275,38 +261,31 @@ void Sap<ClientDataType>::Draw(int level, uint debugDrawFlags)
     Vec3 centerProjY(center.x, drawAxis.y, center.z);
     Vec3 extentsProjY(extents.x, real(0.0), extents.z);
     gDebugDraw->Add(Debug::Obb(center, extents).Color(Color::Aquamarine));
-    gDebugDraw->Add(
-        Debug::Obb(centerProjY, extentsProjY).Color(Color::Aquamarine));
+    gDebugDraw->Add(Debug::Obb(centerProjY, extentsProjY).Color(Color::Aquamarine));
 
     // x-axis
     Vec3 xMin(min.x, real(0.0) + drawAxis.y, min.z);
     Vec3 xMin2(xMin.x, real(0.0), real(0.0));
     Vec3 xMax(max.x, real(0.0) + drawAxis.y, min.z);
     Vec3 xMax2(xMax.x, real(0.0), real(0.0));
-    gDebugDraw->Add(
-        Debug::Line(xMin, xMin2 + drawAxis).Color(Color::Aquamarine));
-    gDebugDraw->Add(
-        Debug::Line(xMax, xMax2 + drawAxis).Color(Color::Aquamarine));
+    gDebugDraw->Add(Debug::Line(xMin, xMin2 + drawAxis).Color(Color::Aquamarine));
+    gDebugDraw->Add(Debug::Line(xMax, xMax2 + drawAxis).Color(Color::Aquamarine));
 
     // z-axis
     Vec3 zMin(max.x, real(0.0) + drawAxis.y, min.z);
     Vec3 zMin2(real(0.0), real(0.0), zMin.z);
     Vec3 zMax(max.x, real(0.0) + drawAxis.y, max.z);
     Vec3 zMax2(real(0.0), real(0.0), zMax.z);
-    gDebugDraw->Add(
-        Debug::Line(zMin, zMin2 + drawAxis).Color(Color::Aquamarine));
-    gDebugDraw->Add(
-        Debug::Line(zMax, zMax2 + drawAxis).Color(Color::Aquamarine));
+    gDebugDraw->Add(Debug::Line(zMin, zMin2 + drawAxis).Color(Color::Aquamarine));
+    gDebugDraw->Add(Debug::Line(zMax, zMax2 + drawAxis).Color(Color::Aquamarine));
 
     // y-axis
     Vec3 yMin(min.x, min.y, min.z);
     Vec3 yMin2(real(0.0), min.y - drawAxis.y, real(0.0));
     Vec3 yMax(min.x, max.y, min.z);
     Vec3 yMax2(real(0.0), max.y - drawAxis.y, real(0.0));
-    gDebugDraw->Add(
-        Debug::Line(yMin, yMin2 + drawAxis).Color(Color::Aquamarine));
-    gDebugDraw->Add(
-        Debug::Line(yMax, yMax2 + drawAxis).Color(Color::Aquamarine));
+    gDebugDraw->Add(Debug::Line(yMin, yMin2 + drawAxis).Color(Color::Aquamarine));
+    gDebugDraw->Add(Debug::Line(yMax, yMax2 + drawAxis).Color(Color::Aquamarine));
 
     r.PopFront();
   }
@@ -319,8 +298,7 @@ void Sap<ClientDataType>::Validate()
   {
     BoxType& box = mBoxes[i];
     if (i == 0)
-      ErrorIf(box.mObj != (void*)SapInternal::cSentinelPattern,
-              "Sentinel object pointer has been modified");
+      ErrorIf(box.mObj != (void*)SapInternal::cSentinelPattern, "Sentinel object pointer has been modified");
 
     if (box.mObj == nullptr)
       continue;
@@ -332,13 +310,10 @@ void Sap<ClientDataType>::Validate()
       uint axisIndex = mIndices[index];
 
       // validate the endpoints and indices match
-      ErrorIf(axisIndex < 0 || axisIndex >= mAxes[axis].Size(),
-              "Index in indices is invalid.");
+      ErrorIf(axisIndex < 0 || axisIndex >= mAxes[axis].Size(), "Index in indices is invalid.");
       EndPointType& endPoint = mAxes[axis][axisIndex];
-      ErrorIf(endPoint.GetIndex() != index,
-              "Endpoint index does not point to its index.");
-      ErrorIf(mBoxes[endPoint.GetIndex() / 6].mObj == nullptr,
-              "Endpoint points to a deleted box");
+      ErrorIf(endPoint.GetIndex() != index, "Endpoint index does not point to its index.");
+      ErrorIf(mBoxes[endPoint.GetIndex() / 6].mObj == nullptr, "Endpoint points to a deleted box");
 
       // validate that the sentinels are in the right spot and flagged min/max
       // correctly
@@ -348,8 +323,7 @@ void Sap<ClientDataType>::Validate()
         if (j % 2)
         {
           ErrorIf(!endPoint.isMin(), "Sentinel max should be flagged as a min");
-          ErrorIf(axisIndex != mAxes[axis].Size() - 1,
-                  "Sentinel max is not the last endpoint");
+          ErrorIf(axisIndex != mAxes[axis].Size() - 1, "Sentinel max is not the last endpoint");
         }
         // check the min
         else
@@ -412,10 +386,8 @@ void Sap<ClientDataType>::MakeSentinel()
 {
   // push back the sentinel
   DataType sentinelData;
-  sentinelData.mAabb.mMax =
-      Vec3(Math::PositiveMax(), Math::PositiveMax(), Math::PositiveMax());
-  sentinelData.mAabb.mMin =
-      Vec3(-Math::PositiveMax(), -Math::PositiveMax(), -Math::PositiveMax());
+  sentinelData.mAabb.mMax = Vec3(Math::PositiveMax(), Math::PositiveMax(), Math::PositiveMax());
+  sentinelData.mAabb.mMin = Vec3(-Math::PositiveMax(), -Math::PositiveMax(), -Math::PositiveMax());
   sentinelData.mBoundingSphere.mCenter = Vec3(0, 0, 0);
   sentinelData.mBoundingSphere.mRadius = Math::PositiveMax();
 
@@ -756,8 +728,7 @@ void Sap<ClientDataType>::InsertEndpoint(BoxType& box, uint index)
 
 template <typename ClientDataType>
 template <uint Axis>
-void Sap<ClientDataType>::InsertEndpointOnAxis(const EndPointType& endpoint,
-                                               bool finalAxis)
+void Sap<ClientDataType>::InsertEndpointOnAxis(const EndPointType& endpoint, bool finalAxis)
 {
   // get the index of the old last endpoint
   int i = mAxes[Axis].Size() - 1;
@@ -782,9 +753,7 @@ void Sap<ClientDataType>::InsertEndpointOnAxis(const EndPointType& endpoint,
 
 template <typename ClientDataType>
 template <uint Axis>
-void Sap<ClientDataType>::UpdateEndpoint(uint index,
-                                         DataType& data,
-                                         bool finalAxis)
+void Sap<ClientDataType>::UpdateEndpoint(uint index, DataType& data, bool finalAxis)
 {
   // get the index in the indices list for the max endpoint
   uint maxIndex = GetBoxMax(Axis, index);
@@ -839,8 +808,7 @@ void Sap<ClientDataType>::UpdateEndpointOnAxis(uint index, bool finalAxis)
   // value, shift it right until it finds the right spot
   while (GetEndpointValue(Axis, index) > GetEndpointValue(Axis, index + 1))
   {
-    ErrorIf(index >= mAxes[Axis].Size() - 1,
-            "Sentinels failed, endpoint made it to a sentinel");
+    ErrorIf(index >= mAxes[Axis].Size() - 1, "Sentinels failed, endpoint made it to a sentinel");
     ShiftRight<Axis>(index, finalAxis);
     ++index;
   }

@@ -13,9 +13,7 @@ public:
   ListenerWorldPositionInfo() : mPosition(Vec3::cZero), mVelocity(Vec3::cZero)
   {
   }
-  ListenerWorldPositionInfo(const Vec3& position,
-                            const Vec3& velocity,
-                            const Mat3& worldMatrix) :
+  ListenerWorldPositionInfo(const Vec3& position, const Vec3& velocity, const Mat3& worldMatrix) :
       mPosition(position),
       mVelocity(velocity),
       mWorldMatrix(worldMatrix)
@@ -34,9 +32,7 @@ class ListenerNode : public SoundNode
 public:
   ZilchDeclareType(ListenerNode, TypeCopyMode::ReferenceType);
 
-  ListenerNode(Zero::StringParam name,
-               unsigned ID,
-               ListenerWorldPositionInfo positionInfo);
+  ListenerNode(Zero::StringParam name, unsigned ID, ListenerWorldPositionInfo positionInfo);
   ~ListenerNode();
 
   // Updates the position and velocity of the listener

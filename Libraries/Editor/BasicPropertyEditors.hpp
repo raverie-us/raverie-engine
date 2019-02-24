@@ -66,9 +66,7 @@ public:
   void CommitValue(AnyParam value);
   void CommitValue(PropertyState& state);
 
-  void BuildPath(ObjectPropertyNode* node,
-                 Handle& rootInstance,
-                 PropertyPath& path);
+  void BuildPath(ObjectPropertyNode* node, Handle& rootInstance, PropertyPath& path);
   bool IsModified();
 
   /// Interface PropertyWidget

@@ -139,16 +139,14 @@ public:
   /// Sets the change authority client by replicator ID
   /// Controls which client has change authority over all replica channels with
   /// client change authority (specified by ReplicaChannel::Authority)
-  void
-  SetAuthorityClientReplicatorId(ReplicatorId authorityClientReplicatorId = 0);
+  void SetAuthorityClientReplicatorId(ReplicatorId authorityClientReplicatorId = 0);
   /// Returns the change authority client by replicator ID
   ReplicatorId GetAuthorityClientReplicatorId() const;
 
   /// Controls whether or not the replica will serialize an accurate timestamp
   /// value when initialized, or will instead accept an estimated timestamp
   /// value
-  void SetAccurateTimestampOnInitialization(
-      bool accurateTimestampOnInitialization = false);
+  void SetAccurateTimestampOnInitialization(bool accurateTimestampOnInitialization = false);
   bool GetAccurateTimestampOnInitialization() const;
 
   /// Controls whether or not the replica will serialize an accurate timestamp
@@ -162,8 +160,7 @@ public:
   /// Controls whether or not the replica will serialize an accurate timestamp
   /// value when uninitialized, or will instead accept an estimated timestamp
   /// value
-  void SetAccurateTimestampOnUninitialization(
-      bool accurateTimestampOnUninitialization = false);
+  void SetAccurateTimestampOnUninitialization(bool accurateTimestampOnUninitialization = false);
   bool GetAccurateTimestampOnUninitialization() const;
 
   //
@@ -173,8 +170,7 @@ public:
   /// Returns true if the replica has the specified replica channel, else false
   bool HasReplicaChannel(const String& replicaChannelName) const;
   /// Returns the specified replica channel, else nullptr
-  const ReplicaChannel*
-  GetReplicaChannel(const String& replicaChannelName) const;
+  const ReplicaChannel* GetReplicaChannel(const String& replicaChannelName) const;
   ReplicaChannel* GetReplicaChannel(const String& replicaChannelName);
   /// Returns all replica channels managed by the replica
   const ReplicaChannelSet& GetReplicaChannels() const;
@@ -224,28 +220,27 @@ public:
                                      bool setLastValues = true);
 
   /// Data
-  CreateContext mCreateContext;    /// Create context
-  ReplicaType mReplicaType;        /// Replica type
-  Replicator* mReplicator;         /// Operating replicator
-  ReplicaId mReplicaId;            /// Replica ID
-  EmplaceContext mEmplaceContext;  /// Emplace context
-  EmplaceId mEmplaceId;            /// Emplace ID
-  bool mIsCloned;                  /// 'Is cloned?' flag
-  TimeMs mInitializationTimestamp; /// Timestamp indicating when this replica
-                                   /// was initialized
-  TimeMs mLastChangeTimestamp; /// Timestamp indicating when this replica was
-                               /// last changed (on any replica channel)
-  TimeMs mUninitializationTimestamp; /// Timestamp indicating when this replica
-                                     /// was uninitialized
-  bool mDetectOutgoingChanges;       /// Detect outgoing changes?
-  bool mAcceptIncomingChanges;       /// Accept incoming changes?
-  bool mAllowNapping;                /// Allow napping?
-  ReplicatorId
-      mAuthorityClientReplicatorId;        /// Authority client by replicator ID
-  bool mAccurateTimestampOnInitialization; /// Accurate timestamp when
-                                           /// initialized?
-  bool mAccurateTimestampOnChange; /// Accurate timestamp when changed (on any
-                                   /// replica channel)?
+  CreateContext mCreateContext;              /// Create context
+  ReplicaType mReplicaType;                  /// Replica type
+  Replicator* mReplicator;                   /// Operating replicator
+  ReplicaId mReplicaId;                      /// Replica ID
+  EmplaceContext mEmplaceContext;            /// Emplace context
+  EmplaceId mEmplaceId;                      /// Emplace ID
+  bool mIsCloned;                            /// 'Is cloned?' flag
+  TimeMs mInitializationTimestamp;           /// Timestamp indicating when this replica
+                                             /// was initialized
+  TimeMs mLastChangeTimestamp;               /// Timestamp indicating when this replica was
+                                             /// last changed (on any replica channel)
+  TimeMs mUninitializationTimestamp;         /// Timestamp indicating when this replica
+                                             /// was uninitialized
+  bool mDetectOutgoingChanges;               /// Detect outgoing changes?
+  bool mAcceptIncomingChanges;               /// Accept incoming changes?
+  bool mAllowNapping;                        /// Allow napping?
+  ReplicatorId mAuthorityClientReplicatorId; /// Authority client by replicator ID
+  bool mAccurateTimestampOnInitialization;   /// Accurate timestamp when
+                                             /// initialized?
+  bool mAccurateTimestampOnChange;           /// Accurate timestamp when changed (on any
+                                             /// replica channel)?
   bool mAccurateTimestampOnUninitialization; /// Accurate timestamp when
                                              /// uninitialized?
   ReplicaChannelSet mReplicaChannels;        /// Replica channels

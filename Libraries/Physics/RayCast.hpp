@@ -106,8 +106,7 @@ struct CastResult
   uint mShapeIndex;
 };
 
-static_assert(sizeof(CastResult) == sizeof(ProxyResult),
-              "Size of CastResult must be the same size of ProxyResult.");
+static_assert(sizeof(CastResult) == sizeof(ProxyResult), "Size of CastResult must be the same size of ProxyResult.");
 
 typedef Array<CastResult> CastResultArray;
 

@@ -13,8 +13,7 @@ namespace Zero
 /// choose whether to stream a file depending on its length. Files longer than
 /// 30 seconds will be streamed from memory, and those longer than 1 minute will
 /// be streamed from file.</param>
-DeclareEnum4(
-    AudioFileLoadType, StreamFromFile, StreamFromMemory, Uncompressed, Auto);
+DeclareEnum4(AudioFileLoadType, StreamFromFile, StreamFromMemory, Uncompressed, Auto);
 
 class AudioContent : public ContentComposition
 {

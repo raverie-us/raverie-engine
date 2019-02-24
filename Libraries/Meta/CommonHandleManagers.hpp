@@ -17,10 +17,8 @@ typedef ThreadSafeId<u32, EmptyClass> ThreadSafeId32;
 typedef ThreadSafeId<u64, EmptyClass> ThreadSafeId64;
 typedef ReferenceCountedSafeId<u32, EmptyClass> ReferenceCountedSafeId32;
 typedef ReferenceCountedSafeId<u64, EmptyClass> ReferenceCountedSafeId64;
-typedef ReferenceCountedThreadSafeId<u32, EmptyClass>
-    ReferenceCountedThreadSafeId32;
-typedef ReferenceCountedThreadSafeId<u64, EmptyClass>
-    ReferenceCountedThreadSafeId64;
+typedef ReferenceCountedThreadSafeId<u32, EmptyClass> ReferenceCountedThreadSafeId32;
+typedef ReferenceCountedThreadSafeId<u64, EmptyClass> ReferenceCountedThreadSafeId64;
 
 // Object handles
 typedef ReferenceCounted<Object> ReferenceCountedObject;
@@ -30,10 +28,8 @@ typedef ThreadSafeId<u32, Object> ThreadSafeId32Object;
 typedef ThreadSafeId<u64, Object> ThreadSafeId64Object;
 typedef ReferenceCountedSafeId<u32, Object> ReferenceCountedSafeId32Object;
 typedef ReferenceCountedSafeId<u64, Object> ReferenceCountedSafeId64Object;
-typedef ReferenceCountedThreadSafeId<u32, Object>
-    ReferenceCountedThreadSafeId32Object;
-typedef ReferenceCountedThreadSafeId<u64, Object>
-    ReferenceCountedThreadSafeId64Object;
+typedef ReferenceCountedThreadSafeId<u32, Object> ReferenceCountedThreadSafeId32Object;
+typedef ReferenceCountedThreadSafeId<u64, Object> ReferenceCountedThreadSafeId64Object;
 
 // EventObject handles
 typedef ReferenceCounted<EventObject> ReferenceCountedEventObject;
@@ -41,14 +37,10 @@ typedef SafeId<u32, EventObject> SafeId32EventObject;
 typedef SafeId<u64, EventObject> SafeId64EventObject;
 typedef ThreadSafeId<u32, EventObject> ThreadSafeId32EventObject;
 typedef ThreadSafeId<u64, EventObject> ThreadSafeId64EventObject;
-typedef ReferenceCountedSafeId<u32, EventObject>
-    ReferenceCountedSafeId32EventObject;
-typedef ReferenceCountedSafeId<u64, EventObject>
-    ReferenceCountedSafeId64EventObject;
-typedef ReferenceCountedThreadSafeId<u32, EventObject>
-    ReferenceCountedThreadSafeId32EventObject;
-typedef ReferenceCountedThreadSafeId<u64, EventObject>
-    ReferenceCountedThreadSafeId64EventObject;
+typedef ReferenceCountedSafeId<u32, EventObject> ReferenceCountedSafeId32EventObject;
+typedef ReferenceCountedSafeId<u64, EventObject> ReferenceCountedSafeId64EventObject;
+typedef ReferenceCountedThreadSafeId<u32, EventObject> ReferenceCountedThreadSafeId32EventObject;
+typedef ReferenceCountedThreadSafeId<u64, EventObject> ReferenceCountedThreadSafeId64EventObject;
 
 void RegisterCommonHandleManagers();
 

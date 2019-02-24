@@ -38,9 +38,7 @@ struct UnaryOperatorKey
 struct BinaryOperatorKey
 {
   BinaryOperatorKey();
-  BinaryOperatorKey(Zilch::Type* type1,
-                    Zilch::Type* type2,
-                    Zilch::Grammar::Enum op);
+  BinaryOperatorKey(Zilch::Type* type1, Zilch::Type* type2, Zilch::Grammar::Enum op);
 
   size_t Hash() const;
   bool operator==(const BinaryOperatorKey& rhs) const;

@@ -32,7 +32,7 @@ RawControlMapping::RawControlMapping()
 RawControlMapping::RawControlMapping(const PlatformInputDevice& device)
 {
   mName = device.mName;
-  forRange(const PlatformAxis& platformAxis, device.mAxes)
+  forRange (const PlatformAxis& platformAxis, device.mAxes)
   {
     RawAxis& rawAxis = mAxes.PushBack();
     rawAxis.Name = platformAxis.mName;
@@ -57,7 +57,7 @@ RawControlMapping::RawControlMapping(const PlatformInputDevice& device)
     }
   }
 
-  forRange(const PlatformButton& platformButton, device.mButtons)
+  forRange (const PlatformButton& platformButton, device.mButtons)
   {
     RawButton& rawButton = mButtons.PushBack();
     rawButton.Name = platformButton.mName;
@@ -211,9 +211,7 @@ String Joystick::GetName()
 
 float Joystick::GetAxisValue(int index)
 {
-  ReturnIf(index >= int(mRawMapping->mAxes.Size()),
-           0.0f,
-           "Joystick axis index was out of bounds");
+  ReturnIf(index >= int(mRawMapping->mAxes.Size()), 0.0f, "Joystick axis index was out of bounds");
 
   return mAxes[index];
 }
@@ -225,9 +223,7 @@ float Joystick::GetDisabledValue()
 
 String Joystick::GetAxisName(int index)
 {
-  ReturnIf(index >= int(mRawMapping->mAxes.Size()),
-           "Invalid",
-           "Joystick axis index was out of bounds");
+  ReturnIf(index >= int(mRawMapping->mAxes.Size()), "Invalid", "Joystick axis index was out of bounds");
 
   return mRawMapping->mAxes[index].Name;
 }
@@ -296,9 +292,7 @@ void Joystick::SaveInputMapping(StringParam name)
     DataBlock dataBlock = SaveToDataBlock(*mRawMapping, DataFileFormat::Text);
     if (dataBlock)
     {
-      block->Text = StringRange((cstr)dataBlock.Data,
-                                (cstr)dataBlock.Data,
-                                (cstr)dataBlock.Data + dataBlock.Size);
+      block->Text = StringRange((cstr)dataBlock.Data, (cstr)dataBlock.Data, (cstr)dataBlock.Data + dataBlock.Size);
       block->mContentItem->SaveContent();
       FreeBlock(dataBlock);
     }
@@ -359,9 +353,7 @@ bool Joystick::Calibrating(void)
 
 void Joystick::RawSetAxis(uint index, uint rawValue)
 {
-  ReturnIf(mIsActive == false,
-           ,
-           "We should not be updating a joystick that is not active");
+  ReturnIf(mIsActive == false, , "We should not be updating a joystick that is not active");
 
   float value = 0.0f;
   RawAxis& axis = mRawMapping->mAxes[index];
@@ -421,9 +413,7 @@ void Joystick::RawSetAxisDisabled(uint index)
 
 void Joystick::RawSetButtons(uint newState)
 {
-  ReturnIf(mIsActive == false,
-           ,
-           "We should not be updating a joystick that is not active");
+  ReturnIf(mIsActive == false, , "We should not be updating a joystick that is not active");
 
   for (uint i = 0; i < GetButtonCount(); ++i)
   {
@@ -459,9 +449,7 @@ void Joystick::SignalUpdated()
 
 void Joystick::RawProcess(DataBlock dataBlock)
 {
-  ReturnIf(mIsActive == false,
-           ,
-           "We should not be updating a joystick that is not active");
+  ReturnIf(mIsActive == false, , "We should not be updating a joystick that is not active");
 
   ErrorIf(this->mRawMapping == nullptr,
           "We should not be calling raw process with a raw data block when we "
@@ -522,7 +510,7 @@ Joysticks::Joysticks()
 
 void Joysticks::DeactivateAll()
 {
-  forRange(Joystick * joyStick, mDeviceToJoystick.Values())
+  forRange (Joystick* joyStick, mDeviceToJoystick.Values())
   {
     if (!joyStick->mIsActive)
       continue;
@@ -542,7 +530,7 @@ void Joysticks::DeactivateAll()
 Joysticks::~Joysticks()
 {
   // Loop through all the joysticks we have available
-  forRange(Joystick * joystick, mDeviceToJoystick.Values())
+  forRange (Joystick* joystick, mDeviceToJoystick.Values())
   {
     // Delete the allocated joystick object
     delete joystick;
@@ -568,8 +556,7 @@ JoystickDeviceRange Joysticks::GetJoysticks()
 void Joysticks::AddJoystickDevice(const PlatformInputDevice& device)
 {
   // Look for the joystick by device
-  Joystick* joyStick =
-      mDeviceToJoystick.FindValue(device.mDeviceHandle, nullptr);
+  Joystick* joyStick = mDeviceToJoystick.FindValue(device.mDeviceHandle, nullptr);
 
   // This will either be 'stolen' below or will be deleted in the internal set
   // functions

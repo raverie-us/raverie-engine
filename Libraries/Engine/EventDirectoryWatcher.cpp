@@ -21,16 +21,13 @@ ZilchDefineType(FileEditEvent, builder, type)
 }
 
 EventDirectoryWatcher::EventDirectoryWatcher(StringParam directory) :
-    mWatcher(
-        directory.c_str(),
-        DirectoryWatcher::CallBackCreator<EventDirectoryWatcher,
-                                          &EventDirectoryWatcher::FileCallBack>,
-        this)
+    mWatcher(directory.c_str(),
+             DirectoryWatcher::CallBackCreator<EventDirectoryWatcher, &EventDirectoryWatcher::FileCallBack>,
+             this)
 {
 }
 
-OsInt EventDirectoryWatcher::FileCallBack(
-    DirectoryWatcher::FileOperationInfo& info)
+OsInt EventDirectoryWatcher::FileCallBack(DirectoryWatcher::FileOperationInfo& info)
 {
   FileEditEvent* event = new FileEditEvent();
   event->FileName = info.FileName;

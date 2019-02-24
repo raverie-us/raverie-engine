@@ -167,10 +167,8 @@ ZilchDefineType(ObjectLink, builder, type)
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDocumented();
 
-  ZilchBindGetterSetterProperty(ObjectAPath)
-      ->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(ObjectBPath)
-      ->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(ObjectAPath)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(ObjectBPath)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
 
   ZilchBindGetterSetter(ObjectA);
   ZilchBindGetterSetter(ObjectB);
@@ -199,10 +197,8 @@ void ObjectLink::Initialize(CogInitializer& initializer)
 {
   // We can't do anything in initialize as cog paths can't be resolved until
   // OnAllObjects Created. Just listen for when these cog path's change.
-  ConnectThisTo(
-      &mObjectPaths[IndexA], Events::CogPathCogChanged, OnObjectAChanged);
-  ConnectThisTo(
-      &mObjectPaths[IndexB], Events::CogPathCogChanged, OnObjectBChanged);
+  ConnectThisTo(&mObjectPaths[IndexA], Events::CogPathCogChanged, OnObjectAChanged);
+  ConnectThisTo(&mObjectPaths[IndexB], Events::CogPathCogChanged, OnObjectBChanged);
 
   // Hack: For now add the visualizer here (so you can click on the object link)
   if (Z::gRuntimeEditor)
@@ -504,9 +500,7 @@ ObjectLinkPointChangedEvent::ObjectLinkPointChangedEvent()
   mEdgeId = 0;
 }
 
-void ObjectLinkPointChangedEvent::Set(uint edgeIndex,
-                                      Vec3Param oldPoint,
-                                      Vec3Param newPoint)
+void ObjectLinkPointChangedEvent::Set(uint edgeIndex, Vec3Param oldPoint, Vec3Param newPoint)
 {
   mEdgeId = edgeIndex;
   mOldLocalPoint = oldPoint;

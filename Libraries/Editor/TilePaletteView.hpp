@@ -146,8 +146,7 @@ public:
   void SetShowCollision(bool showCollision);
   void AddCollisionOverlays();
   void RemoveCollisionOverlays();
-  TilePaletteSprite* CreateTilePaletteSprite(SpriteSource* sprite,
-                                             PhysicsMesh* collision);
+  TilePaletteSprite* CreateTilePaletteSprite(SpriteSource* sprite, PhysicsMesh* collision);
 
   void AddToPaletteSource(IntVec2 location, TileMap::Tile tile);
   void RemoveFromPaletteSource(IntVec2 location);
@@ -188,18 +187,14 @@ public:
   public:
     struct Selection
     {
-      Selection(TilePaletteEntry* entry, IntVec2 location) :
-          mEntry(entry),
-          mLocation(location)
+      Selection(TilePaletteEntry* entry, IntVec2 location) : mEntry(entry), mLocation(location)
       {
       }
       TilePaletteEntry* mEntry;
       IntVec2 mLocation;
     };
 
-    SelectionRange(PaletteEntryMap* paletteTiles,
-                   IntVec2 selectionStart,
-                   IntVec2 selectionEnd);
+    SelectionRange(PaletteEntryMap* paletteTiles, IntVec2 selectionStart, IntVec2 selectionEnd);
 
     bool Empty();
     Selection Front();

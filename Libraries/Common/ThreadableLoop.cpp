@@ -4,9 +4,7 @@
 namespace Zero
 {
 
-ThreadableLoop::ThreadableLoop(StringParam threadName) :
-    mResult(0),
-    mCompleted(false)
+ThreadableLoop::ThreadableLoop(StringParam threadName) : mResult(0), mCompleted(false)
 {
   if (ThreadingEnabled)
     mThread.Initialize(&ThreadableLoop::ThreadFunction, this, threadName);

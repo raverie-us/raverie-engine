@@ -149,8 +149,7 @@ public:
   void Search(SearchData& search) override;
   String GetElementType(SearchViewResult& element) override;
   void RunCommand(SearchView* searchView, SearchViewResult& element) override;
-  Composite* CreatePreview(Composite* parent,
-                           SearchViewResult& element) override;
+  Composite* CreatePreview(Composite* parent, SearchViewResult& element) override;
 
   void FilterAddCommand(SearchData& search, Command* command);
 
@@ -185,9 +184,7 @@ public:
   Command* CreateFromName(StringParam name);
 
   /// Creates a command by name with a executer (callback).
-  Command* AddCommand(StringParam commandName,
-                      CommandExecuter* executer,
-                      bool readOnly = false);
+  Command* AddCommand(StringParam commandName, CommandExecuter* executer, bool readOnly = false);
   void AddCommand(Command* command);
   /// Finds a command by name.
   Command* GetCommand(StringParam name);
@@ -202,30 +199,17 @@ public:
   bool TestCommandKeyboardShortcuts(KeyboardEvent* event);
   /// Check to see if command has already registered a valid shortcut by string.
   bool IsShortcutReserved(StringParam validShortcut);
-  bool IsShortcutReserved(
-      bool ctrl, bool alt, bool shift, StringParam validKey, Command** out);
+  bool IsShortcutReserved(bool ctrl, bool alt, bool shift, StringParam validKey, Command** out);
 
   bool ClearCommandShortcut(Command* command, bool sendEvents = false);
 
-  bool UpdateCommandShortcut(StringParam commandName,
-                             bool ctrl,
-                             bool alt,
-                             bool shift,
-                             StringParam key,
-                             bool sendEvents = false);
-  bool UpdateCommandShortcut(Command* command,
-                             bool ctrl,
-                             bool alt,
-                             bool shift,
-                             StringParam key,
-                             bool sendEvents = false);
+  bool UpdateCommandShortcut(
+      StringParam commandName, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents = false);
+  bool
+  UpdateCommandShortcut(Command* command, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents = false);
 
-  bool UpdateCommandTags(StringParam commandName,
-                         StringParam tags,
-                         bool sendEvents = false);
-  bool UpdateCommandTags(Command* command,
-                         StringParam tags,
-                         bool sendEvents = false);
+  bool UpdateCommandTags(StringParam commandName, StringParam tags, bool sendEvents = false);
+  bool UpdateCommandTags(Command* command, StringParam tags, bool sendEvents = false);
 
   SearchProvider* GetCommandSearchProvider();
 

@@ -12,8 +12,7 @@ ZilchDefineType(ObjectStore, builder, type)
 
   ZilchBindGetter(EntryCount);
 
-  ZilchBindMethodAs(IsEntryStored, "IsStored")
-      ->AddAttribute(DeprecatedAttribute);
+  ZilchBindMethodAs(IsEntryStored, "IsStored")->AddAttribute(DeprecatedAttribute);
   ZilchBindMethod(IsEntryStored);
   ZilchBindMethod(GetEntryAt);
   ZilchBindMethod(Store);
@@ -26,8 +25,7 @@ ZilchDefineType(ObjectStore, builder, type)
 
 void ObjectStore::SetStoreName(StringParam storeName)
 {
-  String storePath =
-      FilePath::Combine(GetUserDocumentsDirectory(), "Zero", storeName);
+  String storePath = FilePath::Combine(GetUserDocumentsDirectory(), "Zero", storeName);
   if (DirectoryExists(storePath))
     PopulateEntries(storePath);
 
@@ -42,8 +40,7 @@ void ObjectStore::SetupDirectory()
     // Build the paths and create the directory to contain stored objects.
 
     // In User documents create a folder call Zero.
-    String storePath =
-        FilePath::Combine(GetUserDocumentsDirectory(), "Zero", mStoreName);
+    String storePath = FilePath::Combine(GetUserDocumentsDirectory(), "Zero", mStoreName);
 
     CreateDirectoryAndParents(storePath);
 
@@ -118,8 +115,7 @@ String ObjectStore::GetDirectoryPath()
 // Store an object.
 StoreResult::Enum ObjectStore::Store(StringParam name, Cog* object)
 {
-  ReturnIf(
-      object == nullptr, StoreResult::Failed, "Can not store null object.");
+  ReturnIf(object == nullptr, StoreResult::Failed, "Can not store null object.");
 
   String storeFile = GetFile(name);
 
@@ -151,8 +147,7 @@ StoreResult::Enum ObjectStore::Store(StringParam name, Cog* object)
   }
   else
   {
-    ZPrintFilter(
-        Filter::DefaultFilter, "Failed to store object %s", name.c_str());
+    ZPrintFilter(Filter::DefaultFilter, "Failed to store object %s", name.c_str());
     return StoreResult::Failed;
   }
 
@@ -183,9 +178,7 @@ Cog* ObjectStore::Restore(StringParam name, Space* space)
   return nullptr;
 }
 
-Cog* ObjectStore::RestoreOrArchetype(StringParam name,
-                                     Archetype* archetype,
-                                     Space* space)
+Cog* ObjectStore::RestoreOrArchetype(StringParam name, Archetype* archetype, Space* space)
 {
   Cog* cog = Restore(name, space);
 
@@ -195,8 +188,7 @@ Cog* ObjectStore::RestoreOrArchetype(StringParam name,
     cog = space->Create(archetype);
     if (cog == nullptr)
     {
-      ZPrintFilter(
-          Filter::DefaultFilter, "Failed to restore object %s", name.c_str());
+      ZPrintFilter(Filter::DefaultFilter, "Failed to restore object %s", name.c_str());
     }
   }
 
@@ -212,10 +204,8 @@ void ObjectStore::Erase(StringParam name)
   if (FileExists(storeFile))
   {
     // Get the path to where we're moving the file to (in the trash directory)
-    String trashDirectory =
-        FilePath::Combine(GetUserDocumentsDirectory(), "Zero", "Trash");
-    String fileDestination =
-        FilePath::Combine(trashDirectory, BuildString(name, ".Data"));
+    String trashDirectory = FilePath::Combine(GetUserDocumentsDirectory(), "Zero", "Trash");
+    String fileDestination = FilePath::Combine(trashDirectory, BuildString(name, ".Data"));
 
     // Create the trash directory if it doesn't exist
     CreateDirectoryAndParents(trashDirectory);
@@ -233,8 +223,7 @@ void ObjectStore::ClearStore()
   mEntries.Clear();
 
   SetupDirectory();
-  String trashDirectory =
-      FilePath::Combine(GetUserDocumentsDirectory(), "Zero", "Trash");
+  String trashDirectory = FilePath::Combine(GetUserDocumentsDirectory(), "Zero", "Trash");
 
   MoveFolderContents(trashDirectory, mStorePath);
   PersistFiles();

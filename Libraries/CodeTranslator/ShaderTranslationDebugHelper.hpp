@@ -45,9 +45,7 @@ public:
   ShaderTranslationEntry()
   {
   }
-  ShaderTranslationEntry(Lexer::Enum lexerType,
-                         StringParam name,
-                         StringParam value);
+  ShaderTranslationEntry(Lexer::Enum lexerType, StringParam name, StringParam value);
   String ToString(bool shortFormat = false) const;
 
   // The name of this entry (typically the fragment name or something like
@@ -72,8 +70,7 @@ public:
 
 private:
   // Helper to create a search view with tags
-  SearchView* CreateSearchView(SearchProvider* searchProvider,
-                               Array<String>& hiddenTags);
+  SearchView* CreateSearchView(SearchProvider* searchProvider, Array<String>& hiddenTags);
   // Helper to create a search view for filtering fragments by an attribute
   SearchView* CreateFragmentSearchView(StringParam attribute);
 
@@ -93,9 +90,8 @@ private:
   void OnRunTranslation(Event* e);
   void OnScriptDisplayChanged(Event* e);
 
-  ZilchShaderIRLibraryRef
-  BuildShaderLibrary(ZilchShaderGenerator& generator,
-                     ZilchShaderIRCompositor::ShaderDefinition& shaderDef);
+  ZilchShaderIRLibraryRef BuildShaderLibrary(ZilchShaderGenerator& generator,
+                                             ZilchShaderIRCompositor::ShaderDefinition& shaderDef);
   bool CompilePipeline(ZilchShaderIRType* shaderType,
                        ShaderPipelineDescription& pipeline,
                        Array<TranslationPassResultRef>& pipelineResults,

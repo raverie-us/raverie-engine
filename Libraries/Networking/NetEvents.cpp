@@ -154,11 +154,9 @@ void BindNetEvents(LibraryBuilder& builder, BoundType* type)
 
   // Link Handshake Sequence:
   ZeroBindEvent(Events::NetPeerSentConnectRequest, NetPeerSentConnectRequest);
-  ZeroBindEvent(Events::NetPeerReceivedConnectRequest,
-                NetPeerReceivedConnectRequest);
+  ZeroBindEvent(Events::NetPeerReceivedConnectRequest, NetPeerReceivedConnectRequest);
   ZeroBindEvent(Events::NetPeerSentConnectResponse, NetPeerSentConnectResponse);
-  ZeroBindEvent(Events::NetPeerReceivedConnectResponse,
-                NetPeerReceivedConnectResponse);
+  ZeroBindEvent(Events::NetPeerReceivedConnectResponse, NetPeerReceivedConnectResponse);
 
   // Link Status:
   ZeroBindEvent(Events::NetLinkConnected, NetLinkConnected);
@@ -181,11 +179,9 @@ void BindNetEvents(LibraryBuilder& builder, BoundType* type)
 
   // User Add Handshake Sequence:
   ZeroBindEvent(Events::NetPeerSentUserAddRequest, NetPeerSentUserAddRequest);
-  ZeroBindEvent(Events::NetPeerReceivedUserAddRequest,
-                NetPeerReceivedUserAddRequest);
+  ZeroBindEvent(Events::NetPeerReceivedUserAddRequest, NetPeerReceivedUserAddRequest);
   ZeroBindEvent(Events::NetPeerSentUserAddResponse, NetPeerSentUserAddResponse);
-  ZeroBindEvent(Events::NetPeerReceivedUserAddResponse,
-                NetPeerReceivedUserAddResponse);
+  ZeroBindEvent(Events::NetPeerReceivedUserAddResponse, NetPeerReceivedUserAddResponse);
 
   // User Scope:
   ZeroBindEvent(Events::NetUserOnline, NetObjectOnline);
@@ -193,8 +189,7 @@ void BindNetEvents(LibraryBuilder& builder, BoundType* type)
 
   // Network Ownership:
   ZeroBindEvent(Events::NetUserLostObjectOwnership, NetUserLostObjectOwnership);
-  ZeroBindEvent(Events::NetUserAcquiredObjectOwnership,
-                NetUserAcquiredObjectOwnership);
+  ZeroBindEvent(Events::NetUserAcquiredObjectOwnership, NetUserAcquiredObjectOwnership);
 
   //
   // NetObject Events
@@ -208,18 +203,12 @@ void BindNetEvents(LibraryBuilder& builder, BoundType* type)
   ZeroBindEvent(Events::NetUserOwnerChanged, NetUserOwnerChanged);
 
   // Network Channel Property Change:
-  ZeroBindEvent(Events::NetChannelOutgoingPropertyInitialized,
-                NetChannelPropertyChange);
-  ZeroBindEvent(Events::NetChannelIncomingPropertyInitialized,
-                NetChannelPropertyChange);
-  ZeroBindEvent(Events::NetChannelOutgoingPropertyUninitialized,
-                NetChannelPropertyChange);
-  ZeroBindEvent(Events::NetChannelIncomingPropertyUninitialized,
-                NetChannelPropertyChange);
-  ZeroBindEvent(Events::NetChannelOutgoingPropertyChanged,
-                NetChannelPropertyChange);
-  ZeroBindEvent(Events::NetChannelIncomingPropertyChanged,
-                NetChannelPropertyChange);
+  ZeroBindEvent(Events::NetChannelOutgoingPropertyInitialized, NetChannelPropertyChange);
+  ZeroBindEvent(Events::NetChannelIncomingPropertyInitialized, NetChannelPropertyChange);
+  ZeroBindEvent(Events::NetChannelOutgoingPropertyUninitialized, NetChannelPropertyChange);
+  ZeroBindEvent(Events::NetChannelIncomingPropertyUninitialized, NetChannelPropertyChange);
+  ZeroBindEvent(Events::NetChannelOutgoingPropertyChanged, NetChannelPropertyChange);
+  ZeroBindEvent(Events::NetChannelIncomingPropertyChanged, NetChannelPropertyChange);
 
   //
   // NetEvent Events
@@ -266,8 +255,7 @@ ZilchDefineType(AcquireNetHostInfo, builder, type)
   ZilchBindFieldProperty(mReturnHostInfo);
 }
 
-AcquireNetHostInfo::AcquireNetHostInfo(GameSession* gameSession) :
-    mReturnHostInfo(gameSession)
+AcquireNetHostInfo::AcquireNetHostInfo(GameSession* gameSession) : mReturnHostInfo(gameSession)
 {
 }
 
@@ -395,8 +383,7 @@ ZilchDefineType(NetPeerReceivedConnectRequest, builder, type)
   ZilchBindFieldProperty(mReturnOurResponseBundle);
 }
 
-NetPeerReceivedConnectRequest::NetPeerReceivedConnectRequest(
-    GameSession* gameSession) :
+NetPeerReceivedConnectRequest::NetPeerReceivedConnectRequest(GameSession* gameSession) :
     mTheirIpAddress(),
     mTheirRequestBundle(gameSession),
     mTheirPendingUserAddRequestCount(0),
@@ -423,8 +410,7 @@ ZilchDefineType(NetPeerSentConnectResponse, builder, type)
   ZilchBindFieldGetterProperty(mOurResponseBundle);
 }
 
-NetPeerSentConnectResponse::NetPeerSentConnectResponse(
-    GameSession* gameSession) :
+NetPeerSentConnectResponse::NetPeerSentConnectResponse(GameSession* gameSession) :
     mTheirNetPeerId(0),
     mTheirIpAddress(),
     mTheirRequestBundle(gameSession),
@@ -452,8 +438,7 @@ ZilchDefineType(NetPeerReceivedConnectResponse, builder, type)
   ZilchBindFieldGetterProperty(mOurNetPeerId);
 }
 
-NetPeerReceivedConnectResponse::NetPeerReceivedConnectResponse(
-    GameSession* gameSession) :
+NetPeerReceivedConnectResponse::NetPeerReceivedConnectResponse(GameSession* gameSession) :
     mTheirIpAddress(),
     mOurRequestBundle(gameSession),
     mOurPendingUserAddRequestCount(0),
@@ -531,10 +516,7 @@ ZilchDefineType(NetLevelStarted, builder, type)
   ZilchBindFieldGetterProperty(mLevelName);
 }
 
-NetLevelStarted::NetLevelStarted() :
-    mGameSession(nullptr),
-    mSpace(nullptr),
-    mLevelName()
+NetLevelStarted::NetLevelStarted() : mGameSession(nullptr), mSpace(nullptr), mLevelName()
 {
 }
 
@@ -581,8 +563,7 @@ ZilchDefineType(NetPeerReceivedUserAddRequest, builder, type)
   ZilchBindFieldGetterProperty(mTheirNetUserId);
 }
 
-NetPeerReceivedUserAddRequest::NetPeerReceivedUserAddRequest(
-    GameSession* gameSession) :
+NetPeerReceivedUserAddRequest::NetPeerReceivedUserAddRequest(GameSession* gameSession) :
     mTheirNetPeerId(0),
     mTheirIpAddress(),
     mTheirRequestBundle(gameSession),
@@ -611,8 +592,7 @@ ZilchDefineType(NetPeerSentUserAddResponse, builder, type)
 }
 
 /// Constructor.
-NetPeerSentUserAddResponse::NetPeerSentUserAddResponse(
-    GameSession* gameSession) :
+NetPeerSentUserAddResponse::NetPeerSentUserAddResponse(GameSession* gameSession) :
     mTheirNetPeerId(0),
     mTheirIpAddress(),
     mTheirRequestBundle(gameSession),
@@ -639,8 +619,7 @@ ZilchDefineType(NetPeerReceivedUserAddResponse, builder, type)
   ZilchBindFieldGetterProperty(mOurNetUserId);
 }
 
-NetPeerReceivedUserAddResponse::NetPeerReceivedUserAddResponse(
-    GameSession* gameSession) :
+NetPeerReceivedUserAddResponse::NetPeerReceivedUserAddResponse(GameSession* gameSession) :
     mTheirNetPeerId(0),
     mTheirIpAddress(),
     mOurRequestBundle(gameSession),
@@ -809,8 +788,7 @@ NetHostRecordEvent::NetHostRecordEvent() : mHostRecord(nullptr)
 {
 }
 
-NetHostRecordEvent::NetHostRecordEvent(NetHostRecord* netHostRecord) :
-    mHostRecord(netHostRecord)
+NetHostRecordEvent::NetHostRecordEvent(NetHostRecord* netHostRecord) : mHostRecord(netHostRecord)
 {
 }
 

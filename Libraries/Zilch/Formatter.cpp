@@ -52,18 +52,16 @@ void ZilchCodeBuilder::WriteKeywordOrSymbol(Grammar::Enum token)
   this->Write(Grammar::GetKeywordOrSymbol(token));
 }
 
-void ZilchCodeBuilder::WriteKeywordOrSymbolSpaceStyle(
-    Grammar::Enum token,
-    SpaceStyle::Enum specific,
-    SpaceStyle::Enum globalDefault)
+void ZilchCodeBuilder::WriteKeywordOrSymbolSpaceStyle(Grammar::Enum token,
+                                                      SpaceStyle::Enum specific,
+                                                      SpaceStyle::Enum globalDefault)
 {
   // This tells us if we want to place spaces before or after (or around) the
   // token
   SpaceStyle::Enum spaceStyle = GetSpaceStyle(specific, globalDefault);
 
   // Prepend a space if we require it
-  if (spaceStyle == SpaceStyle::BeforeAndAfter ||
-      spaceStyle == SpaceStyle::Before)
+  if (spaceStyle == SpaceStyle::BeforeAndAfter || spaceStyle == SpaceStyle::Before)
   {
     this->WriteSpace();
   }
@@ -71,8 +69,7 @@ void ZilchCodeBuilder::WriteKeywordOrSymbolSpaceStyle(
   this->WriteKeywordOrSymbol(token);
 
   // Append a space if we require it
-  if (spaceStyle == SpaceStyle::BeforeAndAfter ||
-      spaceStyle == SpaceStyle::After)
+  if (spaceStyle == SpaceStyle::BeforeAndAfter || spaceStyle == SpaceStyle::After)
   {
     this->WriteSpace();
   }
@@ -128,10 +125,8 @@ void ZilchCodeBuilder::BeginScope(ScopeType::Enum scope)
 
   // For every situation, we could have a specific line or indent style, or we
   // could fall back to the global
-  LineStyle::Enum lineStyle =
-      GetLineStyle(specificLineStyle, this->Format.LineStyleGlobalDefaultScope);
-  IndentStyle::Enum indentStyle =
-      GetIndentStyle(specificIndentStyle, this->Format.IndentGlobalDefault);
+  LineStyle::Enum lineStyle = GetLineStyle(specificLineStyle, this->Format.LineStyleGlobalDefaultScope);
+  IndentStyle::Enum indentStyle = GetIndentStyle(specificIndentStyle, this->Format.IndentGlobalDefault);
 
   // It would be nice if scope was just a simple integer, however, because some
   // styles require that certain scopes are indented, and others are not, and in
@@ -193,8 +188,7 @@ void ZilchCodeBuilder::EndScope()
   this->TrimEnd();
 
   // Make sure we have scopes to end, and we didn't call this one too many times
-  ErrorIf(this->Scopes.Empty(),
-          "Attempting to pop a scope when there we're no scopes present");
+  ErrorIf(this->Scopes.Empty(), "Attempting to pop a scope when there we're no scopes present");
 
   // Get the latest scope
   ScopeStyle& scope = this->Scopes.Back();
@@ -253,8 +247,7 @@ void ZilchCodeBuilder::Write(const UserToken& token)
   this->Write(token.Token);
 }
 
-void ZilchCodeBuilder::WriteLineStyle(LineStyle::Enum specific,
-                                      LineStyle::Enum globalDefault)
+void ZilchCodeBuilder::WriteLineStyle(LineStyle::Enum specific, LineStyle::Enum globalDefault)
 {
   // Get the resulting line style
   LineStyle::Enum lineStyle = GetLineStyle(specific, globalDefault);
@@ -339,9 +332,7 @@ size_t ZilchCodeBuilder::GetLine()
   return this->Line;
 }
 
-ZilchCodeBuilder::ScopeStyle::ScopeStyle() :
-    BracesIndented(false),
-    InnardsIndented(false)
+ZilchCodeBuilder::ScopeStyle::ScopeStyle() : BracesIndented(false), InnardsIndented(false)
 {
 }
 
@@ -353,8 +344,7 @@ CodeFormatterContext::CodeFormatterContext()
 {
 }
 
-LineStyle::Enum ZilchCodeBuilder::GetLineStyle(LineStyle::Enum specific,
-                                               LineStyle::Enum globalDefault)
+LineStyle::Enum ZilchCodeBuilder::GetLineStyle(LineStyle::Enum specific, LineStyle::Enum globalDefault)
 {
   ErrorIf(globalDefault == LineStyle::UseGlobalDefault,
           "The global default cannot be set to 'LineStyle::UseGlobalDefault'");
@@ -370,12 +360,10 @@ LineStyle::Enum ZilchCodeBuilder::GetLineStyle(LineStyle::Enum specific,
   return globalDefault;
 }
 
-IndentStyle::Enum ZilchCodeBuilder::GetIndentStyle(
-    IndentStyle::Enum specific, IndentStyle::Enum globalDefault)
+IndentStyle::Enum ZilchCodeBuilder::GetIndentStyle(IndentStyle::Enum specific, IndentStyle::Enum globalDefault)
 {
-  ErrorIf(
-      globalDefault == IndentStyle::UseGlobalDefault,
-      "The global default cannot be set to 'IndentStyle::UseGlobalDefault'");
+  ErrorIf(globalDefault == IndentStyle::UseGlobalDefault,
+          "The global default cannot be set to 'IndentStyle::UseGlobalDefault'");
 
   // Return the specific indent style as long as it's not falling back on the
   // default
@@ -388,8 +376,7 @@ IndentStyle::Enum ZilchCodeBuilder::GetIndentStyle(
   return globalDefault;
 }
 
-SpaceStyle::Enum ZilchCodeBuilder::GetSpaceStyle(SpaceStyle::Enum specific,
-                                                 SpaceStyle::Enum globalDefault)
+SpaceStyle::Enum ZilchCodeBuilder::GetSpaceStyle(SpaceStyle::Enum specific, SpaceStyle::Enum globalDefault)
 {
   ErrorIf(globalDefault == SpaceStyle::UseGlobalDefault,
           "The global default cannot be set to 'SpaceStyle::UseGlobalDefault'");
@@ -411,8 +398,7 @@ CodeFormatter::CodeFormatter()
 
   this->Walker.Register(&CodeFormatter::FormatBinaryOperator);
   this->Walker.Register(&CodeFormatter::FormatUnaryOperator);
-  this->Walker.RegisterDerived<PropertyDelegateOperatorNode>(
-      &CodeFormatter::FormatUnaryOperator);
+  this->Walker.RegisterDerived<PropertyDelegateOperatorNode>(&CodeFormatter::FormatUnaryOperator);
   this->Walker.Register(&CodeFormatter::FormatTypeCast);
   this->Walker.Register(&CodeFormatter::FormatIndexerCall);
   this->Walker.Register(&CodeFormatter::FormatFunctionCall);
@@ -442,8 +428,7 @@ CodeFormatter::CodeFormatter()
   this->Walker.Register(&CodeFormatter::FormatDestructor);
   this->Walker.Register(&CodeFormatter::FormatClass);
   // this->Walker.Register(&CodeFormatter::FormatTypeDefine);
-  this->Walker.RegisterDerived<LocalVariableReferenceNode>(
-      &CodeFormatter::FormatValue);
+  this->Walker.RegisterDerived<LocalVariableReferenceNode>(&CodeFormatter::FormatValue);
   this->Walker.Register(&CodeFormatter::FormatThrow);
   this->Walker.Register(&CodeFormatter::FormatTypeId);
   this->Walker.Register(&CodeFormatter::FormatEnumValue);
@@ -453,16 +438,14 @@ CodeFormatter::CodeFormatter()
   this->Walker.RegisterNonLeafBase(&CodeFormatter::FormatStatement);
 }
 
-String CodeFormatter::FormatTree(SyntaxTree& syntaxTree,
-                                 const CodeFormat& format)
+String CodeFormatter::FormatTree(SyntaxTree& syntaxTree, const CodeFormat& format)
 {
   // Create the context and setup the format rules
   CodeFormatterContext context;
   context.Builder.Format = format;
 
   // Get the nodes in the order they were declared
-  NodeList<SyntaxNode>& inOrderNodes =
-      syntaxTree.Root->NonTraversedNonOwnedNodesInOrder;
+  NodeList<SyntaxNode>& inOrderNodes = syntaxTree.Root->NonTraversedNonOwnedNodesInOrder;
 
   // Walk the given syntax tree and emit code for each type of node
   for (size_t i = 0; i < inOrderNodes.Size(); ++i)
@@ -494,20 +477,17 @@ bool CodeFormatter::IsDirectlyWithinScope(SyntaxNode* node)
 size_t CodeFormatter::CountAttributes(SyntaxNode* node)
 {
   // Note: This should be solved with interfaces or virtual functions
-  if (LocalVariableNode* attributeParent =
-          Type::DynamicCast<LocalVariableNode*>(node))
+  if (LocalVariableNode* attributeParent = Type::DynamicCast<LocalVariableNode*>(node))
   {
     return attributeParent->Attributes.Size();
   }
 
-  if (MemberVariableNode* attributeParent =
-          Type::DynamicCast<MemberVariableNode*>(node))
+  if (MemberVariableNode* attributeParent = Type::DynamicCast<MemberVariableNode*>(node))
   {
     return attributeParent->Attributes.Size();
   }
 
-  if (GenericFunctionNode* attributeParent =
-          Type::DynamicCast<GenericFunctionNode*>(node))
+  if (GenericFunctionNode* attributeParent = Type::DynamicCast<GenericFunctionNode*>(node))
   {
     return attributeParent->Attributes.Size();
   }
@@ -525,8 +505,7 @@ size_t CodeFormatter::CountAttributes(SyntaxNode* node)
   return 0;
 }
 
-void CodeFormatter::FormatCommentsAndLines(SyntaxNode*& node,
-                                           CodeFormatterContext* context)
+void CodeFormatter::FormatCommentsAndLines(SyntaxNode*& node, CodeFormatterContext* context)
 {
   // This will always run, even if other handlers will handle it
 
@@ -568,8 +547,7 @@ void CodeFormatter::FormatCommentsAndLines(SyntaxNode*& node,
 
     if (foundScope->LastNode != nullptr)
     {
-      lineDifference = (int)(node->Location.StartLine -
-                             foundScope->LastNode->Location.EndLine);
+      lineDifference = (int)(node->Location.StartLine - foundScope->LastNode->Location.EndLine);
     }
 
     lineDifference -= (int)node->Comments.Size();
@@ -664,8 +642,7 @@ void CodeFormatter::FormatCommentsAndLines(SyntaxNode*& node,
   context->Flags = WalkerFlags::ChildrenNotHandled;
 }
 
-void CodeFormatter::FormatDelete(DeleteNode*& node,
-                                 CodeFormatterContext* context)
+void CodeFormatter::FormatDelete(DeleteNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
 
@@ -680,8 +657,7 @@ void CodeFormatter::FormatBreak(BreakNode*& node, CodeFormatterContext* context)
   builder.WriteKeywordOrSymbol(Grammar::Break);
 }
 
-void CodeFormatter::FormatDebugBreak(DebugBreakNode*& node,
-                                     CodeFormatterContext* context)
+void CodeFormatter::FormatDebugBreak(DebugBreakNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
   builder.WriteKeywordOrSymbol(Grammar::Debug);
@@ -697,22 +673,19 @@ void CodeFormatter::FormatThrow(ThrowNode*& node, CodeFormatterContext* context)
   context->Walker->Walk(this, node->Exception, context);
 }
 
-void CodeFormatter::FormatContinue(ContinueNode*& node,
-                                   CodeFormatterContext* context)
+void CodeFormatter::FormatContinue(ContinueNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
   builder.WriteKeywordOrSymbol(Grammar::Continue);
 }
 
-void CodeFormatter::FormatForEach(ForEachNode*& node,
-                                  CodeFormatterContext* context)
+void CodeFormatter::FormatForEach(ForEachNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
   builder.WriteKeywordOrSymbol(Grammar::ForEach);
 
   // HACK, this needs a space style!
-  builder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::Before);
+  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::Before);
 
   if (node->NonTraversedVariable != nullptr)
   {
@@ -731,8 +704,7 @@ void CodeFormatter::FormatForEach(ForEachNode*& node,
   }
 
   // HACK, this needs a space style!
-  builder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
+  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
 
   builder.BeginScope(ScopeType::Block);
   context->Walker->Walk(this, node->Statements, context);
@@ -745,8 +717,7 @@ void CodeFormatter::FormatFor(ForNode*& node, CodeFormatterContext* context)
   builder.WriteKeywordOrSymbol(Grammar::For);
 
   // HACK, this needs a space style!
-  builder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::Before);
+  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::Before);
 
   if (node->Initialization != nullptr)
   {
@@ -761,9 +732,7 @@ void CodeFormatter::FormatFor(ForNode*& node, CodeFormatterContext* context)
   }
 
   // HACK, this needs a space style!
-  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::StatementSeparator,
-                                         SpaceStyle::UseGlobalDefault,
-                                         SpaceStyle::After);
+  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::StatementSeparator, SpaceStyle::UseGlobalDefault, SpaceStyle::After);
 
   if (node->Condition != nullptr)
   {
@@ -771,9 +740,7 @@ void CodeFormatter::FormatFor(ForNode*& node, CodeFormatterContext* context)
   }
 
   // HACK, this needs a space style!
-  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::StatementSeparator,
-                                         SpaceStyle::UseGlobalDefault,
-                                         SpaceStyle::After);
+  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::StatementSeparator, SpaceStyle::UseGlobalDefault, SpaceStyle::After);
 
   if (node->Iterator != nullptr)
   {
@@ -781,16 +748,14 @@ void CodeFormatter::FormatFor(ForNode*& node, CodeFormatterContext* context)
   }
 
   // HACK, this needs a space style!
-  builder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
+  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
 
   builder.BeginScope(ScopeType::Block);
   context->Walker->Walk(this, node->Statements, context);
   builder.EndScope();
 }
 
-void CodeFormatter::FormatDoWhile(DoWhileNode*& node,
-                                  CodeFormatterContext* context)
+void CodeFormatter::FormatDoWhile(DoWhileNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
 
@@ -805,12 +770,10 @@ void CodeFormatter::FormatDoWhile(DoWhileNode*& node,
   builder.WriteKeywordOrSymbol(Grammar::While);
 
   // HACK, this needs a space style!
-  builder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::Before);
+  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::Before);
   context->Walker->Walk(this, node->Condition, context);
   // HACK, this needs a space style!
-  builder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
+  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
 }
 
 void CodeFormatter::FormatLoop(LoopNode*& node, CodeFormatterContext* context)
@@ -830,12 +793,10 @@ void CodeFormatter::FormatWhile(WhileNode*& node, CodeFormatterContext* context)
   builder.WriteKeywordOrSymbol(Grammar::While);
 
   // HACK, this needs a space style!
-  builder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::Before);
+  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::Before);
   context->Walker->Walk(this, node->Condition, context);
   // HACK, this needs a space style!
-  builder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
+  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
 
   builder.BeginScope(ScopeType::Block);
   context->Walker->Walk(this, node->Statements, context);
@@ -860,12 +821,10 @@ void CodeFormatter::FormatIf(IfNode*& node, CodeFormatterContext* context)
 
     builder.WriteKeywordOrSymbol(Grammar::If);
     // HACK, this needs a space style!
-    builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::Before);
+    builder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::Before);
     context->Walker->Walk(this, node->Condition, context);
     // HACK, this needs a space style!
-    builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
+    builder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
   }
 
   builder.BeginScope(ScopeType::Block);
@@ -873,8 +832,7 @@ void CodeFormatter::FormatIf(IfNode*& node, CodeFormatterContext* context)
   builder.EndScope();
 }
 
-void CodeFormatter::FormatReturn(ReturnNode*& node,
-                                 CodeFormatterContext* context)
+void CodeFormatter::FormatReturn(ReturnNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
 
@@ -887,8 +845,7 @@ void CodeFormatter::FormatReturn(ReturnNode*& node,
   }
 }
 
-void CodeFormatter::FormatTypeId(TypeIdNode*& node,
-                                 CodeFormatterContext* context)
+void CodeFormatter::FormatTypeId(TypeIdNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
   builder.WriteKeywordOrSymbol(Grammar::TypeId);
@@ -910,8 +867,7 @@ void CodeFormatter::FormatTypeId(TypeIdNode*& node,
   builder.WriteKeywordOrSymbol(Grammar::EndFunctionCall);
 }
 
-void CodeFormatter::FormatStringInterpolant(StringInterpolantNode*& node,
-                                            CodeFormatterContext* context)
+void CodeFormatter::FormatStringInterpolant(StringInterpolantNode*& node, CodeFormatterContext* context)
 {
   // The string interpolant doesn't really need to do anything,
   // just walk it's children (which are expressions and string literals)
@@ -924,43 +880,37 @@ void CodeFormatter::FormatValue(ValueNode*& node, CodeFormatterContext* context)
   builder.Write(node->Value.Token);
 }
 
-void CodeFormatter::FormatUnaryOperator(UnaryOperatorNode*& node,
-                                        CodeFormatterContext* context)
+void CodeFormatter::FormatUnaryOperator(UnaryOperatorNode*& node, CodeFormatterContext* context)
 {
   // Note: Our formatter makes the assumption that all unary operators are to
   // the left
   ZilchCodeBuilder& builder = context->Builder;
 
   // HACK, this needs a space style!
-  builder.WriteKeywordOrSymbolSpaceStyle(
-      node->Operator->TokenId, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
+  builder.WriteKeywordOrSymbolSpaceStyle(node->Operator->TokenId, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
   context->Walker->Walk(this, node->Operand, context);
 }
 
-void CodeFormatter::FormatTypeCast(TypeCastNode*& node,
-                                   CodeFormatterContext* context)
+void CodeFormatter::FormatTypeCast(TypeCastNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
 
   context->Walker->Walk(this, node->Operand, context);
 
   // HACK, this needs a space style!
-  builder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::As, SpaceStyle::UseGlobalDefault, SpaceStyle::BeforeAndAfter);
+  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::As, SpaceStyle::UseGlobalDefault, SpaceStyle::BeforeAndAfter);
 
   builder.Write(node->Type->ToString());
 }
 
-void CodeFormatter::FormatIndexerCall(IndexerCallNode*& node,
-                                      CodeFormatterContext* context)
+void CodeFormatter::FormatIndexerCall(IndexerCallNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
 
   context->Walker->Walk(this, node->LeftOperand, context);
 
   // HACK, this needs a space style!
-  builder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::BeginIndex, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
+  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginIndex, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
 
   for (size_t i = 0; i < node->Arguments.Size(); ++i)
   {
@@ -973,19 +923,15 @@ void CodeFormatter::FormatIndexerCall(IndexerCallNode*& node,
     {
       // HACK, this needs a space style!
       builder.WriteKeywordOrSymbolSpaceStyle(
-          Grammar::ArgumentSeparator,
-          SpaceStyle::UseGlobalDefault,
-          builder.Format.SpaceStyleGlobalDefaultComma);
+          Grammar::ArgumentSeparator, SpaceStyle::UseGlobalDefault, builder.Format.SpaceStyleGlobalDefaultComma);
     }
   }
 
   // HACK, this needs a space style!
-  builder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::EndIndex, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
+  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndIndex, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
 }
 
-void CodeFormatter::FormatBinaryOperator(BinaryOperatorNode*& node,
-                                         CodeFormatterContext* context)
+void CodeFormatter::FormatBinaryOperator(BinaryOperatorNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
 
@@ -993,16 +939,14 @@ void CodeFormatter::FormatBinaryOperator(BinaryOperatorNode*& node,
   // with a higher precedence
   bool needsGroup = false;
 
-  BinaryOperatorNode* parentBinOp =
-      Type::DynamicCast<BinaryOperatorNode*>(node->Parent);
+  BinaryOperatorNode* parentBinOp = Type::DynamicCast<BinaryOperatorNode*>(node->Parent);
   if (parentBinOp != nullptr)
   {
     Shared& shared = Shared::GetInstance();
 
-    UntypedOperator ourPrecedence = shared.GetOperatorPrecedence(
-        node->Operator->TokenId, OperatorArity::Binary);
-    UntypedOperator parentPrecedence = shared.GetOperatorPrecedence(
-        parentBinOp->Operator->TokenId, OperatorArity::Binary);
+    UntypedOperator ourPrecedence = shared.GetOperatorPrecedence(node->Operator->TokenId, OperatorArity::Binary);
+    UntypedOperator parentPrecedence =
+        shared.GetOperatorPrecedence(parentBinOp->Operator->TokenId, OperatorArity::Binary);
 
     // If the parent has a higher precedence, then we need to wrap ourselves in
     // a group Note: Higher precedence is denoted by a lower number, which is
@@ -1041,8 +985,7 @@ void CodeFormatter::FormatBinaryOperator(BinaryOperatorNode*& node,
   if (needsGroup)
   {
     // HACK, this needs a space style!
-    builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
+    builder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
   }
 
   context->Walker->Walk(this, node->LeftOperand, context);
@@ -1051,30 +994,26 @@ void CodeFormatter::FormatBinaryOperator(BinaryOperatorNode*& node,
 
   // HACK, maybe every operator needs it's own spacing, or access operators have
   // a special mode
-  if (node->Operator->TokenId == Grammar::Access ||
-      node->Operator->TokenId == Grammar::DynamicAccess ||
+  if (node->Operator->TokenId == Grammar::Access || node->Operator->TokenId == Grammar::DynamicAccess ||
       node->Operator->TokenId == Grammar::NonVirtualAccess)
   {
     globalOperatorSpaceStyle = SpaceStyle::None;
   }
 
   // HACK, this needs a space style!
-  builder.WriteKeywordOrSymbolSpaceStyle(node->Operator->TokenId,
-                                         SpaceStyle::UseGlobalDefault,
-                                         globalOperatorSpaceStyle);
+  builder.WriteKeywordOrSymbolSpaceStyle(
+      node->Operator->TokenId, SpaceStyle::UseGlobalDefault, globalOperatorSpaceStyle);
 
   context->Walker->Walk(this, node->RightOperand, context);
 
   if (needsGroup)
   {
     // HACK, this needs a space style!
-    builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
+    builder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
   }
 }
 
-void CodeFormatter::FormatStatement(StatementNode*& node,
-                                    CodeFormatterContext* context)
+void CodeFormatter::FormatStatement(StatementNode*& node, CodeFormatterContext* context)
 {
   // This will always run, even if other handlers will handle it
 
@@ -1117,9 +1056,7 @@ void CodeFormatter::FormatClass(ClassNode*& node, CodeFormatterContext* context)
   if (node->Inheritance.Empty() == false)
   {
     builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::Inheritance,
-        builder.Format.SpaceStyleInheritanceColon,
-        builder.Format.SpaceStyleGlobalDefaultColon);
+        Grammar::Inheritance, builder.Format.SpaceStyleInheritanceColon, builder.Format.SpaceStyleGlobalDefaultColon);
 
     for (size_t i = 0; i < node->Inheritance.Size(); ++i)
     {
@@ -1130,10 +1067,9 @@ void CodeFormatter::FormatClass(ClassNode*& node, CodeFormatterContext* context)
       bool isNotLast = (i != (node->Inheritance.Size() - 1));
       if (isNotLast)
       {
-        builder.WriteKeywordOrSymbolSpaceStyle(
-            Grammar::ArgumentSeparator,
-            builder.Format.SpaceStyleInheritanceComma,
-            builder.Format.SpaceStyleGlobalDefaultComma);
+        builder.WriteKeywordOrSymbolSpaceStyle(Grammar::ArgumentSeparator,
+                                               builder.Format.SpaceStyleInheritanceComma,
+                                               builder.Format.SpaceStyleGlobalDefaultComma);
       }
     }
   }
@@ -1154,8 +1090,7 @@ void CodeFormatter::FormatClass(ClassNode*& node, CodeFormatterContext* context)
   builder.EndScope();
 }
 
-void CodeFormatter::FormatAttributes(NodeList<AttributeNode>& attributes,
-                                     ZilchCodeBuilder& builder)
+void CodeFormatter::FormatAttributes(NodeList<AttributeNode>& attributes, ZilchCodeBuilder& builder)
 {
   if (attributes.Empty() == false)
   {
@@ -1194,9 +1129,7 @@ void CodeFormatter::FormatEnum(EnumNode*& node, CodeFormatterContext* context)
   if (node->Inheritance != nullptr)
   {
     builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::Inheritance,
-        builder.Format.SpaceStyleInheritanceColon,
-        builder.Format.SpaceStyleGlobalDefaultColon);
+        Grammar::Inheritance, builder.Format.SpaceStyleInheritanceColon, builder.Format.SpaceStyleGlobalDefaultColon);
 
     builder.Write(node->Inheritance->ToString());
   }
@@ -1215,8 +1148,7 @@ void CodeFormatter::FormatEnum(EnumNode*& node, CodeFormatterContext* context)
   builder.EndScope();
 }
 
-void CodeFormatter::FormatEnumValue(EnumValueNode*& node,
-                                    CodeFormatterContext* context)
+void CodeFormatter::FormatEnumValue(EnumValueNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
   builder.WriteLineIndented();
@@ -1225,9 +1157,8 @@ void CodeFormatter::FormatEnumValue(EnumValueNode*& node,
   if (node->Value != nullptr)
   {
     // HACK, needs space style
-    builder.WriteKeywordOrSymbolSpaceStyle(Grammar::Assignment,
-                                           SpaceStyle::UseGlobalDefault,
-                                           SpaceStyle::BeforeAndAfter);
+    builder.WriteKeywordOrSymbolSpaceStyle(
+        Grammar::Assignment, SpaceStyle::UseGlobalDefault, SpaceStyle::BeforeAndAfter);
     builder.Write(node->Value->Token);
   }
 }
@@ -1250,19 +1181,16 @@ void CodeFormatter::FormatGenericFunctionHelper(NodeType* node,
     builder.Write(parameter->Name);
 
     builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::TypeSpecifier,
-        builder.Format.SpaceStyleTypeColon,
-        builder.Format.SpaceStyleGlobalDefaultColon);
+        Grammar::TypeSpecifier, builder.Format.SpaceStyleTypeColon, builder.Format.SpaceStyleGlobalDefaultColon);
 
     builder.Write(parameter->ResultSyntaxType->ToString());
 
     bool isNotLast = (i != (node->Parameters.Size() - 1));
     if (isNotLast)
     {
-      builder.WriteKeywordOrSymbolSpaceStyle(
-          Grammar::ArgumentSeparator,
-          builder.Format.SpaceStyleFunctionDefinitionParameterComma,
-          builder.Format.SpaceStyleGlobalDefaultComma);
+      builder.WriteKeywordOrSymbolSpaceStyle(Grammar::ArgumentSeparator,
+                                             builder.Format.SpaceStyleFunctionDefinitionParameterComma,
+                                             builder.Format.SpaceStyleGlobalDefaultComma);
     }
   }
 
@@ -1287,16 +1215,13 @@ void FormatFunctionPostArgs(FunctionNode* node, ZilchCodeBuilder& builder)
   if (node->ReturnType != nullptr)
   {
     builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::TypeSpecifier,
-        builder.Format.SpaceStyleTypeColon,
-        builder.Format.SpaceStyleGlobalDefaultColon);
+        Grammar::TypeSpecifier, builder.Format.SpaceStyleTypeColon, builder.Format.SpaceStyleGlobalDefaultColon);
 
     builder.Write(node->ReturnType->ToString());
   }
 }
 
-void CodeFormatter::FormatFunction(FunctionNode*& node,
-                                   CodeFormatterContext* context)
+void CodeFormatter::FormatFunction(FunctionNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
 
@@ -1316,8 +1241,7 @@ void FormatConstructorPostArgs(ConstructorNode* node, ZilchCodeBuilder& builder)
 {
 }
 
-void CodeFormatter::FormatConstructor(ConstructorNode*& node,
-                                      CodeFormatterContext* context)
+void CodeFormatter::FormatConstructor(ConstructorNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
 
@@ -1330,8 +1254,7 @@ void CodeFormatter::FormatConstructor(ConstructorNode*& node,
   this->FormatGenericFunctionHelper(node, context, FormatConstructorPostArgs);
 }
 
-void CodeFormatter::FormatSendsEvent(SendsEventNode*& node,
-                                     CodeFormatterContext* context)
+void CodeFormatter::FormatSendsEvent(SendsEventNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
 
@@ -1340,9 +1263,7 @@ void CodeFormatter::FormatSendsEvent(SendsEventNode*& node,
   builder.WriteSpace();
   builder.Write(node->Name->Token);
   builder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::TypeSpecifier,
-      builder.Format.SpaceStyleNamedArgumentColon,
-      builder.Format.SpaceStyleGlobalDefaultColon);
+      Grammar::TypeSpecifier, builder.Format.SpaceStyleNamedArgumentColon, builder.Format.SpaceStyleGlobalDefaultColon);
   builder.Write(node->EventType->ToString());
   builder.WriteKeywordOrSymbol(Grammar::StatementSeparator);
 }
@@ -1351,8 +1272,7 @@ void FormatDestructorPostArgs(DestructorNode* node, ZilchCodeBuilder& builder)
 {
 }
 
-void CodeFormatter::FormatDestructor(DestructorNode*& node,
-                                     CodeFormatterContext* context)
+void CodeFormatter::FormatDestructor(DestructorNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
 
@@ -1364,8 +1284,7 @@ void CodeFormatter::FormatDestructor(DestructorNode*& node,
   this->FormatGenericFunctionHelper(node, context, FormatDestructorPostArgs);
 }
 
-void CodeFormatter::FormatFunctionCall(FunctionCallNode*& node,
-                                       CodeFormatterContext* context)
+void CodeFormatter::FormatFunctionCall(FunctionCallNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
 
@@ -1383,10 +1302,9 @@ void CodeFormatter::FormatFunctionCall(FunctionCallNode*& node,
       String& name = node->ArgumentNames[i];
       builder.Write(name);
 
-      builder.WriteKeywordOrSymbolSpaceStyle(
-          Grammar::TypeSpecifier,
-          builder.Format.SpaceStyleNamedArgumentColon,
-          builder.Format.SpaceStyleGlobalDefaultColon);
+      builder.WriteKeywordOrSymbolSpaceStyle(Grammar::TypeSpecifier,
+                                             builder.Format.SpaceStyleNamedArgumentColon,
+                                             builder.Format.SpaceStyleGlobalDefaultColon);
     }
 
     context->Walker->Walk(this, expression, context);
@@ -1394,10 +1312,9 @@ void CodeFormatter::FormatFunctionCall(FunctionCallNode*& node,
     bool isNotLast = (i != (node->Arguments.Size() - 1));
     if (isNotLast)
     {
-      builder.WriteKeywordOrSymbolSpaceStyle(
-          Grammar::ArgumentSeparator,
-          builder.Format.SpaceStyleFunctionCallParameterComma,
-          builder.Format.SpaceStyleGlobalDefaultComma);
+      builder.WriteKeywordOrSymbolSpaceStyle(Grammar::ArgumentSeparator,
+                                             builder.Format.SpaceStyleFunctionCallParameterComma,
+                                             builder.Format.SpaceStyleGlobalDefaultComma);
     }
   }
 
@@ -1405,8 +1322,7 @@ void CodeFormatter::FormatFunctionCall(FunctionCallNode*& node,
   builder.WriteKeywordOrSymbol(Grammar::EndFunctionCall);
 }
 
-void CodeFormatter::FormatMemberAccess(MemberAccessNode*& node,
-                                       CodeFormatterContext* context)
+void CodeFormatter::FormatMemberAccess(MemberAccessNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
 
@@ -1415,8 +1331,7 @@ void CodeFormatter::FormatMemberAccess(MemberAccessNode*& node,
   builder.Write(node->Name);
 }
 
-void CodeFormatter::FormatMemberVariable(MemberVariableNode*& node,
-                                         CodeFormatterContext* context)
+void CodeFormatter::FormatMemberVariable(MemberVariableNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
   this->FormatAttributes(node->Attributes, builder);
@@ -1429,9 +1344,7 @@ void CodeFormatter::FormatMemberVariable(MemberVariableNode*& node,
   if (node->IsInferred() == false)
   {
     builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::TypeSpecifier,
-        builder.Format.SpaceStyleTypeColon,
-        builder.Format.SpaceStyleGlobalDefaultColon);
+        Grammar::TypeSpecifier, builder.Format.SpaceStyleTypeColon, builder.Format.SpaceStyleGlobalDefaultColon);
     builder.Write(node->ResultSyntaxType->ToString());
   }
 
@@ -1468,28 +1381,23 @@ void CodeFormatter::FormatMemberVariable(MemberVariableNode*& node,
   {
     // HACK, this needs a space style!
     // PROBABLY BINARY OPERATOR SPACE STYLE
-    builder.WriteKeywordOrSymbolSpaceStyle(Grammar::Assignment,
-                                           SpaceStyle::UseGlobalDefault,
-                                           SpaceStyle::BeforeAndAfter);
+    builder.WriteKeywordOrSymbolSpaceStyle(
+        Grammar::Assignment, SpaceStyle::UseGlobalDefault, SpaceStyle::BeforeAndAfter);
     context->Walker->Walk(this, node->InitialValue, context);
     builder.WriteKeywordOrSymbol(Grammar::StatementSeparator);
   }
 }
 
-void CodeFormatter::FormatParameter(ParameterNode*& node,
-                                    CodeFormatterContext* context)
+void CodeFormatter::FormatParameter(ParameterNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
   builder.Write(node->Name);
   builder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::TypeSpecifier,
-      builder.Format.SpaceStyleTypeColon,
-      builder.Format.SpaceStyleGlobalDefaultColon);
+      Grammar::TypeSpecifier, builder.Format.SpaceStyleTypeColon, builder.Format.SpaceStyleGlobalDefaultColon);
   builder.Write(node->ResultSyntaxType->ToString());
 }
 
-void CodeFormatter::FormatLocalVariable(LocalVariableNode*& node,
-                                        CodeFormatterContext* context)
+void CodeFormatter::FormatLocalVariable(LocalVariableNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
   this->FormatAttributes(node->Attributes, builder);
@@ -1501,9 +1409,7 @@ void CodeFormatter::FormatLocalVariable(LocalVariableNode*& node,
   if (node->IsInferred() == false)
   {
     builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::TypeSpecifier,
-        builder.Format.SpaceStyleTypeColon,
-        builder.Format.SpaceStyleGlobalDefaultColon);
+        Grammar::TypeSpecifier, builder.Format.SpaceStyleTypeColon, builder.Format.SpaceStyleGlobalDefaultColon);
     builder.Write(node->ResultSyntaxType->ToString());
   }
 
@@ -1512,15 +1418,13 @@ void CodeFormatter::FormatLocalVariable(LocalVariableNode*& node,
   {
     // HACK, this needs a space style!
     // PROBABLY BINARY OPERATOR SPACE STYLE
-    builder.WriteKeywordOrSymbolSpaceStyle(Grammar::Assignment,
-                                           SpaceStyle::UseGlobalDefault,
-                                           SpaceStyle::BeforeAndAfter);
+    builder.WriteKeywordOrSymbolSpaceStyle(
+        Grammar::Assignment, SpaceStyle::UseGlobalDefault, SpaceStyle::BeforeAndAfter);
     context->Walker->Walk(this, node->InitialValue, context);
   }
 }
 
-void CodeFormatter::FormatStaticTypeNode(StaticTypeNode*& node,
-                                         CodeFormatterContext* context)
+void CodeFormatter::FormatStaticTypeNode(StaticTypeNode*& node, CodeFormatterContext* context)
 {
   ZilchCodeBuilder& builder = context->Builder;
 

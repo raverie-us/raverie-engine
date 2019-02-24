@@ -18,8 +18,7 @@ bool FileModifiedState::HasModifiedRecently(StringParam filePath)
   return HasModifiedSinceTime(filePath, Time::Clock());
 }
 
-bool FileModifiedState::HasModifiedSinceTime(StringParam filePath,
-                                             TimeType time)
+bool FileModifiedState::HasModifiedSinceTime(StringParam filePath, TimeType time)
 {
   FileModifiedState* instance = GetInstance();
   instance->mThreadLock.Lock();
@@ -29,8 +28,8 @@ bool FileModifiedState::HasModifiedSinceTime(StringParam filePath,
   String fileId = UniqueFileId(filePath);
 
   // Prefer the fileId over the file path
-  TimeType modifiedTime = instance->mFileLastModified.FindValue(
-      fileId, instance->mFileLastModified.FindValue(canonicalPath, 0));
+  TimeType modifiedTime =
+      instance->mFileLastModified.FindValue(fileId, instance->mFileLastModified.FindValue(canonicalPath, 0));
 
   instance->mThreadLock.Unlock();
 

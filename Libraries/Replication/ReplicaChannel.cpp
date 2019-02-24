@@ -6,8 +6,7 @@ namespace Zero
 
 //                               ReplicaChannel //
 
-ReplicaChannel::ReplicaChannel(const String& name,
-                               ReplicaChannelType* replicaChannelType) :
+ReplicaChannel::ReplicaChannel(const String& name, ReplicaChannelType* replicaChannelType) :
     mName(name),
     mReplicaChannelType(replicaChannelType),
     mReplica(nullptr),
@@ -155,16 +154,14 @@ bool ReplicaChannel::GetChangeFlag() const
 
 bool ReplicaChannel::HasChangedAtAll() const
 {
-  forRange(ReplicaProperty * replicaProperty,
-           GetReplicaProperties()
-               .All()) if (replicaProperty->HasChangedAtAll()) return true;
+  forRange (ReplicaProperty* replicaProperty, GetReplicaProperties().All())
+    if (replicaProperty->HasChangedAtAll())
+      return true;
 
   return false;
 }
 
-bool ReplicaChannel::ObserveAndReplicateChanges(bool forceObservation,
-                                                bool forceReplication,
-                                                bool isRelay)
+bool ReplicaChannel::ObserveAndReplicateChanges(bool forceObservation, bool forceReplication, bool isRelay)
 {
   // Get peer
   Peer* peer = GetReplicator()->GetPeer();
@@ -176,14 +173,10 @@ bool ReplicaChannel::ObserveAndReplicateChanges(bool forceObservation,
   uint64 frameId = peer->GetLocalFrameId();
 
   // Observe and replicate changes
-  return ObserveAndReplicateChanges(
-      timestamp, frameId, forceObservation, forceReplication, isRelay);
+  return ObserveAndReplicateChanges(timestamp, frameId, forceObservation, forceReplication, isRelay);
 }
-bool ReplicaChannel::ObserveAndReplicateChanges(TimeMs timestamp,
-                                                uint64 frameId,
-                                                bool forceObservation,
-                                                bool forceReplication,
-                                                bool isRelay)
+bool ReplicaChannel::ObserveAndReplicateChanges(
+    TimeMs timestamp, uint64 frameId, bool forceObservation, bool forceReplication, bool isRelay)
 {
   // Get replica channel type
   ReplicaChannelType* replicaChannelType = GetReplicaChannelType();
@@ -211,9 +204,7 @@ bool ReplicaChannel::ObserveAndReplicateChanges(TimeMs timestamp,
       // (Sanity check: We should only get here if our replica channel type's
       // authority mode is dynamic, otherwise this replica channel should not
       // have even been scheduled for change observation in the first place)
-      Assert(forceObservation ? true
-                              : (replicaChannelType->GetAuthorityMode() ==
-                                 AuthorityMode::Dynamic));
+      Assert(forceObservation ? true : (replicaChannelType->GetAuthorityMode() == AuthorityMode::Dynamic));
 
       // Success
       return true;
@@ -223,8 +214,7 @@ bool ReplicaChannel::ObserveAndReplicateChanges(TimeMs timestamp,
     if (replicator->GetRole() == Role::Client)
     {
       // Not this replica's change authority client?
-      if (replicator->GetReplicatorId() !=
-          replica->GetAuthorityClientReplicatorId())
+      if (replicator->GetReplicatorId() != replica->GetAuthorityClientReplicatorId())
         return true; // Success
     }
   }
@@ -234,16 +224,11 @@ bool ReplicaChannel::ObserveAndReplicateChanges(TimeMs timestamp,
   {
     //    Replica channel type configured to serialize on change?
     // OR Force replication?
-    if ((replicaChannelType->GetSerializationFlags() &
-         SerializationFlags::OnChange) ||
-        forceReplication)
+    if ((replicaChannelType->GetSerializationFlags() & SerializationFlags::OnChange) || forceReplication)
     {
       // Create change route (route changes to everyone except the change
       // authority client)
-      Route changeRoute = isRelay
-                              ? Route(RouteMode::Exclude,
-                                      replica->GetAuthorityClientReplicatorId())
-                              : Route::All;
+      Route changeRoute = isRelay ? Route(RouteMode::Exclude, replica->GetAuthorityClientReplicatorId()) : Route::All;
 
       // Route replica channel change
       if (!replicator->RouteChange(this, changeRoute, timestamp)) // Unable?
@@ -265,8 +250,7 @@ bool ReplicaChannel::ObserveAndReplicateChanges(TimeMs timestamp,
     SetLastChangeFrameId(frameId);
 
     // Handle changed replica channel property values
-    ReactToPropertyChanges(
-        timestamp, ReplicationPhase::Change, TransmissionDirection::Outgoing);
+    ReactToPropertyChanges(timestamp, ReplicationPhase::Change, TransmissionDirection::Outgoing);
   }
   // No change detected?
   else
@@ -278,12 +262,10 @@ bool ReplicaChannel::ObserveAndReplicateChanges(TimeMs timestamp,
       uint64 frameDurationSinceLastChange = (frameId - GetLastChangeFrameId());
 
       // Awake frame duration has elapsed since the last change was detected?
-      if (frameDurationSinceLastChange >=
-          replicaChannelType->GetAwakeDuration())
+      if (frameDurationSinceLastChange >= replicaChannelType->GetAwakeDuration())
       {
         // Determine if this replica channel is allowed to nap
-        bool allowedToNap = (replica->GetAllowNapping() &&
-                             replicaChannelType->GetAllowNapping());
+        bool allowedToNap = (replica->GetAllowNapping() && replicaChannelType->GetAllowNapping());
 
         // Allowed to nap?
         if (allowedToNap)
@@ -322,8 +304,7 @@ bool ReplicaChannel::ShouldRelay() const
   //     Is server?
   // AND Replica channel has client change authority?
   // AND Replica channel type allows change relays?
-  return GetReplicator()->GetRole() == Role::Server &&
-         GetAuthority() == Authority::Client &&
+  return GetReplicator()->GetRole() == Role::Server && GetAuthority() == Authority::Client &&
          GetReplicaChannelType()->GetAllowRelay();
 }
 
@@ -331,8 +312,7 @@ void ReplicaChannel::SetAuthority(Authority::Enum authority)
 {
   //     Already valid?
   // AND Replica channel type is using a fixed authority mode?
-  if (IsValid() &&
-      GetReplicaChannelType()->GetAuthorityMode() == AuthorityMode::Fixed)
+  if (IsValid() && GetReplicaChannelType()->GetAuthorityMode() == AuthorityMode::Fixed)
   {
     // Unable to modify authority
     Error("Unable to modify Authority - Replica channel is already valid and "
@@ -355,18 +335,14 @@ bool ReplicaChannel::HasReplicaProperty(const String& replicaPropertyName) const
 {
   return mReplicaProperties.Contains(replicaPropertyName);
 }
-const ReplicaProperty*
-ReplicaChannel::GetReplicaProperty(const String& replicaPropertyName) const
+const ReplicaProperty* ReplicaChannel::GetReplicaProperty(const String& replicaPropertyName) const
 {
-  const ReplicaProperty* result =
-      mReplicaProperties.FindValue(replicaPropertyName, ReplicaPropertyPtr());
+  const ReplicaProperty* result = mReplicaProperties.FindValue(replicaPropertyName, ReplicaPropertyPtr());
   return result;
 }
-ReplicaProperty*
-ReplicaChannel::GetReplicaProperty(const String& replicaPropertyName)
+ReplicaProperty* ReplicaChannel::GetReplicaProperty(const String& replicaPropertyName)
 {
-  const ReplicaProperty* result =
-      mReplicaProperties.FindValue(replicaPropertyName, ReplicaPropertyPtr());
+  const ReplicaProperty* result = mReplicaProperties.FindValue(replicaPropertyName, ReplicaPropertyPtr());
   return const_cast<ReplicaProperty*>(result);
 }
 const ReplicaPropertySet& ReplicaChannel::GetReplicaProperties() const
@@ -378,8 +354,7 @@ ReplicaPropertySet& ReplicaChannel::GetReplicaProperties()
   return mReplicaProperties;
 }
 
-ReplicaProperty*
-ReplicaChannel::AddReplicaProperty(ReplicaPropertyPtr replicaProperty)
+ReplicaProperty* ReplicaChannel::AddReplicaProperty(ReplicaPropertyPtr replicaProperty)
 {
   // Already valid?
   if (IsValid())
@@ -391,8 +366,7 @@ ReplicaChannel::AddReplicaProperty(ReplicaPropertyPtr replicaProperty)
   }
 
   // Add replica property
-  ReplicaPropertySet::pointer_bool_pair result =
-      mReplicaProperties.Insert(replicaProperty);
+  ReplicaPropertySet::pointer_bool_pair result = mReplicaProperties.Insert(replicaProperty);
   if (!result.second) // Unable?
   {
     Error("Replica channel already has a replica property with that name, "
@@ -419,8 +393,7 @@ bool ReplicaChannel::RemoveReplicaProperty(const String& replicaPropertyName)
   }
 
   // Remove replica property
-  ReplicaPropertySet::pointer_bool_pair result =
-      mReplicaProperties.EraseValue(replicaPropertyName);
+  ReplicaPropertySet::pointer_bool_pair result = mReplicaProperties.EraseValue(replicaPropertyName);
   return result.second;
 }
 
@@ -439,22 +412,17 @@ void ReplicaChannel::ClearReplicaProperties()
   mReplicaProperties.Clear();
 }
 
-void ReplicaChannel::ReactToPropertyChanges(
-    TimeMs timestamp,
-    ReplicationPhase::Enum replicationPhase,
-    TransmissionDirection::Enum direction,
-    bool generateNotifications,
-    bool setLastValues)
+void ReplicaChannel::ReactToPropertyChanges(TimeMs timestamp,
+                                            ReplicationPhase::Enum replicationPhase,
+                                            TransmissionDirection::Enum direction,
+                                            bool generateNotifications,
+                                            bool setLastValues)
 {
   // For all replica properties
-  forRange(ReplicaProperty * replicaProperty, GetReplicaProperties().All())
+  forRange (ReplicaProperty* replicaProperty, GetReplicaProperties().All())
   {
     // React to changes
-    replicaProperty->ReactToChanges(timestamp,
-                                    replicationPhase,
-                                    direction,
-                                    generateNotifications,
-                                    setLastValues);
+    replicaProperty->ReactToChanges(timestamp, replicationPhase, direction, generateNotifications, setLastValues);
   }
 }
 
@@ -469,7 +437,7 @@ bool ReplicaChannel::ObserveForChange()
 
   // For all replica properties
   bool propertyChanged = false;
-  forRange(ReplicaProperty * replicaProperty, GetReplicaProperties().All())
+  forRange (ReplicaProperty* replicaProperty, GetReplicaProperties().All())
   {
     // Property has changed?
     if (replicaProperty->HasChanged())
@@ -500,9 +468,7 @@ bool ReplicaChannel::ObserveForChange()
   }
 }
 
-bool ReplicaChannel::Serialize(BitStream& bitStream,
-                               ReplicationPhase::Enum replicationPhase,
-                               TimeMs timestamp) const
+bool ReplicaChannel::Serialize(BitStream& bitStream, ReplicationPhase::Enum replicationPhase, TimeMs timestamp) const
 {
   // Get replica channel type
   ReplicaChannelType* replicaChannelType = GetReplicaChannelType();
@@ -514,15 +480,14 @@ bool ReplicaChannel::Serialize(BitStream& bitStream,
   //    Serialize all replica properties?
   // OR There is only a single replica property?
   // OR Force serialization of all replica properties?
-  if (replicaChannelType->GetSerializationMode() == SerializationMode::All ||
-      GetReplicaProperties().Size() == 1 || forceAll)
+  if (replicaChannelType->GetSerializationMode() == SerializationMode::All || GetReplicaProperties().Size() == 1 ||
+      forceAll)
   {
     // For all replica properties
-    forRange(ReplicaProperty * replicaProperty, GetReplicaProperties().All())
+    forRange (ReplicaProperty* replicaProperty, GetReplicaProperties().All())
     {
       // Write replica property
-      bool result =
-          replicaProperty->Serialize(bitStream, replicationPhase, timestamp);
+      bool result = replicaProperty->Serialize(bitStream, replicationPhase, timestamp);
       if (!result) // Unable?
       {
         Assert(false);
@@ -533,11 +498,10 @@ bool ReplicaChannel::Serialize(BitStream& bitStream,
   // Serialize changed?
   else
   {
-    Assert(replicaChannelType->GetSerializationMode() ==
-           SerializationMode::Changed);
+    Assert(replicaChannelType->GetSerializationMode() == SerializationMode::Changed);
 
     // For all replica properties
-    forRange(ReplicaProperty * replicaProperty, GetReplicaProperties().All())
+    forRange (ReplicaProperty* replicaProperty, GetReplicaProperties().All())
     {
       // Write 'Has Changed?' Flag
       bool hasChanged = replicaProperty->HasChanged();
@@ -545,8 +509,7 @@ bool ReplicaChannel::Serialize(BitStream& bitStream,
       if (hasChanged) // Has changed?
       {
         // Write replica property
-        bool result =
-            replicaProperty->Serialize(bitStream, replicationPhase, timestamp);
+        bool result = replicaProperty->Serialize(bitStream, replicationPhase, timestamp);
         if (!result) // Unable?
         {
           Assert(false);
@@ -559,9 +522,7 @@ bool ReplicaChannel::Serialize(BitStream& bitStream,
   // Success
   return true;
 }
-bool ReplicaChannel::Deserialize(const BitStream& bitStream,
-                                 ReplicationPhase::Enum replicationPhase,
-                                 TimeMs timestamp)
+bool ReplicaChannel::Deserialize(const BitStream& bitStream, ReplicationPhase::Enum replicationPhase, TimeMs timestamp)
 {
   // Get replica channel type
   ReplicaChannelType* replicaChannelType = GetReplicaChannelType();
@@ -573,15 +534,14 @@ bool ReplicaChannel::Deserialize(const BitStream& bitStream,
   //    Serialize all replica properties?
   // OR There is only a single replica property?
   // OR Force serialization of all replica properties?
-  if (replicaChannelType->GetSerializationMode() == SerializationMode::All ||
-      GetReplicaProperties().Size() == 1 || forceAll)
+  if (replicaChannelType->GetSerializationMode() == SerializationMode::All || GetReplicaProperties().Size() == 1 ||
+      forceAll)
   {
     // For all replica properties
-    forRange(ReplicaProperty * replicaProperty, GetReplicaProperties().All())
+    forRange (ReplicaProperty* replicaProperty, GetReplicaProperties().All())
     {
       // Read replica property
-      bool result =
-          replicaProperty->Deserialize(bitStream, replicationPhase, timestamp);
+      bool result = replicaProperty->Deserialize(bitStream, replicationPhase, timestamp);
       if (!result) // Unable?
       {
         // Assert(false);
@@ -592,11 +552,10 @@ bool ReplicaChannel::Deserialize(const BitStream& bitStream,
   // Serialize changed?
   else
   {
-    Assert(replicaChannelType->GetSerializationMode() ==
-           SerializationMode::Changed);
+    Assert(replicaChannelType->GetSerializationMode() == SerializationMode::Changed);
 
     // For all replica properties
-    forRange(ReplicaProperty * replicaProperty, GetReplicaProperties().All())
+    forRange (ReplicaProperty* replicaProperty, GetReplicaProperties().All())
     {
       // Read 'Has Changed?' Flag
       bool hasChanged;
@@ -608,8 +567,7 @@ bool ReplicaChannel::Deserialize(const BitStream& bitStream,
       if (hasChanged) // Has changed?
       {
         // Read replica property
-        bool result = replicaProperty->Deserialize(
-            bitStream, replicationPhase, timestamp);
+        bool result = replicaProperty->Deserialize(bitStream, replicationPhase, timestamp);
         if (!result) // Unable?
         {
           // Assert(false);
@@ -678,13 +636,12 @@ void ReplicaChannelIndex::Insert(ReplicaChannel* channel)
   // Find smallest list
   ValueType* smallestChannelList = nullptr;
   size_t smallestChannelListSize = std::numeric_limits<size_t>::max();
-  forRange(ValueType & channelList,
-           mChannelLists.All()) if (channelList->first <
-                                    smallestChannelListSize)
-  {
-    smallestChannelList = &channelList;
-    smallestChannelListSize = channelList->first;
-  }
+  forRange (ValueType& channelList, mChannelLists.All())
+    if (channelList->first < smallestChannelListSize)
+    {
+      smallestChannelList = &channelList;
+      smallestChannelListSize = channelList->first;
+    }
 
   // Unable to find smallest list?
   if (!smallestChannelList)
@@ -732,9 +689,7 @@ void ReplicaChannelIndex::Remove(ReplicaChannel* channel)
 
 //                             ReplicaChannelType //
 
-ReplicaChannelType::ReplicaChannelType(const String& name) :
-    mName(name),
-    mReplicator(nullptr)
+ReplicaChannelType::ReplicaChannelType(const String& name) : mName(name), mReplicator(nullptr)
 {
   ResetConfig();
 }
@@ -826,8 +781,9 @@ void ReplicaChannelType::ObserveAndReplicateChanges()
   // Observe napping replica channels
   ObserveAndReplicateChanges(mNappingChannelIndex, timestamp, frameId);
 }
-void ReplicaChannelType::ObserveAndReplicateChanges(
-    ReplicaChannelIndex& replicaChannelIndex, TimeMs timestamp, uint64 frameId)
+void ReplicaChannelType::ObserveAndReplicateChanges(ReplicaChannelIndex& replicaChannelIndex,
+                                                    TimeMs timestamp,
+                                                    uint64 frameId)
 {
   // (Should be valid)
   Assert(IsValid());
@@ -845,8 +801,7 @@ void ReplicaChannelType::ObserveAndReplicateChanges(
     return;
 
   // Get scheduled replica channel list from index
-  ReplicaChannelList* scheduledList =
-      replicaChannelIndex.GetList(size_t(frameId % listCount));
+  ReplicaChannelList* scheduledList = replicaChannelIndex.GetList(size_t(frameId % listCount));
 
   // For all scheduled replica channels in the list
   ReplicaChannelList::range scheduledChannels = scheduledList->All();
@@ -893,8 +848,7 @@ void ReplicaChannelType::ScheduleChannel(ReplicaChannel* channel)
 
   //     Replica channel authority does not match our role?
   // AND This replica channel type uses a fixed authority mode?
-  if (uint(channel->GetAuthority()) != uint(replicator->GetRole()) &&
-      GetAuthorityMode() == AuthorityMode::Fixed)
+  if (uint(channel->GetAuthority()) != uint(replicator->GetRole()) && GetAuthorityMode() == AuthorityMode::Fixed)
   {
     // Don't schedule change observations for this channel
     return;
@@ -990,8 +944,7 @@ bool ReplicaChannelType::GetAcceptIncomingChanges() const
   return mAcceptIncomingChanges;
 }
 
-void ReplicaChannelType::SetNotifyOnOutgoingPropertyChange(
-    bool notifyOnOutgoingPropertyChange)
+void ReplicaChannelType::SetNotifyOnOutgoingPropertyChange(bool notifyOnOutgoingPropertyChange)
 {
   mNotifyOnOutgoingPropertyChange = notifyOnOutgoingPropertyChange;
 }
@@ -1000,8 +953,7 @@ bool ReplicaChannelType::GetNotifyOnOutgoingPropertyChange() const
   return mNotifyOnOutgoingPropertyChange;
 }
 
-void ReplicaChannelType::SetNotifyOnIncomingPropertyChange(
-    bool notifyOnIncomingPropertyChange)
+void ReplicaChannelType::SetNotifyOnIncomingPropertyChange(bool notifyOnIncomingPropertyChange)
 {
   mNotifyOnIncomingPropertyChange = notifyOnIncomingPropertyChange;
 }
@@ -1016,8 +968,7 @@ void ReplicaChannelType::SetAuthorityMode(AuthorityMode::Enum authorityMode)
   if (IsValid())
   {
     // Unable to modify configuration
-    Error(
-        "ReplicaChannelType is already valid, unable to modify configuration");
+    Error("ReplicaChannelType is already valid, unable to modify configuration");
     return;
   }
 
@@ -1080,14 +1031,12 @@ void ReplicaChannelType::SetAwakeDetectionInterval(uint awakeDetectionInterval)
   if (IsValid())
   {
     // Unable to modify configuration
-    Error(
-        "ReplicaChannelType is already valid, unable to modify configuration");
+    Error("ReplicaChannelType is already valid, unable to modify configuration");
     return;
   }
 
   // (Clamping within arbitrary, useful values)
-  mAwakeDetectionInterval =
-      Math::Clamp(awakeDetectionInterval, uint(1), uint(100));
+  mAwakeDetectionInterval = Math::Clamp(awakeDetectionInterval, uint(1), uint(100));
 }
 uint ReplicaChannelType::GetAwakeDetectionInterval() const
 {
@@ -1100,8 +1049,7 @@ void ReplicaChannelType::SetNapDetectionInterval(uint napDetectionInterval)
   if (IsValid())
   {
     // Unable to modify configuration
-    Error(
-        "ReplicaChannelType is already valid, unable to modify configuration");
+    Error("ReplicaChannelType is already valid, unable to modify configuration");
     return;
   }
 
@@ -1119,8 +1067,7 @@ void ReplicaChannelType::SetSerializationFlags(uint serializationFlags)
   if (IsValid())
   {
     // Unable to modify configuration
-    Error(
-        "ReplicaChannelType is already valid, unable to modify configuration");
+    Error("ReplicaChannelType is already valid, unable to modify configuration");
     return;
   }
 
@@ -1131,15 +1078,13 @@ uint ReplicaChannelType::GetSerializationFlags() const
   return mSerializationFlags;
 }
 
-void ReplicaChannelType::SetSerializationMode(
-    SerializationMode::Enum serializationMode)
+void ReplicaChannelType::SetSerializationMode(SerializationMode::Enum serializationMode)
 {
   // Already valid?
   if (IsValid())
   {
     // Unable to modify configuration
-    Error(
-        "ReplicaChannelType is already valid, unable to modify configuration");
+    Error("ReplicaChannelType is already valid, unable to modify configuration");
     return;
   }
 
@@ -1150,8 +1095,7 @@ SerializationMode::Enum ReplicaChannelType::GetSerializationMode() const
   return mSerializationMode;
 }
 
-void ReplicaChannelType::SetReliabilityMode(
-    ReliabilityMode::Enum reliabilityMode)
+void ReplicaChannelType::SetReliabilityMode(ReliabilityMode::Enum reliabilityMode)
 {
   mReliabilityMode = reliabilityMode;
 }
@@ -1166,8 +1110,7 @@ void ReplicaChannelType::SetTransferMode(TransferMode::Enum transferMode)
   if (IsValid())
   {
     // Unable to modify configuration
-    Error(
-        "ReplicaChannelType is already valid, unable to modify configuration");
+    Error("ReplicaChannelType is already valid, unable to modify configuration");
     return;
   }
 
@@ -1178,8 +1121,7 @@ TransferMode::Enum ReplicaChannelType::GetTransferMode() const
   return mTransferMode;
 }
 
-void ReplicaChannelType::SetAccurateTimestampOnChange(
-    bool accurateTimestampOnChange)
+void ReplicaChannelType::SetAccurateTimestampOnChange(bool accurateTimestampOnChange)
 {
   mAccurateTimestampOnChange = accurateTimestampOnChange;
 }

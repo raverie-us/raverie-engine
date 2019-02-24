@@ -14,27 +14,22 @@ DataDrivenLexerShared::DataDrivenLexerShared()
 {
   GrammarRule<Character>& TokenStart = this->mTokenGrammar["Start"];
   GrammarRule<Character>& Whitespace = this->mTokenGrammar["Whitespace"];
-  GrammarRule<Character>& SingleLineComment =
-      this->mTokenGrammar["SingleLineComment"];
+  GrammarRule<Character>& SingleLineComment = this->mTokenGrammar["SingleLineComment"];
   GrammarRule<Character>& Identifier = this->mTokenGrammar["Identifier"];
   GrammarRule<Character>& TokenLiteral = this->mTokenGrammar["TokenLiteral"];
   GrammarRule<Character>& StringLiteral = this->mTokenGrammar["StringLiteral"];
-  GrammarRule<Character>& IntegerLiteral =
-      this->mTokenGrammar["IntegerLiteral"];
+  GrammarRule<Character>& IntegerLiteral = this->mTokenGrammar["IntegerLiteral"];
   GrammarRule<Character>& OpenBracket = this->mTokenGrammar["OpenBracket"];
   GrammarRule<Character>& CloseBracket = this->mTokenGrammar["CloseBracket"];
   GrammarRule<Character>& OpenCurley = this->mTokenGrammar["OpenCurley"];
   GrammarRule<Character>& CloseCurley = this->mTokenGrammar["CloseCurley"];
-  GrammarRule<Character>& OpenParenthesis =
-      this->mTokenGrammar["OpenParenthesis"];
-  GrammarRule<Character>& CloseParenthesis =
-      this->mTokenGrammar["CloseParenthesis"];
+  GrammarRule<Character>& OpenParenthesis = this->mTokenGrammar["OpenParenthesis"];
+  GrammarRule<Character>& CloseParenthesis = this->mTokenGrammar["CloseParenthesis"];
   GrammarRule<Character>& Comma = this->mTokenGrammar["Comma"];
   GrammarRule<Character>& MemberAccess = this->mTokenGrammar["MemberAccess"];
   GrammarRule<Character>& Colon = this->mTokenGrammar["Colon"];
   GrammarRule<Character>& Semicolon = this->mTokenGrammar["Semicolon"];
-  GrammarRule<Character>& RewriteAssignment =
-      this->mTokenGrammar["RewriteAssignment"];
+  GrammarRule<Character>& RewriteAssignment = this->mTokenGrammar["RewriteAssignment"];
   GrammarRule<Character>& OrAssignment = this->mTokenGrammar["OrAssignment"];
   GrammarRule<Character>& ZeroOrMore = this->mTokenGrammar["ZeroOrMore"];
   GrammarRule<Character>& OneOrMore = this->mTokenGrammar["OneOrMore"];
@@ -77,18 +72,16 @@ DataDrivenLexerShared::DataDrivenLexerShared()
   this->mTokenizer = &Tokenizer;
   this->mParser = &Parser;
 
-  TokenStart |= Whitespace | SingleLineComment | Identifier | TokenLiteral |
-                StringLiteral | IntegerLiteral | OpenBracket | CloseBracket |
-                OpenCurley | CloseCurley;
-  TokenStart |= OpenParenthesis | CloseParenthesis | Comma | MemberAccess |
-                Semicolon | Colon | RewriteAssignment | OrAssignment |
-                ZeroOrMore | OneOrMore | Optional | Or | Capture | CaptureRule;
+  TokenStart |= Whitespace | SingleLineComment | Identifier | TokenLiteral | StringLiteral | IntegerLiteral |
+                OpenBracket | CloseBracket | OpenCurley | CloseCurley;
+  TokenStart |= OpenParenthesis | CloseParenthesis | Comma | MemberAccess | Semicolon | Colon | RewriteAssignment |
+                OrAssignment | ZeroOrMore | OneOrMore | Optional | Or | Capture | CaptureRule;
   Whitespace |= +T(" \t\r\n\v\f");
   SingleLineComment |= T("/") << T("/") << *T("^\r\n");
   Identifier |= T("a-zA-Z_") << *T("a-zA-Z_0-9");
   TokenLiteral |= T("<") << Identifier << T(">");
-  StringLiteral |= T("\"") << *(T("^\"\\") | T("\\") << T("^")) << T("\"") |
-                   T("\'") << *(T("^\'\\") | T("\\") << T("^")) << T("\'");
+  StringLiteral |=
+      T("\"") << *(T("^\"\\") | T("\\") << T("^")) << T("\"") | T("\'") << *(T("^\'\\") | T("\\") << T("^")) << T("\'");
   IntegerLiteral |= +T("0-9");
   OpenBracket |= T("[");
   CloseBracket |= T("]");
@@ -113,104 +106,64 @@ DataDrivenLexerShared::DataDrivenLexerShared()
   GrammarRule<Token>& Scope = this->mParserGrammar["Scope"];
   GrammarRule<Token>& Statement = this->mParserGrammar["Statement"];
   GrammarRule<Token>& IgnoreStatement = this->mParserGrammar["IgnoreStatement"];
-  GrammarRule<Token>& KeywordStatement =
-      this->mParserGrammar["KeywordStatement"];
+  GrammarRule<Token>& KeywordStatement = this->mParserGrammar["KeywordStatement"];
   GrammarRule<Token>& RuleStatement = this->mParserGrammar["RuleStatement"];
-  GrammarRule<Token>& GrammarExpression =
-      this->mParserGrammar["GrammarExpression"];
-  GrammarRule<Token>& GrammarExpressionGrouped =
-      this->mParserGrammar["GrammarExpressionGrouped"];
-  GrammarRule<Token>& GrammarExpressionCapture =
-      this->mParserGrammar["GrammarExpressionCapture"];
-  GrammarRule<Token>& GrammarExpressionCaptureRule =
-      this->mParserGrammar["GrammarExpressionCaptureRule"];
-  GrammarRule<Token>& GrammarExpressionOr =
-      this->mParserGrammar["GrammarExpressionOr"];
-  GrammarRule<Token>& GrammarExpressionConcatenate =
-      this->mParserGrammar["GrammarExpressionConcatenate"];
-  GrammarRule<Token>& GrammarExpressionUnary =
-      this->mParserGrammar["GrammarExpressionUnary"];
-  GrammarRule<Token>& GrammarExpressionValue =
-      this->mParserGrammar["GrammarExpressionValue"];
-  GrammarRule<Token>& ReplacementStatement =
-      this->mParserGrammar["ReplacementStatement"];
+  GrammarRule<Token>& GrammarExpression = this->mParserGrammar["GrammarExpression"];
+  GrammarRule<Token>& GrammarExpressionGrouped = this->mParserGrammar["GrammarExpressionGrouped"];
+  GrammarRule<Token>& GrammarExpressionCapture = this->mParserGrammar["GrammarExpressionCapture"];
+  GrammarRule<Token>& GrammarExpressionCaptureRule = this->mParserGrammar["GrammarExpressionCaptureRule"];
+  GrammarRule<Token>& GrammarExpressionOr = this->mParserGrammar["GrammarExpressionOr"];
+  GrammarRule<Token>& GrammarExpressionConcatenate = this->mParserGrammar["GrammarExpressionConcatenate"];
+  GrammarRule<Token>& GrammarExpressionUnary = this->mParserGrammar["GrammarExpressionUnary"];
+  GrammarRule<Token>& GrammarExpressionValue = this->mParserGrammar["GrammarExpressionValue"];
+  GrammarRule<Token>& ReplacementStatement = this->mParserGrammar["ReplacementStatement"];
   GrammarRule<Token>& ReplacementWith = this->mParserGrammar["ReplacementWith"];
-  GrammarRule<Token>& ReplacementUsing =
-      this->mParserGrammar["ReplacementUsing"];
-  GrammarRule<Token>& ReplacementExpression =
-      this->mParserGrammar["ReplacementExpression"];
-  GrammarRule<Token>& ReplacementExpressionConcatenate =
-      this->mParserGrammar["ReplacementExpressionConcatenate"];
-  GrammarRule<Token>& ReplacementExpressionPost =
-      this->mParserGrammar["ReplacementExpressionPost"];
-  GrammarRule<Token>& ReplacementExpressionText =
-      this->mParserGrammar["ReplacementExpressionText"];
-  GrammarRule<Token>& ReplacementExpressionJoin =
-      this->mParserGrammar["ReplacementExpressionJoin"];
-  GrammarRule<Token>& ReplacementExpressionForeach =
-      this->mParserGrammar["ReplacementExpressionForeach"];
-  GrammarRule<Token>& CaptureExpression =
-      this->mParserGrammar["CaptureExpression"];
-  GrammarRule<Token>& CaptureExpressionName =
-      this->mParserGrammar["CaptureExpressionName"];
-  GrammarRule<Token>& CaptureExpressionNestedIndex =
-      this->mParserGrammar["CaptureExpressionNestedIndex"];
+  GrammarRule<Token>& ReplacementUsing = this->mParserGrammar["ReplacementUsing"];
+  GrammarRule<Token>& ReplacementExpression = this->mParserGrammar["ReplacementExpression"];
+  GrammarRule<Token>& ReplacementExpressionConcatenate = this->mParserGrammar["ReplacementExpressionConcatenate"];
+  GrammarRule<Token>& ReplacementExpressionPost = this->mParserGrammar["ReplacementExpressionPost"];
+  GrammarRule<Token>& ReplacementExpressionText = this->mParserGrammar["ReplacementExpressionText"];
+  GrammarRule<Token>& ReplacementExpressionJoin = this->mParserGrammar["ReplacementExpressionJoin"];
+  GrammarRule<Token>& ReplacementExpressionForeach = this->mParserGrammar["ReplacementExpressionForeach"];
+  GrammarRule<Token>& CaptureExpression = this->mParserGrammar["CaptureExpression"];
+  GrammarRule<Token>& CaptureExpressionName = this->mParserGrammar["CaptureExpressionName"];
+  GrammarRule<Token>& CaptureExpressionNestedIndex = this->mParserGrammar["CaptureExpressionNestedIndex"];
 
   // Text, CaptureJoin, CaptureIteration, Concatenate
 
   ParserStart |= *Scope;
-  Scope |= (P(Tokenizer) | P(Parser))
-           << P(OpenCurley) << *Statement << P(CloseCurley);
-  Statement |=
-      IgnoreStatement | KeywordStatement | RuleStatement | ReplacementStatement;
+  Scope |= (P(Tokenizer) | P(Parser)) << P(OpenCurley) << *Statement << P(CloseCurley);
+  Statement |= IgnoreStatement | KeywordStatement | RuleStatement | ReplacementStatement;
   IgnoreStatement |= P(Ignore) << P("RuleName", P(Identifier)) << P(Semicolon);
-  KeywordStatement |= P(Keyword)
-                      << P("RuleName", P(Identifier)) << P(Colon)
-                      << P("Keyword", P(StringLiteral)) << P(Semicolon);
+  KeywordStatement |= P(Keyword) << P("RuleName", P(Identifier)) << P(Colon) << P("Keyword", P(StringLiteral))
+                                 << P(Semicolon);
   RuleStatement |= P("RuleName", P(Identifier))
-                   << P("Assignment", P(OrAssignment) | P(RewriteAssignment))
-                   << GrammarExpression << P(Semicolon);
-  GrammarExpressionGrouped |= P(OpenParenthesis)
-                              << GrammarExpression << P(CloseParenthesis);
-  GrammarExpressionCapture |= P(Capture) << P("CaptureName", P(Identifier))
-                                         << GrammarExpressionGrouped;
-  GrammarExpressionCaptureRule |= P(CaptureRule)
-                                  << P("CaptureName", P(Identifier));
+                   << P("Assignment", P(OrAssignment) | P(RewriteAssignment)) << GrammarExpression << P(Semicolon);
+  GrammarExpressionGrouped |= P(OpenParenthesis) << GrammarExpression << P(CloseParenthesis);
+  GrammarExpressionCapture |= P(Capture) << P("CaptureName", P(Identifier)) << GrammarExpressionGrouped;
+  GrammarExpressionCaptureRule |= P(CaptureRule) << P("CaptureName", P(Identifier));
   GrammarExpression |= GrammarExpressionOr;
-  GrammarExpressionOr |= GrammarExpressionConcatenate
-                         << *(P(Or) << GrammarExpressionConcatenate);
+  GrammarExpressionOr |= GrammarExpressionConcatenate << *(P(Or) << GrammarExpressionConcatenate);
   GrammarExpressionConcatenate |= +GrammarExpressionUnary;
   GrammarExpressionUnary |=
-      P("UnaryOperator", P(ZeroOrMore) | P(OneOrMore) | P(Optional))
-          << GrammarExpressionUnary |
-      GrammarExpressionValue;
-  GrammarExpressionValue |=
-      P("Value",
-        P(Identifier) | P(StringLiteral) | P(TokenLiteral) | P(Epsilon)) |
-      GrammarExpressionGrouped | GrammarExpressionCapture |
-      GrammarExpressionCaptureRule;
-  ReplacementStatement |= P(Replace) << GrammarExpression << P(In)
-                                     << P("RuleName", P(Identifier))
+      P("UnaryOperator", P(ZeroOrMore) | P(OneOrMore) | P(Optional)) << GrammarExpressionUnary | GrammarExpressionValue;
+  GrammarExpressionValue |= P("Value", P(Identifier) | P(StringLiteral) | P(TokenLiteral) | P(Epsilon)) |
+                            GrammarExpressionGrouped | GrammarExpressionCapture | GrammarExpressionCaptureRule;
+  ReplacementStatement |= P(Replace) << GrammarExpression << P(In) << P("RuleName", P(Identifier))
                                      << (ReplacementWith | ReplacementUsing);
   ReplacementWith |= P(With) << ReplacementExpression << P(Semicolon);
-  ReplacementUsing |=
-      P("Member", P(Identifier) << ~(P(MemberAccess) << P(Identifier)));
+  ReplacementUsing |= P("Member", P(Identifier) << ~(P(MemberAccess) << P(Identifier)));
   ReplacementExpression |= ReplacementExpressionConcatenate;
   ReplacementExpressionConcatenate |= +ReplacementExpressionPost;
   ReplacementExpressionPost |=
-      ReplacementExpressionText | CaptureExpression
-                                      << ~(ReplacementExpressionJoin |
-                                           ReplacementExpressionForeach);
+      ReplacementExpressionText | CaptureExpression << ~(ReplacementExpressionJoin | ReplacementExpressionForeach);
   ReplacementExpressionText |= P("ReplacementText", P(StringLiteral));
-  ReplacementExpressionJoin |= P(OpenParenthesis)
-                               << ReplacementExpression << P(CloseParenthesis);
-  ReplacementExpressionForeach |= P(OpenCurley)
-                                  << ReplacementExpression << P(CloseCurley);
+  ReplacementExpressionJoin |= P(OpenParenthesis) << ReplacementExpression << P(CloseParenthesis);
+  ReplacementExpressionForeach |= P(OpenCurley) << ReplacementExpression << P(CloseCurley);
   CaptureExpression |= CaptureExpressionName << *CaptureExpressionNestedIndex;
   CaptureExpressionName |= P("CaptureName", P(Identifier));
   CaptureExpressionNestedIndex |=
-      P(OpenBracket) << (P("StartIndex", P(IntegerLiteral)) << ~(
-                             P(Comma) << P("EndIndex", P(IntegerLiteral))) |
+      P(OpenBracket) << (P("StartIndex", P(IntegerLiteral)) << ~(P(Comma) << P("EndIndex", P(IntegerLiteral))) |
                          P("NestedCaptureName", P(Identifier)));
 
   this->mParserStart = &ParserStart;
@@ -250,8 +203,7 @@ void DataDrivenLexer::Parse(StringParam input,
 
   DataDrivenLexerShared& shared = DataDrivenLexerShared::GetInstance();
   TokenStream<> stream;
-  stream.mRange =
-      TokenRange<>(shared.mTokenGrammar, *shared.mTokenStart, input);
+  stream.mRange = TokenRange<>(shared.mTokenGrammar, *shared.mTokenStart, input);
 
   // ParseTreeBuilder<Token> parserTreeBuilder;
 
@@ -275,8 +227,7 @@ void DataDrivenLexer::Parse(StringParam input,
 void DataDrivenLexer::StartRule(GrammarRule<Token>* rule)
 {
   if (this->mMode == DataDrivenLexerMode::Tokenizer)
-    this->StartRule<Character>(
-        rule, *this->mUserTokenGrammar, this->mTokenNodes);
+    this->StartRule<Character>(rule, *this->mUserTokenGrammar, this->mTokenNodes);
   else
     this->StartRule<Token>(rule, *this->mUserParserGrammar, this->mParserNodes);
 }
@@ -309,8 +260,7 @@ void DataDrivenLexer::EndParsing()
 }
 
 template <>
-void DataDrivenLexer::AddStringLiteralNode<Character>(
-    StringParam string, Array<GrammarNode<Character>*>& nodes)
+void DataDrivenLexer::AddStringLiteralNode<Character>(StringParam string, Array<GrammarNode<Character>*>& nodes)
 {
   String literal = ReplaceStringEscapesAndStripQuotes(string);
   GrammarNode<Character>& node = T(literal);
@@ -318,16 +268,14 @@ void DataDrivenLexer::AddStringLiteralNode<Character>(
 }
 
 template <>
-void DataDrivenLexer::AddStringLiteralNode<Token>(
-    StringParam string, Array<GrammarNode<Token>*>& nodes)
+void DataDrivenLexer::AddStringLiteralNode<Token>(StringParam string, Array<GrammarNode<Token>*>& nodes)
 {
   Error("Cannot add ranges/sets in a parser (you can only use token literals)");
   nodes.PushBack(&P());
 }
 
 template <>
-void DataDrivenLexer::AddTokenLiteralNode<Character>(
-    StringParam string, Array<GrammarNode<Character>*>& nodes)
+void DataDrivenLexer::AddTokenLiteralNode<Character>(StringParam string, Array<GrammarNode<Character>*>& nodes)
 {
   Error("Cannot add token literals in a tokenizer (the tokens must come from "
         "the tokenizer, and be used in the parser)");
@@ -335,8 +283,7 @@ void DataDrivenLexer::AddTokenLiteralNode<Character>(
 }
 
 template <>
-void DataDrivenLexer::AddTokenLiteralNode<Token>(
-    StringParam string, Array<GrammarNode<Token>*>& nodes)
+void DataDrivenLexer::AddTokenLiteralNode<Token>(StringParam string, Array<GrammarNode<Token>*>& nodes)
 {
   StringRange tokenLiteral = string;
   tokenLiteral.PopFront();

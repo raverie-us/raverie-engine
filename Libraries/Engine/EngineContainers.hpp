@@ -237,8 +237,7 @@ public:
   }
 
   template <typename searchKeyType>
-  size_t GetUpperBoundFromLower(const size_t lowerBound,
-                                const searchKeyType& key)
+  size_t GetUpperBoundFromLower(const size_t lowerBound, const searchKeyType& key)
   {
     // Walk right to get the upper bound
     size_t upperBound = lowerBound;
@@ -331,9 +330,7 @@ template <typename keytype, typename valuetype>
 struct Policy<ArrayMultiMap<keytype, valuetype>>
 {
   typedef ArrayMultiMap<keytype, valuetype> containertype;
-  static inline bool Serialize(Serializer& serializer,
-                               cstr fieldName,
-                               containertype& container)
+  static inline bool Serialize(Serializer& serializer, cstr fieldName, containertype& container)
   {
     return SerializeSequenceInsert(serializer, fieldName, container);
   }

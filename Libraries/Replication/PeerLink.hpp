@@ -45,9 +45,7 @@ public:
   void ResetSession();
 
   /// Constructor
-  PeerLink(Peer* peer,
-           const IpAddress& ipAddress,
-           TransmissionDirection::Enum creationDirection);
+  PeerLink(Peer* peer, const IpAddress& ipAddress, TransmissionDirection::Enum creationDirection);
 
   /// Comparison Operators (compares their IP addresses)
   bool operator==(const PeerLink& rhs) const;
@@ -103,8 +101,7 @@ public:
 
   /// Responds to a pending connect request on the attempting connection link
   /// Returns true if a connect response was successfully initiated, else false
-  bool RespondToConnectRequest(bool accept,
-                               const BitStream& extraData = BitStream());
+  bool RespondToConnectRequest(bool accept, const BitStream& extraData = BitStream());
 
   /// Disconnects by request from the remote peer on the connected or attempting
   /// connection link Returns true if a disconnect notice was successfully
@@ -252,8 +249,7 @@ public:
 
   /// TODO: Remove this after implementing AIMD, no longer necessary
   /// Sets the outgoing packet data size left over for messages
-  void
-  SetPacketDataBytes(Bytes packetDataBytes = MaxPacketDataBytes /* ~1Mbps */);
+  void SetPacketDataBytes(Bytes packetDataBytes = MaxPacketDataBytes /* ~1Mbps */);
   /// Returns the outgoing packet data size left over for messages
   Bytes GetPacketDataBytes() const;
 
@@ -271,8 +267,7 @@ public:
   /// TODO: Remove this after implementing AIMD, no longer necessary
   /// Sets the packet sequence history range factor (packet sequence history
   /// range = send rate * packet sequence history range factor)
-  void SetPacketSequenceHistoryRangeFactor(
-      float packetSequenceHistoryRangeFactor = 2);
+  void SetPacketSequenceHistoryRangeFactor(float packetSequenceHistoryRangeFactor = 2);
   /// Returns the packet sequence history range factor (packet sequence history
   /// range = send rate * packet sequence history range factor)
   float GetPacketSequenceHistoryRangeFactor() const;
@@ -280,8 +275,7 @@ public:
   /// TODO: Remove this after implementing AIMD, no longer necessary
   /// Sets the packet sequence history rate factor [0, 1] (packet sequence
   /// history rate = send rate * packet sequence history rate factor)
-  void
-  SetPacketSequenceHistoryRateFactor(float packetSequenceHistoryRateFactor = 1);
+  void SetPacketSequenceHistoryRateFactor(float packetSequenceHistoryRateFactor = 1);
   /// Returns the packet sequence history rate factor [0, 1] (packet sequence
   /// history rate = send rate * packet sequence history rate factor)
   float GetPacketSequenceHistoryRateFactor() const;
@@ -498,28 +492,21 @@ public:
   /// Attempts to receipt the message type according to the plugin it is
   /// intended for (if there is one) Returns true if successful, else false (the
   /// message type does not belong to any current plugin)
-  bool AttemptPluginMessageReceipt(MoveReference<OutMessage> message,
-                                   Receipt::Enum receipt);
+  bool AttemptPluginMessageReceipt(MoveReference<OutMessage> message, Receipt::Enum receipt);
   /// Attempts to receive the message type according to the plugin it is
   /// intended for (if there is one) Returns true if successful, else false (the
   /// message type does not belong to any current plugin)
-  bool AttemptPluginMessageReceive(MoveReference<Message> message,
-                                   bool& continueProcessingCustomMessages);
+  bool AttemptPluginMessageReceive(MoveReference<Message> message, bool& continueProcessingCustomMessages);
 
   /// Pushes a link connect requested user event message
-  void LinkEventConnectRequested(TransmissionDirection::Enum direction,
-                                 const ConnectRequestData& connectRequestData);
+  void LinkEventConnectRequested(TransmissionDirection::Enum direction, const ConnectRequestData& connectRequestData);
   /// Pushes a link connect responded user event message
-  void
-  LinkEventConnectResponded(TransmissionDirection::Enum direction,
-                            const ConnectResponseData& connectResponseData);
+  void LinkEventConnectResponded(TransmissionDirection::Enum direction, const ConnectResponseData& connectResponseData);
   /// Pushes a link disconnect noticed user event message
-  void
-  LinkEventDisconnectNoticed(TransmissionDirection::Enum direction,
-                             const DisconnectNoticeData& disconnectNoticeData);
+  void LinkEventDisconnectNoticed(TransmissionDirection::Enum direction,
+                                  const DisconnectNoticeData& disconnectNoticeData);
   /// Pushes a link incoming channel opened user event message
-  void LinkEventIncomingChannelOpened(MessageChannelId channelId,
-                                      TransferMode::Enum transferMode);
+  void LinkEventIncomingChannelOpened(MessageChannelId channelId, TransferMode::Enum transferMode);
   /// Pushes a link incoming channel closed user event message
   void LinkEventIncomingChannelClosed(MessageChannelId channelId);
   /// Pushes a link state change user event message
@@ -527,9 +514,7 @@ public:
   /// Pushes a link status change user event message
   void LinkEventStatusChange(LinkStatus::Enum newStatus);
   /// Pushes a link receipt user or protocol event message
-  void LinkEventReceipt(MessageReceiptId receiptId,
-                        Receipt::Enum receipt,
-                        bool forUser);
+  void LinkEventReceipt(MessageReceiptId receiptId, Receipt::Enum receipt, bool forUser);
 
   /// Pushes an event message to be received later by the user
   void PushUserEventMessage(MoveReference<Message> message);
@@ -537,35 +522,31 @@ public:
   void PushProtocolEventMessage(MoveReference<Message> message);
 
   /// Operating Data
-  Peer* mPeer;     /// Operating peer
-  Guid mTheirGuid; /// Their peer's permanent GUID
-  IpAddress
-      mTheirIpAddress; /// Their peer's IP address as seen from our perspective
-  IpAddress
-      mOurIpAddress;  /// Our peer's IP address as seen from their perspective
-  LinkInbox mInbox;   /// Incoming packet manager
-  LinkOutbox mOutbox; /// Outgoing packet manager
+  Peer* mPeer;                       /// Operating peer
+  Guid mTheirGuid;                   /// Their peer's permanent GUID
+  IpAddress mTheirIpAddress;         /// Their peer's IP address as seen from our perspective
+  IpAddress mOurIpAddress;           /// Our peer's IP address as seen from their perspective
+  LinkInbox mInbox;                  /// Incoming packet manager
+  LinkOutbox mOutbox;                /// Outgoing packet manager
   MessageType mUserMessageTypeStart; /// User messages type start
   void* mUserData;                   /// Optional user data
 
   /// State Data
-  TimeMs
-      mLocalToRemoteTimeDifference; /// Local to remote time difference (remote
-                                    /// time elapsed - local time elapsed)
-  TimeMs mCreationTime;             /// Time that the link was created
-  TransmissionDirection::Enum
-      mCreationDirection; /// Direction in which the link was created (which
-                          /// peer initiated the connection)
-  bool mConnectRequested; /// Outgoing connect requested?
-  BitStream mConnectRequestExtraData;    /// Outgoing connect request data
-  bool mDisconnectRequested;             /// Outgoing disconnect requested?
-  BitStream mDisconnectRequestExtraData; /// Outgoing disconnect request data
-  UserConnectResponse::Enum mConnectResponded; /// Outgoing connect responded?
-  BitStream mConnectResponseExtraData; /// Outgoing connect response data
-  LinkState::Enum mState;              /// Specific link state
-  TimeMs mStateTime;                   /// Specific link state set time
-  MessageReceiptId mStateACKId;        /// Specific link state ACK ID
-  bool mSessionCompleted;              /// Session completed?
+  TimeMs mLocalToRemoteTimeDifference;            /// Local to remote time difference (remote
+                                                  /// time elapsed - local time elapsed)
+  TimeMs mCreationTime;                           /// Time that the link was created
+  TransmissionDirection::Enum mCreationDirection; /// Direction in which the link was created (which
+                                                  /// peer initiated the connection)
+  bool mConnectRequested;                         /// Outgoing connect requested?
+  BitStream mConnectRequestExtraData;             /// Outgoing connect request data
+  bool mDisconnectRequested;                      /// Outgoing disconnect requested?
+  BitStream mDisconnectRequestExtraData;          /// Outgoing disconnect request data
+  UserConnectResponse::Enum mConnectResponded;    /// Outgoing connect responded?
+  BitStream mConnectResponseExtraData;            /// Outgoing connect response data
+  LinkState::Enum mState;                         /// Specific link state
+  TimeMs mStateTime;                              /// Specific link state set time
+  MessageReceiptId mStateACKId;                   /// Specific link state ACK ID
+  bool mSessionCompleted;                         /// Session completed?
 
   /// Plugin Data
   LinkPluginSet mAddedPlugins;   /// Link plugins which were just added, need to
@@ -581,14 +562,13 @@ public:
   TimeMs mFloorRoundTripTime;              /// Floor round trip time
   float mPacketSequenceHistoryRangeFactor; /// Packet sequence history range
                                            /// factor
-  float
-      mPacketSequenceHistoryRateFactor; /// Packet sequence history rate factor
-  float mPacketNAKFactor;               /// Packet NAK factor
-  uint32 mHeartbeatPacketRate;          /// Heartbeat packet send rate
-  float mTimeoutFactor;                 /// Timeout factor
-  TimeMs mLatencyLimit;                 /// Latency limit
-  float mConnectAttemptFactor;          /// Connect attempt factor
-  float mDisconnectAttemptFactor;       /// Disconnect attempt factor
+  float mPacketSequenceHistoryRateFactor;  /// Packet sequence history rate factor
+  float mPacketNAKFactor;                  /// Packet NAK factor
+  uint32 mHeartbeatPacketRate;             /// Heartbeat packet send rate
+  float mTimeoutFactor;                    /// Timeout factor
+  TimeMs mLatencyLimit;                    /// Latency limit
+  float mConnectAttemptFactor;             /// Connect attempt factor
+  float mDisconnectAttemptFactor;          /// Disconnect attempt factor
 
   /// Statistics
   bool mRoundTripTimeUpdated; /// Round trip time updated?
@@ -601,12 +581,12 @@ public:
   TimeMs mInternalRoundTripTimeMax; /// Maximum round trip time
 
   /// Frame Data
-  Kbps mOutgoingBandwidth; /// Outgoing bandwidth (data transfer rate) supported
-                           /// by this link
+  Kbps mOutgoingBandwidth;     /// Outgoing bandwidth (data transfer rate) supported
+                               /// by this link
   Bits mOutgoingFrameCapacity; /// Outgoing bandwidth available since our last
                                /// update, updated at the start of every update
-  Bits mOutgoingFrameSize; /// Outgoing data sent, deducted by frame capacity at
-                           /// the start of every update
+  Bits mOutgoingFrameSize;     /// Outgoing data sent, deducted by frame capacity at
+                               /// the start of every update
 
 private:
   /// No Copy Constructor
@@ -777,13 +757,11 @@ protected:
     return true;
   }
   /// Called after a plugin message is receipted
-  virtual void OnPluginMessageReceipt(MoveReference<OutMessage> message,
-                                      Receipt::Enum receipt)
+  virtual void OnPluginMessageReceipt(MoveReference<OutMessage> message, Receipt::Enum receipt)
   {
   }
   /// Called after a plugin message is received
-  virtual void OnPluginMessageReceive(MoveReference<Message> message,
-                                      bool& continueProcessingCustomMessages)
+  virtual void OnPluginMessageReceive(MoveReference<Message> message, bool& continueProcessingCustomMessages)
   {
     continueProcessingCustomMessages = true;
   }

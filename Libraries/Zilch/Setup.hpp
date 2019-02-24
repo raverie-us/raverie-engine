@@ -44,10 +44,9 @@ public:
 
 // A simple macro that we specle everywhere to ensure that the user initializes
 // Zilch
-#  define ZilchErrorIfNotStarted(Name)                                         \
-    ErrorIf(ZilchSetup::Instance == nullptr,                                   \
-            "In order to use the Zilch " #Name                                 \
-            " you must create the ZilchSetup type and hold on to it")
+#  define ZilchErrorIfNotStarted(Name)                                                                                 \
+    ErrorIf(ZilchSetup::Instance == nullptr,                                                                           \
+            "In order to use the Zilch " #Name " you must create the ZilchSetup type and hold on to it")
 
 // A convenient form of parsed main arguments (easily comparable and queryable)
 class ZeroShared MainArguments
@@ -79,9 +78,7 @@ public:
 };
 
 // Parsers arguments that we typically get from main into the above structure
-ZeroShared void ZilchParseMainArguments(int argc,
-                                        char* argv[],
-                                        MainArguments& argumentsOut);
+ZeroShared void ZilchParseMainArguments(int argc, char* argv[], MainArguments& argumentsOut);
 
 // Processes command line arguments for running Zilch standalone (invokes
 // Startup/Shutdown)

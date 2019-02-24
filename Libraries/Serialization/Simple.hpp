@@ -15,25 +15,20 @@ DeclareEnum3(DataFileFormat,
 // Simple serialization helper functions for data file serialization.
 
 /// Create loading serializer for DataBlock with given format.
-Serializer* GetLoaderStreamDataBlock(Status& status,
-                                     DataBlock block,
-                                     DataFileFormat::Enum format);
+Serializer* GetLoaderStreamDataBlock(Status& status, DataBlock block, DataFileFormat::Enum format);
 
 /// Create loading serializer for file with given format.
-Serializer*
-GetLoaderStreamFile(Status& status,
-                    StringParam fileName,
-                    DataFileFormat::Enum format = DataFileFormat::Text);
+Serializer* GetLoaderStreamFile(Status& status,
+                                StringParam fileName,
+                                DataFileFormat::Enum format = DataFileFormat::Text);
 
 /// Create saving serializer for file with given format.
-Serializer*
-GetSaverStreamFile(Status& status,
-                   StringParam fileName,
-                   DataFileFormat::Enum format = DataFileFormat::Text);
+Serializer* GetSaverStreamFile(Status& status,
+                               StringParam fileName,
+                               DataFileFormat::Enum format = DataFileFormat::Text);
 
 /// Create saving serialize
-Serializer* GetSaverStreamBlock(
-    Status& status, DataFileFormat::Enum format = DataFileFormat::Text);
+Serializer* GetSaverStreamBlock(Status& status, DataFileFormat::Enum format = DataFileFormat::Text);
 
 /// Get serialized that always returns defaults
 Serializer* GetDefaultStream();
@@ -45,13 +40,10 @@ String GetTypeInFile(StringParam fileName);
 
 // Save an object to a data file.
 template <typename type>
-bool SaveToDataFile(type& object,
-                    StringParam fileName,
-                    DataFileFormat::Enum format = DataFileFormat::Text)
+bool SaveToDataFile(type& object, StringParam fileName, DataFileFormat::Enum format = DataFileFormat::Text)
 {
   Status status;
-  UniquePointer<Serializer> stream(
-      GetSaverStreamFile(status, fileName, format));
+  UniquePointer<Serializer> stream(GetSaverStreamFile(status, fileName, format));
   if (stream)
   {
     stream->SerializePolymorphic(object);
@@ -60,9 +52,7 @@ bool SaveToDataFile(type& object,
   }
   else
   {
-    ErrorIf(!stream,
-            "Failed to open file %s for writing data stream.",
-            fileName.c_str());
+    ErrorIf(!stream, "Failed to open file %s for writing data stream.", fileName.c_str());
     return false;
   }
 }
@@ -75,8 +65,7 @@ bool LoadFromDataFile(type& object,
                       bool checkTypename = true)
 {
   Status status;
-  UniquePointer<Serializer> stream(
-      GetLoaderStreamFile(status, fileName, format));
+  UniquePointer<Serializer> stream(GetLoaderStreamFile(status, fileName, format));
   if (stream)
   {
     PolymorphicNode node;
@@ -101,23 +90,17 @@ bool LoadFromDataFile(type& object,
   }
   else
   {
-    ErrorIf(!stream,
-            "Failed to load file %s into data stream. %s",
-            fileName.c_str(),
-            status.Message.c_str());
+    ErrorIf(!stream, "Failed to load file %s into data stream. %s", fileName.c_str(), status.Message.c_str());
     return false;
   }
 }
 
 // Load an object from a data block.
 template <typename type>
-bool LoadFromDataBlock(type& object,
-                       DataBlock block,
-                       DataFileFormat::Enum format)
+bool LoadFromDataBlock(type& object, DataBlock block, DataFileFormat::Enum format)
 {
   Status status;
-  UniquePointer<Serializer> stream(
-      GetLoaderStreamDataBlock(status, block, format));
+  UniquePointer<Serializer> stream(GetLoaderStreamDataBlock(status, block, format));
   if (stream)
   {
     PolymorphicNode node;
@@ -154,10 +137,7 @@ void SerializeDefaults(type* instance)
 // Serialization
 
 template <typename containerType>
-void SavePolymorphicSerialize(cstr Name,
-                              cstr FieldName,
-                              Serializer& serializer,
-                              containerType& container)
+void SavePolymorphicSerialize(cstr Name, cstr FieldName, Serializer& serializer, containerType& container)
 {
   serializer.Start(Name, FieldName, StructureType::Object);
 
@@ -167,8 +147,7 @@ void SavePolymorphicSerialize(cstr Name,
   typename containerType::range elements = container.All();
   while (!elements.Empty())
   {
-    serializer.SerializePolymorphic(elements.Front()->GetSerializeInfo(),
-                                    *elements.Front());
+    serializer.SerializePolymorphic(elements.Front()->GetSerializeInfo(), *elements.Front());
     elements.PopFront();
   }
 
@@ -176,11 +155,8 @@ void SavePolymorphicSerialize(cstr Name,
 }
 
 template <typename containerType, typename factoryType>
-void LoadPolymorphicSerialize(cstr Name,
-                              cstr FieldName,
-                              Serializer& stream,
-                              containerType& container,
-                              factoryType* factory)
+void LoadPolymorphicSerialize(
+    cstr Name, cstr FieldName, Serializer& stream, containerType& container, factoryType* factory)
 {
   stream.Start(Name, FieldName, StructureType::Object);
 
@@ -192,8 +168,7 @@ void LoadPolymorphicSerialize(cstr Name,
     PolymorphicNode node;
     stream.GetPolymorphic(node);
 
-    typename containerType::value_type objectPtr =
-        factory->CreateFromName(node.TypeName);
+    typename containerType::value_type objectPtr = factory->CreateFromName(node.TypeName);
     if (objectPtr)
     {
       objectPtr->Serialize(stream);
@@ -205,11 +180,7 @@ void LoadPolymorphicSerialize(cstr Name,
 }
 
 template <typename containerType, typename factoryType>
-void PolymorphicSerialize(cstr Name,
-                          cstr FieldName,
-                          Serializer& stream,
-                          containerType& container,
-                          factoryType* factory)
+void PolymorphicSerialize(cstr Name, cstr FieldName, Serializer& stream, containerType& container, factoryType* factory)
 {
   if (stream.GetMode() == SerializerMode::Saving)
   {

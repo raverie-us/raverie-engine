@@ -27,8 +27,7 @@ inline void SetThreadDebugName(DWORD dwThreadID, LPCSTR szThreadName)
   __try
   {
     // If you hit a breakpoint/exception here, CONTINUE past it
-    RaiseException(
-        0x406D1388, 0, sizeof(info) / sizeof(DWORD), (CONST ULONG_PTR*)&info);
+    RaiseException(0x406D1388, 0, sizeof(info) / sizeof(DWORD), (CONST ULONG_PTR*)&info);
   }
   __except (EXCEPTION_CONTINUE_EXECUTION)
   {
@@ -76,9 +75,7 @@ size_t Thread::GetCurrentThreadId()
   return ::GetCurrentThreadId();
 }
 
-bool Thread::Initialize(EntryFunction entry,
-                        void* instance,
-                        StringParam threadName)
+bool Thread::Initialize(EntryFunction entry, void* instance, StringParam threadName)
 {
   ZeroGetPrivateData(ThreadPrivateData);
 
@@ -92,9 +89,7 @@ bool Thread::Initialize(EntryFunction entry,
                                  0,
                                  &self->mThreadId);
 
-  CheckWin(self->mHandle != INVALID_HANDLE_VALUE,
-           "Failed to create thread named %s",
-           threadName.c_str());
+  CheckWin(self->mHandle != INVALID_HANDLE_VALUE, "Failed to create thread named %s", threadName.c_str());
 
   if (self->mHandle != INVALID_HANDLE_VALUE)
   {
@@ -119,9 +114,7 @@ void Thread::Close()
 {
   ZeroGetPrivateData(ThreadPrivateData);
   if (IsValid())
-    VerifyWin(CloseHandle(self->mHandle),
-              "Failed to close thread handle. Thread name: %",
-              mThreadName.c_str());
+    VerifyWin(CloseHandle(self->mHandle), "Failed to close thread handle. Thread name: %", mThreadName.c_str());
   self->mHandle = NULL;
 }
 
@@ -147,8 +140,7 @@ OsInt Thread::WaitForCompletion(unsigned long milliseconds)
   DWORD result = WaitForSingleObject(self->mHandle, milliseconds);
   if (result != WAIT_OBJECT_0)
   {
-    DebugPrint("Failed to wait on thread. Thread name: %s",
-               mThreadName.c_str());
+    DebugPrint("Failed to wait on thread. Thread name: %s", mThreadName.c_str());
     return (OsInt)-1;
   }
   else

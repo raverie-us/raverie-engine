@@ -8,8 +8,7 @@ class ShaderIRAttributeParameter
 {
 public:
   ShaderIRAttributeParameter();
-  ShaderIRAttributeParameter(Zilch::AttributeParameter& param,
-                             Zilch::SyntaxNode* node);
+  ShaderIRAttributeParameter(Zilch::AttributeParameter& param, Zilch::SyntaxNode* node);
 
   String GetName() const;
   void SetName(StringParam name);
@@ -81,8 +80,7 @@ public:
     Range mRange;
   };
 
-  ShaderIRAttribute* AddAttribute(StringParam attributeName,
-                                  Zilch::AttributeNode* node);
+  ShaderIRAttribute* AddAttribute(StringParam attributeName, Zilch::AttributeNode* node);
   NamedRange FindAttributes(StringParam attributeName);
   ShaderIRAttribute* FindFirstAttribute(StringParam attributeName);
   Range All();

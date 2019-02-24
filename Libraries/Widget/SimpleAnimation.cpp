@@ -12,8 +12,7 @@ void AnimateLayout(Array<LayoutResult>& Results, bool animate)
   {
     LayoutResult& result = results.Front();
     const float minChange = Pixels(1);
-    float distanceMoved =
-        (result.PlacedWidget->GetTranslation() - result.Translation).Length();
+    float distanceMoved = (result.PlacedWidget->GetTranslation() - result.Translation).Length();
     float sizeChanged = (result.PlacedWidget->GetSize() - result.Size).Length();
     if (animate && (distanceMoved > minChange || sizeChanged > minChange))
     {
@@ -21,8 +20,7 @@ void AnimateLayout(Array<LayoutResult>& Results, bool animate)
     }
     else
     {
-      result.PlacedWidget->SetTranslationAndSize(result.Translation,
-                                                 result.Size);
+      result.PlacedWidget->SetTranslationAndSize(result.Translation, result.Size);
       result.PlacedWidget->UpdateTransformExternal();
     }
     results.PopFront();

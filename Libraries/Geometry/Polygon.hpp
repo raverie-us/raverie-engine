@@ -116,13 +116,8 @@ public:
   bool Validate(Array<String>& errors) const;
 
   /// Debug draw.
-  void DebugDraw(ByteColor color,
-                 bool windingOrder = false,
-                 float depth = 0.0f);
-  void DebugDraw(ByteColor color,
-                 Mat4Param transform,
-                 bool windingOrder = false,
-                 float depth = 0.0f);
+  void DebugDraw(ByteColor color, bool windingOrder = false, float depth = 0.0f);
+  void DebugDraw(ByteColor color, Mat4Param transform, bool windingOrder = false, float depth = 0.0f);
   void DebugDrawFilled(ByteColor color, Mat4Param transform) const;
 
 public:

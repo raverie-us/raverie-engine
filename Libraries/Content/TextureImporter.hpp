@@ -13,23 +13,13 @@ void ResizeImage(TextureFormat::Enum format,
                  uint dstWidth,
                  uint dstHeight);
 
-void ToNvttSurface(nvtt::Surface& surface,
-                   uint width,
-                   uint height,
-                   TextureFormat::Enum format,
-                   const byte* image);
-void FromNvttSurface(const nvtt::Surface& surface,
-                     uint& width,
-                     uint& height,
-                     TextureFormat::Enum format,
-                     byte*& image);
+void ToNvttSurface(nvtt::Surface& surface, uint width, uint height, TextureFormat::Enum format, const byte* image);
+void FromNvttSurface(const nvtt::Surface& surface, uint& width, uint& height, TextureFormat::Enum format, byte*& image);
 
 class TextureImporter
 {
 public:
-  TextureImporter(StringParam inputFile,
-                  StringParam outputFile,
-                  StringParam metaFile);
+  TextureImporter(StringParam inputFile, StringParam outputFile, StringParam metaFile);
   ~TextureImporter();
 
   ImageProcessorCodes::Enum ProcessTexture(Status& status);

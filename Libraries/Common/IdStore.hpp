@@ -24,9 +24,7 @@ public:
   }
 
   /// Move Constructor
-  IdStore(MoveReference<IdStore> rhs) :
-      mNewId(rhs->mNewId),
-      mFreeIds(ZeroMove(rhs->mFreeIds))
+  IdStore(MoveReference<IdStore> rhs) : mNewId(rhs->mNewId), mFreeIds(ZeroMove(rhs->mFreeIds))
   {
   }
 
@@ -107,8 +105,7 @@ public:
   /// Returns the number of free IDs available
   size_t GetFreeIdCount() const
   {
-    return size_t((mNewId != 0 ? (Id(Id::max) - mNewId) + 1 : 0).value()) +
-           mFreeIds.Size();
+    return size_t((mNewId != 0 ? (Id(Id::max) - mNewId) + 1 : 0).value()) + mFreeIds.Size();
   }
 
   /// Returns true if there are acquired IDs in use, else false
@@ -138,8 +135,7 @@ private:
 template <typename Id>
 struct MoveWithoutDestructionOperator<IdStore<Id>>
 {
-  static inline void MoveWithoutDestruction(IdStore<Id>* dest,
-                                            IdStore<Id>* source)
+  static inline void MoveWithoutDestruction(IdStore<Id>* dest, IdStore<Id>* source)
   {
     new (dest) IdStore<Id>(ZeroMove(*source));
   }

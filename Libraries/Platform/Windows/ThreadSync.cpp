@@ -96,8 +96,7 @@ Semaphore::~Semaphore()
 
 void Semaphore::Increment()
 {
-  VerifyWin(ReleaseSemaphore(mHandle, 1, NULL),
-            "Failed to increment semaphore");
+  VerifyWin(ReleaseSemaphore(mHandle, 1, NULL), "Failed to increment semaphore");
 }
 
 void Semaphore::Decrement()
@@ -132,9 +131,7 @@ InterprocessMutex::~InterprocessMutex()
   ZeroDestructPrivateData(HANDLE);
 }
 
-void InterprocessMutex::Initialize(Status& status,
-                                   const char* mutexName,
-                                   bool failIfAlreadyExists)
+void InterprocessMutex::Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists)
 {
   ZeroGetPrivateData(HANDLE);
   *self = CreateMutex(NULL, FALSE, Widen(mutexName).c_str());

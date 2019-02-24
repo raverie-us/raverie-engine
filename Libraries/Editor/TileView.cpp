@@ -87,10 +87,8 @@ public:
     min.y = Math::Max(min.y, 0.0f);
     // Clamp to either the window size, or the client area size
     // Whichever is larger
-    max.x =
-        Math::Min(max.x, Math::Max(mClientArea->mSize.x, mTileView->mSize.x));
-    max.y =
-        Math::Min(max.y, Math::Max(mClientArea->mSize.y, mTileView->mSize.y));
+    max.x = Math::Min(max.x, Math::Max(mClientArea->mSize.x, mTileView->mSize.x));
+    max.y = Math::Min(max.y, Math::Max(mClientArea->mSize.y, mTileView->mSize.y));
 
     mSelectBox->SetSize(max - min);
     mSelectBox->SetTranslation(Vec3(min.x, min.y, 0));
@@ -124,8 +122,7 @@ public:
   }
 };
 
-ItemPopUp::ItemPopUp(TileViewWidget* source, MouseEvent* mouseEvent) :
-    PopUp(source, PopUpCloseMode::MouseOutTarget)
+ItemPopUp::ItemPopUp(TileViewWidget* source, MouseEvent* mouseEvent) : PopUp(source, PopUpCloseMode::MouseOutTarget)
 {
   SetBelowMouse(mouseEvent->GetMouse(), Pixels(10, 10));
 
@@ -152,10 +149,7 @@ void ItemPopUp::UpdateTransform()
   PopUp::UpdateTransform();
 }
 
-TileViewWidget::TileViewWidget(Composite* parent,
-                               TileView* tileView,
-                               PreviewWidget* tileWidget,
-                               DataIndex dataIndex) :
+TileViewWidget::TileViewWidget(Composite* parent, TileView* tileView, PreviewWidget* tileWidget, DataIndex dataIndex) :
     Composite(parent),
     mTileView(tileView)
 {
@@ -167,8 +161,7 @@ TileViewWidget::TileViewWidget(Composite* parent,
 
   mBackground->SetColor(Vec4(0.416f, 0.416f, 0.416f, 1));
   mTitleBar->SetColor(Vec4(0.35f, 0.35f, 0.35f, 1));
-  mHighlight->SetColor(Vec4(TileViewUi::MouseOverBorderColor) *
-                       Vec4(1, 1, 1, 0.6));
+  mHighlight->SetColor(Vec4(TileViewUi::MouseOverBorderColor) * Vec4(1, 1, 1, 0.6));
 
   mObject = tileWidget->mObject;
   mName = tileWidget->mName;
@@ -180,8 +173,7 @@ TileViewWidget::TileViewWidget(Composite* parent,
   if (tileWidget->mObject.IsNotNull())
     mItemType = tileWidget->mObject.GetBoundOrIndirectType()->ToString();
 
-  mEditableText =
-      new InPlaceTextEditor(this, InPlaceTextEditorFlags::EditOnDoubleClick);
+  mEditableText = new InPlaceTextEditor(this, InPlaceTextEditorFlags::EditOnDoubleClick);
   mEditableText->mText->SetTextClipping(true);
   mEditableText->mText->SetText(mName);
   mEditableText->Name = CommonColumns::Name;
@@ -227,14 +219,12 @@ void TileViewWidget::UpdateTransform()
   mHighlight->SetActive(false);
   if (IsMouseOver())
   {
-    mHighlight->SetColor((Vec4)TileViewUi::MouseOverBorderColor *
-                         Vec4(1, 1, 1, 0.6f));
+    mHighlight->SetColor((Vec4)TileViewUi::MouseOverBorderColor * Vec4(1, 1, 1, 0.6f));
     mHighlight->SetActive(true);
   }
   else if (mTileView->mSelection->IsSelected(mIndex))
   {
-    mHighlight->SetColor((Vec4)TileViewUi::SelectedBorderColor *
-                         Vec4(1, 1, 1, 0.6f));
+    mHighlight->SetColor((Vec4)TileViewUi::SelectedBorderColor * Vec4(1, 1, 1, 0.6f));
     mHighlight->SetActive(true);
   }
 
@@ -243,8 +233,7 @@ void TileViewWidget::UpdateTransform()
   mHighlight->SetSize(mSize);
 
   // Center content
-  WidgetRect contentRect =
-      WidgetRect::PointAndSize(Vec2(0, titleBarHeight), backgroundSize);
+  WidgetRect contentRect = WidgetRect::PointAndSize(Vec2(0, titleBarHeight), backgroundSize);
   contentRect.RemoveThickness(mContentMargins);
   PlaceWithRect(contentRect, mContent);
 
@@ -261,8 +250,7 @@ void TileViewWidget::UpdateTransform()
     WidgetRect textRect = WidgetRect::PointAndSize(Vec2::cZero, titleBarSize);
     PlaceCenterToRect(textRect, mEditableText);
 
-    mEditableText->mTranslation.x =
-        Math::Max(mEditableText->mTranslation.x, 0.0f);
+    mEditableText->mTranslation.x = Math::Max(mEditableText->mTranslation.x, 0.0f);
     mEditableText->mSize.x = Math::Min(mEditableText->mSize.x, mSize.x);
   }
 
@@ -308,8 +296,7 @@ void TileViewWidget::OnRightUp(MouseEvent* event)
 
   TileViewEvent eventToSend;
   eventToSend.mTile = this;
-  mTileView->GetDispatcher()->Dispatch(Events::TileViewRightClick,
-                                       &eventToSend);
+  mTileView->GetDispatcher()->Dispatch(Events::TileViewRightClick, &eventToSend);
   event->Handled = true;
 }
 
@@ -363,8 +350,7 @@ void TileViewWidget::OnTextChanged(TextUpdatedEvent* event)
     editor->GetEditTextVariant(newTextValue);
 
     // Apply the value to the data source
-    event->mChangeAccepted =
-        mTileView->mDataSource->SetData(entry, newTextValue, editor->Name);
+    event->mChangeAccepted = mTileView->mDataSource->SetData(entry, newTextValue, editor->Name);
   }
 
   if (mTileView->mRefreshOnValueChange)
@@ -501,8 +487,7 @@ Zero::TileViewWidget* TileView::FindTileByIndex(DataIndex& index)
 
 void TileView::SetItemSizePercent(float percentage)
 {
-  mItemSize = TileViewUi::MinTileSize +
-              (TileViewUi::MaxTileSize - TileViewUi::MinTileSize) * percentage;
+  mItemSize = TileViewUi::MinTileSize + (TileViewUi::MaxTileSize - TileViewUi::MinTileSize) * percentage;
 }
 
 float TileView::GetItemSize()
@@ -540,15 +525,10 @@ void TileView::GetSelectionRange(uint* minIndex, uint* maxIndex)
   }
 }
 
-TileViewWidget*
-TileView::CreateTileViewWidget(Composite* parent,
-                               StringParam name,
-                               HandleParam instance,
-                               DataIndex index,
-                               PreviewImportance::Enum minImportance)
+TileViewWidget* TileView::CreateTileViewWidget(
+    Composite* parent, StringParam name, HandleParam instance, DataIndex index, PreviewImportance::Enum minImportance)
 {
-  PreviewWidget* tileWidget = ResourcePreview::CreatePreviewWidget(
-      parent, name, instance, minImportance);
+  PreviewWidget* tileWidget = ResourcePreview::CreatePreviewWidget(parent, name, instance, minImportance);
   if (tileWidget == NULL)
     return NULL;
 
@@ -559,8 +539,7 @@ void TileView::UpdateTransform()
 {
   mArea->SetSize(mSize);
 
-  if (GetTransformUpdateState() == TransformUpdateState::ChildUpdate ||
-      mDataSource == NULL)
+  if (GetTransformUpdateState() == TransformUpdateState::ChildUpdate || mDataSource == NULL)
   {
     Composite::UpdateTransform();
     return;
@@ -638,11 +617,7 @@ void TileView::UpdateVisibleTiles()
       {
         Any nameVar;
         mDataSource->GetData(entry, nameVar, CommonColumns::Name);
-        itemWidget = CreateTileViewWidget(mArea,
-                                          nameVar.Get<String>(),
-                                          object,
-                                          index,
-                                          PreviewImportance::None);
+        itemWidget = CreateTileViewWidget(mArea, nameVar.Get<String>(), object, index, PreviewImportance::None);
         itemWidget->AnimatePreview(PreviewAnimate::MouseOver);
         mTileWidgets[i] = itemWidget;
       }
@@ -755,7 +730,7 @@ void TileView::OnKeyDown(KeyboardEvent* e)
     Array<DataIndex> selected;
     mSelection->GetSelected(selected);
 
-    forRange(DataIndex index, selected.All())
+    forRange (DataIndex index, selected.All())
     {
       DataEvent e;
       e.Index = index;
@@ -843,8 +818,7 @@ void TileView::DragScroll(Vec2Param screenPosition)
     }
     else if (local.y > (mSize.y - TileViewUi::DragScrollSize))
     {
-      float percentage =
-          1.0f - (mSize.y - local.y) / TileViewUi::DragScrollSize;
+      float percentage = 1.0f - (mSize.y - local.y) / TileViewUi::DragScrollSize;
       scrollSpeed = percentage * maxSpeed;
     }
   }
@@ -866,7 +840,7 @@ void TileView::ReloadData()
 
 void TileView::ClearTiles()
 {
-  forRange(TileViewWidget * widget, mTileWidgets.All())
+  forRange (TileViewWidget* widget, mTileWidgets.All())
   {
     if (widget)
       widget->Destroy();

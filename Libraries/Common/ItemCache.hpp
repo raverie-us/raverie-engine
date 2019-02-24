@@ -38,10 +38,7 @@ public:
   {
   }
   /// Copy Constructor
-  ItemCache(const ItemCache& rhs) :
-      mIdStore(rhs.mIdStore),
-      mItemIdMap(rhs.mItemIdMap),
-      mIdItemMap(rhs.mIdItemMap)
+  ItemCache(const ItemCache& rhs) : mIdStore(rhs.mIdStore), mItemIdMap(rhs.mItemIdMap), mIdItemMap(rhs.mIdItemMap)
   {
   }
   /// Move Constructor
@@ -151,8 +148,7 @@ public:
     }
 
     // Map unique item to ID or get current mapping
-    typename ItemIdMap::pointer_bool_pair result =
-        mItemIdMap.FindOrInsert(item, id);
+    typename ItemIdMap::pointer_bool_pair result = mItemIdMap.FindOrInsert(item, id);
     if (result.second) // Insertion succeeded?
     {
       // Actually acquire the ID we used
@@ -198,8 +194,7 @@ public:
   bool MapIdOverwrite(Id id, const Item& item)
   {
     // Map unique ID to item
-    typename IdItemMap::pointer_bool_pair result =
-        mIdItemMap.InsertOrAssign(id, item);
+    typename IdItemMap::pointer_bool_pair result = mIdItemMap.InsertOrAssign(id, item);
 
     // Success
     return result.second;
@@ -244,8 +239,7 @@ private:
 template <typename Item, typename Id>
 struct MoveWithoutDestructionOperator<ItemCache<Item, Id>>
 {
-  static inline void MoveWithoutDestruction(ItemCache<Item, Id>* dest,
-                                            ItemCache<Item, Id>* source)
+  static inline void MoveWithoutDestruction(ItemCache<Item, Id>* dest, ItemCache<Item, Id>* source)
   {
     new (dest) ItemCache<Item, Id>(ZeroMove(*source));
   }

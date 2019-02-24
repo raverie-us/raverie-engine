@@ -393,27 +393,19 @@ public:
   // position and returns a stack handle to the object
   // Note that the handle will become null when we leave the scope
   // that the object was allocated in (return from a function, etc)
-  Handle AllocateStackObject(byte* stackLocation,
-                             PerScopeData* scope,
-                             BoundType* type,
-                             ExceptionReport& report);
+  Handle AllocateStackObject(byte* stackLocation, PerScopeData* scope, BoundType* type, ExceptionReport& report);
 
   // Allocates an object on the heap and returns a handle to the object
   // No constructors are called, but the object will be pre-constructed
   // Note that the memory will be managed by the language itself
-  Handle AllocateHeapObject(BoundType* type,
-                            ExceptionReport& report,
-                            HeapFlags::Enum flags);
+  Handle AllocateHeapObject(BoundType* type, ExceptionReport& report, HeapFlags::Enum flags);
 
   // Allocates an object on the heap and returns a handle to the object
   // Both the pre-constructor and default constructor will be called (or an
   // exception will be thrown) Note that the memory will be managed by the
   // language itself
-  Handle AllocateDefaultConstructedHeapObject(BoundType* type,
-                                              ExceptionReport& report,
-                                              HeapFlags::Enum flags);
-  Handle AllocateDefaultConstructedHeapObject(
-      BoundType* type, HeapFlags::Enum flags = HeapFlags::ReferenceCounted);
+  Handle AllocateDefaultConstructedHeapObject(BoundType* type, ExceptionReport& report, HeapFlags::Enum flags);
+  Handle AllocateDefaultConstructedHeapObject(BoundType* type, HeapFlags::Enum flags = HeapFlags::ReferenceCounted);
 
   // Allocates an object on the heap and returns a handle to the object
   // The object will be pre-constructed and then the copy constructor will be
@@ -424,9 +416,8 @@ public:
                                            const Handle& fromObject);
 
   template <typename T>
-  HandleOf<T> AllocateDefaultConstructed(
-      BoundType* typeToAllocate = nullptr,
-      HeapFlags::Enum flags = HeapFlags::ReferenceCounted)
+  HandleOf<T> AllocateDefaultConstructed(BoundType* typeToAllocate = nullptr,
+                                         HeapFlags::Enum flags = HeapFlags::ReferenceCounted)
   {
     // If the user provided no specific type to allocate, then assume its the T
     // type
@@ -435,8 +426,7 @@ public:
 
     // Allocate the heap object default constructed based on the specified type
     ExceptionReport report;
-    Handle resultHandle = this->AllocateDefaultConstructedHeapObject(
-        typeToAllocate, report, flags);
+    Handle resultHandle = this->AllocateDefaultConstructedHeapObject(typeToAllocate, report, flags);
     return resultHandle;
   }
 
@@ -472,8 +462,7 @@ public:
   void ThrowNullReferenceException(ExceptionReport& report);
 
   // Throws a standard null reference exception with a custom message
-  void ThrowNullReferenceException(ExceptionReport& report,
-                                   StringParam customMessage);
+  void ThrowNullReferenceException(ExceptionReport& report, StringParam customMessage);
 
   // If a function is not implemented, this is a standard exception that lets
   // the user know
@@ -505,15 +494,12 @@ public:
   template <typename T>
   T* GetHandleManager()
   {
-    return (T*)HandleManagers::GetInstance().GetManager(ZilchManagerId(T),
-                                                        this);
+    return (T*)HandleManagers::GetInstance().GetManager(ZilchManagerId(T), this);
   }
 
   // Update the virtual table of a native C++ object, or do nothing if it's not
   // virtual or native
-  void UpdateCppVirtualTable(byte* objectWithBaseVTable,
-                             BoundType* cppBaseType,
-                             BoundType* derivedType);
+  void UpdateCppVirtualTable(byte* objectWithBaseVTable, BoundType* cppBaseType, BoundType* derivedType);
 
   // Get the raw stack array
   const byte* GetRawStack();
@@ -560,10 +546,7 @@ private:
   ZeroForceInline PerFrameData* PopFrame();
 
   // Initialize a handle to point at a location on the stack
-  void InitializeStackHandle(Handle& handle,
-                             byte* location,
-                             PerScopeData* scope,
-                             BoundType* type);
+  void InitializeStackHandle(Handle& handle, byte* location, PerScopeData* scope, BoundType* type);
 
   // Initialize a handle with a direct pointer value
   // Generally unsafe, but used in cases such as statics which are guaranteed to
@@ -588,8 +571,7 @@ private:
   bool PopTimeout(PerFrameData* frame);
 
   // Send an opcode event (generally used for debuggers or profilers)
-  ZeroForceInline void SendOpcodeEvent(StringParam eventId,
-                                       PerFrameData* frame);
+  ZeroForceInline void SendOpcodeEvent(StringParam eventId, PerFrameData* frame);
 
 public:
   // Enables debug events (opcode step, enter/exit function, etc)
@@ -754,9 +736,7 @@ ZeroSharedTemplate void InternalWriteValue(const T& value, byte* stackFrame)
   // Write the value directly to the stack frame
   typedef typename TypeBinding::StaticTypeId<T>::UnqualifiedType& ToType;
   typedef typename TypeBinding::StripConst<T>::Type& FromType;
-  ZilchStaticType(T)::Write(
-      TypeBinding::ReferenceCast<FromType, ToType>::Cast((FromType)value),
-      stackFrame);
+  ZilchStaticType(T)::Write(TypeBinding::ReferenceCast<FromType, ToType>::Cast((FromType)value), stackFrame);
 }
 
 // Grab the next reference type from the stack frame
@@ -777,9 +757,7 @@ ZeroSharedTemplate T InternalReadRef(byte* stackFrame)
 }
 
 template <typename T>
-ZeroSharedTemplate void InternalWriteRef(const T& value,
-                                         byte* stackFrame,
-                                         ExecutableState* state)
+ZeroSharedTemplate void InternalWriteRef(const T& value, byte* stackFrame, ExecutableState* state)
 {
   // Get the type we're trying to write
   ZilchStrip(T)* pointerToValue = ZilchToPointer(value);
@@ -792,8 +770,7 @@ ZeroSharedTemplate void InternalWriteRef(const T& value,
   }
 
   // Grab the handle manager via the state
-  HandleManager* manager =
-      HandleManagers::GetInstance().GetManager(type->HandleManager, state);
+  HandleManager* manager = HandleManagers::GetInstance().GetManager(type->HandleManager, state);
 
   // Create a handle that goes with the given manager index
   Handle* handle = new (stackFrame) Handle();
@@ -807,8 +784,7 @@ ZeroSharedTemplate void InternalWriteRef(const T& value,
     handle->StoredType = type;
 
     // Setup the newly created handle
-    manager->ObjectToHandle(
-        (const byte*)pointerToValue, handle->StoredType, *handle);
+    manager->ObjectToHandle((const byte*)pointerToValue, handle->StoredType, *handle);
   }
   else
   {
@@ -850,11 +826,9 @@ public:
       DelegateType* functionType = call.GetFunction()->FunctionType;
       if (index < functionType->Parameters.Size())
         executableState->ThrowException(
-            String::Format("Error: Parameter '%s' cannot be null.",
-                           functionType->Parameters[index].Name.c_str()));
+            String::Format("Error: Parameter '%s' cannot be null.", functionType->Parameters[index].Name.c_str()));
       else
-        executableState->ThrowException(
-            String::Format("Error: Argument %d cannot be null.", index));
+        executableState->ThrowException(String::Format("Error: Argument %d cannot be null.", index));
     }
     return result;
   }
@@ -865,24 +839,24 @@ public:
   }
 };
 
-#  define ZilchCallHelperSpecialization(T, SetT)                               \
-    class ZeroShared CallHelper<T>                                             \
-    {                                                                          \
-    public:                                                                    \
-      static T Get(Call& call, size_t index);                                  \
-      static void Set(Call& call, size_t index, SetT value);                   \
-      static byte* GetArgumentPointer(Call& call, size_t index);               \
-      static T CastArgumentPointer(byte* stackPointer);                        \
+#  define ZilchCallHelperSpecialization(T, SetT)                                                                       \
+    class ZeroShared CallHelper<T>                                                                                     \
+    {                                                                                                                  \
+    public:                                                                                                            \
+      static T Get(Call& call, size_t index);                                                                          \
+      static void Set(Call& call, size_t index, SetT value);                                                           \
+      static byte* GetArgumentPointer(Call& call, size_t index);                                                       \
+      static T CastArgumentPointer(byte* stackPointer);                                                                \
     };
 
-#  define ZilchCallHelperTemplateSpecialization(T, SetT)                       \
-    ZeroSharedTemplate class CallHelper<T>                                     \
-    {                                                                          \
-    public:                                                                    \
-      static T Get(Call& call, size_t index);                                  \
-      static void Set(Call& call, size_t index, SetT value);                   \
-      static byte* GetArgumentPointer(Call& call, size_t index);               \
-      static T CastArgumentPointer(byte* stackPointer);                        \
+#  define ZilchCallHelperTemplateSpecialization(T, SetT)                                                               \
+    ZeroSharedTemplate class CallHelper<T>                                                                             \
+    {                                                                                                                  \
+    public:                                                                                                            \
+      static T Get(Call& call, size_t index);                                                                          \
+      static void Set(Call& call, size_t index, SetT value);                                                           \
+      static byte* GetArgumentPointer(Call& call, size_t index);                                                       \
+      static T CastArgumentPointer(byte* stackPointer);                                                                \
     };
 
 // Facilitates invoking Zilch functions including parameter passing and grabbing
@@ -895,12 +869,10 @@ public:
   friend class VirtualMachine;
 
   // Constructor for calling a function
-  Call(Function* function,
-       ExecutableState* state = ExecutableState::CallingState);
+  Call(Function* function, ExecutableState* state = ExecutableState::CallingState);
 
   // Constructor for calling a delegate (automatically sets the this handle)
-  Call(const Delegate& delegate,
-       ExecutableState* state = ExecutableState::CallingState);
+  Call(const Delegate& delegate, ExecutableState* state = ExecutableState::CallingState);
 
   // Destructor (constructor is private so only the ExecutableState can create
   // it)
@@ -928,17 +900,12 @@ public:
   void SetValue(size_t index, const T& value)
   {
     typedef typename TypeBinding::StripQualifiers<T>::Type UnqualifiedType;
-    const UnqualifiedType* pointer =
-        TypeBinding::ReferenceCast<T&, const UnqualifiedType*>::Cast((T&)value);
+    const UnqualifiedType* pointer = TypeBinding::ReferenceCast<T&, const UnqualifiedType*>::Cast((T&)value);
     BoundType* valueType = ZilchVirtualTypeId(pointer);
 
     // Get the stack location and perform checks
-    byte* stack =
-        this->GetChecked(index,
-                         sizeof(typename ZilchStaticType(T)::RepresentedType),
-                         valueType,
-                         CheckPrimitive::Value,
-                         Direction::Set);
+    byte* stack = this->GetChecked(
+        index, sizeof(typename ZilchStaticType(T)::RepresentedType), valueType, CheckPrimitive::Value, Direction::Set);
 
     // Finally, copy the input into the stack position
     InternalWriteValue<T>(value, stack);
@@ -950,16 +917,11 @@ public:
   void SetHandle(size_t index, const T& value)
   {
     typedef typename TypeBinding::StripQualifiers<T>::Type UnqualifiedType;
-    const UnqualifiedType* pointer =
-        TypeBinding::ReferenceCast<T&, const UnqualifiedType*>::Cast((T&)value);
+    const UnqualifiedType* pointer = TypeBinding::ReferenceCast<T&, const UnqualifiedType*>::Cast((T&)value);
     BoundType* valueType = ZilchVirtualTypeId(pointer);
 
     // Get the stack location and perform checks
-    byte* stack = this->GetChecked(index,
-                                   sizeof(Handle),
-                                   valueType,
-                                   CheckPrimitive::Handle,
-                                   Direction::Set);
+    byte* stack = this->GetChecked(index, sizeof(Handle), valueType, CheckPrimitive::Handle, Direction::Set);
 
     // Finally, copy the input into the stack position
     InternalWriteRef<T>(value, stack, this->Data->State);
@@ -995,12 +957,11 @@ public:
   T GetValue(size_t index)
   {
     // Get the stack location and perform checks
-    byte* stack =
-        this->GetChecked(index,
-                         sizeof(typename ZilchStaticType(T)::RepresentedType),
-                         ZilchTypeId(T),
-                         CheckPrimitive::Value,
-                         Direction::Get);
+    byte* stack = this->GetChecked(index,
+                                   sizeof(typename ZilchStaticType(T)::RepresentedType),
+                                   ZilchTypeId(T),
+                                   CheckPrimitive::Value,
+                                   Direction::Get);
 
     // Read the value from the stack and return it (or convert it)
     return InternalReadValue<T>(stack);
@@ -1012,11 +973,7 @@ public:
   T GetHandle(size_t index)
   {
     // Get the stack location and perform checks
-    byte* stack = this->GetChecked(index,
-                                   sizeof(Handle),
-                                   ZilchTypeId(T),
-                                   CheckPrimitive::Handle,
-                                   Direction::Get);
+    byte* stack = this->GetChecked(index, sizeof(Handle), ZilchTypeId(T), CheckPrimitive::Handle, Direction::Get);
 
     // Read the value from the stack and return it (or convert it)
     return InternalReadRef<T>(stack);
@@ -1028,12 +985,11 @@ public:
   byte* GetValuePointer(size_t index)
   {
     // Get the stack location and perform checks
-    return this->GetChecked(
-        index,
-        sizeof(typename ZilchStaticType(T)::RepresentedType),
-        ZilchTypeId(T),
-        CheckPrimitive::Value,
-        Direction::Get);
+    return this->GetChecked(index,
+                            sizeof(typename ZilchStaticType(T)::RepresentedType),
+                            ZilchTypeId(T),
+                            CheckPrimitive::Value,
+                            Direction::Get);
   }
 
   // Get either a parameter, return, or this handle from the call (reference
@@ -1042,11 +998,7 @@ public:
   byte* GetHandlePointer(size_t index)
   {
     // Get the stack location and perform checks
-    return this->GetChecked(index,
-                            sizeof(Handle),
-                            ZilchTypeId(T),
-                            CheckPrimitive::Handle,
-                            Direction::Get);
+    return this->GetChecked(index, sizeof(Handle), ZilchTypeId(T), CheckPrimitive::Handle, Direction::Get);
   }
 
   // Get either a parameter, return, or this handle from the call
@@ -1163,41 +1115,25 @@ public:
   void MarkParameterAsSet(size_t parameterIndex);
 
   // Get a generic stack location and do error checking
-  byte* GetChecked(size_t index,
-                   size_t size,
-                   Type* userType,
-                   CheckPrimitive::Enum primitive,
-                   Direction::Enum io);
+  byte* GetChecked(size_t index, size_t size, Type* userType, CheckPrimitive::Enum primitive, Direction::Enum io);
 
   // Get a generic stack location and don't do any error checking
   byte* GetUnchecked(size_t index);
 
 private:
   // Run a set of checks on the given type / size
-  void PerformStandardChecks(size_t size,
-                             Type* userType,
-                             Type* actualType,
-                             CheckPrimitive::Enum primitive,
-                             Direction::Enum io);
+  void PerformStandardChecks(
+      size_t size, Type* userType, Type* actualType, CheckPrimitive::Enum primitive, Direction::Enum io);
 
   // Get a stack location to the 'this' handle and do error checking
-  byte* GetThisChecked(size_t size,
-                       Type* userType,
-                       CheckPrimitive::Enum primitive,
-                       Direction::Enum io);
+  byte* GetThisChecked(size_t size, Type* userType, CheckPrimitive::Enum primitive, Direction::Enum io);
 
   // Get a stack location to the return and do error checking
-  byte* GetReturnChecked(size_t size,
-                         Type* userType,
-                         CheckPrimitive::Enum primitive,
-                         Direction::Enum io);
+  byte* GetReturnChecked(size_t size, Type* userType, CheckPrimitive::Enum primitive, Direction::Enum io);
 
   // Get a stack location to the given parameter and do error checking
-  byte* GetParameterChecked(size_t parameterIndex,
-                            size_t size,
-                            Type* userType,
-                            CheckPrimitive::Enum primitive,
-                            Direction::Enum io);
+  byte* GetParameterChecked(
+      size_t parameterIndex, size_t size, Type* userType, CheckPrimitive::Enum primitive, Direction::Enum io);
 
   // Constructor for the virtual machine call
   Call(PerFrameData* data);
@@ -1214,8 +1150,7 @@ template <typename T>
 T CallHelper<T>::Get(Call& call, size_t index)
 {
   // If the type is a reference type... (this is always a handle)
-  if (ZilchTypeId(T)->CopyMode == TypeCopyMode::ReferenceType ||
-      index == Call::This)
+  if (ZilchTypeId(T)->CopyMode == TypeCopyMode::ReferenceType || index == Call::This)
   {
     return call.GetHandle<T>(index);
   }
@@ -1230,8 +1165,7 @@ template <typename T>
 void CallHelper<T>::Set(Call& call, size_t index, const T& value)
 {
   // If the type is a reference type... (this is always a handle)
-  if (ZilchTypeId(T)->CopyMode == TypeCopyMode::ReferenceType ||
-      index == Call::This)
+  if (ZilchTypeId(T)->CopyMode == TypeCopyMode::ReferenceType || index == Call::This)
   {
     call.SetHandle<T>(index, value);
   }
@@ -1245,8 +1179,7 @@ void CallHelper<T>::Set(Call& call, size_t index, const T& value)
 template <typename T>
 byte* CallHelper<T>::GetArgumentPointer(Call& call, size_t index)
 {
-  if (ZilchTypeId(T)->CopyMode == TypeCopyMode::ReferenceType ||
-      index == Call::This)
+  if (ZilchTypeId(T)->CopyMode == TypeCopyMode::ReferenceType || index == Call::This)
   {
     // Read the handle from the stack
     Handle& handle = *(Handle*)call.GetHandlePointer<T>(index);
@@ -1256,8 +1189,7 @@ byte* CallHelper<T>::GetArgumentPointer(Call& call, size_t index)
 
     // Throw exception if there's null for a value or reference type
     if (stackPointer == nullptr && !Zero::is_pointer<T>::value)
-      ExecutableState::GetCallingState()->ThrowException(
-          String::Format("Error: Argument %d cannot be null.", index));
+      ExecutableState::GetCallingState()->ThrowException(String::Format("Error: Argument %d cannot be null.", index));
 
     return stackPointer;
   }
@@ -1269,12 +1201,9 @@ byte* CallHelper<T>::GetArgumentPointer(Call& call, size_t index)
 
 // A helper for allocating a type within Zilch using the current executable
 // state
-#  define ZilchAllocate(T, ...)                                                \
-    (ZZ::ExecutableState::GetCallingState()->AllocateDefaultConstructed<T>(    \
-        __VA_ARGS__))
-#  define ZilchAllocateUntyped(...)                                            \
-    (ZZ::ExecutableState::GetCallingState()                                    \
-         ->AllocateDefaultConstructedHeapObject(__VA_ARGS__))
+#  define ZilchAllocate(T, ...) (ZZ::ExecutableState::GetCallingState()->AllocateDefaultConstructed<T>(__VA_ARGS__))
+#  define ZilchAllocateUntyped(...)                                                                                    \
+    (ZZ::ExecutableState::GetCallingState()->AllocateDefaultConstructedHeapObject(__VA_ARGS__))
 
 template <>
 ZilchCallHelperSpecialization(Any*, Any* const&);
@@ -1316,8 +1245,7 @@ ZilchCallHelperTemplateSpecialization(HandleOf<T>, const HandleOf<T>&);
 template <typename T>
 ZilchCallHelperTemplateSpecialization(HandleOf<T>&, HandleOf<T>&);
 template <typename T>
-ZilchCallHelperTemplateSpecialization(const HandleOf<T>*,
-                                      const HandleOf<T>* const&);
+ZilchCallHelperTemplateSpecialization(const HandleOf<T>*, const HandleOf<T>* const&);
 template <typename T>
 ZilchCallHelperTemplateSpecialization(const HandleOf<T>&, const HandleOf<T>&);
 
@@ -1349,17 +1277,13 @@ const HandleOf<T>& CallHelper<const HandleOf<T>&>::Get(Call& call, size_t index)
 }
 
 template <typename T>
-void CallHelper<const HandleOf<T>*>::Set(Call& call,
-                                         size_t index,
-                                         const HandleOf<T>* const& value)
+void CallHelper<const HandleOf<T>*>::Set(Call& call, size_t index, const HandleOf<T>* const& value)
 {
   call.SetHandle(index, *static_cast<const Handle*>(value));
 }
 
 template <typename T>
-void CallHelper<HandleOf<T>>::Set(Call& call,
-                                  size_t index,
-                                  const HandleOf<T>& value)
+void CallHelper<HandleOf<T>>::Set(Call& call, size_t index, const HandleOf<T>& value)
 {
   CallHelper<const HandleOf<T>*>::Set(call, index, &value);
 }
@@ -1369,16 +1293,12 @@ void CallHelper<HandleOf<T>&>::Set(Call& call, size_t index, HandleOf<T>& value)
   CallHelper<const HandleOf<T>*>::Set(call, index, &value);
 }
 template <typename T>
-void CallHelper<HandleOf<T>*>::Set(Call& call,
-                                   size_t index,
-                                   HandleOf<T>* const& value)
+void CallHelper<HandleOf<T>*>::Set(Call& call, size_t index, HandleOf<T>* const& value)
 {
   CallHelper<const HandleOf<T>*>::Set(call, index, value);
 }
 template <typename T>
-void CallHelper<const HandleOf<T>&>::Set(Call& call,
-                                         size_t index,
-                                         const HandleOf<T>& value)
+void CallHelper<const HandleOf<T>&>::Set(Call& call, size_t index, const HandleOf<T>& value)
 {
   CallHelper<const HandleOf<T>*>::Set(call, index, &value);
 }
@@ -1400,14 +1320,12 @@ byte* CallHelper<HandleOf<T>&>::GetArgumentPointer(Call& call, size_t index)
   return CallHelper<HandleOf<T>*>::GetArgumentPointer(call, index);
 }
 template <typename T>
-byte* CallHelper<const HandleOf<T>*>::GetArgumentPointer(Call& call,
-                                                         size_t index)
+byte* CallHelper<const HandleOf<T>*>::GetArgumentPointer(Call& call, size_t index)
 {
   return CallHelper<HandleOf<T>*>::GetArgumentPointer(call, index);
 }
 template <typename T>
-byte* CallHelper<const HandleOf<T>&>::GetArgumentPointer(Call& call,
-                                                         size_t index)
+byte* CallHelper<const HandleOf<T>&>::GetArgumentPointer(Call& call, size_t index)
 {
   return CallHelper<HandleOf<T>*>::GetArgumentPointer(call, index);
 }
@@ -1429,14 +1347,12 @@ HandleOf<T>& CallHelper<HandleOf<T>&>::CastArgumentPointer(byte* stackPointer)
   return *CallHelper<HandleOf<T>*>::CastArgumentPointer(stackPointer);
 }
 template <typename T>
-const HandleOf<T>*
-CallHelper<const HandleOf<T>*>::CastArgumentPointer(byte* stackPointer)
+const HandleOf<T>* CallHelper<const HandleOf<T>*>::CastArgumentPointer(byte* stackPointer)
 {
   return CallHelper<HandleOf<T>*>::CastArgumentPointer(stackPointer);
 }
 template <typename T>
-const HandleOf<T>&
-CallHelper<const HandleOf<T>&>::CastArgumentPointer(byte* stackPointer)
+const HandleOf<T>& CallHelper<const HandleOf<T>&>::CastArgumentPointer(byte* stackPointer)
 {
   return *CallHelper<HandleOf<T>*>::CastArgumentPointer(stackPointer);
 }

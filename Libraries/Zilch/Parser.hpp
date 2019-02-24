@@ -19,17 +19,14 @@ public:
 
   // Parses all scripts in a project into an syntax tree (with classes,
   // functions, members, etc)
-  void ParseIntoTree(const Array<UserToken>& tokens,
-                     SyntaxTree& syntaxTree,
-                     EvaluationMode::Enum evaluation);
+  void ParseIntoTree(const Array<UserToken>& tokens, SyntaxTree& syntaxTree, EvaluationMode::Enum evaluation);
 
   // Parses a single expression in the context of a function (evaluation of
   // local variables, etc)
-  void ParseExpressionInFunctionAndClass(
-      const Array<UserToken>& expression,
-      const Array<UserToken>& function,
-      const Array<UserToken>& classTokensWithoutFunction,
-      SyntaxTree& syntaxTree);
+  void ParseExpressionInFunctionAndClass(const Array<UserToken>& expression,
+                                         const Array<UserToken>& function,
+                                         const Array<UserToken>& classTokensWithoutFunction,
+                                         SyntaxTree& syntaxTree);
 
   // From a token stream, just attempt to parse a single type
   SyntaxType* ParseType(const Array<UserToken>& type);
@@ -39,8 +36,7 @@ public:
   static bool IsTokenStreamEmpty(const Array<UserToken>& tokens);
 
   // Tests if a list of attributes Contains a particular attribute by name
-  static AttributeNode* GetAttribute(NodeList<AttributeNode>& attributes,
-                                     StringParam name);
+  static AttributeNode* GetAttribute(NodeList<AttributeNode>& attributes, StringParam name);
 
 private:
   // Type-defines
@@ -79,18 +75,15 @@ private:
 
   // Set the starting line and character of a syntax node to a given token's
   // position
-  static void SetNodeLocationStartToToken(SyntaxNode* node,
-                                          const UserToken& token);
+  static void SetNodeLocationStartToToken(SyntaxNode* node, const UserToken& token);
 
   // Set the starting line and character of a syntax node to a given token's
   // position
-  static void SetNodeLocationPrimaryToToken(SyntaxNode* node,
-                                            const UserToken& token);
+  static void SetNodeLocationPrimaryToToken(SyntaxNode* node, const UserToken& token);
 
   // Set the ending line and character of a syntax node to a given token's
   // position
-  static void SetNodeLocationEndToToken(SyntaxNode* node,
-                                        const UserToken& token);
+  static void SetNodeLocationEndToToken(SyntaxNode* node, const UserToken& token);
 
   // Saves the tokens position onto the stack
   void SaveTokenPosition();
@@ -104,9 +97,7 @@ private:
 
   // Attempts to accept any one of the given tokens, and outputs the one that
   // matches (also moves the token index ahead by one)
-  bool AcceptAnyArgs(size_t parameters,
-                     const UserToken** out_token,
-                     va_list vl);
+  bool AcceptAnyArgs(size_t parameters, const UserToken** out_token, va_list vl);
 
   // Attempts to accept any one of the given tokens, and outputs the one that
   // matches (also moves the token index ahead by one)
@@ -126,17 +117,11 @@ private:
 
   // Expects a given grammar constant, and otherwise produces an error (variadic
   // for the error context)
-  bool ExpectAndRetrieve(Grammar::Enum grammarConstant,
-                         const UserToken*& outToken,
-                         int errorCode,
-                         ...);
+  bool ExpectAndRetrieve(Grammar::Enum grammarConstant, const UserToken*& outToken, int errorCode, ...);
 
   // Expects a given grammar constant, and otherwise produces an error (variadic
   // for the error context)
-  bool ExpectAndRetrieveArgs(Grammar::Enum grammarConstant,
-                             const UserToken*& outToken,
-                             int errorCode,
-                             va_list vl);
+  bool ExpectAndRetrieveArgs(Grammar::Enum grammarConstant, const UserToken*& outToken, int errorCode, va_list vl);
 
   // A helper function to read the contents of a delgate syntax type
   bool ReadDelegateTypeContents(DelegateSyntaxType* delegateSyntaxType);
@@ -155,8 +140,7 @@ private:
 
   // Find the nearest scope to a given code location
   // Generally this is only used for auto-complete
-  static ScopeNode* FindNearestScope(SyntaxNode* root,
-                                     const CodeLocation& location);
+  static ScopeNode* FindNearestScope(SyntaxNode* root, const CodeLocation& location);
 
   // Parse an attribute definition
   void ParseAllOptionalAttributes();
@@ -165,27 +149,20 @@ private:
   bool ParseOneOptionalAttribute();
 
   // Apply the last attribute to a node
-  void AttachLastAttributeToNode(SyntaxNode* node,
-                                 NodeList<AttributeNode>& attributes);
+  void AttachLastAttributeToNode(SyntaxNode* node, NodeList<AttributeNode>& attributes);
 
   // Accept a type specifier (return type for a function)
   // Returns true if it parses successfully, false otherwise (note that no type
   // specifier will return true!)
-  bool AcceptOptionalTypeSpecifier(SyntaxType*& outSyntaxType,
-                                   int notFound,
-                                   ...);
+  bool AcceptOptionalTypeSpecifier(SyntaxType*& outSyntaxType, int notFound, ...);
 
   // Accept a type specifier (return type for a function)
   // Returns true if it parses successfully, false otherwise (note that no type
   // specifier will return true!)
-  bool AcceptOptionalTypeSpecifierArgs(SyntaxType*& outSyntaxType,
-                                       int notFound,
-                                       va_list args);
+  bool AcceptOptionalTypeSpecifierArgs(SyntaxType*& outSyntaxType, int notFound, va_list args);
 
   // Expect an argument list
-  bool ExpectArgumentList(GenericFunctionNode* node,
-                          StringParam functionName,
-                          bool mustBeEmpty);
+  bool ExpectArgumentList(GenericFunctionNode* node, StringParam functionName, bool mustBeEmpty);
 
   // Parse a scope body
   bool ExpectScopeBody(GenericFunctionNode* node, StringParam functionName);
@@ -207,17 +184,15 @@ private:
 
   // Parse a specialized function (code reuse)
   template <typename FunctionNodeType>
-  FunctionNodeType*
-  SpecializedFunction(Grammar::Enum type,
-                      String functionName,
-                      bool (Parser::*postArgs)(FunctionNodeType* node));
+  FunctionNodeType* SpecializedFunction(Grammar::Enum type,
+                                        String functionName,
+                                        bool (Parser::*postArgs)(FunctionNodeType* node));
 
   // Parse a function definition
   FunctionNode* Function();
 
   // Generate the standard function node for a get set
-  FunctionNode* GenerateGetSetFunctionNode(MemberVariableNode* variable,
-                                           bool isGet);
+  FunctionNode* GenerateGetSetFunctionNode(MemberVariableNode* variable, bool isGet);
 
   // Parse a get/set function definition
   FunctionNode* GetSetFunctionBody(MemberVariableNode* variable, bool isGet);
@@ -237,16 +212,14 @@ private:
 
   // A binary operator helper for parsing expressions (with right to left
   // associativity)
-  ExpressionNode*
-  BinaryOperatorRightToLeftAssociative(ExpressionFn currentPrecedence,
-                                       ExpressionFn nextPrecedence,
-                                       int parameters,
-                                       ...);
+  ExpressionNode* BinaryOperatorRightToLeftAssociative(ExpressionFn currentPrecedence,
+                                                       ExpressionFn nextPrecedence,
+                                                       int parameters,
+                                                       ...);
 
   // A binary operator helper for parsing expressions (with left to right
   // associativity)
-  ExpressionNode* BinaryOperatorLeftToRightAssociative(
-      ExpressionFn nextPrecedence, int parameters, ...);
+  ExpressionNode* BinaryOperatorLeftToRightAssociative(ExpressionFn nextPrecedence, int parameters, ...);
 
   // Parse an expression (including all precedent levels of operators, lower
   // number = lower precedence)
@@ -330,8 +303,7 @@ private:
   void Else(IfRootNode* root);
 
   // Parse a scope (with statements) or a single statement
-  bool ExpectScopedStatements(NodeList<StatementNode>& statements,
-                              Grammar::Enum parentKeyword);
+  bool ExpectScopedStatements(NodeList<StatementNode>& statements, Grammar::Enum parentKeyword);
 
   // Parse a for statement
   StatementNode* For();

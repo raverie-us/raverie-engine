@@ -9,15 +9,10 @@ ZilchDefineType(MetaSerialization, builder, type)
 {
 }
 
-void MetaSerialization::SerializeProperty(HandleParam instance,
-                                          Property* property,
-                                          Serializer& serializer)
+void MetaSerialization::SerializeProperty(HandleParam instance, Property* property, Serializer& serializer)
 {
   BoundType* propertyType = Type::GetBoundType(property->PropertyType);
-  ReturnIf(
-      propertyType == nullptr,
-      ,
-      "A property that was attempting to be serialized was not a BoundType");
+  ReturnIf(propertyType == nullptr, , "A property that was attempting to be serialized was not a BoundType");
 
   SerializerMode::Enum mode = serializer.GetMode();
 
@@ -40,8 +35,7 @@ void MetaSerialization::SerializeProperty(HandleParam instance,
   // MetaObjectSerialization The String check is a hack until this change
   if (propertyType->CopyMode == TypeCopyMode::ReferenceType)
   {
-    bool serialized = SerializeReferenceProperty(
-        propertyType, property->Name.c_str(), value, serializer);
+    bool serialized = SerializeReferenceProperty(propertyType, property->Name.c_str(), value, serializer);
 
     // Set the object back in case we allocated it
     if (serialized)
@@ -49,8 +43,7 @@ void MetaSerialization::SerializeProperty(HandleParam instance,
   }
   else
   {
-    bool serialized = SerializePrimitiveProperty(
-        propertyType, property->Name.c_str(), value, serializer);
+    bool serialized = SerializePrimitiveProperty(propertyType, property->Name.c_str(), value, serializer);
 
     // If we failed to load the property, there are a few extra things we need
     // to do
@@ -60,16 +53,14 @@ void MetaSerialization::SerializeProperty(HandleParam instance,
       if (!serialized)
       {
         if (MetaPropertyRename* rename = property->Has<MetaPropertyRename>())
-          serialized = SerializePrimitiveProperty(
-              propertyType, rename->mOldName.c_str(), value, serializer);
+          serialized = SerializePrimitiveProperty(propertyType, rename->mOldName.c_str(), value, serializer);
       }
 
       // If the value was not found use the default
       // value off of the property
       if (!serialized)
       {
-        MetaSerializedProperty* metaDefault =
-            property->Has<MetaSerializedProperty>();
+        MetaSerializedProperty* metaDefault = property->Has<MetaSerializedProperty>();
         if (metaDefault)
         {
           // Even though we failed to read the property, someone set up a valid
@@ -88,14 +79,9 @@ void MetaSerialization::SerializeProperty(HandleParam instance,
   }
 }
 
-bool MetaSerialization::SerializePrimitiveProperty(BoundType* meta,
-                                                   cstr fieldName,
-                                                   Any& value,
-                                                   Serializer& serializer)
+bool MetaSerialization::SerializePrimitiveProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer)
 {
-  Error("Type '%s' is not serializable on property '%s'",
-        meta->ToString().c_str(),
-        fieldName);
+  Error("Type '%s' is not serializable on property '%s'", meta->ToString().c_str(), fieldName);
   return false;
 }
 
@@ -111,8 +97,7 @@ bool MetaSerialization::SerializeReferenceProperty(BoundType* propertyType,
     // Allocate the object if it's null, and we need to load in data
     if (object.IsNull() && serializer.GetMode() == SerializerMode::Loading)
     {
-      if (propertyType->CreatableInScript &&
-          propertyType->GetDefaultConstructor() != nullptr)
+      if (propertyType->CreatableInScript && propertyType->GetDefaultConstructor() != nullptr)
       {
         object = ZilchAllocateUntyped(propertyType);
 
@@ -157,8 +142,7 @@ bool MetaSerialization::ConvertFromString(StringParam input, Any& output)
   return false;
 }
 
-void MetaSerialization::SerializeMembers(HandleParam object,
-                                         Serializer& serializer)
+void MetaSerialization::SerializeMembers(HandleParam object, Serializer& serializer)
 {
   MetaSerializeProperties(object, serializer);
 }
@@ -168,8 +152,7 @@ ZilchDefineType(EnumMetaSerialization, builder, type)
 {
 }
 
-EnumMetaSerialization::EnumMetaSerialization(BoundType* enumType) :
-    mEnumType(enumType)
+EnumMetaSerialization::EnumMetaSerialization(BoundType* enumType) : mEnumType(enumType)
 {
 }
 
@@ -179,8 +162,7 @@ bool EnumMetaSerialization::SerializePrimitiveProperty(BoundType* type,
                                                        Serializer& serializer)
 {
   Integer& enumValue = value.Get<Integer&>();
-  return serializer.EnumField(
-      type->Name.c_str(), fieldName, (uint&)enumValue, type);
+  return serializer.EnumField(type->Name.c_str(), fieldName, (uint&)enumValue, type);
 }
 
 void EnumMetaSerialization::SetDefault(Type* meta, Any& any)
@@ -194,8 +176,7 @@ void EnumMetaSerialization::SetDefault(Type* meta, Any& any)
 String EnumMetaSerialization::ConvertToString(AnyParam input)
 {
   Integer& value = input.Get<Integer&>();
-  return mEnumType->EnumValueToStrings.FindValue(value, Array<String>(1))
-      .Front();
+  return mEnumType->EnumValueToStrings.FindValue(value, Array<String>(1)).Front();
 }
 
 bool EnumMetaSerialization::ConvertFromString(StringParam input, Any& output)
@@ -272,24 +253,24 @@ ZilchDefineType(MetaStringSerialization, builder, type)
 {
 }
 
-bool MetaStringSerialization::SerializeReferenceProperty(
-    BoundType* propertyType, cstr fieldName, Any& value, Serializer& serializer)
+bool MetaStringSerialization::SerializeReferenceProperty(BoundType* propertyType,
+                                                         cstr fieldName,
+                                                         Any& value,
+                                                         Serializer& serializer)
 {
   if (serializer.GetMode() == SerializerMode::Saving)
   {
     if (value.IsNotNull())
     {
       String localValue = value.Get<String>();
-      return Serialization::Policy<String>::Serialize(
-          serializer, fieldName, localValue);
+      return Serialization::Policy<String>::Serialize(serializer, fieldName, localValue);
     }
     return true;
   }
   else
   {
     String localValue;
-    if (Serialization::Policy<String>::Serialize(
-            serializer, fieldName, localValue))
+    if (Serialization::Policy<String>::Serialize(serializer, fieldName, localValue))
     {
       value = localValue;
       return true;
@@ -322,9 +303,7 @@ bool SerializeAny(cstr fieldName, Any& value, Serializer& serializer)
   if (serializer.GetMode() == SerializerMode::Saving)
   {
     BoundType* type = Type::GetBoundType(value.StoredType);
-    ReturnIf(type == nullptr,
-             false,
-             "The Any that we attempted to serialize had no type");
+    ReturnIf(type == nullptr, false, "The Any that we attempted to serialize had no type");
 
     MetaSerialization* meta = type->Has<MetaSerialization>();
     ReturnIf(meta == nullptr,
@@ -334,17 +313,13 @@ bool SerializeAny(cstr fieldName, Any& value, Serializer& serializer)
              type->ToString().c_str());
 
     if (value.StoredType->IsValue())
-      return meta->SerializePrimitiveProperty(
-          type, fieldName, value, serializer);
+      return meta->SerializePrimitiveProperty(type, fieldName, value, serializer);
     else
-      return meta->SerializeReferenceProperty(
-          type, fieldName, value, serializer);
+      return meta->SerializeReferenceProperty(type, fieldName, value, serializer);
   }
   else
   {
-    ReturnIf(serializer.GetType() != SerializerType::Text,
-             nullptr,
-             "Can only detect type from text");
+    ReturnIf(serializer.GetType() != SerializerType::Text, nullptr, "Can only detect type from text");
 
     DataTreeLoader* dataTreeLoader = (DataTreeLoader*)&serializer;
     DataNode* node = dataTreeLoader->GetNext();
@@ -355,10 +330,7 @@ bool SerializeAny(cstr fieldName, Any& value, Serializer& serializer)
     String typeName = node->mTypeName.c_str();
     BoundType* type = MetaDatabase::GetInstance()->FindType(typeName);
 
-    ReturnIf(type == nullptr,
-             false,
-             "Unknown type '%s' while serializing Any",
-             node->mTypeName.c_str());
+    ReturnIf(type == nullptr, false, "Unknown type '%s' while serializing Any", node->mTypeName.c_str());
 
     MetaSerialization* meta = type->Has<MetaSerialization>();
     ReturnIf(meta == nullptr,
@@ -372,11 +344,9 @@ bool SerializeAny(cstr fieldName, Any& value, Serializer& serializer)
 
     // Serialize the any
     if (value.StoredType->IsValue())
-      return meta->SerializePrimitiveProperty(
-          type, fieldName, value, serializer);
+      return meta->SerializePrimitiveProperty(type, fieldName, value, serializer);
     else
-      return meta->SerializeReferenceProperty(
-          type, fieldName, value, serializer);
+      return meta->SerializeReferenceProperty(type, fieldName, value, serializer);
   }
 }
 
@@ -420,9 +390,7 @@ bool SerializeVariant(cstr fieldName, Variant& value, Serializer& serializer)
   return true;
 }
 
-void SerializeProperty(HandleParam instance,
-                       Property* property,
-                       Serializer& serializer)
+void SerializeProperty(HandleParam instance, Property* property, Serializer& serializer)
 {
   BoundType* type = Type::GetBoundType(property->PropertyType);
 
@@ -449,8 +417,7 @@ void SerializeProperty(HandleParam instance,
 void MetaSerializeComponents(HandleParam instance, Serializer& serializer)
 {
   BoundType* type = instance.StoredType;
-  ReturnIf(
-      type == nullptr, , "Invalid instance given to MetaSerializeComponents");
+  ReturnIf(type == nullptr, , "Invalid instance given to MetaSerializeComponents");
 
   MetaComposition* composition = type->Has<MetaComposition>();
 
@@ -467,8 +434,7 @@ void MetaSerializeComponents(HandleParam instance, Serializer& serializer)
     for (uint i = 0; i < childCount; ++i)
     {
       Any component = composition->GetComponentAt(instance, i);
-      MetaSerialization* metaSerialization =
-          component.StoredType->HasInherited<MetaSerialization>();
+      MetaSerialization* metaSerialization = component.StoredType->HasInherited<MetaSerialization>();
       if (metaSerialization)
         metaSerialization->SerializeObject(component, serializer);
       else
@@ -480,8 +446,7 @@ void MetaSerializeComponents(HandleParam instance, Serializer& serializer)
     PolymorphicNode componentNode;
     while (serializer.GetPolymorphic(componentNode))
     {
-      BoundType* componentType =
-          MetaDatabase::GetInstance()->FindType(componentNode.TypeName);
+      BoundType* componentType = MetaDatabase::GetInstance()->FindType(componentNode.TypeName);
       if (componentType)
       {
         Handle component = composition->GetComponent(instance, componentType);
@@ -493,19 +458,16 @@ void MetaSerializeComponents(HandleParam instance, Serializer& serializer)
 
         if (component.IsNotNull())
         {
-          MetaSerialization* metaSerialization =
-              component.StoredType->Has<MetaSerialization>();
+          MetaSerialization* metaSerialization = component.StoredType->Has<MetaSerialization>();
           if (metaSerialization)
             metaSerialization->SerializeObject(component, serializer);
           else
-            Error("Unable to serialize component of type '%s'",
-                  componentType->ToString().c_str());
+            Error("Unable to serialize component of type '%s'", componentType->ToString().c_str());
         }
       }
       else
       {
-        Error("Unable to meta serialize component type '%s'",
-              String(componentNode.TypeName).c_str());
+        Error("Unable to meta serialize component type '%s'", String(componentNode.TypeName).c_str());
       }
       serializer.EndPolymorphic();
     }
@@ -516,15 +478,14 @@ void MetaSerializeProperties(HandleParam instance, Serializer& serializer)
 {
   BoundType* boundType = instance.StoredType;
   // Go through all properties
-  forRange(Property * property, boundType->GetProperties())
+  forRange (Property* property, boundType->GetProperties())
   {
     if (property->Get == nullptr || property->Set == nullptr)
       continue;
 
     if (property->HasAttribute(PropertyAttributes::cProperty) == nullptr &&
         property->HasAttribute(PropertyAttributes::cSerialize) == nullptr &&
-        property->HasAttribute(PropertyAttributes::cDeprecatedSerialized) ==
-            nullptr)
+        property->HasAttribute(PropertyAttributes::cDeprecatedSerialized) == nullptr)
       continue;
 
     SerializeProperty(instance, property, serializer);

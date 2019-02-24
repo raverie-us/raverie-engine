@@ -57,14 +57,14 @@ void Console::Print(Filter::Enum filter, cstr format, ...)
 
 void Console::PrintRaw(Filter::Enum filter, cstr messageBuffer)
 {
-  forRange(ConsoleListener * listener, ConsoleListeners.All())
-      listener->Print(filter, messageBuffer);
+  forRange (ConsoleListener* listener, ConsoleListeners.All())
+    listener->Print(filter, messageBuffer);
 }
 
 void Console::FlushAll()
 {
-  forRange(ConsoleListener * listener, ConsoleListeners.All())
-      listener->Flush();
+  forRange (ConsoleListener* listener, ConsoleListeners.All())
+    listener->Flush();
 }
 
 void Console::Add(ConsoleListener* listener)

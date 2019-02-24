@@ -16,18 +16,14 @@ ZilchDefineType(CogReplaceEvent, builder, type)
 {
 }
 
-CogReplaceEvent::CogReplaceEvent(Cog* oldCog, Cog* newCog) :
-    mOldCog(oldCog),
-    mNewCog(newCog)
+CogReplaceEvent::CogReplaceEvent(Cog* oldCog, Cog* newCog) : mOldCog(oldCog), mNewCog(newCog)
 {
   mOldIndex = oldCog->GetId().ToUint64();
   mNewIndex = newCog->GetId().ToUint64();
 }
 
 // Archetype Rebuilder
-void ReplaceInSelection(Cog* oldCog,
-                        Cog* newCog,
-                        HashSet<MetaSelection*>* modifiedSelections);
+void ReplaceInSelection(Cog* oldCog, Cog* newCog, HashSet<MetaSelection*>* modifiedSelections);
 
 Cog* FindNextInOrderSkipChildren(Cog* cog)
 {
@@ -46,10 +42,9 @@ Cog* FindNextInOrderSkipChildren(Cog* cog)
   return nullptr;
 }
 
-void ArchetypeRebuilder::RebuildArchetypes(
-    Archetype* modifiedArchetype,
-    Cog* ignore,
-    Array<CogRestoreState*>* restoreStates)
+void ArchetypeRebuilder::RebuildArchetypes(Archetype* modifiedArchetype,
+                                           Cog* ignore,
+                                           Array<CogRestoreState*>* restoreStates)
 {
   if (modifiedArchetype == nullptr)
     return;
@@ -60,9 +55,9 @@ void ArchetypeRebuilder::RebuildArchetypes(
   // This is so iteration can be safe later
   HashSet<Cog*> objectsToReload;
 
-  forRange(GameSession * gameSession, Z::gEngine->GetGameSessions())
+  forRange (GameSession* gameSession, Z::gEngine->GetGameSessions())
   {
-    forRange(Space * space, gameSession->GetAllSpaces())
+    forRange (Space* space, gameSession->GetAllSpaces())
     {
       Cog* cog = &space->AllRootObjects().Front();
       while (cog)
@@ -118,14 +113,12 @@ void ArchetypeRebuilder::RebuildArchetypes(
   if (objectsToReload.Empty())
     return;
 
-  ZPrint("Rebuilding %d Archetypes of '%s'\n",
-         objectsToReload.Size(),
-         modifiedArchetype->Name.c_str());
+  ZPrint("Rebuilding %d Archetypes of '%s'\n", objectsToReload.Size(), modifiedArchetype->Name.c_str());
 
   HashSet<MetaSelection*> modifiedSelections;
 
   // Replace all needed objects
-  forRange(Cog * oldCog, objectsToReload.All())
+  forRange (Cog* oldCog, objectsToReload.All())
   {
     // Store the state of the Cog for undo/redo before rebuilding it
     if (restoreStates)
@@ -138,8 +131,8 @@ void ArchetypeRebuilder::RebuildArchetypes(
     RebuildCog(oldCog, &modifiedSelections);
   }
 
-  forRange(MetaSelection * selection, modifiedSelections.All())
-      selection->FinalSelectionUpdated();
+  forRange (MetaSelection* selection, modifiedSelections.All())
+    selection->FinalSelectionUpdated();
 }
 
 Cog* ArchetypeRebuilder::RebuildCog(Cog* cog)
@@ -150,8 +143,8 @@ Cog* ArchetypeRebuilder::RebuildCog(Cog* cog)
   Cog* newCog = ArchetypeRebuilder::RebuildCog(cog, &modifiedSelections);
 
   // Notify that the selections have been changed
-  forRange(MetaSelection * selection, modifiedSelections.All())
-      selection->FinalSelectionUpdated();
+  forRange (MetaSelection* selection, modifiedSelections.All())
+    selection->FinalSelectionUpdated();
 
   return newCog;
 }
@@ -161,7 +154,7 @@ void RestoreUndoHandles(Cog* oldCog, Cog* newCog)
   Z::gUndoMap->UpdateHandleIfExists(oldCog, newCog);
 
   // Update Component handles
-  forRange(Component * newComponent, newCog->GetComponents())
+  forRange (Component* newComponent, newCog->GetComponents())
   {
     BoundType* componentType = ZilchVirtualTypeId(newComponent);
     if (Component* oldComponent = oldCog->QueryComponentType(componentType))
@@ -169,23 +162,21 @@ void RestoreUndoHandles(Cog* oldCog, Cog* newCog)
   }
 
   // Update child Objects
-  forRange(Cog & newChild, newCog->GetChildren())
+  forRange (Cog& newChild, newCog->GetChildren())
   {
     if (Cog* oldChild = oldCog->FindChildByChildId(newChild.mChildId))
       RestoreUndoHandles(oldChild, &newChild);
   }
 }
 
-Cog* ArchetypeRebuilder::RebuildCog(Cog* oldCog,
-                                    HashSet<MetaSelection*>* modifiedSelections)
+Cog* ArchetypeRebuilder::RebuildCog(Cog* oldCog, HashSet<MetaSelection*>* modifiedSelections)
 {
   // TODO: For now, don't rebuild objects that are transient. We could mark them
   // as non-transient, rebuild, then mark the new one as transient
   if (oldCog->GetTransient() || oldCog->GetMarkedForDestruction())
     return nullptr;
 
-  ErrorIf(oldCog->FindNearestArchetypeContext() != oldCog,
-          "Can only rebuild root contexts.");
+  ErrorIf(oldCog->FindNearestArchetypeContext() != oldCog, "Can only rebuild root contexts.");
 
   LocalModifications* modifications = LocalModifications::GetInstance();
   Space* space = oldCog->GetSpace();
@@ -268,13 +259,11 @@ Cog* ArchetypeRebuilder::RebuildCog(Cog* oldCog,
   return updatedCog;
 }
 
-void ReplaceInSelection(Cog* oldCog,
-                        Cog* newCog,
-                        HashSet<MetaSelection*>* modifiedSelections)
+void ReplaceInSelection(Cog* oldCog, Cog* newCog, HashSet<MetaSelection*>* modifiedSelections)
 {
   // If the old object was selected, we want to re-insert the new object
   // in the old one's place
-  forRange(MetaSelection * selection, MetaSelection::GetAllSelections())
+  forRange (MetaSelection* selection, MetaSelection::GetAllSelections())
   {
     if (selection->Contains(oldCog))
     {
@@ -287,7 +276,7 @@ void ReplaceInSelection(Cog* oldCog,
   }
 
   // Recurse down through the children
-  forRange(Cog & newChild, newCog->GetChildren())
+  forRange (Cog& newChild, newCog->GetChildren())
   {
     // Find the old child that has the same child id
     Cog* oldChild = oldCog->FindChildByChildId(newChild.mChildId);

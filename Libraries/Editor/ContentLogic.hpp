@@ -15,8 +15,7 @@ bool LoadContentLibrary(StringParam name, bool isCore);
 void LoadContentConfig();
 bool LoadEditorContent();
 
-class EditorPackageLoader
-    : public ExplicitSingleton<EditorPackageLoader, EventObject>
+class EditorPackageLoader : public ExplicitSingleton<EditorPackageLoader, EventObject>
 {
 public:
   ZilchDeclareType(EditorPackageLoader, TypeCopyMode::ReferenceType);
@@ -25,10 +24,7 @@ public:
 
   void OnPackagedBuilt(ContentSystemEvent* event);
 
-  bool LoadPackage(Editor* editor,
-                   Cog* projectCog,
-                   ContentLibrary* library,
-                   ResourcePackage* package);
+  bool LoadPackage(Editor* editor, Cog* projectCog, ContentLibrary* library, ResourcePackage* package);
 
   Array<ResourcePackage*> PackagesToLoad;
 };

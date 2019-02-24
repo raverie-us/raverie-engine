@@ -48,9 +48,7 @@ public:
     }
   }
 
-  void Rename(Status& status,
-              StringParam sourcePath,
-              StringParam destPath) override
+  void Rename(Status& status, StringParam sourcePath, StringParam destPath) override
   {
     // Build command line
     String source = BuildString("\"", sourcePath, "\"");
@@ -60,9 +58,7 @@ public:
     RunSimpleCommandLine(status, commandLine);
   }
 
-  void GetRevisions(Status& status,
-                    StringParam sourcePath,
-                    Array<Revision>& revisions) override
+  void GetRevisions(Status& status, StringParam sourcePath, Array<Revision>& revisions) override
   {
   }
 };

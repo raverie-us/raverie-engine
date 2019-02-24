@@ -4,12 +4,9 @@
 namespace Zero
 {
 
-bool GetExecutableResource(const char* name,
-                           const char* type,
-                           ByteBufferBlock& output)
+bool GetExecutableResource(const char* name, const char* type, ByteBufferBlock& output)
 {
-  HRSRC resource =
-      FindResource(nullptr, Widen(name).c_str(), Widen(type).c_str());
+  HRSRC resource = FindResource(nullptr, Widen(name).c_str(), Widen(type).c_str());
   if (resource == INVALID_HANDLE_VALUE)
     return false;
 
@@ -25,8 +22,7 @@ bool GetExecutableResource(const char* name,
   return true;
 }
 
-ExecutableResourceUpdater::ExecutableResourceUpdater(Status& status,
-                                                     const char* fileName)
+ExecutableResourceUpdater::ExecutableResourceUpdater(Status& status, const char* fileName)
 {
   mHandle = BeginUpdateResource(Widen(fileName).c_str(), FALSE);
 
@@ -39,10 +35,7 @@ ExecutableResourceUpdater::~ExecutableResourceUpdater()
   EndUpdateResource(mHandle, FALSE);
 }
 
-void ExecutableResourceUpdater::Update(const char* name,
-                                       const char* type,
-                                       const byte* data,
-                                       size_t size)
+void ExecutableResourceUpdater::Update(const char* name, const char* type, const byte* data, size_t size)
 {
   BOOL result = UpdateResource((HANDLE)mHandle,
                                Widen(type).c_str(),
@@ -50,9 +43,7 @@ void ExecutableResourceUpdater::Update(const char* name,
                                MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL),
                                (void*)data,
                                size);
-  ErrorIf(
-      !result,
-      "UpdateResource should never fail unless a parameter was invalid/null");
+  ErrorIf(!result, "UpdateResource should never fail unless a parameter was invalid/null");
 }
 
 #pragma pack(push, 2)
@@ -118,13 +109,12 @@ void ExecutableResourceUpdater::UpdateIcon(const byte* buffer, size_t size)
   for (uint i = 0; i < iconCount; ++i)
   {
     // Add the new icon to resources
-    BOOL result =
-        UpdateResource(mHandle,
-                       RT_ICON,
-                       MAKEINTRESOURCE(i + cIconOffset),
-                       MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL),
-                       (LPVOID)(buffer + iconDir.idEntries[i].dwImageOffset),
-                       iconDir.idEntries[i].dwBytesInRes);
+    BOOL result = UpdateResource(mHandle,
+                                 RT_ICON,
+                                 MAKEINTRESOURCE(i + cIconOffset),
+                                 MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL),
+                                 (LPVOID)(buffer + iconDir.idEntries[i].dwImageOffset),
+                                 iconDir.idEntries[i].dwBytesInRes);
 
     CheckWin(result, "Failed to update resource");
   }
@@ -157,12 +147,8 @@ void ExecutableResourceUpdater::UpdateIcon(const byte* buffer, size_t size)
   // Update the resource
   // Note: If explorer is looking at the exe when this happens it can fail
   // and/or have cached the old icons.
-  BOOL result = UpdateResource(mHandle,
-                               RT_GROUP_ICON,
-                               L"MAINICON",
-                               MAKELANGID(LANG_ENGLISH, SUBLANG_DEFAULT),
-                               &groupIcon,
-                               groupIconSize);
+  BOOL result = UpdateResource(
+      mHandle, RT_GROUP_ICON, L"MAINICON", MAKELANGID(LANG_ENGLISH, SUBLANG_DEFAULT), &groupIcon, groupIconSize);
 
   CheckWin(result, "Failed to update resource");
 }

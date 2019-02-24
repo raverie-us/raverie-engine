@@ -14,9 +14,7 @@ class Widget;
 struct ObjectPropertyNode
 {
   /// Constructors.
-  ObjectPropertyNode(ObjectPropertyNode* parent,
-                     HandleParam object,
-                     Property* objectProperty = nullptr);
+  ObjectPropertyNode(ObjectPropertyNode* parent, HandleParam object, Property* objectProperty = nullptr);
   ObjectPropertyNode(ObjectPropertyNode* parent, Property* property);
 
   /// Destructor.
@@ -141,20 +139,16 @@ public:
   /// Changes the given property on the given object. This is considered the
   /// final commit of the property (not intermediate), and should
   /// be added to a queue for undo/redo if applicable.
-  virtual void ChangeProperty(HandleParam object,
-                              PropertyPathParam property,
-                              PropertyState& state,
-                              PropertyAction::Enum action);
+  virtual void
+  ChangeProperty(HandleParam object, PropertyPathParam property, PropertyState& state, PropertyAction::Enum action);
 
-  virtual void MarkPropertyModified(HandleParam object,
-                                    PropertyPathParam property);
+  virtual void MarkPropertyModified(HandleParam object, PropertyPathParam property);
   virtual void RevertProperty(HandleParam object, PropertyPathParam property);
 
   /// Returns whether or not the value is valid. For example, it could be
   /// invalid if this is a multi-selection and there is a conflict between
   /// the values on multiple objects.
-  virtual PropertyState GetValue(HandleParam object,
-                                 PropertyPathParam property);
+  virtual PropertyState GetValue(HandleParam object, PropertyPathParam property);
 
   /// Invokes the given method on the given object(s).
   virtual void InvokeFunction(HandleParam object, Zilch::Function* method);
@@ -169,10 +163,9 @@ public:
   /// are to be displayed in the property grid. Building the tree in the
   /// property interface allows custom behavior that the property view
   /// couldn't support by querying the objects meta directly.
-  virtual ObjectPropertyNode*
-  BuildObjectTree(ObjectPropertyNode* parent,
-                  HandleParam instance,
-                  Property* objectProperty = nullptr);
+  virtual ObjectPropertyNode* BuildObjectTree(ObjectPropertyNode* parent,
+                                              HandleParam instance,
+                                              Property* objectProperty = nullptr);
 
   /// When the property view is looking at an object or multiple objects,
   /// it needs to know when the components have changed on the object
@@ -182,9 +175,7 @@ public:
   virtual void GetObjects(HandleParam instance, Array<Handle>& objects);
 
   /// Capture the state of a property for all objects
-  virtual void CaptureState(PropertyStateCapture& capture,
-                            HandleParam object,
-                            PropertyPathParam property);
+  virtual void CaptureState(PropertyStateCapture& capture, HandleParam object, PropertyPathParam property);
 
   /// Restore the state of all properties on all objects
   virtual void RestoreState(PropertyStateCapture& capture);
@@ -212,8 +203,7 @@ public:
 class EventMetaComposition : public MetaCompositionWrapper
 {
 public:
-  EventMetaComposition(PropertyInterface* propertyInterface,
-                       BoundType* typeToWrap);
+  EventMetaComposition(PropertyInterface* propertyInterface, BoundType* typeToWrap);
 
   // MetaComposition Interface.
   void AddComponent(HandleParam owner,
@@ -221,12 +211,8 @@ public:
                     int index = -1,
                     bool ignoreDependencies = false,
                     MetaCreationContext* creationContext = nullptr) override;
-  void RemoveComponent(HandleParam owner,
-                       HandleParam component,
-                       bool ignoreDependencies = false) override;
-  void MoveComponent(HandleParam owner,
-                     HandleParam component,
-                     uint destination) override;
+  void RemoveComponent(HandleParam owner, HandleParam component, bool ignoreDependencies = false) override;
+  void MoveComponent(HandleParam owner, HandleParam component, uint destination) override;
 
   PropertyInterface* mPropertyInterface;
 };
@@ -235,8 +221,7 @@ public:
 class EventMetaArray : public MetaArrayWrapper
 {
 public:
-  EventMetaArray(BoundType* containedType,
-                 PropertyInterface* propertyInterface);
+  EventMetaArray(BoundType* containedType, PropertyInterface* propertyInterface);
 
   void Add(HandleParam container, AnyParam value) override;
   void EraseIndex(HandleParam container, uint index) override;

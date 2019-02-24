@@ -27,32 +27,20 @@ public:
     InsertOrOverride(p0);
     InsertOrOverride(p1);
   }
-  OrderedHashSet(ContainerInitializerDummy*,
-                 const T& p0,
-                 const T& p1,
-                 const T& p2)
+  OrderedHashSet(ContainerInitializerDummy*, const T& p0, const T& p1, const T& p2)
   {
     InsertOrOverride(p0);
     InsertOrOverride(p1);
     InsertOrOverride(p2);
   }
-  OrderedHashSet(ContainerInitializerDummy*,
-                 const T& p0,
-                 const T& p1,
-                 const T& p2,
-                 const T& p3)
+  OrderedHashSet(ContainerInitializerDummy*, const T& p0, const T& p1, const T& p2, const T& p3)
   {
     InsertOrOverride(p0);
     InsertOrOverride(p1);
     InsertOrOverride(p2);
     InsertOrOverride(p3);
   }
-  OrderedHashSet(ContainerInitializerDummy*,
-                 const T& p0,
-                 const T& p1,
-                 const T& p2,
-                 const T& p3,
-                 const T& p4)
+  OrderedHashSet(ContainerInitializerDummy*, const T& p0, const T& p1, const T& p2, const T& p3, const T& p4)
   {
     InsertOrOverride(p0);
     InsertOrOverride(p1);
@@ -60,13 +48,8 @@ public:
     InsertOrOverride(p3);
     InsertOrOverride(p4);
   }
-  OrderedHashSet(ContainerInitializerDummy*,
-                 const T& p0,
-                 const T& p1,
-                 const T& p2,
-                 const T& p3,
-                 const T& p4,
-                 const T& p5)
+  OrderedHashSet(
+      ContainerInitializerDummy*, const T& p0, const T& p1, const T& p2, const T& p3, const T& p4, const T& p5)
   {
     InsertOrOverride(p0);
     InsertOrOverride(p1);

@@ -37,8 +37,7 @@ class SubRenderGroupPass : public SafeId32
 public:
   ZilchDeclareType(SubRenderGroupPass, TypeCopyMode::ReferenceType);
 
-  SubRenderGroupPass(RenderTasksEvent* renderTasksEvent,
-                     RenderGroup& baseRenderGroup);
+  SubRenderGroupPass(RenderTasksEvent* renderTasksEvent, RenderGroup& baseRenderGroup);
 
   /// Resets interface back to the initial creation state with a given base
   /// RenderGroup.
@@ -46,22 +45,18 @@ public:
   /// Settings to use for the base or all sub RenderGroups that do not have
   /// specified settings. Without defaults, the base or any sub RenderGroup
   /// without settings will not render.
-  void SetDefaultSettings(GraphicsRenderSettings& defaultSettings,
-                          MaterialBlock& defaultPass);
+  void SetDefaultSettings(GraphicsRenderSettings& defaultSettings, MaterialBlock& defaultPass);
   /// Define the settings to use for a specific RenderGroup.
   /// Given RenderGroup must be a child of the base RenderGroup, or the base
   /// itself, that this was initialized with.
-  void AddSubSettings(GraphicsRenderSettings& subSettings,
-                      RenderGroup& subGroup,
-                      MaterialBlock& subPass);
+  void AddSubSettings(GraphicsRenderSettings& subSettings, RenderGroup& subGroup, MaterialBlock& subPass);
   /// Explicitely exclude a RenderGroup from rendering when there are default
   /// settings. Given RenderGroup must be a child of the base RenderGroup, or
   /// the base itself, that this was initialized with.
   void ExcludeSubRenderGroup(RenderGroup& subGroup);
 
   // Internal
-  bool ValidateSettings(GraphicsRenderSettings& renderSettings,
-                        MaterialBlock& renderPass);
+  bool ValidateSettings(GraphicsRenderSettings& renderSettings, MaterialBlock& renderPass);
   bool ValidateRenderGroup(RenderGroup& renderGroup);
 
   struct SubData
@@ -97,13 +92,10 @@ public:
   // Dimensions are clamped to [1, 4096]
   /// Returns a RenderTarget for use when adding render tasks. Target only valid
   /// during this event.
-  HandleOf<RenderTarget> GetRenderTarget(IntVec2 size,
-                                         TextureFormat::Enum format);
+  HandleOf<RenderTarget> GetRenderTarget(IntVec2 size, TextureFormat::Enum format);
   /// Returns a RenderTarget for use when adding render tasks. Target only valid
   /// during this event.
-  HandleOf<RenderTarget> GetRenderTarget(IntVec2 size,
-                                         TextureFormat::Enum format,
-                                         SamplerSettings& samplerSettings);
+  HandleOf<RenderTarget> GetRenderTarget(IntVec2 size, TextureFormat::Enum format, SamplerSettings& samplerSettings);
   /// Returns a RenderTarget for use when adding render tasks. Target only valid
   /// during this event. Will render to the given texture instead of an
   /// internally managed texture.
@@ -122,25 +114,14 @@ public:
   /// Initializes all the internal texture data for the given RenderTargets.
   void AddRenderTaskClearTarget(RenderTarget* depthTarget, float depth);
   /// Initializes all the internal texture data for the given RenderTargets.
-  void AddRenderTaskClearTarget(RenderTarget* depthTarget,
-                                float depth,
-                                uint stencil);
+  void AddRenderTaskClearTarget(RenderTarget* depthTarget, float depth, uint stencil);
   /// Initializes all the internal texture data for the given RenderTargets.
-  void AddRenderTaskClearTarget(RenderTarget* depthTarget,
-                                float depth,
-                                uint stencil,
-                                uint stencilWriteMask);
+  void AddRenderTaskClearTarget(RenderTarget* depthTarget, float depth, uint stencil, uint stencilWriteMask);
   /// Initializes all the internal texture data for the given RenderTargets.
-  void AddRenderTaskClearTarget(RenderTarget* colorTarget,
-                                RenderTarget* depthTarget,
-                                Vec4 color,
-                                float depth);
+  void AddRenderTaskClearTarget(RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth);
   /// Initializes all the internal texture data for the given RenderTargets.
-  void AddRenderTaskClearTarget(RenderTarget* colorTarget,
-                                RenderTarget* depthTarget,
-                                Vec4 color,
-                                float depth,
-                                uint stencil);
+  void
+  AddRenderTaskClearTarget(RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth, uint stencil);
   /// Initializes all the internal texture data for the given RenderTargets.
   void AddRenderTaskClearTarget(RenderTarget* colorTarget,
                                 RenderTarget* depthTarget,
@@ -149,23 +130,14 @@ public:
                                 uint stencil,
                                 uint stencilWriteMask);
   /// Initializes all the internal texture data for the given RenderTargets.
-  void AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings,
-                                Vec4 color);
+  void AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color);
   /// Initializes all the internal texture data for the given RenderTargets.
-  void AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings,
-                                Vec4 color,
-                                float depth);
+  void AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color, float depth);
   /// Initializes all the internal texture data for the given RenderTargets.
-  void AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings,
-                                Vec4 color,
-                                float depth,
-                                uint stencil);
+  void AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color, float depth, uint stencil);
   /// Initializes all the internal texture data for the given RenderTargets.
-  void AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings,
-                                Vec4 color,
-                                float depth,
-                                uint stencil,
-                                uint stencilWriteMask);
+  void AddRenderTaskClearTarget(
+      GraphicsRenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask);
 
   /// Renders a group of objects with the given settings. The RenderPass
   /// fragment defines what data is written to RenderTargets.
@@ -186,28 +158,21 @@ public:
   /// Invokes the pixel shader for every pixel of the RenderTargets.
   void AddRenderTaskPostProcess(RenderTarget* renderTarget, Material& material);
   /// Invokes the pixel shader for every pixel of the RenderTargets.
-  void AddRenderTaskPostProcess(RenderTarget* renderTarget,
-                                MaterialBlock& postProcess);
+  void AddRenderTaskPostProcess(RenderTarget* renderTarget, MaterialBlock& postProcess);
   /// Invokes the pixel shader for every pixel of the RenderTargets.
-  void AddRenderTaskPostProcess(GraphicsRenderSettings& renderSettings,
-                                Material& material);
+  void AddRenderTaskPostProcess(GraphicsRenderSettings& renderSettings, Material& material);
   /// Invokes the pixel shader for every pixel of the RenderTargets.
-  void AddRenderTaskPostProcess(GraphicsRenderSettings& renderSettings,
-                                MaterialBlock& postProcess);
+  void AddRenderTaskPostProcess(GraphicsRenderSettings& renderSettings, MaterialBlock& postProcess);
 
   // Internal for the graphics engine.
-  void AddRenderTaskBackBufferBlit(RenderTarget* colorTarget,
-                                   ScreenViewport viewport);
+  void AddRenderTaskBackBufferBlit(RenderTarget* colorTarget, ScreenViewport viewport);
 
   /// Returns a RenderTarget for rendering to the CameraViewport's FinalTexture
   /// that represents the end result of the renderer.
-  HandleOf<RenderTarget> GetFinalTarget(IntVec2 size,
-                                        TextureFormat::Enum format);
+  HandleOf<RenderTarget> GetFinalTarget(IntVec2 size, TextureFormat::Enum format);
   /// Returns a RenderTarget for rendering to the CameraViewport's FinalTexture
   /// that represents the end result of the renderer.
-  HandleOf<RenderTarget> GetFinalTarget(IntVec2 size,
-                                        TextureFormat::Enum format,
-                                        SamplerSettings& samplerSettings);
+  HandleOf<RenderTarget> GetFinalTarget(IntVec2 size, TextureFormat::Enum format, SamplerSettings& samplerSettings);
 
   // Internal
   uint GetUniqueShaderInputsId();
@@ -237,25 +202,19 @@ public:
   template <typename T>
   T* NewRenderTask();
 
-  void AddRenderTaskClearTarget(RenderSettings& renderSettings,
-                                Vec4 color,
-                                float depth,
-                                uint stencil,
-                                uint stencilWriteMask);
+  void AddRenderTaskClearTarget(
+      RenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask);
   void AddRenderTaskRenderPass(RenderSettings& renderSettings,
                                uint renderGroupIndex,
                                StringParam renderPassName,
                                uint shaderInputRangesId,
                                uint subRenderGroupCount = 0,
                                bool render = true);
-  void AddRenderTaskPostProcess(RenderSettings& renderSettings,
-                                StringParam postProcessName,
-                                uint shaderInputsId);
+  void AddRenderTaskPostProcess(RenderSettings& renderSettings, StringParam postProcessName, uint shaderInputsId);
   void AddRenderTaskPostProcess(RenderSettings& renderSettings,
                                 MaterialRenderData* materialRenderData,
                                 uint shaderInputsId);
-  void AddRenderTaskBackBufferBlit(RenderTarget* colorTarget,
-                                   ScreenViewport viewport);
+  void AddRenderTaskBackBufferBlit(RenderTarget* colorTarget, ScreenViewport viewport);
   void AddRenderTaskTextureUpdate(Texture* texture);
 
   bool ValidateRenderTargets(RenderSettings& renderSettings);
@@ -266,14 +225,12 @@ public:
 template <typename T>
 T* RenderTaskHelper::NewRenderTask()
 {
-  ErrorIf(mBuffer.mCurrentIndex % MaxPrimtiveSize != 0,
-          "Should always be aligned");
+  ErrorIf(mBuffer.mCurrentIndex % MaxPrimtiveSize != 0, "Should always be aligned");
 
   uint newIndex = mBuffer.mCurrentIndex + sizeof(T);
   if (newIndex > mBuffer.mRenderTaskData.Size())
   {
-    size_t newSize =
-        Math::Max(mBuffer.mRenderTaskData.Size() * 2, (size_t)newIndex);
+    size_t newSize = Math::Max(mBuffer.mRenderTaskData.Size() * 2, (size_t)newIndex);
     mBuffer.mRenderTaskData.Resize(newSize);
   }
 

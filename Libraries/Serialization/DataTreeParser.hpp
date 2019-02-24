@@ -11,9 +11,7 @@ struct DataTreeContext;
 class DataTreeParser
 {
 public:
-  static bool BuildTree(DataTreeContext& context,
-                        StringRange data,
-                        DataNode* fileRoot);
+  static bool BuildTree(DataTreeContext& context, StringRange data, DataNode* fileRoot);
 
 private:
   DataTreeParser(DataTreeContext& context);

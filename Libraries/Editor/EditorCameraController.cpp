@@ -95,15 +95,12 @@ void EditorCameraController::Serialize(Serializer& stream)
 void EditorCameraController::Reset()
 {
   mLookDistance = mControlMode != ControlMode::ZPlane ? 10.0f : 20.0f;
-  mLookTarget =
-      mControlMode != ControlMode::ZPlane ? Vec3(0, 2, 0) : Vec3::cZero;
+  mLookTarget = mControlMode != ControlMode::ZPlane ? Vec3(0, 2, 0) : Vec3::cZero;
   mCameraDirection = -Vec3::cZAxis;
   mCameraRight = Vec3::cXAxis;
   mCameraUp = Vec3::cYAxis;
   mHorizontalAngle = 0;
-  mVerticalAngle = mControlMode != ControlMode::ZPlane
-                       ? Math::DegToRad(ResetVerticalAngle)
-                       : 0.0f;
+  mVerticalAngle = mControlMode != ControlMode::ZPlane ? Math::DegToRad(ResetVerticalAngle) : 0.0f;
   UpdateTransform();
 }
 
@@ -116,31 +113,20 @@ void EditorCameraController::SetControlMode(ControlMode::Enum mode)
 {
   if (mode == ControlMode::FirstPerson || mode == ControlMode::Orbit)
   {
-    ActionGroup* actionGroup =
-        new ActionGroup(this->GetOwner(), ActionExecuteMode::FrameUpdate);
+    ActionGroup* actionGroup = new ActionGroup(this->GetOwner(), ActionExecuteMode::FrameUpdate);
 
     float minVertical = Math::DegToRad(ResetVerticalAngle);
     if (Math::Abs(mVerticalAngle) < minVertical)
-      actionGroup->Add(AnimateMember(&EditorCameraController::mVerticalAngle,
-                                     Ease::Quad::InOut,
-                                     this,
-                                     ModeChangeAnimationTime,
-                                     minVertical));
+      actionGroup->Add(AnimateMember(
+          &EditorCameraController::mVerticalAngle, Ease::Quad::InOut, this, ModeChangeAnimationTime, minVertical));
   }
   else if (mode == ControlMode::ZPlane)
   {
-    ActionGroup* actionGroup =
-        new ActionGroup(this->GetOwner(), ActionExecuteMode::FrameUpdate);
-    actionGroup->Add(AnimateMember(&EditorCameraController::mVerticalAngle,
-                                   Ease::Quad::InOut,
-                                   this,
-                                   ModeChangeAnimationTime,
-                                   0.0f));
-    actionGroup->Add(AnimateMember(&EditorCameraController::mHorizontalAngle,
-                                   Ease::Quad::InOut,
-                                   this,
-                                   ModeChangeAnimationTime,
-                                   0.0f));
+    ActionGroup* actionGroup = new ActionGroup(this->GetOwner(), ActionExecuteMode::FrameUpdate);
+    actionGroup->Add(
+        AnimateMember(&EditorCameraController::mVerticalAngle, Ease::Quad::InOut, this, ModeChangeAnimationTime, 0.0f));
+    actionGroup->Add(AnimateMember(
+        &EditorCameraController::mHorizontalAngle, Ease::Quad::InOut, this, ModeChangeAnimationTime, 0.0f));
   }
 
   mControlMode = mode;
@@ -195,8 +181,7 @@ Vec3 RotatePointAboutPoint(Vec3 point, Vec3 about, Quat rotation)
   return about + rotatedDirection;
 }
 
-void EditorCameraController::DragMovement(Vec2Param movement,
-                                          Viewport* viewport)
+void EditorCameraController::DragMovement(Vec2Param movement, Viewport* viewport)
 {
   // The mouse is being dragged while in orbit mode
   // moving the mouse orbits around the target.
@@ -214,10 +199,8 @@ void EditorCameraController::DragMovement(Vec2Param movement,
     {
       // Rotate the look at point around the camera in the reverse direction
       Vec3 cameraPosition = mTransform->GetWorldTranslation();
-      Quat rotation = Math::ToQuaternion(0, -horizontalChange, 0) *
-                      Math::ToQuaternion(mCameraRight, -verticalChange);
-      mLookTarget =
-          RotatePointAboutPoint(mLookTarget, cameraPosition, rotation);
+      Quat rotation = Math::ToQuaternion(0, -horizontalChange, 0) * Math::ToQuaternion(mCameraRight, -verticalChange);
+      mLookTarget = RotatePointAboutPoint(mLookTarget, cameraPosition, rotation);
     }
 
     mHorizontalAngle += horizontalChange;
@@ -230,8 +213,7 @@ void EditorCameraController::DragMovement(Vec2Param movement,
     {
       // Change size in Orthographic
       float newCameraSize = mCamera->GetSize() + (-movement.y * 0.5f);
-      newCameraSize =
-          Math::Clamp(newCameraSize, mMinCameraSize, mMaxCameraSize);
+      newCameraSize = Math::Clamp(newCameraSize, mMinCameraSize, mMaxCameraSize);
       mCamera->SetSize(newCameraSize);
     }
     else
@@ -245,8 +227,7 @@ void EditorCameraController::DragMovement(Vec2Param movement,
   {
     Vec2 viewportSize = viewport->GetSize();
     Vec2 percentageMoved = movement / viewportSize;
-    Vec2 movementScalar =
-        viewport->ViewPlaneSize(mLookDistance) * percentageMoved;
+    Vec2 movementScalar = viewport->ViewPlaneSize(mLookDistance) * percentageMoved;
 
     if (mControlMode == ControlMode::FirstPerson)
     {
@@ -339,8 +320,7 @@ void EditorCameraController::Draw()
   {
     if (mDragMode == CameraDragMode::Rotation)
     {
-      gDebugDraw->Add(
-          Debug::Sphere(mLookTarget, 1.0f).BackShade(true).Colored(true));
+      gDebugDraw->Add(Debug::Sphere(mLookTarget, 1.0f).BackShade(true).Colored(true));
     }
     else if (mDragMode == CameraDragMode::Pan)
     {
@@ -486,12 +466,10 @@ void EditorCameraController::MouseScroll(Vec2Param scrollMove)
     if (mCamera->mPerspectiveMode == PerspectiveMode::Orthographic)
     {
       float cameraSizeExponent = Math::Log(mCamera->GetSize());
-      float newSizeExponent =
-          cameraSizeExponent + (-scrollMove.y * cScrollExponentScalar);
+      float newSizeExponent = cameraSizeExponent + (-scrollMove.y * cScrollExponentScalar);
 
       float newCameraSize = Math::Exp(newSizeExponent);
-      newCameraSize =
-          Math::Clamp(newCameraSize, mMinCameraSize, mMaxCameraSize);
+      newCameraSize = Math::Clamp(newCameraSize, mMinCameraSize, mMaxCameraSize);
       mCamera->SetSize(newCameraSize);
     }
     // otherwise, dolly the camera based on the mouse scroll wheel
@@ -597,10 +575,8 @@ void EditorCameraController::ProcessKeyboardEvent(KeyboardEvent* keyEvent)
 
 void EditorCameraController::UpdateTransform()
 {
-  mVerticalAngle =
-      Math::Clamp(mVerticalAngle, -Math::cPi * 0.5f, Math::cPi * 0.5f);
-  mLookDistance =
-      Math::Clamp(mLookDistance, mMinLookDistance, mCamera->mFarPlane);
+  mVerticalAngle = Math::Clamp(mVerticalAngle, -Math::cPi * 0.5f, Math::cPi * 0.5f);
+  mLookDistance = Math::Clamp(mLookDistance, mMinLookDistance, mCamera->mFarPlane);
 
   mCameraDirection.x = Math::Sin(mHorizontalAngle) * Math::Cos(mVerticalAngle);
   mCameraDirection.y = -Math::Sin(mVerticalAngle);

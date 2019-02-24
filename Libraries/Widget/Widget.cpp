@@ -13,9 +13,7 @@ ZilchDefineType(Widget, builder, type)
   type->HandleManager = ZilchManagerId(WidgetHandleManager);
 }
 
-void WidgetHandleManager::ObjectToHandle(const byte* object,
-                                         BoundType* type,
-                                         Handle& handleToInitialize)
+void WidgetHandleManager::ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize)
 {
   if (object == nullptr)
     return;
@@ -46,9 +44,7 @@ u64 WidgetHandleManager::HandleToId(const Handle& handle)
   if (handle.StoredType == nullptr)
     return 0;
 
-  ReturnIf(!Type::BoundIsA(handle.StoredType, ZilchTypeId(Widget)),
-           0,
-           "A handle to a non widget was passed in.");
+  ReturnIf(!Type::BoundIsA(handle.StoredType, ZilchTypeId(Widget)), 0, "A handle to a non widget was passed in.");
 
   return handle.HandleU64;
 }
@@ -352,8 +348,7 @@ void Widget::MoveToBack()
 Vec2 Widget::ToLocal(Vec2Param screenPoint)
 {
   Mat4 toLocal = Invert2D(mWorldTx);
-  Vec3 localPoint =
-      TransformPointCol(toLocal, Vec3(screenPoint.x, screenPoint.y, 0.0f));
+  Vec3 localPoint = TransformPointCol(toLocal, Vec3(screenPoint.x, screenPoint.y, 0.0f));
   return Vec2(localPoint.x, localPoint.y);
 }
 
@@ -405,8 +400,7 @@ WidgetRect Widget::GetScreenRect() const
 Vec2 Widget::GetClientCenterPosition() const
 {
   WidgetRect clientRect = GetScreenRect();
-  return Vec2(clientRect.X + clientRect.SizeX / 2.0f,
-              clientRect.Y + clientRect.SizeY / 2.0f);
+  return Vec2(clientRect.X + clientRect.SizeX / 2.0f, clientRect.Y + clientRect.SizeY / 2.0f);
 }
 
 bool Widget::Contains(Vec2 screenPoint)
@@ -525,7 +519,7 @@ bool GetZIndexDepthFirst(Widget* widget, Widget* target, int* zindex)
   Composite* composite = widget->GetSelfAsComposite();
   if (composite)
   {
-    forRange(Widget & child, composite->GetChildren())
+    forRange (Widget& child, composite->GetChildren())
     {
       if (&child == target)
         return true;
@@ -554,21 +548,15 @@ void Widget::BuildLocalMatrix(Mat4& output)
   Build2dTransform(output, this->mTranslation, this->mAngle);
 }
 
-void Widget::RenderUpdate(ViewBlock& viewBlock,
-                          FrameBlock& frameBlock,
-                          Mat4Param parentTx,
-                          ColorTransform colorTx,
-                          WidgetRect clipRect)
+void Widget::RenderUpdate(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Mat4 localTx;
   BuildLocalMatrix(localTx);
   mWorldTx = localTx * parentTx;
 }
 
-ViewNode& Widget::AddRenderNodes(ViewBlock& viewBlock,
-                                 FrameBlock& frameBlock,
-                                 WidgetRect clipRect,
-                                 Texture* texture)
+ViewNode& Widget::AddRenderNodes(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Texture* texture)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes.PushBack();
   ViewNode& viewNode = viewBlock.mViewNodes.PushBack();
@@ -584,8 +572,7 @@ ViewNode& Widget::AddRenderNodes(ViewBlock& viewBlock,
   viewNode.mFrameNodeIndex = frameBlock.mFrameNodes.Size() - 1;
   viewNode.mLocalToView = viewBlock.mWorldToView * frameNode.mLocalToWorld;
 
-  frameNode.mClip =
-      Vec4(clipRect.X, clipRect.Y, clipRect.SizeX, clipRect.SizeY);
+  frameNode.mClip = Vec4(clipRect.X, clipRect.Y, clipRect.SizeX, clipRect.SizeY);
 
   // maybe cache this lookup on root
   Material* spriteMaterial = nullptr;
@@ -601,8 +588,7 @@ ViewNode& Widget::AddRenderNodes(ViewBlock& viewBlock,
 
   // default setup for adding streamed data
   viewNode.mStreamedVertexType = PrimitiveType::Triangles;
-  viewNode.mStreamedVertexStart =
-      frameBlock.mRenderQueues->mStreamedVertices.Size();
+  viewNode.mStreamedVertexStart = frameBlock.mRenderQueues->mStreamedVertices.Size();
   viewNode.mStreamedVertexCount = 0;
 
   return viewNode;
@@ -617,8 +603,7 @@ void Widget::CreateRenderData(ViewBlock& viewBlock,
   if (vertices.Empty())
     return;
 
-  StreamedVertexArray& streamedVertices =
-      frameBlock.mRenderQueues->mStreamedVertices;
+  StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
 
   static Texture* white = TextureManager::Find("White");
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, white);
@@ -627,13 +612,11 @@ void Widget::CreateRenderData(ViewBlock& viewBlock,
   for (uint i = 0; i < vertices.Size(); ++i)
   {
     StreamedVertex vertex = vertices[i];
-    vertex.mPosition =
-        Math::TransformPoint(viewNode.mLocalToView, vertex.mPosition);
+    vertex.mPosition = Math::TransformPoint(viewNode.mLocalToView, vertex.mPosition);
     streamedVertices.PushBack(vertex);
   }
 
-  viewNode.mStreamedVertexCount =
-      streamedVertices.Size() - viewNode.mStreamedVertexStart;
+  viewNode.mStreamedVertexCount = streamedVertices.Size() - viewNode.mStreamedVertexStart;
 }
 
 void Widget::SizeToContents()
@@ -648,8 +631,7 @@ void Widget::UpdateTransformExternal()
   static String message = "Improper Widget Update. Did you forget to call your "
                           "base UpdateTransform at the end of "
                           "your UpdateTransform?";
-  ErrorIf(!mDestroyed && mTransformUpdateState != TransformUpdateState::Updated,
-          message.c_str());
+  ErrorIf(!mDestroyed && mTransformUpdateState != TransformUpdateState::Updated, message.c_str());
 }
 
 void Widget::UpdateTransform()

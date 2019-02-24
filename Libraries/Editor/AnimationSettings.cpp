@@ -6,9 +6,7 @@ namespace Zero
 
 AnimationSettings::EditFpsPresetArray AnimationSettings::mEditFpsPresets;
 
-void GetEditFpsPresets(HandleParam instance,
-                       Property* property,
-                       Array<String>& strings)
+void GetEditFpsPresets(HandleParam instance, Property* property, Array<String>& strings)
 {
   strings.Resize(AnimationSettings::mEditFpsPresets.Size());
 
@@ -19,8 +17,7 @@ void GetEditFpsPresets(HandleParam instance,
 ZilchDefineType(AnimationSettings, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
-  ZilchBindGetterSetterProperty(EditFps)->Add(
-      new EditorIndexedStringArray(GetEditFpsPresets));
+  ZilchBindGetterSetterProperty(EditFps)->Add(new EditorIndexedStringArray(GetEditFpsPresets));
   ZilchBindFieldProperty(mTimeDisplay);
   ZilchBindFieldProperty(mSnappingX);
   ZilchBindFieldProperty(mSnappingY);
@@ -81,8 +78,7 @@ uint AnimationSettings::GetEditFps()
   return 0;
 }
 
-AnimationSettingsView::AnimationSettingsView(Composite* parent,
-                                             AnimationEditor* editor) :
+AnimationSettingsView::AnimationSettingsView(Composite* parent, AnimationEditor* editor) :
     Composite(parent),
     mEditor(editor)
 {
@@ -102,8 +98,7 @@ AnimationSettingsView::AnimationSettingsView(Composite* parent,
   mSettingsProperties->mNamePercent = 0.55f;
 }
 
-void AnimationSettingsView::SetAnimationEditorData(
-    AnimationEditorData* editorData)
+void AnimationSettingsView::SetAnimationEditorData(AnimationEditorData* editorData)
 {
   mRichAnimProperties->SetObject(editorData->mRichAnimation);
   mRichAnimProperties->Invalidate();

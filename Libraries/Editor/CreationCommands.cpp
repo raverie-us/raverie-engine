@@ -14,8 +14,7 @@ class EditorCreateObjectCommand : public CommandExecuter
 {
 public:
   String ArchetypeName;
-  EditorCreateObjectCommand(StringParam archetypeName) :
-      ArchetypeName(archetypeName)
+  EditorCreateObjectCommand(StringParam archetypeName) : ArchetypeName(archetypeName)
   {
   }
 
@@ -32,8 +31,7 @@ public:
   }
 };
 
-void EditorCreateObjectCommand::Execute(Command* command,
-                                        CommandManager* manager)
+void EditorCreateObjectCommand::Execute(Command* command, CommandManager* manager)
 {
   Space* space = manager->GetContext()->Get<Space>();
   if (space == nullptr)
@@ -41,8 +39,7 @@ void EditorCreateObjectCommand::Execute(Command* command,
 
   Editor* editor = Z::gEditor;
 
-  Cog* editorCameraObject =
-      space->FindObjectByName(SpecialCogNames::EditorCamera);
+  Cog* editorCameraObject = space->FindObjectByName(SpecialCogNames::EditorCamera);
   if (editorCameraObject == nullptr)
     return;
 
@@ -71,8 +68,7 @@ void EditorCreateObjectCommand::Execute(Command* command,
   }
   else
   {
-    EditorCameraController* editorCameraController =
-        editorCameraObject->has(EditorCameraController);
+    EditorCameraController* editorCameraController = editorCameraObject->has(EditorCameraController);
     if (editorCameraController != nullptr)
     {
       if (transform)
@@ -89,8 +85,7 @@ void EditorCreateObjectCommand::Execute(Command* command,
   selection->FinalSelectionChanged();
 }
 
-typedef void (*StackCreateFunc)(
-    Space* space, Vec3Param pos, Vec3Param size, uint levels, uint width);
+typedef void (*StackCreateFunc)(Space* space, Vec3Param pos, Vec3Param size, uint levels, uint width);
 
 class StackCreateCommand : public CommandExecuter
 {
@@ -100,11 +95,7 @@ public:
   uint Width;
 
   StackCreateFunc Function;
-  StackCreateCommand(StackCreateFunc func,
-                     Vec3Param size,
-                     uint height,
-                     uint width) :
-      Function(func)
+  StackCreateCommand(StackCreateFunc func, Vec3Param size, uint height, uint width) : Function(func)
   {
     Size = size;
     Height = height;
@@ -126,8 +117,7 @@ public:
   }
 };
 
-void CreatePyramid(
-    Space* space, Vec3Param pos, Vec3Param scale, uint levels, uint width)
+void CreatePyramid(Space* space, Vec3Param pos, Vec3Param scale, uint levels, uint width)
 {
   // Start a batched operation
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
@@ -139,8 +129,7 @@ void CreatePyramid(
 
   Vec3 boxSize = Vec3(2.0f, 2.0f, 2.0f);
 
-  Cog* root =
-      CreateFromArchetype(queue, space, CoreArchetypes::Transform, Vec3::cZero);
+  Cog* root = CreateFromArchetype(queue, space, CoreArchetypes::Transform, Vec3::cZero);
   root->SetName("PyramidRoot");
   root->ClearArchetype();
 
@@ -152,12 +141,7 @@ void CreatePyramid(
     {
       for (float z = -width; z <= width; z += boxSize.x)
       {
-        Cog* cog = CreateFromArchetype(queue,
-                                       space,
-                                       CoreArchetypes::Cube,
-                                       Vec3(x, y, z),
-                                       orientation,
-                                       boxSize);
+        Cog* cog = CreateFromArchetype(queue, space, CoreArchetypes::Cube, Vec3(x, y, z), orientation, boxSize);
         cog->ClearArchetype();
         cog->AttachTo(root);
       }
@@ -167,16 +151,14 @@ void CreatePyramid(
   queue->EndBatch();
 }
 
-void CreateTeeter(
-    Space* space, Vec3Param pos, Vec3Param size, uint levels, uint width)
+void CreateTeeter(Space* space, Vec3Param pos, Vec3Param size, uint levels, uint width)
 {
   // Start a batched operation
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
   queue->BeginBatch();
   queue->SetActiveBatchName("CreateTeeter");
 
-  Cog* root =
-      CreateFromArchetype(queue, space, CoreArchetypes::Transform, Vec3::cZero);
+  Cog* root = CreateFromArchetype(queue, space, CoreArchetypes::Transform, Vec3::cZero);
   root->SetName("TeeterRoot");
   root->ClearArchetype();
 
@@ -184,12 +166,8 @@ void CreateTeeter(
 
   // Create base
   Vec3 halfSize = size * 0.5f;
-  Cog* cog = CreateFromArchetype(queue,
-                                 space,
-                                 CoreArchetypes::Cube,
-                                 Vec3(0, halfSize.y, 0) + pos,
-                                 orientation,
-                                 Vec3(size.x, size.y, size.x));
+  Cog* cog = CreateFromArchetype(
+      queue, space, CoreArchetypes::Cube, Vec3(0, halfSize.y, 0) + pos, orientation, Vec3(size.x, size.y, size.x));
   cog->ClearArchetype();
   cog->AttachTo(root);
 
@@ -209,10 +187,7 @@ void CreateTeeter(
     cog = CreateFromArchetype(queue,
                               space,
                               CoreArchetypes::Cube,
-                              Vec3(-size.y + halfSize.z,
-                                   newGround + halfSize.z + size.z * float(i),
-                                   0) +
-                                  pos,
+                              Vec3(-size.y + halfSize.z, newGround + halfSize.z + size.z * float(i), 0) + pos,
                               orientation,
                               Vec3(size.z, size.z, size.z));
     cog->ClearArchetype();
@@ -221,29 +196,26 @@ void CreateTeeter(
 
   float big = size.z * float(levels);
 
-  cog = CreateFromArchetype(
-      queue,
-      space,
-      CoreArchetypes::Cube,
-      Vec3(size.y + -halfSize.z, newGround + big * 0.5f, 0) + pos,
-      orientation,
-      Vec3(size.z, big, size.z));
+  cog = CreateFromArchetype(queue,
+                            space,
+                            CoreArchetypes::Cube,
+                            Vec3(size.y + -halfSize.z, newGround + big * 0.5f, 0) + pos,
+                            orientation,
+                            Vec3(size.z, big, size.z));
   cog->ClearArchetype();
   cog->AttachTo(root);
 
   queue->EndBatch();
 }
 
-void CreateTower(
-    Space* space, Vec3Param pos, Vec3Param size, uint levels, uint width)
+void CreateTower(Space* space, Vec3Param pos, Vec3Param size, uint levels, uint width)
 {
   // Start a batched operation
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
   queue->BeginBatch();
   queue->SetActiveBatchName("CreateTower");
 
-  Cog* root =
-      CreateFromArchetype(queue, space, CoreArchetypes::Transform, Vec3::cZero);
+  Cog* root = CreateFromArchetype(queue, space, CoreArchetypes::Transform, Vec3::cZero);
   root->SetName("TowerRoot");
   root->ClearArchetype();
 
@@ -258,12 +230,8 @@ void CreateTower(
       for (uint depth = 0; depth < width; ++depth)
       {
         float z = (float)depth * size.x;
-        Cog* cog = CreateFromArchetype(queue,
-                                       space,
-                                       CoreArchetypes::Cube,
-                                       Vec3(x, y, z) + pos,
-                                       orientation,
-                                       Vec3(size.x, size.x, size.x));
+        Cog* cog = CreateFromArchetype(
+            queue, space, CoreArchetypes::Cube, Vec3(x, y, z) + pos, orientation, Vec3(size.x, size.x, size.x));
         cog->ClearArchetype();
         cog->AttachTo(root);
       }
@@ -273,16 +241,14 @@ void CreateTower(
   queue->EndBatch();
 }
 
-void CreateWall(
-    Space* space, Vec3Param pos, Vec3Param size, uint height, uint width)
+void CreateWall(Space* space, Vec3Param pos, Vec3Param size, uint height, uint width)
 {
   // Start a batched operation
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
   queue->BeginBatch();
   queue->SetActiveBatchName("CreateWall");
 
-  Cog* root =
-      CreateFromArchetype(queue, space, CoreArchetypes::Transform, Vec3::cZero);
+  Cog* root = CreateFromArchetype(queue, space, CoreArchetypes::Transform, Vec3::cZero);
   root->SetName("WallRoot");
   root->ClearArchetype();
 
@@ -297,14 +263,8 @@ void CreateWall(
 
     for (uint w = 0; w < width; ++w)
     {
-      float x = (w - width / 2.0f) * 1.05f * size.x * boxSize.x +
-                boxSize.x * halfScale.x * (h % 2);
-      Cog* cog = CreateFromArchetype(queue,
-                                     space,
-                                     CoreArchetypes::Cube,
-                                     Vec3(x, y, 0) + pos,
-                                     orientation,
-                                     size);
+      float x = (w - width / 2.0f) * 1.05f * size.x * boxSize.x + boxSize.x * halfScale.x * (h % 2);
+      Cog* cog = CreateFromArchetype(queue, space, CoreArchetypes::Cube, Vec3(x, y, 0) + pos, orientation, size);
       cog->ClearArchetype();
       cog->AttachTo(root);
     }
@@ -313,16 +273,14 @@ void CreateWall(
   queue->EndBatch();
 }
 
-void CreateBlockTower(
-    Space* space, Vec3Param pos, Vec3Param size, uint height, uint width)
+void CreateBlockTower(Space* space, Vec3Param pos, Vec3Param size, uint height, uint width)
 {
   // Start a batched operation
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
   queue->BeginBatch();
   queue->SetActiveBatchName("CreateBlockTower");
 
-  Cog* root =
-      CreateFromArchetype(queue, space, CoreArchetypes::Transform, Vec3::cZero);
+  Cog* root = CreateFromArchetype(queue, space, CoreArchetypes::Transform, Vec3::cZero);
   root->SetName("BlockTowerRoot");
   root->ClearArchetype();
 
@@ -354,23 +312,13 @@ void CreateBlockTower(
 
       if (h % 2)
       {
-        Cog* cog = CreateFromArchetype(queue,
-                                       space,
-                                       CoreArchetypes::Cube,
-                                       Vec3(x, y, 0),
-                                       orientation,
-                                       scale);
+        Cog* cog = CreateFromArchetype(queue, space, CoreArchetypes::Cube, Vec3(x, y, 0), orientation, scale);
         cog->ClearArchetype();
         cog->AttachTo(root);
       }
       else
       {
-        Cog* cog = CreateFromArchetype(queue,
-                                       space,
-                                       CoreArchetypes::Cube,
-                                       Vec3(0, y, x),
-                                       orientation,
-                                       scale);
+        Cog* cog = CreateFromArchetype(queue, space, CoreArchetypes::Cube, Vec3(0, y, x), orientation, scale);
         cog->ClearArchetype();
         cog->AttachTo(root);
       }
@@ -382,71 +330,36 @@ void CreateBlockTower(
 void BindCreationCommands(Cog* configCog, CommandManager* commands)
 {
   // Creation commands
-  commands->AddCommand(
-      "CreateTransform",
-      new EditorCreateObjectCommand(CoreArchetypes::Transform));
-  commands->AddCommand("CreateCamera",
-                       new EditorCreateObjectCommand(CoreArchetypes::Camera));
-  commands->AddCommand(
-      "CreateDirectionalLight",
-      new EditorCreateObjectCommand(CoreArchetypes::DirectionalLight));
-  commands->AddCommand(
-      "CreateDirectionalLightShadows",
-      new EditorCreateObjectCommand(CoreArchetypes::DirectionalLightShadows));
-  commands->AddCommand(
-      "CreatePointLight",
-      new EditorCreateObjectCommand(CoreArchetypes::PointLight));
-  commands->AddCommand(
-      "CreateSpotLight",
-      new EditorCreateObjectCommand(CoreArchetypes::SpotLight));
-  commands->AddCommand(
-      "CreateSpotLightShadows",
-      new EditorCreateObjectCommand(CoreArchetypes::SpotLightShadows));
+  commands->AddCommand("CreateTransform", new EditorCreateObjectCommand(CoreArchetypes::Transform));
+  commands->AddCommand("CreateCamera", new EditorCreateObjectCommand(CoreArchetypes::Camera));
+  commands->AddCommand("CreateDirectionalLight", new EditorCreateObjectCommand(CoreArchetypes::DirectionalLight));
+  commands->AddCommand("CreateDirectionalLightShadows",
+                       new EditorCreateObjectCommand(CoreArchetypes::DirectionalLightShadows));
+  commands->AddCommand("CreatePointLight", new EditorCreateObjectCommand(CoreArchetypes::PointLight));
+  commands->AddCommand("CreateSpotLight", new EditorCreateObjectCommand(CoreArchetypes::SpotLight));
+  commands->AddCommand("CreateSpotLightShadows", new EditorCreateObjectCommand(CoreArchetypes::SpotLightShadows));
 
-  commands->AddCommand("CreateCube",
-                       new EditorCreateObjectCommand(CoreArchetypes::Cube));
-  commands->AddCommand("CreateSphere",
-                       new EditorCreateObjectCommand(CoreArchetypes::Sphere));
-  commands->AddCommand("CreateCylinder",
-                       new EditorCreateObjectCommand(CoreArchetypes::Cylinder));
-  commands->AddCommand("CreateWedge",
-                       new EditorCreateObjectCommand(CoreArchetypes::Wedge));
-  commands->AddCommand("CreateSprite",
-                       new EditorCreateObjectCommand(CoreArchetypes::Sprite));
-  commands->AddCommand(
-      "CreateSpriteText",
-      new EditorCreateObjectCommand(CoreArchetypes::SpriteText));
-  commands->AddCommand(
-      "CreateSpriteParticles",
-      new EditorCreateObjectCommand(CoreArchetypes::SpriteParticles));
-  commands->AddCommand("CreateSpline",
-                       new EditorCreateObjectCommand(CoreArchetypes::Spline));
-  commands->AddCommand(
-      "CreateSplineParticleSystem",
-      new EditorCreateObjectCommand(CoreArchetypes::SplineParticleSystem));
+  commands->AddCommand("CreateCube", new EditorCreateObjectCommand(CoreArchetypes::Cube));
+  commands->AddCommand("CreateSphere", new EditorCreateObjectCommand(CoreArchetypes::Sphere));
+  commands->AddCommand("CreateCylinder", new EditorCreateObjectCommand(CoreArchetypes::Cylinder));
+  commands->AddCommand("CreateWedge", new EditorCreateObjectCommand(CoreArchetypes::Wedge));
+  commands->AddCommand("CreateSprite", new EditorCreateObjectCommand(CoreArchetypes::Sprite));
+  commands->AddCommand("CreateSpriteText", new EditorCreateObjectCommand(CoreArchetypes::SpriteText));
+  commands->AddCommand("CreateSpriteParticles", new EditorCreateObjectCommand(CoreArchetypes::SpriteParticles));
+  commands->AddCommand("CreateSpline", new EditorCreateObjectCommand(CoreArchetypes::Spline));
+  commands->AddCommand("CreateSplineParticleSystem",
+                       new EditorCreateObjectCommand(CoreArchetypes::SplineParticleSystem));
 
-  commands->AddCommand("CreateGrid",
-                       new EditorCreateObjectCommand(CoreArchetypes::Grid));
+  commands->AddCommand("CreateGrid", new EditorCreateObjectCommand(CoreArchetypes::Grid));
 
-  bool devConfig =
-      Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig) != nullptr;
+  bool devConfig = Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig) != nullptr;
   if (devConfig)
   {
-    commands->AddCommand(
-        "CreatePyramid",
-        new StackCreateCommand(CreatePyramid, Vec3(1, 1, 1), 7, 0));
-    commands->AddCommand(
-        "CreateTower",
-        new StackCreateCommand(CreateTower, Vec3(1, 1, 1), 10, 1));
-    commands->AddCommand(
-        "CreateWall",
-        new StackCreateCommand(CreateWall, Vec3(2, 0.5f, 1), 12, 6));
-    commands->AddCommand(
-        "CreateBlockTower",
-        new StackCreateCommand(CreateBlockTower, Vec3(3, 3, 3), 18, 3));
-    commands->AddCommand(
-        "CreateTeeter",
-        new StackCreateCommand(CreateTeeter, Vec3(1, 4, 1), 4, 3));
+    commands->AddCommand("CreatePyramid", new StackCreateCommand(CreatePyramid, Vec3(1, 1, 1), 7, 0));
+    commands->AddCommand("CreateTower", new StackCreateCommand(CreateTower, Vec3(1, 1, 1), 10, 1));
+    commands->AddCommand("CreateWall", new StackCreateCommand(CreateWall, Vec3(2, 0.5f, 1), 12, 6));
+    commands->AddCommand("CreateBlockTower", new StackCreateCommand(CreateBlockTower, Vec3(3, 3, 3), 18, 3));
+    commands->AddCommand("CreateTeeter", new StackCreateCommand(CreateTeeter, Vec3(1, 4, 1), 4, 3));
   }
 }
 

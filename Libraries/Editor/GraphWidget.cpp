@@ -25,14 +25,8 @@ GraphWidget::GraphWidget(Composite* parent) : Widget(parent)
   mFlags.SetAll();
 }
 
-void AddHashLines(Array<Vec3>& lines,
-                  Vec3 pos,
-                  float size,
-                  Vec3 dir,
-                  Vec3 hashDir,
-                  uint count,
-                  uint offset,
-                  float spacing)
+void AddHashLines(
+    Array<Vec3>& lines, Vec3 pos, float size, Vec3 dir, Vec3 hashDir, uint count, uint offset, float spacing)
 {
   for (uint i = offset; i < count + 1; ++i)
   {
@@ -43,16 +37,12 @@ void AddHashLines(Array<Vec3>& lines,
   }
 }
 
-void GraphWidget::RenderUpdate(ViewBlock& viewBlock,
-                               FrameBlock& frameBlock,
-                               Mat4Param parentTx,
-                               ColorTransform colorTx,
-                               WidgetRect clipRect)
+void GraphWidget::RenderUpdate(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
-  StreamedVertexArray& streamedVertices =
-      frameBlock.mRenderQueues->mStreamedVertices;
+  StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
 
   // Get the spacing for each
   float widthRange = GetWidthRange();
@@ -97,14 +87,7 @@ void GraphWidget::RenderUpdate(ViewBlock& viewBlock,
     uint hashCount = (uint)hashCountf;
     float spacing = mSize.y / hashCountf;
 
-    AddHashLines(primaryLines,
-                 lowerLeft,
-                 mSize.x,
-                 -Vec3::cYAxis,
-                 Vec3::cXAxis,
-                 hashCount,
-                 1,
-                 spacing);
+    AddHashLines(primaryLines, lowerLeft, mSize.x, -Vec3::cYAxis, Vec3::cXAxis, hashCount, 1, spacing);
     AddHashLines(secondaryLines,
                  lowerLeft + Vec3(0, -spacing * 0.5f, 0),
                  mSize.x,
@@ -122,14 +105,7 @@ void GraphWidget::RenderUpdate(ViewBlock& viewBlock,
     uint hashCount = (uint)hashCountf;
     float spacing = mSize.x / hashCountf;
 
-    AddHashLines(primaryLines,
-                 lowerLeft,
-                 mSize.y,
-                 Vec3::cXAxis,
-                 -Vec3::cYAxis,
-                 hashCount,
-                 1,
-                 spacing);
+    AddHashLines(primaryLines, lowerLeft, mSize.y, Vec3::cXAxis, -Vec3::cYAxis, hashCount, 1, spacing);
     AddHashLines(secondaryLines,
                  lowerLeft + Vec3(spacing * 0.5f, 0, 0),
                  mSize.y,
@@ -141,39 +117,28 @@ void GraphWidget::RenderUpdate(ViewBlock& viewBlock,
   }
 
   // Render data for lines
-  ViewNode& lineNode = AddRenderNodes(
-      viewBlock, frameBlock, clipRect, TextureManager::Find("White"));
+  ViewNode& lineNode = AddRenderNodes(viewBlock, frameBlock, clipRect, TextureManager::Find("White"));
   lineNode.mStreamedVertexType = PrimitiveType::Lines;
 
   for (uint i = 0; i < secondaryLines.Size(); ++i)
   {
-    StreamedVertex vertex(
-        Math::TransformPoint(lineNode.mLocalToView, secondaryLines[i]),
-        Vec2::cZero,
-        secondaryColor);
+    StreamedVertex vertex(Math::TransformPoint(lineNode.mLocalToView, secondaryLines[i]), Vec2::cZero, secondaryColor);
     streamedVertices.PushBack(vertex);
   }
 
   for (uint i = 0; i < primaryLines.Size(); ++i)
   {
-    StreamedVertex vertex(
-        Math::TransformPoint(lineNode.mLocalToView, primaryLines[i]),
-        Vec2::cZero,
-        primaryColor);
+    StreamedVertex vertex(Math::TransformPoint(lineNode.mLocalToView, primaryLines[i]), Vec2::cZero, primaryColor);
     streamedVertices.PushBack(vertex);
   }
 
-  lineNode.mStreamedVertexCount =
-      streamedVertices.Size() - lineNode.mStreamedVertexStart;
+  lineNode.mStreamedVertexCount = streamedVertices.Size() - lineNode.mStreamedVertexStart;
 
   if (mDrawLabels)
   {
-    RenderFont* font =
-        FontManager::GetInstance()->GetRenderFont("NotoSans-Regular", 11, 0);
-    ViewNode& textNode =
-        AddRenderNodes(viewBlock, frameBlock, clipRect, font->mTexture);
-    FontProcessor fontProcessor(
-        frameBlock.mRenderQueues, &textNode, primaryColor);
+    RenderFont* font = FontManager::GetInstance()->GetRenderFont("NotoSans-Regular", 11, 0);
+    ViewNode& textNode = AddRenderNodes(viewBlock, frameBlock, clipRect, font->mTexture);
+    FontProcessor fontProcessor(frameBlock.mRenderQueues, &textNode, primaryColor);
 
     if (mFlags.IsSet(GraphAxes::AxisX))
     {
@@ -192,14 +157,8 @@ void GraphWidget::RenderUpdate(ViewBlock& viewBlock,
         Vec2 textSize = font->MeasureText(text);
         pos.x -= textSize.x + Pixels(2);
         pos.y -= textSize.y * 0.5f;
-        AddTextRange(fontProcessor,
-                     font,
-                     text,
-                     Math::ToVector2(SnapToPixels(pos)),
-                     TextAlign::Left,
-                     Vec2(1, 1),
-                     mSize,
-                     false);
+        AddTextRange(
+            fontProcessor, font, text, Math::ToVector2(SnapToPixels(pos)), TextAlign::Left, Vec2(1, 1), mSize, false);
       }
     }
 
@@ -220,14 +179,8 @@ void GraphWidget::RenderUpdate(ViewBlock& viewBlock,
         Vec2 textSize = font->MeasureText(text);
         pos.x -= textSize.x * 0.5f;
         pos.y += textSize.y * 0.5f;
-        AddTextRange(fontProcessor,
-                     font,
-                     text,
-                     Math::ToVector2(SnapToPixels(pos)),
-                     TextAlign::Left,
-                     Vec2(1, 1),
-                     mSize,
-                     false);
+        AddTextRange(
+            fontProcessor, font, text, Math::ToVector2(SnapToPixels(pos)), TextAlign::Left, Vec2(1, 1), mSize, false);
       }
     }
   }
@@ -273,8 +226,7 @@ bool GraphWidget::WorldPointInGraph(Vec2Param worldPos)
 
   Vec2 extents = local / range;
 
-  return !(extents.x < 0.0f || extents.x > 1.0f || extents.y < 0.0f ||
-           extents.y > 1.0f);
+  return !(extents.x < 0.0f || extents.x > 1.0f || extents.y < 0.0f || extents.y > 1.0f);
 }
 
 Vec2 GraphWidget::ClampPos(Vec2Param worldPos)

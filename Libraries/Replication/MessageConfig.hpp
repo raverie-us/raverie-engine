@@ -11,18 +11,12 @@
 /// Determines the threshold at which fragmentation may be preferred and
 /// fragment index count
 #define MESSAGE_MIN_FRAGMENT_DATA_BYTES POW2(5)
-StaticAssertWithinRange(Range1,
-                        MESSAGE_MIN_FRAGMENT_DATA_BYTES,
-                        1,
-                        BITSTREAM_MAX_BYTES);
+StaticAssertWithinRange(Range1, MESSAGE_MIN_FRAGMENT_DATA_BYTES, 1, BITSTREAM_MAX_BYTES);
 
 /// Maximum message whole data size (original data size before any fragmentation
 /// occurs) Determines the maximum data size and fragment index count
 #define MESSAGE_MAX_WHOLE_DATA_BYTES POW2(24)
-StaticAssertWithinRange(Range2,
-                        MESSAGE_MAX_WHOLE_DATA_BYTES,
-                        MESSAGE_MIN_FRAGMENT_DATA_BYTES,
-                        BITSTREAM_MAX_BYTES);
+StaticAssertWithinRange(Range2, MESSAGE_MAX_WHOLE_DATA_BYTES, MESSAGE_MIN_FRAGMENT_DATA_BYTES, BITSTREAM_MAX_BYTES);
 
 /// Message type bits
 /// Determines the maximum number of message types
@@ -60,18 +54,14 @@ typedef make_type<FASTEST_UINT(MessageTypeBits)>::type MessageType;
 
 /// Message type ID range
 static const MessageType MessageTypeMin = MessageType(0);
-static const MessageType MessageTypeMax =
-    MessageType(POW2(MessageTypeBits) - 1);
+static const MessageType MessageTypeMax = MessageType(POW2(MessageTypeBits) - 1);
 
 /// Protocol absolute message type ID range
-static const MessageType ProtocolMessageTypeStart =
-    MessageType(ProtocolMessageType::Invalid);
-static const MessageType ProtocolMessageTypeEnd =
-    MessageType(ProtocolMessageType::Reserved3);
+static const MessageType ProtocolMessageTypeStart = MessageType(ProtocolMessageType::Invalid);
+static const MessageType ProtocolMessageTypeEnd = MessageType(ProtocolMessageType::Reserved3);
 
 /// Custom (user or plugin) absolute message type ID range
-static const MessageType CustomMessageTypeStart =
-    MessageType(ProtocolMessageTypeEnd + 1);
+static const MessageType CustomMessageTypeStart = MessageType(ProtocolMessageTypeEnd + 1);
 static const MessageType CustomMessageTypeEnd = MessageTypeMax;
 
 /// Peer event message type ID range (used locally only)
@@ -80,10 +70,8 @@ namespace PeerEventMessageType
 /// Note: This enum must count down, not up
 enum Enum
 {
-  IncomingLinkCreated =
-      MessageType(MessageTypeMax - 0), // An incoming link was created
-  FatalError = MessageType(MessageTypeMax -
-                           1) // A fatal error occurred, invalidating the peer
+  IncomingLinkCreated = MessageType(MessageTypeMax - 0), // An incoming link was created
+  FatalError = MessageType(MessageTypeMax - 1)           // A fatal error occurred, invalidating the peer
 
   /// Note: This enum must not exceed the number of protocol messages in use
 };
@@ -96,21 +84,14 @@ namespace LinkEventMessageType
 /// Note: This enum must count down, not up
 enum Enum
 {
-  ConnectRequested =
-      MessageType(MessageTypeMax - 0), // A connect request was sent or received
-  ConnectResponded = MessageType(MessageTypeMax -
-                                 1), // A connect response was sent or received
-  DisconnectNoticed = MessageType(
-      MessageTypeMax - 2), // A disconnect notice was sent or received
-  IncomingChannelOpened = MessageType(
-      MessageTypeMax - 3), // The remote peer opened an incoming channel
-  IncomingChannelClosed = MessageType(
-      MessageTypeMax - 4), // The remote peer closed an incoming channel
-  StateChange = MessageType(MessageTypeMax - 5), // The link's state has changed
-  StatusChange =
-      MessageType(MessageTypeMax - 6), // The link's status has changed
-  Receipt =
-      MessageType(MessageTypeMax - 7) // A previously sent message was receipted
+  ConnectRequested = MessageType(MessageTypeMax - 0),      // A connect request was sent or received
+  ConnectResponded = MessageType(MessageTypeMax - 1),      // A connect response was sent or received
+  DisconnectNoticed = MessageType(MessageTypeMax - 2),     // A disconnect notice was sent or received
+  IncomingChannelOpened = MessageType(MessageTypeMax - 3), // The remote peer opened an incoming channel
+  IncomingChannelClosed = MessageType(MessageTypeMax - 4), // The remote peer closed an incoming channel
+  StateChange = MessageType(MessageTypeMax - 5),           // The link's state has changed
+  StatusChange = MessageType(MessageTypeMax - 6),          // The link's status has changed
+  Receipt = MessageType(MessageTypeMax - 7)                // A previously sent message was receipted
 
   /// Note: This enum must not exceed the number of protocol messages in use
 };
@@ -124,8 +105,7 @@ static const Bits MinMessageDataBits = Bits(0);
 static const Bits MaxMessageDataBits = BYTES_TO_BITS(EthernetMtuBytes);
 
 /// Message data stream size bit size
-static const Bits MessageDataSizeBits =
-    BITS_NEEDED_TO_REPRESENT(MaxMessageDataBits);
+static const Bits MessageDataSizeBits = BITS_NEEDED_TO_REPRESENT(MaxMessageDataBits);
 
 //                             Message Channel ID //
 
@@ -149,20 +129,15 @@ typedef UintN<MessageSequenceIdBits, true> MessageSequenceId;
 static const Bits MessageTimestampBits = MESSAGE_TIMESTAMP_BITS;
 
 /// Message timestamp range
-static const TimeMs MessageTimestampMin =
-    -TimeMs(POW2(MessageTimestampBits - 1));
-static const TimeMs MessageTimestampMax =
-    +TimeMs(POW2(MessageTimestampBits - 1)) - 1;
-static const TimeMs MessageTimestampRange =
-    (MessageTimestampMax - MessageTimestampMin);
+static const TimeMs MessageTimestampMin = -TimeMs(POW2(MessageTimestampBits - 1));
+static const TimeMs MessageTimestampMax = +TimeMs(POW2(MessageTimestampBits - 1)) - 1;
+static const TimeMs MessageTimestampRange = (MessageTimestampMax - MessageTimestampMin);
 
 /// Invalid message timestamp
-static const TimeMs cInvalidMessageTimestamp =
-    std::numeric_limits<TimeMs>::min();
+static const TimeMs cInvalidMessageTimestamp = std::numeric_limits<TimeMs>::min();
 
 // (Sanity check)
-static const Bits MessageTimestampBitsNeeded =
-    BITS_NEEDED_TO_REPRESENT(MessageTimestampRange);
+static const Bits MessageTimestampBitsNeeded = BITS_NEEDED_TO_REPRESENT(MessageTimestampRange);
 static_assert(MessageTimestampBits == MessageTimestampBitsNeeded,
               "Declared message timestamp bits do not match the actual bits "
               "needed to represent the declared message timestamp range");
@@ -171,21 +146,16 @@ static_assert(MessageTimestampBits == MessageTimestampBitsNeeded,
 
 /// Maximum message whole data size
 static const Bytes MaxMessageWholeDataBytes = MESSAGE_MAX_WHOLE_DATA_BYTES;
-static const Bits MaxMessageWholeDataBits =
-    BYTES_TO_BITS(MaxMessageWholeDataBytes);
+static const Bits MaxMessageWholeDataBits = BYTES_TO_BITS(MaxMessageWholeDataBytes);
 
 /// Minimum message fragment data size
-static const Bytes MinMessageFragmentDataBytes =
-    MESSAGE_MIN_FRAGMENT_DATA_BYTES;
-static const Bits MinMessageFragmentDataBits =
-    BYTES_TO_BITS(MinMessageFragmentDataBytes);
+static const Bytes MinMessageFragmentDataBytes = MESSAGE_MIN_FRAGMENT_DATA_BYTES;
+static const Bits MinMessageFragmentDataBits = BYTES_TO_BITS(MinMessageFragmentDataBytes);
 
 /// Resulting maximum message fragment index count
-static const uint MaxMessageFragmentCount =
-    MaxMessageWholeDataBits / MinMessageFragmentDataBits;
+static const uint MaxMessageFragmentCount = MaxMessageWholeDataBits / MinMessageFragmentDataBits;
 static const uint MessageFragmentIndexMax = MaxMessageFragmentCount - 1;
-static const Bits MessageFragmentIndexBits =
-    BITS_NEEDED_TO_REPRESENT(MessageFragmentIndexMax);
+static const Bits MessageFragmentIndexBits = BITS_NEEDED_TO_REPRESENT(MessageFragmentIndexMax);
 
 /// Message fragment index
 typedef UintN<MessageFragmentIndexBits> MessageFragmentIndex;
@@ -203,39 +173,30 @@ typedef uint8 MessagePriority;
 //                            Message Header Size //
 
 /// Minimum message header size
-static const Bits MinMessageHeaderBits =
-    MessageTypeBits         /// Message type
-    + MessageSequenceIdBits /// Message sequence ID
-    + MessageDataSizeBits   /// Message data size
-    + 1                     /// Message 'Is channeled?' flag
-    + 1;                    /// Message 'Has accurate timestamp?' flag
+static const Bits MinMessageHeaderBits = MessageTypeBits         /// Message type
+                                         + MessageSequenceIdBits /// Message sequence ID
+                                         + MessageDataSizeBits   /// Message data size
+                                         + 1                     /// Message 'Is channeled?' flag
+                                         + 1;                    /// Message 'Has accurate timestamp?' flag
 
 /// Message header options
-static const Bits MessageT = MessageTimestampBits; /// Message timestamp
-static const Bits MessageC = MessageChannelIdBits; /// Message channel ID
-static const Bits MessageD = 1; /// Message with data ('Is fragment?' flag)
+static const Bits MessageT = MessageTimestampBits;    /// Message timestamp
+static const Bits MessageC = MessageChannelIdBits;    /// Message channel ID
+static const Bits MessageD = 1;                       /// Message with data ('Is fragment?' flag)
 static const Bits MessageF = MessageFragmentIndexBits /// Message fragment index
-                             + 1; /// Message 'Is final fragment?' flag
+                             + 1;                     /// Message 'Is final fragment?' flag
 
 /// Possible message header configurations
 static const Bits MessageHeaderBitsC = MinMessageHeaderBits + MessageC;
 static const Bits MessageHeaderBitsD = MinMessageHeaderBits + MessageD;
-static const Bits MessageHeaderBitsDF =
-    MinMessageHeaderBits + MessageD + MessageF;
-static const Bits MessageHeaderBitsCD =
-    MinMessageHeaderBits + MessageC + MessageD;
-static const Bits MessageHeaderBitsCDF =
-    MinMessageHeaderBits + MessageC + MessageD + MessageF;
-static const Bits MessageHeaderBitsTC =
-    MinMessageHeaderBits + MessageT + MessageC;
-static const Bits MessageHeaderBitsTD =
-    MinMessageHeaderBits + MessageT + MessageD;
-static const Bits MessageHeaderBitsTDF =
-    MinMessageHeaderBits + MessageT + MessageD + MessageF;
-static const Bits MessageHeaderBitsTCD =
-    MinMessageHeaderBits + MessageT + MessageC + MessageD;
-static const Bits MessageHeaderBitsTCDF =
-    MinMessageHeaderBits + MessageT + MessageC + MessageD + MessageF;
+static const Bits MessageHeaderBitsDF = MinMessageHeaderBits + MessageD + MessageF;
+static const Bits MessageHeaderBitsCD = MinMessageHeaderBits + MessageC + MessageD;
+static const Bits MessageHeaderBitsCDF = MinMessageHeaderBits + MessageC + MessageD + MessageF;
+static const Bits MessageHeaderBitsTC = MinMessageHeaderBits + MessageT + MessageC;
+static const Bits MessageHeaderBitsTD = MinMessageHeaderBits + MessageT + MessageD;
+static const Bits MessageHeaderBitsTDF = MinMessageHeaderBits + MessageT + MessageD + MessageF;
+static const Bits MessageHeaderBitsTCD = MinMessageHeaderBits + MessageT + MessageC + MessageD;
+static const Bits MessageHeaderBitsTCDF = MinMessageHeaderBits + MessageT + MessageC + MessageD + MessageF;
 
 /// Maximum message header size
 static const Bits MaxMessageHeaderBits = MessageHeaderBitsTCDF;

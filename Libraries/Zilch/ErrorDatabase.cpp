@@ -29,10 +29,7 @@ ErrorEvent::ErrorEvent() : ErrorCode(ErrorCode::Invalid)
 {
 }
 
-ErrorEvent::ErrorEvent(const ErrorInfo& info,
-                       const CodeLocation& location,
-                       ErrorCode::Enum code,
-                       va_list args) :
+ErrorEvent::ErrorEvent(const ErrorInfo& info, const CodeLocation& location, ErrorCode::Enum code, va_list args) :
     ErrorCode(code),
     Location(location),
     Reason(info.Reason),
@@ -44,8 +41,7 @@ ErrorEvent::ErrorEvent(const ErrorInfo& info,
 String ErrorEvent::GetFormattedMessage(MessageFormat::Enum format) const
 {
   // Print the error message out with the location (in a standard format)
-  String message =
-      this->Location.GetFormattedStringWithMessage(format, this->ExactError);
+  String message = this->Location.GetFormattedStringWithMessage(format, this->ExactError);
 
   // The message may have more things appended to it, so create a string builder
   StringBuilder builder;

@@ -121,23 +121,17 @@ FileDialogFilter::FileDialogFilter()
 {
 }
 
-FileDialogFilter::FileDialogFilter(StringParam filter) :
-    mDescription(filter),
-    mFilter(filter)
+FileDialogFilter::FileDialogFilter(StringParam filter) : mDescription(filter), mFilter(filter)
 {
 }
 
-FileDialogFilter::FileDialogFilter(StringParam description,
-                                   StringParam filter) :
+FileDialogFilter::FileDialogFilter(StringParam description, StringParam filter) :
     mDescription(description),
     mFilter(filter)
 {
 }
 
-FileDialogInfo::FileDialogInfo() :
-    mCallback(nullptr),
-    mUserData(nullptr),
-    Flags(0)
+FileDialogInfo::FileDialogInfo() : mCallback(nullptr), mUserData(nullptr), Flags(0)
 {
 }
 

@@ -11,9 +11,7 @@ public:
   typedef ActiveProjectMenu ZilchSelf;
 
   /// Returns the modal the project ui was created under.
-  static Modal* OpenProject(Composite* modalParent,
-                            CachedProject* cachedProject,
-                            LauncherWindow* launcher);
+  static Modal* OpenProject(Composite* modalParent, CachedProject* cachedProject, LauncherWindow* launcher);
 
   /// Constructor.
   ActiveProjectMenu(Composite* parent, LauncherWindow* launcher);

@@ -167,140 +167,66 @@ Shared::Shared()
 
   // Add all generic information about operator precedence and associativity
   size_t precedence = 1;
-  OperatorAssociativity::Enum associativity =
-      OperatorAssociativity::LeftToRight;
-  this->AddPrecedence(precedence,
-                      associativity,
-                      OperatorArity::Unary,
-                      Grammar::BeginFunctionCall);
-  this->AddPrecedence(precedence,
-                      associativity,
-                      OperatorArity::Unary,
-                      Grammar::EndFunctionCall);
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Unary, Grammar::BeginIndex);
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Unary, Grammar::EndIndex);
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::Access);
+  OperatorAssociativity::Enum associativity = OperatorAssociativity::LeftToRight;
+  this->AddPrecedence(precedence, associativity, OperatorArity::Unary, Grammar::BeginFunctionCall);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Unary, Grammar::EndFunctionCall);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Unary, Grammar::BeginIndex);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Unary, Grammar::EndIndex);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::Access);
   precedence = 2;
   associativity = OperatorAssociativity::RightToLeft;
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Unary, Grammar::Positive);
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Unary, Grammar::Negative);
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Unary, Grammar::Increment);
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Unary, Grammar::Decrement);
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Unary, Grammar::LogicalNot);
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Unary, Grammar::BitwiseNot);
-  this->AddPrecedence(precedence,
-                      associativity,
-                      OperatorArity::Unary,
-                      Grammar::PropertyDelegate);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Unary, Grammar::Positive);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Unary, Grammar::Negative);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Unary, Grammar::Increment);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Unary, Grammar::Decrement);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Unary, Grammar::LogicalNot);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Unary, Grammar::BitwiseNot);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Unary, Grammar::PropertyDelegate);
   precedence = 3;
   associativity = OperatorAssociativity::LeftToRight;
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::Exponent);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::Exponent);
   precedence = 4;
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::Multiply);
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::Divide);
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::Modulo);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::Multiply);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::Divide);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::Modulo);
   precedence = 5;
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::Add);
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::Subtract);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::Add);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::Subtract);
   precedence = 6;
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::BitshiftLeft);
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::BitshiftRight);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::BitshiftLeft);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::BitshiftRight);
   precedence = 7;
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::LessThan);
-  this->AddPrecedence(precedence,
-                      associativity,
-                      OperatorArity::Binary,
-                      Grammar::LessThanOrEqualTo);
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::GreaterThan);
-  this->AddPrecedence(precedence,
-                      associativity,
-                      OperatorArity::Binary,
-                      Grammar::GreaterThanOrEqualTo);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::LessThan);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::LessThanOrEqualTo);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::GreaterThan);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::GreaterThanOrEqualTo);
   precedence = 8;
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::Equality);
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::Inequality);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::Equality);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::Inequality);
   precedence = 9;
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::BitwiseAnd);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::BitwiseAnd);
   precedence = 10;
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::BitwiseXor);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::BitwiseXor);
   precedence = 11;
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::BitwiseOr);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::BitwiseOr);
   precedence = 12;
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::LogicalAnd);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::LogicalAnd);
   precedence = 13;
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::LogicalOr);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::LogicalOr);
   precedence = 14;
   associativity = OperatorAssociativity::RightToLeft;
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::Assignment);
-  this->AddPrecedence(
-      precedence, associativity, OperatorArity::Binary, Grammar::AssignmentAdd);
-  this->AddPrecedence(precedence,
-                      associativity,
-                      OperatorArity::Binary,
-                      Grammar::AssignmentSubtract);
-  this->AddPrecedence(precedence,
-                      associativity,
-                      OperatorArity::Binary,
-                      Grammar::AssignmentMultiply);
-  this->AddPrecedence(precedence,
-                      associativity,
-                      OperatorArity::Binary,
-                      Grammar::AssignmentDivide);
-  this->AddPrecedence(precedence,
-                      associativity,
-                      OperatorArity::Binary,
-                      Grammar::AssignmentModulo);
-  this->AddPrecedence(precedence,
-                      associativity,
-                      OperatorArity::Binary,
-                      Grammar::AssignmentExponent);
-  this->AddPrecedence(precedence,
-                      associativity,
-                      OperatorArity::Binary,
-                      Grammar::AssignmentLeftShift);
-  this->AddPrecedence(precedence,
-                      associativity,
-                      OperatorArity::Binary,
-                      Grammar::AssignmentRightShift);
-  this->AddPrecedence(precedence,
-                      associativity,
-                      OperatorArity::Binary,
-                      Grammar::AssignmentBitwiseAnd);
-  this->AddPrecedence(precedence,
-                      associativity,
-                      OperatorArity::Binary,
-                      Grammar::AssignmentBitwiseXor);
-  this->AddPrecedence(precedence,
-                      associativity,
-                      OperatorArity::Binary,
-                      Grammar::AssignmentBitwiseOr);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::Assignment);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::AssignmentAdd);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::AssignmentSubtract);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::AssignmentMultiply);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::AssignmentDivide);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::AssignmentModulo);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::AssignmentExponent);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::AssignmentLeftShift);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::AssignmentRightShift);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::AssignmentBitwiseAnd);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::AssignmentBitwiseXor);
+  this->AddPrecedence(precedence, associativity, OperatorArity::Binary, Grammar::AssignmentBitwiseOr);
 
   // HandleAssignment
   {
@@ -479,474 +405,261 @@ Shared::Shared()
 
   // Handle our built in primitive casts
   // The 1-dimensional cases
-  this->AddPrimitiveCast(
-      core.ByteType, core.RealType, Instruction::ConvertByteToReal, true);
-  this->AddPrimitiveCast(core.ByteType,
-                         core.BooleanType,
-                         Instruction::ConvertByteToBoolean,
-                         false);
-  this->AddPrimitiveCast(
-      core.ByteType, core.IntegerType, Instruction::ConvertByteToInteger, true);
-  this->AddPrimitiveCast(core.ByteType,
-                         core.DoubleIntegerType,
-                         Instruction::ConvertByteToDoubleInteger,
-                         true);
-  this->AddPrimitiveCast(core.ByteType,
-                         core.DoubleRealType,
-                         Instruction::ConvertByteToDoubleReal,
-                         true);
+  this->AddPrimitiveCast(core.ByteType, core.RealType, Instruction::ConvertByteToReal, true);
+  this->AddPrimitiveCast(core.ByteType, core.BooleanType, Instruction::ConvertByteToBoolean, false);
+  this->AddPrimitiveCast(core.ByteType, core.IntegerType, Instruction::ConvertByteToInteger, true);
+  this->AddPrimitiveCast(core.ByteType, core.DoubleIntegerType, Instruction::ConvertByteToDoubleInteger, true);
+  this->AddPrimitiveCast(core.ByteType, core.DoubleRealType, Instruction::ConvertByteToDoubleReal, true);
 
+  this->AddPrimitiveCast(core.IntegerType, core.RealType, Instruction::ConvertIntegerToReal, true);
+  this->AddPrimitiveCast(core.IntegerType, core.BooleanType, Instruction::ConvertIntegerToBoolean, false);
+  this->AddPrimitiveCast(core.IntegerType, core.ByteType, Instruction::ConvertIntegerToByte, false);
+  this->AddPrimitiveCast(core.IntegerType, core.DoubleIntegerType, Instruction::ConvertIntegerToDoubleInteger, true);
+  this->AddPrimitiveCast(core.IntegerType, core.DoubleRealType, Instruction::ConvertIntegerToDoubleReal, true);
+  this->AddPrimitiveCast(core.RealType, core.IntegerType, Instruction::ConvertRealToInteger, false);
+  this->AddPrimitiveCast(core.RealType, core.BooleanType, Instruction::ConvertRealToBoolean, false);
+  this->AddPrimitiveCast(core.RealType, core.ByteType, Instruction::ConvertRealToByte, false);
+  this->AddPrimitiveCast(core.RealType, core.DoubleIntegerType, Instruction::ConvertRealToDoubleInteger, false);
+  this->AddPrimitiveCast(core.RealType, core.DoubleRealType, Instruction::ConvertRealToDoubleReal, true);
+  this->AddPrimitiveCast(core.BooleanType, core.IntegerType, Instruction::ConvertBooleanToInteger, false);
+  this->AddPrimitiveCast(core.BooleanType, core.RealType, Instruction::ConvertBooleanToReal, false);
+  this->AddPrimitiveCast(core.BooleanType, core.ByteType, Instruction::ConvertBooleanToByte, false);
+  this->AddPrimitiveCast(core.BooleanType, core.DoubleIntegerType, Instruction::ConvertBooleanToDoubleInteger, false);
+  this->AddPrimitiveCast(core.BooleanType, core.DoubleRealType, Instruction::ConvertBooleanToDoubleReal, false);
+  this->AddPrimitiveCast(core.DoubleIntegerType, core.RealType, Instruction::ConvertDoubleIntegerToReal, false);
+  this->AddPrimitiveCast(core.DoubleIntegerType, core.BooleanType, Instruction::ConvertDoubleIntegerToBoolean, false);
+  this->AddPrimitiveCast(core.DoubleIntegerType, core.ByteType, Instruction::ConvertDoubleIntegerToByte, false);
+  this->AddPrimitiveCast(core.DoubleIntegerType, core.IntegerType, Instruction::ConvertDoubleIntegerToInteger, false);
   this->AddPrimitiveCast(
-      core.IntegerType, core.RealType, Instruction::ConvertIntegerToReal, true);
-  this->AddPrimitiveCast(core.IntegerType,
-                         core.BooleanType,
-                         Instruction::ConvertIntegerToBoolean,
-                         false);
-  this->AddPrimitiveCast(core.IntegerType,
-                         core.ByteType,
-                         Instruction::ConvertIntegerToByte,
-                         false);
-  this->AddPrimitiveCast(core.IntegerType,
-                         core.DoubleIntegerType,
-                         Instruction::ConvertIntegerToDoubleInteger,
-                         true);
-  this->AddPrimitiveCast(core.IntegerType,
-                         core.DoubleRealType,
-                         Instruction::ConvertIntegerToDoubleReal,
-                         true);
-  this->AddPrimitiveCast(core.RealType,
-                         core.IntegerType,
-                         Instruction::ConvertRealToInteger,
-                         false);
-  this->AddPrimitiveCast(core.RealType,
-                         core.BooleanType,
-                         Instruction::ConvertRealToBoolean,
-                         false);
+      core.DoubleIntegerType, core.DoubleRealType, Instruction::ConvertDoubleIntegerToDoubleReal, true);
+  this->AddPrimitiveCast(core.DoubleRealType, core.RealType, Instruction::ConvertDoubleRealToReal, false);
+  this->AddPrimitiveCast(core.DoubleRealType, core.BooleanType, Instruction::ConvertDoubleRealToBoolean, false);
+  this->AddPrimitiveCast(core.DoubleRealType, core.ByteType, Instruction::ConvertDoubleRealToByte, false);
+  this->AddPrimitiveCast(core.DoubleRealType, core.IntegerType, Instruction::ConvertDoubleRealToInteger, false);
   this->AddPrimitiveCast(
-      core.RealType, core.ByteType, Instruction::ConvertRealToByte, false);
-  this->AddPrimitiveCast(core.RealType,
-                         core.DoubleIntegerType,
-                         Instruction::ConvertRealToDoubleInteger,
-                         false);
-  this->AddPrimitiveCast(core.RealType,
-                         core.DoubleRealType,
-                         Instruction::ConvertRealToDoubleReal,
-                         true);
-  this->AddPrimitiveCast(core.BooleanType,
-                         core.IntegerType,
-                         Instruction::ConvertBooleanToInteger,
-                         false);
-  this->AddPrimitiveCast(core.BooleanType,
-                         core.RealType,
-                         Instruction::ConvertBooleanToReal,
-                         false);
-  this->AddPrimitiveCast(core.BooleanType,
-                         core.ByteType,
-                         Instruction::ConvertBooleanToByte,
-                         false);
-  this->AddPrimitiveCast(core.BooleanType,
-                         core.DoubleIntegerType,
-                         Instruction::ConvertBooleanToDoubleInteger,
-                         false);
-  this->AddPrimitiveCast(core.BooleanType,
-                         core.DoubleRealType,
-                         Instruction::ConvertBooleanToDoubleReal,
-                         false);
-  this->AddPrimitiveCast(core.DoubleIntegerType,
-                         core.RealType,
-                         Instruction::ConvertDoubleIntegerToReal,
-                         false);
-  this->AddPrimitiveCast(core.DoubleIntegerType,
-                         core.BooleanType,
-                         Instruction::ConvertDoubleIntegerToBoolean,
-                         false);
-  this->AddPrimitiveCast(core.DoubleIntegerType,
-                         core.ByteType,
-                         Instruction::ConvertDoubleIntegerToByte,
-                         false);
-  this->AddPrimitiveCast(core.DoubleIntegerType,
-                         core.IntegerType,
-                         Instruction::ConvertDoubleIntegerToInteger,
-                         false);
-  this->AddPrimitiveCast(core.DoubleIntegerType,
-                         core.DoubleRealType,
-                         Instruction::ConvertDoubleIntegerToDoubleReal,
-                         true);
-  this->AddPrimitiveCast(core.DoubleRealType,
-                         core.RealType,
-                         Instruction::ConvertDoubleRealToReal,
-                         false);
-  this->AddPrimitiveCast(core.DoubleRealType,
-                         core.BooleanType,
-                         Instruction::ConvertDoubleRealToBoolean,
-                         false);
-  this->AddPrimitiveCast(core.DoubleRealType,
-                         core.ByteType,
-                         Instruction::ConvertDoubleRealToByte,
-                         false);
-  this->AddPrimitiveCast(core.DoubleRealType,
-                         core.IntegerType,
-                         Instruction::ConvertDoubleRealToInteger,
-                         false);
-  this->AddPrimitiveCast(core.DoubleRealType,
-                         core.DoubleIntegerType,
-                         Instruction::ConvertDoubleRealToDoubleInteger,
-                         false);
+      core.DoubleRealType, core.DoubleIntegerType, Instruction::ConvertDoubleRealToDoubleInteger, false);
 
   // The 2-dimensional cases
-  this->AddPrimitiveCast(core.Integer2Type,
-                         core.Real2Type,
-                         Instruction::ConvertInteger2ToReal2,
-                         true);
-  this->AddPrimitiveCast(core.Integer2Type,
-                         core.Boolean2Type,
-                         Instruction::ConvertInteger2ToBoolean2,
-                         false);
-  this->AddPrimitiveCast(core.Real2Type,
-                         core.Integer2Type,
-                         Instruction::ConvertReal2ToInteger2,
-                         false);
-  this->AddPrimitiveCast(core.Real2Type,
-                         core.Boolean2Type,
-                         Instruction::ConvertReal2ToBoolean2,
-                         false);
-  this->AddPrimitiveCast(core.Boolean2Type,
-                         core.Integer2Type,
-                         Instruction::ConvertBoolean2ToInteger2,
-                         false);
-  this->AddPrimitiveCast(core.Boolean2Type,
-                         core.Real2Type,
-                         Instruction::ConvertBoolean2ToReal2,
-                         false);
+  this->AddPrimitiveCast(core.Integer2Type, core.Real2Type, Instruction::ConvertInteger2ToReal2, true);
+  this->AddPrimitiveCast(core.Integer2Type, core.Boolean2Type, Instruction::ConvertInteger2ToBoolean2, false);
+  this->AddPrimitiveCast(core.Real2Type, core.Integer2Type, Instruction::ConvertReal2ToInteger2, false);
+  this->AddPrimitiveCast(core.Real2Type, core.Boolean2Type, Instruction::ConvertReal2ToBoolean2, false);
+  this->AddPrimitiveCast(core.Boolean2Type, core.Integer2Type, Instruction::ConvertBoolean2ToInteger2, false);
+  this->AddPrimitiveCast(core.Boolean2Type, core.Real2Type, Instruction::ConvertBoolean2ToReal2, false);
 
   // The 3-dimensional cases
-  this->AddPrimitiveCast(core.Integer3Type,
-                         core.Real3Type,
-                         Instruction::ConvertInteger3ToReal3,
-                         true);
-  this->AddPrimitiveCast(core.Integer3Type,
-                         core.Boolean3Type,
-                         Instruction::ConvertInteger3ToBoolean3,
-                         false);
-  this->AddPrimitiveCast(core.Real3Type,
-                         core.Integer3Type,
-                         Instruction::ConvertReal3ToInteger3,
-                         false);
-  this->AddPrimitiveCast(core.Real3Type,
-                         core.Boolean3Type,
-                         Instruction::ConvertReal3ToBoolean3,
-                         false);
-  this->AddPrimitiveCast(core.Boolean3Type,
-                         core.Integer3Type,
-                         Instruction::ConvertBoolean3ToInteger3,
-                         false);
-  this->AddPrimitiveCast(core.Boolean3Type,
-                         core.Real3Type,
-                         Instruction::ConvertBoolean3ToReal3,
-                         false);
+  this->AddPrimitiveCast(core.Integer3Type, core.Real3Type, Instruction::ConvertInteger3ToReal3, true);
+  this->AddPrimitiveCast(core.Integer3Type, core.Boolean3Type, Instruction::ConvertInteger3ToBoolean3, false);
+  this->AddPrimitiveCast(core.Real3Type, core.Integer3Type, Instruction::ConvertReal3ToInteger3, false);
+  this->AddPrimitiveCast(core.Real3Type, core.Boolean3Type, Instruction::ConvertReal3ToBoolean3, false);
+  this->AddPrimitiveCast(core.Boolean3Type, core.Integer3Type, Instruction::ConvertBoolean3ToInteger3, false);
+  this->AddPrimitiveCast(core.Boolean3Type, core.Real3Type, Instruction::ConvertBoolean3ToReal3, false);
 
   // The 4-dimensional cases
-  this->AddPrimitiveCast(core.Integer4Type,
-                         core.Real4Type,
-                         Instruction::ConvertInteger4ToReal4,
-                         true);
-  this->AddPrimitiveCast(core.Integer4Type,
-                         core.Boolean4Type,
-                         Instruction::ConvertInteger4ToBoolean4,
-                         false);
-  this->AddPrimitiveCast(core.Real4Type,
-                         core.Integer4Type,
-                         Instruction::ConvertReal4ToInteger4,
-                         false);
-  this->AddPrimitiveCast(core.Real4Type,
-                         core.Boolean4Type,
-                         Instruction::ConvertReal4ToBoolean4,
-                         false);
-  this->AddPrimitiveCast(core.Boolean4Type,
-                         core.Integer4Type,
-                         Instruction::ConvertBoolean4ToInteger4,
-                         false);
-  this->AddPrimitiveCast(core.Boolean4Type,
-                         core.Real4Type,
-                         Instruction::ConvertBoolean4ToReal4,
-                         false);
+  this->AddPrimitiveCast(core.Integer4Type, core.Real4Type, Instruction::ConvertInteger4ToReal4, true);
+  this->AddPrimitiveCast(core.Integer4Type, core.Boolean4Type, Instruction::ConvertInteger4ToBoolean4, false);
+  this->AddPrimitiveCast(core.Real4Type, core.Integer4Type, Instruction::ConvertReal4ToInteger4, false);
+  this->AddPrimitiveCast(core.Real4Type, core.Boolean4Type, Instruction::ConvertReal4ToBoolean4, false);
+  this->AddPrimitiveCast(core.Boolean4Type, core.Integer4Type, Instruction::ConvertBoolean4ToInteger4, false);
+  this->AddPrimitiveCast(core.Boolean4Type, core.Real4Type, Instruction::ConvertBoolean4ToReal4, false);
 
   // String to StringRange
-  this->AddPrimitiveCast(core.StringType,
-                         core.StringRangeType,
-                         Instruction::ConvertStringToStringRangeExtended,
-                         true);
+  this->AddPrimitiveCast(core.StringType, core.StringRangeType, Instruction::ConvertStringToStringRangeExtended, true);
 
 // Note: These macros mirror those inside of InstructionEnum and VirtualMachine
 // (for generation of instructions)
 
 // Copy
-#define ZilchCopyOperators(WithType)                                           \
-  {                                                                            \
-    BoundType* type = core.WithType##Type;                                     \
-    this->AddBinary(type,                                                      \
-                    core.VoidType,                                             \
-                    Grammar::Assignment,                                       \
-                    Instruction::Copy##WithType,                               \
-                    IoMode::WriteLValue);                                      \
+#define ZilchCopyOperators(WithType)                                                                                   \
+  {                                                                                                                    \
+    BoundType* type = core.WithType##Type;                                                                             \
+    this->AddBinary(type, core.VoidType, Grammar::Assignment, Instruction::Copy##WithType, IoMode::WriteLValue);       \
   }
 
 // Equality and inequality
-#define ZilchEqualityOperators(WithType, ResultType)                           \
-  {                                                                            \
-    BoundType* type = core.WithType##Type;                                     \
-    this->AddBinary(type,                                                      \
-                    core.ResultType##Type,                                     \
-                    Grammar::Inequality,                                       \
-                    Instruction::TestInequality##WithType,                     \
-                    IoMode::ReadRValue);                                       \
-    this->AddBinary(type,                                                      \
-                    core.ResultType##Type,                                     \
-                    Grammar::Equality,                                         \
-                    Instruction::TestEquality##WithType,                       \
-                    IoMode::ReadRValue);                                       \
+#define ZilchEqualityOperators(WithType, ResultType)                                                                   \
+  {                                                                                                                    \
+    BoundType* type = core.WithType##Type;                                                                             \
+    this->AddBinary(                                                                                                   \
+        type, core.ResultType##Type, Grammar::Inequality, Instruction::TestInequality##WithType, IoMode::ReadRValue);  \
+    this->AddBinary(                                                                                                   \
+        type, core.ResultType##Type, Grammar::Equality, Instruction::TestEquality##WithType, IoMode::ReadRValue);      \
   }
 
 // Less and greater comparison
-#define ZilchComparisonOperators(WithType, ResultType)                         \
-  {                                                                            \
-    BoundType* type = core.WithType##Type;                                     \
-    this->AddBinary(type,                                                      \
-                    core.ResultType##Type,                                     \
-                    Grammar::LessThan,                                         \
-                    Instruction::TestLessThan##WithType,                       \
-                    IoMode::ReadRValue);                                       \
-    this->AddBinary(type,                                                      \
-                    core.ResultType##Type,                                     \
-                    Grammar::LessThanOrEqualTo,                                \
-                    Instruction::TestLessThanOrEqualTo##WithType,              \
-                    IoMode::ReadRValue);                                       \
-    this->AddBinary(type,                                                      \
-                    core.ResultType##Type,                                     \
-                    Grammar::GreaterThan,                                      \
-                    Instruction::TestGreaterThan##WithType,                    \
-                    IoMode::ReadRValue);                                       \
-    this->AddBinary(type,                                                      \
-                    core.ResultType##Type,                                     \
-                    Grammar::GreaterThanOrEqualTo,                             \
-                    Instruction::TestGreaterThanOrEqualTo##WithType,           \
-                    IoMode::ReadRValue);                                       \
+#define ZilchComparisonOperators(WithType, ResultType)                                                                 \
+  {                                                                                                                    \
+    BoundType* type = core.WithType##Type;                                                                             \
+    this->AddBinary(                                                                                                   \
+        type, core.ResultType##Type, Grammar::LessThan, Instruction::TestLessThan##WithType, IoMode::ReadRValue);      \
+    this->AddBinary(type,                                                                                              \
+                    core.ResultType##Type,                                                                             \
+                    Grammar::LessThanOrEqualTo,                                                                        \
+                    Instruction::TestLessThanOrEqualTo##WithType,                                                      \
+                    IoMode::ReadRValue);                                                                               \
+    this->AddBinary(type,                                                                                              \
+                    core.ResultType##Type,                                                                             \
+                    Grammar::GreaterThan,                                                                              \
+                    Instruction::TestGreaterThan##WithType,                                                            \
+                    IoMode::ReadRValue);                                                                               \
+    this->AddBinary(type,                                                                                              \
+                    core.ResultType##Type,                                                                             \
+                    Grammar::GreaterThanOrEqualTo,                                                                     \
+                    Instruction::TestGreaterThanOrEqualTo##WithType,                                                   \
+                    IoMode::ReadRValue);                                                                               \
   }
 
 // Generic numeric operators, copy, equality
-#define ZilchNumericOperators(WithType, ComparisonType)                        \
-  ZilchCopyOperators(WithType)                                                 \
-      ZilchEqualityOperators(WithType, ComparisonType)                         \
-  {                                                                            \
-    BoundType* type = core.WithType##Type;                                     \
-    this->AddUnary(type,                                                       \
-                   type,                                                       \
-                   Grammar::Positive,                                          \
-                   Instruction::InvalidInstruction,                            \
-                   IoMode::ReadRValue);                                        \
-    this->AddUnary(type,                                                       \
-                   type,                                                       \
-                   Grammar::Negative,                                          \
-                   Instruction::Negate##WithType,                              \
-                   IoMode::ReadRValue);                                        \
-    this->AddUnary(type,                                                       \
-                   core.VoidType,                                              \
-                   Grammar::Increment,                                         \
-                   Instruction::Increment##WithType,                           \
-                   (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));  \
-    this->AddUnary(type,                                                       \
-                   core.VoidType,                                              \
-                   Grammar::Decrement,                                         \
-                   Instruction::Decrement##WithType,                           \
-                   (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));  \
-    this->AddBinary(type,                                                      \
-                    type,                                                      \
-                    Grammar::Add,                                              \
-                    Instruction::Add##WithType,                                \
-                    IoMode::ReadRValue);                                       \
-    this->AddBinary(type,                                                      \
-                    type,                                                      \
-                    Grammar::Subtract,                                         \
-                    Instruction::Subtract##WithType,                           \
-                    IoMode::ReadRValue);                                       \
-    this->AddBinary(type,                                                      \
-                    type,                                                      \
-                    Grammar::Multiply,                                         \
-                    Instruction::Multiply##WithType,                           \
-                    IoMode::ReadRValue);                                       \
-    this->AddBinary(type,                                                      \
-                    type,                                                      \
-                    Grammar::Divide,                                           \
-                    Instruction::Divide##WithType,                             \
-                    IoMode::ReadRValue);                                       \
-    this->AddBinary(type,                                                      \
-                    type,                                                      \
-                    Grammar::Modulo,                                           \
-                    Instruction::Modulo##WithType,                             \
-                    IoMode::ReadRValue);                                       \
-    this->AddBinary(type,                                                      \
-                    type,                                                      \
-                    Grammar::Exponent,                                         \
-                    Instruction::Pow##WithType,                                \
-                    IoMode::ReadRValue);                                       \
-    this->AddBinary(type,                                                      \
-                    core.VoidType,                                             \
-                    Grammar::AssignmentAdd,                                    \
-                    Instruction::AssignmentAdd##WithType,                      \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue)); \
-    this->AddBinary(type,                                                      \
-                    core.VoidType,                                             \
-                    Grammar::AssignmentSubtract,                               \
-                    Instruction::AssignmentSubtract##WithType,                 \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue)); \
-    this->AddBinary(type,                                                      \
-                    core.VoidType,                                             \
-                    Grammar::AssignmentMultiply,                               \
-                    Instruction::AssignmentMultiply##WithType,                 \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue)); \
-    this->AddBinary(type,                                                      \
-                    core.VoidType,                                             \
-                    Grammar::AssignmentDivide,                                 \
-                    Instruction::AssignmentDivide##WithType,                   \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue)); \
-    this->AddBinary(type,                                                      \
-                    core.VoidType,                                             \
-                    Grammar::AssignmentModulo,                                 \
-                    Instruction::AssignmentModulo##WithType,                   \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue)); \
-    this->AddBinary(type,                                                      \
-                    core.VoidType,                                             \
-                    Grammar::AssignmentExponent,                               \
-                    Instruction::AssignmentPow##WithType,                      \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue)); \
+#define ZilchNumericOperators(WithType, ComparisonType)                                                                \
+  ZilchCopyOperators(WithType) ZilchEqualityOperators(WithType, ComparisonType)                                        \
+  {                                                                                                                    \
+    BoundType* type = core.WithType##Type;                                                                             \
+    this->AddUnary(type, type, Grammar::Positive, Instruction::InvalidInstruction, IoMode::ReadRValue);                \
+    this->AddUnary(type, type, Grammar::Negative, Instruction::Negate##WithType, IoMode::ReadRValue);                  \
+    this->AddUnary(type,                                                                                               \
+                   core.VoidType,                                                                                      \
+                   Grammar::Increment,                                                                                 \
+                   Instruction::Increment##WithType,                                                                   \
+                   (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                          \
+    this->AddUnary(type,                                                                                               \
+                   core.VoidType,                                                                                      \
+                   Grammar::Decrement,                                                                                 \
+                   Instruction::Decrement##WithType,                                                                   \
+                   (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                          \
+    this->AddBinary(type, type, Grammar::Add, Instruction::Add##WithType, IoMode::ReadRValue);                         \
+    this->AddBinary(type, type, Grammar::Subtract, Instruction::Subtract##WithType, IoMode::ReadRValue);               \
+    this->AddBinary(type, type, Grammar::Multiply, Instruction::Multiply##WithType, IoMode::ReadRValue);               \
+    this->AddBinary(type, type, Grammar::Divide, Instruction::Divide##WithType, IoMode::ReadRValue);                   \
+    this->AddBinary(type, type, Grammar::Modulo, Instruction::Modulo##WithType, IoMode::ReadRValue);                   \
+    this->AddBinary(type, type, Grammar::Exponent, Instruction::Pow##WithType, IoMode::ReadRValue);                    \
+    this->AddBinary(type,                                                                                              \
+                    core.VoidType,                                                                                     \
+                    Grammar::AssignmentAdd,                                                                            \
+                    Instruction::AssignmentAdd##WithType,                                                              \
+                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
+    this->AddBinary(type,                                                                                              \
+                    core.VoidType,                                                                                     \
+                    Grammar::AssignmentSubtract,                                                                       \
+                    Instruction::AssignmentSubtract##WithType,                                                         \
+                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
+    this->AddBinary(type,                                                                                              \
+                    core.VoidType,                                                                                     \
+                    Grammar::AssignmentMultiply,                                                                       \
+                    Instruction::AssignmentMultiply##WithType,                                                         \
+                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
+    this->AddBinary(type,                                                                                              \
+                    core.VoidType,                                                                                     \
+                    Grammar::AssignmentDivide,                                                                         \
+                    Instruction::AssignmentDivide##WithType,                                                           \
+                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
+    this->AddBinary(type,                                                                                              \
+                    core.VoidType,                                                                                     \
+                    Grammar::AssignmentModulo,                                                                         \
+                    Instruction::AssignmentModulo##WithType,                                                           \
+                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
+    this->AddBinary(type,                                                                                              \
+                    core.VoidType,                                                                                     \
+                    Grammar::AssignmentExponent,                                                                       \
+                    Instruction::AssignmentPow##WithType,                                                              \
+                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
   }
 
 // Generic numeric operators, copy, equality, comparison
-#define ZilchScalarOperators(WithType)                                         \
-  ZilchNumericOperators(WithType, Boolean)                                     \
-      ZilchComparisonOperators(WithType, Boolean)
+#define ZilchScalarOperators(WithType)                                                                                 \
+  ZilchNumericOperators(WithType, Boolean) ZilchComparisonOperators(WithType, Boolean)
 
 // Vector operations, generic numeric operators, copy, equality
-#define ZilchVectorOperators(VectorType, ScalarType, ComparisonType)           \
-  ZilchNumericOperators(VectorType, Boolean)                                   \
-      ZilchComparisonOperators(VectorType, ComparisonType)                     \
-  {                                                                            \
-    BoundType* vectorType = core.VectorType##Type;                             \
-    BoundType* scalarType = core.ScalarType##Type;                             \
-    this->AddBinaryCommunative(vectorType,                                     \
-                               scalarType,                                     \
-                               vectorType,                                     \
-                               Grammar::Multiply,                              \
-                               Instruction::ScalarMultiply##VectorType,        \
-                               IoMode::ReadRValue);                            \
-    this->AddBinaryNonCommunative(vectorType,                                  \
-                                  scalarType,                                  \
-                                  vectorType,                                  \
-                                  Grammar::Divide,                             \
-                                  Instruction::ScalarDivide##VectorType,       \
-                                  IoMode::ReadRValue);                         \
-    this->AddBinaryNonCommunative(vectorType,                                  \
-                                  scalarType,                                  \
-                                  vectorType,                                  \
-                                  Grammar::Modulo,                             \
-                                  Instruction::ScalarModulo##VectorType,       \
-                                  IoMode::ReadRValue);                         \
-    this->AddBinaryNonCommunative(vectorType,                                  \
-                                  scalarType,                                  \
-                                  vectorType,                                  \
-                                  Grammar::Exponent,                           \
-                                  Instruction::ScalarPow##VectorType,          \
-                                  IoMode::ReadRValue);                         \
-    this->AddBinaryNonCommunative(                                             \
-        vectorType,                                                            \
-        scalarType,                                                            \
-        core.VoidType,                                                         \
-        Grammar::AssignmentMultiply,                                           \
-        Instruction::AssignmentScalarMultiply##VectorType,                     \
-        (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));             \
-    this->AddBinaryNonCommunative(                                             \
-        vectorType,                                                            \
-        scalarType,                                                            \
-        core.VoidType,                                                         \
-        Grammar::AssignmentDivide,                                             \
-        Instruction::AssignmentScalarDivide##VectorType,                       \
-        (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));             \
-    this->AddBinaryNonCommunative(                                             \
-        vectorType,                                                            \
-        scalarType,                                                            \
-        core.VoidType,                                                         \
-        Grammar::AssignmentModulo,                                             \
-        Instruction::AssignmentScalarModulo##VectorType,                       \
-        (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));             \
-    this->AddBinaryNonCommunative(                                             \
-        vectorType,                                                            \
-        scalarType,                                                            \
-        core.VoidType,                                                         \
-        Grammar::AssignmentExponent,                                           \
-        Instruction::AssignmentScalarPow##VectorType,                          \
-        (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));             \
+#define ZilchVectorOperators(VectorType, ScalarType, ComparisonType)                                                   \
+  ZilchNumericOperators(VectorType, Boolean) ZilchComparisonOperators(VectorType, ComparisonType)                      \
+  {                                                                                                                    \
+    BoundType* vectorType = core.VectorType##Type;                                                                     \
+    BoundType* scalarType = core.ScalarType##Type;                                                                     \
+    this->AddBinaryCommunative(vectorType,                                                                             \
+                               scalarType,                                                                             \
+                               vectorType,                                                                             \
+                               Grammar::Multiply,                                                                      \
+                               Instruction::ScalarMultiply##VectorType,                                                \
+                               IoMode::ReadRValue);                                                                    \
+    this->AddBinaryNonCommunative(vectorType,                                                                          \
+                                  scalarType,                                                                          \
+                                  vectorType,                                                                          \
+                                  Grammar::Divide,                                                                     \
+                                  Instruction::ScalarDivide##VectorType,                                               \
+                                  IoMode::ReadRValue);                                                                 \
+    this->AddBinaryNonCommunative(vectorType,                                                                          \
+                                  scalarType,                                                                          \
+                                  vectorType,                                                                          \
+                                  Grammar::Modulo,                                                                     \
+                                  Instruction::ScalarModulo##VectorType,                                               \
+                                  IoMode::ReadRValue);                                                                 \
+    this->AddBinaryNonCommunative(vectorType,                                                                          \
+                                  scalarType,                                                                          \
+                                  vectorType,                                                                          \
+                                  Grammar::Exponent,                                                                   \
+                                  Instruction::ScalarPow##VectorType,                                                  \
+                                  IoMode::ReadRValue);                                                                 \
+    this->AddBinaryNonCommunative(vectorType,                                                                          \
+                                  scalarType,                                                                          \
+                                  core.VoidType,                                                                       \
+                                  Grammar::AssignmentMultiply,                                                         \
+                                  Instruction::AssignmentScalarMultiply##VectorType,                                   \
+                                  (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                           \
+    this->AddBinaryNonCommunative(vectorType,                                                                          \
+                                  scalarType,                                                                          \
+                                  core.VoidType,                                                                       \
+                                  Grammar::AssignmentDivide,                                                           \
+                                  Instruction::AssignmentScalarDivide##VectorType,                                     \
+                                  (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                           \
+    this->AddBinaryNonCommunative(vectorType,                                                                          \
+                                  scalarType,                                                                          \
+                                  core.VoidType,                                                                       \
+                                  Grammar::AssignmentModulo,                                                           \
+                                  Instruction::AssignmentScalarModulo##VectorType,                                     \
+                                  (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                           \
+    this->AddBinaryNonCommunative(vectorType,                                                                          \
+                                  scalarType,                                                                          \
+                                  core.VoidType,                                                                       \
+                                  Grammar::AssignmentExponent,                                                         \
+                                  Instruction::AssignmentScalarPow##VectorType,                                        \
+                                  (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                           \
   }
 
 // Special integral operators, generic numeric operators, copy, equality, and
 // comparison
-#define ZilchIntegralOperators(WithType)                                       \
-  {                                                                            \
-    BoundType* type = core.WithType##Type;                                     \
-    this->AddUnary(type,                                                       \
-                   type,                                                       \
-                   Grammar::BitwiseNot,                                        \
-                   Instruction::BitwiseNot##WithType,                          \
-                   IoMode::ReadRValue);                                        \
-    this->AddBinary(type,                                                      \
-                    type,                                                      \
-                    Grammar::BitshiftLeft,                                     \
-                    Instruction::BitshiftLeft##WithType,                       \
-                    IoMode::ReadRValue);                                       \
-    this->AddBinary(type,                                                      \
-                    type,                                                      \
-                    Grammar::BitshiftRight,                                    \
-                    Instruction::BitshiftRight##WithType,                      \
-                    IoMode::ReadRValue);                                       \
-    this->AddBinary(type,                                                      \
-                    type,                                                      \
-                    Grammar::BitwiseOr,                                        \
-                    Instruction::BitwiseOr##WithType,                          \
-                    IoMode::ReadRValue);                                       \
-    this->AddBinary(type,                                                      \
-                    type,                                                      \
-                    Grammar::BitwiseXor,                                       \
-                    Instruction::BitwiseXor##WithType,                         \
-                    IoMode::ReadRValue);                                       \
-    this->AddBinary(type,                                                      \
-                    type,                                                      \
-                    Grammar::BitwiseAnd,                                       \
-                    Instruction::BitwiseAnd##WithType,                         \
-                    IoMode::ReadRValue);                                       \
-    this->AddBinary(type,                                                      \
-                    core.VoidType,                                             \
-                    Grammar::AssignmentLeftShift,                              \
-                    Instruction::AssignmentBitshiftLeft##WithType,             \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue)); \
-    this->AddBinary(type,                                                      \
-                    core.VoidType,                                             \
-                    Grammar::AssignmentRightShift,                             \
-                    Instruction::AssignmentBitshiftRight##WithType,            \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue)); \
-    this->AddBinary(type,                                                      \
-                    core.VoidType,                                             \
-                    Grammar::AssignmentBitwiseOr,                              \
-                    Instruction::AssignmentBitwiseOr##WithType,                \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue)); \
-    this->AddBinary(type,                                                      \
-                    core.VoidType,                                             \
-                    Grammar::AssignmentBitwiseXor,                             \
-                    Instruction::AssignmentBitwiseXor##WithType,               \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue)); \
-    this->AddBinary(type,                                                      \
-                    core.VoidType,                                             \
-                    Grammar::AssignmentBitwiseAnd,                             \
-                    Instruction::AssignmentBitwiseAnd##WithType,               \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue)); \
+#define ZilchIntegralOperators(WithType)                                                                               \
+  {                                                                                                                    \
+    BoundType* type = core.WithType##Type;                                                                             \
+    this->AddUnary(type, type, Grammar::BitwiseNot, Instruction::BitwiseNot##WithType, IoMode::ReadRValue);            \
+    this->AddBinary(type, type, Grammar::BitshiftLeft, Instruction::BitshiftLeft##WithType, IoMode::ReadRValue);       \
+    this->AddBinary(type, type, Grammar::BitshiftRight, Instruction::BitshiftRight##WithType, IoMode::ReadRValue);     \
+    this->AddBinary(type, type, Grammar::BitwiseOr, Instruction::BitwiseOr##WithType, IoMode::ReadRValue);             \
+    this->AddBinary(type, type, Grammar::BitwiseXor, Instruction::BitwiseXor##WithType, IoMode::ReadRValue);           \
+    this->AddBinary(type, type, Grammar::BitwiseAnd, Instruction::BitwiseAnd##WithType, IoMode::ReadRValue);           \
+    this->AddBinary(type,                                                                                              \
+                    core.VoidType,                                                                                     \
+                    Grammar::AssignmentLeftShift,                                                                      \
+                    Instruction::AssignmentBitshiftLeft##WithType,                                                     \
+                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
+    this->AddBinary(type,                                                                                              \
+                    core.VoidType,                                                                                     \
+                    Grammar::AssignmentRightShift,                                                                     \
+                    Instruction::AssignmentBitshiftRight##WithType,                                                    \
+                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
+    this->AddBinary(type,                                                                                              \
+                    core.VoidType,                                                                                     \
+                    Grammar::AssignmentBitwiseOr,                                                                      \
+                    Instruction::AssignmentBitwiseOr##WithType,                                                        \
+                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
+    this->AddBinary(type,                                                                                              \
+                    core.VoidType,                                                                                     \
+                    Grammar::AssignmentBitwiseXor,                                                                     \
+                    Instruction::AssignmentBitwiseXor##WithType,                                                       \
+                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
+    this->AddBinary(type,                                                                                              \
+                    core.VoidType,                                                                                     \
+                    Grammar::AssignmentBitwiseAnd,                                                                     \
+                    Instruction::AssignmentBitwiseAnd##WithType,                                                       \
+                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
   }
 
   ZilchIntegralOperators(Byte);
@@ -975,34 +688,20 @@ Shared::Shared()
   // specially above
 
   // Boolean operators
-  this->AddUnary(core.BooleanType,
-                 core.BooleanType,
-                 Grammar::LogicalNot,
-                 Instruction::LogicalNotBoolean,
-                 IoMode::ReadRValue);
+  this->AddUnary(
+      core.BooleanType, core.BooleanType, Grammar::LogicalNot, Instruction::LogicalNotBoolean, IoMode::ReadRValue);
 
   // Note: These operators have instructions marked as invalid because short
   // circuit is handled specially There is not actually an opcode/instruction
   // that performs logical or/and
-  this->AddBinary(core.BooleanType,
-                  core.BooleanType,
-                  Grammar::LogicalAnd,
-                  Instruction::InvalidInstruction,
-                  IoMode::ReadRValue);
-  this->AddBinary(core.BooleanType,
-                  core.BooleanType,
-                  Grammar::LogicalOr,
-                  Instruction::InvalidInstruction,
-                  IoMode::ReadRValue);
+  this->AddBinary(
+      core.BooleanType, core.BooleanType, Grammar::LogicalAnd, Instruction::InvalidInstruction, IoMode::ReadRValue);
+  this->AddBinary(
+      core.BooleanType, core.BooleanType, Grammar::LogicalOr, Instruction::InvalidInstruction, IoMode::ReadRValue);
 }
 
-void Shared::AddBinary(Type* lhs,
-                       Type* rhs,
-                       Type* result,
-                       Grammar::Enum oper,
-                       Instruction::Enum instruction,
-                       IoMode::Enum io,
-                       bool flip)
+void Shared::AddBinary(
+    Type* lhs, Type* rhs, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io, bool flip)
 {
   // Generate the operator information
   BinaryOperator info;
@@ -1016,16 +715,11 @@ void Shared::AddBinary(Type* lhs,
   info.IsValid = true;
 
   // Insert it into the set
-  this->BinaryOperators.InsertOrError(
-      info, "Two unary operators inserted with the same types and operator");
+  this->BinaryOperators.InsertOrError(info, "Two unary operators inserted with the same types and operator");
 }
 
-void Shared::AddBinaryCommunative(Type* type1,
-                                  Type* type2,
-                                  Type* result,
-                                  Grammar::Enum oper,
-                                  Instruction::Enum instruction,
-                                  IoMode::Enum io)
+void Shared::AddBinaryCommunative(
+    Type* type1, Type* type2, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io)
 {
   // The arguments only need flipping if they're not of the same type
   bool needsFlip = !Type::IsSame(type1, type2);
@@ -1037,31 +731,19 @@ void Shared::AddBinaryCommunative(Type* type1,
   this->AddBinary(type2, type1, result, oper, instruction, io, needsFlip);
 }
 
-void Shared::AddBinaryNonCommunative(Type* lhs,
-                                     Type* rhs,
-                                     Type* result,
-                                     Grammar::Enum oper,
-                                     Instruction::Enum instruction,
-                                     IoMode::Enum io)
+void Shared::AddBinaryNonCommunative(
+    Type* lhs, Type* rhs, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io)
 {
   // Since the order they added it was type1, type2, then it needs no flip
   this->AddBinary(lhs, rhs, result, oper, instruction, io, false);
 }
 
-void Shared::AddBinary(Type* sameType,
-                       Type* result,
-                       Grammar::Enum oper,
-                       Instruction::Enum instruction,
-                       IoMode::Enum io)
+void Shared::AddBinary(Type* sameType, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io)
 {
   this->AddBinary(sameType, sameType, result, oper, instruction, io, false);
 }
 
-void Shared::AddUnary(Type* operand,
-                      Type* result,
-                      Grammar::Enum oper,
-                      Instruction::Enum instruction,
-                      IoMode::Enum io)
+void Shared::AddUnary(Type* operand, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io)
 {
   // Generate the operator information
   UnaryOperator info;
@@ -1073,14 +755,10 @@ void Shared::AddUnary(Type* operand,
   info.IsValid = true;
 
   // Insert it into the set
-  this->UnaryOperators.InsertOrError(
-      info, "Two binary operators inserted with the same types and operator");
+  this->UnaryOperators.InsertOrError(info, "Two binary operators inserted with the same types and operator");
 }
 
-void Shared::AddPrimitiveCast(Type* fromType,
-                              Type* toType,
-                              Instruction::Enum instruction,
-                              bool canBeImplicit)
+void Shared::AddPrimitiveCast(Type* fromType, Type* toType, Instruction::Enum instruction, bool canBeImplicit)
 {
   CastOperator info;
   info.From = fromType;
@@ -1094,8 +772,7 @@ void Shared::AddPrimitiveCast(Type* fromType,
   info.RequiresCodeGeneration = true;
 
   // Insert it into the set
-  this->CastOperators.InsertOrError(
-      info, "Two cast operators inserted with the same from/to types");
+  this->CastOperators.InsertOrError(info, "Two cast operators inserted with the same from/to types");
   this->PrimitiveCastOperatorsFrom[fromType].PushBack(info);
 }
 
@@ -1122,8 +799,7 @@ void Shared::AddPrecedence(size_t precedence,
 
   // Map the operator to its precedence level, which is useful for code
   // formatters
-  this->OperatorToPrecedence.InsertOrError(
-      key, info, "The operator was inserted twice");
+  this->OperatorToPrecedence.InsertOrError(key, info, "The operator was inserted twice");
 
   // Map the precedence level to any operators on that level, which is useful
   // for documentation
@@ -1158,10 +834,7 @@ Shared& Shared::GetInstance()
   return instance;
 }
 
-BinaryOperator Shared::GetBinaryOperator(Type* lhs,
-                                         Type* rhs,
-                                         Grammar::Enum oper,
-                                         bool allowRecursiveLookup)
+BinaryOperator Shared::GetBinaryOperator(Type* lhs, Type* rhs, Grammar::Enum oper, bool allowRecursiveLookup)
 {
   // First attempt to find the operator in the specialized place
   // This MUST be first, otherwise value assignment for primitives will be a
@@ -1197,12 +870,10 @@ BinaryOperator Shared::GetBinaryOperator(Type* lhs,
 
     // Don't allow assignments with integer to enum (otheriwse if it's between
     // enum/enum or enum to integer, let it through)
-    if (isSameEnumWithEnum || isEnumToInteger ||
-        (isIntegerToEnum && oper != Grammar::Assignment))
+    if (isSameEnumWithEnum || isEnumToInteger || (isIntegerToEnum && oper != Grammar::Assignment))
     {
       // Treat both as integers, and see if the operation would have been valid
-      BinaryOperator integerOperator =
-          this->GetBinaryOperator(integerType, integerType, oper);
+      BinaryOperator integerOperator = this->GetBinaryOperator(integerType, integerType, oper);
 
       // If the operator is valid
       if (integerOperator.IsValid)
@@ -1229,8 +900,7 @@ BinaryOperator Shared::GetBinaryOperator(Type* lhs,
   {
     // If we can convert the right to the left hand side (or they are the same)
     CastOperator castRightToLeft = this->GetCastOperator(rhs, lhs);
-    if (castRightToLeft.IsValid && castRightToLeft.CanBeImplicit &&
-        castRightToLeft.RequiresCodeGeneration == false)
+    if (castRightToLeft.IsValid && castRightToLeft.CanBeImplicit && castRightToLeft.RequiresCodeGeneration == false)
     {
       // Based on the operation...
       switch (oper)
@@ -1251,8 +921,7 @@ BinaryOperator Shared::GetBinaryOperator(Type* lhs,
     // If we can convert the left to the right hand side (we already know they
     // aren't the same from above)
     CastOperator castLeftToRight = this->GetCastOperator(lhs, rhs);
-    if (castLeftToRight.IsValid && castLeftToRight.CanBeImplicit &&
-        castLeftToRight.RequiresCodeGeneration == false)
+    if (castLeftToRight.IsValid && castLeftToRight.CanBeImplicit && castLeftToRight.RequiresCodeGeneration == false)
     {
       // Based on the operation...
       switch (oper)
@@ -1339,8 +1008,7 @@ BinaryOperator Shared::GetBinaryOperator(Type* lhs,
     if (rightCast.IsValid && rightCast.CanBeImplicit)
     {
       // We only look for direct 'primitive' binary operators
-      BinaryOperator binaryOperatorWithCast =
-          this->GetBinaryOperator(lhs, lhs, oper, false);
+      BinaryOperator binaryOperatorWithCast = this->GetBinaryOperator(lhs, lhs, oper, false);
       if (binaryOperatorWithCast.IsValid)
       {
         // Let the user know that they need to cast to make this operator work
@@ -1362,8 +1030,7 @@ BinaryOperator Shared::GetBinaryOperator(Type* lhs,
       continue;
 
     // We only look for direct 'primitive' binary operators
-    BinaryOperator binaryOperatorWithCast =
-        this->GetBinaryOperator(lhs, rightCast.To, oper, false);
+    BinaryOperator binaryOperatorWithCast = this->GetBinaryOperator(lhs, rightCast.To, oper, false);
     if (binaryOperatorWithCast.IsValid)
     {
       // Let the user know that they need to cast to make this operator work
@@ -1384,8 +1051,7 @@ BinaryOperator Shared::GetBinaryOperator(Type* lhs,
       continue;
 
     // We only look for direct 'primitive' binary operators
-    BinaryOperator binaryOperatorWithCast =
-        this->GetBinaryOperator(leftCast.To, rhs, oper, false);
+    BinaryOperator binaryOperatorWithCast = this->GetBinaryOperator(leftCast.To, rhs, oper, false);
     if (binaryOperatorWithCast.IsValid)
     {
       // We can't allow implicit casting of the left argument when the operator
@@ -1494,13 +1160,11 @@ CastOperator Shared::GetCastOperator(Type* from, Type* to)
     return *result;
 
   // If we're converting from null to any delegate type...
-  if (Type::IsSame(ZilchTypeId(NullPointerType), from) &&
-      Type::IsDelegateType(to))
+  if (Type::IsSame(ZilchTypeId(NullPointerType), from) && Type::IsDelegateType(to))
     return this->NullToDelegate;
 
   // If we're converting from null to any other handle type...
-  if (Type::IsSame(ZilchTypeId(NullPointerType), from) &&
-      Type::IsHandleType(to))
+  if (Type::IsSame(ZilchTypeId(NullPointerType), from) && Type::IsHandleType(to))
     return this->RawImplicitCast;
 
   // If we are converting from a delegate to the 'any delegate'...
@@ -1534,8 +1198,7 @@ CastOperator Shared::GetCastOperator(Type* from, Type* to)
   return CastOperator();
 }
 
-UntypedOperator Shared::GetOperatorPrecedence(Grammar::Enum oper,
-                                              OperatorArity::Enum arity)
+UntypedOperator Shared::GetOperatorPrecedence(Grammar::Enum oper, OperatorArity::Enum arity)
 {
   OperatorWithArity finder;
   finder.Operator = oper;

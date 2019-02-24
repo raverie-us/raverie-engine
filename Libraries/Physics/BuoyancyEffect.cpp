@@ -59,14 +59,12 @@ void BuoyancyEffect::ApplyEffect(RigidBody* obj, real dt)
       continue;
 
     // If the collision group says to not check collision, then don't
-    if (mCollider->mCollisionGroupInstance->SkipDetection(
-            *(collider->mCollisionGroupInstance)))
+    if (mCollider->mCollisionGroupInstance->SkipDetection(*(collider->mCollisionGroupInstance)))
       continue;
 
     // We still want to check to see if resolution should be
     // skipped for not applying region effects
-    if (mCollider->mCollisionGroupInstance->SkipResolution(
-            (*collider->mCollisionGroupInstance)))
+    if (mCollider->mCollisionGroupInstance->SkipResolution((*collider->mCollisionGroupInstance)))
       continue;
 
     // Determine how much of the collider overlaps this region
@@ -79,10 +77,8 @@ void BuoyancyEffect::ApplyEffect(RigidBody* obj, real dt)
     if (percentInside != 0)
     {
       // Get the approximate volume of intersecting region
-      real volumeInside =
-          collider->ComputeWorldVolumeInternal() * percentInside;
-      obj->ApplyForceAtPointNoWakeUp(-mGravity * volumeInside * mDensity,
-                                     centerInside);
+      real volumeInside = collider->ComputeWorldVolumeInternal() * percentInside;
+      obj->ApplyForceAtPointNoWakeUp(-mGravity * volumeInside * mDensity, centerInside);
     }
   }
 }
@@ -103,8 +99,7 @@ void BuoyancyEffect::SetDetail(uint detail)
   mDetail = detail;
 }
 
-float BuoyancyEffect::ComputeOverlapPercent(Collider* collider,
-                                            Vec3& volumeCenter)
+float BuoyancyEffect::ComputeOverlapPercent(Collider* collider, Vec3& volumeCenter)
 {
   // Get the world space Aabb of the object
   Aabb aabb = collider->mAabb;
@@ -160,9 +155,7 @@ float BuoyancyEffect::ComputeOverlapPercent(Collider* collider,
           ++inside;
 
           if (mDebugDrawRuntime)
-            gDebugDraw->Add(Debug::Sphere(pos, minStep * real(0.15f))
-                                .Color(Color::Green)
-                                .OnTop(true));
+            gDebugDraw->Add(Debug::Sphere(pos, minStep * real(0.15f)).Color(Color::Green).OnTop(true));
         }
         else
         {
@@ -170,9 +163,7 @@ float BuoyancyEffect::ComputeOverlapPercent(Collider* collider,
           ++outside;
 
           if (mDebugDrawRuntime)
-            gDebugDraw->Add(Debug::Sphere(pos, minStep * real(0.15f))
-                                .Color(Color::Red)
-                                .OnTop(true));
+            gDebugDraw->Add(Debug::Sphere(pos, minStep * real(0.15f)).Color(Color::Red).OnTop(true));
         }
       }
     }
@@ -193,9 +184,7 @@ float BuoyancyEffect::ComputeOverlapPercent(Collider* collider,
 
   // Draw the volume center
   if (mDebugDrawRuntime)
-    gDebugDraw->Add(Debug::Sphere(volumeCenter, minStep * real(0.3f))
-                        .Color(Color::Blue)
-                        .OnTop(true));
+    gDebugDraw->Add(Debug::Sphere(volumeCenter, minStep * real(0.3f)).Color(Color::Blue).OnTop(true));
 
   return percentInside;
 }

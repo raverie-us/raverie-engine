@@ -4,8 +4,7 @@
 namespace Zero
 {
 
-#define StatsProfileScope(statistics, type)                                    \
-  ProfileScopeRecord(*statistics.GetRecord(type));
+#define StatsProfileScope(statistics, type) ProfileScopeRecord(*statistics.GetRecord(type));
 
 Statistics::Statistics()
 {
@@ -144,12 +143,9 @@ void BroadPhaseTracker::LoadFromStream(Serializer& stream)
 
   while (stream.GetPolymorphic(broadPhaseNode))
   {
-    BroadPhaseCreator* broadPhaseCreator =
-        Z::gBroadPhaseLibrary->GetCreatorBy(broadPhaseNode);
+    BroadPhaseCreator* broadPhaseCreator = Z::gBroadPhaseLibrary->GetCreatorBy(broadPhaseNode);
 
-    ErrorIf(broadPhaseCreator == nullptr,
-            "Invalid broad phase node %s.",
-            broadPhaseNode.TypeName.Data());
+    ErrorIf(broadPhaseCreator == nullptr, "Invalid broad phase node %s.", broadPhaseNode.TypeName.Data());
     if (broadPhaseCreator == nullptr)
       continue;
     // Create the broad phase.
@@ -188,8 +184,7 @@ Statistics* BroadPhaseTracker::GetStatistics(uint type, uint index)
 /// this function.  Each index represents the lexicographical id of the
 /// objects that collided.  This function will compare the results with
 /// what each broad phase has recorded and report any discrepancies.
-void BroadPhaseTracker::RecordFrameResults(
-    const Array<NodePointerPair>& results)
+void BroadPhaseTracker::RecordFrameResults(const Array<NodePointerPair>& results)
 {
   // Walk through each pair and record the collision
   for (uint i = 0; i < results.Size(); ++i)
@@ -207,9 +202,7 @@ void BroadPhaseTracker::Draw(int level, uint debugFlags)
 /// Fills out the proxy for the broadphase at the position specified by data.
 /// The proxy can be thought of as a handle, an object should do nothing more
 /// than hold onto it and give it to broadphase when it wants to do something.
-void BroadPhaseTracker::CreateProxy(uint type,
-                                    BroadPhaseProxy& proxy,
-                                    BroadPhaseData& data)
+void BroadPhaseTracker::CreateProxy(uint type, BroadPhaseProxy& proxy, BroadPhaseData& data)
 {
   // Get a new proxy
   uint proxyIndex = GetNewProxyIndex(type);
@@ -291,9 +284,7 @@ void BroadPhaseTracker::RemoveProxies(uint type, ProxyHandleArray& proxies)
 }
 
 /// Updates the given proxy to the position specified by data.
-void BroadPhaseTracker::UpdateProxy(uint type,
-                                    BroadPhaseProxy& proxy,
-                                    BroadPhaseData& data)
+void BroadPhaseTracker::UpdateProxy(uint type, BroadPhaseProxy& proxy, BroadPhaseData& data)
 {
   // Get the index from the proxy
   uint index = proxy.ToU32();
@@ -357,9 +348,7 @@ void BroadPhaseTracker::SelfQuery(ClientPairArray& results)
   }
 }
 
-void BroadPhaseTracker::Query(BroadPhaseData& data,
-                              ClientPairArray& results,
-                              uint broadphaseType)
+void BroadPhaseTracker::Query(BroadPhaseData& data, ClientPairArray& results, uint broadphaseType)
 {
   BroadPhaseVec& broadPhases = mBroadPhases[broadphaseType];
 
@@ -391,15 +380,13 @@ void BroadPhaseTracker::Query(BroadPhaseData& data, ClientPairArray& results)
 }
 
 /// Batch version of Query.
-void BroadPhaseTracker::BatchQuery(BroadPhaseDataArray& data,
-                                   ClientPairArray& results)
+void BroadPhaseTracker::BatchQuery(BroadPhaseDataArray& data, ClientPairArray& results)
 {
   for (uint i = 0; i < data.Size(); ++i)
     Query(data[i], results);
 }
 
-void BroadPhaseTracker::QueryBoth(BroadPhaseData& data,
-                                  ClientPairArray& results)
+void BroadPhaseTracker::QueryBoth(BroadPhaseData& data, ClientPairArray& results)
 {
   Query(data, results, BroadPhase::Static);
   Query(data, results, BroadPhase::Dynamic);
@@ -508,11 +495,7 @@ void BroadPhaseTracker::CastIntoBroadphase(uint broadPhaseType,
         IBroadPhase* lastBroadPhase = broadPhases[i - 1]->mBroadPhase;
         cstr lastName = ZilchVirtualTypeId(lastBroadPhase)->Name.c_str();
         cstr currName = ZilchVirtualTypeId(broadPhase)->Name.c_str();
-        String message =
-            BuildString(lastName,
-                        " and ",
-                        currName,
-                        " did not have the same results on a ray cast.");
+        String message = BuildString(lastName, " and ", currName, " did not have the same results on a ray cast.");
         DoNotifyTimer("Missed Ray Cast!", message, "Warning", 0.5);
       }
     }
@@ -548,8 +531,7 @@ void BroadPhaseTracker::RegisterCollisions(uint type,
                                            ClientPairArray& finalResults)
 {
   // Record the amount of collisions being registered
-  mBroadPhases[type][broadPhaseId]->mStats.mPossibleCollisionsReturned +=
-      currentResults.Size();
+  mBroadPhases[type][broadPhaseId]->mStats.mPossibleCollisionsReturned += currentResults.Size();
 
   // Walk each collision and register it with this broad phase
   for (uint i = 0; i < currentResults.Size(); ++i)
@@ -564,9 +546,7 @@ void BroadPhaseTracker::RegisterCollisions(uint type,
   }
 }
 
-bool BroadPhaseTracker::RegisterCollision(uint type,
-                                          BroadPhaseId id,
-                                          NodePointerPair pair)
+bool BroadPhaseTracker::RegisterCollision(uint type, BroadPhaseId id, NodePointerPair pair)
 {
   // Lookup to see if the pair has already been inserted.
   CollisionMap::range r = mRegisteredCollisions[type].Find(pair);
@@ -642,9 +622,7 @@ void BroadPhaseTracker::ClearFrameData()
   mRegisteredCollisions[BroadPhase::Static].Clear();
 }
 
-void BroadPhaseTracker::ReportMissedCollision(uint bpType,
-                                              NodePointerPair pair,
-                                              char bitField)
+void BroadPhaseTracker::ReportMissedCollision(uint bpType, NodePointerPair pair, char bitField)
 {
   BroadPhaseVec::range r = mBroadPhases[bpType].All();
 

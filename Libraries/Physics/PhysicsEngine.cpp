@@ -35,14 +35,10 @@ void PhysicsEngine::Initialize(SystemInitializer& initializer)
 
   // Initialize broad phase static callbacks.
   IBroadPhase::SetCastRayCallBack(&Physics::CollisionManager::TestRayVsObject);
-  IBroadPhase::SetCastSegmentCallBack(
-      &Physics::CollisionManager::TestSegmentVsObject);
-  IBroadPhase::SetCastAabbCallBack(
-      &Physics::CollisionManager::TestAabbVsObject);
-  IBroadPhase::SetCastSphereCallBack(
-      &Physics::CollisionManager::TestSphereVsObject);
-  IBroadPhase::SetCastFrustumCallBack(
-      &Physics::CollisionManager::TestFrustumVsObject);
+  IBroadPhase::SetCastSegmentCallBack(&Physics::CollisionManager::TestSegmentVsObject);
+  IBroadPhase::SetCastAabbCallBack(&Physics::CollisionManager::TestAabbVsObject);
+  IBroadPhase::SetCastSphereCallBack(&Physics::CollisionManager::TestSphereVsObject);
+  IBroadPhase::SetCastFrustumCallBack(&Physics::CollisionManager::TestFrustumVsObject);
 }
 
 void PhysicsEngine::Update(bool debugger)

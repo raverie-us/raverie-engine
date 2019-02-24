@@ -34,8 +34,7 @@ void CommandHotspot::OnClick(Matches& matches)
   }
   else
   {
-    String errorMessage =
-        String::Format("Command %s was not found", commandName.c_str());
+    String errorMessage = String::Format("Command %s was not found", commandName.c_str());
     DoNotifyError("Command not found", errorMessage);
   }
 }
@@ -76,8 +75,7 @@ void ResourceHotspot::OnClick(Matches& matches)
     else
     {
       String resource = matches[0];
-      String errorMessage =
-          String::Format("Resource %s was not found", resource.c_str());
+      String errorMessage = String::Format("Resource %s was not found", resource.c_str());
       DoNotifyWarning("Resource not found", errorMessage);
     }
   }
@@ -110,8 +108,7 @@ void ObjectHotspot::OnClick(Matches& matches)
       // in a space
       if (space != NULL)
       {
-        Cog* editorCamera =
-            space->FindObjectByName(SpecialCogNames::EditorCamera);
+        Cog* editorCamera = space->FindObjectByName(SpecialCogNames::EditorCamera);
         CameraFocusSpace(space, editorCamera, EditFocusMode::AutoTime);
       }
     }

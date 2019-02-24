@@ -10,8 +10,7 @@ class MetaLibraryExtensions
 public:
   // Only called for native libraries.
   static void AddNativeExtensions(LibraryBuilder& builder);
-  static void AddNativeExtensions(LibraryBuilder& builder,
-                                  BoundTypeMap& boundTypes);
+  static void AddNativeExtensions(LibraryBuilder& builder, BoundTypeMap& boundTypes);
 
   // Called before each library is compiled (only called for Resource Libraries)
   static void AddExtensionsPreCompilation(LibraryBuilder& builder);
@@ -31,9 +30,7 @@ public:
   // "this.Owner.Model.Material.TextureColor".
   static void ProcessComposition(LibraryBuilder& builder, BoundType* boundType);
   static void ProcessComponent(LibraryBuilder& builder, BoundType* boundType);
-  static void AddCompositionExtension(LibraryBuilder& builder,
-                                      BoundType* compositionType,
-                                      BoundType* componentType);
+  static void AddCompositionExtension(LibraryBuilder& builder, BoundType* compositionType, BoundType* componentType);
 };
 
 } // namespace Zero

@@ -106,10 +106,7 @@ struct SweptTriangle
   {
   }
   SweptTriangle(Triangle& triangle, Vec3Param scaledDirection);
-  SweptTriangle(Vec3Param point1,
-                Vec3Param point2,
-                Vec3Param point3,
-                Vec3Param scaledDirection);
+  SweptTriangle(Vec3Param point1, Vec3Param point2, Vec3Param point3, Vec3Param scaledDirection);
 
   /// Index operators.
   Vec3& operator[](uint index);
@@ -142,10 +139,7 @@ struct Tetrahedron
   Tetrahedron()
   {
   }
-  Tetrahedron(Vec3Param point1,
-              Vec3Param point2,
-              Vec3Param point3,
-              Vec3Param point4);
+  Tetrahedron(Vec3Param point1, Vec3Param point2, Vec3Param point3, Vec3Param point4);
 
   /// Index operators.
   Vec3& operator[](uint index);
@@ -181,10 +175,7 @@ struct Obb
   Obb()
   {
   }
-  Obb(Vec3Param center, Vec3Param radii, Mat3Param basis) :
-      Center(center),
-      HalfExtents(radii),
-      Basis(basis)
+  Obb(Vec3Param center, Vec3Param radii, Mat3Param basis) : Center(center), HalfExtents(radii), Basis(basis)
   {
   }
 
@@ -209,10 +200,7 @@ struct Ellipsoid
   Ellipsoid()
   {
   }
-  Ellipsoid(Vec3Param center, Vec3Param radii, Mat3Param basis) :
-      Center(center),
-      Radii(radii),
-      Basis(basis)
+  Ellipsoid(Vec3Param center, Vec3Param radii, Mat3Param basis) : Center(center), Radii(radii), Basis(basis)
   {
   }
 
@@ -236,10 +224,7 @@ struct Cylinder
   Cylinder()
   {
   }
-  Cylinder(Vec3Param pointA, Vec3Param pointB, real radius) :
-      PointA(pointA),
-      PointB(pointB),
-      Radius(radius)
+  Cylinder(Vec3Param pointA, Vec3Param pointB, real radius) : PointA(pointA), PointB(pointB), Radius(radius)
   {
   }
 
@@ -273,10 +258,7 @@ struct Capsule
   Capsule()
   {
   }
-  Capsule(Vec3Param pointA, Vec3Param pointB, real radius) :
-      PointA(pointA),
-      PointB(pointB),
-      Radius(radius)
+  Capsule(Vec3Param pointA, Vec3Param pointB, real radius) : PointA(pointA), PointB(pointB), Radius(radius)
   {
   }
 

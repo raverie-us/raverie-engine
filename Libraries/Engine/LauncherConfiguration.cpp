@@ -35,15 +35,10 @@ LauncherConfig::LauncherConfig()
 void LauncherConfig::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mLauncherLocation, String());
-  SerializeEnumNameDefault(
-      LauncherAutoRunMode, mAutoRunMode, LauncherAutoRunMode::None);
+  SerializeEnumNameDefault(LauncherAutoRunMode, mAutoRunMode, LauncherAutoRunMode::None);
 
-  SerializeNameDefault(
-      mDefaultProjectSaveLocation,
-      FilePath::Combine(GetUserDocumentsDirectory(), "ZeroProjects"));
-  SerializeNameDefault(
-      mDownloadPath,
-      FilePath::Combine(GetUserDocumentsDirectory(), "ZeroLauncher"));
+  SerializeNameDefault(mDefaultProjectSaveLocation, FilePath::Combine(GetUserDocumentsDirectory(), "ZeroProjects"));
+  SerializeNameDefault(mDownloadPath, FilePath::Combine(GetUserDocumentsDirectory(), "ZeroLauncher"));
   SerializeNameDefault(mDisplayBuildOnProjects, false);
   SerializeNameDefault(mShowDevelopmentBuilds, false);
   SerializeRename(mShowDevelopmentBuilds, "ShowNightlies");
@@ -57,23 +52,19 @@ void LauncherConfig::Serialize(Serializer& stream)
 
 void LauncherConfig::ApplyCommandLineArguments()
 {
-  String upgradeCommand =
-      LauncherStartupArguments::Names[LauncherStartupArguments::Upgrade];
+  String upgradeCommand = LauncherStartupArguments::Names[LauncherStartupArguments::Upgrade];
   bool upgrade = Environment::GetValue<bool>(upgradeCommand, false);
   if (upgrade == true)
     mAutoRunMode = LauncherAutoRunMode::None;
 
   // if we get the command argument to run then try to install and run
-  String runCommand =
-      LauncherStartupArguments::Names[LauncherStartupArguments::Run];
+  String runCommand = LauncherStartupArguments::Names[LauncherStartupArguments::Run];
   bool run = Environment::GetValue<bool>(runCommand, false);
   if (run == true)
     mAutoRunMode = LauncherAutoRunMode::InstallAndRun;
 
-  String debuggerModeCommand =
-      LauncherStartupArguments::Names[LauncherStartupArguments::DebuggerMode];
-  mRunDebuggerMode =
-      Environment::GetValue<bool>(debuggerModeCommand, false);
+  String debuggerModeCommand = LauncherStartupArguments::Names[LauncherStartupArguments::DebuggerMode];
+  mRunDebuggerMode = Environment::GetValue<bool>(debuggerModeCommand, false);
 }
 
 uint LauncherConfig::GetAutoRunMode()

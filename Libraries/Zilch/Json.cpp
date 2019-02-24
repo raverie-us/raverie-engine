@@ -4,10 +4,7 @@
 
 namespace Zilch
 {
-JsonBuilder::JsonBuilder() :
-    IsCompactMode(false),
-    IsMember(false),
-    IsWrittenTo(false)
+JsonBuilder::JsonBuilder() : IsCompactMode(false), IsMember(false), IsWrittenTo(false)
 {
 }
 
@@ -20,10 +17,7 @@ JsonMember::~JsonMember()
   delete this->Value;
 }
 
-JsonValue::JsonValue() :
-    Type(JsonValueType::Invalid),
-    RealValue(0.0),
-    IntegralValue(0)
+JsonValue::JsonValue() : Type(JsonValueType::Invalid), RealValue(0.0), IntegralValue(0)
 {
 }
 
@@ -36,10 +30,8 @@ String JsonValue::ToString()
 
 JsonValue* JsonValue::GetMember(StringParam name, JsonErrorMode::Enum errorMode)
 {
-  ErrorIf(
-      this->Type != JsonValueType::Object &&
-          errorMode == JsonErrorMode::ReportError,
-      "This value was not an object type, and therefore cannot have members");
+  ErrorIf(this->Type != JsonValueType::Object && errorMode == JsonErrorMode::ReportError,
+          "This value was not an object type, and therefore cannot have members");
 
   JsonValue* value = this->Members.FindValue(name, nullptr);
 
@@ -52,13 +44,10 @@ JsonValue* JsonValue::GetMember(StringParam name, JsonErrorMode::Enum errorMode)
 
 JsonValue* JsonValue::IndexValue(size_t index, JsonErrorMode::Enum errorMode)
 {
-  ErrorIf(this->Type != JsonValueType::Array &&
-              errorMode == JsonErrorMode::ReportError,
+  ErrorIf(this->Type != JsonValueType::Array && errorMode == JsonErrorMode::ReportError,
           "This value was not an array type, and therefore cannot be indexed");
 
-  ReturnIf(index >= this->ArrayElements.Size(),
-           nullptr,
-           "The index given was outside the range provided by the array");
+  ReturnIf(index >= this->ArrayElements.Size(), nullptr, "The index given was outside the range provided by the array");
 
   return this->ArrayElements[index];
 }
@@ -81,8 +70,7 @@ bool JsonValue::AsBool(bool defaultValue, JsonErrorMode::Enum errorMode)
   return defaultValue;
 }
 
-String JsonValue::AsString(StringParam defaultValue,
-                           JsonErrorMode::Enum errorMode)
+String JsonValue::AsString(StringParam defaultValue, JsonErrorMode::Enum errorMode)
 {
   if (this->Type == JsonValueType::String)
   {
@@ -115,8 +103,7 @@ float JsonValue::AsFloat(float defaultValue, JsonErrorMode::Enum errorMode)
   return (float)AsDouble(defaultValue, errorMode);
 }
 
-long long JsonValue::AsLongLong(long long defaultValue,
-                                JsonErrorMode::Enum errorMode)
+long long JsonValue::AsLongLong(long long defaultValue, JsonErrorMode::Enum errorMode)
 {
   if (this->Type == JsonValueType::Integer)
   {
@@ -135,117 +122,91 @@ int JsonValue::AsInteger(int defaultValue, JsonErrorMode::Enum errorMode)
   return (int)AsLongLong(defaultValue, errorMode);
 }
 
-bool JsonValue::MemberAsBool(StringParam name,
-                             bool defaultValue,
-                             JsonErrorMode::Enum errorMode)
+bool JsonValue::MemberAsBool(StringParam name, bool defaultValue, JsonErrorMode::Enum errorMode)
 {
   if (JsonValue* value = GetMember(name, errorMode))
     return value->AsBool(defaultValue, errorMode);
   return defaultValue;
 }
 
-String JsonValue::MemberAsString(StringParam name,
-                                 StringParam defaultValue,
-                                 JsonErrorMode::Enum errorMode)
+String JsonValue::MemberAsString(StringParam name, StringParam defaultValue, JsonErrorMode::Enum errorMode)
 {
   if (JsonValue* value = GetMember(name, errorMode))
     return value->AsString(defaultValue, errorMode);
   return defaultValue;
 }
 
-double JsonValue::MemberAsDouble(StringParam name,
-                                 double defaultValue,
-                                 JsonErrorMode::Enum errorMode)
+double JsonValue::MemberAsDouble(StringParam name, double defaultValue, JsonErrorMode::Enum errorMode)
 {
   if (JsonValue* value = GetMember(name, errorMode))
     return value->AsDouble(defaultValue, errorMode);
   return defaultValue;
 }
 
-long long JsonValue::MemberAsLongLong(StringParam name,
-                                      long long defaultValue,
-                                      JsonErrorMode::Enum errorMode)
+long long JsonValue::MemberAsLongLong(StringParam name, long long defaultValue, JsonErrorMode::Enum errorMode)
 {
   if (JsonValue* value = GetMember(name, errorMode))
     return value->AsLongLong(defaultValue, errorMode);
   return defaultValue;
 }
 
-int JsonValue::MemberAsInteger(StringParam name,
-                               int defaultValue,
-                               JsonErrorMode::Enum errorMode)
+int JsonValue::MemberAsInteger(StringParam name, int defaultValue, JsonErrorMode::Enum errorMode)
 {
   if (JsonValue* value = GetMember(name, errorMode))
     return value->AsInteger(defaultValue, errorMode);
   return defaultValue;
 }
 
-float JsonValue::MemberAsFloat(StringParam name,
-                               float defaultValue,
-                               JsonErrorMode::Enum errorMode)
+float JsonValue::MemberAsFloat(StringParam name, float defaultValue, JsonErrorMode::Enum errorMode)
 {
   if (JsonValue* value = GetMember(name, errorMode))
     return value->AsFloat(defaultValue, errorMode);
   return defaultValue;
 }
 
-bool JsonValue::IndexAsBool(size_t index,
-                            bool defaultValue,
-                            JsonErrorMode::Enum errorMode)
+bool JsonValue::IndexAsBool(size_t index, bool defaultValue, JsonErrorMode::Enum errorMode)
 {
   if (JsonValue* value = IndexValue(index, errorMode))
     return value->AsBool(defaultValue, errorMode);
   return defaultValue;
 }
 
-String JsonValue::IndexAsString(size_t index,
-                                StringParam defaultValue,
-                                JsonErrorMode::Enum errorMode)
+String JsonValue::IndexAsString(size_t index, StringParam defaultValue, JsonErrorMode::Enum errorMode)
 {
   if (JsonValue* value = IndexValue(index, errorMode))
     return value->AsString(defaultValue, errorMode);
   return defaultValue;
 }
 
-double JsonValue::IndexAsDouble(size_t index,
-                                double defaultValue,
-                                JsonErrorMode::Enum errorMode)
+double JsonValue::IndexAsDouble(size_t index, double defaultValue, JsonErrorMode::Enum errorMode)
 {
   if (JsonValue* value = IndexValue(index, errorMode))
     return value->AsDouble(defaultValue, errorMode);
   return defaultValue;
 }
 
-long long JsonValue::IndexAsLongLong(size_t index,
-                                     long long defaultValue,
-                                     JsonErrorMode::Enum errorMode)
+long long JsonValue::IndexAsLongLong(size_t index, long long defaultValue, JsonErrorMode::Enum errorMode)
 {
   if (JsonValue* value = IndexValue(index, errorMode))
     return value->AsLongLong(defaultValue, errorMode);
   return defaultValue;
 }
 
-int JsonValue::IndexAsInteger(size_t index,
-                              int defaultValue,
-                              JsonErrorMode::Enum errorMode)
+int JsonValue::IndexAsInteger(size_t index, int defaultValue, JsonErrorMode::Enum errorMode)
 {
   if (JsonValue* value = IndexValue(index, errorMode))
     return value->AsInteger(defaultValue, errorMode);
   return defaultValue;
 }
 
-float JsonValue::IndexAsFloat(size_t index,
-                              float defaultValue,
-                              JsonErrorMode::Enum errorMode)
+float JsonValue::IndexAsFloat(size_t index, float defaultValue, JsonErrorMode::Enum errorMode)
 {
   if (JsonValue* value = IndexValue(index, errorMode))
     return value->AsFloat(defaultValue, errorMode);
   return defaultValue;
 }
 
-JsonValue* JsonReader::ReadIntoTreeFromFile(CompilationErrors& errors,
-                                            StringParam fileName,
-                                            void* userData)
+JsonValue* JsonReader::ReadIntoTreeFromFile(CompilationErrors& errors, StringParam fileName, void* userData)
 {
   Status status;
   String json = Project::ReadTextFile(status, fileName);
@@ -256,10 +217,8 @@ JsonValue* JsonReader::ReadIntoTreeFromFile(CompilationErrors& errors,
   return ReadIntoTreeFromString(errors, json, fileName, userData);
 }
 
-JsonValue* JsonReader::ReadIntoTreeFromString(CompilationErrors& errors,
-                                              StringParam json,
-                                              StringParam origin,
-                                              void* userData)
+JsonValue*
+JsonReader::ReadIntoTreeFromString(CompilationErrors& errors, StringParam json, StringParam origin, void* userData)
 {
   Array<UserToken> tokens;
   Array<UserToken> comments;
@@ -292,13 +251,10 @@ JsonValue* JsonReader::ReadIntoTreeFromString(CompilationErrors& errors,
 
     JsonValue* createdValue = nullptr;
 
-    if (isNegative && token.TokenId != Grammar::IntegerLiteral &&
-        token.TokenId != Grammar::RealLiteral)
+    if (isNegative && token.TokenId != Grammar::IntegerLiteral && token.TokenId != Grammar::RealLiteral)
     {
       errors.Raise(
-          token.Location,
-          ErrorCode::GenericError,
-          "The negative sign must be followed by an Integer or Real literal");
+          token.Location, ErrorCode::GenericError, "The negative sign must be followed by an Integer or Real literal");
       return nullptr;
     }
 
@@ -364,8 +320,7 @@ JsonValue* JsonReader::ReadIntoTreeFromString(CompilationErrors& errors,
       String strValue = ReplaceStringEscapesAndStripQuotes(token.Token);
 
       // If we're inside an object and not a member...
-      if (objectArrayStack.Empty() == false &&
-          objectArrayStack.Back()->Type == JsonValueType::Object &&
+      if (objectArrayStack.Empty() == false && objectArrayStack.Back()->Type == JsonValueType::Object &&
           member == nullptr)
       {
         // We're starting a member!
@@ -386,9 +341,7 @@ JsonValue* JsonReader::ReadIntoTreeFromString(CompilationErrors& errors,
     {
       if (member == nullptr)
       {
-        errors.Raise(token.Location,
-                     ErrorCode::GenericError,
-                     "Invalid member ':' found");
+        errors.Raise(token.Location, ErrorCode::GenericError, "Invalid member ':' found");
         return nullptr;
       }
 
@@ -415,9 +368,7 @@ JsonValue* JsonReader::ReadIntoTreeFromString(CompilationErrors& errors,
     {
       if (objectArrayStack.Empty())
       {
-        errors.Raise(token.Location,
-                     ErrorCode::GenericError,
-                     "Unexpected end of an object or array");
+        errors.Raise(token.Location, ErrorCode::GenericError, "Unexpected end of an object or array");
         return nullptr;
       }
 
@@ -429,9 +380,7 @@ JsonValue* JsonReader::ReadIntoTreeFromString(CompilationErrors& errors,
     {
       if (objectArrayStack.Empty())
       {
-        errors.Raise(token.Location,
-                     ErrorCode::GenericError,
-                     "Unexpected argument separator");
+        errors.Raise(token.Location, ErrorCode::GenericError, "Unexpected argument separator");
         return nullptr;
       }
     }
@@ -439,8 +388,7 @@ JsonValue* JsonReader::ReadIntoTreeFromString(CompilationErrors& errors,
 
     default:
     {
-      errors.Raise(
-          token.Location, ErrorCode::GenericError, "Unexpected token type");
+      errors.Raise(token.Location, ErrorCode::GenericError, "Unexpected token type");
       return nullptr;
     }
     }
@@ -451,9 +399,7 @@ JsonValue* JsonReader::ReadIntoTreeFromString(CompilationErrors& errors,
       {
         if (foundColon == false)
         {
-          errors.Raise(token.Location,
-                       ErrorCode::GenericError,
-                       "A colon ':' was not found when specifying the value");
+          errors.Raise(token.Location, ErrorCode::GenericError, "A colon ':' was not found when specifying the value");
           return nullptr;
         }
 
@@ -485,8 +431,7 @@ JsonValue* JsonReader::ReadIntoTreeFromString(CompilationErrors& errors,
         }
       }
 
-      if (createdValue->Type == JsonValueType::Object ||
-          createdValue->Type == JsonValueType::Array)
+      if (createdValue->Type == JsonValueType::Object || createdValue->Type == JsonValueType::Array)
       {
         objectArrayStack.PushBack(createdValue);
       }
@@ -499,8 +444,7 @@ JsonValue* JsonReader::ReadIntoTreeFromString(CompilationErrors& errors,
 String JsonBuilder::ToString() const
 {
   // Error checking
-  ErrorIf(this->Stack.Size() != 0,
-          "The resulting Json object will be incomplete");
+  ErrorIf(this->Stack.Size() != 0, "The resulting Json object will be incomplete");
 
   // Output the final string
   return this->Builder.ToString();
@@ -562,8 +506,7 @@ void JsonBuilder::Key(StringRange name)
            "(currently at the root!)");
 
   // Error checking
-  ErrorIf(this->Stack.Back() != JsonType::Object,
-          "You must be in the middle of an object to start a key/member");
+  ErrorIf(this->Stack.Back() != JsonType::Object, "You must be in the middle of an object to start a key/member");
 
   // Error checking
   ErrorIf(this->IsMember, "A member of the object was already started");
@@ -804,10 +747,7 @@ void JsonBuilder::Begin(JsonType::Enum type)
 void JsonBuilder::End()
 {
   // Error checking
-  ReturnIf(
-      this->Stack.Empty(),
-      ,
-      "There is no object or array to end (End was called one too many times)");
+  ReturnIf(this->Stack.Empty(), , "There is no object or array to end (End was called one too many times)");
 
   // Get what we're in the top of the stack
   JsonType::Enum type = this->Stack.Back();
@@ -843,9 +783,7 @@ void JsonBuilder::VerifyCanWriteValue()
   if (this->Stack.Size() == 0)
   {
     // We can't write to the root twice...
-    ErrorIf(
-        this->Builder.GetSize() != 0,
-        "Attempting to write to the root when something was already written");
+    ErrorIf(this->Builder.GetSize() != 0, "Attempting to write to the root when something was already written");
 
     // Early out since there's nothing else to check
     return;

@@ -74,8 +74,7 @@ void EditorMain::OnKeyDown(KeyboardEvent* keyEvent)
 
   // Tools
   uint keyPressed = keyEvent->Key;
-  if (keyPressed >= '0' && keyPressed <= '9' &&
-      keyEvent->GetModifierPressed() == false)
+  if (keyPressed >= '0' && keyPressed <= '9' && keyEvent->GetModifierPressed() == false)
   {
     if (keyPressed == '0')
       keyPressed += 10;
@@ -87,8 +86,7 @@ void EditorMain::OnKeyDown(KeyboardEvent* keyEvent)
   if (commands->TestCommandKeyboardShortcuts(keyEvent))
     return;
 
-  if (keyEvent->CtrlPressed && keyEvent->AltPressed &&
-      mConfig->has(Zero::DeveloperConfig) && keyEvent->Key == 'F')
+  if (keyEvent->CtrlPressed && keyEvent->AltPressed && mConfig->has(Zero::DeveloperConfig) && keyEvent->Key == 'F')
     this->ShowWindow("Find/Replace Objects");
 
   // Global special hot keys
@@ -292,8 +290,8 @@ void EditorMain::ShowOperationHistroy(CommandEvent* event)
     return;
 
   GameSession* editorGameSession = mEditGame;
-  Space* newSpace = editorGameSession->CreateNamedSpace(
-      "HistoryWindow", ArchetypeManager::FindOrNull(CoreArchetypes::Space));
+  Space* newSpace =
+      editorGameSession->CreateNamedSpace("HistoryWindow", ArchetypeManager::FindOrNull(CoreArchetypes::Space));
 
   Level* level = LevelManager::FindOrNull("HistoryWindowLevel");
   if (level != nullptr)
@@ -407,13 +405,11 @@ void EditorMain::OnNameActivated(TypeEvent* event)
 
 void EditorMain::ShowLibrary(StringParam libraryName)
 {
-  ContentLibrary* coreLibrary =
-      Z::gContentSystem->Libraries.FindValue(libraryName, nullptr);
-  ResourceLibrary* coreResourcSet =
-      Z::gResources->LoadedResourceLibraries.FindValue(libraryName, nullptr);
+  ContentLibrary* coreLibrary = Z::gContentSystem->Libraries.FindValue(libraryName, nullptr);
+  ResourceLibrary* coreResourcSet = Z::gResources->LoadedResourceLibraries.FindValue(libraryName, nullptr);
 
-  forRange(ContentItem * contentItem, coreLibrary->GetContentItems())
-      contentItem->ShowInEditor = true;
+  forRange (ContentItem* contentItem, coreLibrary->GetContentItems())
+    contentItem->ShowInEditor = true;
 
   LibraryView* libraryView = new LibraryView(this);
   libraryView->View(coreLibrary, coreResourcSet);
@@ -429,8 +425,8 @@ void EditorMain::ShowVolumeMeter(CommandEvent* event)
     return;
 
   GameSession* editorGameSession = mEditGame;
-  Space* newSpace = editorGameSession->CreateNamedSpace(
-      "VolumeMeterWindow", ArchetypeManager::FindOrNull(CoreArchetypes::Space));
+  Space* newSpace =
+      editorGameSession->CreateNamedSpace("VolumeMeterWindow", ArchetypeManager::FindOrNull(CoreArchetypes::Space));
 
   Level* level = LevelManager::FindOrNull("VolumeMeterLevel");
   if (level != nullptr)
@@ -441,8 +437,7 @@ void EditorMain::ShowVolumeMeter(CommandEvent* event)
   Cog* cameraCog = newSpace->FindObjectByName("GameCamera");
   CameraViewport* cameraViewport = cameraCog->has(CameraViewport);
 
-  CreateDockableWindow(
-      "VolumeMeterWindow", cameraViewport, Vec2(300, 330), true);
+  CreateDockableWindow("VolumeMeterWindow", cameraViewport, Vec2(300, 330), true);
 }
 
 void EditorMain::ShowSoundNodeGraph(CommandEvent* event)
@@ -451,9 +446,8 @@ void EditorMain::ShowSoundNodeGraph(CommandEvent* event)
     return;
 
   GameSession* editorGameSession = mEditGame;
-  Space* newSpace = editorGameSession->CreateNamedSpace(
-      "SoundNodeGraphWindow",
-      ArchetypeManager::FindOrNull(CoreArchetypes::Space));
+  Space* newSpace =
+      editorGameSession->CreateNamedSpace("SoundNodeGraphWindow", ArchetypeManager::FindOrNull(CoreArchetypes::Space));
 
   Level* level = LevelManager::FindOrNull("SoundNodeGraphLevel");
   if (level != nullptr)
@@ -464,8 +458,7 @@ void EditorMain::ShowSoundNodeGraph(CommandEvent* event)
   Cog* cameraCog = newSpace->FindObjectByName("GameCamera");
   CameraViewport* cameraViewport = cameraCog->has(CameraViewport);
 
-  CreateDockableWindow(
-      "SoundNodeGraphWindow", cameraViewport, Vec2(700, 500), true);
+  CreateDockableWindow("SoundNodeGraphWindow", cameraViewport, Vec2(700, 500), true);
 }
 
 void EditorMain::ShowRenderGroupHierarchies(CommandEvent* event)
@@ -483,8 +476,7 @@ void EditorMain::ShowRenderGroupHierarchies(CommandEvent* event)
   AddManagedWidget(hierarchies, DockArea::Floating, true);
 }
 
-void EditorMain::AttachDocumentEditor(StringParam name,
-                                      DocumentEditor* docEditor)
+void EditorMain::AttachDocumentEditor(StringParam name, DocumentEditor* docEditor)
 {
   docEditor->SetName(name);
   Z::gEditor->AddManagedWidget(docEditor, DockArea::Center);
@@ -493,9 +485,7 @@ void EditorMain::AttachDocumentEditor(StringParam name,
   Connect(this, Events::SaveCheck, docEditor, &DocumentEditor::OnSaveCheck);
 }
 
-DocumentEditor* EditorMain::OpenTextString(StringParam name,
-                                           StringParam text,
-                                           StringParam extension)
+DocumentEditor* EditorMain::OpenTextString(StringParam name, StringParam text, StringParam extension)
 {
   StringDocument* document = new StringDocument();
   String documentName = name;
@@ -510,8 +500,7 @@ DocumentEditor* EditorMain::OpenTextString(StringParam name,
   document->mName = documentName;
   document->mData = text;
   DocumentEditor* editor = CreateDocumentEditor(this, document);
-  TypeExtensionEntry* zilchEntry =
-      FileExtensionManager::GetZilchScriptTypeEntry();
+  TypeExtensionEntry* zilchEntry = FileExtensionManager::GetZilchScriptTypeEntry();
 
   if (zilchEntry->IsValidExtensionNoDot(extension))
     editor->SetLexer(Lexer::Zilch);
@@ -543,8 +532,7 @@ DocumentEditor* EditorMain::OpenTextFile(StringParam filename)
       DocumentEditor* editor = CreateDocumentEditor(this, document);
 
       String extension = FilePath::GetExtension(filename);
-      TypeExtensionEntry* zilchEntry =
-          FileExtensionManager::GetZilchScriptTypeEntry();
+      TypeExtensionEntry* zilchEntry = FileExtensionManager::GetZilchScriptTypeEntry();
 
       if (zilchEntry->IsValidExtensionNoDot(extension))
         editor->SetLexer(Lexer::Zilch);
@@ -569,8 +557,7 @@ DocumentEditor* EditorMain::OpenDocumentResource(DocumentResource* docResource)
   {
     DocumentManager* docManager = DocumentManager::GetInstance();
     ResourceDocument* document =
-        (ResourceDocument*)docManager->Documents.FindValue(
-            (u64)docResource->mResourceId, nullptr);
+        (ResourceDocument*)docManager->Documents.FindValue((u64)docResource->mResourceId, nullptr);
     if (document == nullptr)
       document = new ResourceDocument(docResource);
 
@@ -595,8 +582,7 @@ DocumentEditor* EditorMain::OpenTextFileAuto(StringParam file)
 {
   // Attempt to get the resource via loaded file lookup
   ResourceId resourceId = Z::gResources->TextResources.FindValue(file, 0);
-  DocumentResource* resource =
-      (DocumentResource*)Z::gResources->GetResource(resourceId);
+  DocumentResource* resource = (DocumentResource*)Z::gResources->GetResource(resourceId);
 
   if (resource)
     return OpenDocumentResource(resource);
@@ -635,9 +621,8 @@ void EditorMain::OnDebuggerPaused(ScriptEvent* event)
 {
   // JC or TS commented that we should remove these lines in a code review,
   // but the reason was unclear. Investigate this!
-  forRange(DocumentEditor * otherEditor,
-           DocumentManager::GetInstance()->Instances)
-      otherEditor->ClearMarker(-1, TextEditor::InstructionMarker);
+  forRange (DocumentEditor* otherEditor, DocumentManager::GetInstance()->Instances)
+    otherEditor->ClearMarker(-1, TextEditor::InstructionMarker);
 
   if (event->Script == nullptr)
     return;
@@ -647,16 +632,14 @@ void EditorMain::OnDebuggerPaused(ScriptEvent* event)
     return;
 
   // CodeLocations use 1 based indices
-  editor->SetMarker(event->Location.StartLine - 1,
-                    TextEditor::InstructionMarker);
+  editor->SetMarker(event->Location.StartLine - 1, TextEditor::InstructionMarker);
   editor->GoToLine(event->Location.StartLine - 1);
 }
 
 void EditorMain::OnDebuggerResumed(ScriptEvent* event)
 {
-  forRange(DocumentEditor * otherEditor,
-           DocumentManager::GetInstance()->Instances)
-      otherEditor->ClearMarker(-1, TextEditor::InstructionMarker);
+  forRange (DocumentEditor* otherEditor, DocumentManager::GetInstance()->Instances)
+    otherEditor->ClearMarker(-1, TextEditor::InstructionMarker);
 }
 
 void EditorMain::OnBlockingTaskStart(BlockingTaskEvent* event)
@@ -732,18 +715,16 @@ void OnExportTypeList(Editor* editor)
   namesPerBaseType[nullptr] = HashSet<String>();
 
   // Check all libraries
-  for (size_t libraryIndex = 0; libraryIndex < allLibraries.Size();
-       ++libraryIndex)
+  for (size_t libraryIndex = 0; libraryIndex < allLibraries.Size(); ++libraryIndex)
   {
     // Check all types in that library
     LibraryRef& library = allLibraries[libraryIndex];
-    forRange(BoundType * boundType, library->BoundTypes.Values())
+    forRange (BoundType* boundType, library->BoundTypes.Values())
     {
       BoundType* foundBaseType = nullptr;
       // Check all of our potential base types. If we don't find one then resort
       // to null (backup)
-      for (size_t typeIndex = 0; typeIndex < baseTypesToFind.Size();
-           ++typeIndex)
+      for (size_t typeIndex = 0; typeIndex < baseTypesToFind.Size(); ++typeIndex)
       {
         BoundType* baseType = baseTypesToFind[typeIndex];
         // If this isn't the current base type skip this
@@ -760,7 +741,7 @@ void OnExportTypeList(Editor* editor)
 
   // Output all of the types into one file
   StringBuilder builder;
-  forRange(MapType::PairType & pair, namesPerBaseType.All())
+  forRange (MapType::PairType& pair, namesPerBaseType.All())
   {
     // Sort by name all of the types
     Array<String> sortedNames;
@@ -796,8 +777,8 @@ void OnExportCommandsList(Editor* editor)
 
   // Sort all commands by name
   Array<String> sortedCommandNames;
-  forRange(Command * command, instance->mCommands)
-      sortedCommandNames.PushBack(command->Name);
+  forRange (Command* command, instance->mCommands)
+    sortedCommandNames.PushBack(command->Name);
   Sort(sortedCommandNames.All());
 
   // Print out the commands
@@ -815,12 +796,12 @@ void OnExportCommandsList(Editor* editor)
 
 void OnResaveAllResources(Editor* editor)
 {
-  forRange(ContentLibrary * library, Z::gContentSystem->Libraries.Values())
+  forRange (ContentLibrary* library, Z::gContentSystem->Libraries.Values())
   {
     library->SaveAllContentItemMeta();
     library->Save();
 
-    forRange(ContentItem * contentItem, library->GetContentItems())
+    forRange (ContentItem* contentItem, library->GetContentItems())
     {
       contentItem->SaveContent();
     }
@@ -848,8 +829,7 @@ void EditorRescueCall(void* userData)
         {
           String path = Z::gContentSystem->GetHistoryPath(library);
           // Build a string for the crashed level that places it in the library.
-          String fileName =
-              BuildString("Recovered", GetTimeAndDateStamp(), ".data");
+          String fileName = BuildString("Recovered", GetTimeAndDateStamp(), ".data");
           String backupFile = FilePath::Combine(path, fileName);
           // Attempt to save the space
           space->SaveLevelFile(backupFile);
@@ -870,15 +850,10 @@ void OnTweakablesModified()
 void AutoVersionCheck();
 void SetupTools(Editor* editor);
 
-#define BindCommand(commandName, memberFunction)                               \
-  Connect(commands->GetCommand(commandName),                                   \
-          Events::CommandExecute,                                              \
-          editorMain,                                                          \
-          &EditorMain::memberFunction);
+#define BindCommand(commandName, memberFunction)                                                                       \
+  Connect(commands->GetCommand(commandName), Events::CommandExecute, editorMain, &EditorMain::memberFunction);
 
-void CreateEditor(OsWindow* mainWindow,
-                  StringParam fileToOpen,
-                  StringParam newProjectName)
+void CreateEditor(OsWindow* mainWindow, StringParam fileToOpen, StringParam newProjectName)
 {
   // Set the tweakables modified callback so that we can update the Ui
   Tweakables::sModifiedCallback = &OnTweakablesModified;
@@ -921,22 +896,10 @@ void CreateEditor(OsWindow* mainWindow,
 
   // Listen to the resource system if any unhandled exception or syntax error
   // occurs
-  Connect(Z::gResources,
-          Events::UnhandledException,
-          editorMain,
-          &EditorMain::OnScriptError);
-  Connect(Z::gResources,
-          Events::SyntaxError,
-          editorMain,
-          &EditorMain::OnScriptError);
-  Connect(Z::gResources,
-          Events::DebuggerPaused,
-          editorMain,
-          &EditorMain::OnDebuggerPaused);
-  Connect(Z::gResources,
-          Events::DebuggerResumed,
-          editorMain,
-          &EditorMain::OnDebuggerResumed);
+  Connect(Z::gResources, Events::UnhandledException, editorMain, &EditorMain::OnScriptError);
+  Connect(Z::gResources, Events::SyntaxError, editorMain, &EditorMain::OnScriptError);
+  Connect(Z::gResources, Events::DebuggerPaused, editorMain, &EditorMain::OnDebuggerPaused);
+  Connect(Z::gResources, Events::DebuggerResumed, editorMain, &EditorMain::OnDebuggerResumed);
 
   // For setting the default docked windows' width to a percentage
   // to make a better initial layout on smaller resolutions
@@ -1006,26 +969,17 @@ void CreateEditor(OsWindow* mainWindow,
     BindCommand("ClearConsole", ClearConsole);
     BindCommand("ShowCoreLibrary", ShowCoreLibrary);
 
-    Connect(Z::gEngine,
-            Events::BlockingTaskStart,
-            editorMain,
-            &EditorMain::OnBlockingTaskStart);
-    Connect(Z::gEngine,
-            Events::BlockingTaskFinish,
-            editorMain,
-            &EditorMain::OnBlockingTaskFinish);
+    Connect(Z::gEngine, Events::BlockingTaskStart, editorMain, &EditorMain::OnBlockingTaskStart);
+    Connect(Z::gEngine, Events::BlockingTaskFinish, editorMain, &EditorMain::OnBlockingTaskFinish);
 
     BindCommand("StressTest", StressTest);
     // Add a command to write out all bound types in the engine
     DeveloperConfig* devConfig = config->has(DeveloperConfig);
     if (devConfig != nullptr)
     {
-      commands->AddCommand("ExportTypeList",
-                           BindCommandFunction(OnExportTypeList));
-      commands->AddCommand("ResaveAllResources",
-                           BindCommandFunction(OnResaveAllResources));
-      commands->AddCommand("OnExportCommandsList",
-                           BindCommandFunction(OnExportCommandsList));
+      commands->AddCommand("ExportTypeList", BindCommandFunction(OnExportTypeList));
+      commands->AddCommand("ResaveAllResources", BindCommandFunction(OnResaveAllResources));
+      commands->AddCommand("OnExportCommandsList", BindCommandFunction(OnExportCommandsList));
     }
 
     //-------------------------------------------------------- Tool Bar Creation
@@ -1041,10 +995,7 @@ void CreateEditor(OsWindow* mainWindow,
       spacer->SetDockMode(DockMode::DockLeft);
 
       rootWidget->mMainMenu->SetActive(true);
-      Connect(rootWidget->mMainMenu,
-              Events::LeftClick,
-              editorMain,
-              &EditorMain::OnMainClick);
+      Connect(rootWidget->mMainMenu, Events::LeftClick, editorMain, &EditorMain::OnMainClick);
 
       // Save, copy/cut/paste, undo/redo
       ToolBar* primaryActions = new ToolBar(toolBarArea);
@@ -1072,8 +1023,7 @@ void CreateEditor(OsWindow* mainWindow,
 
       ToolBar* gameToolbar = new ToolBar(toolBarArea);
       gameToolbar->SetTranslation(Pixels(825, 0, 0));
-      gameToolbar->SetDockMode(
-          DockMode::Enum(DockMode::DockLeft | DockMode::DockRight));
+      gameToolbar->SetDockMode(DockMode::Enum(DockMode::DockLeft | DockMode::DockRight));
       gameToolbar->LoadMenu("GameToolbar");
 
       ToolBar* helpToolbar = new ToolBar(toolBarArea);
@@ -1093,11 +1043,9 @@ void CreateEditor(OsWindow* mainWindow,
   //----------------------------------------------------------------------------
   // Tool Area
   editorMain->Tools->SetSize(Pixels(dockWidth, 280));
-  Window* sideBar =
-      editorMain->AddManagedWidget(editorMain->Tools, DockArea::Left, true);
+  Window* sideBar = editorMain->AddManagedWidget(editorMain->Tools, DockArea::Left, true);
 
-  MainPropertyView* propertyViewArea =
-      new MainPropertyView(editorMain, selection, editorMain->mQueue);
+  MainPropertyView* propertyViewArea = new MainPropertyView(editorMain, selection, editorMain->mQueue);
 
   propertyViewArea->SetHideOnClose(true);
   editorMain->mMainPropertyView = propertyViewArea;
@@ -1106,10 +1054,7 @@ void CreateEditor(OsWindow* mainWindow,
 
   editorMain->Tools->SelectToolIndex(0);
 
-  Connect(propertyViewArea->GetPropertyView(),
-          Events::NameActivated,
-          editorMain,
-          &EditorMain::OnNameActivated);
+  Connect(propertyViewArea->GetPropertyView(), Events::NameActivated, editorMain, &EditorMain::OnNameActivated);
 
   //----------------------------------------------------------------------------
   {
@@ -1222,16 +1167,14 @@ void CreateEditor(OsWindow* mainWindow,
     {
       Event event;
       Z::gEngine->DispatchEvent(Events::NoProjectLoaded, &event);
-      DoNotifyError("Unknown file type",
-                    "Unknown file type must be a valid zero project");
+      DoNotifyError("Unknown file type", "Unknown file type must be a valid zero project");
     }
   }
   else
   {
     bool projectSuccessfullyLoaded = false;
     // Open cached project in user config
-    String startingProject =
-        HasOrAdd<EditorConfig>(Z::gEditor->mConfig)->EditingProject;
+    String startingProject = HasOrAdd<EditorConfig>(Z::gEditor->mConfig)->EditingProject;
     // if the user has requested to create a new project then don't open the
     // last edited project
     if (newProjectName.Empty() && FileExists(startingProject))
@@ -1244,8 +1187,7 @@ void CreateEditor(OsWindow* mainWindow,
     {
       Event event;
       Z::gEngine->DispatchEvent(Events::NoProjectLoaded, &event);
-      DoNotifyWarning("No project found",
-                      "No project file found. Opening launcher");
+      DoNotifyWarning("No project found", "No project file found. Opening launcher");
       NewProject();
     }
   }

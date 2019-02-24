@@ -54,11 +54,8 @@ public:
   void RenderTasksUpdate(RenderTasks& renderTasks);
   void RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& renderQueues);
 
-  void AddToVisibleGraphicals(Graphical& graphical,
-                              Camera& camera,
-                              Vec3 cameraPos,
-                              Vec3 cameraDir,
-                              Frustum* frustum = nullptr);
+  void AddToVisibleGraphicals(
+      Graphical& graphical, Camera& camera, Vec3 cameraPos, Vec3 cameraDir, Frustum* frustum = nullptr);
   void CreateDebugGraphicals();
 
   Link<GraphicsSpace> EngineLink;

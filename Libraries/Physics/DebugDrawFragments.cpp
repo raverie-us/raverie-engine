@@ -16,23 +16,17 @@ void DrawAnchors(WorldAnchorAtom& anchors, Collider* obj0, Collider* obj1)
   Vec3 obj1Pos = obj1->GetWorldTranslation();
 
   // draw lines from each object's center to its respective anchor
-  gDebugDraw->Add(
-      Debug::Line(obj0Pos, anchors.mWorldPoints[0]).Color(Color::White));
-  gDebugDraw->Add(
-      Debug::Line(obj1Pos, anchors.mWorldPoints[1]).Color(Color::Black));
+  gDebugDraw->Add(Debug::Line(obj0Pos, anchors.mWorldPoints[0]).Color(Color::White));
+  gDebugDraw->Add(Debug::Line(obj1Pos, anchors.mWorldPoints[1]).Color(Color::Black));
   // draw a line between the anchors
-  gDebugDraw->Add(Debug::Line(anchors.mWorldPoints[0], anchors.mWorldPoints[1])
-                      .Color(Color::Gray));
+  gDebugDraw->Add(Debug::Line(anchors.mWorldPoints[0], anchors.mWorldPoints[1]).Color(Color::Gray));
 }
 
 void DrawBasis(Mat3Param basis, Vec3Param pos, real size)
 {
-  gDebugDraw->Add(
-      Debug::Line(pos, pos + basis.GetBasis(0) * size).Color(Color::Red));
-  gDebugDraw->Add(
-      Debug::Line(pos, pos + basis.GetBasis(1) * size).Color(Color::Green));
-  gDebugDraw->Add(
-      Debug::Line(pos, pos + basis.GetBasis(2) * size).Color(Color::Blue));
+  gDebugDraw->Add(Debug::Line(pos, pos + basis.GetBasis(0) * size).Color(Color::Red));
+  gDebugDraw->Add(Debug::Line(pos, pos + basis.GetBasis(1) * size).Color(Color::Green));
+  gDebugDraw->Add(Debug::Line(pos, pos + basis.GetBasis(2) * size).Color(Color::Blue));
 }
 
 void DrawArc(Vec3Param center,
@@ -54,15 +48,13 @@ void DrawArc(Vec3Param center,
   uint numSteps = (uint)(Math::Abs(maxAngle - minAngle) / radianStepSize);
 
   real angle = minAngle;
-  Vec3 prev = center + radiusA * xAxis * Math::Cos(angle) +
-              radiusB * yAxis * Math::Sin(angle);
+  Vec3 prev = center + radiusA * xAxis * Math::Cos(angle) + radiusB * yAxis * Math::Sin(angle);
   Vec3 start = prev;
   for (uint i = 0; i < numSteps; ++i)
   {
     angle = minAngle + (maxAngle - minAngle) * real(i) / real(numSteps);
     angle += radianStepSize;
-    Vec3 next = center + radiusA * xAxis * Math::Cos(angle) +
-                radiusB * yAxis * Math::Sin(angle);
+    Vec3 next = center + radiusA * xAxis * Math::Cos(angle) + radiusB * yAxis * Math::Sin(angle);
 
     gDebugDraw->Add(Debug::Line(prev, next).Color(color));
     prev = next;
@@ -75,19 +67,13 @@ void DrawArc(Vec3Param center,
   }
 }
 
-void DrawHinge(Joint* joint,
-               AnchorAtom& anchors,
-               Mat3Param basis0,
-               Mat3Param basis1,
-               uint defaultPerspective)
+void DrawHinge(Joint* joint, AnchorAtom& anchors, Mat3Param basis0, Mat3Param basis1, uint defaultPerspective)
 {
-  JointDebugDrawConfig* drawConfig =
-      joint->GetOwner()->has(JointDebugDrawConfig);
+  JointDebugDrawConfig* drawConfig = joint->GetOwner()->has(JointDebugDrawConfig);
   real size = real(1.0);
   real detail = real(10.0);
-  uint perspective = defaultPerspective == 0
-                         ? JointDebugDrawConfigFlags::ObjectAPerspective
-                         : JointDebugDrawConfigFlags::ObjectBPerspective;
+  uint perspective = defaultPerspective == 0 ? JointDebugDrawConfigFlags::ObjectAPerspective
+                                             : JointDebugDrawConfigFlags::ObjectBPerspective;
   if (drawConfig && drawConfig->GetActive())
   {
     size = drawConfig->mSize;

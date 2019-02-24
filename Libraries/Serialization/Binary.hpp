@@ -39,8 +39,7 @@ public:
 
   void StartPolymorphicInternal(const PolymorphicInfo& info) override
   {
-    ErrorIf(info.mFlags.U32Field != 0,
-            "Patching not supported in binary serialization");
+    ErrorIf(info.mFlags.U32Field != 0, "Patching not supported in binary serialization");
     // BoundType* objectType = info.mObject.StoredType;
     u32 signature = 0;
     BinaryType()->Data((byte*)&signature, sizeof(signature));
@@ -70,9 +69,7 @@ public:
 
   //------------------------------------------------------------ String
   // Serialization
-  bool StringField(cstr typeName,
-                   cstr fieldName,
-                   StringRange& stringRange) override
+  bool StringField(cstr typeName, cstr fieldName, StringRange& stringRange) override
   {
     size_t sizeInBytes = stringRange.SizeInBytes();
     BinaryType()->Data((byte*)&sizeInBytes, sizeof(sizeInBytes));
@@ -82,10 +79,7 @@ public:
 
   //------------------------------------------------------------ Enum
   // Serialization
-  bool EnumField(cstr enumTypeName,
-                 cstr fieldName,
-                 uint& enumValue,
-                 BoundType*) override
+  bool EnumField(cstr enumTypeName, cstr fieldName, uint& enumValue, BoundType*) override
   {
     // Serialize the enum as a simple integer
     FundamentalType(enumValue);
@@ -94,12 +88,8 @@ public:
 
   //------------------------------------------------------------ Array
   // Serialization
-  bool ArrayField(cstr typeName,
-                  cstr fieldName,
-                  byte* data,
-                  ArrayType arrayType,
-                  uint numberOfElements,
-                  uint sizeOftype) override
+  bool ArrayField(
+      cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype) override
   {
     BinaryType()->Data((byte*)data, sizeOftype * numberOfElements);
     return true;
@@ -119,10 +109,10 @@ public:
   {
   }
 
-#define FUNDAMENTAL(type)                                                      \
-  bool FundamentalField(cstr fieldName, type& value) override                  \
-  {                                                                            \
-    return FundamentalType(value);                                             \
+#define FUNDAMENTAL(type)                                                                                              \
+  bool FundamentalField(cstr fieldName, type& value) override                                                          \
+  {                                                                                                                    \
+    return FundamentalType(value);                                                                                     \
   }
 #include "FundamentalTypes.hpp"
 #undef FUNDAMENTAL
@@ -199,12 +189,8 @@ public:
 
   //------------------------------------------------------------ Array
   // Serialization
-  bool ArrayField(cstr typeName,
-                  cstr fieldName,
-                  byte* data,
-                  ArrayType arrayType,
-                  uint numberOfElements,
-                  uint sizeOftype) override
+  bool ArrayField(
+      cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype) override
   {
     BinaryType()->Data((byte*)data, sizeOftype * numberOfElements);
     return true;
@@ -215,10 +201,7 @@ public:
     BinaryType()->Data((byte*)&arraySize, sizeof(arraySize));
   }
 
-  bool EnumField(cstr enumTypeName,
-                 cstr fieldName,
-                 uint& enumValue,
-                 BoundType*) override
+  bool EnumField(cstr enumTypeName, cstr fieldName, uint& enumValue, BoundType*) override
   {
     // Serialize the enum as a simple integer
     FundamentalType(enumValue);
@@ -234,10 +217,10 @@ public:
   {
   }
 
-#define FUNDAMENTAL(type)                                                      \
-  bool FundamentalField(cstr fieldName, type& value) override                  \
-  {                                                                            \
-    return FundamentalType(value);                                             \
+#define FUNDAMENTAL(type)                                                                                              \
+  bool FundamentalField(cstr fieldName, type& value) override                                                          \
+  {                                                                                                                    \
+    return FundamentalType(value);                                                                                     \
   }
 #include "FundamentalTypes.hpp"
 #undef FUNDAMENTAL
@@ -246,9 +229,7 @@ public:
 class BinaryFileLoader : public BinaryLoader<BinaryFileLoader>
 {
 public:
-  bool StringField(cstr typeName,
-                   cstr fieldName,
-                   StringRange& stringRange) override;
+  bool StringField(cstr typeName, cstr fieldName, StringRange& stringRange) override;
   bool OpenFile(Status& status, cstr filename);
   void Close();
   void Data(byte* data, uint size);
@@ -293,9 +274,7 @@ private:
 class BinaryBufferLoader : public BinaryLoader<BinaryBufferLoader>
 {
 public:
-  bool StringField(cstr typeName,
-                   cstr fieldName,
-                   StringRange& stringRange) override;
+  bool StringField(cstr typeName, cstr fieldName, StringRange& stringRange) override;
   void SetBuffer(byte* data, uint size);
   void SetBlock(DataBlock block);
 

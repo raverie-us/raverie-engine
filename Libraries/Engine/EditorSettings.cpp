@@ -15,8 +15,7 @@ ZilchDefineType(EditorSettings, builder, type)
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDocumented();
   ZilchBindFieldProperty(mViewCube);
-  ZilchBindGetterSetterProperty(ViewCubeSize)
-      ->Add(new EditorSlider(sViewCubeMinSize, sViewCubeMaxSize, 0.01f));
+  ZilchBindGetterSetterProperty(ViewCubeSize)->Add(new EditorSlider(sViewCubeMinSize, sViewCubeMaxSize, 0.01f));
   ZilchBindFieldProperty(mAutoUpdateContentChanges);
 }
 

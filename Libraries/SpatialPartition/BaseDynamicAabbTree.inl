@@ -12,8 +12,8 @@ static const real cAabbFatScaleFactor = real(1.2);
 } // namespace BaseDynamicTreeInternal
 
 template <typename NodeType>
-typename BaseDynamicTreePolicy<NodeType>::NodeTypeDef*
-BaseDynamicTreePolicy<NodeType>::SelectNode(NodeType* parent, NodeType* newLeaf)
+typename BaseDynamicTreePolicy<NodeType>::NodeTypeDef* BaseDynamicTreePolicy<NodeType>::SelectNode(NodeType* parent,
+                                                                                                   NodeType* newLeaf)
 {
   // if there is no child 2 then we have to select child1
   if (parent->mChild2 == nullptr)
@@ -32,9 +32,7 @@ BaseDynamicTreePolicy<NodeType>::SelectNode(NodeType* parent, NodeType* newLeaf)
 
 template <typename NodeType>
 typename BaseDynamicTreePolicy<NodeType>::NodeTypeDef*
-BaseDynamicTreePolicy<NodeType>::CreateInternalNode(NodeType* oldParent,
-                                                    NodeType* oldChild,
-                                                    NodeType* newChild)
+BaseDynamicTreePolicy<NodeType>::CreateInternalNode(NodeType* oldParent, NodeType* oldChild, NodeType* newChild)
 {
   NodeType* internalNode = new NodeType();
 
@@ -84,8 +82,7 @@ BaseDynamicAabbTree<PolicyType>::~BaseDynamicAabbTree()
 }
 
 template <typename PolicyType>
-void BaseDynamicAabbTree<PolicyType>::CreateProxy(BroadPhaseProxy& proxy,
-                                                  DataType& data)
+void BaseDynamicAabbTree<PolicyType>::CreateProxy(BroadPhaseProxy& proxy, DataType& data)
 {
   Aabb aabb = data.mAabb;
   if (!aabb.Valid())
@@ -100,9 +97,8 @@ void BaseDynamicAabbTree<PolicyType>::CreateProxy(BroadPhaseProxy& proxy,
   node->mClientData = data.mClientData;
   node->mAabb = aabb;
   Vec3 halfExtents = aabb.GetHalfExtents();
-  halfExtents =
-      Math::Min(halfExtents + BaseDynamicTreeInternal::cAabbFatFactor,
-                halfExtents * BaseDynamicTreeInternal::cAabbFatScaleFactor);
+  halfExtents = Math::Min(halfExtents + BaseDynamicTreeInternal::cAabbFatFactor,
+                          halfExtents * BaseDynamicTreeInternal::cAabbFatScaleFactor);
   node->mAabb.SetCenterAndHalfExtents(aabb.GetCenter(), halfExtents);
 
   PolicyType::InsertNode(mRoot, node, mRoot);
@@ -120,8 +116,7 @@ void BaseDynamicAabbTree<PolicyType>::RemoveProxy(BroadPhaseProxy& proxy)
 }
 
 template <typename PolicyType>
-void BaseDynamicAabbTree<PolicyType>::UpdateProxy(BroadPhaseProxy& proxy,
-                                                  DataType& data)
+void BaseDynamicAabbTree<PolicyType>::UpdateProxy(BroadPhaseProxy& proxy, DataType& data)
 {
   Aabb aabb = data.mAabb;
   if (!aabb.Valid())
@@ -191,9 +186,7 @@ void BaseDynamicAabbTree<PolicyType>::DrawTree(NodeType* node)
 }
 
 template <typename PolicyType>
-void BaseDynamicAabbTree<PolicyType>::DrawLevel(NodeType* node,
-                                                uint currLevel,
-                                                uint level)
+void BaseDynamicAabbTree<PolicyType>::DrawLevel(NodeType* node, uint currLevel, uint level)
 {
   if (!node)
     return;
@@ -235,26 +228,20 @@ void BaseDynamicAabbTree<PolicyType>::Validate()
 
     if (node->IsLeaf())
     {
-      ErrorIf(node->mChild1 != nullptr,
-              "Leaf should have a null Child 1 pointer.");
-      ErrorIf(node->mChild2 != nullptr,
-              "Leaf should have a null Child 2 pointer.");
+      ErrorIf(node->mChild1 != nullptr, "Leaf should have a null Child 1 pointer.");
+      ErrorIf(node->mChild2 != nullptr, "Leaf should have a null Child 2 pointer.");
     }
     else
     {
-      ErrorIf(node->mChild1 == nullptr,
-              "Child 1 of an internal node should never be null.");
-      ErrorIf(node->mChild1 == nullptr,
-              "Child 2 of an internal node should never be null.");
+      ErrorIf(node->mChild1 == nullptr, "Child 1 of an internal node should never be null.");
+      ErrorIf(node->mChild1 == nullptr, "Child 2 of an internal node should never be null.");
 
       Aabb& parent = node->mAabb;
       Aabb& child1 = node->mChild1->mAabb;
       Aabb& child2 = node->mChild2->mAabb;
-      ErrorIf(!parent.ContainsPoint(child1.mMax) ||
-                  !parent.ContainsPoint(child1.mMin),
+      ErrorIf(!parent.ContainsPoint(child1.mMax) || !parent.ContainsPoint(child1.mMin),
               "Parent Aabb does not contain child 1.");
-      ErrorIf(!parent.ContainsPoint(child2.mMax) ||
-                  !parent.ContainsPoint(child2.mMin),
+      ErrorIf(!parent.ContainsPoint(child2.mMax) || !parent.ContainsPoint(child2.mMin),
               "Parent Aabb does not contain child 2.");
       nodes.PushBack(node->mChild1);
       nodes.PushBack(node->mChild2);
@@ -281,8 +268,7 @@ void BaseDynamicAabbTree<PolicyType>::QuerySelfTree(CallbackType* callback)
 
 template <typename PolicyType>
 template <typename CallbackType>
-void BaseDynamicAabbTree<PolicyType>::QueryTree(CallbackType* callback,
-                                                const BaseTreeType* tree)
+void BaseDynamicAabbTree<PolicyType>::QueryTree(CallbackType* callback, const BaseTreeType* tree)
 {
   QueryTreeVsTree(callback, mRoot, tree->mRoot);
 }
@@ -298,8 +284,7 @@ template <typename PolicyType>
 void BaseDynamicAabbTree<PolicyType>::Update(NodeType* leafNode, Aabb& aabb)
 {
   // our old Aabb contained our new one, so we don't have to do anything
-  if (leafNode->mAabb.ContainsPoint(aabb.mMin) &&
-      leafNode->mAabb.ContainsPoint(aabb.mMax))
+  if (leafNode->mAabb.ContainsPoint(aabb.mMin) && leafNode->mAabb.ContainsPoint(aabb.mMax))
     return;
 
   // remove the leaf node
@@ -310,9 +295,8 @@ void BaseDynamicAabbTree<PolicyType>::Update(NodeType* leafNode, Aabb& aabb)
   // set the new fattened aabb
   Vec3 center = aabb.GetCenter();
   Vec3 halfExtents = aabb.GetHalfExtents();
-  halfExtents =
-      Math::Min(halfExtents + BaseDynamicTreeInternal::cAabbFatFactor,
-                halfExtents * BaseDynamicTreeInternal::cAabbFatScaleFactor);
+  halfExtents = Math::Min(halfExtents + BaseDynamicTreeInternal::cAabbFatFactor,
+                          halfExtents * BaseDynamicTreeInternal::cAabbFatScaleFactor);
   leafNode->mAabb.SetCenterAndHalfExtents(center, halfExtents);
 
   // we could update at the last unaffected node, but there is no guarantee that

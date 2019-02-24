@@ -8,12 +8,10 @@ namespace Zilch
 {
 // Declares an event to be sent by an EventHandler
 // The typical pattern in C++ is to declare these within the Events namespace
-#  define ZilchDeclareEvent(EventName, EventType)                              \
-    ZeroShared extern const String EventName;
+#  define ZilchDeclareEvent(EventName, EventType) ZeroShared extern const String EventName;
 
 // Defines the event so only cpp uint allocates the string
-#  define ZilchDefineEvent(EventName)                                          \
-    ZeroShared const String EventName = #EventName;
+#  define ZilchDefineEvent(EventName) ZeroShared const String EventName = #  EventName;
 
 // All events that are sent must be derived from this type
 class ZeroShared EventData : public IZilchObject
@@ -79,15 +77,15 @@ public:
 // When we create new event delegates, we put this at the top to automatically
 // implement 'GetSize' and 'CopyInto' Our implementation of 'CopyInto' just
 // invokes the copy constructor via placement new
-#  define ZilchDefineEventDelegateHelpers(SelfType)                            \
-    void CopyInto(byte* destination) override                                  \
-    {                                                                          \
-      static_assert(sizeof(SelfType) <= MaxEventDelegateSize,                  \
-                    "The size of the event delegate must not exceed "          \
-                    "MaxEventDelegateSize");                                   \
-      SelfType* copy = new (destination) SelfType(*this);                      \
-      copy->OutgoingLink.Next = nullptr;                                       \
-      copy->IncomingLink.Next = nullptr;                                       \
+#  define ZilchDefineEventDelegateHelpers(SelfType)                                                                    \
+    void CopyInto(byte* destination) override                                                                          \
+    {                                                                                                                  \
+      static_assert(sizeof(SelfType) <= MaxEventDelegateSize,                                                          \
+                    "The size of the event delegate must not exceed "                                                  \
+                    "MaxEventDelegateSize");                                                                           \
+      SelfType* copy = new (destination) SelfType(*this);                                                              \
+      copy->OutgoingLink.Next = nullptr;                                                                               \
+      copy->IncomingLink.Next = nullptr;                                                                               \
     }
 
 // We use dual intrusively linked lists with the delegate to ensure that
@@ -157,26 +155,20 @@ ZeroShared void EventSwapAll(EventHandler* a, EventHandler* b);
 
 // Connects a sender and receiver event handler for a particular event, given an
 // event connection
-ZeroShared void EventConnect(EventHandler* sender,
-                             StringParam eventName,
-                             EventDelegate* delegate,
-                             EventHandler* receiver);
+ZeroShared void
+EventConnect(EventHandler* sender, StringParam eventName, EventDelegate* delegate, EventHandler* receiver);
 
 // Disconnect an event that we previously connected to
 // Disconnecting can also be done by storing the event delegate and deleting it
 // Returns the number of connections that were disconnected
 // Note: There can be more than one disconnected, but only if someone connected
 // to the same event twice on the same object
-ZeroShared int EventDisconnect(EventHandler* sender,
-                               EventHandler* receiver,
-                               StringParam eventName,
-                               void* thisPointerOrUniqueId);
+ZeroShared int
+EventDisconnect(EventHandler* sender, EventHandler* receiver, StringParam eventName, void* thisPointerOrUniqueId);
 
 // Invokes the event handler for anyone listening to this event name on our
 // object Returns how many receiver callbacks were successfully invoked
-ZeroShared int EventSend(EventHandler* sender,
-                         StringParam eventName,
-                         EventData* event);
+ZeroShared int EventSend(EventHandler* sender, StringParam eventName, EventData* event);
 
 // When we want to connect up member functions, we use this template
 template <typename ClassType, typename EventType>
@@ -222,10 +214,8 @@ public:
 // A special template helper that can infer template arguments to make member
 // function connecting easier
 template <typename ClassType, typename EventType>
-ZeroSharedTemplate void EventConnect(EventHandler* sender,
-                                     StringParam eventName,
-                                     void (ClassType::*function)(EventType*),
-                                     ClassType* receiver)
+ZeroSharedTemplate void
+EventConnect(EventHandler* sender, StringParam eventName, void (ClassType::*function)(EventType*), ClassType* receiver)
 {
   // Create a member function delegate
   typedef MemberFunctionEventDelegate<ClassType, EventType> EventDelegateType;
@@ -246,8 +236,7 @@ ZeroSharedTemplate void EventConnect(EventHandler* sender,
 {
   // Create a member function delegate
   typedef MemberFunctionEventDelegate<ClassType, EventType> EventDelegateType;
-  EventDelegateType* eventDelegate =
-      new EventDelegateType(function, selfPointer);
+  EventDelegateType* eventDelegate = new EventDelegateType(function, selfPointer);
 
   // Connect the event handler up to this newly created member delegate
   EventConnect(sender, eventName, eventDelegate, receiver);
@@ -314,8 +303,7 @@ ZeroSharedTemplate void EventConnect(EventHandler* sender,
 // When we want to connect up static functions with userdata, we use this
 // template
 template <typename EventType>
-class ZeroSharedTemplate StaticFunctionUserDataEventDelegate
-    : public EventDelegate
+class ZeroSharedTemplate StaticFunctionUserDataEventDelegate : public EventDelegate
 {
 public:
   ZilchDefineEventDelegateHelpers(StaticFunctionUserDataEventDelegate);
@@ -420,9 +408,7 @@ public:
 };
 
 // Automatically forwards all events of a type of event name to another receiver
-ZeroShared void EventForward(EventHandler* sender,
-                             StringParam eventName,
-                             EventHandler* receiver);
+ZeroShared void EventForward(EventHandler* sender, StringParam eventName, EventHandler* receiver);
 
 // A class that represents the 'Events' class within Zilch code (for binding
 // purposes)
@@ -435,9 +421,7 @@ public:
   // Events are only accepted if their type is either the same or more derived
   // then the callback's event type Returns the number of listeners that
   // received the event
-  static int Send(const Handle& sender,
-                  StringParam eventName,
-                  EventData* event);
+  static int Send(const Handle& sender, StringParam eventName, EventData* event);
 
   // Listen for a given event sent by the 'sender'; invoke the callback when it
   // is received Event connections form a two way binding between the sender and
@@ -450,9 +434,7 @@ public:
   // validates that we did not get a null delegate, the this pointer was not
   // null (static functions are ok!), and that the delegate has no return and
   // only one argument that inherits from the EventData type
-  static void Connect(const Handle& sender,
-                      StringParam eventName,
-                      const Delegate& callback);
+  static void Connect(const Handle& sender, StringParam eventName, const Delegate& callback);
 };
 } // namespace Zilch
 

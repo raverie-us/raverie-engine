@@ -17,10 +17,7 @@ Tweakable(bool, DebugMouseEvents, false, cLocation);
 namespace RootWidgetUi
 {
 const cstr cLocation = "EditorUi/";
-Tweakable(Vec4,
-          ClearColor,
-          ToFloatColor(ByteColorRGBA(46, 46, 46, 255)),
-          cLocation);
+Tweakable(Vec4, ClearColor, ToFloatColor(ByteColorRGBA(46, 46, 46, 255)), cLocation);
 } // namespace RootWidgetUi
 
 ZilchDefineType(RootWidget, builder, type)
@@ -64,8 +61,7 @@ RootWidget::RootWidget(OsWindow* osWindow) : Composite(NULL)
   ConnectThisTo(osWindow, Events::OsMouseUp, OnOsMouseUp);
   ConnectThisTo(osWindow, Events::OsMouseMove, OnOsMouseMoved);
 
-  ConnectThisTo(
-      osWindow, Events::OsWindowBorderHitTest, OnOsWindowBorderHitTest);
+  ConnectThisTo(osWindow, Events::OsWindowBorderHitTest, OnOsWindowBorderHitTest);
 
   ConnectThisTo(osWindow, Events::OsMouseScroll, OnOsMouseScroll);
 
@@ -86,8 +82,7 @@ RootWidget::RootWidget(OsWindow* osWindow) : Composite(NULL)
   ConnectThisTo(Z::gEngine, Events::DebuggerResume, OnDebuggerResume);
 
   ConnectThisTo(Z::gEngine->has(TimeSystem), "UiUpdate", OnUiUpdate);
-  ConnectThisTo(
-      Z::gEngine->has(GraphicsEngine), "UiRenderUpdate", OnUiRenderUpdate);
+  ConnectThisTo(Z::gEngine->has(GraphicsEngine), "UiRenderUpdate", OnUiRenderUpdate);
 }
 
 RootWidget::~RootWidget()
@@ -108,10 +103,7 @@ void RootWidget::OnUiUpdate(UpdateEvent* event)
   MouseUpdate(event->Dt);
 }
 
-void LineSegment(StreamedVertexArray& streamedVertices,
-                 Vec3Param p0,
-                 Vec3Param p1,
-                 Vec4Param color)
+void LineSegment(StreamedVertexArray& streamedVertices, Vec3Param p0, Vec3Param p1, Vec4Param color)
 {
   StreamedVertex start(p0, Vec2::cZero, color);
   StreamedVertex end(p1, Vec2::cZero, color);
@@ -119,21 +111,14 @@ void LineSegment(StreamedVertexArray& streamedVertices,
   streamedVertices.PushBack(end);
 }
 
-void DrawBoxAround(StreamedVertexArray& streamedVertices,
-                   ViewNode& lineNode,
-                   Widget* widget,
-                   ByteColor color)
+void DrawBoxAround(StreamedVertexArray& streamedVertices, ViewNode& lineNode, Widget* widget, ByteColor color)
 {
   WidgetRect screenRect = widget->GetScreenRect();
 
-  Vec3 topLeft = Math::TransformPoint(lineNode.mLocalToView,
-                                      ToVector3(screenRect.TopLeft()));
-  Vec3 topRight = Math::TransformPoint(lineNode.mLocalToView,
-                                       ToVector3(screenRect.TopRight()));
-  Vec3 botLeft = Math::TransformPoint(lineNode.mLocalToView,
-                                      ToVector3(screenRect.BottomLeft()));
-  Vec3 botRight = Math::TransformPoint(lineNode.mLocalToView,
-                                       ToVector3(screenRect.BottomRight()));
+  Vec3 topLeft = Math::TransformPoint(lineNode.mLocalToView, ToVector3(screenRect.TopLeft()));
+  Vec3 topRight = Math::TransformPoint(lineNode.mLocalToView, ToVector3(screenRect.TopRight()));
+  Vec3 botLeft = Math::TransformPoint(lineNode.mLocalToView, ToVector3(screenRect.BottomLeft()));
+  Vec3 botRight = Math::TransformPoint(lineNode.mLocalToView, ToVector3(screenRect.BottomRight()));
 
   Vec4 color4 = ToFloatColor(color);
 
@@ -143,11 +128,8 @@ void DrawBoxAround(StreamedVertexArray& streamedVertices,
   LineSegment(streamedVertices, topRight, botRight, color4);
 }
 
-void DrawChain(StreamedVertexArray& streamedVertices,
-               ViewNode& lineNode,
-               Widget* widget,
-               ByteColor base,
-               ByteColor parents)
+void DrawChain(
+    StreamedVertexArray& streamedVertices, ViewNode& lineNode, Widget* widget, ByteColor base, ByteColor parents)
 {
   if (widget)
   {
@@ -180,32 +162,25 @@ void RootWidget::OnUiRenderUpdate(Event* event)
   Mat4 scale;
   scale.Scale(1.0f, -1.0f, 1.0f);
   viewBlock.mWorldToView = scale * translation;
-  BuildOrthographicTransformZero(
-      viewBlock.mViewToPerspective, mSize.y, mSize.x / mSize.y, -1.0f, 1.0f);
+  BuildOrthographicTransformZero(viewBlock.mViewToPerspective, mSize.y, mSize.x / mSize.y, -1.0f, 1.0f);
 
   Mat4 apiPerspective;
-  Z::gRenderer->BuildOrthographicTransform(
-      apiPerspective, mSize.y, mSize.x / mSize.y, -1.0f, 1.0f);
-  viewBlock.mZeroPerspectiveToApiPerspective =
-      apiPerspective * viewBlock.mViewToPerspective.Inverted();
+  Z::gRenderer->BuildOrthographicTransform(apiPerspective, mSize.y, mSize.x / mSize.y, -1.0f, 1.0f);
+  viewBlock.mZeroPerspectiveToApiPerspective = apiPerspective * viewBlock.mViewToPerspective.Inverted();
 
   RenderUpdate(viewBlock, frameBlock, Mat4::cIdentity, colorTx, clipRect);
 
   // Interaction debug draw
   if (Interaction::DebugMouseInteraction)
   {
-    StreamedVertexArray& streamedVertices =
-        frameBlock.mRenderQueues->mStreamedVertices;
-    ViewNode& lineNode = AddRenderNodes(
-        viewBlock, frameBlock, clipRect, TextureManager::Find("White"));
+    StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
+    ViewNode& lineNode = AddRenderNodes(viewBlock, frameBlock, clipRect, TextureManager::Find("White"));
     lineNode.mStreamedVertexType = PrimitiveType::Lines;
 
     DrawChain(streamedVertices, lineNode, mOver, Color::Red, Color::Firebrick);
-    DrawChain(
-        streamedVertices, lineNode, mFocus, Color::Blue, Color::LightBlue);
+    DrawChain(streamedVertices, lineNode, mFocus, Color::Blue, Color::LightBlue);
 
-    lineNode.mStreamedVertexCount =
-        streamedVertices.Size() - lineNode.mStreamedVertexStart;
+    lineNode.mStreamedVertexCount = streamedVertices.Size() - lineNode.mStreamedVertexStart;
   }
 
   IndexRange& indexRange = viewBlock.mRenderGroupRanges.PushBack();
@@ -219,22 +194,17 @@ void RootWidget::OnUiRenderUpdate(Event* event)
   renderTaskRange.mTaskCount = 0;
 
   HandleOf<RenderTarget> renderTarget =
-      Z::gEngine->has(GraphicsEngine)
-          ->GetRenderTarget((uint)mSize.x, (uint)mSize.y, TextureFormat::RGBA8);
+      Z::gEngine->has(GraphicsEngine)->GetRenderTarget((uint)mSize.x, (uint)mSize.y, TextureFormat::RGBA8);
 
   GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(renderTarget);
   renderSettings.mBlendSettings[0].SetBlendAlpha();
   renderSettings.mScissorMode = ScissorMode::Enabled;
 
-  BoundType* defaultRenderPass =
-      MetaDatabase::GetInstance()->FindType("ColorOutput");
-  ReturnIf(defaultRenderPass == nullptr,
-           ,
-           "We expected to have a type defined called ColorOutput");
+  BoundType* defaultRenderPass = MetaDatabase::GetInstance()->FindType("ColorOutput");
+  ReturnIf(defaultRenderPass == nullptr, , "We expected to have a type defined called ColorOutput");
 
-  HandleOf<MaterialBlock> renderPassHandle =
-      ZilchAllocate(MaterialBlock, defaultRenderPass);
+  HandleOf<MaterialBlock> renderPassHandle = ZilchAllocate(MaterialBlock, defaultRenderPass);
   MaterialBlock& renderPass = renderPassHandle;
 
   Material* spriteMaterial = MaterialManager::FindOrNull("AlphaSprite");
@@ -242,8 +212,7 @@ void RootWidget::OnUiRenderUpdate(Event* event)
 
   {
     Pair<u64, uint> key((u64)spriteMaterial->mResourceId, shaderInputsId);
-    IndexRange range = spriteMaterial->AddShaderInputs(
-        renderTasks.mShaderInputs, renderTasks.mShaderInputsVersion);
+    IndexRange range = spriteMaterial->AddShaderInputs(renderTasks.mShaderInputs, renderTasks.mShaderInputsVersion);
     renderTasks.mShaderInputRanges.Insert(key, range);
   }
   {
@@ -254,8 +223,7 @@ void RootWidget::OnUiRenderUpdate(Event* event)
 
   RenderTaskHelper helper(renderTasks.mRenderTaskBuffer);
   helper.AddRenderTaskClearTarget(renderSettings, mClearColor, 0, 0, 0xFF);
-  helper.AddRenderTaskRenderPass(
-      renderSettings, 0, defaultRenderPass->Name, shaderInputsId);
+  helper.AddRenderTaskRenderPass(renderSettings, 0, defaultRenderPass->Name, shaderInputsId);
 
   ScreenViewport viewport = {0, 0, (int)mSize.x, (int)mSize.y};
   helper.AddRenderTaskBackBufferBlit(renderTarget, viewport);
@@ -800,7 +768,7 @@ Widget* GetNext(Widget* object, bool ignoreInactive)
     else
     {
       // Return the first active child
-      forRange(Widget & child, c->mChildren.All())
+      forRange (Widget& child, c->mChildren.All())
       {
         if (child.mActive)
           return &child;
@@ -831,8 +799,7 @@ void FindNextFocus(Widget* object, FocusDirection::Enum direction)
 {
   while (object != nullptr)
   {
-    object = direction == FocusDirection::Forward ? GetNext(object, true)
-                                                  : GetPrevious(object, true);
+    object = direction == FocusDirection::Forward ? GetNext(object, true) : GetPrevious(object, true);
 
     if (object && object->mActive)
     {
@@ -846,9 +813,7 @@ void FindNextFocus(Widget* object, FocusDirection::Enum direction)
 void RootWidget::OnOsMouseMoved(OsMouseEvent* osMouseEvent)
 {
   if (Interaction::DebugMouseEvents)
-    ZPrint("Mouse Move %d, %d \n",
-           osMouseEvent->ClientPosition.x,
-           osMouseEvent->ClientPosition.y);
+    ZPrint("Mouse Move %d, %d \n", osMouseEvent->ClientPosition.x, osMouseEvent->ClientPosition.y);
 
   UpdateMouseButtons(osMouseEvent);
 
@@ -857,14 +822,12 @@ void RootWidget::OnOsMouseMoved(OsMouseEvent* osMouseEvent)
   {
     OsWindow* window = osMouseEvent->Window;
     if (window)
-      mouseMovement = ToVec2(
-          osMouseEvent->ClientPosition -
-          window->MonitorToClient(window->GetMouseTrapMonitorPosition()));
+      mouseMovement =
+          ToVec2(osMouseEvent->ClientPosition - window->MonitorToClient(window->GetMouseTrapMonitorPosition()));
   }
   else
   {
-    mouseMovement =
-        ToVec2(osMouseEvent->ClientPosition) - Z::gMouse->mClientPosition;
+    mouseMovement = ToVec2(osMouseEvent->ClientPosition) - Z::gMouse->mClientPosition;
   }
 
   Z::gMouse->mClientPosition = ToVec2(osMouseEvent->ClientPosition);
@@ -981,9 +944,7 @@ void RootWidget::OnOsMouseButton(OsMouseEvent* osMouseEvent, bool buttonDown)
     return;
 
   if (Interaction::DebugMouseEvents)
-    ZPrint("Mouse %s %s\n",
-           MouseButtons::Names[button],
-           buttonDown ? "IsDown" : "IsUp");
+    ZPrint("Mouse %s %s\n", MouseButtons::Names[button], buttonDown ? "IsDown" : "IsUp");
 
   if (Interaction::DebugMouseInteraction)
   {
@@ -1016,8 +977,7 @@ void RootWidget::OnOsMouseButton(OsMouseEvent* osMouseEvent, bool buttonDown)
 
     // Check for double click conditions
     bool buttonsAreTheSame = mLastClickButton == button;
-    bool distanceIsSmall =
-        LargestAxis(mouseEvent.Position - mLastClickPosition) < 4.0f;
+    bool distanceIsSmall = LargestAxis(mouseEvent.Position - mLastClickPosition) < 4.0f;
     bool doubleClickTime = mTimeSinceLastClick < Interaction::DoubleClickTime;
 
     mouseEvent.Handled = false;
@@ -1106,8 +1066,7 @@ void RootWidget::OnDebuggerResume(Event* event)
   // lots of ghost mouse clicks and weird effects)
   ActionSequence* seq = new ActionSequence(this);
   seq->Add(new ActionDelayOnce());
-  seq->Add(
-      new CallAction<RootWidget, &RootWidget::OnDebuggerResumeDelay>(this));
+  seq->Add(new CallAction<RootWidget, &RootWidget::OnDebuggerResumeDelay>(this));
 }
 
 void RootWidget::OnDebuggerResumeDelay()

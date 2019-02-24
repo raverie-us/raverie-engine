@@ -48,9 +48,7 @@ public:
   /// Fills out the proxy for the broadphase at the position specified by data.
   /// The proxy can be thought of as a handle, an object should do nothing more
   /// than hold onto it and give it to broadphase when it wants to do something.
-  virtual void CreateProxy(uint type,
-                           BroadPhaseProxy& proxy,
-                           BroadPhaseData& data);
+  virtual void CreateProxy(uint type, BroadPhaseProxy& proxy, BroadPhaseData& data);
   /// Batch version of CreateProxy.
   virtual void CreateProxies(uint type, BroadPhaseObjectArray& objects);
   /// Removes the given proxy.
@@ -58,9 +56,7 @@ public:
   /// Batch version of RemoveProxy.
   virtual void RemoveProxies(uint type, ProxyHandleArray& proxies);
   /// Updates the given proxy to the position specified by data.
-  virtual void UpdateProxy(uint type,
-                           BroadPhaseProxy& proxy,
-                           BroadPhaseData& data);
+  virtual void UpdateProxy(uint type, BroadPhaseProxy& proxy, BroadPhaseData& data);
   /// Batch version of UpdateProxy.
   virtual void UpdateProxies(uint type, BroadPhaseObjectArray& objects);
 
@@ -81,13 +77,9 @@ public:
   /// Casts a ray into the broad phases.  If the results is set to only grab
   /// a single object, it will cast into the static first, then use the position
   /// hit to turn the ray into a segment and cast that into the dynamic.
-  virtual void CastRay(Vec3Param startPos,
-                       Vec3Param direction,
-                       ProxyCastResults& results);
+  virtual void CastRay(Vec3Param startPos, Vec3Param direction, ProxyCastResults& results);
   /// Casts a segment into the broad phase.
-  virtual void CastSegment(Vec3Param startPos,
-                           Vec3Param endPos,
-                           ProxyCastResults& results);
+  virtual void CastSegment(Vec3Param startPos, Vec3Param endPos, ProxyCastResults& results);
   /// Casts an Aabb into the broad phases.  Returns all objects intersecting the
   /// bounding box.
   virtual void CastAabb(const Aabb& aabb, ProxyCastResults& results);
@@ -106,14 +98,10 @@ public:
 
 protected:
   typedef void (IBroadPhase::*CastFunction)(CastDataParam, ProxyCastResults&);
-  virtual void CastIntoBroadphase(uint broadPhaseType,
-                                  CastDataParam data,
-                                  ProxyCastResults& results,
-                                  CastFunction func);
+  virtual void
+  CastIntoBroadphase(uint broadPhaseType, CastDataParam data, ProxyCastResults& results, CastFunction func);
 
-  bool GetFirstContactInStatic(CastDataParam rayData,
-                               Vec3& point,
-                               ProxyCastResults& results);
+  bool GetFirstContactInStatic(CastDataParam rayData, Vec3& point, ProxyCastResults& results);
 
   // Enabling this will cause ray casting to cast into static first, convert to
   // a segment, then cast into the dynamic.

@@ -106,9 +106,7 @@ class DeleteDirectoryJob : public BackgroundTaskJob
 public:
   typedef DeleteDirectoryJob ZilchSelf;
 
-  DeleteDirectoryJob(StringParam directory,
-                     StringParam rootDirectory,
-                     bool recursivelyDeleteEmpty);
+  DeleteDirectoryJob(StringParam directory, StringParam rootDirectory, bool recursivelyDeleteEmpty);
 
   /// Job Interface.
   void Execute() override;
@@ -160,8 +158,7 @@ class DownloadAndCreateTemplateTaskJob : public DownloadTemplateTaskJob
 {
 public:
   typedef DownloadAndCreateTemplateTaskJob ZilchSelf;
-  DownloadAndCreateTemplateTaskJob(StringParam templateUrl,
-                                   TemplateProject* project);
+  DownloadAndCreateTemplateTaskJob(StringParam templateUrl, TemplateProject* project);
 
   /// Job Interface.
   void Execute() override;
@@ -182,8 +179,7 @@ public:
 
 private:
   // Create the project from the template file path (must be downloaded to disk)
-  void CreateFromTemplateFile(StringParam templateFilePath,
-                              ProjectCache* projectCache);
+  void CreateFromTemplateFile(StringParam templateFilePath, ProjectCache* projectCache);
 
   // A cached project created (on the main thread)
   CachedProject* mCachedProject;
@@ -195,8 +191,7 @@ class DownloadLauncherPatchInstallerJob : public DownloadTaskJob
 {
 public:
   typedef DownloadLauncherPatchInstallerJob ZilchSelf;
-  DownloadLauncherPatchInstallerJob(StringParam url,
-                                    StringParam rootDownloadLocation);
+  DownloadLauncherPatchInstallerJob(StringParam url, StringParam rootDownloadLocation);
 
   /// Job Interface.
   void Execute() override;
@@ -243,9 +238,7 @@ public:
     String mFullFilePath;
     String mRelativePath;
   };
-  void GetFileList(StringParam path,
-                   StringParam parentPath,
-                   Array<ArchiveData>& fileList);
+  void GetFileList(StringParam path, StringParam parentPath, Array<ArchiveData>& fileList);
 
   String mProjectPath;
   String mDestinationFilePath;

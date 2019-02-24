@@ -10,8 +10,7 @@ CycleDetectionContext::CycleDetectionContext()
   mCurrentLibrary = nullptr;
 }
 
-CycleDetectionObjectScope::CycleDetectionObjectScope(
-    void* object, CycleDetectionContext* context)
+CycleDetectionObjectScope::CycleDetectionObjectScope(void* object, CycleDetectionContext* context)
 {
   mContext = context;
   mObject = object;
@@ -63,9 +62,7 @@ CycleDetection::CycleDetection(ZilchShaderSpirVSettings* settings)
   mSettings = settings;
 }
 
-bool CycleDetection::Run(Zilch::SyntaxTree& syntaxTree,
-                         ZilchShaderIRLibrary* library,
-                         ShaderCompilationErrors* errors)
+bool CycleDetection::Run(Zilch::SyntaxTree& syntaxTree, ZilchShaderIRLibrary* library, ShaderCompilationErrors* errors)
 {
   mErrors = errors;
   CycleDetectionContext context;
@@ -95,8 +92,7 @@ bool CycleDetection::Run(Zilch::SyntaxTree& syntaxTree,
   return mErrors->mErrorTriggered;
 }
 
-void CycleDetection::PreWalkClassNode(Zilch::ClassNode*& node,
-                                      CycleDetectionContext* context)
+void CycleDetection::PreWalkClassNode(Zilch::ClassNode*& node, CycleDetectionContext* context)
 {
   // Map the type to its node
   context->mTypeMap[node->Type] = node;
@@ -106,20 +102,17 @@ void CycleDetection::PreWalkClassNode(Zilch::ClassNode*& node,
   context->Walker->Walk(this, node->Variables, context);
 }
 
-void CycleDetection::PreWalkConstructor(Zilch::ConstructorNode*& node,
-                                        CycleDetectionContext* context)
+void CycleDetection::PreWalkConstructor(Zilch::ConstructorNode*& node, CycleDetectionContext* context)
 {
   context->mConstructorMap[node->DefinedFunction] = node;
 }
 
-void CycleDetection::PreWalkClassFunction(Zilch::FunctionNode*& node,
-                                          CycleDetectionContext* context)
+void CycleDetection::PreWalkClassFunction(Zilch::FunctionNode*& node, CycleDetectionContext* context)
 {
   context->mFunctionMap[node->DefinedFunction] = node;
 }
 
-void CycleDetection::PreWalkClassMemberVariable(
-    Zilch::MemberVariableNode*& node, CycleDetectionContext* context)
+void CycleDetection::PreWalkClassMemberVariable(Zilch::MemberVariableNode*& node, CycleDetectionContext* context)
 {
   context->mVariableMap[node->CreatedProperty] = node;
   // Additionally handle get/set functions.
@@ -129,16 +122,14 @@ void CycleDetection::PreWalkClassMemberVariable(
     context->mFunctionMap[node->Set->DefinedFunction] = node->Set;
 }
 
-void CycleDetection::WalkClassNode(Zilch::ClassNode*& node,
-                                   CycleDetectionContext* context)
+void CycleDetection::WalkClassNode(Zilch::ClassNode*& node, CycleDetectionContext* context)
 {
   WalkClassPreconstructor(node, context);
   context->Walker->Walk(this, node->Constructors, context);
   context->Walker->Walk(this, node->Functions, context);
 }
 
-void CycleDetection::WalkClassPreconstructor(Zilch::ClassNode*& node,
-                                             CycleDetectionContext* context)
+void CycleDetection::WalkClassPreconstructor(Zilch::ClassNode*& node, CycleDetectionContext* context)
 {
   Zilch::Function* preConstructor = node->PreConstructor;
   if (preConstructor == nullptr)
@@ -160,18 +151,15 @@ void CycleDetection::WalkClassPreconstructor(Zilch::ClassNode*& node,
   context->Walker->Walk(this, node->Variables, context);
 }
 
-void CycleDetection::WalkClassPreconstructor(Zilch::Function* preConstructor,
-                                             CycleDetectionContext* context)
+void CycleDetection::WalkClassPreconstructor(Zilch::Function* preConstructor, CycleDetectionContext* context)
 {
   // Pre-constructors require walking the class node.
-  Zilch::ClassNode* classNode =
-      context->mTypeMap.FindValue(preConstructor->Owner, nullptr);
+  Zilch::ClassNode* classNode = context->mTypeMap.FindValue(preConstructor->Owner, nullptr);
   if (classNode != nullptr)
     WalkClassPreconstructor(classNode, context);
 }
 
-void CycleDetection::WalkClassConstructor(Zilch::ConstructorNode*& node,
-                                          CycleDetectionContext* context)
+void CycleDetection::WalkClassConstructor(Zilch::ConstructorNode*& node, CycleDetectionContext* context)
 {
   Zilch::Function* zilchConstructor = node->DefinedFunction;
 
@@ -198,8 +186,7 @@ void CycleDetection::WalkClassConstructor(Zilch::ConstructorNode*& node,
   }
 }
 
-void CycleDetection::WalkClassFunction(Zilch::FunctionNode*& node,
-                                       CycleDetectionContext* context)
+void CycleDetection::WalkClassFunction(Zilch::FunctionNode*& node, CycleDetectionContext* context)
 {
   // Only walk a function once
   Zilch::Function* zilchFunction = node->DefinedFunction;
@@ -218,8 +205,7 @@ void CycleDetection::WalkClassFunction(Zilch::FunctionNode*& node,
   context->Walker->Walk(this, node->Statements, context);
 }
 
-void CycleDetection::WalkClassMemberVariable(Zilch::MemberVariableNode*& node,
-                                             CycleDetectionContext* context)
+void CycleDetection::WalkClassMemberVariable(Zilch::MemberVariableNode*& node, CycleDetectionContext* context)
 {
   // Visit the member variable. If the user requests to not continue iteration
   // then stop
@@ -240,8 +226,7 @@ void CycleDetection::WalkClassMemberVariable(Zilch::MemberVariableNode*& node,
     context->Walker->Walk(this, node->InitialValue, context);
 }
 
-void CycleDetection::WalkMemberAccessNode(Zilch::MemberAccessNode*& node,
-                                          CycleDetectionContext* context)
+void CycleDetection::WalkMemberAccessNode(Zilch::MemberAccessNode*& node, CycleDetectionContext* context)
 {
   // Find the actual accessed function/property
   Zilch::Function* zilchFunction = nullptr;
@@ -269,15 +254,13 @@ void CycleDetection::WalkMemberAccessNode(Zilch::MemberAccessNode*& node,
     // shader function with a different zilch function then the one we started
     // with. This is the one that should actually be walked to find
     // dependencies.
-    ZilchShaderIRFunction* shaderFunction =
-        context->mCurrentLibrary->FindFunction(zilchFunction);
+    ZilchShaderIRFunction* shaderFunction = context->mCurrentLibrary->FindFunction(zilchFunction);
     if (shaderFunction != nullptr)
       zilchFunction = shaderFunction->mMeta->mZilchFunction;
 
     // Recursively walk the function we're calling if it's in the current
     // library. If it's not in the current library this will return null.
-    Zilch::FunctionNode* fnNode =
-        context->mFunctionMap.FindValue(zilchFunction, nullptr);
+    Zilch::FunctionNode* fnNode = context->mFunctionMap.FindValue(zilchFunction, nullptr);
     if (fnNode != nullptr)
       context->Walker->Walk(this, fnNode, context);
   }
@@ -286,16 +269,14 @@ void CycleDetection::WalkMemberAccessNode(Zilch::MemberAccessNode*& node,
   {
     // Recursively walk the member we're referencing if it's in the current
     // library
-    Zilch::MemberVariableNode* varNode =
-        context->mVariableMap.FindValue(zilchProperty, nullptr);
+    Zilch::MemberVariableNode* varNode = context->mVariableMap.FindValue(zilchProperty, nullptr);
     if (varNode != nullptr)
       context->Walker->Walk(this, varNode, context);
   }
   context->mCallStack.PopBack();
 }
 
-void CycleDetection::WalkStaticTypeNode(Zilch::StaticTypeNode*& node,
-                                        CycleDetectionContext* context)
+void CycleDetection::WalkStaticTypeNode(Zilch::StaticTypeNode*& node, CycleDetectionContext* context)
 {
   // Always push the given node onto the current call stack
   context->mCallStack.PushBack(node);
@@ -307,8 +288,7 @@ void CycleDetection::WalkStaticTypeNode(Zilch::StaticTypeNode*& node,
     // Find the node for this constructor so we can walk the statements within.
     // If this node is null then the constructor call is from a different
     // library
-    Zilch::ConstructorNode* constructorNode =
-        context->mConstructorMap.FindValue(constructor, nullptr);
+    Zilch::ConstructorNode* constructorNode = context->mConstructorMap.FindValue(constructor, nullptr);
     if (constructorNode != nullptr)
       context->Walker->Walk(this, constructorNode, context);
   }

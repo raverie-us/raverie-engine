@@ -75,9 +75,7 @@ public:
   template <typename TokenType, typename StreamType, typename ParseHandlerType>
   friend class Zero::RecursiveDescentParser;
 
-  void Parse(StringParam input,
-             GrammarSet<Character>& tokenGrammar,
-             GrammarSet<Token>& parserGrammar);
+  void Parse(StringParam input, GrammarSet<Character>& tokenGrammar, GrammarSet<Token>& parserGrammar);
 
 private:
   DataDrivenLexerMode::Enum mMode;
@@ -111,26 +109,20 @@ private:
   // For example, it is only legal to add a string literal in the tokenizer, and
   // a token literal in the parser
   template <typename TokenType>
-  void AddStringLiteralNode(StringParam string,
-                            Array<GrammarNode<TokenType>*>& nodes);
+  void AddStringLiteralNode(StringParam string, Array<GrammarNode<TokenType>*>& nodes);
   template <typename TokenType>
-  void AddTokenLiteralNode(StringParam string,
-                           Array<GrammarNode<TokenType>*>& nodes);
+  void AddTokenLiteralNode(StringParam string, Array<GrammarNode<TokenType>*>& nodes);
 };
 
 // Explicit specializations
 template <>
-void DataDrivenLexer::AddStringLiteralNode<Character>(
-    StringParam string, Array<GrammarNode<Character>*>& nodes);
+void DataDrivenLexer::AddStringLiteralNode<Character>(StringParam string, Array<GrammarNode<Character>*>& nodes);
 template <>
-void DataDrivenLexer::AddStringLiteralNode<Token>(
-    StringParam string, Array<GrammarNode<Token>*>& nodes);
+void DataDrivenLexer::AddStringLiteralNode<Token>(StringParam string, Array<GrammarNode<Token>*>& nodes);
 template <>
-void DataDrivenLexer::AddTokenLiteralNode<Character>(
-    StringParam string, Array<GrammarNode<Character>*>& nodes);
+void DataDrivenLexer::AddTokenLiteralNode<Character>(StringParam string, Array<GrammarNode<Character>*>& nodes);
 template <>
-void DataDrivenLexer::AddTokenLiteralNode<Token>(
-    StringParam string, Array<GrammarNode<Token>*>& nodes);
+void DataDrivenLexer::AddTokenLiteralNode<Token>(StringParam string, Array<GrammarNode<Token>*>& nodes);
 } // namespace Zilch
 
 #  include "DataDrivenLexer.inl"

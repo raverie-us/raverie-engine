@@ -88,8 +88,7 @@ protected:
 
 /// A bi-directional graph edge between a collider and a contact.
 /// Exposes some internals to Contact which currently can't be exposed.
-struct ContactGraphEdge
-    : public BaseConstraintGraphEdge<Physics::Contact, Physics::ContactEdge>
+struct ContactGraphEdge : public BaseConstraintGraphEdge<Physics::Contact, Physics::ContactEdge>
 {
   ZilchDeclareType(ContactGraphEdge, TypeCopyMode::ReferenceType);
   typedef Physics::Contact Contact;
@@ -191,8 +190,7 @@ struct ConstraintGraphEdgePolicy
   /// Skips over all joints that are not the template type.
   void SkipDead(RangeType& range)
   {
-    while (!range.Empty() && range.Front().mJoint->GetJointType() !=
-                                 JointType::StaticGetJointType())
+    while (!range.Empty() && range.Front().mJoint->GetJointType() != JointType::StaticGetJointType())
       range.PopFront();
   }
 };
@@ -336,10 +334,7 @@ template <typename BaseConstraintType,
           typename PolicyType = ConstraintGraphEdgePolicy<FilterConstraintType>>
 struct BaseConstraintRange
 {
-  typedef BaseConstraintRange<BaseConstraintType,
-                              FilterConstraintType,
-                              PolicyType>
-      self_type;
+  typedef BaseConstraintRange<BaseConstraintType, FilterConstraintType, PolicyType> self_type;
 
   typedef BaseConstraintType BaseConstraintTypeDef;
   typedef FilterConstraintType ConstraintType;
@@ -368,8 +363,7 @@ struct BaseConstraintRange
     mPolicy.SkipDead(mConstraintRange);
   }
 
-  BaseConstraintRange(const JointRangeType& range, PolicyType& policy) :
-      mPolicy(policy)
+  BaseConstraintRange(const JointRangeType& range, PolicyType& policy) : mPolicy(policy)
   {
     mConstraintRange = range;
     mPolicy.SkipDead(mConstraintRange);
@@ -409,32 +403,25 @@ protected:
 typedef BaseConstraintRange<Physics::Contact, Physics::Contact> ContactRange;
 typedef BaseConstraintRange<Joint, Joint> JointRange;
 
-typedef BaseConstraintRange<Physics::Contact,
-                            Physics::Contact,
-                            BodyFilterPolicy<Physics::Contact>>
-    ContactBodyRange;
-typedef BaseConstraintRange<Joint, Joint, BodyFilterPolicy<Joint>>
-    JointBodyRange;
+typedef BaseConstraintRange<Physics::Contact, Physics::Contact, BodyFilterPolicy<Physics::Contact>> ContactBodyRange;
+typedef BaseConstraintRange<Joint, Joint, BodyFilterPolicy<Joint>> JointBodyRange;
 
 /// Define a range for iterating over specific range types (filters out the
 /// other types). This macro automatically declares the range for all joint
 /// types. This does however, assume that you include what joints are needed.
-#define JointType(type)                                                        \
-  typedef BaseConstraintRange<Joint, type> type##Range;                        \
-  typedef BaseConstraintRange<Joint, type, BodyFilterPolicy<type>>             \
-      type##BodyRange;                                                         \
+#define JointType(type)                                                                                                \
+  typedef BaseConstraintRange<Joint, type> type##Range;                                                                \
+  typedef BaseConstraintRange<Joint, type, BodyFilterPolicy<type>> type##BodyRange;                                    \
   typedef BaseJointGraphEdge<type> type##GraphEdge;
 
 #include "JointList.hpp"
 
 #undef JointType
 
-InList<JointEdge, &JointEdge::ColliderLink>::range
-GetJointEdges(Collider* collider);
+InList<JointEdge, &JointEdge::ColliderLink>::range GetJointEdges(Collider* collider);
 
 template <typename JointType>
-inline BaseConstraintRange<Joint, JointType>
-FilterJointRange(Collider* collider)
+inline BaseConstraintRange<Joint, JointType> FilterJointRange(Collider* collider)
 {
   return BaseConstraintRange<Joint, JointType>(GetJointEdges(collider));
 }
@@ -442,11 +429,9 @@ FilterJointRange(Collider* collider)
 ContactRange FilterContactRange(Collider* collider);
 
 template <typename JointType>
-inline BaseConstraintRange<Joint, JointType>
-FilterJointBodyRange(Collider* collider)
+inline BaseConstraintRange<Joint, JointType> FilterJointBodyRange(Collider* collider)
 {
-  return BaseConstraintRange<Joint, JointType, BodyFilterPolicy<JointType>>(
-      GetJointEdges(collider));
+  return BaseConstraintRange<Joint, JointType, BodyFilterPolicy<JointType>>(GetJointEdges(collider));
 }
 
 ContactBodyRange FilterContactBodyRange(Collider* collider);

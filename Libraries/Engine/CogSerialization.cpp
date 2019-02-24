@@ -68,19 +68,16 @@ void CogSerialization::SaveSpaceToStream(Serializer& saver, Space* space)
   SaveRangeOfObjects(saver, space->mRootCount, space->mRoots.All());
 }
 
-void CogSerialization::SaveHierarchy(Serializer& serializer,
-                                     Hierarchy* hierarchy)
+void CogSerialization::SaveHierarchy(Serializer& serializer, Hierarchy* hierarchy)
 {
   uint count = 0;
-  for (HierarchyList::range r = hierarchy->Children.All(); !r.Empty();
-       r.PopFront())
+  for (HierarchyList::range r = hierarchy->Children.All(); !r.Empty(); r.PopFront())
     ++count;
 
   SaveRangeOfObjects(serializer, count, hierarchy->Children.All());
 }
 
-void CogSerialization::SaveSelection(Serializer& saver,
-                                     MetaSelection* selection)
+void CogSerialization::SaveSelection(Serializer& saver, MetaSelection* selection)
 {
   Array<Cog*> cogs;
   FilterChildrenAndProtected(cogs, selection);
@@ -114,9 +111,7 @@ void CogSerialization::SaveSelection(Serializer& saver,
   }
 }
 
-void CogSerialization::LoadHierarchy(Serializer& serializer,
-                                     CogCreationContext* context,
-                                     Hierarchy* hierarchy)
+void CogSerialization::LoadHierarchy(Serializer& serializer, CogCreationContext* context, Hierarchy* hierarchy)
 {
   bool hadCogs = serializer.Start("Cogs", "cogs", StructureType::Object);
   Cog* parent = hierarchy->GetOwner();
@@ -162,8 +157,7 @@ String CogSerialization::SaveToStringForCopy(Cog* cog)
   return saver.GetString();
 }
 
-bool CogSerialization::PreProcessForCopy(Cog* cog,
-                                         CachedModifications& restoreState)
+bool CogSerialization::PreProcessForCopy(Cog* cog, CachedModifications& restoreState)
 {
   // If we're an Archetype, and a child of another Archetype, there's one extra
   // step we need to take before saving the object
@@ -176,13 +170,11 @@ bool CogSerialization::PreProcessForCopy(Cog* cog,
 
     // Apply all modifications to us in our parents Archetype
     Archetype* archetypeContext = archetypeContextCog->GetArchetype();
-    CachedModifications& cachedModifications =
-        archetypeContext->GetAllCachedModifications();
+    CachedModifications& cachedModifications = archetypeContext->GetAllCachedModifications();
 
     // We want to retain our local modifications
     bool combine = true;
-    cachedModifications.ApplyModificationsToChildObject(
-        archetypeContextCog, cog, combine);
+    cachedModifications.ApplyModificationsToChildObject(archetypeContextCog, cog, combine);
 
     return true;
   }
@@ -190,8 +182,7 @@ bool CogSerialization::PreProcessForCopy(Cog* cog,
   return false;
 }
 
-void CogSerialization::PostProcessAfterCopy(Cog* cog,
-                                            CachedModifications& restoreState)
+void CogSerialization::PostProcessAfterCopy(Cog* cog, CachedModifications& restoreState)
 {
   // Clear before restoring
   LocalModifications::GetInstance()->ClearModifications(cog, true, false);
@@ -323,10 +314,7 @@ void CogCreationContext::RegisterCog(Cog* cog, uint localContextId)
   {
     u64 id64 = contextId;
     String hexId = ToString(id64, false).SubStringFromByteIndices(8, 16);
-    DebugPrint("Storing ContextId: %s (%u) on \"%s\"\n",
-               hexId.c_str(),
-               contextId,
-               cog->mName.c_str());
+    DebugPrint("Storing ContextId: %s (%u) on \"%s\"\n", hexId.c_str(), contextId, cog->mName.c_str());
   }
 
   // The sub
@@ -345,10 +333,8 @@ void CogCreationContext::AssignSubContextId(Cog* cog)
     {
       u64 id64 = mCurrentSubContextId;
       String hexId = ToString(id64, false).SubStringFromByteIndices(8, 16);
-      DebugPrint("Setting Cog.SubContextId: %s (%u) on \"%s\"\n",
-                 hexId.c_str(),
-                 cog->mSubContextId,
-                 cog->mName.c_str());
+      DebugPrint(
+          "Setting Cog.SubContextId: %s (%u) on \"%s\"\n", hexId.c_str(), cog->mSubContextId, cog->mName.c_str());
     }
   }
 }

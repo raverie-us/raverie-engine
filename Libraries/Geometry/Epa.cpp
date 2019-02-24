@@ -26,8 +26,8 @@ void Epa::Init(const Simplex& simplex)
   for (unsigned i = 0; i < mFaces.Size(); ++i)
   {
     Face& face = mFaces[i];
-    face.normal = (mVertices[face.p1].cso - mVertices[face.p0].cso)
-                      .Cross(mVertices[face.p2].cso - mVertices[face.p0].cso);
+    face.normal =
+        (mVertices[face.p1].cso - mVertices[face.p0].cso).Cross(mVertices[face.p2].cso - mVertices[face.p0].cso);
     face.normal.AttemptNormalize();
   }
 
@@ -44,10 +44,7 @@ Vec3 Epa::GetClosestFaceNormal(void)
     Face& face = mFaces[i];
 
     Vec3 closest = Vec3::cZero;
-    ClosestPointOnTriangleToPoint(mVertices[face.p0].cso,
-                                  mVertices[face.p1].cso,
-                                  mVertices[face.p2].cso,
-                                  &closest);
+    ClosestPointOnTriangleToPoint(mVertices[face.p0].cso, mVertices[face.p1].cso, mVertices[face.p2].cso, &closest);
 
     float dist = -closest.Length();
     if (dist > mDistClosest)
@@ -77,8 +74,7 @@ bool Epa::Expand(CSOVertex newPoint)
 {
   // Primary terminating condition
   // When new support point is not far enough from the closest face
-  if (mFaces[mIndexClosest].normal.Dot(
-          newPoint.cso - mVertices[mFaces[mIndexClosest].p0].cso) < 0.001f)
+  if (mFaces[mIndexClosest].normal.Dot(newPoint.cso - mVertices[mFaces[mIndexClosest].p0].cso) < 0.001f)
     return false;
 
   // If point is already in the CSO, fail to expand
@@ -139,9 +135,8 @@ bool Epa::Expand(CSOVertex newPoint)
   {
     Edge& edge = mEdges[i];
     Face newFace(edge.p0, edge.p1, index);
-    newFace.normal =
-        (mVertices[newFace.p1].cso - mVertices[newFace.p0].cso)
-            .Cross(mVertices[newFace.p2].cso - mVertices[newFace.p0].cso);
+    newFace.normal = (mVertices[newFace.p1].cso - mVertices[newFace.p0].cso)
+                         .Cross(mVertices[newFace.p2].cso - mVertices[newFace.p0].cso);
     float length = newFace.normal.AttemptNormalize();
     if (length != 0)
       mFaces.PushBack(newFace);
@@ -211,9 +206,8 @@ bool Epa::DebugStep(void)
   {
     Edge& edge = mEdges[i];
     Face newFace(edge.p0, edge.p1, index);
-    newFace.normal =
-        (mVertices[newFace.p1].cso - mVertices[newFace.p0].cso)
-            .Cross(mVertices[newFace.p2].cso - mVertices[newFace.p0].cso);
+    newFace.normal = (mVertices[newFace.p1].cso - mVertices[newFace.p0].cso)
+                         .Cross(mVertices[newFace.p2].cso - mVertices[newFace.p0].cso);
     newFace.normal.AttemptNormalize();
     mFaces.PushBack(newFace);
   }
@@ -226,15 +220,12 @@ bool Epa::DebugStep(void)
 
 void Epa::DrawDebug(void)
 {
-  Zero::gDebugDraw->Add(
-      Zero::Debug::Sphere(mDebugPoint.cso, 0.01f).Color(Color::Red));
+  Zero::gDebugDraw->Add(Zero::Debug::Sphere(mDebugPoint.cso, 0.01f).Color(Color::Red));
 
   for (unsigned i = 0; i < mEdges.Size(); ++i)
   {
     Edge& edge = mEdges[i];
-    Zero::gDebugDraw->Add(
-        Zero::Debug::Line(mVertices[edge.p0].cso, mVertices[edge.p1].cso)
-            .Color(Color::Orange));
+    Zero::gDebugDraw->Add(Zero::Debug::Line(mVertices[edge.p0].cso, mVertices[edge.p1].cso).Color(Color::Orange));
   }
 
   for (unsigned i = 0; i < mFaces.Size(); ++i)
@@ -247,9 +238,7 @@ void Epa::DrawDebug(void)
       color = Color::Red;
     else
       color = Color::Blue;
-    Zero::gDebugDraw->Add(Zero::Debug::Triangle(mVertices[face.p0].cso,
-                                                mVertices[face.p1].cso,
-                                                mVertices[face.p2].cso)
+    Zero::gDebugDraw->Add(Zero::Debug::Triangle(mVertices[face.p0].cso, mVertices[face.p1].cso, mVertices[face.p2].cso)
                               .Color(color)
                               .Border(true)
                               .Alpha(50));

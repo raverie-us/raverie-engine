@@ -9,9 +9,7 @@ namespace Events
 DefineEvent(TemplateProjectPreviewUpdated);
 } // namespace Events
 
-void BuildTagSetFromTokenDelimitedList(StringParam tagData,
-                                       TagSet& tagSet,
-                                       char delimiter)
+void BuildTagSetFromTokenDelimitedList(StringParam tagData, TagSet& tagSet, char delimiter)
 {
   tagSet.Clear();
 
@@ -71,15 +69,11 @@ bool BuildId::Parse(StringParam buildName)
   return Parse(buildName, year, month, day);
 }
 
-bool BuildId::Parse(StringParam buildName,
-                    String& year,
-                    String& month,
-                    String& day)
+bool BuildId::Parse(StringParam buildName, String& year, String& month, String& day)
 {
   // Match ZeroEngineSetup.#.#.#.RevisionId
   String revisionId;
-  bool parsed =
-      ZeroBuild::ParseLegacyBuildName(buildName, year, month, day, revisionId);
+  bool parsed = ZeroBuild::ParseLegacyBuildName(buildName, year, month, day, revisionId);
   if (!parsed)
     return false;
 
@@ -110,9 +104,7 @@ String BuildId::GetMajorMinorPatchRevisionIdString() const
   return GetFullId(false, true, false);
 }
 
-String BuildId::GetFullId(bool showExperimentalBranch,
-                          bool showChangeset,
-                          bool showPlatform) const
+String BuildId::GetFullId(bool showExperimentalBranch, bool showChangeset, bool showPlatform) const
 {
   StringBuilder builder;
 
@@ -207,8 +199,7 @@ BuildUpdateState::Enum BuildId::CheckForUpdate(const BuildId& rhs) const
 bool BuildId::IsOlderThan(const BuildId& rhs) const
 {
   BuildUpdateState::Enum upgradeState = CheckForUpdate(rhs);
-  if (upgradeState == BuildUpdateState::Newer ||
-      upgradeState == BuildUpdateState::NewerBreaking)
+  if (upgradeState == BuildUpdateState::Newer || upgradeState == BuildUpdateState::NewerBreaking)
     return true;
   return false;
 }
@@ -328,8 +319,7 @@ bool ZeroBuild::CreateMetaIfNull()
   bool metaIsNull = mMetaCog == nullptr;
   if (metaIsNull)
   {
-    mMetaCog = Z::gFactory->Create(
-        Z::gEngine->GetEngineSpace(), CoreArchetypes::Empty, 0, nullptr);
+    mMetaCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), CoreArchetypes::Empty, 0, nullptr);
     mMetaCog->ClearArchetype();
   }
 
@@ -338,11 +328,8 @@ bool ZeroBuild::CreateMetaIfNull()
   return metaIsNull;
 }
 
-bool ZeroBuild::ParseLegacyBuildName(StringParam buildName,
-                                     String& year,
-                                     String& month,
-                                     String& day,
-                                     String& revisionId)
+bool ZeroBuild::ParseLegacyBuildName(
+    StringParam buildName, String& year, String& month, String& day, String& revisionId)
 {
   Matches matches;
   Regex regex("\\w*\\.(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)");
@@ -435,8 +422,7 @@ bool TemplateProject::CreateMetaIfNull()
   bool metaIsNull = mMetaCog == nullptr;
   if (metaIsNull)
   {
-    mMetaCog = Z::gFactory->Create(
-        Z::gEngine->GetEngineSpace(), CoreArchetypes::Empty, 0, nullptr);
+    mMetaCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), CoreArchetypes::Empty, 0, nullptr);
     mMetaCog->ClearArchetype();
   }
 
@@ -488,8 +474,7 @@ float TemplateProject::GetSortPriority()
 String TemplateProject::GetLocalTemplateFileName()
 {
   ZeroTemplate* zeroTemplate = GetZeroTemplate(true);
-  return BuildString(zeroTemplate->GetFullTemplateVersionName(),
-                     TemplateProject::mExtensionWithDot);
+  return BuildString(zeroTemplate->GetFullTemplateVersionName(), TemplateProject::mExtensionWithDot);
 }
 
 String TemplateProject::GetInstalledTemplatePath()
@@ -509,8 +494,7 @@ void TemplateProject::DownloadIcon(VersionSelector* versionSelector)
   // When we finish downloading the preview image we need to update our texture
   // (on the main thread)
   BackgroundTask* task = versionSelector->DownloadTemplateIcon(this);
-  ConnectThisTo(
-      task, Events::BackgroundTaskCompleted, OnPreviewImageDownloaded);
+  ConnectThisTo(task, Events::BackgroundTaskCompleted, OnPreviewImageDownloaded);
 }
 
 void TemplateProject::LoadLocalImages()
@@ -522,8 +506,7 @@ void TemplateProject::LoadLocalImages()
   {
     LoadImageFromDiskTaskJob* job = new LoadImageFromDiskTaskJob(iconPath);
     BackgroundTask* task = Z::gBackgroundTasks->Execute(job, "Load preview");
-    ConnectThisTo(
-        task, Events::BackgroundTaskCompleted, OnPreviewImageDownloaded);
+    ConnectThisTo(task, Events::BackgroundTaskCompleted, OnPreviewImageDownloaded);
   }
   else
   {

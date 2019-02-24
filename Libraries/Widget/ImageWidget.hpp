@@ -12,9 +12,7 @@ public:
   ZilchDeclareType(ImageWidget, TypeCopyMode::ReferenceType);
 
   SlicedDefinition* mDef;
-  ImageWidget(Composite* parent,
-              StringParam style,
-              AttachType::Enum attachType = AttachType::Normal);
+  ImageWidget(Composite* parent, StringParam style, AttachType::Enum attachType = AttachType::Normal);
 
   Thickness GetBorderThickness() override;
   Vec2 GetMinSize() override;

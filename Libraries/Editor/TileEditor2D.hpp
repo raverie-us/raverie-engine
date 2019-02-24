@@ -210,8 +210,7 @@ public:
   /// Component Interface.
   void Initialize(CogInitializer& initializer) override;
 
-  void GeneratePhysicsMeshResource(const Array<Vec3>& originalPoints,
-                                   StringParam name);
+  void GeneratePhysicsMeshResource(const Array<Vec3>& originalPoints, StringParam name);
   void OnSelectionFinal(SelectionChangedEvent* event);
   void SetTileMapPalette(TilePaletteSource* tilePalette);
 

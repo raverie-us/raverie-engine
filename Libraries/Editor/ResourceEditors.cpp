@@ -104,8 +104,7 @@ void EditSampleCurve(Editor* editor, Resource* resource)
 void EditColorGradient(Editor* editor, Resource* resource)
 {
   ColorGradient* gradient = (ColorGradient*)resource;
-  ColorGradientEditor* gradientEditor =
-      new ColorGradientEditor(editor, gradient);
+  ColorGradientEditor* gradientEditor = new ColorGradientEditor(editor, gradient);
   gradientEditor->SetName(gradient->Name);
   gradientEditor->SetSize(Pixels(375, 80));
   editor->AddManagedWidget(gradientEditor, DockArea::Floating, true);
@@ -135,9 +134,7 @@ void EditMultiConvexMesh(Editor* editor, Resource* resource)
   // prevent the user from editing the default resource
   if (mesh == MultiConvexMeshManager::GetInstance()->GetDefaultResource())
   {
-    DoNotifyWarning(
-        "Cannot edit default resource.",
-        "Please add a new MultiConvexMesh resource to start editing");
+    DoNotifyWarning("Cannot edit default resource.", "Please add a new MultiConvexMesh resource to start editing");
     return;
   }
 

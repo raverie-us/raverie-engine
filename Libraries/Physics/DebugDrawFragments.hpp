@@ -20,11 +20,7 @@ void DrawArc(Vec3Param center,
              ByteColor color,
              real radianStepSize,
              bool leftHanded = false);
-void DrawHinge(Joint* joint,
-               AnchorAtom& anchors,
-               Mat3Param basis0,
-               Mat3Param basis1,
-               uint defaultPerspective = 0);
+void DrawHinge(Joint* joint, AnchorAtom& anchors, Mat3Param basis0, Mat3Param basis1, uint defaultPerspective = 0);
 
 } // namespace Physics
 

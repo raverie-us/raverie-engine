@@ -143,8 +143,7 @@ public:
 template <typename T>
 struct MoveWithoutDestructionOperator<UniquePointer<T>>
 {
-  static inline void MoveWithoutDestruction(UniquePointer<T>* dest,
-                                            UniquePointer<T>* source)
+  static inline void MoveWithoutDestruction(UniquePointer<T>* dest, UniquePointer<T>* source)
   {
     memcpy(dest, source, sizeof(UniquePointer<T>));
   }

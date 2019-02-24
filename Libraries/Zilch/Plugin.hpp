@@ -89,10 +89,7 @@ public:
   // will attempt to make a local/temporary copy so that dynamic reloading can
   // be done (on certain platforms) This ideally prevents our program from
   // locking the plugin file
-  static LibraryRef LoadFromFile(Status& status,
-                                 Module& dependencies,
-                                 StringParam filePath,
-                                 void* userData = nullptr);
+  static LibraryRef LoadFromFile(Status& status, Module& dependencies, StringParam filePath, void* userData = nullptr);
   static void LoadFromDirectory(Status& status,
                                 Module& dependencies,
                                 Array<LibraryRef>& pluginsOut,
@@ -170,9 +167,7 @@ public:
 
   // Find a function by mangled name and asserts if it cannot find it (function
   // name is intentionally a cstr)
-  Function* FindFunction(GuidType functionHash,
-                         const char* functionName,
-                         StringParam typeName);
+  Function* FindFunction(GuidType functionHash, const char* functionName, StringParam typeName);
 
 private:
   HashMap<DelegateType*, GuidType, DelegateTypePolicy> DelegateTypeToId;
@@ -188,8 +183,7 @@ ZeroShared BoundType* FindLibraryType(LibraryRef library, const char* name);
 // provided library with the specified name Returns the patched bound type, else
 // nullptr
 template <typename T>
-ZeroSharedTemplate BoundType* PatchLibraryType(LibraryRef library,
-                                               const char* name)
+ZeroSharedTemplate BoundType* PatchLibraryType(LibraryRef library, const char* name)
 {
   BoundType*& outputType = ZilchTypeId(T);
 
@@ -214,9 +208,7 @@ class ZeroShared NativeName
 {
 public:
   NativeName();
-  NativeName(StringParam className,
-             StringParam parameterName,
-             StringParam returnName);
+  NativeName(StringParam className, StringParam parameterName, StringParam returnName);
   String Class;
   String Parameter;
   String Return;
@@ -286,51 +278,50 @@ private:
 
 // Use this in a single translational unit (cpp) that can see the declaration of
 // the above plugin
-#  define ZilchDefinePluginInterface(PluginClass)                              \
-    ZeroExportC long GetZilchPluginVersion()                                   \
-    {                                                                          \
-      return 0;                                                                \
-    }                                                                          \
-    ZeroExportC Zilch::Plugin* CreateZilchPlugin()                             \
-    {                                                                          \
-      return new PluginClass();                                                \
+#  define ZilchDefinePluginInterface(PluginClass)                                                                      \
+    ZeroExportC long GetZilchPluginVersion()                                                                           \
+    {                                                                                                                  \
+      return 0;                                                                                                        \
+    }                                                                                                                  \
+    ZeroExportC Zilch::Plugin* CreateZilchPlugin()                                                                     \
+    {                                                                                                                  \
+      return new PluginClass();                                                                                        \
     }
 
 // This is a common macro for implementing a single static library and plugin in
 // one
-#  define ZilchDeclareStaticLibraryAndPlugin(LibraryName, PluginName, ...)     \
-    ZilchDeclareStaticLibrary(                                                 \
-        LibraryName, ZilchNoNamespace, ZeroNoImportExport, __VA_ARGS__);       \
-    class PluginName : public ZZ::Plugin                                       \
-    {                                                                          \
-    public:                                                                    \
-      ~PluginName() override;                                                  \
-      void PreBuild(ZZ::BuildEvent* event) override;                           \
-      ZZ::LibraryRef GetLibrary() override;                                    \
-      void Initialize() override;                                              \
-      void Uninitialize() override;                                            \
+#  define ZilchDeclareStaticLibraryAndPlugin(LibraryName, PluginName, ...)                                             \
+    ZilchDeclareStaticLibrary(LibraryName, ZilchNoNamespace, ZeroNoImportExport, __VA_ARGS__);                         \
+    class PluginName : public ZZ::Plugin                                                                               \
+    {                                                                                                                  \
+    public:                                                                                                            \
+      ~PluginName() override;                                                                                          \
+      void PreBuild(ZZ::BuildEvent* event) override;                                                                   \
+      ZZ::LibraryRef GetLibrary() override;                                                                            \
+      void Initialize() override;                                                                                      \
+      void Uninitialize() override;                                                                                    \
     };
 
 // This is a common macro for implementing a single static library and plugin in
 // one
-#  define ZilchDefineStaticLibraryAndPlugin(LibraryName, PluginName, ...)      \
-    ZilchDefinePluginInterface(PluginName);                                    \
-    PluginName::~PluginName()                                                  \
-    {                                                                          \
-      LibraryName::Destroy();                                                  \
-    }                                                                          \
-    void PluginName::PreBuild(ZZ::BuildEvent* event)                           \
-    {                                                                          \
-      __VA_ARGS__;                                                             \
-      if (LibraryName::Instance == nullptr)                                    \
-        LibraryName::InitializeInstance();                                     \
-      ZZ::LibraryRef library = LibraryName::GetInstance().GetLibrary();        \
-      library->UserData = this->UserData;                                      \
-    }                                                                          \
-    ZZ::LibraryRef PluginName::GetLibrary()                                    \
-    {                                                                          \
-      return LibraryName::GetInstance().GetLibrary();                          \
-    }                                                                          \
+#  define ZilchDefineStaticLibraryAndPlugin(LibraryName, PluginName, ...)                                              \
+    ZilchDefinePluginInterface(PluginName);                                                                            \
+    PluginName::~PluginName()                                                                                          \
+    {                                                                                                                  \
+      LibraryName::Destroy();                                                                                          \
+    }                                                                                                                  \
+    void PluginName::PreBuild(ZZ::BuildEvent* event)                                                                   \
+    {                                                                                                                  \
+      __VA_ARGS__;                                                                                                     \
+      if (LibraryName::Instance == nullptr)                                                                            \
+        LibraryName::InitializeInstance();                                                                             \
+      ZZ::LibraryRef library = LibraryName::GetInstance().GetLibrary();                                                \
+      library->UserData = this->UserData;                                                                              \
+    }                                                                                                                  \
+    ZZ::LibraryRef PluginName::GetLibrary()                                                                            \
+    {                                                                                                                  \
+      return LibraryName::GetInstance().GetLibrary();                                                                  \
+    }                                                                                                                  \
     ZilchDefineStaticLibrary(LibraryName)
 
 #  define ZilchDependencyStub(Name) HookUp##Name(event);

@@ -51,9 +51,7 @@ void RemoveAndDecRef(InActionList& list, Action* action)
 
 void AddToListAndIncRef(InActionList& list, Action* action)
 {
-  ReturnIf(action->mFlags.IsSet(ActionFlag::Linked),
-           ,
-           "Invalid Add. Action is already on a list.");
+  ReturnIf(action->mFlags.IsSet(ActionFlag::Linked), , "Invalid Add. Action is already on a list.");
   action->mFlags.SetFlag(ActionFlag::Linked);
   list.PushBack(action);
   action->AddReference();

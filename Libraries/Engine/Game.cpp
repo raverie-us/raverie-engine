@@ -96,8 +96,7 @@ void GameSession::Initialize(CogInitializer& initializer)
   mCreationFlags = initializer.Flags;
 
   if (!IsEditorMode())
-    ZPrintFilter(Filter::DefaultFilter,
-                 "---------------- Begin Game ----------------\n");
+    ZPrintFilter(Filter::DefaultFilter, "---------------- Begin Game ----------------\n");
 
   Cog::Initialize(initializer);
 }
@@ -113,7 +112,8 @@ void GameSession::Destroy()
   // we're destroyed, so set the flag before destroying all the Spaces
   mFlags.SetFlag(CogFlags::Destroyed);
 
-  forRange(Space * space, mTrackedSpaces.AllValues()) space->Destroy();
+  forRange (Space* space, mTrackedSpaces.AllValues())
+    space->Destroy();
 
   // Cog::Destroy will do logic based on whether or not we're destroyed, so set
   // it back to false to allow normal destruction
@@ -195,7 +195,7 @@ void GameSession::Step()
 {
   mPaused = true;
 
-  forRange(Space * space, mTrackedSpaces.AllValues())
+  forRange (Space* space, mTrackedSpaces.AllValues())
   {
     TimeSpace* timeSpace = space->has(TimeSpace);
     timeSpace->Step();
@@ -217,8 +217,7 @@ Space* GameSession::CreateEditorSpace(Archetype* archetype)
   return CreateSpaceFlags(archetype, CreationFlags::Editing);
 }
 
-Space* GameSession::CreateSpaceFlags(Archetype* archetype,
-                                     CreationFlags::Type flags)
+Space* GameSession::CreateSpaceFlags(Archetype* archetype, CreationFlags::Type flags)
 {
   if (!archetype)
     return nullptr;
@@ -227,15 +226,13 @@ Space* GameSession::CreateSpaceFlags(Archetype* archetype,
   if (this->GetMarkedForDestruction())
   {
     // Don't allow objects to be created
-    DoNotifyException(
-        "GameSession",
-        "Cannot create a Space in a GameSession that is being destroyed. Check "
-        "the MarkedForDestruction property on the GameSession.");
+    DoNotifyException("GameSession",
+                      "Cannot create a Space in a GameSession that is being destroyed. Check "
+                      "the MarkedForDestruction property on the GameSession.");
     return nullptr;
   }
 
-  Space* space =
-      Z::gFactory->CreateSpace(archetype->ResourceIdName, flags, this);
+  Space* space = Z::gFactory->CreateSpace(archetype->ResourceIdName, flags, this);
   if (space && !space->GetMarkedForDestruction())
     InternalAdd(space);
   return space;
@@ -250,15 +247,13 @@ Space* GameSession::CreateNamedSpace(StringParam name, Archetype* archetype)
   if (this->GetMarkedForDestruction())
   {
     // Don't allow objects to be created
-    DoNotifyException(
-        "GameSession",
-        "Cannot create a Space in a GameSession that is being destroyed. Check "
-        "the MarkedForDestruction property on the GameSession.");
+    DoNotifyException("GameSession",
+                      "Cannot create a Space in a GameSession that is being destroyed. Check "
+                      "the MarkedForDestruction property on the GameSession.");
     return nullptr;
   }
 
-  Space* space = Z::gFactory->CreateSpace(
-      archetype->ResourceIdName, CreationFlags::Default, this);
+  Space* space = Z::gFactory->CreateSpace(archetype->ResourceIdName, CreationFlags::Default, this);
   if (space && !space->GetMarkedForDestruction())
   {
     InternalAdd(space);
@@ -310,8 +305,8 @@ void GameSession::SetInEditor(bool inEditor)
 
 void GameSession::DispatchOnSpaces(StringParam eventName, Event* event)
 {
-  forRange(Space * space, mTrackedSpaces.AllValues())
-      space->DispatchEvent(eventName, event);
+  forRange (Space* space, mTrackedSpaces.AllValues())
+    space->DispatchEvent(eventName, event);
 }
 
 Vec2 GameSession::GetResolution()
@@ -340,7 +335,7 @@ void GameSession::EditSpaces()
 
   Level* editLevel = Z::gRuntimeEditor->GetEditingLevel();
   Space* focusSpace = nullptr;
-  forRange(Space * space, mTrackedSpaces.AllValues())
+  forRange (Space* space, mTrackedSpaces.AllValues())
   {
     Z::gRuntimeEditor->OpenEditorViewport(space);
     // check if the current space is the one currently being edited

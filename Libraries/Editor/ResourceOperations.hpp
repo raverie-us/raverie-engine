@@ -8,15 +8,13 @@ namespace Zero
 // content system and the resource system to manage resources for the editor.
 
 // Add a new resource all resource adding goes through this function
-Resource* AddNewResource(ResourceManager* resourceManager,
-                         ResourceAdd& resourceAdd);
+Resource* AddNewResource(ResourceManager* resourceManager, ResourceAdd& resourceAdd);
 
 // Add a resource to the current project from a file
 Resource* AddResourceFromFile(StringParam filePath, StringParam resourceType);
 
 // Add a resources to the current project from  files
-void AddResourcesFromFiles(const Array<String>& files,
-                           StringParam resourceType);
+void AddResourcesFromFiles(const Array<String>& files, StringParam resourceType);
 
 // Duplicate a resource
 Resource* DuplicateResource(Resource* resource, StringParam newName = String());
@@ -40,9 +38,7 @@ Resource* LoadResourceFromNewContentItem(ResourceManager* resourceManager,
                                          Resource* resource);
 
 // Get what the file name should be for this resource
-String GetResourceFileName(ResourceManager* resourceManager,
-                           StringParam resourceName,
-                           ContentItem* current = NULL);
+String GetResourceFileName(ResourceManager* resourceManager, StringParam resourceName, ContentItem* current = NULL);
 
 // Where to place deleted files
 String GetEditorTrash();

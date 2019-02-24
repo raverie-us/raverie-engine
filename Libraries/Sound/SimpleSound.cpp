@@ -26,10 +26,7 @@ ZilchDefineType(SimpleSound, builder, type)
   ZilchBindMethod(Stop);
 }
 
-SimpleSound::SimpleSound() :
-    mInstance(nullptr),
-    mStartPlaying(true),
-    mPositional(false)
+SimpleSound::SimpleSound() : mInstance(nullptr), mStartPlaying(true), mPositional(false)
 {
 }
 

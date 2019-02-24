@@ -69,7 +69,7 @@ String PropertyPath::GetStringPath() const
 {
   StringBuilder builder;
   bool first = true;
-  forRange(Entry & entry, mPath.All())
+  forRange (Entry& entry, mPath.All())
   {
     if (entry.mType == PropertyPathType::Index)
     {
@@ -116,8 +116,7 @@ Handle PropertyPath::GetLeafInstance(HandleParam rootInstance) const
 Property* PropertyPath::GetPropertyFromLeaf(HandleParam leafInstance) const
 {
   String leafPropertyName = GetLeafPropertyName();
-  return leafInstance.StoredType->GetProperty(leafPropertyName,
-                                              Members::InheritedInstanceStatic);
+  return leafInstance.StoredType->GetProperty(leafPropertyName, Members::InheritedInstanceStatic);
 }
 
 Property* PropertyPath::GetPropertyFromRoot(HandleParam rootInstance) const
@@ -174,8 +173,7 @@ void PropertyPath::AddPropertyToPath(StringParam propertyName)
   mPath.PushBack(Entry(propertyName, PropertyPathType::Property));
 }
 
-void PropertyPath::GetInstanceHierarchy(HandleParam rootInstance,
-                                        Array<Handle>* objects) const
+void PropertyPath::GetInstanceHierarchy(HandleParam rootInstance, Array<Handle>* objects) const
 {
   GetLeafInstanceInternal(rootInstance, objects);
 }
@@ -188,11 +186,8 @@ Handle GetComponent(HandleParam parent, StringParam componentName)
   if (composition)
   {
     // Look up the Component type
-    BoundType* componentMeta =
-        MetaDatabase::GetInstance()->FindType(componentName);
-    ReturnIf(componentMeta == nullptr,
-             nullptr,
-             "Invalid Component type in property path.");
+    BoundType* componentMeta = MetaDatabase::GetInstance()->FindType(componentName);
+    ReturnIf(componentMeta == nullptr, nullptr, "Invalid Component type in property path.");
 
     // Query the composition for that component
     Handle componentInstance = composition->GetComponent(parent, componentMeta);
@@ -202,8 +197,7 @@ Handle GetComponent(HandleParam parent, StringParam componentName)
   return Handle();
 }
 
-Handle PropertyPath::GetLeafInstanceInternal(HandleParam instance,
-                                             Array<Handle>* objects) const
+Handle PropertyPath::GetLeafInstanceInternal(HandleParam instance, Array<Handle>* objects) const
 {
   Handle currentInstance = instance;
 
@@ -232,8 +226,7 @@ Handle PropertyPath::GetLeafInstanceInternal(HandleParam instance,
     else // entry.mType == PropertyPathType::Index
     {
       // We can only get the value from an index with a composition
-      if (MetaArray* array =
-              currentInstance.StoredType->HasInherited<MetaArray>())
+      if (MetaArray* array = currentInstance.StoredType->HasInherited<MetaArray>())
       {
         Any value = array->GetValue(currentInstance, entry.mIndex);
 
@@ -250,9 +243,7 @@ Handle PropertyPath::GetLeafInstanceInternal(HandleParam instance,
       }
     }
 
-    ReturnIf(currentInstance.StoredType == nullptr,
-             Handle(),
-             "Object hierarchy does not match property path.");
+    ReturnIf(currentInstance.StoredType == nullptr, Handle(), "Object hierarchy does not match property path.");
 
     if (objects)
       objects->PushBack(currentInstance);
@@ -274,8 +265,7 @@ size_t PropertyPath::Hash() const
   return hash;
 }
 
-PropertPathHandle::PropertPathHandle(HandleParam rootObject,
-                                     PropertyPathParam path) :
+PropertPathHandle::PropertPathHandle(HandleParam rootObject, PropertyPathParam path) :
     mRootObject(rootObject),
     mPath(path)
 {

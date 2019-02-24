@@ -15,10 +15,9 @@ public:
   bool mWindowCentered = false;
 
   // If changes are ever made to these flags, all platforms must be considered.
-  WindowStyleFlags::Enum mWindowStyle = (WindowStyleFlags::Enum)(
-      WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar |
-      WindowStyleFlags::TitleBar | WindowStyleFlags::Resizable |
-      WindowStyleFlags::Close | WindowStyleFlags::ClientOnly);
+  WindowStyleFlags::Enum mWindowStyle =
+      (WindowStyleFlags::Enum)(WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar |
+                               WindowStyleFlags::Resizable | WindowStyleFlags::Close | WindowStyleFlags::ClientOnly);
   Cog* mWindowSettingsFromProjectCog = nullptr;
 
   bool mUseSplashScreen = false;

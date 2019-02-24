@@ -102,7 +102,7 @@ struct TileMapSourceLoadPattern
     Array<Guid> collision;
     Array<bool> merge;
 
-    forRange(typename SourceType::value_type pair, source->mData.All())
+    forRange (typename SourceType::value_type pair, source->mData.All())
     {
       IntVec2 gridPos = pair.first;
       TileMap::Tile tile = pair.second;

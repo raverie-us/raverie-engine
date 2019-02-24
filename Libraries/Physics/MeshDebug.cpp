@@ -60,11 +60,7 @@ void MeshDebug::DrawTriangles()
   mMesh->DrawFaces(mat, color);
 }
 
-void MeshDebug::DrawVoronoiRegion(Vec3Param p0,
-                                  Vec3Param p1,
-                                  real angle,
-                                  Vec3Param triNormal,
-                                  Mat4Param transform)
+void MeshDebug::DrawVoronoiRegion(Vec3Param p0, Vec3Param p1, real angle, Vec3Param triNormal, Mat4Param transform)
 {
   if (angle < Math::cTwoPi)
   {
@@ -76,10 +72,8 @@ void MeshDebug::DrawVoronoiRegion(Vec3Param p0,
     Vec3 midPoint = p1 + axis * edge.Length() * real(.5);
 
     midPoint = Math::TransformPoint(transform, midPoint);
-    rotNormal =
-        Math::TransformNormal(transform, rotNormal).Normalized() * real(.25);
-    gDebugDraw->Add(
-        Debug::Line(midPoint, midPoint + rotNormal).Color(Color::Red));
+    rotNormal = Math::TransformNormal(transform, rotNormal).Normalized() * real(.25);
+    gDebugDraw->Add(Debug::Line(midPoint, midPoint + rotNormal).Color(Color::Red));
   }
 }
 
@@ -136,13 +130,10 @@ void MeshDebug::DrawVectorAtPoint(Vec3Param start, Vec3Param dir, Vec3Param vec)
   Vec3 contactPoint = GetPointFromCastOnTriangle(triIndex, start, dir);
 
   gDebugDraw->Add(Debug::Sphere(contactPoint, real(.01)).Color(Color::Green));
-  gDebugDraw->Add(
-      Debug::Line(contactPoint, contactPoint + vec).Color(Color::Blue));
+  gDebugDraw->Add(Debug::Line(contactPoint, contactPoint + vec).Color(Color::Blue));
 }
 
-void MeshDebug::TestManifoldPoint(Vec3Param start,
-                                  Vec3Param dir,
-                                  Vec3Param contactNormal)
+void MeshDebug::TestManifoldPoint(Vec3Param start, Vec3Param dir, Vec3Param contactNormal)
 {
   uint triIndex = GetTriangleIndexFromCast(start, dir);
   Vec3 contactPoint = GetPointFromCastOnTriangle(triIndex, start, dir);
@@ -205,9 +196,7 @@ Vec3 MeshDebug::GetTriangleNormal(uint index)
     return mHeightMap->GetTriangle(index).GetNormal();
 }
 
-Vec3 MeshDebug::GetPointFromCastOnTriangle(uint index,
-                                           Vec3Param start,
-                                           Vec3Param dir)
+Vec3 MeshDebug::GetPointFromCastOnTriangle(uint index, Vec3Param start, Vec3Param dir)
 {
   CacheData();
 
@@ -259,10 +248,7 @@ void MeshDebug::DrawTriangleFromCast(Vec3Param start, Vec3Param dir)
   DrawTriangleVoronoiRegion(index);
 }
 
-void MeshDebug::GenerateInfoForTriangles(Vec3Param start1,
-                                         Vec3Param dir1,
-                                         Vec3Param start2,
-                                         Vec3Param dir2)
+void MeshDebug::GenerateInfoForTriangles(Vec3Param start1, Vec3Param dir1, Vec3Param start2, Vec3Param dir2)
 {
   CacheData();
 

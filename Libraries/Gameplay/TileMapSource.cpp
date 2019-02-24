@@ -31,14 +31,11 @@ void TileMapSource::Unload()
 }
 
 ImplementResourceManager(TileMapSourceManager, TileMapSource);
-TileMapSourceManager::TileMapSourceManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+TileMapSourceManager::TileMapSourceManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   this->mNoFallbackNeeded = true;
   mExtension = "bin";
-  AddLoader(
-      "TileMapSource",
-      new ChunkFileLoader<TileMapSourceManager, TileMapSourceLoadPattern>());
+  AddLoader("TileMapSource", new ChunkFileLoader<TileMapSourceManager, TileMapSourceLoadPattern>());
 }
 
 } // namespace Zero

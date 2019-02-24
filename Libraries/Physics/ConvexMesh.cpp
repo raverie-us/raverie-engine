@@ -35,8 +35,7 @@ void ConvexMesh::Initialize(void)
 void ConvexMesh::OnResourceModified()
 {
   ConvexMeshManager* manager = (ConvexMeshManager*)GetManager();
-  manager->mModifiedMeshes.PushBack(
-      ConvexMeshManager::ConvexMeshReference(this));
+  manager->mModifiedMeshes.PushBack(ConvexMeshManager::ConvexMeshReference(this));
 }
 
 HandleOf<ConvexMesh> ConvexMesh::CreateRuntime()
@@ -44,9 +43,7 @@ HandleOf<ConvexMesh> ConvexMesh::CreateRuntime()
   return ConvexMeshManager::CreateRuntime();
 }
 
-bool ConvexMesh::CastRay(const Ray& localRay,
-                         ProxyResult& result,
-                         BaseCastFilter& filter)
+bool ConvexMesh::CastRay(const Ray& localRay, ProxyResult& result, BaseCastFilter& filter)
 {
   return GenericPhysicsMesh::CastRayGeneric(localRay, result, filter);
 }
@@ -81,15 +78,13 @@ void ConvexMesh::BuildFromPointSet(const Vec3Array& points)
   int currentVertexId = 0;
   HashMap<Vertex*, int> vertexIdMap;
   Array<int> faceVertexIndices;
-  for (FaceList::range faces = hull3D.GetFaces(); !faces.Empty();
-       faces.PopFront())
+  for (FaceList::range faces = hull3D.GetFaces(); !faces.Empty(); faces.PopFront())
   {
     // Clear the list of vertices for this face
     faceVertexIndices.Clear();
 
     Face* face = &faces.Front();
-    for (EdgeList::range edges = face->mEdges.All(); !edges.Empty();
-         edges.PopFront())
+    for (EdgeList::range edges = face->mEdges.All(); !edges.Empty(); edges.PopFront())
     {
       Vertex* vertex = edges.Front().mTail;
       int vertexId = 0;
@@ -120,8 +115,7 @@ void ConvexMesh::BuildFromPointSet(const Vec3Array& points)
 
 ImplementResourceManager(ConvexMeshManager, ConvexMesh);
 
-ConvexMeshManager::ConvexMeshManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+ConvexMeshManager::ConvexMeshManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   AddLoader("ConvexMesh", new BinaryDataFileLoader<ConvexMeshManager>());
   mCategory = "Physics";

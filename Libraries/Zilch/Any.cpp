@@ -338,8 +338,7 @@ byte* Any::Dereference() const
 
 void Any::AssignFrom(const byte* data, Type* type)
 {
-  ErrorIf(type == nullptr,
-          "Cannot Assign the 'Any' to a null type, use Clear instead");
+  ErrorIf(type == nullptr, "Cannot Assign the 'Any' to a null type, use Clear instead");
 
   // Avoid self assignment
   if (this->GetData() == data)
@@ -364,8 +363,7 @@ void Any::AssignFrom(const byte* data, Type* type)
 
 void Any::DefaultConstruct(Type* type)
 {
-  ErrorIf(type == nullptr,
-          "Cannot Assign the 'Any' to a null type, use Clear instead");
+  ErrorIf(type == nullptr, "Cannot Assign the 'Any' to a null type, use Clear instead");
 
   // Destruct any memory we are currently holding
   this->Clear();

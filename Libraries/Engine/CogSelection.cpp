@@ -88,30 +88,24 @@ bool IsAncestorPresent(Cog* cog, const Array<Handle>& metaObjects)
   return false;
 }
 
-void FilterChildrenAndProtected(Array<Cog*>& cogs,
-                                MetaSelection* selection,
-                                Array<Cog*>* filteredCogs)
+void FilterChildrenAndProtected(Array<Cog*>& cogs, MetaSelection* selection, Array<Cog*>* filteredCogs)
 {
   MetaSelection::rangeType<Cog> r = selection->AllOfType<Cog>();
   for (; !r.Empty(); r.PopFront())
   {
     Cog* object = r.Front();
-    if (object && !object->mFlags.IsSet(CogFlags::Protected) &&
-        !IsAncestorInSelection(object, selection))
+    if (object && !object->mFlags.IsSet(CogFlags::Protected) && !IsAncestorInSelection(object, selection))
       cogs.PushBack(object);
     else if (filteredCogs && object)
       filteredCogs->PushBack(object);
   }
 }
 
-void FilterChildrenAndProtected(const Array<CogId>& cogsIn,
-                                Array<Cog*>& cogsOut,
-                                Array<Cog*>* filteredCogs)
+void FilterChildrenAndProtected(const Array<CogId>& cogsIn, Array<Cog*>& cogsOut, Array<Cog*>* filteredCogs)
 {
-  forRange(Cog * object, cogsIn.All())
+  forRange (Cog* object, cogsIn.All())
   {
-    if (object && !object->mFlags.IsSet(CogFlags::Protected) &&
-        !IsAncestorPresent(object, cogsIn))
+    if (object && !object->mFlags.IsSet(CogFlags::Protected) && !IsAncestorPresent(object, cogsIn))
       cogsOut.PushBack(object);
     else if (filteredCogs && object)
       filteredCogs->PushBack(object);
@@ -122,11 +116,10 @@ void FilterChildrenAndProtected(const Array<Handle>& objectsIn,
                                 Array<Handle>& objectsOut,
                                 Array<Handle>* filteredObjects)
 {
-  forRange(Handle object, objectsIn.All())
+  forRange (Handle object, objectsIn.All())
   {
     Cog* cog = object.Get<Cog*>();
-    if (cog && !cog->mFlags.IsSet(CogFlags::Protected) &&
-        !IsAncestorPresent(cog, objectsIn))
+    if (cog && !cog->mFlags.IsSet(CogFlags::Protected) && !IsAncestorPresent(cog, objectsIn))
       objectsOut.PushBack(object);
     else if (filteredObjects && cog)
       filteredObjects->PushBack(cog);

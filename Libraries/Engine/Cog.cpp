@@ -51,8 +51,7 @@ String CogDisplayName(HandleParam object)
 }
 
 // Cog
-Memory::Heap* Cog::sHeap =
-    new Memory::Heap("Cogs", Memory::GetNamedHeap("Objects"));
+Memory::Heap* Cog::sHeap = new Memory::Heap("Cogs", Memory::GetNamedHeap("Objects"));
 
 ZilchDefineType(Cog, builder, type)
 {
@@ -84,13 +83,9 @@ ZilchDefineType(Cog, builder, type)
   ZilchBindDefaultConstructor();
 
   // Properties
-  ZilchBindGetterSetterProperty(Name)->AddAttribute(
-      PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(Archetype)
-      ->Add(new CogArchetypeExtension())
-      ->Add(new CogArchetypePropertyFilter());
-  ZilchBindGetterProperty(BaseArchetype)
-      ->Add(new MetaEditorResource(false, false, "", true));
+  ZilchBindGetterSetterProperty(Name)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(Archetype)->Add(new CogArchetypeExtension())->Add(new CogArchetypePropertyFilter());
+  ZilchBindGetterProperty(BaseArchetype)->Add(new MetaEditorResource(false, false, "", true));
 
   ZilchBindGetter(Space);
   ZilchBindGetter(LevelSettings);
@@ -221,8 +216,8 @@ void Cog::ForceDestroy()
   // Clean up local modifications
   LocalModifications* modifications = LocalModifications::GetInstance();
   modifications->ClearModifications(this, false, false);
-  forRange(Component * component, GetComponents())
-      modifications->ClearModifications(component, false, false);
+  forRange (Component* component, GetComponents())
+    modifications->ClearModifications(component, false, false);
 
   // Signal the factory that this object needs to be destroyed
   // this will happen at the end of the frame. It's important
@@ -261,8 +256,7 @@ void Cog::SetName(StringParam newName)
 
   String sanitizedName = SanitizeName(newName);
   if (sanitizedName != newName)
-    DoNotifyWarning("Invalid Symbols in Cog Name",
-                    "Invalid symbols were removed from cog name");
+    DoNotifyWarning("Invalid Symbols in Cog Name", "Invalid symbols were removed from cog name");
 
   if (mSpace)
   {
@@ -310,8 +304,7 @@ Cog* Cog::GetLevelSettings()
   Space* space = GetSpace();
   if (space)
   {
-    Cog* levelSettings =
-        GetSpace()->FindObjectByName(SpecialCogNames::LevelSettings);
+    Cog* levelSettings = GetSpace()->FindObjectByName(SpecialCogNames::LevelSettings);
 
     return levelSettings;
   }
@@ -340,12 +333,9 @@ Cog* Cog::Clone()
 
 void Cog::Serialize(Serializer& stream)
 {
-  CogSavingContext* context =
-      static_cast<CogSavingContext*>(stream.GetSerializationContext());
+  CogSavingContext* context = static_cast<CogSavingContext*>(stream.GetSerializationContext());
 
-  ErrorIf(context != nullptr &&
-              context->CurrentContextMode != ContextMode::Saving,
-          "Not a saving context");
+  ErrorIf(context != nullptr && context->CurrentContextMode != ContextMode::Saving, "Not a saving context");
 
   // We need to save out the name differently in the legacy format (to support
   // old projects)
@@ -392,8 +382,7 @@ void Cog::Serialize(Serializer& stream)
     // Should we serialize the component?
     bool shouldSerialize =
         range.Front()->ShouldSerialize() &&
-        (!shouldSerializeCallback || shouldSerializeCallback(this, component) ==
-                                         SerializeCheck::Serialized);
+        (!shouldSerializeCallback || shouldSerializeCallback(this, component) == SerializeCheck::Serialized);
 
     if (shouldSerialize)
       stream.SerializePolymorphic(*component);
@@ -403,8 +392,7 @@ void Cog::Serialize(Serializer& stream)
   if (Hierarchy* hierarchy = has(Hierarchy))
   {
     bool shouldSerialize =
-        !shouldSerializeCallback ||
-        shouldSerializeCallback(this, hierarchy) == SerializeCheck::Serialized;
+        !shouldSerializeCallback || shouldSerializeCallback(this, hierarchy) == SerializeCheck::Serialized;
 
     if (shouldSerialize)
     {
@@ -519,11 +507,11 @@ void Cog::Initialize(CogInitializer& initializer)
     component->Initialize(initializer);
 
     BoundType* componentType = ZilchVirtualTypeId(component);
-    forRange(CogComponentMeta * meta, componentType->HasAll<CogComponentMeta>())
+    forRange (CogComponentMeta* meta, componentType->HasAll<CogComponentMeta>())
     {
       // Add component interfaces
-      forRange(BoundType * interfaceType, meta->mInterfaces)
-          AddComponentInterface(interfaceType, component);
+      forRange (BoundType* interfaceType, meta->mInterfaces)
+        AddComponentInterface(interfaceType, component);
     }
   }
 
@@ -603,8 +591,7 @@ bool Cog::AddComponentByType(BoundType* componentType)
 
   if (mFlags.IsSet(CogFlags::ScriptComponentsLocked) && !componentType->Native)
   {
-    DoNotifyError("Cog locked",
-                  "Attempting to add a component to a locked cog");
+    DoNotifyError("Cog locked", "Attempting to add a component to a locked cog");
     return false;
   }
 
@@ -626,16 +613,14 @@ bool Cog::AddComponentByType(BoundType* componentType)
     return false;
 
   // Create the component
-  Component* component =
-      ZilchAllocate(Component, componentType, HeapFlags::NonReferenceCounted);
+  Component* component = ZilchAllocate(Component, componentType, HeapFlags::NonReferenceCounted);
 
   // If the returned component is null, most likely a script was
   // proxied and they're trying to create it by name.
   if (component == nullptr)
   {
-    String msg = String::Format(
-        "Cannot add component '%s', component has most likely been proxied.",
-        componentType->Name.c_str());
+    String msg = String::Format("Cannot add component '%s', component has most likely been proxied.",
+                                componentType->Name.c_str());
     DoNotifyException("Invalid component addition", msg);
     return false;
   }
@@ -656,8 +641,7 @@ bool Cog::AddComponentByName(StringParam name)
   if (componentType != nullptr)
     return AddComponentByType(componentType);
 
-  String message =
-      "Attempt to add a component by name, but the type was not found";
+  String message = "Attempt to add a component by name, but the type was not found";
   DoNotifyException("Could not add Component", message);
   return false;
 }
@@ -669,8 +653,7 @@ Component* Cog::QueryComponentType(BoundType* componentType)
 
 Component* Cog::GetComponentByName(StringParam componentTypeName)
 {
-  BoundType* componentType =
-      MetaDatabase::GetInstance()->FindType(componentTypeName);
+  BoundType* componentType = MetaDatabase::GetInstance()->FindType(componentTypeName);
 
   if (componentType)
     return QueryComponentType(componentType);
@@ -682,9 +665,7 @@ Component* Cog::GetComponentByIndex(size_t index)
 {
   if (index >= mComponents.Size())
   {
-    DoNotifyException(
-        "Cog",
-        "When attempting to get a component, the index given was out of range");
+    DoNotifyException("Cog", "When attempting to get a component, the index given was out of range");
     return nullptr;
   }
 
@@ -715,8 +696,7 @@ Cog::ComponentRange Cog::GetComponents()
 
 bool Cog::RemoveComponent(Component* component)
 {
-  ErrorIf(component->mOwner != this,
-          "Removing a component from a cog it doesn't belong to.");
+  ErrorIf(component->mOwner != this, "Removing a component from a cog it doesn't belong to.");
 
   if (CheckForRemovalWithNotify(ZilchVirtualTypeId(component)) == false)
     return false;
@@ -728,8 +708,7 @@ bool Cog::RemoveComponent(Component* component)
 
 void Cog::ForceRemoveComponent(Component* component)
 {
-  ErrorIf(component->mOwner != this,
-          "Removing a component from a cog it doesn't belong to.");
+  ErrorIf(component->mOwner != this, "Removing a component from a cog it doesn't belong to.");
 
   // Set modified on the space and this object
   if (Space* space = GetSpace())
@@ -767,8 +746,7 @@ bool Cog::RemoveComponentByType(BoundType* componentType)
 
   if (mFlags.IsSet(CogFlags::ScriptComponentsLocked) && !componentType->Native)
   {
-    DoNotifyError("Cog locked",
-                  "Attempting to remove a component from a locked cog");
+    DoNotifyError("Cog locked", "Attempting to remove a component from a locked cog");
     return false;
   }
 
@@ -776,8 +754,7 @@ bool Cog::RemoveComponentByType(BoundType* componentType)
   // but it may be useful for the user to see a more informative error message
   if (componentType->IsA(ZilchTypeId(Component)) == false)
   {
-    String message = String::Format("Type of name '%s' is not a Component type",
-                                    componentType->Name.c_str());
+    String message = String::Format("Type of name '%s' is not a Component type", componentType->Name.c_str());
     DoNotifyException("Could not remove Component", message);
     return false;
   }
@@ -799,8 +776,7 @@ bool Cog::RemoveComponentByName(StringParam typeName)
   // Error checking
   if (componentType == nullptr)
   {
-    String message =
-        String::Format("Type of name '%s' doesn't exist", typeName.c_str());
+    String message = String::Format("Type of name '%s' doesn't exist", typeName.c_str());
     DoNotifyException("Could not remove Component", message);
     return false;
   }
@@ -831,9 +807,7 @@ void Cog::AddComponentInterface(BoundType* alternateType, Component* component)
   // DO NOT add it the component list as it's just for looking it up by type
 }
 
-void Cog::AddComponentInternal(BoundType* typeId,
-                               Component* component,
-                               int index)
+void Cog::AddComponentInternal(BoundType* typeId, Component* component, int index)
 {
   // Safeguard against bad indices
   if (index == -1 || index >= (int)mComponents.Size())
@@ -845,11 +819,11 @@ void Cog::AddComponentInternal(BoundType* typeId,
   component->mOwner = this;
 
   BoundType* componentType = ZilchVirtualTypeId(component);
-  forRange(CogComponentMeta * meta, componentType->HasAll<CogComponentMeta>())
+  forRange (CogComponentMeta* meta, componentType->HasAll<CogComponentMeta>())
   {
     // Add component interfaces
-    forRange(BoundType * interfaceType, meta->mInterfaces)
-        AddComponentInterface(interfaceType, component);
+    forRange (BoundType* interfaceType, meta->mInterfaces)
+      AddComponentInterface(interfaceType, component);
   }
 
   // Move Hierarchy to end
@@ -997,7 +971,8 @@ HierarchyList::reverse_range Cog::GetChildrenReversed()
 uint Cog::GetChildCount()
 {
   uint count = 0;
-  forRange(Cog & child, GetChildren())++ count;
+  forRange (Cog& child, GetChildren())
+    ++count;
 
   return count;
 }
@@ -1018,22 +993,19 @@ bool Cog::AttachToPreserveLocal(Cog* parent)
 
   if (GetParent() == parent)
   {
-    DoNotifyException("Invalid attachment",
-                      "Already attached to our own parent.");
+    DoNotifyException("Invalid attachment", "Already attached to our own parent.");
     return false;
   }
 
   if (this->mFlags.IsSet(CogFlags::Protected))
   {
-    DoNotifyException("Invalid attachment",
-                      "Cannot attach protected objects to other objects.");
+    DoNotifyException("Invalid attachment", "Cannot attach protected objects to other objects.");
     return false;
   }
 
   if (GetSpace() != parent->GetSpace())
   {
-    DoNotifyException("Invalid attachment",
-                      "Parent must be in the same Space.");
+    DoNotifyException("Invalid attachment", "Parent must be in the same Space.");
     return false;
   }
 
@@ -1049,8 +1021,7 @@ bool Cog::AttachToPreserveLocal(Cog* parent)
     otherRootParent = otherRootParent->GetParent();
     if (otherRootParent == this)
     {
-      DoNotifyException("Invalid attachment",
-                        "Cannot attach to our own child.");
+      DoNotifyException("Invalid attachment", "Cannot attach to our own child.");
       return false;
     }
   }
@@ -1138,8 +1109,7 @@ bool Cog::AttachTo(Cog* parent)
   // Bring the child's transformation into the parent's space
   Mat4 parentTransformation = parentTransform->GetWorldMatrix();
   Mat4 childTransformation = childTransform->GetWorldMatrix();
-  Mat4 relativeTransformation =
-      parentTransformation.Inverted() * childTransformation;
+  Mat4 relativeTransformation = parentTransformation.Inverted() * childTransformation;
 
   // Extract the transformation elements from the matrix
   Vec3 scale, translation;
@@ -1258,7 +1228,7 @@ void Cog::Detach()
 Cog* Cog::FindChildByName(StringParam name)
 {
   // Loop through all the children
-  forRange(Cog & child, GetChildren())
+  forRange (Cog& child, GetChildren())
   {
     // Get the name of the object and compare it
     if (child.GetName() == name)
@@ -1283,7 +1253,7 @@ Cog* Cog::FindChildByName(StringParam name)
 
 Cog* Cog::FindDirectChildByName(StringParam name)
 {
-  forRange(Cog & child, GetChildren())
+  forRange (Cog& child, GetChildren())
   {
     if (child.GetName() == name)
       return &child;
@@ -1314,7 +1284,7 @@ HierarchyListNameRange Cog::FindAllDirectChildrenByName(StringParam name)
 
 Cog* Cog::FindChildByChildId(Guid childId)
 {
-  forRange(Cog & child, GetChildren())
+  forRange (Cog& child, GetChildren())
   {
     if (child.mChildId == childId)
       return &child;
@@ -1411,8 +1381,7 @@ void Cog::PlaceBeforeSibling(Cog* sibling)
 {
   if (sibling->GetParent() != GetParent())
   {
-    DoNotifyException("Cannot move object",
-                      "The objects must have the same parent.");
+    DoNotifyException("Cannot move object", "The objects must have the same parent.");
     return;
   }
 
@@ -1432,8 +1401,7 @@ void Cog::PlaceAfterSibling(Cog* sibling)
 {
   if (sibling->GetParent() != GetParent())
   {
-    DoNotifyException("Cannot move object",
-                      "The objects must have the same parent.");
+    DoNotifyException("Cannot move object", "The objects must have the same parent.");
     return;
   }
 
@@ -1467,8 +1435,7 @@ void Cog::ReplaceChild(Cog* oldChild, Cog* newChild)
   Hierarchy* hierarchy = this->has(Hierarchy);
   if (hierarchy == nullptr || oldChild->GetParent() != this)
   {
-    DoNotifyException("Cannot replace child",
-                      "'oldChild' is not a child of this object.");
+    DoNotifyException("Cannot replace child", "'oldChild' is not a child of this object.");
     return;
   }
 
@@ -1493,16 +1460,14 @@ uint Cog::GetHierarchyIndex()
 {
   if (GetMarkedForDestruction())
   {
-    DoNotifyExceptionAssert(
-        "Invalid Operation",
-        "Cannot get Hierarchy Index of Cog that is marked for destruction");
+    DoNotifyExceptionAssert("Invalid Operation", "Cannot get Hierarchy Index of Cog that is marked for destruction");
     return 0;
   }
 
   if (HierarchyList* list = GetParentHierarchyList())
   {
     size_t index = 0;
-    forRange(Cog & cog, list->All())
+    forRange (Cog& cog, list->All())
     {
       // Don't account for Cogs marked for destruction
       if (cog.GetMarkedForDestruction())
@@ -1535,7 +1500,7 @@ void Cog::PlaceInHierarchy(uint destinationIndex)
   {
     size_t currentIndex = 0;
     bool inserted = false;
-    forRange(Cog & cog, list->All())
+    forRange (Cog& cog, list->All())
     {
       // Don't account for Cogs marked for destruction
       if (cog.GetMarkedForDestruction())
@@ -1596,7 +1561,7 @@ HierarchyList* Cog::GetParentHierarchyList()
 
 void Cog::AssignChildIds()
 {
-  forRange(Cog & child, GetChildren())
+  forRange (Cog& child, GetChildren())
   {
     if (child.mChildId == PolymorphicNode::cInvalidUniqueNodeId)
       child.mChildId = GenerateUniqueId64();
@@ -1666,9 +1631,7 @@ void Cog::MarkNotModified()
 
 void Cog::UploadToArchetype()
 {
-  ReturnIf(GetMarkedForDestruction() || GetTransient(),
-           ,
-           "Cannot upload to Archetype");
+  ReturnIf(GetMarkedForDestruction() || GetTransient(), , "Cannot upload to Archetype");
   if (!mArchetype)
   {
     DoNotifyError("No archetype", "No archetype to upload to.");
@@ -1683,9 +1646,8 @@ void Cog::UploadToArchetype()
     Cog* child = &r.Front();
     if (child != this && child->mArchetype == this->mArchetype)
     {
-      String message =
-          String::Format("Archetype is already in this Hierarchy. "
-                         "Uploading will cause an infinite Hierarchy.");
+      String message = String::Format("Archetype is already in this Hierarchy. "
+                                      "Uploading will cause an infinite Hierarchy.");
       DoNotifyError("Can not upload", message);
       return;
     }
@@ -1718,13 +1680,10 @@ void Cog::UploadToArchetype()
   if (archetypeContextCog != this)
   {
     Archetype* archetypeContext = archetypeContextCog->GetArchetype();
-    CachedModifications& cachedModifications =
-        archetypeContext->GetAllCachedModifications();
-    CachedModifications::ObjectNode* thisChildNode =
-        cachedModifications.FindChildNode(archetypeContextCog, this);
+    CachedModifications& cachedModifications = archetypeContext->GetAllCachedModifications();
+    CachedModifications::ObjectNode* thisChildNode = cachedModifications.FindChildNode(archetypeContextCog, this);
     if (thisChildNode)
-      overlappingModifications.StoreOverlappingModifications(this,
-                                                             thisChildNode);
+      overlappingModifications.StoreOverlappingModifications(this, thisChildNode);
   }
 
   // All local modifications on this object are no longer considered
@@ -1769,8 +1728,7 @@ void Cog::UploadToArchetype()
   // reverting a property)
   if (InArchetypeDefinitionMode() == false)
   {
-    CachedModifications& archetypeModifications =
-        archetype->GetLocalCachedModifications();
+    CachedModifications& archetypeModifications = archetype->GetLocalCachedModifications();
     archetypeModifications.ApplyModificationsToObject(this, true);
   }
 
@@ -1865,8 +1823,7 @@ Cog* Cog::FindNearestArchetypeContext()
     Cog* parent = current->GetParent();
 
     // Stop if the current object is locally added
-    if (parent &&
-        modifications->IsChildLocallyAdded(parent->has(Hierarchy), current))
+    if (parent && modifications->IsChildLocallyAdded(parent->has(Hierarchy), current))
       break;
 
     current = parent;
@@ -1938,10 +1895,10 @@ void Cog::DispatchDown(StringParam eventId, Event* event)
     // Hierarchy can be modified during any event, copy the list of children
     // before dispatching.
     Array<Cog*> children;
-    forRange(HierarchyList::sub_reference child, hierarchy->GetChildren())
-        children.PushBack(&child);
+    forRange (HierarchyList::sub_reference child, hierarchy->GetChildren())
+      children.PushBack(&child);
 
-    forRange(Cog * child, children.All())
+    forRange (Cog* child, children.All())
     {
       child->DispatchEvent(eventId, event);
       child->DispatchDown(eventId, event);
@@ -2014,8 +1971,7 @@ String Cog::SanitizeName(StringParam newName)
   if (newName.Empty())
     return newName;
 
-  return LibraryBuilder::FixIdentifier(
-      newName, TokenCheck::RemoveOuterBrackets, '\0');
+  return LibraryBuilder::FixIdentifier(newName, TokenCheck::RemoveOuterBrackets, '\0');
 }
 
 CogId Cog::GetId()
@@ -2039,8 +1995,7 @@ u32 Cog::GetRuntimeId()
 
 void Cog::SetEditorOnly()
 {
-  mFlags.SetFlag(CogFlags::Protected | CogFlags::Transient |
-                 CogFlags::Persistent);
+  mFlags.SetFlag(CogFlags::Protected | CogFlags::Transient | CogFlags::Persistent);
 }
 
 bool Cog::GetTransient()
@@ -2051,7 +2006,7 @@ bool Cog::GetTransient()
 void Cog::SetTransient(bool state)
 {
   SetCogFlag(this, CogFlags::Transient, "Transient", state);
-  forRange(Cog & child, GetChildren().All())
+  forRange (Cog& child, GetChildren().All())
   {
     child.SetTransient(state);
   }
@@ -2074,10 +2029,9 @@ bool Cog::GetEditorViewportHidden()
 
 void Cog::SetEditorViewportHidden(bool state)
 {
-  SetCogFlag(
-      this, CogFlags::EditorViewportHidden, "Editor Viewport Hidden", state);
+  SetCogFlag(this, CogFlags::EditorViewportHidden, "Editor Viewport Hidden", state);
   // set the hidden state for all the children of this cog
-  forRange(Cog & child, GetChildren().All())
+  forRange (Cog& child, GetChildren().All())
   {
     child.SetEditorViewportHidden(state);
   }
@@ -2091,7 +2045,7 @@ bool Cog::GetObjectViewHidden()
 void Cog::SetObjectViewHidden(bool state)
 {
   SetCogFlag(this, CogFlags::ObjectViewHidden, "Object View Hidden", state);
-  forRange(Cog & child, GetChildren().All())
+  forRange (Cog& child, GetChildren().All())
   {
     child.SetObjectViewHidden(state);
   }
@@ -2106,7 +2060,7 @@ void Cog::SetLocked(bool state)
 {
   SetCogFlag(this, CogFlags::Locked, ":Locked", state);
   // set the locked state for all the children of this cog
-  forRange(Cog & child, GetChildren().All())
+  forRange (Cog& child, GetChildren().All())
   {
     child.SetLocked(state);
   }
@@ -2125,9 +2079,7 @@ void Cog::SetArchetypeDefinitionMode()
 {
   Archetype* archetype = GetArchetype();
 
-  ReturnIf(archetype == nullptr,
-           ,
-           "Must have an Archetype to be in Archetype Definition mode.");
+  ReturnIf(archetype == nullptr, , "Must have an Archetype to be in Archetype Definition mode.");
 
   // Apply our modifications from our base Archetype
   archetype->GetLocalCachedModifications().ApplyModificationsToObject(this);
@@ -2227,7 +2179,7 @@ bool CogIsModifiedFromArchetype(Cog* cog, bool ignoreOverrideProperties)
   }
 
   // Check for modifications on our components
-  forRange(Component * component, cog->GetComponents())
+  forRange (Component* component, cog->GetComponents())
   {
     // Ignore the Hierarchy Component as we're handling child objects manually
     if (ZilchVirtualTypeId(component) == ZilchTypeId(Hierarchy))
@@ -2240,7 +2192,7 @@ bool CogIsModifiedFromArchetype(Cog* cog, bool ignoreOverrideProperties)
   // Check for modifications on our children
   // Never retain child override properties (see example about the enemy holding
   // a gun)
-  forRange(Cog & child, cog->GetChildren())
+  forRange (Cog& child, cog->GetChildren())
   {
     // Never retain child override properties (see example about the enemy
     // holding a gun)
@@ -2280,30 +2232,27 @@ void ClearCogModifications(Cog* rootCog,
   }
 
   // Clear modifications on ourself (Components added / removed)
-  modifications->ClearModifications(
-      cog, false, retainOverrideProperties, cachedMemory);
+  modifications->ClearModifications(cog, false, retainOverrideProperties, cachedMemory);
 
-  forRange(Component * component, cog->GetComponents())
+  forRange (Component* component, cog->GetComponents())
   {
     // Ignore the Hierarchy Component as we're handling child objects manually
     if (ZilchVirtualTypeId(component) == ZilchTypeId(Hierarchy))
       continue;
 
-    modifications->ClearModifications(
-        component, true, retainOverrideProperties, cachedMemory);
+    modifications->ClearModifications(component, true, retainOverrideProperties, cachedMemory);
   }
 
   // Never retain child override properties (see example about the enemy holding
   // a gun)
-  forRange(Cog & child, cog->GetChildren()) ClearCogModifications(
-      rootCog, &child, cachedMemory, false, retainChildArchetypeModifications);
+  forRange (Cog& child, cog->GetChildren())
+    ClearCogModifications(rootCog, &child, cachedMemory, false, retainChildArchetypeModifications);
 
   // Clear modifications to our children list (added / removed Cogs)
   // The hierarchy modifications should be cleared after recursing because we
   // need this state to determine if our children are locally added
   if (Hierarchy* hierarchy = cog->has(Hierarchy))
-    modifications->ClearModifications(
-        hierarchy, false, retainOverrideProperties);
+    modifications->ClearModifications(hierarchy, false, retainOverrideProperties);
 }
 
 void ClearCogModifications(Cog* root, bool retainChildArchetypeModifications)
@@ -2315,11 +2264,7 @@ void ClearCogModifications(Cog* root, bool retainChildArchetypeModifications)
   Cog* nearestArchetypeContext = root->FindNearestArchetypeContext();
   bool retainOverride = (nearestArchetypeContext == root);
 
-  ClearCogModifications(root,
-                        root,
-                        cachedMemory,
-                        retainOverride,
-                        retainChildArchetypeModifications);
+  ClearCogModifications(root, root, cachedMemory, retainOverride, retainChildArchetypeModifications);
 }
 
 template <typename type>
@@ -2336,9 +2281,7 @@ void eraseEqualValues(Array<type>& mArray, type value)
 }
 
 // Cog Handle Manager
-void CogHandleManager::Allocate(BoundType* type,
-                                Handle& handleToInitialize,
-                                size_t customFlags)
+void CogHandleManager::Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags)
 {
   handleToInitialize.Flags |= HandleFlags::NoReferenceCounting;
 
@@ -2347,9 +2290,7 @@ void CogHandleManager::Allocate(BoundType* type,
   data.mRawObject = zAllocate(type->Size);
 }
 
-void CogHandleManager::ObjectToHandle(const byte* object,
-                                      BoundType* type,
-                                      Handle& handleToInitialize)
+void CogHandleManager::ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize)
 {
   if (object == nullptr)
     return;

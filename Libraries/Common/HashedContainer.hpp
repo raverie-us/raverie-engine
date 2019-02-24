@@ -44,9 +44,7 @@ public:
     bool mIsNewInsert;
     ValueType* mValue;
 
-    InsertResult(bool newInsert, Node* node) :
-        mIsNewInsert(newInsert),
-        mValue(&node->Value)
+    InsertResult(bool newInsert, Node* node) : mIsNewInsert(newInsert), mValue(&node->Value)
     {
     }
 
@@ -311,8 +309,7 @@ public:
           // So the entire bucket chain must be checked
           // for double Insert.
 
-          for (Node* searchNode = primaryNode; searchNode != cHashEndNode;
-               searchNode = searchNode->next)
+          for (Node* searchNode = primaryNode; searchNode != cHashEndNode; searchNode = searchNode->next)
           {
             if (mHasher.Equal(searchNode->Value, value))
             {
@@ -343,8 +340,7 @@ public:
   // Find an element value that hashes and compares to a
   // value in the hash map.
   template <typename searchType, typename searchHasherType>
-  Node* InternalFindAs(const searchType& searchValue,
-                       searchHasherType searchHasher) const
+  Node* InternalFindAs(const searchType& searchValue, searchHasherType searchHasher) const
   {
     if (mTableSize == 0)
       return (Node*)cHashOpenNode;
@@ -396,8 +392,7 @@ public:
 
   void EraseNode(Node* node)
   {
-    ErrorIf(node == nullptr || node->next == cHashOpenNode,
-            "Attempted to erase an invalid node.");
+    ErrorIf(node == nullptr || node->next == cHashOpenNode, "Attempted to erase an invalid node.");
     size_type eraseHash = HashedIndex(node->Value);
     Node* bucketPrev = mTable + eraseHash;
 
@@ -498,8 +493,7 @@ protected:
 
   void CheckForExpand(size_type newsize)
   {
-    if (mTableSize == 0 ||
-        (float(newsize) / float(mTableSize)) > MaxLoadFactor())
+    if (mTableSize == 0 || (float(newsize) / float(mTableSize)) > MaxLoadFactor())
     {
       size_type newTableSize = GetNextSize(mTableSize);
       if (newTableSize == 0)

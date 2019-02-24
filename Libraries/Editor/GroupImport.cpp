@@ -14,7 +14,7 @@ String StripResourceExtension(StringParam filename)
 {
   // Count the periods in the filename
   int periodCount = 0;
-  forRange(Rune rune, filename.All())
+  forRange (Rune rune, filename.All())
   {
     if (rune == '.')
       ++periodCount;
@@ -34,8 +34,7 @@ String StripResourceExtension(StringParam filename)
   {
     // Get the resource extension without including the beginning and end
     // periods
-    String resourceExtension = filename.SubString(resourceExtensionStart.End(),
-                                                  resourceExtensionEnd.Begin());
+    String resourceExtension = filename.SubString(resourceExtensionStart.End(), resourceExtensionEnd.Begin());
     // Check if the included middle extension is a Zero Engine resource
     MetaDatabase* metaDatabase = MetaDatabase::GetInstance();
     BoundType* type = metaDatabase->FindType(resourceExtension);
@@ -65,8 +64,7 @@ void RunGroupImport(ImportOptions& options)
   Array<ContentItem*> contentToBuild;
 
   Array<String> filesToExport(options.mFiles);
-  if (options.mConflictOptions &&
-      options.mConflictOptions->GetAction() == ConflictAction::Replace)
+  if (options.mConflictOptions && options.mConflictOptions->GetAction() == ConflictAction::Replace)
     filesToExport.Append(options.mConflictedFiles.All());
 
   // For every file imported
@@ -87,8 +85,7 @@ void RunGroupImport(ImportOptions& options)
 
     Status addItem;
 
-    ContentItem* newContentItem =
-        Z::gContentSystem->AddContentItemToLibrary(addItem, addContent);
+    ContentItem* newContentItem = Z::gContentSystem->AddContentItemToLibrary(addItem, addContent);
 
     // If the content add succeeded
     if (addItem.Succeeded())
@@ -100,8 +97,7 @@ void RunGroupImport(ImportOptions& options)
   // Now that all the content has been added. Build and load them for use.
 
   // Build all new content items
-  ResourceLibrary* resourceLibrary =
-      Z::gResources->GetResourceLibrary(library->Name);
+  ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(library->Name);
 
   ResourcePackage package;
   Status status;
@@ -118,11 +114,9 @@ void RunGroupImport(ImportOptions& options)
   ZilchManager::GetInstance()->TriggerCompileExternally();
 
   if (!contentToBuild.Empty() && status.Succeeded())
-    DoNotify(
-        "Content Imported", "Content has been added to the project", "BigPlus");
+    DoNotify("Content Imported", "Content has been added to the project", "BigPlus");
   else if (status.Failed())
-    DoNotify(
-        "Content Import", "Content failed to be added to the project", "Error");
+    DoNotify("Content Import", "Content failed to be added to the project", "Error");
 }
 
 void GroupImport()
@@ -203,9 +197,7 @@ void LoadDroppedFiles(Array<HandleOfString>& files)
 }
 
 // GroupImportWindow
-GroupImportWindow::GroupImportWindow(Composite* parent,
-                                     ImportOptions* options) :
-    Composite(parent)
+GroupImportWindow::GroupImportWindow(Composite* parent, ImportOptions* options) : Composite(parent)
 {
   mOptions = options;
 
@@ -264,19 +256,13 @@ float GroupImportWindow::GetPropertyGridHeight()
   // METAREFACTOR - Confirm AllProperties.Size() will have the same results as
   // the old Properties array Adding 1 to each for the
   if (mOptions->mImageOptions)
-    propertyCount +=
-        ZilchVirtualTypeId(mOptions->mImageOptions)->AllProperties.Size() + 1;
+    propertyCount += ZilchVirtualTypeId(mOptions->mImageOptions)->AllProperties.Size() + 1;
   if (mOptions->mGeometryOptions)
-    propertyCount +=
-        ZilchVirtualTypeId(mOptions->mGeometryOptions)->AllProperties.Size() +
-        1;
+    propertyCount += ZilchVirtualTypeId(mOptions->mGeometryOptions)->AllProperties.Size() + 1;
   if (mOptions->mAudioOptions)
-    propertyCount +=
-        ZilchVirtualTypeId(mOptions->mAudioOptions)->AllProperties.Size() + 1;
+    propertyCount += ZilchVirtualTypeId(mOptions->mAudioOptions)->AllProperties.Size() + 1;
   if (mOptions->mConflictOptions)
-    propertyCount +=
-        ZilchVirtualTypeId(mOptions->mConflictOptions)->AllProperties.Size() +
-        1;
+    propertyCount += ZilchVirtualTypeId(mOptions->mConflictOptions)->AllProperties.Size() + 1;
 
   return (float)propertyCount * 20.0f;
 }
@@ -301,9 +287,7 @@ void GroupImportWindow::OnOptionsModified(Event* event)
   {
     ActionSequence* sequence = new ActionSequence(this);
     sequence->Add(new ActionDelay(time));
-    sequence->Add(
-        new CallAction<GroupImportWindow, &GroupImportWindow::RebuildTree>(
-            this));
+    sequence->Add(new CallAction<GroupImportWindow, &GroupImportWindow::RebuildTree>(this));
   }
   else
   {
@@ -337,10 +321,7 @@ void GroupImportWindow::OnPressed(Event* event)
 {
   RunGroupImport(*mOptions);
   float time = 0.5f;
-  AnimateTo(mParentWindow,
-            Pixels(2000.0f, 200.0f, 0),
-            mParentWindow->GetSize() * 0.5f,
-            time);
+  AnimateTo(mParentWindow, Pixels(2000.0f, 200.0f, 0), mParentWindow->GetSize() * 0.5f, time);
 
   ActionSequence* sequence = new ActionSequence(mParentWindow);
   sequence->Add(new ActionDelay(time));

@@ -89,8 +89,7 @@ public:
   bool TestBuildId(const BuildId& buildId);
   /// Returns if 'this' template contains a more exact matching build range than
   /// the 'other' template.
-  bool IsMoreExactRangeThan(const BuildId& buildId,
-                            ZeroTemplate* otherTemplate);
+  bool IsMoreExactRangeThan(const BuildId& buildId, ZeroTemplate* otherTemplate);
 
   /// The unique name of this template (versions aside)
   String mSKU;

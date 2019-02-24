@@ -15,12 +15,9 @@ class SimpleResourceFactory : public MetaComposition
 {
 public:
   ZilchDeclareType(SimpleResourceFactory, TypeCopyMode::ReferenceType);
-  SimpleResourceFactory() :
-      MetaComposition(ZilchTypeId(BlockType)),
-      mDeleteMemory(false){};
+  SimpleResourceFactory() : MetaComposition(ZilchTypeId(BlockType)), mDeleteMemory(false){};
 
-  SimpleResourceFactory(bool deleteMemory) :
-      MetaComposition(ZilchTypeId(BlockType))
+  SimpleResourceFactory(bool deleteMemory) : MetaComposition(ZilchTypeId(BlockType))
   {
     mDeleteMemory = deleteMemory;
   }
@@ -39,8 +36,7 @@ public:
   {
     // there's no easy way to turn the id to a block without a linear search,
     // luckily there aren't many block types so it doesn't matter now
-    ResourceType* resource =
-        instance.Get<ResourceType*>(GetOptions::AssertOnNull);
+    ResourceType* resource = instance.Get<ResourceType*>(GetOptions::AssertOnNull);
     BlockType* block = resource->GetById(componentType);
     if (block != nullptr)
       return block;
@@ -59,9 +55,7 @@ public:
 
   Handle MakeObject(BoundType* typeToCreate) override
   {
-    ReturnIf(typeToCreate->IsA(mComponentType) == false,
-             Handle(),
-             "Incorrect component type");
+    ReturnIf(typeToCreate->IsA(mComponentType) == false, Handle(), "Incorrect component type");
 
     if (typeToCreate)
       return AllocateBlock(typeToCreate, true);
@@ -84,9 +78,7 @@ public:
     resource->Add(component, index);
   }
 
-  void RemoveComponent(HandleParam owner,
-                       HandleParam subObject,
-                       bool ignoreDependencies = false) override
+  void RemoveComponent(HandleParam owner, HandleParam subObject, bool ignoreDependencies = false) override
   {
     ResourceType* resource = owner.Get<ResourceType*>(GetOptions::AssertOnNull);
 
@@ -110,8 +102,7 @@ public:
   {
     BlockType* block = handle.Get<BlockType*>();
     // This should probably be done with SFINAE at some point
-    CogComponentMeta* metaComponent =
-        blockMeta->HasInherited<CogComponentMeta>();
+    CogComponentMeta* metaComponent = blockMeta->HasInherited<CogComponentMeta>();
     if (metaComponent != nullptr)
     {
       SetupMode::Enum constructionMode = metaComponent->mSetupMode;

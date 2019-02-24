@@ -49,9 +49,7 @@ public:
   void ShowRenderGroupHierarchies(CommandEvent* event);
   LibraryView* CreateLibraryView(bool showCore, bool autoDock = true);
   void AttachDocumentEditor(StringParam name, DocumentEditor* docEditor);
-  DocumentEditor* OpenTextString(StringParam name,
-                                 StringParam text,
-                                 StringParam extension = String()) override;
+  DocumentEditor* OpenTextString(StringParam name, StringParam text, StringParam extension = String()) override;
   DocumentEditor* OpenTextFile(StringParam filename) override;
   DocumentEditor* OpenDocumentResource(DocumentResource* docResource) override;
   DocumentEditor* OpenTextFileAuto(StringParam file) override;

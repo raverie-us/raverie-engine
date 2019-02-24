@@ -178,18 +178,7 @@ enum Enum
 DeclareEnum6(MouseButtons, Left, Right, Middle, XOneBack, XTwoForward, None);
 
 /// Standard Mouse Cursors
-DeclareEnum11(Cursor,
-              Arrow,
-              Wait,
-              Cross,
-              SizeNWSE,
-              SizeNESW,
-              SizeWE,
-              SizeNS,
-              SizeAll,
-              TextBeam,
-              Hand,
-              Invisible);
+DeclareEnum11(Cursor, Arrow, Wait, Cross, SizeNWSE, SizeNESW, SizeWE, SizeNS, SizeAll, TextBeam, Hand, Invisible);
 
 // Usb Standard Usage Pages
 namespace UsbUsagePage
@@ -428,17 +417,7 @@ DeclareEnum5(WindowState,
              Restore);
 
 /// Border of the window for manipulation
-DeclareEnum10(WindowBorderArea,
-              Title,
-              TopLeft,
-              Top,
-              TopRight,
-              Left,
-              Right,
-              BottomLeft,
-              Bottom,
-              BottomRight,
-              None);
+DeclareEnum10(WindowBorderArea, Title, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight, None);
 
 DeclareEnum3(ProgressType, Normal, Indeterminate, None);
 
@@ -566,9 +545,7 @@ public:
   void (*mOnFocusChanged)(bool activated, ShellWindow* window);
 
   /// Files have been drag-dropped onto this window.
-  void (*mOnMouseDropFiles)(Math::IntVec2Param clientPosition,
-                            const Array<String>& files,
-                            ShellWindow* window);
+  void (*mOnMouseDropFiles)(Math::IntVec2Param clientPosition, const Array<String>& files, ShellWindow* window);
 
   /// An update that is called in cases where the window may be frozen (such as
   /// dragging on the Windows OS).
@@ -576,8 +553,7 @@ public:
 
   /// Occurs when the window is resized (may occur even if the size is the same
   /// and should be protected against).
-  void (*mOnClientSizeChanged)(Math::IntVec2Param clientSize,
-                               ShellWindow* window);
+  void (*mOnClientSizeChanged)(Math::IntVec2Param clientSize, ShellWindow* window);
 
   void (*mOnMinimized)(ShellWindow* window);
   void (*mOnRestored)(ShellWindow* window);
@@ -586,27 +562,16 @@ public:
   void (*mOnTextTyped)(Rune rune, ShellWindow* window);
 
   /// Callback for when a keyboard key is pressed.
-  void (*mOnKeyDown)(Keys::Enum key,
-                     uint osKey,
-                     bool repeated,
-                     ShellWindow* window);
+  void (*mOnKeyDown)(Keys::Enum key, uint osKey, bool repeated, ShellWindow* window);
 
   /// Callback for when a keyboard key is released.
   void (*mOnKeyUp)(Keys::Enum key, uint osKey, ShellWindow* window);
 
-  void (*mOnMouseDown)(Math::IntVec2Param clientPosition,
-                       MouseButtons::Enum button,
-                       ShellWindow* window);
-  void (*mOnMouseUp)(Math::IntVec2Param clientPosition,
-                     MouseButtons::Enum button,
-                     ShellWindow* window);
+  void (*mOnMouseDown)(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window);
+  void (*mOnMouseUp)(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window);
   void (*mOnMouseMove)(Math::IntVec2Param clientPosition, ShellWindow* window);
-  void (*mOnMouseScrollX)(Math::IntVec2Param clientPosition,
-                          float scrollAmount,
-                          ShellWindow* window);
-  void (*mOnMouseScrollY)(Math::IntVec2Param clientPosition,
-                          float scrollAmount,
-                          ShellWindow* window);
+  void (*mOnMouseScrollX)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
+  void (*mOnMouseScrollY)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
 
   /// Called when any hardware devices change.
   void (*mOnDevicesChanged)(ShellWindow* window);
@@ -616,15 +581,11 @@ public:
 
   /// Called when the window is asking if a position should result in dragging
   /// or resizing the window.
-  WindowBorderArea::Enum (*mOnHitTest)(Math::IntVec2Param clientPosition,
-                                       ShellWindow* window);
+  WindowBorderArea::Enum (*mOnHitTest)(Math::IntVec2Param clientPosition, ShellWindow* window);
 
   /// Called when an input device is updated.
-  void (*mOnInputDeviceChanged)(PlatformInputDevice& device,
-                                uint buttons,
-                                const Array<uint>& axes,
-                                const DataBlock& data,
-                                ShellWindow* window);
+  void (*mOnInputDeviceChanged)(
+      PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data, ShellWindow* window);
 
   /// Userdata used for all callbacks.
   void* mUserData;

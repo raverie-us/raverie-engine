@@ -16,10 +16,7 @@ ZilchDefineType(CollisionTable, builder, type)
   ZilchBindMethod(CreateRuntime);
   ZilchBindMethod(RuntimeClone);
 
-  ZilchBindOverloadedMethod(
-      FindFilter,
-      (CollisionFilter *
-       (CollisionTable::*)(CollisionGroup*, CollisionGroup*)));
+  ZilchBindOverloadedMethod(FindFilter, (CollisionFilter * (CollisionTable::*)(CollisionGroup*, CollisionGroup*)));
 }
 
 CollisionTable::CollisionTable()
@@ -109,9 +106,7 @@ void CollisionTable::CopyTo(CollisionTable* destination)
 
   destination->mAutoRegister = mAutoRegister;
   // Register each collision group that we know about
-  for (RegisteredGroups::keyrange range = mRegisteredGroups.Keys();
-       !range.Empty();
-       range.PopFront())
+  for (RegisteredGroups::keyrange range = mRegisteredGroups.Keys(); !range.Empty(); range.PopFront())
   {
     ResourceId id = range.Front();
     CollisionGroup* group = CollisionGroupManager::Find(id);
@@ -150,7 +145,7 @@ void CollisionTable::LoadExistingGroups()
 
   // Otherwise, go through all of the groups that exist and register them
   CollisionGroupManager* manager = CollisionGroupManager::GetInstance();
-  forRange(Resource * resource, manager->AllResources())
+  forRange (Resource* resource, manager->AllResources())
   {
     CollisionGroup* group = static_cast<CollisionGroup*>(resource);
     RegisterGroup(group);
@@ -188,21 +183,13 @@ void CollisionTable::ValidateFilters()
 
     if (mRegisteredGroups.Find(filter.TypeA).Empty())
     {
-      ErrorIf(true,
-              "Resource group %s from pair [%s,%s] was not registered.",
-              typeAName,
-              typeAName,
-              typeBName);
+      ErrorIf(true, "Resource group %s from pair [%s,%s] was not registered.", typeAName, typeAName, typeBName);
       continue;
     }
 
     if (mRegisteredGroups.Find(filter.TypeB).Empty())
     {
-      ErrorIf(true,
-              "Resource group %s from pair [%s,%s] was not registered.",
-              typeBName,
-              typeAName,
-              typeBName);
+      ErrorIf(true, "Resource group %s from pair [%s,%s] was not registered.", typeBName, typeAName, typeBName);
       continue;
     }
     /*
@@ -263,8 +250,7 @@ void CollisionTable::Clear()
   // so put all of the ids into an array then remove them safely
   Array<ResourceId> ids;
   ids.Reserve(mRegisteredGroups.Size());
-  for (RegisteredGroups::range r = mRegisteredGroups.All(); !r.Empty();
-       r.PopFront())
+  for (RegisteredGroups::range r = mRegisteredGroups.All(); !r.Empty(); r.PopFront())
     ids.PushBack(r.Front().first);
 
   for (uint i = 0; i < ids.Size(); ++i)
@@ -273,9 +259,7 @@ void CollisionTable::Clear()
 
 void CollisionTable::RegisterGroup(CollisionGroup* group)
 {
-  ReturnIf(mRegisteredGroups.Size() >= 31,
-           ,
-           "Can only register 32 collision filters per space.");
+  ReturnIf(mRegisteredGroups.Size() >= 31, , "Can only register 32 collision filters per space.");
 
   // Make a new instance and put it in the map under the group's id
   if (mRegisteredGroups.FindValue(group->mResourceId, nullptr) == nullptr)
@@ -295,8 +279,8 @@ void CollisionTable::UnRegisterGroup(CollisionGroup* group)
   RemoveGroupInstancesAndFilters(group->mResourceId);
 }
 
-CollisionGroupInstance* CollisionTable::GetGroupInstance(
-    ResourceId groupId, RegisteredGroupInstanceAccessMode::Enum accessMode)
+CollisionGroupInstance* CollisionTable::GetGroupInstance(ResourceId groupId,
+                                                         RegisteredGroupInstanceAccessMode::Enum accessMode)
 {
   RegisteredGroups::range range = mRegisteredGroups.Find(groupId);
   // If we find the item then return it
@@ -321,8 +305,7 @@ CollisionFilter* CollisionTable::FindFilter(CollisionFilter& pair)
   return range.Front();
 }
 
-CollisionFilter* CollisionTable::FindFilter(CollisionGroup* groupA,
-                                            CollisionGroup* groupB)
+CollisionFilter* CollisionTable::FindFilter(CollisionGroup* groupA, CollisionGroup* groupB)
 {
   if (!groupA || !groupB)
     return nullptr;
@@ -461,8 +444,7 @@ CollisionGroup* CollisionTable::GetDefaultGroup()
 
 ImplementResourceManager(CollisionTableManager, CollisionTable);
 
-CollisionTableManager::CollisionTableManager(BoundType* resourceType) :
-    ResourceManager(resourceType)
+CollisionTableManager::CollisionTableManager(BoundType* resourceType) : ResourceManager(resourceType)
 {
   DefaultResourceName = cDefaultCollisionTable;
   mCanAddFile = true;
@@ -487,8 +469,7 @@ void CollisionTableManager::OnTableCreated(ResourceEvent* event)
   table->ReconfigureGroups();
 }
 
-CollisionTable*
-CollisionTableManager::CreateNewResourceInternal(StringParam name)
+CollisionTable* CollisionTableManager::CreateNewResourceInternal(StringParam name)
 {
   CollisionTable* table = new CollisionTable();
   table->SetDefaults();
@@ -506,7 +487,7 @@ void CollisionTableManager::OnCollisionGroupAdded(ResourceEvent* event)
   // and register this new group on them if it is set up for auto-registering.
   CollisionGroup* group = (CollisionGroup*)event->EventResource;
 
-  forRange(Resource * resource, AllResources())
+  forRange (Resource* resource, AllResources())
   {
     CollisionTable* table = (CollisionTable*)resource;
     if (!table->CanReference(group))
@@ -534,7 +515,7 @@ void CollisionTableManager::OnCollisionGroupRemoved(ResourceEvent* event)
   CollisionGroup* group = (CollisionGroup*)event->EventResource;
 
   // Take all of the tables and remove the given collision group from it.
-  forRange(Resource * resource, AllResources())
+  forRange (Resource* resource, AllResources())
   {
     CollisionTable* table = (CollisionTable*)resource;
     if (!table->CanReference(group))

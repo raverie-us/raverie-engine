@@ -28,20 +28,15 @@ SoundAsset::~SoundAsset()
 void SoundAsset::AddInstance(unsigned instanceID)
 {
   ++mInstanceReferenceCount;
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&SoundAsset::OnAddInstanceThreaded, this, instanceID),
-      nullptr);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&SoundAsset::OnAddInstanceThreaded, this, instanceID), nullptr);
 }
 
 void SoundAsset::RemoveInstance(unsigned instanceID)
 {
-  ErrorIf(mInstanceReferenceCount == 0,
-          "Trying to remove instance on an unreferenced sound asset");
+  ErrorIf(mInstanceReferenceCount == 0, "Trying to remove instance on an unreferenced sound asset");
 
   --mInstanceReferenceCount;
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&SoundAsset::OnRemoveInstanceThreaded, this, instanceID),
-      nullptr);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&SoundAsset::OnRemoveInstanceThreaded, this, instanceID), nullptr);
 }
 
 // Decompressed Sound Asset
@@ -55,9 +50,7 @@ static void DecompressedDecodingCallback(DecodedPacket* packet, void* data)
   ((DecompressedSoundAsset*)data)->DecodingCallback(packet);
 }
 
-DecompressedSoundAsset::DecompressedSoundAsset(Status& status,
-                                               const String& fileName,
-                                               const String& assetName) :
+DecompressedSoundAsset::DecompressedSoundAsset(Status& status, const String& fileName, const String& assetName) :
     SoundAsset(assetName, false),
     mDecoder(status, fileName, DecompressedDecodingCallback, (void*)this),
     mSamplesAvailableShared(0)
@@ -69,8 +62,7 @@ DecompressedSoundAsset::DecompressedSoundAsset(Status& status,
     mDecoder.DecodeNextSection();
 
     // Set the variables
-    mFileLength =
-        (float)mDecoder.mSamplesPerChannel / AudioConstants::cSystemSampleRate;
+    mFileLength = (float)mDecoder.mSamplesPerChannel / AudioConstants::cSystemSampleRate;
     mChannels = mDecoder.mChannels;
     mFrameCount = mDecoder.mSamplesPerChannel;
 
@@ -98,9 +90,7 @@ void DecompressedSoundAsset::AppendSamplesThreaded(BufferType* buffer,
   // Check if we have enough samples available
   if (sampleIndex + samplesRequested < samplesAvailable)
   {
-    memcpy(bufferStart,
-           mSamples.Data() + sampleIndex,
-           sizeof(float) * samplesRequested);
+    memcpy(bufferStart, mSamples.Data() + sampleIndex, sizeof(float) * samplesRequested);
   }
   // If not, copy what we can and set the rest to zero
   else
@@ -111,13 +101,9 @@ void DecompressedSoundAsset::AppendSamplesThreaded(BufferType* buffer,
     if (samplesToCopy > 0)
     {
       // Copy what we have into the buffer
-      memcpy(bufferStart,
-             mSamples.Data() + sampleIndex,
-             sizeof(float) * samplesToCopy);
+      memcpy(bufferStart, mSamples.Data() + sampleIndex, sizeof(float) * samplesToCopy);
       // Set the remaining samples to zero
-      memset(bufferStart + samplesToCopy,
-             0,
-             sizeof(float) * (samplesRequested - samplesToCopy));
+      memset(bufferStart + samplesToCopy, 0, sizeof(float) * (samplesRequested - samplesToCopy));
     }
     // If not, set all samples to zero
     else
@@ -133,15 +119,11 @@ void DecompressedSoundAsset::DecodingCallback(DecodedPacket* packet)
   // size of the array on the DecodedPacket object, so make sure we don't go
   // past the size of mSamples
   unsigned samplesCopied =
-      Math::Min((unsigned)packet->mSamples.Size(),
-                (unsigned)(mSamples.Size() - mSamplesAvailableShared));
+      Math::Min((unsigned)packet->mSamples.Size(), (unsigned)(mSamples.Size() - mSamplesAvailableShared));
   // Copy the decoded samples into the array
-  memcpy(mSamples.Data() + mSamplesAvailableShared,
-         packet->mSamples.Data(),
-         sizeof(float) * samplesCopied);
+  memcpy(mSamples.Data() + mSamplesAvailableShared, packet->mSamples.Data(), sizeof(float) * samplesCopied);
   // Change the samples available value
-  AtomicExchange((s32*)&mSamplesAvailableShared,
-                 (s32)(mSamplesAvailableShared + samplesCopied));
+  AtomicExchange((s32*)&mSamplesAvailableShared, (s32)(mSamplesAvailableShared + samplesCopied));
 }
 
 // Streaming Data Per Instance
@@ -151,37 +133,17 @@ static void StreamingDecodingCallback(DecodedPacket* packet, void* data)
   ((StreamingDataPerInstance*)data)->DecodingCallback(packet);
 }
 
-StreamingDataPerInstance::StreamingDataPerInstance(Status& status,
-                                                   File* inputFile,
-                                                   ThreadLock* lock,
-                                                   unsigned channels,
-                                                   unsigned frames,
-                                                   unsigned instanceID) :
-    mDecoder(status,
-             inputFile,
-             lock,
-             channels,
-             frames,
-             StreamingDecodingCallback,
-             this),
+StreamingDataPerInstance::StreamingDataPerInstance(
+    Status& status, File* inputFile, ThreadLock* lock, unsigned channels, unsigned frames, unsigned instanceID) :
+    mDecoder(status, inputFile, lock, channels, frames, StreamingDecodingCallback, this),
     mPreviousSamples(0),
     mInstanceID(instanceID)
 {
 }
 
-StreamingDataPerInstance::StreamingDataPerInstance(Status& status,
-                                                   byte* inputData,
-                                                   unsigned dataSize,
-                                                   unsigned channels,
-                                                   unsigned frames,
-                                                   unsigned instanceID) :
-    mDecoder(status,
-             inputData,
-             dataSize,
-             channels,
-             frames,
-             StreamingDecodingCallback,
-             this),
+StreamingDataPerInstance::StreamingDataPerInstance(
+    Status& status, byte* inputData, unsigned dataSize, unsigned channels, unsigned frames, unsigned instanceID) :
+    mDecoder(status, inputData, dataSize, channels, frames, StreamingDecodingCallback, this),
     mPreviousSamples(0),
     mInstanceID(instanceID)
 {
@@ -218,8 +180,7 @@ StreamingSoundAsset::StreamingSoundAsset(Status& status,
     mFileName(fileName)
 {
   FileHeader header;
-  unsigned fileSize =
-      PacketDecoder::OpenAndReadHeader(status, fileName, &mInputFile, &header);
+  unsigned fileSize = PacketDecoder::OpenAndReadHeader(status, fileName, &mInputFile, &header);
   if (status.Failed())
     return;
 
@@ -275,9 +236,7 @@ void StreamingSoundAsset::AppendSamplesThreaded(BufferType* buffer,
     ErrorIf(true, "Instance data was not created on a streaming asset");
 
     // If it doesn't exist, set the requested samples to zero and return
-    memset(buffer->Data() + originalBufferSize,
-           0,
-           sizeof(float) * samplesRequested);
+    memset(buffer->Data() + originalBufferSize, 0, sizeof(float) * samplesRequested);
     return;
   }
 
@@ -286,8 +245,7 @@ void StreamingSoundAsset::AppendSamplesThreaded(BufferType* buffer,
   // Adjust the sample index to be within the current buffer
   sampleIndex -= data->mPreviousSamples;
 
-  CopySamplesIntoBuffer(
-      buffer->Data() + originalBufferSize, sampleIndex, samplesRequested, data);
+  CopySamplesIntoBuffer(buffer->Data() + originalBufferSize, sampleIndex, samplesRequested, data);
 }
 
 void StreamingSoundAsset::ResetStreamingFile(unsigned instanceID)
@@ -308,12 +266,8 @@ void StreamingSoundAsset::OnAddInstanceThreaded(unsigned instanceID)
   // If there is data in the buffer, create the instance data for streaming from
   // memory
   if (!mInputFileData.Empty())
-    data = new StreamingDataPerInstance(status,
-                                        mInputFileData.Data(),
-                                        mInputFileData.Size(),
-                                        mChannels,
-                                        mFrameCount,
-                                        instanceID);
+    data = new StreamingDataPerInstance(
+        status, mInputFileData.Data(), mInputFileData.Size(), mChannels, mFrameCount, instanceID);
   // Otherwise, check if the file name is set
   else if (!mFileName.Empty())
   {
@@ -321,17 +275,14 @@ void StreamingSoundAsset::OnAddInstanceThreaded(unsigned instanceID)
     // open it
     if (!mInputFile.IsOpen())
     {
-      mInputFile.Open(
-          mFileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
-      ErrorIf(!mInputFile.IsOpen(),
-              "Could not open streaming audio file to play a new instance");
+      mInputFile.Open(mFileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
+      ErrorIf(!mInputFile.IsOpen(), "Could not open streaming audio file to play a new instance");
       if (!mInputFile.IsOpen())
         return;
     }
 
     // Create the instance data for streaming from file
-    data = new StreamingDataPerInstance(
-        status, &mInputFile, &mLock, mChannels, mFrameCount, instanceID);
+    data = new StreamingDataPerInstance(status, &mInputFile, &mLock, mChannels, mFrameCount, instanceID);
   }
 
   ErrorIf(!data, "No data or file name to play streaming audio asset");
@@ -360,10 +311,9 @@ void StreamingSoundAsset::OnRemoveInstanceThreaded(unsigned instanceID)
   }
 }
 
-Zero::StreamingDataPerInstance*
-StreamingSoundAsset::GetInstanceData(unsigned instanceID)
+Zero::StreamingDataPerInstance* StreamingSoundAsset::GetInstanceData(unsigned instanceID)
 {
-  forRange(StreamingDataPerInstance & data, mDataPerInstanceList.All())
+  forRange (StreamingDataPerInstance& data, mDataPerInstanceList.All())
   {
     if (data.mInstanceID == instanceID)
       return &data;
@@ -406,19 +356,14 @@ void StreamingSoundAsset::CopySamplesIntoBuffer(float* outputBuffer,
 
   // Copy either the number of samples requested or the samples available,
   // whichever is smaller
-  unsigned samplesCopied = Math::Min(
-      samplesRequested, (unsigned)(data->mSamples.Size() - sampleIndex));
-  memcpy(outputBuffer,
-         data->mSamples.Data() + sampleIndex,
-         sizeof(float) * samplesCopied);
+  unsigned samplesCopied = Math::Min(samplesRequested, (unsigned)(data->mSamples.Size() - sampleIndex));
+  memcpy(outputBuffer, data->mSamples.Data() + sampleIndex, sizeof(float) * samplesCopied);
 
   // If we did not copy enough samples, keep trying (in case there is another
   // decoded buffer available)
   if (samplesCopied < samplesRequested)
-    CopySamplesIntoBuffer(outputBuffer + samplesCopied,
-                          sampleIndex + samplesCopied,
-                          samplesRequested - samplesCopied,
-                          data);
+    CopySamplesIntoBuffer(
+        outputBuffer + samplesCopied, sampleIndex + samplesCopied, samplesRequested - samplesCopied, data);
 }
 
 } // namespace Zero

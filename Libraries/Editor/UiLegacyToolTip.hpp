@@ -18,10 +18,7 @@ public:
   /// [ie, left-of, right-of, top-of, bottom-of].
   void SetPlacement(CameraViewport* viewport, RectangleParam localRect);
 
-  void SetPriority(IndicatorSide::Enum p0,
-                   IndicatorSide::Enum p1,
-                   IndicatorSide::Enum p2,
-                   IndicatorSide::Enum p3);
+  void SetPriority(IndicatorSide::Enum p0, IndicatorSide::Enum p1, IndicatorSide::Enum p2, IndicatorSide::Enum p3);
 
   void SetColorScheme(ToolTipColorScheme::Enum color);
   void SetBackgroundColor(Vec4Param c);

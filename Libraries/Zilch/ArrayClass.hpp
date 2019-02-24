@@ -55,27 +55,22 @@ public:
 
 // These are all the specializations that are optimized to store exactly that
 // data type All values that are unknown will be stored as the 'Any' type
-#  define ZilchDeclareDefineArray(ElementType, Linkage)                        \
-    ZilchDeclareCustomType(                                                    \
-        ArrayClass<ElementType>,                                               \
-        ZZ::Core::GetInstance()                                                \
-            .GetBuilder()                                                      \
-            ->InstantiateTemplate(                                             \
-                "Array",                                                       \
-                ZilchConstants(ZilchTypeId(ElementType)),                      \
-                LibraryArray(ZeroInit,                                         \
-                             Core::GetInstance().GetBuilder()->BuiltLibrary))  \
-            .Type,                                                             \
+#  define ZilchDeclareDefineArray(ElementType, Linkage)                                                                \
+    ZilchDeclareCustomType(                                                                                            \
+        ArrayClass<ElementType>,                                                                                       \
+        ZZ::Core::GetInstance()                                                                                        \
+            .GetBuilder()                                                                                              \
+            ->InstantiateTemplate("Array",                                                                             \
+                                  ZilchConstants(ZilchTypeId(ElementType)),                                            \
+                                  LibraryArray(ZeroInit, Core::GetInstance().GetBuilder()->BuiltLibrary))              \
+            .Type,                                                                                                     \
         Linkage);
 
-#  define ZilchDeclareDefineValueArray(ElementType, Linkage)                   \
-    ZilchDeclareDefineArray(ElementType,                                       \
-                            Linkage) typedef ArrayClass<ElementType>           \
-        Array##ElementType;
+#  define ZilchDeclareDefineValueArray(ElementType, Linkage)                                                           \
+    ZilchDeclareDefineArray(ElementType, Linkage) typedef ArrayClass<ElementType> Array##ElementType;
 
-#  define ZilchDeclareDefineHandleArray(ElementType, Linkage)                  \
-    ZilchDeclareDefineArray(HandleOf<ElementType>,                             \
-                            Linkage) typedef ArrayClass<HandleOf<ElementType>> \
+#  define ZilchDeclareDefineHandleArray(ElementType, Linkage)                                                          \
+    ZilchDeclareDefineArray(HandleOf<ElementType>, Linkage) typedef ArrayClass<HandleOf<ElementType>>                  \
         Array##ElementType;
 
 // Pre-existing useful declarations

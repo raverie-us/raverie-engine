@@ -54,8 +54,7 @@ class OutMessageChannel : public MessageChannel
 public:
   /// Constructors
   OutMessageChannel();
-  OutMessageChannel(MessageChannelId channelId,
-                    TransferMode::Enum transferMode);
+  OutMessageChannel(MessageChannelId channelId, TransferMode::Enum transferMode);
 
 private:
   //
@@ -140,8 +139,7 @@ private:
 template <>
 struct MoveWithoutDestructionOperator<InMessageChannel>
 {
-  static inline void MoveWithoutDestruction(InMessageChannel* dest,
-                                            InMessageChannel* source)
+  static inline void MoveWithoutDestruction(InMessageChannel* dest, InMessageChannel* source)
   {
     new (dest) InMessageChannel(ZeroMove(*source));
   }

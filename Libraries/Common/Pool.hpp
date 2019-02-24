@@ -21,11 +21,7 @@ public:
   {
     FreeBlock* NextBlock;
   };
-  Pool(cstr name,
-       Graph* parent,
-       size_t blockSize,
-       size_t blocksPerPage,
-       bool podStackPool = false);
+  Pool(cstr name, Graph* parent, size_t blockSize, size_t blocksPerPage, bool podStackPool = false);
   ~Pool();
 
   static void* operator new(size_t size)

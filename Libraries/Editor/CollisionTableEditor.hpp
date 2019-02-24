@@ -111,17 +111,9 @@ public:
 
   /// Creates all of the labels (on the left for now) for each group.
   /// This returns the x size taken up by the labels.
-  void CreateLabels(Array<CollisionGroup*>& groups,
-                    float height,
-                    float buffer,
-                    float& xStart,
-                    float& yStart);
+  void CreateLabels(Array<CollisionGroup*>& groups, float height, float buffer, float& xStart, float& yStart);
   /// Creates the matrix to edit all of the items in the table.
-  void CreateMatrix(Array<CollisionGroup*>& groups,
-                    float xStart,
-                    float yStart,
-                    Vec2Param size,
-                    float buffer);
+  void CreateMatrix(Array<CollisionGroup*>& groups, float xStart, float yStart, Vec2Param size, float buffer);
   /// Fills out the StringSource for what groups are addable by the user.
   void BuildGroupListing();
   /// Registers a new group when the user selects it in the combo box.

@@ -21,9 +21,7 @@ public:
   ZilchDeclareType(CustomCollisionEventTracker, TypeCopyMode::ReferenceType);
 
   /// Add a collision for this frame between ourself and the passed in collider.
-  void AddCollision(Collider* otherCollider,
-                    Vec3Param worldPoint,
-                    Vec3Param worldNormalTowardsOther);
+  void AddCollision(Collider* otherCollider, Vec3Param worldPoint, Vec3Param worldNormalTowardsOther);
   /// Send out all of the events that have been queued up. This includes
   /// determining what should be started/persisted/ended events. These events
   /// are sent with the prefix that is passed in, e.g. if you pass in
@@ -39,9 +37,7 @@ public:
     Vec3 mWorldNormalTowardsOther;
   };
 
-  void FilloutEvent(CollisionData& data,
-                    Physics::Manifold* manifold,
-                    CollisionEvent* toSend);
+  void FilloutEvent(CollisionData& data, Physics::Manifold* manifold, CollisionEvent* toSend);
   void SendEventList(Array<CollisionData>& events, StringParam eventName);
 
   typedef HashMap<CogId, CollisionData> CollisionMap;
