@@ -9,6 +9,7 @@ BinPackParameters: 'false'
 BreakBeforeBraces: Allman
 BreakConstructorInitializers: AfterColon
 BreakConstructorInitializersBeforeComma: 'true'
+ColumnLimit: '120'
 ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
 DerivePointerAlignment: 'false'
 ExperimentalAutoDetectBinPacking: 'false'
