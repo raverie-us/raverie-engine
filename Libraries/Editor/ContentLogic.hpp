@@ -13,7 +13,7 @@ class MouseEvent;
 bool LoadContentLibrary(StringParam name, bool isCore);
 
 void LoadContentConfig();
-bool LoadEditorContent();
+bool LoadCoreContent(Array<String>& coreLibs);
 
 class EditorPackageLoader : public ExplicitSingleton<EditorPackageLoader, EventObject>
 {

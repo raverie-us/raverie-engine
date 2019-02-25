@@ -175,7 +175,7 @@ void ShowBuiltInResource(StringParam name)
     resource->mContentItem->ShowInEditor = true;
 }
 
-bool LoadEditorContent()
+bool LoadCoreContent(Array<String>& coreLibs)
 {
   Z::gContentSystem->DefaultBuildStream = new TextStreamDebugPrint();
   Z::gContentSystem->EnumerateLibraries();
@@ -183,19 +183,12 @@ bool LoadEditorContent()
   ZPrint("Loading Editor Content...\n");
   EditorPackageLoader* loader = EditorPackageLoader::GetInstance();
 
-  Timer timer;
-  timer.Update();
+  TimerBlock timer("Loading Content");
 
   String docDirectory = GetUserDocumentsDirectory();
 
-  LoadContentLibrary("FragmentCore", true);
-  bool coreContent = LoadContentLibrary("Loading", true);
-
-  Array<String> coreLibs;
-  coreLibs.PushBack("ZeroCore");
-  coreLibs.PushBack("UiWidget");
-  coreLibs.PushBack("EditorUi");
-  coreLibs.PushBack("Editor");
+  bool coreContent = LoadContentLibrary("FragmentCore", true);
+  coreContent = coreContent && LoadContentLibrary("Loading", true);
 
   forRange (String libraryName, coreLibs.All())
   {
@@ -233,14 +226,6 @@ bool LoadEditorContent()
     }
   }
 
-  // The UVS on these need to be verified (currently they are incorrect)
-  // MeshManager::Find("Cube")->PrimitiveShape = MeshPrimitiveShape::Box;
-  // MeshManager::Find("Sphere")->PrimitiveShape = MeshPrimitiveShape::Sphere;
-  // MeshManager::Find("Cylinder")->PrimitiveShape =
-  // MeshPrimitiveShape::Cylinder;
-
-  float time = (float)timer.UpdateAndGetTime();
-  ZPrint("Finished Loading Editor Content in %.2f\n", time);
   return true;
 }
 

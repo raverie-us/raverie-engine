@@ -35,7 +35,10 @@ extern "C" int main(int argc, char* argv[])
   options.mWindowState = WindowState::Windowed;
   OsWindow* mainWindow = startup.Startup(options);
 
-  if (!LoadLauncherContent())
+  Array<String> coreLibs;
+  coreLibs.PushBack("ZeroCore");
+  coreLibs.PushBack("ZeroLauncherResources");
+  if (!LoadCoreContent(coreLibs))
     return 0;
 
   Z::gLauncher = new Launcher(mainWindow);

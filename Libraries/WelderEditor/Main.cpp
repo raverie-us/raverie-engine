@@ -78,7 +78,12 @@ extern "C" int main(int argc, char* argv[])
   }
   else
   {
-    if (!LoadEditorContent())
+    Array<String> coreLibs;
+    coreLibs.PushBack("ZeroCore");
+    coreLibs.PushBack("UiWidget");
+    coreLibs.PushBack("EditorUi");
+    coreLibs.PushBack("Editor");
+    if (!LoadCoreContent(coreLibs))
       return 1;
 
     CreateEditor(mainWindow, projectFile, newProject);
