@@ -65,7 +65,7 @@ bool LoadContentLibrary(StringParam name, bool isCore)
 
     Status status;
     ResourcePackage package;
-    Z::gContentSystem->BuildLibrary(status, library, package);
+    Z::gContentSystem->BuildLibrary(status, library, package, false);
 
     if (status)
     {
@@ -115,7 +115,10 @@ EditorPackageLoader::EditorPackageLoader()
 
 void EditorPackageLoader::OnPackagedBuilt(ContentSystemEvent* event)
 {
-  LoadPackage(Z::gEditor, Z::gEditor->mProject, event->mLibrary, event->mPackage);
+  if (Z::gEditor)
+  {
+    LoadPackage(Z::gEditor, Z::gEditor->mProject, event->mLibrary, event->mPackage);
+  }
 }
 
 bool EditorPackageLoader::LoadPackage(Editor* editor,
@@ -153,7 +156,7 @@ bool EditorPackageLoader::LoadPackage(Editor* editor,
 
     //?
     DoEditorSideImporting(package, nullptr);
-    delete package;
+    //delete package;
 
     Z::gEditor->SetExploded(false, true);
     Z::gEditor->ProjectLoaded();

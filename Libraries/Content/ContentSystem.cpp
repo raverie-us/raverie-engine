@@ -200,18 +200,11 @@ ContentLibrary* ContentSystem::LibraryFromDirectory(Status& status, StringParam 
   return library;
 }
 
-void ContentSystem::BuildLibrary(Status& status, ContentLibrary* library, ResourcePackage& package)
+void ContentSystem::BuildLibrary(Status& status, ContentLibrary* library, ResourcePackage& package, bool sendEvent)
 {
   BuildOptions buildOptions;
   SetupOptions(library, buildOptions);
-  BuildPackage(buildOptions, library, package);
 
-  if (buildOptions.BuildStatus != BuildStatus::Completed)
-    status.SetFailed(buildOptions.Message);
-}
-
-void ContentSystem::BuildPackage(BuildOptions& buildOptions, ContentLibrary* library, ResourcePackage& package)
-{
   String outputPath = ContentOutputPath;
 
   // Output path
@@ -228,6 +221,19 @@ void ContentSystem::BuildPackage(BuildOptions& buildOptions, ContentLibrary* lib
   library->BuildListing(package.Resources);
   Sort(package.Resources.All(), SortByLoadOrder());
   package.Save(libraryPackageFile);
+
+  if (buildOptions.BuildStatus != BuildStatus::Completed)
+    status.SetFailed(buildOptions.Message);
+
+  if (sendEvent)
+  {
+    // Changing this to non-delayed could be a problem
+    // If it is, we need to allocate the ResourcePackage.
+    ContentSystemEvent toSend;
+    toSend.mLibrary = library;
+    toSend.mPackage = &package;
+    Z::gContentSystem->DispatchEvent(Events::PackageBuilt, &toSend);
+  }
 }
 
 class ContentAddCleanUp
@@ -763,50 +769,6 @@ void ContentSystem::EnumerateLibrariesInPath(StringParam path)
       LibraryFromDirectory(status, name, directoryPath);
     }
   }
-}
-
-class BuildContentLibraryJob : public Job
-{
-public:
-  ContentLibrary* library;
-  BuildOptions buildOptions;
-
-  BuildContentLibraryJob(ContentLibrary* library) : library(library)
-  {
-  }
-
-  int Cancel() override
-  {
-    DebugPrint("Canceled build of library '%s'\n", library->Name.c_str());
-    buildOptions.BuildStatus = BuildStatus::Canceled;
-    return 0;
-  }
-
-  void Execute() override
-  {
-    Z::gContentSystem->SetupOptions(library, buildOptions);
-    ResourcePackage* package = new ResourcePackage();
-    Z::gContentSystem->BuildPackage(buildOptions, library, *package);
-
-    ContentSystemEvent* event = new ContentSystemEvent();
-    event->mLibrary = library;
-    event->mPackage = package;
-    Z::gDispatch->Dispatch(Z::gContentSystem, Events::PackageBuilt, event);
-  }
-};
-
-void ContentSystem::BuildLibraryIntoPackageJob(ContentLibrary* library)
-{
-  // This seems to occasionally happen, but when it does it crashes on another
-  // thread. I'm attempting to get more information by adding this here...
-  if (library == nullptr)
-  {
-    FatalEngineError("Content library is null for some reason");
-    return;
-  }
-
-  BuildContentLibraryJob* job = new BuildContentLibraryJob(library);
-  Z::gJobs->AddJob(job);
 }
 
 } // namespace Zero

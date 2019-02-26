@@ -46,13 +46,19 @@ void LoadProject(Editor* editor, Cog* projectCog, StringParam path, StringParam 
       String libraryName = libraryRef.mContentLibraryName;
       String contentFolder = FilePath::Combine(projectFolder, libraryName);
       Status loadContentLibrary;
-      ContentLibrary* projectLibrary =
+      ContentLibrary* contentLibrary =
           Z::gContentSystem->LibraryFromDirectory(loadContentLibrary, libraryName, contentFolder);
-      if (projectLibrary)
-        Z::gContentSystem->BuildLibraryIntoPackageJob(projectLibrary);
+      if (contentLibrary)
+      {
+        Status status;
+        ResourcePackage package;
+        Z::gContentSystem->BuildLibrary(status, contentLibrary, package, true);
+      }
       else
+      {
         DoNotifyWarning("Missing Library",
                         String::Format("Failed to find shared content library %s", libraryName.c_str()));
+      }
     }
   }
 
@@ -66,7 +72,9 @@ void LoadProject(Editor* editor, Cog* projectCog, StringParam path, StringParam 
   /// Store the library on the project
   project->ProjectContentLibrary = projectLibrary;
 
-  Z::gContentSystem->BuildLibraryIntoPackageJob(projectLibrary);
+  Status status;
+  ResourcePackage package;
+  Z::gContentSystem->BuildLibrary(status, projectLibrary, package, true);
 
   // Always select the first tool
   if (editor->Tools)

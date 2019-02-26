@@ -93,7 +93,7 @@ void BuildContent(ProjectSettings* project)
   // Build content for this project to make sure all files are up to date.
   Status status;
   ResourcePackage package;
-  Z::gContentSystem->BuildLibrary(status, project->ProjectContentLibrary, package);
+  Z::gContentSystem->BuildLibrary(status, project->ProjectContentLibrary, package, false);
   DoNotifyStatus(status);
 }
 

@@ -130,7 +130,7 @@ public:
   ContentLibrary* LibraryFromDirectory(Status& status, StringParam name, StringParam directory);
 
   /// Build the Content Library into a Resource Package.
-  void BuildLibrary(Status& status, ContentLibrary* library, ResourcePackage& package);
+  void BuildLibrary(Status& status, ContentLibrary* library, ResourcePackage& package, bool sendEvent);
 
   /// Build ContentItems into Resource Package.
   void BuildContentItems(Status& status, ContentItemArray& toBuild, ResourcePackage& package);
@@ -159,8 +159,6 @@ public:
   ContentItem* CreateFromName(StringRange name);
   void SetupOptions(ContentLibrary* library, BuildOptions& buildOptions);
   void EnumerateLibrariesInPath(StringParam path);
-  void BuildLibraryIntoPackageJob(ContentLibrary* library);
-  void BuildPackage(BuildOptions& buildOptions, ContentLibrary* library, ResourcePackage& package);
 
   BuildOptions Options;
   ContentComponentFactory ComponentFactory;
