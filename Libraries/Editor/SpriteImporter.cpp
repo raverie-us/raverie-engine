@@ -441,11 +441,8 @@ SpriteSheetImporter::AddSpriteResource(StringParam name, Image& output, IntRect 
   // Save builder data
   newContentItem->SaveContent();
 
-  Array<ContentItem*> contentToBuild;
-  contentToBuild.PushBack(newContentItem);
-
   ResourcePackage package;
-  Z::gContentSystem->BuildContentItems(status, contentToBuild, package);
+  Z::gContentSystem->BuildContentItem(status, newContentItem, package);
   DoNotifyStatus(status);
 
   ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(addContent.Library->Name);

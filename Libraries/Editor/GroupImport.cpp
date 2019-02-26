@@ -101,7 +101,7 @@ void RunGroupImport(ImportOptions& options)
 
   ResourcePackage package;
   Status status;
-  Z::gContentSystem->BuildContentItems(status, contentToBuild, package);
+  Z::gContentSystem->BuildContentItems(status, contentToBuild, library, package);
   DoNotifyStatus(status);
 
   // Load all resource generated into the active resource library

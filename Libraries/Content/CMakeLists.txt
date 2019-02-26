@@ -17,6 +17,7 @@ target_sources(Content
     ${CMAKE_CURRENT_LIST_DIR}/BaseBuilders.hpp
     ${CMAKE_CURRENT_LIST_DIR}/BinaryContent.cpp
     ${CMAKE_CURRENT_LIST_DIR}/BinaryContent.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BuildOptions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/BuildOptions.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ContentComposition.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ContentComposition.hpp

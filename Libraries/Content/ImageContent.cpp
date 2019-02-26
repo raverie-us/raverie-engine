@@ -14,7 +14,7 @@ ImageContent::ImageContent()
   mReload = false;
 }
 
-void ImageContent::BuildContent(BuildOptions& options)
+void ImageContent::BuildContentItem(BuildOptions& options)
 {
   forRange (BuilderComponent* bc, Builders.All())
   {
@@ -29,7 +29,7 @@ void ImageContent::BuildContent(BuildOptions& options)
     this->OnInitialize();
 
     // Queue for editor processing
-    options.EditorProcessing.PushBack(this);
+    mNeedsEditorProcessing = true;
     mReload = false;
   }
 }

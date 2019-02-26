@@ -71,7 +71,7 @@ public:
 
   // Content Item Interface
   void AddComponent(ContentComponent* cc) override;
-  void BuildContent(BuildOptions& options) override;
+  void BuildContentItem(BuildOptions& options) override;
   void Serialize(Serializer& stream) override;
   void BuildListing(ResourceListing& listing) override;
   void OnInitialize() override;

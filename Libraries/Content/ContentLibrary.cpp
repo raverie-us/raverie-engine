@@ -72,75 +72,12 @@ void ContentLibrary::Serialize(Serializer& stream)
   SerializeNameDefault(mReadOnly, false);
 }
 
-void ContentLibrary::BuildContent(BuildOptions& buildOptions)
-{
-  Z::gEngine->LoadingStart();
-
-  // Begin building content
-  buildOptions.BuildStatus = BuildStatus::Running;
-
-  int itemsToBuild = ContentItems.Size();
-  int itemsBuilt = 0;
-
-  String currentOperation = "Processing";
-  String currentTask = this->Name;
-  ContentMapType::valuerange itemsToProcess = ContentItems.Values();
-
-  // Continue until finished or canceled
-  while (!itemsToProcess.Empty() && buildOptions.BuildStatus == BuildStatus::Running)
-  {
-    ContentItem* item = itemsToProcess.Front();
-
-    if (buildOptions.SendProgress)
-    {
-      float progress = float(itemsBuilt + 1) / float(itemsToBuild);
-      Z::gEngine->LoadingUpdate(currentOperation, currentTask, item->Filename, ProgressType::Normal, progress);
-    }
-
-    // Build the content item
-    item->BuildContent(buildOptions);
-
-    if (buildOptions.Failure)
-    {
-      ZPrint("Content Build Failed, %s\n", buildOptions.Message.c_str());
-      buildOptions.Failure = false;
-      buildOptions.Message = String();
-    }
-    else
-      ++itemsBuilt;
-
-    itemsToProcess.PopFront();
-
-    YieldToOs();
-  }
-
-  // if all of the items were built, then the build completed successfully
-  if (itemsBuilt == itemsToBuild)
-  {
-    buildOptions.BuildStatus = BuildStatus::Completed;
-  }
-  else
-  {
-    buildOptions.BuildStatus = BuildStatus::Failed;
-    String message = String::Format("Failed to build content library '%s'", this->Name.c_str());
-    DoNotifyError("Content Library build failed", message);
-  }
-
-  Z::gEngine->LoadingFinish();
-}
-
 void ContentLibrary::BuildListing(ResourceListing& listing)
 {
   forRange (ContentItem* node, ContentItems.Values())
   {
     node->BuildListing(listing);
   }
-}
-
-void ContentLibrary::SetPaths(BuildOptions& buildOptions)
-{
-  buildOptions.SourcePath = this->SourcePath;
-  buildOptions.OutputPath = GetOutputPath();
 }
 
 } // namespace Zero

@@ -15,35 +15,24 @@ bool NeedToBuild(StringParam source, StringParam destination)
 
 bool NeedToBuild(BuildOptions& options, StringParam source, StringParam destination)
 {
-  if (options.BuildMode == BuildMode::Incremental)
-  {
-    int fileCmp = CheckFileTime(destination, source);
+  int fileCmp = CheckFileTime(destination, source);
 
-    // destination is older
-    if (fileCmp == -1)
-    {
-      if (options.Verbosity == Verbosity::Detailed)
-      {
-        String msg =
-            String::Format("Needs to build because '%s' is newer than '%s'\n", source.c_str(), destination.c_str());
-        options.BuildTextStream->Write(msg.c_str());
-      }
-      return true;
-    }
-    else // fileCmp = 0 or 1
-    {
-      if (options.Verbosity == Verbosity::Detailed)
-      {
-        String msg = String::Format("File '%s' is up to date relative to '%s'\n", destination.c_str(), source.c_str());
-        options.BuildTextStream->Write(msg.c_str());
-      }
-      return false;
-    }
-  }
-  else
+  // destination is older
+  if (fileCmp == -1)
   {
-    // Always build in non incremental
+    if (options.Verbosity == Verbosity::Detailed)
+    {
+      ZPrint("Needs to build because '%s' is newer than '%s'\n", source.c_str(), destination.c_str());
+    }
     return true;
+  }
+  else // fileCmp = 0 or 1
+  {
+    if (options.Verbosity == Verbosity::Detailed)
+    {
+      ZPrint("File '%s' is up to date relative to '%s'\n", destination.c_str(), source.c_str());
+    }
+    return false;
   }
 }
 

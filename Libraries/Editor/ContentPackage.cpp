@@ -146,7 +146,7 @@ void ImportContentPackageListing(ContentPackageListing& listing, ContentLibrary*
 
   ResourcePackage package;
   Status status;
-  Z::gContentSystem->BuildContentItems(status, newContent, package);
+  Z::gContentSystem->BuildContentItems(status, newContent, library, package);
   DoNotifyStatus(status);
 
   // Load all resource generated into the active resource library

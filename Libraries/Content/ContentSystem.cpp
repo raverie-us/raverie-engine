@@ -78,7 +78,6 @@ ContentSystem::ContentSystem()
 {
   mHistoryEnabled = true;
   mIdCount = 0;
-  DefaultBuildStream = nullptr;
 
   // some special load order dependencies
   LoadOrderMap["FontDefinition"] = 5;
@@ -95,14 +94,11 @@ ContentSystem::ContentSystem()
   IgnoredExtensions.Insert("libview");
   IgnoredExtensions.Insert("__pycache__");
 
-  SystemVerbosity = Verbosity::Minimal;
-
   HistoryPath = FilePath::Combine(GetUserDocumentsDirectory(), "ZeroEditor", "History");
 }
 
 ContentSystem::~ContentSystem()
 {
-  SafeDelete(DefaultBuildStream);
   DeleteObjectsInContainer(Libraries);
 }
 
@@ -202,28 +198,15 @@ ContentLibrary* ContentSystem::LibraryFromDirectory(Status& status, StringParam 
 
 void ContentSystem::BuildLibrary(Status& status, ContentLibrary* library, ResourcePackage& package, bool sendEvent)
 {
-  BuildOptions buildOptions;
-  SetupOptions(library, buildOptions);
-
-  String outputPath = ContentOutputPath;
-
-  // Output path
-  String libraryOutputPath = library->GetOutputPath();
-  String libraryPackageFile = FilePath::CombineWithExtension(libraryOutputPath, library->Name, ".pack");
-
   ZPrintFilter(Filter::EngineFilter, "Building Content Library '%s'\n", library->Name.c_str());
-  CreateDirectoryAndParents(libraryOutputPath);
-  library->BuildContent(buildOptions);
 
-  package.Name = library->Name;
-  package.Location = libraryOutputPath;
-  package.EditorProcessing.Swap(buildOptions.EditorProcessing);
-  library->BuildListing(package.Resources);
-  Sort(package.Resources.All(), SortByLoadOrder());
+  Array<ContentItem*> items;
+  items.Reserve(library->ContentItems.Size());
+  items.Append(library->ContentItems.Values());
+  Z::gContentSystem->BuildContentItems(status, items, library, package);
+
+  String libraryPackageFile = FilePath::CombineWithExtension(library->GetOutputPath(), library->Name, ".pack");
   package.Save(libraryPackageFile);
-
-  if (buildOptions.BuildStatus != BuildStatus::Completed)
-    status.SetFailed(buildOptions.Message);
 
   if (sendEvent)
   {
@@ -693,56 +676,52 @@ ContentItem* ContentSystem::CreateFromName(StringRange name)
   return nullptr;
 }
 
-void ContentSystem::SetupOptions(ContentLibrary* library, BuildOptions& buildOptions)
-{
-  library->SetPaths(buildOptions);
-  buildOptions.Packaging = Packaging::Directory;
-  buildOptions.Verbosity = SystemVerbosity;
-  buildOptions.ProcessingLevel = ProcessingLevel::Production;
-  buildOptions.BuildMode = BuildMode::Incremental;
-  buildOptions.ToolPath = Z::gContentSystem->ToolPath;
-  buildOptions.BuildStatus = BuildStatus::Starting;
-  buildOptions.SendProgress = true;
-  buildOptions.BuildTextStream = DefaultBuildStream;
-  buildOptions.Failure = false;
-}
-
-void ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild, ResourcePackage& package)
+void ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild, ContentLibrary* library, ResourcePackage& package)
 {
   if (toBuild.Empty())
     return;
 
   Z::gEngine->LoadingStart();
 
-  BuildOptions buildOptions;
-  ContentLibrary* library = toBuild[0]->mLibrary;
+  if (package.Name.Empty())
+    package.Name = library->Name;
 
-  SetupOptions(library, buildOptions);
+  package.Location = library->GetOutputPath();
+  CreateDirectoryAndParents(package.Location);
+
+  BuildOptions buildOptions(library);
+
+  bool allBuilt = true;
 
   for (uint i = 0; i < toBuild.Size(); ++i)
   {
     // Process from this contentItem down.
     ContentItem* contentItem = toBuild[i];
+    static const String cProcessing("Processing");
     Z::gEngine->LoadingUpdate(
-        "Loading", package.Name, contentItem->Filename, ProgressType::Normal, (float)(i + 1) / toBuild.Size());
+      cProcessing, library->Name, contentItem->Filename, ProgressType::Normal, (float)(i + 1) / toBuild.Size());
 
-    contentItem->BuildContent(buildOptions);
+    contentItem->BuildContentItem(buildOptions);
 
     if (buildOptions.Failure)
     {
-      status.SetFailed(buildOptions.Message);
-      Z::gEngine->LoadingFinish();
-      return;
+      ZPrint("Content Build Failed, %s\n", buildOptions.Message.c_str());
+      buildOptions.Failure = false;
+      buildOptions.Message = String();
+      allBuilt = false;
     }
 
     contentItem->BuildListing(package.Resources);
+
+    // Don't do this in the thread (do it after).
+    if (contentItem->mNeedsEditorProcessing)
+      package.EditorProcessing.PushBack(contentItem);
   }
 
   Sort(package.Resources.All(), SortByLoadOrder());
 
-  package.Location = library->GetOutputPath();
-
-  package.EditorProcessing.Swap(buildOptions.EditorProcessing);
+  if (!allBuilt)
+    status.SetFailed(String::Format("Failed to build content library '%s'", library->Name.c_str()));
 
   Z::gEngine->LoadingFinish();
 }
@@ -751,7 +730,8 @@ void ContentSystem::BuildContentItem(Status& status, ContentItem* contentItem, R
 {
   ContentItemArray contentItems;
   contentItems.PushBack(contentItem);
-  BuildContentItems(status, contentItems, package);
+  BuildContentItems(status, contentItems, contentItem->mLibrary, package);
+  DoNotifyStatus(status);
 }
 
 void ContentSystem::EnumerateLibrariesInPath(StringParam path)

@@ -139,7 +139,7 @@ public:
   GeometryContent(StringParam inputFilename);
   String GetName();
   // Content Item Interface
-  void BuildContent(BuildOptions& options) override;
+  void BuildContentItem(BuildOptions& options) override;
   GeometryContent(ContentInitializer& initializer);
 };
 

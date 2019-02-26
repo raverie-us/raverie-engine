@@ -59,6 +59,8 @@ public:
 
   bool ShowInEditor;
 
+  bool mNeedsEditorProcessing = false;
+
   virtual void AddComponent(ContentComponent* cc) = 0;
 
   // Save the content object meta file data.
@@ -89,11 +91,11 @@ public:
   virtual Object* GetEditingObject(Resource* resource);
 
   // Build the content item
-  virtual void BuildContent(BuildOptions& buildOptions) = 0;
+  virtual void BuildContentItem(BuildOptions& buildOptions) = 0;
 
   // Helper that builds the content item using build options from the content
   // libarary.
-  void BuildContent();
+  void BuildContentItem();
 
   // Build the resource listing that this content item makes
   virtual void BuildListing(ResourceListing& listing);

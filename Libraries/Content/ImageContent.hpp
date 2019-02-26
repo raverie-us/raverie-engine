@@ -12,7 +12,7 @@ public:
   ZilchDeclareType(ImageContent, TypeCopyMode::ReferenceType);
   ImageContent();
 
-  void BuildContent(BuildOptions& options) override;
+  void BuildContentItem(BuildOptions& options) override;
 
   bool mReload;
 };

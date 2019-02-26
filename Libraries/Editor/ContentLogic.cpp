@@ -51,8 +51,6 @@ void LoadContentConfig()
       CopyFolderContents(contentSystem->ContentOutputPath, prebuiltContent);
     }
   }
-
-  contentSystem->SystemVerbosity = contentConfig->ContentVerbosity;
 }
 
 bool LoadContentLibrary(StringParam name, bool isCore)
@@ -154,9 +152,7 @@ bool EditorPackageLoader::LoadPackage(Editor* editor,
     if (!status)
       DoNotifyError("Failed to load resource package.", status.Message);
 
-    //?
     DoEditorSideImporting(package, nullptr);
-    //delete package;
 
     Z::gEditor->SetExploded(false, true);
     Z::gEditor->ProjectLoaded();
@@ -180,7 +176,6 @@ void ShowBuiltInResource(StringParam name)
 
 bool LoadCoreContent(Array<String>& coreLibs)
 {
-  Z::gContentSystem->DefaultBuildStream = new TextStreamDebugPrint();
   Z::gContentSystem->EnumerateLibraries();
 
   ZPrint("Loading Editor Content...\n");

@@ -19,6 +19,7 @@ ZilchDefineType(ConsoleUi, builder, type)
 
 void ConsoleUi::UiConsoleListener::Print(FilterType filterType, cstr message)
 {
+  // ConsoleLog handles multiple threads.
   Owner->ConsoleLog(filterType, message);
 }
 

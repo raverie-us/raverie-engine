@@ -505,7 +505,7 @@ String GeometryContent::GetName()
   return FilePath::GetFileNameWithoutExtension(Filename);
 }
 
-void GeometryContent::BuildContent(BuildOptions& options)
+void GeometryContent::BuildContentItem(BuildOptions& options)
 {
   bool needToBuild = ContentComposition::AnyNeedsBuilding(options);
   if (needToBuild)
@@ -583,7 +583,7 @@ void GeometryContent::BuildContent(BuildOptions& options)
       this->OnInitialize();
 
       // Queue for editor processing
-      options.EditorProcessing.PushBack(this);
+      mNeedsEditorProcessing = true;
     }
   }
 }

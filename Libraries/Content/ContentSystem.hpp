@@ -133,7 +133,7 @@ public:
   void BuildLibrary(Status& status, ContentLibrary* library, ResourcePackage& package, bool sendEvent);
 
   /// Build ContentItems into Resource Package.
-  void BuildContentItems(Status& status, ContentItemArray& toBuild, ResourcePackage& package);
+  void BuildContentItems(Status& status, ContentItemArray& toBuild, ContentLibrary* library, ResourcePackage& package);
 
   /// Build Individual ContentItems into Resource Package.
   void BuildContentItem(Status& status, ContentItem* contentItem, ResourcePackage& package);
@@ -157,10 +157,8 @@ public:
 
   // Internals
   ContentItem* CreateFromName(StringRange name);
-  void SetupOptions(ContentLibrary* library, BuildOptions& buildOptions);
   void EnumerateLibrariesInPath(StringParam path);
 
-  BuildOptions Options;
   ContentComponentFactory ComponentFactory;
 
   typedef HashMap<String, ContentTypeEntry> ContentCreatorMapType;
@@ -197,8 +195,6 @@ public:
   /// Where the tools (curl, crash handler, etc) are located
   String ToolPath;
 
-  Verbosity::Enum SystemVerbosity;
-  TextStream* DefaultBuildStream;
   HashSet<ContentItemId> mModifiedContentItems;
 
 private:
