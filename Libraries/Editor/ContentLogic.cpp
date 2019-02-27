@@ -56,50 +56,49 @@ void LoadContentConfig()
 bool LoadContentLibrary(StringParam name, bool isCore)
 {
   ContentLibrary* library = Z::gContentSystem->Libraries.FindValue(name, nullptr);
-  if (library)
+  if (!library)
   {
-    if (isCore)
-      library->SetReadOnly(true);
-
-    Status status;
-    ResourcePackage package;
-    Z::gContentSystem->BuildLibrary(status, library, package, false);
-
-    if (status)
-    {
-      if (isCore)
-      {
-        forRange (ResourceEntry& entry, package.Resources.All())
-        {
-          if (entry.mLibrarySource)
-          {
-            if (ContentEditorOptions* options = entry.mLibrarySource->has(ContentEditorOptions))
-              entry.mLibrarySource->ShowInEditor = options->mShowInEditor;
-            else
-              entry.mLibrarySource->ShowInEditor = false;
-          }
-        }
-      }
-
-      Status status;
-      Z::gResources->LoadPackage(status, &package);
-      if (!status)
-        DoNotifyError("Failed to load resource package.", status.Message);
-
-      return (bool)status;
-    }
-    else
-    {
-      return false;
-    }
-
-    return true;
-  }
-  else
-  {
-    ZPrint("Failed to find core content library %s.\n", name.c_str());
+    FatalEngineError("Failed to find core content library %s.\n", name.c_str());
     return false;
   }
+
+  if (isCore)
+    library->SetReadOnly(true);
+
+  Status status;
+  ResourcePackage package;
+  Z::gContentSystem->BuildLibrary(status, library, package, false);
+
+  if (!status)
+    return false;
+
+  if (isCore)
+  {
+    forRange (ResourceEntry& entry, package.Resources.All())
+    {
+      if (entry.mLibrarySource)
+      {
+        if (ContentEditorOptions* options = entry.mLibrarySource->has(ContentEditorOptions))
+          entry.mLibrarySource->ShowInEditor = options->mShowInEditor;
+        else
+          entry.mLibrarySource->ShowInEditor = false;
+      }
+    }
+  }
+
+  Z::gResources->LoadPackage(status, &package);
+  if (!status)
+  {
+    if (isCore)
+    {
+      FatalEngineError("Failed to load core content library for editor. Resources"
+        " need to be in the working directory.");
+    }
+
+    DoNotifyError("Failed to load resource package.", status.Message);
+  }
+
+  return (bool)status;
 }
 
 ZilchDefineType(EditorPackageLoader, builder, type)
@@ -185,19 +184,12 @@ bool LoadCoreContent(Array<String>& coreLibs)
 
   String docDirectory = GetUserDocumentsDirectory();
 
-  bool coreContent = LoadContentLibrary("FragmentCore", true);
-  coreContent = coreContent && LoadContentLibrary("Loading", true);
+  LoadContentLibrary("FragmentCore", true);
+  LoadContentLibrary("Loading", true);
 
   forRange (String libraryName, coreLibs.All())
   {
-    coreContent = coreContent && LoadContentLibrary(libraryName, true);
-  }
-
-  if (!coreContent)
-  {
-    FatalEngineError("Failed to load core content library for editor. Resources"
-                     " need to be in the working directory.");
-    return false;
+    LoadContentLibrary(libraryName, true);
   }
 
   // Show all default resources
