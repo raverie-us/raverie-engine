@@ -13,6 +13,10 @@ public:
 
   EditorMain(Composite* parent, OsWindow* window);
   ~EditorMain();
+
+  void OnPackagedBuilt(ContentSystemEvent* event);
+  bool LoadPackage(Cog* projectCog, ContentLibrary* library, ResourcePackage* package);
+
   void OnEngineUpdate(UpdateEvent* event);
   void OnClosing(HandleableEvent* event);
   void OnMouseDown(MouseEvent* mouseEvent);
@@ -63,6 +67,8 @@ public:
   void OnNotifyEvent(NotifyEvent* event);
   void StressTest(CommandEvent* event);
   void OnMainClick(MouseEvent* event);
+
+  Array<ResourcePackage*> PackagesToLoad;
 };
 
 } // namespace Zero

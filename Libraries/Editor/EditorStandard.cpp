@@ -119,7 +119,6 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeTypeAs(CurveEditing::Draggable, "CurveDraggable");
   ZilchInitializeTypeAs(CurveEditing::ControlPoint, "CurveControlPoint");
   ZilchInitializeTypeAs(CurveEditing::Tangent, "CurveTangent");
-  ZilchInitializeType(EditorPackageLoader);
   ZilchInitializeType(Document);
   ZilchInitializeType(DocumentManager);
 
@@ -301,7 +300,6 @@ void EditorLibrary::Initialize()
   Exporter::Initialize();
   PreviewWidgetFactory::Initialize();
   ResourceEditors::Initialize();
-  EditorPackageLoader::Initialize();
   ValueEditorFactory::Initialize();
   ColorScheme::Initialize();
   HotKeyCommands::Initialize();
@@ -323,7 +321,6 @@ void EditorLibrary::Shutdown()
   HotKeyCommands::Destroy();
   ColorScheme::Destroy();
   ValueEditorFactory::Destroy();
-  EditorPackageLoader::Destroy();
   ResourceEditors::Destroy();
   PreviewWidgetFactory::Destroy();
   DocumentManager::Destroy();

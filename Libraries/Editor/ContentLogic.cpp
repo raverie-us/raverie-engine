@@ -101,84 +101,11 @@ bool LoadContentLibrary(StringParam name, bool isCore)
   return (bool)status;
 }
 
-ZilchDefineType(EditorPackageLoader, builder, type)
-{
-}
-
-EditorPackageLoader::EditorPackageLoader()
-{
-  ConnectThisTo(Z::gContentSystem, Events::PackageBuilt, OnPackagedBuilt);
-}
-
-void EditorPackageLoader::OnPackagedBuilt(ContentSystemEvent* event)
-{
-  if (Z::gEditor)
-  {
-    LoadPackage(Z::gEditor, Z::gEditor->mProject, event->mLibrary, event->mPackage);
-  }
-}
-
-bool EditorPackageLoader::LoadPackage(Editor* editor,
-                                      Cog* projectCog,
-                                      ContentLibrary* library,
-                                      ResourcePackage* package)
-{
-  ProjectSettings* project = projectCog->has(ProjectSettings);
-
-  ResourceSystem* resourceSystem = Z::gResources;
-
-  if (project->ProjectContentLibrary == library)
-  {
-    // Load all packages
-    forRange (ResourcePackage* dependentPackage, PackagesToLoad.All())
-    {
-      Status status;
-      ResourceLibrary* library = resourceSystem->LoadPackage(status, dependentPackage);
-      if (!status)
-        DoNotifyError("Failed to load resource package.", status.Message);
-
-      project->SharedResourceLibraries.PushBack(library);
-      delete dependentPackage;
-    }
-    PackagesToLoad.Clear();
-
-    // Set the content library so Loading may try to create new content for
-    // fixing old content elements.
-    editor->mProjectLibrary = library;
-
-    Status status;
-    project->ProjectResourceLibrary = resourceSystem->LoadPackage(status, package);
-    if (!status)
-      DoNotifyError("Failed to load resource package.", status.Message);
-
-    DoEditorSideImporting(package, nullptr);
-
-    Z::gEditor->SetExploded(false, true);
-    Z::gEditor->ProjectLoaded();
-    return true;
-  }
-  else
-  {
-    PackagesToLoad.PushBack(package);
-  }
-
-  return false;
-}
-
-template <typename ManagerType>
-void ShowBuiltInResource(StringParam name)
-{
-  Resource* resource = ManagerType::Find(name);
-  if (resource && resource->mContentItem)
-    resource->mContentItem->ShowInEditor = true;
-}
-
 bool LoadCoreContent(Array<String>& coreLibs)
 {
   Z::gContentSystem->EnumerateLibraries();
 
-  ZPrint("Loading Editor Content...\n");
-  EditorPackageLoader* loader = EditorPackageLoader::GetInstance();
+  ZPrint("Loading Content...\n");
 
   TimerBlock timer("Loading Content");
 
