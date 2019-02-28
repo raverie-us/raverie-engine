@@ -441,15 +441,15 @@ SpriteSheetImporter::AddSpriteResource(StringParam name, Image& output, IntRect 
   // Save builder data
   newContentItem->SaveContent();
 
-  ResourcePackage package;
-  Z::gContentSystem->BuildContentItem(status, newContentItem, package);
+  HandleOf<ResourcePackage> packageHandle = Z::gContentSystem->BuildSingleContentItem(status, newContentItem);
+  ResourcePackage* package = packageHandle;
   DoNotifyStatus(status);
 
   ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(addContent.Library->Name);
-  Z::gResources->ReloadPackage(resourceLibrary, &package);
+  Z::gResources->ReloadPackage(resourceLibrary, package);
 
-  ErrorIf(package.Resources.Size() != 1, "Should only be a single SpriteSource built.");
-  SpriteSource* spriteSource = (SpriteSource*)Z::gResources->GetResource(package.Resources.Front().mResourceId);
+  ErrorIf(package->Resources.Size() != 1, "Should only be a single SpriteSource built.");
+  SpriteSource* spriteSource = (SpriteSource*)Z::gResources->GetResource(package->Resources.Front().mResourceId);
 
   return spriteSource;
 }

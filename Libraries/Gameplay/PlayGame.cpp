@@ -15,14 +15,7 @@ void LoadResourcePackageRelative(StringParam baseDirectory, StringParam libraryN
     FatalEngineError("Failed to find needed content package. %s", libraryName.c_str());
   }
 
-  ResourcePackage* package = new ResourcePackage();
-  package->Load(packageFile);
-  package->Location = path;
-
-  Status status;
-  Z::gResources->LoadPackage(status, package);
-  if (!status)
-    DoNotifyError("Failed to load resource package.", status.Message);
+  Z::gResources->LoadPackageFile(packageFile);
 }
 
 void CreateGame(OsWindow* mainWindow, Cog* projectCog, StringParam projectFile)

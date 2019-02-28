@@ -885,7 +885,13 @@ void EditorSaveResource(Resource* resource)
   resource->mContentItem->SaveContent();
 }
 
-void BuildContent(ProjectSettings* project);
+void BuildContent(ProjectSettings* project)
+{
+  // Build content for this project to make sure all files are up to date.
+  Status status;
+  Z::gContentSystem->BuildLibrary(status, project->ProjectContentLibrary, false);
+  DoNotifyStatus(status);
+}
 
 Status Editor::SaveAll(bool showNotify)
 {

@@ -193,7 +193,7 @@ Object* ContentItem::GetEditingObject(Resource* resource)
   }
 }
 
-void ContentItem::BuildContentItem()
+void ContentItem::BuildContentItem(bool useJob)
 {
   BuildOptions options(mLibrary);
   BuildContentItem(options);

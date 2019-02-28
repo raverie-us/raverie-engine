@@ -40,15 +40,15 @@ Resource* AddResourceFromFile(StringParam filePath, StringParam resourceType)
   if (addContentStatus.Succeeded())
   {
     // Build a package to load the content items resources
-    ResourcePackage package;
     Status status;
-    Z::gContentSystem->BuildContentItem(status, newContentItem, package);
+    HandleOf<ResourcePackage> packageHandle = Z::gContentSystem->BuildSingleContentItem(status, newContentItem);
+    ResourcePackage* package = packageHandle;
     DoNotifyStatus(status);
 
-    Z::gResources->LoadIntoLibrary(status, resourceLibrary, &package, true);
+    Z::gResources->LoadIntoLibrary(status, resourceLibrary, package, true);
     DoNotifyStatus(status);
 
-    DoEditorSideImporting(&package, NULL);
+    DoEditorSideImporting(package, NULL);
 
     DoNotify("File Added", String::Format("File '%s' has been added.", fileName.c_str()), "Disk");
   }
@@ -413,20 +413,20 @@ void ReloadContentItem(ContentItem* contentItem)
   ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(contentItem->mLibrary->Name);
 
   // Rebuild the content item to get new modified resources
-  ResourcePackage package;
-
   Status status;
-  Z::gContentSystem->BuildContentItem(status, contentItem, package);
+  HandleOf<ResourcePackage> packageHandle = Z::gContentSystem->BuildSingleContentItem(status, contentItem);
+  ResourcePackage* package = packageHandle;
+
   DoNotifyStatus(status);
 
   // Remove this content items old resources (may have been removed)
-  UnloadInactive(contentItem, resourceLibrary, &package);
+  UnloadInactive(contentItem, resourceLibrary, package);
 
   // Reload resources / load new resources
-  Z::gResources->ReloadPackage(resourceLibrary, &package);
+  Z::gResources->ReloadPackage(resourceLibrary, package);
 
   // May have editor-side importing to do (archetypes, etc)
-  DoEditorSideImporting(&package, NULL);
+  DoEditorSideImporting(package, NULL);
 }
 
 void EditResourceExternal(Resource* resource)
@@ -516,8 +516,8 @@ Resource* LoadResourceFromNewContentItem(ResourceManager* resourceManager,
 
   // Build the content item to get a resource package with one resource
   Status status;
-  ResourcePackage package;
-  Z::gContentSystem->BuildContentItem(status, newContentItem, package);
+  HandleOf<ResourcePackage> packageHandle = Z::gContentSystem->BuildSingleContentItem(status, newContentItem);
+  ResourcePackage* package = packageHandle;
 
   if (status.Failed())
   {
@@ -530,10 +530,10 @@ Resource* LoadResourceFromNewContentItem(ResourceManager* resourceManager,
   ContentLibrary* contentLibrary = newContentItem->mLibrary;
 
   // Resource that are added this way only have one resource per content item
-  ErrorIf(package.Resources.Size() != 1 && !newContentItem->mIgnoreMultipleResourcesWarning,
+  ErrorIf(package->Resources.Size() != 1 && !newContentItem->mIgnoreMultipleResourcesWarning,
           "Multiple resources in content item.");
 
-  if (package.Resources.Size() > 0)
+  if (package->Resources.Size() > 0)
   {
     // ResourceLibrary resource will be loaded into
     ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(contentLibrary->Name);
@@ -541,7 +541,7 @@ Resource* LoadResourceFromNewContentItem(ResourceManager* resourceManager,
     if (resource)
     {
       // if the resource was already created, just add it to the set
-      resourceManager->AddResource(package.Resources[0], resource);
+      resourceManager->AddResource(package->Resources[0], resource);
       resource->UpdateContentItem(newContentItem);
 
       if (resourceLibrary)
@@ -552,7 +552,7 @@ Resource* LoadResourceFromNewContentItem(ResourceManager* resourceManager,
       // new resource
       Status status;
       // Events are sent by the resource manager
-      Z::gResources->LoadIntoLibrary(status, resourceLibrary, &package, true);
+      Z::gResources->LoadIntoLibrary(status, resourceLibrary, package, true);
       DoNotifyStatus(status);
 
       // RESOURCEREFACTOR Why was this doing what it was doing...????

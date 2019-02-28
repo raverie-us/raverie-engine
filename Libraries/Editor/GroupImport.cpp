@@ -99,16 +99,16 @@ void RunGroupImport(ImportOptions& options)
   // Build all new content items
   ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(library->Name);
 
-  ResourcePackage package;
   Status status;
-  Z::gContentSystem->BuildContentItems(status, contentToBuild, library, package);
+  HandleOf<ResourcePackage> packageHandle = Z::gContentSystem->BuildContentItems(status, contentToBuild, library, false);
+  ResourcePackage* package = packageHandle;
   DoNotifyStatus(status);
 
   // Load all resource generated into the active resource library
-  Z::gResources->ReloadPackage(resourceLibrary, &package);
+  Z::gResources->ReloadPackage(resourceLibrary, package);
 
   // Do editor side importing
-  DoEditorSideImporting(&package, &options);
+  DoEditorSideImporting(package, &options);
 
   // Compile all scripts
   ZilchManager::GetInstance()->TriggerCompileExternally();

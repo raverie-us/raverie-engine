@@ -144,13 +144,12 @@ void ImportContentPackageListing(ContentPackageListing& listing, ContentLibrary*
   // Build all new content items
   ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(library->Name);
 
-  ResourcePackage package;
   Status status;
-  Z::gContentSystem->BuildContentItems(status, newContent, library, package);
+  HandleOf<ResourcePackage> package = Z::gContentSystem->BuildContentItems(status, newContent, library, false);
   DoNotifyStatus(status);
 
   // Load all resource generated into the active resource library
-  Z::gResources->ReloadPackage(resourceLibrary, &package);
+  Z::gResources->ReloadPackage(resourceLibrary, package);
 }
 
 } // namespace Zero

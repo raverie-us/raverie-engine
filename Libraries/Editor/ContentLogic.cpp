@@ -66,15 +66,15 @@ bool LoadContentLibrary(StringParam name, bool isCore)
     library->SetReadOnly(true);
 
   Status status;
-  ResourcePackage package;
-  Z::gContentSystem->BuildLibrary(status, library, package, false);
+  HandleOf<ResourcePackage> packageHandle = Z::gContentSystem->BuildLibrary(status, library, false);
+  ResourcePackage* package = packageHandle;
 
   if (!status)
     return false;
 
   if (isCore)
   {
-    forRange (ResourceEntry& entry, package.Resources.All())
+    forRange (ResourceEntry& entry, package->Resources.All())
     {
       if (entry.mLibrarySource)
       {
@@ -86,7 +86,7 @@ bool LoadContentLibrary(StringParam name, bool isCore)
     }
   }
 
-  Z::gResources->LoadPackage(status, &package);
+  Z::gResources->LoadPackage(status, package);
   if (!status)
   {
     if (isCore)

@@ -88,15 +88,6 @@ void ArchiveProject(ProjectSettings* project)
   new ArchiveProjectCallback();
 }
 
-void BuildContent(ProjectSettings* project)
-{
-  // Build content for this project to make sure all files are up to date.
-  Status status;
-  ResourcePackage package;
-  Z::gContentSystem->BuildLibrary(status, project->ProjectContentLibrary, package, false);
-  DoNotifyStatus(status);
-}
-
 void ExportGame(ProjectSettings* project)
 {
   Exporter* exporter = Exporter::GetInstance();

@@ -90,12 +90,12 @@ void ResourceSystem::AddLoader(StringParam resourceTypeId, ResourceLoader* loade
 
 ResourceLibrary* ResourceSystem::LoadPackageFile(StringParam fileName)
 {
-  ResourcePackage* package = new ResourcePackage();
-  package->Load(fileName);
-  package->Location = FilePath::GetFileName(fileName);
+  ResourcePackage package;
+  package.Load(fileName);
+  package.Location = FilePath::GetDirectoryPath(fileName);
 
   Status status;
-  ResourceLibrary* library = LoadPackage(status, package);
+  ResourceLibrary* library = LoadPackage(status, &package);
   if (!status)
     DoNotifyError("Failed to load resource package.", status.Message);
   return library;

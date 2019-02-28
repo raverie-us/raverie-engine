@@ -93,7 +93,7 @@ typedef Array<ResourceEntry> ResourceListing;
 /// A Resource package is collection of resources
 /// to be loaded. Built from a Content Library or
 /// dynamically.
-class ResourcePackage : public Object
+class ResourcePackage : public ReferenceCountedThreadSafeId32EventObject
 {
 public:
   ResourcePackage();

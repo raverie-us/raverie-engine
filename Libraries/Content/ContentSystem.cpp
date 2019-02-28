@@ -32,7 +32,8 @@ struct SortByLoadOrder
 {
   bool operator()(ResourceEntry& left, ResourceEntry& right)
   {
-    return left.LoadOrder < right.LoadOrder;
+    // First sort by load order, then name for determinism.
+    return left.LoadOrder < right.LoadOrder || (left.LoadOrder == right.LoadOrder && left.Name < right.Name);
   }
 };
 
@@ -196,17 +197,17 @@ ContentLibrary* ContentSystem::LibraryFromDirectory(Status& status, StringParam 
   return library;
 }
 
-void ContentSystem::BuildLibrary(Status& status, ContentLibrary* library, ResourcePackage& package, bool sendEvent)
+HandleOf<ResourcePackage> ContentSystem::BuildLibrary(Status& status, ContentLibrary* library, bool sendEvent)
 {
   ZPrintFilter(Filter::EngineFilter, "Building Content Library '%s'\n", library->Name.c_str());
 
   Array<ContentItem*> items;
   items.Reserve(library->ContentItems.Size());
   items.Append(library->ContentItems.Values());
-  Z::gContentSystem->BuildContentItems(status, items, library, package);
+  HandleOf<ResourcePackage> package = Z::gContentSystem->BuildContentItems(status, items, library, false);
 
   String libraryPackageFile = FilePath::CombineWithExtension(library->GetOutputPath(), library->Name, ".pack");
-  package.Save(libraryPackageFile);
+  package->Save(libraryPackageFile);
 
   if (sendEvent)
   {
@@ -214,9 +215,11 @@ void ContentSystem::BuildLibrary(Status& status, ContentLibrary* library, Resour
     // If it is, we need to allocate the ResourcePackage.
     ContentSystemEvent toSend;
     toSend.mLibrary = library;
-    toSend.mPackage = &package;
+    toSend.mPackage = package;
     Z::gContentSystem->DispatchEvent(Events::PackageBuilt, &toSend);
   }
+
+  return package;
 }
 
 class ContentAddCleanUp
@@ -676,18 +679,15 @@ ContentItem* ContentSystem::CreateFromName(StringRange name)
   return nullptr;
 }
 
-void ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild, ContentLibrary* library, ResourcePackage& package)
+HandleOf<ResourcePackage> ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild, ContentLibrary* library, bool useJobs)
 {
-  if (toBuild.Empty())
-    return;
+  //Z::gEngine->LoadingStart();
 
-  Z::gEngine->LoadingStart();
+  ResourcePackage* package = new ResourcePackage();
+  package->Name = library->Name;
 
-  if (package.Name.Empty())
-    package.Name = library->Name;
-
-  package.Location = library->GetOutputPath();
-  CreateDirectoryAndParents(package.Location);
+  package->Location = library->GetOutputPath();
+  CreateDirectoryAndParents(package->Location);
 
   BuildOptions buildOptions(library);
 
@@ -701,7 +701,7 @@ void ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild,
     Z::gEngine->LoadingUpdate(
       cProcessing, library->Name, contentItem->Filename, ProgressType::Normal, (float)(i + 1) / toBuild.Size());
 
-    contentItem->BuildContentItem(buildOptions);
+    contentItem->BuildContentItem(useJobs);
 
     if (buildOptions.Failure)
     {
@@ -711,27 +711,29 @@ void ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild,
       allBuilt = false;
     }
 
-    contentItem->BuildListing(package.Resources);
+    contentItem->BuildListing(package->Resources);
 
     // Don't do this in the thread (do it after).
     if (contentItem->mNeedsEditorProcessing)
-      package.EditorProcessing.PushBack(contentItem);
+      package->EditorProcessing.PushBack(contentItem);
   }
 
-  Sort(package.Resources.All(), SortByLoadOrder());
+  Sort(package->Resources.All(), SortByLoadOrder());
 
   if (!allBuilt)
     status.SetFailed(String::Format("Failed to build content library '%s'", library->Name.c_str()));
 
-  Z::gEngine->LoadingFinish();
+  //Z::gEngine->LoadingFinish();
+  return package;
 }
 
-void ContentSystem::BuildContentItem(Status& status, ContentItem* contentItem, ResourcePackage& package)
+HandleOf<ResourcePackage> ContentSystem::BuildSingleContentItem(Status& status, ContentItem* contentItem)
 {
   ContentItemArray contentItems;
   contentItems.PushBack(contentItem);
-  BuildContentItems(status, contentItems, contentItem->mLibrary, package);
+  HandleOf<ResourcePackage> package = BuildContentItems(status, contentItems, contentItem->mLibrary, false);
   DoNotifyStatus(status);
+  return package;
 }
 
 void ContentSystem::EnumerateLibrariesInPath(StringParam path)

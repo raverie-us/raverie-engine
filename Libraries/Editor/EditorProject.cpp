@@ -51,8 +51,7 @@ void LoadProject(Editor* editor, Cog* projectCog, StringParam path, StringParam 
       if (contentLibrary)
       {
         Status status;
-        ResourcePackage package;
-        Z::gContentSystem->BuildLibrary(status, contentLibrary, package, true);
+        Z::gContentSystem->BuildLibrary(status, contentLibrary, true);
       }
       else
       {
@@ -73,8 +72,7 @@ void LoadProject(Editor* editor, Cog* projectCog, StringParam path, StringParam 
   project->ProjectContentLibrary = projectLibrary;
 
   Status status;
-  ResourcePackage package;
-  Z::gContentSystem->BuildLibrary(status, projectLibrary, package, true);
+  Z::gContentSystem->BuildLibrary(status, projectLibrary, true);
 
   // Always select the first tool
   if (editor->Tools)

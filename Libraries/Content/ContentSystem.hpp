@@ -65,7 +65,7 @@ public:
   ZilchDeclareType(ContentSystemEvent, TypeCopyMode::ReferenceType);
 
   ContentLibrary* mLibrary;
-  ResourcePackage* mPackage;
+  HandleOf<ResourcePackage> mPackage;
 };
 
 DeclareEnum3(ContentFileConflict, Fail, FindNewName, Replace);
@@ -130,13 +130,13 @@ public:
   ContentLibrary* LibraryFromDirectory(Status& status, StringParam name, StringParam directory);
 
   /// Build the Content Library into a Resource Package.
-  void BuildLibrary(Status& status, ContentLibrary* library, ResourcePackage& package, bool sendEvent);
+  HandleOf<ResourcePackage> BuildLibrary(Status& status, ContentLibrary* library, bool sendEvent);
 
   /// Build ContentItems into Resource Package.
-  void BuildContentItems(Status& status, ContentItemArray& toBuild, ContentLibrary* library, ResourcePackage& package);
+  HandleOf<ResourcePackage> BuildContentItems(Status& status, ContentItemArray& toBuild, ContentLibrary* library, bool useJobs);
 
   /// Build Individual ContentItems into Resource Package.
-  void BuildContentItem(Status& status, ContentItem* contentItem, ResourcePackage& package);
+  HandleOf<ResourcePackage> BuildSingleContentItem(Status& status, ContentItem* contentItem);
 
   // Content item management
 
