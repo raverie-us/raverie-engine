@@ -5,7 +5,7 @@ namespace Zero
 {
 void LauncherStartup::UserInitializeLibraries()
 {
-  LauncherDllLibrary::Initialize();
+  LauncherLibrary::Initialize();
 }
 
 void LauncherStartup::UserInitializeConfig(Cog* configCog)
@@ -73,8 +73,8 @@ void LauncherStartup::UserShutdown()
 
 void LauncherStartup::UserShutdownLibraries()
 {
-  LauncherDllLibrary::Shutdown();
-  LauncherDllLibrary::GetInstance().ClearLibrary();
+  LauncherLibrary::Shutdown();
+  LauncherLibrary::GetInstance().ClearLibrary();
 }
 
 } // namespace Zero

@@ -24,8 +24,8 @@ target_sources(WelderLauncher
     ${CMAKE_CURRENT_LIST_DIR}/LauncherComponents.hpp
     ${CMAKE_CURRENT_LIST_DIR}/LauncherCrashCallbacks.cpp
     ${CMAKE_CURRENT_LIST_DIR}/LauncherCrashCallbacks.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherDllStandard.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherDllStandard.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/LauncherStandard.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/LauncherStandard.hpp
     ${CMAKE_CURRENT_LIST_DIR}/LauncherStartup.cpp
     ${CMAKE_CURRENT_LIST_DIR}/LauncherStartup.hpp
     ${CMAKE_CURRENT_LIST_DIR}/LauncherTasks.cpp

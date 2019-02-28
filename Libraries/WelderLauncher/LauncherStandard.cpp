@@ -8,7 +8,7 @@ const String mLauncherBoldFont = "NotoSans-Bold";
 
 ZilchDefineEnum(LauncherStartupArguments);
 
-ZilchDefineStaticLibrary(LauncherDllLibrary)
+ZilchDefineStaticLibrary(LauncherLibrary)
 {
   builder.CreatableInScriptDefault = false;
 
@@ -26,13 +26,13 @@ ZilchDefineStaticLibrary(LauncherDllLibrary)
   ZilchInitializeType(LauncherProjectInfo);
 }
 
-void LauncherDllLibrary::Initialize()
+void LauncherLibrary::Initialize()
 {
   BuildStaticLibrary();
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 }
 
-void LauncherDllLibrary::Shutdown()
+void LauncherLibrary::Shutdown()
 {
 }
 

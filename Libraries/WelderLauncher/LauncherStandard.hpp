@@ -8,11 +8,10 @@ namespace Zero
 extern const String mLauncherRegularFont;
 extern const String mLauncherBoldFont;
 
-// LauncherDll library
-class ZeroNoImportExport LauncherDllLibrary : public Zilch::StaticLibrary
+class ZeroNoImportExport LauncherLibrary : public Zilch::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(LauncherDllLibrary, "ZeroEngine");
+  ZilchDeclareStaticLibraryInternals(LauncherLibrary, "ZeroEngine");
 
   static void Initialize();
   static void Shutdown();
