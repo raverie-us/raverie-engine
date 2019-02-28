@@ -39,7 +39,7 @@ void GameOrEditorStartup::UserInitialize()
   MainConfig* mainConfig = configCog->has(MainConfig);
   EditorConfig* editorConfig = configCog->has(EditorConfig);
   if (mainConfig && projectFile.Empty() && newProject.Empty() &&
-    (editorConfig == nullptr || editorConfig->EditingProject.Empty()))
+      (editorConfig == nullptr || editorConfig->EditingProject.Empty()))
   {
     projectFile = FilePath::Combine(mainConfig->DataDirectory, "Fallback", "Fallback.zeroproj");
   }

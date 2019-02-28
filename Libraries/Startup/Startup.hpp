@@ -6,27 +6,29 @@ namespace Zero
 
 // To allow platforms without threads / yields (such as Emscripten) to give time back to the OS/Browser
 // we perform our initialization in phases
-DeclareEnum9(StartupPhase,
-  // All meta libraries are initialized, environment initialized, config loaded, and
-  // engine created here. There will be no systems available on the engine.
-  Initialize,
-  // User may perform logic using Common/Meta/Config/Environment.
-  // Use should set window creation settings, etc.
-  UserInitialize,
-  // Adds all the engine systems, initializes the content system (no loading yet), and creates the main window.
-  Startup,
-  // User may decide to queue any jobs such as processing content or loading packages.
-  UserStartup,
-  // All jobs are performed until there are none left (may yield back to the OS/Browser periodically).
-  ProcessJobs,
-  // After all jobs are completed, use this opportunity to create your version of a main object (Editor/Game/Launcher).
-  UserCreation,
-  // Engine is automatically updated until it is no longer active / closed.
-  EngineUpdate,
-  // User may perform any cleanup logic (do not destroy the engine however).
-  UserShutdown,
-  // All libraries are shutdown and the engine is destroyed.
-  Shutdown);
+DeclareEnum9(
+    StartupPhase,
+    // All meta libraries are initialized, environment initialized, config loaded, and
+    // engine created here. There will be no systems available on the engine.
+    Initialize,
+    // User may perform logic using Common/Meta/Config/Environment.
+    // Use should set window creation settings, etc.
+    UserInitialize,
+    // Adds all the engine systems, initializes the content system (no loading yet), and creates the main window.
+    Startup,
+    // User may decide to queue any jobs such as processing content or loading packages.
+    UserStartup,
+    // All jobs are performed until there are none left (may yield back to the OS/Browser periodically).
+    ProcessJobs,
+    // After all jobs are completed, use this opportunity to create your version of a main object
+    // (Editor/Game/Launcher).
+    UserCreation,
+    // Engine is automatically updated until it is no longer active / closed.
+    EngineUpdate,
+    // User may perform any cleanup logic (do not destroy the engine however).
+    UserShutdown,
+    // All libraries are shutdown and the engine is destroyed.
+    Shutdown);
 
 // Runs through phases of initialization, allowing platforms that don't support threading
 // to yeild time back to the OS/Browser between updates. This also unifies Editor/Game/Launcher startup.
@@ -37,18 +39,18 @@ public:
   int Run();
 
 protected:
-
   // The following options should be set by the user in UserInitialize.
   // The default options are all tailored for the Editor.
-  // If changes are ever made to these flags (especially mWindowStyle), ALL platforms and programs (Editor/Game/Launcher) must be considered.
+  // If changes are ever made to these flags (especially mWindowStyle), ALL platforms and programs
+  // (Editor/Game/Launcher) must be considered.
   bool mLoadContent = true;
   WindowState::Enum mWindowState = WindowState::Maximized;
   IntVec2 mWindowSize = IntVec2(1280, 720);
   IntVec2 mMinimumWindowSize = cMinimumMonitorSize;
   bool mWindowCentered = false;
   WindowStyleFlags::Enum mWindowStyle =
-    (WindowStyleFlags::Enum)(WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar |
-      WindowStyleFlags::Resizable | WindowStyleFlags::Close | WindowStyleFlags::ClientOnly);
+      (WindowStyleFlags::Enum)(WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar |
+                               WindowStyleFlags::Resizable | WindowStyleFlags::Close | WindowStyleFlags::ClientOnly);
   Cog* mWindowSettingsFromProjectCog = nullptr;
   bool mUseSplashScreen = false;
 
@@ -85,7 +87,7 @@ private:
   void ProcessJobs();
   void EngineUpdate();
   void Shutdown();
-  
+
   void NextPhase();
 
   StartupPhase::Enum mPhase = StartupPhase::Initialize;

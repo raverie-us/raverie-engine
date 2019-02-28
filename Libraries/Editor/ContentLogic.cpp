@@ -92,7 +92,7 @@ bool LoadContentLibrary(StringParam name, bool isCore)
     if (isCore)
     {
       FatalEngineError("Failed to load core content library for editor. Resources"
-        " need to be in the working directory.");
+                       " need to be in the working directory.");
     }
 
     DoNotifyError("Failed to load resource package.", status.Message);

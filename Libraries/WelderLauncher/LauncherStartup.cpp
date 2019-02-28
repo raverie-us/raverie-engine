@@ -33,7 +33,7 @@ void LauncherStartup::UserInitialize()
   if (status.Failed())
   {
     ZPrint("Mutex is already open. Sending a message to the open launcher and "
-      "closing\n");
+           "closing\n");
     Zero::LauncherSingletonCommunication communicator;
     return Exit(0);
   }

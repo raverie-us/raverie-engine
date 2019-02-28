@@ -29,10 +29,7 @@ void EditorMain::OnPackagedBuilt(ContentSystemEvent* event)
   LoadPackage(mProject, event->mLibrary, event->mPackage);
 }
 
-bool EditorMain::LoadPackage(
-  Cog* projectCog,
-  ContentLibrary* library,
-  ResourcePackage* package)
+bool EditorMain::LoadPackage(Cog* projectCog, ContentLibrary* library, ResourcePackage* package)
 {
   ProjectSettings* project = projectCog->has(ProjectSettings);
 
@@ -41,7 +38,7 @@ bool EditorMain::LoadPackage(
   if (project->ProjectContentLibrary == library)
   {
     // Load all packages
-    forRange(ResourcePackage* dependentPackage, PackagesToLoad.All())
+    forRange (ResourcePackage* dependentPackage, PackagesToLoad.All())
     {
       Status status;
       ResourceLibrary* library = resourceSystem->LoadPackage(status, dependentPackage);

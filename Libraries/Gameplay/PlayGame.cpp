@@ -30,7 +30,7 @@ void LoadGamePackages(StringParam projectFile, Cog* projectCog)
 
   if (SharedContent* sharedContent = projectCog->has(SharedContent))
   {
-    forRange(ContentLibraryReference libraryRef, sharedContent->ExtraContentLibraries.All())
+    forRange (ContentLibraryReference libraryRef, sharedContent->ExtraContentLibraries.All())
     {
       String libraryName = libraryRef.mContentLibraryName;
       LoadResourcePackageRelative(projectDirectory, libraryName);

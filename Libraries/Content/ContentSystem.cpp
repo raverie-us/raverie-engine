@@ -679,9 +679,10 @@ ContentItem* ContentSystem::CreateFromName(StringRange name)
   return nullptr;
 }
 
-HandleOf<ResourcePackage> ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild, ContentLibrary* library, bool useJobs)
+HandleOf<ResourcePackage>
+ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild, ContentLibrary* library, bool useJobs)
 {
-  //Z::gEngine->LoadingStart();
+  // Z::gEngine->LoadingStart();
 
   ResourcePackage* package = new ResourcePackage();
   package->Name = library->Name;
@@ -699,7 +700,7 @@ HandleOf<ResourcePackage> ContentSystem::BuildContentItems(Status& status, Conte
     ContentItem* contentItem = toBuild[i];
     static const String cProcessing("Processing");
     Z::gEngine->LoadingUpdate(
-      cProcessing, library->Name, contentItem->Filename, ProgressType::Normal, (float)(i + 1) / toBuild.Size());
+        cProcessing, library->Name, contentItem->Filename, ProgressType::Normal, (float)(i + 1) / toBuild.Size());
 
     contentItem->BuildContentItem(useJobs);
 
@@ -723,7 +724,7 @@ HandleOf<ResourcePackage> ContentSystem::BuildContentItems(Status& status, Conte
   if (!allBuilt)
     status.SetFailed(String::Format("Failed to build content library '%s'", library->Name.c_str()));
 
-  //Z::gEngine->LoadingFinish();
+  // Z::gEngine->LoadingFinish();
   return package;
 }
 

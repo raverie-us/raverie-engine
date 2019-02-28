@@ -117,7 +117,6 @@ public:
   virtual void OnInitialize();
 
 protected:
-
   // Build the content item
   virtual void BuildContentItem(BuildOptions& buildOptions) = 0;
 };
