@@ -574,13 +574,13 @@ async function runEslint(options)
   const eslintOptions = {
     cwd: dirs.root,
     stdio: ['ignore', 'pipe', 'pipe'],
-    out: options.fix ? printLog : printError,
-    err: options.fix ? printLog : printError,
+    out: options.validate ? printError : printLog,
+    err: options.validate ? printError : printLog,
     reject: false
   };
   const args = ['node_modules/eslint/bin/eslint.js', '.'];
 
-  if (options.fix)
+  if (!options.validate)
   {
     args.push('--fix');
   }
@@ -619,7 +619,7 @@ async function runClangTidy(options, sourceFiles)
     // We capture them and re-emit them to stderr.
     const result = await exec(paths.clangTidy, args, clangTidyOptions);
 
-    if (options.fix)
+    if (!options.validate)
     {
       continue;
     }
@@ -667,13 +667,13 @@ async function runClangFormat(options, sourceFiles)
     const oldCode = fs.readFileSync(fullPath, fileOptions);
     const newCode = result.stdout;
 
-    if (options.fix)
+    if (options.validate)
     {
-      fs.writeFileSync(fullPath, newCode, fileOptions);
+      printError(`File '${fullPath}' was not clang-formatted`);
     }
     else if (oldCode !== newCode)
     {
-      printError(`File '${fullPath}' was not clang-formatted`);
+      fs.writeFileSync(fullPath, newCode, fileOptions);
     }
   }
 }
@@ -735,13 +735,13 @@ async function runWelderFormat(options, sourceFiles)
     // Join all lines together with a standard UNIX newline.
     const newCode = lines.join('\n');
 
-    if (options.fix)
+    if (options.validate)
     {
-      fs.writeFileSync(fullPath, newCode, fileOptions);
+      printError(`File '${fullPath}' must be welder-formatted`);
     }
     else if (oldCode !== newCode)
     {
-      printError(`File '${fullPath}' must be welder-formatted`);
+      fs.writeFileSync(fullPath, newCode, fileOptions);
     }
   }
 }
