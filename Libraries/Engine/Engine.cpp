@@ -98,7 +98,6 @@ Engine::Engine()
   mFrameCounter = 0;
   mHaveLoadingResources = false;
   mTimePassed = 0.0f;
-  mAutoShutdown = false;
   mIsDebugging = false;
 }
 
@@ -127,29 +126,6 @@ void Engine::Initialize(SystemInitializer& initializer)
   Z::gSystemObjects->Add(this, ZilchTypeId(Engine), ObjectCleanup::None);
 
   mTimeSystem = this->has(TimeSystem);
-}
-
-void Engine::Run(bool autoShutdown)
-{
-  mAutoShutdown = autoShutdown;
-  RunMainLoop(&Engine::MainLoopFunction, this);
-}
-
-void Engine::MainLoopFunction(void* enginePointer)
-{
-  Engine* engine = (Engine*)enginePointer;
-
-  if (!engine->mEngineActive)
-  {
-    if (engine->mAutoShutdown)
-      engine->Shutdown();
-
-    StopMainLoop();
-    return;
-  }
-
-  engine->Update();
-  YieldToOs();
 }
 
 void Engine::Update()

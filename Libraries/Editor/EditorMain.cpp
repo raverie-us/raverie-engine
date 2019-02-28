@@ -906,7 +906,7 @@ void SetupTools(Editor* editor);
 #define BindCommand(commandName, memberFunction)                                                                       \
   Connect(commands->GetCommand(commandName), Events::CommandExecute, editorMain, &EditorMain::memberFunction);
 
-void CreateEditor(OsWindow* mainWindow, StringParam fileToOpen, StringParam newProjectName)
+void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam newProjectName)
 {
   // Set the tweakables modified callback so that we can update the Ui
   Tweakables::sModifiedCallback = &OnTweakablesModified;
@@ -1205,16 +1205,16 @@ void CreateEditor(OsWindow* mainWindow, StringParam fileToOpen, StringParam newP
   ZilchManager::GetInstance()->TriggerCompileExternally();
 
   // If we have a file to be loaded
-  if (!fileToOpen.Empty())
+  if (!projectFile.Empty())
   {
     // Project extension
-    String extension = FilePath::GetExtension(fileToOpen);
+    String extension = FilePath::GetExtension(projectFile);
 
     // If the file passed in is a project file...
     if (extension == "zeroproj")
     {
       // Open the project
-      OpenProjectFile(fileToOpen);
+      OpenProjectFile(projectFile);
     }
     else
     {

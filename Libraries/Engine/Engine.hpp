@@ -30,10 +30,6 @@ public:
 
   /// Initializes all systems in the engine.
   void Initialize(SystemInitializer& initializer);
-  /// Update all the systems until the engine is no longer active.
-  void Run(bool autoShutdown = true);
-  /// A special main loop function that we use to update the engine.
-  static void MainLoopFunction(void* enginePointer);
   /// Update all owned systems.
   void Update();
   /// Terminate the game engine loop.
@@ -115,6 +111,10 @@ public:
 
   Cog* mConfigCog;
 
+  /// Is the engine currently running. Used to shutdown the engine on the next
+  /// frame.
+  bool mEngineActive;
+
 private:
   friend class Space;
   friend class EngineMetaComposition;
@@ -138,14 +138,6 @@ private:
   SystemMapType mSystemMap;
 
   GameSessionArray mGameSessions;
-
-  /// Is the engine currently running. Used to shutdown the engine on the next
-  /// frame.
-  bool mEngineActive;
-
-  /// Do we automatically shutdown the engine when it is no longer active
-  /// (terminated)?
-  bool mAutoShutdown;
 };
 
 class EngineMetaComposition : public MetaComposition

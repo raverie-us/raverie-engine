@@ -18,10 +18,8 @@ void LoadResourcePackageRelative(StringParam baseDirectory, StringParam libraryN
   Z::gResources->LoadPackageFile(packageFile);
 }
 
-void CreateGame(OsWindow* mainWindow, Cog* projectCog, StringParam projectFile)
+void LoadGamePackages(StringParam projectFile, Cog* projectCog)
 {
-  ZPrint("Loading in Game Mode.\n");
-
   String projectDirectory = FilePath::GetDirectoryPath(projectFile);
   LoadResourcePackageRelative(projectDirectory, "FragmentCore");
   LoadResourcePackageRelative(projectDirectory, "Loading");
@@ -32,7 +30,7 @@ void CreateGame(OsWindow* mainWindow, Cog* projectCog, StringParam projectFile)
 
   if (SharedContent* sharedContent = projectCog->has(SharedContent))
   {
-    forRange (ContentLibraryReference libraryRef, sharedContent->ExtraContentLibraries.All())
+    forRange(ContentLibraryReference libraryRef, sharedContent->ExtraContentLibraries.All())
     {
       String libraryName = libraryRef.mContentLibraryName;
       LoadResourcePackageRelative(projectDirectory, libraryName);
@@ -41,10 +39,16 @@ void CreateGame(OsWindow* mainWindow, Cog* projectCog, StringParam projectFile)
 
   ProjectSettings* project = projectCog->has(ProjectSettings);
 
-  // Set the store name based on the project name.
-  ObjectStore::GetInstance()->SetStoreName(project->ProjectName);
-
   LoadResourcePackageRelative(projectDirectory, project->ProjectName);
+}
+
+void CreateGame(OsWindow* mainWindow, StringParam projectFile, Cog* projectCog)
+{
+  ZPrint("Creating Game\n");
+
+  // Set the store name based on the project name.
+  ProjectSettings* project = projectCog->has(ProjectSettings);
+  ObjectStore::GetInstance()->SetStoreName(project->ProjectName);
 
   // Make sure scripts in the project are compiled
   ZilchManager::GetInstance()->TriggerCompileExternally();

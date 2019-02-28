@@ -4,16 +4,18 @@
 namespace Zero
 {
 
-class LauncherStartup : public ZeroStartup
+class GameOrEditorStartup : public ZeroStartup
 {
-protected:
-  void UserInitializeLibraries() override;
+private:
+  bool mPlayGame = false;
+  Cog* mProjectCog = nullptr;
+  String mProjectFile;
+  String mNewProject;
+
   void UserInitializeConfig(Cog* configCog) override;
   void UserInitialize() override;
   void UserStartup() override;
   void UserCreation() override;
-  void UserShutdown() override;
-  void UserShutdownLibraries() override;
 };
 
 } // namespace Zero

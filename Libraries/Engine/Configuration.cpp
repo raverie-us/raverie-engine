@@ -438,13 +438,9 @@ Cog* LoadConfig(ModifyConfigFn modifier, void* userData)
     return nullptr;
   }
 
-  HasOrAdd<EditorSettings>(configCog);
-  HasOrAdd<ContentConfig>(configCog);
-  HasOrAdd<TextEditorConfig>(configCog);
-
   modifier(configCog, userData);
 
-  MainConfig* mainConfig = configCog->has(MainConfig);
+  MainConfig* mainConfig = HasOrAdd<MainConfig>(configCog);
   mainConfig->SourceDirectory = sourceDirectory;
   mainConfig->DataDirectory = dataDirectory;
 

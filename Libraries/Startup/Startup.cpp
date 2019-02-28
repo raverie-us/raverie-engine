@@ -3,13 +3,103 @@
 
 namespace Zero
 {
-OsShell* CreateOsShellSystem();
-System* CreateSoundSystem();
-System* CreateGraphicsSystem();
-System* CreatePhysicsSystem();
-System* CreateTimeSystem();
+int ZeroStartup::sReturnCode = 0;
 
-Engine* ZeroStartup::Initialize()
+int ZeroStartup::Run()
+{
+  RunMainLoop(&ZeroStartup::MainLoopFunction, this);
+  return sReturnCode;
+}
+
+void ZeroStartup::UserInitializeLibraries()
+{
+}
+
+void ZeroStartup::UserInitializeConfig(Cog* configCog)
+{
+}
+
+void ZeroStartup::UserInitialize()
+{
+}
+
+void ZeroStartup::UserStartup()
+{
+}
+
+void ZeroStartup::UserCreation()
+{
+}
+
+void ZeroStartup::UserShutdownLibraries()
+{
+}
+
+void ZeroStartup::UserShutdown()
+{
+}
+
+void ZeroStartup::Exit(int returnCode)
+{
+  mExit = true;
+  sReturnCode = returnCode;
+}
+
+void ZeroStartup::MainLoop()
+{
+  switch (mPhase)
+  {
+  case StartupPhase::Initialize:
+    Initialize();
+    NextPhase();
+    break;
+  case StartupPhase::UserInitialize:
+    UserInitialize();
+    NextPhase();
+    break;
+  case StartupPhase::Startup:
+    Startup();
+    NextPhase();
+    break;
+  case StartupPhase::UserStartup:
+    UserStartup();
+    NextPhase();
+    break;
+  case StartupPhase::ProcessJobs:
+    // Handles changing to the next phase internally.
+    ProcessJobs();
+    break;
+  case StartupPhase::UserCreation:
+    UserCreation();
+    NextPhase();
+    break;
+  case StartupPhase::EngineUpdate:
+    // Handles changing to the next phase internally.
+    EngineUpdate();
+    break;
+  case StartupPhase::UserShutdown:
+    UserShutdown();
+    NextPhase();
+    break;
+  case StartupPhase::Shutdown:
+    Shutdown();
+    break;
+  }
+
+  if (mExit)
+  {
+    StopMainLoop();
+    delete this;
+  }
+}
+
+void ZeroStartup::MainLoopFunction(void* userData)
+{
+  ZeroStartup* self = (ZeroStartup*)userData;
+  self->MainLoop();
+}
+
+void ZeroStartup::Initialize()
 {
   TimerBlock startUp("Initialize");
 
@@ -113,10 +203,9 @@ Engine* ZeroStartup::Initialize()
 
   NativeBindingList::ValidateTypes();
 
-  InitializeExternal();
+  UserInitializeLibraries();
 
-  if (LoadConfig(&InitializeConfigExternal, this) == nullptr)
-    return false;
+  LoadConfig(&InitializeConfigExternal, this);
 
   Tweakables::Load();
 
@@ -128,11 +217,20 @@ Engine* ZeroStartup::Initialize()
       FilePath::Combine(Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory, "Documentation.data"));
 
   ZPrint("Os: %s\n", Os::GetVersionString().c_str());
-
-  return Z::gEngine;
 }
 
-OsWindow* ZeroStartup::Startup(StartupOptions& options)
+void ZeroStartup::InitializeConfigExternal(Cog* configCog, void* userData)
+{
+  ((ZeroStartup*)userData)->UserInitializeConfig(configCog);
+}
+
+OsShell* CreateOsShellSystem();
+System* CreateSoundSystem();
+System* CreateGraphicsSystem();
+System* CreatePhysicsSystem();
+System* CreateTimeSystem();
+
+void ZeroStartup::Startup()
 {
   TimerBlock startUp("Startup");
   Engine* engine = Z::gEngine;
@@ -153,21 +251,21 @@ OsWindow* ZeroStartup::Startup(StartupOptions& options)
   // Initialize all systems.
   engine->Initialize(initializer);
 
-  if (options.mLoadContent)
+  if (mLoadContent)
     LoadContentConfig();
 
   ZPrint("Creating main window.\n");
 
-  OsShell* osShell = Z::gEngine->has(OsShell);
+  OsShell* osShell = engine->has(OsShell);
 
-  IntVec2 size = options.mWindowSize;
-  WindowState::Enum state = options.mWindowState;
+  IntVec2 size = mWindowSize;
+  WindowState::Enum state = mWindowState;
 
   String name = BuildString(GetOrganization(), " ", GetApplicationName());
 
-  if (options.mWindowSettingsFromProjectCog)
+  if (mWindowSettingsFromProjectCog)
   {
-    WindowLaunchSettings* windowLaunch = options.mWindowSettingsFromProjectCog->has(WindowLaunchSettings);
+    WindowLaunchSettings* windowLaunch = mWindowSettingsFromProjectCog->has(WindowLaunchSettings);
     if (windowLaunch != nullptr)
     {
       size = windowLaunch->mWindowedResolution;
@@ -175,7 +273,7 @@ OsWindow* ZeroStartup::Startup(StartupOptions& options)
         state = WindowState::Fullscreen;
     }
 
-    ProjectSettings* projectSettings = options.mWindowSettingsFromProjectCog->has(ProjectSettings);
+    ProjectSettings* projectSettings = mWindowSettingsFromProjectCog->has(ProjectSettings);
     if (projectSettings != nullptr)
     {
       name = projectSettings->ProjectName;
@@ -190,24 +288,24 @@ OsWindow* ZeroStartup::Startup(StartupOptions& options)
     state = WindowState::Maximized;
 #endif
 
-  IntVec2 minSize = Math::Min(options.mMinimumWindowSize, size);
+  IntVec2 minSize = Math::Min(mMinimumWindowSize, size);
   IntVec2 monitorClientPos = IntVec2(0, 0);
 
-  if (options.mWindowCentered)
+  if (mWindowCentered)
   {
     IntRect monitorRect = osShell->GetPrimaryMonitorRectangle();
     monitorClientPos = monitorRect.Center(size);
   }
 
-  OsWindow* mainWindow = osShell->CreateOsWindow(name, size, monitorClientPos, nullptr, options.mWindowStyle);
+  OsWindow* mainWindow = osShell->CreateOsWindow(name, size, monitorClientPos, nullptr, mWindowStyle);
   mainWindow->SetMinClientSize(minSize);
   mainWindow->SetState(state);
 
   // Pass window handle to initialize the graphics api
-  auto graphics = Z::gEngine->has(GraphicsEngine);
+  auto graphics = engine->has(GraphicsEngine);
   graphics->CreateRenderer(mainWindow);
 
-  if (options.mUseSplashScreen)
+  if (mUseSplashScreen)
     graphics->SetSplashscreenLoading();
 
   // Fix any issues related to Intel drivers (we call SetState twice on purpose to fix the driver issues).
@@ -218,30 +316,30 @@ OsWindow* ZeroStartup::Startup(StartupOptions& options)
 
   // Note that content and resources are loaded after CreateRenderer so that they may use the Renderer API to upload
   // textures, meshes, etc.
-  return mainWindow;
+  mMainWindow = mainWindow;
 }
 
-void ZeroStartup::InitializeExternal()
+void ZeroStartup::ProcessJobs()
 {
+  // TODO(Trevor.Sundberg): Iterative job processing or event wait on all jobs complete.
+  NextPhase();
 }
 
-void ZeroStartup::InitializeConfig(Cog* configCog)
+void ZeroStartup::EngineUpdate()
 {
-}
+  Z::gEngine->Update();
+  if (Z::gEngine->mEngineActive)
+    return;
 
-void ZeroStartup::ShutdownExternal()
-{
-}
-
-void ZeroStartup::InitializeConfigExternal(Cog* configCog, void* userData)
-{
-  ((ZeroStartup*)userData)->InitializeConfig(configCog);
+  NextPhase();
 }
 
 void ZeroStartup::Shutdown()
 {
   Zero::TimerBlock block("Shutting down Libraries.");
-  ShutdownExternal();
+  Z::gEngine->Shutdown();
+
+  UserShutdownLibraries();
 
   Core::GetInstance().GetLibrary()->ClearComponents();
 
@@ -313,6 +411,15 @@ void ZeroStartup::Shutdown()
   delete mZilchSetup;
 
   CommonLibrary::Shutdown();
+
+  ZPrint("Terminated\n");
+
+  mExit = true;
+}
+
+void ZeroStartup::NextPhase()
+{
+  mPhase = (StartupPhase::Enum)(mPhase + 1);
 }
 
 } // namespace Zero
