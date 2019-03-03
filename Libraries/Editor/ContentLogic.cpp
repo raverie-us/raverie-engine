@@ -101,15 +101,13 @@ bool LoadContentLibrary(StringParam name, bool isCore)
   return (bool)status;
 }
 
-bool LoadCoreContent(Array<String>& coreLibs)
+void LoadCoreContent(Array<String>& coreLibs)
 {
   Z::gContentSystem->EnumerateLibraries();
 
   ZPrint("Loading Content...\n");
 
   TimerBlock timer("Loading Content");
-
-  String docDirectory = GetUserDocumentsDirectory();
 
   LoadContentLibrary("FragmentCore", true);
   LoadContentLibrary("Loading", true);
@@ -118,32 +116,6 @@ bool LoadCoreContent(Array<String>& coreLibs)
   {
     LoadContentLibrary(libraryName, true);
   }
-
-  // Show all default resources
-  forRange (ResourceManager* manager, Z::gResources->Managers.Values())
-  {
-    if (manager->mCanCreateNew)
-      ErrorIf(manager->mExtension.Empty(), "Must set an extension on %s", manager->GetResourceType()->Name.c_str());
-
-    Resource* resource = manager->GetResource(manager->DefaultResourceName, ResourceNotFound::ReturnNull);
-    if (resource && resource->mContentItem)
-    {
-      resource->mContentItem->ShowInEditor = true;
-
-      // Moved default font to the Loading library for progress display
-      ErrorIf(resource->mContentItem->mLibrary->Name != "ZeroCore" &&
-                  resource->mContentItem->mLibrary->Name != "Loading",
-              "Only resources that are in core can be defaults");
-    }
-    else
-    {
-      ErrorIf(!manager->mNoFallbackNeeded,
-              "Failed to find default resource for resource type %s",
-              manager->mResourceTypeName.c_str());
-    }
-  }
-
-  return true;
 }
 
 } // namespace Zero

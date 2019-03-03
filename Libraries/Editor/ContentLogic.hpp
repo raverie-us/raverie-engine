@@ -13,6 +13,6 @@ class MouseEvent;
 bool LoadContentLibrary(StringParam name, bool isCore);
 
 void LoadContentConfig();
-bool LoadCoreContent(Array<String>& coreLibs);
+void LoadCoreContent(Array<String>& coreLibs);
 
 } // namespace Zero

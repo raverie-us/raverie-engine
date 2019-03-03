@@ -67,6 +67,36 @@ ResourceLibrary* ResourceSystem::GetResourceLibraryFromCurrentType(BoundType* cu
   return nullptr;
 }
 
+void ResourceSystem::SetupDefaults()
+{
+  // Show all default resources
+  forRange(ResourceManager* manager, Managers.Values())
+  {
+    if (manager->mCanCreateNew)
+      ErrorIf(manager->mExtension.Empty(), "Must set an extension on %s", manager->GetResourceType()->Name.c_str());
+
+    Resource* resource = manager->GetResource(manager->DefaultResourceName, ResourceNotFound::ReturnNull);
+    if (resource)
+    {
+      if (resource->mContentItem)
+      {
+        resource->mContentItem->ShowInEditor = true;
+
+        // Moved default font to the Loading library for progress display
+        ErrorIf(resource->mContentItem->mLibrary->Name != "ZeroCore" &&
+          resource->mContentItem->mLibrary->Name != "Loading",
+          "Only resources that are in core can be defaults");
+      }
+    }
+    else
+    {
+      ErrorIf(!manager->mNoFallbackNeeded,
+        "Failed to find default resource for resource type %s",
+        manager->mResourceTypeName.c_str());
+    }
+  }
+}
+
 void ResourceSystem::RegisterManager(ResourceManager* manager)
 {
   Managers.InsertOrError(manager->mResourceType->Name, manager, "Only one resource manager for each type");

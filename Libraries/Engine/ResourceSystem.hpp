@@ -70,6 +70,8 @@ public:
 
   ResourceLibrary* GetResourceLibraryFromCurrentType(BoundType* currentType);
 
+  void SetupDefaults();
+
   // Resources that were modified in the editor.
   HashSet<ResourceId> mModifiedResources;
 

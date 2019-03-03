@@ -6,7 +6,7 @@ namespace Zero
 
 // To allow platforms without threads / yields (such as Emscripten) to give time back to the OS/Browser
 // we perform our initialization in phases
-DeclareEnum9(
+DeclareEnum10(
     StartupPhase,
     // All meta libraries are initialized, environment initialized, config loaded, and
     // engine created here. There will be no systems available on the engine.
@@ -20,6 +20,8 @@ DeclareEnum9(
     UserStartup,
     // All jobs are performed until there are none left (may yield back to the OS/Browser periodically).
     ProcessJobs,
+    // Called when all jobs are complete (allows the engine to do anything with the results of completed jobs).
+    JobsComplete,
     // After all jobs are completed, use this opportunity to create your version of a main object
     // (Editor/Game/Launcher).
     UserCreation,
@@ -86,6 +88,7 @@ private:
   static void InitializeConfigExternal(Cog* configCog, void* userData);
   void Startup();
   void ProcessJobs();
+  void JobsComplete();
   void EngineUpdate();
   void Shutdown();
 

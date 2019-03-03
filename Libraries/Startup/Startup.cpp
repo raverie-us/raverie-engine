@@ -70,6 +70,10 @@ void ZeroStartup::MainLoop()
     // Handles changing to the next phase internally.
     ProcessJobs();
     break;
+  case StartupPhase::JobsComplete:
+    JobsComplete();
+    NextPhase();
+    break;
   case StartupPhase::UserCreation:
     UserCreation();
     NextPhase();
@@ -324,8 +328,17 @@ void ZeroStartup::Startup()
 
 void ZeroStartup::ProcessJobs()
 {
+  // Do work here
+
+  Z::gDispatch->DispatchEvents();
+
   // TODO(Trevor.Sundberg): Iterative job processing or event wait on all jobs complete.
   NextPhase();
+}
+
+void ZeroStartup::JobsComplete()
+{
+  Z::gResources->SetupDefaults();
 }
 
 void ZeroStartup::EngineUpdate()
