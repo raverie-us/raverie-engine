@@ -31,3 +31,6 @@
 [submodule "Libraries/SpirvHeaders/Repo"]
 	path = External/SpirvHeaders/Repo
 	url = https://github.com/WelderFoundation/WelderEngineSpirvHeaders.git
+[submodule "External/SDL/Repo"]
+	path = External/SDL/Repo
+	url = https://github.com/SDL-mirror/SDL.git
