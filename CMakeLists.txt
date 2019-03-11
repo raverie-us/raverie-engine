@@ -1,4 +1,7 @@
-cmake_minimum_required(VERSION 3.13.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12.1 FATAL_ERROR)
+
+# There is a problem with clang using the default gcc headers on Ubuntu (remove #error).
+add_definitions(-D__STDC__)
 
 add_definitions(-DWelderRevisionId=${WELDER_REVISION})
 add_definitions(-DWelderShortChangeSet=${WELDER_SHORT_CHANGESET})

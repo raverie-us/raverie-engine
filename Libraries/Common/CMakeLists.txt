@@ -205,6 +205,7 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/SpinLock.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Stack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Stack.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Standard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Standard.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Status.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Status.hpp

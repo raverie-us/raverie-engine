@@ -5,16 +5,8 @@ const mkdirp = require('mkdirp');
 const fs = require('fs');
 const glob = require('glob');
 const os = require('os');
-const request = require('request');
 const rimraf = require('rimraf');
-const mv = require('mv');
-const ncp = require('ncp');
-const performance = require('perf_hooks').performance;
-const extract = require('extract-zip');
-const archiver = require('archiver');
 const commandExists = require('command-exists').sync;
-
-const bytesPerMb = 1024 * 1024;
 
 let system;
 let executableExtension = '';
@@ -40,71 +32,14 @@ initialize();
 
 const dirs = (() =>
 {
-  const root = process.cwd();
-  const libraries = path.join(root, 'Libraries');
-  const temp = path.join(root, 'Temp');
-  const tempBuild = path.join(temp, 'Build');
-  const tempDownload = path.join(temp, 'Download');
-  const tempDoxygen = path.join(temp, 'Doxygen');
-  const tempTest = path.join(temp, 'Test');
-  const tempTools = path.join(temp, 'Tools');
-  const tempImages = path.join(temp, 'Images');
-  const localNinja = path.join(tempTools, 'Ninja');
-  const localLlvm = path.join(tempTools, 'Llvm');
-  const localDoxygen = path.join(tempTools, 'Doxygen');
-  const localCmake = path.join(tempTools, 'Cmake');
-  const localNinjaBin = path.join(localNinja, 'bin');
-  const localLlvmBin = path.join(localLlvm, 'bin');
-  const localDoxygenBin = path.join(localDoxygen, 'bin');
-  const localCmakeBin = path.join(localCmake, 'bin');
+  const repo = process.cwd();
+  const libraries = path.join(repo, 'Libraries');
+  const buildPath = path.join(repo, 'Build');
 
   return {
-    root,
-    temp,
+    repo,
     libraries,
-    tempBuild,
-    tempDownload,
-    tempDoxygen,
-    tempTest,
-    tempTools,
-    tempImages,
-    localNinja,
-    localLlvm,
-    localDoxygen,
-    localCmake,
-    localNinjaBin,
-    localLlvmBin,
-    localDoxygenBin,
-    localCmakeBin,
-  };
-})();
-
-const paths = (() =>
-{
-  const ninja = path.join(dirs.localNinjaBin, 'ninja' + executableExtension);
-  const clang = path.join(dirs.localLlvmBin, 'clang' + executableExtension);
-  const clangXX = path.join(dirs.localLlvmBin, 'clang++' + executableExtension);
-  const lld = path.join(dirs.localLlvmBin, 'lld' + executableExtension);
-  const llvmAr = path.join(dirs.localLlvmBin, 'llvm-ar' + executableExtension);
-  const clangTidy = path.join(dirs.localLlvmBin, 'clang-tidy' + executableExtension);
-  const clangFormat = path.join(dirs.localLlvmBin, 'clang-format' + executableExtension);
-  const doxygen = path.join(dirs.localDoxygenBin, 'doxygen' + executableExtension);
-  const cmake = path.join(dirs.localCmakeBin, 'cmake' + executableExtension);
-
-  // Commands that we don't have portable/image versions of:
-  const git = 'git';
-
-  return {
-    ninja,
-    clang,
-    clangXX,
-    lld,
-    llvmAr,
-    clangTidy,
-    clangFormat,
-    doxygen,
-    cmake,
-    git,
+    build: buildPath,
   };
 })();
 
@@ -115,20 +50,6 @@ function makeDir(dirPath)
   });
   return dirPath;
 }
-
-function makeAllDirs()
-{
-  // Ensuring all directories exist just makes everything easier.
-  for (const key in dirs)
-  {
-    makeDir(dirs[key]);
-  }
-}
-
-//function addPath(directory)
-//{
-//  process.env.PATH += `;${directory}`;
-//}
 
 function sleep(ms)
 {
@@ -185,11 +106,30 @@ async function exec(executable, args, options)
   // This may be a result of a virus scanner or other process.
   let lastErr = 'Unknown';
   let result = null;
+
+  const readData = (optionsFunc, name) =>
+  {
+    const strName = name + 'Str';
+    result[strName] = '';
+    result[name].on('data', data =>
+    {
+      const str = data.toString();
+      if (optionsFunc)
+      {
+        optionsFunc(str);
+      }
+      result[strName] += str;
+    });
+  };
+
   for (let attempts = 10; attempts >= 0; --attempts)
   {
     try
     {
-      result = await execa(executable, args, options);
+      result = execa(executable, args, options);
+      readData(options.out, 'stdout');
+      readData(options.err, 'stderr');
+      await result;
       break;
     }
     catch (err)
@@ -200,22 +140,14 @@ async function exec(executable, args, options)
     }
   }
 
-  if (result)
-  {
-    if (options.err)
-    {
-      options.err(result.stderr);
-    }
-    if (options.out)
-    {
-      options.out(result.stdout);
-    }
-  }
-  else
+  if (!result)
   {
     printError(lastErr);
   }
-  return result;
+  return {
+    stdout: result.stdoutStr,
+    stderr: result.stderrStr,
+  };
 }
 
 async function execStdout(...args)
@@ -223,321 +155,9 @@ async function execStdout(...args)
   return (await exec(...args)).stdout;
 }
 
-function verifyFileExists(filePath)
+async function execStdoutTrimmed(...args)
 {
-  const exists = path.isAbsolute(filePath) ? fs.existsSync(filePath) : commandExists(filePath);
-
-  if (!exists)
-  {
-    printError(`file/command '${filePath}' does not exist`);
-    return false;
-  }
-  return true;
-}
-
-function getPercent(count, total)
-{
-  return total !== 0 ? Math.round((count / total) * 100) : '?';
-}
-
-function download(url, filePath)
-{
-  console.log(`Downloading '${url}'`);
-  return new Promise(resolve =>
-  {
-    const file = fs.createWriteStream(filePath);
-
-    let expectedBytes = 0;
-    let downloadedBytes = 0;
-    let lastBytes = 0;
-    let lastTime = performance.now();
-    request(url)
-      .on('error', printError)
-      .on('response', data =>
-      {
-        expectedBytes = data.headers['content-length'];
-      })
-      .on('data', chunk =>
-      {
-        downloadedBytes += chunk.length;
-        const now = performance.now();
-        if (now - lastTime >= 1000)
-        {
-          const deltaSeconds = (now - lastTime) / 1000.0;
-          const deltaMb = (downloadedBytes - lastBytes) / bytesPerMb;
-
-          lastTime = now;
-          lastBytes = downloadedBytes;
-
-          const mb = Math.round(downloadedBytes / bytesPerMb);
-          const mbps = deltaMb / deltaSeconds;
-          const percent = getPercent(downloadedBytes, expectedBytes);
-
-          console.log(` - ${percent}% - ${mb}mb (${mbps} MB/s)`);
-        }
-      })
-      .pipe(file);
-
-    file.on('finish', () =>
-    {
-      file.close();
-      resolve();
-      console.log(`Completed '${url}'`);
-    });
-  });
-}
-
-async function downloadTemp(url, fileName)
-{
-  const filePath = path.join(dirs.tempDownload, fileName);
-  try
-  {
-    fs.unlinkSync(filePath);
-  }
-  catch (err)
-  {
-    // Ignored.
-  }
-
-  await download(url, filePath);
-
-  return filePath;
-}
-
-async function standardInstall(filePath, args)
-{
-  const options = {
-    stdio: ['ignore', 'pipe', 'pipe'],
-    out: printLog,
-    err: printError,
-    reject: false
-  };
-  await exec(filePath, args ? args : [], options);
-}
-
-function getSingleSubDirectory(parentDir)
-{
-  let singleDirectory = null;
-  let directories = 0;
-  let files = 0;
-  for (const name of fs.readdirSync(parentDir))
-  {
-    const checkPath = path.join(parentDir, name);
-    if (fs.lstatSync(checkPath).isDirectory())
-    {
-      singleDirectory = checkPath;
-      ++directories;
-    }
-    else
-    {
-      ++files;
-    }
-  }
-
-  if (directories === 1 && files === 0)
-  {
-    return singleDirectory;
-  }
-  return null;
-}
-
-async function tarExtractor(filePath, tempExtractDir)
-{
-  const options = {
-    stdio: ['ignore', 'pipe', 'pipe'],
-    out: printLog,
-    err: printError,
-    reject: false
-  };
-  const args = ['xf', filePath, '-C', tempExtractDir];
-  return await exec('tar', args, options);
-}
-
-async function zipExtractor(filePath, tempExtractDir)
-{
-  const options = {
-    dir: tempExtractDir
-  };
-  return await new Promise(resolve =>
-  {
-    extract(filePath, options, err =>
-    {
-      printError(err);
-      resolve();
-    });
-  });
-}
-
-async function extractInstall(extractor, filePath, extractDir)
-{
-  const tempExtractDir = path.join(dirs.tempDownload, 'extract');
-  mkdirp.sync(tempExtractDir);
-
-  await extractor(filePath, tempExtractDir);
-
-  // Check if there is a single directory. If so we're going to move it.
-  const singleSubDir = getSingleSubDirectory(tempExtractDir);
-  const moveDir = singleSubDir ? singleSubDir : tempExtractDir;
-
-  rimraf.sync(extractDir);
-
-  const mvOptions = {
-    mkdirp: true
-  };
-  const error = await new Promise(resolve => mv(moveDir, extractDir, mvOptions, resolve));
-  printError(error);
-
-  rimraf.sync(tempExtractDir);
-}
-
-async function tarInstall(filePath, extractDir)
-{
-  return await extractInstall(tarExtractor, filePath, extractDir);
-}
-
-async function zipInstall(filePath, extractDir)
-{
-  return await extractInstall(zipExtractor, filePath, extractDir);
-}
-
-async function installProgram(info)
-{
-  if (info.check)
-  {
-    console.log(`Checking ${info.name}`);
-    if (await info.check())
-    {
-      console.log(`Checked ${info.name}`);
-      return;
-    }
-  }
-
-  const settings = info[system];
-  if (settings)
-  {
-    let filePath = null;
-    if (settings.url && settings.file)
-    {
-      filePath = await downloadTemp(settings.url, settings.file);
-    }
-
-    console.log(`Installing ${info.name}`);
-    await settings.install(filePath);
-    console.log(`Completed ${info.name}`);
-  }
-  else
-  {
-    printError(`installProgram: Unhandled system ${system} for ${info.name}`);
-  }
-
-  if (info.check)
-  {
-    if (await info.check())
-    {
-      console.log(`Checked ${info.name}`);
-    }
-    else
-    {
-      printError(`Failed ${info.name}`);
-    }
-  }
-}
-
-function installNinja()
-{
-  return installProgram({
-    name: 'Ninja',
-    check: async () => fs.existsSync(paths.ninja),
-    windows: {
-      url: 'https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip',
-      file: 'ninja-win.zip',
-      install: filePath => zipInstall(filePath, dirs.localNinjaBin)
-    },
-    linux: {
-      url: 'https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip',
-      file: 'ninja-linux.zip',
-      install: filePath => zipInstall(filePath, dirs.localNinjaBin)
-    },
-  });
-}
-
-function installLlvm()
-{
-  return installProgram({
-    name: 'Llvm',
-    check: async () => fs.existsSync(paths.clang) && fs.existsSync(paths.clangTidy) && fs.existsSync(paths.clangFormat),
-    windows: {
-      url: 'http://releases.llvm.org/7.0.0/LLVM-7.0.0-win64.exe',
-      file: 'LLVM-7.0.0-win64.exe',
-      install: async filePath =>
-      {
-        // Do a standard install, then copy the artifacts to our local directory.
-        const installPath = 'C:\\Program Files\\LLVM';
-        await standardInstall(filePath, ['/S', '/D=' + installPath]);
-        await new Promise(resolve =>
-        {
-          ncp(installPath, dirs.localLlvm, err =>
-          {
-            printError(err);
-            resolve();
-          });
-        });
-      }
-    },
-    linux: {
-      url: 'http://releases.llvm.org/7.0.0/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz',
-      file: 'clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz',
-      install: filePath => tarInstall(filePath, dirs.localLlvm)
-    },
-  });
-}
-
-function installDoxygen()
-{
-  return installProgram({
-    name: 'Doxygen',
-    check: async () => fs.existsSync(paths.doxygen),
-    windows: {
-      url: 'http://doxygen.nl/files/doxygen-1.8.15.windows.x64.bin.zip',
-      file: 'doxygen-1.8.15.windows.x64.bin.zip',
-      install: filePath => zipInstall(filePath, dirs.localDoxygenBin)
-    },
-    linux: {
-      url: 'http://doxygen.nl/files/doxygen-1.8.15.linux.bin.tar.gz',
-      file: 'doxygen-1.8.15.linux.bin.tar.gz',
-      install: filePath => tarInstall(filePath, dirs.localDoxygen)
-    },
-  });
-}
-
-function installCmake()
-{
-  return installProgram({
-    name: 'CMake',
-    check: async () => fs.existsSync(paths.cmake),
-    windows: {
-      url: 'https://github.com/Kitware/CMake/releases/download/v3.13.2/cmake-3.13.2-win64-x64.zip',
-      file: 'cmake-3.13.2-win64-x64.zip',
-      install: filePath => zipInstall(filePath, dirs.localCmake)
-    },
-    linux: {
-      url: 'https://github.com/Kitware/CMake/releases/download/v3.13.2/cmake-3.13.2-Linux-x86_64.tar.gz',
-      file: 'cmake-3.13.2-Linux-x86_64.tar.gz',
-      install: filePath => tarInstall(filePath, dirs.localCmake)
-    },
-  });
-}
-
-function safeDeleteFile(filePath)
-{
-  try
-  {
-    fs.unlinkSync(filePath);
-  }
-  catch (err)
-  {
-    // Ignored.
-  }
+  return (await execStdout(...args)).trim();
 }
 
 function gatherSourceFiles()
@@ -572,7 +192,7 @@ async function runEslint(options)
 {
   console.log('Running Eslint');
   const eslintOptions = {
-    cwd: dirs.root,
+    cwd: dirs.repo,
     stdio: ['ignore', 'pipe', 'pipe'],
     out: options.validate ? printError : printLog,
     err: options.validate ? printError : printLog,
@@ -591,7 +211,7 @@ async function runEslint(options)
 async function runClangTidy(options, sourceFiles)
 {
   console.log('Running Clang Tidy');
-  if (!verifyFileExists(paths.clangTidy))
+  if (!commandExists('clang-tidy'))
   {
     return;
   }
@@ -617,7 +237,7 @@ async function runClangTidy(options, sourceFiles)
 
     // Clang-tidy emits all the errors to the standard out.
     // We capture them and re-emit them to stderr.
-    const result = await exec(paths.clangTidy, args, clangTidyOptions);
+    const result = await exec('clang-tidy', args, clangTidyOptions);
 
     if (!options.validate)
     {
@@ -639,7 +259,7 @@ async function runClangTidy(options, sourceFiles)
 async function runClangFormat(options, sourceFiles)
 {
   console.log('Running Clang Format');
-  if (!verifyFileExists(paths.clangFormat))
+  if (!commandExists('clang-format'))
   {
     return;
   }
@@ -657,7 +277,7 @@ async function runClangFormat(options, sourceFiles)
     // Clang-format emits the formatted file to the output.
     // In this build script we want to emit errors if the user
     // did not auto-format their code, so we will perform a diff.
-    const result = await exec(paths.clangFormat, [filePath], clangFormatOptions);
+    const result = await exec('clang-format', [filePath], clangFormatOptions);
 
     const fullPath = path.join(dirs.libraries, filePath);
     const fileOptions =
@@ -750,13 +370,13 @@ async function runWelderFormat(options, sourceFiles)
 async function runDoxygen()
 {
   console.log('Running Doxygen');
-  if (!verifyFileExists(paths.doxygen))
+  if (!commandExists(paths.doxygen))
   {
     return;
   }
 
   const doxygenOptions = {
-    cwd: dirs.root,
+    cwd: dirs.repo,
     stdio: ['ignore', 'pipe', 'pipe'],
     out: printLog,
     err: printError,
@@ -766,27 +386,8 @@ async function runDoxygen()
 }
 */
 
-async function runCmake(options)
+function determineCmakeCombo(options)
 {
-  console.log('Running Cmake');
-  makeAllDirs();
-
-  if (!verifyFileExists(paths.cmake) || !verifyFileExists(paths.git))
-  {
-    return null;
-  }
-
-  const gitOptions = {
-    cwd: dirs.root,
-    stdio: ['ignore', 'pipe', 'pipe'],
-    err: printError,
-    reject: false
-  };
-  const revision = await execStdout(paths.git, ['rev-list', '--count', 'HEAD'], gitOptions);
-  const shortChangeset = await execStdout(paths.git, ['log', '-1', '--pretty=%h', '--abbrev=12'], gitOptions);
-  const changeset = await execStdout(paths.git, ['log', '-1', '--pretty=%H'], gitOptions);
-  const changesetDate = `"${await execStdout(paths.git, ['log', '-1', '--pretty=%cd', '--date=format:%Y-%m-%d'], gitOptions)}"`;
-
   const aliases =
   {
     windows:
@@ -796,6 +397,14 @@ async function runCmake(options)
       platform: 'Windows',
       architecture: 'X64',
       configuration: 'Any',
+    },
+    linux:
+    {
+      builder: 'Ninja',
+      toolchain: 'Clang',
+      platform: 'SDLSTDEmpty',
+      architecture: 'ANY',
+      configuration: 'Release',
     },
     emscripten:
     {
@@ -819,17 +428,50 @@ async function runCmake(options)
 
   // Allow options to override builder, toolchian, etc.
   // It is the user's responsibility to ensure this is a valid combination.
-  Object.assign(combo, options);
+  return Object.assign(combo, options);
+}
+
+function determineBuildDir(combo)
+{
+  const comboString = `${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.architecture}_${combo.configuration}`.replace(/ /g, '-');
+  return path.join(dirs.build, comboString);
+}
+
+async function runCmake(options)
+{
+  console.log('Running Cmake', options);
+
+  rimraf.sync(dirs.build);
+  makeDir(dirs.build);
+
+  if (!commandExists('cmake') || !commandExists('git'))
+  {
+    return null;
+  }
+
+  const gitOptions = {
+    cwd: dirs.repo,
+    stdio: ['ignore', 'pipe', 'pipe'],
+    err: printError,
+    reject: false
+  };
+  const revision = await execStdoutTrimmed('git', ['rev-list', '--count', 'HEAD'], gitOptions);
+  const shortChangeset = await execStdoutTrimmed('git', ['log', '-1', '--pretty=%h', '--abbrev=12'], gitOptions);
+  const changeset = await execStdoutTrimmed('git', ['log', '-1', '--pretty=%H'], gitOptions);
+  const changesetDate = `"${await execStdoutTrimmed('git', ['log', '-1', '--pretty=%cd', '--date=format:%Y-%m-%d'], gitOptions)}"`;
+
 
   let builderArgs = [];
   let toolchainArgs = [];
   let architectureArgs = [];
   let configurationArgs = [];
 
+  const combo = determineCmakeCombo(options);
+
   if (combo.builder === 'Ninja')
   {
     builderArgs = [
-      `-DCMAKE_MAKE_PROGRAM=${paths.ninja}`,
+      '-DCMAKE_MAKE_PROGRAM=ninja',
     ];
   }
 
@@ -851,12 +493,12 @@ async function runCmake(options)
   {
     toolchainArgs = [
       '-DCMAKE_SYSTEM_NAME=Generic',
-      `-DCMAKE_C_COMPILER:PATH=${paths.clang}`,
-      `-DCMAKE_CXX_COMPILER:PATH=${paths.clangXX}`,
+      '-DCMAKE_C_COMPILER:PATH=clang',
+      '-DCMAKE_CXX_COMPILER:PATH=clang++',
       '-DCMAKE_C_COMPILER_ID=Clang',
       '-DCMAKE_CXX_COMPILER_ID=Clang',
-      `-DCMAKE_LINKER=${paths.lld}`,
-      `-DCMAKE_AR=${paths.llvmAr}`,
+      '-DCMAKE_LINKER=lld',
+      '-DCMAKE_AR=/usr/bin/llvm-ar',
     ];
   }
 
@@ -889,14 +531,13 @@ async function runCmake(options)
     `-DWELDER_ARCHITECTURE=${combo.architecture}`,
     ...architectureArgs,
     ...configurationArgs,
-    dirs.root,
+    dirs.repo,
   ];
 
   console.log(cmakeArgs);
   console.log(combo);
 
-  const comboString = `${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.architecture}_${combo.configuration}`.replace(/ /g, '-');
-  const comboDir = path.join(dirs.tempBuild, comboString);
+  const comboDir = determineBuildDir(combo);
   rimraf.sync(comboDir);
   makeDir(comboDir);
 
@@ -907,7 +548,7 @@ async function runCmake(options)
     err: printError,
     reject: false
   };
-  await exec(paths.cmake, cmakeArgs, cmakeOptions);
+  await exec('cmake', cmakeArgs, cmakeOptions);
 
   return comboDir;
 }
@@ -927,7 +568,7 @@ function safeChmod(file, mode)
 async function runBuild(buildDir, config, testExecutablePaths)
 {
   console.log('Running Build');
-  if (!verifyFileExists(paths.cmake))
+  if (!commandExists('cmake'))
   {
     return;
   }
@@ -950,7 +591,7 @@ async function runBuild(buildDir, config, testExecutablePaths)
     reject: false
   };
 
-  await exec(paths.cmake, ['--build', '.', '--config', config], options);
+  await exec('cmake', ['--build', '.', '--config', config], options);
 
   const addExecutable = file =>
   {
@@ -982,54 +623,9 @@ async function runTests(testExecutablePaths)
 }
 */
 
-async function createImage()
-{
-  console.log('Creating');
-  makeAllDirs();
-  const imagePath = path.join(dirs.tempImages, `image-${system}.zip`);
-  safeDeleteFile(imagePath);
-
-  const output = fs.createWriteStream(imagePath);
-  const archive = archiver('zip', {
-    zlib:
-    {
-      level: 9
-    }
-  });
-  archive.on('error', printError);
-  archive.on('warning', printError);
-
-  let lastTime = performance.now();
-  archive.on('progress', data =>
-  {
-    const now = performance.now();
-    if (now - lastTime > 1000)
-    {
-      const percent = getPercent(data.fs.processedBytes, data.fs.totalBytes);
-      console.log(` - ${percent}% - ${data.fs.processedBytes} / ${data.fs.totalBytes}`);
-      lastTime = now;
-    }
-  });
-
-  archive.pipe(output);
-  archive.directory(dirs.tempTools, false);
-  archive.finalize();
-
-  await new Promise(resolve => output.on('close', resolve));
-  console.log('Created');
-}
-
-async function clean()
-{
-  console.log('Cleaning');
-  rimraf.sync(dirs.temp);
-  console.log('Cleaned');
-}
-
 async function format(options)
 {
   console.log('Formatting');
-  makeAllDirs();
   await runEslint(options);
   // TODO(Trevor.Sundberg): Run cmake_format.
   const sourceFiles = gatherSourceFiles();
@@ -1049,39 +645,13 @@ async function format(options)
 async function build(options)
 {
   console.log('Building');
-  const buildDir = await runCmake(options);
+  //const buildDir = await runCmake(options);
+  const buildDir = await determineBuildDir(determineCmakeCombo(options));
   const testExecutablePaths = [];
   const configuration = options.configuration ? options.configuration : 'Release';
   await runBuild(buildDir, configuration, testExecutablePaths);
   //await runTests(testExecutablePaths);
   console.log('Built');
-}
-
-async function installImage()
-{
-  makeAllDirs();
-  await installProgram({
-    name: 'Image',
-    windows: {
-      url: 'https://github.com/WelderFoundation/WelderFiles/releases/download/v0.0.0/image-windows.zip',
-      file: 'image-windows.zip',
-      install: filePath => zipInstall(filePath, dirs.tempTools)
-    },
-    linux: {
-      url: 'https://github.com/WelderFoundation/WelderFiles/releases/download/v0.0.0/image-linux.zip',
-      file: 'image-linux.zip',
-      install: filePath => zipInstall(filePath, dirs.tempTools)
-    },
-  });
-}
-
-async function installSources()
-{
-  makeAllDirs();
-  await installNinja();
-  await installLlvm();
-  await installDoxygen();
-  await installCmake();
 }
 
 function getParsedArgs()
@@ -1090,7 +660,7 @@ function getParsedArgs()
 
   if (args.length === 0)
   {
-    return ['clean', 'installImage', 'build'];
+    return ['build'];
   }
 
   const json = args.join(' ');
@@ -1107,10 +677,6 @@ function getParsedArgs()
 async function main()
 {
   const commands = {
-    createImage,
-    clean,
-    installImage,
-    installSources,
     format,
     runCmake,
     build,

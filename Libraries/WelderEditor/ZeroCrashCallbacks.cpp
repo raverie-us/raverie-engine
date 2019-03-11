@@ -133,14 +133,14 @@ void SendCrashReport(CrashHandlerParameters& params, void* userData)
   String crashToolPathA = GetToolsPath();
 
   Status status;
-  bool success = Os::SystemOpenFile(status, crashToolPathA.c_str(), NULL, paramString.c_str());
+  bool success = Os::SystemOpenFile(status, crashToolPathA.c_str(), Os::Verb::Default, paramString.c_str());
 
   if (success == true)
     return;
 
   // May be exported try other path
   String crashToolPathB = FilePath::Combine(GetTemporaryDirectory(), "Zero", "Tools", "ZeroCrashHandler.exe");
-  success = Os::SystemOpenFile(status, crashToolPathB.c_str(), NULL, paramString.c_str());
+  success = Os::SystemOpenFile(status, crashToolPathB.c_str(), Os::Verb::Default, paramString.c_str());
 }
 
 } // namespace Zero

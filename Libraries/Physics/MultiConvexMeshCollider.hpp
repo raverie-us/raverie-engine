@@ -74,7 +74,7 @@ public:
 
   /// Used to tell the collision system that this collider stores information in
   /// world space.
-  typedef false_type RangeInLocalSpace;
+  typedef FalseType RangeInLocalSpace;
   /// Used in the collision system. @JoshD: Maybe replace with AutoDeclare
   /// later?
   typedef MultiConvexMeshRange RangeType;

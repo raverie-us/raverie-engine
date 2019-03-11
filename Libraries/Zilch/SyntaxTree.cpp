@@ -1013,7 +1013,7 @@ Type* ValueNode::PrecomputeType() const
     return ZilchTypeId(Boolean);
 
   case Grammar::Null:
-    return ZilchTypeId(nullptr_t);
+    return ZilchTypeId(NullPointerType);
   default:
     break;
   }

@@ -95,7 +95,7 @@ void LauncherSendCrashReport(CrashHandlerParameters& params, void* userData)
   String crashToolPathA = LauncherGetToolsPath();
 
   Status status;
-  bool success = Os::SystemOpenFile(status, crashToolPathA.c_str(), NULL, paramString.c_str());
+  bool success = Os::SystemOpenFile(status, crashToolPathA.c_str(), Os::Verb::Default, paramString.c_str());
 }
 
 } // namespace Zero

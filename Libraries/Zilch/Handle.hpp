@@ -58,7 +58,7 @@ public:
 
   // Constructor that creates a null handle
   Handle();
-  Handle(nullptr_t);
+  Handle(NullPointerType);
 
   template <typename T>
   Handle(const T& value, HandleManager* manager = nullptr, ExecutableState* state = nullptr);

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-#if defined(PLATFORM_EMSCRIPTEN)
+#if !defined(COMPILER_MSVC)
 typedef size_t rsize_t;
 typedef int errno_t;
 

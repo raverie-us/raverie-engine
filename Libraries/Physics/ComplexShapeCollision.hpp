@@ -4,7 +4,7 @@
 #include "Physics/ShapeCollisionHelpers.hpp"
 
 /// To support being a complex shape, the collider type must contain a typedef
-/// called RangeInLocalSpace that is either set to true_type or false_type.
+/// called RangeInLocalSpace that is either set to TrueType or FalseType.
 /// Also, the collider must have a GetOverlapRange(Aabb) that returns a range
 /// of items to check. The item must be a class containing the Shape type to
 /// check against named Shape and a uint that signifies the id of that
@@ -159,25 +159,25 @@ bool ComplexCollideCollidersInternal(Collider* complexCollider,
 
 // These two functions use function overloading to determine which functor to
 // pass into the above function. By using the overloaded functions with
-// true/false_type, I can make sure that only the code that should actually run
+// true/FalseType, I can make sure that only the code that should actually run
 // is generated.
 
-/// Resolves the true_type of RangeInLocalSpace to the LocalFunctor.
+/// Resolves the TrueType of RangeInLocalSpace to the LocalFunctor.
 template <typename ColliderType, typename Shape2Type>
 bool ComplexCollideCollidersResolveLocal(Collider* complexCollider,
                                          Collider* collider2,
                                          PodArray<Physics::Manifold>* manifolds,
-                                         true_type)
+                                         TrueType)
 {
   return ComplexCollideCollidersInternal<ColliderType, Shape2Type, LocalFunctor>(complexCollider, collider2, manifolds);
 }
 
-/// Resolves the false_type of RangeInLocalSpace to the WorldFunctor.
+/// Resolves the FalseType of RangeInLocalSpace to the WorldFunctor.
 template <typename ColliderType, typename Shape2Type>
 bool ComplexCollideCollidersResolveLocal(Collider* complexCollider,
                                          Collider* collider2,
                                          PodArray<Physics::Manifold>* manifolds,
-                                         false_type)
+                                         FalseType)
 {
   return ComplexCollideCollidersInternal<ColliderType, Shape2Type, WorldFunctor>(complexCollider, collider2, manifolds);
 }

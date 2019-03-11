@@ -4,8 +4,6 @@
 namespace Zero
 {
 
-const int cDebugBufferLength = 1024;
-
 ErrorSignaler::ErrorHandler ErrorSignaler::sActiveErrorHandler = Os::ErrorProcessHandler;
 
 bool ErrorSignaler::SignalError(

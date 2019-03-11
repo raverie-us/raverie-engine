@@ -25,12 +25,16 @@
 #include <ctime>
 #include <limits>
 #include <unordered_map>
+#include <memory>
+#include <vector>
 #include <cmath>
 #include <limits>
 #include <cstdio>
 #include <cstdlib>
 #include <cfloat>
 #include <malloc.h>
+
+using namespace std;
 
 namespace Zero
 {

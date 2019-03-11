@@ -29,7 +29,7 @@ class ZeroShared Any
 public:
   // Constructor that initializes the Any to null (a handle, set to NullType)
   Any();
-  Any(nullptr_t);
+  Any(NullPointerType);
 
   Any(Zero::MoveReference<Any> rhs)
   {

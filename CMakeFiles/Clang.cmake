@@ -15,6 +15,7 @@ set(WELDER_C_CXX_FLAGS "\
   -fno-vectorize\
   -fno-slp-vectorize\
   -fno-tree-vectorize\
+  -pthread\
 ")
 
 
@@ -35,7 +36,8 @@ set(WELDER_C_CXX_FLAGS_MINSIZEREL "\
   -Oz\
 ")
 
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xlinker /ignore:4049,4217")
+#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xlinker /ignore:4049,4217")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xlinker --start-group")
 
 set(WELDER_C_CXX_EXTERNAL_FLAGS -Wno-everything)
 

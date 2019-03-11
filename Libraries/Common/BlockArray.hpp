@@ -330,7 +330,7 @@ public:
     // then deallocate the old array of buckets
     if (mCapacity != 0)
     {
-      UninitializedMove(newData, mData, oldBucketSize, true_type());
+      UninitializedMove(newData, mData, oldBucketSize, TrueType());
       mAllocator.Deallocate(mData, sizeof(pointer) * oldBucketSize);
     }
 
@@ -456,9 +456,9 @@ public:
 
     // fill out all complete buckets
     for (size_type i = 0; i < lastBucket; ++i)
-      UninitializedCopy(mData[i], other.mData[i], BucketSize, true_type());
+      UninitializedCopy(mData[i], other.mData[i], BucketSize, TrueType());
     // fill out the remaining portion of the last bucket
-    UninitializedCopy(mData[lastBucket], other.mData[lastBucket], lastBucketFillCount, true_type());
+    UninitializedCopy(mData[lastBucket], other.mData[lastBucket], lastBucketFillCount, TrueType());
   }
 
   size_type BucketCountFromSize(size_type size)

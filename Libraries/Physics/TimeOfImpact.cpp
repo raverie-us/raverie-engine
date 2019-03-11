@@ -309,13 +309,13 @@ void TimeOfImpactComplexInternal(TimeOfImpactData* data, bool parametersSwapped)
 }
 
 template <typename ComplexType, typename ShapeType>
-void TimeOfImpactComplex(TimeOfImpactData* data, bool parametersSwapped, true_type)
+void TimeOfImpactComplex(TimeOfImpactData* data, bool parametersSwapped, TrueType)
 {
   TimeOfImpactComplexInternal<ComplexType, ShapeType, LocalFunctor>(data, parametersSwapped);
 }
 
 template <typename ComplexType, typename ShapeType>
-void TimeOfImpactComplex(TimeOfImpactData* data, bool parametersSwapped, false_type)
+void TimeOfImpactComplex(TimeOfImpactData* data, bool parametersSwapped, FalseType)
 {
   TimeOfImpactComplexInternal<ComplexType, ShapeType, WorldFunctor>(data, parametersSwapped);
 }

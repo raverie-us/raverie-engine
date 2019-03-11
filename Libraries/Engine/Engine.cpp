@@ -365,7 +365,8 @@ void Engine::CrashEngine()
 {
   memset((void*)Z::gEngine, 0xffffff, 9999);
   memset((void*)Z::gTracker, 0xffffff, 9999);
-  memset(nullptr, 0xffffff, 9999);
+  Z::gEngine = nullptr;
+  memset((void*)Z::gEngine, 0xffffff, 9999);
 }
 
 bool Engine::IsReadOnly()

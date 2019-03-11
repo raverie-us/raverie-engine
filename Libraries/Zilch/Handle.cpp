@@ -23,7 +23,7 @@ Handle::Handle()
 #endif
 }
 
-Handle::Handle(nullptr_t)
+Handle::Handle(NullPointerType)
 {
   ZilchErrorIfNotStarted(Handle);
 

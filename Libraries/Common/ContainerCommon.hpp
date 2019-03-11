@@ -158,7 +158,7 @@ struct MoveWithoutDestructionOperator<Pair<first, second>>
 
 /// Move values from source array to new array using move
 template <typename type>
-inline void UninitializedMove(type* dest, type* source, size_t size, false_type /*isPod*/)
+inline void UninitializedMove(type* dest, type* source, size_t size, FalseType /*isPod*/)
 {
   type* destEnd = dest + size;
   while (dest != destEnd)
@@ -170,13 +170,13 @@ inline void UninitializedMove(type* dest, type* source, size_t size, false_type 
 }
 
 template <typename type>
-inline void UninitializedMove(type* dest, type* source, size_t size, true_type /*isPod*/)
+inline void UninitializedMove(type* dest, type* source, size_t size, TrueType /*isPod*/)
 {
   memmove(dest, source, sizeof(type) * size);
 }
 
 template <typename type>
-inline void UninitializedMoveRev(type* dest, type* source, size_t size, false_type /*isPod*/)
+inline void UninitializedMoveRev(type* dest, type* source, size_t size, FalseType /*isPod*/)
 {
   type* destEnd = dest + size;
   type* sourceEnd = source + size;
@@ -190,13 +190,13 @@ inline void UninitializedMoveRev(type* dest, type* source, size_t size, false_ty
 }
 
 template <typename type>
-inline void UninitializedMoveRev(type* dest, type* source, size_t size, true_type /*isPod*/)
+inline void UninitializedMoveRev(type* dest, type* source, size_t size, TrueType /*isPod*/)
 {
   memmove(dest, source, sizeof(type) * size);
 }
 
 template <typename type>
-inline void UninitializedCopy(type* dest, type* source, size_t size, false_type /*isPod*/)
+inline void UninitializedCopy(type* dest, type* source, size_t size, FalseType /*isPod*/)
 {
   type* destEnd = dest + size;
   while (dest != destEnd)
@@ -208,7 +208,7 @@ inline void UninitializedCopy(type* dest, type* source, size_t size, false_type 
 }
 
 template <typename type>
-inline void UninitializedCopy(type* dest, type* source, size_t size, true_type /*isPod*/)
+inline void UninitializedCopy(type* dest, type* source, size_t size, TrueType /*isPod*/)
 {
   memcpy(dest, source, sizeof(type) * size);
 }
@@ -228,25 +228,25 @@ inline void ConstructWith(type* elem, MoveReference<initType> source)
 }
 
 template <typename type>
-inline void Construct(type* elem, false_type /*isPod*/)
+inline void Construct(type* elem, FalseType /*isPod*/)
 {
   new (elem) type();
 }
 
 template <typename type>
-inline void Construct(type* /*elem*/, true_type /*isPod*/)
+inline void Construct(type* /*elem*/, TrueType /*isPod*/)
 {
   // do nothing for pod
 }
 
 template <typename type>
-inline void Destroy(type* dest, false_type /*isPod*/)
+inline void Destroy(type* dest, FalseType /*isPod*/)
 {
   dest->~type();
 }
 
 template <typename type>
-inline void Destroy(type* /*dest*/, true_type /*isPod*/)
+inline void Destroy(type* /*dest*/, TrueType /*isPod*/)
 {
   // do nothing for pod types
 }
@@ -263,7 +263,7 @@ inline void UninitializedFill(type* dest, size_t size, const type& source)
 }
 
 template <typename type>
-inline void UninitializedFill(type* dest, size_t size, false_type /*isPod*/)
+inline void UninitializedFill(type* dest, size_t size, FalseType /*isPod*/)
 {
   type* destEnd = dest + size;
   while (dest != destEnd)
@@ -274,13 +274,13 @@ inline void UninitializedFill(type* dest, size_t size, false_type /*isPod*/)
 }
 
 template <typename type>
-inline void UninitializedFill(type* /*dest*/, size_t /*size*/, true_type /*isPod*/)
+inline void UninitializedFill(type* /*dest*/, size_t /*size*/, TrueType /*isPod*/)
 {
   // do nothing for pod types
 }
 
 template <typename type>
-inline void DestroyElements(type* begin, size_t size, false_type /*isPod*/)
+inline void DestroyElements(type* begin, size_t size, FalseType /*isPod*/)
 {
   type* end = begin + size;
   while (begin != end)
@@ -291,7 +291,7 @@ inline void DestroyElements(type* begin, size_t size, false_type /*isPod*/)
 }
 
 template <typename type>
-inline void DestroyElements(type* /*begin*/, size_t /*size*/, true_type /*isPod*/)
+inline void DestroyElements(type* /*begin*/, size_t /*size*/, TrueType /*isPod*/)
 {
   // do nothing for pod types
 }

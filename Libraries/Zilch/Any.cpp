@@ -13,7 +13,7 @@ Any::Any() : StoredType(nullptr)
   memset(this->Data, 0, sizeof(this->Data));
 }
 
-Any::Any(nullptr_t) : StoredType(nullptr)
+Any::Any(NullPointerType) : StoredType(nullptr)
 {
   ZilchErrorIfNotStarted(Any);
 

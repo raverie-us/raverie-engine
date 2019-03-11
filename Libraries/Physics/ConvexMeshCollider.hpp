@@ -41,7 +41,7 @@ public:
   /// Used to tell the collision system that this collider stores information in
   /// local space. This means that the passed in aabb for GetOverlapRange should
   /// be transformed to local space.
-  typedef true_type RangeInLocalSpace;
+  typedef TrueType RangeInLocalSpace;
   /// Used in the collision system. @JoshD: Maybe replace with AutoDeclare
   /// later?
   typedef Physics::MeshFilterRange RangeType;

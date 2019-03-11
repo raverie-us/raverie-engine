@@ -50,6 +50,7 @@ void EnableMemoryLeakChecking(int breakOnAllocation)
 
 bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
 {
+  const int cDebugBufferLength = 1024;
   char buffer[cDebugBufferLength];
   ZeroSPrintf(buffer,
               cDebugBufferLength,

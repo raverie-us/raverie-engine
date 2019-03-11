@@ -32,7 +32,7 @@ public:
   {
     if (mSize > maxSize)
       mSize = maxSize;
-    UninitializedCopy(mData, data, mSize, true_type());
+    UninitializedCopy(mData, data, mSize, TrueType());
   }
 
   range All()

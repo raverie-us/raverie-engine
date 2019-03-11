@@ -25,9 +25,9 @@ template <typename IntegerType, IntegerType Value>
 const IntegerType integral_constant<IntegerType, Value>::value;
 
 /// Integral constant true type
-typedef integral_constant<bool, true> true_type;
+typedef integral_constant<bool, true> TrueType;
 /// Integral constant false type
-typedef integral_constant<bool, false> false_type;
+typedef integral_constant<bool, false> FalseType;
 
 //
 // Is Same
@@ -57,9 +57,9 @@ struct is_same : public integral_constant<bool, (is_same_helper<TypeA, TypeB>::v
 //
 
 template <typename T>
-static true_type is_base_of_helper(T*);
+static TrueType is_base_of_helper(T*);
 template <typename T>
-static false_type is_base_of_helper(...);
+static FalseType is_base_of_helper(...);
 
 /// Provides a constant defined as true if DerivedType derives from BaseType
 template <typename BaseType, typename DerivedType>
@@ -168,210 +168,210 @@ struct remove_const_and_volatile
 /// Provides a constant defined as true if T is a pointer type, else defined as
 /// false
 template <typename T>
-struct is_pointer : public false_type
+struct is_pointer : public FalseType
 {
 };
 template <typename T>
-struct is_pointer<T*> : public true_type
+struct is_pointer<T*> : public TrueType
 {
 };
 
 /// Provides a constant defined as true if T is a reference type, else defined
 /// as false
 template <typename T>
-struct is_reference : public false_type
+struct is_reference : public FalseType
 {
 };
 template <typename T>
-struct is_reference<T&> : public true_type
+struct is_reference<T&> : public TrueType
 {
 };
 
 /// Provides a constant defined as true if T is a floating-point type, else
 /// defined as false
 template <typename T>
-struct is_floating_point : public false_type
+struct is_floating_point : public FalseType
 {
 };
 template <>
-struct is_floating_point<float> : public true_type
+struct is_floating_point<float> : public TrueType
 {
 };
 template <>
-struct is_floating_point<double> : public true_type
+struct is_floating_point<double> : public TrueType
 {
 };
 
 /// Provides a constant defined as true if T is a signed arithmetic type, else
 /// defined as false
 template <typename T>
-struct is_signed : public false_type
+struct is_signed : public FalseType
 {
 };
 template <>
-struct is_signed<slonglong> : public true_type
+struct is_signed<slonglong> : public TrueType
 {
 };
 template <>
-struct is_signed<slong> : public true_type
+struct is_signed<slong> : public TrueType
 {
 };
 template <>
-struct is_signed<sint> : public true_type
+struct is_signed<sint> : public TrueType
 {
 };
 template <>
-struct is_signed<sshort> : public true_type
+struct is_signed<sshort> : public TrueType
 {
 };
 template <>
-struct is_signed<schar> : public true_type
+struct is_signed<schar> : public TrueType
 {
 };
 template <>
-struct is_signed<float> : public true_type
+struct is_signed<float> : public TrueType
 {
 };
 template <>
-struct is_signed<double> : public true_type
+struct is_signed<double> : public TrueType
 {
 };
 
 /// Provides a constant defined as true if T is an unsigned arithmetic type,
 /// else defined as false
 template <typename T>
-struct is_unsigned : public false_type
+struct is_unsigned : public FalseType
 {
 };
 template <>
-struct is_unsigned<ulonglong> : public true_type
+struct is_unsigned<ulonglong> : public TrueType
 {
 };
 template <>
-struct is_unsigned<ulong> : public true_type
+struct is_unsigned<ulong> : public TrueType
 {
 };
 template <>
-struct is_unsigned<uint> : public true_type
+struct is_unsigned<uint> : public TrueType
 {
 };
 template <>
-struct is_unsigned<ushort> : public true_type
+struct is_unsigned<ushort> : public TrueType
 {
 };
 template <>
-struct is_unsigned<uchar> : public true_type
+struct is_unsigned<uchar> : public TrueType
 {
 };
 
 /// Provides a constant defined as true if T is an integral type, else defined
 /// as false
 template <typename T>
-struct is_integral : public false_type
+struct is_integral : public FalseType
 {
 };
 template <>
-struct is_integral<slonglong> : public true_type
+struct is_integral<slonglong> : public TrueType
 {
 };
 template <>
-struct is_integral<slong> : public true_type
+struct is_integral<slong> : public TrueType
 {
 };
 template <>
-struct is_integral<sint> : public true_type
+struct is_integral<sint> : public TrueType
 {
 };
 template <>
-struct is_integral<sshort> : public true_type
+struct is_integral<sshort> : public TrueType
 {
 };
 template <>
-struct is_integral<schar> : public true_type
+struct is_integral<schar> : public TrueType
 {
 };
 template <>
-struct is_integral<ulonglong> : public true_type
+struct is_integral<ulonglong> : public TrueType
 {
 };
 template <>
-struct is_integral<ulong> : public true_type
+struct is_integral<ulong> : public TrueType
 {
 };
 template <>
-struct is_integral<uint> : public true_type
+struct is_integral<uint> : public TrueType
 {
 };
 template <>
-struct is_integral<ushort> : public true_type
+struct is_integral<ushort> : public TrueType
 {
 };
 template <>
-struct is_integral<uchar> : public true_type
+struct is_integral<uchar> : public TrueType
 {
 };
 template <>
-struct is_integral<char> : public true_type
+struct is_integral<char> : public TrueType
 {
 };
 template <>
-struct is_integral<bool> : public true_type
+struct is_integral<bool> : public TrueType
 {
 };
 
 /// Provides a constant defined as true if T is a bool type, else defined as
 /// false
 template <typename T>
-struct is_bool : public false_type
+struct is_bool : public FalseType
 {
 };
 template <>
-struct is_bool<bool> : public true_type
+struct is_bool<bool> : public TrueType
 {
 };
 
 /// Provides a constant defined as true if T is a void type, else defined as
 /// false
 template <typename T>
-struct is_void : public false_type
+struct is_void : public FalseType
 {
 };
 template <>
-struct is_void<void> : public true_type
+struct is_void<void> : public TrueType
 {
 };
 
 /// Provides a constant defined as true if T is a nullptr_t type, else defined
 /// as false
 template <typename T>
-struct is_null_pointer : public false_type
+struct is_null_pointer : public FalseType
 {
 };
-// template<> struct is_null_pointer<NullPointerType> : public true_type  {}; //
+// template<> struct is_null_pointer<NullPointerType> : public TrueType  {}; //
 // TODO
 
 /// Provides a constant defined as true if T is a array type, else defined as
 /// false
 template <typename T>
-struct is_array : public false_type
+struct is_array : public FalseType
 {
 };
 template <typename T>
-struct is_array<T[]> : public true_type
+struct is_array<T[]> : public TrueType
 {
 };
 template <typename T, size_t N>
-struct is_array<T[N]> : public true_type
+struct is_array<T[N]> : public TrueType
 {
 };
 
 /// is_member_pointer helper class
 template <typename T>
-struct is_member_pointer_helper : public false_type
+struct is_member_pointer_helper : public FalseType
 {
 };
 template <typename T, typename U>
-struct is_member_pointer_helper<T U::*> : public true_type
+struct is_member_pointer_helper<T U::*> : public TrueType
 {
 };
 
@@ -432,9 +432,9 @@ struct is_enum
 /// template argument
 #define ZeroDeclareHasMemberTrait(TypeTraitName, MemberName)                                                           \
   template <typename ZilchT>                                                                                           \
-  static ::Zero::true_type check_##TypeTraitName(decltype(&ZilchT::MemberName)*);                                      \
+  static ::Zero::TrueType check_##TypeTraitName(decltype(&ZilchT::MemberName)*);                                      \
   template <typename ZilchT>                                                                                           \
-  static ::Zero::false_type check_##TypeTraitName(...);                                                                \
+  static ::Zero::FalseType check_##TypeTraitName(...);                                                                \
   template <typename ZilchT>                                                                                           \
   struct TypeTraitName : public decltype(check_##TypeTraitName<ZilchT>(nullptr))                                       \
   {                                                                                                                    \
@@ -518,11 +518,11 @@ struct StandardTraits
 /// convenience
 struct PodOverride
 {
-  typedef true_type is_pod_;
-  typedef true_type has_trivial_copy_;
-  typedef true_type has_trivial_assign_;
-  typedef true_type has_trivial_constructor_;
-  typedef true_type has_trivial_destructor_;
+  typedef TrueType is_pod_;
+  typedef TrueType has_trivial_copy_;
+  typedef TrueType has_trivial_assign_;
+  typedef TrueType has_trivial_constructor_;
+  typedef TrueType has_trivial_destructor_;
 };
 
 //
@@ -876,11 +876,11 @@ struct Decay
 /// Provides a constant defined as true if T is a MoveReference<T> type, else
 /// defined as false
 template <typename T>
-struct is_move_reference : public false_type
+struct is_move_reference : public FalseType
 {
 };
 template <typename T>
-struct is_move_reference<MoveReference<T>> : public true_type
+struct is_move_reference<MoveReference<T>> : public TrueType
 {
 };
 

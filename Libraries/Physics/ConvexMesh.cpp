@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
-#include "Geometry\QuickHull3D.hpp"
+#include "Geometry/QuickHull3D.hpp"
 
 namespace Zero
 {

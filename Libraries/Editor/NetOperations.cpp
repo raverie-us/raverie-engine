@@ -3,7 +3,7 @@
 
 // Includes
 #include "NetOperations.hpp"
-#include "Networking\NetObject.hpp"
+#include "Networking/NetObject.hpp"
 
 namespace Zero
 {
