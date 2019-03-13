@@ -61,7 +61,7 @@
 #include <GL/wglew.h>
 
 // Include OpenGl
-#include <GL/GL.h>
+#include <GL/gl.h>
 
 #ifdef min
 #  undef min

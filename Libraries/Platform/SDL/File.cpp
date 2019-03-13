@@ -228,13 +228,13 @@ void File::Duplicate(Status& status, File& destinationFile)
   WarnIf(ret != fileSizeInBytes, "Failed to duplicate original file");
   if (status.Failed())
   {
-    delete buffer;
+    delete[] buffer;
     return;
   }
 
   // Write the duplicate data into the other file
   ret = destinationFile.Write(buffer, fileSizeInBytes);
-  delete buffer;
+  delete[] buffer;
   WarnIf(ret != fileSizeInBytes, "Failed to duplicate original file");
 }
 

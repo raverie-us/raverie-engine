@@ -1,21 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-#if defined(PLATFORM_EMSCRIPTEN)
+#if __has_include(<experimental/filesystem>)
 #  include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
 #else
 #  include <filesystem>
-#endif
-
-namespace std
-{
-namespace experimental
-{
-}
-using namespace experimental;
-} // namespace std
-
 namespace fs = std::filesystem;
+#endif
 
 namespace Zero
 {

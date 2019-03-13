@@ -11,7 +11,7 @@
 #include "GL/glew.h"
 
 // Include OpenGl
-#include "GL/GL.h"
+#include <GL/gl.h>
 
 #include <emscripten.h>
 #include <emscripten/html5.h>

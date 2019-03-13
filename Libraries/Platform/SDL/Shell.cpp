@@ -764,6 +764,7 @@ ShellWindow::ShellWindow(Shell* shell,
   // Is the width and height in client space? SDL doesn't say...
   SDL_Window* sdlWindow = SDL_CreateWindow(
       windowName.c_str(), monitorClientPos.x, monitorClientPos.y, clientSize.x, clientSize.y, sdlFlags);
+  ErrorIf(sdlWindow == nullptr, "%s", SDL_GetError());
   mHandle = sdlWindow;
 
   SDL_SetWindowHitTest(sdlWindow, &ShellWindowSDLHitTest, this);

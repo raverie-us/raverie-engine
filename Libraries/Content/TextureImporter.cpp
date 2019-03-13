@@ -669,7 +669,9 @@ ImageProcessorCodes::Enum TextureImporter::ProcessTexture(Status& status)
 
   MipHeader& mipHeader = mMipHeaders.Back();
   float dataSize = (mipHeader.mDataOffset + mipHeader.mDataSize) / (1024.0f * 1024.0f);
-  String size = String::Format("%.3f MB", dataSize);
+  // This keeps the number consistent accross platforms (sometimes printf behavior is different).
+  float fixedSize = Math::Floor(dataSize * 1000.0f) / 1000.0f;
+  String size = String::Format("%.3f MB", fixedSize);
 
   // Check for meta update
   TextureInfo* info = mImageContent->has(TextureInfo);
