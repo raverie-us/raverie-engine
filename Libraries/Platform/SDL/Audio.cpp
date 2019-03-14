@@ -110,7 +110,7 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStr
     return StreamStatus::DeviceProblem;
   }
 
-#if defined(PLATFORM_EMSCRIPTEN)
+#if defined(WelderTargetOsEmscripten)
   // The web now requires audio is started by a user action.
   return StreamStatus::DeviceProblem;
 #endif

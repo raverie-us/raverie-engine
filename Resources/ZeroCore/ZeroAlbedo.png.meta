@@ -21,7 +21,7 @@ ImageContent
 		var FileType = "png"
 		var LoadFormat = "RGBA8"
 		var Dimensions = "1024 x 1024"
-		var Size = "0.667 MB"
+		var Size = "0.666 MB"
 	}
 	ContentEditorOptions 
 	{

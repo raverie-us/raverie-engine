@@ -8,7 +8,7 @@ const os = require('os');
 const rimraf = require('rimraf');
 const commandExists = require('command-exists').sync;
 
-let system;
+let hostos;
 let executableExtension = '';
 
 function initialize()
@@ -16,14 +16,14 @@ function initialize()
   switch (os.platform())
   {
   case 'win32':
-    system = 'windows';
+    hostos = 'Windows';
     executableExtension = '.exe';
     break;
   case 'darwin':
-    system = 'mac';
+    hostos = 'Mac';
     break;
   default:
-    system = 'linux';
+    hostos = 'Linux';
     break;
   }
 }
@@ -390,41 +390,52 @@ function determineCmakeCombo(options)
 {
   const aliases =
   {
-    windows:
+    Windows:
     {
       builder: 'Visual Studio 15 2017',
       toolchain: 'MSVC',
       platform: 'Windows',
       architecture: 'X64',
       configuration: 'Any',
+      targetos: 'Windows',
     },
-    linux:
+    Linux:
     {
       builder: 'Ninja',
       toolchain: 'Clang',
       platform: 'SDLSTDEmpty',
       architecture: 'ANY',
       configuration: 'Release',
+      targetos: 'Linux',
     },
-    emscripten:
+    Emscripten:
     {
       builder: 'MinGW Makefiles',
       toolchain: 'Emscripten',
       platform: 'Emscripten',
       architecture: 'WASM',
       configuration: 'Release',
+      targetos: 'Emscripten',
     },
-    empty:
+    Empty:
     {
       builder: 'Ninja',
       toolchain: 'Clang',
       platform: 'Stub',
       architecture: 'ANY',
       configuration: 'Release',
+      targetos: hostos,
     },
   };
 
-  const combo = aliases[options.alias ? options.alias : system];
+  const alias = options.alias ? options.alias : hostos;
+  let combo = aliases[alias];
+
+  if (!combo)
+  {
+    printError(`Undefined alias ${alias}, choosing platform empty`);
+    combo = aliases.empty;
+  }
 
   // Allow options to override builder, toolchian, etc.
   // It is the user's responsibility to ensure this is a valid combination.
@@ -433,7 +444,7 @@ function determineCmakeCombo(options)
 
 function determineBuildDir(combo)
 {
-  const comboString = `${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.architecture}_${combo.configuration}`.replace(/ /g, '-');
+  const comboString = `${hostos}_${combo.targetos}_${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.architecture}_${combo.configuration}`.replace(/ /g, '-');
   return path.join(dirs.build, comboString);
 }
 
@@ -460,19 +471,16 @@ async function runCmake(options)
   const changeset = await execStdoutTrimmed('git', ['log', '-1', '--pretty=%H'], gitOptions);
   const changesetDate = `"${await execStdoutTrimmed('git', ['log', '-1', '--pretty=%cd', '--date=format:%Y-%m-%d'], gitOptions)}"`;
 
-
-  let builderArgs = [];
-  let toolchainArgs = [];
-  let architectureArgs = [];
-  let configurationArgs = [];
+  const builderArgs = [];
+  const toolchainArgs = [];
+  const architectureArgs = [];
+  const configurationArgs = [];
 
   const combo = determineCmakeCombo(options);
 
   if (combo.builder === 'Ninja')
   {
-    builderArgs = [
-      '-DCMAKE_MAKE_PROGRAM=ninja',
-    ];
+    builderArgs.push('-DCMAKE_MAKE_PROGRAM=ninja');
   }
 
   if (combo.toolchain === 'Emscripten')
@@ -483,39 +491,37 @@ async function runCmake(options)
     }
 
     const toolchainFile = path.join(process.env.EMSCRIPTEN, 'cmake/Modules/Platform/Emscripten.cmake');
-    toolchainArgs = [
-      `-DCMAKE_TOOLCHAIN_FILE=${toolchainFile}`,
-      '-DEMSCRIPTEN_GENERATE_BITCODE_STATIC_LIBRARIES=1',
-    ];
+    toolchainArgs.push(`-DCMAKE_TOOLCHAIN_FILE=${toolchainFile}`);
+    toolchainArgs.push('-DEMSCRIPTEN_GENERATE_BITCODE_STATIC_LIBRARIES=1');
   }
 
   if (combo.toolchain === 'Clang')
   {
-    toolchainArgs = [
-      '-DCMAKE_SYSTEM_NAME=Generic',
-      '-DCMAKE_C_COMPILER:PATH=clang',
-      '-DCMAKE_CXX_COMPILER:PATH=clang++',
-      '-DCMAKE_C_COMPILER_ID=Clang',
-      '-DCMAKE_CXX_COMPILER_ID=Clang',
-      '-DCMAKE_LINKER=lld',
-      '-DCMAKE_AR=/usr/bin/llvm-ar',
-    ];
+    if (hostos === 'Windows')
+    {
+      // CMake on Windows tries to do a bunch of detection thinking that it will be using MSVC.
+      toolchainArgs.push('-DCMAKE_SYSTEM_NAME=Generic');
+    }
+
+    toolchainArgs.push('-DCMAKE_C_COMPILER:PATH=clang');
+    toolchainArgs.push('-DCMAKE_CXX_COMPILER:PATH=clang++');
+    toolchainArgs.push('-DCMAKE_C_COMPILER_ID=Clang');
+    toolchainArgs.push('-DCMAKE_CXX_COMPILER_ID=Clang');
+    toolchainArgs.push('-DCMAKE_LINKER=lld');
+    toolchainArgs.push('-DCMAKE_AR=/usr/bin/llvm-ar');
   }
 
   if (combo.toolchain === 'MSVC' && combo.architecture === 'X64')
   {
-    architectureArgs = [
-      '-DCMAKE_GENERATOR_PLATFORM=x64',
-      '-T', 'host=x64',
-    ];
+    architectureArgs.push('-DCMAKE_GENERATOR_PLATFORM=x64');
+    architectureArgs.push('-T');
+    architectureArgs.push('host=x64');
   }
 
   if (combo.toolchain !== 'MSVC')
   {
-    configurationArgs = [
-      `-DCMAKE_BUILD_TYPE=${combo.configuration}`,
-      '-DCMAKE_EXPORT_COMPILE_COMMANDS=1',
-    ];
+    configurationArgs.push(`-DCMAKE_BUILD_TYPE=${combo.configuration}`);
+    configurationArgs.push('-DCMAKE_EXPORT_COMPILE_COMMANDS=1');
   }
 
   const cmakeArgs = [
@@ -531,6 +537,8 @@ async function runCmake(options)
     `-DWELDER_ARCHITECTURE=${combo.architecture}`,
     ...architectureArgs,
     ...configurationArgs,
+    `-DWELDER_HOSTOS=${hostos}`,
+    `-DWELDER_TARGETOS=${combo.targetos}`,
     dirs.repo,
   ];
 
@@ -647,6 +655,10 @@ async function build(options)
   console.log('Building');
   //const buildDir = await runCmake(options);
   const buildDir = await determineBuildDir(determineCmakeCombo(options));
+  if (!fs.existsSync(buildDir))
+  {
+    printError(`Build directory does not exist ${buildDir}`);
+  }
   const testExecutablePaths = [];
   const configuration = options.configuration ? options.configuration : 'Release';
   await runBuild(buildDir, configuration, testExecutablePaths);

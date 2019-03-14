@@ -61,9 +61,9 @@ struct Thickness;
 
 struct LayoutResult
 {
-  Widget* PlacedWidget;
-  Vec3 Translation;
-  Vec2 Size;
+  Widget* PlacedWidget = nullptr;
+  Vec3 Translation = Vec3::cZero;
+  Vec2 Size = Vec2::cZero;
 };
 
 LayoutResult AspectLayout(Vec2 aspect, Vec2 size);

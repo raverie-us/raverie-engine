@@ -8,7 +8,7 @@
 #include <errno.h>
 
 // This is only used to make it compile for easy testing
-#if defined(PLATFORM_WINDOWS)
+#if defined(WelderTargetOsWindows)
 #  include "FileSystemWindowsEmulation.inl"
 #else
 #  include <unistd.h>
@@ -29,7 +29,7 @@ static const String cParentDirectory("..");
 
 FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback, void* userData)
 {
-#if defined(PLATFORM_EMSCRIPTEN)
+#if defined(WelderTargetOsEmscripten)
   // Calling this will allow the outside product to populate the
   // virtual file system by calling 'AddVirtualFileSystemEntry'.
   if (callback)
@@ -89,7 +89,7 @@ void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, T
 
 bool PersistFiles()
 {
-#if defined(PLATFORM_EMSCRIPTEN)
+#if defined(WelderTargetOsEmscripten)
   EM_ASM(FS.syncfs(false, function(err) {
     if (err)
       console.error(err);

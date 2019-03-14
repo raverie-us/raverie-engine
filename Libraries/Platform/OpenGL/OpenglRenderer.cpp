@@ -3,7 +3,7 @@
 #include "Precompiled.hpp"
 #include "OpenglRenderer.hpp"
 
-#ifdef PLATFORM_EMSCRIPTEN
+#ifdef WelderTargetOsEmscripten
 #  define ZeroWebgl
 #else
 #  define ZeroGl

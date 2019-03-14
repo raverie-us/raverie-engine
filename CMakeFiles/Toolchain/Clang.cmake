@@ -1,9 +1,4 @@
-add_definitions(-DPLATFORM_EMSCRIPTEN=1 -DPLATFORM_NAME="Stub")
-add_definitions(-DCOMPILER_CLANG=1)
-
-# If we're compiling under Windows...
-add_definitions(-D_UNICODE -DUNICODE)
-add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SECURE_SCL=0 -D_NO_CVCONST_H)
+add_definitions(-DWelderCompilerClang=1 -DWelderCompilerName="Clang")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 set(WELDER_C_CXX_FLAGS "\
@@ -17,7 +12,6 @@ set(WELDER_C_CXX_FLAGS "\
   -fno-tree-vectorize\
   -pthread\
 ")
-
 
 set(WELDER_C_CXX_FLAGS_DEBUG "\
   -g\

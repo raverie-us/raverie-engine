@@ -12,6 +12,7 @@ ImageContent
 		var Filtering = TextureFiltering.Nearest
 		var Anisotropy = TextureAnisotropy.x1
 		var MipMapping = TextureMipMapping.None
+		var HalfScaleCount = 0
 		var PremultipliedAlpha = false
 		var GammaCorrection = false
 	}
@@ -20,9 +21,9 @@ ImageContent
 		var FileType = "png"
 		var LoadFormat = "RGBA8"
 		var Dimensions = "16 x 16"
-		var Size = "0.001 MB"
+		var Size = "0.000 MB"
 	}
-	ContentEditorOptions
+	ContentEditorOptions 
 	{
 		var ShowInEditor = true
 	}

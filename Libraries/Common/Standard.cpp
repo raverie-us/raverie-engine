@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-#if !defined(COMPILER_MSVC)
+#if !defined(WelderCompilerMsvc)
 int vsprintf_s(char* buffer, size_t numberOfElements, const char* format, va_list args)
 {
   return vsnprintf(buffer, numberOfElements, format, args);

@@ -9,7 +9,7 @@ SDL_Haptic* cSDLHapticDevices[cMaxGamepads];
 
 void PlatformLibrary::Initialize()
 {
-#if defined(PLATFORM_EMSCRIPTEN)
+#if defined(WelderTargetOsEmscripten)
   SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");
   emscripten_sample_gamepad_data();
 #endif

@@ -13,10 +13,20 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT WelderEditor)
 
 project(Welder)
-add_definitions(-DPLATFORM_ARCHITECTURE="${WELDER_ARCHITECTURE}")
+add_definitions(-DWelderArchitectureName="${WELDER_ARCHITECTURE}")
+add_definitions(-DWelderHostOs${WELDER_HOSTOS}=1)
+add_definitions(-DWelderHostOsName="${WELDER_HOSTOS}")
+add_definitions(-DWelderTargetOs${WELDER_TARGETOS}=1)
+add_definitions(-DWelderTargetOsName="${WELDER_TARGETOS}")
+add_definitions(-DWelderPlatform${WELDER_PLATFORM}=1)
+add_definitions(-DWelderPlatformName="${WELDER_PLATFORM}")
+add_definitions(-DWelderToolchain${WELDER_TOOLCHAIN}=1)
+add_definitions(-DWelderToolchainName="${WELDER_TOOLCHAIN}")
 
 set(WELDER_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(WELDER_CMAKE_DIR ${WELDER_CORE_DIR}/CMakeFiles/)
+set(WELDER_TOOLCHAIN_DIR ${WELDER_CMAKE_DIR}/Toolchain/)
+set(WELDER_TARGETOS_DIR ${WELDER_CMAKE_DIR}/TargetOs/)
 set(WELDER_LIBRARIES_DIR ${WELDER_CORE_DIR}/Libraries/)
 set(WELDER_PLATFORM_DATA_DIR ${WELDER_CORE_DIR}/PlatformData/${WELDER_TOOLCHAIN})
 set(WELDER_VIRTUAL_FILE_SYSTEM_ZIP ${CMAKE_BINARY_DIR}/FileSystem.zip)
@@ -79,7 +89,8 @@ endfunction()
 
 #Emscripten
 #MSVC
-include(${WELDER_CMAKE_DIR}/${WELDER_TOOLCHAIN}.cmake)
+include(${WELDER_TOOLCHAIN_DIR}/${WELDER_TOOLCHAIN}.cmake)
+include(${WELDER_TARGETOS_DIR}/${WELDER_TARGETOS}.cmake)
 
 set(CMAKE_C_FLAGS                             "${CMAKE_C_FLAGS}                             ${WELDER_C_CXX_FLAGS}")
 set(CMAKE_CXX_FLAGS                           "${CMAKE_CXX_FLAGS}                           ${WELDER_C_CXX_FLAGS}")
@@ -124,7 +135,7 @@ set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL         "${CMAKE_EXE_LINKER_FLAGS_MINSIZER
 #Windows
 #Emscripten
 #SDLSTDEmpty
-#Empty
+#Stub
 add_subdirectory(Libraries/Platform/${WELDER_PLATFORM})
 
 add_subdirectory(External)

@@ -29,7 +29,7 @@ void GetExceptionPointers(DWORD dwExceptionCode, EXCEPTION_POINTERS** ppExceptio
   CONTEXT ContextRecord;
   memset(&ContextRecord, 0, sizeof(CONTEXT));
 
-#if defined(_X86_) && !defined(COMPILER_CLANG)
+#if defined(_X86_) && defined(WelderCompilerMsvc)
   __asm {
     mov dword ptr[ContextRecord.Eax], eax
       mov dword ptr[ContextRecord.Ecx], ecx

@@ -68,18 +68,11 @@ String ZilchPluginBuilder::GetSharedLibraryPlatformName()
 
   // Append the operating system name (or some grouped name for all OSes that
   // support this shared library)
-#if defined(PLATFORM_WINDOWS)
-  builder.Append("Windows_NT");
-#else
-  builder.Append("Unknown");
-#endif
-
+  builder.Append(WelderTargetOsName);
   builder.Append('-');
 
   // Append the target machine architecture
-#if defined(PLATFORM_ARCHITECTURE)
-  builder.Append(PLATFORM_ARCHITECTURE);
-#endif
+  builder.Append(WelderArchitectureName);
   String pluginFileName = builder.ToString();
   return pluginFileName;
 }

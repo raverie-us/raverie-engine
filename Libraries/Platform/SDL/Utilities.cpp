@@ -74,7 +74,7 @@ u64 GetMacAddress()
 
 bool DebugBreak()
 {
-#if defined(PLATFORM_EMSCRIPTEN)
+#if defined(WelderTargetOsEmscripten)
   emscripten_debugger();
 #else
   SDL_TriggerBreakpoint();

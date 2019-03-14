@@ -61,7 +61,7 @@ target_link_libraries(Platform
     GL
 )
 
-if (PLATFORM_ARCHITECTURE STREQUAL "X86")
+if (WELDER_ARCHITECTURE STREQUAL "X86")
   target_sources(Platform
     PRIVATE
       ${CMAKE_CURRENT_LIST_DIR}/../CEF/Browser.cpp

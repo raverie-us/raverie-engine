@@ -1040,7 +1040,7 @@ String NativeStubCode::GenerateCpp()
     builder.WriteLineIndented();
   }
 
-  builder.WriteLineIndented("#if defined(COMPILER_MICROSOFT)");
+  builder.WriteLineIndented("#if defined(WelderCompilerMsvc)");
   builder.WriteLineIndented("#pragma optimize(\"\", off)");
   builder.WriteLineIndented("#endif");
 

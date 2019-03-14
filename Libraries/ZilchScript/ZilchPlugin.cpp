@@ -302,7 +302,7 @@ void ZilchPluginSource::WriteCurrentVersionFile()
   if (mContentItem == nullptr)
     return;
 
-#if defined(PLATFORM_WINDOWS)
+#if defined(WelderTargetOsWindows)
   String revisionNumber = GetRevisionNumberString();
   String propsFile = BuildString("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
                                  "<Project ToolsVersion=\"4.0\" "
@@ -342,7 +342,7 @@ void ZilchPluginSource::OpenIde()
   CopyPluginDependenciesOnce();
   String codeDir = GetCodeDirectory();
 
-#if defined(PLATFORM_WINDOWS)
+#if defined(WelderTargetOsWindows)
 
   if (CheckIdeAndInformUser() == false)
     return;
@@ -366,7 +366,7 @@ void ZilchPluginSource::OpenIde()
 
 void ZilchPluginSource::OnEngineUpdate(UpdateEvent* event)
 {
-#if defined(PLATFORM_WINDOWS)
+#if defined(WelderTargetOsWindows)
   if (mOpenIdeAfterToolsInstallCounter > 0)
   {
     // If the installer process is finally stopped
@@ -389,7 +389,7 @@ void ZilchPluginSource::InstallIdeTools()
 {
   MarkAttemptedIdeToolsInstAll();
 
-#if defined(PLATFORM_WINDOWS)
+#if defined(WelderTargetOsWindows)
   String extensionPath = FilePath::Combine(Z::gContentSystem->ToolPath, "ZeroZilchPlugins.vsix");
   Os::SystemOpenFile(extensionPath.c_str());
 #else
@@ -421,7 +421,7 @@ void ZilchPluginSource::MarkAttemptedIdeToolsInstAll()
 
 bool ZilchPluginSource::IsIdeToolInstalled()
 {
-#if defined(PLATFORM_WINDOWS)
+#if defined(WelderTargetOsWindows)
 
   // 14 is Visual Studio 2015
   static const char* cVersions[] = {"14.0", "14.0_Exp", "14.0_Config", "14.0_Remote"};
@@ -472,7 +472,7 @@ bool ZilchPluginSource::CheckIdeAndInformUser()
                     "No IDE was detected, you must first install a C++ IDE for "
                     "your platform");
 
-#if defined(PLATFORM_WINDOWS)
+#if defined(WelderTargetOsWindows)
     Os::SystemOpenNetworkFile("https://www.visualstudio.com/"
                               "post-download-vs?sku=community&clcid=0x409");
 #endif
@@ -483,7 +483,7 @@ bool ZilchPluginSource::CheckIdeAndInformUser()
 
 void ZilchPluginSource::Clean()
 {
-#if defined(PLATFORM_WINDOWS)
+#if defined(WelderTargetOsWindows)
   String codeDir = GetCodeDirectory();
   String ideFile = FilePath::Combine(codeDir, BuildString(Name, "Clean.bat"));
   Status status;
@@ -504,7 +504,7 @@ void ZilchPluginSource::CompileConfiguration(StringParam configuration)
   String codeDir = GetCodeDirectory();
   String taskName = BuildString("Compiling ", configuration, " ", Name);
 
-#if defined(PLATFORM_WINDOWS)
+#if defined(WelderTargetOsWindows)
   String configurationBatchFileName = BuildString(Name, "Build", configuration);
   String configurationBatchFilePath = FilePath::CombineWithExtension(codeDir, configurationBatchFileName, ".bat");
   String process = BuildString("cmd /C \"", configurationBatchFilePath, "\"");

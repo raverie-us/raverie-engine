@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-#define ZeroPlatform PLATFORM_NAME PLATFORM_ARCHITECTURE
+#define ZeroPlatform WelderTargetOsName "_" WelderArchitectureName
 
 extern const String sWelderOrganization;
 extern const String sEditorGuid;

@@ -10,7 +10,7 @@
 
 #include <GL/gl.h>
 
-#ifdef PLATFORM_APPLE
+#ifdef WelderTargetOsMac
 #  include <CoreServices/CoreServices.h>
 #  include <mach/mach.h>
 #  include <mach/mach_time.h>

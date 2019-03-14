@@ -13,40 +13,20 @@ RUN apt-get update && apt-get install -y \
     ninja-build \
     nodejs \
     npm \
+    pkg-config \
+    xorg-dev \
+    xscreensaver \
+    xutils-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g npm@latest
 
-#WORKDIR /home/cmake/
-#RUN wget -q -Otemp.tar.gz "https://cmake.org/files/v3.13/cmake-3.13.4-Linux-x86_64.tar.gz"
-#RUN tar -xf temp.tar.gz --strip-components=1
-#RUN rm temp.tar.gz
-#ENV PATH=/home/cmake/bin:$PATH
-#
-#WORKDIR /home/doxygen
-#RUN wget -q -Otemp.tar.gz "http://doxygen.nl/files/doxygen-1.8.15.linux.bin.tar.gz"
-#RUN tar -xf temp.tar.gz --strip-components=1
-#RUN rm temp.tar.gz
-#ENV PATH=/home/doxygen/bin:$PATH
-#
-#WORKDIR /home/llvm/
-#RUN wget -q -Otemp.tar.xz "http://releases.llvm.org/7.0.0/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz"
-#RUN tar -xf temp.tar.xz --strip-components=1
-#RUN rm temp.tar.xz
-#ENV PATH=/home/llvm/bin:$PATH
-#
-#WORKDIR /home/ninja/bin
-#RUN wget -q -Otemp.zip "https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip"
-#RUN unzip temp.zip
-#RUN rm temp.zip
-#ENV PATH=/home/ninja/bin:$PATH
-
-WORKDIR /home
+WORKDIR /Welder/
 COPY package*.json ./
 RUN npm install --no-optional --no-progress --no-audit
 
-RUN chown -R 1000 /home/
+RUN chown -R 1000 /Welder/
 
 # There is a problem with clang using the default gcc headers on Ubuntu (remove #error).
 RUN sed -i 's/# error.*//g' /usr/include/x86_64-linux-gnu/sys/cdefs.h

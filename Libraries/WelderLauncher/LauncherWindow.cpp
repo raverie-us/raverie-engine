@@ -487,7 +487,7 @@ void LauncherWindow::OnMajorLauncherUpdateDownloaded(BackgroundTaskEvent* e)
   // silent, this still shows progress but has no prompts) and close and re-open
   // the launcher.
   Status status;
-#if defined(PLATFORM_WINDOWS)
+#if defined(WelderTargetOsWindows)
   Os::SystemOpenFile(
       status, job->mInstallerPath.c_str(), Os::Verb::Default, "/SILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS");
 #else
