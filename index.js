@@ -59,6 +59,19 @@ function sleep(ms)
   });
 }
 
+function tryUnlinkSync(fullPath)
+{
+  try
+  {
+    fs.unlinkSync(fullPath);
+    return true;
+  }
+  catch (err)
+  {
+    return false;
+  }
+}
+
 function printIndented(text, printer, symbol)
 {
   if (!text)
@@ -442,18 +455,19 @@ function determineCmakeCombo(options)
   return Object.assign(combo, options);
 }
 
+function determineBuildComboStr(combo)
+{
+  return `${hostos}_${combo.targetos}_${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.architecture}_${combo.configuration}`.replace(/ /g, '-');
+}
+
 function determineBuildDir(combo)
 {
-  const comboString = `${hostos}_${combo.targetos}_${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.architecture}_${combo.configuration}`.replace(/ /g, '-');
-  return path.join(dirs.build, comboString);
+  return path.join(dirs.build, determineBuildComboStr(combo));
 }
 
 async function runCmake(options)
 {
   console.log('Running Cmake', options);
-
-  rimraf.sync(dirs.build);
-  makeDir(dirs.build);
 
   if (!commandExists('cmake') || !commandExists('git'))
   {
@@ -545,9 +559,16 @@ async function runCmake(options)
   console.log(cmakeArgs);
   console.log(combo);
 
-  const comboDir = determineBuildDir(combo);
+  const comboStr = determineBuildComboStr(combo);
+  const comboDir = path.join(dirs.build, comboStr);
   rimraf.sync(comboDir);
   makeDir(comboDir);
+
+  // This will always be set to the last build directory the user created (when calling runCmake).
+  // This is used for finding compile_commands.json, cmake artefacts, etc.
+  const activeLink = path.join(dirs.build, 'Active');
+  tryUnlinkSync(activeLink);
+  fs.symlinkSync(`./${comboStr}`, activeLink);
 
   const cmakeOptions = {
     cwd: comboDir,
@@ -654,7 +675,7 @@ async function build(options)
 {
   console.log('Building');
   //const buildDir = await runCmake(options);
-  const buildDir = await determineBuildDir(determineCmakeCombo(options));
+  const buildDir = determineBuildDir(determineCmakeCombo(options));
   if (!fs.existsSync(buildDir))
   {
     printError(`Build directory does not exist ${buildDir}`);

@@ -22,24 +22,29 @@ RUN apt-get update && apt-get install -y \
 
 RUN npm install -g npm@latest
 
-WORKDIR /Welder/
 COPY package*.json ./
-RUN npm install --no-optional --no-progress --no-audit
-
-RUN chown -R 1000 /Welder/
+RUN npm install --no-optional --no-progress --no-audit --global
 
 # There is a problem with clang using the default gcc headers on Ubuntu (remove #error).
 RUN sed -i 's/# error.*//g' /usr/include/x86_64-linux-gnu/sys/cdefs.h
 
 USER 1000
 
-ENTRYPOINT ["dumb-init", "--", "node", "index.js"]
+ENTRYPOINT ["dumb-init", "--"]
 
-#CMD cmake --version && \
-#    doxygen --version && \
-#    clang --version && \
-#    clang-format --version && \
-#    clang-tidy --version && \
-#    ninja --version && \
-#    node --version && \
-#    npm --version
+CMD echo '----------cmake:' && \
+    cmake --version && \
+    echo '----------doxygen:' && \
+    doxygen --version && \
+    echo '----------clang:' && \
+    clang --version && \
+    echo '----------clang-format:' && \
+    clang-format --version && \
+    echo '----------clang-tidy:' && \
+    clang-tidy --version && \
+    echo '----------ninja:' && \
+    ninja --version && \
+    echo '----------node:' && \
+    node --version && \
+    echo '----------npm:' && \
+    npm --version
