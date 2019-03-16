@@ -3,16 +3,18 @@ cmake_minimum_required(VERSION 3.12.1 FATAL_ERROR)
 # There is a problem with clang using the default gcc headers on Ubuntu (remove #error).
 add_definitions(-D__STDC__)
 
-add_definitions(-DWelderRevisionId=${WELDER_REVISION})
-add_definitions(-DWelderShortChangeSet=${WELDER_SHORT_CHANGESET})
-add_definitions(-DWelderChangeSet=${WELDER_CHANGESET})
-add_definitions(-DWelderChangeSetDate=${WELDER_CHANGESET_DATE})
-
 set(CMAKE_CONFIGURATION_TYPES Debug RelWithDebInfo Release MinSizeRel)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT WelderEditor)
 
+find_program(WELDER_IWYU_PATH NAMES include-what-you-use iwyu)
+
 project(Welder)
+
+add_definitions(-DWelderRevisionId=${WELDER_REVISION})
+add_definitions(-DWelderShortChangeSet=${WELDER_SHORT_CHANGESET})
+add_definitions(-DWelderChangeSet=${WELDER_CHANGESET})
+add_definitions(-DWelderChangeSetDate=${WELDER_CHANGESET_DATE})
 add_definitions(-DWelderArchitectureName="${WELDER_ARCHITECTURE}")
 add_definitions(-DWelderHostOs${WELDER_HOSTOS}=1)
 add_definitions(-DWelderHostOsName="${WELDER_HOSTOS}")
@@ -42,6 +44,7 @@ add_custom_target(VirtualFileSystemZip
 
 function(welder_setup_library target directory)
   target_include_directories(${target} PUBLIC ${directory} ${WELDER_LIBRARIES_DIR})
+  #set_property(TARGET ${target} PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${WELDER_IWYU_PATH})
 endfunction()
 
 function(welder_get_all_dependencies outputList TARGET)

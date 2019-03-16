@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     clang-tidy \
     clang-format \
     git \
+    iwyu \
     mesa-common-dev mesa-utils-extra libglapi-mesa libgl1-mesa-dev libglu1-mesa-dev freeglut3 freeglut3-dev \
     llvm \
     ninja-build \
