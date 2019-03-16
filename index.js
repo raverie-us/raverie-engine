@@ -7,6 +7,7 @@ const glob = require('glob');
 const os = require('os');
 const rimraf = require('rimraf');
 const commandExists = require('command-exists').sync;
+const yargs = require('yargs');
 
 let hostos;
 let executableExtension = '';
@@ -82,6 +83,10 @@ function printIndented(text, printer, symbol)
   if (text.stack)
   {
     text = `${text.stack}`;
+  }
+  else if (typeof text === 'object')
+  {
+    text = JSON.stringify(text, null, 2);
   }
   else
   {
@@ -409,7 +414,7 @@ function determineCmakeCombo(options)
       toolchain: 'MSVC',
       platform: 'Windows',
       architecture: 'X64',
-      configuration: 'Any',
+      config: 'Any',
       targetos: 'Windows',
     },
     Linux:
@@ -418,7 +423,7 @@ function determineCmakeCombo(options)
       toolchain: 'Clang',
       platform: 'SDLSTDEmpty',
       architecture: 'ANY',
-      configuration: 'Release',
+      config: 'Release',
       targetos: 'Linux',
     },
     Emscripten:
@@ -427,7 +432,7 @@ function determineCmakeCombo(options)
       toolchain: 'Emscripten',
       platform: 'Emscripten',
       architecture: 'WASM',
-      configuration: 'Release',
+      config: 'Release',
       targetos: 'Emscripten',
     },
     Empty:
@@ -436,7 +441,7 @@ function determineCmakeCombo(options)
       toolchain: 'Clang',
       platform: 'Stub',
       architecture: 'ANY',
-      configuration: 'Release',
+      config: 'Release',
       targetos: hostos,
     },
   };
@@ -457,7 +462,7 @@ function determineCmakeCombo(options)
 
 function determineBuildComboStr(combo)
 {
-  return `${hostos}_${combo.targetos}_${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.architecture}_${combo.configuration}`.replace(/ /g, '-');
+  return `${hostos}_${combo.targetos}_${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.architecture}_${combo.config}`.replace(/ /g, '-');
 }
 
 function determineBuildDir(combo)
@@ -465,7 +470,7 @@ function determineBuildDir(combo)
   return path.join(dirs.build, determineBuildComboStr(combo));
 }
 
-async function runCmake(options)
+async function cmake(options)
 {
   console.log('Running Cmake', options);
 
@@ -488,7 +493,7 @@ async function runCmake(options)
   const builderArgs = [];
   const toolchainArgs = [];
   const architectureArgs = [];
-  const configurationArgs = [];
+  const configArgs = [];
 
   const combo = determineCmakeCombo(options);
 
@@ -534,8 +539,8 @@ async function runCmake(options)
 
   if (combo.toolchain !== 'MSVC')
   {
-    configurationArgs.push(`-DCMAKE_BUILD_TYPE=${combo.configuration}`);
-    configurationArgs.push('-DCMAKE_EXPORT_COMPILE_COMMANDS=1');
+    configArgs.push(`-DCMAKE_BUILD_TYPE=${combo.config}`);
+    configArgs.push('-DCMAKE_EXPORT_COMPILE_COMMANDS=1');
   }
 
   const cmakeArgs = [
@@ -550,14 +555,14 @@ async function runCmake(options)
     `-DWELDER_PLATFORM=${combo.platform}`,
     `-DWELDER_ARCHITECTURE=${combo.architecture}`,
     ...architectureArgs,
-    ...configurationArgs,
+    ...configArgs,
     `-DWELDER_HOSTOS=${hostos}`,
     `-DWELDER_TARGETOS=${combo.targetos}`,
     dirs.repo,
   ];
 
-  console.log(cmakeArgs);
-  console.log(combo);
+  printLog(cmakeArgs);
+  printLog(combo);
 
   const comboStr = determineBuildComboStr(combo);
   const comboDir = path.join(dirs.build, comboStr);
@@ -674,72 +679,32 @@ async function format(options)
 async function build(options)
 {
   console.log('Building');
-  //const buildDir = await runCmake(options);
   const buildDir = determineBuildDir(determineCmakeCombo(options));
   if (!fs.existsSync(buildDir))
   {
     printError(`Build directory does not exist ${buildDir}`);
   }
   const testExecutablePaths = [];
-  const configuration = options.configuration ? options.configuration : 'Release';
-  await runBuild(buildDir, configuration, testExecutablePaths);
+  const config = options.config ? options.config : 'Release';
+  await runBuild(buildDir, config, testExecutablePaths);
   //await runTests(testExecutablePaths);
   console.log('Built');
 }
 
-function getParsedArgs()
-{
-  const args = process.argv.splice(2);
-
-  if (args.length === 0)
-  {
-    return ['build'];
-  }
-
-  const json = args.join(' ');
-
-  if (json.startsWith('['))
-  {
-    return eval(json); // eslint-disable-line
-  }
-
-  // Assume the arguments are not in json format (just an array of strings).
-  return args;
-}
-
 async function main()
 {
-  const commands = {
-    format,
-    runCmake,
-    build,
+  const empty = {
   };
-
-  const parsedArgs = getParsedArgs();
-  for (let arg of parsedArgs)
-  {
-    console.log('--------------------------------------------------');
-    let command;
-    if (typeof arg === 'string')
-    {
-      command = commands[arg];
-      arg = {
-        name: arg
-      };
-    }
-    else
-    {
-      command = commands[arg.name];
-    }
-
-    if (command)
-    {
-      await command(arg);
-    }
-    else
-    {
-      console.error(`Invalid command '${arg}'`);
-    }
-  }
+  // eslint-disable-next-line
+  yargs
+    .command('format', 'Formats all C/C++ files', empty, format)
+    .usage('format [--validate]')
+    .command('cmake', 'Generate a cmake project', empty, cmake)
+    .usage('cmake [--alias=...] [--builder=...] [--toolchain=...] [--platform=...] [--architecture=...] [--config] [--targetos=...]')
+    .command('build', 'Build a cmake project (options must match generated version)', empty, build)
+    .usage('build [same options as cmake]')
+    .demand(1)
+    .help()
+    .argv;
 }
 main();
