@@ -93,6 +93,7 @@ protected:
   Vec2 mMinSize;
 
 private:
+  void UpdateChildTransforms();
   static void InternalDetach(Composite* parent, Widget* child);
   static void InternalAttach(Composite* parent, Widget* child);
 };

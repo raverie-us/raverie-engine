@@ -129,6 +129,7 @@ private:
   Space* mEngineSpace;
   SpaceListType mSpaceList;
   InputDevice::Enum mCurrentInputDevice;
+  size_t mLoadingCount = 0;
 
   /// Systems to be updated every game loop.
   Array<System*> mSystems;

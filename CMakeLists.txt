@@ -8,6 +8,15 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT WelderEditor)
 
 find_program(WELDER_IWYU_PATH NAMES include-what-you-use iwyu)
+if(WELDER_IWYU_PATH)
+  message(STATUS "Found iwyu at ${WELDER_IWYU_PATH}")
+endif()
+
+find_program(WELDER_CCACHE_PATH ccache)
+if(WELDER_CCACHE_PATH)
+  message(STATUS "Found ccache at ${WELDER_CCACHE_PATH}")
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${WELDER_CCACHE_PATH}")
+endif()
 
 project(Welder)
 

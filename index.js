@@ -460,14 +460,18 @@ function determineCmakeCombo(options)
   return Object.assign(combo, options);
 }
 
-function determineBuildComboStr(combo)
+function activateBuildDir(combo)
 {
-  return `${hostos}_${combo.targetos}_${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.architecture}_${combo.config}`.replace(/ /g, '-');
-}
+  const comboStr = `${hostos}_${combo.targetos}_${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.architecture}_${combo.config}`.replace(/ /g, '-');
+  const comboDir = path.join(dirs.build, comboStr);
 
-function determineBuildDir(combo)
-{
-  return path.join(dirs.build, determineBuildComboStr(combo));
+  // This will always be set to the last build directory the user created (when calling cmake/build).
+  // This is used for finding compile_commands.json, cmake artefacts, etc.
+  const activeLink = path.join(dirs.build, 'Active');
+  tryUnlinkSync(activeLink);
+  fs.symlinkSync(`./${comboStr}`, activeLink);
+  printLog(`Activated ${comboStr}`);
+  return comboDir;
 }
 
 async function cmake(options)
@@ -564,19 +568,12 @@ async function cmake(options)
   printLog(cmakeArgs);
   printLog(combo);
 
-  const comboStr = determineBuildComboStr(combo);
-  const comboDir = path.join(dirs.build, comboStr);
-  rimraf.sync(comboDir);
-  makeDir(comboDir);
-
-  // This will always be set to the last build directory the user created (when calling runCmake).
-  // This is used for finding compile_commands.json, cmake artefacts, etc.
-  const activeLink = path.join(dirs.build, 'Active');
-  tryUnlinkSync(activeLink);
-  fs.symlinkSync(`./${comboStr}`, activeLink);
+  const buildDir = activateBuildDir(combo);
+  rimraf.sync(buildDir);
+  makeDir(buildDir);
 
   const cmakeOptions = {
-    cwd: comboDir,
+    cwd: buildDir,
     stdio: ['ignore', 'pipe', 'pipe'],
     out: printLog,
     err: printError,
@@ -584,7 +581,7 @@ async function cmake(options)
   };
   await exec('cmake', cmakeArgs, cmakeOptions);
 
-  return comboDir;
+  return buildDir;
 }
 
 function safeChmod(file, mode)
@@ -679,7 +676,8 @@ async function format(options)
 async function build(options)
 {
   console.log('Building');
-  const buildDir = determineBuildDir(determineCmakeCombo(options));
+  const combo = determineCmakeCombo(options);
+  const buildDir = activateBuildDir(combo);
   if (!fs.existsSync(buildDir))
   {
     printError(`Build directory does not exist ${buildDir}`);

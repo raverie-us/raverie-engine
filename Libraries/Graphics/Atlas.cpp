@@ -20,7 +20,7 @@ Atlas::Atlas()
 {
   mTexture = Texture::CreateRuntime();
   uint size = cAtlasSize * cAtlasSize * GetPixelSize(TextureFormat::RGBA8);
-  byte* image = (byte*)zAllocate(size);
+  byte* image = new byte[size];
   if (image != nullptr)
     memset(image, 0, size);
   mTexture->Upload(cAtlasSize, cAtlasSize, TextureFormat::RGBA8, image, size, false);

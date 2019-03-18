@@ -222,6 +222,22 @@ Widget* Composite::HitTest(Vec2 location, Widget* ignore)
   return nullptr;
 }
 
+
+void Composite::UpdateChildTransforms()
+{
+  forRange(auto& child, GetChildren())
+  {
+    Widget* widget = Z::gWidgetManager->Widgets.FindValue(child.mId, nullptr);
+    // TODO(TrevorSundberg): This check is horrible but I'm not sure why there is an
+    // invalid Widget in the child list (seems to be under EditorViewport maybe?).
+    if (widget == nullptr || widget != &child || widget->mId != child.mId)
+      continue;
+
+    if (!child.mDestroyed && child.GetActive())
+      child.UpdateTransformExternal();
+  }
+}
+
 void Composite::UpdateTransform()
 {
   // Skip this if we're already on our way out
@@ -236,27 +252,12 @@ void Composite::UpdateTransform()
     }
     else
     {
-      WidgetListRange children = GetChildren();
-      while (!children.Empty())
-      {
-        Widget& child = children.Front();
-        if (!child.mDestroyed && child.GetActive())
-          child.UpdateTransformExternal();
-        children.PopFront();
-      }
+      UpdateChildTransforms();
     }
   }
   else if (mTransformUpdateState == TransformUpdateState::ChildUpdate)
   {
-    WidgetListRange children = GetChildren();
-    while (!children.Empty())
-    {
-      Widget& child = children.Front();
-      if (!child.mDestroyed && child.GetActive())
-        child.UpdateTransformExternal();
-
-      children.PopFront();
-    }
+    UpdateChildTransforms();
   }
 
   Widget::UpdateTransform();

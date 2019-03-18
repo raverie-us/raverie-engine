@@ -99,10 +99,10 @@ void BaseSpirVOptimizerPass::DestroyOptimizerOptions(spv_optimizer_options& opti
     if (flag == nullptr)
       break;
 
-    delete flag;
+    delete[] flag;
     ++flagIndex;
   }
-  delete options->flags_;
+  delete[] options->flags_;
   options->flags_ = nullptr;
 
   // Destroy the actual options object

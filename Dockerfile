@@ -1,12 +1,13 @@
 FROM ubuntu:18.10
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ccache \
     cmake \
     doxygen \
     dumb-init \
     clang \
-    clang-tidy \
     clang-format \
+    clang-tidy \
     git \
     iwyu \
     mesa-common-dev mesa-utils-extra libglapi-mesa libgl1-mesa-dev libglu1-mesa-dev freeglut3 freeglut3-dev \
@@ -31,9 +32,15 @@ RUN sed -i 's/# error.*//g' /usr/include/x86_64-linux-gnu/sys/cdefs.h
 
 USER 1000
 
+ENV CCACHE_COMPRESS=1
+ENV CCACHE_COMPRESSLEVEL=9
+ENV CCACHE_DIR=/cache/
+
 ENTRYPOINT ["dumb-init", "--"]
 
-CMD echo '----------cmake:' && \
+CMD echo '----------ccache:' && \
+    ccache --version && \
+    echo '----------cmake:' && \
     cmake --version && \
     echo '----------doxygen:' && \
     doxygen --version && \
@@ -43,6 +50,10 @@ CMD echo '----------cmake:' && \
     clang-format --version && \
     echo '----------clang-tidy:' && \
     clang-tidy --version && \
+    echo '----------git:' && \
+    git --version && \
+    echo '----------iwyu:' && \
+    iwyu --version && \
     echo '----------ninja:' && \
     ninja --version && \
     echo '----------node:' && \
