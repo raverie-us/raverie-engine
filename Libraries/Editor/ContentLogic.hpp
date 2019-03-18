@@ -10,7 +10,7 @@ class Viewport;
 class Mouse;
 class MouseEvent;
 
-bool LoadContentLibrary(StringParam name, bool isCore);
+bool LoadContentLibrary(StringParam name);
 
 void LoadContentConfig();
 void LoadCoreContent(Array<String>& coreLibs);

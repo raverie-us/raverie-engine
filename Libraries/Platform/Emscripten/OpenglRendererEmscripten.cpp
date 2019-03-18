@@ -20,7 +20,7 @@ OpenglRendererEmscripten::OpenglRendererEmscripten(OsHandle windowHandle, String
   attrs.majorVersion = 2;
   attrs.minorVersion = 0;
   attrs.alpha = false;
-  EMSCRIPTEN_WEBGL_CONTEXT_HANDLE deviceContext = emscripten_webgl_create_context(nullptr, &attrs);
+  EMSCRIPTEN_WEBGL_CONTEXT_HANDLE deviceContext = emscripten_webgl_create_context("#canvas", &attrs);
   emscripten_webgl_make_context_current(deviceContext);
 
   // Call the base initialize now that we've created the OpenGL context.

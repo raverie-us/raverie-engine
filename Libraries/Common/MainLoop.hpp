@@ -6,10 +6,6 @@ namespace Zero
 // On some platforms such as Emscripten we need to yield back to the operating
 // system / browser. This is known as cooperative-multitasking.
 
-// On this platform, do we support drawing to the display
-// (rendering / blitting, etc) when not running the main loop.
-extern bool SupportsRenderingOutsideMainLoop;
-
 // Yield back to the operating system or browser. This function does nothing on
 // platforms that do not need it, however it may have serious build
 // ramifications if used.

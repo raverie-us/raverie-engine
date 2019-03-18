@@ -92,40 +92,67 @@ Job* JobSystem::GetNextJob()
   return job;
 }
 
+void JobSystem::RunJobsTimeSliced(double seconds)
+{
+  if (ThreadingEnabled)
+    return;
+
+  Timer timer;
+  do
+  {
+    if (!RunOneJob())
+      return;
+  } while (timer.UpdateAndGetTime() < seconds);
+}
+
+bool JobSystem::AreAllJobsCompleted()
+{
+  mLock.Lock();
+  bool completed = mPendingJobs.Empty() && mActiveJobs.Empty();
+  mLock.Unlock();
+  return completed;
+}
+
 OsInt JobSystem::WorkerThreadEntry()
 {
   for (;;)
   {
-    mJobCounter.WaitAndDecrement();
-    Job* job = GetNextJob();
-
-    // No jobs and Semaphore release
-    // that means we are shutting down.
-    if (job == nullptr)
+    if (!RunOneJob())
       return 0;
-
-    RunJob(job);
   }
 }
 
 void JobSystem::AddJob(Job* job)
 {
+  if (!ThreadingEnabled && job->mRunImmediateWhenThreadingDisabled)
+  {
+    ++job->mRunCount;
+    RunJob(job);
+    return;
+  }
+
   mLock.Lock();
   if (job->mRunCount == 0)
     mPendingJobs.PushBack(job);
   ++job->mRunCount;
   mLock.Unlock();
 
-  if (!ThreadingEnabled)
-  {
-    // Run the job on the main thread.
-    RunJob(job);
-  }
-  else
-  {
-    // Signal that a job has been added, which will unblock the waiting workers.
-    mJobCounter.Increment();
-  }
+  // Signal that a job has been added, which will unblock the waiting workers.
+  mJobCounter.Increment();
+}
+
+bool JobSystem::RunOneJob()
+{
+  mJobCounter.WaitAndDecrement();
+  Job* job = GetNextJob();
+
+  // No jobs and Semaphore release
+  // that means we are shutting down.
+  if (job == nullptr)
+    return false;
+
+  RunJob(job);
+  return true;
 }
 
 void JobSystem::RunJob(Job* job)

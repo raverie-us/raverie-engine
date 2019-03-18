@@ -38,7 +38,7 @@ public:
 template <typename Parent, typename Member>
 inline ptrdiff_t PointerToMemberOffset(const Member Parent::*ptrToMember)
 {
-  return *(unsigned int*)(void*)&ptrToMember;
+  return (ptrdiff_t)ZeroOffsetOfHelper(Parent, ->*, ptrToMember);
 }
 
 typedef const char* const cstrc;

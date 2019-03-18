@@ -149,6 +149,7 @@ ZilchDefineStaticLibrary(GraphicsLibrary)
   ZilchInitializeType(Texture);
   ZilchInitializeType(TextureData);
   ZilchInitializeType(VertexBuffer);
+  ZilchInitializeType(ViewportInterface);
   ZilchInitializeType(ZilchFragment);
 
   // Dependent on RenderGroupList

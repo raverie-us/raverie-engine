@@ -27,6 +27,10 @@ public:
     return 0;
   };
 
+public:
+  // When threading is disabled, should we run this task immediately when AddJob is called?
+  bool mRunImmediateWhenThreadingDisabled = false;
+
 private:
   // This value is incremented by the job system every time we add the job.
   // If the value is greater than 1, the thread will run it multiple times.
@@ -46,7 +50,18 @@ public:
   void AddJob(Job* job);
   OsInt WorkerThreadEntry();
 
+  // Runs until a slice of time is taken (only when ThreadingEnabled is false).
+  // Returns false if there is no work to be done.
+  // Executing jobs may run over the given slice of time, but will never undershoot it.
+  void RunJobsTimeSliced(double seconds = 1.0 / 60.0);
+
+  bool AreAllJobsCompleted();
+
 private:
+  // Takes a job from the job queue and runs it.
+  // If no jobs are available, this will return false.
+  bool RunOneJob();
+
   void RunJob(Job* job);
 
   ThreadLock mLock;

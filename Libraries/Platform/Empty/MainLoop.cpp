@@ -3,9 +3,6 @@
 
 namespace Zero
 {
-// Most platforms support this behavior.
-bool SupportsRenderingOutsideMainLoop = true;
-
 ZeroThreadLocal bool gStopMainLoop = false;
 
 void YieldToOs()

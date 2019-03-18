@@ -963,6 +963,7 @@ void MipmapCubemap(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, Textur
       job->mFaceCount = 6;
       job->mRoughness = roughness;
       job->mCountdownEvent = &countdownEvent;
+      job->mRunImmediateWhenThreadingDisabled = true;
       Z::gJobs->AddJob(job);
     }
     else
@@ -981,6 +982,7 @@ void MipmapCubemap(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, Textur
         job->mFaceCount = 1;
         job->mRoughness = roughness;
         job->mCountdownEvent = &countdownEvent;
+        job->mRunImmediateWhenThreadingDisabled = true;
         Z::gJobs->AddJob(job);
       }
 

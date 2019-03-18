@@ -3,11 +3,6 @@
 
 namespace Zero
 {
-// When running the browser you have to return control to the browser before it
-// will update the render to the canvas (so special progress/loading screens
-// will not work).
-bool SupportsRenderingOutsideMainLoop = false;
-
 ZeroThreadLocal bool gIsMainLoopSet = false;
 
 void YieldToOs()
@@ -25,10 +20,8 @@ void RunMainLoop(MainLoopFn callback, void* userData)
 
   ErrorIf(gIsMainLoopSet, "We should not have a main loop set since we called 'StopMainLoop'");
 
-  ZPrint("EMSCRIPTEN SET MAIN LOOP %p\n", callback);
-  // This *MUST* come before because we are haulting execution here.
   gIsMainLoopSet = true;
-  emscripten_set_main_loop_arg(callback, userData, 0, 1);
+  emscripten_set_main_loop_arg(callback, userData, 0, 0);
 }
 
 void StopMainLoop()
@@ -36,7 +29,6 @@ void StopMainLoop()
   if (!gIsMainLoopSet)
     return;
 
-  ZPrint("MAIN LOOP STOPPED\n");
   emscripten_cancel_main_loop();
   gIsMainLoopSet = false;
 }

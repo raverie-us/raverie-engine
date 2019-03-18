@@ -4,6 +4,9 @@ add_definitions(-DHAVE_UNISTD_H)
 
 # We disable MINIFY_HTML because it takes too much memory and crashes
 
+# This doesn't work with SDL yet:
+#  -s DISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR=1\
+
 #  -s DISABLE_EXCEPTION_CATCHING=0\
 
 set(CMAKE_EXECUTABLE_SUFFIX ".html")

@@ -18,7 +18,7 @@ ZilchDefineType(CameraViewport, builder, type)
   ZilchBindGetterSetterProperty(ResolutionOrAspect);
   ZilchBindGetterSetterProperty(RenderToViewport)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindFieldProperty(mForwardViewportEvents)->ZeroFilterEquality(mRenderToViewport, bool, true);
-  ;
+
   ZilchBindFieldProperty(mViewportScaling)->ZeroFilterEquality(mRenderToViewport, bool, true);
   ZilchBindFieldProperty(mMarginColor)->ZeroFilterEquality(mRenderToViewport, bool, true);
   ZilchBindFieldProperty(mNormalizedSize)->ZeroFilterEquality(mRenderToViewport, bool, true);

@@ -102,6 +102,7 @@ target_sources(Graphics
     ${CMAKE_CURRENT_LIST_DIR}/TextureUtilities.hpp
     ${CMAKE_CURRENT_LIST_DIR}/UtilityStructures.cpp
     ${CMAKE_CURRENT_LIST_DIR}/UtilityStructures.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ViewportInterface.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ViewportInterface.hpp
     ${CMAKE_CURRENT_LIST_DIR}/VisibilityFlag.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZeroZilchShaderGlslBackend.cpp

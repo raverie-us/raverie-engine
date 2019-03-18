@@ -245,7 +245,8 @@
 #define ZeroStringDeref(text) #text
 #define ZeroStringize(text) ZeroStringDeref(text)
 
-#define ZeroOffsetOf(structure, member) ((::size_t) & reinterpret_cast<char const volatile&>((((structure*)0)->member)))
+#define ZeroOffsetOfHelper(structure, op, member) (((::size_t) & reinterpret_cast<char const volatile&>((((structure*)(::uintptr_t)1) op member)))-1)
+#define ZeroOffsetOf(structure, member) ZeroOffsetOfHelper(structure, ->, member)
 
 #if defined(WelderTargetOsWindows)
 #  define ZeroThreadLocal __declspec(thread)

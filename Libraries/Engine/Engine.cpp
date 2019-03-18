@@ -155,6 +155,7 @@ void Engine::Update()
 
     Z::gTracker->ClearDeletedObjects();
 
+    Z::gJobs->RunJobsTimeSliced();
     Z::gDispatch->DispatchEvents();
 
     LoadPendingLevels();
@@ -284,7 +285,7 @@ void Engine::DestroyAllSpaces()
 
 void Engine::LoadingStart()
 {
-  if (!mHaveLoadingResources || !SupportsRenderingOutsideMainLoop)
+  if (!mHaveLoadingResources)
     return;
 
   ++mLoadingCount;
@@ -301,7 +302,7 @@ void Engine::LoadingUpdate(StringParam operation,
                            ProgressType::Enum progressType,
                            float percentage)
 {
-  if (!mHaveLoadingResources || !SupportsRenderingOutsideMainLoop || mLoadingCount == 0)
+  if (!mHaveLoadingResources)
     return;
 
   ProgressEvent progressEvent;
@@ -316,7 +317,7 @@ void Engine::LoadingUpdate(StringParam operation,
 
 void Engine::LoadingFinish()
 {
-  if (!mHaveLoadingResources || !SupportsRenderingOutsideMainLoop || mLoadingCount == 0)
+  if (!mHaveLoadingResources)
     return;
 
   if (mLoadingCount == 1)

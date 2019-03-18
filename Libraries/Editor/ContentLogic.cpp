@@ -53,7 +53,7 @@ void LoadContentConfig()
   }
 }
 
-bool LoadContentLibrary(StringParam name, bool isCore)
+bool LoadContentLibrary(StringParam name)
 {
   ContentLibrary* library = Z::gContentSystem->Libraries.FindValue(name, nullptr);
   if (!library)
@@ -62,9 +62,6 @@ bool LoadContentLibrary(StringParam name, bool isCore)
     return false;
   }
 
-  if (isCore)
-    library->SetReadOnly(true);
-
   Status status;
   HandleOf<ResourcePackage> packageHandle = Z::gContentSystem->BuildLibrary(status, library, false);
   ResourcePackage* package = packageHandle;
@@ -72,30 +69,22 @@ bool LoadContentLibrary(StringParam name, bool isCore)
   if (!status)
     return false;
 
-  if (isCore)
+  forRange (ResourceEntry& entry, package->Resources.All())
   {
-    forRange (ResourceEntry& entry, package->Resources.All())
+    if (entry.mLibrarySource)
     {
-      if (entry.mLibrarySource)
-      {
-        if (ContentEditorOptions* options = entry.mLibrarySource->has(ContentEditorOptions))
-          entry.mLibrarySource->ShowInEditor = options->mShowInEditor;
-        else
-          entry.mLibrarySource->ShowInEditor = false;
-      }
+      if (ContentEditorOptions* options = entry.mLibrarySource->has(ContentEditorOptions))
+        entry.mLibrarySource->ShowInEditor = options->mShowInEditor;
+      else
+        entry.mLibrarySource->ShowInEditor = false;
     }
   }
 
   Z::gResources->LoadPackage(status, package);
   if (!status)
   {
-    if (isCore)
-    {
-      FatalEngineError("Failed to load core content library for editor. Resources"
-                       " need to be in the working directory.");
-    }
-
-    DoNotifyError("Failed to load resource package.", status.Message);
+    FatalEngineError("Failed to load core content library for editor. Resources"
+                      " need to be in the working directory.");
   }
 
   return (bool)status;
@@ -109,12 +98,12 @@ void LoadCoreContent(Array<String>& coreLibs)
 
   TimerBlock timer("Loading Content");
 
-  LoadContentLibrary("FragmentCore", true);
-  LoadContentLibrary("Loading", true);
+  LoadContentLibrary("FragmentCore");
+  LoadContentLibrary("Loading");
 
   forRange (String libraryName, coreLibs.All())
   {
-    LoadContentLibrary(libraryName, true);
+    LoadContentLibrary(libraryName);
   }
 }
 
