@@ -1,6 +1,6 @@
 add_executable(BrowserSubProcess)
 
-welder_setup_library(BrowserSubProcess ${CMAKE_CURRENT_LIST_DIR})
+welder_setup_library(BrowserSubProcess ${CMAKE_CURRENT_LIST_DIR} TRUE)
 welder_use_precompiled_header(BrowserSubProcess ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(BrowserSubProcess

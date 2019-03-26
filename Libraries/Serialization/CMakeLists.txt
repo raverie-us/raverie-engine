@@ -1,6 +1,6 @@
 add_library(Serialization)
 
-welder_setup_library(Serialization ${CMAKE_CURRENT_LIST_DIR})
+welder_setup_library(Serialization ${CMAKE_CURRENT_LIST_DIR} TRUE)
 welder_use_precompiled_header(Serialization ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(Serialization

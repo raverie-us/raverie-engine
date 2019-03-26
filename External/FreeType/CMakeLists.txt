@@ -1,6 +1,6 @@
 add_library(FreeType)
 
-welder_setup_library(FreeType ${CMAKE_CURRENT_LIST_DIR})
+welder_setup_library(FreeType ${CMAKE_CURRENT_LIST_DIR} FALSE)
 
 target_compile_definitions(FreeType
   PUBLIC

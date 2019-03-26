@@ -1,6 +1,6 @@
 add_library(Editor)
 
-welder_setup_library(Editor ${CMAKE_CURRENT_LIST_DIR})
+welder_setup_library(Editor ${CMAKE_CURRENT_LIST_DIR} TRUE)
 welder_use_precompiled_header(Editor ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(Editor

@@ -1,6 +1,6 @@
 add_library(Platform)
 
-welder_setup_library(Platform ${CMAKE_CURRENT_LIST_DIR})
+welder_setup_library(Platform ${CMAKE_CURRENT_LIST_DIR} TRUE)
 welder_use_precompiled_header(Platform ${CMAKE_CURRENT_LIST_DIR})
 
 target_compile_definitions(Platform

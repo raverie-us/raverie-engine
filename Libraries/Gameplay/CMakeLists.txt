@@ -1,6 +1,6 @@
 add_library(Gameplay)
 
-welder_setup_library(Gameplay ${CMAKE_CURRENT_LIST_DIR})
+welder_setup_library(Gameplay ${CMAKE_CURRENT_LIST_DIR} TRUE)
 welder_use_precompiled_header(Gameplay ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(Gameplay

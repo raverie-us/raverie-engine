@@ -1,6 +1,6 @@
 add_executable(WelderLauncherShell)
 
-welder_setup_library(WelderLauncherShell ${CMAKE_CURRENT_LIST_DIR})
+welder_setup_library(WelderLauncherShell ${CMAKE_CURRENT_LIST_DIR} TRUE)
 welder_use_precompiled_header(WelderLauncherShell ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(WelderLauncherShell

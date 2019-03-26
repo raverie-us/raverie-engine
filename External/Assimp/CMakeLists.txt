@@ -1,6 +1,6 @@
 add_library(Assimp)
 
-welder_setup_library(Assimp ${CMAKE_CURRENT_LIST_DIR})
+welder_setup_library(Assimp ${CMAKE_CURRENT_LIST_DIR} FALSE)
 welder_use_precompiled_header(Assimp ${CMAKE_CURRENT_LIST_DIR})
 welder_source_ignore_precompiled_header(${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/unzip/ioapi.c)
 welder_source_ignore_precompiled_header(${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/unzip/unzip.c)

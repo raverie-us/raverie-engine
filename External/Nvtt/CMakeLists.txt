@@ -1,6 +1,6 @@
 add_library(Nvtt)
 
-welder_setup_library(Nvtt ${CMAKE_CURRENT_LIST_DIR})
+welder_setup_library(Nvtt ${CMAKE_CURRENT_LIST_DIR} FALSE)
 welder_use_precompiled_header(Nvtt ${CMAKE_CURRENT_LIST_DIR})
 welder_source_ignore_precompiled_header(${CMAKE_CURRENT_LIST_DIR}/Repo/extern/poshlib/posh.c)
 

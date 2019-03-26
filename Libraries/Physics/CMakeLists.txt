@@ -1,6 +1,6 @@
 add_library(Physics)
 
-welder_setup_library(Physics ${CMAKE_CURRENT_LIST_DIR})
+welder_setup_library(Physics ${CMAKE_CURRENT_LIST_DIR} TRUE)
 welder_use_precompiled_header(Physics ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(Physics

@@ -1,6 +1,6 @@
 add_library(ZLib)
 
-welder_setup_library(ZLib ${CMAKE_CURRENT_LIST_DIR})
+welder_setup_library(ZLib ${CMAKE_CURRENT_LIST_DIR} FALSE)
 
 target_sources(ZLib
   PRIVATE

@@ -1,6 +1,6 @@
 add_library(Graphics)
 
-welder_setup_library(Graphics ${CMAKE_CURRENT_LIST_DIR})
+welder_setup_library(Graphics ${CMAKE_CURRENT_LIST_DIR} TRUE)
 welder_use_precompiled_header(Graphics ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(Graphics

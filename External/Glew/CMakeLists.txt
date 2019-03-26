@@ -1,6 +1,6 @@
 add_library(Glew)
 
-welder_setup_library(Glew ${CMAKE_CURRENT_LIST_DIR})
+welder_setup_library(Glew ${CMAKE_CURRENT_LIST_DIR} FALSE)
 
 target_compile_definitions(Glew
   PUBLIC
