@@ -7,8 +7,6 @@
 #include "ZilchZero.hpp"
 #include "ZilchPlugin.hpp"
 
-#include "Editor/EditorStandard.hpp"
-
 namespace Zero
 {
 // Forward declarations

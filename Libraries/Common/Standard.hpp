@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
+#include "Precompiled.hpp"
 
 #if !defined(WelderCompilerMsvc)
 typedef size_t rsize_t;

@@ -1,5 +1,6 @@
 // External.
 #pragma once
+#include "Precompiled.hpp"
 
 #define STB_VORBIS_NO_PUSHDATA_API
 #define STB_VORBIS_NO_INTEGER_CONVERSION

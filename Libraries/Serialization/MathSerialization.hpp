@@ -5,6 +5,7 @@
 /// Copyright 2010-2016, DigiPen Institute of Technology
 ///
 #pragma once
+#include "Precompiled.hpp"
 
 namespace Zero
 {

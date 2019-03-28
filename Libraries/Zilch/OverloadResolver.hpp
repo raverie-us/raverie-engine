@@ -1,6 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 
 #pragma once
+#include "Precompiled.hpp"
 #ifndef ZILCH_OVERLOAD_RESOLVER_HPP
 #  define ZILCH_OVERLOAD_RESOLVER_HPP
 

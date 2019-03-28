@@ -8,6 +8,7 @@
 #include "Sound/SoundStandard.hpp"
 #include "ZilchScript/ZilchScriptStandard.hpp"
 #include "UiWidget/UiWidgetStandard.hpp"
+#include "ZilchShaders/ZilchShadersStandard.hpp"
 
 namespace Zero
 {
@@ -177,3 +178,9 @@ public:
 #include "AnimationEditor.hpp"
 
 #include "EditorMain.hpp"
+
+#include "CodeSplitWindow.hpp"
+#include "CodeTranslatorCommands.hpp"
+#include "ShaderTranslationDebugHelper.hpp"
+
+#include "UnitTestSystem.hpp"

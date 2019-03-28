@@ -1,13 +1,5 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
+#include "Precompiled.hpp"
 
 #include "PhysicsStandard.hpp"
-
-#include "Geometry/Mpr.hpp"
-
-#include "InternalEdgeCorrection.hpp"
-#include "ShapeCollisionHelpers.hpp"
-#include "SimpleShapeCollision.hpp"
-#include "ComplexShapeCollision.hpp"
-#include "ShapeCollision.hpp"
-#include "DebugDrawHelpers.hpp"

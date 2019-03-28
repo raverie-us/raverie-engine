@@ -1,6 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 
 #pragma once
+#include "Precompiled.hpp"
 #ifndef ZILCH_EXECUTABLE_STATE_HPP
 #  define ZILCH_EXECUTABLE_STATE_HPP
 

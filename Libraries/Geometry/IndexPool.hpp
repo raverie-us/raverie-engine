@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
+#include "Precompiled.hpp"
 
 template <typename T, typename index_t = s32>
 class IndexPool

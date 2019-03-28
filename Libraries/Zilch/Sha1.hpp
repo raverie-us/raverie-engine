@@ -4,6 +4,7 @@
 // implementation (thank you Steve!)
 
 #pragma once
+#include "Precompiled.hpp"
 #ifndef ZILCH_SHA1_HPP
 #  define ZILCH_SHA1_HPP
 

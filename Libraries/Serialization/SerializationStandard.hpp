@@ -39,3 +39,6 @@ public:
 #include "MetaSerialization.hpp"
 #include "MathSerialization.hpp"
 #include "SerializationUtility.hpp"
+#include "LegacyDataTreeParser.hpp"
+#include "DataTreeTokenizer.hpp"
+#include "DataTreeParser.hpp"

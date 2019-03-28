@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
+#include "Precompiled.hpp"
 
 namespace Zero
 {
@@ -33,7 +34,7 @@ public:
   byte mBoneIndices[cMaxBonesWeights];
 };
 
-typedef Array<VertexData> VertexArray;
+typedef Array<VertexData> VertexDataArray;
 typedef Array<Vec3> VertexPositionArray;
 typedef Array<uint> IndexArray;
 
@@ -57,7 +58,7 @@ public:
   Aabb mAabb;
 
   FixedVertexDescription mVertexDescription;
-  VertexArray mVertexBuffer;
+  VertexDataArray mVertexBuffer;
   IndexArray mIndexBuffer;
   Array<MeshBone> mBones;
 

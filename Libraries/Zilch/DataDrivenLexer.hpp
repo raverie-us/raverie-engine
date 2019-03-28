@@ -1,6 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 
 #pragma once
+#include "Precompiled.hpp"
 #ifndef ZILCH_DATA_DRIVEN_LEXER_HPP
 #  define ZILCH_DATA_DRIVEN_LEXER_HPP
 

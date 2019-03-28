@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
+#include "Precompiled.hpp"
 #include "Engine/EngineStandard.hpp"
 #include "Utilities.hpp"
 #include "Thread.hpp"

@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
+#include "Precompiled.hpp"
 
 const uint cMaxErrorMessageSize = 1024;
 // Convert a windows error code to a human readable string. If the errorCode

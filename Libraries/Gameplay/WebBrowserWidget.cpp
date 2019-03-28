@@ -5,6 +5,8 @@
 #include "Engine/Tweakables.hpp"
 #include "Engine/Time.hpp"
 
+#include "Editor/EditorStandard.hpp"
+
 namespace Zero
 {
 

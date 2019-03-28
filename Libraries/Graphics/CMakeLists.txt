@@ -117,5 +117,6 @@ welder_target_includes(Graphics
     Common
     Geometry
     ZilchShaders
+    Engine
     FreeType
 )

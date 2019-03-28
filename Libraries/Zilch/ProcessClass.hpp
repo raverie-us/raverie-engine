@@ -2,6 +2,7 @@
 
 // Include protection
 #pragma once
+#include "Precompiled.hpp"
 #ifndef ZILCH_PROCESSCLASS_HPP
 #  define ZILCH_PROCESSCLASS_HPP
 

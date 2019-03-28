@@ -1,6 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
+#include "Editor/EditorStandard.hpp"
 #include "IndexedHalfEdgeMesh.hpp"
 #include "QuickHull3DBindings.hpp"
 
@@ -74,16 +75,6 @@ ZilchDefineStaticLibrary(GameplayLibrary)
 
   ZilchInitializeType(SplineParticleEmitter);
   ZilchInitializeType(SplineParticleAnimator);
-
-  ZilchInitializeType(UnitTestSystem);
-  ZilchInitializeType(UnitTestEvent);
-  ZilchInitializeType(UnitTestEndFrameEvent);
-  ZilchInitializeType(UnitTestBaseMouseEvent);
-  ZilchInitializeType(UnitTestMouseEvent);
-  ZilchInitializeType(UnitTestMouseDropEvent);
-  ZilchInitializeType(UnitTestKeyboardEvent);
-  ZilchInitializeType(UnitTestKeyboardTextEvent);
-  ZilchInitializeType(UnitTestWindowEvent);
 
   ZilchInitializeType(IndexedHalfEdgeMeshVertexArray);
   ZilchInitializeType(IndexedHalfEdgeMeshEdgeArray);

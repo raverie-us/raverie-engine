@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
+#include "Precompiled.hpp"
 #include "GraphicsApi/BatchBuffer.hpp"
 
 namespace Zero

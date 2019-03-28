@@ -2374,7 +2374,8 @@ NetPropertyInfo* NetObject::AddNetPropertyInfo(BoundType* componentType, StringP
   NetPropertyInfo netPropertyInfo(componentType, propertyName);
 
   // Does this property belong to the Transform or RigidBody component?
-  if (componentType == ZilchTypeId(Transform) || componentType == ZilchTypeId(RigidBody))
+  static const String cRigidBody("RigidBody");
+  if (componentType == ZilchTypeId(Transform) || componentType->Name == cRigidBody)
   {
     // Note: We special case Transform and RigidBody to both use the Transform
     // NetChannel by default for performance and convenience reasons In the

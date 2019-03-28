@@ -1,6 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 
 #pragma once
+#include "Precompiled.hpp"
 #ifndef ZILCH_VIRTUAL_MACHINE_HPP
 #  define ZILCH_VIRTUAL_MACHINE_HPP
 

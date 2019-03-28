@@ -66,4 +66,5 @@ welder_target_includes(Networking
   PUBLIC
     Common
     Geometry
+    Engine
 )

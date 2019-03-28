@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
+#include "Precompiled.hpp"
 
 // Forward declarations needed for the backend's internal data
 namespace spirv_cross

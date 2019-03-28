@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
+#include "Precompiled.hpp"
 #include "ByteBuffer.hpp"
 
 namespace Zero

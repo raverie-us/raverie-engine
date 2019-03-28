@@ -53,8 +53,6 @@ target_sources(Gameplay
     ${CMAKE_CURRENT_LIST_DIR}/TileMapSource.cpp
     ${CMAKE_CURRENT_LIST_DIR}/TileMapSource.hpp
     ${CMAKE_CURRENT_LIST_DIR}/TileMapSourceLoadPattern.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/UnitTestSystem.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/UnitTestSystem.hpp
     ${CMAKE_CURRENT_LIST_DIR}/WebBrowser.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WebBrowser.hpp
     ${CMAKE_CURRENT_LIST_DIR}/WebBrowserWidget.cpp

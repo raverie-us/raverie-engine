@@ -3,6 +3,7 @@
 // Note: This code is based on libb64's public domain code
 
 #pragma once
+#include "Precompiled.hpp"
 #ifndef ZILCH_BASE64_HPP
 #  define ZILCH_BASE64_HPP
 

@@ -1,6 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 
 #pragma once
+#include "Precompiled.hpp"
 #ifndef ZILCH_FUNCTION_HPP
 #  define ZILCH_FUNCTION_HPP
 

@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
+#include "Precompiled.hpp"
 #include "Reals.hpp"
 #include "Vector2.hpp"
 #include "Vector3.hpp"

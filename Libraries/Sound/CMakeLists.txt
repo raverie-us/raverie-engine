@@ -78,5 +78,6 @@ welder_target_includes(Sound
   PUBLIC
     Common
     Geometry
+    Engine
     Opus
 )

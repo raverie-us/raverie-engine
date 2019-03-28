@@ -1,6 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 
 #pragma once
+#include "Precompiled.hpp"
 #ifndef ZILCH_SYNTAX_TREE_HPP
 #  define ZILCH_SYNTAX_TREE_HPP
 

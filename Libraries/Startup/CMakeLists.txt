@@ -16,5 +16,6 @@ welder_target_includes(Startup
   PUBLIC
     Common
     Geometry
+    Engine
     Graphics
 )

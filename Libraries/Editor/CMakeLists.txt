@@ -42,6 +42,10 @@ target_sources(Editor
     ${CMAKE_CURRENT_LIST_DIR}/BugReport.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ClothTools.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ClothTools.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/CodeSplitWindow.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/CodeSplitWindow.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/CodeTranslatorCommands.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/CodeTranslatorCommands.hpp
     ${CMAKE_CURRENT_LIST_DIR}/CogCommand.cpp
     ${CMAKE_CURRENT_LIST_DIR}/CogCommand.hpp
     ${CMAKE_CURRENT_LIST_DIR}/CollisionTableEditor.cpp
@@ -119,14 +123,14 @@ target_sources(Editor
     ${CMAKE_CURRENT_LIST_DIR}/Gizmo.hpp
     ${CMAKE_CURRENT_LIST_DIR}/GizmoDrag.cpp
     ${CMAKE_CURRENT_LIST_DIR}/GizmoDrag.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/GraphicsCommands.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/GraphicsCommands.hpp
     ${CMAKE_CURRENT_LIST_DIR}/GraphView.cpp
     ${CMAKE_CURRENT_LIST_DIR}/GraphView.cpp
     ${CMAKE_CURRENT_LIST_DIR}/GraphView.hpp
     ${CMAKE_CURRENT_LIST_DIR}/GraphView.hpp
     ${CMAKE_CURRENT_LIST_DIR}/GraphWidget.cpp
     ${CMAKE_CURRENT_LIST_DIR}/GraphWidget.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/GraphicsCommands.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/GraphicsCommands.hpp
     ${CMAKE_CURRENT_LIST_DIR}/GridDraw.cpp
     ${CMAKE_CURRENT_LIST_DIR}/GridDraw.hpp
     ${CMAKE_CURRENT_LIST_DIR}/GroupImport.cpp
@@ -228,6 +232,8 @@ target_sources(Editor
     ${CMAKE_CURRENT_LIST_DIR}/ScrollingGraph.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SelectionHistory.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SelectionHistory.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ShaderTranslationDebugHelper.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ShaderTranslationDebugHelper.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SimpleBackgroundTasks.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SimpleBackgroundTasks.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SpriteEditor.cpp
@@ -272,6 +278,8 @@ target_sources(Editor
     ${CMAKE_CURRENT_LIST_DIR}/TreeViewSearch.hpp
     ${CMAKE_CURRENT_LIST_DIR}/UiLegacyToolTip.cpp
     ${CMAKE_CURRENT_LIST_DIR}/UiLegacyToolTip.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/UnitTestSystem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/UnitTestSystem.hpp
     ${CMAKE_CURRENT_LIST_DIR}/UndoPropertyInterface.cpp
     ${CMAKE_CURRENT_LIST_DIR}/UndoPropertyInterface.hpp
     ${CMAKE_CURRENT_LIST_DIR}/VariantEditor.cpp
@@ -284,7 +292,8 @@ target_sources(Editor
 
 welder_target_includes(Editor
   PUBLIC
-    Scintilla
     Common
+    Engine
     ZilchShaders
+    Scintilla
 )

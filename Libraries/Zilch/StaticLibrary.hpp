@@ -1,6 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 
 #pragma once
+#include "Precompiled.hpp"
 #ifndef ZILCH_STATIC_LIBRARY_HPP
 #  define ZILCH_STATIC_LIBRARY_HPP
 
