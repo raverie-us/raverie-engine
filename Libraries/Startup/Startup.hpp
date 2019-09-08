@@ -46,7 +46,8 @@ protected:
   // (Editor/Game/Launcher) must be considered.
   bool mLoadContent = true;
   WindowState::Enum mWindowState = WindowState::Maximized;
-  IntVec2 mWindowSize = IntVec2(1280, 720);
+  // If this value is IntVec2::cZero, the primary monitor usable size will be used.
+  IntVec2 mWindowSize = IntVec2::cZero;
   IntVec2 mMinimumWindowSize = cMinimumMonitorSize;
   bool mWindowCentered = false;
   WindowStyleFlags::Enum mWindowStyle =

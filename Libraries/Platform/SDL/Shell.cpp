@@ -192,7 +192,7 @@ IntRect Shell::GetPrimaryMonitorRectangle()
     displayIndex = SDL_GetWindowDisplayIndex((SDL_Window*)mMainWindow->mHandle);
 
   SDL_Rect monitorRectangle;
-  if (SDL_GetDisplayUsableBounds(displayIndex, &monitorRectangle) == 0)
+  if (SDL_GetDisplayUsableBounds(displayIndex, &monitorRectangle) == 0) 
     return IntRect(monitorRectangle.x, monitorRectangle.y, monitorRectangle.w, monitorRectangle.h);
 
   // Return a default monitor size since we failed.
@@ -202,7 +202,7 @@ IntRect Shell::GetPrimaryMonitorRectangle()
 IntVec2 Shell::GetPrimaryMonitorSize()
 {
   IntRect rect = GetPrimaryMonitorRectangle();
-  return IntVec2(rect.X, rect.Y);
+  return IntVec2(rect.SizeX, rect.SizeY);
 }
 
 #if !defined(ZeroPlatformNoShellGetColorAtMouse)
@@ -719,7 +719,8 @@ ShellWindow::ShellWindow(Shell* shell,
                          Math::IntVec2Param clientSize,
                          Math::IntVec2Param monitorClientPos,
                          ShellWindow* parentWindow,
-                         WindowStyleFlags::Enum flags) :
+                         WindowStyleFlags::Enum flags,
+                         WindowState::Enum state) :
     mShell(shell),
     mMinClientSize(IntVec2(10, 10)),
     mParent(parentWindow),
@@ -760,6 +761,23 @@ ShellWindow::ShellWindow(Shell* shell,
 
   if (!(flags & WindowStyleFlags::OnTaskBar))
     sdlFlags |= SDL_WINDOW_SKIP_TASKBAR;
+  
+  switch (state)
+  {
+  case WindowState::Minimized:
+    sdlFlags |= SDL_WINDOW_MINIMIZED;
+    break;
+
+  case WindowState::Maximized:
+    sdlFlags |= SDL_WINDOW_MAXIMIZED;
+    break;
+
+  case WindowState::Fullscreen:
+    sdlFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+    break;
+  default:
+    break;
+  }
 
   // Is the width and height in client space? SDL doesn't say...
   SDL_Window* sdlWindow = SDL_CreateWindow(
@@ -973,8 +991,7 @@ void ShellWindow::SetState(WindowState::Enum windowState)
 
   case WindowState::Windowed:
   {
-    // Not sure if this is correct...
-    SDL_SetWindowFullscreen((SDL_Window*)mHandle, 0);
+    SDL_RestoreWindow((SDL_Window*)mHandle);
     break;
   }
 

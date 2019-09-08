@@ -133,7 +133,8 @@ ShellWindow::ShellWindow(Shell* shell,
                          Math::IntVec2Param clientSize,
                          Math::IntVec2Param monitorClientPos,
                          ShellWindow* parentWindow,
-                         WindowStyleFlags::Enum flags) :
+                         WindowStyleFlags::Enum flags,
+                         WindowState::Enum state) :
     mShell(shell),
     mMinClientSize(IntVec2(10, 10)),
     mParent(parentWindow),

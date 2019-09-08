@@ -259,6 +259,9 @@ void ZeroStartup::Startup()
   OsShell* osShell = engine->has(OsShell);
 
   IntVec2 size = mWindowSize;
+  if (mWindowSize == IntVec2::cZero) {
+    size = osShell->GetPrimaryMonitorSize();
+  }
   WindowState::Enum state = mWindowState;
 
   String name = BuildString(GetOrganization(), " ", GetApplicationName());
@@ -297,9 +300,8 @@ void ZeroStartup::Startup()
     monitorClientPos = monitorRect.Center(size);
   }
 
-  OsWindow* mainWindow = osShell->CreateOsWindow(name, size, monitorClientPos, nullptr, mWindowStyle);
+  OsWindow* mainWindow = osShell->CreateOsWindow(name, size, monitorClientPos, nullptr, mWindowStyle, state);
   mainWindow->SetMinClientSize(minSize);
-  mainWindow->SetState(state);
 
   // Pass window handle to initialize the graphics api
   auto graphics = engine->has(GraphicsEngine);

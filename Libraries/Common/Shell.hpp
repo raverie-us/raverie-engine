@@ -430,7 +430,8 @@ public:
               Math::IntVec2Param clientSize,
               Math::IntVec2Param monitorClientPos,
               ShellWindow* parentWindow,
-              WindowStyleFlags::Enum flags);
+              WindowStyleFlags::Enum flags,
+              WindowState::Enum state);
 
   /// Destroy will be called automatically here.
   ~ShellWindow();

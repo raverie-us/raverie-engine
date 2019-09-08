@@ -50,7 +50,8 @@ public:
                            IntVec2Param clientSize,
                            IntVec2Param monitorClientPos,
                            OsWindow* parentWindow,
-                           WindowStyleFlags::Enum flags);
+                           WindowStyleFlags::Enum flags,
+                           WindowState::Enum state = WindowState::Windowed);
 
   /// Get the pixel color at the mouse position.
   ByteColor GetColorAtMouse();

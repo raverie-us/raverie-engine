@@ -94,9 +94,10 @@ OsWindow* OsShell::CreateOsWindow(StringParam windowName,
                                   IntVec2Param clientSize,
                                   IntVec2Param monitorClientPos,
                                   OsWindow* parentWindow,
-                                  WindowStyleFlags::Enum flags)
+                                  WindowStyleFlags::Enum flags,
+                                  WindowState::Enum state)
 {
-  return new OsWindow(this, windowName, clientSize, monitorClientPos, parentWindow, flags);
+  return new OsWindow(this, windowName, clientSize, monitorClientPos, parentWindow, flags, state);
 }
 
 ByteColor OsShell::GetColorAtMouse()

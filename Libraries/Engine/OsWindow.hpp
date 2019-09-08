@@ -62,7 +62,8 @@ public:
            IntVec2Param clientSize,
            IntVec2Param monitorClientPos,
            OsWindow* parentWindow,
-           WindowStyleFlags::Enum flags);
+           WindowStyleFlags::Enum flags,
+           WindowState::Enum state);
   virtual ~OsWindow();
 
   OsShell* GetShell();
