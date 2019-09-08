@@ -225,8 +225,14 @@ Widget* Composite::HitTest(Vec2 location, Widget* ignore)
 
 void Composite::UpdateChildTransforms()
 {
+  static const size_t MaxIterations = 1000;
+  size_t counter = 0;
   forRange(auto& child, GetChildren())
   {
+    if (counter++ > MaxIterations) {
+      Error("Max child iterations reached in Composite::UpdateChildTransforms");
+      return;
+    }
     Widget* widget = Z::gWidgetManager->Widgets.FindValue(child.mId, nullptr);
     // TODO(TrevorSundberg): This check is horrible but I'm not sure why there is an
     // invalid Widget in the child list (seems to be under EditorViewport maybe?).
@@ -240,6 +246,13 @@ void Composite::UpdateChildTransforms()
 
 void Composite::UpdateTransform()
 {
+  if (mIsUpdatingTransform) {
+    Widget::UpdateTransform();
+    Error("Recursive update in Composite::UpdateTransform");
+    return;
+  }
+  mIsUpdatingTransform = true;
+
   // Skip this if we're already on our way out
   if (mDestroyed)
     return;
@@ -261,6 +274,7 @@ void Composite::UpdateTransform()
   }
 
   Widget::UpdateTransform();
+  mIsUpdatingTransform = false;
 }
 
 void Composite::DispatchDown(StringParam eventId, Event* event)

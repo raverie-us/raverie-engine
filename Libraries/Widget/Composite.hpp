@@ -97,6 +97,7 @@ private:
   void UpdateChildTransforms();
   static void InternalDetach(Composite* parent, Widget* child);
   static void InternalAttach(Composite* parent, Widget* child);
+  bool mIsUpdatingTransform = false;
 };
 
 DeclareEnum3(UiTraversal, DirectDescendantsOnly, DepthFirst, BreadthFirst);
