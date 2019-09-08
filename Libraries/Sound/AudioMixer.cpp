@@ -114,6 +114,7 @@ void AudioMixer::ShutDown()
     mShuttingDown.Set(cTrue);
 
     // Wait for the mix thread to finish shutting down
+    AudioIO.GetMixedOutputSamples(nullptr, 0);
     MixThread.WaitForCompletion();
     MixThread.Close();
   }
@@ -151,10 +152,10 @@ void AudioMixer::Update()
 void AudioMixer::MixLoopThreaded()
 {
 #ifdef TRACK_TIME
-  double maxTime = ? ?
+  double maxTime = 0.1;
 #endif
 
-                     bool running = true;
+  bool running = true;
   do
   {
 #ifdef TRACK_TIME
@@ -179,8 +180,12 @@ void AudioMixer::MixLoopThreaded()
 #endif
 
     // Wait until more data is needed
-    if (running && Zero::ThreadingEnabled)
+    if (running && Zero::ThreadingEnabled) {
       AudioIO.WaitUntilOutputNeededThreaded();
+      if (mShuttingDown.Get() == cTrue) {
+        break;
+      }
+    }
 
   } while (running && Zero::ThreadingEnabled);
 }
@@ -324,7 +329,7 @@ void AudioMixer::SendListenerRemovedEvent(ListenerNode* listener)
 bool AudioMixer::MixCurrentInstancesThreaded()
 {
   if (!FinalOutputNode)
-    return mShuttingDown.Get() == false;
+    return mShuttingDown.Get() == cFalse;
 
   // Find out how many samples we can write to the ring buffer
   unsigned samplesNeeded = AudioIO.OutputRingBuffer.GetWriteAvailable();

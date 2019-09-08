@@ -104,11 +104,8 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStr
   if (whichStream == StreamTypes::Input)
     capture = 1;
 
-  if (SDL_GetNumAudioDevices(capture) == 0)
-  {
-    LogAudioIoError("No audio devices were available\n", resultMessage);
-    return StreamStatus::DeviceProblem;
-  }
+  // We don't bother to check SDL_GetNumAudioDevices because SDL's documentation says it can return
+  // -1 or 0, and still be able to open the default device (which just seems... wrong but whatever).
 
 #if defined(WelderTargetOsEmscripten)
   // The web now requires audio is started by a user action.
@@ -116,11 +113,11 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStr
 #endif
 
   data.mDeviceID = SDL_OpenAudioDevice(
-      nullptr, capture, &want, &have, SDL_AUDIO_ALLOW_CHANNELS_CHANGE || SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
+      nullptr, capture, &want, &have, SDL_AUDIO_ALLOW_CHANNELS_CHANGE | SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
 
   if (data.mDeviceID == 0)
   {
-    LogAudioIoError("Could not open audio device\n", resultMessage);
+    LogAudioIoError(String::Format("Could not open audio device: %s\n", SDL_GetError()), resultMessage);
     return StreamStatus::DeviceProblem;
   }
 
