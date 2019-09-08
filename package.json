@@ -4,7 +4,7 @@
   "description": "Component based game engine focusing on rapid iteration.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "docker build -t welder ."
   },
   "repository": {
     "type": "git",

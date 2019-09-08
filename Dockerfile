@@ -10,6 +10,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     clang-tidy \
     git \
     iwyu \
+    build-essential \
+    libasound2-dev \
+    libpulse-dev \
+    libudev-dev \
+    libopenal-dev \
+    libogg-dev \
+    libvorbis-dev \
+    libaudiofile-dev \
+    libpng-dev \
+    libfreetype6-dev \
+    libusb-dev \
+    libdbus-1-dev \
+    zlib1g-dev \
+    libdirectfb-dev \
     mesa-common-dev mesa-utils-extra libglapi-mesa libgl1-mesa-dev libglu1-mesa-dev freeglut3 freeglut3-dev \
     llvm \
     ninja-build \
