@@ -21,6 +21,6 @@ ImageContent
 		var FileType = "jpg"
 		var LoadFormat = "RGBA8"
 		var Dimensions = "640 x 328"
-		var Size = "1.068 MB"
+		var Size = "1.067 MB"
 	}
 }
