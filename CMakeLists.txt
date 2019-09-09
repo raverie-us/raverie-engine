@@ -54,8 +54,8 @@ add_custom_target(VirtualFileSystemZip
 function(welder_setup_library target directory internal)
   target_include_directories(${target} PUBLIC ${directory} ${WELDER_LIBRARIES_DIR})
   if (${internal})
-    set_property(TARGET ${target} PROPERTY C_INCLUDE_WHAT_YOU_USE ${WELDER_IWYU_PATH})
-    set_property(TARGET ${target} PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${WELDER_IWYU_PATH})
+    #set_property(TARGET ${target} PROPERTY C_INCLUDE_WHAT_YOU_USE ${WELDER_IWYU_PATH})
+    #set_property(TARGET ${target} PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${WELDER_IWYU_PATH})
   endif()
 endfunction()
 
