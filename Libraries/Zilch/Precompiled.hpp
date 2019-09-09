@@ -2,7 +2,6 @@
 
 // Note: This header is typically used as a precompiled header
 #pragma once
-#include "Precompiled.hpp"
 #ifndef ZILCH_PRECOMPILED_HPP
 #  define ZILCH_PRECOMPILED_HPP
 

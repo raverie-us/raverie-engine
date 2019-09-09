@@ -1,6 +1,5 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "Precompiled.hpp"
 
 #define DeclareAnchorAccessors(ConstraintType, anchor)                                                                 \
   /* The local point of the anchor on object A.*/                                                                      \

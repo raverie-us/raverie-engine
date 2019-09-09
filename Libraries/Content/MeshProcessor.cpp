@@ -46,7 +46,7 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
     uint numVertices = mesh->mNumVertices;
 
     // extract all the vertex data
-    VertexDataArray& vertexBuffer = meshData.mVertexBuffer;
+    VertexArray& vertexBuffer = meshData.mVertexBuffer;
     vertexBuffer.Resize(numVertices);
     // guarantees bone weights and indices to be 0 if unset on a vertex
     memset(vertexBuffer.Data(), 0, vertexBuffer.Size() * sizeof(VertexData));

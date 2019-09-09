@@ -1,6 +1,5 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "Precompiled.hpp"
 
 // Used to determine whether or not the enum is going to be used as a bit field
 // or an index.  As a bit field, each index needs to be shifted.

@@ -1,4 +1,5 @@
 # Libraries.
+add_subdirectory(CodeTranslator)
 add_subdirectory(Common)
 add_subdirectory(Content)
 add_subdirectory(Editor)

@@ -1,6 +1,5 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "Precompiled.hpp"
 #include "Typedefs.hpp"
 // quick ARM compiler fix, project isn't seeing/building this before console.hpp
 #include <stdarg.h>

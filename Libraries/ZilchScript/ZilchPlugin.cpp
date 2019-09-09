@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-// TODO(TrevorSundberg): This is probably a bad dependency, but there's not many
+// This is probably a bad dependency, but there's not many
 // other places that make sense for launching the background task
 #include "Editor/SimpleBackgroundTasks.hpp"
 

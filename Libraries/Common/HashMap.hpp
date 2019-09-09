@@ -1,7 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 
 #pragma once
-#include "Precompiled.hpp"
 #include "TypeTraits.hpp"
 #include "ContainerCommon.hpp"
 #include "Hashing.hpp"

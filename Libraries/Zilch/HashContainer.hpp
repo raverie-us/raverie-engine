@@ -1,7 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 
 #pragma once
-#include "Precompiled.hpp"
 #ifndef ZILCH_HASH_CONTAINER_HPP
 #  define ZILCH_HASH_CONTAINER_HPP
 

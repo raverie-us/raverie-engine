@@ -1,6 +1,5 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "Precompiled.hpp"
 
 // Make sure the private data is of a type that is aligned for proper native
 // alignment (most likely pointer reading alignment). Still take the size in

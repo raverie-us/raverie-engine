@@ -215,5 +215,4 @@ welder_target_includes(Engine
     Common
     Geometry
     Zilch
-    Content
 )

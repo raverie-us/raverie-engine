@@ -1,6 +1,5 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "Precompiled.hpp"
 
 struct spv_diagnostic_t;
 typedef spv_diagnostic_t* spv_diagnostic;

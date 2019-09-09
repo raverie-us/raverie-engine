@@ -9,8 +9,9 @@
  *  (for additional changes see History in 'StackWalker.cpp'!
  *
  **********************************************************************/
+// #pragma once is supported starting with _MCS_VER 1000, 
+// so we need not to check the version (because we only support _MSC_VER >= 1100)!
 #pragma once
-#include "Precompiled.hpp"
 #ifdef _MSC_VER
 
 // Stack walker constants

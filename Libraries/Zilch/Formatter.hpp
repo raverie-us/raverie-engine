@@ -1,7 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 
 #pragma once
-#include "Precompiled.hpp"
 #ifndef ZILCH_FORMATTER_HPP
 #  define ZILCH_FORMATTER_HPP
 

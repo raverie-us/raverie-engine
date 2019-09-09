@@ -1,6 +1,5 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "Precompiled.hpp"
 
 /// Allocator to bind Zero memory management to STL.
 template <class T>

@@ -7,7 +7,6 @@
 #include "Geometry/GeometryStandard.hpp"
 #include "Meta/MetaStandard.hpp"
 #include "Support/SupportStandard.hpp"
-#include "ZilchScript/ZilchScriptStandard.hpp"
 
 // Zilch Library Dependencies
 #include "Zilch/Precompiled.hpp"
@@ -35,6 +34,7 @@ public:
 #include "Sound/SoundStandard.hpp"
 
 // Gameplay Includes
+#include "UnitTestSystem.hpp"
 #include "Orientation.hpp"
 
 #include "Reactive.hpp"

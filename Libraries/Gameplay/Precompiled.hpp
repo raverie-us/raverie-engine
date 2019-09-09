@@ -1,8 +1,11 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "Precompiled.hpp"
 
 #include "GameplayStandard.hpp"
+
+// Internal Core Library Dependencies
+// (Used by MarketWidget.cpp, PlayGame.cpp, GeometryBuilder.cpp)
+#include "Editor/EditorStandard.hpp"
 
 // Internal Gameplay Includes
 #include "TileMapSourceLoadPattern.hpp"

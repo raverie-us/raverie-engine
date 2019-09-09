@@ -1,6 +1,5 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "Precompiled.hpp"
 
 #define AddDeclarations(DebugObjectType)                                                                               \
   static void Add(Debug::DebugObjectType& debugObject);                                                                \

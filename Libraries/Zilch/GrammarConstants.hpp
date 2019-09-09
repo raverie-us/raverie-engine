@@ -1,7 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 
 #pragma once
-#include "Precompiled.hpp"
 #ifndef ZILCH_GRAMMAR_CONSTANTS_HPP
 #  define ZILCH_GRAMMAR_CONSTANTS_HPP
 

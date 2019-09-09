@@ -203,17 +203,6 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(SpriteSheetImporter);
   ZilchInitializeType(HeightMapImporter);
 
-  // Unit Tests
-  ZilchInitializeType(UnitTestSystem);
-  ZilchInitializeType(UnitTestEvent);
-  ZilchInitializeType(UnitTestEndFrameEvent);
-  ZilchInitializeType(UnitTestBaseMouseEvent);
-  ZilchInitializeType(UnitTestMouseEvent);
-  ZilchInitializeType(UnitTestMouseDropEvent);
-  ZilchInitializeType(UnitTestKeyboardEvent);
-  ZilchInitializeType(UnitTestKeyboardTextEvent);
-  ZilchInitializeType(UnitTestWindowEvent);
-
   // Tools
   ZilchInitializeType(Tool);
   ZilchInitializeType(SelectTool);

@@ -1,6 +1,5 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "Precompiled.hpp"
 
 // The forRange macros use two for loops, so we need to do some extra work
 // to make the 'break' keyword properly break out of both loops. The

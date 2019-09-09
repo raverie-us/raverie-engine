@@ -167,13 +167,3 @@ public:
 #include "MeshDebug.hpp"
 #include "TimeOfImpactDebug.hpp"
 #include "ComponentInspectors.hpp"
-
-
-#include "Geometry/Mpr.hpp"
-
-#include "InternalEdgeCorrection.hpp"
-#include "ShapeCollisionHelpers.hpp"
-#include "SimpleShapeCollision.hpp"
-#include "ComplexShapeCollision.hpp"
-#include "ShapeCollision.hpp"
-#include "DebugDrawHelpers.hpp"

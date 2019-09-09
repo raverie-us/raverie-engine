@@ -1,6 +1,5 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "Precompiled.hpp"
 #include "Typedefs.hpp"
 
 //*NOTE - Includes a library dependency and should be moved.

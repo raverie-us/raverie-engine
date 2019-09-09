@@ -1,6 +1,5 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "Precompiled.hpp"
 
 #define CustomPropertySetter(type, name, propName)                                                                     \
   ReturnType& propName(type var)                                                                                       \

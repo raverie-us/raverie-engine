@@ -1,6 +1,5 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "Precompiled.hpp"
 
 /// Tracks down which object, if any, was not sent to be checked
 /// for collision when it should have (assuming at least one broad phase caught

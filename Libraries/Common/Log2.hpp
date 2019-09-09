@@ -1,6 +1,5 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "Precompiled.hpp"
 
 // Written as an unholy macro so it can be used at compile time.
 // We could have used a constexpr function instead of this madness if we had

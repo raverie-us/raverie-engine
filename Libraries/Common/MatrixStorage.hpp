@@ -1,6 +1,5 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "Precompiled.hpp"
 
 /// Used to set the way matrices are laid out. If 0, then the columns of an
 /// orthogonal basis matrix represent the xyz-axes of the rotation. If 1, then

@@ -259,5 +259,4 @@ target_sources(Physics
 welder_target_includes(Physics
   PUBLIC
     Zilch
-    Engine
 )
