@@ -5,6 +5,7 @@ namespace Zero
 {
 void LauncherStartup::UserInitializeLibraries()
 {
+  Debugger::Enabled = false;
   LauncherLibrary::Initialize();
 }
 

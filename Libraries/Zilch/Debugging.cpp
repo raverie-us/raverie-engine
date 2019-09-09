@@ -14,6 +14,8 @@ ZilchDefineEvent(DebuggerBreakpointedRemoved);
 ZilchDefineEvent(DebuggerBreakNotAllowed);
 } // namespace Events
 
+bool Debugger::Enabled = true;
+
 ZilchDefineType(DebuggerEvent, builder, type)
 {
 }
@@ -556,6 +558,11 @@ void Debugger::UpdateAttach()
 
 void Debugger::Breakpoint(const CodeLocation& codeLocation)
 {
+  if (!Enabled) {
+    this->Resume();
+    return;
+  }
+  
   ErrorIf(this->IsBreakpointed, "We should not be able to get in here when in a breakpoint");
 
   ExecutableState* state = ExecutableState::CallingState;

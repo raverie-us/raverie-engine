@@ -202,6 +202,9 @@ private:
   void UpdateAttach();
 
 public:
+  // Set by the launcher and other things that can't handle debug events.
+  static bool Enabled;
+
   // As we walk over lines of code (callbacks from any running ExecutableState)
   // we will check to see if the line exists in this breakpoints map
   // The map maps from origin to line numbers
