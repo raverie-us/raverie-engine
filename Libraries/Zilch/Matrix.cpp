@@ -130,7 +130,7 @@ void MatrixConstructor(Call& call, ExceptionReport& report)
     for (size_t x = 0; x < userData.SizeX; ++x)
     {
       byte* matrixItem = IndexIntoMatrix(matrixData, x, y, userData.SizeX, userData.SizeY, elementType->Size);
-      byte* parameterItem = parameters + (x + y * userData.SizeX) * elementType->Size;
+      byte* parameterItem = parameters + (x + y * userData.SizeX) * AlignToBusWidth(elementType->Size);
 
       memcpy(matrixItem, parameterItem, elementType->Size);
     }

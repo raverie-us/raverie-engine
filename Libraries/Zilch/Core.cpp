@@ -175,24 +175,34 @@ void VectorComponentConstructor(Call& call, ExceptionReport& report)
   Handle& selfHandle = call.GetHandle(Call::This);
   ComponentType* self = (ComponentType*)selfHandle.Dereference();
 
-  // Get the stack memory where all the values live
-  byte* stackValues = call.GetParametersUnchecked();
+  // Validate that component counts are the same
+  size_t parameterComponentCount = 0;
+  ParameterArray& parameters = call.GetFunction()->FunctionType->Parameters;
+  for (size_t i = 0; i < parameters.Size(); ++i)
+    parameterComponentCount += parameters[i].ParameterType->GetCopyableSize() / sizeof(ComponentType);
 
-  // We want to get the alignment of the stack values
-  size_t alignedComponentSize = AlignToBusWidth(sizeof(ComponentType));
+  ErrorIf(parameterComponentCount != Components, "Component counts of self and parameters do not match.");
 
   // This is very subtle but because of padding we can't assume the values on
   // the stack directly align with the values inside our structure. For example,
   // sizeof(bool) is typically 1, however on the stack each bool is aligned by 4
   // bytes so therefore 3 bools in the stack is 3 * 4 = 12, rather than a
   // Boolean3 which is actually sizeof(bool) * 3 = 3 + padding = 4
-  for (size_t i = 0; i < Components; ++i)
+  for (size_t i = 0; i < parameters.Size(); ++i)
   {
-    // Grab the current value of the stack
-    ComponentType value = *(ComponentType*)(stackValues + i * alignedComponentSize);
-
-    // Treat ourself like a contiguous array and directly set our members
-    self[i] = value;
+    // Get the stack memory where the parameter's values live
+    byte* stackParam = call.GetParameterUnchecked(i);
+    byte* stackParamEnd = stackParam + parameters[i].ParameterType->GetCopyableSize();
+    // Copy each component value from the parameter
+    while (stackParam < stackParamEnd)
+    {
+      // Grab the current value of the stack
+      ComponentType value = *(ComponentType*)stackParam;
+      stackParam += sizeof(ComponentType);
+      // Treat ourself like a contiguous array and directly set our members
+      *self = value;
+      ++self;
+    }
   }
 }
 
