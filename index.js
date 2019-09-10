@@ -410,7 +410,7 @@ function determineCmakeCombo(options)
   {
     Windows:
     {
-      builder: 'Visual Studio 15 2017',
+      builder: 'Visual Studio 16 2019',
       toolchain: 'MSVC',
       platform: 'Windows',
       architecture: 'X64',
@@ -464,6 +464,7 @@ function activateBuildDir(combo)
 {
   const comboStr = `${hostos}_${combo.targetos}_${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.architecture}_${combo.config}`.replace(/ /g, '-');
   const comboDir = path.join(dirs.build, comboStr);
+  makeDir(comboDir);
 
   // This will always be set to the last build directory the user created (when calling cmake/build).
   // This is used for finding compile_commands.json, cmake artefacts, etc.
