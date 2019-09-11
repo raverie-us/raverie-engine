@@ -15,21 +15,13 @@ set(WELDER_C_CXX_FLAGS "\
   -s BINARYEN_TRAP_MODE='clamp'\
   -s WASM=1\
   -s SIMD=0\
-  -s USE_SDL=2\
-  -s USE_WEBGL2=1\
-  -s FULL_ES2=1\
-  -s FULL_ES3=1\
-  -s SINGLE_FILE=1\
-  -s MINIFY_HTML=0\
   --shell-file  ${WELDER_PLATFORM_DATA_DIR}/Shell.html\
   -fdelayed-template-parsing\
   -fexceptions\
   -frtti\
-  -fstack-protector\
   -fno-vectorize\
   -fno-slp-vectorize\
   -fno-tree-vectorize\
-  -fno-omit-frame-pointer\
 ")
 
 set(WELDER_LINKER_FLAGS "\
@@ -37,6 +29,7 @@ set(WELDER_LINKER_FLAGS "\
   -s FULL_ES2=1\
   -s FULL_ES3=1\
   -s MINIFY_HTML=0\
+  -s SINGLE_FILE=1\
 ")
 
 set(WELDER_C_CXX_FLAGS_DEBUG "\

@@ -4,7 +4,7 @@
 #include "Common/CommonStandard.hpp"
 #include "Common/PlatformStandard.hpp"
 
-#include "SDL2/SDL.h"
+#include "SDL.h"
 
 // Include glew before OpenGl
 #define GLEW_STATIC

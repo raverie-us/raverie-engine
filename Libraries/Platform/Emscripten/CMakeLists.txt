@@ -44,6 +44,11 @@ target_compile_definitions(Platform
     ZeroPlatformNoShellOpenFile
 )
 
+target_link_libraries(Platform
+  PUBLIC
+    SDL
+)
+
 welder_target_includes(Platform
   PUBLIC
     Common
