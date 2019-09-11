@@ -428,7 +428,7 @@ function determineCmakeCombo(options)
     },
     Emscripten:
     {
-      builder: 'MinGW Makefiles',
+      builder: 'Ninja',
       toolchain: 'Emscripten',
       platform: 'Emscripten',
       architecture: 'WASM',

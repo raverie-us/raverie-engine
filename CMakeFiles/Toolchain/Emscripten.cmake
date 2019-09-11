@@ -2,6 +2,8 @@ add_definitions(-DWelderCompilerClang=1 -DWelderCompilerName="Clang")
 
 add_definitions(-DHAVE_UNISTD_H)
 
+# We disable MINIFY_HTML because it takes too much memory and crashes
+
 #  -s DISABLE_EXCEPTION_CATCHING=0\
 
 set(CMAKE_EXECUTABLE_SUFFIX ".html")
@@ -18,6 +20,7 @@ set(WELDER_C_CXX_FLAGS "\
   -s FULL_ES2=1\
   -s FULL_ES3=1\
   -s SINGLE_FILE=1\
+  -s MINIFY_HTML=0\
   --shell-file  ${WELDER_PLATFORM_DATA_DIR}/Shell.html\
   -fdelayed-template-parsing\
   -fexceptions\
@@ -33,6 +36,7 @@ set(WELDER_LINKER_FLAGS "\
   -s USE_WEBGL2=1\
   -s FULL_ES2=1\
   -s FULL_ES3=1\
+  -s MINIFY_HTML=0\
 ")
 
 set(WELDER_C_CXX_FLAGS_DEBUG "\

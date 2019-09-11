@@ -13,10 +13,6 @@ void YieldToOs()
   // Most platforms aren't cooperatively multi-threaded.
 }
 
-void InitializeMainLoop()
-{
-}
-
 void RunMainLoop(MainLoopFn callback, void* userData)
 {
   while (!gStopMainLoop)

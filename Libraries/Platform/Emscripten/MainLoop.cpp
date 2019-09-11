@@ -19,25 +19,13 @@ void YieldToOs()
   // emscripten_sleep(0);
 }
 
-void EmptyMainLoopFunction(void* userData)
-{
-}
-
-void InitializeMainLoop()
-{
-  // We shouldn't have a main loop set yet, however it's technically possible.
-  StopMainLoop();
-
-  gIsMainLoopSet = true;
-  emscripten_set_main_loop_arg(&EmptyMainLoopFunction, nullptr, 0, 0);
-}
-
 void RunMainLoop(MainLoopFn callback, void* userData)
 {
   StopMainLoop();
 
   ErrorIf(gIsMainLoopSet, "We should not have a main loop set since we called 'StopMainLoop'");
 
+  ZPrint("EMSCRIPTEN SET MAIN LOOP %p\n", callback);
   // This *MUST* come before because we are haulting execution here.
   gIsMainLoopSet = true;
   emscripten_set_main_loop_arg(callback, userData, 0, 1);
@@ -48,6 +36,7 @@ void StopMainLoop()
   if (!gIsMainLoopSet)
     return;
 
+  ZPrint("MAIN LOOP STOPPED\n");
   emscripten_cancel_main_loop();
   gIsMainLoopSet = false;
 }

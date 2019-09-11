@@ -15,10 +15,6 @@ extern bool SupportsRenderingOutsideMainLoop;
 // ramifications if used.
 void YieldToOs();
 
-// Initailize our main loop (called automatically by Common/Platform
-// initialization).
-void InitializeMainLoop();
-
 typedef void (*MainLoopFn)(void* userData);
 
 // Runs a loop in a continuous update until 'StopMainLoop' is called.

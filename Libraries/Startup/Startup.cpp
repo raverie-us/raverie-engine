@@ -41,6 +41,7 @@ void ZeroStartup::UserShutdown()
 
 void ZeroStartup::Exit(int returnCode)
 {
+  ZPrint("Exit %d\n", returnCode);
   mExit = true;
   sReturnCode = returnCode;
 }
