@@ -283,7 +283,10 @@ void EventDispatchList::Dispatch(Event* event)
         // If this is a script connection, we want to skip it (don't want to run
         // invalid code)
         if (current->Flags.IsSet(ConnectionFlags::Script))
+        {
           current->Flags.SetFlag(ConnectionFlags::Invalid);
+          current->mDispatcher->mUniqueConnections.Erase(current);
+        }
       }
     }
 
@@ -329,6 +332,7 @@ void RemoveReceiver(type& mConnections, ObjPtr thisObject)
       // connections list. The dispatcher will removed all invalid
       // connections during invoking.
       current->Flags.SetFlag(ConnectionFlags::Invalid);
+      current->mDispatcher->mUniqueConnections.Erase(current);
     }
   }
 }
@@ -399,7 +403,10 @@ void EventReceiver::Disconnect(StringParam eventId)
   {
     // Mark all matching connections as invalid so they get removed
     if (connection.mEventId == eventId)
+    {
       connection.Flags.SetFlag(ConnectionFlags::Invalid);
+      connection.mDispatcher->mUniqueConnections.Erase(&connection);
+    }
   }
 }
 

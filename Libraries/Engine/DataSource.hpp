@@ -104,6 +104,7 @@ const DataIndex cRootIndex = DataIndex(u64(-1));
 class DataSource : public EventObject
 {
 public:
+  ZilchDeclareType(DataSource, TypeCopyMode::ReferenceType);
   DataSource()
   {
   }

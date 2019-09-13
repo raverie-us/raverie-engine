@@ -20,7 +20,7 @@ ImageWidget::ImageWidget(Composite* parent, StringParam style, AttachType::Enum 
   mOrigin = mDef->ImageMode;
 }
 
-String ImageWidget::GetDebugName()
+String ImageWidget::GetDebugName() const
 {
   return BuildString("Image:", mName, ":", mDef->Name);
 }

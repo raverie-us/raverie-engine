@@ -27,7 +27,7 @@ public:
                     ColorTransform colorTx,
                     WidgetRect clipRect) override;
 
-  String GetDebugName() override;
+  String GetDebugName() const override;
 };
 
 } // namespace Zero

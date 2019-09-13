@@ -40,13 +40,19 @@ int GetSign(DockArea::Enum dockArea)
 
 void UpdateNotInLayout(Composite* widget)
 {
+  bool disabled = Widget::sDisableDeletes;
+  Widget::sDisableDeletes = true;
+  widget->DebugValidate();
   WidgetListRange children = widget->GetChildren();
   while (!children.Empty())
   {
-    if (children.Front().mActive && children.Front().mNotInLayout)
-      children.Front().UpdateTransformExternal();
+    Widget& child = children.Front();
+    child.DebugValidate();
+    if (child.mActive && child.mNotInLayout)
+      child.UpdateTransformExternal();
     children.PopFront();
   }
+  Widget::sDisableDeletes = disabled;
 }
 
 LayoutResult AspectLayout(Vec2 aspect, Vec2 size)
@@ -263,6 +269,7 @@ Vec2 StackLayout::DoLayout(Composite* widget, LayoutArea data)
   if (mDebug)
     ZeroDebugBreak();
 
+  widget->DebugValidate();
   // Get all children of the widget
   UpdateNotInLayout(widget);
 
@@ -287,6 +294,7 @@ Vec2 StackLayout::DoLayout(Composite* widget, LayoutArea data)
   {
     Widget& child = firstPass.Front();
 
+    child.DebugValidate();
     Vec2 childSize = child.Measure(data);
 
     if (child.mSizePolicy.Policy[stackAxis] == SizePolicy::Flex)
@@ -314,10 +322,12 @@ Vec2 StackLayout::DoLayout(Composite* widget, LayoutArea data)
 
   // Flex ratio
   float flexRatio = ComputeFlexRatio(fixedSize, totalFlex, flexMinSize, totalSize);
+  widget->DebugValidate();
 
   while (!children.Empty())
   {
     Widget& child = children.Front();
+    child.DebugValidate();
     children.PopFront();
 
     SizePolicies policy = child.GetSizePolicy();
@@ -388,6 +398,7 @@ Vec2 StackLayout::DoLayout(Composite* widget, LayoutArea data)
   // Remove padding
   RemovePadding(Padding, data);
 
+  widget->DebugValidate();
   return data.Size;
 }
 

@@ -138,6 +138,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
 
   // Arrays
   ZeroInitializeArrayTypeAs(Array<ContentLibraryReference>, "ContentLibraryReferenceArray");
+  ZilchInitializeType(DataSource);
 
   ZilchInitializeType(System);
 

@@ -3,6 +3,9 @@
 
 namespace Zero
 {
+ZilchDefineType(DataSource, builder, type)
+{
+}
 
 namespace CommonColumns
 {

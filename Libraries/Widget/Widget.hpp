@@ -146,6 +146,8 @@ class Widget : public EventObject
 public:
   ZilchDeclareType(Widget, TypeCopyMode::ReferenceType);
 
+  static bool sDisableDeletes;
+
   Widget(Composite* parent, AttachType::Enum attachType = AttachType::Normal);
   virtual ~Widget();
   virtual void OnDestroy();
@@ -161,7 +163,7 @@ public:
   String GetName();
 
   /// Get name to display when debugging widget trees
-  virtual String GetDebugName();
+  virtual String GetDebugName() const;
 
   /// Widgets that are not active do not receive use input, are not
   /// drawn and not placed in layouts. Used to disable or hide widgets.
@@ -218,6 +220,8 @@ public:
   /// Dispatch an event to this widget and all ancestors
   void DispatchBubble(StringParam eventId, Event* event);
   virtual void DispatchDown(StringParam eventId, Event* event){};
+
+  void DebugValidate() const;
 
   // Focus
   void TakeFocus();

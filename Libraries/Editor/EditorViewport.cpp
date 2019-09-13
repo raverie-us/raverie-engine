@@ -223,7 +223,6 @@ Vec2 EditorViewport::GetMinSize()
 
 void EditorViewport::ConfigureViewCube(bool active, real viewportSize)
 {
-  active = false;
   EditorMode::Enum mode = Z::gEditor->GetEditMode();
   active = active && (mode != EditorMode::Mode2D);
 

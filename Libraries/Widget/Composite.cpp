@@ -59,6 +59,7 @@ Composite::Composite(Composite* parent, AttachType::Enum attachType) : Widget(pa
 {
   mLayout = nullptr;
   mMinSize = Vec2(10, 10);
+  DebugValidate();
 }
 
 Composite::~Composite()
@@ -71,11 +72,14 @@ Composite::~Composite()
 
 void Composite::AttachChildWidget(Widget* child, AttachType::Enum attachType)
 {
+  DebugValidate();
   InternalAttach(this, child);
 }
 
 void Composite::InternalDetach(Composite* parent, Widget* child)
 {
+  parent->DebugValidate();
+  child->DebugValidate();
   ErrorIf(child->mParent != parent, "Object is not a child of the parent.");
   parent->mChildren.Erase(child);
   child->mParent = nullptr;
@@ -83,6 +87,8 @@ void Composite::InternalDetach(Composite* parent, Widget* child)
 
 void Composite::InternalAttach(Composite* parent, Widget* child)
 {
+  parent->DebugValidate();
+  child->DebugValidate();
   ErrorIf(child->mDestroyed, "Widget is being destroyed and is now attaching to another widget.");
   ErrorIf(parent->mDestroyed, "Widget is attaching to widget that is being destroyed");
 
@@ -101,6 +107,8 @@ void Composite::InternalAttach(Composite* parent, Widget* child)
 
 void Composite::ChangeRoot(RootWidget* newRoot)
 {
+  DebugValidate();
+  newRoot->DebugValidate();
   if (mRootWidget == newRoot)
     return;
 
@@ -116,10 +124,12 @@ void Composite::ChangeRoot(RootWidget* newRoot)
 
 void Composite::DestroyChildren()
 {
+  DebugValidate();
   Widget* child = mChildren.Begin();
   while (child != mChildren.End())
   {
     Widget* next = WidgetList::Next(child);
+    child->DebugValidate();
     child->Destroy();
     child = next;
   }
@@ -127,28 +137,33 @@ void Composite::DestroyChildren()
 
 void Composite::OnDestroy()
 {
+  DebugValidate();
   DestroyChildren();
   Widget::OnDestroy();
 }
 
 void Composite::SetLayout(Layout* layout)
 {
+  DebugValidate();
   SafeDelete(mLayout);
   mLayout = layout;
 }
 
 void Composite::DoLayout()
 {
+  DebugValidate();
   LayoutArea data;
   data.Size = mSize;
   data.HorizLimit = LimitMode::Limited;
   data.VerticalLimit = LimitMode::Limited;
   data.Offset = Vec3::cZero;
   mLayout->DoLayout(this, data);
+  DebugValidate();
 }
 
 void Composite::ShiftOntoScreen(Vec3 offset)
 {
+  DebugValidate();
   Vec2 screenSize = this->GetParent()->GetSize();
   Vec2 thisSize = this->GetSize();
 
@@ -164,6 +179,7 @@ void Composite::ShiftOntoScreen(Vec3 offset)
 void Composite::RenderUpdate(
     ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
+  DebugValidate();
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
   if (mClipping)
@@ -194,6 +210,7 @@ void Composite::RenderUpdate(
 
 Widget* Composite::HitTest(Vec2 location, Widget* ignore)
 {
+  DebugValidate();
   // Skip inactive object
   if (InputBlocked())
     return nullptr;
@@ -225,6 +242,7 @@ Widget* Composite::HitTest(Vec2 location, Widget* ignore)
 
 void Composite::UpdateChildTransforms()
 {
+  DebugValidate();
   static const size_t MaxIterations = 1000;
   size_t counter = 0;
   forRange(auto& child, GetChildren())
@@ -233,11 +251,8 @@ void Composite::UpdateChildTransforms()
       Error("Max child iterations reached in Composite::UpdateChildTransforms");
       return;
     }
-    Widget* widget = Z::gWidgetManager->Widgets.FindValue(child.mId, nullptr);
-    // TODO(TrevorSundberg): This check is horrible but I'm not sure why there is an
-    // invalid Widget in the child list (seems to be under EditorViewport maybe?).
-    if (widget == nullptr || widget != &child || widget->mId != child.mId)
-      continue;
+
+    child.DebugValidate();
 
     if (!child.mDestroyed && child.GetActive())
       child.UpdateTransformExternal();
@@ -246,6 +261,7 @@ void Composite::UpdateChildTransforms()
 
 void Composite::UpdateTransform()
 {
+  DebugValidate();
   if (mIsUpdatingTransform) {
     Widget::UpdateTransform();
     Error("Recursive update in Composite::UpdateTransform");
@@ -279,6 +295,7 @@ void Composite::UpdateTransform()
 
 void Composite::DispatchDown(StringParam eventId, Event* event)
 {
+  DebugValidate();
   forRange (Widget& widget, mChildren.All())
   {
     widget.DispatchEvent(eventId, event);
@@ -288,6 +305,7 @@ void Composite::DispatchDown(StringParam eventId, Event* event)
 
 Vec2 Composite::GetMinSize()
 {
+  DebugValidate();
   LayoutArea area;
   if (mLayout && !mChildren.Empty())
   {
@@ -299,11 +317,13 @@ Vec2 Composite::GetMinSize()
 
 void Composite::SetMinSize(Vec2 newMin)
 {
+  DebugValidate();
   mMinSize = newMin;
 }
 
 Vec2 Composite::Measure(LayoutArea& data)
 {
+  DebugValidate();
   // If we're fixed, no need to do anything
   if (mSizePolicy.XPolicy == SizePolicy::Fixed && mSizePolicy.YPolicy == SizePolicy::Fixed)
     return mSize;
