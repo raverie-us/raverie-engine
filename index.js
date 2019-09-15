@@ -600,6 +600,25 @@ const build = async (options) => {
     console.log("Built");
 };
 
+const documentation = async () => {
+    console.log("Running Doxygen");
+    if (!commandExists("doxygen")) {
+        return;
+    }
+    const doxygenOptions = {
+        cwd: dirs.repo,
+        err: printError,
+        out: printLog,
+        reject: false,
+        stdio: [
+            "ignore",
+            "pipe",
+            "pipe"
+        ]
+    };
+    await exec("doxygen", [], doxygenOptions);
+};
+
 const main = async () => {
     const empty = {
     };
@@ -612,6 +631,8 @@ const main = async () => {
         usage(`cmake ${comboOptions}`).
         command("build", "Build a cmake project (options must match generated version)", empty, build).
         usage("build [--alias=...] [--builder=...] [--toolchain=...] [--platform=...] [--architecture=...] [--config] [--targetos=...]").
+        command("documentation", "Build generated documentation", empty, documentation).
+        usage("documentation").
         demand(1).
         help().
         argv;
