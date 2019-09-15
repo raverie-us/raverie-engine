@@ -1,10 +1,5 @@
 cmake_minimum_required(VERSION 3.12.1 FATAL_ERROR)
 
-# There is a problem with clang using the default gcc headers on Ubuntu (remove #error).
-if(NOT WIN32)
-  add_definitions(-D__STDC__)
-endif()
-
 set(CMAKE_CONFIGURATION_TYPES Debug RelWithDebInfo Release MinSizeRel)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT WelderEditor)
