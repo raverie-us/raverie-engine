@@ -1,36 +1,36 @@
-[submodule "Libraries/Scintilla/Repo"]
+[submodule "Scintilla"]
 	path = External/Scintilla/Repo
 	url = https://github.com/WelderFoundation/WelderEngineScintilla.git
-[submodule "Libraries/Libpng/Repo"]
+[submodule "Libpng"]
 	path = External/Libpng/Repo
 	url = https://github.com/WelderFoundation/WelderEngineLibpng.git
-[submodule "Libraries/Assimp/Repo"]
+[submodule "Assimp"]
 	path = External/Assimp/Repo
 	url = https://github.com/WelderFoundation/WelderEngineAssimp.git
-[submodule "Libraries/ZLib/Repo"]
+[submodule "ZLib"]
 	path = External/ZLib/Repo
 	url = https://github.com/WelderFoundation/WelderEngineZLib.git
-[submodule "Libraries/FreeType/Repo"]
+[submodule "FreeType"]
 	path = External/FreeType/Repo
 	url = https://github.com/WelderFoundation/WelderEngineFreeType.git
-[submodule "Libraries/Opus/Repo"]
+[submodule "Opus"]
 	path = External/Opus/Repo
 	url = https://github.com/WelderFoundation/WelderEngineOpus.git
-[submodule "Libraries/Glew/Repo"]
+[submodule "Glew"]
 	path = External/Glew/Repo
 	url = https://github.com/WelderFoundation/WelderEngineGlew.git
-[submodule "Libraries/Nvtt/Repo"]
+[submodule "Nvtt"]
 	path = External/Nvtt/Repo
 	url = https://github.com/WelderFoundation/WelderEngineNvtt.git
-[submodule "Libraries/SpirvTools/Repo"]
+[submodule "SpirvTools"]
 	path = External/SpirvTools/Repo
 	url = https://github.com/WelderFoundation/WelderEngineSpirvTools.git
-[submodule "Libraries/SpirvCross/Repo"]
+[submodule "SpirvCross"]
 	path = External/SpirvCross/Repo
 	url = https://github.com/WelderFoundation/WelderEngineSpirvCross.git
-[submodule "Libraries/SpirvHeaders/Repo"]
+[submodule "SpirvHeaders"]
 	path = External/SpirvHeaders/Repo
 	url = https://github.com/WelderFoundation/WelderEngineSpirvHeaders.git
-[submodule "External/SDL/Repo"]
+[submodule "SDL"]
 	path = External/SDL/Repo
 	url = https://github.com/WelderFoundation/WelderEngineSdl.git
