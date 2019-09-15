@@ -158,21 +158,7 @@ async function exec(executable, args, options)
     }
   }
 
-  if (result)
-  {
-    console.log(`$ ${result.cmd}`);
-    console.log(`cwd: ${options.cwd}`);
-
-    if (options.err)
-    {
-      options.err(result.stderr);
-    }
-    if (options.out)
-    {
-      options.out(result.stdout);
-    }
-  }
-  else
+  if (!result)
   {
     printError(lastErr);
   }
