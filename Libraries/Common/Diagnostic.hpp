@@ -85,13 +85,13 @@ private:
 static int gConditionalFalseConstant = 0;
 
 #define AlwaysErrorIf(Expression, ...)                                                                                 \
-    do                                                                                                                 \
-    {                                                                                                                  \
-      static bool __ignore = false;                                                                                    \
-      if ((Expression) && ::Zero::ErrorSignaler::SignalError(                                                          \
-                              ::Zero::ErrorSignaler::Error, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__)) \
-        ZeroDebugBreak();                                                                                              \
-    } while (gConditionalFalseConstant)
+  do                                                                                                                   \
+  {                                                                                                                    \
+    static bool __ignore = false;                                                                                      \
+    if ((Expression) && ::Zero::ErrorSignaler::SignalError(                                                            \
+                            ::Zero::ErrorSignaler::Error, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__))   \
+      ZeroDebugBreak();                                                                                                \
+  } while (gConditionalFalseConstant)
 
 #if ZERO_ENABLE_ERROR
 

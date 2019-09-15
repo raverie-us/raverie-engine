@@ -432,9 +432,9 @@ struct is_enum
 /// template argument
 #define ZeroDeclareHasMemberTrait(TypeTraitName, MemberName)                                                           \
   template <typename ZilchT>                                                                                           \
-  static ::Zero::TrueType check_##TypeTraitName(decltype(&ZilchT::MemberName)*);                                      \
+  static ::Zero::TrueType check_##TypeTraitName(decltype(&ZilchT::MemberName)*);                                       \
   template <typename ZilchT>                                                                                           \
-  static ::Zero::FalseType check_##TypeTraitName(...);                                                                \
+  static ::Zero::FalseType check_##TypeTraitName(...);                                                                 \
   template <typename ZilchT>                                                                                           \
   struct TypeTraitName : public decltype(check_##TypeTraitName<ZilchT>(nullptr))                                       \
   {                                                                                                                    \

@@ -58,14 +58,16 @@ HashSet<const Widget*> gValidWidgets;
 HashSet<const Widget*> gValidWidgetsAllTime;
 
 static Array<String> gWidgetStack;
-void WidgetBreak(const char* message, const Widget* widget) {
-    forRange(String& str, gWidgetStack) {
-      printf("STACK: %s\n", str.c_str());
-    }
-    Error("%s %p\n", message, widget);
-    printf("%s %p\n", message, widget);
-    fflush(stdout);
-    ZeroDebugBreak();
+void WidgetBreak(const char* message, const Widget* widget)
+{
+  forRange (String& str, gWidgetStack)
+  {
+    printf("STACK: %s\n", str.c_str());
+  }
+  Error("%s %p\n", message, widget);
+  printf("%s %p\n", message, widget);
+  fflush(stdout);
+  ZeroDebugBreak();
 }
 bool Widget::sDisableDeletes = false;
 
@@ -141,12 +143,14 @@ Widget::~Widget()
   }
 
 #ifdef WIDGET_DEBUGGING
-  if (!gValidWidgets.Erase(this)) {
+  if (!gValidWidgets.Erase(this))
+  {
     WidgetBreak("Did not find widget, double delete? %p\n", this);
   }
 #endif
 
-  if (sDisableDeletes) {
+  if (sDisableDeletes)
+  {
     WidgetBreak("Widget deletes disabled %p\n", this);
   }
 }
@@ -495,10 +499,14 @@ void Widget::DebugValidate() const
     WidgetBreak("Widget was null or had an invalid id", this);
   }
 
-  if (!gValidWidgets.Contains(this)) {
-    if (gValidWidgetsAllTime.Contains(this)) {
+  if (!gValidWidgets.Contains(this))
+  {
+    if (gValidWidgetsAllTime.Contains(this))
+    {
       WidgetBreak("Invalid widget (but it was valid at one point in time)", this);
-    } else {
+    }
+    else
+    {
       WidgetBreak("Invalid widget", this);
     }
   }
@@ -506,7 +514,8 @@ void Widget::DebugValidate() const
   static HashSet<void*> vtables;
 
   void* vtable = *(void**)this;
-  if (!vtables.Contains(vtable)) {
+  if (!vtables.Contains(vtable))
+  {
     vtables.Insert(vtable);
     printf("New vtable: %p\n", vtable);
     fflush(stdout);
@@ -530,7 +539,8 @@ void Widget::DebugValidate() const
   static byte sMemory[sizeof(Widget)];
   memcpy(sMemory, (void*)this, sizeof(Widget));
 
-  if (!mDestroyed) {
+  if (!mDestroyed)
+  {
     Widget* widget = Z::gWidgetManager->Widgets.FindValue(this->mId, nullptr);
     if (widget == nullptr || widget != this || widget->mId != this->mId)
     {

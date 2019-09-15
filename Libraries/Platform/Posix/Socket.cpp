@@ -1270,8 +1270,8 @@ void Socket::Bind(Status& status, const SocketAddress& localAddress)
   SOCKET_ADDRESS_STORAGE* sockAddrStorage = (SOCKET_ADDRESS_STORAGE*)localAddress.mPrivateData;
   socklen_t sockAddrLength = sizeof(SOCKET_ADDRESS_STORAGE);
   if (::bind(CAST_HANDLE_TO_SOCKET(mHandle),
-           (SOCKET_ADDRESS_TYPE*)sockAddrStorage,
-           sockAddrLength) == SOCKET_ERROR) // Unable?
+             (SOCKET_ADDRESS_TYPE*)sockAddrStorage,
+             sockAddrLength) == SOCKET_ERROR) // Unable?
     return FailOnLastError(status);
 }
 

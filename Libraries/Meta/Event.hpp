@@ -230,6 +230,7 @@ private:
   friend class EventConnection;
   typedef HashMap<String, EventDispatchList*> EventMapType;
   EventMapType mEvents;
+
 public:
   HashSet<EventConnection*, ConnectionPointerHashPolicy> mUniqueConnections;
 };

@@ -558,11 +558,12 @@ void Debugger::UpdateAttach()
 
 void Debugger::Breakpoint(const CodeLocation& codeLocation)
 {
-  if (!Enabled) {
+  if (!Enabled)
+  {
     this->Resume();
     return;
   }
-  
+
   ErrorIf(this->IsBreakpointed, "We should not be able to get in here when in a breakpoint");
 
   ExecutableState* state = ExecutableState::CallingState;

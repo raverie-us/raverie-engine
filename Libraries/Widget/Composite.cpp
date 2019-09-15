@@ -239,15 +239,15 @@ Widget* Composite::HitTest(Vec2 location, Widget* ignore)
   return nullptr;
 }
 
-
 void Composite::UpdateChildTransforms()
 {
   DebugValidate();
   static const size_t MaxIterations = 1000;
   size_t counter = 0;
-  forRange(auto& child, GetChildren())
+  forRange (auto& child, GetChildren())
   {
-    if (counter++ > MaxIterations) {
+    if (counter++ > MaxIterations)
+    {
       Error("Max child iterations reached in Composite::UpdateChildTransforms");
       return;
     }
@@ -262,7 +262,8 @@ void Composite::UpdateChildTransforms()
 void Composite::UpdateTransform()
 {
   DebugValidate();
-  if (mIsUpdatingTransform) {
+  if (mIsUpdatingTransform)
+  {
     Widget::UpdateTransform();
     Error("Recursive update in Composite::UpdateTransform");
     return;

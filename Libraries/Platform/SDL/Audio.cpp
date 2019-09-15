@@ -104,8 +104,8 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStr
   if (whichStream == StreamTypes::Input)
     capture = 1;
 
-  // We don't bother to check SDL_GetNumAudioDevices because SDL's documentation says it can return
-  // -1 or 0, and still be able to open the default device (which just seems... wrong but whatever).
+    // We don't bother to check SDL_GetNumAudioDevices because SDL's documentation says it can return
+    // -1 or 0, and still be able to open the default device (which just seems... wrong but whatever).
 
 #if defined(WelderTargetOsEmscripten)
   // The web now requires audio is started by a user action.

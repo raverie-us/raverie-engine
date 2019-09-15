@@ -265,7 +265,8 @@ void ZeroStartup::Startup()
   OsShell* osShell = engine->has(OsShell);
 
   IntVec2 size = mWindowSize;
-  if (mWindowSize == IntVec2::cZero) {
+  if (mWindowSize == IntVec2::cZero)
+  {
     size = osShell->GetPrimaryMonitorSize();
   }
   WindowState::Enum state = mWindowState;

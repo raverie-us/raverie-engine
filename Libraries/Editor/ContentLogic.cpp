@@ -84,7 +84,7 @@ bool LoadContentLibrary(StringParam name)
   if (!status)
   {
     FatalEngineError("Failed to load core content library for editor. Resources"
-                      " need to be in the working directory.");
+                     " need to be in the working directory.");
   }
 
   return (bool)status;

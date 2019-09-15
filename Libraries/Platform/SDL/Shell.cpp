@@ -192,7 +192,7 @@ IntRect Shell::GetPrimaryMonitorRectangle()
     displayIndex = SDL_GetWindowDisplayIndex((SDL_Window*)mMainWindow->mHandle);
 
   SDL_Rect monitorRectangle;
-  if (SDL_GetDisplayUsableBounds(displayIndex, &monitorRectangle) == 0) 
+  if (SDL_GetDisplayUsableBounds(displayIndex, &monitorRectangle) == 0)
     return IntRect(monitorRectangle.x, monitorRectangle.y, monitorRectangle.w, monitorRectangle.h);
 
   // Return a default monitor size since we failed.
@@ -761,7 +761,7 @@ ShellWindow::ShellWindow(Shell* shell,
 
   if (!(flags & WindowStyleFlags::OnTaskBar))
     sdlFlags |= SDL_WINDOW_SKIP_TASKBAR;
-  
+
   switch (state)
   {
   case WindowState::Minimized:

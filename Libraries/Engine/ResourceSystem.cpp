@@ -70,7 +70,7 @@ ResourceLibrary* ResourceSystem::GetResourceLibraryFromCurrentType(BoundType* cu
 void ResourceSystem::SetupDefaults()
 {
   // Show all default resources
-  forRange(ResourceManager* manager, Managers.Values())
+  forRange (ResourceManager* manager, Managers.Values())
   {
     if (manager->mCanCreateNew)
       ErrorIf(manager->mExtension.Empty(), "Must set an extension on %s", manager->GetResourceType()->Name.c_str());
@@ -84,15 +84,15 @@ void ResourceSystem::SetupDefaults()
 
         // Moved default font to the Loading library for progress display
         ErrorIf(resource->mContentItem->mLibrary->Name != "ZeroCore" &&
-          resource->mContentItem->mLibrary->Name != "Loading",
-          "Only resources that are in core can be defaults");
+                    resource->mContentItem->mLibrary->Name != "Loading",
+                "Only resources that are in core can be defaults");
       }
     }
     else
     {
       ErrorIf(!manager->mNoFallbackNeeded,
-        "Failed to find default resource for resource type %s",
-        manager->mResourceTypeName.c_str());
+              "Failed to find default resource for resource type %s",
+              manager->mResourceTypeName.c_str());
     }
   }
 }

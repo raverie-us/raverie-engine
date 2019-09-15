@@ -48,10 +48,6 @@ const makeDir = (dirPath) => {
     return dirPath;
 };
 
-const sleep = (ms) => new Promise((resolve) => {
-    setTimeout(resolve, ms);
-});
-
 const tryUnlinkSync = (fullPath) => {
     try {
         fs.unlinkSync(fullPath);
@@ -95,39 +91,23 @@ const printLog = (text) => {
 };
 
 const exec = async (executable, args, options) => {
-    let lastErr = "Unknown";
-    let result = null;
-
+    const result = execa(executable, args, options);
     const readData = (optionsFunc, name) => {
         const strName = `${name}Str`;
         result[strName] = "";
-        result[name].on("data", (data) => {
-            const str = data.toString();
-            if (optionsFunc) {
-                optionsFunc(str);
-            }
-            result[strName] += str;
-        });
-    };
-
-    // A file may be locked after it completes downloading (virus scanning, etc).
-    for (let attempts = 10; attempts >= 0; --attempts) {
-        try {
-            result = execa(executable, args, options);
-            readData(options.out, "stdout");
-            readData(options.err, "stderr");
-            await result;
-            break;
-        } catch (err) {
-            lastErr = err;
-            await sleep(100);
-            continue;
+        if (result[name]) {
+            result[name].on("data", (data) => {
+                const str = data.toString();
+                if (optionsFunc) {
+                    optionsFunc(str);
+                }
+                result[strName] += str;
+            });
         }
-    }
-
-    if (!result) {
-        printError(lastErr);
-    }
+    };
+    readData(options.out, "stdout");
+    readData(options.err, "stderr");
+    await result;
     return {
         stderr: result.stderrStr,
         stdout: result.stdoutStr
@@ -251,7 +231,7 @@ const runClangFormat = async (options, sourceFiles) => {
         stripFinalNewline: false
     };
 
-    for (const filePath of sourceFiles) {
+    await Promise.all(sourceFiles.map(async (filePath) => {
         const result = await exec("clang-format", [filePath], clangFormatOptions);
 
         const fullPath = path.join(dirs.libraries, filePath);
@@ -263,13 +243,13 @@ const runClangFormat = async (options, sourceFiles) => {
         } else if (oldCode !== newCode) {
             fs.writeFileSync(fullPath, newCode, "utf8");
         }
-    }
+    }));
 };
 
 const runWelderFormat = async (options, sourceFiles) => {
     console.log("Running Welder Format");
 
-    for (const filePath of sourceFiles) {
+    await Promise.all(sourceFiles.map(async (filePath) => {
         const fullPath = path.join(dirs.libraries, filePath);
         const oldCode = fs.readFileSync(fullPath, "utf8");
 
@@ -316,7 +296,7 @@ const runWelderFormat = async (options, sourceFiles) => {
         } else if (oldCode !== newCode) {
             fs.writeFileSync(fullPath, newCode, "utf8");
         }
-    }
+    }));
 };
 
 const determineCmakeCombo = (options) => {

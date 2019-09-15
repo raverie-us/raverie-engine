@@ -180,9 +180,11 @@ void AudioMixer::MixLoopThreaded()
 #endif
 
     // Wait until more data is needed
-    if (running && Zero::ThreadingEnabled) {
+    if (running && Zero::ThreadingEnabled)
+    {
       AudioIO.WaitUntilOutputNeededThreaded();
-      if (mShuttingDown.Get() == cTrue) {
+      if (mShuttingDown.Get() == cTrue)
+      {
         break;
       }
     }
