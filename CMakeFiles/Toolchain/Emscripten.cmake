@@ -2,12 +2,12 @@ add_definitions(-DWelderCompilerClang=1 -DWelderCompilerName="Clang")
 
 add_definitions(-DHAVE_UNISTD_H)
 
+set(WELDER_SINGLE_FILE 1)
+
 # We disable MINIFY_HTML because it takes too much memory and crashes
 
 # This doesn't work with SDL yet:
 #  -s DISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR=1\
-
-#  -s DISABLE_EXCEPTION_CATCHING=0\
 
 set(CMAKE_EXECUTABLE_SUFFIX ".html")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -32,7 +32,7 @@ set(WELDER_LINKER_FLAGS "\
   -s FULL_ES2=1\
   -s FULL_ES3=1\
   -s MINIFY_HTML=0\
-  -s SINGLE_FILE=1\
+  -s SINGLE_FILE=${WELDER_SINGLE_FILE}\
 ")
 
 set(WELDER_C_CXX_FLAGS_DEBUG "\
@@ -65,9 +65,15 @@ set(WELDER_C_CXX_FLAGS_MINSIZEREL "\
   -Oz\
 ")
 
+if(WELDER_SINGLE_FILE EQUAL 1)
+  set(EMSCRIPTEN_FILE_SYSTEM_LOADER "embed")
+else()
+  set(EMSCRIPTEN_FILE_SYSTEM_LOADER "preload")
+endif()
+
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}\
   --no-heap-copy\
-  --embed-file \"${WELDER_VIRTUAL_FILE_SYSTEM_ZIP}\"@/FileSystem.zip\
+  --${EMSCRIPTEN_FILE_SYSTEM_LOADER}-file \"${WELDER_VIRTUAL_FILE_SYSTEM_ZIP}\"@/FileSystem.zip\
 ")
 
 set(WELDER_C_CXX_EXTERNAL_FLAGS -Wno-everything)
