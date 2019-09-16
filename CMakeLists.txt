@@ -44,6 +44,7 @@ add_custom_target(VirtualFileSystemZip
   COMMAND 7z a -tzip -mx=9 -mfb=128 -mpass=10 ${WELDER_VIRTUAL_FILE_SYSTEM_ZIP}
     "Resources"
     "Data"
+    "PrebuiltContent"
     ".welder"
   WORKING_DIRECTORY ${WELDER_CORE_DIR}
 )

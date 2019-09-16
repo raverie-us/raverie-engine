@@ -37,3 +37,6 @@ node_modules/
 enc_temp_folder/
 .vs
 .vscode/ipch
+
+PrebuiltContent/*
+!PrebuiltContent/.exist

@@ -22,7 +22,10 @@ bool NeedToBuild(BuildOptions& options, StringParam source, StringParam destinat
   {
     if (options.Verbosity == Verbosity::Detailed)
     {
-      ZPrint("Needs to build because '%s' is newer than '%s'\n", source.c_str(), destination.c_str());
+      if (!FileExists(destination))
+        ZPrint("Needs to build because '%s' exists and '%s' does not exist\n", source.c_str(), destination.c_str());
+      else
+        ZPrint("Needs to build because '%s' is newer than '%s'\n", source.c_str(), destination.c_str());
     }
     return true;
   }

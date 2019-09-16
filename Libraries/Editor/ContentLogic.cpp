@@ -36,21 +36,7 @@ void LoadContentConfig()
   // based upon the version number
   String revisionChangesetName = BuildString("ZeroVersion", GetRevisionNumberString(), "-", GetChangeSetString());
   contentSystem->ContentOutputPath = FilePath::Combine(appCacheDirectory, "ZeroContent", revisionChangesetName);
-
-  // If we don't already have the content output directory, then see if we have
-  // local prebuilt content that can be copied into the output directory (this
-  // is faster than building the content ourselves, if it exists).
-  if (!DirectoryExists(contentSystem->ContentOutputPath))
-  {
-    String prebuiltContent = FilePath::Combine(sourceDirectory, "PrebuiltZeroContent");
-    if (DirectoryExists(prebuiltContent))
-    {
-      ZPrint("Copying prebuilt content from '%s' to '%s'\n",
-             prebuiltContent.c_str(),
-             contentSystem->ContentOutputPath.c_str());
-      CopyFolderContents(contentSystem->ContentOutputPath, prebuiltContent);
-    }
-  }
+  ZPrint("Content output directory '%s'\n", contentSystem->ContentOutputPath.c_str());
 }
 
 bool LoadContentLibrary(StringParam name)

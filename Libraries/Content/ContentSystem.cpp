@@ -201,12 +201,35 @@ HandleOf<ResourcePackage> ContentSystem::BuildLibrary(Status& status, ContentLib
 {
   ZPrintFilter(Filter::EngineFilter, "Building Content Library '%s'\n", library->Name.c_str());
 
+  Cog* configCog = Z::gEngine->GetConfigCog();
+  MainConfig* mainConfig = configCog->has(MainConfig);
+  String sourceDirectory = mainConfig->SourceDirectory;
+
+  String outputPath = library->GetOutputPath();
+
+  // If we don't already have the content output directory, then see if we have
+  // local prebuilt content that can be copied into the output directory (this
+  // is faster than building the content ourselves, if it exists).
+  if (!DirectoryExists(outputPath))
+  {
+    String versionedContentName = FilePath::GetFileName(ContentOutputPath);
+    String prebuiltContent = FilePath::Combine(sourceDirectory, "PrebuiltContent", versionedContentName, library->Name);
+    if (DirectoryExists(prebuiltContent))
+    {
+      ZPrint("Copying prebuilt content from '%s' to '%s'\n",
+             prebuiltContent.c_str(),
+             outputPath.c_str());
+      TimerBlock block("PrebuiltContent");
+      CopyFolderContents(outputPath, prebuiltContent);
+    }
+  }
+
   Array<ContentItem*> items;
   items.Reserve(library->ContentItems.Size());
   items.Append(library->ContentItems.Values());
   HandleOf<ResourcePackage> package = Z::gContentSystem->BuildContentItems(status, items, library, false);
 
-  String libraryPackageFile = FilePath::CombineWithExtension(library->GetOutputPath(), library->Name, ".pack");
+  String libraryPackageFile = FilePath::CombineWithExtension(outputPath, library->Name, ".pack");
   package->Save(libraryPackageFile);
 
   if (sendEvent)
