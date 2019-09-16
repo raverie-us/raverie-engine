@@ -585,13 +585,22 @@ const documentation = async () => {
         err: printError,
         out: printLog,
         reject: false,
-        stdio: [
-            "ignore",
-            "pipe",
-            "pipe"
-        ]
+        stdio: "pipe"
     };
-    await exec("doxygen", ["./Documentation/Doxyfile"], doxygenOptions);
+    const doxyFile = fs.readFileSync("./Documentation/Doxyfile", "utf8");
+    const libraryNames = fs.readdirSync(dirs.libraries);
+
+    const libraryDirs = libraryNames.
+        map((library) => path.join(dirs.libraries, library)).
+        filter((fullPath) => fs.statSync(fullPath).isDirectory());
+
+    await Promise.all(libraryDirs.map(async (libraryDir) => {
+        const outputDir = `Build/Documentation/${path.basename(libraryDir)}`;
+        const warnLog = path.join(outputDir, "warnings.log");
+        mkdirp.sync(outputDir);
+        const doxyFileSpecific = `${doxyFile}\nINPUT="${libraryDir}"\nOUTPUT_DIRECTORY="${outputDir}"\nWARN_LOGFILE="${warnLog}"`;
+        await exec("doxygen", ["-"], {...doxygenOptions, input: doxyFileSpecific});
+    }));
 };
 
 const main = async () => {
