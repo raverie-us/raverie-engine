@@ -40,12 +40,13 @@ set(WELDER_PLATFORM_DATA_DIR ${WELDER_CORE_DIR}/PlatformData/${WELDER_TOOLCHAIN}
 set(WELDER_VIRTUAL_FILE_SYSTEM_ZIP ${CMAKE_BINARY_DIR}/FileSystem.zip)
 
 add_custom_target(VirtualFileSystemZip
-  #COMMAND ${CMAKE_COMMAND} -E tar "cfv" "${WELDER_VIRTUAL_FILE_SYSTEM_ZIP}" --format=zip
+  COMMAND ${CMAKE_COMMAND} -E remove ${WELDER_VIRTUAL_FILE_SYSTEM_ZIP}
   COMMAND 7z a -tzip -mx=9 -mfb=128 -mpass=10 ${WELDER_VIRTUAL_FILE_SYSTEM_ZIP}
     "Resources"
     "Data"
-    "PrebuiltContent"
+    "Build/PrebuiltContent/ZeroVersion${WELDER_REVISION}-${WELDER_CHANGESET}"
     ".welder"
+  #COMMAND ${CMAKE_COMMAND} -E tar "cfv" "${WELDER_VIRTUAL_FILE_SYSTEM_ZIP}" --format=zip
   WORKING_DIRECTORY ${WELDER_CORE_DIR}
 )
 

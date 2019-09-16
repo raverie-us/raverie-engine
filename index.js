@@ -32,21 +32,16 @@ initialize();
 const dirs = (() => {
     const repo = process.cwd();
     const libraries = path.join(repo, "Libraries");
-    const buildPath = path.join(repo, "Build");
+    const build = path.join(repo, "Build");
+    const prebuiltContent = path.join(build, "PrebuiltContent");
 
     return {
-        build: buildPath,
+        build,
         libraries,
+        prebuiltContent,
         repo
     };
 })();
-
-const makeDir = (dirPath) => {
-    mkdirp.sync(dirPath, {
-        recursive: true
-    });
-    return dirPath;
-};
 
 const tryUnlinkSync = (fullPath) => {
     try {
@@ -355,7 +350,7 @@ const activateBuildDir = (combo) => {
       `${hostos}_${combo.targetos}_${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.architecture}_${combo.config}`.
           replace(/ /gu, "-");
     const comboDir = path.join(dirs.build, comboStr);
-    makeDir(comboDir);
+    mkdirp.sync(comboDir);
 
     /*
      * This will always be set to the last build directory the user created (when calling cmake/build).
@@ -478,7 +473,7 @@ const cmake = async (options) => {
 
     const buildDir = activateBuildDir(combo);
     rimraf.sync(buildDir);
-    makeDir(buildDir);
+    mkdirp.sync(buildDir);
 
     const cmakeOptions = {
         cwd: buildDir,
@@ -491,6 +486,7 @@ const cmake = async (options) => {
             "pipe"
         ]
     };
+    mkdirp.sync(dirs.prebuiltContent);
     await exec("cmake", cmakeArgs, cmakeOptions);
 
     return buildDir;
@@ -560,7 +556,6 @@ const format = async (options) => {
      * TODO(Trevor.Sundberg): Run cmake_format.
      * TODO(Trevor.Sundberg): Run cppcheck.
      * TODO(Trevor.Sundberg): Run cpplint.'
-     * await runDoxygen();
      * TODO(Trevor.Sundberg): Run moxygen.
      */
     console.log("Formatted");
@@ -596,7 +591,7 @@ const documentation = async () => {
             "pipe"
         ]
     };
-    await exec("doxygen", [], doxygenOptions);
+    await exec("doxygen", ["./Documentation/Doxyfile"], doxygenOptions);
 };
 
 const main = async () => {

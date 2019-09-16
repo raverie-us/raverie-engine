@@ -1,2 +1,2 @@
-mkdir -p Cache
-docker run --rm -v"`pwd`/Cache":'/cache/' -v`pwd`:`pwd` -w`pwd` welder "$@"
+mkdir -p Build/Cache
+docker run --rm -v"`pwd`/Build/Cache":'/cache/' -v`pwd`:`pwd` -w`pwd` welder "$@"
