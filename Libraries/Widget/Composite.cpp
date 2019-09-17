@@ -268,12 +268,12 @@ void Composite::UpdateTransform()
     Error("Recursive update in Composite::UpdateTransform");
     return;
   }
-  mIsUpdatingTransform = true;
 
   // Skip this if we're already on our way out
   if (mDestroyed)
     return;
 
+  mIsUpdatingTransform = true;
   if (mTransformUpdateState == TransformUpdateState::LocalUpdate)
   {
     if (mLayout)
