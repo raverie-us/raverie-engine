@@ -864,14 +864,14 @@ void DocumentationLibrary::Serialize(Serializer& stream)
 
 void DocumentationLibrary::LoadDocumentation(StringParam fileName)
 {
+  // save the global documentation
+  Z::gDocumentation = this;
+
   // will throw if unable to load file
   LoadFromDataFile(*this, fileName);
 
   // finalize sorts data, fills maps, and fills base class pointers
   FinalizeDocumentation();
-
-  // save the global documentation
-  Z::gDocumentation = this;
 
   MetaDatabase* meta = MetaDatabase::GetInstance();
   forRange (Library* lib, meta->mNativeLibraries.All())
