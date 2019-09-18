@@ -173,7 +173,7 @@ ZilchScriptManager::ZilchScriptManager(BoundType* resourceType) :
   AddLoader("ZilchScript", new ZilchScriptLoader());
 
   // listen for when we should compile
-  Zilch::EventConnect(ExecutableState::CallingState, Zilch::Events::UnhandledException, ZeroZilchExceptionCallback);
+  Zilch::EventConnect(ExecutableState::CallingState, Zilch::Events::PreUnhandledException, ZeroZilchExceptionCallback);
   Zilch::EventConnect(ExecutableState::CallingState, Zilch::Events::FatalError, ZeroZilchFatalErrorCallback);
 
   ConnectThisTo(Z::gResources, Events::ResourceLibraryConstructed, OnResourceLibraryConstructed);

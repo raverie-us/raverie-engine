@@ -15,6 +15,7 @@ ZilchDeclareEvent(FatalError, FatalErrorEvent);
 
 // Sent on ExecutableState when an exception occurs and isn't handled (can be
 // user thrown, etc)
+ZilchDeclareEvent(PreUnhandledException, ExceptionEvent);
 ZilchDeclareEvent(UnhandledException, ExceptionEvent);
 
 // Sent on ExecutableState when an exception occurs and is caught by the user
