@@ -221,9 +221,7 @@ public:
 class MethodDoc : public Object
 {
 public:
-  MethodDoc() : mStatic(false)
-  {
-  }
+  MethodDoc();
 
   ~MethodDoc();
 

@@ -426,6 +426,12 @@ struct Zero::Serialization::Trait<MethodDoc>
   }
 };
 
+static const String cDefaultParameters("()");
+static const String cDefaultReturn("Void");
+MethodDoc::MethodDoc() : mStatic(false), mParameters(cDefaultParameters), mReturnType(cDefaultReturn)
+{
+}
+
 MethodDoc::~MethodDoc()
 {
   forRange (ParameterDoc* param, mParameterList.All())
