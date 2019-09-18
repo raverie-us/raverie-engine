@@ -93,8 +93,6 @@ public:
   /// been updated but before we send input events.
   OsShellHook* mOsShellHook;
 
-  bool mIsUpdating;
-
   /// Platform specific shell
   Shell mShell;
 };

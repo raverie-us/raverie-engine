@@ -27,7 +27,7 @@ OsShell* CreateOsShellSystem()
   return new OsShell();
 }
 
-OsShell::OsShell() : mOsShellHook(nullptr), mIsUpdating(false)
+OsShell::OsShell() : mOsShellHook(nullptr)
 {
   mShell.mUserData = this;
 }
@@ -39,13 +39,6 @@ cstr OsShell::GetName()
 
 void OsShell::Update(bool debugger)
 {
-  // Prevent recursion due to cases where call Z::gEngine->Update(),
-  // such as in the WM_TIMER message handling
-  if (mIsUpdating)
-    return;
-
-  mIsUpdating = true;
-
   Keyboard* keyboard = Keyboard::GetInstance();
   keyboard->Update();
 
@@ -66,8 +59,6 @@ void OsShell::Update(bool debugger)
   Event toSend;
   DispatchEvent(Events::OsShellUpdate, &toSend);
   Z::gEngine->DispatchEvent(Events::OsShellUpdate, &toSend);
-
-  mIsUpdating = false;
 }
 
 String OsShell::GetOsName()
