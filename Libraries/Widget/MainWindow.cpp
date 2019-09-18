@@ -141,6 +141,13 @@ MainWindow::MainWindow(OsWindow* window) : RootWidget(window)
   mClose->MarkAsNeedsUpdate();
   ConnectThisTo(mClose, Events::ButtonPressed, OnClickClose);
 
+  if (window->mWindow.HasOwnMinMaxExitButtons())
+  {
+    mMin->SetActive(false);
+    mMax->SetActive(false);
+    mClose->SetActive(false);
+  }
+
   mLayoutSize = Vec2(0, 0);
 }
 

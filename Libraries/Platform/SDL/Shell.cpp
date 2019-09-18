@@ -1070,4 +1070,13 @@ void ShellWindow::PlatformSpecificFixup()
   // SDL doesn't need anything special here.
 }
 
+bool ShellWindow::HasOwnMinMaxExitButtons()
+{
+#if defined(WelderTargetOsEmscripten)
+  return true;
+#else
+  return !mStyle.IsSet(WindowStyleFlags::ClientOnly);
+#endif
+}
+
 } // namespace Zero

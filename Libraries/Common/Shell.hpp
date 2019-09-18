@@ -539,6 +539,9 @@ public:
   /// OpenGL)
   void PlatformSpecificFixup();
 
+  /// If this window has it's own buttons, then we may not need to draw our own.
+  bool HasOwnMinMaxExitButtons();
+
   /// The window has been requested to close.
   void (*mOnClose)(ShellWindow* window);
 

@@ -314,4 +314,9 @@ void ShellWindow::PlatformSpecificFixup()
 {
 }
 
+bool ShellWindow::HasOwnMinMaxExitButtons()
+{
+  return !mStyle.IsSet(WindowStyleFlags::ClientOnly);
+}
+
 } // namespace Zero
