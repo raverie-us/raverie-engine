@@ -260,6 +260,9 @@ public:
   virtual StringRange LoadTextData() = 0;
   /// Save the text
   virtual void ReloadData(StringRange data) = 0;
+
+  void UpdatePossibleProxiedClasses();
+  static HashMap<String, ResourceId> mPossibleProxiedClasses;
 };
 
 namespace Events

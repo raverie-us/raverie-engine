@@ -420,6 +420,8 @@ void ICodeInspector::AddCallTipFromMetaMethod(Array<CallTip>& tips, BoundType* o
   }
 }
 
+HashMap<String, ResourceId> DocumentResource::mPossibleProxiedClasses;
+
 ZilchDefineType(DocumentResource, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cResourceInterface);
@@ -452,6 +454,28 @@ void DocumentResource::DocumentSetup(ResourceEntry& entry, bool searchable)
 
   if (searchable)
     Z::gResources->TextResources.InsertNoOverwrite(LoadPath, mResourceId);
+  UpdatePossibleProxiedClasses();
+}
+
+void DocumentResource::UpdatePossibleProxiedClasses()
+{
+  // This should probably look through only ZilchScripts for "class" and
+  // ZilchFragments for "struct" This can possibly point a proxied fragment to a
+  // ZilchScript
+  static Regex sClassStructRegex("(class|struct)\\s+([A-Z][a-zA-Z0-9_]*)");
+
+  Matches matches;
+  Zero::StringRange unparsedContent = LoadTextData();
+
+  for (;;)
+  {
+    sClassStructRegex.Search(unparsedContent, matches, RegexFlags::None);
+
+    if (matches.Empty())
+      break;
+    mPossibleProxiedClasses[matches[2]] = this->mResourceId;
+    unparsedContent = unparsedContent.SubString(matches[0].End(), unparsedContent.End());
+  }
 }
 
 void DocumentResource::UpdateContentItem(ContentItem* contentItem)
@@ -464,6 +488,7 @@ void DocumentResource::UpdateContentItem(ContentItem* contentItem)
   textResources.Erase(LoadPath);
   LoadPath = contentItem->GetFullPath();
   textResources.InsertNoOverwrite(LoadPath, mResourceId);
+  UpdatePossibleProxiedClasses();
 }
 
 void DocumentResource::SetAndSaveData(StringRange data)
@@ -476,6 +501,7 @@ void DocumentResource::SetAndSaveData(StringRange data)
   }
 
   ReloadData(data);
+  UpdatePossibleProxiedClasses();
 }
 
 namespace Events

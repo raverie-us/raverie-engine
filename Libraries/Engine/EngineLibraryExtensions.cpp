@@ -83,33 +83,11 @@ void EngineLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e, void* use
 
 void EngineLibraryExtensions::FindProxiedTypeOrigin(BoundType* proxiedType)
 {
-  // This should probably look through only ZilchScripts for "class" and
-  // ZilchFragments for "struct" This can possibly point a proxied fragment to a
-  // ZilchScript
-  String regexString = String::Format("(class|struct)\\s+%s", proxiedType->Name.c_str());
-
-  Regex regex(regexString);
-
-  forRange (ResourceId textResourceId, Z::gResources->TextResources.Values())
-  {
-    DocumentResource* textResource = (DocumentResource*)Z::gResources->GetResource(textResourceId);
-    if (textResource == nullptr)
-      continue;
-
-    Matches matches;
-    regex.Search(textResource->LoadTextData(), matches);
-
-    if (matches.Empty())
-      continue;
-
-    // Remove it if it's already there
-    MetaResource* metaResource = proxiedType->HasOrAdd<MetaResource>();
-    metaResource->SetResource(textResource);
-    return;
-  }
-
-  // Remove the component if it wasn't found this time
-  if (proxiedType->Has<MetaResource>())
+  ResourceId id = DocumentResource::mPossibleProxiedClasses.FindValue(proxiedType->Name, 0);
+  DocumentResource* document = static_cast<DocumentResource*>(Z::gResources->GetResource(id));
+  if (document)
+    proxiedType->HasOrAdd<MetaResource>()->SetResource(document);
+  else
     proxiedType->Remove<MetaResource>();
 }
 

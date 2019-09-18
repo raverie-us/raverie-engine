@@ -23,6 +23,8 @@ ZilchDocumentResource::ZilchDocumentResource()
 
 StringRange ZilchDocumentResource::LoadTextData()
 {
+  if (mText.Empty())
+    mText = ReadFileIntoString(LoadPath.c_str());
   return mText;
 }
 
