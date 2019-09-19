@@ -17,7 +17,7 @@ jobs:
       - npm run build
       - docker push welderengine/build
     - stage: Build
-    - name: Linux
+      name: Linux
       script:
       - ./weld.sh node index.js cmake --alias=Linux
       - ./weld.sh node index.js build --alias=Linux
