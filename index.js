@@ -358,7 +358,7 @@ const activateBuildDir = (combo) => {
      */
     const activeLink = path.join(dirs.build, "Active");
     tryUnlinkSync(activeLink);
-    fs.symlinkSync(`./${comboStr}`, activeLink, 'junction');
+    fs.symlinkSync(`./${comboStr}`, activeLink, "junction");
     printLog(`Activated ${comboStr}`);
     return comboDir;
 };
