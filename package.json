@@ -4,7 +4,7 @@
   "description": "Component based game engine focusing on rapid iteration.",
   "main": "index.js",
   "scripts": {
-    "build": "docker build -t welder ."
+    "build": "docker build -t welderengine/build ."
   },
   "repository": {
     "type": "git",

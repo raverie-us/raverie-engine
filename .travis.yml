@@ -12,12 +12,16 @@ install:
 jobs:
   include:
     - stage: docker
-      script: npm run build
-    - stage: Linux
+      script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "welderengine" --password-stdin
+      - npm run build
+      - docker push welderengine/build
+    - stage: Build
+    - name: Linux
       script:
       - ./weld.sh node index.js cmake --alias=Linux
       - ./weld.sh node index.js build --alias=Linux
-    - stage: Emscripten
+    - name: Emscripten
       script:
       - ./weld.sh node index.js cmake --alias=Emscripten
       - ./weld.sh node index.js build --alias=Emscripten
