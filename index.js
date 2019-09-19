@@ -79,6 +79,7 @@ const printIndented = (originalText, printer, symbol) => {
 
 const printError = (text) => {
     printIndented(text, console.error, "- ");
+    process.exitCode = 1;
 };
 
 const printLog = (text) => {
