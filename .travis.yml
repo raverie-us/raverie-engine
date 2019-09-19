@@ -9,13 +9,15 @@ install:
 - npm install
 - export DISPLAY=':99.0'
 - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-script:
-- npm run build
-- echo "=================== CMAKE LINUX ==================="
-- ./weld.sh node index.js cmake
-- echo "=================== BUILD LINUX ==================="
-- ./weld.sh node index.js build
-- echo "=================== CMAKE EMSCRIPTEN ==================="
-- ./weld.sh node index.js cmake --alias=Emscripten
-- echo "=================== BUILD EMSCRIPTEN ==================="
-- ./weld.sh node index.js build --alias=Emscripten
+jobs:
+  include:
+    - stage: docker
+      script: npm run build
+    - stage: Linux
+      script:
+      - ./weld.sh node index.js cmake --alias=Linux
+      - ./weld.sh node index.js build --alias=Linux
+    - stage: Emscripten
+      script:
+      - ./weld.sh node index.js cmake --alias=Emscripten
+      - ./weld.sh node index.js build --alias=Emscripten
