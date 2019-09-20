@@ -501,7 +501,7 @@ const safeChmod = (file, mode) => {
     }
 };
 
-const runBuild = async (buildDir, config, testExecutablePaths) => {
+const runBuild = async (buildDir, config, testExecutablePaths, opts) => {
     console.log("Running Build");
     if (!commandExists("cmake")) {
         return;
@@ -525,11 +525,17 @@ const runBuild = async (buildDir, config, testExecutablePaths) => {
         ]
     };
 
+    const target = opts.target ? [
+        "--target",
+        opts.target
+    ] : null;
+
     await exec("cmake", [
         "--build",
         ".",
         "--config",
-        config
+        config,
+        ...target
     ], options);
 
     const addExecutable = (file) => {
@@ -571,7 +577,7 @@ const build = async (options) => {
     }
     const testExecutablePaths = [];
     const config = options.config ? options.config : "Release";
-    await runBuild(buildDir, config, testExecutablePaths);
+    await runBuild(buildDir, config, testExecutablePaths, options);
     // Await runTests(testExecutablePaths);
     console.log("Built");
 };
@@ -615,7 +621,7 @@ const main = async () => {
         command("cmake", "Generate a cmake project", empty, cmake).
         usage(`cmake ${comboOptions}`).
         command("build", "Build a cmake project (options must match generated version)", empty, build).
-        usage("build [--alias=...] [--builder=...] [--toolchain=...] [--platform=...] [--architecture=...] [--config] [--targetos=...]").
+        usage("build [--target=...] [--alias=...] [--builder=...] [--toolchain=...] [--platform=...] [--architecture=...] [--config] [--targetos=...]").
         command("documentation", "Build generated documentation", empty, documentation).
         usage("documentation").
         demand(1).
