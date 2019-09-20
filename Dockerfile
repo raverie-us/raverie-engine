@@ -48,6 +48,8 @@ RUN npm install --no-optional --no-progress --no-audit --global
 # There is a problem with clang using the default gcc headers on Ubuntu (remove #error).
 RUN sed -i 's/# error.*//g' /usr/include/x86_64-linux-gnu/sys/cdefs.h
 
+USER 1000
+
 ENV EMSCRIPTEN_VERSION sdk-tag-1.38.43-64bit
 
 RUN cd /tmp && \
