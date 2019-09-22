@@ -528,7 +528,7 @@ const runBuild = async (buildDir, config, testExecutablePaths, opts) => {
     const target = opts.target ? [
         "--target",
         opts.target
-    ] : null;
+    ] : [];
 
     await exec("cmake", [
         "--build",
