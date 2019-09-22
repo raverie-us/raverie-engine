@@ -248,8 +248,8 @@ struct Zero::Serialization::Trait<ExceptionDoc>
 
 void ExceptionDoc::Serialize(Serializer& stream)
 {
-  SerializeName(mTitle);
-  SerializeName(mMessage);
+  SerializeNameDefault(mTitle, String());
+  SerializeNameDefault(mMessage, String());
 }
 
 // CommandDoc
@@ -269,10 +269,10 @@ struct Zero::Serialization::Trait<CommandDoc>
 
 void CommandDoc::Serialize(Serializer& stream)
 {
-  SerializeName(mName);
-  SerializeName(mDescription);
-  SerializeName(mShortcut);
-  SerializeName(mTags);
+  SerializeNameDefault(mName, String());
+  SerializeNameDefault(mDescription, String());
+  SerializeNameDefault(mShortcut, String());
+  SerializeNameDefault(mTags, StringArray());
 }
 
 // CommandDocList
@@ -288,7 +288,7 @@ void CommandDocList::Sort(void)
 
 void CommandDocList::Serialize(Serializer& stream)
 {
-  SerializeName(mCommands);
+  SerializeNameDefault(mCommands, Array<CommandDoc*>());
 }
 
 // EventDoc
@@ -311,10 +311,10 @@ EventDoc::EventDoc(StringParam eventType, StringParam eventName) : mType(eventTy
 }
 void EventDoc::Serialize(Serializer& stream)
 {
-  SerializeName(mName);
-  SerializeName(mType);
-  SerializeName(mSenders);
-  SerializeName(mListeners);
+  SerializeNameDefault(mName, String());
+  SerializeNameDefault(mType, String());
+  SerializeNameDefault(mSenders, StringArray());
+  SerializeNameDefault(mListeners, StringArray());
 }
 
 bool EventDoc::operator<(const EventDoc& rhs) const
@@ -383,11 +383,11 @@ struct Zero::Serialization::Trait<PropertyDoc>
 
 void PropertyDoc::Serialize(Serializer& stream)
 {
-  SerializeName(mName);
-  SerializeName(mType);
-  SerializeName(mDescription);
-  SerializeName(mReadOnly);
-  SerializeName(mStatic);
+  SerializeNameDefault(mName, String());
+  SerializeNameDefault(mType, String());
+  SerializeNameDefault(mDescription, String());
+  SerializeNameDefault(mReadOnly, false);
+  SerializeNameDefault(mStatic, false);
 }
 
 // ParameterDoc
@@ -406,9 +406,9 @@ struct Zero::Serialization::Trait<ParameterDoc>
 
 void ParameterDoc::Serialize(Serializer& stream)
 {
-  SerializeName(mName);
-  SerializeName(mType);
-  SerializeName(mDescription);
+  SerializeNameDefault(mName, String());
+  SerializeNameDefault(mType, String());
+  SerializeNameDefault(mDescription, String());
 }
 
 // MethodDoc
@@ -444,6 +444,17 @@ MethodDoc::~MethodDoc()
   }
 }
 
+void MethodDoc::Serialize(Serializer& stream)
+{
+  SerializeNameDefault(mName, String());
+  SerializeNameDefault(mDescription, String());
+  SerializeNameDefault(mReturnType, cDefaultReturn);
+  SerializeNameDefault(mParameters, cDefaultParameters);
+  SerializeNameDefault(mParameterList, Array<ParameterDoc*>());
+  SerializeNameDefault(mPossibleExceptionThrows, Array<ExceptionDoc*>());
+  SerializeNameDefault(mStatic, false);
+}
+
 // AttributeDoc
 AttributeDoc::AttributeDoc(AttributeExtension* attribute)
 {
@@ -460,11 +471,11 @@ bool AttributeDocCompareFn(AttributeDoc* lhs, AttributeDoc* rhs)
 
 void AttributeDoc::Serialize(Serializer& stream)
 {
-  SerializeName(mName);
-  SerializeName(mDescription);
-  SerializeName(mAllowStatic);
-  SerializeName(mAllowMultiple);
-  SerializeName(mDeveloperAttribute);
+  SerializeNameDefault(mName, String());
+  SerializeNameDefault(mDescription, String());
+  SerializeNameDefault(mAllowStatic, false);
+  SerializeNameDefault(mAllowMultiple, false);
+  SerializeNameDefault(mDeveloperAttribute, false);
 }
 
 // AttributeDocList
@@ -486,9 +497,9 @@ Zero::AttributeDocList::~AttributeDocList()
 
 void AttributeDocList::Serialize(Serializer& stream)
 {
-  SerializeName(mObjectAttributes);
-  SerializeName(mFunctionAttributes);
-  SerializeName(mPropertyAttributes);
+  SerializeNameDefault(mObjectAttributes, Array<AttributeDoc*>());
+  SerializeNameDefault(mFunctionAttributes, Array<AttributeDoc*>());
+  SerializeNameDefault(mPropertyAttributes, Array<AttributeDoc*>());
 }
 
 // we have a seperate saveToFile since the doc tool can't use Serialize function
@@ -541,17 +552,6 @@ void AttributeDocList::Sort(void)
   Zero::Sort(mPropertyAttributes.All(), AttributeDocCompareFn);
 }
 
-void MethodDoc::Serialize(Serializer& stream)
-{
-  SerializeName(mName);
-  SerializeName(mDescription);
-  SerializeName(mReturnType);
-  SerializeName(mParameters);
-  SerializeName(mParameterList);
-  SerializeName(mPossibleExceptionThrows);
-  SerializeName(mStatic);
-}
-
 // ClassDoc
 template <>
 struct Zero::Serialization::Trait<ClassDoc>
@@ -591,16 +591,16 @@ ClassDoc::~ClassDoc()
 
 void ClassDoc::Serialize(Serializer& stream)
 {
-  SerializeName(mName);
-  SerializeName(mBaseClass);
-  SerializeName(mLibrary);
-  SerializeName(mDescription);
-  SerializeName(mTags);
-  SerializeName(mProperties);
-  SerializeName(mMethods);
-  SerializeName(mEventsSent);
-  SerializeName(mImportDocumentation);
-  SerializeName(mDevOnly);
+  SerializeNameDefault(mName, String());
+  SerializeNameDefault(mBaseClass, String());
+  SerializeNameDefault(mLibrary, String());
+  SerializeNameDefault(mDescription, String());
+  SerializeNameDefault(mTags, StringArray());
+  SerializeNameDefault(mProperties, Array<PropertyDoc*>());
+  SerializeNameDefault(mMethods, Array<MethodDoc*>());
+  SerializeNameDefault(mEventsSent, Array<EventDoc*>());
+  SerializeNameDefault(mImportDocumentation, false);
+  SerializeNameDefault(mDevOnly, false);
 }
 
 void ClassDoc::BuildMapsAndArrays()
@@ -823,9 +823,9 @@ void ClassDoc::CreatePropertyDocFromBoundType(Property* metaProperty, TypeReplac
 
 void EnumDoc::Serialize(Serializer& stream)
 {
-  SerializeName(mName);
-  SerializeName(mEnumValues);
-  SerializeName(mDescription);
+  SerializeNameDefault(mName, String());
+  SerializeNameDefault(mEnumValues, TypeReplacementMap());
+  SerializeNameDefault(mDescription, String());
 }
 
 void EnumDoc::FillDocumentation(BoundType* enumOrFlagType)
@@ -863,9 +863,9 @@ DocumentationLibrary::~DocumentationLibrary()
 
 void DocumentationLibrary::Serialize(Serializer& stream)
 {
-  SerializeName(mClasses);
-  SerializeName(mEnums);
-  SerializeName(mFlags);
+  SerializeNameDefault(mClasses, Array<ClassDoc*>());
+  SerializeNameDefault(mEnums, Array<EnumDoc*>());
+  SerializeNameDefault(mFlags, Array<EnumDoc*>());
 }
 
 void DocumentationLibrary::LoadDocumentation(StringParam fileName)

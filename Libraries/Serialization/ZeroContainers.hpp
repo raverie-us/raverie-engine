@@ -143,7 +143,7 @@ struct Policy<Pair<first, second>>
   {
     serializer.Start(Trait<type>::TypeName(), fieldName, Serialization::Trait<type>::Type);
     serializer.SerializeField("key", pair.first);
-    serializer.SerializeField("value", pair.second);
+    serializer.SerializeFieldDefault("value", pair.second, second());
     serializer.End(Trait<type>::TypeName(), Serialization::Trait<type>::Type);
     return true;
   }
