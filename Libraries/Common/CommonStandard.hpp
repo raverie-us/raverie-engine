@@ -188,11 +188,11 @@ namespace Math
 // to be revisited. It may be acceptable to include the intrinsic headers on
 // multiple platforms, but it's unknown.
 #if defined(USESSE)
-#  include "SimMath.hpp"
-#  include "SimVectors.hpp"
-#  include "SimMatrix3.hpp"
-#  include "SimMatrix4.hpp"
-#  include "SimConversion.hpp"
+#  include /**/ "SimMath.hpp"
+#  include /**/ "SimVectors.hpp"
+#  include /**/ "SimMatrix3.hpp"
+#  include /**/ "SimMatrix4.hpp"
+#  include /**/ "SimConversion.hpp"
 #endif
 
 namespace Zero
