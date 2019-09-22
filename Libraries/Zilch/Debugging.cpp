@@ -492,8 +492,8 @@ void Debugger::OnOpcodePreStep(OpcodeEvent* e)
     }
   }
   break;
+  // Debugger is attached and looking for a breakpoint location
   case DebuggerAction::Resume:
-    Error("Invalid");
     break;
   }
 
