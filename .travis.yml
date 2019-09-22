@@ -1,4 +1,7 @@
 language: node_js
+cache:
+  directories:
+  - $TRAVIS_BUILD_DIR/Build
 node_js:
 - '11'
 addons:
@@ -21,7 +24,3 @@ jobs:
       script:
       - ./weld.sh node index.js cmake --alias=Linux
       - ./weld.sh node index.js build --alias=Linux
-    - name: Emscripten
-      script:
-      - ./weld.sh node index.js cmake --alias=Emscripten
-      - ./weld.sh node index.js build --alias=Emscripten
