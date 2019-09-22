@@ -666,12 +666,11 @@ void EntryPointGeneration::DeclarePixelInterface(ZilchSpirVFrontEnd* translator,
   interfaceInfo.mInputs.mTypeDecorations.PushBack(InterfaceInfoGroup::DecorationParam(spv::DecorationBlock));
   interfaceInfo.mInputs.mInstanceDecorations.PushBack(InterfaceInfoGroup::DecorationParam(spv::DecorationLocation, 0));
   // Pixel outputs can be a struct but cannot be a block
-  interfaceInfo.mOutputs.mIsStruct = true;
+  interfaceInfo.mOutputs.mIsStruct = false;
   interfaceInfo.mOutputs.mStorageClass = spv::StorageClassOutput;
   interfaceInfo.mOutputs.mName = "Out";
-  // By decorating the struct with a location all of the members are
-  // automatically assigned locations
-  interfaceInfo.mOutputs.mInstanceDecorations.PushBack(InterfaceInfoGroup::DecorationParam(spv::DecorationLocation, 0));
+  // Add location decorations to all of the outputs, properly handling the render target name locations.
+  AddPixelLocationDecorations(interfaceInfo.mOutputs);
   // Also decorate uniforms
   DecorateUniformGroups(interfaceInfo);
   AddFlatDecorations(interfaceInfo.mInputs);
@@ -2233,6 +2232,38 @@ void EntryPointGeneration::AddVertexLocationDecorations(InterfaceInfoGroup& info
     location = vertexDefinitionLocations.FindValue(fieldInfo.mFieldMeta->MakeFieldKey(), -1);
     if (location == -1)
       location = lastVertexDefinitionIndex++;
+
+    fieldInfo.mDecorations.PushBack(InterfaceInfoGroup::DecorationParam(spv::DecorationLocation, location));
+    fieldInfo.mReflectionData.mLocation = i;
+  }
+}
+
+void EntryPointGeneration::AddPixelLocationDecorations(InterfaceInfoGroup& infoGroup)
+{
+  Zilch::StringArray& renderTargetNames = mTranslator->mSettings->mRenderTargetNames;
+  Zilch::BoundType* renderTargetType = mTranslator->mSettings->mRenderTargetType;
+
+  HashMap<ShaderFieldKey, int> renderTargetLocations;
+  int lastRenderTargetIndex = renderTargetNames.Size();
+  // Find the locations of the pre-defined render target names
+  for (size_t i = 0; i < renderTargetNames.Size(); ++i)
+  {
+    ShaderFieldKey renderTargetKey(renderTargetNames[i], renderTargetType->ToString());
+    renderTargetLocations[renderTargetKey] = i;
+  }
+
+  // Decorate each field as to what location it is (just by index)
+  InterfaceInfoGroup::FieldList& fieldList = infoGroup.mFields;
+  for (size_t i = 0; i < fieldList.Size(); ++i)
+  {
+    InterfaceInfoGroup::FieldInfo& fieldInfo = fieldList[i];
+
+    int location;
+    // If this property is a valid render target then use that id,
+    // otherwise just start appending after the last id (probably doesn't make sense here...).
+    location = renderTargetLocations.FindValue(fieldInfo.mFieldMeta->MakeFieldKey(), -1);
+    if (location == -1)
+      location = lastRenderTargetIndex++;
 
     fieldInfo.mDecorations.PushBack(InterfaceInfoGroup::DecorationParam(spv::DecorationLocation, location));
     fieldInfo.mReflectionData.mLocation = i;

@@ -740,8 +740,7 @@ void ZilchShaderIRCompositor::GetStageFieldName(ShaderIRFieldMeta* fieldMeta,
 void ZilchShaderIRCompositor::ResolveGpuStage(CompositedShaderInfo& compositeInfo)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
-
-  String renderTargetType = ZilchTypeId(Zilch::Real4)->ToString();
+  Zilch::BoundType* renderTargetType = mSettings->mRenderTargetType;
 
   StageLinkingInfo& gpuStage = compositeInfo.mStages[CompositorShaderStage::Gpu];
   StageAttachmentLinkingInfo* lastStage = gpuStage.mVertexLinkingInfo.mPreviousStage;
@@ -755,7 +754,7 @@ void ZilchShaderIRCompositor::ResolveGpuStage(CompositedShaderInfo& compositeInf
   for (size_t i = 0; i < settings->mRenderTargetNames.Size(); ++i)
   {
     String renderTargetName = settings->mRenderTargetNames[i];
-    ShaderFieldKey renderTargetKey(renderTargetName, renderTargetType);
+    ShaderFieldKey renderTargetKey(renderTargetName, renderTargetType->ToString());
     // If any previous stage output the render target name then add the render
     // target as a stage output to all required previous stages
     ExpectedOutputData* previousStageExpectedOutput = lastStage->mExpectedOutputs.FindPointer(renderTargetKey);

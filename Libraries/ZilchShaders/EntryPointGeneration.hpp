@@ -511,6 +511,7 @@ public:
                                 InterfaceInfoGroup::FieldInfo& fieldInfo,
                                 ShaderResourceReflectionData& memberReflection);
   void AddVertexLocationDecorations(InterfaceInfoGroup& infoGroup);
+  void AddPixelLocationDecorations(InterfaceInfoGroup& infoGroup);
   void AddFlatDecorations(InterfaceInfoGroup& infoGroup);
   void WriteTypeDecorations(Array<InterfaceInfoGroup::DecorationParam>& decorations,
                             BasicBlock* decorationBlock,

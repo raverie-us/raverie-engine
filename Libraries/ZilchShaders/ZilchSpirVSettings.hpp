@@ -316,6 +316,9 @@ public:
   void SetMaxSimultaneousRenderTargets(size_t maxNumber);
   // Render targets are resolved via name.
   void SetRenderTargetName(StringParam varName, size_t targetIndex);
+  // Override what the render target type is.
+  // @JoshD: This needs testing beyond using Real4 and how to deal with changing this per compilation.
+  void SetRenderTargetType(Zilch::BoundType* targetType);
 
   /// The name of the current language's specialization variable name.
   /// Used to find the spec id to override this variable.
@@ -362,6 +365,7 @@ public:
   /// The bound render targets. Each index in the array maps to the given render
   /// target name.
   Array<String> mRenderTargetNames;
+  Zilch::BoundType* mRenderTargetType;
 
   CallbackSettings mCallbackSettings;
   ZilchShaderErrorSettings mErrorSettings;
