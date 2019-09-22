@@ -42,16 +42,16 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/ByteBuffer.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ByteColor.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ByteEnum.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/CallStack.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Callback.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Callback.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/CallStack.hpp
     ${CMAKE_CURRENT_LIST_DIR}/CharacterTraits.cpp
     ${CMAKE_CURRENT_LIST_DIR}/CharacterTraits.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ColorDefinitions.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ComPort.hpp
     ${CMAKE_CURRENT_LIST_DIR}/CommonForwardDeclarations.hpp
     ${CMAKE_CURRENT_LIST_DIR}/CommonStandard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/CommonStandard.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ComPort.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ConditionalRange.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ConjugateGradient.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Console.cpp
@@ -105,26 +105,26 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Guid.hpp
     ${CMAKE_CURRENT_LIST_DIR}/HalfFloat.cpp
     ${CMAKE_CURRENT_LIST_DIR}/HalfFloat.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/HashMap.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/HashSet.hpp
     ${CMAKE_CURRENT_LIST_DIR}/HashedContainer.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Hashing.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/HashMap.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/HashSet.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Heap.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Heap.hpp
     ${CMAKE_CURRENT_LIST_DIR}/IdSequence.hpp
     ${CMAKE_CURRENT_LIST_DIR}/IdStore.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Image.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Image.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/InList.hpp
     ${CMAKE_CURRENT_LIST_DIR}/IndexPolicies.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/InList.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Intrinsics.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Intrinsics.hpp
     ${CMAKE_CURRENT_LIST_DIR}/IntVector2.cpp
     ${CMAKE_CURRENT_LIST_DIR}/IntVector2.hpp
     ${CMAKE_CURRENT_LIST_DIR}/IntVector3.cpp
     ${CMAKE_CURRENT_LIST_DIR}/IntVector3.hpp
     ${CMAKE_CURRENT_LIST_DIR}/IntVector4.cpp
     ${CMAKE_CURRENT_LIST_DIR}/IntVector4.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Intrinsics.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Intrinsics.hpp
     ${CMAKE_CURRENT_LIST_DIR}/IpAddress.cpp
     ${CMAKE_CURRENT_LIST_DIR}/IpAddress.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ItemCache.hpp
@@ -194,6 +194,7 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/SharedVectorFunctions.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Shell.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Shell.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/SimpleCgPolicies.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Singleton.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SlotMap.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Socket.cpp
@@ -227,17 +228,17 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/TextStream.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Thread.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Thread.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ThreadSync.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ThreadableLoop.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ThreadableLoop.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ThreadSync.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Time.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Time.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Timer.hpp
     ${CMAKE_CURRENT_LIST_DIR}/TimerBlock.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ToString.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ToString.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/TypeTraits.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Typedefs.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/TypeTraits.hpp
     ${CMAKE_CURRENT_LIST_DIR}/UintNType.hpp
     ${CMAKE_CURRENT_LIST_DIR}/UnicodeUtility.cpp
     ${CMAKE_CURRENT_LIST_DIR}/UnicodeUtility.hpp
