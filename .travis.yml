@@ -1,16 +1,10 @@
-language: node_js
-cache:
-  directories:
-  - $TRAVIS_BUILD_DIR/Build
-  - /var/lib/docker
-node_js:
-- '11'
+services:
+  - docker
 addons:
   apt:
     packages:
       - xvfb
 install:
-- npm install
 - export DISPLAY=':99.0'
 - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 jobs:
