@@ -1,3 +1,7 @@
+cache:
+  directories:
+  - $TRAVIS_BUILD_DIR/Build
+  - /var/lib/docker
 services:
   - docker
 addons:
