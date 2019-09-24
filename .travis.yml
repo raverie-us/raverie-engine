@@ -2,6 +2,7 @@ language: node_js
 cache:
   directories:
   - $TRAVIS_BUILD_DIR/Build
+  - /var/lib/docker
 node_js:
 - '11'
 addons:
@@ -20,7 +21,7 @@ jobs:
       - ./dockerbuild.sh
       - ./weld.sh node index.js cmake --alias=Linux
       - ./weld.sh node index.js build --alias=Linux
-    - name: Linux
+    - name: Emscripten
       script:
       - ./dockerbuild.sh
       - ./weld.sh node index.js cmake --alias=Emscripten
