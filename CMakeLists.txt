@@ -41,6 +41,7 @@ set(WELDER_VIRTUAL_FILE_SYSTEM_ZIP ${CMAKE_BINARY_DIR}/FileSystem.zip)
 
 add_custom_target(VirtualFileSystemZip
   COMMAND ${CMAKE_COMMAND} -E remove ${WELDER_VIRTUAL_FILE_SYSTEM_ZIP}
+  COMMAND ${CMAKE_COMMAND} -E make_directory "Build/PrebuiltContent/ZeroVersion${WELDER_REVISION}-${WELDER_CHANGESET}"
   COMMAND 7z a -tzip -mx=9 -mfb=128 -mpass=10 ${WELDER_VIRTUAL_FILE_SYSTEM_ZIP}
     "Resources"
     "Data"
