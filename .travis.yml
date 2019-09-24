@@ -20,7 +20,7 @@ jobs:
       - ./dockerbuild.sh
       - ./weld.sh node index.js cmake --alias=Linux
       - ./weld.sh node index.js build --alias=Linux
-    -name: Linux
+    - name: Linux
       script:
       - ./dockerbuild.sh
       - ./weld.sh node index.js cmake --alias=Emscripten
