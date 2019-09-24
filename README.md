@@ -10,7 +10,7 @@ cd WelderEngineRevamp
 git submodule update --init --recursive
 npm install
 
-# Specify builder if not using the default. Ex: --builder="Visual Studio 16 2019"
+# Specify builder if not using the default. Ex: --builder="Visual Studio 15 2017"
 node index.js cmake
 
 .\Build\<target>\Welder.sln
