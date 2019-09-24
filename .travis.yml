@@ -14,13 +14,14 @@ install:
 - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 jobs:
   include:
-    - stage: docker
-      script:
-      - echo "$DOCKER_PASSWORD" | docker login -u "welderengine" --password-stdin
-      - npm run build
-      - docker push welderengine/build
     - stage: Build
       name: Linux
       script:
+      - ./dockerbuild.sh
       - ./weld.sh node index.js cmake --alias=Linux
       - ./weld.sh node index.js build --alias=Linux
+    -name: Linux
+      script:
+      - ./dockerbuild.sh
+      - ./weld.sh node index.js cmake --alias=Emscripten
+      - ./weld.sh node index.js build --alias=Emscripten
