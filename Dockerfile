@@ -80,6 +80,7 @@ RUN mkdir -p /tmp/emcc && \
 ENV CCACHE_COMPRESS=1
 ENV CCACHE_COMPRESSLEVEL=9
 ENV CCACHE_DIR=/cache/
+ENV CCACHE_SLOPPINESS=pch_defines,time_macros
 
 ENTRYPOINT ["dumb-init", "--"]
 
