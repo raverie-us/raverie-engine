@@ -1,7 +1,6 @@
 cache:
   directories:
-  - $TRAVIS_BUILD_DIR/Build
-  - /var/lib/docker
+  - $TRAVIS_BUILD_DIR/Build/Cache
 services:
   - docker
 addons:
@@ -16,11 +15,7 @@ jobs:
     - stage: Build
       name: Linux
       script:
-      - ./dockerbuild.sh
-      - ./weld.sh node index.js cmake --alias=Linux
-      - ./weld.sh node index.js build --alias=Linux
+      - ALIAS=Linux travis_wait 60 ./build.sh
     - name: Emscripten
       script:
-      - ./dockerbuild.sh
-      - ./weld.sh node index.js cmake --alias=Emscripten
-      - ./weld.sh node index.js build --alias=Emscripten
+      - ALIAS=Emscripten travis_wait 60 ./build.sh
