@@ -18,7 +18,6 @@ set(WELDER_C_CXX_FLAGS "\
   -s BINARYEN_TRAP_MODE='clamp'\
   -s WASM=1\
   -s SIMD=0\
-  --shell-file  ${WELDER_PLATFORM_DATA_DIR}/Shell.html\
   -fdelayed-template-parsing\
   -fexceptions\
   -frtti\
@@ -33,6 +32,7 @@ set(WELDER_LINKER_FLAGS "\
   -s FULL_ES3=1\
   -s MINIFY_HTML=0\
   -s SINGLE_FILE=${WELDER_SINGLE_FILE}\
+  --shell-file ${WELDER_PLATFORM_DATA_DIR}/Shell.html\
 ")
 
 set(WELDER_C_CXX_FLAGS_DEBUG "\
