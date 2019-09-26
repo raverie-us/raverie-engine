@@ -15,7 +15,7 @@ jobs:
     - stage: Build
       name: Linux
       script:
-      - ALIAS=Linux ./build.sh
+      - ./build.sh --parallel=2 --alias=Linux
     - name: Emscripten
       script:
-      - ALIAS=Emscripten ./build.sh
+      - ./build.sh --parallel=2 --alias=Emscripten

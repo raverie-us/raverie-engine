@@ -525,17 +525,21 @@ const runBuild = async (buildDir, config, testExecutablePaths, opts) => {
         ]
     };
 
-    const target = opts.target ? [
-        "--target",
-        opts.target
+    const makeArgArray = (optsName) => opts[optsName] ? [
+        `--${optsName}`,
+        opts[optsName]
     ] : [];
+
+    const target = makeArgArray("target");
+    const parallel = makeArgArray("parallel");
 
     await exec("cmake", [
         "--build",
         ".",
         "--config",
         config,
-        ...target
+        ...target,
+        ...parallel
     ], options);
 
     const addExecutable = (file) => {
@@ -621,7 +625,7 @@ const main = async () => {
         command("cmake", "Generate a cmake project", empty, cmake).
         usage(`cmake ${comboOptions}`).
         command("build", "Build a cmake project (options must match generated version)", empty, build).
-        usage("build [--target=...] [--alias=...] [--builder=...] [--toolchain=...] [--platform=...] [--architecture=...] [--config] [--targetos=...]").
+        usage(`build [--target=...] [--parallel=...] ${comboOptions}`).
         command("documentation", "Build generated documentation", empty, documentation).
         usage("documentation").
         demand(1).
