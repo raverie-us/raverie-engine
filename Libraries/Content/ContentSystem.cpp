@@ -213,12 +213,11 @@ HandleOf<ResourcePackage> ContentSystem::BuildLibrary(Status& status, ContentLib
   if (!DirectoryExists(outputPath))
   {
     String versionedContentName = FilePath::GetFileName(ContentOutputPath);
-    String prebuiltContent = FilePath::Combine(sourceDirectory, "Build", "PrebuiltContent", versionedContentName, library->Name);
+    String prebuiltContent =
+        FilePath::Combine(sourceDirectory, "Build", "PrebuiltContent", versionedContentName, library->Name);
     if (DirectoryExists(prebuiltContent))
     {
-      ZPrint("Copying prebuilt content from '%s' to '%s'\n",
-             prebuiltContent.c_str(),
-             outputPath.c_str());
+      ZPrint("Copying prebuilt content from '%s' to '%s'\n", prebuiltContent.c_str(), outputPath.c_str());
       TimerBlock block("PrebuiltContent");
       CopyFolderContents(outputPath, prebuiltContent);
     }
