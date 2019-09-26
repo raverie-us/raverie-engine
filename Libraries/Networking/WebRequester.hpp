@@ -135,6 +135,11 @@ public:
   /// when StoreData is set to true. Default is 0 (no caching).
   u64 mForceCacheSeconds;
 
+  /// We need an intrusive list of all web requests so that when the engine
+  /// shuts down we can cancel all of them (because otheriwse they will keep
+  /// running and try to use the Z::gDispatch).
+  IntrusiveLink(AsyncWebRequest, link);
+
 private:
   AsyncWebRequest();
 
@@ -159,11 +164,6 @@ private:
   /// Every time a request is cancelled we increment the version
   /// on the AsyncWebRequest to ensure we don't receive old events.
   Atomic<uint> mVersion;
-
-  /// We need an intrusive list of all web requests so that when the engine
-  /// shuts down we can cancel all of them (because otheriwse they will keep
-  /// running and try to use the Z::gDispatch).
-  IntrusiveLink(AsyncWebRequest, link);
 
   /// All living / active AsyncWebRequests (and a thread lock to go with it).
   static InList<AsyncWebRequest> mActiveRequests;

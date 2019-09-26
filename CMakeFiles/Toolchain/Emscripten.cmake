@@ -2,7 +2,7 @@ add_definitions(-DWelderCompilerClang=1 -DWelderCompilerName="Clang")
 
 add_definitions(-DHAVE_UNISTD_H)
 
-set(WELDER_SINGLE_FILE 1)
+set(WELDER_SINGLE_FILE 0)
 
 # We disable MINIFY_HTML because it takes too much memory and crashes
 
@@ -15,7 +15,6 @@ set(WELDER_C_CXX_FLAGS "\
   -Wno-address-of-packed-member\
   -Wno-empty-body\
   -s ALLOW_MEMORY_GROWTH=1\
-  -s BINARYEN_TRAP_MODE='clamp'\
   -s WASM=1\
   -s SIMD=0\
   -fdelayed-template-parsing\

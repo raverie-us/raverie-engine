@@ -51,7 +51,7 @@ RUN sed -i 's/# error.*//g' /usr/include/x86_64-linux-gnu/sys/cdefs.h
 ARG USER_ID
 USER $USER_ID
 
-ENV EMSCRIPTEN_VERSION sdk-tag-1.38.43-64bit
+ENV EMSCRIPTEN_VERSION sdk-tag-1.38.46-64bit-upstream
 
 RUN cd /tmp && \
     git clone https://github.com/juj/emsdk.git && \
@@ -60,14 +60,14 @@ RUN cd /tmp && \
     ./emsdk install $EMSCRIPTEN_VERSION && \
     ./emsdk activate --embedded $EMSCRIPTEN_VERSION
 
-ENV PATH="/tmp/emsdk:/tmp/emsdk/fastcomp/emscripten:/tmp/emsdk/node/12.9.1_64bit/bin:${PATH}"
+ENV PATH="/tmp/emsdk:/tmp/emsdk/upstream/emscripten:/tmp/emsdk/node/12.9.1_64bit/bin:${PATH}"
 ENV EMSDK="/tmp/emsdk"
 ENV EM_CONFIG="/tmp/emsdk/.emscripten"
 ENV EM_PORTS="/tmp/emsdk/.emscripten_ports"
 ENV EM_CACHE="/tmp/emsdk/.emscripten_cache"
 ENV EMSDK_NODE="/tmp/emsdk/node/12.9.1_64bit/bin/node"
-ENV EMSCRIPTEN="/tmp/emsdk/fastcomp/emscripten"
-ENV EMCC_WASM_BACKEND=0
+ENV EMSCRIPTEN="/tmp/emsdk/upstream/emscripten"
+ENV EMCC_WASM_BACKEND=1
 ENV EMCC_SKIP_SANITY_CHECK=1
 
 # Compile a program to force emcc caching
