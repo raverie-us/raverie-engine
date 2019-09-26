@@ -1,3 +1,4 @@
+set -e
 docker load -i ./Build/Cache/welder.tar || true
 ./dockerbuild.sh
 ./weld.sh node index.js cmake --alias=$ALIAS

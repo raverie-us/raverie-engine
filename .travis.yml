@@ -15,7 +15,7 @@ jobs:
     - stage: Build
       name: Linux
       script:
-      - ALIAS=Linux travis_wait 60 ./build.sh
+      - ALIAS=Linux ./build.sh
     - name: Emscripten
       script:
-      - ALIAS=Emscripten travis_wait 60 ./build.sh
+      - ALIAS=Emscripten ./build.sh
