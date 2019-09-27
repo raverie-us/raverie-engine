@@ -501,6 +501,13 @@ const safeChmod = (file, mode) => {
     }
 };
 
+const preventNoOutputTimeout = () => {
+    const interval = setInterval(() => {
+        printLog("Working...");
+    }, 1000 * 60);
+    return () => clearInterval(interval);
+};
+
 const runBuild = async (buildDir, config, testExecutablePaths, opts) => {
     console.log("Running Build");
     if (!commandExists("cmake")) {
@@ -533,6 +540,7 @@ const runBuild = async (buildDir, config, testExecutablePaths, opts) => {
     const target = makeArgArray("target");
     const parallel = makeArgArray("parallel");
 
+    const endPnot = preventNoOutputTimeout();
     await exec("cmake", [
         "--build",
         ".",
@@ -541,6 +549,7 @@ const runBuild = async (buildDir, config, testExecutablePaths, opts) => {
         ...target,
         ...parallel
     ], options);
+    endPnot();
 
     const addExecutable = (file) => {
         if (fs.existsSync(file)) {
