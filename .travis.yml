@@ -15,7 +15,19 @@ jobs:
     - stage: Build
       name: Linux
       script:
-      - ./build.sh --parallel=2 --alias=Linux
+      - ./build.sh --parallel=1 --alias=Linux
     - name: Emscripten
       script:
-      - ./build.sh --parallel=2 --alias=Emscripten
+      - ./build.sh --parallel=1 --alias=Emscripten
+      - mkdir bin
+      - cp Build/Linux_Emscripten_Ninja_Emscripten_Emscripten_WASM_Release/Libraries/WelderEditor/WelderEditor.* bin
+      - mv bin/WelderEditor.html bin/index.html
+      - touch bin/.nojekyll
+      deploy:
+        provider: pages
+        local_dir: ./bin
+        github_token: $GITHUB_TOKEN
+        skip_cleanup: true
+        keep_history: false
+        on:
+          branch: master

@@ -504,7 +504,7 @@ const safeChmod = (file, mode) => {
 const preventNoOutputTimeout = () => {
     const interval = setInterval(() => {
         printLog("Working...");
-    }, 1000 * 60);
+    }, 1000 * 10);
     return () => clearInterval(interval);
 };
 
