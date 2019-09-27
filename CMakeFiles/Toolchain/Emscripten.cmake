@@ -15,6 +15,7 @@ set(WELDER_C_CXX_FLAGS "\
   -Wno-address-of-packed-member\
   -Wno-empty-body\
   -s ALLOW_MEMORY_GROWTH=1\
+  -s BINARYEN_TRAP_MODE='clamp'\
   -s WASM=1\
   -s SIMD=0\
   -fdelayed-template-parsing\
