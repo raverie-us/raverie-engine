@@ -101,6 +101,15 @@ bool DeleteDirectoryContents(StringParam directory)
   return success;
 }
 
+bool EnsureEmptyDirectory(StringParam directory)
+{
+  bool directoryDeleted = DeleteDirectoryContents(directory);
+  CreateDirectoryAndParents(directory);
+  if (!directoryDeleted)
+    return false;
+  return true;
+}
+
 int CheckFileTime(StringParam dest, StringParam source)
 {
   if (!FileExists(dest))

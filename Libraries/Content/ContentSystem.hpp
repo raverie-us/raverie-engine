@@ -193,6 +193,7 @@ public:
   // These paths are set by the editor
   Array<String> LibrarySearchPaths;
   String ContentOutputPath;
+  String PrebuiltContentPath;
   /// Where the tools (curl, crash handler, etc) are located
   String ToolPath;
 

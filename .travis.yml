@@ -10,24 +10,19 @@ addons:
 install:
 - export DISPLAY=':99.0'
 - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-jobs:
-  include:
-    - stage: Build
-      name: Linux
-      script:
-      - ./build.sh --parallel=1 --alias=Linux
-    - name: Emscripten
-      script:
-      - ./build.sh --parallel=1 --alias=Emscripten
-      - mkdir bin
-      - cp Build/Linux_Emscripten_Ninja_Emscripten_Emscripten_WASM_Release/Libraries/WelderEditor/WelderEditor.* bin
-      - mv bin/WelderEditor.html bin/index.html
-      - touch bin/.nojekyll
-      deploy:
-        provider: pages
-        local_dir: ./bin
-        github_token: $GITHUB_TOKEN
-        skip_cleanup: true
-        keep_history: false
-        on:
-          branch: master
+script:
+- ./build.sh --parallel=1 --alias=Linux
+- ./Build/Linux_Linux_Ninja_Clang_SDLSTDEmpty_ANY_Release/Libraries/WelderEditor/WelderEditor -CopyPrebuiltContent
+- ./build.sh --parallel=1 --alias=Emscripten
+- mkdir bin
+- cp Build/Linux_Emscripten_Ninja_Emscripten_Emscripten_WASM_Release/Libraries/WelderEditor/WelderEditor.* bin
+- mv bin/WelderEditor.html bin/index.html
+- touch bin/.nojekyll
+deploy:
+  provider: pages
+  local_dir: ./bin
+  github_token: $GITHUB_TOKEN
+  skip_cleanup: true
+  keep_history: false
+  on:
+    branch: master

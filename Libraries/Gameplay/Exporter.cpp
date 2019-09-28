@@ -620,13 +620,12 @@ void Exporter::CopyContent(Status& status, String outputDirectory, ExportTarget*
   MainConfig* mainConfig = configCog->has(MainConfig);
 
   // Delete the old content if it was previously exported
-  bool directoryDeleted = DeleteDirectoryContents(outputDirectory);
-  if (!directoryDeleted)
+  bool directoryEmpty = EnsureEmptyDirectory(outputDirectory);
+  if (!directoryEmpty)
   {
     status.SetFailed("Unable to delete the output directory contents");
     return;
   }
-  CreateDirectoryAndParents(outputDirectory);
 
   // Copy content output
   ExportUtility::CopyLibraryOut(outputDirectory, "FragmentCore");

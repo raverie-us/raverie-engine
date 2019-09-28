@@ -63,6 +63,10 @@ ZeroShared bool DeleteFileInternal(StringParam dest);
 ZeroShared bool DeleteDirectory(StringParam directory);
 ZeroShared bool DeleteDirectoryContents(StringParam directory);
 
+/// Makes sure the directory exists but that it is empty.
+/// Any existing contents will be deleted.
+ZeroShared bool EnsureEmptyDirectory(StringParam directory);
+
 /// Create a directory.
 ZeroShared void CreateDirectory(StringParam dest);
 
