@@ -22,8 +22,8 @@ void ExportContentFolders(Cog* projectCog);
 void AddFiles(StringParam directory, HashSet<String>& additionalFileExcludes, FileCallback callback, void* userData);
 void ArchiveLibraryOutput(Archive& archive, ContentLibrary* library);
 void ArchiveLibraryOutput(Archive& archive, StringParam libraryName);
-void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library);
-void CopyLibraryOut(StringParam outputDirectory, StringParam name);
+void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library, bool skipTemplates = true);
+void CopyLibraryOut(StringParam outputDirectory, StringParam name, bool skipTemplates = true);
 void RelativeCopyFile(StringParam dest, StringParam source, StringParam filename);
 void ArchiveFileCallback(
     StringParam fullPath, StringParam relativePath, StringParam fileName, void* userData, float progressPercent);

@@ -108,7 +108,7 @@ void ArchiveLibraryOutput(Archive& archive, StringParam libraryName)
     ArchiveLibraryOutput(archive, library);
 }
 
-void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library)
+void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library, bool skipTemplates)
 {
   String libraryPath = library->GetOutputPath();
   String libraryOutputPath = FilePath::Combine(outputDirectory, library->Name);
@@ -139,7 +139,7 @@ void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library)
     forRange (ResourceEntry& entry, listing.All())
     {
       // Skip zilch Resource Templates
-      if (isTemplate)
+      if (isTemplate && skipTemplates)
       {
         BoundType* resourceType = MetaDatabase::FindType(entry.Type);
 
@@ -160,11 +160,11 @@ void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library)
   }
 }
 
-void CopyLibraryOut(StringParam outputDirectory, StringParam name)
+void CopyLibraryOut(StringParam outputDirectory, StringParam name, bool skipTemplates)
 {
   ContentLibrary* library = Z::gContentSystem->Libraries.FindValue(name, nullptr);
   if (library)
-    CopyLibraryOut(outputDirectory, library);
+    CopyLibraryOut(outputDirectory, library, skipTemplates);
 }
 
 void RelativeCopyFile(StringParam dest, StringParam source, StringParam filename)

@@ -119,7 +119,7 @@ void CopyPrebuiltContent(ProjectSettings* project)
   forRange(ContentLibrary* library, Z::gContentSystem->Libraries.Values())
   {
     ZPrint("  Copying %s\n", library->Name.c_str());
-    ExportUtility::CopyLibraryOut(outputDirectory, library->Name);
+    ExportUtility::CopyLibraryOut(outputDirectory, library, false);
   }
 }
 
