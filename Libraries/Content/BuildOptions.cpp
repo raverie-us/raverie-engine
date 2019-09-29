@@ -11,6 +11,7 @@ BuildOptions::BuildOptions(ContentLibrary* library)
   {
     Verbosity = contentConfig->ContentVerbosity;
   }
+  Verbosity = Verbosity::Detailed;
 
   ToolPath = Z::gContentSystem->ToolPath;
 
