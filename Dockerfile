@@ -37,8 +37,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xorg-dev \
     xscreensaver \
     xutils-dev \
+    xvfb \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+ENV DISPLAY ':99.0'
 
 RUN npm install -g npm@latest
 
@@ -82,7 +85,7 @@ ENV CCACHE_COMPRESSLEVEL=9
 ENV CCACHE_DIR=/cache/
 ENV CCACHE_SLOPPINESS=pch_defines,time_macros
 
-ENTRYPOINT ["dumb-init", "--"]
+ENTRYPOINT ["dumb-init", "--", "xvfb-run"]
 
 CMD echo '----------ccache:' && \
     ccache --version && \

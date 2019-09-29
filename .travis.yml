@@ -3,16 +3,9 @@ cache:
   - $TRAVIS_BUILD_DIR/Build/Cache
 services:
   - docker
-addons:
-  apt:
-    packages:
-      - xvfb
-install:
-- export DISPLAY=':99.0'
-- Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 script:
 - ./build.sh --parallel=1 --alias=Linux
-- ./Build/Linux_Linux_Ninja_Clang_SDLSTDEmpty_ANY_Release/Libraries/WelderEditor/WelderEditor -CopyPrebuiltContent
+- ./weld.sh ./Build/Linux_Linux_Ninja_Clang_SDLSTDEmpty_ANY_Release/Libraries/WelderEditor/WelderEditor -CopyPrebuiltContent -Exit
 - ./build.sh --parallel=1 --alias=Emscripten
 - mkdir bin
 - cp Build/Linux_Emscripten_Ninja_Emscripten_Emscripten_WASM_Release/Libraries/WelderEditor/WelderEditor.* bin
