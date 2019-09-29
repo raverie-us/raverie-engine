@@ -220,6 +220,14 @@ HandleOf<ResourcePackage> ContentSystem::BuildLibrary(Status& status, ContentLib
       TimerBlock block("PrebuiltContent");
       CopyFolderContents(outputPath, prebuiltContent);
     }
+    else
+    {
+      ZPrint("Prebuilt content '%s' does not exist\n", prebuiltContent.c_str());
+    }
+  }
+  else
+  {
+    ZPrint("Content output for '%s' exists\n", outputPath.c_str());
   }
 
   Array<ContentItem*> items;
