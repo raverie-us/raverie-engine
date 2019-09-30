@@ -9,12 +9,18 @@ SDL_Haptic* cSDLHapticDevices[cMaxGamepads];
 
 void PlatformLibrary::Initialize()
 {
+  Uint32 flags = SDL_INIT_EVERYTHING;
 #if defined(WelderTargetOsEmscripten)
   SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");
   emscripten_sample_gamepad_data();
+  flags &= ~(SDL_INIT_TIMER | SDL_INIT_HAPTIC);
 #endif
 
-  SDL_Init(SDL_INIT_EVERYTHING);
+  if (SDL_Init(flags) != 0)
+  {
+    ZPrint("Unable to initialize SDL: %s\n", SDL_GetError());
+    CrashHandler::FatalError(1);
+  }
 
   // We don't want the back buffer to be multi-sampled because we can't blit a
   // frame buffer to it.

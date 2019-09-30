@@ -155,7 +155,11 @@ Shell::Shell() : mCursor(Cursor::Arrow), mMainWindow(nullptr), mUserData(nullptr
 
   self->mSDLCursors.Resize(SDL_NUM_SYSTEM_CURSORS);
   for (size_t i = 0; i < SDL_NUM_SYSTEM_CURSORS; ++i)
-    self->mSDLCursors[i] = SDL_CreateSystemCursor((SDL_SystemCursor)i);
+  {
+    SDL_Cursor* cursor = SDL_CreateSystemCursor((SDL_SystemCursor)i);
+    ErrorIf(cursor === nullptr, "Unable to create SDL cursor: %s", SDL_GetError());
+    self->mSDLCursors[i] = cursor;
+  }
 }
 
 Shell::~Shell()
@@ -313,7 +317,7 @@ void Shell::SetMouseCursor(Cursor::Enum cursor)
     break;
   }
 
-  SDL_Cursor*& sdlCursor = self->mSDLCursors[sdlSystemCursor];
+  SDL_Cursor* sdlCursor = self->mSDLCursors[sdlSystemCursor];
   SDL_SetCursor(sdlCursor);
 }
 
