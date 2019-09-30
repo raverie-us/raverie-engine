@@ -470,6 +470,10 @@
       window.addEventListener('dragover', dragHandler, false);
       window.addEventListener('drop', dropHandler, false);
 
+      window.onbeforeunload = () => {
+        return 'Are you sure you wish to exit?';
+      };
+
       var downloadingDataText = 'Downloading data...';
       
       var Module =
