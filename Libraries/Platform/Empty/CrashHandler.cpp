@@ -84,6 +84,8 @@ void CrashHandler::InvokeSendCrashReport(CrashHandlerParameters& params)
 
 void CrashHandler::FatalError(int errorCode)
 {
+  int* bad = (int*)(uintptr_t)-1;
+  *bad = 0;
 }
 
 void CrashHandler::DefaultRunCrashHandlerCallback(void* crashData, bool doRescueCall, void* userData)
