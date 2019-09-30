@@ -14,7 +14,7 @@ HyperLinkHotspot::HyperLinkHotspot() : TextEditorHotspot(HyperLinkRegex)
 void HyperLinkHotspot::OnClick(Matches& matches)
 {
   String url = matches.Front();
-  Os::SystemOpenNetworkFile(url.c_str());
+  Os::OpenUrl(url.c_str());
 }
 
 // Command : any number of letters

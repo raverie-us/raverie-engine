@@ -6,17 +6,17 @@ namespace Zero
 
 void OpenHelp()
 {
-  Os::SystemOpenNetworkFile(Urls::cUserHelp);
+  Os::OpenUrl(Urls::cUserHelp);
 }
 
 void OpenZeroHub()
 {
-  Os::SystemOpenNetworkFile(Urls::cUserZeroHub);
+  Os::OpenUrl(Urls::cUserZeroHub);
 }
 
 void OpenDocumentation()
 {
-  Os::SystemOpenNetworkFile(Urls::cUserOnlineDocs);
+  Os::OpenUrl(Urls::cUserOnlineDocs);
 }
 
 void ExitEditor()

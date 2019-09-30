@@ -80,10 +80,8 @@ bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr 
   return false;
 }
 
-bool SystemOpenNetworkFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
+void OpenUrl(cstr url)
 {
-  status.SetFailed("SystemOpenNetworkFile not implemented");
-  return false;
 }
 
 void GetMemoryStatus(MemoryInfo& data)

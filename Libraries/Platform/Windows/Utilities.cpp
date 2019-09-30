@@ -221,9 +221,10 @@ bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr 
   return false;
 }
 
-bool SystemOpenNetworkFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
+void OpenUrl(cstr url)
 {
-  return SystemOpenFile(status, file, verb, parameters, workingDirectory);
+  Status status;
+  SystemOpenFile(status, url);
 }
 
 String GetEnvironmentalVariable(StringParam variable)

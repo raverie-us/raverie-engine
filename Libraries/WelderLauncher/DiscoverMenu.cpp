@@ -90,7 +90,7 @@ void DiscoverTile::OnMouseEnter(MouseEvent* e)
 
 void DiscoverTile::OnLeftClick(MouseEvent* e)
 {
-  Os::SystemOpenNetworkFile(mUrl.c_str());
+  Os::OpenUrl(mUrl.c_str());
 }
 
 void DiscoverTile::OnMouseExit(MouseEvent* e)

@@ -414,7 +414,7 @@ void EditorMain::ShowBugReporter(CommandEvent* event)
 {
   // For now the window is disabled and we link directly to the github page.
   // TODO: Fix the bug reporter to actually work with GitHub's API.
-  Os::SystemOpenNetworkFile(Urls::cUserReportIssue);
+  Os::OpenUrl(Urls::cUserReportIssue);
   // this->ShowWindow("Bug Reporter");
   // mBugReporter->Reset();
 }

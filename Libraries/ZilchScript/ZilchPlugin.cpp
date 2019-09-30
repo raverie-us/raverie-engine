@@ -473,7 +473,7 @@ bool ZilchPluginSource::CheckIdeAndInformUser()
                     "your platform");
 
 #if defined(WelderTargetOsWindows)
-    Os::SystemOpenNetworkFile("https://www.visualstudio.com/"
+    Os::OpenUrl("https://www.visualstudio.com/"
                               "post-download-vs?sku=community&clcid=0x409");
 #endif
     return false;

@@ -876,7 +876,7 @@ void PropertyWidgetObject::OnViewOnlineDocs(ObjectEvent* event)
   String url = builder.ToString();
 
   // Open browser with URL
-  Os::SystemOpenNetworkFile(url.c_str());
+  Os::OpenUrl(url.c_str());
 }
 
 void PropertyWidgetObject::OnRemove(ObjectEvent* event)

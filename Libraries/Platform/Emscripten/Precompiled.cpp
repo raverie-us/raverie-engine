@@ -58,7 +58,7 @@ void glEnablei(GLenum cap, GLuint index)
 void glDisablei(GLenum cap, GLuint index)
 {
   Error(cInvalidWebGl);
-};
+}
 
 using namespace Zero;
 
@@ -164,5 +164,17 @@ void Shell::OpenFile(FileDialogInfo& config)
   String accept = acceptExtensions.ToString();
   EmscriptenShellOpenFileBegin(multiple, accept.c_str(), &config);
 }
+
+EM_JS(void, EmscriptenOpenUrl, (cstr url), {
+  window.open(UTF8ToString(url));
+});
+
+namespace Os
+{
+void OpenUrl(cstr url)
+{
+  EmscriptenOpenUrl(url);
+}
+} // namespace Os
 
 } // namespace Zero

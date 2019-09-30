@@ -1223,7 +1223,7 @@ void LauncherWindow::OnOpenProjectFile(OsFileSelection* e)
 
 void LauncherWindow::OnFileBugPressed(Event* e)
 {
-  Os::SystemOpenNetworkFile(Urls::cUserReportIssue);
+  Os::OpenUrl(Urls::cUserReportIssue);
 }
 
 void LauncherWindow::OsWindowTakeFocus()

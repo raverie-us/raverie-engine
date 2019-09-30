@@ -42,6 +42,7 @@ target_sources(Platform
 target_compile_definitions(Platform
   PUBLIC
     ZeroPlatformNoShellOpenFile
+    ZeroPlatformNoOpenUrl
 )
 
 target_link_libraries(Platform

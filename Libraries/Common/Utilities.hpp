@@ -54,12 +54,8 @@ SystemOpenFile(cstr file, uint verb = Verb::Default, cstr parameters = nullptr, 
 ZeroShared bool SystemOpenFile(
     Status& status, cstr file, uint verb = Verb::Default, cstr parameters = nullptr, cstr workingDirectory = nullptr);
 
-// Open the network file (including urls) using the appropriate
-// Os application or launch an external application
-ZeroShared void
-SystemOpenNetworkFile(cstr file, uint verb = Verb::Default, cstr parameters = nullptr, cstr workingDirectory = nullptr);
-ZeroShared bool SystemOpenNetworkFile(
-    Status& status, cstr file, uint verb = Verb::Default, cstr parameters = nullptr, cstr workingDirectory = nullptr);
+// Open's a url in a browser or tab.
+ZeroShared void OpenUrl(cstr url);
 
 // Get the memory status of the Os.
 ZeroShared void GetMemoryStatus(MemoryInfo& memoryInfo);

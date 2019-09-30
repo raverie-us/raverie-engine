@@ -172,10 +172,11 @@ bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr 
 }
 #endif
 
-#if !defined(ZeroPlatformNoSystemOpenNetworkFile)
-bool SystemOpenNetworkFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
+#if !defined(ZeroPlatformNoOpenUrl)
+void OpenUrl(cstr url)
 {
-  return SystemOpenFile(status, file, verb, parameters, workingDirectory);
+  String commandLine = String::Format("xdg-open \"%s\" || open \"%s\" || start \"%s\"", url);
+  system(commandLine.c_str());
 }
 #endif
 
