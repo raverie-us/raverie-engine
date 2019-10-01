@@ -4,9 +4,14 @@ cache:
 services:
   - docker
 script:
-- ./build.sh --parallel=1 --alias=Linux
+- docker load -i ./Build/Cache/welder.tar || true
+- ./dockerbuild.sh
+- docker save -o ./Build/Cache/welder.tar welder
+- ./weld.sh node index.js cmake --alias=Linux
+- ./weld.sh node index.js build --parallel=4 --alias=Linux
 - ./weld.sh ./Build/Linux_Linux_Ninja_Clang_SDLSTDEmpty_ANY_Release/Libraries/WelderEditor/WelderEditor -CopyPrebuiltContent -Exit
-- ./build.sh --parallel=1 --alias=Emscripten
+- ./weld.sh node index.js cmake --alias=Emscripten
+- ./weld.sh node index.js build --parallel=1 --alias=Emscripten
 - mkdir bin
 - cp Build/Linux_Emscripten_Ninja_Emscripten_Emscripten_WASM_Release/Libraries/WelderEditor/WelderEditor.* bin
 - mv bin/WelderEditor.html bin/index.html
