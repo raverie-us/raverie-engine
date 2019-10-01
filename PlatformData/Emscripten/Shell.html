@@ -481,6 +481,7 @@
       {
         preRun: [],
         postRun: [],
+        arguments: [],
         
         preInit: function()
         {
@@ -496,9 +497,9 @@
           {
             var command = decodeURIComponent(tokens[1]);
             var value = tokens[3] ? decodeURIComponent(tokens[3]) : null;
-            Module.arguments.push('-' + command);
+            this.arguments.push('-' + command);
             if (value)
-              Module.arguments.push(value);
+              this.arguments.push(value);
           }
           
           /*
