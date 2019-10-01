@@ -238,14 +238,6 @@ Tweakables
 				var BackgroundColor = Vec4{0.180391997, 0.180391997, 0.180391997, 1}
 				var DividerColor = Vec4{0.180391997, 0.180391997, 0.180391997, 1}
 			}
-			WebBrowser_ 
-			{
-				var ButtonEnabledColor = Vec4{1, 1, 1, 1}
-				var ButtonDisabledColor = Vec4{0.5, 0.5, 0.5, 0.5}
-				var ButtonWidth = 40
-				var ButtonSpacing = 2
-				var ElementSpacing = 1
-			}
 		}
 		ConvexMeshEditor_ 
 		{

@@ -586,51 +586,14 @@ Widget* Editor::ToggleConsole()
   return mManager->ToggleWidget("Console");
 }
 
-Widget* Editor::ShowBrowser()
+void Editor::ShowMarket()
 {
-  WebBrowserSetup setup;
-  WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
-  browser->SetName("Browser");
-  browser->SetHideOnClose(false);
-
-  this->AddManagedWidget(browser, DockArea::Center, true);
-  return browser;
+  Os::OpenUrl(Urls::cUserMarket);
 }
 
-Widget* Editor::ShowBrowser(StringParam url, StringParam tabName)
+void Editor::ShowChat()
 {
-  WebBrowserSetup setup;
-  setup.mUrl = url;
-  WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
-  browser->SetName(tabName);
-  browser->SetHideOnClose(false);
-
-  this->AddManagedWidget(browser, DockArea::Center, true);
-  return browser;
-}
-
-Widget* Editor::ShowMarket()
-{
-  WebBrowserSetup setup(Urls::cUserMarket, cWebBrowserDefaultSize, IntVec2::cZero, false, Vec4(0.2f, 0.2f, 0.2f, 1.0f));
-
-  WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
-  browser->SetName("Market");
-  browser->SetHideOnClose(false);
-
-  this->AddManagedWidget(browser, DockArea::Center, true);
-  return browser;
-}
-
-Widget* Editor::ShowChat()
-{
-  WebBrowserSetup setup(Urls::cUserChat, cWebBrowserDefaultSize, IntVec2::cZero, false, Vec4(0.2f, 0.2f, 0.2f, 1.0f));
-
-  WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
-  browser->SetName("Chat");
-  browser->SetHideOnClose(false);
-
-  this->AddManagedWidget(browser, DockArea::Center, true);
-  return browser;
+  Os::OpenUrl(Urls::cUserChat);
 }
 
 void Editor::SelectTool(StringParam toolName)

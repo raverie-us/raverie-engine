@@ -51,8 +51,4 @@ target_link_libraries(WelderEditor
     ZilchShaders
 )
 
-add_dependencies(WelderEditor
-  BrowserSubProcess
-)
-
 welder_copy_from_linked_libraries(WelderEditor)

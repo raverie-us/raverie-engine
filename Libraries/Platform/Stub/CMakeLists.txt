@@ -7,7 +7,6 @@ target_sources(Platform
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Atomic.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Audio.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../Empty/Browser.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/CallStack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/ComPort.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/CrashHandler.cpp

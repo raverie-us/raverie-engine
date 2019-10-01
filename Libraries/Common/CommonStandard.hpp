@@ -236,7 +236,6 @@ namespace Zero
 #include "Shell.hpp"
 #include "ComPort.hpp"
 #include "Intrinsics.hpp"
-#include "Browser.hpp"
 #include "RendererEnumerations.hpp"
 #include "Renderer.hpp"
 #include "Audio.hpp"

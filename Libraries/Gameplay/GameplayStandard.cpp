@@ -8,7 +8,6 @@ namespace Zero
 {
 
 // Enums
-ZilchDefineEnum(BrowserModifiers);
 ZilchDefineEnum(OrientationBases);
 ZilchDefineEnum(SplineAnimatorMode);
 ZilchDefineEnum(PathFinderStatus);
@@ -23,7 +22,6 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   builder.CreatableInScriptDefault = false;
 
   // Enums
-  ZilchInitializeEnumAs(BrowserModifiers, "WebBrowserModifiers");
   ZilchInitializeEnum(OrientationBases);
   ZilchInitializeEnum(SplineAnimatorMode);
   ZilchInitializeEnum(PathFinderStatus);
@@ -38,23 +36,11 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   ZilchInitializeType(MouseEvent);
   ZilchInitializeType(MouseFileDropEvent);
   ZilchInitializeType(ViewportMouseEvent);
-  ZilchInitializeType(WebBrowserEvent);
-  ZilchInitializeType(WebBrowserConsoleEvent);
-  ZilchInitializeType(WebBrowserCursorEvent);
-  ZilchInitializeType(WebBrowserDownloadEvent);
-  ZilchInitializeType(WebBrowserPopupCreateEvent);
-  ZilchInitializeType(WebBrowserPointQueryEvent);
-  ZilchInitializeType(WebBrowserTextEvent);
-  ZilchInitializeType(WebBrowserUrlEvent);
 
   ZilchInitializeType(Viewport);
   ZilchInitializeType(ReactiveViewport);
   ZilchInitializeType(GameWidget);
 
-  ZilchInitializeType(WebBrowser);
-  ZilchInitializeType(WebBrowserSetup);
-  ZilchInitializeType(WebBrowserManager);
-  ZilchInitializeType(WebBrowserWidget);
   ZilchInitializeType(TileMapSource);
   ZilchInitializeType(Reactive);
   ZilchInitializeType(ReactiveSpace);
@@ -108,15 +94,11 @@ void GameplayLibrary::Initialize()
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 
   InitializeResourceManager(TileMapSourceManager);
-
-  WebBrowserManager::Initialize();
 }
 
 void GameplayLibrary::Shutdown()
 {
   GetLibrary()->ClearComponents();
-
-  WebBrowserManager::Destroy();
 }
 
 } // namespace Zero

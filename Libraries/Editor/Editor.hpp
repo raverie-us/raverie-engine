@@ -29,7 +29,6 @@ class CogCommandManager;
 class EventDirectoryWatcher;
 class FileEditEvent;
 class CodeTranslatorListener;
-class WebBrowserWidget;
 class CameraViewport;
 class EditorViewport;
 class FindTextDialog;
@@ -81,10 +80,8 @@ public:
   Widget* ShowConsole();
   Widget* HideConsole();
   Widget* ToggleConsole();
-  Widget* ShowBrowser();
-  Widget* ShowBrowser(StringParam url, StringParam tabName);
-  Widget* ShowMarket();
-  Widget* ShowChat();
+  void ShowMarket();
+  void ShowChat();
 
   /// Selects a tool with the given name.
   void SelectTool(StringParam toolName);

@@ -19,7 +19,6 @@ target_link_libraries(WelderLauncherShell
 )
 
 add_dependencies(WelderLauncherShell
-  BrowserSubProcess
   WelderLauncher
 )
 

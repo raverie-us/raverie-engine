@@ -243,7 +243,7 @@ public:
 
   // Compute a 0-based index of how many parents and siblings we are in front
   // of. This is not used anywhere in the widget system, but can be used for
-  // WebBrowser and other similar z-index properties.
+  // placing OS windows in front and other similar z-index properties.
   int GetZIndex();
 
   template <typename type>

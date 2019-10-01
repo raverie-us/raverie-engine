@@ -64,19 +64,16 @@ target_link_libraries(Platform
 if (WELDER_ARCHITECTURE STREQUAL "X86")
   target_sources(Platform
     PRIVATE
-      ${CMAKE_CURRENT_LIST_DIR}/../CEF/Browser.cpp
       ${CMAKE_CURRENT_LIST_DIR}/../Curl/WebRequest.cpp
   )
 
   target_link_libraries(Platform
     PUBLIC
-      CEF
       Curl
   )
 else()
   target_sources(Platform
     PRIVATE
-      ${CMAKE_CURRENT_LIST_DIR}/../Empty/Browser.cpp
       ${CMAKE_CURRENT_LIST_DIR}/../Empty/WebRequest.cpp
   )
 endif()

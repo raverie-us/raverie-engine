@@ -25,7 +25,6 @@ extern const cstr cUserChat;
 extern const cstr cUserLauncherDownloads;
 extern const cstr cUserOnlineDocs;
 extern const cstr cUserHelp;
-extern const cstr cUserWebBrowserDefault;
 extern const cstr cUserWebRequesterDefault;
 extern const cstr cApiZeroBuilds;
 extern const cstr cApiLauncherTemplates;

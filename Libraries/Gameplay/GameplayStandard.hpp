@@ -59,8 +59,6 @@ public:
 #include "TileMapSource.hpp"
 #include "SplineParticles.hpp"
 
-#include "WebBrowser.hpp"
-#include "WebBrowserWidget.hpp"
 #include "TileMapSourceLoadPattern.hpp"
 #include "Zero.hpp"
 

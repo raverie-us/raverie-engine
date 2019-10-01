@@ -22,7 +22,6 @@ const cstr cUserChat = "https://discordapp.com/invite/RVunmvx/";
 const cstr cUserLauncherDownloads = "https://github.com/zeroengineteam/ZeroCore/releases/";
 const cstr cUserOnlineDocs = "https://github.com/zeroengineteam/ZeroCore/wiki/";
 const cstr cUserHelp = "https://github.com/zeroengineteam/ZeroCore/wiki/help/";
-const cstr cUserWebBrowserDefault = "https://www.google.com/";
 const cstr cUserWebRequesterDefault = "https://www.example.com/";
 const cstr cApiZeroBuilds = "https://api.github.com/repos/zeroengineteam/"
                             "ZeroCore/releases?per_page=10000";

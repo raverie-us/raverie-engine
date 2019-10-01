@@ -357,7 +357,7 @@ void BugReportJob::OnWebResponseComplete(WebResponseEvent* event)
 
     // Open the browser to the bug report form if the bug reporter failed to
     // file the bug from the editor
-    Z::gEditor->ShowBrowser(Urls::cUserReportIssue, "Bug Report Form");
+    Os::OpenUrl(Urls::cUserReportIssue);
   }
 
   // We kept ourselves alive until the request was done by adding a reference

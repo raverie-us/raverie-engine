@@ -88,8 +88,4 @@ target_link_libraries(WelderLauncher
     ZilchShaders
 )
 
-add_dependencies(WelderLauncher
-  BrowserSubProcess
-)
-
 welder_copy_from_linked_libraries(WelderLauncher)

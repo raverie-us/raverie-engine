@@ -415,15 +415,6 @@ Commands commands =
 
 	Command =
 	{
-		string Name = "Browser",
-		string Description = "Show the Browser Window",
-		string IconName = "Browser",
-		string Tags = "Windows",
-		bool ReadOnly = true,
-	},
-
-	Command =
-	{
 		string Name = "Market",
 		string Description = "Show the Zero Market where you can download content for your projects",
 		string IconName = "Market",

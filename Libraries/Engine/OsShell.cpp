@@ -55,7 +55,7 @@ void OsShell::Update(bool debugger)
   mShell.Update();
 
   // This is a special place to update for other systems like the
-  // CEF WebBrowser that may cause the message pump to run.
+  // that may cause the message pump to run (originally used for CEF browser).
   Event toSend;
   DispatchEvent(Events::OsShellUpdate, &toSend);
   Z::gEngine->DispatchEvent(Events::OsShellUpdate, &toSend);

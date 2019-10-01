@@ -23,7 +23,6 @@ add_subdirectory(ZilchScript)
 add_subdirectory(ZilchShaders)
 
 # Executables.
-add_subdirectory(BrowserSubProcess)
 add_subdirectory(WelderEditor)
 add_subdirectory(WelderLauncher)
 add_subdirectory(WelderLauncherShell)

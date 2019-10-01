@@ -37,7 +37,6 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/BoolVector3.hpp
     ${CMAKE_CURRENT_LIST_DIR}/BoolVector4.cpp
     ${CMAKE_CURRENT_LIST_DIR}/BoolVector4.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Browser.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ByteBuffer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ByteBuffer.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ByteColor.hpp

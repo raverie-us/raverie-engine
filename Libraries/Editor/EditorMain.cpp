@@ -298,11 +298,6 @@ void EditorMain::HideConsole(CommandEvent* event)
   Editor::HideConsole();
 }
 
-void EditorMain::ShowBrowser(CommandEvent* event)
-{
-  Editor::ShowBrowser();
-}
-
 void EditorMain::ShowMarket(CommandEvent* event)
 {
   Editor::ShowMarket();
@@ -1007,7 +1002,7 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     BindCommand("Library", ShowLibrary);
     BindCommand("Console", ToggleConsole);
     BindCommand("ShowConsole", ShowConsole);
-    BindCommand("HideConsole", HideConsole) BindCommand("Browser", ShowBrowser);
+    BindCommand("HideConsole", HideConsole);
     BindCommand("Market", ShowMarket);
     BindCommand("Chat", ShowChat);
     BindCommand("Objects", ShowObjects);

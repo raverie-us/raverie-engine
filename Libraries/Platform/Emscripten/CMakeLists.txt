@@ -30,7 +30,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../STD/File.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../STD/FpControl.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../STD/Process.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Browser.cpp
     ${CMAKE_CURRENT_LIST_DIR}/CallStack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/MainLoop.cpp
     ${CMAKE_CURRENT_LIST_DIR}/OpenglRendererEmscripten.cpp
