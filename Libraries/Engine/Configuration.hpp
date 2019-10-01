@@ -95,8 +95,6 @@ public:
   String ContentOutput;
   /// Content tools directory.
   String ToolsDirectory;
-  /// Content system console verbosity used for resolving content issues.
-  Verbosity::Enum ContentVerbosity;
   /// Directories to search for shared content
   /// libraries.
   Array<String> LibraryDirectories;

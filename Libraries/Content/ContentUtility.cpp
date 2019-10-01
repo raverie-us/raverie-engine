@@ -20,21 +20,10 @@ bool NeedToBuild(BuildOptions& options, StringParam source, StringParam destinat
   // destination is older
   if (fileCmp == -1)
   {
-    if (options.Verbosity == Verbosity::Detailed)
-    {
-      if (!FileExists(destination))
-        ZPrint("Needs to build because '%s' exists and '%s' does not exist\n", source.c_str(), destination.c_str());
-      else
-        ZPrint("Needs to build because '%s' is newer than '%s'\n", source.c_str(), destination.c_str());
-    }
     return true;
   }
   else // fileCmp = 0 or 1
   {
-    if (options.Verbosity == Verbosity::Detailed)
-    {
-      ZPrint("File '%s' is up to date relative to '%s'\n", destination.c_str(), source.c_str());
-    }
     return false;
   }
 }

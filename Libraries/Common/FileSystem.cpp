@@ -1,6 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
+#define DEBUG_FILE_TIMES
+#ifdef DEBUG_FILE_TIMES
+#define DebugFileTime(...) ZPrint("CheckFileTime: " __VA_ARGS__)
+#else
+#define DebugFileTime(...)
+#endif
+
 namespace Zero
 {
 
@@ -113,17 +120,29 @@ bool EnsureEmptyDirectory(StringParam directory)
 int CheckFileTime(StringParam dest, StringParam source)
 {
   if (!FileExists(dest))
+  {
+    DebugFileTime("Source '%s' exists and destination '%s' does not exist\n", source.c_str(), dest.c_str());
     return -1;
+  }
   if (!FileExists(source))
+  {
+    DebugFileTime("Source '%s' does not exist and destination '%s' exists\n", source.c_str(), dest.c_str());
     return +1;
+  }
 
   TimeType destTime = GetFileModifiedTime(dest);
   TimeType sourceTime = GetFileModifiedTime(source);
 
   if (destTime < sourceTime)
+  {
+    DebugFileTime("Source '%s' (%d) is newer than destination '%s' (%d)\n", source.c_str(), sourceTime, dest.c_str(), destTime);
     return -1;
+  }
   if (destTime > sourceTime)
+  {
+    DebugFileTime("Source '%s' (%d) is older than destination '%s' (%d)\n", source.c_str(), sourceTime, dest.c_str(), destTime);
     return +1;
+  }
 
   return 0;
 }

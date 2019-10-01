@@ -43,7 +43,6 @@ ZilchDefineEnum(StoreResult);
 ZilchDefineEnum(StreamType);
 ZilchDefineEnum(TabWidth);
 ZilchDefineEnum(TimeMode);
-ZilchDefineEnum(Verbosity);
 ZilchDefineEnum(WindowState);
 ZilchDefineEnum(WindowStyleFlags);
 
@@ -132,7 +131,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeEnum(StreamType);
   ZilchInitializeEnum(TabWidth);
   ZilchInitializeEnum(TimeMode);
-  ZilchInitializeEnum(Verbosity);
   ZilchInitializeEnum(WindowState);
   ZilchInitializeEnum(WindowStyleFlags);
 

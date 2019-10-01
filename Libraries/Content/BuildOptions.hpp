@@ -15,11 +15,6 @@ class BuildOptions
 public:
   BuildOptions(ContentLibrary* library);
 
-  // Verbosity (initialized to config verbosity).
-  // Minimal is minimal (one line per process)
-  // Detailed is details for debugging
-  Verbosity::Enum Verbosity = Verbosity::Minimal;
-
   // Any Content Item Failed?
   bool Failure = false;
 

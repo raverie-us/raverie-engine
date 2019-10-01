@@ -67,7 +67,6 @@ void ContentConfig::Serialize(Serializer& stream)
   SerializeNameDefault(ContentOutput, String());
   SerializeNameDefault(ToolsDirectory, String());
   SerializeNameDefault(LibraryDirectories, LibraryDirectories);
-  SerializeEnumNameDefault(Verbosity, ContentVerbosity, Verbosity::Minimal);
   SerializeNameDefault(HistoryEnabled, true);
 }
 

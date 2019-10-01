@@ -4,8 +4,6 @@
 namespace Zero
 {
 
-DeclareEnum2(Verbosity, Minimal, Detailed);
-
 typedef HashMap<String, String> StringMap;
 
 template <typename rangeType, typename castType>
