@@ -189,6 +189,34 @@
     <script type='text/javascript'>
       if (Error && Error.stackTraceLimit)
         Error.stackTraceLimit = Infinity;
+
+      // emscripten_sleep calls setTimeout, but we want it to call requestAnimationFrame
+      const timeoutToAnimationId = {}
+      const originalSetTimeout = window.setTimeout;
+      const originalClearTimeout = window.clearTimeout;
+      window.setTimeout = (func, delay, ...args) => {
+        if (typeof delay === 'undefined' || delay === 0) {
+          const timeoutId = originalSetTimeout(() => {});
+          const animationId = requestAnimationFrame(() =>
+          {
+            delete timeoutToAnimationId[timeoutId];
+            func(...args);
+          });
+          timeoutToAnimationId[timeoutId] = animationId
+          return timeoutId;
+        } else {
+          return originalSetTimeout(func, delay, ...args);
+        }
+      }
+      window.clearTimeout = window.clearInterval = (timeoutId) => {
+        const animationId = timeoutToAnimationId[timeoutId];
+        if (typeof animationId !== 'undefined') {
+          cancelAnimationFrame(animationId);
+          delete timeoutToAnimationId[timeoutId];
+        } else {
+          return originalClearTimeout(id);
+        }
+      }
       
       var canvasElement = document.getElementById('canvas');
       
