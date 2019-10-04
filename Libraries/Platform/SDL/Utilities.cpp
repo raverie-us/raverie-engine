@@ -180,6 +180,11 @@ void OpenUrl(cstr url)
 }
 #endif
 
+unsigned int GetDoubleClickTimeMs()
+{
+  return 500;
+}
+
 String GetEnvironmentalVariable(StringParam variable)
 {
   return getenv(variable.c_str());

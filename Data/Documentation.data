@@ -76503,12 +76503,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Property
 				{
-					var Name = "DoubleClickTime"
-					var Type = "Real"
-					var Description = "The amount of time between clicks to send the 'DoubleClick' event."
-				}
-				Property
-				{
 					var Name = "FocusWidget"
 					var Type = "UiWidget"
 					var Description = "The widget that currently has focus."

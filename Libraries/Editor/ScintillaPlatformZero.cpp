@@ -803,7 +803,7 @@ int Platform::DefaultFontSize()
 
 unsigned int Platform::DoubleClickTime()
 {
-  return 100;
+  return Zero::Os::GetDoubleClickTimeMs();
 }
 
 bool Platform::MouseButtonBounce()

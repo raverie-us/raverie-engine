@@ -159,8 +159,6 @@ public:
   /// The amount of time we've been holding over the 'MouseOver' widget.
   float mCurrHoldTime;
 
-  /// The amount of time between clicks to send the 'DoubleClick' event.
-  float mDoubleClickTime;
   /// The amount of time since the last click happened. This is used
   /// for determining when to send out the DoubleClick event.
   float mTimeSinceLastClick;

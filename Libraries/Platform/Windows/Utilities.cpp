@@ -227,6 +227,11 @@ void OpenUrl(cstr url)
   SystemOpenFile(status, url);
 }
 
+unsigned int GetDoubleClickTimeMs()
+{
+  return (unsigned int)GetDoubleClickTime();
+}
+
 String GetEnvironmentalVariable(StringParam variable)
 {
   char* envVarValue = getenv(variable.c_str());

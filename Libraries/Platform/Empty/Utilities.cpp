@@ -84,6 +84,11 @@ void OpenUrl(cstr url)
 {
 }
 
+unsigned int GetDoubleClickTimeMs()
+{
+  return 500;
+}
+
 void GetMemoryStatus(MemoryInfo& data)
 {
 }

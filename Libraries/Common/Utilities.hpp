@@ -57,6 +57,9 @@ ZeroShared bool SystemOpenFile(
 // Open's a url in a browser or tab.
 ZeroShared void OpenUrl(cstr url);
 
+// Get the time in milliseconds for a double click.
+ZeroShared unsigned int GetDoubleClickTimeMs();
+
 // Get the memory status of the Os.
 ZeroShared void GetMemoryStatus(MemoryInfo& memoryInfo);
 

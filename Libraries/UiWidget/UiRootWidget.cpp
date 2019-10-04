@@ -40,7 +40,6 @@ ZilchDefineType(UiRootWidget, builder, type)
 
   ZilchBindFieldProperty(mMouseHoverTime);
   ZilchBindFieldProperty(mMouseHoldTime);
-  ZilchBindFieldProperty(mDoubleClickTime);
   ZilchBindFieldProperty(mDepthSeparation);
 
   ZilchBindGetterSetterProperty(DebugSelected);
@@ -97,7 +96,6 @@ void UiRootWidget::Serialize(Serializer& stream)
 
   SerializeNameDefault(mMouseHoverTime, 0.1f);
   SerializeNameDefault(mMouseHoldTime, 1.0f);
-  SerializeNameDefault(mDoubleClickTime, 0.3f);
   SerializeNameDefault(mDepthSeparation, 0.01f);
   SerializeNameDefault(mDebugMouseInteraction, false);
 }
@@ -394,7 +392,8 @@ void UiRootWidget::PerformMouseButton(ViewportMouseEvent* e)
       // Send the DoubleClick event if we're within the time limit
       bool buttonsAreTheSame = (mLastClickedButton == button);
       bool distanceIsSmall = GetLargestAxis(e->Position - mLastClickPosition) < 4.0f;
-      bool doubleClickTime = mTimeSinceLastClick < mDoubleClickTime;
+      float osDoubleClickTime = Os::GetDoubleClickTimeMs() / 1000.0f;
+      bool doubleClickTime = mTimeSinceLastClick < osDoubleClickTime;
 
       if (buttonsAreTheSame && distanceIsSmall && doubleClickTime)
       {

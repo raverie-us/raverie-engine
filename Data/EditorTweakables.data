@@ -272,7 +272,6 @@ Tweakables
 			var DebugTextArea = false
 			var MouseHoldTime = 0.100000001
 			var MouseHoverTime = 0.200000012
-			var DoubleClickTime = 0.300000012
 			var MouseDragDistance = 8
 			var DebugMouseInteraction = false
 			var DebugMouseEvents = false

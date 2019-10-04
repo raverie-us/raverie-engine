@@ -8,7 +8,6 @@ namespace Interaction
 const cstr cLocation = "EditorUi/Interaction";
 Tweakable(float, MouseHoldTime, 0.1f, cLocation);
 Tweakable(float, MouseHoverTime, 0.2f, cLocation);
-Tweakable(float, DoubleClickTime, 0.3f, cLocation);
 Tweakable(float, MouseDragDistance, 8.0f, cLocation);
 Tweakable(bool, DebugMouseInteraction, false, cLocation);
 Tweakable(bool, DebugMouseEvents, false, cLocation);
@@ -978,7 +977,8 @@ void RootWidget::OnOsMouseButton(OsMouseEvent* osMouseEvent, bool buttonDown)
     // Check for double click conditions
     bool buttonsAreTheSame = mLastClickButton == button;
     bool distanceIsSmall = LargestAxis(mouseEvent.Position - mLastClickPosition) < 4.0f;
-    bool doubleClickTime = mTimeSinceLastClick < Interaction::DoubleClickTime;
+    float osDoubleClickTime = Os::GetDoubleClickTimeMs() / 1000.0f;
+    bool doubleClickTime = mTimeSinceLastClick < osDoubleClickTime;
 
     mouseEvent.Handled = false;
     if (buttonsAreTheSame && distanceIsSmall && doubleClickTime)
