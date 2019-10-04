@@ -597,7 +597,10 @@ void ResourceTemplateSearch::ShowTemplates(BoundType* resourceType)
     }
 
     if (ContentItem* contentItem = resource->mContentItem)
+    {
+      DisconnectAll(contentItem, this);
       ConnectThisTo(contentItem, Events::ComponentsModified, OnContentComponentsChanged);
+    }
   }
 
   mNoTemplateBackground->SetVisible(false);
