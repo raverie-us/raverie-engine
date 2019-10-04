@@ -56,7 +56,7 @@ bool CodeLocation::IsSamePositionAndOrigin(const CodeLocation& rhs)
   return this->StartPosition == rhs.StartPosition && this->EndPosition == rhs.EndPosition && this->Origin == rhs.Origin;
 }
 
-bool CodeLocation::IsValid()
+bool CodeLocation::IsValid() const
 {
   return this->Origin != UnknownOrigin;
 }

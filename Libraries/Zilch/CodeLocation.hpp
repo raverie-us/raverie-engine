@@ -40,7 +40,7 @@ public:
 
   // Checks if this location was ever set to a valid value
   // This is true if the origin is set
-  bool IsValid();
+  bool IsValid() const;
 
   // Get a formatted message that includes this location (may include newlines
   // depending on the format)
