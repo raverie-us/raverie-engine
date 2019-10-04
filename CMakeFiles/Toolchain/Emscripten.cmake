@@ -15,9 +15,9 @@ set(WELDER_C_CXX_FLAGS "\
   -Wno-address-of-packed-member\
   -Wno-empty-body\
   -s ALLOW_MEMORY_GROWTH=1\
-  -s BINARYEN_TRAP_MODE='clamp'\
   -s WASM=1\
   -s SIMD=0\
+  -s ASYNCIFY=1\
   -fdelayed-template-parsing\
   -fexceptions\
   -frtti\
@@ -32,6 +32,7 @@ set(WELDER_LINKER_FLAGS "\
   -s FULL_ES3=1\
   -s MINIFY_HTML=0\
   -s SINGLE_FILE=${WELDER_SINGLE_FILE}\
+  -s ASYNCIFY=1\
   --shell-file ${WELDER_PLATFORM_DATA_DIR}/Shell.html\
 ")
 
