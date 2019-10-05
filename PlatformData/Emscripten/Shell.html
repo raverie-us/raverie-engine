@@ -509,7 +509,6 @@
       {
         preRun: [],
         postRun: [],
-        arguments: [],
         
         preInit: function()
         {
@@ -521,6 +520,7 @@
           var tokens;
           var re = /[?&]?([^=]+)(=([^&]*))?/g;
 
+          this.arguments = [];
           while (tokens = re.exec(url))
           {
             var command = decodeURIComponent(tokens[1]);
