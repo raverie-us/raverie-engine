@@ -34,3 +34,6 @@
 [submodule "SDL"]
 	path = External/SDL/Repo
 	url = https://github.com/WelderFoundation/WelderEngineSdl.git
+[submodule "Curl"]
+	path = External/Curl/Repo
+	url = https://github.com/WelderFoundation/WelderEngineCurl.git

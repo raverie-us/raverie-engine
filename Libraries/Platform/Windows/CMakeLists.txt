@@ -57,23 +57,7 @@ welder_target_includes(Platform
 
 target_link_libraries(Platform
   PUBLIC
-    Glew
+    Curl
     GL
+    Glew
 )
-
-if (WELDER_ARCHITECTURE STREQUAL "X86")
-  target_sources(Platform
-    PRIVATE
-      ${CMAKE_CURRENT_LIST_DIR}/../Curl/WebRequest.cpp
-  )
-
-  target_link_libraries(Platform
-    PUBLIC
-      Curl
-  )
-else()
-  target_sources(Platform
-    PRIVATE
-      ${CMAKE_CURRENT_LIST_DIR}/../Empty/WebRequest.cpp
-  )
-endif()

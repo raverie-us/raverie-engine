@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
-#include "curl.h"
+#include <curl/curl.h>
 
 // Defines for CURL
 #define SKIP_PEER_VERIFICATION

@@ -1,12 +1,12 @@
-FROM ubuntu:18.10
+FROM ubuntu:18.04
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget \
     git-core \
     default-jre \
     python2.7 \
     p7zip-full \
     ccache \
-    cmake \
     doxygen \
     dumb-init \
     clang \
@@ -40,6 +40,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xvfb \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+RUN wget -q -O cmake.sh https://github.com/Kitware/CMake/releases/download/v3.14.7/cmake-3.14.7-Linux-x86_64.sh && \
+    chmod +x cmake.sh && \
+    ./cmake.sh --skip-license && \
+    rm cmake.sh
 
 ENV DISPLAY ':99.0'
 

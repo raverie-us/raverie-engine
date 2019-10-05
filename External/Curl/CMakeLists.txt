@@ -1,9 +1,15 @@
-add_library(Curl STATIC IMPORTED GLOBAL)
+if(NOT EMSCRIPTEN)
+  set(ENABLE_MANUAL OFF CACHE BOOL "")
+  set(BUILD_CURL_EXE OFF CACHE BOOL "")
+  set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
+  set(BUILD_TESTING OFF CACHE BOOL "")
 
-set_target_properties(Curl
-  PROPERTIES
-    IMPORTED_LOCATION_DEBUG ${CMAKE_CURRENT_LIST_DIR}/Libraries/Windows_x86_Debug/libcurl.lib
-    IMPORTED_LOCATION_RELEASE ${CMAKE_CURRENT_LIST_DIR}/Libraries/Windows_x86_Release/libcurl.lib
-    INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_LIST_DIR}/Includes/
-    INTERFACE_COMPILE_DEFINITIONS CURL_STATICLIB
-)
+  add_subdirectory(Repo)
+
+  add_library(Curl INTERFACE)
+
+  target_link_libraries(Curl
+    INTERFACE
+      libcurl
+  )
+endif()

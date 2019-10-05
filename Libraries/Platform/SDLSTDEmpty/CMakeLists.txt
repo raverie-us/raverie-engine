@@ -10,7 +10,7 @@ target_compile_definitions(Platform
 
 target_sources(Platform
   PRIVATE
-    #${CMAKE_CURRENT_LIST_DIR}/../Curl/WebRequest.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../Curl/WebRequest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/CallStack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/ComPort.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/CrashHandler.cpp
@@ -22,7 +22,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/MainLoop.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Registry.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Socket.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../Empty/WebRequest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../OpenGL/OpenglRenderer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../OpenGL/OpenglRenderer.hpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Audio.cpp
@@ -54,9 +53,9 @@ welder_target_includes(Platform
 
 target_link_libraries(Platform
   PUBLIC
-    Glew
-    #Curl
+    Curl
     GL
+    Glew
     SDL
 )
 
