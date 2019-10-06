@@ -3,9 +3,9 @@
 
 //#define DEBUG_FILE_TIMES
 #ifdef DEBUG_FILE_TIMES
-#define DebugFileTime(...) ZPrint("CheckFileTime: " __VA_ARGS__)
+#  define DebugFileTime(...) ZPrint("CheckFileTime: " __VA_ARGS__)
 #else
-#define DebugFileTime(...)
+#  define DebugFileTime(...)
 #endif
 
 namespace Zero
@@ -135,12 +135,14 @@ int CheckFileTime(StringParam dest, StringParam source)
 
   if (destTime < sourceTime)
   {
-    DebugFileTime("Source '%s' (%d) is newer than destination '%s' (%d)\n", source.c_str(), sourceTime, dest.c_str(), destTime);
+    DebugFileTime(
+        "Source '%s' (%d) is newer than destination '%s' (%d)\n", source.c_str(), sourceTime, dest.c_str(), destTime);
     return -1;
   }
   if (destTime > sourceTime)
   {
-    DebugFileTime("Source '%s' (%d) is older than destination '%s' (%d)\n", source.c_str(), sourceTime, dest.c_str(), destTime);
+    DebugFileTime(
+        "Source '%s' (%d) is older than destination '%s' (%d)\n", source.c_str(), sourceTime, dest.c_str(), destTime);
     return +1;
   }
 

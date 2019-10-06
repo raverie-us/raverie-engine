@@ -36,7 +36,8 @@ void LoadContentConfig()
   // based upon the version number
   String revisionChangesetName = BuildString("ZeroVersion", GetRevisionNumberString(), "-", GetChangeSetString());
   contentSystem->ContentOutputPath = FilePath::Combine(appCacheDirectory, "ZeroContent", revisionChangesetName);
-  contentSystem->PrebuiltContentPath = FilePath::Combine(sourceDirectory, "Build", "PrebuiltContent", revisionChangesetName);
+  contentSystem->PrebuiltContentPath =
+      FilePath::Combine(sourceDirectory, "Build", "PrebuiltContent", revisionChangesetName);
   ZPrint("Content output directory '%s'\n", contentSystem->ContentOutputPath.c_str());
 }
 

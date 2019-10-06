@@ -134,7 +134,6 @@ OsInt WebRequestThread(void* userData)
     return -1;
   }
 
-
   // Keep this alive for the entire curl call.
   String userAgent = WebRequest::GetUserAgent();
 
@@ -205,7 +204,6 @@ OsInt WebRequestThread(void* userData)
     else
       status.SetFailed(String::Format("Curl error %d: %s", (int)result, curl_easy_strerror(result)));
   }
-
 
   // Release the header list back to CURL
   if (headerList)

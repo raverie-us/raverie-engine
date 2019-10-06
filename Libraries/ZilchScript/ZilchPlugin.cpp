@@ -474,7 +474,7 @@ bool ZilchPluginSource::CheckIdeAndInformUser()
 
 #if defined(WelderTargetOsWindows)
     Os::OpenUrl("https://www.visualstudio.com/"
-                              "post-download-vs?sku=community&clcid=0x409");
+                "post-download-vs?sku=community&clcid=0x409");
 #endif
     return false;
   }

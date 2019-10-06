@@ -53,7 +53,6 @@ enum PriorityRange
   LibraryBegin = 2000,
   TagBegin = 3000
 };
-
 }
 
 /// Possible search match element

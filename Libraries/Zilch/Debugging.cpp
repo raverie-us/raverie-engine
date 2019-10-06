@@ -560,7 +560,7 @@ void Debugger::Breakpoint(const CodeLocation& codeLocation)
 {
   if (!codeLocation.IsValid())
     return;
-  
+
   if (!Enabled)
   {
     this->Resume();

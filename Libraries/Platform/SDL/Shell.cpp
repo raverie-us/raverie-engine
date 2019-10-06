@@ -157,7 +157,7 @@ Shell::Shell() : mCursor(Cursor::Arrow), mMainWindow(nullptr), mUserData(nullptr
   for (size_t i = 0; i < SDL_NUM_SYSTEM_CURSORS; ++i)
   {
     SDL_Cursor* cursor = SDL_CreateSystemCursor((SDL_SystemCursor)i);
-    ErrorIf(cursor === nullptr, "Unable to create SDL cursor: %s", SDL_GetError());
+    ErrorIf(cursor == nullptr, "Unable to create SDL cursor: %s", SDL_GetError());
     self->mSDLCursors[i] = cursor;
   }
 }

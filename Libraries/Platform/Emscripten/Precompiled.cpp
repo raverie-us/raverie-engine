@@ -165,9 +165,7 @@ void Shell::OpenFile(FileDialogInfo& config)
   EmscriptenShellOpenFileBegin(multiple, accept.c_str(), &config);
 }
 
-EM_JS(void, EmscriptenOpenUrl, (cstr url), {
-  window.open(UTF8ToString(url));
-});
+EM_JS(void, EmscriptenOpenUrl, (cstr url), { window.open(UTF8ToString(url)); });
 
 namespace Os
 {
