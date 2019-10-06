@@ -7,6 +7,8 @@ const Rune cDirectorySeparatorRune = Rune('/');
 const char cDirectorySeparatorCstr[] = "/";
 bool cFileSystemCaseSensitive = false;
 
+static const String cRoot(cDirectorySeparatorCstr);
+
 DeclareEnum2(EntryType, File, Directory);
 
 class SystemEntry : public LinkBase
@@ -30,7 +32,6 @@ public:
   EntryList mChildren;
   Array<byte> mFileData;
   TimeType mModifiedTime;
-  bool mLocked;
 };
 
 class FileSystem : public ExplicitSingleton<FileSystem>
@@ -149,7 +150,6 @@ SystemEntry* SystemEntry::CloneUnattached()
 void SystemEntry::AttachTo(SystemEntry* parent)
 {
   ReturnIf(mParent == nullptr, , "Cannot move the root directory");
-  ReturnIf(mLocked, , "Cannot move a locked file/directory");
 
   EntryList::Unlink(this);
 
@@ -160,12 +160,11 @@ void SystemEntry::AttachTo(SystemEntry* parent)
 bool SystemEntry::Delete()
 {
   ReturnIf(mParent == nullptr, false, "Attempting to delete the root directory");
-  ReturnIf(mLocked, false, "The file/directory is locked and cannot be deleted");
   delete this;
   return true;
 }
 
-FileSystem::FileSystem()
+FileSystem::FileSystem() : mWorkingDirectory(cRoot)
 {
   CreateEntry(GetUserLocalDirectory(), EntryType::Directory);
   CreateEntry(GetUserDocumentsDirectory(), EntryType::Directory);
@@ -310,7 +309,7 @@ bool DeleteDirectory(StringParam directory)
 
 bool PathIsRooted(StringParam directoryPath)
 {
-  return directoryPath.StartsWith("/");
+  return directoryPath.StartsWith(cRoot);
 }
 
 void CreateDirectory(StringParam dest)
@@ -364,7 +363,7 @@ bool FileExists(StringParam filePath)
 bool FileWritable(StringParam filePath)
 {
   SystemEntry* entry = FileSystem::GetInstance()->FindEntry(filePath);
-  return entry == nullptr || (entry->mType == EntryType::File && !entry->mLocked);
+  return entry == nullptr || (entry->mType == EntryType::File);
 }
 
 bool DirectoryExists(StringParam directoryPath)
@@ -390,22 +389,22 @@ void SetWorkingDirectory(StringParam path)
 
 String GetUserLocalDirectory()
 {
-  return "/Local/";
+  return "/home/.config/";
 }
 
 String GetUserDocumentsDirectory()
 {
-  return "/Documents/";
+  return "/home/";
 }
 
 String GetApplication()
 {
-  return "/Main.app";
+  return "/main";
 }
 
 String GetTemporaryDirectory()
 {
-  return "/Temporary/";
+  return "/tmp/";
 }
 
 String UniqueFileId(StringParam fullpath)
@@ -514,17 +513,6 @@ bool File::Open(StringParam filePath,
     entry = FileSystem::GetInstance()->CreateEntry(filePath, EntryType::File);
   }
 
-  if (entry->mLocked)
-  {
-    if (status)
-      status->SetFailed("The file was locked and cannot be read/written to");
-    return false;
-  }
-
-  // At the moment, we never lock files.
-  if (mode != FileMode::Read)
-    entry->mLocked = false;
-
   if (!entry)
   {
     if (status)
@@ -576,7 +564,6 @@ void File::Close()
   if (!self->mEntry)
     return;
 
-  self->mEntry->mLocked = false;
   self->mEntry = nullptr;
   if (mFileMode != FileMode::Read)
     FileModifiedState::EndFileModified(mFilePath);

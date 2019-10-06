@@ -214,7 +214,7 @@
           cancelAnimationFrame(animationId);
           delete timeoutToAnimationId[timeoutId];
         } else {
-          return originalClearTimeout(id);
+          return originalClearTimeout(timeoutId);
         }
       }
       

@@ -15,8 +15,8 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Registry.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Thread.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/ThreadSync.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../Empty/VirtualFileAndFileSystem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../OpenGL/OpenglRenderer.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../Posix/FileSystem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Posix/Socket.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Audio.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/ExternalLibrary.cpp
@@ -27,7 +27,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Timer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Utilities.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../STD/Atomic.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../STD/File.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../STD/FpControl.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../STD/Process.cpp
     ${CMAKE_CURRENT_LIST_DIR}/CallStack.cpp
