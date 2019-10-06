@@ -8,28 +8,42 @@
 
 namespace Zero
 {
-struct WebRequestPrivateData
+class WebRequestSharedData
 {
-  WebRequestPrivateData() : mCurl(nullptr), mTotalDownloaded(0)
+public:
+  WebRequestSharedData() : mCurl(nullptr), mTotalDownloaded(0), mCalledReceivedHeaders(false)
   {
   }
 
-  Thread mThread;
+  // Things from the main thread (copied).
+  String mUrl;
+  Array<WebPostData> mPostData;
+  Array<String> mAdditionalRequestHeaders;
+  String mPostDataWithBoundaries;
+
+  // Things set by the thread.
   CURL* mCurl;
   u64 mTotalDownloaded;
   Array<String> mHeaders;
   bool mCalledReceivedHeaders;
+
+  ThreadLock mRequestLock;
+  WebRequest* mRequest;
 };
 
-static size_t OnWebRequestHeaderReceived(char* data, size_t size, size_t nitems, void* request)
-{
-  WebRequest* self = (WebRequest*)request;
-  WebRequestPrivateData& privateData = *(WebRequestPrivateData*)self->mPrivateData;
-  CURL*& curl = privateData.mCurl;
+typedef std::shared_ptr<WebRequestSharedData> WebRequestSharedPointer;
 
-  // Returning 0 cancels the request.
-  if (self->mCancel)
-    return 0;
+class WebRequestPrivateData
+{
+public:
+  Thread mThread;
+  WebRequestSharedPointer mShared;
+};
+
+static size_t OnWebRequestHeaderReceived(char* data, size_t size, size_t nitems, void* userData)
+{
+  WebRequestSharedData* shared = (WebRequestSharedData*)userData;
+  CURL*& curl = shared->mCurl;
 
   size_t totalSize = size * nitems;
 
@@ -46,78 +60,90 @@ static size_t OnWebRequestHeaderReceived(char* data, size_t size, size_t nitems,
   static const String cHttpNewline("\r\n");
   Array<String> headers;
   forRange (StringRange singleHeader, strData.Split(cHttpNewline))
-    privateData.mHeaders.PushBack(singleHeader);
+    shared->mHeaders.PushBack(singleHeader);
 
   return totalSize;
 }
 
-static size_t OnWebRequestDataReceived(char* data, size_t size, size_t nmemb, void* request)
+static size_t OnWebRequestDataReceived(char* data, size_t size, size_t nmemb, void* userData)
 {
-  WebRequest* self = (WebRequest*)request;
-  WebRequestPrivateData& privateData = *(WebRequestPrivateData*)self->mPrivateData;
-  CURL*& curl = privateData.mCurl;
+  WebRequestSharedData* shared = (WebRequestSharedData*)userData;
+  CURL*& curl = shared->mCurl;
 
-  // Returning 0 cancels the request.
-  if (self->mCancel)
-    return 0;
-
-  if (!privateData.mCalledReceivedHeaders)
+  if (!shared->mCalledReceivedHeaders)
   {
     long responseCode = 0;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &responseCode);
 
-    if (self->mOnHeadersReceived)
-      self->mOnHeadersReceived(privateData.mHeaders, (WebResponseCode::Enum)responseCode, self);
+    {
+      Lock lock(shared->mRequestLock);
+      WebRequest* request = shared->mRequest;
+      if (!request)
+        return 0;
+      if (request->mOnHeadersReceived)
+        request->mOnHeadersReceived(shared->mHeaders, (WebResponseCode::Enum)responseCode, request);
+    }
 
-    privateData.mCalledReceivedHeaders = true;
+    shared->mCalledReceivedHeaders = true;
   }
 
-  // Currently this occurs on the main thread, so its safe for us to just
-  // directly send data
   size_t totalSize = size * nmemb;
 
-  privateData.mTotalDownloaded += (u64)totalSize;
+  shared->mTotalDownloaded += (u64)totalSize;
 
-  if (self->mOnDataReceived)
-    self->mOnDataReceived((byte*)data, totalSize, privateData.mTotalDownloaded, self);
+  {
+    Lock lock(shared->mRequestLock);
+    WebRequest* request = shared->mRequest;
+    if (!request)
+      return 0;
+    if (request->mOnDataReceived)
+      request->mOnDataReceived((byte*)data, totalSize, shared->mTotalDownloaded, request);
+  }
 
   // Return how much data we consumed
   return totalSize;
 }
 
-OsInt WebRequestThread(void* request)
+OsInt WebRequestThread(void* userData)
 {
-  WebRequest* self = (WebRequest*)request;
-  WebRequestPrivateData& privateData = *(WebRequestPrivateData*)self->mPrivateData;
-  privateData.mTotalDownloaded = 0;
-  privateData.mHeaders.Clear();
-  privateData.mCalledReceivedHeaders = false;
-
-  Status status;
+  // Keep a the shared pointer on the stack to ensure it's alive.
+  std::shared_ptr<WebRequestSharedData> shared = *(WebRequestSharedPointer*)userData;
+  delete (WebRequestSharedPointer*)userData;
+  shared->mTotalDownloaded = 0;
+  shared->mHeaders.Clear();
+  shared->mCalledReceivedHeaders = false;
 
   // Initialize a new curl state object
-  CURL*& curl = privateData.mCurl;
+  CURL*& curl = shared->mCurl;
   curl = curl_easy_init();
+
+  Status status;
 
   // If we couldn't create the curl object...
   if (!curl)
   {
-    if (self->mOnComplete)
+    Lock lock(shared->mRequestLock);
+    WebRequest* request = shared->mRequest;
+    if (!request)
+      return 0;
+    if (request->mOnComplete)
     {
       status.SetFailed("Unable to create the curl object");
-      self->mOnComplete(status, self);
+      request->mOnComplete(status, request);
     }
     return -1;
   }
 
-  String userAgent = self->GetZeroUserAgent();
+
+  // Keep this alive for the entire curl call.
+  String userAgent = WebRequest::GetUserAgent();
 
   // We always want to follow urls if they redirect
   curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
   curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, &OnWebRequestHeaderReceived);
-  curl_easy_setopt(curl, CURLOPT_HEADERDATA, self);
+  curl_easy_setopt(curl, CURLOPT_HEADERDATA, shared.get());
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &OnWebRequestDataReceived);
-  curl_easy_setopt(curl, CURLOPT_WRITEDATA, self);
+  curl_easy_setopt(curl, CURLOPT_WRITEDATA, shared.get());
   curl_easy_setopt(curl, CURLOPT_USERAGENT, userAgent.c_str());
   curl_easy_setopt(curl, CURLOPT_BUFFERSIZE, CURL_MAX_READ_SIZE);
 
@@ -144,15 +170,12 @@ OsInt WebRequestThread(void* request)
   // Any extra headers we add to the request (or override)
   curl_slist* headerList = nullptr;
 
-  forRange (StringParam header, self->mAdditionalRequestHeaders)
+  forRange (StringParam header, shared->mAdditionalRequestHeaders)
     headerList = curl_slist_append(headerList, header.c_str());
 
-  // We grab post data out here to keep it alive for the entire curl call.
-  String postData = self->GetPostDataWithBoundaries();
-
-  if (!self->mPostData.Empty())
+  if (!shared->mPostData.Empty())
   {
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postData.c_str());
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, shared->mPostDataWithBoundaries.c_str());
 
     // Set us into post mode
     curl_easy_setopt(curl, CURLOPT_POST, true);
@@ -166,7 +189,7 @@ OsInt WebRequestThread(void* request)
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerList);
 
   // Set the url we'll be requesting to.
-  curl_easy_setopt(curl, CURLOPT_URL, self->mUrl.c_str());
+  curl_easy_setopt(curl, CURLOPT_URL, shared->mUrl.c_str());
 
   char errorBuffer[CURL_ERROR_SIZE];
   errorBuffer[0] = '\0';
@@ -183,14 +206,22 @@ OsInt WebRequestThread(void* request)
       status.SetFailed(String::Format("Curl error %d: %s", (int)result, curl_easy_strerror(result)));
   }
 
+
   // Release the header list back to CURL
   if (headerList)
     curl_slist_free_all(headerList);
 
   curl_easy_cleanup(curl);
 
-  if (self->mOnComplete)
-    self->mOnComplete(status, self);
+  {
+    Lock lock(shared->mRequestLock);
+    WebRequest* request = shared->mRequest;
+    if (!request)
+      return 0;
+    if (request->mOnComplete)
+      request->mOnComplete(status, request);
+  }
+
   return 0;
 }
 
@@ -198,8 +229,7 @@ WebRequest::WebRequest() :
     mOnHeadersReceived(nullptr),
     mOnDataReceived(nullptr),
     mOnComplete(nullptr),
-    mUserData(nullptr),
-    mCancel(false)
+    mUserData(nullptr)
 {
   ZeroConstructPrivateData(WebRequestPrivateData);
 }
@@ -221,7 +251,15 @@ WebRequest::~WebRequest()
 void WebRequest::Run()
 {
   ZeroGetPrivateData(WebRequestPrivateData);
-  self->mThread.Initialize(&WebRequestThread, this, "WebRequest");
+  auto shared = std::make_shared<WebRequestSharedData>();
+  shared->mUrl = mUrl;
+  shared->mPostData = mPostData;
+  shared->mAdditionalRequestHeaders = mAdditionalRequestHeaders;
+  shared->mPostDataWithBoundaries = GetPostDataWithBoundaries();
+  shared->mRequest = this;
+  self->mShared = shared;
+
+  self->mThread.Initialize(&WebRequestThread, new WebRequestSharedPointer(shared), "WebRequest");
 }
 
 void WebRequest::Cancel()
@@ -230,9 +268,11 @@ void WebRequest::Cancel()
   if (!IsRunning())
     return;
 
-  mCancel = true;
-  self->mThread.WaitForCompletion();
-  mCancel = false;
+  {
+    Lock lock(self->mShared->mRequestLock);
+    self->mShared->mRequest = nullptr;
+  }
+  self->mShared = nullptr;
 }
 
 bool WebRequest::IsRunning()

@@ -66,8 +66,7 @@ WebRequest::WebRequest() :
     mOnHeadersReceived(nullptr),
     mOnDataReceived(nullptr),
     mOnComplete(nullptr),
-    mUserData(nullptr),
-    mCancel(false)
+    mUserData(nullptr)
 {
   ZeroConstructPrivateData(WebRequestPrivateData);
 }

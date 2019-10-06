@@ -117,8 +117,8 @@ public:
   // Gets the headers concatenated with the standard HTTP newline (\r\n).
   // This also includes the content type header at the beginning.
   String GetNewlineSeparatedHeaders();
-  // The user agent we use for this version of Zero (use if possible).
-  String GetZeroUserAgent();
+  // The user agent we use for this version of the executable (use if possible).
+  static String GetUserAgent();
 
   // The data and callbacks must be set before calling Run.
   String mUrl;
@@ -130,10 +130,6 @@ public:
   WebRequestDataFn mOnDataReceived;
   WebRequestCompleteFn mOnComplete;
   void* mUserData;
-
-  // Internals
-  // May be used to signal we're canceling.
-  Atomic<bool> mCancel;
 
   ZeroDeclarePrivateDataBytes(128);
 };
