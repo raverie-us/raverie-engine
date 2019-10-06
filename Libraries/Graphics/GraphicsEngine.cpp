@@ -506,7 +506,10 @@ void GraphicsEngine::UpdateProgress(ProgressEvent* event)
     static const size_t cProgressUpdateInterval = 5;
     static size_t sProgressUpdateFrame = 0;
     if (sProgressUpdateFrame % cProgressUpdateInterval == 0)
+    {
       RendererThreadMain(mRendererJobQueue);
+      YieldToOs();
+    }
     ++sProgressUpdateFrame;
   }
 }

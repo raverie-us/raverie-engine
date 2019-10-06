@@ -305,8 +305,6 @@ void ResourceSystem::LoadIntoLibrary(Status& status,
 
     if (resource)
       resourceLibrary->Add(resource, isNew);
-
-    YieldToOs();
   }
 
   if (!status)

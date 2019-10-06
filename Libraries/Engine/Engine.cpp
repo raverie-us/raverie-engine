@@ -314,7 +314,6 @@ void Engine::LoadingUpdate(StringParam operation,
   progressEvent.Percentage = percentage;
 
   DispatchEvent(Events::LoadingProgress, &progressEvent);
-  YieldToOs();
 }
 
 void Engine::LoadingFinish()
