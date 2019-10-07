@@ -311,8 +311,8 @@ Vec3 GjkDebug::ComputeSupport(Vec3 supportVector)
 
 Vec3 GjkDebug::RandomPoint(void)
 {
-  float alpha = std::rand() * Math::cPi / RAND_MAX;
-  float beta = std::rand() * Math::cPi / RAND_MAX * 2;
+  float alpha = (float)(std::rand() * (double)Math::cPi / (double)RAND_MAX);
+  float beta = (float)(std::rand() * (double)Math::cPi / (double)RAND_MAX * 2);
   float sinAlpha1 = Math::Sin(alpha);
   float CosAlpha1 = Math::Cos(alpha);
   float sinBeta1 = Math::Sin(beta);
