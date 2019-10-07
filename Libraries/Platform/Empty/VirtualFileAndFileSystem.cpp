@@ -389,12 +389,12 @@ void SetWorkingDirectory(StringParam path)
 
 String GetUserLocalDirectory()
 {
-  return "/home/.config/";
+  return "/home/root/.config/";
 }
 
 String GetUserDocumentsDirectory()
 {
-  return "/home/";
+  return "/home/root/";
 }
 
 String GetApplication()
