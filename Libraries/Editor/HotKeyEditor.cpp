@@ -849,7 +849,7 @@ HotKeyEditor::HotKeyEditor(Composite* parent) :
 
   if (!cNotUsingHotKeyResource)
   {
-    String userHotKeyFile = FilePath::Combine(GetUserDocumentsDirectory(), "ZeroEditor", "Default.HotKeyDataSet.data");
+    String userHotKeyFile = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "Default.HotKeyDataSet.data");
 
     if (!FileExists(userHotKeyFile))
     {

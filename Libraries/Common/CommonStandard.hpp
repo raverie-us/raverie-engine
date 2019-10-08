@@ -92,7 +92,6 @@ typedef double MaxAlignmentType;
 #include "Memory.hpp"
 #include "Pool.hpp"
 #include "Stack.hpp"
-#include "ZeroAllocator.hpp"
 #include "Permuter.hpp"
 #include "Rune.hpp"
 #include "String.hpp"
@@ -137,6 +136,7 @@ typedef double MaxAlignmentType;
 #include "Web.hpp"
 #include "Stream.hpp"
 #include "Singleton.hpp"
+#include "BuildVersion.hpp"
 
 namespace Math
 {

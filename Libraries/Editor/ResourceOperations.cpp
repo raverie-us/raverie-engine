@@ -602,7 +602,7 @@ String GetResourceFileName(ResourceManager* resourceManager, StringParam resourc
 
 String GetEditorTrash()
 {
-  return FilePath::Combine(GetUserDocumentsDirectory(), "ZeroEditor", "Trash");
+  return FilePath::Combine(GetUserDocumentsApplicationDirectory(), "Trash");
 }
 
 // Code paths for new resource:

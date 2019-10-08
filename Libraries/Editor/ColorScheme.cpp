@@ -188,8 +188,9 @@ void ColorScheme::Save()
     return;
   }
 
+  String userSchemeDirectory = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "ColorSchemes");
   if (mFilePath.Empty())
-    mFilePath = FilePath::Combine(GetUserDocumentsDirectory(), "ZeroEditor", "ColorSchemes");
+    mFilePath = userSchemeDirectory;
 
   CreateDirectoryAndParents(mFilePath);
   String filename = BuildString(mSaveName, ".data");
@@ -200,7 +201,6 @@ void ColorScheme::Save()
 
   // After saving a color scheme we need enumerate and add the new user color
   // schemes
-  String userSchemeDirectory = FilePath::Combine(GetUserDocumentsDirectory(), "ZeroEditor", "ColorSchemes");
   Enumerate(userSchemeDirectory);
   // Set our active scheme to the new saved scheme
   SetActiveScheme(mSaveName);
@@ -235,7 +235,7 @@ void ColorScheme::LoadSchemes()
   MainConfig* mainConfig = configCog->has(MainConfig);
   TextEditorConfig* textConfig = configCog->has(TextEditorConfig);
 
-  String userColorSchemeDirectory = FilePath::Combine(GetUserDocumentsDirectory(), "ZeroEditor", "ColorSchemes");
+  String userColorSchemeDirectory = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "ColorSchemes");
   Enumerate(userColorSchemeDirectory);
 
   // Default color schemes are loaded second to overwrite user schemes using the

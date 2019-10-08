@@ -46,7 +46,7 @@ void StartArchiveJob(StringParam filename)
 
 void BackupProject(ProjectSettings* project)
 {
-  String backupDirectory = FilePath::Combine(GetUserDocumentsDirectory(), "ZeroProjects", "Backups");
+  String backupDirectory = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "Backups");
   CreateDirectoryAndParents(backupDirectory);
   String timeStamp = GetTimeAndDateStamp();
   String fileName = BuildString(project->ProjectName, timeStamp, ".zip");

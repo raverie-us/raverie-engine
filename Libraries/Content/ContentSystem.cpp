@@ -95,7 +95,7 @@ ContentSystem::ContentSystem()
   IgnoredExtensions.Insert("libview");
   IgnoredExtensions.Insert("__pycache__");
 
-  HistoryPath = FilePath::Combine(GetUserDocumentsDirectory(), "ZeroEditor", "History");
+  HistoryPath = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "History");
 }
 
 ContentSystem::~ContentSystem()

@@ -133,6 +133,12 @@ ZeroShared String GetUserLocalDirectory();
 /// Directory for user modifiable configuration files.
 ZeroShared String GetUserDocumentsDirectory();
 
+/// Directory for user modifiable files specific to a remote application.
+ZeroShared String GetRemoteUserDocumentsApplicationDirectory(StringParam organization, StringParam applicationName);
+
+/// Directory for user modifiable files specific to our application.
+ZeroShared String GetUserDocumentsApplicationDirectory();
+
 /// Directory to the application.
 ZeroShared String GetApplicationDirectory();
 

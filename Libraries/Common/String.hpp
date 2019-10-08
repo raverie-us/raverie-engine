@@ -214,8 +214,23 @@ public:
   static StringNode* AllocateNode(size_type size);
   static StringNode* AllocateNode(size_type memorySize, size_t subStringSize);
 
+  friend String operator+(StringParam left, StringParam right)
+  {
+    return String::Format("%s%s", left.c_str(), right.c_str());
+  }
+
+  friend String operator+(StringParam left, const char* right)
+  {
+    return String::Format("%s%s", left.c_str(), right);
+  }
+
+  friend String operator+(const char* left, StringParam right)
+  {
+    return String::Format("%s%s", left, right.c_str());
+  }
+
   ///////Primary equal operator for strings///////
-  friend bool operator==(const String& left, const String& right)
+  friend bool operator==(StringParam left, StringParam right)
   {
 #if defined(ZeroStringPooling)
     return left.mNode == right.mNode;
@@ -225,7 +240,7 @@ public:
   }
 
   ///////Less than operators///////////
-  friend bool operator<(const String& left, const String& right)
+  friend bool operator<(StringParam left, StringParam right)
   {
     if (left.mNode == right.mNode)
       return false;
@@ -233,7 +248,7 @@ public:
   }
 
   ///////Greater than operators///////////
-  friend bool operator>(const String& left, const String& right)
+  friend bool operator>(StringParam left, StringParam right)
   {
     if (left.mNode == right.mNode)
       return false;

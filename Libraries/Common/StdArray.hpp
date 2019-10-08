@@ -4,7 +4,6 @@
 
 #include "ContainerCommon.hpp"
 #include <vector>
-#include "ZeroAllocator.hpp"
 
 namespace Zero
 {

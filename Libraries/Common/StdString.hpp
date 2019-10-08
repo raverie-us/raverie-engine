@@ -1,7 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-#include "ZeroAllocator.hpp"
 #include "Hashing.hpp"
 
 namespace Zero

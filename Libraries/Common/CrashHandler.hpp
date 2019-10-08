@@ -37,10 +37,10 @@ struct CrashInfo
 {
   CrashInfo()
   {
-    mDumpName = "ZeroDump.dmp";
-    mLogName = "ZeroLog.txt";
-    mStackName = "ZeroStack.txt";
-    mModuleName = "ZeroEditor";
+    mDumpName = GetApplicationName() + "Dump.dmp";
+    mLogName = GetApplicationName() + "Log.txt";
+    mStackName = GetApplicationName() + "Stack.txt";
+    mModuleName = GetApplicationName();
     mStripModules = false;
   }
 

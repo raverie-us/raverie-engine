@@ -2,7 +2,6 @@ Cog  =
 {
 	MainConfig  = 
 	{
-		string ApplicationName = "ZeroEditor",
 	},
 	ContentConfig = 
 	{

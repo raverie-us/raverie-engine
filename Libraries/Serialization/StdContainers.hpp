@@ -9,7 +9,6 @@
 #include <utility>
 
 #include "Graph.hpp"
-#include "ZeroAllocator.hpp"
 #include "StdString.hpp"
 #include "Serialization\SerializationTraits.hpp"
 #include "Serialization\Serialization.hpp"

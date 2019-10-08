@@ -25,7 +25,7 @@ ZilchDefineType(ObjectStore, builder, type)
 
 void ObjectStore::SetStoreName(StringParam storeName)
 {
-  String storePath = FilePath::Combine(GetUserDocumentsDirectory(), "Zero", storeName);
+  String storePath = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "Store", storeName);
   if (DirectoryExists(storePath))
     PopulateEntries(storePath);
 
@@ -40,7 +40,7 @@ void ObjectStore::SetupDirectory()
     // Build the paths and create the directory to contain stored objects.
 
     // In User documents create a folder call Zero.
-    String storePath = FilePath::Combine(GetUserDocumentsDirectory(), "Zero", mStoreName);
+    String storePath = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "Store", mStoreName);
 
     CreateDirectoryAndParents(storePath);
 
@@ -204,7 +204,7 @@ void ObjectStore::Erase(StringParam name)
   if (FileExists(storeFile))
   {
     // Get the path to where we're moving the file to (in the trash directory)
-    String trashDirectory = FilePath::Combine(GetUserDocumentsDirectory(), "Zero", "Trash");
+    String trashDirectory = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "StoreTrash");
     String fileDestination = FilePath::Combine(trashDirectory, BuildString(name, ".Data"));
 
     // Create the trash directory if it doesn't exist
@@ -223,7 +223,7 @@ void ObjectStore::ClearStore()
   mEntries.Clear();
 
   SetupDirectory();
-  String trashDirectory = FilePath::Combine(GetUserDocumentsDirectory(), "Zero", "Trash");
+  String trashDirectory = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "StoreTrash");
 
   MoveFolderContents(trashDirectory, mStorePath);
   PersistFiles();

@@ -17836,21 +17836,6 @@ DocumentationLibrary
 			{
 				"Component"
 			}
-			var Properties = Array
-			{
-				Property
-				{
-					var Name = "ZeroHubUsername"
-					var Type = "String"
-				}
-			}
-			var Methods = Array
-			{
-				Method
-				{
-					var Name = "EditorConfig"
-				}
-			}
 		}
 		Object
 		{
@@ -29016,12 +29001,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 			}
 			var Properties = Array
 			{
-				Property
-				{
-					var Name = "ApplicationName"
-					var Type = "String"
-					var ReadOnly = true
-				}
 				Property
 				{
 					var Name = "BuildDate"

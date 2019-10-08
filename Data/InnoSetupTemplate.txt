@@ -1,4 +1,4 @@
-; Zero Engine Export Installer
+; Engine Export Installer
 ; Use this file with Inno Setup to create an installer for your exported game and its content
 
 #define ApplicationName "%PROJECTNAME%"

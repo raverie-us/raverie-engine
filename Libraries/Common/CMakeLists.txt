@@ -37,6 +37,8 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/BoolVector3.hpp
     ${CMAKE_CURRENT_LIST_DIR}/BoolVector4.cpp
     ${CMAKE_CURRENT_LIST_DIR}/BoolVector4.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BuildVersion.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/BuildVersion.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ByteBuffer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ByteBuffer.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ByteColor.hpp
@@ -263,6 +265,5 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/WebRequest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WebRequest.hpp
     ${CMAKE_CURRENT_LIST_DIR}/WeightedProbabilityTable.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZeroAllocator.hpp
     ${WELDER_COMMON_VISUALIZER}
 )

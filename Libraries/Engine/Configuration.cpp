@@ -45,14 +45,14 @@ ZilchDefineType(EditorConfig, builder, type)
   ZeroBindDocumented();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   type->AddAttribute(ObjectAttributes::cCore);
-  ZilchBindFieldProperty(ZeroHubUsername);
+  ZilchBindFieldProperty(BugReportUsername);
 }
 
 void EditorConfig::Serialize(Serializer& stream)
 {
   SerializeNameDefault(EditingProject, String());
   SerializeNameDefault(EditingLevel, String());
-  SerializeNameDefault(ZeroHubUsername, String());
+  SerializeNameDefault(BugReportUsername, String());
 }
 
 ZilchDefineType(ContentConfig, builder, type)
@@ -326,14 +326,9 @@ void RecentProjects::RemoveMissingProjects()
   }
 }
 
-String GetRemoteConfigDirectory(StringParam organization, StringParam applicationName)
-{
-  return FilePath::Combine(GetUserDocumentsDirectory(), BuildString(organization, applicationName));
-}
-
 String GetConfigDirectory()
 {
-  return GetRemoteConfigDirectory(GetOrganization(), GetApplicationName());
+  return GetUserDocumentsApplicationDirectory();
 }
 
 String GetConfigFileName()
@@ -343,7 +338,7 @@ String GetConfigFileName()
 
 String GetRemoteConfigFilePath(StringParam organization, StringParam applicationName)
 {
-  return FilePath::Combine(GetRemoteConfigDirectory(organization, applicationName), GetConfigFileName());
+  return FilePath::Combine(GetRemoteUserDocumentsApplicationDirectory(organization, applicationName), GetConfigFileName());
 }
 
 String GetConfigFilePath()
@@ -390,7 +385,6 @@ Cog* LoadConfig(ModifyConfigFn modifier, void* userData)
 
   static const String cDataDirectoryName("Data");
 
-  String appCacheDirectory = GetUserLocalDirectory();
   String documentDirectory = GetUserDocumentsDirectory();
   String applicationDirectory = GetApplicationDirectory();
   String configFile = GetConfigFilePath();

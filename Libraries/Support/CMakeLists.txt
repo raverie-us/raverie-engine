@@ -7,8 +7,6 @@ target_sources(Support
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Archive.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Archive.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/BuildVersion.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/BuildVersion.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ChunkReader.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ChunkWriter.hpp
     ${CMAKE_CURRENT_LIST_DIR}/FileConsoleListener.hpp

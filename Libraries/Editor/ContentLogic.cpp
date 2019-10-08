@@ -15,7 +15,6 @@ void LoadContentConfig()
 
   Array<String>& librarySearchPaths = contentSystem->LibrarySearchPaths;
   ContentConfig* contentConfig = configCog->has(ContentConfig);
-  String appCacheDirectory = GetUserLocalDirectory();
 
   String sourceDirectory = mainConfig->SourceDirectory;
   ErrorIf(sourceDirectory.Empty(), "Expected a source directory");
@@ -25,8 +24,6 @@ void LoadContentConfig()
 
   librarySearchPaths.PushBack(FilePath::Combine(sourceDirectory, "Resources"));
 
-  CreateDirectoryAndParents(FilePath::Combine(appCacheDirectory, GetApplicationName()));
-
   contentSystem->ToolPath = FilePath::Combine(sourceDirectory, "Tools");
 
   contentSystem->mHistoryEnabled = contentConfig->HistoryEnabled;
@@ -35,7 +32,7 @@ void LoadContentConfig()
   // version selector goes live) set the content folder to a unique directory
   // based upon the version number
   String revisionChangesetName = BuildString("ZeroVersion", GetRevisionNumberString(), "-", GetChangeSetString());
-  contentSystem->ContentOutputPath = FilePath::Combine(appCacheDirectory, "ZeroContent", revisionChangesetName);
+  contentSystem->ContentOutputPath = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "ContentOutput", revisionChangesetName);
   contentSystem->PrebuiltContentPath =
       FilePath::Combine(sourceDirectory, "Build", "PrebuiltContent", revisionChangesetName);
   ZPrint("Content output directory '%s'\n", contentSystem->ContentOutputPath.c_str());

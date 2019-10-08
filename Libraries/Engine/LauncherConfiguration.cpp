@@ -37,8 +37,8 @@ void LauncherConfig::Serialize(Serializer& stream)
   SerializeNameDefault(mLauncherLocation, String());
   SerializeEnumNameDefault(LauncherAutoRunMode, mAutoRunMode, LauncherAutoRunMode::None);
 
-  SerializeNameDefault(mDefaultProjectSaveLocation, FilePath::Combine(GetUserDocumentsDirectory(), "ZeroProjects"));
-  SerializeNameDefault(mDownloadPath, FilePath::Combine(GetUserDocumentsDirectory(), "ZeroLauncher"));
+  SerializeNameDefault(mDefaultProjectSaveLocation, FilePath::Combine(GetUserDocumentsApplicationDirectory(), "Projects"));
+  SerializeNameDefault(mDownloadPath, FilePath::Combine(GetUserDocumentsApplicationDirectory(), "Launcher"));
   SerializeNameDefault(mDisplayBuildOnProjects, false);
   SerializeNameDefault(mShowDevelopmentBuilds, false);
   SerializeRename(mShowDevelopmentBuilds, "ShowNightlies");

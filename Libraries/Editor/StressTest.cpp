@@ -263,7 +263,7 @@ StressTest::StressTest()
 {
   Seed = 1234;
   Frames = 1000;
-  LogFile = FilePath::Combine(GetUserDocumentsDirectory(), "Log.txt");
+  LogFile = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "StressTestLog.txt");
   CreateObjects = true;
   DestroyObjects = true;
   SetProperties = true;
@@ -299,7 +299,7 @@ void StressTest::Serialize(Serializer& stream)
   MetaSerializeProperties(this, stream);
 
   if (LogFile.Empty())
-    LogFile = FilePath::Combine(GetUserDocumentsDirectory(), "Log.txt");
+    LogFile = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "StressTestLog.txt");
 }
 
 // StressTestDialog

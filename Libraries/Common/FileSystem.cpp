@@ -11,6 +11,18 @@
 namespace Zero
 {
 
+String GetRemoteUserDocumentsApplicationDirectory(StringParam organization, StringParam applicationName)
+{
+  return FilePath::Combine(GetUserDocumentsDirectory(), BuildString(organization, applicationName));
+}
+
+String GetUserDocumentsApplicationDirectory()
+{
+  String directory = GetRemoteUserDocumentsApplicationDirectory(GetOrganization(), GetApplicationName());
+  CreateDirectoryAndParents(directory);
+  return directory;
+}
+
 String GetApplicationDirectory()
 {
   // Use the parent directory of the executable as the application directory.

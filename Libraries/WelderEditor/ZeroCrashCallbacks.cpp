@@ -139,7 +139,7 @@ void SendCrashReport(CrashHandlerParameters& params, void* userData)
     return;
 
   // May be exported try other path
-  String crashToolPathB = FilePath::Combine(GetTemporaryDirectory(), "Zero", "Tools", "ZeroCrashHandler.exe");
+  String crashToolPathB = FilePath::Combine(GetTemporaryDirectory(), GetApplicationName(), "Tools", "ZeroCrashHandler.exe");
   success = Os::SystemOpenFile(status, crashToolPathB.c_str(), Os::Verb::Default, paramString.c_str());
 }
 

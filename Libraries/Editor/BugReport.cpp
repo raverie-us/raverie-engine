@@ -102,7 +102,7 @@ void BugReporter::Reset()
   if (Z::gEditor != nullptr && Z::gEditor->mConfig != nullptr)
   {
     if (EditorConfig* editorConfig = Z::gEditor->mConfig->has(EditorConfig))
-      mUsername->SetText(editorConfig->ZeroHubUsername);
+      mUsername->SetText(editorConfig->BugReportUsername);
   }
 
   // Set focus on username field if it's empty.
@@ -183,7 +183,7 @@ void BugReporter::OnSend(Event* event)
   if (Z::gEditor != nullptr && Z::gEditor->mConfig != nullptr)
   {
     if (EditorConfig* editorConfig = Z::gEditor->mConfig->has(EditorConfig))
-      editorConfig->ZeroHubUsername = mUsername->GetText();
+      editorConfig->BugReportUsername = mUsername->GetText();
   }
 
   BugReportJob* job = new BugReportJob();

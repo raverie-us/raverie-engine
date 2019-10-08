@@ -49,7 +49,7 @@ public:
   String EditingLevel;
 
   /// Username that's used by the bug reporter.
-  String ZeroHubUsername;
+  String BugReportUsername;
 };
 
 /// Configuration component that Contains user info.
