@@ -5,6 +5,7 @@ welder_use_precompiled_header(Platform ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(Platform
   PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/../Curl/WebRequest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/MainLoop.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../OpenGL/OpenglRenderer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../OpenGL/OpenglRenderer.hpp
