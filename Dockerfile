@@ -56,8 +56,13 @@ RUN npm install --no-optional --no-progress --no-audit --global
 # There is a problem with clang using the default gcc headers on Ubuntu (remove #error).
 RUN sed -i 's/# error.*//g' /usr/include/x86_64-linux-gnu/sys/cdefs.h
 
+RUN echo 'pcm.!default { type plug slave.pcm "null" }' > /etc/asound.conf
+
 ARG USER_ID
+RUN useradd -m -s /bin/bash -u $USER_ID user
+RUN addgroup user audio
 USER $USER_ID
+ENV HOME="/home/user"
 
 ENV EMSCRIPTEN_VERSION sdk-tag-1.38.47-64bit-upstream
 
