@@ -72,9 +72,15 @@ else()
   set(EMSCRIPTEN_FILE_SYSTEM_LOADER "preload")
 endif()
 
+function(welder_toolchain_setup_library target)
+  get_target_property(targetType ${target} TYPE)
+  if (targetType STREQUAL "EXECUTABLE")
+    target_link_options(${target} PUBLIC --${EMSCRIPTEN_FILE_SYSTEM_LOADER}-file $<TARGET_FILE_DIR:${target}>/FileSystem.zip@/FileSystem.zip)
+  endif ()
+endfunction()
+
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}\
   --no-heap-copy\
-  --${EMSCRIPTEN_FILE_SYSTEM_LOADER}-file \"${WELDER_VIRTUAL_FILE_SYSTEM_ZIP}\"@/FileSystem.zip\
 ")
 
 set(WELDER_C_CXX_EXTERNAL_FLAGS -Wno-everything)

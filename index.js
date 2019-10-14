@@ -8,6 +8,7 @@ const os = require("os");
 const rimraf = require("rimraf");
 const commandExists = require("command-exists").sync;
 const yargs = require("yargs");
+const findUp = require("find-up");
 
 let hostos = "";
 let executableExtension = "";
@@ -28,10 +29,12 @@ const initialize = () => {
 };
 
 initialize();
+const repoRootFile = ".welder";
 
 const dirs = (() => {
-    const repo = process.cwd();
+    const repo = path.dirname(findUp.sync(repoRootFile));
     const libraries = path.join(repo, "Libraries");
+    const resources = path.join(repo, "Resources");
     const build = path.join(repo, "Build");
     const prebuiltContent = path.join(build, "PrebuiltContent");
 
@@ -39,7 +42,8 @@ const dirs = (() => {
         build,
         libraries,
         prebuiltContent,
-        repo
+        repo,
+        resources
     };
 })();
 
@@ -84,6 +88,14 @@ const printError = (text) => {
 
 const printLog = (text) => {
     printIndented(text, console.log, "+ ");
+};
+
+const ensureCommandExists = (command) => {
+    if (!commandExists(command)) {
+        printError(`Command '${command}' does not exist`);
+        return false;
+    }
+    return true;
 };
 
 const exec = async (executable, args, options) => {
@@ -163,7 +175,7 @@ const runEslint = async (options) => {
 
 const runClangTidy = async (options, sourceFiles) => {
     console.log("Running Clang Tidy");
-    if (!commandExists("clang-tidy")) {
+    if (!ensureCommandExists("clang-tidy")) {
         return;
     }
 
@@ -211,7 +223,7 @@ const runClangTidy = async (options, sourceFiles) => {
 
 const runClangFormat = async (options, sourceFiles) => {
     console.log("Running Clang Format");
-    if (!commandExists("clang-format")) {
+    if (!ensureCommandExists("clang-format")) {
         return;
     }
 
@@ -367,7 +379,7 @@ const activateBuildDir = (combo) => {
 const cmake = async (options) => {
     console.log("Running Cmake", options);
 
-    if (!commandExists("cmake") || !commandExists("git")) {
+    if (!ensureCommandExists("cmake") || !ensureCommandExists("git")) {
         return null;
     }
 
@@ -508,11 +520,118 @@ const preventNoOutputTimeout = () => {
     return () => clearInterval(interval);
 };
 
-const runBuild = async (buildDir, config, testExecutablePaths, opts) => {
+const executables = [
+    {
+        additionalVfs: [
+            "Data",
+            repoRootFile
+        ],
+        name: "WelderEditor",
+        resourceLibraries: [
+            "FragmentCore",
+            "Loading",
+            "ZeroCore",
+            "UiWidget",
+            "EditorUi",
+            "Editor"
+        ]
+    },
+    {
+        additionalVfs: [
+            "Data",
+            repoRootFile
+        ],
+        name: "WelderLauncher",
+        resourceLibraries: [
+            "FragmentCore",
+            "Loading",
+            "ZeroCore",
+            "ZeroLauncherResources"
+        ]
+    },
+    {
+        additionalVfs: [repoRootFile],
+        name: "WelderLauncherShell",
+        resourceLibraries: []
+    }
+];
+
+/*
+ * Add files to an existing zip. If the file paths are absolute, only the file name will be added to the root,
+ * otherwise if the files are relative the entire relative path will be added.
+ */
+const zipAdd = async (cwd, outputZip, files) => {
+    const options = {
+        cwd,
+        err: printError,
+        out: printLog,
+        reject: false,
+        stdio: [
+            "ignore",
+            "pipe",
+            "pipe"
+        ]
+    };
+    await exec("7z", [
+        "a",
+        "-tzip",
+        "-mx=9",
+        "-mfb=128",
+        "-mpass=10",
+        outputZip,
+        ...files
+    ], options);
+};
+
+const readCmakeVariables = (buildDir) => {
+    const cmakeCachePath = path.join(buildDir, "CMakeCache.txt");
+    const contents = fs.readFileSync(cmakeCachePath, "utf8");
+    const regex = /(?<name>[a-zA-Z0-9_-]+):UNINITIALIZED=(?<value>.*)/gu;
+
+    const result = {};
+    for (;;) {
+        const array = regex.exec(contents);
+        if (!array) {
+            break;
+        }
+        result[array.groups.name] = array.groups.value;
+    }
+    return result;
+};
+
+const runBuild = async (buildDir, testExecutablePaths, opts) => {
     console.log("Running Build");
-    if (!commandExists("cmake")) {
+    if (!ensureCommandExists("cmake")) {
         return;
     }
+
+    const cmakeVariables = readCmakeVariables(buildDir);
+    for (const executable of executables) {
+        console.log(`Zipping virtual file system for ${executable.name}`);
+
+        const libraryDir = path.join(buildDir, "Libraries", executable.name);
+        mkdirp.sync(libraryDir);
+        const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
+        tryUnlinkSync(fileSystemZip);
+
+        const files = [...executable.additionalVfs];
+        for (const resourceLibrary of executable.resourceLibraries) {
+            files.push(path.join(dirs.resources, resourceLibrary));
+
+            // This must match the revisionChangesetName in ContentLogic.cpp:
+            const revisionChangesetName = `Version-${cmakeVariables.WELDER_REVISION}-${cmakeVariables.WELDER_CHANGESET}`;
+            const prebuiltPath = path.join(dirs.prebuiltContent, revisionChangesetName, resourceLibrary);
+            if (fs.existsSync(prebuiltPath)) {
+                files.push(prebuiltPath);
+            } else {
+                printLog(`Skipping prebuilt content for ${resourceLibrary}`);
+            }
+        }
+
+        const relativeFiles = files.map((file) => path.relative(dirs.repo, file));
+        await zipAdd(dirs.repo, fileSystemZip, relativeFiles);
+    }
+
 
     const options = {
         cwd: buildDir,
@@ -541,6 +660,7 @@ const runBuild = async (buildDir, config, testExecutablePaths, opts) => {
     const parallel = makeArgArray("parallel");
 
     const endPnot = preventNoOutputTimeout();
+    const config = opts.config ? opts.config : "Release";
     await exec("cmake", [
         "--build",
         ".",
@@ -585,19 +705,92 @@ const build = async (options) => {
     console.log("Building");
     const combo = determineCmakeCombo(options);
     const buildDir = activateBuildDir(combo);
-    if (!fs.existsSync(buildDir)) {
-        printError(`Build directory does not exist ${buildDir}`);
-    }
     const testExecutablePaths = [];
-    const config = options.config ? options.config : "Release";
-    await runBuild(buildDir, config, testExecutablePaths, options);
+    await runBuild(buildDir, testExecutablePaths, options);
     // Await runTests(testExecutablePaths);
     console.log("Built");
 };
 
+const prebuilt = async (options) => {
+    console.log("Copying Prebuilt Content");
+    const combo = determineCmakeCombo(options);
+    if (combo.toolchain === "Emscripten") {
+        console.log(`Skipping prebuilt content for toolchain '${combo.toolchain}'`);
+        return;
+    }
+    const buildDir = activateBuildDir(combo);
+    const editorPath = path.join(buildDir, "Libraries", "WelderEditor", `WelderEditor${executableExtension}`);
+
+    if (!fs.existsSync(editorPath)) {
+        printError(`Executable does not exit ${editorPath}`);
+        return;
+    }
+
+    const opts = {
+        cwd: buildDir,
+        err: printError,
+        out: printLog,
+        reject: false,
+        stdio: [
+            "ignore",
+            "pipe",
+            "pipe"
+        ]
+    };
+    await exec(editorPath, [
+        "-CopyPrebuiltContent",
+        "-Exit"
+    ], opts);
+
+    if (!fs.existsSync(dirs.prebuiltContent) || fs.readdirSync(dirs.prebuiltContent).length === 0) {
+        printError("Prebuilt content directory did not exist or was empty");
+    }
+    console.log("Copied Prebuilt Content");
+};
+
+const pack = async (options) => {
+    console.log("Packing");
+    const combo = determineCmakeCombo(options);
+    const buildDir = activateBuildDir(combo);
+
+    const filter = [
+        ".pdb",
+        ".ilk",
+        ".exp",
+        ".lib",
+        ".wast",
+        ".cmake",
+        "CMakeFiles",
+        "FileSystem.zip"
+    ];
+
+    for (const executable of executables) {
+        const library = executable.name;
+        console.log(`Packaging library ${library}`);
+
+        const libraryDir = path.join(buildDir, "Libraries", library);
+        if (!fs.existsSync(libraryDir)) {
+            printError(`Library directory does not exist ${libraryDir}`);
+            continue;
+        }
+        const files = fs.readdirSync(libraryDir).filter((file) => !filter.includes(path.extname(file)) && !filter.includes(file)).
+            map((file) => path.join(libraryDir, file));
+        const packageZip = path.join(buildDir, `${library}Package.zip`);
+        tryUnlinkSync(packageZip);
+        if (combo.toolchain !== "Emscripten") {
+            const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
+            fs.copyFileSync(fileSystemZip, packageZip);
+        }
+
+        // Keep files as absolute, since we want to only add the file names to the zip.
+        await zipAdd(dirs.repo, packageZip, files);
+    }
+    console.log("Packed");
+};
+
 const documentation = async () => {
     console.log("Running Doxygen");
-    if (!commandExists("doxygen")) {
+    if (!ensureCommandExists("doxygen")) {
         return;
     }
     const doxygenOptions = {
@@ -623,6 +816,14 @@ const documentation = async () => {
     }));
 };
 
+const all = async (options) => {
+    await cmake(options);
+    await build(options);
+    await prebuilt(options);
+    await documentation(options);
+    await pack(options);
+};
+
 const main = async () => {
     const empty = {
     };
@@ -637,6 +838,12 @@ const main = async () => {
         usage(`build [--target=...] [--parallel=...] ${comboOptions}`).
         command("documentation", "Build generated documentation", empty, documentation).
         usage("documentation").
+        command("prebuilt", "Copy prebuilt content", empty, prebuilt).
+        usage(`prebuilt ${comboOptions}`).
+        command("pack", "Package everything into standalone installable archives", empty, pack).
+        usage(`pack ${comboOptions}`).
+        command("all", "Run all the expected commands in order: cmake build prebuilt documentation pack", empty, all).
+        usage(`all ${comboOptions}`).
         demand(1).
         help().
         argv;

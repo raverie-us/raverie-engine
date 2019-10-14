@@ -41,6 +41,7 @@ module.exports = {
     "default-case": "off",
     "max-lines": ["error", 1000],
     "no-sync": "off",
-    "no-continue": "off"
+    "no-continue": "off",
+    "no-loop-func": "off"
   }
 };

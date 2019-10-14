@@ -37,19 +37,6 @@ set(WELDER_TOOLCHAIN_DIR ${WELDER_CMAKE_DIR}/Toolchain/)
 set(WELDER_TARGETOS_DIR ${WELDER_CMAKE_DIR}/TargetOs/)
 set(WELDER_LIBRARIES_DIR ${WELDER_CORE_DIR}/Libraries/)
 set(WELDER_PLATFORM_DATA_DIR ${WELDER_CORE_DIR}/PlatformData/${WELDER_TOOLCHAIN})
-set(WELDER_VIRTUAL_FILE_SYSTEM_ZIP ${CMAKE_BINARY_DIR}/FileSystem.zip)
-
-add_custom_target(VirtualFileSystemZip
-  COMMAND ${CMAKE_COMMAND} -E remove ${WELDER_VIRTUAL_FILE_SYSTEM_ZIP}
-  COMMAND ${CMAKE_COMMAND} -E make_directory "Build/PrebuiltContent/ZeroVersion${WELDER_REVISION}-${WELDER_CHANGESET}"
-  COMMAND 7z a -tzip -mx=9 -mfb=128 -mpass=10 ${WELDER_VIRTUAL_FILE_SYSTEM_ZIP}
-    "Resources"
-    "Data"
-    "Build/PrebuiltContent/ZeroVersion${WELDER_REVISION}-${WELDER_CHANGESET}"
-    ".welder"
-  #COMMAND ${CMAKE_COMMAND} -E tar "cfv" "${WELDER_VIRTUAL_FILE_SYSTEM_ZIP}" --format=zip
-  WORKING_DIRECTORY ${WELDER_CORE_DIR}
-)
 
 function(welder_setup_library target directory internal)
   target_include_directories(${target} PUBLIC ${directory} ${WELDER_LIBRARIES_DIR})
@@ -57,6 +44,7 @@ function(welder_setup_library target directory internal)
     #set_property(TARGET ${target} PROPERTY C_INCLUDE_WHAT_YOU_USE ${WELDER_IWYU_PATH})
     #set_property(TARGET ${target} PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${WELDER_IWYU_PATH})
   endif()
+  welder_toolchain_setup_library(${target})
 endfunction()
 
 function(welder_get_all_dependencies outputList TARGET)

@@ -61,6 +61,9 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SAFESEH:NO /SUBSYSTEM:WIN
 
 set(WELDER_C_CXX_EXTERNAL_FLAGS /W0 /wd4267)
 
+function(welder_toolchain_setup_library target)
+endfunction()
+
 function(welder_use_precompiled_header target directory)
   target_compile_options(${target} PRIVATE "/FIPrecompiled.hpp")
   set_source_files_properties(${directory}/Precompiled.cpp PROPERTIES COMPILE_FLAGS "/YcPrecompiled.hpp")

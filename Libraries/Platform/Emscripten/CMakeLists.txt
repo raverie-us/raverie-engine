@@ -52,5 +52,3 @@ welder_target_includes(Platform
   PUBLIC
     Common
 )
-
-add_dependencies(Platform VirtualFileSystemZip)
