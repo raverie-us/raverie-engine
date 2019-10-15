@@ -732,7 +732,7 @@ const prebuilt = async (options) => {
 
   const opts = {
     cwd: buildDir,
-    err: printError,
+    err: printLog,
     out: printLog,
     reject: false,
     stdio: [
