@@ -11,6 +11,7 @@ module.exports = {
     es6: true
   },
   rules: {
+    "indent": ["error", 2],
     "no-extra-parens": "off",
 
     "max-statements": ["error", 100],
