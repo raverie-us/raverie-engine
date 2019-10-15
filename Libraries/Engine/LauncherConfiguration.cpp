@@ -37,7 +37,8 @@ void LauncherConfig::Serialize(Serializer& stream)
   SerializeNameDefault(mLauncherLocation, String());
   SerializeEnumNameDefault(LauncherAutoRunMode, mAutoRunMode, LauncherAutoRunMode::None);
 
-  SerializeNameDefault(mDefaultProjectSaveLocation, FilePath::Combine(GetUserDocumentsApplicationDirectory(), "Projects"));
+  SerializeNameDefault(mDefaultProjectSaveLocation,
+                       FilePath::Combine(GetUserDocumentsApplicationDirectory(), "Projects"));
   SerializeNameDefault(mDownloadPath, FilePath::Combine(GetUserDocumentsApplicationDirectory(), "Launcher"));
   SerializeNameDefault(mDisplayBuildOnProjects, false);
   SerializeNameDefault(mShowDevelopmentBuilds, false);

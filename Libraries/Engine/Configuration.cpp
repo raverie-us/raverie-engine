@@ -338,7 +338,8 @@ String GetConfigFileName()
 
 String GetRemoteConfigFilePath(StringParam organization, StringParam applicationName)
 {
-  return FilePath::Combine(GetRemoteUserDocumentsApplicationDirectory(organization, applicationName), GetConfigFileName());
+  return FilePath::Combine(GetRemoteUserDocumentsApplicationDirectory(organization, applicationName),
+                           GetConfigFileName());
 }
 
 String GetConfigFilePath()
