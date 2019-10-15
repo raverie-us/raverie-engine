@@ -46,10 +46,11 @@ RUN wget -q -O cmake.sh https://github.com/Kitware/CMake/releases/download/v3.14
     ./cmake.sh --skip-license && \
     rm cmake.sh
 
-ENV DISPLAY ':99.0'
+ENV DISPLAY=":99.0"
 
 RUN npm install -g npm@latest
 
+ENV NODE_PATH="/node_modules"
 COPY package*.json ./
 RUN npm install --no-optional --no-progress --no-audit --global
 

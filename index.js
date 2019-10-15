@@ -158,8 +158,9 @@ const runEslint = async (options) => {
       "pipe"
     ]
   };
+  const eslintPath = path.normalize(path.join(require.resolve("eslint"), "..", "..", "bin", "eslint.js"));
   const args = [
-    "node_modules/eslint/bin/eslint.js",
+    eslintPath,
     "."
   ];
 
@@ -167,10 +168,7 @@ const runEslint = async (options) => {
     args.push("--fix");
   }
 
-  await exec("node", [
-    "node_modules/eslint/bin/eslint.js",
-    "."
-  ], eslintOptions);
+  await exec("node", args, eslintOptions);
 };
 
 const runClangTidy = async (options, sourceFiles) => {
@@ -266,7 +264,7 @@ const runWelderFormat = async (options, sourceFiles) => {
     // Split our code into lines (detect Windows newline too so we can remove it).
     const lines = oldCode.split(/\r?\n/u);
 
-    const commentRegex = /^[/*-=\\]+.*/u;
+    const commentRegex = /^[ \t]*[/*-=\\]+.*/u;
 
     // Remove any comments from the first lines.
     while (lines.length !== 0) {
@@ -283,7 +281,7 @@ const runWelderFormat = async (options, sourceFiles) => {
      * Technically this could remove the beginning of a multi-line comment, but our
      * style says it's invalid to have one that has a ton of stars in it anyways.
      */
-    const barCommentRegex = /^[/*-=\\]{40}.*/u;
+    const barCommentRegex = /^[ \t]*[/*-=\\]{40}.*/u;
 
     // These comments may have text after them, but we delete that too intentionally.
     for (let lineIndex = 0; lineIndex < lines.length;) {
@@ -641,7 +639,7 @@ const runBuild = async (buildDir, testExecutablePaths, opts) => {
     cwd: buildDir,
     err: printError,
     out: (text) => {
-      if (text.search(/(FAILED|failed|ERROR)/u) === -1) {
+      if (text.search(/(?:FAILED|failed|ERROR)/u) === -1) {
         printLog(text);
       } else {
         printError(text);
