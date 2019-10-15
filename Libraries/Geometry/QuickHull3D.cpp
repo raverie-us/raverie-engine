@@ -7,7 +7,7 @@ namespace Zero
 const bool cDebugQuickHull = false;
 #define TimeQuickHull 0
 #if TimeQuickHull
-#  define QHullScopedTimer(message) PreciseTimerBlock _block(message)
+#  define QHullScopedTimer(message) TimerBlock _block(message)
 #else
 #  define QHullScopedTimer(message)
 #endif

@@ -227,7 +227,6 @@ namespace Zero
 #include "Socket.hpp"
 #include "IpAddress.hpp"
 #include "Timer.hpp"
-#include "TimerBlock.hpp"
 #include "DirectoryWatcher.hpp"
 #include "Peripherals.hpp"
 #include "ExecutableResource.hpp"

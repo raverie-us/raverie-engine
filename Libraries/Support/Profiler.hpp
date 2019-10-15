@@ -9,6 +9,17 @@
 namespace Zero
 {
 
+class TimerBlock
+{
+public:
+  TimerBlock(StringParam name);
+  ~TimerBlock();
+
+private:
+  String mName;
+  Timer mTimer;
+};
+
 namespace Profile
 {
 

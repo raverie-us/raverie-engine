@@ -235,7 +235,6 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Time.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Time.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Timer.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/TimerBlock.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ToString.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ToString.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Typedefs.hpp

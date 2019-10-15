@@ -6,6 +6,17 @@
 
 namespace Zero
 {
+
+TimerBlock::TimerBlock(StringParam name) : mName(name)
+{
+}
+
+TimerBlock::~TimerBlock()
+{
+  double time = mTimer.UpdateAndGetTime();
+  ZPrintFilter(Filter::DefaultFilter, "%s %gs\n", mName.c_str(), time);
+}
+
 namespace Profile
 {
 
