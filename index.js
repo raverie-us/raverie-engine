@@ -246,10 +246,12 @@ const runClangFormat = async (options, sourceFiles) => {
         const oldCode = fs.readFileSync(fullPath, "utf8");
         const newCode = result.stdout;
 
-        if (options.validate) {
-            printError(`File '${fullPath}' was not clang-formatted`);
-        } else if (oldCode !== newCode) {
-            fs.writeFileSync(fullPath, newCode, "utf8");
+        if (oldCode !== newCode) {
+            if (options.validate) {
+                printError(`File '${fullPath}' was not clang-formatted`);
+            } else {
+                fs.writeFileSync(fullPath, newCode, "utf8");
+            }
         }
     }));
 };
@@ -299,10 +301,12 @@ const runWelderFormat = async (options, sourceFiles) => {
         // Join all lines together with a standard UNIX newline.
         const newCode = lines.join("\n");
 
-        if (options.validate) {
-            printError(`File '${fullPath}' must be welder-formatted`);
-        } else if (oldCode !== newCode) {
-            fs.writeFileSync(fullPath, newCode, "utf8");
+        if (oldCode !== newCode) {
+            if (options.validate) {
+                printError(`File '${fullPath}' must be welder-formatted`);
+            } else {
+                fs.writeFileSync(fullPath, newCode, "utf8");
+            }
         }
     }));
 };
@@ -817,6 +821,7 @@ const documentation = async () => {
 };
 
 const all = async (options) => {
+    await format({...options, validate: true});
     await cmake(options);
     await build(options);
     await prebuilt(options);
