@@ -18,7 +18,6 @@ public:
   CogId mMouseCaptureObject;
   HandleOf<ReactiveViewport> mViewport;
 
-  //****************************************************************************
   MouseCaptureDrag(ViewportMouseEvent* e, Cog* captureObject) : MouseManipulation(e->GetMouse(), e->GetViewport())
   {
     mViewport = e->GetViewport();
@@ -31,18 +30,15 @@ public:
       mButton = e->Button;
   }
 
-  //****************************************************************************
   ~MouseCaptureDrag()
   {
   }
 
-  //****************************************************************************
   void ForwardMouseEvent(MouseEvent* e)
   {
     ForwardMouseEvent(e, e->EventId);
   }
 
-  //****************************************************************************
   void ForwardMouseEvent(MouseEvent* e, StringParam eventId)
   {
     ReactiveViewport* viewport = *mViewport;
@@ -60,7 +56,6 @@ public:
     e->HandledEventScript = eventToSend.HandledEventScript;
   }
 
-  //****************************************************************************
   void ForwardEvent(Event* e)
   {
     Cog* captureObject = mMouseCaptureObject;
@@ -73,7 +68,6 @@ public:
     captureObject->DispatchEvent(e->EventId, e);
   }
 
-  //****************************************************************************
   void OnMouseButtonUp(MouseEvent* e)
   {
     Cog* captureObject = mMouseCaptureObject;
@@ -102,43 +96,36 @@ public:
     }
   }
 
-  //****************************************************************************
   void OnMouseUp(MouseEvent* e) override
   {
     OnMouseButtonUp(e);
   }
 
-  //****************************************************************************
   void OnMouseDown(MouseEvent* e) override
   {
     ForwardMouseEvent(e);
   }
 
-  //****************************************************************************
   void OnMouseMove(MouseEvent* e) override
   {
     ForwardMouseEvent(e, Events::MouseDragMove);
   }
 
-  //****************************************************************************
   void OnRightMouseUp(MouseEvent* e) override
   {
     OnMouseButtonUp(e);
   }
 
-  //****************************************************************************
   void OnMiddleMouseUp(MouseEvent* e) override
   {
     OnMouseButtonUp(e);
   }
 
-  //****************************************************************************
   void OnMouseUpdate(MouseEvent* e) override
   {
     ForwardMouseEvent(e, Events::MouseDragUpdate);
   }
 
-  //****************************************************************************
   void OnKeyDown(KeyboardEvent* e) override
   {
     Viewport* viewport = mViewport;
@@ -155,7 +142,6 @@ public:
     e->Handled = true;
   }
 
-  //****************************************************************************
   void OnKeyUp(KeyboardEvent* e) override
   {
     Viewport* viewport = mViewport;
@@ -167,7 +153,6 @@ public:
     e->Handled = true;
   }
 
-  //****************************************************************************
   void OnKeyRepeated(KeyboardEvent* e) override
   {
     Viewport* viewport = mViewport;

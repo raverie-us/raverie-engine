@@ -20,7 +20,6 @@ public:
   void Initialize(CogInitializer& initializer) override;
   bool IsSerialized();
 
-  //-------------------------------------------------------------------Properties
   /// Determines whether the RigidBody on this Cog will use
   /// the cached or actual mass and inertia.
   bool GetActive();
@@ -50,7 +49,6 @@ public:
   bool GetAutoComputeInertia();
   void SetAutoComputeInertia(bool autoCompute);
 
-  //-------------------------------------------------------------------Internal
   /// Takes a new snapshot of the current mass and inertia.
   void RecomputeMass();
   real ClampMassTerm(real value);

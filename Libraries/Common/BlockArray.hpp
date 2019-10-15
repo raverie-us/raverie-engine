@@ -15,7 +15,6 @@ template <typename type, uint shiftSize = 6, typename Allocator = DefaultAllocat
 class PodBlockArray : public AllocationContainer<Allocator>
 {
 public:
-  //-------------------------------------------------------- Standard Typedefs
   typedef type value_type;
   typedef value_type* pointer;
   typedef value_type& reference;

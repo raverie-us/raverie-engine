@@ -16,19 +16,16 @@ public:
   ContentItem* mRoot;
   Array<ContentItem*>& mEntries;
 
-  //****************************************************************************
   ContentUploadSource(Array<ContentItem*>& resources) : mEntries(resources)
   {
     mRoot = (ContentItem*)0x123456;
   }
 
-  //****************************************************************************
   DataEntry* GetRoot() override
   {
     return mRoot;
   }
 
-  //****************************************************************************
   DataEntry* ToEntry(DataIndex index) override
   {
     if (index == cRootIndex || (uint)index.Id >= mEntries.Size())
@@ -36,7 +33,6 @@ public:
     return mEntries[(uint)index.Id];
   }
 
-  //****************************************************************************
   DataIndex ToIndex(DataEntry* dataEntry) override
   {
     if (dataEntry == mRoot)
@@ -46,13 +42,11 @@ public:
     return DataIndex(index);
   }
 
-  //****************************************************************************
   Handle ToHandle(DataEntry* dataEntry) override
   {
     return (ContentItem*)dataEntry;
   }
 
-  //****************************************************************************
   DataEntry* Parent(DataEntry* dataEntry) override
   {
     if (dataEntry == mRoot)
@@ -60,7 +54,6 @@ public:
     return &mRoot;
   }
 
-  //****************************************************************************
   uint ChildCount(DataEntry* dataEntry) override
   {
     if (dataEntry == mRoot)
@@ -68,7 +61,6 @@ public:
     return 0;
   }
 
-  //****************************************************************************
   DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
   {
     if (dataEntry == mRoot)
@@ -76,13 +68,11 @@ public:
     return nullptr;
   }
 
-  //****************************************************************************
   bool IsExpandable(DataEntry* dataEntry) override
   {
     return false;
   }
 
-  //****************************************************************************
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override
   {
     ContentItem* contentItem = (ContentItem*)dataEntry;
@@ -93,7 +83,6 @@ public:
     }
   }
 
-  //****************************************************************************
   bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
   {
     return false;

@@ -93,7 +93,6 @@ public:
   /// Decompose the given matrix into rotation and scale
   static void Decompose(Mat2Param transform, real& radians, Vec2Ref scale);
 
-  //-------------------------------------------------------------------Legacy
   Matrix2 Transposed() const;
 
   Matrix2 Inverted();

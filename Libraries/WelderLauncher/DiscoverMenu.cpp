@@ -17,14 +17,12 @@ Tweakable(Vec4, NewTextColor, Vec4(1, 1, 1, 1), cLocation);
 class TileSeparators : public Composite
 {
 public:
-  //****************************************************************************
   TileSeparators(Composite* parent, Vec4Param color) : Composite(parent)
   {
     mImage = CreateAttached<Element>(cWhiteSquare);
     mImage->SetColor(color);
   }
 
-  //****************************************************************************
   void UpdateTransform() override
   {
     mImage->SetSize(GetSize());

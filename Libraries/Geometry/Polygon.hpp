@@ -30,7 +30,6 @@ public:
   /// Quantizes the shape to a constant precision.
   void Quantize();
 
-  //------------------------------------------------------------- Modification
   /// Clears all vertices in the polygon.
   void Clear();
 
@@ -71,7 +70,6 @@ public:
   /// Forces the polygon to be clockwise.
   void MakeClockwise();
 
-  //--------------------------------------------------------------------- Info
   /// Returns the amount of vertices in the polygon.
   uint Size() const;
 
@@ -121,7 +119,6 @@ public:
   void DebugDrawFilled(ByteColor color, Mat4Param transform) const;
 
 public:
-  //--------------------------------------------------------------- Edge Range
   struct Edge
   {
     Edge(Vec2Ref a, Vec2Ref b);
@@ -145,7 +142,6 @@ public:
     Polygon& mPolygon;
   };
 
-  //----------------------------------------------------------------------- Data
 public:
   /// Each vertex in the polygon.
   Array<Vec2> mData;

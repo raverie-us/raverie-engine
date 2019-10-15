@@ -39,7 +39,6 @@ public:
   /// sampler).
   bool IsStorageImage();
 
-  //-----------------------------------------------------------------Internal
   int GetIntegerConstantParameterValue(int parameterIndex);
 
   ZilchShaderIRType* mIRType;

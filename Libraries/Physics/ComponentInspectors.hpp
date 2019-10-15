@@ -17,7 +17,6 @@ public:
   Vec3 GetLocalInverseInertiaTensorRow1() const;
   Vec3 GetLocalInverseInertiaTensorRow2() const;
 
-  //-------------------------------------------------------------------Internal
   Mat3 GetInertia() const;
 };
 

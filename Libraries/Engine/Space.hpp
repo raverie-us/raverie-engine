@@ -63,8 +63,6 @@ public:
   Space* GetSpace() override;
   GameSession* GetGameSession() override;
 
-  //----------------------------------------------------------------- Creation
-
   /// Create an object in the space
   Cog* Create(Archetype* archetype);
 
@@ -84,7 +82,6 @@ public:
   Cog* CreateLink(Archetype* archetype, Cog* objectA, Cog* objectB);
   Cog* CreateNamedLink(StringParam archetypeName, Cog* objectA, Cog* objectB);
 
-  //------------------------------------------------------------------ Loading
   /// Load new level replace the current level.
   void LoadLevel(Level* level);
 
@@ -103,8 +100,6 @@ public:
   /// Load the level file
   void LoadLevelFile(StringParam filePath);
 
-  //----------------------------------------------------------- Adding Objects
-
   /// Do no destroy current objects, add objects from level and change loaded
   /// level.
   void LoadLevelAdditive(Level* levelName);
@@ -115,7 +110,6 @@ public:
   /// Add objects from serializer stream.
   range AddObjectsFromStream(StringParam source, Serializer& stream);
 
-  //------------------------------------------------------- Destroying Objects
   /// Destroy all objects in space.
   void DestroyAll();
 
@@ -127,8 +121,6 @@ public:
 
   /// Internal Destroy
   void ForceDestroy() override;
-
-  //---------------------------------------------------------------- Objects
 
   /// Find an object in the space with a given name.
   CogNameRange FindAllObjectsByName(StringParam name);
@@ -154,8 +146,6 @@ public:
     return mCogsInSpace;
   }
 
-  //------------------------------------------------------------ Modification
-
   // Any change that needs to be saved marks the space as modified.
   void MarkModified();
   bool GetModified();
@@ -167,7 +157,6 @@ public:
   /// updated.
   void ChangedObjects();
 
-  //-------------------------------------------------------------------- Flags
   // Get create flags used for create new objects in this space.
   // Used by Factory.
   uint GetCreationFlags();

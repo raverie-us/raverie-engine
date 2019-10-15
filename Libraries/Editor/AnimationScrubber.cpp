@@ -63,7 +63,6 @@ public:
   AnimationScrubber* mScrubber;
   HashMap<KeyFrameIcon*, float> mTimeOffsets;
 
-  //****************************************************************************
   KeyFrameManipulator(Mouse* mouse, AnimationScrubber* scrubber) : MouseManipulation(mouse, scrubber)
   {
     mScrubber = scrubber;
@@ -79,14 +78,12 @@ public:
     }
   }
 
-  //****************************************************************************
   float GetTimeAtMouse(Mouse* mouse)
   {
     float mousePosX = mScrubber->ToLocal(mouse->GetClientPosition()).x;
     return mScrubber->ToTime(mousePosX);
   }
 
-  //****************************************************************************
   void OnMouseMove(MouseEvent* e) override
   {
     float timeAtMouse = GetTimeAtMouse(e->GetMouse());
@@ -101,14 +98,12 @@ public:
     }
   }
 
-  //****************************************************************************
   void OnMouseUpdate(MouseEvent* e) override
   {
     mScrubber->MouseDragUpdate(e);
     OnMouseMove(e);
   }
 
-  //****************************************************************************
   void OnMouseUp(MouseEvent* e) override
   {
     forRange (KeyFrameIcon* keyFrame, mScrubber->mSelection.All())
@@ -433,7 +428,6 @@ public:
   float mStartPos;
   float mGraphStart;
 
-  //****************************************************************************
   ScrubberManipulator(Mouse* mouse, AnimationScrubber* scrubber, ScrubberMode::Type mode, float startPos = 0.0f) :
       MouseManipulation(mouse, scrubber)
   {
@@ -447,7 +441,6 @@ public:
     UpdateScrubberPosition(mouse);
   }
 
-  //****************************************************************************
   void UpdateScrubberPosition(Mouse* mouse)
   {
     // Get the local position of the mouse
@@ -471,31 +464,26 @@ public:
     }
   }
 
-  //****************************************************************************
   void OnMouseMove(MouseEvent* e) override
   {
     UpdateScrubberPosition(e->GetMouse());
   }
 
-  //****************************************************************************
   void OnMouseUp(MouseEvent* event) override
   {
     Finish();
   }
 
-  //****************************************************************************
   void OnRightMouseUp(MouseEvent* event) override
   {
     Finish();
   }
 
-  //****************************************************************************
   void OnMiddleMouseUp(MouseEvent* event) override
   {
     Finish();
   }
 
-  //****************************************************************************
   void Finish()
   {
     if (mMode == ScrubberMode::Scrub)
@@ -524,14 +512,12 @@ public:
   AnimationScrubber* mScrubber;
   Vec2 mStart;
 
-  //****************************************************************************
   ScrubberSelection(Mouse* mouse, AnimationScrubber* scrubber) : MouseManipulation(mouse, scrubber)
   {
     mScrubber = scrubber;
     mStart = scrubber->ToLocal(mouse->GetClientPosition());
   }
 
-  //****************************************************************************
   WidgetRect GetSelectionRect(MouseEvent* e)
   {
     // Get the local position of the mouse
@@ -560,7 +546,6 @@ public:
     return WidgetRect::MinAndMax(min, max);
   }
 
-  //****************************************************************************
   void OnMouseMove(MouseEvent* e) override
   {
     WidgetRect selection = GetSelectionRect(e);
@@ -570,7 +555,6 @@ public:
     mScrubber->mSelectBox->SetVisible(true);
   }
 
-  //****************************************************************************
   void OnMouseUp(MouseEvent* e) override
   {
     WidgetRect selection = GetSelectionRect(e);

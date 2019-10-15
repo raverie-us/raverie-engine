@@ -30,11 +30,9 @@ struct ConstraintConfigBlock : public SafeId32Object
 
   ConstraintConfigBlock();
 
-  //-------------------------------------------------------------------Object
   // Interface
   void Serialize(Serializer& serializer);
 
-  //-------------------------------------------------------------------Properties
   /// The amount of error allowed before position correction takes effect.
   real GetSlop();
   void SetSlop(real slop);
@@ -60,7 +58,6 @@ struct ConstraintConfigBlock : public SafeId32Object
   ConstraintPositionCorrection::Enum GetPositionCorrectionType();
   void SetPositionCorrectionType(ConstraintPositionCorrection::Enum correctionType);
 
-  //-------------------------------------------------------------------Internal
   /// Reset the default values of this constraint block
   void ResetDefaultValues();
 
@@ -113,7 +110,6 @@ public:
   PhysicsSolverConfig();
   ~PhysicsSolverConfig();
 
-  //-------------------------------------------------------------------DataResource
   // Interface
   void Serialize(Serializer& stream) override;
   void Initialize() override;
@@ -121,7 +117,6 @@ public:
   HandleOf<PhysicsSolverConfig> RuntimeClone();
   void ResourceModified() override;
 
-  //-------------------------------------------------------------------Properties
   /// The number of iterations used in the constraint solver. Affects how stiff
   /// joints will be.
   uint GetSolverIterationCount();
@@ -149,7 +144,6 @@ public:
   PhysicsSolverSubType::Enum GetSubCorrectionType();
   void SetSubCorrectionType(PhysicsSolverSubType::Enum subType);
 
-  //-------------------------------------------------------------------Internal
   ConstraintConfigBlock& GetContactBlock();
   void RebuildConstraintBlockValues();
   void CopyTo(PhysicsSolverConfig* destination);

@@ -956,7 +956,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
 
   Connect(manager, Events::OsKeyDown, editorMain, &EditorMain::OnKeyDown);
 
-  //----------------------------------------------------------------------------
   {
     // Create a persistent Library instance so that the rest of the engine can
     // manipulate it regardless of how many instances there are existing (See
@@ -966,7 +965,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     editorMain->AddManagedWidget(editorMain->mLibrary, DockArea::Right, true);
   }
 
-  //----------------------------------------------------------------------------
   {
     ObjectView* objects = new ObjectView(editorMain);
     objects->SetName("Objects");
@@ -976,7 +974,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     editorMain->mObjectView = objects;
   }
 
-  //----------------------------------------------------------------------------
   {
     HotKeyEditor* hotkeyEditor = new HotKeyEditor(editorMain);
     hotkeyEditor->SetName("Commands");
@@ -985,7 +982,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     editorMain->AddManagedWidget(hotkeyEditor, DockArea::Floating, false);
   }
 
-  //----------------------------------------------------------------------------
   {
     BindCommand("Commands", ShowHotKeyEditor);
     BindCommand("OperationHistory", ShowOperationHistroy);
@@ -1027,7 +1023,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
       commands->AddCommand("OnExportCommandsList", BindCommandFunction(OnExportCommandsList));
     }
 
-    //-------------------------------------------------------- Tool Bar Creation
     {
       // All tools exist under this toolbar area
       ToolBarArea* toolBarArea = new ToolBarArea(editorMain);
@@ -1085,7 +1080,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
 
   MetaSelection* selection = editorMain->GetSelection();
 
-  //----------------------------------------------------------------------------
   // Tool Area
   editorMain->Tools->SetSize(Pixels(dockWidth, 280));
   Window* sideBar = editorMain->AddManagedWidget(editorMain->Tools, DockArea::Left, true);
@@ -1101,7 +1095,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
 
   Connect(propertyViewArea->GetPropertyView(), Events::NameActivated, editorMain, &EditorMain::OnNameActivated);
 
-  //----------------------------------------------------------------------------
   {
     // Create the console window
     ConsoleUi* console = new ConsoleUi(editorMain);
@@ -1113,7 +1106,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     editorMain->mConsole = console;
   }
 
-  //----------------------------------------------------------------------------
   {
     // Create the find text dialog
     FindTextDialog* findText = new FindTextDialog(editorMain);
@@ -1123,7 +1115,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     editorMain->mFindTextDialog = findText;
   }
 
-  //----------------------------------------------------------------------------
   {
     // Create the bug report dialog
     BugReporter* dialog = new BugReporter(editorMain);
@@ -1133,7 +1124,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     editorMain->mBugReporter = dialog;
   }
 
-  //----------------------------------------------------------------------------
   {
     // Create the stress test dialog
     StressTestDialog* stress = new StressTestDialog(editorMain);
@@ -1143,7 +1133,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     editorMain->mStressTestDialog = stress;
   }
 
-  //----------------------------------------------------------------------------
   {
     // Create the Broad Phase Editor window
     BroadPhaseEditor* bpEditor = new BroadPhaseEditor(editorMain);
@@ -1153,7 +1142,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     editorMain->AddManagedWidget(bpEditor, DockArea::Floating, false);
   }
 
-  //----------------------------------------------------------------------------
   {
     // Create the desync window
     Window* desyncWindow = new Window(editorMain);
@@ -1169,8 +1157,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     // editorMain->Tools->AddTool(new ClothAnchorTool());
     // editorMain->Tools->AddTool(new ClothCutterTool());
   }
-
-  //----------------------------------------------------------------------------
 
   {
     AnimationEditor* animator = new AnimationEditor(editorMain);

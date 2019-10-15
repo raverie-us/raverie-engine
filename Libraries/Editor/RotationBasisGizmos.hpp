@@ -52,7 +52,6 @@ public:
 
   RotationBasisGizmo();
 
-  //-------------------------------------------------------------------Component
   // Interface
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;

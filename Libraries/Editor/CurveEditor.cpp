@@ -41,7 +41,6 @@ public:
   /// Where the drag was started in pixels.
   Vec2 mDragStartGraph;
 
-  //****************************************************************************
   MultiSelectManipulation(MouseDragEvent* dragEvent, CurveEditor* editor) :
       MouseManipulation(dragEvent->GetMouse(), editor->GetRootWidget()),
       mEditor(editor)
@@ -54,20 +53,17 @@ public:
     mSelectBox->SetVisible(false);
   }
 
-  //****************************************************************************
   void OnMouseMove(MouseEvent* e) override
   {
     mSelectBox->SetVisible(true);
   }
 
-  //****************************************************************************
   void OnMouseUpdate(MouseEvent* e) override
   {
     WidgetRect selection = GetSelectionRect(e);
     PlaceWithRect(selection, mSelectBox);
   }
 
-  //****************************************************************************
   WidgetRect GetSelectionRect(MouseEvent* e)
   {
     Vec2 currPixels = mEditor->ToLocal(e->Position);
@@ -79,7 +75,6 @@ public:
     return WidgetRect::MinAndMax(min, max);
   }
 
-  //****************************************************************************
   void OnKeyDown(KeyboardEvent* e) override
   {
     if (e->Key == Keys::Escape)
@@ -89,14 +84,12 @@ public:
     }
   }
 
-  //****************************************************************************
   bool Contains(CurveEditing::Draggable* target, WidgetRect& selectionRect)
   {
     Vec2 center = ToVector2(target->GetTranslation()) + target->GetSize() * 0.5f;
     return selectionRect.Contains(center);
   }
 
-  //****************************************************************************
   void OnMouseUp(MouseEvent* e) override
   {
     WidgetRect selection = GetSelectionRect(e);
@@ -1046,7 +1039,6 @@ public:
   CurveEditor* mEditor;
   HashMap<Draggable*, Vec2> mOffsets;
 
-  //****************************************************************************
   DragManipulator(Mouse* mouse, CurveEditor* editor) : MouseManipulation(mouse, editor->GetRootWidget())
   {
     mEditor = editor;
@@ -1061,7 +1053,6 @@ public:
     }
   }
 
-  //****************************************************************************
   void OnMouseMove(MouseEvent* e) override
   {
     // We want the position in our parents local space (the curve editor)
@@ -1073,7 +1064,6 @@ public:
     }
   }
 
-  //****************************************************************************
   void OnMouseUpdate(MouseEvent* e) override
   {
     mEditor->MouseDragUpdate(e);
@@ -1087,7 +1077,6 @@ public:
     }
   }
 
-  //****************************************************************************
   void OnMouseUp(MouseEvent* e) override
   {
     forRange (Draggable* target, mEditor->GetSelection())

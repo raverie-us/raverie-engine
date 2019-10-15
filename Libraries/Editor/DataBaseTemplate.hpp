@@ -409,8 +409,6 @@ public:
     return IdToEntry[index.Id]->Object;
   }
 
-  //------------------------------------------------------------
-
   // Data Source Interface
   DataEntry* GetRoot() override
   {
@@ -436,7 +434,6 @@ public:
     else
       return Handle();
   }
-  //------------------------------------------------------------
 
   // Data Base Interface
 
@@ -500,8 +497,6 @@ public:
     */
     return false;
   }
-
-  //------------------------------------------------------------
 
   // Tree Data Source Interface
   void Expand(DataEntry* dataEntry) override

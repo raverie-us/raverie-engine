@@ -34,13 +34,11 @@ public:
   /// RootWidget overrides this to account for OnTop widgets.
   UiWidget* CastPoint(Vec2Param worldPoint, UiWidget* ignore = nullptr, bool interactiveOnly = false) override;
 
-  //---------------------------------------------------------------------------
   // Keyboard Events
   void PerformKeyDown(Keys::Enum key);
   void PerformKeyUp(Keys::Enum key);
   void PerformKeyboardEvent(KeyboardEvent* e);
 
-  //------------------------------------------------------------------------------
   // Mouse Events
   /// This must be called appropriately before mouse clicks.
   void PerformMouseMove(Vec2Param newRootPoint);
@@ -66,7 +64,6 @@ public:
   /// Widget.
   void DispatchAt(DispatchAtParams& dispatchParams);
 
-  //-----------------------------------------------------------------------
   // Input Event Routing
   /// If set, all input from the Os will be forwarded to the root widget.
   void SetOsWindow(OsWindow* window);
@@ -81,7 +78,6 @@ public:
   /// and we'll get them again. This is used to ignore duplicate events.
   bool mIgnoreEvents;
 
-  //---------------------------------------------------------------------------------
   // Rendering
   /// Renders the Ui to the given color render target. The depth render target
   /// must have stencil.
@@ -118,7 +114,6 @@ public:
   GraphicsRenderSettings mStencilRemoveSettings;
   GraphicsRenderSettings mStencilTestSettings;
 
-  //-------------------------------------------------------------------------------------
   // Other
   /// The widget currently in focus.
   void SetFocusWidget(UiWidget* newFocus);

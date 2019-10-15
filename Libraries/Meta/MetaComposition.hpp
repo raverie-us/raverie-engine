@@ -83,7 +83,6 @@ public:
   /// Constructor.
   MetaComposition(BoundType* componentType);
 
-  //----------------------------------------------------------------------------------------
   // Queries
   /// Returns how many Components the given instance has.
   virtual uint GetComponentCount(HandleParam owner);
@@ -110,7 +109,6 @@ public:
   /// be more optimal.
   virtual uint GetComponentIndex(HandleParam owner, HandleParam component);
 
-  //-----------------------------------------------------------------------------------
   // Modification
   /// Fills out the given array with all dynamically addable types. The owner is
   /// only required if querying for all addable to object.
@@ -167,7 +165,6 @@ public:
   /// will return the blocking component.
   virtual void MoveComponent(HandleParam owner, HandleParam component, uint destination);
 
-  //--------------------------------------------------------------------------------
   // Component Range
   struct ComponentRange
   {

@@ -399,7 +399,6 @@ Type SegmentCapsule(Vec3Param segmentStart,
   real segLen = Normalize(segment);
   Vec3 normal = Normalized(capsulePointA - capsulePointB);
 
-  //-------------------------------------------------------------------- Plane A
   real dirDotNormal = Dot(segment, normal);
 
   // First intersection is the plane, second is infinity
@@ -415,7 +414,6 @@ Type SegmentCapsule(Vec3Param segmentStart,
     t[0][1] = (planeDistance - Dot(segmentStart, normal)) / dirDotNormal;
   }
 
-  //-------------------------------------------------------------------- Plane B
   Negate(&normal);
   dirDotNormal = Dot(segment, normal);
 
@@ -432,7 +430,6 @@ Type SegmentCapsule(Vec3Param segmentStart,
     t[1][1] = (planeDistance - Dot(segmentStart, normal)) / dirDotNormal;
   }
 
-  //---------------------------------------------------------- Infinite Cylinder
   real radiusSq = Math::Sq(capsuleRadius);
   {
     Vec3 relStart = segmentStart - capsulePointA;
@@ -454,7 +451,6 @@ Type SegmentCapsule(Vec3Param segmentStart,
     }
   }
 
-  //------------------------------------------------- Compare Cylinder Intervals
   real tMin = Math::Max(Math::Max(t[0][0], t[1][0]), t[2][0]);
   real tMax = Math::Min(Math::Min(t[0][1], t[1][1]), t[2][1]);
 
@@ -467,7 +463,6 @@ Type SegmentCapsule(Vec3Param segmentStart,
     tMax = -Math::PositiveMax();
   }
 
-  //------------------------------------------------------------------- Sphere A
   {
     Vec3 centerToPoint = segmentStart - capsulePointA;
     real b = real(2.0) * Dot(segment, centerToPoint);
@@ -491,7 +486,6 @@ Type SegmentCapsule(Vec3Param segmentStart,
     }
   }
 
-  //------------------------------------------------------------------- Sphere B
   {
     Vec3 pc = segmentStart - capsulePointB;
     real b = real(2.0) * Dot(segment, pc);
@@ -515,7 +509,6 @@ Type SegmentCapsule(Vec3Param segmentStart,
     }
   }
 
-  //------------------------------------------------ Compute Intersection Points
   if (tMin > tMax)
   {
     return None;
@@ -567,7 +560,6 @@ Type SegmentCylinder(Vec3Param segmentStart,
   real segLen = Normalize(segment);
   Vec3 normal = Normalized(cylinderPointA - cylinderPointB);
 
-  //-------------------------------------------------------------------- Plane A
   real dirDotNormal = Dot(segment, normal);
 
   // First intersection is the plane, second is infinity
@@ -590,7 +582,6 @@ Type SegmentCylinder(Vec3Param segmentStart,
     return None;
   }
 
-  //-------------------------------------------------------------------- Plane B
   Negate(&normal);
   dirDotNormal = Dot(segment, normal);
 
@@ -614,7 +605,6 @@ Type SegmentCylinder(Vec3Param segmentStart,
     return None;
   }
 
-  //---------------------------------------------------------- Infinite Cylinder
   Vec3 relStart = segmentStart - cylinderPointA;
   real startDotNormal = Dot(relStart, normal);
   real a = real(1.0) - Math::Sq(dirDotNormal);
@@ -633,7 +623,6 @@ Type SegmentCylinder(Vec3Param segmentStart,
     return None;
   }
 
-  //---------------------------------------------------------- Compare Intervals
   real tMin = Math::Max(Math::Max(t[0][0], t[1][0]), t[2][0]);
   real tMax = Math::Min(Math::Min(t[0][1], t[1][1]), t[2][1]);
   if (tMin > tMax)

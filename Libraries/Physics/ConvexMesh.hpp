@@ -12,7 +12,6 @@ class ConvexMesh : public GenericPhysicsMesh
 public:
   ZilchDeclareType(ConvexMesh, TypeCopyMode::ReferenceType);
 
-  //-------------------------------------------------------------------Resource
   // Interface
   void Serialize(Serializer& stream) override;
   void Initialize();
@@ -24,7 +23,6 @@ public:
   /// Creates a ConvexMesh for run-time modifications.
   static HandleOf<ConvexMesh> CreateRuntime();
 
-  //-------------------------------------------------------------------Internal
   /// Finds the first triangle hit by the local-space ray.
   bool CastRay(const Ray& localRay, ProxyResult& result, BaseCastFilter& filter);
   void Draw(Mat4Param transform);

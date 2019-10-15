@@ -186,7 +186,6 @@ public:
 
   ResourceTemplate* GetResourceTemplate();
 
-  //----------------------------------------------------------------------------------
   // Inherit Range
   struct InheritRange
   {

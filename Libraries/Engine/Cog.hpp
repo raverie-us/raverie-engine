@@ -108,7 +108,6 @@ public:
   /// (if it exists).
   virtual Cog* Clone();
 
-  //-----------------------------------------------------------------------------
   // Serialization
   /// Serialize all components data.
   void Serialize(Serializer& stream) override;
@@ -119,7 +118,6 @@ public:
   static Cog* CreateFromString(Space* space, StringParam stringData);
   static Cog* CreateAndInitializeFromStream(Space* space, Serializer& stream);
 
-  //----------------------------------------------------------------------------
   // Initialization
   /// Initialize all the components on the composition.
   /// The order of initialize is as follows:
@@ -137,7 +135,6 @@ public:
   /// Returns whether or not the object has already been initialized.
   bool IsInitialized() const;
 
-  //--------------------------------------------------------------------------------
   // Components
   /// Typedefs.
   typedef Array<Component*> ComponentArray;
@@ -220,7 +217,6 @@ public:
   /// The map of the component's name to their instance for fast lookup.
   ComponentMap mComponentMap;
 
-  //----------------------------------------------------------------------------------
   // Children
   /// Get the parent of this object in the Hierarchy.
   Cog* GetParent();
@@ -311,7 +307,6 @@ public:
   /// The parent of this Cog in a Hierarchy.
   Cog* mHierarchyParent;
 
-  //--------------------------------------------------------------------------------
   // Archetypes
   /// Getter / setter for Archetype.
   Archetype* GetArchetype();
@@ -358,7 +353,6 @@ public:
   /// Archetype this object was created with.
   HandleOf<Archetype> mArchetype;
 
-  //------------------------------------------------------------------------------------
   // Events
   /// Dispatches an event on this object
   void DispatchEvent(StringParam eventId, Event* event);
@@ -383,7 +377,6 @@ public:
   EventReceiver mReceiver;
   EventDispatcher mDispatcher;
 
-  //-------------------------------------------------------------------------------------
   // Other
   virtual bool IsEditorMode();
   virtual bool IsPreviewMode();

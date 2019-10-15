@@ -192,7 +192,6 @@ public:
   /// Solve any spring systems
   void SolveSprings(real dt);
 
-  //---------------------------------------------------------------- Ray Casting
   /// Returns the results of a Ray Cast. The results of the ray cast are
   /// stored in the passed in vector sorted by time of collision.  The number
   /// of results given is based on the size of the CastResults passed in.
@@ -211,7 +210,6 @@ public:
   /// given filter. This returns up to maxCount number of objects.
   CastResultsRange CastRay(const Ray& worldRay, uint maxCount, CastFilter& filter);
 
-  //------------------------------------------------------------ Segment Casting
   /// Returns the results of a Segment Cast.  The results of the segment cast
   /// are stored in the passed in vector sorted by time of collision. The
   /// number of results given is based on the size of the CastResults passed in.
@@ -223,26 +221,22 @@ public:
   /// given filter. This returns up to maxCount number of objects.
   CastResultsRange CastSegment(const Segment& segment, uint maxCount, CastFilter& filter);
 
-  //------------------------------------------------------------- Aabb Casting
   void CastAabb(const Aabb& aabb, CastResults& results);
   /// Finds all colliders in the space that an Aabb hits using the
   /// given filter. This returns up to maxCount number of objects.
   CastResultsRange CastAabb(const Aabb& aabb, uint maxCount, CastFilter& filter);
 
-  //------------------------------------------------------------- Sphere Casting
   void CastSphere(const Sphere& sphere, CastResults& results);
   /// Finds all colliders in the space that a Sphere hits using the
   /// given filter. This returns up to maxCount number of objects.
   CastResultsRange CastSphere(const Sphere& sphere, uint maxCount, CastFilter& filter);
 
-  //------------------------------------------------------------- Frustum
   // Casting
   void CastFrustum(const Frustum& frustum, CastResults& results);
   /// Finds all colliders in the space that a Frustum hits using the
   /// given filter. This returns up to maxCount number of objects.
   CastResultsRange CastFrustum(const Frustum& frustum, uint maxCount, CastFilter& filter);
 
-  //------------------------------------------------------------- Collider
   // Casting
   /// Currently a hack function for player controller sweeping
   void CastCollider(Vec3Param offset, Collider* testCollider, Physics::ManifoldArray& results, CastFilter& filter);
@@ -251,13 +245,11 @@ public:
   /// different location. This returns up to maxCount number of objects.
   CastResultsRange CastCollider(Vec3Param offset, Collider* testCollider, CastFilter& filter);
 
-  //------------------------------------------------------------- Collider
   // Sweeping
   /// Performs a swept cast with a collider's shape and a given velocity.
   /// Returns a range of all objects the collider could've hit within 'dt' time.
   SweepResultRange SweepCollider(Collider* collider, Vec3Param velocity, real dt, CastFilter& filter);
 
-  //------------------------------------------------------------- Collision
   // Shape Events
   /// Dispatches an event to all objects within the given sphere. Uses the
   /// default cast filter.
@@ -288,7 +280,6 @@ public:
   /// objects should be colliding.
   String WhyAreTheyNotColliding(Cog* cog1, Cog* cog2);
 
-  //----------------------------------------------- Dynamic Component Add/Remove
   void AddComponent(RigidBody* body);
   void RemoveComponent(RigidBody* body);
   /// The given body has changed between Dynamic/Static/Kinematic.

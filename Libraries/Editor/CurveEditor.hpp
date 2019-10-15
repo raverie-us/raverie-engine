@@ -291,7 +291,6 @@ public:
 private:
   friend class Zero::CurveEditor;
 
-  //---------------------------------------------------------------------- range
   /// Filters out tangents in the selection.
   struct range
   {

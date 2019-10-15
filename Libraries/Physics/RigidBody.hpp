@@ -264,7 +264,6 @@ public:
   /// list of colliders that affect this body's velocity/mass/etc...
   CompositeColliderList::range GetColliders();
 
-  //-------------------------------------------------------------------Internal
   /// Has this body already started initialization (aka, we have a physics
   /// space). Used to deal with setters during serialization that require
   /// updating the physics space.

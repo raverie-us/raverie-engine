@@ -23,56 +23,48 @@ public:
   AnimationEditorData* mEditorData;
   RichAnimation* mRichAnimation;
 
-  //****************************************************************************
   AnimationTrackSource(AnimationEditorData* editorData)
   {
     mEditorData = editorData;
     mRichAnimation = editorData->mRichAnimation;
   }
 
-  //****************************************************************************
   // Data base Indexing
   DataEntry* GetRoot() override
   {
     return mRichAnimation->mRoot;
   }
 
-  //****************************************************************************
   // Safe Indexing
   DataEntry* ToEntry(DataIndex index) override
   {
     return mRichAnimation->mTrackMap.FindValue(index.Id, nullptr);
   }
 
-  //****************************************************************************
   DataIndex ToIndex(DataEntry* dataEntry) override
   {
     TrackNode* trackInfo = (TrackNode*)dataEntry;
     return DataIndex(trackInfo->Id);
   }
 
-  //****************************************************************************
   DataEntry* Parent(DataEntry* dataEntry) override
   {
     TrackNode* trackInfo = (TrackNode*)dataEntry;
     return trackInfo->Parent;
   }
 
-  //****************************************************************************
   uint ChildCount(DataEntry* dataEntry) override
   {
     TrackNode* trackInfo = (TrackNode*)dataEntry;
     return trackInfo->Children.Size();
   }
 
-  //****************************************************************************
   DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
   {
     TrackNode* trackInfo = (TrackNode*)dataEntry;
     return trackInfo->Children[index];
   }
 
-  //****************************************************************************
   // Tree expanding
   bool IsExpandable(DataEntry* dataEntry) override
   {
@@ -83,7 +75,6 @@ public:
     return !trackInfo->Children.Empty();
   }
 
-  //****************************************************************************
   // Data Base Cell Modification and Inspection
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override
   {
@@ -154,7 +145,6 @@ public:
     }
   }
 
-  //****************************************************************************
   bool IsValid(DataEntry* dataEntry) override
   {
     Cog* animGraphObject = mEditorData->mEditor->GetAnimationGraphObject();
@@ -165,7 +155,6 @@ public:
     return !status.Failed();
   }
 
-  //****************************************************************************
   bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
   {
     TrackNode* track = (TrackNode*)dataEntry;
@@ -192,12 +181,10 @@ public:
 class AnimationNameEditor : public InPlaceTextEditor
 {
 public:
-  //****************************************************************************
   AnimationNameEditor(Composite* parent, u32 flags) : InPlaceTextEditor(parent, flags)
   {
   }
 
-  //****************************************************************************
   void SetVariant(AnyParam variant) override
   {
     TrackNode* track = variant.Get<TrackNode*>();
@@ -217,7 +204,6 @@ public:
     InPlaceTextEditor::SetVariant(text);
   }
 
-  //****************************************************************************
   void Edit()
   {
     // If it Contains the (Disabled) string, we need to remove it before editing
@@ -242,7 +228,6 @@ public:
   Element* mColorBar;
   Vec4 mColor;
 
-  //****************************************************************************
   AnimationTrackColor(Composite* parent) : ValueEditor(parent)
   {
     static const String className = "AnimatorUI";
@@ -251,7 +236,6 @@ public:
     mColorBar = CreateAttached<Element>("TrackColor");
   }
 
-  //****************************************************************************
   void UpdateTransform() override
   {
     // Center the color bar
@@ -264,7 +248,6 @@ public:
     Composite::UpdateTransform();
   }
 
-  //****************************************************************************
   void SetVariant(AnyParam& variant) override
   {
     // It should be given to us as a color
@@ -272,7 +255,6 @@ public:
     mColorBar->SetColor(mColor);
   }
 
-  //****************************************************************************
   void GetVariant(Any& variant) override
   {
     variant = mColor;

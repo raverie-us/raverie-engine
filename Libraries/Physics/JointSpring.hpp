@@ -45,7 +45,6 @@ public:
   real GetDampingRatio() const;
   void SetDampingRatio(real dampRatio);
 
-  //-------------------------------------------------------------------Internal
   Physics::SpringAtom mSpringAtom;
   JointNode* mNode;
   uint mAtomIds;

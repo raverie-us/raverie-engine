@@ -222,12 +222,10 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
   mAlpha = 1.0f;
   mHdr = 1.0f;
 
-  //----------------------------------------------------- Create the Final Color
   mFinalColorDisplay = new ColorDisplay(this, 70, 20);
   mFinalColorDisplay->SetTranslation(Pixels(239, 1, 0));
   mFinalColorDisplay->SetSize(Pixels(70, 20));
 
-  //----------------------------------------------------- Create the color block
   // Parent composite for the color block area to allow for proper widget
   // clipping
   mColorBlockArea = new Composite(this);
@@ -248,7 +246,6 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
 
   ConnectThisTo(mColorBlockDisplay, Events::LeftMouseDown, OnColorBlockMouseDown);
 
-  //---------------------------------------------------- Create the color slider
   // Create the color buffer
   mColorSliderBuffer = new PixelBuffer(Color::Red, 1, 256);
   // Create the display and set the texture
@@ -264,7 +261,6 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
 
   ConnectThisTo(mColorSliderDisplay, Events::LeftMouseDown, OnColorSliderMouseDown);
 
-  //---------------------------------------------------- Create the alpha slider
   // Create the color buffer
   mAlphaSliderBuffer = new PixelBuffer(Color::Red, 20, 256);
   // Create the display and set the texture
@@ -280,7 +276,6 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
 
   ConnectThisTo(mAlphaSliderDisplay, Events::LeftMouseDown, OnAlphaSliderMouseDown);
 
-  //---------------------------------------------------------- Create Text Boxes
   Vec3 offset = Pixels(250, 25, 0);
 
   for (uint i = 0; i < 6; ++i)
@@ -327,7 +322,6 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
   ConnectThisTo(mTextBoxes[Green], Events::TextBoxChanged, OnGreenChanged);
   ConnectThisTo(mTextBoxes[Blue], Events::TextBoxChanged, OnBlueChanged);
 
-  //----------------------------------------------------------- Create Alpha Box
   mAlphaLabel = new Label(this);
   mAlphaLabel->SetText("A:");
   mAlphaLabel->SetTranslationAndSize(Pixels(250, 175, 0), Pixels(20, 20));
@@ -338,7 +332,6 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
   mAlphaTextBox->SetTranslationAndSize(Pixels(270, 175, 0), Pixels(40, 20));
   ConnectThisTo(mAlphaTextBox, Events::TextBoxChanged, OnAlphaChanged);
 
-  //------------------------------------------------------------- Create Hdr Box
   mHdrLabel = new Label(this);
   mHdrLabel->SetText("Hdr:");
   mHdrLabel->SetTranslationAndSize(Pixels(320, 150, 0), Pixels(30, 20));
@@ -349,7 +342,6 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
   mHdrTextBox->SetTranslationAndSize(Pixels(355.0f, 150.0f, 0.0f), Pixels(40, 20));
   ConnectThisTo(mHdrTextBox, Events::TextBoxChanged, OnHdrChanged);
 
-  //------------------------------------------------------------- Create Hex Box
   mHexLabel = new Label(this);
   mHexLabel->SetText("#");
   mHexLabel->SetTranslationAndSize(Pixels(325, 175, 0), Pixels(20, 20));
@@ -360,7 +352,6 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
   mHexTextBox->SetTranslationAndSize(Pixels(340, 175, 0), Pixels(55, 19));
   ConnectThisTo(mHexTextBox, Events::TextBoxChanged, OnHexChanged);
 
-  //------------------------------------------------------------- Create Buttons
   mOkButton = new TextButton(this);
   mOkButton->SetText("OK");
   mOkButton->SetTranslationAndSize(Pixels(315, 0, 0), Pixels(80, 20));

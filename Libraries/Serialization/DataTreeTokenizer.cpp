@@ -77,7 +77,6 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
 
     switch (currentState)
     {
-      //----------------------------------------------------------------------------
       // Start
     case TokenState::Start:
     {
@@ -118,7 +117,6 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       }
       break;
     }
-    //------------------------------------------------------------- String
     // Literal Start
     case TokenState::StringLiteralStart:
     {
@@ -130,7 +128,6 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       // Otherwise, we accept any character so we don't need to do anything
       break;
     }
-    //------------------------------------------------------------ String
     // Literal Escape
     case TokenState::StringLiteralEscape:
     {
@@ -139,7 +136,6 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       // Otherwise, we accept any character so we don't need to do anything
       break;
     }
-    //------------------------------------------------------------------- String
     // Literal
     case TokenState::StringLiteral:
     {
@@ -148,7 +144,6 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       // Otherwise, we accept any character so we don't need to do anything
       break;
     }
-    //-----------------------------------------------------------------------
     // Identifier
     case TokenState::Identifier:
     {
@@ -161,7 +156,6 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
 
       break;
     }
-    //----------------------------------------------------------------
     // Enumeration Start
     case TokenState::EnumerationStart:
     {
@@ -172,7 +166,6 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
 
       break;
     }
-    //----------------------------------------------------------------------
     // Enumeration
     case TokenState::Enumeration:
     {
@@ -181,7 +174,6 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
         tokenAccepted = true;
       break;
     }
-    //--------------------------------------------------------------------------
     // Integer
     case TokenState::Integer:
     {
@@ -197,7 +189,6 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
         tokenAccepted = true;
       break;
     }
-    //-------------------------------------------------------------------
     // Negative Start
     case TokenState::NegativeStart:
     {
@@ -209,7 +200,6 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
         status.SetFailed("Negative symbol must be followed by a number");
       break;
     }
-    //--------------------------------------------------------------------- Zero
     // Integer
     case TokenState::ZeroInteger:
     {
@@ -223,7 +213,6 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
         tokenAccepted = true;
       break;
     }
-    //------------------------------------------------------------------------
     // Hex Start
     case TokenState::HexStart:
     {
@@ -233,7 +222,6 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
         status.SetFailed("Incomplete hex value");
       break;
     }
-    //------------------------------------------------------------------------------
     // Hex
     case TokenState::Hex:
     {
@@ -243,7 +231,6 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
         tokenAccepted = true;
       break;
     }
-    //----------------------------------------------------------------------
     // Float Start
     case TokenState::FloatStart:
     {
@@ -253,7 +240,6 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
         status.SetFailed("Incomplete float. A number must follow the '.'");
       break;
     }
-    //----------------------------------------------------------------------------
     // Float
     case TokenState::Float:
     {
@@ -263,14 +249,12 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
         tokenAccepted = true;
       break;
     }
-    //-------------------------------------------------------------------
     // Explicit Float
     case TokenState::ExplicitFloat:
     {
       tokenAccepted = true;
       break;
     }
-    //--------------------------------------------------------- Scientific
     // Notation Start
     case TokenState::ScientificNotationStart:
     {
@@ -282,7 +266,6 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
         status.SetFailed("Incomplete scientific notation. A number or +- should follow 'e'");
       break;
     }
-    //--------------------------------------------------------- Scientific
     // Notation Sign
     case TokenState::ScientificNotationSign:
     {
@@ -293,7 +276,6 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
                          "follow the + or -");
       break;
     }
-    //-------------------------------------------------------- Scientific
     // Notation Float
     case TokenState::ScientificNotationFloat:
     {

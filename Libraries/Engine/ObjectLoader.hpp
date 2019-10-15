@@ -79,7 +79,6 @@ public:
   void Clear();
   bool Empty();
 
-  //------------------------------------------------------------------------------------
   // Object Node
   struct ObjectNode
   {

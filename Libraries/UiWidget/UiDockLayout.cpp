@@ -115,7 +115,6 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
     {
       switch (mode)
       {
-        //--------------------------------------------------------------------
       case UiDockMode::Bottom:
       {
         if (child->GetSizePolicyY() == UiSizePolicy::Flex)
@@ -132,7 +131,6 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
       }
       break;
 
-        //--------------------------------------------------------------------
       case UiDockMode::Top:
       {
         if (child->GetSizePolicyY() == UiSizePolicy::Flex)
@@ -149,7 +147,6 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
       }
       break;
 
-        //--------------------------------------------------------------------
       case UiDockMode::Left:
       {
         if (child->GetSizePolicyX() == UiSizePolicy::Flex)
@@ -165,7 +162,6 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
       }
       break;
 
-        //--------------------------------------------------------------------
       case UiDockMode::Right:
       {
         if (child->GetSizePolicyX() == UiSizePolicy::Flex)

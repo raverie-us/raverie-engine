@@ -154,7 +154,6 @@ public:
   ZeroDeclareHasMemberTrait(IsSafeId, mZeroHandleId);
   ZeroDeclareHasMemberTrait(IsThreadSafe, mZeroHandleLock);
 
-  //------------------------------------------------------------------------------------
   // Handle Data
   struct HandleData
   {
@@ -162,7 +161,6 @@ public:
     IdType mId;
   };
 
-  //************************************************************************************************
   void Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags) override
   {
     if (IsReferenceCounted<T>::value)
@@ -180,38 +178,31 @@ public:
     }
   }
 
-  //************************************************************************************************
   void ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize) override
   {
     ObjectToHandleInternal(object, type, handleToInitialize);
   }
 
-  //************************************************************************************************
   byte* HandleToObject(const Handle& handle) override
   {
     return HandleToObjectInternal(handle);
   }
 
-  //************************************************************************************************
   void AddReference(const Handle& handle) override
   {
     AddReferenceInternal(handle);
   }
 
-  //************************************************************************************************
   ReleaseResult::Enum ReleaseReference(const Handle& handle) override
   {
     return ReleaseReferenceInternal(handle);
   }
 
-  //--------------------------------------------------------------------------------------
   // Internals
   // Internal versions of each function were added because they need to be
   // templated for SFINAE
 
-  //---------------------------------------------------------------------------------
   // ObjectToHandle
-  //************************************************************************************************
   // Only reference counted
   template <typename U = T>
   void ObjectToHandleInternal(const byte* object,
@@ -227,7 +218,6 @@ public:
     handleToInitialize.HandlePointer = (byte*)object;
   }
 
-  //************************************************************************************************
   // Only safe id
   template <typename U = T>
   void ObjectToHandleInternal(const byte* object,
@@ -242,7 +232,6 @@ public:
       data.mId = instance->mZeroHandleId.mId;
   }
 
-  //************************************************************************************************
   // Reference counted and safe id
   template <typename U = T>
   void ObjectToHandleInternal(const byte* object,
@@ -262,9 +251,7 @@ public:
     }
   }
 
-  //---------------------------------------------------------------------------------
   // HandleToObject
-  //************************************************************************************************
   // Only reference counted
   template <typename U = T>
   byte* HandleToObjectInternal(const Handle& handle, P_ENABLE_IF(IsReferenceCounted<U>::value && !IsSafeId<U>::value))
@@ -272,7 +259,6 @@ public:
     return (byte*)handle.HandlePointer;
   }
 
-  //************************************************************************************************
   // Only safe id
   template <typename U = T>
   byte* HandleToObjectInternal(const Handle& handle, P_ENABLE_IF(IsSafeId<U>::value && !IsThreadSafe<U>::value))
@@ -286,7 +272,6 @@ public:
     return (byte*)object;
   }
 
-  //************************************************************************************************
   // Thread safe id
   template <typename U = T>
   byte* HandleToObjectInternal(const Handle& handle, P_ENABLE_IF(IsSafeId<U>::value&& IsThreadSafe<U>::value))
@@ -302,9 +287,7 @@ public:
     return (byte*)object;
   }
 
-  //-----------------------------------------------------------------------------------
   // AddReference
-  //************************************************************************************************
   template <typename U = T>
   void AddReferenceInternal(const Handle& handle, P_ENABLE_IF(IsReferenceCounted<U>::value))
   {
@@ -312,15 +295,12 @@ public:
     instance->AddReference();
   }
 
-  //************************************************************************************************
   template <typename U = T>
   void AddReferenceInternal(const Handle& handle, P_DISABLE_IF(IsReferenceCounted<U>::value))
   {
   }
 
-  //-------------------------------------------------------------------------------
   // ReleaseReference
-  //************************************************************************************************
   template <typename U = T>
   ReleaseResult::Enum ReleaseReferenceInternal(const Handle& handle, P_ENABLE_IF(IsReferenceCounted<U>::value))
   {
@@ -333,7 +313,6 @@ public:
     return ReleaseResult::TakeNoAction;
   }
 
-  //************************************************************************************************
   template <typename U = T>
   ReleaseResult::Enum ReleaseReferenceInternal(const Handle& handle, P_DISABLE_IF(IsReferenceCounted<U>::value))
   {
@@ -355,19 +334,16 @@ public:
   ZilchDeclareType(ReferenceCounted, TypeCopyMode::ReferenceType);
   DeclareReferenceCountedHandle();
 
-  //************************************************************************************************
   ReferenceCounted()
   {
     ConstructReferenceCountedHandle();
   }
 
-  //************************************************************************************************
   ReferenceCounted(const ReferenceCounted&)
   {
     ConstructReferenceCountedHandle();
   }
 
-  //************************************************************************************************
   virtual ~ReferenceCounted()
   {
     DestructReferenceCountedHandle();
@@ -388,25 +364,21 @@ public:
   ZilchDeclareType(SafeId, TypeCopyMode::ReferenceType);
   DeclareSafeIdHandle(idType);
 
-  //************************************************************************************************
   SafeId()
   {
     ConstructSafeIdHandle();
   }
 
-  //************************************************************************************************
   SafeId(const SafeId&)
   {
     ConstructSafeIdHandle();
   }
 
-  //************************************************************************************************
   virtual ~SafeId()
   {
     DestructSafeIdHandle();
   }
 
-  //************************************************************************************************
   SafeId& operator=(const SafeId& rhs)
   {
     return *this;
@@ -433,25 +405,21 @@ public:
   ZilchDeclareType(ThreadSafeId, TypeCopyMode::ReferenceType);
   DeclareThreadSafeIdHandle(idType);
 
-  //************************************************************************************************
   ThreadSafeId()
   {
     ConstructThreadSafeIdHandle();
   }
 
-  //************************************************************************************************
   ThreadSafeId(const ThreadSafeId&)
   {
     ConstructThreadSafeIdHandle();
   }
 
-  //************************************************************************************************
   virtual ~ThreadSafeId()
   {
     DestructThreadSafeIdHandle();
   }
 
-  //************************************************************************************************
   ThreadSafeId& operator=(const ThreadSafeId& rhs)
   {
     return *this;
@@ -479,25 +447,21 @@ public:
   ZilchDeclareType(ReferenceCountedSafeId, TypeCopyMode::ReferenceType);
   DeclareReferenceCountedSafeIdHandle(idType);
 
-  //************************************************************************************************
   ReferenceCountedSafeId()
   {
     ConstructReferenceCountedSafeIdHandle();
   }
 
-  //************************************************************************************************
   ReferenceCountedSafeId(const ReferenceCountedSafeId&)
   {
     ConstructReferenceCountedSafeIdHandle();
   }
 
-  //************************************************************************************************
   virtual ~ReferenceCountedSafeId()
   {
     DestructReferenceCountedSafeIdHandle();
   }
 
-  //************************************************************************************************
   ReferenceCountedSafeId& operator=(const ReferenceCountedSafeId& rhs)
   {
     return *this;
@@ -524,25 +488,21 @@ public:
   ZilchDeclareType(ReferenceCountedThreadSafeId, TypeCopyMode::ReferenceType);
   DeclareReferenceCountedThreadSafeIdHandle(idType);
 
-  //************************************************************************************************
   ReferenceCountedThreadSafeId()
   {
     ConstructReferenceCountedThreadSafeIdHandle();
   }
 
-  //************************************************************************************************
   ReferenceCountedThreadSafeId(const ReferenceCountedThreadSafeId&)
   {
     ConstructReferenceCountedThreadSafeIdHandle();
   }
 
-  //************************************************************************************************
   virtual ~ReferenceCountedThreadSafeId()
   {
     DestructReferenceCountedThreadSafeIdHandle();
   }
 
-  //************************************************************************************************
   ReferenceCountedThreadSafeId& operator=(const ReferenceCountedThreadSafeId& rhs)
   {
     return *this;

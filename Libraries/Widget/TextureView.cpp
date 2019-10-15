@@ -9,13 +9,11 @@ class SkyboxDrag : public MouseManipulation
 public:
   TextureView* mView;
 
-  //****************************************************************************
   SkyboxDrag(MouseEvent* e, TextureView* view) : MouseManipulation(e->GetMouse(), view->GetParent())
   {
     mView = view;
   }
 
-  //****************************************************************************
   void OnMouseMove(MouseEvent* event) override
   {
     mView->mSkyboxInput += Vec4(event->Movement.x, event->Movement.y, 0.0f, 0.0f);
@@ -23,7 +21,6 @@ public:
     mView->mTimeSinceLastDrag = 0.0f;
   }
 
-  //****************************************************************************
   void OnMouseScroll(MouseEvent* event) override
   {
     mView->mSkyboxInput.z += event->Scroll.y;

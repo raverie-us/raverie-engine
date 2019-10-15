@@ -36,7 +36,6 @@ struct NavMeshEdge
   /// Constructor.
   NavMeshEdge(NavMeshPolygon* owner);
 
-  //------------------------------------------ Polygon Range
   /// Range of all connected triangles.
   struct PolygonRange
   {
@@ -91,7 +90,6 @@ struct NavMeshPolygon
 
   Vec3 GetCenter(PathFinderAlgorithmMesh* mesh);
 
-  //------------------------------------------ Polygon Range
   /// Range of all adjacent triangles.
   struct PolygonRange
   {

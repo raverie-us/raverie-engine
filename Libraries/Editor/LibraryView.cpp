@@ -24,7 +24,6 @@ inline bool LibDataEntrySort(LibDataEntry* left, LibDataEntry* right)
 class LibraryDataSource : public DataSource
 {
 public:
-  //****************************************************************************
   LibraryDataSource()
   {
     mRoot.mTag = "Root";
@@ -38,7 +37,6 @@ public:
   LibDataEntry mRoot;
   Array<LibDataEntry*> mEntries;
 
-  //****************************************************************************
   void AddResource(Resource* resource)
   {
     LibDataEntry* entry = new LibDataEntry();
@@ -46,7 +44,6 @@ public:
     mEntries.PushBack(entry);
   }
 
-  //****************************************************************************
   void AddTag(StringParam tag)
   {
     LibDataEntry* entry = new LibDataEntry();
@@ -54,25 +51,21 @@ public:
     mEntries.PushBack(entry);
   }
 
-  //****************************************************************************
   void SortByTagName()
   {
     Zero::Sort(mEntries.All(), LibDataEntrySort);
   }
 
-  //****************************************************************************
   void Clear()
   {
     DeleteObjectsInContainer(mEntries);
   }
 
-  //****************************************************************************
   DataEntry* GetRoot() override
   {
     return &mRoot;
   }
 
-  //****************************************************************************
   DataEntry* ToEntry(DataIndex index) override
   {
     if (index == cRootIndex || (uint)index.Id >= mEntries.Size())
@@ -80,7 +73,6 @@ public:
     return mEntries[(uint)index.Id];
   }
 
-  //****************************************************************************
   DataIndex ToIndex(DataEntry* dataEntry) override
   {
     if (dataEntry == &mRoot)
@@ -90,7 +82,6 @@ public:
     return DataIndex(index);
   }
 
-  //****************************************************************************
   DataIndex GetResourceIndex(Resource* resource)
   {
     for (uint i = 0; i < mEntries.Size(); ++i)
@@ -102,14 +93,12 @@ public:
     return DataIndex((u64)-1);
   }
 
-  //****************************************************************************
   Handle ToHandle(DataEntry* dataEntry) override
   {
     LibDataEntry* entry = (LibDataEntry*)dataEntry;
     return entry->mResource;
   }
 
-  //****************************************************************************
   DataEntry* Parent(DataEntry* dataEntry) override
   {
     if (dataEntry == &mRoot)
@@ -117,7 +106,6 @@ public:
     return &mRoot;
   }
 
-  //****************************************************************************
   uint ChildCount(DataEntry* dataEntry) override
   {
     if (dataEntry == &mRoot)
@@ -125,7 +113,6 @@ public:
     return 0;
   }
 
-  //****************************************************************************
   DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
   {
     if (dataEntry == &mRoot)
@@ -133,13 +120,11 @@ public:
     return nullptr;
   }
 
-  //****************************************************************************
   bool IsExpandable(DataEntry* dataEntry) override
   {
     return false;
   }
 
-  //****************************************************************************
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override
   {
     LibDataEntry* entry = (LibDataEntry*)dataEntry;
@@ -168,7 +153,6 @@ public:
     }
   }
 
-  //****************************************************************************
   bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
   {
     if (Z::gEngine->IsReadOnly())

@@ -27,7 +27,6 @@ public:
   /// Returns an empty string if the variable doesn't exist.
   String GetEnvironmentalVariable(StringParam variableName);
 
-  //-------------------------------------------------------------------Internal
   void SetCommandLineArguments(const Array<String>& commandLineArgs);
   bool ParseCommandLine();
   void BuildCommandLine();

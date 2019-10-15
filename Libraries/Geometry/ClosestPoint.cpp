@@ -119,7 +119,6 @@ Type ClosestPointOnAabbToPoint(Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, V
     return features[featureTracker - 1];
   }
 
-  //----------------------------------------------------------------------------
   // The point is inside of the AABB, push the point out in the direction of the
   // face on the AABB that is closest to the point.
 

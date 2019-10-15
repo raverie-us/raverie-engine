@@ -979,7 +979,6 @@ Type TriangleTriangle(Vec3Param triOnePointA,
                       Vec3Param triTwoPointC,
                       Manifold* manifold)
 {
-  //----------------------------------------------------------------------------
   // Compute the plane equation of triangle A.
   Vec3 planeNormalOne = Geometry::GenerateNormal(triOnePointA, triOnePointB, triOnePointC);
   real planeDistanceOne = Dot(planeNormalOne, triOnePointA);
@@ -995,7 +994,6 @@ Type TriangleTriangle(Vec3Param triOnePointA,
     return None;
   }
 
-  //----------------------------------------------------------------------------
   // Compute the plane equation of triangle B.
   Vec3 planeNormalTwo = Geometry::GenerateNormal(triTwoPointA, triTwoPointB, triTwoPointC);
   real planeDistanceTwo = Dot(planeNormalTwo, triTwoPointA);
@@ -1011,7 +1009,6 @@ Type TriangleTriangle(Vec3Param triOnePointA,
     return None;
   }
 
-  //----------------------------------------------------------------------------
   // Compute the line L of intersection between the two planes.
   Manifold planesInfo;
   PlanePlane(planeNormalOne, planeDistanceOne, planeNormalTwo, planeDistanceTwo, &planesInfo);
@@ -1032,7 +1029,6 @@ Type TriangleTriangle(Vec3Param triOnePointA,
   projTwo[1] = Math::Max(Math::Max(triTwoPointA[axis], triTwoPointA[axis]), triTwoPointA[axis]);
   real proj[2] = {Math::Max(projOne[0], projTwo[0]), Math::Min(projOne[1], projTwo[1])};
 
-  //----------------------------------------------------------------------------
   // The triangles intersect if the intersection intervals overlap; otherwise,
   // they do not.
   if (proj[0] < proj[1])

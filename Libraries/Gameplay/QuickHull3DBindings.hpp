@@ -29,7 +29,6 @@ class QuickHull3DInterface
   /// purposes.
   void Draw();
 
-  //-------------------------------------------------------------------Internal
   // Build the half-edge mesh from the quick-hull results.
   void BuildHalfEdgeMesh();
 

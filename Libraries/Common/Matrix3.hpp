@@ -131,7 +131,6 @@ public:
   /// Decompose the given three-dimensional transform.
   static void Decompose(Mat3Param transform, Mat3Ref rotationRadians, Vec3Ref scale);
 
-  //-------------------------------------------------------------------Legacy
   /// Returns a copy of this matrix with its elements transposed.
   Matrix3 Transposed() const;
 

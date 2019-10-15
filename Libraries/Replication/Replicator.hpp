@@ -531,9 +531,7 @@ public:
   /// Called before a link is removed
   void OnLinkRemove(PeerLink* link) override;
 
-  //---------------------------------------------------------------------------------//
   //                                 ItemCacher //
-  //---------------------------------------------------------------------------------//
 
   /// Item Cache Helper
   /// Provides custom behavior around ItemCache for easier replication

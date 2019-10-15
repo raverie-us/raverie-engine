@@ -35,7 +35,6 @@ public:
 
   GenericPhysicsMesh();
 
-  //-------------------------------------------------------------------Resource
   // Interface
   void Save(StringParam filename) override;
   void Serialize(Serializer& stream) override;
@@ -43,7 +42,6 @@ public:
   void Unload() override;
   void ResourceModified() override;
 
-  //-------------------------------------------------------------------
   // GenericPhysicsMesh Interface
   /// Called when a mesh is modified. This is typically done when the
   /// vertices/indices are modified in script.
@@ -93,7 +91,6 @@ public:
   void DrawFaces(Mat4Param transform, ByteColor color);
   void DrawFaceNormals(Mat4Param transform, ByteColor color);
 
-  //-------------------------------------------------------------------Internal
   /// RayCasts against the given triangle (the index is needed for the result's
   /// shape index) and fills out the appropriate info (t, points, normals,
   /// etc...)

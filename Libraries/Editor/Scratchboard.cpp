@@ -12,7 +12,6 @@ public:
   float mLineWidth;
   ByteColor mLineColor;
 
-  //****************************************************************************
   ScratchboardDrawer(Composite* parent,
                      float lineWidth = 0.75f,
                      ByteColor lineColor = ToByteColor(Vec4(0, 0, 0, 0.1f)),
@@ -25,7 +24,6 @@ public:
     mLineColor = lineColor;
   }
 
-  //****************************************************************************
   void Draw(DisplayRender* render, Mat4Param parentTx, ColorTransform& colorTx, DrawParams& params)
   {
     if (mSize.x < 0 || mSize.y < 0)
@@ -38,7 +36,6 @@ public:
     DrawLines(render, mOffset.y, Vec3::cYAxis, mSize);
   }
 
-  //****************************************************************************
   void DrawLines(DisplayRender* render, float offset, Vec3 axis, Vec2 displaySize)
   {
     // Vec3 tangent = Math::Abs(Math::Cross(axis, Vec3::cZAxis));
@@ -71,7 +68,6 @@ public:
   Vec3 mScrollDirection;
   Vec2 mLastLocalMousePos;
 
-  //****************************************************************************
   ScratchboardObjectMover(Mouse* mouse, Scratchboard* scratchBoard, Widget* widget, bool snapping, float snapFidelity) :
       MouseManipulation(mouse, scratchBoard)
   {
@@ -83,7 +79,6 @@ public:
     mLastLocalMousePos = mScratchboard->ToLocal(mouse->GetClientPosition());
   }
 
-  //****************************************************************************
   void OnMouseMove(MouseEvent* event) override
   {
     // Get the local position on the scratchboard
@@ -108,7 +103,6 @@ public:
     mLastLocalMousePos = local;
   }
 
-  //****************************************************************************
   void OnUpdate(UpdateEvent* event) override
   {
     Vec2 local = mLastLocalMousePos;
@@ -132,7 +126,6 @@ public:
     mScratchboard->Scroll(mScrollDirection * cScrollSpeed);
   }
 
-  //****************************************************************************
   void OnMouseUp(MouseEvent* event) override
   {
     this->Destroy();
@@ -144,27 +137,23 @@ class ScratchboardScroller : public MouseManipulation
 public:
   Scratchboard* mScratchboard;
 
-  //****************************************************************************
   ScratchboardScroller(Mouse* mouse, Scratchboard* scratchboard) : MouseManipulation(mouse, scratchboard)
   {
     mScratchboard = scratchboard;
   }
 
-  //****************************************************************************
   void OnMouseMove(MouseEvent* event) override
   {
     // Scroll the graph
     mScratchboard->Scroll(Vec3(event->Movement));
   }
 
-  //****************************************************************************
   void OnMiddleMouseUp(MouseEvent* event) override
   {
     this->Destroy();
     event->GetMouse()->SetCursor(Cursor::Arrow);
   }
 
-  //****************************************************************************
   void OnRightMouseUp(MouseEvent* event) override
   {
     this->Destroy();

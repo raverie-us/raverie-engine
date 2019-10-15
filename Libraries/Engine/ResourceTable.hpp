@@ -157,7 +157,6 @@ public:
   /// Force rebuild the weighted probability table.
   void ForceRebuild();
 
-  //-------------------------------------------------------------------Internal
   // Add a new entry solely based upon a value. This is almost entirely used by
   // the ui when a new row is added.
   void AddNewEntry(StringParam value = String());

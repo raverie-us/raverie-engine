@@ -58,7 +58,6 @@ public:
   {
   }
 
-  //****************************************************************************
   ObjectPropertyNode* BuildObjectTree(ObjectPropertyNode* parent,
                                       HandleParam object,
                                       Property* objectProperty = nullptr) override
@@ -122,7 +121,6 @@ public:
     return node;
   }
 
-  //****************************************************************************
   void RemoveScriptSourceProperties(ObjectPropertyNode* node)
   {
     forRange (ObjectPropertyNode* propertyNode, node->mProperties.All())
@@ -142,11 +140,9 @@ public:
 
   /* METAREFACTOR - Not sure how to resolve these yet
   //
-  ****************************************************************************
   bool SupportsComponentRemoval() override { return false; }
 
   //
-  ****************************************************************************
   bool CanAddComponents(HandleParam instance) override { return false; }
   */
 };

@@ -108,7 +108,6 @@ public:
     return (Integer)this->NativeArray.Size();
   }
 
-  //***************************************************************************
   static String ArrayToString(const BoundType* type, const byte* data)
   {
     // Read the element size from the current function's user-data
@@ -149,7 +148,6 @@ public:
     return result;
   }
 
-  //***************************************************************************
   // Store 'Any' value as return value
   static void ArrayCopyReturnValue(Call& call, const T& value)
   {
@@ -161,7 +159,6 @@ public:
     CopyFromAnyOrActualType<T>(value, returnValue);
   }
 
-  //***************************************************************************
   static T ArrayReadValue(Call& call, ArrayTemplate* self, Integer parameter)
   {
     // Read the element size from the current function's user-data
@@ -175,7 +172,6 @@ public:
     return CopyToAnyOrActualType<T>(valueData, userData.ContainedType);
   }
 
-  //***************************************************************************
   static void ArrayGet(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -195,7 +191,6 @@ public:
     ArrayCopyReturnValue(call, self->NativeArray[index]);
   }
 
-  //***************************************************************************
   static void ArraySet(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -216,7 +211,6 @@ public:
     self->Modified();
   }
 
-  //***************************************************************************
   static void ArrayPush(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -227,7 +221,6 @@ public:
     self->Modified();
   }
 
-  //***************************************************************************
   static void ArrayInsert(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -248,7 +241,6 @@ public:
     self->Modified();
   }
 
-  //***************************************************************************
   static void ArrayPop(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -270,7 +262,6 @@ public:
     self->Modified();
   }
 
-  //***************************************************************************
   static void ArrayRemoveAt(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -291,7 +282,6 @@ public:
     self->Modified();
   }
 
-  //***************************************************************************
   static void ArrayRemoveSwap(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -311,7 +301,6 @@ public:
     self->Modified();
   }
 
-  //***************************************************************************
   static void ArrayClear(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -321,7 +310,6 @@ public:
     self->Modified();
   }
 
-  //***************************************************************************
   static void ArrayCopy(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -347,7 +335,6 @@ public:
     call.SetHandle(Call::Return, arrayHandle);
   }
 
-  //***************************************************************************
   static void ArrayCount(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -357,7 +344,6 @@ public:
     call.Set(Call::Return, self->GetCount());
   }
 
-  //***************************************************************************
   static void ArrayCapacity(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -367,7 +353,6 @@ public:
     call.Set(Call::Return, (Integer)self->NativeArray.capacity());
   }
 
-  //***************************************************************************
   static void ArrayReserve(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -381,7 +366,6 @@ public:
     self->NativeArray.Reserve(capacity);
   }
 
-  //***************************************************************************
   static void ArrayResizeHelper(Call& call, ExceptionReport& report, byte* defaultValue)
   {
     // Get the user data, because we need to know the template types
@@ -427,7 +411,6 @@ public:
     }
   }
 
-  //***************************************************************************
   static void ArrayResizeConstructorHelper(Call& call, ExceptionReport& report, byte* defaultValue)
   {
     // Get ourselves (the array)
@@ -440,7 +423,6 @@ public:
     ArrayResizeHelper(call, report, defaultValue);
   }
 
-  //***************************************************************************
   static void ArrayConstructorResize(Call& call, ExceptionReport& report)
   {
     // Construct the array and resize the number of elements, with no default
@@ -448,7 +430,6 @@ public:
     ArrayResizeConstructorHelper(call, report, nullptr);
   }
 
-  //***************************************************************************
   static void ArrayConstructorResizeDefault(Call& call, ExceptionReport& report)
   {
     // The second argument should be the default value we'd like to initialize
@@ -460,14 +441,12 @@ public:
     ArrayResizeConstructorHelper(call, report, defaultValue);
   }
 
-  //***************************************************************************
   static void ArrayResize(Call& call, ExceptionReport& report)
   {
     // Resize with no default value
     ArrayResizeHelper(call, report, nullptr);
   }
 
-  //***************************************************************************
   static void ArrayResizeDefault(Call& call, ExceptionReport& report)
   {
     // The second argument should be the default value we'd like to initialize
@@ -478,7 +457,6 @@ public:
     ArrayResizeHelper(call, report, defaultValue);
   }
 
-  //***************************************************************************
   static void ArrayLastIndex(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -488,7 +466,6 @@ public:
     call.Set(Call::Return, self->GetCount() - 1);
   }
 
-  //***************************************************************************
   static void ArrayFindFirstIndex(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -514,7 +491,6 @@ public:
     call.Set(Call::Return, -1);
   }
 
-  //***************************************************************************
   static void ArrayRemoveFirst(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -543,7 +519,6 @@ public:
     call.Set<Boolean>(Call::Return, false);
   }
 
-  //***************************************************************************
   static void ArrayRemoveAll(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -559,14 +534,12 @@ public:
     call.Set<Integer>(Call::Return, (Integer)removeCount);
   }
 
-  //***************************************************************************
   static void SetParameter(Call& call, size_t index, T& value)
   {
     byte* dest = call.GetParameterUnchecked(index);
     CopyFromAnyOrActualType(value, dest);
   }
 
-  //***************************************************************************
   template <ComparisonMode::Enum comparisonMode>
   class DelegateCompare
   {
@@ -612,7 +585,6 @@ public:
     }
   };
 
-  //***************************************************************************
   static void ArraySortDelegate(Call& call, ExceptionReport& report)
   {
     Delegate& comparer = call.GetDelegate(0);
@@ -620,7 +592,6 @@ public:
     Sort(self->NativeArray.All(), DelegateCompare<ComparisonMode::BoolMode>(call.GetState(), report, comparer));
   }
 
-  //***************************************************************************
   static void ArraySortCompareToDelegate(Call& call, ExceptionReport& report)
   {
     Delegate& comparer = call.GetDelegate(0);
@@ -628,7 +599,6 @@ public:
     Sort(self->NativeArray.All(), DelegateCompare<ComparisonMode::CompareMode>(call.GetState(), report, comparer));
   }
 
-  //***************************************************************************
   static void
   ArrayReturnIndexedRange(Call& call, ExceptionReport& report, ArrayTemplate* self, Integer start, Integer count)
   {
@@ -657,7 +627,6 @@ public:
     call.SetHandle(Call::Return, rangeHandle);
   }
 
-  //***************************************************************************
   static void ArrayAll(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -667,7 +636,6 @@ public:
     ArrayReturnIndexedRange(call, report, self, 0, self->GetCount());
   }
 
-  //***************************************************************************
   static void ArrayRange(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the array)
@@ -733,7 +701,6 @@ public:
   // The id that the container had when we were created from it
   Integer ModifyId;
 
-  //***************************************************************************
   static void ArrayRangeConstructor(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the range)
@@ -744,7 +711,6 @@ public:
     new (selfData) ArrayRangeTemplate();
   }
 
-  //***************************************************************************
   static void ArrayRangeDestructor(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the range)
@@ -754,7 +720,6 @@ public:
     self->~ArrayRangeTemplate();
   }
 
-  //***************************************************************************
   static void ArrayRangeReset(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the range)
@@ -764,7 +729,6 @@ public:
     self->Current = self->Start;
   }
 
-  //***************************************************************************
   static void ArrayRangeMoveNext(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the range)
@@ -786,7 +750,6 @@ public:
     }
   }
 
-  //***************************************************************************
   static void ArrayRangeIsEmpty(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the range)
@@ -797,7 +760,6 @@ public:
     call.Set(Call::Return, isEmpty);
   }
 
-  //***************************************************************************
   static void ArrayRangeIsNotEmpty(Call& call, ExceptionReport& report)
   {
     // Get ourselves (the range)
@@ -808,7 +770,6 @@ public:
     call.Set(Call::Return, isNotEmpty);
   }
 
-  //***************************************************************************
   static void ArrayRangeAll(Call& call, ExceptionReport& report)
   {
     // Grab our self handle and return it (we just return ourselves)
@@ -816,7 +777,6 @@ public:
     call.SetHandle(Call::Return, selfHandle);
   }
 
-  //***************************************************************************
   static void ArrayRangeCurrent(Call& call, ExceptionReport& report)
   {
     // Get this object

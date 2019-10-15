@@ -236,7 +236,6 @@ public:
   OperationCreationContext mCreationContexts;
   HashSet<Cog*> mDestroyedObjects;
 
-  //-----------------------------------------------------------------------------------
   // Side Effects
   static void StartListeningForSideEffects();
   static bool IsListeningForSideEffects();

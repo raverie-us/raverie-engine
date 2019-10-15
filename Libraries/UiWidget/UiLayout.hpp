@@ -49,7 +49,6 @@ public:
   /// Used to debug the layout in the editor.
   bool mDebug;
 
-  //-------------------------------------------------------------------- Helpers
 protected:
   /// Updates all child widgets that are not in a layout.
   void UpdateNotInLayout(UiTransformUpdateEvent* e);
@@ -65,7 +64,6 @@ protected:
   /// Finds the maximum of all the minimum sizes of all child widgets.
   Vec2 MaxMeasure(Rectangle& rect);
 
-  //---------------------------------------------------------- Filtered Children
   /// Range for walking through all children that are in the layout.
   struct UiFilteredChildren
   {

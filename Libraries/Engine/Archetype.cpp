@@ -206,7 +206,6 @@ public:
   BoundType* StoredType;
   String FilterTag;
 
-  //************************************************************************************************
   ArchetypeLoader(StringParam objectTypeName, StringParam filterTag) :
       StoredTypeName(objectTypeName),
       FilterTag(filterTag),
@@ -214,7 +213,6 @@ public:
   {
   }
 
-  //************************************************************************************************
   HandleOf<Resource> LoadFromFile(ResourceEntry& entry) override
   {
     Archetype* archetype = new Archetype();
@@ -253,7 +251,6 @@ public:
     return archetype;
   }
 
-  //************************************************************************************************
   HandleOf<Resource> LoadFromBlock(ResourceEntry& entry)
   {
     WriteToFile(entry.FullPath.c_str(), entry.Block.Data, entry.Block.Size);

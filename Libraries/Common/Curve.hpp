@@ -70,14 +70,12 @@ private:
   template <typename Policy>
   PointData ComputePointData(real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const;
 
-  //---------------------------------------------------------- B-Spline Policy
   struct BSplinePolicy
   {
     static const Mat4& GetBasis();
     static Vec4 GetParam(real t);
   };
 
-  //------------------------------------------------------- Catmul-Rom Policy
   struct CatmullRomPolicy
   {
     static const Mat4& GetBasis();
@@ -161,7 +159,6 @@ struct ZeroShared PiecewiseFunction
   /// Returns whether or not there are any control points in the curve.
   bool Empty();
 
-  //-------------------------------------------------------------- Control Point
   struct ControlPoint
   {
     Vec2 Position;

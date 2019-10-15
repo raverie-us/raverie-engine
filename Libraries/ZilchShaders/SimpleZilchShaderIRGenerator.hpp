@@ -200,7 +200,6 @@ public:
   SimpleZilchShaderIRGenerator(FrontEndTranslatorType* frontEndTranslator, ZilchShaderSpirVSettings* settings);
   ~SimpleZilchShaderIRGenerator();
 
-  //-------------------------------------------------------------------Settings/Setup
   /// Setup all dependent libraries that we have and compile them into a shader
   /// library (only once) for all subsequent fragment and shader operations.
   /// This is not done in the constructor so the user has a chance to connect
@@ -213,27 +212,23 @@ public:
   /// translation)
   void ClearAll();
 
-  //-------------------------------------------------------------------Fragments
   void AddFragmentCode(StringParam fragmentCode, StringParam fileName, void* userData);
   /// Compiles fragments and translates them to an internal representation
   /// (spir-v)
   bool CompileAndTranslateFragments();
   void ClearFragmentsProjectAndLibrary();
 
-  //-------------------------------------------------------------------Compositing
   /// Composes the given shader definition of fragments together. Stores the
   /// resultant zilch shader code in the given definition object. The zilch
   /// shader code is also stored cached internally.
   bool ComposeShader(ZilchShaderIRCompositor::ShaderDefinition& shaderDef, ShaderCapabilities& capabilities);
 
-  //-------------------------------------------------------------------Shaders
   void AddShaderCode(StringParam shaderCode, StringParam fileName, void* userData);
   /// Compiles shaders and translates them to an internal representation
   /// (spir-v)
   bool CompileAndTranslateShaders();
   void ClearShadersProjectAndLibrary();
 
-  //-------------------------------------------------------------------Pipeline
   // compilation.
   // Compiles the shader library through a pipeline of tools to a final backend.
 
@@ -244,7 +239,6 @@ public:
   // called first) given a pipeline.
   bool CompilePipeline(ShaderPipelineDescription& pipeline);
 
-  //-------------------------------------------------------------------Reflection
   // Interface
   /// Find a the shader type for a fragment by name. Only checks the fragment
   /// library.
@@ -257,7 +251,6 @@ public:
   /// Finds the cached simplified reflection data for a shader.
   SimplifiedShaderReflectionData* FindSimplifiedReflectionResult(ZilchShaderIRType* shaderType);
 
-  //-------------------------------------------------------------------Settings
   /// Load default name settings
   static void LoadNameSettings(SpirVNameSettings& nameSettings);
   /// Create the settings that the unit tests use.
@@ -265,7 +258,6 @@ public:
   /// Create the settings that zero uses.
   static ZilchShaderSpirVSettings* CreateZeroSettings(SpirVNameSettings& nameSettings);
 
-  //-------------------------------------------------------------------Internal
   void Initialize(FrontEndTranslatorType* frontEndTranslator, ZilchShaderSpirVSettings* settings);
   void SetupEventConnections();
   // Helper to setup a lot of shared data on the translator

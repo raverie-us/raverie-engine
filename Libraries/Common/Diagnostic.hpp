@@ -43,7 +43,6 @@ public:
     FileError
   };
 
-  //--------------------------------------------------------------- Error Data
   struct ErrorData
   {
     int Line;

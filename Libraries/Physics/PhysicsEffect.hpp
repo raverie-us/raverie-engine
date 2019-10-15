@@ -57,7 +57,6 @@ public:
   void ComponentAdded(BoundType* typeId, Component* component) override;
   void ComponentRemoved(BoundType* typeId, Component* component) override;
 
-  //-------------------------------------------------------------------PhysicsEffect
   // Interface
   /// Some values can be pre-calculated once per frame instead
   /// of per body/object (local to world space directions, etc...)

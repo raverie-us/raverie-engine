@@ -129,7 +129,6 @@ public:
   /// Is the command read only (doesn't affect state)
   bool ReadOnly;
 
-  //-------------------------------------------------------------------Generated
   // Data
   // Tool tip or short description.
   String ToolTip;

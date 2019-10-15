@@ -62,8 +62,6 @@ public:
   TextEditor(Composite* parent);
   ~TextEditor();
 
-  //------------------------------------------------------------ Style
-
   // Select the lexer which preforms syntax highlighting and auto completion.
   void SetLexer(uint lexer);
 
@@ -74,7 +72,6 @@ public:
 
   void SetTextStyle(uint pos, uint length, uint style);
 
-  //------------------------------------------------------------ Info
   // Get the length of the document.
   int GetLength();
 
@@ -98,8 +95,6 @@ public:
 
   // Get how much a given line is indented
   int GetLineIndentation(int line);
-
-  //------------------------------------------------------------ Location
 
   // Get/set the current position of the cursor.
   int GetCurrentPosition();
@@ -147,8 +142,6 @@ public:
 
   void AdvanceCaretsToEnd();
 
-  //------------------------------------------------------------ Selection
-
   // Get the start of the selection.
   int GetSelectionStart();
 
@@ -166,8 +159,6 @@ public:
 
   LinePosition::Enum GetLinePositionInfo();
 
-  //------------------------------------------------------------ Text Retrieval
-
   void GetLineText(int line, char* buffer, uint size);
   int GetCurrentLineText(char* buffer, uint size);
 
@@ -175,8 +166,6 @@ public:
   String GetCurrentLineText();
 
   StringRange GetSelectedText();
-
-  //------------------------------------------------------------ Modification
 
   // Clear all text
   void ClearAll();
@@ -212,14 +201,10 @@ public:
 
   void InsertAutoCompleteText(const char* text, int length, int removeCount, int charOffset);
 
-  //------------------------------------------------------------ Annotations
-
   // Set an annotation.
   void SetAnnotation(int lineNumber, StringParam message, bool goToLine = true);
   // Clear all annotations
   void ClearAnnotations();
-
-  //------------------------------------------------------------ Indicators
 
   // The maximum number of supported indicators (what the index is for)
   static const int MaxIndicators = 32;
@@ -228,8 +213,6 @@ public:
   void SetIndicatorEnd(int index, int end);
   // Set the style of an indicator
   void SetIndicatorStyle(int index, IndicatorStyle::Enum style);
-
-  //------------------------------------------------------------ Markers
 
   void SetMarkerColors(int marker, int foreground, int background);
   void SetMarkerForegroundColor(int marker, int foreground);
@@ -245,8 +228,6 @@ public:
 
   static const int InstructionMarker = 2;
   static const int BreakPointMarker = 1;
-
-  //------------------------------------------------------------ Event Handlers
 
   void OnConfigChanged(PropertyEvent* event);
   void OnConfigPropertyChanged(PropertyEvent* event);
@@ -266,8 +247,6 @@ public:
   void OnFocusOut(FocusEvent* event);
   void OnFocusIn(FocusEvent* event);
   void OnMouseExit(MouseEvent* event);
-
-  //------------------------------------------------------------ Others
 
   void SetFontSize(int size);
 
@@ -330,8 +309,6 @@ public:
   {
   }
 
-  //------------------------------------------------------------ Members
-
 public:
   friend class ScintillaWidget;
   friend class ScintillaZero;
@@ -372,8 +349,6 @@ public:
 
   PixelBuffer* mIndicators;
   TextureView* mIndicatorDisplay;
-
-  //------------------------------------------------------------ Protected
 
 protected:
   virtual void OnFocusIn()

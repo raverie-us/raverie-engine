@@ -249,25 +249,21 @@ struct ResourceManagerPolicy : public ObjectTree<String>
     AllowFolders = false
   };
 
-  //************************************************************************************************
   static StoredType InvalidValue()
   {
     return String();
   }
 
-  //************************************************************************************************
   static MapType Map(StringParam name)
   {
     return name;
   }
 
-  //************************************************************************************************
   static String UnMap(MapType name)
   {
     return name;
   }
 
-  //************************************************************************************************
   template <typename EntryType>
   static void GetData(Any& value, EntryType* entry, StringParam name, StringParam column)
   {
@@ -278,7 +274,6 @@ struct ResourceManagerPolicy : public ObjectTree<String>
     }
   }
 
-  //************************************************************************************************
   template <typename EntryType>
   static void SetData(AnyParam newValue, EntryType* entry, StringParam object, StringParam column)
   {

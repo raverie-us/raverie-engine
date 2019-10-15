@@ -49,7 +49,6 @@ public:
   CapsuleScalingMode::Enum GetScalingMode() const;
   void SetScalingMode(CapsuleScalingMode::Enum mode);
 
-  //-------------------------------------------------------------------Internal
   /// The index of both radius axes.
   void GetRadiiIndices(uint& rIndex0, uint& rIndex1) const;
   /// The index of the height axis.

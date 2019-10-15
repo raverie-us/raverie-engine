@@ -116,7 +116,6 @@ public:
                     WidgetRect clipRect) override;
 
 private:
-  //--------------------------------------------------------Mouse Event Response
   void OnMouseDown(MouseEvent* event);
   void OnMouseMove(MouseEvent* event);
   void OnMouseScroll(MouseEvent* event);

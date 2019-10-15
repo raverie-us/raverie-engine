@@ -1017,7 +1017,6 @@ void DebugGenerateOrthonormalBasis(Vec3Param w, Vec3Ptr u, Vec3Ptr v)
 /// referenced from Insomniac Games math library.
 half ToHalf(float value)
 {
-  //------------------------------------------------------------------ Constants
   // Base value for the exponent part of the 32-bit floating point number
   const s32 cFloatExponentBase = 127;
 
@@ -1069,7 +1068,6 @@ half ToHalf(float value)
 
   // Redundant value used for clarification
   const s32 cZeroMantissa = 0x00000000;
-  //----------------------------------------------------------------------------
 
   // Bit interpretation of the floating point value
   s32 v = *reinterpret_cast<s32*>(&value);
@@ -1148,7 +1146,6 @@ half ToHalf(float value)
 /// referenced from Insomniac Games math library.
 float ToFloat(half value)
 {
-  //------------------------------------------------------------------ Constants
   // Base value for the exponent part of the 32-bit floating point number
   const s32 cFloatExponentBase = 127;
 
@@ -1174,7 +1171,6 @@ float ToFloat(half value)
 
   // Bit mask to ensure all the exponent bits are set
   s32 cFullExponent = 0x7F800000;
-  //----------------------------------------------------------------------------
 
   // Sign
   s32 s = (value >> 15) & cShiftedSignMask;

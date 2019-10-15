@@ -136,7 +136,6 @@ Type BoxBox(Vec2Param boxCenterA,
   Vec2 minAxis;
   uint axisIndex = uint(-1);
 
-  //----------------------------------------------------------------------------
   // Project the boxes onto the axes of box A
   for (uint i = 0; i < 2; ++i)
   {
@@ -158,7 +157,6 @@ Type BoxBox(Vec2Param boxCenterA,
     }
   }
 
-  //----------------------------------------------------------------------------
   // Project the boxes onto the axes of box B
   for (uint i = 0; i < 2; ++i)
   {
@@ -180,7 +178,6 @@ Type BoxBox(Vec2Param boxCenterA,
     }
   }
 
-  //----------------------------------------------------------------------------
   ErrorIf(axisIndex == uint(-1),
           "Intersection - Axis index is invalid, "
           "impossible for this to break.");
@@ -492,7 +489,6 @@ Type ConvexPolygonConvexPolygon(const Vec2* convexPolygonPointsA,
   real minOverlap = Math::PositiveMax();
   Vec2 minAxis;
 
-  //----------------------------------------------------------------------------
   // Project both polygons onto all of the axes of polygon A.
   uint lastPoint = convexPolygonPointCountA - 1;
   for (uint i = 0; i < convexPolygonPointCountA; ++i)
@@ -521,7 +517,6 @@ Type ConvexPolygonConvexPolygon(const Vec2* convexPolygonPointsA,
     }
   }
 
-  //----------------------------------------------------------------------------
   // Project both polygons onto all of the axes of polygon B.
   lastPoint = convexPolygonPointCountB - 1;
   for (uint i = 0; i < convexPolygonPointCountB; ++i)
@@ -557,7 +552,6 @@ Type ConvexPolygonConvexPolygon(const Vec2* convexPolygonPointsA,
     return Point;
   }
 
-  //----------------------------------------------------------------------------
   // Now we know that the two polygons are intersecting, all that's left is to
   // calculate the information needed to resolve the collision
   return None;

@@ -63,7 +63,6 @@ public:
   void DebugDraw() override;
   void OnDestroy(uint flags) override;
 
-  //-------------------------------------------------------------------Collider
   // Interface
   /// Gives any derived collider a chance to cache world-space values (e.g.
   /// SphereCollider.WorldRadius)
@@ -105,7 +104,6 @@ public:
   /// updated. Called by several "Get" functions to force up-to-date
   /// information.
   virtual void RebuildModifiedResources();
-  //-------------------------------------------------------------------Support
   // Shape Interface
   /// Support function for GJK/MPR or any other Minkowski difference algorithm.
   /// This sets the given support vector to the point (in world space) furthest
@@ -195,7 +193,6 @@ public:
   /// A range of all joints attached to this collider.
   JointRange GetJoints();
 
-  //-------------------------------------------------------------------Internal
   /// Which kind of collider is this? Mostly used to determine which collision
   /// function to call.
   ColliderType GetColliderType() const;

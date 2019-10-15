@@ -261,7 +261,6 @@ private:
   EdgeList mEdges;
   FaceList mFaces;
 
-  //-------------------------------------------------------------------Debug
   DebugDrawStep& CreateStep(StringParam text);
   DebugDrawStep& DrawHull(DebugDrawStep& step, bool filled = false);
   void DrawVertices(DebugDrawStep& step, VertexList& vertexList, Vec4Param color);

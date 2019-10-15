@@ -517,7 +517,6 @@ void EditorCameraController::ProcessKeyboardEvent(KeyboardEvent* keyEvent)
 
   switch (keyEvent->Key)
   {
-  //--------------------------------------------------------------------------
   case Keys::Up:
   case Keys::W:
   {
@@ -525,7 +524,6 @@ void EditorCameraController::ProcessKeyboardEvent(KeyboardEvent* keyEvent)
   }
   break;
 
-  //--------------------------------------------------------------------------
   case Keys::Left:
   case Keys::A:
   {
@@ -533,7 +531,6 @@ void EditorCameraController::ProcessKeyboardEvent(KeyboardEvent* keyEvent)
   }
   break;
 
-  //--------------------------------------------------------------------------
   case Keys::Down:
   case Keys::S:
   {
@@ -541,7 +538,6 @@ void EditorCameraController::ProcessKeyboardEvent(KeyboardEvent* keyEvent)
   }
   break;
 
-  //--------------------------------------------------------------------------
   case Keys::Right:
   case Keys::D:
   {
@@ -549,7 +545,6 @@ void EditorCameraController::ProcessKeyboardEvent(KeyboardEvent* keyEvent)
   }
   break;
 
-  //--------------------------------------------------------------------------
   case Keys::Q:
   {
     if (keyEvent->State)
@@ -559,7 +554,6 @@ void EditorCameraController::ProcessKeyboardEvent(KeyboardEvent* keyEvent)
   }
   break;
 
-  //--------------------------------------------------------------------------
   case Keys::E:
   {
     if (keyEvent->State)

@@ -391,7 +391,6 @@ void AnimationCurveObject::OnTrackDeleted(TrackEvent* event)
 class GraphDrawer : public Widget
 {
 public:
-  //****************************************************************************
   GraphDrawer(Composite* parent, AnimationGraphEditor* graph) : Widget(parent)
   {
     mScrub = NULL;
@@ -405,7 +404,6 @@ public:
     mScrub = scrubber;
   }
 
-  //****************************************************************************
   // void Draw(DisplayRender* render, Mat4Param parentTx, ColorTransform&
   // colorTx,
   //          DrawParams& params) override
@@ -439,7 +437,6 @@ public:
     CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
   }
 
-  //****************************************************************************
   void
   DrawVerticalLines(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
   {
@@ -484,7 +481,6 @@ public:
     }
   }
 
-  //****************************************************************************
   void
   DrawHorizontalLines(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
   {
@@ -534,7 +530,6 @@ public:
     }
   }
 
-  //****************************************************************************
   void
   DrawGhostPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
   {
@@ -549,7 +544,6 @@ public:
     lines.PushBack(StreamedVertex(SnapToPixels(Vec3(localX, mSize.y, 0)), Vec2(0, 0), color));
   }
 
-  //****************************************************************************
   void DrawPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
   {
     float localX = mScrub->ToPixels(mScrub->GetPlayHead());
@@ -571,20 +565,17 @@ class GraphManipulator : public MouseManipulation
 public:
   AnimationGraphEditor* mGraph;
 
-  //****************************************************************************
   GraphManipulator(Mouse* mouse, AnimationGraphEditor* graph) : MouseManipulation(mouse, graph)
   {
     mGraph = graph;
   }
 
-  //****************************************************************************
   void OnMouseMove(MouseEvent* event) override
   {
     mGraph->mGraphData->ScrollPixels(Vec2(event->Movement.x, -event->Movement.y));
     mGraph->MarkAsNeedsUpdate();
   }
 
-  //****************************************************************************
   void OnMiddleMouseUp(MouseEvent* event) override
   {
     mGraph->mEditor->TakeFocus();

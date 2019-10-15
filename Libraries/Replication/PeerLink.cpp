@@ -925,9 +925,7 @@ UpdateLinkState:
     Assert(false);
     break;
 
-  //--------------------------------------//
   //       LinkStatus::Disconnected       //
-  //--------------------------------------//
   case LinkState::Disconnected:
   {
     //
@@ -1145,9 +1143,7 @@ UpdateLinkState:
   }
   break;
 
-  //--------------------------------------//
   //   LinkStatus::AttemptingConnection   //
-  //--------------------------------------//
   case LinkState::SentConnectRequest:
   {
     //
@@ -1324,9 +1320,7 @@ UpdateLinkState:
   }
   break;
 
-  //--------------------------------------//
   //        LinkStatus::Connected         //
-  //--------------------------------------//
   case LinkState::Connected:
   {
     //

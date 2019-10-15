@@ -13,7 +13,6 @@ public:
 
   PhysicsMaterial();
 
-  //-------------------------------------------------------------------Resource
   // Interface
   void Serialize(Serializer& stream) override;
   void ResourceModified() override;
@@ -24,7 +23,6 @@ public:
   /// Creates a clone of this material for run-time modifications.
   HandleOf<PhysicsMaterial> RuntimeClone();
 
-  //-------------------------------------------------------------------Properties
   /// How slippery or rough the object is. When friction is 0 the object will be
   /// slippery. As friction increases, sliding objects will stop quicker.
   /// The friction of two object's are combined with the formula sqrt(a * b).
@@ -42,7 +40,6 @@ public:
   bool GetHighPriority();
   void SetHighPriority(bool state);
 
-  //-------------------------------------------------------------------Internal
   void CopyTo(PhysicsMaterial* destination);
   /// After modifying this resource, notify anyone using it to update
   /// now instead of at the next physics update.

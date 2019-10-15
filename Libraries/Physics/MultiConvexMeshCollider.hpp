@@ -29,8 +29,6 @@ struct MultiConvexMeshRange
   void PopFront();
   bool Empty();
 
-  //-------------------------------------------------------------------Internal
-
   void SkipDead();
 
   /// The query aabb
@@ -67,8 +65,6 @@ public:
   /// The MultiConvexMesh resource that defines collision.
   MultiConvexMesh* GetMesh();
   void SetMesh(MultiConvexMesh* mesh);
-
-  //-------------------------------------------------------------------Internal
 
   void OnMeshModified(Event* e);
 

@@ -6,11 +6,9 @@ namespace Intersection
 
 enum IntersectionType
 {
-  //----------------------------------------------------------- Negative Results
   None = -3,
   Outside, // Used in ClosestPointOn____ToPoint (if original point was outside)
 
-  //----------------------------------------------------------- Positive Results
   Point = 1,
   Edge,
   Triangle,
@@ -22,7 +20,6 @@ enum IntersectionType
   Inside, // Used in ClosestPointOn____ToPoint (if original point was inside)
   Other,
 
-  //----------------------------------------------------------- Specific Results
   // Points
   // PointPoint = (uint(Point) << 16) | uint(Point),        //Point
   PointEdge = (uint(Point) << 16) | uint(Edge),    // Edge
@@ -47,7 +44,6 @@ enum IntersectionType
   FaceTri = (uint(Face) << 16) | uint(Triangle), // Triangle
   FaceFace = (uint(Face) << 16) | uint(Face),    // Face
 
-  //------------------------------------------------------------ Special Results
   Unimplemented = 0
 };
 

@@ -156,7 +156,6 @@ void Hull2D::DebugBuildStep(void)
 
   switch (mDebugStep)
   {
-  //-------------------------------------------------------------- Sort Points
   case 0:
   {
     Zero::Sort(mPoints.All(), LessThanX);
@@ -166,7 +165,6 @@ void Hull2D::DebugBuildStep(void)
   }
   break;
 
-  //---------------------------------------------------------- Classify Points
   case 1:
   {
     // Create a line from the most negative x-value to the most positive
@@ -207,7 +205,6 @@ void Hull2D::DebugBuildStep(void)
   }
   break;
 
-  //----------------------------------------------- Compute Negative Half Hull
   case 2:
   {
     if (!mNegativePoints.Empty())
@@ -248,7 +245,6 @@ void Hull2D::DebugBuildStep(void)
   }
   break;
 
-  //----------------------------------------------- Compute Positive Half Hull
   case 3:
   {
     if (!mPositivePoints.Empty())

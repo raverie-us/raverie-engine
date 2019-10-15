@@ -49,7 +49,6 @@ public:
   /// Displays the drag selection
   Element* mSelectBox;
 
-  //****************************************************************************
   TileSelector(MouseDragEvent* dragEvent, TileView* tree) :
       MouseManipulation(dragEvent->GetMouse(), tree),
       mTileView(tree)
@@ -63,7 +62,6 @@ public:
     mSelectBox->SetVisible(false);
   }
 
-  //****************************************************************************
   void OnMouseUp(MouseEvent* event) override
   {
     mSelectBox->Destroy();
@@ -71,13 +69,11 @@ public:
     this->Destroy();
   }
 
-  //****************************************************************************
   void OnMouseMove(MouseEvent* event) override
   {
     mSelectBox->SetVisible(true);
   }
 
-  //****************************************************************************
   void OnMouseUpdate(MouseEvent* event) override
   {
     Vec2 local = mClientArea->ToLocal(event->Position);
@@ -111,7 +107,6 @@ public:
     mSelectBox->MoveToFront();
   }
 
-  //****************************************************************************
   void OnKeyDown(KeyboardEvent* event) override
   {
     if (event->Key == Keys::Escape)

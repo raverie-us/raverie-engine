@@ -1608,7 +1608,6 @@ void PhysicsSpace::RemoveComponent(Collider* collider)
   mIslandManager->RemoveCollider(collider);
   ColliderList::Unlink(collider);
 
-  //////////////////////////////////////////////////////////////////////////
   // Doesn't work now because the id we have at this point is already gone.
   // Valid code below for when the id problem is fixed
 

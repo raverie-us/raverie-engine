@@ -60,36 +60,30 @@ struct ContentImporterSource : public DataSource
 {
   ContentPackageListing* mListing;
 
-  //****************************************************************************
   ContentImporterSource(ContentPackageListing* listing) : mListing(listing)
   {
   }
 
-  //****************************************************************************
   DataEntry* GetRoot() override
   {
     return (DataEntry*)mListing;
   }
 
-  //****************************************************************************
   DataEntry* ToEntry(DataIndex index) override
   {
     return (DataEntry*)index.Id;
   }
 
-  //****************************************************************************
   DataIndex ToIndex(DataEntry* dataEntry) override
   {
     return DataIndex((u64)dataEntry);
   }
 
-  //****************************************************************************
   DataEntry* Parent(DataEntry* dataEntry) override
   {
     return mListing;
   }
 
-  //****************************************************************************
   uint ChildCount(DataEntry* dataEntry) override
   {
     if (dataEntry == mListing)
@@ -98,20 +92,17 @@ struct ContentImporterSource : public DataSource
       return 0;
   }
 
-  //****************************************************************************
   DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
   {
     ContentPackageListing* listing = (ContentPackageListing*)dataEntry;
     return (DataEntry*)listing->SortedEntries[index];
   }
 
-  //****************************************************************************
   bool IsExpandable(DataEntry* dataEntry) override
   {
     return dataEntry == mListing;
   }
 
-  //****************************************************************************
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override
   {
     // Ignore the root
@@ -143,7 +134,6 @@ struct ContentImporterSource : public DataSource
     }
   }
 
-  //****************************************************************************
   bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
   {
     ContentPackageEntry* entry = (ContentPackageEntry*)dataEntry;
@@ -158,7 +148,6 @@ struct ContentImporterSource : public DataSource
     return false;
   }
 
-  //****************************************************************************
   void Sort(DataEntry* dataEntry, StringParam column, bool flip) override
   {
     // Can only sort the root

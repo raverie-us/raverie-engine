@@ -71,7 +71,6 @@ public:
 
   void Save(bool overwriteRevisionNumber);
 
-  //-------------------------------------------------------------------Internal
   void ParseTags(LauncherProjectInfo* launcherInfo, StringParam tags);
   DataNode* GetComponentPropertyNode(StringParam componentType, StringParam propertyName);
   String GetChildComponentPropertyValue(StringParam componentType, StringParam propertyName);

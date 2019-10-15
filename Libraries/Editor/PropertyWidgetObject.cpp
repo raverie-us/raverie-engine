@@ -962,7 +962,6 @@ public:
 
   static const uint cInvalidIndex = uint(-1);
 
-  //****************************************************************************
   ComponentDrag(Mouse* mouse, PropertyWidgetObject* objectNode) :
       MouseManipulation(mouse, objectNode->mParentWidgetObject)
   {
@@ -979,7 +978,6 @@ public:
     }
   }
 
-  //****************************************************************************
   void OnMouseMove(MouseEvent* event) override
   {
     // The mouse position
@@ -1076,7 +1074,6 @@ public:
     }
   }
 
-  //****************************************************************************
   uint GetObjectRealIndex(uint localIndex)
   {
     if (localIndex == mObjects.Size())
@@ -1088,7 +1085,6 @@ public:
     return mParent->mComposition->GetComponentIndex(parent, childInstance);
   }
 
-  //****************************************************************************
   /// The moveIndex is where to move the dragging object to. The test index
   /// is which object should be tested against (not yet ready to move).
   /// One operation could be to move the dragging object as well as testing
@@ -1172,7 +1168,6 @@ public:
     }
   }
 
-  //****************************************************************************
   uint ValidateMove(uint destinationIndex, String& message)
   {
     // The destination index given is the index into our temporary array of
@@ -1194,7 +1189,6 @@ public:
     return mObjects.FindIndex(blockingObject);
   }
 
-  //****************************************************************************
   void MoveToBeforeObject(uint moveIndex)
   {
     InList<PropertyWidget>::Unlink(mDragObject);
@@ -1228,7 +1222,6 @@ public:
     mDragObject->GetActions()->Cancel();
   }
 
-  //****************************************************************************
   void HighlightBlockingChild(uint blockingIndex, StringParam message)
   {
     PropertyWidgetObject* blockingObject = mObjects[blockingIndex];
@@ -1240,7 +1233,6 @@ public:
     mBlocking = blockingObject;
   }
 
-  //****************************************************************************
   PropertyWidgetObject* GetObjectNode(HandleParam instance)
   {
     forRange (PropertyWidgetObject* child, mObjects.All())
@@ -1254,7 +1246,6 @@ public:
     return nullptr;
   }
 
-  //****************************************************************************
   void FadeOutBlockingHighlight()
   {
     if (mBlocking)
@@ -1264,7 +1255,6 @@ public:
     }
   }
 
-  //****************************************************************************
   void OnMouseUp(MouseEvent* event) override
   {
     // Now we want to make the final move commit

@@ -36,8 +36,6 @@ public:
   void SetPhysicsMesh(PhysicsMesh* physicsMesh);
   void OnMeshModified(Event* e);
 
-  //-------------------------------------------------------------------Internal
-
   /// Used to tell the collision system that this collider stores information in
   /// local space. This means that the passed in aabb for GetOverlapRange should
   /// be transformed to local space.

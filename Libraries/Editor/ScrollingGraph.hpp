@@ -38,7 +38,6 @@ public:
              Vec2 pixelPadding = Pixels(0, 0),
              float animTime = 0.4f);
 
-  //------------------------------------------------------------------ Hash Mark
   struct HashMark
   {
     /// Position in graph space.
@@ -47,7 +46,6 @@ public:
     String Label;
   };
 
-  //---------------------------------------------------------------------- range
   struct range
   {
     range(float origin, float range, float spacing, bool halfHash, float gridScale);

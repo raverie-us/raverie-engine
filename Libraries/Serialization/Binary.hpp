@@ -34,7 +34,6 @@ public:
     return static_cast<sub_type*>(this);
   }
 
-  //------------------------------------------------------------ Polymorphic
   // Serialization
 
   void StartPolymorphicInternal(const PolymorphicInfo& info) override
@@ -58,7 +57,6 @@ public:
     BinaryType()->Data((byte*)&end, sizeof(end));
   }
 
-  //-------------------------------------------------------  Fundamental
   // serialization
   template <typename type>
   bool FundamentalType(type& value)
@@ -67,7 +65,6 @@ public:
     return true;
   }
 
-  //------------------------------------------------------------ String
   // Serialization
   bool StringField(cstr typeName, cstr fieldName, StringRange& stringRange) override
   {
@@ -77,7 +74,6 @@ public:
     return true;
   }
 
-  //------------------------------------------------------------ Enum
   // Serialization
   bool EnumField(cstr enumTypeName, cstr fieldName, uint& enumValue, BoundType*) override
   {
@@ -86,7 +82,6 @@ public:
     return true;
   }
 
-  //------------------------------------------------------------ Array
   // Serialization
   bool ArrayField(
       cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype) override
@@ -142,7 +137,6 @@ public:
     return static_cast<sub_type*>(this);
   }
 
-  //-------------------------------------------------------  Fundamental
   // serialization
   template <typename type>
   bool FundamentalType(type& value)
@@ -151,12 +145,10 @@ public:
     return true;
   }
 
-  //------------------------------------------------------------ String
   // Serialization
 
   /// Each binary loader must handle string separately
 
-  //------------------------------------------------------------ Polymorphic
   // Serialization
   bool GetPolymorphic(PolymorphicNode& node) override
   {
@@ -187,7 +179,6 @@ public:
             "serialized inside this polymorphic node.");
   }
 
-  //------------------------------------------------------------ Array
   // Serialization
   bool ArrayField(
       cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype) override

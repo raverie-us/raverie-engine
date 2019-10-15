@@ -312,7 +312,6 @@ public:
   /// Changes focus to the next applicable widget in the given direction.
   void TabJumpDirection(UiFocusDirection::Enum direction);
 
-  //----------------------------------------------------------------- Properties
   /// Used for determining how this widget should be sized when in a layout.
   UiSizePolicy::Enum GetSizePolicy(Axis::Enum axis);
   UiSizePolicy::Enum GetSizePolicyX();

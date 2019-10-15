@@ -101,7 +101,6 @@ public:
   /// 'SelectionChangedEvent' class.
   void FinalSelectionUpdated();
 
-  //------------------------------------------------------------- SelectionRange
   typedef OrderedHashSet<Handle>::range SetRange;
 
   class range
@@ -128,7 +127,6 @@ public:
     Handle mCurrent;
   };
 
-  //--------------------------------------------------------- SelectionRangeType
   template <typename type>
   class rangeType
   {

@@ -147,8 +147,6 @@ public:
   /// its components.
   static void Decompose(Mat4Param transform, Vec3Ref translation, Mat3Ref rotation, Vec3Ref shear, Vec3Ref scale);
 
-  //-------------------------------------------------------------------Legacy
-
   /// Transposes this matrix in place.
   Mat4Ref Transpose();
   /// Returns a copy of this matrix with its elements transposed.

@@ -229,14 +229,12 @@ public:
   Vec3 mStartTrans;
   ToolBar* mDraggin;
 
-  //****************************************************************************
   ToolBarDrag(Mouse* mouse, ToolBar* toBeDragged) : MouseManipulation(mouse, toBeDragged->GetParent())
   {
     mStartTrans = toBeDragged->GetTranslation();
     mDraggin = toBeDragged;
   }
 
-  //****************************************************************************
   void OnMouseMove(MouseEvent* event) override
   {
     Vec3 newT = mStartTrans + Vec3(event->Position - mMouseStartPosition);

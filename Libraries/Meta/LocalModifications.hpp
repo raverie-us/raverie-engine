@@ -16,7 +16,6 @@ class ObjectRestoreState;
 class ObjectState
 {
 public:
-  //---------------------------------------------------------------------------------------
   // Child Id
   struct ChildId
   {

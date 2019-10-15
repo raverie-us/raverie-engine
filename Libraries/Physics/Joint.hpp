@@ -189,7 +189,6 @@ struct Joint : public Component
   Cog* GetOtherObject(Cog* cog);
 
   // Common helpers for joint atoms
-  //-------------------------------------------------------------------
   // AnchorAtom helpers
   /// Helper to get/set a local point on an anchor atom.
   Vec3 GetLocalPointHelper(const Physics::AnchorAtom& anchor, uint index) const;
@@ -206,7 +205,6 @@ struct Joint : public Component
   /// Helper function for when an object link point changes.
   void ObjectLinkPointUpdatedHelper(Physics::AnchorAtom& anchor, size_t edgeIndex, Vec3Param localPoint);
 
-  //------------------------------------------------------------------- AxisAtom
   // helpers
   /// Helpers to get/set a local space axis for an axis atom
   Vec3 GetLocalAxisHelper(const Physics::AxisAtom& axisAtom, uint index) const;
@@ -216,7 +214,6 @@ struct Joint : public Component
   Vec3 GetWorldAxisHelper(const Physics::AxisAtom& axisAtom) const;
   void SetWorldAxisHelper(Physics::AxisAtom& axisAtom, Vec3Param worldAxis);
 
-  //-------------------------------------------------------------------
   // AngleAtom helpers
   /// Helpers to get/set local space reference frames for an angle atom.
   Quat GetLocalAngleHelper(const Physics::AngleAtom& angleAtom, uint index) const;

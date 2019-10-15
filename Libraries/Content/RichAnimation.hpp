@@ -323,7 +323,6 @@ public:
   /// Sends events for all changed key frames.
   void Flush();
 
-  //---------------------------------------------------------------------- range
   class range
   {
   public:

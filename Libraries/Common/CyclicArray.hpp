@@ -13,7 +13,6 @@ template <typename type>
 class CyclicArray
 {
 public:
-  //---------------------------------------------------------- Standard Typedefs
   typedef size_t size_type;
 
   typedef type value_type;
@@ -23,7 +22,6 @@ public:
   typedef CyclicArray<type> this_type;
   typedef Array<type> ArrayType;
 
-  //--------------------------------------------------------------- Constructors
   /// Default constructor.
   CyclicArray() : mSize(0), mFront(0)
   {
@@ -39,7 +37,6 @@ public:
   {
   }
 
-  //--------------------------------------------------- Element Access Functions
   /// Indexing operator.
   reference operator[](size_type index)
   {
@@ -88,7 +85,6 @@ public:
     return mArray[GetBackIndex()];
   }
 
-  //----------------------------------------------------- Modification Functions
   /// Pushes the given item onto the front of the cyclic array.
   void Push(const type& item)
   {
@@ -150,7 +146,6 @@ public:
     --mSize;
   }
 
-  //------------------------------------------------------ Information Functions
   /// The amount of items pushed into the array.
   size_type Size() const
   {
@@ -182,7 +177,6 @@ public:
     return false;
   }
 
-  //------------------------------------------------------------------ Iterators
   /// Used for simple iteration over the cyclic array.
   struct range
   {

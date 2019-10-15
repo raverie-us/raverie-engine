@@ -32,7 +32,6 @@ public:
   /// The Joint that triggered the event.
   Joint* GetJoint();
 
-  //-------------------------------------------------------------------Internal
   Collider* mColliderA;
   Collider* mColliderB;
   Joint* mJoint;

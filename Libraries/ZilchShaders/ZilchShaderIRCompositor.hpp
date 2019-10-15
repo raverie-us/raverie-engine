@@ -106,7 +106,6 @@ public:
                         const ShaderCapabilities& capabilities,
                         ZilchShaderSpirVSettingsRef& settings);
 
-  //-------------------------------------------------------------------Internal
   struct StageLinkingInfo;
   struct CompositedShaderInfo;
   struct ResolvedFieldInfo;
@@ -176,7 +175,6 @@ public:
   ShaderCapabilities mCapabilities;
   String mShaderCompositeName;
 
-  //-------------------------------------------------------------------FieldLinkingInfo
   /// Used to store how each field on a fragment is linked together in the final
   /// shader.
   struct FieldLinkingInfo
@@ -202,7 +200,6 @@ public:
     String mOutputFieldDependencyName;
   };
 
-  //-------------------------------------------------------------------FragmentLinkingInfo
   /// Stores linking information about each fragment, in particular how each
   /// field is resolved.
   struct FragmentLinkingInfo
@@ -221,7 +218,6 @@ public:
     Array<FieldLinkingInfo> mNonCopyableProperties;
   };
 
-  //-------------------------------------------------------------------ResolvedFieldInfo
   /// When a field is added to the shader stage it can fulfill multiple in/outs
   /// (e.g. [StageInput][FragmentOutput][StageOutput]). This keeps track of all
   /// attributes that need to be applied to a field for final declaration.
@@ -232,7 +228,6 @@ public:
     String mFieldName;
   };
 
-  //-------------------------------------------------------------------ResolvedFieldOutputInfo
   /// Information about a resolved field. In particular, this contains the name
   /// of the stage output to use as name overrides may make this different then
   /// the actual field's name. It's only during linking that the actual name is
@@ -247,7 +242,6 @@ public:
     ShaderIRFieldMeta* mOutputFieldDependency;
   };
 
-  //-------------------------------------------------------------------ExpectedOutputData
   /// Information about an expected output. In particular, this stores the
   /// fragment stage type for the expected field output. This is important to
   /// distinguish pass-through from actual outputs.
@@ -268,7 +262,6 @@ public:
     ShaderIRFieldMeta* mOutputFieldDependency;
   };
 
-  //-------------------------------------------------------------------StageAttachmentLinkingInfo
   /// Describes a stage's attachment point (e.g. vertex/primitive) linking info.
   struct StageAttachmentLinkingInfo
   {
@@ -310,7 +303,6 @@ public:
     StageAttachmentLinkingInfo* mNextStage;
   };
 
-  //-------------------------------------------------------------------StageLinkingInfo
   /// Describes all info about a stage being composited. This includes the final
   /// properties on the composite as well as how each fragment's inputs/outputs
   /// are resolved.
@@ -348,7 +340,6 @@ public:
     ShaderStage::Enum mShaderStage;
   };
 
-  //-------------------------------------------------------------------CompositedShaderInfo
   // Describes all of the stages for the shader being composited.
   struct CompositedShaderInfo
   {

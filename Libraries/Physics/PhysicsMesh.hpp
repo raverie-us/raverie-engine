@@ -12,7 +12,6 @@ public:
   ZilchDeclareType(PhysicsMesh, TypeCopyMode::ReferenceType);
   typedef StaticAabbTree<uint> AabbTree;
 
-  //-------------------------------------------------------------------Resource
   // Interface
   void Serialize(Serializer& stream) override;
   void Initialize();
@@ -25,13 +24,10 @@ public:
   /// Creates a PhysicsMesh for run-time modifications.
   static HandleOf<PhysicsMesh> CreateRuntime();
 
-  //-------------------------------------------------------------------
   // GenericPhysicsMesh Interface
   void ForceRebuild() override;
   void RebuildMidPhase() override;
   void GenerateInternalEdgeData() override;
-
-  //-------------------------------------------------------------------Internal
 
   /// Finds the first triangle hit by the local-space ray.
   bool CastRay(const Ray& localRay, ProxyResult& result, BaseCastFilter& filter);

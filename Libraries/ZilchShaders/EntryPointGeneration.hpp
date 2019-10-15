@@ -356,7 +356,6 @@ public:
 
   void Clear();
 
-  //-------------------------------------------------------------------Internal
   friend ShaderInterfaceStruct;
   friend ShaderInterfaceGlobals;
   friend ShaderInterfaceStructArray;

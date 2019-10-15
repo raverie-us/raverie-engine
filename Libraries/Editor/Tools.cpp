@@ -37,7 +37,6 @@ public:
   SelectTool* mTool;
   MetaSelection mCurrentSelection;
 
-  //****************************************************************************
   GroupSelectDrag(Composite* owner, Mouse* mouse, EditorViewport* editorViewport, SelectTool* tool) :
       MouseManipulation(mouse, owner)
   {
@@ -56,7 +55,6 @@ public:
       mCurrentSelection.Add(cog, SendsEvents::False);
   }
 
-  //****************************************************************************
   ~GroupSelectDrag()
   {
     mDragElement.SafeDestroy();
@@ -68,21 +66,18 @@ public:
       viewport->TakeFocus();
   }
 
-  //****************************************************************************
   void OnKeyDown(KeyboardEvent* event) override
   {
     EditorViewport* viewport = mViewport;
     viewport->DispatchEvent(Events::KeyDown, event);
   }
 
-  //****************************************************************************
   void OnKeyUp(KeyboardEvent* event) override
   {
     EditorViewport* viewport = mViewport;
     viewport->DispatchEvent(Events::KeyUp, event);
   }
 
-  //****************************************************************************
   void OnMouseMove(MouseEvent* event) override
   {
     // Check objects
@@ -198,7 +193,6 @@ public:
     selection->SelectionChanged();
   }
 
-  //****************************************************************************
   void OnMouseUp(MouseEvent* event) override
   {
     MetaSelection* selection = Z::gEditor->GetSelection();
@@ -750,38 +744,32 @@ Vec3 CreationTool::GetPlacementLocation(Viewport* viewport, Vec2 screenPosition)
 
     switch (mPlacementMode)
     {
-    //------------------------------------------------------------------------
     case Placement::OnTop:
       if (EditorCameraController* controller = camera->GetOwner()->has(EditorCameraController))
         position = PointOnTopOrViewPlane(viewport, controller, worldRay);
 
       break;
 
-    //------------------------------------------------------------------------
     case Placement::LookAtPlane:
       if (EditorCameraController* controller = camera->GetOwner()->has(EditorCameraController))
         position = PointOnViewPlane(controller, worldRay);
 
       break;
 
-    //------------------------------------------------------------------------
     case Placement::LookAtPoint:
       if (EditorCameraController* controller = camera->GetOwner()->has(EditorCameraController))
         position = controller->GetLookTarget();
 
       break;
 
-    //------------------------------------------------------------------------
     case Placement::ViewAtDepth:
       position = cameraPosition + mMouseDir * mDepth;
       break;
 
-    //------------------------------------------------------------------------
     case Placement::CameraLocation:
       position = cameraPosition;
       break;
 
-    //------------------------------------------------------------------------
     case Placement::PlaneXY:
       Intersection::IntersectionPoint point;
       RayPlane(worldRay.Start, mMouseDir, Vec3(0, 0, 1), mDepthPlane, &point);

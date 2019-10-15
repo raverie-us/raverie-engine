@@ -161,7 +161,6 @@ public:
   BuiltInBlockDescription();
 
 private:
-  //-------------------------------------------------------------------Internal
   friend ZilchShaderSpirVSettings;
   friend BuiltInStageDescription;
   friend EntryPointGeneration;
@@ -207,7 +206,6 @@ public:
   bool IsValidHardwareBuiltIn(ShaderFieldKey& fieldKey, bool isInput);
 
 private:
-  //-------------------------------------------------------------------Internal
   typedef HashMap<ShaderFieldKey, BuiltInBlockDescription*> FieldKeyToBlockMap;
 
   BuiltInBlockDescription mInputInterfaceBlock;

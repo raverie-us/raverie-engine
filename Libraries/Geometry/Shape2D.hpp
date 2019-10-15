@@ -32,7 +32,6 @@ public:
   /// Quantizes the shape to a constant precision.
   void Quantize();
 
-  //--------------------------------------------------------------- Modification
   /// Removes all contours in the shape.
   void Clear();
 
@@ -63,7 +62,6 @@ public:
   void DrawTriangles(ByteColor color, bool borders = false, float depth = 0.0f);
   void DrawTriangles(ByteColor color, Mat4Param transform, bool borders = false, float depth = 0.0f);
 
-  //----------------------------------------------------------------------- Info
   /// Returns whether or not the polygon is empty.
   bool Empty();
 
@@ -97,7 +95,6 @@ public:
   bool Validate();
   bool Validate(Array<String>& errors);
 
-  //------------------------------------------------------------------- Indexing
   struct Index
   {
     Index() : Contour(-1), Vertex(-1)
@@ -135,7 +132,6 @@ public:
   void RemoveVertexAtIndex(Index index);
   Vec2* GetVertexAtIndex(Index index);
 
-  //---------------------------------------------------------------------- Range
   struct range
   {
     range(Shape2D* shape);
@@ -155,7 +151,6 @@ public:
   /// Returns a range of all vertices in the shape.
   range All();
 
-  //----------------------------------------------------------------------- Data
 public:
   /// The contours that make up the shape.  The first will always be the outer
   /// contour (counter-clockwise), and any after the first will be inner

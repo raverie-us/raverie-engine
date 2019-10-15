@@ -170,12 +170,9 @@ public:
   // This should ideally be a component on the editor
   CodeTranslatorListener* mCodeTranslatorListener;
 
-  //------------------------------------------------------------ Selection
   HandleOf<MetaSelection> mSelection;
   MetaSelection* GetSelection();
   void OnSelectionFinal(SelectionChangedEvent* event);
-
-  //------------------------------------------------------------ Edit
 
   // Edit a Resource Object
   void EditResource(Resource* resource);

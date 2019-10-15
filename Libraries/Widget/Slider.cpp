@@ -118,20 +118,17 @@ void ProgressBar::SetProgressBarVisible(bool state)
 class SliderManipulation : public MouseManipulation
 {
 public:
-  //****************************************************************************
   SliderManipulation(Mouse* mouse, Composite* owner, Slider* sliderTarget) : MouseManipulation(mouse, owner)
   {
     mSliderTarget = sliderTarget;
     UpdateToMouse(mouse);
   }
 
-  //****************************************************************************
   void OnMouseMove(MouseEvent* event) override
   {
     UpdateToMouse(event->GetMouse());
   }
 
-  //****************************************************************************
   void UpdateToMouse(Mouse* mouse)
   {
     Vec2 mousePos = mSliderTarget->ToLocal(mouse->GetClientPosition());
@@ -139,7 +136,6 @@ public:
     mSliderTarget->SetPercentage(val, true);
   }
 
-  //****************************************************************************
   void OnMouseUp(MouseEvent* event) override
   {
     mSliderTarget->CommitValue(mSliderTarget->GetValue());

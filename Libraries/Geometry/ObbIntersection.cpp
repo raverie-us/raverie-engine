@@ -463,7 +463,6 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
   ErrorIf(axisCase == 0,
           "Intersection - It seems the boxes are colliding, yet"
           " a valid axis of intersection was not found.");
-  //----------------------------------------------------------------------------
   // If any of the 9 latter OBB axes were used (those that are generated from
   // the cross products of the OBBs' face normals), then it is an edge-edge
   // case. Now we find the closest points of the two edges.
@@ -484,7 +483,6 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
     return EdgeEdge;
   }
 
-  //----------------------------------------------------------------------------
   // Make sure the normal is pointing from One to Two
   {
     Vec3 oneToTwo = obbTwoCenter - obbOneCenter;
@@ -495,7 +493,6 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
     }
   }
 
-  //----------------------------------------------------------------------------
   // Otherwise the axis of intersection is one of the OBBs' face normals and we
   // are dealing with a face-(point/edge/face) case
   uint aIndex;
@@ -544,18 +541,15 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
     aNormal *= real(-1.0);
   }
 
-  //----------------------------------------------------------------------------
   // The largest component of the bNormal corresponds to the normal for B's
   // face. The perpendicular components are stored as well.
   uint bAxis, bOne, bTwo;
   Vec3 bFaceCenter = *bCenter - *aCenter; // Used later (see end of scope)
   {
-    //--------------------------------------------------------------------------
     // Axis of intersection in the reference frame of box B
     Vec3 bNormal = aNormal;
     Math::TransposedTransform(*bBasis, &bNormal);
 
-    //--------------------------------------------------------------------------
     // Absolute value version of bNormal
     Vec3 absBNormal = Abs(bNormal);
 
@@ -581,7 +575,6 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
       bTwo = 1;
     }
 
-    //--------------------------------------------------------------------------
     // Compute the center of B's face in A's face coordinates.
     if (Math::IsNegative(bNormal[bAxis]))
     {
@@ -597,7 +590,6 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
     }
   }
 
-  //----------------------------------------------------------------------------
   // Find the largest component of the aNormal. The perpendicular components are
   // stored as well.
   uint aOne = 1, aTwo = 2;
@@ -626,7 +618,6 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
   break;
   }
 
-  //----------------------------------------------------------------------------
   // The following code computes the points of B's face in A's face's reference
   // frame. This is akin to finding the four points on B's face and projecting
   // them onto the plane of A's face. The result is a 2D projection of the two
@@ -673,11 +664,9 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
     bFacePoints[3].y = bFaceXY.y + bFaceBasis[0].y - bFaceBasis[1].y;
   }
 
-  //----------------------------------------------------------------------------
   // Get the half extents of A's face.
   Vec2 aFaceExtents((*aHalfExtents)[aOne], (*aHalfExtents)[aTwo]);
 
-  //----------------------------------------------------------------------------
   // B's face is now in A's face's reference frame. The nice thing is that now
   // A's face can be represented by its half extents, with the center of A's
   // face being the origin and the axes of A's face being the x-axis and y-axis
@@ -690,7 +679,6 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
     return None;
   }
 
-  //----------------------------------------------------------------------------
   // Convert the intersection points into A's face's coordinates and compute the
   // contact point and depth for each point. Only keep the points that lie on
   // the inside of A's face (ie. those that are inside box A).
@@ -705,7 +693,6 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
     bFaceAxes[1] *= inverseDeterminant;
   }
 
-  //----------------------------------------------------------------------------
   // Number of penetrating points found.
   uint pointCount = 0;
   Vec3 points[8];
@@ -749,7 +736,6 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
     return None;
   }
 
-  //----------------------------------------------------------------------------
   // Was not able to generate as many points as requested
   uint& maxPoints = manifold.PointCount;
   maxPoints = 4;
@@ -771,7 +757,6 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
     Negate(&(manifold.Normal));
   }
 
-  //----------------------------------------------------------------------------
   if (pointCount <= maxPoints)
   {
     // The amount of contacts generated may not meet the amount of contacts
@@ -938,12 +923,9 @@ Type ObbObb(Vec3Param obbOneCenter,
 
   real rot[3][3], absRot[3][3];
 
-  //----------------------------------------------------------------------------
   // Test axes L = one0, L = one1, L = one2
-  //----------------------------------------------------------------------------
   for (uint i = 0; i < 3; ++i)
   {
-    //--------------------------------------------------------------------------
     // Create the matrix that takes points from Two's space to One's space
     //(World to One Matrix) * (Two to World Matrix) = (Two to One Matrix)
     for (uint j = 0; j < 3; ++j)
@@ -966,7 +948,6 @@ Type ObbObb(Vec3Param obbOneCenter,
       //  having to do so for each axis test.
       absRot[i][j] = absRotValue + cObbEpsilon;
     }
-    //--------------------------------------------------------------------------
 
     boxProjections = obbOneHalfExtents[i];
     boxProjections += obbTwoHalfExtents[0] * absRot[i][0];
@@ -986,9 +967,7 @@ Type ObbObb(Vec3Param obbOneCenter,
     }
   }
 
-  //----------------------------------------------------------------------------
   // Test axes L = two0, L = two1, L = two2
-  //----------------------------------------------------------------------------
   for (uint i = 0; i < 3; ++i)
   {
     boxProjections = obbOneHalfExtents[0] * absRot[0][i];
@@ -1037,9 +1016,7 @@ Type ObbObb(Vec3Param obbOneCenter,
     }                                                                                                                  \
   }
 
-    //--------------------------------------------------------------------------
     // Test axis L = one0 x two0
-    //--------------------------------------------------------------------------
     boxProjections = obbOneHalfExtents[1] * absRot[2][0];
     boxProjections += obbOneHalfExtents[2] * absRot[1][0];
     boxProjections += obbTwoHalfExtents[1] * absRot[0][2];
@@ -1049,9 +1026,7 @@ Type ObbObb(Vec3Param obbOneCenter,
     test -= T[1] * rot[2][0];
     HandleObbOverlap(real(0.0), -rot[2][0], rot[1][0], 7);
 
-    //--------------------------------------------------------------------------
     // Test axis L = one0 x two1
-    //--------------------------------------------------------------------------
     boxProjections = obbOneHalfExtents[1] * absRot[2][1];
     boxProjections += obbOneHalfExtents[2] * absRot[1][1];
     boxProjections += obbTwoHalfExtents[0] * absRot[0][2];
@@ -1061,9 +1036,7 @@ Type ObbObb(Vec3Param obbOneCenter,
     test -= T[1] * rot[2][1];
     HandleObbOverlap(real(0.0), -rot[2][1], rot[1][1], 8);
 
-    //--------------------------------------------------------------------------
     // Test axis L = one0 x two2
-    //--------------------------------------------------------------------------
     boxProjections = obbOneHalfExtents[1] * absRot[2][2];
     boxProjections += obbOneHalfExtents[2] * absRot[1][2];
     boxProjections += obbTwoHalfExtents[0] * absRot[0][1];
@@ -1073,9 +1046,7 @@ Type ObbObb(Vec3Param obbOneCenter,
     test -= T[1] * rot[2][2];
     HandleObbOverlap(real(0.0), -rot[2][2], rot[1][2], 9);
 
-    //--------------------------------------------------------------------------
     // Test axis L = one1 x two0
-    //--------------------------------------------------------------------------
     boxProjections = obbOneHalfExtents[0] * absRot[2][0];
     boxProjections += obbOneHalfExtents[2] * absRot[0][0];
     boxProjections += obbTwoHalfExtents[1] * absRot[1][2];
@@ -1085,9 +1056,7 @@ Type ObbObb(Vec3Param obbOneCenter,
     test -= T[2] * rot[0][0];
     HandleObbOverlap(rot[2][0], real(0.0), -rot[0][0], 10);
 
-    //--------------------------------------------------------------------------
     // Test axis L = one1 x two1
-    //--------------------------------------------------------------------------
     boxProjections = obbOneHalfExtents[0] * absRot[2][1];
     boxProjections += obbOneHalfExtents[2] * absRot[0][1];
     boxProjections += obbTwoHalfExtents[0] * absRot[1][2];
@@ -1097,9 +1066,7 @@ Type ObbObb(Vec3Param obbOneCenter,
     test -= T[2] * rot[0][1];
     HandleObbOverlap(rot[2][1], real(0.0), -rot[0][1], 11);
 
-    //--------------------------------------------------------------------------
     // Test axis L = one1 x two2
-    //--------------------------------------------------------------------------
     boxProjections = obbOneHalfExtents[0] * absRot[2][2];
     boxProjections += obbOneHalfExtents[2] * absRot[0][2];
     boxProjections += obbTwoHalfExtents[0] * absRot[1][1];
@@ -1109,9 +1076,7 @@ Type ObbObb(Vec3Param obbOneCenter,
     test -= T[2] * rot[0][2];
     HandleObbOverlap(rot[2][2], real(0.0), -rot[0][2], 12);
 
-    //--------------------------------------------------------------------------
     // Test axis L = one2 x two0
-    //--------------------------------------------------------------------------
     boxProjections = obbOneHalfExtents[0] * absRot[1][0];
     boxProjections += obbOneHalfExtents[1] * absRot[0][0];
     boxProjections += obbTwoHalfExtents[1] * absRot[2][2];
@@ -1121,9 +1086,7 @@ Type ObbObb(Vec3Param obbOneCenter,
     test -= T[0] * rot[1][0];
     HandleObbOverlap(-rot[1][0], rot[0][0], real(0.0), 13);
 
-    //--------------------------------------------------------------------------
     // Test axis L = one2 x two1
-    //--------------------------------------------------------------------------
     boxProjections = obbOneHalfExtents[0] * absRot[1][1];
     boxProjections += obbOneHalfExtents[1] * absRot[0][1];
     boxProjections += obbTwoHalfExtents[0] * absRot[2][2];
@@ -1133,9 +1096,7 @@ Type ObbObb(Vec3Param obbOneCenter,
     test -= T[0] * rot[1][1];
     HandleObbOverlap(-rot[1][1], rot[0][1], real(0.0), 14);
 
-    //--------------------------------------------------------------------------
     // Test axis L = one2 x two2
-    //--------------------------------------------------------------------------
     boxProjections = obbOneHalfExtents[0] * absRot[1][2];
     boxProjections += obbOneHalfExtents[1] * absRot[0][2];
     boxProjections += obbTwoHalfExtents[0] * absRot[2][1];
@@ -1444,7 +1405,6 @@ Type ClipTriangleAgainstBox(Vec3Param obbCenter,
 {
   Vec3 obbAxes[3] = {obbBasis.GetBasis(0), obbBasis.GetBasis(1), obbBasis.GetBasis(2)};
 
-  //----------------------------------------------------------------------------
   // Find the largest component of the normal. The perpendicular components are
   // stored as well.
   uint boxAxis = axisCase - 1;
@@ -1473,7 +1433,6 @@ Type ClipTriangleAgainstBox(Vec3Param obbCenter,
   break;
   }
 
-  //----------------------------------------------------------------------------
   // Now that we have the face on the box that the triangle is said to be
   // intersecting with, clip the triangle.
 
@@ -1517,7 +1476,6 @@ Type ClipTriangleAgainstBox(Vec3Param obbCenter,
     return None;
   }
 
-  //----------------------------------------------------------------------------
   // Was not able to generate as many points as requested
   uint& maxPoints = manifold.PointCount;
   if (maxPoints > pointCount)
@@ -1533,7 +1491,6 @@ Type ClipTriangleAgainstBox(Vec3Param obbCenter,
 
   manifold.Normal = normal;
 
-  //----------------------------------------------------------------------------
   if (pointCount <= maxPoints)
   {
     // The amount of contacts generated may not meet the amount of contacts
@@ -1624,11 +1581,9 @@ Type ClipBoxAgainstTriangle(Vec3Param obbCenter,
   Vec3 triNormal = -normal;
   uint boxAxis, boxOne, boxTwo;
 
-  //----------------------------------------------------------------------------
   // Axis of intersection in the reference frame of the box.
   Vec3 boxNormal = Math::TransposedTransform(obbBasis, normal);
 
-  //----------------------------------------------------------------------------
   // Absolute value version of the normal in the box's frame of reference.
   Vec3 absBoxNormal = Abs(boxNormal);
 
@@ -1697,7 +1652,6 @@ Type ClipBoxAgainstTriangle(Vec3Param obbCenter,
     return None;
   }
 
-  //----------------------------------------------------------------------------
   // Was not able to generate as many points as requested
   uint& maxPoints = manifold.PointCount;
   if (maxPoints > pointCount)
@@ -1713,7 +1667,6 @@ Type ClipBoxAgainstTriangle(Vec3Param obbCenter,
 
   manifold.Normal = normal;
 
-  //----------------------------------------------------------------------------
   if (pointCount <= maxPoints)
   {
     // The amount of contact points generated may not meet the amount of contact
@@ -1791,7 +1744,6 @@ Type ObbTriangleContactGeneration(Vec3Param obbCenter,
                                   real projection,
                                   Manifold& manifold)
 {
-  //----------------------------------------------------------------------------
   // If any of the 9 latter box-triangle axes were used (those that are
   // generated from the cross products of the box's face normals and the
   // triangle's edge normals), then it is an edge-edge case. Now we find the
@@ -1802,7 +1754,6 @@ Type ObbTriangleContactGeneration(Vec3Param obbCenter,
     return EdgeEdge;
   }
 
-  //----------------------------------------------------------------------------
   // Make sure the normal is pointing from the box to the triangle.
   {
     Vec3 triCenter;
@@ -1815,7 +1766,6 @@ Type ObbTriangleContactGeneration(Vec3Param obbCenter,
     }
   }
 
-  //----------------------------------------------------------------------------
   // If the axis case falls in the range of [1,3], then the triangle will be
   // clipped against one of the box's faces.
   if (axisCase != 4)
@@ -1823,7 +1773,6 @@ Type ObbTriangleContactGeneration(Vec3Param obbCenter,
     return ClipTriangleAgainstBox(obbCenter, obbHalfExtents, obbBasis, triPoints, axisCase, normal, manifold);
   }
 
-  //----------------------------------------------------------------------------
   // If the axis case is 4, then the face on the box that is most oriented
   // toward the triangle will be used to clip the triangle.
   else
@@ -1906,73 +1855,55 @@ Type ObbTriangle(
     }                                                                                                                  \
   }
 
-    //--------------------------------------------------------------------------
     // Test axis L = box0 x tri0 = (0, -edge[0].z, edge[0].y)
-    //--------------------------------------------------------------------------
     triProj[0] = triPoint[0].z * triPoint[1].y - triPoint[0].y * triPoint[1].z;
     triProj[1] = triPoint[2].z * triEdge[0].y - triPoint[2].y * triEdge[0].z;
     boxProj = obbHalfExtents[1] * Math::Abs(triEdge[0].z) + obbHalfExtents[2] * Math::Abs(triEdge[0].y);
     HandleObbTriOverlap(real(0.0), -triEdge[0].z, triEdge[0].y, 5);
 
-    //--------------------------------------------------------------------------
     // Test axis L = box0 x tri1 = (0, -edge[1].z, edge[1].y)
-    //--------------------------------------------------------------------------
     triProj[0] = triPoint[1].z * triPoint[2].y - triPoint[1].y * triPoint[2].z;
     triProj[1] = triPoint[0].z * triEdge[1].y - triPoint[0].y * triEdge[1].z;
     boxProj = obbHalfExtents[1] * Math::Abs(triEdge[1].z) + obbHalfExtents[2] * Math::Abs(triEdge[1].y);
     HandleObbTriOverlap(real(0.0), -triEdge[1].z, triEdge[1].y, 6);
 
-    //--------------------------------------------------------------------------
     // Test axis L = box0 x tri2 = (0, -edge[2].z, edge[2].y)
-    //--------------------------------------------------------------------------
     triProj[0] = triPoint[0].y * triPoint[2].z - triPoint[0].z * triPoint[2].y;
     triProj[1] = triPoint[1].z * triEdge[2].y - triPoint[1].y * triEdge[2].z;
     boxProj = obbHalfExtents[1] * Math::Abs(triEdge[2].z) + obbHalfExtents[2] * Math::Abs(triEdge[2].y);
     HandleObbTriOverlap(real(0.0), -triEdge[2].z, triEdge[2].y, 7);
 
-    //--------------------------------------------------------------------------
     // Test axis L = box1 x tri0 = (edge[0].z, 0, -edge[0].x)
-    //--------------------------------------------------------------------------
     triProj[0] = triPoint[0].x * triPoint[1].z - triPoint[0].z * triPoint[1].x;
     triProj[1] = triPoint[2].x * triEdge[0].z - triPoint[2].z * triEdge[0].x;
     boxProj = obbHalfExtents[0] * Math::Abs(triEdge[0].z) + obbHalfExtents[2] * Math::Abs(triEdge[0].x);
     HandleObbTriOverlap(triEdge[0].z, real(0.0), -triEdge[0].x, 8);
 
-    //--------------------------------------------------------------------------
     // Test axis L = box1 x tri1 = (edge[1].z, 0, -edge[1].x)
-    //--------------------------------------------------------------------------
     triProj[0] = triPoint[1].x * triPoint[2].z - triPoint[1].z * triPoint[2].x;
     triProj[1] = triPoint[0].x * triEdge[1].z - triPoint[0].z * triEdge[1].x;
     boxProj = obbHalfExtents[0] * Math::Abs(triEdge[1].z) + obbHalfExtents[2] * Math::Abs(triEdge[1].x);
     HandleObbTriOverlap(triEdge[1].z, real(0.0), -triEdge[1].x, 9);
 
-    //--------------------------------------------------------------------------
     // Test axis L = box1 x tri2 = (edge[2].z, 0, -edge[2].x)
-    //--------------------------------------------------------------------------
     triProj[0] = triPoint[0].z * triPoint[2].x - triPoint[0].x * triPoint[2].z;
     triProj[1] = triPoint[1].x * triEdge[2].z - triPoint[1].z * triEdge[2].x;
     boxProj = obbHalfExtents[0] * Math::Abs(triEdge[2].z) + obbHalfExtents[2] * Math::Abs(triEdge[2].x);
     HandleObbTriOverlap(triEdge[2].z, real(0.0), -triEdge[2].x, 10);
 
-    //--------------------------------------------------------------------------
     // Test axis L = box2 x tri0 = (-edge[0].y, edge[0].x, 0)
-    //--------------------------------------------------------------------------
     triProj[0] = triPoint[0].y * triPoint[1].x - triPoint[0].x * triPoint[1].y;
     triProj[1] = triPoint[2].y * triEdge[0].x - triPoint[2].x * triEdge[0].y;
     boxProj = obbHalfExtents[0] * Math::Abs(triEdge[0].y) + obbHalfExtents[1] * Math::Abs(triEdge[0].x);
     HandleObbTriOverlap(-triEdge[0].y, triEdge[0].x, real(0.0), 11);
 
-    //--------------------------------------------------------------------------
     // Test axis L = box2 x tri1 = (-edge[1].y, edge[1].x, 0)
-    //--------------------------------------------------------------------------
     triProj[0] = triPoint[1].y * triPoint[2].x - triPoint[1].x * triPoint[2].y;
     triProj[1] = triPoint[0].y * triEdge[1].x - triPoint[0].x * triEdge[1].y;
     boxProj = obbHalfExtents[0] * Math::Abs(triEdge[1].y) + obbHalfExtents[1] * Math::Abs(triEdge[1].x);
     HandleObbTriOverlap(-triEdge[1].y, triEdge[1].x, real(0.0), 12);
 
-    //--------------------------------------------------------------------------
     // Test axis L = box2 x tri2 = (-edge[2].y, edge[2].x, 0)
-    //--------------------------------------------------------------------------
     triProj[0] = triPoint[0].x * triPoint[2].y - triPoint[0].y * triPoint[2].x;
     triProj[1] = triPoint[1].y * triEdge[2].x - triPoint[1].x * triEdge[2].y;
     boxProj = obbHalfExtents[0] * Math::Abs(triEdge[2].y) + obbHalfExtents[1] * Math::Abs(triEdge[2].x);
@@ -1981,9 +1912,7 @@ Type ObbTriangle(
 #undef HandleObbTriOverlap
   }
 
-  //----------------------------------------------------------------------------
   // Category 1: Test AABB against triangle's AABB (3 axes, cases 1 - 3)
-  //----------------------------------------------------------------------------
 #define Min3(a, b, c) Math::Min(Math::Min((a), (b)), (c))
 #define Max3(a, b, c) Math::Max(Math::Max((a), (b)), (c))
   for (uint i = 0; i < 3; ++i)
@@ -2016,9 +1945,7 @@ Type ObbTriangle(
 #undef Max3
 #undef Min3
 
-  //----------------------------------------------------------------------------
   // Category 2: Test AABB against triangle's normal (1 axis, case 4)
-  //----------------------------------------------------------------------------
   // This code is the simple early-out case for AABB vs plane. The only reason
   // I'm not calling that code is because I need the projection difference in
   // case this axis has the minimum overlap.

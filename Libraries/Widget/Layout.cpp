@@ -515,7 +515,6 @@ Vec2 DockLayout::DoLayout(Composite* widget, LayoutArea data)
     {
       switch (mode)
       {
-      //--------------------------------------------------------------------
       case DockMode::DockNone:
       case DockMode::DockFill:
       case DockMode::DockTop:
@@ -527,7 +526,6 @@ Vec2 DockLayout::DoLayout(Composite* widget, LayoutArea data)
       }
       break;
 
-      //--------------------------------------------------------------------
       case DockMode::DockBottom:
       {
         float moveY = size.y;
@@ -537,7 +535,6 @@ Vec2 DockLayout::DoLayout(Composite* widget, LayoutArea data)
       }
       break;
 
-      //--------------------------------------------------------------------
       case DockMode::DockLeft:
       {
         float moveX = size.x;
@@ -547,7 +544,6 @@ Vec2 DockLayout::DoLayout(Composite* widget, LayoutArea data)
       }
       break;
 
-      //--------------------------------------------------------------------
       case DockMode::DockRight:
       {
         float moveX = size.x;
