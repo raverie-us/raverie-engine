@@ -535,7 +535,8 @@ const executables = [
       "ZeroCore",
       "UiWidget",
       "EditorUi",
-      "Editor"
+      "Editor",
+      "Fallback"
     ]
   },
   {
@@ -618,7 +619,12 @@ const runBuild = async (buildDir, testExecutablePaths, opts) => {
 
     const files = [...executable.additionalVfs];
     for (const resourceLibrary of executable.resourceLibraries) {
-      files.push(path.join(dirs.resources, resourceLibrary));
+      const resourceLibraryPath = path.join(dirs.resources, resourceLibrary);
+      if (fs.existsSync(resourceLibraryPath)) {
+        files.push(resourceLibraryPath);
+      } else {
+        printLog(`Skipping resource library for ${resourceLibrary}`);
+      }
 
       // This must match the revisionChangesetName in ContentLogic.cpp:
       const revisionChangesetName = `Version-${cmakeVariables.WELDER_REVISION}-${cmakeVariables.WELDER_CHANGESET}`;
