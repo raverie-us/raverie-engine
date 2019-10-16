@@ -415,9 +415,6 @@ bool EngineLibrary::Initialize()
   // Uncomment out this line to disable the fpu exceptions
   // FpuControlSystem::Active = false;
 
-  // Start the profiling system used to performance counters and timers.
-  Profile::ProfileSystem::Initialize();
-
   // Load the debug drawer.
   Debug::DebugDraw::Initialize();
 
@@ -513,7 +510,6 @@ void EngineLibrary::Shutdown()
   SafeDelete(Z::gFactory);
   SafeDelete(Z::gTweakables);
 
-  Profile::ProfileSystem::Shutdown();
   GetLibrary()->ClearComponents();
 }
 

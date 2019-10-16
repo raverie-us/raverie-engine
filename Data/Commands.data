@@ -716,6 +716,24 @@ Commands commands =
 
 	Command =
 	{
+		string Name = "BeginTracing",
+		string Description = "Start recording performance trace events (for use with chrome://tracing)",
+		string IconName = "Performance",
+		string Tags = "Editor",
+		bool ReadOnly = true,
+	},
+
+	Command =
+	{
+		string Name = "EndTracing",
+		string Description = "Stop recording performance trace events and save to a file (for use with chrome://tracing)",
+		string IconName = "Performance",
+		string Tags = "Editor",
+		bool ReadOnly = true,
+	},
+
+	Command =
+	{
 		string Name = "BroadPhaseTracker",
 		string Description = "Used to compare broad phase performance",
 		string IconName = "Performance",

@@ -107,8 +107,6 @@ void ZeroStartup::MainLoopFunction(void* userData)
 
 void ZeroStartup::Initialize()
 {
-  TimerBlock startUp("Initialize");
-
   // Set the log and error handlers so debug printing and asserts will print to
   // the any debugger output (such as the Visual Studio Output Window).
   mDebuggerListener = new DebuggerListener();
@@ -119,8 +117,6 @@ void ZeroStartup::Initialize()
   // Mirror console output to a log file.
   mFileListener = new FileListener();
   Zero::Console::Add(mFileListener);
-
-  mTotalEngineTimer = new TimerBlock("Total run time:");
 
   CrashHandler::Enable();
 
@@ -134,6 +130,13 @@ void ZeroStartup::Initialize()
 
   Environment* environment = Environment::GetInstance();
   environment->ParseCommandArgs(gCommandLineArguments);
+
+  // Start the profiling system used to performance counters and timers.
+  Profile::ProfileSystem::Initialize();
+  ProfileScope("Initialize");
+
+  if (Environment::GetValue<bool>("-BeginTracing", false))
+    Profile::ProfileSystem::Instance->BeginTracing();
 
   // Add stdout listener (requires engine initialization to get the Environment
   // object)
@@ -238,7 +241,7 @@ System* CreateTimeSystem();
 
 void ZeroStartup::Startup()
 {
-  TimerBlock startUp("Startup");
+  ProfileScope("Startup");
   Engine* engine = Z::gEngine;
   Cog* configCog = engine->GetConfigCog();
 
@@ -361,85 +364,89 @@ void ZeroStartup::EngineUpdate()
 
 void ZeroStartup::Shutdown()
 {
-  Zero::TimerBlock block("Shutting down Libraries.");
-  Z::gEngine->Shutdown();
+  {
+    ProfileScope("Shutdown");
+    Z::gEngine->Shutdown();
 
-  UserShutdownLibraries();
+    UserShutdownLibraries();
 
-  Core::GetInstance().GetLibrary()->ClearComponents();
+    Core::GetInstance().GetLibrary()->ClearComponents();
 
-  // Shutdown in reverse order
-  ZilchScriptLibrary::Shutdown();
+    // Shutdown in reverse order
+    ZilchScriptLibrary::Shutdown();
 
-  UiWidgetLibrary::Shutdown();
-  EditorLibrary::Shutdown();
-  GameplayLibrary::Shutdown();
-  WidgetLibrary::Shutdown();
+    UiWidgetLibrary::Shutdown();
+    EditorLibrary::Shutdown();
+    GameplayLibrary::Shutdown();
+    WidgetLibrary::Shutdown();
 
-  SoundLibrary::Shutdown();
-  NetworkingLibrary::Shutdown();
-  PhysicsLibrary::Shutdown();
-  GraphicsLibrary::Shutdown();
-  EngineLibrary::Shutdown();
+    SoundLibrary::Shutdown();
+    NetworkingLibrary::Shutdown();
+    PhysicsLibrary::Shutdown();
+    GraphicsLibrary::Shutdown();
+    EngineLibrary::Shutdown();
 
-  SpatialPartitionLibrary::Shutdown();
-  ContentMetaLibrary::Shutdown();
-  SerializationLibrary::Shutdown();
-  MetaLibrary::Shutdown();
-  GeometryLibrary::Shutdown();
-  PlatformLibrary::Shutdown();
+    SpatialPartitionLibrary::Shutdown();
+    ContentMetaLibrary::Shutdown();
+    SerializationLibrary::Shutdown();
+    MetaLibrary::Shutdown();
+    GeometryLibrary::Shutdown();
+    PlatformLibrary::Shutdown();
 
-  // ClearLibrary
-  ZilchScriptLibrary::GetInstance().ClearLibrary();
+    // ClearLibrary
+    ZilchScriptLibrary::GetInstance().ClearLibrary();
 
-  UiWidgetLibrary::GetInstance().ClearLibrary();
-  EditorLibrary::GetInstance().ClearLibrary();
-  GameplayLibrary::GetInstance().ClearLibrary();
-  WidgetLibrary::GetInstance().ClearLibrary();
+    UiWidgetLibrary::GetInstance().ClearLibrary();
+    EditorLibrary::GetInstance().ClearLibrary();
+    GameplayLibrary::GetInstance().ClearLibrary();
+    WidgetLibrary::GetInstance().ClearLibrary();
 
-  SoundLibrary::GetInstance().ClearLibrary();
-  NetworkingLibrary::GetInstance().ClearLibrary();
-  PhysicsLibrary::GetInstance().ClearLibrary();
-  GraphicsLibrary::GetInstance().ClearLibrary();
-  EngineLibrary::GetInstance().ClearLibrary();
+    SoundLibrary::GetInstance().ClearLibrary();
+    NetworkingLibrary::GetInstance().ClearLibrary();
+    PhysicsLibrary::GetInstance().ClearLibrary();
+    GraphicsLibrary::GetInstance().ClearLibrary();
+    EngineLibrary::GetInstance().ClearLibrary();
 
-  SpatialPartitionLibrary::GetInstance().ClearLibrary();
-  ContentMetaLibrary::GetInstance().ClearLibrary();
-  SerializationLibrary::GetInstance().ClearLibrary();
-  MetaLibrary::GetInstance().ClearLibrary();
-  GeometryLibrary::GetInstance().ClearLibrary();
+    SpatialPartitionLibrary::GetInstance().ClearLibrary();
+    ContentMetaLibrary::GetInstance().ClearLibrary();
+    SerializationLibrary::GetInstance().ClearLibrary();
+    MetaLibrary::GetInstance().ClearLibrary();
+    GeometryLibrary::GetInstance().ClearLibrary();
 
-  // Destroy
-  ZilchScriptLibrary::Destroy();
+    // Destroy
+    ZilchScriptLibrary::Destroy();
 
-  UiWidgetLibrary::Destroy();
-  EditorLibrary::Destroy();
-  GameplayLibrary::Destroy();
-  WidgetLibrary::Destroy();
+    UiWidgetLibrary::Destroy();
+    EditorLibrary::Destroy();
+    GameplayLibrary::Destroy();
+    WidgetLibrary::Destroy();
 
-  SoundLibrary::Destroy();
-  NetworkingLibrary::Destroy();
-  PhysicsLibrary::Destroy();
-  GraphicsLibrary::Destroy();
-  EngineLibrary::Destroy();
+    SoundLibrary::Destroy();
+    NetworkingLibrary::Destroy();
+    PhysicsLibrary::Destroy();
+    GraphicsLibrary::Destroy();
+    EngineLibrary::Destroy();
 
-  SpatialPartitionLibrary::Destroy();
-  ContentMetaLibrary::Destroy();
-  SerializationLibrary::Destroy();
-  MetaLibrary::Destroy();
-  GeometryLibrary::Destroy();
+    SpatialPartitionLibrary::Destroy();
+    ContentMetaLibrary::Destroy();
+    SerializationLibrary::Destroy();
+    MetaLibrary::Destroy();
+    GeometryLibrary::Destroy();
 
-  ZilchManager::Destroy();
-  MetaDatabase::Destroy();
+    ZilchManager::Destroy();
+    MetaDatabase::Destroy();
 
-  delete mState;
-  delete mZilchSetup;
+    delete mState;
+    delete mZilchSetup;
 
-  CommonLibrary::Shutdown();
+    CommonLibrary::Shutdown();
 
-  ZPrint("Terminated\n");
+    ZPrint("Terminated\n");
 
-  mExit = true;
+    mExit = true;
+  }
+
+  Profile::ProfileSystem::Shutdown();
 }
 
 void ZeroStartup::NextPhase()

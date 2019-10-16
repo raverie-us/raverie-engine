@@ -103,7 +103,6 @@ private:
   UniquePointer<DebuggerListener> mDebuggerListener;
   UniquePointer<FileSystemInitializer> mFileSystemInitializer;
   UniquePointer<FileListener> mFileListener;
-  UniquePointer<TimerBlock> mTotalEngineTimer;
   UniquePointer<StdOutListener> mStdoutListener;
 };
 

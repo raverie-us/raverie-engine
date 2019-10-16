@@ -82,7 +82,7 @@ void LoadCoreContent(Array<String>& coreLibs)
 
   ZPrint("Loading Content...\n");
 
-  TimerBlock timer("Loading Content");
+  ProfileScope("Loading Content");
 
   LoadContentLibrary("FragmentCore");
   LoadContentLibrary("Loading");

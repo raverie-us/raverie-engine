@@ -255,7 +255,7 @@ String HumanReadableFileSize(u64 bytes)
 
 void PopulateVirtualFileSystemWithZip(void* userData)
 {
-  TimerBlock startUp("Virtual File System");
+  ProfileScope("Virtual File System");
 
   // It's very important that this uses C's FILE instead of our File since our
   // File could be virtual. First check to see if it's in the working directory.

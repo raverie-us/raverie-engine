@@ -30,7 +30,7 @@ Statistics::Statistics()
     cstr name = BPStats::Names[i];
     uint color = colors[i];
     // Allocate the record
-    Profile::Record* record = new Profile::Record(name, nullptr, color);
+    Profile::Record* record = new Profile::Record(name, String(), color);
     record->Clear();
     // Add the record
     mRecords[i] = record;

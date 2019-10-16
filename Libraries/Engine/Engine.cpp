@@ -118,7 +118,7 @@ void Engine::Initialize(SystemInitializer& initializer)
   {
     System* system = mSystems[i];
     cstr systemName = system->GetName();
-    TimerBlock time(systemName);
+    ProfileScope(systemName);
     ZPrintFilter(Filter::DefaultFilter, "Initializing %s...\n", systemName);
     system->Initialize(initializer);
   }

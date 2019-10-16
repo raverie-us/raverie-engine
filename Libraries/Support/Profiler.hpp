@@ -9,17 +9,6 @@
 namespace Zero
 {
 
-class TimerBlock
-{
-public:
-  TimerBlock(StringParam name);
-  ~TimerBlock();
-
-private:
-  String mName;
-  Timer mTimer;
-};
-
 namespace Profile
 {
 
@@ -27,23 +16,40 @@ namespace Profile
 typedef u64 ProfileTime;
 class Record;
 
+class TraceEvent
+{
+public:
+  String mCategory;
+  String mName;
+  String mArgs;
+  size_t mThreadId;
+  ProfileTime mTimestamp;
+  ProfileTime mDuration;
+};
+
 /// System to manage all of the profile records.
 class ProfileSystem
 {
 public:
+  friend class ScopeTimer;
   static ProfileSystem* Instance;
   static void Initialize();
   static void Shutdown();
   void Add(Record* record);
-  void Add(cstr parentName, Record* record);
+  void Add(StringParam parentName, Record* record);
   float GetTimeInSeconds(ProfileTime time);
   ProfileTime GetTime();
+  void BeginTracing();
+  void EndTracing(Array<TraceEvent>& output);
   Array<Record*>::range GetRecords()
   {
     return mRecordList.All();
   }
 
 private:
+  Atomic<bool> mIsRecording;
+  SpinLock mTraceEventsLock;
+  Array<TraceEvent> mTraceEvents;
   Array<Record*> mRecordList;
   Timer mTimer;
 };
@@ -54,15 +60,16 @@ class Record : public LinkBase
 {
 public:
   friend class ProfileSystem;
+  friend class ScopeTimer;
   Record();
-  Record(cstr name);
-  Record(cstr name, cstr parentName, u32 color = 0);
+  Record(StringParam name);
+  Record(StringParam name, StringParam parentName, u32 color = 0);
 
-  void Initialize(cstr name, cstr parentName, u32 color = 0);
+  void Initialize(StringParam name, StringParam parentName, u32 color = 0);
 
   // Display information
-  void SetName(cstr name);
-  cstr GetName()
+  void SetName(StringParam name);
+  StringParam GetName()
   {
     return mName;
   };
@@ -113,7 +120,7 @@ public:
 private:
   // Display information
   u32 mColor;
-  cstr mName;
+  String mName;
 
   // General measurement
   u32 mHits;

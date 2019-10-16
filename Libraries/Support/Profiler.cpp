@@ -7,16 +7,6 @@
 namespace Zero
 {
 
-TimerBlock::TimerBlock(StringParam name) : mName(name)
-{
-}
-
-TimerBlock::~TimerBlock()
-{
-  double time = mTimer.UpdateAndGetTime();
-  ZPrintFilter(Filter::DefaultFilter, "%s %gs\n", mName.c_str(), time);
-}
-
 namespace Profile
 {
 
@@ -26,6 +16,7 @@ ProfileSystem* ProfileSystem::Instance = nullptr;
 void ProfileSystem::Initialize()
 {
   Instance = new ProfileSystem();
+  Instance->mIsRecording = false;
 }
 
 void ProfileSystem::Shutdown()
@@ -43,16 +34,16 @@ void ProfileSystem::Add(Record* record)
   mRecordList.PushBack(record);
 }
 
-void ProfileSystem::Add(cstr parentName, Record* record)
+void ProfileSystem::Add(StringParam parentName, Record* record)
 {
-  Array<Record*>::range r = mRecordList.All();
   // if this object has a parent, then walk through the record list
   // to find the parent
-  if (parentName != nullptr)
+  if (!parentName.Empty())
   {
+    Array<Record*>::range r = mRecordList.All();
     for (; !r.Empty(); r.PopFront())
     {
-      if (strcmp(r.Front()->mName, parentName) == 0)
+      if (r.Front()->mName == parentName)
       {
         r.Front()->AddChild(record);
         break;
@@ -70,25 +61,46 @@ ProfileTime ProfileSystem::GetTime()
   return mTimer.GetTickTime();
 }
 
+void ProfileSystem::BeginTracing()
+{
+  if (mIsRecording)
+  {
+    return;
+  }
+  mTraceEventsLock.Lock();
+  mTraceEvents.Clear();
+  mTraceEvents.Reserve(10000);
+  mTraceEventsLock.Unlock();
+  mIsRecording = true;
+}
+
+void ProfileSystem::EndTracing(Array<TraceEvent>& output)
+{
+  mIsRecording = false;
+  mTraceEventsLock.Lock();
+  output.Swap(mTraceEvents);
+  mTraceEvents.Clear();
+  mTraceEventsLock.Unlock();
+}
+
 Record::Record(void)
 {
-  mName = nullptr;
   mParent = nullptr;
   mColor = 0xFFFFFFFF;
   Clear();
 }
 
-Record::Record(cstr name)
+Record::Record(StringParam name)
 {
-  Initialize(name, nullptr, 0xFFFFFFFF);
+  Initialize(name, String(), 0xFFFFFFFF);
 }
 
-Record::Record(cstr name, cstr parentName, u32 color)
+Record::Record(StringParam name, StringParam parentName, u32 color)
 {
   Initialize(name, parentName, color);
 }
 
-void Record::Initialize(cstr name, cstr parentName, u32 color)
+void Record::Initialize(StringParam name, StringParam parentName, u32 color)
 {
   mColor = color;
   mParent = nullptr;
@@ -152,7 +164,7 @@ float Record::SmoothAverage()
   return mSmoothAvg;
 }
 
-void Record::SetName(cstr name)
+void Record::SetName(StringParam name)
 {
   mName = name;
 }
@@ -185,8 +197,26 @@ ScopeTimer::ScopeTimer(Record* data)
 
 ScopeTimer::~ScopeTimer()
 {
-  ProfileTime endTime = ProfileSystem::Instance->GetTime();
-  mData->EnterRecord(endTime - mStartTime);
+  ProfileSystem* system = ProfileSystem::Instance;
+  ProfileTime endTime = system->GetTime();
+  ProfileTime duration = endTime - mStartTime;
+  mData->EnterRecord(duration);
+
+  if (system->mIsRecording && duration != 0)
+  {
+    TraceEvent event;
+    if (mData->mParent)
+      event.mCategory = mData->mParent->mName;
+    event.mName = mData->mName;
+    // event.mArgs = "";
+    event.mThreadId = Thread::GetCurrentThreadId();
+    event.mTimestamp = mStartTime;
+    event.mDuration = duration;
+
+    system->mTraceEventsLock.Lock();
+    system->mTraceEvents.PushBack(event);
+    system->mTraceEventsLock.Unlock();
+  }
 }
 
 void PrintProfileGraph(Record* record, double total, int level)

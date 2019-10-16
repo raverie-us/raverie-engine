@@ -903,7 +903,7 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
   // Set the tweakables modified callback so that we can update the Ui
   Tweakables::sModifiedCallback = &OnTweakablesModified;
 
-  TimerBlock block("Creating Editor");
+  ProfileScope("Creating Editor");
   CrashHandler::SetupRescueCallback(EditorRescueCall, nullptr);
 
   MainWindow* rootWidget = new MainWindow(mainWindow);

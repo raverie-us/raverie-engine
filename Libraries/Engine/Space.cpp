@@ -571,7 +571,7 @@ void Space::LoadLevelFile(StringParam filePath)
 {
   // Enable in debug for level loading (object initialization, etc)
   FpuExceptionsEnablerDebug();
-  TimerBlock block("Loaded level");
+  ProfileScope("Loaded level");
 
   // Load from Level file
   Status status;
@@ -620,7 +620,7 @@ Level* Space::AddObjectsFromLevel(Level* level)
 
   PushErrorContextObject("Loading level", level);
 
-  TimerBlock block("Loaded level");
+  ProfileScope("Loaded level");
 
   if (level)
   {

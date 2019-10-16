@@ -115,7 +115,7 @@ void PerformanceGraphWidget::RenderUpdate(
   forRange (Profile::Record& record, mainRecord->GetChildren())
   {
     float seconds = Profile::ProfileSystem::Instance->GetTimeInSeconds((Profile::ProfileTime)record.SmoothAverage());
-    text = String::Format(" %0.1fms %s", seconds * 1000.0f, record.GetName());
+    text = String::Format(" %0.1fms %s", seconds * 1000.0f, record.GetName().c_str());
     fontProcessor.mVertexColor = ToFloatColor(record.GetColor());
     AddTextRange(fontProcessor, font, text, namePos, TextAlign::Left, Vec2(1, 1), mSize, true);
     namePos -= Vec2(0, 20);
@@ -126,7 +126,7 @@ void PerformanceGraphWidget::RenderUpdate(
     Profile::Record& record = *mainRecord;
     float seconds = Profile::ProfileSystem::Instance->GetTimeInSeconds(
         (Profile::ProfileTime)samplesTotal[Profile::Record::sSampleIndex - 1]);
-    text = String::Format(" %0.1fms %s Total", seconds * 1000.0f, record.GetName());
+    text = String::Format(" %0.1fms %s Total", seconds * 1000.0f, record.GetName().c_str());
     fontProcessor.mVertexColor = ToFloatColor(record.GetColor());
     AddTextRange(fontProcessor, font, text, namePos, TextAlign::Left, Vec2(1, 1), mSize, true);
     namePos -= Vec2(0, 20);
@@ -227,11 +227,11 @@ float PerformanceGraphWidget::DrawProfileGraph(ViewBlock& viewBlock,
     if (timeInS != 0.0f)
       fps = 1.0f / timeInS;
     fps = Math::Round(fps);
-    text = String::Format("%s %0.0f %0.1f ms", record->GetName(), fps, timeInS * 1000.0f);
+    text = String::Format("%s %0.0f %0.1f ms", record->GetName().c_str(), fps, timeInS * 1000.0f);
   }
   else
   {
-    text = String::Format("%s %0.1f ms", record->GetName(), timeInS * 1000.0f);
+    text = String::Format("%s %0.1f ms", record->GetName().c_str(), timeInS * 1000.0f);
   }
 
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, font->mTexture);

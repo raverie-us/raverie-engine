@@ -151,10 +151,77 @@ void AddGraph(Editor* editor)
   editor->AddManagedWidget(graph, DockArea::Floating, true);
 }
 
+void BeginTracing(Editor* editor)
+{
+  Profile::ProfileSystem::Instance->BeginTracing();
+}
+
+void EndTracing(Editor* editor)
+{
+  Array<Profile::TraceEvent> traceEvents;
+  Profile::ProfileSystem::Instance->EndTracing(traceEvents);
+
+  static const String cCategory("cat");
+  static const String cProcessId("pid");
+  static const String cThreadId("tid");
+  static const String cTimeStamp("ts");
+  static const String cDuration("dur");
+  static const String cName("name");
+  static const String cArgs("args");
+  static const String cPhase("ph");
+  static const String cComplete("X");
+
+  Zilch::JsonBuilder builder;
+  builder.IsCompactMode = true;
+  builder.Begin(Zilch::JsonType::ArraySingleLine);
+  forRange (Profile::TraceEvent& traceEvent, traceEvents)
+  {
+    builder.Begin(Zilch::JsonType::Object);
+    builder.Key(cPhase);
+    builder.Value(cComplete);
+
+    builder.Key(cCategory);
+    builder.Value(traceEvent.mCategory);
+    builder.Key(cProcessId);
+    builder.Value(0);
+    builder.Key(cThreadId);
+    builder.Value(traceEvent.mThreadId);
+    builder.Key(cTimeStamp);
+    builder.Value(traceEvent.mTimestamp);
+    builder.Key(cDuration);
+    builder.Value(traceEvent.mDuration);
+    builder.Key(cName);
+    builder.Value(traceEvent.mName);
+
+    if (!traceEvent.mArgs.Empty())
+    {
+      builder.Key(cArgs);
+      builder.Value(traceEvent.mArgs);
+    }
+    builder.End();
+  }
+  builder.End();
+
+  String json = builder.ToString();
+
+  Archive archive(ArchiveMode::Compressing, CompressionLevel::MaxCompression);
+  archive.AddFileBlock("trace.json", DataBlock((byte*)json.Data(), json.SizeInBytes()));
+  ByteBufferBlock block(archive.ComputeZipSize());
+  archive.WriteBuffer(block);
+
+  String compressedData((cstr)block.GetBegin(), block.Size());
+
+  ProjectSettings* project = Z::gEditor->mProject.has(ProjectSettings);
+  String defaultFileName = BuildString(project->ProjectName, "-", GetTimeAndDateStamp(), ".zip");
+  new SimpleSaveFileDialog(compressedData, "Save a trace", "Trace Zip File", "*.zip", "zip", defaultFileName);
+}
+
 void SetupGraphCommands(Cog* configCog, CommandManager* commands)
 {
   commands->AddCommand("Performance", BindCommandFunction(AddPerformance), true);
   commands->AddCommand("Graph", BindCommandFunction(AddGraph), true);
+  commands->AddCommand("BeginTracing", BindCommandFunction(BeginTracing), true);
+  commands->AddCommand("EndTracing", BindCommandFunction(EndTracing), true);
 }
 
 } // namespace Zero

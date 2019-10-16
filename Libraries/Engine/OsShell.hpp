@@ -8,6 +8,7 @@ namespace Events
 // This event occurs in the middle of OsShell update before we process Os
 // messages
 DeclareEvent(OsShellUpdate);
+DeclareEvent(FileDialogComplete);
 } // namespace Events
 
 class OsWindow;
@@ -112,6 +113,7 @@ public:
 /// deleted at the end of the OpenFile/SaveFile call.
 struct FileDialogConfig : public FileDialogInfo
 {
+  // The default event name is Events::FileDialogComplete.
   String EventName;
   HandleOf<Object> CallbackObject;
 
@@ -120,6 +122,22 @@ struct FileDialogConfig : public FileDialogInfo
 private:
   FileDialogConfig();
   static void Callback(Array<String>& files, void* userData);
+};
+
+class SimpleSaveFileDialog : public SafeId32EventObject
+{
+public:
+  typedef SimpleSaveFileDialog ZilchSelf;
+  SimpleSaveFileDialog(StringParam data,
+                       StringParam title,
+                       StringParam filterName,
+                       StringParam filter,
+                       StringParam defaultExtension,
+                       StringParam defaultFileName);
+
+private:
+  String mData;
+  void OnFileDialogComplete(OsFileSelection* event);
 };
 
 } // namespace Zero

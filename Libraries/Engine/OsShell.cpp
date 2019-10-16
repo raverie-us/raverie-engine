@@ -6,7 +6,8 @@ namespace Zero
 namespace Events
 {
 DefineEvent(OsShellUpdate);
-}
+DefineEvent(FileDialogComplete);
+} // namespace Events
 
 ZilchDefineType(OsShell, builder, type)
 {
@@ -192,6 +193,7 @@ FileDialogConfig* FileDialogConfig::Create()
 
 FileDialogConfig::FileDialogConfig()
 {
+  EventName = Events::FileDialogComplete;
   CallbackObject = nullptr;
   mCallback = &Callback;
   mUserData = this;
@@ -215,6 +217,32 @@ void FileDialogConfig::Callback(Array<String>& files, void* userData)
 
   // At the end of the callback we need to free the memory for the config.
   delete self;
+}
+
+SimpleSaveFileDialog::SimpleSaveFileDialog(StringParam data,
+                                           StringParam title,
+                                           StringParam filterName,
+                                           StringParam filter,
+                                           StringParam defaultExtension,
+                                           StringParam defaultFileName) :
+    mData(data)
+{
+  FileDialogConfig* config = FileDialogConfig::Create();
+  config->CallbackObject = this;
+  config->Title = title;
+  config->AddFilter(filterName, filter);
+  config->DefaultFileName = defaultFileName;
+  config->mDefaultSaveExtension = defaultExtension;
+
+  ConnectThisTo(this, Events::FileDialogComplete, OnFileDialogComplete);
+  Z::gEngine->has(OsShell)->SaveFile(config);
+}
+
+void SimpleSaveFileDialog::OnFileDialogComplete(OsFileSelection* event)
+{
+  if (event->Success)
+    WriteStringRangeToFile(event->Files[0], mData);
+  delete this;
 }
 
 } // namespace Zero

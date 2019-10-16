@@ -337,7 +337,7 @@ public:
 
 HandleOf<Resource> ResourceSystem::LoadEntry(Status& status, ResourceEntry& element)
 {
-  // TimerBlock block(element.Name);
+  ProfileScope(element.Name);
 
   ErrorContextResourceEntry loadingResourceContext(&element);
 

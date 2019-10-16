@@ -32,7 +32,7 @@ EmscriptenExportTarget::EmscriptenExportTarget(Exporter* exporter, String target
 void EmscriptenExportTarget::ExportApplication()
 {
   {
-    TimerBlock block("Exported Project");
+    ProfileScope("Exported Project");
     String outputDirectory = FilePath::Combine(GetTemporaryDirectory(), "Web", "ZeroExport");
 
     Status status;

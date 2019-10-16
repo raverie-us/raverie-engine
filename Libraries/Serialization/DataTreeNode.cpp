@@ -878,7 +878,7 @@ bool ReadDataSet(
   // Load the data tree with the correct parser
   *fileVersion = GetFileVersion(data);
 
-  // TimerBlock block("Data Tree Parsing");
+  ProfileScope("Data Tree Parsing");
   if (*fileVersion == DataVersion::Legacy)
   {
     // Legacy format only supported a single root

@@ -105,7 +105,7 @@ ContentSystem::~ContentSystem()
 
 void ContentSystem::EnumerateLibraries()
 {
-  TimerBlock t("Enumerate Libraries");
+  ProfileScope("Enumerate Libraries");
 
   // For every search path
   forRange (String path, LibrarySearchPaths.All())
@@ -217,7 +217,7 @@ HandleOf<ResourcePackage> ContentSystem::BuildLibrary(Status& status, ContentLib
     if (DirectoryExists(prebuiltContent))
     {
       ZPrint("Copying prebuilt content from '%s' to '%s'\n", prebuiltContent.c_str(), outputPath.c_str());
-      TimerBlock block("PrebuiltContent");
+      ProfileScope("PrebuiltContent");
       CopyFolderContents(outputPath, prebuiltContent);
     }
     else
