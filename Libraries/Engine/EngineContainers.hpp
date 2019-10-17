@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-typedef HashMap<String, String> StringMap;
+typedef OrderedHashMap<String, String> StringMap;
 
 template <typename rangeType, typename castType>
 class CastRangeAdapter

@@ -67,6 +67,7 @@ void ProfileSystem::BeginTracing()
   {
     return;
   }
+  ZPrint("Tracing begun\n");
   mTraceEventsLock.Lock();
   mTraceEvents.Clear();
   mTraceEvents.Reserve(10000);
@@ -76,11 +77,17 @@ void ProfileSystem::BeginTracing()
 
 void ProfileSystem::EndTracing(Array<TraceEvent>& output)
 {
+  if (!mIsRecording)
+  {
+    ZPrint("Cannot end tracing since it was never started\n");
+    return;
+  }
   mIsRecording = false;
   mTraceEventsLock.Lock();
   output.Swap(mTraceEvents);
   mTraceEvents.Clear();
   mTraceEventsLock.Unlock();
+  ZPrint("Tracing ended\n");
 }
 
 Record::Record(void)

@@ -396,12 +396,15 @@ void CommandManager::RunParsedCommands()
 {
   Environment* environment = Environment::GetInstance();
   StringMap& arguments = environment->mParsedCommandLineArguments;
-  for (StringMap::range range = arguments.All(); !range.Empty(); range.PopFront())
+  for (StringMap::Range range = arguments.All(); !range.Empty(); range.PopFront())
   {
     String commandName = range.Front().first;
     Command* command = GetCommand(commandName);
     if (command)
+    {
+      ZPrint("Executing command: %s\n", commandName.c_str());
       command->ExecuteCommand();
+    }
   }
 }
 

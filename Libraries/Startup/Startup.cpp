@@ -93,7 +93,7 @@ void ZeroStartup::MainLoop()
 
   if (mExit)
   {
-    ZPrint("Stopping main loop");
+    ZPrint("Stopping main loop\n");
     StopMainLoop();
     delete this;
   }
@@ -135,7 +135,7 @@ void ZeroStartup::Initialize()
   Profile::ProfileSystem::Initialize();
   ProfileScope("Initialize");
 
-  if (Environment::GetValue<bool>("-BeginTracing", false))
+  if (Environment::GetValue<bool>("BeginTracing", false))
     Profile::ProfileSystem::Instance->BeginTracing();
 
   // Add stdout listener (requires engine initialization to get the Environment

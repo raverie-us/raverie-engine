@@ -36,7 +36,7 @@ void LauncherCommunicationEvent::LoadFromCommandArguments(StringMap& arguments)
 {
   String eventName;
 
-  arguments.TryGetValue("file", mProjectFile);
+  mProjectFile = arguments.FindValue("file", String());
   // We can have just a project name and no other command-line args and
   // that implies we are performing the open command
   if (!mProjectFile.Empty())
