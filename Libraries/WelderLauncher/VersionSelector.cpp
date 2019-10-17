@@ -185,7 +185,7 @@ void VersionSelector::SaveInstalledBuildsMeta()
 BackgroundTask* VersionSelector::GetServerListing()
 {
   ZPrint("Requesting build list from server.\n");
-  return GetReleaseListing(Urls::cApiZeroBuilds);
+  return GetReleaseListing(Urls::cApiEditorBuilds);
 }
 
 BackgroundTask* VersionSelector::GetLauncherListing()
