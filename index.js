@@ -312,7 +312,6 @@ const runWelderFormat = async (options, sourceFiles) => {
 const determineCmakeCombo = (options) => {
   const aliases = {
     Empty: {
-      architecture: "ANY",
       builder: "Ninja",
       config: "Release",
       platform: "Stub",
@@ -320,7 +319,7 @@ const determineCmakeCombo = (options) => {
       toolchain: "Clang"
     },
     Emscripten: {
-      architecture: "WASM",
+      architecture: "wasm",
       builder: "Ninja",
       config: "Release",
       platform: "Emscripten",
@@ -328,7 +327,6 @@ const determineCmakeCombo = (options) => {
       toolchain: "Emscripten"
     },
     Linux: {
-      architecture: "ANY",
       builder: "Ninja",
       config: "Release",
       platform: "SDLSTDEmpty",
@@ -336,7 +334,6 @@ const determineCmakeCombo = (options) => {
       toolchain: "Clang"
     },
     Windows: {
-      architecture: "X64",
       builder: "Visual Studio 16 2019",
       config: "Any",
       platform: "Windows",
@@ -352,13 +349,18 @@ const determineCmakeCombo = (options) => {
     printError(`Undefined alias ${alias}, choosing platform empty`);
     combo = aliases.empty;
   }
-  combo.alias = alias;
 
   /*
    * Allow options to override builder, toolchian, etc.
    * It is the user's responsibility to ensure this is a valid combination.
    */
-  return Object.assign(combo, options);
+  combo = Object.assign(combo, options);
+  combo.alias = alias;
+
+  if (!combo.architecture) {
+    combo.architecture = os.arch();
+  }
+  return combo;
 };
 
 const activateBuildDir = (combo) => {
@@ -462,7 +464,7 @@ const cmake = async (options) => {
     toolchainArgs.push("-DCMAKE_AR=/usr/bin/llvm-ar");
   }
 
-  if (combo.toolchain === "MSVC" && combo.architecture === "X64") {
+  if (combo.toolchain === "MSVC" && combo.architecture === "x64") {
     architectureArgs.push("-DCMAKE_GENERATOR_PLATFORM=x64");
     architectureArgs.push("-T");
     architectureArgs.push("host=x64");
@@ -798,8 +800,8 @@ const pack = async (options) => {
 
     /*
      * This needs to match GetVersionListingTaskJob in LauncherTasks.cpp.
-     * Tags.Major.Minor.Patch.Revision.ShortChangeset.Platform.Extension
-     * Example: WelderEditor.1.5.0.1501.fb02756c46a4.Win32.zerobuild
+     * Tags.Major.Minor.Patch.Revision.ShortChangeset.Platform.Architecture.Extension
+     * Example: WelderEditor.1.5.0.1501.fb02756c46a4.Windows.x86.zip
      */
     const name =
       `${library}.` +
@@ -808,9 +810,12 @@ const pack = async (options) => {
       `${cmakeVariables.WELDER_PATCH_VERSION}.` +
       `${cmakeVariables.WELDER_REVISION}.` +
       `${cmakeVariables.WELDER_SHORT_CHANGESET}.` +
-      `${combo.alias}${combo.architecture}.zip`;
+      `${combo.alias}.` +
+      `${combo.architecture}.zip`;
 
     const packageZip = path.join(packagesDir, name);
+
+    // Emscripten does not need a copy of the FileSystem.zip (it already has a .data file).
     if (combo.toolchain !== "Emscripten") {
       const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
       fs.copyFileSync(fileSystemZip, packageZip);
