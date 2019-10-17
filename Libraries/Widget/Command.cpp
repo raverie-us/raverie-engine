@@ -394,9 +394,12 @@ void CommandManager::RemoveCommand(Command* command)
 
 void CommandManager::RunParsedCommandsDelayed()
 {
-  if (Z::gWidgetManager->RootWidgets.Empty()) {
+  if (Z::gWidgetManager->RootWidgets.Empty())
+  {
     RunParsedCommandsImmediately();
-  } else {
+  }
+  else
+  {
     // We delay running commands by one frame so that lazy tasks have had a frame to complete
     ActionSequence* seq = new ActionSequence(&Z::gWidgetManager->RootWidgets.Front());
     seq->Add(new CallAction<CommandManager, &CommandManager::RunParsedCommandsImmediately>(this));

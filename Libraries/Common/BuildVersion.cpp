@@ -29,10 +29,7 @@ String gAppGuid;
 String gAppOrganization;
 String gAppName;
 
-void SetupApplication(uint configVersion,
-                      StringParam organization,
-                      StringParam guid,
-                      StringParam name)
+void SetupApplication(uint configVersion, StringParam organization, StringParam guid, StringParam name)
 {
   gConfigVersion = configVersion;
   gAppGuid = guid;
