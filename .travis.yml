@@ -2,7 +2,9 @@ cache:
   directories:
   - $TRAVIS_BUILD_DIR/Build/Cache
 services:
-  - docker
+- docker
+git:
+  depth: false
 script:
 - docker load -i ./Build/Cache/welder.tar || true
 - ./dockerbuild.sh
@@ -14,10 +16,17 @@ script:
 - mv bin/WelderEditor.html bin/index.html
 - touch bin/.nojekyll
 deploy:
-  provider: pages
+- provider: pages
+  skip_cleanup: true
   local_dir: ./bin
   github_token: $GITHUB_TOKEN
-  skip_cleanup: true
   keep_history: false
+  on:
+    branch: master
+- provider: releases
+  skip_cleanup: true
+  api_key: $GITHUB_TOKEN
+  file_glob: true
+  file: Build/*/Packages/*.zip
   on:
     branch: master

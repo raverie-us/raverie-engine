@@ -13,10 +13,7 @@ extern const String sLauncherGuid;
 extern const String sLauncherName;
 
 /// Sets all the application version and name information.
-void SetupApplication(uint major,
-                      uint minor,
-                      uint patch,
-                      uint configVersion,
+void SetupApplication(uint configVersion,
                       StringParam organization,
                       StringParam guid,
                       StringParam name);

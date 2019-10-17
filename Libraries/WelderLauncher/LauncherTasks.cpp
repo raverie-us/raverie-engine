@@ -52,10 +52,11 @@ void GetVersionListingTaskJob::PopulatePackageList()
   static const String cZeroEngineSetup("ZeroEngineSetup");
   static const String cDevelop("Develop");
 
-  // Tags.Major.Minor.Patch.Revision.ShortChangeset-Platform.Extension
-  // Example: ZeroEngineSetup.1.5.0.1501.fb02756c46a4-Win32.zerobuild
-  static const Regex cNameRegex("([a-zA-Z0-9_,]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9a-"
-                                "fA-F]+)\\-([a-zA-Z0-9_]+)\\.([a-zA-Z0-9_]+)");
+  // This needs to match the index.js build script.
+  // Tags.Major.Minor.Patch.Revision.ShortChangeset.Platform.Extension
+  // Example: WelderEditor.1.5.0.1501.fb02756c46a4.Win32.zerobuild
+  static const Regex cNameRegex("([a-zA-Z0-9_,]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)\\."
+                                "([0-9a-fA-F]+)\\.([a-zA-Z0-9_]+)\\.([a-zA-Z0-9_]+)");
 
   forRange (JsonValue* jsonRelease, jsonReleases->ArrayElements)
   {

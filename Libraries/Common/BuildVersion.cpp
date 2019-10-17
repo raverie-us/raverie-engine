@@ -24,25 +24,16 @@ const String sEditorName = "Editor";
 const String sLauncherGuid = "7489829B-8A03-4B26-B3AC-FDDC6668BAF7";
 const String sLauncherName = "Launcher";
 
-uint gAppMajorVersion = 1;
-uint gAppMinorVersion = 0;
-uint gAppPatchVersion = 0;
 uint gConfigVersion = 1;
 String gAppGuid;
 String gAppOrganization;
 String gAppName;
 
-void SetupApplication(uint major,
-                      uint minor,
-                      uint patch,
-                      uint configVersion,
+void SetupApplication(uint configVersion,
                       StringParam organization,
                       StringParam guid,
                       StringParam name)
 {
-  gAppMajorVersion = major;
-  gAppMinorVersion = minor;
-  gAppPatchVersion = patch;
   gConfigVersion = configVersion;
   gAppGuid = guid;
   gAppOrganization = organization;
@@ -71,17 +62,17 @@ uint GetConfigVersion()
 
 uint GetMajorVersion()
 {
-  return gAppMajorVersion;
+  return WelderMajorVersion;
 }
 
 uint GetMinorVersion()
 {
-  return gAppMinorVersion;
+  return WelderMinorVersion;
 }
 
 uint GetPatchVersion()
 {
-  return gAppPatchVersion;
+  return WelderPatchVersion;
 }
 
 uint GetRevisionNumber()

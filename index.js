@@ -352,6 +352,7 @@ const determineCmakeCombo = (options) => {
     printError(`Undefined alias ${alias}, choosing platform empty`);
     combo = aliases.empty;
   }
+  combo.alias = alias;
 
   /*
    * Allow options to override builder, toolchian, etc.
@@ -418,6 +419,14 @@ const cmake = async (options) => {
     "--date=format:%Y-%m-%d"
   ], gitOptions)}"`;
 
+  const tag = await execStdoutTrimmed("git", ["describe"], gitOptions);
+  const versionResult = (/v(?<major>[0-9]+)\.(?<minor>[0-9]+)\.(?<patch>[0-9]+)/u).exec(tag);
+  const version = versionResult ? {
+    major: parseInt(versionResult.groups.major, 10),
+    minor: parseInt(versionResult.groups.minor, 10),
+    patch: parseInt(versionResult.groups.patch, 10)
+  } : {major: 0, minor: 0, patch: 0};
+
   const builderArgs = [];
   const toolchainArgs = [];
   const architectureArgs = [];
@@ -469,6 +478,9 @@ const cmake = async (options) => {
     `-DWELDER_SHORT_CHANGESET=${shortChangeset}`,
     `-DWELDER_CHANGESET=${changeset}`,
     `-DWELDER_CHANGESET_DATE=${changesetDate}`,
+    `-DWELDER_MAJOR_VERSION=${version.major}`,
+    `-DWELDER_MINOR_VERSION=${version.minor}`,
+    `-DWELDER_PATCH_VERSION=${version.patch}`,
     "-G",
     combo.builder,
     ...builderArgs,
@@ -551,11 +563,6 @@ const executables = [
       "ZeroCore",
       "ZeroLauncherResources"
     ]
-  },
-  {
-    additionalVfs: [repoRootFile],
-    name: "WelderLauncherShell",
-    resourceLibraries: []
   }
 ];
 
@@ -772,6 +779,11 @@ const pack = async (options) => {
     "FileSystem.zip"
   ];
 
+  const cmakeVariables = readCmakeVariables(buildDir);
+  const packagesDir = path.join(buildDir, "Packages");
+  rimraf.sync(packagesDir);
+  mkdirp.sync(packagesDir);
+
   for (const executable of executables) {
     const library = executable.name;
     console.log(`Packaging library ${library}`);
@@ -783,8 +795,22 @@ const pack = async (options) => {
     }
     const files = fs.readdirSync(libraryDir).filter((file) => !filter.includes(path.extname(file)) && !filter.includes(file)).
       map((file) => path.join(libraryDir, file));
-    const packageZip = path.join(buildDir, `${library}Package.zip`);
-    tryUnlinkSync(packageZip);
+
+    /*
+     * This needs to match GetVersionListingTaskJob in LauncherTasks.cpp.
+     * Tags.Major.Minor.Patch.Revision.ShortChangeset.Platform.Extension
+     * Example: WelderEditor.1.5.0.1501.fb02756c46a4.Win32.zerobuild
+     */
+    const name =
+      `${library}.` +
+      `${cmakeVariables.WELDER_MAJOR_VERSION}.` +
+      `${cmakeVariables.WELDER_MINOR_VERSION}.` +
+      `${cmakeVariables.WELDER_PATCH_VERSION}.` +
+      `${cmakeVariables.WELDER_REVISION}.` +
+      `${cmakeVariables.WELDER_SHORT_CHANGESET}.` +
+      `${combo.alias}${combo.architecture}.zip`;
+
+    const packageZip = path.join(packagesDir, name);
     if (combo.toolchain !== "Emscripten") {
       const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
       fs.copyFileSync(fileSystemZip, packageZip);
