@@ -421,7 +421,10 @@ const cmake = async (options) => {
     "--date=format:%Y-%m-%d"
   ], gitOptions)}"`;
 
-  const tag = await execStdoutTrimmed("git", ["describe"], gitOptions);
+  const tag = await execStdoutTrimmed("git", [
+    "describe",
+    "--tags"
+  ], gitOptions);
   const versionResult = (/v(?<major>[0-9]+)\.(?<minor>[0-9]+)\.(?<patch>[0-9]+)/u).exec(tag);
   const version = versionResult ? {
     major: parseInt(versionResult.groups.major, 10),
