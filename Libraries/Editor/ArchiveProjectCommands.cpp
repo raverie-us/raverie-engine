@@ -106,23 +106,6 @@ void ExportContent(ProjectSettings* project)
   exporter->ExportContent(exporter->mDefaultTargets);
 }
 
-void CopyPrebuiltContent(ProjectSettings* project)
-{
-  // Save all resources and build them so the
-  // output directory is up to date
-  Editor* editor = Z::gEditor;
-  editor->SaveAll(true);
-  ZPrint("Copying prebuilt content...\n");
-  // We copy all libraries (including Fallback) because we only expect this to be run by the install steps
-  const String outputDirectory = Z::gContentSystem->PrebuiltContentPath;
-  EnsureEmptyDirectory(outputDirectory);
-  forRange (ContentLibrary* library, Z::gContentSystem->Libraries.Values())
-  {
-    ZPrint("  Copying %s\n", library->Name.c_str());
-    ExportUtility::CopyLibraryOut(outputDirectory, library, false);
-  }
-}
-
 void ShowProjectFolder(ProjectSettings* project)
 {
   Os::SystemOpenFile(project->ProjectFolder.c_str());
@@ -151,8 +134,6 @@ void BindArchiveCommands(Cog* config, CommandManager* commands)
 
   commands->AddCommand("ShowProjectFolder", BindCommandFunction(ShowProjectFolder), true);
   commands->AddCommand("ShowContentOutput", BindCommandFunction(ShowContentOutput), true);
-
-  commands->AddCommand("CopyPrebuiltContent", BindCommandFunction(CopyPrebuiltContent));
 }
 
 } // namespace Zero

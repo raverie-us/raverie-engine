@@ -178,6 +178,23 @@ void PlayUnitTestFile()
   unitTestSystem->PlayFromZeroTestFile();
 }
 
+void CopyPrebuiltContent(ProjectSettings* project)
+{
+  // Save all resources and build them so the
+  // output directory is up to date
+  Editor* editor = Z::gEditor;
+  editor->SaveAll(true);
+  ZPrint("Copying prebuilt content...\n");
+  // We copy all libraries (including Fallback) because we only expect this to be run by the install steps
+  const String outputDirectory = Z::gContentSystem->PrebuiltContentPath;
+  EnsureEmptyDirectory(outputDirectory);
+  forRange (ContentLibrary* library, Z::gContentSystem->Libraries.Values())
+  {
+    ZPrint("  Copying %s\n", library->Name.c_str());
+    ExportUtility::CopyLibraryOut(outputDirectory, library, false);
+  }
+}
+
 void BindAppCommands(Cog* config, CommandManager* commands)
 {
   commands->AddCommand("About", BindCommandFunction(ShowAbout), true);
@@ -200,6 +217,8 @@ void BindAppCommands(Cog* config, CommandManager* commands)
   commands->AddCommand("Help", BindCommandFunction(OpenHelp), true);
   commands->AddCommand("ZeroHub", BindCommandFunction(OpenZeroHub), true);
   commands->AddCommand("Documentation", BindCommandFunction(OpenDocumentation), true);
+
+  commands->AddCommand("CopyPrebuiltContent", BindCommandFunction(CopyPrebuiltContent));
 }
 
 } // namespace Zero

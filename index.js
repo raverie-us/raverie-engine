@@ -335,7 +335,7 @@ const determineCmakeCombo = (options) => {
     },
     Windows: {
       builder: "Visual Studio 16 2019",
-      config: "Any",
+      config: "Release",
       platform: "Windows",
       targetos: "Windows",
       toolchain: "MSVC"
@@ -521,14 +521,6 @@ const cmake = async (options) => {
   return buildDir;
 };
 
-const safeChmod = (file, mode) => {
-  try {
-    fs.chmodSync(file, mode);
-  } catch (err) {
-    printError(err);
-  }
-};
-
 const preventNoOutputTimeout = () => {
   const interval = setInterval(() => {
     printLog("Working...");
@@ -543,6 +535,7 @@ const executables = [
       repoRootFile
     ],
     name: "WelderEditor",
+    prebuild: true,
     resourceLibraries: [
       "FragmentCore",
       "Loading",
@@ -559,6 +552,7 @@ const executables = [
       repoRootFile
     ],
     name: "WelderLauncher",
+    prebuild: true,
     resourceLibraries: [
       "FragmentCore",
       "Loading",
@@ -611,7 +605,12 @@ const readCmakeVariables = (buildDir) => {
   return result;
 };
 
-const runBuild = async (buildDir, testExecutablePaths, opts) => {
+const findExecutable = (buildDir, config, library) => [
+  path.join(buildDir, "Libraries", library, config, `${library}${executableExtension}`),
+  path.join(buildDir, "Libraries", library, `${library}${executableExtension}`)
+].filter((filePath) => fs.existsSync(filePath))[0];
+
+const runBuild = async (buildDir, opts) => {
   console.log("Running Build");
   if (!ensureCommandExists("cmake")) {
     return;
@@ -648,7 +647,6 @@ const runBuild = async (buildDir, testExecutablePaths, opts) => {
     const relativeFiles = files.map((file) => path.relative(dirs.repo, file));
     await zipAdd(dirs.repo, fileSystemZip, relativeFiles);
   }
-
 
   const options = {
     cwd: buildDir,
@@ -687,16 +685,6 @@ const runBuild = async (buildDir, testExecutablePaths, opts) => {
     ...parallel
   ], options);
   endPnot();
-
-  const addExecutable = (file) => {
-    if (fs.existsSync(file)) {
-      safeChmod(file, 0o777);
-      testExecutablePaths.push(file);
-    }
-  };
-
-  addExecutable(path.join(buildDir, config, `ne${executableExtension}`));
-  addExecutable(path.join(buildDir, `ne${executableExtension}`));
 };
 
 const format = async (options) => {
@@ -722,9 +710,7 @@ const build = async (options) => {
   console.log("Building");
   const combo = determineCmakeCombo(options);
   const buildDir = activateBuildDir(combo);
-  const testExecutablePaths = [];
-  await runBuild(buildDir, testExecutablePaths, options);
-  // Await runTests(testExecutablePaths);
+  await runBuild(buildDir, options);
   console.log("Built");
 };
 
@@ -736,28 +722,33 @@ const prebuilt = async (options) => {
     return;
   }
   const buildDir = activateBuildDir(combo);
-  const editorPath = path.join(buildDir, "Libraries", "WelderEditor", `WelderEditor${executableExtension}`);
+  for (const executable of executables) {
+    if (!executable.prebuild) {
+      continue;
+    }
+    const executablePath = findExecutable(buildDir, combo.config, executable.name);
 
-  if (!fs.existsSync(editorPath)) {
-    printError(`Executable does not exit ${editorPath}`);
-    return;
+    if (!fs.existsSync(executablePath)) {
+      printError(`Executable does not exist ${executablePath}`);
+      continue;
+    }
+
+    const opts = {
+      cwd: buildDir,
+      err: printLog,
+      out: printLog,
+      reject: false,
+      stdio: [
+        "ignore",
+        "pipe",
+        "pipe"
+      ]
+    };
+    await exec(executablePath, [
+      "-CopyPrebuiltContent",
+      "-Exit"
+    ], opts);
   }
-
-  const opts = {
-    cwd: buildDir,
-    err: printLog,
-    out: printLog,
-    reject: false,
-    stdio: [
-      "ignore",
-      "pipe",
-      "pipe"
-    ]
-  };
-  await exec(editorPath, [
-    "-CopyPrebuiltContent",
-    "-Exit"
-  ], opts);
 
   if (!fs.existsSync(dirs.prebuiltContent) || fs.readdirSync(dirs.prebuiltContent).length === 0) {
     printError("Prebuilt content directory did not exist or was empty");
