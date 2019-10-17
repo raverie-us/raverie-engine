@@ -22,6 +22,7 @@ deploy:
   github_token: $GITHUB_TOKEN
   keep_history: false
   on:
+    tags: true
     branch: master
 - provider: releases
   skip_cleanup: true
@@ -29,4 +30,5 @@ deploy:
   file_glob: true
   file: Build/*/Packages/*.zip
   on:
+    tags: true
     branch: master
