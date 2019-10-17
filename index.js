@@ -356,10 +356,8 @@ const determineCmakeCombo = (options) => {
    */
   combo = Object.assign(combo, options);
   combo.alias = alias;
-
-  if (!combo.architecture) {
-    combo.architecture = os.arch();
-  }
+  combo.architecture = combo.architecture || os.arch();
+  combo.config = combo.config || "Release";
   return combo;
 };
 
@@ -608,12 +606,14 @@ const readCmakeVariables = (buildDir) => {
   return result;
 };
 
-const findExecutable = (buildDir, config, library) => [
-  path.join(buildDir, "Libraries", library, config, `${library}${executableExtension}`),
-  path.join(buildDir, "Libraries", library, `${library}${executableExtension}`)
+const findExecutableDir = (buildDir, config, library) => [
+  path.join(buildDir, "Libraries", library, config),
+  path.join(buildDir, "Libraries", library)
 ].filter((filePath) => fs.existsSync(filePath))[0];
 
-const runBuild = async (buildDir, opts) => {
+const findExecutable = (buildDir, config, library) => path.join(findExecutableDir(buildDir, config, library), `${library}${executableExtension}`);
+
+const runBuild = async (buildDir, opts, combo) => {
   console.log("Running Build");
   if (!ensureCommandExists("cmake")) {
     return;
@@ -678,12 +678,11 @@ const runBuild = async (buildDir, opts) => {
   const parallel = makeArgArray("parallel");
 
   const endPnot = preventNoOutputTimeout();
-  const config = opts.config ? opts.config : "Release";
   await exec("cmake", [
     "--build",
     ".",
     "--config",
-    config,
+    combo.config,
     ...target,
     ...parallel
   ], options);
@@ -713,7 +712,7 @@ const build = async (options) => {
   console.log("Building");
   const combo = determineCmakeCombo(options);
   const buildDir = activateBuildDir(combo);
-  await runBuild(buildDir, options);
+  await runBuild(buildDir, options, combo);
   console.log("Built");
 };
 
@@ -784,13 +783,13 @@ const pack = async (options) => {
     const library = executable.name;
     console.log(`Packaging library ${library}`);
 
-    const libraryDir = path.join(buildDir, "Libraries", library);
-    if (!fs.existsSync(libraryDir)) {
-      printError(`Library directory does not exist ${libraryDir}`);
+    const executableDir = findExecutableDir(buildDir, combo.config, library);
+    if (!fs.existsSync(executableDir)) {
+      printError(`Library directory does not exist ${executableDir}`);
       continue;
     }
-    const files = fs.readdirSync(libraryDir).filter((file) => !filter.includes(path.extname(file)) && !filter.includes(file)).
-      map((file) => path.join(libraryDir, file));
+    const files = fs.readdirSync(executableDir).filter((file) => !filter.includes(path.extname(file)) && !filter.includes(file)).
+      map((file) => path.join(executableDir, file));
 
     /*
      * This needs to match GetVersionListingTaskJob in LauncherTasks.cpp.
@@ -811,6 +810,7 @@ const pack = async (options) => {
 
     // Emscripten does not need a copy of the FileSystem.zip (it already has a .data file).
     if (combo.toolchain !== "Emscripten") {
+      const libraryDir = path.join(buildDir, "Libraries", executable.name);
       const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
       fs.copyFileSync(fileSystemZip, packageZip);
     }
@@ -854,6 +854,7 @@ const all = async (options) => {
   await cmake(options);
   await build(options);
   await prebuilt(options);
+  await build(options);
   await documentation(options);
   await pack(options);
 };
