@@ -625,6 +625,7 @@ void GraphicsEngine::UpdateRenderGroups()
 
 void GraphicsEngine::CheckTextureYInvert(Texture* texture)
 {
+  ProfileScopeFunctionArgs(texture->Name);
   // Check for Y-invert
   // Some Api's expect byte 0 to be the bottom left pixel, in Zero byte 0 is the
   // top left Have to Y-invert because sampling from a rendered target must also

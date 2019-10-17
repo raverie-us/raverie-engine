@@ -41,6 +41,7 @@ void LoadContentConfig()
 
 bool LoadContentLibrary(StringParam name)
 {
+  ProfileScopeFunctionArgs(name);
   ContentLibrary* library = Z::gContentSystem->Libraries.FindValue(name, nullptr);
   if (!library)
   {
@@ -78,11 +79,10 @@ bool LoadContentLibrary(StringParam name)
 
 void LoadCoreContent(Array<String>& coreLibs)
 {
+  ProfileScopeFunction();
   Z::gContentSystem->EnumerateLibraries();
 
   ZPrint("Loading Content...\n");
-
-  ProfileScope("Loading Content");
 
   LoadContentLibrary("FragmentCore");
   LoadContentLibrary("Loading");

@@ -190,7 +190,8 @@ public:
   /// Deletes the given command
   void RemoveCommand(Command* command);
   /// Checks the command-line arguments to see if any match a command.
-  void RunParsedCommands();
+  void RunParsedCommandsDelayed();
+  void RunParsedCommandsImmediately();
 
   String BuildShortcutString(bool ctrl, bool alt, bool shift, StringParam key);
 

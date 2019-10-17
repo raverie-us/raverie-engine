@@ -7,6 +7,12 @@ namespace Zero
 
 static const float cAcceptableLoadtime = 0.15f;
 
+void ExecuteRendererJob(RendererJob* job)
+{
+  ProfileScopeFunction();
+  job->Execute();
+}
+
 OsInt RendererThreadMain(void* rendererThreadJobQueue)
 {
   RendererThreadJobQueue* jobQueue = (RendererThreadJobQueue*)rendererThreadJobQueue;
@@ -20,7 +26,7 @@ OsInt RendererThreadMain(void* rendererThreadJobQueue)
 
     jobQueue->TakeAllJobs(rendererJobs);
     forRange (RendererJob* job, rendererJobs.All())
-      job->Execute();
+      ExecuteRendererJob(job);
     rendererJobs.Clear();
 
     if (!ThreadingEnabled)

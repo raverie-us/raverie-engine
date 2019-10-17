@@ -157,6 +157,7 @@ bool JobSystem::RunOneJob()
 
 void JobSystem::RunJob(Job* job)
 {
+  ProfileScopeFunctionArgs(ZilchVirtualTypeId(job)->Name);
   bool completed = false;
   do
   {

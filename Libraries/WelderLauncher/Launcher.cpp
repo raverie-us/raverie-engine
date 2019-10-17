@@ -57,7 +57,7 @@ Launcher::Launcher(OsWindow* window)
 
   CommandManager* commands = CommandManager::GetInstance();
   BindAppCommands(Z::gEngine->GetConfigCog(), commands);
-  commands->RunParsedCommands();
+  commands->RunParsedCommandsDelayed();
 }
 
 void Launcher::OpenTweakablesWindow()

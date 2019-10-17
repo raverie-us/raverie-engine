@@ -197,6 +197,7 @@ void ZilchShaderGenerator::InitializeSpirV()
 
 LibraryRef BuildWrapperLibrary(ZilchShaderIRLibraryRef fragmentsLibrary)
 {
+  ProfileScopeFunction();
   // @Nate: Maybe put this somewhere else?
   // Build a lookup map to deal with opaque shader types
   HashMap<String, String> lookupMap;
@@ -390,6 +391,7 @@ LibraryRef ZilchShaderGenerator::BuildFragmentsLibrary(Module& dependencies,
                                                        Array<ZilchDocumentResource*>& fragments,
                                                        StringParam libraryName)
 {
+  ProfileScopeFunctionArgs(libraryName);
   mFragmentsProject.Clear();
   mFragmentsProject.mProjectName = libraryName;
 
@@ -564,6 +566,7 @@ bool ZilchShaderGenerator::BuildShaders(ShaderSet& shaders,
                                         Array<ShaderEntry>& shaderEntries,
                                         Array<ShaderDefinition>* compositeShaderDefs)
 {
+  ProfileScopeFunction();
   // @Nate: Build a description of the pipeline tools to run.
   // This could be cached and down the line should probably be
   // split up to deal with multiple libraries and caching.
@@ -603,6 +606,7 @@ bool ZilchShaderGenerator::BuildShaders(ShaderSet& shaders,
     for (size_t i = startIndex; i < endIndex; ++i)
     {
       Shader* shader = shaderArray[i];
+      ProfileScopeArgs("Compositing", shader->mName);
       ZPrint("Compositing %s\n", shader->mName.c_str());
 
       // Make shader def.

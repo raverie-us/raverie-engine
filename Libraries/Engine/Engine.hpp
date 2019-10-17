@@ -65,6 +65,7 @@ public:
   /// Returns the current game project's settings.
   ProjectSettings* GetProjectSettings();
 
+  Actions* GetActions() override;
   /// Space for engine objects.
   Space* GetEngineSpace();
   typedef InList<Space> SpaceListType;

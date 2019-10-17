@@ -196,10 +196,11 @@ void Record::EnterRecord(ProfileTime time)
   }
 }
 
-ScopeTimer::ScopeTimer(Record* data)
+ScopeTimer::ScopeTimer(Record* data, String args)
 {
   mData = data;
   mStartTime = ProfileSystem::Instance->GetTime();
+  mArgs = args;
 }
 
 ScopeTimer::~ScopeTimer()
@@ -215,7 +216,7 @@ ScopeTimer::~ScopeTimer()
     if (mData->mParent)
       event.mCategory = mData->mParent->mName;
     event.mName = mData->mName;
-    // event.mArgs = "";
+    event.mArgs = mArgs;
     event.mThreadId = Thread::GetCurrentThreadId();
     event.mTimestamp = mStartTime;
     event.mDuration = duration;

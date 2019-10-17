@@ -27,8 +27,6 @@ ZilchDefineType(ResourceSystem, builder, type)
 
 ResourceSystem::ResourceSystem()
 {
-  mDetailedResources = false;
-
   // Only need to listen for the resource package for 'Loading'
   ConnectThisTo(this, Events::ResourcesLoaded, OnResourcesLoaded);
 }
@@ -133,6 +131,7 @@ ResourceLibrary* ResourceSystem::LoadPackageFile(StringParam fileName)
 
 ResourceLibrary* ResourceSystem::LoadPackage(Status& status, ResourcePackage* package)
 {
+  ProfileScopeFunctionArgs(package->Name);
   PushErrorContextObject("Loading", package);
 
   ResourceLibrary* currentSet = LoadedResourceLibraries.FindValue(package->Name, nullptr);
@@ -337,12 +336,9 @@ public:
 
 HandleOf<Resource> ResourceSystem::LoadEntry(Status& status, ResourceEntry& element)
 {
-  ProfileScope(element.Name);
+  ProfileScopeFunctionArgs(element.Name);
 
   ErrorContextResourceEntry loadingResourceContext(&element);
-
-  if (mDetailedResources)
-    ZPrintFilter(Filter::ResourceFilter, "Loading Resource '%s'\n", element.Name.c_str());
 
   if (!FileExists(element.FullPath))
   {

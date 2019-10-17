@@ -105,7 +105,7 @@ ContentSystem::~ContentSystem()
 
 void ContentSystem::EnumerateLibraries()
 {
-  ProfileScope("Enumerate Libraries");
+  ProfileScopeFunction();
 
   // For every search path
   forRange (String path, LibrarySearchPaths.All())
@@ -199,6 +199,7 @@ ContentLibrary* ContentSystem::LibraryFromDirectory(Status& status, StringParam 
 
 HandleOf<ResourcePackage> ContentSystem::BuildLibrary(Status& status, ContentLibrary* library, bool sendEvent)
 {
+  ProfileScopeFunctionArgs(library->Name);
   ZPrintFilter(Filter::EngineFilter, "Building Content Library '%s'\n", library->Name.c_str());
 
   Cog* configCog = Z::gEngine->GetConfigCog();
@@ -711,7 +712,8 @@ ContentItem* ContentSystem::CreateFromName(StringRange name)
 HandleOf<ResourcePackage>
 ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild, ContentLibrary* library, bool useJobs)
 {
-  // Z::gEngine->LoadingStart();
+  ProfileScopeFunctionArgs(library->Name);
+  Z::gEngine->LoadingStart();
 
   ResourcePackage* package = new ResourcePackage();
   package->Name = library->Name;
@@ -753,7 +755,7 @@ ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild, Cont
   if (!allBuilt)
     status.SetFailed(String::Format("Failed to build content library '%s'", library->Name.c_str()));
 
-  // Z::gEngine->LoadingFinish();
+  Z::gEngine->LoadingFinish();
   return package;
 }
 

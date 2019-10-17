@@ -118,7 +118,7 @@ void Engine::Initialize(SystemInitializer& initializer)
   {
     System* system = mSystems[i];
     cstr systemName = system->GetName();
-    ProfileScope(systemName);
+    ProfileScopeFunctionArgs(systemName);
     ZPrintFilter(Filter::DefaultFilter, "Initializing %s...\n", systemName);
     system->Initialize(initializer);
   }
@@ -151,7 +151,7 @@ void Engine::Update()
   }
   else
   {
-    ProfileScope("Engine");
+    ProfileScopeFunction();
 
     Z::gTracker->ClearDeletedObjects();
 
@@ -260,6 +260,12 @@ ProjectSettings* Engine::GetProjectSettings()
 
   // No project cog found
   return nullptr;
+}
+
+Actions* Engine::GetActions()
+{
+  ReturnIf(!GetEngineSpace(), nullptr, "Attempting to get Engine Actions when there was no Engine Space");
+  return GetEngineSpace()->GetActions();
 }
 
 Space* Engine::GetEngineSpace()

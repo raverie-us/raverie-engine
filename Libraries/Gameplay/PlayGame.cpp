@@ -83,7 +83,7 @@ void CreateGame(OsWindow* mainWindow, StringParam projectFile, Cog* projectCog)
 
   // Run all parsed command-line arguments once after the game is fully loaded.
   CommandManager* commandManager = CommandManager::GetInstance();
-  commandManager->RunParsedCommands();
+  commandManager->RunParsedCommandsDelayed();
 }
 
 } // namespace Zero

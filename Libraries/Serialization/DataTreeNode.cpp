@@ -871,6 +871,7 @@ void Compare(DataNode* lhs, DataNode* rhs)
 bool ReadDataSet(
     Status& status, StringRange data, StringParam source, DataTreeLoader* loader, uint* fileVersion, DataNode* fileRoot)
 {
+  ProfileScopeFunctionArgs(source);
   DataTreeContext parseContext;
   parseContext.Filename = source;
   parseContext.Loader = loader;
@@ -878,7 +879,6 @@ bool ReadDataSet(
   // Load the data tree with the correct parser
   *fileVersion = GetFileVersion(data);
 
-  ProfileScope("Data Tree Parsing");
   if (*fileVersion == DataVersion::Legacy)
   {
     // Legacy format only supported a single root

@@ -900,10 +900,11 @@ void SetupTools(Editor* editor);
 
 void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam newProjectName)
 {
+  ProfileScopeFunction();
+
   // Set the tweakables modified callback so that we can update the Ui
   Tweakables::sModifiedCallback = &OnTweakablesModified;
 
-  ProfileScope("Creating Editor");
   CrashHandler::SetupRescueCallback(EditorRescueCall, nullptr);
 
   MainWindow* rootWidget = new MainWindow(mainWindow);

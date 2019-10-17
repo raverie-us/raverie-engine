@@ -392,7 +392,18 @@ void CommandManager::RemoveCommand(Command* command)
   delete command;
 }
 
-void CommandManager::RunParsedCommands()
+void CommandManager::RunParsedCommandsDelayed()
+{
+  if (Z::gWidgetManager->RootWidgets.Empty()) {
+    RunParsedCommandsImmediately();
+  } else {
+    // We delay running commands by one frame so that lazy tasks have had a frame to complete
+    ActionSequence* seq = new ActionSequence(&Z::gWidgetManager->RootWidgets.Front());
+    seq->Add(new CallAction<CommandManager, &CommandManager::RunParsedCommandsImmediately>(this));
+  }
+}
+
+void CommandManager::RunParsedCommandsImmediately()
 {
   Environment* environment = Environment::GetInstance();
   StringMap& arguments = environment->mParsedCommandLineArguments;

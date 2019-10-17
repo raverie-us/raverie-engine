@@ -288,7 +288,7 @@ void TimeSystem::Update(bool debugger)
   // the the rest of the frame. This reduces heat and power use on laptops.
   if (mLimitFrameRate)
   {
-    // ProfileScopeTree("Limiter", "Engine", Color::Green);
+    ProfileScopeTree("Limiter", "Engine", Color::Green);
     const int limitError = 1;
     const int limitframeTimeMs = int(1.0f / float(mFrameRate) * 1000.0f);
     int frameTime = int(dt * 1000.0f) + limitError;

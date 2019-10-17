@@ -96,9 +96,6 @@ public:
   HandleOf<Resource> LoadEntry(Status& status, ResourceEntry& entry);
   void ReloadEntry(Resource* resource, ResourceEntry& entry);
 
-  // Whether or not to print every resource that is loaded
-  bool mDetailedResources;
-
   // Map of resource type names to loaders
   typedef HashMap<String, ResourceLoader*> LoaderMapType;
   typedef LoaderMapType::range LoaderRange;

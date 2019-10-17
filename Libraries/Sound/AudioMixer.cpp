@@ -104,7 +104,7 @@ void AudioMixer::StartMixing(Status& status)
 
 void AudioMixer::ShutDown()
 {
-  ProfileScope("Stopping Audio System");
+  ProfileScopeFunction();
 
   ZPrint("Shutting down audio\n");
 

@@ -24,7 +24,7 @@ void WindowsExportTarget::ExportApplication()
   String applicationOutputPath =
       FilePath::CombineWithExtension(mExporter->mOutputDirectory, mExporter->mApplicationName, ".exe");
   {
-    ProfileScope("Exported Project");
+    ProfileScopeFunction();
     ProjectSettings* project = mExporter->mProjectCog->has(ProjectSettings);
     String outputPath = FilePath::Combine(GetTemporaryDirectory(), "Windows", "ZeroExport");
     String appDirectory = GetApplicationDirectory();

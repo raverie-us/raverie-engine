@@ -170,6 +170,7 @@ void EndTracing(Editor* editor)
   static const String cArgs("args");
   static const String cPhase("ph");
   static const String cComplete("X");
+  static const String cValue("value");
 
   Zilch::JsonBuilder builder;
   builder.IsCompactMode = true;
@@ -196,7 +197,10 @@ void EndTracing(Editor* editor)
     if (!traceEvent.mArgs.Empty())
     {
       builder.Key(cArgs);
+      builder.Begin(Zilch::JsonType::Object);
+      builder.Key(cValue);
       builder.Value(traceEvent.mArgs);
+      builder.End();
     }
     builder.End();
   }

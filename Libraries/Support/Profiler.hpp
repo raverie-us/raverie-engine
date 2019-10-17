@@ -142,11 +142,12 @@ private:
 class ScopeTimer
 {
 public:
-  ScopeTimer(Record* data);
+  ScopeTimer(Record* data, String args = String());
   ~ScopeTimer();
 
   Record* mData;
   ProfileTime mStartTime;
+  String mArgs;
 };
 
 void PrintProfileGraph();
@@ -162,13 +163,25 @@ void PrintProfileGraph();
     static Zero::Profile::Record __LocalRecord(__FUNCTION__);                                                          \
     Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
 
+#  define ProfileScopeFunctionArgs(args)                                                                               \
+    static Zero::Profile::Record __LocalRecord(__FUNCTION__);                                                          \
+    Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord, args);
+
 #  define ProfileScope(name)                                                                                           \
     static Zero::Profile::Record __LocalRecord(name);                                                                  \
     Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
 
+#  define ProfileScopeArgs(name, args)                                                                                 \
+    static Zero::Profile::Record __LocalRecord(name);                                                                  \
+    Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord, args);
+
 #  define ProfileScopeTree(name, parentName, color)                                                                    \
     static Zero::Profile::Record __LocalRecord(name, parentName, color);                                               \
     Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
+
+#  define ProfileScopeTreeArgs(name, args, parentName, color)                                                          \
+    static Zero::Profile::Record __LocalRecord(name, parentName, color);                                               \
+    Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord, args);
 
 #  define ProfileScopeRecord(recordName) Zero::Profile::ScopeTimer __ScopedBlock(&recordName);
 

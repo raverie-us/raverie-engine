@@ -133,7 +133,7 @@ void ZeroStartup::Initialize()
 
   // Start the profiling system used to performance counters and timers.
   Profile::ProfileSystem::Initialize();
-  ProfileScope("Initialize");
+  ProfileScopeFunction();
 
   if (Environment::GetValue<bool>("BeginTracing", false))
     Profile::ProfileSystem::Instance->BeginTracing();
@@ -241,7 +241,7 @@ System* CreateTimeSystem();
 
 void ZeroStartup::Startup()
 {
-  ProfileScope("Startup");
+  ProfileScopeFunction();
   Engine* engine = Z::gEngine;
   Cog* configCog = engine->GetConfigCog();
 
@@ -365,7 +365,7 @@ void ZeroStartup::EngineUpdate()
 void ZeroStartup::Shutdown()
 {
   {
-    ProfileScope("Shutdown");
+    ProfileScopeFunction();
     Z::gEngine->Shutdown();
 
     UserShutdownLibraries();

@@ -507,7 +507,7 @@ void Editor::ProjectLoaded()
   // loaded otherwise. There is a chance that if they open a new project these
   // commands could re-run, but this is something left for a later refactor.
   CommandManager* commandManager = CommandManager::GetInstance();
-  commandManager->RunParsedCommands();
+  commandManager->RunParsedCommandsDelayed();
 }
 
 void Editor::OnSelectionFinal(SelectionChangedEvent* event)

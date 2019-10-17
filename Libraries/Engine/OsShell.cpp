@@ -40,6 +40,8 @@ cstr OsShell::GetName()
 
 void OsShell::Update(bool debugger)
 {
+  ProfileScopeTree("ShellSystem", "Engine", Color::Red);
+
   Keyboard* keyboard = Keyboard::GetInstance();
   keyboard->Update();
 
@@ -50,8 +52,6 @@ void OsShell::Update(bool debugger)
 
   if (mOsShellHook)
     mOsShellHook->HookUpdate();
-
-  ProfileScopeTree("ShellSystem", "Engine", Color::Red);
 
   mShell.Update();
 

@@ -195,6 +195,7 @@ Object* ContentItem::GetEditingObject(Resource* resource)
 
 void ContentItem::BuildContentItem(bool useJob)
 {
+  ProfileScopeFunctionArgs(Filename);
   BuildOptions options(mLibrary);
   BuildContentItem(options);
 }
