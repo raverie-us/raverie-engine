@@ -473,7 +473,11 @@ void ResourceLibrary::OnScriptProjectPreParser(ParseEvent* e)
   // library before its done we need to add extensions for the plugins here
   // (such as .YourComponent).
   forRange (SwapLibrary& swapLibrary, mSwapPlugins.Values())
-    EngineLibraryExtensions::AddNativeExtensions(*e->Builder, swapLibrary.GetNewestLibrary()->BoundTypes);
+  {
+    if (swapLibrary.GetNewestLibrary()) {
+      EngineLibraryExtensions::AddNativeExtensions(*e->Builder, swapLibrary.GetNewestLibrary()->BoundTypes);
+    }
+  }
 
   EngineLibraryExtensions::AddExtensionsPreCompilation(*e->Builder, this);
 }
