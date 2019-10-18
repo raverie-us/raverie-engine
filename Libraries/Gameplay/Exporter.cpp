@@ -111,6 +111,12 @@ void ArchiveLibraryOutput(Archive& archive, StringParam libraryName)
 void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library, bool skipTemplates)
 {
   String libraryPath = library->GetOutputPath();
+  if (!DirectoryExists(libraryPath))
+  {
+    ZPrint("Skipped copying library output because it was not built %s\n", library->Name.c_str());
+    return;
+  }
+
   String libraryOutputPath = FilePath::Combine(outputDirectory, library->Name);
 
   CreateDirectoryAndParents(libraryOutputPath);
