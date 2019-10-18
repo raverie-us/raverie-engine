@@ -6,13 +6,10 @@ namespace Zero
 
 inline void CommandFailed(Command* command, BoundType* contextType)
 {
-  if (false)
-  {
-    String message = String::Format("There is no '%s' available to run the command '%s'",
-                                    contextType->Name.c_str(),
-                                    command->GetDisplayName().c_str());
-    DoNotifyWarning("Command Not Run", message);
-  }
+  String message = String::Format("There is no '%s' available to run the command '%s'",
+                                  contextType->Name.c_str(),
+                                  command->GetDisplayName().c_str());
+  DoNotifyWarning("Command Not Run", message);
 }
 
 template <typename pt0, typename pt1>

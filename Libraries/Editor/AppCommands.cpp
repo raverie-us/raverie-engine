@@ -183,16 +183,15 @@ void PlayUnitTestFile()
   unitTestSystem->PlayFromZeroTestFile();
 }
 
-void CopyPrebuiltContent(ProjectSettings* project)
+void CopyPrebuiltContent()
 {
+  ZPrint("Copying prebuilt content...\n");
   // Save all resources and build them so the
   // output directory is up to date
-  Editor* editor = Z::gEditor;
-  editor->SaveAll(true);
-  ZPrint("Copying prebuilt content...\n");
+  if (Z::gEditor)
+    Z::gEditor->SaveAll(true);
   // We copy all libraries (including Fallback) because we only expect this to be run by the install steps
   const String outputDirectory = Z::gContentSystem->PrebuiltContentPath;
-  EnsureEmptyDirectory(outputDirectory);
   forRange (ContentLibrary* library, Z::gContentSystem->Libraries.Values())
   {
     ZPrint("  Copying %s\n", library->Name.c_str());
