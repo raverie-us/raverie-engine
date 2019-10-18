@@ -21,7 +21,12 @@ void OpenDocumentation()
 
 void ExitEditor()
 {
-  Z::gEditor->RequestQuit(false);
+  if (Z::gWidgetManager->RootWidgets.Empty())
+    return;
+
+  OsWindow* mainWindow = Z::gWidgetManager->RootWidgets.Begin()->GetOsWindow();
+  OsWindowEvent event;
+  mainWindow->DispatchEvent(Events::OsClose, &event);
 }
 
 void Restart()
