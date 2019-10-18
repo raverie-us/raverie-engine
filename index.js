@@ -516,7 +516,6 @@ const cmake = async (options) => {
       "pipe"
     ]
   };
-  mkdirp.sync(dirs.prebuiltContent);
   await exec("cmake", cmakeArgs, cmakeOptions);
 
   return buildDir;
@@ -723,6 +722,8 @@ const prebuilt = async (options) => {
     console.log(`Skipping prebuilt content for toolchain '${combo.toolchain}'`);
     return;
   }
+  rimraf.sync(dirs.prebuiltContent);
+
   const buildDir = activateBuildDir(combo);
   for (const executable of executables) {
     if (!executable.prebuild) {
