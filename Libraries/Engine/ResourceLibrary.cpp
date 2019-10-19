@@ -474,7 +474,8 @@ void ResourceLibrary::OnScriptProjectPreParser(ParseEvent* e)
   // (such as .YourComponent).
   forRange (SwapLibrary& swapLibrary, mSwapPlugins.Values())
   {
-    if (swapLibrary.GetNewestLibrary()) {
+    if (swapLibrary.GetNewestLibrary())
+    {
       EngineLibraryExtensions::AddNativeExtensions(*e->Builder, swapLibrary.GetNewestLibrary()->BoundTypes);
     }
   }
