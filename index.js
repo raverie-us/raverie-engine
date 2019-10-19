@@ -788,6 +788,7 @@ const pack = async (options) => {
     // This prevents GitHub from processing our files with Jekyll.
     fs.writeFileSync(path.join(dirs.page, ".nojekyll"), "", "utf8");
   }
+  mkdirp.sync(dirs.packages);
 
   const cmakeVariables = readCmakeVariables(buildDir);
 
