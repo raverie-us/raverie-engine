@@ -37,10 +37,14 @@ const dirs = (() => {
   const resources = path.join(repo, "Resources");
   const build = path.join(repo, "Build");
   const prebuiltContent = path.join(build, "PrebuiltContent");
+  const packages = path.join(build, "Packages");
+  const page = path.join(build, "Page");
 
   return {
     build,
     libraries,
+    packages,
+    page,
     prebuiltContent,
     repo,
     resources
@@ -120,6 +124,11 @@ const exec = async (executable, args, options) => {
     stderr: result.stderrStr,
     stdout: result.stdoutStr
   };
+};
+
+const clearCreateDirectory = (directory) => {
+  rimraf.sync(directory);
+  mkdirp.sync(directory);
 };
 
 const execStdout = async (...args) => (await exec(...args)).stdout;
@@ -502,8 +511,7 @@ const cmake = async (options) => {
   printLog(combo);
 
   const buildDir = activateBuildDir(combo);
-  rimraf.sync(buildDir);
-  mkdirp.sync(buildDir);
+  clearCreateDirectory(buildDir);
 
   const cmakeOptions = {
     cwd: buildDir,
@@ -775,10 +783,13 @@ const pack = async (options) => {
     "FileSystem.zip"
   ];
 
+  if (combo.toolchain === "Emscripten") {
+    clearCreateDirectory(dirs.page);
+    // This prevents GitHub from processing our files with Jekyll.
+    fs.writeFileSync(path.join(dirs.page, ".nojekyll"), "", "utf8");
+  }
+
   const cmakeVariables = readCmakeVariables(buildDir);
-  const packagesDir = path.join(buildDir, "Packages");
-  rimraf.sync(packagesDir);
-  mkdirp.sync(packagesDir);
 
   for (const executable of executables) {
     const library = executable.name;
@@ -807,17 +818,32 @@ const pack = async (options) => {
       `${combo.alias}.` +
       `${combo.architecture}.zip`;
 
-    const packageZip = path.join(packagesDir, name);
+    const packageZip = path.join(dirs.packages, name);
+    tryUnlinkSync(packageZip);
 
     // Emscripten does not need a copy of the FileSystem.zip (it already has a .data file).
     if (combo.toolchain !== "Emscripten") {
-      const libraryDir = path.join(buildDir, "Libraries", executable.name);
+      const libraryDir = path.join(buildDir, "Libraries", library);
       const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
       fs.copyFileSync(fileSystemZip, packageZip);
     }
 
     // Keep files as absolute, since we want to only add the file names to the zip.
     await zipAdd(dirs.repo, packageZip, files);
+
+    // On Emscripten we also output a directory (this can be used to publish to github pages).
+    if (combo.toolchain === "Emscripten") {
+      const pageLibraryDir = path.join(dirs.page, library);
+      mkdirp.sync(pageLibraryDir);
+      files.forEach((file) => {
+        const basename = path.basename(file);
+        if (basename === `${library}.html`) {
+          fs.copyFileSync(file, path.join(pageLibraryDir, "index.html"));
+        } else {
+          fs.copyFileSync(file, path.join(pageLibraryDir, basename));
+        }
+      });
+    }
   }
   console.log("Packed");
 };

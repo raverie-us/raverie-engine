@@ -11,14 +11,10 @@ script:
 - docker save -o ./Build/Cache/welder.tar welder
 - ./weld.sh node index.js all --alias=Linux
 - ./weld.sh node index.js all --alias=Emscripten
-- mkdir bin
-- cp Build/Linux_Emscripten_Ninja_Emscripten_Emscripten_WASM_Release/Libraries/WelderEditor/WelderEditor.* bin
-- mv bin/WelderEditor.html bin/index.html
-- touch bin/.nojekyll
 deploy:
 - provider: pages
   skip_cleanup: true
-  local_dir: ./bin
+  local_dir: Build/Page/
   github_token: $GITHUB_TOKEN
   keep_history: false
   on:
@@ -28,7 +24,7 @@ deploy:
   skip_cleanup: true
   api_key: $GITHUB_TOKEN
   file_glob: true
-  file: Build/*/Packages/*.zip
+  file: Build/Packages/*
   on:
     tags: true
     branch: master
