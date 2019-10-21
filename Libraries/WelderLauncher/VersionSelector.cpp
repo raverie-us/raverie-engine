@@ -185,19 +185,19 @@ void VersionSelector::SaveInstalledBuildsMeta()
 BackgroundTask* VersionSelector::GetServerListing()
 {
   ZPrint("Requesting build list from server.\n");
-  return GetReleaseListing(Urls::cApiEditorBuilds);
+  return GetReleaseListing(false);
 }
 
 BackgroundTask* VersionSelector::GetLauncherListing()
 {
   ZPrint("Requesting launcher build list from server.\n");
-  return GetReleaseListing(Urls::cApiLauncherBuilds);
+  return GetReleaseListing(true);
 }
 
-BackgroundTask* VersionSelector::GetReleaseListing(StringParam url)
+BackgroundTask* VersionSelector::GetReleaseListing(bool launcher)
 {
   // Start the task to get the version listing
-  GetVersionListingTaskJob* job = new GetVersionListingTaskJob(url);
+  GetVersionListingTaskJob* job = new GetVersionListingTaskJob(launcher);
   job->mName = "Version List";
   return Z::gBackgroundTasks->Execute(job, job->mName);
 }
@@ -516,7 +516,7 @@ void VersionSelector::FindDownloadedTemplates()
   FindDownloadedTemplatesRecursive(packagedTemplates);
 
   // Check the download directory (for user downloaded templates)
-  String dir = FilePath::Combine(mConfig->mDownloadPath, "Templates");
+  String dir = mConfig->GetTemplateInstallPath();
   FindDownloadedTemplatesRecursive(dir);
 }
 
@@ -1015,7 +1015,7 @@ ZeroBuild* VersionSelector::FindExactVersion(CachedProject* cachedProject)
   for (size_t i = 0; i < mVersions.Size(); ++i)
   {
     ZeroBuild* build = mVersions[i];
-    if (build->GetBuildId().CompareBuilds(buildId, true))
+    if (build->GetBuildId().CompareBuilds(buildId))
       return build;
   }
   return nullptr;
@@ -1027,38 +1027,17 @@ ZeroBuild* VersionSelector::GetLatestBuild()
   if (mConfig->mShowDevelopmentBuilds == false)
     rejectionTags.Insert("Develop");
   HashSet<String> legacyTags;
-  return GetLatestBuild(legacyTags, rejectionTags);
-}
 
-ZeroBuild* VersionSelector::GetLatestBuild(const HashSet<String>& requiredTags, const HashSet<String>& rejectionTags)
-{
-  // We need to find the first build that satisfies the user tags
-  forRange (ZeroBuild* build, mVersions.All())
+  ZeroBuildTagPolicy policy(Z::gEngine->GetConfigCog()->has(LauncherConfig));
+  Array<ZeroBuild*> results;
+  TagSet resultTags;
+  FilterDataSetWithTags(legacyTags, rejectionTags, String(), mVersions, results, resultTags, policy);
+
+  // We need to find the first build that satisfies the user tags (filtered results are still sorted)
+  forRange (ZeroBuild* build, results)
   {
     // Ignore builds that aren't on the server
-    if (!build->mOnServer)
-      continue;
-
-    bool containsUserTags = true;
-    forRange (String userTag, requiredTags.All())
-    {
-      if (!build->ContainsTag(userTag))
-      {
-        containsUserTags = false;
-        break;
-      }
-    }
-    bool containsRejectionTag = false;
-    forRange (String rejectTag, rejectionTags.All())
-    {
-      if (build->ContainsTag(rejectTag))
-      {
-        containsRejectionTag = true;
-        break;
-      }
-    }
-
-    if (containsUserTags && !containsRejectionTag)
+    if (build->mOnServer)
       return build;
   }
 

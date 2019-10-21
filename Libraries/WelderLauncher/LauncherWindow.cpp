@@ -872,34 +872,30 @@ void LauncherWindow::OnSettingsPressed(Event*)
 void LauncherWindow::OnPackageListing(BackgroundTaskEvent* taskEvent)
 {
   bool installingLatest = false;
-  if (taskEvent->mTask->IsCompleted())
+  if (!taskEvent->mTask->IsCompleted())
+    return;
+
+  // Load the available builds into the version selector
+  GetVersionListingTaskJob* job = (GetVersionListingTaskJob*)taskEvent->mTask->GetFinishedJob();
+  mVersionSelector->UpdatePackageListing(job);
+
+  // Notify that the version list has been loaded
+  Event e;
+  mVersionSelector->GetDispatcher()->Dispatch(Events::VersionListLoaded, &e);
+
+  // If the user doesn't have any builds installed and has no recent projects
+  // then install the latest stable version
+  RecentProjects* recentProjects = Z::gEngine->GetConfigCog()->has(RecentProjects);
+  if (mVersionSelector->GetInstalledBuildsCount() == 0 &&
+      (recentProjects == nullptr || recentProjects->GetRecentProjectsCount() == 0))
   {
-    // Load the available builds into the version selector
-    GetVersionListingTaskJob* job = (GetVersionListingTaskJob*)taskEvent->mTask->GetFinishedJob();
-    mVersionSelector->UpdatePackageListing(job);
+    ZeroBuild* latest = mVersionSelector->GetLatestBuild();
 
-    // Notify that the version list has been loaded
-    Event e;
-    mVersionSelector->GetDispatcher()->Dispatch(Events::VersionListLoaded, &e);
-
-    // If the user doesn't have any builds installed and has no recent projects
-    // then install the latest "Stable" version
-    RecentProjects* recentProjects = Z::gEngine->GetConfigCog()->has(RecentProjects);
-    if (mVersionSelector->GetInstalledBuildsCount() == 0 &&
-        (recentProjects == nullptr || recentProjects->GetRecentProjectsCount() == 0))
+    // Install the latest
+    if (latest != nullptr)
     {
-      HashSet<String> requiredTags;
-      HashSet<String> rejectionTags;
-      requiredTags.Insert("Stable");
-      rejectionTags.Insert("Develop");
-      ZeroBuild* latest = mVersionSelector->GetLatestBuild(requiredTags, rejectionTags);
-
-      // Install the latest
-      if (latest != nullptr)
-      {
-        mVersionSelector->InstallVersion(latest);
-        installingLatest = true;
-      }
+      mVersionSelector->InstallVersion(latest);
+      installingLatest = true;
     }
   }
 

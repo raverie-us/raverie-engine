@@ -39,7 +39,7 @@ void LauncherConfig::Serialize(Serializer& stream)
 
   SerializeNameDefault(mDefaultProjectSaveLocation,
                        FilePath::Combine(GetUserDocumentsApplicationDirectory(), "Projects"));
-  SerializeNameDefault(mDownloadPath, FilePath::Combine(GetUserDocumentsApplicationDirectory(), "Launcher"));
+  SerializeNameDefault(mDownloadPath, FilePath::Combine(GetUserDocumentsApplicationDirectory(), "Downloads"));
   SerializeNameDefault(mDisplayBuildOnProjects, false);
   SerializeNameDefault(mShowDevelopmentBuilds, false);
   SerializeRename(mShowDevelopmentBuilds, "ShowNightlies");

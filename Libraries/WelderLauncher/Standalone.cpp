@@ -130,14 +130,13 @@ String BuildId::GetFullId(bool showExperimentalBranch, bool showChangeset, bool 
 size_t BuildId::Hash() const
 {
   // Use the full display string hash
-  String id = GetFullId(true, true, false);
-  return id.Hash();
+  return ToIdString().Hash();
 }
 
 bool BuildId::operator==(const BuildId& rhs) const
 {
   // Compare the builds (no legacy)
-  return CompareBuilds(rhs, false);
+  return CompareBuilds(rhs);
 }
 
 bool BuildId::operator!=(const BuildId& rhs) const
@@ -145,26 +144,9 @@ bool BuildId::operator!=(const BuildId& rhs) const
   return !(*this == rhs);
 }
 
-bool BuildId::CompareBuilds(const BuildId& rhs, bool legacyCompare) const
+bool BuildId::CompareBuilds(const BuildId& rhs) const
 {
-  // If anything doesn't match then we aren't equal
-  if (mExperimentalBranchName != rhs.mExperimentalBranchName)
-    return false;
-  if (mMajorVersion != rhs.mMajorVersion)
-    return false;
-  if (mMinorVersion != rhs.mMinorVersion)
-    return false;
-  if (mPatchVersion != rhs.mPatchVersion)
-    return false;
-  if (mRevisionId != rhs.mRevisionId)
-    return false;
-  // Legacy builds didn't store the changeset. To properly resolve old projects
-  // to their builds we have to compare without the changeset.
-  if (!legacyCompare && mShortChangeSet != rhs.mShortChangeSet)
-    return false;
-  if (mPlatform != rhs.mPlatform)
-    return false;
-  return true;
+  return ToIdString() == rhs.ToIdString();
 }
 
 BuildUpdateState::Enum BuildId::CheckForUpdate(const BuildId& rhs) const

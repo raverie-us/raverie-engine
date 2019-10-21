@@ -57,7 +57,7 @@ public:
   size_t Hash() const;
   bool operator==(const BuildId& rhs) const;
   bool operator!=(const BuildId& rhs) const;
-  bool CompareBuilds(const BuildId& rhs, bool legacyCompare) const;
+  bool CompareBuilds(const BuildId& rhs) const;
 
   // What kind of a change is updating from this to rhs.
   BuildUpdateState::Enum CheckForUpdate(const BuildId& rhs) const;

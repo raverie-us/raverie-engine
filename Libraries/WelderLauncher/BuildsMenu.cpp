@@ -46,7 +46,7 @@ BuildItem::BuildItem(Composite* parent, ZeroBuild* version, BuildsMenu* buildsMe
   leftHalf->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(144));
   {
     mBuildVersion = new Text(leftHalf, mLauncherRegularFont, 11);
-    mBuildVersion->SetText(version->GetDisplayString());
+    mBuildVersion->SetText(version->GetDisplayString(true));
     mBuildVersion->SetColor(BuildsUi::BuildVersion);
     mBuildVersion->mAlign = TextAlign::Left;
 
@@ -243,7 +243,7 @@ void BuildItem::OnUninstallModalResult(ModalConfirmEvent* e)
 void BuildItem::CreateBuildsRunningModal()
 {
   // Warn the user that the build is currently running
-  String msg = String::Format("Build %s is currently running", mVersion->GetDisplayString().c_str());
+  String msg = String::Format("Build %s is currently running", mVersion->GetDisplayString(true).c_str());
   // Create the buttons that we will display and listen for responses from
   Array<String> buttons;
   buttons.PushBack("RETRY");
@@ -432,7 +432,7 @@ ReleaseNotes::ReleaseNotes(Composite* parent) : Composite(parent)
       new Spacer(topRow, SizePolicy::Fixed, Pixels(10, 0));
 
       mBuildVersion = new Text(topRow, mLauncherRegularFont, 36);
-      mBuildVersion->SetText("BUILD 9001");
+      mBuildVersion->SetText("BUILD 0");
       mBuildVersion->mAlign = TextAlign::Right;
       mBuildVersion->SetColor(BuildsUi::BuildNotesColor);
     }
@@ -486,7 +486,7 @@ void ReleaseNotes::DisplayReleaseNotes(ZeroBuild* build)
   mSelectedBuild = build;
 
   // Set the build text
-  mBuildVersion->SetText(build->GetDisplayString());
+  mBuildVersion->SetText(build->GetDisplayString(true));
 
   // Tags
   mNote->SetText(build->GetTagsString());

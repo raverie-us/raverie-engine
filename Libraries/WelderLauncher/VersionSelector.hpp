@@ -46,7 +46,7 @@ public:
   // Queue up a task to get the listing of versions from the server
   BackgroundTask* GetServerListing();
   BackgroundTask* GetLauncherListing();
-  BackgroundTask* GetReleaseListing(StringParam url);
+  BackgroundTask* GetReleaseListing(bool launcher);
   // Updates the internal version listing based upon the results from
   // GetServerListing
   void UpdatePackageListing(GetVersionListingTaskJob* job);
@@ -115,8 +115,6 @@ public:
   /// Find the standalone that is the exact version desired by the project
   ZeroBuild* FindExactVersion(CachedProject* cachedProject);
   ZeroBuild* GetLatestBuild();
-  /// Get the latest build available with certain tags
-  ZeroBuild* GetLatestBuild(const HashSet<String>& requiredTags, const HashSet<String>& rejectionTags);
 
   /// Returns how many builds are currently installed
   size_t GetInstalledBuildsCount() const;

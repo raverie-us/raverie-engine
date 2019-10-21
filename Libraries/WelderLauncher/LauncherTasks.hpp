@@ -12,7 +12,7 @@ class GetVersionListingTaskJob : public DownloadTaskJob
 public:
   typedef GetVersionListingTaskJob ZilchSelf;
 
-  GetVersionListingTaskJob(StringParam url);
+  GetVersionListingTaskJob(bool launcher);
 
   /// Job Interface.
   void Execute() override;
@@ -21,6 +21,7 @@ public:
   void PopulatePackageList();
 
   Array<Cog*> mPackages;
+  bool mLauncher;
 };
 
 class DownloadImageTaskJob : public DownloadTaskJob

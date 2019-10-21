@@ -26,9 +26,8 @@ extern const cstr cUserLauncherDownloads;
 extern const cstr cUserOnlineDocs;
 extern const cstr cUserHelp;
 extern const cstr cUserWebRequesterDefault;
-extern const cstr cApiEditorBuilds;
+extern const cstr cApiBuilds;
 extern const cstr cApiLauncherTemplates;
-extern const cstr cApiLauncherBuilds;
 extern const cstr cUserDevNotes;
 extern const cstr cApiDevNotes;
 } // namespace Urls

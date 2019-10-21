@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-GetVersionListingTaskJob::GetVersionListingTaskJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
+GetVersionListingTaskJob::GetVersionListingTaskJob(bool launcher) : DownloadTaskJob(Urls::cApiBuilds, cCacheSeconds), mLauncher(launcher)
 {
 }
 
@@ -49,9 +49,6 @@ void GetVersionListingTaskJob::PopulatePackageList()
   static const String cJsonUpdatedAt("updated_at");
   static const String cJsonBody("body");
 
-  static const String cZeroEngineSetup("ZeroEngineSetup");
-  static const String cDevelop("Develop");
-
   // This needs to match the index.js build script.
   // Tags.Major.Minor.Patch.Revision.ShortChangeset.Platform.Architecture.Extension
   // Example: WelderEditor.1.5.0.1501.fb02756c46a4.Windows.x86.zip
@@ -69,7 +66,7 @@ void GetVersionListingTaskJob::PopulatePackageList()
     forRange (JsonValue* jsonAsset, jsonAssets->ArrayElements)
     {
       String name = jsonAsset->MemberAsString(cJsonName);
-
+      
       Matches matches;
       cNameRegex.Search(name, matches);
 
@@ -78,24 +75,28 @@ void GetVersionListingTaskJob::PopulatePackageList()
       if (matches.Empty())
         continue;
 
+      // 1    2     3     4     5        6              7        8            9
+      // Tags.Major.Minor.Patch.Revision.ShortChangeset.Platform.Architecture.Extension
+      String tags = matches[1];
+      bool isLauncher = tags.Contains(GetApplicationName());
+      if (isLauncher != mLauncher)
+        continue;
+
       Cog* cog = space->Create(emptyArchetype);
       ReturnIf(cog == nullptr, , "Unable to create an empty Cog");
       mPackages.PushBack(cog);
       ZeroBuildContent* zeroBuildContent = HasOrAdd<ZeroBuildContent>(cog);
       zeroBuildContent->mPackageName = name;
 
-      // 1    2     3     4     5        6              7
-      // Tags.Major.Minor.Patch.Revision.ShortChangeset-Platform.zerobuild
-      zeroBuildContent->mTags = matches[1].All();
-      if (zeroBuildContent->mTags == cZeroEngineSetup)
-        zeroBuildContent->mTags = cDevelop;
-      ToValue(matches[2].All(), zeroBuildContent->mBuildId.mMajorVersion);
-      ToValue(matches[3].All(), zeroBuildContent->mBuildId.mMinorVersion);
-      ToValue(matches[4].All(), zeroBuildContent->mBuildId.mPatchVersion);
-      ToValue(matches[5].All(), zeroBuildContent->mBuildId.mRevisionId);
-      zeroBuildContent->mBuildId.mShortChangeSet = matches[6].All();
-      zeroBuildContent->mBuildId.mPlatform = matches[7].All();
-      zeroBuildContent->mPackageExtension = matches[8].All();
+      zeroBuildContent->mTags = matches[1];
+      ToValue(matches[2], zeroBuildContent->mBuildId.mMajorVersion);
+      ToValue(matches[3], zeroBuildContent->mBuildId.mMinorVersion);
+      ToValue(matches[4], zeroBuildContent->mBuildId.mPatchVersion);
+      ToValue(matches[5], zeroBuildContent->mBuildId.mRevisionId);
+      zeroBuildContent->mBuildId.mShortChangeSet = matches[6];
+      // This platform name must match the name in GetPlatformString
+      zeroBuildContent->mBuildId.mPlatform = BuildString(matches[7], "_", matches[8]);
+      zeroBuildContent->mPackageExtension = matches[9];
 
       zeroBuildContent->mChangeSetDate = jsonAsset->MemberAsString(cJsonUpdatedAt);
 
