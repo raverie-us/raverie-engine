@@ -61,12 +61,8 @@ void ShowTextWindow(StringParam windowTitle, StringParam windowText)
 
 void ShowAbout()
 {
-  String text = "DigiPen Zero Engine\n"
-                "Copyright: \n"
-                "DigiPen Institute of Technology 2016\n"
-                "All rights reserved. \n"
-                "Version: \n";
-  ShowTextWindow("About", BuildString(text, GetBuildVersionName()));
+  String text = GetApplicationName() + "\n" + GetBuildVersionName() + "\n";
+  ShowTextWindow("About", text);
 }
 
 DeclareEnum3(VersionStatus, Unknown, UpToDate, NewVersionAvailable);

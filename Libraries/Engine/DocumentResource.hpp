@@ -1,12 +1,4 @@
 // MIT Licensed (see LICENSE.md).
-
-///
-/// \file Resource.hpp
-/// Declaration of the Resource base class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
 #pragma once
 
 namespace Zero

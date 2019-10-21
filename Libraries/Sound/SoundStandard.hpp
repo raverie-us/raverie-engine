@@ -1,9 +1,4 @@
 // MIT Licensed (see LICENSE.md).
-
-///
-/// Author: Andrea Ellinger
-/// Copyright 2017, DigiPen Institute of Technology
-///
 #pragma once
 #include "Common/CommonStandard.hpp"
 #include "PlatformStandard.hpp"

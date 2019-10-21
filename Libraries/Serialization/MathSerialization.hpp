@@ -1,9 +1,4 @@
 // MIT Licensed (see LICENSE.md).
-
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
 #pragma once
 
 namespace Zero

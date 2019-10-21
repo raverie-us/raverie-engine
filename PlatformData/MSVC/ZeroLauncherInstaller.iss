@@ -1,8 +1,8 @@
-#define MyAppName "ZeroLauncher"
-#define MyAppNameVisual "Zero Launcher"
-#define MyAppPublisher "DigiPen USA Corporation"
-#define MyAppURL "http://zeroengine.io"
-#define MyAppExeName "ZeroLauncher.exe"
+#define MyAppName "WelderLauncher"
+#define MyAppNameVisual "Welder Launcher"
+#define MyAppPublisher "Welder Foundation"
+#define MyAppURL "https://github.com/WelderFoundation/WelderEngineRevamp/"
+#define MyAppExeName "WelderLauncher.exe"
 
 ; Let these defines be defined via command line args if provided
 #ifndef ZeroSource

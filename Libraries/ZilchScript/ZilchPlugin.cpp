@@ -125,8 +125,8 @@ void ZilchPluginSource::ForceCopyPluginDependencies()
 
   Zilch::NativeStubCode coreStubber;
   coreStubber.PrecompiledHeader = BuildString("\"", Name, "Precompiled.hpp\"");
-  coreStubber.HppHeader = "/* Copyright 2016, DigiPen Institute of Technology */";
-  coreStubber.CppHeader = "/* Copyright 2016, DigiPen Institute of Technology */";
+  coreStubber.HppHeader = "// MIT Licensed (see LICENSE.md).";
+  coreStubber.CppHeader = "// MIT Licensed (see LICENSE.md).";
 
   coreStubber.Generate(coreLibrary);
 
@@ -140,8 +140,8 @@ void ZilchPluginSource::ForceCopyPluginDependencies()
   // Create ZeroEngine library source files
   Zilch::NativeStubCode zeroStubber;
   zeroStubber.PrecompiledHeader = BuildString("\"", Name, "Precompiled.hpp\"");
-  zeroStubber.HppHeader = "/* Copyright 2016, DigiPen Institute of Technology */";
-  zeroStubber.CppHeader = "/* Copyright 2016, DigiPen Institute of Technology */";
+  zeroStubber.HppHeader = "// MIT Licensed (see LICENSE.md).";
+  zeroStubber.CppHeader = "// MIT Licensed (see LICENSE.md).";
 
   Zilch::BoundType* cogType = EngineLibrary::GetLibrary()->BoundTypes["Cog"];
   zeroStubber.CustomClassHeaderDefines[cogType] = "ZeroCogGetComponentTemplate;";

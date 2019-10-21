@@ -7,7 +7,7 @@ Cog
 		var SKU = "Template3d"
 		var VersionId = "1.0.0"
 		var DisplayName = "EMPTY 3D\\nPROJECT"
-		var Author = "DigiPen USA Corporation"
+		var Author = "Welder Foundation"
 		var Description = "A template project for 3d games."
 		var Date = "7/26/2017"
 		var SortPriority = 0

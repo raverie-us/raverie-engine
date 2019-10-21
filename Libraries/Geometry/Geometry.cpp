@@ -1,11 +1,4 @@
 // MIT Licensed (see LICENSE.md).
-
-///  \file Geometry.cpp
-///  Source to all functions that deal with geometry but not intersection.
-///
-///  Authors: Benjamin Strukus, Joshua Claeys
-///  Copyright 2010-2012, DigiPen Institute of Technology
-///
 #include "Precompiled.hpp"
 #include "Geometry/Geometry.hpp"
 #include "Geometry/Solids.hpp"
