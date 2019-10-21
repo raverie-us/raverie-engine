@@ -1,0 +1,52 @@
+[Version:1]
+Space 
+{
+	var Name = ""
+	var LinkId = 1
+	TimeSpace 
+	{
+		var MaxDt = 0.300000012
+		var MinDt = 9.99999997e-07
+		var TimeScale = 1
+		var TimeMode = TimeMode.FixedFrametime
+		var StepCount = 1
+	}
+	GraphicsSpace 
+	{
+		var Active = true
+		var RandomSeed = false
+		var Seed = 0
+	}
+	ActionSpace 
+	{
+	}
+	PhysicsSpace 
+	{
+		var AllowSleep = true
+		var Mode2D = true
+		var Deterministic = true
+		var SubStepCount = 1
+		var CollisionTable = "4e66a5c0b9dc59b9:DefaultCollisionTable"
+		var PhysicsSolverConfig = "5391c496ad3459b8:PostStabilization"
+		var DynamicBroadphaseType = "DynamicAabbTree"
+		var StaticBroadphaseType = "StaticAabbTree"
+	}
+	SoundSpace 
+	{
+		var PauseWithTimeSpace = true
+		var PitchWithTimeSpace = true
+	}
+	ReactiveSpace 
+	{
+	}
+	NetSpace 
+	{
+		var DetectOutgoingChanges = true
+		var AcceptIncomingChanges = true
+		var AllowNapping = true
+		var AutomaticChannel = "56f22bdc94800e65:Default"
+		var NetPropertyInfos = Array
+		{
+		}
+	}
+}
