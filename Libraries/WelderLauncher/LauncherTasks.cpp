@@ -4,7 +4,9 @@
 namespace Zero
 {
 
-GetVersionListingTaskJob::GetVersionListingTaskJob(bool launcher) : DownloadTaskJob(Urls::cApiBuilds, cCacheSeconds), mLauncher(launcher)
+GetVersionListingTaskJob::GetVersionListingTaskJob(bool launcher) :
+    DownloadTaskJob(Urls::cApiBuilds, cCacheSeconds),
+    mLauncher(launcher)
 {
 }
 
@@ -66,7 +68,7 @@ void GetVersionListingTaskJob::PopulatePackageList()
     forRange (JsonValue* jsonAsset, jsonAssets->ArrayElements)
     {
       String name = jsonAsset->MemberAsString(cJsonName);
-      
+
       Matches matches;
       cNameRegex.Search(name, matches);
 

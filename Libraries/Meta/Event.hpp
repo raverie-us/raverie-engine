@@ -263,12 +263,10 @@ struct MemberFunctionConnection : public EventConnection
   }
 };
 
-    /// Create an event connection
-    template <typename targetType, typename classType, typename eventType>
-    inline void Connect(targetType* dispatcherObject,
-                        StringParam eventId,
-                        classType* receiver,
-                        void (classType::*function)(eventType*))
+/// Create an event connection
+template <typename targetType, typename classType, typename eventType>
+inline void
+Connect(targetType* dispatcherObject, StringParam eventId, classType* receiver, void (classType::*function)(eventType*))
 {
   ReturnIf(dispatcherObject == nullptr, , "Dispatcher object is null");
   ReturnIf(receiver == nullptr || !receiver->GetReceiver(), , "Receiver is null");
