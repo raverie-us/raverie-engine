@@ -105,11 +105,6 @@ Tweakables
 		}
 		ContentStore_ 
 		{
-			var ContentHighlightColor = Vec4{0.247059003, 0.407842994, 0.541176021, 1}
-			var ContentSelectColor = Vec4{0, 0.501960993, 0.92156899, 1}
-			var ContentPadding = 4
-			var ContentCellSize = 60
-			var StorePath = "http://zero.digipen.edu/ContentStoreStaging/"
 			Uploader_ 
 			{
 				var MissingColor = Vec4{0.839999974, 0.1008, 0.1008, 1}
