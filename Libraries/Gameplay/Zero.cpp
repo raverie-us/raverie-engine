@@ -98,8 +98,6 @@ void ZeroStatic::Connect(Object* target, StringParam eventId, DelegateParam dele
 
   if (!dispatcher->IsUniqueConnection(connection))
   {
-    String error = String::Format("The event id '%s' already has a connection to this event handler", eventId.c_str());
-    DoNotifyException("Duplicate Event Connection", error);
     connection->Flags.SetFlag(ConnectionFlags::DoNotDisconnect);
     delete connection;
     return;

@@ -263,15 +263,12 @@ struct MemberFunctionConnection : public EventConnection
   }
 };
 
-DeclareEnum3(ConnectNotify, Exception, ExceptionAssert, Ignore)
-
     /// Create an event connection
     template <typename targetType, typename classType, typename eventType>
     inline void Connect(targetType* dispatcherObject,
                         StringParam eventId,
                         classType* receiver,
-                        void (classType::*function)(eventType*),
-                        ConnectNotify::Enum notify = ConnectNotify::Exception)
+                        void (classType::*function)(eventType*))
 {
   ReturnIf(dispatcherObject == nullptr, , "Dispatcher object is null");
   ReturnIf(receiver == nullptr || !receiver->GetReceiver(), , "Receiver is null");
@@ -283,18 +280,6 @@ DeclareEnum3(ConnectNotify, Exception, ExceptionAssert, Ignore)
 
   if (!dispatcher->IsUniqueConnection(connection))
   {
-    if (notify != ConnectNotify::Ignore)
-    {
-      String className = ZilchTypeId(targetType)->ToString();
-      String error = String::Format("The event id '%s' already has a connection to this "
-                                    "event handler for class %s",
-                                    eventId.c_str(),
-                                    className.c_str());
-      if (notify == ConnectNotify::ExceptionAssert)
-        DoNotifyExceptionAssert("Duplicate Event Connection", error);
-      else
-        DoNotifyException("Duplicate Event Connection", error);
-    }
     connection->Flags.SetFlag(ConnectionFlags::DoNotDisconnect);
     delete connection;
     return;
@@ -318,7 +303,7 @@ DeclareEnum3(ConnectNotify, Exception, ExceptionAssert, Ignore)
 #define ConnectThisTo(target, eventname, handle)                                                                       \
   do                                                                                                                   \
   {                                                                                                                    \
-    ::Zero::Connect(target, eventname, this, &ZilchSelf::handle, ::Zero::ConnectNotify::ExceptionAssert);              \
+    ::Zero::Connect(target, eventname, this, &ZilchSelf::handle);                                                      \
   } while (false)
 
 #define DisconnectAll(sender, receiver) sender->GetDispatcher()->Disconnect(receiver);

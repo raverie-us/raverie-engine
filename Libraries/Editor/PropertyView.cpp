@@ -149,8 +149,8 @@ void PropertyView::SetObject(HandleParam newObject, PropertyInterface* newInterf
     {
       if (EventDispatcher* dispatcher = objectPointer->GetDispatcherObject())
       {
-        Connect(objectPointer, Events::ComponentsModified, this, &ZilchSelf::OnInvalidate, ConnectNotify::Ignore);
-        Connect(objectPointer, Events::ObjectStructureModified, this, &ZilchSelf::OnInvalidate, ConnectNotify::Ignore);
+        ConnectThisTo(objectPointer, Events::ComponentsModified, OnInvalidate);
+        ConnectThisTo(objectPointer, Events::ObjectStructureModified, OnInvalidate);
       }
     }
   }
