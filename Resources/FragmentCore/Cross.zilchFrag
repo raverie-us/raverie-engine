@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 struct MathCross
 {
   [Static][Extension(typeid(Math))][Implements]

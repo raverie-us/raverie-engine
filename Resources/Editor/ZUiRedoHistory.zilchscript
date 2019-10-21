@@ -1,6 +1,6 @@
-////////////////////////////////////////////////////////////////////////////////
-//  Redo history view manager.
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
+
+// Redo history view manager.
 class ZUiRedoHistory : ZilchComponent
 {
     // This row's current color.
@@ -13,7 +13,6 @@ class ZUiRedoHistory : ZilchComponent
   sends RedoRowsCleared : ZilchEvent;
   
   
-  /******************************************************************************/
   function Initialize(init : CogInitializer)
   {
       // If a new history view window has just been opened, then populate the redo
@@ -29,7 +28,6 @@ class ZUiRedoHistory : ZilchComponent
     Zero.Connect(this.Owner, Events.OperationUndone, this.OnOperationUndone);
   }
   
-  /******************************************************************************/
   // Initialize a new history row.
   function AddEntry(operation : Operation)
   {
@@ -50,7 +48,6 @@ class ZUiRedoHistory : ZilchComponent
       entryCog.PlaceBeforeSibling(this.Owner.Children.Current);
   }
   
-  /******************************************************************************/
   // If a new operation was added to the undo view, then all rows in the redo
   // view are invalidated.
   function OnOperationQueued(event : OperationQueueEvent)
@@ -65,7 +62,6 @@ class ZUiRedoHistory : ZilchComponent
     this.Owner.DispatchEvent(Events.RedoRowsCleared, ZilchEvent());
   }
   
-  /******************************************************************************/
   // When a row is redone, move it to the undo view.
   function OnOperationRedo(event : OperationQueueEvent)
   {
@@ -77,7 +73,6 @@ class ZUiRedoHistory : ZilchComponent
       front.ChangeHistoryView(false, this.Owner.Parent.ZUiOperationHistory.UndoView.Cog, Events.OperationRedone);
   }
 
-  /******************************************************************************/
   // When an operation is undone place it first in the list of rows in the redo view.
   function OnOperationUndone(event : ChangedHistoryView)
   {

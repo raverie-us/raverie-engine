@@ -1,6 +1,6 @@
-////////////////////////////////////////////////////////////////////////////////
-//  Main operation history script-side manager.
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
+
+// Main operation history script-side manager.
 class ZUiOperationHistory : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;
@@ -21,7 +21,6 @@ class ZUiOperationHistory : ZilchComponent
   var TotalViewLength : Real = 0.0;
   
   
-  /******************************************************************************/
   function Initialize(init : CogInitializer)
   {
       // Save original scrollbar-indicator thickness
@@ -40,7 +39,6 @@ class ZUiOperationHistory : ZilchComponent
     this.UpdateStatusText();
   }
 
-  /******************************************************************************/
   function GetNextRowColor() : Real4
   {
     var color = this.RowColor[this.NextRowColor];
@@ -49,7 +47,6 @@ class ZUiOperationHistory : ZilchComponent
     return color;
   }
   
-  /******************************************************************************/
   // Expects a number from 0 to 1.
   function SetVerticalScrollPosition(verticalScrollPercentage : Real)
   {
@@ -59,14 +56,12 @@ class ZUiOperationHistory : ZilchComponent
     this.UiWidget.LocalTranslation = offset;
   }
   
-  /******************************************************************************/
   function GetVerticalScrollDistance() : Real
   {
       // Total distance (on the Y-axis) the scrollbar indicator can travel.
     return Math.Max(0, this.TotalViewLength - this.UiWidget.Parent.Size.Y);
   }
   
-  /******************************************************************************/
   function RecursiveRowColorHelper(row : ZUiHistoryEntry)
   {
     ++this.EntryCount;
@@ -76,7 +71,6 @@ class ZUiOperationHistory : ZilchComponent
       this.RecursiveRowColorHelper(child.ZUiHistoryEntry);
   }
   
-  /******************************************************************************/
   // Update the history row colors and size the view according to the number of rows.
   function OnEntryListUpdate(event : ZilchEvent)
   {
@@ -96,7 +90,6 @@ class ZUiOperationHistory : ZilchComponent
     this.UpdateStatusText();
   }
   
-  /******************************************************************************/
   function OnWindowResize(event : AreaEvent)
   {
     this.TotalViewLength = this.UndoView.Cog.UiWidget.Size.Y + this.RedoView.Cog.UiWidget.Size.Y;
@@ -106,7 +99,6 @@ class ZUiOperationHistory : ZilchComponent
     this.UpdateStatusText();
   }
   
-  /******************************************************************************/
   // Update the size and position of the status text.
   function UpdateStatusText()
   {
@@ -128,13 +120,11 @@ class ZUiOperationHistory : ZilchComponent
     }
   }
   
-  /******************************************************************************/
   var ChildCount : Integer
   {
     get { return this.EntryCount; }
   }
   
-  /******************************************************************************/
   // Size of the current view vs. the required view size, if all history rows could be displayed.
   var ScrollRatio : Real
   {

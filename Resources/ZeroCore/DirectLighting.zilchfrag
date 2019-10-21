@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Data required to run direct lighting calculations.
 struct DirectLightingInputs
 {

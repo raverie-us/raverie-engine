@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Boiler plate vertex shader fragment used in generated shaders for post processes.
 [Vertex][Protected]
 struct PostVertex

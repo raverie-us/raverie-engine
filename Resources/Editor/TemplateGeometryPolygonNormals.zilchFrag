@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 struct RESOURCE_NAME_InOut
 {
 	[Input][Output] var ViewPosition : Real3;

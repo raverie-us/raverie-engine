@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // PostProcess fragments are intended to be constructed in script
 // and passed directly to the AddRenderTaskPostProcess method.
 [Pixel][PostProcess]

@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // The first (given) buffer is blurred horizontally and written into a second buffer
 // then the second is blurred vertically and written back into the first.
 // The type parameter to this class should come from the Blur fragment file.

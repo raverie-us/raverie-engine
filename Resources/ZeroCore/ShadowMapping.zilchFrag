@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Compares a pixel depth with a depth buffer rendered from the a light's perspective
 // to determine if the pixel is visible to the light.
 [Pixel]

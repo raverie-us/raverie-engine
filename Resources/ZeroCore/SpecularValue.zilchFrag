@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Specular input for lighting opaque geometry.
 // Output values are constant over the surface.
 [Pixel]

@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Boiler plate vertex shader fragment used in generated shaders for Sprites, SpriteTexts, and internal debug drawing.
 [Vertex][CoreVertex]
 struct StreamedVertex

@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Output results of direct lighting using scene data from the GeometryPass.
 [Pixel][RenderPass]
 struct LightPass

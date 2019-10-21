@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Renders a cubemap texture to the output based on the view direction.
 [Pixel][PostProcess]
 struct Skybox

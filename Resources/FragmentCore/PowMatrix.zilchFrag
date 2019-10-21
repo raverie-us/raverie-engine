@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 struct MathPowMatrixImplements
 {
   [Static][Extension(typeid(Math))][Implements]

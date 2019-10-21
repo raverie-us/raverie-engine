@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Data needed for rendering a spot light.
 // Usage with DeferredRenderer expects a Model on this object with the
 // 'SpotLight' or 'SpotLightShadows' Material and 'Sphere' Mesh.

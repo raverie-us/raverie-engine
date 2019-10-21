@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 class ZUiSoundNodeGraph : ZilchComponent
 {
   [Dependency] var Capture : MouseCapture;

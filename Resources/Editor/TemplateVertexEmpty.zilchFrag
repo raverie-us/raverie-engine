@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 [Vertex]
 struct RESOURCE_NAME_
 {

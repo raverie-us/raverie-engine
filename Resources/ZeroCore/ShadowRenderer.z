@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Outputs scene depth to a texture to use in shadow mapping.
 [RunInEditor]
 class ShadowRenderer : ZilchComponent

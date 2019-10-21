@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Makes double sided geometry always have outward facing normals.
 [Pixel]
 struct FlipBackfaceNormals

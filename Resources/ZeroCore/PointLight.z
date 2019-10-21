@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Data needed for rendering a point light.
 // Usage with DeferredRenderer expects a Model on this object with the
 // 'PointLight' Material and 'Sphere' Mesh.

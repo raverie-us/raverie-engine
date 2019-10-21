@@ -1,4 +1,5 @@
-// Sets the position of the peak volume bar
+// MIT Licensed (see LICENSE.md).
+
 class ZUiPeakVolumeBar : ZilchComponent
 {
   var Bar : Cog;

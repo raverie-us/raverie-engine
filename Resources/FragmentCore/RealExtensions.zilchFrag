@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 struct RealExtensions
 {
   [Static][Extension(typeid(Real))][Implements]

@@ -1,6 +1,6 @@
-////////////////////////////////////////////////////////////////////////////////
-//  Controller for all functionlity related to a history entry row.
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
+
+// Controller for all functionlity related to a history entry row.
 class ZUiOperationHistoryToolTip
 {
   [Static] var TypeColor : Real4 = Colors.PaleGoldenrod;
@@ -9,7 +9,6 @@ class ZUiOperationHistoryToolTip
   [Static] var OldValueColor : Real4 = Real4(1, 1, 1, 0.35);
   [Static] var NewValueColor : Real4 = Colors.MediumSpringGreen;
   
-  /******************************************************************************/
   [Static]
   function Fill(toolTip : UiLegacyToolTip, op : PropertyOperation) : Boolean
   {
@@ -27,7 +26,6 @@ class ZUiOperationHistoryToolTip
     return true;
   }
   
-  /******************************************************************************/
   [Static]
   function FormatType(typeString : String, valueString : String) : String
   {

@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Outputs lighting values used by LightPass for a point light source.
 [Pixel]
 struct PointLightFragment

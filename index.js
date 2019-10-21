@@ -135,23 +135,18 @@ const execStdout = async (...args) => (await exec(...args)).stdout;
 
 const execStdoutTrimmed = async (...args) => (await execStdout(...args)).trim();
 
-const gatherSourceFiles = () => {
+const gatherSourceFiles = (directory, extensions) => {
   console.log("Gathering Source Files");
-  const files = glob.sync("**/*.@(c|cc|cxx|cpp|h|hxx|hpp|inl)", {
-    cwd: dirs.libraries
+  const files = glob.sync(`**/*.@(${extensions})`, {
+    absolute: true,
+    cwd: directory
   });
 
-  for (let fileIndex = 0; fileIndex < files.length;) {
-    const fullPath = path.join(dirs.libraries, files[fileIndex]);
-    const code = fs.readFileSync(fullPath, "utf8");
-
-    if (code.startsWith("// External.")) {
-      files.splice(fileIndex, 1);
-    } else {
-      ++fileIndex;
-    }
-  }
-  return files;
+  const filteredFiles = files.filter((filePath) => {
+    const code = fs.readFileSync(filePath, "utf8");
+    return !code.startsWith("// External.");
+  });
+  return filteredFiles;
 };
 
 const runEslint = async (options) => {
@@ -199,8 +194,7 @@ const runClangTidy = async (options, sourceFiles) => {
   };
 
   for (const filePath of sourceFiles) {
-    const fullPath = path.join(dirs.libraries, filePath);
-    const oldCode = fs.readFileSync(fullPath, "utf8");
+    const oldCode = fs.readFileSync(filePath, "utf8");
 
     // We always tell it to fix the file, and we compare it afterward to see if it changed.
     const args = [
@@ -217,13 +211,13 @@ const runClangTidy = async (options, sourceFiles) => {
       continue;
     }
 
-    const newCode = fs.readFileSync(fullPath, "utf8");
+    const newCode = fs.readFileSync(filePath, "utf8");
     if (oldCode !== newCode) {
-      printError(`File '${fullPath}' was not clang-tidy'd`);
+      printError(`File '${filePath}' was not clang-tidy'd`);
       printError(result.stdout);
 
       // Rewrite the original code back.
-      fs.writeFileSync(fullPath, oldCode, "utf8");
+      fs.writeFileSync(filePath, oldCode, "utf8");
     }
   }
 };
@@ -249,15 +243,14 @@ const runClangFormat = async (options, sourceFiles) => {
   await Promise.all(sourceFiles.map(async (filePath) => {
     const result = await exec("clang-format", [filePath], clangFormatOptions);
 
-    const fullPath = path.join(dirs.libraries, filePath);
-    const oldCode = fs.readFileSync(fullPath, "utf8");
+    const oldCode = fs.readFileSync(filePath, "utf8");
     const newCode = result.stdout;
 
     if (oldCode !== newCode) {
       if (options.validate) {
-        printError(`File '${fullPath}' was not clang-formatted`);
+        printError(`File '${filePath}' was not clang-formatted`);
       } else {
-        fs.writeFileSync(fullPath, newCode, "utf8");
+        fs.writeFileSync(filePath, newCode, "utf8");
       }
     }
   }));
@@ -267,8 +260,7 @@ const runWelderFormat = async (options, sourceFiles) => {
   console.log("Running Welder Format");
 
   await Promise.all(sourceFiles.map(async (filePath) => {
-    const fullPath = path.join(dirs.libraries, filePath);
-    const oldCode = fs.readFileSync(fullPath, "utf8");
+    const oldCode = fs.readFileSync(filePath, "utf8");
 
     // Split our code into lines (detect Windows newline too so we can remove it).
     const lines = oldCode.split(/\r?\n/u);
@@ -302,7 +294,7 @@ const runWelderFormat = async (options, sourceFiles) => {
       }
     }
 
-    // Add back in the standard file header (would have been removed above).
+    // Add back in the standard file header (would have been removed above) with a newline after it.
     lines.unshift("// MIT Licensed (see LICENSE.md).");
 
     // Join all lines together with a standard UNIX newline.
@@ -310,9 +302,9 @@ const runWelderFormat = async (options, sourceFiles) => {
 
     if (oldCode !== newCode) {
       if (options.validate) {
-        printError(`File '${fullPath}' must be welder-formatted`);
+        printError(`File '${filePath}' must be welder-formatted`);
       } else {
-        fs.writeFileSync(fullPath, newCode, "utf8");
+        fs.writeFileSync(filePath, newCode, "utf8");
       }
     }
   }));
@@ -699,19 +691,14 @@ const runBuild = async (buildDir, opts, combo) => {
 const format = async (options) => {
   console.log("Formatting");
   await runEslint(options);
-  const sourceFiles = gatherSourceFiles();
+  const sourceFiles = gatherSourceFiles(dirs.libraries, "c|cc|cxx|cpp|h|hxx|hpp|inl");
   if (options.tidy) {
     await runClangTidy(options, sourceFiles);
   }
   await runClangFormat(options, sourceFiles);
-  await runWelderFormat(options, sourceFiles);
-
-  /*
-   * TODO(Trevor.Sundberg): Run cmake_format.
-   * TODO(Trevor.Sundberg): Run cppcheck.
-   * TODO(Trevor.Sundberg): Run cpplint.'
-   * TODO(Trevor.Sundberg): Run moxygen.
-   */
+  const scriptFiles = gatherSourceFiles(dirs.resources, "zilchscript|z|zilchfrag|zilchFrag");
+  const allFiles = sourceFiles.concat(scriptFiles);
+  await runWelderFormat(options, allFiles);
   console.log("Formatted");
 };
 

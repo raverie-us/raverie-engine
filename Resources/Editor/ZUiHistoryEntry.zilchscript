@@ -1,15 +1,13 @@
-////////////////////////////////////////////////////////////////////////////////
-//  Event structure referencing which cog needs to switch from/to undo/redo
-//  views and vice verse.
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
+
+// Event structure referencing which cog needs to switch from/to undo/redo
+// views and vice verse.
 class ChangedHistoryView : ZilchEvent
 {
   var HistoryEntry : Cog;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//  Controller for all functionlity related to a history entry row.
-////////////////////////////////////////////////////////////////////////////////
+// Controller for all functionlity related to a history entry row.
 class ZUiHistoryEntry : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;
@@ -62,7 +60,6 @@ class ZUiHistoryEntry : ZilchComponent
   sends HistoryEntryUpdate : ZilchEvent;
   
   
-  /******************************************************************************/
   function Initialize(init : CogInitializer)
   {
     this.IsExpanded = false;
@@ -90,7 +87,6 @@ class ZUiHistoryEntry : ZilchComponent
     Zero.Connect(this.RowName, Events.LeftMouseUp, this.OnLeftMouseUp);
   }
   
-  /******************************************************************************/
   // Stand in for 'Initialize' of potential parent(s).
   function OnAttached(event : HierarchyEvent)
   {
@@ -116,7 +112,6 @@ class ZUiHistoryEntry : ZilchComponent
     this.Owner.DispatchUp(Events.HistoryEntryUpdate, ZilchEvent());
   }
   
-  /******************************************************************************/
   // If this operation is a batch then create children rows for all operations
   // in this batch.
   function CreateChildrenEntries() : Integer
@@ -164,7 +159,6 @@ class ZUiHistoryEntry : ZilchComponent
     return childCount;
   }
   
-  /******************************************************************************/
   // Remove all children rows.
   function DestroyChildrenEntries()
   {
@@ -175,7 +169,6 @@ class ZUiHistoryEntry : ZilchComponent
     
   }
   
-  /******************************************************************************/
   // Change this row's parent depending on its undone state.
   function ChangeHistoryView(moveToRedoView : Boolean, dispatcher : Cog, eventName: String)
   {
@@ -188,7 +181,6 @@ class ZUiHistoryEntry : ZilchComponent
     dispatcher.DispatchEvent(eventName, changedViewEvent);
   }
   
-  /******************************************************************************/
   // Highlight entry row.
   function OnMouseEnterHierarchy(event : ViewportMouseEvent)
   {
@@ -197,7 +189,6 @@ class ZUiHistoryEntry : ZilchComponent
     event.HandledEvent = true;
   }
   
-  /******************************************************************************/
   // Un-highlight entry row.
   function OnMouseExitHierarchy(event : ViewportMouseEvent)
   {
@@ -206,7 +197,6 @@ class ZUiHistoryEntry : ZilchComponent
     event.HandledEvent = true;
   }
   
-  /******************************************************************************/
   // Spawn a tooltip next to the history row if there is any extra info to display.
   function OnMouseEnter(event : ViewportMouseEvent)
   {
@@ -227,14 +217,12 @@ class ZUiHistoryEntry : ZilchComponent
       delete this.ToolTip;
   }
   
-  /******************************************************************************/
   // Destroy this row's tooltip - if there is one.
   function OnMouseExit(event : ViewportMouseEvent)
   {
     delete this.ToolTip;
   }
   
-  /******************************************************************************/
   // Excute undo/redo command.
   function OnLeftMouseUp(event : ViewportMouseEvent)
   {
@@ -290,7 +278,6 @@ class ZUiHistoryEntry : ZilchComponent
     
   }
 
-  /******************************************************************************/
   // Resize this row to display the children rows of this batch.
   function OnLeftClickExpand(event : ViewportMouseEvent)
   {
@@ -323,7 +310,6 @@ class ZUiHistoryEntry : ZilchComponent
     event.HandledEvent = true;
   }
   
-  /******************************************************************************/
   function AnimateSize(additionalSizeY : Real) : ActionSet
   {
     additionalSizeY += this.UiOriginalSize.Y;
@@ -335,21 +321,18 @@ class ZUiHistoryEntry : ZilchComponent
     return seq;
   }
   
-  /******************************************************************************/
   // Resizing helper.  Let the UI determine the size of this row.
   function AfterExpand()
   {
     this.UiWidget.SizePolicyY = UiSizePolicy.Auto;
   }
   
-  /******************************************************************************/
   // Cleanup helper.
   function AfterCollapse()
   {
     this.DestroyChildrenEntries();
   }
   
-  /******************************************************************************/
   // Sets the base color the row should be without modifications such as highlight.
   function SetRowColor(color : Real4)
   {
@@ -361,7 +344,6 @@ class ZUiHistoryEntry : ZilchComponent
       this.UpdateColor(color, false);
   }
   
-  /******************************************************************************/
   // Change the color of this row, but not the children rows.
   function UpdateColor(color : Real4, highlight : Boolean)
   {
@@ -369,7 +351,6 @@ class ZUiHistoryEntry : ZilchComponent
     this.HistoryInfo.UiWidget.LocalColor = color;
   }
   
-  /******************************************************************************/
   // Recursively change the color of this row and its hierarchy to the same color.
   function UpdateHierarchyColor(color : Real4, highlight : Boolean)
   {
@@ -379,7 +360,6 @@ class ZUiHistoryEntry : ZilchComponent
       row.ZUiHistoryEntry.UpdateHierarchyColor(color, highlight);
   }
   
-  /******************************************************************************/
   // Recursively restore the color of this row and all rows its hierarchy to their
   // respective original color.
   function OriginalHierarchyColor()

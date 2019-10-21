@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Darkens occluded areas of the scene.
 // This implementation requires data from DeferredRenderer's GeometryPass.
 [RunInEditor]

@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Math equations used in physically based lighting calculations that make up the various
 // parts of a Cook-Torrance Microfacet BRDF (Bidirectional Reflectance Distribution Function),
 // which follows the general form of

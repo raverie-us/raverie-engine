@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Data needed for rendering a directional light.
 // Usage with DeferredRenderer expects a Model on this object with the
 // 'DirectionalLight' Material and 'Triangle' Mesh.

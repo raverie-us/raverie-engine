@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 struct Real4x2Implements
 {
   [Static][Extension(typeid(Real4x2))][Implements]

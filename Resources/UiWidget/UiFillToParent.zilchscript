@@ -1,23 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
-//----------------------------------------------------------- Ui Size To Parent
 [RunInEditor]
 class UiFillToParent : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;
   
-  //***************************************************************************
   function Initialize(init : CogInitializer)
   {
     Zero.Connect(this.Owner, Events.UiPreUpdate, this.OnUiPreUpdate);
   }
   
-  //***************************************************************************
   function OnUiPreUpdate(event : UiTransformUpdateEvent)
   {
     UiFillLayout.FillToParent(this.UiWidget);

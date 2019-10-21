@@ -1,11 +1,5 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
-//---------------------------------------------------------- Ui Focus Highlight
 class UiFocusHighlight : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;
@@ -15,7 +9,6 @@ class UiFocusHighlight : ZilchComponent
   
   var InitialColor : Real4;
   
-  //***************************************************************************
   function Initialize(init : CogInitializer)
   {
     Zero.Connect(this.Owner, Events.UiFocusGainedHierarchy, this.OnUiFocusGained);
@@ -25,13 +18,11 @@ class UiFocusHighlight : ZilchComponent
       this.InitialColor = this.HighlightObject.Cog.UiWidget.LocalColor;
   }
   
-  //***************************************************************************
   function OnUiFocusGained(event : UiFocusEvent)
   {
     this.HighlightObject.Cog.UiWidget.LocalColor = this.FocusColor;
   }
   
-  //***************************************************************************
   function OnUiFocusLost(event : UiFocusEvent)
   {
     this.HighlightObject.Cog.UiWidget.LocalColor = this.InitialColor;

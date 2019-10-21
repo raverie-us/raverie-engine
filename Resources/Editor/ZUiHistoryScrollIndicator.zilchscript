@@ -1,6 +1,6 @@
-////////////////////////////////////////////////////////////////////////////////
-//  Main controller for scrolling the operation history view.
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
+
+// Main controller for scrolling the operation history view.
 class ZUiHistoryScrollIndicator : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;
@@ -17,7 +17,6 @@ class ZUiHistoryScrollIndicator : ZilchComponent
   var ScrollPercentage : Real = 0;
   
   
-  /******************************************************************************/
   function Initialize(init : CogInitializer)
   {
     this.OriginalSize = this.Owner.UiWidget.Size;
@@ -35,7 +34,6 @@ class ZUiHistoryScrollIndicator : ZilchComponent
     this.UpdateSize();
   }
   
-  /******************************************************************************/
   function WorldMousePosition(viewport : CameraViewport) : Real3
   {
     return viewport.ScreenToWorldPlane(
@@ -44,7 +42,6 @@ class ZUiHistoryScrollIndicator : ZilchComponent
       this.Owner.Transform.WorldTranslation);
   }
    
-  /******************************************************************************/
   // Determine the size of the scroll bar indicator.
   function UpdateSize()
   {
@@ -65,19 +62,16 @@ class ZUiHistoryScrollIndicator : ZilchComponent
     this.UiWidget.Parent.Size = Real2(this.ScrollAreaObject.ZUiOperationHistory.IntendedScrollBarSizeX, this.UiWidget.Parent.Size.Y);
   }
   
-  /******************************************************************************/
   function OnAreaChanged(event : AreaEvent)
   {
     this.UpdateSize();
   }
   
-  /******************************************************************************/
   function OnChildrenModified(event : Event)
   {
     this.UpdateSize();
   }
   
-  /******************************************************************************/
   function OnMouseScroll(event : ViewportMouseEvent)
   {
       // Nothing to scroll.
@@ -95,7 +89,6 @@ class ZUiHistoryScrollIndicator : ZilchComponent
     this.ApplyScroll();
   }
   
-  /******************************************************************************/
   function OnMouseMove(event : ViewportMouseEvent)
   {
     if(!this.IsGrabbed)
@@ -117,14 +110,12 @@ class ZUiHistoryScrollIndicator : ZilchComponent
     this.ApplyScroll();
   }
   
-  /******************************************************************************/
   function OnMouseUp(event : ViewportMouseEvent)
   {
     this.MouseCapture.ReleaseCapture(event);
     this.IsGrabbed = false;
   }
   
-  /******************************************************************************/
   function OnMouseDown(event : ViewportMouseEvent)
   {
     this.MouseCapture.Capture(event);
@@ -133,7 +124,6 @@ class ZUiHistoryScrollIndicator : ZilchComponent
     this.GrabOffest = this.WorldMousePosition(event.CameraViewport).XY - this.UiWidget.WorldTranslation;
   }
   
-  /******************************************************************************/
   // Determine the amount to scroll up/down the operation histroy view.
   function ApplyScroll()
   {

@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 struct MathSmoothStepPlacesImplements
 {
   [Static][Extension(typeid(Math))][Implements]

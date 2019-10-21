@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 struct QuaternionExtensions
 {
   [Static][Extension(typeid(Quaternion))][Implements]

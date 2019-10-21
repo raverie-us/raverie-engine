@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Converts colors from linear space to gamma space.
 [Pixel][PostProcess]
 struct ToGamma

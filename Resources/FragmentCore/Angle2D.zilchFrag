@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 struct MathAngle2DImplements
 {
   [Static][Extension(typeid(Math))][Implements]

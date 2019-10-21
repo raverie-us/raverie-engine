@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Samples built in texture atlas for a specific sprite frame.
 // Undefined results if not used with Sprites or SpriteTexts.
 [Pixel]

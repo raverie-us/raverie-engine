@@ -1,15 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: 
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
+
 class ZUiSliderEvent : ZilchEvent
 {
   var SliderPercentage : Real;
 }
 
-//------------------------------------------------------------------- Ui Slider
 class ZUiSlider : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;
@@ -18,7 +13,6 @@ class ZUiSlider : ZilchComponent
   
   sends ZUiSliderChanged : ZUiSliderEvent;
   
-  //***************************************************************************
   function Initialize(init : CogInitializer)
   {
     this.Handle = this.Owner.FindChildByName("Handle");
@@ -27,7 +21,6 @@ class ZUiSlider : ZilchComponent
     Zero.Connect(this.Handle, Events.MouseDragMove, this.OnMouseDragMove);
   }
   
-  //***************************************************************************
   function OnLeftMouseDown(event : ViewportMouseEvent)
   {
     event.HandledEvent = true;
@@ -35,13 +28,11 @@ class ZUiSlider : ZilchComponent
     this.MoveHandleToMouse(event);
   }
   
-  //***************************************************************************
   function OnMouseDragMove(event : ViewportMouseEvent)
   {
     this.MoveHandleToMouse(event);
   }
   
-  //***************************************************************************
   function MoveHandleToMouse(event : ViewportMouseEvent)
   {
     // Bring the mouse position into local space
@@ -65,7 +56,6 @@ class ZUiSlider : ZilchComponent
     this.Owner.DispatchEvent(Events.ZUiSliderChanged, eventToSend);
   }
   
-  //***************************************************************************
   function SetHandlePosition(percent : Real)
   {
     var handle = this.Handle.UiWidget;

@@ -1,11 +1,5 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
-//----------------------------------------------------------- Ui Scale On Enter
 class UiScaleOnEnter : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;
@@ -17,7 +11,6 @@ class UiScaleOnEnter : ZilchComponent
   
   var OriginalSize : Real2;
   
-  //***************************************************************************
   function Initialize(init : CogInitializer)
   {
     var targetCog = this.TargetCog.Cog;
@@ -28,19 +21,16 @@ class UiScaleOnEnter : ZilchComponent
     Zero.Connect(targetCog, Events.MouseExitHierarchy, this.OnMouseExit);
   }
   
-  //***************************************************************************
   function OnMouseEnter(event : ViewportMouseEvent)
   {
       this.SetSize(this.OriginalSize * this.Scalar);
   }
   
-  //***************************************************************************
   function OnMouseExit(event : ViewportMouseEvent)
   {
       this.SetSize(this.OriginalSize);
   }
   
-  //***************************************************************************
   function SetSize(size : Real2)
   {
     if(this.Active == false)

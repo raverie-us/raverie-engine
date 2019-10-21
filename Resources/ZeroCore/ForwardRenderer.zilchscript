@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Does indirect and direct lighting calculations when rendering opaque objects.
 // Direct lighting in ForwardPass only accounts for a single directional light.
 [RunInEditor]

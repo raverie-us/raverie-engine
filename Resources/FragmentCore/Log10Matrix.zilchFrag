@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 struct MathLog10MatrixImplements
 {
   [Static][Extension(typeid(Math))][Implements]

@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // The bloom "bright pass" takes an input image and separates sufficiently
 // bright parts from the rest. A part of the image is sufficiently bright
 // if its luminance value exceeds the user-defined threshold.

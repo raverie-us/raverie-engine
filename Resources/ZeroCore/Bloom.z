@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Makes overly bright elements in a scene appear to glow.
 [RunInEditor]
 class Bloom : ZilchComponent

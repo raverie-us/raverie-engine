@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Renders geometric and material data of opaque objects and defers lighting for a separate pass.
 // Allow processing of an arbitrary number of dynamic area lights with minimal performance penalty.
 [RunInEditor]

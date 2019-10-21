@@ -1,13 +1,7 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 enum UiScrollBarAxis {X, Y}
 
-//-------------------------------------------------------------- Ui Scroll Area
 [RunInEditor]
 class UiScrollArea : ZilchComponent
 {
@@ -50,21 +44,18 @@ class UiScrollArea : ZilchComponent
   // The sequence used for animating the scrolling based on `ScrollAnimateTime`.
   var TranslateSequence : ActionSequence;
   
-  //***************************************************************************
   var ContentOffset : Real2
   {
     get { return this.ContentOffsetInternal; }
     set { this.ContentOffsetInternal = value; this.Snap(); this.DesiredOffset = this.ContentOffsetInternal; }
   }
   
-  //***************************************************************************
   var ContentOffsetInternal : Real2
   {
     get { return this.Content.LocalTopLeft * Real2(-1, 1); }
     set { this.Content.LocalTopLeft = value * Real2(-1, 1); }
   }
   
-  //***************************************************************************
   // Content size with the over-scroll taken into account
   var ScrollableContentSize : Real2
   {
@@ -77,13 +68,11 @@ class UiScrollArea : ZilchComponent
     }
   }
   
-  //***************************************************************************
   var OverScrollTopLeft : Real2
   {
     get { return Real2(this.OverScrollLeft, this.OverScrollTop); }
   }
   
-  //***************************************************************************
   function Initialize(init : CogInitializer)
   {
     Zero.Connect(init, Events.AllObjectsInitialized, this.OnAllObjectsInitialized);
@@ -96,7 +85,6 @@ class UiScrollArea : ZilchComponent
     this.ContentOffset = Real2(0);
   }
 
-  //***************************************************************************
   function OnAllObjectsInitialized(event : CogInitializerEvent)
   {
     this.ScrollBarX = this.ScrollBarXPath.UiWidget;
@@ -105,19 +93,16 @@ class UiScrollArea : ZilchComponent
     this.ScrollBarYPath.UiScrollBar.UiScrollArea = this;
   }
   
-  //***************************************************************************
   function AttachToContent(widget : UiWidget)
   {
     widget.Owner.AttachTo(this.Content.Owner);
   }
   
-  //***************************************************************************
   function ScrollToTopLeft()
   {
     this.ContentOffset = Real2(0);
   }
   
-  //***************************************************************************
   // The given widget is expected to be a child of the 'Content' Cog.
   function ScrollToWidget(widget : UiWidget, animateTime : Real) : Boolean
   {
@@ -125,7 +110,6 @@ class UiScrollArea : ZilchComponent
     return this.ScrollToWorldRectangle(worldRect, animateTime);
   }
   
-  //***************************************************************************
   function ScrollToWorldRectangle(worldRect : Rectangle, animateTime : Real) : Boolean
   {
     var worldToContentLocal = Math.Invert(this.Content.Owner.Transform.WorldMatrix);
@@ -134,7 +118,6 @@ class UiScrollArea : ZilchComponent
     return this.ScrollToLocalRectangle(localRect, animateTime);
   }
   
-  //***************************************************************************
   // Expects the rectangle to be in the local space of the 'Content' Cog.
   function ScrollToLocalRectangle(localRect : Rectangle, animateTime : Real) : Boolean
   {
@@ -178,7 +161,6 @@ class UiScrollArea : ZilchComponent
     return true;
   }
   
-  //***************************************************************************
   function OnPreTransformUpdate(event : UiTransformUpdateEvent)
   {
     // We're controlling content manually, so it shouldn't be in layout
@@ -195,7 +177,6 @@ class UiScrollArea : ZilchComponent
     this.Content.Size = contentSize;
   }
   
-  //***************************************************************************
   function OnPostTransformUpdate(event : UiTransformUpdateEvent)
   {
     var ourSize = this.UiWidget.Size;
@@ -241,7 +222,6 @@ class UiScrollArea : ZilchComponent
     }
   }
   
-  //***************************************************************************
   function OnMouseScroll(event : ViewportMouseEvent)
   {
     if(event.HandledEvent)
@@ -263,7 +243,6 @@ class UiScrollArea : ZilchComponent
     this.Scroll(scroll * this.ScrollSpeed);
   }
   
-  //***************************************************************************
   function Scroll(pixels : Real2)
   {
     var scroll = pixels;
@@ -297,7 +276,6 @@ class UiScrollArea : ZilchComponent
     }
   }
   
-  //***************************************************************************
   function Snap()
   {
     var ourSize = this.UiWidget.Size;
@@ -305,7 +283,6 @@ class UiScrollArea : ZilchComponent
     this.ContentOffsetInternal = Math.Min(this.ContentOffset, Math.Max(this.ScrollableContentSize - this.OverScrollTopLeft - ourSize, Real2(0)));
   }
   
-  //***************************************************************************
   function GetScrollPercent(axis : UiScrollBarAxis) : Real
   {
     var topLeft = -this.OverScrollTopLeft;
@@ -318,7 +295,6 @@ class UiScrollArea : ZilchComponent
     return ((this.ContentOffset[axis] - topLeft[axis]) / scrollableSize) * 100.0;
   }
   
-  //***************************************************************************
   function SetScrollPercent(axis : UiScrollBarAxis, percent : Real)
   {
     percent = Math.Clamp(percent / 100.0, 0, 1);
@@ -333,7 +309,6 @@ class UiScrollArea : ZilchComponent
   }
 }
 
-//--------------------------------------------------------------- Ui Scroll Bar
 [RunInEditor]
 class UiScrollBar : ZilchComponent
 {
@@ -347,14 +322,12 @@ class UiScrollBar : ZilchComponent
   
   var GrabOffset : Real;
   
-  //***************************************************************************
   function Initialize(init : CogInitializer)
   {
     Zero.Connect(this.Handle.Cog, Events.LeftMouseDown, this.OnLeftMouseDown);
     Zero.Connect(this.Owner, Events.MouseDragMove, this.OnMouseDragMove);
   }
   
-  //***************************************************************************
   function OnLeftMouseDown(event : ViewportMouseEvent)
   {
     // Alt is our hotkey to interact with widgets in the editor
@@ -368,7 +341,6 @@ class UiScrollBar : ZilchComponent
     this.MouseCapture.Capture(event);
   }
   
-  //***************************************************************************
   function OnMouseDragMove(event : ViewportMouseEvent)
   {
     var handle = this.Handle.UiWidget;

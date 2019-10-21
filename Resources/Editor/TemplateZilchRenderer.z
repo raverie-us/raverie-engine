@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 [RunInEditor]
 class RESOURCE_NAME_ : ZilchComponent
 {

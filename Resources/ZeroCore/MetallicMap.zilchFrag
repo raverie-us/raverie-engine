@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Metallic input for lighting opaque geometry.
 // Output values are mapped from a texture over the surface.
 [Pixel]

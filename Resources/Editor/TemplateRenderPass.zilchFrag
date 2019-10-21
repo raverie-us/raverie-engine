@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // RenderPass fragments are intended to be constructed in script
 // and passed directly to the AddRenderTaskRenderPass method.
 // RenderPass fragment code is implicitely appended to the end

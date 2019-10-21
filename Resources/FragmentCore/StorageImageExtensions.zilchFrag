@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 struct StorageImageExtensions
 {
   [Extension(typeid(StorageImage2d))]

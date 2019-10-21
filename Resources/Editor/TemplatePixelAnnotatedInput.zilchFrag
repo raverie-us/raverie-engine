@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Shader input attribute definitions
 // [AppBuiltInInput] Input comes from predefined data given by the graphics engine
 // [StageInput]      Input comes from the previous hardware stage (mesh -> vertex -> geometry -> pixel)

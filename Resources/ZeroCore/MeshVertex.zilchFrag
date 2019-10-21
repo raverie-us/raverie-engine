@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Boiler plate vertex shader fragment used in generated shaders for Models and HeightMapModels.
 [Vertex][CoreVertex]
 struct MeshVertex

@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Perturbes the view normal using normals stored in texture space.
 [Pixel]
 struct NormalMap

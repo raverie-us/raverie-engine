@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Samples built in texture of linear weights for use by other fragments.
 // Each patch in a HeightMapModel has a 128x128 texture containing these weights.
 // Undefined results if not used with HeightMapModel.

@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Does all lighting calculations at the time of rendering scene geometry.
 // Allows one directional light to be used.
 [Pixel][RenderPass]

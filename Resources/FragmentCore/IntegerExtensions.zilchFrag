@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 struct IntegerExtensions
 {
   [Static][Extension(typeid(Integer))][Implements]

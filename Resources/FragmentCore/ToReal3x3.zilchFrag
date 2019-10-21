@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 struct MathToReal3x3Implements
 {
   [Static][Extension(typeid(Math))][Implements]

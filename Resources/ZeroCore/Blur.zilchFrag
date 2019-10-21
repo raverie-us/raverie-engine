@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // The weights used for the blur were derived from Pascal's Triangle using the following method:
 //
 //   1) If the blur radius is an integer r, find the row of Pascal's

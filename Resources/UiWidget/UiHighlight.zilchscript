@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 enum UiHighlightMouseMode {Enter, EnterHierarchy, Hover}
 enum UiHighlightColorMode {Local, Hierarchy}
 enum UiHighlightColorOp   {Set, Add, Multiply}
 
-//---------------------------------------------------------------- Ui Highlight
 class UiHighlight : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;
@@ -29,7 +23,6 @@ class UiHighlight : ZilchComponent
   
   var OriginalColor : Real4;
   
-  //***************************************************************************
   function Initialize(init : CogInitializer)
   {
     // Confirm that both objects are valid
@@ -66,7 +59,6 @@ class UiHighlight : ZilchComponent
     Zero.Connect(mouseOverCog, Events.LeftMouseUp, this.OnLeftMouseUp);
   }
 
-  //***************************************************************************
   function OnMouseEnter(event : ViewportMouseEvent)
   {
     if(this.UiWidget.Root.MouseDownWidget == this.UiWidget)
@@ -75,27 +67,23 @@ class UiHighlight : ZilchComponent
       this.SetColor(this.MouseHoverColor);
   }
   
-  //***************************************************************************
   function OnLeftMouseDown(event : ViewportMouseEvent)
   {
     if(event.HandledEvent == false)
       this.SetColor(this.MouseDownColor);
   }
   
-  //***************************************************************************
   function OnLeftMouseUp(event : ViewportMouseEvent)
   {
     if(event.HandledEvent == false)
       this.SetColor(this.MouseHoverColor);
   }
   
-  //***************************************************************************
   function OnMouseExit(event : ViewportMouseEvent)
   {
     this.SetColor(this.OriginalColor);
   }
   
-  //***************************************************************************
   function SetColor(color : Real4)
   {
     if(this.Active == false)
@@ -113,7 +101,6 @@ class UiHighlight : ZilchComponent
     Action.Property(seq, prop, color, this.AnimateTime, Ease.QuadOut);
   }
   
-  //***************************************************************************
   function SimulateClick()
   {
     var currColor = this.HighlightCog.Cog.UiWidget.LocalColor;

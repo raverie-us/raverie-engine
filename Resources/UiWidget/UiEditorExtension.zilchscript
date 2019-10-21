@@ -1,18 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
-//--------------------------------------------------------- Ui Editor Extension
 [RunInEditor]
 class UiEditorExtension : ZilchComponent
 {
   [Dependency] var UiRootWidget : UiRootWidget;
   [Property] var HighlightColor : Real4 = Real4(1,0,0,1);
   
-  //***************************************************************************
   function Initialize(init : CogInitializer)
   {
     Zero.Connect(this.Space, Events.SelectToolPreSelect, this.OnSelectToolPreSelect);
@@ -21,7 +14,6 @@ class UiEditorExtension : ZilchComponent
     Zero.Connect(this.Space, Events.MetaDropUpdate, this.OnMetaDrop);
   }
 
-  //***************************************************************************
   function OnSelectToolPreSelect(event : ViewportMouseEvent)
   {
     var hitWidget = this.GetHitCog(event.ToWorldZPlane(0));
@@ -44,7 +36,6 @@ class UiEditorExtension : ZilchComponent
     }
   }
   
-  //***************************************************************************
   function OnMetaDrop(event : MetaDropEvent)
   {
     var archetype = event.Object as Archetype;
@@ -90,7 +81,6 @@ class UiEditorExtension : ZilchComponent
     }
   }
   
-  //***************************************************************************
   function GetHitCog(worldPoint : Real3) : Cog
   {
     var hitWidget = this.UiRootWidget.CastPoint(worldPoint.XY, null, false);
@@ -99,7 +89,6 @@ class UiEditorExtension : ZilchComponent
     return null;
   }
   
-  //***************************************************************************
   function DrawLine(line : DebugLine, offset : Real3, start : Real2, end : Real2)
   {
     line.Start = (Real3(start, 0) + offset);

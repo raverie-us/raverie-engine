@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Outputs all information about scene geometry into two buffers.
 [Pixel][RenderPass]
 struct GeometryPass

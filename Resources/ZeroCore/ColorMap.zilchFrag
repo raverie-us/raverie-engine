@@ -1,3 +1,5 @@
+// MIT Licensed (see LICENSE.md).
+
 // Color input for generic use. Color is not used in lighting, see Albedo.
 // Output values are mapped from a texture over the surface.
 [Pixel]
