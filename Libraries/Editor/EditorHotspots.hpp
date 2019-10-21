@@ -8,7 +8,7 @@ class TextEditor;
 
 // Simple Hyper links
 // Opens link on click
-// Matches: http://zero.digipen.edu/
+// Matches: https://www.example.com/
 class HyperLinkHotspot : public TextEditorHotspot
 {
 public:
