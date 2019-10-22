@@ -868,6 +868,7 @@ void SpriteSourceEditor::OnExportAllFrames(Event* event)
 {
   SpriteSource* spriteSource = mSpriteSource;
 
+  Array<String> downloadFiles;
   // save out each sprite frame as its own image
   forRange (SpriteFrame* spriteFrame, mSpriteData.All())
   {
@@ -882,10 +883,13 @@ void SpriteSourceEditor::OnExportAllFrames(Event* event)
     String fullPath = FilePath::Combine(mEditDirectory, name);
     Status status;
     SaveImage(status, fullPath, &buffer, ImageSaveFormat::Png);
+    downloadFiles.PushBack(fullPath);
   }
 
   // Open the directory we saved the sprite frames into
   Os::SystemOpenFile(mEditDirectory.c_str(), Os::Verb::Open);
+
+  DownloadFiles(spriteSource->Name, mEditDirectory, downloadFiles);
 }
 
 void SpriteSourceEditor::OnSpriteSourceRemoved(ResourceEvent* event)

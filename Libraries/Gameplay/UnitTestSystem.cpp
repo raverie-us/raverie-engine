@@ -358,7 +358,9 @@ void UnitTestSystem::OnUnitTestRecordFileSelected(OsFileSelection* event)
   if (event->Files.Empty())
     return;
 
-  RecordToZeroTestFile(event->Files.Front());
+  String filePath = event->Files.Front();
+  RecordToZeroTestFile(filePath);
+  DownloadFiles(filePath);
 }
 
 void UnitTestSystem::RecordToZeroTestFile(StringParam zeroTestFile)

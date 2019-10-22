@@ -705,8 +705,8 @@ BackupProjectJob::BackupProjectJob(StringParam projectPath, StringParam destFile
 
 void BackupProjectJob::Execute()
 {
-  String targetDirector = FilePath::GetDirectoryPath(mDestinationFilePath);
-  CreateDirectoryAndParents(targetDirector);
+  String targetDirectory = FilePath::GetDirectoryPath(mDestinationFilePath);
+  CreateDirectoryAndParents(targetDirectory);
 
   // Collect all of the files to archive
   Array<ArchiveData> files;
@@ -732,7 +732,8 @@ void BackupProjectJob::Execute()
 
   // If requested, open the target directory on completion.
   if (mOpenDirectoryOnCompletion)
-    Os::SystemOpenFile(targetDirector.c_str());
+    Os::SystemOpenFile(targetDirectory.c_str());
+  DownloadFiles(targetDirectory);
 }
 
 void BackupProjectJob::GetFileList(StringParam path, StringParam parentPath, Array<ArchiveData>& fileList)

@@ -410,6 +410,7 @@ void ContentPackageExporter::OnExportFileSelected(OsFileSelection* e)
 
   // Write out the package file
   ExportContentPackageListing(listing, packageFile);
+  DownloadFiles(packageFile);
 
   // If info provided write that out
   if (!mTempPackage.mName.Empty())
@@ -420,6 +421,7 @@ void ContentPackageExporter::OnExportFileSelected(OsFileSelection* e)
 
     // Write out the meta file
     String metaFile = BuildString(packageFile, ".meta");
+    DownloadFiles(metaFile);
     TextSaver saver;
     Status status;
     saver.Open(status, metaFile.c_str());

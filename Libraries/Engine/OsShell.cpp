@@ -241,7 +241,11 @@ SimpleSaveFileDialog::SimpleSaveFileDialog(StringParam data,
 void SimpleSaveFileDialog::OnFileDialogComplete(OsFileSelection* event)
 {
   if (event->Success)
-    WriteStringRangeToFile(event->Files[0], mData);
+  {
+    String filePath = event->Files[0];
+    WriteStringRangeToFile(filePath, mData);
+    DownloadFiles(filePath);
+  }
   delete this;
 }
 
