@@ -3,6 +3,10 @@
 
 namespace Zero
 {
+const cstr cExecutableExtensionWithoutDot = "";
+const cstr cSharedLibraryExtensionWithoutDot = "";
+const cstr cExecutableExtensionWithDot = "";
+const cstr cSharedLibraryExtensionWithDot = "";
 
 ExternalLibrary::ExternalLibrary()
 {
