@@ -438,6 +438,8 @@ void LauncherWindow::AutoCheckForLauncherUpdates()
 
 void LauncherWindow::CheckForLauncherUpdates()
 {
+  // Right now we disable launcher update checks because they don't work properly
+  /*
   // Check for updates if we don't already have the
   // modal up that tells the user about an update.
   Modal* activeModal = mActiveModal;
@@ -446,6 +448,7 @@ void LauncherWindow::CheckForLauncherUpdates()
     BackgroundTask* task = mVersionSelector->GetLauncherListing();
     ConnectThisTo(task, Events::BackgroundTaskCompleted, OnLauncherListing);
   }
+  */
 }
 
 void LauncherWindow::OnInstallMajorVersion(ModalConfirmEvent* e)
