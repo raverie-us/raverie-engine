@@ -104,7 +104,7 @@ MainWindow::MainWindow(OsWindow* window) : RootWidget(window)
   leftSpacer->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
   leftSpacer->SetInteractive(false);
 
-  mTitleText = new Label(mTitleBar, DefaultTextStyle, "Title");
+  mTitleText = new Label(mTitleBar, DefaultTextStyle, GetOrganization() + " " + GetApplicationName());
   mTitleText->SetInteractive(false);
   mTitleText->SetNotInLayout(true);
   mTitleText->mText->ChangeDefinition(mDefSet->GetDefinition("TitleText"));
