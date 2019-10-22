@@ -53,13 +53,16 @@ DownloadTaskJob::DownloadTaskJob(StringParam url, u64 forceCacheSeconds)
   request->mSendEventsOnRequestThread = true;
 
   request->mUrl = url;
-  ConnectThisTo(request, Events::WebResponsePartialData, OnWebResponsePartialData);
-  ConnectThisTo(request, Events::WebResponseComplete, OnWebResponseComplete);
 }
 
 void DownloadTaskJob::Execute()
 {
-  mRequest->Run();
+  // We connect on execute (not on construction) to ensure that anyone else who connects
+  // will receive the event before we do, because we mark the background task as success or failure.
+  AsyncWebRequest* request = mRequest;
+  ConnectThisTo(request, Events::WebResponsePartialData, OnWebResponsePartialData);
+  ConnectThisTo(request, Events::WebResponseComplete, OnWebResponseComplete);
+  request->Run();
 }
 
 int DownloadTaskJob::Cancel()
