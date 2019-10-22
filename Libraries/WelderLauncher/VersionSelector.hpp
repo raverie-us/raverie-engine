@@ -60,7 +60,8 @@ public:
   TemplateProject* CreateTemplateProjectFromMeta(StringParam metaFilePath);
   TemplateProject* CreateTemplateProjectFromMeta(Cog* metaCog, StringParam localPath);
 
-  // Find all available templates on the dsik (checks the current build data folder, next to the application, and the downloads location)
+  // Find all available templates on the dsik (checks the current build data folder, next to the application, and the
+  // downloads location)
   void FindOnDiskTemplates(ZeroBuild* selectedBuild);
   // Recursively searches a directory for templates.
   // Uses the rootDir param to re-base the url from the server.

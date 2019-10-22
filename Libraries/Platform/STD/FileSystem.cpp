@@ -81,11 +81,8 @@ bool FileExists(StringParam filePath)
 {
   std::error_code error;
   auto type = fs::status(filePath.c_str(), error).type();
-  return
-    type != fs::file_type::none &&
-    type != fs::file_type::not_found &&
-    type != fs::file_type::directory &&
-    type != fs::file_type::unknown;
+  return type != fs::file_type::none && type != fs::file_type::not_found && type != fs::file_type::directory &&
+         type != fs::file_type::unknown;
 }
 
 bool FileWritable(StringParam filePath)
