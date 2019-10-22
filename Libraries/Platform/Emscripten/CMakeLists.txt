@@ -41,6 +41,8 @@ target_compile_definitions(Platform
   PUBLIC
     ZeroPlatformNoShellOpenFile
     ZeroPlatformNoOpenUrl
+    ZeroPlatformNoSupportsDownloadingFiles
+    ZeroPlatformNoDownloadFile
 )
 
 target_link_libraries(Platform

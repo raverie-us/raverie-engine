@@ -80,6 +80,15 @@ bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr 
   return false;
 }
 
+bool SupportsDownloadingFiles()
+{
+  return false;
+}
+
+void DownloadFile(cstr filePath)
+{
+}
+
 void OpenUrl(cstr url)
 {
 }

@@ -175,6 +175,19 @@ bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr 
 }
 #endif
 
+#if !defined(ZeroPlatformNoSupportsDownloadingFiles)
+bool SupportsDownloadingFiles()
+{
+  return false;
+}
+#endif
+
+#if !defined(ZeroPlatformNoDownloadFile)
+void DownloadFile(cstr filePath)
+{
+}
+#endif
+
 #if !defined(ZeroPlatformNoOpenUrl)
 void OpenUrl(cstr url)
 {

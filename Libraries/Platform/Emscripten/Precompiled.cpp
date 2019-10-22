@@ -167,8 +167,25 @@ void Shell::OpenFile(FileDialogInfo& config)
 
 EM_JS(void, EmscriptenOpenUrl, (cstr url), { window.open(UTF8ToString(url)); });
 
+EM_JS(void, EmscriptenDownloadFile, (cstr fileName, const void* fileMemory, size_t fileSize),
+{
+  downloadFileInMemory(UTF8ToString(fileName), fileMemory, fileSize);
+});
+
 namespace Os
 {
+bool SupportsDownloadingFiles()
+{
+  return true;
+}
+
+void DownloadFile(cstr filePath)
+{
+  String binaryData = ReadFileIntoString(filePath);
+  String fileName = FilePath::GetFileName(filePath);
+  EmscriptenDownloadFile(fileName.c_str(), binaryData.Data(), binaryData.SizeInBytes());
+}
+
 void OpenUrl(cstr url)
 {
   EmscriptenOpenUrl(url);

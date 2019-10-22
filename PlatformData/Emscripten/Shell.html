@@ -237,7 +237,27 @@
       {
         return Array.prototype.slice.call(value);
       }
-      
+
+      function downloadFile(fileName, url)
+      {
+        const a = document.createElement('a');
+        document.body.appendChild(a);
+        a.href = url;
+        a.download = fileName;
+        a.style.display = 'none';
+        a.target = '_blank';
+        a.click();
+        document.body.removeChild(a);
+      }
+
+      function downloadFileInMemory(fileName, dataPtr, byteLength)
+      {
+        const dataHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, byteLength);
+        const base64Data = btoa(String.fromCharCode.apply(null, dataHeap));
+        const dataUrl = 'data:application/octet-stream;base64,' + base64Data;
+        downloadFile(fileName, dataUrl);
+      }
+
       function sanitizeHTML(html)
       {
         var temp = document.createElement('div');

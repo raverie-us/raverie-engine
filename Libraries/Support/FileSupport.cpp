@@ -315,4 +315,50 @@ void PopulateVirtualFileSystemWithZip(void* userData)
   }
 }
 
+void DownloadFiles(StringParam filePath)
+{
+  DownloadFiles(FilePath::GetFileNameWithoutExtension(filePath), FilePath::GetDirectoryPath(filePath), Array<String>(ZeroInit, filePath));
+}
+
+void DownloadFiles(StringParam suggestedNameWithoutExtension, StringParam workingDirectory, const Array<String>& filePaths)
+{
+  if (!Os::SupportsDownloadingFiles())
+    return;
+
+  if (filePaths.Size() == 1 && FileExists(filePaths.Front()))
+  {
+    Os::DownloadFile(filePaths.Front().c_str());
+  }
+  else
+  {
+    String workingDirectoryNormalized = FilePath::Normalize(workingDirectory);
+    String tempFile = FilePath::CombineWithExtension(GetTemporaryDirectory(), suggestedNameWithoutExtension, ".zip");
+    Status status;
+    Archive archive(ArchiveMode::Compressing);
+    forRange (StringParam filePath, filePaths)
+    {
+      if (FileExists(filePath))
+      {
+        String normalized = FilePath::Normalize(filePath);
+        if (normalized.StartsWith(workingDirectoryNormalized))
+        {
+          String relativePath = normalized.SubStringFromByteIndices(workingDirectoryNormalized.SizeInBytes(), normalized.SizeInBytes());
+          archive.AddFile(filePath, relativePath);
+        }
+        else
+        {
+          archive.AddFile(filePath, filePath);
+        }
+      }
+      else
+      {
+        archive.ArchiveDirectory(status, filePath, workingDirectory);
+      }
+    }
+    archive.WriteZipFile(tempFile);
+    Os::DownloadFile(tempFile.c_str());
+    DeleteFile(tempFile);
+  }
+}
+
 } // namespace Zero
