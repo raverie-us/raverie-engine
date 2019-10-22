@@ -31,7 +31,7 @@ void LoadProject(Editor* editor, Cog* projectCog, StringParam path, StringParam 
   project->ProjectFile = projectFile;
 
   // Set the Platform Title Bar.
-  editor->mMainWindow->SetTitle(BuildString("Zero Editor - ", project->ProjectName));
+  editor->mMainWindow->SetTitle(BuildString(GetOrganization(), " ", GetApplicationName(), " - ", project->ProjectName));
 
   // Set the store name based on the project name.
   ObjectStore::GetInstance()->SetStoreName(project->ProjectName);
