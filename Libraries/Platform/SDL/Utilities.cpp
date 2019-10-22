@@ -165,8 +165,11 @@ void WebRequest(Status& status,
 #if !defined(ZeroPlatformNoSystemOpenFile)
 bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
-  // Unfortunately we have no portable way of using the working directory.
-  String commandLine = String::Format("\"%s\" %s", file, parameters);
+  String commandLine;
+  if (workingDirectory && *workingDirectory != '\0')
+    commandLine = String::Format("cd \"%s\" && \"%s\" %s &", workingDirectory, file, parameters);
+  else
+    commandLine = String::Format("\"%s\" %s &", file, parameters);
   int result = system(commandLine.c_str());
   return result != 0;
 }
