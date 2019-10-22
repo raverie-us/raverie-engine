@@ -625,8 +625,10 @@ void Archive::ReadZip(ArchiveReadFlags::Enum readFlags, File& file)
 void Archive::ReadZipFile(ArchiveReadFlags::Enum readFlags, StringParam name)
 {
   File file;
-  file.Open(name.c_str(), FileMode::Read, FileAccessPattern::Sequential);
-  ReadZip(readFlags, file);
+  if (file.Open(name.c_str(), FileMode::Read, FileAccessPattern::Sequential))
+    ReadZip(readFlags, file);
+  else
+    Error("Unable to open file");
 }
 
 void Archive::ReadBuffer(ArchiveReadFlags::Enum readFlags, ByteBufferBlock& buffer)
