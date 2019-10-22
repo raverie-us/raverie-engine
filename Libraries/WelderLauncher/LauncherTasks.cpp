@@ -258,6 +258,9 @@ void DownloadStandaloneTaskJob::OnReponse(WebResponseEvent* event)
     archive.ReadBuffer(ArchiveReadFlags::All, buffer);
     archive.ExportToDirectory(ArchiveExportMode::Overwrite, mInstallLocation);
 
+    String executablePath = FilePath::Combine(mInstallLocation, GetEditorExecutableFileName());
+    Os::MarkAsExecutable(executablePath.c_str());
+
     mState = BackgroundTaskState::Completed;
   }
   else
@@ -315,6 +318,9 @@ void InstallBuildTaskJob::InstallBuild()
   ByteBufferBlock buffer((byte*)mData.Data(), mData.SizeInBytes(), false);
   archive.ReadBuffer(ArchiveReadFlags::All, buffer);
   archive.ExportToDirectory(ArchiveExportMode::Overwrite, mInstallLocation);
+
+  String executablePath = FilePath::Combine(mInstallLocation, GetEditorExecutableFileName());
+  Os::MarkAsExecutable(executablePath.c_str());
 
   mState = BackgroundTaskState::Completed;
 }

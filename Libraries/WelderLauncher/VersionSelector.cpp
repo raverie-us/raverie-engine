@@ -93,8 +93,8 @@ void VersionSelector::FindInstalledVersions(StringParam searchPath)
 
       // If this folder contains an exe (a build) then load the version,
       // otherwise recurse.
-      String zeroExePath = FilePath::CombineWithExtension(fullDirName, "ZeroEditor", ".exe");
-      if (FileExists(zeroExePath) == false)
+      String executablePath = FilePath::Combine(fullDirName, GetEditorExecutableFileName());
+      if (FileExists(executablePath) == false)
         FindInstalledVersions(fullDirName);
       else
         LoadInstalledBuild(entry.mPath, entry.mFileName);
@@ -508,19 +508,26 @@ TemplateProject* VersionSelector::CreateTemplateProjectFromMeta(Cog* metaCog, St
   return currentProject;
 }
 
-void VersionSelector::FindDownloadedTemplates()
+void VersionSelector::FindOnDiskTemplates(ZeroBuild* selectedBuild)
 {
-  // Check the dll install directory.
-  String dllDownloadDir = GetApplicationDirectory();
-  String packagedTemplates = FilePath::Combine(dllDownloadDir, "Templates");
-  FindDownloadedTemplatesRecursive(packagedTemplates);
+  mOldTemplates.Insert(mOldTemplates.End(), mTemplates.All());
+  mTemplates.Clear();
+  mTemplateMap.Clear();
+  if (selectedBuild)
+  {
+    String buildTemplates = FilePath::Combine(selectedBuild->mInstallLocation, "Data", "LauncherTemplates");
+    FindOnDiskTemplatesRecursive(buildTemplates);
+  }
+
+  String packagedTemplates = FilePath::Combine(GetApplicationDirectory(), "Templates");
+  FindOnDiskTemplatesRecursive(packagedTemplates);
 
   // Check the download directory (for user downloaded templates)
   String dir = mConfig->GetTemplateInstallPath();
-  FindDownloadedTemplatesRecursive(dir);
+  FindOnDiskTemplatesRecursive(dir);
 }
 
-void VersionSelector::FindDownloadedTemplatesRecursive(StringParam searchPath)
+void VersionSelector::FindOnDiskTemplatesRecursive(StringParam searchPath)
 {
   // Iterate over the install directory
   FileRange range(searchPath);
@@ -529,7 +536,7 @@ void VersionSelector::FindDownloadedTemplatesRecursive(StringParam searchPath)
     FileEntry entry = range.FrontEntry();
     String fullDirName = entry.GetFullPath();
     if (DirectoryExists(fullDirName))
-      FindDownloadedTemplatesRecursive(fullDirName);
+      FindOnDiskTemplatesRecursive(fullDirName);
     else
     {
       String ext = FilePath::GetExtension(fullDirName);
@@ -1214,7 +1221,7 @@ String VersionSelector::GetInstallExePath(ZeroBuild* build)
 {
   // get the location to zero
   String installLocation = GetInstallLocation(build);
-  return FilePath::Combine(installLocation, "ZeroEditor.exe");
+  return FilePath::Combine(installLocation, GetEditorExecutableFileName());
 }
 
 String VersionSelector::GetInstallLocation(ZeroBuild* standalone)

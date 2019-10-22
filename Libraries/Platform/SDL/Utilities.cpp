@@ -180,6 +180,13 @@ void OpenUrl(cstr url)
 }
 #endif
 
+void MarkAsExecutable(cstr fileName)
+{
+#if defined(WelderTargetOsLinux) || defined(WelderTargetOsMac)
+  system(String::Format("chmod +x \"%s\"", fileName).c_str());
+#endif
+}
+
 unsigned int GetDoubleClickTimeMs()
 {
   return 500;

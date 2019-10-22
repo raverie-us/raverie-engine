@@ -12,6 +12,11 @@ extern const String sEditorName;
 extern const String sLauncherGuid;
 extern const String sLauncherName;
 
+String GetEditorFullName();
+String GetEditorExecutableFileName();
+String GetLauncherFullName();
+String GetLauncherExecutableFileName();
+
 /// Sets all the application version and name information.
 void SetupApplication(uint configVersion, StringParam organization, StringParam guid, StringParam name);
 

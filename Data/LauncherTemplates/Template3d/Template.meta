@@ -5,16 +5,14 @@ Cog
 	ZeroTemplate 
 	{
 		var SKU = "Template3d"
-		var VersionId = "1.0.0"
+		var VersionId = "0-"
 		var DisplayName = "EMPTY 3D\\nPROJECT"
 		var Author = "Welder Foundation"
 		var Description = "A template project for 3d games."
-		var Date = "7/26/2017"
+		var Date = "10/21/2019"
 		var SortPriority = 0
 		var Tags = ""
-		var TemplatePath = "../Templates/Template3d[1.0-]"
-		var TemplateFileName = "Template3d.zerotemplate"
-		var IconUrl = "Template3d.icon.png"
+		var IconUrl = "Icon.png"
 		var PreviewUrl = ""
 	}
 }

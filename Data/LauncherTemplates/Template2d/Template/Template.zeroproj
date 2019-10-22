@@ -4,22 +4,22 @@ Cog
 	var Name = ""
 	ProjectSettings 
 	{
-		var ProjectName = "PreReleaseBraveCobra2d"
+		var ProjectName = "Project"
 		var ProjectOwner = ""
 		var DefaultLevel = "Level"
 		var ProjectSpace = "Space"
-		var ProjectEngineRevision = 17614
+		var ProjectEngineRevision = 0
 		var AutoTakeProjectScreenshot = true
-		var Guid = 0x5813312a0649d59f
+		var Guid = 0x0000000000000000
 	}
 	LauncherProjectInfo 
 	{
 		var Tags = ""
-		var ExperimentalBranchName = "BraveCobra"
+		var ExperimentalBranchName = ""
 		var MajorVersion = 0
 		var MinorVersion = 0
 		var PatchVersion = 0
-		var RevisionId = 17330
+		var RevisionId = 0
 	}
 	WindowLaunchSettings 
 	{

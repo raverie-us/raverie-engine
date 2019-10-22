@@ -291,6 +291,13 @@ void NewProjectMenu::UpdateTemplates()
     SelectTemplate(mTemplates[0]);
 }
 
+void NewProjectMenu::BuildChanged()
+{
+  mLauncher->mVersionSelector->FindOnDiskTemplates(mBuildSelector->GetBuild());
+  UpdateTemplates();
+  ValidateProjectCreation();
+}
+
 void NewProjectMenu::ValidateProjectCreation()
 {
   String projectName = mNameBox->GetText();
@@ -420,8 +427,7 @@ void NewProjectMenu::OnMenuDisplayed(Event* e)
 
   ConnectThisTo(search, Events::SearchDataModified, OnSearchDataModified);
 
-  UpdateTemplates();
-  ValidateProjectCreation();
+  BuildChanged();
 
   MarkAsNeedsUpdate();
 }
@@ -460,8 +466,7 @@ void NewProjectMenu::OnFirstInstallStarted(Event* e)
 
 void NewProjectMenu::OnVersionChange(Event* e)
 {
-  UpdateTemplates();
-  ValidateProjectCreation();
+  BuildChanged();
 
   ZeroBuild* selectedBuild = mBuildSelector->GetBuild();
   if (selectedBuild)
@@ -475,12 +480,12 @@ void NewProjectMenu::OnVersionChange(Event* e)
 
 void NewProjectMenu::OnBuildStateChanged(Event* e)
 {
-  ValidateProjectCreation();
+  BuildChanged();
 }
 
 void NewProjectMenu::OnFilePathTextChanged(Event* e)
 {
-  ValidateProjectCreation();
+  BuildChanged();
 }
 
 void NewProjectMenu::OnSearchDataModified(Event* e)

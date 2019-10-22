@@ -233,7 +233,7 @@ LauncherWindow::LauncherWindow(MainWindow* parent) : Composite(parent)
 
   // Finds which version are currently installed
   mVersionSelector->FindInstalledVersions();
-  mVersionSelector->FindDownloadedTemplates();
+  mVersionSelector->FindOnDiskTemplates(nullptr);
 
   // Download what builds and templates are available
   CheckForUpdates();
@@ -394,10 +394,14 @@ void LauncherWindow::CheckForUpdates()
   ConnectThisTo(task, Events::BackgroundTaskCompleted, OnPackageListing);
   ConnectThisTo(task, Events::BackgroundTaskFailed, OnPackageListing);
 
-  // start the task to get the version listing
+  // Currently, templates are located in each build instead of separate downloads.
+  // This makes them easier for the devs to deploy.
+  /*
+  // Start the task to get the version listing
   BackgroundTask* templateTask = mVersionSelector->GetTemplateListing();
   ConnectThisTo(templateTask, Events::BackgroundTaskCompleted, OnTemplateListing);
   ConnectThisTo(templateTask, Events::BackgroundTaskFailed, OnTemplateListing);
+  */
 
   // Queue up actions to auto-recheck for new builds, etc...
   float secondsForRecheck = GetConfig()->mAutoUpdateFrequencyInSeconds;

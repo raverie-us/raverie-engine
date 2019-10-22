@@ -483,10 +483,20 @@ CachedProject* ProjectCache::CreateProjectFromTemplate(StringParam projectName,
                                                        const BuildId& buildId,
                                                        const HashSet<String>& projectTags)
 {
-  // Extract the zip to the project's install location
-  Archive archive(ArchiveMode::Decompressing);
-  archive.ReadZipFile(ArchiveReadFlags::All, templatePath);
-  archive.ExportToDirectory(ArchiveExportMode::Overwrite, projectDir);
+  // If this is a zipped archive of a template?
+  if (FileExists(templatePath))
+  {
+    // Extract the zip to the project's install location
+    Archive archive(ArchiveMode::Decompressing);
+    archive.ReadZipFile(ArchiveReadFlags::All, templatePath);
+    archive.ExportToDirectory(ArchiveExportMode::Overwrite, projectDir);
+  }
+  else
+  {
+    String directory = FilePath::Combine(FilePath::GetDirectoryPath(templatePath), "Template");
+    ErrorIf(!DirectoryExists(directory), "Template directory did not exist");
+    CopyFolderContents(projectDir, directory);
+  }
 
   // Get the old zero proj file (by the template name)
   String oldProjectName = FilePath::GetFileNameWithoutExtension(templatePath);

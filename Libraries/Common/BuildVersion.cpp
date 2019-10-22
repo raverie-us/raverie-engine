@@ -24,6 +24,26 @@ const String sEditorName = "Editor";
 const String sLauncherGuid = "7489829B-8A03-4B26-B3AC-FDDC6668BAF7";
 const String sLauncherName = "Launcher";
 
+String GetEditorFullName()
+{
+  return sWelderOrganization + sEditorName;
+}
+
+String GetEditorExecutableFileName()
+{
+  return GetEditorFullName() + cExecutableExtensionWithDot;
+}
+
+String GetLauncherFullName()
+{
+  return sWelderOrganization + sLauncherName;
+}
+
+String GetLauncherExecutableFileName()
+{
+  return GetLauncherFullName() + cExecutableExtensionWithDot;
+}
+
 uint gConfigVersion = 1;
 String gAppGuid;
 String gAppOrganization;

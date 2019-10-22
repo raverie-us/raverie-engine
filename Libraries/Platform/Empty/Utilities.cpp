@@ -84,6 +84,10 @@ void OpenUrl(cstr url)
 {
 }
 
+void MarkAsExecutable(cstr fileName)
+{
+}
+
 unsigned int GetDoubleClickTimeMs()
 {
   return 500;

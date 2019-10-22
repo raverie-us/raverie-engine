@@ -46,6 +46,7 @@ public:
   BuildId GetBuildId() const;
   void UpdateTemplates();
 
+  void BuildChanged();
   void ValidateProjectCreation();
   void SetInvalidProject(StringParam errorMessage);
   /// When this menu is activated / deactivated, we want to change the

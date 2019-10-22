@@ -227,6 +227,10 @@ void OpenUrl(cstr url)
   SystemOpenFile(status, url);
 }
 
+void MarkAsExecutable(cstr fileName)
+{
+}
+
 unsigned int GetDoubleClickTimeMs()
 {
   return (unsigned int)GetDoubleClickTime();
