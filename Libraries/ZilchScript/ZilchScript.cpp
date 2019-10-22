@@ -280,7 +280,7 @@ void ZilchScriptManager::DispatchZeroZilchError(const CodeLocation& location,
                                                 StringParam message,
                                                 Project* buildingProject)
 {
-  String shortMessage = BuildString("Zero Error: ", message);
+  String shortMessage = BuildString("Error: ", message);
   String fullMessage = location.GetFormattedStringWithMessage(MessageFormat::Python, shortMessage);
   buildingProject->Raise(location, ErrorCode::GenericError, message.c_str());
 }

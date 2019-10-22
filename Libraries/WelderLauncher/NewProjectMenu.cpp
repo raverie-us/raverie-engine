@@ -671,7 +671,7 @@ void NewProjectMenu::OnSelectLocationPressed(Event* e)
   config->EventName = CallBackEvent;
   config->CallbackObject = this;
   config->Title = "Select a folder";
-  config->AddFilter("Zero Project Folder", "*.none");
+  config->AddFilter("Project Folder", "*.none");
   config->StartingDirectory = mLocationBox->GetText();
   config->Flags |= FileDialogFlags::Folder;
   Z::gEngine->has(OsShell)->SaveFile(config);

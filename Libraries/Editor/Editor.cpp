@@ -744,7 +744,7 @@ Composite* Editor::OpenSearchWindow(Widget* returnFocus, bool noBorder)
     newWindow->ChangeStyle(WindowStyle::NoFrame);
 
   GeneralSearchView* cs = new GeneralSearchView(newWindow, returnFocus);
-  newWindow->SetTitle("Zero Search");
+  newWindow->SetTitle("Search");
   newWindow->SetTranslationAndSize(Pixels(0, 0, 0), Pixels(320, 440));
   CenterToWindow(this->GetParent(), newWindow, false);
 

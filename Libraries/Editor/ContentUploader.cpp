@@ -373,7 +373,7 @@ void ContentPackageExporter::OnExportPressed(Event* e)
   config->EventName = "OnExportFileSelected";
   config->CallbackObject = this;
   config->Title = "Select Content Package File";
-  config->AddFilter("Zero Pack File", "*.zeropack");
+  config->AddFilter("Import Pack File", "*.zeropack");
   config->StartingDirectory = GetUserDocumentsDirectory();
   String filename = "Package";
   if (!mTempPackage.mName.Empty())

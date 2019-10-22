@@ -291,7 +291,7 @@ void SettingsMenu::OnBrowseProjectLocation(Event* e)
   config->EventName = CallBackEvent;
   config->CallbackObject = this;
   config->Title = "Select a folder";
-  config->AddFilter("Zero Project Folder", "*.none");
+  config->AddFilter("Project Folder", "*.none");
   config->DefaultFileName = mDefaultProjectLocation->GetText();
   config->StartingDirectory = mDefaultProjectLocation->GetText();
   config->Flags |= FileDialogFlags::Folder;
@@ -362,7 +362,7 @@ void SettingsMenu::OnBrowseDownloadLocation(Event* e)
   config->EventName = CallBackEvent;
   config->CallbackObject = this;
   config->Title = "Select a folder";
-  config->AddFilter("Zero Project Folder", "*.none");
+  config->AddFilter("Project Folder", "*.none");
   config->StartingDirectory = mDownloadLocation->GetText();
   config->Flags |= FileDialogFlags::Folder;
   Z::gEngine->has(OsShell)->SaveFile(config);

@@ -347,7 +347,7 @@ void UnitTestSystem::RecordToZeroTestFile()
   config->EventName = Events::UnitTestRecordFileSelected;
   config->CallbackObject = this;
   config->Title = "Record Unit Test File";
-  config->AddFilter("Zero Unit Test (*.zerotest)", "*.zerotest");
+  config->AddFilter("Unit Test (*.zerotest)", "*.zerotest");
   config->mDefaultSaveExtension = "zerotest";
   config->DefaultFileName = BuildString(Z::gEngine->GetProjectSettings()->ProjectName, ".zerotest");
   Z::gEngine->has(OsShell)->SaveFile(config);
@@ -436,7 +436,7 @@ void UnitTestSystem::PlayFromZeroTestFile()
   config->EventName = Events::UnitTestPlayFileSelected;
   config->CallbackObject = this;
   config->Title = "Play Unit Test File";
-  config->AddFilter("Zero Unit Test (*.zerotest)", "*.zerotest");
+  config->AddFilter("Unit Test (*.zerotest)", "*.zerotest");
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 

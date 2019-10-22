@@ -302,9 +302,9 @@ LauncherWindow::LauncherWindow(MainWindow* parent) : Composite(parent)
   mBottomBar->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness(Pixels(35, 14, 35, 0))));
   mBottomBar->SetName("BottomBar");
   {
-    Text* zeroText = new Text(mBottomBar, "MainTabText");
-    zeroText->SetText("ZERO ENGINE");
-    zeroText->SetName("Zero Text");
+    Text* titleText = new Text(mBottomBar, "MainTabText");
+    titleText->SetText((GetOrganization() + " " + GetApplicationName()).ToUpper());
+    titleText->SetName("Title Text");
 
     Composite* spacer = new Composite(mBottomBar);
     spacer->SetSizing(SizePolicy::Flex, Vec2(1));
@@ -1199,7 +1199,7 @@ void LauncherWindow::OnBrowsePressed(Event* e)
   config->EventName = cCallBackEvent;
   config->CallbackObject = this;
   config->Title = "Open a project";
-  config->AddFilter("Zero Project File", "*.zeroproj");
+  config->AddFilter("Project File", "*.zeroproj");
   config->StartingDirectory = launcherConfig->mDefaultProjectSaveLocation;
   Z::gEngine->has(OsShell)->OpenFile(config);
 }

@@ -1347,7 +1347,7 @@ void HotKeyEditor::OnMouseEnterIconHeader(MouseEvent* event)
   if (mCogCommandSortToggle)
     CreateCommandHeaderToolTip(source, "User Commands", Vec4(1));
   else
-    CreateCommandHeaderToolTip(source, "Zero Commands", cZeroCommandColor);
+    CreateCommandHeaderToolTip(source, "Native Commands", cZeroCommandColor);
 }
 
 void HotKeyEditor::OnMouseEnterCommandHeader(MouseEvent* event)
