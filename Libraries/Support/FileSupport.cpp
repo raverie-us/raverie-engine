@@ -331,6 +331,7 @@ void DownloadFiles(StringParam suggestedNameWithoutExtension,
 
   if (filePaths.Size() == 1 && FileExists(filePaths.Front()))
   {
+    ZPrint("Downloading single file %s\n", filePaths.Front().c_str());
     Os::DownloadFile(filePaths.Front().c_str());
   }
   else
@@ -346,17 +347,20 @@ void DownloadFiles(StringParam suggestedNameWithoutExtension,
         String normalized = FilePath::Normalize(filePath);
         if (normalized.StartsWith(workingDirectoryNormalized))
         {
+          ZPrint("Adding file to download archive (in working directory) %s\n", filePath.c_str());
           String relativePath =
               normalized.SubStringFromByteIndices(workingDirectoryNormalized.SizeInBytes(), normalized.SizeInBytes());
           archive.AddFile(filePath, relativePath);
         }
         else
         {
+          ZPrint("Adding file to download archive (out of working directory) %s\n", filePath.c_str());
           archive.AddFile(filePath, filePath);
         }
       }
       else
       {
+        ZPrint("Adding directory to download archive %s\n", filePath.c_str());
         archive.ArchiveDirectory(status, filePath, workingDirectory);
       }
     }
