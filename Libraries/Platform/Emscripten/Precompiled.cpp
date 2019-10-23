@@ -167,8 +167,7 @@ void Shell::OpenFile(FileDialogInfo& config)
 
 EM_JS(void, EmscriptenOpenUrl, (cstr url), { window.open(UTF8ToString(url)); });
 
-EM_JS(void, EmscriptenDownloadFile, (cstr fileName, const void* fileMemory, size_t fileSize),
-{
+EM_JS(void, EmscriptenDownloadFile, (cstr fileName, const void* fileMemory, size_t fileSize), {
   downloadFileInMemory(UTF8ToString(fileName), fileMemory, fileSize);
 });
 

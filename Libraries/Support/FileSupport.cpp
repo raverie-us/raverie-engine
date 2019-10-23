@@ -317,10 +317,14 @@ void PopulateVirtualFileSystemWithZip(void* userData)
 
 void DownloadFiles(StringParam filePath)
 {
-  DownloadFiles(FilePath::GetFileNameWithoutExtension(filePath), FilePath::GetDirectoryPath(filePath), Array<String>(ZeroInit, filePath));
+  DownloadFiles(FilePath::GetFileNameWithoutExtension(filePath),
+                FilePath::GetDirectoryPath(filePath),
+                Array<String>(ZeroInit, filePath));
 }
 
-void DownloadFiles(StringParam suggestedNameWithoutExtension, StringParam workingDirectory, const Array<String>& filePaths)
+void DownloadFiles(StringParam suggestedNameWithoutExtension,
+                   StringParam workingDirectory,
+                   const Array<String>& filePaths)
 {
   if (!Os::SupportsDownloadingFiles())
     return;
@@ -342,7 +346,8 @@ void DownloadFiles(StringParam suggestedNameWithoutExtension, StringParam workin
         String normalized = FilePath::Normalize(filePath);
         if (normalized.StartsWith(workingDirectoryNormalized))
         {
-          String relativePath = normalized.SubStringFromByteIndices(workingDirectoryNormalized.SizeInBytes(), normalized.SizeInBytes());
+          String relativePath =
+              normalized.SubStringFromByteIndices(workingDirectoryNormalized.SizeInBytes(), normalized.SizeInBytes());
           archive.AddFile(filePath, relativePath);
         }
         else

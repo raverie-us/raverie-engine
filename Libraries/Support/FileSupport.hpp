@@ -126,6 +126,8 @@ void DownloadFiles(StringParam filePath);
 
 // If we're passed a single file, download the file individually.
 // If we're passed a directory or a set of files or directories, then zip them and download as one.
-void DownloadFiles(StringParam suggestedNameWithoutExtension, StringParam workingDirectory, const Array<String>& filePaths);
+void DownloadFiles(StringParam suggestedNameWithoutExtension,
+                   StringParam workingDirectory,
+                   const Array<String>& filePaths);
 
 } // namespace Zero
