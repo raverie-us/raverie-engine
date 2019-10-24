@@ -618,36 +618,38 @@ const runBuild = async (buildDir, opts, combo) => {
     return;
   }
 
-  const cmakeVariables = readCmakeVariables(buildDir);
-  for (const executable of executables) {
-    console.log(`Zipping virtual file system for ${executable.name}`);
+  if (!opts.skipfs) {
+    const cmakeVariables = readCmakeVariables(buildDir);
+    for (const executable of executables) {
+      console.log(`Zipping virtual file system for ${executable.name}`);
 
-    const libraryDir = path.join(buildDir, "Libraries", executable.name);
-    mkdirp.sync(libraryDir);
-    const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
-    tryUnlinkSync(fileSystemZip);
+      const libraryDir = path.join(buildDir, "Libraries", executable.name);
+      mkdirp.sync(libraryDir);
+      const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
+      tryUnlinkSync(fileSystemZip);
 
-    const files = [...executable.additionalVfs];
-    for (const resourceLibrary of executable.resourceLibraries) {
-      const resourceLibraryPath = path.join(dirs.resources, resourceLibrary);
-      if (fs.existsSync(resourceLibraryPath)) {
-        files.push(resourceLibraryPath);
-      } else {
-        printLog(`Skipping resource library for ${resourceLibrary}`);
+      const files = [...executable.additionalVfs];
+      for (const resourceLibrary of executable.resourceLibraries) {
+        const resourceLibraryPath = path.join(dirs.resources, resourceLibrary);
+        if (fs.existsSync(resourceLibraryPath)) {
+          files.push(resourceLibraryPath);
+        } else {
+          printLog(`Skipping resource library for ${resourceLibrary}`);
+        }
+
+        // This must match the revisionChangesetName in ContentLogic.cpp:
+        const revisionChangesetName = `Version-${cmakeVariables.WELDER_REVISION}-${cmakeVariables.WELDER_CHANGESET}`;
+        const prebuiltPath = path.join(dirs.prebuiltContent, revisionChangesetName, resourceLibrary);
+        if (fs.existsSync(prebuiltPath)) {
+          files.push(prebuiltPath);
+        } else {
+          printLog(`Skipping prebuilt content for ${resourceLibrary}`);
+        }
       }
 
-      // This must match the revisionChangesetName in ContentLogic.cpp:
-      const revisionChangesetName = `Version-${cmakeVariables.WELDER_REVISION}-${cmakeVariables.WELDER_CHANGESET}`;
-      const prebuiltPath = path.join(dirs.prebuiltContent, revisionChangesetName, resourceLibrary);
-      if (fs.existsSync(prebuiltPath)) {
-        files.push(prebuiltPath);
-      } else {
-        printLog(`Skipping prebuilt content for ${resourceLibrary}`);
-      }
+      const relativeFiles = files.map((file) => path.relative(dirs.repo, file));
+      await zipAdd(dirs.repo, fileSystemZip, relativeFiles);
     }
-
-    const relativeFiles = files.map((file) => path.relative(dirs.repo, file));
-    await zipAdd(dirs.repo, fileSystemZip, relativeFiles);
   }
 
   const options = {
@@ -885,7 +887,7 @@ const main = async () => {
     command("cmake", "Generate a cmake project", empty, cmake).
     usage(`cmake ${comboOptions}`).
     command("build", "Build a cmake project (options must match generated version)", empty, build).
-    usage(`build [--target=...] [--parallel=...] ${comboOptions}`).
+    usage(`build [--target=...] [--parallel=...] [--skipfs] ${comboOptions}`).
     command("documentation", "Build generated documentation", empty, documentation).
     usage("documentation").
     command("prebuilt", "Copy prebuilt content", empty, prebuilt).
