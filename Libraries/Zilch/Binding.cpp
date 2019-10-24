@@ -104,6 +104,39 @@ AutoGrabAllocatingType::AutoGrabAllocatingType()
     this->Type = nullptr;
 }
 
+bool BoundTypeHelperIsRawCastable(BoundType* fromType, BoundType* toType)
+{
+  return fromType->IsRawCastableTo(toType);
+}
+
+bool BoundTypeHelperIsInitialized(BoundType* type)
+{
+  return type->IsInitialized();
+}
+
+bool BoundTypeHelperIsInitializedAssert(BoundType* type)
+{
+  return type->IsInitializedAssert();
+}
+
+void LibraryBuilderHelperAddNativeBoundType(LibraryBuilder& builder,
+                                            BoundType* type,
+                                            BoundType* base,
+                                            TypeCopyMode::Enum mode)
+{
+  return builder.AddNativeBoundType(type, base, mode);
+}
+
+void InitializeTypeHelper(StringParam originalName, BoundType* type, size_t size, size_t rawVirtualcount)
+{
+  String typeName =
+      LibraryBuilder::FixIdentifier(typeName, TokenCheck::IsUpper | TokenCheck::SkipPastScopeResolution, '\0');
+  type->Name = typeName;
+  type->TemplateBaseName = typeName;
+  type->Size = size;
+  type->RawNativeVirtualCount = rawVirtualcount;
+}
+
 ZilchDefineExternalBaseType(Boolean, TypeCopyMode::ValueType, builder, type)
 {
 }

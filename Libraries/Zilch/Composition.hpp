@@ -9,6 +9,9 @@ namespace Zilch
 template <typename T>
 class ComponentRange;
 
+// These helpers exist to fix template order issues by forcing implementation in the cpp files.
+Type* TypeHelperGetBaseType(Type* derivedType);
+
 // Allows the user to attach any type to a Zilch primitive
 // The primitive must be default constructable
 class ZeroShared Composition : public IZilchObject
@@ -31,7 +34,7 @@ public:
       // Map the component's most derived type all the way up to its root base
       // type
       this->Components[type] = component;
-      type = Type::GetBaseType(type);
+      type = TypeHelperGetBaseType(type);
     } while (type != nullptr);
     return this;
   }
@@ -127,7 +130,7 @@ public:
     do
     {
       this->Components.Erase(type);
-      type = Type::GetBaseType(type);
+      type = TypeHelperGetBaseType(type);
     } while (type != nullptr);
     return this;
   }

@@ -33,6 +33,14 @@ void ResolveBinaryOp(ZilchSpirVFrontEnd* translator,
     translator->PerformBinaryOp(binaryOpNode, opType, lhs, rhs, context);
 }
 
+void ResolveUnaryOperator(ZilchSpirVFrontEnd* translator,
+                          Zilch::UnaryOperatorNode* unaryOpNode,
+                          OpType opType,
+                          ZilchSpirVFrontEndContext* context)
+{
+  translator->PerformUnaryOp(unaryOpNode, opType, context);
+}
+
 template <OpType opType>
 void ResolveIntIncDecUnaryOperator(ZilchSpirVFrontEnd* translator,
                                    Zilch::UnaryOperatorNode* unaryOpNode,

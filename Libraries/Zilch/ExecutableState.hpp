@@ -809,6 +809,9 @@ ZeroSharedTemplate void InternalWriteRef(const T& value, byte* stackFrame, Execu
   }
 }
 
+// These helpers exist to fix template order issues by forcing implementation in the cpp files.
+DelegateType* CallGetFunctionType(Call& call);
+
 template <typename T>
 ZeroSharedTemplate class CallHelper
 {
@@ -824,7 +827,7 @@ public:
     {
       ExecutableState* executableState = ExecutableState::GetCallingState();
       // Lookup the function type to get the argument name
-      DelegateType* functionType = call.GetFunction()->FunctionType;
+      DelegateType* functionType = CallGetFunctionType(call);
       if (index < functionType->Parameters.Size())
         executableState->ThrowException(
             String::Format("Error: Parameter '%s' cannot be null.", functionType->Parameters[index].Name.c_str()));

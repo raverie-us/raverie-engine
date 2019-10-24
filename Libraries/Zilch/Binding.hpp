@@ -711,6 +711,18 @@ public:
   };
 };
 
+// These helpers exist to fix template order issues by forcing implementation in the cpp files.
+bool BoundTypeHelperIsRawCastable(BoundType* fromType, BoundType* toType);
+bool BoundTypeHelperIsInitialized(BoundType* type);
+bool BoundTypeHelperIsInitializedAssert(BoundType* type);
+void LibraryBuilderHelperAddNativeBoundType(LibraryBuilder& builder,
+                                            BoundType* type,
+                                            BoundType* base,
+                                            TypeCopyMode::Enum mode);
+void InitializeTypeHelper(StringParam originalName, BoundType* type, size_t size, size_t rawVirtualcount);
+template <typename T>
+ZeroSharedTemplate T InternalReadRef(byte* stackFrame);
+
 template <typename T>
 Handle::Handle(const HandleOf<T>& rhs) :
     StoredType(rhs.StoredType),
@@ -736,8 +748,8 @@ Handle::Handle(const T& value, HandleManager* manager, ExecutableState* state)
   typedef typename TypeBinding::StripQualifiers<T>::Type UnqualifiedType;
   const UnqualifiedType* pointer = TypeBinding::ReferenceCast<T&, const UnqualifiedType*>::Cast((T&)value);
   BoundType* type = ZilchVirtualTypeId(pointer);
-  type->IsInitializedAssert();
-  ZilchTypeId(T)->IsInitializedAssert();
+  BoundTypeHelperIsInitializedAssert(type);
+  BoundTypeHelperIsInitializedAssert(ZilchTypeId(T));
   this->Initialize((byte*)pointer, type, manager, state);
 }
 
@@ -754,7 +766,7 @@ T Handle::Get(GetOptions::Enum options) const
   // This supports derived -> base class casting (but not visa versa), enums to
   // integers, etc
   BoundType* toType = ZilchTypeId(T);
-  if (this->StoredType->IsRawCastableTo(toType) == false)
+  if (BoundTypeHelperIsRawCastable(this->StoredType, toType) == false)
   {
     ErrorIf(options == GetOptions::AssertOnNull,
             "There was a value inside the Handle of type '%s' but it cannot be "
@@ -1174,7 +1186,8 @@ void SetupType(LibraryBuilder& builder,
                SetupFunction setupType,
                P_ENABLE_IF(HasZilchSetupType<ZilchSelf>::value))
 {
-  builder.AddNativeBoundType(type, ZilchTypeId(typename ZilchSelf::ZilchBase), ZilchSelf::ZilchCopyMode);
+  LibraryBuilderHelperAddNativeBoundType(
+      builder, type, ZilchTypeId(typename ZilchSelf::ZilchBase), ZilchSelf::ZilchCopyMode);
   if (setupType != nullptr)
     setupType(nullptr, builder, type);
   ZilchSelf::ZilchSetupType(builder, type);
@@ -1201,7 +1214,7 @@ BoundType* InitializeType(const char* initializingTypeName, SetupFunction setupT
 {
   // Check if we've already been initialized
   BoundType* type = ZilchTypeId(InitializingType);
-  if (type->IsInitialized())
+  if (BoundTypeHelperIsInitialized(type))
     return type;
 
   // First initialize our base type...
@@ -1217,11 +1230,7 @@ BoundType* InitializeType(const char* initializingTypeName, SetupFunction setupT
     return type;
   }
   String typeName = initializingTypeName;
-  typeName = LibraryBuilder::FixIdentifier(typeName, TokenCheck::IsUpper | TokenCheck::SkipPastScopeResolution, '\0');
-  type->Name = typeName;
-  type->TemplateBaseName = typeName;
-  type->Size = sizeof(InitializingType);
-  type->RawNativeVirtualCount = TypeBinding::GetVirtualTableCount<InitializingType>();
+  InitializeTypeHelper(typeName, type, sizeof(InitializingType), TypeBinding::GetVirtualTableCount<InitializingType>());
   LibraryBuilder& builder = *library.GetBuilder();
   SetupType<InitializingType>(builder, type, setupType);
   return type;

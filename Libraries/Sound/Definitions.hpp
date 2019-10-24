@@ -63,6 +63,9 @@ float DecibelsToVolume(float decibels);
 
 } // namespace AudioConstants
 
+// These helpers exist to fix template order issues by forcing implementation in the cpp files.
+void SetThreadedValue(Functor* task, AudioThreads::Enum threadCalledOn);
+
 template <typename T>
 class Threaded
 {
@@ -86,9 +89,9 @@ public:
     mValues[threadCalledOn] = value;
 
     if (threadCalledOn == AudioThreads::MainThread)
-      Z::gSound->Mixer.AddTask(CreateFunctor(&mValues[AudioThreads::MixThread], value), nullptr);
+      SetThreadedValue(CreateFunctor(&mValues[AudioThreads::MixThread], value), threadCalledOn);
     else
-      Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&mValues[AudioThreads::MainThread], value), nullptr);
+      SetThreadedValue(CreateFunctor(&mValues[AudioThreads::MainThread], value), threadCalledOn);
   }
 
   void SetDirectly(T value)

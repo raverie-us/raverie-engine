@@ -24,6 +24,24 @@ void DummyBoundFunction(Zilch::Call& call, Zilch::ExceptionReport& report)
   call.MarkReturnAsSet();
 }
 
+void ResolveSimpleFunction(ZilchSpirVFrontEnd* translator,
+                           Zilch::FunctionCallNode* functionCallNode,
+                           Zilch::MemberAccessNode* memberAccessNode,
+                           OpType opType,
+                           ZilchSpirVFrontEndContext* context)
+{
+  ZilchShaderIRType* resultType = translator->FindType(functionCallNode->ResultType, functionCallNode);
+
+  ZilchShaderIROp* result = translator->BuildIROpNoBlockAdd(opType, resultType, context);
+  for (size_t i = 0; i < functionCallNode->Arguments.Size(); ++i)
+  {
+    ZilchShaderIROp* arg = translator->WalkAndGetValueTypeResult(functionCallNode->Arguments[i], context);
+    result->mArguments.PushBack(arg);
+  }
+  context->GetCurrentBlock()->AddOp(result);
+  context->PushIRStack(result);
+}
+
 void ResolveVectorTypeCount(ZilchSpirVFrontEnd* translator,
                             Zilch::FunctionCallNode* functionCallNode,
                             Zilch::MemberAccessNode* memberAccessNode,

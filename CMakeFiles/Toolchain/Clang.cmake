@@ -4,7 +4,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 set(WELDER_C_CXX_FLAGS "\
   -Wno-address-of-packed-member\
   -Wno-empty-body\
-  -fdelayed-template-parsing\
   -fexceptions\
   -frtti\
   -fno-vectorize\

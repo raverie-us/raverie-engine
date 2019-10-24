@@ -4,6 +4,11 @@
 
 namespace Zilch
 {
+Type* TypeHelperGetBaseType(Type* derivedType)
+{
+  return Type::GetBaseType(derivedType);
+}
+
 Composition::Composition()
 {
 }

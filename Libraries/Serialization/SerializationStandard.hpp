@@ -27,6 +27,7 @@ public:
 #include "ZeroContainers.hpp"
 #include "SerializationBuilder.hpp"
 #include "Tokenizer.hpp"
+#include "SerializationUtility.hpp"
 #include "Text.hpp"
 #include "Binary.hpp"
 #include "DataTreeNode.hpp"
@@ -38,4 +39,3 @@ public:
 #include "EnumSerialization.hpp"
 #include "MetaSerialization.hpp"
 #include "MathSerialization.hpp"
-#include "SerializationUtility.hpp"

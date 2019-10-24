@@ -1782,6 +1782,11 @@ byte* ExecutableState::GetStaticField(Field* field, ExceptionReport& report)
   return staticMemory;
 }
 
+DelegateType* CallGetFunctionType(Call& call)
+{
+  return call.GetFunction()->FunctionType;
+}
+
 void Call::PerformStandardChecks(
     size_t size, Type* userType, Type* actualType, CheckPrimitive::Enum primitive, Direction::Enum io)
 {

@@ -18,7 +18,6 @@ set(WELDER_C_CXX_FLAGS "\
   -s WASM=1\
   -s SIMD=0\
   -s ASYNCIFY=1\
-  -fdelayed-template-parsing\
   -fexceptions\
   -frtti\
   -fno-vectorize\

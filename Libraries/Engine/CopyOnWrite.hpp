@@ -85,7 +85,7 @@ public:
 
   T& operator*() const
   {
-    ReturnIf(mData == nullptr, *nullptr, "Attempting to dereference * off an invalid CopyOnWriteHandle");
+    ReturnIf(mData == nullptr, GetInvalidObject<T>(), "Attempting to dereference * off an invalid CopyOnWriteHandle");
     return mData->mObject;
   }
 

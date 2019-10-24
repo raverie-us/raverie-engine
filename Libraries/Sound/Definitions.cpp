@@ -4,6 +4,13 @@
 
 namespace Zero
 {
+void SetThreadedValue(Functor* task, AudioThreads::Enum threadCalledOn)
+{
+  if (threadCalledOn == AudioThreads::MainThread)
+    Z::gSound->Mixer.AddTask(task, nullptr);
+  else
+    Z::gSound->Mixer.AddTaskThreaded(task, nullptr);
+}
 
 void LogAudioIoError(StringParam message, String* savedMessage)
 {

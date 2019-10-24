@@ -9,6 +9,9 @@ DeclareEvent(PathFinderFinishedGeneric);
 DeclareEvent(PathFinderFinished);
 } // namespace Events
 
+template <typename NodeKey, typename Algorithm>
+class PathFinderJob;
+
 // PathFinderAlgorithm
 // To derive from PathFinderAlgorithm you must provide the following interface:
 // Template Types:
@@ -122,6 +125,37 @@ public:
 // PathFinder
 class PathFinderRequest;
 class PathFinderBaseEvent;
+class PathFinder;
+
+DeclareEnum4(PathFinderStatus, Pending, Succeeded, Failed, Cancelled);
+
+/// Represents a threaded path finding calculation. You may listen on the
+/// PathFinderRequest for events such as PathFinderFinished
+/// (or more specific events such as PathFinderGridFinished if you are using a
+/// PathFinderGrid, etc). The status of the threaded request is also available
+/// on this class.
+class PathFinderRequest : public ReferenceCountedThreadSafeId32EventObject
+{
+public:
+  ZilchDeclareType(PathFinderRequest, TypeCopyMode::ReferenceType);
+
+  PathFinderRequest(PathFinder* owner, Job* job);
+
+  /// Requests to stop the thread running the path finding calculation.
+  void Cancel();
+
+  // Internals
+  void OnJobFinished(PathFinderBaseEvent* event);
+  HandleOf<Job> mJob;
+
+  /// The component that initiated this request.
+  /// You may need to cast this into the derived type (for example to
+  /// PathFinderGrid).
+  HandleOf<PathFinder> mPathFinderComponent;
+
+  /// The status of the threaded path finding calculation.
+  PathFinderStatus::Enum mStatus;
+};
 
 /// A base class for all path finding implementations. The base provides
 /// functionality such as path finding with Real3 vectors from one position to
@@ -221,36 +255,6 @@ public:
   /// terminate it. This prevents infinite loops when we have an unbounded
   /// number of nodes/edges.
   int mMaxIterations;
-};
-
-DeclareEnum4(PathFinderStatus, Pending, Succeeded, Failed, Cancelled);
-
-/// Represents a threaded path finding calculation. You may listen on the
-/// PathFinderRequest for events such as PathFinderFinished
-/// (or more specific events such as PathFinderGridFinished if you are using a
-/// PathFinderGrid, etc). The status of the threaded request is also available
-/// on this class.
-class PathFinderRequest : public ReferenceCountedThreadSafeId32EventObject
-{
-public:
-  ZilchDeclareType(PathFinderRequest, TypeCopyMode::ReferenceType);
-
-  PathFinderRequest(PathFinder* owner, Job* job);
-
-  /// Requests to stop the thread running the path finding calculation.
-  void Cancel();
-
-  // Internals
-  void OnJobFinished(PathFinderBaseEvent* event);
-  HandleOf<Job> mJob;
-
-  /// The component that initiated this request.
-  /// You may need to cast this into the derived type (for example to
-  /// PathFinderGrid).
-  HandleOf<PathFinder> mPathFinderComponent;
-
-  /// The status of the threaded path finding calculation.
-  PathFinderStatus::Enum mStatus;
 };
 
 /// An event that contains common data between all path-finding implementations.
