@@ -130,7 +130,7 @@ void LibraryBuilderHelperAddNativeBoundType(LibraryBuilder& builder,
 void InitializeTypeHelper(StringParam originalName, BoundType* type, size_t size, size_t rawVirtualcount)
 {
   String typeName =
-      LibraryBuilder::FixIdentifier(typeName, TokenCheck::IsUpper | TokenCheck::SkipPastScopeResolution, '\0');
+      LibraryBuilder::FixIdentifier(originalName, TokenCheck::IsUpper | TokenCheck::SkipPastScopeResolution, '\0');
   type->Name = typeName;
   type->TemplateBaseName = typeName;
   type->Size = size;
