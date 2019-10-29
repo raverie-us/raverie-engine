@@ -19,6 +19,7 @@ struct ShellPrivateData
 };
 
 static const char* cShellWindow = "ShellWindow";
+SDL_Window* gSdlMainWindow = nullptr;
 
 // In SDL 'global' is synonymous with 'monitor' space and 'relative' means
 // 'client' space.
@@ -821,12 +822,15 @@ ShellWindow::ShellWindow(Shell* shell,
   {
     ErrorIf(shell->mMainWindow != nullptr, "Another main window already exists");
     shell->mMainWindow = this;
+    gSdlMainWindow = sdlWindow;
   }
   shell->mWindows.PushBack(this);
 }
 
 ShellWindow::~ShellWindow()
 {
+  if (gSdlMainWindow == mHandle)
+    gSdlMainWindow = nullptr;
   Destroy();
 }
 

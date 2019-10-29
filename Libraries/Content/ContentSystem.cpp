@@ -525,7 +525,7 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status, AddContentIt
     if (!contentFileExists)
     {
       status.SetFailed(
-          String::Format("File %s is missing from content library %s ", info.FileName.c_str(), library->Name.c_str()));
+          String::Format("File %s is missing from content library %s ", fullPath.c_str(), library->Name.c_str()));
       return nullptr;
     }
 

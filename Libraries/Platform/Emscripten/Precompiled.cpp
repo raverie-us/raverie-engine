@@ -62,13 +62,65 @@ void glDisablei(GLenum cap, GLuint index)
 
 using namespace Zero;
 
+namespace Zero
+{
+extern SDL_Window* gSdlMainWindow;
+}
+
+// TODO(Trevor.Sundberg): Refactor the drag drop and open dialogs so that they can just directly input
+// arrays of buffers (no need to write to the disk, read it and then write to the VFS, and read it again...).
+bool CopyToVFS(StringParam file)
+{
+  FILE* sourceFile = fopen(file.c_str(), "rb");
+  if (sourceFile == nullptr)
+    return false;
+
+  File destFile;
+  if (!destFile.Open(file, FileMode::Write, FileAccessPattern::Sequential))
+  {
+    fclose(sourceFile);
+    return false;
+  }
+
+  const int bufferSize = 4096;
+
+  bool result = true;
+  char buf[bufferSize];
+  for (;;)
+  {
+    size_t bytesRead = fread(buf, 1, bufferSize, sourceFile);
+    if (ferror(sourceFile))
+    {
+      result = false;
+      break;
+    }
+
+    size_t written = destFile.Write((byte*)buf, bytesRead);
+    if (!written)
+    {
+      result = false;
+      break;
+    }
+
+    if (bytesRead != bufferSize)
+      break;
+  }
+
+  fclose(sourceFile);
+  return result;
+}
+
 extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenFileDropHandler(char* fileBuffer)
 {
   // We're relying on the Emscripten instance only having one window with GL
   // setup. This could be changed to get a saved id somewhere for the primary
   // window.
-  SDL_Window* sdlWindow = SDL_GL_GetCurrentWindow();
-  ReturnIf(!sdlWindow, , "Could not get window from SDL_GL_GetCurrentWindow");
+  SDL_Window* sdlWindow = gSdlMainWindow;
+  if (!sdlWindow)
+    sdlWindow = SDL_GetGrabbedWindow();
+  if (!sdlWindow)
+    sdlWindow = SDL_GL_GetCurrentWindow();
+  ReturnIf(!sdlWindow, , "Could not get SDL window for drag/drop");
   Uint32 windowID = SDL_GetWindowID(sdlWindow);
 
   // Create the drop event
@@ -92,6 +144,7 @@ extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenFileDropHandler(char* fileBuffer)
     dropEvent.file = dropFile;
     // Set the window id and queue the event
     SDL_PushEvent((SDL_Event*)&dropEvent);
+    CopyToVFS(dropFile);
 
     it += stringSizeInBytes;
   }
@@ -124,6 +177,7 @@ extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenShellOpenFileEnd(char* fileBuffer
     while (*it != '\0')
     {
       String file(it);
+      CopyToVFS(file);
       config.mFiles.PushBack(file);
 
       it += file.SizeInBytes() + 1;
