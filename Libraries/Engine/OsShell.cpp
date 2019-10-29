@@ -227,15 +227,23 @@ SimpleSaveFileDialog::SimpleSaveFileDialog(StringParam data,
                                            StringParam defaultFileName) :
     mData(data)
 {
-  FileDialogConfig* config = FileDialogConfig::Create();
-  config->CallbackObject = this;
-  config->Title = title;
-  config->AddFilter(filterName, filter);
-  config->DefaultFileName = defaultFileName;
-  config->mDefaultSaveExtension = defaultExtension;
+  if (Os::SupportsDownloadingFiles())
+  {
+    Download(defaultFileName, data);
+    delete this;
+  }
+  else
+  {
+    FileDialogConfig* config = FileDialogConfig::Create();
+    config->CallbackObject = this;
+    config->Title = title;
+    config->AddFilter(filterName, filter);
+    config->DefaultFileName = defaultFileName;
+    config->mDefaultSaveExtension = defaultExtension;
 
-  ConnectThisTo(this, Events::FileDialogComplete, OnFileDialogComplete);
-  Z::gEngine->has(OsShell)->SaveFile(config);
+    ConnectThisTo(this, Events::FileDialogComplete, OnFileDialogComplete);
+    Z::gEngine->has(OsShell)->SaveFile(config);
+  }
 }
 
 void SimpleSaveFileDialog::OnFileDialogComplete(OsFileSelection* event)
@@ -244,7 +252,6 @@ void SimpleSaveFileDialog::OnFileDialogComplete(OsFileSelection* event)
   {
     String filePath = event->Files[0];
     WriteStringRangeToFile(filePath, mData);
-    DownloadFiles(filePath);
   }
   delete this;
 }

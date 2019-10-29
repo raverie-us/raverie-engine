@@ -127,6 +127,8 @@ public:
 
   // Set data block to use for this byte buffer
   void SetBlock(DataBlock block);
+  DataBlock GetBlock();
+  const DataBlock GetBlock() const;
 
   // Read data from buffer.
   size_t Read(Status& status, byte* data, size_t sizeInBytes);
@@ -144,7 +146,7 @@ public:
   byte* GetCurrent();
 
   // Size of a buffer.
-  size_t Size();
+  size_t Size() const;
 
   // Return current position.
   size_t Tell();

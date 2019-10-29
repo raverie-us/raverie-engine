@@ -733,7 +733,7 @@ void BackupProjectJob::Execute()
   // If requested, open the target directory on completion.
   if (mOpenDirectoryOnCompletion)
     Os::SystemOpenFile(targetDirectory.c_str());
-  DownloadFiles(targetDirectory);
+  Download(targetDirectory);
 }
 
 void BackupProjectJob::GetFileList(StringParam path, StringParam parentPath, Array<ArchiveData>& fileList)

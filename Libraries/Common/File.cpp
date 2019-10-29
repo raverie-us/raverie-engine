@@ -72,6 +72,15 @@ DataBlock ReadFileIntoDataBlock(cstr path)
   return block;
 }
 
+ByteBufferBlock ReadFileIntoByteBufferBlock(cstr path)
+{
+  size_t size = 0;
+  byte* data = ReadFileIntoMemory(path, size, 0);
+  ByteBufferBlock block;
+  block.SetData(data, size, true);
+  return block;
+}
+
 String ReadFileIntoString(StringParam path)
 {
   Zero::DataBlock block = Zero::ReadFileIntoDataBlock(path.c_str());

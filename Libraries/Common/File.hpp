@@ -29,6 +29,7 @@ typedef u64 FilePosition;
 
 ZeroShared byte* ReadFileIntoMemory(cstr path, size_t& fileSize, size_t extra = 0);
 ZeroShared DataBlock ReadFileIntoDataBlock(cstr path);
+ZeroShared ByteBufferBlock ReadFileIntoByteBufferBlock(cstr path);
 ZeroShared String ReadFileIntoString(StringParam path);
 ZeroShared size_t WriteToFile(cstr filePath, const byte* data, size_t bufferSize);
 

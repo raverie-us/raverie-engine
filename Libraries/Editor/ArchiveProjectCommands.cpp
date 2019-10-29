@@ -13,7 +13,7 @@ void ArchiveProjectFile(Cog* projectCog, StringParam filename)
   Archive projectArchive(ArchiveMode::Compressing);
   projectArchive.ArchiveDirectory(status, projectDirectory);
   projectArchive.WriteZipFile(filename);
-  DownloadFiles(filename);
+  Download(filename);
 }
 
 class ArchiveProjectJob : public Job

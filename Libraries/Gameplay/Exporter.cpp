@@ -600,7 +600,7 @@ void Exporter::ExportApplication(HashSet<String> exportTargets)
       exportTarget->ExportApplication();
   }
   Z::gEngine->LoadingFinish();
-  DownloadFiles(mOutputDirectory);
+  Download(mOutputDirectory);
 }
 
 void Exporter::ExportContent(HashSet<String> exportTargets)
@@ -615,7 +615,7 @@ void Exporter::ExportContent(HashSet<String> exportTargets)
       exportTarget->ExportContentFolders(mProjectCog);
   }
   Z::gEngine->LoadingFinish();
-  DownloadFiles(mOutputDirectory);
+  Download(mOutputDirectory);
 }
 
 void Exporter::CopyContent(Status& status, String outputDirectory, ExportTarget* target)

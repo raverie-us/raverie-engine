@@ -315,29 +315,49 @@ void PopulateVirtualFileSystemWithZip(void* userData)
   }
 }
 
-void DownloadFiles(StringParam filePath)
+void Download(StringParam fileName, const Array<byte>& binaryData)
 {
-  DownloadFiles(FilePath::GetFileNameWithoutExtension(filePath),
-                FilePath::GetDirectoryPath(filePath),
-                Array<String>(ZeroInit, filePath));
+  Os::DownloadFile(fileName.c_str(), DataBlock((byte*)binaryData.Data(), binaryData.Size()));
 }
 
-void DownloadFiles(StringParam suggestedNameWithoutExtension,
-                   StringParam workingDirectory,
-                   const Array<String>& filePaths)
+void Download(StringParam fileName, const DataBlock& binaryData)
 {
-  if (!Os::SupportsDownloadingFiles())
+  Os::DownloadFile(fileName.c_str(), DataBlock(binaryData.Data, binaryData.Size));
+}
+
+void Download(StringParam fileName, StringParam binaryData)
+{
+  Os::DownloadFile(fileName.c_str(), DataBlock((byte*)binaryData.Data(), binaryData.SizeInBytes()));
+}
+
+void Download(StringParam fileName, const ByteBufferBlock& binaryData)
+{
+  Os::DownloadFile(fileName.c_str(), binaryData.GetBlock());
+}
+
+void Download(StringParam filePath)
+{
+  Download(FilePath::GetFileNameWithoutExtension(filePath),
+           FilePath::GetDirectoryPath(filePath),
+           Array<String>(ZeroInit, filePath));
+}
+
+void Download(StringParam suggestedNameWithoutExtension, StringParam workingDirectory, const Array<String>& filePaths)
+{
+  if (!Os::SupportsDownloadingFiles() || filePaths.Empty())
     return;
 
   if (filePaths.Size() == 1 && FileExists(filePaths.Front()))
   {
-    ZPrint("Downloading single file %s\n", filePaths.Front().c_str());
-    Os::DownloadFile(filePaths.Front().c_str());
+    String filePath = filePaths.Front();
+    ZPrint("Downloading single file %s\n", filePath.c_str());
+    ByteBufferBlock block = ReadFileIntoByteBufferBlock(filePath.c_str());
+    String fileName = FilePath::GetFileName(filePath);
+    Os::DownloadFile(fileName.c_str(), block.GetBlock());
   }
   else
   {
     String workingDirectoryNormalized = FilePath::Normalize(workingDirectory);
-    String tempFile = FilePath::CombineWithExtension(GetTemporaryDirectory(), suggestedNameWithoutExtension, ".zip");
     Status status;
     Archive archive(ArchiveMode::Compressing);
     forRange (StringParam filePath, filePaths)
@@ -364,9 +384,11 @@ void DownloadFiles(StringParam suggestedNameWithoutExtension,
         archive.ArchiveDirectory(status, filePath, workingDirectory);
       }
     }
-    archive.WriteZipFile(tempFile);
-    Os::DownloadFile(tempFile.c_str());
-    DeleteFile(tempFile);
+    ByteBufferBlock block(archive.ComputeZipSize());
+    archive.WriteBuffer(block);
+
+    String fileName = suggestedNameWithoutExtension + ".zip";
+    Os::DownloadFile(fileName.c_str(), block.GetBlock());
   }
 }
 

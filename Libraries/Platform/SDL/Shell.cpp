@@ -437,7 +437,31 @@ void Shell::OpenFile(FileDialogInfo& config)
 #if !defined(ZeroPlatformNoShellSaveFile)
 void Shell::SaveFile(FileDialogInfo& config)
 {
-  return FileDialog(this, config, false);
+  String downloads = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "Downloads");
+  CreateDirectoryAndParents(downloads);
+
+  String filePath = FilePath::Combine(downloads, config.DefaultFileName);
+  if (FileExists(filePath) || DirectoryExists(filePath))
+  {
+    String id = "_" + ToString(GenerateUniqueId64());
+    String fileName;
+    StringRange dot = config.DefaultFileName.FindLastOf(".");
+    if (!dot.Empty())
+      fileName = BuildString(config.DefaultFileName.SubString(config.DefaultFileName.Begin(), dot.Begin()),
+                             id,
+                             ".",
+                             config.DefaultFileName.SubString(dot.End(), config.DefaultFileName.End()));
+    else
+      fileName = config.DefaultFileName + id;
+
+    filePath = FilePath::Combine(downloads, fileName);
+  }
+
+  config.mFiles.PushBack(filePath);
+  if (config.mCallback)
+    config.mCallback(config.mFiles, config.mUserData);
+  Status status;
+  Os::SystemOpenFile(status, downloads.c_str());
 }
 #endif
 

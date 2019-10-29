@@ -57,8 +57,8 @@ ZeroShared bool SystemOpenFile(
 // On browser based platforms, we can't access the user's file-system so we need to download files instead.
 ZeroShared bool SupportsDownloadingFiles();
 
-// Download a single file (NOT directory) to the user's file system (on supported browser platforms).
-ZeroShared void DownloadFile(cstr filePath);
+// Download a single file to the user's file system (on supported browser platforms).
+ZeroShared void DownloadFile(cstr fileName, const DataBlock& data);
 
 // Open's a url in a browser or tab.
 ZeroShared void OpenUrl(cstr url);

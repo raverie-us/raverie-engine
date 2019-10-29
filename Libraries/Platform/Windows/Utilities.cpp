@@ -226,7 +226,7 @@ bool SupportsDownloadingFiles()
   return false;
 }
 
-void DownloadFile(cstr filePath)
+void DownloadFile(cstr fileName, const DataBlock& data)
 {
 }
 

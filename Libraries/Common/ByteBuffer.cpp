@@ -267,6 +267,16 @@ void ByteBufferBlock::SetBlock(DataBlock block)
   mOwnsData = false;
 }
 
+DataBlock ByteBufferBlock::GetBlock()
+{
+  return DataBlock(mData, mSize);
+}
+
+const DataBlock ByteBufferBlock::GetBlock() const
+{
+  return DataBlock(mData, mSize);
+}
+
 ByteBufferBlock::~ByteBufferBlock()
 {
   Deallocate();
@@ -309,7 +319,7 @@ size_t ByteBufferBlock::Write(byte value)
   return Write(&value, 1);
 }
 
-size_t ByteBufferBlock::Size()
+size_t ByteBufferBlock::Size() const
 {
   return mSize;
 }

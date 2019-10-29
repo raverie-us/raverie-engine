@@ -889,7 +889,7 @@ void SpriteSourceEditor::OnExportAllFrames(Event* event)
   // Open the directory we saved the sprite frames into
   Os::SystemOpenFile(mEditDirectory.c_str(), Os::Verb::Open);
 
-  DownloadFiles(spriteSource->Name, mEditDirectory, downloadFiles);
+  Download(spriteSource->Name, mEditDirectory, downloadFiles);
 }
 
 void SpriteSourceEditor::OnSpriteSourceRemoved(ResourceEvent* event)

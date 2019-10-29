@@ -162,6 +162,21 @@ void WebRequest(Status& status,
 }
 #endif
 
+bool ShellOpen(const char* path)
+{
+  static cstr cOpeners[] = {"xdg-open", "open", "start"};
+  static const size_t cOpenersCount = sizeof(cOpeners) / sizeof(*cOpeners);
+
+  bool result = false;
+  for (size_t i = 0; i < cOpenersCount; ++i)
+  {
+    String commandLine = String::Format("%s \"%s\" &", cOpeners[i], path);
+    if (system(commandLine.c_str()) == 0)
+      result = true;
+  }
+  return result;
+}
+
 #if !defined(ZeroPlatformNoSystemOpenFile)
 bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
@@ -171,7 +186,11 @@ bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr 
   else
     commandLine = String::Format("\"%s\" %s &", file, parameters);
   int result = system(commandLine.c_str());
-  return result != 0;
+  if (result == 0)
+    return true;
+
+  // Does not take into account the working directory or parameters, but it will open the file.
+  return ShellOpen(file);
 }
 #endif
 
@@ -183,7 +202,7 @@ bool SupportsDownloadingFiles()
 #endif
 
 #if !defined(ZeroPlatformNoDownloadFile)
-void DownloadFile(cstr filePath)
+void DownloadFile(cstr fileName, const DataBlock& data)
 {
 }
 #endif
@@ -191,8 +210,7 @@ void DownloadFile(cstr filePath)
 #if !defined(ZeroPlatformNoOpenUrl)
 void OpenUrl(cstr url)
 {
-  String commandLine = String::Format("xdg-open \"%s\" || open \"%s\" || start \"%s\"", url);
-  system(commandLine.c_str());
+  ShellOpen(url);
 }
 #endif
 

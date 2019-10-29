@@ -121,13 +121,20 @@ String HumanReadableFileSize(u64 bytes);
 // platforms that don't have an actual file system, so we use memory instead.
 void PopulateVirtualFileSystemWithZip(void* userData);
 
+// Download a single file.
+void Download(StringParam fileName, const Array<byte>& binaryData);
+// Download a single file.
+void Download(StringParam fileName, const DataBlock& binaryData);
+// Download a single file.
+void Download(StringParam fileName, StringParam binaryData);
+// Download a single file.
+void Download(StringParam fileName, const ByteBufferBlock& binaryData);
+
 // Download a single file or if it is a directory download a zip of the directory.
-void DownloadFiles(StringParam filePath);
+void Download(StringParam filePath);
 
 // If we're passed a single file, download the file individually.
 // If we're passed a directory or a set of files or directories, then zip them and download as one.
-void DownloadFiles(StringParam suggestedNameWithoutExtension,
-                   StringParam workingDirectory,
-                   const Array<String>& filePaths);
+void Download(StringParam suggestedNameWithoutExtension, StringParam workingDirectory, const Array<String>& filePaths);
 
 } // namespace Zero

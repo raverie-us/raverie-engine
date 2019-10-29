@@ -360,7 +360,7 @@ void UnitTestSystem::OnUnitTestRecordFileSelected(OsFileSelection* event)
 
   String filePath = event->Files.Front();
   RecordToZeroTestFile(filePath);
-  DownloadFiles(filePath);
+  Download(filePath);
 }
 
 void UnitTestSystem::RecordToZeroTestFile(StringParam zeroTestFile)

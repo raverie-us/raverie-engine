@@ -193,6 +193,7 @@ void CopyPrebuiltContent()
     ZPrint("  Copying %s\n", library->Name.c_str());
     ExportUtility::CopyLibraryOut(outputDirectory, library, false);
   }
+  Download(outputDirectory);
 }
 
 void BindAppCommands(Cog* config, CommandManager* commands)

@@ -178,11 +178,9 @@ bool SupportsDownloadingFiles()
   return true;
 }
 
-void DownloadFile(cstr filePath)
+void DownloadFile(cstr fileName, const DataBlock& data)
 {
-  String binaryData = ReadFileIntoString(filePath);
-  String fileName = FilePath::GetFileName(filePath);
-  EmscriptenDownloadFile(fileName.c_str(), binaryData.Data(), binaryData.SizeInBytes());
+  EmscriptenDownloadFile(fileName, data.Data, data.Size);
 }
 
 void OpenUrl(cstr url)
