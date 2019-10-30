@@ -227,14 +227,49 @@ void DownloadStandaloneTaskJob::Execute()
   DownloadTaskJob::Execute();
 }
 
+void Install(StringParam installLocation, StringParam metaContents, StringParam data)
+{
+  EnsureEmptyDirectory(installLocation);
+
+  // Save the meta file out for this build (cached as a string to avoid
+  // threading issues)
+  String metaFilePath = ZeroBuild::GetMetaFilePath(installLocation);
+  WriteStringRangeToFile(metaFilePath, metaContents);
+
+  // decompress the archive to our install location
+  Archive archive(ArchiveMode::Decompressing);
+  ByteBufferBlock buffer((byte*)data.Data(), data.SizeInBytes(), false);
+  // Unfortunately, archive doesn't return any failed state so we could get
+  // back an invalid zip. Currently this should only happen if the server code
+  // is wrong.
+  archive.ReadBuffer(ArchiveReadFlags::All, buffer);
+  archive.ExportToDirectory(ArchiveExportMode::Overwrite, installLocation);
+
+  String executablePath = FilePath::Combine(installLocation, GetEditorExecutableFileName());
+  Os::MarkAsExecutable(executablePath.c_str());
+
+  // For platforms like Emscripten, the build will package the file into a virtual file system.
+  // Extract any file that is a zip file.
+  FileRange range(installLocation);
+  // We have to make a copy of the range so that way we don't walk over files we just extracted.
+  Array<String> entries = RangeToArray<String>(range);
+  forRange(StringParam fileName, entries)
+  {
+    String fullPath = FilePath::Combine(installLocation, fileName);
+    if (Archive::IsZip(fullPath))
+    {
+      Archive internalArchive(ArchiveMode::Decompressing);
+      internalArchive.ReadZipFile(ArchiveReadFlags::All, fullPath);
+      internalArchive.ExportToDirectory(ArchiveExportMode::Overwrite, installLocation);
+    }
+  }
+}
+
 void DownloadStandaloneTaskJob::OnReponse(WebResponseEvent* event)
 {
   if (event->mResponseCode == WebResponseCode::OK)
   {
     String data = event->mData;
-
-    // Make sure the directory where we're extract to exists
-    CreateDirectoryAndParents(mInstallLocation);
 
     // Validate that we got any data (otherwise archive fails)
     if (data.SizeInBytes() == 0)
@@ -244,23 +279,7 @@ void DownloadStandaloneTaskJob::OnReponse(WebResponseEvent* event)
       return;
     }
 
-    // Save the meta file out for this build (cached as a string to avoid
-    // threading issues)
-    String metaFilePath = ZeroBuild::GetMetaFilePath(mInstallLocation);
-    WriteStringRangeToFile(metaFilePath, mMetaContents);
-
-    // Decompress the archive to our install location
-    Archive archive(ArchiveMode::Decompressing);
-    ByteBufferBlock buffer((byte*)data.Data(), data.SizeInBytes(), false);
-    // Unfortunately, archive doesn't return any failed state so we could get
-    // back an invalid zip. Currently this should only happen if the server code
-    // is wrong.
-    archive.ReadBuffer(ArchiveReadFlags::All, buffer);
-    archive.ExportToDirectory(ArchiveExportMode::Overwrite, mInstallLocation);
-
-    String executablePath = FilePath::Combine(mInstallLocation, GetEditorExecutableFileName());
-    Os::MarkAsExecutable(executablePath.c_str());
-
+    Install(mInstallLocation, mMetaContents, data);
     mState = BackgroundTaskState::Completed;
   }
   else
@@ -300,28 +319,7 @@ void InstallBuildTaskJob::Execute()
 
 void InstallBuildTaskJob::InstallBuild()
 {
-  // if the build folder already exists for some reason then replace it (maybe
-  // prompt later)
-  if (FileExists(mInstallLocation))
-    DeleteDirectory(mInstallLocation);
-
-  // make sure the directory where we're extract to exists
-  CreateDirectoryAndParents(mInstallLocation);
-
-  // Save the meta file out for this build (cached as a string to avoid
-  // threading issues)
-  String metaFilePath = ZeroBuild::GetMetaFilePath(mInstallLocation);
-  WriteStringRangeToFile(metaFilePath, mMetaContents);
-
-  // decompress the archive to our install location
-  Archive archive(ArchiveMode::Decompressing);
-  ByteBufferBlock buffer((byte*)mData.Data(), mData.SizeInBytes(), false);
-  archive.ReadBuffer(ArchiveReadFlags::All, buffer);
-  archive.ExportToDirectory(ArchiveExportMode::Overwrite, mInstallLocation);
-
-  String executablePath = FilePath::Combine(mInstallLocation, GetEditorExecutableFileName());
-  Os::MarkAsExecutable(executablePath.c_str());
-
+  Install(mInstallLocation, mMetaContents, mData);
   mState = BackgroundTaskState::Completed;
 }
 
