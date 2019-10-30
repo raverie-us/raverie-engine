@@ -253,9 +253,10 @@
       function downloadFileInMemory(fileName, dataPtr, byteLength)
       {
         const dataHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, byteLength);
-        const base64Data = btoa(String.fromCharCode.apply(null, dataHeap));
-        const dataUrl = 'data:application/octet-stream;base64,' + base64Data;
-        downloadFile(fileName, dataUrl);
+        const blob = new Blob([dataHeap], {type: "application/octet-stream"});
+        const url  = window.URL.createObjectURL(blob);
+        downloadFile(fileName, url);
+        window.URL.revokeObjectURL(url);
       }
 
       function sanitizeHTML(html)
