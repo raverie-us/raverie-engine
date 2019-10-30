@@ -994,4 +994,15 @@ struct MoveWithoutDestructionOperator<Array<ValueType, Allocator, tt_traits>>
   }
 };
 
+template <typename T, typename Range>
+Array<T> RangeToArray(Range& range)
+{
+  Array<T> array;
+  while (!range.Empty()) {
+    array.PushBack(range.Front());
+    range.PopFront();
+  }
+  return array;
+}
+
 } // namespace Zero
