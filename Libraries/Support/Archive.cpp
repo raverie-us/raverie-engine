@@ -485,6 +485,14 @@ void Archive::WriteZipInternal(Stream& file)
 }
 
 template <typename Stream>
+bool Archive::IsZipFileInternal(Stream& file)
+{
+  u32 signature = 0;
+  PeekType(file, signature);
+  return signature == LocalHeader;
+}
+
+template <typename Stream>
 void Archive::ReadZipFileInternal(ArchiveReadFlags::Enum readFlags, Stream& file)
 {
   u32 signature = 0;
@@ -615,6 +623,31 @@ void Archive::ReadZip(ArchiveReadFlags::Enum readFlags, DataBlock block)
   ByteBufferBlock buffer;
   buffer.SetBlock(block);
   ReadBuffer(readFlags, buffer);
+}
+
+bool Archive::IsZip(StringParam filePath)
+{
+  File file;
+  if (!file.Open(filePath.c_str(), FileMode::Read, FileAccessPattern::Sequential))
+    return false;
+  return IsZip(file);
+}
+
+bool Archive::IsZip(File& file)
+{
+  return IsZipFileInternal(file);
+}
+
+bool Archive::IsZip(DataBlock block)
+{
+  ByteBufferBlock buffer;
+  buffer.SetBlock(block);
+  return IsZipFileInternal(buffer);
+}
+
+bool Archive::IsZip(ByteBufferBlock& buffer)
+{
+  return IsZipFileInternal(buffer);
 }
 
 void Archive::ReadZip(ArchiveReadFlags::Enum readFlags, File& file)

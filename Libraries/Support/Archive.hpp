@@ -98,6 +98,11 @@ public:
   void ReadZip(ArchiveReadFlags::Enum readFlags, File& file);
   void ReadZip(ArchiveReadFlags::Enum readFlags, DataBlock block);
 
+  static bool IsZip(StringParam filePath);
+  static bool IsZip(File& file);
+  static bool IsZip(DataBlock block);
+  static bool IsZip(ByteBufferBlock& buffer);
+
   // Write or Read from a buffer object.
   void WriteBuffer(ByteBuffer& buffer);
   void WriteBuffer(ByteBufferBlock& buffer);
@@ -138,6 +143,8 @@ private:
   void DecompressEntry(ArchiveEntry& entry);
   void ComputeOffsets();
 
+  template <typename Stream>
+  static bool IsZipFileInternal(Stream& file);
   template <typename Stream>
   void ReadZipFileInternal(ArchiveReadFlags::Enum readFlags, Stream& file);
 
