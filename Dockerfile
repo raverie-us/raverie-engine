@@ -1,6 +1,7 @@
 FROM ubuntu:18.04
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     wget \
     git-core \
     default-jre \
@@ -13,6 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     clang-format \
     clang-tidy \
     git \
+    gnupg2 \
     iwyu \
     build-essential \
     libasound2-dev \
@@ -37,9 +39,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xorg-dev \
     xscreensaver \
     xutils-dev \
-    xvfb \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    xvfb
+
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+    google-chrome-unstable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf
+
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN wget -q -O cmake.sh https://github.com/Kitware/CMake/releases/download/v3.14.7/cmake-3.14.7-Linux-x86_64.sh && \
     chmod +x cmake.sh && \
@@ -60,8 +69,9 @@ RUN sed -i 's/# error.*//g' /usr/include/x86_64-linux-gnu/sys/cdefs.h
 RUN echo 'pcm.!default { type plug slave.pcm "null" }' > /etc/asound.conf
 
 ARG USER_ID
-RUN useradd -m -s /bin/bash -u $USER_ID user
-RUN addgroup user audio
+RUN useradd -m -s /bin/bash -u $USER_ID user && \
+    addgroup user audio && \
+    addgroup user video
 USER $USER_ID
 ENV HOME="/home/user"
 
