@@ -610,22 +610,11 @@
         }
       };
 
-      // Pull out url parameters and use them as argv/argc.
-      // We add a '-' to each command (left hand side of the '=').
-      var url = window.location.search.split('+').join(' ');
-
-      var params = {};
-      var tokens;
-      var re = /[?&]?([^=]+)(=([^&]*))?/g;
-      Module.arguments = [];
-      while (tokens = re.exec(url))
-      {
-        var command = decodeURIComponent(tokens[1]);
-        var value = tokens[3] ? decodeURIComponent(tokens[3]) : null;
-        Module.arguments.push('-' + command);
-        if (value)
-        Module.arguments.push(value);
-      }
+      // Turn '?foo%20bar+baz' into 'foo bar baz', and then into ['foo', 'bar', 'baz'].
+      const commandLine = decodeURIComponent(window.location.search.substr(1)).replace(/\+/g, ' ');
+      Module.arguments = (commandLine.match(/"(\\"|[^"])+"|'(\\'|[^'])+'|\S+/g) || [commandLine])
+        .map((arg) => (arg.match(/[^"'].*[^"']/g) || [arg])[0]);
+      console.log("Parsed arguments:", Module.arguments);
 
       // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
       canvasElement.addEventListener('webglcontextlost', function(e)
