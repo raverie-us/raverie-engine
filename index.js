@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 // MIT Licensed (see LICENSE.md).
 const execa = require("execa");
 const path = require("path");
@@ -641,45 +642,76 @@ const getVersionedPrebuiltContentDir = (cmakeVariables) => {
   return path.join(dirs.prebuiltContent, revisionChangesetName);
 };
 
-const runBuild = async (buildDir, opts, combo) => {
-  console.log("Running Build");
+const format = async (options) => {
+  console.log("Formatting");
+  await runEslint(options);
+  const sourceFiles = gatherSourceFiles(dirs.libraries, "c|cc|cxx|cpp|h|hxx|hpp|inl");
+  if (options.tidy) {
+    await runClangTidy(options, sourceFiles);
+  }
+  await runClangFormat(options, sourceFiles);
+  const scriptFiles = gatherSourceFiles(dirs.resources, "zilchscript|z|zilchfrag|zilchFrag");
+  const allFiles = sourceFiles.concat(scriptFiles);
+  await runWelderFormat(options, allFiles);
+  console.log("Formatted");
+};
+
+const buildfs = async (options) => {
+  const combo = determineCmakeCombo(options);
+  const buildDir = activateBuildDir(combo);
+
+  console.log("Building Filesystem");
+  const cmakeVariables = readCmakeVariables(buildDir);
+  for (const executable of executables) {
+    console.log(`Zipping virtual file system for ${executable.name}`);
+
+    const libraryDir = path.join(buildDir, "Libraries", executable.name);
+    mkdirp.sync(libraryDir);
+    const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
+    tryUnlinkSync(fileSystemZip);
+
+    const files = [...executable.additionalVfs];
+    for (const resourceLibrary of executable.resourceLibraries) {
+      const resourceLibraryPath = path.join(dirs.resources, resourceLibrary);
+      if (fs.existsSync(resourceLibraryPath)) {
+        files.push(resourceLibraryPath);
+      } else {
+        printLog(`Skipping resource library for ${resourceLibrary}`);
+      }
+
+      const prebuiltPath = path.join(getVersionedPrebuiltContentDir(cmakeVariables), resourceLibrary);
+      if (fs.existsSync(prebuiltPath)) {
+        files.push(prebuiltPath);
+      } else {
+        printLog(`Skipping prebuilt content for ${resourceLibrary}`);
+      }
+    }
+
+    const relativeFiles = files.map((file) => path.relative(dirs.repo, file));
+    await zipAdd(dirs.repo, fileSystemZip, relativeFiles);
+
+    if (combo.toolchain === "Emscripten") {
+      const embeddedZip = path.join(libraryDir, `${executable.name}.data`);
+      fs.copyFileSync(fileSystemZip, embeddedZip);
+    }
+  }
+  console.log("Built Filesystem");
+};
+
+const build = async (options) => {
+  console.log("Building");
+  const combo = determineCmakeCombo(options);
+  const buildDir = activateBuildDir(combo);
   if (!ensureCommandExists("cmake")) {
     return;
   }
 
-  if (!opts.skipfs) {
-    const cmakeVariables = readCmakeVariables(buildDir);
-    for (const executable of executables) {
-      console.log(`Zipping virtual file system for ${executable.name}`);
-
-      const libraryDir = path.join(buildDir, "Libraries", executable.name);
-      mkdirp.sync(libraryDir);
-      const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
-      tryUnlinkSync(fileSystemZip);
-
-      const files = [...executable.additionalVfs];
-      for (const resourceLibrary of executable.resourceLibraries) {
-        const resourceLibraryPath = path.join(dirs.resources, resourceLibrary);
-        if (fs.existsSync(resourceLibraryPath)) {
-          files.push(resourceLibraryPath);
-        } else {
-          printLog(`Skipping resource library for ${resourceLibrary}`);
-        }
-
-        const prebuiltPath = path.join(getVersionedPrebuiltContentDir(cmakeVariables), resourceLibrary);
-        if (fs.existsSync(prebuiltPath)) {
-          files.push(prebuiltPath);
-        } else {
-          printLog(`Skipping prebuilt content for ${resourceLibrary}`);
-        }
-      }
-
-      const relativeFiles = files.map((file) => path.relative(dirs.repo, file));
-      await zipAdd(dirs.repo, fileSystemZip, relativeFiles);
-    }
+  // For Emscripten we always need to ensure the filesystem is built.
+  if (combo.toolchain === "Emscripten") {
+    await buildfs(options);
   }
 
-  const options = {
+  const opts = {
     cwd: buildDir,
     err: printError,
     out: (text) => {
@@ -697,9 +729,9 @@ const runBuild = async (buildDir, opts, combo) => {
     ]
   };
 
-  const makeArgArray = (optsName) => opts[optsName] ? [
+  const makeArgArray = (optsName) => options[optsName] ? [
     `--${optsName}`,
-    opts[optsName]
+    options[optsName]
   ] : [];
 
   const target = makeArgArray("target");
@@ -713,29 +745,8 @@ const runBuild = async (buildDir, opts, combo) => {
     combo.config,
     ...target,
     ...parallel
-  ], options);
+  ], opts);
   endPnot();
-};
-
-const format = async (options) => {
-  console.log("Formatting");
-  await runEslint(options);
-  const sourceFiles = gatherSourceFiles(dirs.libraries, "c|cc|cxx|cpp|h|hxx|hpp|inl");
-  if (options.tidy) {
-    await runClangTidy(options, sourceFiles);
-  }
-  await runClangFormat(options, sourceFiles);
-  const scriptFiles = gatherSourceFiles(dirs.resources, "zilchscript|z|zilchfrag|zilchFrag");
-  const allFiles = sourceFiles.concat(scriptFiles);
-  await runWelderFormat(options, allFiles);
-  console.log("Formatted");
-};
-
-const build = async (options) => {
-  console.log("Building");
-  const combo = determineCmakeCombo(options);
-  const buildDir = activateBuildDir(combo);
-  await runBuild(buildDir, options, combo);
   console.log("Built");
 };
 
@@ -962,7 +973,7 @@ const all = async (options) => {
   await cmake(options);
   await build(options);
   await prebuilt(options);
-  await build(options);
+  await buildfs(options);
   await documentation(options);
   await pack(options);
 };
@@ -977,8 +988,10 @@ const main = async () => {
     usage("format [--validate]").
     command("cmake", "Generate a cmake project", empty, cmake).
     usage(`cmake ${comboOptions}`).
-    command("build", "Build a cmake project (options must match generated version)", empty, build).
-    usage(`build [--target=...] [--parallel=...] [--skipfs] ${comboOptions}`).
+    command("buildfs", "Build a the virtual file system zip", empty, buildfs).
+    usage(`buildfs ${comboOptions}`).
+    command("build", "Build a cmake project", empty, build).
+    usage(`build [--target=...] [--parallel=...] ${comboOptions}`).
     command("documentation", "Build generated documentation", empty, documentation).
     usage("documentation").
     command("prebuilt", "Copy prebuilt content", empty, prebuilt).
