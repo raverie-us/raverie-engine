@@ -847,7 +847,7 @@ const prebuilt = async (options) => {
 
     for (const downloadPath of downloadPaths) {
       console.log("Extracting download", downloadPath);
-      zipExtract(downloadPath, dirs.prebuiltContent);
+      await zipExtract(downloadPath, dirs.prebuiltContent);
     }
   }
 
