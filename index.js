@@ -41,9 +41,11 @@ const dirs = (() => {
   const prebuiltContent = path.join(build, "PrebuiltContent");
   const packages = path.join(build, "Packages");
   const page = path.join(build, "Page");
+  const downloads = path.join(build, "Downloads");
 
   return {
     build,
+    downloads,
     libraries,
     packages,
     page,
@@ -591,6 +593,25 @@ const zipAdd = async (cwd, outputZip, files) => {
   ], options);
 };
 
+const zipExtract = async (zipFile, outDir) => {
+  const options = {
+    err: printError,
+    out: printLog,
+    reject: false,
+    stdio: [
+      "ignore",
+      "pipe",
+      "pipe"
+    ]
+  };
+  await exec("7z", [
+    "x",
+    zipFile,
+    `-o${outDir}`,
+    "-y"
+  ], options);
+};
+
 const readCmakeVariables = (buildDir) => {
   const cmakeCachePath = path.join(buildDir, "CMakeCache.txt");
   const contents = fs.readFileSync(cmakeCachePath, "utf8");
@@ -613,6 +634,12 @@ const findExecutableDir = (buildDir, config, library) => [
 ].filter((filePath) => fs.existsSync(filePath))[0];
 
 const findExecutable = (buildDir, config, library) => path.join(findExecutableDir(buildDir, config, library), `${library}${executableExtension}`);
+
+const getVersionedPrebuiltContentDir = (cmakeVariables) => {
+  // This must match the revisionChangesetName in ContentLogic.cpp:
+  const revisionChangesetName = `Version-${cmakeVariables.WELDER_REVISION}-${cmakeVariables.WELDER_CHANGESET}`;
+  return path.join(dirs.prebuiltContent, revisionChangesetName);
+};
 
 const runBuild = async (buildDir, opts, combo) => {
   console.log("Running Build");
@@ -639,9 +666,7 @@ const runBuild = async (buildDir, opts, combo) => {
           printLog(`Skipping resource library for ${resourceLibrary}`);
         }
 
-        // This must match the revisionChangesetName in ContentLogic.cpp:
-        const revisionChangesetName = `Version-${cmakeVariables.WELDER_REVISION}-${cmakeVariables.WELDER_CHANGESET}`;
-        const prebuiltPath = path.join(dirs.prebuiltContent, revisionChangesetName, resourceLibrary);
+        const prebuiltPath = path.join(getVersionedPrebuiltContentDir(cmakeVariables), resourceLibrary);
         if (fs.existsSync(prebuiltPath)) {
           files.push(prebuiltPath);
         } else {
@@ -719,7 +744,7 @@ const executeBuiltProcess = async (buildDir, combo, library, args) => {
     const pageDirectory = path.join(buildDir, "Libraries", library);
     if (!fs.existsSync(pageDirectory)) {
       printError(`Directory does not exist ${pageDirectory}`);
-      return;
+      return [];
     }
 
     const app = express();
@@ -733,6 +758,16 @@ const executeBuiltProcess = async (buildDir, combo, library, args) => {
       timeout: 0
     });
     const page = await browser.newPage();
+
+    const downloadDir = path.join(dirs.downloads, Math.random().toString(36).
+      substr(2, 8));
+    clearCreateDirectory(downloadDir);
+    // eslint-disable-next-line no-underscore-dangle
+    await page._client.send("Page.setDownloadBehavior", {
+      behavior: "allow",
+      downloadPath: downloadDir
+    });
+
     let pageResolver = null;
     const finishedPromise = new Promise((resolve) => {
       pageResolver = resolve;
@@ -747,29 +782,40 @@ const executeBuiltProcess = async (buildDir, combo, library, args) => {
     page.on("pageerror", (event) => printError(event.stack));
     await page.goto(url);
     await finishedPromise;
-    server.close();
-    await browser.close();
-  } else {
-    const executablePath = findExecutable(buildDir, combo.config, library);
 
-    if (!fs.existsSync(executablePath)) {
-      printError(`Executable does not exist ${executablePath}`);
-      return;
+    for (;;) {
+      if (!fs.readdirSync(downloadDir).find((fileName) => fileName.endsWith(".crdownload"))) {
+        break;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
-    const opts = {
-      cwd: buildDir,
-      err: printLog,
-      out: printLog,
-      reject: false,
-      stdio: [
-        "ignore",
-        "pipe",
-        "pipe"
-      ]
-    };
-    await exec(executablePath, args, opts);
+    server.close();
+    await browser.close();
+    const downloadPaths = fs.readdirSync(downloadDir).map((fileName) => path.join(downloadDir, fileName));
+    return downloadPaths;
   }
+
+  const executablePath = findExecutable(buildDir, combo.config, library);
+
+  if (!fs.existsSync(executablePath)) {
+    printError(`Executable does not exist ${executablePath}`);
+    return [];
+  }
+
+  const opts = {
+    cwd: buildDir,
+    err: printLog,
+    out: printLog,
+    reject: false,
+    stdio: [
+      "ignore",
+      "pipe",
+      "pipe"
+    ]
+  };
+  await exec(executablePath, args, opts);
+  return [];
 };
 
 const prebuilt = async (options) => {
@@ -783,12 +829,18 @@ const prebuilt = async (options) => {
       continue;
     }
 
-    await executeBuiltProcess(buildDir, combo, executable.name, [
+    const downloadPaths = await executeBuiltProcess(buildDir, combo, executable.name, [
       "-CopyPrebuiltContent",
       "-Exit"
     ]);
+
+    for (const downloadPath of downloadPaths) {
+      console.log("Extracting download", downloadPath);
+      zipExtract(downloadPath, dirs.prebuiltContent);
+    }
   }
 
+  rimraf.sync(dirs.downloads);
   if (!fs.existsSync(dirs.prebuiltContent) || fs.readdirSync(dirs.prebuiltContent).length === 0) {
     printError("Prebuilt content directory did not exist or was empty");
   }
