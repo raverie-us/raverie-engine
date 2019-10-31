@@ -362,28 +362,38 @@ void Download(StringParam suggestedNameWithoutExtension, StringParam workingDire
     Archive archive(ArchiveMode::Compressing);
     forRange (StringParam filePath, filePaths)
     {
-      if (FileExists(filePath))
+      String normalized = FilePath::Normalize(filePath);
+      if (normalized.StartsWith(workingDirectoryNormalized))
       {
-        String normalized = FilePath::Normalize(filePath);
-        if (normalized.StartsWith(workingDirectoryNormalized))
+        String relativePath =
+            normalized.SubStringFromByteIndices(workingDirectoryNormalized.SizeInBytes(), normalized.SizeInBytes());
+
+        if (FileExists(filePath))
         {
           ZPrint("Adding file to download archive (in working directory) %s\n", filePath.c_str());
-          String relativePath =
-              normalized.SubStringFromByteIndices(workingDirectoryNormalized.SizeInBytes(), normalized.SizeInBytes());
           archive.AddFile(filePath, relativePath);
         }
         else
         {
-          ZPrint("Adding file to download archive (out of working directory) %s\n", filePath.c_str());
-          archive.AddFile(filePath, filePath);
+          ZPrint("Adding directory to download archive (in working directory) %s\n", filePath.c_str());
+          archive.ArchiveDirectory(status, filePath, relativePath);
         }
       }
       else
       {
-        ZPrint("Adding directory to download archive %s\n", filePath.c_str());
-        archive.ArchiveDirectory(status, filePath, workingDirectory);
+        if (FileExists(filePath))
+        {
+          ZPrint("Adding file to download archive (out of working directory) %s\n", filePath.c_str());
+          archive.AddFile(filePath, filePath);
+        }
+        else
+        {
+          ZPrint("Adding directory to download archive (out of working directory) %s\n", filePath.c_str());
+          archive.ArchiveDirectory(status, filePath, filePath);
+        }
       }
     }
+
     ByteBufferBlock block(archive.ComputeZipSize());
     archive.WriteBuffer(block);
 

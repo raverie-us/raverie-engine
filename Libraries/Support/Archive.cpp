@@ -122,7 +122,7 @@ void Archive::ArchiveDirectory(Status& status, StringParam path, StringParam par
   {
     // If the path is a directory enumerate it
     String localPath = files.Front();
-    String fullPath = FilePath::Combine(path, files.Front());
+    String fullPath = FilePath::Combine(path, localPath);
     String relativePath = FilePath::Combine(parentPath, localPath);
 
     FilterResult::Enum filterResult = FilterResult::Include;
