@@ -253,7 +253,7 @@ void Install(StringParam installLocation, StringParam metaContents, StringParam 
   FileRange range(installLocation);
   // We have to make a copy of the range so that way we don't walk over files we just extracted.
   Array<String> entries = RangeToArray<String>(range);
-  forRange(StringParam fileName, entries)
+  forRange (StringParam fileName, entries)
   {
     String fullPath = FilePath::Combine(installLocation, fileName);
     if (Archive::IsZip(fullPath))

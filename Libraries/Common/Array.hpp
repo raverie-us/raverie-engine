@@ -998,7 +998,8 @@ template <typename T, typename Range>
 Array<T> RangeToArray(Range& range)
 {
   Array<T> array;
-  while (!range.Empty()) {
+  while (!range.Empty())
+  {
     array.PushBack(range.Front());
     range.PopFront();
   }
