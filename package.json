@@ -1,6 +1,6 @@
 {
   "name": "welderengine",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Component based game engine focusing on rapid iteration.",
   "main": "index.js",
   "scripts": {},
