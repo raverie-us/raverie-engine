@@ -8,6 +8,9 @@
     "type": "git",
     "url": "git+https://github.com/WelderFoundation/WelderEngine.git"
   },
+  "config": {
+    "unsafe-perm":true
+  },
   "keywords": [
     "game",
     "engine",

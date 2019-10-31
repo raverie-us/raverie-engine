@@ -61,7 +61,7 @@ RUN npm install -g npm@latest
 
 ENV NODE_PATH="/node_modules"
 COPY package*.json ./
-RUN npm install --no-optional --no-progress --no-audit --global
+RUN npm install --no-optional --no-progress --no-audit --unsafe-perm --global
 
 # There is a problem with clang using the default gcc headers on Ubuntu (remove #error).
 RUN sed -i 's/# error.*//g' /usr/include/x86_64-linux-gnu/sys/cdefs.h
