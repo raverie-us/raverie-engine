@@ -9,6 +9,8 @@ const rimraf = require("rimraf");
 const commandExists = require("command-exists").sync;
 const yargs = require("yargs");
 const findUp = require("find-up");
+const puppeteer = require("puppeteer");
+const express = require("express");
 
 let hostos = "";
 let executableExtension = "";
@@ -712,25 +714,47 @@ const build = async (options) => {
   console.log("Built");
 };
 
-const prebuilt = async (options) => {
-  console.log("Copying Prebuilt Content");
-  const combo = determineCmakeCombo(options);
+const executeBuiltProcess = async (buildDir, combo, library, args) => {
   if (combo.toolchain === "Emscripten") {
-    console.log(`Skipping prebuilt content for toolchain '${combo.toolchain}'`);
-    return;
-  }
-  rimraf.sync(dirs.prebuiltContent);
-
-  const buildDir = activateBuildDir(combo);
-  for (const executable of executables) {
-    if (!executable.prebuild) {
-      continue;
+    const pageDirectory = path.join(buildDir, "Libraries", library);
+    if (!fs.existsSync(pageDirectory)) {
+      printError(`Directory does not exist ${pageDirectory}`);
+      return;
     }
-    const executablePath = findExecutable(buildDir, combo.config, executable.name);
+
+    const app = express();
+    app.use("/", express.static(pageDirectory));
+    const port = 3000;
+    const server = app.listen(port);
+    const argString = args.map((arg) => JSON.stringify(arg)).join(" ");
+    const url = `http://localhost:${port}/${library}.html?${argString}`;
+
+    const browser = await puppeteer.launch({
+      timeout: 0
+    });
+    const page = await browser.newPage();
+    let pageResolver = null;
+    const finishedPromise = new Promise((resolve) => {
+      pageResolver = resolve;
+    });
+    page.on("console", (event) => {
+      if (event.text() === "Stopping main loop") {
+        pageResolver();
+      }
+      printLog(event.text());
+    });
+    page.on("error", (event) => printError(event.stack));
+    page.on("pageerror", (event) => printError(event.stack));
+    await page.goto(url);
+    await finishedPromise;
+    server.close();
+    await browser.close();
+  } else {
+    const executablePath = findExecutable(buildDir, combo.config, library);
 
     if (!fs.existsSync(executablePath)) {
       printError(`Executable does not exist ${executablePath}`);
-      continue;
+      return;
     }
 
     const opts = {
@@ -744,10 +768,25 @@ const prebuilt = async (options) => {
         "pipe"
       ]
     };
-    await exec(executablePath, [
+    await exec(executablePath, args, opts);
+  }
+};
+
+const prebuilt = async (options) => {
+  console.log("Copying Prebuilt Content");
+  const combo = determineCmakeCombo(options);
+  rimraf.sync(dirs.prebuiltContent);
+
+  const buildDir = activateBuildDir(combo);
+  for (const executable of executables) {
+    if (!executable.prebuild) {
+      continue;
+    }
+
+    await executeBuiltProcess(buildDir, combo, executable.name, [
       "-CopyPrebuiltContent",
       "-Exit"
-    ], opts);
+    ]);
   }
 
   if (!fs.existsSync(dirs.prebuiltContent) || fs.readdirSync(dirs.prebuiltContent).length === 0) {

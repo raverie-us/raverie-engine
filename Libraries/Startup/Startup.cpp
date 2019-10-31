@@ -93,6 +93,9 @@ void ZeroStartup::MainLoop()
 
   if (mExit)
   {
+    // This exact string is required to be printed because it
+    // is the only we know the application has exited when it
+    // comes to running Emscripten (tests, builds, etc.)
     ZPrint("Stopping main loop\n");
     StopMainLoop();
     delete this;
