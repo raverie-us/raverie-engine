@@ -20,15 +20,16 @@ jobs:
     script:
     - ./dockerbuildserver.sh
     - ./weld.sh node index.js all --alias=Emscripten
+    deploy:
+    - provider: pages
+      skip_cleanup: true
+      local_dir: Build/Page/
+      github_token: $GITHUB_TOKEN
+      keep_history: false
+      on:
+        tags: true
+        branch: master
 deploy:
-- provider: pages
-  skip_cleanup: true
-  local_dir: Build/Page/
-  github_token: $GITHUB_TOKEN
-  keep_history: false
-  on:
-    tags: true
-    branch: master
 - provider: releases
   skip_cleanup: true
   api_key: $GITHUB_TOKEN
