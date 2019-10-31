@@ -5,12 +5,21 @@ services:
 - docker
 git:
   depth: false
-script:
-- docker load -i ./Build/Cache/welder.tar || true
-- ./dockerbuild.sh
-- docker save -o ./Build/Cache/welder.tar welder
-- ./weld.sh node index.js all --alias=Linux
-- ./weld.sh node index.js all --alias=Emscripten
+jobs:
+  include:
+  - stage: Build
+    name: Linux
+    env:
+    - CACHE_NAME=Linux
+    script:
+    - ./dockerbuildserver.sh
+    - ./weld.sh node index.js all --alias=Linux
+  - name: Emscripten
+    env:
+    - CACHE_NAME=Emscripten
+    script:
+    - ./dockerbuildserver.sh
+    - ./weld.sh node index.js all --alias=Emscripten
 deploy:
 - provider: pages
   skip_cleanup: true
