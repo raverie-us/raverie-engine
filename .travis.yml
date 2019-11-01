@@ -54,8 +54,12 @@ jobs:
     language: node_js
     node_js:
     - 13
+    install:
+    - npm install
+    - choco install doxygen.install
+    - choco install llvm
+    - choco install ninja
     script:
-    - setup.bat
     - node index.js all --alias=Windows
     deploy:
     - provider: releases

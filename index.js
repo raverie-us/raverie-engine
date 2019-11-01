@@ -102,12 +102,22 @@ const tryUnlinkSync = (fullPath) => {
   }
 };
 
-const printIndented = (originalText, printer, symbol) => {
-  let text = originalText;
-  if (!text) {
-    return;
-  }
+const printIndentedLine = (line, symbol) => {
+  const indent = " ".repeat(4);
+  console.log(indent + symbol + line);
+};
 
+const printErrorLine = (line) => {
+  printIndentedLine(line, "- ");
+  process.exitCode = 1;
+};
+
+const printLogLine = (line) => {
+  printIndentedLine(line, "+ ");
+};
+
+const parseLines = (str, lineCallback) => {
+  let text = str;
   if (text.stack) {
     text = `${text.stack}`;
   } else if (typeof text === "object") {
@@ -116,29 +126,19 @@ const printIndented = (originalText, printer, symbol) => {
     text = `${text}`;
   }
 
-  const indent = " ".repeat(8) + symbol;
   const matches = text.match(/[^\r\n]+/gu);
   if (matches) {
     for (const line of matches) {
-      printer(indent + line);
+      lineCallback(line);
     }
   } else if (text) {
-    printer(indent + text);
+    lineCallback(text);
   }
-};
-
-const printError = (text) => {
-  printIndented(text, console.error, "- ");
-  process.exitCode = 1;
-};
-
-const printLog = (text) => {
-  printIndented(text, console.log, "+ ");
 };
 
 const ensureCommandExists = (command) => {
   if (!commandExists(command)) {
-    printError(`Command '${command}' does not exist`);
+    printErrorLine(`Command '${command}' does not exist`);
     return false;
   }
   return true;
@@ -153,7 +153,7 @@ const exec = async (executable, args, options) => {
       result[name].on("data", (data) => {
         const str = data.toString();
         if (optionsFunc) {
-          optionsFunc(str);
+          parseLines(str, optionsFunc);
         }
         result[strName] += str;
       });
@@ -188,8 +188,8 @@ const zipAdd = async (cwd, outputZip, files) => {
   }
   const options = {
     cwd,
-    err: printError,
-    out: printLog,
+    err: printErrorLine,
+    out: printLogLine,
     reject: false,
     stdio: [
       "ignore",
@@ -210,8 +210,8 @@ const zipAdd = async (cwd, outputZip, files) => {
 
 const zipExtract = async (zipFile, outDir) => {
   const options = {
-    err: printError,
-    out: printLog,
+    err: printErrorLine,
+    out: printLogLine,
     reject: false,
     stdio: [
       "ignore",
@@ -245,8 +245,8 @@ const runEslint = async (options) => {
   console.log("Running Eslint");
   const eslintOptions = {
     cwd: dirs.repo,
-    err: options.validate ? printError : printLog,
-    out: options.validate ? printError : printLog,
+    err: options.validate ? printErrorLine : printLogLine,
+    out: options.validate ? printErrorLine : printLogLine,
     reject: false,
     stdio: [
       "ignore",
@@ -305,8 +305,8 @@ const runClangTidy = async (options, sourceFiles) => {
 
     const newCode = fs.readFileSync(filePath, "utf8");
     if (oldCode !== newCode) {
-      printError(`File '${filePath}' was not clang-tidy'd`);
-      printError(result.stdout);
+      printErrorLine(`File '${filePath}' was not clang-tidy'd`);
+      parseLines(result.stdout, printErrorLine);
 
       // Rewrite the original code back.
       fs.writeFileSync(filePath, oldCode, "utf8");
@@ -340,7 +340,7 @@ const runClangFormat = async (options, sourceFiles) => {
 
     if (oldCode !== newCode) {
       if (options.validate) {
-        printError(`File '${filePath}' was not clang-formatted`);
+        printErrorLine(`File '${filePath}' was not clang-formatted`);
       } else {
         fs.writeFileSync(filePath, newCode, "utf8");
       }
@@ -394,7 +394,7 @@ const runWelderFormat = async (options, sourceFiles) => {
 
     if (oldCode !== newCode) {
       if (options.validate) {
-        printError(`File '${filePath}' must be welder-formatted`);
+        printErrorLine(`File '${filePath}' must be welder-formatted`);
       } else {
         fs.writeFileSync(filePath, newCode, "utf8");
       }
@@ -430,7 +430,7 @@ const determineCmakeCombo = (options) => {
       vfs: false
     },
     Windows: {
-      builder: "Visual Studio 16 2019",
+      builder: "Visual Studio 15 2017",
       config: "Release",
       platform: "Windows",
       targetos: "Windows",
@@ -443,7 +443,7 @@ const determineCmakeCombo = (options) => {
   let combo = aliases[alias];
 
   if (!combo) {
-    printError(`Undefined alias ${alias}, choosing platform empty`);
+    printErrorLine(`Undefined alias ${alias}, choosing platform empty`);
     combo = aliases.empty;
   }
 
@@ -473,7 +473,7 @@ const activateBuildDir = (combo) => {
   const activeLink = path.join(dirs.build, "Active");
   tryUnlinkSync(activeLink);
   fs.symlinkSync(`./${comboStr}`, activeLink, "junction");
-  printLog(`Activated ${comboStr}`);
+  printLogLine(`Activated ${comboStr}`);
   return comboDir;
 };
 
@@ -509,7 +509,7 @@ const makeExecutableZip = async (cmakeVariablesOptional, executable, fileSystemZ
     if (fs.existsSync(resourceLibraryPath)) {
       files.push(resourceLibraryPath);
     } else {
-      printLog(`Skipping resource library for ${resourceLibrary}`);
+      printLogLine(`Skipping resource library for ${resourceLibrary}`);
     }
 
     if (cmakeVariablesOptional) {
@@ -517,7 +517,7 @@ const makeExecutableZip = async (cmakeVariablesOptional, executable, fileSystemZ
       if (fs.existsSync(prebuiltPath)) {
         files.push(prebuiltPath);
       } else {
-        printLog(`Skipping prebuilt content for ${resourceLibrary}`);
+        printLogLine(`Skipping prebuilt content for ${resourceLibrary}`);
       }
     }
   }
@@ -561,7 +561,7 @@ const cmake = async (options) => {
 
   const gitOptions = {
     cwd: dirs.repo,
-    err: printError,
+    err: printErrorLine,
     reject: false,
     stdio: [
       "ignore",
@@ -616,7 +616,7 @@ const cmake = async (options) => {
 
   if (combo.toolchain === "Emscripten") {
     if (!process.env.EMSCRIPTEN) {
-      printError("Cannot find EMSCRIPTEN environment variable");
+      printErrorLine("Cannot find EMSCRIPTEN environment variable");
     }
 
     const toolchainFile = path.join(process.env.EMSCRIPTEN, "cmake/Modules/Platform/Emscripten.cmake");
@@ -671,8 +671,8 @@ const cmake = async (options) => {
     dirs.repo
   ];
 
-  printLog(cmakeArgs);
-  printLog(combo);
+  parseLines(cmakeArgs, printLogLine);
+  parseLines(combo, printLogLine);
 
   const buildDir = activateBuildDir(combo);
   clearCreateDirectory(buildDir);
@@ -681,8 +681,8 @@ const cmake = async (options) => {
 
   const cmakeOptions = {
     cwd: buildDir,
-    err: printError,
-    out: printLog,
+    err: printErrorLine,
+    out: printLogLine,
     reject: false,
     stdio: [
       "ignore",
@@ -697,7 +697,7 @@ const cmake = async (options) => {
 
 const preventNoOutputTimeout = () => {
   const interval = setInterval(() => {
-    printLog("Working...");
+    printLogLine("Working...");
   }, 1000 * 10);
   return () => clearInterval(interval);
 };
@@ -736,12 +736,12 @@ const build = async (options) => {
 
   const opts = {
     cwd: buildDir,
-    err: printError,
-    out: (text) => {
-      if (text.search(/(?:FAILED|failed|ERROR|error)/u) === -1) {
-        printLog(text);
+    err: printErrorLine,
+    out: (line) => {
+      if (line.search(/(?:FAILED|failed|ERROR|: error )/u) === -1) {
+        printLogLine(line);
       } else {
-        printError(text);
+        printErrorLine(line);
       }
     },
     reject: false,
@@ -777,7 +777,7 @@ const executeBuiltProcess = async (buildDir, combo, library, args) => {
   if (combo.toolchain === "Emscripten") {
     const pageDirectory = path.join(buildDir, "Libraries", library);
     if (!fs.existsSync(pageDirectory)) {
-      printError(`Directory does not exist ${pageDirectory}`);
+      printErrorLine(`Directory does not exist ${pageDirectory}`);
       return [];
     }
 
@@ -810,10 +810,10 @@ const executeBuiltProcess = async (buildDir, combo, library, args) => {
       if (event.text() === "Stopping main loop") {
         pageResolver();
       }
-      printLog(event.text());
+      printLogLine(event.text());
     });
-    page.on("error", (event) => printError(event.stack));
-    page.on("pageerror", (event) => printError(event.stack));
+    page.on("error", (event) => parseLines(event.stack, printErrorLine));
+    page.on("pageerror", (event) => parseLines(event.stack, printErrorLine));
     await page.goto(url);
     await finishedPromise;
 
@@ -833,14 +833,14 @@ const executeBuiltProcess = async (buildDir, combo, library, args) => {
   const executablePath = findExecutable(buildDir, combo.config, library);
 
   if (!fs.existsSync(executablePath)) {
-    printError(`Executable does not exist ${executablePath}`);
+    printErrorLine(`Executable does not exist ${executablePath}`);
     return [];
   }
 
   const opts = {
     cwd: buildDir,
-    err: printLog,
-    out: printLog,
+    err: printLogLine,
+    out: printLogLine,
     reject: false,
     stdio: [
       "ignore",
@@ -876,7 +876,7 @@ const prebuilt = async (options) => {
 
   rimraf.sync(dirs.downloads);
   if (!fs.existsSync(dirs.prebuiltContent) || fs.readdirSync(dirs.prebuiltContent).length === 0) {
-    printError("Prebuilt content directory did not exist or was empty");
+    printErrorLine("Prebuilt content directory did not exist or was empty");
   }
   console.log("Copied Prebuilt Content");
 };
@@ -913,7 +913,7 @@ const pack = async (options) => {
 
     const executableDir = findExecutableDir(buildDir, combo.config, library);
     if (!fs.existsSync(executableDir)) {
-      printError(`Library directory does not exist ${executableDir}`);
+      printErrorLine(`Library directory does not exist ${executableDir}`);
       continue;
     }
     const files = fs.readdirSync(executableDir).filter((file) => !filter.includes(path.extname(file)) && !filter.includes(file)).
@@ -970,8 +970,8 @@ const documentation = async () => {
   }
   const doxygenOptions = {
     cwd: dirs.repo,
-    err: printError,
-    out: printLog,
+    err: printErrorLine,
+    out: printLogLine,
     reject: false,
     stdio: "pipe"
   };
