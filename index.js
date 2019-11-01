@@ -997,7 +997,7 @@ const all = async (options) => {
   await build(options);
   await prebuilt(options);
   await build(options);
-  await documentation(options);
+  // /await documentation(options);
   await pack(options);
 };
 
