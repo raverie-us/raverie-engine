@@ -159,6 +159,9 @@ void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library, bool s
 
       String fileName = entry.Location;
       String source = FilePath::Combine(libraryPath, fileName);
+      if (!FileExists(source))
+        continue;
+
       String destination = FilePath::Combine(libraryOutputPath, fileName);
       CopyFile(destination, source);
       Z::gEngine->LoadingUpdate("Copying", fileName, "", ProgressType::Normal, float(itemsDone) / librarySize);

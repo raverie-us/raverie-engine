@@ -43,6 +43,8 @@ ZeroShared void DebuggerOutput(const char* message)
 {
   if (IsDebuggerPresent())
     OutputDebugStringW(Widen(message).c_str());
+  else
+    printf("%s", message);
 }
 
 u64 GetMacAddress()
