@@ -7,8 +7,8 @@ git:
   depth: false
 jobs:
   include:
-  - stage: Build
-    name: Linux
+  - name: Linux
+    os: linux
     env:
     - CACHE_NAME=Linux
     script:
@@ -24,6 +24,7 @@ jobs:
         tags: true
         branch: master
   - name: Emscripten
+    os: linux
     env:
     - CACHE_NAME=Emscripten
     script:
@@ -43,6 +44,23 @@ jobs:
       local_dir: Build/Page/
       github_token: $GITHUB_TOKEN
       keep_history: false
+      on:
+        tags: true
+        branch: master
+  - name: Windows
+    os: windows
+    env:
+    - CACHE_NAME=Windows
+    language: node_js
+    script:
+    - setup.bat
+    - node index.js all --alias=Windows
+    deploy:
+    - provider: releases
+      skip_cleanup: true
+      api_key: $GITHUB_TOKEN
+      file_glob: true
+      file: Build/Packages/*
       on:
         tags: true
         branch: master
