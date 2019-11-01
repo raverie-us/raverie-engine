@@ -515,7 +515,7 @@ void VersionSelector::FindOnDiskTemplates(ZeroBuild* selectedBuild)
   mTemplateMap.Clear();
   if (selectedBuild)
   {
-    String buildTemplates = FilePath::Combine(selectedBuild->mInstallLocation, "Data", "LauncherTemplates");
+    String buildTemplates = FilePath::Combine(selectedBuild->mInstallLocation, "LauncherTemplates");
     FindOnDiskTemplatesRecursive(buildTemplates);
   }
 
