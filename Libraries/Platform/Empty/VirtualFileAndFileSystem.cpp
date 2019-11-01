@@ -1,6 +1,8 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
+#define DEBUG_FILE_TIMES
+
 namespace Zero
 {
 const Rune cDirectorySeparatorRune = Rune('/');
@@ -263,6 +265,9 @@ void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, T
   }
 
   entry->mModifiedTime = modifiedTime;
+#ifdef DEBUG_FILE_TIMES
+  DebugFileTime("AddVirtualFileSystemEntry: '%s' (%lld)", absolutePath.c_str(), (long long)modifiedTime);
+#endif
 }
 
 bool PersistFiles()
