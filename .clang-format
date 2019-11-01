@@ -1,5 +1,4 @@
-﻿---
-BasedOnStyle: LLVM
+﻿BasedOnStyle: LLVM
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: 'false'
 AllowShortLoopsOnASingleLine: 'false'
@@ -9,6 +8,8 @@ BinPackParameters: 'false'
 BreakBeforeBraces: Allman
 BreakConstructorInitializers: AfterColon
 BreakConstructorInitializersBeforeComma: 'true'
+ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
+AllowAllConstructorInitializersOnNextLine: 'false'
 ColumnLimit: '120'
 ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
 DerivePointerAlignment: 'false'
@@ -21,4 +22,3 @@ PointerAlignment: Left
 SortIncludes: 'false'
 TabWidth: '2'
 UseTab: Never
-...

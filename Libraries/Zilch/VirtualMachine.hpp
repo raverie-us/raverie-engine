@@ -107,6 +107,16 @@ public:
     return value == 0;
   }
 
+  template <typename T>
+  static inline void GenericIsZeroThrow(PerFrameData* ourFrame, const T& value, const char* name)
+  {
+    if (GenericIsZero(value))
+    {
+      ExecutableState::GetCallingState()->ThrowException(String::Format("Attempted to %s by zero", name));
+      longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);
+    }
+  }
+
   // A generic wrapper around 'vector raise to a scalar power'
   // Note that in cases of compound assignment, the value can be the out!
   template <typename VectorType, typename ScalarType>

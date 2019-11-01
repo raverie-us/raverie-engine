@@ -670,26 +670,17 @@ VirtualInstructionFn InstructionTable[Instruction::Count] = {0};
   ZilchCaseBinaryRValue(WithType, WithType, Add, output = left + right);                                               \
   ZilchCaseBinaryRValue(WithType, WithType, Subtract, output = left - right);                                          \
   ZilchCaseBinaryRValue(WithType, WithType, Multiply, output = left * right);                                          \
-  ZilchCaseBinaryRValue(WithType, WithType, Divide, if (GenericIsZero(right)) {                                        \
-    state->ThrowException(report, "Attempted to divide by zero");                                                      \
-    longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                                                             \
-  } output = left / right);                                                                                            \
-  ZilchCaseBinaryRValue(WithType, WithType, Modulo, if (GenericIsZero(right)) {                                        \
-    state->ThrowException(report, "Attempted to modulo by zero");                                                      \
-    longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                                                             \
-  } GenericMod(output, left, right));                                                                                  \
+  ZilchCaseBinaryRValue(WithType, WithType, Divide, GenericIsZeroThrow(ourFrame, right, "divide");                     \
+                        output = left / right);                                                                        \
+  ZilchCaseBinaryRValue(WithType, WithType, Modulo, GenericIsZeroThrow(ourFrame, right, "modulo");                     \
+                        GenericMod(output, left, right));                                                              \
   ZilchCaseBinaryRValue(WithType, WithType, Pow, GenericPow(output, left, right));                                     \
   ZilchCaseBinaryLValue(WithType, AssignmentAdd, output += right);                                                     \
   ZilchCaseBinaryLValue(WithType, AssignmentSubtract, output -= right);                                                \
   ZilchCaseBinaryLValue(WithType, AssignmentMultiply, output *= right);                                                \
-  ZilchCaseBinaryLValue(WithType, AssignmentDivide, if (GenericIsZero(right)) {                                        \
-    state->ThrowException(report, "Attempted to divide by zero");                                                      \
-    longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                                                             \
-  } output /= right);                                                                                                  \
-  ZilchCaseBinaryLValue(WithType, AssignmentModulo, if (GenericIsZero(right)) {                                        \
-    state->ThrowException(report, "Attempted to modulo by zero");                                                      \
-    longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                                                             \
-  } GenericMod(output, output, right));                                                                                \
+  ZilchCaseBinaryLValue(WithType, AssignmentDivide, GenericIsZeroThrow(ourFrame, right, "divide"); output /= right);   \
+  ZilchCaseBinaryLValue(WithType, AssignmentModulo, GenericIsZeroThrow(ourFrame, right, "modulo");                     \
+                        GenericMod(output, output, right));                                                            \
   ZilchCaseBinaryLValue(WithType, AssignmentPow, GenericPow(output, output, right));
 
 // Generic numeric operators, copy, equality, comparison
@@ -699,24 +690,19 @@ VirtualInstructionFn InstructionTable[Instruction::Count] = {0};
 #define ZilchVectorCases(VectorType, ScalarType, ComparisonType)                                                       \
   ZilchNumericCases(VectorType, Boolean) ZilchComparisonCases(VectorType, ComparisonType)                              \
       ZilchCaseBinaryRValue2(VectorType, ScalarType, VectorType, ScalarMultiply, output = left * right);               \
-  ZilchCaseBinaryRValue2(VectorType, ScalarType, VectorType, ScalarDivide, if (GenericIsZero(right)) {                 \
-    state->ThrowException(report, "Attempted to divide by zero");                                                      \
-    longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                                                             \
-  } output = left / right);                                                                                            \
-  ZilchCaseBinaryRValue2(VectorType, ScalarType, VectorType, ScalarModulo, if (GenericIsZero(right)) {                 \
-    state->ThrowException(report, "Attempted to modulo by zero");                                                      \
-    longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                                                             \
-  } GenericScalarMod(output, left, right));                                                                            \
+  ZilchCaseBinaryRValue2(                                                                                              \
+      VectorType, ScalarType, VectorType, ScalarDivide, GenericIsZeroThrow(ourFrame, right, "divide");                 \
+      output = left / right);                                                                                          \
+  ZilchCaseBinaryRValue2(                                                                                              \
+      VectorType, ScalarType, VectorType, ScalarModulo, GenericIsZeroThrow(ourFrame, right, "modulo");                 \
+      GenericScalarMod(output, left, right));                                                                          \
   ZilchCaseBinaryRValue2(VectorType, ScalarType, VectorType, ScalarPow, GenericScalarPow(output, left, right));        \
   ZilchCaseBinaryLValue2(VectorType, ScalarType, AssignmentScalarMultiply, output *= right);                           \
-  ZilchCaseBinaryLValue2(VectorType, ScalarType, AssignmentScalarDivide, if (GenericIsZero(right)) {                   \
-    state->ThrowException(report, "Attempted to divide by zero");                                                      \
-    longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                                                             \
-  } output /= right);                                                                                                  \
-  ZilchCaseBinaryLValue2(VectorType, ScalarType, AssignmentScalarModulo, if (GenericIsZero(right)) {                   \
-    state->ThrowException(report, "Attempted to modulo by zero");                                                      \
-    longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);                                                             \
-  } GenericScalarMod(output, output, right));                                                                          \
+  ZilchCaseBinaryLValue2(                                                                                              \
+      VectorType, ScalarType, AssignmentScalarDivide, GenericIsZeroThrow(ourFrame, right, "divide"); output /= right); \
+  ZilchCaseBinaryLValue2(                                                                                              \
+      VectorType, ScalarType, AssignmentScalarModulo, GenericIsZeroThrow(ourFrame, right, "modulo");                   \
+      GenericScalarMod(output, output, right));                                                                        \
   ZilchCaseBinaryLValue2(VectorType, ScalarType, AssignmentScalarPow, GenericScalarPow(output, output, right));
 
 // Special integral operators, generic numeric operators, copy, equality, and

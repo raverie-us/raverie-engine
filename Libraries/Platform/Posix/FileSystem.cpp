@@ -90,12 +90,7 @@ void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, T
 bool PersistFiles()
 {
 #if defined(WelderTargetOsEmscripten)
-  EM_ASM(FS.syncfs(false, function(err) {
-    if (err)
-      console.error(err);
-    else
-      console.log("Finished persisting files");
-  }););
+  EM_ASM(FS.syncfs(false, console.log));
   ZPrint("Persisting files...\n");
   return true;
 #else
