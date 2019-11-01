@@ -56,6 +56,43 @@ const dirs = (() => {
   };
 })();
 
+const executables = [
+  {
+    name: "WelderEditor",
+    nonResourceDependencies: [
+      "Data",
+      "LauncherTemplates",
+      repoRootFile
+    ],
+    prebuild: true,
+    resourceLibraries: [
+      "FragmentCore",
+      "Loading",
+      "ZeroCore",
+      "UiWidget",
+      "EditorUi",
+      "Editor",
+      "Fallback"
+    ],
+    vfsOnlyPackage: ["LauncherTemplates"]
+  },
+  {
+    name: "WelderLauncher",
+    nonResourceDependencies: [
+      "Data",
+      repoRootFile
+    ],
+    prebuild: true,
+    resourceLibraries: [
+      "FragmentCore",
+      "Loading",
+      "ZeroCore",
+      "ZeroLauncherResources"
+    ],
+    vfsOnlyPackage: []
+  }
+];
+
 const tryUnlinkSync = (fullPath) => {
   try {
     fs.unlinkSync(fullPath);
@@ -139,6 +176,56 @@ const clearCreateDirectory = (directory) => {
 const execStdout = async (...args) => (await exec(...args)).stdout;
 
 const execStdoutTrimmed = async (...args) => (await execStdout(...args)).trim();
+
+
+/*
+ * Add files to an existing zip. If the file paths are absolute, only the file name will be added to the root,
+ * otherwise if the files are relative the entire relative path will be added.
+ */
+const zipAdd = async (cwd, outputZip, files) => {
+  if (files.length === 0) {
+    return;
+  }
+  const options = {
+    cwd,
+    err: printError,
+    out: printLog,
+    reject: false,
+    stdio: [
+      "ignore",
+      "pipe",
+      "pipe"
+    ]
+  };
+  await exec("7z", [
+    "a",
+    "-tzip",
+    "-mx=9",
+    "-mfb=128",
+    "-mpass=10",
+    outputZip,
+    ...files
+  ], options);
+};
+
+const zipExtract = async (zipFile, outDir) => {
+  const options = {
+    err: printError,
+    out: printLog,
+    reject: false,
+    stdio: [
+      "ignore",
+      "pipe",
+      "pipe"
+    ]
+  };
+  await exec("7z", [
+    "x",
+    zipFile,
+    `-o${outDir}`,
+    "-y"
+  ], options);
+};
 
 const gatherSourceFiles = (directory, extensions) => {
   console.log("Gathering Source Files");
@@ -390,6 +477,81 @@ const activateBuildDir = (combo) => {
   return comboDir;
 };
 
+const readCmakeVariables = (buildDir) => {
+  const cmakeCachePath = path.join(buildDir, "CMakeCache.txt");
+  const contents = fs.readFileSync(cmakeCachePath, "utf8");
+  const regex = /(?<name>[a-zA-Z0-9_-]+):UNINITIALIZED=(?<value>.*)/gu;
+
+  const result = {};
+  for (;;) {
+    const array = regex.exec(contents);
+    if (!array) {
+      break;
+    }
+    result[array.groups.name] = array.groups.value;
+  }
+  return result;
+};
+
+const getVersionedPrebuiltContentDir = (cmakeVariables) => {
+  // This must match the revisionChangesetName in ContentLogic.cpp:
+  const revisionChangesetName = `Version-${cmakeVariables.WELDER_REVISION}-${cmakeVariables.WELDER_CHANGESET}`;
+  return path.join(dirs.prebuiltContent, revisionChangesetName);
+};
+
+const makeExecutableZip = async (cmakeVariablesOptional, executable, fileSystemZip) => {
+  console.log(`Building zip for ${executable.name}`);
+  tryUnlinkSync(fileSystemZip);
+
+  const files = [...executable.nonResourceDependencies];
+  for (const resourceLibrary of executable.resourceLibraries) {
+    const resourceLibraryPath = path.join(dirs.resources, resourceLibrary);
+    if (fs.existsSync(resourceLibraryPath)) {
+      files.push(resourceLibraryPath);
+    } else {
+      printLog(`Skipping resource library for ${resourceLibrary}`);
+    }
+
+    if (cmakeVariablesOptional) {
+      const prebuiltPath = path.join(getVersionedPrebuiltContentDir(cmakeVariablesOptional), resourceLibrary);
+      if (fs.existsSync(prebuiltPath)) {
+        files.push(prebuiltPath);
+      } else {
+        printLog(`Skipping prebuilt content for ${resourceLibrary}`);
+      }
+    }
+  }
+
+  const relativeFiles = files.map((file) => path.relative(dirs.repo, path.normalize(file)));
+  await zipAdd(dirs.repo, fileSystemZip, relativeFiles);
+};
+
+const generateBinaryCArray = (id, buffer) => `unsigned char ${id}Data[] = {${buffer.join(",")}};\nunsigned int ${id}Size = ${buffer.length};\n`;
+
+const buildvfs = async (cmakeVariables, buildDir, combo) => {
+  for (const executable of executables) {
+    console.log(`Building virtual file system for ${executable.name}`);
+
+    const libraryDir = path.join(buildDir, "Libraries", executable.name);
+    mkdirp.sync(libraryDir);
+
+    const makeFsBuffer = async () => {
+      if (combo.vfs) {
+        const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
+        await makeExecutableZip(cmakeVariables, executable, fileSystemZip);
+        return fs.readFileSync(fileSystemZip);
+      }
+      return Buffer.alloc(0);
+    };
+
+    const vfsCppContents = generateBinaryCArray("VirtualFileSystem", await makeFsBuffer());
+    const vfsCppFile = path.join(libraryDir, "VirtualFileSystem.cpp");
+    if (!fs.existsSync(vfsCppFile) || fs.readFileSync(vfsCppFile, "utf8") !== vfsCppContents) {
+      fs.writeFileSync(vfsCppFile, vfsCppContents, "utf8");
+    }
+  }
+};
+
 const cmake = async (options) => {
   console.log("Running Cmake", options);
 
@@ -515,6 +677,8 @@ const cmake = async (options) => {
   const buildDir = activateBuildDir(combo);
   clearCreateDirectory(buildDir);
 
+  await buildvfs(null, buildDir, combo);
+
   const cmakeOptions = {
     cwd: buildDir,
     err: printError,
@@ -538,120 +702,12 @@ const preventNoOutputTimeout = () => {
   return () => clearInterval(interval);
 };
 
-const executables = [
-  {
-    name: "WelderEditor",
-    nonResourceDependencies: [
-      "Data",
-      "LauncherTemplates",
-      repoRootFile
-    ],
-    prebuild: true,
-    resourceLibraries: [
-      "FragmentCore",
-      "Loading",
-      "ZeroCore",
-      "UiWidget",
-      "EditorUi",
-      "Editor",
-      "Fallback"
-    ],
-    vfsOnlyPackage: ["LauncherTemplates"]
-  },
-  {
-    name: "WelderLauncher",
-    nonResourceDependencies: [
-      "Data",
-      repoRootFile
-    ],
-    prebuild: true,
-    resourceLibraries: [
-      "FragmentCore",
-      "Loading",
-      "ZeroCore",
-      "ZeroLauncherResources"
-    ],
-    vfsOnlyPackage: []
-  }
-];
-
-/*
- * Add files to an existing zip. If the file paths are absolute, only the file name will be added to the root,
- * otherwise if the files are relative the entire relative path will be added.
- */
-const zipAdd = async (cwd, outputZip, files) => {
-  if (files.length === 0) {
-    return;
-  }
-  const options = {
-    cwd,
-    err: printError,
-    out: printLog,
-    reject: false,
-    stdio: [
-      "ignore",
-      "pipe",
-      "pipe"
-    ]
-  };
-  await exec("7z", [
-    "a",
-    "-tzip",
-    "-mx=9",
-    "-mfb=128",
-    "-mpass=10",
-    outputZip,
-    ...files
-  ], options);
-};
-
-const zipExtract = async (zipFile, outDir) => {
-  const options = {
-    err: printError,
-    out: printLog,
-    reject: false,
-    stdio: [
-      "ignore",
-      "pipe",
-      "pipe"
-    ]
-  };
-  await exec("7z", [
-    "x",
-    zipFile,
-    `-o${outDir}`,
-    "-y"
-  ], options);
-};
-
-const readCmakeVariables = (buildDir) => {
-  const cmakeCachePath = path.join(buildDir, "CMakeCache.txt");
-  const contents = fs.readFileSync(cmakeCachePath, "utf8");
-  const regex = /(?<name>[a-zA-Z0-9_-]+):UNINITIALIZED=(?<value>.*)/gu;
-
-  const result = {};
-  for (;;) {
-    const array = regex.exec(contents);
-    if (!array) {
-      break;
-    }
-    result[array.groups.name] = array.groups.value;
-  }
-  return result;
-};
-
 const findExecutableDir = (buildDir, config, library) => [
   path.join(buildDir, "Libraries", library, config),
   path.join(buildDir, "Libraries", library)
 ].filter((filePath) => fs.existsSync(filePath))[0];
 
 const findExecutable = (buildDir, config, library) => path.join(findExecutableDir(buildDir, config, library), `${library}${executableExtension}`);
-
-const getVersionedPrebuiltContentDir = (cmakeVariables) => {
-  // This must match the revisionChangesetName in ContentLogic.cpp:
-  const revisionChangesetName = `Version-${cmakeVariables.WELDER_REVISION}-${cmakeVariables.WELDER_CHANGESET}`;
-  return path.join(dirs.prebuiltContent, revisionChangesetName);
-};
 
 const format = async (options) => {
   console.log("Formatting");
@@ -667,69 +723,16 @@ const format = async (options) => {
   console.log("Formatted");
 };
 
-const makeExecutableZip = async (cmakeVariables, executable, fileSystemZip) => {
-  console.log(`Building zip for ${executable.name}`);
-  tryUnlinkSync(fileSystemZip);
-
-  const files = [...executable.nonResourceDependencies];
-  for (const resourceLibrary of executable.resourceLibraries) {
-    const resourceLibraryPath = path.join(dirs.resources, resourceLibrary);
-    if (fs.existsSync(resourceLibraryPath)) {
-      files.push(resourceLibraryPath);
-    } else {
-      printLog(`Skipping resource library for ${resourceLibrary}`);
-    }
-
-    const prebuiltPath = path.join(getVersionedPrebuiltContentDir(cmakeVariables), resourceLibrary);
-    if (fs.existsSync(prebuiltPath)) {
-      files.push(prebuiltPath);
-    } else {
-      printLog(`Skipping prebuilt content for ${resourceLibrary}`);
-    }
-  }
-
-  const relativeFiles = files.map((file) => path.relative(dirs.repo, path.normalize(file)));
-  await zipAdd(dirs.repo, fileSystemZip, relativeFiles);
-};
-
-const generateBinaryCArray = (id, buffer) => `unsigned char ${id}Data[] = {${buffer.join(",")}};\nunsigned int ${id}Size = ${buffer.length};\n`;
-
-const buildvfs = async (options) => {
-  const combo = determineCmakeCombo(options);
-  const buildDir = activateBuildDir(combo);
-  const cmakeVariables = readCmakeVariables(buildDir);
-
-  for (const executable of executables) {
-    console.log(`Building virtual file system for ${executable.name}`);
-
-    const libraryDir = path.join(buildDir, "Libraries", executable.name);
-
-    const makeFsBuffer = async () => {
-      if (combo.vfs) {
-        const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
-        await makeExecutableZip(cmakeVariables, executable, fileSystemZip);
-        return fs.readFileSync(fileSystemZip);
-      }
-      return Buffer.alloc(0);
-    };
-
-    const vfsCppContents = generateBinaryCArray("VirtualFileSystem", await makeFsBuffer());
-    const vfsCppFile = path.join(libraryDir, "VirtualFileSystem.cpp");
-    if (!fs.existsSync(vfsCppFile) || fs.readFileSync(vfsCppFile, "utf8") !== vfsCppContents) {
-      fs.writeFileSync(vfsCppFile, vfsCppContents, "utf8");
-    }
-  }
-};
-
 const build = async (options) => {
   console.log("Building");
-  const combo = determineCmakeCombo(options);
-  const buildDir = activateBuildDir(combo);
   if (!ensureCommandExists("cmake")) {
     return;
   }
+  const combo = determineCmakeCombo(options);
+  const buildDir = activateBuildDir(combo);
 
-  await buildvfs(options);
+  const cmakeVariables = readCmakeVariables(buildDir);
+  await buildvfs(cmakeVariables, buildDir, combo);
 
   const opts = {
     cwd: buildDir,
@@ -1008,8 +1011,6 @@ const main = async () => {
     usage("format [--validate]").
     command("cmake", "Generate a cmake project", empty, cmake).
     usage(`cmake ${comboOptions}`).
-    command("buildvfs", "Turn the virtual file system zip into an compilable C++ file (in static memory)", empty, buildvfs).
-    usage(`buildvfs ${comboOptions}`).
     command("build", "Build a cmake project", empty, build).
     usage(`build [--target=...] [--parallel=...] ${comboOptions}`).
     command("documentation", "Build generated documentation", empty, documentation).
