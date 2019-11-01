@@ -32,6 +32,7 @@ set(WELDER_LINKER_FLAGS "\
   -s MINIFY_HTML=0\
   -s SINGLE_FILE=${WELDER_SINGLE_FILE}\
   -s ASYNCIFY=1\
+  -s TOTAL_MEMORY=32MB\
   --shell-file ${WELDER_PLATFORM_DATA_DIR}/Shell.html\
 ")
 
@@ -65,17 +66,7 @@ set(WELDER_C_CXX_FLAGS_MINSIZEREL "\
   -Oz\
 ")
 
-if(WELDER_SINGLE_FILE EQUAL 1)
-  set(EMSCRIPTEN_FILE_SYSTEM_LOADER "embed")
-else()
-  set(EMSCRIPTEN_FILE_SYSTEM_LOADER "preload")
-endif()
-
 function(welder_toolchain_setup_library target)
-  get_target_property(targetType ${target} TYPE)
-  if (targetType STREQUAL "EXECUTABLE")
-    target_link_options(${target} PUBLIC --${EMSCRIPTEN_FILE_SYSTEM_LOADER}-file $<TARGET_FILE_DIR:${target}>/FileSystem.zip@/FileSystem.zip)
-  endif ()
 endfunction()
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}\

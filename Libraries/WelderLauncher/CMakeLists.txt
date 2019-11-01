@@ -5,6 +5,7 @@ welder_use_precompiled_header(WelderLauncher ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(WelderLauncher
   PRIVATE
+    ${CMAKE_CURRENT_BINARY_DIR}/VirtualFileSystem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ActiveProjectMenu.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ActiveProjectMenu.hpp
     ${CMAKE_CURRENT_LIST_DIR}/BuildsMenu.cpp

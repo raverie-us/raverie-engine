@@ -322,7 +322,8 @@ const determineCmakeCombo = (options) => {
       config: "Release",
       platform: "Stub",
       targetos: hostos,
-      toolchain: "Clang"
+      toolchain: "Clang",
+      vfs: true
     },
     Emscripten: {
       architecture: "wasm",
@@ -330,21 +331,24 @@ const determineCmakeCombo = (options) => {
       config: "Release",
       platform: "Emscripten",
       targetos: "Emscripten",
-      toolchain: "Emscripten"
+      toolchain: "Emscripten",
+      vfs: true
     },
     Linux: {
       builder: "Ninja",
       config: "Release",
       platform: "SDLSTDEmpty",
       targetos: "Linux",
-      toolchain: "Clang"
+      toolchain: "Clang",
+      vfs: false
     },
     Windows: {
       builder: "Visual Studio 16 2019",
       config: "Release",
       platform: "Windows",
       targetos: "Windows",
-      toolchain: "MSVC"
+      toolchain: "MSVC",
+      vfs: false
     }
   };
 
@@ -364,6 +368,7 @@ const determineCmakeCombo = (options) => {
   combo.alias = alias;
   combo.architecture = combo.architecture || os.arch();
   combo.config = combo.config || "Release";
+  combo.vfs = combo.vfs || false;
   return combo;
 };
 
@@ -689,13 +694,33 @@ const buildfs = async (options) => {
 
     const relativeFiles = files.map((file) => path.relative(dirs.repo, file));
     await zipAdd(dirs.repo, fileSystemZip, relativeFiles);
-
-    if (combo.toolchain === "Emscripten") {
-      const embeddedZip = path.join(libraryDir, `${executable.name}.data`);
-      fs.copyFileSync(fileSystemZip, embeddedZip);
-    }
   }
   console.log("Built Filesystem");
+};
+
+const generateBinaryCArray = (id, buffer) => `unsigned char ${id}Data[] = {${buffer.join(",")}};\nunsigned int ${id}Size = ${buffer.length};\n`;
+
+const buildvfs = async (options) => {
+  const combo = determineCmakeCombo(options);
+  const buildDir = activateBuildDir(combo);
+
+  if (combo.vfs) {
+    await buildfs(options);
+  }
+
+  for (const executable of executables) {
+    console.log(`Building virtual file system for ${executable.name}`);
+
+    const libraryDir = path.join(buildDir, "Libraries", executable.name);
+    const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
+    const vfsCppFile = path.join(libraryDir, "VirtualFileSystem.cpp");
+
+    const fileSystemZipBuffer = combo.vfs ? fs.readFileSync(fileSystemZip) : Buffer.alloc(0);
+    const vfsCppContents = generateBinaryCArray("VirtualFileSystem", fileSystemZipBuffer);
+    if (!fs.existsSync(vfsCppFile) || fs.readFileSync(vfsCppFile, "utf8") !== vfsCppContents) {
+      fs.writeFileSync(vfsCppFile, vfsCppContents, "utf8");
+    }
+  }
 };
 
 const build = async (options) => {
@@ -706,10 +731,7 @@ const build = async (options) => {
     return;
   }
 
-  // For Emscripten we always need to ensure the filesystem is built.
-  if (combo.toolchain === "Emscripten") {
-    await buildfs(options);
-  }
+  await buildvfs(options);
 
   const opts = {
     cwd: buildDir,
@@ -871,7 +893,8 @@ const pack = async (options) => {
     ".wast",
     ".cmake",
     "CMakeFiles",
-    "FileSystem.zip"
+    "FileSystem.zip",
+    "VirtualFileSystem.cpp"
   ];
 
   if (combo.toolchain === "Emscripten") {
@@ -974,6 +997,7 @@ const all = async (options) => {
   await build(options);
   await prebuilt(options);
   await buildfs(options);
+  await build(options);
   await documentation(options);
   await pack(options);
 };
@@ -981,7 +1005,7 @@ const all = async (options) => {
 const main = async () => {
   const empty = {
   };
-  const comboOptions = "[--alias=...] [--builder=...] [--toolchain=...] [--platform=...] [--architecture=...] [--config] [--targetos=...]";
+  const comboOptions = "[--alias=...] [--builder=...] [--toolchain=...] [--platform=...] [--architecture=...] [--config] [--targetos=...] [--vfs=true|false]";
   // eslint-disable-next-line
     yargs.
     command("format", "Formats all C/C++ files", empty, format).
@@ -990,6 +1014,8 @@ const main = async () => {
     usage(`cmake ${comboOptions}`).
     command("buildfs", "Build a the virtual file system zip", empty, buildfs).
     usage(`buildfs ${comboOptions}`).
+    command("buildvfs", "Turn the virtual file system zip into an compilable C++ file (in static memory)", empty, buildvfs).
+    usage(`buildvfs ${comboOptions}`).
     command("build", "Build a cmake project", empty, build).
     usage(`build [--target=...] [--parallel=...] ${comboOptions}`).
     command("documentation", "Build generated documentation", empty, documentation).
