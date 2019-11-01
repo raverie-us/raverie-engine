@@ -38,10 +38,10 @@ struct TypeGroups
 };
 
 void ResolveSimpleFunctionFromOpType(ZilchSpirVFrontEnd* translator,
-                           Zilch::FunctionCallNode* functionCallNode,
-                           Zilch::MemberAccessNode* memberAccessNode,
-                           OpType opType,
-                           ZilchSpirVFrontEndContext* context);
+                                     Zilch::FunctionCallNode* functionCallNode,
+                                     Zilch::MemberAccessNode* memberAccessNode,
+                                     OpType opType,
+                                     ZilchSpirVFrontEndContext* context);
 
 // A simple helper to resolve a function (assumed to be value types) into
 // calling a basic op function.

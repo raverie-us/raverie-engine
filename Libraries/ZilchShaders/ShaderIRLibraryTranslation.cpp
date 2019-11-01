@@ -25,10 +25,10 @@ void DummyBoundFunction(Zilch::Call& call, Zilch::ExceptionReport& report)
 }
 
 void ResolveSimpleFunctionFromOpType(ZilchSpirVFrontEnd* translator,
-                           Zilch::FunctionCallNode* functionCallNode,
-                           Zilch::MemberAccessNode* memberAccessNode,
-                           OpType opType,
-                           ZilchSpirVFrontEndContext* context)
+                                     Zilch::FunctionCallNode* functionCallNode,
+                                     Zilch::MemberAccessNode* memberAccessNode,
+                                     OpType opType,
+                                     ZilchSpirVFrontEndContext* context)
 {
   ZilchShaderIRType* resultType = translator->FindType(functionCallNode->ResultType, functionCallNode);
 
