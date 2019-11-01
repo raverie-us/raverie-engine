@@ -52,6 +52,8 @@ jobs:
     env:
     - CACHE_NAME=Windows
     language: node_js
+    node_js:
+    - 13
     script:
     - setup.bat
     - node index.js all --alias=Windows
