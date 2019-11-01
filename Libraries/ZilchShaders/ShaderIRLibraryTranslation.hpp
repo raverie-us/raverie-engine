@@ -37,7 +37,7 @@ struct TypeGroups
   }
 };
 
-void ResolveSimpleFunction(ZilchSpirVFrontEnd* translator,
+void ResolveSimpleFunctionFromOpType(ZilchSpirVFrontEnd* translator,
                            Zilch::FunctionCallNode* functionCallNode,
                            Zilch::MemberAccessNode* memberAccessNode,
                            OpType opType,
@@ -51,7 +51,7 @@ inline void ResolveSimpleFunction(ZilchSpirVFrontEnd* translator,
                                   Zilch::MemberAccessNode* memberAccessNode,
                                   ZilchSpirVFrontEndContext* context)
 {
-  return ResolveSimpleFunction(translator, functionCallNode, memberAccessNode, opType, context);
+  return ResolveSimpleFunctionFromOpType(translator, functionCallNode, memberAccessNode, opType, context);
 }
 
 void ResolveVectorTypeCount(ZilchSpirVFrontEnd* translator,

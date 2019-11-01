@@ -541,7 +541,7 @@ const buildvfs = async (cmakeVariables, buildDir, combo) => {
         await makeExecutableZip(cmakeVariables, executable, fileSystemZip);
         return fs.readFileSync(fileSystemZip);
       }
-      return Buffer.alloc(0);
+      return Buffer.alloc(1);
     };
 
     const vfsCppContents = generateBinaryCArray("VirtualFileSystem", await makeFsBuffer());
@@ -738,7 +738,7 @@ const build = async (options) => {
     cwd: buildDir,
     err: printError,
     out: (text) => {
-      if (text.search(/(?:FAILED|failed|ERROR)/u) === -1) {
+      if (text.search(/(?:FAILED|failed|ERROR|error)/u) === -1) {
         printLog(text);
       } else {
         printError(text);

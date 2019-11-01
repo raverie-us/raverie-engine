@@ -24,7 +24,7 @@ void DummyBoundFunction(Zilch::Call& call, Zilch::ExceptionReport& report)
   call.MarkReturnAsSet();
 }
 
-void ResolveSimpleFunction(ZilchSpirVFrontEnd* translator,
+void ResolveSimpleFunctionFromOpType(ZilchSpirVFrontEnd* translator,
                            Zilch::FunctionCallNode* functionCallNode,
                            Zilch::MemberAccessNode* memberAccessNode,
                            OpType opType,
