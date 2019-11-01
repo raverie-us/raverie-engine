@@ -124,8 +124,10 @@ void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library, bool s
   // Copy the .pack file
   String packFile = BuildString(library->Name, ".pack");
   String packFileSource = FilePath::Combine(libraryPath, packFile);
-  String packFileDestination = FilePath::Combine(libraryOutputPath, packFile);
-  CopyFile(packFileDestination, packFileSource);
+  if (FileExists(packFileSource)) {
+    String packFileDestination = FilePath::Combine(libraryOutputPath, packFile);
+    CopyFile(packFileDestination, packFileSource);
+  }
 
   BoundType* zilchDocumentType = ZilchTypeId(ZilchDocumentResource);
   BoundType* ZilchPluginSourceType = ZilchTypeId(ZilchPluginSource);
