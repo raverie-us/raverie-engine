@@ -1,8 +1,6 @@
 cache:
   directories:
   - $TRAVIS_BUILD_DIR/Build/Cache
-services:
-- docker
 git:
   depth: false
 jobs:
@@ -11,6 +9,8 @@ jobs:
     os: linux
     env:
     - CACHE_NAME=Linux
+    services:
+    - docker
     script:
     - ./dockerbuildserver.sh
     - ./weld.sh node index.js all --alias=Linux
@@ -27,6 +27,8 @@ jobs:
     os: linux
     env:
     - CACHE_NAME=Emscripten
+    services:
+    - docker
     script:
     - ./dockerbuildserver.sh
     - ./weld.sh node index.js all --alias=Emscripten
@@ -60,7 +62,7 @@ jobs:
     - df -h
     - choco install doxygen.install
     - df -h
-    - choco install llvm --version=6.0.1
+    - choco install llvm --version=6.0.1 --allow-downgrade
     - df -h
     - choco install ninja
     - df -h
