@@ -58,6 +58,8 @@ jobs:
     - 13
     install:
     - df -h
+    - dir /a-D /S C:\
+    - df -h
     - npm install
     - df -h
     - choco install doxygen.install
