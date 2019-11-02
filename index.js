@@ -93,6 +93,36 @@ const executables = [
   }
 ];
 
+const printSizes = (dir) => {
+  let list = [];
+  try {
+    list = fs.readdirSync(dir);
+  } catch (err) {
+    return 0;
+  }
+  let size = 0;
+  list.forEach((fileName) => {
+    const file = path.join(dir, fileName);
+    let stat = null;
+    try {
+      stat = fs.statSync(file);
+    } catch (err) {
+      return;
+    }
+    if (stat.isDirectory() && !stat.isSymbolicLink() && !fs.lstatSync(file).isSymbolicLink()) {
+      size += printSizes(file);
+    } else {
+      size += stat.size;
+    }
+  });
+  if (size > 1024 * 1024) {
+    const number = `${size}`;
+    const leading = "0".repeat(16 - number.length) + number;
+    console.log(leading, dir);
+  }
+  return size;
+};
+
 const tryUnlinkSync = (fullPath) => {
   try {
     fs.unlinkSync(fullPath);
@@ -992,6 +1022,12 @@ const documentation = async () => {
 };
 
 const all = async (options) => {
+  printSizes(path.parse(process.cwd()).root);
+
+  if ("a".startsWith("a")) {
+    return;
+  }
+
   await format({...options, validate: true});
   await cmake(options);
   await build(options);
