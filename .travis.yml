@@ -55,12 +55,19 @@ jobs:
     node_js:
     - 13
     install:
+    - df -h
     - npm install
+    - df -h
     - choco install doxygen.install
+    - df -h
     - choco install llvm --version=6.0.1
+    - df -h
     - choco install ninja
+    - df -h
     script:
+    - df -h
     - node index.js all --alias=Windows
+    - df -h
     deploy:
     - provider: releases
       skip_cleanup: true
