@@ -4,9 +4,6 @@
 
 namespace Zilch
 {
-// This is just a special identifier that means we jumped, there's really no
-// reason to the number... ;)
-static const int ExceptionJumpResult = 1729;
 
 template <>
 void VirtualMachine::GenericPow<Byte>(Byte& out, const Byte& base, const Byte& exponent)
