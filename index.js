@@ -1021,13 +1021,11 @@ const documentation = async () => {
   }));
 };
 
-const all = async (options) => {
+const disk = () => {
   printSizes(path.parse(process.cwd()).root);
+};
 
-  if ("a".startsWith("a")) {
-    return;
-  }
-
+const all = async (options) => {
   await format({...options, validate: true});
   await cmake(options);
   await build(options);
@@ -1043,6 +1041,7 @@ const main = async () => {
   const comboOptions = "[--alias=...] [--builder=...] [--toolchain=...] [--platform=...] [--architecture=...] [--config] [--targetos=...] [--vfs=true|false]";
   // eslint-disable-next-line
     yargs.
+    command("disk", "Print the approximate size of every directory on disk", empty, disk).
     command("format", "Formats all C/C++ files", empty, format).
     usage("format [--validate]").
     command("cmake", "Generate a cmake project", empty, cmake).
