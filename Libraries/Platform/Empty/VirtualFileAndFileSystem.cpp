@@ -266,7 +266,7 @@ void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, T
 
   entry->mModifiedTime = modifiedTime;
 #ifdef DEBUG_FILE_TIMES
-  DebugFileTime("AddVirtualFileSystemEntry: '%s' (%lld)", absolutePath.c_str(), (long long)modifiedTime);
+  ZPrint("AddVirtualFileSystemEntry: '%s' (%lld)\n", absolutePath.c_str(), (long long)modifiedTime);
 #endif
 }
 
