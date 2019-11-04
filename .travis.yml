@@ -62,13 +62,13 @@ jobs:
     - choco install llvm --version=6.0.1 --allow-downgrade
     - choco install ninja
     - df -h
-    - rd /s /q "C:\ProgramData\docker\windowsfilter" || exit 0
-    - rd /s /q "C:\ProgramData\Package Cache" || exit 0
-    - rd /s /q "C:\ProgramData\chocolatey\lib\mingw" || exit 0
-    - rd /s /q "C:\Program Files (x86)\Android" || exit 0
-    - rd /s /q "C:\Windows\SoftwareDistribution\Download" || exit 0
-    - rd /s /q "C:\Recovery" || exit 0
-    - rd /s /q "C:\Program Files (x86)\Microsoft SDKs\UWPNuGetPackages" || exit 0
+    - rd /s /q "C:\ProgramData\docker\windowsfilter" &
+      rd /s /q "C:\ProgramData\Package Cache" &
+      rd /s /q "C:\ProgramData\chocolatey\lib\mingw" &
+      rd /s /q "C:\Program Files (x86)\Android" &
+      rd /s /q "C:\Windows\SoftwareDistribution\Download" &
+      rd /s /q "C:\Recovery" &
+      rd /s /q "C:\Program Files (x86)\Microsoft SDKs\UWPNuGetPackages"
     - df -h
     script:
     - node index.js all --alias=Windows
