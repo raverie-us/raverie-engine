@@ -115,7 +115,7 @@ void GetVersionListingTaskJob::PopulatePackageList()
       // during Initialize).
       zeroBuildContent->Parse();
 
-      String releaseNotes = jsonRelease->MemberAsString(cJsonBody);
+      String releaseNotes = jsonRelease->MemberAsString(cJsonBody, String(), JsonErrorMode::DefaultValue);
       if (!releaseNotes.Empty())
       {
         ZeroBuildReleaseNotes* zeroBuildReleaseNotes = HasOrAdd<ZeroBuildReleaseNotes>(cog);
