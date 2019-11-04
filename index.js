@@ -906,7 +906,7 @@ const prebuilt = async (options) => {
 
   rimraf.sync(dirs.downloads);
   if (!fs.existsSync(dirs.prebuiltContent) || fs.readdirSync(dirs.prebuiltContent).length === 0) {
-    printErrorLine("Prebuilt content directory did not exist or was empty");
+    printLogLine("Prebuilt content directory did not exist or was empty");
   }
   console.log("Copied Prebuilt Content");
 };
