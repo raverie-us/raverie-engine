@@ -871,7 +871,7 @@ const executeBuiltProcess = async (buildDir, combo, library, args) => {
     cwd: buildDir,
     err: printLogLine,
     out: printLogLine,
-    reject: false,
+    reject: true,
     stdio: [
       "ignore",
       "pipe",
