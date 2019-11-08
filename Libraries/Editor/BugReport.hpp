@@ -37,7 +37,6 @@ public:
   void OnSend(Event* event);
   void OnBrowse(Event* event);
   void OnBrowseSelected(OsFileSelection* event);
-  void OnUpdate(UpdateEvent* event);
 
   TextBox* mUsername;
   TextBox* mTitle;
@@ -48,7 +47,6 @@ public:
 
   TextBox* mIncludeFile;
   TextButton* mBrowse;
-  TextCheckBox* mIncludeClipboardImage;
   TextCheckBox* mIncludeScreenshot;
   TextCheckBox* mIncludeProject;
   bool mSent;

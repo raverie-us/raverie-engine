@@ -197,6 +197,7 @@ public:
 
   /// Check to see if a command's shortcut hot-key has been pressed.
   bool TestCommandKeyboardShortcuts(KeyboardEvent* event);
+  bool TestCommandCopyPasteShortcuts(ClipboardEvent* event);
   /// Check to see if command has already registered a valid shortcut by string.
   bool IsShortcutReserved(StringParam validShortcut);
   bool IsShortcutReserved(bool ctrl, bool alt, bool shift, StringParam validKey, Command** out);

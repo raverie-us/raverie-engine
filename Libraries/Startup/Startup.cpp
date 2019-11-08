@@ -115,6 +115,8 @@ void ZeroStartup::Initialize()
   mDebuggerListener = new DebuggerListener();
   Zero::Console::Add(mDebuggerListener);
 
+  // Start the profiling system used to performance counters and timers.
+  Profile::ProfileSystem::Initialize();
   mFileSystemInitializer = new FileSystemInitializer(&PopulateVirtualFileSystemWithZip);
 
   // Mirror console output to a log file.
@@ -134,8 +136,6 @@ void ZeroStartup::Initialize()
   Environment* environment = Environment::GetInstance();
   environment->ParseCommandArgs(gCommandLineArguments);
 
-  // Start the profiling system used to performance counters and timers.
-  Profile::ProfileSystem::Initialize();
   ProfileScopeFunction();
 
   if (Environment::GetValue<bool>("BeginTracing", false))

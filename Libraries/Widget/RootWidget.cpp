@@ -77,6 +77,11 @@ RootWidget::RootWidget(OsWindow* osWindow) : Composite(NULL)
 
   ConnectThisTo(osWindow, Events::OsClose, OnClose);
 
+  OsShell* shell = osWindow->GetShell();
+  ConnectThisTo(shell, Events::Cut, OnCutCopyPaste);
+  ConnectThisTo(shell, Events::Copy, OnCutCopyPaste);
+  ConnectThisTo(shell, Events::Paste, OnCutCopyPaste);
+
   ConnectThisTo(Z::gEngine, Events::DebuggerPause, OnDebuggerPause);
   ConnectThisTo(Z::gEngine, Events::DebuggerResume, OnDebuggerResume);
 
@@ -557,6 +562,12 @@ void RootWidget::MouseUpdate(float dt)
   }
 
   mTimeSinceLastClick += dt;
+}
+
+void RootWidget::OnCutCopyPaste(ClipboardEvent* event)
+{
+  if (Widget* focusObject = mFocus)
+    focusObject->DispatchBubble(event->EventId, event);
 }
 
 void RootWidget::OnOsKeyDown(KeyboardEvent* keyboardEvent)

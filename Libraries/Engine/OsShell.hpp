@@ -7,6 +7,9 @@ namespace Events
 {
 // This event occurs in the middle of OsShell update before we process Os
 // messages
+DeclareEvent(Cut);
+DeclareEvent(Copy);
+DeclareEvent(Paste);
 DeclareEvent(OsShellUpdate);
 DeclareEvent(FileDialogComplete);
 } // namespace Events
@@ -59,16 +62,6 @@ public:
   /// Set the cursor for the mouse.
   void SetMouseCursor(Cursor::Enum cursorId);
 
-  /// Check if the current clipboard Contains text.
-  bool IsClipboardText();
-  /// The current clipboard text.
-  String GetClipboardText();
-  void SetClipboardText(StringParam text);
-
-  /// Checks if the clipboard holds an image
-  bool IsClipboardImage();
-  /// Get an image from clipboard.
-  bool GetClipboardImage(Image* imageBuffer);
   /// Get an image of the desktop / primary monitor.
   bool GetPrimaryMonitorImage(Image* imageBuffer);
 
@@ -94,8 +87,25 @@ public:
   /// been updated but before we send input events.
   OsShellHook* mOsShellHook;
 
+  // Internal
+
   /// Platform specific shell
   Shell mShell;
+
+  static void ShellOnCopy(ClipboardData& data, bool cut, Shell* shell);
+  static void ShellOnPaste(const ClipboardData& data, Shell* shell);
+};
+
+class ClipboardEvent : public Event, public ClipboardData
+{
+public:
+  ZilchDeclareType(ClipboardEvent, TypeCopyMode::ReferenceType);
+  void Clear();
+  void SetText(StringParam text);
+  String GetText();
+  void SetImage(const Image& image);
+  const Image& GetImage();
+  bool mHandled = false;
 };
 
 /// Files have been selected by the File Dialog.

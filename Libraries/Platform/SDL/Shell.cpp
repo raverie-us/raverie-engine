@@ -3,6 +3,8 @@
 
 namespace Zero
 {
+Shell* Shell::sInstance;
+
 // Notes:
 //  - We do not handle mOnFrozenUpdate (Zero may freeze on window drags)
 
@@ -150,8 +152,9 @@ int MouseButtonToSDL(MouseButtons::Enum button)
   return 0;
 }
 
-Shell::Shell() : mCursor(Cursor::Arrow), mMainWindow(nullptr), mUserData(nullptr)
+Shell::Shell() : mCursor(Cursor::Arrow), mMainWindow(nullptr), mUserData(nullptr), mOnCopy(nullptr), mOnPaste(nullptr)
 {
+  sInstance = this;
   ZeroConstructPrivateData(ShellPrivateData);
 
   self->mSDLCursors.Resize(SDL_NUM_SYSTEM_CURSORS);
@@ -322,51 +325,17 @@ void Shell::SetMouseCursor(Cursor::Enum cursor)
   SDL_SetCursor(sdlCursor);
 }
 
-#if !defined(ZeroPlatformNoShellIsClipboardText)
-bool Shell::IsClipboardText()
+bool SDLGetClipboardText(String* out)
 {
-  return SDL_HasClipboardText() == SDL_TRUE;
-}
-#endif
-
-String SDLGetClipboardTextAsString()
-{
+  if (!SDL_HasClipboardText())
+    return false;
   char* clipboardText = SDL_GetClipboardText();
-  String result = clipboardText;
+  if (!clipboardText)
+    return false;
+  *out = clipboardText;
   SDL_free(clipboardText);
-  return result;
+  return true;
 }
-
-#if !defined(ZeroPlatformNoShellGetClipboardText)
-String Shell::GetClipboardText()
-{
-  return SDLGetClipboardTextAsString();
-}
-#endif
-
-#if !defined(ZeroPlatformNoShellSetClipboardText)
-void Shell::SetClipboardText(StringParam text)
-{
-  SDL_SetClipboardText(text.c_str());
-}
-#endif
-
-#if !defined(ZeroPlatformNoShellIsClipboardImage)
-bool Shell::IsClipboardImage()
-{
-  // SDL has no way of grabbing images from the clipboard.
-  return false;
-}
-#endif
-
-#if !defined(ZeroPlatformNoShellGetClipboardImage)
-bool Shell::GetClipboardImage(Image* image)
-{
-  // SDL has no way of grabbing images from the clipboard.
-  // We could possibly translate base64 encoded text images into an image.
-  return false;
-}
-#endif
 
 #if !defined(ZeroPlatformNoShellGetPrimaryMonitorImage)
 bool Shell::GetPrimaryMonitorImage(Image* image)
@@ -378,60 +347,13 @@ bool Shell::GetPrimaryMonitorImage(Image* image)
 }
 #endif
 
-// SDL has no open file dialog. We could maybe revert to using our own custom
-// dialog that uses the file system API. This method uses a very poor message
-// box + clipboard approach.
-void FileDialog(Shell* shell, FileDialogInfo& config, bool isOpen)
-{
-  const SDL_MessageBoxButtonData buttons[] = {
-      {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "Clipboard"},
-      {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel"},
-  };
-
-  const char* title = isOpen ? "Open File - " : "Save File - ";
-  const char* message = "SDL does not support file open/save dialogs.\n"
-                        "As a workaround, you can copy a file path and click Clipboard.\n"
-                        "You can use newlines to separate multiple files.\n";
-
-  String fullTitle = BuildString(title, config.Title);
-  String fullMessage = message;
-
-  forRange (FileDialogFilter& filter, config.mSearchFilters)
-    fullMessage = BuildString(fullMessage, "(", filter.mFilter, ") ", filter.mDescription);
-
-  const SDL_MessageBoxData messageboxdata = {
-      SDL_MESSAGEBOX_INFORMATION,
-      nullptr,
-      fullTitle.c_str(),
-      fullMessage.c_str(),
-      SDL_arraysize(buttons),
-      buttons,
-      nullptr,
-  };
-
-  int buttonid = 0;
-
-  // Show the message box, and if it failed or they click cancel, early out
-  if (SDL_ShowMessageBox(&messageboxdata, &buttonid) < 0 || buttonid == 0)
-    return;
-
-  String files = shell->GetClipboardText();
-  if (files.Empty())
-    return;
-
-  forRange (StringRange fileRange, files.Split("\n"))
-  {
-    config.mFiles.PushBack(fileRange.Trim());
-  }
-
-  if (config.mCallback)
-    config.mCallback(config.mFiles, config.mUserData);
-}
-
 #if !defined(ZeroPlatformNoShellOpenFile)
 void Shell::OpenFile(FileDialogInfo& config)
 {
-  return FileDialog(this, config, true);
+  SDL_ShowSimpleMessageBox(
+      SDL_MESSAGEBOX_WARNING, "Unsupported", "The file open dialog is not yet supported in SDL", nullptr);
+  if (config.mCallback)
+    config.mCallback(config.mFiles, config.mUserData);
 }
 #endif
 
@@ -608,8 +530,32 @@ void Shell::Update()
     case SDL_KEYDOWN:
     {
       ShellWindow* window = GetShellWindowFromSDLId(e.key.windowID);
+      Keys::Enum key = SDLKeycodeToKey(e.key.keysym.sym);
+
       if (window && window->mOnKeyDown)
-        window->mOnKeyDown(SDLKeycodeToKey(e.key.keysym.sym), e.key.keysym.scancode, e.key.repeat != 0, window);
+        window->mOnKeyDown(key, e.key.keysym.scancode, e.key.repeat != 0, window);
+
+#if !defined(ZeroPlatformNoClipboardEvents)
+      // Handle paste explicitly to be more like a browser platform
+      if (IsKeyDown(Keys::Control) && key == Keys::V && mOnPaste)
+      {
+        // SDL clipboard does not support images, but we may want to support url encoded images at some point
+        ClipboardData data;
+        data.mHasText = SDLGetClipboardText(&data.mText);
+        mOnPaste(data, this);
+      }
+
+      // Handle copy explicitly to be more like a browser platform
+      if (IsKeyDown(Keys::Control) && (key == Keys::C || key == Keys::X) && mOnCopy)
+      {
+        ClipboardData data;
+        mOnCopy(data, key == Keys::X, this);
+        ErrorIf(!data.mHasText && !data.mText.Empty(), "Clipboard Text was not empty, but HasText was not set");
+        if (data.mHasText)
+          SDL_SetClipboardText(data.mText.c_str());
+        ErrorIf(data.mHasImage, "Copying image data not yet supported");
+      }
+#endif
       break;
     }
     case SDL_KEYUP:

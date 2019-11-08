@@ -5,7 +5,6 @@ namespace Zero
 {
 void YieldToOs()
 {
-  // Most platforms aren't cooperatively multi-threaded.
 }
 
 ZeroThreadLocal bool gStopMainLoop = false;

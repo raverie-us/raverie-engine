@@ -80,6 +80,8 @@ public:
   void NotifyFocus(bool focus) override;
   void NotifyParent(Scintilla::SCNotification scn) override;
   void NotifyDoubleClick(Scintilla::Point pt, bool shift, bool ctrl, bool alt) override;
+  // We don't use Scinitilla's built in Cut/Copy/Paste
+  // because we handle them specially to match browser behavior.
   void Copy() override;
   bool CanPaste() override;
   void Paste() override;
@@ -261,7 +263,10 @@ TextEditor::TextEditor(Composite* parent) : BaseScrollArea(parent)
   ConnectThisTo(mScinWidget, Events::KeyDown, OnKeyDown);
   ConnectThisTo(mScinWidget, Events::KeyRepeated, OnKeyDown);
 
-  ConnectThisTo(mScinWidget, Events::KeyUp, OnKeyUp);
+  ConnectThisTo(mScinWidget, Events::Cut, OnCut);
+  ConnectThisTo(mScinWidget, Events::Copy, OnCopy);
+  ConnectThisTo(mScinWidget, Events::Paste, OnPaste);
+
   ConnectThisTo(mScinWidget, Events::MouseScroll, OnMouseScroll);
   ConnectThisTo(mScinWidget, Events::FocusLost, OnFocusOut);
   ConnectThisTo(mScinWidget, Events::MouseExitHierarchy, OnMouseExit);
@@ -1199,8 +1204,128 @@ void TextEditor::SetFontSize(int size)
   UpdateColorScheme();
 }
 
-void TextEditor::OnKeyUp(KeyboardEvent* event)
+void TextEditor::OnCut(ClipboardEvent* event)
 {
+  OnCopy(event);
+  mScintilla->Cut();
+}
+
+void TextEditor::OnCopy(ClipboardEvent* event)
+{
+  if (mScintilla->sel.Empty())
+  {
+    // Copy the line that the main caret is on
+    Scintilla::SelectionText selectedText;
+    mScintilla->CopySelectionRange(&selectedText, true);
+    event->SetText(String(selectedText.s, selectedText.s + selectedText.len));
+    return;
+  }
+
+  // Get newline string
+  char newLine[3] = {0};
+  if (mScintilla->pdoc->eolMode != SC_EOL_LF)
+    strcat(newLine, "\r");
+  if (mScintilla->pdoc->eolMode != SC_EOL_CR)
+    strcat(newLine, "\n");
+  int newLineLength = strlen(newLine);
+
+  // Sort caret order so text is copied top-down
+  std::vector<Scintilla::SelectionRange> rangesInOrder = mScintilla->sel.RangesCopy();
+  std::sort(rangesInOrder.begin(), rangesInOrder.end());
+
+  StringBuilder builder;
+
+  // Copy characters from every caret
+  for (uint i = 0; i < rangesInOrder.size() - 1; ++i)
+  {
+    Scintilla::SelectionRange& selection = rangesInOrder[i];
+
+    int start = selection.Start().Position();
+    int end = selection.End().Position();
+    for (int charIndex = start; charIndex < end; ++charIndex)
+      builder.Append(mScintilla->pdoc->CharAt(charIndex));
+    builder.Append(StringRange(newLine, newLine + newLineLength));
+  }
+
+  // Last or only caret, no additional newline
+  Scintilla::SelectionRange& selection = rangesInOrder.back();
+  for (int charIndex = selection.Start().Position(); charIndex < selection.End().Position(); ++charIndex)
+    builder.Append(mScintilla->pdoc->CharAt(charIndex));
+
+  String text = builder.ToString();
+  event->SetText(text);
+}
+
+void TextEditor::OnPaste(ClipboardEvent* event)
+{
+  Scintilla::UndoGroup ug(mScintilla->pdoc);
+
+  Zero::String clipboardText = event->GetText();
+
+  mScintilla->ClearSelection(mScintilla->multiPasteMode == SC_MULTIPASTE_EACH);
+
+  // Get newline string
+  char newLineChars[3] = {0};
+  if (mScintilla->pdoc->eolMode != SC_EOL_LF)
+    strcat(newLineChars, "\r");
+  if (mScintilla->pdoc->eolMode != SC_EOL_CR)
+    strcat(newLineChars, "\n");
+  String newLine(newLineChars);
+
+  uint newLineCount = 0;
+  Array<StringIterator> linePositions;
+  linePositions.PushBack(clipboardText.Begin());
+
+  Zero::StringRange clipboardRange = clipboardText;
+  int newLineRuneCount = newLine.ComputeRuneCount();
+
+  // check for newlines for multiselect positions within the text to paste
+  while (!clipboardRange.Empty())
+  {
+    StringRange newLineGroup =
+        clipboardRange.SubString(clipboardRange.Begin(), clipboardRange.Begin() + newLineRuneCount);
+    if (newLineGroup == newLine)
+    {
+      ++newLineCount;
+      linePositions.PushBack(newLineGroup.End());
+    }
+    clipboardRange.PopFront();
+  }
+
+  // Sort caret order to match clipboard for multi-caret copies
+  std::vector<Scintilla::SelectionRange>& ranges = mScintilla->sel.GetRanges();
+  std::sort(ranges.begin(), ranges.end());
+
+  if (newLineCount == ranges.size() - 1)
+  {
+    // Paste respective chunks at each caret delimited by newline
+    int offset = 0;
+    for (uint i = 0; i < ranges.size(); ++i)
+    {
+      Scintilla::SelectionRange& selection = ranges[i];
+
+      mScintilla->InsertSpace(selection.Start().Position(), selection.Start().VirtualSpace());
+      selection.ClearVirtualSpace();
+
+      StringIterator start = linePositions[i];
+      StringIterator end =
+          (i + 1 < linePositions.Size()) ? (linePositions[i + 1] - newLineRuneCount) : clipboardText.End();
+      String lineChunk(start, end);
+      mScintilla->pdoc->InsertString(selection.Start().Position(), lineChunk.Data(), lineChunk.SizeInBytes());
+    }
+  }
+  else
+  {
+    // Paste text at each caret
+    for (uint i = 0; i < ranges.size(); ++i)
+    {
+      Scintilla::SelectionRange& selection = ranges[i];
+
+      mScintilla->InsertSpace(selection.Start().Position(), selection.Start().VirtualSpace());
+      selection.ClearVirtualSpace();
+      mScintilla->pdoc->InsertString(selection.Start().Position(), clipboardText.c_str(), clipboardText.SizeInBytes());
+    }
+  }
 }
 
 void TextEditor::OnMouseScroll(MouseEvent* event)
@@ -2023,6 +2148,16 @@ void TextEditor::OnNotify(Scintilla::SCNotification& notify)
 ScintillaZero::ScintillaZero()
 {
   mMouseCapture = false;
+
+  // Overwrite Scintilla's default behavior of mapping cut/copy/paste.
+  // We do this since now the operating system (or browser) sends cut/copy/paste externally.
+  kmap.AssignCmdKey(SCK_DELETE, SCI_SHIFT, SCI_NULL); // SCI_CUT
+  kmap.AssignCmdKey(SCK_INSERT, SCI_SHIFT, SCI_NULL); // SCI_PASTE
+  kmap.AssignCmdKey(SCK_INSERT, SCI_CTRL, SCI_NULL);  // SCI_COPY
+
+  kmap.AssignCmdKey('X', SCI_CTRL, SCI_NULL); // SCI_CUT
+  kmap.AssignCmdKey('C', SCI_CTRL, SCI_NULL); // SCI_COPY
+  kmap.AssignCmdKey('V', SCI_CTRL, SCI_NULL); // SCI_PASTE
 }
 
 ScintillaZero::~ScintillaZero()
@@ -2548,120 +2683,12 @@ bool ScintillaZero::ModifyScrollBars(int nMax, int nPage)
 
 void ScintillaZero::Copy()
 {
-  if (sel.Empty())
-  {
-    // Copy the line that the main caret is on
-    Scintilla::SelectionText selectedText;
-    CopySelectionRange(&selectedText, true);
-    Z::gEngine->has(Zero::OsShell)->SetClipboardText(StringRange(selectedText.s, selectedText.s + selectedText.len));
-    return;
-  }
-
-  // Get newline string
-  char newLine[3] = {0};
-  if (pdoc->eolMode != SC_EOL_LF)
-    strcat(newLine, "\r");
-  if (pdoc->eolMode != SC_EOL_CR)
-    strcat(newLine, "\n");
-  int newLineLength = strlen(newLine);
-
-  // Sort caret order so text is copied top-down
-  std::vector<Scintilla::SelectionRange> rangesInOrder = sel.RangesCopy();
-  std::sort(rangesInOrder.begin(), rangesInOrder.end());
-
-  StringBuilder builder;
-
-  // Copy characters from every caret
-  for (uint i = 0; i < rangesInOrder.size() - 1; ++i)
-  {
-    Scintilla::SelectionRange& selection = rangesInOrder[i];
-
-    int start = selection.Start().Position();
-    int end = selection.End().Position();
-    for (int charIndex = start; charIndex < end; ++charIndex)
-      builder.Append(pdoc->CharAt(charIndex));
-    builder.Append(StringRange(newLine, newLine + newLineLength));
-  }
-
-  // Last or only caret, no additional newline
-  Scintilla::SelectionRange& selection = rangesInOrder.back();
-  for (int charIndex = selection.Start().Position(); charIndex < selection.End().Position(); ++charIndex)
-    builder.Append(pdoc->CharAt(charIndex));
-
-  String text = builder.ToString();
-  Z::gEngine->has(Zero::OsShell)->SetClipboardText(text.All());
+  // This logic is now handled in OnCopy to be more browser like,
+  // since we cannot explicitly access the clipboard.
 }
 
 void ScintillaZero::Paste()
 {
-  Scintilla::UndoGroup ug(pdoc);
-
-  Zero::String clipboardText = Z::gEngine->has(Zero::OsShell)->GetClipboardText();
-
-  ClearSelection(multiPasteMode == SC_MULTIPASTE_EACH);
-
-  // Get newline string
-  char newLineChars[3] = {0};
-  if (pdoc->eolMode != SC_EOL_LF)
-    strcat(newLineChars, "\r");
-  if (pdoc->eolMode != SC_EOL_CR)
-    strcat(newLineChars, "\n");
-  String newLine(newLineChars);
-
-  uint newLineCount = 0;
-  Array<StringIterator> linePositions;
-  linePositions.PushBack(clipboardText.Begin());
-
-  Zero::StringRange clipboardRange = clipboardText;
-  int newLineRuneCount = newLine.ComputeRuneCount();
-
-  // check for newlines for multiselect positions within the text to paste
-  while (!clipboardRange.Empty())
-  {
-    StringRange newLineGroup =
-        clipboardRange.SubString(clipboardRange.Begin(), clipboardRange.Begin() + newLineRuneCount);
-    if (newLineGroup == newLine)
-    {
-      ++newLineCount;
-      linePositions.PushBack(newLineGroup.End());
-    }
-    clipboardRange.PopFront();
-  }
-
-  // Sort caret order to match clipboard for multi-caret copies
-  std::vector<Scintilla::SelectionRange>& ranges = sel.GetRanges();
-  std::sort(ranges.begin(), ranges.end());
-
-  if (newLineCount == ranges.size() - 1)
-  {
-    // Paste respective chunks at each caret delimited by newline
-    int offset = 0;
-    for (uint i = 0; i < ranges.size(); ++i)
-    {
-      Scintilla::SelectionRange& selection = ranges[i];
-
-      InsertSpace(selection.Start().Position(), selection.Start().VirtualSpace());
-      selection.ClearVirtualSpace();
-
-      StringIterator start = linePositions[i];
-      StringIterator end =
-          (i + 1 < linePositions.Size()) ? (linePositions[i + 1] - newLineRuneCount) : clipboardText.End();
-      String lineChunk(start, end);
-      pdoc->InsertString(selection.Start().Position(), lineChunk.Data(), lineChunk.SizeInBytes());
-    }
-  }
-  else
-  {
-    // Paste text at each caret
-    for (uint i = 0; i < ranges.size(); ++i)
-    {
-      Scintilla::SelectionRange& selection = ranges[i];
-
-      InsertSpace(selection.Start().Position(), selection.Start().VirtualSpace());
-      selection.ClearVirtualSpace();
-      pdoc->InsertString(selection.Start().Position(), clipboardText.c_str(), clipboardText.SizeInBytes());
-    }
-  }
 }
 
 bool ScintillaZero::CanPaste()

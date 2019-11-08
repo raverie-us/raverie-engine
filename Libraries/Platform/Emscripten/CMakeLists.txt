@@ -43,6 +43,7 @@ target_compile_definitions(Platform
     ZeroPlatformNoOpenUrl
     ZeroPlatformNoSupportsDownloadingFiles
     ZeroPlatformNoDownloadFile
+    ZeroPlatformNoClipboardEvents
 )
 
 target_link_libraries(Platform

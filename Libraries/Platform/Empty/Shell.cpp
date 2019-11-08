@@ -3,11 +3,12 @@
 
 namespace Zero
 {
-
+Shell* Shell::sInstance;
 String gClipboardText;
 
-Shell::Shell() : mCursor(Cursor::Arrow), mMainWindow(nullptr), mUserData(nullptr)
+Shell::Shell() : mCursor(Cursor::Arrow), mMainWindow(nullptr), mUserData(nullptr), mOnCopy(nullptr), mOnPaste(nullptr)
 {
+  sInstance = this;
 }
 
 Shell::~Shell()
@@ -74,31 +75,6 @@ bool Shell::IsMouseDown(MouseButtons::Enum button)
 void Shell::SetMouseCursor(Cursor::Enum cursor)
 {
   mCursor = cursor;
-}
-
-bool Shell::IsClipboardText()
-{
-  return true;
-}
-
-String Shell::GetClipboardText()
-{
-  return gClipboardText;
-}
-
-void Shell::SetClipboardText(StringParam text)
-{
-  gClipboardText = text;
-}
-
-bool Shell::IsClipboardImage()
-{
-  return false;
-}
-
-bool Shell::GetClipboardImage(Image* image)
-{
-  return false;
 }
 
 bool Shell::GetPrimaryMonitorImage(Image* image)

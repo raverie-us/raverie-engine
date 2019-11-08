@@ -113,6 +113,7 @@ public:
   void OnMouseScroll(MouseEvent* e);
   void OnMetaDrop(MetaDropEvent* e);
   void OnKeyDown(KeyboardEvent* e);
+  void OnCutCopyPaste(ClipboardEvent* event);
   void OnKeyUp(KeyboardEvent* e);
   void OnFocusLost(FocusEvent* focusEvent);
   void OnFocusGained(FocusEvent* focusEvent);
@@ -122,8 +123,10 @@ public:
   bool ForwardMouseEventToTool(MouseEvent* e, Cog* tool = nullptr);
   bool ForwardEventToTool(MouseEvent* e, Cog* tool = nullptr);
   bool ForwardEventToTool(KeyboardEvent* e, Cog* tool = nullptr);
+  bool ForwardEventToTool(ClipboardEvent* e, Cog* tool = nullptr);
   bool ForwardEventToGizmos(MouseEvent* e);
   bool ForwardEventToGizmos(KeyboardEvent* e);
+  bool ForwardEventToGizmos(ClipboardEvent* e);
 
   void OnCameraUpdate(ObjectEvent* event);
   void OnSettingsChanged(Event* event);

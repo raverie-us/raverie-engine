@@ -91,6 +91,9 @@ public:
 
   // Events
   void OnTextTyped(KeyboardTextEvent* keyboardEvent);
+  void OnCut(ClipboardEvent* event);
+  void OnCopy(ClipboardEvent* event);
+  void OnPaste(ClipboardEvent* event);
   void OnKeyDown(KeyboardEvent* keyboardEvent);
   void OnFocusGained(FocusEvent* focusEvent);
   void OnFocusLost(FocusEvent* focusEvent);

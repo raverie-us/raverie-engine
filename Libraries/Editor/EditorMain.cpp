@@ -117,6 +117,16 @@ void EditorMain::OnMouseDown(MouseEvent* mouseEvent)
   }
 }
 
+void EditorMain::OnCutCopyPaste(ClipboardEvent* event)
+{
+  if (event->mHandled)
+    return;
+
+  CommandManager* commands = CommandManager::GetInstance();
+  if (commands->TestCommandCopyPasteShortcuts(event))
+    return;
+}
+
 void EditorMain::OnKeyDown(KeyboardEvent* keyEvent)
 {
   if (keyEvent->Handled || keyEvent->HandledEventScript || mDisableInput)
@@ -956,6 +966,9 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
   editorMain->mManager = manager;
 
   Connect(manager, Events::OsKeyDown, editorMain, &EditorMain::OnKeyDown);
+  Connect(manager, Events::Cut, editorMain, &EditorMain::OnCutCopyPaste);
+  Connect(manager, Events::Copy, editorMain, &EditorMain::OnCutCopyPaste);
+  Connect(manager, Events::Paste, editorMain, &EditorMain::OnCutCopyPaste);
 
   {
     // Create a persistent Library instance so that the rest of the engine can

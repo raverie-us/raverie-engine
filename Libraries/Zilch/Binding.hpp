@@ -715,6 +715,7 @@ public:
 bool BoundTypeHelperIsRawCastable(BoundType* fromType, BoundType* toType);
 bool BoundTypeHelperIsInitialized(BoundType* type);
 bool BoundTypeHelperIsInitializedAssert(BoundType* type);
+String BoundTypeHelperGetName(BoundType* type);
 void LibraryBuilderHelperAddNativeBoundType(LibraryBuilder& builder,
                                             BoundType* type,
                                             BoundType* base,
@@ -771,7 +772,7 @@ T Handle::Get(GetOptions::Enum options) const
     ErrorIf(options == GetOptions::AssertOnNull,
             "There was a value inside the Handle of type '%s' but it cannot be "
             "converted",
-            this->StoredType->Name.c_str());
+            BoundTypeHelperGetName(this->StoredType).c_str());
     return T();
   }
 
@@ -1204,7 +1205,7 @@ void SetupType(LibraryBuilder& builder,
           "Be sure you are calling the correct initialize function: "
           "ZilchInitializeExternalType,"
           "ZilchInitializeRange, or ZilchInitializeEnum.",
-          type->Name.c_str());
+          BoundTypeHelperGetName(type).c_str());
   setupType(nullptr, builder, type);
 };
 

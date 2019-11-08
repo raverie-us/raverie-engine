@@ -74,7 +74,6 @@ void BuildVersion()
   String buildVersionString = String::Format("BuildVersion: %s", GetBuildVersionName().c_str());
   ZPrintFilter(Filter::DefaultFilter, "%s\n", buildVersionString.c_str());
   OsShell* platform = Z::gEngine->has(OsShell);
-  platform->SetClipboardText(buildVersionString);
 }
 
 void WriteBuildInfo()

@@ -5,6 +5,9 @@ namespace Zero
 {
 namespace Events
 {
+DefineEvent(Cut);
+DefineEvent(Copy);
+DefineEvent(Paste);
 DefineEvent(OsShellUpdate);
 DefineEvent(FileDialogComplete);
 } // namespace Events
@@ -12,9 +15,6 @@ DefineEvent(FileDialogComplete);
 ZilchDefineType(OsShell, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
-
-  ZilchBindMethod(IsClipboardText);
-  ZilchBindGetterSetterProperty(ClipboardText);
 
   ZilchBindGetterProperty(WindowCount);
   ZilchBindMethod(GetWindow);
@@ -31,6 +31,25 @@ OsShell* CreateOsShellSystem()
 OsShell::OsShell() : mOsShellHook(nullptr)
 {
   mShell.mUserData = this;
+  mShell.mOnCopy = &ShellOnCopy;
+  mShell.mOnPaste = &ShellOnPaste;
+}
+
+void OsShell::ShellOnCopy(ClipboardData& data, bool cut, Shell* shell)
+{
+  OsShell* self = (OsShell*)shell->mUserData;
+  ClipboardEvent toSend;
+  self->DispatchEvent(cut ? Events::Cut : Events::Copy, &toSend);
+  data = toSend;
+}
+
+void OsShell::ShellOnPaste(const ClipboardData& data, Shell* shell)
+{
+  OsShell* self = (OsShell*)shell->mUserData;
+  ClipboardEvent toSend;
+  ClipboardData& toSendData = toSend;
+  toSendData = data;
+  self->DispatchEvent(Events::Paste, &toSend);
 }
 
 cstr OsShell::GetName()
@@ -102,31 +121,6 @@ void OsShell::SetMouseCursor(Cursor::Enum cursorId)
   return mShell.SetMouseCursor(cursorId);
 }
 
-bool OsShell::IsClipboardText()
-{
-  return mShell.IsClipboardText();
-}
-
-String OsShell::GetClipboardText()
-{
-  return mShell.GetClipboardText();
-}
-
-void OsShell::SetClipboardText(StringParam text)
-{
-  return mShell.SetClipboardText(text);
-}
-
-bool OsShell::IsClipboardImage()
-{
-  return mShell.IsClipboardImage();
-}
-
-bool OsShell::GetClipboardImage(Image* imageBuffer)
-{
-  return mShell.GetClipboardImage(imageBuffer);
-}
-
 bool OsShell::GetPrimaryMonitorImage(Image* imageBuffer)
 {
   return mShell.GetPrimaryMonitorImage(imageBuffer);
@@ -180,6 +174,46 @@ OsWindow* OsShell::GetWindow(size_t index)
 void OsShell::DumpMemoryDebuggerStats()
 {
   Memory::DumpMemoryDebuggerStats("MyProject");
+}
+
+ZilchDefineType(ClipboardEvent, builder, type)
+{
+  ZilchBindMethodProperty(Clear);
+  ZilchBindGetterSetterProperty(Text);
+  ZilchBindMemberProperty(mHandled);
+}
+
+void ClipboardEvent::Clear()
+{
+  mHasText = false;
+  mText = String();
+  mHasImage = false;
+  mImage.Deallocate();
+  mHandled = false;
+}
+
+void ClipboardEvent::SetText(StringParam text)
+{
+  mHasText = true;
+  mText = text;
+}
+
+String ClipboardEvent::GetText()
+{
+  return mText;
+}
+
+void ClipboardEvent::SetImage(const Image& image)
+{
+  mHasImage = true;
+  CopyImage(&mImage, const_cast<Image*>(&image));
+}
+
+const Image& ClipboardEvent::GetImage()
+{
+  // We should implement copy construction and assignment for Image and return a copy
+  // so that it cannot be modified without calling SetImage...
+  return mImage;
 }
 
 ZilchDefineType(OsFileSelection, builder, type)

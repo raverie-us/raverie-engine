@@ -282,6 +282,15 @@ public:
 class ShellWindow;
 class PlatformInputDevice;
 
+class ClipboardData
+{
+public:
+  bool mHasText = false;
+  String mText;
+  bool mHasImage = false;
+  Image mImage;
+};
+
 /// Monitor coordinates means a position anywhere on the desktop relative to the
 /// primary monitor's top left corner. Client coordinates means a position
 /// within a window (not including title bar if the window has a border). Sizes
@@ -333,22 +342,6 @@ public:
   /// Checks if a mouse button is down
   bool IsMouseDown(MouseButtons::Enum button);
 
-  /// Check if the current clipboard holds plain-text.
-  bool IsClipboardText();
-
-  /// Get whatever plain-text is on the clipboard (or an empty string if there
-  /// is no text).
-  String GetClipboardText();
-
-  /// Set the clipboard to hold the given plain-text.
-  void SetClipboardText(StringParam text);
-
-  /// Check if the current clipboard holds an image.
-  bool IsClipboardImage();
-
-  /// Get an image from the clipboard.
-  bool GetClipboardImage(Image* image);
-
   /// Get an image of the entire desktop (primary monitor).
   bool GetPrimaryMonitorImage(Image* image);
 
@@ -378,6 +371,11 @@ public:
   ShellWindow* mMainWindow;
   Array<ShellWindow*> mWindows;
   Array<PlatformInputDevice> mInputDevices;
+
+  static Shell* sInstance;
+
+  void (*mOnCopy)(ClipboardData&, bool cut, Shell* shell);
+  void (*mOnPaste)(const ClipboardData& data, Shell* shell);
 
   void* mUserData;
 

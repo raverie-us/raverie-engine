@@ -198,6 +198,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(TextErrorEvent);
   ZilchInitializeType(ProgressEvent);
   ZilchInitializeType(OsFileSelection);
+  ZilchInitializeType(ClipboardEvent);
   ZilchInitializeType(ZilchCompiledEvent);
   ZilchInitializeType(ZilchCompileFragmentEvent);
   ZilchInitializeType(ZilchCompileEvent);

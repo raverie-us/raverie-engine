@@ -179,8 +179,9 @@ uint GetFirstHierarchyIndex(MetaSelection* selection)
   return primary->GetHierarchyIndex() + 1;
 }
 
-void SaveSelectionToClipboard(Editor* editor, Space* space)
+void SaveSelectionToClipboard(ClipboardEvent* event, Space* space)
 {
+  Editor* editor = Z::gEditor;
   MetaSelection* selection = editor->GetSelection();
   editor->mLastCopiedParent = GetSharedParent(selection);
   editor->mPasteHierarchyIndex = GetFirstHierarchyIndex(selection);
@@ -194,33 +195,27 @@ void SaveSelectionToClipboard(Editor* editor, Space* space)
 
   CogSerialization::SaveSelection(saver, selection);
 
-  uint size = saver.GetBufferSize();
-  byte* data = (byte*)zAllocate(size + 1);
-  saver.ExtractInto(data, size);
-  data[size] = 0;
-
-  OsShell* platform = Z::gEngine->has(OsShell);
-  platform->SetClipboardText(StringRange((cstr)data));
-  editor->mLastCopy = platform->GetClipboardText();
-
-  zDeallocate(data);
+  String string = saver.GetString();
+  event->SetText(string);
+  editor->mLastCopy = string;
 }
 
-void SaveToClipBoardAndDelete(Editor* editor, Space* space)
+void SaveToClipBoardAndDelete(ClipboardEvent* event, Space* space)
 {
-  SaveSelectionToClipboard(editor, space);
+  Editor* editor = Z::gEditor;
+  SaveSelectionToClipboard(event, space);
   DeleteSelectedObjects(editor, space);
 
   // The selected object was removed, so just move the object to the end
   editor->mPasteHierarchyIndex = uint(-1);
 }
 
-void LoadObjectFromClipboard(Editor* editor, Space* space)
+void LoadObjectFromClipboard(ClipboardEvent* event, Space* space)
 {
+  Editor* editor = Z::gEditor;
   PushErrorContext("Paste Object From Clipboard");
 
-  OsShell* platform = Z::gEngine->has(OsShell);
-  String text = platform->GetClipboardText();
+  String text = event->GetText();
   if (!text.Empty())
   {
     Status status;

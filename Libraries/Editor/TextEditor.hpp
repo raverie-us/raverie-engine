@@ -242,7 +242,9 @@ public:
   void OnMouseFileDrop(MouseFileDropEvent* event);
   void OnMouseScroll(MouseEvent* event);
 
-  void OnKeyUp(KeyboardEvent* event);
+  void OnCut(ClipboardEvent* event);
+  void OnCopy(ClipboardEvent* event);
+  void OnPaste(ClipboardEvent* event);
 
   void OnFocusOut(FocusEvent* event);
   void OnFocusIn(FocusEvent* event);

@@ -35,6 +35,10 @@ EditText::EditText(Composite* parent) : Widget(parent)
 
   SelectNone();
 
+  ConnectThisTo(this, Events::Cut, OnCut);
+  ConnectThisTo(this, Events::Copy, OnCopy);
+  ConnectThisTo(this, Events::Paste, OnPaste);
+
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
   ConnectThisTo(this, Events::KeyRepeated, OnKeyDown);
 
@@ -423,6 +427,31 @@ void EditText::OnTextTyped(KeyboardTextEvent* keyboardEvent)
   }
 }
 
+void EditText::OnCut(ClipboardEvent* event)
+{
+  StringRange toCut = GetSelectedText();
+  event->SetText(toCut);
+  ReplaceSelection(String());
+  event->mHandled = true;
+  ObjectEvent objectEvent(this);
+  DispatchBubble(Events::TextChanged, &objectEvent);
+}
+
+void EditText::OnCopy(ClipboardEvent* event)
+{
+  String toCopy = GetSelectedText();
+  event->SetText(toCopy);
+  event->mHandled = true;
+}
+
+void EditText::OnPaste(ClipboardEvent* event)
+{
+  ReplaceSelection(RangeUntilFirst(event->GetText(), IsControl));
+  event->mHandled = true;
+  ObjectEvent objectEvent(this);
+  DispatchBubble(Events::TextChanged, &objectEvent);
+}
+
 void EditText::OnKeyDown(KeyboardEvent* keyboardEvent)
 {
   if (!mEditEnabled)
@@ -677,33 +706,6 @@ void EditText::OnKeyDown(KeyboardEvent* keyboardEvent)
     {
       SetEditSelection(0, mDisplayText.ComputeRuneCount());
       keyboardEvent->Handled = true;
-      break;
-    }
-
-    case Keys::V:
-    {
-      String toPaste = Z::gEngine->has(OsShell)->GetClipboardText();
-      ReplaceSelection(RangeUntilFirst(toPaste, IsControl));
-      keyboardEvent->Handled = true;
-      DispatchBubble(Events::TextChanged, &objectEvent);
-      break;
-    }
-
-    case Keys::C:
-    {
-      StringRange toCopy = GetSelectedText();
-      Z::gEngine->has(OsShell)->SetClipboardText(toCopy);
-      keyboardEvent->Handled = true;
-      break;
-    }
-
-    case Keys::X:
-    {
-      StringRange toCut = GetSelectedText();
-      Z::gEngine->has(OsShell)->SetClipboardText(toCut);
-      ReplaceSelection(String());
-      keyboardEvent->Handled = true;
-      DispatchBubble(Events::TextChanged, &objectEvent);
       break;
     }
     }

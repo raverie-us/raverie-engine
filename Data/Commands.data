@@ -113,7 +113,7 @@ Commands commands =
 		string Name = "Cut",
 		string Description = "Cut selected objects and save them to clipboard",
 		string IconName = "Cut",
-		string Shortcut = "Ctrl+X",
+		string Shortcut = "Cut",
 		string Tags = "Edit",
 	},
 
@@ -122,7 +122,7 @@ Commands commands =
 		string Name = "Paste",
 		string Description = "Paste objects on clipboard to space",
 		string IconName = "Paste",
-		string Shortcut = "Ctrl+V",
+		string Shortcut = "Paste",
 		string Tags = "Edit",
 	},
 
@@ -131,7 +131,7 @@ Commands commands =
 		string Name = "Copy",
 		string Description = "Copy objects to clipboard",
 		string IconName = "Copy",
-		string Shortcut = "Ctrl+C",
+		string Shortcut = "Copy",
 		string Tags = "Edit",
 		bool ReadOnly = true,
 	},

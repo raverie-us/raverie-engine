@@ -14,8 +14,8 @@ struct Aabb;
 
 void DeleteSelectedObjects(Editor* editor, Space* space);
 void AddToSelection(Space* space, MetaSelection* selection, BoundType* boundType, SelectComponentMode::Enum mode);
-void SaveSelectionToClipboard(Editor* editor, Space* space);
-void LoadObjectFromClipboard(Editor* editor, Space* space);
+void SaveSelectionToClipboard(ClipboardEvent* event, Space* space);
+void LoadObjectFromClipboard(ClipboardEvent* event, Space* space);
 Cog* SelectTopOfTree(Editor* editor, Space* cog);
 Cog* GetParentOfSelection(Editor* editor, Space* cog);
 void SelectAllInTree(Editor* editor, Space* cog);

@@ -20,6 +20,7 @@ public:
   void OnEngineUpdate(UpdateEvent* event);
   void OnClosing(HandleableEvent* event);
   void OnMouseDown(MouseEvent* mouseEvent);
+  void OnCutCopyPaste(ClipboardEvent* event);
   void OnKeyDown(KeyboardEvent* keyEvent);
   void ShowTools(CommandEvent* event);
   void ShowLibrary(CommandEvent* event);

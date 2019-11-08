@@ -119,6 +119,11 @@ bool BoundTypeHelperIsInitializedAssert(BoundType* type)
   return type->IsInitializedAssert();
 }
 
+String BoundTypeHelperGetName(BoundType* type)
+{
+  return type->Name;
+}
+
 void LibraryBuilderHelperAddNativeBoundType(LibraryBuilder& builder,
                                             BoundType* type,
                                             BoundType* base,

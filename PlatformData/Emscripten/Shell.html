@@ -259,12 +259,52 @@
         window.URL.revokeObjectURL(url);
       }
 
+      function syncCall(...args)
+      {
+        // This is most likely terrible, but we rely on making synchronous ccalls
+        // but we also use asyncify. With asyncify, if the stack has been suspended then
+        // every ccall or cwrap will result in a promise. Some functions, like clipboard operations
+        // cannot allow async calls, so we trick emscripten into letting us make sync calls.
+        // Another way we could cludge this problme is to go back to using Emscripten's main loop,
+        // and only use emscripten_sleep when we're inside of the Zilch debugger.
+        const previous = Asyncify.currData;
+        Asyncify.currData = null;
+        const result = ccall(...args);
+        Asyncify.currData = previous;
+        return result;
+      }
+
       function sanitizeHTML(html)
       {
         var temp = document.createElement('div');
         temp.textContent = html;
         return temp.innerHTML;
       }
+
+      window.addEventListener('paste', (e) => {
+        const text = e.clipboardData.getData('text/plain')
+        if (!text) {
+          return;
+        }
+
+        const textPointer = mallocStringUTF8(text);
+        syncCall('EmscriptenOnPaste', null, ['number'], [textPointer]);
+        e.preventDefault();
+      })
+
+      const onCutOrCopy = (e) => {
+        const textPointer = syncCall('EmscriptenOnCopy', 'number', ['number'], [e.type === 'cut']);
+        if (textPointer)
+        {
+          const text = UTF8ToString(textPointer);
+          Module._free(textPointer);
+          e.clipboardData.setData('text/plain', text);
+          e.preventDefault();
+        }
+      };
+
+      window.addEventListener('cut', onCutOrCopy)
+      window.addEventListener('copy', onCutOrCopy)
       
       var userInitiatedActions = [];
       
@@ -350,7 +390,7 @@
           if (xhr.readyState == 2)
           {
             var responseHeaders = mallocStringUTF8(xhr.getAllResponseHeaders());
-            ccall('EmscriptenWebRequestOnHeadersReceived', null, ['number', 'number', 'number'], [responseHeaders, xhr.status, request]);
+            syncCall('EmscriptenWebRequestOnHeadersReceived', null, ['number', 'number', 'number'], [responseHeaders, xhr.status, request]);
           }
 
           // Done.
@@ -363,8 +403,8 @@
               var dataHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, byteLength);
               dataHeap.set(new Uint8Array(xhr.response));
               
-              ccall('EmscriptenWebRequestOnDataReceived', null, ['number', 'number', 'number', 'number'], [dataHeap.byteOffset, byteLength, byteLength, request]);
-              ccall('EmscriptenWebRequestOnComplete', null, ['number', 'number'], [null, request]);
+              syncCall('EmscriptenWebRequestOnDataReceived', null, ['number', 'number', 'number', 'number'], [dataHeap.byteOffset, byteLength, byteLength, request]);
+              syncCall('EmscriptenWebRequestOnComplete', null, ['number', 'number'], [null, request]);
               xhr.close();
             }
             else
@@ -375,7 +415,7 @@
               if (xhr.status !== 0 || corsProxy)
               {
                 var errorMessage = mallocStringUTF8(xhr.statusText);
-                ccall('EmscriptenWebRequestOnComplete', null, ['number', 'number'], [errorMessage, request]);
+                syncCall('EmscriptenWebRequestOnComplete', null, ['number', 'number'], [errorMessage, request]);
               }
               else
               {
@@ -394,7 +434,7 @@
           if (requestToXhr[request] !== xhr)
             return;
           
-          ccall('EmscriptenWebRequestOnDataReceived', null, ['number', 'number', 'number', 'number'], [null, 0, event.loaded, request]);
+          syncCall('EmscriptenWebRequestOnDataReceived', null, ['number', 'number', 'number', 'number'], [null, 0, event.loaded, request]);
         };
         
         xhr.send(postData);
@@ -455,7 +495,7 @@
         
         var cancelHandler = function()
         {
-          ccall('EmscriptenShellOpenFileEnd', null, ['number', 'number'], [null, configPointer]);
+          syncCall('EmscriptenShellOpenFileEnd', null, ['number', 'number'], [null, configPointer]);
           shellOpen.remove();
         };
         
@@ -498,7 +538,7 @@
         {
           copyFileListToTemp(files, function(concatenatedFilePathsUtf8)
           {
-            ccall('EmscriptenShellOpenFileEnd', null, ['number', 'number'], [concatenatedFilePathsUtf8, configPointer]);
+            syncCall('EmscriptenShellOpenFileEnd', null, ['number', 'number'], [concatenatedFilePathsUtf8, configPointer]);
             shellOpen.remove();
           });
         });
@@ -511,7 +551,7 @@
           string = '';
         
         var lengthBytes = lengthBytesUTF8(string) + 1;
-        var stringOnWasmHeap = _malloc(lengthBytes);
+        var stringOnWasmHeap = Module._malloc(lengthBytes);
         stringToUTF8(string, stringOnWasmHeap, lengthBytes);
         return stringOnWasmHeap;
       }
@@ -535,7 +575,7 @@
           copyFileListToTemp(event.dataTransfer.files, function(concatenatedFilePathsUtf8)
           {
             // Call C++ function drag and drop handler.
-            ccall('EmscriptenFileDropHandler', null, ['number'], [concatenatedFilePathsUtf8]);
+            syncCall('EmscriptenFileDropHandler', null, ['number'], [concatenatedFilePathsUtf8]);
           });
         }
       }
@@ -630,12 +670,12 @@
         var ctrlKey = e.ctrlKey || e.metaKey;
         var key = e.which || e.keyCode;
         
-        // Prevent all Ctrl key combos (except Ctrl itself).
-        if (ctrlKey && key != 17)
+        // Prevent all Ctrl key combos (except Ctrl itself as well as cut/copy/paste).
+        if (ctrlKey && key !== 17 && key !== 88 && key !== 67 && key !== 86)
           e.preventDefault();
         
         // Prevent all Alt key combos (except Alt itself).
-        if (e.altKey && key != 18)
+        if (e.altKey && key !== 18)
           e.preventDefault();
         
         // Block Refresh

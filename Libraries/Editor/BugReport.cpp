@@ -63,9 +63,6 @@ BugReporter::BugReporter(Composite* parent) : Composite(parent)
   mIncludeFile->SetSizing(SizeAxis::X, SizePolicy::Flex, 20);
   mIncludeFile->SetEditable(true);
 
-  mIncludeClipboardImage = new TextCheckBox(this);
-  mIncludeClipboardImage->SetText("Include Clipboard Image");
-
   mIncludeScreenshot = new TextCheckBox(this);
   mIncludeScreenshot->SetText("Include Screenshot");
 
@@ -77,7 +74,6 @@ BugReporter::BugReporter(Composite* parent) : Composite(parent)
 
   ConnectThisTo(mSend, Events::ButtonPressed, OnSend);
   ConnectThisTo(mBrowse, Events::ButtonPressed, OnBrowse);
-  ConnectThisTo(GetRootWidget(), Events::WidgetUpdate, OnUpdate);
 }
 
 BugReporter::~BugReporter()
@@ -92,7 +88,6 @@ void BugReporter::Reset()
   mDescription->SetAllText(String());
   mRepro->SetAllText(String());
   mIncludeFile->SetText(String());
-  mIncludeClipboardImage->SetChecked(false);
   mIncludeScreenshot->SetChecked(false);
   mIncludeProject->SetChecked(false);
 
@@ -139,25 +134,6 @@ void BugReporter::OnBrowseSelected(OsFileSelection* event)
   }
 }
 
-void BugReporter::OnUpdate(UpdateEvent* event)
-{
-  bool isClipboardChecked = mIncludeClipboardImage->GetChecked();
-
-  if (isClipboardChecked)
-  {
-    OsShell* shell = Z::gEngine->has(OsShell);
-    bool imageOnClipboard = shell->IsClipboardImage();
-
-    if (!imageOnClipboard)
-    {
-      DoNotifyWarning("Bug Reporter",
-                      "There is no image on the clipboard, or the image type "
-                      "is not recognized (Bitmap, Dib, Tiff)");
-      mIncludeClipboardImage->SetChecked(false);
-    }
-  }
-}
-
 String GenerateTempFile(StringParam name, StringParam extension)
 {
   String directory = GetTemporaryDirectory();
@@ -197,11 +173,6 @@ void BugReporter::OnSend(Event* event)
   job->mReportType = mSelectorButton->mButtons[mSelectorButton->GetSelectedItem()]->mButtonText->GetText();
 
   OsShell* shell = Z::gEngine->has(OsShell);
-
-  if (mIncludeClipboardImage->GetChecked())
-  {
-    shell->GetClipboardImage(&job->mClipboardImage);
-  }
 
   if (mIncludeScreenshot->GetChecked())
   {

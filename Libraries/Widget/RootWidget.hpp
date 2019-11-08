@@ -63,6 +63,8 @@ private:
   void OnOsMouseDrop(OsMouseDropEvent* mouseDrop);
   void OnOsWindowBorderHitTest(OsWindowBorderHitTest* event);
 
+  void OnCutCopyPaste(ClipboardEvent* event);
+
   void OnOsKeyDown(KeyboardEvent* keyboardEvent);
   void OnOsKeyUp(KeyboardEvent* keyboardEvent);
   void OnOsKeyTyped(KeyboardTextEvent* keyboardTextEvent);

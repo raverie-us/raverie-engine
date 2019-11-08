@@ -457,6 +457,25 @@ bool CommandManager::TestCommandKeyboardShortcuts(KeyboardEvent* event)
   return true;
 }
 
+bool CommandManager::TestCommandCopyPasteShortcuts(ClipboardEvent* event)
+{
+  if (event->mHandled)
+    return false;
+
+  // The "Cut", "Copy", and "Paste" events are special.
+  Command* command = mShortcuts.FindValue(event->EventId, nullptr);
+  if (command == nullptr)
+    return false;
+
+  event->mHandled = true;
+
+  GetContext()->Add(event);
+  command->ExecuteCommand();
+  GetContext()->Remove(ZilchVirtualTypeId(event));
+
+  return true;
+}
+
 bool CommandManager::IsShortcutReserved(StringParam validShortcut)
 {
   return mShortcuts.FindValue(validShortcut, nullptr) != nullptr;

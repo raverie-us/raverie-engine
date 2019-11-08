@@ -57,6 +57,10 @@ EditorViewport::EditorViewport(Composite* parent, OwnerShip::Enum ownership) :
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
   ConnectThisTo(this, Events::KeyUp, OnKeyUp);
 
+  ConnectThisTo(this, Events::Cut, OnCutCopyPaste);
+  ConnectThisTo(this, Events::Copy, OnCutCopyPaste);
+  ConnectThisTo(this, Events::Paste, OnCutCopyPaste);
+
   ConnectThisTo(this, Events::MetaDrop, OnMetaDrop);
   ConnectThisTo(this, Events::MetaDropTest, OnMetaDrop);
   ConnectThisTo(this, Events::MetaDropUpdate, OnMetaDrop);
@@ -726,6 +730,32 @@ void EditorViewport::OnMetaDrop(MetaDropEvent* e)
   }
 }
 
+void EditorViewport::OnCutCopyPaste(ClipboardEvent* e)
+{
+  if (e->mHandled)
+    return;
+
+  ReactiveViewport* viewport = GetReactiveViewport();
+  if (viewport == nullptr)
+    return;
+
+  Space* targetSpace = mEditSpace;
+  if (targetSpace == NULL)
+    return;
+
+  // Allow active tool to have the first chance response.
+  //   - Note: Tools can block commands
+  if (ForwardEventToTool(e))
+    return;
+
+  if (ForwardEventToGizmos(e))
+    return;
+
+  CommandManager* commands = CommandManager::GetInstance();
+  if (commands->TestCommandCopyPasteShortcuts(e))
+    return;
+}
+
 void EditorViewport::OnKeyDown(KeyboardEvent* e)
 {
   if (e->Handled)
@@ -868,6 +898,21 @@ bool EditorViewport::ForwardEventToTool(MouseEvent* e, Cog* tool)
   return false;
 }
 
+bool EditorViewport::ForwardEventToTool(ClipboardEvent* e, Cog* tool)
+{
+  if (tool == nullptr)
+    tool = mTools->GetActiveCog();
+
+  if (tool)
+  {
+    tool->DispatchEvent(e->EventId, e);
+
+    return e->mHandled;
+  }
+
+  return false;
+}
+
 bool EditorViewport::ForwardEventToTool(KeyboardEvent* e, Cog* tool)
 {
   if (tool == nullptr)
@@ -913,6 +958,15 @@ bool EditorViewport::ForwardEventToGizmos(KeyboardEvent* e)
   gizmoSpace->ForwardEvent(e);
 
   return (e->Handled || e->HandledEventScript);
+}
+
+bool EditorViewport::ForwardEventToGizmos(ClipboardEvent* e)
+{
+  GizmoSpace* gizmoSpace = HasOrAdd<GizmoSpace>(mEditSpace);
+
+  gizmoSpace->ForwardEvent(e);
+
+  return e->mHandled;
 }
 
 void EditorViewport::OnCameraUpdate(ObjectEvent* event)
