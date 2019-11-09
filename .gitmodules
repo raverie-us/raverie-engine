@@ -37,3 +37,6 @@
 [submodule "Curl"]
 	path = External/Curl/Repo
 	url = https://github.com/WelderFoundation/WelderEngineCurl.git
+[submodule "External/Libgit2/Repo"]
+	path = External/Libgit2/Repo
+	url = https://github.com/WelderFoundation/WelderLibgit2.git
