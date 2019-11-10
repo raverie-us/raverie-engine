@@ -64,3 +64,5 @@ public:
 
 #include "Importer.hpp"
 #include "Exporter.hpp"
+
+#include "GitJobs.hpp"

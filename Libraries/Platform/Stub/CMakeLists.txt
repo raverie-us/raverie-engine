@@ -16,6 +16,7 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/ExecutableResource.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/ExternalLibrary.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/FpControl.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../Empty/Git.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Intrinsics.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/MainLoop.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Peripherals.cpp

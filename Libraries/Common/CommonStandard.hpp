@@ -242,3 +242,4 @@ namespace Zero
 #include "WebRequest.hpp"
 
 #include "ThreadableLoop.hpp"
+#include "Git.hpp"
