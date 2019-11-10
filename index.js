@@ -420,7 +420,8 @@ const runWelderFormat = async (options, sourceFiles) => {
     lines.unshift("// MIT Licensed (see LICENSE.md).");
 
     // Join all lines together with a standard UNIX newline.
-    const newCode = lines.join("\n");
+    const newCodeWithoutEnding = lines.join("\n");
+    const newCode = newCodeWithoutEnding.endsWith("\n") ? newCodeWithoutEnding : `${newCodeWithoutEnding}\n`;
 
     if (oldCode !== newCode) {
       if (options.validate) {
