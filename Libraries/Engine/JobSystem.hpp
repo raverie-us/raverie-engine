@@ -15,17 +15,25 @@ public:
   Job();
   virtual ~Job();
 
-  // Entrant function of the job. If it returns Complete, the job may be
-  // destroyed by the job system. Returning InProgress means the job will not be
-  // deleted (you can call AddJob again from any thread, even on the same job
-  // class).
-  virtual void Execute() = 0;
+  // Warning: Only overwrite this if your job has its own threads and runs,
+  // asynchronously otherwise implement Execute.
+  // Anyone who implements must call ExecuteAsyncEnd() at the end.
+  virtual void ExecuteAsyncBegin();
 
   // Called from a different thread, typically setting a bool to stop
   virtual int Cancel()
   {
     return 0;
   };
+
+protected:
+  // The default behavior is that a job completes everything synchronously on the
+  // worker thread, however some jobs may have their own threads and run asynchronously.
+  // Called by the default implementation of ExecuteAsyncBegin.
+  virtual void Execute();
+
+  // Only should be called by ExecuteAsyncBegin when the job is complete.
+  void ExecuteAsyncEnd();
 
 public:
   // When threading is disabled, should we run this task immediately when AddJob is called?
@@ -41,6 +49,7 @@ private:
 class JobSystem : public EventObject
 {
 public:
+  friend class Job;
   typedef JobSystem ZilchSelf;
   JobSystem();
   ~JobSystem();
@@ -63,6 +72,8 @@ private:
   bool RunOneJob();
 
   void RunJob(Job* job);
+
+  void JobComplete(Job* job);
 
   ThreadLock mLock;
   Array<HandleOf<Job>> mPendingJobs;

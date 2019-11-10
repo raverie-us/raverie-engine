@@ -16,6 +16,21 @@ Job::~Job()
 {
 }
 
+void Job::Execute()
+{
+}
+
+void Job::ExecuteAsyncBegin()
+{
+  Execute();
+  ExecuteAsyncEnd();
+}
+
+void Job::ExecuteAsyncEnd()
+{
+  Z::gJobs->JobComplete(this);
+}
+
 namespace Z
 {
 JobSystem* gJobs = nullptr;
@@ -158,21 +173,23 @@ bool JobSystem::RunOneJob()
 void JobSystem::RunJob(Job* job)
 {
   ProfileScopeFunctionArgs(ZilchVirtualTypeId(job)->Name);
-  bool completed = false;
-  do
-  {
-    job->Execute();
+  job->ExecuteAsyncBegin();
+}
 
-    mLock.Lock();
-    --job->mRunCount;
-    completed = (job->mRunCount == 0);
-    if (completed)
-    {
-      HandleOf<Job> jobHandle = job;
-      mActiveJobs.EraseValue(jobHandle);
-    }
-    mLock.Unlock();
-  } while (!completed);
+void JobSystem::JobComplete(Job* job)
+{
+  mLock.Lock();
+  --job->mRunCount;
+  bool completed = (job->mRunCount == 0);
+  if (completed)
+  {
+    HandleOf<Job> jobHandle = job;
+    mActiveJobs.EraseValue(jobHandle);
+  }
+  mLock.Unlock();
+
+  if (!completed)
+    RunJob(job);
 }
 
 } // namespace Zero
