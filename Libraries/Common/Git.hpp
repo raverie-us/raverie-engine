@@ -10,7 +10,7 @@ class Git : public ExplicitSingleton<Git>
 public:
   Git();
   ~Git();
-  
+
   // Clone a repository asynchronously.
   void Clone(StringParam url, StringParam directory, GitCallback completed, void* userData);
 };
