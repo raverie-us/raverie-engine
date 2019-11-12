@@ -769,7 +769,7 @@ const build = async (options) => {
     cwd: buildDir,
     err: printErrorLine,
     out: (line) => {
-      if (line.search(/\b(?:FAILED|failed|ERROR|error)\b/u) === -1) {
+      if (line.search(/\b(?:FAILED|failed|ERROR| error )\b/u) === -1) {
         printLogLine(line);
       } else {
         printErrorLine(line);
