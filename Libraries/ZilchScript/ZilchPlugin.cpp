@@ -326,7 +326,7 @@ void ZilchPluginSource::OpenDirectory()
   CopyPluginDependenciesOnce();
 
   // Now open the folder up that we just created for the plugin
-  Os::SystemOpenFile(GetCodeDirectory().c_str(), Os::Verb::Open);
+  Os::ShellOpenDirectory(GetCodeDirectory());
 }
 
 bool ZilchPluginSource::IsIdeInstalled()
@@ -355,8 +355,7 @@ void ZilchPluginSource::OpenIde()
   }
 
   String ideFile = FilePath::CombineWithExtension(codeDir, Name, ".bat");
-  Status status;
-  Os::SystemOpenFile(status, ideFile.c_str());
+  Os::ShellOpenFile(status, ideFile);
   DoNotifyStatus(status);
 
 #else
@@ -391,7 +390,7 @@ void ZilchPluginSource::InstallIdeTools()
 
 #if defined(WelderTargetOsWindows)
   String extensionPath = FilePath::Combine(Z::gContentSystem->ToolPath, "ZeroZilchPlugins.vsix");
-  Os::SystemOpenFile(extensionPath.c_str());
+  Os::ShellOpenFile(extensionPath);
 #else
   DoNotifyErrorNoAssert("Zilch Plugin", "No IDE Plugins were detected or supported on this platform");
 #endif
@@ -486,8 +485,7 @@ void ZilchPluginSource::Clean()
 #if defined(WelderTargetOsWindows)
   String codeDir = GetCodeDirectory();
   String ideFile = FilePath::Combine(codeDir, BuildString(Name, "Clean.bat"));
-  Status status;
-  Os::SystemOpenFile(status, ideFile.c_str());
+  Os::ShellOpenFile(ideFile);
 #endif
 }
 

@@ -23,11 +23,24 @@ void DebugBreak()
   __builtin_trap();
 }
 
-void SystemOpenFile(cstr file, uint verb, cstr workingDirectory)
+bool ShellOpenDirectory(StringParam directory)
 {
-  if (workingDirectory)
-    SetWorkingDirectory(workingDirectory);
-  system(file);
+  return false;
+}
+
+bool ShellOpenFile(StringParam file)
+{
+  return false;
+}
+
+bool ShellEditFile(StringParam file)
+{
+  return false;
+}
+
+bool ShellOpenApplication(StringParam file, StringParam parameters)
+{
+  return false;
 }
 
 String GetEnvironmentalVariable(StringRef variable)
@@ -38,10 +51,6 @@ String GetEnvironmentalVariable(StringRef variable)
 bool IsDebuggerAttached()
 {
   return false;
-}
-
-void SystemOpenFile(cstr file, uint verb, cstr parameters, cstr workingDirectory)
-{
 }
 
 String UserName()

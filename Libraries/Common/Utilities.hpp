@@ -44,15 +44,17 @@ ZeroShared void EnableMemoryLeakChecking(int breakOnAllocation = -1);
 // When a diagnostic error occurs, this is the default response
 ZeroShared bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData);
 
-// Verb used to open file
-DeclareEnum4(Verb, Default, Open, Edit, Run);
+// Tells the shell to open or show a directory.
+ZeroShared bool ShellOpenDirectory(StringParam directory);
 
-// Open the file using the appropriate Os application or
-// launch an external application.
-ZeroShared void
-SystemOpenFile(cstr file, uint verb = Verb::Default, cstr parameters = nullptr, cstr workingDirectory = nullptr);
-ZeroShared bool SystemOpenFile(
-    Status& status, cstr file, uint verb = Verb::Default, cstr parameters = nullptr, cstr workingDirectory = nullptr);
+// Tells the shell to open or show a file.
+ZeroShared bool ShellOpenFile(StringParam file);
+
+// Tells the shell to edit a file.
+ZeroShared bool ShellEditFile(StringParam file);
+
+// Open the application with parameters.
+ZeroShared bool ShellOpenApplication(StringParam file, StringParam parameters = String());
 
 // On browser based platforms, we can't access the user's file-system so we need to download files instead.
 ZeroShared bool SupportsDownloadingFiles();

@@ -109,13 +109,13 @@ void ExportContent(ProjectSettings* project)
 
 void ShowProjectFolder(ProjectSettings* project)
 {
-  Os::SystemOpenFile(project->ProjectFolder.c_str());
+  Os::ShellOpenDirectory(project->ProjectFolder);
 }
 
 void ShowContentOutput(ProjectSettings* project)
 {
   String outputPath = project->ProjectContentLibrary->GetOutputPath();
-  Os::SystemOpenFile(outputPath.c_str());
+  Os::ShellOpenDirectory(outputPath);
 }
 
 void ExportAndPlayGame(ProjectSettings* project)

@@ -503,7 +503,7 @@ void CrashHandler::DefaultRunCrashHandlerCallback(void* crashData, bool doRescue
   if (CrashHandler::mAutoRestart)
   {
     String appExe = GetApplication();
-    Os::SystemOpenFile(appExe.c_str(), NULL, CrashHandler::mRestartCommandLine.c_str());
+    Os::ShellOpenApplication(appExe, CrashHandler::mRestartCommandLine);
 
     return;
   }

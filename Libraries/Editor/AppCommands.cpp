@@ -34,7 +34,7 @@ void Restart()
   bool quitSuccess = Z::gEditor->RequestQuit(true);
 
   if (quitSuccess)
-    Os::SystemOpenFile(GetApplication().c_str());
+    Os::ShellOpenApplication(GetApplication());
 }
 
 void FullScreen(Editor* editor)

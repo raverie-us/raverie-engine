@@ -988,11 +988,7 @@ const pack = async (options) => {
       mkdirp.sync(pageLibraryDir);
       files.forEach((file) => {
         const basename = path.basename(file);
-        if (basename === `${library}.html`) {
-          fs.copyFileSync(file, path.join(pageLibraryDir, "index.html"));
-        } else {
-          fs.copyFileSync(file, path.join(pageLibraryDir, basename));
-        }
+        fs.copyFileSync(file, path.join(pageLibraryDir, basename));
       });
     }
   }

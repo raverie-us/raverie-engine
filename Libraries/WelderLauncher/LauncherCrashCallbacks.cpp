@@ -93,10 +93,8 @@ void LauncherSendCrashReport(CrashHandlerParameters& params, void* userData)
 
   // Now shell out to our application and tell it to upload the dump
 
-  String crashToolPathA = LauncherGetToolsPath();
-
-  Status status;
-  bool success = Os::SystemOpenFile(status, crashToolPathA.c_str(), Os::Verb::Default, paramString.c_str());
+  String crashToolPath = LauncherGetToolsPath();
+  Os::ShellOpenApplication(crashToolPath, paramString);
 }
 
 } // namespace Zero

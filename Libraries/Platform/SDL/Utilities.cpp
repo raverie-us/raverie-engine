@@ -177,20 +177,27 @@ bool ShellOpen(const char* path)
   return result;
 }
 
-#if !defined(ZeroPlatformNoSystemOpenFile)
-bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
+bool ShellOpenDirectory(StringParam directory)
 {
-  String commandLine;
-  if (workingDirectory && *workingDirectory != '\0')
-    commandLine = String::Format("cd \"%s\" && \"%s\" %s &", workingDirectory, file, parameters);
-  else
-    commandLine = String::Format("\"%s\" %s &", file, parameters);
-  int result = system(commandLine.c_str());
-  if (result == 0)
-    return true;
+  return ShellOpen(directory.c_str());
+}
 
-  // Does not take into account the working directory or parameters, but it will open the file.
-  return ShellOpen(file);
+bool ShellOpenFile(StringParam file)
+{
+  return ShellOpen(file.c_str());
+}
+
+bool ShellEditFile(StringParam file)
+{
+  return ShellOpen(file.c_str());
+}
+
+#if !defined(ZeroPlatformNoShellOpenApplication)
+bool ShellOpenApplication(StringParam file, StringParam parameters)
+{
+  String commandLine = String::Format("\"%s\" %s &", file.c_str(), parameters.c_str());
+  int result = system(commandLine.c_str());
+  return result == 0;
 }
 #endif
 

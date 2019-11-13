@@ -74,9 +74,23 @@ void WebRequest(Status& status,
   status.SetFailed("WebRequest not implemented");
 }
 
-bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
+bool ShellOpenDirectory(StringParam directory)
 {
-  status.SetFailed("SystemOpenFile not implemented");
+  return false;
+}
+
+bool ShellOpenFile(StringParam file)
+{
+  return false;
+}
+
+bool ShellEditFile(StringParam file)
+{
+  return false;
+}
+
+bool ShellOpenApplication(StringParam file, StringParam parameters)
+{
   return false;
 }
 

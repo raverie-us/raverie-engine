@@ -5,10 +5,7 @@ namespace Zero
 {
 namespace Os
 {
-void SystemOpenFile(cstr file, uint verb, cstr parameters, cstr workingDirectory)
-{
-  Status status;
-  SystemOpenFile(status, file, verb, parameters, workingDirectory);
-}
+// A public symbol to avoid any warnings.
+int gCommonUtility;
 } // namespace Os
 } // namespace Zero

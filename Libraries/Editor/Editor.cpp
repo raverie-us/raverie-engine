@@ -1632,7 +1632,7 @@ void Editor::OnSaveRestartMessageBox(MessageBoxEvent* event)
   // 2 is cancel
 
   // This was a restart request
-  Os::SystemOpenFile(GetApplication().c_str());
+  Os::ShellOpenApplication(GetApplication());
 }
 
 void Editor::DebuggerResume()

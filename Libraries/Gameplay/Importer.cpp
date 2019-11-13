@@ -72,7 +72,7 @@ ImporterResult::Type Importer::CheckForImport()
   if (applicationName != ZeroEngineExecutable)
   {
     ZPrint("Launching %s\n", destinationApplication.c_str());
-    Zero::Os::SystemOpenFile(destinationApplication.c_str());
+    Zero::Os::ShellOpenApplication(destinationApplication);
     return ImporterResult::ExecutedAnotherProcess;
   }
 

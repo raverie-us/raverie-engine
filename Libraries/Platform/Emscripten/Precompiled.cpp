@@ -254,6 +254,16 @@ EM_JS(void, EmscriptenDownloadFile, (cstr fileName, const void* fileMemory, size
 
 namespace Os
 {
+bool ShellOpenApplication(StringParam file, StringParam parameters)
+{
+  // Always assume the other application is in a sibling url directory
+  // and that we can pass parameters as anything after the ?
+  String name = FilePath::GetFileNameWithoutExtension(file);
+  String url = "../../" + name + "/" + name + ".html?" + parameters;
+  Os::OpenUrl(url.c_str());
+  return true;
+}
+
 bool SupportsDownloadingFiles()
 {
   return true;

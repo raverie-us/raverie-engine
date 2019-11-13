@@ -133,8 +133,7 @@ void SendCrashReport(CrashHandlerParameters& params, void* userData)
 
   String crashToolPathA = GetToolsPath();
 
-  Status status;
-  bool success = Os::SystemOpenFile(status, crashToolPathA.c_str(), Os::Verb::Default, paramString.c_str());
+  bool success = Os::ShellOpenApplication(crashToolPathA, paramString);
 
   if (success == true)
     return;
@@ -142,7 +141,7 @@ void SendCrashReport(CrashHandlerParameters& params, void* userData)
   // May be exported try other path
   String crashToolPathB =
       FilePath::Combine(GetTemporaryDirectory(), GetApplicationName(), "Tools", "ZeroCrashHandler.exe");
-  success = Os::SystemOpenFile(status, crashToolPathB.c_str(), Os::Verb::Default, paramString.c_str());
+  success = Os::ShellOpenApplication(crashToolPathB, paramString);
 }
 
 } // namespace Zero

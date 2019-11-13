@@ -241,30 +241,26 @@ void LauncherOpenProjectComposite::SendEvent(StringParam eventType)
 
 void LauncherOpenProjectComposite::FailedToOpenLauncher()
 {
-  String message = String::Format("Couldn't find 'ZeroLauncher.exe'. Please "
+  String message = String::Format("Couldn't find '%s'. Please "
                                   "download the installer from %s.",
+                                  GetLauncherExecutableFileName().c_str(),
                                   Urls::cUserLauncherDownloads);
   DoNotifyError("Launcher not found", message);
 }
 
 bool LauncherOpenProjectComposite::RunLauncherExe(StringParam exePath)
 {
-  if (FileExists(exePath))
-  {
-    String cmd;
-    if (mEventType == Events::LauncherOpenRecentProjects)
-      cmd = BuildString("-", LauncherStartupArguments::Names[LauncherStartupArguments::Projects]);
-    else if (mEventType == Events::LauncherNewProject)
-      cmd = BuildString("-", LauncherStartupArguments::Names[LauncherStartupArguments::New]);
+  String cmd;
+  if (mEventType == Events::LauncherOpenRecentProjects)
+    cmd = BuildString("-", LauncherStartupArguments::Names[LauncherStartupArguments::Projects]);
+  else if (mEventType == Events::LauncherNewProject)
+    cmd = BuildString("-", LauncherStartupArguments::Names[LauncherStartupArguments::New]);
 
-    // If the debugger is attached tell the launcher to run in debugger mode
-    if (Os::IsDebuggerAttached())
-      cmd = BuildString(cmd, " -", LauncherStartupArguments::Names[LauncherStartupArguments::DebuggerMode]);
+  // If the debugger is attached tell the launcher to run in debugger mode
+  if (Os::IsDebuggerAttached())
+    cmd = BuildString(cmd, " -", LauncherStartupArguments::Names[LauncherStartupArguments::DebuggerMode]);
 
-    Os::SystemOpenFile(exePath.c_str(), Os::Verb::Default, cmd.c_str());
-    return true;
-  }
-  return false;
+  return Os::ShellOpenApplication(exePath, cmd);
 }
 
 bool LauncherOpenProjectComposite::RunFromInstalledPath()
@@ -274,7 +270,7 @@ bool LauncherOpenProjectComposite::RunFromInstalledPath()
   if (result == false)
     return false;
 
-  String exePath = FilePath::Combine(installPath, "ZeroLauncher.exe");
+  String exePath = FilePath::Combine(installPath, GetLauncherExecutableFileName());
   return RunLauncherExe(exePath);
 }
 

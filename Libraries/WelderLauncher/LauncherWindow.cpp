@@ -493,12 +493,10 @@ void LauncherWindow::OnMajorLauncherUpdateDownloaded(BackgroundTaskEvent* e)
   // Invoke the installer in such a way that it'll run silently (not very
   // silent, this still shows progress but has no prompts) and close and re-open
   // the launcher.
-  Status status;
 #if defined(WelderTargetOsWindows)
-  Os::SystemOpenFile(
-      status, job->mInstallerPath.c_str(), Os::Verb::Default, "/SILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS");
+  Os::ShellOpenApplication(job->mInstallerPath, "/SILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS");
 #else
-  Os::SystemOpenFile(status, job->mInstallerPath.c_str(), Os::Verb::Default);
+  Os::ShellOpenApplication(job->mInstallerPath);
 #endif
   Z::gEngine->Terminate();
 }

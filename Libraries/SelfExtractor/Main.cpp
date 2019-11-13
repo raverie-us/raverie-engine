@@ -62,7 +62,7 @@ void Extract(const Array<String>& arguments)
     if (FileExists(extractExecutablePath))
     {
       // Run the extracted executable, we're done!
-      Zero::Os::SystemOpenFile(extractExecutablePath.c_str());
+      Zero::Os::ShellOpenApplication(extractExecutablePath);
       return;
     }
 
@@ -86,12 +86,11 @@ void Extract(const Array<String>& arguments)
         {
           // We wrote the executable to disk, now we need to run it.
           String quotedApplication = BuildString("\"", GetApplication(), "\"");
-          Status status;
-          Zero::Os::SystemOpenFile(status, clonePath.c_str(), Os::Verb::Default, quotedApplication.c_str());
+          bool result = Zero::Os::ShellOpenApplication(clonePath, quotedApplication);
 
           // If we successfully ran the other process, shut down so that it can
           // read our process.
-          if (status.Succeeded())
+          if (result)
             return;
         }
       }
@@ -172,7 +171,7 @@ void Extract(const Array<String>& arguments)
     return FatalError("Target executable not found after extracting archive.");
 
   // Run the extracted executable, we're done!
-  Zero::Os::SystemOpenFile(extractExecutablePath.c_str());
+  Zero::Os::ShellOpenApplication(extractExecutablePath);
 }
 
 void PackArchive(Status& status, StringParam executablePath, StringParam archivePath)

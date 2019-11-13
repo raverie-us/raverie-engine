@@ -42,6 +42,7 @@ target_compile_definitions(Platform
   PUBLIC
     ZeroPlatformNoShellOpenFile
     ZeroPlatformNoOpenUrl
+    ZeroPlatformNoShellOpenApplication
     ZeroPlatformNoSupportsDownloadingFiles
     ZeroPlatformNoDownloadFile
     ZeroPlatformNoClipboardEvents

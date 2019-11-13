@@ -671,7 +671,7 @@ void ActiveProjectMenu::OnVersionListLoaded(Event* e)
 
 void ActiveProjectMenu::OnShowProjectFolder(Event* e)
 {
-  Os::SystemOpenFile(mCachedProject->GetProjectFolder().c_str());
+  Os::ShellOpenDirectory(mCachedProject->GetProjectFolder());
   Download(mCachedProject->GetProjectFolder());
 }
 

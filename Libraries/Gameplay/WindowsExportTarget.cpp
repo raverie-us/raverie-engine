@@ -148,7 +148,7 @@ void WindowsExportTarget::ExportApplication()
   if (mExporter->mPlay)
   {
     // Wait for file system finish writing the file
-    Os::SystemOpenFile(applicationOutputPath.c_str());
+    Os::ShellOpenDirectory(applicationOutputPath);
   }
 }
 
@@ -178,7 +178,7 @@ void WindowsExportTarget::ExportContentFolders(Cog* projectCog)
       mExporter->UpdateIcon(project, updater);
   }
 
-  Os::SystemOpenFile(outputDirectory.c_str());
+  Os::ShellOpenDirectory(outputDirectory);
 }
 
 void WindowsExportTarget::CopyInstallerSetupFile(StringParam dest,

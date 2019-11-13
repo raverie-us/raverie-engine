@@ -1167,13 +1167,13 @@ WarningLevel::Enum VersionSelector::CheckVersionForProject(ZeroBuild* standalone
 void VersionSelector::RunProject(ZeroBuild* standalone, StringParam projectPath)
 {
   // get the location to zero
-  String zeroExePath = GetInstallExePath(standalone);
+  String executablePath = GetInstallExePath(standalone);
 
-  ZPrint("Running project '%s' with build '%s'\n", projectPath.c_str(), zeroExePath.c_str());
+  ZPrint("Running project '%s' with build '%s'\n", projectPath.c_str(), executablePath.c_str());
 
   // call zero with our project file
   String commandLine = String::Format("-file \"%s\"", projectPath.c_str());
-  Os::SystemOpenFile(zeroExePath.c_str(), Os::Verb::Default, commandLine.c_str());
+  Os::ShellOpenApplication(executablePath, commandLine);
 }
 
 void VersionSelector::RunProject(ZeroBuild* standalone, CachedProject* cachedProject)
@@ -1185,16 +1185,16 @@ void VersionSelector::RunProject(ZeroBuild* standalone, CachedProject* cachedPro
 void VersionSelector::RunNewProject(ZeroBuild* standalone, StringParam projectName, Cog* configCog)
 {
   // get the location to zero
-  String zeroExePath = GetInstallExePath(standalone);
+  String executablePath = GetInstallExePath(standalone);
 
-  ZPrint("Running project '%s' with build '%s'\n", projectName.c_str(), zeroExePath.c_str());
+  ZPrint("Running project '%s' with build '%s'\n", projectName.c_str(), executablePath.c_str());
 
   String commandLine = "-newProject";
   // if a project name was specified then set the name of the new project to run
   if (projectName.Empty() == false)
     commandLine = String::Format("-newProject \"%s\"", projectName.c_str());
 
-  Os::SystemOpenFile(zeroExePath.c_str(), Os::Verb::Default, commandLine.c_str());
+  Os::ShellOpenApplication(executablePath, commandLine);
 }
 
 void VersionSelector::MarkVersionValid(ZeroBuild* build)
