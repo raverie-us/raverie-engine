@@ -22,7 +22,7 @@ jobs:
     - docker
     script:
     - ./dockerbuildserver.sh
-    - ./weld.sh node index.js all --deploy --alias=Emscripten
+    - ./weld.sh node index.js all --alias=Emscripten
   - name: Windows
     os: windows
     env:
@@ -52,6 +52,11 @@ deploy:
   api_key: $GITHUB_TOKEN
   file_glob: true
   file: Build/Packages/*
+  on:
+    tags: true
+    branch: master
+- provider: script
+  script: ./weld.sh node index.js deploy
   on:
     tags: true
     branch: master

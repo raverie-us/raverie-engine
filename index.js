@@ -999,41 +999,14 @@ const pack = async (options) => {
   console.log("Packed");
 };
 
-const deploy = async (options) => {
+const deploy = async () => {
   console.log("Deploying");
-  const gitOptions = {
-    cwd: dirs.repo,
-    reject: false,
-    stdio: [
-      "ignore",
-      "pipe",
-      "ignore"
-    ]
-  };
-  const tag = await execSimple("git", [
-    "describe",
-    "--exact-match",
-    "--tags",
-    "HEAD"
-  ], gitOptions);
-  const branch = await execSimple("git", [
-    "rev-parse",
-    "--abbrev-ref",
-    "HEAD"
-  ], gitOptions);
 
-  if (tag && branch === "master") {
-    const combo = determineCmakeCombo(options);
-    if (combo.toolchain === "Emscripten") {
-      await execa("npm", [
-        "run",
-        "deploy-gh-pages"
-      ]);
-    }
-  } else {
-    console.log("Skipping deployment because we are not on a tagged commit on the master branch");
-    console.log("     Tag:", tag);
-    console.log("  Branch:", branch);
+  if (fs.existsSync(dirs.page)) {
+    await execa("npm", [
+      "run",
+      "deploy-gh-pages"
+    ]);
   }
 
   console.log("Deployed");
@@ -1079,10 +1052,6 @@ const all = async (options) => {
   await build(options);
   // /await documentation(options);
   await pack(options);
-
-  if (options.deploy) {
-    await deploy(options);
-  }
 };
 
 const main = async () => {
@@ -1107,7 +1076,7 @@ const main = async () => {
     command("deploy", "Deploy the packages", empty, deploy).
     usage(`deploy ${comboOptions}`).
     command("all", "Run all the expected commands in order: cmake build prebuilt documentation pack", empty, all).
-    usage(`all [--deploy] ${comboOptions}`).
+    usage(`all ${comboOptions}`).
     demand(1).
     help().
     argv;
