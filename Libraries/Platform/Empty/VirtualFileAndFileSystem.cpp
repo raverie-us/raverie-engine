@@ -298,6 +298,7 @@ bool MoveFileInternal(StringParam dest, StringParam source)
   String dirDest = FilePath::GetDirectoryPath(dest);
   SystemEntry* dirEntry = FileSystem::GetInstance()->CreateEntry(dirDest, EntryType::Directory);
 
+  sourceEntry->mName =FilePath::GetFileName(dest);
   sourceEntry->AttachTo(dirEntry);
   return true;
 }
