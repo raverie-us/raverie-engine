@@ -14,15 +14,6 @@ jobs:
     script:
     - ./dockerbuildserver.sh
     - ./weld.sh node index.js all --alias=Linux
-    deploy:
-    - provider: releases
-      skip_cleanup: true
-      api_key: $GITHUB_TOKEN
-      file_glob: true
-      file: Build/Packages/*
-      on:
-        tags: true
-        branch: master
   - name: Emscripten
     os: linux
     env:
@@ -31,24 +22,7 @@ jobs:
     - docker
     script:
     - ./dockerbuildserver.sh
-    - ./weld.sh node index.js all --alias=Emscripten
-    deploy:
-    - provider: releases
-      skip_cleanup: true
-      api_key: $GITHUB_TOKEN
-      file_glob: true
-      file: Build/Packages/*
-      on:
-        tags: true
-        branch: master
-    - provider: pages
-      skip_cleanup: true
-      local_dir: Build/Page/
-      github_token: $GITHUB_TOKEN
-      keep_history: false
-      on:
-        tags: true
-        branch: master
+    - ./weld.sh node index.js all --deploy --alias=Emscripten
   - name: Windows
     os: windows
     env:
@@ -72,12 +46,12 @@ jobs:
     - df -h
     script:
     - node index.js all --alias=Windows
-    deploy:
-    - provider: releases
-      skip_cleanup: true
-      api_key: $GITHUB_TOKEN
-      file_glob: true
-      file: Build/Packages/*
-      on:
-        tags: true
-        branch: master
+deploy:
+- provider: releases
+  skip_cleanup: true
+  api_key: $GITHUB_TOKEN
+  file_glob: true
+  file: Build/Packages/*
+  on:
+    tags: true
+    branch: master

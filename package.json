@@ -3,7 +3,9 @@
   "version": "0.0.23",
   "description": "Component based game engine focusing on rapid iteration.",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "deploy-gh-pages": "gh-pages-multi deploy --no-history --verbose --src=./Build/Page"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/WelderFoundation/WelderEngine.git"
@@ -25,6 +27,7 @@
   },
   "homepage": "https://github.com/WelderFoundation/WelderEngine#readme",
   "dependencies": {
+    "@koumoul/gh-pages-multi": "^0.7.1",
     "command-exists": "^1.2.8",
     "eslint": "^5.9.0",
     "execa": "^1.0.0",

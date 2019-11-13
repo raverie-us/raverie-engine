@@ -191,8 +191,9 @@ const exec = async (executable, args, options) => {
   };
   readData(options.out, "stdout");
   readData(options.err, "stderr");
-  await result;
+  const final = await result;
   return {
+    failed: final.failed,
     stderr: result.stderrStr,
     stdout: result.stdoutStr
   };
@@ -203,10 +204,14 @@ const clearCreateDirectory = (directory) => {
   mkdirp.sync(directory);
 };
 
-const execStdout = async (...args) => (await exec(...args)).stdout;
-
-const execStdoutTrimmed = async (...args) => (await execStdout(...args)).trim();
-
+// If this fails, it returns an empty string, otherwise it returns trimmed stdout.
+const execSimple = async (...args) => {
+  const result = await exec(...args);
+  if (result.failed) {
+    return "";
+  }
+  return result.stdout.trim();
+};
 
 /*
  * Add files to an existing zip. If the file paths are absolute, only the file name will be added to the root,
@@ -600,30 +605,30 @@ const cmake = async (options) => {
       "pipe"
     ]
   };
-  const revision = await execStdoutTrimmed("git", [
+  const revision = await execSimple("git", [
     "rev-list",
     "--count",
     "HEAD"
   ], gitOptions);
-  const shortChangeset = await execStdoutTrimmed("git", [
+  const shortChangeset = await execSimple("git", [
     "log",
     "-1",
     "--pretty=%h",
     "--abbrev=12"
   ], gitOptions);
-  const changeset = await execStdoutTrimmed("git", [
+  const changeset = await execSimple("git", [
     "log",
     "-1",
     "--pretty=%H"
   ], gitOptions);
-  const changesetDate = `"${await execStdoutTrimmed("git", [
+  const changesetDate = `"${await execSimple("git", [
     "log",
     "-1",
     "--pretty=%cd",
     "--date=format:%Y-%m-%d"
   ], gitOptions)}"`;
 
-  const tag = await execStdoutTrimmed("git", [
+  const tag = await execSimple("git", [
     "describe",
     "--tags"
   ], gitOptions);
@@ -994,6 +999,46 @@ const pack = async (options) => {
   console.log("Packed");
 };
 
+const deploy = async (options) => {
+  console.log("Deploying");
+  const gitOptions = {
+    cwd: dirs.repo,
+    reject: false,
+    stdio: [
+      "ignore",
+      "pipe",
+      "ignore"
+    ]
+  };
+  const tag = await execSimple("git", [
+    "describe",
+    "--exact-match",
+    "--tags",
+    "HEAD"
+  ], gitOptions);
+  const branch = await execSimple("git", [
+    "rev-parse",
+    "--abbrev-ref",
+    "HEAD"
+  ], gitOptions);
+
+  if (tag && branch === "master") {
+    const combo = determineCmakeCombo(options);
+    if (combo.toolchain === "Emscripten") {
+      await execa("npm", [
+        "run",
+        "deploy-gh-pages"
+      ]);
+    }
+  } else {
+    console.log("Skipping deployment because we are not on a tagged commit on the master branch");
+    console.log("     Tag:", tag);
+    console.log("  Branch:", branch);
+  }
+
+  console.log("Deployed");
+};
+
 const documentation = async () => {
   console.log("Running Doxygen");
   if (!ensureCommandExists("doxygen")) {
@@ -1034,6 +1079,10 @@ const all = async (options) => {
   await build(options);
   // /await documentation(options);
   await pack(options);
+
+  if (options.deploy) {
+    await deploy(options);
+  }
 };
 
 const main = async () => {
@@ -1055,8 +1104,10 @@ const main = async () => {
     usage(`prebuilt ${comboOptions}`).
     command("pack", "Package everything into standalone installable archives", empty, pack).
     usage(`pack ${comboOptions}`).
+    command("deploy", "Deploy the packages", empty, deploy).
+    usage(`deploy ${comboOptions}`).
     command("all", "Run all the expected commands in order: cmake build prebuilt documentation pack", empty, all).
-    usage(`all ${comboOptions}`).
+    usage(`all [--deploy] ${comboOptions}`).
     demand(1).
     help().
     argv;
