@@ -301,7 +301,7 @@ inline void GetProcessNameAndId(DWORD processID, String& processName, String& pr
       processPath = Narrow(szProcessPath);
       // Make sure to normalize the path just in-case
       processPath = FilePath::Normalize(processPath);
-      // The just the process' name (e.g. ZeroEditor.exe)
+      // The just the process' name (e.g. example.exe)
       processName = FilePath::GetFileName(processPath);
     }
   }

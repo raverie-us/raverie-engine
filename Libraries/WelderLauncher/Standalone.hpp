@@ -137,7 +137,7 @@ public:
   Cog* mMetaCog;
 
   /// The folder where this build is installed (if it's been installed), aka the
-  /// folder with ZeroEditor.exe.
+  /// folder with the executable.
   String mInstallLocation;
 
   // The extension used for builds. Makes it easier to change all at once.

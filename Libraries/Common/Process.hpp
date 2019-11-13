@@ -82,7 +82,7 @@ struct ProcessInfo
 
   /// Unique identifier for a process
   OsInt mProcessId;
-  /// The name of the process by itself (e.g. ZeroEditor.exe)
+  /// The name of the process by itself (e.g. example.exe)
   String mProcessName;
   /// The full path to the process
   String mProcessPath;
