@@ -265,13 +265,11 @@ bool LauncherOpenProjectComposite::RunLauncherExe(StringParam exePath)
 
 bool LauncherOpenProjectComposite::RunFromInstalledPath()
 {
-  String installPath;
-  bool result = GetRegistryValueFromCommonInstallPaths(sLauncherGuid, "InstallLocation", installPath);
-  if (result == false)
+  String installExe = Os::GetInstalledExecutable(sWelderOrganization, sLauncherName, sLauncherGuid);
+  if (installExe.Empty())
     return false;
 
-  String exePath = FilePath::Combine(installPath, GetLauncherExecutableFileName());
-  return RunLauncherExe(exePath);
+  return RunLauncherExe(installExe);
 }
 
 void LauncherOpenProjectComposite::CommunicateWithLauncher()

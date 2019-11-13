@@ -255,6 +255,11 @@ String GetVersionString()
   return String::Format("%s SDL %d.%d.%d", SDL_GetPlatform(), version.major, version.minor, version.patch);
 }
 
+String GetInstalledExecutable(StringParam organization, StringParam name, StringParam guid)
+{
+  return GetRelativeExecutable(organization, name);
+}
+
 } // namespace Os
 
 u64 GenerateUniqueId64()

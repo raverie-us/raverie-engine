@@ -347,13 +347,6 @@ void ZilchPluginSource::OpenIde()
   if (CheckIdeAndInformUser() == false)
     return;
 
-  if (ShouldInstallIdeTools())
-  {
-    InstallIdeTools();
-    mOpenIdeAfterToolsInstallCounter = 1;
-    return;
-  }
-
   String ideFile = FilePath::CombineWithExtension(codeDir, Name, ".bat");
   Os::ShellOpenFile(status, ideFile);
   DoNotifyStatus(status);
@@ -402,52 +395,12 @@ ZilchPluginConfig* ZilchPluginSource::GetConfig()
   return config;
 }
 
-bool ZilchPluginSource::ShouldInstallIdeTools()
-{
-  if (GetConfig()->mAttemptedIdeToolsInstall)
-    return false;
-
-  return IsIdeToolInstalled() == false;
-}
-
 void ZilchPluginSource::MarkAttemptedIdeToolsInstAll()
 {
   // This resource is NOT actually modified, but I want to signal to the engine
   // to save the config (refactor me)
   GetConfig()->mAttemptedIdeToolsInstall = true;
   ResourceModified();
-}
-
-bool ZilchPluginSource::IsIdeToolInstalled()
-{
-#if defined(WelderTargetOsWindows)
-
-  // 14 is Visual Studio 2015
-  static const char* cVersions[] = {"14.0", "14.0_Exp", "14.0_Config", "14.0_Remote"};
-  size_t versionCount = ZilchCArrayCount(cVersions);
-
-  static const char* cExtensions[] = {"ZeroZilchPlugins.Company.1794b5cc-5106-4426-a8e9-3610415a8dba,1.0"};
-  size_t extensionCount = ZilchCArrayCount(cExtensions);
-
-  for (size_t i = 0; i < versionCount; ++i)
-  {
-    for (size_t j = 0; j < extensionCount; ++j)
-    {
-      String path = String::Format("Software\\Microsoft\\VisualStudio\\%"
-                                   "s\\ExtensionManager\\EnabledExtensions\\",
-                                   cVersions[i]);
-
-      String result;
-      if (GetRegistryValue("HKEY_CURRENT_USER", path, cExtensions[j], result))
-        return true;
-    }
-  }
-
-#else
-#endif
-
-  // We did not detect any tools
-  return false;
 }
 
 void ZilchPluginSource::CompileDebug()

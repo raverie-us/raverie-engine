@@ -469,4 +469,44 @@ u64 GenerateUniqueId64()
 
   return newId;
 }
+
+bool GetRegistryValue(void* key, StringParam subKey, StringParam value, String& result)
+{
+  HKEY hRoot = (HKEY)key;
+
+  // Read OEM Name from the key
+  wchar_t nameBuffer[256] = {0};
+  DWORD length = sizeof(nameBuffer);
+
+  HKEY hKey;
+  LONG queryResult = RegOpenKeyEx(hRoot, Widen(subKey).c_str(), 0, KEY_QUERY_VALUE, &hKey);
+  if (queryResult != ERROR_SUCCESS)
+    return false;
+
+  queryResult = RegQueryValueEx(hKey, Widen(value).c_str(), 0, 0, (LPBYTE)nameBuffer, &length);
+  if (queryResult != ERROR_SUCCESS)
+    return false;
+
+  result = Narrow(nameBuffer);
+  return true;
+}
+
+String GetInstalledExecutable(StringParam organization, StringParam name, StringParam guid)
+{
+  String path1 =
+      String::Format("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{%s}_is1", guid.c_str());
+  String path2 = String::Format("SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\Cur"
+                                "rentVersion\\Uninstall\\{%s}}_is1",
+                                guid.c_str());
+  static const String cInstallLocation("InstallLocation");
+  String directory;
+  bool result =
+    GetRegistryValue(HKEY_CURRENT_USER, path1, cInstallLocation, directory) ||
+    GetRegistryValue(HKEY_CURRENT_USER, path2, cInstallLocation, directory) ||
+    GetRegistryValue(HKEY_LOCAL_MACHINE, path1, cInstallLocation, directory) ||
+    GetRegistryValue(HKEY_LOCAL_MACHINE, path2, cInstallLocation, directory);
+  if (!result)
+    return GetRelativeExecutable(organization, name);
+  return FilePath::Combine(directory, organization + name + cExecutableExtensionWithDot);
+}
 } // namespace Zero

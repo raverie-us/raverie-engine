@@ -44,6 +44,12 @@ String GetLauncherExecutableFileName()
   return GetLauncherFullName() + cExecutableExtensionWithDot;
 }
 
+String GetRelativeExecutable(StringParam organization, StringParam name)
+{
+  String fullName = organization + name;
+  return FilePath::Combine("..", "..", fullName, fullName + cExecutableExtensionWithDot);
+}
+
 uint gConfigVersion = 1;
 String gAppGuid;
 String gAppOrganization;

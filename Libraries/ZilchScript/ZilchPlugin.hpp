@@ -51,8 +51,6 @@ public:
 
   bool CheckIdeAndInformUser();
   bool IsIdeInstalled();
-  bool IsIdeToolInstalled();
-  bool ShouldInstallIdeTools();
   void MarkAttemptedIdeToolsInstAll();
 
   ZilchPluginConfig* GetConfig();

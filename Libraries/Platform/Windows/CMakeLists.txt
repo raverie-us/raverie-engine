@@ -33,7 +33,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Process.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Registry.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Resolution.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Shell.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Socket.cpp

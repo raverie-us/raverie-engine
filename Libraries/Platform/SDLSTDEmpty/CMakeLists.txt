@@ -20,7 +20,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/ExecutableResource.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Intrinsics.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/MainLoop.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../Empty/Registry.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Socket.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Libgit2/Git.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../OpenGL/OpenglRenderer.cpp

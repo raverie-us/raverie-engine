@@ -80,6 +80,8 @@ ZeroShared String GetEnvironmentalVariable(StringParam variable);
 // Get a string describing the current operating system version.
 ZeroShared String GetVersionString();
 
+// Get the path to an installed executable (may use similar logic to discover the executable name as in BuildVersion.cpp).
+ZeroShared String GetInstalledExecutable(StringParam organization, StringParam name, StringParam guid);
 } // namespace Os
 
 // Generate a 64 bit unique Id. Uses system timer and mac

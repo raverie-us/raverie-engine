@@ -220,7 +220,6 @@ namespace Zero
 #include "FpControl.hpp"
 #include "Lock.hpp"
 #include "Process.hpp"
-#include "Registry.hpp"
 #include "Resolution.hpp"
 #include "SocketEnums.hpp"
 #include "SocketConstants.hpp"
