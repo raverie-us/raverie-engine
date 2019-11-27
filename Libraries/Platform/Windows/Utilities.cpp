@@ -493,18 +493,16 @@ bool GetRegistryValue(void* key, StringParam subKey, StringParam value, String& 
 
 String GetInstalledExecutable(StringParam organization, StringParam name, StringParam guid)
 {
-  String path1 =
-      String::Format("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{%s}_is1", guid.c_str());
+  String path1 = String::Format("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{%s}_is1", guid.c_str());
   String path2 = String::Format("SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\Cur"
                                 "rentVersion\\Uninstall\\{%s}}_is1",
                                 guid.c_str());
   static const String cInstallLocation("InstallLocation");
   String directory;
-  bool result =
-    GetRegistryValue(HKEY_CURRENT_USER, path1, cInstallLocation, directory) ||
-    GetRegistryValue(HKEY_CURRENT_USER, path2, cInstallLocation, directory) ||
-    GetRegistryValue(HKEY_LOCAL_MACHINE, path1, cInstallLocation, directory) ||
-    GetRegistryValue(HKEY_LOCAL_MACHINE, path2, cInstallLocation, directory);
+  bool result = GetRegistryValue(HKEY_CURRENT_USER, path1, cInstallLocation, directory) ||
+                GetRegistryValue(HKEY_CURRENT_USER, path2, cInstallLocation, directory) ||
+                GetRegistryValue(HKEY_LOCAL_MACHINE, path1, cInstallLocation, directory) ||
+                GetRegistryValue(HKEY_LOCAL_MACHINE, path2, cInstallLocation, directory);
   if (!result)
     return GetRelativeExecutable(organization, name);
   return FilePath::Combine(directory, organization + name + cExecutableExtensionWithDot);
