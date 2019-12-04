@@ -608,8 +608,8 @@ void ActiveProjectMenu::OnConfirmBuildVersionChange(ModalConfirmEvent* e)
     if (activeBuild != nullptr)
     {
       ZeroBuild* newBuild = (ZeroBuild*)e->mUserData;
-      String newBuildIdString = newBuild->GetDisplayString(true);
-      String oldBuildIdString = mCachedProject->GetDisplayString(true);
+      String newBuildIdString = newBuild->GetDisplayString();
+      String oldBuildIdString = mCachedProject->GetDisplayString();
       ZPrint("Changing project '%s' from Build %s to %s\n",
              mCachedProject->GetProjectPath().c_str(),
              oldBuildIdString.c_str(),

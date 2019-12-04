@@ -27,8 +27,6 @@ public:
   String GetTagString();
 
   BuildId mBuildId;
-  /// The date this build was made (not necessarily the release date)
-  String mChangeSetDate;
   // A display name for the build independent of the actual build name
   String mDisplayName;
   String mPackageName;
@@ -118,6 +116,8 @@ public:
   String mTags;
   /// The tags split into an easier to query format
   HashSet<String> mTagSet;
+  /// Is this template for a specific version of the engine?
+  BuildId mSpecificVersion;
 
 private:
   /// Build ids for a project are quite complicated/gross and so I want them

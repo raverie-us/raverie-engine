@@ -36,6 +36,9 @@ StringParam GetApplicationName();
 /// Gets the orgnaization or name-space of an application.
 StringParam GetOrganization();
 
+/// Gets the full name: GetOrganization() + GetApplicationName();
+String GetOrganizationApplicationName();
+
 /// Version of the configuration file we're loading (bumped for breaking changes).
 uint GetConfigVersion();
 

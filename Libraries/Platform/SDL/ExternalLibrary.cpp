@@ -4,10 +4,18 @@
 
 namespace Zero
 {
+
+#if defined(WelderTargetOsEmscripten)
+const cstr cExecutableExtensionWithoutDot = ".wasm";
+const cstr cSharedLibraryExtensionWithoutDot = "wasm";
+const cstr cExecutableExtensionWithDot = ".wasm";
+const cstr cSharedLibraryExtensionWithDot = "wasm";
+#else
 const cstr cExecutableExtensionWithoutDot = "";
 const cstr cSharedLibraryExtensionWithoutDot = "";
 const cstr cExecutableExtensionWithDot = "";
 const cstr cSharedLibraryExtensionWithDot = "";
+#endif
 
 ExternalLibrary::ExternalLibrary()
 {

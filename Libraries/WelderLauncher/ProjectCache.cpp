@@ -24,8 +24,8 @@ void LauncherProjectInfo::Serialize(Serializer& stream)
 
   // If we're loading and we have no platform then default to the current build
   // (legacy builds)
-  if (stream.GetMode() == SerializerMode::Loading && mBuildId.mPlatform.Empty())
-    mBuildId.mPlatform = ZeroPlatform;
+  if (stream.GetMode() == SerializerMode::Loading && mBuildId.IsPlatformEmpty())
+    mBuildId.SetToThisPlatform();
 }
 
 void LauncherProjectInfo::AddTag(StringParam tag)
@@ -96,7 +96,7 @@ bool CachedProject::Load(StringParam projectFilePath)
     // and platform and then re-set the build id
     BuildId buildId = mLauncherInfo->GetBuildId();
     ToValue(buildNumberText, buildId.mRevisionId);
-    buildId.mPlatform = ZeroPlatform;
+    buildId.SetToThisPlatform();
     mLauncherInfo->SetBuildId(buildId);
 
     // Load the project tags
@@ -164,14 +164,14 @@ void CachedProject::SetBuildId(const BuildId& buildId)
   SetProjectPropertyValue("ProjectEngineRevision", ToString(buildId.mRevisionId));
 }
 
-String CachedProject::GetDisplayString(bool showPlatform) const
+String CachedProject::GetDisplayString() const
 {
-  return GetBuildId().ToDisplayString(showPlatform);
+  return GetBuildId().GetVersionString();
 }
 
 String CachedProject::GetDebugIdString()
 {
-  return GetBuildId().ToIdString();
+  return GetBuildId().GetFullId();
 }
 
 String CachedProject::GetProjectPath()

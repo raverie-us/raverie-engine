@@ -229,7 +229,7 @@ BuildId NewProjectMenu::GetBuildId() const
   // If there is no build (likely cause no builds are installed)
   // then just return the version the launcher was made in
   if (currentBuild == nullptr)
-    return BuildId::GetCurrentLauncherId();
+    return BuildId::GetCurrentApplicationId();
 
   return currentBuild->GetBuildId();
 }
@@ -578,7 +578,7 @@ void NewProjectMenu::OnCreateProject(Event* e)
   ZPrint("  Project: %s\n", selectedProject->GetIdString().c_str());
   ZPrint("  Folder: %s\n", projectFolder.c_str());
   ZPrint("  ProjectName: %s\n", projectName.c_str());
-  ZPrint("  Build: %s\n", projectBuildId.GetFullId(true, true, true).c_str());
+  ZPrint("  Build: %s\n", projectBuildId.GetFullId().c_str());
   ZPrint("  Project Tags: %s\n", mTags->GetText().c_str());
 
   // If the project is already downloaded then just create a project from that,

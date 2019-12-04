@@ -43,6 +43,7 @@ module.exports = {
     "max-lines": ["error", 1000],
     "no-sync": "off",
     "no-continue": "off",
-    "no-loop-func": "off"
+    "no-loop-func": "off",
+    "lines-around-comment": "off"
   }
 };

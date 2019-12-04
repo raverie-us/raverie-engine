@@ -32,105 +32,149 @@ BuildId::BuildId()
   mMinorVersion = 0;
   mPatchVersion = 0;
   mRevisionId = 0;
+  mMsSinceEpoch = 0;
 }
 
 void BuildId::Serialize(Serializer& stream, bool includePlatform)
 {
-  SerializeNameDefault(mExperimentalBranchName, String());
+  SerializeNameDefault(mApplication, String());
+  SerializeNameDefault(mBranch, String());
   SerializeNameDefault(mMajorVersion, 0);
   SerializeNameDefault(mMinorVersion, 0);
   SerializeNameDefault(mPatchVersion, 0);
   SerializeNameDefault(mRevisionId, 0);
   SerializeNameDefault(mShortChangeSet, String());
+  SerializeNameDefault(mMsSinceEpoch, (u64)0);
   // Projects save this save information but without the platform
   if (includePlatform)
-    SerializeNameDefault(mPlatform, String());
+  {
+    SerializeNameDefault(mTargetOs, String());
+    SerializeNameDefault(mArchitecture, String());
+    SerializeNameDefault(mConfig, String());
+  }
+  SerializeNameDefault(mPackageExtension, String());
 }
 
-BuildId BuildId::GetCurrentLauncherId()
+BuildId BuildId::GetCurrentApplicationId()
 {
   BuildId id;
   // This major id needs to match "ZeroLauncherMajorId" on the web server in
   // order to determine if a new major version is available which triggers a
   // re-install of the launcher.
-  id.mMajorVersion = GetMajorVersion();
-  id.mMinorVersion = 0;
-  id.mPatchVersion = 0;
-  id.mRevisionId = GetRevisionNumber();
-  id.mPlatform = GetPlatformString();
-  id.mShortChangeSet = GetShortChangeSetString();
+
+  id.mApplication = GetOrganizationApplicationName(); // Application [WelderEditor]
+  id.mBranch = WelderBranchName;                      // Branch [master]
+  id.mMajorVersion = GetMajorVersion();               // Major [1]
+  id.mMinorVersion = GetMinorVersion();               // Minor [5]
+  id.mPatchVersion = GetPatchVersion();               // Patch [0]
+  id.mRevisionId = GetRevisionNumber();               // Revision [1501]
+  id.mShortChangeSet = GetShortChangeSetString();     // ShortChangeset [fb02756c46a4]
+  id.mMsSinceEpoch = WelderMsSinceEpoch;              // MsSinceEpoch [1574702096290]
+  id.mTargetOs = WelderTargetOsName;                  // TargetOs [Windows]
+  id.mArchitecture = WelderArchitectureName;          // Architecture [x86]
+  id.mConfig = WelderConfigName;                      // Config [Release]
+  id.mPackageExtension = "zip";                       // Extension [zip]
   return id;
 }
 
 bool BuildId::Parse(StringParam buildName)
 {
-  // Match ZeroEngineSetup.#.#.#.RevisionId
-  String year, month, day, revisionId;
-  return Parse(buildName, year, month, day);
-}
+  /*
+   * This needs to match
+   * index.js:pack/Standalone.cpp:BuildId::Parse/BuildId::GetFullId/BuildVersion.cpp:GetBuildVersionName
+   * Application.Branch.Major.Minor.Patch.Revision.ShortChangeset.MsSinceEpoch.TargetOs.Architecture.Config.Extension
+   * Example: WelderEditor.master.1.5.0.1501.fb02756c46a4.1574702096290.Windows.x86.Release.zip
+   */
+  const Regex cBuildNameRegex("([a-zA-Z0-9_]+)\\." // Application [WelderEditor]
+                              "([a-zA-Z0-9_]+)\\." // Branch [master]
+                              "([0-9]+)\\."        // Major [1]
+                              "([0-9]+)\\."        // Minor [5]
+                              "([0-9]+)\\."        // Patch [0]
+                              "([0-9]+)\\."        // Revision [1501]
+                              "([0-9a-fA-F]+)\\."  // ShortChangeset [fb02756c46a4]
+                              "([0-9]+)\\."        // MsSinceEpoch [1574702096290]
+                              "([a-zA-Z0-9_]+)\\." // TargetOs [Windows]
+                              "([a-zA-Z0-9_]+)\\." // Architecture [x86]
+                              "([a-zA-Z0-9_]+)\\." // Config [Release]
+                              "([a-zA-Z0-9_]+)"    // Extension [zip]
+  );
 
-bool BuildId::Parse(StringParam buildName, String& year, String& month, String& day)
-{
-  // Match ZeroEngineSetup.#.#.#.RevisionId
-  String revisionId;
-  bool parsed = ZeroBuild::ParseLegacyBuildName(buildName, year, month, day, revisionId);
-  if (!parsed)
+  Matches matches;
+  cBuildNameRegex.Search(buildName, matches);
+  // Make sure the regular expression matched (if not, it may be some other
+  // release that's not a zerobuild).
+  if (matches.Empty())
     return false;
 
-  mExperimentalBranchName = String();
-  mMajorVersion = 0;
-  mMinorVersion = 0;
-  mPatchVersion = 0;
+  // 1           2      3     4     5     6        7              8            9        10           11     12
+  // Application.Branch.Major.Minor.Patch.Revision.ShortChangeset.MsSinceEpoch.TargetOs.Architecture.Config.Extension
 
-  ToValue(revisionId, mRevisionId);
-  mPlatform = GetPlatformString();
+  mApplication = matches[1];
+  mBranch = matches[2];
+  ToValue(matches[3], mMajorVersion);
+  ToValue(matches[4], mMinorVersion);
+  ToValue(matches[5], mPatchVersion);
+  ToValue(matches[6], mRevisionId);
+  mShortChangeSet = matches[7];
+  ToValue(matches[8], mMsSinceEpoch);
+  mTargetOs = matches[9];
+  mArchitecture = matches[10];
+  mConfig = matches[11];
+  mPackageExtension = matches[12];
   return true;
 }
 
-String BuildId::ToIdString() const
+bool BuildId::ParseRequired(StringParam buildName)
 {
-  // To have a stable id we have to always use the full
-  // name (including platform) to avoid conflicts
-  return GetFullId(true, true, true);
+  if (Parse(buildName))
+    return true;
+  DoNotifyError("Failed", "Unable to parse build name " + buildName);
+  return false;
 }
 
-String BuildId::ToDisplayString(bool showPlatform) const
+String BuildId::GetFullId() const
 {
-  return GetFullId(true, false, showPlatform);
+  /*
+   * This needs to match
+   * index.js:pack/Standalone.cpp:BuildId::Parse/BuildId::GetFullId/BuildVersion.cpp:GetBuildVersionName
+   * Application.Branch.Major.Minor.Patch.Revision.ShortChangeset.MsSinceEpoch.TargetOs.Architecture.Config.Extension
+   * Example: WelderEditor.master.1.5.0.1501.fb02756c46a4.1574702096290.Windows.x86.Release.zip
+   */
+  StringBuilder builder;
+  builder.AppendFormat("%s.", mApplication.c_str());     // Application [WelderEditor]
+  builder.AppendFormat("%s.", mBranch.c_str());          // Branch [master]
+  builder.AppendFormat("%d.", mMajorVersion);            // Major [1]
+  builder.AppendFormat("%d.", mMinorVersion);            // Minor [5]
+  builder.AppendFormat("%d.", mPatchVersion);            // Patch [0]
+  builder.AppendFormat("%d.", mRevisionId);              // Revision [1501]
+  builder.AppendFormat("%s.", mShortChangeSet.c_str());  // ShortChangeset [fb02756c46a4]
+  builder.AppendFormat("%llu.", mMsSinceEpoch);          // MsSinceEpoch [1574702096290]
+  builder.AppendFormat("%s.", mTargetOs.c_str());        // TargetOs [Windows]
+  builder.AppendFormat("%s.", mArchitecture.c_str());    // Architecture [x86]
+  builder.AppendFormat("%s.", mConfig.c_str());          // Config [Release]
+  builder.AppendFormat("%s", mPackageExtension.c_str()); // Extension [zip]
+  return builder.ToString();
 }
 
-String BuildId::GetMajorMinorPatchRevisionIdString() const
-{
-  return GetFullId(false, true, false);
-}
-
-String BuildId::GetFullId(bool showExperimentalBranch, bool showChangeset, bool showPlatform) const
+String BuildId::GetVersionString() const
 {
   StringBuilder builder;
-
-  // If we have a branch then start with that
-  if (showExperimentalBranch && !mExperimentalBranchName.Empty())
-    builder.AppendFormat("%s.", mExperimentalBranchName.c_str());
-
-  // Append the main 4 id numbers
-  builder.AppendFormat("%d.", mMajorVersion);
-  builder.AppendFormat("%d.", mMinorVersion);
-  builder.AppendFormat("%d.", mPatchVersion);
-  builder.AppendFormat("%d", mRevisionId);
-  if (showChangeset && !mShortChangeSet.Empty())
-    builder.AppendFormat(".%s", mShortChangeSet.c_str());
-
-  // If we display the platform then add that in too
-  if (showPlatform)
-    builder.AppendFormat("-%s", mPlatform.c_str());
-
+  builder.AppendFormat("%d.", mMajorVersion); // Major [1]
+  builder.AppendFormat("%d.", mMinorVersion); // Minor [5]
+  builder.AppendFormat("%d.", mPatchVersion); // Patch [0]
+  builder.AppendFormat("%d", mRevisionId);    // Revision [1501]
   return builder.ToString();
+}
+
+bool BuildId::IsEmpty() const
+{
+  return CompareBuilds(BuildId());
 }
 
 size_t BuildId::Hash() const
 {
   // Use the full display string hash
-  return ToIdString().Hash();
+  return GetFullId().Hash();
 }
 
 bool BuildId::operator==(const BuildId& rhs) const
@@ -146,13 +190,16 @@ bool BuildId::operator!=(const BuildId& rhs) const
 
 bool BuildId::CompareBuilds(const BuildId& rhs) const
 {
-  return ToIdString() == rhs.ToIdString();
+  return GetFullId() == rhs.GetFullId();
 }
 
 BuildUpdateState::Enum BuildId::CheckForUpdate(const BuildId& rhs) const
 {
+  if (!mApplication.Empty() && !rhs.mApplication.Empty() && mApplication != rhs.mApplication)
+    return BuildUpdateState::DifferentApplication;
+
   // Check if the branches are different
-  if (mExperimentalBranchName != rhs.mExperimentalBranchName)
+  if (!mBranch.Empty() && !rhs.mBranch.Empty() && mBranch != rhs.mBranch)
     return BuildUpdateState::DifferentBranch;
 
   // Check for changes in the major version
@@ -184,6 +231,38 @@ bool BuildId::IsOlderThan(const BuildId& rhs) const
   if (upgradeState == BuildUpdateState::Newer || upgradeState == BuildUpdateState::NewerBreaking)
     return true;
   return false;
+}
+
+bool BuildId::IsPlatformEmpty() const
+{
+  return mTargetOs.Empty() && mArchitecture.Empty();
+}
+
+bool BuildId::IsForThisPlatform() const
+{
+  return mTargetOs == WelderTargetOsName && mArchitecture == WelderArchitectureName && mConfig == WelderConfigName;
+}
+
+void BuildId::SetToThisPlatform()
+{
+  mTargetOs = WelderTargetOsName;
+  mArchitecture = WelderArchitectureName;
+  mConfig = WelderConfigName;
+}
+
+String BuildId::GetChangeSetDate() const
+{
+  char buffer[256];
+  time_t time = mMsSinceEpoch / 1000;
+  auto tm = localtime(&time);
+  strftime(buffer, sizeof(buffer), "%Y-%m-%d", tm);
+  return buffer;
+}
+
+String BuildId::GetMasterBranch()
+{
+  static const String cMaster("master");
+  return cMaster;
 }
 
 const String ZeroBuild::mExtension = "zerobuild";
@@ -238,14 +317,14 @@ ZeroBuildDeprecated* ZeroBuild::GetDeprecatedInfo(bool createIfNull)
   return mMetaCog->has(ZeroBuildDeprecated);
 }
 
-String ZeroBuild::GetDisplayString(bool showPlatform)
+String ZeroBuild::GetDisplayString()
 {
-  return GetBuildId().ToDisplayString(showPlatform);
+  return GetBuildId().GetVersionString();
 }
 
 String ZeroBuild::GetDebugIdString()
 {
-  return GetBuildId().ToIdString();
+  return GetBuildId().GetFullId();
 }
 
 BuildId ZeroBuild::GetBuildId()
@@ -255,7 +334,7 @@ BuildId ZeroBuild::GetBuildId()
   ZeroBuildContent* zeroBuild = GetBuildContent(false);
   if (zeroBuild != nullptr)
     return zeroBuild->GetBuildId();
-  return BuildId::GetCurrentLauncherId();
+  return BuildId::GetCurrentApplicationId();
 }
 
 void ZeroBuild::SetBuildId(const BuildId& buildId)
@@ -272,30 +351,6 @@ String ZeroBuild::GetDownloadUrl()
   return String();
 }
 
-void ZeroBuild::SaveMetaFile(StringParam filePath)
-{
-  // Save our meta cog to a file
-  Status status;
-  ObjectSaver saver;
-  saver.Open(status, filePath.c_str());
-  saver.SaveDefinition(mMetaCog);
-}
-
-String ZeroBuild::SaveMetaFileToString()
-{
-  // Save our meta cog to a string. Needed for creating a project on another
-  // thread as serialization is not currently thread safe.
-  ObjectSaver saver;
-  saver.OpenBuffer();
-  saver.SaveDefinition(mMetaCog);
-  return saver.GetString();
-}
-
-String ZeroBuild::GetMetaFilePath(StringParam basePath)
-{
-  return FilePath::CombineWithExtension(basePath, "ZeroEditor", ".meta");
-}
-
 bool ZeroBuild::CreateMetaIfNull()
 {
   bool metaIsNull = mMetaCog == nullptr;
@@ -308,39 +363,6 @@ bool ZeroBuild::CreateMetaIfNull()
   // Make sure the metaCog always has a ZeroBuildContent component
   HasOrAdd<ZeroBuildContent>(mMetaCog);
   return metaIsNull;
-}
-
-bool ZeroBuild::ParseLegacyBuildName(
-    StringParam buildName, String& year, String& month, String& day, String& revisionId)
-{
-  Matches matches;
-  Regex regex("\\w*\\.(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)");
-  regex.Search(buildName, matches);
-  if (matches.Size() == 5)
-  {
-    year = matches[1];
-    month = matches[2];
-    day = matches[3];
-    revisionId = matches[4];
-    return true;
-  }
-  return false;
-}
-
-void ZeroBuild::GetReleaseDate(String& year, String& month, String& day)
-{
-  // Get the build content component and split the release date field on it
-  ZeroBuildContent* zeroBuild = GetBuildContent(true);
-
-  Matches matches;
-  Regex regex("(\\d+)\\-(\\d+)\\-(\\d+)");
-  regex.Search(zeroBuild->mChangeSetDate, matches);
-  if (matches.Size() == 4)
-  {
-    year = matches[1];
-    month = matches[2];
-    day = matches[3];
-  }
 }
 
 bool ZeroBuild::IsBad()

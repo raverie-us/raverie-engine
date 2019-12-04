@@ -9,20 +9,17 @@ struct ZeroBuildTagPolicy
 {
   bool mShowExperimentalBranches;
   bool mShowOnlyPreferredPlatform;
-  String mPreferredPlatform;
 
   ZeroBuildTagPolicy()
   {
     mShowExperimentalBranches = false;
     mShowOnlyPreferredPlatform = true;
-    mPreferredPlatform = GetPlatformString();
   }
 
   ZeroBuildTagPolicy(LauncherConfig* launcherConfig)
   {
     mShowExperimentalBranches = launcherConfig->mShowExperimentalBranches;
     mShowOnlyPreferredPlatform = launcherConfig->mDisplayOnlyPreferredPlatform;
-    mPreferredPlatform = GetPlatformString();
   }
 
   TagSet& GetTagSet(ZeroBuild* build)
@@ -38,9 +35,9 @@ struct ZeroBuildTagPolicy
   bool ShouldInclude(ZeroBuild* build)
   {
     BuildId buildId = build->GetBuildId();
-    if (!mShowExperimentalBranches && !buildId.mExperimentalBranchName.Empty())
+    if (!mShowExperimentalBranches && buildId.mBranch != BuildId::GetMasterBranch())
       return false;
-    if (mShowOnlyPreferredPlatform && buildId.mPlatform != mPreferredPlatform)
+    if (mShowOnlyPreferredPlatform && !buildId.IsForThisPlatform())
       return false;
     return true;
   }

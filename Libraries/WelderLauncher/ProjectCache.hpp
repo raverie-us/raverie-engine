@@ -46,7 +46,7 @@ public:
 
   /// A display string for this build associated with this project.
   /// Note: this should only ever be used as a display string, not a unique id.
-  String GetDisplayString(bool showPlatform = false) const;
+  String GetDisplayString() const;
   /// A string for debug printing the build id
   String GetDebugIdString();
 

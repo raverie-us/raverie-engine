@@ -37,16 +37,11 @@ public:
   /// Given a directory and build folder name, load the locally installed
   /// build's information.
   void LoadInstalledBuild(StringParam directoryPath, StringParam buildFolder);
-  /// For all installed builds, overwrite their saved meta files. This fixes
-  /// legacy builds before meta existed and this also serves to update any
-  /// installed information when the server changes (tags, release notes,
-  /// etc...)
-  void SaveInstalledBuildsMeta();
 
   // Queue up a task to get the listing of versions from the server
   BackgroundTask* GetServerListing();
   BackgroundTask* GetLauncherListing();
-  BackgroundTask* GetReleaseListing(bool launcher);
+  BackgroundTask* GetReleaseListing(StringParam applicationName);
   // Updates the internal version listing based upon the results from
   // GetServerListing
   void UpdatePackageListing(GetVersionListingTaskJob* job);
@@ -57,15 +52,15 @@ public:
   bool InstallLocalTemplateProject(StringParam filePath);
 
   /// Create a template project from the specified meta file
-  TemplateProject* CreateTemplateProjectFromMeta(StringParam metaFilePath);
-  TemplateProject* CreateTemplateProjectFromMeta(Cog* metaCog, StringParam localPath);
+  TemplateProject* CreateTemplateProjectFromMeta(StringParam metaFilePath, StringParam fullBuildId);
+  TemplateProject* CreateTemplateProjectFromMeta(Cog* metaCog, StringParam localPath, StringParam fullBuildId);
 
   // Find all available templates on the dsik (checks the current build data folder, next to the application, and the
   // downloads location)
   void FindOnDiskTemplates(ZeroBuild* selectedBuild);
   // Recursively searches a directory for templates.
   // Uses the rootDir param to re-base the url from the server.
-  void FindOnDiskTemplatesRecursive(StringParam searchPath);
+  void FindOnDiskTemplatesRecursive(StringParam searchPath, StringParam fullBuildId = String());
   BackgroundTask* GetTemplateListing();
   void UpdateTemplateListing(GetTemplateListingTaskJob* templates);
   BackgroundTask* DownloadTemplateProject(TemplateProject* project);
@@ -78,13 +73,6 @@ public:
   BackgroundTask* DownloadTemplatePreviews(TemplateProject* project);
   BackgroundTask* DownloadDeveloperNotes();
 
-  // Given a path to a build archive file, generate a build id. This is most
-  // commonly for dragging in local builds to be installed. This tries several
-  // methods of identifying the build: looking for a meta file in the archive,
-  // parsing the old file naming format, finally it may generate a unique id
-  // from the hash. Note: the passed in zero build's meta cog will be set to the
-  // loaded meta cog or newly created one.
-  void GetBuildIdFromArchive(StringParam buildPath, ZeroBuild& zeroBuild, BuildId& buildId);
   /// Given an archive that came from the specified file, find the specified
   /// meta file and create it if we can. Also, try and extract any images
   /// specified in the meta file to the same directory that the meta file goes

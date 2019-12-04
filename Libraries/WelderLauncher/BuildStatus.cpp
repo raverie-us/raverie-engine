@@ -93,7 +93,7 @@ void BuildStatusView::SetVersion(const BuildId& buildId)
     mBuild = nullptr;
   }
 
-  String text = buildId.ToDisplayString();
+  String text = buildId.GetVersionString();
   mBuildText->SetText(text);
   mBuildText->SizeToContents();
 }

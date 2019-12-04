@@ -172,7 +172,7 @@ void MainButton::SetSubText(StringParam text)
 
 void MainButton::SetBuildId(const BuildId& buildId)
 {
-  mSubText->SetText(buildId.ToDisplayString());
+  mSubText->SetText(buildId.GetVersionString());
   mSubText->SizeToContents();
   MarkAsNeedsUpdate();
 }
@@ -925,8 +925,6 @@ void LauncherWindow::OnLauncherListing(BackgroundTaskEvent* taskEvent)
   ZeroBuildContent* newestInstaller = nullptr;
   ZeroBuildContent* newestPatch = nullptr;
 
-  String platformString = GetPlatformString();
-
   static const String cPatchExtension("zip");
 
   // Get the newest launcher build from the listing.
@@ -938,7 +936,7 @@ void LauncherWindow::OnLauncherListing(BackgroundTaskEvent* taskEvent)
 
     // It must be the same platform as we're on.
     BuildId buildId = content->GetBuildId();
-    if (buildId.mPlatform != platformString)
+    if (buildId.IsForThisPlatform())
       continue;
 
     // If this is a patch we need to check the minor version (and make sure it's

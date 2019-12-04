@@ -28,9 +28,11 @@ struct VersionSorter
     BuildId rhsBuildId = rhs->GetBuildId();
     BuildUpdateState::Enum state = lhsBuildId.CheckForUpdate(rhsBuildId);
 
-    // If the branches are different just sort alphabetically
+    // If the branches or application are different just sort alphabetically
+    if (state == BuildUpdateState::DifferentApplication)
+      return lhsBuildId.mApplication < rhsBuildId.mApplication;
     if (state == BuildUpdateState::DifferentBranch)
-      return lhsBuildId.mExperimentalBranchName < rhsBuildId.mExperimentalBranchName;
+      return lhsBuildId.mBranch < rhsBuildId.mBranch;
 
     // Otherwise, return true if lhs > rhs (aka the update is to an older build)
     bool updatingToOlder = (state == BuildUpdateState::Older || state == BuildUpdateState::OlderBreaking);
@@ -68,6 +70,13 @@ VersionSelector::~VersionSelector()
 
 void VersionSelector::FindInstalledVersions()
 {
+  // The launcher may come with a pre-packaged build.
+  MainConfig* mainConfig = Z::gEngine->GetConfigCog()->has(MainConfig);
+  String includedBuilds = FilePath::Combine(mainConfig->SourceDirectory, "Build", "IncludedBuilds");
+
+  if (DirectoryExists(includedBuilds))
+    FindInstalledVersions(includedBuilds);
+
   // Recursively find builds from the root install location
   String rootInstallLocation = GetRootInstallLocation();
   FindInstalledVersions(rootInstallLocation);
@@ -80,6 +89,8 @@ void VersionSelector::FindInstalledVersions()
 
 void VersionSelector::FindInstalledVersions(StringParam searchPath)
 {
+  ZPrint("Looking for builds in %s\n", searchPath.c_str());
+
   // Iterate over the install directory
   FileRange range(searchPath);
   for (; !range.Empty(); range.PopFront())
@@ -104,33 +115,14 @@ void VersionSelector::FindInstalledVersions(StringParam searchPath)
 
 void VersionSelector::LoadInstalledBuild(StringParam directoryPath, StringParam buildFolder)
 {
+  String fullPath = FilePath::Combine(directoryPath, buildFolder);
+  ZPrint("Loading installed build %s\n", fullPath.c_str());
+
   // By default, parse the build's folder name to
   // attempt to get the build id (mostly for legacy)
   BuildId buildId;
-  String year, month, day;
-  buildId.Parse(buildFolder, year, month, day);
-
-  // Try to load the meta file if it exists. If it doesn't we'll use the parsed
-  // build folder id.
-  Cog* metaCog = nullptr;
-  String fullPath = FilePath::Combine(directoryPath, buildFolder);
-  String metaFilePath = ZeroBuild::GetMetaFilePath(fullPath);
-  if (FileExists(metaFilePath))
-  {
-    // Create the meta file's cog for this build (make sure to clear the
-    // archetype if it has one). Also, load the build id from the
-    // ZeroBuildContent component.
-    metaCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), metaFilePath, 0, nullptr);
-    // Meta could be null if the file was invalid (all nulls after a bluescreen
-    // for instance)
-    if (metaCog != nullptr)
-    {
-      metaCog->ClearArchetype();
-      ZeroBuildContent* projectInfo = metaCog->has(ZeroBuildContent);
-      if (projectInfo != nullptr)
-        buildId = projectInfo->GetBuildId();
-    }
-  }
+  if (!buildId.ParseRequired(buildFolder))
+    return;
 
   // If this build hasn't already been loaded then we need to create it
   // (we either haven't contacted the server yet or it's not on the server).
@@ -138,17 +130,6 @@ void VersionSelector::LoadInstalledBuild(StringParam directoryPath, StringParam 
   if (localBuild == nullptr)
   {
     localBuild = new ZeroBuild();
-    localBuild->mMetaCog = metaCog;
-    // If we failed to load a meta cog then this is a legacy build with no meta
-    // file, we need to create the meta file and set old data (date-time,
-    // revision, etc...)
-    bool isLegacy = localBuild->CreateMetaIfNull();
-    if (isLegacy)
-    {
-      ZeroBuildContent* buildInfo = localBuild->GetBuildContent(false);
-      buildInfo->mChangeSetDate = String::Format("%s-%s-%s", year.c_str(), month.c_str(), day.c_str());
-    }
-
     localBuild->SetBuildId(buildId);
     // Add this build by id and into an array (sorted by id)
     mVersionMap.Insert(buildId, localBuild);
@@ -168,36 +149,21 @@ void VersionSelector::LoadInstalledBuild(StringParam directoryPath, StringParam 
   localBuild->mInstallState = InstallState::Installed;
 }
 
-void VersionSelector::SaveInstalledBuildsMeta()
-{
-  // Save each installed build's meta next to the ".exe"
-  for (size_t i = 0; i < mVersions.Size(); ++i)
-  {
-    ZeroBuild* build = mVersions[i];
-    if (build->mInstallState != InstallState::Installed)
-      continue;
-
-    String metaFilePath = ZeroBuild::GetMetaFilePath(GetInstallLocation(build));
-    build->SaveMetaFile(metaFilePath);
-  }
-}
-
 BackgroundTask* VersionSelector::GetServerListing()
 {
-  ZPrint("Requesting build list from server.\n");
-  return GetReleaseListing(false);
+  return GetReleaseListing(GetEditorFullName());
 }
 
 BackgroundTask* VersionSelector::GetLauncherListing()
 {
-  ZPrint("Requesting launcher build list from server.\n");
-  return GetReleaseListing(true);
+  return GetReleaseListing(GetLauncherFullName());
 }
 
-BackgroundTask* VersionSelector::GetReleaseListing(bool launcher)
+BackgroundTask* VersionSelector::GetReleaseListing(StringParam applicationName)
 {
+  ZPrint("Requesting launcher build list for %s from server.\n", applicationName.c_str());
   // Start the task to get the version listing
-  GetVersionListingTaskJob* job = new GetVersionListingTaskJob(launcher);
+  GetVersionListingTaskJob* job = new GetVersionListingTaskJob(applicationName);
   job->mName = "Version List";
   return Z::gBackgroundTasks->Execute(job, job->mName);
 }
@@ -309,9 +275,6 @@ void VersionSelector::UpdatePackageListing(GetVersionListingTaskJob* job)
   }
 
   Sort(mVersions.All(), VersionSorter());
-  // Save all build's meta now that we have updated data from this server.
-  // This will properly cache release notes, tags, etc...
-  SaveInstalledBuildsMeta();
 
   Event e;
   DispatchEvent(Events::BuildListUpdated, &e);
@@ -331,10 +294,11 @@ void VersionSelector::AddCustomBuild(StringParam buildPath, bool shouldInstall)
   ZPrint("Adding custom user build.\n");
   ZeroBuild* localBuild = new ZeroBuild();
 
-  // Load the build id for this archive. This may come from a meta file in the
-  // archive, the file name, or be uniquely generated by the file's contents.
   BuildId buildId;
-  GetBuildIdFromArchive(buildPath, *localBuild, buildId);
+  String buildName = FilePath::GetFileName(buildPath);
+  if (!buildId.ParseRequired(buildName))
+    return;
+
   localBuild->SetBuildId(buildId);
   localBuild->mInstallLocation = GetDefaultInstallLocation(buildId);
 
@@ -362,7 +326,6 @@ void VersionSelector::AddCustomBuild(StringParam buildPath, bool shouldInstall)
   {
     InstallBuildTaskJob* job = new InstallBuildTaskJob();
     job->LoadFromFile(buildPath);
-    job->mMetaContents = localBuild->SaveMetaFileToString();
     job->mInstallLocation = localBuild->mInstallLocation;
 
     // there are several different scenarios that want to install then do
@@ -439,7 +402,7 @@ bool VersionSelector::InstallLocalTemplateProject(StringParam filePath)
 
   // Create the template project from our meta cog so that we can
   // cache information like where this is installed, icon images, etc...
-  TemplateProject* currentProject = CreateTemplateProjectFromMeta(metaCog, templateInstallDirectory);
+  TemplateProject* currentProject = CreateTemplateProjectFromMeta(metaCog, templateInstallDirectory, String());
   // Make sure we set the local path of where this template is installed right
   // away as several other functions use this
   currentProject->mLocalPath = templateInstallDirectory;
@@ -465,17 +428,19 @@ bool VersionSelector::InstallLocalTemplateProject(StringParam filePath)
   return true;
 }
 
-TemplateProject* VersionSelector::CreateTemplateProjectFromMeta(StringParam metaFilePath)
+TemplateProject* VersionSelector::CreateTemplateProjectFromMeta(StringParam metaFilePath, StringParam fullBuildId)
 {
   // Load the meta file
   DataTreeLoader loader;
   Status status;
   loader.OpenFile(status, metaFilePath);
   Cog* metaCog = Z::gFactory->CreateFromStream(Z::gEngine->GetEngineSpace(), loader, 0, nullptr);
-  return CreateTemplateProjectFromMeta(metaCog, FilePath::GetDirectoryPath(metaFilePath));
+  return CreateTemplateProjectFromMeta(metaCog, FilePath::GetDirectoryPath(metaFilePath), fullBuildId);
 }
 
-TemplateProject* VersionSelector::CreateTemplateProjectFromMeta(Cog* metaCog, StringParam localPath)
+TemplateProject* VersionSelector::CreateTemplateProjectFromMeta(Cog* metaCog,
+                                                                StringParam localPath,
+                                                                StringParam fullBuildId)
 {
   // Make sure the meta file contained the necessary info
   if (metaCog == nullptr)
@@ -483,6 +448,8 @@ TemplateProject* VersionSelector::CreateTemplateProjectFromMeta(Cog* metaCog, St
   ZeroTemplate* zeroTemplate = metaCog->has(ZeroTemplate);
   if (zeroTemplate == nullptr)
     return nullptr;
+
+  ZPrint("Found and parsed template: %s\n", localPath.c_str());
 
   // Check and see if we already had this template
   String key = zeroTemplate->GetIdString();
@@ -516,7 +483,7 @@ void VersionSelector::FindOnDiskTemplates(ZeroBuild* selectedBuild)
   if (selectedBuild)
   {
     String buildTemplates = FilePath::Combine(selectedBuild->mInstallLocation, "LauncherTemplates");
-    FindOnDiskTemplatesRecursive(buildTemplates);
+    FindOnDiskTemplatesRecursive(buildTemplates, FilePath::GetFileName(selectedBuild->mInstallLocation));
   }
 
   String packagedTemplates = FilePath::Combine(GetApplicationDirectory(), "Templates");
@@ -527,7 +494,7 @@ void VersionSelector::FindOnDiskTemplates(ZeroBuild* selectedBuild)
   FindOnDiskTemplatesRecursive(dir);
 }
 
-void VersionSelector::FindOnDiskTemplatesRecursive(StringParam searchPath)
+void VersionSelector::FindOnDiskTemplatesRecursive(StringParam searchPath, StringParam fullBuildId)
 {
   // Iterate over the install directory
   FileRange range(searchPath);
@@ -542,8 +509,7 @@ void VersionSelector::FindOnDiskTemplatesRecursive(StringParam searchPath)
       String ext = FilePath::GetExtension(fullDirName);
       if (ext != "meta")
         continue;
-
-      CreateTemplateProjectFromMeta(fullDirName);
+      CreateTemplateProjectFromMeta(fullDirName, fullBuildId);
     }
   }
 }
@@ -645,7 +611,6 @@ BackgroundTask* VersionSelector::DownloadTemplateProject(TemplateProject* projec
   job->mTemplateInstallLocation =
       FilePath::Combine(mConfig->GetTemplateInstallPath(), zeroTemplate->GetFullTemplateVersionName());
   job->mTemplateNameWithoutExtension = FilePath::GetFileNameWithoutExtension(project->GetLocalTemplateFileName());
-  job->mMetaContents = project->SaveMetaFileToString();
 
   return Z::gBackgroundTasks->Execute(job, job->mName);
 }
@@ -691,87 +656,6 @@ BackgroundTask* VersionSelector::DownloadDeveloperNotes()
   job->mName = "Download DevUpdates";
 
   return Z::gBackgroundTasks->Execute(job, job->mName);
-}
-
-void VersionSelector::GetBuildIdFromArchive(StringParam buildPath, ZeroBuild& zeroBuild, BuildId& buildId)
-{
-  // Keep track of if we successfully loaded our build info from a meta file
-  bool buildInfoLoadedFromMeta = false;
-
-  File file;
-  file.Open(buildPath, FileMode::Read, FileAccessPattern::Random);
-
-  // Try to find a meta file in the zip. Make sure to open the zip to only read
-  // the entries so that we don't have to decompress everything.
-  String metaFileName = "ZeroEditor.meta";
-  Archive archive(ArchiveMode::Decompressing);
-  archive.ReadZip(ArchiveReadFlags::Entries, file);
-  // Find the meta file's entry
-  for (Archive::range range = archive.GetEntries(); !range.Empty(); range.PopFront())
-  {
-    ArchiveEntry& entry = range.Front();
-    if (entry.Name != metaFileName)
-      continue;
-
-    // Decompress this entry from the same file and then create the meta cog
-    // from the contents
-    archive.DecompressEntry(entry, file);
-    String metaContents((cstr)entry.Full.Data, entry.Full.Size);
-
-    DataTreeLoader loader;
-    Status status;
-    loader.OpenBuffer(status, metaContents);
-    Cog* metaCog = Z::gFactory->CreateFromStream(Z::gEngine->GetEngineSpace(), loader, 0, nullptr);
-    // If we failed to create the meta then maybe we'll get lucky with another
-    // entry?
-    if (metaCog == nullptr)
-      continue;
-    // Same with creating the cog but failing to find the build information
-    ZeroBuildContent* buildInfo = metaCog->has(ZeroBuildContent);
-    if (buildInfo == nullptr)
-      continue;
-
-    // Otherwise, we successfully got the build id so we're done
-    buildId = buildInfo->GetBuildId();
-    zeroBuild.mMetaCog = metaCog;
-    return;
-  }
-
-  // Otherwise, we failed to find a meta file to load build information from.
-  // So first always create a meta cog, then we need to try and extract the
-  // build id. In this case we first want to try and parse the old file naming
-  // format to extract a build id.
-  zeroBuild.CreateMetaIfNull();
-  ZeroBuildContent* buildInfo = zeroBuild.mMetaCog->has(ZeroBuildContent);
-
-  String year, month, day;
-  bool oldFormatParsed = buildId.Parse(buildPath, year, month, day);
-  // If the old parsing method succeeded then make sure to set the release date
-  if (oldFormatParsed)
-  {
-    buildInfo->mChangeSetDate = String::Format("%s-%s-%s", year.c_str(), month.c_str(), day.c_str());
-    return;
-  }
-
-  // If we failed to parse then we have to generate a unique random name
-  buildId = BuildId::GetCurrentLauncherId();
-  // First set the branch to mark this as a unique build
-  buildId.mExperimentalBranchName = "Custom";
-
-  // Set the major version to a hash of the file
-  Array<byte> bytes;
-  Zilch::Sha1Builder sha1Builder;
-  sha1Builder.Append(file);
-  sha1Builder.OutputHash(bytes);
-  buildId.mMajorVersion = Math::Abs((int)HashString((char*)bytes.Data(), bytes.Size()));
-
-  // Set the revision id to a hash of the file's date time
-  CalendarDateTime dateTime;
-  GetFileDateTime(buildPath, dateTime);
-  buildId.mRevisionId = Math::Abs((int)HashString((char*)&dateTime, sizeof(CalendarDateTime)));
-
-  // Also set the release date string
-  buildInfo->mChangeSetDate = String::Format("%d-%d-%d", dateTime.Year, dateTime.Month + 1, dateTime.Day);
 }
 
 Cog* VersionSelector::ExtractLocalTemplateMetaAndImages(Archive& archive,
@@ -862,7 +746,6 @@ BackgroundTask* VersionSelector::InstallVersion(ZeroBuild* standalone)
   // Get the install path for this build
   standalone->mInstallLocation = GetDefaultInstallLocation(buildId);
 
-  job->mMetaContents = standalone->SaveMetaFileToString();
   job->mInstallLocation = standalone->mInstallLocation;
 
   // there are several different scenarios that want to install then do
@@ -1005,8 +888,7 @@ ZeroBuild* VersionSelector::FindExactVersion(CachedProject* cachedProject)
   // display the preferred platform then always try to find the current
   // launcher's platform build.
   BuildId buildId = cachedProject->GetBuildId();
-  if (mConfig->mDisplayOnlyPreferredPlatform)
-    buildId.mPlatform = GetPlatformString();
+  buildId.SetToThisPlatform();
 
   // If we find a matching build then return it
   ZeroBuild* matchingBuild = mVersionMap.FindValue(buildId, nullptr);
@@ -1132,16 +1014,21 @@ WarningLevel::Enum VersionSelector::CheckVersionForProject(ZeroBuild* standalone
   BuildId projectId = cachedProject->GetBuildId();
   BuildUpdateState::Enum updateState = projectId.CheckForUpdate(buildId);
 
-  // If we cross build branches
-  if (updateState == BuildUpdateState::DifferentBranch)
+  if (updateState == BuildUpdateState::DifferentApplication)
   {
-    warningString = "Changing to a different branch. Are you Sure?";
+    warningString = "Changing to a different application. Are you sure?";
+    return WarningLevel::Severe;
+  }
+  // If we cross build branches
+  else if (updateState == BuildUpdateState::DifferentBranch)
+  {
+    warningString = "Changing to a different branch. Are you sure?";
     return WarningLevel::Basic;
   }
   // If we try to go to an older version (breaking changes older as well)
   else if (updateState == BuildUpdateState::Older || updateState == BuildUpdateState::OlderBreaking)
   {
-    warningString = "Reverting to an old version. Are you Sure?";
+    warningString = "Reverting to an old version. Are you sure?";
     return WarningLevel::Basic;
   }
   // If we try to update past a major version
@@ -1231,12 +1118,7 @@ String VersionSelector::GetInstallLocation(ZeroBuild* standalone)
 
 String VersionSelector::GetDefaultInstallLocation(const BuildId& buildId)
 {
-  // Build the build's path as: Branch/Major.Minor.Patch.RevisionId/Platform
-  String branch = buildId.mExperimentalBranchName;
-  if (branch.Empty())
-    branch = "Master";
-  String coreVersionId = buildId.GetMajorMinorPatchRevisionIdString();
-  return FilePath::Combine(GetRootInstallLocation(), branch, coreVersionId, buildId.mPlatform);
+  return FilePath::Combine(GetRootInstallLocation(), buildId.GetFullId());
 }
 
 String VersionSelector::GetMarkedBadPath(ZeroBuild* standalone)

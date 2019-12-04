@@ -40,6 +40,7 @@ const dirs = (() => {
   const resources = path.join(repo, "Resources");
   const build = path.join(repo, "Build");
   const prebuiltContent = path.join(build, "PrebuiltContent");
+  const includedBuilds = path.join(build, "IncludedBuilds");
   const packages = path.join(build, "Packages");
   const page = path.join(build, "Page");
   const downloads = path.join(build, "Downloads");
@@ -47,6 +48,7 @@ const dirs = (() => {
   return {
     build,
     downloads,
+    includedBuilds,
     libraries,
     packages,
     page,
@@ -58,6 +60,7 @@ const dirs = (() => {
 
 const executables = [
   {
+    copyToIncludedBuilds: true,
     name: "WelderEditor",
     nonResourceDependencies: [
       "Data",
@@ -77,9 +80,12 @@ const executables = [
     vfsOnlyPackage: ["LauncherTemplates"]
   },
   {
+    // Since the launcher includes the editor build, it must come afterwards.
+    copyToIncludedBuilds: false,
     name: "WelderLauncher",
     nonResourceDependencies: [
       "Data",
+      path.join("Build", "IncludedBuilds"),
       repoRootFile
     ],
     prebuild: true,
@@ -564,7 +570,7 @@ const makeExecutableZip = async (cmakeVariablesOptional, executable, fileSystemZ
 
 const generateBinaryCArray = (id, buffer) => `unsigned char ${id}Data[] = {${buffer.join(",")}};\nunsigned int ${id}Size = ${buffer.length};\n`;
 
-const buildvfs = async (cmakeVariables, buildDir, combo) => {
+const buildvfs = async (cmakeVariablesOptional, buildDir, combo) => {
   for (const executable of executables) {
     console.log(`Building virtual file system for ${executable.name}`);
 
@@ -574,7 +580,7 @@ const buildvfs = async (cmakeVariables, buildDir, combo) => {
     const makeFsBuffer = async () => {
       if (combo.vfs) {
         const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
-        await makeExecutableZip(cmakeVariables, executable, fileSystemZip);
+        await makeExecutableZip(cmakeVariablesOptional, executable, fileSystemZip);
         return fs.readFileSync(fileSystemZip);
       }
       return Buffer.alloc(1);
@@ -605,6 +611,11 @@ const cmake = async (options) => {
       "pipe"
     ]
   };
+  const branch = await execSimple("git", [
+    "rev-parse",
+    "--abbrev-ref",
+    "HEAD"
+  ], gitOptions);
   const revision = await execSimple("git", [
     "rev-list",
     "--count",
@@ -686,6 +697,8 @@ const cmake = async (options) => {
   }
 
   const cmakeArgs = [
+    `-DWELDER_MS_SINCE_EPOCH=${Date.now()}`,
+    `-DWELDER_BRANCH=${branch}`,
     `-DWELDER_REVISION=${revision}`,
     `-DWELDER_SHORT_CHANGESET=${shortChangeset}`,
     `-DWELDER_CHANGESET=${changeset}`,
@@ -693,6 +706,7 @@ const cmake = async (options) => {
     `-DWELDER_MAJOR_VERSION=${version.major}`,
     `-DWELDER_MINOR_VERSION=${version.minor}`,
     `-DWELDER_PATCH_VERSION=${version.patch}`,
+    `-DWELDER_CONFIG=${combo.config}`,
     "-G",
     combo.builder,
     ...builderArgs,
@@ -943,6 +957,7 @@ const pack = async (options) => {
 
   const cmakeVariables = readCmakeVariables(buildDir);
 
+  rimraf.sync(dirs.includedBuilds);
   for (const executable of executables) {
     const library = executable.name;
     console.log(`Packaging library ${library}`);
@@ -956,19 +971,22 @@ const pack = async (options) => {
       map((file) => path.join(executableDir, file));
 
     /*
-     * This needs to match GetVersionListingTaskJob in LauncherTasks.cpp.
-     * Tags.Major.Minor.Patch.Revision.ShortChangeset.Platform.Architecture.Extension
-     * Example: WelderEditor.1.5.0.1501.fb02756c46a4.Windows.x86.zip
+     * This needs to match index.js:pack/Standalone.cpp:BuildId::Parse/BuildId::GetFullId/BuildVersion.cpp:GetBuildVersionName
+     * Application.Branch.Major.Minor.Patch.Revision.ShortChangeset.MsSinceEpoch.TargetOs.Architecture.Config.Extension
+     * Example: WelderEditor.master.1.5.0.1501.fb02756c46a4.1574702096290.Windows.x86.Release.zip
      */
     const name =
       `${library}.` +
+      `${cmakeVariables.WELDER_BRANCH}.` +
       `${cmakeVariables.WELDER_MAJOR_VERSION}.` +
       `${cmakeVariables.WELDER_MINOR_VERSION}.` +
       `${cmakeVariables.WELDER_PATCH_VERSION}.` +
       `${cmakeVariables.WELDER_REVISION}.` +
       `${cmakeVariables.WELDER_SHORT_CHANGESET}.` +
+      `${cmakeVariables.WELDER_MS_SINCE_EPOCH}.` +
       `${combo.alias}.` +
-      `${combo.architecture}.zip`;
+      `${combo.architecture}.` +
+      `${cmakeVariables.WELDER_CONFIG}.zip`;
 
     const packageZip = path.join(dirs.packages, name);
     tryUnlinkSync(packageZip);
@@ -981,6 +999,11 @@ const pack = async (options) => {
 
     // Keep files as absolute, since we want to only add the file names to the zip.
     await zipAdd(dirs.repo, packageZip, files);
+
+    if (executable.copyToIncludedBuilds) {
+      const extractDir = path.join(dirs.includedBuilds, path.basename(packageZip));
+      await zipExtract(packageZip, extractDir);
+    }
 
     // On Emscripten we also output a directory (this can be used to publish to github pages).
     if (combo.toolchain === "Emscripten") {
@@ -1043,10 +1066,17 @@ const disk = () => {
 const all = async (options) => {
   await format({...options, validate: true});
   await cmake(options);
+  // Build the executable so we can prebuild content (no prebuilt content or included builds for the launcher yet)
   await build(options);
   await prebuilt(options);
+  // Build again so that platforms with a VFS will have the prebuilt content
   await build(options);
-  // /await documentation(options);
+  // Pack up the builds so that we can include the build for the launcher
+  await pack(options);
+  // Build again so that if the launcher uses a VFS it will have the packaged build
+  await build(options);
+  await documentation(options);
+  // Finally, pack everything up (with included builds and prebuilt content)
   await pack(options);
 };
 

@@ -11,7 +11,7 @@ DeclareEvent(TemplateProjectPreviewUpdated);
 
 DeclareEnum4(InstallState, NotInstalled, Installing, Installed, Uninstalling);
 // How different two build ids are (typically for project to build)
-DeclareEnum6(BuildUpdateState, DifferentBranch, Older, Newer, NewerBreaking, OlderBreaking, Same);
+DeclareEnum7(BuildUpdateState, DifferentApplication, DifferentBranch, Older, Newer, NewerBreaking, OlderBreaking, Same);
 
 typedef HashSet<String> TagSet;
 void BuildTagSetFromTokenDelimitedList(StringParam tagData, TagSet& tagSet, char delimiter);
@@ -28,30 +28,25 @@ public:
   /// avoid re-writing the save logic as projects don't save the platform.
   void Serialize(Serializer& stream, bool includePlatform);
 
-  /// Get a build id for the current version of the launcher.
+  /// Get a build id for the current version of whatever application is running.
   /// Mostly used as a fallback method for some cases that should never happen.
-  static BuildId GetCurrentLauncherId();
+  static BuildId GetCurrentApplicationId();
 
-  /// Legacy for when no meta exists. Parse a build's name and extract id
-  /// information.
+  /// Parse a build's name and extract id information.
   bool Parse(StringParam buildName);
-  /// Same as above, but also saves the date-time information while setting the
-  /// revision id.
-  bool Parse(StringParam buildName, String& year, String& month, String& day);
 
-  /// Get the display string for this build. Optionally show
-  /// the platform (depending on various settings).
-  String ToDisplayString(bool showPlatform = false) const;
-  /// returns the string of all the basic version numbers put together.
-  /// Currently used to create the folder for the build.
-  String GetMajorMinorPatchRevisionIdString() const;
-  /// Get a unique string that will always be consistent.
-  /// Needed for uniquely identifying/hashing a build.
-  String ToIdString() const;
+  /// Parse a build and require it to be parsed properly (or notify with an error).
+  bool ParseRequired(StringParam buildName);
+
   /// Returns the full unique id of a build. Parts of the id can be
   /// disabled for things like display names and whatnot. A shared helper
   /// function.
-  String GetFullId(bool showExperimentalBranch, bool showChangeset, bool showPlatform) const;
+  String GetFullId() const;
+  /// Returns the version only, such as "1.0.0.1234".
+  String GetVersionString() const;
+
+  /// Check if this build id is empty.
+  bool IsEmpty() const;
 
   // HashPolicy Interface
   size_t Hash() const;
@@ -64,13 +59,27 @@ public:
   // Is 'this' build older than 'rhs'.
   bool IsOlderThan(const BuildId& rhs) const;
 
-  String mExperimentalBranchName;
-  String mPlatform;
+  bool IsPlatformEmpty() const;
+  bool IsForThisPlatform() const;
+  void SetToThisPlatform();
+
+  // Get the date in the format YYYY-MM-DD
+  String GetChangeSetDate() const;
+
+  static String GetMasterBranch();
+
+  String mApplication;
+  String mBranch;
   int mMajorVersion;
   int mMinorVersion;
   int mPatchVersion;
   int mRevisionId;
   String mShortChangeSet;
+  u64 mMsSinceEpoch;
+  String mTargetOs;
+  String mArchitecture;
+  String mConfig;
+  String mPackageExtension;
 };
 
 /// Represents a standalone "installer" of zero that is either installed locally
@@ -90,7 +99,7 @@ public:
 
   /// A display string for this build. Note: this is not safe as a
   /// unique identifier. Use the BuildId directly as a unique Id.
-  String GetDisplayString(bool showPlatform = false);
+  String GetDisplayString();
   /// A string for debug printing the build id
   String GetDebugIdString();
 
@@ -99,22 +108,10 @@ public:
 
   String GetDownloadUrl();
 
-  /// Save the stored meta cog to a file
-  void SaveMetaFile(StringParam filePath);
-  /// Save the store meta cog to a string. Needed to safely run on another
-  // thread while serialization isn't thread-safe.
-  String SaveMetaFileToString();
-  static String GetMetaFilePath(StringParam basePath);
-
   // If we don't already have a meta cog, then create one from the empty
   // archetype and make sure it has all of the necessary components. Returns
   // true if the meta was null.
   bool CreateMetaIfNull();
-
-  // Given a legacy build name, parse out the date-time and revision id.
-  // Returns false if the build's name didn't match the legacy pattern.
-  static bool ParseLegacyBuildName(StringParam buildName, String& year, String& month, String& day, String& revisionId);
-  void GetReleaseDate(String& year, String& month, String& day);
 
   bool IsBad();
 

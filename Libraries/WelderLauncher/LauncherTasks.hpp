@@ -12,7 +12,7 @@ class GetVersionListingTaskJob : public DownloadTaskJob
 public:
   typedef GetVersionListingTaskJob ZilchSelf;
 
-  GetVersionListingTaskJob(bool launcher);
+  GetVersionListingTaskJob(StringParam applicationName);
 
   /// Job Interface.
   void Execute() override;
@@ -21,7 +21,7 @@ public:
   void PopulatePackageList();
 
   Array<Cog*> mPackages;
-  bool mLauncher;
+  String mApplicationName;
 };
 
 class DownloadImageTaskJob : public DownloadTaskJob
@@ -79,7 +79,6 @@ public:
   void OnReponse(WebResponseEvent* event);
 
   String mInstallLocation;
-  String mMetaContents;
 };
 
 class InstallBuildTaskJob : public BackgroundTaskJob
@@ -95,7 +94,6 @@ public:
   void InstallBuild();
 
   String mData;
-  String mMetaContents;
   String mInstallLocation;
 };
 
@@ -150,7 +148,6 @@ public:
   String mTemplateInstallLocation;
   /// What the name of the template is to install (so the file name)
   String mTemplateNameWithoutExtension;
-  String mMetaContents;
 };
 
 // Downloads a template (if needed) and creates a new project from that

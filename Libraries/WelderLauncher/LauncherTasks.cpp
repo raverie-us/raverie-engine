@@ -4,9 +4,9 @@
 namespace Zero
 {
 
-GetVersionListingTaskJob::GetVersionListingTaskJob(bool launcher) :
+GetVersionListingTaskJob::GetVersionListingTaskJob(StringParam applicationName) :
     DownloadTaskJob(Urls::cApiBuilds, cCacheSeconds),
-    mLauncher(launcher)
+    mApplicationName(applicationName)
 {
 }
 
@@ -51,12 +51,6 @@ void GetVersionListingTaskJob::PopulatePackageList()
   static const String cJsonUpdatedAt("updated_at");
   static const String cJsonBody("body");
 
-  // This needs to match the index.js build script.
-  // Tags.Major.Minor.Patch.Revision.ShortChangeset.Platform.Architecture.Extension
-  // Example: WelderEditor.1.5.0.1501.fb02756c46a4.Windows.x86.zip
-  static const Regex cNameRegex("([a-zA-Z0-9_,]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)\\."
-                                "([0-9a-fA-F]+)\\.([a-zA-Z0-9_]+)\\.([a-zA-Z0-9_]+)\\.([a-zA-Z0-9_]+)");
-
   forRange (JsonValue* jsonRelease, jsonReleases->ArrayElements)
   {
     JsonValue* jsonAssets = jsonRelease->GetMember(cJsonAssets);
@@ -69,19 +63,10 @@ void GetVersionListingTaskJob::PopulatePackageList()
     {
       String name = jsonAsset->MemberAsString(cJsonName);
 
-      Matches matches;
-      cNameRegex.Search(name, matches);
-
-      // Make sure the regular expression matched (if not, it may be some other
-      // release that's not a zerobuild).
-      if (matches.Empty())
+      BuildId id;
+      if (!id.Parse(name))
         continue;
-
-      // 1    2     3     4     5        6              7        8            9
-      // Tags.Major.Minor.Patch.Revision.ShortChangeset.Platform.Architecture.Extension
-      String tags = matches[1];
-      bool isLauncher = tags.Contains(GetApplicationName());
-      if (isLauncher != mLauncher)
+      if (mApplicationName != GetApplicationName())
         continue;
 
       Cog* cog = space->Create(emptyArchetype);
@@ -90,24 +75,8 @@ void GetVersionListingTaskJob::PopulatePackageList()
       ZeroBuildContent* zeroBuildContent = HasOrAdd<ZeroBuildContent>(cog);
       zeroBuildContent->mPackageName = name;
 
-      zeroBuildContent->mTags = matches[1];
-      ToValue(matches[2], zeroBuildContent->mBuildId.mMajorVersion);
-      ToValue(matches[3], zeroBuildContent->mBuildId.mMinorVersion);
-      ToValue(matches[4], zeroBuildContent->mBuildId.mPatchVersion);
-      ToValue(matches[5], zeroBuildContent->mBuildId.mRevisionId);
-      zeroBuildContent->mBuildId.mShortChangeSet = matches[6];
-      // This platform name must match the name in GetPlatformString
-      zeroBuildContent->mBuildId.mPlatform = BuildString(matches[7], "_", matches[8]);
-      zeroBuildContent->mPackageExtension = matches[9];
-
-      zeroBuildContent->mChangeSetDate = jsonAsset->MemberAsString(cJsonUpdatedAt);
-
-      // Remove the time portion (otherwise, the date is in the exact format we
-      // expect: YYYY-MM-DD).
-      StringIterator begin = zeroBuildContent->mChangeSetDate.Begin();
-      StringIterator end = zeroBuildContent->mChangeSetDate.FindFirstOf(Rune('T')).Begin();
-      if (!end.Empty())
-        zeroBuildContent->mChangeSetDate = StringRange(begin, end);
+      zeroBuildContent->mBuildId = id;
+      zeroBuildContent->mPackageExtension = id.mPackageExtension;
 
       zeroBuildContent->mDownloadUrl = jsonAsset->MemberAsString(cJsonDownloadUrl);
 
@@ -227,14 +196,9 @@ void DownloadStandaloneTaskJob::Execute()
   DownloadTaskJob::Execute();
 }
 
-void Install(StringParam installLocation, StringParam metaContents, StringParam data)
+void Install(StringParam installLocation, StringParam data)
 {
   EnsureEmptyDirectory(installLocation);
-
-  // Save the meta file out for this build (cached as a string to avoid
-  // threading issues)
-  String metaFilePath = ZeroBuild::GetMetaFilePath(installLocation);
-  WriteStringRangeToFile(metaFilePath, metaContents);
 
   // decompress the archive to our install location
   Archive archive(ArchiveMode::Decompressing);
@@ -279,7 +243,7 @@ void DownloadStandaloneTaskJob::OnReponse(WebResponseEvent* event)
       return;
     }
 
-    Install(mInstallLocation, mMetaContents, data);
+    Install(mInstallLocation, data);
     mState = BackgroundTaskState::Completed;
   }
   else
@@ -319,7 +283,7 @@ void InstallBuildTaskJob::Execute()
 
 void InstallBuildTaskJob::InstallBuild()
 {
-  Install(mInstallLocation, mMetaContents, mData);
+  Install(mInstallLocation, mData);
   mState = BackgroundTaskState::Completed;
 }
 
@@ -501,9 +465,6 @@ void DownloadTemplateTaskJob::OnReponse(WebResponseEvent* event)
 
   // Save the template meta file
   FilePath::GetFileNameWithoutExtension(mTemplateNameWithoutExtension);
-  String metaFilePath =
-      FilePath::CombineWithExtension(mTemplateInstallLocation, mTemplateNameWithoutExtension, ".meta");
-  WriteToFile(metaFilePath.c_str(), (byte*)mMetaContents.c_str(), mMetaContents.SizeInBytes());
 
   // Save the template zip
   String templateFilePath = FilePath::CombineWithExtension(

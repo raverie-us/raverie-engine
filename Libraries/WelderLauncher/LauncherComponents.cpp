@@ -26,7 +26,6 @@ ZilchDefineType(ZeroBuildContent, builder, type)
 void ZeroBuildContent::Serialize(Serializer& stream)
 {
   mBuildId.Serialize(stream, true);
-  SerializeNameDefault(mChangeSetDate, String());
   SerializeNameDefault(mDisplayName, String());
   SerializeNameDefault(mPackageName, String());
   SerializeNameDefault(mTags, String());
@@ -147,7 +146,6 @@ void ZeroTemplate::Initialize(CogInitializer& initializer)
 void ZeroTemplate::Parse()
 {
   mTagSet.Clear();
-  mBuildIds.Clear();
 
   // Populate the tag set for easy querying. This set should stay
   // up-to-date as long as AddTag is called (no way to remove tags now)
@@ -176,11 +174,11 @@ String ZeroTemplate::GetFullTemplateVersionName()
     BuildIdRange& idRange = mBuildIds[i];
     // Always print out the min build id, but only print out the max if we have
     // one
-    builder.Append(idRange.mMin.ToDisplayString(false));
+    builder.Append(idRange.mMin.GetFullId());
     if (idRange.mHasMax)
     {
       builder.Append("-");
-      builder.Append(idRange.mMax.ToDisplayString(false));
+      builder.Append(idRange.mMax.GetFullId());
     }
     // Add the separator token up to the last id range
     if (i != mBuildIds.Size() - 1)
@@ -193,7 +191,16 @@ bool ZeroTemplate::ParseVersionId()
 {
   // Clear the old list of build ids and parse the string
   mBuildIds.Clear();
-  return ParseVersionId(mVersionId, mBuildIds);
+  bool result = ParseVersionId(mVersionId, mBuildIds);
+
+  if (!mSpecificVersion.IsEmpty())
+  {
+    BuildIdRange& idRange = mBuildIds.PushBack();
+    idRange.mMin = mSpecificVersion;
+    idRange.mMax = mSpecificVersion;
+    idRange.mHasMax = true;
+  }
+  return result;
 }
 
 bool ZeroTemplate::TestBuildId(const BuildId& buildId)
@@ -296,7 +303,7 @@ bool ZeroTemplate::ParseVersionId(StringParam versionId, BuildId& buildId)
   // the branch
   if (!IsNumber(tokens[0]))
   {
-    buildId.mExperimentalBranchName = tokens[0];
+    buildId.mBranch = tokens[0];
     ++index;
   }
 
