@@ -200,12 +200,10 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
   }
 }
 
-cwstr windowsVerbNames[] = {NULL, L"open", L"edit", L"run"};
-
-bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
+bool SystemOpenFile(Status& status, cstr file, cwstr verb, cstr parameters = nullptr, cstr workingDirectory = nullptr)
 {
   HINSTANCE success = ShellExecute(NULL,
-                                   windowsVerbNames[verb],
+                                   verb,
                                    Widen(file).c_str(),
                                    Widen(parameters).c_str(),
                                    Widen(workingDirectory).c_str(),
@@ -223,6 +221,34 @@ bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr 
   return false;
 }
 
+bool ShellOpenDirectory(StringParam directory)
+{
+  Status status;
+  SystemOpenFile(status, directory.c_str(), L"open");
+  return status.Succeeded();
+}
+
+bool ShellOpenFile(StringParam file)
+{
+  Status status;
+  SystemOpenFile(status, file.c_str(), NULL);
+  return status.Succeeded();
+}
+
+bool ShellEditFile(StringParam file)
+{
+  Status status;
+  SystemOpenFile(status, file.c_str(), L"edit");
+  return status.Succeeded();
+}
+
+bool ShellOpenApplication(StringParam file, StringParam parameters)
+{
+  Status status;
+  SystemOpenFile(status, file.c_str(), NULL, parameters.c_str());
+  return status.Succeeded();
+}
+
 bool SupportsDownloadingFiles()
 {
   return false;
@@ -235,7 +261,7 @@ void DownloadFile(cstr fileName, const DataBlock& data)
 void OpenUrl(cstr url)
 {
   Status status;
-  SystemOpenFile(status, url);
+  SystemOpenFile(status, url, L"open", NULL, NULL);
 }
 
 void MarkAsExecutable(cstr fileName)
@@ -429,6 +455,44 @@ String GetVersionString()
   }
 }
 
+bool GetRegistryValue(void* key, StringParam subKey, StringParam value, String& result)
+{
+  HKEY hRoot = (HKEY)key;
+
+  // Read OEM Name from the key
+  wchar_t nameBuffer[256] = {0};
+  DWORD length = sizeof(nameBuffer);
+
+  HKEY hKey;
+  LONG queryResult = RegOpenKeyEx(hRoot, Widen(subKey).c_str(), 0, KEY_QUERY_VALUE, &hKey);
+  if (queryResult != ERROR_SUCCESS)
+    return false;
+
+  queryResult = RegQueryValueEx(hKey, Widen(value).c_str(), 0, 0, (LPBYTE)nameBuffer, &length);
+  if (queryResult != ERROR_SUCCESS)
+    return false;
+
+  result = Narrow(nameBuffer);
+  return true;
+}
+
+String GetInstalledExecutable(StringParam organization, StringParam name, StringParam guid)
+{
+  String path1 = String::Format("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{%s}_is1", guid.c_str());
+  String path2 = String::Format("SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\Cur"
+                                "rentVersion\\Uninstall\\{%s}}_is1",
+                                guid.c_str());
+  static const String cInstallLocation("InstallLocation");
+  String directory;
+  bool result = GetRegistryValue(HKEY_CURRENT_USER, path1, cInstallLocation, directory) ||
+                GetRegistryValue(HKEY_CURRENT_USER, path2, cInstallLocation, directory) ||
+                GetRegistryValue(HKEY_LOCAL_MACHINE, path1, cInstallLocation, directory) ||
+                GetRegistryValue(HKEY_LOCAL_MACHINE, path2, cInstallLocation, directory);
+  if (!result)
+    return GetRelativeExecutable(organization, name);
+  return FilePath::Combine(directory, organization + name + cExecutableExtensionWithDot);
+}
+
 } // namespace Os
 
 u64 GenerateUniqueId64()
@@ -470,41 +534,4 @@ u64 GenerateUniqueId64()
   return newId;
 }
 
-bool GetRegistryValue(void* key, StringParam subKey, StringParam value, String& result)
-{
-  HKEY hRoot = (HKEY)key;
-
-  // Read OEM Name from the key
-  wchar_t nameBuffer[256] = {0};
-  DWORD length = sizeof(nameBuffer);
-
-  HKEY hKey;
-  LONG queryResult = RegOpenKeyEx(hRoot, Widen(subKey).c_str(), 0, KEY_QUERY_VALUE, &hKey);
-  if (queryResult != ERROR_SUCCESS)
-    return false;
-
-  queryResult = RegQueryValueEx(hKey, Widen(value).c_str(), 0, 0, (LPBYTE)nameBuffer, &length);
-  if (queryResult != ERROR_SUCCESS)
-    return false;
-
-  result = Narrow(nameBuffer);
-  return true;
-}
-
-String GetInstalledExecutable(StringParam organization, StringParam name, StringParam guid)
-{
-  String path1 = String::Format("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{%s}_is1", guid.c_str());
-  String path2 = String::Format("SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\Cur"
-                                "rentVersion\\Uninstall\\{%s}}_is1",
-                                guid.c_str());
-  static const String cInstallLocation("InstallLocation");
-  String directory;
-  bool result = GetRegistryValue(HKEY_CURRENT_USER, path1, cInstallLocation, directory) ||
-                GetRegistryValue(HKEY_CURRENT_USER, path2, cInstallLocation, directory) ||
-                GetRegistryValue(HKEY_LOCAL_MACHINE, path1, cInstallLocation, directory) ||
-                GetRegistryValue(HKEY_LOCAL_MACHINE, path2, cInstallLocation, directory);
-  if (!result)
-    return GetRelativeExecutable(organization, name);
-  return FilePath::Combine(directory, organization + name + cExecutableExtensionWithDot);
-}
 } // namespace Zero

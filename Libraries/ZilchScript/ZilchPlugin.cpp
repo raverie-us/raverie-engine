@@ -348,8 +348,8 @@ void ZilchPluginSource::OpenIde()
     return;
 
   String ideFile = FilePath::CombineWithExtension(codeDir, Name, ".bat");
-  Os::ShellOpenFile(status, ideFile);
-  DoNotifyStatus(status);
+  if (!Os::ShellOpenFile(ideFile))
+    DoNotifyError("Failed to open Ide", String::Format("Ide: %s", ideFile.c_str()));
 
 #else
   DoNotifyErrorNoAssert("Zilch Plugin", "No IDE was detected or supported on this platform");
