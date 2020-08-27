@@ -801,7 +801,7 @@ bool WindowsOpenClipboard(UINT format)
 {
   if (!OpenClipboard((HWND)0))
     return false;
-  if (!IsClipboardFormatAvailable(CF_UNICODETEXT))
+  if (!IsClipboardFormatAvailable(format))
   {
     CloseClipboard();
     return false;
