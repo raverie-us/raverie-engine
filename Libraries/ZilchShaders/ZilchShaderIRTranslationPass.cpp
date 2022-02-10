@@ -29,7 +29,7 @@ String ZilchShaderIRTranslationPass::SpirvDiagnosticToString(spv_diagnostic& dia
     builder << "error: ";
     if (diagnostic->position.index > 0)
       builder << ToString(diagnostic->position.index) << ": ";
-    builder << diagnostic->error << "\n";
+    builder << ToString(diagnostic->error) << "\n";
   }
   return builder.ToString();
 }
