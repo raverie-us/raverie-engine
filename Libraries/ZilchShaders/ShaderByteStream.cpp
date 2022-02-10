@@ -72,7 +72,7 @@ void ShaderStreamWriter::Write(StringParam text)
   while (i < totalSize)
   {
     int32 word = 0;
-    for (size_t j = 0; j < 4 && i + j < totalSize; ++j)
+    for (size_t j = 0; j < 4 && i + j < byteCount; ++j)
     {
       int32 shiftedData = *(data + i + j) << (j * 8);
       word = word | shiftedData;
