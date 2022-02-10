@@ -818,7 +818,10 @@ ShaderInput ZilchShaderGenerator::CreateShaderInput(StringParam fragmentName,
   }
   else
   {
-    shaderInput.mTranslatedInputName = BuildString("Material.", GenerateSpirVPropertyName(inputName, fragmentName));
+    shaderInput.mTranslatedInputName = BuildString("Material_",
+                                                     FragmentType::Names[shaderTypeMeta->mFragmentType],
+                                                     ".",
+                                                     GenerateSpirVPropertyName(inputName, fragmentName));
     // SPIR-V doesn't allow boolean uniforms so we convert boolean inputs from
     // Zilch to integers.
     if (type == ShaderInputType::Bool)

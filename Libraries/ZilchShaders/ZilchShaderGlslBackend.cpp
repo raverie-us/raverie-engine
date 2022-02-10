@@ -127,6 +127,38 @@ void ZilchShaderGlslBackend::FixInterfaceBlockNames(GlslBackendInternalData& int
   }
 }
 
+void ZilchShaderGlslBackend::FixUniformBufferNameoverlaps(GlslBackendInternalData& internalData)
+{
+  spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
+  spirv_cross::ShaderResources* resources = internalData.mResources;
+
+  spv::ExecutionModel executionMode = compiler->get_execution_model();
+  FragmentType::Enum shaderStage = FragmentType::Vertex;
+  if (executionMode == spv::ExecutionModelVertex)
+    shaderStage = FragmentType::Vertex;
+  else if (executionMode == spv::ExecutionModelGeometry)
+    shaderStage = FragmentType::Geometry;
+  else if (executionMode == spv::ExecutionModelFragment)
+    shaderStage = FragmentType::Pixel;
+  else if (executionMode == spv::ExecutionModelGLCompute)
+    shaderStage = FragmentType::Compute;
+
+  for (size_t i = 0; i < resources->uniform_buffers.size(); ++i)
+  {
+    auto&& uniformBuffer = resources->uniform_buffers[i];
+    std::string bufferName = compiler->get_name(uniformBuffer.id);
+    // It's a linker error in glsl (on some drivers) for multiple stages to have the same buffer
+    // names with different definitions. As each stage is currently compiled independently, the best
+    // we can do is to force the buffer named "Material" to be named differently. In particular, appending the stage
+    // name.
+    if (bufferName == "Material")
+    {
+      String materialBufferName = Zero::BuildString(bufferName.c_str(), "_", Zero::FragmentType::Names[shaderStage]);
+      compiler->set_name(uniformBuffer.id, materialBufferName.c_str());
+    }
+  }
+}
+
 void ZilchShaderGlslBackend::FindUsedSampledImageBindings(GlslBackendInternalData& internalData)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;

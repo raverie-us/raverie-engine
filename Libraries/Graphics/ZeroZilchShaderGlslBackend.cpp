@@ -99,6 +99,7 @@ bool ZeroZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult&
   // Combined sampled images (via the backend) don't get binding ids.
   // Assign ids based upon what is available.
   HandleCompiledSampledImages(internalData);
+  FixUniformBufferNameoverlaps(internalData);
 
   // Fetch the resources again (since we modified them)
   resources = compiler.get_shader_resources();
