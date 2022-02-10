@@ -150,7 +150,7 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
   // If we failed to start the process...
   if (!result)
   {
-    Console::Print(Filter::ErrorFilter, message.c_str());
+    Console::Print(Filter::ErrorFilter, "%s", message.c_str());
 
     // Show a message box instead
     message = BuildString(message, "\nWould you like to continue?");

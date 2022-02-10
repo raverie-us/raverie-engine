@@ -121,7 +121,7 @@ void StringBuilder::Append(cstr begin, uint sizeInBytes)
 void StringBuilder::Append(Rune rune)
 {
   byte utf8Bytes[4];
-  int bytesRead = UTF8::UnpackUtf8RuneIntoBuffer(rune, utf8Bytes);
+  size_t bytesRead = UTF8::UnpackUtf8RuneIntoBuffer(rune, utf8Bytes);
   ByteBuffer::Append(utf8Bytes, bytesRead);
 }
 

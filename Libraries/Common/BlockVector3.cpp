@@ -6,7 +6,7 @@ namespace Math
 
 uint BlockVector3::GetSize() const
 {
-  return mBlocks.Size();
+  return static_cast<uint>(mBlocks.Size());
 }
 
 void BlockVector3::SetSize(uint size)
@@ -80,7 +80,7 @@ void BlockVector3::Scale(const BlockVector3& rhs, BlockVector3& out) const
 
 uint BlockMatrix3::GetSize() const
 {
-  return mBlocks.Size();
+  return static_cast<uint>(mBlocks.Size());
 }
 
 void BlockMatrix3::SetSize(uint size)
@@ -109,7 +109,7 @@ Matrix3& BlockMatrix3::operator()(uint row, uint col)
 
 real& BlockMatrix3::GlobalIndex(uint row, uint col)
 {
-  uint size = mBlocks.Size() * 3;
+  uint size = GetSize() * 3;
   ErrorIf(row > size || col > size, "Math::BlockMatrix3 - Subscript out of range.");
 
   int blockRow = row / 3;
@@ -121,7 +121,7 @@ real& BlockMatrix3::GlobalIndex(uint row, uint col)
 
 BlockMatrix3 BlockMatrix3::Transposed() const
 {
-  uint size = mBlocks.Size();
+  uint size = GetSize();
   BlockMatrix3 result;
   result.SetSize(size);
   for (uint j = 0; j < size; ++j)
@@ -136,7 +136,7 @@ BlockMatrix3 BlockMatrix3::Transposed() const
 
 BlockMatrix3 BlockMatrix3::Transform(const BlockMatrix3& rhs) const
 {
-  uint size = mBlocks.Size();
+  uint size = GetSize();
   BlockMatrix3 result;
   result.SetSize(size);
   for (uint j = 0; j < size; ++j)

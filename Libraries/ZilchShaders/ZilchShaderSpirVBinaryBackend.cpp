@@ -551,21 +551,29 @@ void ZilchShaderSpirVBinaryBackend::WriteDebug(ZilchShaderIRType* type, ZilchSha
 {
   WriteDebugName(type, type->mDebugResultName, context);
 
-  // @JoshD: Fix to be a consistent order (this is hashmap order)
+  // Get indices to names for members
+  HashMap<int, String> memberIndicesToNames;
   AutoDeclare(memberNameRange, type->mMemberNamesToIndex.All());
   for (; !memberNameRange.Empty(); memberNameRange.PopFront())
   {
     AutoDeclare(pair, memberNameRange.Front());
+    memberIndicesToNames[pair.second] = pair.first;
+  }
+
+  // Walk all the member names in order
+  for (int i = 0; i < (int)memberIndicesToNames.Size(); ++i)
+  {
+    String name = memberIndicesToNames.FindValue(i, String());
 
     ShaderStreamWriter& streamWriter = *context->mStreamWriter;
-    size_t byteCount = streamWriter.GetPaddedByteCount(pair.first);
+    size_t byteCount = streamWriter.GetPaddedByteCount(name);
     size_t wordCount = byteCount / 4;
 
     int typeId = context->FindId(type);
     streamWriter.WriteInstruction(3 + (int16)wordCount, OpType::OpMemberName);
     streamWriter.Write(typeId);
-    streamWriter.Write(pair.second);
-    streamWriter.Write(pair.first);
+    streamWriter.Write(i);
+    streamWriter.Write(name);
   }
 }
 
