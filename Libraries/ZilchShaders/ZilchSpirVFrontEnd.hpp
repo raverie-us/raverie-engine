@@ -187,11 +187,19 @@ public:
   void PreWalkTemplateTypes(ZilchSpirVFrontEndContext* context);
   void PreWalkTemplateType(Zilch::BoundType* zilchType, ZilchSpirVFrontEndContext* context);
   void PreWalkClassVariables(Zilch::MemberVariableNode*& node, ZilchSpirVFrontEndContext* context);
-  void AddRuntimeArray(Zilch::MemberVariableNode* node, ZilchShaderIRType* varType, ZilchSpirVFrontEndContext* context);
+  void AddRuntimeArray(Zilch::MemberVariableNode* node,
+                       ZilchShaderIRType* varType,
+                       ShaderIRFieldMeta* fieldMeta,
+                       ZilchSpirVFrontEndContext* context);
   void AddGlobalVariable(Zilch::MemberVariableNode* node,
                          ZilchShaderIRType* varType,
+                         ShaderIRFieldMeta* fieldMeta,
                          spv::StorageClass storageClass,
                          ZilchSpirVFrontEndContext* context);
+  GlobalVariableData* CreateGlobalVariable(spv::StorageClass storageClass,
+                                           ZilchShaderIRType* varType,
+                                           StringParam varName,
+                                           ZilchSpirVFrontEndContext* context);
   void PreWalkClassConstructor(Zilch::ConstructorNode*& node, ZilchSpirVFrontEndContext* context);
   void PreWalkClassFunction(Zilch::FunctionNode*& node, ZilchSpirVFrontEndContext* context);
   void PreWalkMainFunction(Zilch::FunctionNode*& node, ZilchSpirVFrontEndContext* context);

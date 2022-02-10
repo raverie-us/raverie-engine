@@ -466,6 +466,25 @@ void ZilchSpirVFrontEnd::ParseAttributes(Zilch::Array<Zilch::Attribute>& zilchAt
       ValidateNameOverrideAttribute(shaderAttribute);
       ValidateAttributeExclusions(shaderAttribute, shaderAttributes, staticExclusions);
     }
+    else if (attributeName == nameSettings.mFragmentSharedAttribute)
+    {
+      ZilchShaderIRType* fieldShaderType = FindType(fieldMeta->mZilchType, nullptr);
+      ShaderIRAttribute* storageClassAttribute =
+          fieldShaderType->FindFirstAttribute(SpirVNameSettings::mStorageClassAttribute);
+
+      // Currently, fragment shared is only allowed on types that are stored
+      // globally (aka, types with non function storage class)
+      bool valid = false;
+      if (storageClassAttribute != nullptr)
+      {
+        spv::StorageClass forcedStorageClass = (spv::StorageClass)storageClassAttribute->mParameters[0].GetIntValue();
+        if (forcedStorageClass != spv::StorageClassFunction)
+          continue;
+      }
+      // Otherwise this type either doesn't have a forced storage class or is function storage class.
+      String msg = String::Format("Attribute [%s] is only valid on opaque data types", attributeName.c_str());
+      SendTranslationError(shaderAttribute->GetLocation(), msg);
+    }
     // Outputs
     else if (attributeName == nameSettings.mOutputAttribute)
     {
@@ -1326,7 +1345,7 @@ void ZilchSpirVFrontEnd::PreWalkClassVariables(Zilch::MemberVariableNode*& node,
   // zilch type's template name) then add a global runtime array.
   if (memberType->mZilchType->TemplateBaseName == SpirVNameSettings::mRuntimeArrayTypeName)
   {
-    AddRuntimeArray(node, memberType, context);
+    AddRuntimeArray(node, memberType, fieldMeta, context);
     return;
   }
 
@@ -1337,7 +1356,7 @@ void ZilchSpirVFrontEnd::PreWalkClassVariables(Zilch::MemberVariableNode*& node,
     // @JoshD: Right now I'm assuming this isn't a function storage class.
     // Change later?
     spv::StorageClass forcedStorageClass = (spv::StorageClass)storageClassAttribute->mParameters[0].GetIntValue();
-    AddGlobalVariable(node, memberType, forcedStorageClass, context);
+    AddGlobalVariable(node, memberType, fieldMeta, forcedStorageClass, context);
     return;
   }
 
@@ -1350,7 +1369,7 @@ void ZilchSpirVFrontEnd::PreWalkClassVariables(Zilch::MemberVariableNode*& node,
       AddSpecializationConstant(node, memberType, context);
     // Otherwise, add it as a global variables
     else
-      AddGlobalVariable(node, memberType, spv::StorageClassPrivate, context);
+      AddGlobalVariable(node, memberType, fieldMeta, spv::StorageClassPrivate, context);
     return;
   }
 
@@ -1360,6 +1379,7 @@ void ZilchSpirVFrontEnd::PreWalkClassVariables(Zilch::MemberVariableNode*& node,
 
 void ZilchSpirVFrontEnd::AddRuntimeArray(Zilch::MemberVariableNode* node,
                                          ZilchShaderIRType* varType,
+                                         ShaderIRFieldMeta* fieldMeta,
                                          ZilchSpirVFrontEndContext* context)
 {
   // Make sure no constructor call exists (illegal as this type
@@ -1394,30 +1414,54 @@ void ZilchSpirVFrontEnd::AddRuntimeArray(Zilch::MemberVariableNode* node,
     return;
   }
 
-  // Make a variable of the wrapper struct type
-  ZilchShaderIROp* globalVar = BuildIROpNoBlockAdd(OpType::OpVariable, zilchRuntimeArrayType->mPointerType, context);
-  // Runtime array structs must be of storage class storage buffer
-  ZilchShaderIRConstantLiteral* storageClassLiteral =
-      GetOrCreateConstantIntegerLiteral((int)spv::StorageClassStorageBuffer);
-  globalVar->mArguments.PushBack(storageClassLiteral);
-  // Mangle the variable name like other globals (including the fragment type
-  // name).
-  globalVar->mDebugResultName = GenerateSpirVPropertyName(node->Name.Token, context->mCurrentType);
-  // Add this field to our globals (so we can find it later)
-  ErrorIf(mLibrary->mZilchFieldToGlobalVariable.ContainsKey(node->CreatedField), "Global variable already exists");
-
-  // Create global variable data to store the instance and initializer function
-  GlobalVariableData* globalData = new GlobalVariableData();
-  mLibrary->mZilchFieldToGlobalVariable[node->CreatedField] = globalData;
-  globalData->mInstance = globalVar;
-  // Also map the instance for the backend
-  mLibrary->mGlobalVariableToZilchField[globalData->mInstance] = node->CreatedField;
+  // Otherwise we can create the runtime array (which is the same as creating a global)
+  AddGlobalVariable(node, varType, fieldMeta, spv::StorageClassStorageBuffer, context);
 }
 
 void ZilchSpirVFrontEnd::AddGlobalVariable(Zilch::MemberVariableNode* node,
                                            ZilchShaderIRType* varType,
+                                           ShaderIRFieldMeta* fieldMeta,
                                            spv::StorageClass storageClass,
                                            ZilchSpirVFrontEndContext* context)
+{
+  String varName = node->Name.Token;
+  SpirVNameSettings& nameSettings = mSettings->mNameSettings;
+
+  // Error check to make sure this global was only created once
+  ErrorIf(mLibrary->mZilchFieldToGlobalVariable.ContainsKey(node->CreatedField), "Global variable already exists");
+
+  GlobalVariableData* globalData = nullptr;
+  // Check if this field is marked as being shared across fragments
+  if (fieldMeta->ContainsAttribute(nameSettings.mFragmentSharedAttribute))
+  {
+    // Find if this shared field was already created
+    // (use the raw field name instead of a mangled name by fragment type)
+    FragmentSharedKey fragmentSharedKey(storageClass, varType, varName);
+    globalData = mLibrary->FindFragmentSharedVariable(fragmentSharedKey);
+    // If not, create the variable and map it by its key
+    if (globalData == nullptr)
+    {
+      globalData = CreateGlobalVariable(storageClass, varType, varName, context);
+      mLibrary->mFragmentSharedGlobalVariables[fragmentSharedKey] = globalData;
+    }
+  }
+  // Otherwise always create the field
+  else
+  {
+    // Update the name to be a proper property name (mangled by fragment name). Purely for debugging.
+    varName = GenerateSpirVPropertyName(varName, context->mCurrentType);
+    globalData = CreateGlobalVariable(storageClass, varType, varName, context);
+  }
+
+  // In either case, record how to look up the global variable from the field.
+  // This is necessary when we come across a member access later.
+  mLibrary->mZilchFieldToGlobalVariable[node->CreatedField] = globalData;
+}
+
+GlobalVariableData* ZilchSpirVFrontEnd::CreateGlobalVariable(spv::StorageClass storageClass,
+                                                             ZilchShaderIRType* varType,
+                                                             StringParam varName,
+                                                             ZilchSpirVFrontEndContext* context)
 {
   // Get the pointer type of this variable. We need to make sure the pointer types is
   // of the correct storage class (e.g. globals have to be Private, uniforms, etc...)
@@ -1425,20 +1469,24 @@ void ZilchSpirVFrontEnd::AddGlobalVariable(Zilch::MemberVariableNode* node,
   if (pointerType->mStorageClass != storageClass)
     pointerType = FindOrCreatePointerInterfaceType(mLibrary, varType, storageClass);
 
-  // Make a member variable with the specified storage class
+  // Make a member variable with the specified storage class and name
   ZilchShaderIROp* globalVar = BuildIROpNoBlockAdd(OpType::OpVariable, pointerType, context);
   globalVar->mArguments.PushBack(GetOrCreateConstantIntegerLiteral(storageClass));
-  // Name the variable. Include the owning type's name for clarity.
-  globalVar->mDebugResultName = GenerateSpirVPropertyName(node->Name.Token, context->mCurrentType);
-  // Add this field to our globals (so we can find it later)
-  ErrorIf(mLibrary->mZilchFieldToGlobalVariable.ContainsKey(node->CreatedField), "Global variable already exists");
+  globalVar->mDebugResultName = varName;
 
-  // Create global variable data to store the instance and initializer function
+  // Create global variable data to store the instance and
+  // initializer function (by default, the function is empty)
   GlobalVariableData* globalData = new GlobalVariableData();
-  mLibrary->mZilchFieldToGlobalVariable[node->CreatedField] = globalData;
   globalData->mInstance = globalVar;
-  // Also map the instance for the backend
-  mLibrary->mGlobalVariableToZilchField[globalData->mInstance] = node->CreatedField;
+
+  // Mark that this library owns the global
+  mLibrary->mOwnedGlobals.PushBack(globalData);
+
+  // Always map the variable for the backend so it can know if how to
+  // find the initializer function for a random op-code (if it's global)
+  mLibrary->mVariableOpLookupMap[globalVar] = globalData;
+
+  return globalData;
 }
 
 void ZilchSpirVFrontEnd::PreWalkClassConstructor(Zilch::ConstructorNode*& node, ZilchSpirVFrontEndContext* context)

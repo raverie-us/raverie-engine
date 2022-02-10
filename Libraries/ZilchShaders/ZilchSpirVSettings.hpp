@@ -77,6 +77,10 @@ public:
   String mAppBuiltInInputAttribute;
   String mPropertyInputAttribute;
   String mSpecializationConstantInputAttribute;
+  /// Used to represent that a property should be shared between all
+  /// fragments (instead of a unique copy per fragments). For instance,
+  /// this can be used to have multiple fragments reference the same RuntimeArrays.
+  String mFragmentSharedAttribute;
 
   String mOutputAttribute;
   String mFragmentOutputAttribute;

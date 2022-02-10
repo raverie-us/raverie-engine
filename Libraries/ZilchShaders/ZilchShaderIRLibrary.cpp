@@ -4,6 +4,47 @@
 namespace Zero
 {
 
+//-------------------------------------------------------------------FragmentSharedKey
+FragmentSharedKey::FragmentSharedKey()
+{
+  mStorageClass = spv::StorageClassFunction;
+  mFieldType = nullptr;
+}
+
+FragmentSharedKey::FragmentSharedKey(spv::StorageClass storageClass, ZilchShaderIRType* fieldType, StringParam varName)
+{
+  mStorageClass = storageClass;
+  mFieldType = fieldType;
+  mVariableName = varName;
+}
+
+size_t FragmentSharedKey::Hash() const
+{
+  size_t hash = 0;
+  HashCombine(hash, (int)mStorageClass);
+  HashCombine(hash, mFieldType);
+  HashCombine(hash, mVariableName);
+  return hash;
+}
+
+bool FragmentSharedKey::operator==(const FragmentSharedKey& rhs) const
+{
+  bool isEqual =
+      (mStorageClass == rhs.mStorageClass) && (mFieldType == rhs.mFieldType) && (mVariableName == rhs.mVariableName);
+  return isEqual;
+}
+
+template <typename T>
+void FragmentSharedKey::HashCombine(size_t& seed, const T& value) const
+{
+  // Code from boost
+  // Reciprocal of the golden ratio helps spread entropy
+  //     and handles duplicates.
+  // See Mike Seymour in magic-numbers-in-boosthash-combine:
+  //     https://stackoverflow.com/questions/4948780
+  seed ^= HashPolicy<T>()(value) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
+
 TypeResolvers::TypeResolvers()
 {
   mBackupFieldResolver = nullptr;
@@ -188,6 +229,20 @@ GlobalVariableData* ZilchShaderIRModule::FindGlobalVariable(ZilchShaderIROp* glo
   return nullptr;
 }
 
+GlobalVariableData* ZilchShaderIRModule::FindFragmentSharedVariable(const FragmentSharedKey& key,
+                                                                    bool checkDependencies)
+{
+  // Check each library, if any library finds the shared variable then return it
+  for (size_t i = 0; i < Size(); ++i)
+  {
+    ZilchShaderIRLibrary* library = (*this)[i];
+    GlobalVariableData* result = library->FindFragmentSharedVariable(key, checkDependencies);
+    if (result != nullptr)
+      return result;
+  }
+  return nullptr;
+}
+
 TemplateTypeIRResloverFn ZilchShaderIRModule::FindTemplateResolver(const TemplateTypeKey& templateKey,
                                                                    bool checkDependencies)
 {
@@ -327,13 +382,13 @@ ZilchShaderIRLibrary::~ZilchShaderIRLibrary()
   DeleteObjectsIn(mOwnedFunctionMeta.All());
   DeleteObjectsIn(mOwnedTypeMeta.All());
   DeleteObjectsIn(mOwnedSpecializationConstants.All());
+  DeleteObjectsIn(mOwnedGlobals.All());
 
   DeleteObjectsIn(mExtensionInstructions.Values());
   DeleteObjectsIn(mExtensionLibraries.All());
   DeleteObjectsIn(mConstantLiterals.Values());
   DeleteObjectsIn(mConstantOps.Values());
   DeleteObjectsIn(mExtensionLibraryImports.Values());
-  DeleteObjectsIn(mZilchFieldToGlobalVariable.Values());
 }
 
 void ZilchShaderIRLibrary::AddType(StringParam typeName, ZilchShaderIRType* shaderType)
@@ -385,8 +440,7 @@ GlobalVariableData* ZilchShaderIRLibrary::FindGlobalVariable(Zilch::Field* zilch
 
 GlobalVariableData* ZilchShaderIRLibrary::FindGlobalVariable(ZilchShaderIROp* globalInstance, bool checkDependencies)
 {
-  Zilch::Field* zilchField = mGlobalVariableToZilchField.FindValue(globalInstance, nullptr);
-  GlobalVariableData* result = mZilchFieldToGlobalVariable.FindValue(zilchField, nullptr);
+  GlobalVariableData* result = mVariableOpLookupMap.FindValue(globalInstance, nullptr);
   if (result != nullptr)
     return result;
 
@@ -399,6 +453,23 @@ GlobalVariableData* ZilchShaderIRLibrary::FindGlobalVariable(ZilchShaderIROp* gl
   if (mDependencies == nullptr)
     return nullptr;
   return mDependencies->FindGlobalVariable(globalInstance, checkDependencies);
+}
+
+GlobalVariableData* ZilchShaderIRLibrary::FindFragmentSharedVariable(const FragmentSharedKey& key,
+                                                                     bool checkDependencies)
+{
+  GlobalVariableData* result = mFragmentSharedGlobalVariables.FindValue(key, nullptr);
+  if (result != nullptr)
+    return result;
+
+  // If we failed to find the variable but we don't check dependencies then return that we can't find it
+  if (!checkDependencies)
+    return nullptr;
+
+  // Otherwise check all of our dependencies (if we have any)
+  if (mDependencies == nullptr)
+    return nullptr;
+  return mDependencies->FindFragmentSharedVariable(key, checkDependencies);
 }
 
 void ZilchShaderIRLibrary::RegisterTemplateResolver(const TemplateTypeKey& templateKey,

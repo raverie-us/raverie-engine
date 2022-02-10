@@ -80,6 +80,7 @@ SpirVNameSettings::SpirVNameSettings()
   mUnitTestAttribute = "UnitTest";
   mSpecializationConstantAttribute = "SpecConstant";
   mSpecializationConstantInputAttribute = BuildString(mSpecializationConstantAttribute, "Input");
+  mFragmentSharedAttribute = "FragmentShared";
 
   // Create the implied sub-attributes for [Input]
   mInputSubAttributes.PushBack(mFragmentInputAttribute);
@@ -105,6 +106,7 @@ SpirVNameSettings::SpirVNameSettings()
   mAllowedFieldAttributes.Insert(mStaticAttribute, AttributeInfo());
   mAllowedFieldAttributes.Insert(mSpecializationConstantAttribute, AttributeInfo());
   mAllowedFieldAttributes.Insert(mSpecializationConstantInputAttribute, AttributeInfo());
+  mAllowedFieldAttributes.Insert(mFragmentSharedAttribute, AttributeInfo());
 
   mAllowedFunctionAttributes.Insert(mStaticAttribute, AttributeInfo());
   mAllowedFunctionAttributes.Insert(mExtensionAttribute, AttributeInfo());
