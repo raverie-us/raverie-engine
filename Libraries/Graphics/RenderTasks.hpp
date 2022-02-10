@@ -63,7 +63,7 @@ public:
   {
     GraphicsRenderSettings mRenderSettings;
     HandleOf<RenderGroup> mRenderGroup;
-    MaterialBlock mRenderPass;
+    HandleOf<MaterialBlock> mRenderPass;
     bool mRender;
   };
 
