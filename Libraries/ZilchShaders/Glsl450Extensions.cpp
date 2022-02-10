@@ -39,6 +39,30 @@ ZilchShaderIROp* MakeBasicExtensionFunction(ZilchSpirVFrontEnd* translator,
   return extensionOp;
 }
 
+void WriteExtensionFunctionArguments(ZilchSpirVFrontEnd* translator,
+                                     Zilch::FunctionCallNode*& node,
+                                     ZilchShaderIROp* functionCallOp,
+                                     ZilchSpirVFrontEndContext* context)
+{
+  // @JoshD: Writing arguments for an extension function is slightly different than
+  // writing arguments for a regular function. It would be nice to refactor this later...
+  for (size_t i = 0; i < node->Arguments.Size(); ++i)
+  {
+    IZilchShaderIR* argument = translator->WalkAndGetResult(node->Arguments[i], context);
+    translator->WriteFunctionCallArgument(argument, functionCallOp, nullptr, context);
+  }
+
+  // Write any postamble copies (these should never happen)
+  translator->WriteFunctionCallPostamble(context);
+
+  // If there is a return then we have to push the result onto a stack so any assignments can get the value
+  Zilch::Type* returnType = node->ResultType;
+  if (returnType != ZilchTypeId(void))
+  {
+    context->PushIRStack(functionCallOp);
+  }
+}
+
 template <int extensionOpId>
 void BasicExtensionFunction(ZilchSpirVFrontEnd* translator,
                             Zilch::FunctionCallNode* functionCallNode,
@@ -50,7 +74,7 @@ void BasicExtensionFunction(ZilchSpirVFrontEnd* translator,
       MakeBasicExtensionFunction(translator, functionCallNode, extensionOpId, importLibraryIR, context);
 
   // Write the remaining function arguments
-  translator->WriteFunctionCallArguments(functionCallNode, extensionOp, context);
+  WriteExtensionFunctionArguments(translator, functionCallNode, extensionOp, context);
 
   BasicBlock* currentBlock = context->GetCurrentBlock();
   currentBlock->mLines.PushBack(extensionOp);
@@ -68,7 +92,7 @@ void ResolveGlslExtensionFunction(ZilchSpirVFrontEnd* translator,
       MakeBasicExtensionFunction(translator, functionCallNode, userData.mOpCode, importOp, context);
 
   // Write the remaining function arguments
-  translator->WriteFunctionCallArguments(functionCallNode, extensionOp, context);
+  WriteExtensionFunctionArguments(translator, functionCallNode, extensionOp, context);
 
   BasicBlock* currentBlock = context->GetCurrentBlock();
   currentBlock->mLines.PushBack(extensionOp);
@@ -93,7 +117,7 @@ void GenerateFSign(ZilchSpirVFrontEnd* translator,
   extensionOp->mArguments.PushBack(instructionLiteral);
 
   // Write the remaining function arguments
-  translator->WriteFunctionCallArguments(functionCallNode, extensionOp, context);
+  WriteExtensionFunctionArguments(translator, functionCallNode, extensionOp, context);
   // Pop the extension op off the stack and write the instruction to the current
   // block
   context->PopIRStack();

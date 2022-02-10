@@ -595,12 +595,10 @@ void EntryPointGeneration::DeclareGeometryInterface(ZilchSpirVFrontEnd* translat
     entryPointArguments.PushBack(outputVar);
 
     // Create the function call to the entry point
-    translator->BuildIROp(
-        currentBlock, OpType::OpFunctionCall, voidType, copyInputsData.mFunction, selfVar, inputVar, context);
-    ZilchShaderIROp* fnCallOp = translator->BuildIROpNoBlockAdd(OpType::OpFunctionCall, voidType, context);
-    fnCallOp->mArguments.PushBack(function);
-    translator->WriteFunctionCallArguments(entryPointArguments, voidType, function->mFunctionType, fnCallOp, context);
-    currentBlock->AddOp(fnCallOp);
+    translator->BuildIROp(currentBlock, OpType::OpFunctionCall, voidType, copyInputsData.mFunction, selfVar, inputVar, context);
+    
+    // Call the generated entry point function
+    translator->WriteFunctionCall(entryPointArguments, function, context);
 
     // Add the termination statement
     translator->BuildIROp(currentBlock, OpType::OpReturn, nullptr, context);
