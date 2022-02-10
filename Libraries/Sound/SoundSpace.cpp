@@ -148,8 +148,8 @@ void SoundSpace::InterpolatePitch(float pitch, float time)
     mPitchNode = new PitchNode("Space", mSpaceNodeID);
     mSoundNodeInput->InsertNodeAfter(mPitchNode);
   }
-
-  mPitchNode->InterpolatePitch(pitch, time);
+  else if (Math::Abs(mPitchNode->GetPitch() - pitch) > 0.001f)
+    mPitchNode->InterpolatePitch(pitch, time);
 }
 
 float SoundSpace::GetSemitones()
@@ -265,8 +265,7 @@ void SoundSpace::Update()
   if (mPitchWithTimeSpace)
   {
     float scale = GetOwner()->has(TimeSpace)->mTimeScale;
-    if (scale != 1.0f)
-      InterpolatePitch(Math::Log2(scale), dt);
+    InterpolatePitch(Math::Log2(scale), dt);
   }
 
   // Update emitters
