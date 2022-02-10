@@ -437,7 +437,12 @@ LibraryRef ZilchShaderGenerator::BuildFragmentsLibrary(Module& dependencies,
     if (shaderTypeMeta == nullptr)
       continue;
 
-    Resource* resource = (Resource*)shaderTypeMeta->mZilchType->Location.CodeUserData;
+    // Not all types have backing zilch types either (runtime arrays have an internal type with no backing zilch type)
+    Zilch::BoundType* zilchType = shaderTypeMeta->mZilchType;
+    if (zilchType == nullptr)
+      continue;
+
+    Resource* resource = (Resource*)zilchType->Location.CodeUserData;
     // If we have a valid user data (some types won't, like arrays that are
     // generated in your library)
     if (resource == nullptr)
