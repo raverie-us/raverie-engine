@@ -617,6 +617,23 @@ bool SimpleZilchShaderIRGenerator::ComposeShader(ZilchShaderIRCompositor::Shader
   return success;
 }
 
+bool SimpleZilchShaderIRGenerator::ComposeComputeShader(
+    ZilchShaderIRCompositor::ShaderDefinition& shaderDef,
+    ShaderCapabilities& capabilities,
+    ZilchShaderIRCompositor::ComputeShaderProperties* computeProperties)
+{
+  ZilchShaderIRCompositor compositor;
+  EventConnect(&compositor, Events::TranslationError, &SimpleZilchShaderIRGenerator::OnForwardEvent, this);
+  EventConnect(&compositor, Zilch::Events::CompilationError, &SimpleZilchShaderIRGenerator::OnForwardEvent, this);
+  EventConnect(&compositor, Events::ValidationError, &SimpleZilchShaderIRGenerator::OnForwardEvent, this);
+
+  bool success = compositor.CompositeCompute(shaderDef, computeProperties, capabilities, mSettings);
+
+  mShaderDefinitionMap[shaderDef.mShaderName] = shaderDef;
+
+  return success;
+}
+
 void SimpleZilchShaderIRGenerator::AddShaderCode(StringParam shaderCode, StringParam fileName, void* userData)
 {
   mShaderProject.AddCodeFromString(shaderCode, fileName, userData);
