@@ -499,6 +499,7 @@ void ReleaseNotes::DisplayReleaseNotes(ZeroBuild* build)
   // visibility on the release notes. Need to figure out what's wrong with
   // scintilla later...
   mReleaseNotes->SetVisible(!releaseNotes.Empty());
+  mReleaseNotes->GoToLine(0);
 
   UpdateBuildButtons();
 }
