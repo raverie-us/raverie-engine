@@ -562,7 +562,9 @@ bool ShaderTranslationDebugHelper::CompilePipeline(ZilchShaderIRType* shaderType
   // Run the final backend
   ShaderTranslationPassResult* backendResult = new ShaderTranslationPassResult();
   pipelineResults.PushBack(backendResult);
-  pipeline.mBackend->RunTranslationPass(*lastPassData, *backendResult);
+  bool success = pipeline.mBackend->RunTranslationPass(*lastPassData, *backendResult);
+  if (!success)
+    backendResult->mByteStream.Load(pipeline.mBackend->GetErrorLog());
 
   return true;
 }
