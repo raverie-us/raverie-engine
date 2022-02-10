@@ -22,6 +22,14 @@ Vec3 Solve33(Mat3Param J, Vec3Param f)
 // presentation for details on the topic.
 Vec3 SolveGyroscopic(RigidBody* body, float dt)
 {
+  // Solve for gyroscopic torque if we are not in 2d. Gyroscopic torque is ignored in 2d because
+  // this takes into account the Cross(w, I*w) term in Euler's equations of motion.
+  // This term is non-zero when angular velocity and angular momentum point in different directions.
+  // When in 2d mode, these will always point in the exact same direction (along the z-axis)
+  // so this term should mathematically be zero.
+  if (body->mState.IsSet(RigidBodyStates::Mode2D))
+    return Vec3::cZero;
+
   Quat rotation = body->mRotationQuat;
   Mat3 invInertia = body->mInvInertia.GetInvModelTensor();
   real invInertiaDeterminant = invInertia.Determinant();
