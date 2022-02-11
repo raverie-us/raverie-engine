@@ -127,7 +127,7 @@ class UniformBufferDescription
 {
 public:
   UniformBufferDescription();
-  UniformBufferDescription(int bindingId, int descriptorSetId = 0);
+  UniformBufferDescription(u32 bindingId, u32 descriptorSetId = 0);
   UniformBufferDescription(const UniformBufferDescription& rhs);
   ~UniformBufferDescription();
 
@@ -135,16 +135,16 @@ public:
   void CopyFrom(const UniformBufferDescription& source);
 
   /// Set the common description terms for this uniform buffer.
-  void Set(int bindingId, int descriptorSetId, ShaderStage::Enum allowedStages, StringParam debugName = String());
+  void Set(u32 bindingId, u32 descriptorSetId, ShaderStage::Enum allowedStages, StringParam debugName = String());
 
   /// Add a field to this buffer. Fields are laid out in the order they are
   /// added.
   void AddField(Zilch::BoundType* type, StringParam fieldName);
 
   /// The register id that this buffer will be bound to.
-  int mBindingId;
+  u32 mBindingId;
   /// The descriptor set (hlsl: space) for this buffer.
-  int mDescriptorSetId;
+  u32 mDescriptorSetId;
   /// Debug name to emit this buffer with.
   String mDebugName;
   /// The fields that belong to this buffer.
