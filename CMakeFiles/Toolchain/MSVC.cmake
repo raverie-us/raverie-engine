@@ -16,7 +16,6 @@ set(WELDER_C_CXX_FLAGS "\
 
 set(WELDER_C_CXX_FLAGS_DEBUG "\
   -Zi\
-  -Gm\
   -MDd\
   -GS\
   -Od\
@@ -26,7 +25,6 @@ set(WELDER_C_CXX_FLAGS_DEBUG "\
 
 set(WELDER_C_CXX_FLAGS_RELWITHDEBINFO "\
   -Zi\
-  -Gm\
   -MT\
   -MP\
   -GS\
@@ -36,7 +34,6 @@ set(WELDER_C_CXX_FLAGS_RELWITHDEBINFO "\
 ")
 
 set(WELDER_C_CXX_FLAGS_RELEASE "\
-  -Gm-\
   -MT\
   -MP\
   -GL\
@@ -46,7 +43,6 @@ set(WELDER_C_CXX_FLAGS_RELEASE "\
 ")
 
 set(WELDER_C_CXX_FLAGS_MINSIZEREL "\
-  -Gm-\
   -MT\
   -MP\
   -GL\

@@ -54,7 +54,7 @@ target_sources(WelderLauncher
 
 target_link_libraries(WelderLauncher
   PUBLIC
-    Assimp
+    assimp
     CodeTranslator
     Common
     Content

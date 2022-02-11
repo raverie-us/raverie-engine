@@ -92,7 +92,7 @@ welder_target_includes(Content
   PUBLIC
     Common
     Zilch
-    Assimp
+    assimp
     ZLib
     Opus
     Nvtt

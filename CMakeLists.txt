@@ -1,5 +1,14 @@
 cmake_minimum_required(VERSION 3.12.1 FATAL_ERROR)
 
+if (POLICY CMP0077)
+  cmake_policy(SET CMP0077 NEW)
+  set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+endif ()
+
+# Configure CMake global variables
+#  set(CMAKE_CXX_STANDARD 17)
+#  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 set(CMAKE_CONFIGURATION_TYPES Debug RelWithDebInfo Release MinSizeRel)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT WelderEditor)
