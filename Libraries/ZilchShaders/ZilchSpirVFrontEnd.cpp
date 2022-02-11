@@ -3782,19 +3782,39 @@ void ZilchSpirVFrontEnd::WriteFunctionCallArgument(IZilchShaderIR* argument,
     if (paramOp->IsResultPointerType())
       paramOp = GetOrGenerateValueTypeFromIR(paramOp, context);
   }
-  // Otherwise, if the parameter is a pointer type but of the wrong storage class then we have to create a temporary
-  else if (paramType->IsPointerType() && paramOp->mResultType->mStorageClass != paramType->mStorageClass)
+  // Otherwise, if the parameter is a pointer type it might require creating a
+  // temporary variable to pass through to the function and then copy the result back out.
+  else if (paramType->IsPointerType())
   {
-    // Create a local variable and copy the parameter into it (this will now have the correct storage class)
-    ZilchShaderIRType* localVarPointerType =
-        FindOrCreatePointerInterfaceType(mLibrary, paramType->mDereferenceType, paramType->mStorageClass);
-    ZilchShaderIROp* localVarOp = BuildOpVariable(localVarPointerType, context);
-    BuildStoreOp(localVarOp, paramOp, context);
-    // Additionally, we'll need to copy the result back out of the function call to set the original paramter.
-    // Unfortunately this has to happen after the function call is made so we just queue up what copies need to happen.
-    context->mFunctionPostambleCopies.PushBack(ZilchSpirVFrontEndContext::PostableCopy(paramOp, localVarOp));
-    // Replace the paramter with the local temporary
-    paramOp = localVarOp;
+    bool requiresCopyArgument = false;
+
+    // The storage class is the wrong type, we have to create a new variable to pass in-out
+    if (paramOp->mResultType->mStorageClass != paramType->mStorageClass)
+      requiresCopyArgument = true;
+    // Pointer arguments must be a memory object declaration or a pointer
+    // to an element in an array of type sampler or image (per validation rules)
+    else if (paramOp->mOpType != OpType::OpVariable && paramOp->mOpType != OpType::OpFunctionParameter)
+    {
+      ZilchShaderIRType* dereferencedType = paramOp->mResultType->mDereferenceType;
+      if (dereferencedType->mBaseType != ShaderIRTypeBaseType::Image &&
+          dereferencedType->mBaseType != ShaderIRTypeBaseType::Sampler)
+        requiresCopyArgument = true;
+    }
+
+    if (requiresCopyArgument)
+    {
+      // Create a local variable and copy the parameter into it (this will now have the correct storage class)
+      ZilchShaderIRType* localVarPointerType =
+          FindOrCreatePointerInterfaceType(mLibrary, paramType->mDereferenceType, paramType->mStorageClass);
+      ZilchShaderIROp* localVarOp = BuildOpVariable(localVarPointerType, context);
+      BuildStoreOp(localVarOp, paramOp, context);
+      // Additionally, we'll need to copy the result back out of the function call to set the original paramter.
+      // Unfortunately this has to happen after the function call is made so we just queue up what copies need to
+      // happen.
+      context->mFunctionPostambleCopies.PushBack(ZilchSpirVFrontEndContext::PostableCopy(paramOp, localVarOp));
+      // Replace the paramter with the local temporary
+      paramOp = localVarOp;
+    }
   }
 
   functionCallOp->mArguments.PushBack(paramOp);
