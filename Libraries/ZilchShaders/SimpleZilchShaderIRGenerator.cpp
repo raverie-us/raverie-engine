@@ -114,7 +114,7 @@ void SimplifiedShaderReflectionData::CreateUniformReflectionData(ZilchShaderIRLi
   HashMap<String, UniformReflectionData> memberRemappings;
   HashMap<String, SimpleResourceRemappingData> bufferRenames;
   ShaderStageInterfaceReflection& firstStageData = passResults[0]->mReflectionData;
-  ShaderStageInterfaceReflection* lastStageData = &firstStageData;
+  ShaderStageInterfaceReflection* lastStageData = &passResults[passResults.Size() - 1]->mReflectionData;
 
   // Walk all uniforms in the first stage, building a mapping of the
   // buffer names and the member names within each buffer
