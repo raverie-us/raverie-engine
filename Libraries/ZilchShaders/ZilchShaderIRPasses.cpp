@@ -118,7 +118,7 @@ bool SpirVOptimizerPass::RunTranslationPass(ShaderTranslationPassResult& inputDa
                                             ShaderTranslationPassResult& outputData)
 {
   Array<String> flags;
-  bool success = RunOptimizer(SPV_OPTIMIZER_SIZE_PASS, flags, inputData.mByteStream, outputData.mByteStream);
+  bool success = RunOptimizer(SPV_OPTIMIZER_PERFORMANCE_PASS, flags, inputData.mByteStream, outputData.mByteStream);
 
   // By default, all of the reflection data is the same as the input stage
   if (success)

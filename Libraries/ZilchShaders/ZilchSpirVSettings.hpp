@@ -45,6 +45,12 @@ FragmentType::Enum ShaderStageToFragmentType(ShaderStage::Enum shaderStage);
 /// Currently only used to hide attributes from code completion.
 struct AttributeInfo
 {
+  typedef Zilch::ConstantType::Enum ParamType;
+  struct ParameterSignature
+  {
+    Array<ParamType> mTypes;
+  };
+
   AttributeInfo()
   {
     mHidden = false;
@@ -54,7 +60,33 @@ struct AttributeInfo
     mHidden = hidden;
   }
 
+  AttributeInfo& AddSignature(ParamType p0)
+  {
+    return AddSignature(Array<ParamType>(ZeroInit, p0));
+  }
+  AttributeInfo& AddSignature(ParamType p0, ParamType p1)
+  {
+    return AddSignature(Array<ParamType>(ZeroInit, p0, p1));
+  }
+  AttributeInfo& AddSignature(ParamType p0, ParamType p1, ParamType p2)
+  {
+    return AddSignature(Array<ParamType>(ZeroInit, p0, p1, p2));
+  }
+  AttributeInfo& AddSignature(ParamType p0, ParamType p1, ParamType p2, ParamType p3)
+  {
+    return AddSignature(Array<ParamType>(ZeroInit, p0, p1, p2, p3));
+  }
+  AttributeInfo& AddSignature(Array<ParamType> types)
+  {
+    ParameterSignature& signature = mOverloads.PushBack();
+    signature.mTypes = types;
+    return *this;
+  }
+
   bool mHidden;
+  bool mCheckSignature = true;
+
+  Array<ParameterSignature> mOverloads;
 };
 
 /// Name settings used in the ZilchSpirV translator. This allows

@@ -61,9 +61,14 @@ void ZilchShaderGenerator::InitializeSpirV()
   // Temporarily make compute fragments illegal (not supported in zero yet)
   nameSettings.mAllowedClassAttributes.Erase(nameSettings.mComputeAttribute);
   nameSettings.mAllowedFieldAttributes.Insert("Hidden", AttributeInfo());
-  nameSettings.mAllowedFieldAttributes.Insert(PropertyAttributes::cGroup, AttributeInfo());
-  nameSettings.mAllowedFieldAttributes.Insert(PropertyAttributes::cRange, AttributeInfo());
-  nameSettings.mAllowedFieldAttributes.Insert(PropertyAttributes::cSlider, AttributeInfo());
+  AttributeInfo& groupInfo = nameSettings.mAllowedFieldAttributes[PropertyAttributes::cGroup];
+  groupInfo.AddSignature(Zilch::ConstantType::String);
+  AttributeInfo& rangeInfo = nameSettings.mAllowedFieldAttributes[PropertyAttributes::cRange];
+  rangeInfo.AddSignature(Zilch::ConstantType::Real, Zilch::ConstantType::Real);
+  rangeInfo.AddSignature(Zilch::ConstantType::Real, Zilch::ConstantType::Real, Zilch::ConstantType::Real);
+  AttributeInfo& sliderInfo = nameSettings.mAllowedFieldAttributes[PropertyAttributes::cSlider];
+  sliderInfo.AddSignature(Zilch::ConstantType::Real, Zilch::ConstantType::Real);
+  sliderInfo.AddSignature(Zilch::ConstantType::Real, Zilch::ConstantType::Real, Zilch::ConstantType::Real);
 
   // Add names to list of allowed attributes in zilch fragments
   forRange (String& attribute, mSamplerAttributeValues.Keys())

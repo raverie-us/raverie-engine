@@ -350,7 +350,7 @@ void ZilchSpirVFrontEnd::ParseAttributes(Zilch::Array<Zilch::Attribute>& zilchAt
       ValidateSingleParamAttribute(shaderAttribute, String(), Zilch::ConstantType::Integer, true);
     }
     else
-      ValidateAttributeNoParameters(shaderAttribute);
+      ValidateAttributeParameters(shaderAttribute, nameSettings.mAllowedClassAttributes, "types");
   }
 
   // If we found more than one fragment type attribute
@@ -384,7 +384,7 @@ void ZilchSpirVFrontEnd::ParseAttributes(Zilch::Array<Zilch::Attribute>& zilchAt
     if (attributeName == nameSettings.mExtensionAttribute)
       continue;
     else
-      ValidateAttributeNoParameters(shaderAttribute);
+      ValidateAttributeParameters(shaderAttribute, nameSettings.mAllowedFunctionAttributes, "functions");
   }
 }
 
@@ -515,9 +515,8 @@ void ZilchSpirVFrontEnd::ParseAttributes(Zilch::Array<Zilch::Attribute>& zilchAt
       dependencies.PushBack(nameSettings.mStaticAttribute);
       ValidateAttributeDependencies(shaderAttribute, shaderAttributes, dependencies);
     }
-    // Assume all other attribute don't take any parameters
     else
-      ValidateAttributeNoParameters(shaderAttribute);
+      ValidateAttributeParameters(shaderAttribute, nameSettings.mAllowedFieldAttributes, "fields");
   }
 }
 
@@ -740,6 +739,98 @@ void ZilchSpirVFrontEnd::ValidateAttributeNoParameters(ShaderIRAttribute* shader
                                 shaderAttribute->mAttributeName.c_str());
     SendTranslationError(shaderAttribute->GetLocation(), msg);
   }
+}
+
+void ZilchSpirVFrontEnd::ValidateAttributeParameters(ShaderIRAttribute* shaderAttribute,
+                                                     HashMap<String, AttributeInfo>& allowedAttributes,
+                                                     StringParam errorTypeName)
+{
+  // First find the attribute's info so we know what it allows
+  AttributeInfo* attributeInfo = allowedAttributes.FindPointer(shaderAttribute->mAttributeName);
+  if (attributeInfo == nullptr)
+  {
+    // This is often a redundant error check, but whatever
+    String msg = String::Format(
+        "Attribute '%s' is not allowed on %s", shaderAttribute->mAttributeName.c_str(), errorTypeName.c_str());
+    SendTranslationError(shaderAttribute->GetLocation(), msg);
+    return;
+  }
+
+  // If the attribute doesn't care about signature checking then ignore it. Mostly for legacy
+  if (attributeInfo->mCheckSignature == false)
+    return;
+
+  // Handle zero params first
+  if (attributeInfo->mOverloads.Size() == 0 && shaderAttribute->mParameters.Size() == 0)
+    return;
+
+  // Check all of the overloads
+  bool isValid = false;
+  for (size_t i = 0; i < attributeInfo->mOverloads.Size(); ++i)
+  {
+    isValid |= ValidateAttributeParameterSignature(shaderAttribute, attributeInfo->mOverloads[i]);
+    if (isValid)
+      break;
+  }
+
+  // If any overload matches then we're cool
+  if (isValid)
+    return;
+
+  // Otherwise print the error message
+  StringBuilder builder;
+  builder.AppendFormat("No matching signature for attribute '%s'.\n", shaderAttribute->mAttributeName.c_str());
+  builder.AppendFormat("Provided signature is %s(", shaderAttribute->mAttributeName.c_str());
+  for (size_t i = 0; i < shaderAttribute->mParameters.Size(); ++i)
+  {
+    const ShaderIRAttributeParameter& param = shaderAttribute->mParameters[i];
+    shaderAttribute->mParameters[i].GetType();
+    String typeName = Zilch::ConstantType::Names[param.GetType()];
+    builder.Append(typeName);
+    if (i != shaderAttribute->mParameters.Size() - 1)
+      builder.Append(", ");
+  }
+  builder.Append(")\n");
+  builder.AppendFormat("Possible signatures are:\n");
+  for (size_t i = 0; i < attributeInfo->mOverloads.Size(); ++i)
+  {
+    builder.AppendFormat("%s(", shaderAttribute->mAttributeName.c_str());
+    const AttributeInfo::ParameterSignature& signature = attributeInfo->mOverloads[i];
+    for (size_t i = 0; i < signature.mTypes.Size(); ++i)
+    {
+      String typeName = Zilch::ConstantType::Names[signature.mTypes[i]];
+      builder.Append(typeName);
+      if (i != signature.mTypes.Size() - 1)
+        builder.Append(", ");
+    }
+    builder.Append(")\n");
+  }
+  SendTranslationError(shaderAttribute->GetLocation(), builder.ToString());
+}
+
+bool ZilchSpirVFrontEnd::ValidateAttributeParameterSignature(ShaderIRAttribute* shaderAttribute,
+                                                             const AttributeInfo::ParameterSignature& signature) const
+{
+  if (shaderAttribute->mParameters.Size() != signature.mTypes.Size())
+    return false;
+
+  for (size_t i = 0; i < shaderAttribute->mParameters.Size(); ++i)
+  {
+    const ShaderIRAttributeParameter& attributeParam = shaderAttribute->mParameters[i];
+    if (!DoTypesMatch(attributeParam.GetType(), signature.mTypes[i]))
+      return false;
+  }
+  return true;
+}
+
+bool ZilchSpirVFrontEnd::DoTypesMatch(const AttributeInfo::ParamType& actualType,
+                                      const AttributeInfo::ParamType& expectedType) const
+{
+  if (actualType == expectedType)
+    return true;
+  if (expectedType == AttributeInfo::ParamType::Real && actualType == AttributeInfo::ParamType::Integer)
+    return true;
+  return false;
 }
 
 void ZilchSpirVFrontEnd::ValidateAttributeDependencies(ShaderIRAttribute* shaderAttribute,
