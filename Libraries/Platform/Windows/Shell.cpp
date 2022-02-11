@@ -562,6 +562,9 @@ void ScanDevice(Array<PlatformInputDevice>& devices, HANDLE deviceHandle, RID_DE
     HIDP_CAPS caps;
     ReturnIf(HidP_GetCaps(preparsedData, &caps) != HIDP_STATUS_SUCCESS, , "Unable to get device capabilities");
 
+    if (caps.NumberInputButtonCaps == 0)
+      return;
+
     HIDP_BUTTON_CAPS* buttonCaps = (PHIDP_BUTTON_CAPS)alloca(sizeof(HIDP_BUTTON_CAPS) * caps.NumberInputButtonCaps);
 
     USHORT capsLength = caps.NumberInputButtonCaps;
