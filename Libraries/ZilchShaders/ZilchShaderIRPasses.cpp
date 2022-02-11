@@ -8,7 +8,7 @@ namespace Zero
 
 BaseSpirVOptimizerPass::BaseSpirVOptimizerPass()
 {
-  mTargetEnv = SPV_ENV_UNIVERSAL_1_3;
+  mTargetEnv = SPV_ENV_UNIVERSAL_1_4;
 }
 
 bool BaseSpirVOptimizerPass::RunOptimizer(int primaryPass,
@@ -128,7 +128,7 @@ bool SpirVOptimizerPass::RunTranslationPass(ShaderTranslationPassResult& inputDa
 
 SpirVValidatorPass::SpirVValidatorPass()
 {
-  mTargetEnv = SPV_ENV_UNIVERSAL_1_3;
+  mTargetEnv = SPV_ENV_UNIVERSAL_1_4;
 }
 
 bool SpirVValidatorPass::RunTranslationPass(ShaderTranslationPassResult& inputData,

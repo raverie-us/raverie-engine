@@ -6,7 +6,7 @@ namespace Zero
 
 ZilchSpirVDisassemblerBackend::ZilchSpirVDisassemblerBackend()
 {
-  mTargetEnv = SPV_ENV_UNIVERSAL_1_3;
+  mTargetEnv = SPV_ENV_UNIVERSAL_1_4;
 }
 
 String ZilchSpirVDisassemblerBackend::GetExtension()

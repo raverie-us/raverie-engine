@@ -4,8 +4,6 @@
 namespace Zero
 {
 
-constexpr bool is_Universal_1_4 = false;
-
 InterfaceInfoGroup::FieldInfo* InterfaceInfoGroup::FindFieldInfo(const ShaderFieldKey& fieldKey)
 {
   // @JoshD: Optimize later? This is typically small so it's easy enough to
@@ -186,15 +184,10 @@ void ShaderInterfaceStruct::DefineInterfaceType(EntryPointGeneration* entryPoint
   // Write decoration on the block instance
   entryPointGeneration->WriteTypeDecorations(interfaceGroup.mInstanceDecorations, decorationBlock, interfaceInstance);
 
-  // @JoshD: Update when upgrading to 1.4
   // As of version 1.4 of spirv, all global variables of all storage classes
   // must be declared in the entry point's interface list
-  if (!is_Universal_1_4 && (interfaceGroup.mStorageClass == spv::StorageClassInput ||
-                            interfaceGroup.mStorageClass == spv::StorageClassOutput))
-  {
-    entryPointInfo->mInterface.PushBack(interfaceInstance);
-    entryPointGeneration->mUniqueOps.Insert(interfaceInstance);
-  }
+  entryPointInfo->mInterface.PushBack(interfaceInstance);
+  entryPointGeneration->mUniqueOps.Insert(interfaceInstance);
 }
 
 void ShaderInterfaceStruct::CopyInterfaceType(EntryPointGeneration* entryPointGeneration,
@@ -2395,10 +2388,6 @@ void EntryPointGeneration::FindAndDecorateGlobals(ZilchShaderIRType* currentType
 void EntryPointGeneration::AddInterfaceTypesToEntryPoint(TypeDependencyCollector& collector,
                                                          EntryPointInfo* entryPointInfo)
 {
-  // @JoshD: Update later when upgrading to 1.4
-  if (!is_Universal_1_4)
-    return;
-
   auto range = collector.mReferencedGlobals.All();
   for (; !range.Empty(); range.PopFront())
   {

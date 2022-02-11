@@ -397,7 +397,7 @@ Array<String> GetOpcodeNames()
 {
   // Get all opcodes from spirv (hardcode the language for now...)
   spv_opcodes_t opCodeNames;
-  spvGetOpcodeNames(SPV_ENV_UNIVERSAL_1_2, &opCodeNames);
+  spvGetOpcodeNames(SPV_ENV_UNIVERSAL_1_4, &opCodeNames);
 
   // Convert each opcode to string
   Array<String> results;

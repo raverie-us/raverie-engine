@@ -455,7 +455,7 @@ void ZilchShaderSpirVBinaryBackend::WriteHeader(ZilchShaderToSpirVContext* conte
 
   streamWriter.Write(spv::MagicNumber);
   // Major
-  streamWriter.Write(0, 1, 2, 0);
+  streamWriter.Write(0, 1, 4, 0);
   // Generator id
   streamWriter.Write(0);
   // Bound
