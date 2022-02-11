@@ -4,6 +4,8 @@
 namespace Zero
 {
 
+constexpr bool is_Universal_1_4 = false;
+
 InterfaceInfoGroup::FieldInfo* InterfaceInfoGroup::FindFieldInfo(const ShaderFieldKey& fieldKey)
 {
   // @JoshD: Optimize later? This is typically small so it's easy enough to
@@ -184,10 +186,15 @@ void ShaderInterfaceStruct::DefineInterfaceType(EntryPointGeneration* entryPoint
   // Write decoration on the block instance
   entryPointGeneration->WriteTypeDecorations(interfaceGroup.mInstanceDecorations, decorationBlock, interfaceInstance);
 
-  // If this is an input/output (e.g. not uniform) then add it to the entry
-  // point's interface
-  if (interfaceGroup.mStorageClass == spv::StorageClassInput || interfaceGroup.mStorageClass == spv::StorageClassOutput)
+  // @JoshD: Update when upgrading to 1.4
+  // As of version 1.4 of spirv, all global variables of all storage classes
+  // must be declared in the entry point's interface list
+  if (!is_Universal_1_4 && (interfaceGroup.mStorageClass == spv::StorageClassInput ||
+                            interfaceGroup.mStorageClass == spv::StorageClassOutput))
+  {
     entryPointInfo->mInterface.PushBack(interfaceInstance);
+    entryPointGeneration->mUniqueOps.Insert(interfaceInstance);
+  }
 }
 
 void ShaderInterfaceStruct::CopyInterfaceType(EntryPointGeneration* entryPointGeneration,
@@ -376,7 +383,10 @@ void ShaderInterfaceGlobals::DefineInterfaceType(EntryPointGeneration* entryPoin
     // (required to declare OpEntryPoint) if it's an input or output
     if (interfaceGroup.mStorageClass == spv::StorageClassInput ||
         interfaceGroup.mStorageClass == spv::StorageClassOutput)
+    {
       entryPointInfo->mInterface.PushBack(varOp);
+      entryPointGeneration->mUniqueOps.Insert(varOp);
+    }
   }
 }
 
@@ -520,7 +530,7 @@ void EntryPointGeneration::DeclareVertexInterface(ZilchSpirVFrontEnd* translator
   ShaderInterfaceInfo interfaceInfo;
   CollectInterfaceVariables(function, interfaceInfo, ShaderStage::Vertex);
 
-  // Mark the inputs of pixel shaders as a non-struct non-block set of inputs.
+  // Mark the inputs of vertex shaders as a non-struct non-block set of inputs.
   interfaceInfo.mInputs.mIsStruct = false;
   interfaceInfo.mInputs.mStorageClass = spv::StorageClassInput;
   // Vertex inputs also must have locations specified
@@ -2371,8 +2381,27 @@ void EntryPointGeneration::FindAndDecorateGlobals(ZilchShaderIRType* currentType
   TypeDependencyCollector collector(currentType->mShaderLibrary);
   collector.Collect(currentType);
 
+  AddInterfaceTypesToEntryPoint(collector, entryPointInfo);
   DecorateImagesAndSamplers(collector, entryPointInfo);
   DecorateRuntimeArrays(collector, entryPointInfo);
+}
+
+void EntryPointGeneration::AddInterfaceTypesToEntryPoint(TypeDependencyCollector& collector,
+                                                         EntryPointInfo* entryPointInfo)
+{
+  // @JoshD: Update later when upgrading to 1.4
+  if (!is_Universal_1_4)
+    return;
+
+  auto range = collector.mReferencedGlobals.All();
+  for (; !range.Empty(); range.PopFront())
+  {
+    ZilchShaderIROp* globalVarInstance = range.Front();
+    if (!mUniqueOps.Contains(globalVarInstance))
+      // Add the instance to the list of interface variables
+      entryPointInfo->mInterface.PushBack(globalVarInstance);
+    mUniqueOps.Insert(globalVarInstance);
+  }
 }
 
 void EntryPointGeneration::DecorateImagesAndSamplers(TypeDependencyCollector& collector, EntryPointInfo* entryPointInfo)
@@ -2488,10 +2517,13 @@ void EntryPointGeneration::DecorateRuntimeArrays(TypeDependencyCollector& collec
         decorationBlock, globalVarInstance, spv::DecorationDescriptorSet, descriptorSetId, context);
     ++bindingId;
 
-    // Decorate the struct wrapper type. This requires
-    // marking it as a block and adding the offset of the actual runtime array.
-    translator->BuildDecorationOp(decorationBlock, opValueType, spv::DecorationBlock, context);
-    translator->BuildMemberDecorationOp(decorationBlock, opValueType, 0, spv::DecorationOffset, 0, context);
+    // Decorate the struct wrapper type. This requires marking it as a block and
+    // adding the offset of the actual runtime array. Make sure this decoration is unique
+    if (!mUniqueTypes.Contains(spirvRuntimeArrayType))
+    {
+      translator->BuildDecorationOp(decorationBlock, opValueType, spv::DecorationBlock, context);
+      translator->BuildMemberDecorationOp(decorationBlock, opValueType, 0, spv::DecorationOffset, 0, context);
+    }
 
     // Create a new reflection object for the runtime array.
     ShaderStageInterfaceReflection& stageReflectionData = entryPointInfo->mStageReflectionData;
@@ -2507,6 +2539,8 @@ void EntryPointGeneration::DecorateRuntimeArrays(TypeDependencyCollector& collec
     // this can be a struct of structs or other complicated things.
     AddRuntimeArrayDecorations(
         decorationBlock, zilchRuntimeArrayType, spirvRuntimeArrayType, elementType, stageResource);
+    // Finally mark that we've visited this array type so we don't duplicately decorate it.
+    mUniqueTypes.Insert(spirvRuntimeArrayType);
   }
 }
 
@@ -2574,8 +2608,12 @@ void EntryPointGeneration::AddRuntimeArrayDecorations(BasicBlock* decorationBloc
   int stride = GetSizeAfterAlignment(totalSize, maxAlignment);
   reflectionData.mSizeInBytes = totalSize;
   reflectionData.mStride = stride;
-  // Now we can actually decorate the runtime array's rull stride
-  translator->BuildDecorationOp(decorationBlock, spirvRuntimeArrayType, spv::DecorationArrayStride, stride, context);
+  
+  // Now we can actually decorate the runtime array's stride (make sure to only decorate a type once)
+  if (!mUniqueTypes.Contains(spirvRuntimeArrayType))
+  {
+    translator->BuildDecorationOp(decorationBlock, spirvRuntimeArrayType, spv::DecorationArrayStride, stride, context);
+  }
 }
 
 void EntryPointGeneration::RecursivelyDecorateStructType(BasicBlock* decorationBlock,
@@ -2611,9 +2649,13 @@ void EntryPointGeneration::RecursivelyDecorateStructType(BasicBlock* decorationB
     maxAlignment = Math::Max(requiredAlignment, maxAlignment);
     currentByteOffset = GetSizeAfterAlignment(currentByteOffset, requiredAlignment);
 
-    // Decorate the offset of this member within the struct
-    translator->BuildMemberDecorationOp(
-        decorationBlock, structType, i, spv::DecorationOffset, currentByteOffset, context);
+    // Decorate the offset of this member within the struct.
+    // This has to be uniquely defined per type (no duplicatees).
+    if (!mUniqueTypes.Contains(structType))
+    {
+      translator->BuildMemberDecorationOp(
+          decorationBlock, structType, i, spv::DecorationOffset, currentByteOffset, context);
+    }
 
     // Store the offset and size of this field in the reflection data
     ShaderResourceReflectionData& fieldReflectionData = stageResource.mMembers.PushBack();
@@ -2671,6 +2713,9 @@ void EntryPointGeneration::RecursivelyDecorateStructType(BasicBlock* decorationB
   int stride = GetSizeAfterAlignment(totalSize, maxAlignment);
   reflectionData.mSizeInBytes = totalSize;
   reflectionData.mStride = stride;
+
+  // Mark that this type has been visited for decorations
+  mUniqueTypes.Insert(structType);
 }
 
 int EntryPointGeneration::FindBindingId(HashSet<int>& usedIds)
