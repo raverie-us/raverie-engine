@@ -29,6 +29,8 @@ public:
   OrderedHashSet<ZilchShaderIRFunction*> mReferencedFunctions;
   OrderedHashSet<ZilchShaderExtensionImport*> mReferencedImports;
   OrderedHashSet<spv::Capability> mCapabilities;
+  // Any required extensions that need to declare OpExtension. This is of type spvtools::Extension
+  OrderedHashSet<int> mRequiredExtensions;
 
   // Keep track of the order we found types, constants, and globals. These are
   // all grouped in one section of the module and have to be in the correct

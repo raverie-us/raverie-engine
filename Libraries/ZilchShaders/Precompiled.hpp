@@ -8,3 +8,4 @@
 #include "source/spirv_validator_options.h"
 #include "spirv_optimizer_options.h"
 #include "spirv_glsl.hpp"
+#include "source/extensions.h"

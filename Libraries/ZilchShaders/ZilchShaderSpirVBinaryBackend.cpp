@@ -1,6 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
+#include "extensions.h"
+#include "enum_string_mapping.h"
+
 namespace Zero
 {
 
@@ -474,6 +477,23 @@ void ZilchShaderSpirVBinaryBackend::WriteHeader(ZilchShaderToSpirVContext* conte
   for (; !capabilitiesRange.Empty(); capabilitiesRange.PopFront())
   {
     streamWriter.WriteInstruction(2, OpType::OpCapability, capabilitiesRange.Front());
+  }
+
+  // Write Extensions
+  AutoDeclare(extensionsRange, typeCollector.mRequiredExtensions.All());
+  for (; !extensionsRange.Empty(); extensionsRange.PopFront())
+  {
+    // Convert the extension instruction id to a string (OpExtension requires
+    // the extension string name instead of id for some reason)
+    spvtools::Extension extensionId = (spvtools::Extension)extensionsRange.Front();
+    String extString = spvtools::ExtensionToString(extensionId);
+
+    // Compute the word count required for the op
+    uint16 byteCount = (uint16)streamWriter.GetPaddedByteCount(extString);
+    uint16 wordCount = byteCount / 4;
+
+    streamWriter.Write(1 + wordCount, OpType::OpExtension);
+    streamWriter.Write(extString);
   }
 
   // Imports
