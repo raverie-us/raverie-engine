@@ -142,6 +142,10 @@ void ResolveScalarSwizzle(ZilchSpirVFrontEnd* translator,
 void ScalarBackupFieldResolver(ZilchSpirVFrontEnd* translator,
                                Zilch::MemberAccessNode* memberAccessNode,
                                ZilchSpirVFrontEndContext* context);
+void ResolveVectorCopyConstructor(ZilchSpirVFrontEnd* translator,
+                                  Zilch::FunctionCallNode* fnCallNode,
+                                  Zilch::StaticTypeNode* staticTypeNode,
+                                  ZilchSpirVFrontEndContext* context);
 void ResolveVectorComponentAccess(ZilchSpirVFrontEnd* translator,
                                   ZilchShaderIROp* selfInstance,
                                   ZilchShaderIRType* componentType,

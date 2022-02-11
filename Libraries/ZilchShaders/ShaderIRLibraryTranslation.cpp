@@ -467,6 +467,36 @@ void ScalarBackupFieldResolver(ZilchSpirVFrontEnd* translator,
   //__debugbreak();
 }
 
+void ResolveVectorCopyConstructor(ZilchSpirVFrontEnd* translator,
+                                  Zilch::FunctionCallNode* fnCallNode,
+                                  Zilch::StaticTypeNode* staticTypeNode,
+                                  ZilchSpirVFrontEndContext* context)
+{
+  if (fnCallNode->Arguments.Size() != 1)
+  {
+    Error("Copy constructor translation can only handle a single element");
+    return;
+  }
+
+  // Get the value type op
+  IZilchShaderIR* argIR = translator->WalkAndGetResult(fnCallNode->Arguments[0], context);
+  ZilchShaderIROp* argValueOp = translator->GetOrGenerateValueTypeFromIR(argIR, context);
+  // If the original op was a variable (pointer type) then we can simply load the op to get a value to store or use.
+  // If the original op was a value type then we have to generate a copy somehow since we can't just assign ops.
+  // The easiest way to do this with a vector is to swizzle it to generate the same vector.
+  if (argIR == argValueOp)
+  {
+    ZilchShaderIRType* resultType = translator->FindType(fnCallNode->ResultType, fnCallNode);
+    argValueOp = translator->BuildIROp(
+        context->GetCurrentBlock(), OpType::OpVectorShuffle, resultType, argValueOp, argValueOp, context);
+    for (u32 i = 0; i < resultType->mComponents; ++i)
+      argValueOp->mArguments.PushBack(translator->GetOrCreateConstantIntegerLiteral(i));
+  }
+
+  // Also mark this as the return of this tree
+  context->PushIRStack(argValueOp);
+}
+
 void ResolveVectorComponentAccess(ZilchSpirVFrontEnd* translator,
                                   ZilchShaderIROp* selfInstance,
                                   ZilchShaderIRType* componentType,

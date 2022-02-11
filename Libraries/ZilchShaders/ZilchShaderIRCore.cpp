@@ -206,6 +206,9 @@ void ZilchShaderIRCore::RegisterVectorFunctions(ZilchSpirVFrontEnd* translator,
                                                        TranslateCompositeDefaultConstructor);
     primitiveTypeResolvers.RegisterConstructorResolver(GetConstructor(zilchType, zilchComponentTypeName),
                                                        TranslateCompositeSplatConstructor);
+    Zilch::Function* copyConstructor = GetConstructor(zilchType, zilchTypeName);
+    if (copyConstructor != nullptr)
+      primitiveTypeResolvers.RegisterConstructorResolver(copyConstructor, ResolveVectorCopyConstructor);
     primitiveTypeResolvers.RegisterFunctionResolver(GetStaticProperty(zilchType, "Count")->Get, ResolveVectorTypeCount);
     primitiveTypeResolvers.RegisterFunctionResolver(GetInstanceProperty(zilchType, "Count")->Get,
                                                     ResolveVectorTypeCount);
