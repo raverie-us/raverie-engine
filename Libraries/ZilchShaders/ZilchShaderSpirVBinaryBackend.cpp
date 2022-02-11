@@ -762,6 +762,8 @@ void ZilchShaderSpirVBinaryBackend::WriteType(ZilchShaderIRType* type, ZilchShad
     streamWriter.WriteInstruction(2, OpType::OpTypeBool, context->FindId(type));
   else if (type->mBaseType == ShaderIRTypeBaseType::Int)
     streamWriter.WriteInstruction(4, OpType::OpTypeInt, context->FindId(type), 32, 1);
+  else if (type->mBaseType == ShaderIRTypeBaseType::Uint)
+    streamWriter.WriteInstruction(4, OpType::OpTypeInt, context->FindId(type), 32, 0);
   else if (type->mBaseType == ShaderIRTypeBaseType::Float)
     streamWriter.WriteInstruction(3, OpType::OpTypeFloat, context->FindId(type), 32);
   else if (type->mBaseType == ShaderIRTypeBaseType::Vector)

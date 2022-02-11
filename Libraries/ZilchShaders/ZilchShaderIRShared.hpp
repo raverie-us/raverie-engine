@@ -6,10 +6,11 @@ namespace Zero
 
 DeclareEnum7(ZilchShaderIRBaseType, Op, ConstantLiteral, DataType, Function, Block, Comment, Extension);
 DeclareEnum3(BlockType, Direct, Selection, Loop);
-DeclareEnum15(ShaderIRTypeBaseType,
+DeclareEnum16(ShaderIRTypeBaseType,
               Bool,
               Float,
               Int,
+              Uint,
               Vector,
               Matrix,
               Struct,

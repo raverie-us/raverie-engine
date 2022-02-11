@@ -454,4 +454,10 @@ ComputeFragmentUserData::ComputeFragmentUserData()
   mLocalSizeZ = 1;
 }
 
+//------------------------------------------------------------------------UnsignedInt
+ZilchDefineType(UnsignedInt, builder, type)
+{
+  ZilchBindDefaultCopyDestructor();
+}
+
 } // namespace Zilch

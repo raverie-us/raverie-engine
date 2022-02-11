@@ -45,6 +45,11 @@ void ShaderIntrinsicsStaticZilchLibrary::Parse(ZilchSpirVFrontEnd* translator)
   Zilch::Core& core = Zilch::Core::GetInstance();
   Zilch::Library* zilchLibrary = shaderLibrary->mZilchLibrary;
 
+  // Declare the unsigned int type. As this is currently a hack type, only do this for the scalar version. @JoshD:
+  // Cleanup
+  ZilchShaderIRType* uintType =
+      translator->MakeCoreType(shaderLibrary, ShaderIRTypeBaseType::Uint, 1, nullptr, ZilchTypeId(Zilch::UnsignedInt));
+
   // Grabbed a bunch of zilch types
   Zilch::BoundType* zilchSamplerType = ZilchTypeId(Zilch::Sampler);
   Zilch::BoundType* zilchImage2d = ZilchTypeId(Zilch::Image2d);
