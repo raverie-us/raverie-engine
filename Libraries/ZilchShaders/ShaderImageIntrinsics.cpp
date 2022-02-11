@@ -726,14 +726,14 @@ void AddImageWrite(Zilch::LibraryBuilder& builder,
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, nullptr));
 }
 
-void AddImageFunctions(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, TypeGroups& types)
+void AddImageFunctions(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, ZilchTypeGroups& types)
 {
-  Zilch::BoundType* intType = types.mIntegerVectorTypes[0]->mZilchType;
-  Zilch::BoundType* int2Type = types.mIntegerVectorTypes[1]->mZilchType;
-  Zilch::BoundType* realType = types.mRealVectorTypes[0]->mZilchType;
-  Zilch::BoundType* real2Type = types.mRealVectorTypes[1]->mZilchType;
-  Zilch::BoundType* real3Type = types.mRealVectorTypes[2]->mZilchType;
-  Zilch::BoundType* real4Type = types.mRealVectorTypes[3]->mZilchType;
+  Zilch::BoundType* intType = types.mIntegerVectorTypes[0];
+  Zilch::BoundType* int2Type = types.mIntegerVectorTypes[1];
+  Zilch::BoundType* realType = types.mRealVectorTypes[0];
+  Zilch::BoundType* real2Type = types.mRealVectorTypes[1];
+  Zilch::BoundType* real3Type = types.mRealVectorTypes[2];
+  Zilch::BoundType* real4Type = types.mRealVectorTypes[3];
 
   Zilch::BoundType* samplerType = ZilchTypeId(Sampler);
 

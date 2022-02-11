@@ -19,26 +19,27 @@ public:
   void Parse(ZilchSpirVFrontEnd* translator);
   ZilchShaderIRLibraryRef GetLibrary();
 
-  TypeGroups mTypes;
+  ZilchTypeGroups mZilchTypes;
+  ShaderTypeGroups mShaderTypes;
   SpirVExtensionLibrary* mGlsl450ExtensionsLibrary;
 
 private:
-  void MakeMathTypes(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types);
+  void MakeMathTypes(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, ShaderTypeGroups& types);
   void RegisterPrimitiveFunctions(ZilchSpirVFrontEnd* translator,
                                   ZilchShaderIRLibrary* shaderLibrary,
-                                  TypeGroups& types,
+                                  ShaderTypeGroups& types,
                                   ZilchShaderIRType* shaderType);
   void RegisterVectorFunctions(ZilchSpirVFrontEnd* translator,
                                ZilchShaderIRLibrary* shaderLibrary,
-                               TypeGroups& types,
+                               ShaderTypeGroups& types,
                                Array<ZilchShaderIRType*>& vectorTypes);
   void RegisterMatrixFunctions(ZilchSpirVFrontEnd* translator,
                                ZilchShaderIRLibrary* shaderLibrary,
-                               TypeGroups& types,
+                               ShaderTypeGroups& types,
                                Array<ZilchShaderIRType*>& matrixTypes);
   void RegisterQuaternionFunctions(ZilchSpirVFrontEnd* translator,
                                    ZilchShaderIRLibrary* shaderLibrary,
-                                   TypeGroups& types,
+                                   ShaderTypeGroups& types,
                                    ZilchShaderIRType* quaternionType);
 
   ZilchShaderIRLibraryRef mLibraryRef;

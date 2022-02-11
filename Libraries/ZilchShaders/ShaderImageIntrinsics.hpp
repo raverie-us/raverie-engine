@@ -165,6 +165,6 @@ void AddImageQueryLevels(Zilch::LibraryBuilder& builder,
                          Zilch::BoundType* returnType);
 
 // Add all of the relevant image intrinsics to the shader given bound type.
-void AddImageFunctions(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, TypeGroups& types);
+void AddImageFunctions(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, ZilchTypeGroups& types);
 
 } // namespace Zero

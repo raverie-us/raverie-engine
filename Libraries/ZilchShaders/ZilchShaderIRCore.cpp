@@ -31,6 +31,38 @@ ZilchShaderIRCore& ZilchShaderIRCore::GetInstance()
 ZilchShaderIRCore::ZilchShaderIRCore()
 {
   mGlsl450ExtensionsLibrary = nullptr;
+
+  Zilch::Core& core = Zilch::Core::GetInstance();
+  mZilchTypes.mVoidType = core.VoidType;
+
+  mZilchTypes.mRealVectorTypes.PushBack(core.RealType);
+  mZilchTypes.mRealVectorTypes.PushBack(core.Real2Type);
+  mZilchTypes.mRealVectorTypes.PushBack(core.Real3Type);
+  mZilchTypes.mRealVectorTypes.PushBack(core.Real4Type);
+
+  // Make all of the matrix types
+  for (size_t y = 2; y <= 4; ++y)
+  {
+    for (size_t x = 2; x <= 4; ++x)
+    {
+      Zilch::BoundType* basisType = mZilchTypes.mRealVectorTypes[x - 1];
+      String matrixName = BuildString("Real", ToString(y), "x", ToString(x));
+      Zilch::BoundType* zilchMatrixType = core.GetLibrary()->BoundTypes.FindValue(matrixName, nullptr);
+      mZilchTypes.mRealMatrixTypes.PushBack(zilchMatrixType);
+    }
+  }
+
+  mZilchTypes.mIntegerVectorTypes.PushBack(core.IntegerType);
+  mZilchTypes.mIntegerVectorTypes.PushBack(core.Integer2Type);
+  mZilchTypes.mIntegerVectorTypes.PushBack(core.Integer3Type);
+  mZilchTypes.mIntegerVectorTypes.PushBack(core.Integer4Type);
+
+  mZilchTypes.mBooleanVectorTypes.PushBack(core.BooleanType);
+  mZilchTypes.mBooleanVectorTypes.PushBack(core.Boolean2Type);
+  mZilchTypes.mBooleanVectorTypes.PushBack(core.Boolean3Type);
+  mZilchTypes.mBooleanVectorTypes.PushBack(core.Boolean4Type);
+
+  mZilchTypes.mQuaternionType = core.QuaternionType;
 }
 
 void ZilchShaderIRCore::Parse(ZilchSpirVFrontEnd* translator)
@@ -47,7 +79,7 @@ void ZilchShaderIRCore::Parse(ZilchSpirVFrontEnd* translator)
   Zilch::BoundType* zilchIntType = core.IntegerType;
   String intTypeName = zilchIntType->ToString();
 
-  TypeGroups& types = mTypes;
+  ShaderTypeGroups& types = mShaderTypes;
   MakeMathTypes(translator, shaderLibrary, types);
 
   // Add all static/instance functions for primitive types
@@ -67,16 +99,16 @@ void ZilchShaderIRCore::Parse(ZilchSpirVFrontEnd* translator)
   RegisterQuaternionFunctions(translator, shaderLibrary, types, types.mQuaternionType);
 
   // Add a bunch of math ops (a lot on the math class)
-  RegisterArithmeticOps(translator, shaderLibrary, types);
-  RegisterConversionOps(translator, shaderLibrary, types);
-  RegisterLogicalOps(translator, shaderLibrary, types);
-  RegisterBitOps(translator, shaderLibrary, types);
-  RegisterColorsOps(translator, shaderLibrary, types);
+  RegisterArithmeticOps(translator, shaderLibrary, mZilchTypes);
+  RegisterConversionOps(translator, shaderLibrary, mZilchTypes);
+  RegisterLogicalOps(translator, shaderLibrary, mZilchTypes);
+  RegisterBitOps(translator, shaderLibrary, mZilchTypes);
+  RegisterColorsOps(translator, shaderLibrary, mZilchTypes);
 
   // Add special extension functions such as Matrix.Determinant and Sin
   mGlsl450ExtensionsLibrary = new SpirVExtensionLibrary();
   shaderLibrary->mExtensionLibraries.PushBack(mGlsl450ExtensionsLibrary);
-  RegisterGlsl450Extensions(shaderLibrary, mGlsl450ExtensionsLibrary, types);
+  RegisterGlsl450Extensions(shaderLibrary, mGlsl450ExtensionsLibrary, mZilchTypes);
   shaderLibrary->mTranslated = true;
 }
 
@@ -87,7 +119,7 @@ ZilchShaderIRLibraryRef ZilchShaderIRCore::GetLibrary()
 
 void ZilchShaderIRCore::MakeMathTypes(ZilchSpirVFrontEnd* translator,
                                       ZilchShaderIRLibrary* shaderLibrary,
-                                      TypeGroups& types)
+                                      ShaderTypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
 
@@ -162,7 +194,7 @@ void ZilchShaderIRCore::MakeMathTypes(ZilchSpirVFrontEnd* translator,
 
 void ZilchShaderIRCore::RegisterPrimitiveFunctions(ZilchSpirVFrontEnd* translator,
                                                    ZilchShaderIRLibrary* shaderLibrary,
-                                                   TypeGroups& types,
+                                                   ShaderTypeGroups& types,
                                                    ZilchShaderIRType* shaderType)
 {
   Zilch::BoundType* intType = types.mIntegerVectorTypes[0]->mZilchType;
@@ -184,7 +216,7 @@ void ZilchShaderIRCore::RegisterPrimitiveFunctions(ZilchSpirVFrontEnd* translato
 
 void ZilchShaderIRCore::RegisterVectorFunctions(ZilchSpirVFrontEnd* translator,
                                                 ZilchShaderIRLibrary* shaderLibrary,
-                                                TypeGroups& types,
+                                                ShaderTypeGroups& types,
                                                 Array<ZilchShaderIRType*>& vectorTypes)
 {
   Zilch::BoundType* intType = types.mIntegerVectorTypes[0]->mZilchType;
@@ -224,7 +256,7 @@ void ZilchShaderIRCore::RegisterVectorFunctions(ZilchSpirVFrontEnd* translator,
 
 void ZilchShaderIRCore::RegisterMatrixFunctions(ZilchSpirVFrontEnd* translator,
                                                 ZilchShaderIRLibrary* shaderLibrary,
-                                                TypeGroups& types,
+                                                ShaderTypeGroups& types,
                                                 Array<ZilchShaderIRType*>& matrixTypes)
 {
   Zilch::BoundType* intType = types.mIntegerVectorTypes[0]->mZilchType;
@@ -269,7 +301,7 @@ void ZilchShaderIRCore::RegisterMatrixFunctions(ZilchSpirVFrontEnd* translator,
 
 void ZilchShaderIRCore::RegisterQuaternionFunctions(ZilchSpirVFrontEnd* translator,
                                                     ZilchShaderIRLibrary* shaderLibrary,
-                                                    TypeGroups& types,
+                                                    ShaderTypeGroups& types,
                                                     ZilchShaderIRType* quaternionType)
 {
   Zilch::BoundType* intType = types.mIntegerVectorTypes[0]->mZilchType;

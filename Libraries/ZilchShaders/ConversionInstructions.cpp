@@ -84,7 +84,7 @@ void ResolveRealToBoolCast(ZilchSpirVFrontEnd* translator,
 // Instructions in the spir-v spec). Some functions aren't implemented here as
 // zilch doesn't have a corresponding function. Everything else should be
 // implemented on the ShaderIntrinsics type.
-void RegisterConversionOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types)
+void RegisterConversionOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, ZilchTypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
   OperatorResolvers& opResolvers = shaderLibrary->mOperatorResolvers;
@@ -94,9 +94,9 @@ void RegisterConversionOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary*
   // instructions in spir-v and must be generated from multiple instructions.
   for (size_t i = 0; i < types.mRealVectorTypes.Size(); ++i)
   {
-    Zilch::BoundType* floatType = types.mRealVectorTypes[i]->mZilchType;
-    Zilch::BoundType* intType = types.mIntegerVectorTypes[i]->mZilchType;
-    Zilch::BoundType* boolType = types.mBooleanVectorTypes[i]->mZilchType;
+    Zilch::BoundType* floatType = types.mRealVectorTypes[i];
+    Zilch::BoundType* intType = types.mIntegerVectorTypes[i];
+    Zilch::BoundType* boolType = types.mBooleanVectorTypes[i];
 
     opResolvers.RegisterTypeCastOpResolver(floatType, intType, ResolveOpCast<OpType::OpConvertFToS>);
     opResolvers.RegisterTypeCastOpResolver(intType, floatType, ResolveOpCast<OpType::OpConvertSToF>);

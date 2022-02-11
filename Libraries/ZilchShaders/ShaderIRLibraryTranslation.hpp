@@ -15,7 +15,30 @@ void DummyBoundFunction(Zilch::Call& call, Zilch::ExceptionReport& report);
 
 /// Helper struct to pass around groups of types for generating library
 /// translation
-struct TypeGroups
+struct ZilchTypeGroups
+{
+  Zilch::BoundType* mVoidType;
+
+  // Index 0 is Real1 (e.g. Real)
+  Array<Zilch::BoundType*> mRealVectorTypes;
+  Array<Zilch::BoundType*> mRealMatrixTypes;
+
+  Array<Zilch::BoundType*> mIntegerVectorTypes;
+  Array<Zilch::BoundType*> mBooleanVectorTypes;
+  Zilch::BoundType* mQuaternionType;
+  // SpirV does not support non-floating point matrix types
+  // Array<ZilchShaderIRType*> mIntegerMatrixTypes;
+
+  Zilch::BoundType* GetMatrixType(int y, int x)
+  {
+    y -= 2;
+    x -= 2;
+    return mRealMatrixTypes[x + y * 3];
+  }
+};
+
+/// Helper struct to pass around groups of types for generating library translation
+struct ShaderTypeGroups
 {
   ZilchShaderIRType* mVoidType;
 
@@ -266,19 +289,19 @@ void ResolveStaticBinaryFunctionOp(ZilchSpirVFrontEnd* translator,
                                    Zilch::FunctionCallNode* functionCallNode,
                                    OpType opType,
                                    ZilchSpirVFrontEndContext* context);
-void RegisterArithmeticOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types);
-void RegisterConversionOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types);
-void RegisterLogicalOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types);
-void RegisterBitOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types);
+void RegisterArithmeticOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, ZilchTypeGroups& types);
+void RegisterConversionOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, ZilchTypeGroups& types);
+void RegisterLogicalOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, ZilchTypeGroups& types);
+void RegisterBitOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, ZilchTypeGroups& types);
 void RegisterGlsl450Extensions(ZilchShaderIRLibrary* shaderLibrary,
                                SpirVExtensionLibrary* extLibrary,
-                               TypeGroups& types);
+                               ZilchTypeGroups& types);
 void AddGlslExtensionIntrinsicOps(Zilch::LibraryBuilder& builder,
                                   SpirVExtensionLibrary* extLibrary,
                                   Zilch::BoundType* type,
-                                  TypeGroups& types);
+                                  ZilchTypeGroups& types);
 void RegisterShaderIntrinsics(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary);
-void RegisterColorsOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types);
+void RegisterColorsOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, ZilchTypeGroups& types);
 void FixedArrayResolver(ZilchSpirVFrontEnd* translator, Zilch::BoundType* zilchFixedArrayType);
 void RuntimeArrayResolver(ZilchSpirVFrontEnd* translator, Zilch::BoundType* zilchRuntimeArrayType);
 void GeometryStreamInputResolver(ZilchSpirVFrontEnd* translator, Zilch::BoundType* zilchFixedArrayType);

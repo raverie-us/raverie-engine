@@ -151,7 +151,7 @@ void ResolveLogicalAnd(ZilchSpirVFrontEnd* translator,
 // Logical Instructions in the spir-v spec). Some functions aren't implemented
 // here as zilch doesn't have a corresponding function. Everything else should
 // be implemented on the ShaderIntrinsics type.
-void RegisterLogicalOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types)
+void RegisterLogicalOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, ZilchTypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
   Zilch::BoundType* mathType = core.MathType;
@@ -165,7 +165,7 @@ void RegisterLogicalOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* sh
   // Register ops that are on all float vector types
   for (size_t i = 0; i < types.mRealVectorTypes.Size(); ++i)
   {
-    Zilch::BoundType* zilchType = types.mRealVectorTypes[i]->mZilchType;
+    Zilch::BoundType* zilchType = types.mRealVectorTypes[i];
 
     opResolvers.RegisterBinaryOpResolver(
         zilchType, zilchType, Zilch::Grammar::Equality, ResolveLogicalBinaryOp<OpType::OpFOrdEqual>);
@@ -186,7 +186,7 @@ void RegisterLogicalOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* sh
   // Register ops that are on all integer vector types
   for (size_t i = 0; i < types.mIntegerVectorTypes.Size(); ++i)
   {
-    Zilch::BoundType* zilchType = types.mIntegerVectorTypes[i]->mZilchType;
+    Zilch::BoundType* zilchType = types.mIntegerVectorTypes[i];
 
     opResolvers.RegisterBinaryOpResolver(
         zilchType, zilchType, Zilch::Grammar::Equality, ResolveLogicalBinaryOp<OpType::OpIEqual>);
@@ -215,7 +215,7 @@ void RegisterLogicalOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* sh
   // Register ops that are on all boolean vector types
   for (size_t i = 0; i < types.mBooleanVectorTypes.Size(); ++i)
   {
-    Zilch::BoundType* zilchType = types.mBooleanVectorTypes[i]->mZilchType;
+    Zilch::BoundType* zilchType = types.mBooleanVectorTypes[i];
     String zilchTypeName = zilchType->ToString();
 
     opResolvers.RegisterUnaryOpResolver(

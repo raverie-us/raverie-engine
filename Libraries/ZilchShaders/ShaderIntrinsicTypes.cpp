@@ -180,16 +180,16 @@ Zilch::Function* AddFunction(Zilch::LibraryBuilder& builder,
                              String());
 }
 
-void AddMathOps(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, TypeGroups& types)
+void AddMathOps(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, ZilchTypeGroups& types)
 {
   Zilch::BoundType* voidType = ZilchTypeId(void);
-  Zilch::BoundType* boolType = types.mBooleanVectorTypes[0]->mZilchType;
-  Zilch::BoundType* intType = types.mIntegerVectorTypes[0]->mZilchType;
-  Zilch::BoundType* realType = types.mRealVectorTypes[0]->mZilchType;
+  Zilch::BoundType* boolType = types.mBooleanVectorTypes[0];
+  Zilch::BoundType* intType = types.mIntegerVectorTypes[0];
+  Zilch::BoundType* realType = types.mRealVectorTypes[0];
 
   for (size_t i = 0; i < types.mBooleanVectorTypes.Size(); ++i)
   {
-    Zilch::BoundType* zilchType = types.mBooleanVectorTypes[i]->mZilchType;
+    Zilch::BoundType* zilchType = types.mBooleanVectorTypes[i];
     Zilch::BoundType* vectorBoolType = zilchType;
 
     // Unary
@@ -213,8 +213,8 @@ void AddMathOps(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, TypeGrou
 
   for (size_t i = 0; i < types.mIntegerVectorTypes.Size(); ++i)
   {
-    Zilch::BoundType* zilchType = types.mIntegerVectorTypes[i]->mZilchType;
-    Zilch::BoundType* vectorBoolType = types.mBooleanVectorTypes[i]->mZilchType;
+    Zilch::BoundType* zilchType = types.mIntegerVectorTypes[i];
+    Zilch::BoundType* vectorBoolType = types.mBooleanVectorTypes[i];
 
     // Unary
     AddFunction<OpType::OpBitReverse>(builder, type, zilchType, "BitReverse", zilchType);
@@ -264,8 +264,8 @@ void AddMathOps(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, TypeGrou
 
   for (size_t i = 0; i < types.mRealVectorTypes.Size(); ++i)
   {
-    Zilch::BoundType* zilchType = types.mRealVectorTypes[i]->mZilchType;
-    Zilch::BoundType* vectorBoolType = types.mBooleanVectorTypes[i]->mZilchType;
+    Zilch::BoundType* zilchType = types.mRealVectorTypes[i];
+    Zilch::BoundType* vectorBoolType = types.mBooleanVectorTypes[i];
 
     // Unary
     AddFunction<OpType::OpDPdx>(builder, type, zilchType, "Ddx", zilchType)
@@ -317,8 +317,7 @@ void AddMathOps(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, TypeGrou
   {
     for (size_t x = 2; x <= 4; ++x)
     {
-      ZilchShaderIRType* shaderType = types.GetMatrixType(y, x);
-      Zilch::BoundType* zilchType = shaderType->mZilchType;
+      Zilch::BoundType* zilchType = types.GetMatrixType(y, x);
 
       // Unary
       AddFunction<OpType::OpTranspose>(builder, type, zilchType, "Transpose", zilchType);
@@ -335,9 +334,9 @@ void AddMathOps(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, TypeGrou
   // Conversion
   for (size_t i = 0; i < types.mRealVectorTypes.Size(); ++i)
   {
-    Zilch::BoundType* zilchRealType = types.mRealVectorTypes[i]->mZilchType;
-    Zilch::BoundType* zilchIntType = types.mIntegerVectorTypes[i]->mZilchType;
-    Zilch::BoundType* zilchBoolType = types.mBooleanVectorTypes[i]->mZilchType;
+    Zilch::BoundType* zilchRealType = types.mRealVectorTypes[i];
+    Zilch::BoundType* zilchIntType = types.mIntegerVectorTypes[i];
+    Zilch::BoundType* zilchBoolType = types.mBooleanVectorTypes[i];
 
     AddFunction<OpType::OpConvertFToS>(builder, type, zilchIntType, "ConvertFToS", zilchRealType);
     AddFunction<OpType::OpConvertSToF>(builder, type, zilchRealType, "ConvertSToF", zilchIntType);
@@ -354,7 +353,7 @@ ZilchDefineType(ShaderIntrinsics, builder, type)
   Zilch::BoundType* intType = ZilchTypeId(int);
 
   ZilchShaderIRCore& shaderCore = ZilchShaderIRCore::GetInstance();
-  TypeGroups& types = shaderCore.mTypes;
+  ZilchTypeGroups& types = shaderCore.mZilchTypes;
 
   // This technically needs to be restricted to pixel fragment types.
   AddFunction<OpType::OpKill>(builder, type, voidType, "Kill")
