@@ -485,6 +485,16 @@ void SimplifiedShaderReflectionData::CreateSimpleOpaqueTypeReflectionData(ZilchS
         // Store the remapped data if it exists
         if (remappingData != nullptr)
           fragLookup.mStructedStorageBuffers[fieldName] = *remappingData;
+        else
+        {
+          // @JoshD: Currently opaque types when shared will have a name mangling that
+          // doesn't always map as it should. Temporarily try both names when resolving
+          // and pick the first one that works. Fix later.
+          remappingData = storageBufferMappings.FindPointer(fieldName);
+          // Store the remapped data if it exists
+          if (remappingData != nullptr)
+            fragLookup.mStructedStorageBuffers[fieldName] = *remappingData;
+        }
         continue;
       }
       // Check if this is a storage image
