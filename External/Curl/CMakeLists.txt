@@ -5,6 +5,7 @@ if(NOT EMSCRIPTEN)
   set(BUILD_TESTING OFF CACHE BOOL "")
   if(WIN32)
     set(CMAKE_USE_WINSSL ON CACHE BOOL "")
+    set(CURL_STATIC_CRT ON CACHE BOOL "")
   endif()
 
   add_subdirectory(Repo)
