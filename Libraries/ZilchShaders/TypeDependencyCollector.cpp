@@ -9,7 +9,8 @@ namespace Zero
 TypeDependencyCollector::TypeDependencyCollector(ZilchShaderIRLibrary* owningLibrary)
 {
   mOwningLibrary = owningLibrary;
-  mCapabilities.InsertOrIgnore(spv::CapabilityLinkage);
+  // @JoshD: This can't always be on in vulkan. Figure out how to experiment with linkage later.
+  // mCapabilities.InsertOrIgnore(spv::CapabilityLinkage);
   mCapabilities.InsertOrIgnore(spv::CapabilityShader);
   // @JoshD: Parse from spirv grammar later. Just prototyping now.
   mRequiredCapabilities[spv::OpImageQuerySize] = spv::CapabilityImageQuery;
