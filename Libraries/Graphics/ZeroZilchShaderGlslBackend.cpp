@@ -27,7 +27,8 @@ bool ZeroZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult&
   spirv_cross::CompilerGLSL compiler(data, wordCount);
   // Set options
   spirv_cross::CompilerGLSL::Options opts = compiler.get_common_options();
-  opts.force_legacy = true;
+  //opts.force_legacy = true; // welder specific
+  opts.emit_uniform_buffer_as_plain_uniforms = true; // replaces welder specific line above after spirv-cross update, welder specific patch not needed anymore
   opts.version = mTargetVersion;
   opts.es = mTargetGlslEs;
   compiler.set_common_options(opts);
