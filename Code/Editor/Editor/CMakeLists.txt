@@ -3,8 +3,18 @@ add_library(Editor)
 welder_setup_library(Editor ${CMAKE_CURRENT_LIST_DIR} TRUE)
 welder_use_precompiled_header(Editor ${CMAKE_CURRENT_LIST_DIR})
 
+set(Editor_CodeTranslator_Sources 
+    ${CMAKE_CURRENT_LIST_DIR}/CodeTranslator/CodeSplitWindow.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/CodeTranslator/CodeSplitWindow.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/CodeTranslator/CodeTranslatorCommands.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/CodeTranslator/CodeTranslatorCommands.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/CodeTranslator/ShaderTranslationDebugHelper.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/CodeTranslator/ShaderTranslationDebugHelper.hpp
+)
+
 target_sources(Editor
   PRIVATE
+    ${Editor_CodeTranslator_Sources}
     ${CMAKE_CURRENT_LIST_DIR}/AddRemoveListBox.cpp
     ${CMAKE_CURRENT_LIST_DIR}/AddRemoveListBox.hpp
     ${CMAKE_CURRENT_LIST_DIR}/AddWindow.cpp
