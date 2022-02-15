@@ -2,7 +2,8 @@
 #include "Precompiled.hpp"
 
 // METAREFACTOR - remove cyclic dependency
-#include "Editor/Editor/MessageBox.hpp"
+// todo: wu - remove dependency
+#include "Editor/EditorCore/MessageBox.hpp"
 
 namespace Zero
 {

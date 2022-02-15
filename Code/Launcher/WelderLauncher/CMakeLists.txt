@@ -55,10 +55,9 @@ target_sources(WelderLauncher
 target_link_libraries(WelderLauncher
   PUBLIC
     assimp
-#    CodeTranslator
     Common
     Content
-    Editor
+    EditorCore
     Engine
     FreeType
     Gameplay

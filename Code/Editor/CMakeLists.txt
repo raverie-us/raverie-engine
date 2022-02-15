@@ -1,2 +1,2 @@
-add_subdirectory(Editor)
+add_subdirectory(EditorCore)
 add_subdirectory(WelderEditor)

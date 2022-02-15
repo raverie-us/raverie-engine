@@ -2,4 +2,3 @@
 #pragma once
 
 #include "EditorStandard.hpp"
-#include "Extensions/CodeTranslator/CodeTranslatorStandard.hpp"

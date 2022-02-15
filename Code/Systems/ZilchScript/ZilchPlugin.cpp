@@ -3,7 +3,8 @@
 
 // This is probably a bad dependency, but there's not many
 // other places that make sense for launching the background task
-#include "Editor/Editor/SimpleBackgroundTasks.hpp"
+// todo: wu - Remove dependency
+#include "Editor/EditorCore/SimpleBackgroundTasks.hpp"
 
 namespace Zero
 {

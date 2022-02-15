@@ -54,7 +54,7 @@ public:
 #include "VariantEditor.hpp"
 #include "DataBaseTemplate.hpp"
 #include "GraphView.hpp"
-#include "Editor/Editor/TileLayout.hpp"
+#include "Editor/EditorCore/TileLayout.hpp"
 #include "PreviewWidget.hpp"
 #include "TileView.hpp"
 #include "TreeViewFilter.hpp"
@@ -175,5 +175,10 @@ public:
 #include "AnimationTrackView.hpp"
 #include "OnionSkinning.hpp"
 #include "AnimationEditor.hpp"
+
+// CodeTranslator
+#include "CodeTranslator/CodeSplitWindow.hpp"
+#include "CodeTranslator/CodeTranslatorCommands.hpp"
+#include "CodeTranslator/ShaderTranslationDebugHelper.hpp"
 
 #include "EditorMain.hpp"

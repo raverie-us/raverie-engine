@@ -8,7 +8,7 @@
 #include "Systems/Sound/SoundStandard.hpp"
 #include "Extensions/Widget/WidgetStandard.hpp"
 #include "Extensions/UiWidget/UiWidgetStandard.hpp"
-#include "Editor/Editor/EditorStandard.hpp"
+#include "Editor/EditorCore/EditorStandard.hpp"
 #include "Extensions/Gameplay/GameplayStandard.hpp"
 #include "Systems/ZilchScript/ZilchScriptStandard.hpp"
 #include "PlatformStandard.hpp"

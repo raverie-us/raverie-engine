@@ -5,7 +5,7 @@
 
 // Internal Core Library Dependencies
 // (Used by MarketWidget.cpp, PlayGame.cpp, GeometryBuilder.cpp)
-#include "Editor/Editor/EditorStandard.hpp"
+#include "Editor/EditorCore/EditorStandard.hpp"
 
 // Internal Gameplay Includes
 #include "TileMapSourceLoadPattern.hpp"

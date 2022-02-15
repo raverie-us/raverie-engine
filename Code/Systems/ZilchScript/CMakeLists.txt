@@ -21,5 +21,5 @@ welder_target_includes(ZilchScript
   PUBLIC
     Common
     Geometry
-    Editor
+    EditorCore
 )
