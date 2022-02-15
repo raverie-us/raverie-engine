@@ -1,0 +1,2 @@
+add_subdirectory(WelderLauncher)
+#add_subdirectory(WelderLauncherShell)

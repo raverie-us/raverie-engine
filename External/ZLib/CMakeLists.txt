@@ -36,3 +36,7 @@ target_include_directories(ZLib
   PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/Repo/
 )
+
+if(WIN32)
+	set_property(TARGET "ZLib" PROPERTY FOLDER "External")
+endif()

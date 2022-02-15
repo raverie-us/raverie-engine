@@ -36,7 +36,7 @@ const repoRootFile = ".welder";
 
 const dirs = (() => {
   const repo = path.dirname(findUp.sync(repoRootFile));
-  const libraries = path.join(repo, "Libraries");
+  const libraries = path.join(repo, "Code");
   const resources = path.join(repo, "Resources");
   const build = path.join(repo, "Build");
   const prebuiltContent = path.join(build, "PrebuiltContent");
@@ -62,6 +62,7 @@ const executables = [
   {
     copyToIncludedBuilds: true,
     name: "WelderEditor",
+    dir: "Editor",
     nonResourceDependencies: [
       "Data",
       "LauncherTemplates",
@@ -83,6 +84,7 @@ const executables = [
     // Since the launcher includes the editor build, it must come afterwards.
     copyToIncludedBuilds: false,
     name: "WelderLauncher",
+    dir: "Launcher",
     nonResourceDependencies: [
       "Data",
       path.join("Build", "IncludedBuilds"),
@@ -472,7 +474,7 @@ const determineCmakeCombo = (options) => {
       vfs: false
     },
     Windows: {
-      builder: "Visual Studio 15 2017",
+      builder: "Visual Studio 16 2019",
       config: "Release",
       platform: "Windows",
       targetos: "Windows",
@@ -574,7 +576,7 @@ const buildvfs = async (cmakeVariablesOptional, buildDir, combo) => {
   for (const executable of executables) {
     console.log(`Building virtual file system for ${executable.name}`);
 
-    const libraryDir = path.join(buildDir, "Libraries", executable.name);
+    const libraryDir = path.join(buildDir, "Code", executable.dir, executable.name);
     mkdirp.sync(libraryDir);
 
     const makeFsBuffer = async () => {
@@ -752,12 +754,12 @@ const preventNoOutputTimeout = () => {
   return () => clearInterval(interval);
 };
 
-const findExecutableDir = (buildDir, config, library) => [
-  path.join(buildDir, "Libraries", library, config),
-  path.join(buildDir, "Libraries", library)
+const findExecutableDir = (buildDir, config, libraryDir, library) => [
+  path.join(buildDir, "Code", libraryDir, library, config),
+  path.join(buildDir, "Code", libraryDir, library)
 ].filter((filePath) => fs.existsSync(filePath))[0];
 
-const findExecutable = (buildDir, config, library) => path.join(findExecutableDir(buildDir, config, library), `${library}${executableExtension}`);
+const findExecutable = (buildDir, config, libraryDir, library) => path.join(findExecutableDir(buildDir, config, libraryDir, library), `${library}${executableExtension}`);
 
 const format = async (options) => {
   console.log("Formatting");
@@ -823,9 +825,9 @@ const build = async (options) => {
   console.log("Built");
 };
 
-const executeBuiltProcess = async (buildDir, combo, library, args) => {
+const executeBuiltProcess = async (buildDir, combo, libraryDir, library, args) => {
   if (combo.toolchain === "Emscripten") {
-    const pageDirectory = path.join(buildDir, "Libraries", library);
+    const pageDirectory = path.join(buildDir, "Code", library);
     if (!fs.existsSync(pageDirectory)) {
       printErrorLine(`Directory does not exist ${pageDirectory}`);
       return [];
@@ -880,7 +882,7 @@ const executeBuiltProcess = async (buildDir, combo, library, args) => {
     return downloadPaths;
   }
 
-  const executablePath = findExecutable(buildDir, combo.config, library);
+  const executablePath = findExecutable(buildDir, combo.config, libraryDir, library);
 
   if (!fs.existsSync(executablePath)) {
     printErrorLine(`Executable does not exist ${executablePath}`);
@@ -913,7 +915,7 @@ const prebuilt = async (options) => {
       continue;
     }
 
-    const downloadPaths = await executeBuiltProcess(buildDir, combo, executable.name, [
+    const downloadPaths = await executeBuiltProcess(buildDir, combo, executable.dir, executable.name, [
       "-CopyPrebuiltContent",
       "-Exit"
     ]);
@@ -962,7 +964,7 @@ const pack = async (options) => {
     const library = executable.name;
     console.log(`Packaging library ${library}`);
 
-    const executableDir = findExecutableDir(buildDir, combo.config, library);
+    const executableDir = findExecutableDir(buildDir, combo.config, executable.dir, library);
     if (!fs.existsSync(executableDir)) {
       printErrorLine(`Library directory does not exist ${executableDir}`);
       continue;

@@ -1,0 +1,8 @@
+add_subdirectory(Common)
+add_subdirectory(Zilch)
+add_subdirectory(Support)
+add_subdirectory(Geometry)
+add_subdirectory(Meta)
+add_subdirectory(Serialization)
+add_subdirectory(SpatialPartition)
+add_subdirectory(Replication)

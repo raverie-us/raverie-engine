@@ -1,0 +1,5 @@
+add_subdirectory(ZilchShaders)
+add_subdirectory(Widget)
+add_subdirectory(UiWidget)
+add_subdirectory(Gameplay)
+add_subdirectory(CodeTranslator)

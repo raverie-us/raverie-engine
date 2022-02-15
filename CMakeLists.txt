@@ -51,7 +51,7 @@ set(WELDER_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(WELDER_CMAKE_DIR ${WELDER_CORE_DIR}/CMakeFiles/)
 set(WELDER_TOOLCHAIN_DIR ${WELDER_CMAKE_DIR}/Toolchain/)
 set(WELDER_TARGETOS_DIR ${WELDER_CMAKE_DIR}/TargetOs/)
-set(WELDER_LIBRARIES_DIR ${WELDER_CORE_DIR}/Libraries/)
+set(WELDER_LIBRARIES_DIR ${WELDER_CORE_DIR}/Code/)
 set(WELDER_PLATFORM_DATA_DIR ${WELDER_CORE_DIR}/PlatformData/${WELDER_TOOLCHAIN})
 
 function(welder_setup_library target directory internal)
@@ -162,7 +162,7 @@ set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL         "${CMAKE_EXE_LINKER_FLAGS_MINSIZER
 #Emscripten
 #SDLSTDEmpty
 #Stub
-add_subdirectory(Libraries/Platform/${WELDER_PLATFORM})
+add_subdirectory(Code/Foundation/Platform/${WELDER_PLATFORM})
 
 add_subdirectory(External)
-add_subdirectory(Libraries)
+add_subdirectory(Code)

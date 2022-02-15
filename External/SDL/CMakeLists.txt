@@ -14,3 +14,8 @@ target_link_libraries(SDL
     SDL2-static
     SDL2main
 )
+
+if(WIN32)
+	set_property(TARGET "SDL2-static" PROPERTY FOLDER "External/SDL")
+	set_property(TARGET "SDL2main" PROPERTY FOLDER "External/SDL")
+endif()

@@ -17,3 +17,7 @@ if(NOT EMSCRIPTEN)
       libcurl
   )
 endif()
+
+if(WIN32)
+	set_property(TARGET "libcurl" PROPERTY FOLDER "External")
+endif()

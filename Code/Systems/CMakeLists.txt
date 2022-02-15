@@ -1,0 +1,8 @@
+add_subdirectory(Engine)
+add_subdirectory(Content)
+add_subdirectory(Physics)
+add_subdirectory(Graphics)
+add_subdirectory(Sound)
+add_subdirectory(Startup)
+add_subdirectory(ZilchScript)
+add_subdirectory(Networking)

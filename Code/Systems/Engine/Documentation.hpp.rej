@@ -1,0 +1,10 @@
+--- Documentation.hpp
++++ Documentation.hpp
+@@ -249,6 +249,7 @@
+ 
+     void Serialize(Serializer& stream);
+ 
++    /// loads documentation from file then fills that documentation into the meta database
+     void LoadDocumentation(StringRef fileName);
+ 
+     /// Finalize the documentation for saving/loading (builds maps and fills out missing data)

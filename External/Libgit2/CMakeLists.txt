@@ -11,3 +11,7 @@ if(NOT EMSCRIPTEN)
       git2
   )
 endif()
+
+if(WIN32)
+	set_property(TARGET "git2" PROPERTY FOLDER "External")
+endif()
