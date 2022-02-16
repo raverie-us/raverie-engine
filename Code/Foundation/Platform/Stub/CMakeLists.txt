@@ -22,7 +22,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Peripherals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/PlatformStandard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Process.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../Empty/Renderer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Resolution.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Shell.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Socket.cpp

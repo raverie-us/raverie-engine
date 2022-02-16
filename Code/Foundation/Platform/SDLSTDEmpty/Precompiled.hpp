@@ -1,14 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-#include "Common/CommonStandard.hpp"
-#include "PlatformStandard.hpp"
+#include "Foundation/Common/CommonStandard.hpp"
+#include "Platform/PlatformStandard.hpp"
 
 #include "SDL.h"
-
-#include <GL/glew.h>
-
-#include <GL/gl.h>
 
 #ifdef WelderTargetOsMac
 #  include <CoreServices/CoreServices.h>

@@ -22,6 +22,7 @@ target_link_libraries(WelderEditor
     Replication
     Startup
     Support
+    RendererImpl
 )
 
 welder_copy_from_linked_libraries(WelderEditor)

@@ -36,6 +36,7 @@ target_sources(Support
 welder_target_includes(Support
   PUBLIC
     Common
+    RendererBase
     Libpng
     ZLib
 )
@@ -43,6 +44,7 @@ welder_target_includes(Support
 target_link_libraries(Support
   PUBLIC
     Common
+    RendererBase
     Zilch
     Platform
     Libpng

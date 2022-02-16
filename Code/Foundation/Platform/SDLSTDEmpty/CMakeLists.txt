@@ -22,14 +22,11 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/MainLoop.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Socket.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Libgit2/Git.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../OpenGL/OpenglRenderer.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../OpenGL/OpenglRenderer.hpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Audio.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/ExternalLibrary.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/File.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Keys.inl
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/MouseButtons.inl
-    ${CMAKE_CURRENT_LIST_DIR}/../SDL/OpenglRendererSDL.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Peripherals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/PlatformStandard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Resolution.cpp

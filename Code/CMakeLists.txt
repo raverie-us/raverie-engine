@@ -1,4 +1,5 @@
 add_subdirectory(Foundation)
+add_subdirectory(Renderer)
 add_subdirectory(Systems)
 add_subdirectory(Extensions)
 add_subdirectory(Editor)

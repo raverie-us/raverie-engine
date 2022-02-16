@@ -16,7 +16,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Thread.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/ThreadSync.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/VirtualFileAndFileSystem.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../OpenGL/OpenglRenderer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Posix/Socket.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Audio.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/ExternalLibrary.cpp
@@ -31,7 +30,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../STD/Process.cpp
     ${CMAKE_CURRENT_LIST_DIR}/CallStack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/MainLoop.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/OpenglRendererEmscripten.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/WebRequest.cpp

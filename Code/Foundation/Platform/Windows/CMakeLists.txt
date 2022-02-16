@@ -8,8 +8,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../Curl/WebRequest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/MainLoop.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Libgit2/Git.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../OpenGL/OpenglRenderer.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../OpenGL/OpenglRenderer.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Atomic.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Audio.cpp
     ${CMAKE_CURRENT_LIST_DIR}/CallStack.cpp
@@ -27,7 +25,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/Keys.inl
     ${CMAKE_CURRENT_LIST_DIR}/Main.cpp
     ${CMAKE_CURRENT_LIST_DIR}/MouseButtons.inl
-    ${CMAKE_CURRENT_LIST_DIR}/OpenglRendererWindows.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Peripherals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/PlatformStandard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
@@ -59,7 +56,5 @@ welder_target_includes(Platform
 target_link_libraries(Platform
   PUBLIC
     Curl
-    GL
-    Glew
     Libgit2
 )

@@ -234,8 +234,6 @@ namespace Zero
 #include "Platform/Shell.hpp"
 #include "Platform/ComPort.hpp"
 #include "Platform/Intrinsics.hpp"
-#include "Platform/RendererEnumerations.hpp"
-#include "Platform/Renderer.hpp"
 #include "Platform/Audio.hpp"
 #include "Platform/CallStack.hpp"
 #include "Platform/WebRequest.hpp"

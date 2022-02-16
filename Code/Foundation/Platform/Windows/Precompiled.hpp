@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Foundation/Common/CommonStandard.hpp"
+#include "Renderer/RendererBase/RendererBaseStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
 
 // Prevent including winsock1.
@@ -55,13 +56,6 @@
 #include <process.h>
 #include <avrt.h>
 #include <hidsdi.h>
-
-// Include glew before OpenGl
-#include <GL/glew.h>
-#include <GL/wglew.h>
-
-// Include OpenGl
-#include <GL/gl.h>
 
 #ifdef min
 #  undef min

@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Foundation/Common/CommonStandard.hpp"
+#include "Renderer/RendererBase/RendererBaseStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
 
 #include "Urls.hpp"

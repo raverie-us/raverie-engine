@@ -59,6 +59,7 @@ target_link_libraries(WelderLauncher
     Replication
     Startup
     Support
+    RendererImpl
 )
 
 welder_copy_from_linked_libraries(WelderLauncher)

@@ -119,6 +119,7 @@ welder_target_includes(Graphics
     Geometry
     ZilchShaders
     FreeType
+    RendererBase
 )
 
 target_link_libraries(Graphics
@@ -131,4 +132,5 @@ target_link_libraries(Graphics
     SpatialPartition
     ZilchShaders
     FreeType
+    RendererBase
 )
