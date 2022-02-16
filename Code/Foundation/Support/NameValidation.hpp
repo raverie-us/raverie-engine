@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "String.hpp"
-#include "Status.hpp"
+#include "String/String.hpp"
+#include "Utility/Status.hpp"
 
 namespace Zero
 {

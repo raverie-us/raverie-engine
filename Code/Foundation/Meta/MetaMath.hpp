@@ -3,7 +3,7 @@
 
 namespace Zero
 {
-#include "MathImports.hpp"
+#include "Math/MathImports.hpp"
 typedef Math::EulerAnglesParam EulerAnglesParam;
 
 struct Aabb;

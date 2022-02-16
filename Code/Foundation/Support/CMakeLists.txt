@@ -39,3 +39,12 @@ welder_target_includes(Support
     Libpng
     ZLib
 )
+
+target_link_libraries(Support
+  PUBLIC
+    Common
+    Zilch
+    Platform
+    Libpng
+    ZLib
+)

@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Foundation/Common/CommonStandard.hpp"
-#include "PlatformStandard.hpp"
+#include "Platform/PlatformStandard.hpp"
 #include "Systems/Engine/EngineStandard.hpp"
 #include "Foundation/SpatialPartition/SpatialPartitionStandard.hpp"
 

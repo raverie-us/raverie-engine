@@ -1,11 +1,11 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "Importer.hpp"
-#include "FileSystem.hpp"
-#include "FilePath.hpp"
+#include "Platform/FileSystem.hpp"
+#include "Platform/FilePath.hpp"
 #include "ToString.hpp"
 #include "Foundation/Support/Archive.hpp"
-#include "Utilities.hpp"
+#include "Platform/Utilities.hpp"
 
 namespace Zero
 {

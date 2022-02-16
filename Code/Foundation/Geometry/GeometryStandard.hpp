@@ -17,7 +17,7 @@ using Zero::Array;
 
 namespace Zero
 {
-#include "MathImports.hpp"
+#include "Math/MathImports.hpp"
 using Geometry::Vec3Array;
 
 typedef Array<Array<Vec2>> ContourArray;

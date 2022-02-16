@@ -3,9 +3,9 @@
 
 #include <ctype.h>
 #include "NameValidation.hpp"
-#include "StringBuilder.hpp"
-#include "CharacterTraits.hpp"
-#include "StringUtility.hpp"
+#include "String/StringBuilder.hpp"
+#include "String/CharacterTraits.hpp"
+#include "String/StringUtility.hpp"
 
 namespace Zero
 {

@@ -260,3 +260,13 @@ welder_target_includes(Physics
   PUBLIC
     Zilch
 )
+
+target_link_libraries(Physics
+                      PUBLIC
+                      Common
+                      Meta
+                      Serialization
+                      Geometry
+                      SpatialPartition
+
+)

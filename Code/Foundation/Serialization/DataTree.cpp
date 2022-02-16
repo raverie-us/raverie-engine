@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
-#include "FileSystem.hpp"
-#include "File.hpp"
+#include "Platform/FileSystem.hpp"
+#include "Platform/File.hpp"
 #include "LegacyDataTreeParser.hpp"
 
 namespace Zero

@@ -1,12 +1,12 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "Text.hpp"
-#include "StringConversion.hpp"
-#include "File.hpp"
-#include "CharacterTraits.hpp"
+#include "String/StringConversion.hpp"
+#include "Platform/File.hpp"
+#include "String/CharacterTraits.hpp"
 #include "Foundation/Support/FileSupport.hpp"
 #include "SerializationUtility.hpp"
-#include "ToString.hpp"
+#include "String/ToString.hpp"
 
 namespace Zero
 {

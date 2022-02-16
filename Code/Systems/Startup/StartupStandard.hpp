@@ -11,6 +11,6 @@
 #include "Editor/EditorCore/EditorStandard.hpp"
 #include "Extensions/Gameplay/GameplayStandard.hpp"
 #include "Systems/ZilchScript/ZilchScriptStandard.hpp"
-#include "PlatformStandard.hpp"
+#include "Platform/PlatformStandard.hpp"
 
 #include "Startup.hpp"

@@ -48,6 +48,11 @@ target_sources(Replication
 welder_target_includes(Replication
   PUBLIC
     Common
+)
+
+target_link_libraries(Replication
+  PUBLIC
+    Common
     Zilch
     Geometry
 )

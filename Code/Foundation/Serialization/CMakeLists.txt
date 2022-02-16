@@ -49,3 +49,11 @@ welder_target_includes(Serialization
   PUBLIC
     Common
 )
+
+target_link_libraries(Serialization
+  PUBLIC
+    Common
+    Zilch
+    Meta
+    Platform
+)

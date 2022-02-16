@@ -1,8 +1,8 @@
 // MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
-#include "Process.hpp"
-#include "FilePath.hpp"
+#include "Platform/Process.hpp"
+#include "Platform/FilePath.hpp"
 
 namespace Zero
 {

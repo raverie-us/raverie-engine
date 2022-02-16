@@ -24,7 +24,7 @@ const Guid cInvalidUniqueId = (Guid)(u64)-1;
 
 // Project includes
 #include "NativeTypeConversion.hpp"
-#include "Singleton.hpp"
+#include "Utility/Singleton.hpp"
 #include "Object.hpp"
 #include "HandleManagers.hpp"
 #include "ThreadSafeReferenceCounted.hpp"

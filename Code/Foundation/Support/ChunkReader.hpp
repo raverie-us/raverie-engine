@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "Standard.hpp"
-#include "File.hpp"
+#include "Utility/Standard.hpp"
+#include "Platform/File.hpp"
 
 namespace Zero
 {

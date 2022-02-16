@@ -42,7 +42,7 @@ public:
   ZilchDeclareType(ColorsClass, TypeCopyMode::ReferenceType);
 
 #  define DefineColor(name, r, g, b, a) static const Real4 name;
-#  include "ColorDefinitions.hpp"
+#  include "Math/ColorDefinitions.hpp"
 #  undef DefineColor
 };
 } // namespace Zilch

@@ -1,11 +1,11 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "FileSupport.hpp"
-#include "FileSystem.hpp"
-#include "StringBuilder.hpp"
-#include "Regex.hpp"
-#include "FilePath.hpp"
-#include "Foundation/Common/Time.hpp"
+#include "Platform/FileSystem.hpp"
+#include "String/StringBuilder.hpp"
+#include "Regex/Regex.hpp"
+#include "Platform/FilePath.hpp"
+#include "Utility/Time.hpp"
 
 extern unsigned char VirtualFileSystemData[];
 extern unsigned int VirtualFileSystemSize;

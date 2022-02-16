@@ -1,8 +1,8 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
-#include "Status.hpp"
+#include "Utility/Status.hpp"
 #include "SourceControl.hpp"
-#include "StringBuilder.hpp"
+#include "String/StringBuilder.hpp"
 
 namespace Zero
 {

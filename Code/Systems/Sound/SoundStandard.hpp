@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 #include "Foundation/Common/CommonStandard.hpp"
-#include "PlatformStandard.hpp"
+#include "Platform/PlatformStandard.hpp"
 #include "Foundation/Serialization/SerializationStandard.hpp"
 #include "Foundation/Meta/MetaStandard.hpp"
 #include "Foundation/Support/SupportStandard.hpp"

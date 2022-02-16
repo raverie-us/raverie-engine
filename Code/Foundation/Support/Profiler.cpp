@@ -1,8 +1,8 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "Profiler.hpp"
-#include "Timer.hpp"
-#include "Misc.hpp"
+#include "Platform/Timer.hpp"
+#include "Utility/Misc.hpp"
 
 namespace Zero
 {

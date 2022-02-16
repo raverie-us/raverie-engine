@@ -23,3 +23,11 @@ welder_target_includes(ZilchScript
     Geometry
     Engine
 )
+
+target_link_libraries(ZilchScript
+  PUBLIC
+    Common
+    Zilch
+    Meta
+    Serialization
+)

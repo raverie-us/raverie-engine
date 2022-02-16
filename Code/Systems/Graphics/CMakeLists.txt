@@ -120,3 +120,15 @@ welder_target_includes(Graphics
     ZilchShaders
     FreeType
 )
+
+target_link_libraries(Graphics
+  PUBLIC
+    Common
+    Zilch
+    Meta
+    Serialization
+    Geometry
+    SpatialPartition
+    ZilchShaders
+    FreeType
+)

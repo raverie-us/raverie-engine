@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-#include "Typedefs.hpp"
-#include "Array.hpp"
-#include "InList.hpp"
-#include "Timer.hpp"
+#include "Utility/Typedefs.hpp"
+#include "Containers/Array.hpp"
+#include "Containers/InList.hpp"
+#include "Platform/Timer.hpp"
 
 namespace Zero
 {

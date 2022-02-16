@@ -1,9 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "SourceControl.hpp"
-#include "Process.hpp"
-#include "StringBuilder.hpp"
-#include "FileSystem.hpp"
+#include "Platform/Process.hpp"
+#include "String/StringBuilder.hpp"
+#include "Platform/FileSystem.hpp"
 
 namespace Zero
 {

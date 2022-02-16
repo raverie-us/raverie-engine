@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
-#include "StringBuilder.hpp"
-#include "Algorithm.hpp"
+#include "String/StringBuilder.hpp"
+#include "Containers/Algorithm.hpp"
 #include "StringReplacement.hpp"
 
 namespace Zero

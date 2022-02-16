@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "DataContent.hpp"
-#include "FileSystem.hpp"
+#include "Platform/FileSystem.hpp"
 #include "ContentLibrary.hpp"
 #include "Foundation/Serialization/Simple.hpp"
-#include "Process.hpp"
+#include "Platform/Process.hpp"
 #include "ContentSystem.hpp"
 #include "RichAnimation.hpp"
-#include "FilePath.hpp"
+#include "Platform/FilePath.hpp"
 #include "ZilchPluginContent.hpp"
 
 namespace Zero
