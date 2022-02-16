@@ -27,11 +27,9 @@ public:
 // Misc.
 #include "LauncherCommunicationEvent.hpp"
 #include "NetOperations.hpp"
-#include "BackgroundTask.hpp"
 #include "Downloads.hpp"
 #include "EditorSearchProviders.hpp"
 #include "BackgroundTaskUi.hpp"
-#include "SimpleBackgroundTasks.hpp"
 #include "StressTest.hpp"
 #include "CurveEditor.hpp"
 

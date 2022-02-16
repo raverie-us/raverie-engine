@@ -36,8 +36,6 @@ target_sources(EditorCore
     ${CMAKE_CURRENT_LIST_DIR}/AnimationTrackView.hpp
     ${CMAKE_CURRENT_LIST_DIR}/AppCommands.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ArchiveProjectCommands.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/BackgroundTask.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/BackgroundTask.hpp
     ${CMAKE_CURRENT_LIST_DIR}/BackgroundTaskUi.cpp
     ${CMAKE_CURRENT_LIST_DIR}/BackgroundTaskUi.hpp
     ${CMAKE_CURRENT_LIST_DIR}/BasicGizmos.cpp
@@ -238,8 +236,6 @@ target_sources(EditorCore
     ${CMAKE_CURRENT_LIST_DIR}/ScrollingGraph.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SelectionHistory.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SelectionHistory.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/SimpleBackgroundTasks.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/SimpleBackgroundTasks.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SpriteEditor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SpriteEditor.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SpriteImporter.cpp

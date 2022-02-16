@@ -38,9 +38,9 @@ target_link_libraries(WelderEditor
     Serialization
     Sound
     SpatialPartition
-    SpirvCross
-    SpirvHeaders
-    SpirvTools
+#    SpirvCross
+#    SpirvHeaders
+#    SpirvTools
     Startup
     Support
     UiWidget

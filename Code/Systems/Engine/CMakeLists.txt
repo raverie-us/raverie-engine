@@ -29,6 +29,8 @@ target_sources(Engine
     ${CMAKE_CURRENT_LIST_DIR}/Area.hpp
     ${CMAKE_CURRENT_LIST_DIR}/AsyncProcess.cpp
     ${CMAKE_CURRENT_LIST_DIR}/AsyncProcess.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BackgroundTask.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/BackgroundTask.hpp
     ${CMAKE_CURRENT_LIST_DIR}/BasicActions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/BasicActions.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Cog.cpp
@@ -178,6 +180,8 @@ target_sources(Engine
     ${CMAKE_CURRENT_LIST_DIR}/ScriptEvents.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ShortcutsDoc.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ShortcutsDoc.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/SimpleBackgroundTasks.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/SimpleBackgroundTasks.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SimpleResourceFactory.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Space.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Space.hpp

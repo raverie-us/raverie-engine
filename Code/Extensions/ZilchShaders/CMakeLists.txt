@@ -101,3 +101,9 @@ welder_target_includes(ZilchShaders
     SpirvTools
     SpirvCross
 )
+target_link_libraries(ZilchShaders
+  PUBLIC
+    SpirvCross
+    SpirvHeaders
+    SpirvTools
+)

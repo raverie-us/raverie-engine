@@ -145,6 +145,8 @@ private:
 #include "Spline.hpp"
 #include "HierarchySpline.hpp"
 #include "AsyncProcess.hpp"
+#include "BackgroundTask.hpp"
+#include "SimpleBackgroundTasks.hpp"
 #include "CopyOnWrite.hpp"
 
 // Co-dependent libraries
