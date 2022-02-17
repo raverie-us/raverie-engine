@@ -46,7 +46,9 @@ target_sources(FreeType
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/pshinter/pshinter.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/psnames/psnames.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/raster/raster.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/sdf/sdf.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/sfnt/sfnt.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/svg/svg.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/smooth/smooth.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/truetype/truetype.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/type1/type1.c
