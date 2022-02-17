@@ -42,7 +42,7 @@ target_link_libraries(RendererGL
   PUBLIC
     GL
     Glew
-    RendererBase
+#    RendererBase
 )
 
 if(NOT ${WELDER_TARGETOS} STREQUAL "Windows")

@@ -31,7 +31,7 @@ welder_target_includes(UiWidget
     ZilchShaders
 )
 
-target_link_libraries(UiWidget
-                      PUBLIC
-                      Engine
-)
+#target_link_libraries(UiWidget
+#                      PUBLIC
+#                      Engine
+#)

@@ -82,8 +82,8 @@ welder_target_includes(Geometry
     Zilch
 )
 
-target_link_libraries(Geometry
-  PUBLIC
-    Common
-    Zilch
-)
+#target_link_libraries(Geometry
+#  PUBLIC
+#    Common
+#    Zilch
+#)

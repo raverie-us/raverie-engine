@@ -17,12 +17,41 @@ target_sources(WelderEditor
 
 target_link_libraries(WelderEditor
   PUBLIC
+    assimp
     Common
+    Content
     EditorCore
+    Engine
+    FreeType
+    Gameplay
+    Geometry
+    Graphics
+    Libpng
+    Meta
+    Networking
+    Nvtt
+    Opus
+    Physics
+    Platform
+    RendererBase
+    RendererImpl
+#    RendererGL
     Replication
+    Scintilla
+    Serialization
+    Sound
+    SpatialPartition
+    SpirvCross
+    SpirvHeaders
+    SpirvTools
     Startup
     Support
-    RendererImpl
+    UiWidget
+    Widget
+    ZLib
+    Zilch
+    ZilchScript
+    ZilchShaders
 )
 
 welder_copy_from_linked_libraries(WelderEditor)

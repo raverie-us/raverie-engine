@@ -51,8 +51,6 @@ welder_target_includes(Platform
 target_link_libraries(Platform
   PUBLIC
     Curl
-    GL
-    Glew
     Libgit2
     SDL
 )

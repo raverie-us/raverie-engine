@@ -12,7 +12,7 @@ welder_target_includes(RendererEmpty
   PUBLIC
     RendererBase
 )
-target_link_libraries(RendererEmpty
-  PUBLIC
-    RendererBase
-)
+#target_link_libraries(RendererEmpty
+#  PUBLIC
+#    RendererBase
+#)

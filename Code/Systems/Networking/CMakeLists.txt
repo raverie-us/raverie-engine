@@ -68,8 +68,8 @@ welder_target_includes(Networking
     Geometry
 )
 
-target_link_libraries(Networking
-                      PUBLIC
-                      Common
-                      Geometry
-)
+#target_link_libraries(Networking
+#                      PUBLIC
+#                      Common
+#                      Geometry
+#)

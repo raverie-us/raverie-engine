@@ -67,8 +67,8 @@ welder_target_includes(SpatialPartition
     Zilch
 )
 
-target_link_libraries(SpatialPartition
-  PUBLIC
-    Common
-    Serialization
-)
+#target_link_libraries(SpatialPartition
+#  PUBLIC
+#    Common
+#    Serialization
+#)

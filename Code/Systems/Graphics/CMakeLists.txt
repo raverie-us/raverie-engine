@@ -122,15 +122,15 @@ welder_target_includes(Graphics
     RendererBase
 )
 
-target_link_libraries(Graphics
-  PUBLIC
-    Common
-    Zilch
-    Meta
-    Serialization
-    Geometry
-    SpatialPartition
-    ZilchShaders
-    FreeType
-    RendererBase
-)
+#target_link_libraries(Graphics
+#  PUBLIC
+#    Common
+#    Zilch
+#    Meta
+#    Serialization
+#    Geometry
+#    SpatialPartition
+#    ZilchShaders
+#    FreeType
+#    RendererBase
+#)

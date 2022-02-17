@@ -81,12 +81,12 @@ welder_target_includes(Sound
     Opus
 )
 
-target_link_libraries(Sound
-                      PUBLIC
-                      Common
-                      Meta
-                      Serialization
-                      Geometry
-                      SpatialPartition
-                      Opus
-)
+#target_link_libraries(Sound
+#                      PUBLIC
+#                      Common
+#                      Meta
+#                      Serialization
+#                      Geometry
+#                      SpatialPartition
+#                      Opus
+#)

@@ -221,13 +221,13 @@ welder_target_includes(Engine
     Zilch
 )
 
-target_link_libraries(Engine
-  PUBLIC
-    Common
-    Zilch
-    Platform
-    Meta
-    Serialization
-    Geometry
-    SpatialPartition
-)
+#target_link_libraries(Engine
+#  PUBLIC
+#    Common
+#    Zilch
+#    Platform
+#    Meta
+#    Serialization
+#    Geometry
+#    SpatialPartition
+#)

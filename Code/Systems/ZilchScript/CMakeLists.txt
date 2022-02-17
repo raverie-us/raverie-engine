@@ -24,10 +24,10 @@ welder_target_includes(ZilchScript
     Engine
 )
 
-target_link_libraries(ZilchScript
-  PUBLIC
-    Common
-    Zilch
-    Meta
-    Serialization
-)
+#target_link_libraries(ZilchScript
+#  PUBLIC
+#    Common
+#    Zilch
+#    Meta
+#    Serialization
+#)

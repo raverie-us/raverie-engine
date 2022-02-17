@@ -670,7 +670,7 @@ const cmake = async (options) => {
 
     const toolchainFile = path.join(process.env.EMSCRIPTEN, "cmake/Modules/Platform/Emscripten.cmake");
     toolchainArgs.push(`-DCMAKE_TOOLCHAIN_FILE=${toolchainFile}`);
-    toolchainArgs.push("-DEMSCRIPTEN_GENERATE_BITCODE_STATIC_LIBRARIES=1");
+    toolchainArgs.push("-DEMSCRIPTEN_GENERATE_BITCODE_STATIC_LIBRARIES=0");
   }
 
   if (combo.toolchain === "Clang") {

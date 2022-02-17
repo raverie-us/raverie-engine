@@ -19,23 +19,23 @@ welder_target_includes(Startup
     Graphics
 )
 
-target_link_libraries(Startup
-  PUBLIC
-    Common
-    Meta
-    Platform
-    Geometry
-    Serialization
-    Content
-    SpatialPartition
-    Engine
-    Graphics
-    Physics
-    Networking
-    Sound
-    Widget
-    Gameplay
-    UiWidget
-    ZilchScript
-    ZilchShaders
-)
+#target_link_libraries(Startup
+#  PUBLIC
+#    Common
+#    Meta
+#    Platform
+#    Geometry
+#    Serialization
+#    Content
+#    SpatialPartition
+#    Engine
+#    Graphics
+#    Physics
+#    Networking
+#    Sound
+#    Widget
+#    Gameplay
+#    UiWidget
+#    ZilchScript
+#    ZilchShaders
+#)

@@ -18,7 +18,7 @@ welder_target_includes(RendererBase
   PUBLIC
     Common
 )
-target_link_libraries(RendererBase
-  PUBLIC
-    Common
-)
+#target_link_libraries(RendererBase
+#  PUBLIC
+#    Common
+#)

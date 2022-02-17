@@ -70,13 +70,13 @@ welder_target_includes(Gameplay
     ZilchShaders
 )
 
-target_link_libraries(Gameplay
-  PUBLIC
-    Common
-    Platform
-    Zilch
-    Geometry
-    Meta
-    Support
-    Engine
-)
+#target_link_libraries(Gameplay
+#  PUBLIC
+#    Common
+#    Platform
+#    Zilch
+#    Geometry
+#    Meta
+#    Support
+#    Engine
+#)

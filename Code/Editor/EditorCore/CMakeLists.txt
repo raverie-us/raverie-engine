@@ -295,15 +295,15 @@ welder_target_includes(EditorCore
     ZilchShaders
 )
 
-target_link_libraries(EditorCore
-  PUBLIC
-  Platform
-  Common
-  Engine
-  Scintilla
-  Widget
-  UiWidget
-  Gameplay
-  Sound
-  Geometry
-)
+#target_link_libraries(EditorCore
+#  PUBLIC
+#  Platform
+#  Common
+#  Engine
+#  Scintilla
+#  Widget
+#  UiWidget
+#  Gameplay
+#  Sound
+#  Geometry
+#)
