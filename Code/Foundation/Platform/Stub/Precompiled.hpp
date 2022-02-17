@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-#include "Common/CommonStandard.hpp"
-#include "PlatformStandard.hpp"
+#include "Foundation/Common/CommonStandard.hpp"
+#include "Renderer/RendererBase/RendererBaseStandard.hpp"
+#include "Platform/PlatformStandard.hpp"

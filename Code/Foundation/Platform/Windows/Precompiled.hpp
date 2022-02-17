@@ -2,8 +2,8 @@
 #pragma once
 
 #include "Foundation/Common/CommonStandard.hpp"
-#include "Renderer/RendererBase/RendererBaseStandard.hpp"
-#include "Platform/PlatformStandard.hpp"
+//#include "Renderer/RendererBase/RendererBaseStandard.hpp"
+#include "Foundation/Common/Platform/PlatformStandard.hpp"
 
 // Prevent including winsock1.
 #define _WINSOCKAPI_

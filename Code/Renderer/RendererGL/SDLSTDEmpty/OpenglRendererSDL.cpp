@@ -1,7 +1,8 @@
 // MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
-#include "../OpenGL/OpenglRenderer.hpp"
+#include "SDL.h"
+#include "OpenglRenderer.hpp"
 
 namespace Zero
 {
