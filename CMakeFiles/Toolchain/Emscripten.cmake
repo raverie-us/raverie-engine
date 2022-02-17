@@ -16,7 +16,6 @@ set(WELDER_C_CXX_FLAGS "\
   -Wno-empty-body\
   -s ALLOW_MEMORY_GROWTH=1\
   -s WASM=1\
-  -s SIMD=0\
   -s ASYNCIFY=1\
   -fexceptions\
   -frtti\
