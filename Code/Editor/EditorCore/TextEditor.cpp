@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
-#include "ScintillaPlatformZero.hpp"
+#include "Scintilla/ScintillaPlatformZero.hpp"
 
 const ByteColor ColorBlack = ByteColorRGBA(0, 0, 0, 0xFF);
 const ByteColor Yellow = ByteColorRGBA(0xFF, 0xFF, 0, 0xFF);
