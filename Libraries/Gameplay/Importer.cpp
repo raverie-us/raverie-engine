@@ -17,7 +17,7 @@ ImporterResult::Type Importer::CheckForImport()
   // For the sake of plugins, our exe MUST be named ZeroEditor.exe
   // We solve this by copying our own executable to the output directory first,
   // run the executable there, and terminate our own
-  static const String ZeroEngineExecutable("ZeroEditor.exe");
+  static const String ZeroEngineExecutable("WelderEditor.exe");
 
   // Get the package as an executable resource
   ByteBufferBlock buffer;
