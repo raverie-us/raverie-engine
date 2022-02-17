@@ -61,6 +61,13 @@ function(welder_setup_library target directory internal)
     #set_property(TARGET ${target} PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${WELDER_IWYU_PATH})
   endif()
   welder_toolchain_setup_library(${target})
+  # globally enable sorting targets into folders in IDEs
+  if(WIN32)
+      set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+      get_filename_component (PARENT_FOLDER ${directory} PATH)
+      get_filename_component (FOLDER_NAME ${PARENT_FOLDER} NAME)
+      set_property(TARGET ${target} PROPERTY FOLDER ${FOLDER_NAME})
+  endif()
 endfunction()
 
 function(welder_get_all_dependencies outputList TARGET)
