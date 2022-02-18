@@ -434,6 +434,19 @@ TemplateProject* VersionSelector::CreateTemplateProjectFromMeta(StringParam meta
   DataTreeLoader loader;
   Status status;
   loader.OpenFile(status, metaFilePath);
+  if (loader.GetType() != SerializerType::Text)
+  {
+    return nullptr;
+  }
+
+  ObjectLoader* objectLoader = (ObjectLoader*)&loader;
+  DataNode* cogDataNode = objectLoader->GetNext();
+  BoundType* cogType = ZilchTypeId(Cog);
+  if (cogDataNode->mTypeName != cogType->Name)
+  {
+    return nullptr;
+  }
+  
   Cog* metaCog = Z::gFactory->CreateFromStream(Z::gEngine->GetEngineSpace(), loader, 0, nullptr);
   return CreateTemplateProjectFromMeta(metaCog, FilePath::GetDirectoryPath(metaFilePath), fullBuildId);
 }
