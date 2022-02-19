@@ -3,24 +3,81 @@ add_library(Engine)
 welder_setup_library(Engine ${CMAKE_CURRENT_LIST_DIR} TRUE)
 welder_use_precompiled_header(Engine ${CMAKE_CURRENT_LIST_DIR})
 
+set(Engine_Action_Sources
+    ${CMAKE_CURRENT_LIST_DIR}/Action/Action.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Action/Action.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Action/ActionEase.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Action/ActionEase.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Action/ActionGenerator.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Action/ActionSystem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Action/ActionSystem.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Action/BasicActions.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Action/BasicActions.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Action/MetaAction.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Action/MetaAction.hpp
+)
+
+set(Engine_Animation_Sources
+    ${CMAKE_CURRENT_LIST_DIR}/Animation/Animation.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Animation/Animation.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Animation/AnimationGraph.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Animation/AnimationGraph.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Animation/AnimationGraphEvents.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Animation/AnimationGraphEvents.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Animation/AnimationNode.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Animation/AnimationNode.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Animation/AnimationNode.inl
+    ${CMAKE_CURRENT_LIST_DIR}/Animation/PropertyTrack.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Animation/PropertyTrack.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Animation/PropertyTrack.inl
+)
+
+set(Engine_Platform_Sources
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/Input/GamePadSystem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/Input/GamePadSystem.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/Input/JoystickSystem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/Input/JoystickSystem.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/Input/Keyboard.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/Input/Keyboard.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/Input/Mouse.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/Input/Mouse.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/OsShell.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/OsShell.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/OsWindow.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/OsWindow.hpp
+)
+
+set(Engine_ResourceManager_Sources
+    ${CMAKE_CURRENT_LIST_DIR}/ResourceManager/Resource.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ResourceManager/Resource.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ResourceManager/ResourceLibrary.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ResourceManager/ResourceLibrary.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ResourceManager/ResourceManager.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ResourceManager/ResourceManager.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ResourceManager/ResourcePropertyOperations.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ResourceManager/ResourcePropertyOperations.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ResourceManager/ResourceSystem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ResourceManager/ResourceSystem.hpp
+)
+
+set(Engine_Scripting_Sources
+    ${CMAKE_CURRENT_LIST_DIR}/Scripting/ScriptEvents.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Scripting/ScriptEvents.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Scripting/ZilchAction.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Scripting/ZilchAction.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Scripting/ZilchManager.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Scripting/ZilchManager.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Scripting/ZilchResource.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Scripting/ZilchResource.hpp
+)
+
 target_sources(Engine
   PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/Action.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Action.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ActionEase.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ActionEase.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ActionGenerator.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ActionSystem.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ActionSystem.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Animation.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Animation.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/AnimationGraph.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/AnimationGraph.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/AnimationGraphEvents.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/AnimationGraphEvents.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/AnimationNode.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/AnimationNode.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/AnimationNode.inl
+    ${Engine_Action_Sources}
+    ${Engine_Animation_Sources}
+    ${Engine_Platform_Sources}
+    ${Engine_ResourceManager_Sources}
+    ${Engine_Scripting_Sources}
     ${CMAKE_CURRENT_LIST_DIR}/Archetype.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Archetype.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ArchetypeRebuilder.cpp
@@ -31,8 +88,6 @@ target_sources(Engine
     ${CMAKE_CURRENT_LIST_DIR}/AsyncProcess.hpp
     ${CMAKE_CURRENT_LIST_DIR}/BackgroundTask.cpp
     ${CMAKE_CURRENT_LIST_DIR}/BackgroundTask.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/BasicActions.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/BasicActions.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Cog.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Cog.hpp
     ${CMAKE_CURRENT_LIST_DIR}/CogHelpers.cpp
@@ -103,8 +158,6 @@ target_sources(Engine
     ${CMAKE_CURRENT_LIST_DIR}/Factory.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Game.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Game.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/GamePadSystem.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/GamePadSystem.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Gradient.hpp
     ${CMAKE_CURRENT_LIST_DIR}/HeightMap.cpp
     ${CMAKE_CURRENT_LIST_DIR}/HeightMap.hpp
@@ -118,20 +171,12 @@ target_sources(Engine
     ${CMAKE_CURRENT_LIST_DIR}/HierarchySpline.hpp
     ${CMAKE_CURRENT_LIST_DIR}/JobSystem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/JobSystem.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/JoystickSystem.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/JoystickSystem.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Keyboard.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Keyboard.hpp
     ${CMAKE_CURRENT_LIST_DIR}/LauncherConfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/LauncherConfiguration.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Level.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Level.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/MetaAction.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/MetaAction.hpp
     ${CMAKE_CURRENT_LIST_DIR}/MetaOperations.cpp
     ${CMAKE_CURRENT_LIST_DIR}/MetaOperations.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Mouse.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Mouse.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Noise.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Noise.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ObjectLink.cpp
@@ -144,40 +189,21 @@ target_sources(Engine
     ${CMAKE_CURRENT_LIST_DIR}/ObjectStore.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Operation.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Operation.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/OsShell.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/OsShell.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/OsWindow.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/OsWindow.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Project.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Project.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/PropertyTrack.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/PropertyTrack.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/PropertyTrack.inl
     ${CMAKE_CURRENT_LIST_DIR}/ProxyObject.hpp
     ${CMAKE_CURRENT_LIST_DIR}/RaycastProvider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/RaycastProvider.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Rectangle.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Rectangle.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Resource.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Resource.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ResourceLibrary.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ResourceLibrary.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ResourceManager.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ResourceManager.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ResourcePropertyOperations.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ResourcePropertyOperations.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ResourceSystem.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ResourceSystem.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ResourceTable.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ResourceTable.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SampleCurve.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SampleCurve.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SceneGraph.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SceneGraph.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ScriptEvents.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ScriptEvents.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ShortcutsDoc.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ShortcutsDoc.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SimpleBackgroundTasks.cpp
@@ -206,12 +232,6 @@ target_sources(Engine
     ${CMAKE_CURRENT_LIST_DIR}/Tweakables.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Tweakables.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Tweakables.inl
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchAction.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchAction.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchManager.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchManager.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchResource.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchResource.hpp
 )
 
 welder_target_includes(Engine
