@@ -89,7 +89,7 @@ bool ShellEditFile(StringParam file)
   return false;
 }
 
-bool ShellOpenApplication(StringParam file, StringParam parameters)
+bool ShellOpenApplication(StringParam file, StringParam parameters, StringParam workingDirectory)
 {
   return false;
 }

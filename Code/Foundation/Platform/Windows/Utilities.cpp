@@ -242,10 +242,10 @@ bool ShellEditFile(StringParam file)
   return status.Succeeded();
 }
 
-bool ShellOpenApplication(StringParam file, StringParam parameters)
+bool ShellOpenApplication(StringParam file, StringParam parameters, StringParam workingDirectory)
 {
   Status status;
-  SystemOpenFile(status, file.c_str(), NULL, parameters.c_str());
+  SystemOpenFile(status, file.c_str(), NULL, parameters.c_str(), workingDirectory.c_str());
   return status.Succeeded();
 }
 

@@ -54,7 +54,7 @@ ZeroShared bool ShellOpenFile(StringParam file);
 ZeroShared bool ShellEditFile(StringParam file);
 
 // Open the application with parameters.
-ZeroShared bool ShellOpenApplication(StringParam file, StringParam parameters = String());
+ZeroShared bool ShellOpenApplication(StringParam file, StringParam parameters = String(), StringParam workingDirectory = String());
 
 // On browser based platforms, we can't access the user's file-system so we need to download files instead.
 ZeroShared bool SupportsDownloadingFiles();
