@@ -245,7 +245,7 @@ bool ShellEditFile(StringParam file)
 bool ShellOpenApplication(StringParam file, StringParam parameters, StringParam workingDirectory)
 {
   Status status;
-  SystemOpenFile(status, file.c_str(), NULL, parameters.c_str(), workingDirectory.c_str());
+  SystemOpenFile(status, file.c_str(), NULL, parameters.c_str(), !workingDirectory.Empty() ? workingDirectory.c_str() : nullptr);
   return status.Succeeded();
 }
 
