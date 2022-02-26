@@ -81,6 +81,23 @@ const executables = [
     vfsOnlyPackage: ["LauncherTemplates"]
   },
   {
+    copyToIncludedBuilds: true,
+    name: "Game",
+    dir: "Editor",
+    nonResourceDependencies: [
+      "Data",
+      repoRootFile
+    ],
+    prebuild: true,
+    resourceLibraries: [
+      "FragmentCore",
+      "Loading",
+      "ZeroCore",
+      "UiWidget"
+    ],
+    vfsOnlyPackage: []
+  },
+  {
     // Since the launcher includes the editor build, it must come afterwards.
     copyToIncludedBuilds: false,
     name: "WelderLauncher",
