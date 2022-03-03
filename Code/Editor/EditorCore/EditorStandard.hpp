@@ -179,4 +179,7 @@ public:
 #include "CodeTranslator/CodeTranslatorCommands.hpp"
 #include "CodeTranslator/ShaderTranslationDebugHelper.hpp"
 
+// Export
+#include "Export/Exporter.hpp"
+
 #include "EditorMain.hpp"

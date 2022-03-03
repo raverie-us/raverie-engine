@@ -50,6 +50,7 @@ target_link_libraries(Game
     Widget
     ZLib
     Zilch
+    ZilchScript
     ZilchShaders
 )
 

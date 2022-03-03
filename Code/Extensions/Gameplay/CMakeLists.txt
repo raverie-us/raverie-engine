@@ -10,9 +10,6 @@ target_sources(Gameplay
     ${CMAKE_CURRENT_LIST_DIR}/CsgExternalSerialization.hpp
     ${CMAKE_CURRENT_LIST_DIR}/DefaultGame.cpp
     ${CMAKE_CURRENT_LIST_DIR}/DefaultGame.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/EmscriptenExportTarget.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Exporter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Exporter.hpp
     ${CMAKE_CURRENT_LIST_DIR}/GameplayStandard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/GameplayStandard.hpp
     ${CMAKE_CURRENT_LIST_DIR}/GitJobs.cpp
@@ -57,7 +54,6 @@ target_sources(Gameplay
     ${CMAKE_CURRENT_LIST_DIR}/TileMapSourceLoadPattern.hpp
     ${CMAKE_CURRENT_LIST_DIR}/UnitTestSystem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/UnitTestSystem.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/WindowsExportTarget.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Zero.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Zero.hpp
 )
