@@ -26,7 +26,8 @@ void WindowsExportTarget::ExportApplication()
   {
     ProfileScopeFunction();
     ProjectSettings* project = mExporter->mProjectCog->has(ProjectSettings);
-    String outputPath = FilePath::Combine(GetTemporaryDirectory(), "Windows", "ZeroExport");
+    //String outputPath = FilePath::Combine(GetTemporaryDirectory(), "Windows", "ZeroExport");
+    String outputPath = mExporter->mOutputDirectory;
     String appDirectory = GetApplicationDirectory();
     Cog* configCog = Z::gEngine->GetConfigCog();
     MainConfig* mainConfig = configCog->has(MainConfig);
@@ -155,7 +156,8 @@ void WindowsExportTarget::ExportApplication()
 void WindowsExportTarget::ExportContentFolders(Cog* projectCog)
 {
   ProjectSettings* project = projectCog->has(ProjectSettings);
-  String outputDirectory = FilePath::Combine(GetTemporaryDirectory(), "Windows", project->ProjectName);
+  //String outputDirectory = FilePath::Combine(GetTemporaryDirectory(), "Windows", project->ProjectName);
+  String outputDirectory = mExporter->mOutputDirectory;
 
   Status copyStatus;
   mExporter->CopyContent(copyStatus, outputDirectory, this);
