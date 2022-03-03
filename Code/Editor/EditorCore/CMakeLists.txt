@@ -19,6 +19,11 @@ set(Editor_Export_Sources
     ${CMAKE_CURRENT_LIST_DIR}/Export/WindowsExportTarget.cpp
 )
 
+set(Editor_Import_Sources 
+    ${CMAKE_CURRENT_LIST_DIR}/Import/Importer.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Import/Importer.cpp
+)
+
 set(Editor_Property_Sources 
     ${CMAKE_CURRENT_LIST_DIR}/Property/BasicPropertyEditors.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Property/BasicPropertyEditors.hpp

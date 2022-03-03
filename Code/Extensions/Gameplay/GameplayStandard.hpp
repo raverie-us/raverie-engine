@@ -62,6 +62,4 @@ public:
 #include "TileMapSourceLoadPattern.hpp"
 #include "Zero.hpp"
 
-#include "Importer.hpp"
-
 #include "GitJobs.hpp"

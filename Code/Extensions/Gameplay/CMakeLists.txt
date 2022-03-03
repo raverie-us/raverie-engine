@@ -14,8 +14,6 @@ target_sources(Gameplay
     ${CMAKE_CURRENT_LIST_DIR}/GameplayStandard.hpp
     ${CMAKE_CURRENT_LIST_DIR}/GitJobs.cpp
     ${CMAKE_CURRENT_LIST_DIR}/GitJobs.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Importer.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Importer.hpp
     ${CMAKE_CURRENT_LIST_DIR}/IndexedHalfEdgeMesh.cpp
     ${CMAKE_CURRENT_LIST_DIR}/IndexedHalfEdgeMesh.hpp
     ${CMAKE_CURRENT_LIST_DIR}/MarchingCubes.cpp

@@ -182,4 +182,7 @@ public:
 // Export
 #include "Export/Exporter.hpp"
 
+// Import
+#include "Import/Importer.hpp"
+
 #include "EditorMain.hpp"

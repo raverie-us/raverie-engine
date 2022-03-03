@@ -31,7 +31,7 @@ void GameStartup::UserInitialize()
   projectCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), projectFile, 0, nullptr);
   if (projectCog == nullptr)
   {
-    FatalEngineError("Failed load project '%s'", projectFile.c_str());
+    FatalEngineError("GameStartup: Failed load project '%s'", projectFile.c_str());
     return Exit(1);
   }
 

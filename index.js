@@ -81,7 +81,7 @@ const executables = [
     vfsOnlyPackage: ["LauncherTemplates"]
   },
   {
-    copyToIncludedBuilds: true,
+    copyToIncludedBuilds: false,
     name: "Game",
     dir: "Editor",
     nonResourceDependencies: [
