@@ -1094,7 +1094,7 @@ const all = async (options) => {
   await pack(options);
   // Build again so that if the launcher uses a VFS it will have the packaged build
   await build(options);
-  await documentation(options);
+  //await documentation(options);
   // Finally, pack everything up (with included builds and prebuilt content)
   await pack(options);
 };
