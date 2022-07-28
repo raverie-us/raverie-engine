@@ -44,6 +44,10 @@ module.exports = {
     "no-sync": "off",
     "no-continue": "off",
     "no-loop-func": "off",
-    "lines-around-comment": "off"
+    "lines-around-comment": "off",
+    "implicit-arrow-linebreak": "off",
+    "capitalized-comments": "off",
+    "spaced-comment": "off",
+    "multiline-comment-style": "off",
   }
 };

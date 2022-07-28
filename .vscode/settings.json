@@ -4,8 +4,10 @@
   "files.insertFinalNewline": true,
   "editor.tabSize": 2,
   "editor.detectIndentation": false,
-  "eslint.autoFixOnSave": true,
   "javascript.format.enable": false,
   "C_Cpp.default.compileCommands": "${workspaceFolder}/Build/Active/compile_commands.json",
-  "C_Cpp.autoAddFileAssociations": false
+  "C_Cpp.autoAddFileAssociations": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }

@@ -61,8 +61,8 @@ const dirs = (() => {
 const executables = [
   {
     copyToIncludedBuilds: true,
-    name: "WelderEditor",
     dir: "Editor",
+    name: "WelderEditor",
     nonResourceDependencies: [
       "Data",
       "LauncherTemplates",
@@ -82,8 +82,8 @@ const executables = [
   },
   {
     copyToIncludedBuilds: false,
-    name: "Game",
     dir: "Editor",
+    name: "Game",
     nonResourceDependencies: [
       "Data",
       repoRootFile
@@ -100,8 +100,8 @@ const executables = [
   {
     // Since the launcher includes the editor build, it must come afterwards.
     copyToIncludedBuilds: false,
-    name: "WelderLauncher",
     dir: "Launcher",
+    name: "WelderLauncher",
     nonResourceDependencies: [
       "Data",
       path.join("Build", "IncludedBuilds"),
@@ -776,7 +776,8 @@ const findExecutableDir = (buildDir, config, libraryDir, library) => [
   path.join(buildDir, "Code", libraryDir, library)
 ].filter((filePath) => fs.existsSync(filePath))[0];
 
-const findExecutable = (buildDir, config, libraryDir, library) => path.join(findExecutableDir(buildDir, config, libraryDir, library), `${library}${executableExtension}`);
+const findExecutable = (buildDir, config, libraryDir, library) =>
+  path.join(findExecutableDir(buildDir, config, libraryDir, library), `${library}${executableExtension}`);
 
 const format = async (options) => {
   console.log("Formatting");
