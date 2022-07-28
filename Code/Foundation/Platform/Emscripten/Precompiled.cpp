@@ -254,7 +254,7 @@ EM_JS(void, EmscriptenDownloadFile, (cstr fileName, const void* fileMemory, size
 
 namespace Os
 {
-bool ShellOpenApplication(StringParam file, StringParam parameters)
+bool ShellOpenApplication(StringParam file, StringParam parameters, StringParam workingDirectory)
 {
   // Always assume the other application is in a sibling url directory
   // and that we can pass parameters as anything after the ?

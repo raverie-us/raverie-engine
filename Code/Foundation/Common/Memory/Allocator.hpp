@@ -1,6 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 
 #pragma once
+#include <stdexcept>
 
 #ifndef UseMemoryGraph
 #  define UseMemoryGraph 1

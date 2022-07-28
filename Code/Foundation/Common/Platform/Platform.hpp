@@ -207,6 +207,9 @@
 
 #  pragma clang diagnostic ignored "-Wlogical-op-parentheses"
 
+// Spirv triggers this
+#  pragma clang diagnostic ignored "-Wunqualified-std-cast-call"
+
 #  undef __STDC__
 #endif
 

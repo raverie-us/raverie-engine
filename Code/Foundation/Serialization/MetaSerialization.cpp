@@ -319,7 +319,7 @@ bool SerializeAny(cstr fieldName, Any& value, Serializer& serializer)
   }
   else
   {
-    ReturnIf(serializer.GetType() != SerializerType::Text, nullptr, "Can only detect type from text");
+    ReturnIf(serializer.GetType() != SerializerType::Text, false, "Can only detect type from text");
 
     DataTreeLoader* dataTreeLoader = (DataTreeLoader*)&serializer;
     DataNode* node = dataTreeLoader->GetNext();

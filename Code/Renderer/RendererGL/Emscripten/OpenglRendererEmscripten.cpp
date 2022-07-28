@@ -1,7 +1,8 @@
 // MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
-#include "../OpenGL/OpenglRenderer.hpp"
+#include "OpenglRenderer.hpp"
+#include "emscripten/html5.h"
 
 namespace Zero
 {

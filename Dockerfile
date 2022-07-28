@@ -1,13 +1,14 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04 
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends \
     wget \
     git-core \
     default-jre \
     python2.7 \
     p7zip-full \
     ccache \
+    cmake \
     doxygen \
     dumb-init \
     clang \
@@ -15,7 +16,6 @@ RUN apt-get update && \
     clang-tidy \
     git \
     gnupg2 \
-    iwyu \
     build-essential \
     libasound2-dev \
     libpulse-dev \
@@ -30,32 +30,23 @@ RUN apt-get update && \
     libdbus-1-dev \
     zlib1g-dev \
     libdirectfb-dev \
-    mesa-common-dev mesa-utils-extra libglapi-mesa libgl1-mesa-dev libglu1-mesa-dev freeglut3 freeglut3-dev \
+    mesa-common-dev \
+    mesa-utils-extra \
+    libglapi-mesa \
+    libgl1-mesa-dev \
+    libglu1-mesa-dev \
+    freeglut3 \
+    freeglut3-dev \
     llvm \
     ninja-build \
     nodejs \
     npm \
     pkg-config \
+    python3 \
     xorg-dev \
     xscreensaver \
     xutils-dev \
     xvfb
-
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-    google-chrome-unstable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf
-
-RUN apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN wget -q -O cmake.sh https://github.com/Kitware/CMake/releases/download/v3.14.7/cmake-3.14.7-Linux-x86_64.sh && \
-    chmod +x cmake.sh && \
-    ./cmake.sh --skip-license && \
-    rm cmake.sh
-
-ENV DISPLAY=":99.0"
 
 RUN npm install -g npm@latest
 
@@ -68,6 +59,8 @@ RUN sed -i 's/# error.*//g' /usr/include/x86_64-linux-gnu/sys/cdefs.h
 
 RUN echo 'pcm.!default { type plug slave.pcm "null" }' > /etc/asound.conf
 
+RUN ln /usr/bin/python3 /usr/bin/python
+
 ARG USER_ID
 RUN useradd -m -s /bin/bash -u $USER_ID user && \
     addgroup user audio && \
@@ -75,14 +68,15 @@ RUN useradd -m -s /bin/bash -u $USER_ID user && \
 USER $USER_ID
 ENV HOME="/home/user"
 
-ENV EMSCRIPTEN_VERSION sdk-tag-1.38.47-64bit-upstream
+ENV EMSCRIPTEN_VERSION 3.1.17
 
 RUN cd /tmp && \
     git clone https://github.com/juj/emsdk.git && \
     cd emsdk && \
-    ./emsdk update-tags && \
     ./emsdk install $EMSCRIPTEN_VERSION && \
     ./emsdk activate --embedded $EMSCRIPTEN_VERSION
+
+RUN ls /tmp/emsdk/node/
 
 ENV PATH="/tmp/emsdk:/tmp/emsdk/upstream/emscripten:/tmp/emsdk/node/12.9.1_64bit/bin:${PATH}"
 ENV EMSDK="/tmp/emsdk"
@@ -97,7 +91,7 @@ ENV EMCC_SKIP_SANITY_CHECK=1
 # Compile a program to force emcc caching
 RUN mkdir -p /tmp/emcc && \
     cd /tmp/emcc && \
-    printf "#include <iostream>\nint main(){ std::cout << 0; }" > build.cpp && \
+    printf "#include <iostream>\nint main(){ std::cout << 0; malloc(0); }" > build.cpp && \
     emcc -s USE_WEBGL2=1 -s FULL_ES2=1 -s FULL_ES3=1 -s USE_SDL=2 -O2 -s WASM=1 build.cpp && \
     rm -rf /tmp/emcc
 
@@ -122,8 +116,6 @@ CMD echo '----------ccache:' && \
     clang-tidy --version && \
     echo '----------git:' && \
     git --version && \
-    echo '----------iwyu:' && \
-    iwyu --version && \
     echo '----------ninja:' && \
     ninja --version && \
     echo '----------node:' && \

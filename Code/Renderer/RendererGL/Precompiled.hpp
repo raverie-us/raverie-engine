@@ -2,9 +2,15 @@
 
 #include "RendererGLStandard.hpp"
 
+#ifdef ZeroWebgl
+# include "GLES3/gl32.h"
+#else
 // Include glew before OpenGl
-#include <GL/glew.h>
-#include <GL/wglew.h>
+# include <GL/glew.h>
+# ifdef WIN32
+#   include <GL/wglew.h>
+# endif
+#endif
 
 // Include OpenGl
 #include <GL/gl.h>

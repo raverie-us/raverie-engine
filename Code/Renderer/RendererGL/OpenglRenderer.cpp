@@ -970,14 +970,6 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
   ZPrint("OpenGL Vendor           : %s\n", gl_vendor ? gl_vendor : "(no data)");
   ZPrint("OpenGL Renderer         : %s\n", gl_renderer ? gl_renderer : "(no data)");
 
-  // Initialize glew
-  GLenum glewInitStatus = glewInit();
-  if (glewInitStatus != GLEW_OK)
-  {
-    error = String::Format("GLEW failed to initialize with error: %d", glewInitStatus);
-    return;
-  }
-
 #ifdef ZeroWebgl
   // glewIsSupported on emscripten doesn't emulate desktop gl extension queries.
   bool version_2_0 = true;
@@ -986,6 +978,15 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
   bool draw_buffers_blend = false;
   bool sampler_objects = true;
 #else
+
+  // Initialize glew
+  GLenum glewInitStatus = glewInit();
+  if (glewInitStatus != GLEW_OK)
+  {
+    error = String::Format("GLEW failed to initialize with error: %d", glewInitStatus);
+    return;
+  }
+
   bool version_2_0 = glewIsSupported("GL_VERSION_2_0");
   bool framebuffer_object = glewIsSupported("GL_ARB_framebuffer_object");
   bool texture_compression = glewIsSupported("GL_ARB_texture_compression");
@@ -1040,8 +1041,10 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
   glEnable(GL_TEXTURE_CUBE_MAP);
 #endif
 
+#ifndef ZeroWebgl
   if (glewIsSupported("GL_ARB_seamless_cube_map"))
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+#endif
 
   // GLint maxAttributes;
   // glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxAttributes); // 16

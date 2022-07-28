@@ -1,8 +1,8 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-#include "TypeTraits.hpp"
-#include "ContainerCommon.hpp"
+#include "Containers/TypeTraits.hpp"
+#include "Containers/ContainerCommon.hpp"
 
 // Todo: Handle enum hash policies in a way that works for all compilers.
 // We need to make a specialization because the hash maps do not work with enums

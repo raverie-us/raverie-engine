@@ -147,20 +147,20 @@ int CheckFileTime(StringParam dest, StringParam source)
 
   if (destTime < sourceTime)
   {
-    DebugFileTime("Source '%s' (%d) is newer than destination '%s' (%lld)\n",
+    DebugFileTime("Source '%s' (%d) is newer than destination '%s' (%d)\n",
                   source.c_str(),
-                  sourceTime,
+                  (int)sourceTime,
                   dest.c_str(),
-                  (long long)destTime);
+                  (int)destTime);
     return -1;
   }
   if (destTime > sourceTime)
   {
-    DebugFileTime("Source '%s' (%d) is older than destination '%s' (%lld)\n",
+    DebugFileTime("Source '%s' (%d) is older than destination '%s' (%d)\n",
                   source.c_str(),
-                  sourceTime,
+                  (int)sourceTime,
                   dest.c_str(),
-                  (long long)destTime);
+                  (int)destTime);
     return +1;
   }
 

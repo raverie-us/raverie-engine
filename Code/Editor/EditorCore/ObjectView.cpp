@@ -924,8 +924,8 @@ public:
       return false;
     }
 
-    ReturnIf(Type::DynamicCast<Cog*>((Object*)destinationEntry) == nullptr, nullptr, "This should always be a Cog");
-    ReturnIf(Type::DynamicCast<Cog*>((Object*)movingEntry) == nullptr, nullptr, "This should always be a Cog");
+    ReturnIf(Type::DynamicCast<Cog*>((Object*)destinationEntry) == nullptr, false, "This should always be a Cog");
+    ReturnIf(Type::DynamicCast<Cog*>((Object*)movingEntry) == nullptr, false, "This should always be a Cog");
 
     OperationQueue* queue = Z::gEditor->GetOperationQueue();
 
@@ -967,7 +967,7 @@ public:
     }
 
     ReturnIf(indicesToMove.Empty(), false, "Nothing to move");
-    ReturnIf(Type::DynamicCast<Cog*>((Object*)destinationEntry) == nullptr, nullptr, "This should always be a Cog");
+    ReturnIf(Type::DynamicCast<Cog*>((Object*)destinationEntry) == nullptr, false, "This should always be a Cog");
     OperationQueue* queue = Z::gEditor->GetOperationQueue();
     Cog* dest = (Cog*)destinationEntry;
 

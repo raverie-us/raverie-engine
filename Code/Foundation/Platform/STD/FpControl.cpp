@@ -5,9 +5,13 @@
 namespace Zero
 {
 
+#ifdef FE_INEXACT
 // by default, we want all of the fpu exceptions apart from inexact
 ///(inexact happens in lots of odd places...) and underflow
 uint FpuControlSystem::DefaultMask = FE_INEXACT | FE_UNDERFLOW;
+#else
+uint FpuControlSystem::DefaultMask = 0;
+#endif
 
 /// Stores that by default floating point exceptions are enabled
 bool FpuControlSystem::Active = true;
