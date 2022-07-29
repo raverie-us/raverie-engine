@@ -3,7 +3,6 @@
 
 namespace Zero
 {
-bool gYieldToOsEnabled = true;
 void YieldToOs()
 {
   emscripten_sleep(0);
