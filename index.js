@@ -765,8 +765,9 @@ const cmake = async (options) => {
 };
 
 const preventNoOutputTimeout = () => {
+  const start = Date.now();
   const interval = setInterval(() => {
-    printLogLine("Working...");
+    printLogLine(`Working... (${Math.floor((Date.now() - start) / 1000)} seconds)`);
   }, 1000 * 10);
   return () => clearInterval(interval);
 };
