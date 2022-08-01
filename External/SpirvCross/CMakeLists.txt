@@ -1,5 +1,10 @@
 add_library(SpirvCross)
 
+# This cmake option 'WelderExceptions' needs to be setup somewhere for this to work
+if (NOT WELDER_EXCEPTIONS)
+  add_compile_definitions(SPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS)
+endif()
+
 welder_setup_library(SpirvCross ${CMAKE_CURRENT_LIST_DIR} FALSE)
 welder_use_precompiled_header(SpirvCross ${CMAKE_CURRENT_LIST_DIR})
 

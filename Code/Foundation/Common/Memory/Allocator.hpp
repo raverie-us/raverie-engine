@@ -1,7 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 
 #pragma once
-#include <stdexcept>
+#ifdef WelderExceptions
+#  include <stdexcept>
+#endif
 
 #ifndef UseMemoryGraph
 #  define UseMemoryGraph 1
@@ -119,12 +121,20 @@ public:
     }
     if (num > MaxSize())
     {
+#ifdef WelderExceptions
       throw std::length_error("Zallocator Too Many Elements");
+#else
+      return nullptr;
+#endif
     }
     void* ptr = Zero::zAllocate(num * sizeof(T));
     if (!ptr)
     {
+#ifdef WelderExceptions
       throw std::bad_alloc();
+#else
+      return nullptr;
+#endif
     }
     return static_cast<pointer>(ptr);
   }

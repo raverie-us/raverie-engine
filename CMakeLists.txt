@@ -47,6 +47,11 @@ add_definitions(-DWelderPlatformName="${WELDER_PLATFORM}")
 add_definitions(-DWelderToolchain${WELDER_TOOLCHAIN}=1)
 add_definitions(-DWelderToolchainName="${WELDER_TOOLCHAIN}")
 
+option(WELDER_EXCEPTIONS "Enable exception throwing/catching" ON)
+if (WELDER_EXCEPTIONS)
+  add_definitions(-DWelderExceptions)
+endif()
+
 set(WELDER_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(WELDER_CMAKE_DIR ${WELDER_CORE_DIR}/CMakeFiles/)
 set(WELDER_TOOLCHAIN_DIR ${WELDER_CMAKE_DIR}/Toolchain/)

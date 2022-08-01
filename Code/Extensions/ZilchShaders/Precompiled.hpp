@@ -1,6 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
+#ifndef WelderExceptions
+#define SPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS
+#endif
 #include "ZilchShadersStandard.hpp"
 
 #include "source/spirv_target_env.h"

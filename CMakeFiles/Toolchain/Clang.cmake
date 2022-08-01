@@ -1,10 +1,16 @@
 add_definitions(-DWelderCompilerClang=1 -DWelderCompilerName="Clang")
 
+if (WELDER_EXCEPTIONS)
+  set(CLANG_EXCEPTION_OPTION "-fexceptions")
+else()
+  set(CLANG_EXCEPTION_OPTION "-fno-exceptions")
+endif()
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 set(WELDER_C_CXX_FLAGS "\
   -Wno-address-of-packed-member\
   -Wno-empty-body\
-  -fexceptions\
+  ${CLANG_EXCEPTION_OPTION}\
   -frtti\
   -fno-vectorize\
   -fno-slp-vectorize\

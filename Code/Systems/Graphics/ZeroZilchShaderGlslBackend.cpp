@@ -1,6 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
+#ifndef WelderExceptions
+#define SPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS
+#endif
 #include "spirv_glsl.hpp"
 
 namespace Zero
@@ -110,16 +113,20 @@ bool ZeroZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult&
   outputData.mReflectionData.mShaderTypeName = inputData.mReflectionData.mShaderTypeName;
 
   bool success = true;
+#ifdef WelderExceptions
   try
   {
+#endif
     std::string source = compiler.compile();
     outputData.mByteStream.Load(source.c_str(), source.size());
+#ifdef WelderExceptions
   }
   catch (const std::exception& e)
   {
     success = false;
     mErrorLog = e.what();
   }
+#endif
 
   return success;
 }

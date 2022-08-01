@@ -890,8 +890,10 @@ bool Peer::IsValidRawPacket(RawPacket& rawPacket)
 
 OsInt Peer::Ipv4ReceiveThreadFn()
 {
+#ifdef WelderExceptions
   try
   {
+#endif
     //
     // Receive Loop
     //
@@ -928,6 +930,7 @@ OsInt Peer::Ipv4ReceiveThreadFn()
 
     // Success
     return 0;
+#ifdef WelderExceptions
   }
   catch (const std::exception& error)
   {
@@ -939,13 +942,16 @@ OsInt Peer::Ipv4ReceiveThreadFn()
     // [Peer Event]
     PeerEventFatalError("Unknown IPv4 receive thread error");
   }
+#endif
   // Failure
   return 1;
 }
 OsInt Peer::Ipv6ReceiveThreadFn()
 {
+#ifdef WelderExceptions
   try
   {
+#endif
     //
     // Receive Loop
     //
@@ -981,6 +987,7 @@ OsInt Peer::Ipv6ReceiveThreadFn()
 
     // Success
     return 0;
+#ifdef WelderExceptions
   }
   catch (const std::exception& error)
   {
@@ -992,6 +999,7 @@ OsInt Peer::Ipv6ReceiveThreadFn()
     // [Peer Event]
     PeerEventFatalError("Unknown IPv6 receive thread error");
   }
+#endif
   // Failure
   return 1;
 }

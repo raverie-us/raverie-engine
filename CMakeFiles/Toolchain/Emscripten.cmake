@@ -14,12 +14,18 @@ set(WELDER_SINGLE_FILE 0)
 set(CMAKE_C_ARCHIVE_CREATE "<CMAKE_AR> qc <TARGET> <OBJECTS>")
 set(CMAKE_CXX_ARCHIVE_CREATE "<CMAKE_AR> qc <TARGET> <OBJECTS>")
 
+if (WELDER_EXCEPTIONS)
+  set(CLANG_EXCEPTION_OPTION "-fexceptions")
+else()
+  set(CLANG_EXCEPTION_OPTION "-fno-exceptions")
+endif()
+
 set(CMAKE_EXECUTABLE_SUFFIX ".html")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(WELDER_C_CXX_FLAGS "\
   -Wno-address-of-packed-member\
   -Wno-empty-body\
-  -fexceptions\
+  ${CLANG_EXCEPTION_OPTION}\
   -frtti\
   -fno-vectorize\
   -fno-slp-vectorize\
@@ -73,7 +79,7 @@ set(WELDER_C_CXX_FLAGS_RELEASE "\
 ")
 
 set(WELDER_C_CXX_FLAGS_MINSIZEREL "\
-  -Oz\
+  -Os\
 ")
 
 function(welder_toolchain_setup_library target)
