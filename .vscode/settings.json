@@ -1,7 +1,7 @@
 {
   "files.associations": {},
   "files.eol": "\n",
-  "files.insertFinalNewline": true,
+  "files.insertFinalNewline": false,
   "editor.tabSize": 2,
   "editor.detectIndentation": false,
   "javascript.format.enable": false,
