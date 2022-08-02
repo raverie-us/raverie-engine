@@ -347,6 +347,7 @@ public:
     byte mData[16];
     int mDataAsInts[4];
     float mDataAsFloats[4];
+    u64 mDataAsU64[2];
     // String mDataAsString;
     void* mDataAsPointer;
   };
