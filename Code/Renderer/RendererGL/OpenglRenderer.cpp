@@ -1002,7 +1002,6 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
   ZPrint("OpenGL All Extensions : %s\n", gl_extensions ? gl_extensions : "(no data)");
 
 
-  ZPrint("OpenGL1\n");
   // Required OpenGL extensions
   if (!version_2_0 || !framebuffer_object)
   {
@@ -1025,11 +1024,9 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
   if (vendorString.Contains("Intel"))
     mDriverSupport.mIntel = true;
 
-  ZPrint("OpenGL2\n");
   // V-Sync off by default
   zglSetSwapInterval(this, 0);
 
-  ZPrint("OpenGL3\n");
   // No padding
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -1074,19 +1071,13 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
 
   uint triangleIndices[] = {0, 1, 2};
 
-  ZPrint("OpenGL40\n");
   glGenVertexArrays(1, &mTriangleArray);
-  ZPrint("OpenGL41\n");
   glBindVertexArray(mTriangleArray);
 
-  ZPrint("OpenGL42\n");
   glGenBuffers(1, &mTriangleVertex);
-  ZPrint("OpenGL43\n");
   glBindBuffer(GL_ARRAY_BUFFER, mTriangleVertex);
-  ZPrint("OpenGL44\n");
   glBufferData(GL_ARRAY_BUFFER, sizeof(StreamedVertex) * 3, triangleVertices, GL_STATIC_DRAW);
 
-  ZPrint("OpenGL5\n");
   glEnableVertexAttribArray(VertexSemantic::Position);
   glVertexAttribPointer(VertexSemantic::Position,
                         3,
@@ -1098,7 +1089,6 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
   glVertexAttribPointer(
       VertexSemantic::Uv, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)ZeroOffsetOf(StreamedVertex, mUv));
 
-  ZPrint("OpenGL6\n");
   glGenBuffers(1, &mTriangleIndex);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mTriangleIndex);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 3, triangleIndices, GL_STATIC_DRAW);
@@ -1131,7 +1121,6 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
 #define ZeroGlVertexOut ZeroIfGl("out") ZeroIfWebgl("varying")
 #define ZeroGlPixelIn ZeroIfGl("in") ZeroIfWebgl("varying")
 
-  ZPrint("OpenGL7\n");
   // @Nate: This will most likley have to change to use uniform buffers
   String loadingShaderVertex = ZeroIfGl("#version 150\n") ZeroIfWebgl("#version 100\n")
       ZeroIfWebgl("precision mediump float;\n") "uniform mat4 Transform;\n"
@@ -1158,7 +1147,6 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
                                                 "  gl_FragColor.xyz *= Alpha;\n"
                                                 "}";
 
-  ZPrint("OpenGL8\n");
   CreateShader(loadingShaderVertex, String(), loadingShaderPixel, mLoadingShader);
 }
 
