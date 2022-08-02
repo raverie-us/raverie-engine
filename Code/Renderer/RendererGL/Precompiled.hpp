@@ -2,6 +2,12 @@
 
 #include "RendererGLStandard.hpp"
 
+#ifdef WelderTargetOsEmscripten
+#  define ZeroWebgl
+#else
+#  define ZeroGl
+#endif
+
 #ifdef ZeroWebgl
 # include "GLES3/gl32.h"
 #else
