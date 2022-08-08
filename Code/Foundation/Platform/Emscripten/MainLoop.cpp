@@ -41,4 +41,12 @@ void StopMainLoop()
 }
 #endif
 
+EM_JS(void, JSInitialLoadingCompleted, (), {
+  window.parent.postMessage({type: 'initialLoadingCompleted'}, '*');
+});
+
+void InitialLoadingCompleted() {
+  JSInitialLoadingCompleted();
+}
+
 } // namespace Zero

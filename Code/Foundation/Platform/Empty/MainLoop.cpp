@@ -7,6 +7,10 @@ void YieldToOs()
 {
 }
 
+void InitialLoadingCompleted()
+{
+}
+
 ZeroThreadLocal bool gStopMainLoop = false;
 
 void RunMainLoop(MainLoopFn callback, void* userData)

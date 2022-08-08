@@ -11,6 +11,9 @@ namespace Zero
 // ramifications if used.
 void YieldToOs();
 
+// Let the operating system know that initial loading is done and we can display
+void InitialLoadingCompleted();
+
 typedef void (*MainLoopFn)(void* userData);
 
 // Runs a loop in a continuous update until 'StopMainLoop' is called.
