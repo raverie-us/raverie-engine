@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-#define DEBUG_FILE_TIMES
+//#define DEBUG_FILE_TIMES
 #ifdef DEBUG_FILE_TIMES
 #  define DebugFileTime(...) ZPrint("CheckFileTime: " __VA_ARGS__)
 #else
