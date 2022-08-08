@@ -46,7 +46,9 @@ RUN apt-get install -y --no-install-recommends \
     xorg-dev \
     xscreensaver \
     xutils-dev \
-    xvfb
+    xvfb \
+    libatk-bridge2.0-0 \
+    libgtk-3.0
 
 RUN npm install -g npm@latest
 

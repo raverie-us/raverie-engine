@@ -846,7 +846,7 @@ const build = async (options) => {
 
 const executeBuiltProcess = async (buildDir, combo, libraryDir, library, args) => {
   if (combo.toolchain === "Emscripten") {
-    const pageDirectory = path.join(buildDir, "Code", library);
+    const pageDirectory = path.join(buildDir, "Code", libraryDir, library);
     if (!fs.existsSync(pageDirectory)) {
       printErrorLine(`Directory does not exist ${pageDirectory}`);
       return [];
@@ -860,6 +860,11 @@ const executeBuiltProcess = async (buildDir, combo, libraryDir, library, args) =
     const url = `http://localhost:${port}/${library}.html?${argString}`;
 
     const browser = await puppeteer.launch({
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox"
+      ],
+      headless: false,
       timeout: 0
     });
     const page = await browser.newPage();
