@@ -930,6 +930,7 @@ const executeBuiltProcess = async (buildDir, combo, libraryDir, library, args) =
 
 const prebuilt = async (options) => {
   console.log("Copying Prebuilt Content");
+  const endPnot = preventNoOutputTimeout();
   const combo = determineCmakeCombo(options);
   rimraf.sync(dirs.prebuiltContent);
 
@@ -955,6 +956,7 @@ const prebuilt = async (options) => {
     printLogLine("Prebuilt content directory did not exist or was empty");
   }
   console.log("Copied Prebuilt Content");
+  endPnot();
 };
 
 const pack = async (options) => {
