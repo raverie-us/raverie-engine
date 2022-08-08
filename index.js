@@ -79,42 +79,6 @@ const executables = [
       "Fallback"
     ],
     vfsOnlyPackage: ["LauncherTemplates"]
-  },
-  {
-    copyToIncludedBuilds: false,
-    dir: "Editor",
-    name: "Game",
-    nonResourceDependencies: [
-      "Data",
-      repoRootFile
-    ],
-    prebuild: true,
-    resourceLibraries: [
-      "FragmentCore",
-      "Loading",
-      "ZeroCore",
-      "UiWidget"
-    ],
-    vfsOnlyPackage: []
-  },
-  {
-    // Since the launcher includes the editor build, it must come afterwards.
-    copyToIncludedBuilds: false,
-    dir: "Launcher",
-    name: "WelderLauncher",
-    nonResourceDependencies: [
-      "Data",
-      path.join("Build", "IncludedBuilds"),
-      repoRootFile
-    ],
-    prebuild: true,
-    resourceLibraries: [
-      "FragmentCore",
-      "Loading",
-      "ZeroCore",
-      "ZeroLauncherResources"
-    ],
-    vfsOnlyPackage: []
   }
 ];
 
