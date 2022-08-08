@@ -1,3 +1,2 @@
 add_subdirectory(EditorCore)
-add_subdirectory(Game)
 add_subdirectory(WelderEditor)
