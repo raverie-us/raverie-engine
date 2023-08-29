@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.25.1 FATAL_ERROR)
 
 if (POLICY CMP0077)
   cmake_policy(SET CMP0077 NEW)
