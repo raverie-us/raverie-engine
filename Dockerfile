@@ -1,11 +1,10 @@
-FROM ubuntu:22.04 
+FROM ubuntu:23.04 
 
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
     wget \
     git-core \
     default-jre \
-    python2.7 \
     p7zip-full \
     ccache \
     cmake \
@@ -35,7 +34,6 @@ RUN apt-get install -y --no-install-recommends \
     libglapi-mesa \
     libgl1-mesa-dev \
     libglu1-mesa-dev \
-    freeglut3 \
     freeglut3-dev \
     llvm \
     ninja-build \
@@ -54,7 +52,7 @@ RUN npm install -g npm@latest
 
 ENV NODE_PATH="/node_modules"
 COPY package*.json ./
-RUN npm install --no-optional --no-progress --no-audit --unsafe-perm --global
+RUN npm install --omit=optional --no-progress --no-audit --unsafe-perm --global
 
 # There is a problem with clang using the default gcc headers on Ubuntu (remove #error).
 RUN sed -i 's/# error.*//g' /usr/include/x86_64-linux-gnu/sys/cdefs.h
@@ -64,13 +62,12 @@ RUN echo 'pcm.!default { type plug slave.pcm "null" }' > /etc/asound.conf
 RUN ln /usr/bin/python3 /usr/bin/python
 
 ARG USER_ID
-RUN useradd -m -s /bin/bash -u $USER_ID user && \
-    addgroup user audio && \
-    addgroup user video
+RUN cat /etc/passwd
+RUN usermod -md /home/user -u $USER_ID -l user ubuntu
 USER $USER_ID
 ENV HOME="/home/user"
 
-ENV EMSCRIPTEN_VERSION 3.1.17
+ENV EMSCRIPTEN_VERSION 3.1.45
 
 RUN cd /tmp && \
     git clone https://github.com/juj/emsdk.git && \

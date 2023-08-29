@@ -193,8 +193,6 @@ target_sources(EditorCore
     ${CMAKE_CURRENT_LIST_DIR}/ItemList.hpp
     ${CMAKE_CURRENT_LIST_DIR}/JointTools.cpp
     ${CMAKE_CURRENT_LIST_DIR}/JointTools.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherCommunicationEvent.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherCommunicationEvent.hpp
     ${CMAKE_CURRENT_LIST_DIR}/LibraryView.cpp
     ${CMAKE_CURRENT_LIST_DIR}/LibraryView.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ListView.cpp

@@ -230,8 +230,6 @@ void LibrarySearchProvider::Search(SearchData& search)
   forRange (ContentLibrary* library, mLibraries.Values())
   {
     String& name = library->Name;
-    if (name == "ZeroLauncherResources")
-      continue;
 
     // Match on the name
     int priority = PartialMatch(search.SearchString.All(), name.All(), CaseInsensitiveCompare);

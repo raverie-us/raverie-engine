@@ -6,7 +6,7 @@ namespace Zero
 
 String GetCallStack(StringParam extraSymbolPath, OsHandle exceptionContext)
 {
-  auto flags = EM_LOG_JS_STACK | EM_LOG_DEMANGLE | EM_LOG_FUNC_PARAMS;
+  auto flags = EM_LOG_JS_STACK | EM_LOG_FUNC_PARAMS;
 
   auto size = emscripten_get_callstack(flags, nullptr, 0);
   char* buffer = (char*)alloca(size);

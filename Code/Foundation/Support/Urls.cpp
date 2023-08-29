@@ -19,13 +19,13 @@ const cstr cUserReportIssue = "https://github.com/WelderFoundation/WelderEngineR
 const cstr cUserLatestIssues = "https://github.com/WelderFoundation/WelderEngineRevamp/issues/";
 const cstr cUserSpecificIssue = "https://github.com/WelderFoundation/WelderEngineRevamp/issues/";
 const cstr cUserChat = "https://discordapp.com/invite/RVunmvx/";
-const cstr cUserLauncherDownloads = "https://github.com/WelderFoundation/WelderEngineRevamp/releases/";
 const cstr cUserOnlineDocs = "https://github.com/WelderFoundation/WelderEngineRevamp/wiki/";
 const cstr cUserHelp = "https://github.com/WelderFoundation/WelderEngineRevamp/wiki/help/";
 const cstr cUserWebRequesterDefault = "https://www.example.com/";
 const cstr cApiBuilds = "https://api.github.com/repos/WelderFoundation/WelderEngineRevamp/releases?per_page=10000";
-const cstr cApiLauncherTemplates = "https://api.github.com/repos/zeroengineteam/ZeroTemplates/releases?per_page=10000";
 const cstr cUserDevNotes = "https://github.com/WelderFoundation/WelderEngineRevamp/wiki/Developer-Updates/";
 const cstr cApiDevNotes = "https://github.com/WelderFoundation/WelderEngineRevamp/wiki/Developer-Updates";
+const cstr cOpenProject = "https://example.com#OpenProject";
+const cstr cNewProject = "https://example.com#NewProject";
 } // namespace Urls
 } // namespace Zero

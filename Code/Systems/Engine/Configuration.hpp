@@ -4,11 +4,6 @@
 namespace Zero
 {
 
-namespace Events
-{
-DeclareEvent(RecentProjectsUpdated);
-} // namespace Events
-
 /// Main configuration component
 class MainConfig : public Component
 {
@@ -191,48 +186,6 @@ public:
 
   /// Name of color scheme to use
   String ColorScheme;
-};
-
-class RecentProjects : public Component
-{
-public:
-  ZilchDeclareType(RecentProjects, TypeCopyMode::ReferenceType);
-
-  /// Component Interface.
-  void Serialize(Serializer& stream) override;
-  void Initialize(CogInitializer& initializer) override;
-
-  /// Adds the given project.
-  void AddRecentProject(StringParam projectFile, bool sendsEvent = false);
-
-  /// Removes the given project.
-  void RemoveRecentProject(StringParam projectFile, bool sendsEvent = false);
-
-  /// Returns all objects sorted by date (most recent first).
-  void GetProjectsByDate(Array<String>& projects);
-
-  /// Copy one set of recent projects to the other (for the launcher)
-  void CopyProjects(RecentProjects* source);
-
-  /// Returns how many recent projects there are.
-  /// The launcher uses this to special case what screen is displayed on launch.
-  size_t GetRecentProjectsCount() const;
-
-  /// Updates the max number of recent projects we store (and prunes any old
-  /// items from the list)
-  void UpdateMaxNumberOfProjects(uint maxRecentProjects, bool sendsEvent);
-  uint mMaxRecentProjects;
-
-  static uint mAbsoluteMaxRecentProjects;
-
-private:
-  /// Returns the project in this list that was opened the longest time ago.
-  String GetOldestProject();
-
-  /// Remove all projects that no longer exist.
-  void RemoveMissingProjects();
-
-  HashSet<String> mRecentProjects;
 };
 
 typedef void (*ModifyConfigFn)(Cog* config, void* userData);

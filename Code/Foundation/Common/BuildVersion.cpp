@@ -13,8 +13,6 @@ namespace Zero
 const String sWelderOrganization = "Welder";
 const String sEditorGuid = "51392222-AEDE-4530-8749-9DFAB5725FD7";
 const String sEditorName = "Editor";
-const String sLauncherGuid = "7489829B-8A03-4B26-B3AC-FDDC6668BAF7";
-const String sLauncherName = "Launcher";
 
 String GetEditorFullName()
 {
@@ -24,22 +22,6 @@ String GetEditorFullName()
 String GetEditorExecutableFileName()
 {
   return GetEditorFullName() + cExecutableExtensionWithDot;
-}
-
-String GetLauncherFullName()
-{
-  return sWelderOrganization + sLauncherName;
-}
-
-String GetLauncherExecutableFileName()
-{
-  return GetLauncherFullName() + cExecutableExtensionWithDot;
-}
-
-String GetRelativeExecutable(StringParam organization, StringParam name)
-{
-  String fullName = organization + name;
-  return FilePath::Combine("..", "..", fullName, fullName + cExecutableExtensionWithDot);
 }
 
 uint gConfigVersion = 1;

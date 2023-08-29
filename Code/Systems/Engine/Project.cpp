@@ -368,13 +368,6 @@ void FrameRateSettings::SetFrameRate(int frameRate)
   mFrameRate = Math::Max(frameRate, 1);
 }
 
-// LauncherProjectInfoProxy
-ZilchDefineType(LauncherProjectInfoProxy, builder, type)
-{
-  ZeroBindComponent();
-  type->AddAttribute(ObjectAttributes::cCore);
-}
-
 ZilchDefineType(DebugSettings, builder, type)
 {
   ZeroBindComponent();

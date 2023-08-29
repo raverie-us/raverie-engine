@@ -282,7 +282,6 @@ public:
   void DebuggerStepOut();
 
   Array<CogId> mSelectionGizmos;
-  UniquePointer<EventObject> mSimpleDebuggerListener;
 };
 
 namespace Z

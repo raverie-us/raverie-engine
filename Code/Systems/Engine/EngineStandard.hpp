@@ -111,7 +111,6 @@ private:
 #include "Animation/Animation.hpp"
 #include "CogSelection.hpp"
 #include "Configuration.hpp"
-#include "LauncherConfiguration.hpp"
 #include "DebugDraw.hpp"
 #include "Scripting/ScriptEvents.hpp"
 #include "TextResource.hpp"

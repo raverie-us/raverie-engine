@@ -22,7 +22,4 @@ Cog
 		var LimitFrameRate = true
 		var FrameRate = 60
 	}
-	LauncherProjectInfo 
-	{
-	}
 }

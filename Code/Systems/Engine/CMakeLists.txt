@@ -171,8 +171,6 @@ target_sources(Engine
     ${CMAKE_CURRENT_LIST_DIR}/HierarchySpline.hpp
     ${CMAKE_CURRENT_LIST_DIR}/JobSystem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/JobSystem.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherConfiguration.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherConfiguration.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Level.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Level.hpp
     ${CMAKE_CURRENT_LIST_DIR}/MetaOperations.cpp

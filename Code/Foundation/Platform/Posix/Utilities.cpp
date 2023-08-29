@@ -77,11 +77,6 @@ void SetTimerFrequency(uint ms)
   // Not available on linux
 }
 
-String GetInstalledExecutable(StringParam organization, StringParam name, StringParam guid)
-{
-  return GetRelativeExecutable(organization, name);
-}
-
 } // namespace Os
 
 u64 GenerateUniqueId64()

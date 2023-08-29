@@ -66,9 +66,7 @@ struct CrashHandler
   static void Enable();
 
   // If there are any extra locations to search for symbols then they need to be
-  // added to a path internal to the stack walker. For instance, the launcher
-  // needs to add the path to the dll that is actually being run (since crash
-  // handler only checks next to the .exe).
+  // added to a path internal to the stack walker.
   static void AppendToExtraSymbolPath(StringParam path);
 
   typedef void (*RunCrashHandlerCallback)(void* crashData, bool doRescueCall, void* userData);

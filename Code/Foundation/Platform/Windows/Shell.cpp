@@ -1926,9 +1926,6 @@ bool ShellWindow::GetMouseCapture()
 
 void ShellWindow::TakeFocus()
 {
-  // JoshD: There's a lot of extra stuff required to make a window's window take
-  // focus (required for the launcher). Talk to me if you need to change this.
-
   // Force the window to be un-minimized
   SetState(WindowState::Restore);
 

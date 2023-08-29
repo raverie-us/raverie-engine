@@ -7,8 +7,10 @@ Array<String> gCommandLineArguments;
 
 void CommandLineToStringArray(Array<String>& strings, cstr* argv, int numberOfParameters)
 {
-  for (int i = 0; i < numberOfParameters; ++i)
+  for (int i = 0; i < numberOfParameters; ++i) {
+    ZPrint("Command line arg: %d %s\n", i, argv[i]);
     strings.PushBack(argv[i]);
+  }
 }
 
 void CommandLineToStringArray(Array<String>& strings, char** argv, int numberOfParameters)
@@ -18,6 +20,11 @@ void CommandLineToStringArray(Array<String>& strings, char** argv, int numberOfP
 
 bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments, Array<String>& commandLineArguments)
 {
+  printf("commandLineArgumentsX size %d\n", commandLineArguments.Size());
+  forRange(String& arg, commandLineArguments.All()) {
+    printf("arg: %s\n", arg.c_str());
+  }
+
   // First parameter is exe path
   if (commandLineArguments.Size() == 1)
     return false;

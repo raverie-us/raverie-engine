@@ -25,7 +25,6 @@ public:
 } // namespace Zero
 
 // Misc.
-#include "LauncherCommunicationEvent.hpp"
 #include "NetOperations.hpp"
 #include "Downloads.hpp"
 #include "EditorSearchProviders.hpp"

@@ -22,8 +22,7 @@ DeclareEnum10(
     ProcessJobs,
     // Called when all jobs are complete (allows the engine to do anything with the results of completed jobs).
     JobsComplete,
-    // After all jobs are completed, use this opportunity to create your version of a main object
-    // (Editor/Game/Launcher).
+    // After all jobs are completed, use this opportunity to create your version of a main object (Editor/Game).
     UserCreation,
     // Engine is automatically updated until it is no longer active / closed.
     EngineUpdate,
@@ -33,7 +32,7 @@ DeclareEnum10(
     Shutdown);
 
 // Runs through phases of initialization, allowing platforms that don't support threading
-// to yeild time back to the OS/Browser between updates. This also unifies Editor/Game/Launcher startup.
+// to yeild time back to the OS/Browser between updates. This also unifies Editor/Game startup.
 class ZeroStartup
 {
 public:
@@ -43,8 +42,6 @@ public:
 protected:
   // The following options should be set by the user in UserInitialize.
   // The default options are all tailored for the Editor.
-  // If changes are ever made to these flags (especially mWindowStyle), ALL platforms and programs
-  // (Editor/Game/Launcher) must be considered.
   bool mLoadContent = true;
   WindowState::Enum mWindowState = WindowState::Maximized;
   // If this value is IntVec2::cZero, the primary monitor usable size will be used.

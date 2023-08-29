@@ -34,7 +34,6 @@ ZilchDefineEnum(EaseType);
 ZilchDefineEnum(FlickedStick);
 ZilchDefineEnum(InputDevice);
 ZilchDefineEnum(KeyState);
-ZilchDefineEnum(LauncherAutoRunMode);
 ZilchDefineEnum(Math::CurveType);
 ZilchDefineEnum(MouseButtons);
 ZilchDefineEnum(ProgressType);
@@ -121,7 +120,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeEnum(InputDevice);
   ZilchInitializeEnum(Keys);
   ZilchInitializeEnum(KeyState);
-  ZilchInitializeEnum(LauncherAutoRunMode);
   ZilchInitializeEnum(Location);
   ZilchInitializeEnumAs(Math::CurveType, "CurveType");
   ZilchInitializeEnum(MouseButtons);
@@ -318,10 +316,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(DeveloperConfig);
   ZilchInitializeType(ZilchPluginConfig);
   ZilchInitializeType(TextEditorConfig);
-  ZilchInitializeType(RecentProjects);
   ZilchInitializeType(EditorSettings);
-  ZilchInitializeType(LauncherConfig);
-  ZilchInitializeType(LauncherLegacySettings);
 
   ZilchInitializeType(HierarchySpline);
 
@@ -363,9 +358,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(DocumentationLibrary);
   ZilchInitializeType(Shortcuts);
   ZilchInitializeTypeAs(ProxyObject<Component>, "ComponentProxy");
-
-  if (GetApplicationName() != sLauncherName)
-    ZilchInitializeTypeAs(LauncherProjectInfoProxy, "LauncherProjectInfo");
 
   ZilchInitializeType(ZilchLibraryResource);
   ZilchInitializeType(ZilchDocumentResource);

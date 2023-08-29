@@ -774,7 +774,7 @@ void TextEditor::OnColorSchemeChanged(ObjectEvent* event)
 
 TextEditorConfig* TextEditor::GetConfig()
 {
-  // Check if the editor is present for when this is called from the launcher
+  // Check if the editor is present
   if (Z::gEditor)
   {
     auto config = Z::gEditor->mConfig->has(TextEditorConfig);

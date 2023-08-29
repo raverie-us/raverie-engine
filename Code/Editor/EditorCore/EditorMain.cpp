@@ -1227,13 +1227,12 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
       projectSuccessfullyLoaded = OpenProjectFile(startingProject);
 
     // If loading failed for some reason (either it didn't exist, the project
-    // was corrupted, etc...) then send out the failure event so we stop
-    // blocking and shell out to the launcher.
+    // was corrupted, etc...) then send out the failure event so we stop blocking
     if (!projectSuccessfullyLoaded)
     {
       Event event;
       Z::gEngine->DispatchEvent(Events::NoProjectLoaded, &event);
-      DoNotifyWarning("No project found", "No project file found. Opening launcher");
+      DoNotifyWarning("No project found", "No project file found");
       NewProject();
     }
   }
@@ -1241,13 +1240,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
   HasOrAdd<TextEditorConfig>(Z::gEditor->mConfig);
 
   editorMain->ShowWindow("Tools");
-
-  // If the debugger is attached add a simple listener component to listen on
-  // a tcp socket for the launcher telling us to open a project file
-  if (Os::IsDebuggerAttached())
-  {
-    Z::gEditor->mSimpleDebuggerListener = new SimpleDebuggerListener();
-  }
 
   CommandManager::GetInstance()->ValidateCommands();
 

@@ -32,9 +32,8 @@ void GameOrEditorStartup::UserInitialize()
   // If there was no specified project file (or it doesn't exist) and we're not
   // creating a new project, then use a fall-back project that we open from our
   // data directory. This project should be read-only, but is useful for testing
-  // platforms before the full launcher pipeline is implemented. Note that if
-  // the 'projectFile' does not exist, but is specified, we will not use the
-  // fall-back.
+  // platforms before the full pipeline is implemented. Note that if the
+  // 'projectFile' does not exist, but is specified, we will not use the fall-back.
   Cog* configCog = Z::gEngine->GetConfigCog();
   MainConfig* mainConfig = configCog->has(MainConfig);
   EditorConfig* editorConfig = configCog->has(EditorConfig);

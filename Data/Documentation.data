@@ -28654,128 +28654,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "LauncherCommunicationEvent"
-			var BaseClass = "SendableEvent"
-			var Library = "EditorLibrary"
-			var Tags = Array
-			{
-				"Event"
-			}
-			var Methods = Array
-			{
-				Method
-				{
-					var Name = "LauncherCommunicationEvent"
-				}
-				Method
-				{
-					var Name = "LauncherCommunicationEvent"
-					var Parameters = "(LauncherCommunicationEvent p0)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "p0"
-							var Type = "LauncherCommunicationEvent"
-						}
-					}
-				}
-			}
-			var DevOnly = true
-		}
-		Object
-		{
-			var Name = "LauncherConfig"
-			var BaseClass = "Component"
-			var Library = "EngineLibrary"
-			var Tags = Array
-			{
-				"Component"
-			}
-			var Properties = Array
-			{
-				Property
-				{
-					var Name = "AutoRunMode"
-					var Type = "Integer"
-				}
-			}
-			var Methods = Array
-			{
-				Method
-				{
-					var Name = "LauncherConfig"
-				}
-			}
-			var DevOnly = true
-		}
-		Object
-		{
-			var Name = "LauncherDebuggerCommunication"
-			var BaseClass = "EventObject"
-			var Library = "EditorLibrary"
-			var DevOnly = true
-		}
-		Object
-		{
-			var Name = "LauncherLegacySettings"
-			var BaseClass = "Component"
-			var Library = "EngineLibrary"
-			var Tags = Array
-			{
-				"Component"
-			}
-			var Properties = Array
-			{
-				Property
-				{
-					var Name = "DisplayLegacyBuilds"
-					var Type = "Boolean"
-				}
-			}
-			var Methods = Array
-			{
-				Method
-				{
-					var Name = "LauncherLegacySettings"
-				}
-			}
-			var DevOnly = true
-		}
-		Object
-		{
-			var Name = "LauncherOpenProjectComposite"
-			var BaseClass = "Composite"
-			var Library = "EditorLibrary"
-			var DevOnly = true
-		}
-		Object
-		{
-			var Name = "LauncherProjectInfo"
-			var BaseClass = "ComponentProxy"
-			var Library = "EngineLibrary"
-			var Tags = Array
-			{
-				"Component"
-			}
-			var Methods = Array
-			{
-				Method
-				{
-					var Name = "LauncherProjectInfo"
-				}
-			}
-			var DevOnly = true
-		}
-		Object
-		{
-			var Name = "LauncherSingletonCommunication"
-			var BaseClass = "EventObject"
-			var Library = "EditorLibrary"
-			var DevOnly = true
-		}
-		Object
-		{
 			var Name = "Layout"
 			var Library = "WidgetLibrary"
 			var Properties = Array
@@ -63771,23 +63649,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "RecentProjects"
-			var BaseClass = "Component"
-			var Library = "EngineLibrary"
-			var Tags = Array
-			{
-				"Component"
-			}
-			var Methods = Array
-			{
-				Method
-				{
-					var Name = "RecentProjects"
-				}
-			}
-		}
-		Object
-		{
 			var Name = "RecordingNode"
 			var BaseClass = "SoundNode"
 			var Library = "SoundLibrary"
@@ -68259,12 +68120,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var Name = "SimpleAnimation"
 				}
 			}
-		}
-		Object
-		{
-			var Name = "SimpleDebuggerListener"
-			var BaseClass = "EventObject"
-			var Library = "EditorLibrary"
 		}
 		Object
 		{
@@ -81828,25 +81683,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Object
 				{
 					var key = "Up"
-				}
-			}
-		}
-		Object
-		{
-			var Name = "LauncherAutoRunMode"
-			var EnumValues = Map
-			{
-				Object
-				{
-					var key = "IfInstalled"
-				}
-				Object
-				{
-					var key = "InstallAndRun"
-				}
-				Object
-				{
-					var key = "None"
 				}
 			}
 		}

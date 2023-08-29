@@ -45,7 +45,11 @@ void Environment::SetCommandLineArguments(const Array<String>& commandLineArgs)
 
 bool Environment::ParseCommandLine()
 {
-  return ParseCommandLineStringArray(mParsedCommandLineArguments, mCommandLineArguments);
+  bool result = ParseCommandLineStringArray(mParsedCommandLineArguments, mCommandLineArguments);
+  //forRange (StringMap::PairType& pair, mParsedCommandLineArguments.All()) {
+  //  ZPrint("Arg: %s = %s\n", pair.first.c_str(), pair.second.c_str());
+  //}
+  return result;
 }
 
 void Environment::BuildCommandLine()

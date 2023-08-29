@@ -12,15 +12,6 @@ Cog
 		var AutoTakeProjectScreenshot = true
 		var Guid = 0x0000000000000000
 	}
-	LauncherProjectInfo 
-	{
-		var Tags = ""
-		var ExperimentalBranchName = ""
-		var MajorVersion = 0
-		var MinorVersion = 0
-		var PatchVersion = 0
-		var RevisionId = 0
-	}
 	WindowLaunchSettings 
 	{
 		var LaunchFullscreen = true

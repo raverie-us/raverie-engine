@@ -201,7 +201,6 @@ private:
   void UpdateAttach();
 
 public:
-  // Set by the launcher and other things that can't handle debug events.
   static bool Enabled;
 
   // As we walk over lines of code (callbacks from any running ExecutableState)

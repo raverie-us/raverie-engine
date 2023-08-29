@@ -93,9 +93,8 @@ void ZilchPluginSource::ForceCopyPluginDependencies()
   // it under a directory mangled by the platform name so that we can support
   // both Debug/Release builds (and possibly x86/x64 in the future) This ALSO
   // needs to partially match where we place the lib/all-to-one header in the
-  // Data directory (does not include the version number since every version is
-  // separated by the launcher) This is setup within the Zero engine build
-  // process (typically as a post build event)
+  // Data directory (does not include the version number). This is setup within
+  // the Zero engine build process (typically as a post build event)
   String platformName = ZilchPluginBuilder::GetSharedLibraryPlatformName();
   String sourceVersionDir = FilePath::Combine(mainConfig->DataDirectory, "ZilchCustomPluginShared", platformName);
 

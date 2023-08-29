@@ -232,7 +232,6 @@ Editor::Editor(Composite* parent) : MultiDock(parent)
   mBugReporter = nullptr;
   mCodeTranslatorListener = nullptr;
   mProjectDirectoryWatcher = nullptr;
-  mSimpleDebuggerListener = nullptr;
   mStopGame = false;
 
   mQueue = new OperationQueue();

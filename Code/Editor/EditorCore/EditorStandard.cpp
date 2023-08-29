@@ -80,7 +80,6 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeEnum(ImportFrames);
 
   // Events
-  ZilchInitializeType(LauncherCommunicationEvent);
   ZilchInitializeType(BackgroundTaskEvent);
   ZilchInitializeType(EditorEvent);
   ZilchInitializeType(MetaDropEvent);
@@ -149,10 +148,6 @@ ZilchDefineStaticLibrary(EditorLibrary)
   // Editor Core
   ZilchInitializeType(Editor);
   ZilchInitializeType(EditorMain);
-  ZilchInitializeType(LauncherOpenProjectComposite);
-  ZilchInitializeType(LauncherSingletonCommunication);
-  ZilchInitializeType(LauncherDebuggerCommunication);
-  ZilchInitializeType(SimpleDebuggerListener);
   ZilchInitializeType(MainPropertyView);
 
   // Editor Core

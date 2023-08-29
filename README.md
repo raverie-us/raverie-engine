@@ -32,8 +32,6 @@ The JavaScript script runs several processes:
 - Building the project
 - Packaging prebuilt resources
 - Builds the project a second time (so platforms with a VFS will have the prebuilt content)
-- Package the build in a format that can be used by the launcher.
-- Builds the project again so the launcher will have the packaged build if it uses a VFS.
 - Generates the documentation
 - Finally pack everything up in a redistributable format.
 

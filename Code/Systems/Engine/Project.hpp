@@ -181,12 +181,6 @@ public:
   int mFrameRate;
 };
 
-class LauncherProjectInfoProxy : public ProxyObject<Component>
-{
-public:
-  ZilchDeclareType(LauncherProjectInfoProxy, TypeCopyMode::ReferenceType);
-};
-
 class DebugSettings : public Component
 {
 public:

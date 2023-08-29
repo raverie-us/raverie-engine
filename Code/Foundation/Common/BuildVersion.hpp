@@ -9,20 +9,9 @@ namespace Zero
 extern const String sWelderOrganization;
 extern const String sEditorGuid;
 extern const String sEditorName;
-extern const String sLauncherGuid;
-extern const String sLauncherName;
 
 String GetEditorFullName();
 String GetEditorExecutableFileName();
-String GetLauncherFullName();
-String GetLauncherExecutableFileName();
-
-// Get an executable that may be built as a sibling to our own.
-// For example if we were executing:
-// - Libraries/EditorExecutable/EditorExecutable.exe
-// Then this may return:
-// - ../../LauncherExecutable/LauncherExecutable.exe
-String GetRelativeExecutable(StringParam organization, StringParam name);
 
 /// Sets all the application version and name information.
 void SetupApplication(uint configVersion, StringParam organization, StringParam guid, StringParam name);
