@@ -20,7 +20,6 @@ void CommandLineToStringArray(Array<String>& strings, char** argv, int numberOfP
 
 bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments, Array<String>& commandLineArguments)
 {
-  printf("commandLineArgumentsX size %d\n", commandLineArguments.Size());
   forRange(String& arg, commandLineArguments.All()) {
     printf("arg: %s\n", arg.c_str());
   }
