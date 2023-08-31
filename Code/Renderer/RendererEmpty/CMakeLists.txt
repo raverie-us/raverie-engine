@@ -5,7 +5,7 @@ welder_use_precompiled_header(RendererEmpty ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(RendererEmpty
   PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/OpenglRenderer.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Renderer.cpp
 )
 
 welder_target_includes(RendererEmpty

@@ -10,7 +10,7 @@ target_compile_definitions(Platform
 
 target_sources(Platform
   PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/../Curl/WebRequest.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../Empty/WebRequest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/CallStack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/ComPort.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/CrashHandler.cpp
