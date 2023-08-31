@@ -279,7 +279,7 @@
 #    define ZeroForceInline /* GCC has issues with                                                                     \
                                __attribute__((always_inline)) */                                                       \
       inline
-#    define ZeroDebugBreak() asm("int $3")
+#    define ZeroDebugBreak()
 #  endif
 #  define ZeroNoInline
 #endif
