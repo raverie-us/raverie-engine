@@ -11,7 +11,7 @@ namespace Zero
 {
 
 // Random number generator for guids
-Math::Random TcpSocket::GuidGenerator((int)time(nullptr) + (int)clock() * 137);
+Math::Random TcpSocket::GuidGenerator;
 
 namespace Events
 {

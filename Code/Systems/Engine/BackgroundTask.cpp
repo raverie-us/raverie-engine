@@ -111,7 +111,7 @@ void BackgroundTask::Execute()
   // prevents the race condition.
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
 
-  mStartTime = clock();
+  mStartTime = Time::Clock();
 
   // Signal that the task has started
   BackgroundTaskEvent e(this);
@@ -149,7 +149,7 @@ Job* BackgroundTask::GetFinishedJob()
 
 float BackgroundTask::GetTimeAlive()
 {
-  clock_t currTime = clock();
+  clock_t currTime = Time::Clock();
   clock_t difference = (currTime - mStartTime);
   return (float)(difference / (double)Time::ClocksPerSecond());
 }

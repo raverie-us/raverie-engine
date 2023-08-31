@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
+#include <chrono>
 
 namespace Zero
 {
@@ -11,12 +12,14 @@ TimeType Time::GetTime()
 
 TimeType Time::Clock()
 {
-  return clock();
+  const auto now = std::chrono::system_clock::now();
+  const std::time_t clock = std::chrono::system_clock::to_time_t(now);
+  return clock;
 }
 
 TimeType Time::GenerateSeed()
 {
-  return clock();
+  return (int)time(nullptr) + (int)Clock() * 137;
 }
 
 CalendarDateTime Time::GetLocalTime(const TimeType& timer)
