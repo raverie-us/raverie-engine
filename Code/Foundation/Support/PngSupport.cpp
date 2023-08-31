@@ -50,12 +50,13 @@ bool ReadPngInfo(Stream* stream, ImageInfo& info)
   png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
   png_infop infoPtr = png_create_info_struct(pngPtr);
 
-  if (setjmp(png_jmpbuf(pngPtr)))
-  {
-    png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
-    stream->Seek(0);
-    return false;
-  }
+  //TODO(trevor): Handle setjmp
+  //if (setjmp(png_jmpbuf(pngPtr)))
+  //{
+  //  png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
+  //  stream->Seek(0);
+  //  return false;
+  //}
 
   // Set up custom read to read from the file object
   png_set_read_fn(pngPtr, (png_voidp)stream, StreamReadData);
@@ -132,19 +133,20 @@ void LoadPng(Status& status,
     return;
   }
 
+  //TODO(trevor): Handle setjmp
   // Set error handling if you are using the setjmp/longjmp method (this is
   // the normal method of doing things with libpng).  REQUIRED unless you
   // set up your own error handlers in the png_create_read_struct() earlier.
-  if (setjmp(png_jmpbuf(pngPtr)))
-  {
-    // Clean up memory
-    zDeallocate(imageData);
-    // Free all of the memory associated with the pngPtr and infoPtr
-    png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
-    // If we get here, we had a problem reading the file
-    status.SetFailed("Can not read png file");
-    return;
-  }
+  //if (setjmp(png_jmpbuf(pngPtr)))
+  //{
+  //  // Clean up memory
+  //  zDeallocate(imageData);
+  //  // Free all of the memory associated with the pngPtr and infoPtr
+  //  png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
+  //  // If we get here, we had a problem reading the file
+  //  status.SetFailed("Can not read png file");
+  //  return;
+  //}
 
   // If you are using replacement read functions, instead of calling
   // png_init_io()
@@ -252,13 +254,14 @@ void SavePng(Status& status, Stream* stream, const byte* image, uint width, uint
   // Initialize the info struct.
   png_infop pngInfo = png_create_info_struct(png_ptr);
 
+  // TODO(trevor): Handle setjmp removal
   // Set up error handling.
-  if (setjmp(png_jmpbuf(png_ptr)))
-  {
-    png_destroy_write_struct(&png_ptr, &pngInfo);
-    status.SetFailed("Internal Png Error");
-    return;
-  }
+  //if (setjmp(png_jmpbuf(png_ptr)))
+  //{
+  //  png_destroy_write_struct(&png_ptr, &pngInfo);
+  //  status.SetFailed("Internal Png Error");
+  //  return;
+  //}
 
   int bitDepth = 8;
   if (format == TextureFormat::RGBA16)

@@ -4,6 +4,15 @@
 #ifndef ZILCH_EXECUTABLE_STATE_HPP
 #  define ZILCH_EXECUTABLE_STATE_HPP
 
+// TODO(trevor): Handle setjmp removal
+#ifdef setjmp
+#undef setjmp
+#endif
+
+#define jmp_buf int
+#define longjmp(a, b)
+#define setjmp(a) 0
+
 namespace Zilch
 {
 namespace Events

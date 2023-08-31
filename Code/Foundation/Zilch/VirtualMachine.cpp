@@ -354,6 +354,8 @@ ZeroForceInline T& GetOperand(PerFrameData* stackFrame, PerFrameData* reportFram
 
   // Unwind our stack
   longjmp(reportFrame->ExceptionJump, ExceptionJumpResult);
+  // TODO(trevor): Handle setjmp removal
+  abort();
 }
 
 // Reusable code for the if opcodes
