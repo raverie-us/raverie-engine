@@ -1,18 +1,9 @@
 [submodule "External/Assimp/Repo"]
 	path = External/Assimp/Repo
 	url = https://github.com/WelderUpdates/assimp.git
-[submodule "External/Curl/Repo"]
-	path = External/Curl/Repo
-	url = https://github.com/WelderUpdates/curl.git
 [submodule "External/FreeType/Repo"]
 	path = External/FreeType/Repo
 	url = https://github.com/WelderUpdates/freetype.git
-[submodule "External/Glew/Repo"]
-	path = External/Glew/Repo
-	url = https://github.com/WelderUpdates/glew.git
-[submodule "External/Libgit2/Repo"]
-	path = External/Libgit2/Repo
-	url = https://github.com/WelderUpdates/libgit2.git
 [submodule "External/Libpng/Repo"]
 	path = External/Libpng/Repo
 	url = https://github.com/WelderUpdates/libpng.git
@@ -25,9 +16,6 @@
 [submodule "External/Scintilla/Repo"]
 	path = External/Scintilla/Repo
 	url = https://github.com/WelderUpdates/scintilla.git
-[submodule "External/SDL/Repo"]
-	path = External/SDL/Repo
-	url = https://github.com/WelderUpdates/SDL.git
 [submodule "External/SpirvCross/Repo"]
 	path = External/SpirvCross/Repo
 	url = https://github.com/WelderUpdates/SPIRV-Cross.git
