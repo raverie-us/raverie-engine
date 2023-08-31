@@ -17,7 +17,7 @@ target_sources(WelderEditor
 
 target_link_libraries(WelderEditor
   PUBLIC
-    assimp
+    Assimp
     Common
     Content
     EditorCore
