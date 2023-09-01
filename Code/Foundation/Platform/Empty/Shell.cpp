@@ -241,7 +241,6 @@ void ShellWindow::SetTitle(StringParam title)
 
 WindowState::Enum ShellWindow::GetState()
 {
-  Error("Not implemented");
   return WindowState::Fullscreen;
 }
 
