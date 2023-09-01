@@ -5,33 +5,11 @@ const path = require("path");
 const mkdirp = require("mkdirp");
 const fs = require("fs");
 const glob = require("glob");
-const os = require("os");
 const rimraf = require("rimraf");
 const commandExists = require("command-exists").sync;
 const yargs = require("yargs");
 const findUp = require("find-up");
-const puppeteer = require("puppeteer");
-const express = require("express");
 
-let hostos = "";
-let executableExtension = "";
-
-const initialize = () => {
-  switch (os.platform()) {
-  case "win32":
-    hostos = "Windows";
-    executableExtension = ".exe";
-    break;
-  case "darwin":
-    hostos = "Mac";
-    break;
-  default:
-    hostos = "Linux";
-    break;
-  }
-};
-
-initialize();
 const repoRootFile = ".welder";
 
 const dirs = (() => {
@@ -431,13 +409,12 @@ const determineCmakeCombo = (options) => ({
   builder: "Ninja",
   config: options.config || "Release",
   platform: "Stub",
-  toolchain: "Clang",
   vfs: true
 });
 
 const activateBuildDir = (combo) => {
   const comboStr =
-      `${hostos}_${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.config}`.
+      `${combo.builder}_${combo.platform}_${combo.config}`.
         replace(/ /gu, "-");
   const comboDir = path.join(dirs.build, comboStr);
   mkdirp.sync(comboDir);
@@ -585,42 +562,11 @@ const cmake = async (options) => {
   } : {major: 0, minor: 0, patch: 0};
 
   const builderArgs = [];
-  const toolchainArgs = [];
-  const configArgs = [];
 
   const combo = determineCmakeCombo(options);
 
   if (combo.builder === "Ninja") {
     builderArgs.push("-DCMAKE_MAKE_PROGRAM=ninja");
-  }
-
-  if (combo.toolchain === "Emscripten") {
-    if (!process.env.EMSCRIPTEN) {
-      printErrorLine("Cannot find EMSCRIPTEN environment variable");
-    }
-
-    const toolchainFile = path.join(process.env.EMSCRIPTEN, "cmake/Modules/Platform/Emscripten.cmake");
-    toolchainArgs.push(`-DCMAKE_TOOLCHAIN_FILE=${toolchainFile}`);
-    toolchainArgs.push("-DEMSCRIPTEN_GENERATE_BITCODE_STATIC_LIBRARIES=0");
-  }
-
-  if (combo.toolchain === "Clang") {
-    if (hostos === "Windows") {
-      // CMake on Windows tries to do a bunch of detection thinking that it will be using MSVC.
-      toolchainArgs.push("-DCMAKE_SYSTEM_NAME=Generic");
-    }
-
-    toolchainArgs.push("-DCMAKE_C_COMPILER:PATH=clang");
-    toolchainArgs.push("-DCMAKE_CXX_COMPILER:PATH=clang++");
-    toolchainArgs.push("-DCMAKE_C_COMPILER_ID=Clang");
-    toolchainArgs.push("-DCMAKE_CXX_COMPILER_ID=Clang");
-    toolchainArgs.push("-DCMAKE_LINKER=lld");
-    toolchainArgs.push("-DCMAKE_AR=/usr/bin/llvm-ar");
-  }
-
-  if (combo.toolchain !== "MSVC") {
-    configArgs.push(`-DCMAKE_BUILD_TYPE=${combo.config}`);
-    configArgs.push("-DCMAKE_EXPORT_COMPILE_COMMANDS=1");
   }
 
   const cmakeArgs = [
@@ -637,11 +583,15 @@ const cmake = async (options) => {
     "-G",
     combo.builder,
     ...builderArgs,
-    `-DWELDER_TOOLCHAIN=${combo.toolchain}`,
-    ...toolchainArgs,
+    "-DCMAKE_C_COMPILER:PATH=clang",
+    "-DCMAKE_CXX_COMPILER:PATH=clang++",
+    "-DCMAKE_C_COMPILER_ID=Clang",
+    "-DCMAKE_CXX_COMPILER_ID=Clang",
+    "-DCMAKE_LINKER=lld",
+    "-DCMAKE_AR=/usr/bin/llvm-ar",
     `-DWELDER_PLATFORM=${combo.platform}`,
-    ...configArgs,
-    `-DWELDER_HOSTOS=${hostos}`,
+    `-DCMAKE_BUILD_TYPE=${combo.config}`,
+    "-DCMAKE_EXPORT_COMPILE_COMMANDS=1",
     dirs.repo
   ];
 
@@ -683,7 +633,7 @@ const findExecutableDir = (buildDir, config, libraryDir, library) => [
 ].filter((filePath) => fs.existsSync(filePath))[0];
 
 const findExecutable = (buildDir, config, libraryDir, library) =>
-  path.join(findExecutableDir(buildDir, config, libraryDir, library), `${library}${executableExtension}`);
+  path.join(findExecutableDir(buildDir, config, libraryDir, library), library);
 
 const format = async (options) => {
   console.log("Formatting");
@@ -750,67 +700,7 @@ const build = async (options) => {
 };
 
 const executeBuiltProcess = async (buildDir, combo, libraryDir, library, args) => {
-  if (combo.toolchain === "Emscripten") {
-    const pageDirectory = path.join(buildDir, "Code", libraryDir, library);
-    if (!fs.existsSync(pageDirectory)) {
-      printErrorLine(`Directory does not exist ${pageDirectory}`);
-      return [];
-    }
-
-    const app = express();
-    app.use("/", express.static(pageDirectory));
-    const port = 3000;
-    const server = app.listen(port);
-    const argString = args.map((arg) => JSON.stringify(arg)).join(" ");
-    const url = `http://localhost:${port}/${library}.html?${argString}`;
-
-    const browser = await puppeteer.launch({
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox"
-      ],
-      headless: false,
-      timeout: 0
-    });
-    const page = await browser.newPage();
-
-    const downloadDir = path.join(dirs.downloads, Math.random().toString(36).
-      substr(2, 8));
-    clearCreateDirectory(downloadDir);
-    // eslint-disable-next-line no-underscore-dangle
-    await page._client.send("Page.setDownloadBehavior", {
-      behavior: "allow",
-      downloadPath: downloadDir
-    });
-
-    let pageResolver = null;
-    const finishedPromise = new Promise((resolve) => {
-      pageResolver = resolve;
-    });
-    page.on("console", (event) => {
-      if (event.text() === "Stopping main loop") {
-        pageResolver();
-      }
-      printLogLine(event.text());
-    });
-    page.on("error", (event) => parseLines(event.stack, printErrorLine));
-    page.on("pageerror", (event) => parseLines(event.stack, printErrorLine));
-    await page.goto(url);
-    await finishedPromise;
-
-    for (;;) {
-      if (!fs.readdirSync(downloadDir).find((fileName) => fileName.endsWith(".crdownload"))) {
-        break;
-      }
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    }
-
-    server.close();
-    await browser.close();
-    const downloadPaths = fs.readdirSync(downloadDir).map((fileName) => path.join(downloadDir, fileName));
-    return downloadPaths;
-  }
-
+  // TODO(trevor): Retailor this to import the WASM and execute it
   const executablePath = findExecutable(buildDir, combo.config, libraryDir, library);
 
   if (!fs.existsSync(executablePath)) {
@@ -881,11 +771,9 @@ const pack = async (options) => {
     "VirtualFileSystem.cpp"
   ];
 
-  if (combo.toolchain === "Emscripten") {
-    clearCreateDirectory(dirs.page);
-    // This prevents GitHub from processing our files with Jekyll.
-    fs.writeFileSync(path.join(dirs.page, ".nojekyll"), "", "utf8");
-  }
+  clearCreateDirectory(dirs.page);
+  // This prevents GitHub from processing our files with Jekyll.
+  fs.writeFileSync(path.join(dirs.page, ".nojekyll"), "", "utf8");
   mkdirp.sync(dirs.packages);
 
   const cmakeVariables = readCmakeVariables(buildDir);
@@ -937,15 +825,13 @@ const pack = async (options) => {
       await zipExtract(packageZip, extractDir);
     }
 
-    // On Emscripten we also output a directory (this can be used to publish to github pages).
-    if (combo.toolchain === "Emscripten") {
-      const pageLibraryDir = path.join(dirs.page, library);
-      mkdirp.sync(pageLibraryDir);
-      files.forEach((file) => {
-        const basename = path.basename(file);
-        fs.copyFileSync(file, path.join(pageLibraryDir, basename));
-      });
-    }
+    // For the web we also output a directory (this can be used to publish to github pages).
+    const pageLibraryDir = path.join(dirs.page, library);
+    mkdirp.sync(pageLibraryDir);
+    files.forEach((file) => {
+      const basename = path.basename(file);
+      fs.copyFileSync(file, path.join(pageLibraryDir, basename));
+    });
   }
   console.log("Packed");
 };
@@ -1012,7 +898,7 @@ const all = async (options) => {
 const main = async () => {
   const empty = {
   };
-  const comboOptions = "[--alias=...] [--builder=...] [--toolchain=...] [--platform=...] [--config] [--vfs=true|false]";
+  const comboOptions = "[--alias=...] [--builder=...] [--platform=...] [--config] [--vfs=true|false]";
   // eslint-disable-next-line
     yargs.
     command("disk", "Print the approximate size of every directory on disk", empty, disk).

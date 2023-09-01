@@ -49,5 +49,6 @@ module.exports = {
     "capitalized-comments": "off",
     "spaced-comment": "off",
     "multiline-comment-style": "off",
+    "no-warning-comments": "off",
   }
 };
