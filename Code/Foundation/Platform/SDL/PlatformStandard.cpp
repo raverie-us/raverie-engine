@@ -10,13 +10,6 @@ SDL_Haptic* cSDLHapticDevices[cMaxGamepads];
 void PlatformLibrary::Initialize()
 {
   Uint32 flags = SDL_INIT_EVERYTHING;
-#if defined(WelderTargetOsEmscripten)
-  SDL_SetHint(SDL_HINT_EMSCRIPTEN_ASYNCIFY, "0");
-  SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");
-  emscripten_sample_gamepad_data();
-  // https://github.com/emscripten-core/emscripten/issues/3139
-  flags &= ~(SDL_INIT_TIMER | SDL_INIT_HAPTIC);
-#endif
 
   if (SDL_Init(flags) != 0)
   {

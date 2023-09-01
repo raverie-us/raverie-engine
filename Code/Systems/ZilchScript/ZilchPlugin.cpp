@@ -301,24 +301,6 @@ void ZilchPluginSource::WriteCurrentVersionFile()
   // Only do this code when we have content loaded
   if (mContentItem == nullptr)
     return;
-
-#if defined(WelderTargetOsWindows)
-  String revisionNumber = GetRevisionNumberString();
-  String propsFile = BuildString("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
-                                 "<Project ToolsVersion=\"4.0\" "
-                                 "xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\r\n"
-                                 "  <PropertyGroup>\r\n"
-                                 "    <ZeroVersion>",
-                                 revisionNumber,
-                                 "</ZeroVersion>\r\n"
-                                 "  </PropertyGroup>\r\n"
-                                 "</Project>\r\n");
-
-  String codeDir = GetCodeDirectory();
-  CreateDirectoryAndParents(codeDir);
-  String versionFile = FilePath::Combine(codeDir, BuildString(Name, "Version.props"));
-  WriteStringRangeToFile(versionFile, propsFile);
-#endif
 }
 
 void ZilchPluginSource::OpenDirectory()
@@ -342,51 +324,18 @@ void ZilchPluginSource::OpenIde()
   CopyPluginDependenciesOnce();
   String codeDir = GetCodeDirectory();
 
-#if defined(WelderTargetOsWindows)
-
-  if (CheckIdeAndInformUser() == false)
-    return;
-
-  String ideFile = FilePath::CombineWithExtension(codeDir, Name, ".bat");
-  if (!Os::ShellOpenFile(ideFile))
-    DoNotifyError("Failed to open Ide", String::Format("Ide: %s", ideFile.c_str()));
-
-#else
   DoNotifyErrorNoAssert("Zilch Plugin", "No IDE was detected or supported on this platform");
-#endif
 }
 
 void ZilchPluginSource::OnEngineUpdate(UpdateEvent* event)
 {
-#if defined(WelderTargetOsWindows)
-  if (mOpenIdeAfterToolsInstallCounter > 0)
-  {
-    // If the installer process is finally stopped
-    static const String VSIXInstaller("VSIXInstaller.exe");
-    if (FindProcess(VSIXInstaller).mProcessId == 0)
-    {
-      ++mOpenIdeAfterToolsInstallCounter;
-
-      if (mOpenIdeAfterToolsInstallCounter > InstallCounter)
-      {
-        mOpenIdeAfterToolsInstallCounter = 0;
-        OpenIde();
-      }
-    }
-  }
-#endif
 }
 
 void ZilchPluginSource::InstallIdeTools()
 {
   MarkAttemptedIdeToolsInstAll();
 
-#if defined(WelderTargetOsWindows)
-  String extensionPath = FilePath::Combine(Z::gContentSystem->ToolPath, "ZeroZilchPlugins.vsix");
-  Os::ShellOpenFile(extensionPath);
-#else
   DoNotifyErrorNoAssert("Zilch Plugin", "No IDE Plugins were detected or supported on this platform");
-#endif
 }
 
 ZilchPluginConfig* ZilchPluginSource::GetConfig()
@@ -423,11 +372,6 @@ bool ZilchPluginSource::CheckIdeAndInformUser()
     DoNotifyWarning("Zilch Plugin",
                     "No IDE was detected, you must first install a C++ IDE for "
                     "your platform");
-
-#if defined(WelderTargetOsWindows)
-    Os::OpenUrl("https://www.visualstudio.com/"
-                "post-download-vs?sku=community&clcid=0x409");
-#endif
     return false;
   }
   return true;
@@ -435,11 +379,6 @@ bool ZilchPluginSource::CheckIdeAndInformUser()
 
 void ZilchPluginSource::Clean()
 {
-#if defined(WelderTargetOsWindows)
-  String codeDir = GetCodeDirectory();
-  String ideFile = FilePath::Combine(codeDir, BuildString(Name, "Clean.bat"));
-  Os::ShellOpenFile(ideFile);
-#endif
 }
 
 void ZilchPluginSource::CompileConfiguration(StringParam configuration)
@@ -455,29 +394,7 @@ void ZilchPluginSource::CompileConfiguration(StringParam configuration)
   String codeDir = GetCodeDirectory();
   String taskName = BuildString("Compiling ", configuration, " ", Name);
 
-#if defined(WelderTargetOsWindows)
-  String configurationBatchFileName = BuildString(Name, "Build", configuration);
-  String configurationBatchFilePath = FilePath::CombineWithExtension(codeDir, configurationBatchFileName, ".bat");
-  String process = BuildString("cmd /C \"", configurationBatchFilePath, "\"");
-
-  ExecuteProcessTaskJob* job = new ExecuteProcessTaskJob(process);
-  mCompileTask = Z::gBackgroundTasks->Execute(job, taskName);
-  mCompileTask->mActivateOnCompleted = true;
-  // Listen for the task completion events
-  ConnectThisTo(mCompileTask, Events::BackgroundTaskCompleted, OnCompilationCompleted);
-  ConnectThisTo(mCompileTask, Events::BackgroundTaskFailed, OnCompilationCompleted);
-
-  // We can't get progress, so we'll have to estimate the time to complete
-  mCompileTask->mIndeterminate = true;
-  mCompileTask->mEstimatedTotalDuration = 15.0f;
-
-  // Other parts of the engine may want to know when a plugin is currently
-  // compiling We decrement this above in the 'CompletedCompilation' callback
-  ZilchPluginSourceManager* manager = ZilchPluginSourceManager::GetInstance();
-  ++manager->mCompilingPluginCount;
-#else
   DoNotifyErrorNoAssert("Zilch Plugin", "Cannot automatically compile the plugin for this platform");
-#endif
 }
 
 void ZilchPluginSource::OnCompilationCompleted(BackgroundTaskEvent* e)

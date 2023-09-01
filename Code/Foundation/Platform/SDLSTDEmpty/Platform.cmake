@@ -20,7 +20,7 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Intrinsics.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/MainLoop.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Socket.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../Libgit2/Git.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../Empty/Git.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Audio.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/ExternalLibrary.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/File.cpp
@@ -49,15 +49,12 @@ welder_target_includes(Platform
 
 target_link_libraries(Platform
   PUBLIC
-    Curl
-    Libgit2
     SDL
 )
 
-if (WELDER_TARGETOS STREQUAL "Linux")
-  target_link_libraries(Platform
-    PUBLIC
-      stdc++fs
-      dl
-  )
-endif()
+# TODO(trevor): Do we need this?
+target_link_libraries(Platform
+PUBLIC
+  stdc++fs
+  dl
+)

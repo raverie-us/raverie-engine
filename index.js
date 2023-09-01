@@ -432,14 +432,13 @@ const determineCmakeCombo = (options) => ({
   builder: "Ninja",
   config: options.config || "Release",
   platform: "Stub",
-  targetos: "WASM",
   toolchain: "Clang",
   vfs: true
 });
 
 const activateBuildDir = (combo) => {
   const comboStr =
-      `${hostos}_${combo.targetos}_${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.architecture}_${combo.config}`.
+      `${hostos}_${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.architecture}_${combo.config}`.
         replace(/ /gu, "-");
   const comboDir = path.join(dirs.build, comboStr);
   mkdirp.sync(comboDir);
@@ -653,7 +652,6 @@ const cmake = async (options) => {
     ...architectureArgs,
     ...configArgs,
     `-DWELDER_HOSTOS=${hostos}`,
-    `-DWELDER_TARGETOS=${combo.targetos}`,
     dirs.repo
   ];
 
@@ -917,7 +915,7 @@ const pack = async (options) => {
 
     /*
      * This needs to match index.js:pack/Standalone.cpp:BuildId::Parse/BuildId::GetFullId/BuildVersion.cpp:GetBuildVersionName
-     * Application.Branch.Major.Minor.Patch.Revision.ShortChangeset.MsSinceEpoch.TargetOs.Architecture.Config.Extension
+     * Application.Branch.Major.Minor.Patch.Revision.ShortChangeset.MsSinceEpoch.Architecture.Config.Extension
      * Example: WelderEditor.master.1.5.0.1501.fb02756c46a4.1574702096290.Windows.x86.Release.zip
      */
     const name =
@@ -1025,7 +1023,7 @@ const all = async (options) => {
 const main = async () => {
   const empty = {
   };
-  const comboOptions = "[--alias=...] [--builder=...] [--toolchain=...] [--platform=...] [--architecture=...] [--config] [--targetos=...] [--vfs=true|false]";
+  const comboOptions = "[--alias=...] [--builder=...] [--toolchain=...] [--platform=...] [--architecture=...] [--config] [--vfs=true|false]";
   // eslint-disable-next-line
     yargs.
     command("disk", "Print the approximate size of every directory on disk", empty, disk).

@@ -123,7 +123,6 @@ void SendCrashReport(CrashHandlerParameters& params, void* userData)
   params.AddParameter("ChangeSet", GetChangeSetString());
   params.AddParameter("ChangeSetDate", GetChangeSetDateString());
   params.AddParameter("Configuration", GetConfigurationString());
-  params.AddParameter("Platform", GetPlatformString());
 
   params.AddParameter("ExePath", GetApplication().c_str());
 

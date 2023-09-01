@@ -152,11 +152,6 @@ public:
 
   void Serialize(Serializer& stream) override;
 
-  /// If a pre-launch popup should be used to determine how application window
-  /// is sized.
-  // bool mUseLaunchOptionsPopup;
-  /// If application launches in fullscreen mode.
-  bool mLaunchFullscreen;
   /// Resolution of application when launched in windowed mode.
   IntVec2 mWindowedResolution;
 };

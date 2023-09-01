@@ -48,7 +48,6 @@ bool ZeroZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult&
     compiler.set_name(ubo.base_type_id, name.c_str());
   }
 
-#ifdef WelderTargetOsEmscripten
   // gles output is going to flatten input/output blocks and prepend the block
   // name to each member. Forcing block typenames to match.
   for (auto stageInput : resources.stage_inputs)
@@ -84,7 +83,6 @@ bool ZeroZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult&
         compiler.set_member_decoration(stageOutput.base_type_id, i, spv::DecorationLocation, i);
     }
   }
-#endif
 
   // Create a helper struct to pass a lot of data around
   GlslBackendInternalData internalData;

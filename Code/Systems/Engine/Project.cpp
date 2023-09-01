@@ -320,19 +320,11 @@ ZilchDefineType(WindowLaunchSettings, builder, type)
   ZeroBindComponent();
   ZeroBindDocumented();
   ZeroBindSetup(SetupMode::DefaultSerialization);
-
-  // Disabled usage of launch options popup for now
-  // ZilchBindFieldProperty(mUseLaunchOptionsPopup)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mLaunchFullscreen);   //->ZeroFilterEquality(mUseLaunchOptionsPopup,
-                                               // bool, false);
-  ZilchBindFieldProperty(mWindowedResolution); //->ZeroFilterEquality(mUseLaunchOptionsPopup,
-                                               // bool, false);
+  ZilchBindFieldProperty(mWindowedResolution);
 }
 
 void WindowLaunchSettings::Serialize(Serializer& stream)
 {
-  // SerializeNameDefault(mUseLaunchOptionsPopup, false);
-  SerializeNameDefault(mLaunchFullscreen, true);
   SerializeNameDefault(mWindowedResolution, IntVec2(1280, 720));
 }
 

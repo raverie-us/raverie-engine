@@ -6,12 +6,6 @@
 
 #include "SDL.h"
 
-#ifdef WelderTargetOsMac
-#  include <CoreServices/CoreServices.h>
-#  include <mach/mach.h>
-#  include <mach/mach_time.h>
-#endif
-
 #include <new>
 #include <stdlib.h>
 #include <stdio.h>

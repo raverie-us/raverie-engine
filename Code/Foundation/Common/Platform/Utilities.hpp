@@ -65,9 +65,6 @@ ZeroShared void DownloadFile(cstr fileName, const DataBlock& data);
 // Open's a url in a browser or tab.
 ZeroShared void OpenUrl(cstr url);
 
-// Mark a file as executable.
-ZeroShared void MarkAsExecutable(cstr fileName);
-
 // Get the time in milliseconds for a double click.
 ZeroShared unsigned int GetDoubleClickTimeMs();
 

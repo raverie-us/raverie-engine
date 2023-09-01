@@ -74,11 +74,7 @@ u64 GetMacAddress()
 
 bool DebugBreak()
 {
-#if defined(WelderTargetOsEmscripten)
-  emscripten_debugger();
-#else
   SDL_TriggerBreakpoint();
-#endif
   return true;
 }
 
@@ -221,13 +217,6 @@ void OpenUrl(cstr url)
   ShellOpen(url);
 }
 #endif
-
-void MarkAsExecutable(cstr fileName)
-{
-#if defined(WelderTargetOsLinux) || defined(WelderTargetOsMac)
-  system(String::Format("chmod +x \"%s\"", fileName).c_str());
-#endif
-}
 
 unsigned int GetDoubleClickTimeMs()
 {

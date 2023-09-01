@@ -4,8 +4,6 @@
 namespace Zero
 {
 
-#define ZeroPlatform WelderTargetOsName "_" WelderArchitectureName
-
 extern const String sWelderOrganization;
 extern const String sEditorGuid;
 extern const String sEditorName;
@@ -83,9 +81,6 @@ cstr GetChangeSetDateString();
 
 /// Get the configuration as a string.
 cstr GetConfigurationString();
-
-/// Get the platform as a string.
-cstr GetPlatformString();
 
 /// Get the full string description of the build version.
 String GetBuildVersionName();

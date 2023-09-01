@@ -6,15 +6,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
-
-// This is only used to make it compile for easy testing
-#if defined(WelderTargetOsWindows)
-#  include "FileSystemWindowsEmulation.inl"
-#else
-#  include <unistd.h>
-#  include <dirent.h>
-#  define ZeroAllPermissions (S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IXOTH)
-#endif
+#include <unistd.h>
+#include <dirent.h>
+#define ZeroAllPermissions (S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IXOTH)
 
 namespace Zero
 {
@@ -29,12 +23,10 @@ static const String cParentDirectory("..");
 
 FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback, void* userData)
 {
-#if defined(WelderTargetOsEmscripten)
   // Calling this will allow the outside product to populate the
   // virtual file system by calling 'AddVirtualFileSystemEntry'.
   if (callback)
     callback(userData);
-#endif
 }
 
 FileSystemInitializer::~FileSystemInitializer()
@@ -89,13 +81,8 @@ void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, T
 
 bool PersistFiles()
 {
-#if defined(WelderTargetOsEmscripten)
-  EM_ASM(FS.syncfs(false, console.log));
-  ZPrint("Persisting files...\n");
-  return true;
-#else
+  ZPrint("Attempted to persist files (not implemented)\n");
   return false;
-#endif
 }
 
 bool CopyFileInternal(StringParam dest, StringParam source)

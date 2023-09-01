@@ -224,7 +224,6 @@ void BugReportJob::Execute()
     request.AddField("Repro", mRepro);
   request.AddField("Revision", GetRevisionNumberString());
   request.AddField("ChangeSet", GetChangeSetString());
-  request.AddField("Platform", GetPlatformString());
   request.AddField("BuildVersionName", GetBuildVersionName());
 
   ProjectSettings* project = mProject.has(ProjectSettings);

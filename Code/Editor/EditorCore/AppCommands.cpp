@@ -89,7 +89,6 @@ void WriteBuildInfo()
   builder.AppendFormat("MinorVersion %d\n", GetMinorVersion());
   builder.AppendFormat("PatchVersion %d\n", GetPatchVersion());
   builder.AppendFormat("RevisionId %d\n", GetRevisionNumber());
-  builder.AppendFormat("Platform \"%s\"\n", GetPlatformString());
   builder.AppendFormat("ShortChangeSet \"%s\"\n", GetShortChangeSetString());
   builder.AppendFormat("ChangeSet \"%s\"\n", GetChangeSetString());
   builder.AppendFormat("ChangeSetDate \"%s\"\n", GetChangeSetDateString());
