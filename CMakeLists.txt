@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.22.1 FATAL_ERROR)
 
 if (POLICY CMP0077)
   cmake_policy(SET CMP0077 NEW)
@@ -47,6 +47,9 @@ add_definitions(-DWelderPlatformName="${WELDER_PLATFORM}")
 add_definitions(-DWelderToolchain${WELDER_TOOLCHAIN}=1)
 add_definitions(-DWelderToolchainName="${WELDER_TOOLCHAIN}")
 
+add_definitions(-D_WASI_EMULATED_SIGNAL)
+add_definitions(-D_WASI_EMULATED_PROCESS_CLOCKS)
+
 option(WELDER_EXCEPTIONS "Enable exception throwing/catching" ON)
 if (WELDER_EXCEPTIONS)
   add_definitions(-DWelderExceptions)
@@ -54,8 +57,6 @@ endif()
 
 set(WELDER_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(WELDER_CMAKE_DIR ${WELDER_CORE_DIR}/CMakeFiles/)
-set(WELDER_TOOLCHAIN_DIR ${WELDER_CMAKE_DIR}/Toolchain/)
-set(WELDER_TARGETOS_DIR ${WELDER_CMAKE_DIR}/TargetOs/)
 set(WELDER_LIBRARIES_DIR ${WELDER_CORE_DIR}/Code/)
 set(WELDER_PLATFORM_DATA_DIR ${WELDER_CORE_DIR}/PlatformData/${WELDER_TOOLCHAIN})
 
@@ -118,10 +119,48 @@ function(welder_target_includes target)
   endforeach()
 endfunction()
 
-#Emscripten
-#MSVC
-include(${WELDER_TOOLCHAIN_DIR}/${WELDER_TOOLCHAIN}.cmake)
-include(${WELDER_TARGETOS_DIR}/${WELDER_TARGETOS}.cmake)
+add_definitions(-DWelderCompilerClang=1 -DWelderCompilerName="Clang")
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+set(WELDER_C_CXX_FLAGS "\
+  -Wno-address-of-packed-member\
+  -Wno-empty-body\
+  -fexceptions\
+  -frtti\
+  -fno-vectorize\
+  -fno-slp-vectorize\
+  -fno-tree-vectorize\
+")
+
+set(WELDER_C_CXX_FLAGS_DEBUG "\
+  -g\
+")
+
+set(WELDER_C_CXX_FLAGS_RELWITHDEBINFO "\
+  -O3\
+  -g\
+")
+
+set(WELDER_C_CXX_FLAGS_RELEASE "\
+  -O3\
+")
+
+set(WELDER_C_CXX_FLAGS_MINSIZEREL "\
+  -Oz\
+")
+
+set(WELDER_C_CXX_EXTERNAL_FLAGS -Wno-everything)
+
+function(welder_toolchain_setup_library target)
+endfunction()
+
+function(welder_use_precompiled_header target directory)
+endfunction()
+
+function(welder_source_ignore_precompiled_header source)
+endfunction()
+
+
 
 set(CMAKE_C_FLAGS                             "${CMAKE_C_FLAGS}                             ${WELDER_C_CXX_FLAGS}")
 set(CMAKE_CXX_FLAGS                           "${CMAKE_CXX_FLAGS}                           ${WELDER_C_CXX_FLAGS}")
@@ -163,11 +202,5 @@ set(CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL      "${CMAKE_SHARED_LINKER_FLAGS_MINSI
 set(CMAKE_MODULE_LINKER_FLAGS_MINSIZEREL      "${CMAKE_MODULE_LINKER_FLAGS_MINSIZEREL}      ${WELDER_LINKER_FLAGS_MINSIZEREL}")
 set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL         "${CMAKE_EXE_LINKER_FLAGS_MINSIZEREL}         ${WELDER_LINKER_FLAGS_MINSIZEREL}")
 
-#Windows
-#Emscripten
-#SDLSTDEmpty
-#Stub
-
-#add_subdirectory(Code/Foundation/Platform)
 add_subdirectory(External)
 add_subdirectory(Code)

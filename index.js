@@ -427,62 +427,15 @@ const runWelderFormat = async (options, sourceFiles) => {
   }));
 };
 
-const determineCmakeCombo = (options) => {
-  const aliases = {
-    Empty: {
-      builder: "Ninja",
-      config: "Release",
-      platform: "Stub",
-      targetos: hostos,
-      toolchain: "Clang",
-      vfs: true
-    },
-    Emscripten: {
-      architecture: "wasm",
-      builder: "Ninja",
-      config: "Release",
-      platform: "Emscripten",
-      targetos: "Emscripten",
-      toolchain: "Emscripten",
-      vfs: true
-    },
-    Linux: {
-      builder: "Ninja",
-      config: "Release",
-      platform: "SDLSTDEmpty",
-      targetos: "Linux",
-      toolchain: "Clang",
-      vfs: false
-    },
-    Windows: {
-      builder: "Visual Studio 16 2019",
-      config: "Release",
-      platform: "Windows",
-      targetos: "Windows",
-      toolchain: "MSVC",
-      vfs: false
-    }
-  };
-
-  const alias = options.alias ? options.alias : hostos;
-  let combo = aliases[alias];
-
-  if (!combo) {
-    printErrorLine(`Undefined alias ${alias}, choosing platform empty`);
-    combo = aliases.empty;
-  }
-
-  /*
-   * Allow options to override builder, toolchian, etc.
-   * It is the user's responsibility to ensure this is a valid combination.
-   */
-  combo = Object.assign(combo, options);
-  combo.alias = alias;
-  combo.architecture = combo.architecture || os.arch();
-  combo.config = combo.config || "Release";
-  combo.vfs = combo.vfs || false;
-  return combo;
-};
+const determineCmakeCombo = (options) => ({
+  architecture: "WASM",
+  builder: "Ninja",
+  config: options.config || "Release",
+  platform: "Stub",
+  targetos: "WASM",
+  toolchain: "Clang",
+  vfs: true
+});
 
 const activateBuildDir = (combo) => {
   const comboStr =
