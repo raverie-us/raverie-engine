@@ -23,8 +23,6 @@ add_definitions(-DWelderMajorVersion=${WELDER_MAJOR_VERSION})
 add_definitions(-DWelderMinorVersion=${WELDER_MINOR_VERSION})
 add_definitions(-DWelderPatchVersion=${WELDER_PATCH_VERSION})
 add_definitions(-DWelderConfigName="${WELDER_CONFIG}")
-add_definitions(-DWelderPlatform${WELDER_PLATFORM}=1)
-add_definitions(-DWelderPlatformName="${WELDER_PLATFORM}")
 
 add_definitions(-D_WASI_EMULATED_SIGNAL)
 add_definitions(-D_WASI_EMULATED_PROCESS_CLOCKS)

@@ -406,15 +406,13 @@ const runWelderFormat = async (options, sourceFiles) => {
 };
 
 const determineCmakeCombo = (options) => ({
-  builder: "Ninja",
   config: options.config || "Release",
-  platform: "Stub",
   vfs: true
 });
 
 const activateBuildDir = (combo) => {
   const comboStr =
-      `${combo.builder}_${combo.platform}_${combo.config}`.
+      `${combo.config}`.
         replace(/ /gu, "-");
   const comboDir = path.join(dirs.build, comboStr);
   mkdirp.sync(comboDir);
@@ -561,13 +559,7 @@ const cmake = async (options) => {
     patch: parseInt(versionResult.groups.patch, 10)
   } : {major: 0, minor: 0, patch: 0};
 
-  const builderArgs = [];
-
   const combo = determineCmakeCombo(options);
-
-  if (combo.builder === "Ninja") {
-    builderArgs.push("-DCMAKE_MAKE_PROGRAM=ninja");
-  }
 
   const cmakeArgs = [
     `-DWELDER_MS_SINCE_EPOCH=${Date.now()}`,
@@ -580,16 +572,7 @@ const cmake = async (options) => {
     `-DWELDER_MINOR_VERSION=${version.minor}`,
     `-DWELDER_PATCH_VERSION=${version.patch}`,
     `-DWELDER_CONFIG=${combo.config}`,
-    "-G",
-    combo.builder,
-    ...builderArgs,
-    "-DCMAKE_C_COMPILER:PATH=clang",
-    "-DCMAKE_CXX_COMPILER:PATH=clang++",
-    "-DCMAKE_C_COMPILER_ID=Clang",
-    "-DCMAKE_CXX_COMPILER_ID=Clang",
-    "-DCMAKE_LINKER=lld",
-    "-DCMAKE_AR=/usr/bin/llvm-ar",
-    `-DWELDER_PLATFORM=${combo.platform}`,
+    "-GNinja",
     `-DCMAKE_BUILD_TYPE=${combo.config}`,
     "-DCMAKE_EXPORT_COMPILE_COMMANDS=1",
     dirs.repo
@@ -887,7 +870,7 @@ const all = async (options) => {
   // Build the executable so we can prebuild content
   await build(options);
   await prebuilt(options);
-  // Build again so that platforms with a VFS will have the prebuilt content
+  // Build again so that the VFS will have the prebuilt content
   await build(options);
   await pack(options);
   //await documentation(options);
@@ -898,7 +881,7 @@ const all = async (options) => {
 const main = async () => {
   const empty = {
   };
-  const comboOptions = "[--alias=...] [--builder=...] [--platform=...] [--config] [--vfs=true|false]";
+  const comboOptions = "[--alias=...]  [--config] [--vfs=true|false]";
   // eslint-disable-next-line
     yargs.
     command("disk", "Print the approximate size of every directory on disk", empty, disk).
