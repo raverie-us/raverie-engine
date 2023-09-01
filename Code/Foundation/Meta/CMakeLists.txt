@@ -59,10 +59,3 @@ welder_target_includes(Meta
   PUBLIC
     Zilch
 )
-
-#target_link_libraries(Meta
-#  PUBLIC
-#    Common
-#    Zilch
-#    Platform
-#)

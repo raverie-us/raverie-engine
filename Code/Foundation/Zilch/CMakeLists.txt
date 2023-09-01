@@ -143,8 +143,3 @@ welder_target_includes(Zilch
   PUBLIC
     Common
 )
-
-#target_link_libraries(Zilch
-#  PUBLIC
-#    Common
-#)

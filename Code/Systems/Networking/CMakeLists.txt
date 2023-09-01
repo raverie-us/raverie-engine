@@ -66,9 +66,3 @@ welder_target_includes(Networking
     Common
     Geometry
 )
-
-#target_link_libraries(Networking
-#                      PUBLIC
-#                      Common
-#                      Geometry
-#)

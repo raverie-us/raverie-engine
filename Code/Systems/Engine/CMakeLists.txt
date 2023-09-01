@@ -237,14 +237,3 @@ welder_target_includes(Engine
     Geometry
     Zilch
 )
-
-#target_link_libraries(Engine
-#  PUBLIC
-#    Common
-#    Zilch
-#    Platform
-#    Meta
-#    Serialization
-#    Geometry
-#    SpatialPartition
-#)

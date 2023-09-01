@@ -50,10 +50,3 @@ welder_target_includes(Replication
     Zilch
     Geometry
 )
-
-#target_link_libraries(Replication
-#  PUBLIC
-#    Common
-#    Zilch
-#    Geometry
-#)

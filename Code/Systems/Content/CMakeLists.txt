@@ -96,15 +96,3 @@ welder_target_includes(Content
     Opus
     Nvtt
 )
-
-#target_link_libraries(Content
-#  PUBLIC
-#    Common
-#    Zilch
-#    Platform
-#    Meta
-#    Serialization
-#    Assimp
-#    Nvtt
-#    Opus
-#)
