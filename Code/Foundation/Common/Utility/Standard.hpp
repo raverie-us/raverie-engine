@@ -1,7 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-#if !defined(WelderCompilerMsvc)
 typedef size_t rsize_t;
 typedef int errno_t;
 
@@ -13,7 +12,6 @@ extern errno_t wcscat_s(wchar_t* dest, rsize_t destsz, const wchar_t* src);
 extern errno_t strcpy_s(char* dest, rsize_t destsz, const char* src);
 extern errno_t wcscpy_s(wchar_t* dest, rsize_t destsz, const wchar_t* src);
 extern errno_t strncpy_s(char* dest, rsize_t destsz, const char* src, rsize_t count);
-#endif
 
 // A temporary non-thread safe buffer that is only used for counting the lengths
 // of printfs

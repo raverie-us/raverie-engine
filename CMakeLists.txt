@@ -33,8 +33,6 @@ add_definitions(-DWelderPlatformName="${WELDER_PLATFORM}")
 add_definitions(-DWelderToolchain${WELDER_TOOLCHAIN}=1)
 add_definitions(-DWelderToolchainName="${WELDER_TOOLCHAIN}")
 
-add_definitions(-DWelderCompilerClang=1 -DWelderCompilerName="Clang")
-
 add_definitions(-D_WASI_EMULATED_SIGNAL)
 add_definitions(-D_WASI_EMULATED_PROCESS_CLOCKS)
 

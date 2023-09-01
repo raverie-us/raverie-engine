@@ -1,7 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-#if !defined(WelderCompilerMsvc)
 int vsprintf_s(char* buffer, size_t numberOfElements, const char* format, va_list args)
 {
   return vsnprintf(buffer, numberOfElements, format, args);
@@ -89,4 +88,3 @@ errno_t strncpy_s(char* dest, rsize_t destsz, const char* src, rsize_t count)
   strncpy(dest, src, count);
   return 0;
 }
-#endif
