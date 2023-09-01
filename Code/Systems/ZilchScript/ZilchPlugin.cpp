@@ -95,8 +95,7 @@ void ZilchPluginSource::ForceCopyPluginDependencies()
   // needs to partially match where we place the lib/all-to-one header in the
   // Data directory (does not include the version number). This is setup within
   // the Zero engine build process (typically as a post build event)
-  String platformName = ZilchPluginBuilder::GetSharedLibraryPlatformName();
-  String sourceVersionDir = FilePath::Combine(mainConfig->DataDirectory, "ZilchCustomPluginShared", platformName);
+  String sourceVersionDir = FilePath::Combine(mainConfig->DataDirectory, "ZilchCustomPluginShared", "WASM");
 
   String destVersionDir = GetCurrentVersionDirectory();
   CreateDirectoryAndParents(destVersionDir);

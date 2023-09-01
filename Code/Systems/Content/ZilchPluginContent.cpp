@@ -54,28 +54,9 @@ void ZilchPluginBuilder::Rename(StringParam newName)
                   "(projects, solutions, make files, etc)");
 }
 
-String ZilchPluginBuilder::GetSharedLibraryPlatformName()
-{
-  StringBuilder builder;
-
-  // This is not currently used because we ensured that Debug/Release builds
-  // of the plugins are compatible with both Debug/Release builds of Zero
-  // Note that this relates to linked libraries within the generated project
-  // files (plugin templates) The template projects also generate dynamic
-  // libraries with extensions that could include Debug/Release
-  // builder.Append(GetConfigurationString());
-  // builder.Append('-');
-
-  // Append the target machine architecture
-  builder.Append(WelderArchitectureName);
-  String pluginFileName = builder.ToString();
-  return pluginFileName;
-}
-
 String ZilchPluginBuilder::GetSharedLibraryPlatformBuildName()
 {
-  String platformName = GetSharedLibraryPlatformName();
-  String platformBuildName = BuildString(platformName, "-", GetRevisionNumberString());
+  String platformBuildName = BuildString("WASM-", GetRevisionNumberString());
   return platformBuildName;
 }
 

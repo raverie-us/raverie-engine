@@ -428,7 +428,6 @@ const runWelderFormat = async (options, sourceFiles) => {
 };
 
 const determineCmakeCombo = (options) => ({
-  architecture: "WASM",
   builder: "Ninja",
   config: options.config || "Release",
   platform: "Stub",
@@ -438,7 +437,7 @@ const determineCmakeCombo = (options) => ({
 
 const activateBuildDir = (combo) => {
   const comboStr =
-      `${hostos}_${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.architecture}_${combo.config}`.
+      `${hostos}_${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.config}`.
         replace(/ /gu, "-");
   const comboDir = path.join(dirs.build, comboStr);
   mkdirp.sync(comboDir);
@@ -587,7 +586,6 @@ const cmake = async (options) => {
 
   const builderArgs = [];
   const toolchainArgs = [];
-  const architectureArgs = [];
   const configArgs = [];
 
   const combo = determineCmakeCombo(options);
@@ -620,12 +618,6 @@ const cmake = async (options) => {
     toolchainArgs.push("-DCMAKE_AR=/usr/bin/llvm-ar");
   }
 
-  if (combo.toolchain === "MSVC" && combo.architecture === "x64") {
-    architectureArgs.push("-DCMAKE_GENERATOR_PLATFORM=x64");
-    architectureArgs.push("-T");
-    architectureArgs.push("host=x64");
-  }
-
   if (combo.toolchain !== "MSVC") {
     configArgs.push(`-DCMAKE_BUILD_TYPE=${combo.config}`);
     configArgs.push("-DCMAKE_EXPORT_COMPILE_COMMANDS=1");
@@ -648,8 +640,6 @@ const cmake = async (options) => {
     `-DWELDER_TOOLCHAIN=${combo.toolchain}`,
     ...toolchainArgs,
     `-DWELDER_PLATFORM=${combo.platform}`,
-    `-DWELDER_ARCHITECTURE=${combo.architecture}`,
-    ...architectureArgs,
     ...configArgs,
     `-DWELDER_HOSTOS=${hostos}`,
     dirs.repo
@@ -915,7 +905,7 @@ const pack = async (options) => {
 
     /*
      * This needs to match index.js:pack/Standalone.cpp:BuildId::Parse/BuildId::GetFullId/BuildVersion.cpp:GetBuildVersionName
-     * Application.Branch.Major.Minor.Patch.Revision.ShortChangeset.MsSinceEpoch.Architecture.Config.Extension
+     * Application.Branch.Major.Minor.Patch.Revision.ShortChangeset.MsSinceEpoch.Config.Extension
      * Example: WelderEditor.master.1.5.0.1501.fb02756c46a4.1574702096290.Windows.x86.Release.zip
      */
     const name =
@@ -928,7 +918,6 @@ const pack = async (options) => {
       `${cmakeVariables.WELDER_SHORT_CHANGESET}.` +
       `${cmakeVariables.WELDER_MS_SINCE_EPOCH}.` +
       `${combo.alias}.` +
-      `${combo.architecture}.` +
       `${cmakeVariables.WELDER_CONFIG}.zip`;
 
     const packageZip = path.join(dirs.packages, name);
@@ -1023,7 +1012,7 @@ const all = async (options) => {
 const main = async () => {
   const empty = {
   };
-  const comboOptions = "[--alias=...] [--builder=...] [--toolchain=...] [--platform=...] [--architecture=...] [--config] [--vfs=true|false]";
+  const comboOptions = "[--alias=...] [--builder=...] [--toolchain=...] [--platform=...] [--config] [--vfs=true|false]";
   // eslint-disable-next-line
     yargs.
     command("disk", "Print the approximate size of every directory on disk", empty, disk).

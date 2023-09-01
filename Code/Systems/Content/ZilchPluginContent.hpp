@@ -17,7 +17,6 @@ public:
 
   // Gets a platform and Zero revision dependent extension (ends with
   // zilchPlugin)
-  static String GetSharedLibraryPlatformName();
   static String GetSharedLibraryPlatformBuildName();
   static String GetSharedLibraryExtension(bool includeDot);
 

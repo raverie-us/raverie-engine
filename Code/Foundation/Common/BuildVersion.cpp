@@ -146,7 +146,7 @@ String GetBuildVersionName()
   /*
    * This needs to match
    * index.js:pack/Standalone.cpp:BuildId::Parse/BuildId::GetFullId/BuildVersion.cpp:GetBuildVersionName.
-   * Application.Branch.Major.Minor.Patch.Revision.ShortChangeset.MsSinceEpoch.Architecture.Config.Extension
+   * Application.Branch.Major.Minor.Patch.Revision.ShortChangeset.MsSinceEpoch.Config.Extension
    * Example: WelderEditor.master.1.5.0.1501.fb02756c46a4.1574702096290.Windows.x86.Release.zip
    */
   StringBuilder builder;
@@ -158,7 +158,6 @@ String GetBuildVersionName()
   builder.AppendFormat("%d.", GetRevisionNumber());          // Revision [1501]
   builder.AppendFormat("%s.", GetShortChangeSetString());    // ShortChangeset [fb02756c46a4]
   builder.AppendFormat("%llu.", WelderMsSinceEpoch);         // MsSinceEpoch [1574702096290]
-  builder.AppendFormat("%s.", WelderArchitectureName);       // Architecture [x86]
   builder.AppendFormat("%s.", WelderConfigName);             // Config [Release]
   builder.Append("zip");
   String result = builder.ToString();
