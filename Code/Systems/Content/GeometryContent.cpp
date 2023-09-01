@@ -507,6 +507,7 @@ String GeometryContent::GetName()
 
 void GeometryContent::BuildContentItem(BuildOptions& options)
 {
+  ZPrint("Processing geometry: %s\n", Filename.c_str());
   bool needToBuild = ContentComposition::AnyNeedsBuilding(options);
   if (needToBuild)
   {
