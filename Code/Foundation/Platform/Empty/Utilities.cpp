@@ -37,6 +37,7 @@ bool IsDebuggerAttached()
 
 void DebuggerOutput(const char* message)
 {
+  printf("%s", message);
 }
 
 bool DebugBreak()
