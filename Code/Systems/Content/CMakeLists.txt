@@ -1,7 +1,6 @@
 add_library(Content)
 
 welder_setup_library(Content ${CMAKE_CURRENT_LIST_DIR} TRUE)
-welder_use_precompiled_header(Content ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(Content
   PRIVATE

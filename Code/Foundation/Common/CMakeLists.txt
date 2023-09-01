@@ -1,7 +1,6 @@
 add_library(Common)
 
 welder_setup_library(Common ${CMAKE_CURRENT_LIST_DIR} TRUE)
-welder_use_precompiled_header(Common ${CMAKE_CURRENT_LIST_DIR})
 
 set(WELDER_COMMON_VISUALIZER "")
 

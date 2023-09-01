@@ -1,7 +1,6 @@
 add_library(UiWidget)
 
 welder_setup_library(UiWidget ${CMAKE_CURRENT_LIST_DIR} TRUE)
-welder_use_precompiled_header(UiWidget ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(UiWidget
   PRIVATE

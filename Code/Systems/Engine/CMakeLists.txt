@@ -1,7 +1,6 @@
 add_library(Engine)
 
 welder_setup_library(Engine ${CMAKE_CURRENT_LIST_DIR} TRUE)
-welder_use_precompiled_header(Engine ${CMAKE_CURRENT_LIST_DIR})
 
 set(Engine_Action_Sources
     ${CMAKE_CURRENT_LIST_DIR}/Action/Action.cpp

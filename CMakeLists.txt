@@ -114,13 +114,6 @@ set(WELDER_C_CXX_FLAGS_MINSIZEREL "\
 
 set(WELDER_C_CXX_EXTERNAL_FLAGS -Wno-everything)
 
-function(welder_use_precompiled_header target directory)
-endfunction()
-
-function(welder_source_ignore_precompiled_header source)
-endfunction()
-
-
 
 set(CMAKE_C_FLAGS                             "${CMAKE_C_FLAGS}                             ${WELDER_C_CXX_FLAGS}")
 set(CMAKE_CXX_FLAGS                           "${CMAKE_CXX_FLAGS}                           ${WELDER_C_CXX_FLAGS}")

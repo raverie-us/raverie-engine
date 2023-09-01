@@ -1,12 +1,11 @@
 add_library(RendererGL)
 
 welder_setup_library(RendererGL ${CMAKE_CURRENT_LIST_DIR} TRUE)
-welder_use_precompiled_header(RendererGL ${CMAKE_CURRENT_LIST_DIR})
 
 #Emscripten
 #SDLSTDEmpty
 #Windows
-
+# TODO(trevor): Remove all this
 if(${WELDER_TARGETOS} STREQUAL "Windows")
   if(${WELDER_PLATFORM} STREQUAL "SDLSTDEmpty")
     set(RendererPlatformSource 

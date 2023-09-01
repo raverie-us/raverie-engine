@@ -1,7 +1,6 @@
 add_library(EditorCore)
 
 welder_setup_library(EditorCore ${CMAKE_CURRENT_LIST_DIR} TRUE)
-welder_use_precompiled_header(EditorCore ${CMAKE_CURRENT_LIST_DIR})
 
 set(Editor_CodeTranslator_Sources 
     ${CMAKE_CURRENT_LIST_DIR}/CodeTranslator/CodeSplitWindow.hpp

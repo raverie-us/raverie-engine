@@ -6,7 +6,6 @@ if (NOT WELDER_EXCEPTIONS)
 endif()
 
 welder_setup_library(SpirvCross ${CMAKE_CURRENT_LIST_DIR} FALSE)
-welder_use_precompiled_header(SpirvCross ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(SpirvCross
   PRIVATE

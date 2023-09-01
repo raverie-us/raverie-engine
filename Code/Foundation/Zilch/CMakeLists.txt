@@ -1,7 +1,6 @@
 add_library(Zilch)
 
 welder_setup_library(Zilch ${CMAKE_CURRENT_LIST_DIR} TRUE)
-welder_use_precompiled_header(Zilch ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(Zilch
   PRIVATE

@@ -1,7 +1,6 @@
 add_library(RendererBase)
 
 welder_setup_library(RendererBase ${CMAKE_CURRENT_LIST_DIR} TRUE)
-welder_use_precompiled_header(RendererBase ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(RendererBase
   PRIVATE

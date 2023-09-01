@@ -1,7 +1,6 @@
 add_library(Geometry)
 
 welder_setup_library(Geometry ${CMAKE_CURRENT_LIST_DIR} TRUE)
-welder_use_precompiled_header(Geometry ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(Geometry
   PRIVATE

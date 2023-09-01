@@ -1,7 +1,6 @@
 add_executable(WelderEditor)
 
 welder_setup_library(WelderEditor ${CMAKE_CURRENT_LIST_DIR} TRUE)
-welder_use_precompiled_header(WelderEditor ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(WelderEditor
   PRIVATE
