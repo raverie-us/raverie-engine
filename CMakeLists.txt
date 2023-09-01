@@ -1,22 +1,8 @@
 cmake_minimum_required(VERSION 3.22.1 FATAL_ERROR)
 
-if (POLICY CMP0077)
-  cmake_policy(SET CMP0077 NEW)
-  set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
-endif ()
-
-# Configure CMake global variables
-#  set(CMAKE_CXX_STANDARD 17)
-#  set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 set(CMAKE_CONFIGURATION_TYPES Debug RelWithDebInfo Release MinSizeRel)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT WelderEditor)
-
-find_program(WELDER_IWYU_PATH NAMES include-what-you-use iwyu)
-if(WELDER_IWYU_PATH)
-  message(STATUS "Found iwyu at ${WELDER_IWYU_PATH}")
-endif()
 
 find_program(WELDER_CCACHE_PATH ccache)
 if(WELDER_CCACHE_PATH)
@@ -47,6 +33,8 @@ add_definitions(-DWelderPlatformName="${WELDER_PLATFORM}")
 add_definitions(-DWelderToolchain${WELDER_TOOLCHAIN}=1)
 add_definitions(-DWelderToolchainName="${WELDER_TOOLCHAIN}")
 
+add_definitions(-DWelderCompilerClang=1 -DWelderCompilerName="Clang")
+
 add_definitions(-D_WASI_EMULATED_SIGNAL)
 add_definitions(-D_WASI_EMULATED_PROCESS_CLOCKS)
 
@@ -62,18 +50,6 @@ set(WELDER_PLATFORM_DATA_DIR ${WELDER_CORE_DIR}/PlatformData/${WELDER_TOOLCHAIN}
 
 function(welder_setup_library target directory internal)
   target_include_directories(${target} PUBLIC ${directory} ${WELDER_LIBRARIES_DIR})
-  if (${internal})
-    #set_property(TARGET ${target} PROPERTY C_INCLUDE_WHAT_YOU_USE ${WELDER_IWYU_PATH})
-    #set_property(TARGET ${target} PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${WELDER_IWYU_PATH})
-  endif()
-  welder_toolchain_setup_library(${target})
-  # globally enable sorting targets into folders in IDEs
-  if(WIN32)
-      set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-      get_filename_component (PARENT_FOLDER ${directory} PATH)
-      get_filename_component (FOLDER_NAME ${PARENT_FOLDER} NAME)
-      set_property(TARGET ${target} PROPERTY FOLDER ${FOLDER_NAME})
-  endif()
 endfunction()
 
 function(welder_get_all_dependencies outputList TARGET)
@@ -98,17 +74,6 @@ function(welder_get_all_dependencies outputList TARGET)
     set(${outputList} ${allLinkedLibs} PARENT_SCOPE)
 endfunction()
 
-function(welder_copy_from_linked_libraries target)
-  welder_get_all_dependencies(dependencies ${target})
-  foreach(dependency ${dependencies})
-    set(directory "${${dependency}CopyDirectories}")
-    if(directory)
-      add_custom_command(TARGET ${target} POST_BUILD COMMAND
-        ${CMAKE_COMMAND} -E copy_directory ${directory} $<TARGET_FILE_DIR:${target}>)
-    endif()
-  endforeach()
-endfunction()
-
 function(welder_target_includes target)
   set(multiValueArgs PUBLIC)
   cmake_parse_arguments(WELDER "" "" "${multiValueArgs}" "${ARGN}")
@@ -118,8 +83,6 @@ function(welder_target_includes target)
   target_compile_definitions(${target} PUBLIC $<TARGET_PROPERTY:${fromTarget},INTERFACE_COMPILE_DEFINITIONS>)
   endforeach()
 endfunction()
-
-add_definitions(-DWelderCompilerClang=1 -DWelderCompilerName="Clang")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 set(WELDER_C_CXX_FLAGS "\
@@ -150,9 +113,6 @@ set(WELDER_C_CXX_FLAGS_MINSIZEREL "\
 ")
 
 set(WELDER_C_CXX_EXTERNAL_FLAGS -Wno-everything)
-
-function(welder_toolchain_setup_library target)
-endfunction()
 
 function(welder_use_precompiled_header target directory)
 endfunction()

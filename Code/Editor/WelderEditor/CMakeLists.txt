@@ -35,7 +35,6 @@ target_link_libraries(WelderEditor
     Platform
     RendererBase
     RendererImpl
-#    RendererGL
     Replication
     Scintilla
     Serialization
@@ -53,5 +52,3 @@ target_link_libraries(WelderEditor
     ZilchScript
     ZilchShaders
 )
-
-welder_copy_from_linked_libraries(WelderEditor)
