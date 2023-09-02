@@ -21,7 +21,7 @@ ZilchDefineType(UiLayout, builder, type)
   ZilchBindGetterSetterProperty(PaddingRight);
   ZilchBindGetterSetterProperty(PaddingBottom);
 
-  // Only show the debug button if we're in Visual Studio
+  // Only show the debug button if we're in a debugger
   if (Os::IsDebuggerAttached())
     ZilchBindMethodProperty(Debug);
 }

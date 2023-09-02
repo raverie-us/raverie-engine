@@ -12,7 +12,7 @@ DataContent
 	ResourceTemplate
 	{
 		var DisplayName = "Default"
-		var Description = "A plugin that creates a Visual Studio project with the structure defined and basic examples"
+		var Description = "A plugin that creates a project with the structure defined and basic examples"
 		var SortWeight = 0
 		var Category = ""
 		var CategorySortWeight = 0

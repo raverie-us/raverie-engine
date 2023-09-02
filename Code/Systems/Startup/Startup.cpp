@@ -111,7 +111,7 @@ void ZeroStartup::MainLoopFunction(void* userData)
 void ZeroStartup::Initialize()
 {
   // Set the log and error handlers so debug printing and asserts will print to
-  // the any debugger output (such as the Visual Studio Output Window).
+  // the any debugger output (such as the debugger Output Window).
   mDebuggerListener = new DebuggerListener();
   Zero::Console::Add(mDebuggerListener);
 

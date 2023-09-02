@@ -389,7 +389,7 @@ public:
     mutable RefLinkType Referencers;
 
 // If a particular object is going to be used as a referencer,
-// we use a trick that lets the Visual Studio debugger show our
+// we use a trick that lets the debugger show our
 // object, but it needs to be virtual for the trick to work
 #  define ZilchDebuggableReferencer()                                                                                  \
     virtual void z() const                                                                                             \
