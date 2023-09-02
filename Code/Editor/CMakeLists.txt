@@ -1,2 +1,2 @@
 add_subdirectory(EditorCore)
-add_subdirectory(WelderEditor)
+add_subdirectory(RaverieEditor)

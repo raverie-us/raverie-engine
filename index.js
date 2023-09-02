@@ -40,7 +40,7 @@ const executables = [
   {
     copyToIncludedBuilds: true,
     dir: "Editor",
-    name: "WelderEditor",
+    name: "RaverieEditor",
     nonResourceDependencies: [
       "Data",
       "Templates",
