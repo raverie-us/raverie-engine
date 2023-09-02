@@ -18,7 +18,7 @@
 	url = https://github.com/raverie-us/raverie-engine-scintilla.git
 [submodule "External/SpirvCross/Repo"]
 	path = External/SpirvCross/Repo
-	url = https://github.com/WelderUpdates/SPIRV-Cross.git
+	url = https://github.com/raverie-us/raverie-engine-spirv-cross.git
 [submodule "External/SpirvHeaders/Repo"]
 	path = External/SpirvHeaders/Repo
 	url = https://github.com/WelderUpdates/SPIRV-Headers.git
