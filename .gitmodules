@@ -1,6 +1,6 @@
 [submodule "External/Assimp/Repo"]
 	path = External/Assimp/Repo
-	url = https://github.com/WelderUpdates/assimp.git
+	url = https://github.com/raverie-us/raverie-engine-assimp.git
 [submodule "External/FreeType/Repo"]
 	path = External/FreeType/Repo
 	url = https://github.com/WelderUpdates/freetype.git
