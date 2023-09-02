@@ -3,7 +3,7 @@
 	url = https://github.com/raverie-us/raverie-engine-assimp.git
 [submodule "External/FreeType/Repo"]
 	path = External/FreeType/Repo
-	url = https://github.com/WelderUpdates/freetype.git
+	url = https://github.com/raverie-us/raverie-engine-freetype.git
 [submodule "External/Libpng/Repo"]
 	path = External/Libpng/Repo
 	url = https://github.com/WelderUpdates/libpng.git
