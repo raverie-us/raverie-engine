@@ -24,7 +24,7 @@
 	url = https://github.com/raverie-us/raverie-engine-spirv-headers.git
 [submodule "External/SpirvTools/Repo"]
 	path = External/SpirvTools/Repo
-	url = https://github.com/WelderUpdates/SPIRV-Tools.git
+	url = https://github.com/raverie-us/raverie-engine-spirv-tools.git
 [submodule "External/ZLib/Repo"]
 	path = External/ZLib/Repo
 	url = https://github.com/WelderUpdates/zlib.git
