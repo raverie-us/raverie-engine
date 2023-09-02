@@ -1,6 +1,6 @@
 add_library(Platform)
 
-welder_setup_library(Platform ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Platform ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(Platform
   PRIVATE
@@ -34,7 +34,7 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )
 
-welder_target_includes(Platform
+raverie_target_includes(Platform
   PUBLIC
     Common
 )

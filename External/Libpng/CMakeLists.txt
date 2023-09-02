@@ -1,6 +1,6 @@
 add_library(Libpng)
 
-welder_setup_library(Libpng ${CMAKE_CURRENT_LIST_DIR} FALSE)
+raverie_setup_library(Libpng ${CMAKE_CURRENT_LIST_DIR} FALSE)
 
 target_sources(Libpng
   PRIVATE
@@ -27,7 +27,7 @@ target_sources(Libpng
     ${CMAKE_CURRENT_LIST_DIR}/Repo/pngwutil.c
 )
 
-welder_target_includes(Libpng
+raverie_target_includes(Libpng
   PUBLIC
     ZLib
 )

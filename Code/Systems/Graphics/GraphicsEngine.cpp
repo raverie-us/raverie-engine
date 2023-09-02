@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
-#define WelderLazyShaderCompositing
+#define RaverieLazyShaderCompositing
 
 namespace Zero
 {
@@ -150,7 +150,7 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
   mVerticalSync = false;
 }
 
-#if defined(WelderLazyShaderCompositing)
+#if defined(RaverieLazyShaderCompositing)
 void CollectShadersRenderTaskRenderPass(RenderTaskRenderPass* task,
                                         ViewBlock* viewBlock,
                                         FrameBlock* frameBlock,
@@ -334,7 +334,7 @@ void GraphicsEngine::Update(bool debugger)
   mDoRenderTasksJob->mRenderTasks = mRenderTasksFront;
   mDoRenderTasksJob->mRenderQueues = mRenderQueuesFront;
 
-#if defined(WelderLazyShaderCompositing)
+#if defined(RaverieLazyShaderCompositing)
   Array<String> shaderNames;
   CollectShaders(mRenderTasksFront, mRenderQueuesFront, shaderNames);
 
@@ -1618,7 +1618,7 @@ void GraphicsEngine::CompileShaders()
     shader->mSentToRenderer = false;
   }
 
-#if !defined(WelderLazyShaderCompositing)
+#if !defined(RaverieLazyShaderCompositing)
   if (shadersToCompile.Empty() == false)
   {
     AddShadersJob* addShadersJob = new AddShadersJob(mRendererJobQueue);

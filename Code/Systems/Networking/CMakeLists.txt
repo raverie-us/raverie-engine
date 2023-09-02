@@ -1,6 +1,6 @@
 add_library(Networking)
 
-welder_setup_library(Networking ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Networking ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(Networking
   PRIVATE
@@ -61,7 +61,7 @@ target_sources(Networking
     ${CMAKE_CURRENT_LIST_DIR}/WebServer.hpp
 )
 
-welder_target_includes(Networking
+raverie_target_includes(Networking
   PUBLIC
     Common
     Geometry

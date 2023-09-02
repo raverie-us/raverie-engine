@@ -1,6 +1,6 @@
 add_library(Startup)
 
-welder_setup_library(Startup ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Startup ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(Startup
   PRIVATE
@@ -11,7 +11,7 @@ target_sources(Startup
     ${CMAKE_CURRENT_LIST_DIR}/StartupStandard.hpp
 )
 
-welder_target_includes(Startup
+raverie_target_includes(Startup
   PUBLIC
     Common
     Geometry

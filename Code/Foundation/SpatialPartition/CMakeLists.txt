@@ -1,6 +1,6 @@
 add_library(SpatialPartition)
 
-welder_setup_library(SpatialPartition ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(SpatialPartition ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(SpatialPartition
   PRIVATE
@@ -61,7 +61,7 @@ target_sources(SpatialPartition
     ${CMAKE_CURRENT_LIST_DIR}/StaticAabbTreeBroadPhase.hpp
 )
 
-welder_target_includes(SpatialPartition
+raverie_target_includes(SpatialPartition
   PUBLIC
     Zilch
 )

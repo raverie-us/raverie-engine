@@ -1,6 +1,6 @@
 add_library(Graphics)
 
-welder_setup_library(Graphics ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Graphics ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(Graphics
   PRIVATE
@@ -112,7 +112,7 @@ target_sources(Graphics
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderGenerator.hpp
 )
 
-welder_target_includes(Graphics
+raverie_target_includes(Graphics
   PUBLIC
     Common
     Geometry

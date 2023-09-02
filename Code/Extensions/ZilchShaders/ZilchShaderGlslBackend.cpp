@@ -68,13 +68,13 @@ bool ZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult& inp
   outputData.mReflectionData.mShaderTypeName = inputData.mReflectionData.mShaderTypeName;
 
   bool success = true;
-#ifdef WelderExceptions
+#ifdef RaverieExceptions
   try
   {
 #endif
     std::string source = compiler.compile();
     outputData.mByteStream.Load(source.c_str(), source.size());
-#ifdef WelderExceptions
+#ifdef RaverieExceptions
   }
   catch (const std::exception& e)
   {

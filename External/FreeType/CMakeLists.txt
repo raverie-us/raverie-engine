@@ -1,6 +1,6 @@
 add_library(FreeType)
 
-welder_setup_library(FreeType ${CMAKE_CURRENT_LIST_DIR} FALSE)
+raverie_setup_library(FreeType ${CMAKE_CURRENT_LIST_DIR} FALSE)
 
 target_compile_definitions(FreeType
   PUBLIC
@@ -56,7 +56,7 @@ target_sources(FreeType
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/winfonts/winfnt.c
 )
 
-welder_target_includes(FreeType
+raverie_target_includes(FreeType
   PUBLIC
     ZLib
     Libpng

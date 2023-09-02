@@ -8,12 +8,12 @@
       "name": "(gdb) Launch",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/Build/Active/Libraries/WelderEditor/WelderEditor",
+      "program": "${workspaceFolder}/Build/Active/Libraries/RaverieEditor/RaverieEditor",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "sourceFileMap": {
-        "/Welder/": "${workspaceFolder}/"
+        "/Raverie/": "${workspaceFolder}/"
       },
       "environment": [],
       "externalConsole": false,

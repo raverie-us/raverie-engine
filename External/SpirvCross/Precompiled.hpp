@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-#ifndef WelderExceptions
+#ifndef RaverieExceptions
 #define SPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS
 #endif
 #include "Repo/GLSL.std.450.h"

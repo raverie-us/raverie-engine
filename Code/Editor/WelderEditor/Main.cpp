@@ -11,7 +11,7 @@ extern "C" int main(int argc, char* argv[])
   }
   
   CommandLineToStringArray(gCommandLineArguments, argv, argc);
-  SetupApplication(1, sWelderOrganization, sEditorGuid, sEditorName);
+  SetupApplication(1, sRaverieOrganization, sEditorGuid, sEditorName);
 
   return (new GameOrEditorStartup())->Run();
 }

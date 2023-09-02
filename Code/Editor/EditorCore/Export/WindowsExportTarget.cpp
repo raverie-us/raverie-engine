@@ -85,7 +85,7 @@ void WindowsExportTarget::ExportApplication()
     String tempFile = FilePath::Combine(GetTemporaryDirectory(), tempName);
 
     // Alright time to create the exe
-    CopyFile(tempFile, FilePath::Combine(appDirectory, "WelderEditor.exe"));
+    CopyFile(tempFile, FilePath::Combine(appDirectory, "RaverieEditor.exe"));
 
     // Embed package as resource section. This is generally more windows
     // friendly than appending the data on the End() of the exe since opening
@@ -169,7 +169,7 @@ void WindowsExportTarget::ExportContentFolders(Cog* projectCog)
   }
 
   // Copy the executable
-  String outputExe = FilePath::Combine(outputDirectory, "WelderEditor.exe");
+  String outputExe = FilePath::Combine(outputDirectory, "RaverieEditor.exe");
   CopyFile(outputExe, GetApplication());
 
   // Scope the ExecutableResourceUpdater so it writes out at the end

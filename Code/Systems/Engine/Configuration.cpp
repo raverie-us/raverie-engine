@@ -314,7 +314,7 @@ String FindDirectoryFromRootFile(String dir, StringParam root)
 
 String FindSourceDirectory()
 {
-  static const String cRoot(".welder");
+  static const String cRoot(".raverie");
   String dir;
 
   dir = FindDirectoryFromRootFile(GetWorkingDirectory(), cRoot);

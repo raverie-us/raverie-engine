@@ -198,7 +198,7 @@ void SaveConfig();
 // Remove config file
 void RemoveConfig();
 // Find the source directory by walking up from the application path looking for
-// '.welder'. If it is not found, it returns the application directory.
+// '.raverie'. If it is not found, it returns the application directory.
 String FindSourceDirectory();
 
 } // namespace Zero

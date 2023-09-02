@@ -1,6 +1,6 @@
 add_library(Sound)
 
-welder_setup_library(Sound ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Sound ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(Sound
   PRIVATE
@@ -73,7 +73,7 @@ target_sources(Sound
     ${CMAKE_CURRENT_LIST_DIR}/VolumeModifier.hpp
 )
 
-welder_target_includes(Sound
+raverie_target_includes(Sound
   PUBLIC
     Common
     Geometry

@@ -1,6 +1,6 @@
 add_library(Common)
 
-welder_setup_library(Common ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Common ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 set(Common_Containers_Sources
     ${CMAKE_CURRENT_LIST_DIR}/Containers/Algorithm.hpp

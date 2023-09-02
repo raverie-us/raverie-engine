@@ -1,6 +1,6 @@
 add_library(Meta)
 
-welder_setup_library(Meta ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Meta ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(Meta
   PRIVATE
@@ -55,7 +55,7 @@ target_sources(Meta
     ${CMAKE_CURRENT_LIST_DIR}/ZeroMetaArray.hpp
 )
 
-welder_target_includes(Meta
+raverie_target_includes(Meta
   PUBLIC
     Zilch
 )

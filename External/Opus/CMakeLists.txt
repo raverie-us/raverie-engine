@@ -1,6 +1,6 @@
 add_library(Opus)
 
-welder_setup_library(Opus ${CMAKE_CURRENT_LIST_DIR} FALSE)
+raverie_setup_library(Opus ${CMAKE_CURRENT_LIST_DIR} FALSE)
 
 target_compile_definitions(Opus
   PUBLIC

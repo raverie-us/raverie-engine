@@ -1,6 +1,6 @@
 add_library(Serialization)
 
-welder_setup_library(Serialization ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Serialization ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(Serialization
   PRIVATE
@@ -44,7 +44,7 @@ target_sources(Serialization
     ${CMAKE_CURRENT_LIST_DIR}/ZeroContainers.hpp
 )
 
-welder_target_includes(Serialization
+raverie_target_includes(Serialization
   PUBLIC
     Common
 )

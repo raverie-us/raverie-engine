@@ -1,6 +1,6 @@
 add_library(Widget)
 
-welder_setup_library(Widget ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Widget ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(Widget
   PRIVATE
@@ -89,7 +89,7 @@ target_sources(Widget
     ${CMAKE_CURRENT_LIST_DIR}/Window.hpp
 )
 
-welder_target_includes(Widget
+raverie_target_includes(Widget
   PUBLIC
     Engine
     ZilchShaders

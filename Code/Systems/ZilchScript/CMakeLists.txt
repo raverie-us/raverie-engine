@@ -1,6 +1,6 @@
 add_library(ZilchScript)
 
-welder_setup_library(ZilchScript ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(ZilchScript ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(ZilchScript
   PRIVATE
@@ -16,7 +16,7 @@ target_sources(ZilchScript
     ${CMAKE_CURRENT_LIST_DIR}/ZilchZero.hpp
 )
 
-welder_target_includes(ZilchScript
+raverie_target_includes(ZilchScript
   PUBLIC
     Common
     Geometry

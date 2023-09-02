@@ -10,13 +10,13 @@ namespace Zero
 #define WrapHex(a) InnerWrapHex(a)
 #define InnerWrapHex(s) 0x##s##ULL
 
-const String sWelderOrganization = "Welder";
+const String sRaverieOrganization = "Raverie";
 const String sEditorGuid = "51392222-AEDE-4530-8749-9DFAB5725FD7";
 const String sEditorName = "Editor";
 
 String GetEditorFullName()
 {
-  return sWelderOrganization + sEditorName;
+  return sRaverieOrganization + sEditorName;
 }
 
 String GetEditorExecutableFileName()
@@ -64,47 +64,47 @@ uint GetConfigVersion()
 
 uint GetMajorVersion()
 {
-  return WelderMajorVersion;
+  return RaverieMajorVersion;
 }
 
 uint GetMinorVersion()
 {
-  return WelderMinorVersion;
+  return RaverieMinorVersion;
 }
 
 uint GetPatchVersion()
 {
-  return WelderPatchVersion;
+  return RaveriePatchVersion;
 }
 
 uint GetRevisionNumber()
 {
-  return WelderRevisionId;
+  return RaverieRevisionId;
 }
 
 u64 GetShortChangeSet()
 {
-  return WrapHex(WelderShortChangeSet);
+  return WrapHex(RaverieShortChangeSet);
 }
 
 cstr GetMajorVersionString()
 {
-  return Stringify(WelderMajorVersion);
+  return Stringify(RaverieMajorVersion);
 }
 
 cstr GetMinorVersionString()
 {
-  return Stringify(WelderMinorVersion);
+  return Stringify(RaverieMinorVersion);
 }
 
 cstr GetPatchVersionString()
 {
-  return Stringify(WelderPatchVersion);
+  return Stringify(RaveriePatchVersion);
 }
 
 cstr GetRevisionNumberString()
 {
-  return Stringify(WelderRevisionId);
+  return Stringify(RaverieRevisionId);
 }
 
 String GetBuildIdString()
@@ -123,22 +123,22 @@ String GetBuildIdString()
 
 cstr GetShortChangeSetString()
 {
-  return Stringify(WelderShortChangeSet);
+  return Stringify(RaverieShortChangeSet);
 }
 
 cstr GetChangeSetString()
 {
-  return Stringify(WelderChangeSet);
+  return Stringify(RaverieChangeSet);
 }
 
 cstr GetChangeSetDateString()
 {
-  return WelderChangeSetDate;
+  return RaverieChangeSetDate;
 }
 
 cstr GetConfigurationString()
 {
-  return WelderConfigName;
+  return RaverieConfigName;
 }
 
 String GetBuildVersionName()
@@ -147,18 +147,18 @@ String GetBuildVersionName()
    * This needs to match
    * index.js:pack/Standalone.cpp:BuildId::Parse/BuildId::GetFullId/BuildVersion.cpp:GetBuildVersionName.
    * Application.Branch.Major.Minor.Patch.Revision.ShortChangeset.MsSinceEpoch.Config.Extension
-   * Example: WelderEditor.master.1.5.0.1501.fb02756c46a4.1574702096290.Windows.x86.Release.zip
+   * Example: RaverieEditor.master.1.5.0.1501.fb02756c46a4.1574702096290.Windows.x86.Release.zip
    */
   StringBuilder builder;
-  builder.AppendFormat("%s.", GetApplicationName().c_str()); // Application [WelderEditor]
-  builder.AppendFormat("%s.", WelderBranchName);             // Branch [master]
+  builder.AppendFormat("%s.", GetApplicationName().c_str()); // Application [RaverieEditor]
+  builder.AppendFormat("%s.", RaverieBranchName);             // Branch [master]
   builder.AppendFormat("%d.", GetMajorVersion());            // Major [1]
   builder.AppendFormat("%d.", GetMinorVersion());            // Minor [5]
   builder.AppendFormat("%d.", GetPatchVersion());            // Patch [0]
   builder.AppendFormat("%d.", GetRevisionNumber());          // Revision [1501]
   builder.AppendFormat("%s.", GetShortChangeSetString());    // ShortChangeset [fb02756c46a4]
-  builder.AppendFormat("%llu.", WelderMsSinceEpoch);         // MsSinceEpoch [1574702096290]
-  builder.AppendFormat("%s.", WelderConfigName);             // Config [Release]
+  builder.AppendFormat("%llu.", RaverieMsSinceEpoch);         // MsSinceEpoch [1574702096290]
+  builder.AppendFormat("%s.", RaverieConfigName);             // Config [Release]
   builder.Append("zip");
   String result = builder.ToString();
   return result;

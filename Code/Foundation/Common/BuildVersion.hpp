@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-extern const String sWelderOrganization;
+extern const String sRaverieOrganization;
 extern const String sEditorGuid;
 extern const String sEditorName;
 

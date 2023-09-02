@@ -1,6 +1,6 @@
 add_library(UiWidget)
 
-welder_setup_library(UiWidget ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(UiWidget ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(UiWidget
   PRIVATE
@@ -24,7 +24,7 @@ target_sources(UiWidget
     ${CMAKE_CURRENT_LIST_DIR}/UiWidgetStandard.hpp
 )
 
-welder_target_includes(UiWidget
+raverie_target_includes(UiWidget
   PUBLIC
     Engine
     ZilchShaders

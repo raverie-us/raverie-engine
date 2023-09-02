@@ -1,6 +1,6 @@
 add_library(Replication)
 
-welder_setup_library(Replication ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Replication ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(Replication
   PRIVATE
@@ -44,7 +44,7 @@ target_sources(Replication
     ${CMAKE_CURRENT_LIST_DIR}/Route.hpp
 )
 
-welder_target_includes(Replication
+raverie_target_includes(Replication
   PUBLIC
     Common
     Zilch

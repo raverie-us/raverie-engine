@@ -1,6 +1,6 @@
 add_library(Support)
 
-welder_setup_library(Support ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Support ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(Support
   PRIVATE
@@ -32,7 +32,7 @@ target_sources(Support
     ${CMAKE_CURRENT_LIST_DIR}/Urls.hpp
 )
 
-welder_target_includes(Support
+raverie_target_includes(Support
   PUBLIC
     Common
     RendererBase

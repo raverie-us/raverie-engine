@@ -1,6 +1,6 @@
 add_library(Assimp)
 
-welder_setup_library(Assimp ${CMAKE_CURRENT_LIST_DIR} FALSE)
+raverie_setup_library(Assimp ${CMAKE_CURRENT_LIST_DIR} FALSE)
 
 target_compile_definitions(Assimp
   PUBLIC
@@ -603,7 +603,7 @@ target_sources(Assimp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )
 
-welder_target_includes(Assimp
+raverie_target_includes(Assimp
   PUBLIC
     ZLib
 )

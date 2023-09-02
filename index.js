@@ -10,7 +10,7 @@ const commandExists = require("command-exists").sync;
 const yargs = require("yargs");
 const findUp = require("find-up");
 
-const repoRootFile = ".welder";
+const repoRootFile = ".raverie";
 
 const dirs = (() => {
   const repo = path.dirname(findUp.sync(repoRootFile));
@@ -350,8 +350,8 @@ const runClangFormat = async (options, sourceFiles) => {
   }));
 };
 
-const runWelderFormat = async (options, sourceFiles) => {
-  console.log("Running Welder Format");
+const runRaverieFormat = async (options, sourceFiles) => {
+  console.log("Running Raverie Format");
 
   await Promise.all(sourceFiles.map(async (filePath) => {
     const oldCode = fs.readFileSync(filePath, "utf8");
@@ -397,7 +397,7 @@ const runWelderFormat = async (options, sourceFiles) => {
 
     if (oldCode !== newCode) {
       if (options.validate) {
-        printErrorLine(`File '${filePath}' must be welder-formatted`);
+        printErrorLine(`File '${filePath}' must be raverie-formatted`);
       } else {
         fs.writeFileSync(filePath, newCode, "utf8");
       }
@@ -446,7 +446,7 @@ const readCmakeVariables = (buildDir) => {
 
 const getVersionedPrebuiltContentDir = (cmakeVariables) => {
   // This must match the revisionChangesetName in ContentLogic.cpp:
-  const revisionChangesetName = `Version-${cmakeVariables.WELDER_REVISION}-${cmakeVariables.WELDER_CHANGESET}`;
+  const revisionChangesetName = `Version-${cmakeVariables.RAVERIE_REVISION}-${cmakeVariables.RAVERIE_CHANGESET}`;
   return path.join(dirs.prebuiltContent, revisionChangesetName);
 };
 
@@ -562,16 +562,16 @@ const cmake = async (options) => {
   const combo = determineCmakeCombo(options);
 
   const cmakeArgs = [
-    `-DWELDER_MS_SINCE_EPOCH=${Date.now()}`,
-    `-DWELDER_BRANCH=${branch}`,
-    `-DWELDER_REVISION=${revision}`,
-    `-DWELDER_SHORT_CHANGESET=${shortChangeset}`,
-    `-DWELDER_CHANGESET=${changeset}`,
-    `-DWELDER_CHANGESET_DATE=${changesetDate}`,
-    `-DWELDER_MAJOR_VERSION=${version.major}`,
-    `-DWELDER_MINOR_VERSION=${version.minor}`,
-    `-DWELDER_PATCH_VERSION=${version.patch}`,
-    `-DWELDER_CONFIG=${combo.config}`,
+    `-DRAVERIE_MS_SINCE_EPOCH=${Date.now()}`,
+    `-DRAVERIE_BRANCH=${branch}`,
+    `-DRAVERIE_REVISION=${revision}`,
+    `-DRAVERIE_SHORT_CHANGESET=${shortChangeset}`,
+    `-DRAVERIE_CHANGESET=${changeset}`,
+    `-DRAVERIE_CHANGESET_DATE=${changesetDate}`,
+    `-DRAVERIE_MAJOR_VERSION=${version.major}`,
+    `-DRAVERIE_MINOR_VERSION=${version.minor}`,
+    `-DRAVERIE_PATCH_VERSION=${version.patch}`,
+    `-DRAVERIE_CONFIG=${combo.config}`,
     "-GNinja",
     `-DCMAKE_BUILD_TYPE=${combo.config}`,
     "-DCMAKE_EXPORT_COMPILE_COMMANDS=1",
@@ -628,7 +628,7 @@ const format = async (options) => {
   await runClangFormat(options, sourceFiles);
   const scriptFiles = gatherSourceFiles(dirs.resources, "zilchscript|z|zilchfrag|zilchFrag");
   const allFiles = sourceFiles.concat(scriptFiles);
-  await runWelderFormat(options, allFiles);
+  await runRaverieFormat(options, allFiles);
   console.log("Formatted");
 };
 
@@ -777,19 +777,19 @@ const pack = async (options) => {
     /*
      * This needs to match index.js:pack/Standalone.cpp:BuildId::Parse/BuildId::GetFullId/BuildVersion.cpp:GetBuildVersionName
      * Application.Branch.Major.Minor.Patch.Revision.ShortChangeset.MsSinceEpoch.Config.Extension
-     * Example: WelderEditor.master.1.5.0.1501.fb02756c46a4.1574702096290.Windows.x86.Release.zip
+     * Example: RaverieEditor.master.1.5.0.1501.fb02756c46a4.1574702096290.Windows.x86.Release.zip
      */
     const name =
       `${library}.` +
-      `${cmakeVariables.WELDER_BRANCH}.` +
-      `${cmakeVariables.WELDER_MAJOR_VERSION}.` +
-      `${cmakeVariables.WELDER_MINOR_VERSION}.` +
-      `${cmakeVariables.WELDER_PATCH_VERSION}.` +
-      `${cmakeVariables.WELDER_REVISION}.` +
-      `${cmakeVariables.WELDER_SHORT_CHANGESET}.` +
-      `${cmakeVariables.WELDER_MS_SINCE_EPOCH}.` +
+      `${cmakeVariables.RAVERIE_BRANCH}.` +
+      `${cmakeVariables.RAVERIE_MAJOR_VERSION}.` +
+      `${cmakeVariables.RAVERIE_MINOR_VERSION}.` +
+      `${cmakeVariables.RAVERIE_PATCH_VERSION}.` +
+      `${cmakeVariables.RAVERIE_REVISION}.` +
+      `${cmakeVariables.RAVERIE_SHORT_CHANGESET}.` +
+      `${cmakeVariables.RAVERIE_MS_SINCE_EPOCH}.` +
       `${combo.alias}.` +
-      `${cmakeVariables.WELDER_CONFIG}.zip`;
+      `${cmakeVariables.RAVERIE_CONFIG}.zip`;
 
     const packageZip = path.join(dirs.packages, name);
     tryUnlinkSync(packageZip);

@@ -1,6 +1,6 @@
 add_library(Zilch)
 
-welder_setup_library(Zilch ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Zilch ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(Zilch
   PRIVATE
@@ -139,7 +139,7 @@ target_sources(Zilch
     ${CMAKE_CURRENT_LIST_DIR}/Wrapper.hpp
 )
 
-welder_target_includes(Zilch
+raverie_target_includes(Zilch
   PUBLIC
     Common
 )

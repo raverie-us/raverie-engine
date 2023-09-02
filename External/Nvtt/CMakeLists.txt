@@ -1,6 +1,6 @@
 add_library(Nvtt)
 
-welder_setup_library(Nvtt ${CMAKE_CURRENT_LIST_DIR} FALSE)
+raverie_setup_library(Nvtt ${CMAKE_CURRENT_LIST_DIR} FALSE)
 
 target_sources(Nvtt
   PRIVATE

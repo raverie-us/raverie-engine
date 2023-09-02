@@ -1,6 +1,6 @@
 add_library(Content)
 
-welder_setup_library(Content ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Content ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(Content
   PRIVATE
@@ -87,7 +87,7 @@ target_sources(Content
     ${CMAKE_CURRENT_LIST_DIR}/stb_vorbis.h
 )
 
-welder_target_includes(Content
+raverie_target_includes(Content
   PUBLIC
     Common
     Zilch

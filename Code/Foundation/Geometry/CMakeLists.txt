@@ -1,6 +1,6 @@
 add_library(Geometry)
 
-welder_setup_library(Geometry ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Geometry ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(Geometry
   PRIVATE
@@ -75,7 +75,7 @@ target_sources(Geometry
     ${CMAKE_CURRENT_LIST_DIR}/Triangulator.hpp
 )
 
-welder_target_includes(Geometry
+raverie_target_includes(Geometry
   PUBLIC
     Common
     Zilch

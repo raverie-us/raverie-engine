@@ -1,6 +1,6 @@
 add_library(Scintilla)
 
-welder_setup_library(Scintilla ${CMAKE_CURRENT_LIST_DIR} FALSE)
+raverie_setup_library(Scintilla ${CMAKE_CURRENT_LIST_DIR} FALSE)
 
 target_compile_definitions(Scintilla
   PUBLIC

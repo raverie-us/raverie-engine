@@ -78,7 +78,7 @@ String WebRequest::GetUserAgent()
   // We use this string because it lets servers know we can support many types
   // of responses.
   return "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like "
-         "Gecko) Chrome/39.0.2171.71 Safari/537.36 Edge/12.0 Welder";
+         "Gecko) Chrome/39.0.2171.71 Safari/537.36 Edge/12.0 Raverie";
 }
 
 } // namespace Zero

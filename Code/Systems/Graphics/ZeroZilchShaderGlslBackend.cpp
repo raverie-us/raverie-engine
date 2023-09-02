@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-#ifndef WelderExceptions
+#ifndef RaverieExceptions
 #define SPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS
 #endif
 #include "spirv_glsl.hpp"
@@ -30,8 +30,8 @@ bool ZeroZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult&
   spirv_cross::CompilerGLSL compiler(data, wordCount);
   // Set options
   spirv_cross::CompilerGLSL::Options opts = compiler.get_common_options();
-  //opts.force_legacy = true; // welder specific
-  opts.emit_uniform_buffer_as_plain_uniforms = true; // replaces welder specific line above after spirv-cross update, welder specific patch not needed anymore
+  //opts.force_legacy = true; // raverie specific
+  opts.emit_uniform_buffer_as_plain_uniforms = true; // replaces raverie specific line above after spirv-cross update, raverie specific patch not needed anymore
   opts.version = mTargetVersion;
   opts.es = mTargetGlslEs;
   compiler.set_common_options(opts);
@@ -111,13 +111,13 @@ bool ZeroZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult&
   outputData.mReflectionData.mShaderTypeName = inputData.mReflectionData.mShaderTypeName;
 
   bool success = true;
-#ifdef WelderExceptions
+#ifdef RaverieExceptions
   try
   {
 #endif
     std::string source = compiler.compile();
     outputData.mByteStream.Load(source.c_str(), source.size());
-#ifdef WelderExceptions
+#ifdef RaverieExceptions
   }
   catch (const std::exception& e)
   {

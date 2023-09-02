@@ -1,6 +1,6 @@
 add_library(SpirvTools)
 
-welder_setup_library(SpirvTools ${CMAKE_CURRENT_LIST_DIR} FALSE)
+raverie_setup_library(SpirvTools ${CMAKE_CURRENT_LIST_DIR} FALSE)
 
 target_sources(SpirvTools
   PRIVATE
@@ -496,7 +496,7 @@ target_sources(SpirvTools
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )
 
-welder_target_includes(SpirvTools
+raverie_target_includes(SpirvTools
   PUBLIC
     SpirvHeaders
 )

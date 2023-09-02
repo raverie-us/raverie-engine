@@ -1,8 +1,8 @@
-add_executable(WelderEditor)
+add_executable(RaverieEditor)
 
-welder_setup_library(WelderEditor ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(RaverieEditor ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
-target_sources(WelderEditor
+target_sources(RaverieEditor
   PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}/VirtualFileSystem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/GameOrEditorStartup.cpp
@@ -14,7 +14,7 @@ target_sources(WelderEditor
     ${CMAKE_CURRENT_LIST_DIR}/ZeroCrashCallbacks.hpp
 )
 
-target_link_libraries(WelderEditor
+target_link_libraries(RaverieEditor
   PUBLIC
     Assimp
     Common

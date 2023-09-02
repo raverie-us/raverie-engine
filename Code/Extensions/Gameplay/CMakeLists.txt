@@ -1,6 +1,6 @@
 add_library(Gameplay)
 
-welder_setup_library(Gameplay ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Gameplay ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(Gameplay
   PRIVATE
@@ -53,7 +53,7 @@ target_sources(Gameplay
     ${CMAKE_CURRENT_LIST_DIR}/Zero.hpp
 )
 
-welder_target_includes(Gameplay
+raverie_target_includes(Gameplay
   PUBLIC
     Common
     Zilch

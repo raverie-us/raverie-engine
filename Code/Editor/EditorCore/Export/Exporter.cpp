@@ -13,7 +13,7 @@ namespace ExportUtility
 HashSet<String>& GetExcludedFiles()
 {
   static HashSet<String> files;
-  files.Insert("WelderEditor.exe");
+  files.Insert("RaverieEditor.exe");
   files.Insert("exp");
   files.Insert("ilk");
   files.Insert("lib");

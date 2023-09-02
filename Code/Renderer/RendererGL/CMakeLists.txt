@@ -1,6 +1,6 @@
 add_library(RendererGL)
 
-welder_setup_library(RendererGL ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(RendererGL ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 set(RendererPlatformSource 
 ${CMAKE_CURRENT_LIST_DIR}/SDLSTDEmpty/OpenglRendererSDL.cpp
@@ -17,7 +17,7 @@ target_sources(RendererGL
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )
 
-welder_target_includes(RendererGL
+raverie_target_includes(RendererGL
   PUBLIC
     RendererBase
 )

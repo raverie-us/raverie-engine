@@ -1,6 +1,6 @@
 add_library(ZilchShaders)
 
-welder_setup_library(ZilchShaders ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(ZilchShaders ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(ZilchShaders
   PRIVATE
@@ -91,7 +91,7 @@ target_sources(ZilchShaders
     ${CMAKE_CURRENT_LIST_DIR}/ZilchSpirVSettings.hpp
 )
 
-welder_target_includes(ZilchShaders
+raverie_target_includes(ZilchShaders
   PUBLIC
     Common
     Geometry

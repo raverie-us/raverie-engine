@@ -1,6 +1,6 @@
 add_library(Physics)
 
-welder_setup_library(Physics ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Physics ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(Physics
   PRIVATE
@@ -255,7 +255,7 @@ target_sources(Physics
     ${CMAKE_CURRENT_LIST_DIR}/WorldTransformation.hpp
 )
 
-welder_target_includes(Physics
+raverie_target_includes(Physics
   PUBLIC
     Zilch
 )

@@ -1,4 +1,4 @@
-add_compile_options(${WELDER_C_CXX_EXTERNAL_FLAGS})
+add_compile_options(${RAVERIE_C_CXX_EXTERNAL_FLAGS})
 
 add_subdirectory(Assimp)
 add_subdirectory(FreeType)

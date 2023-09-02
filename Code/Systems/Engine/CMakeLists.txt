@@ -1,6 +1,6 @@
 add_library(Engine)
 
-welder_setup_library(Engine ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(Engine ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 set(Engine_Action_Sources
     ${CMAKE_CURRENT_LIST_DIR}/Action/Action.cpp
@@ -231,7 +231,7 @@ target_sources(Engine
     ${CMAKE_CURRENT_LIST_DIR}/Tweakables.inl
 )
 
-welder_target_includes(Engine
+raverie_target_includes(Engine
   PUBLIC
     Common
     Geometry

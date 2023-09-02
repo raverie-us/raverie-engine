@@ -1,6 +1,6 @@
 add_library(RendererBase)
 
-welder_setup_library(RendererBase ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(RendererBase ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 target_sources(RendererBase
   PRIVATE
@@ -13,7 +13,7 @@ target_sources(RendererBase
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )
 
-welder_target_includes(RendererBase
+raverie_target_includes(RendererBase
   PUBLIC
     Common
 )

@@ -7,7 +7,7 @@ Cog
 		var SKU = "Template2d"
 		var VersionId = "0-"
 		var DisplayName = "EMPTY 2D\\nPROJECT"
-		var Author = "Welder Foundation"
+		var Author = "Raverie"
 		var Description = "A template project for 2d games."
 		var Date = "10/21/2019"
 		var SortPriority = 0

@@ -1,6 +1,6 @@
 add_library(EditorCore)
 
-welder_setup_library(EditorCore ${CMAKE_CURRENT_LIST_DIR} TRUE)
+raverie_setup_library(EditorCore ${CMAKE_CURRENT_LIST_DIR} TRUE)
 
 set(Editor_CodeTranslator_Sources 
     ${CMAKE_CURRENT_LIST_DIR}/CodeTranslator/CodeSplitWindow.hpp
@@ -293,7 +293,7 @@ target_sources(EditorCore
     ${CMAKE_CURRENT_LIST_DIR}/WatchView.hpp
 )
 
-welder_target_includes(EditorCore
+raverie_target_includes(EditorCore
   PUBLIC
     Scintilla
     Common

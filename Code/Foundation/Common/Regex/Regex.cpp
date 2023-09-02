@@ -166,13 +166,13 @@ Regex::Regex(StringRange regexStr, RegexFlavor::Enum flavor, bool caseSensitive,
   // Store the regular expression string so it won't invalidate
   mRegexString = regexStr;
 
-#ifdef WelderExceptions
+#ifdef RaverieExceptions
   try
   {
 #endif
     // Create the regular expression from the given text
     mPrivate->InternalRegex = CreateRegex(regexStr, flavor, caseSensitive, optimizeForMatching);
-#ifdef WelderExceptions
+#ifdef RaverieExceptions
   }
   catch (...)
   {
@@ -216,14 +216,14 @@ Regex& Regex::operator=(const Regex& source)
 
 bool Regex::Validate(StringRange regexStr, RegexFlavor::Enum flavor, bool caseSensitive)
 {
-#ifdef WelderExceptions
+#ifdef RaverieExceptions
   try
   {
 #endif
     // Create the regular expression from the given text
     CreateRegex(regexStr, flavor, caseSensitive, false);
     return true;
-#ifdef WelderExceptions
+#ifdef RaverieExceptions
   }
   catch (...)
   {

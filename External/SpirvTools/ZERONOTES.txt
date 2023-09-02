@@ -1,2 +1,2 @@
-You must build the WelderEngineSpirvTools repo with WelderEngineSpirvHeaders checked out in "WelderEngineSpirvTools/externals/".
-After building, copy the *.inc and DebugInfo.h from the WelderEngineSpirvTools root directory into our "Libraries/SpirvTools/Build/".
+You must build the RaverieEngineSpirvTools repo with RaverieEngineSpirvHeaders checked out in "RaverieEngineSpirvTools/externals/".
+After building, copy the *.inc and DebugInfo.h from the RaverieEngineSpirvTools root directory into our "Libraries/SpirvTools/Build/".
