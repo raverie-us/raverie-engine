@@ -9,7 +9,7 @@
 	url = https://github.com/raverie-us/raverie-engine-libpng.git
 [submodule "External/Nvtt/Repo"]
 	path = External/Nvtt/Repo
-	url = https://github.com/WelderUpdates/nvidia-texture-tools.git
+	url = https://github.com/raverie-us/raverie-engine-nvidia-texture-tools.git
 [submodule "External/Opus/Repo"]
 	path = External/Opus/Repo
 	url = https://github.com/WelderUpdates/opus.git
