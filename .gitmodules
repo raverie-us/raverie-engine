@@ -12,7 +12,7 @@
 	url = https://github.com/raverie-us/raverie-engine-nvidia-texture-tools.git
 [submodule "External/Opus/Repo"]
 	path = External/Opus/Repo
-	url = https://github.com/WelderUpdates/opus.git
+	url = https://github.com/raverie-us/raverie-engine-opus.git
 [submodule "External/Scintilla/Repo"]
 	path = External/Scintilla/Repo
 	url = https://github.com/WelderUpdates/scintilla.git
