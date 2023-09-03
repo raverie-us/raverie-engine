@@ -27,7 +27,6 @@ public:
 
 void FlexMinSizeLayoutTest(Composite* testWindow);
 void StandardControlsLayoutTest(Composite* testWindow);
-void OpenSeperateWindow(OsWindow* mainWindow);
 void OpenTestWidgets(Composite* owner);
 
 } // namespace Zero

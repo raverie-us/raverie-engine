@@ -61,9 +61,6 @@ public:
   Widget* FindWidget(StringParam name);
   Widget* FindWidgetWith(HandleParam searchObject);
 
-  // For moving windows between OS windows
-  void Transfer(TabWidget* tabWidget, Widget* widget);
-
   // Internals
   void ManageWidget(Widget* widget);
   Widget* InternalActivateWidget(Widget* widget);

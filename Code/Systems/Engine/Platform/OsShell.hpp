@@ -48,14 +48,6 @@ public:
   /// Get the size of the primary monitor (desktop size).
   IntVec2 GetPrimaryMonitorSize();
 
-  /// Create an OS window.
-  OsWindow* CreateOsWindow(StringParam windowName,
-                           IntVec2Param clientSize,
-                           IntVec2Param monitorClientPos,
-                           OsWindow* parentWindow,
-                           WindowStyleFlags::Enum flags,
-                           WindowState::Enum state = WindowState::Windowed);
-
   /// Get the pixel color at the mouse position.
   ByteColor GetColorAtMouse();
 

@@ -203,7 +203,6 @@ public:
 };
 
 ColorPicker* ColorPicker::Instance;
-bool ColorPicker::sOpenInNewOsWindow = false;
 const float ColorPicker::cColorDisplaySize = 200.0f;
 const float ColorPicker::cLuminanceThreshold = 0.5f;
 
@@ -403,35 +402,10 @@ ColorPicker* ColorPicker::EditColor(Widget* target, Vec4 color)
   {
     Composite* parent = nullptr;
 
-    if (sOpenInNewOsWindow)
-    {
-      OsShell* osShell = Z::gEngine->has(OsShell);
-      IntVec2 size = IntVec2(400, 210);
-      IntVec2 position = IntVec2(250, 200);
+    Window* window = new Window(target->GetRootWidget());
+    window->SetTranslationAndSize(Pixels(200, 200, 0), Pixels(280, 400));
 
-      BitField<WindowStyleFlags::Enum> style;
-      style.SetFlag(WindowStyleFlags::MainWindow);
-      style.SetFlag(WindowStyleFlags::Resizable);
-      style.SetFlag(WindowStyleFlags::OnTaskBar);
-      style.SetFlag(WindowStyleFlags::Close);
-      style.SetFlag(WindowStyleFlags::ClientOnly);
-
-      OsWindow* window = osShell->CreateOsWindow(
-          "TweakablesWindow", size, position, target->GetRootWidget()->GetOsWindow(), style.Field);
-      window->SetMinClientSize(size);
-
-      MainWindow* rootWidget = new MainWindow(window);
-      rootWidget->SetTitle("Color Picker");
-
-      parent = rootWidget;
-    }
-    else
-    {
-      Window* window = new Window(target->GetRootWidget());
-      window->SetTranslationAndSize(Pixels(200, 200, 0), Pixels(280, 400));
-
-      parent = window;
-    }
+    parent = window;
 
     Instance = new ColorPicker(parent);
   }
@@ -449,10 +423,6 @@ void ColorPicker::Close()
   if (Instance != NULL)
   {
     CloseTabContaining(Instance);
-
-    // Close the Os window if it was opened in its own Os window
-    if (sOpenInNewOsWindow)
-      Instance->GetRootWidget()->GetOsWindow()->Close();
   }
 }
 

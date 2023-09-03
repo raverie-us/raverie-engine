@@ -141,7 +141,6 @@ public:
   void OnOwnedWidgetModified(TabModifiedEvent* e);
   void OnOwnedWidgetResourceModified(TabRenamedEvent* e);
   void OnOwnedChangedFocus(FocusEvent* event);
-  void OnNewWindow(Event* event);
 
   Widget* GetOwnedWidget();
   void SetOwnedWidget(Widget* widget);

@@ -184,60 +184,6 @@ void MultiManager::Closed(Widget* widget)
   }
 }
 
-void MultiManager::Transfer(TabWidget* tabWidget, Widget* widget)
-{
-  // Is this widget on the main widget this is
-  // true if they have the same root
-  RootWidget* targetRoot = widget->GetRootWidget();
-  RootWidget* mainRoot = mMainDock->GetRootWidget();
-
-  if (targetRoot == mainRoot)
-  {
-    // Create a new Os window and attach the tab to it
-    OsWindow* currentOsWindow = mainRoot->GetOsWindow();
-    OsShell* shell = Z::gEngine->has(OsShell);
-    Window* currentWindow = tabWidget->mTabArea->mParentWindow;
-
-    // Open window on current location
-    IntVec2 windowPos = ToIntVec2(ToVector2(currentWindow->GetScreenPosition()));
-    windowPos += currentOsWindow->GetMonitorClientPosition();
-    IntVec2 windowSize = Math::ToIntVec2(currentWindow->GetSize());
-    String name = tabWidget->mTitle->GetText();
-
-    // Create a new top level window
-    WindowStyleFlags::Enum windowFlags = (WindowStyleFlags::Enum)(
-        WindowStyleFlags::Resizable | WindowStyleFlags::OnTaskBar | WindowStyleFlags::ClientOnly);
-    OsWindow* newOsWindow = shell->CreateOsWindow(name, windowSize, windowPos, currentOsWindow, windowFlags);
-    newOsWindow->SetMinClientSize(IntVec2(500, 500));
-    MainWindow* rootWidget = new MainWindow(newOsWindow);
-    rootWidget->SetTitle(name);
-
-    ConnectThisTo(newOsWindow, Events::OsKeyDown, OnWindowKeyDown);
-
-    // Attach a window to it
-    Window* window = new Window(rootWidget);
-    ManageWidget(window);
-    newOsWindow->SetMinClientSize(ToIntVec2(currentWindow->GetMinSize()));
-    window->mDocker = new OsDocker();
-    window->AttachAsTab(widget);
-
-    // Remove this tab
-    tabWidget->SetOwnedWidget(nullptr);
-    tabWidget->mTabArea->CloseTab(tabWidget);
-  }
-  else
-  {
-    // Move to the main widget
-    AddManagedWidget(widget, DockArea::Floating, true);
-    // Remove this tab
-    tabWidget->SetOwnedWidget(nullptr);
-    tabWidget->mTabArea->CloseTab(tabWidget);
-
-    // Close the old window
-    targetRoot->GetOsWindow()->Close();
-  }
-}
-
 void MultiManager::OnWindowKeyDown(KeyboardEvent* event)
 {
   // When a key is pressed on any window it re dispatched

@@ -299,7 +299,9 @@ void ZeroStartup::Startup()
     monitorClientPos = monitorRect.Center(size);
   }
 
-  OsWindow* mainWindow = osShell->CreateOsWindow(name, size, monitorClientPos, nullptr, mWindowStyle, state);
+  // We only ever create a single OsWindow
+  OsWindow* mainWindow = new OsWindow(osShell, name, size, monitorClientPos, nullptr, mWindowStyle, state);
+
   mainWindow->SetMinClientSize(minSize);
 
   // Pass window handle to initialize the graphics api

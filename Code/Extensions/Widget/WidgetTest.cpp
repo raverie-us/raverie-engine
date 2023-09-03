@@ -216,22 +216,6 @@ void OpenTestWidgets(Composite* owner)
   TestLayout(owner, "FlexMinSizeLayoutTest", FlexMinSizeLayoutTest);
   TestLayout(owner, "StandardControlsLayoutTest", StandardControlsLayoutTest);
   TestLayout(owner, "FlexTests", FlexTests);
-
-  OpenSeperateWindow(NULL);
-}
-
-void OpenSeperateWindow(OsWindow* mainWindow)
-{
-  OsShell* shell = Z::gEngine->has(OsShell);
-  IntVec2 windowPos = IntVec2(0, 0);
-  IntVec2 windowSize = IntVec2(800, 800);
-  WindowStyleFlags::Enum flags =
-      (WindowStyleFlags::Enum)(WindowStyleFlags::Close | WindowStyleFlags::Resizable | WindowStyleFlags::TitleBar);
-  OsWindow* newWindow = shell->CreateOsWindow("Testing", windowSize, windowPos, mainWindow, flags);
-  RootWidget* rootWidget = new RootWidget(newWindow);
-  Window* testWindow = new Window(rootWidget);
-  testWindow->SetSize(Pixels(400, 400));
-  StandardControlsLayoutTest(testWindow);
 }
 
 } // namespace Zero
