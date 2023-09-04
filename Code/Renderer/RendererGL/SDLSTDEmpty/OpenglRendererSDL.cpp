@@ -1,7 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
-#include "SDL.h"
 #include "OpenglRenderer.hpp"
 
 namespace Zero
@@ -15,6 +14,7 @@ public:
 
 OpenglRendererSDL::OpenglRendererSDL(OsHandle windowHandle, String& error)
 {
+  /*
   SDL_Window* window = (SDL_Window*)windowHandle;
 
   SDL_GLContext deviceContext = SDL_GL_CreateContext(window);
@@ -40,6 +40,8 @@ OpenglRendererSDL::OpenglRendererSDL(OsHandle windowHandle, String& error)
 
   // Call the base initialize now that we've created the OpenGL context.
   Initialize(windowHandle, deviceContext, nullptr, error);
+  */
+  Initialize(windowHandle, nullptr, nullptr, error);
 }
 
 OpenglRendererSDL::~OpenglRendererSDL()
@@ -47,7 +49,7 @@ OpenglRendererSDL::~OpenglRendererSDL()
   // Must call this before we destroy the OpenGL context.
   Shutdown();
 
-  SDL_GL_DeleteContext((SDL_GLContext)mDeviceContext);
+  //SDL_GL_DeleteContext((SDL_GLContext)mDeviceContext);
 }
 
 Renderer* CreateRenderer(OsHandle windowHandle, String& error)
@@ -57,20 +59,20 @@ Renderer* CreateRenderer(OsHandle windowHandle, String& error)
 
 void zglSetSwapInterval(OpenglRenderer* renderer, int interval)
 {
-  SDL_GL_SetSwapInterval(interval);
+  //SDL_GL_SetSwapInterval(interval);
 }
 
 IntVec2 zglGetWindowRenderableSize(OpenglRenderer* renderer)
 {
   // Use a default size just in case the call fails.
   IntVec2 size(1024, 768);
-  SDL_GL_GetDrawableSize((SDL_Window*)renderer->mWindow, &size.x, &size.y);
+  //SDL_GL_GetDrawableSize((SDL_Window*)renderer->mWindow, &size.x, &size.y);
   return size;
 }
 
 void zglSwapBuffers(OpenglRenderer* renderer)
 {
-  SDL_GL_SwapWindow((SDL_Window*)renderer->mWindow);
+  //SDL_GL_SwapWindow((SDL_Window*)renderer->mWindow);
 }
 
 } // namespace Zero

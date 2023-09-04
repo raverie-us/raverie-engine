@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
+#include "Foundation/Platform/Stub/PlatformCommunication.hpp"
 
 namespace Zero
 {
@@ -240,6 +241,8 @@ System* CreateTimeSystem();
 
 void ZeroStartup::Startup()
 {
+  // TODO(trevor): Find a better way to keep the exports linked in
+  printf("%p\n", &ExportKeyDown);
   ProfileScopeFunction();
   Engine* engine = Z::gEngine;
   Cog* configCog = engine->GetConfigCog();

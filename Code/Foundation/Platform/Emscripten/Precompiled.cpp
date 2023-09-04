@@ -21,12 +21,6 @@ extern "C" EMSCRIPTEN_KEEPALIVE void* _Znwj(unsigned int n)
   return malloc((size_t)n);
 }
 
-void glDrawBuffer(GLenum buf)
-{
-  GLenum drawBuffers[8] = {buf, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE};
-  glDrawBuffers(1, drawBuffers);
-}
-
 static const char* const cInvalidWebGl = "This function should not be called when running Emscripten: WebGL "
                                          "functionality was not properly queried";
 

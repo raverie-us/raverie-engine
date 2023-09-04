@@ -30,6 +30,7 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Utilities.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/VirtualFileAndFileSystem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/WebRequest.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/PlatformCommunication.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )

@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
+#include "Foundation/Platform/Stub/PlatformCommunication.hpp"
 
 namespace Zero
 {
@@ -12,10 +13,7 @@ extern void zglSetSwapInterval(OpenglRenderer* renderer, int interval);
 extern IntVec2 zglGetWindowRenderableSize(OpenglRenderer* renderer);
 extern void zglSwapBuffers(OpenglRenderer* renderer);
 
-// Links regarding the portability of GLAPIENTRY:
-// http://lists.openscenegraph.org/pipermail/osg-users-openscenegraph.org/2007-October/003023.html
-// http://sourceforge.net/p/glew/bugs/227/
-typedef void(GLAPIENTRY* UniformFunction)(GLint, GLsizei, const void*);
+typedef void(*UniformFunction)(GLint, GLsizei, const void*);
 
 class StreamedVertexBuffer
 {

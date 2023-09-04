@@ -61,7 +61,7 @@ const Zero::String cSpriteSourceCubePreview("SpriteSource_TextureCubePreview");
 namespace Zero
 {
 
-void GLAPIENTRY EmptyUniformFunc(GLint, GLsizei, const void*)
+void EmptyUniformFunc(GLint, GLsizei, const void*)
 {
 }
 
@@ -80,10 +80,10 @@ GlTextureEnums gTextureEnums[] = {
     {GL_RG8, GL_RG, GL_UNSIGNED_BYTE},                                          // RG8
     {GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE},                                        // RGB8
     {GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE},                                      // RGBA8
-    {GL_R16, GL_RED, GL_UNSIGNED_SHORT},                                        // R16
-    {GL_RG16, GL_RG, GL_UNSIGNED_SHORT},                                        // RG16
-    {GL_RGB16, GL_RGB, GL_UNSIGNED_SHORT},                                      // RGB16
-    {GL_RGBA16, GL_RGBA, GL_UNSIGNED_SHORT},                                    // RGBA16
+    {GL_R16I, GL_RED, GL_UNSIGNED_SHORT},                                        // R16
+    {GL_RG16I, GL_RG, GL_UNSIGNED_SHORT},                                        // RG16
+    {GL_RGB16I, GL_RGB, GL_UNSIGNED_SHORT},                                      // RGB16
+    {GL_RGBA16I, GL_RGBA, GL_UNSIGNED_SHORT},                                    // RGBA16
     {GL_R16F, GL_RED, GL_HALF_FLOAT},                                           // R16f
     {GL_RG16F, GL_RG, GL_HALF_FLOAT},                                           // RG16f
     {GL_RGB16F, GL_RGB, GL_HALF_FLOAT},                                         // RGB16f
@@ -357,13 +357,13 @@ void CheckShader(GLuint shader, StringParam shaderCode)
 {
 #ifdef ZeroDebug
   GLint status = 0;
-  glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+  ImportGlGetShaderiv(shader, GL_COMPILE_STATUS, &status);
   if (status == GL_FALSE)
   {
     GLint infoLogLength;
-    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
+    ImportGlGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
     GLchar* strInfoLog = (GLchar*)alloca(infoLogLength + 1);
-    glGetShaderInfoLog(shader, infoLogLength, NULL, strInfoLog);
+    ImportGlGetShaderInfoLog(shader, infoLogLength, NULL, strInfoLog);
     ZPrint("Compile Error\n%s\n", strInfoLog);
 
     static size_t sMaxPrints = 4;
@@ -521,7 +521,7 @@ GLuint GlCompareMode(TextureCompareMode::Enum compareMode)
   case TextureCompareMode::Disabled:
     return GL_NONE;
   case TextureCompareMode::Enabled:
-    return GL_COMPARE_R_TO_TEXTURE;
+    return GL_COMPARE_REF_TO_TEXTURE;
   default:
     return 0;
   }
@@ -557,18 +557,18 @@ void SetBlendSettings(const BlendSettings& blendSettings)
   switch (blendSettings.mBlendMode)
   {
   case BlendMode::Disabled:
-    glDisable(GL_BLEND);
+    ImportGlDisable(GL_BLEND);
     break;
   case BlendMode::Enabled:
-    glEnable(GL_BLEND);
-    glBlendEquation(GlBlendEquation(blendSettings.mBlendEquation));
-    glBlendFunc(GlBlendFactor(blendSettings.mSourceFactor), GlBlendFactor(blendSettings.mDestFactor));
+    ImportGlEnable(GL_BLEND);
+    ImportGlBlendEquation(GlBlendEquation(blendSettings.mBlendEquation));
+    ImportGlBlendFunc(GlBlendFactor(blendSettings.mSourceFactor), GlBlendFactor(blendSettings.mDestFactor));
     break;
   case BlendMode::Separate:
-    glEnable(GL_BLEND);
-    glBlendEquationSeparate(GlBlendEquation(blendSettings.mBlendEquation),
+    ImportGlEnable(GL_BLEND);
+    ImportGlBlendEquationSeparate(GlBlendEquation(blendSettings.mBlendEquation),
                             GlBlendEquation(blendSettings.mBlendEquationAlpha));
-    glBlendFuncSeparate(GlBlendFactor(blendSettings.mSourceFactor),
+    ImportGlBlendFuncSeparate(GlBlendFactor(blendSettings.mSourceFactor),
                         GlBlendFactor(blendSettings.mDestFactor),
                         GlBlendFactor(blendSettings.mSourceFactorAlpha),
                         GlBlendFactor(blendSettings.mDestFactorAlpha));
@@ -581,12 +581,12 @@ void SetRenderSettings(const RenderSettings& renderSettings, bool drawBuffersBle
   switch (renderSettings.mCullMode)
   {
   case CullMode::Disabled:
-    glDisable(GL_CULL_FACE);
+    ImportGlDisable(GL_CULL_FACE);
     break;
   case CullMode::BackFace:
   case CullMode::FrontFace:
-    glEnable(GL_CULL_FACE);
-    glCullFace(GlCullFace(renderSettings.mCullMode));
+    ImportGlEnable(GL_CULL_FACE);
+    ImportGlCullFace(GlCullFace(renderSettings.mCullMode));
     break;
   }
 
@@ -602,18 +602,18 @@ void SetRenderSettings(const RenderSettings& renderSettings, bool drawBuffersBle
       switch (blendSettings.mBlendMode)
       {
       case BlendMode::Disabled:
-        glDisablei(GL_BLEND, i);
+        ImportGlDisablei(GL_BLEND, i);
         break;
       case BlendMode::Enabled:
-        glEnablei(GL_BLEND, i);
-        glBlendEquationi(i, GlBlendEquation(blendSettings.mBlendEquation));
-        glBlendFunci(i, GlBlendFactor(blendSettings.mSourceFactor), GlBlendFactor(blendSettings.mDestFactor));
+        ImportGlEnablei(GL_BLEND, i);
+        ImportGlBlendEquationi(i, GlBlendEquation(blendSettings.mBlendEquation));
+        ImportGlBlendFunci(i, GlBlendFactor(blendSettings.mSourceFactor), GlBlendFactor(blendSettings.mDestFactor));
         break;
       case BlendMode::Separate:
-        glEnablei(GL_BLEND, i);
-        glBlendEquationSeparatei(
+        ImportGlEnablei(GL_BLEND, i);
+        ImportGlBlendEquationSeparatei(
             i, GlBlendEquation(blendSettings.mBlendEquation), GlBlendEquation(blendSettings.mBlendEquationAlpha));
-        glBlendFuncSeparatei(i,
+        ImportGlBlendFuncSeparatei(i,
                              GlBlendFactor(blendSettings.mSourceFactor),
                              GlBlendFactor(blendSettings.mDestFactor),
                              GlBlendFactor(blendSettings.mSourceFactorAlpha),
@@ -627,62 +627,62 @@ void SetRenderSettings(const RenderSettings& renderSettings, bool drawBuffersBle
   switch (depthSettings.mDepthMode)
   {
   case DepthMode::Disabled:
-    glDisable(GL_DEPTH_TEST);
+    ImportGlDisable(GL_DEPTH_TEST);
     break;
   case DepthMode::Read:
   case DepthMode::Write:
-    glEnable(GL_DEPTH_TEST);
-    glDepthMask(GlDepthMode(depthSettings.mDepthMode));
-    glDepthFunc(GlCompareFunc(depthSettings.mDepthCompareFunc));
+    ImportGlEnable(GL_DEPTH_TEST);
+    ImportGlDepthMask(GlDepthMode(depthSettings.mDepthMode));
+    ImportGlDepthFunc(GlCompareFunc(depthSettings.mDepthCompareFunc));
     break;
   }
 
   switch (depthSettings.mStencilMode)
   {
   case StencilMode::Disabled:
-    glDisable(GL_STENCIL_TEST);
-    glStencilMask(0);
+    ImportGlDisable(GL_STENCIL_TEST);
+    ImportGlStencilMask(0);
     break;
   case StencilMode::Enabled:
-    glEnable(GL_STENCIL_TEST);
-    glStencilFunc(GlCompareFunc(depthSettings.mStencilCompareFunc),
+    ImportGlEnable(GL_STENCIL_TEST);
+    ImportGlStencilFunc(GlCompareFunc(depthSettings.mStencilCompareFunc),
                   depthSettings.mStencilTestValue,
                   depthSettings.mStencilReadMask);
-    glStencilOp(GlStencilOp(depthSettings.mStencilFailOp),
+    ImportGlStencilOp(GlStencilOp(depthSettings.mStencilFailOp),
                 GlStencilOp(depthSettings.mDepthFailOp),
                 GlStencilOp(depthSettings.mDepthPassOp));
-    glStencilMask(depthSettings.mStencilWriteMask);
+    ImportGlStencilMask(depthSettings.mStencilWriteMask);
     break;
   case StencilMode::Separate:
-    glEnable(GL_STENCIL_TEST);
-    glStencilFuncSeparate(GL_FRONT,
+    ImportGlEnable(GL_STENCIL_TEST);
+    ImportGlStencilFuncSeparate(GL_FRONT,
                           GlCompareFunc(depthSettings.mStencilCompareFunc),
                           depthSettings.mStencilTestValue,
                           depthSettings.mStencilReadMask);
-    glStencilOpSeparate(GL_FRONT,
+    ImportGlStencilOpSeparate(GL_FRONT,
                         GlStencilOp(depthSettings.mStencilFailOp),
                         GlStencilOp(depthSettings.mDepthFailOp),
                         GlStencilOp(depthSettings.mDepthPassOp));
-    glStencilMaskSeparate(GL_FRONT, depthSettings.mStencilWriteMask);
-    glStencilFuncSeparate(GL_BACK,
+    ImportGlStencilMaskSeparate(GL_FRONT, depthSettings.mStencilWriteMask);
+    ImportGlStencilFuncSeparate(GL_BACK,
                           GlCompareFunc(depthSettings.mStencilCompareFuncBackFace),
                           depthSettings.mStencilTestValueBackFace,
                           depthSettings.mStencilReadMaskBackFace);
-    glStencilOpSeparate(GL_BACK,
+    ImportGlStencilOpSeparate(GL_BACK,
                         GlStencilOp(depthSettings.mStencilFailOpBackFace),
                         GlStencilOp(depthSettings.mDepthFailOpBackFace),
                         GlStencilOp(depthSettings.mDepthPassOpBackFace));
-    glStencilMaskSeparate(GL_BACK, depthSettings.mStencilWriteMaskBackFace);
+    ImportGlStencilMaskSeparate(GL_BACK, depthSettings.mStencilWriteMaskBackFace);
     break;
   }
 
   switch (renderSettings.mScissorMode)
   {
   case ScissorMode::Disabled:
-    glDisable(GL_SCISSOR_TEST);
+    ImportGlDisable(GL_SCISSOR_TEST);
     break;
   case ScissorMode::Enabled:
-    glEnable(GL_SCISSOR_TEST);
+    ImportGlEnable(GL_SCISSOR_TEST);
     break;
   }
 }
@@ -690,19 +690,19 @@ void SetRenderSettings(const RenderSettings& renderSettings, bool drawBuffersBle
 void BindTexture(TextureType::Enum textureType, uint textureSlot, uint textureId, bool samplerObjects)
 {
   // Clear anything bound to this texture unit
-  glActiveTexture(GL_TEXTURE0 + textureSlot);
-  glBindTexture(GL_TEXTURE_2D, 0);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+  ImportGlActiveTexture(GL_TEXTURE0 + textureSlot);
+  ImportGlBindTexture(GL_TEXTURE_2D, 0);
+  ImportGlBindTexture(GL_TEXTURE_CUBE_MAP, 0);
   if (samplerObjects)
-    glBindSampler(textureSlot, 0);
+    ImportGlBindSampler(textureSlot, 0);
   // Bind texture
-  glBindTexture(GlTextureType(textureType), textureId);
+  ImportGlBindTexture(GlTextureType(textureType), textureId);
 }
 
 void CheckFramebufferStatus()
 {
 #ifdef ZeroDebug
-  GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+  GLenum status = ImportGlCheckFramebufferStatus(GL_FRAMEBUFFER);
   switch (status)
   {
   case GL_FRAMEBUFFER_UNSUPPORTED:
@@ -719,30 +719,36 @@ void CheckFramebufferStatus()
 #endif
 }
 
+void DrawBuffer(GLenum buf)
+{
+  GLenum drawBuffers[8] = {buf, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE};
+  ImportGlDrawBuffers(1, drawBuffers);
+}
+
 void SetSingleRenderTargets(GLuint fboId, TextureRenderData** colorTargets, TextureRenderData* depthTarget)
 {
-  glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+  ImportGlBindFramebuffer(GL_FRAMEBUFFER, fboId);
 
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
-  glDrawBuffer(GL_NONE);
+  ImportGlFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+  DrawBuffer(GL_NONE);
 
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+  ImportGlFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+  ImportGlFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 
   GlTextureRenderData* colorRenderData = (GlTextureRenderData*)colorTargets[0];
   if (colorRenderData != nullptr)
   {
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorRenderData->mId, 0);
-    glDrawBuffer(GL_COLOR_ATTACHMENT0);
+    ImportGlFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorRenderData->mId, 0);
+    DrawBuffer(GL_COLOR_ATTACHMENT0);
   }
 
   GlTextureRenderData* depthRenderData = (GlTextureRenderData*)depthTarget;
   if (depthRenderData != nullptr)
   {
     if (IsDepthStencilFormat(depthRenderData->mFormat))
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthRenderData->mId, 0);
+      ImportGlFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthRenderData->mId, 0);
     else
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthRenderData->mId, 0);
+      ImportGlFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthRenderData->mId, 0);
   }
 
   CheckFramebufferStatus();
@@ -750,10 +756,10 @@ void SetSingleRenderTargets(GLuint fboId, TextureRenderData** colorTargets, Text
 
 void SetMultiRenderTargets(GLuint fboId, TextureRenderData** colorTargets, TextureRenderData* depthTarget)
 {
-  glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+  ImportGlBindFramebuffer(GL_FRAMEBUFFER, fboId);
 
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+  ImportGlFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+  ImportGlFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 
   GLenum drawBuffers[cMaxDrawBuffers];
 
@@ -762,27 +768,27 @@ void SetMultiRenderTargets(GLuint fboId, TextureRenderData** colorTargets, Textu
     GlTextureRenderData* colorRenderData = (GlTextureRenderData*)colorTargets[i];
     if (colorRenderData != nullptr)
     {
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, colorRenderData->mId, 0);
+      ImportGlFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, colorRenderData->mId, 0);
       drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
     }
     else
     {
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, 0, 0);
+      ImportGlFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, 0, 0);
       drawBuffers[i] = GL_NONE;
     }
   }
 
   // Set active buffers, some drivers do not work correctly if all are always
   // active
-  glDrawBuffers(cMaxDrawBuffers, drawBuffers);
+  ImportGlDrawBuffers(cMaxDrawBuffers, drawBuffers);
 
   GlTextureRenderData* depthRenderData = (GlTextureRenderData*)depthTarget;
   if (depthRenderData != nullptr)
   {
     if (IsDepthStencilFormat(depthRenderData->mFormat))
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthRenderData->mId, 0);
+      ImportGlFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthRenderData->mId, 0);
     else
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthRenderData->mId, 0);
+      ImportGlFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthRenderData->mId, 0);
   }
 
   CheckFramebufferStatus();
@@ -793,39 +799,39 @@ void StreamedVertexBuffer::Initialize()
   mBufferSize = 1 << 18; // 256Kb, 1213 sprites at 216 bytes per sprite
   mCurrentBufferOffset = 0;
 
-  glGenVertexArrays(1, &mVertexArray);
-  glBindVertexArray(mVertexArray);
+  ImportGlGenVertexArrays(1, &mVertexArray);
+  ImportGlBindVertexArray(mVertexArray);
 
-  glGenBuffers(1, &mVertexBuffer);
-  glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-  glBufferData(GL_ARRAY_BUFFER, mBufferSize, nullptr, GL_STREAM_DRAW);
+  ImportGlGenBuffers(1, &mVertexBuffer);
+  ImportGlBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+  ImportGlBufferData(GL_ARRAY_BUFFER, mBufferSize, nullptr, GL_STREAM_DRAW);
 
-  glEnableVertexAttribArray(VertexSemantic::Position);
-  glVertexAttribPointer(VertexSemantic::Position,
+  ImportGlEnableVertexAttribArray(VertexSemantic::Position);
+  ImportGlVertexAttribPointer(VertexSemantic::Position,
                         3,
                         GL_FLOAT,
                         GL_FALSE,
                         sizeof(StreamedVertex),
                         (void*)ZeroOffsetOf(StreamedVertex, mPosition));
-  glEnableVertexAttribArray(VertexSemantic::Uv);
-  glVertexAttribPointer(
+  ImportGlEnableVertexAttribArray(VertexSemantic::Uv);
+  ImportGlVertexAttribPointer(
       VertexSemantic::Uv, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)ZeroOffsetOf(StreamedVertex, mUv));
-  glEnableVertexAttribArray(VertexSemantic::Color);
-  glVertexAttribPointer(VertexSemantic::Color,
+  ImportGlEnableVertexAttribArray(VertexSemantic::Color);
+  ImportGlVertexAttribPointer(VertexSemantic::Color,
                         4,
                         GL_FLOAT,
                         GL_FALSE,
                         sizeof(StreamedVertex),
                         (void*)ZeroOffsetOf(StreamedVertex, mColor));
-  glEnableVertexAttribArray(VertexSemantic::UvAux);
-  glVertexAttribPointer(VertexSemantic::UvAux,
+  ImportGlEnableVertexAttribArray(VertexSemantic::UvAux);
+  ImportGlVertexAttribPointer(VertexSemantic::UvAux,
                         2,
                         GL_FLOAT,
                         GL_FALSE,
                         sizeof(StreamedVertex),
                         (void*)ZeroOffsetOf(StreamedVertex, mUvAux));
 
-  glBindVertexArray(0);
+  ImportGlBindVertexArray(0);
 
   mPrimitiveType = PrimitiveType::Triangles;
   mActive = false;
@@ -833,16 +839,16 @@ void StreamedVertexBuffer::Initialize()
 
 void StreamedVertexBuffer::Destroy()
 {
-  glDeleteBuffers(1, &mVertexBuffer);
-  glDeleteVertexArrays(1, &mVertexArray);
+  ImportGlDeleteBuffers(1, &mVertexBuffer);
+  ImportGlDeleteVertexArrays(1, &mVertexArray);
 }
 
 void StreamedVertexBuffer::AddVertices(StreamedVertex* vertices, uint count, PrimitiveType::Enum primitiveType)
 {
   if (!mActive)
   {
-    glBindVertexArray(mVertexArray);
-    glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+    ImportGlBindVertexArray(mVertexArray);
+    ImportGlBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
     mActive = true;
   }
 
@@ -866,7 +872,7 @@ void StreamedVertexBuffer::AddVertices(StreamedVertex* vertices, uint count, Pri
       uint maxByteCount = maxPrimitiveCount * primitiveSize;
 
       mCurrentBufferOffset = maxByteCount;
-      glBufferSubData(GL_ARRAY_BUFFER, 0, mCurrentBufferOffset, vertices);
+      ImportGlBufferSubData(GL_ARRAY_BUFFER, 0, mCurrentBufferOffset, vertices);
       FlushBuffer(false);
       // Move pointer forward by byte count, below condition will grab this new
       // value
@@ -875,7 +881,7 @@ void StreamedVertexBuffer::AddVertices(StreamedVertex* vertices, uint count, Pri
     }
   }
 
-  glBufferSubData(GL_ARRAY_BUFFER, mCurrentBufferOffset, uploadSize, vertices);
+  ImportGlBufferSubData(GL_ARRAY_BUFFER, mCurrentBufferOffset, uploadSize, vertices);
   mCurrentBufferOffset += uploadSize;
 }
 
@@ -920,18 +926,18 @@ void StreamedVertexBuffer::FlushBuffer(bool deactivate)
   if (mCurrentBufferOffset > 0)
   {
     if (mPrimitiveType == PrimitiveType::Triangles)
-      glDrawArrays(GL_TRIANGLES, 0, mCurrentBufferOffset / sizeof(StreamedVertex));
+      ImportGlDrawArrays(GL_TRIANGLES, 0, mCurrentBufferOffset / sizeof(StreamedVertex));
     else if (mPrimitiveType == PrimitiveType::Lines)
-      glDrawArrays(GL_LINES, 0, mCurrentBufferOffset / sizeof(StreamedVertex));
+      ImportGlDrawArrays(GL_LINES, 0, mCurrentBufferOffset / sizeof(StreamedVertex));
     else if (mPrimitiveType == PrimitiveType::Points)
-      glDrawArrays(GL_POINTS, 0, mCurrentBufferOffset / sizeof(StreamedVertex));
+      ImportGlDrawArrays(GL_POINTS, 0, mCurrentBufferOffset / sizeof(StreamedVertex));
     mCurrentBufferOffset = 0;
   }
 
   if (deactivate && mActive)
   {
-    glBindVertexArray(0);
-    glLineWidth(1.0f);
+    ImportGlBindVertexArray(0);
+    ImportGlLineWidth(1.0f);
     mActive = false;
   }
 }
@@ -945,8 +951,8 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
   mRenderContext = renderContext;
 
   // Read the OpenGL version support
-  const char* gl_version = (const char*)glGetString(GL_VERSION);
-  if (gl_version == NULL)
+  const char* ImportGl_version = (const char*)ImportGlGetString(GL_VERSION);
+  if (ImportGl_version == NULL)
   {
     error = "Unable to query OpenGL version. "
             "Please update your computer's graphics drivers or verify that "
@@ -954,18 +960,18 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
     return;
   }
 
-  const char* gl_sl_version = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
-  const char* gl_vendor = (const char*)glGetString(GL_VENDOR);
-  const char* gl_renderer = (const char*)glGetString(GL_RENDERER);
-  const char* gl_extensions = (const char*)glGetString(GL_EXTENSIONS);
+  const char* ImportGl_sl_version = (const char*)ImportGlGetString(GL_SHADING_LANGUAGE_VERSION);
+  const char* ImportGl_vendor = (const char*)ImportGlGetString(GL_VENDOR);
+  const char* ImportGl_renderer = (const char*)ImportGlGetString(GL_RENDERER);
+  const char* ImportGl_extensions = (const char*)ImportGlGetString(GL_EXTENSIONS);
 
-  ZPrint("OpenGL Version          : %s\n", gl_version ? gl_version : "(no data)");
-  ZPrint("OpenGL Shading Language : %s\n", gl_sl_version ? gl_sl_version : "(no data)");
-  ZPrint("OpenGL Vendor           : %s\n", gl_vendor ? gl_vendor : "(no data)");
-  ZPrint("OpenGL Renderer         : %s\n", gl_renderer ? gl_renderer : "(no data)");
+  ZPrint("OpenGL Version          : %s\n", ImportGl_version ? ImportGl_version : "(no data)");
+  ZPrint("OpenGL Shading Language : %s\n", ImportGl_sl_version ? ImportGl_sl_version : "(no data)");
+  ZPrint("OpenGL Vendor           : %s\n", ImportGl_vendor ? ImportGl_vendor : "(no data)");
+  ZPrint("OpenGL Renderer         : %s\n", ImportGl_renderer ? ImportGl_renderer : "(no data)");
 
 #ifdef ZeroWebgl
-  // glewIsSupported on emscripten doesn't emulate desktop gl extension queries.
+  // ImportGlewIsSupported on emscripten doesn't emulate desktop gl extension queries.
   bool version_2_0 = true;
   bool framebuffer_object = true;
   bool texture_compression = false;
@@ -973,19 +979,19 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
   bool sampler_objects = true;
 #else
 
-  // Initialize glew
-  GLenum glewInitStatus = glewInit();
-  if (glewInitStatus != GLEW_OK)
+  // Initialize ImportGlew
+  GLenum ImportGlewInitStatus = ImportGlewInit();
+  if (ImportGlewInitStatus != GLEW_OK)
   {
-    error = String::Format("GLEW failed to initialize with error: %d", glewInitStatus);
+    error = String::Format("GLEW failed to initialize with error: %d", ImportGlewInitStatus);
     return;
   }
 
-  bool version_2_0 = glewIsSupported("GL_VERSION_2_0");
-  bool framebuffer_object = glewIsSupported("GL_ARB_framebuffer_object");
-  bool texture_compression = glewIsSupported("GL_ARB_texture_compression");
-  bool draw_buffers_blend = glewIsSupported("GL_ARB_draw_buffers_blend");
-  bool sampler_objects = glewIsSupported("GL_ARB_sampler_objects");
+  bool version_2_0 = ImportGlewIsSupported("GL_VERSION_2_0");
+  bool framebuffer_object = ImportGlewIsSupported("GL_ARB_framebuffer_object");
+  bool texture_compression = ImportGlewIsSupported("GL_ARB_texture_compression");
+  bool draw_buffers_blend = ImportGlewIsSupported("GL_ARB_draw_buffers_blend");
+  bool sampler_objects = ImportGlewIsSupported("GL_ARB_sampler_objects");
 #endif
 
   ZPrint("OpenGL *Required Extensions\n");
@@ -999,7 +1005,7 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
          draw_buffers_blend ? "True" : "False");
   ZPrint("OpenGL (GL_ARB_sampler_objects) Sampler Object support          : %s\n", sampler_objects ? "True" : "False");
 
-  ZPrint("OpenGL All Extensions : %s\n", gl_extensions ? gl_extensions : "(no data)");
+  ZPrint("OpenGL All Extensions : %s\n", ImportGl_extensions ? ImportGl_extensions : "(no data)");
 
 
   // Required OpenGL extensions
@@ -1020,7 +1026,7 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
 
   // Intel integrated graphics does not render correctly with borderless
   // Window's aero on OpenGL.
-  String vendorString = gl_vendor;
+  String vendorString = ImportGl_vendor;
   if (vendorString.Contains("Intel"))
     mDriverSupport.mIntel = true;
 
@@ -1028,29 +1034,15 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
   zglSetSwapInterval(this, 0);
 
   // No padding
-  glPixelStorei(GL_PACK_ALIGNMENT, 1);
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  ImportGlPixelStorei(GL_PACK_ALIGNMENT, 1);
+  ImportGlPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 #if !defined(ZeroWebgl)
-  glEnable(GL_TEXTURE_2D);
-  glEnable(GL_TEXTURE_CUBE_MAP);
-  if (glewIsSupported("GL_ARB_seamless_cube_map"))
-    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+  ImportGlEnable(GL_TEXTURE_2D);
+  ImportGlEnable(GL_TEXTURE_CUBE_MAP);
+  if (ImportGlewIsSupported("GL_ARB_seamless_cube_map"))
+    ImportGlEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 #endif
-
-  // GLint maxAttributes;
-  // glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxAttributes); // 16
-  // for (int i = 0; i < maxAttributes; ++i)
-  //   glEnableVertexAttribArray(i);
-
-  // GLint maxAttach;
-  // glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &maxAttach);
-
-  // GLint maxTexUnits;
-  // glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTexUnits);
-
-  // GLfloat maxAnisotropy;
-  // glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
 
   mLazyShaderCompilation = true;
 
@@ -1071,49 +1063,49 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
 
   uint triangleIndices[] = {0, 1, 2};
 
-  glGenVertexArrays(1, &mTriangleArray);
-  glBindVertexArray(mTriangleArray);
+  ImportGlGenVertexArrays(1, &mTriangleArray);
+  ImportGlBindVertexArray(mTriangleArray);
 
-  glGenBuffers(1, &mTriangleVertex);
-  glBindBuffer(GL_ARRAY_BUFFER, mTriangleVertex);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(StreamedVertex) * 3, triangleVertices, GL_STATIC_DRAW);
+  ImportGlGenBuffers(1, &mTriangleVertex);
+  ImportGlBindBuffer(GL_ARRAY_BUFFER, mTriangleVertex);
+  ImportGlBufferData(GL_ARRAY_BUFFER, sizeof(StreamedVertex) * 3, triangleVertices, GL_STATIC_DRAW);
 
-  glEnableVertexAttribArray(VertexSemantic::Position);
-  glVertexAttribPointer(VertexSemantic::Position,
+  ImportGlEnableVertexAttribArray(VertexSemantic::Position);
+  ImportGlVertexAttribPointer(VertexSemantic::Position,
                         3,
                         GL_FLOAT,
                         GL_FALSE,
                         sizeof(StreamedVertex),
                         (void*)ZeroOffsetOf(StreamedVertex, mPosition));
-  glEnableVertexAttribArray(VertexSemantic::Uv);
-  glVertexAttribPointer(
+  ImportGlEnableVertexAttribArray(VertexSemantic::Uv);
+  ImportGlVertexAttribPointer(
       VertexSemantic::Uv, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)ZeroOffsetOf(StreamedVertex, mUv));
 
-  glGenBuffers(1, &mTriangleIndex);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mTriangleIndex);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 3, triangleIndices, GL_STATIC_DRAW);
+  ImportGlGenBuffers(1, &mTriangleIndex);
+  ImportGlBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mTriangleIndex);
+  ImportGlBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 3, triangleIndices, GL_STATIC_DRAW);
 
-  glBindVertexArray(0);
+  ImportGlBindVertexArray(0);
 
   // frame buffers
-  glGenFramebuffers(1, &mSingleTargetFbo);
-  glGenFramebuffers(1, &mMultiTargetFbo);
+  ImportGlGenFramebuffers(1, &mSingleTargetFbo);
+  ImportGlGenFramebuffers(1, &mMultiTargetFbo);
 
   // Function invocations will fail if calling convention is not correct,
   // currently using GLAPIENTRY
   mUniformFunctions[ShaderInputType::Invalid] = EmptyUniformFunc;
-  mUniformFunctions[ShaderInputType::Bool] = (UniformFunction)glUniform1iv;
-  mUniformFunctions[ShaderInputType::Int] = (UniformFunction)glUniform1iv;
-  mUniformFunctions[ShaderInputType::IntVec2] = (UniformFunction)glUniform2iv;
-  mUniformFunctions[ShaderInputType::IntVec3] = (UniformFunction)glUniform3iv;
-  mUniformFunctions[ShaderInputType::IntVec4] = (UniformFunction)glUniform4iv;
-  mUniformFunctions[ShaderInputType::Float] = (UniformFunction)glUniform1fv;
-  mUniformFunctions[ShaderInputType::Vec2] = (UniformFunction)glUniform2fv;
-  mUniformFunctions[ShaderInputType::Vec3] = (UniformFunction)glUniform3fv;
-  mUniformFunctions[ShaderInputType::Vec4] = (UniformFunction)glUniform4fv;
+  mUniformFunctions[ShaderInputType::Bool] = (UniformFunction)ImportGlUniform1iv;
+  mUniformFunctions[ShaderInputType::Int] = (UniformFunction)ImportGlUniform1iv;
+  mUniformFunctions[ShaderInputType::IntVec2] = (UniformFunction)ImportGlUniform2iv;
+  mUniformFunctions[ShaderInputType::IntVec3] = (UniformFunction)ImportGlUniform3iv;
+  mUniformFunctions[ShaderInputType::IntVec4] = (UniformFunction)ImportGlUniform4iv;
+  mUniformFunctions[ShaderInputType::Float] = (UniformFunction)ImportGlUniform1fv;
+  mUniformFunctions[ShaderInputType::Vec2] = (UniformFunction)ImportGlUniform2fv;
+  mUniformFunctions[ShaderInputType::Vec3] = (UniformFunction)ImportGlUniform3fv;
+  mUniformFunctions[ShaderInputType::Vec4] = (UniformFunction)ImportGlUniform4fv;
   mUniformFunctions[ShaderInputType::Mat3] = EmptyUniformFunc;
   mUniformFunctions[ShaderInputType::Mat4] = EmptyUniformFunc;
-  mUniformFunctions[ShaderInputType::Texture] = (UniformFunction)glUniform1iv;
+  mUniformFunctions[ShaderInputType::Texture] = (UniformFunction)ImportGlUniform1iv;
 
   mStreamedVertexBuffer.Initialize();
 
@@ -1131,7 +1123,7 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
                                                 "{\n"
                                                 "  psInUv = (vec3(Uv, 1.0) * "
                                                 "UvTransform).xy;\n"
-                                                "  gl_Position = vec4(LocalPosition, "
+                                                "  ImportGl_Position = vec4(LocalPosition, "
                                                 "1.0) * Transform;\n"
                                                 "}";
 
@@ -1142,9 +1134,9 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
                                                 "{\n"
                                                 "  vec2 uv = vec2(psInUv.x, 1.0 - "
                                                 "psInUv.y);\n"
-                                                "  gl_FragColor = texture2D(Texture, "
+                                                "  ImportGl_FragColor = texture2D(Texture, "
                                                 "uv);\n"
-                                                "  gl_FragColor.xyz *= Alpha;\n"
+                                                "  ImportGl_FragColor.xyz *= Alpha;\n"
                                                 "}";
 
   CreateShader(loadingShaderVertex, String(), loadingShaderPixel, mLoadingShader);
@@ -1157,19 +1149,19 @@ void OpenglRenderer::Shutdown()
 
   DelayedRenderDataDestruction();
 
-  glDeleteFramebuffers(1, &mSingleTargetFbo);
-  glDeleteFramebuffers(1, &mMultiTargetFbo);
+  ImportGlDeleteFramebuffers(1, &mSingleTargetFbo);
+  ImportGlDeleteFramebuffers(1, &mMultiTargetFbo);
 
-  glDeleteVertexArrays(1, &mTriangleArray);
-  glDeleteBuffers(1, &mTriangleVertex);
-  glDeleteBuffers(1, &mTriangleIndex);
+  ImportGlDeleteVertexArrays(1, &mTriangleArray);
+  ImportGlDeleteBuffers(1, &mTriangleVertex);
+  ImportGlDeleteBuffers(1, &mTriangleIndex);
 
-  glDeleteProgram(mLoadingShader);
+  ImportGlDeleteProgram(mLoadingShader);
 
   mStreamedVertexBuffer.Destroy();
 
   forRange (GLuint sampler, mSamplers.Values())
-    glDeleteSamplers(1, &sampler);
+    ImportGlDeleteSamplers(1, &sampler);
   mSamplers.Clear();
 }
 
@@ -1228,9 +1220,9 @@ void OpenglRenderer::AddMesh(AddMeshInfo* info)
   GlMeshRenderData* renderData = (GlMeshRenderData*)info->mRenderData;
   if (renderData->mVertexArray != 0)
   {
-    glDeleteVertexArrays(1, &renderData->mVertexArray);
-    glDeleteBuffers(1, &renderData->mVertexBuffer);
-    glDeleteBuffers(1, &renderData->mIndexBuffer);
+    ImportGlDeleteVertexArrays(1, &renderData->mVertexArray);
+    ImportGlDeleteBuffers(1, &renderData->mVertexBuffer);
+    ImportGlDeleteBuffers(1, &renderData->mIndexBuffer);
   }
 
   if (info->mVertexData == nullptr)
@@ -1244,26 +1236,26 @@ void OpenglRenderer::AddMesh(AddMeshInfo* info)
   }
 
   GLuint vertexArray;
-  glGenVertexArrays(1, &vertexArray);
-  glBindVertexArray(vertexArray);
+  ImportGlGenVertexArrays(1, &vertexArray);
+  ImportGlBindVertexArray(vertexArray);
 
   GLuint vertexBuffer;
-  glGenBuffers(1, &vertexBuffer);
-  glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-  glBufferData(GL_ARRAY_BUFFER, info->mVertexCount * info->mVertexSize, info->mVertexData, GL_STATIC_DRAW);
+  ImportGlGenBuffers(1, &vertexBuffer);
+  ImportGlBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+  ImportGlBufferData(GL_ARRAY_BUFFER, info->mVertexCount * info->mVertexSize, info->mVertexData, GL_STATIC_DRAW);
 
   forRange (VertexAttribute& element, info->mVertexAttributes.All())
   {
     bool normalized = element.mType >= VertexElementType::NormByte;
-    glEnableVertexAttribArray(element.mSemantic);
+    ImportGlEnableVertexAttribArray(element.mSemantic);
     if (element.mType == VertexElementType::Byte || element.mType == VertexElementType::Short)
-      glVertexAttribIPointer(element.mSemantic,
+      ImportGlVertexAttribIPointer(element.mSemantic,
                              element.mCount,
                              ToOpenglType(element.mType),
                              info->mVertexSize,
                              (void*)(uintptr_t)element.mOffset);
     else
-      glVertexAttribPointer(element.mSemantic,
+      ImportGlVertexAttribPointer(element.mSemantic,
                             element.mCount,
                             ToOpenglType(element.mType),
                             normalized,
@@ -1274,12 +1266,12 @@ void OpenglRenderer::AddMesh(AddMeshInfo* info)
   GLuint indexBuffer = 0;
   if (info->mIndexData != nullptr)
   {
-    glGenBuffers(1, &indexBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, info->mIndexCount * info->mIndexSize, info->mIndexData, GL_STATIC_DRAW);
+    ImportGlGenBuffers(1, &indexBuffer);
+    ImportGlBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    ImportGlBufferData(GL_ELEMENT_ARRAY_BUFFER, info->mIndexCount * info->mIndexSize, info->mIndexData, GL_STATIC_DRAW);
   }
 
-  glBindVertexArray(0);
+  ImportGlBindVertexArray(0);
 
   renderData->mVertexBuffer = vertexBuffer;
   renderData->mIndexBuffer = indexBuffer;
@@ -1301,7 +1293,7 @@ void OpenglRenderer::AddTexture(AddTextureInfo* info)
   {
     if (renderData->mId != 0)
     {
-      glDeleteTextures(1, &renderData->mId);
+      ImportGlDeleteTextures(1, &renderData->mId);
       renderData->mId = 0;
     }
   }
@@ -1309,12 +1301,12 @@ void OpenglRenderer::AddTexture(AddTextureInfo* info)
   {
     if (info->mType != renderData->mType && renderData->mId != 0)
     {
-      glDeleteTextures(1, &renderData->mId);
+      ImportGlDeleteTextures(1, &renderData->mId);
       renderData->mId = 0;
     }
 
     if (renderData->mId == 0)
-      glGenTextures(1, &renderData->mId);
+      ImportGlGenTextures(1, &renderData->mId);
 
     BindTexture(info->mType, 0, renderData->mId, mDriverSupport.mSamplerObjects);
 
@@ -1323,24 +1315,24 @@ void OpenglRenderer::AddTexture(AddTextureInfo* info)
     if (info->mTotalDataSize == 0)
     {
       ZeroIfWebgl(WebglConvertRenderTargetFormat(info));
-      GlTextureEnums glEnums = gTextureEnums[info->mFormat];
+      GlTextureEnums ImportGlEnums = gTextureEnums[info->mFormat];
 
       // Rendering to cubemap is not implemented.
-      glTexImage2D(GL_TEXTURE_2D,
+      ImportGlTexImage2D(GL_TEXTURE_2D,
                    0,
-                   glEnums.mInternalFormat,
+                   ImportGlEnums.mInternalFormat,
                    info->mWidth,
                    info->mHeight,
                    0,
-                   glEnums.mFormat,
-                   glEnums.mType,
+                   ImportGlEnums.mFormat,
+                   ImportGlEnums.mType,
                    nullptr);
     }
     // Do not try to reallocate texture data if no new data is given.
     else if (info->mImageData != nullptr)
     {
       ZeroIfWebgl(WebglConvertTextureFormat(info));
-      GlTextureEnums glEnums = gTextureEnums[info->mFormat];
+      GlTextureEnums ImportGlEnums = gTextureEnums[info->mFormat];
 
       for (uint i = 0; i < info->mMipCount; ++i)
       {
@@ -1352,20 +1344,20 @@ void OpenglRenderer::AddTexture(AddTextureInfo* info)
           ErrorIf(mipHeader->mLevel != 0, "Sub-image uploading to lower mip levels is not supported.");
           uint xOffset = info->mXOffset;
           uint yOffset = info->mHeight - (mipHeader->mHeight + info->mYOffset);
-          glTexSubImage2D(GlTextureFace((TextureFace::Enum)mipHeader->mFace),
+          ImportGlTexSubImage2D(GlTextureFace((TextureFace::Enum)mipHeader->mFace),
                           mipHeader->mLevel,
                           xOffset,
                           yOffset,
                           mipHeader->mWidth,
                           mipHeader->mHeight,
-                          glEnums.mFormat,
-                          glEnums.mType,
+                          ImportGlEnums.mFormat,
+                          ImportGlEnums.mType,
                           mipData);
         }
         else
         {
           if (info->mCompression != TextureCompression::None)
-            glCompressedTexImage2D(GlTextureFace((TextureFace::Enum)mipHeader->mFace),
+            ImportGlCompressedTexImage2D(GlTextureFace((TextureFace::Enum)mipHeader->mFace),
                                    mipHeader->mLevel,
                                    GlInternalFormat(info->mCompression),
                                    mipHeader->mWidth,
@@ -1374,36 +1366,36 @@ void OpenglRenderer::AddTexture(AddTextureInfo* info)
                                    mipHeader->mDataSize,
                                    mipData);
           else
-            glTexImage2D(GlTextureFace((TextureFace::Enum)mipHeader->mFace),
+            ImportGlTexImage2D(GlTextureFace((TextureFace::Enum)mipHeader->mFace),
                          mipHeader->mLevel,
-                         glEnums.mInternalFormat,
+                         ImportGlEnums.mInternalFormat,
                          mipHeader->mWidth,
                          mipHeader->mHeight,
                          0,
-                         glEnums.mFormat,
-                         glEnums.mType,
+                         ImportGlEnums.mFormat,
+                         ImportGlEnums.mType,
                          mipData);
         }
       }
     }
 
-    glTexParameteri(GlTextureType(info->mType), GL_TEXTURE_WRAP_S, GlTextureAddressing(info->mAddressingX));
-    glTexParameteri(GlTextureType(info->mType), GL_TEXTURE_WRAP_T, GlTextureAddressing(info->mAddressingY));
-    glTexParameteri(GlTextureType(info->mType), GL_TEXTURE_MIN_FILTER, GlTextureFilteringMin(info->mFiltering));
-    glTexParameteri(GlTextureType(info->mType), GL_TEXTURE_MAG_FILTER, GlTextureFilteringMag(info->mFiltering));
-    glTexParameteri(GlTextureType(info->mType), GL_TEXTURE_COMPARE_MODE, GlCompareMode(info->mCompareMode));
-    glTexParameteri(GlTextureType(info->mType), GL_TEXTURE_COMPARE_FUNC, GlCompareFunc(info->mCompareFunc));
-    glTexParameterf(GlTextureType(info->mType), GL_TEXTURE_MAX_ANISOTROPY_EXT, GlTextureAnisotropy(info->mAnisotropy));
-    glTexParameteri(GlTextureType(info->mType), GL_TEXTURE_MAX_LEVEL, GlTextureMipMapping(info->mMipMapping));
+    ImportGlTexParameteri(GlTextureType(info->mType), GL_TEXTURE_WRAP_S, GlTextureAddressing(info->mAddressingX));
+    ImportGlTexParameteri(GlTextureType(info->mType), GL_TEXTURE_WRAP_T, GlTextureAddressing(info->mAddressingY));
+    ImportGlTexParameteri(GlTextureType(info->mType), GL_TEXTURE_MIN_FILTER, GlTextureFilteringMin(info->mFiltering));
+    ImportGlTexParameteri(GlTextureType(info->mType), GL_TEXTURE_MAG_FILTER, GlTextureFilteringMag(info->mFiltering));
+    ImportGlTexParameteri(GlTextureType(info->mType), GL_TEXTURE_COMPARE_MODE, GlCompareMode(info->mCompareMode));
+    ImportGlTexParameteri(GlTextureType(info->mType), GL_TEXTURE_COMPARE_FUNC, GlCompareFunc(info->mCompareFunc));
+    ImportGlTexParameterf(GlTextureType(info->mType), GL_TEXTURE_MAX_ANISOTROPY, GlTextureAnisotropy(info->mAnisotropy));
+    ImportGlTexParameteri(GlTextureType(info->mType), GL_TEXTURE_MAX_LEVEL, GlTextureMipMapping(info->mMipMapping));
 
     if (info->mMipMapping == TextureMipMapping::GpuGenerated)
     {
       if (info->mMaxMipOverride > 0)
-        glTexParameteri(GlTextureType(info->mType), GL_TEXTURE_MAX_LEVEL, info->mMaxMipOverride);
-      glGenerateMipmap(GlTextureType(info->mType));
+        ImportGlTexParameteri(GlTextureType(info->mType), GL_TEXTURE_MAX_LEVEL, info->mMaxMipOverride);
+      ImportGlGenerateMipmap(GlTextureType(info->mType));
     }
 
-    glBindTexture(GlTextureType(info->mType), 0);
+    ImportGlBindTexture(GlTextureType(info->mType), 0);
   }
 
   renderData->mType = info->mType;
@@ -1483,7 +1475,7 @@ void OpenglRenderer::RemoveShaders(Array<ShaderEntry>& entries)
     ShaderKey shaderKey(entry.mComposite, StringPair(entry.mCoreVertex, entry.mRenderPass));
 
     if (mGlShaders.ContainsKey(shaderKey))
-      glDeleteProgram(mGlShaders[shaderKey].mId);
+      ImportGlDeleteProgram(mGlShaders[shaderKey].mId);
 
     mGlShaders.Erase(shaderKey);
     mShaderEntries.Erase(shaderKey);
@@ -1522,11 +1514,11 @@ void OpenglRenderer::GetTextureData(GetTextureDataInfo* info)
   info->mImage = new byte[imageSize];
 
   GlTextureEnums textureEnums = gTextureEnums[info->mFormat];
-  glReadPixels(0, 0, info->mWidth, info->mHeight, textureEnums.mFormat, textureEnums.mType, info->mImage);
+  ImportGlReadPixels(0, 0, info->mWidth, info->mHeight, textureEnums.mFormat, textureEnums.mType, info->mImage);
 
   YInvertNonCompressed(info->mImage, info->mWidth, info->mHeight, GetPixelSize(info->mFormat));
 
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  ImportGlBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
@@ -1605,67 +1597,67 @@ void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
       {Vec3(-0.5f, -0.5f, 0.0f), Vec2(0.0f, 0.0f), Vec4(1.0f)},
   };
 
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
+  ImportGlClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+  ImportGlClear(GL_COLOR_BUFFER_BIT);
 
-  glUseProgram(mLoadingShader);
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  ImportGlUseProgram(mLoadingShader);
+  ImportGlEnable(GL_BLEND);
+  ImportGlBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  GLint textureLoc = glGetUniformLocation(mLoadingShader, "Texture");
-  GLint transformLoc = glGetUniformLocation(mLoadingShader, "Transform");
-  GLint uvTransformLoc = glGetUniformLocation(mLoadingShader, "UvTransform");
+  GLint textureLoc = ImportGlGetUniformLocation(mLoadingShader, "Texture");
+  GLint transformLoc = ImportGlGetUniformLocation(mLoadingShader, "Transform");
+  GLint uvTransformLoc = ImportGlGetUniformLocation(mLoadingShader, "UvTransform");
 
-  GLint alphaLoc = glGetUniformLocation(mLoadingShader, "Alpha");
-  glUniform1fv(alphaLoc, 1, &alpha);
+  GLint alphaLoc = ImportGlGetUniformLocation(mLoadingShader, "Alpha");
+  ImportGlUniform1fv(alphaLoc, 1, &alpha);
 
   GLint textureSlot = 0;
-  glActiveTexture(GL_TEXTURE0 + textureSlot);
-  glUniform1iv(textureLoc, 1, &textureSlot);
+  ImportGlActiveTexture(GL_TEXTURE0 + textureSlot);
+  ImportGlUniform1iv(textureLoc, 1, &textureSlot);
 
-  glUniformMatrix3fv(uvTransformLoc, 1, cTransposeMatrices, Mat3::cIdentity.array);
+  ImportGlUniformMatrix3fv(uvTransformLoc, 1, cTransposeMatrices, Mat3::cIdentity.array);
 
   if (!splashMode)
   {
     // Loading
-    glUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, loadingTransform.array);
-    glBindTexture(GL_TEXTURE_2D, loadingTexture->mId);
+    ImportGlUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, loadingTransform.array);
+    ImportGlBindTexture(GL_TEXTURE_2D, loadingTexture->mId);
     mStreamedVertexBuffer.AddVertices(quadVertices, 6, PrimitiveType::Triangles);
     mStreamedVertexBuffer.FlushBuffer(true);
 
     // Progress bar
-    glUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, progressTransform.array);
-    glBindTexture(GL_TEXTURE_2D, whiteTexture->mId);
+    ImportGlUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, progressTransform.array);
+    ImportGlBindTexture(GL_TEXTURE_2D, whiteTexture->mId);
     mStreamedVertexBuffer.AddVertices(quadVertices, 6, PrimitiveType::Triangles);
     mStreamedVertexBuffer.FlushBuffer(true);
 
     // Progress text
     if (progressText.Size() > 0)
     {
-      glUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, textTransform.array);
-      glBindTexture(GL_TEXTURE_2D, fontTexture->mId);
+      ImportGlUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, textTransform.array);
+      ImportGlBindTexture(GL_TEXTURE_2D, fontTexture->mId);
       mStreamedVertexBuffer.AddVertices(&progressText[0], progressText.Size(), PrimitiveType::Triangles);
       mStreamedVertexBuffer.FlushBuffer(true);
     }
 
     // Logo
-    glUniformMatrix3fv(uvTransformLoc, 1, cTransposeMatrices, logoUvTransform.array);
-    glUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, logoTransform.array);
-    glBindTexture(GL_TEXTURE_2D, logoTexture->mId);
+    ImportGlUniformMatrix3fv(uvTransformLoc, 1, cTransposeMatrices, logoUvTransform.array);
+    ImportGlUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, logoTransform.array);
+    ImportGlBindTexture(GL_TEXTURE_2D, logoTexture->mId);
     mStreamedVertexBuffer.AddVertices(quadVertices, 6, PrimitiveType::Triangles);
     mStreamedVertexBuffer.FlushBuffer(true);
   }
   else
   {
     // Splash
-    glUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, splashTransform.array);
-    glBindTexture(GL_TEXTURE_2D, splashTexture->mId);
+    ImportGlUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, splashTransform.array);
+    ImportGlBindTexture(GL_TEXTURE_2D, splashTexture->mId);
     mStreamedVertexBuffer.AddVertices(quadVertices, 6, PrimitiveType::Triangles);
     mStreamedVertexBuffer.FlushBuffer(true);
   }
 
-  glDisable(GL_BLEND);
-  glUseProgram(0);
+  ImportGlDisable(GL_BLEND);
+  ImportGlUseProgram(0);
 
   // Disable v-sync so we don't wait on frames (mostly for single threaded mode)
   // This could cause tearing, but it's the loading screen.
@@ -1761,18 +1753,18 @@ void OpenglRenderer::DoRenderTaskClearTarget(RenderTaskClearTarget* task)
 {
   SetRenderTargets(task->mRenderSettings);
 
-  glStencilMask(task->mStencilWriteMask);
-  glDepthMask(true);
+  ImportGlStencilMask(task->mStencilWriteMask);
+  ImportGlDepthMask(true);
 
-  glClearColor(task->mColor.x, task->mColor.y, task->mColor.z, task->mColor.w);
-  glClearDepth(task->mDepth);
-  glClearStencil(0);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+  ImportGlClearColor(task->mColor.x, task->mColor.y, task->mColor.z, task->mColor.w);
+  ImportGlClearDepth(task->mDepth);
+  ImportGlClearStencil(0);
+  ImportGlClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-  glStencilMask(0);
-  glDepthMask(false);
+  ImportGlStencilMask(0);
+  ImportGlDepthMask(false);
 
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  ImportGlBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void OpenglRenderer::DoRenderTaskRenderPass(RenderTaskRenderPass* task)
@@ -1832,7 +1824,7 @@ void OpenglRenderer::DoRenderTaskRenderPass(RenderTaskRenderPass* task)
 
       SetRenderTargets(subTask->mRenderSettings);
 
-      glViewport(0, 0, mViewportSize.x, mViewportSize.y);
+      ImportGlViewport(0, 0, mViewportSize.x, mViewportSize.y);
     }
 
     // Render the object.
@@ -1857,7 +1849,7 @@ void OpenglRenderer::DoRenderTaskRenderPass(RenderTaskRenderPass* task)
 
   SetShader(0);
   SetRenderSettings(RenderSettings(), mDriverSupport.mMultiTargetBlend);
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  ImportGlBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void OpenglRenderer::DoRenderTaskPostProcess(RenderTaskPostProcess* task)
@@ -1881,7 +1873,7 @@ void OpenglRenderer::DoRenderTaskPostProcess(RenderTaskPostProcess* task)
   SetRenderTargets(task->mRenderSettings);
   SetRenderSettings(task->mRenderSettings, mDriverSupport.mMultiTargetBlend);
 
-  glViewport(0, 0, mViewportSize.x, mViewportSize.y);
+  ImportGlViewport(0, 0, mViewportSize.x, mViewportSize.y);
 
   SetShader(shader->mId);
 
@@ -1893,13 +1885,13 @@ void OpenglRenderer::DoRenderTaskPostProcess(RenderTaskPostProcess* task)
   SetShaderParameters(cGlobalShaderInputsId, task->mShaderInputsId, mNextTextureSlot);
 
   // draw fullscreen triangle
-  glBindVertexArray(mTriangleArray);
-  glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)0);
-  glBindVertexArray(0);
+  ImportGlBindVertexArray(mTriangleArray);
+  ImportGlDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)0);
+  ImportGlBindVertexArray(0);
 
   SetShader(0);
   SetRenderSettings(RenderSettings(), mDriverSupport.mMultiTargetBlend);
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  ImportGlBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void OpenglRenderer::DoRenderTaskBackBufferBlit(RenderTaskBackBufferBlit* task)
@@ -1907,15 +1899,15 @@ void OpenglRenderer::DoRenderTaskBackBufferBlit(RenderTaskBackBufferBlit* task)
   GlTextureRenderData* renderData = (GlTextureRenderData*)task->mColorTarget;
   ScreenViewport viewport = task->mViewport;
 
-  glBindFramebuffer(GL_READ_FRAMEBUFFER, mSingleTargetFbo);
-  glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderData->mId, 0);
-  glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
-  glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+  ImportGlBindFramebuffer(GL_READ_FRAMEBUFFER, mSingleTargetFbo);
+  ImportGlFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderData->mId, 0);
+  ImportGlFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+  ImportGlFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
   CheckFramebufferStatus();
 
   mThreadLock.Lock();
   if (mBackBufferSafe)
-    glBlitFramebuffer(0,
+    ImportGlBlitFramebuffer(0,
                       0,
                       renderData->mWidth,
                       renderData->mHeight,
@@ -1927,7 +1919,7 @@ void OpenglRenderer::DoRenderTaskBackBufferBlit(RenderTaskBackBufferBlit* task)
                       GL_NEAREST);
   mThreadLock.Unlock();
 
-  glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+  ImportGlBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 }
 
 void OpenglRenderer::DoRenderTaskTextureUpdate(RenderTaskTextureUpdate* task)
@@ -1994,7 +1986,7 @@ void OpenglRenderer::DrawStatic(ViewNode& viewNode, FrameNode& frameNode)
     SetShaderParameters(cFragmentShaderInputsId, mShaderInputsId, mNextTextureSlot);
   }
 
-  // On change of materials, material inputs followed by global inputs have to
+  // On change of materials, material inputs followed by ImportGlobal inputs have to
   // be reset
   if (materialData->mResourceId != mActiveMaterial)
   {
@@ -2026,14 +2018,14 @@ void OpenglRenderer::DrawStatic(ViewNode& viewNode, FrameNode& frameNode)
     SetShaderParameter(ShaderInputType::Texture, "HeightMapWeights_HeightMapTextureWeights", &textureSlot);
   }
 
-  glBindVertexArray(meshData->mVertexArray);
+  ImportGlBindVertexArray(meshData->mVertexArray);
   if (meshData->mIndexBuffer == 0)
-    // If nothing is bound, glDrawArrays will invoke the shader pipeline the
+    // If nothing is bound, ImportGlDrawArrays will invoke the shader pipeline the
     // given number of times
-    glDrawArrays(GlPrimitiveType(meshData->mPrimitiveType), 0, meshData->mIndexCount);
+    ImportGlDrawArrays(GlPrimitiveType(meshData->mPrimitiveType), 0, meshData->mIndexCount);
   else
-    glDrawElements(GlPrimitiveType(meshData->mPrimitiveType), meshData->mIndexCount, GL_UNSIGNED_INT, (void*)0);
-  glBindVertexArray(0);
+    ImportGlDrawElements(GlPrimitiveType(meshData->mPrimitiveType), meshData->mIndexCount, GL_UNSIGNED_INT, (void*)0);
+  ImportGlBindVertexArray(0);
 }
 
 void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
@@ -2064,14 +2056,14 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
   {
     mCurrentLineWidth = frameNode.mBorderThickness;
     mStreamedVertexBuffer.FlushBuffer(false);
-    glLineWidth(frameNode.mBorderThickness);
+    ImportGlLineWidth(frameNode.mBorderThickness);
   }
 
   if (mClipMode && frameNode.mClip != mCurrentClip)
   {
     mStreamedVertexBuffer.FlushBuffer(false);
     mCurrentClip = frameNode.mClip;
-    glScissor((int)mCurrentClip.x,
+    ImportGlScissor((int)mCurrentClip.x,
               mViewportSize.y - (int)mCurrentClip.y - (int)mCurrentClip.w,
               (int)mCurrentClip.z,
               (int)mCurrentClip.w);
@@ -2136,7 +2128,7 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
 
 void OpenglRenderer::SetShaderParameter(ShaderInputType::Enum uniformType, StringParam name, void* data)
 {
-  GLint location = glGetUniformLocation(mActiveShader, name.c_str());
+  GLint location = ImportGlGetUniformLocation(mActiveShader, name.c_str());
   if (location == -1)
     return;
   mUniformFunctions[uniformType](location, 1, data);
@@ -2144,37 +2136,37 @@ void OpenglRenderer::SetShaderParameter(ShaderInputType::Enum uniformType, Strin
 
 void OpenglRenderer::SetShaderParameterMatrix(StringParam name, Mat3& transform)
 {
-  GLint location = glGetUniformLocation(mActiveShader, name.c_str());
+  GLint location = ImportGlGetUniformLocation(mActiveShader, name.c_str());
   if (location == -1)
     return;
-  glUniformMatrix3fv(location, 1, cTransposeMatrices, transform.array);
+  ImportGlUniformMatrix3fv(location, 1, cTransposeMatrices, transform.array);
 }
 
 void OpenglRenderer::SetShaderParameterMatrix(StringParam name, Mat4& transform)
 {
-  GLint location = glGetUniformLocation(mActiveShader, name.c_str());
+  GLint location = ImportGlGetUniformLocation(mActiveShader, name.c_str());
   if (location == -1)
     return;
-  glUniformMatrix4fv(location, 1, cTransposeMatrices, transform.array);
+  ImportGlUniformMatrix4fv(location, 1, cTransposeMatrices, transform.array);
 }
 
 void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name, Mat3& transform)
 {
-  GLint location = glGetUniformLocation(mActiveShader, name.c_str());
+  GLint location = ImportGlGetUniformLocation(mActiveShader, name.c_str());
   if (location == -1)
     return;
   Mat3 inverse = transform.Inverted();
-  glUniformMatrix3fv(location, 1, cTransposeMatrices, inverse.array);
+  ImportGlUniformMatrix3fv(location, 1, cTransposeMatrices, inverse.array);
 }
 
 void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name, Mat4& transform)
 {
-  GLint location = glGetUniformLocation(mActiveShader, name.c_str());
+  GLint location = ImportGlGetUniformLocation(mActiveShader, name.c_str());
   if (location == -1)
     return;
 
   Mat4 inverse = transform.Inverted();
-  glUniformMatrix4fv(location, 1, cTransposeMatrices, inverse.array);
+  ImportGlUniformMatrix4fv(location, 1, cTransposeMatrices, inverse.array);
 }
 
 void OpenglRenderer::SetShaderParameters(FrameBlock* frameBlock, ViewBlock* viewBlock)
@@ -2219,10 +2211,10 @@ void OpenglRenderer::SetShaderParameters(FrameNode* frameNode, ViewNode* viewNod
                                       meshData->mBones[meshIndex].mBindTransform);
     }
 
-    GLint location = glGetUniformLocation(mActiveShader, "MiscData.BoneTransforms");
+    GLint location = ImportGlGetUniformLocation(mActiveShader, "MiscData.BoneTransforms");
     if (location != -1)
     {
-      glUniformMatrix4fv(location, remappedBoneTransforms.Size(), cTransposeMatrices, remappedBoneTransforms[0].array);
+      ImportGlUniformMatrix4fv(location, remappedBoneTransforms.Size(), cTransposeMatrices, remappedBoneTransforms[0].array);
     }
   }
 
@@ -2255,7 +2247,7 @@ void OpenglRenderer::SetShaderParameters(IndexRange inputRange, uint& nextTextur
         // shader input differ from the texture
         SamplerSettings::FillDefaults(samplerSettings, textureData->mSamplerSettings);
         GLuint sampler = GetSampler(samplerSettings);
-        glBindSampler(nextTextureSlot, sampler);
+        ImportGlBindSampler(nextTextureSlot, sampler);
       }
 
       SetShaderParameter(input.mShaderInputType, input.mTranslatedInputName, &nextTextureSlot);
@@ -2309,7 +2301,7 @@ void OpenglRenderer::CreateShader(ShaderEntry& entry)
   // Must delete old shader after new one is created or something is getting
   // incorrectly cached/generated
   if (mGlShaders.ContainsKey(shaderKey))
-    glDeleteProgram(mGlShaders[shaderKey].mId);
+    ImportGlDeleteProgram(mGlShaders[shaderKey].mId);
 
   mGlShaders.Insert(shaderKey, shader);
 }
@@ -2323,14 +2315,14 @@ void OpenglRenderer::CreateShader(StringParam vertexSource,
   Timer compileTimer;
 #endif
 
-  GLuint program = glCreateProgram();
+  GLuint program = ImportGlCreateProgram();
 
   const GLchar* vertexSourceData = vertexSource.Data();
   GLint vertexSourceSize = vertexSource.SizeInBytes();
-  GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  glAttachShader(program, vertexShader);
-  glShaderSource(vertexShader, 1, &vertexSourceData, &vertexSourceSize);
-  glCompileShader(vertexShader);
+  GLuint vertexShader = ImportGlCreateShader(GL_VERTEX_SHADER);
+  ImportGlAttachShader(program, vertexShader);
+  ImportGlShaderSource(vertexShader, 1, &vertexSourceData, &vertexSourceSize);
+  ImportGlCompileShader(vertexShader);
   CheckShader(vertexShader, vertexSource);
 
   GLuint geometryShader = 0;
@@ -2338,38 +2330,38 @@ void OpenglRenderer::CreateShader(StringParam vertexSource,
   {
     const GLchar* geometrySourceData = geometrySource.Data();
     GLint geometrySourceSize = geometrySource.SizeInBytes();
-    geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
-    glAttachShader(program, geometryShader);
-    glShaderSource(geometryShader, 1, &geometrySourceData, &geometrySourceSize);
-    glCompileShader(geometryShader);
+    geometryShader = ImportGlCreateShader(GL_GEOMETRY_SHADER);
+    ImportGlAttachShader(program, geometryShader);
+    ImportGlShaderSource(geometryShader, 1, &geometrySourceData, &geometrySourceSize);
+    ImportGlCompileShader(geometryShader);
     CheckShader(geometryShader, geometrySource);
   }
 
   const GLchar* pixelSourceData = pixelSource.Data();
   GLint pixelSourceSize = pixelSource.SizeInBytes();
-  GLuint pixelShader = glCreateShader(GL_FRAGMENT_SHADER);
-  glAttachShader(program, pixelShader);
-  glShaderSource(pixelShader, 1, &pixelSourceData, &pixelSourceSize);
-  glCompileShader(pixelShader);
+  GLuint pixelShader = ImportGlCreateShader(GL_FRAGMENT_SHADER);
+  ImportGlAttachShader(program, pixelShader);
+  ImportGlShaderSource(pixelShader, 1, &pixelSourceData, &pixelSourceSize);
+  ImportGlCompileShader(pixelShader);
   CheckShader(pixelShader, pixelSource);
 
-  glBindAttribLocation(program, VertexSemantic::Position, "LocalPosition");
-  glBindAttribLocation(program, VertexSemantic::Normal, "LocalNormal");
-  glBindAttribLocation(program, VertexSemantic::Tangent, "LocalTangent");
-  glBindAttribLocation(program, VertexSemantic::Bitangent, "LocalBitangent");
-  glBindAttribLocation(program, VertexSemantic::Uv, "Uv");
-  glBindAttribLocation(program, VertexSemantic::UvAux, "UvAux");
-  glBindAttribLocation(program, VertexSemantic::Color, "Color");
-  glBindAttribLocation(program, VertexSemantic::ColorAux, "ColorAux");
-  glBindAttribLocation(program, VertexSemantic::BoneIndices, "BoneIndices");
-  glBindAttribLocation(program, VertexSemantic::BoneWeights, "BoneWeights");
+  ImportGlBindAttribLocation(program, VertexSemantic::Position, "LocalPosition");
+  ImportGlBindAttribLocation(program, VertexSemantic::Normal, "LocalNormal");
+  ImportGlBindAttribLocation(program, VertexSemantic::Tangent, "LocalTangent");
+  ImportGlBindAttribLocation(program, VertexSemantic::Bitangent, "LocalBitangent");
+  ImportGlBindAttribLocation(program, VertexSemantic::Uv, "Uv");
+  ImportGlBindAttribLocation(program, VertexSemantic::UvAux, "UvAux");
+  ImportGlBindAttribLocation(program, VertexSemantic::Color, "Color");
+  ImportGlBindAttribLocation(program, VertexSemantic::ColorAux, "ColorAux");
+  ImportGlBindAttribLocation(program, VertexSemantic::BoneIndices, "BoneIndices");
+  ImportGlBindAttribLocation(program, VertexSemantic::BoneWeights, "BoneWeights");
   // Not implemented by geometry processor
-  glBindAttribLocation(program, 10, "Aux0");
-  glBindAttribLocation(program, 11, "Aux1");
-  glBindAttribLocation(program, 12, "Aux2");
-  glBindAttribLocation(program, 13, "Aux3");
-  glBindAttribLocation(program, 14, "Aux4");
-  glBindAttribLocation(program, 15, "Aux5");
+  ImportGlBindAttribLocation(program, 10, "Aux0");
+  ImportGlBindAttribLocation(program, 11, "Aux1");
+  ImportGlBindAttribLocation(program, 12, "Aux2");
+  ImportGlBindAttribLocation(program, 13, "Aux3");
+  ImportGlBindAttribLocation(program, 14, "Aux4");
+  ImportGlBindAttribLocation(program, 15, "Aux5");
 
 #ifdef ZeroDebug
   double compileSeconds = compileTimer.UpdateAndGetTime();
@@ -2380,7 +2372,7 @@ void OpenglRenderer::CreateShader(StringParam vertexSource,
   Timer linkTimer;
 #endif
 
-  glLinkProgram(program);
+  ImportGlLinkProgram(program);
 
 #ifdef ZeroDebug
   double linkSeconds = linkTimer.UpdateAndGetTime();
@@ -2389,13 +2381,13 @@ void OpenglRenderer::CreateShader(StringParam vertexSource,
 
 #ifdef ZeroDebug
   GLint status;
-  glGetProgramiv(program, GL_LINK_STATUS, &status);
+  ImportGlGetProgramiv(program, GL_LINK_STATUS, &status);
   if (status == GL_FALSE)
   {
     GLint infoLogLength;
-    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
+    ImportGlGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
     GLchar* strInfoLog = (GLchar*)alloca(infoLogLength + 1);
-    glGetProgramInfoLog(program, infoLogLength, NULL, strInfoLog);
+    ImportGlGetProgramInfoLog(program, infoLogLength, NULL, strInfoLog);
     ZPrint("Link Error\n%s\n", strInfoLog);
 
     static size_t sMaxPrints = 4;
@@ -2420,27 +2412,27 @@ void OpenglRenderer::CreateShader(StringParam vertexSource,
   // link. This is because requesting the link status is a blocking operation.
   shader = program;
 
-  glDetachShader(program, vertexShader);
-  glDetachShader(program, pixelShader);
-  glDeleteShader(vertexShader);
-  glDeleteShader(pixelShader);
+  ImportGlDetachShader(program, vertexShader);
+  ImportGlDetachShader(program, pixelShader);
+  ImportGlDeleteShader(vertexShader);
+  ImportGlDeleteShader(pixelShader);
 
   if (geometryShader != 0)
   {
-    glDetachShader(program, geometryShader);
-    glDeleteShader(geometryShader);
+    ImportGlDetachShader(program, geometryShader);
+    ImportGlDeleteShader(geometryShader);
   }
 
   // We don't currently do this because we don't want to check the status of the
   // shader (blocking).
   // if (status == GL_FALSE)
-  //  glDeleteProgram(program);
+  //  ImportGlDeleteProgram(program);
 }
 
 void OpenglRenderer::SetShader(GLuint shader)
 {
   mActiveShader = shader;
-  glUseProgram(mActiveShader);
+  ImportGlUseProgram(mActiveShader);
 }
 
 void OpenglRenderer::DelayedRenderDataDestruction()
@@ -2464,18 +2456,18 @@ void OpenglRenderer::DestroyRenderData(GlMaterialRenderData* renderData)
 
 void OpenglRenderer::DestroyRenderData(GlMeshRenderData* renderData)
 {
-  GlMeshRenderData* glRenderData = (GlMeshRenderData*)renderData;
-  glDeleteVertexArrays(1, &glRenderData->mVertexArray);
-  glDeleteBuffers(1, &glRenderData->mVertexBuffer);
-  glDeleteBuffers(1, &glRenderData->mIndexBuffer);
+  GlMeshRenderData* ImportGlRenderData = (GlMeshRenderData*)renderData;
+  ImportGlDeleteVertexArrays(1, &ImportGlRenderData->mVertexArray);
+  ImportGlDeleteBuffers(1, &ImportGlRenderData->mVertexBuffer);
+  ImportGlDeleteBuffers(1, &ImportGlRenderData->mIndexBuffer);
 
   delete renderData;
 }
 
 void OpenglRenderer::DestroyRenderData(GlTextureRenderData* renderData)
 {
-  GlTextureRenderData* glRenderData = (GlTextureRenderData*)renderData;
-  glDeleteTextures(1, &glRenderData->mId);
+  GlTextureRenderData* ImportGlRenderData = (GlTextureRenderData*)renderData;
+  ImportGlDeleteTextures(1, &ImportGlRenderData->mId);
   delete renderData;
 }
 
@@ -2489,7 +2481,7 @@ GLuint OpenglRenderer::GetSampler(u32 samplerSettings)
   }
 
   GLuint newSampler;
-  glGenSamplers(1, &newSampler);
+  ImportGlGenSamplers(1, &newSampler);
 
   TextureAddressing::Enum addressingX = SamplerSettings::AddressingX(samplerSettings);
   TextureAddressing::Enum addressingY = SamplerSettings::AddressingY(samplerSettings);
@@ -2497,12 +2489,12 @@ GLuint OpenglRenderer::GetSampler(u32 samplerSettings)
   TextureCompareMode::Enum compareMode = SamplerSettings::CompareMode(samplerSettings);
   TextureCompareFunc::Enum compareFunc = SamplerSettings::CompareFunc(samplerSettings);
 
-  glSamplerParameteri(newSampler, GL_TEXTURE_WRAP_S, GlTextureAddressing(addressingX));
-  glSamplerParameteri(newSampler, GL_TEXTURE_WRAP_T, GlTextureAddressing(addressingY));
-  glSamplerParameteri(newSampler, GL_TEXTURE_MIN_FILTER, GlTextureFilteringMin(filtering));
-  glSamplerParameteri(newSampler, GL_TEXTURE_MAG_FILTER, GlTextureFilteringMag(filtering));
-  glSamplerParameteri(newSampler, GL_TEXTURE_COMPARE_MODE, GlCompareMode(compareMode));
-  glSamplerParameteri(newSampler, GL_TEXTURE_COMPARE_FUNC, GlCompareFunc(compareFunc));
+  ImportGlSamplerParameteri(newSampler, GL_TEXTURE_WRAP_S, GlTextureAddressing(addressingX));
+  ImportGlSamplerParameteri(newSampler, GL_TEXTURE_WRAP_T, GlTextureAddressing(addressingY));
+  ImportGlSamplerParameteri(newSampler, GL_TEXTURE_MIN_FILTER, GlTextureFilteringMin(filtering));
+  ImportGlSamplerParameteri(newSampler, GL_TEXTURE_MAG_FILTER, GlTextureFilteringMag(filtering));
+  ImportGlSamplerParameteri(newSampler, GL_TEXTURE_COMPARE_MODE, GlCompareMode(compareMode));
+  ImportGlSamplerParameteri(newSampler, GL_TEXTURE_COMPARE_FUNC, GlCompareFunc(compareFunc));
 
   mSamplers.Insert(samplerSettings, newSampler);
 
@@ -2514,7 +2506,7 @@ void OpenglRenderer::DestroyUnusedSamplers()
   forRange (u32 id, mUnusedSamplers.All())
   {
     GLuint sampler = mSamplers[id];
-    glDeleteSamplers(1, &sampler);
+    ImportGlDeleteSamplers(1, &sampler);
     mSamplers.Erase(id);
   }
   mUnusedSamplers.Clear();
