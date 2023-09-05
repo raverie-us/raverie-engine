@@ -76,7 +76,6 @@ OsWindow::OsWindow(OsShell* shell,
   mWindow.mOnClose = &ShellWindowOnClose;
   mWindow.mOnFocusChanged = &ShellWindowOnFocusChanged;
   mWindow.mOnMouseDropFiles = &ShellWindowOnMouseDropFiles;
-  mWindow.mOnFrozenUpdate = &ShellWindowOnFrozenUpdate;
   mWindow.mOnClientSizeChanged = &ShellWindowOnClientSizeChanged;
   mWindow.mOnMinimized = &ShellWindowOnMinimized;
   mWindow.mOnRestored = &ShellWindowOnRestored;

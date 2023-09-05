@@ -546,10 +546,6 @@ public:
   /// Files have been drag-dropped onto this window.
   void (*mOnMouseDropFiles)(Math::IntVec2Param clientPosition, const Array<String>& files, ShellWindow* window);
 
-  /// An update that is called in cases where the window may be frozen (such as
-  /// dragging on the Windows OS).
-  void (*mOnFrozenUpdate)(ShellWindow* window);
-
   /// Occurs when the window is resized (may occur even if the size is the same
   /// and should be protected against).
   void (*mOnClientSizeChanged)(Math::IntVec2Param clientSize, ShellWindow* window);

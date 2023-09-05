@@ -5,9 +5,6 @@ namespace Zero
 {
 Shell* Shell::sInstance;
 
-// Notes:
-//  - We do not handle mOnFrozenUpdate (Zero may freeze on window drags)
-
 struct DropFileInfo
 {
   bool mBeganDropFiles = false;
@@ -708,7 +705,6 @@ ShellWindow::ShellWindow(Shell* shell,
     mOnClose(nullptr),
     mOnFocusChanged(nullptr),
     mOnMouseDropFiles(nullptr),
-    mOnFrozenUpdate(nullptr),
     mOnClientSizeChanged(nullptr),
     mOnMinimized(nullptr),
     mOnRestored(nullptr),
