@@ -440,7 +440,7 @@ void FatalEngineError(cstr format, ...)
   ErrorIf(true, "%s", message.c_str());
 
   // Print for log
-  ZPrint("%s", message.c_str());
+  ZPrint("%s\n", message.c_str());
 
   // Show Message Box
   String finalMessage = BuildString(message,
