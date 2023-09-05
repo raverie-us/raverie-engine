@@ -11,6 +11,7 @@ if(RAVERIE_CCACHE_PATH)
 endif()
 
 project(Raverie)
+set(CMAKE_EXECUTABLE_SUFFIX ".wasm")
 
 add_definitions(-DRaverieMsSinceEpoch=${RAVERIE_MS_SINCE_EPOCH})
 add_definitions(-DRaverieBranchName="${RAVERIE_BRANCH}")
