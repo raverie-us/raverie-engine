@@ -45,9 +45,6 @@ public:
   /// If texture sampler settings can be uniquely specified per sampler shader
   /// input.
   bool mSamplerObjects;
-
-  // For detecting Intel drivers to handle driver bugs.
-  bool mIntel;
 };
 
 // Do not reorder, value used to calculate number of vertices per primitive

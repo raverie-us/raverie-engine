@@ -3,8 +3,6 @@
 
 namespace Zero
 {
-bool gIntelGraphics = false;
-
 cstr KeyNames[Keys::KeyMax + 1] = {0};
 
 #define SetKeyName(value) KeyNames[Keys::value] = #value;

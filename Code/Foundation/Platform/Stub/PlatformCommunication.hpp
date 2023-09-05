@@ -160,7 +160,6 @@ typedef unsigned int GLuint;
 #define GL_UNSIGNED_INT_24_8                          0x84FA
 #define GL_UNSIGNED_SHORT                             0x1403
 #define GL_VENDOR                                     0x1F00
-#define GL_VERSION                                    0x1F02
 #define GL_VERTEX_SHADER                              0x8B31
 #define GL_ZERO                                       0
 
@@ -190,7 +189,7 @@ void ZeroImportNamed(ImportGlClearDepth)(GLfloat d);
 void ZeroImportNamed(ImportGlClearStencil)(GLint s);
 void ZeroImportNamed(ImportGlCompileShader)(GLuint shader);
 void ZeroImportNamed(ImportGlCompressedTexImage2D)(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const void* data);
-GLuint ZeroImportNamed(ImportGlCreateProgram)(void);
+GLuint ZeroImportNamed(ImportGlCreateProgram)();
 GLuint ZeroImportNamed(ImportGlCreateShader)(GLenum type);
 void ZeroImportNamed(ImportGlCullFace)(GLenum mode);
 void ZeroImportNamed(ImportGlDeleteBuffers)(GLsizei n, const GLuint* buffers);

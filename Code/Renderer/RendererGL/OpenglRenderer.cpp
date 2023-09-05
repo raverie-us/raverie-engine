@@ -950,85 +950,12 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
   mDeviceContext = deviceContext;
   mRenderContext = renderContext;
 
-  // Read the OpenGL version support
-  const char* ImportGl_version = (const char*)ImportGlGetString(GL_VERSION);
-  if (ImportGl_version == NULL)
-  {
-    error = "Unable to query OpenGL version. "
-            "Please update your computer's graphics drivers or verify that "
-            "your graphics card supports OpenGL 2.0.";
-    return;
-  }
-
-  const char* ImportGl_sl_version = (const char*)ImportGlGetString(GL_SHADING_LANGUAGE_VERSION);
-  const char* ImportGl_vendor = (const char*)ImportGlGetString(GL_VENDOR);
-  const char* ImportGl_renderer = (const char*)ImportGlGetString(GL_RENDERER);
-  const char* ImportGl_extensions = (const char*)ImportGlGetString(GL_EXTENSIONS);
-
-  ZPrint("OpenGL Version          : %s\n", ImportGl_version ? ImportGl_version : "(no data)");
-  ZPrint("OpenGL Shading Language : %s\n", ImportGl_sl_version ? ImportGl_sl_version : "(no data)");
-  ZPrint("OpenGL Vendor           : %s\n", ImportGl_vendor ? ImportGl_vendor : "(no data)");
-  ZPrint("OpenGL Renderer         : %s\n", ImportGl_renderer ? ImportGl_renderer : "(no data)");
-
-#ifdef ZeroWebgl
-  // ImportGlewIsSupported on emscripten doesn't emulate desktop gl extension queries.
-  bool version_2_0 = true;
-  bool framebuffer_object = true;
-  bool texture_compression = false;
-  bool draw_buffers_blend = false;
-  bool sampler_objects = true;
-#else
-
-  // Initialize ImportGlew
-  GLenum ImportGlewInitStatus = ImportGlewInit();
-  if (ImportGlewInitStatus != GLEW_OK)
-  {
-    error = String::Format("GLEW failed to initialize with error: %d", ImportGlewInitStatus);
-    return;
-  }
-
-  bool version_2_0 = ImportGlewIsSupported("GL_VERSION_2_0");
-  bool framebuffer_object = ImportGlewIsSupported("GL_ARB_framebuffer_object");
-  bool texture_compression = ImportGlewIsSupported("GL_ARB_texture_compression");
-  bool draw_buffers_blend = ImportGlewIsSupported("GL_ARB_draw_buffers_blend");
-  bool sampler_objects = ImportGlewIsSupported("GL_ARB_sampler_objects");
-#endif
-
-  ZPrint("OpenGL *Required Extensions\n");
-  ZPrint("OpenGL *(GL_VERSION_2_0) Shader Program support                 : %s\n", version_2_0 ? "True" : "False");
-  ZPrint("OpenGL *(GL_ARB_framebuffer_object) Deferred Rendering support  : %s\n",
-         framebuffer_object ? "True" : "False");
-
-  ZPrint("OpenGL (GL_ARB_texture_compression) Texture Compression support : %s\n",
-         texture_compression ? "True" : "False");
-  ZPrint("OpenGL (GL_ARB_draw_buffers_blend) Multi Target Blend support   : %s\n",
-         draw_buffers_blend ? "True" : "False");
-  ZPrint("OpenGL (GL_ARB_sampler_objects) Sampler Object support          : %s\n", sampler_objects ? "True" : "False");
-
-  ZPrint("OpenGL All Extensions : %s\n", ImportGl_extensions ? ImportGl_extensions : "(no data)");
-
-
-  // Required OpenGL extensions
-  if (!version_2_0 || !framebuffer_object)
-  {
-    String failedExtensions =
-        BuildString(version_2_0 ? "" : "GL_VERSION_2_0, ", framebuffer_object ? "" : "GL_ARB_framebuffer_object, ");
-    error = String::Format("Required OpenGL extensions: %s are unsupported by the active driver. "
-                           "Please update your computer's graphics drivers or verify that your "
-                           "graphics card supports the listed features.",
-                           failedExtensions.c_str());
-    return;
-  }
-
-  mDriverSupport.mTextureCompression = texture_compression;
-  mDriverSupport.mMultiTargetBlend = draw_buffers_blend;
-  mDriverSupport.mSamplerObjects = sampler_objects;
-
-  // Intel integrated graphics does not render correctly with borderless
-  // Window's aero on OpenGL.
-  String vendorString = ImportGl_vendor;
-  if (vendorString.Contains("Intel"))
-    mDriverSupport.mIntel = true;
+  // TODO(trevor): Support texture compression via extensions
+  mDriverSupport.mTextureCompression = false;
+  // TODO(trevor): Check webgl for multi target blend support
+  mDriverSupport.mMultiTargetBlend = false;
+  // WebGL supports this
+  mDriverSupport.mSamplerObjects = true;
 
   // V-Sync off by default
   zglSetSwapInterval(this, 0);

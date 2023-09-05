@@ -31,8 +31,7 @@ StringParam GetCoreVertexFragmentName(CoreVertexType::Enum type)
 GraphicsDriverSupport::GraphicsDriverSupport() :
     mTextureCompression(false),
     mMultiTargetBlend(false),
-    mSamplerObjects(false),
-    mIntel(false)
+    mSamplerObjects(false)
 {
 }
 

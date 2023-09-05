@@ -686,8 +686,6 @@ void GraphicsEngine::CreateRenderer(OsWindow* mainWindow)
 
   delete rendererJob;
 
-  gIntelGraphics = Z::gRenderer->mDriverSupport.mIntel;
-
   ConnectThisTo(mainWindow, Events::OsWindowMinimized, OnOsWindowMinimized);
   ConnectThisTo(mainWindow, Events::OsWindowRestored, OnOsWindowRestored);
 }

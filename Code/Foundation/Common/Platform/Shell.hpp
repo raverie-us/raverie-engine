@@ -3,9 +3,6 @@
 
 namespace Zero
 {
-/// For detecting Intel drivers to handle driver bugs.
-extern bool gIntelGraphics;
-
 DeclareBitField2(FileDialogFlags, MultiSelect, Folder);
 
 static const IntVec2 cMinimumMonitorSize(800, 600);
