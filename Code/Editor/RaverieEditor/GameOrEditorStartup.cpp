@@ -42,6 +42,10 @@ StartupPhase::Enum GameOrEditorStartup::RunIteration()
     UserCreation();
     NextPhase();
     break;
+  case StartupPhase::ImportsInitialize:
+    ImportsInitialize();
+    NextPhase();
+    break;
   case StartupPhase::EngineUpdate:
     // Handles changing to the next phase internally.
     EngineUpdate();
@@ -469,10 +473,11 @@ void GameOrEditorStartup::UserCreation()
   {
     CreateEditor(mMainWindow, mProjectFile, mNewProject);
   }
+}
 
-  // Update the engine at least one, this ensures that any logic that
-  // needs to run first frame is done (compositing, etc)
-  Z::gEngine->Update();
+void GameOrEditorStartup::ImportsInitialize() {
+  auto graphics = Z::gEngine->has(GraphicsEngine);
+  graphics->InitializeRenderer();
 }
 
 } // namespace Zero

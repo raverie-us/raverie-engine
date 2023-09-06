@@ -94,6 +94,12 @@ void CreateRendererJob::Execute()
   mWaitEvent.Signal();
 }
 
+void InitializeRendererJob::Execute()
+{
+  Z::gRenderer->Initialize();
+  mWaitEvent.Signal();
+}
+
 void DestroyRendererJob::Execute()
 {
   delete Z::gRenderer;

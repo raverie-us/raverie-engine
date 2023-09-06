@@ -7,7 +7,7 @@ namespace Zero
 
 namespace Z
 {
-Renderer* gRenderer;
+Renderer* gRenderer = nullptr;
 }
 
 ZilchDefineExternalBaseType(GraphicsDriverSupport, TypeCopyMode::ReferenceType, builder, type)

@@ -6,6 +6,7 @@ namespace Zero
 {
 
 OsInt RendererThreadMain(void* rendererThreadJobQueue);
+void ExecuteRendererJob(RendererJob* job);
 
 class RendererJob
 {
@@ -17,6 +18,7 @@ public:
   virtual void ReturnExecute()
   {
   }
+  virtual bool IsDeferrable() { return true; }
 };
 
 class RendererJobQueue
@@ -47,6 +49,7 @@ public:
   WaitRendererJob();
   // Wait function called by main thread to wait on this job
   void WaitOnThisJob();
+  bool IsDeferrable() override { return false; }
   OsEvent mWaitEvent;
 };
 
@@ -58,6 +61,7 @@ public:
 
   void Execute() override;
   virtual void OnExecute() = 0;
+  bool IsDeferrable() override { return false; }
   virtual bool OnShouldRun()
   {
     return false;
@@ -88,6 +92,12 @@ public:
 
   OsHandle mMainWindowHandle;
   String mError;
+};
+
+class InitializeRendererJob : public WaitRendererJob
+{
+public:
+  void Execute() override;
 };
 
 class DestroyRendererJob : public WaitRendererJob

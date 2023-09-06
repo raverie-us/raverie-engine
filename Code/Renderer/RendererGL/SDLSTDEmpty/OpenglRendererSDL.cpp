@@ -41,7 +41,7 @@ OpenglRendererSDL::OpenglRendererSDL(OsHandle windowHandle, String& error)
   // Call the base initialize now that we've created the OpenGL context.
   Initialize(windowHandle, deviceContext, nullptr, error);
   */
-  Initialize(windowHandle, nullptr, nullptr, error);
+  //Initialize(windowHandle, nullptr, nullptr, error);
 }
 
 OpenglRendererSDL::~OpenglRendererSDL()

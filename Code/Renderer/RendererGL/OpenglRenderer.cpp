@@ -942,21 +942,17 @@ void StreamedVertexBuffer::FlushBuffer(bool deactivate)
   }
 }
 
-void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, OsHandle renderContext, String& error)
-{
-  mVsync = false;
-
-  mWindow = windowHandle;
-  mDeviceContext = deviceContext;
-  mRenderContext = renderContext;
-
+OpenglRenderer::OpenglRenderer() {
   // TODO(trevor): Support texture compression via extensions
   mDriverSupport.mTextureCompression = false;
   // TODO(trevor): Check webgl for multi target blend support
   mDriverSupport.mMultiTargetBlend = false;
   // WebGL supports this
   mDriverSupport.mSamplerObjects = true;
+}
 
+void OpenglRenderer::Initialize()
+{
   // V-Sync off by default
   zglSetSwapInterval(this, 0);
 
@@ -970,16 +966,6 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
   if (ImportGlewIsSupported("GL_ARB_seamless_cube_map"))
     ImportGlEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 #endif
-
-  mLazyShaderCompilation = true;
-
-  mActiveShader = 0;
-  mActiveMaterial = 0;
-  mActiveTexture = 0;
-
-  mCurrentLineWidth = 1.0f;
-  mClipMode = false;
-  mCurrentClip = Vec4(0, 0, 0, 0);
 
   // buffer for fullscreen triangle
   StreamedVertex triangleVertices[] = {
