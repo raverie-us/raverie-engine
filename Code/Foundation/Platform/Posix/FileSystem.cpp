@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
 #include <dirent.h>
@@ -162,7 +161,7 @@ bool DeleteDirectory(StringParam name)
 
 void CreateDirectory(StringParam dest)
 {
-  int failCode = mkdir(dest.c_str(), ZeroAllPermissions);
+  int failCode = mkdir(dest.c_str(), ZeroAllPermissions);ff
 
   if (failCode != 0)
   {

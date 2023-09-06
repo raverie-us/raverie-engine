@@ -24,32 +24,19 @@ String GetEditorExecutableFileName()
   return GetEditorFullName() + cExecutableExtensionWithDot;
 }
 
-uint gConfigVersion = 1;
-String gAppGuid;
-String gAppOrganization;
-String gAppName;
-
-void SetupApplication(uint configVersion, StringParam organization, StringParam guid, StringParam name)
-{
-  gConfigVersion = configVersion;
-  gAppGuid = guid;
-  gAppOrganization = organization;
-  gAppName = name;
-}
-
 cstr GetGuidString()
 {
-  return gAppGuid.c_str();
+  return sEditorGuid.c_str();
 }
 
 StringParam GetApplicationName()
 {
-  return gAppName;
+  return sEditorName;
 }
 
 StringParam GetOrganization()
 {
-  return gAppOrganization;
+  return sRaverieOrganization;
 }
 
 String GetOrganizationApplicationName()
@@ -59,7 +46,7 @@ String GetOrganizationApplicationName()
 
 uint GetConfigVersion()
 {
-  return gConfigVersion;
+  return 1;
 }
 
 uint GetMajorVersion()

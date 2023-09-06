@@ -42,7 +42,6 @@ target_link_libraries(RaverieEditor
     SpirvCross
     SpirvHeaders
     SpirvTools
-    Startup
     Support
     UiWidget
     Widget

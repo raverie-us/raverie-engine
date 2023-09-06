@@ -258,6 +258,8 @@ void ZeroImportNamed(ImportGlVertexAttribPointer)(GLuint index, GLint size, GLen
 void ZeroImportNamed(ImportGlViewport)(GLint x, GLint y, GLsizei width, GLsizei height);
 
 // Platform
+void ZeroImportNamed(ImportPrintLine)(int32_t fd, const char* str, size_t length);
+int32_t ZeroImportNamed(ImportClock)(int32_t clockId);
 //void (*CaptureMouse)(bool capture);
 
 void ZeroExportNamed(ExportKeyDown)(Zero::Keys::Enum key, uint osKey, bool repeated);

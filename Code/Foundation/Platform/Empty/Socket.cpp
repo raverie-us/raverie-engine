@@ -484,10 +484,6 @@ void Socket::Shutdown(Status& status, SocketIo::Enum io)
   status.SetFailed("Socket not implemented");
 }
 
-void Socket::Close()
-{
-}
-
 void Socket::Close(Status& status)
 {
   status.SetFailed("Socket not implemented");

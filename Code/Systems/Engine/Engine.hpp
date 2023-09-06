@@ -173,7 +173,7 @@ public:
 
 /// A core element of the engine has encountered a unrecoverable error.
 /// the engine will display a message box and terminate.
-void FatalEngineError(cstr format, ...);
+ZeroNoReturn void FatalEngineError(cstr format, ...);
 
 // Global Access
 namespace Z

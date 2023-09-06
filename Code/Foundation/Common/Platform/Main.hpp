@@ -12,6 +12,3 @@ void CommandLineToStringArray(Array<String>& strings, char** argv, int numberOfP
 bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments, Array<String>& commandLineArguments);
 
 } // namespace Zero
-
-// Everyone implements this main instead of platform specific mains.
-extern "C" int main(int argc, char* argv[]);

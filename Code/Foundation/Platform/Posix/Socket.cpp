@@ -10,7 +10,6 @@
 #include <sys/un.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include <fcntl.h>
 
 // Platform Conversion Types and Macros
 typedef int SOCKET_TYPE;
@@ -1287,6 +1286,7 @@ void Socket::Listen(Status& status, uint backlog)
 
 void Socket::SetBlocking(Status& status, bool blocking)
 {
+  /*
   // Get socket file descriptor flags
   int flags = fcntl(CAST_HANDLE_TO_SOCKET(mHandle), F_GETFL, 0);
   if (flags == SOCKET_ERROR) // Unable?
@@ -1302,7 +1302,7 @@ void Socket::SetBlocking(Status& status, bool blocking)
   int result = fcntl(CAST_HANDLE_TO_SOCKET(mHandle), F_SETFL, flags);
   if (result == SOCKET_ERROR) // Unable?
     return FailOnError(status, 0, "Unable to set socket flags");
-
+  */
   // Store value
   mIsBlocking = blocking;
 }

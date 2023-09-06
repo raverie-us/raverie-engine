@@ -6,7 +6,7 @@ namespace Zero
 
 String WebRequest::GetBoundary()
 {
-  static const String cBoundary("----------" + GetOrganizationApplicationName() + GetGuidString() + "$");
+  static const String cBoundary("----------" + GetOrganizationApplicationName() + "$");
   return cBoundary;
 }
 

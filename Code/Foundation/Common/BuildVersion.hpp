@@ -11,9 +11,6 @@ extern const String sEditorName;
 String GetEditorFullName();
 String GetEditorExecutableFileName();
 
-/// Sets all the application version and name information.
-void SetupApplication(uint configVersion, StringParam organization, StringParam guid, StringParam name);
-
 /// Get the guid (primarily for crashes).
 cstr GetGuidString();
 

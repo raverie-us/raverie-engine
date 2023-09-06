@@ -7,6 +7,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_STATIC
+#define STBI_WRITE_NO_STDIO
 #include "stb_image.h"
 #include "stb_image_write.h"
 

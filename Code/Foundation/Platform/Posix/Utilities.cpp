@@ -92,7 +92,6 @@ void CheckClassMemory(cstr className, byte* classMemory)
 
 void FatalError(int exitCode)
 {
-  exit(exitCode);
 }
 
 } // namespace Zero

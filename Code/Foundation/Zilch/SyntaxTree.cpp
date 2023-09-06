@@ -612,28 +612,6 @@ String SyntaxTree::GetGraphVizRepresentation()
   return output.ToString();
 }
 
-void SyntaxTree::ShowGraphVizRepresentation()
-{
-  FILE* fp = fopen("C:\\Temp\\Parse.gv", "w");
-
-  if (fp)
-  {
-    String gv = GetGraphVizRepresentation();
-
-    fwrite(gv.c_str(), gv.SizeInBytes(), 1, fp);
-    fwrite("\0", 1, 1, fp);
-
-    fclose(fp);
-
-    // system("C:\\Progra~1\\Graphviz2.26.3\\bin\\dot.exe -Tpng \"C:\\temp.gv\"
-    // > \"C:\\temp.png\"");
-    system("C:\\Progra~2\\Graphviz2.38\\bin\\dot.exe -Tpng "
-           "\"C:\\Temp\\Parse.gv\" > \"C:\\Temp\\Parse.png\"");
-
-    system("C:\\Temp\\Parse.png");
-  }
-}
-
 void RootNode::PopulateChildren(NodeChildren& childrenOut)
 {
   ZilchBase::PopulateChildren(childrenOut);

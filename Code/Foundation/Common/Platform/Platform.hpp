@@ -56,6 +56,8 @@
 #define ZeroExportC extern "C" __attribute__((visibility("default")))
 #define ZeroImportNamed(Name) __attribute__((used)) __attribute__((noinline)) __attribute__((visibility("default"))) __attribute__((__import_name__(#Name))) Name
 #define ZeroExportNamed(Name) __attribute__((used)) __attribute__((noinline)) __attribute__((visibility("default"))) __attribute__((__export_name__(#Name))) Name
+#define ZeroNoReturn __attribute__((noreturn))
+
 #define ZeroTodo(text)
 #define ZeroForceInline inline
 #define ZeroDebugBreak()

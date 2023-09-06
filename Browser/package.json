@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -12,7 +12,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@wasmer/wasi": "^1.2.2",
     "vite": "^4.4.9",
     "vite-plugin-node-stdlib-browser": "^0.2.1"
   }

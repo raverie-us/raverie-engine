@@ -39,9 +39,6 @@ public:
   // Get the graphviz representation for debugging purposes
   String GetGraphVizRepresentation();
 
-  // Show the graphviz representation for debugging purposes
-  void ShowGraphVizRepresentation();
-
 private:
   // Recursively walks child nodes looking for any node whose range encompasses
   // the cursor
