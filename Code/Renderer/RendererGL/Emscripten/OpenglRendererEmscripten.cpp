@@ -48,7 +48,7 @@ void zglSetSwapInterval(OpenglRenderer* renderer, int interval)
 IntVec2 zglGetWindowRenderableSize(OpenglRenderer* renderer)
 {
   // Use a default size just in case the call fails.
-  IntVec2 size(1024, 768);
+  IntVec2 size = cMinimumMonitorSize;
   emscripten_webgl_get_drawing_buffer_size((EMSCRIPTEN_WEBGL_CONTEXT_HANDLE)renderer->mDeviceContext, &size.x, &size.y);
   return size;
 }

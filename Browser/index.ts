@@ -27,8 +27,8 @@ type CharPointer = number;
 
 const canvas = document.createElement("canvas");
 canvas.style.backgroundColor = "#555";
-canvas.width = 512;
-canvas.height = 512;
+canvas.width = 800;
+canvas.height = 600;
 document.body.append(canvas);
 const gl = canvas.getContext("webgl2", {
   antialias: false

@@ -65,7 +65,7 @@ void zglSetSwapInterval(OpenglRenderer* renderer, int interval)
 IntVec2 zglGetWindowRenderableSize(OpenglRenderer* renderer)
 {
   // Use a default size just in case the call fails.
-  IntVec2 size(1024, 768);
+  IntVec2 size = cMinimumMonitorSize;
   //SDL_GL_GetDrawableSize((SDL_Window*)renderer->mWindow, &size.x, &size.y);
   return size;
 }

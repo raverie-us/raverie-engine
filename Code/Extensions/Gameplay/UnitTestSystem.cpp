@@ -121,7 +121,7 @@ static const String cProjectBegin("ProjectBegin");
 static const String cProjectEnd("ProjectEnd");
 static const String cZeroProjWithoutDot("zeroproj");
 static const String cZeroProjWithDot(".zeroproj");
-static const IntVec2 cWindowSize(1024, 768);
+static const IntVec2 cWindowSize = cMinimumMonitorSize;
 
 ZilchDefineType(UnitTestEvent, builder, type)
 {
