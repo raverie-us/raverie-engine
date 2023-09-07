@@ -37,29 +37,14 @@ const gl = canvas.getContext("webgl2", {
 const EXT_texture_filter_anisotropic = gl.getExtension("EXT_texture_filter_anisotropic");
 const GL_TEXTURE_MAX_ANISOTROPY = 0x84FE;
 
-if (!gl.getExtension("EXT_color_buffer_float")) {
-  throw new Error("Needs EXT_color_buffer_float to function");
+const requireExtension = (name: string) => {
+  if (!gl.getExtension(name)) {
+    throw new Error(`Needs ${name} to function`);
+  }
 }
 
-gl.getExtension("EXT_color_buffer_float");
-gl.getExtension("EXT_color_buffer_half_float");
-gl.getExtension("EXT_disjoint_timer_query_webgl2");
-gl.getExtension("EXT_float_blend");
-gl.getExtension("EXT_texture_compression_bptc");
-gl.getExtension("EXT_texture_compression_rgtc");
-gl.getExtension("EXT_texture_filter_anisotropic");
-gl.getExtension("EXT_texture_norm16");
-gl.getExtension("KHR_parallel_shader_compile");
-gl.getExtension("OES_draw_buffers_indexed");
-gl.getExtension("OES_texture_float_linear");
-gl.getExtension("OVR_multiview2");
-gl.getExtension("WEBGL_compressed_texture_s3tc");
-gl.getExtension("WEBGL_compressed_texture_s3tc_srgb");
-gl.getExtension("WEBGL_debug_renderer_info");
-gl.getExtension("WEBGL_debug_shaders");
-gl.getExtension("WEBGL_lose_context");
-gl.getExtension("WEBGL_multi_draw");
-gl.getExtension("WEBGL_provoking_vertex");
+requireExtension("EXT_color_buffer_float");
+requireExtension("OES_texture_float_linear");
 
 class ObjectMap<T> {
   private map: Record<number, T> = {};
@@ -183,6 +168,8 @@ const imports: WebAssembly.Imports = {
     ImportGlBlendEquation: (mode: GLenum): void => {
       gl.blendEquation(mode);
     },
+    // To support all these, we must have extension OES_draw_buffers_indexed
+    // and we must set mDriverSupport.mMultiTargetBlend
     ImportGlBlendEquationi: (buf: GLuint, mode: GLenum): void => {
       throw new Error("Not implemented");
     },
@@ -233,6 +220,8 @@ const imports: WebAssembly.Imports = {
     ImportGlCompileShader: (shader: GLuint): void => {
       gl.compileShader(shaderMap.getRequired(shader));
     },
+    // For this we probably need extension EXT_texture_compression_bptc and EXT_texture_compression_rgtc
+    // and possibly WEBGL_compressed_texture_s3tc and WEBGL_compressed_texture_s3tc_srgb
     ImportGlCompressedTexImage2D: (target: GLenum, level: GLint, internalformat: GLenum, width: GLsizei, height: GLsizei, imageSize: GLsizei, data: VoidPointer): void => {
       throw new Error("Not implemented");
     },
