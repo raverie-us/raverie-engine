@@ -120,12 +120,6 @@ struct CrashHandler
   static void InvokeRescueCallback();
   static void InvokeSendCrashReport(CrashHandlerParameters& params);
 
-  // Used to signal that a fatal error has happened and send out a crash report.
-  // No minidump will be generated as there was no hardware exception,
-  // but stack and log information will be sent. Also doesn't invoke the rescue
-  // callback.
-  static void FatalError(int errorCode);
-
   // The default logic for the crash handler.
   static void DefaultRunCrashHandlerCallback(void* crashData, bool doRescueCall, void* userData);
   static void SetRestartCommandLine(StringRange commandLine);
