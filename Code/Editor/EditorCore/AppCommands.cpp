@@ -132,51 +132,6 @@ void SortAndPrintMetaTypeList(StringBuilder& builder, Array<String>& names, cstr
   builder.Append("\n");
 }
 
-// Special class to delay dispatching the unit test command until scripts have
-// been compiled
-class UnitTestDelayRunner : public Composite
-{
-public:
-  typedef UnitTestDelayRunner ZilchSelf;
-
-  void OnScriptsCompiled(Event* e)
-  {
-    ActionSequence* seq = new ActionSequence(Z::gEditor, ActionExecuteMode::FrameUpdate);
-    // wait a little bit so we the scripts will be finished compiling (and
-    // hooked up)
-    seq->Add(new ActionDelay(0.1f));
-    seq->Add(new ActionEvent(Z::gEngine, "RunUnitTests", new Event()));
-
-    // when the game plays the scripts will be compiled again so don't dispatch
-    // this event
-    DisconnectAll(Z::gEngine, this);
-    this->Destroy();
-  }
-
-  UnitTestDelayRunner(Composite* parent) : Composite(parent)
-  {
-    OnScriptsCompiled(nullptr);
-  }
-};
-
-void RunUnitTests()
-{
-  Zilch::Sha1Builder::RunUnitTests();
-  new UnitTestDelayRunner(Z::gEditor);
-}
-
-void RecordUnitTestFile()
-{
-  UnitTestSystem* unitTestSystem = Z::gEngine->has(UnitTestSystem);
-  unitTestSystem->RecordToZeroTestFile();
-}
-
-void PlayUnitTestFile()
-{
-  UnitTestSystem* unitTestSystem = Z::gEngine->has(UnitTestSystem);
-  unitTestSystem->PlayFromZeroTestFile();
-}
-
 void CopyPrebuiltContent()
 {
   ZPrint("Copying prebuilt content...\n");
@@ -204,9 +159,6 @@ void BindAppCommands(Cog* config, CommandManager* commands)
 
   commands->AddCommand("BuildVersion", BindCommandFunction(BuildVersion), true);
   commands->AddCommand("WriteBuildInfo", BindCommandFunction(WriteBuildInfo));
-  commands->AddCommand("RunUnitTests", BindCommandFunction(RunUnitTests));
-  commands->AddCommand("RecordUnitTestFile", BindCommandFunction(RecordUnitTestFile));
-  commands->AddCommand("PlayUnitTestFile", BindCommandFunction(PlayUnitTestFile));
 
   if (DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig))
   {

@@ -61,16 +61,6 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   ZilchInitializeType(SplineParticleEmitter);
   ZilchInitializeType(SplineParticleAnimator);
 
-  ZilchInitializeType(UnitTestSystem);
-  ZilchInitializeType(UnitTestEvent);
-  ZilchInitializeType(UnitTestEndFrameEvent);
-  ZilchInitializeType(UnitTestBaseMouseEvent);
-  ZilchInitializeType(UnitTestMouseEvent);
-  ZilchInitializeType(UnitTestMouseDropEvent);
-  ZilchInitializeType(UnitTestKeyboardEvent);
-  ZilchInitializeType(UnitTestKeyboardTextEvent);
-  ZilchInitializeType(UnitTestWindowEvent);
-
   ZilchInitializeType(IndexedHalfEdgeMeshVertexArray);
   ZilchInitializeType(IndexedHalfEdgeMeshEdgeArray);
   ZilchInitializeType(IndexedHalfEdgeFaceEdgeIndexArray);

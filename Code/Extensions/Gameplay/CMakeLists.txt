@@ -47,8 +47,6 @@ target_sources(Gameplay
     ${CMAKE_CURRENT_LIST_DIR}/TileMapSource.cpp
     ${CMAKE_CURRENT_LIST_DIR}/TileMapSource.hpp
     ${CMAKE_CURRENT_LIST_DIR}/TileMapSourceLoadPattern.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/UnitTestSystem.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/UnitTestSystem.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Zero.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Zero.hpp
 )

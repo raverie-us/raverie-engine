@@ -191,7 +191,6 @@ void GameOrEditorStartup::Startup()
   Cog* configCog = engine->GetConfigCog();
 
   // Create all core systems
-  engine->AddSystem(CreateUnitTestSystem());
   engine->AddSystem(CreateOsShellSystem());
   engine->AddSystem(CreateTimeSystem());
   engine->AddSystem(CreatePhysicsSystem());

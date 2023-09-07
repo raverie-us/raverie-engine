@@ -249,13 +249,6 @@ String GetVersionString()
 
 u64 GenerateUniqueId64()
 {
-  if (gDeterministicMode)
-  {
-    static u64 deterministicId = 0;
-    ++deterministicId;
-    return deterministicId;
-  }
-
   u64 result = SDL_GetPerformanceCounter() ^ SDL_GetTicks();
 
   static u64 highCount = 0;
