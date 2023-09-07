@@ -14,7 +14,7 @@ void PlatformLibrary::Initialize()
   if (SDL_Init(flags) != 0)
   {
     ZPrint("Unable to initialize SDL: %s\n", SDL_GetError());
-    CrashHandler::FatalError(1);
+    abort();
   }
 
   // We don't want the back buffer to be multi-sampled because we can't blit a
