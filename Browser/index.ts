@@ -526,23 +526,10 @@ const getPixelsView = (width: GLsizei, height: GLsizei, format: GLenum, type: GL
 }
 
 initialize();
-console.log("after initialize");
 
-console.log("iteration 0");
-runIteration();
-console.log("iteration 1");
-runIteration();
-console.log("iteration 2");
-runIteration();
-console.log("iteration 3");
-runIteration();
-console.log("iteration 4");
-runIteration();
-console.log("iteration 5");
-runIteration();
-console.log("iteration 6");
-runIteration();
-console.log("iteration 7");
-runIteration();
-console.log("iteration 8");
-runIteration();
+const doUpdate = () => {
+  requestAnimationFrame(doUpdate);
+  runIteration();
+};
+
+doUpdate();
