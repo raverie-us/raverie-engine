@@ -476,6 +476,7 @@ void GameOrEditorStartup::UserCreation()
 }
 
 void GameOrEditorStartup::ImportsInitialize() {
+  gDeferImports = false;
   auto graphics = Z::gEngine->has(GraphicsEngine);
   graphics->InitializeRenderer();
 }

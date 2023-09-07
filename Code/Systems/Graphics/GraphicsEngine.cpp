@@ -1,6 +1,8 @@
 // MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
+#include "Foundation/Platform/Stub/PlatformCommunication.hpp"
+
 #define RaverieLazyShaderCompositing
 
 namespace Zero
@@ -678,7 +680,7 @@ void GraphicsEngine::CheckTextureYInvert(Texture* texture)
 
 void GraphicsEngine::AddRendererJob(RendererJob* rendererJob)
 {
-  if (ThreadingEnabled || rendererJob->IsDeferrable()) {
+  if (ThreadingEnabled || (gDeferImports && rendererJob->IsDeferrable())) {
     mRendererJobQueue->AddJob(rendererJob);
   } else {
     // In single threaded mode, instantly execute the job

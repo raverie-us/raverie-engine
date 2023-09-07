@@ -3,6 +3,8 @@
 #include "Foundation/Common/CommonStandard.hpp"
 
 extern "C" {
+extern bool gDeferImports;
+
 // GL
 typedef char GLchar;
 typedef float GLfloat;
@@ -188,17 +190,17 @@ void ZeroImportNamed(ImportGlClearColor)(GLfloat red, GLfloat green, GLfloat blu
 void ZeroImportNamed(ImportGlClearDepth)(GLfloat d);
 void ZeroImportNamed(ImportGlClearStencil)(GLint s);
 void ZeroImportNamed(ImportGlCompileShader)(GLuint shader);
-void ZeroImportNamed(ImportGlCompressedTexImage2D)(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const void* data);
+void ZeroImportNamed(ImportGlCompressedTexImage2D)(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei imageSize, const void* data);
 GLuint ZeroImportNamed(ImportGlCreateProgram)();
 GLuint ZeroImportNamed(ImportGlCreateShader)(GLenum type);
 void ZeroImportNamed(ImportGlCullFace)(GLenum mode);
-void ZeroImportNamed(ImportGlDeleteBuffers)(GLsizei n, const GLuint* buffers);
-void ZeroImportNamed(ImportGlDeleteFramebuffers)(GLsizei n, const GLuint* framebuffers);
+void ZeroImportNamed(ImportGlDeleteBuffer)(GLuint buffer);
+void ZeroImportNamed(ImportGlDeleteFramebuffer)(GLuint framebuffer);
 void ZeroImportNamed(ImportGlDeleteProgram)(GLuint program);
 void ZeroImportNamed(ImportGlDeleteSamplers)(GLsizei count, const GLuint* samplers);
 void ZeroImportNamed(ImportGlDeleteShader)(GLuint shader);
-void ZeroImportNamed(ImportGlDeleteTextures)(GLsizei n, const GLuint* textures);
-void ZeroImportNamed(ImportGlDeleteVertexArrays)(GLsizei n, const GLuint* arrays);
+void ZeroImportNamed(ImportGlDeleteTexture)(GLuint texture);
+void ZeroImportNamed(ImportGlDeleteVertexArray)(GLuint array);
 void ZeroImportNamed(ImportGlDepthFunc)(GLenum func);
 void ZeroImportNamed(ImportGlDepthMask)(GLboolean flag);
 void ZeroImportNamed(ImportGlDetachShader)(GLuint program, GLuint shader);
@@ -211,19 +213,16 @@ void ZeroImportNamed(ImportGlEnable)(GLenum cap);
 void ZeroImportNamed(ImportGlEnablei)(GLenum target, GLuint index);
 void ZeroImportNamed(ImportGlEnableVertexAttribArray)(GLuint index);
 void ZeroImportNamed(ImportGlFramebufferTexture2D)(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
-void ZeroImportNamed(ImportGlGenBuffers)(GLsizei n, GLuint* buffers);
+GLuint ZeroImportNamed(ImportGlGenBuffer)();
 void ZeroImportNamed(ImportGlGenerateMipmap)(GLenum target);
-void ZeroImportNamed(ImportGlGenFramebuffers)(GLsizei n, GLuint* framebuffers);
+GLuint ZeroImportNamed(ImportGlGenFramebuffer)();
 void ZeroImportNamed(ImportGlGenSamplers)(GLsizei count, GLuint* samplers);
-void ZeroImportNamed(ImportGlGenTextures)(GLsizei n, GLuint* textures);
-void ZeroImportNamed(ImportGlGenVertexArrays)(GLsizei n, GLuint* arrays);
-void ZeroImportNamed(ImportGlGetFloatv)(GLenum pname, GLfloat* data);
-void ZeroImportNamed(ImportGlGetIntegerv)(GLenum pname, GLint* data);
+GLuint ZeroImportNamed(ImportGlGenTexture)();
+GLuint ZeroImportNamed(ImportGlGenVertexArray)();
 void ZeroImportNamed(ImportGlGetProgramInfoLog)(GLuint program, GLsizei bufSize, GLsizei* length, GLchar* infoLog);
 void ZeroImportNamed(ImportGlGetProgramiv)(GLuint program, GLenum pname, GLint* params);
 void ZeroImportNamed(ImportGlGetShaderInfoLog)(GLuint shader, GLsizei bufSize, GLsizei* length, GLchar* infoLog);
 void ZeroImportNamed(ImportGlGetShaderiv)(GLuint shader, GLenum pname, GLint* params);
-const GLubyte* ZeroImportNamed(ImportGlGetString)(GLenum name);
 GLint ZeroImportNamed(ImportGlGetUniformLocation)(GLuint program, const GLchar* name);
 void ZeroImportNamed(ImportGlLineWidth)(GLfloat width);
 void ZeroImportNamed(ImportGlLinkProgram)(GLuint program);
@@ -231,14 +230,14 @@ void ZeroImportNamed(ImportGlPixelStorei)(GLenum pname, GLint param);
 void ZeroImportNamed(ImportGlReadPixels)(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, void* pixels);
 void ZeroImportNamed(ImportGlSamplerParameteri)(GLuint sampler, GLenum pname, GLint param);
 void ZeroImportNamed(ImportGlScissor)(GLint x, GLint y, GLsizei width, GLsizei height);
-void ZeroImportNamed(ImportGlShaderSource)(GLuint shader, GLsizei count, const GLchar* const*string, const GLint* length);
+void ZeroImportNamed(ImportGlShaderSource)(GLuint shader, const GLchar* string, GLint length);
 void ZeroImportNamed(ImportGlStencilFunc)(GLenum func, GLint ref, GLuint mask);
 void ZeroImportNamed(ImportGlStencilFuncSeparate)(GLenum face, GLenum func, GLint ref, GLuint mask);
 void ZeroImportNamed(ImportGlStencilMask)(GLuint mask);
 void ZeroImportNamed(ImportGlStencilMaskSeparate)(GLenum face, GLuint mask);
 void ZeroImportNamed(ImportGlStencilOp)(GLenum fail, GLenum zfail, GLenum zpass);
-void ZeroImportNamed(ImportGlStencilOpSeparate)(GLenum face, GLenum sfail, GLenum dpfail, GLenum dppass);
-void ZeroImportNamed(ImportGlTexImage2D)(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void* pixels);
+void ZeroImportNamed(ImportGlStencilOpSeparate)(GLenum face, GLenum sfail, GLenum zfail, GLenum zpass);
+void ZeroImportNamed(ImportGlTexImage2D)(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void* pixels);
 void ZeroImportNamed(ImportGlTexParameterf)(GLenum target, GLenum pname, GLfloat param);
 void ZeroImportNamed(ImportGlTexParameteri)(GLenum target, GLenum pname, GLint param);
 void ZeroImportNamed(ImportGlTexSubImage2D)(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void* pixels);
