@@ -50,4 +50,5 @@ target_link_libraries(RaverieEditor
     Zilch
     ZilchScript
     ZilchShaders
+    Exceptions
 )

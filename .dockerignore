@@ -1,2 +1,3 @@
 *
 !package*.json
+!External/Emscripten/Repo/system/lib/libcxxabi/include/cxxabi.h

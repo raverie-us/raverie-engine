@@ -78,6 +78,7 @@ set(RAVERIE_C_CXX_FLAGS "\
   -Wno-address-of-packed-member\
   -Wno-empty-body\
   -fexceptions\
+  -fwasm-exceptions\
   -frtti\
   -fno-vectorize\
   -fno-slp-vectorize\
