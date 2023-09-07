@@ -28,3 +28,6 @@
 [submodule "External/ZLib/Repo"]
 	path = External/ZLib/Repo
 	url = https://github.com/raverie-us/raverie-engine-zlib.git
+[submodule "External/Emscripten/Repo"]
+	path = External/Emscripten/Repo
+	url = https://github.com/emscripten-core/emscripten.git
