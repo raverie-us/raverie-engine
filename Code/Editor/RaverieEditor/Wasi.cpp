@@ -1,4 +1,4 @@
-#include "Foundation/Platform/Stub/PlatformCommunication.hpp"
+#include "Foundation/Platform/PlatformCommunication.hpp"
 #include <wasi/api.h>
 #include <unistd.h>
 

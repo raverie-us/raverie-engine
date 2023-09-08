@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-#include "Foundation/Platform/Stub/PlatformCommunication.hpp"
+#include "Foundation/Platform/PlatformCommunication.hpp"
 
 namespace Zero
 {

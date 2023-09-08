@@ -11,7 +11,6 @@
 #include "Editor/EditorCore/EditorStandard.hpp"
 #include "Extensions/Gameplay/GameplayStandard.hpp"
 #include "Systems/ZilchScript/ZilchScriptStandard.hpp"
-#include "Platform/PlatformStandard.hpp"
-#include "Foundation/Platform/Stub/PlatformCommunication.hpp"
+#include "Foundation/Platform/PlatformCommunication.hpp"
 #include "GameOrEditorStartup.hpp"
 #include "ZeroCrashCallbacks.hpp"

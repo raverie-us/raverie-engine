@@ -7,7 +7,6 @@
 
 // Zero includes
 #  include "Foundation/Common/CommonStandard.hpp"
-#  include "Platform/PlatformStandard.hpp"
 
 // This needs to be included before anything else
 // since it disables warnings and defines macros we use

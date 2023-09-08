@@ -2,7 +2,6 @@
 #pragma once
 
 #include "Foundation/Support/SupportStandard.hpp"
-#include "Platform/PlatformStandard.hpp"
 #include "Foundation/Meta/MetaStandard.hpp"
 
 #include "Foundation/Zilch/Precompiled.hpp"

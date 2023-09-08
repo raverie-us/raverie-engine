@@ -3,7 +3,6 @@
 
 // Standard Library Dependencies
 #include "Foundation/Common/CommonStandard.hpp"
-#include "Platform/PlatformStandard.hpp"
 #include "Foundation/Meta/MetaStandard.hpp"
 #include "Foundation/Support/SupportStandard.hpp"
 

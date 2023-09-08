@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
-#include "Foundation/Platform/Stub/PlatformCommunication.hpp"
+#include "Foundation/Platform/PlatformCommunication.hpp"
 
 #define RaverieLazyShaderCompositing
 

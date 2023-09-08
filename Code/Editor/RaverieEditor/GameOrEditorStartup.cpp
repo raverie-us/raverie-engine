@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
-#include "Foundation/Platform/Stub/PlatformCommunication.hpp"
+#include "Foundation/Platform/PlatformCommunication.hpp"
 
 namespace Zero
 {
@@ -134,7 +134,6 @@ void GameOrEditorStartup::Initialize()
   MetaDatabase::GetInstance()->AddNativeLibrary(Core::GetInstance().GetLibrary());
 
   // Initialize Zero Libraries
-  PlatformLibrary::Initialize();
   GeometryLibrary::Initialize();
   // Geometry doesn't know about the Meta Library, so it cannot add itself to
   // the MetaDatabase
@@ -310,7 +309,6 @@ void GameOrEditorStartup::Shutdown()
     SerializationLibrary::Shutdown();
     MetaLibrary::Shutdown();
     GeometryLibrary::Shutdown();
-    PlatformLibrary::Shutdown();
 
     // ClearLibrary
     ZilchScriptLibrary::GetInstance().ClearLibrary();
