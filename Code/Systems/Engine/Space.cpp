@@ -570,8 +570,6 @@ void Space::LoadLevelAdditive(Level* level)
 void Space::LoadLevelFile(StringParam filePath)
 {
   ProfileScopeFunctionArgs(filePath);
-  // Enable in debug for level loading (object initialization, etc)
-  FpuExceptionsEnablerDebug();
 
   // Load from Level file
   Status status;
@@ -614,9 +612,6 @@ Level* Space::AddObjectsFromLevel(Level* level)
 
   // Begin Loading Level
   mIsLoadingLevel = true;
-
-  // Enable in debug for level loading (object initialization, etc)
-  FpuExceptionsEnablerDebug();
 
   PushErrorContextObject("Loading level", level);
 

@@ -18,11 +18,6 @@ set(Editor_Export_Sources
     ${CMAKE_CURRENT_LIST_DIR}/Export/WindowsExportTarget.cpp
 )
 
-set(Editor_Jobs_Sources 
-    ${CMAKE_CURRENT_LIST_DIR}/Jobs/GitJobs.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Jobs/GitJobs.cpp
-)
-
 set(Editor_Import_Sources 
     ${CMAKE_CURRENT_LIST_DIR}/Import/Importer.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Import/Importer.cpp
@@ -60,7 +55,6 @@ target_sources(EditorCore
   PRIVATE
     ${Editor_CodeTranslator_Sources}
     ${Editor_Export_Sources}
-    ${Editor_Jobs_Sources}
     ${Editor_Import_Sources}
     ${Editor_Property_Sources}
     ${Editor_Scintilla_Sources}

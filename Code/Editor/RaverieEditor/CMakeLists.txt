@@ -11,8 +11,6 @@ target_sources(RaverieEditor
     ${CMAKE_CURRENT_LIST_DIR}/Wasi.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZeroCrashCallbacks.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZeroCrashCallbacks.hpp
 )
 
 target_link_libraries(RaverieEditor

@@ -863,7 +863,7 @@ void OnResaveAllResources(Editor* editor)
   }
 }
 
-void EditorRescueCall(void* userData)
+void ExportHandleCrash()
 {
   // Get the error context printed
   // DoNotifyErrorWithContext("Crashing");
@@ -914,8 +914,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
 
   // Set the tweakables modified callback so that we can update the Ui
   Tweakables::sModifiedCallback = &OnTweakablesModified;
-
-  CrashHandler::SetupRescueCallback(EditorRescueCall, nullptr);
 
   MainWindow* rootWidget = new MainWindow(mainWindow);
   EditorMain* editorMain = new EditorMain(rootWidget, mainWindow);

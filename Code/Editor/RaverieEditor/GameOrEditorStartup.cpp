@@ -79,8 +79,6 @@ void GameOrEditorStartup::Initialize()
   mFileListener = new FileListener();
   Zero::Console::Add(mFileListener);
 
-  CrashHandler::Enable();
-
   Environment* environment = Environment::GetInstance();
   environment->ParseCommandArgs(gCommandLineArguments);
 
@@ -96,8 +94,6 @@ void GameOrEditorStartup::Initialize()
     mStdoutListener = new StdOutListener();
     Zero::Console::Add(mStdoutListener);
   }
-
-  CrashHandler::RestartOnCrash(Environment::GetValue<bool>("autorestart", false));
 
   CommonLibrary::Initialize();
 
@@ -447,16 +443,6 @@ void GameOrEditorStartup::UserStartup()
     coreLibs.PushBack("EditorUi");
     coreLibs.PushBack("Editor");
     LoadCoreContent(coreLibs);
-  }
-
-  String cloneUrl = Environment::GetValue<String>("cloneUrl");
-  if (!cloneUrl.Empty() && !FileExists(mProjectFile))
-  {
-    GitCloneJob* job = new GitCloneJob();
-    job->mUrl = cloneUrl;
-    job->mDirectory = FilePath::GetDirectoryPath(mProjectFile);
-    ZPrint("Cloning url '%s' to directory '%s'\n", job->mUrl.c_str(), job->mDirectory.c_str());
-    Z::gJobs->AddJob(job);
   }
 }
 

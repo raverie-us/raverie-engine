@@ -13,4 +13,3 @@
 #include "Systems/ZilchScript/ZilchScriptStandard.hpp"
 #include "Foundation/Platform/PlatformCommunication.hpp"
 #include "GameOrEditorStartup.hpp"
-#include "ZeroCrashCallbacks.hpp"

@@ -131,9 +131,6 @@ void TimeSpace::SetTimeScale(float timeScale)
 
 void TimeSpace::Update(float dt)
 {
-  // Enable for logic update loop only in debug
-  FpuExceptionsEnablerDebug();
-
   Space* space = GetSpace();
 
   // If this is a preview space and we're sending out update (should include any

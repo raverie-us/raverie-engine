@@ -263,6 +263,7 @@ int32_t ZeroImportNamed(ImportClock)(int32_t clockId);
 
 char* ZeroExportNamed(ExportInitialize)(size_t argumentsLength);
 void ZeroExportNamed(ExportRunIteration)();
+void ZeroExportNamed(ExportHandleCrash)();
 void ZeroExportNamed(ExportKeyDown)(Zero::Keys::Enum key, uint osKey, bool repeated);
 void ZeroExportNamed(ExportQuit)();
 

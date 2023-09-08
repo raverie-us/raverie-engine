@@ -21,8 +21,6 @@ void CommonLibrary::Initialize()
   // Setup keyboard enumerations
   InitializeKeyboard();
 
-  Git::Initialize();
-
   // This is printed to any log for debugging purposes.
   ZPrint("Paths:\n"
          "  Application: %s\n"
@@ -39,8 +37,6 @@ void CommonLibrary::Initialize()
 
 void CommonLibrary::Shutdown()
 {
-  Git::Destroy();
-
   // For certain platforms (Emscripten) make sure that any
   // files saved in memory are persisted for the next run.
   PersistFiles();

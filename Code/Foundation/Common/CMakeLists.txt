@@ -130,10 +130,6 @@ set(Common_Memory_Sources
 set(Common_Platform_Sources
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Atomic.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Audio.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Platform/CallStack.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Platform/CrashHandler.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Platform/Debug.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Platform/DebugSymbolInformation.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/DirectoryWatcher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/DirectoryWatcher.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/ExecutableResource.hpp
@@ -146,7 +142,6 @@ set(Common_Platform_Sources
     ${CMAKE_CURRENT_LIST_DIR}/Platform/FilePath.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/FileSystem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/FileSystem.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Platform/FpControl.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Intrinsics.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Intrinsics.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/IpAddress.cpp

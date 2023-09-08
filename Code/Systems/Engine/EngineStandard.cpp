@@ -392,7 +392,6 @@ bool EngineLibrary::Initialize()
 
   // Could be moved to Platform
   Environment* environment = Environment::GetInstance();
-  CrashHandler::SetRestartCommandLine(environment->mCommandLine);
 
   // Allow the user to specify an extra log file (use 2 different log files so
   // the crash reporter works and because we need to start system objects for
@@ -404,9 +403,6 @@ bool EngineLibrary::Initialize()
     extraListener.OverrideLogFile(logFile);
     Zero::Console::Add(&extraListener);
   }
-
-  // Uncomment out this line to disable the fpu exceptions
-  // FpuControlSystem::Active = false;
 
   // Load the debug drawer.
   Debug::DebugDraw::Initialize();

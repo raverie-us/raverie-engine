@@ -184,6 +184,4 @@ public:
 // Import
 #include "Import/Importer.hpp"
 
-#include "Jobs/GitJobs.hpp"
-
 #include "EditorMain.hpp"

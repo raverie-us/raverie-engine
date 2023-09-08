@@ -6,15 +6,9 @@ target_sources(Platform
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Atomic.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Audio.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/CallStack.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/CrashHandler.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Debug.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/DebugSymbolInformation.cpp
     ${CMAKE_CURRENT_LIST_DIR}/DirectoryWatcher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ExecutableResource.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ExternalLibrary.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/FpControl.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Git.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Intrinsics.cpp
     ${CMAKE_CURRENT_LIST_DIR}/MainLoop.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Peripherals.cpp

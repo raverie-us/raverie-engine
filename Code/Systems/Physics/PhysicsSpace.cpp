@@ -585,28 +585,24 @@ void PhysicsSpace::SystemLogicUpdate(UpdateEvent* updateEvent)
 {
   ProfileScopeTree("Physics", "Engine", ByteColorRGBA(232, 0, 34, 255));
 
+  // If any resources are modified then make sure to update them now (probably
+  // modified in script)
+  UpdateModifiedResources();
+
+  // This push is necessary to put physics into a valid state after the rest
+  // of the engine may have done things to physics
+  PushBroadPhaseQueueProfiled();
+
+  ReturnIf(mSubStepCount == 0, , "Physics is set to have no iteration steps.");
+
+  // If this is a preview space, don't run the timestep. This will prevent
+  // previews from integrating forces, solving joints, etc...
+  if (!GetSpace()->IsPreviewMode())
   {
-    FpuExceptionsEnabler();
-
-    // If any resources are modified then make sure to update them now (probably
-    // modified in script)
-    UpdateModifiedResources();
-
-    // This push is necessary to put physics into a valid state after the rest
-    // of the engine may have done things to physics
-    PushBroadPhaseQueueProfiled();
-
-    ReturnIf(mSubStepCount == 0, , "Physics is set to have no iteration steps.");
-
-    // If this is a preview space, don't run the timestep. This will prevent
-    // previews from integrating forces, solving joints, etc...
-    if (!GetSpace()->IsPreviewMode())
-    {
-      real frameTime = updateEvent->Dt;
-      real dt = frameTime / real(mSubStepCount);
-      for (uint i = 0; i < mSubStepCount; ++i)
-        IterateTimestep(dt);
-    }
+    real frameTime = updateEvent->Dt;
+    real dt = frameTime / real(mSubStepCount);
+    for (uint i = 0; i < mSubStepCount; ++i)
+      IterateTimestep(dt);
   }
 
   // Now that we've updated our objects, tell the rest of the world what we've
