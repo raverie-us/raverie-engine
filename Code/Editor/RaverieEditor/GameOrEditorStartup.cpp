@@ -186,8 +186,6 @@ System* CreateTimeSystem();
 
 void GameOrEditorStartup::Startup()
 {
-  // TODO(trevor): Find a better way to keep the exports linked in
-  printf("%p\n", &ExportKeyDown);
   ProfileScopeFunction();
   Engine* engine = Z::gEngine;
   Cog* configCog = engine->GetConfigCog();
