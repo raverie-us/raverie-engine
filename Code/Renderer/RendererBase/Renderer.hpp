@@ -447,9 +447,6 @@ public:
   Renderer();
   virtual ~Renderer();
 
-  // Called after all loading is done
-  virtual void Initialize() = 0;
-
   // should move these to a file for api dependent utility functions
   virtual void
   BuildOrthographicTransform(Mat4Ref matrix, float size, float aspect, float nearPlane, float farPlane) = 0;

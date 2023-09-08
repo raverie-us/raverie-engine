@@ -2,8 +2,6 @@
 #include "PlatformCommunication.hpp"
 
 extern "C" {
-bool gDeferImports = true;
-
 void ExportKeyDown(Zero::Keys::Enum key, uint osKey, bool repeated) {
   printf("ExportKeyDown\n");
 }

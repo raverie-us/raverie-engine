@@ -6,7 +6,7 @@ namespace Zero
 
 // To allow platforms without threads / yields (such as Emscripten) to give time back to the OS/Browser
 // we perform our initialization in phases
-DeclareEnum11(
+DeclareEnum10(
     StartupPhase,
     // All meta libraries are initialized, environment initialized, config loaded, and
     // engine created here. There will be no systems available on the engine.
@@ -24,8 +24,6 @@ DeclareEnum11(
     JobsComplete,
     // After all jobs are completed, use this opportunity to create your version of a main object (Editor/Game).
     UserCreation,
-    // Another initialization pass where we now allow systems to make imported calls (see PlatformCommunication.hpp)
-    ImportsInitialize,
     // Engine is automatically updated until it is no longer active / closed.
     EngineUpdate,
     // All libraries are shutdown and the engine is destroyed.
@@ -63,7 +61,6 @@ protected:
   void UserInitialize();
   void UserStartup();
   void UserCreation();
-  void ImportsInitialize();
 
 private:
   void Initialize();

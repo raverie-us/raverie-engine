@@ -42,10 +42,6 @@ StartupPhase::Enum GameOrEditorStartup::RunIteration()
     UserCreation();
     NextPhase();
     break;
-  case StartupPhase::ImportsInitialize:
-    ImportsInitialize();
-    NextPhase();
-    break;
   case StartupPhase::EngineUpdate:
     // Handles changing to the next phase internally.
     EngineUpdate();
@@ -456,12 +452,6 @@ void GameOrEditorStartup::UserCreation()
   {
     CreateEditor(mMainWindow, mProjectFile, mNewProject);
   }
-}
-
-void GameOrEditorStartup::ImportsInitialize() {
-  gDeferImports = false;
-  auto graphics = Z::gEngine->has(GraphicsEngine);
-  graphics->InitializeRenderer();
 }
 
 } // namespace Zero

@@ -952,10 +952,7 @@ OpenglRenderer::OpenglRenderer() {
   mDriverSupport.mMultiTargetBlend = false;
   // WebGL supports this
   mDriverSupport.mSamplerObjects = true;
-}
 
-void OpenglRenderer::Initialize()
-{
   // V-Sync off by default
   zglSetSwapInterval(this, 0);
 

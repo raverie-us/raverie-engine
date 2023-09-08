@@ -74,10 +74,6 @@ class OpenglRenderer : public Renderer
 public:
   OpenglRenderer();
 
-  // This must be called by the derived class after the OpenGL context has been
-  // created.
-  void Initialize() override;
-
   // This must be called by the derived class before the OpenGL context has been
   // destroyed.
   void Shutdown();

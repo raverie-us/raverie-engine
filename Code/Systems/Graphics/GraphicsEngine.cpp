@@ -680,7 +680,7 @@ void GraphicsEngine::CheckTextureYInvert(Texture* texture)
 
 void GraphicsEngine::AddRendererJob(RendererJob* rendererJob)
 {
-  if (ThreadingEnabled || (gDeferImports && rendererJob->IsDeferrable())) {
+  if (ThreadingEnabled) {
     mRendererJobQueue->AddJob(rendererJob);
   } else {
     // In single threaded mode, instantly execute the job
