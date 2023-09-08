@@ -261,6 +261,8 @@ void ZeroImportNamed(ImportPrintLine)(int32_t fd, const char* str, size_t length
 int32_t ZeroImportNamed(ImportClock)(int32_t clockId);
 //void (*CaptureMouse)(bool capture);
 
+char* ZeroExportNamed(ExportInitialize)(size_t argumentsLength);
+void ZeroExportNamed(ExportRunIteration)();
 void ZeroExportNamed(ExportKeyDown)(Zero::Keys::Enum key, uint osKey, bool repeated);
 void ZeroExportNamed(ExportQuit)();
 

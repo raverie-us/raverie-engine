@@ -7,15 +7,18 @@ static GameOrEditorStartup* startup = nullptr;
 
 extern "C" {
 void __wasm_call_ctors();
+}
 
-void ZeroExportNamed(ExportInitialize)() {
+char* ExportInitialize(size_t argumentsLength) {
   __wasm_call_ctors();
   startup = new GameOrEditorStartup();
+  gCommandLineBuffer = new char[argumentsLength];
+  gCommandLineBufferLength = argumentsLength;
+  return gCommandLineBuffer;
 }
 
-void ZeroExportNamed(ExportRunIteration)() {
+void ExportRunIteration() {
   startup->RunIteration();
-}
 }
 
 // We don't actually use main since our exeuctable is initialized externally

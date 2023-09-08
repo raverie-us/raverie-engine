@@ -4,18 +4,24 @@
 namespace Zero
 {
 Array<String> gCommandLineArguments;
+size_t gCommandLineBufferLength = 0;
+char* gCommandLineBuffer = nullptr;
 
-void CommandLineToStringArray(Array<String>& strings, cstr* argv, int numberOfParameters)
+void CommandLineToStringArray()
 {
-  for (int i = 0; i < numberOfParameters; ++i) {
-    ZPrint("Command line arg: %d %s\n", i, argv[i]);
-    strings.PushBack(argv[i]);
+  size_t start = 0;
+  for (size_t i = 0; i < gCommandLineBufferLength; ++i) {
+    if (gCommandLineBuffer[i] == '\0') {
+      if (i == start) {
+        break;
+      }
+
+      String arg(gCommandLineBuffer + start, gCommandLineBuffer + i);
+      start = i + 1;
+      ZPrint("Command line arg: %s\n", arg.c_str());
+      gCommandLineArguments.PushBack(arg);
+    }
   }
-}
-
-void CommandLineToStringArray(Array<String>& strings, char** argv, int numberOfParameters)
-{
-  return CommandLineToStringArray(strings, const_cast<cstr*>(argv), numberOfParameters);
 }
 
 bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments, Array<String>& commandLineArguments)

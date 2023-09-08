@@ -64,6 +64,8 @@ StartupPhase::Enum GameOrEditorStartup::RunIteration()
 
 void GameOrEditorStartup::Initialize()
 {
+  CommandLineToStringArray();
+
   // Set the log and error handlers so debug printing and asserts will print to
   // the any debugger output (such as the debugger Output Window).
   mDebuggerListener = new DebuggerListener();

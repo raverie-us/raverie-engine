@@ -471,10 +471,12 @@ const imports: WebAssembly.Imports = {
 const instance = await WebAssembly.instantiate(module, imports);
 
 const memory = instance.exports.memory as WebAssembly.Memory;
-const initialize = instance.exports.ExportInitialize as Function;
-const runIteration = instance.exports.ExportRunIteration as Function;
+
+const ExportInitialize = instance.exports.ExportInitialize as (argumentsLength: number) => number;
+const ExportRunIteration = instance.exports.ExportRunIteration as () => void;
 
 const decoder = new TextDecoder();
+const encoder = new TextEncoder();
 const readLengthString = (startPointer: number, length: number) =>
   decoder.decode(new DataView(memory.buffer, startPointer, length));
 const readNullTerminatedString = (startPointer: number) => {
@@ -525,11 +527,13 @@ const getPixelsView = (width: GLsizei, height: GLsizei, format: GLenum, type: GL
   }
 }
 
-initialize();
+const commandLine = encoder.encode("test\0\0");
+const commandLineBuffer = ExportInitialize(commandLine.byteLength);
+new Uint8Array(memory.buffer).set(commandLine, commandLineBuffer);
 
 const doUpdate = () => {
   requestAnimationFrame(doUpdate);
-  runIteration();
+  ExportRunIteration();
 };
 
 doUpdate();
