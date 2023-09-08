@@ -56,6 +56,9 @@ const Zero::String cZeroPerspectiveToApiPerspective("TransformData.ZeroPerspecti
 
 const Zero::String cSpriteSource("SpriteSource_SpriteSourceColor");
 const Zero::String cSpriteSourceCubePreview("SpriteSource_TextureCubePreview");
+
+const Zero::String cBoneTransforms("MiscData.BoneTransforms");
+
 } // namespace
 
 namespace Zero
@@ -1053,6 +1056,11 @@ void OpenglRenderer::Initialize()
                                                 "}";
 
   CreateShader(loadingShaderVertex, String(), loadingShaderPixel, mLoadingShader);
+
+  mLoadingTextureLoc = ImportGlGetUniformLocation(mLoadingShader, "Texture");
+  mLoadingTransformLoc = ImportGlGetUniformLocation(mLoadingShader, "Transform");
+  mLoadingUvTransformLoc = ImportGlGetUniformLocation(mLoadingShader, "UvTransform");
+  mLoadingAlphaLoc = ImportGlGetUniformLocation(mLoadingShader, "Alpha");
 }
 
 void OpenglRenderer::Shutdown()
@@ -1377,16 +1385,34 @@ void OpenglRenderer::AddShaders(Array<ShaderEntry>& entries, uint forceCompileBa
   }
 }
 
+GLint OpenglRenderer::GetUniformLocation(GlShader* shader, StringParam name) {
+  // First look in our local cache
+  GLint location = shader->mLocations.FindValue(name, -1);
+  if (location != -1) {
+    return location;
+  }
+
+  location = ImportGlGetUniformLocation(shader->mId, name.c_str());
+  shader->mLocations[name] = location;
+  return location;
+}
+
+void OpenglRenderer::DeleteShaderByKey(const ShaderKey& shaderKey) {
+  GlShader* shader = mGlShaders.FindValue(shaderKey, nullptr);
+  if (shader) {
+    ImportGlDeleteProgram(shader->mId);
+    delete shader;
+  }
+  mGlShaders.Erase(shaderKey);
+}
+
 void OpenglRenderer::RemoveShaders(Array<ShaderEntry>& entries)
 {
   forRange (ShaderEntry& entry, entries)
   {
     ShaderKey shaderKey(entry.mComposite, StringPair(entry.mCoreVertex, entry.mRenderPass));
 
-    if (mGlShaders.ContainsKey(shaderKey))
-      ImportGlDeleteProgram(mGlShaders[shaderKey].mId);
-
-    mGlShaders.Erase(shaderKey);
+    DeleteShaderByKey(shaderKey);
     mShaderEntries.Erase(shaderKey);
   }
 }
@@ -1513,29 +1539,24 @@ void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
   ImportGlEnable(GL_BLEND);
   ImportGlBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  GLint textureLoc = ImportGlGetUniformLocation(mLoadingShader, "Texture");
-  GLint transformLoc = ImportGlGetUniformLocation(mLoadingShader, "Transform");
-  GLint uvTransformLoc = ImportGlGetUniformLocation(mLoadingShader, "UvTransform");
-
-  GLint alphaLoc = ImportGlGetUniformLocation(mLoadingShader, "Alpha");
-  ImportGlUniform1fv(alphaLoc, 1, &alpha);
+  ImportGlUniform1fv(mLoadingAlphaLoc, 1, &alpha);
 
   GLint textureSlot = 0;
   ImportGlActiveTexture(GL_TEXTURE0 + textureSlot);
-  ImportGlUniform1iv(textureLoc, 1, &textureSlot);
+  ImportGlUniform1iv(mLoadingTextureLoc, 1, &textureSlot);
 
-  ImportGlUniformMatrix3fv(uvTransformLoc, 1, cTransposeMatrices, Mat3::cIdentity.array);
+  ImportGlUniformMatrix3fv(mLoadingUvTransformLoc, 1, cTransposeMatrices, Mat3::cIdentity.array);
 
   if (!splashMode)
   {
     // Loading
-    ImportGlUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, loadingTransform.array);
+    ImportGlUniformMatrix4fv(mLoadingTransformLoc, 1, cTransposeMatrices, loadingTransform.array);
     ImportGlBindTexture(GL_TEXTURE_2D, loadingTexture->mId);
     mStreamedVertexBuffer.AddVertices(quadVertices, 6, PrimitiveType::Triangles);
     mStreamedVertexBuffer.FlushBuffer(true);
 
     // Progress bar
-    ImportGlUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, progressTransform.array);
+    ImportGlUniformMatrix4fv(mLoadingTransformLoc, 1, cTransposeMatrices, progressTransform.array);
     ImportGlBindTexture(GL_TEXTURE_2D, whiteTexture->mId);
     mStreamedVertexBuffer.AddVertices(quadVertices, 6, PrimitiveType::Triangles);
     mStreamedVertexBuffer.FlushBuffer(true);
@@ -1543,15 +1564,15 @@ void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
     // Progress text
     if (progressText.Size() > 0)
     {
-      ImportGlUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, textTransform.array);
+      ImportGlUniformMatrix4fv(mLoadingTransformLoc, 1, cTransposeMatrices, textTransform.array);
       ImportGlBindTexture(GL_TEXTURE_2D, fontTexture->mId);
       mStreamedVertexBuffer.AddVertices(&progressText[0], progressText.Size(), PrimitiveType::Triangles);
       mStreamedVertexBuffer.FlushBuffer(true);
     }
 
     // Logo
-    ImportGlUniformMatrix3fv(uvTransformLoc, 1, cTransposeMatrices, logoUvTransform.array);
-    ImportGlUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, logoTransform.array);
+    ImportGlUniformMatrix3fv(mLoadingUvTransformLoc, 1, cTransposeMatrices, logoUvTransform.array);
+    ImportGlUniformMatrix4fv(mLoadingTransformLoc, 1, cTransposeMatrices, logoTransform.array);
     ImportGlBindTexture(GL_TEXTURE_2D, logoTexture->mId);
     mStreamedVertexBuffer.AddVertices(quadVertices, 6, PrimitiveType::Triangles);
     mStreamedVertexBuffer.FlushBuffer(true);
@@ -1559,7 +1580,7 @@ void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
   else
   {
     // Splash
-    ImportGlUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, splashTransform.array);
+    ImportGlUniformMatrix4fv(mLoadingTransformLoc, 1, cTransposeMatrices, splashTransform.array);
     ImportGlBindTexture(GL_TEXTURE_2D, splashTexture->mId);
     mStreamedVertexBuffer.AddVertices(quadVertices, 6, PrimitiveType::Triangles);
     mStreamedVertexBuffer.FlushBuffer(true);
@@ -1589,7 +1610,7 @@ GlShader* OpenglRenderer::GetShader(ShaderKey& shaderKey)
     mShaderEntries.Erase(shaderKey);
   }
 
-  return mGlShaders.FindPointer(shaderKey);
+  return mGlShaders.FindValue(shaderKey, nullptr);
 }
 
 void OpenglRenderer::DoRenderTasks(RenderTasks* renderTasks, RenderQueues* renderQueues)
@@ -1756,7 +1777,7 @@ void OpenglRenderer::DoRenderTaskRenderPass(RenderTaskRenderPass* task)
   mClipMode = false;
   mCurrentClip = Vec4(0, 0, 0, 0);
 
-  SetShader(0);
+  SetShader(nullptr);
   SetRenderSettings(RenderSettings(), mDriverSupport.mMultiTargetBlend);
   ImportGlBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -1784,7 +1805,7 @@ void OpenglRenderer::DoRenderTaskPostProcess(RenderTaskPostProcess* task)
 
   ImportGlViewport(0, 0, mViewportSize.x, mViewportSize.y);
 
-  SetShader(shader->mId);
+  SetShader(shader);
 
   SetShaderParameters(mFrameBlock, mViewBlock);
 
@@ -1798,7 +1819,7 @@ void OpenglRenderer::DoRenderTaskPostProcess(RenderTaskPostProcess* task)
   ImportGlDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)0);
   ImportGlBindVertexArray(0);
 
-  SetShader(0);
+  SetShader(nullptr);
   SetRenderSettings(RenderSettings(), mDriverSupport.mMultiTargetBlend);
   ImportGlBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -1877,9 +1898,9 @@ void OpenglRenderer::DrawStatic(ViewNode& viewNode, FrameNode& frameNode)
   if (shader == nullptr)
     return;
 
-  if (shader->mId != mActiveShader)
+  if (shader->mId != mActiveShaderId)
   {
-    SetShader(shader->mId);
+    SetShader(shader);
     // Set non-object built-in inputs once per active shader
     SetShaderParameters(mFrameBlock, mViewBlock);
     mActiveMaterial = 0;
@@ -1979,11 +2000,11 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
   }
 
   // Check for any state change
-  if (shaderId != mActiveShader || textureId != mActiveTexture || materialId != mActiveMaterial)
+  if (shaderId != mActiveShaderId || textureId != mActiveTexture || materialId != mActiveMaterial)
   {
     mStreamedVertexBuffer.FlushBuffer(false);
 
-    SetShader(shaderId);
+    SetShader(shader);
     mActiveTexture = textureId;
     mActiveMaterial = materialId;
 
@@ -2037,7 +2058,7 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
 
 void OpenglRenderer::SetShaderParameter(ShaderInputType::Enum uniformType, StringParam name, void* data)
 {
-  GLint location = ImportGlGetUniformLocation(mActiveShader, name.c_str());
+  GLint location = GetUniformLocation(mActiveShader, name);
   if (location == -1)
     return;
   mUniformFunctions[uniformType](location, 1, data);
@@ -2045,7 +2066,7 @@ void OpenglRenderer::SetShaderParameter(ShaderInputType::Enum uniformType, Strin
 
 void OpenglRenderer::SetShaderParameterMatrix(StringParam name, Mat3& transform)
 {
-  GLint location = ImportGlGetUniformLocation(mActiveShader, name.c_str());
+  GLint location = GetUniformLocation(mActiveShader, name);
   if (location == -1)
     return;
   ImportGlUniformMatrix3fv(location, 1, cTransposeMatrices, transform.array);
@@ -2053,7 +2074,7 @@ void OpenglRenderer::SetShaderParameterMatrix(StringParam name, Mat3& transform)
 
 void OpenglRenderer::SetShaderParameterMatrix(StringParam name, Mat4& transform)
 {
-  GLint location = ImportGlGetUniformLocation(mActiveShader, name.c_str());
+  GLint location = GetUniformLocation(mActiveShader, name);
   if (location == -1)
     return;
   ImportGlUniformMatrix4fv(location, 1, cTransposeMatrices, transform.array);
@@ -2061,7 +2082,7 @@ void OpenglRenderer::SetShaderParameterMatrix(StringParam name, Mat4& transform)
 
 void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name, Mat3& transform)
 {
-  GLint location = ImportGlGetUniformLocation(mActiveShader, name.c_str());
+  GLint location = GetUniformLocation(mActiveShader, name);
   if (location == -1)
     return;
   Mat3 inverse = transform.Inverted();
@@ -2070,7 +2091,7 @@ void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name, Mat3& transfo
 
 void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name, Mat4& transform)
 {
-  GLint location = ImportGlGetUniformLocation(mActiveShader, name.c_str());
+  GLint location = GetUniformLocation(mActiveShader, name);
   if (location == -1)
     return;
 
@@ -2120,7 +2141,7 @@ void OpenglRenderer::SetShaderParameters(FrameNode* frameNode, ViewNode* viewNod
                                       meshData->mBones[meshIndex].mBindTransform);
     }
 
-    GLint location = ImportGlGetUniformLocation(mActiveShader, "MiscData.BoneTransforms");
+    GLint location = GetUniformLocation(mActiveShader, cBoneTransforms);
     if (location != -1)
     {
       ImportGlUniformMatrix4fv(location, remappedBoneTransforms.Size(), cTransposeMatrices, remappedBoneTransforms[0].array);
@@ -2204,14 +2225,12 @@ void OpenglRenderer::CreateShader(ShaderEntry& entry)
   // Shouldn't fail at this point. Not currently handling gl errors.
   ErrorIf(shaderId == 0, "Failed to compile or link shader.");
 
-  GlShader shader;
-  shader.mId = shaderId;
-
   // Must delete old shader after new one is created or something is getting
   // incorrectly cached/generated
-  if (mGlShaders.ContainsKey(shaderKey))
-    ImportGlDeleteProgram(mGlShaders[shaderKey].mId);
+  DeleteShaderByKey(shaderKey);
 
+  GlShader* shader = new GlShader();
+  shader->mId = shaderId;
   mGlShaders.Insert(shaderKey, shader);
 }
 
@@ -2338,10 +2357,11 @@ void OpenglRenderer::CreateShader(StringParam vertexSource,
   //  ImportGlDeleteProgram(program);
 }
 
-void OpenglRenderer::SetShader(GLuint shader)
+void OpenglRenderer::SetShader(GlShader* shader)
 {
   mActiveShader = shader;
-  ImportGlUseProgram(mActiveShader);
+  mActiveShaderId = shader == nullptr ? 0 : shader->mId;
+  ImportGlUseProgram(mActiveShaderId);
 }
 
 void OpenglRenderer::DelayedRenderDataDestruction()
