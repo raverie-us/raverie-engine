@@ -414,12 +414,6 @@ void OsWindow::ShellWindowOnMouseDropFiles(Math::IntVec2Param clientPosition,
   self->SendMouseDropEvent(mouseDrop, false);
 }
 
-void OsWindow::ShellWindowOnFrozenUpdate(ShellWindow* window)
-{
-  OsWindow* self = (OsWindow*)window->mUserData;
-  Z::gEngine->Update();
-}
-
 void OsWindow::ShellWindowOnClientSizeChanged(Math::IntVec2Param clientSize, ShellWindow* window)
 {
   OsWindow* self = (OsWindow*)window->mUserData;

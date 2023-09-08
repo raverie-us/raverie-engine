@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
+#include "Foundation/Platform/PlatformCommunication.hpp"
 
 namespace Zero
 {
@@ -175,6 +176,7 @@ void ZilchManager::OnDebuggerPauseUpdate(Zilch::DebuggerEvent* event)
 
   Z::gEngine->mIsDebugging = true;
   Z::gEngine->Update();
+  ImportYield();
   Z::gEngine->mIsDebugging = false;
 }
 

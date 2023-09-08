@@ -225,7 +225,6 @@ namespace Zero
 #include "Platform/Peripherals.hpp"
 #include "Platform/ExecutableResource.hpp"
 #include "Platform/Main.hpp"
-#include "Platform/MainLoop.hpp"
 #include "Platform/Shell.hpp"
 #include "Platform/Intrinsics.hpp"
 #include "Platform/Audio.hpp"

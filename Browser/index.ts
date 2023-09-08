@@ -466,6 +466,11 @@ const imports: WebAssembly.Imports = {
           return performance.now() * MILLISECOND_TO_NANOSECOND;
         default: throw new Error(`Invalid clockId: ${clockId}`);
       }
+    },
+    ImportYield: () => {
+      // Does nothing for now, eventually:
+      // https://github.com/WebAssembly/js-promise-integration/blob/main/proposals/js-promise-integration/Overview.md
+      // https://v8.dev/blog/jspi
     }
   }
 };

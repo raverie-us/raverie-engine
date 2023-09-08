@@ -10,7 +10,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/ExecutableResource.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ExternalLibrary.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Intrinsics.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/MainLoop.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Peripherals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Process.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Resolution.cpp

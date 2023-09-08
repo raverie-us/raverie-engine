@@ -152,13 +152,6 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
   mVerticalSync = false;
 }
 
-void GraphicsEngine::InitializeRenderer() {
-  InitializeRendererJob* rendererJob = new InitializeRendererJob();
-  AddRendererJob(rendererJob);
-  rendererJob->WaitOnThisJob();
-  delete rendererJob;
-}
-
 #if defined(RaverieLazyShaderCompositing)
 void CollectShadersRenderTaskRenderPass(RenderTaskRenderPass* task,
                                         ViewBlock* viewBlock,
@@ -519,14 +512,10 @@ void GraphicsEngine::UpdateProgress(ProgressEvent* event)
   {
     static const size_t cProgressUpdateInterval = 10;
     static size_t sProgressUpdateFrame = 0;
-    if (sProgressUpdateFrame == 0) {
-      InitialLoadingCompleted();
-    }
-
     if (sProgressUpdateFrame % cProgressUpdateInterval == 0)
     {
       ExecuteRendererJob(mShowProgressJob);
-      YieldToOs();
+      ImportYield();
     }
     ++sProgressUpdateFrame;
   }

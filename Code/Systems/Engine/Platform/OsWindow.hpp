@@ -167,7 +167,6 @@ public:
   static void ShellWindowOnMouseDropFiles(Math::IntVec2Param clientPosition,
                                           const Array<String>& files,
                                           ShellWindow* window);
-  static void ShellWindowOnFrozenUpdate(ShellWindow* window);
   static void ShellWindowOnClientSizeChanged(Math::IntVec2Param clientSize, ShellWindow* window);
   static void ShellWindowOnMinimized(ShellWindow* window);
   static void ShellWindowOnRestored(ShellWindow* window);
