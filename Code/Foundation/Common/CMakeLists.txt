@@ -131,7 +131,6 @@ set(Common_Platform_Sources
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Atomic.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Audio.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/CallStack.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Platform/ComPort.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/CrashHandler.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Debug.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/DebugSymbolInformation.hpp

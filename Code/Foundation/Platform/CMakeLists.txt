@@ -7,7 +7,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/Atomic.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Audio.cpp
     ${CMAKE_CURRENT_LIST_DIR}/CallStack.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ComPort.cpp
     ${CMAKE_CURRENT_LIST_DIR}/CrashHandler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Debug.cpp
     ${CMAKE_CURRENT_LIST_DIR}/DebugSymbolInformation.cpp
