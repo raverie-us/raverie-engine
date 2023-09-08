@@ -258,7 +258,7 @@ void ZeroImportNamed(ImportGlViewport)(GLint x, GLint y, GLsizei width, GLsizei 
 
 // Platform
 void ZeroImportNamed(ImportPrintLine)(int32_t fd, const char* str, size_t length);
-int32_t ZeroImportNamed(ImportClock)(int32_t clockId);
+double ZeroImportNamed(ImportClock)(int32_t clockId);
 //void (*CaptureMouse)(bool capture);
 
 char* ZeroExportNamed(ExportInitialize)(size_t argumentsLength);

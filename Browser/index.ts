@@ -457,11 +457,13 @@ const imports: WebAssembly.Imports = {
       const CLOCKID_REALTIME = 0;
       const CLOCKID_MONOTONIC = 1;
 
+      const MILLISECOND_TO_NANOSECOND = 1000000;
+
       switch (clockId) {
         case CLOCKID_REALTIME:
-          return Date.now();
+          return Date.now() * MILLISECOND_TO_NANOSECOND;
         case CLOCKID_MONOTONIC:
-          return performance.now();
+          return performance.now() * MILLISECOND_TO_NANOSECOND;
         default: throw new Error(`Invalid clockId: ${clockId}`);
       }
     }

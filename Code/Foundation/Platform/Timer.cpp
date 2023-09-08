@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "Platform/Timer.hpp"
-
+#include <inttypes.h>
 namespace Zero
 {
 
@@ -10,19 +10,9 @@ double NanosecondToSecond = 1.0 / double(SecondToNanosecond);
 
 u64 GetTimeNanosecond()
 {
-// Apple OSes do not implement 'clock_gettime'
-#ifdef __APPLE__
-  // https://developer.apple.com/library/mac/qa/qa1398/_index.html
-  uint64_t time = mach_absolute_time();
-  // 'AbsoluteTime' is guaranteed to be a 64 bit wide value, however it's a
-  // struct, not a primitive 64 bit value
-  Nanoseconds nanoseconds = AbsoluteToNanoseconds(*(AbsoluteTime*)&time);
-  return *(uint64_t*)&nanoseconds;
-#else
-  timespec time;
+  timespec time = {0, 0};
   clock_gettime(CLOCK_MONOTONIC, &time);
   return (u64(time.tv_sec) * SecondToNanosecond + time.tv_nsec);
-#endif
 }
 
 Timer::Timer()

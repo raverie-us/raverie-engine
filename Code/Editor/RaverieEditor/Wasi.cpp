@@ -193,7 +193,7 @@ int32_t __imported_wasi_snapshot_preview1_clock_time_get(__wasi_clockid_t id, __
     fatal("clock_time_get should only be called with REALTIME or MONOTONIC clocks ids");
   }
 
-  *ticks = ImportClock(id);
+  *ticks = (int64_t)ImportClock(id);
   return __WASI_ERRNO_SUCCESS;
 }
 
