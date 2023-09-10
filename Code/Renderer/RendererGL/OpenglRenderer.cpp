@@ -1057,8 +1057,7 @@ OpenglRenderer::OpenglRenderer() {
   mLoadingAlphaLoc = ImportGlGetUniformLocation(mLoadingShader, "Alpha");
 }
 
-void OpenglRenderer::Shutdown()
-{
+OpenglRenderer::~OpenglRenderer() {
   ErrorIf(mGlShaders.Empty() == false, "Not all shaders were deleted.");
   ErrorIf(mShaderEntries.Empty() == false, "Not all shaders were deleted.");
 
@@ -1459,7 +1458,8 @@ void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
   bool splashMode = info->mSplashMode;
   float alpha = splashMode ? info->mSplashFade : 1.0f;
 
-  IntVec2 size = zglGetWindowRenderableSize(this);
+  // TODO(trevor): Make this track the actual main window size
+  IntVec2 size = cMinimumMonitorSize;
 
   Mat4 viewportToNdc;
   viewportToNdc.BuildTransform(Vec3(-1.0f, 1.0f, 0.0f), Mat3::cIdentity, Vec3(2.0f / size.x, -2.0f / size.y, 1.0f));
@@ -1575,8 +1575,6 @@ void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
 
   ImportGlDisable(GL_BLEND);
   ImportGlUseProgram(0);
-
-  zglSwapBuffers(this);
 }
 
 GlShader* OpenglRenderer::GetShader(ShaderKey& shaderKey)
@@ -1600,8 +1598,6 @@ void OpenglRenderer::DoRenderTasks(RenderTasks* renderTasks, RenderQueues* rende
 
   forRange (RenderTaskRange& taskRange, mRenderTasks->mRenderTaskRanges.All())
     DoRenderTaskRange(taskRange);
-
-  zglSwapBuffers(this);
 
   DelayedRenderDataDestruction();
 
@@ -2418,6 +2414,12 @@ void OpenglRenderer::DestroyUnusedSamplers()
   }
   mUnusedSamplers.Clear();
   mUnusedSamplers.Append(mSamplers.Keys());
+}
+
+
+Renderer* CreateRenderer()
+{
+  return new OpenglRenderer();
 }
 
 } // namespace Zero

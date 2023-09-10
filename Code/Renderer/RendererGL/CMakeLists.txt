@@ -7,7 +7,6 @@ set(RendererPlatformSource
 
 target_sources(RendererGL
   PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/SDLSTDEmpty/OpenglRendererSDL.cpp
     ${CMAKE_CURRENT_LIST_DIR}/OpenglRenderer.hpp
     ${CMAKE_CURRENT_LIST_DIR}/OpenglRenderer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/RendererGLStandard.cpp

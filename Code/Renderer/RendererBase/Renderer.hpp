@@ -8,7 +8,7 @@ namespace Zero
 // Implemented by api specific renderer (just call C++ delete on the renderer to
 // destroy it)
 class Renderer;
-Renderer* CreateRenderer(OsHandle windowHandle, String& error);
+Renderer* CreateRenderer();
 
 extern const String cPostVertex;
 StringParam GetCoreVertexFragmentName(CoreVertexType::Enum type);

@@ -84,7 +84,7 @@ public:
   }
 };
 
-Renderer* CreateRenderer(OsHandle windowHandle, String& error)
+Renderer* CreateRenderer()
 {
   return new EmptyRenderer();
 }

@@ -90,7 +90,7 @@ void WaitRendererJob::WaitOnThisJob()
 
 void CreateRendererJob::Execute()
 {
-  Z::gRenderer = CreateRenderer(mMainWindowHandle, mError);
+  Z::gRenderer = CreateRenderer();
   mWaitEvent.Signal();
 }
 

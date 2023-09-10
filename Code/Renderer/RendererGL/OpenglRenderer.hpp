@@ -9,8 +9,6 @@ namespace Zero
 // only be one implementation of OpenGL per platform, so we can avoid the
 // virtual overhead.
 class OpenglRenderer;
-extern IntVec2 zglGetWindowRenderableSize(OpenglRenderer* renderer);
-extern void zglSwapBuffers(OpenglRenderer* renderer);
 
 typedef void(*UniformFunction)(GLint, GLsizei, const void*);
 
@@ -72,6 +70,7 @@ class OpenglRenderer : public Renderer
 {
 public:
   OpenglRenderer();
+  ~OpenglRenderer();
 
   // This must be called by the derived class before the OpenGL context has been
   // destroyed.
