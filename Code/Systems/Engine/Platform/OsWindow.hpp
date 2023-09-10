@@ -179,7 +179,6 @@ public:
   static void ShellWindowOnMouseScrollY(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
   static void ShellWindowOnMouseScrollX(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
   static void ShellWindowOnDevicesChanged(ShellWindow* window);
-  static void ShellWindowOnRawMouseChanged(Math::IntVec2Param movement, ShellWindow* window);
   static WindowBorderArea::Enum ShellWindowOnHitTest(Math::IntVec2Param clientPosition, ShellWindow* window);
   static void ShellWindowOnInputDeviceChanged(
       PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data, ShellWindow* window);
@@ -192,6 +191,8 @@ public:
 
   // The platform shell window.
   ShellWindow mWindow;
+
+  static OsWindow* sInstance;
 };
 
 // General windows events.
@@ -216,13 +217,11 @@ public:
   OsMouseEvent();
   void Clear();
 
-  OsWindow* Window;
   bool ShiftPressed;
   bool AltPressed;
   bool CtrlPressed;
   IntVec2 ClientPosition;
   Vec2 ScrollMovement;
-  bool IsMouseAtTrapPosition;
 
   // Button For this Event
   MouseButtons::Enum MouseButton;

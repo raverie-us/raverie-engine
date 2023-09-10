@@ -1,5 +1,5 @@
 import wasmUrl from "../Build/Active/Code/Editor/RaverieEditor/RaverieEditor.wasm?url";
-import { ToWorkerMessageType, MessageYieldDraw, MessageYieldComplete } from "./shared";
+import { ToWorkerMessageType, MessageYieldDraw, MessageYieldComplete, MessageMouseTrap, MessageMouseSetCursor } from "./shared";
 
 const modulePromise = WebAssembly.compileStreaming(fetch(wasmUrl));
 
@@ -507,7 +507,21 @@ const start = async (canvas: OffscreenCanvas) => {
         // Eventually we would like to take advantage of this:
         // https://github.com/WebAssembly/js-promise-integration/blob/main/proposals/js-promise-integration/Overview.md
         // https://v8.dev/blog/jspi
-      }
+      },
+      ImportMouseTrap: (value: boolean) => {
+        const toSend: MessageMouseTrap = {
+          type: "mouseTrap",
+          value
+        };
+        postMessage(toSend);
+      },
+      ImportMouseSetCursor: (cursor: number) => {
+        const toSend: MessageMouseSetCursor = {
+          type: "mouseSetCursor",
+          cursor
+        };
+        postMessage(toSend);
+      },
     }
   };
 
@@ -517,6 +531,19 @@ const start = async (canvas: OffscreenCanvas) => {
 
   const ExportInitialize = instance.exports.ExportInitialize as (argumentsLength: number) => number;
   const ExportRunIteration = instance.exports.ExportRunIteration as () => void;
+  const ExportHandleCrash = instance.exports.ExportHandleCrash as () => void;
+  const ExportMouseMove = instance.exports.ExportMouseMove as (x: number, y: number, dx: number, dy: number) => void;
+  const ExportKeyDown = instance.exports.ExportKeyDown as (key: number, osKey: number, repeated: boolean) => void;
+  const ExportQuit = instance.exports.ExportQuit as () => void;
+console.log("EXPORTS", instance.exports);
+  addEventListener("message", (event: MessageEvent<ToWorkerMessageType>) => {
+    const data = event.data;
+    switch (data.type) {
+      case "mouseMove":
+        ExportMouseMove(data.x, data.y, data.dx, data.dy);
+        break;
+    }
+  });
 
   const decoder = new TextDecoder();
   const encoder = new TextEncoder();
@@ -595,9 +622,10 @@ const start = async (canvas: OffscreenCanvas) => {
 }
 
 addEventListener("message", (event: MessageEvent<ToWorkerMessageType>) => {
-  switch (event.data.type) {
+  const data = event.data;
+  switch (data.type) {
     case "canvas":
-      start(event.data.canvas);
+      start(data.canvas);
       break;
   }
 });

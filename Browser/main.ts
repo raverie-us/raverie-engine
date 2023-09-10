@@ -1,5 +1,5 @@
 import RaverieEngineWorker from "./index.ts?worker";
-import { ToMainMessageType } from "./shared";
+import { MessageCanvas, MessageMouseMove, ToMainMessageType } from "./shared";
 
 const parent = document.createElement("div");
 parent.style.position = "relative";
@@ -15,6 +15,7 @@ const yieldCanvas = document.createElement("canvas");
 yieldCanvas.style.position = "absolute";
 yieldCanvas.style.backgroundColor = "#000";
 yieldCanvas.style.display = "none";
+yieldCanvas.style.pointerEvents = "none";
 yieldCanvas.width = canvas.width;
 yieldCanvas.height = canvas.height;
 canvas.append(yieldCanvas);
@@ -24,18 +25,97 @@ parent.append(canvas);
 parent.append(yieldCanvas);
 document.body.append(parent);
 
+// Keep in sync with Shell.hpp
+enum Cursor {
+  Arrow,
+  Wait,
+  Cross,
+  SizeNWSE,
+  SizeNESW,
+  SizeWE,
+  SizeNS,
+  SizeAll,
+  TextBeam,
+  Hand,
+  Invisible,
+};
+
 const worker = new RaverieEngineWorker();
 worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
-  switch (event.data.type) {
+  const data = event.data;
+  switch (data.type) {
     case "yieldDraw":
-      const data = new ImageData(event.data.pixels, event.data.width, event.data.height);
-      ctx.putImageData(data, 0, 0);
+      const imageData = new ImageData(data.pixels, data.width, data.height);
+      ctx.putImageData(imageData, 0, 0);
       yieldCanvas.style.display = "block";
       break;
     case "yieldComplete":
       yieldCanvas.style.display = "none";
       break;
+    case "mouseTrap":
+      if (data.value) {
+        canvas.requestPointerLock();
+      } else if (document.pointerLockElement === canvas) {
+        document.exitPointerLock();
+      }
+      break;
+    case "mouseSetCursor":
+      switch (data.cursor) {
+        case Cursor.Arrow:
+          canvas.style.cursor = "default";
+          break;
+        case Cursor.Wait:
+          canvas.style.cursor = "wait";
+          break;
+        case Cursor.Cross:
+          canvas.style.cursor = "crosshair";
+          break;
+        case Cursor.SizeNWSE:
+          canvas.style.cursor = "nwse-resize";
+          break;
+        case Cursor.SizeNESW:
+          canvas.style.cursor = "nesw-resize";
+          break;
+        case Cursor.SizeWE:
+          canvas.style.cursor = "ew-resize";
+          break;
+        case Cursor.SizeNS:
+          canvas.style.cursor = "ns-resize";
+          break;
+        case Cursor.SizeAll:
+          canvas.style.cursor = "all-scroll";
+          break;
+        case Cursor.TextBeam:
+          canvas.style.cursor = "text";
+          break;
+        case Cursor.Hand:
+          canvas.style.cursor = "pointer";
+          break;
+        case Cursor.Invisible:
+          canvas.style.cursor = "none";
+          break;
+      }
+      canvas.style.cursor = "";
+      break;
   }
 });
 
-worker.postMessage({canvas: offscreenCanvas, type: 'canvas'}, [offscreenCanvas]);
+const canvasMessage: MessageCanvas = {
+  type: "canvas",
+  canvas: offscreenCanvas
+};
+worker.postMessage(canvasMessage, [offscreenCanvas]);
+
+canvas.addEventListener("mousemove", (event) => {
+  const rect = canvas.getBoundingClientRect();
+  const toSend: MessageMouseMove = {
+    type: "mouseMove",
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top,
+    dx: event.movementX,
+    dy: event.movementY
+  };
+  worker.postMessage(toSend);
+});
+
+

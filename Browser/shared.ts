@@ -3,7 +3,15 @@ export interface MessageCanvas {
   canvas: OffscreenCanvas;
 }
 
-export type ToWorkerMessageType = MessageCanvas;
+export interface MessageMouseMove {
+  type: "mouseMove";
+  x: number;
+  y: number;
+  dx: number;
+  dy: number;
+}
+
+export type ToWorkerMessageType = MessageCanvas | MessageMouseMove;
 
 export interface MessageYieldDraw {
   type: "yieldDraw";
@@ -16,4 +24,14 @@ export interface MessageYieldComplete {
   type: "yieldComplete";
 }
 
-export type ToMainMessageType = MessageYieldDraw | MessageYieldComplete;
+export interface MessageMouseTrap {
+  type: "mouseTrap";
+  value: boolean;
+}
+
+export interface MessageMouseSetCursor {
+  type: "mouseSetCursor";
+  cursor: number;
+}
+
+export type ToMainMessageType = MessageYieldDraw | MessageYieldComplete | MessageMouseTrap | MessageMouseSetCursor;

@@ -174,7 +174,7 @@ enum Enum
 /// named accordingly.
 DeclareEnum6(MouseButtons, Left, Right, Middle, XOneBack, XTwoForward, None);
 
-/// Standard Mouse Cursors
+/// Standard Mouse Cursors (keep in sync with TypeScript/platforms)
 DeclareEnum11(Cursor, Arrow, Wait, Cross, SizeNWSE, SizeNESW, SizeWE, SizeNS, SizeAll, TextBeam, Hand, Invisible);
 
 // Usb Standard Usage Pages
@@ -318,20 +318,11 @@ public:
   /// Get the pixel color at the mouse position.
   ByteColor GetColorAtMouse();
 
-  /// Set a region that the cursor cannot leave (in monitor coordinates).
-  void SetMonitorCursorClip(const IntRect& monitorRectangle);
-
-  /// Release the cursor for being trapped within a clip region.
-  void ClearMonitorCursorClip();
-
   /// Get the current mouse cursor (returns Arrow if the cursor is unknown).
   Cursor::Enum GetMouseCursor();
 
   /// Set a region that the cursor cannot leave.
   void SetMouseCursor(Cursor::Enum cursor);
-
-  void SetMonitorCursorPosition(Math::IntVec2Param monitorPosition);
-  Math::IntVec2 GetMonitorCursorPosition();
 
   /// Checks if a key is down
   bool IsKeyDown(Keys::Enum key);
@@ -564,15 +555,11 @@ public:
 
   void (*mOnMouseDown)(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window);
   void (*mOnMouseUp)(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window);
-  void (*mOnMouseMove)(Math::IntVec2Param clientPosition, ShellWindow* window);
   void (*mOnMouseScrollX)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
   void (*mOnMouseScrollY)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
 
   /// Called when any hardware devices change.
   void (*mOnDevicesChanged)(ShellWindow* window);
-
-  /// Called when a mouse moves (raw input without pointer balistics applied).
-  void (*mOnRawMouseChanged)(Math::IntVec2Param movement, ShellWindow* window);
 
   /// Called when the window is asking if a position should result in dragging
   /// or resizing the window.

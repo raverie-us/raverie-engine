@@ -219,33 +219,9 @@ ByteColor Shell::GetColorAtMouse()
 }
 #endif
 
-#if !defined(ZeroPlatformNoShellSetMonitorCursorClip)
-void Shell::SetMonitorCursorClip(const IntRect& monitorRectangle)
-{
-}
-#endif
-
-#if !defined(ZeroPlatformNoShellClearMonitorCursorClip)
-void Shell::ClearMonitorCursorClip()
-{
-}
-#endif
-
 Cursor::Enum Shell::GetMouseCursor()
 {
   return mCursor;
-}
-
-void Shell::SetMonitorCursorPosition(Math::IntVec2Param monitorPosition)
-{
-  SDL_WarpMouseGlobal(monitorPosition.x, monitorPosition.y);
-}
-
-Math::IntVec2 Shell::GetMonitorCursorPosition()
-{
-  IntVec2 result;
-  SDL_GetGlobalMouseState(&result.x, &result.y);
-  return result;
 }
 
 bool Shell::IsKeyDown(Keys::Enum key)
@@ -575,18 +551,6 @@ void Shell::Update()
         window->mOnMouseUp(IntVec2(e.button.x, e.button.y), SDLToMouseButton(e.button.button), window);
       break;
     }
-    case SDL_MOUSEMOTION:
-    {
-      ShellWindow* window = GetShellWindowFromSDLId(e.motion.windowID);
-      if (window)
-      {
-        if (window->mOnMouseMove)
-          window->mOnMouseMove(IntVec2(e.motion.x, e.motion.y), window);
-        if (window->mOnRawMouseChanged)
-          window->mOnRawMouseChanged(IntVec2(e.motion.xrel, e.motion.yrel), window);
-      }
-      break;
-    }
 
     case SDL_MOUSEWHEEL:
     {
@@ -713,11 +677,9 @@ ShellWindow::ShellWindow(Shell* shell,
     mOnKeyUp(nullptr),
     mOnMouseDown(nullptr),
     mOnMouseUp(nullptr),
-    mOnMouseMove(nullptr),
     mOnMouseScrollY(nullptr),
     mOnMouseScrollX(nullptr),
     mOnDevicesChanged(nullptr),
-    mOnRawMouseChanged(nullptr),
     mOnHitTest(nullptr),
     mOnInputDeviceChanged(nullptr)
 {

@@ -40,26 +40,9 @@ ByteColor Shell::GetColorAtMouse()
   return 0;
 }
 
-void Shell::SetMonitorCursorClip(const IntRect& monitorRectangle)
-{
-}
-
-void Shell::ClearMonitorCursorClip()
-{
-}
-
 Cursor::Enum Shell::GetMouseCursor()
 {
   return mCursor;
-}
-
-void Shell::SetMonitorCursorPosition(Math::IntVec2Param monitorPosition)
-{
-}
-
-Math::IntVec2 Shell::GetMonitorCursorPosition()
-{
-  return IntVec2::cZero;
 }
 
 bool Shell::IsKeyDown(Keys::Enum key)
@@ -131,11 +114,9 @@ ShellWindow::ShellWindow(Shell* shell,
     mOnKeyUp(nullptr),
     mOnMouseDown(nullptr),
     mOnMouseUp(nullptr),
-    mOnMouseMove(nullptr),
     mOnMouseScrollY(nullptr),
     mOnMouseScrollX(nullptr),
     mOnDevicesChanged(nullptr),
-    mOnRawMouseChanged(nullptr),
     mOnInputDeviceChanged(nullptr)
 {
 }

@@ -827,31 +827,13 @@ void RootWidget::OnOsMouseMoved(OsMouseEvent* osMouseEvent)
 
   UpdateMouseButtons(osMouseEvent);
 
-  Vec2 mouseMovement = Vec2::cZero;
-  if (Z::gMouse->GetTrapped())
-  {
-    OsWindow* window = osMouseEvent->Window;
-    if (window)
-      mouseMovement =
-          ToVec2(osMouseEvent->ClientPosition - window->MonitorToClient(window->GetMouseTrapMonitorPosition()));
-  }
-  else
-  {
-    mouseMovement = ToVec2(osMouseEvent->ClientPosition) - Z::gMouse->mClientPosition;
-  }
+  Vec2 mouseMovement = ToVec2(osMouseEvent->ClientPosition) - Z::gMouse->mClientPosition;
 
   Z::gMouse->mClientPosition = ToVec2(osMouseEvent->ClientPosition);
   Z::gMouse->mCursorMovement = mouseMovement;
 
   if (Interaction::DebugMouseEvents)
     ZPrint("Mouse Moved by %f, %f \n", mouseMovement.x, mouseMovement.y);
-
-  // We must update the mScreenPostion above before exiting out
-  // Normally we ignore mouse movements due to the 'mouse trapped' feature
-  // (moving to center over and over) but we need to at least update the mouse's
-  // screen position (which should have moved to the center)
-  if (osMouseEvent->IsMouseAtTrapPosition)
-    return;
 
   // Find the widget the mouse is over
   // this will send MouseExit / MouseEnter and update

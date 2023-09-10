@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
+#include "Foundation/Platform/PlatformCommunication.hpp"
 
 namespace Zero
 {
@@ -27,6 +28,7 @@ DefineEvent(OsWindowBorderHitTest);
 } // namespace Events
 
 const String cOsKeyboardEventsFromState[] = {Events::OsKeyUp, Events::OsKeyDown, Events::OsKeyRepeated};
+OsWindow* OsWindow::sInstance = nullptr;
 
 ZilchDefineType(OsWindow, builder, type)
 {
@@ -71,6 +73,9 @@ OsWindow::OsWindow(OsShell* shell,
     mCustomMouseTrapClientPosition(IntVec2(0, 0)),
     mUseCustomMouseTrapClientPosition(false)
 {
+  ErrorIf(sInstance != nullptr, "We should only have one instance");
+  sInstance = this;
+  
   mWindow.mUserData = this;
 
   mWindow.mOnClose = &ShellWindowOnClose;
@@ -84,11 +89,9 @@ OsWindow::OsWindow(OsShell* shell,
   mWindow.mOnKeyUp = &ShellWindowOnKeyUp;
   mWindow.mOnMouseDown = &ShellWindowOnMouseDown;
   mWindow.mOnMouseUp = &ShellWindowOnMouseUp;
-  mWindow.mOnMouseMove = &ShellWindowOnMouseMove;
   mWindow.mOnMouseScrollY = &ShellWindowOnMouseScrollY;
   mWindow.mOnMouseScrollX = &ShellWindowOnMouseScrollX;
   mWindow.mOnDevicesChanged = &ShellWindowOnDevicesChanged;
-  mWindow.mOnRawMouseChanged = &ShellWindowOnRawMouseChanged;
   mWindow.mOnHitTest = &ShellWindowOnHitTest;
   mWindow.mOnInputDeviceChanged = &ShellWindowOnInputDeviceChanged;
 
@@ -234,19 +237,8 @@ void OsWindow::SetMouseTrap(bool mouseTrapped)
 {
   Shell* shell = mWindow.mShell;
   mMouseTrapped = mouseTrapped;
-  if (mouseTrapped)
-  {
-    // Clip the cursor to the client area
-    IntRect monitorClientRectangle = mWindow.GetMonitorClientRectangle();
-    shell->SetMonitorCursorClip(monitorClientRectangle);
-    shell->SetMouseCursor(Cursor::Invisible);
-  }
-  else
-  {
-    // Remove mouse clipping
-    shell->ClearMonitorCursorClip();
-    shell->SetMouseCursor(Cursor::Arrow);
-  }
+  ImportMouseTrap(mouseTrapped);
+  ImportMouseSetCursor(mouseTrapped ? Cursor::Invisible : Cursor::Arrow);
 }
 
 void OsWindow::SetMouseTrapClientPosition(IntVec2 clientPosition, bool useCustomPosition)
@@ -361,7 +353,6 @@ void OsWindow::FillKeyboardEvent(Keys::Enum key, KeyState::Enum keyState, Keyboa
 void OsWindow::FillMouseEvent(IntVec2Param clientPosition, MouseButtons::Enum mouseButton, OsMouseEvent& mouseEvent)
 {
   Shell* shell = mWindow.mShell;
-  mouseEvent.Window = this;
   mouseEvent.ClientPosition = clientPosition;
   mouseEvent.ScrollMovement = Vec2(0, 0);
   mouseEvent.AltPressed = shell->IsKeyDown(Keys::Alt);
@@ -480,45 +471,16 @@ void OsWindow::ShellWindowOnMouseUp(Math::IntVec2Param clientPosition, MouseButt
   self->SendMouseEvent(mouseEvent, false);
 }
 
-void OsWindow::ShellWindowOnMouseMove(Math::IntVec2Param clientPosition, ShellWindow* window)
-{
-  OsWindow* self = (OsWindow*)window->mUserData;
-
-  Shell* shell = window->mShell;
+void ZeroExportNamed(ExportMouseMove)(int32_t x, int32_t y, int32_t dx, int32_t dy) {
+  IntVec2 clientPosition(x, y);
 
   OsMouseEvent mouseEvent;
-  self->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
+  OsWindow::sInstance->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
   mouseEvent.EventId = Events::OsMouseMove;
 
-  // If the mouse is trapped, move it back to the trap position.
-  // Or, mark that it's already there.
-  if (self->mMouseTrapped)
-  {
-    // Clip the cursor to the client area
-    IntRect monitorClientRectangle = window->GetMonitorClientRectangle();
-    shell->SetMonitorCursorClip(monitorClientRectangle);
-    shell->SetMouseCursor(Cursor::Invisible);
+  OsWindow::sInstance->SendMouseEvent(mouseEvent, false);
 
-    // Set the mouse position to the trap position if it isn't already there.
-    IntVec2 mouseTrapMonitorPosition = self->GetMouseTrapMonitorPosition();
-    IntVec2 cursorMonitorPosition = window->ClientToMonitor(clientPosition);
-    if (cursorMonitorPosition != mouseTrapMonitorPosition)
-    {
-      // The call to clipping the cursor above sets an internal state to ensure
-      // the mouse's position stays inside the client area.  Even if the
-      // position passed into 'SetCursorPos' is outside the client area.
-      window->mShell->SetMonitorCursorPosition(mouseTrapMonitorPosition);
-    }
-    else
-    {
-      mouseEvent.IsMouseAtTrapPosition = true;
-    }
-  }
-
-  self->SendMouseEvent(mouseEvent, false);
-
-  // Constantly set the cursor to the last cursor that was set
-  shell->SetMouseCursor(shell->GetMouseCursor());
+  Z::gMouse->mRawMovement += Vec2(dx, dy);
 }
 
 void OsWindow::ShellWindowOnMouseScrollY(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window)
@@ -556,12 +518,6 @@ void OsWindow::ShellWindowOnDevicesChanged(ShellWindow* window)
   }
 
   Z::gJoysticks->JoysticksChanged();
-}
-
-void OsWindow::ShellWindowOnRawMouseChanged(Math::IntVec2Param movement, ShellWindow* window)
-{
-  OsWindow* self = (OsWindow*)window->mUserData;
-  Z::gMouse->mRawMovement += ToVec2(movement);
 }
 
 WindowBorderArea::Enum OsWindow::ShellWindowOnHitTest(Math::IntVec2Param clientPosition, ShellWindow* window)
@@ -632,14 +588,12 @@ OsMouseEvent::OsMouseEvent()
 
 void OsMouseEvent::Clear()
 {
-  Window = nullptr;
   ClientPosition = IntVec2(0, 0);
   ScrollMovement = Vec2(0, 0);
   ShiftPressed = false;
   AltPressed = false;
   CtrlPressed = false;
   MouseButton = MouseButtons::None;
-  IsMouseAtTrapPosition = false;
   for (uint i = 0; i < MouseButtons::Size; ++i)
     ButtonDown[i] = false;
 }
@@ -652,7 +606,6 @@ void OsMouseEvent::Serialize(Serializer& stream)
   SerializeNameDefault(CtrlPressed, false);
   SerializeNameDefault(ClientPosition, IntVec2::cZero);
   SerializeNameDefault(ScrollMovement, Vec2::cZero);
-  SerializeNameDefault(IsMouseAtTrapPosition, false);
 
   SerializeEnumNameDefault(MouseButtons, MouseButton, MouseButtons::None);
 
