@@ -259,7 +259,7 @@ void ZeroImportNamed(ImportPrintLine)(int32_t fd, const char* str, size_t length
 double ZeroImportNamed(ImportClock)(int32_t clockId);
 void ZeroImportNamed(ImportYield)();
 void ZeroImportNamed(ImportMouseTrap)(bool value);
-void ZeroImportNamed(ImportMouseSetCursor)(int32_t cursor);
+void ZeroImportNamed(ImportMouseSetCursor)(Zero::Cursor::Enum cursor);
 //void (*CaptureMouse)(bool capture);
 
 char* ZeroExportNamed(ExportInitialize)(size_t argumentsLength);

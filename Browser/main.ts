@@ -95,7 +95,6 @@ worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
           canvas.style.cursor = "none";
           break;
       }
-      canvas.style.cursor = "";
       break;
   }
 });

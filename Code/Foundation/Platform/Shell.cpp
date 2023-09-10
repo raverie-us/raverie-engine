@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
+#include "Foundation/Platform/PlatformCommunication.hpp"
 
 namespace Zero
 {
@@ -40,11 +41,6 @@ ByteColor Shell::GetColorAtMouse()
   return 0;
 }
 
-Cursor::Enum Shell::GetMouseCursor()
-{
-  return mCursor;
-}
-
 bool Shell::IsKeyDown(Keys::Enum key)
 {
   return false;
@@ -55,9 +51,15 @@ bool Shell::IsMouseDown(MouseButtons::Enum button)
   return false;
 }
 
+Cursor::Enum Shell::GetMouseCursor()
+{
+  return mCursor;
+}
+
 void Shell::SetMouseCursor(Cursor::Enum cursor)
 {
   mCursor = cursor;
+  ImportMouseSetCursor(cursor);
 }
 
 bool Shell::GetPrimaryMonitorImage(Image* image)
