@@ -510,14 +510,8 @@ void GraphicsEngine::UpdateProgress(ProgressEvent* event)
   // want to do a full render for every single resource that is loaded.
   if (!ThreadingEnabled)
   {
-    static const size_t cProgressUpdateInterval = 10;
-    static size_t sProgressUpdateFrame = 0;
-    if (sProgressUpdateFrame % cProgressUpdateInterval == 0)
-    {
-      ExecuteRendererJob(mShowProgressJob);
-      ImportYield();
-    }
-    ++sProgressUpdateFrame;
+    ExecuteRendererJob(mShowProgressJob);
+    ImportYield();
   }
 }
 
