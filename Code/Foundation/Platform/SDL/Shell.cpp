@@ -219,11 +219,6 @@ ByteColor Shell::GetColorAtMouse()
 }
 #endif
 
-Cursor::Enum Shell::GetMouseCursor()
-{
-  return mCursor;
-}
-
 bool Shell::IsKeyDown(Keys::Enum key)
 {
   int numKeys = 0;
@@ -246,56 +241,6 @@ bool Shell::IsKeyDown(Keys::Enum key)
 bool Shell::IsMouseDown(MouseButtons::Enum button)
 {
   return (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(MouseButtonToSDL(button))) != 0;
-}
-
-void Shell::SetMouseCursor(Cursor::Enum cursor)
-{
-  ZeroGetPrivateData(ShellPrivateData);
-  mCursor = cursor;
-
-  SDL_SystemCursor sdlSystemCursor = SDL_SYSTEM_CURSOR_ARROW;
-
-  switch (cursor)
-  {
-  case Cursor::Arrow:
-    sdlSystemCursor = SDL_SYSTEM_CURSOR_ARROW;
-    break;
-  case Cursor::Wait:
-    sdlSystemCursor = SDL_SYSTEM_CURSOR_WAIT;
-    break;
-  case Cursor::Cross:
-    sdlSystemCursor = SDL_SYSTEM_CURSOR_CROSSHAIR;
-    break;
-  case Cursor::SizeNWSE:
-    sdlSystemCursor = SDL_SYSTEM_CURSOR_SIZENWSE;
-    break;
-  case Cursor::SizeNESW:
-    sdlSystemCursor = SDL_SYSTEM_CURSOR_SIZENESW;
-    break;
-  case Cursor::SizeWE:
-    sdlSystemCursor = SDL_SYSTEM_CURSOR_SIZEWE;
-    break;
-  case Cursor::SizeNS:
-    sdlSystemCursor = SDL_SYSTEM_CURSOR_SIZENS;
-    break;
-  case Cursor::SizeAll:
-    sdlSystemCursor = SDL_SYSTEM_CURSOR_SIZEALL;
-    break;
-  case Cursor::TextBeam:
-    sdlSystemCursor = SDL_SYSTEM_CURSOR_IBEAM;
-    break;
-  case Cursor::Hand:
-    sdlSystemCursor = SDL_SYSTEM_CURSOR_HAND;
-    break;
-  case Cursor::Invisible:
-    sdlSystemCursor = SDL_SYSTEM_CURSOR_CROSSHAIR;
-    break;
-  default:
-    break;
-  }
-
-  SDL_Cursor* sdlCursor = self->mSDLCursors[sdlSystemCursor];
-  SDL_SetCursor(sdlCursor);
 }
 
 bool SDLGetClipboardText(String* out)

@@ -49,7 +49,6 @@ public:
   OsWindow* mActiveWindow;
 
 private:
-  Cursor::Enum mCurrentCursor;
   OsShell* mPlatform;
   Vec2 mClientPosition;
   byte mButtonDown[MouseButtons::Size];

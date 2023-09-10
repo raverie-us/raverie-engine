@@ -260,7 +260,6 @@ double ZeroImportNamed(ImportClock)(int32_t clockId);
 void ZeroImportNamed(ImportYield)();
 void ZeroImportNamed(ImportMouseTrap)(bool value);
 void ZeroImportNamed(ImportMouseSetCursor)(Zero::Cursor::Enum cursor);
-//void (*CaptureMouse)(bool capture);
 
 char* ZeroExportNamed(ExportInitialize)(size_t argumentsLength);
 void ZeroExportNamed(ExportRunIteration)();

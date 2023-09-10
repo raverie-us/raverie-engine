@@ -12,7 +12,6 @@ Mouse* gMouse = nullptr;
 Mouse::Mouse()
 {
   mPlatform = Z::gEngine->has(OsShell);
-  mCurrentCursor = Cursor::Arrow;
   mCursorMovement = Vec2::cZero;
   mClientPosition = Vec2::cZero;
   mRawMovement = Vec2::cZero;
@@ -45,13 +44,12 @@ bool Mouse::IsButtonDown(MouseButtons::Enum button)
 
 Cursor::Enum Mouse::GetCursor()
 {
-  return mCurrentCursor;
+  return Shell::sInstance->GetMouseCursor();
 }
 
 void Mouse::SetCursor(Cursor::Enum cursor)
 {
-  Z::gEngine->has(OsShell)->SetMouseCursor(cursor);
-  mCurrentCursor = cursor;
+  Shell::sInstance->SetMouseCursor(cursor);
 }
 
 bool Mouse::GetTrapped()
