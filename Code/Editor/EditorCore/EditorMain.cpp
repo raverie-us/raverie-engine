@@ -863,7 +863,7 @@ void OnResaveAllResources(Editor* editor)
   }
 }
 
-void ExportHandleCrash()
+void ZeroExportNamed(ExportHandleCrash)()
 {
   // Get the error context printed
   // DoNotifyErrorWithContext("Crashing");

@@ -9,7 +9,7 @@ extern "C" {
 void __wasm_call_ctors();
 }
 
-char* ExportInitialize(size_t argumentsLength) {
+char* ZeroExportNamed(ExportInitialize)(size_t argumentsLength) {
   __wasm_call_ctors();
   startup = new GameOrEditorStartup();
   gCommandLineBuffer = new char[argumentsLength];
@@ -17,7 +17,7 @@ char* ExportInitialize(size_t argumentsLength) {
   return gCommandLineBuffer;
 }
 
-void ExportRunIteration() {
+void ZeroExportNamed(ExportRunIteration)() {
   startup->RunIteration();
 }
 
