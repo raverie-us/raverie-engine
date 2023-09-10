@@ -953,9 +953,6 @@ OpenglRenderer::OpenglRenderer() {
   // WebGL supports this
   mDriverSupport.mSamplerObjects = true;
 
-  // V-Sync off by default
-  zglSetSwapInterval(this, 0);
-
   // No padding
   ImportGlPixelStorei(GL_PACK_ALIGNMENT, 1);
   ImportGlPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -1414,13 +1411,6 @@ void OpenglRenderer::RemoveShaders(Array<ShaderEntry>& entries)
   }
 }
 
-void OpenglRenderer::SetVSync(bool vsync)
-{
-  int swapInterval = vsync ? 1 : 0;
-  zglSetSwapInterval(this, swapInterval);
-  mVsync = vsync;
-}
-
 void OpenglRenderer::GetTextureData(GetTextureDataInfo* info)
 {
   GlTextureRenderData* renderData = (GlTextureRenderData*)info->mRenderData;
@@ -1586,14 +1576,7 @@ void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
   ImportGlDisable(GL_BLEND);
   ImportGlUseProgram(0);
 
-  // Disable v-sync so we don't wait on frames (mostly for single threaded mode)
-  // This could cause tearing, but it's the loading screen.
-  zglSetSwapInterval(this, 0);
-
   zglSwapBuffers(this);
-
-  int swapInterval = mVsync ? 1 : 0;
-  zglSetSwapInterval(this, swapInterval);
 }
 
 GlShader* OpenglRenderer::GetShader(ShaderKey& shaderKey)

@@ -57,11 +57,6 @@ Renderer* CreateRenderer(OsHandle windowHandle, String& error)
   return new OpenglRendererSDL(windowHandle, error);
 }
 
-void zglSetSwapInterval(OpenglRenderer* renderer, int interval)
-{
-  //SDL_GL_SetSwapInterval(interval);
-}
-
 IntVec2 zglGetWindowRenderableSize(OpenglRenderer* renderer)
 {
   // Use a default size just in case the call fails.

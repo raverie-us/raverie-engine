@@ -172,14 +172,6 @@ public:
   Array<ShaderEntry> mShaders;
 };
 
-class SetVSyncJob : public RendererJob
-{
-public:
-  void Execute() override;
-
-  bool mVSync;
-};
-
 class DoRenderTasksJob : public WaitRendererJob
 {
 public:

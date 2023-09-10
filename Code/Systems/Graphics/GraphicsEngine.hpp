@@ -190,7 +190,6 @@ public:
   bool mUpdateRenderGroupCount;
 
   HandleOf<Cog> mProjectCog;
-  bool mVerticalSync;
 
   bool mEngineShutdown;
 

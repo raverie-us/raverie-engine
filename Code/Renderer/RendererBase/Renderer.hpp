@@ -473,8 +473,6 @@ public:
   virtual void AddShaders(Array<ShaderEntry>& entries, uint forceCompileBatchCount) = 0;
   virtual void RemoveShaders(Array<ShaderEntry>& entries) = 0;
 
-  virtual void SetVSync(bool vsync) = 0;
-
   virtual void GetTextureData(GetTextureDataInfo* info) = 0;
 
   virtual void ShowProgress(ShowProgressInfo* info)

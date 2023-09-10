@@ -41,10 +41,6 @@ Renderer* CreateRenderer(OsHandle windowHandle, String& error)
   return new OpenglRendererEmscripten(windowHandle, error);
 }
 
-void zglSetSwapInterval(OpenglRenderer* renderer, int interval)
-{
-}
-
 IntVec2 zglGetWindowRenderableSize(OpenglRenderer* renderer)
 {
   // Use a default size just in case the call fails.

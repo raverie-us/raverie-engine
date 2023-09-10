@@ -9,7 +9,6 @@ namespace Zero
 // only be one implementation of OpenGL per platform, so we can avoid the
 // virtual overhead.
 class OpenglRenderer;
-extern void zglSetSwapInterval(OpenglRenderer* renderer, int interval);
 extern IntVec2 zglGetWindowRenderableSize(OpenglRenderer* renderer);
 extern void zglSwapBuffers(OpenglRenderer* renderer);
 
@@ -101,8 +100,6 @@ public:
 
   GLint GetUniformLocation(GlShader* shader, StringParam name);
 
-  void SetVSync(bool vsync) override;
-
   void GetTextureData(GetTextureDataInfo* info) override;
 
   void ShowProgress(ShowProgressInfo* info) override;
@@ -193,8 +190,6 @@ public:
 
   HashMap<u32, GLuint> mSamplers;
   HashSet<u32> mUnusedSamplers;
-
-  bool mVsync = false;
 };
 
 } // namespace Zero

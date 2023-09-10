@@ -71,10 +71,6 @@ public:
   {
   }
 
-  void SetVSync(bool vsync) override
-  {
-  }
-
   void GetTextureData(GetTextureDataInfo* info) override
   {
   }

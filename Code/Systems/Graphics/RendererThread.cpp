@@ -183,12 +183,6 @@ void RemoveShadersJob::Execute()
   delete this;
 }
 
-void SetVSyncJob::Execute()
-{
-  Z::gRenderer->SetVSync(mVSync);
-  delete this;
-}
-
 void DoRenderTasksJob::Execute()
 {
   Z::gRenderer->DoRenderTasks(mRenderTasks, mRenderQueues);

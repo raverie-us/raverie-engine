@@ -334,14 +334,12 @@ ZilchDefineType(FrameRateSettings, builder, type)
   ZeroBindDocumented();
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindFieldProperty(mVerticalSync);
   ZilchBindFieldProperty(mLimitFrameRate);
   ZilchBindGetterSetterProperty(FrameRate);
 }
 
 void FrameRateSettings::Serialize(Serializer& stream)
 {
-  SerializeNameDefault(mVerticalSync, false);
   SerializeNameDefault(mLimitFrameRate, true);
   SerializeNameDefault(mFrameRate, 60);
 }

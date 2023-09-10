@@ -165,9 +165,6 @@ public:
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
 
-  /// If the frame rate should sync with the monitor's refresh rate, superseded
-  /// by LimitFrameRate.
-  bool mVerticalSync;
   /// If the engine should limit the frame rate.
   bool mLimitFrameRate;
   /// How many frames per second the engine should be limited at.

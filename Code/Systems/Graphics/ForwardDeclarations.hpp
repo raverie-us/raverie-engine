@@ -69,7 +69,6 @@ class SaveImageToFileJob;
 class ScreenViewport;
 class SelectionIcon;
 class SetLazyShaderCompilationJob;
-class SetVSyncJob;
 class ShaderInputsEvent;
 class ShowProgressJob;
 class Skeleton;

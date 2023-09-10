@@ -148,8 +148,6 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
     mRendererThread.Initialize(RendererThreadMain, mRendererJobQueue, "RendererThread");
     ErrorIf(mRendererThread.IsValid() == false, "RendererThread failed to initialize.");
   }
-
-  mVerticalSync = false;
 }
 
 #if defined(RaverieLazyShaderCompositing)
@@ -577,27 +575,10 @@ void GraphicsEngine::OnOsWindowRestored(Event* event)
 
 void GraphicsEngine::OnProjectCogModified(Event* event)
 {
-  if (FrameRateSettings* frameRate = mProjectCog.has(FrameRateSettings))
-    SetVerticalSync(frameRate->mVerticalSync && !frameRate->mLimitFrameRate);
-  else
-    SetVerticalSync(false);
-
   if (DebugSettings* debugSettings = mProjectCog.has(DebugSettings))
     gDebugDraw->SetMaxDebugObjects(debugSettings->GetMaxDebugObjects());
   else
     gDebugDraw->SetMaxDebugObjects();
-}
-
-void GraphicsEngine::SetVerticalSync(bool verticalSync)
-{
-  if (verticalSync == mVerticalSync)
-    return;
-
-  mVerticalSync = verticalSync;
-
-  SetVSyncJob* setVSyncJob = new SetVSyncJob();
-  setVSyncJob->mVSync = mVerticalSync;
-  AddRendererJob(setVSyncJob);
 }
 
 uint GraphicsEngine::GetRenderGroupCount()
