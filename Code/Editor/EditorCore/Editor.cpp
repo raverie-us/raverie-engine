@@ -229,7 +229,6 @@ Editor::Editor(Composite* parent) : MultiDock(parent)
   mFindTextDialog = nullptr;
   mStressTestDialog = nullptr;
   mDesyncWindow = nullptr;
-  mBugReporter = nullptr;
   mCodeTranslatorListener = nullptr;
   mProjectDirectoryWatcher = nullptr;
   mStopGame = false;
@@ -583,16 +582,6 @@ Widget* Editor::HideConsole()
 Widget* Editor::ToggleConsole()
 {
   return mManager->ToggleWidget("Console");
-}
-
-void Editor::ShowMarket()
-{
-  Os::OpenUrl(Urls::cUserMarket);
-}
-
-void Editor::ShowChat()
-{
-  Os::OpenUrl(Urls::cUserChat);
 }
 
 void Editor::SelectTool(StringParam toolName)

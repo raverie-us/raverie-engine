@@ -4,16 +4,6 @@
 namespace Zero
 {
 
-void OpenHelp()
-{
-  Os::OpenUrl(Urls::cUserHelp);
-}
-
-void OpenZeroHub()
-{
-  Os::OpenUrl(Urls::cUserZeroHub);
-}
-
 void OpenDocumentation()
 {
   Os::OpenUrl(Urls::cUserOnlineDocs);
@@ -165,8 +155,6 @@ void BindAppCommands(Cog* config, CommandManager* commands)
     commands->AddCommand("OpenTestWidgets", BindCommandFunction(OpenTestWidgetsCommand));
     commands->AddCommand("CrashEngine", BindCommandFunction(CrashEngine));
   }
-  commands->AddCommand("Help", BindCommandFunction(OpenHelp), true);
-  commands->AddCommand("ZeroHub", BindCommandFunction(OpenZeroHub), true);
   commands->AddCommand("Documentation", BindCommandFunction(OpenDocumentation), true);
 
   commands->AddCommand("CopyPrebuiltContent", BindCommandFunction(CopyPrebuiltContent));

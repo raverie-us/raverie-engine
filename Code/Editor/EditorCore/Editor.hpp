@@ -18,7 +18,6 @@ class CommandManager;
 class UpdateEvent;
 class CommandCaptureContextEvent;
 class DocumentEditor;
-class BugReporter;
 class MainPropertyView;
 class SavingEvent;
 class MainWindow;
@@ -80,8 +79,6 @@ public:
   Widget* ShowConsole();
   Widget* HideConsole();
   Widget* ToggleConsole();
-  void ShowMarket();
-  void ShowChat();
 
   /// Selects a tool with the given name.
   void SelectTool(StringParam toolName);
@@ -145,9 +142,6 @@ public:
   // Commands
   CommandManager* mCommands;
   CogCommandManager* mCogCommands;
-
-  // Bugs
-  BugReporter* mBugReporter;
 
   // Find
   FindTextDialog* mFindTextDialog;

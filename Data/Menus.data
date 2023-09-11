@@ -137,8 +137,7 @@ Menus menus =
 		string Description = "",
 		Array Entries = 
 		[
-		  "Help",
-		  "ReportBug",
+		  "Documentation",
 		  "Commands",
 		  "Divider",
 		  "About",

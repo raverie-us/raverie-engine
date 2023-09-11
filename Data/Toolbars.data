@@ -106,16 +106,4 @@ Menus menus =
 			"DebuggerStepOut",
 		]
 	}
-	
-	Menu =
-	{	
-		string Name = "HelpToolbar",
-		Array Entries = 
-		[
-			"Chat",
-			"Market",
-			"Divider",
-			"ReportBug",
-		]
-	}
 },	

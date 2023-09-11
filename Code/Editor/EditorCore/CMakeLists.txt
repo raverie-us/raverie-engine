@@ -85,8 +85,6 @@ target_sources(EditorCore
     ${CMAKE_CURRENT_LIST_DIR}/BasicGizmos.hpp
     ${CMAKE_CURRENT_LIST_DIR}/BroadPhaseEditor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/BroadPhaseEditor.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/BugReport.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/BugReport.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ClothTools.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ClothTools.hpp
     ${CMAKE_CURRENT_LIST_DIR}/CogCommand.cpp

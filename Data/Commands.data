@@ -412,24 +412,6 @@ Commands commands =
     string IconName = "Console",
     string Tags = "Windows",
   },
-
-	Command =
-	{
-		string Name = "Market",
-		string Description = "Show the Zero Market where you can download content for your projects",
-		string IconName = "Market",
-		string Tags = "Windows",
-		bool ReadOnly = true,
-	},
-
-	Command =
-	{
-		string Name = "Chat",
-		string Description = "A place where users can talk to each other and share content",
-		string IconName = "Chat",
-		string Tags = "Windows",
-		bool ReadOnly = true,
-	},
 	
 	Command =
 	{
@@ -477,15 +459,6 @@ Commands commands =
 		string Description = "Show the Find/Replace Window to replace in all documents",
 		string IconName = "FindReplace",
 		string Shortcut = "Ctrl+Shift+H",
-		string Tags = "Windows",
-		bool ReadOnly = true,
-	},
-
-	Command =
-	{
-		string Name = "ReportBug",
-		string Description = "Report a bug",
-		string IconName = "BugIcon",
 		string Tags = "Windows",
 		bool ReadOnly = true,
 	},

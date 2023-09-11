@@ -109,7 +109,6 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(ManipulatorToolEvent);
   ZilchInitializeType(SelectToolFrustumEvent);
 
-  ZilchInitializeType(BugReporter);
   ZilchInitializeType(MetaPropertyEditor);
   ZilchInitializeType(MetaCompositionWrapper);
   ZilchInitializeType(BackgroundTasks);

@@ -149,7 +149,6 @@ public:
 #include "ObjectView.hpp"
 #include "HotKeyEditor.hpp"
 #include "EditorHotspots.hpp"
-#include "BugReport.hpp"
 #include "BroadPhaseEditor.hpp"
 #include "ScriptEditor.hpp"
 #include "NotificationUi.hpp"

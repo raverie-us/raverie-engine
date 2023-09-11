@@ -8136,31 +8136,6 @@ DocumentationLibrary
 		}
 		Object
 		{
-			var Name = "BugReporter"
-			var BaseClass = "Composite"
-			var Library = "EditorLibrary"
-			var DevOnly = true
-		}
-		Object
-		{
-			var Name = "BugReporterResponse"
-			var BaseClass = "Event"
-			var Library = "EditorLibrary"
-			var Tags = Array
-			{
-				"Event"
-			}
-			var Properties = Array
-			{
-				Property
-				{
-					var Name = "Response"
-					var Type = "String"
-				}
-			}
-		}
-		Object
-		{
 			var Name = "BuilderComponent"
 			var BaseClass = "ContentComponent"
 			var Library = "ContentMetaLibrary"

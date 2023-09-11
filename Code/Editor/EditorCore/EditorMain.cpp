@@ -308,16 +308,6 @@ void EditorMain::HideConsole(CommandEvent* event)
   Editor::HideConsole();
 }
 
-void EditorMain::ShowMarket(CommandEvent* event)
-{
-  Editor::ShowMarket();
-}
-
-void EditorMain::ShowChat(CommandEvent* event)
-{
-  Editor::ShowChat();
-}
-
 void EditorMain::ShowObjects(CommandEvent* event)
 {
   this->ShowWindow("Objects");
@@ -413,15 +403,6 @@ void EditorMain::ShowReplaceAll(CommandEvent* event)
 {
   this->ShowWindow("Find/Replace Text");
   mFindTextDialog->DefaultReplaceAllSettings();
-}
-
-void EditorMain::ShowBugReporter(CommandEvent* event)
-{
-  // For now the window is disabled and we link directly to the github page.
-  // TODO: Fix the bug reporter to actually work with GitHub's API.
-  Os::OpenUrl(Urls::cUserReportIssue);
-  // this->ShowWindow("Bug Reporter");
-  // mBugReporter->Reset();
 }
 
 void EditorMain::EditColorScheme(CommandEvent* event)
@@ -1002,7 +983,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     BindCommand("FindAll", ShowFindAll);
     BindCommand("ReplaceNext", ShowReplaceNext);
     BindCommand("ReplaceAll", ShowReplaceAll);
-    BindCommand("ReportBug", ShowBugReporter);
     BindCommand("Tools", ShowTools);
     BindCommand("Properties", ShowProperties);
     BindCommand("SelectEditorConfig", ShowConfig);
@@ -1011,8 +991,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     BindCommand("Console", ToggleConsole);
     BindCommand("ShowConsole", ShowConsole);
     BindCommand("HideConsole", HideConsole);
-    BindCommand("Market", ShowMarket);
-    BindCommand("Chat", ShowChat);
     BindCommand("Objects", ShowObjects);
     BindCommand("BroadPhaseTracker", ShowBroadPhaseTracker);
     BindCommand("VolumeMeter", ShowVolumeMeter);
@@ -1078,12 +1056,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
       gameToolbar->SetDockMode(DockMode::Enum(DockMode::DockLeft | DockMode::DockRight));
       gameToolbar->LoadMenu("GameToolbar");
 
-      ToolBar* helpToolbar = new ToolBar(toolBarArea);
-      helpToolbar->SetTranslation(Pixels(1856, 0, 0));
-      helpToolbar->SetDockMode(DockMode::DockRight);
-      new BackgroundTaskButton(helpToolbar);
-      helpToolbar->LoadMenu("HelpToolbar");
-
       ToolBar* debuggerToolbar = new ToolBar(toolBarArea);
       debuggerToolbar->SetDockMode(DockMode::DockRight);
       debuggerToolbar->LoadMenu("DebuggerToolbar");
@@ -1126,15 +1098,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     findText->SetHideOnClose(true);
     editorMain->AddManagedWidget(findText, DockArea::Floating, false);
     editorMain->mFindTextDialog = findText;
-  }
-
-  {
-    // Create the bug report dialog
-    BugReporter* dialog = new BugReporter(editorMain);
-    dialog->SetName("Bug Reporter");
-    dialog->SetHideOnClose(true);
-    editorMain->AddManagedWidget(dialog, DockArea::Floating, false);
-    editorMain->mBugReporter = dialog;
   }
 
   {
