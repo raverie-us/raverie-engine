@@ -68,10 +68,14 @@ const start = async (canvas: OffscreenCanvas) => {
       return id;
     }
 
-    public delete(id: number): T {
+    public delete(id: number): T | null {
+      if (id === 0) {
+        return null;
+      }
+
       const value = this.map[id];
       if (!value) {
-        throw new Error("Double delete or attempt to delete invalid id");
+        throw new Error(`Double delete or attempt to delete invalid id: ${id}`);
       }
       delete this.map[id];
       return value;
@@ -252,9 +256,11 @@ const start = async (canvas: OffscreenCanvas) => {
       },
       ImportGlDeleteProgram: (program: GLuint): void => {
         const programWithLocations = programMap.delete(program);
-        gl.deleteProgram(programWithLocations);
-        programWithLocations.locations.clear();
-        delete (programWithLocations as Partial<WebGLProgramWithLocations>).locations;
+        if (programWithLocations) {
+          gl.deleteProgram(programWithLocations);
+          programWithLocations.locations.clear();
+          delete (programWithLocations as Partial<WebGLProgramWithLocations>).locations;
+        }
       },
       ImportGlDeleteSamplers: (count: GLsizei, samplers: GLuintPointer): void => {
         throw new Error("Not implemented");
