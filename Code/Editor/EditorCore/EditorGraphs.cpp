@@ -213,11 +213,9 @@ void EndTracing(Editor* editor)
   ByteBufferBlock block(archive.ComputeZipSize());
   archive.WriteBuffer(block);
 
-  String compressedData((cstr)block.GetBegin(), block.Size());
-
   ProjectSettings* project = Z::gEditor->mProject.has(ProjectSettings);
-  String defaultFileName = BuildString(project->ProjectName, "-", GetTimeAndDateStamp(), ".zip");
-  new SimpleSaveFileDialog(compressedData, "Save a trace", "Trace Zip File", "*.zip", "zip", defaultFileName);
+  String defaultFileName = BuildString("Trace-", project->ProjectName, "-", GetTimeAndDateStamp(), ".zip");
+  Download(defaultFileName, block.GetBlock());
 }
 
 void SetupGraphCommands(Cog* configCog, CommandManager* commands)

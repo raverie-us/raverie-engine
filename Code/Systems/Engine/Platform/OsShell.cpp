@@ -243,41 +243,4 @@ void FileDialogConfig::Callback(Array<String>& files, void* userData)
   delete self;
 }
 
-SimpleSaveFileDialog::SimpleSaveFileDialog(StringParam data,
-                                           StringParam title,
-                                           StringParam filterName,
-                                           StringParam filter,
-                                           StringParam defaultExtension,
-                                           StringParam defaultFileName) :
-    mData(data)
-{
-  if (Os::SupportsDownloadingFiles())
-  {
-    Download(defaultFileName, data);
-    delete this;
-  }
-  else
-  {
-    FileDialogConfig* config = FileDialogConfig::Create();
-    config->CallbackObject = this;
-    config->Title = title;
-    config->AddFilter(filterName, filter);
-    config->DefaultFileName = defaultFileName;
-    config->mDefaultSaveExtension = defaultExtension;
-
-    ConnectThisTo(this, Events::FileDialogComplete, OnFileDialogComplete);
-    Z::gEngine->has(OsShell)->SaveFile(config);
-  }
-}
-
-void SimpleSaveFileDialog::OnFileDialogComplete(OsFileSelection* event)
-{
-  if (event->Success)
-  {
-    String filePath = event->Files[0];
-    WriteStringRangeToFile(filePath, mData);
-  }
-  delete this;
-}
-
 } // namespace Zero

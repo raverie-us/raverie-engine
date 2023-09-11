@@ -126,20 +126,4 @@ private:
   static void Callback(Array<String>& files, void* userData);
 };
 
-class SimpleSaveFileDialog : public SafeId32EventObject
-{
-public:
-  typedef SimpleSaveFileDialog ZilchSelf;
-  SimpleSaveFileDialog(StringParam data,
-                       StringParam title,
-                       StringParam filterName,
-                       StringParam filter,
-                       StringParam defaultExtension,
-                       StringParam defaultFileName);
-
-private:
-  String mData;
-  void OnFileDialogComplete(OsFileSelection* event);
-};
-
 } // namespace Zero
