@@ -83,8 +83,6 @@ OsWindow::OsWindow(OsShell* shell,
   mWindow.mOnMinimized = &ShellWindowOnMinimized;
   mWindow.mOnRestored = &ShellWindowOnRestored;
   mWindow.mOnTextTyped = &ShellWindowOnTextTyped;
-  mWindow.mOnKeyDown = &ShellWindowOnKeyDown;
-  mWindow.mOnKeyUp = &ShellWindowOnKeyUp;
   mWindow.mOnMouseScrollY = &ShellWindowOnMouseScrollY;
   mWindow.mOnMouseScrollX = &ShellWindowOnMouseScrollX;
   mWindow.mOnDevicesChanged = &ShellWindowOnDevicesChanged;
@@ -408,39 +406,19 @@ void OsWindow::ShellWindowOnTextTyped(Rune rune, ShellWindow* window)
   self->SendKeyboardTextEvent(textEvent, false);
 }
 
-void OsWindow::ShellWindowOnKeyDown(Keys::Enum key, uint osKey, bool repeated, ShellWindow* window)
+void ZeroExportNamed(ExportKeyboardButtonChanged)(Zero::Keys::Enum key, Zero::KeyState::Enum state)
 {
-  OsWindow* self = (OsWindow*)window->mUserData;
   KeyboardEvent keyEvent;
-  keyEvent.OsKey = osKey;
-  self->FillKeyboardEvent(key, repeated ? KeyState::Repeated : KeyState::Down, keyEvent);
-  self->SendKeyboardEvent(keyEvent, false);
+  OsWindow::sInstance->FillKeyboardEvent(key, state, keyEvent);
+  OsWindow::sInstance->SendKeyboardEvent(keyEvent, false);
 }
 
-void OsWindow::ShellWindowOnKeyUp(Keys::Enum key, uint osKey, ShellWindow* window)
+void ZeroExportNamed(ExportMouseButtonChanged)(int32_t x, int32_t y, Zero::MouseButtons::Enum button, Zero::MouseState::Enum state)
 {
-  OsWindow* self = (OsWindow*)window->mUserData;
-  KeyboardEvent keyEvent;
-  keyEvent.OsKey = osKey;
-  self->FillKeyboardEvent(key, KeyState::Up, keyEvent);
-  self->SendKeyboardEvent(keyEvent, false);
-}
-
-void ZeroExportNamed(ExportMouseDown)(int32_t x, int32_t y, MouseButtons::Enum button)
-{
-  Shell::sInstance->mMouseState[button] = true;
+  Shell::sInstance->mMouseState[button] = (state == MouseState::Down);
   OsMouseEvent mouseEvent;
   OsWindow::sInstance->FillMouseEvent(IntVec2(x, y), button, mouseEvent);
-  mouseEvent.EventId = Events::OsMouseDown;
-  OsWindow::sInstance->SendMouseEvent(mouseEvent, false);
-}
-
-void ZeroExportNamed(ExportMouseUp)(int32_t x, int32_t y, MouseButtons::Enum button)
-{
-  Shell::sInstance->mMouseState[button] = false;
-  OsMouseEvent mouseEvent;
-  OsWindow::sInstance->FillMouseEvent(IntVec2(x, y), button, mouseEvent);
-  mouseEvent.EventId = Events::OsMouseUp;
+  mouseEvent.EventId = state == MouseState::Down ? Events::OsMouseDown : Events::OsMouseUp;
   OsWindow::sInstance->SendMouseEvent(mouseEvent, false);
 }
 

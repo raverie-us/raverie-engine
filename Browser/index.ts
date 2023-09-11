@@ -1,5 +1,11 @@
 import wasmUrl from "../Build/Active/Code/Editor/RaverieEditor/RaverieEditor.wasm?url";
-import { ToWorkerMessageType, MessageYieldDraw, MessageYieldComplete, MessageMouseTrap, MessageMouseSetCursor } from "./shared";
+import {
+  ToWorkerMessageType,
+  MessageYieldDraw,
+  MessageYieldComplete,
+  MessageMouseTrap,
+  MessageMouseSetCursor
+} from "./shared";
 
 const modulePromise = WebAssembly.compileStreaming(fetch(wasmUrl));
 
@@ -533,9 +539,8 @@ const start = async (canvas: OffscreenCanvas) => {
   const ExportRunIteration = instance.exports.ExportRunIteration as () => void;
   const ExportHandleCrash = instance.exports.ExportHandleCrash as () => void;
   const ExportMouseMove = instance.exports.ExportMouseMove as (x: number, y: number, dx: number, dy: number) => void;
-  const ExportMouseDown = instance.exports.ExportMouseDown as (x: number, y: number, button: number) => void;
-  const ExportMouseUp = instance.exports.ExportMouseUp as (x: number, y: number, button: number) => void;
-  const ExportKeyDown = instance.exports.ExportKeyDown as (key: number, osKey: number, repeated: boolean) => void;
+  const ExportMouseButtonChanged = instance.exports.ExportMouseButtonChanged as (x: number, y: number, button: number, state: number) => void;
+  const ExportKeyboardButtonChanged = instance.exports.ExportKeyboardButtonChanged as (key: number, state: number) => void;
   const ExportQuit = instance.exports.ExportQuit as () => void;
 
   addEventListener("message", (event: MessageEvent<ToWorkerMessageType>) => {
@@ -544,11 +549,11 @@ const start = async (canvas: OffscreenCanvas) => {
       case "mouseMove":
         ExportMouseMove(data.x, data.y, data.dx, data.dy);
         break;
-      case "mouseDown":
-        ExportMouseDown(data.x, data.y, data.button);
+      case "mouseButtonChanged":
+        ExportMouseButtonChanged(data.x, data.y, data.button, data.state);
         break;
-      case "mouseUp":
-        ExportMouseUp(data.x, data.y, data.button);
+      case "keyboardButtonChanged":
+        ExportKeyboardButtonChanged(data.button, data.state);
         break;
     }
   });

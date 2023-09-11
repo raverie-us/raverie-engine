@@ -87,8 +87,6 @@ public:
   byte States[Keys::KeyMax];
 };
 
-DeclareEnum3(KeyState, Up, Down, Repeated);
-
 /// Represents information about key state changes.
 class KeyboardEvent : public Event
 {
@@ -123,9 +121,6 @@ public:
   /// Not for use in native code:
   /// Whether this message was handled by script
   bool HandledEventScript;
-
-  /// The original OS key that was pressed (platform specific)
-  uint OsKey;
 
   /// Keyboard for this event.
   Keyboard* mKeyboard;

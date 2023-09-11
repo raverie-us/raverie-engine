@@ -43,6 +43,8 @@ struct FileDialogInfo
   Array<String> mFiles;
 };
 
+DeclareEnum3(KeyState, Up, Down, Repeated);
+
 extern cstr KeyNames[];
 
 namespace Keys
@@ -173,6 +175,8 @@ enum Enum
 /// As the extra mouse buttons are typically Back and Forward they have been
 /// named accordingly.
 DeclareEnum6(MouseButtons, Left, Right, Middle, XOneBack, XTwoForward, None);
+
+DeclareEnum2(MouseState, Up, Down);
 
 /// Standard Mouse Cursors (keep in sync with TypeScript/platforms)
 DeclareEnum11(Cursor, Arrow, Wait, Cross, SizeNWSE, SizeNESW, SizeWE, SizeNS, SizeAll, TextBeam, Hand, Invisible);
@@ -547,9 +551,6 @@ public:
 
   /// Callback for when a keycode is translated into text.
   void (*mOnTextTyped)(Rune rune, ShellWindow* window);
-
-  /// Callback for when a keyboard key is pressed.
-  void (*mOnKeyDown)(Keys::Enum key, uint osKey, bool repeated, ShellWindow* window);
 
   /// Callback for when a keyboard key is released.
   void (*mOnKeyUp)(Keys::Enum key, uint osKey, ShellWindow* window);

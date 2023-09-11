@@ -1,5 +1,16 @@
 import RaverieEngineWorker from "./index.ts?worker";
-import { Cursor, MessageCanvas, MessageMouseDown, MessageMouseMove, MessageMouseUp, MouseButtons, ToMainMessageType } from "./shared";
+import {
+  Cursor,
+  KeyState,
+  Keys,
+  MessageCanvas,
+  MessageKeyboardButtonChanged,
+  MessageMouseButtonChanged,
+  MessageMouseMove,
+  MouseButtons,
+  MouseState,
+  ToMainMessageType
+} from "./shared";
 
 const parent = document.createElement("div");
 parent.style.position = "relative";
@@ -7,6 +18,7 @@ parent.style.position = "relative";
 const canvas = document.createElement("canvas");
 canvas.style.position = "absolute";
 canvas.style.backgroundColor = "#000";
+canvas.tabIndex = 1;
 canvas.width = 800;
 canvas.height = 600;
 const offscreenCanvas = canvas.transferControlToOffscreen();
@@ -102,26 +114,156 @@ canvas.addEventListener("mousemove", (event) => {
   worker.postMessage(toSend);
 });
 
-canvas.addEventListener("mousedown", (event) => {
+const onMouseButtonChanged = (event: MouseEvent) => {
   const rect = canvas.getBoundingClientRect();
-  const toSend: MessageMouseDown = {
-    type: "mouseDown",
+  const toSend: MessageMouseButtonChanged = {
+    type: "mouseButtonChanged",
     x: event.clientX - rect.left,
     y: event.clientY - rect.top,
     // Button values line up with MouseButtons enum
-    button: event.button as MouseButtons
+    button: event.button as MouseButtons,
+    state: (event.type === "mouseup") ? MouseState.Up : MouseState.Down
   };
   worker.postMessage(toSend);
-});
+};
 
-canvas.addEventListener("mouseup", (event) => {
-  const rect = canvas.getBoundingClientRect();
-  const toSend: MessageMouseUp = {
-    type: "mouseUp",
-    x: event.clientX - rect.left,
-    y: event.clientY - rect.top,
-    // Button values line up with MouseButtons enum
-    button: event.button as MouseButtons
+canvas.addEventListener("mousedown", onMouseButtonChanged);
+canvas.addEventListener("mouseup", onMouseButtonChanged);
+
+const mapKeyboardKey = (code: string) => {
+  switch (code) {
+    case "KeyA": return Keys.A;
+    case "KeyB": return Keys.B;
+    case "KeyC": return Keys.C;
+    case "KeyD": return Keys.D;
+    case "KeyE": return Keys.E;
+    case "KeyF": return Keys.F;
+    case "KeyG": return Keys.G;
+    case "KeyH": return Keys.H;
+    case "KeyI": return Keys.I;
+    case "KeyJ": return Keys.J;
+    case "KeyK": return Keys.K;
+    case "KeyL": return Keys.L;
+    case "KeyM": return Keys.M;
+    case "KeyN": return Keys.N;
+    case "KeyO": return Keys.O;
+    case "KeyP": return Keys.P;
+    case "KeyQ": return Keys.Q;
+    case "KeyR": return Keys.R;
+    case "KeyS": return Keys.S;
+    case "KeyT": return Keys.T;
+    case "KeyU": return Keys.U;
+    case "KeyV": return Keys.V;
+    case "KeyW": return Keys.W;
+    case "KeyY": return Keys.Y;
+    case "KeyX": return Keys.X;
+    case "KeyZ": return Keys.Z;
+
+    case "Space": return Keys.Space;
+
+    case "Digit0": return Keys.Num0;
+    case "Digit1": return Keys.Num1;
+    case "Digit2": return Keys.Num2;
+    case "Digit3": return Keys.Num3;
+    case "Digit4": return Keys.Num4;
+    case "Digit5": return Keys.Num5;
+    case "Digit6": return Keys.Num6;
+    case "Digit7": return Keys.Num7;
+    case "Digit8": return Keys.Num8;
+    case "Digit9": return Keys.Num9;
+
+    case "BracketLeft": return Keys.LeftBracket;
+    case "BracketRight": return Keys.RightBracket;
+    case "Comma": return Keys.Comma;
+
+    case "Period": return Keys.Period;
+    case "Semicolon": return Keys.Semicolon;
+    case "Minus": return Keys.Minus;
+    case "Quote": return Keys.Apostrophe;
+    case "Slash": return Keys.Slash;
+    case "Backslash": return Keys.Backslash;
+
+    case "ArrowUp": return Keys.Up;
+    case "ArrowDown": return Keys.Down;
+    case "ArrowLeft": return Keys.Left;
+    case "ArrowRight": return Keys.Right;
+
+    case "F1": return Keys.F1;
+    case "F2": return Keys.F2;
+    case "F3": return Keys.F3;
+    case "F4": return Keys.F4;
+    case "F5": return Keys.F5;
+    case "F6": return Keys.F6;
+    case "F7": return Keys.F7;
+    case "F8": return Keys.F8;
+    case "F9": return Keys.F9;
+    case "F10": return Keys.F10;
+    case "F11": return Keys.F11;
+    case "F12": return Keys.F12;
+
+    case "Insert": return Keys.Insert;
+    case "Delete": return Keys.Delete;
+    case "Backspace": return Keys.Back;
+    case "Home": return Keys.Home;
+    case "End": return Keys.End;
+    case "Backquote": return Keys.Tilde;
+    case "Tab": return Keys.Tab;
+    case "ShiftLeft": return Keys.Shift;
+    case "ShiftRight": return Keys.Shift;
+    case "AltLeft": return Keys.Alt;
+    case "AltRight": return Keys.Alt;
+    case "ControlLeft": return Keys.Control;
+    case "ControlRight": return Keys.Control;
+    case "CapsLock": return Keys.Capital;
+    case "Enter": return Keys.Enter;
+    case "Escape": return Keys.Escape;
+    case "PageUp": return Keys.PageUp;
+    case "PageDown": return Keys.PageDown;
+    case "Equal": return Keys.Equal;
+
+    // Numpad
+    case "Numpad0": return Keys.NumPad0;
+    case "Numpad1": return Keys.NumPad1;
+    case "Numpad2": return Keys.NumPad2;
+    case "Numpad3": return Keys.NumPad3;
+    case "Numpad4": return Keys.NumPad4;
+    case "Numpad5": return Keys.NumPad5;
+    case "Numpad6": return Keys.NumPad6;
+    case "Numpad7": return Keys.NumPad7;
+    case "Numpad8": return Keys.NumPad8;
+    case "Numpad9": return Keys.NumPad9;
+    case "NumpadAdd": return Keys.Add;
+    case "NumpadMultiply": return Keys.Multiply;
+    case "NumpadSubtract": return Keys.Subtract;
+    case "NumpadDivide": return Keys.Divide;
+    case "NumpadDecimal": return Keys.Decimal;
+
+    default: return Keys.Unknown;
+  }
+};
+
+const onKeyboardButtonChanged = (event: KeyboardEvent) => {
+  let state = KeyState.Up;
+  if (event.type === "keydown") {
+    if (event.repeat) {
+      state = KeyState.Repeated;
+    } else {
+      state = KeyState.Down;
+    }
+  }
+
+  const toSend: MessageKeyboardButtonChanged = {
+    type: "keyboardButtonChanged",
+    button: mapKeyboardKey(event.code),
+    state
   };
+
   worker.postMessage(toSend);
+}
+
+canvas.addEventListener("keydown", onKeyboardButtonChanged);
+canvas.addEventListener("keyup", onKeyboardButtonChanged);
+
+canvas.addEventListener("contextmenu", (event) => {
+  event.preventDefault();
 });

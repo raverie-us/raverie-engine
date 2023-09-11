@@ -28568,11 +28568,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Property
 				{
-					var Name = "OsKey"
-					var Type = "Integer"
-				}
-				Property
-				{
 					var Name = "ShiftPressed"
 					var Type = "Boolean"
 				}

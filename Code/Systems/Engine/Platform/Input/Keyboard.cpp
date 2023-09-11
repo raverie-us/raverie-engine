@@ -384,7 +384,6 @@ ZilchDefineType(KeyboardEvent, builder, type)
   ZilchBindFieldProperty(SpacePressed);
   ZilchBindFieldPropertyAs(HandledEventScript, "HandledEvent");
   ZilchBindGetterProperty(Keyboard);
-  ZilchBindFieldProperty(OsKey);
   ZilchBindGetterProperty(ModifierPressed);
 }
 
@@ -392,7 +391,6 @@ KeyboardEvent::KeyboardEvent()
 {
   Handled = false;
   HandledEventScript = false;
-  OsKey = 0;
 }
 
 void KeyboardEvent::Serialize(Serializer& stream)
@@ -402,7 +400,6 @@ void KeyboardEvent::Serialize(Serializer& stream)
   SerializeNameDefault(AltPressed, false);
   SerializeNameDefault(CtrlPressed, false);
   SerializeNameDefault(SpacePressed, false);
-  SerializeNameDefault(OsKey, 0U);
   stream.SerializeFieldDefault<int>("Key", *(int*)&Key, (int)Keys::Unknown);
 
   SerializeEnumNameDefault(KeyState, State, KeyState::Up);

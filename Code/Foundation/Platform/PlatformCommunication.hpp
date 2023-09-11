@@ -265,9 +265,9 @@ char* ZeroExportNamed(ExportInitialize)(size_t argumentsLength);
 void ZeroExportNamed(ExportRunIteration)();
 void ZeroExportNamed(ExportHandleCrash)();
 void ZeroExportNamed(ExportMouseMove)(int32_t x, int32_t y, int32_t dx, int32_t dy);
-void ZeroExportNamed(ExportMouseDown)(int32_t x, int32_t y, Zero::MouseButtons::Enum button);
+void ZeroExportNamed(ExportMouseButtonChanged)(int32_t x, int32_t y, Zero::MouseButtons::Enum button, Zero::MouseState::Enum state);
 void ZeroExportNamed(ExportMouseUp)(int32_t x, int32_t y, Zero::MouseButtons::Enum button);
-void ZeroExportNamed(ExportKeyDown)(Zero::Keys::Enum key, uint osKey, bool repeated);
+void ZeroExportNamed(ExportKeyboardButtonChanged)(Zero::Keys::Enum key, Zero::KeyState::Enum state);
 void ZeroExportNamed(ExportQuit)();
 
 }
