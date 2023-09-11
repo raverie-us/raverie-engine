@@ -67,8 +67,6 @@ OsWindow::OsWindow(OsShell* shell,
             parentWindow ? &parentWindow->mWindow : nullptr,
             flags,
             state),
-    mOsInputHook(nullptr),
-    mBlockUserInput(false),
     mMouseTrapped(false)
 {
   ErrorIf(sInstance != nullptr, "We should only have one instance");
@@ -247,14 +245,8 @@ void OsWindow::SetProgress(ProgressType::Enum progressType, float progress)
   return mWindow.SetProgress(progressType, progress);
 }
 
-void OsWindow::SendKeyboardEvent(KeyboardEvent& event, bool simulated)
+void OsWindow::SendKeyboardEvent(KeyboardEvent& event)
 {
-  if (mOsInputHook)
-    mOsInputHook->HookKeyboardEvent(event);
-
-  if (mBlockUserInput && !simulated)
-    return;
-
   Keyboard* keyboard = Keyboard::GetInstance();
   keyboard->UpdateKeys(event);
 
@@ -263,48 +255,24 @@ void OsWindow::SendKeyboardEvent(KeyboardEvent& event, bool simulated)
   keyboard->DispatchEvent(cKeyboardEventsFromState[event.State], &event);
 }
 
-void OsWindow::SendKeyboardTextEvent(KeyboardTextEvent& event, bool simulated)
+void OsWindow::SendKeyboardTextEvent(KeyboardTextEvent& event)
 {
-  if (mOsInputHook)
-    mOsInputHook->HookKeyboardTextEvent(event);
-
-  if (mBlockUserInput && !simulated)
-    return;
-
   DispatchEvent(event.EventId, &event);
   Keyboard::GetInstance()->DispatchEvent(Events::TextTyped, &event);
 }
 
-void OsWindow::SendMouseEvent(OsMouseEvent& event, bool simulated)
+void OsWindow::SendMouseEvent(OsMouseEvent& event)
 {
-  if (mOsInputHook)
-    mOsInputHook->HookMouseEvent(event);
-
-  if (mBlockUserInput && !simulated)
-    return;
-
   DispatchEvent(event.EventId, &event);
 }
 
-void OsWindow::SendMouseDropEvent(OsMouseDropEvent& event, bool simulated)
+void OsWindow::SendMouseDropEvent(OsMouseDropEvent& event)
 {
-  if (mOsInputHook)
-    mOsInputHook->HookMouseDropEvent(event);
-
-  if (mBlockUserInput && !simulated)
-    return;
-
   DispatchEvent(event.EventId, &event);
 }
 
-void OsWindow::SendWindowEvent(OsWindowEvent& event, bool simulated)
+void OsWindow::SendWindowEvent(OsWindowEvent& event)
 {
-  if (mOsInputHook)
-    mOsInputHook->HookWindowEvent(event);
-
-  if (mBlockUserInput && !simulated)
-    return;
-
   DispatchEvent(event.EventId, &event);
 }
 
@@ -358,7 +326,7 @@ void OsWindow::ShellWindowOnFocusChanged(bool activated, ShellWindow* window)
     focusEvent.EventId = Events::OsFocusLost;
   }
 
-  self->SendWindowEvent(focusEvent, false);
+  self->SendWindowEvent(focusEvent);
 }
 
 void OsWindow::ShellWindowOnMouseDropFiles(Math::IntVec2Param clientPosition,
@@ -372,7 +340,7 @@ void OsWindow::ShellWindowOnMouseDropFiles(Math::IntVec2Param clientPosition,
   mouseDrop.Files = files;
 
   mouseDrop.EventId = Events::OsMouseFileDrop;
-  self->SendMouseDropEvent(mouseDrop, false);
+  self->SendMouseDropEvent(mouseDrop);
 }
 
 void OsWindow::ShellWindowOnClientSizeChanged(Math::IntVec2Param clientSize, ShellWindow* window)
@@ -401,7 +369,7 @@ void ZeroExportNamed(ExportTextTyped)(uint32_t rune)
 {
   KeyboardTextEvent textEvent(rune);
   textEvent.EventId = Events::OsKeyTyped;
-  OsWindow::sInstance->SendKeyboardTextEvent(textEvent, false);
+  OsWindow::sInstance->SendKeyboardTextEvent(textEvent);
 }
 
 void ZeroExportNamed(ExportKeyboardButtonChanged)(Zero::Keys::Enum key, Zero::KeyState::Enum state)
@@ -409,7 +377,7 @@ void ZeroExportNamed(ExportKeyboardButtonChanged)(Zero::Keys::Enum key, Zero::Ke
   Shell::sInstance->mKeyState[key] = (state == KeyState::Down || state == KeyState::Repeated);
   KeyboardEvent keyEvent;
   OsWindow::sInstance->FillKeyboardEvent(key, state, keyEvent);
-  OsWindow::sInstance->SendKeyboardEvent(keyEvent, false);
+  OsWindow::sInstance->SendKeyboardEvent(keyEvent);
 }
 
 void ZeroExportNamed(ExportMouseButtonChanged)(int32_t x, int32_t y, Zero::MouseButtons::Enum button, Zero::MouseState::Enum state)
@@ -418,7 +386,7 @@ void ZeroExportNamed(ExportMouseButtonChanged)(int32_t x, int32_t y, Zero::Mouse
   OsMouseEvent mouseEvent;
   OsWindow::sInstance->FillMouseEvent(IntVec2(x, y), button, mouseEvent);
   mouseEvent.EventId = state == MouseState::Down ? Events::OsMouseDown : Events::OsMouseUp;
-  OsWindow::sInstance->SendMouseEvent(mouseEvent, false);
+  OsWindow::sInstance->SendMouseEvent(mouseEvent);
 }
 
 void ZeroExportNamed(ExportMouseMove)(int32_t x, int32_t y, int32_t dx, int32_t dy) {
@@ -428,7 +396,7 @@ void ZeroExportNamed(ExportMouseMove)(int32_t x, int32_t y, int32_t dx, int32_t 
   OsWindow::sInstance->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
   mouseEvent.EventId = Events::OsMouseMove;
 
-  OsWindow::sInstance->SendMouseEvent(mouseEvent, false);
+  OsWindow::sInstance->SendMouseEvent(mouseEvent);
 
   Z::gMouse->mRawMovement += Vec2(dx, dy);
 }
@@ -440,7 +408,7 @@ void OsWindow::ShellWindowOnMouseScrollY(Math::IntVec2Param clientPosition, floa
   self->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
   mouseEvent.EventId = Events::OsMouseScroll;
   mouseEvent.ScrollMovement.y = scrollAmount;
-  self->SendMouseEvent(mouseEvent, false);
+  self->SendMouseEvent(mouseEvent);
 }
 
 void OsWindow::ShellWindowOnMouseScrollX(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window)
@@ -450,7 +418,7 @@ void OsWindow::ShellWindowOnMouseScrollX(Math::IntVec2Param clientPosition, floa
   self->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
   mouseEvent.EventId = Events::OsMouseScroll;
   mouseEvent.ScrollMovement.x = scrollAmount;
-  self->SendMouseEvent(mouseEvent, false);
+  self->SendMouseEvent(mouseEvent);
 }
 
 void OsWindow::ShellWindowOnDevicesChanged(ShellWindow* window)
