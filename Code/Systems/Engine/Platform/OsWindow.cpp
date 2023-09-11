@@ -82,7 +82,6 @@ OsWindow::OsWindow(OsShell* shell,
   mWindow.mOnClientSizeChanged = &ShellWindowOnClientSizeChanged;
   mWindow.mOnMinimized = &ShellWindowOnMinimized;
   mWindow.mOnRestored = &ShellWindowOnRestored;
-  mWindow.mOnTextTyped = &ShellWindowOnTextTyped;
   mWindow.mOnMouseScrollY = &ShellWindowOnMouseScrollY;
   mWindow.mOnMouseScrollX = &ShellWindowOnMouseScrollX;
   mWindow.mOnDevicesChanged = &ShellWindowOnDevicesChanged;
@@ -398,12 +397,11 @@ void OsWindow::ShellWindowOnRestored(ShellWindow* window)
   self->DispatchEvent(Events::OsWindowRestored, &event);
 }
 
-void OsWindow::ShellWindowOnTextTyped(Rune rune, ShellWindow* window)
+void ZeroExportNamed(ExportTextTyped)(uint32_t rune)
 {
-  OsWindow* self = (OsWindow*)window->mUserData;
-  KeyboardTextEvent textEvent(rune.value);
+  KeyboardTextEvent textEvent(rune);
   textEvent.EventId = Events::OsKeyTyped;
-  self->SendKeyboardTextEvent(textEvent, false);
+  OsWindow::sInstance->SendKeyboardTextEvent(textEvent, false);
 }
 
 void ZeroExportNamed(ExportKeyboardButtonChanged)(Zero::Keys::Enum key, Zero::KeyState::Enum state)

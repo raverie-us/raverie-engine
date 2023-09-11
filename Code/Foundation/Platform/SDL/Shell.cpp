@@ -427,23 +427,6 @@ void Shell::Update()
       break;
     }
 
-    case SDL_TEXTINPUT:
-    {
-      // Some platforms send SDL_TEXTINPUT even when Control/Alt are down.
-      // In Zero we ignore these because we don't want the events here.
-      if (!IsKeyDown(Keys::Control) && !IsKeyDown(Keys::Alt))
-      {
-        ShellWindow* window = GetShellWindowFromSDLId(e.text.windowID);
-        if (window && window->mOnTextTyped)
-        {
-          String text = e.text.text;
-          forRange (Rune rune, text)
-            window->mOnTextTyped(rune, window);
-        }
-      }
-      break;
-    }
-
     case SDL_KEYDOWN:
     {
       ShellWindow* window = GetShellWindowFromSDLId(e.key.windowID);
@@ -603,9 +586,6 @@ ShellWindow::ShellWindow(Shell* shell,
     mOnClientSizeChanged(nullptr),
     mOnMinimized(nullptr),
     mOnRestored(nullptr),
-    mOnTextTyped(nullptr),
-    mOnKeyDown(nullptr),
-    mOnKeyUp(nullptr),
     mOnMouseDown(nullptr),
     mOnMouseUp(nullptr),
     mOnMouseScrollY(nullptr),

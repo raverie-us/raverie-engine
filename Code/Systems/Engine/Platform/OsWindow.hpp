@@ -167,7 +167,6 @@ public:
   static void ShellWindowOnClientSizeChanged(Math::IntVec2Param clientSize, ShellWindow* window);
   static void ShellWindowOnMinimized(ShellWindow* window);
   static void ShellWindowOnRestored(ShellWindow* window);
-  static void ShellWindowOnTextTyped(Rune rune, ShellWindow* window);
   static void ShellWindowOnMouseMove(Math::IntVec2Param clientPosition, ShellWindow* window);
   static void ShellWindowOnMouseScrollY(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
   static void ShellWindowOnMouseScrollX(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);

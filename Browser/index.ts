@@ -540,6 +540,7 @@ const start = async (canvas: OffscreenCanvas) => {
   const ExportHandleCrash = instance.exports.ExportHandleCrash as () => void;
   const ExportMouseMove = instance.exports.ExportMouseMove as (x: number, y: number, dx: number, dy: number) => void;
   const ExportMouseButtonChanged = instance.exports.ExportMouseButtonChanged as (x: number, y: number, button: number, state: number) => void;
+  const ExportTextTyped = instance.exports.ExportTextTyped as (rune: number) => void;
   const ExportKeyboardButtonChanged = instance.exports.ExportKeyboardButtonChanged as (key: number, state: number) => void;
   const ExportQuit = instance.exports.ExportQuit as () => void;
 
@@ -554,6 +555,9 @@ const start = async (canvas: OffscreenCanvas) => {
         break;
       case "keyboardButtonChanged":
         ExportKeyboardButtonChanged(data.button, data.state);
+        break;
+      case "textTyped":
+        ExportTextTyped(data.rune);
         break;
     }
   });

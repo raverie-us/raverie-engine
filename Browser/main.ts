@@ -7,6 +7,7 @@ import {
   MessageKeyboardButtonChanged,
   MessageMouseButtonChanged,
   MessageMouseMove,
+  MessageTextTyped,
   MouseButtons,
   MouseState,
   ToMainMessageType
@@ -243,6 +244,11 @@ const mapKeyboardKey = (code: string) => {
 };
 
 const onKeyboardButtonChanged = (event: KeyboardEvent) => {
+  // Ideally we'd prevent all default browser behavior, but doing so supresses events like keypress
+  if (event.code === "Tab" || /^F[0-9]{1,2}$/.test(event.code)) {
+    event.preventDefault();
+  }
+
   let state = KeyState.Up;
   if (event.type === "keydown") {
     if (event.repeat) {
@@ -263,6 +269,18 @@ const onKeyboardButtonChanged = (event: KeyboardEvent) => {
 
 canvas.addEventListener("keydown", onKeyboardButtonChanged);
 canvas.addEventListener("keyup", onKeyboardButtonChanged);
+
+// TODO(trevor): Long term, the engine should tell us when we focus on a text field, what the text is,
+// and what position the cursor is at. We can then create an invisible text input, set the text,
+// and change to the correct position so that we can get auto-complete and proper mobile support.
+canvas.addEventListener("keypress", (event) => {
+  const toSend: MessageTextTyped = {
+    type: "textTyped",
+    rune: event.charCode
+  };
+
+  worker.postMessage(toSend);
+});
 
 canvas.addEventListener("contextmenu", (event) => {
   event.preventDefault();

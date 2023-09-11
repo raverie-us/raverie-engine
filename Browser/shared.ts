@@ -176,7 +176,17 @@ export interface MessageKeyboardButtonChanged {
   state: KeyState;
 }
 
-export type ToWorkerMessageType = MessageCanvas | MessageMouseMove | MessageMouseButtonChanged | MessageKeyboardButtonChanged;
+export interface MessageTextTyped {
+  type: "textTyped";
+  rune: number;
+}
+
+export type ToWorkerMessageType =
+  MessageCanvas |
+  MessageMouseMove |
+  MessageMouseButtonChanged |
+  MessageKeyboardButtonChanged |
+  MessageTextTyped;
 
 export interface MessageYieldDraw {
   type: "yieldDraw";
@@ -199,4 +209,8 @@ export interface MessageMouseSetCursor {
   cursor: Cursor;
 }
 
-export type ToMainMessageType = MessageYieldDraw | MessageYieldComplete | MessageMouseTrap | MessageMouseSetCursor;
+export type ToMainMessageType =
+  MessageYieldDraw |
+  MessageYieldComplete |
+  MessageMouseTrap |
+  MessageMouseSetCursor;

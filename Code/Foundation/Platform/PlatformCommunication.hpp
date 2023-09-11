@@ -268,6 +268,7 @@ void ZeroExportNamed(ExportMouseMove)(int32_t x, int32_t y, int32_t dx, int32_t 
 void ZeroExportNamed(ExportMouseButtonChanged)(int32_t x, int32_t y, Zero::MouseButtons::Enum button, Zero::MouseState::Enum state);
 void ZeroExportNamed(ExportMouseUp)(int32_t x, int32_t y, Zero::MouseButtons::Enum button);
 void ZeroExportNamed(ExportKeyboardButtonChanged)(Zero::Keys::Enum key, Zero::KeyState::Enum state);
+void ZeroExportNamed(ExportTextTyped)(uint32_t rune);
 void ZeroExportNamed(ExportQuit)();
 
 }

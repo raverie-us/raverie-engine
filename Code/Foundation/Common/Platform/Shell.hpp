@@ -549,12 +549,6 @@ public:
   void (*mOnMinimized)(ShellWindow* window);
   void (*mOnRestored)(ShellWindow* window);
 
-  /// Callback for when a keycode is translated into text.
-  void (*mOnTextTyped)(Rune rune, ShellWindow* window);
-
-  /// Callback for when a keyboard key is released.
-  void (*mOnKeyUp)(Keys::Enum key, uint osKey, ShellWindow* window);
-
   void (*mOnMouseScrollX)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
   void (*mOnMouseScrollY)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
 
