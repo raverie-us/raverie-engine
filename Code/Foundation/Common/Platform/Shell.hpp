@@ -5,7 +5,7 @@ namespace Zero
 {
 DeclareBitField2(FileDialogFlags, MultiSelect, Folder);
 
-static const IntVec2 cMinimumMonitorSize(800, 600);
+static const IntVec2 cMinimumMonitorSize(1024, 768);
 
 struct FileDialogFilter
 {

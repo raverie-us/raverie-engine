@@ -19,8 +19,8 @@ const canvas = document.createElement("canvas");
 canvas.style.position = "absolute";
 canvas.style.backgroundColor = "#000";
 canvas.tabIndex = 1;
-canvas.width = 800;
-canvas.height = 600;
+canvas.width = 1024;
+canvas.height = 768;
 const offscreenCanvas = canvas.transferControlToOffscreen();
 
 const yieldCanvas = document.createElement("canvas");
