@@ -1,19 +1,29 @@
 /* eslint-disable max-lines */
 // MIT Licensed (see LICENSE.md).
-const execa = require("execa");
-const path = require("path");
-const mkdirp = require("mkdirp");
-const fs = require("fs");
-const glob = require("glob");
-const rimraf = require("rimraf");
-const commandExists = require("command-exists").sync;
-const yargs = require("yargs");
-const findUp = require("find-up");
+import path from "path";
+import {mkdirp} from "mkdirp";
+import fs from "fs";
+import {glob} from "glob";
+import {rimraf} from "rimraf";
+import commandExists from "command-exists";
+import yargs from "yargs";
+import execa from "execa";
 
 const repoRootFile = ".raverie";
 
+type TextLineFunction = (line: string) => void;
+interface ExecOptions extends execa.Options {
+  err?: TextLineFunction;
+  out?: TextLineFunction;
+}
+
 const dirs = (() => {
-  const repo = path.dirname(findUp.sync(repoRootFile));
+  let repoRoot = path.join(process.cwd(), repoRootFile);
+  while (!fs.existsSync(repoRoot)) {
+    repoRoot = path.join(path.dirname(repoRoot), repoRootFile);
+  }
+
+  const repo = path.dirname(repoRoot);
   const libraries = path.join(repo, "Code");
   const resources = path.join(repo, "Resources");
   const build = path.join(repo, "Build");
@@ -61,7 +71,7 @@ const executables = [
 ];
 
 const printSizes = (dir) => {
-  let list = [];
+  let list: string[] = [];
   try {
     list = fs.readdirSync(dir);
   } catch (err) {
@@ -70,7 +80,7 @@ const printSizes = (dir) => {
   let size = 0;
   list.forEach((fileName) => {
     const file = path.join(dir, fileName);
-    let stat = null;
+    let stat: fs.Stats | null = null;
     try {
       stat = fs.statSync(file);
     } catch (err) {
@@ -99,17 +109,17 @@ const tryUnlinkSync = (fullPath) => {
   }
 };
 
-const printIndentedLine = (line, symbol) => {
+const printIndentedLine = (line: string, symbol: string) => {
   const indent = " ".repeat(4);
   console.log(indent + symbol + line);
 };
 
-const printErrorLine = (line) => {
+const printErrorLine = (line: string) => {
   printIndentedLine(line, "- ");
   process.exitCode = 1;
 };
 
-const printLogLine = (line) => {
+const printLogLine = (line: string) => {
   printIndentedLine(line, "+ ");
 };
 
@@ -141,18 +151,20 @@ const ensureCommandExists = (command) => {
   return true;
 };
 
-const exec = async (executable, args, options) => {
+const exec = async (executable: string, args: string[], options: ExecOptions) => {
   const result = execa(executable, args, options);
-  const readData = (optionsFunc, name) => {
-    const strName = `${name}Str`;
-    result[strName] = "";
+  const textResults = {
+    stdout: "",
+    stderr: "",
+  }
+  const readData = (optionsFunc: TextLineFunction, name: "stdout" | "stderr") => {
     if (result[name]) {
       result[name].on("data", (data) => {
         const str = data.toString();
         if (optionsFunc) {
           parseLines(str, optionsFunc);
         }
-        result[strName] += str;
+        textResults[name] += str;
       });
     }
   };
@@ -161,8 +173,8 @@ const exec = async (executable, args, options) => {
   const final = await result;
   return {
     failed: final.failed,
-    stderr: result.stderrStr,
-    stdout: result.stdoutStr
+    stderr: textResults.stderr,
+    stdout: textResults.stdout
   };
 };
 
@@ -172,8 +184,8 @@ const clearCreateDirectory = (directory) => {
 };
 
 // If this fails, it returns an empty string, otherwise it returns trimmed stdout.
-const execSimple = async (...args) => {
-  const result = await exec(...args);
+const execSimple = async (executable: string, args: string[], options: ExecOptions) => {
+  const result = await exec(executable, args, options);
   if (result.failed) {
     return "";
   }
@@ -188,7 +200,7 @@ const zipAdd = async (cwd, outputZip, files) => {
   if (files.length === 0) {
     return;
   }
-  const options = {
+  const options: ExecOptions = {
     cwd,
     err: printErrorLine,
     out: printLogLine,
@@ -211,7 +223,7 @@ const zipAdd = async (cwd, outputZip, files) => {
 };
 
 const zipExtract = async (zipFile, outDir) => {
-  const options = {
+  const options: ExecOptions = {
     err: printErrorLine,
     out: printLogLine,
     reject: false,
@@ -245,7 +257,7 @@ const gatherSourceFiles = (directory, extensions) => {
 
 const runEslint = async (options) => {
   console.log("Running Eslint");
-  const eslintOptions = {
+  const eslintOptions: ExecOptions = {
     cwd: dirs.repo,
     err: options.validate ? printErrorLine : printLogLine,
     out: options.validate ? printErrorLine : printLogLine,
@@ -276,7 +288,7 @@ const runClangTidy = async (options, sourceFiles) => {
   }
 
   // Run clang-tidy.
-  const clangTidyOptions = {
+  const clangTidyOptions: ExecOptions = {
     cwd: dirs.libraries,
     reject: false,
     // We only ignore stderr because it prints 'unable to find compile_commands.json'.
@@ -322,7 +334,7 @@ const runClangFormat = async (options, sourceFiles) => {
     return;
   }
 
-  const clangFormatOptions = {
+  const clangFormatOptions: ExecOptions = {
     cwd: dirs.libraries,
     reject: false,
     stdio: [
@@ -330,7 +342,6 @@ const runClangFormat = async (options, sourceFiles) => {
       "pipe",
       "ignore"
     ],
-    stripEof: false,
     stripFinalNewline: false
   };
 
@@ -428,7 +439,7 @@ const activateBuildDir = (combo) => {
   return comboDir;
 };
 
-const readCmakeVariables = (buildDir) => {
+const readCmakeVariables = (buildDir: string): Record<string, string> => {
   const cmakeCachePath = path.join(buildDir, "CMakeCache.txt");
   const contents = fs.readFileSync(cmakeCachePath, "utf8");
   const regex = /(?<name>[a-zA-Z0-9_-]+):UNINITIALIZED=(?<value>.*)/gu;
@@ -510,7 +521,7 @@ const cmake = async (options) => {
     return null;
   }
 
-  const gitOptions = {
+  const gitOptions: ExecOptions = {
     cwd: dirs.repo,
     err: printErrorLine,
     reject: false,
@@ -586,7 +597,7 @@ const cmake = async (options) => {
 
   await buildvfs(null, buildDir, combo);
 
-  const cmakeOptions = {
+  const cmakeOptions: ExecOptions = {
     cwd: buildDir,
     err: printErrorLine,
     out: printLogLine,
@@ -598,8 +609,6 @@ const cmake = async (options) => {
     ]
   };
   await exec("cmake", cmakeArgs, cmakeOptions);
-
-  return buildDir;
 };
 
 const preventNoOutputTimeout = () => {
@@ -643,7 +652,7 @@ const build = async (options) => {
   const cmakeVariables = readCmakeVariables(buildDir);
   await buildvfs(cmakeVariables, buildDir, combo);
 
-  const opts = {
+  const opts: ExecOptions = {
     cwd: buildDir,
     err: printErrorLine,
     out: (line) => {
@@ -691,7 +700,7 @@ const executeBuiltProcess = async (buildDir, combo, libraryDir, library, args) =
     return [];
   }
 
-  const opts = {
+  const opts: ExecOptions = {
     cwd: buildDir,
     err: printLogLine,
     out: printLogLine,
@@ -788,7 +797,6 @@ const pack = async (options) => {
       `${cmakeVariables.RAVERIE_REVISION}.` +
       `${cmakeVariables.RAVERIE_SHORT_CHANGESET}.` +
       `${cmakeVariables.RAVERIE_MS_SINCE_EPOCH}.` +
-      `${combo.alias}.` +
       `${cmakeVariables.RAVERIE_CONFIG}.zip`;
 
     const packageZip = path.join(dirs.packages, name);
@@ -821,14 +829,7 @@ const pack = async (options) => {
 
 const deploy = async () => {
   console.log("Deploying");
-
-  if (fs.existsSync(dirs.page)) {
-    await execa("npm", [
-      "run",
-      "deploy-gh-pages"
-    ]);
-  }
-
+  // Does nothing yet
   console.log("Deployed");
 };
 
@@ -837,7 +838,7 @@ const documentation = async () => {
   if (!ensureCommandExists("doxygen")) {
     return;
   }
-  const doxygenOptions = {
+  const doxygenOptions: ExecOptions = {
     cwd: dirs.repo,
     err: printErrorLine,
     out: printLogLine,
@@ -881,7 +882,7 @@ const all = async (options) => {
 const main = async () => {
   const empty = {
   };
-  const comboOptions = "[--alias=...]  [--config] [--vfs=true|false]";
+  const comboOptions = "[--config] [--vfs=true|false]";
   // eslint-disable-next-line
     yargs.
     command("disk", "Print the approximate size of every directory on disk", empty, disk).
