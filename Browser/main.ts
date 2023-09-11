@@ -26,13 +26,13 @@ const offscreenCanvas = canvas.transferControlToOffscreen();
 
 const yieldCanvas = document.createElement("canvas");
 yieldCanvas.style.position = "absolute";
-yieldCanvas.style.backgroundColor = "#000";
+yieldCanvas.style.backgroundColor = "transparent";
 yieldCanvas.style.display = "none";
 yieldCanvas.style.pointerEvents = "none";
 yieldCanvas.width = canvas.width;
 yieldCanvas.height = canvas.height;
 canvas.append(yieldCanvas);
-const ctx = yieldCanvas.getContext("2d")!;
+const yieldContext = yieldCanvas.getContext("2d")!;
 
 parent.append(canvas);
 parent.append(yieldCanvas);
@@ -44,7 +44,7 @@ worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
   switch (data.type) {
     case "yieldDraw":
       const imageData = new ImageData(data.pixels, data.width, data.height);
-      ctx.putImageData(imageData, 0, 0);
+      yieldContext.putImageData(imageData, 0, 0);
       yieldCanvas.style.display = "block";
       break;
     case "yieldComplete":

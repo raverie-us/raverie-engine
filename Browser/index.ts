@@ -633,6 +633,7 @@ const start = async (canvas: OffscreenCanvas) => {
       yieldedThisFrame = false;
       mustSendYieldComplete = true;
     } else if (mustSendYieldComplete) {
+      mustSendYieldComplete = false;
       // We only send yield complete when we complete an entire frame without yielding
       const toSend: MessageYieldComplete = {
         type: "yieldComplete"

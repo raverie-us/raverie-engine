@@ -210,6 +210,8 @@ public:
   RendererJobQueue* mReturnJobQueue;
   ShowProgressJob* mShowProgressJob;
 
+  uint mProgressCounter = 0;
+
   // Shader building
   ShaderMap mCompositeShaders;
   ShaderMap mPostProcessShaders;

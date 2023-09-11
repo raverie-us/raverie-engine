@@ -459,6 +459,8 @@ void GraphicsEngine::StartProgress(Event* event)
   if (loadingTexture == nullptr || logoTexture == nullptr || whiteTexture == nullptr || splashTexture == nullptr)
     return;
 
+  mProgressCounter = 0;
+
   mShowProgressJob->Lock();
   mShowProgressJob->mLoadingTexture = loadingTexture->mRenderData;
   mShowProgressJob->mLogoTexture = logoTexture->mRenderData;
@@ -508,8 +510,15 @@ void GraphicsEngine::UpdateProgress(ProgressEvent* event)
   // want to do a full render for every single resource that is loaded.
   if (!ThreadingEnabled)
   {
-    ExecuteRendererJob(mShowProgressJob);
-    ImportYield();
+    // This prevents us from drawing for every single update, but also delays
+    // showing the loading screen which can prevent a flicker for fast loads
+    static const size_t cProgressUpdateInterval = 5;
+    if (mProgressCounter % cProgressUpdateInterval == (cProgressUpdateInterval - 1))
+    {
+      ExecuteRendererJob(mShowProgressJob);
+      ImportYield();
+    }
+    ++mProgressCounter;
   }
 }
 
