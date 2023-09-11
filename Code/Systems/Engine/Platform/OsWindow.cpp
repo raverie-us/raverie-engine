@@ -406,6 +406,7 @@ void ZeroExportNamed(ExportTextTyped)(uint32_t rune)
 
 void ZeroExportNamed(ExportKeyboardButtonChanged)(Zero::Keys::Enum key, Zero::KeyState::Enum state)
 {
+  Shell::sInstance->mKeyState[key] = (state == KeyState::Down || state == KeyState::Repeated);
   KeyboardEvent keyEvent;
   OsWindow::sInstance->FillKeyboardEvent(key, state, keyEvent);
   OsWindow::sInstance->SendKeyboardEvent(keyEvent, false);

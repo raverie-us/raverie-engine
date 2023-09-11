@@ -359,6 +359,7 @@ public:
   /// The current cursor (defaults to Arrow).
   Cursor::Enum mCursor;
   bool mMouseState[MouseButtons::Size] = {false};
+  bool mKeyState[Keys::Size] = {false};
 
   /// A window whose flag is passed as 'MainWindow' (there is only one allowed)
   ShellWindow* mMainWindow;

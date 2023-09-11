@@ -43,7 +43,7 @@ ByteColor Shell::GetColorAtMouse()
 
 bool Shell::IsKeyDown(Keys::Enum key)
 {
-  return false;
+  return mKeyState[key];
 }
 
 bool Shell::IsMouseDown(MouseButtons::Enum button)
