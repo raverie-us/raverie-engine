@@ -1,3 +1,28 @@
+// Keep in sync with Shell.hpp
+export enum Cursor {
+  Arrow,
+  Wait,
+  Cross,
+  SizeNWSE,
+  SizeNESW,
+  SizeWE,
+  SizeNS,
+  SizeAll,
+  TextBeam,
+  Hand,
+  Invisible,
+};
+
+// Keep in sync with Shell.hpp
+export enum MouseButtons {
+  Left,
+  Right,
+  Middle,
+  XOneBack,
+  XTwoForward,
+  None
+}
+
 export interface MessageCanvas {
   type: "canvas";
   canvas: OffscreenCanvas;
@@ -11,7 +36,21 @@ export interface MessageMouseMove {
   dy: number;
 }
 
-export type ToWorkerMessageType = MessageCanvas | MessageMouseMove;
+export interface MessageMouseDown {
+  type: "mouseDown";
+  x: number;
+  y: number;
+  button: MouseButtons;
+}
+
+export interface MessageMouseUp {
+  type: "mouseUp";
+  x: number;
+  y: number;
+  button: MouseButtons;
+}
+
+export type ToWorkerMessageType = MessageCanvas | MessageMouseMove | MessageMouseDown | MessageMouseUp;
 
 export interface MessageYieldDraw {
   type: "yieldDraw";
@@ -31,7 +70,7 @@ export interface MessageMouseTrap {
 
 export interface MessageMouseSetCursor {
   type: "mouseSetCursor";
-  cursor: number;
+  cursor: Cursor;
 }
 
 export type ToMainMessageType = MessageYieldDraw | MessageYieldComplete | MessageMouseTrap | MessageMouseSetCursor;

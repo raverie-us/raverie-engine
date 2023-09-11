@@ -1,5 +1,5 @@
 import RaverieEngineWorker from "./index.ts?worker";
-import { MessageCanvas, MessageMouseMove, ToMainMessageType } from "./shared";
+import { Cursor, MessageCanvas, MessageMouseDown, MessageMouseMove, MessageMouseUp, MouseButtons, ToMainMessageType } from "./shared";
 
 const parent = document.createElement("div");
 parent.style.position = "relative";
@@ -24,21 +24,6 @@ const ctx = yieldCanvas.getContext("2d")!;
 parent.append(canvas);
 parent.append(yieldCanvas);
 document.body.append(parent);
-
-// Keep in sync with Shell.hpp
-enum Cursor {
-  Arrow,
-  Wait,
-  Cross,
-  SizeNWSE,
-  SizeNESW,
-  SizeWE,
-  SizeNS,
-  SizeAll,
-  TextBeam,
-  Hand,
-  Invisible,
-};
 
 const worker = new RaverieEngineWorker();
 worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
@@ -117,4 +102,26 @@ canvas.addEventListener("mousemove", (event) => {
   worker.postMessage(toSend);
 });
 
+canvas.addEventListener("mousedown", (event) => {
+  const rect = canvas.getBoundingClientRect();
+  const toSend: MessageMouseDown = {
+    type: "mouseDown",
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top,
+    // Button values line up with MouseButtons enum
+    button: event.button as MouseButtons
+  };
+  worker.postMessage(toSend);
+});
 
+canvas.addEventListener("mouseup", (event) => {
+  const rect = canvas.getBoundingClientRect();
+  const toSend: MessageMouseUp = {
+    type: "mouseUp",
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top,
+    // Button values line up with MouseButtons enum
+    button: event.button as MouseButtons
+  };
+  worker.postMessage(toSend);
+});

@@ -354,6 +354,7 @@ public:
 
   /// The current cursor (defaults to Arrow).
   Cursor::Enum mCursor;
+  bool mMouseState[MouseButtons::Size] = {false};
 
   /// A window whose flag is passed as 'MainWindow' (there is only one allowed)
   ShellWindow* mMainWindow;
@@ -553,8 +554,6 @@ public:
   /// Callback for when a keyboard key is released.
   void (*mOnKeyUp)(Keys::Enum key, uint osKey, ShellWindow* window);
 
-  void (*mOnMouseDown)(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window);
-  void (*mOnMouseUp)(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window);
   void (*mOnMouseScrollX)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
   void (*mOnMouseScrollY)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
 

@@ -533,14 +533,22 @@ const start = async (canvas: OffscreenCanvas) => {
   const ExportRunIteration = instance.exports.ExportRunIteration as () => void;
   const ExportHandleCrash = instance.exports.ExportHandleCrash as () => void;
   const ExportMouseMove = instance.exports.ExportMouseMove as (x: number, y: number, dx: number, dy: number) => void;
+  const ExportMouseDown = instance.exports.ExportMouseDown as (x: number, y: number, button: number) => void;
+  const ExportMouseUp = instance.exports.ExportMouseUp as (x: number, y: number, button: number) => void;
   const ExportKeyDown = instance.exports.ExportKeyDown as (key: number, osKey: number, repeated: boolean) => void;
   const ExportQuit = instance.exports.ExportQuit as () => void;
-console.log("EXPORTS", instance.exports);
+
   addEventListener("message", (event: MessageEvent<ToWorkerMessageType>) => {
     const data = event.data;
     switch (data.type) {
       case "mouseMove":
         ExportMouseMove(data.x, data.y, data.dx, data.dy);
+        break;
+      case "mouseDown":
+        ExportMouseDown(data.x, data.y, data.button);
+        break;
+      case "mouseUp":
+        ExportMouseUp(data.x, data.y, data.button);
         break;
     }
   });

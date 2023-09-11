@@ -48,7 +48,7 @@ bool Shell::IsKeyDown(Keys::Enum key)
 
 bool Shell::IsMouseDown(MouseButtons::Enum button)
 {
-  return false;
+  return mMouseState[button];
 }
 
 Cursor::Enum Shell::GetMouseCursor()
@@ -114,8 +114,6 @@ ShellWindow::ShellWindow(Shell* shell,
     mOnTextTyped(nullptr),
     mOnKeyDown(nullptr),
     mOnKeyUp(nullptr),
-    mOnMouseDown(nullptr),
-    mOnMouseUp(nullptr),
     mOnMouseScrollY(nullptr),
     mOnMouseScrollX(nullptr),
     mOnDevicesChanged(nullptr),

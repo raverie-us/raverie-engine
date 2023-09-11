@@ -482,20 +482,6 @@ void Shell::Update()
         window->mOnKeyUp(SDLKeycodeToKey(e.key.keysym.sym), e.key.keysym.scancode, window);
       break;
     }
-    case SDL_MOUSEBUTTONDOWN:
-    {
-      ShellWindow* window = GetShellWindowFromSDLId(e.button.windowID);
-      if (window && window->mOnMouseDown)
-        window->mOnMouseDown(IntVec2(e.button.x, e.button.y), SDLToMouseButton(e.button.button), window);
-      break;
-    }
-    case SDL_MOUSEBUTTONUP:
-    {
-      ShellWindow* window = GetShellWindowFromSDLId(e.button.windowID);
-      if (window && window->mOnMouseUp)
-        window->mOnMouseUp(IntVec2(e.button.x, e.button.y), SDLToMouseButton(e.button.button), window);
-      break;
-    }
 
     case SDL_MOUSEWHEEL:
     {

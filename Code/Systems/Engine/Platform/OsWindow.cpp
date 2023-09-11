@@ -87,8 +87,6 @@ OsWindow::OsWindow(OsShell* shell,
   mWindow.mOnTextTyped = &ShellWindowOnTextTyped;
   mWindow.mOnKeyDown = &ShellWindowOnKeyDown;
   mWindow.mOnKeyUp = &ShellWindowOnKeyUp;
-  mWindow.mOnMouseDown = &ShellWindowOnMouseDown;
-  mWindow.mOnMouseUp = &ShellWindowOnMouseUp;
   mWindow.mOnMouseScrollY = &ShellWindowOnMouseScrollY;
   mWindow.mOnMouseScrollX = &ShellWindowOnMouseScrollX;
   mWindow.mOnDevicesChanged = &ShellWindowOnDevicesChanged;
@@ -238,7 +236,6 @@ void OsWindow::SetMouseTrap(bool mouseTrapped)
   Shell* shell = mWindow.mShell;
   mMouseTrapped = mouseTrapped;
   ImportMouseTrap(mouseTrapped);
-  ImportMouseSetCursor(mouseTrapped ? Cursor::Invisible : Cursor::Arrow);
 }
 
 void OsWindow::SetMouseTrapClientPosition(IntVec2 clientPosition, bool useCustomPosition)
@@ -453,22 +450,22 @@ void OsWindow::ShellWindowOnKeyUp(Keys::Enum key, uint osKey, ShellWindow* windo
   self->SendKeyboardEvent(keyEvent, false);
 }
 
-void OsWindow::ShellWindowOnMouseDown(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window)
+void ZeroExportNamed(ExportMouseDown)(int32_t x, int32_t y, MouseButtons::Enum button)
 {
-  OsWindow* self = (OsWindow*)window->mUserData;
+  Shell::sInstance->mMouseState[button] = true;
   OsMouseEvent mouseEvent;
-  self->FillMouseEvent(clientPosition, button, mouseEvent);
+  OsWindow::sInstance->FillMouseEvent(IntVec2(x, y), button, mouseEvent);
   mouseEvent.EventId = Events::OsMouseDown;
-  self->SendMouseEvent(mouseEvent, false);
+  OsWindow::sInstance->SendMouseEvent(mouseEvent, false);
 }
 
-void OsWindow::ShellWindowOnMouseUp(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window)
+void ZeroExportNamed(ExportMouseUp)(int32_t x, int32_t y, MouseButtons::Enum button)
 {
-  OsWindow* self = (OsWindow*)window->mUserData;
+  Shell::sInstance->mMouseState[button] = false;
   OsMouseEvent mouseEvent;
-  self->FillMouseEvent(clientPosition, button, mouseEvent);
+  OsWindow::sInstance->FillMouseEvent(IntVec2(x, y), button, mouseEvent);
   mouseEvent.EventId = Events::OsMouseUp;
-  self->SendMouseEvent(mouseEvent, false);
+  OsWindow::sInstance->SendMouseEvent(mouseEvent, false);
 }
 
 void ZeroExportNamed(ExportMouseMove)(int32_t x, int32_t y, int32_t dx, int32_t dy) {
