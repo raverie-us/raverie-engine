@@ -634,11 +634,11 @@ const start = async (canvas: OffscreenCanvas) => {
   doUpdate();
 }
 
-addEventListener("message", (event: MessageEvent<ToWorkerMessageType>) => {
+const onCanvasMessage = (event: MessageEvent<ToWorkerMessageType>) => {
   const data = event.data;
-  switch (data.type) {
-    case "canvas":
-      start(data.canvas);
-      break;
+  if (data.type === "canvas") {
+    start(data.canvas);
+    removeEventListener("message", onCanvasMessage);
   }
-});
+};
+addEventListener("message", onCanvasMessage);
