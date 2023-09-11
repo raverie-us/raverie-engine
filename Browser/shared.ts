@@ -209,8 +209,15 @@ export interface MessageMouseSetCursor {
   cursor: Cursor;
 }
 
+export interface MessageDownloadFile {
+  type: "downloadFile";
+  filename: string;
+  buffer: ArrayBuffer;
+}
+
 export type ToMainMessageType =
   MessageYieldDraw |
   MessageYieldComplete |
   MessageMouseTrap |
-  MessageMouseSetCursor;
+  MessageMouseSetCursor |
+  MessageDownloadFile;

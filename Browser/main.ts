@@ -38,6 +38,20 @@ parent.append(canvas);
 parent.append(yieldCanvas);
 document.body.append(parent);
 
+const downloadFile = (filename: string, buffer: ArrayBuffer) => {
+  const blob = new Blob([buffer]);
+  const url  = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.style.display = 'none';
+  a.target = '_blank';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+}
+
 const worker = new RaverieEngineWorker();
 worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
   const data = event.data;
@@ -94,6 +108,9 @@ worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
           break;
       }
       break;
+      case "downloadFile":
+        downloadFile(data.filename, data.buffer);
+        break;
   }
 });
 

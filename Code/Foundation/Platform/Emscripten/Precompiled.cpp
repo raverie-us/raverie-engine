@@ -263,11 +263,6 @@ bool SupportsDownloadingFiles()
   return true;
 }
 
-void DownloadFile(cstr fileName, const DataBlock& data)
-{
-  EmscriptenDownloadFile(fileName, data.Data, data.Size);
-}
-
 void OpenUrl(cstr url)
 {
   EmscriptenOpenUrl(url);

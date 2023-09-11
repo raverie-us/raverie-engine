@@ -6,6 +6,7 @@
 #include "Regex/Regex.hpp"
 #include "Platform/FilePath.hpp"
 #include "Utility/Time.hpp"
+#include "Foundation/Platform/PlatformCommunication.hpp"
 
 extern unsigned char VirtualFileSystemData[];
 extern unsigned int VirtualFileSystemSize;
@@ -276,22 +277,22 @@ void PopulateVirtualFileSystemWithZip(void* userData)
 
 void Download(StringParam fileName, const Array<byte>& binaryData)
 {
-  Os::DownloadFile(fileName.c_str(), DataBlock((byte*)binaryData.Data(), binaryData.Size()));
+  ImportDownloadFile(fileName.c_str(), (byte*)binaryData.Data(), binaryData.Size());
 }
 
 void Download(StringParam fileName, const DataBlock& binaryData)
 {
-  Os::DownloadFile(fileName.c_str(), DataBlock(binaryData.Data, binaryData.Size));
+  ImportDownloadFile(fileName.c_str(), binaryData.Data, binaryData.Size);
 }
 
 void Download(StringParam fileName, StringParam binaryData)
 {
-  Os::DownloadFile(fileName.c_str(), DataBlock((byte*)binaryData.Data(), binaryData.SizeInBytes()));
+  ImportDownloadFile(fileName.c_str(), (byte*)binaryData.Data(), binaryData.SizeInBytes());
 }
 
 void Download(StringParam fileName, const ByteBufferBlock& binaryData)
 {
-  Os::DownloadFile(fileName.c_str(), binaryData.GetBlock());
+  Download(fileName, binaryData.GetBlock());
 }
 
 void Download(StringParam filePath)
@@ -312,7 +313,7 @@ void Download(StringParam suggestedNameWithoutExtension, StringParam workingDire
     ZPrint("Downloading single file %s\n", filePath.c_str());
     ByteBufferBlock block = ReadFileIntoByteBufferBlock(filePath.c_str());
     String fileName = FilePath::GetFileName(filePath);
-    Os::DownloadFile(fileName.c_str(), block.GetBlock());
+    Download(fileName, block.GetBlock());
   }
   else
   {
@@ -357,7 +358,7 @@ void Download(StringParam suggestedNameWithoutExtension, StringParam workingDire
     archive.WriteBuffer(block);
 
     String fileName = suggestedNameWithoutExtension + ".zip";
-    Os::DownloadFile(fileName.c_str(), block.GetBlock());
+    Download(fileName, block.GetBlock());
   }
 }
 

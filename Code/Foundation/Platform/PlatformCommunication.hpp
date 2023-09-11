@@ -260,6 +260,7 @@ double ZeroImportNamed(ImportClock)(int32_t clockId);
 void ZeroImportNamed(ImportYield)();
 void ZeroImportNamed(ImportMouseTrap)(bool value);
 void ZeroImportNamed(ImportMouseSetCursor)(Zero::Cursor::Enum cursor);
+void ZeroImportNamed(ImportDownloadFile)(const char* filename, const byte* data, size_t dataLength);
 
 char* ZeroExportNamed(ExportInitialize)(size_t argumentsLength);
 void ZeroExportNamed(ExportRunIteration)();

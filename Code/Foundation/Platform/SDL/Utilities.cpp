@@ -198,19 +198,6 @@ bool ShellOpenApplication(StringParam file, StringParam parameters, StringParam 
 }
 #endif
 
-#if !defined(ZeroPlatformNoSupportsDownloadingFiles)
-bool SupportsDownloadingFiles()
-{
-  return false;
-}
-#endif
-
-#if !defined(ZeroPlatformNoDownloadFile)
-void DownloadFile(cstr fileName, const DataBlock& data)
-{
-}
-#endif
-
 #if !defined(ZeroPlatformNoOpenUrl)
 void OpenUrl(cstr url)
 {

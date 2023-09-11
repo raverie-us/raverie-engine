@@ -97,11 +97,7 @@ bool ShellOpenApplication(StringParam file, StringParam parameters, StringParam 
 
 bool SupportsDownloadingFiles()
 {
-  return false;
-}
-
-void DownloadFile(cstr fileName, const DataBlock& data)
-{
+  return true;
 }
 
 void OpenUrl(cstr url)

@@ -4,7 +4,8 @@ import {
   MessageYieldDraw,
   MessageYieldComplete,
   MessageMouseTrap,
-  MessageMouseSetCursor
+  MessageMouseSetCursor,
+  MessageDownloadFile
 } from "./shared";
 
 const modulePromise = WebAssembly.compileStreaming(fetch(wasmUrl));
@@ -534,6 +535,16 @@ const start = async (canvas: OffscreenCanvas) => {
         };
         postMessage(toSend);
       },
+      ImportDownloadFile: (filenamePointer: number, dataPointer: number, dataLength: number) => {
+        const filename = readNullTerminatedString(filenamePointer);
+        const buffer = readBuffer(dataPointer, dataLength);
+        const toSend: MessageDownloadFile = {
+          type: "downloadFile",
+          filename,
+          buffer
+        };
+        postMessage(toSend);
+      }
     }
   };
 
@@ -582,6 +593,9 @@ const start = async (canvas: OffscreenCanvas) => {
       }
     }
     return decoder.decode(new DataView(memory.buffer, startPointer, length));
+  }
+  const readBuffer = (startPointer: number, length: number) => {
+    return memory.buffer.slice(startPointer, startPointer + length)
   }
 
   const getPixelsView = (width: GLsizei, height: GLsizei, format: GLenum, type: GLenum, pixels: VoidPointer): ArrayBufferView | null => {
