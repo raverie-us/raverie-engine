@@ -124,14 +124,6 @@ ReactiveViewport::ReactiveViewport(Composite* parent, Space* space, Camera* came
   ConnectThisTo(this, Events::MiddleMouseUp, OnMouseGeneric);
 }
 
-void ReactiveViewport::UpdateTransform()
-{
-  Composite::UpdateTransform();
-
-  if (mMouseOver)
-    SetMouseTrapPosition(true);
-}
-
 ReactiveSpace* ReactiveViewport::GetReactiveSpace()
 {
   // Get the target space
@@ -160,7 +152,6 @@ ReactiveSpace* ReactiveViewport::GetReactiveSpace()
 
 void ReactiveViewport::OnMouseEnter(MouseEvent* e)
 {
-  SetMouseTrapPosition(true);
   mMouseOver = true;
 
   ReactiveSpace* reactiveSpace = GetReactiveSpace();
@@ -177,7 +168,6 @@ void ReactiveViewport::OnMouseEnter(MouseEvent* e)
 
 void ReactiveViewport::OnMouseExit(MouseEvent* e)
 {
-  SetMouseTrapPosition(false);
   mMouseOver = false;
 
   ReactiveSpace* reactiveSpace = GetReactiveSpace();
@@ -455,12 +445,6 @@ void ReactiveViewport::InitViewportEvent(ViewportMouseEvent& viewportEvent)
   viewportEvent.Handled = false;
 
   viewportEvent.mCameraViewportCog = mViewportInterface->GetOwner();
-}
-
-void ReactiveViewport::SetMouseTrapPosition(bool useMouseTrapPosition)
-{
-  if (OsWindow* window = mRootWidget->GetOsWindow())
-    window->SetMouseTrapClientPosition(Math::ToIntVec2(GetClientCenterPosition()), useMouseTrapPosition);
 }
 
 Widget* ReactiveViewport::HitTest(Vec2 screenPoint, Widget* skip)

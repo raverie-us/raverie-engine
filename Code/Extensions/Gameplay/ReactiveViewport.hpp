@@ -67,9 +67,6 @@ public:
   /// Constructor.
   ReactiveViewport(Composite* parent, Space* space, Camera* camera, CameraViewport* cameraViewport);
 
-  /// Needed to reset mouse trap position when viewport resizes.
-  void UpdateTransform() override;
-
   /// Get the reactive space component from our target space
   ReactiveSpace* GetReactiveSpace();
 
@@ -101,9 +98,6 @@ public:
 
   /// Adds extra data to the MouseEvent.
   virtual void InitViewportEvent(ViewportMouseEvent& viewportEvent);
-
-  /// Sets mouse trapped position for the os window to use.
-  void SetMouseTrapPosition(bool useMouseTrapPosition);
 
   Widget* HitTest(Vec2 screenPoint, Widget* skip) override;
 

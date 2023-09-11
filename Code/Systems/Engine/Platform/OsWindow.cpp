@@ -69,9 +69,7 @@ OsWindow::OsWindow(OsShell* shell,
             state),
     mOsInputHook(nullptr),
     mBlockUserInput(false),
-    mMouseTrapped(false),
-    mCustomMouseTrapClientPosition(IntVec2(0, 0)),
-    mUseCustomMouseTrapClientPosition(false)
+    mMouseTrapped(false)
 {
   ErrorIf(sInstance != nullptr, "We should only have one instance");
   sInstance = this;
@@ -233,30 +231,8 @@ bool OsWindow::GetMouseTrap()
 
 void OsWindow::SetMouseTrap(bool mouseTrapped)
 {
-  Shell* shell = mWindow.mShell;
   mMouseTrapped = mouseTrapped;
   ImportMouseTrap(mouseTrapped);
-}
-
-void OsWindow::SetMouseTrapClientPosition(IntVec2 clientPosition, bool useCustomPosition)
-{
-  mCustomMouseTrapClientPosition = clientPosition;
-  mUseCustomMouseTrapClientPosition = useCustomPosition;
-}
-
-IntVec2 OsWindow::GetMouseTrapMonitorPosition()
-{
-  if (mUseCustomMouseTrapClientPosition)
-    return ClientToMonitor(mCustomMouseTrapClientPosition);
-
-  // Trap the mouse in the center of the window
-  IntRect monitorClientRectangle = mWindow.GetMonitorClientRectangle();
-  IntVec2 clientSize = monitorClientRectangle.Size();
-
-  IntVec2 monitorPosition;
-  monitorPosition.x = monitorClientRectangle.X + clientSize.x / 2;
-  monitorPosition.y = monitorClientRectangle.Y + clientSize.y / 2;
-  return monitorPosition;
 }
 
 OsHandle OsWindow::GetWindowHandle()
