@@ -14,7 +14,7 @@ namespace Zero
 class ZeroNoImportExport SerializationLibrary : public Zilch::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(SerializationLibrary, "ZeroEngine");
+  ZilchDeclareStaticLibraryInternals(SerializationLibrary);
 
   static void Initialize();
   static void Shutdown();

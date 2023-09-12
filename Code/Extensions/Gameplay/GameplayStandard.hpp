@@ -18,7 +18,7 @@ namespace Zero
 class ZeroNoImportExport GameplayLibrary : public Zilch::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(GameplayLibrary, "ZeroEngine");
+  ZilchDeclareStaticLibraryInternals(GameplayLibrary);
 
   static void Initialize();
   static void Shutdown();

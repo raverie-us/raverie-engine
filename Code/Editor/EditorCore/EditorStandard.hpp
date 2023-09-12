@@ -16,7 +16,7 @@ namespace Zero
 class ZeroNoImportExport EditorLibrary : public Zilch::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(EditorLibrary, "ZeroEngine");
+  ZilchDeclareStaticLibraryInternals(EditorLibrary);
 
   static void Initialize();
   static void Shutdown();

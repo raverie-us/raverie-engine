@@ -6,7 +6,7 @@
 
 namespace Zilch
 {
-ZilchDeclareStaticLibrary(WebSockets, ZilchNoNamespace, ZeroShared);
+ZilchDeclareStaticLibrary(WebSockets, ZeroShared);
 
 namespace Events
 {

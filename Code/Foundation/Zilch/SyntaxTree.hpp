@@ -6,7 +6,7 @@
 
 namespace Zilch
 {
-ZilchDeclareStaticLibrary(Syntax, ZilchNoNamespace, ZeroShared);
+ZilchDeclareStaticLibrary(Syntax, ZeroShared);
 
 namespace EvaluationMode
 {

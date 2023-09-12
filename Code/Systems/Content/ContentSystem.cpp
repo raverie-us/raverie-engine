@@ -16,7 +16,6 @@ void CreateDataContent(ContentSystem* system);
 void CreateVectorContent(ContentSystem* system);
 void CreateScriptContent(ContentSystem* system);
 void CreateBinaryContent(ContentSystem* system);
-void CreateZilchPluginContent(ContentSystem* system);
 void CreateSupportContent(ContentSystem* system);
 
 namespace Events
@@ -67,7 +66,6 @@ void InitializeContentSystem()
   CreateVectorContent(system);
   CreateScriptContent(system);
   CreateBinaryContent(system);
-  CreateZilchPluginContent(system);
   CreateSupportContent(system);
 }
 

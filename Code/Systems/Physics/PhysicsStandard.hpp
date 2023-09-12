@@ -22,7 +22,7 @@ DeclareEnum3(AxisDirection, X, Y, Z);
 class ZeroNoImportExport PhysicsLibrary : public Zilch::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(PhysicsLibrary, "ZeroEngine");
+  ZilchDeclareStaticLibraryInternals(PhysicsLibrary);
 
   static void Initialize();
   static void Shutdown();

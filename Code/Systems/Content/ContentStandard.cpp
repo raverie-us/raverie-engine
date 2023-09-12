@@ -76,7 +76,6 @@ ZilchDefineStaticLibrary(ContentMetaLibrary)
   ZilchInitializeType(DataContent);
   ZilchInitializeType(DataBuilder);
   ZilchInitializeType(ContentTags);
-  ZilchInitializeType(ZilchPluginBuilder);
   ZilchInitializeType(FontContent);
   ZilchInitializeType(FontBuilder);
   ZilchInitializeType(ImageContent);

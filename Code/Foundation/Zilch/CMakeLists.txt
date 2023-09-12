@@ -81,8 +81,6 @@ target_sources(Zilch
     ${CMAKE_CURRENT_LIST_DIR}/OverloadResolver.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Parser.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Parser.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Plugin.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Plugin.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ProcessClass.cpp

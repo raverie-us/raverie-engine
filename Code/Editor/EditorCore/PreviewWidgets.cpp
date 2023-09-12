@@ -874,8 +874,6 @@ void RegisterEditorTileViewWidgets()
       PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
   previewFactory->Creators["TextBlock"] =
       PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
-  previewFactory->Creators["ZilchPluginSource"] =
-      PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
   previewFactory->Creators["Level"] =
       PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<LevelPreview>);
   previewFactory->Creators["Sound"] =

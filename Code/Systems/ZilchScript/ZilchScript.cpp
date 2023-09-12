@@ -28,16 +28,6 @@ void ZeroZilchFatalErrorCallback(FatalErrorEvent* e)
 // Called when an error occurs in compilation
 void ZeroZilchErrorCallback(Zilch::ErrorEvent* e)
 {
-  // If plugins are currently compiling, let the user know that the error
-  // *might* be because of that
-  ZilchPluginSourceManager* manager = ZilchPluginSourceManager::GetInstance();
-  if (manager->IsCompilingPlugins())
-  {
-    e->ExactError = BuildString(e->ExactError,
-                                "\nThis may be because we're currently compiling Zilch"
-                                " plugins (once finished, scripts will recompile)");
-  }
-
   String shortMessage = e->ExactError;
   String fullMessage = e->GetFormattedMessage(MessageFormat::Python);
 

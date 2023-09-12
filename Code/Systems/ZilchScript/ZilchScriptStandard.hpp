@@ -5,18 +5,14 @@
 
 #include "ZilchScript.hpp"
 #include "ZilchZero.hpp"
-#include "ZilchPlugin.hpp"
 
 namespace Zero
 {
-// Forward declarations
-class ZilchPluginLibrary;
-
 // Zilch Script library
 class ZeroNoImportExport ZilchScriptLibrary : public Zilch::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(ZilchScriptLibrary, "ZeroEngine");
+  ZilchDeclareStaticLibraryInternals(ZilchScriptLibrary);
 
   static void Initialize();
   static void Shutdown();

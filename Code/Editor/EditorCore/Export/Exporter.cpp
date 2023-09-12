@@ -131,8 +131,6 @@ void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library, bool s
   }
 
   BoundType* zilchDocumentType = ZilchTypeId(ZilchDocumentResource);
-  BoundType* ZilchPluginSourceType = ZilchTypeId(ZilchPluginSource);
-  BoundType* zilchPluginLibraryType = ZilchTypeId(ZilchPluginLibrary);
 
   int itemsDone = 0;
   float librarySize = (float)library->GetContentItems().Size();
@@ -153,8 +151,7 @@ void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library, bool s
         BoundType* resourceType = MetaDatabase::FindType(entry.Type);
 
         // Skip zilch resource types
-        if (resourceType->IsA(zilchDocumentType) || resourceType->IsA(ZilchPluginSourceType) ||
-            resourceType->IsA(zilchPluginLibraryType))
+        if (resourceType->IsA(zilchDocumentType))
         {
           continue;
         }

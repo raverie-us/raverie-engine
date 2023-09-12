@@ -12,7 +12,7 @@ namespace Zero
 class ZeroNoImportExport SpatialPartitionLibrary : public Zilch::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(SpatialPartitionLibrary, "ZeroEngine");
+  ZilchDeclareStaticLibraryInternals(SpatialPartitionLibrary);
 
   static void Initialize();
   static void Shutdown();

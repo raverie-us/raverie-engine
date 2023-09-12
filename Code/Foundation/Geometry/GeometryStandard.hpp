@@ -31,7 +31,7 @@ using Zero::ContourArray;
 class ZeroNoImportExport GeometryLibrary : public Zilch::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(GeometryLibrary, "ZeroEngine");
+  ZilchDeclareStaticLibraryInternals(GeometryLibrary);
 
   static void Initialize();
   static void Shutdown();

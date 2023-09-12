@@ -123,20 +123,6 @@ public:
   HashSet<String> mGenericFlags;
 };
 
-// We attach this component to Zero's editor configuration file
-class ZilchPluginConfig : public Component
-{
-public:
-  ZilchDeclareType(ZilchPluginConfig, TypeCopyMode::ReferenceType);
-
-  ZilchPluginConfig();
-  void Serialize(Serializer& stream) override;
-  void Initialize(CogInitializer& initializer);
-
-  /// If on this machine we attempted to install IDE tools for plugins
-  bool mAttemptedIdeToolsInstall;
-};
-
 DeclareEnum2(TabWidth, TwoSpaces, FourSpaces);
 
 class TextEditorConfig : public Component

@@ -18,7 +18,7 @@ class ContentComposition;
 class ZeroNoImportExport ContentMetaLibrary : public Zilch::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(ContentMetaLibrary, "ZeroEngine");
+  ZilchDeclareStaticLibraryInternals(ContentMetaLibrary);
 
   static void Initialize();
   static void Shutdown();
@@ -37,7 +37,6 @@ public:
 #include "DataContent.hpp"
 #include "TagsContent.hpp"
 #include "BaseBuilders.hpp"
-#include "ZilchPluginContent.hpp"
 #include "VectorContent.hpp"
 #include "TextureBuilder.hpp"
 #include "AudioFileEncoder.hpp"

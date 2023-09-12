@@ -228,34 +228,7 @@ int ZilchMain(int argc, char* argv[])
   ErrorEvent errorEvent;
   EventConnect(&project, Events::CompilationError, GetErrorEvent, &errorEvent);
 
-  // We always load plugins from the directory next to the executable
   Module module;
-  {
-    String pluginDirectory = Zero::GetApplicationDirectory();
-    Status status;
-    Plugin::LoadFromDirectory(status, module, module, Zero::GetApplicationDirectory());
-    if (status.Failed())
-      printf("* Unable to load plugin from directory '%s': '%s'\n", pluginDirectory.c_str(), status.Message.c_str());
-  }
-  ZilchForEach (String& pluginDirectory, arguments.GetCommandValues("-PluginDirectory"))
-  {
-    Status status;
-    Plugin::LoadFromDirectory(status, module, module, pluginDirectory);
-    if (status.Failed())
-      printf("* Unable to load plugin from directory '%s': '%s'\n", pluginDirectory.c_str(), status.Message.c_str());
-  }
-
-  ZilchForEach (String& pluginFile, arguments.GetCommandValues("-Plugin"))
-  {
-    Status status;
-    LibraryRef pluginLibrary = Plugin::LoadFromFile(status, module, pluginFile);
-    if (pluginLibrary != nullptr)
-    {
-      module.Append(pluginLibrary);
-    }
-    if (status.Failed())
-      printf("* Unable to load plugin '%s': '%s'\n", pluginFile.c_str(), status.Message.c_str());
-  }
 
   // Treat all the stray input values as file names
   ZilchForEach (String& fileName, arguments.InputValues)
@@ -329,12 +302,6 @@ int ZilchMain(int argc, char* argv[])
       }
       else if (run)
       {
-        ZilchForEach (LibraryRef library, module)
-        {
-          if (library->Plugin)
-            library->Plugin->InitializeSafe();
-        }
-
         BoundType* programType = library->BoundTypes.FindValue("Program", nullptr);
         if (programType != nullptr)
         {

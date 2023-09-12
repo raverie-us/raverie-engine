@@ -79,16 +79,8 @@ public:
   // generate and store the stub code on demand
   void GenerateDefinitionStubCode();
 
-  // Either returns the special custom namespace name for plugins, or
-  // if that name is empty it will return the library name
-  String GetPluginNamespace();
-
   // The name of the library, used for debug purposes
   String Name;
-
-  // If this library is ever used to generate a C++ header, then
-  // this is the namespace that all generated code will go inside
-  String NamespaceForPlugins;
 
   // The source code this library was built from (generally the result of a
   // Project) If this library is native / build via generation, this array will
@@ -152,9 +144,6 @@ public:
 
   // Whether this library was built in tolerant mode or not
   bool TolerantMode;
-
-  // If we loaded a plugin that created this library (otherwise null)
-  Plugin* Plugin;
 
 private:
   // Constructor
@@ -293,7 +282,7 @@ public:
   friend class Module;
 
   // Constructor that takes the name of the library we want to build
-  LibraryBuilder(StringParam name, StringParam namespaceForPlugins = String());
+  LibraryBuilder(StringParam name);
 
   // Get the name fo the library we are building
   String GetName();

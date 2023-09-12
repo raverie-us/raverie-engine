@@ -8,7 +8,6 @@
 #include "ContentSystem.hpp"
 #include "RichAnimation.hpp"
 #include "Platform/FilePath.hpp"
-#include "ZilchPluginContent.hpp"
 
 namespace Zero
 {
@@ -19,9 +18,6 @@ ContentItem* MakeDataContent(ContentInitializer& initializer)
 
   // What type is in the file so we know what builder type
   String loaderType = GetTypeInFile(fullPath);
-
-  if (loaderType == "ZilchPluginSource")
-    return MakeZilchPluginContent(initializer);
 
   DataContent* content = new DataContent();
 
@@ -125,7 +121,6 @@ void CreateDataContent(ContentSystem* system)
 {
   AddContentComponent<DataBuilder>(system);
   AddContentComponent<RichAnimationBuilder>(system);
-  CreateZilchPluginContent(system);
   AddContent<DataContent>(system);
 
   system->CreatorsByExtension["data"] = ContentTypeEntry(ZilchTypeId(DataContent), MakeDataContent);

@@ -53,7 +53,7 @@ public:
 protected:
   // Constructor
   // The namespace is optional and only used for plugins
-  StaticLibrary(StringParam name, StringParam namespaceForPlugins = String());
+  StaticLibrary(StringParam name);
 
   // Declare a virtual destructor
   virtual ~StaticLibrary();
@@ -78,10 +78,10 @@ private:
   LibraryRef Library;
 };
 
-#  define ZilchDeclareStaticLibraryInternals(Name, Namespace, ...)                                                     \
+#  define ZilchDeclareStaticLibraryInternals(Name, ...)                                                                \
     /* Needed for binding macros work with this library */                                                             \
     typedef Name ZilchLibrary;                                                                                         \
-    Name() : ZZ::StaticLibrary(#Name, Namespace)                                                                       \
+    Name() : ZZ::StaticLibrary(#Name)                                                                                  \
     {                                                                                                                  \
       ZilchDependency(ZZ::Core) __VA_ARGS__                                                                            \
     }                                                                                                                  \
@@ -122,15 +122,12 @@ private:
 // ZilchDependency(Namespace::OtherLibrary) to mark dependencies
 // upon other static libraries
 // All libraries declared with this macro implicitly add a dependency on Core
-#  define ZilchDeclareStaticLibrary(Name, Namespace, Linkage, ...)                                                     \
+#  define ZilchDeclareStaticLibrary(Name, Linkage, ...)                                                                \
     class Linkage Name : public ZZ::StaticLibrary                                                                      \
     {                                                                                                                  \
     public:                                                                                                            \
-      ZilchDeclareStaticLibraryInternals(Name, Namespace, __VA_ARGS__)                                                 \
+      ZilchDeclareStaticLibraryInternals(Name, __VA_ARGS__)                                                            \
     };
-
-// When we don't care about a namespace for a static library
-#  define ZilchNoNamespace ZZ::String()
 
 // This allows us to define an initialize all the types that belong within our
 // library This should be put in a translational unit (cpp) that can see all of

@@ -157,9 +157,6 @@ void SwapLibrary::Commit()
     MetaDatabase::GetInstance()->AddLibrary(mPendingLibrary, true);
     mCurrentLibrary = mPendingLibrary;
     mPendingLibrary = nullptr;
-
-    if (mCurrentLibrary->Plugin)
-      mCurrentLibrary->Plugin->InitializeSafe();
   }
 }
 
@@ -169,8 +166,6 @@ void SwapLibrary::Unload()
   if (mCurrentLibrary != nullptr)
   {
     MetaDatabase::GetInstance()->RemoveLibrary(mCurrentLibrary);
-    if (mCurrentLibrary->Plugin)
-      mCurrentLibrary->Plugin->UninitializeSafe();
   }
 
   mCurrentLibrary = nullptr;
@@ -503,10 +498,6 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
   if (CompileFragments(modifiedLibrariesOut) == false)
     return false;
 
-  // Scripts cannot compile if plugins do not compile
-  if (CompilePlugins(modifiedLibrariesOut) == false)
-    return false;
-
   Module dependencies;
 
   // Remove the core library from dependencies as we're going to add it from
@@ -591,56 +582,6 @@ bool ResourceLibrary::CompileFragments(HashSet<ResourceLibrary*>& modifiedLibrar
   }
 
   return false;
-}
-
-bool ResourceLibrary::CompilePlugins(HashSet<ResourceLibrary*>& modifiedLibrariesOut)
-{
-  // Plugins should only depend on the Core library and native Zero libraries
-  // (the only libraries we generate headers for) In the future we could attempt
-  // to generate other library headers (dependencies...)
-  Module pluginDependencies;
-  pluginDependencies.Append(MetaDatabase::GetInstance()->mNativeLibraries.All());
-
-  bool allPluginsSucceeded = true;
-
-  forRange (ZilchLibraryResource* libraryResource, mPlugins.All())
-  {
-    if (libraryResource->GetResourceTemplate() != nullptr)
-      continue;
-
-    SwapLibrary& swapPlugin = mSwapPlugins[libraryResource];
-    if (swapPlugin.mCompileStatus == ZilchCompileStatus::Modified)
-    {
-      Status status;
-      String pluginPath = libraryResource->GetSharedLibraryPath();
-      Resource* origin = libraryResource->GetOriginResource();
-
-      swapPlugin.mPendingLibrary = Plugin::LoadFromFile(status, pluginDependencies, pluginPath, origin);
-
-      // If the status failed, it could just be because the plugin was empty
-      // (we're in progress compiling it). Note: We'll get a separate error if
-      // the plugin fails to compile or if we can't find the compiler.
-      if (status.Failed() && status.Context != Plugin::StatusContextEmpty)
-      {
-        Console::Print(
-            Filter::DefaultFilter, "Plugin Error (%s): %s\n", libraryResource->Name.c_str(), status.Message.c_str());
-      }
-
-      if (swapPlugin.mPendingLibrary != nullptr)
-      {
-        modifiedLibrariesOut.Insert(this);
-        swapPlugin.mCompileStatus = ZilchCompileStatus::Compiled;
-      }
-      else
-      {
-        // We failed to compile one plugin, so we should stop all other script
-        // compilation
-        allPluginsSucceeded = false;
-      }
-    }
-  }
-
-  return allPluginsSucceeded;
 }
 
 void ResourceLibrary::PreCommitUnload()

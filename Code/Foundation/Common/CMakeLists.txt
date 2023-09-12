@@ -133,7 +133,6 @@ set(Common_Platform_Sources
     ${CMAKE_CURRENT_LIST_DIR}/Platform/DirectoryWatcher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/DirectoryWatcher.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/ExecutableResource.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Platform/ExternalLibrary.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/File.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/File.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/FileEvents.cpp

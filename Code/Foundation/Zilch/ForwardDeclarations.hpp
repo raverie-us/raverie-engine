@@ -99,7 +99,6 @@ class Operand;
 class ParameterNode;
 class PerFrameData;
 class PerScopeData;
-class Plugin;
 class PointerManager;
 class PostExpressionNode;
 class Project;

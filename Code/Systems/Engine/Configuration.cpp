@@ -111,29 +111,6 @@ void DeveloperConfig::Serialize(Serializer& stream)
   SerializeNameDefault(mGenericFlags, HashSet<String>());
 }
 
-// ZilchPluginConfig
-ZilchDefineType(ZilchPluginConfig, builder, type)
-{
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(mAttemptedIdeToolsInstall);
-  type->AddAttribute(ObjectAttributes::cCore);
-}
-
-ZilchPluginConfig::ZilchPluginConfig()
-{
-  mAttemptedIdeToolsInstall = false;
-}
-
-void ZilchPluginConfig::Initialize(CogInitializer& initializer)
-{
-}
-
-void ZilchPluginConfig::Serialize(Serializer& stream)
-{
-  SerializeNameDefault(mAttemptedIdeToolsInstall, false);
-}
-
 ZilchDefineType(TextEditorConfig, builder, type)
 {
   ZeroBindComponent();

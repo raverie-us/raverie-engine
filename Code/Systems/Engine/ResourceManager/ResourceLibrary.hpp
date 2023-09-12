@@ -188,7 +188,6 @@ public:
   // need to happen globally
   bool CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrariesOut);
   bool CompileFragments(HashSet<ResourceLibrary*>& modifiedLibrariesOut);
-  bool CompilePlugins(HashSet<ResourceLibrary*>& modifiedLibrariesOut);
 
   void OnScriptProjectPreParser(ParseEvent* e);
   void OnScriptProjectPostSyntaxer(ParseEvent* e);

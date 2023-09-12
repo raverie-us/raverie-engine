@@ -17,7 +17,7 @@ namespace Zero
 class ZeroNoImportExport NetworkingLibrary : public Zilch::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(NetworkingLibrary, "ZeroEngine");
+  ZilchDeclareStaticLibraryInternals(NetworkingLibrary);
 
   static void Initialize();
   static void Shutdown();

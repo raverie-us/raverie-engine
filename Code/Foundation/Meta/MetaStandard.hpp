@@ -13,7 +13,7 @@ class MetaSelection;
 class ZeroNoImportExport MetaLibrary : public Zilch::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(MetaLibrary, "ZeroEngine");
+  ZilchDeclareStaticLibraryInternals(MetaLibrary);
 
   static void Initialize();
   static void Shutdown();

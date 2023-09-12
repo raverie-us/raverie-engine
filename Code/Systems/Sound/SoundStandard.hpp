@@ -24,7 +24,7 @@ class Sound;
 class ZeroNoImportExport SoundLibrary : public Zilch::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(SoundLibrary, "ZeroEngine");
+  ZilchDeclareStaticLibraryInternals(SoundLibrary);
 
   static void Initialize();
   static void Shutdown();

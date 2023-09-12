@@ -81,8 +81,6 @@ target_sources(Content
     ${CMAKE_CURRENT_LIST_DIR}/VectorContent.hpp
     ${CMAKE_CURRENT_LIST_DIR}/VertexDescriptionBuilder.cpp
     ${CMAKE_CURRENT_LIST_DIR}/VertexDescriptionBuilder.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchPluginContent.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchPluginContent.hpp
     ${CMAKE_CURRENT_LIST_DIR}/stb_vorbis.cpp
     ${CMAKE_CURRENT_LIST_DIR}/stb_vorbis.h
 )

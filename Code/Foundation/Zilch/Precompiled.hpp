@@ -23,7 +23,6 @@ using Zero::BaseInList;
 using Zero::BuildString;
 using Zero::EqualTo;
 using Zero::ErrorSignaler;
-using Zero::ExternalLibrary;
 using Zero::File;
 using Zero::FindFirstIndex;
 using Zero::FixedArray;
@@ -294,7 +293,6 @@ String GetDocumentationCStringOrEmpty(cstr string);
 #  include "Matrix.hpp"
 #  include "OverloadResolver.hpp"
 #  include "Parser.hpp"
-#  include "Plugin.hpp"
 #  include "Project.hpp"
 #  include "RandomClass.hpp"
 #  include "Setup.hpp"

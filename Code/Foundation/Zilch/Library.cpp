@@ -106,7 +106,7 @@ bool DelegateTypePolicy::Equal(DelegateType* a, DelegateType* b) const
   return Type::IsRawSame(a, b);
 }
 
-LibraryBuilder::LibraryBuilder(StringParam name, StringParam namespaceForPlugins) :
+LibraryBuilder::LibraryBuilder(StringParam name) :
     UserData(nullptr),
     CreatableInScriptDefault(true),
     ComputedDelegateAndFunctionSizes(false)
@@ -114,7 +114,6 @@ LibraryBuilder::LibraryBuilder(StringParam name, StringParam namespaceForPlugins
   // Start out by creating a new library that we'll populate
   this->BuiltLibrary = LibraryRef(new Library());
   this->BuiltLibrary->Name = name;
-  this->BuiltLibrary->NamespaceForPlugins = namespaceForPlugins;
 }
 
 String LibraryBuilder::GetName()
@@ -1515,7 +1514,7 @@ size_t CodeEntry::GetHash()
   return this->Code.Hash() ^ this->Origin.Hash() * 5689;
 }
 
-Library::Library() : GeneratedDefinitionStubCode(false), UserData(nullptr), TolerantMode(false), Plugin(nullptr)
+Library::Library() : GeneratedDefinitionStubCode(false), UserData(nullptr), TolerantMode(false)
 {
 }
 
@@ -1580,14 +1579,6 @@ void Library::ComputeTypesInDependencyOrderOnce()
   }
 }
 
-String Library::GetPluginNamespace()
-{
-  if (!this->NamespaceForPlugins.Empty())
-    return this->NamespaceForPlugins;
-
-  return this->Name;
-}
-
 void Library::ClearComponents()
 {
   for (size_t i = 0; i < this->OwnedTypes.Size(); ++i)
@@ -1622,22 +1613,6 @@ Library::~Library()
 
   // First, release all components
   this->ClearComponents();
-
-  // If this library was made via a plugin, then the library now manages the
-  // plugin and will delete it
-  if (this->Plugin)
-  {
-    this->Plugin->UninitializeSafe();
-
-    ExternalLibrary* sharedLibrary = this->Plugin->SharedLibrary;
-
-    // We need to delete the plugin first because the destructor is virutal and
-    // is defined within the external library's loaded code
-    delete this->Plugin;
-
-    // Now we can delete the external library
-    delete sharedLibrary;
-  }
 
   for (size_t i = 0; i < this->OwnedTypes.Size(); ++i)
   {

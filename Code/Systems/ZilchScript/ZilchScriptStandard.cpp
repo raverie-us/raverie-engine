@@ -15,9 +15,6 @@ ZilchDefineStaticLibrary(ZilchScriptLibrary)
   ZilchInitializeType(ZilchObject);
   ZilchInitializeType(ZilchScript);
 
-  ZilchInitializeType(ZilchPluginSource);
-  ZilchInitializeType(ZilchPluginLibrary);
-
   MetaLibraryExtensions::AddNativeExtensions(builder);
 }
 
@@ -27,8 +24,6 @@ void ZilchScriptLibrary::Initialize()
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 
   InitializeResourceManager(ZilchScriptManager);
-  InitializeResourceManager(ZilchPluginLibraryManager);
-  InitializeResourceManager(ZilchPluginSourceManager);
 
   ResourceLibrary::sScriptType = ZilchTypeId(ZilchScript);
 

@@ -8,12 +8,6 @@ extern const String sRaverieOrganization;
 extern const String sEditorGuid;
 extern const String sEditorName;
 
-String GetEditorFullName();
-String GetEditorExecutableFileName();
-
-/// Get the guid (primarily for crashes).
-cstr GetGuidString();
-
 /// Gets the name of the current running application.
 StringParam GetApplicationName();
 
@@ -81,8 +75,5 @@ cstr GetConfigurationString();
 
 /// Get the full string description of the build version.
 String GetBuildVersionName();
-
-/// Read a version from a specified text file.
-int GetVersionId(StringParam versionIdFilePath);
 
 } // namespace Zero

@@ -208,7 +208,6 @@ namespace Zero
 #include "Platform/OsHandle.hpp"
 #include "Platform/Thread.hpp"
 #include "Platform/ThreadSync.hpp"
-#include "Platform/ExternalLibrary.hpp"
 #include "Platform/File.hpp"
 #include "Platform/FileEvents.hpp"
 #include "Platform/FilePath.hpp"

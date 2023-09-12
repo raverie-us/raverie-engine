@@ -33,7 +33,7 @@ class DocumentResource;
 class ZeroNoImportExport EngineLibrary : public Zilch::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(EngineLibrary, "ZeroEngine");
+  ZilchDeclareStaticLibraryInternals(EngineLibrary);
 
   static bool Initialize();
   static void Shutdown();

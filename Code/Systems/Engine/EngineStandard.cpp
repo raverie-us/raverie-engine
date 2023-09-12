@@ -314,7 +314,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(ContentConfig);
   ZilchInitializeType(UserConfig);
   ZilchInitializeType(DeveloperConfig);
-  ZilchInitializeType(ZilchPluginConfig);
   ZilchInitializeType(TextEditorConfig);
   ZilchInitializeType(EditorSettings);
 

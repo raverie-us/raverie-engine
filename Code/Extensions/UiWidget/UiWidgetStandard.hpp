@@ -14,7 +14,7 @@ namespace Zero
 class ZeroNoImportExport UiWidgetLibrary : public Zilch::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(UiWidgetLibrary, "ZeroEngine");
+  ZilchDeclareStaticLibraryInternals(UiWidgetLibrary);
 
   static void Initialize();
   static void Shutdown();

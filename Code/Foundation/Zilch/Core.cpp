@@ -5189,8 +5189,6 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
 
 void Core::SetupBinding(LibraryBuilder& builder)
 {
-  builder.BuiltLibrary->NamespaceForPlugins = "Zilch";
-
   ZilchInitializeExternalType(Boolean);
   ZilchInitializeExternalType(Boolean2);
   ZilchInitializeExternalType(Boolean3);
@@ -5374,8 +5372,6 @@ void Core::SetupBinding(LibraryBuilder& builder)
   ZilchInitializeType(MemoryLeakEvent);
   ZilchInitializeType(OpcodeEvent);
   ZilchInitializeType(FatalErrorEvent);
-  ZilchInitializeType(BuildEvent);
-  ZilchInitializeType(PluginEvent);
   ZilchInitializeType(ParseEvent);
   ZilchInitializeType(ExecutableState);
   ZilchInitializeTypeAs(FilePathClass, "FilePath");

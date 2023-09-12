@@ -54,7 +54,7 @@ class Window;
 class ZeroNoImportExport WidgetLibrary : public Zilch::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(WidgetLibrary, "ZeroEngine");
+  ZilchDeclareStaticLibraryInternals(WidgetLibrary);
 
   static void Initialize();
   static void Shutdown();
