@@ -122,6 +122,67 @@ void SortAndPrintMetaTypeList(StringBuilder& builder, Array<String>& names, cstr
   builder.Append("\n");
 }
 
+void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library, bool skipTemplates)
+{
+  String libraryPath = library->GetOutputPath();
+  if (!DirectoryExists(libraryPath))
+  {
+    ZPrint("Skipped copying library output because it was not built %s\n", library->Name.c_str());
+    return;
+  }
+
+  String libraryOutputPath = FilePath::Combine(outputDirectory, library->Name);
+
+  CreateDirectoryAndParents(libraryOutputPath);
+
+  // Copy the .pack file
+  String packFile = BuildString(library->Name, ".pack");
+  String packFileSource = FilePath::Combine(libraryPath, packFile);
+  if (FileExists(packFileSource))
+  {
+    String packFileDestination = FilePath::Combine(libraryOutputPath, packFile);
+    CopyFile(packFileDestination, packFileSource);
+  }
+
+  BoundType* zilchDocumentType = ZilchTypeId(ZilchDocumentResource);
+
+  int itemsDone = 0;
+  float librarySize = (float)library->GetContentItems().Size();
+
+  forRange (ContentItem* contentItem, library->GetContentItems())
+  {
+    ++itemsDone;
+    bool isTemplate = contentItem->has(ResourceTemplate);
+
+    // Copy each generated Resource
+    ResourceListing listing;
+    contentItem->BuildListing(listing);
+    forRange (ResourceEntry& entry, listing.All())
+    {
+      // Skip zilch Resource Templates
+      if (isTemplate && skipTemplates)
+      {
+        BoundType* resourceType = MetaDatabase::FindType(entry.Type);
+
+        // Skip zilch resource types
+        if (resourceType->IsA(zilchDocumentType))
+        {
+          continue;
+        }
+      }
+
+      String fileName = entry.Location;
+      String source = FilePath::Combine(libraryPath, fileName);
+      if (!FileExists(source))
+        continue;
+
+      String destination = FilePath::Combine(libraryOutputPath, fileName);
+      CopyFile(destination, source);
+      Z::gEngine->LoadingUpdate("Copying", fileName, "", ProgressType::Normal, float(itemsDone) / librarySize);
+    }
+  }
+}
+
 void CopyPrebuiltContent()
 {
   ZPrint("Copying prebuilt content...\n");
@@ -134,7 +195,7 @@ void CopyPrebuiltContent()
   forRange (ContentLibrary* library, Z::gContentSystem->Libraries.Values())
   {
     ZPrint("  Copying %s\n", library->Name.c_str());
-    ExportUtility::CopyLibraryOut(outputDirectory, library, false);
+    CopyLibraryOut(outputDirectory, library, false);
   }
   Download(outputDirectory);
 }

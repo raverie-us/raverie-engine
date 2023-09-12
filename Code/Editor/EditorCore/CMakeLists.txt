@@ -11,18 +11,6 @@ set(Editor_CodeTranslator_Sources
     ${CMAKE_CURRENT_LIST_DIR}/CodeTranslator/ShaderTranslationDebugHelper.hpp
 )
 
-set(Editor_Export_Sources 
-    ${CMAKE_CURRENT_LIST_DIR}/Export/Exporter.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Export/Exporter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Export/EmscriptenExportTarget.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Export/WindowsExportTarget.cpp
-)
-
-set(Editor_Import_Sources 
-    ${CMAKE_CURRENT_LIST_DIR}/Import/Importer.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Import/Importer.cpp
-)
-
 set(Editor_Property_Sources 
     ${CMAKE_CURRENT_LIST_DIR}/Property/BasicPropertyEditors.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Property/BasicPropertyEditors.hpp
@@ -54,8 +42,6 @@ set(Editor_Scintilla_Sources
 target_sources(EditorCore
   PRIVATE
     ${Editor_CodeTranslator_Sources}
-    ${Editor_Export_Sources}
-    ${Editor_Import_Sources}
     ${Editor_Property_Sources}
     ${Editor_Scintilla_Sources}
     ${CMAKE_CURRENT_LIST_DIR}/AddRemoveListBox.cpp

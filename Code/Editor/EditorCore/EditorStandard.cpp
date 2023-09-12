@@ -291,7 +291,6 @@ void EditorLibrary::Initialize()
 
   BackgroundTasks::Initialize();
   DocumentManager::Initialize();
-  Exporter::Initialize();
   PreviewWidgetFactory::Initialize();
   ResourceEditors::Initialize();
   ValueEditorFactory::Initialize();
@@ -318,7 +317,6 @@ void EditorLibrary::Shutdown()
   ResourceEditors::Destroy();
   PreviewWidgetFactory::Destroy();
   DocumentManager::Destroy();
-  Exporter::Destroy();
   BackgroundTasks::Destroy();
 
   GetLibrary()->ClearComponents();

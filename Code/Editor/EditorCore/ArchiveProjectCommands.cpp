@@ -89,24 +89,6 @@ void ArchiveProject(ProjectSettings* project)
   new ArchiveProjectCallback();
 }
 
-void ExportGame(ProjectSettings* project)
-{
-  Exporter* exporter = Exporter::GetInstance();
-  exporter->ExportGameProject(project->mOwner);
-}
-
-void ExportContent(ProjectSettings* project)
-{
-  // Save all resources and build them so the
-  // output directory is up to date
-  Editor* editor = Z::gEditor;
-  editor->SaveAll(true);
-
-  Exporter* exporter = Exporter::GetInstance();
-  exporter->mProjectCog = project->GetOwner();
-  exporter->ExportContent(exporter->mDefaultTargets);
-}
-
 void ShowProjectFolder(ProjectSettings* project)
 {
   Os::ShellOpenDirectory(project->ProjectFolder);
@@ -118,20 +100,10 @@ void ShowContentOutput(ProjectSettings* project)
   Os::ShellOpenDirectory(outputPath);
 }
 
-void ExportAndPlayGame(ProjectSettings* project)
-{
-  Exporter* exporter = Exporter::GetInstance();
-  exporter->ExportAndPlay(project->mOwner);
-}
-
 void BindArchiveCommands(Cog* config, CommandManager* commands)
 {
   commands->AddCommand("ArchiveProject", BindCommandFunction(ArchiveProject));
   commands->AddCommand("BackupProject", BindCommandFunction(BackupProject));
-
-  commands->AddCommand("ExportGame", BindCommandFunction(ExportGame));
-  commands->AddCommand("ExportAndPlayGame", BindCommandFunction(ExportAndPlayGame));
-  commands->AddCommand("ExportContent", BindCommandFunction(ExportContent));
 
   commands->AddCommand("ShowProjectFolder", BindCommandFunction(ShowProjectFolder), true);
   commands->AddCommand("ShowContentOutput", BindCommandFunction(ShowContentOutput), true);

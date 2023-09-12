@@ -362,29 +362,6 @@ Commands commands =
 		bool ReadOnly = true,
 	},
 
-	//------------------------------------------ Export
-
-	Command =
-	{
-		string Name = "ExportAndPlayGame",
-		string Description = "Export the game and play it",
-		string Tags = "Export",
-	},
-
-	Command =
-	{
-		string Name = "ExportGame",
-		string Description = "Export game to a standalone exe",
-		string Tags = "Export",
-	},
-
-	Command =
-	{
-		string Name = "ExportContent",
-		string Description = "Export content to a folder for an installer",
-		string Tags = "Export",
-	},
-
    //----------------------------------------------------------- Editor Windows
 
 	Command =
