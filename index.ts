@@ -46,29 +46,26 @@ const dirs = (() => {
   };
 })();
 
-const executables = [
-  {
-    copyToIncludedBuilds: true,
-    dir: "Editor",
-    name: "RaverieEditor",
-    nonResourceDependencies: [
-      "Data",
-      "Templates",
-      repoRootFile
-    ],
-    prebuild: true,
-    resourceLibraries: [
-      "FragmentCore",
-      "Loading",
-      "ZeroCore",
-      "UiWidget",
-      "EditorUi",
-      "Editor",
-      "Fallback"
-    ],
-    vfsOnlyPackage: ["Templates"]
-  }
-];
+const executable = 
+{
+  dir: "Editor",
+  name: "RaverieEditor",
+  nonResourceDependencies: [
+    "Data",
+    "Templates",
+    repoRootFile
+  ],
+  resourceLibraries: [
+    "FragmentCore",
+    "Loading",
+    "ZeroCore",
+    "UiWidget",
+    "EditorUi",
+    "Editor",
+    "Fallback"
+  ],
+  vfsOnlyPackage: ["Templates"]
+};
 
 const printSizes = (dir) => {
   let list: string[] = [];
@@ -491,26 +488,24 @@ const makeExecutableZip = async (cmakeVariablesOptional, executable, fileSystemZ
 const generateBinaryCArray = (id, buffer) => `unsigned char ${id}Data[] = {${buffer.join(",")}};\nunsigned int ${id}Size = ${buffer.length};\n`;
 
 const buildvfs = async (cmakeVariablesOptional, buildDir, combo) => {
-  for (const executable of executables) {
-    console.log(`Building virtual file system for ${executable.name}`);
+  console.log(`Building virtual file system for ${executable.name}`);
 
-    const libraryDir = path.join(buildDir, "Code", executable.dir, executable.name);
-    mkdirp.sync(libraryDir);
+  const libraryDir = path.join(buildDir, "Code", executable.dir, executable.name);
+  mkdirp.sync(libraryDir);
 
-    const makeFsBuffer = async () => {
-      if (combo.vfs) {
-        const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
-        await makeExecutableZip(cmakeVariablesOptional, executable, fileSystemZip);
-        return fs.readFileSync(fileSystemZip);
-      }
-      return Buffer.alloc(1);
-    };
-
-    const vfsCppContents = generateBinaryCArray("VirtualFileSystem", await makeFsBuffer());
-    const vfsCppFile = path.join(libraryDir, "VirtualFileSystem.cpp");
-    if (!fs.existsSync(vfsCppFile) || fs.readFileSync(vfsCppFile, "utf8") !== vfsCppContents) {
-      fs.writeFileSync(vfsCppFile, vfsCppContents, "utf8");
+  const makeFsBuffer = async () => {
+    if (combo.vfs) {
+      const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
+      await makeExecutableZip(cmakeVariablesOptional, executable, fileSystemZip);
+      return fs.readFileSync(fileSystemZip);
     }
+    return Buffer.alloc(1);
+  };
+
+  const vfsCppContents = generateBinaryCArray("VirtualFileSystem", await makeFsBuffer());
+  const vfsCppFile = path.join(libraryDir, "VirtualFileSystem.cpp");
+  if (!fs.existsSync(vfsCppFile) || fs.readFileSync(vfsCppFile, "utf8") !== vfsCppContents) {
+    fs.writeFileSync(vfsCppFile, vfsCppContents, "utf8");
   }
 };
 
@@ -619,13 +614,11 @@ const preventNoOutputTimeout = () => {
   return () => clearInterval(interval);
 };
 
-const findExecutableDir = (buildDir, config, libraryDir, library) => [
-  path.join(buildDir, "Code", libraryDir, library, config),
-  path.join(buildDir, "Code", libraryDir, library)
-].filter((filePath) => fs.existsSync(filePath))[0];
+const findExecutableDir = (buildDir: string, libraryDir: string, library: string) =>
+  path.join(buildDir, "Code", libraryDir, library);
 
-const findExecutable = (buildDir, config, libraryDir, library) =>
-  path.join(findExecutableDir(buildDir, config, libraryDir, library), library);
+const findExecutable = (buildDir: string, libraryDir: string, library: string) =>
+  path.join(findExecutableDir(buildDir, libraryDir, library), library);
 
 const format = async (options) => {
   console.log("Formatting");
@@ -693,7 +686,7 @@ const build = async (options) => {
 
 const executeBuiltProcess = async (buildDir, combo, libraryDir, library, args) => {
   // TODO(trevor): Retailor this to import the WASM and execute it
-  const executablePath = findExecutable(buildDir, combo.config, libraryDir, library);
+  const executablePath = findExecutable(buildDir, libraryDir, library);
 
   if (!fs.existsSync(executablePath)) {
     printErrorLine(`Executable does not exist ${executablePath}`);
@@ -722,20 +715,15 @@ const prebuilt = async (options) => {
   rimraf.sync(dirs.prebuiltContent);
 
   const buildDir = activateBuildDir(combo);
-  for (const executable of executables) {
-    if (!executable.prebuild) {
-      continue;
-    }
 
-    const downloadPaths = await executeBuiltProcess(buildDir, combo, executable.dir, executable.name, [
-      "-CopyPrebuiltContent",
-      "-Exit"
-    ]);
+  const downloadPaths = await executeBuiltProcess(buildDir, combo, executable.dir, executable.name, [
+    "-CopyPrebuiltContent",
+    "-Exit"
+  ]);
 
-    for (const downloadPath of downloadPaths) {
-      console.log("Extracting download", downloadPath);
-      await zipExtract(downloadPath, dirs.prebuiltContent);
-    }
+  for (const downloadPath of downloadPaths) {
+    console.log("Extracting download", downloadPath);
+    await zipExtract(downloadPath, dirs.prebuiltContent);
   }
 
   rimraf.sync(dirs.downloads);
@@ -771,59 +759,55 @@ const pack = async (options) => {
   const cmakeVariables = readCmakeVariables(buildDir);
 
   rimraf.sync(dirs.includedBuilds);
-  for (const executable of executables) {
-    const library = executable.name;
-    console.log(`Packaging library ${library}`);
+  const library = executable.name;
+  console.log(`Packaging library ${library}`);
 
-    const executableDir = findExecutableDir(buildDir, combo.config, executable.dir, library);
-    if (!fs.existsSync(executableDir)) {
-      printErrorLine(`Library directory does not exist ${executableDir}`);
-      continue;
-    }
-    const files = fs.readdirSync(executableDir).filter((file) => !filter.includes(path.extname(file)) && !filter.includes(file)).
-      map((file) => path.join(executableDir, file));
-
-    /*
-     * This needs to match index.js:pack/Standalone.cpp:BuildId::Parse/BuildId::GetFullId/BuildVersion.cpp:GetBuildVersionName
-     * Application.Branch.Major.Minor.Patch.Revision.ShortChangeset.MsSinceEpoch.Config.Extension
-     * Example: RaverieEditor.master.1.5.0.1501.fb02756c46a4.1574702096290.Windows.x86.Release.zip
-     */
-    const name =
-      `${library}.` +
-      `${cmakeVariables.RAVERIE_BRANCH}.` +
-      `${cmakeVariables.RAVERIE_MAJOR_VERSION}.` +
-      `${cmakeVariables.RAVERIE_MINOR_VERSION}.` +
-      `${cmakeVariables.RAVERIE_PATCH_VERSION}.` +
-      `${cmakeVariables.RAVERIE_REVISION}.` +
-      `${cmakeVariables.RAVERIE_SHORT_CHANGESET}.` +
-      `${cmakeVariables.RAVERIE_MS_SINCE_EPOCH}.` +
-      `${cmakeVariables.RAVERIE_CONFIG}.zip`;
-
-    const packageZip = path.join(dirs.packages, name);
-    tryUnlinkSync(packageZip);
-
-    if (combo.vfs) {
-      await zipAdd(dirs.repo, packageZip, executable.vfsOnlyPackage);
-    } else {
-      await makeExecutableZip(cmakeVariables, executable, packageZip);
-    }
-
-    // Keep files as absolute, since we want to only add the file names to the zip.
-    await zipAdd(dirs.repo, packageZip, files);
-
-    if (executable.copyToIncludedBuilds) {
-      const extractDir = path.join(dirs.includedBuilds, path.basename(packageZip));
-      await zipExtract(packageZip, extractDir);
-    }
-
-    // For the web we also output a directory (this can be used to publish to github pages).
-    const pageLibraryDir = path.join(dirs.page, library);
-    mkdirp.sync(pageLibraryDir);
-    files.forEach((file) => {
-      const basename = path.basename(file);
-      fs.copyFileSync(file, path.join(pageLibraryDir, basename));
-    });
+  const executableDir = findExecutableDir(buildDir, executable.dir, library);
+  if (!fs.existsSync(executableDir)) {
+    printErrorLine(`Library directory does not exist ${executableDir}`);
+    return;
   }
+  const files = fs.readdirSync(executableDir).filter((file) => !filter.includes(path.extname(file)) && !filter.includes(file)).
+    map((file) => path.join(executableDir, file));
+
+  /*
+    * This needs to match index.js:pack/Standalone.cpp:BuildId::Parse/BuildId::GetFullId/BuildVersion.cpp:GetBuildVersionName
+    * Application.Branch.Major.Minor.Patch.Revision.ShortChangeset.MsSinceEpoch.Config.Extension
+    * Example: RaverieEditor.master.1.5.0.1501.fb02756c46a4.1574702096290.Windows.x86.Release.zip
+    */
+  const name =
+    `${library}.` +
+    `${cmakeVariables.RAVERIE_BRANCH}.` +
+    `${cmakeVariables.RAVERIE_MAJOR_VERSION}.` +
+    `${cmakeVariables.RAVERIE_MINOR_VERSION}.` +
+    `${cmakeVariables.RAVERIE_PATCH_VERSION}.` +
+    `${cmakeVariables.RAVERIE_REVISION}.` +
+    `${cmakeVariables.RAVERIE_SHORT_CHANGESET}.` +
+    `${cmakeVariables.RAVERIE_MS_SINCE_EPOCH}.` +
+    `${cmakeVariables.RAVERIE_CONFIG}.zip`;
+
+  const packageZip = path.join(dirs.packages, name);
+  tryUnlinkSync(packageZip);
+
+  if (combo.vfs) {
+    await zipAdd(dirs.repo, packageZip, executable.vfsOnlyPackage);
+  } else {
+    await makeExecutableZip(cmakeVariables, executable, packageZip);
+  }
+
+  // Keep files as absolute, since we want to only add the file names to the zip.
+  await zipAdd(dirs.repo, packageZip, files);
+
+  const extractDir = path.join(dirs.includedBuilds, path.basename(packageZip));
+  await zipExtract(packageZip, extractDir);
+
+  // For the web we also output a directory (this can be used to publish to github pages).
+  const pageLibraryDir = path.join(dirs.page, library);
+  mkdirp.sync(pageLibraryDir);
+  files.forEach((file) => {
+    const basename = path.basename(file);
+    fs.copyFileSync(file, path.join(pageLibraryDir, basename));
+  });
   console.log("Packed");
 };
 
