@@ -149,9 +149,10 @@ export enum KeyState {
   Repeated,
 }
 
-export interface MessageCanvas {
-  type: "canvas";
+export interface MessageInitialize {
+  type: "initialize";
   canvas: OffscreenCanvas;
+  args: string;
 }
 
 export interface MessageMouseMove {
@@ -182,7 +183,7 @@ export interface MessageTextTyped {
 }
 
 export type ToWorkerMessageType =
-  MessageCanvas |
+  MessageInitialize |
   MessageMouseMove |
   MessageMouseButtonChanged |
   MessageKeyboardButtonChanged |

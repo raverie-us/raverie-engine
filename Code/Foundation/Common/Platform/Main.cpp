@@ -18,7 +18,6 @@ void CommandLineToStringArray()
 
       String arg(gCommandLineBuffer + start, gCommandLineBuffer + i);
       start = i + 1;
-      ZPrint("Command line arg: %s\n", arg.c_str());
       gCommandLineArguments.PushBack(arg);
     }
   }
@@ -27,14 +26,10 @@ void CommandLineToStringArray()
 bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments, Array<String>& commandLineArguments)
 {
   forRange(String& arg, commandLineArguments.All()) {
-    printf("arg: %s\n", arg.c_str());
+    ZPrint("Raw Argument: %s\n", arg.c_str());
   }
 
-  // First parameter is exe path
-  if (commandLineArguments.Size() == 1)
-    return false;
-
-  size_t index = 1;
+  size_t index = 0;
 
   while (index < commandLineArguments.Size())
   {

@@ -3,7 +3,7 @@ import {
   Cursor,
   KeyState,
   Keys,
-  MessageCanvas,
+  MessageInitialize,
   MessageKeyboardButtonChanged,
   MessageMouseButtonChanged,
   MessageMouseMove,
@@ -114,11 +114,12 @@ worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
   }
 });
 
-const canvasMessage: MessageCanvas = {
-  type: "canvas",
-  canvas: offscreenCanvas
+const initializeMessage: MessageInitialize = {
+  type: "initialize",
+  canvas: offscreenCanvas,
+  args: new URL(location.href).searchParams.get("args") || ""
 };
-worker.postMessage(canvasMessage, [offscreenCanvas]);
+worker.postMessage(initializeMessage, [offscreenCanvas]);
 
 canvas.addEventListener("mousemove", (event) => {
   const rect = canvas.getBoundingClientRect();

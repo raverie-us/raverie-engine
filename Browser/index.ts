@@ -33,7 +33,7 @@ type GLsizeiPointer = number;
 // Platform
 type CharPointer = number;
 
-const start = async (canvas: OffscreenCanvas) => {
+const start = async (canvas: OffscreenCanvas, args: string) => {
   const module = await modulePromise;
 
   const gl = canvas.getContext("webgl2", {
@@ -634,7 +634,7 @@ const start = async (canvas: OffscreenCanvas) => {
     }
   }
 
-  const commandLine = encoder.encode("test\0\0");
+  const commandLine = encoder.encode(`${args.split(" ").join("\0")}\0\0`);
   const commandLineBuffer = ExportInitialize(commandLine.byteLength);
   new Uint8Array(memory.buffer).set(commandLine, commandLineBuffer);
 
@@ -661,9 +661,9 @@ const start = async (canvas: OffscreenCanvas) => {
 
 const onCanvasMessage = (event: MessageEvent<ToWorkerMessageType>) => {
   const data = event.data;
-  if (data.type === "canvas") {
-    start(data.canvas);
+  if (data.type === "initialize") {
     removeEventListener("message", onCanvasMessage);
+    start(data.canvas, data.args);
   }
 };
 addEventListener("message", onCanvasMessage);
