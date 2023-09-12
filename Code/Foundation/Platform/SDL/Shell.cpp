@@ -160,22 +160,6 @@ void Shell::ShowMessageBox(StringParam title, StringParam message)
   SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, title.c_str(), message.c_str(), nullptr);
 }
 
-ShellWindow* GetShellWindowFromSDLId(Uint32 id)
-{
-  SDL_Window* sdlWindow = SDL_GetWindowFromID(id);
-  if (!sdlWindow)
-    return nullptr;
-
-  ShellWindow* window = (ShellWindow*)SDL_GetWindowData(sdlWindow, cShellWindow);
-  return window;
-}
-
-PlatformInputDevice* PlatformInputDeviceFromSDL(SDL_JoystickID id)
-{
-  Error("Not implemented");
-  return nullptr;
-}
-
 void UpdateResize(ShellWindow* window, IntVec2Param clientSize)
 {
   if (clientSize == window->mClientSize)
@@ -296,13 +280,6 @@ void Shell::Update()
         ErrorIf(data.mHasImage, "Copying image data not yet supported");
       }
 #endif
-      break;
-    }
-    case SDL_KEYUP:
-    {
-      ShellWindow* window = GetShellWindowFromSDLId(e.key.windowID);
-      if (window && window->mOnKeyUp)
-        window->mOnKeyUp(SDLKeycodeToKey(e.key.keysym.sym), e.key.keysym.scancode, window);
       break;
     }
 
