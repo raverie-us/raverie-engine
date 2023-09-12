@@ -1,6 +1,6 @@
 MIT License
 
-Modified work Copyright (c) 2019 RaverieFoundation
+Modified work Copyright (c) 2023 Raverie
 Original work Copyright (c) 2018 DigiPen Institute of Technology
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
