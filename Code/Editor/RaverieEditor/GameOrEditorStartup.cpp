@@ -224,9 +224,6 @@ void GameOrEditorStartup::Startup()
   if (mUseSplashScreen)
     graphics->SetSplashscreenLoading();
 
-  // Fix any issues related to Intel drivers (we call SetState twice on purpose to fix the driver issues).
-  mainWindow->PlatformSpecificFixup();
-
   // Used for trapping the mouse.
   Z::gMouse->mActiveWindow = mainWindow;
 

@@ -517,10 +517,6 @@ public:
   /// downloading a file).
   void SetProgress(ProgressType::Enum progressType, float progress);
 
-  /// Fix the window (specifically for Intel related Windowing issues with
-  /// OpenGL)
-  void PlatformSpecificFixup();
-
   /// If this window has it's own buttons, then we may not need to draw our own.
   bool HasOwnMinMaxExitButtons();
 
@@ -536,9 +532,6 @@ public:
   /// Occurs when the window is resized (may occur even if the size is the same
   /// and should be protected against).
   void (*mOnClientSizeChanged)(Math::IntVec2Param clientSize, ShellWindow* window);
-
-  void (*mOnMinimized)(ShellWindow* window);
-  void (*mOnRestored)(ShellWindow* window);
 
   void (*mOnMouseScrollX)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
   void (*mOnMouseScrollY)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);

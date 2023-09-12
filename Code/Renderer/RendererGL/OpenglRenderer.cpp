@@ -1812,17 +1812,16 @@ void OpenglRenderer::DoRenderTaskBackBufferBlit(RenderTaskBackBufferBlit* task)
   CheckFramebufferStatus();
 
   mThreadLock.Lock();
-  if (mBackBufferSafe)
-    ImportGlBlitFramebuffer(0,
-                      0,
-                      renderData->mWidth,
-                      renderData->mHeight,
-                      viewport.x,
-                      viewport.y,
-                      viewport.x + viewport.width,
-                      viewport.y + viewport.height,
-                      GL_COLOR_BUFFER_BIT,
-                      GL_NEAREST);
+  ImportGlBlitFramebuffer(0,
+                    0,
+                    renderData->mWidth,
+                    renderData->mHeight,
+                    viewport.x,
+                    viewport.y,
+                    viewport.x + viewport.width,
+                    viewport.y + viewport.height,
+                    GL_COLOR_BUFFER_BIT,
+                    GL_NEAREST);
   mThreadLock.Unlock();
 
   ImportGlBindFramebuffer(GL_READ_FRAMEBUFFER, 0);

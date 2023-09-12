@@ -94,8 +94,6 @@ ShellWindow::ShellWindow(Shell* shell,
     mOnFocusChanged(nullptr),
     mOnMouseDropFiles(nullptr),
     mOnClientSizeChanged(nullptr),
-    mOnMinimized(nullptr),
-    mOnRestored(nullptr),
     mOnMouseScrollY(nullptr),
     mOnMouseScrollX(nullptr),
     mOnDevicesChanged(nullptr),
@@ -245,10 +243,6 @@ float ShellWindow::GetProgress()
 void ShellWindow::SetProgress(ProgressType::Enum progressType, float progress)
 {
   mProgress = progress;
-}
-
-void ShellWindow::PlatformSpecificFixup()
-{
 }
 
 bool ShellWindow::HasOwnMinMaxExitButtons()

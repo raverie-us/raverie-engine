@@ -485,10 +485,6 @@ public:
 
   // Thread lock for the main thread to set any critical control flags.
   SpinLock mThreadLock;
-  // Intel crashes when blitting to back buffer when window is minimized with
-  // certain window style flags set. Flag is set to false when the window is
-  // minimized.
-  bool mBackBufferSafe;
 };
 
 class HandleIdInfo

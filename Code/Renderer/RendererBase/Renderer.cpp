@@ -1107,7 +1107,7 @@ ShowProgressInfo::ShowProgressInfo() : mSplashMode(false), mSplashFade(0.0f)
 {
 }
 
-Renderer::Renderer() : mBackBufferSafe(true)
+Renderer::Renderer()
 {
 }
 

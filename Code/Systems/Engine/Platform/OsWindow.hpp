@@ -23,8 +23,6 @@ DeclareEvent(OsFocusGained);
 DeclareEvent(OsFocusLost);
 DeclareEvent(OsPaint);
 DeclareEvent(OsMouseFileDrop);
-DeclareEvent(OsWindowMinimized);
-DeclareEvent(OsWindowRestored);
 
 // Checking if we're over one of the grip borders of a window.
 DeclareEvent(OsWindowBorderHitTest);
@@ -121,10 +119,6 @@ public:
 
   OsHandle GetWindowHandle();
 
-  /// Apply any fixes to the window (after creation) due to driver specific
-  /// issues (OpenGl + Intel for example)
-  void PlatformSpecificFixup();
-
   /// Set application progress which may show up in the task bar.
   void SetProgress(ProgressType::Enum progressType, float progress = 0.0f);
 
@@ -147,8 +141,6 @@ public:
                                           ShellWindow* window);
   static void ShellWindowOnClientSizeChanged(Math::IntVec2Param clientSize, ShellWindow* window);
   static void ShellWindowOnMinimized(ShellWindow* window);
-  static void ShellWindowOnRestored(ShellWindow* window);
-  static void ShellWindowOnMouseMove(Math::IntVec2Param clientPosition, ShellWindow* window);
   static void ShellWindowOnMouseScrollY(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
   static void ShellWindowOnMouseScrollX(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
   static void ShellWindowOnDevicesChanged(ShellWindow* window);

@@ -568,20 +568,6 @@ void GraphicsEngine::SetSplashscreenLoading()
   mShowProgressJob->mSplashMode = true;
 }
 
-void GraphicsEngine::OnOsWindowMinimized(Event* event)
-{
-  Z::gRenderer->mThreadLock.Lock();
-  Z::gRenderer->mBackBufferSafe = false;
-  Z::gRenderer->mThreadLock.Unlock();
-}
-
-void GraphicsEngine::OnOsWindowRestored(Event* event)
-{
-  Z::gRenderer->mThreadLock.Lock();
-  Z::gRenderer->mBackBufferSafe = true;
-  Z::gRenderer->mThreadLock.Unlock();
-}
-
 void GraphicsEngine::OnProjectCogModified(Event* event)
 {
   if (DebugSettings* debugSettings = mProjectCog.has(DebugSettings))
@@ -674,9 +660,6 @@ void GraphicsEngine::CreateRenderer(OsWindow* mainWindow)
     FatalEngineError(rendererJob->mError.c_str());
 
   delete rendererJob;
-
-  ConnectThisTo(mainWindow, Events::OsWindowMinimized, OnOsWindowMinimized);
-  ConnectThisTo(mainWindow, Events::OsWindowRestored, OnOsWindowRestored);
 }
 
 void GraphicsEngine::DestroyRenderer()

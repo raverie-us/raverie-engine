@@ -228,16 +228,6 @@ void Shell::Update()
         if (window->mOnClientSizeChanged)
           UpdateResize(window, IntVec2(e.window.data1, e.window.data2));
         break;
-
-      case SDL_WINDOWEVENT_MINIMIZED:
-        if (window->mOnMinimized)
-          window->mOnMinimized(window);
-        break;
-
-      case SDL_WINDOWEVENT_RESTORED:
-        if (window->mOnRestored)
-          window->mOnRestored(window);
-        break;
       }
       break;
     }
@@ -388,8 +378,6 @@ ShellWindow::ShellWindow(Shell* shell,
     mOnFocusChanged(nullptr),
     mOnMouseDropFiles(nullptr),
     mOnClientSizeChanged(nullptr),
-    mOnMinimized(nullptr),
-    mOnRestored(nullptr),
     mOnMouseDown(nullptr),
     mOnMouseUp(nullptr),
     mOnMouseScrollY(nullptr),
@@ -713,11 +701,6 @@ float ShellWindow::GetProgress()
 void ShellWindow::SetProgress(ProgressType::Enum progressType, float progress)
 {
   mProgress = progress;
-}
-
-void ShellWindow::PlatformSpecificFixup()
-{
-  // SDL doesn't need anything special here.
 }
 
 bool ShellWindow::HasOwnMinMaxExitButtons()

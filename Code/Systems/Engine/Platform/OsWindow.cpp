@@ -22,8 +22,6 @@ DefineEvent(OsFocusGained);
 DefineEvent(OsFocusLost);
 DefineEvent(OsPaint);
 DefineEvent(OsMouseFileDrop);
-DefineEvent(OsWindowMinimized);
-DefineEvent(OsWindowRestored);
 DefineEvent(OsWindowBorderHitTest);
 } // namespace Events
 
@@ -78,8 +76,6 @@ OsWindow::OsWindow(OsShell* shell,
   mWindow.mOnFocusChanged = &ShellWindowOnFocusChanged;
   mWindow.mOnMouseDropFiles = &ShellWindowOnMouseDropFiles;
   mWindow.mOnClientSizeChanged = &ShellWindowOnClientSizeChanged;
-  mWindow.mOnMinimized = &ShellWindowOnMinimized;
-  mWindow.mOnRestored = &ShellWindowOnRestored;
   mWindow.mOnMouseScrollY = &ShellWindowOnMouseScrollY;
   mWindow.mOnMouseScrollX = &ShellWindowOnMouseScrollX;
   mWindow.mOnDevicesChanged = &ShellWindowOnDevicesChanged;
@@ -235,11 +231,6 @@ OsHandle OsWindow::GetWindowHandle()
   return mWindow.mHandle;
 }
 
-void OsWindow::PlatformSpecificFixup()
-{
-  return mWindow.PlatformSpecificFixup();
-}
-
 void OsWindow::SetProgress(ProgressType::Enum progressType, float progress)
 {
   return mWindow.SetProgress(progressType, progress);
@@ -349,20 +340,6 @@ void OsWindow::ShellWindowOnClientSizeChanged(Math::IntVec2Param clientSize, She
   OsWindowEvent sizeEvent;
   sizeEvent.ClientSize = clientSize;
   self->DispatchEvent(Events::OsResized, &sizeEvent);
-}
-
-void OsWindow::ShellWindowOnMinimized(ShellWindow* window)
-{
-  OsWindow* self = (OsWindow*)window->mUserData;
-  Event event;
-  self->DispatchEvent(Events::OsWindowMinimized, &event);
-}
-
-void OsWindow::ShellWindowOnRestored(ShellWindow* window)
-{
-  OsWindow* self = (OsWindow*)window->mUserData;
-  Event event;
-  self->DispatchEvent(Events::OsWindowRestored, &event);
 }
 
 void ZeroExportNamed(ExportTextTyped)(uint32_t rune)

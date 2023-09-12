@@ -77,9 +77,6 @@ public:
   void SetSplashscreenLoading();
   void EndProgressDelayTerminate();
 
-  void OnOsWindowMinimized(Event* event);
-  void OnOsWindowRestored(Event* event);
-
   void OnProjectCogModified(Event* event);
   void SetVerticalSync(bool verticalSync);
 
