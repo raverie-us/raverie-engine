@@ -210,11 +210,6 @@ unsigned int GetDoubleClickTimeMs()
   return 500;
 }
 
-String GetEnvironmentalVariable(StringParam variable)
-{
-  return getenv(variable.c_str());
-}
-
 #if !defined(ZeroPlatformNoGetMemoryStatus)
 void GetMemoryStatus(MemoryInfo& data)
 {
@@ -224,13 +219,6 @@ void GetMemoryStatus(MemoryInfo& data)
   data.Reserve = 0;
 }
 #endif
-
-String GetVersionString()
-{
-  SDL_version version;
-  SDL_GetVersion(&version);
-  return String::Format("%s SDL %d.%d.%d", SDL_GetPlatform(), version.major, version.minor, version.patch);
-}
 
 } // namespace Os
 

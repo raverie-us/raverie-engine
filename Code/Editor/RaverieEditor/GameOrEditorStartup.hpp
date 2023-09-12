@@ -47,7 +47,6 @@ protected:
   // If this value is IntVec2::cZero, the primary monitor usable size will be used.
   IntVec2 mWindowSize = IntVec2::cZero;
   IntVec2 mMinimumWindowSize = cMinimumMonitorSize;
-  bool mWindowCentered = false;
   WindowStyleFlags::Enum mWindowStyle =
       (WindowStyleFlags::Enum)(WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar |
                                WindowStyleFlags::Resizable | WindowStyleFlags::Close | WindowStyleFlags::ClientOnly);

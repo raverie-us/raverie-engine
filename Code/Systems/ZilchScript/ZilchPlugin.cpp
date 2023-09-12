@@ -312,7 +312,7 @@ void ZilchPluginSource::OpenDirectory()
 
 bool ZilchPluginSource::IsIdeInstalled()
 {
-  return Os::GetEnvironmentalVariable("VS140COMNTOOLS").SizeInBytes() != 0;
+  return false;
 }
 
 void ZilchPluginSource::OpenIde()

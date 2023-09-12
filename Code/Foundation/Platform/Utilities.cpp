@@ -112,16 +112,6 @@ unsigned int GetDoubleClickTimeMs()
 void GetMemoryStatus(MemoryInfo& data)
 {
 }
-
-String GetEnvironmentalVariable(StringParam variable)
-{
-  return String();
-}
-
-String GetVersionString()
-{
-  return String();
-}
 } // namespace Os
 
 u64 GenerateUniqueId64()

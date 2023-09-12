@@ -160,8 +160,6 @@ void GameOrEditorStartup::Initialize()
   // Load documentation for all native libraries
   DocumentationLibrary::GetInstance()->LoadDocumentation(
       FilePath::Combine(Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory, "Documentation.data"));
-
-  ZPrint("Os: %s\n", Os::GetVersionString().c_str());
 }
 
 void GameOrEditorStartup::InitializeConfigExternal(Cog* configCog, void* userData)
@@ -213,12 +211,6 @@ void GameOrEditorStartup::Startup()
 
   IntVec2 minSize = Math::Min(mMinimumWindowSize, size);
   IntVec2 monitorClientPos = IntVec2(0, 0);
-
-  if (mWindowCentered)
-  {
-    IntRect monitorRect = osShell->GetPrimaryMonitorRectangle();
-    monitorClientPos = monitorRect.Center(size);
-  }
 
   // We only ever create a single OsWindow
   OsWindow* mainWindow = new OsWindow(osShell, name, size, monitorClientPos, nullptr, mWindowStyle, state);

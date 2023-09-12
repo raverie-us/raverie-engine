@@ -23,10 +23,6 @@ public:
   /// returned.
   String GetParsedArgument(StringParam parameterName);
 
-  /// Queries the operating system for an environmental variable.
-  /// Returns an empty string if the variable doesn't exist.
-  String GetEnvironmentalVariable(StringParam variableName);
-
   void SetCommandLineArguments(const Array<String>& commandLineArgs);
   bool ParseCommandLine();
   void BuildCommandLine();

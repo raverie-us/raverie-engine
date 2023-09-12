@@ -36,14 +36,8 @@ public:
   cstr GetName() override;
   void Update(bool debugger) override;
 
-  /// Name of the Shell's operating system.
-  String GetOsName();
-
   /// OS specific line-scroll setting when using the mouse scroll wheel.
   uint GetScrollLineCount();
-
-  /// Get the rectangle of the primary monitor (desktop size).
-  IntRect GetPrimaryMonitorRectangle();
 
   /// Get the size of the primary monitor (desktop size).
   IntVec2 GetPrimaryMonitorSize();
@@ -53,9 +47,6 @@ public:
 
   /// Set the cursor for the mouse.
   void SetMouseCursor(Cursor::Enum cursorId);
-
-  /// Get an image of the desktop / primary monitor.
-  bool GetPrimaryMonitorImage(Image* imageBuffer);
 
   /// Use the file open dialog.
   void OpenFile(FileDialogConfig* config);

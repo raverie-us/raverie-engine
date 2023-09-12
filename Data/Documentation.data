@@ -18089,20 +18089,6 @@ DocumentationLibrary
 			{
 				Method
 				{
-					var Name = "GetEnvironmentalVariable"
-					var ReturnType = "String"
-					var Parameters = "(String p0)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "p0"
-							var Type = "String"
-						}
-					}
-				}
-				Method
-				{
 					var Name = "GetParsedArgument"
 					var ReturnType = "String"
 					var Parameters = "(String p0)"

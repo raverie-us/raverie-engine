@@ -306,15 +306,8 @@ public:
   Shell();
   ~Shell();
 
-  /// Name of the Shell's operating system.
-  String GetOsName();
-
   /// OS specific line-scroll setting when using the mouse scroll wheel.
   uint GetScrollLineCount();
-
-  /// Get the monitor rectangle for the primary monitor (in monitor
-  /// coordinates).
-  IntRect GetPrimaryMonitorRectangle();
 
   /// Get the monitor size for the primary monitor (in monitor coordinates).
   IntVec2 GetPrimaryMonitorSize();
@@ -333,9 +326,6 @@ public:
 
   /// Checks if a mouse button is down
   bool IsMouseDown(MouseButtons::Enum button);
-
-  /// Get an image of the entire desktop (primary monitor).
-  bool GetPrimaryMonitorImage(Image* image);
 
   /// Show the file open dialog. Results are returned via mCallback or mFiles.
   void OpenFile(FileDialogInfo& config);

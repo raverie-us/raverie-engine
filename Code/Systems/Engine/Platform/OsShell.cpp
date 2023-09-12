@@ -81,19 +81,9 @@ void OsShell::Update(bool debugger)
   Z::gEngine->DispatchEvent(Events::OsShellUpdate, &toSend);
 }
 
-String OsShell::GetOsName()
-{
-  return mShell.GetOsName();
-}
-
 uint OsShell::GetScrollLineCount()
 {
   return mShell.GetScrollLineCount();
-}
-
-IntRect OsShell::GetPrimaryMonitorRectangle()
-{
-  return mShell.GetPrimaryMonitorRectangle();
 }
 
 IntVec2 OsShell::GetPrimaryMonitorSize()
@@ -109,11 +99,6 @@ ByteColor OsShell::GetColorAtMouse()
 void OsShell::SetMouseCursor(Cursor::Enum cursorId)
 {
   return mShell.SetMouseCursor(cursorId);
-}
-
-bool OsShell::GetPrimaryMonitorImage(Image* imageBuffer)
-{
-  return mShell.GetPrimaryMonitorImage(imageBuffer);
 }
 
 void OsShell::OpenFile(FileDialogConfig* config)

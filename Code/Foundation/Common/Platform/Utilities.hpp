@@ -67,12 +67,6 @@ ZeroShared unsigned int GetDoubleClickTimeMs();
 
 // Get the memory status of the Os.
 ZeroShared void GetMemoryStatus(MemoryInfo& memoryInfo);
-
-// Get an Environmental variable
-ZeroShared String GetEnvironmentalVariable(StringParam variable);
-
-// Get a string describing the current operating system version.
-ZeroShared String GetVersionString();
 } // namespace Os
 
 // Generate a 64 bit unique Id. Uses system timer and mac

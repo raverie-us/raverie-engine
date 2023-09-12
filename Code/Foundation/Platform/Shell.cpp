@@ -16,19 +16,9 @@ Shell::~Shell()
 {
 }
 
-String Shell::GetOsName()
-{
-  return "Empty";
-}
-
 uint Shell::GetScrollLineCount()
 {
   return 3;
-}
-
-IntRect Shell::GetPrimaryMonitorRectangle()
-{
-  return IntRect(0, 0, cMinimumMonitorSize.x, cMinimumMonitorSize.y);
 }
 
 IntVec2 Shell::GetPrimaryMonitorSize()
@@ -60,11 +50,6 @@ void Shell::SetMouseCursor(Cursor::Enum cursor)
 {
   mCursor = cursor;
   ImportMouseSetCursor(cursor);
-}
-
-bool Shell::GetPrimaryMonitorImage(Image* image)
-{
-  return false;
 }
 
 void Shell::OpenFile(FileDialogInfo& config)

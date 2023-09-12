@@ -12,7 +12,6 @@ ZilchDefineType(Environment, builder, type)
 
   ZilchBindFieldProperty(mCommandLine);
   ZilchBindMethod(GetParsedArgument);
-  ZilchBindMethod(GetEnvironmentalVariable);
 }
 
 Environment* Environment::GetInstance()
@@ -31,11 +30,6 @@ void Environment::ParseCommandArgs(const Array<String>& commandLineArgs)
 String Environment::GetParsedArgument(StringParam parameterName)
 {
   return mParsedCommandLineArguments.FindValue(parameterName, String());
-}
-
-String Environment::GetEnvironmentalVariable(StringParam variableName)
-{
-  return Os::GetEnvironmentalVariable(variableName);
 }
 
 void Environment::SetCommandLineArguments(const Array<String>& commandLineArgs)
