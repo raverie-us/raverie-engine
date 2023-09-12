@@ -1,71 +1,58 @@
-This project is an experimental fork of [Raverie Engine](https://github.com/RaverieFoundation/RaverieEngineRevamp).
-It is not recommended for production use.
+# About
+The Raverie Engine is a light-weight game engine that aims to recreate the Macromedia/Adobe Flash experience of old.
 
-# History
-Raverie Engine is itself a fork of [Zero Engine](https://zero.digipen.edu). 
+# Architecture
+The Raverie Engine is built to run on any platform and targets pure WASM as its only output. This means that the output does not include executables, glue code, etc (we do not use Emscripten). The list of imports and exports is cleanly defined in `PlatformCommunication.hpp` and can easily be implemented by any platform, including the browser.
 
-**Zero Engine** was initially a proprietary game engine from the DigiPen Institute of Technology.
-The code for Zero Engine was made available under the MIT license.
-After becoming open source, one of the original developers created the Raverie Engine fork as a revamp of Zero Engine but with cross platform support (Linux, Windows, Emscripten).
-The developers of both code-bases became inactive and both projects are essentially not being developed anymore.
-The engine itself is well designed and works great for the most part. It is a shame that it is no longer being developed.
+# Getting started
+Checkout the repository and all submodules:
 
-I've decided to create an experimental fork to see what I can create with it as a base.
-The overall goal is to modernize the engine in some areas and to update/replace some systems in others.
-Since Raverie Engine and Zero Engine have diverged a bit, I had to decide on which one to fork.
-Raverie Engine has made quite a few changes over Zero Engine, reorganizing the code structure and changed the formatting of the code.
-This made it very difficult to try to merge the changes back into Zero Engine. I've attempted to do this and gave about halfway because of the sheer amount of changes across probably hundreds of commits. The manual process introduced too many opportunities for errors. 
-Zero Engine on the other hand made only conservative changes to the common base.
-It was feasible to manually apply the changes from Zero Engine into Raverie Engine to get the best of both worlds; Raverie Engine as a cross platform engine and the improvements from Zero Engine.
-The changes from Zero Engine that were applied to this fork can be tracked on the [zerocore](https://github.com/RaverieUpdates/RaverieEngineRevamp/tree/zerocore) branch. This branch will remain mostly unchanged and only possible future changes from Zero Core will be added there. In an effort to update the engine dependencies, a second branch [zerocore_updates](https://github.com/RaverieUpdates/RaverieEngineRevamp/tree/zerocore_updates) was created to track updates to the third party dependencies. This branch is based on the zerocore branch and will continuously be rebased on it if necessary. Finally, there's the [evolution](https://github.com/RaverieUpdates/RaverieEngineRevamp) branch where additional bug fixes and experimental changes are made. 
-
-# What will be changed
-
-## Folder Structure
-I personally think that the repository structure of Zero Engine makes more sense as it offers a clear separation between different systems instead of all systems and libraries being placed in a single Libraries folder. The first change here will be to reorganize the code to more closely follow the structure of Zero Engine (with some minor changes).
-
-## Build System Updates
-The Raverie Engine build system is based on CMake. However, it is currently invoked through JavaScript. 
-The JavaScript script runs several processes:
-- Automatic code formatting
-- CMake project generation
-- Building the project
-- Packaging prebuilt resources
-- Builds the project a second time (so platforms with a VFS will have the prebuilt content)
-- Generates the documentation
-- Finally pack everything up in a redistributable format.
-
-This is a complex process and results in long build times of a distributable package.
-This will be simplified and will be invoked from shell/bash scripts instead of JavaScript, doing away with JavaScript as part of the build process.
-
-## Future and more radical changes
- - Introduce a low level cross platform RHI and adapt the high level renderer to work with it.
- - Integrate Detour (and possibly recast) for navigation.
- - Completely separate the game process from the editor process.
- - Improve or replace the GUI toolkit (this is still an area of active investigation)
- - Change the content system to allowing using the file system hierarchy for organization instead of just tags.
- - Introduce the concept of Data directories to replace content libraries.
- - Lots of usability improvements to the editor.
- - Support deploying games to Android and possibly iOS.
- - Make ZilchPlugins (Integrate with CMake instead of VS directly).
- - Investigate integrating another scripting language: While Zilch works great, it is not currently actively developed and will likely not receive any further improvements. Even if another scripting language is added, Zilch will still be kept around.
-*Other changes will be announced in the future*
-
-# Old Raverie Engine readme
- 
-## Raverie Engine
-
-Building on Windows:
-- Install CMake and Node.js
-- Run the following in cmd:
-
-```shell
-git clone https://github.com/RaverieUpdates/RaverieEngineRevamp.git
-cd RaverieEngineRevamp
-git submodule update --init --recursive
-npm install
-
-node index.js cmake --config=Release
-
-.\Build\<target>\Raverie.sln
+```bash
+git clone --recurse-submodules https://github.com/raverie-us/raverie-engine.git
 ```
+
+Or if you already checked the repo out without cloning submodules, be sure to run:
+```bash
+git submodule update --init --recursive
+```
+
+# Building
+Whilst the Raverie Engine can run on any platform, it is currently only built on Linux and requires Docker, but may work on other *nix platforms.
+
+Start by building the docker image:
+
+```bash
+# Only need to run this once, or any time the Dockerfile changes
+./dockerbuild.sh
+```
+
+The script `run.sh` runs any command inside Docker in the root of the repo.
+
+To build, we use CMake, however we run through a script that handles bundling in pre-built content in the final build:
+
+```bash
+# The 'all' command will run cmake, build the project,
+# pre-build all content, and then package that into a final build
+./run.sh npm start -- all --config=Release
+```
+
+To run just the build manually (without prebuilt content):
+
+```bash
+# Clean and generate a new cmake, only do this once
+./run.sh npm start -- cmake --config=Release
+
+# Run this after any change to build a new WASM file
+./run.sh npm start -- build --config=Release
+```
+
+# Testing
+
+To run a newly created build, the easiest way is to run in a browser:
+```bash
+./run.sh npm run browser-dev
+```
+
+This will print out a link that you can visit in the browser which will run the engine, for example http://172.17.0.*:8080/
+
+Note that the `localhost` link will not work as it's only accessible from inside the Docker container.
