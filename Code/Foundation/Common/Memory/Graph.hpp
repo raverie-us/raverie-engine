@@ -119,7 +119,6 @@ Heap* GetNamedHeap(cstr name);
 Root* GetRoot();
 Heap* GetStaticHeap();
 void Shutdown();
-void DumpMemoryDebuggerStats(cstr projectName);
 
 class ZeroShared StandardMemory
 {

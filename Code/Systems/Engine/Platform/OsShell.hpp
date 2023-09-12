@@ -17,12 +17,6 @@ DeclareEvent(FileDialogComplete);
 class OsWindow;
 struct FileDialogConfig;
 
-class OsShellHook
-{
-public:
-  virtual void HookUpdate() = 0;
-};
-
 /// Os Shell interface used to provide abstract platform user interface
 /// functionality. Used to manage mouse, keyboard, and clipboard functionality.
 class OsShell : public System
@@ -61,14 +55,6 @@ public:
   /// How many OsWindows current exist
   size_t GetWindowCount();
   OsWindow* GetWindow(size_t index);
-
-  /// Debug helper to print out memory logging information
-  void DumpMemoryDebuggerStats();
-
-  /// If this is set we will call the HookUpdate function inside here
-  /// during the middle of our update after the keyboard has
-  /// been updated but before we send input events.
-  OsShellHook* mOsShellHook;
 
   // Internal
 

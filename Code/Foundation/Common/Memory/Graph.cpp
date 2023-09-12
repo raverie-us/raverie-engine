@@ -1,37 +1,17 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-#ifdef UseMemoryDebugger
-#  include /**/ "Allocations.hpp" //@ignore (for the compactor turning this into a single hpp/cpp)
-#endif
-
-#ifdef UseMemoryTracker
-#  include /**/ "Allocations.hpp" //@ignore (for the compactor turning this into a single hpp/cpp)
-#endif
-
 namespace Zero
 {
 
 void* zAllocate(size_t numberOfBytes)
 {
-#ifdef UseMemoryDebugger
-  return DebugAllocate(numberOfBytes, AllocationType_Direct, 4);
-#elif UseMemoryTracker
-  return DebugAllocate(numberOfBytes, 4);
-#else
   return malloc(numberOfBytes);
-#endif
 }
 
 void zDeallocate(void* ptr)
 {
-#ifdef UseMemoryDebugger
-  DebugDeallocate(ptr, AllocationType_Direct);
-#elif UseMemoryTracker
-  return DebugDeallocate(ptr);
-#else
   return free(ptr);
-#endif
 }
 
 const uint cStaticMemoryBufferSize = 5000;
@@ -113,21 +93,8 @@ void Root::Shutdown()
   }
 }
 
-void DumpMemoryDebuggerStats(cstr projectName)
-{
-#ifdef UseMemoryDebugger
-  BuildVerySleepyStats_ActiveAllocations(projectName);
-#elif UseMemoryTracker
-  OutputActiveAllocations("MyProject", VerySleepy_0_90);
-#endif
-}
-
 void Root::Initialize()
 {
-#ifdef UseMemoryDebugger
-  InitializeMemory();
-#endif
-
   if (RootGraph == nullptr)
   {
     RootGraph = new Root("Root", nullptr);

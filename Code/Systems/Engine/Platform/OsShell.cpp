@@ -19,8 +19,6 @@ ZilchDefineType(OsShell, builder, type)
   ZilchBindGetterProperty(WindowCount);
   ZilchBindMethod(GetWindow);
   ZilchBindSetter(MouseCursor);
-
-  ZilchBindMethod(DumpMemoryDebuggerStats);
 }
 
 OsShell* CreateOsShellSystem()
@@ -28,7 +26,7 @@ OsShell* CreateOsShellSystem()
   return new OsShell();
 }
 
-OsShell::OsShell() : mOsShellHook(nullptr)
+OsShell::OsShell()
 {
   mShell.mUserData = this;
   mShell.mOnCopy = &ShellOnCopy;
@@ -68,9 +66,6 @@ void OsShell::Update(bool debugger)
   // frames movement
   Z::gMouse->mCursorMovement = Vec2::cZero;
   Z::gMouse->mRawMovement = Vec2(0, 0);
-
-  if (mOsShellHook)
-    mOsShellHook->HookUpdate();
 
   mShell.Update();
 
@@ -144,11 +139,6 @@ OsWindow* OsShell::GetWindow(size_t index)
     return nullptr;
   }
   return (OsWindow*)mShell.mWindows[index]->mUserData;
-}
-
-void OsShell::DumpMemoryDebuggerStats()
-{
-  Memory::DumpMemoryDebuggerStats("MyProject");
 }
 
 ZilchDefineType(ClipboardEvent, builder, type)

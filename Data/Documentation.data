@@ -55296,10 +55296,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 			{
 				Method
 				{
-					var Name = "DumpMemoryDebuggerStats"
-				}
-				Method
-				{
 					var Name = "GetWindow"
 					var ReturnType = "OsWindow"
 					var Parameters = "(Integer p0)"

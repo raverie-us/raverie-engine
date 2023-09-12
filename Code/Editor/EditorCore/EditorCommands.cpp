@@ -1224,11 +1224,6 @@ void TakeProjectScreenshot(Editor* editor)
   seq->Add(new GlobalCallParamAction<Editor*, TakeProjectScreenshotDelayed>(editor));
 }
 
-void DumpMemoryDebuggerStats()
-{
-  Memory::DumpMemoryDebuggerStats("MyProject");
-}
-
 void EditInGame(Editor* editor)
 {
   // command needs a game to be running to work so start the game if none are
@@ -1310,11 +1305,6 @@ void BindEditorCommands(Cog* configCog, CommandManager* commands)
 
   Command* editInGameCommand = commands->AddCommand("EditInGame", BindCommandFunction(EditInGame));
   editInGameCommand->Shortcut = "F9";
-
-  if (DeveloperConfig* config = configCog->has(DeveloperConfig))
-  {
-    commands->AddCommand("DumpMemoryDebuggerStats", BindCommandFunction(DumpMemoryDebuggerStats));
-  }
 }
 
 } // namespace Zero
