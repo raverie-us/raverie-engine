@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "description": "Component based game engine focusing on rapid iteration.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "browser-install": "cd Browser && npm install",
     "browser-dev": "cd Browser && npm run dev",
     "browser-build": "cd Browser && npm run build",
     "browser-preview": "cd Browser && npm run preview",
-    "start": "ts-node index.ts"
+    "start": "ts-node-esm index.ts"
   },
   "repository": {
     "type": "git",
@@ -38,6 +39,7 @@
     "execa": "^5.1.1",
     "glob": "^10.3.4",
     "mkdirp": "^3.0.1",
+    "puppeteer": "^21.1.1",
     "rimraf": "^5.0.1",
     "ts-node": "^10.9.1",
     "yargs": "^17.7.2"

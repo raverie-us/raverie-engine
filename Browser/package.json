@@ -12,7 +12,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "vite": "^4.4.9",
-    "vite-plugin-node-stdlib-browser": "^0.2.1"
+    "vite": "^4.4.9"
   }
 }

@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "strict": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "nodenext",
+    "module": "es2022",
+    "target": "es2022"
   }
 }

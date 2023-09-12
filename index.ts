@@ -7,6 +7,9 @@ import {rimraf} from "rimraf";
 import commandExists from "command-exists";
 import yargs from "yargs";
 import execa from "execa";
+import puppeteer from "puppeteer";
+
+const vite = import("./Browser/node_modules/vite/dist/node/index.js");
 
 const repoRootFile = ".raverie";
 
@@ -26,6 +29,7 @@ const dirs = (() => {
   const libraries = path.join(repo, "Code");
   const resources = path.join(repo, "Resources");
   const build = path.join(repo, "Build");
+  const browser = path.join(repo, "Browser");
   const prebuiltContent = path.join(build, "PrebuiltContent");
   const includedBuilds = path.join(build, "IncludedBuilds");
   const packages = path.join(build, "Packages");
@@ -34,6 +38,7 @@ const dirs = (() => {
 
   return {
     build,
+    browser,
     downloads,
     includedBuilds,
     libraries,
@@ -174,7 +179,7 @@ const exec = async (executable: string, args: string[], options: ExecOptions) =>
   };
 };
 
-const clearCreateDirectory = (directory) => {
+const clearCreateDirectory = (directory: string) => {
   rimraf.sync(directory);
   mkdirp.sync(directory);
 };
@@ -587,7 +592,7 @@ const cmake = async (options) => {
   parseLines(combo, printLogLine);
 
   const buildDir = activateBuildDir(combo);
-  //clearCreateDirectory(buildDir);
+  clearCreateDirectory(buildDir);
 
   await buildvfs(null, buildDir, combo);
 
@@ -612,12 +617,6 @@ const preventNoOutputTimeout = () => {
   }, 1000 * 10);
   return () => clearInterval(interval);
 };
-
-const findExecutableDir = (buildDir: string, libraryDir: string, library: string) =>
-  path.join(buildDir, "Code", libraryDir, library);
-
-const findExecutable = (buildDir: string, libraryDir: string, library: string) =>
-  path.join(findExecutableDir(buildDir, libraryDir, library), library);
 
 const format = async (options) => {
   console.log("Formatting");
@@ -683,29 +682,6 @@ const build = async (options) => {
   console.log("Built");
 };
 
-const executeBuiltProcess = async (buildDir, combo, libraryDir, library, args) => {
-  const executablePath = findExecutable(buildDir, libraryDir, library);
-
-  if (!fs.existsSync(executablePath)) {
-    printErrorLine(`Executable does not exist ${executablePath}`);
-    return [];
-  }
-
-  const opts: ExecOptions = {
-    cwd: buildDir,
-    err: printLogLine,
-    out: printLogLine,
-    reject: false,
-    stdio: [
-      "ignore",
-      "pipe",
-      "pipe"
-    ]
-  };
-  await exec(executablePath, args, opts);
-  return [];
-};
-
 const prebuilt = async (options) => {
   console.log("Copying Prebuilt Content");
   const endPnot = preventNoOutputTimeout();
@@ -714,15 +690,64 @@ const prebuilt = async (options) => {
 
   const buildDir = activateBuildDir(combo);
 
-  const downloadPaths = await executeBuiltProcess(buildDir, combo, executable.dir, executable.name, [
-    "-CopyPrebuiltContent",
-    "-Exit"
-  ]);
+  // We use executable.name twice since it's RaverieEditor/RaverieEditor
+  const wasmPath = path.join(buildDir, "Code", executable.dir, executable.name, executable.name);
 
-  for (const downloadPath of downloadPaths) {
-    console.log("Extracting download", downloadPath);
-    await zipExtract(downloadPath, dirs.prebuiltContent);
+  const port = 3000;
+  const server = await (await vite).createServer({
+    configFile: false,
+    root: dirs.browser,
+    server: {
+      port: 3000
+    }
+  });
+
+  await server.listen();
+  server.printUrls();
+
+  const browser = await puppeteer.launch({
+    headless: "new",
+    timeout: 0
+  });
+  const page = await browser.newPage();
+
+  const downloadDir = path.join(dirs.downloads, Math.random().toString(36).substring(2, 10));
+  clearCreateDirectory(downloadDir);
+  
+  const client = await page.target().createCDPSession();
+  await client.send("Page.setDownloadBehavior", {
+    behavior: "allow",
+    downloadPath: downloadDir
+  });
+
+  page.on("console", (event) => {
+    printLogLine(event.text());
+  });
+  page.on("error", (event) => parseLines(event.stack, printErrorLine));
+  page.on("pageerror", (event) => parseLines(event.stack, printErrorLine));
+
+  const url = new URL(`http://localhost:${port}/`);
+  url.searchParams.set("args", "-CopyPrebuiltContent");
+  await page.goto(url.href);
+
+  let zipFilename: string | undefined = undefined;
+  for (;;) {
+    // As long as we're not still downloading (a .crdownload exists)
+    if (!fs.readdirSync(downloadDir).find((fileName) => fileName.endsWith(".crdownload"))) {
+      // Just because we don't have a .crdownload does not mean we have a zip, check for that too
+      zipFilename = fs.readdirSync(downloadDir).find((fileName) => fileName.endsWith(".zip"));
+      if (zipFilename) {
+        break;
+      }
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100));
   }
+
+  await server.close();
+  await browser.close();
+
+  console.log("Extracting download", zipFilename);
+  await zipExtract(path.join(downloadDir, zipFilename), dirs.prebuiltContent);
 
   rimraf.sync(dirs.downloads);
   if (!fs.existsSync(dirs.prebuiltContent) || fs.readdirSync(dirs.prebuiltContent).length === 0) {
@@ -780,8 +805,8 @@ const main = async () => {
   const empty = {
   };
   const comboOptions = "[--config] [--vfs=true|false]";
-  // eslint-disable-next-line
-    yargs.
+
+  await yargs(process.argv.slice(2)).
     command("disk", "Print the approximate size of every directory on disk", empty, disk).
     command("format", "Formats all C/C++ files", empty, format).
     usage("format [--validate]").
@@ -797,6 +822,6 @@ const main = async () => {
     usage(`all ${comboOptions}`).
     demand(1).
     help().
-    argv;
+    parse();
 };
-main();
+await main();
