@@ -15,6 +15,13 @@ RUN curl -sL https://deb.nodesource.com/setup_20.x | bash -
 RUN apt-get install -y nodejs
 RUN npm install -g npm@latest
 
+# This is needed for Chrome/puppeteer to run
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+    google-chrome-unstable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf
+
 ENV NODE_PATH="/node_modules"
 COPY package*.json ./
 RUN npm install --omit=optional --no-progress --no-audit --unsafe-perm --global
