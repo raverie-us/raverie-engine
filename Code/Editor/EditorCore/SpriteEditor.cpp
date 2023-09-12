@@ -886,9 +886,6 @@ void SpriteSourceEditor::OnExportAllFrames(Event* event)
     downloadFiles.PushBack(fullPath);
   }
 
-  // Open the directory we saved the sprite frames into
-  Os::ShellOpenDirectory(mEditDirectory);
-
   Download(spriteSource->Name, mEditDirectory, downloadFiles);
 }
 
@@ -961,7 +958,7 @@ void SpriteSourceEditor::OnEditSpriteSheet(Event* event)
   String fullPath = FilePath::Combine(mEditDirectory, name);
   Status status;
   SaveImage(status, fullPath, &output, ImageSaveFormat::Png);
-  Os::ShellEditFile(fullPath);
+  Download(fullPath);
 
   // Track edits
   mSheetEdit = name;
@@ -1079,7 +1076,7 @@ void SpriteSourceEditor::EditFrameImage(DataIndex frameIndex)
   SaveImage(status, fullPath, &buffer, ImageSaveFormat::Png);
 
   // Tell the Os to edit this type of file
-  Os::ShellEditFile(fullPath);
+  Download(fullPath);
 
   // Track that this file/frame is out for editing
   mEditFrames.Insert(tempFile, spriteFrame);

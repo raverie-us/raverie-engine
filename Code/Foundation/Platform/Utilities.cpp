@@ -75,21 +75,6 @@ void WebRequest(Status& status,
   status.SetFailed("WebRequest not implemented");
 }
 
-bool ShellOpenDirectory(StringParam directory)
-{
-  return false;
-}
-
-bool ShellOpenFile(StringParam file)
-{
-  return false;
-}
-
-bool ShellEditFile(StringParam file)
-{
-  return false;
-}
-
 bool ShellOpenApplication(StringParam file, StringParam parameters, StringParam workingDirectory)
 {
   return false;

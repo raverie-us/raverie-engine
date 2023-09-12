@@ -436,7 +436,7 @@ void EditResourceExternal(Resource* resource)
     return;
 
   String file = resource->mContentItem->GetFullPath();
-  Os::ShellEditFile(file);
+  Download(file);
 }
 
 void RemoveResource(Resource* resource)

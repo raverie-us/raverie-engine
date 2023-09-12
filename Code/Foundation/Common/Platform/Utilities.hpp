@@ -44,15 +44,6 @@ ZeroShared void EnableMemoryLeakChecking(int breakOnAllocation = -1);
 // When a diagnostic error occurs, this is the default response
 ZeroShared bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData);
 
-// Tells the shell to open or show a directory.
-ZeroShared bool ShellOpenDirectory(StringParam directory);
-
-// Tells the shell to open or show a file.
-ZeroShared bool ShellOpenFile(StringParam file);
-
-// Tells the shell to edit a file.
-ZeroShared bool ShellEditFile(StringParam file);
-
 // Open the application with parameters.
 ZeroShared bool ShellOpenApplication(StringParam file, StringParam parameters = String(), StringParam workingDirectory = String());
 

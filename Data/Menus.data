@@ -10,7 +10,7 @@ Menus menus =
 		  "ArchiveProject",
 		  "OpenProject",
 		  "SaveProject",
-		  "ShowProjectFolder",
+		  "DownloadProjectFolder",
 		  "Divider",
 		  "PlayGame",
 		  "Divider",

@@ -36,30 +36,16 @@ Commands commands =
 
 	Command =
 	{
-		string Name = "ArchiveProject",
-		string Description = "Archive a project into a file",
-		string Tags = "Project",
-	},
-
-	Command =
-	{
-		string Name = "BackupProject",
-		string Description = "Back up project to time stamped archive",
-		string Tags = "Project",
-	},
-
-	Command =
-	{
-		string Name = "ShowProjectFolder",
-		string Description = "Show the folder the project is located in the file system",
+		string Name = "DownloadProjectFolder",
+		string Description = "Download the folder the project is located in the file system",
 		string Tags = "Project",
 		bool ReadOnly = true,
 	},
 
 	Command =
 	{
-		string Name = "ShowContentOutput",
-		string Description = "Show the project's content output folder",
+		string Name = "DownloadContentOutput",
+		string Description = "Download the project's content output folder",
 		string Tags = "Project",
 		bool ReadOnly = true,
 	},

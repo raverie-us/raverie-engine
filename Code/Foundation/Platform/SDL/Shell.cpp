@@ -151,7 +151,6 @@ void Shell::SaveFile(FileDialogInfo& config)
   config.mFiles.PushBack(filePath);
   if (config.mCallback)
     config.mCallback(config.mFiles, config.mUserData);
-  Os::ShellOpenDirectory(downloads);
 }
 #endif
 

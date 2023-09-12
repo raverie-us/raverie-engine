@@ -173,21 +173,6 @@ bool ShellOpen(const char* path)
   return result;
 }
 
-bool ShellOpenDirectory(StringParam directory)
-{
-  return ShellOpen(directory.c_str());
-}
-
-bool ShellOpenFile(StringParam file)
-{
-  return ShellOpen(file.c_str());
-}
-
-bool ShellEditFile(StringParam file)
-{
-  return ShellOpen(file.c_str());
-}
-
 #if !defined(ZeroPlatformNoShellOpenApplication)
 bool ShellOpenApplication(StringParam file, StringParam parameters, StringParam workingDirectory)
 {

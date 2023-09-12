@@ -179,38 +179,6 @@ extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenFileDropHandler(char* fileBuffer)
   free(fileBuffer);
 }
 
-EM_JS(void, EmscriptenShellOpenFileBegin, (bool multiple, const char* accept, void* configPointer), {
-  if (!document)
-    return;
-  shellOpenFile(multiple, UTF8ToString(accept), configPointer);
-});
-
-extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenShellOpenFileEnd(char* fileBuffer, void* configPointer)
-{
-  FileDialogInfo& config = *(FileDialogInfo*)configPointer;
-
-  // Note the the 'fileBuffer' can be null if we cancelled, so we check it
-  // before iterating.
-  if (fileBuffer)
-  {
-    // Loop through all the files and add them to the config.
-    char* it = fileBuffer;
-    while (*it != '\0')
-    {
-      String file(it);
-      CopyToVFS(file);
-      config.mFiles.PushBack(file);
-
-      it += file.SizeInBytes() + 1;
-    }
-    free(fileBuffer);
-  }
-
-  // Invoke the user's provided callback.
-  if (config.mCallback)
-    config.mCallback(config.mFiles, config.mUserData);
-}
-
 namespace Zero
 {
 
