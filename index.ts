@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 // MIT Licensed (see LICENSE.md).
 import path from "path";
 import {mkdirp} from "mkdirp";
@@ -685,7 +684,6 @@ const build = async (options) => {
 };
 
 const executeBuiltProcess = async (buildDir, combo, libraryDir, library, args) => {
-  // TODO(trevor): Retailor this to import the WASM and execute it
   const executablePath = findExecutable(buildDir, libraryDir, library);
 
   if (!fs.existsSync(executablePath)) {
@@ -734,88 +732,6 @@ const prebuilt = async (options) => {
   endPnot();
 };
 
-const pack = async (options) => {
-  console.log("Packing");
-  const combo = determineCmakeCombo(options);
-  const buildDir = activateBuildDir(combo);
-
-  const filter = [
-    ".pdb",
-    ".ilk",
-    ".exp",
-    ".lib",
-    ".wast",
-    ".cmake",
-    "CMakeFiles",
-    "FileSystem.zip",
-    "VirtualFileSystem.cpp"
-  ];
-
-  clearCreateDirectory(dirs.page);
-  // This prevents GitHub from processing our files with Jekyll.
-  fs.writeFileSync(path.join(dirs.page, ".nojekyll"), "", "utf8");
-  mkdirp.sync(dirs.packages);
-
-  const cmakeVariables = readCmakeVariables(buildDir);
-
-  rimraf.sync(dirs.includedBuilds);
-  const library = executable.name;
-  console.log(`Packaging library ${library}`);
-
-  const executableDir = findExecutableDir(buildDir, executable.dir, library);
-  if (!fs.existsSync(executableDir)) {
-    printErrorLine(`Library directory does not exist ${executableDir}`);
-    return;
-  }
-  const files = fs.readdirSync(executableDir).filter((file) => !filter.includes(path.extname(file)) && !filter.includes(file)).
-    map((file) => path.join(executableDir, file));
-
-  /*
-    * This needs to match index.js:pack/Standalone.cpp:BuildId::Parse/BuildId::GetFullId/BuildVersion.cpp:GetBuildVersionName
-    * Application.Branch.Major.Minor.Patch.Revision.ShortChangeset.MsSinceEpoch.Config.Extension
-    * Example: RaverieEditor.master.1.5.0.1501.fb02756c46a4.1574702096290.Windows.x86.Release.zip
-    */
-  const name =
-    `${library}.` +
-    `${cmakeVariables.RAVERIE_BRANCH}.` +
-    `${cmakeVariables.RAVERIE_MAJOR_VERSION}.` +
-    `${cmakeVariables.RAVERIE_MINOR_VERSION}.` +
-    `${cmakeVariables.RAVERIE_PATCH_VERSION}.` +
-    `${cmakeVariables.RAVERIE_REVISION}.` +
-    `${cmakeVariables.RAVERIE_SHORT_CHANGESET}.` +
-    `${cmakeVariables.RAVERIE_MS_SINCE_EPOCH}.` +
-    `${cmakeVariables.RAVERIE_CONFIG}.zip`;
-
-  const packageZip = path.join(dirs.packages, name);
-  tryUnlinkSync(packageZip);
-
-  if (combo.vfs) {
-    await zipAdd(dirs.repo, packageZip, executable.vfsOnlyPackage);
-  } else {
-    await makeExecutableZip(cmakeVariables, executable, packageZip);
-  }
-
-  // Keep files as absolute, since we want to only add the file names to the zip.
-  await zipAdd(dirs.repo, packageZip, files);
-
-  const extractDir = path.join(dirs.includedBuilds, path.basename(packageZip));
-  await zipExtract(packageZip, extractDir);
-
-  // For the web we also output a directory (this can be used to publish to github pages).
-  const pageLibraryDir = path.join(dirs.page, library);
-  mkdirp.sync(pageLibraryDir);
-  files.forEach((file) => {
-    const basename = path.basename(file);
-    fs.copyFileSync(file, path.join(pageLibraryDir, basename));
-  });
-  console.log("Packed");
-};
-
-const deploy = async () => {
-  console.log("Deploying");
-  // Does nothing yet
-  console.log("Deployed");
-};
 
 const documentation = async () => {
   console.log("Running Doxygen");
@@ -855,12 +771,9 @@ const all = async (options) => {
   // Build the executable so we can prebuild content
   await build(options);
   await prebuilt(options);
+  //await documentation(options);
   // Build again so that the VFS will have the prebuilt content
   await build(options);
-  await pack(options);
-  //await documentation(options);
-  // Finally, pack everything up (with included builds and prebuilt content)
-  await pack(options);
 };
 
 const main = async () => {
@@ -880,11 +793,7 @@ const main = async () => {
     usage("documentation").
     command("prebuilt", "Copy prebuilt content", empty, prebuilt).
     usage(`prebuilt ${comboOptions}`).
-    command("pack", "Package everything into standalone installable archives", empty, pack).
-    usage(`pack ${comboOptions}`).
-    command("deploy", "Deploy the packages", empty, deploy).
-    usage(`deploy ${comboOptions}`).
-    command("all", "Run all the expected commands in order: cmake build prebuilt documentation pack", empty, all).
+    command("all", "Run all the expected commands in order: cmake build prebuilt documentation build", empty, all).
     usage(`all ${comboOptions}`).
     demand(1).
     help().
