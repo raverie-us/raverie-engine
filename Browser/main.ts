@@ -10,7 +10,8 @@ import {
   MessageTextTyped,
   MouseButtons,
   MouseState,
-  ToMainMessageType
+  ToMainMessageType,
+  ToWorkerMessageType
 } from "./shared";
 
 const parent = document.createElement("div");
@@ -114,36 +115,41 @@ worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
   }
 });
 
-const initializeMessage: MessageInitialize = {
+const workerPostMessage = <T extends ToWorkerMessageType>(message: T, transfer?: Transferable[]) => {
+  if (transfer) {
+    worker.postMessage(message, transfer);
+  } else {
+    worker.postMessage(message);
+  }
+}
+
+workerPostMessage<MessageInitialize>({
   type: "initialize",
   canvas: offscreenCanvas,
   args: new URL(location.href).searchParams.get("args") || ""
-};
-worker.postMessage(initializeMessage, [offscreenCanvas]);
+}, [offscreenCanvas]);
 
 canvas.addEventListener("mousemove", (event) => {
   const rect = canvas.getBoundingClientRect();
-  const toSend: MessageMouseMove = {
+  workerPostMessage<MessageMouseMove>({
     type: "mouseMove",
     x: event.clientX - rect.left,
     y: event.clientY - rect.top,
     dx: event.movementX,
     dy: event.movementY
-  };
-  worker.postMessage(toSend);
+  });
 });
 
 const onMouseButtonChanged = (event: MouseEvent) => {
   const rect = canvas.getBoundingClientRect();
-  const toSend: MessageMouseButtonChanged = {
+  workerPostMessage<MessageMouseButtonChanged>({
     type: "mouseButtonChanged",
     x: event.clientX - rect.left,
     y: event.clientY - rect.top,
     // Button values line up with MouseButtons enum
     button: event.button as MouseButtons,
     state: (event.type === "mouseup") ? MouseState.Up : MouseState.Down
-  };
-  worker.postMessage(toSend);
+  });
 };
 
 canvas.addEventListener("mousedown", onMouseButtonChanged);
@@ -276,13 +282,11 @@ const onKeyboardButtonChanged = (event: KeyboardEvent) => {
     }
   }
 
-  const toSend: MessageKeyboardButtonChanged = {
+  workerPostMessage<MessageKeyboardButtonChanged>({
     type: "keyboardButtonChanged",
     button: mapKeyboardKey(event.code),
     state
-  };
-
-  worker.postMessage(toSend);
+  });
 }
 
 canvas.addEventListener("keydown", onKeyboardButtonChanged);
@@ -292,12 +296,10 @@ canvas.addEventListener("keyup", onKeyboardButtonChanged);
 // and what position the cursor is at. We can then create an invisible text input, set the text,
 // and change to the correct position so that we can get auto-complete and proper mobile support.
 canvas.addEventListener("keypress", (event) => {
-  const toSend: MessageTextTyped = {
+  workerPostMessage<MessageTextTyped>({
     type: "textTyped",
     rune: event.charCode
-  };
-
-  worker.postMessage(toSend);
+  });
 });
 
 canvas.addEventListener("contextmenu", (event) => {
