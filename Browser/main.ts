@@ -8,6 +8,7 @@ import {
   MessageKeyboardButtonChanged,
   MessageMouseButtonChanged,
   MessageMouseMove,
+  MessageMouseScroll,
   MessagePaste,
   MessageTextTyped,
   MouseButtons,
@@ -148,12 +149,25 @@ canvas.addEventListener("mousemove", (event) => {
   const rect = canvas.getBoundingClientRect();
   workerPostMessage<MessageMouseMove>({
     type: "mouseMove",
-    x: event.clientX - rect.left,
-    y: event.clientY - rect.top,
+    clientX: event.clientX - rect.left,
+    clientY: event.clientY - rect.top,
     dx: event.movementX,
     dy: event.movementY
   });
 });
+
+canvas.addEventListener("wheel", (event) => {
+  const SCROLL_SCALE = 1 / 60;
+  const rect = canvas.getBoundingClientRect();
+  workerPostMessage<MessageMouseScroll>({
+    type: "mouseScroll",
+    clientX: event.clientX - rect.left,
+    clientY: event.clientY - rect.top,
+    scrollX: event.deltaX * SCROLL_SCALE,
+    scrollY: -event.deltaY * SCROLL_SCALE,
+  });
+});
+
 const mapMouseButton = (button: number): MouseButtons => {
   switch (button) {
     case 0: return MouseButtons.Left;

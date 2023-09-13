@@ -74,11 +74,6 @@ void OsShell::Update(bool debugger)
   Z::gEngine->DispatchEvent(Events::OsShellUpdate, &toSend);
 }
 
-uint OsShell::GetScrollLineCount()
-{
-  return mShell.GetScrollLineCount();
-}
-
 IntVec2 OsShell::GetPrimaryMonitorSize()
 {
   return mShell.GetPrimaryMonitorSize();

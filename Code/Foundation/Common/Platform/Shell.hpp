@@ -297,9 +297,6 @@ public:
   Shell();
   ~Shell();
 
-  /// OS specific line-scroll setting when using the mouse scroll wheel.
-  uint GetScrollLineCount();
-
   /// Get the monitor size for the primary monitor (in monitor coordinates).
   IntVec2 GetPrimaryMonitorSize();
 
@@ -510,9 +507,6 @@ public:
   /// Occurs when the window is resized (may occur even if the size is the same
   /// and should be protected against).
   void (*mOnClientSizeChanged)(Math::IntVec2Param clientSize, ShellWindow* window);
-
-  void (*mOnMouseScrollX)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
-  void (*mOnMouseScrollY)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
 
   /// Called when any hardware devices change.
   void (*mOnDevicesChanged)(ShellWindow* window);

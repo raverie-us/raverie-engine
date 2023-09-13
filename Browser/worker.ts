@@ -565,8 +565,9 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
   const ExportInitialize = instance.exports.ExportInitialize as (argumentsCharPtr: number) => void;
   const ExportRunIteration = instance.exports.ExportRunIteration as () => void;
   const ExportHandleCrash = instance.exports.ExportHandleCrash as () => void;
-  const ExportMouseMove = instance.exports.ExportMouseMove as (x: number, y: number, dx: number, dy: number) => void;
-  const ExportMouseButtonChanged = instance.exports.ExportMouseButtonChanged as (x: number, y: number, button: number, state: number) => void;
+  const ExportMouseMove = instance.exports.ExportMouseMove as (clientX: number, clientY: number, dx: number, dy: number) => void;
+  const ExportMouseScroll = instance.exports.ExportMouseScroll as (clientX: number, clientY: number, scrollX: number, scrollY: number) => void;
+  const ExportMouseButtonChanged = instance.exports.ExportMouseButtonChanged as (clientX: number, clientY: number, button: number, state: number) => void;
   const ExportTextTyped = instance.exports.ExportTextTyped as (rune: number) => void;
   const ExportKeyboardButtonChanged = instance.exports.ExportKeyboardButtonChanged as (key: number, state: number) => void;
   const ExportQuit = instance.exports.ExportQuit as () => void;
@@ -586,10 +587,13 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
     const data = event.data;
     switch (data.type) {
       case "mouseMove":
-        ExportMouseMove(data.x, data.y, data.dx, data.dy);
+        ExportMouseMove(data.clientX, data.clientY, data.dx, data.dy);
+        break;
+      case "mouseScroll":
+        ExportMouseScroll(data.clientX, data.clientY, data.scrollX, data.scrollY);
         break;
       case "mouseButtonChanged":
-        ExportMouseButtonChanged(data.x, data.y, data.button, data.state);
+        ExportMouseButtonChanged(data.clientX, data.clientY, data.button, data.state);
         break;
       case "keyboardButtonChanged":
         ExportKeyboardButtonChanged(data.button, data.state);

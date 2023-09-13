@@ -73,8 +73,6 @@ OsWindow::OsWindow(OsShell* shell,
   mWindow.mOnFocusChanged = &ShellWindowOnFocusChanged;
   mWindow.mOnMouseDropFiles = &ShellWindowOnMouseDropFiles;
   mWindow.mOnClientSizeChanged = &ShellWindowOnClientSizeChanged;
-  mWindow.mOnMouseScrollY = &ShellWindowOnMouseScrollY;
-  mWindow.mOnMouseScrollX = &ShellWindowOnMouseScrollX;
   mWindow.mOnDevicesChanged = &ShellWindowOnDevicesChanged;
   mWindow.mOnHitTest = &ShellWindowOnHitTest;
   mWindow.mOnInputDeviceChanged = &ShellWindowOnInputDeviceChanged;
@@ -352,24 +350,15 @@ void ZeroExportNamed(ExportMouseMove)(int32_t x, int32_t y, int32_t dx, int32_t 
   Z::gMouse->mRawMovement += Vec2(dx, dy);
 }
 
-void OsWindow::ShellWindowOnMouseScrollY(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window)
+void ZeroExportNamed(ExportMouseScroll)(int32_t mouseX, int32_t mouseY, float scrollX, float scrollY)
 {
-  OsWindow* self = (OsWindow*)window->mUserData;
+  IntVec2 clientPosition(mouseX, mouseY);
   OsMouseEvent mouseEvent;
-  self->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
+  OsWindow::sInstance->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
   mouseEvent.EventId = Events::OsMouseScroll;
-  mouseEvent.ScrollMovement.y = scrollAmount;
-  self->SendMouseEvent(mouseEvent);
-}
-
-void OsWindow::ShellWindowOnMouseScrollX(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window)
-{
-  OsWindow* self = (OsWindow*)window->mUserData;
-  OsMouseEvent mouseEvent;
-  self->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
-  mouseEvent.EventId = Events::OsMouseScroll;
-  mouseEvent.ScrollMovement.x = scrollAmount;
-  self->SendMouseEvent(mouseEvent);
+  mouseEvent.ScrollMovement.x = scrollX;
+  mouseEvent.ScrollMovement.y = scrollY;
+  OsWindow::sInstance->SendMouseEvent(mouseEvent);
 }
 
 void OsWindow::ShellWindowOnDevicesChanged(ShellWindow* window)

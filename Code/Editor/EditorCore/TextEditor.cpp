@@ -1331,8 +1331,13 @@ void TextEditor::OnPaste(ClipboardEvent* event)
 void TextEditor::OnMouseScroll(MouseEvent* event)
 {
   OsShell* shell = Z::gEngine->has(OsShell);
-  int scroll = (int)shell->GetScrollLineCount();
-  scroll = int(scroll * event->Scroll.y);
+
+  // We only support scrolling by whole lines, so account for fractional scrolling amounts by accumulating it
+  int scroll = int(round(event->Scroll.y));
+  mScrollLineLeftover += event->Scroll.y - float(scroll);
+  int scrollLinesLeftover = int(round(mScrollLineLeftover));
+  mScrollLineLeftover -= float(scrollLinesLeftover);
+  scroll += scrollLinesLeftover;
 
   // vertical scroll
   if (!event->CtrlPressed && !event->ShiftPressed)
@@ -1351,6 +1356,7 @@ void TextEditor::OnMouseScroll(MouseEvent* event)
 
 void TextEditor::OnFocusOut(FocusEvent* event)
 {
+  mScrollLineLeftover = 0;
   mScintilla->SetFocusState(false);
   this->OnFocusOut();
 }
@@ -2140,6 +2146,7 @@ void TextEditor::OnNotify(Scintilla::SCNotification& notify)
 
       Event event;
       this->GetDispatcher()->Dispatch(Events::TextEditorModified, &event);
+      mScrollLineLeftover = 0;
     }
   }
 }

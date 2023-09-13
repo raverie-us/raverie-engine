@@ -157,16 +157,24 @@ export interface MessageInitialize {
 
 export interface MessageMouseMove {
   type: "mouseMove";
-  x: number;
-  y: number;
+  clientX: number;
+  clientY: number;
   dx: number;
   dy: number;
 }
 
+export interface MessageMouseScroll {
+  type: "mouseScroll";
+  clientX: number;
+  clientY: number;
+  scrollX: number;
+  scrollY: number;
+}
+
 export interface MessageMouseButtonChanged {
   type: "mouseButtonChanged";
-  x: number;
-  y: number;
+  clientX: number;
+  clientY: number;
   button: MouseButtons;
   state: MouseState;
 }
@@ -195,6 +203,7 @@ export interface MessagePaste {
 export type ToWorkerMessageType =
   MessageInitialize |
   MessageMouseMove |
+  MessageMouseScroll |
   MessageMouseButtonChanged |
   MessageKeyboardButtonChanged |
   MessageTextTyped |

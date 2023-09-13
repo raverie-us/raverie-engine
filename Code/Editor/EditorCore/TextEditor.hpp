@@ -348,6 +348,7 @@ public:
   String mColorSchemeName;
   // Active hotspots
   Array<TextEditorHotspot*> mHotspots;
+  float mScrollLineLeftover = 0.0f;
 
   PixelBuffer* mIndicators;
   TextureView* mIndicatorDisplay;

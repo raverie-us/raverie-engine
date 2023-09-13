@@ -30,9 +30,6 @@ public:
   cstr GetName() override;
   void Update(bool debugger) override;
 
-  /// OS specific line-scroll setting when using the mouse scroll wheel.
-  uint GetScrollLineCount();
-
   /// Get the size of the primary monitor (desktop size).
   IntVec2 GetPrimaryMonitorSize();
 

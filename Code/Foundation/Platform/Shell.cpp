@@ -16,11 +16,6 @@ Shell::~Shell()
 {
 }
 
-uint Shell::GetScrollLineCount()
-{
-  return 3;
-}
-
 IntVec2 Shell::GetPrimaryMonitorSize()
 {
   return cMinimumMonitorSize;
@@ -91,8 +86,6 @@ ShellWindow::ShellWindow(Shell* shell,
     mOnFocusChanged(nullptr),
     mOnMouseDropFiles(nullptr),
     mOnClientSizeChanged(nullptr),
-    mOnMouseScrollY(nullptr),
-    mOnMouseScrollX(nullptr),
     mOnDevicesChanged(nullptr),
     mOnInputDeviceChanged(nullptr)
 {
