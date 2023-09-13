@@ -22,6 +22,7 @@ parent.style.position = "relative";
 const canvas = document.createElement("canvas");
 canvas.style.position = "absolute";
 canvas.style.backgroundColor = "#000";
+canvas.style.outline = "none";
 canvas.tabIndex = 1;
 canvas.width = 1024;
 canvas.height = 768;
@@ -283,7 +284,8 @@ const mapKeyboardKey = (code: string) => {
 
 const onKeyboardButtonChanged = (event: KeyboardEvent) => {
   // Ideally we'd prevent all default browser behavior, but doing so supresses events like keypress
-  if (event.code === "Tab" || /^F[0-9]{1,2}$/.test(event.code) || (event.ctrlKey && event.code === "KeyF")) {
+  // We also prevent Ctrl+Key (except for CXV for copy,cut,paste)
+  if (event.code === "Tab" || /^F[0-9]{1,2}$/.test(event.code) || (event.ctrlKey && /^Key[ABDEFGHIJKLMNOPQRSTUWYZ]$/gm.test(event.code))) {
     event.preventDefault();
   }
 
