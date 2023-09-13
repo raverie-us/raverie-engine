@@ -154,15 +154,24 @@ canvas.addEventListener("mousemove", (event) => {
     dy: event.movementY
   });
 });
+const mapMouseButton = (button: number): MouseButtons => {
+  switch (button) {
+    case 0: return MouseButtons.Left;
+    case 1: return MouseButtons.Middle;
+    case 2: return MouseButtons.Right;
+    case 3: return MouseButtons.XOneBack;
+    case 4: return MouseButtons.XTwoForward;
+  }
+  throw new Error("Unhandled mouse button");
+}
 
 const onMouseButtonChanged = (event: MouseEvent) => {
   const rect = canvas.getBoundingClientRect();
   workerPostMessage<MessageMouseButtonChanged>({
     type: "mouseButtonChanged",
-    x: event.clientX - rect.left,
-    y: event.clientY - rect.top,
-    // Button values line up with MouseButtons enum
-    button: event.button as MouseButtons,
+    clientX: event.clientX - rect.left,
+    clientY: event.clientY - rect.top,
+    button: mapMouseButton(event.button),
     state: (event.type === "mouseup") ? MouseState.Up : MouseState.Down
   });
 };
