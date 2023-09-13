@@ -12,7 +12,6 @@ class ContentLibrary;
 class RuntimeEditorImpl;
 class PropertyView;
 class Level;
-class StressTestDialog;
 class ObjectView;
 class CommandManager;
 class UpdateEvent;
@@ -145,9 +144,6 @@ public:
 
   // Find
   FindTextDialog* mFindTextDialog;
-
-  // Stress Tests
-  StressTestDialog* mStressTestDialog;
 
   // Desync
   Window* mDesyncWindow;

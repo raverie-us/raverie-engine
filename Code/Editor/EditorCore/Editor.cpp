@@ -227,7 +227,6 @@ Editor::Editor(Composite* parent) : MultiDock(parent)
   mLoading = nullptr;
   mCommands = nullptr;
   mFindTextDialog = nullptr;
-  mStressTestDialog = nullptr;
   mDesyncWindow = nullptr;
   mCodeTranslatorListener = nullptr;
   mProjectDirectoryWatcher = nullptr;

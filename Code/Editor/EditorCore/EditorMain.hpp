@@ -62,7 +62,6 @@ public:
   void OnBlockingTaskFinish(Event* event);
 
   void OnNotifyEvent(NotifyEvent* event);
-  void StressTest(CommandEvent* event);
   void OnMainClick(MouseEvent* event);
 
   Array<ResourcePackage*> PackagesToLoad;

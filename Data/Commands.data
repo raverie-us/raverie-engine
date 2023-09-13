@@ -611,13 +611,6 @@ Commands commands =
 
 	Command =
 	{
-		string Name = "StressTest",
-		string Description = "Stress test the engine by doing a bunch of random stuff",
-		string Tags = "Editor",
-	},
-
-	Command =
-	{
 		string Name = "BuildVersion",
 		string Description = "Print this version date and revision number in the console and copies them to the clipboard",
 		string IconName = "Console",

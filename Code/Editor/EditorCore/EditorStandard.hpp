@@ -29,7 +29,6 @@ public:
 #include "Downloads.hpp"
 #include "EditorSearchProviders.hpp"
 #include "BackgroundTaskUi.hpp"
-#include "StressTest.hpp"
 #include "CurveEditor.hpp"
 
 // Commands

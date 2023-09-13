@@ -698,17 +698,6 @@ void EditorMain::OnNotifyEvent(NotifyEvent* event)
   DoNotifyPopup(this->GetRootWidget()->GetPopUp(), event);
 }
 
-void EditorMain::StressTest(CommandEvent* event)
-{
-  Widget* widget = ShowWindow("Stress Test");
-  if (widget != nullptr)
-  {
-    StressTestDialog* dialog = Type::DynamicCast<StressTestDialog*>(widget);
-    if (dialog != nullptr)
-      dialog->Refresh();
-  }
-}
-
 void EditorMain::OnMainClick(MouseEvent* event)
 {
   Composite* searchWindow = Z::gEditor->OpenSearchWindow(nullptr, true);
@@ -1003,7 +992,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     Connect(Z::gEngine, Events::BlockingTaskStart, editorMain, &EditorMain::OnBlockingTaskStart);
     Connect(Z::gEngine, Events::BlockingTaskFinish, editorMain, &EditorMain::OnBlockingTaskFinish);
 
-    BindCommand("StressTest", StressTest);
     // Add a command to write out all bound types in the engine
     DeveloperConfig* devConfig = config->has(DeveloperConfig);
     if (devConfig != nullptr)
@@ -1098,15 +1086,6 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     findText->SetHideOnClose(true);
     editorMain->AddManagedWidget(findText, DockArea::Floating, false);
     editorMain->mFindTextDialog = findText;
-  }
-
-  {
-    // Create the stress test dialog
-    StressTestDialog* stress = new StressTestDialog(editorMain);
-    stress->SetName("Stress Test");
-    stress->SetHideOnClose(true);
-    editorMain->AddManagedWidget(stress, DockArea::Floating, false);
-    editorMain->mStressTestDialog = stress;
   }
 
   {

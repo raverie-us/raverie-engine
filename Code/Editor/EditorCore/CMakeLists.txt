@@ -235,8 +235,6 @@ target_sources(EditorCore
     ${CMAKE_CURRENT_LIST_DIR}/SpriteEditor.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SpriteImporter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SpriteImporter.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/StressTest.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/StressTest.hpp
     ${CMAKE_CURRENT_LIST_DIR}/TextEditor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/TextEditor.hpp
     ${CMAKE_CURRENT_LIST_DIR}/TextEditorHotspot.cpp

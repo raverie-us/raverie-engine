@@ -112,7 +112,6 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(MetaPropertyEditor);
   ZilchInitializeType(MetaCompositionWrapper);
   ZilchInitializeType(BackgroundTasks);
-  ZilchInitializeType(StressTest);
   ZilchInitializeType(GeneralSearchView);
   ZilchInitializeTypeAs(CurveEditing::Draggable, "CurveDraggable");
   ZilchInitializeTypeAs(CurveEditing::ControlPoint, "CurveControlPoint");
@@ -276,9 +275,6 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(AnimationSettings);
   ZilchInitializeType(AnimationTrackView);
   ZilchInitializeType(AnimationEditor);
-
-  // Stress test
-  ZilchInitializeType(StressTestDialog);
 
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
