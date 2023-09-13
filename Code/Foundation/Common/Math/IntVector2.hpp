@@ -13,7 +13,7 @@ typedef IntVector2& IntVec2Ref;
 typedef IntVector2* IntVec2Ptr;
 
 /// 2 dimensional integral vector.
-struct ZeroShared IntVector2
+struct IntVector2
 {
   IntVector2(void)
   {
@@ -97,18 +97,18 @@ struct ZeroShared IntVector2
 };
 
 /// Binary Operators (integers)
-ZeroShared IntVector2 operator*(int lhs, IntVec2Param rhs);
+IntVector2 operator*(int lhs, IntVec2Param rhs);
 
 /// Returns a vector with absolute valued elements of the given vector.
-ZeroShared IntVector2 Abs(IntVec2Param vec);
+IntVector2 Abs(IntVec2Param vec);
 
 /// Returns the component-wise minimum vector of the two vectors.
-ZeroShared IntVector2 Min(IntVec2Param lhs, IntVec2Param rhs);
+IntVector2 Min(IntVec2Param lhs, IntVec2Param rhs);
 
 /// Returns the component-wise maximum vector of the two vectors.
-ZeroShared IntVector2 Max(IntVec2Param lhs, IntVec2Param rhs);
+IntVector2 Max(IntVec2Param lhs, IntVec2Param rhs);
 
 /// Compute the dot product of two vectors.
-ZeroShared int Dot(IntVec2Param lhs, IntVec2Param rhs);
+int Dot(IntVec2Param lhs, IntVec2Param rhs);
 
 } // namespace Math

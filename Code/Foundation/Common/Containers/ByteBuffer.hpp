@@ -10,7 +10,7 @@ namespace Zero
 class ByteBufferBlock;
 
 /// ByteBuffer used for efficient appending. Structured as an array of blocks.
-class ZeroShared ByteBuffer
+class ByteBuffer
 {
 public:
   typedef unsigned char byteType;
@@ -166,7 +166,7 @@ private:
 };
 
 template <>
-struct ZeroShared MoveWithoutDestructionOperator<ByteBufferBlock>
+struct MoveWithoutDestructionOperator<ByteBufferBlock>
 {
   static inline void MoveWithoutDestruction(ByteBufferBlock* dest, ByteBufferBlock* source)
   {

@@ -21,7 +21,7 @@ enum Enum
 } // namespace ErrorCode
 
 // Store example error information and how it was fixed
-class ZeroShared ErrorExample
+class ErrorExample
 {
 public:
   // The lines of code where the error can be seen
@@ -35,7 +35,7 @@ public:
 };
 
 // Store information about a particular error
-class ZeroShared ErrorInfo
+class ErrorInfo
 {
 public:
   // The error itself (possibly a context sensitive string)
@@ -54,7 +54,7 @@ public:
 };
 
 // A created database that stores all the errors
-class ZeroShared ErrorDatabase
+class ErrorDatabase
 {
 public:
   // Get the singleton instance of the error database (which also initializes
@@ -73,7 +73,7 @@ private:
 };
 
 // This structure is what gets reported to the user
-class ZeroShared ErrorEvent : public EventData
+class ErrorEvent : public EventData
 {
 public:
   ZilchDeclareType(ErrorEvent, TypeCopyMode::ReferenceType);

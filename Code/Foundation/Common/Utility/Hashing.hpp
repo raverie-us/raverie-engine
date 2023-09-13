@@ -43,7 +43,7 @@ inline size_t Hash64to32Shift(u64 key)
 
 /// has_hash_function_helper helper class
 template <typename T>
-struct ZeroSharedTemplate has_hash_function_helper
+struct has_hash_function_helper
 {
   template <typename T2>
   static inline yes Test(static_verify_function_signature<size_t (T2::*)() const, &T2::Hash>*);
@@ -56,7 +56,7 @@ struct ZeroSharedTemplate has_hash_function_helper
 /// Provides a constant defined as true if T has a hash function, else defined
 /// as false
 template <typename T>
-struct ZeroSharedTemplate has_hash_function : public integral_constant<bool, has_hash_function_helper<T>::value>
+struct has_hash_function : public integral_constant<bool, has_hash_function_helper<T>::value>
 {
 };
 
@@ -66,7 +66,7 @@ struct ZeroSharedTemplate has_hash_function : public integral_constant<bool, has
 
 /// Policy for how values are hashed
 template <typename T, typename Enable = void>
-struct ZeroSharedTemplate HashPolicy : public ComparePolicy<T>
+struct HashPolicy : public ComparePolicy<T>
 {
   // (Dummy operator() required for has_valid_hash_policy<T> to compile
   // properly)
@@ -80,7 +80,7 @@ struct ZeroSharedTemplate HashPolicy : public ComparePolicy<T>
 /// Default hash policy
 /// Available for instantiation if T has an accessible hash function
 template <typename T>
-struct ZeroSharedTemplate HashPolicy<T, TC_ENABLE_IF(has_hash_function<T>::value)> : public ComparePolicy<T>
+struct HashPolicy<T, TC_ENABLE_IF(has_hash_function<T>::value)> : public ComparePolicy<T>
 {
 public:
   typedef HashPolicy<T> this_type;
@@ -95,7 +95,7 @@ public:
 
 /// HashPolicy for bool
 template <>
-struct ZeroShared HashPolicy<bool> : public ComparePolicy<bool>
+struct HashPolicy<bool> : public ComparePolicy<bool>
 {
   inline size_t operator()(const bool& value) const
   {
@@ -106,7 +106,7 @@ struct ZeroShared HashPolicy<bool> : public ComparePolicy<bool>
 
 /// HashPolicy for short
 template <>
-struct ZeroShared HashPolicy<short> : public ComparePolicy<int>
+struct HashPolicy<short> : public ComparePolicy<int>
 {
   inline size_t operator()(const short& value) const
   {
@@ -117,7 +117,7 @@ struct ZeroShared HashPolicy<short> : public ComparePolicy<int>
 
 /// HashPolicy for int
 template <>
-struct ZeroShared HashPolicy<int> : public ComparePolicy<int>
+struct HashPolicy<int> : public ComparePolicy<int>
 {
   inline size_t operator()(const int& value) const
   {
@@ -127,7 +127,7 @@ struct ZeroShared HashPolicy<int> : public ComparePolicy<int>
 
 /// HashPolicy for unsigned int
 template <>
-struct ZeroShared HashPolicy<unsigned int> : public ComparePolicy<unsigned int>
+struct HashPolicy<unsigned int> : public ComparePolicy<unsigned int>
 {
   inline size_t operator()(const unsigned int& value) const
   {
@@ -137,7 +137,7 @@ struct ZeroShared HashPolicy<unsigned int> : public ComparePolicy<unsigned int>
 
 /// HashPolicy for long
 template <>
-struct ZeroShared HashPolicy<long> : public ComparePolicy<long>
+struct HashPolicy<long> : public ComparePolicy<long>
 {
   inline size_t operator()(const long& value) const
   {
@@ -147,7 +147,7 @@ struct ZeroShared HashPolicy<long> : public ComparePolicy<long>
 
 /// HashPolicy for unsigned long
 template <>
-struct ZeroShared HashPolicy<unsigned long> : public ComparePolicy<unsigned long>
+struct HashPolicy<unsigned long> : public ComparePolicy<unsigned long>
 {
   inline size_t operator()(const unsigned long& value) const
   {
@@ -157,7 +157,7 @@ struct ZeroShared HashPolicy<unsigned long> : public ComparePolicy<unsigned long
 
 /// HashPolicy for pointers
 template <typename type>
-struct ZeroSharedTemplate HashPolicy<type*> : public ComparePolicy<type*>
+struct HashPolicy<type*> : public ComparePolicy<type*>
 {
   inline size_t operator()(const type* value) const
   {
@@ -167,7 +167,7 @@ struct ZeroSharedTemplate HashPolicy<type*> : public ComparePolicy<type*>
 
 /// HashPolicy for float
 template <>
-struct ZeroShared HashPolicy<float> : public ComparePolicy<float>
+struct HashPolicy<float> : public ComparePolicy<float>
 {
   inline size_t operator()(const float& value) const
   {
@@ -177,7 +177,7 @@ struct ZeroShared HashPolicy<float> : public ComparePolicy<float>
 
 /// HashPolicy for const char*
 template <>
-struct ZeroShared HashPolicy<const char*> : public ComparePolicy<const char*>
+struct HashPolicy<const char*> : public ComparePolicy<const char*>
 {
   inline size_t operator()(const char* value) const
   {
@@ -187,7 +187,7 @@ struct ZeroShared HashPolicy<const char*> : public ComparePolicy<const char*>
 
 /// HashPolicy for u64
 template <>
-struct ZeroShared HashPolicy<u64> : public ComparePolicy<u64>
+struct HashPolicy<u64> : public ComparePolicy<u64>
 {
   inline size_t operator()(const u64& value) const
   {
@@ -197,7 +197,7 @@ struct ZeroShared HashPolicy<u64> : public ComparePolicy<u64>
 
 /// HashPolicy for Guid
 template <>
-struct ZeroShared HashPolicy<Guid> : public ComparePolicy<Guid>
+struct HashPolicy<Guid> : public ComparePolicy<Guid>
 {
   inline size_t operator()(const Guid& value) const
   {
@@ -207,7 +207,7 @@ struct ZeroShared HashPolicy<Guid> : public ComparePolicy<Guid>
 
 /// HashPolicy for s64
 template <>
-struct ZeroShared HashPolicy<s64> : public ComparePolicy<s64>
+struct HashPolicy<s64> : public ComparePolicy<s64>
 {
   inline size_t operator()(const s64& value) const
   {
@@ -233,7 +233,7 @@ size_t Pair<type0, type1>::Hash() const
 
 /// has_valid_hash_policy_helper helper class
 template <typename T>
-struct ZeroSharedTemplate has_valid_hash_policy_helper
+struct has_valid_hash_policy_helper
 {
   typedef struct HashPolicy<T> HashPolicyT;
 
@@ -250,7 +250,7 @@ struct ZeroSharedTemplate has_valid_hash_policy_helper
 /// defined as false A hash policy is valid if it has a function callable as:
 /// size_t operator()(const T& value) const;
 template <typename T>
-struct ZeroSharedTemplate has_valid_hash_policy : public integral_constant<bool, has_valid_hash_policy_helper<T>::value>
+struct has_valid_hash_policy : public integral_constant<bool, has_valid_hash_policy_helper<T>::value>
 {
 };
 

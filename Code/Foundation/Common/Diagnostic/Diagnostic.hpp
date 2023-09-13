@@ -33,7 +33,7 @@ namespace Zero
 {
 
 // Signaler
-class ZeroShared ErrorSignaler
+class ErrorSignaler
 {
 public:
   enum SignalErrorType

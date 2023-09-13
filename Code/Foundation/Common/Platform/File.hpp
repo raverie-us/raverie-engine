@@ -27,18 +27,18 @@ DeclareBitField4(FileShare, Read, Write, Delete, Unspecified);
 // Position in file
 typedef u64 FilePosition;
 
-ZeroShared byte* ReadFileIntoMemory(cstr path, size_t& fileSize, size_t extra = 0);
-ZeroShared DataBlock ReadFileIntoDataBlock(cstr path);
-ZeroShared ByteBufferBlock ReadFileIntoByteBufferBlock(cstr path);
-ZeroShared String ReadFileIntoString(StringParam path);
-ZeroShared size_t WriteToFile(cstr filePath, const byte* data, size_t bufferSize);
+byte* ReadFileIntoMemory(cstr path, size_t& fileSize, size_t extra = 0);
+DataBlock ReadFileIntoDataBlock(cstr path);
+ByteBufferBlock ReadFileIntoByteBufferBlock(cstr path);
+String ReadFileIntoString(StringParam path);
+size_t WriteToFile(cstr filePath, const byte* data, size_t bufferSize);
 
 // Auxiliary functions defined once for every platform
-ZeroShared bool CompareFile(Status& status, StringParam filePath1, StringParam filePath2);
-ZeroShared bool CompareFileAndString(Status& status, StringParam filePath, StringParam string);
+bool CompareFile(Status& status, StringParam filePath1, StringParam filePath2);
+bool CompareFileAndString(Status& status, StringParam filePath, StringParam string);
 
 /// Os file class
-class ZeroShared File
+class File
 {
 public:
   static const int MaxPath = 260;

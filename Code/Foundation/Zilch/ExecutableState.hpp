@@ -43,7 +43,7 @@ ZilchDeclareEvent(MemoryLeak, MemoryLeakEvent);
 
 // Used when an object leaks when an executable state is torn down
 // Members may be null depending on the type of leak (always check for null)
-class ZeroShared MemoryLeakEvent : public EventData
+class MemoryLeakEvent : public EventData
 {
 public:
   ZilchDeclareType(MemoryLeakEvent, TypeCopyMode::ReferenceType);
@@ -56,7 +56,7 @@ public:
 
 // An event intended for debuggers and profilers (used when we enter/exit
 // functions and step opcodes)
-class ZeroShared OpcodeEvent : public EventData
+class OpcodeEvent : public EventData
 {
 public:
   ZilchDeclareType(OpcodeEvent, TypeCopyMode::ReferenceType);
@@ -70,7 +70,7 @@ public:
 };
 
 // An event sent out when an exception occurs
-class ZeroShared ExceptionEvent : public EventData
+class ExceptionEvent : public EventData
 {
 public:
   ZilchDeclareType(ExceptionEvent, TypeCopyMode::ReferenceType);
@@ -92,7 +92,7 @@ enum Enum
 }
 
 // The event sent out when a fatal error occurs
-class ZeroShared FatalErrorEvent : public EventData
+class FatalErrorEvent : public EventData
 {
 public:
   ZilchDeclareType(FatalErrorEvent, TypeCopyMode::ReferenceType);
@@ -107,7 +107,7 @@ const size_t ProgramCounterNative = (size_t)-2;
 
 // The data that exists per scope (per stack frame)
 // Every function has an implicit scope
-class ZeroShared PerScopeData
+class PerScopeData
 {
 public:
   // Invoke the destructors of anything we need to cleanup
@@ -178,7 +178,7 @@ enum Enum
 }
 
 // The data that exists per stack frame
-class ZeroShared PerFrameData
+class PerFrameData
 {
 public:
   // Constructor
@@ -268,7 +268,7 @@ enum Enum
 
 // Describes where an operand is pointing to =
 // (a location on the stack, or an object, etc)
-class ZeroShared OperandLocation
+class OperandLocation
 {
 public:
   // Constructor
@@ -294,7 +294,7 @@ public:
 
 // Tells us when a function or timeout scope started, and how
 // long it has until it exceeds its time and throws an exception
-class ZeroShared Timeout
+class Timeout
 {
 public:
   // Constructor
@@ -318,7 +318,7 @@ public:
 };
 
 // With any function call, an exception can occur that we need to catch
-class ZeroShared ExceptionReport
+class ExceptionReport
 {
 public:
   // Friends
@@ -350,10 +350,10 @@ private:
 };
 
 // A callback that prints to stderr whenever an exception occurs
-ZeroShared void DefaultExceptionCallback(ExceptionEvent* e);
+void DefaultExceptionCallback(ExceptionEvent* e);
 
 // Stores the generated functions, and anything else needed for a VM to execute
-class ZeroShared ExecutableState : public EventHandler
+class ExecutableState : public EventHandler
 {
 public:
   ZilchDeclareType(ExecutableState, TypeCopyMode::ReferenceType);
@@ -728,7 +728,7 @@ public:
 // You can get the current stack frame by calling 'GetCurrentStackFrame'
 // See 'GetCurrentStackFrame' for the calling conventions
 template <typename T>
-ZeroSharedTemplate T InternalReadValue(byte* stackFrame)
+T InternalReadValue(byte* stackFrame)
 {
   // Return the read in value and advance the stack forward by the value's size
   typedef typename TypeBinding::StaticTypeId<T>::ReadType ReadType;
@@ -741,7 +741,7 @@ ZeroSharedTemplate T InternalReadValue(byte* stackFrame)
 // You can get the current stack frame by calling 'GetCurrentStackFrame'
 // See 'GetCurrentStackFrame' for the calling conventions
 template <typename T>
-ZeroSharedTemplate void InternalWriteValue(const T& value, byte* stackFrame)
+void InternalWriteValue(const T& value, byte* stackFrame)
 {
   // Write the value directly to the stack frame
   typedef typename TypeBinding::StaticTypeId<T>::UnqualifiedType& ToType;
@@ -754,7 +754,7 @@ ZeroSharedTemplate void InternalWriteValue(const T& value, byte* stackFrame)
 // You can get the current stack frame by calling 'GetCurrentStackFrame'
 // See 'GetCurrentStackFrame' for the calling conventions
 template <typename T>
-ZeroSharedTemplate T InternalReadRef(byte* stackFrame)
+T InternalReadRef(byte* stackFrame)
 {
   // Read the handle that will point at the string from the stack
   Handle& handle = *(Handle*)stackFrame;
@@ -767,7 +767,7 @@ ZeroSharedTemplate T InternalReadRef(byte* stackFrame)
 }
 
 template <typename T>
-ZeroSharedTemplate void InternalWriteRef(const T& value, byte* stackFrame, ExecutableState* state)
+void InternalWriteRef(const T& value, byte* stackFrame, ExecutableState* state)
 {
   // Get the type we're trying to write
   ZilchStrip(T)* pointerToValue = ZilchToPointer(value);
@@ -822,7 +822,7 @@ ZeroSharedTemplate void InternalWriteRef(const T& value, byte* stackFrame, Execu
 DelegateType* CallGetFunctionType(Call& call);
 
 template <typename T>
-ZeroSharedTemplate class CallHelper
+class CallHelper
 {
 public:
   static T Get(Call& call, size_t index);
@@ -853,7 +853,7 @@ public:
 };
 
 #  define ZilchCallHelperSpecialization(T, SetT)                                                                       \
-    class ZeroShared CallHelper<T>                                                                                     \
+    class CallHelper<T>                                                                                     \
     {                                                                                                                  \
     public:                                                                                                            \
       static T Get(Call& call, size_t index);                                                                          \
@@ -863,7 +863,7 @@ public:
     };
 
 #  define ZilchCallHelperTemplateSpecialization(T, SetT)                                                               \
-    ZeroSharedTemplate class CallHelper<T>                                                                             \
+    class CallHelper<T>                                                                             \
     {                                                                                                                  \
     public:                                                                                                            \
       static T Get(Call& call, size_t index);                                                                          \
@@ -875,7 +875,7 @@ public:
 // Facilitates invoking Zilch functions including parameter passing and grabbing
 // return values Also is passed into each call when implementing a custom
 // function that is bound to Zilch
-class ZeroShared Call
+class Call
 {
 public:
   friend class ExecutableState;

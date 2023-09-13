@@ -404,7 +404,7 @@ void ToMatrix3(EulerAnglesParam eulerAngles, Mat3Ptr matrix)
   }
 }
 
-ZeroShared Matrix3 ToMatrix3(real xRadians, real yRadians, real zRadians)
+Matrix3 ToMatrix3(real xRadians, real yRadians, real zRadians)
 {
   EulerAngles euler(xRadians, yRadians, zRadians, Math::EulerOrders::XYZs);
   return Math::ToMatrix3(euler);

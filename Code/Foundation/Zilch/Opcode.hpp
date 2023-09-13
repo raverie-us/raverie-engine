@@ -66,7 +66,7 @@ enum Enum
 // This is the form that the intermediate three-address opcode will take
 // An opcode is basically a single instruction with its operand (like an
 // assembly command)
-class ZeroShared Opcode
+class Opcode
 {
 public:
   // Constructor (gets rid of the annoying warning about POD constructors)
@@ -109,7 +109,7 @@ enum Enum
 
 // An operand is used inside of an opcode,
 // for when it needs to refer to any bit of memory
-class ZeroShared Operand
+class Operand
 {
 public:
   // Default constructor
@@ -142,7 +142,7 @@ public:
 };
 
 // Opcode for the creation of a handle from a local
-class ZeroShared TimeoutOpcode : public Opcode
+class TimeoutOpcode : public Opcode
 {
 public:
   // Even though it might be more efficient to store this in ticks
@@ -152,7 +152,7 @@ public:
 };
 
 // Opcode for the creation of a handle from a local
-class ZeroShared ToHandleOpcode : public Opcode
+class ToHandleOpcode : public Opcode
 {
 public:
   Operand ToHandle;
@@ -161,7 +161,7 @@ public:
 };
 
 // Opcode for the creation of generic delegates (never used directly)
-class ZeroShared CreateDelegateOpcode : public Opcode
+class CreateDelegateOpcode : public Opcode
 {
 public:
   Function* BoundFunction;
@@ -171,7 +171,7 @@ public:
 // Opcode for the creation of static delegates
 // Note that this opcode always saves to a local
 // (anyone that wants to store the value just copies it from a local)
-class ZeroShared CreateStaticDelegateOpcode : public CreateDelegateOpcode
+class CreateStaticDelegateOpcode : public CreateDelegateOpcode
 {
 public:
 };
@@ -179,7 +179,7 @@ public:
 // Opcode for the creation of instance delegates
 // Note that this opcode always saves to a local
 // (anyone that wants to store the value just copies it from a local)
-class ZeroShared CreateInstanceDelegateOpcode : public CreateDelegateOpcode
+class CreateInstanceDelegateOpcode : public CreateDelegateOpcode
 {
 public:
   Operand ThisHandle;
@@ -187,7 +187,7 @@ public:
 };
 
 // Opcode for the if-instruction
-class ZeroShared IfOpcode : public Opcode
+class IfOpcode : public Opcode
 {
 public:
   Operand Condition;
@@ -195,14 +195,14 @@ public:
 };
 
 // Opcode for the relative jump instruction
-class ZeroShared RelativeJumpOpcode : public Opcode
+class RelativeJumpOpcode : public Opcode
 {
 public:
   ByteCodeOffset JumpOffset;
 };
 
 // Opcode for the prep for function call instruction
-class ZeroShared PrepForFunctionCallOpcode : public Opcode
+class PrepForFunctionCallOpcode : public Opcode
 {
 public:
   Operand Delegate;
@@ -211,13 +211,13 @@ public:
 
 // Creates a fresh string builder that we use for efficient concatenation of
 // strings
-class ZeroShared BeginStringBuilderOpcode : public Opcode
+class BeginStringBuilderOpcode : public Opcode
 {
 public:
 };
 
 // Finishes off a string builder and outputs the string to a given stack local
-class ZeroShared EndStringBuilderOpcode : public Opcode
+class EndStringBuilderOpcode : public Opcode
 {
 public:
   OperandLocal SaveStringHandleLocal;
@@ -225,7 +225,7 @@ public:
 
 // Creates a fresh string builder that we use for efficient concatenation of
 // strings
-class ZeroShared AddToStringBuilderOpcode : public Opcode
+class AddToStringBuilderOpcode : public Opcode
 {
 public:
   const Type* TypeToConvert;
@@ -233,7 +233,7 @@ public:
 };
 
 // Gets the virtual type (most derived) of an expression
-class ZeroShared TypeIdOpcode : public Opcode
+class TypeIdOpcode : public Opcode
 {
 public:
   const Type* CompileTimeType;
@@ -243,7 +243,7 @@ public:
 
 // Opcode for generic creation of an object
 // Note that this opcode always creates a handle at the given local position
-class ZeroShared CreateTypeOpcode : public Opcode
+class CreateTypeOpcode : public Opcode
 {
 public:
   BoundType* CreatedType;
@@ -251,14 +251,14 @@ public:
 };
 
 // Opcode for local creation of an object
-class ZeroShared CreateLocalTypeOpcode : public CreateTypeOpcode
+class CreateLocalTypeOpcode : public CreateTypeOpcode
 {
 public:
   OperandLocal StackLocal;
 };
 
 // Opcode for the creation of a property delegate (a reference object)
-class ZeroShared CreatePropertyDelegateOpcode : public CreateTypeOpcode
+class CreatePropertyDelegateOpcode : public CreateTypeOpcode
 {
 public:
   OperandLocal ThisHandleLocal;
@@ -266,14 +266,14 @@ public:
 };
 
 // Opcode for the delete object instruction
-class ZeroShared DeleteObjectOpcode : public Opcode
+class DeleteObjectOpcode : public Opcode
 {
 public:
   Operand Object;
 };
 
 // Opcode for the throw exception instruction
-class ZeroShared ThrowExceptionOpcode : public Opcode
+class ThrowExceptionOpcode : public Opcode
 {
 public:
   Operand Exception;
@@ -281,7 +281,7 @@ public:
 
 // Binary operation between two operands (this instruction has no side effects
 // and is only used with value types, and therefore the output is always local)
-class ZeroShared BinaryRValueOpcode : public Opcode
+class BinaryRValueOpcode : public Opcode
 {
 public:
   Operand Left;
@@ -291,7 +291,7 @@ public:
 };
 
 // A side effect operator (such as assignment)
-class ZeroShared BinaryLValueOpcode : public Opcode
+class BinaryLValueOpcode : public Opcode
 {
 public:
   Operand Output;
@@ -300,7 +300,7 @@ public:
 
 // Unary operation for a single operand (this instruction has no side effects
 // and is only used with value types, and therefore the output is always local)
-class ZeroShared UnaryRValueOpcode : public Opcode
+class UnaryRValueOpcode : public Opcode
 {
 public:
   Operand SingleOperand;
@@ -308,7 +308,7 @@ public:
 };
 
 // A side effect operator (such as increment)
-class ZeroShared UnaryLValueOpcode : public Opcode
+class UnaryLValueOpcode : public Opcode
 {
 public:
   Operand SingleOperand;
@@ -316,7 +316,7 @@ public:
 
 // Convert one value to another (this instruction has no side effects and
 // is only used with value types, and therefore the output is always local)
-class ZeroShared ConversionOpcode : public Opcode
+class ConversionOpcode : public Opcode
 {
 public:
   Operand ToConvert;
@@ -325,7 +325,7 @@ public:
 
 // Convert a type into the 'Any' type (which means copying it's value into the
 // variant)
-class ZeroShared AnyConversionOpcode : public ConversionOpcode
+class AnyConversionOpcode : public ConversionOpcode
 {
 public:
   // For ConvertToAny:
@@ -344,7 +344,7 @@ public:
 };
 
 // When we cast between a base type and derived handles
-class ZeroShared DowncastConversionOpcode : public ConversionOpcode
+class DowncastConversionOpcode : public ConversionOpcode
 {
 public:
   // We check to make sure the type stored in the handle is a type that is
@@ -353,7 +353,7 @@ public:
 };
 
 // Describes how to get a value out of a value stored by the 'any' type
-class ZeroShared AnyDynamicGet : public Opcode
+class AnyDynamicGet : public Opcode
 {
 public:
   // An index into the constant table where the member's name lives (as a
@@ -374,7 +374,7 @@ enum Enum
 }
 
 // Copy a value from one place to another
-class ZeroShared CopyOpcode : public Opcode
+class CopyOpcode : public Opcode
 {
 public:
   Operand Source;
@@ -399,7 +399,7 @@ enum Enum
 };
 }
 
-class ZeroShared DebugOperand
+class DebugOperand
 {
 public:
   DebugOperand();
@@ -410,7 +410,7 @@ public:
   String Name;
 };
 
-class ZeroShared DebugInstruction
+class DebugInstruction
 {
 public:
   DebugInstruction();
@@ -426,7 +426,7 @@ public:
 };
 
 // Generate debug info per instruction
-ZeroShared void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut);
+void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut);
 } // namespace Zilch
 
 #endif

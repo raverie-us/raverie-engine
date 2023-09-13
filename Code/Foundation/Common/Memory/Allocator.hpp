@@ -22,7 +22,7 @@ namespace Zero
 void* zAllocate(size_t numberOfBytes);
 void zDeallocate(void*);
 
-class ZeroShared StandardMemory
+class StandardMemory
 {
 public:
   static inline void MemCopy(void* dest, void* source, size_t numberOfBytes)
@@ -38,7 +38,7 @@ public:
 
 // Default allocator of Standard Memory. This allocator
 // is used by default for all the containers.
-class ZeroShared DefaultAllocator : public StandardMemory
+class DefaultAllocator : public StandardMemory
 {
 public:
   enum

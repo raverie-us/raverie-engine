@@ -7,7 +7,7 @@
 namespace Zilch
 {
 // Instantiates an array template when requested
-ZeroShared BoundType* InstantiateArray(LibraryBuilder& builder,
+BoundType* InstantiateArray(LibraryBuilder& builder,
                                        StringParam baseName,
                                        StringParam fullyQualifiedName,
                                        const Array<Constant>& templateTypes,
@@ -15,7 +15,7 @@ ZeroShared BoundType* InstantiateArray(LibraryBuilder& builder,
 
 // For every instantiated array, it may want to look up information about what
 // it Contains
-class ZeroShared ArrayUserData
+class ArrayUserData
 {
 public:
   ArrayUserData();
@@ -30,7 +30,7 @@ public:
 // the Zilch Array template We add no members or virtuals in the derived class,
 // and static assert that the sizes are the same
 template <typename T>
-class ZeroSharedTemplate ArrayClass
+class ArrayClass
 {
 public:
   // Constructor
@@ -55,7 +55,7 @@ public:
 
 // These are all the specializations that are optimized to store exactly that
 // data type All values that are unknown will be stored as the 'Any' type
-#  define ZilchDeclareDefineArray(ElementType, Linkage)                                                                \
+#  define ZilchDeclareDefineArray(ElementType)                                                                         \
     ZilchDeclareCustomType(                                                                                            \
         ArrayClass<ElementType>,                                                                                       \
         ZZ::Core::GetInstance()                                                                                        \
@@ -63,38 +63,37 @@ public:
             ->InstantiateTemplate("Array",                                                                             \
                                   ZilchConstants(ZilchTypeId(ElementType)),                                            \
                                   LibraryArray(ZeroInit, Core::GetInstance().GetBuilder()->BuiltLibrary))              \
-            .Type,                                                                                                     \
-        Linkage);
+            .Type);
 
-#  define ZilchDeclareDefineValueArray(ElementType, Linkage)                                                           \
-    ZilchDeclareDefineArray(ElementType, Linkage) typedef ArrayClass<ElementType> Array##ElementType;
+#  define ZilchDeclareDefineValueArray(ElementType)                                                           \
+    ZilchDeclareDefineArray(ElementType) typedef ArrayClass<ElementType> Array##ElementType;
 
-#  define ZilchDeclareDefineHandleArray(ElementType, Linkage)                                                          \
-    ZilchDeclareDefineArray(HandleOf<ElementType>, Linkage) typedef ArrayClass<HandleOf<ElementType>>                  \
+#  define ZilchDeclareDefineHandleArray(ElementType)                                                          \
+    ZilchDeclareDefineArray(HandleOf<ElementType>) typedef ArrayClass<HandleOf<ElementType>>                  \
         Array##ElementType;
 
 // Pre-existing useful declarations
 typedef HandleOf<String> HandleOfString;
-ZilchDeclareDefineValueArray(Handle, ZeroShared);
-ZilchDeclareDefineValueArray(Delegate, ZeroShared);
-ZilchDeclareDefineValueArray(Boolean, ZeroShared);
-ZilchDeclareDefineValueArray(Boolean2, ZeroShared);
-ZilchDeclareDefineValueArray(Boolean3, ZeroShared);
-ZilchDeclareDefineValueArray(Boolean4, ZeroShared);
-ZilchDeclareDefineValueArray(Byte, ZeroShared);
-ZilchDeclareDefineValueArray(Integer, ZeroShared);
-ZilchDeclareDefineValueArray(Integer2, ZeroShared);
-ZilchDeclareDefineValueArray(Integer3, ZeroShared);
-ZilchDeclareDefineValueArray(Integer4, ZeroShared);
-ZilchDeclareDefineValueArray(Real, ZeroShared);
-ZilchDeclareDefineValueArray(Real2, ZeroShared);
-ZilchDeclareDefineValueArray(Real3, ZeroShared);
-ZilchDeclareDefineValueArray(Real4, ZeroShared);
-ZilchDeclareDefineValueArray(Quaternion, ZeroShared);
-ZilchDeclareDefineValueArray(DoubleInteger, ZeroShared);
-ZilchDeclareDefineValueArray(DoubleReal, ZeroShared);
-ZilchDeclareDefineValueArray(Any, ZeroShared);
-ZilchDeclareDefineHandleArray(String, ZeroShared);
+ZilchDeclareDefineValueArray(Handle);
+ZilchDeclareDefineValueArray(Delegate);
+ZilchDeclareDefineValueArray(Boolean);
+ZilchDeclareDefineValueArray(Boolean2);
+ZilchDeclareDefineValueArray(Boolean3);
+ZilchDeclareDefineValueArray(Boolean4);
+ZilchDeclareDefineValueArray(Byte);
+ZilchDeclareDefineValueArray(Integer);
+ZilchDeclareDefineValueArray(Integer2);
+ZilchDeclareDefineValueArray(Integer3);
+ZilchDeclareDefineValueArray(Integer4);
+ZilchDeclareDefineValueArray(Real);
+ZilchDeclareDefineValueArray(Real2);
+ZilchDeclareDefineValueArray(Real3);
+ZilchDeclareDefineValueArray(Real4);
+ZilchDeclareDefineValueArray(Quaternion);
+ZilchDeclareDefineValueArray(DoubleInteger);
+ZilchDeclareDefineValueArray(DoubleReal);
+ZilchDeclareDefineValueArray(Any);
+ZilchDeclareDefineHandleArray(String);
 } // namespace Zilch
 
 #endif

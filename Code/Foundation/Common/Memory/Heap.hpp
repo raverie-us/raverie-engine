@@ -11,7 +11,7 @@ class HeapPrivate;
 
 /// Heap allocator. The heap allocator allocates memory directly from the
 /// system heap using malloc and free.
-class ZeroShared Heap : public Graph
+class Heap : public Graph
 {
 public:
   Heap(cstr name, Graph* parent);
@@ -57,7 +57,7 @@ void HeapDeallocate(Heap* heap, type* instance)
   }
 
 template <typename NodeType>
-class ZeroSharedTemplate TypedAllocator : public Memory::StandardMemory
+class TypedAllocator : public Memory::StandardMemory
 {
   typedef TypedAllocator<NodeType> this_type;
 
@@ -87,7 +87,7 @@ public:
 
 // This allocater has to be stored on the container.
 template <typename NodeType, size_t ReserveSizeInBytes>
-class ZeroSharedTemplate ReservedSizeAllocator : public Memory::StandardMemory
+class ReservedSizeAllocator : public Memory::StandardMemory
 {
   typedef ReservedSizeAllocator<NodeType, ReserveSizeInBytes> this_type;
 
@@ -133,7 +133,7 @@ public:
 
 // This allocator specifically works with
 template <typename NodeType>
-class ZeroSharedTemplate MemsetZeroTypedAllocator : public TypedAllocator<NodeType>
+class MemsetZeroTypedAllocator : public TypedAllocator<NodeType>
 {
 public:
   MemsetZeroTypedAllocator() : mNode(Memory::GetGlobalHeap())

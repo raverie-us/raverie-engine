@@ -14,7 +14,7 @@ typedef BoundType* (*InstantiateTemplateCallback)(LibraryBuilder& builder,
                                                   const void* userData);
 
 // An type parsed delegate is a structure that stores the callback and user-data
-class ZeroShared InstantiateTemplateDelegate
+class InstantiateTemplateDelegate
 {
 public:
   // Constructor
@@ -28,7 +28,7 @@ public:
 };
 
 // The type and name of a template parameter
-class ZeroShared TemplateParameter
+class TemplateParameter
 {
 public:
   // The name of the template argument
@@ -39,7 +39,7 @@ public:
 };
 
 // All the information we need to instantiate a new template
-class ZeroShared InstantiateTemplateInfo
+class InstantiateTemplateInfo
 {
 public:
   // Get the fully qualified name of the template
@@ -56,7 +56,7 @@ public:
 };
 
 // A library stores all the types and
-class ZeroShared Library
+class Library
 {
 public:
   ZilchDeclareType(Library, TypeCopyMode::ReferenceType);
@@ -171,7 +171,7 @@ void ComputeTypesInDependencyOrder(const Array<LibraryRef>& libraries,
 template class Ref<Library>;
 
 // A hashing policy for the delegate type set
-class ZeroShared DelegateTypePolicy
+class DelegateTypePolicy
 {
 public:
   // Hashing operator
@@ -228,7 +228,7 @@ enum Enum
 }
 
 // What we return from instantiating a template
-class ZeroShared InstantiatedTemplate
+class InstantiatedTemplate
 {
 public:
   // Constructor
@@ -254,25 +254,25 @@ public:
 #  define ZilchLibraries(...) Array<LibraryRef>(ZeroInit, __VA_ARGS__)
 
 // Helper functions for generating parameter arrays (used in library building)
-ZeroShared ParameterArray OneParameter(Type* type);
-ZeroShared ParameterArray OneParameter(Type* type, StringParam name);
-ZeroShared ParameterArray TwoParameters(Type* type);
-ZeroShared ParameterArray TwoParameters(Type* type1, Type* type2);
-ZeroShared ParameterArray TwoParameters(Type* type, StringParam name1, StringParam name2);
-ZeroShared ParameterArray TwoParameters(Type* type1, StringParam name1, Type* type2, StringParam name2);
-ZeroShared ParameterArray ThreeParameters(Type* type);
-ZeroShared ParameterArray ThreeParameters(Type* type1, Type* type2, Type* type3);
-ZeroShared ParameterArray ThreeParameters(Type* type, StringParam name1, StringParam name2, StringParam name3);
-ZeroShared ParameterArray
+ParameterArray OneParameter(Type* type);
+ParameterArray OneParameter(Type* type, StringParam name);
+ParameterArray TwoParameters(Type* type);
+ParameterArray TwoParameters(Type* type1, Type* type2);
+ParameterArray TwoParameters(Type* type, StringParam name1, StringParam name2);
+ParameterArray TwoParameters(Type* type1, StringParam name1, Type* type2, StringParam name2);
+ParameterArray ThreeParameters(Type* type);
+ParameterArray ThreeParameters(Type* type1, Type* type2, Type* type3);
+ParameterArray ThreeParameters(Type* type, StringParam name1, StringParam name2, StringParam name3);
+ParameterArray
 ThreeParameters(Type* type1, StringParam name1, Type* type2, StringParam name2, Type* type3, StringParam name3);
-ZeroShared ParameterArray FourParameters(Type* type);
-ZeroShared ParameterArray
+ParameterArray FourParameters(Type* type);
+ParameterArray
 FourParameters(Type* type, StringParam name1, StringParam name2, StringParam name3, StringParam name4);
-ZeroShared ParameterArray FiveParameters(Type* type);
-ZeroShared ParameterArray FiveParameters(
+ParameterArray FiveParameters(Type* type);
+ParameterArray FiveParameters(
     Type* type, StringParam name1, StringParam name2, StringParam name3, StringParam name4, StringParam name5);
 
-class ZeroShared LibraryBuilder
+class LibraryBuilder
 {
 public:
   // Friends
@@ -508,7 +508,7 @@ private:
 };
 
 // A module Contains many libraries
-class ZeroShared Module : public LibraryArray
+class Module : public LibraryArray
 {
 public:
   // Constructor
@@ -564,7 +564,7 @@ enum Enum
 
 // The functor should return a ForEachFunctorResult::Enum and takes (Property*)
 template <typename Functor>
-ZeroSharedTemplate void
+void
 ForEachExtensionGetterSetter(bool isStatic, const LibraryArray& libraries, BoundType* type, Functor functor)
 {
   // Loop through all the libraries
@@ -609,7 +609,7 @@ ForEachExtensionGetterSetter(bool isStatic, const LibraryArray& libraries, Bound
 
 // The functor should return a ForEachFunctorResult::Enum and takes (Function*)
 template <typename Functor>
-ZeroSharedTemplate void
+void
 ForEachExtensionFunction(bool isStatic, const LibraryArray& libraries, BoundType* type, Functor functor)
 {
   // Loop through all the libraries
@@ -662,7 +662,7 @@ ForEachExtensionFunction(bool isStatic, const LibraryArray& libraries, BoundType
 // The functor should return a bool (true means stop, false means keep going)
 // and takes (Property*)
 template <typename Functor>
-ZeroSharedTemplate void
+void
 ForEachGetterSetter(bool isStatic, const LibraryArray& libraries, BoundType* type, Functor functor)
 {
   // Walk up the base class heirarchy
@@ -692,7 +692,7 @@ ForEachGetterSetter(bool isStatic, const LibraryArray& libraries, BoundType* typ
 // The functor should return a bool (true means stop, false means keep going)
 // and takes (Function*)
 template <typename Functor>
-ZeroSharedTemplate void ForEachFunction(bool isStatic, const LibraryArray& libraries, BoundType* type, Functor functor)
+void ForEachFunction(bool isStatic, const LibraryArray& libraries, BoundType* type, Functor functor)
 {
   // Walk up the base class heirarchy
   BoundType* baseType = type;

@@ -6,7 +6,7 @@
 
 namespace Zilch
 {
-ZilchDeclareStaticLibrary(WebSockets, ZeroShared);
+ZilchDeclareStaticLibrary(WebSockets);
 
 namespace Events
 {
@@ -50,7 +50,7 @@ enum Enum
 class ThreadedWebSocketConnection;
 
 // An event sent out whenever a web socket connection changes or receives data
-class ZeroShared WebSocketEvent : public EventData
+class WebSocketEvent : public EventData
 {
 public:
   ZilchDeclareType(WebSocketEvent, TypeCopyMode::ReferenceType);
@@ -77,7 +77,7 @@ public:
 // server to client) With the blocking version, the user must properly respond
 // to the Close and Ping messages The threaded version internally takes care of
 // these messages
-class ZeroShared BlockingWebSocketConnection
+class BlockingWebSocketConnection
 {
 public:
   // Constructor
@@ -119,7 +119,7 @@ public:
 // Listens for incoming web-socket connections
 // This class should only be initialized and closed once (it should not be
 // reused)
-class ZeroShared BlockingWebSocketListener
+class BlockingWebSocketListener
 {
 public:
   // Constructor
@@ -151,7 +151,7 @@ public:
 // from the owning thread All send and update functions are safe to call from
 // the owning thread (not multiple!) Once this connection has been terminated,
 // it may not be used again
-class ZeroShared ThreadedWebSocketConnection : public EventHandler
+class ThreadedWebSocketConnection : public EventHandler
 {
 public:
   // sends WebSocketReceivedData : WebSocketEvent;
@@ -240,7 +240,7 @@ public:
 // Can only be used once (once it is closed, it should be removed)
 // Must be preriodically updated by the owning thread, which will then dispatch
 // events for accepted connections
-class ZeroShared ThreadedWebSocketListener : public EventHandler
+class ThreadedWebSocketListener : public EventHandler
 {
 public:
   // sends WebSocketAcceptedConnection : WebSocketEvent;
@@ -308,7 +308,7 @@ public:
 // callbacks for when connections are received and fully handshook, or closed
 // The thread that owns the server is responsible for occasionally pumping
 // events via Update
-class ZeroShared ThreadedWebSocketServer : public EventHandler
+class ThreadedWebSocketServer : public EventHandler
 {
 public:
   // Events will be forwarded from owned connections to the server

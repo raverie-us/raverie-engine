@@ -30,7 +30,7 @@ class SavingEvent;
 class DocumentResource;
 
 // Engine library
-class ZeroNoImportExport EngineLibrary : public Zilch::StaticLibrary
+class EngineLibrary : public Zilch::StaticLibrary
 {
 public:
   ZilchDeclareStaticLibraryInternals(EngineLibrary);

@@ -5,10 +5,10 @@ namespace Zero
 {
 
 // Is threading enabled on this platform?
-ZeroShared extern const bool ThreadingEnabled;
+extern const bool ThreadingEnabled;
 
 /// Thread class manages Os threads.
-class ZeroShared Thread
+class Thread
 {
 public:
   typedef OsInt (*EntryFunction)(void*);

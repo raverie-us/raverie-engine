@@ -47,7 +47,7 @@ enum Enum
 
 // A generic interface for reading and writing data to a stream (file, network,
 // etc)
-class ZeroShared FileStreamClass : public IStreamClass
+class FileStreamClass : public IStreamClass
 {
 public:
   ZilchDeclareType(FileStreamClass, TypeCopyMode::ReferenceType);

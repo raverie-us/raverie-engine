@@ -7,7 +7,7 @@ namespace Math
 /// Stores a decomposed matrix 4. This means that shear is lost.
 /// This does however allow efficient inverse transforms and
 /// extracting of each portion of a transformation.
-struct ZeroShared DecomposedMatrix4
+struct DecomposedMatrix4
 {
   DecomposedMatrix4();
   DecomposedMatrix4(Mat4Param transform);

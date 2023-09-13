@@ -7,7 +7,7 @@
 namespace Zilch
 {
 // Information we hand to the
-class ZeroShared NativeVirtualInfo
+class NativeVirtualInfo
 {
 public:
   // A special index that means that a function is non-virtual
@@ -57,7 +57,7 @@ typedef unsigned Flags;
 } // namespace FunctionOptions
 
 // A base function
-class ZeroShared Function : public Member
+class Function : public Member
 {
 public:
   // Declare the class for RTTI

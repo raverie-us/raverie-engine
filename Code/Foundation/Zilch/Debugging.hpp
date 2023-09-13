@@ -33,7 +33,7 @@ ZilchDeclareEvent(DebuggerBreakNotAllowed, DebuggerEvent);
 } // namespace Events
 
 // When the debugger pauses or resumes, we send this event out
-class ZeroShared DebuggerEvent : public EventData
+class DebuggerEvent : public EventData
 {
 public:
   ZilchDeclareType(DebuggerEvent, TypeCopyMode::ReferenceType);
@@ -49,7 +49,7 @@ public:
 };
 
 // When the debugger needs to send a message
-class ZeroShared DebuggerTextEvent : public DebuggerEvent
+class DebuggerTextEvent : public DebuggerEvent
 {
 public:
   ZilchDeclareType(DebuggerTextEvent, TypeCopyMode::ReferenceType);
@@ -83,7 +83,7 @@ enum Enum
 
 // The base debugger handles placing breakpoints and signals events when the
 // breakpoints are hit. It also handles pausing and stepping.
-class ZeroShared Debugger : public EventHandler
+class Debugger : public EventHandler
 {
 public:
   // sends DebuggerPauseUpdate : DebuggerEvent;
@@ -247,7 +247,7 @@ private:
 };
 
 // Every platform should define an error handler
-ZeroShared bool DebugErrorHandler(ErrorSignaler::ErrorData& errorData);
+bool DebugErrorHandler(ErrorSignaler::ErrorData& errorData);
 } // namespace Zilch
 
 #endif

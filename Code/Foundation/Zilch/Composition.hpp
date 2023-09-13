@@ -14,7 +14,7 @@ Type* TypeHelperGetBaseType(Type* derivedType);
 
 // Allows the user to attach any type to a Zilch primitive
 // The primitive must be default constructable
-class ZeroShared Composition : public IZilchObject
+class Composition : public IZilchObject
 {
 public:
   Composition();

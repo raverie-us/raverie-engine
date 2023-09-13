@@ -13,7 +13,7 @@ namespace Zilch
 // for native definitions, we need to keep track of all the code locations we've
 // touched so we can update the 'Code' portion of the location after we're
 // finished generating stub code
-class ZeroShared StubCode
+class StubCode
 {
 public:
   // Constructor

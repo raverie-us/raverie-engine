@@ -11,7 +11,7 @@ namespace Zero
 {
 
 template <typename Hasher, typename KeyType, typename DataType>
-struct ZeroSharedTemplate PairHashAdapter
+struct PairHashAdapter
 {
   Hasher mHasher;
   typedef Pair<KeyType, DataType> pair_type;
@@ -45,7 +45,7 @@ template <typename KeyType,
           typename DataType,
           typename Hasher = HashPolicy<KeyType>,
           typename Allocator = DefaultAllocator>
-class ZeroSharedTemplate HashMap
+class HashMap
     : public HashedContainer<Pair<KeyType, DataType>, PairHashAdapter<Hasher, KeyType, DataType>, Allocator>
 {
 public:

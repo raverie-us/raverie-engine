@@ -13,7 +13,7 @@ typedef IntVector3& IntVec3Ref;
 typedef IntVector3* IntVec3Ptr;
 
 /// 3 dimensional integral vector.
-struct ZeroShared IntVector3
+struct IntVector3
 {
   IntVector3(void)
   {
@@ -98,18 +98,18 @@ struct ZeroShared IntVector3
 };
 
 /// Binary Operators (integers)
-ZeroShared IntVector3 operator*(int lhs, IntVec3Param rhs);
+IntVector3 operator*(int lhs, IntVec3Param rhs);
 
 /// Returns a vector with absolute valued elements of the given vector.
-ZeroShared IntVector3 Abs(IntVec3Param vec);
+IntVector3 Abs(IntVec3Param vec);
 
 /// Returns the component-wise minimum vector of the two vectors.
-ZeroShared IntVector3 Min(IntVec3Param lhs, IntVec3Param rhs);
+IntVector3 Min(IntVec3Param lhs, IntVec3Param rhs);
 
 /// Returns the component-wise maximum vector of the two vectors.
-ZeroShared IntVector3 Max(IntVec3Param lhs, IntVec3Param rhs);
+IntVector3 Max(IntVec3Param lhs, IntVec3Param rhs);
 
 /// Compute the dot product of two vectors.
-ZeroShared int Dot(IntVec3Param lhs, IntVec3Param rhs);
+int Dot(IntVec3Param lhs, IntVec3Param rhs);
 
 } // namespace Math

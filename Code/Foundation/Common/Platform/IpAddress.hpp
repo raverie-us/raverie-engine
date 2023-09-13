@@ -12,7 +12,7 @@ void UpdateHostPortString(Status& status, IpAddress& ipAddress);
 /// IPv4/IPv6 network host identifier
 /// Provided for convenience
 /// Note: This class is not slice-able, it has extra data
-class ZeroShared IpAddress : public SocketAddress
+class IpAddress : public SocketAddress
 {
 private:
   /// Base methods and data hidden to provide desired behavior
@@ -90,7 +90,7 @@ public:
 /// Serializes an IP address
 /// Returns the number of bits serialized if successful, else 0
 template <>
-inline ZeroShared Bits Serialize<IpAddress>(SerializeDirection::Enum direction,
+inline Bits Serialize<IpAddress>(SerializeDirection::Enum direction,
                                             BitStream& bitStream,
                                             IpAddress& ipAddress)
 {

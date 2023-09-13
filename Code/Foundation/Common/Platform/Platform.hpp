@@ -38,10 +38,6 @@
 
 #undef __STDC__
 
-// ZeroForceInline forces a function to be inlined for optimization purposes
-// ZeroNoInline forces a function to not be inlined (only used to debug, and
-// unfortunately to fix true linker bugs)
-
 // Helper macros
 #define ZeroStringDeref(text) #text
 #define ZeroStringize(text) ZeroStringDeref(text)
@@ -51,20 +47,12 @@
 #define ZeroOffsetOf(structure, member) ZeroOffsetOfHelper(structure, ->, member)
 
 #define ZeroThreadLocal __thread
-#define ZeroImport __attribute__((visibility("default")))
-#define ZeroExport __attribute__((visibility("default")))
-#define ZeroExportC extern "C" __attribute__((visibility("default")))
 #define ZeroImportNamed(Name) __attribute__((used)) __attribute__((noinline)) __attribute__((visibility("default"))) __attribute__((__import_name__(#Name))) Name
 #define ZeroExportNamed(Name) __attribute__((used)) __attribute__((noinline)) __attribute__((visibility("default"))) __attribute__((__export_name__(#Name))) Name
 #define ZeroNoReturn __attribute__((noreturn))
 
 #define ZeroTodo(text)
-#define ZeroForceInline inline
+#define ZeroForceInline inline __attribute__((always_inline))
 #define ZeroDebugBreak()
-#define ZeroNoInline
-
-#define ZeroNoImportExport
-#define ZeroShared
-#define ZeroSharedTemplate
 
 #include <alloca.h>

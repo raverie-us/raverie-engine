@@ -6,21 +6,21 @@ namespace Zero
 {
 
 // Simple String Builder
-ZeroShared String BuildString(StringRange a, StringRange b);
-ZeroShared String BuildString(StringRange a, StringRange b, StringRange c);
-ZeroShared String BuildString(StringRange a, StringRange b, StringRange c, StringRange d);
-ZeroShared String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e);
-ZeroShared String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e, StringRange f);
-ZeroShared String
+String BuildString(StringRange a, StringRange b);
+String BuildString(StringRange a, StringRange b, StringRange c);
+String BuildString(StringRange a, StringRange b, StringRange c, StringRange d);
+String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e);
+String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e, StringRange f);
+String
 BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e, StringRange f, StringRange g);
-ZeroShared String BuildString(StringRange** ranges, uint count);
+String BuildString(StringRange** ranges, uint count);
 
-ZeroShared String StringJoin(Array<String>& strings, StringParam joinToken);
+String StringJoin(Array<String>& strings, StringParam joinToken);
 
 /// Extension of ByteBuffer for building strings. Has
 /// stream operators overloaded so it can act as a replacement
 /// for io streams.
-class ZeroShared StringBuilder : public ByteBuffer
+class StringBuilder : public ByteBuffer
 {
 public:
   template <typename type>

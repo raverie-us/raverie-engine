@@ -10,7 +10,7 @@ namespace Zero
 namespace Memory
 {
 
-struct ZeroShared Stats
+struct Stats
 {
   enum StatFlags
   {
@@ -40,7 +40,7 @@ struct ZeroShared Stats
 /// runtime memory statics collection and debugging. Class provides a graph
 /// structure for hierarchical grouping of memory and the ability to name
 /// allocators.
-class ZeroShared Graph : public LinkBase
+class Graph : public LinkBase
 {
 public:
   UseStaticMemory();
@@ -114,13 +114,13 @@ public:
   static void PrintAll();
 };
 
-ZeroShared Heap* GetGlobalHeap();
+Heap* GetGlobalHeap();
 Heap* GetNamedHeap(cstr name);
 Root* GetRoot();
 Heap* GetStaticHeap();
 void Shutdown();
 
-class ZeroShared StandardMemory
+class StandardMemory
 {
 public:
   static inline void MemCopy(void* dest, void* source, size_t numberOfBytes)

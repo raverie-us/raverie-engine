@@ -358,7 +358,7 @@ typedef void (*StringToObjectFn)(StringRange source, void* destination);
 /// Destructs the object at source (does not delete or free, only calls the
 /// object's destructor) (Requires an accessible destructor on T)
 template <typename T>
-ZeroSharedTemplate void DestructObject(void* source)
+void DestructObject(void* source)
 {
   // Get source object
   T& sourceObject = *reinterpret_cast<T*>(source);
@@ -372,7 +372,7 @@ ZeroSharedTemplate void DestructObject(void* source)
 /// Default constructs a new object in place at destination
 /// (Requires an accessible default constructor on T)
 template <typename T>
-ZeroSharedTemplate void DefaultConstructObject(void* destination)
+void DefaultConstructObject(void* destination)
 {
   // Use placement new to default construct in place at 'destination'
   new (destination) T();
@@ -381,7 +381,7 @@ ZeroSharedTemplate void DefaultConstructObject(void* destination)
 /// Copy constructs a new object in place at destination, copied from the object
 /// at source (Requires an accessible copy constructor on T)
 template <typename T>
-ZeroSharedTemplate void CopyConstructObject(const void* source, void* destination)
+void CopyConstructObject(const void* source, void* destination)
 {
   // Get source object
   const T& sourceObject = *reinterpret_cast<const T*>(source);
@@ -394,7 +394,7 @@ ZeroSharedTemplate void CopyConstructObject(const void* source, void* destinatio
 /// Move constructs a new object in place at destination, moved from the object
 /// at source (Requires an accessible move constructor on T)
 template <typename T>
-ZeroSharedTemplate void MoveConstructObject(void* source, void* destination)
+void MoveConstructObject(void* source, void* destination)
 {
   // Get source object
   T& sourceObject = *reinterpret_cast<T*>(source);
@@ -407,7 +407,7 @@ ZeroSharedTemplate void MoveConstructObject(void* source, void* destination)
 /// Returns true if the object at lhs is equal to the object at rhs, else false
 /// (Requires a valid compare policy for T)
 template <typename T>
-ZeroSharedTemplate bool EqualToObject(const void* lhs, const void* rhs)
+bool EqualToObject(const void* lhs, const void* rhs)
 {
   // Generate compare policy (as lazy singleton)
   static ComparePolicy<T> comparePolicy;
@@ -423,7 +423,7 @@ ZeroSharedTemplate bool EqualToObject(const void* lhs, const void* rhs)
 /// Returns the hash of the object at source
 /// (Requires a valid hash policy for T)
 template <typename T>
-ZeroSharedTemplate size_t HashObject(const void* source)
+size_t HashObject(const void* source)
 {
   // Generate hash policy (as lazy singleton)
   static HashPolicy<T> hashPolicy;
@@ -439,7 +439,7 @@ ZeroSharedTemplate size_t HashObject(const void* source)
 /// according to shortFormat if applicable) (Requires a global to string
 /// function for T)
 template <typename T>
-ZeroSharedTemplate String ObjectToString(const void* source, bool shortFormat)
+String ObjectToString(const void* source, bool shortFormat)
 {
   // Get source object
   const T& sourceObject = *reinterpret_cast<const T*>(source);
@@ -451,7 +451,7 @@ ZeroSharedTemplate String ObjectToString(const void* source, bool shortFormat)
 /// Parses the source string as the erased type and assigns the result to the
 /// object at destination (Requires a global to value function for T)
 template <typename T>
-ZeroSharedTemplate void StringToObject(StringRange source, void* destination)
+void StringToObject(StringRange source, void* destination)
 {
   // Get destination object
   T& destinationObject = *reinterpret_cast<T*>(destination);
@@ -472,12 +472,12 @@ ZeroSharedTemplate void StringToObject(StringRange source, void* destination)
 /// Gets a destruct object function if the type has an accessible destructor,
 /// else returns nullptr
 template <typename T, TF_ENABLE_IF(has_destructor<T>::value)>
-ZeroSharedTemplate DestructObjectFn GetDestructObjectFn()
+DestructObjectFn GetDestructObjectFn()
 {
   return DestructObject<T>;
 }
 template <typename T, TF_DISABLE_IF(has_destructor<T>::value)>
-ZeroSharedTemplate DestructObjectFn GetDestructObjectFn()
+DestructObjectFn GetDestructObjectFn()
 {
   return nullptr;
 }
@@ -485,12 +485,12 @@ ZeroSharedTemplate DestructObjectFn GetDestructObjectFn()
 /// Gets a default construct object function if the type has an accessible
 /// default constructor, else returns nullptr
 template <typename T, TF_ENABLE_IF(has_default_constructor<T>::value)>
-ZeroSharedTemplate DefaultConstructObjectFn GetDefaultConstructObjectFn()
+DefaultConstructObjectFn GetDefaultConstructObjectFn()
 {
   return DefaultConstructObject<T>;
 }
 template <typename T, TF_DISABLE_IF(has_default_constructor<T>::value)>
-ZeroSharedTemplate DefaultConstructObjectFn GetDefaultConstructObjectFn()
+DefaultConstructObjectFn GetDefaultConstructObjectFn()
 {
   return nullptr;
 }
@@ -498,12 +498,12 @@ ZeroSharedTemplate DefaultConstructObjectFn GetDefaultConstructObjectFn()
 /// Gets a copy construct object function if the type has an accessible copy
 /// constructor, else returns nullptr
 template <typename T, TF_ENABLE_IF(has_copy_constructor<T>::value)>
-ZeroSharedTemplate CopyConstructObjectFn GetCopyConstructObjectFn()
+CopyConstructObjectFn GetCopyConstructObjectFn()
 {
   return CopyConstructObject<T>;
 }
 template <typename T, TF_DISABLE_IF(has_copy_constructor<T>::value)>
-ZeroSharedTemplate CopyConstructObjectFn GetCopyConstructObjectFn()
+CopyConstructObjectFn GetCopyConstructObjectFn()
 {
   return nullptr;
 }
@@ -511,12 +511,12 @@ ZeroSharedTemplate CopyConstructObjectFn GetCopyConstructObjectFn()
 /// Gets a move construct object function if the type has an accessible move
 /// constructor, else returns nullptr
 template <typename T, TF_ENABLE_IF(has_move_constructor<T>::value)>
-ZeroSharedTemplate MoveConstructObjectFn GetMoveConstructObjectFn()
+MoveConstructObjectFn GetMoveConstructObjectFn()
 {
   return MoveConstructObject<T>;
 }
 template <typename T, TF_DISABLE_IF(has_move_constructor<T>::value)>
-ZeroSharedTemplate MoveConstructObjectFn GetMoveConstructObjectFn()
+MoveConstructObjectFn GetMoveConstructObjectFn()
 {
   return nullptr;
 }
@@ -524,12 +524,12 @@ ZeroSharedTemplate MoveConstructObjectFn GetMoveConstructObjectFn()
 /// Gets an equal to object function if the type has a valid compare policy,
 /// else returns nullptr
 template <typename T, TF_ENABLE_IF(has_valid_compare_policy<T>::value)>
-ZeroSharedTemplate EqualToObjectFn GetEqualToObjectFn()
+EqualToObjectFn GetEqualToObjectFn()
 {
   return EqualToObject<T>;
 }
 template <typename T, TF_DISABLE_IF(has_valid_compare_policy<T>::value)>
-ZeroSharedTemplate EqualToObjectFn GetEqualToObjectFn()
+EqualToObjectFn GetEqualToObjectFn()
 {
   return nullptr;
 }
@@ -537,12 +537,12 @@ ZeroSharedTemplate EqualToObjectFn GetEqualToObjectFn()
 /// Gets a hash object function if the type has a valid hash policy, else
 /// returns nullptr
 template <typename T, TF_ENABLE_IF(has_valid_hash_policy<T>::value)>
-ZeroSharedTemplate HashObjectFn GetHashObjectFn()
+HashObjectFn GetHashObjectFn()
 {
   return HashObject<T>;
 }
 template <typename T, TF_DISABLE_IF(has_valid_hash_policy<T>::value)>
-ZeroSharedTemplate HashObjectFn GetHashObjectFn()
+HashObjectFn GetHashObjectFn()
 {
   return nullptr;
 }
@@ -550,12 +550,12 @@ ZeroSharedTemplate HashObjectFn GetHashObjectFn()
 /// Gets an object to string function if the type has a global to string
 /// function, else returns nullptr
 template <typename T, TF_ENABLE_IF(has_global_to_string<T>::value)>
-ZeroSharedTemplate ObjectToStringFn GetObjectToStringFn()
+ObjectToStringFn GetObjectToStringFn()
 {
   return ObjectToString<T>;
 }
 template <typename T, TF_DISABLE_IF(has_global_to_string<T>::value)>
-ZeroSharedTemplate ObjectToStringFn GetObjectToStringFn()
+ObjectToStringFn GetObjectToStringFn()
 {
   return nullptr;
 }
@@ -563,12 +563,12 @@ ZeroSharedTemplate ObjectToStringFn GetObjectToStringFn()
 /// Gets a string to object function if the type has a global to value function,
 /// else returns nullptr
 template <typename T, TF_ENABLE_IF(has_global_to_value<T>::value)>
-ZeroSharedTemplate StringToObjectFn GetStringToObjectFn()
+StringToObjectFn GetStringToObjectFn()
 {
   return StringToObject<T>;
 }
 template <typename T, TF_DISABLE_IF(has_global_to_value<T>::value)>
-ZeroSharedTemplate StringToObjectFn GetStringToObjectFn()
+StringToObjectFn GetStringToObjectFn()
 {
   return nullptr;
 }
@@ -593,7 +593,7 @@ ZeroSharedTemplate StringToObjectFn GetStringToObjectFn()
 /// particular C++ type. Type information is generated according to compile-time
 /// type traits for its given type. Native type is a lazy singleton, uniquely
 /// representing its given type.
-class ZeroShared NativeType
+class NativeType
 {
 protected:
   /// Constructs a native type object representing type T

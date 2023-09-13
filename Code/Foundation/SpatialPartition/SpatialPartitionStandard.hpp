@@ -9,7 +9,7 @@ namespace Zero
 {
 
 // SpatialPartition library
-class ZeroNoImportExport SpatialPartitionLibrary : public Zilch::StaticLibrary
+class SpatialPartitionLibrary : public Zilch::StaticLibrary
 {
 public:
   ZilchDeclareStaticLibraryInternals(SpatialPartitionLibrary);

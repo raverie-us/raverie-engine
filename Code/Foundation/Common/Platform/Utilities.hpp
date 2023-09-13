@@ -4,7 +4,7 @@
 namespace Zero
 {
 /// System Memory Information
-struct ZeroShared MemoryInfo
+struct MemoryInfo
 {
   uint Reserve;
   uint Commit;
@@ -15,22 +15,22 @@ namespace Os
 {
 
 // Sleep the current thread for ms milliseconds.
-ZeroShared void Sleep(uint ms);
+void Sleep(uint ms);
 
 // When a diagnostic error occurs, this is the default response
-ZeroShared bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData);
+bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData);
 
 // Open's a url in a browser or tab.
-ZeroShared void OpenUrl(cstr url);
+void OpenUrl(cstr url);
 
 // Get the time in milliseconds for a double click.
-ZeroShared unsigned int GetDoubleClickTimeMs();
+unsigned int GetDoubleClickTimeMs();
 
 } // namespace Os
 
 // Generate a 64 bit unique Id. Uses system timer and mac
 // address to generate the id.
-ZeroShared u64 GenerateUniqueId64();
+u64 GenerateUniqueId64();
 
 // Waits for expression to evaluate to true, checking approximately every
 // pollPeriod (in milliseconds)

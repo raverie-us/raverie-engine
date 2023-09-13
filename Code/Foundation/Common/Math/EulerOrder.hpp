@@ -93,7 +93,7 @@ typedef const EulerOrder& EulerOrderParam;
 /// Structure to hold the order of rotations when dealing with Euler angles,
 /// whether or not there are any repeating angles, and if the rotations are
 /// being described in a fixed or rotated frame of reference.
-struct ZeroShared EulerOrder
+struct EulerOrder
 {
   EulerOrder(EulerOrders::Enum eulerOrder);
 

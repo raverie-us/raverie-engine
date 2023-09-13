@@ -10,7 +10,7 @@ namespace Zilch
 typedef const Any& AnyParam;
 
 // Represents one utf-8 character in a string.
-class ZeroShared Rune
+class Rune
 {
 public:
   ZilchDeclareType(Rune, TypeCopyMode::ValueType);
@@ -29,10 +29,10 @@ public:
 };
 
 // Zero::Runes are converted to and treated as Zilch::Runes
-ZilchDeclareDefineImplicitRedirectType(Zero::Rune, Zilch::Rune, ZeroShared);
+ZilchDeclareDefineImplicitRedirectType(Zero::Rune, Zilch::Rune);
 
 // String builder is a convenient way to concatenate strings
-class ZeroShared StringBuilderExtended : public StringBuilder
+class StringBuilderExtended : public StringBuilder
 {
 public:
   ZilchDeclareType(StringBuilderExtended, TypeCopyMode::ReferenceType);
@@ -95,7 +95,7 @@ public:
 
 // An iterator to one rune (think char) in a string
 // This iterator also keeps a reference to the string to keep it alive
-class ZeroShared RuneIterator
+class RuneIterator
 {
 public:
   ZilchDeclareType(RuneIterator, TypeCopyMode::ReferenceType);
@@ -127,7 +127,7 @@ public:
 
 // A string range bound to Zilch. This range will also keep the string that it's
 // referencing alive
-class ZeroShared StringRangeExtended
+class StringRangeExtended
 {
   ZilchDeclareType(StringRangeExtended, TypeCopyMode::ReferenceType);
 
@@ -183,7 +183,7 @@ class ZeroShared StringRangeExtended
 };
 
 // The results from a String.Split operation
-class ZeroShared StringSplitRangeExtended
+class StringSplitRangeExtended
 {
   ZilchDeclareType(StringSplitRangeExtended, TypeCopyMode::ReferenceType);
 

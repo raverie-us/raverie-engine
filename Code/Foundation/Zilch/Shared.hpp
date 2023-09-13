@@ -30,7 +30,7 @@ enum Enum
 }
 
 // This struct is given back to the user when asking for tokens
-class ZeroShared BinaryOperator
+class BinaryOperator
 {
 public:
   // Constructor
@@ -74,7 +74,7 @@ public:
 };
 
 // This struct is given back to the user when asking for tokens
-class ZeroShared UnaryOperator
+class UnaryOperator
 {
 public:
   // Constructor
@@ -117,7 +117,7 @@ enum Enum
 
 // Lets us query information about the validity of a cast, as well as what kind
 // it will be
-class ZeroShared CastOperator
+class CastOperator
 {
 public:
   // Constructor
@@ -171,7 +171,7 @@ enum Enum
 }
 
 // Encompasses everything we need to know about operator precedence
-class ZeroShared UntypedOperator
+class UntypedOperator
 {
 public:
   // Constructor
@@ -188,7 +188,7 @@ public:
 
 // Contains information that is shared between the syntaxer and the code
 // generator
-class ZeroShared Shared
+class Shared
 {
 public:
   // Construct the shared object
@@ -300,7 +300,7 @@ private:
   HashMap<Type*, Array<CastOperator>> PrimitiveCastOperatorsFrom;
 
   // We use this as a key into a hash map
-  class ZeroShared OperatorWithArity
+  class OperatorWithArity
   {
   public:
     // Define these so we can be used as a key

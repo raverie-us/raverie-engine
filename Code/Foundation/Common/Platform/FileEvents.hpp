@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-class ZeroShared FileModifiedState
+class FileModifiedState
 {
 public:
   FileModifiedState();

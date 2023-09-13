@@ -8,7 +8,7 @@ namespace Zilch
 {
 // This list is used to hold nodes in the tree
 template <typename ValueType>
-class ZeroSharedTemplate DoublePointerArray : public PodArray<ValueType**>
+class DoublePointerArray : public PodArray<ValueType**>
 {
 public:
   // Type-defines
@@ -38,7 +38,7 @@ private:
 
 // This list is used to hold nodes in the tree
 template <typename ValueType>
-class ZeroSharedTemplate PopulatingPointerArray : public PodBlockArray<ValueType*>
+class PopulatingPointerArray : public PodBlockArray<ValueType*>
 {
 public:
   // Type-defines
@@ -80,7 +80,7 @@ private:
 
 // This list is used to hold nodes of any type in the tree
 template <typename T>
-class ZeroSharedTemplate NodeList : public PopulatingPointerArray<T>
+class NodeList : public PopulatingPointerArray<T>
 {
 };
 
@@ -105,7 +105,7 @@ typedef size_t Type;
 } // namespace WalkerFlags
 
 template <typename TreeOwnerType, typename ContextType>
-class ZeroSharedTemplate WalkerContext
+class WalkerContext
 {
 public:
   // Store a pointer back to the walker
@@ -116,7 +116,7 @@ public:
 };
 
 template <typename TreeOwnerType, typename ContextType>
-class ZeroSharedTemplate BranchWalker
+class BranchWalker
 {
 public:
   // Constructor

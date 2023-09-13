@@ -12,7 +12,7 @@ typedef BoolVector4& BoolVec4Ref;
 typedef BoolVector4* BoolVec4Ptr;
 
 /// 2 dimensional integral vector.
-struct ZeroShared BoolVector4
+struct BoolVector4
 {
   BoolVector4(void)
   {

@@ -29,7 +29,7 @@ typedef EulerAngles* EulerAnglesPtr;
 
 /// Structure to provide a consistent way to deal with rotations stored as Euler
 /// angles.
-struct ZeroShared EulerAngles
+struct EulerAngles
 {
   EulerAngles(EulerOrderParam order);
   EulerAngles(Vec3Param xyzRotation, EulerOrderParam order);

@@ -7,7 +7,7 @@
 namespace Zilch
 {
 // Represents a parameter in a function
-class ZeroShared DocumentationParameter
+class DocumentationParameter
 {
 public:
   // The name of the parameter (or an empty string if it's nothing)
@@ -18,7 +18,7 @@ public:
 };
 
 // Documentation that describes an individual function
-class ZeroShared DocumentationFunction
+class DocumentationFunction
 {
 public:
   // Destructor
@@ -47,7 +47,7 @@ public:
 };
 
 // Documentation that describes an individual property
-class ZeroShared DocumentationProperty
+class DocumentationProperty
 {
 public:
   // Constructor
@@ -80,7 +80,7 @@ public:
 };
 
 // Documentation that describes an individual type
-class ZeroShared DocumentationType
+class DocumentationType
 {
 public:
   // Destructor
@@ -123,7 +123,7 @@ public:
 };
 
 // Represents an entire library built by our documentation engine
-class ZeroShared DocumentationLibrary
+class DocumentationLibrary
 {
 public:
   // Destructor
@@ -140,7 +140,7 @@ public:
 };
 
 // Represents an entire library built by our documentation engine
-class ZeroShared DocumentationModule
+class DocumentationModule
 {
 public:
   // Destructor
@@ -150,7 +150,7 @@ public:
   Array<DocumentationLibrary*> Libraries;
 };
 
-class ZeroShared RstTable
+class RstTable
 {
 public:
   // Constructor
@@ -191,7 +191,7 @@ enum Enum
 };
 }
 
-class ZeroShared RstBuilder : public StringBuilderExtended
+class RstBuilder : public StringBuilderExtended
 {
 public:
   // We don't want to hide the base class members, but rather add overloads

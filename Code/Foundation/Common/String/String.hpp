@@ -67,7 +67,7 @@ public:
   bool Equal(const StringNode* lhs, const StringNode* rhs) const;
 };
 
-class ZeroShared String
+class String
 {
 public:
   ///////Standard typedefs/////////////

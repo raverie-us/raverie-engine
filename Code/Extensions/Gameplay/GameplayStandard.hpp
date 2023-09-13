@@ -15,7 +15,7 @@ namespace Zero
 {
 
 // Gameplay Library
-class ZeroNoImportExport GameplayLibrary : public Zilch::StaticLibrary
+class GameplayLibrary : public Zilch::StaticLibrary
 {
 public:
   ZilchDeclareStaticLibraryInternals(GameplayLibrary);

@@ -4,7 +4,7 @@
 namespace Math
 {
 
-struct ZeroShared ExtendableVector
+struct ExtendableVector
 {
   void Resize(uint size);
 
@@ -17,7 +17,7 @@ struct ZeroShared ExtendableVector
   Zero::Array<real> mData;
 };
 
-struct ZeroShared ExtendableMatrix
+struct ExtendableMatrix
 {
   void Resize(uint sizeX, uint sizeY);
 
@@ -33,7 +33,7 @@ struct ZeroShared ExtendableMatrix
 // working size can be changed up to the fixed size.
 // Currently used in position correction.
 template <typename DataType, size_t FixedSize>
-struct ZeroSharedTemplate FixedVector
+struct FixedVector
 {
   void Resize(size_t size)
   {
@@ -67,7 +67,7 @@ struct ZeroSharedTemplate FixedVector
 };
 
 template <size_t SizeX, size_t SizeY>
-struct ZeroSharedTemplate FixedMatrix
+struct FixedMatrix
 {
   real& operator()(uint y, uint x)
   {

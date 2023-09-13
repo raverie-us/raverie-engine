@@ -25,7 +25,7 @@ static const cstr Names[] = {
 } // namespace ConstantType
 
 // A constant can be any of the following primitives
-class ZeroShared Constant
+class Constant
 {
 public:
   Constant();
@@ -69,7 +69,7 @@ public:
 };
 
 // An attribute parameter can be any of the literal types we support
-class ZeroShared AttributeParameter : public Constant
+class AttributeParameter : public Constant
 {
 public:
   AttributeParameter()
@@ -96,7 +96,7 @@ public:
 // properties, etc that the language normally does not provide
 // An example would be marking a property as have a range of values from 1 to
 // 100 eg [Range(1, 100)]
-class ZeroShared Attribute
+class Attribute
 {
 public:
   Attribute();
@@ -136,7 +136,7 @@ public:
 };
 
 // Provides a description
-class ZeroShared ReflectionObject : public Composition
+class ReflectionObject : public Composition
 {
 public:
   ZilchDeclareType(ReflectionObject, TypeCopyMode::ReferenceType);
@@ -214,7 +214,7 @@ typedef unsigned Flags;
 
 // All primitives that appear on types (properties, fields, functions, etc) are
 // members
-class ZeroShared Member : public ReflectionObject
+class Member : public ReflectionObject
 {
 public:
   ZilchDeclareType(Member, TypeCopyMode::ReferenceType);
@@ -243,7 +243,7 @@ public:
 
 // A class property basically consists of two functions that let us get and set
 // a variable
-class ZeroShared Property : public Member
+class Property : public Member
 {
 public:
   ZilchDeclareType(Property, TypeCopyMode::ReferenceType);
@@ -277,7 +277,7 @@ public:
 // A getter setter is a property with an explicitly declared get/set
 // Since Property already has all the members of a getter setter,
 // this class is really just to add type information
-class ZeroShared GetterSetter : public Property
+class GetterSetter : public Property
 {
 public:
   ZilchDeclareType(GetterSetter, TypeCopyMode::ReferenceType);
@@ -285,7 +285,7 @@ public:
 
 // A class field basically consists of the type, as well as the offset into the
 // memory block
-class ZeroShared Field : public Property
+class Field : public Property
 {
 public:
   ZilchDeclareType(Field, TypeCopyMode::ReferenceType);
@@ -310,7 +310,7 @@ public:
 };
 
 // Store information about a variable inside a function
-class ZeroShared Variable : public ReflectionObject
+class Variable : public ReflectionObject
 {
 public:
   ZilchDeclareType(Variable, TypeCopyMode::ReferenceType);
@@ -336,7 +336,7 @@ public:
 };
 
 // Information about events sent by a class or struct
-class ZeroShared SendsEvent : public ReflectionObject
+class SendsEvent : public ReflectionObject
 {
 public:
   // Constructor

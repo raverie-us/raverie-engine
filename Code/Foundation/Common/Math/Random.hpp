@@ -8,7 +8,7 @@
 
 namespace Math
 {
-class ZeroShared Random
+class Random
 {
 public:
   /// Seeds with a call to the "time" function

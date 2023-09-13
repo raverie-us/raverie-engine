@@ -8,7 +8,7 @@ typedef unsigned long OsInt;
 const OsHandle cInvalidHandle = (OsHandle)(uintptr_t)-1;
 const uint cDebugNameMax = 32;
 
-class ZeroShared StackHandle
+class StackHandle
 {
 public:
   StackHandle()

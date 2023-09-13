@@ -20,8 +20,8 @@ public:
 };
 
 // Adds the \ in front of common ascii codes (\n, \r, \0, etc)
-ZeroShared String EscapeString(StringRange input);
-ZeroShared String EscapeCharacter(int unicodeCharacter);
+String EscapeString(StringRange input);
+String EscapeCharacter(int unicodeCharacter);
 
 DeclareEnum11(GrammarNodeType,
               Epsilon,

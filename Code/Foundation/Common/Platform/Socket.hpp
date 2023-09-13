@@ -8,24 +8,24 @@ namespace Zero
 /// On little endian platforms, flips byte order to big endian
 /// On big endian platforms, does nothing
 /// (Named htons/htonl on most platforms)
-ZeroShared u16 HostToNetworkShort(u16 hostShort);
-ZeroShared s16 HostToNetworkShort(s16 hostShort);
-ZeroShared u32 HostToNetworkLong(u32 hostLong);
-ZeroShared s32 HostToNetworkLong(s32 hostLong);
+u16 HostToNetworkShort(u16 hostShort);
+s16 HostToNetworkShort(s16 hostShort);
+u32 HostToNetworkLong(u32 hostLong);
+s32 HostToNetworkLong(s32 hostLong);
 
 /// Converts a network byte order value to a host byte order value
 /// On little endian platforms, flips byte order to little endian
 /// On big endian platforms, does nothing
 /// (Named ntohs/ntohl on most platforms)
-ZeroShared u16 NetworkToHostShort(u16 networkShort);
-ZeroShared s16 NetworkToHostShort(s16 networkShort);
-ZeroShared u32 NetworkToHostLong(u32 networkLong);
-ZeroShared s32 NetworkToHostLong(s32 networkLong);
+u16 NetworkToHostShort(u16 networkShort);
+s16 NetworkToHostShort(s16 networkShort);
+u32 NetworkToHostLong(u32 networkLong);
+s32 NetworkToHostLong(s32 networkLong);
 
 //                                SocketAddress //
 
 /// Network host identifier
-class ZeroShared SocketAddress
+class SocketAddress
 {
 public:
   /// Creates an empty socket address
@@ -84,7 +84,7 @@ public:
 /// Serializes a socket address (currently only defined for InternetworkV4 and
 /// InternetworkV6 socket addresses) Returns the number of bits serialized if
 /// successful, else 0
-ZeroShared Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, SocketAddress& socketAddress);
+Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, SocketAddress& socketAddress);
 
 /// Resolves the most preferred socket address from a host name and service name
 /// as specified Host provided may contain either a host name (like "localhost"
@@ -93,29 +93,29 @@ ZeroShared Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStre
 /// number string (like "80") Will block until address resolution completes or
 /// times out Note: Preferred socket address order is documented in RFC 3484
 /// (Named getaddrinfo on most platforms)
-ZeroShared SocketAddress ResolveSocketAddress(Status& status,
+SocketAddress ResolveSocketAddress(Status& status,
                                               StringParam host,
                                               StringParam service,
                                               SocketAddressFamily::Enum addressFamily,
                                               SocketProtocol::Enum protocol,
                                               SocketType::Enum type,
                                               SocketAddressResolutionFlags::Enum addressResolutionFlags);
-ZeroShared SocketAddress ResolveSocketAddress(Status& status,
+SocketAddress ResolveSocketAddress(Status& status,
                                               StringParam host,
                                               StringParam service,
                                               SocketAddressFamily::Enum addressFamily,
                                               SocketProtocol::Enum protocol,
                                               SocketAddressResolutionFlags::Enum addressResolutionFlags);
-ZeroShared SocketAddress ResolveSocketAddress(Status& status,
+SocketAddress ResolveSocketAddress(Status& status,
                                               StringParam host,
                                               StringParam service,
                                               SocketAddressFamily::Enum addressFamily,
                                               SocketAddressResolutionFlags::Enum addressResolutionFlags);
-ZeroShared SocketAddress ResolveSocketAddress(Status& status,
+SocketAddress ResolveSocketAddress(Status& status,
                                               StringParam host,
                                               StringParam service,
                                               SocketAddressResolutionFlags::Enum addressResolutionFlags);
-ZeroShared SocketAddress ResolveSocketAddress(Status& status, StringParam host, StringParam service);
+SocketAddress ResolveSocketAddress(Status& status, StringParam host, StringParam service);
 
 /// Resolves all associated socket addresses (in preferred socket address order)
 /// from a host name and service name as specified Host provided may contain
@@ -125,29 +125,29 @@ ZeroShared SocketAddress ResolveSocketAddress(Status& status, StringParam host, 
 /// block until address resolution completes or times out Note: Preferred socket
 /// address order is documented in RFC 3484 (Named getaddrinfo on most
 /// platforms)
-ZeroShared Array<SocketAddress> ResolveAllSocketAddresses(Status& status,
+Array<SocketAddress> ResolveAllSocketAddresses(Status& status,
                                                           StringParam host,
                                                           StringParam service,
                                                           SocketAddressFamily::Enum addressFamily,
                                                           SocketProtocol::Enum protocol,
                                                           SocketType::Enum type,
                                                           SocketAddressResolutionFlags::Enum addressResolutionFlags);
-ZeroShared Array<SocketAddress> ResolveAllSocketAddresses(Status& status,
+Array<SocketAddress> ResolveAllSocketAddresses(Status& status,
                                                           StringParam host,
                                                           StringParam service,
                                                           SocketAddressFamily::Enum addressFamily,
                                                           SocketProtocol::Enum protocol,
                                                           SocketAddressResolutionFlags::Enum addressResolutionFlags);
-ZeroShared Array<SocketAddress> ResolveAllSocketAddresses(Status& status,
+Array<SocketAddress> ResolveAllSocketAddresses(Status& status,
                                                           StringParam host,
                                                           StringParam service,
                                                           SocketAddressFamily::Enum addressFamily,
                                                           SocketAddressResolutionFlags::Enum addressResolutionFlags);
-ZeroShared Array<SocketAddress> ResolveAllSocketAddresses(Status& status,
+Array<SocketAddress> ResolveAllSocketAddresses(Status& status,
                                                           StringParam host,
                                                           StringParam service,
                                                           SocketAddressResolutionFlags::Enum addressResolutionFlags);
-ZeroShared Array<SocketAddress> ResolveAllSocketAddresses(Status& status, StringParam host, StringParam service);
+Array<SocketAddress> ResolveAllSocketAddresses(Status& status, StringParam host, StringParam service);
 
 /// Resolves the host name and service name from a socket address as specified
 /// Host returned may contain either a host name (like "localhost" or
@@ -155,77 +155,77 @@ ZeroShared Array<SocketAddress> ResolveAllSocketAddresses(Status& status, String
 /// Service returned may contain either a service name (like "http") or port
 /// number string (like "80") Will block until name resolution completes or
 /// times out (Named getnameinfo on most platforms)
-ZeroShared Pair<String, String> ResolveHostAndServiceNames(Status& status,
+Pair<String, String> ResolveHostAndServiceNames(Status& status,
                                                            const SocketAddress& address,
                                                            SocketNameResolutionFlags::Enum nameResolutionFlags);
-ZeroShared Pair<String, String> ResolveHostAndServiceNames(Status& status, const SocketAddress& address);
+Pair<String, String> ResolveHostAndServiceNames(Status& status, const SocketAddress& address);
 
 /// Converts a valid socket address to a numeric address string, else String()
 /// Note: Only translates the address host portion, does not translate port
 /// numbers (Named inet_ntop on most platforms)
-ZeroShared String SocketAddressToString(Status& status,
+String SocketAddressToString(Status& status,
                                         SocketAddressFamily::Enum addressFamily,
                                         const SocketAddress& address);
-ZeroShared String SocketAddressToString(SocketAddressFamily::Enum addressFamily, const SocketAddress& address);
+String SocketAddressToString(SocketAddressFamily::Enum addressFamily, const SocketAddress& address);
 
 /// Converts a valid numeric address string to a socket address, else
 /// SocketAddress() Note: Only translates the address host portion, does not
 /// translate port numbers (Named inet_pton on most platforms)
-ZeroShared SocketAddress StringToSocketAddress(Status& status,
+SocketAddress StringToSocketAddress(Status& status,
                                                SocketAddressFamily::Enum addressFamily,
                                                StringParam address);
-ZeroShared SocketAddress StringToSocketAddress(SocketAddressFamily::Enum addressFamily, StringParam address);
+SocketAddress StringToSocketAddress(SocketAddressFamily::Enum addressFamily, StringParam address);
 
 /// Returns true if the socket address represents a valid IPv4 host, else false
 /// This does not imply that the host exists, only that the socket address is
 /// well formed
-ZeroShared bool IsValidIpv4Address(const SocketAddress& address);
+bool IsValidIpv4Address(const SocketAddress& address);
 /// Returns true if the socket address represents a valid IPv6 host, else false
 /// This does not imply that the host exists, only that the socket address is
 /// well formed
-ZeroShared bool IsValidIpv6Address(const SocketAddress& address);
+bool IsValidIpv6Address(const SocketAddress& address);
 
 /// Returns true if the numeric address string represents a valid IPv4 host,
 /// else false This does not imply that the host exists, only that the numeric
 /// address string is well formed
-ZeroShared bool IsValidIpv4Address(StringParam address);
+bool IsValidIpv4Address(StringParam address);
 /// Returns true if the numeric address string represents a valid IPv6 host,
 /// else false This does not imply that the host exists, only that the numeric
 /// address string is well formed
-ZeroShared bool IsValidIpv6Address(StringParam address);
+bool IsValidIpv6Address(StringParam address);
 
 /// Converts a valid IPv4 socket address to a numeric address string, else
 /// String()
-ZeroShared String Ipv4AddressToString(const SocketAddress& address);
+String Ipv4AddressToString(const SocketAddress& address);
 /// Converts a valid IPv6 socket address to a numeric address string, else
 /// String()
-ZeroShared String Ipv6AddressToString(const SocketAddress& address);
+String Ipv6AddressToString(const SocketAddress& address);
 
 /// Returns a port as a numeric string, else String()
-ZeroShared String PortToString(uint port);
+String PortToString(uint port);
 
 /// Converts a valid IPv4 socket address to a numeric address string with
 /// appended port number, else String()
-ZeroShared String Ipv4AddressToStringWithPort(const SocketAddress& address);
+String Ipv4AddressToStringWithPort(const SocketAddress& address);
 /// Converts a valid IPv6 socket address to a numeric address string with
 /// appended port number, else String()
-ZeroShared String Ipv6AddressToStringWithPort(const SocketAddress& address);
+String Ipv6AddressToStringWithPort(const SocketAddress& address);
 
 /// Converts a valid IPv4 numeric address string to a socket address, else
 /// SocketAddress()
-ZeroShared SocketAddress StringToIpv4Address(StringParam address);
-ZeroShared SocketAddress StringToIpv4Address(StringParam address, ushort port);
+SocketAddress StringToIpv4Address(StringParam address);
+SocketAddress StringToIpv4Address(StringParam address, ushort port);
 
 /// Converts a valid IPv6 numeric address string to a socket address, else
 /// SocketAddress()
-ZeroShared SocketAddress StringToIpv6Address(StringParam address);
-ZeroShared SocketAddress StringToIpv6Address(StringParam address, ushort port);
+SocketAddress StringToIpv6Address(StringParam address);
+SocketAddress StringToIpv6Address(StringParam address, ushort port);
 
 //                                    Socket //
 
 /// Network host endpoint
 /// Facilitates interprocess communication
-class ZeroShared Socket
+class Socket
 {
 public:
   //
@@ -514,7 +514,7 @@ private:
 
 /// Socket Move-Without-Destruction Operator
 template <>
-struct ZeroShared MoveWithoutDestructionOperator<Socket>
+struct MoveWithoutDestructionOperator<Socket>
 {
   static inline void MoveWithoutDestruction(Socket* dest, Socket* source)
   {
@@ -530,7 +530,7 @@ struct ZeroShared MoveWithoutDestructionOperator<Socket>
 /// Queries the socket library for the current local socket address associated
 /// with the specified socket Returns the local address the socket is bound to,
 /// else SocketAddress() (Named getsockname on most platforms)
-ZeroShared SocketAddress QueryLocalSocketAddress(Status& status, const Socket& socket);
+SocketAddress QueryLocalSocketAddress(Status& status, const Socket& socket);
 
 /// Queries the socket library for the current remote socket address associated
 /// with the specified socket Returns the remote address currently associated
@@ -542,6 +542,6 @@ ZeroShared SocketAddress QueryLocalSocketAddress(Status& status, const Socket& s
 /// remote address is currently valid, only that the most recent connect
 /// operation succeeded and hasn't been shutdown since (Named getpeername on
 /// most platforms)
-ZeroShared SocketAddress QueryRemoteSocketAddress(Status& status, const Socket& socket);
+SocketAddress QueryRemoteSocketAddress(Status& status, const Socket& socket);
 
 } // namespace Zero

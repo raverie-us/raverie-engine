@@ -11,13 +11,13 @@ typedef HandleManager* (*CreateHandleManagerFn)(ExecutableState* state);
 
 // Generates handle manager creator functions
 template <typename T>
-ZeroSharedTemplate HandleManager* HandleManagerCreator(ExecutableState* state)
+HandleManager* HandleManagerCreator(ExecutableState* state)
 {
   return new T(state);
 }
 
 // This holds any shared handle manager memory
-class ZeroShared HandleManagers
+class HandleManagers
 {
 public:
   // Get the singleton instance
@@ -67,7 +67,7 @@ private:
 };
 
 template <typename T>
-ZeroSharedTemplate class HandleManagerGuid
+class HandleManagerGuid
 {
 public:
   // The index into the executable state that this manager gets
@@ -77,7 +77,7 @@ public:
 
 // Auto-increment the handle manager index as we register more managers
 template <typename T>
-ZeroSharedTemplate const HandleManagerId HandleManagerGuid<T>::Id = HandleManagers::GetInstance().GetNextId();
+const HandleManagerId HandleManagerGuid<T>::Id = HandleManagers::GetInstance().GetNextId();
 
 // Get the id of a handle manager
 #  define ZilchManagerId(Type) Zilch::HandleManagerGuid<Type>::Id
@@ -112,7 +112,7 @@ enum Enum
 // Other types include reference counted objects, or even garbage collected
 // objects Note that objects allocated within the language are managed by the
 // language
-class ZeroShared HandleManager
+class HandleManager
 {
 public:
   // Constructor
@@ -239,7 +239,7 @@ enum Enum
 
 // The header exists at the beginning of the allocated object (the Data pointer
 // on ObjectSlot)
-class ZeroShared ObjectHeader
+class ObjectHeader
 {
 public:
   BoundType* Type;
@@ -249,7 +249,7 @@ public:
 };
 
 // The structure of our heap handle's inner data
-class ZeroShared HeapHandleData
+class HeapHandleData
 {
 public:
   // This is the pointer to the header of the object
@@ -277,7 +277,7 @@ const size_t HeapManagerExtraPatchSize = 256;
 
 // This manages heap objects allocated in the language (including references to
 // heap members via offset)
-class ZeroShared HeapManager : public HandleManager
+class HeapManager : public HandleManager
 {
 public:
   // HandleManager interface
@@ -308,7 +308,7 @@ public:
 };
 
 // The structure of our stack handle's inner data
-class ZeroShared StackHandleData
+class StackHandleData
 {
 public:
   Uid UniqueId;
@@ -321,7 +321,7 @@ static_assert(sizeof(StackHandleData) <= HandleUserDataSize,
 
 // This manages stack objects initialized in the language (including references
 // to stack members via offset)
-class ZeroShared StackManager : public HandleManager
+class StackManager : public HandleManager
 {
 public:
   // HandleManager interface
@@ -334,7 +334,7 @@ public:
 
 // This manages insertion of pointers into the language, which are assumed to be
 // global
-class ZeroShared PointerManager : public HandleManager
+class PointerManager : public HandleManager
 {
 public:
   // HandleManager interface
@@ -349,7 +349,7 @@ public:
 
 // This manages string nodes for the string class, which is always a reference
 // type
-class ZeroShared StringManager : public HandleManager
+class StringManager : public HandleManager
 {
 public:
   // HandleManager interface

@@ -6,7 +6,7 @@
 
 namespace Zilch
 {
-ZilchDeclareStaticLibrary(Syntax, ZeroShared);
+ZilchDeclareStaticLibrary(Syntax);
 
 namespace EvaluationMode
 {
@@ -21,7 +21,7 @@ enum Enum
 }
 
 // This tree stores the parsed language in a format that's easy to traverse
-class ZeroShared SyntaxTree
+class SyntaxTree
 {
 public:
   // Friends
@@ -90,7 +90,7 @@ public:
     }
 
 // A syntax node represents any syntactical entity in the syntax tree
-class ZeroShared SyntaxNode : public IZilchObject
+class SyntaxNode : public IZilchObject
 {
 public:
   ZilchDeclareType(SyntaxNode, TypeCopyMode::ReferenceType);
@@ -175,7 +175,7 @@ public:
 };
 
 // A pre-type representation for the syntax tree
-class ZeroShared SyntaxType : public SyntaxNode
+class SyntaxType : public SyntaxNode
 {
 public:
   ZilchDeclareType(SyntaxType, TypeCopyMode::ReferenceType);
@@ -191,7 +191,7 @@ public:
   Type* ResolvedType;
 };
 
-class ZeroShared AnySyntaxType : public SyntaxType
+class AnySyntaxType : public SyntaxType
 {
 public:
   ZilchDeclareType(AnySyntaxType, TypeCopyMode::ReferenceType);
@@ -201,7 +201,7 @@ public:
   String ToString() const override;
 };
 
-class ZeroShared IndirectionSyntaxType : public SyntaxType
+class IndirectionSyntaxType : public SyntaxType
 {
 public:
   ZilchDeclareType(IndirectionSyntaxType, TypeCopyMode::ReferenceType);
@@ -218,7 +218,7 @@ public:
   virtual void PopulateChildren(NodeChildren& childrenOut) override;
 };
 
-class ZeroShared BoundSyntaxType : public SyntaxType
+class BoundSyntaxType : public SyntaxType
 {
 public:
   ZilchDeclareType(BoundSyntaxType, TypeCopyMode::ReferenceType);
@@ -239,7 +239,7 @@ public:
 };
 
 // A parameter that belongs inside of a delegate declaration
-class ZeroShared DelegateSyntaxParameter
+class DelegateSyntaxParameter
 {
 public:
   // Constructor
@@ -252,7 +252,7 @@ public:
   SyntaxType* Type;
 };
 
-class ZeroShared DelegateSyntaxType : public SyntaxType
+class DelegateSyntaxType : public SyntaxType
 {
 public:
   ZilchDeclareType(DelegateSyntaxType, TypeCopyMode::ReferenceType);
@@ -288,7 +288,7 @@ enum Enum
 }
 
 // A root node is the root of a syntax tree
-class ZeroShared RootNode : public SyntaxNode
+class RootNode : public SyntaxNode
 {
 public:
   ZilchDeclareType(RootNode, TypeCopyMode::ReferenceType);
@@ -309,7 +309,7 @@ public:
 
 // An attribute that can be attached to classes, functions, member variables,
 // etc
-class ZeroShared AttributeNode : public SyntaxNode
+class AttributeNode : public SyntaxNode
 {
 public:
   ZilchDeclareType(AttributeNode, TypeCopyMode::ReferenceType);
@@ -329,7 +329,7 @@ public:
 };
 
 // A statement node represents any kind of statement
-class ZeroShared StatementNode : public SyntaxNode
+class StatementNode : public SyntaxNode
 {
 public:
   ZilchDeclareType(StatementNode, TypeCopyMode::ReferenceType);
@@ -345,7 +345,7 @@ public:
 
 // An evaluatable node represents anything that can be evaluated into a value
 // (expressions, function calls, values, etc)
-class ZeroShared ExpressionNode : public StatementNode
+class ExpressionNode : public StatementNode
 {
 public:
   ZilchDeclareType(ExpressionNode, TypeCopyMode::ReferenceType);
@@ -382,7 +382,7 @@ public:
 };
 
 // A binary-operator node represents a binary operator and its operands
-class ZeroShared BinaryOperatorNode : public ExpressionNode
+class BinaryOperatorNode : public ExpressionNode
 {
 public:
   ZilchDeclareType(BinaryOperatorNode, TypeCopyMode::ReferenceType);
@@ -407,7 +407,7 @@ public:
 };
 
 // A unary-operator node represents a unary operator and its operand
-class ZeroShared UnaryOperatorNode : public ExpressionNode
+class UnaryOperatorNode : public ExpressionNode
 {
 public:
   ZilchDeclareType(UnaryOperatorNode, TypeCopyMode::ReferenceType);
@@ -431,7 +431,7 @@ public:
 };
 
 // A unary-operator node represents a unary operator and its operand
-class ZeroShared PropertyDelegateOperatorNode : public UnaryOperatorNode
+class PropertyDelegateOperatorNode : public UnaryOperatorNode
 {
 public:
   ZilchDeclareType(PropertyDelegateOperatorNode, TypeCopyMode::ReferenceType);
@@ -446,7 +446,7 @@ public:
 
 // A type-cast node represents a type cast from an expression to a specified
 // type
-class ZeroShared TypeCastNode : public ExpressionNode
+class TypeCastNode : public ExpressionNode
 {
 public:
   ZilchDeclareType(TypeCastNode, TypeCopyMode::ReferenceType);
@@ -471,7 +471,7 @@ public:
 
 // A post expression node represents right hand operators (call, indexer,
 // access, etc)
-class ZeroShared PostExpressionNode : public ExpressionNode
+class PostExpressionNode : public ExpressionNode
 {
 public:
   ZilchDeclareType(PostExpressionNode, TypeCopyMode::ReferenceType);
@@ -488,7 +488,7 @@ public:
 
 // An indexer call node represents a list of passed in arguments used in an
 // indexer call
-class ZeroShared IndexerCallNode : public PostExpressionNode
+class IndexerCallNode : public PostExpressionNode
 {
 public:
   ZilchDeclareType(IndexerCallNode, TypeCopyMode::ReferenceType);
@@ -518,7 +518,7 @@ public:
 
 // A function call node represents a list of passed in arguments used in a
 // function call
-class ZeroShared FunctionCallNode : public PostExpressionNode
+class FunctionCallNode : public PostExpressionNode
 {
 public:
   ZilchDeclareType(FunctionCallNode, TypeCopyMode::ReferenceType);
@@ -563,7 +563,7 @@ enum Enum
 }
 
 // A member-access node represents accessing a member / field
-class ZeroShared MemberAccessNode : public PostExpressionNode
+class MemberAccessNode : public PostExpressionNode
 {
 public:
   ZilchDeclareType(MemberAccessNode, TypeCopyMode::ReferenceType);
@@ -606,7 +606,7 @@ public:
 };
 
 // Lets us get the runtime type object that describes a type
-class ZeroShared TypeIdNode : public ExpressionNode
+class TypeIdNode : public ExpressionNode
 {
 public:
   ZilchDeclareType(TypeIdNode, TypeCopyMode::ReferenceType);
@@ -634,7 +634,7 @@ public:
 
 // Lets us get the runtime property object that describes a field or
 // getter/setter
-class ZeroShared MemberIdNode : public ExpressionNode
+class MemberIdNode : public ExpressionNode
 {
 public:
   ZilchDeclareType(MemberIdNode, TypeCopyMode::ReferenceType);
@@ -662,7 +662,7 @@ enum Enum
 
 // Used when we access static members as well as invoking constructors (could be
 // after new/local, or just by itself)
-class ZeroShared StaticTypeNode : public ExpressionNode
+class StaticTypeNode : public ExpressionNode
 {
 public:
   ZilchDeclareType(StaticTypeNode, TypeCopyMode::ReferenceType);
@@ -695,7 +695,7 @@ public:
 };
 
 // When we want to initialize a type we can also initialize particular members
-class ZeroShared ExpressionInitializerMemberNode : public SyntaxNode
+class ExpressionInitializerMemberNode : public SyntaxNode
 {
 public:
   ZilchDeclareType(ExpressionInitializerMemberNode, TypeCopyMode::ReferenceType);
@@ -716,7 +716,7 @@ public:
 
 // When we want to initialize a type we can also add values to it (generally for
 // containers)
-class ZeroShared ExpressionInitializerAddNode : public SyntaxNode
+class ExpressionInitializerAddNode : public SyntaxNode
 {
 public:
   ZilchDeclareType(ExpressionInitializerAddNode, TypeCopyMode::ReferenceType);
@@ -732,7 +732,7 @@ public:
 
 // When we want to initialize a type (either a container, with .Add calls, or
 // members of a class / properties)
-class ZeroShared ExpressionInitializerNode : public PostExpressionNode
+class ExpressionInitializerNode : public PostExpressionNode
 {
 public:
   ZilchDeclareType(ExpressionInitializerNode, TypeCopyMode::ReferenceType);
@@ -762,7 +762,7 @@ public:
 
 // A multi-expression Contains multiple expressions but only yields the results
 // of one of them (done by index)
-class ZeroShared MultiExpressionNode : public ExpressionNode
+class MultiExpressionNode : public ExpressionNode
 {
 public:
   ZilchDeclareType(MultiExpressionNode, TypeCopyMode::ReferenceType);
@@ -788,7 +788,7 @@ public:
 };
 
 // A variable node represents any variable declaration
-class ZeroShared VariableNode : public ExpressionNode
+class VariableNode : public ExpressionNode
 {
 public:
   ZilchDeclareType(VariableNode, TypeCopyMode::ReferenceType);
@@ -818,7 +818,7 @@ public:
 
 // A local variable node represents a local variable declaration (such as one
 // inside a function)
-class ZeroShared LocalVariableNode : public VariableNode
+class LocalVariableNode : public VariableNode
 {
 public:
   ZilchDeclareType(LocalVariableNode, TypeCopyMode::ReferenceType);
@@ -846,7 +846,7 @@ public:
 };
 
 // A parameter node represents the parameter of a function
-class ZeroShared ParameterNode : public LocalVariableNode
+class ParameterNode : public LocalVariableNode
 {
 public:
   ZilchDeclareType(ParameterNode, TypeCopyMode::ReferenceType);
@@ -861,7 +861,7 @@ public:
 
 // A member variable node represents a member variable declaration (such as one
 // inside a class)
-class ZeroShared MemberVariableNode : public VariableNode
+class MemberVariableNode : public VariableNode
 {
 public:
   ZilchDeclareType(MemberVariableNode, TypeCopyMode::ReferenceType);
@@ -905,7 +905,7 @@ public:
 };
 
 // A value node represents any constant or identifier value
-class ZeroShared ValueNode : public ExpressionNode
+class ValueNode : public ExpressionNode
 {
 public:
   ZilchDeclareType(ValueNode, TypeCopyMode::ReferenceType);
@@ -927,7 +927,7 @@ public:
 
 // String interpolants are basically advanced efficient string concatenations
 // with values
-class ZeroShared StringInterpolantNode : public ExpressionNode
+class StringInterpolantNode : public ExpressionNode
 {
 public:
   ZilchDeclareType(StringInterpolantNode, TypeCopyMode::ReferenceType);
@@ -945,7 +945,7 @@ public:
 };
 
 // A delete node represents explicit deletion of an object
-class ZeroShared DeleteNode : public StatementNode
+class DeleteNode : public StatementNode
 {
 public:
   ZilchDeclareType(DeleteNode, TypeCopyMode::ReferenceType);
@@ -962,7 +962,7 @@ public:
 };
 
 // An return node represents the return statement for a function
-class ZeroShared ReturnNode : public StatementNode
+class ReturnNode : public StatementNode
 {
 public:
   ZilchDeclareType(ReturnNode, TypeCopyMode::ReferenceType);
@@ -982,7 +982,7 @@ public:
 };
 
 // A scope node represends a type of scope
-class ZeroShared ScopeNode : public StatementNode
+class ScopeNode : public StatementNode
 {
 public:
   ZilchDeclareType(ScopeNode, TypeCopyMode::ReferenceType);
@@ -1010,7 +1010,7 @@ public:
 
 // Allows code to run for a period of time before it throws an exception and
 // 'times out'
-class ZeroShared TimeoutNode : public ScopeNode
+class TimeoutNode : public ScopeNode
 {
 public:
   ZilchDeclareType(TimeoutNode, TypeCopyMode::ReferenceType);
@@ -1024,7 +1024,7 @@ public:
 };
 
 // An if node represents the if-then else-if else construct
-class ZeroShared IfNode : public ScopeNode
+class IfNode : public ScopeNode
 {
 public:
   ZilchDeclareType(IfNode, TypeCopyMode::ReferenceType);
@@ -1047,7 +1047,7 @@ public:
 };
 
 // We hold all parts of the if as children
-class ZeroShared IfRootNode : public StatementNode
+class IfRootNode : public StatementNode
 {
 public:
   ZilchDeclareType(IfRootNode, TypeCopyMode::ReferenceType);
@@ -1067,7 +1067,7 @@ public:
 };
 
 // Declares that a class sends a particular type of event
-class ZeroShared SendsEventNode : public SyntaxNode
+class SendsEventNode : public SyntaxNode
 {
 public:
   ZilchDeclareType(SendsEventNode, TypeCopyMode::ReferenceType);
@@ -1093,7 +1093,7 @@ public:
 };
 
 // An break node represents the break statement in a loop
-class ZeroShared BreakNode : public StatementNode
+class BreakNode : public StatementNode
 {
 public:
   ZilchDeclareType(BreakNode, TypeCopyMode::ReferenceType);
@@ -1115,7 +1115,7 @@ public:
 };
 
 // An break node represents a debug breakpoint in the virtual machine
-class ZeroShared DebugBreakNode : public StatementNode
+class DebugBreakNode : public StatementNode
 {
 public:
   ZilchDeclareType(DebugBreakNode, TypeCopyMode::ReferenceType);
@@ -1123,7 +1123,7 @@ public:
 };
 
 // An continue node represents the continue statement in a loop
-class ZeroShared ContinueNode : public StatementNode
+class ContinueNode : public StatementNode
 {
 public:
   ZilchDeclareType(ContinueNode, TypeCopyMode::ReferenceType);
@@ -1142,7 +1142,7 @@ public:
 };
 
 // Represents throwing an exception in langugae
-class ZeroShared ThrowNode : public StatementNode
+class ThrowNode : public StatementNode
 {
 public:
   ZilchDeclareType(ThrowNode, TypeCopyMode::ReferenceType);
@@ -1159,7 +1159,7 @@ public:
 };
 
 // A loop scope is a scope that we can break out of or continue from
-class ZeroShared LoopScopeNode : public ScopeNode
+class LoopScopeNode : public ScopeNode
 {
 public:
   ZilchDeclareType(LoopScopeNode, TypeCopyMode::ReferenceType);
@@ -1178,7 +1178,7 @@ public:
 };
 
 // A loop that Contains a conditional expression
-class ZeroShared ConditionalLoopNode : public LoopScopeNode
+class ConditionalLoopNode : public LoopScopeNode
 {
 public:
   ZilchDeclareType(ConditionalLoopNode, TypeCopyMode::ReferenceType);
@@ -1194,7 +1194,7 @@ public:
 };
 
 // A while node represents the a while loop
-class ZeroShared WhileNode : public ConditionalLoopNode
+class WhileNode : public ConditionalLoopNode
 {
 public:
   ZilchDeclareType(WhileNode, TypeCopyMode::ReferenceType);
@@ -1202,7 +1202,7 @@ public:
 };
 
 // A do-while node represents the a do-while loop
-class ZeroShared DoWhileNode : public ConditionalLoopNode
+class DoWhileNode : public ConditionalLoopNode
 {
 public:
   ZilchDeclareType(DoWhileNode, TypeCopyMode::ReferenceType);
@@ -1210,7 +1210,7 @@ public:
 };
 
 // A for node represents the a for loop
-class ZeroShared ForNode : public ConditionalLoopNode
+class ForNode : public ConditionalLoopNode
 {
 public:
   ZilchDeclareType(ForNode, TypeCopyMode::ReferenceType);
@@ -1237,7 +1237,7 @@ public:
 };
 
 // A for node represents the a for loop
-class ZeroShared ForEachNode : public ForNode
+class ForEachNode : public ForNode
 {
 public:
   ZilchDeclareType(ForEachNode, TypeCopyMode::ReferenceType);
@@ -1261,7 +1261,7 @@ public:
 };
 
 // A loop node represents the a loop
-class ZeroShared LoopNode : public LoopScopeNode
+class LoopNode : public LoopScopeNode
 {
 public:
   ZilchDeclareType(LoopNode, TypeCopyMode::ReferenceType);
@@ -1270,7 +1270,7 @@ public:
 
 // A generic function only takes parameters, has no returns and is not marked as
 // static
-class ZeroShared GenericFunctionNode : public ScopeNode
+class GenericFunctionNode : public ScopeNode
 {
 public:
   ZilchDeclareType(GenericFunctionNode, TypeCopyMode::ReferenceType);
@@ -1306,7 +1306,7 @@ public:
 };
 
 // A function node represent the definition of a function
-class ZeroShared FunctionNode : public GenericFunctionNode
+class FunctionNode : public GenericFunctionNode
 {
 public:
   ZilchDeclareType(FunctionNode, TypeCopyMode::ReferenceType);
@@ -1333,7 +1333,7 @@ public:
 };
 
 // Note that represents an initializer in the initializer list
-class ZeroShared InitializerNode : public ExpressionNode
+class InitializerNode : public ExpressionNode
 {
 public:
   ZilchDeclareType(InitializerNode, TypeCopyMode::ReferenceType);
@@ -1351,7 +1351,7 @@ public:
 
 // A constructor is a specialized function for creating and initializing an
 // object
-class ZeroShared ConstructorNode : public GenericFunctionNode
+class ConstructorNode : public GenericFunctionNode
 {
 public:
   ZilchDeclareType(ConstructorNode, TypeCopyMode::ReferenceType);
@@ -1370,7 +1370,7 @@ public:
 };
 
 // A destructor is a specialized function for destroying an object
-class ZeroShared DestructorNode : public GenericFunctionNode
+class DestructorNode : public GenericFunctionNode
 {
 public:
   ZilchDeclareType(DestructorNode, TypeCopyMode::ReferenceType);
@@ -1380,7 +1380,7 @@ public:
 // A class node represents the definition of a class
 // The class is a scope node itself because of the pre-constructor and member
 // variable initialization
-class ZeroShared ClassNode : public ScopeNode
+class ClassNode : public ScopeNode
 {
 public:
   ZilchDeclareType(ClassNode, TypeCopyMode::ReferenceType);
@@ -1445,7 +1445,7 @@ public:
 };
 
 // An enum value declared within an enum
-class ZeroShared EnumValueNode : public SyntaxNode
+class EnumValueNode : public SyntaxNode
 {
 public:
   ZilchDeclareType(EnumValueNode, TypeCopyMode::ReferenceType);
@@ -1472,7 +1472,7 @@ public:
 
 // An enum node represents constant integral values that count up (or bitwise
 // flags)
-class ZeroShared EnumNode : public SyntaxNode
+class EnumNode : public SyntaxNode
 {
 public:
   ZilchDeclareType(EnumNode, TypeCopyMode::ReferenceType);
@@ -1507,7 +1507,7 @@ public:
 };
 
 // A type-define node represents
-class ZeroShared TypeDefineNode : public SyntaxNode
+class TypeDefineNode : public SyntaxNode
 {
 public:
   ZilchDeclareType(TypeDefineNode, TypeCopyMode::ReferenceType);
@@ -1528,7 +1528,7 @@ public:
 };
 
 // A local variable reference node replaces a generic identifier node
-class ZeroShared LocalVariableReferenceNode : public ValueNode
+class LocalVariableReferenceNode : public ValueNode
 {
 public:
   ZilchDeclareType(LocalVariableReferenceNode, TypeCopyMode::ReferenceType);

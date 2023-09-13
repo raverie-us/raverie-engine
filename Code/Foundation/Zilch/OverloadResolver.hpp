@@ -25,7 +25,7 @@ enum Enum
 }
 
 // A class that's responsible for resolving overloads
-class ZeroShared Overload
+class Overload
 {
 public:
   // Resolve an overload between a function call and the list of functions

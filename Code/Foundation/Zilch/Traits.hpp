@@ -7,14 +7,14 @@
 namespace Zilch
 {
 template <typename T>
-class ZeroSharedTemplate StaticDereference
+class StaticDereference
 {
 public:
   typedef T Type;
 };
 
 template <typename T>
-class ZeroSharedTemplate StaticDereference<T*>
+class StaticDereference<T*>
 {
 public:
   typedef T Type;
@@ -22,7 +22,7 @@ public:
 
 // Tells us whether a type is a primitive (built in type)
 template <typename T>
-class ZeroSharedTemplate IsPrimitive
+class IsPrimitive
 {
 public:
   static const bool Value = false;
@@ -31,85 +31,85 @@ public:
 
 // Mark all the basic types that we know of as primtiive
 template <>
-class ZeroShared IsPrimitive<bool>
+class IsPrimitive<bool>
 {
 public:
   static const bool Value = true;
 };
 template <>
-class ZeroShared IsPrimitive<float>
+class IsPrimitive<float>
 {
 public:
   static const bool Value = true;
 };
 template <>
-class ZeroShared IsPrimitive<double>
+class IsPrimitive<double>
 {
 public:
   static const bool Value = true;
 };
 template <>
-class ZeroShared IsPrimitive<char>
+class IsPrimitive<char>
 {
 public:
   static const bool Value = true;
 };
 template <>
-class ZeroShared IsPrimitive<signed char>
+class IsPrimitive<signed char>
 {
 public:
   static const bool Value = true;
 };
 template <>
-class ZeroShared IsPrimitive<unsigned char>
+class IsPrimitive<unsigned char>
 {
 public:
   static const bool Value = true;
 };
 template <>
-class ZeroShared IsPrimitive<signed short>
+class IsPrimitive<signed short>
 {
 public:
   static const bool Value = true;
 };
 template <>
-class ZeroShared IsPrimitive<unsigned short>
+class IsPrimitive<unsigned short>
 {
 public:
   static const bool Value = true;
 };
 template <>
-class ZeroShared IsPrimitive<signed int>
+class IsPrimitive<signed int>
 {
 public:
   static const bool Value = true;
 };
 template <>
-class ZeroShared IsPrimitive<unsigned int>
+class IsPrimitive<unsigned int>
 {
 public:
   static const bool Value = true;
 };
 template <>
-class ZeroShared IsPrimitive<signed long>
+class IsPrimitive<signed long>
 {
 public:
   static const bool Value = true;
 };
 template <>
-class ZeroShared IsPrimitive<unsigned long>
+class IsPrimitive<unsigned long>
 {
 public:
   static const bool Value = true;
 };
 template <>
-class ZeroShared IsPrimitive<signed long long>
+class IsPrimitive<signed long long>
 {
 public:
   static const bool Value = true;
 };
 template <>
-class ZeroShared IsPrimitive<unsigned long long>
+class IsPrimitive<unsigned long long>
 {
 public:
   static const bool Value = true;

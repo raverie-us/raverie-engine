@@ -7,7 +7,7 @@
 namespace Zilch
 {
 template <typename T>
-class ZeroSharedTemplate Range
+class Range
 {
 public:
   ZilchDeclareType(Range, TypeCopyMode::ReferenceType);

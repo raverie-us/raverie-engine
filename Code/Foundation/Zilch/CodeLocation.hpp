@@ -32,7 +32,7 @@ enum Enum
 }
 
 // A code location provides us with a context of where something occurred
-class ZeroShared CodeLocation
+class CodeLocation
 {
 public:
   // Default constructor
@@ -117,7 +117,7 @@ public:
 
 // Every time we add code to the project we do it through this
 // This is also stored on the library that gets generated out of the project
-class ZeroShared CodeEntry
+class CodeEntry
 {
 public:
   // Constructor
@@ -142,7 +142,7 @@ namespace Zero
 // skip it! WARNING: If this ever becomes non-movable, then be sure to update
 // UserToken!
 template <>
-struct ZeroShared MoveWithoutDestructionOperator<Zilch::CodeLocation>
+struct MoveWithoutDestructionOperator<Zilch::CodeLocation>
 {
   static inline void MoveWithoutDestruction(Zilch::CodeLocation* dest, Zilch::CodeLocation* source)
   {

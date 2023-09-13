@@ -17,14 +17,14 @@ typedef Array<const CodeLocation*> LocationArray;
 
 // The default error callback prints compiler errors to stderr (pass null for
 // userData)
-ZeroShared void DefaultErrorCallback(ErrorEvent* e);
+void DefaultErrorCallback(ErrorEvent* e);
 
 // A special callback that assumes the user-data is a pointer to a String class
-ZeroShared void OutputErrorStringCallback(ErrorEvent* e, void* stringPointer);
+void OutputErrorStringCallback(ErrorEvent* e, void* stringPointer);
 
 // This class provides a general output handler that we can use in all modules
 // (for outputting messages, warnings, and errors)
-class ZeroShared CompilationErrors : public EventHandler
+class CompilationErrors : public EventHandler
 {
 public:
   // Constructor

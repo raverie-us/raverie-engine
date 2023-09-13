@@ -15,7 +15,7 @@ class BuildOptions;
 class ContentComposition;
 
 // Content library
-class ZeroNoImportExport ContentMetaLibrary : public Zilch::StaticLibrary
+class ContentMetaLibrary : public Zilch::StaticLibrary
 {
 public:
   ZilchDeclareStaticLibraryInternals(ContentMetaLibrary);

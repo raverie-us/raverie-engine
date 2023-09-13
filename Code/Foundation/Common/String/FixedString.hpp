@@ -132,7 +132,7 @@ protected:
 };
 
 template <size_t maxSize>
-class ZeroSharedTemplate FixedString : public FixedArray<char, maxSize>
+class FixedString : public FixedArray<char, maxSize>
 {
 public:
   typedef FixedArray<char, maxSize> base_type;

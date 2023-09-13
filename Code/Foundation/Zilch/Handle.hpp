@@ -49,7 +49,7 @@ DeclareEnum2(GetOptions, ReturnDefaultOrNull, AssertOnNull);
 
 // A handle is an object that has the ability to point at an object
 // (both on the heap, as a member of an object on the heap, etc)
-class ZeroShared Handle
+class Handle
 {
 public:
   // Friends

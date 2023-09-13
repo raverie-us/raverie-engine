@@ -8,7 +8,7 @@ namespace Zilch
 {
 // This class implements a recursive descent parser that parses
 // through the token stream that we get from the tokenizer
-class ZeroShared Parser
+class Parser
 {
 public:
   // Constructor

@@ -13,7 +13,7 @@ namespace Zilch
 // bound as an external type (before the definition is seen here)
 // The range makes a copy of the container for safety purposes
 template <typename ContainerType, typename RangeType, typename ElementType>
-class ZeroSharedTemplate ContainerRange
+class ContainerRange
 {
 public:
   // The container that we're iterating through (a copy)
@@ -24,7 +24,7 @@ public:
  * ******************************/
 
 // Derive from object
-class ZeroShared IZilchObject
+class IZilchObject
 {
 public:
   // Declare a virtual destructor
@@ -39,7 +39,7 @@ public:
 
 // This type is used in the case where we have no base type (base type gets
 // defined as this)
-class ZeroShared NoType : public IZilchObject
+class NoType : public IZilchObject
 {
 public:
   virtual BoundType* ZilchGetDerivedType() const;
@@ -55,7 +55,7 @@ public:
 
 // This class keeps track of all BoundTypes that are natively bound
 // (any deleted type that is native must be removed from here)
-class ZeroShared NativeBindingList
+class NativeBindingList
 {
 public:
   NativeBindingList();
@@ -80,7 +80,7 @@ public:
 // that would know and limit the types it could store via the compile time type
 // (T)
 template <typename T>
-class ZeroSharedTemplate HandleOf : public Handle
+class HandleOf : public Handle
 {
 public:
   typedef T HandleOfType;
@@ -112,7 +112,7 @@ public:
 };
 
 // All things relevant to binding types
-class ZeroShared TypeBinding
+class TypeBinding
 {
 public:
   ZeroDeclareHasMemberTrait(CanGetDerivedType, ZilchGetDerivedType);
@@ -463,7 +463,7 @@ public:
   // (This template can be specialized using macros)
   // This is to allow Rtti for pre-defined types such as int, via specialization
   template <typename T>
-  class ZeroSharedTemplate StaticTypeId
+  class StaticTypeId
   {
   public:
     // The T type (and because partial specializations of 'StaticTypeId', this
@@ -533,7 +533,7 @@ public:
 
   // A partial specialization for reference types
   template <typename T>
-  class ZeroSharedTemplate StaticTypeId<T&> : public StaticTypeId<T>
+  class StaticTypeId<T&> : public StaticTypeId<T>
   {
   public:
     // This type gets shadowed by the other partial specializations (and will be
@@ -549,7 +549,7 @@ public:
 
   // A partial specialization for reference types
   template <typename T>
-  class ZeroSharedTemplate StaticTypeId<const T> : public StaticTypeId<T>
+  class StaticTypeId<const T> : public StaticTypeId<T>
   {
   public:
     // This type gets shadowed by the other partial specializations (and will be
@@ -565,7 +565,7 @@ public:
 
   // A partial specialization for pointer types
   template <typename T>
-  class ZeroSharedTemplate StaticTypeId<T*> : public StaticTypeId<T>
+  class StaticTypeId<T*> : public StaticTypeId<T>
   {
   public:
     // This type gets shadowed by the other partial specializations (and will be
@@ -581,7 +581,7 @@ public:
 
   // We need to let binding know to redirect the type id operations
   template <typename T>
-  class ZeroSharedTemplate StaticTypeId<HandleOf<T>> : public StaticTypeId<T>
+  class StaticTypeId<HandleOf<T>> : public StaticTypeId<T>
   {
   public:
     // This type gets shadowed by the other partial specializations (and will be
@@ -722,7 +722,7 @@ void LibraryBuilderHelperAddNativeBoundType(LibraryBuilder& builder,
                                             TypeCopyMode::Enum mode);
 void InitializeTypeHelper(StringParam originalName, BoundType* type, size_t size, size_t rawVirtualcount);
 template <typename T>
-ZeroSharedTemplate T InternalReadRef(byte* stackFrame);
+T InternalReadRef(byte* stackFrame);
 
 template <typename T>
 Handle::Handle(const HandleOf<T>& rhs) :
@@ -868,7 +868,7 @@ T* HandleOf<T>::Dereference() const
 /************************************ VOID
  * *************************************/
 template <>
-class ZeroShared TypeBinding::StaticTypeId<void>
+class TypeBinding::StaticTypeId<void>
 {
 public:
   static BoundType* GetType();
@@ -877,7 +877,7 @@ public:
 /************************************ NO TYPE
  * *************************************/
 template <>
-class ZeroShared TypeBinding::StaticTypeId<NoType>
+class TypeBinding::StaticTypeId<NoType>
 {
 public:
   static BoundType* GetType();
@@ -886,7 +886,7 @@ public:
 /************************************ NULL POINTER
  * *************************************/
 template <>
-class ZeroShared TypeBinding::StaticTypeId<NullPointerType>
+class TypeBinding::StaticTypeId<NullPointerType>
 {
 public:
   static BoundType* GetType();
@@ -894,7 +894,7 @@ public:
 
 /************************************ ANY *************************************/
 template <>
-class ZeroShared TypeBinding::StaticTypeId<Any>
+class TypeBinding::StaticTypeId<Any>
 {
 public:
   // The T type (and because partial specializations of 'StaticTypeId', this
@@ -928,7 +928,7 @@ public:
 /************************************ ANY DELEGATE
  * *************************************/
 template <>
-class ZeroShared TypeBinding::StaticTypeId<Delegate>
+class TypeBinding::StaticTypeId<Delegate>
 {
 public:
   // The T type (and because partial specializations of 'StaticTypeId', this
@@ -962,7 +962,7 @@ public:
 /************************************ ANY HANDLE
  * *************************************/
 template <>
-class ZeroShared TypeBinding::StaticTypeId<Handle>
+class TypeBinding::StaticTypeId<Handle>
 {
 public:
   // The T type (and because partial specializations of 'StaticTypeId', this
@@ -997,7 +997,7 @@ public:
  * ************************************/
 
 template <typename SelfType, typename BaseType>
-class ZeroSharedTemplate CheckTypesAreRelated
+class CheckTypesAreRelated
 {
 public:
   static void Test()
@@ -1018,7 +1018,7 @@ public:
 };
 
 template <typename SelfType>
-class ZeroSharedTemplate CheckTypesAreRelated<SelfType, NoType>
+class CheckTypesAreRelated<SelfType, NoType>
 {
 public:
   static void Test()
@@ -1057,10 +1057,10 @@ public:
 
 /**************************** EXTERNAL REDIRECTION
  * *****************************/
-#  define ZilchDeclareCustomType(SelfType, CustomBoundType, Linkage)                                                   \
+#  define ZilchDeclareCustomType(SelfType, CustomBoundType)                                                            \
     /* A specialization so we know that type info exists for this type */                                              \
     template <>                                                                                                        \
-    class Linkage ZilchStaticType(SelfType)                                                                            \
+    class ZilchStaticType(SelfType)                                                                                    \
     {                                                                                                                  \
     public:                                                                                                            \
       typedef SelfType UnqualifiedType;                                                                                \
@@ -1090,10 +1090,10 @@ public:
     };
 
 // Declare an external type
-#  define ZilchDeclareDefineRedirectType(SelfType, RedirectType, ConvertFromRedirect, ConvertToRedirect, Linkage)      \
+#  define ZilchDeclareDefineRedirectType(SelfType, RedirectType, ConvertFromRedirect, ConvertToRedirect)               \
     /* A specialization so we know that type info exists for this type */                                              \
     template <>                                                                                                        \
-    class Linkage ZilchStaticType(SelfType)                                                                            \
+    class ZilchStaticType(SelfType)                                                                                    \
     {                                                                                                                  \
     public:                                                                                                            \
       typedef SelfType UnqualifiedType;                                                                                \
@@ -1131,9 +1131,9 @@ To StaticCast(const From& from)
 
 // Define an external type with a given name that can be statically casted to
 // our redirected type
-#  define ZilchDeclareDefineImplicitRedirectType(SelfType, RedirectType, Linkage)                                      \
+#  define ZilchDeclareDefineImplicitRedirectType(SelfType, RedirectType)                                               \
     ZilchDeclareDefineRedirectType(                                                                                    \
-        SelfType, RedirectType, (StaticCast<SelfType, RedirectType>), (StaticCast<RedirectType, SelfType>), Linkage)
+        SelfType, RedirectType, (StaticCast<SelfType, RedirectType>), (StaticCast<RedirectType, SelfType>))
 
 /********************************** BINDING ***********************************/
 
@@ -1370,16 +1370,16 @@ ZilchDeclareExternalType(DoubleReal);
 ZilchDeclareExternalType(DoubleInteger);
 
 // All the redirection types
-ZilchDeclareDefineImplicitRedirectType(char, Integer, ZeroShared);
-ZilchDeclareDefineImplicitRedirectType(signed char, Integer, ZeroShared);
-ZilchDeclareDefineImplicitRedirectType(signed short, Integer, ZeroShared);
-ZilchDeclareDefineImplicitRedirectType(unsigned short, Integer, ZeroShared);
+ZilchDeclareDefineImplicitRedirectType(char, Integer);
+ZilchDeclareDefineImplicitRedirectType(signed char, Integer);
+ZilchDeclareDefineImplicitRedirectType(signed short, Integer);
+ZilchDeclareDefineImplicitRedirectType(unsigned short, Integer);
 
-ZilchDeclareDefineImplicitRedirectType(unsigned int, Integer, ZeroShared);
-ZilchDeclareDefineImplicitRedirectType(signed long, Integer, ZeroShared);
-ZilchDeclareDefineImplicitRedirectType(unsigned long, Integer, ZeroShared);
+ZilchDeclareDefineImplicitRedirectType(unsigned int, Integer);
+ZilchDeclareDefineImplicitRedirectType(signed long, Integer);
+ZilchDeclareDefineImplicitRedirectType(unsigned long, Integer);
 
-ZilchDeclareDefineImplicitRedirectType(unsigned long long, DoubleInteger, ZeroShared);
+ZilchDeclareDefineImplicitRedirectType(unsigned long long, DoubleInteger);
 } // namespace Zilch
 
 #endif

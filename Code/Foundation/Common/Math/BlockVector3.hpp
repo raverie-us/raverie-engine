@@ -4,7 +4,7 @@
 namespace Math
 {
 
-struct ZeroShared BlockVector3
+struct BlockVector3
 {
   uint GetSize() const;
   void SetSize(uint size);
@@ -27,7 +27,7 @@ struct ZeroShared BlockVector3
   Zero::Array<Vector3> mBlocks;
 };
 
-struct ZeroShared BlockMatrix3
+struct BlockMatrix3
 {
   uint GetSize() const;
   void SetSize(uint size);
@@ -46,7 +46,7 @@ struct ZeroShared BlockMatrix3
   Rows mBlocks;
 };
 
-struct ZeroShared BlockCgPolicy
+struct BlockCgPolicy
 {
   real& operator()(BlockMatrix3& A, uint row, uint col)
   {

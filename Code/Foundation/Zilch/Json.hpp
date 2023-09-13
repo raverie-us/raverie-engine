@@ -26,7 +26,7 @@ class JsonValue;
 
 // A member is basically just a key-value pair, where
 // the key is always a string and the value is generic
-class ZeroShared JsonMember
+class JsonMember
 {
 public:
   // Constructor
@@ -52,7 +52,7 @@ enum Enum
 }
 
 // A 'value' in Json can be a string, number, object, array, true/false, or null
-class ZeroShared JsonValue
+class JsonValue
 {
 public:
   // Constructor
@@ -138,7 +138,7 @@ public:
   OwnedArray<JsonValue*> ArrayElements;
 };
 
-class ZeroShared JsonReader
+class JsonReader
 {
 public:
   // Reads a json text file into a tree format
@@ -159,7 +159,7 @@ enum Enum
 };
 }
 
-class ZeroShared JsonBuilder
+class JsonBuilder
 {
 public:
   // Constructor

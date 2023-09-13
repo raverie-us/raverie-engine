@@ -8,7 +8,7 @@ namespace Zilch
 {
 // A structure that is responsible for resolving members and functions of a
 // class
-class ZeroShared Resolver
+class Resolver
 {
 public:
   // Get the instance resolver
@@ -79,7 +79,7 @@ enum Enum
 }
 
 // A type is the base representation of all types
-class ZeroShared Type : public ReflectionObject
+class Type : public ReflectionObject
 {
 public:
   ZilchDeclareType(Type, TypeCopyMode::ReferenceType);
@@ -286,7 +286,7 @@ public:
 };
 
 // A qualified type represents a true-type with qualifications
-class ZeroShared IndirectionType : public Type
+class IndirectionType : public Type
 {
 public:
   ZilchDeclareType(IndirectionType, TypeCopyMode::ReferenceType);
@@ -321,7 +321,7 @@ public:
 // The 'any type' is a special type that can contain any primitive (delegates,
 // handles, values, etc) Note: There should only ever be one instantiation of
 // this type (core.AnyType)
-class ZeroShared AnyType : public Type
+class AnyType : public Type
 {
 public:
   ZilchDeclareType(AnyType, TypeCopyMode::ReferenceType);
@@ -415,7 +415,7 @@ void IgnoreOnInvalidBinding(const char*);
 // Allows us to walk through filtered members of a BoundType (including up the
 // inheritance chain if the option is specified)
 template <typename MemberType = Member>
-class ZeroSharedTemplate MemberRange
+class MemberRange
 {
 public:
   typedef MemberType* FrontResult;
@@ -523,7 +523,7 @@ public:
 
 // A type that provides us with a simple way of grabbing members and functions
 // from maps
-class ZeroShared BoundType : public Type
+class BoundType : public Type
 {
 public:
   ZilchDeclareType(BoundType, TypeCopyMode::ReferenceType);
@@ -853,7 +853,7 @@ public:
 };
 
 // Structure for delegate parameters
-class ZeroShared DelegateParameter
+class DelegateParameter
 {
 public:
   ZilchDeclareType(DelegateParameter, TypeCopyMode::ReferenceType);
@@ -887,7 +887,7 @@ typedef Array<DelegateParameter> ParameterArray;
 
 // The delegate type essentially stores the signature of a function (regardless
 // of the class it belongs to)
-class ZeroShared DelegateType : public Type
+class DelegateType : public Type
 {
 public:
   ZilchDeclareType(DelegateType, TypeCopyMode::ReferenceType);

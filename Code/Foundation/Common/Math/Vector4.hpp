@@ -14,7 +14,7 @@ typedef Vector4& Vec4Ref;
 typedef Vector4* Vec4Ptr;
 
 /// Four dimensional vector
-struct ZeroShared Vector4
+struct Vector4
 {
   Vector4(){};
   explicit Vector4(real x, real y, real z, real w);
@@ -169,74 +169,74 @@ struct ZeroShared Vector4
   static const Vector4 Axes[4];
 };
 
-ZeroShared Vector4 operator*(real lhs, Vec4Param rhs);
+Vector4 operator*(real lhs, Vec4Param rhs);
 /// Compute the dot product of two vectors.
-ZeroShared real Dot(Vec4Param lhs, Vec4Param rhs);
+real Dot(Vec4Param lhs, Vec4Param rhs);
 /// Get the length of a vector.
-ZeroShared real Length(Vec4Param value);
+real Length(Vec4Param value);
 /// Get the squared length of a vector.
-ZeroShared real LengthSq(Vec4Param value);
+real LengthSq(Vec4Param value);
 /// Compute the distance between two vectors.
-ZeroShared real Distance(Vec4Param lhs, Vec4Param rhs);
+real Distance(Vec4Param lhs, Vec4Param rhs);
 /// Compute the squared distance between two vectors.
-ZeroShared real DistanceSq(Vec4Param lhs, Vec4Param rhs);
+real DistanceSq(Vec4Param lhs, Vec4Param rhs);
 /// Make the given vector have a length of 1, returns the original length.
-ZeroShared real Normalize(Vec4Ref value);
+real Normalize(Vec4Ref value);
 /// Calculate and return a unit-length copy of the given vector.
-ZeroShared Vector4 Normalized(Vec4Param value);
+Vector4 Normalized(Vec4Param value);
 /// Try to normalize the given vector if possible. Safeguards against zero
 /// divisions.
-ZeroShared real AttemptNormalize(Vec4Ref value);
+real AttemptNormalize(Vec4Ref value);
 /// Attempts to return a normalized given vector. Safeguards against zero
 /// divisions.
-ZeroShared Vector4 AttemptNormalized(Vec4Param value);
+Vector4 AttemptNormalized(Vec4Param value);
 
 /// Fused multiply add:  v0 + v1 * scalar
-ZeroShared Vector4 MultiplyAdd(Vec4Param v0, Vec4Param v1, real scalar);
+Vector4 MultiplyAdd(Vec4Param v0, Vec4Param v1, real scalar);
 /// Fused multiply subtract:  v0 - v1 * scalar
-ZeroShared Vector4 MultiplySubtract(Vec4Param v0, Vec4Param v1, real scalar);
+Vector4 MultiplySubtract(Vec4Param v0, Vec4Param v1, real scalar);
 
 /// Returns a copy of value with the absolute value of each element.
-ZeroShared Vector4 Abs(Vec4Param value);
+Vector4 Abs(Vec4Param value);
 /// Returns a vector with the component-wise min between two vectors.
-ZeroShared Vector4 Min(Vec4Param lhs, Vec4Param rhs);
+Vector4 Min(Vec4Param lhs, Vec4Param rhs);
 /// Returns a vector with the component-wise max between two vectors.
-ZeroShared Vector4 Max(Vec4Param lhs, Vec4Param rhs);
+Vector4 Max(Vec4Param lhs, Vec4Param rhs);
 /// Returns a vector where each component is clamped between min and max.
-ZeroShared Vector4 Clamp(Vec4Param value, Vec4Param minValue, Vec4Param maxValue);
+Vector4 Clamp(Vec4Param value, Vec4Param minValue, Vec4Param maxValue);
 /// Same as clamp, however it fills out whether or not anything was clamped.
 /// Useful when an assert message should be shown if anything was clamped.
-ZeroShared Vector4 DebugClamp(Vec4Param value, Vec4Param minValue, Vec4Param maxValue, bool& wasClamped);
+Vector4 DebugClamp(Vec4Param value, Vec4Param minValue, Vec4Param maxValue, bool& wasClamped);
 
 /// Return a copy of this vector with each element has been floored.
-ZeroShared Vector4 Floor(Vec4Param value);
+Vector4 Floor(Vec4Param value);
 /// Return a copy of this vector with each element has been ceiled.
-ZeroShared Vector4 Ceil(Vec4Param value);
+Vector4 Ceil(Vec4Param value);
 /// Return a copy of this vector with each element has been truncated.
-ZeroShared Vector4 Truncate(Vec4Param value);
+Vector4 Truncate(Vec4Param value);
 /// Return a copy of this vector with each element has been rounded.
-ZeroShared Vector4 Round(Vec4Param value);
+Vector4 Round(Vec4Param value);
 
 /// Linearly interpolate between the two vectors, the t-value is restricted to
 /// [0, 1].
-ZeroShared Vector4 Lerp(Vec4Param start, Vec4Param end, real tValue);
+Vector4 Lerp(Vec4Param start, Vec4Param end, real tValue);
 
 /// Projects the input vector onto the given vector (must be normalized)
-ZeroShared Vector4 ProjectOnVector(Vec4Param input, Vec4Param normalizedVector);
+Vector4 ProjectOnVector(Vec4Param input, Vec4Param normalizedVector);
 /// Projects the input vector onto a plane (the normal must be normalized)
-ZeroShared Vector4 ProjectOnPlane(Vec4Param input, Vec4Param planeNormal);
+Vector4 ProjectOnPlane(Vec4Param input, Vec4Param planeNormal);
 /// Calculates the reflection vector across a given vector.
-ZeroShared Vector4 ReflectAcrossVector(Vec4Param input, Vec4Param normalizedVector);
+Vector4 ReflectAcrossVector(Vec4Param input, Vec4Param normalizedVector);
 /// Calculates the reflection vector across a given plane.
-ZeroShared Vector4 ReflectAcrossPlane(Vec4Param input, Vec4Param planeNormal);
+Vector4 ReflectAcrossPlane(Vec4Param input, Vec4Param planeNormal);
 /// Calculates the refraction vector through a plane given a certain index of
 /// refraction.
-ZeroShared Vector4 Refract(Vec4Param input, Vec4Param planeNormal, real refractionIndex);
+Vector4 Refract(Vec4Param input, Vec4Param planeNormal, real refractionIndex);
 /// Get the angle between the two vectors in radians.
-ZeroShared real AngleBetween(Vec4Param a, Vec4Param b);
+real AngleBetween(Vec4Param a, Vec4Param b);
 
-ZeroShared void Negate(Vec4Ptr vec);
-ZeroShared Vector4 Negated(Vec4Param vec);
-ZeroShared Vector4 Clamped(Vec4Param vec, real min, real max);
+void Negate(Vec4Ptr vec);
+Vector4 Negated(Vec4Param vec);
+Vector4 Clamped(Vec4Param vec, real min, real max);
 
 } // namespace Math

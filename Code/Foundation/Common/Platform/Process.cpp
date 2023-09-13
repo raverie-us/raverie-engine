@@ -17,7 +17,7 @@ ProcessInfo::ProcessInfo()
   mProcessId = 0;
 }
 
-ZeroShared ProcessInfo FindProcess(StringParam processName)
+ProcessInfo FindProcess(StringParam processName)
 {
   Array<ProcessInfo> processes;
   GetProcesses(processes);

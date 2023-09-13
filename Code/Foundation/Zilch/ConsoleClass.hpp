@@ -17,7 +17,7 @@ ZilchDeclareEvent(ConsoleRead, ConsoleEvent);
 
 // When the user prints data using the console, or attempts to read
 // this will be the event type that we send out (for callbacks)
-class ZeroShared ConsoleEvent : public EventData
+class ConsoleEvent : public EventData
 {
 public:
   ZilchDeclareType(ConsoleEvent, TypeCopyMode::ReferenceType);
@@ -31,13 +31,13 @@ public:
 };
 
 // The default write text callback that prints to stdio
-ZeroShared void DefaultWriteText(ConsoleEvent* event);
+void DefaultWriteText(ConsoleEvent* event);
 
 // The default read text callback that reads text from stdin
-ZeroShared void DefaultReadText(ConsoleEvent* event);
+void DefaultReadText(ConsoleEvent* event);
 
 // The type that we use to bind a console to the language
-class ZeroShared Console
+class Console
 {
 public:
   ZilchDeclareType(Console, TypeCopyMode::ReferenceType);

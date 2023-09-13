@@ -47,7 +47,7 @@ enum Enum
 
 /// An encoding is a generic interface for writing out strings to any format
 /// (wide character, Utf16, etc)
-class ZeroShared IEncoding
+class IEncoding
 {
 public:
   ZilchDeclareType(IEncoding, TypeCopyMode::ReferenceType);
@@ -77,7 +77,7 @@ public:
 /// Ascii encoding will strip wide characters and turn them into spaces
 /// All characters that fit within a single byte will be directly written to the
 /// stream
-class ZeroShared AsciiEncoding : public IEncoding
+class AsciiEncoding : public IEncoding
 {
 public:
   ZilchDeclareType(AsciiEncoding, TypeCopyMode::ReferenceType);
@@ -88,7 +88,7 @@ public:
 /// Ascii encoding will strip wide characters and turn them into spaces
 /// All characters that fit within a single byte will be directly written to the
 /// stream
-class ZeroShared Utf8Encoding : public IEncoding
+class Utf8Encoding : public IEncoding
 {
 public:
   ZilchDeclareType(Utf8Encoding, TypeCopyMode::ReferenceType);
@@ -98,7 +98,7 @@ public:
 
 /// A generic interface for reading and writing data to a stream (file, network,
 /// etc)
-class ZeroShared IStreamClass
+class IStreamClass
 {
 public:
   ZilchDeclareType(IStreamClass, TypeCopyMode::ReferenceType);

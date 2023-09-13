@@ -19,7 +19,7 @@ namespace Zero
 DeclareEnum3(AxisDirection, X, Y, Z);
 
 // Physics library
-class ZeroNoImportExport PhysicsLibrary : public Zilch::StaticLibrary
+class PhysicsLibrary : public Zilch::StaticLibrary
 {
 public:
   ZilchDeclareStaticLibraryInternals(PhysicsLibrary);

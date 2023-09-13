@@ -7,7 +7,7 @@
 namespace Zilch
 {
 // A context we use to collect all class types
-class ZeroShared ClassContext : public WalkerContext<Syntaxer, ClassContext>
+class ClassContext : public WalkerContext<Syntaxer, ClassContext>
 {
 public:
   // Store all the classes we're compiling
@@ -15,7 +15,7 @@ public:
 };
 
 // A context used for walking everything (classes, functions, expressions, etc)
-class ZeroShared TypingContext : public WalkerContext<Syntaxer, TypingContext>
+class TypingContext : public WalkerContext<Syntaxer, TypingContext>
 {
 public:
   // Store the current function that we're building
@@ -44,7 +44,7 @@ enum Enum
 
 // This class implements a recursive descent parser that parses
 // through the token stream that we get from the tokenizer
-class ZeroShared Syntaxer
+class Syntaxer
 {
 public:
   // Friends

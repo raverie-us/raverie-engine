@@ -27,7 +27,7 @@ ZilchDeclareEvent(PostSyntaxer, ParseEvent);
 } // namespace Events
 
 // An even that it sent out from parsing (such as when a type is parsed)
-class ZeroShared ParseEvent : public EventData
+class ParseEvent : public EventData
 {
 public:
   ZilchDeclareType(ParseEvent, TypeCopyMode::ReferenceType);
@@ -40,7 +40,7 @@ public:
 };
 
 // A completion is an entry in the auto complete list
-class ZeroShared CompletionEntry
+class CompletionEntry
 {
 public:
   CompletionEntry();
@@ -73,7 +73,7 @@ public:
 };
 
 // A parameter in a function overload
-class ZeroShared CompletionParameter
+class CompletionParameter
 {
 public:
   // Constructor
@@ -97,7 +97,7 @@ public:
 // When showing all the overloads for a function call, this is basically the
 // signature and description Note that we don't sort overloads because their
 // order is actually important to Zilch
-class ZeroShared CompletionOverload
+class CompletionOverload
 {
 public:
   // All the parameters in the overload (with types and optional
@@ -120,7 +120,7 @@ public:
 };
 
 // Returned when we perform an auto-complete query on the Project
-class ZeroShared AutoCompleteInfo
+class AutoCompleteInfo
 {
 public:
   // The maximum length for generated short types
@@ -197,7 +197,7 @@ public:
 };
 
 // Returned when we perform an definition query on the Project
-class ZeroShared CodeDefinition
+class CodeDefinition
 {
 public:
   CodeDefinition();
@@ -234,7 +234,7 @@ public:
 };
 
 // The project Contains all the files that are being compiled together
-class ZeroShared Project : public CompilationErrors
+class Project : public CompilationErrors
 {
 public:
   friend class Debugger;

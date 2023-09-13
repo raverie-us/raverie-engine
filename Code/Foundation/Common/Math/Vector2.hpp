@@ -14,7 +14,7 @@ typedef Vector2& Vec2Ref;
 typedef Vector2* Vec2Ptr;
 
 /// Two dimensional vector.
-struct ZeroShared Vector2
+struct Vector2
 {
   Vector2(){};
   explicit Vector2(real x, real y);
@@ -199,97 +199,97 @@ struct ZeroShared Vector2
   static const Vector2 Axes[2];
 };
 
-ZeroShared Vector2 operator*(real lhs, Vec2Param rhs);
+Vector2 operator*(real lhs, Vec2Param rhs);
 
 /// Compute the dot product of two vectors.
-ZeroShared real Dot(Vec2Param lhs, Vec2Param rhs);
+real Dot(Vec2Param lhs, Vec2Param rhs);
 /// Equivalent to Cross(Vec3(lhs.x, lhs.y, 0), Vec3(rhs.x, rhs.y, 0))
-ZeroShared real Cross(Vec2Param lhs, Vec2Param rhs);
+real Cross(Vec2Param lhs, Vec2Param rhs);
 /// Equivalent to Cross(Vec3(0, 0, lhs), Vec3(rhs.x, rhs.y, 0))
-ZeroShared Vector2 Cross(real lhs, Vec2Param rhs);
+Vector2 Cross(real lhs, Vec2Param rhs);
 /// Equivalent to Cross(Vec3(lhs.x, lhs.y, 0), Vec3(0, 0, rhs))
-ZeroShared Vector2 Cross(Vec2Param lhs, real rhs);
+Vector2 Cross(Vec2Param lhs, real rhs);
 /// Get the length of a vector.
-ZeroShared real Length(Vec2Param value);
+real Length(Vec2Param value);
 /// Get the squared length of a vector.
-ZeroShared real LengthSq(Vec2Param value);
+real LengthSq(Vec2Param value);
 /// Compute the distance between two vectors.
-ZeroShared real Distance(Vec2Param lhs, Vec2Param rhs);
+real Distance(Vec2Param lhs, Vec2Param rhs);
 /// Compute the squared distance between two vectors.
-ZeroShared real DistanceSq(Vec2Param lhs, Vec2Param rhs);
+real DistanceSq(Vec2Param lhs, Vec2Param rhs);
 /// Make the given vector have a length of 1, returns the original length.
-ZeroShared real Normalize(Vec2Ref value);
+real Normalize(Vec2Ref value);
 /// Calculate and return a unit-length copy of the given vector.
-ZeroShared Vector2 Normalized(Vec2Param value);
+Vector2 Normalized(Vec2Param value);
 /// Try to normalize the given vector if possible. Safeguards against zero
 /// divisions.
-ZeroShared real AttemptNormalize(Vec2Ref value);
+real AttemptNormalize(Vec2Ref value);
 /// Attempts to return a normalized given vector. Safeguards against zero
 /// divisions.
-ZeroShared Vector2 AttemptNormalized(Vec2Param value);
+Vector2 AttemptNormalized(Vec2Param value);
 
 /// Fused multiply add:  v0 + v1 * scalar
-ZeroShared Vector2 MultiplyAdd(Vec2Param v0, Vec2Param v1, real scalar);
+Vector2 MultiplyAdd(Vec2Param v0, Vec2Param v1, real scalar);
 /// Fused multiply subtract:  v0 - v1 * scalar
-ZeroShared Vector2 MultiplySubtract(Vec2Param v0, Vec2Param v1, real scalar);
+Vector2 MultiplySubtract(Vec2Param v0, Vec2Param v1, real scalar);
 
 /// Returns a copy of value with the absolute value of each element.
-ZeroShared Vector2 Abs(Vec2Param value);
+Vector2 Abs(Vec2Param value);
 /// Returns a vector with the component-wise min between two vectors.
-ZeroShared Vector2 Min(Vec2Param lhs, Vec2Param rhs);
+Vector2 Min(Vec2Param lhs, Vec2Param rhs);
 /// Returns a vector with the component-wise max between two vectors.
-ZeroShared Vector2 Max(Vec2Param lhs, Vec2Param rhs);
+Vector2 Max(Vec2Param lhs, Vec2Param rhs);
 /// Returns a vector where each component is clamped between min and max.
-ZeroShared Vector2 Clamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue);
+Vector2 Clamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue);
 /// Same as clamp, however it fills out whether or not anything was clamped.
 /// Useful when an assert message should be shown if anything was clamped.
-ZeroShared Vector2 DebugClamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue, bool& wasClamped);
+Vector2 DebugClamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue, bool& wasClamped);
 
 /// Return a copy of this vector with each element has been floored.
-ZeroShared Vector2 Floor(Vec2Param value);
+Vector2 Floor(Vec2Param value);
 /// Return a copy of this vector with each element has been ceiled.
-ZeroShared Vector2 Ceil(Vec2Param value);
+Vector2 Ceil(Vec2Param value);
 /// Return a copy of this vector with each element has been truncated.
-ZeroShared Vector2 Truncate(Vec2Param value);
+Vector2 Truncate(Vec2Param value);
 /// Return a copy of this vector with each element has been rounded.
-ZeroShared Vector2 Round(Vec2Param value);
+Vector2 Round(Vec2Param value);
 
 /// Linearly interpolate between the two vectors, the t-value is restricted to
 /// [0, 1].
-ZeroShared Vector2 Lerp(Vec2Param start, Vec2Param end, real tValue);
+Vector2 Lerp(Vec2Param start, Vec2Param end, real tValue);
 /// Spherical linear interpolation. Interpolates along the surface of the unit
 /// sphere. Normalizes input, checks for degenerate/ambiguous cases.
-ZeroShared Vector2 Slerp(Vec2Param start, Vec2Param end, real tValue);
+Vector2 Slerp(Vec2Param start, Vec2Param end, real tValue);
 /// Same as Slerp except this function assumes the user has deal with
 /// degenerate/ambiguous cases. Used when multiple calls are made to Slerp and
 /// the user wants to fix degeneracies once ahead of time.
-ZeroShared Vector2 SlerpFast(Vec2Param start, Vec2Param end, real tValue);
+Vector2 SlerpFast(Vec2Param start, Vec2Param end, real tValue);
 /// Same as Slerp except this function does not normalize the input vectors.
 /// This is the 'pure' mathematical Slerp function. This effectively traces
 /// along an ellipse defined by the two input vectors.
-ZeroShared Vector2 SlerpUnnormalized(Vec2Param start, Vec2Param end, real tValue);
+Vector2 SlerpUnnormalized(Vec2Param start, Vec2Param end, real tValue);
 
 /// Projects the input vector onto the given vector (must be normalized)
-ZeroShared Vector2 ProjectOnVector(Vec2Param input, Vec2Param normalizedVector);
+Vector2 ProjectOnVector(Vec2Param input, Vec2Param normalizedVector);
 /// Projects the input vector onto a plane (the normal must be normalized)
-ZeroShared Vector2 ProjectOnPlane(Vec2Param input, Vec2Param planeNormal);
+Vector2 ProjectOnPlane(Vec2Param input, Vec2Param planeNormal);
 /// Calculates the reflection vector across a given vector.
-ZeroShared Vector2 ReflectAcrossVector(Vec2Param input, Vec2Param normalizedVector);
+Vector2 ReflectAcrossVector(Vec2Param input, Vec2Param normalizedVector);
 /// Calculates the reflection vector across a given plane.
-ZeroShared Vector2 ReflectAcrossPlane(Vec2Param input, Vec2Param planeNormal);
+Vector2 ReflectAcrossPlane(Vec2Param input, Vec2Param planeNormal);
 /// Calculates the refraction vector through a plane given a certain index of
 /// refraction.
-ZeroShared Vector2 Refract(Vec2Param input, Vec2Param planeNormal, real refractionIndex);
+Vector2 Refract(Vec2Param input, Vec2Param planeNormal, real refractionIndex);
 /// Get the angle between the two vectors in radians.
-ZeroShared real AngleBetween(Vec2Param a, Vec2Param b);
+real AngleBetween(Vec2Param a, Vec2Param b);
 
 /// Clamps each component of a vector between min/max.
-ZeroShared void Clamp(Vec2Ptr vec, real min, real max);
+void Clamp(Vec2Ptr vec, real min, real max);
 
 /// Flips the given vector so it's pointing in the opposite direction.
-ZeroShared void Negate(Vec2Ptr vec);
+void Negate(Vec2Ptr vec);
 
 /// Returns a vector pointing in the opposite direction of the given vector.
-ZeroShared Vector2 Negated(Vec2Param vec);
+Vector2 Negated(Vec2Param vec);
 
 } // namespace Math

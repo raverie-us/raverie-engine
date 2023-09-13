@@ -6,7 +6,7 @@
 
 namespace Zilch
 {
-class ZeroShared FilePathClass
+class FilePathClass
 {
 public:
   ZilchDocument(FilePathClass,

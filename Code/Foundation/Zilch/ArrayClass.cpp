@@ -4,84 +4,6 @@
 
 namespace Zilch
 {
-// Unfortunately because there's some sort of bug in the MSVC linker, we have to
-// make a bunch of non-inlined comparison functions
-ZeroNoInline bool LinkerEquals(Boolean a, Boolean b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(Boolean2Param a, Boolean2Param b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(Boolean3Param a, Boolean3Param b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(Boolean4Param a, Boolean4Param b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(Integer a, Integer b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(Integer2Param a, Integer2Param b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(Integer3Param a, Integer3Param b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(Integer4Param a, Integer4Param b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(Real a, Real b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(Real2Param a, Real2Param b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(Real3Param a, Real3Param b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(Real4Param a, Real4Param b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(QuaternionParam a, QuaternionParam b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(DoubleInteger a, DoubleInteger b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(DoubleReal a, DoubleReal b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(const Handle& a, const Handle& b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(const Delegate& a, const Delegate& b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(const Any& a, const Any& b)
-{
-  return a == b;
-}
-ZeroNoInline bool LinkerEquals(const HandleOf<String>& a, const HandleOf<String>& b)
-{
-  return a == b;
-}
 
 ArrayUserData::ArrayUserData() : ContainedType(nullptr), RangeType(nullptr), SelfType(nullptr)
 {
@@ -479,7 +401,7 @@ public:
     {
       // If we found the value....
       const T& temp = self->NativeArray[i];
-      if (LinkerEquals(value, temp))
+      if (value == temp)
       {
         // Return the index at which we found the value
         return call.Set(Call::Return, (Integer)i);
@@ -504,7 +426,7 @@ public:
     {
       // If we found the value...
       const T& temp = self->NativeArray[i];
-      if (LinkerEquals(value, temp))
+      if (value == temp)
       {
         // Erase the value at that index and mark the container as modified
         self->NativeArray.EraseAt(i);

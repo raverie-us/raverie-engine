@@ -10,7 +10,7 @@ namespace Math
 /// O(n) memory usage. Very useful for randomly sampling a weighted die.
 /// Implementation reference: http://www.keithschwarz.com/darts-dice-coins/
 template <typename valueType>
-struct ZeroSharedTemplate WeightedProbabilityTable
+struct WeightedProbabilityTable
 {
   typedef real WeightType;
   typedef valueType ValueType;

@@ -17,16 +17,6 @@
 
 static const size_t cMaxDrawBuffers = 4;
 
-// As Of NVidia Driver 302 exporting this symbol will enable GPU hardware
-// accelerated graphics when using Optimus (Laptop NVidia gpu / Intel HD auto
-// switching). This is important for two reasons first is performance and second
-// is stability since Intel seems to have a fair amount of bugs and crashes in
-// their OpenGl drivers
-extern "C"
-{
-  ZeroExport int NvOptimusEnablement = 0x00000001;
-}
-
 // temporary to prevent string constructions every frame
 // RenderQueue structures should have semantics for setting shader parameters
 namespace

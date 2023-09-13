@@ -15,7 +15,7 @@ namespace Zero
 /// This array is also optimized to use pod conventions (memcpy, no destructors)
 /// on fundamental types or types with proper type traits.(see TypeTraits).
 template <typename ValueType, typename Allocator = DefaultAllocator, typename value_tt = StandardTraits<ValueType>>
-class ZeroSharedTemplate Array : public AllocationContainer<Allocator>
+class Array : public AllocationContainer<Allocator>
 {
 public:
   /// Standard Typedefs
@@ -964,7 +964,7 @@ protected:
 
 /// PodArray is the same as Array except Pod conventions are forced on
 template <typename ValueType, typename Allocator = DefaultAllocator>
-class ZeroSharedTemplate PodArray : public Array<ValueType, Allocator, PodOverride>
+class PodArray : public Array<ValueType, Allocator, PodOverride>
 {
 public:
   typedef Array<ValueType, Allocator, PodOverride> base_type;

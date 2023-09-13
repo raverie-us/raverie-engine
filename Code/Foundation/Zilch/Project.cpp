@@ -298,7 +298,7 @@ bool Project::Tokenize(Array<UserToken>& tokensOut, Array<UserToken>& commentsOu
 
 // This simple struct is used to define information about which syntax nodes
 // came from which lines
-class ZeroShared OriginInfo
+class OriginInfo
 {
 public:
   // Constructor

@@ -26,7 +26,7 @@ typedef Quaternion& QuatRef;
 typedef Quaternion* QuatPtr;
 typedef Quaternion Quat;
 
-struct ZeroShared Quaternion
+struct Quaternion
 {
   static const Quaternion cIdentity;
 
@@ -132,20 +132,20 @@ struct ZeroShared Quaternion
   real x, y, z, w;
 };
 
-ZeroShared Quaternion operator*(real lhs, QuatParam rhs);
+Quaternion operator*(real lhs, QuatParam rhs);
 
-ZeroShared real Dot(QuatParam lhs, QuatParam rhs);
-ZeroShared real Length(QuatParam quaternion);
-ZeroShared real LengthSq(QuatParam quaternion);
-ZeroShared void Normalize(QuatRef quaternion);
-ZeroShared Quaternion Normalized(QuatParam quaternion);
-ZeroShared Quaternion Multiply(QuatParam lhs, QuatParam rhs);
-ZeroShared Vector3 Multiply(QuatParam lhs, Vec3Param rhs);
-ZeroShared Quaternion Lerp(QuatParam start, QuatParam end, real tValue);
-ZeroShared Quaternion Slerp(QuatParam start, QuatParam end, real tValue);
-ZeroShared Quaternion SlerpUnnormalized(QuatParam start, QuatParam end, real tValue);
-ZeroShared real AngleBetween(QuatParam a, QuatParam b);
+real Dot(QuatParam lhs, QuatParam rhs);
+real Length(QuatParam quaternion);
+real LengthSq(QuatParam quaternion);
+void Normalize(QuatRef quaternion);
+Quaternion Normalized(QuatParam quaternion);
+Quaternion Multiply(QuatParam lhs, QuatParam rhs);
+Vector3 Multiply(QuatParam lhs, Vec3Param rhs);
+Quaternion Lerp(QuatParam start, QuatParam end, real tValue);
+Quaternion Slerp(QuatParam start, QuatParam end, real tValue);
+Quaternion SlerpUnnormalized(QuatParam start, QuatParam end, real tValue);
+real AngleBetween(QuatParam a, QuatParam b);
 
-ZeroShared Quaternion CreateDiagonalizer(Mat3Param matrix);
+Quaternion CreateDiagonalizer(Mat3Param matrix);
 
 } // namespace Math

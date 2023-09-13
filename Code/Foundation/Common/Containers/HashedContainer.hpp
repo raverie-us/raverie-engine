@@ -11,7 +11,7 @@ void* const cHashOpenNode = nullptr;
 void* const cHashEndNode = (void*)1;
 
 template <typename ValueType, typename Hasher, typename Allocator>
-class ZeroSharedTemplate HashedContainer : public AllocationContainer<Allocator>
+class HashedContainer : public AllocationContainer<Allocator>
 {
 public:
   // standard container typedefs

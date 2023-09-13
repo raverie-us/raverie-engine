@@ -9,7 +9,7 @@ namespace Zilch
 // A block array (except it is untyped, and therefore works mostly with copyable
 // structs)
 template <size_t BlockSize>
-class ZeroSharedTemplate UntypedBlockArray
+class UntypedBlockArray
 {
 public:
   // Constructor

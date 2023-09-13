@@ -25,7 +25,7 @@ T& GetInvalid()
 }
 
 // Stores any type of object (handles, delegates, or even value types)
-class ZeroShared Any
+class Any
 {
 public:
   // Constructor that initializes the Any to null (a handle, set to NullType)
@@ -251,12 +251,12 @@ T CopyToAnyOrActualType(byte* data, Type* dataType)
 
 // Specialization for the Any type, which will copy the value into an Any
 template <>
-ZeroShared Any CopyToAnyOrActualType<Any>(byte* data, Type* dataType);
+Any CopyToAnyOrActualType<Any>(byte* data, Type* dataType);
 
 // Given a type we know natively, just directly copy it to a location
 // This is specialized by the Any type to only copy its inner value
 template <typename T>
-ZeroSharedTemplate void CopyFromAnyOrActualType(const T& value, byte* to)
+void CopyFromAnyOrActualType(const T& value, byte* to)
 {
   // Just directly construct the value
   new (to) T(value);
@@ -264,7 +264,7 @@ ZeroSharedTemplate void CopyFromAnyOrActualType(const T& value, byte* to)
 
 // Specialization for the Any type, which will copy the value out of an Any
 template <>
-ZeroShared void CopyFromAnyOrActualType<Any>(const Any& any, byte* to);
+void CopyFromAnyOrActualType<Any>(const Any& any, byte* to);
 } // namespace Zilch
 
 #endif

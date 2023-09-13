@@ -6,7 +6,7 @@ namespace Zero
 class Thread;
 class Event;
 
-class ZeroShared DirectoryWatcher
+class DirectoryWatcher
 {
 public:
   enum FileOperation

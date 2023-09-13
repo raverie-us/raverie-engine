@@ -7,7 +7,7 @@
 namespace Zilch
 {
 // The context we use to generate code
-class ZeroShared GeneratorContext : public WalkerContext<CodeGenerator, GeneratorContext>
+class GeneratorContext : public WalkerContext<CodeGenerator, GeneratorContext>
 {
 public:
   // Store the current function that we're building
@@ -19,7 +19,7 @@ public:
 
 // This class uses the syntax tree (after type checking) to generate a byte-code
 // known as the "three-address"
-class ZeroShared CodeGenerator
+class CodeGenerator
 {
 public:
   // Constructor

@@ -11,7 +11,7 @@ namespace Zero
 {
 
 // UiWidget library
-class ZeroNoImportExport UiWidgetLibrary : public Zilch::StaticLibrary
+class UiWidgetLibrary : public Zilch::StaticLibrary
 {
 public:
   ZilchDeclareStaticLibraryInternals(UiWidgetLibrary);

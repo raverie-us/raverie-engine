@@ -18,7 +18,7 @@ const uintptr_t ObjListPtrDebugValue = (uintptr_t)0xFFFFDEAD;
 #endif
 
 template <typename type>
-struct ZeroSharedTemplate Link
+struct Link
 {
 #if DEBUGLINKS
   Link() : Next((type*)ObjListPtrDebugValue), Prev((type*)ObjListPtrDebugValue){};
@@ -29,7 +29,7 @@ struct ZeroSharedTemplate Link
 
 #define IntrusiveLink(objectType, linkName) Link<objectType> linkName
 
-class ZeroShared LinkBase
+class LinkBase
 {
 public:
   IntrusiveLink(LinkBase, link);
@@ -54,7 +54,7 @@ cstrc cBadRemovedAlready = "Object has already been erased or was never added.";
 /// Does not own the objects in Contains (they are implicitly pointers)
 /// Objects can link and unlink without using the container.
 template <typename type, typename refType, Link<type> type::*PtrToMember = &type::link>
-class ZeroSharedTemplate BaseInList
+class BaseInList
 {
 public:
   // Should InList be value type or pointer to value typed?
@@ -700,7 +700,7 @@ protected:
 };
 
 template <typename type, Link<type> type::*PtrToMember = &type::link>
-class ZeroSharedTemplate InList : public BaseInList<type, type, PtrToMember>
+class InList : public BaseInList<type, type, PtrToMember>
 {
 public:
   InList()
@@ -718,7 +718,7 @@ private:
 };
 
 template <typename type, typename baseLinkType = LinkBase>
-class ZeroSharedTemplate InListBaseLink : public BaseInList<baseLinkType, type, &baseLinkType::link>
+class InListBaseLink : public BaseInList<baseLinkType, type, &baseLinkType::link>
 {
 public:
   InListBaseLink()

@@ -39,7 +39,7 @@ using namespace std;
 namespace Zero
 {
 
-class ZeroNoImportExport CommonLibrary
+class CommonLibrary
 {
 public:
   static void Initialize();

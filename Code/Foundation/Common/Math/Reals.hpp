@@ -32,107 +32,107 @@ extern const real cTwoPi;
 // Golden ratio!
 const real cGoldenRatio = real(1.6180339887498948482045868343656);
 
-ZeroShared real Epsilon(void);
-ZeroShared real PositiveMax(void);
-ZeroShared real PositiveMin();
-ZeroShared bool Equal(real lhs, real rhs);
-ZeroShared bool Equal(real lhs, real rhs, real epsilon);
-ZeroShared bool NotEqual(real lhs, real rhs);
-ZeroShared bool IsZero(real val);
-ZeroShared bool IsNegative(real number);
-ZeroShared bool IsPositive(real number);
-ZeroShared bool LessThan(real lhs, real rhs);
-ZeroShared bool LessThanOrEqual(real lhs, real rhs);
-ZeroShared bool GreaterThan(real lhs, real rhs);
-ZeroShared bool GreaterThanOrEqual(real lhs, real rhs);
-ZeroShared real Sqrt(real val);
-ZeroShared bool SafeSqrt(real val, real& result);
-ZeroShared real Rsqrt(real val);
-ZeroShared real Sq(real sqrt);
-ZeroShared real Pow(real base, real exp);
-ZeroShared real Log(real val);
-ZeroShared real Log(real val, real base);
-ZeroShared real Log10(real val);
-ZeroShared real Log2(real val);
-ZeroShared real Exp(real val);
-ZeroShared real Exp2(real val);
-ZeroShared u8 Abs(u8 val);
-ZeroShared u16 Abs(u16 val);
-ZeroShared u32 Abs(u32 val);
-ZeroShared u64 Abs(u64 val);
-ZeroShared s8 Abs(s8 val);
-ZeroShared s16 Abs(s16 val);
-ZeroShared s32 Abs(s32 val);
-ZeroShared s64 Abs(s64 val);
-ZeroShared float Abs(float val);
-ZeroShared double Abs(double val);
-ZeroShared real FMod(real dividend, real divisor);
-ZeroShared bool SafeFMod(real dividend, real divisor, real& result);
-ZeroShared real GetSign(real val);
-ZeroShared int Sign(real val);
-ZeroShared int Sign(int val);
-ZeroShared real Cos(real val);
-ZeroShared real Sin(real val);
-ZeroShared real Tan(real angle);
-ZeroShared real Cot(real angle);
-ZeroShared real Cosh(real val);
-ZeroShared real Sinh(real val);
-ZeroShared real Tanh(real angle);
-ZeroShared real ArcCos(real angle);
-ZeroShared real ArcSin(real angle);
-ZeroShared real ArcTan(real angle);
-ZeroShared real ArcTan2(real y, real x);
-ZeroShared bool SafeArcCos(real radians, real& result);
-ZeroShared bool SafeArcSin(real radians, real& result);
-ZeroShared real RadToDeg(real radians);
-ZeroShared real DegToRad(real degrees);
-ZeroShared real Fractional(real val);
-ZeroShared real Round(real val);
-ZeroShared real Round(real value, int places);
-ZeroShared real Round(real value, int places, int base);
-ZeroShared real Truncate(real val);
-ZeroShared real Truncate(real val, int places);
-ZeroShared real Truncate(real val, int places, int base);
-ZeroShared real Ceil(real val);
-ZeroShared real Ceil(real val, int places);
-ZeroShared real Ceil(real val, int places, int base);
-ZeroShared real Floor(real val);
-ZeroShared real Floor(real val, int places);
-ZeroShared real Floor(real val, int places, int base);
+real Epsilon(void);
+real PositiveMax(void);
+real PositiveMin();
+bool Equal(real lhs, real rhs);
+bool Equal(real lhs, real rhs, real epsilon);
+bool NotEqual(real lhs, real rhs);
+bool IsZero(real val);
+bool IsNegative(real number);
+bool IsPositive(real number);
+bool LessThan(real lhs, real rhs);
+bool LessThanOrEqual(real lhs, real rhs);
+bool GreaterThan(real lhs, real rhs);
+bool GreaterThanOrEqual(real lhs, real rhs);
+real Sqrt(real val);
+bool SafeSqrt(real val, real& result);
+real Rsqrt(real val);
+real Sq(real sqrt);
+real Pow(real base, real exp);
+real Log(real val);
+real Log(real val, real base);
+real Log10(real val);
+real Log2(real val);
+real Exp(real val);
+real Exp2(real val);
+u8 Abs(u8 val);
+u16 Abs(u16 val);
+u32 Abs(u32 val);
+u64 Abs(u64 val);
+s8 Abs(s8 val);
+s16 Abs(s16 val);
+s32 Abs(s32 val);
+s64 Abs(s64 val);
+float Abs(float val);
+double Abs(double val);
+real FMod(real dividend, real divisor);
+bool SafeFMod(real dividend, real divisor, real& result);
+real GetSign(real val);
+int Sign(real val);
+int Sign(int val);
+real Cos(real val);
+real Sin(real val);
+real Tan(real angle);
+real Cot(real angle);
+real Cosh(real val);
+real Sinh(real val);
+real Tanh(real angle);
+real ArcCos(real angle);
+real ArcSin(real angle);
+real ArcTan(real angle);
+real ArcTan2(real y, real x);
+bool SafeArcCos(real radians, real& result);
+bool SafeArcSin(real radians, real& result);
+real RadToDeg(real radians);
+real DegToRad(real degrees);
+real Fractional(real val);
+real Round(real val);
+real Round(real value, int places);
+real Round(real value, int places, int base);
+real Truncate(real val);
+real Truncate(real val, int places);
+real Truncate(real val, int places, int base);
+real Ceil(real val);
+real Ceil(real val, int places);
+real Ceil(real val, int places, int base);
+real Floor(real val);
+real Floor(real val, int places);
+real Floor(real val, int places, int base);
 /// If y <= x then 1 is returned, otherwise 0 is returned.
-ZeroShared real Step(real y, real x);
-ZeroShared int CountBits(int value);
-ZeroShared bool IsValid(real val);
+real Step(real y, real x);
+int CountBits(int value);
+bool IsValid(real val);
 
-ZeroShared double DoublePositiveMax();
-ZeroShared double DoublePositiveMin();
-ZeroShared byte BytePositiveMax();
-ZeroShared byte BytePositiveMin();
-ZeroShared int IntegerPositiveMax();
-ZeroShared int IntegerNegativeMin();
-ZeroShared long long int DoubleIntegerPositiveMax();
-ZeroShared long long int DoubleIntegerNegativeMin();
+double DoublePositiveMax();
+double DoublePositiveMin();
+byte BytePositiveMax();
+byte BytePositiveMin();
+int IntegerPositiveMax();
+int IntegerNegativeMin();
+long long int DoubleIntegerPositiveMax();
+long long int DoubleIntegerNegativeMin();
 
 template <typename T>
-ZeroSharedTemplate inline T Max(const T lhs, const T rhs)
+inline T Max(const T lhs, const T rhs)
 {
   return lhs > rhs ? lhs : rhs;
 }
 
 template <typename T>
-ZeroSharedTemplate inline T Min(const T lhs, const T rhs)
+inline T Min(const T lhs, const T rhs)
 {
   return lhs > rhs ? rhs : lhs;
 }
 
 template <typename T>
-ZeroSharedTemplate inline T Clamp(const T x, const T xMin, const T xMax)
+inline T Clamp(const T x, const T xMin, const T xMax)
 {
   return Max(xMin, Min(x, xMax));
 }
 
 template <typename T>
-ZeroSharedTemplate inline T Clamp(const T value)
+inline T Clamp(const T value)
 {
   return Clamp(value, T(0), T(1));
 }
@@ -140,7 +140,7 @@ ZeroSharedTemplate inline T Clamp(const T value)
 /// Clamps between min and max but it sets a bool saying whether or not a value
 /// was clamped.
 template <typename T>
-ZeroSharedTemplate inline T DebugClamp(const T x, const T xMin, const T xMax, bool& wasClamped)
+inline T DebugClamp(const T x, const T xMin, const T xMax, bool& wasClamped)
 {
   wasClamped = true;
   if (x < xMin)
@@ -152,7 +152,7 @@ ZeroSharedTemplate inline T DebugClamp(const T x, const T xMin, const T xMax, bo
 }
 
 template <typename T>
-ZeroSharedTemplate inline T ClampIfClose(const T x, const T xMin, const T xMax, const T epsilon)
+inline T ClampIfClose(const T x, const T xMin, const T xMax, const T epsilon)
 {
   real value = x < xMin && x > (xMin - epsilon) ? xMin : x;
   value = value > xMax && value < (xMax + epsilon) ? xMax : value;
@@ -160,7 +160,7 @@ ZeroSharedTemplate inline T ClampIfClose(const T x, const T xMin, const T xMax, 
 }
 
 template <typename T>
-ZeroSharedTemplate inline bool TryClampIfClose(T& x, const T xMin, const T xMax, const T epsilon)
+inline bool TryClampIfClose(T& x, const T xMin, const T xMax, const T epsilon)
 {
   if (x < xMin)
   {
@@ -180,7 +180,7 @@ ZeroSharedTemplate inline bool TryClampIfClose(T& x, const T xMin, const T xMax,
 }
 
 template <typename T>
-ZeroSharedTemplate inline real InverseLerp(const T x, const T start, const T end)
+inline real InverseLerp(const T x, const T start, const T end)
 {
   if (end == start)
   {
@@ -191,33 +191,33 @@ ZeroSharedTemplate inline real InverseLerp(const T x, const T start, const T end
 }
 
 template <typename T>
-ZeroSharedTemplate inline real InverseLerpClamped(const T x, const T start, const T end)
+inline real InverseLerpClamped(const T x, const T start, const T end)
 {
   return Clamp(InverseLerp(x, start, end));
 }
 
 /// Checks to see if x is within the interval of [xMin, xMax]
 template <typename T>
-ZeroSharedTemplate inline bool InRange(const T x, const T xMin, const T xMax)
+inline bool InRange(const T x, const T xMin, const T xMax)
 {
   return ((xMin <= x) && (x <= xMax));
 }
 
 /// Checks to see if x is within the interval of (xMin, xMax)
 template <typename T>
-ZeroSharedTemplate inline bool InBounds(const T x, const T xMin, const T xMax)
+inline bool InBounds(const T x, const T xMin, const T xMax)
 {
   return ((xMin < x) && (x < xMax));
 }
 
 template <typename T>
-ZeroSharedTemplate inline T Wrap(const T x, const T xMin, const T xMax)
+inline T Wrap(const T x, const T xMin, const T xMax)
 {
   return (x < xMin) ? (x + (xMax - xMin)) : ((x > xMax) ? (x - (xMax - xMin)) : x);
 }
 
 template <typename T>
-ZeroSharedTemplate inline void Swap(T& a, T& b)
+inline void Swap(T& a, T& b)
 {
   T temp(a);
   a = b;
@@ -225,13 +225,13 @@ ZeroSharedTemplate inline void Swap(T& a, T& b)
 }
 
 template <typename Data, typename T>
-ZeroSharedTemplate inline Data Lerp(const Data& start, const Data& end, T interpolationValue)
+inline Data Lerp(const Data& start, const Data& end, T interpolationValue)
 {
   return (Data)((T(1.0) - interpolationValue) * start + interpolationValue * end);
 }
 
 template <typename Data>
-ZeroSharedTemplate inline Data SmoothStep(const Data& start, const Data& end, real t)
+inline Data SmoothStep(const Data& start, const Data& end, real t)
 {
   t = Clamp((t - start) / (end - start));
 

@@ -5,7 +5,7 @@ namespace Zero
 {
 /// Thread Lock
 /// Safe to lock multiple times from the same thread
-class ZeroShared ThreadLock
+class ThreadLock
 {
 public:
   ThreadLock();
@@ -18,7 +18,7 @@ private:
 };
 
 // Wrapper around an unnamed event.
-class ZeroShared OsEvent
+class OsEvent
 {
 public:
   OsEvent();
@@ -37,7 +37,7 @@ private:
 const int MaxSemaphoreCount = 0x0FFFFFFF;
 
 // Semaphore class. Multithreaded counter / gatekeeper.
-class ZeroShared Semaphore
+class Semaphore
 {
 public:
   Semaphore();
@@ -55,7 +55,7 @@ private:
 
 /// Not fully implemented as it's currently only needed for interprocess
 /// communication
-class ZeroShared InterprocessMutex
+class InterprocessMutex
 {
 public:
   InterprocessMutex();

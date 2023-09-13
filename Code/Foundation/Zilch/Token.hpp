@@ -7,7 +7,7 @@
 namespace Zilch
 {
 // This struct is given back to the user when asking for tokens
-class ZeroShared UserToken
+class UserToken
 {
 public:
   // Default constructor
@@ -52,7 +52,7 @@ namespace Zero
 // String would technically just increment a reference and then decrement, so
 // skip it!
 template <>
-struct ZeroShared MoveWithoutDestructionOperator<Zilch::UserToken>
+struct MoveWithoutDestructionOperator<Zilch::UserToken>
 {
   static inline void MoveWithoutDestruction(Zilch::UserToken* dest, Zilch::UserToken* source)
   {

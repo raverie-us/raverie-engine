@@ -10,7 +10,7 @@ class PropertyPath;
 class MetaSelection;
 
 // Meta library
-class ZeroNoImportExport MetaLibrary : public Zilch::StaticLibrary
+class MetaLibrary : public Zilch::StaticLibrary
 {
 public:
   ZilchDeclareStaticLibraryInternals(MetaLibrary);

@@ -21,7 +21,7 @@ class SoundTagEntry;
 class Sound;
 
 // Sound library
-class ZeroNoImportExport SoundLibrary : public Zilch::StaticLibrary
+class SoundLibrary : public Zilch::StaticLibrary
 {
 public:
   ZilchDeclareStaticLibraryInternals(SoundLibrary);

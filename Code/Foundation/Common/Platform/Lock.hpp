@@ -9,7 +9,7 @@ namespace Zero
 /// Represents an object which may be Locked
 /// Provided to make Locked objects easier to manage
 /// The object itself stores it's thread lock
-struct ZeroShared Lockable
+struct Lockable
 {
   /// Default Constructor
   Lockable() : mLock(new ThreadLock)
@@ -62,7 +62,7 @@ struct ZeroShared Lockable
 /// Multithreaded locked object
 /// Ownership provides exclusive thread-safe access
 template <typename T>
-struct ZeroSharedTemplate Locked
+struct Locked
 {
   /// Creates an empty locked object
   Locked() : mObject(nullptr), mLock(nullptr)
@@ -200,7 +200,7 @@ private:
 
 /// Scoped thread lock
 /// Ownership provides exclusive thread-safe access
-class ZeroShared Lock
+class Lock
 {
 public:
   /// Constructor
@@ -225,7 +225,7 @@ private:
 
 /// Locked container range of lockable pointer items
 template <typename ContainerType>
-class ZeroSharedTemplate LockedRange
+class LockedRange
 {
 public:
   /// Typedefs

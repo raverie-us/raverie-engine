@@ -319,22 +319,22 @@ bool IsValid(real val)
   return isfinite(val);
 }
 
-ZeroShared double DoublePositiveMax()
+double DoublePositiveMax()
 {
   return DBL_MAX;
 }
 
-ZeroShared double DoublePositiveMin()
+double DoublePositiveMin()
 {
   return DBL_MIN;
 }
 
-ZeroShared byte BytePositiveMax()
+byte BytePositiveMax()
 {
   return UCHAR_MAX;
 }
 
-ZeroShared byte BytePositiveMin()
+byte BytePositiveMin()
 {
   return (byte)0;
 }
@@ -349,12 +349,12 @@ int IntegerNegativeMin()
   return INT_MIN;
 }
 
-ZeroShared long long int DoubleIntegerPositiveMax()
+long long int DoubleIntegerPositiveMax()
 {
   return LLONG_MAX;
 }
 
-ZeroShared long long int DoubleIntegerNegativeMin()
+long long int DoubleIntegerNegativeMin()
 {
   return LLONG_MIN;
 }

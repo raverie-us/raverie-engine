@@ -30,7 +30,7 @@ struct SetHashAdapter
 
 /// Hash Set is an Associative Hashed Container.
 template <typename ValueType, typename Hasher = HashPolicy<ValueType>, typename Allocator = DefaultAllocator>
-class ZeroSharedTemplate HashSet : public HashedContainer<ValueType, SetHashAdapter<Hasher, ValueType>, Allocator>
+class HashSet : public HashedContainer<ValueType, SetHashAdapter<Hasher, ValueType>, Allocator>
 {
 public:
   typedef ValueType value_type;

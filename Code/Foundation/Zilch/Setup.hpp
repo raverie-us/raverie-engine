@@ -21,7 +21,7 @@ typedef unsigned Type;
 
 // Initializes the shared global memory manager and builds all the static bound
 // libraries
-class ZeroShared ZilchSetup
+class ZilchSetup
 {
 public:
   // Controls default setup parameters (such as whether we optimize out
@@ -49,7 +49,7 @@ public:
             "In order to use the Zilch " #Name " you must create the ZilchSetup type and hold on to it")
 
 // A convenient form of parsed main arguments (easily comparable and queryable)
-class ZeroShared MainArguments
+class MainArguments
 {
 public:
   // The first argument of the argv is generally a path to the executable
@@ -78,11 +78,11 @@ public:
 };
 
 // Parsers arguments that we typically get from main into the above structure
-ZeroShared void ZilchParseMainArguments(int argc, char* argv[], MainArguments& argumentsOut);
+void ZilchParseMainArguments(int argc, char* argv[], MainArguments& argumentsOut);
 
 // Processes command line arguments for running Zilch standalone (invokes
 // Startup/Shutdown)
-ZeroShared int ZilchMain(int argc, char* argv[]);
+int ZilchMain(int argc, char* argv[]);
 } // namespace Zilch
 
 #endif

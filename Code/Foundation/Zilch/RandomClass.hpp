@@ -7,7 +7,7 @@
 namespace Zilch
 {
 /// Contains utility functions for random generation
-class ZeroShared Random
+class Random
 {
 public:
   ZilchDeclareType(Random, TypeCopyMode::ReferenceType);

@@ -6,12 +6,12 @@ namespace Zero
 
 // for enum types
 template <>
-struct ZeroShared HashPolicy<spv::Op> : public HashPolicy<int>
+struct HashPolicy<spv::Op> : public HashPolicy<int>
 {
 };
 
 template <>
-struct ZeroShared HashPolicy<spv::Capability> : public HashPolicy<int>
+struct HashPolicy<spv::Capability> : public HashPolicy<int>
 {
 };
 

@@ -7,7 +7,7 @@ namespace Math
 {
 
 template <typename ScalarType, uint Dimension>
-struct ZeroSharedTemplate GenericVector
+struct GenericVector
 {
   // should technically add a trait type for the scalar type to do things
   // like get zero and whatnot, but that's not necessary yet

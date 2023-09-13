@@ -3,7 +3,7 @@
 
 namespace Zero
 {
-class ZeroShared ProcessStartInfo
+class ProcessStartInfo
 {
 public:
   ProcessStartInfo();
@@ -21,7 +21,7 @@ public:
 /// Process class used for managing external processes and redirecting their
 /// stdio. Used to launch and monitor various external programs, compilers and
 /// tools.
-class ZeroShared Process
+class Process
 {
 public:
   Process();
@@ -89,16 +89,16 @@ struct ProcessInfo
 };
 
 /// Fill out an array with all active processes.
-ZeroShared void GetProcesses(Array<ProcessInfo>& results);
+void GetProcesses(Array<ProcessInfo>& results);
 /// Given a process id (from the ProcessInfo struct) kill the process.
-ZeroShared void KillProcess(OsInt processId, int exitCode = 1);
+void KillProcess(OsInt processId, int exitCode = 1);
 /// Find a process by name (returns 0 for the id and empty strings if it fails)
-ZeroShared ProcessInfo FindProcess(StringParam processName);
+ProcessInfo FindProcess(StringParam processName);
 /// Register the current application with the operating system's restart
 /// services. Allows an installer to restart this application when running. The
 /// application name is auto-added to the arguments. See the specific platform
 /// for flags.
-ZeroShared void RegisterApplicationRestartCommand(StringParam commandLineArgs, uint flags = 0);
+void RegisterApplicationRestartCommand(StringParam commandLineArgs, uint flags = 0);
 
 class SimpleProcess : public Process
 {

@@ -8,7 +8,7 @@ namespace Zilch
 {
 typedef Pair<Any, Any> AnyKeyValue;
 
-class ZeroShared AnyHashMap : public HashMap<Any, Any>
+class AnyHashMap : public HashMap<Any, Any>
 {
 public:
   // Constructor
@@ -22,7 +22,7 @@ public:
   Integer ModifyId;
 };
 
-class ZeroShared AnyHashMapRange
+class AnyHashMapRange
 {
 public:
   AnyHashMapRange();
@@ -53,7 +53,7 @@ public:
 };
 
 // The user-data we attach to the hash map class (every template instantiation)
-class ZeroShared HashMapUserData
+class HashMapUserData
 {
 public:
   HashMapUserData();

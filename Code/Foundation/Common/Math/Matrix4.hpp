@@ -25,7 +25,7 @@ typedef Matrix4* Mat4Ptr;
 
 /// 4 dimensional square matrix. Supports operations with other 4 dimensional
 /// square matrices, 3 dimensional vectors, and 4 dimensional vectors.
-struct ZeroShared Matrix4
+struct Matrix4
 {
 #if ColumnBasis == 1
   typedef Vector4 BasisVector;
@@ -228,36 +228,36 @@ public:
   static const Matrix4 cIdentity;
 };
 
-ZeroShared Matrix4 operator*(real lhs, Mat4Param rhs);
+Matrix4 operator*(real lhs, Mat4Param rhs);
 
 /// Multiply the two matrices together. Matrix multiplication order is
 /// right-to-left.
-ZeroShared Matrix4 Multiply(Mat4Param lhs, Mat4Param rhs);
+Matrix4 Multiply(Mat4Param lhs, Mat4Param rhs);
 /// Multiply the given vector by a matrix.
-ZeroShared Vector4 Multiply(Mat4Param lhs, Vec4Param rhs);
+Vector4 Multiply(Mat4Param lhs, Vec4Param rhs);
 /// Multiply the given vector by a matrix. The vector is promoted to the point
 /// Vec4(x, y, z, 1). No homogeneous division is applied.
-ZeroShared Vector3 MultiplyPoint(Mat4Param lhs, Vec3Param rhs);
+Vector3 MultiplyPoint(Mat4Param lhs, Vec3Param rhs);
 /// Multiply the given vector by a matrix. The vector is promoted to the vector
 /// Vec4(x, y, z, 0).
-ZeroShared Vector3 MultiplyNormal(Mat4Param lhs, Vec3Param rhs);
+Vector3 MultiplyNormal(Mat4Param lhs, Vec3Param rhs);
 
-ZeroShared Vector4 Transform(Mat4Param mat, Vec4Param vector);
-ZeroShared void Transform(Mat4Param mat, Vec4Ptr vector);
+Vector4 Transform(Mat4Param mat, Vec4Param vector);
+void Transform(Mat4Param mat, Vec4Ptr vector);
 /// Applies transformation with the translation (p.x, p.y, p.z, 1)
-ZeroShared Vector3 TransformPoint(Mat4Param matrix, Vec3Param point);
+Vector3 TransformPoint(Mat4Param matrix, Vec3Param point);
 /// Applies transformation without the translation (n.x, n.y, n.z, 0)
-ZeroShared Vector3 TransformNormal(Mat4Param matrix, Vec3Param normal);
+Vector3 TransformNormal(Mat4Param matrix, Vec3Param normal);
 /// Applies transform and projects back to (w = 1)
-ZeroShared Vector3 TransformPointProjected(Mat4Param matrix, Vec3Param point);
-ZeroShared Vector3 TransformNormalCol(Mat4Param matrix, Vec3Param normal);
-ZeroShared Vector3 TransformPointCol(Mat4Param matrix, Vec3Param point);
-ZeroShared Vector3 TransformPointProjectedCol(Mat4Param matrix, Vec3Param point);
-ZeroShared Vector3 TransformPointProjectedCol(Mat4Param matrix, Vec3Param point, real* w);
+Vector3 TransformPointProjected(Mat4Param matrix, Vec3Param point);
+Vector3 TransformNormalCol(Mat4Param matrix, Vec3Param normal);
+Vector3 TransformPointCol(Mat4Param matrix, Vec3Param point);
+Vector3 TransformPointProjectedCol(Mat4Param matrix, Vec3Param point);
+Vector3 TransformPointProjectedCol(Mat4Param matrix, Vec3Param point, real* w);
 
-ZeroShared Matrix4 BuildTransform(Vec3Param translate, QuatParam rotate, Vec3Param scale);
-ZeroShared Matrix4 BuildTransform(Vec3Param translate, Mat3Param rotate, Vec3Param scale);
+Matrix4 BuildTransform(Vec3Param translate, QuatParam rotate, Vec3Param scale);
+Matrix4 BuildTransform(Vec3Param translate, Mat3Param rotate, Vec3Param scale);
 
-ZeroShared real Trace(Mat4Param matrix);
+real Trace(Mat4Param matrix);
 
 } // namespace Math

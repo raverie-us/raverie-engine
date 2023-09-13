@@ -9,7 +9,7 @@ typedef Zero::Array<Math::Vector3> Vec3Array;
 DeclareEnum3(CurveType, Linear, BSpline, CatmullRom);
 
 /// A generic curve object that can switched between different spline types.
-struct ZeroShared SplineCurve
+struct SplineCurve
 {
   SplineCurve();
 
@@ -91,7 +91,7 @@ public:
 /// A curve that has been baked out to a set of points and their respective
 /// arc-lengths. This table can be used to find a point at a given distance
 /// along a curve.
-class ZeroShared BakedCurve
+class BakedCurve
 {
 public:
   struct BakedData
@@ -125,7 +125,7 @@ private:
   Zero::Array<BakedData> mArcLengthTable;
 };
 
-struct ZeroShared PiecewiseFunction
+struct PiecewiseFunction
 {
   struct ControlPoint;
 

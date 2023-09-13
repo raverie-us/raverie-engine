@@ -14,7 +14,7 @@ namespace Zero
 {
 
 // Networking library
-class ZeroNoImportExport NetworkingLibrary : public Zilch::StaticLibrary
+class NetworkingLibrary : public Zilch::StaticLibrary
 {
 public:
   ZilchDeclareStaticLibraryInternals(NetworkingLibrary);

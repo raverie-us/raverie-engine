@@ -20,7 +20,7 @@ enum Enum
 // library / using the binding system. The only other function that
 // is expected is a static 'GetLibrary()' function which returns a
 // reference to your own type
-class ZeroShared StaticLibrary
+class StaticLibrary
 {
 public:
   // Friends
@@ -122,8 +122,8 @@ private:
 // ZilchDependency(Namespace::OtherLibrary) to mark dependencies
 // upon other static libraries
 // All libraries declared with this macro implicitly add a dependency on Core
-#  define ZilchDeclareStaticLibrary(Name, Linkage, ...)                                                                \
-    class Linkage Name : public ZZ::StaticLibrary                                                                      \
+#  define ZilchDeclareStaticLibrary(Name, ...)                                                                         \
+    class Name : public ZZ::StaticLibrary                                                                              \
     {                                                                                                                  \
     public:                                                                                                            \
       ZilchDeclareStaticLibraryInternals(Name, __VA_ARGS__)                                                            \

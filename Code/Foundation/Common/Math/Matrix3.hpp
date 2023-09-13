@@ -25,7 +25,7 @@ typedef Matrix3* Mat3Ptr;
 
 /// 3 dimensional square matrix. Supports operations with other 3 dimensional
 /// square matrices, 2 dimensional vectors, and 3 dimensional vectors.
-struct ZeroShared Matrix3
+struct Matrix3
 {
 #if ColumnBasis == 1
   typedef Vector3 BasisVector;
@@ -210,50 +210,50 @@ public:
   static const Matrix3 cIdentity;
 };
 
-ZeroShared Matrix3 operator*(real lhs, Mat3Param rhs);
+Matrix3 operator*(real lhs, Mat3Param rhs);
 
 /// Multiply the two matrices together. Matrix multiplication order is
 /// right-to-left.
-ZeroShared Matrix3 Multiply(Mat3Param lhs, Mat3Param rhs);
+Matrix3 Multiply(Mat3Param lhs, Mat3Param rhs);
 /// Multiply the given vector by a matrix.
-ZeroShared Vector3 Multiply(Mat3Param lhs, Vec3Param rhs);
+Vector3 Multiply(Mat3Param lhs, Vec3Param rhs);
 /// Multiply the given vector by a matrix. The vector is promoted to the point
 /// Vec3(x, y, 1). No homogeneous division is applied.
-ZeroShared Vector2 MultiplyPoint(Mat3Param lhs, Vec2Param rhs);
+Vector2 MultiplyPoint(Mat3Param lhs, Vec2Param rhs);
 /// Multiply the given vector by a matrix. The vector is promoted to the vector
 /// Vec3(x, y, 0).
-ZeroShared Vector2 MultiplyNormal(Mat3Param lhs, Vec2Param rhs);
+Vector2 MultiplyNormal(Mat3Param lhs, Vec2Param rhs);
 
 /// This builds a matrix that should be used on 2D points/vectors
-ZeroShared Matrix3 BuildTransform(Vec2Param translate, real radians, Vec2Param scale);
+Matrix3 BuildTransform(Vec2Param translate, real radians, Vec2Param scale);
 
 /// This builds a matrix that should be used on 3D points/vectors
-ZeroShared Matrix3 BuildTransform(QuatParam rotate, Vec3Param scale);
+Matrix3 BuildTransform(QuatParam rotate, Vec3Param scale);
 
-ZeroShared Vector3 Transform(Mat3Param mat, Vec3Param vector);
-ZeroShared void Transform(Mat3Param matrix, Vec3Ptr vector);
+Vector3 Transform(Mat3Param mat, Vec3Param vector);
+void Transform(Mat3Param matrix, Vec3Ptr vector);
 
 /// Applies transformation with the translation (p.x, p.y, 1)
-ZeroShared Vector2 TransformPoint(Mat3Param matrix, Vec2Param vector);
+Vector2 TransformPoint(Mat3Param matrix, Vec2Param vector);
 
 /// Applies transformation without the translation (n.x, n.y, 0)
-ZeroShared Vector2 TransformNormal(Mat3Param matrix, Vec2Param normal);
+Vector2 TransformNormal(Mat3Param matrix, Vec2Param normal);
 
 /// Transforms the given vector by the matrix as if the matrix was transposed.
-ZeroShared Vector3 TransposedTransform(Mat3Param mat, Vec3Param vector);
+Vector3 TransposedTransform(Mat3Param mat, Vec3Param vector);
 
 /// Transforms the given vector by the matrix as if the matrix was transposed.
-ZeroShared void TransposedTransform(Mat3Param matrix, Vec3Ptr vector);
+void TransposedTransform(Mat3Param matrix, Vec3Ptr vector);
 
-ZeroShared real Trace(Mat3Param matrix);
+real Trace(Mat3Param matrix);
 
-ZeroShared real Cofactor(Mat3Param matrix, uint row, uint column);
+real Cofactor(Mat3Param matrix, uint row, uint column);
 
 /// Takes a symmetric matrix and diagonalizes it.
-ZeroShared void Diagonalize(Mat3Ptr matrix);
-ZeroShared Matrix3 Diagonalized(Mat3Param matrix);
+void Diagonalize(Mat3Ptr matrix);
+Matrix3 Diagonalized(Mat3Param matrix);
 
-ZeroShared void Invert(Mat3Ptr matrix);
-ZeroShared Matrix3 Inverted(Mat3Param matrix);
+void Invert(Mat3Ptr matrix);
+Matrix3 Inverted(Mat3Param matrix);
 
 } // namespace Math

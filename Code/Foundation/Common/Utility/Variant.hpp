@@ -24,7 +24,7 @@ namespace Zero
 /// user does not need to change how they interact with variant. The distinction
 /// between large and small types is only made known for performance
 /// considerations (large types cause memory allocation on assignment).
-class ZeroShared Variant
+class Variant
 {
 public:
   /// Constructs an empty variant
@@ -358,7 +358,7 @@ typedef const Variant& VariantParam;
 
 /// Variant Move-Without-Destruction Operator
 template <>
-struct ZeroShared MoveWithoutDestructionOperator<Variant>
+struct MoveWithoutDestructionOperator<Variant>
 {
   static inline void MoveWithoutDestruction(Variant* dest, Variant* source)
   {
@@ -381,18 +381,18 @@ struct ZeroShared MoveWithoutDestructionOperator<Variant>
 
 /// Returns the string representation of the stored value if the variant is
 /// non-empty, else String()
-ZeroShared inline String ToString(const Variant& value, bool shortFormat = false);
+inline String ToString(const Variant& value, bool shortFormat = false);
 
 /// Parses the string as a value of the specified type T and assigns the parsed
 /// value to the variant, else clears the variant
 template <typename T>
-ZeroSharedTemplate inline void ToValue(StringRange range, Variant& value);
+inline void ToValue(StringRange range, Variant& value);
 /// Parses the string as a value of the specified native type and assigns the
 /// parsed value to the variant, else clears the variant
-ZeroShared inline void ToValue(StringRange range, Variant& value, NativeType* nativeType);
+inline void ToValue(StringRange range, Variant& value, NativeType* nativeType);
 /// Parses the string as a value of the variant's stored type and assigns the
 /// parsed value to the variant, else clears the variant
-ZeroShared inline void ToValue(StringRange range, Variant& value);
+inline void ToValue(StringRange range, Variant& value);
 
 } // namespace Zero
 

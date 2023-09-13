@@ -9,7 +9,7 @@
 namespace Zero
 {
 // Zilch Script library
-class ZeroNoImportExport ZilchScriptLibrary : public Zilch::StaticLibrary
+class ZilchScriptLibrary : public Zilch::StaticLibrary
 {
 public:
   ZilchDeclareStaticLibraryInternals(ZilchScriptLibrary);

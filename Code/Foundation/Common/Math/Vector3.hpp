@@ -15,7 +15,7 @@ typedef Vector3& Vec3Ref;
 typedef Vector3* Vec3Ptr;
 
 /// Three dimensional vector.
-struct ZeroShared Vector3
+struct Vector3
 {
   Vector3(){};
   explicit Vector3(real x, real y, real z);
@@ -199,114 +199,114 @@ struct ZeroShared Vector3
   static const Vector3 Axes[3];
 };
 
-ZeroShared Vector3 operator*(real lhs, Vec3Param rhs);
+Vector3 operator*(real lhs, Vec3Param rhs);
 /// Compute the dot product of two vectors.
-ZeroShared real Dot(Vec3Param lhs, Vec3Param rhs);
+real Dot(Vec3Param lhs, Vec3Param rhs);
 /// Computes the cross-product.
-ZeroShared Vector3 Cross(Vec3Param lhs, Vec3Param rhs);
+Vector3 Cross(Vec3Param lhs, Vec3Param rhs);
 /// Get the length of a vector.
-ZeroShared real Length(Vec3Param value);
+real Length(Vec3Param value);
 /// Get the squared length of a vector.
-ZeroShared real LengthSq(Vec3Param value);
+real LengthSq(Vec3Param value);
 /// Compute the distance between two vectors.
-ZeroShared real Distance(Vec3Param lhs, Vec3Param rhs);
+real Distance(Vec3Param lhs, Vec3Param rhs);
 /// Compute the squared distance between two vectors.
-ZeroShared real DistanceSq(Vec3Param lhs, Vec3Param rhs);
+real DistanceSq(Vec3Param lhs, Vec3Param rhs);
 /// Make the given vector have a length of 1, returns the original length.
-ZeroShared real Normalize(Vec3Ref value);
+real Normalize(Vec3Ref value);
 /// Calculate and return a unit-length copy of the given vector.
-ZeroShared Vector3 Normalized(Vec3Param value);
+Vector3 Normalized(Vec3Param value);
 /// Try to normalize the given vector if possible. Safeguards against zero
 /// divisions.
-ZeroShared real AttemptNormalize(Vec3Ref value);
+real AttemptNormalize(Vec3Ref value);
 /// Attempts to return a normalized given vector. Safeguards against zero
 /// divisions.
-ZeroShared Vector3 AttemptNormalized(Vec3Param value);
+Vector3 AttemptNormalized(Vec3Param value);
 
 /// Fused multiply add:  v0 + v1 * scalar
-ZeroShared Vector3 MultiplyAdd(Vec3Param v0, Vec3Param v1, real scalar);
+Vector3 MultiplyAdd(Vec3Param v0, Vec3Param v1, real scalar);
 /// Fused multiply subtract:  v0 - v1 * scalar
-ZeroShared Vector3 MultiplySubtract(Vec3Param v0, Vec3Param v1, real scalar);
+Vector3 MultiplySubtract(Vec3Param v0, Vec3Param v1, real scalar);
 
 /// Returns a copy of value with the absolute value of each element.
-ZeroShared Vector3 Abs(Vec3Param value);
+Vector3 Abs(Vec3Param value);
 /// Returns a vector with the component-wise min between two vectors.
-ZeroShared Vector3 Min(Vec3Param lhs, Vec3Param rhs);
+Vector3 Min(Vec3Param lhs, Vec3Param rhs);
 /// Returns a vector with the component-wise max between two vectors.
-ZeroShared Vector3 Max(Vec3Param lhs, Vec3Param rhs);
+Vector3 Max(Vec3Param lhs, Vec3Param rhs);
 /// Returns a vector where each component is clamped between min and max.
-ZeroShared Vector3 Clamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue);
+Vector3 Clamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue);
 /// Same as clamp, however it fills out whether or not anything was clamped.
 /// Useful when an assert message should be shown if anything was clamped.
-ZeroShared Vector3 DebugClamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue, bool& wasClamped);
+Vector3 DebugClamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue, bool& wasClamped);
 
 /// Return a copy of this vector with each element has been floored.
-ZeroShared Vector3 Floor(Vec3Param value);
+Vector3 Floor(Vec3Param value);
 /// Return a copy of this vector with each element has been ceiled.
-ZeroShared Vector3 Ceil(Vec3Param value);
+Vector3 Ceil(Vec3Param value);
 /// Return a copy of this vector with each element has been truncated.
-ZeroShared Vector3 Truncate(Vec3Param value);
+Vector3 Truncate(Vec3Param value);
 /// Return a copy of this vector with each element has been rounded.
-ZeroShared Vector3 Round(Vec3Param value);
+Vector3 Round(Vec3Param value);
 
 /// Linearly interpolate between the two vectors, the t-value is restricted to
 /// [0, 1].
-ZeroShared Vector3 Lerp(Vec3Param start, Vec3Param end, real tValue);
+Vector3 Lerp(Vec3Param start, Vec3Param end, real tValue);
 /// Spherical linear interpolation. Interpolates along the surface of the unit
 /// sphere. Normalizes input, checks for degenerate/ambiguous cases.
-ZeroShared Vector3 Slerp(Vec3Param start, Vec3Param end, real tValue);
+Vector3 Slerp(Vec3Param start, Vec3Param end, real tValue);
 /// Same as Slerp except this function assumes the user has deal with
 /// degenerate/ambiguous cases. Used when multiple calls are made to Slerp and
 /// the user wants to fix degeneracies once ahead of time.
-ZeroShared Vector3 SlerpFast(Vec3Param start, Vec3Param end, real tValue);
+Vector3 SlerpFast(Vec3Param start, Vec3Param end, real tValue);
 /// Same as Slerp except this function does not normalize the input vectors.
 /// This is the 'pure' mathematical Slerp function. This effectively traces
 /// along an ellipse defined by the two input vectors.
-ZeroShared Vector3 SlerpUnnormalized(Vec3Param start, Vec3Param end, real tValue);
+Vector3 SlerpUnnormalized(Vec3Param start, Vec3Param end, real tValue);
 
 /// Projects the input vector onto the given vector (must be normalized)
-ZeroShared Vector3 ProjectOnVector(Vec3Param input, Vec3Param normalizedVector);
+Vector3 ProjectOnVector(Vec3Param input, Vec3Param normalizedVector);
 /// Projects the input vector onto a plane (the normal must be normalized)
-ZeroShared Vector3 ProjectOnPlane(Vec3Param input, Vec3Param planeNormal);
+Vector3 ProjectOnPlane(Vec3Param input, Vec3Param planeNormal);
 /// Calculates the reflection vector across a given vector.
-ZeroShared Vector3 ReflectAcrossVector(Vec3Param input, Vec3Param normalizedVector);
+Vector3 ReflectAcrossVector(Vec3Param input, Vec3Param normalizedVector);
 /// Calculates the reflection vector across a given plane.
-ZeroShared Vector3 ReflectAcrossPlane(Vec3Param input, Vec3Param planeNormal);
+Vector3 ReflectAcrossPlane(Vec3Param input, Vec3Param planeNormal);
 /// Calculates the refraction vector through a plane given a certain index of
 /// refraction.
-ZeroShared Vector3 Refract(Vec3Param input, Vec3Param planeNormal, real refractionIndex);
+Vector3 Refract(Vec3Param input, Vec3Param planeNormal, real refractionIndex);
 /// Get the angle between the two vectors in radians.
-ZeroShared real AngleBetween(Vec3Param a, Vec3Param b);
+real AngleBetween(Vec3Param a, Vec3Param b);
 
-ZeroShared bool Equal(Vec3Param lhs, Vec3Param rhs, real epsilon);
+bool Equal(Vec3Param lhs, Vec3Param rhs, real epsilon);
 
 /// Compute the cross product of the two given vectors for 2d.
 /// The result is only the z axis of the cross product.
-ZeroShared Vector3 Cross2d(Vec3Param lhs, Vec3Param rhs);
+Vector3 Cross2d(Vec3Param lhs, Vec3Param rhs);
 
 /// Flips the given vector so it's pointing in the opposite direction.
-ZeroShared void Negate(Vec3Ptr vec);
+void Negate(Vec3Ptr vec);
 
 /// Returns a vector pointing in the opposite direction of the given vector.
-ZeroShared Vector3 Negated(Vec3Param vec);
+Vector3 Negated(Vec3Param vec);
 
 /// Calculates and returns the given vector with its values clamped to the range
 /// [min, max].
-ZeroShared Vector3 Clamped(Vec3Param vec, real min, real max);
+Vector3 Clamped(Vec3Param vec, real min, real max);
 
 /// Returns if all values in lhs are less than all values in rhs
-ZeroShared bool AllLess(Vec3Param lhs, Vec3Param rhs);
+bool AllLess(Vec3Param lhs, Vec3Param rhs);
 
 /// Returns if any value in lhs is less than any value in rhs
-ZeroShared bool AnyLess(Vec3Param lhs, Vec3Param rhs);
+bool AnyLess(Vec3Param lhs, Vec3Param rhs);
 
 /// Returns if all values in lhs are greater than all values in rhs
-ZeroShared bool AllGreater(Vec3Param lhs, Vec3Param rhs);
+bool AllGreater(Vec3Param lhs, Vec3Param rhs);
 
 /// Returns if any value in lhs is greater than any value in rhs
-ZeroShared bool AnyGreater(Vec3Param lhs, Vec3Param rhs);
+bool AnyGreater(Vec3Param lhs, Vec3Param rhs);
 
-ZeroShared real DistanceToLineSq(Vec3Param start, Vec3Param end, Vec3Param point);
+real DistanceToLineSq(Vec3Param start, Vec3Param end, Vec3Param point);
 
 } // namespace Math
 

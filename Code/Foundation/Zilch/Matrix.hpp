@@ -9,7 +9,7 @@ namespace Zilch
 
 // User data for a single matrix so that functions can be generic
 // to matrices of different sizes and types
-class ZeroShared MatrixUserData
+class MatrixUserData
 {
 public:
   MatrixUserData() : SizeX(4), SizeY(4), ElementTypeIndex(0)

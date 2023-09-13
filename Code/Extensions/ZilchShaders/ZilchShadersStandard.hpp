@@ -52,13 +52,13 @@
 namespace Zilch
 {
 
-ZilchDeclareStaticLibrary(ShaderIntrinsicsLibrary, ZeroNoImportExport);
+ZilchDeclareStaticLibrary(ShaderIntrinsicsLibrary);
 
 } // namespace Zilch
 
 namespace Zero
 {
 
-ZilchDeclareStaticLibrary(ShaderSettingsLibrary, ZeroNoImportExport);
+ZilchDeclareStaticLibrary(ShaderSettingsLibrary);
 
 } // namespace Zero

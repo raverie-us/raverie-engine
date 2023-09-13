@@ -7,7 +7,7 @@
 namespace Zilch
 {
 // This class parses the input stream using a grammar
-class ZeroShared Tokenizer
+class Tokenizer
 {
 public:
   // Constructor
@@ -106,7 +106,7 @@ private:
 };
 
 // Character utilities that we use for tokenizing
-class ZeroShared CharacterUtilities
+class CharacterUtilities
 {
 public:
   // Detect if a character is a white-space character

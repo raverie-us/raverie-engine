@@ -14,7 +14,7 @@ namespace Zero
 {
 
 // Graphics library
-class ZeroNoImportExport GraphicsLibrary : public Zilch::StaticLibrary
+class GraphicsLibrary : public Zilch::StaticLibrary
 {
 public:
   ZilchDeclareStaticLibraryInternals(GraphicsLibrary);

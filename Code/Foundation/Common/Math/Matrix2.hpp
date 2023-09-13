@@ -13,7 +13,7 @@ typedef const Matrix2& Mat2Param;
 typedef Matrix2& Mat2Ref;
 typedef Matrix2* Mat2Ptr;
 
-struct ZeroShared Matrix2
+struct Matrix2
 {
 public:
   Matrix2(){};
@@ -114,8 +114,8 @@ public:
   static const Matrix2 cIdentity;
 };
 
-ZeroShared Matrix2 operator*(real lhs, Mat2Param rhs);
-ZeroShared Matrix2 Multiply(Mat2Param lhs, Mat2Param rhs);
-ZeroShared Vector2 Multiply(Mat2Param lhs, Vec2Param rhs);
+Matrix2 operator*(real lhs, Mat2Param rhs);
+Matrix2 Multiply(Mat2Param lhs, Mat2Param rhs);
+Vector2 Multiply(Mat2Param lhs, Vec2Param rhs);
 
 } // namespace Math

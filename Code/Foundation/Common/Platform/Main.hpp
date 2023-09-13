@@ -3,7 +3,7 @@
 
 namespace Zero
 {
-extern ZeroShared Array<String> gCommandLineArguments;
+extern Array<String> gCommandLineArguments;
 extern size_t gCommandLineBufferLength;
 extern char* gCommandLineBuffer;
 

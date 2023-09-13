@@ -35,12 +35,8 @@ public:
 #define ZeroInit ((Zero::ContainerInitializerDummy*)nullptr)
 
 /// Base class for containers that use allocators.
-/// WARNING: This should be a ZeroSharedTemplate, however Release is optimizing
-/// out the constructor for an unknown reason and therefore the definition isn't
-/// getting exported to the dll We force both sides (dll and us) to generate the
-/// definition by forcing it as an export
 template <typename AllocatorType>
-class ZeroExport AllocationContainer
+class AllocationContainer
 {
 public:
   typedef AllocatorType allocator_type;
@@ -68,7 +64,7 @@ inline void Swap(type& a, type& b)
 
 /// A Pair of objects.
 template <typename type0, typename type1>
-struct ZeroSharedTemplate Pair
+struct Pair
 {
   typedef type0 first_type;
   typedef type1 second_type;
@@ -536,7 +532,7 @@ struct DataBlock
 /// specified First parameter : Function pointer type with desired signature to
 /// verify Second parameter: Named function to verify has the desired signature
 template <typename Fn, Fn>
-struct ZeroSharedTemplate static_verify_function_signature
+struct static_verify_function_signature
 {
   typedef Fn type;
 };
@@ -547,7 +543,7 @@ struct ZeroSharedTemplate static_verify_function_signature
 
 /// has_equality_operator_helper helper class
 template <typename T>
-struct ZeroSharedTemplate has_equality_operator_helper
+struct has_equality_operator_helper
 {
   template <typename T2>
   static yes Test(int param[sizeof(*((T2*)nullptr) == *((T2*)nullptr))]);
@@ -560,7 +556,7 @@ struct ZeroSharedTemplate has_equality_operator_helper
 /// Provides a constant defined as true if T has an equality operator, else
 /// defined as false
 template <typename T>
-struct ZeroSharedTemplate has_equality_operator : public integral_constant<bool, has_equality_operator_helper<T>::value>
+struct has_equality_operator : public integral_constant<bool, has_equality_operator_helper<T>::value>
 {
 };
 
@@ -572,7 +568,7 @@ struct ZeroSharedTemplate has_equality_operator : public integral_constant<bool,
 /// Allow the containers to be searched by values
 /// that are not the same as the stored type
 template <typename T, typename Enable = void>
-struct ZeroSharedTemplate ComparePolicy
+struct ComparePolicy
 {
   inline bool Equal(const T& left, const T& right) const
   {
@@ -591,7 +587,7 @@ struct ZeroSharedTemplate ComparePolicy
 /// Available for instantiation if T has an accessible self-type equality
 /// operator
 template <typename T>
-struct ZeroSharedTemplate ComparePolicy<T, TC_ENABLE_IF(has_equality_operator<T>::value)>
+struct ComparePolicy<T, TC_ENABLE_IF(has_equality_operator<T>::value)>
 {
 public:
   inline bool Equal(const T& left, const T& right) const
@@ -607,7 +603,7 @@ public:
 
 /// ComparePolicy for const char* (uses string comparison)
 template <>
-struct ZeroShared ComparePolicy<const char*>
+struct ComparePolicy<const char*>
 {
   inline bool Equal(const char* left, const char* right) const
   {
@@ -628,7 +624,7 @@ struct ZeroShared ComparePolicy<const char*>
 
 /// has_valid_compare_policy_helper helper class
 template <typename T>
-struct ZeroSharedTemplate has_valid_compare_policy_helper
+struct has_valid_compare_policy_helper
 {
   typedef struct ComparePolicy<T> ComparePolicyT;
 
@@ -645,7 +641,7 @@ struct ZeroSharedTemplate has_valid_compare_policy_helper
 /// defined as false A compare policy is valid if it has a function callable as:
 /// bool Equal(const T& left, const T& right) const;
 template <typename T>
-struct ZeroSharedTemplate has_valid_compare_policy
+struct has_valid_compare_policy
     : public integral_constant<bool, has_valid_compare_policy_helper<T>::value>
 {
 };

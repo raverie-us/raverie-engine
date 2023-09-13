@@ -28,7 +28,7 @@ using Zero::ContourArray;
 } // namespace Csg
 
 // Geometry library
-class ZeroNoImportExport GeometryLibrary : public Zilch::StaticLibrary
+class GeometryLibrary : public Zilch::StaticLibrary
 {
 public:
   ZilchDeclareStaticLibraryInternals(GeometryLibrary);

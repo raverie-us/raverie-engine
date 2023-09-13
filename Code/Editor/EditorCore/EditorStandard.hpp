@@ -13,7 +13,7 @@ namespace Zero
 {
 
 // Editor library
-class ZeroNoImportExport EditorLibrary : public Zilch::StaticLibrary
+class EditorLibrary : public Zilch::StaticLibrary
 {
 public:
   ZilchDeclareStaticLibraryInternals(EditorLibrary);

@@ -205,25 +205,25 @@ enum Enum
 };
 
 // Gets the name of a given grammar constant
-ZeroShared const String& GetName(Grammar::Enum value);
+const String& GetName(Grammar::Enum value);
 
 // Gets the keyword or symbol associated with a grammar constant, or returns the
 // string 'Invalid'
-ZeroShared const String& GetKeywordOrSymbol(Grammar::Enum value);
+const String& GetKeywordOrSymbol(Grammar::Enum value);
 
 // Get a list of keywords used by Zilch (typically provided for syntax
 // highlighting) If you need a list of words separated by spaces, you can use
 // Zilch::JoinStrings
-ZeroShared const Array<String>& GetUsedKeywords();
+const Array<String>& GetUsedKeywords();
 
 // Special keywords that only exist in certain contexts, (eg this, value...)
 // If you need a list of words separated by spaces, you can use
 // Zilch::JoinStrings
-ZeroShared const Array<String>& GetSpecialKeywords();
+const Array<String>& GetSpecialKeywords();
 
 // Get a list of keywords reserved by Zilch (these may not be used, but do
 // nothing)
-ZeroShared const Array<String>& GetReservedKeywords();
+const Array<String>& GetReservedKeywords();
 } // namespace Grammar
 } // namespace Zilch
 

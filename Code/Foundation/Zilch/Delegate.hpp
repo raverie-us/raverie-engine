@@ -11,7 +11,7 @@ const size_t InvalidOpcodeLocation = (size_t)-1;
 
 // A delegate is a simple type that consists of an index for a function, as well
 // as the this pointer object
-class ZeroShared Delegate
+class Delegate
 {
 public:
   // Constructor

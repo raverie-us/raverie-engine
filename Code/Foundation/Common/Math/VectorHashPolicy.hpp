@@ -6,7 +6,7 @@ namespace Zero
 
 /// Hashing for an integer vector2
 template <>
-struct ZeroShared HashPolicy<Math::IntVec2>
+struct HashPolicy<Math::IntVec2>
 {
   inline size_t operator()(Math::IntVec2Param value) const
   {

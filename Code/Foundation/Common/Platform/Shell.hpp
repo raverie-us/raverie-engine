@@ -248,9 +248,9 @@ const uint DpadRight = 0x92;
 const uint DpadLeft = 0x93;
 } // namespace UsbUsage
 
-ZeroShared HashMap<uint, String>& GetUsageNames();
+HashMap<uint, String>& GetUsageNames();
 
-class ZeroShared PlatformAxis
+class PlatformAxis
 {
 public:
   String mName;
@@ -262,7 +262,7 @@ public:
   bool mCanBeDisabled;
 };
 
-class ZeroShared PlatformButton
+class PlatformButton
 {
 public:
   String mName;
@@ -270,7 +270,7 @@ public:
   uint mBit;
 };
 
-class ZeroShared PlatformInputDevice
+class PlatformInputDevice
 {
 public:
   OsHandle mDeviceHandle;

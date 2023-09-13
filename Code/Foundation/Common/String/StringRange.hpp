@@ -11,7 +11,7 @@ const char* const cEmpty = "";
 const int Utf8ContinunationByteSignature = 0x80; // 10000000
 const int Utf8ContinunationByteMask = 0xC0;      // 11000000
 
-class ZeroShared StringRange
+class StringRange
 {
 public:
   typedef Rune value_type;
@@ -117,7 +117,7 @@ public:
 
 // Split Range
 /// A range that splits a StringRange based upon a separator range.
-class ZeroShared StringSplitRange
+class StringSplitRange
 {
 public:
   StringSplitRange(StringRange range, StringRange separator);
@@ -149,7 +149,7 @@ inline bool operator<(const StringRange& left, cstr right);
 inline bool operator<(cstr left, const StringRange& right);
 
 // An iterator for StringRange to make moving backwards in the StringRange safe
-class ZeroShared StringIterator
+class StringIterator
 {
 public:
   typedef const StringIterator& StringIteratorParam;
@@ -195,7 +195,7 @@ public:
   StringRange mIteratorRange;
 };
 
-class ZeroShared StringTokenRange
+class StringTokenRange
 {
 public:
   StringTokenRange(StringRange stringRange, Rune delim);
@@ -274,7 +274,7 @@ inline bool operator<(cstr left, const StringRange& right)
 
 // Hash policy for string range
 template <>
-struct ZeroShared HashPolicy<StringRange>
+struct HashPolicy<StringRange>
 {
   inline size_t operator()(const StringRange& value) const
   {
@@ -296,7 +296,7 @@ struct ZeroShared HashPolicy<StringRange>
 
 // Hash policy for String class.
 template <>
-struct ZeroShared HashPolicy<String>
+struct HashPolicy<String>
 {
   inline size_t operator()(const String& value) const
   {
@@ -310,7 +310,7 @@ struct ZeroShared HashPolicy<String>
 };
 
 template <>
-struct ZeroShared MoveWithoutDestructionOperator<String>
+struct MoveWithoutDestructionOperator<String>
 {
   static inline void MoveWithoutDestruction(String* dest, String* source)
   {

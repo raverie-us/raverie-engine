@@ -17,7 +17,7 @@ enum Enum
 }
 
 // All things relevant to binding methods
-class ZeroShared TemplateBinding
+class TemplateBinding
 {
 public:
   // Given a comma delimited string of names (eg, "destination, source, size")

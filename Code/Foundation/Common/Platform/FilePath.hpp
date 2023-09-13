@@ -6,7 +6,7 @@ namespace Zero
 
 /// Represents info about a file path. This can be converted to the full
 /// path by using FilePath.CombineWithExtension(Folder, FileName, Extension).
-struct ZeroShared FilePathInfo
+struct FilePathInfo
 {
   /// The full folder path of the file without the file name or extension.
   /// Note this doesn't include the trailing folder separator.
@@ -21,7 +21,7 @@ struct ZeroShared FilePathInfo
 };
 
 // Helper class to combine paths and extract info out of a path.
-class ZeroShared FilePath
+class FilePath
 {
 public:
   static String Combine(StringRange path0, StringRange path1);

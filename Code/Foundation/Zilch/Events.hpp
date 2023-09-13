@@ -8,13 +8,13 @@ namespace Zilch
 {
 // Declares an event to be sent by an EventHandler
 // The typical pattern in C++ is to declare these within the Events namespace
-#  define ZilchDeclareEvent(EventName, EventType) ZeroShared extern const String EventName;
+#  define ZilchDeclareEvent(EventName, EventType) extern const String EventName;
 
 // Defines the event so only cpp uint allocates the string
-#  define ZilchDefineEvent(EventName) ZeroShared const String EventName = #  EventName;
+#  define ZilchDefineEvent(EventName) const String EventName = #  EventName;
 
 // All events that are sent must be derived from this type
-class ZeroShared EventData : public IZilchObject
+class EventData : public IZilchObject
 {
 public:
   ZilchDeclareType(EventData, TypeCopyMode::ReferenceType);
@@ -29,7 +29,7 @@ public:
 // The virtual base class that represents a callback
 // This class is specialized for C++ static and member and Zilch delegates (can
 // be made for other languages too)
-class ZeroShared EventDelegate
+class EventDelegate
 {
 public:
   // The size of the event delegate must be less than or equal to this size
@@ -96,7 +96,7 @@ typedef InList<EventDelegate, &EventDelegate::IncomingLink> IncomingList;
 // Stores all outbound connections for a particular event name
 // As an optimization, this list can be pulled out and stored next to an
 // EventHandler (but will be destroyed along with the handler)
-class ZeroShared EventDelegateList
+class EventDelegateList
 {
 public:
   // The destructor deletes all outgoing connections
@@ -116,7 +116,7 @@ public:
 };
 
 // Stores all outgoing connections
-class ZeroShared EventHandler : public IZilchObject
+class EventHandler : public IZilchObject
 {
 public:
   ZilchDeclareType(EventHandler, TypeCopyMode::ReferenceType);
@@ -151,11 +151,11 @@ public:
 
 // Swap all the events from one handler to another (generally used when we want
 // to disable all events, but save their states)
-ZeroShared void EventSwapAll(EventHandler* a, EventHandler* b);
+void EventSwapAll(EventHandler* a, EventHandler* b);
 
 // Connects a sender and receiver event handler for a particular event, given an
 // event connection
-ZeroShared void
+void
 EventConnect(EventHandler* sender, StringParam eventName, EventDelegate* delegate, EventHandler* receiver);
 
 // Disconnect an event that we previously connected to
@@ -163,16 +163,16 @@ EventConnect(EventHandler* sender, StringParam eventName, EventDelegate* delegat
 // Returns the number of connections that were disconnected
 // Note: There can be more than one disconnected, but only if someone connected
 // to the same event twice on the same object
-ZeroShared int
+int
 EventDisconnect(EventHandler* sender, EventHandler* receiver, StringParam eventName, void* thisPointerOrUniqueId);
 
 // Invokes the event handler for anyone listening to this event name on our
 // object Returns how many receiver callbacks were successfully invoked
-ZeroShared int EventSend(EventHandler* sender, StringParam eventName, EventData* event);
+int EventSend(EventHandler* sender, StringParam eventName, EventData* event);
 
 // When we want to connect up member functions, we use this template
 template <typename ClassType, typename EventType>
-class ZeroSharedTemplate MemberFunctionEventDelegate : public EventDelegate
+class MemberFunctionEventDelegate : public EventDelegate
 {
 public:
   ZilchDefineEventDelegateHelpers(MemberFunctionEventDelegate);
@@ -214,7 +214,7 @@ public:
 // A special template helper that can infer template arguments to make member
 // function connecting easier
 template <typename ClassType, typename EventType>
-ZeroSharedTemplate void
+void
 EventConnect(EventHandler* sender, StringParam eventName, void (ClassType::*function)(EventType*), ClassType* receiver)
 {
   // Create a member function delegate
@@ -228,7 +228,7 @@ EventConnect(EventHandler* sender, StringParam eventName, void (ClassType::*func
 // A special template helper that can infer template arguments to make member
 // function connecting easier (receiver is different frmo the class)
 template <typename ClassType, typename EventType>
-ZeroSharedTemplate void EventConnect(EventHandler* sender,
+void EventConnect(EventHandler* sender,
                                      StringParam eventName,
                                      void (ClassType::*function)(EventType*),
                                      ClassType* selfPointer,
@@ -244,7 +244,7 @@ ZeroSharedTemplate void EventConnect(EventHandler* sender,
 
 // When we want to connect up static functions, we use this template
 template <typename EventType>
-class ZeroSharedTemplate StaticFunctionEventDelegate : public EventDelegate
+class StaticFunctionEventDelegate : public EventDelegate
 {
 public:
   ZilchDefineEventDelegateHelpers(StaticFunctionEventDelegate);
@@ -283,7 +283,7 @@ public:
 // A special template helper that can infer template arguments to make static
 // function connecting easier
 template <typename EventType>
-ZeroSharedTemplate void EventConnect(EventHandler* sender,
+void EventConnect(EventHandler* sender,
                                      StringParam eventName,
                                      void (*function)(EventType*),
                                      EventHandler* receiver = nullptr)
@@ -303,7 +303,7 @@ ZeroSharedTemplate void EventConnect(EventHandler* sender,
 // When we want to connect up static functions with userdata, we use this
 // template
 template <typename EventType>
-class ZeroSharedTemplate StaticFunctionUserDataEventDelegate : public EventDelegate
+class StaticFunctionUserDataEventDelegate : public EventDelegate
 {
 public:
   ZilchDefineEventDelegateHelpers(StaticFunctionUserDataEventDelegate);
@@ -344,7 +344,7 @@ public:
 // A special template helper that can infer template arguments to make static
 // function connecting easier (with user-data)
 template <typename EventType>
-ZeroSharedTemplate void EventConnect(EventHandler* sender,
+void EventConnect(EventHandler* sender,
                                      StringParam eventName,
                                      void (*function)(EventType*, void*),
                                      void* userData = nullptr,
@@ -363,7 +363,7 @@ ZeroSharedTemplate void EventConnect(EventHandler* sender,
 }
 
 // A simple event delegate that just forwards events to another EventHandler
-class ZeroShared ForwardingEventDelegate : public EventDelegate
+class ForwardingEventDelegate : public EventDelegate
 {
 public:
   ZilchDefineEventDelegateHelpers(ForwardingEventDelegate);
@@ -384,7 +384,7 @@ public:
 };
 
 // An event delegate that can call Zilch code
-class ZeroShared ZilchEventDelegate : public EventDelegate
+class ZilchEventDelegate : public EventDelegate
 {
 public:
   ZilchDefineEventDelegateHelpers(ZilchEventDelegate);
@@ -408,11 +408,11 @@ public:
 };
 
 // Automatically forwards all events of a type of event name to another receiver
-ZeroShared void EventForward(EventHandler* sender, StringParam eventName, EventHandler* receiver);
+void EventForward(EventHandler* sender, StringParam eventName, EventHandler* receiver);
 
 // A class that represents the 'Events' class within Zilch code (for binding
 // purposes)
-class ZeroShared EventsClass
+class EventsClass
 {
 public:
   ZilchDeclareType(EventsClass, TypeCopyMode::ReferenceType);

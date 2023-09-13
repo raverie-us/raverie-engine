@@ -36,15 +36,15 @@ public:
   s16 mThumbRY;
 };
 
-ZeroShared bool AreGamepadsEnabled();
+bool AreGamepadsEnabled();
 
 // Query the current state of a Gamepad (returns false if it fails or if the
 // Gamepad is not connected) This function is responsible for ensuring that
 // sticks within the dead-zone result in 0
-ZeroShared bool GetGamepadState(size_t gamepadIndex, GamepadState* stateOut);
+bool GetGamepadState(size_t gamepadIndex, GamepadState* stateOut);
 // The left and right motor speeds are set on a [0.0 - 1.0] range with 1.0 being
 // max rumble.
-ZeroShared bool SetGamepadVibration(size_t gamepadIndex, float leftSpeed, float rightSpeed);
+bool SetGamepadVibration(size_t gamepadIndex, float leftSpeed, float rightSpeed);
 
 static const size_t cMaxGamepads = 4;
 

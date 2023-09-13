@@ -8,7 +8,7 @@ namespace Zilch
 {
 // Aligns a number to a machine byte boundary (either the same or a larger
 // value)
-ZeroShared size_t AlignToBusWidth(size_t value);
+size_t AlignToBusWidth(size_t value);
 
 // A function that will invoke the destructor on an object (does not call delete
 // or free!)
@@ -20,7 +20,7 @@ typedef void (*CopyConstructFn)(const void* from, void* to);
 
 // A function for wrapping a destructor of any object in the above signature
 template <typename T>
-ZeroSharedTemplate void DestructorWrapper(void* object)
+void DestructorWrapper(void* object)
 {
   // Cast the object pointer we got into our own object type
   T* objectTyped = (T*)object;
@@ -32,7 +32,7 @@ ZeroSharedTemplate void DestructorWrapper(void* object)
 
 // Get the destructor for a type, or null for pod types...
 template <typename T>
-ZeroSharedTemplate DestructFn GetDestructor()
+DestructFn GetDestructor()
 {
   // If the type is considered to be pod, ignore the destructor
   if (StandardTraits<T>::is_pod_::value)
@@ -49,7 +49,7 @@ ZeroSharedTemplate DestructFn GetDestructor()
 // A function for wrapping a copy constructor of any object in the above
 // signature
 template <typename T>
-ZeroSharedTemplate void CopyConstructorWrapper(const void* from, void* to)
+void CopyConstructorWrapper(const void* from, void* to)
 {
   // Use placement new to construct the object at the 'to' location (but invoke
   // the copy constructor using the from object reference)
@@ -58,7 +58,7 @@ ZeroSharedTemplate void CopyConstructorWrapper(const void* from, void* to)
 
 // Get the copy constructor for a type, or null for pod types...
 template <typename T>
-ZeroSharedTemplate CopyConstructFn GetCopyConstructor()
+CopyConstructFn GetCopyConstructor()
 {
   // If the type is considered to be pod, ignore the destructor
   if (StandardTraits<T>::is_pod_::value)
@@ -74,7 +74,7 @@ ZeroSharedTemplate CopyConstructFn GetCopyConstructor()
 
 // Used to write arbitrary data to a buffer where some of the data could be
 // destructed
-class ZeroShared DestructibleBuffer
+class DestructibleBuffer
 {
 public:
   // The block size we use for allocations
@@ -153,7 +153,7 @@ public:
 
 private:
   // Represents any bit of destructible data in our buffer
-  class ZeroShared Entry
+  class Entry
   {
   public:
     // The position in the buffer where the object lives

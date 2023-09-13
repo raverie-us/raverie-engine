@@ -10,7 +10,7 @@ namespace Zilch
 DeclareEnum3(VectorScalarTypes, Real, Integer, Boolean);
 
 // The base type for all enumerations within Zilch
-class ZeroShared Enum
+class Enum
 {
 public:
   ZilchDeclareType(Enum, TypeCopyMode::ValueType);
@@ -19,7 +19,7 @@ public:
 
 // The core of Zilch Contains all types that the compiler uses internally
 // The core also acts as a global database of all immutable and sharable types
-class ZeroShared Core : public StaticLibrary
+class Core : public StaticLibrary
 {
 public:
   // Friends
@@ -177,7 +177,7 @@ private:
 };
 
 // A single entry in a stack trace
-class ZeroShared StackEntry
+class StackEntry
 {
 public:
   // Constructor
@@ -191,7 +191,7 @@ public:
 };
 
 // Contains all the locations that we're at in an execution of Zilch
-class ZeroShared StackTrace
+class StackTrace
 {
 public:
   // Get the most recent non-native call (for debugging and visualization)
@@ -217,7 +217,7 @@ public:
 };
 
 // The base class of any exception that gets thrown
-class ZeroShared Exception
+class Exception
 {
 public:
   ZilchDeclareType(Exception, TypeCopyMode::ReferenceType);
@@ -242,7 +242,7 @@ public:
 // A property delegate Contains both the get and set delegates
 // Technically we store the handle twice, which could be compacted because
 // we know that the 'this' handle will always be the same among both
-class ZeroShared PropertyDelegateTemplate
+class PropertyDelegateTemplate
 {
 public:
   // The property getter and setters
@@ -252,22 +252,22 @@ public:
 };
 
 // Functions for converting our primitives to strings
-ZeroShared String BooleanToString(Boolean value);
-ZeroShared String Boolean2ToString(Boolean2Param value);
-ZeroShared String Boolean3ToString(Boolean3Param value);
-ZeroShared String Boolean4ToString(Boolean4Param value);
-ZeroShared String ByteToString(Byte value);
-ZeroShared String IntegerToString(Integer value);
-ZeroShared String Integer2ToString(Integer2Param value);
-ZeroShared String Integer3ToString(Integer3Param value);
-ZeroShared String Integer4ToString(Integer4Param value);
-ZeroShared String RealToString(Real value);
-ZeroShared String Real2ToString(Real2Param value);
-ZeroShared String Real3ToString(Real3Param value);
-ZeroShared String Real4ToString(Real4Param value);
-ZeroShared String QuaternionToString(QuaternionParam value);
-ZeroShared String DoubleIntegerToString(DoubleInteger value);
-ZeroShared String DoubleRealToString(DoubleReal value);
+String BooleanToString(Boolean value);
+String Boolean2ToString(Boolean2Param value);
+String Boolean3ToString(Boolean3Param value);
+String Boolean4ToString(Boolean4Param value);
+String ByteToString(Byte value);
+String IntegerToString(Integer value);
+String Integer2ToString(Integer2Param value);
+String Integer3ToString(Integer3Param value);
+String Integer4ToString(Integer4Param value);
+String RealToString(Real value);
+String Real2ToString(Real2Param value);
+String Real3ToString(Real3Param value);
+String Real4ToString(Real4Param value);
+String QuaternionToString(QuaternionParam value);
+String DoubleIntegerToString(DoubleInteger value);
+String DoubleRealToString(DoubleReal value);
 } // namespace Zilch
 
 #endif

@@ -8,7 +8,7 @@ namespace Zilch
 {
 // A standard deletion policy
 template <typename Type>
-class ZeroSharedTemplate StandardDelete
+class StandardDelete
 {
 public:
   void operator()(Type* object)
@@ -20,7 +20,7 @@ public:
 
 // An array deletion policy
 template <typename Type>
-class ZeroSharedTemplate ArrayDelete
+class ArrayDelete
 {
 public:
   void operator()(Type* object)
@@ -30,7 +30,7 @@ public:
   }
 };
 
-class ZeroShared WeakPolicy
+class WeakPolicy
 {
 public:
   template <typename RefType>
@@ -59,7 +59,7 @@ public:
   }
 };
 
-class ZeroShared NormalPolicy
+class NormalPolicy
 {
 public:
   template <typename RefType>
@@ -116,7 +116,7 @@ public:
 };
 
 // The virtual type is used primarily for debugging
-class ZeroShared VirtualType
+class VirtualType
 {
 public:
   virtual ~VirtualType()
@@ -130,7 +130,7 @@ public:
 // used as the reference count. This approach decreases memory
 // allocation and adds very little to the shared object itself
 template <typename Type, typename ModePolicy = NormalPolicy, typename DeletePolicy = StandardDelete<Type>>
-class ZeroSharedTemplate Ref
+class Ref
 {
 public:
   // Type-defines
@@ -353,7 +353,7 @@ public:
 
 // This structure should be placed as a mutable member of your class
 template <typename Type, typename DeletePolicy = StandardDelete<Type>>
-class ZeroSharedTemplate RefLink
+class RefLink
 {
 public:
   // Type-defines

@@ -16,25 +16,25 @@ static const TimeMs cInfiniteTimeMs = std::numeric_limits<TimeMs>::max();
 #define RATE_TO_INTERVAL(Rate) TimeMs((double(1) / double(Rate)) * cOneSecondTimeMs)
 
 /// Returns the duration between start and end
-ZeroShared inline TimeMs GetDuration(TimeMs start, TimeMs end)
+inline TimeMs GetDuration(TimeMs start, TimeMs end)
 {
   return end - start;
 }
 
 /// Converts milliseconds (TimeMs) to seconds (float)
-ZeroShared inline float TimeMsToFloatSeconds(TimeMs milliseconds)
+inline float TimeMsToFloatSeconds(TimeMs milliseconds)
 {
   return float(milliseconds) / float(1000);
 }
 
 /// Converts seconds (float) to milliseconds (TimeMs)
-ZeroShared inline TimeMs FloatSecondsToTimeMs(float seconds)
+inline TimeMs FloatSecondsToTimeMs(float seconds)
 {
   return TimeMs(seconds * float(1000));
 }
 
 /// High precision timer class
-class ZeroShared Timer
+class Timer
 {
 public:
   /// Tick type

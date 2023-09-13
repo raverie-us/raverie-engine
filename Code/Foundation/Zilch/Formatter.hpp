@@ -48,7 +48,7 @@ enum Enum
 
 // Allows us to specify almost every aspect of code formatting
 // The default values used here reflect the official coding standard of Zilch
-class ZeroShared CodeFormat
+class CodeFormat
 {
 public:
   // Constructor
@@ -203,7 +203,7 @@ enum Enum
 // This class can be used to directly emit Zilch code as text
 // It's mostly a convenience (handles scoping, formatting, spaces, keywords,
 // etc)
-class ZeroShared ZilchCodeBuilder : public StringBuilderExtended
+class ZilchCodeBuilder : public StringBuilderExtended
 {
 public:
   // Constructor
@@ -314,7 +314,7 @@ private:
   StringBuilder builder;
 };
 
-class ZeroShared ScopeLastNode
+class ScopeLastNode
 {
 public:
   // Constructor
@@ -325,7 +325,7 @@ public:
 };
 
 // The context we use to generate code
-class ZeroShared CodeFormatterContext : public WalkerContext<CodeFormatter, CodeFormatterContext>
+class CodeFormatterContext : public WalkerContext<CodeFormatter, CodeFormatterContext>
 {
 public:
   // Constructor
@@ -349,7 +349,7 @@ public:
 // Responsible for converting a syntax tree back into code
 // This is incredibly useful for auto-formatting Zilch code, or translating into
 // other languages
-class ZeroShared CodeFormatter
+class CodeFormatter
 {
 public:
   // Constructor

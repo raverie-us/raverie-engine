@@ -9,7 +9,7 @@
 
 namespace Zilch
 {
-class ZeroShared Sha1Builder
+class Sha1Builder
 {
 public:
   static const size_t Sha1ByteSize = 20;

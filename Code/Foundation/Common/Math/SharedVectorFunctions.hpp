@@ -6,28 +6,28 @@ namespace Math
 
 // Projects the input vector onto the given vector (must be normalized)
 template <typename VectorType>
-ZeroSharedTemplate VectorType GenericProjectOnVector(const VectorType& input, const VectorType& normalizedVector)
+VectorType GenericProjectOnVector(const VectorType& input, const VectorType& normalizedVector)
 {
   return normalizedVector * Math::Dot(input, normalizedVector);
 }
 
 // Projects the input vector onto a plane (the normal must be normalized)
 template <typename VectorType>
-ZeroSharedTemplate VectorType GenericProjectOnPlane(const VectorType& input, const VectorType& planeNormal)
+VectorType GenericProjectOnPlane(const VectorType& input, const VectorType& planeNormal)
 {
   return input - GenericProjectOnVector(input, planeNormal);
 }
 
 /// Calculates the reflection vector across a given plane.
 template <typename VectorType>
-ZeroSharedTemplate VectorType GenericReflectAcrossPlane(const VectorType& input, const VectorType& planeNormal)
+VectorType GenericReflectAcrossPlane(const VectorType& input, const VectorType& planeNormal)
 {
   return input - 2 * GenericProjectOnVector(input, planeNormal);
 }
 
 /// Calculates the reflection vector across a given vector.
 template <typename VectorType>
-ZeroSharedTemplate VectorType GenericReflectAcrossVector(const VectorType& input, const VectorType& planeNormal)
+VectorType GenericReflectAcrossVector(const VectorType& input, const VectorType& planeNormal)
 {
   return 2 * GenericProjectOnVector(input, planeNormal) - input;
 }
@@ -35,7 +35,7 @@ ZeroSharedTemplate VectorType GenericReflectAcrossVector(const VectorType& input
 /// Calculates the refraction vector through a plane given a certain index of
 /// refraction.
 template <typename VectorType>
-ZeroSharedTemplate VectorType GenericRefract(const VectorType& incidentVector,
+VectorType GenericRefract(const VectorType& incidentVector,
                                              const VectorType& planeNormal,
                                              real refractionIndex)
 {

@@ -11,7 +11,7 @@ namespace Zilch
 // every Property Get/Set and Function call This class also acts as a component
 // that is attached to the wrapper's BoundType (you should inherit from it)
 // There should only ever be one wrapper per wrapped type
-class ZeroShared Wrapper : public IZilchObject
+class Wrapper : public IZilchObject
 {
 public:
   ZilchDeclareType(Wrapper, TypeCopyMode::ReferenceType);

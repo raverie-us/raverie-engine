@@ -51,7 +51,7 @@ class Widget;
 class Window;
 
 // Widget library
-class ZeroNoImportExport WidgetLibrary : public Zilch::StaticLibrary
+class WidgetLibrary : public Zilch::StaticLibrary
 {
 public:
   ZilchDeclareStaticLibraryInternals(WidgetLibrary);
