@@ -33,7 +33,6 @@ void LoadingWindow::Activate(StringParam taskName)
   mTime = 0.0f;
 
   OsWindow* mainWindow = Z::gEditor->mOsWindow;
-  mainWindow->SetProgress(ProgressType::Indeterminate);
 }
 
 void LoadingWindow::Deactivate()
@@ -49,7 +48,6 @@ void LoadingWindow::Deactivate()
   }
 
   OsWindow* mainWindow = Z::gEditor->mOsWindow;
-  mainWindow->SetProgress(ProgressType::None);
 }
 
 void LoadingWindow::SetLoadingName(StringParam text)

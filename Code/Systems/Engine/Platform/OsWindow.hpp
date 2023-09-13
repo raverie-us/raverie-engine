@@ -48,7 +48,6 @@ public:
            StringParam windowName,
            IntVec2Param clientSize,
            IntVec2Param monitorClientPos,
-           OsWindow* parentWindow,
            WindowStyleFlags::Enum flags,
            WindowState::Enum state);
   virtual ~OsWindow();
@@ -69,9 +68,6 @@ public:
   /// The current client size of the window
   IntVec2 GetClientSize();
   void SetClientSize(IntVec2Param clientSize);
-
-  /// Parent window of this window. Null for Desktop windows.
-  OsWindow* GetParent();
 
   /// Convert screen coordinates to client coordinates
   IntVec2 MonitorToClient(IntVec2Param monitorPosition);
@@ -116,11 +112,6 @@ public:
   /// Locks the mouse to prevent it from moving.
   bool GetMouseTrap();
   void SetMouseTrap(bool trapped);
-
-  OsHandle GetWindowHandle();
-
-  /// Set application progress which may show up in the task bar.
-  void SetProgress(ProgressType::Enum progressType, float progress = 0.0f);
 
   void SendKeyboardEvent(KeyboardEvent& event);
   void SendKeyboardTextEvent(KeyboardTextEvent& event);

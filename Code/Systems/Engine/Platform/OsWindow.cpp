@@ -33,7 +33,6 @@ ZilchDefineType(OsWindow, builder, type)
   ZilchBindGetterSetterProperty(MonitorClientPosition);
   ZilchBindSetter(MinClientSize);
   ZilchBindGetterSetterProperty(ClientSize);
-  ZilchBindGetterProperty(Parent);
   // Seems to be problematic to expose because they can set some dangerous stuff
   // ZilchBindGetterSetterProperty(Style);
   ZilchBindGetterSetterProperty(Visible);
@@ -55,14 +54,12 @@ OsWindow::OsWindow(OsShell* shell,
                    StringParam windowName,
                    IntVec2Param clientSize,
                    IntVec2Param monitorClientPos,
-                   OsWindow* parentWindow,
                    WindowStyleFlags::Enum flags,
                    WindowState::Enum state) :
     mWindow(&shell->mShell,
             windowName,
             clientSize,
             monitorClientPos,
-            parentWindow ? &parentWindow->mWindow : nullptr,
             flags,
             state),
     mMouseTrapped(false)
@@ -130,14 +127,6 @@ IntVec2 OsWindow::GetClientSize()
 void OsWindow::SetClientSize(IntVec2Param clientSize)
 {
   return mWindow.SetClientSize(clientSize);
-}
-
-OsWindow* OsWindow::GetParent()
-{
-  ShellWindow* shellParent = mWindow.GetParent();
-  if (shellParent)
-    return (OsWindow*)shellParent->mUserData;
-  return nullptr;
 }
 
 IntVec2 OsWindow::MonitorToClient(IntVec2Param monitorPosition)
@@ -224,16 +213,6 @@ void OsWindow::SetMouseTrap(bool mouseTrapped)
 {
   mMouseTrapped = mouseTrapped;
   ImportMouseTrap(mouseTrapped);
-}
-
-OsHandle OsWindow::GetWindowHandle()
-{
-  return mWindow.mHandle;
-}
-
-void OsWindow::SetProgress(ProgressType::Enum progressType, float progress)
-{
-  return mWindow.SetProgress(progressType, progress);
 }
 
 void OsWindow::SendKeyboardEvent(KeyboardEvent& event)

@@ -78,15 +78,12 @@ ShellWindow::ShellWindow(Shell* shell,
                          StringParam windowName,
                          Math::IntVec2Param clientSize,
                          Math::IntVec2Param monitorClientPos,
-                         ShellWindow* parentWindow,
                          WindowStyleFlags::Enum flags,
                          WindowState::Enum state) :
     mShell(shell),
     mMinClientSize(IntVec2(10, 10)),
-    mParent(parentWindow),
     mHandle(nullptr),
     mStyle(flags),
-    mProgress(0),
     mClientSize(cMinimumMonitorSize),
     mClientMousePosition(IntVec2(-1, -1)),
     mUserData(nullptr),
@@ -135,11 +132,6 @@ IntVec2 ShellWindow::GetMinClientSize()
 void ShellWindow::SetMinClientSize(Math::IntVec2Param minSize)
 {
   mMinClientSize = minSize;
-}
-
-ShellWindow* ShellWindow::GetParent()
-{
-  return nullptr;
 }
 
 IntVec2 ShellWindow::MonitorToClient(Math::IntVec2Param monitorPosition)
@@ -233,16 +225,6 @@ bool ShellWindow::GetImage(Image* image)
 
 void ShellWindow::Close()
 {
-}
-
-float ShellWindow::GetProgress()
-{
-  return mProgress;
-}
-
-void ShellWindow::SetProgress(ProgressType::Enum progressType, float progress)
-{
-  mProgress = progress;
 }
 
 bool ShellWindow::HasOwnMinMaxExitButtons()

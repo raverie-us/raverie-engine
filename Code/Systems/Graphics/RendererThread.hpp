@@ -86,9 +86,6 @@ class CreateRendererJob : public WaitRendererJob
 {
 public:
   void Execute() override;
-
-  OsHandle mMainWindowHandle;
-  String mError;
 };
 
 class DestroyRendererJob : public WaitRendererJob

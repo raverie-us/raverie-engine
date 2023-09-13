@@ -203,7 +203,7 @@ void GameOrEditorStartup::Startup()
   IntVec2 monitorClientPos = IntVec2(0, 0);
 
   // We only ever create a single OsWindow
-  OsWindow* mainWindow = new OsWindow(osShell, name, size, monitorClientPos, nullptr, mWindowStyle, state);
+  OsWindow* mainWindow = new OsWindow(osShell, name, size, monitorClientPos, mWindowStyle, state);
 
   mainWindow->SetMinClientSize(minSize);
 

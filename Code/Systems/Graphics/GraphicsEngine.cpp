@@ -649,15 +649,9 @@ void GraphicsEngine::AddRendererJob(RendererJob* rendererJob)
 
 void GraphicsEngine::CreateRenderer(OsWindow* mainWindow)
 {
-  OsHandle mainWindowHandle = mainWindow->GetWindowHandle();
-
   CreateRendererJob* rendererJob = new CreateRendererJob();
-  rendererJob->mMainWindowHandle = mainWindowHandle;
   AddRendererJob(rendererJob);
   rendererJob->WaitOnThisJob();
-
-  if (rendererJob->mError.Empty() == false)
-    FatalEngineError(rendererJob->mError.c_str());
 
   delete rendererJob;
 }

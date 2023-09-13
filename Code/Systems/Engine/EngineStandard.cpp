@@ -36,7 +36,6 @@ ZilchDefineEnum(InputDevice);
 ZilchDefineEnum(KeyState);
 ZilchDefineEnum(Math::CurveType);
 ZilchDefineEnum(MouseButtons);
-ZilchDefineEnum(ProgressType);
 ZilchDefineEnum(SplineType);
 ZilchDefineEnum(StoreResult);
 ZilchDefineEnum(StreamType);
@@ -123,7 +122,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeEnum(Location);
   ZilchInitializeEnumAs(Math::CurveType, "CurveType");
   ZilchInitializeEnum(MouseButtons);
-  ZilchInitializeEnum(ProgressType);
   ZilchInitializeEnum(SplineType);
   ZilchInitializeEnum(StoreResult);
   ZilchInitializeEnum(StreamType);

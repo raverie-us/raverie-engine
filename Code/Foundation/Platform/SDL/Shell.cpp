@@ -337,7 +337,6 @@ ShellWindow::ShellWindow(Shell* shell,
                          StringParam windowName,
                          Math::IntVec2Param clientSize,
                          Math::IntVec2Param monitorClientPos,
-                         ShellWindow* parentWindow,
                          WindowStyleFlags::Enum flags,
                          WindowState::Enum state) :
     mShell(shell),
@@ -345,7 +344,6 @@ ShellWindow::ShellWindow(Shell* shell,
     mParent(parentWindow),
     mHandle(nullptr),
     mStyle(flags),
-    mProgress(0),
     mClientSize(clientSize),
     mClientMousePosition(IntVec2(-1, -1)),
     mCapture(false),
@@ -497,11 +495,6 @@ void ShellWindow::SetMinClientSize(Math::IntVec2Param minSize)
 {
   SDL_SetWindowMinimumSize((SDL_Window*)mHandle, minSize.x, minSize.y);
   mMinClientSize = minSize;
-}
-
-ShellWindow* ShellWindow::GetParent()
-{
-  return mParent;
 }
 
 IntVec2 ShellWindow::MonitorToClient(Math::IntVec2Param monitorPosition)
@@ -667,16 +660,6 @@ void ShellWindow::Close()
   e.window.event = SDL_WINDOWEVENT_CLOSE;
   e.window.windowID = SDL_GetWindowID((SDL_Window*)mHandle);
   SDL_PushEvent(&e);
-}
-
-float ShellWindow::GetProgress()
-{
-  return mProgress;
-}
-
-void ShellWindow::SetProgress(ProgressType::Enum progressType, float progress)
-{
-  mProgress = progress;
 }
 
 bool ShellWindow::HasOwnMinMaxExitButtons()
