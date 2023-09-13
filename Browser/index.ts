@@ -5,7 +5,8 @@ import {
   MessageYieldComplete,
   MessageMouseTrap,
   MessageMouseSetCursor,
-  MessageDownloadFile
+  MessageDownloadFile,
+  ToMainMessageType
 } from "./shared";
 
 const modulePromise = WebAssembly.compileStreaming(fetch(wasmUrl));
@@ -32,6 +33,10 @@ type GLsizeiPointer = number;
 
 // Platform
 type CharPointer = number;
+
+const mainPostMessage = <T extends ToMainMessageType>(message: T) => {
+  postMessage(message);
+};
 
 const start = async (canvas: OffscreenCanvas, args: string) => {
   const module = await modulePromise;
@@ -508,13 +513,12 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
           pixels.set(temp, bottomOffset);
         }
 
-        const toSend: MessageYieldDraw = {
+        mainPostMessage<MessageYieldDraw>({
           type: "yieldDraw",
           pixels,
           width,
           height
-        };
-        postMessage(toSend);
+        });
         yieldedThisFrame = true;
 
         // Eventually we would like to take advantage of this:
@@ -522,28 +526,25 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
         // https://v8.dev/blog/jspi
       },
       ImportMouseTrap: (value: boolean) => {
-        const toSend: MessageMouseTrap = {
+        mainPostMessage<MessageMouseTrap>({
           type: "mouseTrap",
           value
-        };
-        postMessage(toSend);
+        });
       },
       ImportMouseSetCursor: (cursor: number) => {
-        const toSend: MessageMouseSetCursor = {
+        mainPostMessage<MessageMouseSetCursor>({
           type: "mouseSetCursor",
           cursor
-        };
-        postMessage(toSend);
+        });
       },
       ImportDownloadFile: (filenamePointer: number, dataPointer: number, dataLength: number) => {
         const filename = readNullTerminatedString(filenamePointer);
         const buffer = readBuffer(dataPointer, dataLength);
-        const toSend: MessageDownloadFile = {
+        mainPostMessage<MessageDownloadFile>({
           type: "downloadFile",
           filename,
           buffer
-        };
-        postMessage(toSend);
+        });
       }
     }
   };
@@ -649,10 +650,9 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
     } else if (mustSendYieldComplete) {
       mustSendYieldComplete = false;
       // We only send yield complete when we complete an entire frame without yielding
-      const toSend: MessageYieldComplete = {
+      mainPostMessage<MessageYieldComplete>({
         type: "yieldComplete"
-      };
-      postMessage(toSend);
+      });
     }
   };
 
