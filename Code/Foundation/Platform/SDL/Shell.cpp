@@ -17,103 +17,6 @@ struct ShellPrivateData
   Array<SDL_Cursor*> mSDLCursors;
 };
 
-static const char* cShellWindow = "ShellWindow";
-SDL_Window* gSdlMainWindow = nullptr;
-
-// In SDL 'global' is synonymous with 'monitor' space and 'relative' means
-// 'client' space.
-
-Keys::Enum SDLScancodeToKey(SDL_Scancode code)
-{
-  switch (code)
-  {
-#define ProcessInput(Scancode, Keycode, ZeroValue)                                                                     \
-  case Scancode:                                                                                                       \
-    return ZeroValue;
-#include "Keys.inl"
-#undef ProcessInput
-  default:
-    break;
-  }
-
-  switch (code)
-  {
-  // Treat the gui keys as if they are control.
-  case SDL_SCANCODE_LGUI:
-  case SDL_SCANCODE_RGUI:
-    return Keys::Control;
-
-  // Keys.inl already handles all the right versions.
-  case SDL_SCANCODE_RCTRL:
-    return Keys::Control;
-  case SDL_SCANCODE_RSHIFT:
-    return Keys::Shift;
-  case SDL_SCANCODE_RALT:
-    return Keys::Alt;
-  default:
-    break;
-  }
-
-  return Keys::Unknown;
-}
-
-SDL_Scancode KeyToSDLScancode(Keys::Enum key)
-{
-  switch (key)
-  {
-#define ProcessInput(Scancode, Keycode, ZeroValue)                                                                     \
-  case ZeroValue:                                                                                                      \
-    return Scancode;
-#include "Keys.inl"
-#undef ProcessInput
-  default:
-    break;
-  }
-  return SDL_SCANCODE_UNKNOWN;
-}
-
-Keys::Enum SDLKeycodeToKey(SDL_Keycode code)
-{
-  switch (code)
-  {
-#define ProcessInput(Scancode, Keycode, ZeroValue)                                                                     \
-  case Keycode:                                                                                                        \
-    return ZeroValue;
-#include "Keys.inl"
-#undef ProcessInput
-  default:
-    break;
-  }
-
-  switch (code)
-  {
-  // Treat the gui keys as if they are control.
-  case SDLK_LGUI:
-  case SDLK_RGUI:
-    return Keys::Control;
-
-  // Keys.inl already handles all the right versions.
-  case SDLK_RCTRL:
-    return Keys::Control;
-  case SDLK_RSHIFT:
-    return Keys::Shift;
-  case SDLK_RALT:
-    return Keys::Alt;
-  }
-  return Keys::Unknown;
-}
-
-bool SDLGetClipboardText(String* out)
-{
-  if (!SDL_HasClipboardText())
-    return false;
-  char* clipboardText = SDL_GetClipboardText();
-  if (!clipboardText)
-    return false;
-  *out = clipboardText;
-  SDL_free(clipboardText);
-  return true;
-}
 
 #if !defined(ZeroPlatformNoShellOpenFile)
 void Shell::OpenFile(FileDialogInfo& config)
@@ -292,13 +195,6 @@ void Shell::Update()
       break;
     }
   }
-}
-
-const Array<PlatformInputDevice>& Shell::ScanInputDevices()
-{
-  mInputDevices.Clear();
-
-  return mInputDevices;
 }
 
 ShellWindow::ShellWindow(Shell* shell,
