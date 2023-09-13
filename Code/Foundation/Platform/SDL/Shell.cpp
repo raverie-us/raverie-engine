@@ -153,26 +153,6 @@ void Shell::Update()
       break;
     }
 
-    case SDL_MOUSEWHEEL:
-    {
-      IntVec2 clientPosition = IntVec2::cZero;
-      SDL_GetMouseState(&clientPosition.x, &clientPosition.y);
-
-      // May need to handle SDL_MOUSEWHEEL_FLIPPED here
-      ShellWindow* window = GetShellWindowFromSDLId(e.wheel.windowID);
-      if (window)
-      {
-        // Currently we are using the sign of the scroll delta because the value
-        // is mostly undefined per platform. We should probably refactor all
-        // scroll wheel deltas to be in pixels scrolled.
-        if (e.wheel.x && window->mOnMouseScrollX)
-          window->mOnMouseScrollX(clientPosition, (float)Math::Sign(e.wheel.x), window);
-        if (e.wheel.y && window->mOnMouseScrollY)
-          window->mOnMouseScrollY(clientPosition, (float)Math::Sign(e.wheel.y), window);
-      }
-      break;
-    }
-
     case SDL_JOYDEVICEADDED:
     case SDL_JOYDEVICEREMOVED:
     case SDL_AUDIODEVICEADDED:
@@ -216,10 +196,6 @@ ShellWindow::ShellWindow(Shell* shell,
     mOnFocusChanged(nullptr),
     mOnMouseDropFiles(nullptr),
     mOnClientSizeChanged(nullptr),
-    mOnMouseDown(nullptr),
-    mOnMouseUp(nullptr),
-    mOnMouseScrollY(nullptr),
-    mOnMouseScrollX(nullptr),
     mOnDevicesChanged(nullptr),
     mOnHitTest(nullptr),
     mOnInputDeviceChanged(nullptr)
