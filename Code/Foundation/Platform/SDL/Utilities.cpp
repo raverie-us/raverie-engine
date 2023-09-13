@@ -7,42 +7,6 @@ namespace Zero
 namespace Os
 {
 
-void Sleep(uint ms)
-{
-  SDL_Delay((Uint32)ms);
-}
-
-const char* GetEnvironmentList(const char* defaultValue, const char* names[], size_t length)
-{
-  for (size_t i = 0; i < length; ++i)
-  {
-    const char* name = names[i];
-    const char* result = getenv(name);
-
-    if (result != nullptr && strlen(result) != 0)
-      return result;
-  }
-
-  return defaultValue;
-}
-
-#if !defined(ZeroPlatformNoUserName)
-String UserName()
-{
-  // There is no portable way to get the user name
-  const char* names[] = {"USER", "USERNAME", "LOGNAME", "COMPUTERNAME", "HOSTNAME"};
-  return GetEnvironmentList("User", names, SDL_arraysize(names));
-}
-#endif
-
-#if !defined(ZeroPlatformNoComputerName)
-String ComputerName()
-{
-  // There is no portable way to get the computer/host name
-  const char* names[] = {"COMPUTERNAME", "HOSTNAME", "USER", "USERNAME", "LOGNAME"};
-  return GetEnvironmentList("Computer", names, SDL_arraysize(names));
-}
-#endif
 
 DeclareEnum4(ReturnCode, Continue, DebugBreak, Terminate, Ignore);
 
@@ -104,40 +68,4 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
   }
 }
 
-#if !defined(ZeroPlatformNoWebRequest)
-void WebRequest(Status& status,
-                StringParam url,
-                const Array<WebPostData>& postDatas,
-                const Array<String>& additionalRequestHeaders,
-                WebRequestHeadersFn onHeadersReceived,
-                WebRequestDataFn onDataReceived,
-                void* userData)
-{
-  status.SetFailed("WebRequest not supported by SDL");
-}
-#endif
-
-#if !defined(ZeroPlatformNoOpenUrl)
-void OpenUrl(cstr url)
-{
-  ShellOpen(url);
-}
-#endif
-
-unsigned int GetDoubleClickTimeMs()
-{
-  return 500;
-}
-} // namespace Os
-
-u64 GenerateUniqueId64()
-{
-  u64 result = SDL_GetPerformanceCounter() ^ SDL_GetTicks();
-
-  static u64 highCount = 0;
-  ++highCount;
-  result += (highCount << 48) ^ Os::UserName().Hash();
-
-  return result;
-}
 } // namespace Zero
