@@ -44,33 +44,6 @@ bool CopyToVFS(StringParam file)
   return result;
 }
 
-extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenOnPaste(const char* text)
-{
-  if (!Shell::sInstance->mOnPaste)
-    return;
-  ClipboardData data;
-  data.mHasText = true;
-  data.mText = text;
-  Shell::sInstance->mOnPaste(data, Shell::sInstance);
-}
-
-extern "C" EMSCRIPTEN_KEEPALIVE char* EmscriptenOnCopy(int cut)
-{
-  if (!Shell::sInstance->mOnCopy)
-    return nullptr;
-  ClipboardData data;
-  Shell::sInstance->mOnCopy(data, !!cut, Shell::sInstance);
-  ErrorIf(!data.mHasText && !data.mText.Empty(), "Clipboard Text was not empty, but HasText was not set");
-  if (data.mHasText)
-  {
-    const size_t size = data.mText.SizeInBytes() + 1;
-    char* buffer = (char*)malloc(size);
-    memcpy(buffer, data.mText.c_str(), size);
-    return buffer;
-  }
-  return nullptr;
-}
-
 extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenFileDropHandler(char* fileBuffer)
 {
   // We're relying on the Emscripten instance only having one window with GL

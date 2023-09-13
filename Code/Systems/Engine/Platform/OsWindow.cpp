@@ -89,11 +89,6 @@ OsWindow::~OsWindow()
 {
 }
 
-OsShell* OsWindow::GetShell()
-{
-  return (OsShell*)mWindow.mShell->mUserData;
-}
-
 IntVec2 OsWindow::GetMonitorClientPosition()
 {
   return mWindow.GetMonitorClientPosition();

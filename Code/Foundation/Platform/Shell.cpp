@@ -7,7 +7,7 @@ namespace Zero
 Shell* Shell::sInstance;
 String gClipboardText;
 
-Shell::Shell() : mCursor(Cursor::Arrow), mMainWindow(nullptr), mUserData(nullptr), mOnCopy(nullptr), mOnPaste(nullptr)
+Shell::Shell() : mCursor(Cursor::Arrow), mMainWindow(nullptr)
 {
   sInstance = this;
 }

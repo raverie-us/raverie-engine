@@ -52,8 +52,6 @@ public:
            WindowState::Enum state);
   virtual ~OsWindow();
 
-  OsShell* GetShell();
-
   /// Position of the window's client area in monitor coordinates
   IntVec2 GetMonitorClientPosition();
   void SetMonitorClientPosition(IntVec2Param monitorPosition);

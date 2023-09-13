@@ -250,38 +250,6 @@ void Shell::Update()
       break;
     }
 
-    case SDL_KEYDOWN:
-    {
-      ShellWindow* window = GetShellWindowFromSDLId(e.key.windowID);
-      Keys::Enum key = SDLKeycodeToKey(e.key.keysym.sym);
-
-      if (window && window->mOnKeyDown)
-        window->mOnKeyDown(key, e.key.keysym.scancode, e.key.repeat != 0, window);
-
-#if !defined(ZeroPlatformNoClipboardEvents)
-      // Handle paste explicitly to be more like a browser platform
-      if (IsKeyDown(Keys::Control) && key == Keys::V && mOnPaste)
-      {
-        // SDL clipboard does not support images, but we may want to support url encoded images at some point
-        ClipboardData data;
-        data.mHasText = SDLGetClipboardText(&data.mText);
-        mOnPaste(data, this);
-      }
-
-      // Handle copy explicitly to be more like a browser platform
-      if (IsKeyDown(Keys::Control) && (key == Keys::C || key == Keys::X) && mOnCopy)
-      {
-        ClipboardData data;
-        mOnCopy(data, key == Keys::X, this);
-        ErrorIf(!data.mHasText && !data.mText.Empty(), "Clipboard Text was not empty, but HasText was not set");
-        if (data.mHasText)
-          SDL_SetClipboardText(data.mText.c_str());
-        ErrorIf(data.mHasImage, "Copying image data not yet supported");
-      }
-#endif
-      break;
-    }
-
     case SDL_MOUSEWHEEL:
     {
       IntVec2 clientPosition = IntVec2::cZero;

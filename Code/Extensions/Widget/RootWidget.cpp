@@ -77,7 +77,7 @@ RootWidget::RootWidget(OsWindow* osWindow) : Composite(NULL)
 
   ConnectThisTo(osWindow, Events::OsClose, OnClose);
 
-  OsShell* shell = osWindow->GetShell();
+  OsShell* shell = Z::gEngine->has(OsShell);
   ConnectThisTo(shell, Events::Cut, OnCutCopyPaste);
   ConnectThisTo(shell, Events::Copy, OnCutCopyPaste);
   ConnectThisTo(shell, Events::Paste, OnCutCopyPaste);

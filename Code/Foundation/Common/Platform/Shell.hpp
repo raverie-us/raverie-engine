@@ -361,7 +361,6 @@ public:
   void (*mOnCopy)(ClipboardData&, bool cut, Shell* shell);
   void (*mOnPaste)(const ClipboardData& data, Shell* shell);
 
-  void* mUserData;
 
   ZeroDeclarePrivateData(Shell, 128);
 };
