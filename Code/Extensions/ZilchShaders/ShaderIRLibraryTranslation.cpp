@@ -462,9 +462,6 @@ void ScalarBackupFieldResolver(ZilchSpirVFrontEnd* translator,
     ResolveScalarSwizzle(translator, memberAccessNode, memberName, context);
     return;
   }
-
-  // Deal with the remainder later
-  //__debugbreak();
 }
 
 void ResolveVectorCopyConstructor(ZilchSpirVFrontEnd* translator,

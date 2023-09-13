@@ -91,13 +91,6 @@ public:
   /// Should normally not be manually called.
   void Shutdown();
 
-  /// If in a debugger, this will trigger a breakpoint
-  /// This is useful for debugging C++ things invoked in script
-  void DebugBreak();
-
-  /// Forcibly crash the engine. Mostly for debugging/testing crash handling.
-  void CrashEngine();
-
   /// The engine may be in read only mode (such as when debugging a breakpoint).
   bool IsReadOnly();
 

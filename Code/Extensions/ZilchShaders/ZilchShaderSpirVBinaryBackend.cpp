@@ -530,8 +530,6 @@ void ZilchShaderSpirVBinaryBackend::WriteHeader(ZilchShaderToSpirVContext* conte
       executionModel = spv::ExecutionModelGeometry;
     else if (entryPoint->mFragmentType == FragmentType::Compute)
       executionModel = spv::ExecutionModelGLCompute;
-    // else
-    //  __debugbreak();
 
     streamWriter.WriteInstruction(totalSize, OpType::OpEntryPoint, executionModel, entryPointId);
     streamWriter.Write(entryPointName);
@@ -1064,10 +1062,6 @@ void ZilchShaderSpirVBinaryBackend::WriteIROp(BasicBlock* block,
 
       streamWriter.WriteInstruction(2, OpType::OpBranch);
       WriteIROpArguments(op, context);
-    }
-    else if (block->mBlockType == BlockType::Selection)
-    {
-      //__debugbreak();
     }
     else
     {

@@ -17,9 +17,6 @@ namespace Os
 // Sleep the current thread for ms milliseconds.
 ZeroShared void Sleep(uint ms);
 
-// Debug break (only if a debugger is attached)
-ZeroShared bool DebugBreak();
-
 // When a diagnostic error occurs, this is the default response
 ZeroShared bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData);
 

@@ -44,12 +44,6 @@ String ComputerName()
 }
 #endif
 
-bool DebugBreak()
-{
-  SDL_TriggerBreakpoint();
-  return true;
-}
-
 DeclareEnum4(ReturnCode, Continue, DebugBreak, Terminate, Ignore);
 
 bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)

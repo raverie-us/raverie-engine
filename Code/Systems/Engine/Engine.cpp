@@ -79,9 +79,6 @@ ZilchDefineType(Engine, builder, type)
   ZilchBindMethod(RebuildArchetypes);
   ZilchBindGetter(GameSessions);
 
-  ZilchBindMethod(DebugBreak);
-  ZilchBindMethod(CrashEngine);
-
   type->Add(new EngineMetaComposition());
 }
 
@@ -369,19 +366,6 @@ void Engine::Shutdown()
   // call ShutdownThreadSystem here because there are still systems that are
   // alive (and threaded) such as AsyncWebRequest that can be using gDispatch.
   Z::gDispatch->ClearEvents();
-}
-
-void Engine::DebugBreak()
-{
-  Os::DebugBreak();
-}
-
-void Engine::CrashEngine()
-{
-  memset((void*)Z::gEngine, 0xffffff, 9999);
-  memset((void*)Z::gTracker, 0xffffff, 9999);
-  Z::gEngine = nullptr;
-  memset((void*)Z::gEngine, 0xffffff, 9999);
 }
 
 bool Engine::IsReadOnly()

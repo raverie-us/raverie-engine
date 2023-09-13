@@ -1098,9 +1098,6 @@ Any StressTestDialog::GetVariantForRangeExtension(StressRandom& random, Property
       value = random.RandomIntRange((int)editorRange->Min, (int)editorRange->Max);
     return Any(value);
   }
-  else
-    // there is a range type we don't handle
-    Os::DebugBreak();
 
   return Any(0);
 }

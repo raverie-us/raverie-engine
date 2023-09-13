@@ -11,11 +11,6 @@ void Sleep(uint ms)
 {
 }
 
-bool DebugBreak()
-{
-  return false;
-}
-
 bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
 {
   const int cDebugBufferLength = 1024;

@@ -90,12 +90,6 @@ void OpenTestWidgetsCommand()
   OpenTestWidgets(Z::gEditor);
 }
 
-// Used to test the crash handler
-void CrashEngine()
-{
-  Z::gEngine->CrashEngine();
-}
-
 void SortAndPrintMetaTypeList(StringBuilder& builder, Array<String>& names, cstr category)
 {
   if (names.Empty())
@@ -205,7 +199,6 @@ void BindAppCommands(Cog* config, CommandManager* commands)
   if (DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig))
   {
     commands->AddCommand("OpenTestWidgets", BindCommandFunction(OpenTestWidgetsCommand));
-    commands->AddCommand("CrashEngine", BindCommandFunction(CrashEngine));
   }
   commands->AddCommand("Documentation", BindCommandFunction(OpenDocumentation), true);
 

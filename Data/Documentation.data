@@ -18009,10 +18009,6 @@ DocumentationLibrary
 			{
 				Method
 				{
-					var Name = "CrashEngine"
-				}
-				Method
-				{
 					var Name = "CreateGameSession"
 					var ReturnType = "GameSession"
 				}
@@ -18029,10 +18025,6 @@ DocumentationLibrary
 							var Type = "Archetype"
 						}
 					}
-				}
-				Method
-				{
-					var Name = "DebugBreak"
 				}
 				Method
 				{

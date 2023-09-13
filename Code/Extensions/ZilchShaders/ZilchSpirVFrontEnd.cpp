@@ -2049,9 +2049,6 @@ void ZilchSpirVFrontEnd::GenerateEntryPoint(Zilch::GenericFunctionNode* node,
     entryPointGeneration.DeclareGeometryInterface(this, node, function, context);
   else if (fragmentType == FragmentType::Compute)
     entryPointGeneration.DeclareComputeInterface(this, node, function, context);
-  // else
-  // @JoshD: Revisit
-  //__debugbreak();
 }
 
 void ZilchSpirVFrontEnd::WalkFunctionCallNode(Zilch::FunctionCallNode*& node, ZilchSpirVFrontEndContext* context)
@@ -2588,9 +2585,6 @@ void ZilchSpirVFrontEnd::WalkMemberAccessNode(Zilch::MemberAccessNode*& node, Zi
     // @JoshD: Validate (have to find op-code to generate this)
     else
     {
-      // Validate this is right (haven't made code to hit this yet)
-      //__debugbreak();
-
       // Make the constant for the sub-index of the member with respect to the
       // base
       ZilchShaderIRConstantLiteral* memberIndexLiteral = GetOrCreateConstantLiteral(memberIndex);
