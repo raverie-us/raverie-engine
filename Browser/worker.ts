@@ -546,6 +546,12 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
           filename,
           buffer
         });
+      },
+      ImportRandomUnique: (): BigInt => {
+        const buffer = new Uint8Array(8);
+        crypto.getRandomValues(buffer);
+        const view = new DataView(buffer.buffer);
+        return view.getBigUint64(0);
       }
     }
   };

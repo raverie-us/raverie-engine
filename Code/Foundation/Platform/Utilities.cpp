@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
+#include "PlatformCommunication.hpp"
 
 namespace Zero
 {
@@ -49,8 +50,7 @@ unsigned int GetDoubleClickTimeMs()
 
 u64 GenerateUniqueId64()
 {
-  static u64 counter = 0;
-  return ++counter;
+  return ImportRandomUnique();
 }
 
 } // namespace Zero
