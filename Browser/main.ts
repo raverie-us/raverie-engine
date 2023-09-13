@@ -283,7 +283,7 @@ const mapKeyboardKey = (code: string) => {
 
 const onKeyboardButtonChanged = (event: KeyboardEvent) => {
   // Ideally we'd prevent all default browser behavior, but doing so supresses events like keypress
-  if (event.code === "Tab" || /^F[0-9]{1,2}$/.test(event.code)) {
+  if (event.code === "Tab" || /^F[0-9]{1,2}$/.test(event.code) || (event.ctrlKey && event.code === "KeyF")) {
     event.preventDefault();
   }
 
