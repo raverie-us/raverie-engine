@@ -2,7 +2,6 @@
 namespace Zero
 {
 
-DeclareEnum2(LatencyValues, LowLatency, HighLatency);
 DeclareEnum2(StreamTypes, Output, Input);
 DeclareEnum6(StreamStatus, Uninitialized, Initialized, Started, Stopped, ApiProblem, DeviceProblem);
 
