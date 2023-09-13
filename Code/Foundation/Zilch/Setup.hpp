@@ -83,11 +83,6 @@ ZeroShared void ZilchParseMainArguments(int argc, char* argv[], MainArguments& a
 // Processes command line arguments for running Zilch standalone (invokes
 // Startup/Shutdown)
 ZeroShared int ZilchMain(int argc, char* argv[]);
-
-// Waits for a debugger to be attached (optionally can breakpoint upon
-// attachment) Note, if this is called and the breakpoint option is on, it will
-// ALWAYS breakpoint when running from a debugger
-ZeroShared void ZilchWaitForDebugger(bool breakpointWhenAttached);
 } // namespace Zilch
 
 #endif

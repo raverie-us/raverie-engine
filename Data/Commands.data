@@ -61,13 +61,6 @@ Commands commands =
 
 	Command =
 	{
-		string Name = "Restart",
-		string Description = "Restart the editor",
-		string Tags = "File",
-	},
-
-	Command =
-	{
 		string Name = "Add",
 		string Description = "Add a new content item to the project",
 		string IconName = "AddResource",

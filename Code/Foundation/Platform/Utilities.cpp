@@ -11,42 +11,9 @@ void Sleep(uint ms)
 {
 }
 
-void SetTimerFrequency(uint ms)
-{
-}
-
-String UserName()
-{
-  return "User";
-}
-
-String ComputerName()
-{
-  return "Computer";
-}
-
-u64 GetMacAddress()
-{
-  return 0;
-}
-
-bool IsDebuggerAttached()
-{
-  return false;
-}
-
-void DebuggerOutput(const char* message)
-{
-  printf("%s", message);
-}
-
 bool DebugBreak()
 {
   return false;
-}
-
-void EnableMemoryLeakChecking(int breakOnAllocation)
-{
 }
 
 bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
@@ -75,16 +42,6 @@ void WebRequest(Status& status,
   status.SetFailed("WebRequest not implemented");
 }
 
-bool ShellOpenApplication(StringParam file, StringParam parameters, StringParam workingDirectory)
-{
-  return false;
-}
-
-bool SupportsDownloadingFiles()
-{
-  return true;
-}
-
 void OpenUrl(cstr url)
 {
 }
@@ -92,10 +49,6 @@ void OpenUrl(cstr url)
 unsigned int GetDoubleClickTimeMs()
 {
   return 500;
-}
-
-void GetMemoryStatus(MemoryInfo& data)
-{
 }
 } // namespace Os
 

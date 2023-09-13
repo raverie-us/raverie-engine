@@ -20,10 +20,6 @@ ZilchDefineType(UiLayout, builder, type)
   ZilchBindGetterSetterProperty(PaddingTop);
   ZilchBindGetterSetterProperty(PaddingRight);
   ZilchBindGetterSetterProperty(PaddingBottom);
-
-  // Only show the debug button if we're in a debugger
-  if (Os::IsDebuggerAttached())
-    ZilchBindMethodProperty(Debug);
 }
 
 void UiLayout::Serialize(Serializer& stream)

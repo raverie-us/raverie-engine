@@ -94,7 +94,7 @@ void EditorMain::OnClosing(HandleableEvent* event)
   event->Handled = true;
 
   // Run editor quit logic
-  RequestQuit(false);
+  RequestQuit();
 }
 
 void EditorMain::OnMouseDown(MouseEvent* mouseEvent)

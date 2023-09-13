@@ -1553,7 +1553,7 @@ void Editor::EditResource(Resource* resource)
   ResourceEditors::GetInstance()->FindResourceEditor(resource);
 }
 
-bool Editor::RequestQuit(bool isRestart)
+bool Editor::RequestQuit()
 {
   // Does anything need saving?
   SavingEvent saveEvent;
@@ -1562,21 +1562,10 @@ bool Editor::RequestQuit(bool isRestart)
   if (saveEvent.NeedSaving)
   {
     // If anything needs saving prompt the user
-    MessageBox* box;
-    if (isRestart)
-    {
-      const cstr MBSaveRestartCancel[] = {"Save and Restart", "Restart without Saving", "Cancel", nullptr};
-      box = MessageBox::Show(
-          "Restart Confirmation", "Save all changes to levels, scripts, and resources?", MBSaveRestartCancel);
-      ConnectThisTo(box, Events::MessageBoxResult, OnSaveRestartMessageBox);
-    }
-    else
-    {
-      const cstr MBSaveQuitCancel[] = {"Save and Quit", "Quit without Saving", "Cancel", nullptr};
-      box = MessageBox::Show(
-          "Quit Confirmation", "Save all changes to levels, scripts, and resources?", MBSaveQuitCancel);
-      ConnectThisTo(box, Events::MessageBoxResult, OnSaveQuitMessageBox);
-    }
+    const cstr saveQuitCancel[] = {"Save and Quit", "Quit without Saving", "Cancel", nullptr};
+    MessageBox* box = MessageBox::Show(
+        "Quit Confirmation", "Save all changes to levels, scripts, and resources?", saveQuitCancel);
+    ConnectThisTo(box, Events::MessageBoxResult, OnSaveQuitMessageBox);
     // Block the quit
     return false;
   }
@@ -1602,25 +1591,6 @@ void Editor::OnSaveQuitMessageBox(MessageBoxEvent* event)
   }
 
   // 2 is cancel
-}
-
-void Editor::OnSaveRestartMessageBox(MessageBoxEvent* event)
-{
-  if (event->ButtonIndex == 0)
-  {
-    SaveAll(false);
-    Z::gEngine->Terminate();
-  }
-
-  if (event->ButtonIndex == 1)
-  {
-    Z::gEngine->Terminate();
-  }
-
-  // 2 is cancel
-
-  // This was a restart request
-  Os::ShellOpenApplication(GetApplication());
 }
 
 void Editor::DebuggerResume()

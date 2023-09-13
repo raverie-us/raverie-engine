@@ -262,9 +262,8 @@ public:
   void SetMainPropertyViewObject(Object* object);
   void LoadDefaultLevel();
   void ProjectLoaded();
-  bool RequestQuit(bool isRestart);
+  bool RequestQuit();
   void OnSaveQuitMessageBox(MessageBoxEvent* event);
-  void OnSaveRestartMessageBox(MessageBoxEvent* event);
   GameArray mGames;
   bool mGamePending;
   bool mStopGame;

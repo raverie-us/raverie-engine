@@ -9,11 +9,6 @@ ConsoleListener::~ConsoleListener()
   Console::Remove(this);
 };
 
-void DebuggerListener::Print(FilterType filterType, cstr message)
-{
-  Os::DebuggerOutput(message);
-}
-
 void StdOutListener::Print(FilterType filterType, cstr message)
 {
   // As this is used for logging primarily on the build machine make

@@ -62,10 +62,8 @@ void GameOrEditorStartup::Initialize()
 {
   CommandLineToStringArray();
 
-  // Set the log and error handlers so debug printing and asserts will print to
-  // the any debugger output (such as the debugger Output Window).
-  mDebuggerListener = new DebuggerListener();
-  Zero::Console::Add(mDebuggerListener);
+  mStdoutListener = new StdOutListener();
+  Zero::Console::Add(mStdoutListener);
 
   // Start the profiling system used to performance counters and timers.
   Profile::ProfileSystem::Initialize();
@@ -82,14 +80,6 @@ void GameOrEditorStartup::Initialize()
 
   if (Environment::GetValue<bool>("BeginTracing", false))
     Profile::ProfileSystem::Instance->BeginTracing();
-
-  // Add stdout listener (requires engine initialization to get the Environment
-  // object)
-  if (!environment->GetParsedArgument("logStdOut").Empty())
-  {
-    mStdoutListener = new StdOutListener();
-    Zero::Console::Add(mStdoutListener);
-  }
 
   CommonLibrary::Initialize();
 

@@ -214,10 +214,6 @@ int ZilchMain(int argc, char* argv[])
   MainArguments arguments;
   ZilchParseMainArguments(argc, argv, arguments);
 
-  // For our own internal use, we may want to attach a debugger to Zilch
-  if (arguments.HasCommand("-WaitForDebugger"))
-    ZilchWaitForDebugger(true);
-
   // Hook up the standard write and read callbacks to the console (which allows
   // us to read from stdin and write to stdout)
   EventConnect(&Console::Events, Events::ConsoleWrite, DefaultWriteText);
@@ -393,15 +389,5 @@ int ZilchMain(int argc, char* argv[])
   }
 
   return result;
-}
-
-void ZilchWaitForDebugger(bool breakpointWhenAttached)
-{
-  // Wait until the debugger gets attached by constantly sleeping and checking
-  while (Zero::Os::IsDebuggerAttached() == false)
-    Zero::Os::Sleep(1);
-
-  // We got here and a debugger is attached, so breakpoint!
-  Zero::Os::DebugBreak();
 }
 } // namespace Zilch

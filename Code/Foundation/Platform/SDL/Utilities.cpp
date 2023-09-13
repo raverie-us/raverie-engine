@@ -12,13 +12,6 @@ void Sleep(uint ms)
   SDL_Delay((Uint32)ms);
 }
 
-#if !defined(ZeroPlatformNoSetTimerFrequency)
-void SetTimerFrequency(uint ms)
-{
-  // Not supported by SDL.
-}
-#endif
-
 const char* GetEnvironmentList(const char* defaultValue, const char* names[], size_t length)
 {
   for (size_t i = 0; i < length; ++i)
@@ -51,39 +44,11 @@ String ComputerName()
 }
 #endif
 
-#if !defined(ZeroPlatformNoIsDebuggerAttached)
-bool IsDebuggerAttached()
-{
-  // SDL cannot detect whether a debugger is attached.
-  return false;
-}
-#endif
-
-ZeroShared void DebuggerOutput(const char* message)
-{
-  printf("%s", message);
-}
-
-#if !defined(ZeroPlatformNoGetMacAddress)
-u64 GetMacAddress()
-{
-  // Not supported by SDL.
-  return 0;
-}
-#endif
-
 bool DebugBreak()
 {
   SDL_TriggerBreakpoint();
   return true;
 }
-
-#if !defined(ZeroPlatformNoEnableMemoryLeakChecking)
-void EnableMemoryLeakChecking(int breakOnAllocation)
-{
-  // Not supported by SDL.
-}
-#endif
 
 DeclareEnum4(ReturnCode, Continue, DebugBreak, Terminate, Ignore);
 
@@ -158,31 +123,6 @@ void WebRequest(Status& status,
 }
 #endif
 
-bool ShellOpen(const char* path)
-{
-  static cstr cOpeners[] = {"xdg-open", "open", "start"};
-  static const size_t cOpenersCount = sizeof(cOpeners) / sizeof(*cOpeners);
-
-  bool result = false;
-  for (size_t i = 0; i < cOpenersCount; ++i)
-  {
-    String commandLine = String::Format("%s \"%s\" &", cOpeners[i], path);
-    if (system(commandLine.c_str()) == 0)
-      result = true;
-  }
-  return result;
-}
-
-#if !defined(ZeroPlatformNoShellOpenApplication)
-bool ShellOpenApplication(StringParam file, StringParam parameters, StringParam workingDirectory)
-{
-  // todo: wu - Use the workingDirectory passed
-  String commandLine = String::Format("\"%s\" %s &", file.c_str(), parameters.c_str());
-  int result = system(commandLine.c_str());
-  return result == 0;
-}
-#endif
-
 #if !defined(ZeroPlatformNoOpenUrl)
 void OpenUrl(cstr url)
 {
@@ -194,17 +134,6 @@ unsigned int GetDoubleClickTimeMs()
 {
   return 500;
 }
-
-#if !defined(ZeroPlatformNoGetMemoryStatus)
-void GetMemoryStatus(MemoryInfo& data)
-{
-  // Not supported by SDL.
-  data.Commit = 0;
-  data.Free = 0;
-  data.Reserve = 0;
-}
-#endif
-
 } // namespace Os
 
 u64 GenerateUniqueId64()

@@ -304,7 +304,7 @@ void Download(StringParam filePath)
 
 void Download(StringParam suggestedNameWithoutExtension, StringParam workingDirectory, const Array<String>& filePaths)
 {
-  if (!Os::SupportsDownloadingFiles() || filePaths.Empty())
+  if (filePaths.Empty())
     return;
 
   if (filePaths.Size() == 1 && FileExists(filePaths.Front()))

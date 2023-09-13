@@ -19,14 +19,6 @@ void ExitEditor()
   mainWindow->DispatchEvent(Events::OsClose, &event);
 }
 
-void Restart()
-{
-  bool quitSuccess = Z::gEditor->RequestQuit(true);
-
-  if (quitSuccess)
-    Os::ShellOpenApplication(GetApplication());
-}
-
 void FullScreen(Editor* editor)
 {
   OsWindow* osWindow = editor->mOsWindow;
@@ -206,7 +198,6 @@ void BindAppCommands(Cog* config, CommandManager* commands)
 
   commands->AddCommand("Exit", BindCommandFunction(ExitEditor));
   commands->AddCommand("ToggleFullScreen", BindCommandFunction(FullScreen), true);
-  commands->AddCommand("Restart", BindCommandFunction(Restart));
 
   commands->AddCommand("BuildVersion", BindCommandFunction(BuildVersion), true);
   commands->AddCommand("WriteBuildInfo", BindCommandFunction(WriteBuildInfo));

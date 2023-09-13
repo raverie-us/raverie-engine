@@ -40,13 +40,6 @@ public:
   virtual ~ConsoleListener();
 };
 
-/// ConsoleListener that redirects to the debugger's console output
-class DebuggerListener : public ConsoleListener
-{
-public:
-  void Print(FilterType filterType, cstr message) override;
-};
-
 /// ConsoleListener that redirects to the standard output
 class StdOutListener : public ConsoleListener
 {

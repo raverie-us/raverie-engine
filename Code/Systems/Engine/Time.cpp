@@ -256,12 +256,6 @@ void TimeSystem::Initialize(SystemInitializer& initializer)
   ConnectThisTo(Z::gEngine, Events::ProjectLoaded, OnProjectLoaded);
   mLimitFrameRate = true;
   mFrameRate = 60;
-
-  // Set the time frequency to 1 ms. If the frame limiter is active
-  // it needs a high frequency to prevent sleep from waiting too long
-  // This also improves the response of other wait calls but does
-  // increase power consumption.
-  Os::SetTimerFrequency(1);
 }
 
 TimeSystem::TimeSystem()

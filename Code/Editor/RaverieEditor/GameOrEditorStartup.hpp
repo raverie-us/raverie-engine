@@ -83,7 +83,6 @@ private:
   ZilchSetup* mZilchSetup = nullptr;
 
   // Initialize:
-  UniquePointer<DebuggerListener> mDebuggerListener;
   UniquePointer<FileSystemInitializer> mFileSystemInitializer;
   UniquePointer<FileListener> mFileListener;
   UniquePointer<StdOutListener> mStdoutListener;
