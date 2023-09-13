@@ -138,8 +138,6 @@ private:
   TaskListType TasksForGameThread[2];
   // Lock used for switching game thread task buffers
   ThreadLock GameThreadTasksLock;
-  // Object to get MIDI data from the operating system.
-  MidiInput MidiObject;
   // Resampler object used to resample mixed output
   Resampler OutputResampler;
   // Encoder to use for compressed microphone input

@@ -54,12 +54,4 @@ float AudioInputOutput::GetBufferSizeMultiplier()
   return 1.0f;
 }
 
-MidiInput::MidiInput() : mOnMidiData(nullptr), mHandle(nullptr), mUserData(nullptr)
-{
-}
-
-MidiInput::~MidiInput()
-{
-}
-
 } // namespace Zero

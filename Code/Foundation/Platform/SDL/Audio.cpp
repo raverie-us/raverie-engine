@@ -200,14 +200,4 @@ float AudioInputOutput::GetBufferSizeMultiplier()
   return 0.04f;
 }
 
-// MIDI Input
-
-MidiInput::MidiInput()
-{
-}
-
-MidiInput::~MidiInput()
-{
-}
-
 } // namespace Zero
