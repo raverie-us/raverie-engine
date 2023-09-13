@@ -1,4 +1,4 @@
-import RaverieEngineWorker from "./index.ts?worker";
+import RaverieEngineWorker from "./worker.ts?worker";
 import {
   Cursor,
   KeyState,
