@@ -4,8 +4,7 @@
 namespace Zero
 {
 extern Array<String> gCommandLineArguments;
-extern size_t gCommandLineBufferLength;
-extern char* gCommandLineBuffer;
+extern String gCommandLine;
 
 // Not platform specific
 typedef OrderedHashMap<String, String> StringMap;

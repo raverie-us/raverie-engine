@@ -283,15 +283,6 @@ public:
 class ShellWindow;
 class PlatformInputDevice;
 
-class ClipboardData
-{
-public:
-  bool mHasText = false;
-  String mText;
-  bool mHasImage = false;
-  Image mImage;
-};
-
 /// Monitor coordinates means a position anywhere on the desktop relative to the
 /// primary monitor's top left corner. Client coordinates means a position
 /// within a window (not including title bar if the window has a border). Sizes
@@ -357,10 +348,6 @@ public:
   Array<PlatformInputDevice> mInputDevices;
 
   static Shell* sInstance;
-
-  void (*mOnCopy)(ClipboardData&, bool cut, Shell* shell);
-  void (*mOnPaste)(const ClipboardData& data, Shell* shell);
-
 
   ZeroDeclarePrivateData(Shell, 128);
 };

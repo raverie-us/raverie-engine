@@ -3,10 +3,12 @@ import {
   Cursor,
   KeyState,
   Keys,
+  MessageCopy,
   MessageInitialize,
   MessageKeyboardButtonChanged,
   MessageMouseButtonChanged,
   MessageMouseMove,
+  MessagePaste,
   MessageTextTyped,
   MouseButtons,
   MouseState,
@@ -38,6 +40,8 @@ const yieldContext = yieldCanvas.getContext("2d")!;
 parent.append(canvas);
 parent.append(yieldCanvas);
 document.body.append(parent);
+
+let emulatedClipboardText: string | null = null;
 
 const downloadFile = (filename: string, buffer: ArrayBuffer) => {
   const blob = new Blob([buffer]);
@@ -111,6 +115,16 @@ worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
       break;
       case "downloadFile":
         downloadFile(data.filename, data.buffer);
+        break;
+      case "copyData":
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(data.text).catch(() => {
+            emulatedClipboardText = data.text;
+          });
+        } else {
+          // In an insecure context, we emulate copy local to the page since we can't set the clipboard immediately
+          emulatedClipboardText = data.text;
+        }
         break;
   }
 });
@@ -304,4 +318,27 @@ canvas.addEventListener("keypress", (event) => {
 
 canvas.addEventListener("contextmenu", (event) => {
   event.preventDefault();
+});
+
+const copyCutHandler = (event: ClipboardEvent) => {
+  if (document.activeElement === canvas) {
+    workerPostMessage<MessageCopy>({
+      type: "copy",
+      isCut: event.type === "cut"
+    });
+    event.preventDefault();
+  }
+};
+
+// These two event handlers don't work on the canvas (only on document) so we must check focus
+document.addEventListener("copy", copyCutHandler);
+document.addEventListener("paste", (event) => {
+  if (document.activeElement === canvas && (event.clipboardData || emulatedClipboardText)) {
+    workerPostMessage<MessagePaste>({
+      type: "paste",
+      text: emulatedClipboardText || event.clipboardData!.getData("text/plain")
+    });
+    emulatedClipboardText = null;
+    event.preventDefault();
+  }
 });

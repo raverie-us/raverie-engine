@@ -60,20 +60,20 @@ public:
 
   /// Platform specific shell
   Shell mShell;
-
-  static void ShellOnCopy(ClipboardData& data, bool cut, Shell* shell);
-  static void ShellOnPaste(const ClipboardData& data, Shell* shell);
 };
 
-class ClipboardEvent : public Event, public ClipboardData
+class ClipboardEvent : public Event
 {
 public:
   ZilchDeclareType(ClipboardEvent, TypeCopyMode::ReferenceType);
   void Clear();
   void SetText(StringParam text);
   String GetText();
-  void SetImage(const Image& image);
-  const Image& GetImage();
+
+  String mText;
+
+  // This is used internally to indicate the clipboard event was handled
+  // This does NOT indicate that text or any data was set on it
   bool mHandled = false;
 };
 

@@ -6,7 +6,8 @@ import {
   MessageMouseTrap,
   MessageMouseSetCursor,
   MessageDownloadFile,
-  ToMainMessageType
+  ToMainMessageType,
+  MessageCopyData
 } from "./shared";
 
 const modulePromise = WebAssembly.compileStreaming(fetch(wasmUrl));
@@ -553,7 +554,9 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
 
   const memory = instance.exports.memory as WebAssembly.Memory;
 
-  const ExportInitialize = instance.exports.ExportInitialize as (argumentsLength: number) => number;
+  const ExportAllocate = instance.exports.ExportAllocate as (size: number) => number;
+  const ExportFree = instance.exports.ExportFree as (pointer: number) => void;
+  const ExportInitialize = instance.exports.ExportInitialize as (argumentsCharPtr: number) => void;
   const ExportRunIteration = instance.exports.ExportRunIteration as () => void;
   const ExportHandleCrash = instance.exports.ExportHandleCrash as () => void;
   const ExportMouseMove = instance.exports.ExportMouseMove as (x: number, y: number, dx: number, dy: number) => void;
@@ -561,6 +564,17 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
   const ExportTextTyped = instance.exports.ExportTextTyped as (rune: number) => void;
   const ExportKeyboardButtonChanged = instance.exports.ExportKeyboardButtonChanged as (key: number, state: number) => void;
   const ExportQuit = instance.exports.ExportQuit as () => void;
+  const ExportCopy = instance.exports.ExportCopy as (isCut: boolean) => number;
+  const ExportPaste = instance.exports.ExportPaste as (charPtr: number) => void;
+
+  const allocateAndCopy = (buffer: Uint8Array) => {
+    const pointer = ExportAllocate(buffer.byteLength);
+    new Uint8Array(memory.buffer).set(buffer, pointer);
+    return pointer;
+  }
+  const allocateNullTerminatedString = (str: string) => {
+    return allocateAndCopy(encoder.encode(`${str}\0`))
+  }
 
   addEventListener("message", (event: MessageEvent<ToWorkerMessageType>) => {
     const data = event.data;
@@ -577,6 +591,18 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
       case "textTyped":
         ExportTextTyped(data.rune);
         break;
+      case "copy":
+        mainPostMessage<MessageCopyData>({
+          type: "copyData",
+          text: readNullTerminatedString(ExportCopy(data.isCut))
+        });
+        break;
+      case "paste": {
+        const text = allocateNullTerminatedString(data.text);
+        ExportPaste(text);
+        ExportFree(text);
+        break;
+      }
     }
   });
 
@@ -635,9 +661,9 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
     }
   }
 
-  const commandLine = encoder.encode(`${args.split(" ").join("\0")}\0\0`);
-  const commandLineBuffer = ExportInitialize(commandLine.byteLength);
-  new Uint8Array(memory.buffer).set(commandLine, commandLineBuffer);
+  const commandLine = allocateNullTerminatedString(args);
+  ExportInitialize(commandLine);
+  ExportFree(commandLine);
 
   let mustSendYieldComplete = false;
   const doUpdate = () => {

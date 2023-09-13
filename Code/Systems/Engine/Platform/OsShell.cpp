@@ -28,26 +28,24 @@ OsShell* CreateOsShellSystem()
 
 OsShell::OsShell()
 {
-  mShell.mUserData = this;
-  mShell.mOnCopy = &ShellOnCopy;
-  mShell.mOnPaste = &ShellOnPaste;
 }
 
-void OsShell::ShellOnCopy(ClipboardData& data, bool cut, Shell* shell)
+const char* ZeroExportNamed(ExportCopy)(bool isCut)
 {
-  OsShell* self = (OsShell*)shell->mUserData;
   ClipboardEvent toSend;
-  self->DispatchEvent(cut ? Events::Cut : Events::Copy, &toSend);
-  data = toSend;
+  Z::gEngine->has(OsShell)->DispatchEvent(isCut ? Events::Cut : Events::Copy, &toSend);
+
+  // We store the copied string here until the next copy occurs
+  static String sCopyBuffer;
+  sCopyBuffer = toSend.mText;
+  return sCopyBuffer.c_str();
 }
 
-void OsShell::ShellOnPaste(const ClipboardData& data, Shell* shell)
+void ZeroExportNamed(ExportPaste)(const char* text)
 {
-  OsShell* self = (OsShell*)shell->mUserData;
   ClipboardEvent toSend;
-  ClipboardData& toSendData = toSend;
-  toSendData = data;
-  self->DispatchEvent(Events::Paste, &toSend);
+  toSend.mText = text;
+  Z::gEngine->has(OsShell)->DispatchEvent(Events::Paste, &toSend);
 }
 
 cstr OsShell::GetName()
@@ -150,35 +148,17 @@ ZilchDefineType(ClipboardEvent, builder, type)
 
 void ClipboardEvent::Clear()
 {
-  mHasText = false;
   mText = String();
-  mHasImage = false;
-  mImage.Deallocate();
-  mHandled = false;
 }
 
 void ClipboardEvent::SetText(StringParam text)
 {
-  mHasText = true;
   mText = text;
 }
 
 String ClipboardEvent::GetText()
 {
   return mText;
-}
-
-void ClipboardEvent::SetImage(const Image& image)
-{
-  mHasImage = true;
-  CopyImage(&mImage, const_cast<Image*>(&image));
-}
-
-const Image& ClipboardEvent::GetImage()
-{
-  // We should implement copy construction and assignment for Image and return a copy
-  // so that it cannot be modified without calling SetImage...
-  return mImage;
 }
 
 ZilchDefineType(OsFileSelection, builder, type)

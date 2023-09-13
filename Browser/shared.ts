@@ -182,12 +182,24 @@ export interface MessageTextTyped {
   rune: number;
 }
 
+export interface MessageCopy {
+  type: "copy";
+  isCut: boolean;
+}
+
+export interface MessagePaste {
+  type: "paste";
+  text: string;
+}
+
 export type ToWorkerMessageType =
   MessageInitialize |
   MessageMouseMove |
   MessageMouseButtonChanged |
   MessageKeyboardButtonChanged |
-  MessageTextTyped;
+  MessageTextTyped |
+  MessageCopy |
+  MessagePaste;
 
 export interface MessageYieldDraw {
   type: "yieldDraw";
@@ -216,9 +228,15 @@ export interface MessageDownloadFile {
   buffer: ArrayBuffer;
 }
 
+export interface MessageCopyData {
+  type: "copyData";
+  text: string;
+}
+
 export type ToMainMessageType =
   MessageYieldDraw |
   MessageYieldComplete |
   MessageMouseTrap |
   MessageMouseSetCursor |
-  MessageDownloadFile;
+  MessageDownloadFile |
+  MessageCopyData;

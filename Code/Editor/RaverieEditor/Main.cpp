@@ -9,12 +9,18 @@ extern "C" {
 void __wasm_call_ctors();
 }
 
-char* ZeroExportNamed(ExportInitialize)(size_t argumentsLength) {
+void* ZeroExportNamed(ExportAllocate)(size_t size) {
+  return malloc(size);
+}
+
+void ZeroExportNamed(ExportFree)(void* pointer) {
+  free(pointer);
+}
+
+void ZeroExportNamed(ExportInitialize)(const char* arguments) {
   __wasm_call_ctors();
   startup = new GameOrEditorStartup();
-  gCommandLineBuffer = new char[argumentsLength];
-  gCommandLineBufferLength = argumentsLength;
-  return gCommandLineBuffer;
+  gCommandLine = arguments;
 }
 
 void ZeroExportNamed(ExportRunIteration)() {

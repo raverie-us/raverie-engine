@@ -261,9 +261,10 @@ void ZeroImportNamed(ImportYield)();
 void ZeroImportNamed(ImportMouseTrap)(bool value);
 void ZeroImportNamed(ImportMouseSetCursor)(Zero::Cursor::Enum cursor);
 void ZeroImportNamed(ImportDownloadFile)(const char* filename, const byte* data, size_t dataLength);
-void ZeroImportNamed(Import)(const char* filename, const byte* data, size_t dataLength);
 
-char* ZeroExportNamed(ExportInitialize)(size_t argumentsLength);
+void* ZeroExportNamed(ExportAllocate)(size_t size);
+void ZeroExportNamed(ExportFree)(void* pointer);
+void ZeroExportNamed(ExportInitialize)(const char* arguments);
 void ZeroExportNamed(ExportRunIteration)();
 void ZeroExportNamed(ExportHandleCrash)();
 void ZeroExportNamed(ExportMouseMove)(int32_t x, int32_t y, int32_t dx, int32_t dy);
@@ -271,6 +272,8 @@ void ZeroExportNamed(ExportMouseButtonChanged)(int32_t x, int32_t y, Zero::Mouse
 void ZeroExportNamed(ExportMouseUp)(int32_t x, int32_t y, Zero::MouseButtons::Enum button);
 void ZeroExportNamed(ExportKeyboardButtonChanged)(Zero::Keys::Enum key, Zero::KeyState::Enum state);
 void ZeroExportNamed(ExportTextTyped)(uint32_t rune);
+const char* ZeroExportNamed(ExportCopy)(bool isCut);
+void ZeroExportNamed(ExportPaste)(const char* text);
 void ZeroExportNamed(ExportQuit)();
 
 }

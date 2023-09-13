@@ -4,22 +4,13 @@
 namespace Zero
 {
 Array<String> gCommandLineArguments;
-size_t gCommandLineBufferLength = 0;
-char* gCommandLineBuffer = nullptr;
+String gCommandLine;
 
 void CommandLineToStringArray()
 {
-  size_t start = 0;
-  for (size_t i = 0; i < gCommandLineBufferLength; ++i) {
-    if (gCommandLineBuffer[i] == '\0') {
-      if (i == start) {
-        break;
-      }
-
-      String arg(gCommandLineBuffer + start, gCommandLineBuffer + i);
-      start = i + 1;
+  forRange (String arg, gCommandLine.Split(" "))
+  {
       gCommandLineArguments.PushBack(arg);
-    }
   }
 }
 
