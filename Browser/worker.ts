@@ -354,7 +354,7 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
         return programWithLocations.locations.allocateOrGet(location);
       },
       ImportGlLineWidth: (width: GLfloat): void => {
-        gl.lineWidth(width);
+        gl.lineWidth(Math.max(width, 0.0000001));
       },
       ImportGlLinkProgram: (program: GLuint): void => {
         const programWithLocations = programMap.getRequired(program);
