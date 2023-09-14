@@ -4,11 +4,13 @@ import {
   KeyState,
   Keys,
   MessageCopy,
+  MessageFilesDropped,
   MessageInitialize,
   MessageKeyboardButtonChanged,
   MessageMouseButtonChanged,
   MessageMouseMove,
   MessageMouseScroll,
+  MessagePartFile,
   MessagePaste,
   MessageTextTyped,
   MouseButtons,
@@ -366,5 +368,31 @@ document.addEventListener("paste", (event) => {
     });
     emulatedClipboardText = null;
     event.preventDefault();
+  }
+});
+
+// We have to prevent default on dragover otherwise it opens the file with it's usual behavior
+canvas.addEventListener("dragover", (event) => {
+  event.preventDefault();
+});
+
+canvas.addEventListener("drop", async (event) => {
+  event.preventDefault();
+  if (event.dataTransfer) {
+    const files: MessagePartFile[] = [];
+    for (const file of event.dataTransfer.files) {
+      files.push({
+        fileName: file.name,
+        buffer: await file.arrayBuffer()
+      });
+    }
+
+    const rect = canvas.getBoundingClientRect();
+    workerPostMessage<MessageFilesDropped>({
+      type: "filesDropped",
+      clientX: event.clientX - rect.left,
+      clientY: event.clientY - rect.top,
+      files
+    });
   }
 });

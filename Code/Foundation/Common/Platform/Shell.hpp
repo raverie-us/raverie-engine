@@ -501,9 +501,6 @@ public:
   /// The window has been activated or deactivated.
   void (*mOnFocusChanged)(bool activated, ShellWindow* window);
 
-  /// Files have been drag-dropped onto this window.
-  void (*mOnMouseDropFiles)(Math::IntVec2Param clientPosition, const Array<String>& files, ShellWindow* window);
-
   /// Occurs when the window is resized (may occur even if the size is the same
   /// and should be protected against).
   void (*mOnClientSizeChanged)(Math::IntVec2Param clientSize, ShellWindow* window);

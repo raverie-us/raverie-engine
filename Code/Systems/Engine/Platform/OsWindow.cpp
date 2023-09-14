@@ -71,7 +71,6 @@ OsWindow::OsWindow(OsShell* shell,
 
   mWindow.mOnClose = &ShellWindowOnClose;
   mWindow.mOnFocusChanged = &ShellWindowOnFocusChanged;
-  mWindow.mOnMouseDropFiles = &ShellWindowOnMouseDropFiles;
   mWindow.mOnClientSizeChanged = &ShellWindowOnClientSizeChanged;
   mWindow.mOnDevicesChanged = &ShellWindowOnDevicesChanged;
   mWindow.mOnHitTest = &ShellWindowOnHitTest;
@@ -292,18 +291,20 @@ void OsWindow::ShellWindowOnFocusChanged(bool activated, ShellWindow* window)
   self->SendWindowEvent(focusEvent);
 }
 
-void OsWindow::ShellWindowOnMouseDropFiles(Math::IntVec2Param clientPosition,
-                                           const Array<String>& files,
-                                           ShellWindow* window)
-{
-  OsWindow* self = (OsWindow*)window->mUserData;
+Array<String> gDroppedFiles;
+void ZeroExportNamed(ExportFileDropAdd)(const char* filePath) {
+  gDroppedFiles.PushBack(filePath);
+}
 
+void ZeroExportNamed(ExportFileDropFinish)(int32_t clientX, int32_t clientY) {
+  IntVec2 clientPosition(clientX, clientY);
   OsMouseDropEvent mouseDrop;
-  self->FillMouseEvent(clientPosition, MouseButtons::None, mouseDrop);
-  mouseDrop.Files = files;
+  OsWindow::sInstance->FillMouseEvent(clientPosition, MouseButtons::None, mouseDrop);
+  mouseDrop.Files = gDroppedFiles;
+  gDroppedFiles.Clear();
 
   mouseDrop.EventId = Events::OsMouseFileDrop;
-  self->SendMouseDropEvent(mouseDrop);
+  OsWindow::sInstance->SendMouseDropEvent(mouseDrop);
 }
 
 void OsWindow::ShellWindowOnClientSizeChanged(Math::IntVec2Param clientSize, ShellWindow* window)
@@ -329,18 +330,18 @@ void ZeroExportNamed(ExportKeyboardButtonChanged)(Zero::Keys::Enum key, Zero::Ke
   OsWindow::sInstance->SendKeyboardEvent(keyEvent);
 }
 
-void ZeroExportNamed(ExportMouseButtonChanged)(int32_t x, int32_t y, Zero::MouseButtons::Enum button, Zero::MouseState::Enum state)
+void ZeroExportNamed(ExportMouseButtonChanged)(int32_t clientX, int32_t clientY, Zero::MouseButtons::Enum button, Zero::MouseState::Enum state)
 {
+  IntVec2 clientPosition(clientX, clientY);
   Shell::sInstance->mMouseState[button] = (state == MouseState::Down);
   OsMouseEvent mouseEvent;
-  OsWindow::sInstance->FillMouseEvent(IntVec2(x, y), button, mouseEvent);
+  OsWindow::sInstance->FillMouseEvent(clientPosition, button, mouseEvent);
   mouseEvent.EventId = state == MouseState::Down ? Events::OsMouseDown : Events::OsMouseUp;
   OsWindow::sInstance->SendMouseEvent(mouseEvent);
 }
 
-void ZeroExportNamed(ExportMouseMove)(int32_t x, int32_t y, int32_t dx, int32_t dy) {
-  IntVec2 clientPosition(x, y);
-
+void ZeroExportNamed(ExportMouseMove)(int32_t clientX, int32_t clientY, int32_t dx, int32_t dy) {
+  IntVec2 clientPosition(clientX, clientY);
   OsMouseEvent mouseEvent;
   OsWindow::sInstance->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
   mouseEvent.EventId = Events::OsMouseMove;
@@ -350,9 +351,9 @@ void ZeroExportNamed(ExportMouseMove)(int32_t x, int32_t y, int32_t dx, int32_t 
   Z::gMouse->mRawMovement += Vec2(dx, dy);
 }
 
-void ZeroExportNamed(ExportMouseScroll)(int32_t mouseX, int32_t mouseY, float scrollX, float scrollY)
+void ZeroExportNamed(ExportMouseScroll)(int32_t clientX, int32_t clientY, float scrollX, float scrollY)
 {
-  IntVec2 clientPosition(mouseX, mouseY);
+  IntVec2 clientPosition(clientX, clientY);
   OsMouseEvent mouseEvent;
   OsWindow::sInstance->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
   mouseEvent.EventId = Events::OsMouseScroll;

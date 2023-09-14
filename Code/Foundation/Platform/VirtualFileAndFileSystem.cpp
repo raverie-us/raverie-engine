@@ -284,7 +284,16 @@ bool CopyFileInternal(StringParam dest, StringParam source)
   if (!sourceEntry || sourceEntry->mType != EntryType::File)
     return false;
 
-  SystemEntry* destEntry = FileSystem::GetInstance()->CreateEntry(dest, sourceEntry->mType);
+  SystemEntry* destEntry = FileSystem::GetInstance()->FindEntry(dest);
+  if (destEntry) {
+    // We can't copy a file over the top of a directory
+    if (destEntry->mType == EntryType::Directory) {
+      return false;
+    }
+  } else {
+    destEntry = FileSystem::GetInstance()->CreateEntry(dest, EntryType::File);
+  }
+
   sourceEntry->CopyTo(destEntry);
   return true;
 }
@@ -294,6 +303,18 @@ bool MoveFileInternal(StringParam dest, StringParam source)
   SystemEntry* sourceEntry = FileSystem::GetInstance()->FindEntry(source);
   if (!sourceEntry || sourceEntry->mType != EntryType::File)
     return false;
+
+  SystemEntry* destEntry = FileSystem::GetInstance()->FindEntry(dest);
+
+  if (destEntry) {
+    // We can't move a file over the top of a directory
+    if (destEntry->mType == EntryType::Directory) {
+      return false;
+    }
+    
+    // It must be a file that exists there, so delete the file
+    destEntry->Delete();
+  }
 
   String dirDest = FilePath::GetDirectoryPath(dest);
   SystemEntry* dirEntry = FileSystem::GetInstance()->CreateEntry(dirDest, EntryType::Directory);
@@ -670,6 +691,18 @@ void File::Duplicate(Status& status, File& destinationFile)
   }
 
   self->mEntry->CopyTo(other->mEntry);
+}
+
+void ZeroExportNamed(ExportFileCreate)(const char* filePath, const byte* data, size_t dataLength) {
+  DataBlock block;
+  block.Data = (byte*)zAllocate(dataLength);
+  memcpy(block.Data, data, dataLength);
+  block.Size = dataLength;
+  AddVirtualFileSystemEntry(filePath, &block, time(0));
+}
+
+void ZeroExportNamed(ExportFileDelete)(const char* filePath) {
+  FileSystem::GetInstance()->DeleteEntry(filePath);
 }
 
 } // namespace Zero

@@ -84,7 +84,6 @@ ShellWindow::ShellWindow(Shell* shell,
     mUserData(nullptr),
     mOnClose(nullptr),
     mOnFocusChanged(nullptr),
-    mOnMouseDropFiles(nullptr),
     mOnClientSizeChanged(nullptr),
     mOnDevicesChanged(nullptr),
     mOnInputDeviceChanged(nullptr)

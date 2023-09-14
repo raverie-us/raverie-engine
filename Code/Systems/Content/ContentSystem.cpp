@@ -344,8 +344,8 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status, AddContentIt
 
         if (existingItem)
         {
-          // Replacing content file
-          CopyFile(fullPath, info.ExternalFile);
+          // Replacing content file, note that we always move/steal files since we're using a virtual file system
+          MoveFile(fullPath, info.ExternalFile);
 
           // Fill out our content initializer, this has information for the new
           // content options
@@ -406,8 +406,8 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status, AddContentIt
       }
     }
 
-    // Copy into content library
-    CopyFile(fullPath, info.ExternalFile);
+    // Copy into content library, note that we always move/steal files since we're using a virtual file system
+    MoveFile(fullPath, info.ExternalFile);
 
     // Delete file if something fails
     cleanUp.FileToDelete = fullPath;

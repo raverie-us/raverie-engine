@@ -200,6 +200,18 @@ export interface MessagePaste {
   text: string;
 }
 
+export interface MessagePartFile {
+  fileName: string;
+  buffer: ArrayBuffer;
+}
+
+export interface MessageFilesDropped {
+  type: "filesDropped";
+  clientX: number;
+  clientY: number;
+  files: MessagePartFile[];
+}
+
 export type ToWorkerMessageType =
   MessageInitialize |
   MessageMouseMove |
@@ -208,7 +220,8 @@ export type ToWorkerMessageType =
   MessageKeyboardButtonChanged |
   MessageTextTyped |
   MessageCopy |
-  MessagePaste;
+  MessagePaste |
+  MessageFilesDropped;
 
 export interface MessageYieldDraw {
   type: "yieldDraw";

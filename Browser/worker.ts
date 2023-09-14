@@ -538,8 +538,8 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
           cursor
         });
       },
-      ImportDownloadFile: (filenamePointer: number, dataPointer: number, dataLength: number) => {
-        const filename = readNullTerminatedString(filenamePointer);
+      ImportDownloadFile: (fileNamePointer: number, dataPointer: number, dataLength: number) => {
+        const filename = readNullTerminatedString(fileNamePointer);
         const buffer = readBuffer(dataPointer, dataLength);
         mainPostMessage<MessageDownloadFile>({
           type: "downloadFile",
@@ -573,6 +573,10 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
   const ExportQuit = instance.exports.ExportQuit as () => void;
   const ExportCopy = instance.exports.ExportCopy as (isCut: boolean) => number;
   const ExportPaste = instance.exports.ExportPaste as (charPtr: number) => void;
+  const ExportFileCreate = instance.exports.ExportFileCreate as (filePathCharPtr: number, dataBytePtr: number, dataLength: number) => void;
+  const ExportFileDelete = instance.exports.ExportFileDelete as (filePathCharPtr: number) => void;
+  const ExportFileDropAdd = instance.exports.ExportFileDropAdd as (filePathCharPtr: number) => void;
+  const ExportFileDropFinish = instance.exports.ExportFileDropFinish as (clientX: number, clientY: number) => void;
 
   const allocateAndCopy = (buffer: Uint8Array) => {
     const pointer = ExportAllocate(buffer.byteLength);
@@ -608,9 +612,25 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
         });
         break;
       case "paste": {
-        const text = allocateNullTerminatedString(data.text);
-        ExportPaste(text);
-        ExportFree(text);
+        const charPtr = allocateNullTerminatedString(data.text);
+        ExportPaste(charPtr);
+        ExportFree(charPtr);
+        break;
+      }
+      case "filesDropped": {
+        const filePathCharPtrs: number[] = [];
+        for (const file of data.files) {
+          // When dropping files, we write them all to /tmp/ and add the absolute file paths to a drop context
+          const filePathCharPtr = allocateNullTerminatedString(`/tmp/${file.fileName}`);
+          const dataBytePtr = allocateAndCopy(new Uint8Array(file.buffer));
+          ExportFileCreate(filePathCharPtr, dataBytePtr, file.buffer.byteLength);
+          ExportFileDropAdd(filePathCharPtr);
+          filePathCharPtrs.push(filePathCharPtr);
+          ExportFree(filePathCharPtr);
+        }
+        
+        // Once all files have been added, we complete the drop with the coordinates
+        ExportFileDropFinish(data.clientX, data.clientY);
         break;
       }
     }
@@ -671,9 +691,9 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
     }
   }
 
-  const commandLine = allocateNullTerminatedString(args);
-  ExportInitialize(commandLine);
-  ExportFree(commandLine);
+  const commandLineCharPtr = allocateNullTerminatedString(args);
+  ExportInitialize(commandLineCharPtr);
+  ExportFree(commandLineCharPtr);
 
   let mustSendYieldComplete = false;
   const doUpdate = () => {

@@ -125,13 +125,8 @@ public:
   // ShellWindow interface
   static void ShellWindowOnClose(ShellWindow* window);
   static void ShellWindowOnFocusChanged(bool activated, ShellWindow* window);
-  static void ShellWindowOnMouseDropFiles(Math::IntVec2Param clientPosition,
-                                          const Array<String>& files,
-                                          ShellWindow* window);
   static void ShellWindowOnClientSizeChanged(Math::IntVec2Param clientSize, ShellWindow* window);
   static void ShellWindowOnMinimized(ShellWindow* window);
-  static void ShellWindowOnMouseScrollY(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
-  static void ShellWindowOnMouseScrollX(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
   static void ShellWindowOnDevicesChanged(ShellWindow* window);
   static WindowBorderArea::Enum ShellWindowOnHitTest(Math::IntVec2Param clientPosition, ShellWindow* window);
   static void ShellWindowOnInputDeviceChanged(

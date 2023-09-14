@@ -260,7 +260,7 @@ double ZeroImportNamed(ImportClock)(int32_t clockId);
 void ZeroImportNamed(ImportYield)();
 void ZeroImportNamed(ImportMouseTrap)(bool value);
 void ZeroImportNamed(ImportMouseSetCursor)(Zero::Cursor::Enum cursor);
-void ZeroImportNamed(ImportDownloadFile)(const char* filename, const byte* data, size_t dataLength);
+void ZeroImportNamed(ImportDownloadFile)(const char* fileName, const byte* data, size_t dataLength);
 uint64_t ZeroImportNamed(ImportRandomUnique)();
 
 void* ZeroExportNamed(ExportAllocate)(size_t size);
@@ -275,6 +275,10 @@ void ZeroExportNamed(ExportKeyboardButtonChanged)(Zero::Keys::Enum key, Zero::Ke
 void ZeroExportNamed(ExportTextTyped)(uint32_t rune);
 const char* ZeroExportNamed(ExportCopy)(bool isCut);
 void ZeroExportNamed(ExportPaste)(const char* text);
+void ZeroExportNamed(ExportFileCreate)(const char* filePath, const byte* data, size_t dataLength);
+void ZeroExportNamed(ExportFileDelete)(const char* filePath);
+void ZeroExportNamed(ExportFileDropAdd)(const char* filePath);
+void ZeroExportNamed(ExportFileDropFinish)(int32_t clientX, int32_t clientY);
 void ZeroExportNamed(ExportQuit)();
 
 }

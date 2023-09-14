@@ -118,40 +118,6 @@ void Shell::Update()
       break;
     }
 
-    case SDL_DROPBEGIN:
-    case SDL_DROPCOMPLETE:
-    case SDL_DROPFILE:
-    {
-      ShellWindow* window = GetShellWindowFromSDLId(e.drop.windowID);
-      DropFileInfo& info = self->mDropInfos[e.drop.windowID];
-      if (e.type == SDL_DROPBEGIN)
-      {
-        ErrorIf(info.mBeganDropFiles, "Got SDL_DROPBEGIN while another SDL_DROPBEGIN was in progress");
-        info.mBeganDropFiles = true;
-      }
-      else if (e.type == SDL_DROPCOMPLETE)
-      {
-        ErrorIf(!info.mBeganDropFiles, "Got SDL_DROPCOMPLETE without a SDL_DROPBEGIN");
-        info.mBeganDropFiles = false;
-      }
-      else if (e.type == SDL_DROPFILE)
-      {
-        info.mDropFiles.PushBack(e.drop.file);
-      }
-
-      // If this is a drop file without a begin, or it's a drop complete and
-      // we're ending a drop...
-      if (window && window->mOnMouseDropFiles && !info.mBeganDropFiles)
-      {
-        IntVec2 clientPosition = IntVec2::cZero;
-        SDL_GetMouseState(&clientPosition.x, &clientPosition.y);
-
-        window->mOnMouseDropFiles(clientPosition, info.mDropFiles, window);
-        info.mDropFiles.Clear();
-        SDL_free(e.drop.file);
-      }
-      break;
-    }
 
     case SDL_JOYDEVICEADDED:
     case SDL_JOYDEVICEREMOVED:
@@ -194,7 +160,6 @@ ShellWindow::ShellWindow(Shell* shell,
     mUserData(nullptr),
     mOnClose(nullptr),
     mOnFocusChanged(nullptr),
-    mOnMouseDropFiles(nullptr),
     mOnClientSizeChanged(nullptr),
     mOnDevicesChanged(nullptr),
     mOnHitTest(nullptr),
