@@ -166,7 +166,8 @@ canvas.addEventListener("wheel", (event) => {
     scrollX: event.deltaX * SCROLL_SCALE,
     scrollY: -event.deltaY * SCROLL_SCALE,
   });
-});
+  event.preventDefault();
+}, {passive: false});
 
 const mapMouseButton = (button: number): MouseButtons => {
   switch (button) {
