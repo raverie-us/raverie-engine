@@ -358,16 +358,48 @@ const copyCutHandler = (event: ClipboardEvent) => {
   }
 };
 
+const dropFiles = async (dataTransfer: DataTransfer, clientX: number, clientY: number) => {
+  const files: MessagePartFile[] = [];
+  for (const file of dataTransfer.files) {
+    files.push({
+      fileName: file.name,
+      buffer: await file.arrayBuffer()
+    });
+  }
+
+  const rect = canvas.getBoundingClientRect();
+  workerPostMessage<MessageFilesDropped>({
+    type: "filesDropped",
+    clientX,
+    clientY,
+    files
+  });
+}
+
 // These two event handlers don't work on the canvas (only on document) so we must check focus
 document.addEventListener("copy", copyCutHandler);
 document.addEventListener("paste", (event) => {
-  if (document.activeElement === canvas && (event.clipboardData || emulatedClipboardText)) {
-    workerPostMessage<MessagePaste>({
-      type: "paste",
-      text: emulatedClipboardText || event.clipboardData!.getData("text/plain")
-    });
-    emulatedClipboardText = null;
-    event.preventDefault();
+  if (document.activeElement === canvas) {
+    let dataTransfer = event.clipboardData;
+    if (emulatedClipboardText) {
+      dataTransfer = new DataTransfer();
+      dataTransfer.setData("text/plain", emulatedClipboardText);
+      emulatedClipboardText = null;
+    }
+
+    if (dataTransfer) {
+      event.preventDefault();
+      
+      if (dataTransfer.files.length > 0) {
+        // Pretend to drop the file at 0,0
+        dropFiles(dataTransfer, 0, 0);
+      } else {
+        workerPostMessage<MessagePaste>({
+          type: "paste",
+          text: emulatedClipboardText || dataTransfer.getData("text/plain")
+        });
+      }
+    }
   }
 });
 
@@ -376,23 +408,10 @@ canvas.addEventListener("dragover", (event) => {
   event.preventDefault();
 });
 
-canvas.addEventListener("drop", async (event) => {
+canvas.addEventListener("drop", (event) => {
   event.preventDefault();
   if (event.dataTransfer) {
-    const files: MessagePartFile[] = [];
-    for (const file of event.dataTransfer.files) {
-      files.push({
-        fileName: file.name,
-        buffer: await file.arrayBuffer()
-      });
-    }
-
     const rect = canvas.getBoundingClientRect();
-    workerPostMessage<MessageFilesDropped>({
-      type: "filesDropped",
-      clientX: event.clientX - rect.left,
-      clientY: event.clientY - rect.top,
-      files
-    });
+    dropFiles(event.dataTransfer, event.clientX - rect.left, event.clientY - rect.top);
   }
 });
