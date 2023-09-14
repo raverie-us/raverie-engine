@@ -587,7 +587,7 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
     return allocateAndCopy(encoder.encode(`${str}\0`))
   }
 
-  addEventListener("message", (event: MessageEvent<ToWorkerMessageType>) => {
+  const onMessage = (event: MessageEvent<ToWorkerMessageType>) => {
     const data = event.data;
     switch (data.type) {
       case "mouseMove":
@@ -634,7 +634,17 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
         break;
       }
     }
-  });
+  };
+  addEventListener("message", onMessage);
+
+  let requestedAnimationFrame = -1;
+  const handleCrash = () => {
+    cancelAnimationFrame(requestedAnimationFrame);
+    removeEventListener("message", onMessage);
+    ExportHandleCrash();
+  };
+  addEventListener("error", handleCrash);
+  addEventListener("unhandledrejection", handleCrash);
 
   const decoder = new TextDecoder();
   const encoder = new TextEncoder();
@@ -697,7 +707,7 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
 
   let mustSendYieldComplete = false;
   const doUpdate = () => {
-    requestAnimationFrame(doUpdate);
+    requestedAnimationFrame = requestAnimationFrame(doUpdate);
     ExportRunIteration();
 
     if (yieldedThisFrame) {
