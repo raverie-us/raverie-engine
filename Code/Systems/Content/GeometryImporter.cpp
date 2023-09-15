@@ -93,6 +93,10 @@ GeometryProcessorCodes::Enum GeometryImporter::ProcessModelFiles()
   // read the file.
   DataBlock block = ReadFileIntoDataBlock(mInputFile.c_str());
   mScene = mAssetImporter.ReadFileFromMemory(block.Data, block.Size, flags);
+  if (!mScene) {
+    String extension = FilePath::GetExtension(mInputFile);
+    mScene = mAssetImporter.ReadFileFromMemory(block.Data, block.Size, flags, extension.c_str());
+  }
   zDeallocate(block.Data);
   ZPrint("Processing model: %s\n", FilePath::GetFileNameWithoutExtension(mInputFile).Data());
 
