@@ -261,6 +261,7 @@ void ZeroImportNamed(ImportYield)();
 void ZeroImportNamed(ImportMouseTrap)(bool value);
 void ZeroImportNamed(ImportMouseSetCursor)(Zero::Cursor::Enum cursor);
 void ZeroImportNamed(ImportDownloadFile)(const char* fileName, const byte* data, size_t dataLength);
+void ZeroImportNamed(ImportOpenFileDialog)(void* dialog, bool multiple, const char* accept);
 uint64_t ZeroImportNamed(ImportRandomUnique)();
 
 void* ZeroExportNamed(ExportAllocate)(size_t size);
@@ -279,6 +280,8 @@ void ZeroExportNamed(ExportFileCreate)(const char* filePath, const byte* data, s
 void ZeroExportNamed(ExportFileDelete)(const char* filePath);
 void ZeroExportNamed(ExportFileDropAdd)(const char* filePath);
 void ZeroExportNamed(ExportFileDropFinish)(int32_t clientX, int32_t clientY);
+void ZeroExportNamed(ExportOpenFileDialogAdd)(void* dialog, const char* filePath);
+void ZeroExportNamed(ExportOpenFileDialogFinish)(void* dialog);
 void ZeroExportNamed(ExportQuit)();
 
 }

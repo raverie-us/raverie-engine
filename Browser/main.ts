@@ -10,6 +10,7 @@ import {
   MessageMouseButtonChanged,
   MessageMouseMove,
   MessageMouseScroll,
+  MessageOpenFileDialogFinish,
   MessagePartFile,
   MessagePaste,
   MessageTextTyped,
@@ -41,8 +42,13 @@ yieldCanvas.height = canvas.height;
 canvas.append(yieldCanvas);
 const yieldContext = yieldCanvas.getContext("2d")!;
 
+const input = document.createElement("input");
+input.type = "file";
+let currentDialog: number | null = null;
+
 parent.append(canvas);
 parent.append(yieldCanvas);
+parent.append(input);
 document.body.append(parent);
 
 let emulatedClipboardText: string | null = null;
@@ -128,7 +134,15 @@ worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
         } else {
           // In an insecure context, we emulate copy local to the page since we can't set the clipboard immediately
           emulatedClipboardText = data.text;
+          console.log("Copy Data Below:");
+          console.log(emulatedClipboardText);
         }
+        break;
+      case "openFileDialog":
+        input.accept = data.accept;
+        input.multiple = data.multiple;
+        currentDialog = data.dialog;
+        input.click();
         break;
   }
 });
@@ -140,6 +154,28 @@ const workerPostMessage = <T extends ToWorkerMessageType>(message: T, transfer?:
     worker.postMessage(message);
   }
 }
+
+input.addEventListener("change", async (event) => {
+  if (currentDialog) {
+    const files: MessagePartFile[] = [];
+    if (input.files) {
+      for (const file of input.files) {
+        files.push({
+          fileName: file.name,
+          buffer: await file.arrayBuffer()
+        });
+      }
+    }
+    console.log(files);
+
+    workerPostMessage<MessageOpenFileDialogFinish>({
+      type: "openFileDialogFinish",
+      dialog: currentDialog,
+      files
+    });
+    currentDialog = null;
+  }
+});
 
 workerPostMessage<MessageInitialize>({
   type: "initialize",

@@ -3,8 +3,6 @@
 
 namespace Zero
 {
-DeclareBitField2(FileDialogFlags, MultiSelect, Folder);
-
 static const IntVec2 cMinimumMonitorSize(1024, 768);
 
 struct FileDialogFilter
@@ -27,13 +25,11 @@ struct FileDialogInfo
   FileDialogInfo();
   void AddFilter(StringParam description, StringParam filter);
 
-  String Title;
-  String StartingDirectory;
   Array<FileDialogFilter> mSearchFilters;
   // Should not include '.'
   String mDefaultSaveExtension;
   String DefaultFileName;
-  FileDialogFlags::Type Flags;
+  bool mMultiple = false;
   FileDialogCallback mCallback;
   void* mUserData;
 

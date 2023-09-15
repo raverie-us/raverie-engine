@@ -49,6 +49,34 @@ void Shell::SetMouseCursor(Cursor::Enum cursor)
 
 void Shell::OpenFile(FileDialogInfo& config)
 {
+  StringBuilder acceptExtensions;
+  forRange (FileDialogFilter& filter, config.mSearchFilters)
+  {
+    if (acceptExtensions.GetSize() != 0)
+      acceptExtensions.Append(',');
+
+    // Filter out all the wildcard stars '*' since (currently cannot use them)
+    forRange (Rune rune, filter.mFilter)
+    {
+      if (rune == ';')
+        acceptExtensions.Append(',');
+      else if (rune != '*')
+        acceptExtensions.Append(rune);
+    }
+  }
+
+  String accept = acceptExtensions.ToString();
+  ImportOpenFileDialog(&config, config.mMultiple, accept.c_str());
+}
+
+void ZeroExportNamed(ExportOpenFileDialogAdd)(void* dialog, const char* filePath) {
+  FileDialogInfo& config = *(FileDialogInfo*)dialog;
+  config.mFiles.PushBack(filePath);
+}
+
+void ZeroExportNamed(ExportOpenFileDialogFinish)(void* dialog) {
+  FileDialogInfo& config = *(FileDialogInfo*)dialog;
+  config.mCallback(config.mFiles, config.mUserData);
 }
 
 void Shell::SaveFile(FileDialogInfo& config)

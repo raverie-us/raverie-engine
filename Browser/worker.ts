@@ -7,7 +7,8 @@ import {
   MessageMouseSetCursor,
   MessageDownloadFile,
   ToMainMessageType,
-  MessageCopyData
+  MessageCopyData,
+  MessageOpenFileDialog
 } from "./shared";
 
 const modulePromise = WebAssembly.compileStreaming(fetch(wasmUrl));
@@ -552,7 +553,15 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
         crypto.getRandomValues(buffer);
         const view = new DataView(buffer.buffer);
         return view.getBigUint64(0);
-      }
+      },
+      ImportOpenFileDialog: (dialog: number, multiple: boolean, acceptCharPtr: number) => {
+        mainPostMessage<MessageOpenFileDialog>({
+          type: "openFileDialog",
+          dialog,
+          multiple,
+          accept: readNullTerminatedString(acceptCharPtr)
+        });
+      },
     }
   };
 
@@ -577,6 +586,8 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
   const ExportFileDelete = instance.exports.ExportFileDelete as (filePathCharPtr: number) => void;
   const ExportFileDropAdd = instance.exports.ExportFileDropAdd as (filePathCharPtr: number) => void;
   const ExportFileDropFinish = instance.exports.ExportFileDropFinish as (clientX: number, clientY: number) => void;
+  const ExportOpenFileDialogAdd = instance.exports.ExportOpenFileDialogAdd as (dialog: number, filePathCharPtr: number) => void;
+  const ExportOpenFileDialogFinish = instance.exports.ExportOpenFileDialogFinish as (dialog: number) => void;
 
   const allocateAndCopy = (buffer: Uint8Array) => {
     const pointer = ExportAllocate(buffer.byteLength);
@@ -618,19 +629,31 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
         break;
       }
       case "filesDropped": {
-        const filePathCharPtrs: number[] = [];
         for (const file of data.files) {
           // When dropping files, we write them all to /tmp/ and add the absolute file paths to a drop context
           const filePathCharPtr = allocateNullTerminatedString(`/tmp/${file.fileName}`);
           const dataBytePtr = allocateAndCopy(new Uint8Array(file.buffer));
           ExportFileCreate(filePathCharPtr, dataBytePtr, file.buffer.byteLength);
           ExportFileDropAdd(filePathCharPtr);
-          filePathCharPtrs.push(filePathCharPtr);
           ExportFree(filePathCharPtr);
         }
         
         // Once all files have been added, we complete the drop with the coordinates
         ExportFileDropFinish(data.clientX, data.clientY);
+        break;
+      }
+      case "openFileDialogFinish": {
+        for (const file of data.files) {
+          // When opening files, we write them all to /tmp/ and add the absolute file paths to a dialog context
+          const filePathCharPtr = allocateNullTerminatedString(`/tmp/${file.fileName}`);
+          const dataBytePtr = allocateAndCopy(new Uint8Array(file.buffer));
+          ExportFileCreate(filePathCharPtr, dataBytePtr, file.buffer.byteLength);
+          ExportOpenFileDialogAdd(data.dialog, filePathCharPtr);
+          ExportFree(filePathCharPtr);
+        }
+        
+        // Once all files have been added, we complete the dialog
+        ExportOpenFileDialogFinish(data.dialog);
         break;
       }
     }

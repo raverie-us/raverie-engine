@@ -22,9 +22,7 @@ void ImportHeightMap(Editor* editor)
   FileDialogConfig* config = FileDialogConfig::Create();
   config->EventName = "OnFileSelected";
   config->CallbackObject = importer;
-  config->Title = "Select height map to import";
   BuildImageFileDialogFilters(config->mSearchFilters);
-  config->StartingDirectory = editor->GetProjectPath();
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 

@@ -360,7 +360,6 @@ void ImportContentPackage()
   FileDialogConfig* config = FileDialogConfig::Create();
   config->EventName = "OnImportFileSelected";
   config->CallbackObject = widget;
-  config->Title = "Import Package";
   config->AddFilter("Import Pack File", "*.zeropack");
   Z::gEngine->has(OsShell)->OpenFile(config);
 }

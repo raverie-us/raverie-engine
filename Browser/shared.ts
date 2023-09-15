@@ -212,6 +212,12 @@ export interface MessageFilesDropped {
   files: MessagePartFile[];
 }
 
+export interface MessageOpenFileDialogFinish {
+  type: "openFileDialogFinish";
+  dialog: number;
+  files: MessagePartFile[];
+}
+
 export type ToWorkerMessageType =
   MessageInitialize |
   MessageMouseMove |
@@ -221,7 +227,8 @@ export type ToWorkerMessageType =
   MessageTextTyped |
   MessageCopy |
   MessagePaste |
-  MessageFilesDropped;
+  MessageFilesDropped |
+  MessageOpenFileDialogFinish;
 
 export interface MessageYieldDraw {
   type: "yieldDraw";
@@ -255,10 +262,18 @@ export interface MessageCopyData {
   text: string;
 }
 
+export interface MessageOpenFileDialog {
+  type: "openFileDialog";
+  dialog: number;
+  multiple: boolean;
+  accept: string;
+}
+
 export type ToMainMessageType =
   MessageYieldDraw |
   MessageYieldComplete |
   MessageMouseTrap |
   MessageMouseSetCursor |
   MessageDownloadFile |
-  MessageCopyData;
+  MessageCopyData |
+  MessageOpenFileDialog;

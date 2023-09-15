@@ -23,7 +23,7 @@ PostAddResourceEvent::PostAddResourceEvent(PostAddOp& postAdd, ResourceAdd* reso
 {
 }
 
-const String cFilesSelected = "cFilesSelected";
+const String cFilesSelected = "FilesSelected";
 
 AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window, StringParam resourceName)
 {
@@ -389,11 +389,10 @@ bool ResourceTypeSearch::TakeFocusOverride()
 void ResourceTypeSearch::OnImportClicked(Event*)
 {
   FileDialogConfig* config = FileDialogConfig::Create();
-  config->EventName = "cFilesSelected";
+  config->EventName = cFilesSelected;
   config->CallbackObject = this;
-  config->Title = "Add a content file";
   config->AddFilter("All Content (*.*)", "*.*");
-  config->Flags = FileDialogFlags::MultiSelect;
+  config->mMultiple = true;
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 
@@ -628,14 +627,13 @@ void ResourceTemplateSearch::UpdateTransform()
 void ResourceTemplateSearch::OnImportClicked(Event*)
 {
   FileDialogConfig* config = FileDialogConfig::Create();
-  config->EventName = "cFilesSelected";
+  config->EventName = cFilesSelected;
   config->CallbackObject = this;
-  config->Title = String::Format("Add a %s", mManager->GetResourceType()->Name.c_str());
 
   forRange (FileDialogFilter& filter, mManager->mOpenFileFilters)
     config->mSearchFilters.PushBack(filter);
 
-  config->Flags = FileDialogFlags::MultiSelect;
+  config->mMultiple = true;
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 

@@ -341,9 +341,8 @@ void ImportCallback::Open()
   FileDialogConfig* config = FileDialogConfig::Create();
   config->EventName = "OnFileSelected";
   config->CallbackObject = this;
-  config->Title = "Select resource";
   config->AddFilter("ResourceFile", "*.*");
-  config->Flags |= FileDialogFlags::MultiSelect;
+  config->mMultiple = true;
 
   ConnectThisTo(this, config->EventName, OnFilesSelected);
   Z::gEngine->has(OsShell)->OpenFile(config);
