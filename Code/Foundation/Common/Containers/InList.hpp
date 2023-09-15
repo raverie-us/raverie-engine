@@ -36,7 +36,7 @@ public:
 };
 
 template <typename Parent, typename Member>
-inline ptrdiff_t PointerToMemberOffset(const Member Parent::*ptrToMember)
+__attribute__ ((optnone)) inline ptrdiff_t PointerToMemberOffset(const Member Parent::*ptrToMember)
 {
   return (ptrdiff_t)ZeroOffsetOfHelper(Parent, ->*, ptrToMember);
 }
