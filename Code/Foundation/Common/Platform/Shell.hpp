@@ -274,9 +274,6 @@ public:
   Array<PlatformButton> mButtons;
 };
 
-/// Border of the window for manipulation
-DeclareEnum10(WindowBorderArea, Title, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight, None);
-
 DeclareEnum3(ProgressType, Normal, Indeterminate, None);
 
 class PlatformInputDevice;
@@ -348,10 +345,6 @@ public:
 
   /// Called when any hardware devices change.
   //void (*mOnDevicesChanged)();
-
-  /// Called when the window is asking if a position should result in dragging
-  /// or resizing the window.
-  //WindowBorderArea::Enum (*mOnHitTest)(Math::IntVec2Param clientPosition);
 
   /// Called when an input device is updated.
   //void (*mOnInputDeviceChanged)(

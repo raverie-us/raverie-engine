@@ -46,8 +46,6 @@ public:
   Composite* mMenuArea;
   Element* mBorder;
   Element* mTitleBack;
-  GripZones* mSizeGrips;
-  Gripper* mTitleGrip;
 
   Label* mTitleText;
   Composite* mTitleBar;
@@ -58,7 +56,7 @@ public:
   Vec2 mLayoutSize;
 };
 
-class OsDocker : public Docker
+class MainDocker : public Docker
 {
 public:
   void Dock(Widget* widget, DockArea::Enum area) override{};
@@ -68,7 +66,6 @@ public:
   }
   void Zoom(Widget* widget) override{};
   void WidgetDestroyed(Widget* widget) override;
-  WindowBorderArea::Enum GetWindowBorderArea(Widget* widget, DockMode::Enum direction) override;
 };
 
 } // namespace Zero

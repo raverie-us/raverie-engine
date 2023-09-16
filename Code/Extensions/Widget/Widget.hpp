@@ -52,10 +52,6 @@ public:
   {
     return false;
   }
-  virtual WindowBorderArea::Enum GetWindowBorderArea(Widget* widget, DockMode::Enum direction)
-  {
-    return WindowBorderArea::None;
-  }
   virtual ~Docker()
   {
   }

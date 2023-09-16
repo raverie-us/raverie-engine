@@ -57,11 +57,9 @@ MainWindow::MainWindow() : RootWidget()
   mWindowWidget = new Composite(this, AttachType::Direct);
   mPopUp = new Composite(this, AttachType::Direct);
 
-  mSizeGrips = new GripZones(this, this);
-  mDocker = new OsDocker();
+  mDocker = new MainDocker();
 
   mBorder = mWindowWidget->CreateAttached<Element>(cWhiteSquareBorder);
-  mTitleGrip = new Gripper(mWindowWidget, this, DockMode::DockFill);
 
   mClientWidget = new Composite(this, AttachType::Direct);
   mClientWidget->SetName("Client");
@@ -136,7 +134,6 @@ void MainWindow::UpdateTransform()
 {
   Vec2 size = ToVec2(Shell::sInstance->GetClientSize());
 
-  mSizeGrips->MoveToFront();
   mPopUp->MoveToFront();
 
   bool sizeUpdated = false;
@@ -151,15 +148,11 @@ void MainWindow::UpdateTransform()
 
     mLayoutSize = mSize;
     mSize = size;
-    mSizeGrips->SetSize(size);
     mPopUp->SetSize(mSize);
-
-    mTitleGrip->SetTranslation(Vec3(0, 0, 0));
 
     Thickness border = Thickness(MainWindowUi::BorderPadding);
 
     Vec2 titleBarSize = Vec2(size.x - border.Size().x, 20.0f);
-    mTitleGrip->SetSize(titleBarSize);
     mBorder->SetSize(size);
 
     mTitleBar->SetSize(titleBarSize);
@@ -215,30 +208,7 @@ void MainWindow::UpdateTransform()
   }
 }
 
-WindowBorderArea::Enum OsDocker::GetWindowBorderArea(Widget* widget, DockMode::Enum direction)
-{
-  if (direction == DockMode::DockFill)
-    return WindowBorderArea::Title;
-  else if (direction == DockMode::DockTop)
-    return WindowBorderArea::Top;
-  else if (direction == DockMode::DockLeft)
-    return WindowBorderArea::Left;
-  else if (direction == DockMode::DockRight)
-    return WindowBorderArea::Right;
-  else if (direction == DockMode::DockBottom)
-    return WindowBorderArea::Bottom;
-  else if (direction == (DockMode::DockBottom | DockMode::DockRight))
-    return WindowBorderArea::BottomRight;
-  else if (direction == (DockMode::DockBottom | DockMode::DockLeft))
-    return WindowBorderArea::BottomLeft;
-  else if (direction == (DockMode::DockTop | DockMode::DockRight))
-    return WindowBorderArea::TopRight;
-  else if (direction == (DockMode::DockTop | DockMode::DockLeft))
-    return WindowBorderArea::TopLeft;
-  return WindowBorderArea::None;
-}
-
-void OsDocker::WidgetDestroyed(Widget* widget)
+void MainDocker::WidgetDestroyed(Widget* widget)
 {
   RootWidget* root = widget->GetRootWidget();
   root->Destroy();

@@ -74,7 +74,6 @@ public:
   static void ShellWOnFocusChanged(bool activated);
   static void ShellWOnClientSizeChanged(Math::IntVec2Param clientSize);
   static void ShellWOnDevicesChanged();
-  static WindowBorderArea::Enum ShellWOnHitTest(Math::IntVec2Param clientPosition);
   static void ShellWOnInputDeviceChanged(
       PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data);
 
@@ -125,9 +124,6 @@ public:
   OsWindowBorderHitTest();
 
   IntVec2 ClientPosition;
-
-  // This should be set by the receiver of the event.
-  WindowBorderArea::Enum mWindowBorderArea;
 };
 
 /// Files have been dropped on a OsShellWindow

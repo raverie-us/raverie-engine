@@ -117,8 +117,6 @@ Gripper::Gripper(Composite* parent, Widget* target, DockMode::Enum gripDirection
   ConnectThisTo(this, Events::MouseExit, OnMouseExit);
   ConnectThisTo(this, Events::LeftMouseDown, OnMouseDown);
   ConnectThisTo(this, Events::LeftMouseDrag, OnMouseDrag);
-  ;
-  ConnectThisTo(this, Events::OsWindowBorderHitTest, OnOsWindowBorderHitTest);
 }
 
 void Gripper::OnMouseDrag(MouseEvent* event)
@@ -172,18 +170,6 @@ void Gripper::OnMouseDown(MouseEvent* event)
     docker->StartManipulation(target, mGripDirection);
   else
     new SizingManipulation(event->GetMouse(), target, mGripDirection);
-}
-
-void Gripper::OnOsWindowBorderHitTest(OsWindowBorderHitTest* event)
-{
-  Widget* target = mTarget;
-  if (Docker* docker = target->GetDocker())
-  {
-    WindowBorderArea::Enum area = docker->GetWindowBorderArea(target, mGripDirection);
-
-    if (area != WindowBorderArea::None)
-      event->mWindowBorderArea = area;
-  }
 }
 
 GripZones::GripZones(Composite* owner, Widget* sizeTarget) : Composite(owner, AttachType::Direct)

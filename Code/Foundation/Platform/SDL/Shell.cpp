@@ -84,7 +84,6 @@ Shell::Shell(Math::IntVec2Param clientSize) :
     mOnFocusChanged(nullptr),
     mOnClientSizeChanged(nullptr),
     mOnDevicesChanged(nullptr),
-    mOnHitTest(nullptr),
     mOnInputDeviceChanged(nullptr)
 {
 }

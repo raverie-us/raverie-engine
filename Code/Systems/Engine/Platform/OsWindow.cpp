@@ -44,7 +44,6 @@ OsWindow::OsWindow()
   //Shell::sInstance->mOnFocusChanged = &ShellWOnFocusChanged;
   //Shell::sInstance->mOnClientSizeChanged = &ShellWOnClientSizeChanged;
   //Shell::sInstance->mOnDevicesChanged = &ShellWOnDevicesChanged;
-  //Shell::sInstance->mOnHitTest = &ShellWOnHitTest;
   //Shell::sInstance->mOnInputDeviceChanged = &ShellWOnInputDeviceChanged;
 }
 
@@ -241,14 +240,6 @@ void OsWindow::ShellWOnDevicesChanged()
   Z::gJoysticks->JoysticksChanged();
 }
 
-WindowBorderArea::Enum OsWindow::ShellWOnHitTest(Math::IntVec2Param clientPosition)
-{
-  OsWindowBorderHitTest event;
-  event.ClientPosition = clientPosition;
-  OsWindow::sInstance->DispatchEvent(Events::OsWindowBorderHitTest, &event);
-  return event.mWindowBorderArea;
-}
-
 void OsWindow::ShellWOnInputDeviceChanged(
     PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data)
 {
@@ -344,8 +335,7 @@ ZilchDefineType(OsWindowBorderHitTest, builder, type)
 }
 
 OsWindowBorderHitTest::OsWindowBorderHitTest() :
-    ClientPosition(IntVec2::cZero),
-    mWindowBorderArea(WindowBorderArea::None)
+    ClientPosition(IntVec2::cZero)
 {
 }
 
