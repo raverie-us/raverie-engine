@@ -424,13 +424,6 @@ void FatalEngineError(cstr format, ...)
 
   // Print for log
   ZPrint("%s\n", message.c_str());
-
-  // Show Message Box
-  String finalMessage = BuildString(message,
-                                    " The engine will now exit. If this issue persists please"
-                                    " reinstall Zero Engine or contact support.");
-
-  Shell::sInstance->ShowMessageBox("Core Engine Error", finalMessage);
   abort();
 }
 

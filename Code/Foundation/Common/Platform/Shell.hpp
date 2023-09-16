@@ -313,9 +313,6 @@ public:
   /// Show the file open dialog. Results are returned via mCallback or mFiles.
   void OpenFile(FileDialogInfo& config);
 
-  /// Message box used for critical failures.
-  void ShowMessageBox(StringParam title, StringParam message);
-
   /// Scan for input new devices and store them. The shell must have
   /// created a main window for this to work properly on all platforms.
   const Array<PlatformInputDevice>& ScanInputDevices();

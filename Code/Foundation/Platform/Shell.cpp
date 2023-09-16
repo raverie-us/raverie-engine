@@ -74,10 +74,6 @@ void ZeroExportNamed(ExportOpenFileDialogFinish)(void* dialog) {
   config.mCallback(config.mFiles, config.mUserData);
 }
 
-void Shell::ShowMessageBox(StringParam title, StringParam message)
-{
-}
-
 const Array<PlatformInputDevice>& Shell::ScanInputDevices()
 {
   return mInputDevices;

@@ -3,36 +3,6 @@
 
 namespace Zero
 {
-Shell* Shell::sInstance;
-
-struct DropFileInfo
-{
-  bool mBeganDropFiles = false;
-  Array<String> mDropFiles;
-};
-
-struct ShellPrivateData
-{
-  HashMap<Uint32, DropFileInfo> mDropInfos;
-  Array<SDL_Cursor*> mSDLCursors;
-};
-
-
-#if !defined(ZeroPlatformNoShellOpenFile)
-void Shell::OpenFile(FileDialogInfo& config)
-{
-  SDL_ShowSimpleMessageBox(
-      SDL_MESSAGEBOX_WARNING, "Unsupported", "The file open dialog is not yet supported in SDL", nullptr);
-  if (config.mCallback)
-    config.mCallback(config.mFiles, config.mUserData);
-}
-#endif
-
-void Shell::ShowMessageBox(StringParam title, StringParam message)
-{
-  SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, title.c_str(), message.c_str(), nullptr);
-}
-
 void UpdateResize(Shell* window, IntVec2Param clientSize)
 {
   if (clientSize == window->mClientSize)
