@@ -138,58 +138,6 @@ void FileDialogInfo::AddFilter(StringParam description, StringParam filter)
   mSearchFilters.PushBack(FileDialogFilter(description, filter));
 }
 
-IntVec2 ShellWindow::GetMonitorClientPosition()
-{
-  return GetMonitorClientRectangle().TopLeft();
-}
-
-void ShellWindow::SetMonitorClientPosition(Math::IntVec2Param monitorPosition)
-{
-  IntRect monitorClientRectangle = GetMonitorClientRectangle();
-  monitorClientRectangle.X = monitorPosition.x;
-  monitorClientRectangle.Y = monitorPosition.y;
-  SetMonitorClientRectangle(monitorClientRectangle);
-}
-
-IntVec2 ShellWindow::GetClientSize()
-{
-  return GetMonitorClientRectangle().Size();
-}
-
-void ShellWindow::SetClientSize(Math::IntVec2Param clientSize)
-{
-  IntRect monitorClientRectangle = GetMonitorClientRectangle();
-  monitorClientRectangle.SizeX = clientSize.x;
-  monitorClientRectangle.SizeY = clientSize.y;
-  SetMonitorClientRectangle(monitorClientRectangle);
-}
-
-IntVec2 ShellWindow::GetMonitorBorderedPosition()
-{
-  return GetMonitorBorderedRectangle().TopLeft();
-}
-
-void ShellWindow::SetMonitorBorderedPosition(Math::IntVec2Param monitorPosition)
-{
-  IntRect monitorBorderedRectangle = GetMonitorBorderedRectangle();
-  monitorBorderedRectangle.X = monitorPosition.x;
-  monitorBorderedRectangle.Y = monitorPosition.y;
-  SetMonitorBorderedRectangle(monitorBorderedRectangle);
-}
-
-IntVec2 ShellWindow::GetBorderedSize()
-{
-  return GetMonitorBorderedRectangle().Size();
-}
-
-void ShellWindow::SetBorderedSize(Math::IntVec2Param borderedSize)
-{
-  IntRect monitorBorderedRectangle = GetMonitorBorderedRectangle();
-  monitorBorderedRectangle.SizeX = borderedSize.x;
-  monitorBorderedRectangle.SizeY = borderedSize.y;
-  SetMonitorBorderedRectangle(monitorBorderedRectangle);
-}
-
 static HashMap<uint, String> InternalGenerateUsageNames()
 {
   HashMap<uint, String> names;

@@ -23,7 +23,7 @@ void ImportHeightMap(Editor* editor)
   config->EventName = "OnFileSelected";
   config->CallbackObject = importer;
   BuildImageFileDialogFilters(config->mSearchFilters);
-  Z::gEngine->has(OsShell)->OpenFile(config);
+  Shell::sInstance->OpenFile(*config);
 }
 
 ZilchDefineType(HeightMapImporter, builder, type)

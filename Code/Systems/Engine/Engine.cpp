@@ -430,8 +430,7 @@ void FatalEngineError(cstr format, ...)
                                     " The engine will now exit. If this issue persists please"
                                     " reinstall Zero Engine or contact support.");
 
-  OsShell* shell = Z::gEngine->has(OsShell);
-  shell->ShowMessageBox("Core Engine Error", finalMessage);
+  Shell::sInstance->ShowMessageBox("Core Engine Error", finalMessage);
   abort();
 }
 

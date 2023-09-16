@@ -26,24 +26,20 @@ DefineEvent(MainWindowTransformUpdated);
 
 ZilchDefineType(MainWindowTransformEvent, builder, type)
 {
-  ZilchBindFieldGetter(mTargetWindow);
-  ZilchBindFieldGetter(mOldScreenPosition);
-  ZilchBindFieldGetter(mNewScreenPosition);
+  ZilchBindGetter(TargetWindow);
   ZilchBindFieldGetter(mOldScreenSize);
   ZilchBindFieldGetter(mNewScreenSize);
 }
 
-MainWindowTransformEvent::MainWindowTransformEvent(OsWindow* window,
-                                                   Vec2Param oldScreenPosition,
-                                                   Vec2Param newScreenPosition,
-                                                   Vec2Param oldScreenSize,
+MainWindowTransformEvent::MainWindowTransformEvent(Vec2Param oldScreenSize,
                                                    Vec2Param newScreenSize) :
-    mTargetWindow(window),
-    mOldScreenPosition(oldScreenPosition),
-    mNewScreenPosition(newScreenPosition),
     mOldScreenSize(oldScreenSize),
     mNewScreenSize(newScreenSize)
 {
+}
+
+OsWindow* MainWindowTransformEvent::GetTargetWindow() {
+  return OsWindow::sInstance;
 }
 
 ZilchDefineType(MainWindow, builder, type)
@@ -51,13 +47,12 @@ ZilchDefineType(MainWindow, builder, type)
   ZeroBindEvent(Events::MainWindowTransformUpdated, MainWindowTransformEvent);
 }
 
-MainWindow::MainWindow(OsWindow* window) : RootWidget(window)
+MainWindow::MainWindow() : RootWidget()
 {
   static const String className = "Window";
   mDefSet = mDefSet->GetDefinitionSet(className);
 
-  mSize = Math::ToVec2(window->GetClientSize());
-  mPreviousPosition = Math::ToVec2(window->GetMonitorClientPosition());
+  mSize = Math::ToVec2(Shell::sInstance->GetClientSize());
 
   mWindowWidget = new Composite(this, AttachType::Direct);
   mPopUp = new Composite(this, AttachType::Direct);
@@ -67,7 +62,6 @@ MainWindow::MainWindow(OsWindow* window) : RootWidget(window)
 
   mBorder = mWindowWidget->CreateAttached<Element>(cWhiteSquareBorder);
   mTitleGrip = new Gripper(mWindowWidget, this, DockMode::DockFill);
-  ConnectThisTo(mTitleGrip, Events::DoubleClick, OnDoubleClickTitle);
 
   mClientWidget = new Composite(this, AttachType::Direct);
   mClientWidget->SetName("Client");
@@ -83,9 +77,9 @@ MainWindow::MainWindow(OsWindow* window) : RootWidget(window)
 
   Composite* mainMenu = new Composite(menuArea);
   mainMenu->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness(2, 2, 2, 2)));
-  Label* zeroLabel = new Label(mainMenu);
-  zeroLabel->SetText(window->GetTitle());
-  zeroLabel->mText->ChangeDefinition(mDefSet->GetDefinition("TitleText"));
+  Label* label = new Label(mainMenu);
+  label->SetText("Raverie Editor");
+  label->mText->ChangeDefinition(mDefSet->GetDefinition("TitleText"));
   Spacer* spacer = new Spacer(mainMenu);
   spacer->SetSize(Vec2(4, 0));
   Element* arrow = mainMenu->CreateAttached<Element>("TitleDown");
@@ -108,46 +102,6 @@ MainWindow::MainWindow(OsWindow* window) : RootWidget(window)
   mTitleText->SetInteractive(false);
   mTitleText->SetNotInLayout(true);
   mTitleText->mText->ChangeDefinition(mDefSet->GetDefinition("TitleText"));
-
-  mMin = new IconButton(mTitleBar);
-  mMin->SetToolTip("Minimize Window");
-  mMin->SetIcon("TitleMinimize");
-  mMin->mPadding = Thickness::All(4);
-  mMin->mBackgroundColor = ToByteColor(MainWindowUi::ButtonColor);
-  mMin->mBackgroundHoverColor = ToByteColor(MainWindowUi::ButtonHover);
-  mMin->mBackgroundClickedColor = ToByteColor(MainWindowUi::ButtonClick);
-  mMin->mBorder->SetVisible(false);
-  ConnectThisTo(mMin, Events::ButtonPressed, OnClickMin);
-
-  mMax = new IconButton(mTitleBar);
-  mMax->SetToolTip("Maximize Window");
-  mMax->mPadding = Thickness::All(4);
-  mMax->SetIcon("TitleMaximize");
-  mMax->mBackgroundColor = ToByteColor(MainWindowUi::ButtonColor);
-  mMax->mBackgroundHoverColor = ToByteColor(MainWindowUi::ButtonHover);
-  mMax->mBackgroundClickedColor = ToByteColor(MainWindowUi::ButtonClick);
-  mMax->mBorder->SetVisible(false);
-  ConnectThisTo(mMax, Events::ButtonPressed, OnClickMax);
-
-  mClose = new IconButton(mTitleBar);
-  mClose->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(38));
-  mClose->SetToolTip("Close Window");
-  mClose->SetIcon("TitleClose");
-  mClose->mPadding = Thickness::All(4);
-  mClose->mBackgroundColor = ToByteColor(MainWindowUi::CloseColor);
-  mClose->mBackgroundHoverColor = ToByteColor(MainWindowUi::CloseHover);
-  mClose->mBackgroundClickedColor = ToByteColor(MainWindowUi::CloseClick);
-  mClose->mBorder->SetVisible(false);
-  mClose->MarkAsNeedsUpdate();
-  ConnectThisTo(mClose, Events::ButtonPressed, OnClickClose);
-
-  if (window->mWindow.HasOwnMinMaxExitButtons())
-  {
-    mMin->SetActive(false);
-    mMax->SetActive(false);
-    mClose->SetActive(false);
-  }
-
   mLayoutSize = Vec2(0, 0);
 }
 
@@ -159,7 +113,6 @@ void MainWindow::LoadMenu(StringParam menuName)
 
 void MainWindow::SetTitle(StringParam title)
 {
-  GetOsWindow()->SetTitle(title);
   mTitleText->SetText(title);
   mTitleText->MarkAsNeedsUpdate();
   mLayoutSize = Vec2(0, 0);
@@ -174,33 +127,6 @@ void MainWindow::AttachChildWidget(Widget* child, AttachType::Enum attachType)
   mLayoutSize = Vec2(0, 0);
 }
 
-void MainWindow::OnDoubleClickTitle(MouseEvent* event)
-{
-  if (GetOsWindow()->GetState() != WindowState::Windowed)
-    GetOsWindow()->SetState(WindowState::Windowed);
-  else
-    GetOsWindow()->SetState(WindowState::Maximized);
-}
-
-void MainWindow::OnClickClose(Event* event)
-{
-  OsWindowEvent windowEvent;
-  GetOsWindow()->DispatchEvent(Events::OsClose, &windowEvent);
-}
-
-void MainWindow::OnClickMax(Event* event)
-{
-  if (GetOsWindow()->GetState() != WindowState::Windowed)
-    GetOsWindow()->SetState(WindowState::Windowed);
-  else
-    GetOsWindow()->SetState(WindowState::Maximized);
-}
-
-void MainWindow::OnClickMin(Event* event)
-{
-  GetOsWindow()->SetState(WindowState::Minimized);
-}
-
 Composite* MainWindow::GetPopUp()
 {
   return mPopUp;
@@ -208,39 +134,19 @@ Composite* MainWindow::GetPopUp()
 
 void MainWindow::UpdateTransform()
 {
-  OsWindow* osWindow = GetOsWindow();
-  Vec2 position = Math::ToVec2(osWindow->GetMonitorClientPosition());
-  Vec2 size = ToVec2(osWindow->GetClientSize());
+  Vec2 size = ToVec2(Shell::sInstance->GetClientSize());
 
   mSizeGrips->MoveToFront();
   mPopUp->MoveToFront();
 
-  WindowState::Type windowState = osWindow->GetState();
-
-  // Has to be set outside of resize because maximize and fullscreen could be
-  // same size.
-  mSizeGrips->SetActive(windowState == WindowState::Windowed);
-  mTitleGrip->SetActive(windowState != WindowState::Fullscreen);
-
   bool sizeUpdated = false;
-  MainWindowTransformEvent eventToSend(osWindow, position, position, size, size);
+  MainWindowTransformEvent eventToSend(size, size);
 
   // Do not resize all child widgets unless
   // a child has been added or the size of the OS window
   // has changed this prevents animation issues
   if (size != mLayoutSize)
   {
-    // Skip resizing if Minimized
-    if (windowState == WindowState::Minimized)
-      return;
-
-    // Can't be set outside of resize or the event connection is lost.
-    // There aren't any cases where it's diplayed wrong anyway.
-    if (windowState != WindowState::Windowed)
-      mMax->SetIcon("TitleRestore");
-    else
-      mMax->SetIcon("TitleMaximize");
-
     Vec2 previousSize = mSize;
 
     mLayoutSize = mSize;
@@ -301,32 +207,16 @@ void MainWindow::UpdateTransform()
 
   RootWidget::UpdateTransform();
 
-  // First check if the window position changed, must change by at least one
-  // pixel.
-  float distanceSq = (position - mPreviousPosition).LengthSq();
-  if (distanceSq > 1.0f)
-  {
-    eventToSend.mOldScreenPosition = mPreviousPosition;
-    eventToSend.mNewScreenPosition = position;
-
-    // Size changes will be included, if any.
-    Z::gEngine->DispatchEvent(Events::MainWindowTransformUpdated, &eventToSend);
-    osWindow->DispatchEvent(Events::MainWindowTransformUpdated, &eventToSend);
-
-    mPreviousPosition = position;
-  }
   // If the position didn't change, did the size?
-  else if (sizeUpdated)
+  if (sizeUpdated)
   {
     Z::gEngine->DispatchEvent(Events::MainWindowTransformUpdated, &eventToSend);
-    osWindow->DispatchEvent(Events::MainWindowTransformUpdated, &eventToSend);
+    OsWindow::sInstance->DispatchEvent(Events::MainWindowTransformUpdated, &eventToSend);
   }
 }
 
 WindowBorderArea::Enum OsDocker::GetWindowBorderArea(Widget* widget, DockMode::Enum direction)
 {
-  RootWidget* rootWidget = widget->GetRootWidget();
-  OsWindow* window = rootWidget->GetOsWindow();
   if (direction == DockMode::DockFill)
     return WindowBorderArea::Title;
   else if (direction == DockMode::DockTop)
@@ -346,12 +236,6 @@ WindowBorderArea::Enum OsDocker::GetWindowBorderArea(Widget* widget, DockMode::E
   else if (direction == (DockMode::DockTop | DockMode::DockLeft))
     return WindowBorderArea::TopLeft;
   return WindowBorderArea::None;
-}
-
-void OsDocker::Show(Widget* widget)
-{
-  RootWidget* root = widget->GetRootWidget();
-  root->GetOsWindow()->TakeFocus();
 }
 
 void OsDocker::WidgetDestroyed(Widget* widget)

@@ -20139,12 +20139,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Property
 				{
-					var Name = "FullScreen"
-					var Type = "Boolean"
-					var ReadOnly = true
-				}
-				Property
-				{
 					var Name = "Paused"
 					var Type = "Boolean"
 					var Description = "Controls if the game session is paused which prevents updates to all spaces owned by this game."
@@ -55321,11 +55315,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Property
 				{
-					var Name = "MinSize"
-					var Type = "Integer2"
-				}
-				Property
-				{
 					var Name = "MouseCapture"
 					var Type = "Boolean"
 				}
@@ -55339,72 +55328,13 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var Name = "MouseTrap"
 					var Type = "Boolean"
 				}
-				Property
-				{
-					var Name = "Parent"
-					var Type = "OsWindow"
-					var ReadOnly = true
-				}
-				Property
-				{
-					var Name = "Position"
-					var Type = "Integer2"
-				}
-				Property
-				{
-					var Name = "Size"
-					var Type = "Integer2"
-				}
-				Property
-				{
-					var Name = "State"
-					var Type = "WindowState"
-				}
-				Property
-				{
-					var Name = "Title"
-					var Type = "String"
-				}
-				Property
-				{
-					var Name = "Visible"
-					var Type = "Boolean"
-				}
 			}
 			var Methods = Array
 			{
 				Method
 				{
-					var Name = "ClientToScreen"
-					var ReturnType = "Integer2"
-					var Parameters = "(Integer2 p0)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "p0"
-							var Type = "Integer2"
-						}
-					}
-				}
-				Method
-				{
 					var Name = "HasFocus"
 					var ReturnType = "Boolean"
-				}
-				Method
-				{
-					var Name = "ScreenToClient"
-					var ReturnType = "Integer2"
-					var Parameters = "(Integer2 p0)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "p0"
-							var Type = "Integer2"
-						}
-					}
 				}
 			}
 		}
@@ -78433,52 +78363,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "WindowLaunchSettings"
-			var BaseClass = "Component"
-			var Library = "EngineLibrary"
-			var Description = "Settings for how the application window should be sized when launched."
-			var Tags = Array
-			{
-				"Component"
-			}
-			var Properties = Array
-			{
-				Property
-				{
-					var Name = "LaunchFullscreen"
-					var Type = "Boolean"
-					var Description = "If a pre-launch popup should be used to determine how application window is sized."
-				}
-				Property
-				{
-					var Name = "WindowedResolution"
-					var Type = "Integer2"
-					var Description = "Resolution of application when launched in windowed mode."
-				}
-			}
-			var Methods = Array
-			{
-				Method
-				{
-					var Name = "WindowLaunchSettings"
-				}
-			}
-		}
-		Object
-		{
-			var Name = "WindowsOsWindow"
-			var BaseClass = "OsWindow"
-			var Library = "WindowsShellSystemLibrary"
-			var Methods = Array
-			{
-				Method
-				{
-					var Name = "WindowsOsWindow"
-				}
-			}
-		}
-		Object
-		{
 			var Name = "WindowTabEvent"
 			var BaseClass = "HandleableEvent"
 			var Library = "WidgetLibrary"
@@ -83727,69 +83611,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 			}
 			var Description = "How the viewport should be sized within the window size."
-		}
-		Object
-		{
-			var Name = "WindowState"
-			var EnumValues = Map
-			{
-				Object
-				{
-					var key = "Fullscreen"
-				}
-				Object
-				{
-					var key = "Maximized"
-				}
-				Object
-				{
-					var key = "Minimized"
-				}
-				Object
-				{
-					var key = "Restore"
-				}
-				Object
-				{
-					var key = "Windowed"
-				}
-			}
-			var Description = "The state of the window for minimizing / maximizing."
-		}
-		Object
-		{
-			var Name = "WindowStyleFlags"
-			var EnumValues = Map
-			{
-				Object
-				{
-					var key = "ClientOnly"
-				}
-				Object
-				{
-					var key = "Close"
-				}
-				Object
-				{
-					var key = "MainWindow"
-				}
-				Object
-				{
-					var key = "NotVisible"
-				}
-				Object
-				{
-					var key = "OnTaskBar"
-				}
-				Object
-				{
-					var key = "Resizable"
-				}
-				Object
-				{
-					var key = "TitleBar"
-				}
-			}
 		}
 	}
 	var Flags = Array

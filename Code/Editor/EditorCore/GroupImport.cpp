@@ -345,7 +345,7 @@ void ImportCallback::Open()
   config->mMultiple = true;
 
   ConnectThisTo(this, config->EventName, OnFilesSelected);
-  Z::gEngine->has(OsShell)->OpenFile(config);
+  Shell::sInstance->OpenFile(*config);
 }
 
 void ImportCallback::OnFilesSelected(OsFileSelection* fileSelection)

@@ -1300,7 +1300,6 @@ void Editor::DisplayGameSession(StringParam name, GameSession* gameSession)
   main->UpdateTransformExternal();
 
   // Update game session info as it is now running in the editor window
-  gameSession->mMainWindow = main->GetRootWidget()->GetOsWindow();
   gameSession->SetInEditor(true);
   gameSession->mGameWidget = gameWidget;
 
@@ -1388,7 +1387,6 @@ GameSession* Editor::PlayGame(PlayGameOptions::Enum options, bool takeFocus, boo
 
   // Create the game session
   GameSession* game = EditorCreateGameSession(CreationFlags::Default);
-  game->mMainWindow = main->GetRootWidget()->GetOsWindow();
 
   game->SetInEditor(true);
   game->mGameWidget = gameWidget;

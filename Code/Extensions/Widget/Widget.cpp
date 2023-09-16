@@ -621,12 +621,6 @@ void Widget::ScreenCaptureBackBuffer(Image& image)
 void Widget::ScreenCaptureBackBuffer(Image& image, WidgetRect& subRect)
 {
   DebugValidate();
-  // GraphicsViewport viewport = GenerateSubViewport(mWorldTx,
-  // subRect.TopLeft(), subRect.Size());
-
-  // RootWidget* root = GetRootWidget();
-  // CaptureViewport(root->GetOsWindow()->GetGraphicsContext(), &image,
-  // viewport);
 }
 
 void Widget::SetTakeFocusMode(FocusMode::Type focusMode)

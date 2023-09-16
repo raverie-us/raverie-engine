@@ -4,21 +4,16 @@
 
 namespace Zero
 {
-Shell* Shell::sInstance;
-String gClipboardText;
+Shell* Shell::sInstance = nullptr;
+IntVec2 Shell::sInitialClientSize = IntVec2::cZero;
 
-Shell::Shell() : mCursor(Cursor::Arrow), mMainWindow(nullptr)
+Shell::Shell() : mCursor(Cursor::Arrow), mClientSize(sInitialClientSize)
 {
   sInstance = this;
 }
 
 Shell::~Shell()
 {
-}
-
-IntVec2 Shell::GetPrimaryMonitorSize()
-{
-  return cMinimumMonitorSize;
 }
 
 ByteColor Shell::GetColorAtMouse()
@@ -79,15 +74,7 @@ void ZeroExportNamed(ExportOpenFileDialogFinish)(void* dialog) {
   config.mCallback(config.mFiles, config.mUserData);
 }
 
-void Shell::SaveFile(FileDialogInfo& config)
-{
-}
-
 void Shell::ShowMessageBox(StringParam title, StringParam message)
-{
-}
-
-void Shell::Update()
 {
 }
 
@@ -96,160 +83,43 @@ const Array<PlatformInputDevice>& Shell::ScanInputDevices()
   return mInputDevices;
 }
 
-// ShellWindow
-ShellWindow::ShellWindow(Shell* shell,
-                         StringParam windowName,
-                         Math::IntVec2Param clientSize,
-                         Math::IntVec2Param monitorClientPos,
-                         WindowStyleFlags::Enum flags,
-                         WindowState::Enum state) :
-    mShell(shell),
-    mMinClientSize(IntVec2(10, 10)),
-    mHandle(nullptr),
-    mStyle(flags),
-    mClientSize(cMinimumMonitorSize),
-    mClientMousePosition(IntVec2(-1, -1)),
-    mUserData(nullptr),
-    mOnClose(nullptr),
-    mOnFocusChanged(nullptr),
-    mOnClientSizeChanged(nullptr),
-    mOnDevicesChanged(nullptr),
-    mOnInputDeviceChanged(nullptr)
+IntVec2 Shell::GetClientSize()
+{
+  return mClientSize;
+}
+
+void Shell::SetMouseCapture(bool capture)
 {
 }
 
-ShellWindow::~ShellWindow()
-{
-}
-
-void ShellWindow::Destroy()
-{
-}
-
-IntRect ShellWindow::GetMonitorClientRectangle()
-{
-  return IntRect(0, 0, cMinimumMonitorSize.x, cMinimumMonitorSize.y);
-}
-
-void ShellWindow::SetMonitorClientRectangle(const IntRect& monitorRectangle)
-{
-}
-
-IntRect ShellWindow::GetMonitorBorderedRectangle()
-{
-  return IntRect(0, 0, cMinimumMonitorSize.x, cMinimumMonitorSize.y);
-}
-
-void ShellWindow::SetMonitorBorderedRectangle(const IntRect& monitorRectangle)
-{
-}
-
-IntVec2 ShellWindow::GetMinClientSize()
-{
-  return mMinClientSize;
-}
-
-void ShellWindow::SetMinClientSize(Math::IntVec2Param minSize)
-{
-  mMinClientSize = minSize;
-}
-
-IntVec2 ShellWindow::MonitorToClient(Math::IntVec2Param monitorPosition)
-{
-  return monitorPosition;
-}
-
-IntVec2 ShellWindow::MonitorToBordered(Math::IntVec2Param monitorPosition)
-{
-  return monitorPosition;
-}
-
-IntVec2 ShellWindow::ClientToMonitor(Math::IntVec2Param clientPosition)
-{
-  return clientPosition;
-}
-
-IntVec2 ShellWindow::ClientToBordered(Math::IntVec2Param clientPosition)
-{
-  return clientPosition;
-}
-
-IntVec2 ShellWindow::BorderedToMonitor(Math::IntVec2Param borderedPosition)
-{
-  return borderedPosition;
-}
-
-IntVec2 ShellWindow::BorderedToClient(Math::IntVec2Param borderedPosition)
-{
-  return borderedPosition;
-}
-
-WindowStyleFlags::Enum ShellWindow::GetStyle()
-{
-  return WindowStyleFlags::NotVisible;
-}
-
-void ShellWindow::SetStyle(WindowStyleFlags::Enum style)
-{
-}
-
-bool ShellWindow::GetVisible()
+bool Shell::GetMouseCapture()
 {
   return false;
 }
 
-void ShellWindow::SetVisible(bool visible)
+bool Shell::GetMouseTrap()
 {
+  return mMouseTrapped;
 }
 
-String ShellWindow::GetTitle()
+void Shell::SetMouseTrap(bool mouseTrapped)
 {
-  return "Window";
+  mMouseTrapped = mouseTrapped;
+  ImportMouseTrap(mouseTrapped);
 }
 
-void ShellWindow::SetTitle(StringParam title)
-{
-}
-
-WindowState::Enum ShellWindow::GetState()
-{
-  return WindowState::Fullscreen;
-}
-
-void ShellWindow::SetState(WindowState::Enum windowState)
-{
-}
-
-void ShellWindow::SetMouseCapture(bool capture)
-{
-}
-
-bool ShellWindow::GetMouseCapture()
+bool Shell::HasFocus()
 {
   return false;
 }
 
-void ShellWindow::TakeFocus()
-{
-}
-
-bool ShellWindow::HasFocus()
+bool Shell::GetImage(Image* image)
 {
   return false;
 }
 
-bool ShellWindow::GetImage(Image* image)
+void Shell::Close()
 {
-  return false;
-}
-
-void ShellWindow::Close()
-{
-}
-
-bool ShellWindow::HasOwnMinMaxExitButtons()
-{
-  return !mStyle.IsSet(WindowStyleFlags::ClientOnly);
 }
 
 } // namespace Zero

@@ -15,7 +15,6 @@ Mouse::Mouse()
   mCursorMovement = Vec2::cZero;
   mClientPosition = Vec2::cZero;
   mRawMovement = Vec2::cZero;
-  mActiveWindow = nullptr;
   for (uint i = 0; i < MouseButtons::Size; ++i)
     mButtonDown[i] = false;
   Z::gMouse = this;
@@ -54,21 +53,17 @@ void Mouse::SetCursor(Cursor::Enum cursor)
 
 bool Mouse::GetTrapped()
 {
-  if (mActiveWindow)
-    return mActiveWindow->GetMouseTrap();
-  return false;
+  return Shell::sInstance->GetMouseTrap();
 }
 
 void Mouse::SetTrapped(bool state)
 {
-  if (mActiveWindow)
-    mActiveWindow->SetMouseTrap(state);
+  Shell::sInstance->SetMouseTrap(state);
 }
 
 void Mouse::ToggleTrapped()
 {
-  if (mActiveWindow)
-    mActiveWindow->SetMouseTrap(!mActiveWindow->GetMouseTrap());
+  Shell::sInstance->SetMouseTrap(!Shell::sInstance->GetMouseTrap());
 }
 
 } // namespace Zero

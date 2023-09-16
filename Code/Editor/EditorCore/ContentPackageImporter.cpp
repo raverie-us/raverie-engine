@@ -361,7 +361,7 @@ void ImportContentPackage()
   config->EventName = "OnImportFileSelected";
   config->CallbackObject = widget;
   config->AddFilter("Import Pack File", "*.zeropack");
-  Z::gEngine->has(OsShell)->OpenFile(config);
+  Shell::sInstance->OpenFile(*config);
 }
 
 } // namespace Zero

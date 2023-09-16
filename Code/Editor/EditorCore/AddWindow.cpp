@@ -393,7 +393,7 @@ void ResourceTypeSearch::OnImportClicked(Event*)
   config->CallbackObject = this;
   config->AddFilter("All Content (*.*)", "*.*");
   config->mMultiple = true;
-  Z::gEngine->has(OsShell)->OpenFile(config);
+  Shell::sInstance->OpenFile(*config);
 }
 
 void ResourceTypeSearch::OnFilesSelected(OsFileSelection* e)
@@ -634,7 +634,7 @@ void ResourceTemplateSearch::OnImportClicked(Event*)
     config->mSearchFilters.PushBack(filter);
 
   config->mMultiple = true;
-  Z::gEngine->has(OsShell)->OpenFile(config);
+  Shell::sInstance->OpenFile(*config);
 }
 
 void ResourceTemplateSearch::OnFilesSelected(OsFileSelection* e)

@@ -54,7 +54,6 @@ ZilchDefineType(GameSession, builder, type)
 
   ZilchBindGetter(Focused);
   ZilchBindGetter(Resolution);
-  ZilchBindGetter(FullScreen);
 
   ZilchBindField(mPaused);
 
@@ -81,7 +80,6 @@ GameSession::GameSession()
   mQuiting = false;
   mPaused = false;
   mStarted = false;
-  mMainWindow = nullptr;
   Z::gEngine->mGameSessions.PushBack(this);
 }
 
@@ -297,9 +295,9 @@ void GameSession::SetInEditor(bool inEditor)
   if (!inEditor)
   {
     // Listen to events from the main window
-    ConnectThisTo(mMainWindow, Events::OsClose, OnClose);
-    ConnectThisTo(mMainWindow, Events::OsFocusGained, OnFocusGained);
-    ConnectThisTo(mMainWindow, Events::OsFocusLost, OnFocusLost);
+    ConnectThisTo(OsWindow::sInstance, Events::OsClose, OnClose);
+    ConnectThisTo(OsWindow::sInstance, Events::OsFocusGained, OnFocusGained);
+    ConnectThisTo(OsWindow::sInstance, Events::OsFocusLost, OnFocusLost);
   }
 }
 
@@ -311,21 +309,14 @@ void GameSession::DispatchOnSpaces(StringParam eventName, Event* event)
 
 Vec2 GameSession::GetResolution()
 {
-  return ToVec2(mMainWindow->GetClientSize());
-}
-
-bool GameSession::GetFullScreen()
-{
-  return mMainWindow->GetState() == WindowState::Fullscreen;
+  return ToVec2(Shell::sInstance->GetClientSize());
 }
 
 bool GameSession::GetFocused()
 {
   if (Z::gRuntimeEditor)
     return Z::gRuntimeEditor->HasFocus(this);
-  else if (mMainWindow)
-    return mMainWindow->HasFocus();
-  return true;
+  return Shell::sInstance->HasFocus();
 }
 
 void GameSession::EditSpaces()

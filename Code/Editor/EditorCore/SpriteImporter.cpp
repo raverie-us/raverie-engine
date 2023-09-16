@@ -1221,7 +1221,7 @@ void SpriteSheetImport(Editor* editor)
   config->CallbackObject = importer;
   BuildImageFileDialogFilters(config->mSearchFilters);
   config->mMultiple = true;
-  Z::gEngine->has(OsShell)->OpenFile(config);
+  Shell::sInstance->OpenFile(*config);
 }
 
 } // namespace Zero

@@ -1448,8 +1448,7 @@ void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
   bool splashMode = info->mSplashMode;
   float alpha = splashMode ? info->mSplashFade : 1.0f;
 
-  // TODO(trevor): Make this track the actual main window size
-  IntVec2 size = cMinimumMonitorSize;
+  IntVec2 size = Shell::sInstance->GetClientSize();
 
   Mat4 viewportToNdc;
   viewportToNdc.BuildTransform(Vec3(-1.0f, 1.0f, 0.0f), Mat3::cIdentity, Vec3(2.0f / size.x, -2.0f / size.y, 1.0f));

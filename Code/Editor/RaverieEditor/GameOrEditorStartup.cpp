@@ -5,8 +5,8 @@
 namespace Zero
 {
 
-void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam newProjectName);
-void CreateGame(OsWindow* mainWindow, StringParam projectFile, Cog* projectCog);
+void CreateEditor(StringParam projectFile, StringParam newProjectName);
+void CreateGame(StringParam projectFile, Cog* projectCog);
 void LoadGamePackages(StringParam projectFile, Cog* projectCog);
 
 StartupPhase::Enum GameOrEditorStartup::RunIteration()
@@ -190,22 +190,10 @@ void GameOrEditorStartup::Startup()
 
   OsShell* osShell = engine->has(OsShell);
 
-  IntVec2 size = mWindowSize;
-  if (mWindowSize == IntVec2::cZero)
-  {
-    size = osShell->GetPrimaryMonitorSize();
-  }
-  WindowState::Enum state = mWindowState;
-
   String name = BuildString(GetOrganization(), " ", GetApplicationName());
 
-  IntVec2 minSize = Math::Min(mMinimumWindowSize, size);
-  IntVec2 monitorClientPos = IntVec2(0, 0);
-
   // We only ever create a single OsWindow
-  OsWindow* mainWindow = new OsWindow(osShell, name, size, monitorClientPos, mWindowStyle, state);
-
-  mainWindow->SetMinClientSize(minSize);
+  OsWindow* mainWindow = new OsWindow();
 
   // Pass window handle to initialize the graphics api
   auto graphics = engine->has(GraphicsEngine);
@@ -213,13 +201,6 @@ void GameOrEditorStartup::Startup()
 
   if (mUseSplashScreen)
     graphics->SetSplashscreenLoading();
-
-  // Used for trapping the mouse.
-  Z::gMouse->mActiveWindow = mainWindow;
-
-  // Note that content and resources are loaded after CreateRenderer so that they may use the Renderer API to upload
-  // textures, meshes, etc.
-  mMainWindow = mainWindow;
 }
 
 void GameOrEditorStartup::ProcessJobs()
@@ -389,10 +370,6 @@ void GameOrEditorStartup::UserInitialize()
       FatalEngineError("Failed load project '%s'", projectFile.c_str());
       return;
     }
-
-    // Since we don't create a resiziable wigdet/close button, etc.
-    // for the game, then we want the typical OS border to appear.
-    mWindowStyle = (WindowStyleFlags::Enum)(mWindowStyle & ~WindowStyleFlags::ClientOnly);
   }
 
   mLoadContent = !playGame;
@@ -425,11 +402,11 @@ void GameOrEditorStartup::UserCreation()
 {
   if (mPlayGame)
   {
-    CreateGame(mMainWindow, mProjectFile, mProjectCog);
+    CreateGame(mProjectFile, mProjectCog);
   }
   else
   {
-    CreateEditor(mMainWindow, mProjectFile, mNewProject);
+    CreateEditor(mProjectFile, mNewProject);
   }
 }
 

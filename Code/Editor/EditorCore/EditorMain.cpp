@@ -8,7 +8,7 @@ ZilchDefineType(EditorMain, builder, type)
 {
 }
 
-EditorMain::EditorMain(Composite* parent, OsWindow* window) : Editor(parent)
+EditorMain::EditorMain(Composite* parent) : Editor(parent)
 {
   this->SetName("EditorMain");
   mTimeSinceEscape = 100.0f;
@@ -878,19 +878,18 @@ void SetupTools(Editor* editor);
 #define BindCommand(commandName, memberFunction)                                                                       \
   Connect(commands->GetCommand(commandName), Events::CommandExecute, editorMain, &EditorMain::memberFunction);
 
-void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam newProjectName)
+void CreateEditor(StringParam projectFile, StringParam newProjectName)
 {
   ProfileScopeFunction();
 
   // Set the tweakables modified callback so that we can update the Ui
   Tweakables::sModifiedCallback = &OnTweakablesModified;
 
-  MainWindow* rootWidget = new MainWindow(mainWindow);
-  EditorMain* editorMain = new EditorMain(rootWidget, mainWindow);
+  MainWindow* rootWidget = new MainWindow();
+  EditorMain* editorMain = new EditorMain(rootWidget);
   Cog* config = Z::gEngine->GetConfigCog();
   MainConfig* mainConfig = config->has(MainConfig);
   editorMain->mConfig = config;
-  editorMain->mOsWindow = mainWindow;
   editorMain->mMainWindow = rootWidget;
 
   String dataDirectory = mainConfig->DataDirectory;

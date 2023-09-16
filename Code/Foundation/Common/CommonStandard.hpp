@@ -214,7 +214,6 @@ namespace Zero
 #include "Platform/FileSystem.hpp"
 #include "Platform/Lock.hpp"
 #include "Platform/Process.hpp"
-#include "Platform/Resolution.hpp"
 #include "Platform/SocketEnums.hpp"
 #include "Platform/SocketConstants.hpp"
 #include "Platform/Socket.hpp"

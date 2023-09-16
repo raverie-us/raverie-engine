@@ -14,16 +14,10 @@ class MainWindowTransformEvent : public Event
 public:
   ZilchDeclareType(MainWindowTransformEvent, TypeCopyMode::ReferenceType);
 
-  MainWindowTransformEvent(OsWindow* window = nullptr,
-                           Vec2Param oldScreenPosition = Vec2::cZero,
-                           Vec2Param newScreenPosition = Vec2::cZero,
-                           Vec2Param oldScreenSize = Vec2::cZero,
+  MainWindowTransformEvent(Vec2Param oldScreenSize = Vec2::cZero,
                            Vec2Param newScreenSize = Vec2::cZero);
 
-  OsWindow* mTargetWindow;
-
-  Vec2 mOldScreenPosition;
-  Vec2 mNewScreenPosition;
+  OsWindow* GetTargetWindow();
 
   Vec2 mOldScreenSize;
   Vec2 mNewScreenSize;
@@ -34,7 +28,7 @@ class MainWindow : public RootWidget
 public:
   ZilchDeclareType(MainWindow, TypeCopyMode::ReferenceType);
 
-  MainWindow(OsWindow* window);
+  MainWindow();
 
   void LoadMenu(StringParam menuName);
   void SetTitle(StringParam title);
@@ -48,8 +42,6 @@ public:
   void OnClickMax(Event* event);
   void OnClickMin(Event* event);
 
-  Vec2 mPreviousPosition;
-
   Composite* mClientWidget;
   Composite* mMenuArea;
   Element* mBorder;
@@ -58,9 +50,6 @@ public:
   Gripper* mTitleGrip;
 
   Label* mTitleText;
-  IconButton* mClose;
-  IconButton* mMax;
-  IconButton* mMin;
   Composite* mTitleBar;
   Composite* mWindowWidget;
   MenuBar* mMenu;
@@ -78,7 +67,6 @@ public:
     return DockArea::Floating;
   }
   void Zoom(Widget* widget) override{};
-  void Show(Widget* widget) override;
   void WidgetDestroyed(Widget* widget) override;
   WindowBorderArea::Enum GetWindowBorderArea(Widget* widget, DockMode::Enum direction) override;
 };

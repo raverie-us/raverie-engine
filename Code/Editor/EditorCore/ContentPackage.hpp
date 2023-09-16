@@ -38,7 +38,7 @@ struct ContentPackageListing
 void LoadContentPackageListing(ContentPackageListing& listing, StringParam sourcePackageFile);
 
 // Export give content listing to the destination package file
-void ExportContentPackageListing(ContentPackageListing& listing, StringParam destPackageFile);
+void ExportContentPackageListing(ContentPackageListing& listing, ByteBuffer& bufferOut);
 
 // Build content pPackage listing from current loaded content library
 void BuildContentPackageListingFromLibrary(ContentPackageListing& listing, ContentLibrary* library);

@@ -12,7 +12,7 @@ MultiManager::MultiManager(RootWidget* rootWidget, MultiDock* mainDock)
 {
   mMainRoot = rootWidget;
   mMainDock = mainDock;
-  ConnectThisTo(rootWidget->GetOsWindow(), Events::OsKeyDown, OnWindowKeyDown);
+  ConnectThisTo(OsWindow::sInstance, Events::OsKeyDown, OnWindowKeyDown);
 }
 
 void MultiManager::ManageWidget(Widget* widget)

@@ -14,7 +14,7 @@ class RootWidget : public Composite
 public:
   ZilchDeclareType(RootWidget, TypeCopyMode::ReferenceType);
 
-  RootWidget(OsWindow* osWindow);
+  RootWidget();
   ~RootWidget();
 
   void OnUiUpdate(UpdateEvent* event);
@@ -24,7 +24,6 @@ public:
   void FocusReset();
   void Refresh();
   Widget* GetFocusObject();
-  OsWindow* GetOsWindow();
   void ResetHover();
 
   // Widget Interface
@@ -80,7 +79,6 @@ private:
 
   friend class Widget;
   friend class GameWidget;
-  OsWindow* mOsWindow;
   Vec4 mClearColor;
   FocusMode::Type mFocusMode;
   uint mLastClickButton;

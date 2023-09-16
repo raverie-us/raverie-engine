@@ -266,7 +266,7 @@ uint64_t ZeroImportNamed(ImportRandomUnique)();
 
 void* ZeroExportNamed(ExportAllocate)(size_t size);
 void ZeroExportNamed(ExportFree)(void* pointer);
-void ZeroExportNamed(ExportInitialize)(const char* arguments);
+void ZeroExportNamed(ExportInitialize)(const char* arguments, int32_t clientWidth, int32_t clientHeight);
 void ZeroExportNamed(ExportRunIteration)();
 void ZeroExportNamed(ExportHandleCrash)();
 void ZeroExportNamed(ExportMouseMove)(int32_t clientX, int32_t clientY, int32_t dx, int32_t dy);

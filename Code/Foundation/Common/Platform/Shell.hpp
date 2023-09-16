@@ -3,8 +3,6 @@
 
 namespace Zero
 {
-static const IntVec2 cMinimumMonitorSize(1024, 768);
-
 struct FileDialogFilter
 {
   FileDialogFilter();
@@ -276,7 +274,11 @@ public:
   Array<PlatformButton> mButtons;
 };
 
-class ShellWindow;
+/// Border of the window for manipulation
+DeclareEnum10(WindowBorderArea, Title, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight, None);
+
+DeclareEnum3(ProgressType, Normal, Indeterminate, None);
+
 class PlatformInputDevice;
 
 /// Monitor coordinates means a position anywhere on the desktop relative to the
@@ -292,9 +294,6 @@ class Shell
 public:
   Shell();
   ~Shell();
-
-  /// Get the monitor size for the primary monitor (in monitor coordinates).
-  IntVec2 GetPrimaryMonitorSize();
 
   /// Get the pixel color at the mouse position.
   ByteColor GetColorAtMouse();
@@ -314,157 +313,15 @@ public:
   /// Show the file open dialog. Results are returned via mCallback or mFiles.
   void OpenFile(FileDialogInfo& config);
 
-  /// Show the save file dialog. Results are returned via mCallback or mFiles.
-  void SaveFile(FileDialogInfo& config);
-
   /// Message box used for critical failures.
   void ShowMessageBox(StringParam title, StringParam message);
-
-  /// Pumps operation system events which will result in callbacks being called.
-  /// Note that this may also update ShellWindows.
-  void Update();
 
   /// Scan for input new devices and store them. The shell must have
   /// created a main window for this to work properly on all platforms.
   const Array<PlatformInputDevice>& ScanInputDevices();
-
-  // Internals
-
-  /// The current cursor (defaults to Arrow).
-  Cursor::Enum mCursor;
-  bool mMouseState[MouseButtons::Size] = {false};
-  bool mKeyState[Keys::Size] = {false};
-
-  /// A window whose flag is passed as 'MainWindow' (there is only one allowed)
-  ShellWindow* mMainWindow;
-  Array<ShellWindow*> mWindows;
-  Array<PlatformInputDevice> mInputDevices;
-
-  static Shell* sInstance;
-
-  ZeroDeclarePrivateData(Shell, 128);
-};
-
-/// Flags used to control the behavior of an ShellWindow
-DeclareBitField7(WindowStyleFlags,
-                 // Is the window visible. This is 'NotVisible' instead of
-                 // visible so that the default is visible.
-                 NotVisible,
-                 // Main window
-                 MainWindow,
-                 // Does the window appear on the task bar
-                 OnTaskBar,
-                 // Does the window have a title bar area
-                 TitleBar,
-                 // Does this window have resizable borders
-                 Resizable,
-                 // Does this window have a close button
-                 Close,
-                 // Window has client area only
-                 ClientOnly);
-
-/// The state of the window for minimizing / maximizing
-DeclareEnum5(WindowState,
-             // Shrink the window to the taskbar
-             Minimized,
-             // Expand the window to fill the current desktop
-             Maximized,
-             // Arbitrarily sized window
-             Windowed,
-             // Window covers everything including the taskbar and is minimized
-             // without focus
-             Fullscreen,
-             // Restore window to previous state before being minimizing
-             Restore);
-
-/// Border of the window for manipulation
-DeclareEnum10(WindowBorderArea, Title, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight, None);
-
-DeclareEnum3(ProgressType, Normal, Indeterminate, None);
-
-class ShellWindow
-{
-public:
-  ShellWindow(Shell* shell,
-              StringParam windowName,
-              Math::IntVec2Param clientSize,
-              Math::IntVec2Param monitorClientPos,
-              WindowStyleFlags::Enum flags,
-              WindowState::Enum state);
-
-  /// Destroy will be called automatically here.
-  ~ShellWindow();
-
-  /// Free the window and all resources. All calls to the
-  /// window are invalid after this. This is automatically called
-  /// in the destructor.
-  void Destroy();
-
-  /// Get the rectangle of the window's client area (in monitor coordinates).
-  IntRect GetMonitorClientRectangle();
-  void SetMonitorClientRectangle(const IntRect& monitorRect);
-
-  /// Position of the window's top-left client area in monitor coordinates.
-  IntVec2 GetMonitorClientPosition();
-  void SetMonitorClientPosition(Math::IntVec2Param monitorPosition);
-
+  
   /// The size of the window's client area.
   IntVec2 GetClientSize();
-  void SetClientSize(Math::IntVec2Param clientSize);
-
-  /// The minimum size of the window (in pixels).
-  IntVec2 GetMinClientSize();
-  void SetMinClientSize(Math::IntVec2Param minClientSize);
-
-  /// Get the rectangle of the window's bordered area (in monitor coordinates).
-  IntRect GetMonitorBorderedRectangle();
-  void SetMonitorBorderedRectangle(const IntRect& monitorRect);
-
-  /// Position of the window's top-left bordered area in monitor coordinates.
-  IntVec2 GetMonitorBorderedPosition();
-  void SetMonitorBorderedPosition(Math::IntVec2Param monitorPosition);
-
-  /// The size of the window including the border (in pixels).
-  IntVec2 GetBorderedSize();
-  void SetBorderedSize(Math::IntVec2Param borderedSize);
-
-  /// Get the parent window of this window. Null if there is no parent.
-  ShellWindow* GetParent();
-
-  /// Convert monitor coordinates to client coordinates.
-  IntVec2 MonitorToClient(Math::IntVec2Param monitorPosition);
-
-  /// Convert monitor coordinates to bordered coordinates.
-  IntVec2 MonitorToBordered(Math::IntVec2Param monitorPosition);
-
-  /// Convert client coordinates to monitor coordinates
-  IntVec2 ClientToMonitor(Math::IntVec2Param clientPosition);
-
-  /// Convert client coordinates to bordered coordinates
-  IntVec2 ClientToBordered(Math::IntVec2Param clientPosition);
-
-  /// Convert bordered coordinates to monitor coordinates
-  IntVec2 BorderedToMonitor(Math::IntVec2Param borderedPosition);
-
-  /// Convert bordered coordinates to client coordinates
-  IntVec2 BorderedToClient(Math::IntVec2Param borderedPosition);
-
-  /// Style flags control border style, title bar, and other features.
-  WindowStyleFlags::Enum GetStyle();
-  void SetStyle(WindowStyleFlags::Enum style);
-
-  /// Is the window visible on the desktop?
-  bool GetVisible();
-  void SetVisible(bool visible);
-
-  /// Set the title of window displayed in the title bar.
-  String GetTitle();
-  void SetTitle(StringParam title);
-
-  /// State of the Window, Set state to Minimize, Maximize, or Restore the
-  /// window
-  WindowState::Enum GetState();
-  void SetState(WindowState::Enum windowState);
 
   /// When the mouse is captured it will only allow mouse events to be sent to
   /// this window (no other operating system windows or other windows we've
@@ -472,10 +329,10 @@ public:
   void SetMouseCapture(bool capture);
   bool GetMouseCapture();
 
-  /// Try to take Focus and bring the window to the foreground.
-  /// The OS may prevent this from working if this app is not the foreground
-  /// app.
-  void TakeFocus();
+  /// Locks the mouse to prevent it from moving.
+  bool GetMouseTrap();
+  void SetMouseTrap(bool trapped);
+
   /// Does this window have focus?
   bool HasFocus();
 
@@ -485,63 +342,40 @@ public:
   /// Sends a message to close the window (the window is not destroyed).
   void Close();
 
-  /// Resize or move the window using the default OS method.
-  void ManipulateWindow(WindowBorderArea::Enum area);
-
-  /// If this window has it's own buttons, then we may not need to draw our own.
-  bool HasOwnMinMaxExitButtons();
-
-  /// The window has been requested to close.
-  void (*mOnClose)(ShellWindow* window);
-
   /// The window has been activated or deactivated.
-  void (*mOnFocusChanged)(bool activated, ShellWindow* window);
+  //void (*mOnFocusChanged)(bool activated);
 
   /// Occurs when the window is resized (may occur even if the size is the same
   /// and should be protected against).
-  void (*mOnClientSizeChanged)(Math::IntVec2Param clientSize, ShellWindow* window);
+  //void (*mOnClientSizeChanged)(Math::IntVec2Param clientSize);
 
   /// Called when any hardware devices change.
-  void (*mOnDevicesChanged)(ShellWindow* window);
+  //void (*mOnDevicesChanged)();
 
   /// Called when the window is asking if a position should result in dragging
   /// or resizing the window.
-  WindowBorderArea::Enum (*mOnHitTest)(Math::IntVec2Param clientPosition, ShellWindow* window);
+  //WindowBorderArea::Enum (*mOnHitTest)(Math::IntVec2Param clientPosition);
 
   /// Called when an input device is updated.
-  void (*mOnInputDeviceChanged)(
-      PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data, ShellWindow* window);
-
-  /// Userdata used for all callbacks.
-  void* mUserData;
+  //void (*mOnInputDeviceChanged)(
+  //    PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data);
 
   // Internals
 
-  /// The shell we were created from.
-  Shell* mShell;
+  /// The current cursor (defaults to Arrow).
+  Cursor::Enum mCursor;
+  bool mMouseState[MouseButtons::Size] = {false};
+  bool mKeyState[Keys::Size] = {false};
+  IntVec2 mClientSize = IntVec2::cZero;
+  static IntVec2 sInitialClientSize;
 
-  /// The operating system specific handle to the window.
-  OsHandle mHandle;
+  Array<PlatformInputDevice> mInputDevices;
 
-  /// Minimum size of a window. Should be initialized to IntVec2(10, 10).
-  IntVec2 mMinClientSize;
+  // If the mouse is currently trapped (not visible and centered on the window).
+  bool mMouseTrapped = false;
 
-  /// Should be initialized to the passed in clientSize.
-  /// Only should be used to track the last set client size (detect changes).
-  IntVec2 mClientSize;
-
-  /// If this window has captured the mouse.
-  bool mCapture;
-
-  /// Should be initialized to (-1, -1)
-  /// Only should be used to track the last set mouse position (detect changes).
-  IntVec2 mClientMousePosition;
-
-  BitField<WindowStyleFlags::Enum> mStyle;
-
-  ShellWindow* mParent;
-
-  ZeroDeclarePrivateData(ShellWindow, 64);
+  static Shell* sInstance;
+  
 };
 
 } // namespace Zero

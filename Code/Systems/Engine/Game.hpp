@@ -107,8 +107,6 @@ public:
 
   Vec2 GetResolution();
 
-  bool GetFullScreen();
-
   // Does the game have focus?
   bool GetFocused();
 
@@ -150,10 +148,6 @@ public:
 
   // Main widget holding the game
   HandleOf<GameWidget> mGameWidget;
-
-  /// Os Window holding the game. This is used to pass on Os events to the user,
-  /// set resolution, set fullscreen, etc...
-  OsWindow* mMainWindow;
 };
 
 } // namespace Zero

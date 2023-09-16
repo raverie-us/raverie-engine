@@ -11,11 +11,6 @@ Cog
 		var AutoTakeProjectScreenshot = false
 		var Guid = 0x5495377007825215
 	}
-	WindowLaunchSettings 
-	{
-		var LaunchFullscreen = true
-		var WindowedResolution = Integer2{1280, 720}
-	}
 	FrameRateSettings 
 	{
 		var VerticalSync = false

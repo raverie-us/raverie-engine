@@ -89,7 +89,6 @@ public:
 
   void OnProjectFileModified(FileEditEvent* e);
 
-  OsWindow* mOsWindow;
   MainWindow* mMainWindow;
 
   Widget* ShowWindow(StringParam name);

@@ -492,32 +492,6 @@ void UiRootWidget::DispatchAt(DispatchAtParams& params)
   //}
 }
 
-void UiRootWidget::SetOsWindow(OsWindow* window)
-{
-  // Disconnect from all Reactive events
-  DisconnectAll(GetOwner(), this);
-
-  // ConnectThisTo(osWindow, Events::OsResized, OnOsResize);
-  // ConnectThisTo(osWindow, Events::OsMouseDown, OnOsMouseDown);
-  // ConnectThisTo(osWindow, Events::OsMouseUp, OnOsMouseUp);
-  // ConnectThisTo(osWindow, Events::OsMouseMove, OnOsMouseMoved);
-  //
-  // ConnectThisTo(osWindow, Events::OsMouseScroll, OnOsMouseScroll);
-  //
-  // ConnectThisTo(osWindow, Events::OsKeyTyped, OnOsKeyTyped);
-  // ConnectThisTo(osWindow, Events::OsKeyRepeated, OnOsKeyDown);
-  // ConnectThisTo(osWindow, Events::OsKeyDown, OnOsKeyDown);
-  // ConnectThisTo(osWindow, Events::OsKeyUp, OnOsKeyUp);
-  //
-  // ConnectThisTo(osWindow, Events::OsFocusGained, OnOsFocusGained);
-  // ConnectThisTo(osWindow, Events::OsFocusLost, OnOsFocusLost);
-  //
-  // ConnectThisTo(osWindow, Events::OsMouseFileDrop, OnOsMouseDrop);
-  // ConnectThisTo(osWindow, Events::OsPaint, OnOsPaint);
-  //
-  // ConnectThisTo(osWindow, Events::OsClose, OnClose);
-}
-
 void UiRootWidget::OnMouseEvent(ViewportMouseEvent* e)
 {
   if (mIgnoreEvents)

@@ -99,7 +99,7 @@ ColorEyeDropper::ColorEyeDropper(Mouse* mouse, Composite* parent) : MouseManipul
 
 void ColorEyeDropper::SetColorEvent(StringParam eventName)
 {
-  ByteColor color = Z::gEngine->has(OsShell)->GetColorAtMouse();
+  ByteColor color = Shell::sInstance->GetColorAtMouse();
   ColorEvent event(ToFloatColor(color));
   mOwner->DispatchEvent(eventName, &event);
 }

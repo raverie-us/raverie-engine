@@ -144,18 +144,6 @@ public:
   HashSet<String> mProjectTags;
 };
 
-/// Settings for how the application window should be sized when launched.
-class WindowLaunchSettings : public Component
-{
-public:
-  ZilchDeclareType(WindowLaunchSettings, TypeCopyMode::ReferenceType);
-
-  void Serialize(Serializer& stream) override;
-
-  /// Resolution of application when launched in windowed mode.
-  IntVec2 mWindowedResolution;
-};
-
 /// Settings for how the frame rate of the engine should be controlled.
 class FrameRateSettings : public Component
 {

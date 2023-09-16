@@ -64,10 +64,6 @@ public:
   /// Widget.
   void DispatchAt(DispatchAtParams& dispatchParams);
 
-  // Input Event Routing
-  /// If set, all input from the Os will be forwarded to the root widget.
-  void SetOsWindow(OsWindow* window);
-
   /// Reactive event response
   void OnMouseEvent(ViewportMouseEvent* e);
   void OnMouseButton(ViewportMouseEvent* e);

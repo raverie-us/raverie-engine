@@ -17,8 +17,9 @@ void ZeroExportNamed(ExportFree)(void* pointer) {
   free(pointer);
 }
 
-void ZeroExportNamed(ExportInitialize)(const char* arguments) {
+void ZeroExportNamed(ExportInitialize)(const char* arguments, int32_t clientWidth, int32_t clientHeight) {
   __wasm_call_ctors();
+  Shell::sInitialClientSize = IntVec2(clientWidth, clientHeight);
   startup = new GameOrEditorStartup();
   gCommandLine = arguments;
 }

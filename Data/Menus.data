@@ -125,8 +125,7 @@ Menus menus =
           "Performance",
           "VolumeMeter",
           "SoundNodeGraph",
-		  "Divider",
-		  "ToggleFullScreen"
+		  "Divider"
 		]
 	},
 	

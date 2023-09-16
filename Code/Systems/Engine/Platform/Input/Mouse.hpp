@@ -45,9 +45,6 @@ public:
   Vec2 mRawMovement;
   Vec2 mCursorMovement;
 
-  // Hack to make public for now
-  OsWindow* mActiveWindow;
-
 private:
   OsShell* mPlatform;
   Vec2 mClientPosition;

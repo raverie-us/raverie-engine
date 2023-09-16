@@ -43,17 +43,7 @@ protected:
   // The following options should be set by the user in UserInitialize.
   // The default options are all tailored for the Editor.
   bool mLoadContent = true;
-  WindowState::Enum mWindowState = WindowState::Maximized;
-  // If this value is IntVec2::cZero, the primary monitor usable size will be used.
-  IntVec2 mWindowSize = IntVec2::cZero;
-  IntVec2 mMinimumWindowSize = cMinimumMonitorSize;
-  WindowStyleFlags::Enum mWindowStyle =
-      (WindowStyleFlags::Enum)(WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar |
-                               WindowStyleFlags::Resizable | WindowStyleFlags::Close | WindowStyleFlags::ClientOnly);
   bool mUseSplashScreen = false;
-
-  // This will be available in UserStartup.
-  OsWindow* mMainWindow = nullptr;
 
   // The order these are declared is the order they will be called.
   void UserInitializeConfig(Cog* configCog);

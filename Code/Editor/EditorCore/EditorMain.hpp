@@ -11,7 +11,7 @@ public:
   float mTimeSinceEscape;
   bool mDisableInput;
 
-  EditorMain(Composite* parent, OsWindow* window);
+  EditorMain(Composite* parent);
   ~EditorMain();
 
   void OnPackagedBuilt(ContentSystemEvent* event);

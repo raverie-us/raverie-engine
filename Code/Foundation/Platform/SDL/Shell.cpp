@@ -28,41 +28,12 @@ void Shell::OpenFile(FileDialogInfo& config)
 }
 #endif
 
-#if !defined(ZeroPlatformNoShellSaveFile)
-void Shell::SaveFile(FileDialogInfo& config)
-{
-  String downloads = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "Downloads");
-  CreateDirectoryAndParents(downloads);
-
-  String filePath = FilePath::Combine(downloads, config.DefaultFileName);
-  if (FileExists(filePath) || DirectoryExists(filePath))
-  {
-    String id = "_" + ToString(GenerateUniqueId64());
-    String fileName;
-    StringRange dot = config.DefaultFileName.FindLastOf(".");
-    if (!dot.Empty())
-      fileName = BuildString(config.DefaultFileName.SubString(config.DefaultFileName.Begin(), dot.Begin()),
-                             id,
-                             ".",
-                             config.DefaultFileName.SubString(dot.End(), config.DefaultFileName.End()));
-    else
-      fileName = config.DefaultFileName + id;
-
-    filePath = FilePath::Combine(downloads, fileName);
-  }
-
-  config.mFiles.PushBack(filePath);
-  if (config.mCallback)
-    config.mCallback(config.mFiles, config.mUserData);
-}
-#endif
-
 void Shell::ShowMessageBox(StringParam title, StringParam message)
 {
   SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, title.c_str(), message.c_str(), nullptr);
 }
 
-void UpdateResize(ShellWindow* window, IntVec2Param clientSize)
+void UpdateResize(Shell* window, IntVec2Param clientSize)
 {
   if (clientSize == window->mClientSize)
     return;
@@ -74,7 +45,6 @@ void UpdateResize(ShellWindow* window, IntVec2Param clientSize)
 void Shell::Update()
 {
   ZeroGetPrivateData(ShellPrivateData);
-  ShellWindow* mainWindow = mMainWindow;
 
   // Some platforms don't sent all resize events, so handle that here.
   // For example, if you resize the window while loading in Emscripten, it
@@ -87,16 +57,10 @@ void Shell::Update()
   {
     switch (e.type)
     {
-    case SDL_QUIT:
-    {
-      if (mainWindow && mainWindow->mOnClose)
-        mainWindow->mOnClose(mainWindow);
-      break;
-    }
 
     case SDL_WINDOWEVENT:
     {
-      ShellWindow* window = GetShellWindowFromSDLId(e.window.windowID);
+      Shell* window = GetShellFromSDLId(e.window.windowID);
       if (!window)
         break;
 
@@ -143,320 +107,41 @@ void Shell::Update()
   }
 }
 
-ShellWindow::ShellWindow(Shell* shell,
-                         StringParam windowName,
-                         Math::IntVec2Param clientSize,
-                         Math::IntVec2Param monitorClientPos,
-                         WindowStyleFlags::Enum flags,
-                         WindowState::Enum state) :
-    mShell(shell),
-    mMinClientSize(IntVec2(10, 10)),
-    mParent(parentWindow),
-    mHandle(nullptr),
-    mStyle(flags),
+Shell::Shell(Math::IntVec2Param clientSize) :
     mClientSize(clientSize),
-    mClientMousePosition(IntVec2(-1, -1)),
     mCapture(false),
     mUserData(nullptr),
-    mOnClose(nullptr),
     mOnFocusChanged(nullptr),
     mOnClientSizeChanged(nullptr),
     mOnDevicesChanged(nullptr),
     mOnHitTest(nullptr),
     mOnInputDeviceChanged(nullptr)
 {
-  Uint32 sdlFlags = SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_OPENGL;
-  if (flags & WindowStyleFlags::NotVisible)
-    sdlFlags |= SDL_WINDOW_HIDDEN;
-  if (flags & WindowStyleFlags::Resizable)
-    sdlFlags |= SDL_WINDOW_RESIZABLE;
-  if (flags & WindowStyleFlags::ClientOnly)
-    sdlFlags |= SDL_WINDOW_BORDERLESS;
-
-  if (!(flags & WindowStyleFlags::OnTaskBar))
-    sdlFlags |= SDL_WINDOW_SKIP_TASKBAR;
-
-  switch (state)
-  {
-  case WindowState::Minimized:
-    sdlFlags |= SDL_WINDOW_MINIMIZED;
-    break;
-
-  case WindowState::Maximized:
-    sdlFlags |= SDL_WINDOW_MAXIMIZED;
-    break;
-
-  case WindowState::Fullscreen:
-    sdlFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-    break;
-  default:
-    break;
-  }
-
-  // Is the width and height in client space? SDL doesn't say...
-  SDL_Window* sdlWindow = SDL_CreateWindow(
-      windowName.c_str(), monitorClientPos.x, monitorClientPos.y, clientSize.x, clientSize.y, sdlFlags);
-  ErrorIf(sdlWindow == nullptr, "%s", SDL_GetError());
-  mHandle = sdlWindow;
-
-  SDL_SetWindowHitTest(sdlWindow, &ShellWindowSDLHitTest, this);
-
-  SDL_SetWindowData(sdlWindow, cShellWindow, this);
-
-  if (WindowStyleFlags::MainWindow & flags)
-  {
-    ErrorIf(shell->mMainWindow != nullptr, "Another main window already exists");
-    shell->mMainWindow = this;
-    gSdlMainWindow = sdlWindow;
-  }
-  shell->mWindows.PushBack(this);
 }
 
-ShellWindow::~ShellWindow()
-{
-  if (gSdlMainWindow == mHandle)
-    gSdlMainWindow = nullptr;
-  Destroy();
-}
-
-void ShellWindow::Destroy()
-{
-  if (!mHandle)
-    return;
-
-  if (mShell && mShell->mMainWindow == this)
-    mShell->mMainWindow = nullptr;
-
-  mShell->mWindows.EraseValue(this);
-
-  SDL_DestroyWindow((SDL_Window*)mHandle);
-
-  mHandle = nullptr;
-}
-
-IntRect ShellWindow::GetMonitorClientRectangle()
-{
-  IntRect monitorClientRectangle;
-  SDL_GetWindowSize((SDL_Window*)mHandle, &monitorClientRectangle.SizeX, &monitorClientRectangle.SizeY);
-  SDL_GetWindowPosition((SDL_Window*)mHandle, &monitorClientRectangle.X, &monitorClientRectangle.Y);
-  return monitorClientRectangle;
-}
-
-void ShellWindow::SetMonitorClientRectangle(const IntRect& monitorRectangle)
-{
-  SDL_SetWindowPosition((SDL_Window*)mHandle, monitorRectangle.X, monitorRectangle.Y);
-  SDL_SetWindowSize((SDL_Window*)mHandle, monitorRectangle.SizeX, monitorRectangle.SizeY);
-  mClientSize = monitorRectangle.Size();
-}
-
-IntRect ShellWindow::GetMonitorBorderedRectangle()
-{
-  int top = 0;
-  int left = 0;
-  int bottom = 0;
-  int right = 0;
-
-  SDL_GetWindowBordersSize((SDL_Window*)mHandle, &top, &left, &bottom, &right);
-
-  IntRect monitorBorderedRectangle = GetMonitorClientRectangle();
-
-  monitorBorderedRectangle.X -= left;
-  monitorBorderedRectangle.Y -= top;
-
-  monitorBorderedRectangle.SizeX += right;
-  monitorBorderedRectangle.SizeY += bottom;
-
-  return monitorBorderedRectangle;
-}
-
-void ShellWindow::SetMonitorBorderedRectangle(const IntRect& monitorBorderedRectangle)
-{
-  int top = 0;
-  int left = 0;
-  int bottom = 0;
-  int right = 0;
-
-  SDL_GetWindowBordersSize((SDL_Window*)mHandle, &top, &left, &bottom, &right);
-
-  IntRect monitorClientRectangle = monitorBorderedRectangle;
-
-  monitorClientRectangle.X += left;
-  monitorClientRectangle.Y += top;
-
-  monitorClientRectangle.SizeX -= right;
-  monitorClientRectangle.SizeY -= bottom;
-
-  SetMonitorClientRectangle(monitorClientRectangle);
-
-  mClientSize = monitorClientRectangle.Size();
-}
-
-IntVec2 ShellWindow::GetMinClientSize()
-{
-  return mMinClientSize;
-}
-
-void ShellWindow::SetMinClientSize(Math::IntVec2Param minSize)
-{
-  SDL_SetWindowMinimumSize((SDL_Window*)mHandle, minSize.x, minSize.y);
-  mMinClientSize = minSize;
-}
-
-IntVec2 ShellWindow::MonitorToClient(Math::IntVec2Param monitorPosition)
-{
-  return monitorPosition - GetMonitorClientPosition();
-}
-
-IntVec2 ShellWindow::MonitorToBordered(Math::IntVec2Param monitorPosition)
-{
-  return ClientToBordered(MonitorToClient(monitorPosition));
-}
-
-IntVec2 ShellWindow::ClientToMonitor(Math::IntVec2Param clientPosition)
-{
-  return clientPosition + GetMonitorClientPosition();
-}
-
-IntVec2 ShellWindow::ClientToBordered(Math::IntVec2Param clientPosition)
-{
-  int top = 0;
-  int left = 0;
-
-  SDL_GetWindowBordersSize((SDL_Window*)mHandle, &top, &left, nullptr, nullptr);
-
-  return IntVec2(clientPosition.x + left, clientPosition.y + top);
-}
-
-IntVec2 ShellWindow::BorderedToMonitor(Math::IntVec2Param borderedPosition)
-{
-  return ClientToMonitor(BorderedToClient(borderedPosition));
-}
-
-IntVec2 ShellWindow::BorderedToClient(Math::IntVec2Param borderedPosition)
-{
-  int top = 0;
-  int left = 0;
-
-  SDL_GetWindowBordersSize((SDL_Window*)mHandle, &top, &left, nullptr, nullptr);
-
-  return IntVec2(borderedPosition.x - left, borderedPosition.y - top);
-}
-
-WindowStyleFlags::Enum ShellWindow::GetStyle()
-{
-  return mStyle.Field;
-}
-
-void ShellWindow::SetStyle(WindowStyleFlags::Enum style)
-{
-  mStyle = style;
-  Error("Not implemented");
-}
-
-bool ShellWindow::GetVisible()
-{
-  return (SDL_GetWindowFlags((SDL_Window*)mHandle) & SDL_WINDOW_SHOWN) != 0;
-}
-
-void ShellWindow::SetVisible(bool visible)
-{
-  if (visible)
-    SDL_ShowWindow((SDL_Window*)mHandle);
-  else
-    SDL_HideWindow((SDL_Window*)mHandle);
-}
-
-String ShellWindow::GetTitle()
-{
-  return SDL_GetWindowTitle((SDL_Window*)mHandle);
-}
-
-void ShellWindow::SetTitle(StringParam title)
-{
-  SDL_SetWindowTitle((SDL_Window*)mHandle, title.c_str());
-}
-
-WindowState::Enum ShellWindow::GetState()
-{
-  Uint32 flags = SDL_GetWindowFlags((SDL_Window*)mHandle);
-
-  // Restore is never returned.
-  if (flags & SDL_WINDOW_FULLSCREEN || flags & SDL_WINDOW_FULLSCREEN_DESKTOP)
-    return WindowState::Fullscreen;
-  if (flags & SDL_WINDOW_MAXIMIZED)
-    return WindowState::Maximized;
-  if (flags & SDL_WINDOW_MINIMIZED)
-    return WindowState::Minimized;
-
-  return WindowState::Windowed;
-}
-
-void ShellWindow::SetState(WindowState::Enum windowState)
-{
-  switch (windowState)
-  {
-  case WindowState::Minimized:
-  {
-    SDL_MinimizeWindow((SDL_Window*)mHandle);
-    break;
-  }
-
-  case WindowState::Windowed:
-  {
-    SDL_RestoreWindow((SDL_Window*)mHandle);
-    break;
-  }
-
-  case WindowState::Maximized:
-  {
-    SDL_MaximizeWindow((SDL_Window*)mHandle);
-    break;
-  }
-
-  case WindowState::Fullscreen:
-  {
-    SDL_SetWindowFullscreen((SDL_Window*)mHandle, SDL_WINDOW_FULLSCREEN_DESKTOP);
-    break;
-  }
-
-  case WindowState::Restore:
-  {
-    SDL_RestoreWindow((SDL_Window*)mHandle);
-    break;
-  }
-  default:
-    break;
-  }
-}
-
-void ShellWindow::SetMouseCapture(bool capture)
+void Shell::SetMouseCapture(bool capture)
 {
   SDL_CaptureMouse((SDL_bool)capture);
   mCapture = capture;
 }
 
-bool ShellWindow::GetMouseCapture()
+bool Shell::GetMouseCapture()
 {
   return mCapture;
 }
 
-void ShellWindow::TakeFocus()
-{
-  SDL_RaiseWindow((SDL_Window*)mHandle);
-}
-
-bool ShellWindow::HasFocus()
+bool Shell::HasFocus()
 {
   return SDL_GetKeyboardFocus() == mHandle;
 }
 
-bool ShellWindow::GetImage(Image* image)
+bool Shell::GetImage(Image* image)
 {
   Error("Not implemented");
   return false;
 }
 
-void ShellWindow::Close()
+void Shell::Close()
 {
   SDL_Event e;
   memset(&e, 0, sizeof(e));
@@ -465,11 +150,6 @@ void ShellWindow::Close()
   e.window.event = SDL_WINDOWEVENT_CLOSE;
   e.window.windowID = SDL_GetWindowID((SDL_Window*)mHandle);
   SDL_PushEvent(&e);
-}
-
-bool ShellWindow::HasOwnMinMaxExitButtons()
-{
-  return true;
 }
 
 } // namespace Zero

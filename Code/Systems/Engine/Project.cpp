@@ -315,19 +315,6 @@ String ProjectDescription::GetTagsString(StringParam splitChar)
   return tagText;
 }
 
-ZilchDefineType(WindowLaunchSettings, builder, type)
-{
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZilchBindFieldProperty(mWindowedResolution);
-}
-
-void WindowLaunchSettings::Serialize(Serializer& stream)
-{
-  SerializeNameDefault(mWindowedResolution, IntVec2(1280, 720));
-}
-
 ZilchDefineType(FrameRateSettings, builder, type)
 {
   ZeroBindComponent();

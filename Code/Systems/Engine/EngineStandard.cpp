@@ -41,8 +41,6 @@ ZilchDefineEnum(StoreResult);
 ZilchDefineEnum(StreamType);
 ZilchDefineEnum(TabWidth);
 ZilchDefineEnum(TimeMode);
-ZilchDefineEnum(WindowState);
-ZilchDefineEnum(WindowStyleFlags);
 
 void LocationBind(LibraryBuilder& builder, BoundType* type)
 {
@@ -127,8 +125,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeEnum(StreamType);
   ZilchInitializeEnum(TabWidth);
   ZilchInitializeEnum(TimeMode);
-  ZilchInitializeEnum(WindowState);
-  ZilchInitializeEnum(WindowStyleFlags);
 
   // Arrays
   ZeroInitializeArrayTypeAs(Array<ContentLibraryReference>, "ContentLibraryReferenceArray");
@@ -305,7 +301,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
 
   ZilchInitializeType(MainConfig);
   ZilchInitializeType(EditorConfig);
-  ZilchInitializeType(WindowLaunchSettings);
   ZilchInitializeType(FrameRateSettings);
   ZilchInitializeType(DebugSettings);
   ZilchInitializeType(ExportSettings);

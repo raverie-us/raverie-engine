@@ -333,7 +333,6 @@ ContentPackageExporter::ContentPackageExporter(Composite* parent) : Composite(pa
   mHintText->SetInteractive(false);
 
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
-  ConnectThisTo(this, "OnExportFileSelected", OnExportFileSelected);
   ConnectThisTo(this, "RemoveSelectedItems", RemoveSelectedItems);
 }
 
@@ -369,27 +368,6 @@ void ContentPackageExporter::OnExportPressed(Event* e)
     return;
   }
 
-  FileDialogConfig* config = FileDialogConfig::Create();
-  config->EventName = "OnExportFileSelected";
-  config->CallbackObject = this;
-  config->AddFilter("Import Pack File", "*.zeropack");
-  String filename = "Package";
-  if (!mTempPackage.mName.Empty())
-    filename = mTempPackage.mName;
-  config->DefaultFileName = BuildString(filename, ".zeropack");
-  Z::gEngine->has(OsShell)->SaveFile(config);
-
-  // Close the export window after exporting a content package
-  CloseTabContaining(this);
-}
-
-void ContentPackageExporter::OnExportFileSelected(OsFileSelection* e)
-{
-  if (!e->Success)
-    return;
-
-  String packageFile = e->Files[0];
-
   ContentPackageListing listing;
 
   // Add all the content items to the listing
@@ -407,8 +385,14 @@ void ContentPackageExporter::OnExportFileSelected(OsFileSelection* e)
   }
 
   // Write out the package file
-  ExportContentPackageListing(listing, packageFile);
-  Download(packageFile);
+  ByteBuffer packageBuffer;
+  ExportContentPackageListing(listing, packageBuffer);
+  String packageName = mTempPackage.mName;
+  if (packageName.Empty()) {
+    packageName = "Package";
+  }
+  String packageFile = BuildString(packageName, ".zeropack");
+  Download("Package.zeropack", packageBuffer.ToString());
 
   // If info provided write that out
   if (!mTempPackage.mName.Empty())
@@ -418,19 +402,16 @@ void ContentPackageExporter::OnExportFileSelected(OsFileSelection* e)
     mTempPackage.mVersionBuilt = GetRevisionNumber();
 
     // Write out the meta file
-    String metaFile = BuildString(packageFile, ".meta");
-    Download(metaFile);
     TextSaver saver;
-    Status status;
-    saver.Open(status, metaFile.c_str());
-    if (!status.Failed())
-    {
-      saver.StartPolymorphic("ContentPackage");
-      mTempPackage.Serialize(saver);
-      saver.EndPolymorphic();
-    }
-    saver.Close();
-  }
+    saver.OpenBuffer();
+    saver.StartPolymorphic("ContentPackage");
+    mTempPackage.Serialize(saver);
+    saver.EndPolymorphic();
+    Download(BuildString(packageFile, ".meta"), saver.GetString());
+  } 
+
+  // Close the export window after exporting a content package
+  CloseTabContaining(this);
 }
 
 void ContentPackageExporter::OnKeyDown(KeyboardEvent* event)

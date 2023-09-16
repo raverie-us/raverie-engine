@@ -10,7 +10,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/Intrinsics.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Peripherals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Process.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Resolution.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Shell.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Socket.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Thread.cpp
@@ -19,7 +18,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/Utilities.cpp
     ${CMAKE_CURRENT_LIST_DIR}/VirtualFileAndFileSystem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WebRequest.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/PlatformCommunication.cpp
 )
 
 raverie_target_includes(Platform

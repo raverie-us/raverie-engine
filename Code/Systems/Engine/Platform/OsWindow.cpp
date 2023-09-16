@@ -30,181 +30,51 @@ OsWindow* OsWindow::sInstance = nullptr;
 
 ZilchDefineType(OsWindow, builder, type)
 {
-  ZilchBindGetterSetterProperty(MonitorClientPosition);
-  ZilchBindSetter(MinClientSize);
-  ZilchBindGetterSetterProperty(ClientSize);
-  // Seems to be problematic to expose because they can set some dangerous stuff
-  // ZilchBindGetterSetterProperty(Style);
-  ZilchBindGetterSetterProperty(Visible);
-  ZilchBindSetter(Title);
-  ZilchBindGetterSetterProperty(State);
-
+  ZilchBindGetterProperty(ClientSize);
   ZilchBindMethod(HasFocus);
-  // Currently behaves weird when called from script when the window doesn't
-  // have focus
-  // ZilchBindMethod(TakeFocus);
   ZilchBindSetter(MouseCapture);
   ZilchBindGetterSetter(MouseTrap);
-
-  ZilchBindMethod(MonitorToClient);
-  ZilchBindMethod(ClientToMonitor);
 }
 
-OsWindow::OsWindow(OsShell* shell,
-                   StringParam windowName,
-                   IntVec2Param clientSize,
-                   IntVec2Param monitorClientPos,
-                   WindowStyleFlags::Enum flags,
-                   WindowState::Enum state) :
-    mWindow(&shell->mShell,
-            windowName,
-            clientSize,
-            monitorClientPos,
-            flags,
-            state),
-    mMouseTrapped(false)
+OsWindow::OsWindow()
 {
   ErrorIf(sInstance != nullptr, "We should only have one instance");
   sInstance = this;
-  
-  mWindow.mUserData = this;
 
-  mWindow.mOnClose = &ShellWindowOnClose;
-  mWindow.mOnFocusChanged = &ShellWindowOnFocusChanged;
-  mWindow.mOnClientSizeChanged = &ShellWindowOnClientSizeChanged;
-  mWindow.mOnDevicesChanged = &ShellWindowOnDevicesChanged;
-  mWindow.mOnHitTest = &ShellWindowOnHitTest;
-  mWindow.mOnInputDeviceChanged = &ShellWindowOnInputDeviceChanged;
-
-  // Since we're creating the main window, do a single scan for input devices
-  // (they rely on a main window)
-  if (flags & WindowStyleFlags::MainWindow)
-    shell->ScanInputDevices();
+  //Shell::sInstance->mOnFocusChanged = &ShellWOnFocusChanged;
+  //Shell::sInstance->mOnClientSizeChanged = &ShellWOnClientSizeChanged;
+  //Shell::sInstance->mOnDevicesChanged = &ShellWOnDevicesChanged;
+  //Shell::sInstance->mOnHitTest = &ShellWOnHitTest;
+  //Shell::sInstance->mOnInputDeviceChanged = &ShellWOnInputDeviceChanged;
 }
 
 OsWindow::~OsWindow()
 {
 }
 
-IntVec2 OsWindow::GetMonitorClientPosition()
-{
-  return mWindow.GetMonitorClientPosition();
-}
-
-void OsWindow::SetMonitorClientPosition(IntVec2Param monitorPosition)
-{
-  return mWindow.SetMonitorClientPosition(monitorPosition);
-}
-
-IntVec2 OsWindow::GetBorderedSize()
-{
-  return mWindow.GetBorderedSize();
-}
-
-void OsWindow::SetBorderedSize(IntVec2Param borderedSize)
-{
-  return mWindow.SetBorderedSize(borderedSize);
-}
-
-void OsWindow::SetMinClientSize(IntVec2Param minClientSize)
-{
-  return mWindow.SetMinClientSize(minClientSize);
-}
-
 IntVec2 OsWindow::GetClientSize()
 {
-  return mWindow.GetClientSize();
-}
-
-void OsWindow::SetClientSize(IntVec2Param clientSize)
-{
-  return mWindow.SetClientSize(clientSize);
-}
-
-IntVec2 OsWindow::MonitorToClient(IntVec2Param monitorPosition)
-{
-  return mWindow.MonitorToClient(monitorPosition);
-}
-
-IntVec2 OsWindow::ClientToMonitor(IntVec2Param clientPosition)
-{
-  return mWindow.ClientToMonitor(clientPosition);
-}
-
-WindowStyleFlags::Enum OsWindow::GetStyle()
-{
-  return mWindow.GetStyle();
-}
-
-void OsWindow::SetStyle(WindowStyleFlags::Enum style)
-{
-  return mWindow.SetStyle(style);
-}
-
-bool OsWindow::GetVisible()
-{
-  return mWindow.GetVisible();
-}
-
-void OsWindow::SetVisible(bool visible)
-{
-  return mWindow.SetVisible(visible);
-}
-
-void OsWindow::SetTitle(StringParam title)
-{
-  return mWindow.SetTitle(title);
-}
-
-String OsWindow::GetTitle()
-{
-  return mWindow.GetTitle();
-}
-
-WindowState::Enum OsWindow::GetState()
-{
-  return mWindow.GetState();
-}
-
-void OsWindow::SetState(WindowState::Enum windowState)
-{
-  return mWindow.SetState(windowState);
-}
-
-void OsWindow::TakeFocus()
-{
-  return mWindow.TakeFocus();
+  return Shell::sInstance->GetClientSize();
 }
 
 bool OsWindow::HasFocus()
 {
-  return mWindow.HasFocus();
-}
-
-void OsWindow::Close()
-{
-  return mWindow.Close();
-}
-
-void OsWindow::Destroy()
-{
-  return mWindow.Destroy();
+  return Shell::sInstance->HasFocus();
 }
 
 void OsWindow::SetMouseCapture(bool enabled)
 {
-  return mWindow.SetMouseCapture(enabled);
+  return Shell::sInstance->SetMouseCapture(enabled);
 }
 
 bool OsWindow::GetMouseTrap()
 {
-  return mMouseTrapped;
+  return Shell::sInstance->GetMouseTrap();
 }
 
 void OsWindow::SetMouseTrap(bool mouseTrapped)
 {
-  mMouseTrapped = mouseTrapped;
-  ImportMouseTrap(mouseTrapped);
+  Shell::sInstance->SetMouseTrap(mouseTrapped);
 }
 
 void OsWindow::SendKeyboardEvent(KeyboardEvent& event)
@@ -240,43 +110,38 @@ void OsWindow::SendWindowEvent(OsWindowEvent& event)
 
 void OsWindow::FillKeyboardEvent(Keys::Enum key, KeyState::Enum keyState, KeyboardEvent& keyEvent)
 {
-  Shell* shell = mWindow.mShell;
   keyEvent.Key = key;
   keyEvent.State = keyState;
   keyEvent.mKeyboard = Keyboard::GetInstance();
-  keyEvent.AltPressed = shell->IsKeyDown(Keys::Alt);
-  keyEvent.CtrlPressed = shell->IsKeyDown(Keys::Control);
-  keyEvent.ShiftPressed = shell->IsKeyDown(Keys::Shift);
-  keyEvent.SpacePressed = shell->IsKeyDown(Keys::Space);
+  keyEvent.AltPressed = Shell::sInstance->IsKeyDown(Keys::Alt);
+  keyEvent.CtrlPressed = Shell::sInstance->IsKeyDown(Keys::Control);
+  keyEvent.ShiftPressed = Shell::sInstance->IsKeyDown(Keys::Shift);
+  keyEvent.SpacePressed = Shell::sInstance->IsKeyDown(Keys::Space);
 }
 
 void OsWindow::FillMouseEvent(IntVec2Param clientPosition, MouseButtons::Enum mouseButton, OsMouseEvent& mouseEvent)
 {
-  Shell* shell = mWindow.mShell;
   mouseEvent.ClientPosition = clientPosition;
   mouseEvent.ScrollMovement = Vec2(0, 0);
-  mouseEvent.AltPressed = shell->IsKeyDown(Keys::Alt);
-  mouseEvent.CtrlPressed = shell->IsKeyDown(Keys::Control);
-  mouseEvent.ShiftPressed = shell->IsKeyDown(Keys::Shift);
-  mouseEvent.ButtonDown[MouseButtons::Left] = shell->IsMouseDown(MouseButtons::Left);
-  mouseEvent.ButtonDown[MouseButtons::Right] = shell->IsMouseDown(MouseButtons::Right);
-  mouseEvent.ButtonDown[MouseButtons::Middle] = shell->IsMouseDown(MouseButtons::Middle);
-  mouseEvent.ButtonDown[MouseButtons::XOneBack] = shell->IsMouseDown(MouseButtons::XOneBack);
-  mouseEvent.ButtonDown[MouseButtons::XTwoForward] = shell->IsMouseDown(MouseButtons::XTwoForward);
+  mouseEvent.AltPressed = Shell::sInstance->IsKeyDown(Keys::Alt);
+  mouseEvent.CtrlPressed = Shell::sInstance->IsKeyDown(Keys::Control);
+  mouseEvent.ShiftPressed = Shell::sInstance->IsKeyDown(Keys::Shift);
+  mouseEvent.ButtonDown[MouseButtons::Left] = Shell::sInstance->IsMouseDown(MouseButtons::Left);
+  mouseEvent.ButtonDown[MouseButtons::Right] = Shell::sInstance->IsMouseDown(MouseButtons::Right);
+  mouseEvent.ButtonDown[MouseButtons::Middle] = Shell::sInstance->IsMouseDown(MouseButtons::Middle);
+  mouseEvent.ButtonDown[MouseButtons::XOneBack] = Shell::sInstance->IsMouseDown(MouseButtons::XOneBack);
+  mouseEvent.ButtonDown[MouseButtons::XTwoForward] = Shell::sInstance->IsMouseDown(MouseButtons::XTwoForward);
   mouseEvent.ButtonDown[MouseButtons::None] = 0;
   mouseEvent.MouseButton = mouseButton;
 }
 
-void OsWindow::ShellWindowOnClose(ShellWindow* window)
-{
-  OsWindow* self = (OsWindow*)window->mUserData;
+void ZeroExportNamed(ExportQuit)() {
   OsWindowEvent event;
-  self->DispatchEvent(Events::OsClose, &event);
+  OsWindow::sInstance->DispatchEvent(Events::OsClose, &event);
 }
 
-void OsWindow::ShellWindowOnFocusChanged(bool activated, ShellWindow* window)
+void OsWindow::ShellWOnFocusChanged(bool activated)
 {
-  OsWindow* self = (OsWindow*)window->mUserData;
   OsWindowEvent focusEvent;
   if (activated)
   {
@@ -288,7 +153,7 @@ void OsWindow::ShellWindowOnFocusChanged(bool activated, ShellWindow* window)
     focusEvent.EventId = Events::OsFocusLost;
   }
 
-  self->SendWindowEvent(focusEvent);
+  OsWindow::sInstance->SendWindowEvent(focusEvent);
 }
 
 Array<String> gDroppedFiles;
@@ -307,12 +172,11 @@ void ZeroExportNamed(ExportFileDropFinish)(int32_t clientX, int32_t clientY) {
   OsWindow::sInstance->SendMouseDropEvent(mouseDrop);
 }
 
-void OsWindow::ShellWindowOnClientSizeChanged(Math::IntVec2Param clientSize, ShellWindow* window)
+void OsWindow::ShellWOnClientSizeChanged(Math::IntVec2Param clientSize)
 {
-  OsWindow* self = (OsWindow*)window->mUserData;
   OsWindowEvent sizeEvent;
   sizeEvent.ClientSize = clientSize;
-  self->DispatchEvent(Events::OsResized, &sizeEvent);
+  OsWindow::sInstance->DispatchEvent(Events::OsResized, &sizeEvent);
 }
 
 void ZeroExportNamed(ExportTextTyped)(uint32_t rune)
@@ -362,14 +226,12 @@ void ZeroExportNamed(ExportMouseScroll)(int32_t clientX, int32_t clientY, float 
   OsWindow::sInstance->SendMouseEvent(mouseEvent);
 }
 
-void OsWindow::ShellWindowOnDevicesChanged(ShellWindow* window)
+void OsWindow::ShellWOnDevicesChanged()
 {
-  OsWindow* self = (OsWindow*)window->mUserData;
-
   // DeactivateAll because joysticks may have been removed in device changed
   Z::gJoysticks->DeactivateAll();
 
-  const Array<PlatformInputDevice>& devices = window->mShell->ScanInputDevices();
+  const Array<PlatformInputDevice>& devices = Shell::sInstance->ScanInputDevices();
   forRange (PlatformInputDevice& device, devices)
   {
     // Tell the Joysticks system that a Joystick is present
@@ -379,27 +241,22 @@ void OsWindow::ShellWindowOnDevicesChanged(ShellWindow* window)
   Z::gJoysticks->JoysticksChanged();
 }
 
-WindowBorderArea::Enum OsWindow::ShellWindowOnHitTest(Math::IntVec2Param clientPosition, ShellWindow* window)
+WindowBorderArea::Enum OsWindow::ShellWOnHitTest(Math::IntVec2Param clientPosition)
 {
-  OsWindow* self = (OsWindow*)window->mUserData;
-
   OsWindowBorderHitTest event;
-  event.Window = self;
   event.ClientPosition = clientPosition;
-  self->DispatchEvent(Events::OsWindowBorderHitTest, &event);
+  OsWindow::sInstance->DispatchEvent(Events::OsWindowBorderHitTest, &event);
   return event.mWindowBorderArea;
 }
 
-void OsWindow::ShellWindowOnInputDeviceChanged(
-    PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data, ShellWindow* window)
+void OsWindow::ShellWOnInputDeviceChanged(
+    PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data)
 {
-  OsWindow* self = (OsWindow*)window->mUserData;
-
   Joystick* joystick = Z::gJoysticks->GetJoystickByDevice(device.mDeviceHandle);
   ReturnIf(joystick == nullptr,
            ,
            "Unable to find a joystick by the device handle "
-           "(should have been found in ShellWindowOnDevicesChanged)");
+           "(should have been found in ShellWOnDevicesChanged)");
 
   joystick->RawSetButtons(buttons);
 
@@ -427,7 +284,7 @@ ZilchDefineType(OsWindowEvent, builder, type)
 {
 }
 
-OsWindowEvent::OsWindowEvent() : Window(nullptr), ClientSize(IntVec2::cZero)
+OsWindowEvent::OsWindowEvent() : ClientSize(IntVec2::cZero)
 {
 }
 
@@ -487,7 +344,6 @@ ZilchDefineType(OsWindowBorderHitTest, builder, type)
 }
 
 OsWindowBorderHitTest::OsWindowBorderHitTest() :
-    Window(nullptr),
     ClientPosition(IntVec2::cZero),
     mWindowBorderArea(WindowBorderArea::None)
 {

@@ -14,18 +14,8 @@ void ExitEditor()
   if (Z::gWidgetManager->RootWidgets.Empty())
     return;
 
-  OsWindow* mainWindow = Z::gWidgetManager->RootWidgets.Begin()->GetOsWindow();
   OsWindowEvent event;
-  mainWindow->DispatchEvent(Events::OsClose, &event);
-}
-
-void FullScreen(Editor* editor)
-{
-  OsWindow* osWindow = editor->mOsWindow;
-  if (osWindow->GetState() != WindowState::Fullscreen)
-    osWindow->SetState(WindowState::Fullscreen);
-  else
-    osWindow->SetState(WindowState::Windowed);
+  OsWindow::sInstance->DispatchEvent(Events::OsClose, &event);
 }
 
 void ShowTextWindow(StringParam windowTitle, StringParam windowText)
@@ -191,7 +181,6 @@ void BindAppCommands(Cog* config, CommandManager* commands)
   commands->AddCommand("About", BindCommandFunction(ShowAbout), true);
 
   commands->AddCommand("Exit", BindCommandFunction(ExitEditor));
-  commands->AddCommand("ToggleFullScreen", BindCommandFunction(FullScreen), true);
 
   commands->AddCommand("BuildVersion", BindCommandFunction(BuildVersion), true);
   commands->AddCommand("WriteBuildInfo", BindCommandFunction(WriteBuildInfo));

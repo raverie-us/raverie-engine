@@ -30,28 +30,11 @@ public:
   cstr GetName() override;
   void Update(bool debugger) override;
 
-  /// Get the size of the primary monitor (desktop size).
-  IntVec2 GetPrimaryMonitorSize();
-
-  /// Get the pixel color at the mouse position.
-  ByteColor GetColorAtMouse();
-
   /// Set the cursor for the mouse.
   void SetMouseCursor(Cursor::Enum cursorId);
 
-  /// Use the file open dialog.
-  void OpenFile(FileDialogConfig* config);
-  /// Use the save file dialog.
-  void SaveFile(FileDialogConfig* config);
-  /// Message box used for critical failures.
-  void ShowMessageBox(StringParam title, StringParam message);
-
   /// Scan for new input devices and register them with Zero.
   void ScanInputDevices();
-
-  /// How many OsWindows current exist
-  size_t GetWindowCount();
-  OsWindow* GetWindow(size_t index);
 
   // Internal
 
@@ -86,7 +69,7 @@ public:
 /// FileDialogConfig is used to configure the Open File Dialog
 /// and the Save File Dialog.
 /// Note that the config may only be used ONCE because it will be automatically
-/// deleted at the end of the OpenFile/SaveFile call.
+/// deleted at the end of the OpenFile call.
 struct FileDialogConfig : public FileDialogInfo
 {
   // The default event name is Events::FileDialogComplete.

@@ -42,7 +42,7 @@ void LoadGamePackages(StringParam projectFile, Cog* projectCog)
   LoadResourcePackageRelative(projectDirectory, project->ProjectName);
 }
 
-void CreateGame(OsWindow* mainWindow, StringParam projectFile, Cog* projectCog)
+void CreateGame(StringParam projectFile, Cog* projectCog)
 {
   ZPrint("Creating Game\n");
 
@@ -60,10 +60,10 @@ void CreateGame(OsWindow* mainWindow, StringParam projectFile, Cog* projectCog)
 
   ZPrint("Creating game...\n");
 
-  IntVec2 intViewportSize = mainWindow->GetClientSize();
+  IntVec2 intViewportSize = Shell::sInstance->GetClientSize();
   Vec2 mainViewportSize = Pixels(float(intViewportSize.x), float(intViewportSize.y));
 
-  RootWidget* rootWidget = new RootWidget(mainWindow);
+  RootWidget* rootWidget = new RootWidget();
   rootWidget->SetSize(mainViewportSize);
 
   // In game mode only one widget that has the viewport
@@ -73,7 +73,6 @@ void CreateGame(OsWindow* mainWindow, StringParam projectFile, Cog* projectCog)
 
   // Create the GameSession
   GameSession* game = Z::gEngine->CreateGameSession();
-  game->mMainWindow = mainWindow;
   game->SetInEditor(false);
 
   game->mGameWidget = gameWidget;

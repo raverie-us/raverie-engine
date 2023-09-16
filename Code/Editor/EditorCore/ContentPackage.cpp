@@ -65,7 +65,7 @@ void LoadContentPackageListing(ContentPackageListing& listing, StringParam filen
   }
 }
 
-void ExportContentPackageListing(ContentPackageListing& listing, StringParam filename)
+void ExportContentPackageListing(ContentPackageListing& listing, ByteBuffer& bufferOut)
 {
   // Start compressing files to an archive
   Archive archive(ArchiveMode::Compressing);
@@ -88,7 +88,7 @@ void ExportContentPackageListing(ContentPackageListing& listing, StringParam fil
   }
 
   // Write out the zip file
-  archive.WriteZipFile(filename);
+  archive.WriteBuffer(bufferOut);
 }
 
 void ImportContentPackageListing(ContentPackageListing& listing, ContentLibrary* library, StringParam filename)

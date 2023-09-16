@@ -44,64 +44,13 @@ class OsWindow : public ThreadSafeId32EventObject
 public:
   ZilchDeclareType(OsWindow, TypeCopyMode::ReferenceType);
 
-  OsWindow(OsShell* shell,
-           StringParam windowName,
-           IntVec2Param clientSize,
-           IntVec2Param monitorClientPos,
-           WindowStyleFlags::Enum flags,
-           WindowState::Enum state);
+  OsWindow();
   virtual ~OsWindow();
-
-  /// Position of the window's client area in monitor coordinates
-  IntVec2 GetMonitorClientPosition();
-  void SetMonitorClientPosition(IntVec2Param monitorPosition);
-
-  /// The size of the window including the border
-  IntVec2 GetBorderedSize();
-  void SetBorderedSize(IntVec2Param borderedSize);
-
-  /// Set the minimum size of the window
-  void SetMinClientSize(IntVec2Param minClientSize);
 
   /// The current client size of the window
   IntVec2 GetClientSize();
-  void SetClientSize(IntVec2Param clientSize);
-
-  /// Convert screen coordinates to client coordinates
-  IntVec2 MonitorToClient(IntVec2Param monitorPosition);
-
-  /// Convert client coordinates to screen coordinates
-  IntVec2 ClientToMonitor(IntVec2Param clientPosition);
-
-  /// Style flags control border style, title bar, and other features.
-  WindowStyleFlags::Enum GetStyle();
-  void SetStyle(WindowStyleFlags::Enum style);
-
-  /// Is the window visible on the desktop?
-  bool GetVisible();
-  void SetVisible(bool visible);
-
-  /// Set the title of window displayed in the title bar.
-  void SetTitle(StringParam title);
-  String GetTitle();
-
-  /// State of the Window, Set state to Minimize, Maximize, or Restore the
-  /// window
-  WindowState::Enum GetState();
-  void SetState(WindowState::Enum windowState);
-
-  /// Try to take Focus and bring the window to the foreground.
-  /// The OS may prevent this from working if this app is not the foreground
-  /// app.
-  void TakeFocus();
   /// Does this window have focus?
   bool HasFocus();
-
-  /// Try to close the window. The OsClose event is sent and can be canceled
-  void Close();
-
-  /// Destroy the window
-  void Destroy();
 
   /// Capturing the mouse prevents messages from being sent to other windows and
   /// getting mouse movements outside the window (e.g. dragging).
@@ -122,21 +71,12 @@ public:
   void FillKeyboardEvent(Keys::Enum key, KeyState::Enum keyState, KeyboardEvent& keyEvent);
   void FillMouseEvent(IntVec2Param clientPosition, MouseButtons::Enum mouseButton, OsMouseEvent& mouseEvent);
 
-  // ShellWindow interface
-  static void ShellWindowOnClose(ShellWindow* window);
-  static void ShellWindowOnFocusChanged(bool activated, ShellWindow* window);
-  static void ShellWindowOnClientSizeChanged(Math::IntVec2Param clientSize, ShellWindow* window);
-  static void ShellWindowOnMinimized(ShellWindow* window);
-  static void ShellWindowOnDevicesChanged(ShellWindow* window);
-  static WindowBorderArea::Enum ShellWindowOnHitTest(Math::IntVec2Param clientPosition, ShellWindow* window);
-  static void ShellWindowOnInputDeviceChanged(
-      PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data, ShellWindow* window);
-
-  // If the mouse is currently trapped (not visible and centered on the window).
-  bool mMouseTrapped;
-
-  // The platform shell window.
-  ShellWindow mWindow;
+  static void ShellWOnFocusChanged(bool activated);
+  static void ShellWOnClientSizeChanged(Math::IntVec2Param clientSize);
+  static void ShellWOnDevicesChanged();
+  static WindowBorderArea::Enum ShellWOnHitTest(Math::IntVec2Param clientPosition);
+  static void ShellWOnInputDeviceChanged(
+      PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data);
 
   static OsWindow* sInstance;
 };
@@ -150,7 +90,6 @@ public:
 
   void Serialize(Serializer& stream);
 
-  OsWindow* Window;
   IntVec2 ClientSize;
 };
 
@@ -185,7 +124,6 @@ public:
 
   OsWindowBorderHitTest();
 
-  OsWindow* Window;
   IntVec2 ClientPosition;
 
   // This should be set by the receiver of the event.

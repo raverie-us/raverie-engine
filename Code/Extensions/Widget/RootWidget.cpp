@@ -21,12 +21,10 @@ Tweakable(Vec4, ClearColor, ToFloatColor(ByteColorRGBA(46, 46, 46, 255)), cLocat
 
 ZilchDefineType(RootWidget, builder, type)
 {
-  ZilchBindGetterProperty(OsWindow);
-
   ZeroBindEvent(Events::Closing, HandleableEvent);
 }
 
-RootWidget::RootWidget(OsWindow* osWindow) : Composite(NULL)
+RootWidget::RootWidget() : Composite(NULL)
 {
   WidgetManager::GetInstance()->RootWidgets.PushBack(this);
 
@@ -41,7 +39,6 @@ RootWidget::RootWidget(OsWindow* osWindow) : Composite(NULL)
   mLastClickPosition = Vec2(0, 0);
   mTimeSinceLastClick = 10000;
   mClearColor = RootWidgetUi::ClearColor;
-  mOsWindow = osWindow;
   mDragged = false;
 
   mDebuggerOverlay = new ColorBlock(this);
@@ -55,27 +52,27 @@ RootWidget::RootWidget(OsWindow* osWindow) : Composite(NULL)
 
   ConnectThisTo(Z::gWidgetManager, Events::WidgetUpdate, OnManagerUpdate);
 
-  ConnectThisTo(osWindow, Events::OsResized, OnOsResize);
-  ConnectThisTo(osWindow, Events::OsMouseDown, OnOsMouseDown);
-  ConnectThisTo(osWindow, Events::OsMouseUp, OnOsMouseUp);
-  ConnectThisTo(osWindow, Events::OsMouseMove, OnOsMouseMoved);
+  ConnectThisTo(OsWindow::sInstance, Events::OsResized, OnOsResize);
+  ConnectThisTo(OsWindow::sInstance, Events::OsMouseDown, OnOsMouseDown);
+  ConnectThisTo(OsWindow::sInstance, Events::OsMouseUp, OnOsMouseUp);
+  ConnectThisTo(OsWindow::sInstance, Events::OsMouseMove, OnOsMouseMoved);
 
-  ConnectThisTo(osWindow, Events::OsWindowBorderHitTest, OnOsWindowBorderHitTest);
+  ConnectThisTo(OsWindow::sInstance, Events::OsWindowBorderHitTest, OnOsWindowBorderHitTest);
 
-  ConnectThisTo(osWindow, Events::OsMouseScroll, OnOsMouseScroll);
+  ConnectThisTo(OsWindow::sInstance, Events::OsMouseScroll, OnOsMouseScroll);
 
-  ConnectThisTo(osWindow, Events::OsKeyTyped, OnOsKeyTyped);
-  ConnectThisTo(osWindow, Events::OsKeyRepeated, OnOsKeyDown);
-  ConnectThisTo(osWindow, Events::OsKeyDown, OnOsKeyDown);
-  ConnectThisTo(osWindow, Events::OsKeyUp, OnOsKeyUp);
+  ConnectThisTo(OsWindow::sInstance, Events::OsKeyTyped, OnOsKeyTyped);
+  ConnectThisTo(OsWindow::sInstance, Events::OsKeyRepeated, OnOsKeyDown);
+  ConnectThisTo(OsWindow::sInstance, Events::OsKeyDown, OnOsKeyDown);
+  ConnectThisTo(OsWindow::sInstance, Events::OsKeyUp, OnOsKeyUp);
 
-  ConnectThisTo(osWindow, Events::OsFocusGained, OnOsFocusGained);
-  ConnectThisTo(osWindow, Events::OsFocusLost, OnOsFocusLost);
+  ConnectThisTo(OsWindow::sInstance, Events::OsFocusGained, OnOsFocusGained);
+  ConnectThisTo(OsWindow::sInstance, Events::OsFocusLost, OnOsFocusLost);
 
-  ConnectThisTo(osWindow, Events::OsMouseFileDrop, OnOsMouseDrop);
-  ConnectThisTo(osWindow, Events::OsPaint, OnOsPaint);
+  ConnectThisTo(OsWindow::sInstance, Events::OsMouseFileDrop, OnOsMouseDrop);
+  ConnectThisTo(OsWindow::sInstance, Events::OsPaint, OnOsPaint);
 
-  ConnectThisTo(osWindow, Events::OsClose, OnClose);
+  ConnectThisTo(OsWindow::sInstance, Events::OsClose, OnClose);
 
   OsShell* shell = Z::gEngine->has(OsShell);
   ConnectThisTo(shell, Events::Cut, OnCutCopyPaste);
@@ -92,11 +89,7 @@ RootWidget::RootWidget(OsWindow* osWindow) : Composite(NULL)
 RootWidget::~RootWidget()
 {
   InList<RootWidget>::Unlink(this);
-  mOsWindow->Destroy();
-
-  if (Z::gMouse->mActiveWindow == mOsWindow)
-    Z::gMouse->mActiveWindow = nullptr;
-  delete mOsWindow;
+  delete OsWindow::sInstance;
 }
 
 void RootWidget::OnUiUpdate(UpdateEvent* event)
@@ -244,15 +237,9 @@ void RootWidget::OnManagerUpdate(UpdateEvent* event)
 
 void RootWidget::UpdateTransform()
 {
-  Vec2 size = ToVec2(mOsWindow->GetClientSize());
+  Vec2 size = ToVec2(Shell::sInstance->GetClientSize());
   if (mSize != size)
   {
-    WindowState::Type windowState = GetOsWindow()->GetState();
-
-    // Do not resize when minimized
-    if (windowState == WindowState::Minimized)
-      return;
-
     WidgetListRange children = GetChildren();
     if (!children.Empty())
       children.Front().SetSize(size);
@@ -442,11 +429,6 @@ Widget* RootWidget::GetFocusObject()
   return mFocus;
 }
 
-OsWindow* RootWidget::GetOsWindow()
-{
-  return mOsWindow;
-}
-
 void RootWidget::RootSoftTakeFocus(Widget* newFocus)
 {
   Widget* oldFocus = mFocus;
@@ -482,7 +464,7 @@ void RootWidget::RootRemoveFocus(Widget* widget)
 
 void RootWidget::RootCaptureMouse(Widget* widget)
 {
-  mOsWindow->SetMouseCapture(true);
+  Shell::sInstance->SetMouseCapture(true);
   mCaptured = widget;
   // need to set the down object to the capture widget
   // so that drags are only sent to the captured widget
@@ -506,16 +488,12 @@ void RootWidget::RootReleaseMouseCapture(Widget* object)
   if (WidgetHandleManager::HandleToId(mCaptured) == object->mId)
   {
     mCaptured = nullptr;
-    mOsWindow->SetMouseCapture(false);
+    Shell::sInstance->SetMouseCapture(false);
   }
 }
 
 void RootWidget::MouseUpdate(float dt)
 {
-  // Not on this window
-  if (Z::gMouse->mActiveWindow != this->mOsWindow)
-    return;
-
   // Get the object the mouse is over
   Widget* hoverObject = mOver;
 
@@ -623,7 +601,6 @@ void RootWidget::OnOsWindowBorderHitTest(OsWindowBorderHitTest* event)
 
 void RootWidget::BuildMouseEvent(MouseEvent& event, OsMouseEvent* mouseEvent)
 {
-  Z::gMouse->mActiveWindow = mOsWindow;
   Z::gMouse->mClientPosition = ToVec2(mouseEvent->ClientPosition);
 
   event.Button = mouseEvent->MouseButton;

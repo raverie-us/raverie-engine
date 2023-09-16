@@ -571,7 +571,7 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
 
   const ExportAllocate = instance.exports.ExportAllocate as (size: number) => number;
   const ExportFree = instance.exports.ExportFree as (pointer: number) => void;
-  const ExportInitialize = instance.exports.ExportInitialize as (argumentsCharPtr: number) => void;
+  const ExportInitialize = instance.exports.ExportInitialize as (argumentsCharPtr: number, clientWidth: number, clientHeight: number) => void;
   const ExportRunIteration = instance.exports.ExportRunIteration as () => void;
   const ExportHandleCrash = instance.exports.ExportHandleCrash as () => void;
   const ExportMouseMove = instance.exports.ExportMouseMove as (clientX: number, clientY: number, dx: number, dy: number) => void;
@@ -725,7 +725,7 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
   }
 
   const commandLineCharPtr = allocateNullTerminatedString(args);
-  ExportInitialize(commandLineCharPtr);
+  ExportInitialize(commandLineCharPtr, canvas.width, canvas.height);
   ExportFree(commandLineCharPtr);
 
   let mustSendYieldComplete = false;

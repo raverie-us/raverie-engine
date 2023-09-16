@@ -31,8 +31,6 @@ void LoadingWindow::Activate(StringParam taskName)
 
   SetLoadingName(taskName);
   mTime = 0.0f;
-
-  OsWindow* mainWindow = Z::gEditor->mOsWindow;
 }
 
 void LoadingWindow::Deactivate()
@@ -46,8 +44,6 @@ void LoadingWindow::Deactivate()
     seq->Add(Fade(block, Vec4(0.0f), 0.3f));
     seq->Add(DestroyAction(block));
   }
-
-  OsWindow* mainWindow = Z::gEditor->mOsWindow;
 }
 
 void LoadingWindow::SetLoadingName(StringParam text)

@@ -15,9 +15,6 @@ DefineEvent(FileDialogComplete);
 ZilchDefineType(OsShell, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
-
-  ZilchBindGetterProperty(WindowCount);
-  ZilchBindMethod(GetWindow);
   ZilchBindSetter(MouseCursor);
 }
 
@@ -65,8 +62,6 @@ void OsShell::Update(bool debugger)
   Z::gMouse->mCursorMovement = Vec2::cZero;
   Z::gMouse->mRawMovement = Vec2(0, 0);
 
-  mShell.Update();
-
   // This is a special place to update for other systems like the
   // that may cause the message pump to run (originally used for CEF browser).
   Event toSend;
@@ -74,34 +69,9 @@ void OsShell::Update(bool debugger)
   Z::gEngine->DispatchEvent(Events::OsShellUpdate, &toSend);
 }
 
-IntVec2 OsShell::GetPrimaryMonitorSize()
-{
-  return mShell.GetPrimaryMonitorSize();
-}
-
-ByteColor OsShell::GetColorAtMouse()
-{
-  return mShell.GetColorAtMouse();
-}
-
 void OsShell::SetMouseCursor(Cursor::Enum cursorId)
 {
   return mShell.SetMouseCursor(cursorId);
-}
-
-void OsShell::OpenFile(FileDialogConfig* config)
-{
-  return mShell.OpenFile(*config);
-}
-
-void OsShell::SaveFile(FileDialogConfig* config)
-{
-  return mShell.SaveFile(*config);
-}
-
-void OsShell::ShowMessageBox(StringParam title, StringParam message)
-{
-  return mShell.ShowMessageBox(title, message);
 }
 
 void OsShell::ScanInputDevices()
@@ -117,21 +87,6 @@ void OsShell::ScanInputDevices()
   }
 
   Z::gJoysticks->JoysticksChanged();
-}
-
-size_t OsShell::GetWindowCount()
-{
-  return mShell.mWindows.Size();
-}
-
-OsWindow* OsShell::GetWindow(size_t index)
-{
-  if (index >= mShell.mWindows.Size())
-  {
-    DoNotifyException("Shell", "Invalid window index");
-    return nullptr;
-  }
-  return (OsWindow*)mShell.mWindows[index]->mUserData;
 }
 
 ZilchDefineType(ClipboardEvent, builder, type)
