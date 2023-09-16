@@ -662,6 +662,9 @@ const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) =>
         canvas.width = data.clientWidth;
         canvas.height = data.clientHeight;
         ExportSizeChanged(data.clientWidth, data.clientHeight);
+        // Since the OffscreenCanvas clears the back buffer to black/transparent upon any resize
+        // we run another engine iteration immediately to render out a frame to avoid resize flicker
+        ExportRunIteration();
         break;
       case "focusChanged":
         ExportFocusChanged(data.focused);

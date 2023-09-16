@@ -24,9 +24,13 @@ import {
 
 const parent = document.createElement("div");
 parent.style.position = "relative";
+parent.style.width = "100%";
+parent.style.height = "100%";
 
 const canvas = document.createElement("canvas");
 canvas.style.position = "absolute";
+canvas.style.width = "100%";
+canvas.style.height = "100%";
 canvas.style.backgroundColor = "#000";
 canvas.style.outline = "none";
 canvas.tabIndex = 1;
@@ -474,10 +478,15 @@ window.addEventListener("focus", updateFocus);
 window.addEventListener("blur", updateFocus);
 document.addEventListener("visibilitychange", updateFocus);
 
-export const resizeCanvas = (clientWidth: number, clientHeight: number) => {
-  workerPostMessage<MessageSizeChanged>({
-    type: "sizeChanged",
-    clientWidth,
-    clientHeight
-  });
-}
+const resizeObserver = new ResizeObserver((entries) => {
+  for (const entry of entries) {
+    workerPostMessage<MessageSizeChanged>({
+      type: "sizeChanged",
+      clientWidth: entry.contentRect.width,
+      clientHeight: entry.contentRect.height
+    });
+  }
+});
+
+resizeObserver.observe(parent);
+

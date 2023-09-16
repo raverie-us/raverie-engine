@@ -170,14 +170,17 @@ void ZeroExportNamed(ExportFileDropFinish)(int32_t clientX, int32_t clientY) {
   OsWindow::sInstance->SendMouseDropEvent(mouseDrop);
 }
 
+void OsWindow::SendSizeChanged(IntVec2Param clientSize) {
+  Shell::sInstance->mClientSize = clientSize;
+  OsWindowEvent sizeEvent;
+  sizeEvent.ClientSize = clientSize;
+  DispatchEvent(Events::OsResized, &sizeEvent);
+}
 
 void ZeroExportNamed(ExportSizeChanged)(int32_t clientWidth, int32_t clientHeight)
 {
   IntVec2 clientSize(clientWidth, clientHeight);
-  Shell::sInstance->mClientSize = clientSize;
-  OsWindowEvent sizeEvent;
-  sizeEvent.ClientSize = clientSize;
-  OsWindow::sInstance->DispatchEvent(Events::OsResized, &sizeEvent);
+  OsWindow::sInstance->SendSizeChanged(clientSize);
 }
 
 void ZeroExportNamed(ExportTextTyped)(uint32_t rune)
