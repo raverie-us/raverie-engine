@@ -6,8 +6,9 @@ namespace Zero
 {
 Shell* Shell::sInstance = nullptr;
 IntVec2 Shell::sInitialClientSize = IntVec2::cZero;
+bool Shell::sInitialFocused = false;
 
-Shell::Shell() : mCursor(Cursor::Arrow), mClientSize(sInitialClientSize)
+Shell::Shell() : mCursor(Cursor::Arrow), mClientSize(sInitialClientSize), mHasFocus(sInitialFocused)
 {
   sInstance = this;
 }
@@ -102,11 +103,6 @@ void Shell::SetMouseTrap(bool mouseTrapped)
 {
   mMouseTrapped = mouseTrapped;
   ImportMouseTrap(mouseTrapped);
-}
-
-bool Shell::HasFocus()
-{
-  return false;
 }
 
 bool Shell::GetImage(Image* image)

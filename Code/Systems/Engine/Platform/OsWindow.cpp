@@ -41,8 +41,6 @@ OsWindow::OsWindow()
   ErrorIf(sInstance != nullptr, "We should only have one instance");
   sInstance = this;
 
-  //Shell::sInstance->mOnFocusChanged = &ShellWOnFocusChanged;
-  //Shell::sInstance->mOnClientSizeChanged = &ShellWOnClientSizeChanged;
   //Shell::sInstance->mOnDevicesChanged = &ShellWOnDevicesChanged;
   //Shell::sInstance->mOnInputDeviceChanged = &ShellWOnInputDeviceChanged;
 }
@@ -58,7 +56,7 @@ IntVec2 OsWindow::GetClientSize()
 
 bool OsWindow::HasFocus()
 {
-  return Shell::sInstance->HasFocus();
+  return Shell::sInstance->mHasFocus;
 }
 
 void OsWindow::SetMouseCapture(bool enabled)
@@ -139,10 +137,11 @@ void ZeroExportNamed(ExportQuit)() {
   OsWindow::sInstance->DispatchEvent(Events::OsClose, &event);
 }
 
-void OsWindow::ShellWOnFocusChanged(bool activated)
+void ZeroExportNamed(ExportFocusChanged)(bool focused)
 {
+  Shell::sInstance->mHasFocus = focused;
   OsWindowEvent focusEvent;
-  if (activated)
+  if (focused)
   {
     focusEvent.EventId = Events::OsFocusGained;
   }
@@ -171,8 +170,11 @@ void ZeroExportNamed(ExportFileDropFinish)(int32_t clientX, int32_t clientY) {
   OsWindow::sInstance->SendMouseDropEvent(mouseDrop);
 }
 
-void OsWindow::ShellWOnClientSizeChanged(Math::IntVec2Param clientSize)
+
+void ZeroExportNamed(ExportSizeChanged)(int32_t clientWidth, int32_t clientHeight)
 {
+  IntVec2 clientSize(clientWidth, clientHeight);
+  Shell::sInstance->mClientSize = clientSize;
   OsWindowEvent sizeEvent;
   sizeEvent.ClientSize = clientSize;
   OsWindow::sInstance->DispatchEvent(Events::OsResized, &sizeEvent);

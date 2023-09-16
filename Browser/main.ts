@@ -5,6 +5,7 @@ import {
   Keys,
   MessageCopy,
   MessageFilesDropped,
+  MessageFocusChanged,
   MessageInitialize,
   MessageKeyboardButtonChanged,
   MessageMouseButtonChanged,
@@ -13,6 +14,7 @@ import {
   MessageOpenFileDialogFinish,
   MessagePartFile,
   MessagePaste,
+  MessageSizeChanged,
   MessageTextTyped,
   MouseButtons,
   MouseState,
@@ -45,6 +47,9 @@ const yieldContext = yieldCanvas.getContext("2d")!;
 const input = document.createElement("input");
 input.type = "file";
 let currentDialog: number | null = null;
+
+const checkFocus = () => document.hasFocus() && document.visibilityState == "visible";
+let focused = checkFocus();
 
 parent.append(canvas);
 parent.append(yieldCanvas);
@@ -180,7 +185,8 @@ input.addEventListener("change", async (event) => {
 workerPostMessage<MessageInitialize>({
   type: "initialize",
   canvas: offscreenCanvas,
-  args: new URL(location.href).searchParams.get("args") || ""
+  args: new URL(location.href).searchParams.get("args") || "",
+  focused,
 }, [offscreenCanvas]);
 
 canvas.addEventListener("mousemove", (event) => {
@@ -451,3 +457,27 @@ canvas.addEventListener("drop", (event) => {
     dropFiles(event.dataTransfer, event.clientX - rect.left, event.clientY - rect.top);
   }
 });
+
+const updateFocus = () => {
+  const hasFocus = checkFocus();
+  if (focused !== hasFocus) {
+    focused = hasFocus;
+
+    workerPostMessage<MessageFocusChanged>({
+      type: "focusChanged",
+      focused
+    });
+  }
+}
+
+window.addEventListener("focus", updateFocus);
+window.addEventListener("blur", updateFocus);
+document.addEventListener("visibilitychange", updateFocus);
+
+export const resizeCanvas = (clientWidth: number, clientHeight: number) => {
+  workerPostMessage<MessageSizeChanged>({
+    type: "sizeChanged",
+    clientWidth,
+    clientHeight
+  });
+}

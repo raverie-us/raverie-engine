@@ -327,21 +327,11 @@ public:
   bool GetMouseTrap();
   void SetMouseTrap(bool trapped);
 
-  /// Does this window have focus?
-  bool HasFocus();
-
   /// Get an image from window.
   bool GetImage(Image* image);
 
   /// Sends a message to close the window (the window is not destroyed).
   void Close();
-
-  /// The window has been activated or deactivated.
-  //void (*mOnFocusChanged)(bool activated);
-
-  /// Occurs when the window is resized (may occur even if the size is the same
-  /// and should be protected against).
-  //void (*mOnClientSizeChanged)(Math::IntVec2Param clientSize);
 
   /// Called when any hardware devices change.
   //void (*mOnDevicesChanged)();
@@ -358,11 +348,14 @@ public:
   bool mKeyState[Keys::Size] = {false};
   IntVec2 mClientSize = IntVec2::cZero;
   static IntVec2 sInitialClientSize;
+  static bool sInitialFocused;
 
   Array<PlatformInputDevice> mInputDevices;
 
   // If the mouse is currently trapped (not visible and centered on the window).
   bool mMouseTrapped = false;
+
+  bool mHasFocus = false;
 
   static Shell* sInstance;
   

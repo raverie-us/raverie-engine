@@ -316,7 +316,7 @@ bool GameSession::GetFocused()
 {
   if (Z::gRuntimeEditor)
     return Z::gRuntimeEditor->HasFocus(this);
-  return Shell::sInstance->HasFocus();
+  return Shell::sInstance->mHasFocus;
 }
 
 void GameSession::EditSpaces()

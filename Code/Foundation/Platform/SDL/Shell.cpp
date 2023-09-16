@@ -3,14 +3,6 @@
 
 namespace Zero
 {
-void UpdateResize(Shell* window, IntVec2Param clientSize)
-{
-  if (clientSize == window->mClientSize)
-    return;
-
-  window->mOnClientSizeChanged(clientSize, window);
-  window->mClientSize = clientSize;
-}
 
 void Shell::Update()
 {
@@ -36,19 +28,7 @@ void Shell::Update()
 
       switch (e.window.event)
       {
-      case SDL_WINDOWEVENT_FOCUS_GAINED:
-      case SDL_WINDOWEVENT_FOCUS_LOST:
 
-        if (window->mOnFocusChanged)
-          window->mOnFocusChanged(e.window.event == SDL_WINDOWEVENT_FOCUS_GAINED, window);
-        break;
-
-      case SDL_WINDOWEVENT_RESIZED:
-      case SDL_WINDOWEVENT_SIZE_CHANGED:
-        if (window->mOnClientSizeChanged)
-          UpdateResize(window, IntVec2(e.window.data1, e.window.data2));
-        break;
-      }
       break;
     }
 
@@ -81,8 +61,6 @@ Shell::Shell(Math::IntVec2Param clientSize) :
     mClientSize(clientSize),
     mCapture(false),
     mUserData(nullptr),
-    mOnFocusChanged(nullptr),
-    mOnClientSizeChanged(nullptr),
     mOnDevicesChanged(nullptr),
     mOnInputDeviceChanged(nullptr)
 {

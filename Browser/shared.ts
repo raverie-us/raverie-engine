@@ -153,6 +153,7 @@ export interface MessageInitialize {
   type: "initialize";
   canvas: OffscreenCanvas;
   args: string;
+  focused: boolean;
 }
 
 export interface MessageMouseMove {
@@ -218,6 +219,17 @@ export interface MessageOpenFileDialogFinish {
   files: MessagePartFile[];
 }
 
+export interface MessageSizeChanged {
+  type: "sizeChanged";
+  clientWidth: number;
+  clientHeight: number;
+}
+
+export interface MessageFocusChanged {
+  type: "focusChanged";
+  focused: boolean;
+}
+
 export type ToWorkerMessageType =
   MessageInitialize |
   MessageMouseMove |
@@ -228,7 +240,9 @@ export type ToWorkerMessageType =
   MessageCopy |
   MessagePaste |
   MessageFilesDropped |
-  MessageOpenFileDialogFinish;
+  MessageOpenFileDialogFinish |
+  MessageSizeChanged |
+  MessageFocusChanged;
 
 export interface MessageYieldDraw {
   type: "yieldDraw";

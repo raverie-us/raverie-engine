@@ -40,7 +40,7 @@ const mainPostMessage = <T extends ToMainMessageType>(message: T) => {
   postMessage(message);
 };
 
-const start = async (canvas: OffscreenCanvas, args: string) => {
+const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) => {
   const module = await modulePromise;
 
   const gl = canvas.getContext("webgl2", {
@@ -571,7 +571,7 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
 
   const ExportAllocate = instance.exports.ExportAllocate as (size: number) => number;
   const ExportFree = instance.exports.ExportFree as (pointer: number) => void;
-  const ExportInitialize = instance.exports.ExportInitialize as (argumentsCharPtr: number, clientWidth: number, clientHeight: number) => void;
+  const ExportInitialize = instance.exports.ExportInitialize as (argumentsCharPtr: number, clientWidth: number, clientHeight: number, focused: boolean) => void;
   const ExportRunIteration = instance.exports.ExportRunIteration as () => void;
   const ExportHandleCrash = instance.exports.ExportHandleCrash as () => void;
   const ExportMouseMove = instance.exports.ExportMouseMove as (clientX: number, clientY: number, dx: number, dy: number) => void;
@@ -588,6 +588,8 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
   const ExportFileDropFinish = instance.exports.ExportFileDropFinish as (clientX: number, clientY: number) => void;
   const ExportOpenFileDialogAdd = instance.exports.ExportOpenFileDialogAdd as (dialog: number, filePathCharPtr: number) => void;
   const ExportOpenFileDialogFinish = instance.exports.ExportOpenFileDialogFinish as (dialog: number) => void;
+  const ExportSizeChanged = instance.exports.ExportSizeChanged as (clientWidth: number, clientHeight: number) => void;
+  const ExportFocusChanged = instance.exports.ExportFocusChanged as (focused: boolean) => void;
 
   const allocateAndCopy = (buffer: Uint8Array) => {
     const pointer = ExportAllocate(buffer.byteLength);
@@ -656,6 +658,14 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
         ExportOpenFileDialogFinish(data.dialog);
         break;
       }
+      case "sizeChanged":
+        canvas.width = data.clientWidth;
+        canvas.height = data.clientHeight;
+        ExportSizeChanged(data.clientWidth, data.clientHeight);
+        break;
+      case "focusChanged":
+        ExportFocusChanged(data.focused);
+        break;
     }
   };
   addEventListener("message", onMessage);
@@ -725,7 +735,7 @@ const start = async (canvas: OffscreenCanvas, args: string) => {
   }
 
   const commandLineCharPtr = allocateNullTerminatedString(args);
-  ExportInitialize(commandLineCharPtr, canvas.width, canvas.height);
+  ExportInitialize(commandLineCharPtr, canvas.width, canvas.height, focused);
   ExportFree(commandLineCharPtr);
 
   let mustSendYieldComplete = false;
@@ -752,7 +762,7 @@ const onCanvasMessage = (event: MessageEvent<ToWorkerMessageType>) => {
   const data = event.data;
   if (data.type === "initialize") {
     removeEventListener("message", onCanvasMessage);
-    start(data.canvas, data.args);
+    start(data.canvas, data.args, data.focused);
   }
 };
 addEventListener("message", onCanvasMessage);
