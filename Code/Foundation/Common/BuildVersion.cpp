@@ -116,9 +116,9 @@ String GetBuildVersionName()
 {
   /*
    * This needs to match
-   * index.js:pack/Standalone.cpp:BuildId::Parse/BuildId::GetFullId/BuildVersion.cpp:GetBuildVersionName.
+   * index.ts:pack/Standalone.cpp:BuildId::Parse/BuildId::GetFullId/BuildVersion.cpp:GetBuildVersionName.
    * Application.Branch.Major.Minor.Patch.Revision.ShortChangeset.MsSinceEpoch.Config.Extension
-   * Example: RaverieEditor.master.1.5.0.1501.fb02756c46a4.1574702096290.Windows.x86.Release.zip
+   * Example: RaverieEditor.master.1.5.0.1501.fb02756c46a4.1574702096290.Release.zip
    */
   StringBuilder builder;
   builder.AppendFormat("%s.", GetApplicationName().c_str()); // Application [RaverieEditor]
