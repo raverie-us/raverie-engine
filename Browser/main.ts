@@ -57,7 +57,7 @@ loading.style.position = "absolute";
 loading.style.width = "100%";
 loading.style.height = "100%";
 loading.style.backgroundColor = "#222";
-loading.style.display = "block";
+loading.style.visibility = "visible";
 loading.style.pointerEvents = "none";
 loading.style.opacity = "0";
 loading.style.transition = "opacity 1s ease-in-out";
@@ -212,10 +212,10 @@ worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
         break;
       case "progressUpdate":
         if (data.text === null) {
-          loading.style.display = "none";
+          loading.style.visibility = "hidden";
           loading.style.opacity = "0";
         } else {
-          loading.style.display = "block";
+          loading.style.visibility = "visible";
           loading.style.opacity = "1";
           if (data.text !== "") {
             loadingText.textContent = data.text;
