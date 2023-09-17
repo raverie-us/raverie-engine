@@ -69,12 +69,7 @@ public:
   void RemoveSpace(GraphicsSpace* space);
 
   // Show loading progress
-  void StartProgress(Event* event);
-  void UpdateProgress(ProgressEvent* event);
-  void EndProgress(Event* event);
   void OnProjectLoaded(ObjectEvent* event);
-  void OnNoProjectLoaded(Event* event);
-  void SetSplashscreenLoading();
   void EndProgressDelayTerminate();
 
   void OnProjectCogModified(Event* event);
@@ -205,7 +200,6 @@ public:
   RendererThreadJobQueue* mRendererJobQueue;
   DoRenderTasksJob* mDoRenderTasksJob;
   RendererJobQueue* mReturnJobQueue;
-  ShowProgressJob* mShowProgressJob;
 
   // Shader building
   ShaderMap mCompositeShaders;

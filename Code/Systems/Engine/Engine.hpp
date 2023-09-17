@@ -9,7 +9,6 @@ DeclareEvent(CurrentInputDeviceChanged);
 DeclareEvent(DebuggerPause);
 DeclareEvent(DebuggerResume);
 DeclareEvent(DebuggerPauseUpdate);
-DeclareEvent(LoadingStart);
 DeclareEvent(LoadingProgress);
 DeclareEvent(LoadingFinish);
 DeclareEvent(BlockingTaskStart);
@@ -96,8 +95,6 @@ public:
 
   /// What frame is the engine currently on. Used for debugging
   u64 mFrameCounter;
-  // If engine has resources for display of loading
-  bool mHaveLoadingResources;
 
   // If we're currently debugging scripts which means we have a special very
   // limited update.

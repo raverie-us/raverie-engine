@@ -29,18 +29,6 @@ public:
   int Code;
 };
 
-class ProgressEvent : public Event
-{
-public:
-  ZilchDeclareType(ProgressEvent, TypeCopyMode::ReferenceType);
-  ProgressEvent();
-  ProgressType::Enum ProgressType;
-  String Operation;
-  String CurrentTask;
-  String ProgressLine;
-  float Percentage;
-};
-
 class BlockingTaskEvent : public Event
 {
 public:

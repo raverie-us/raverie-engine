@@ -57,8 +57,6 @@ GraphicsEngine::~GraphicsEngine()
 
   delete mReturnJobQueue;
 
-  delete mShowProgressJob;
-
   // Call clear functions for anything that has to be manually destructed
   // Must be done after renderer is destroyed
   mRenderTasksBack->Clear();
@@ -82,12 +80,6 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
   mShaderGenerator = CreateZilchShaderGenerator();
 
   ConnectThisTo(Z::gEngine, Events::EngineShutdown, OnEngineShutdown);
-
-  ConnectThisTo(Z::gEngine, Events::LoadingStart, StartProgress);
-  ConnectThisTo(Z::gEngine, Events::LoadingProgress, UpdateProgress);
-  ConnectThisTo(Z::gEngine, Events::LoadingFinish, EndProgress);
-  ConnectThisTo(Z::gEngine, Events::ProjectLoaded, OnProjectLoaded);
-  ConnectThisTo(Z::gEngine, Events::NoProjectLoaded, OnNoProjectLoaded);
 
   ConnectThisTo(Z::gResources, Events::ResourcesLoaded, OnResourcesAdded);
   ConnectThisTo(Z::gResources, Events::ResourcesUnloaded, OnResourcesRemoved);
@@ -139,9 +131,6 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
   mDoRenderTasksJob->mWaitEvent.Signal();
 
   mReturnJobQueue = new RendererJobQueue();
-
-  mShowProgressJob = new ShowProgressJob(mRendererJobQueue);
-  mShowProgressJob->mDelayTerminate = true;
 
   if (ThreadingEnabled)
   {
@@ -263,7 +252,7 @@ void CollectShaders(RenderTasks* renderTasks, RenderQueues* renderQueues, Array<
 void GraphicsEngine::Update(bool debugger)
 {
   // Do not try to run rendering while this job is going.
-  if (ThreadingEnabled && mShowProgressJob->IsRunning())
+  if (ThreadingEnabled)
     return;
 
   // Do any deferred tasks
@@ -432,7 +421,6 @@ void GraphicsEngine::OnEngineShutdown(Event* event)
   }
 
   mEngineShutdown = true;
-  mShowProgressJob->ForceTerminate();
   while (mRendererJobQueue->HasJobs())
     ;
 }
@@ -447,78 +435,6 @@ void GraphicsEngine::RemoveSpace(GraphicsSpace* space)
   mSpaces.Erase(space);
 }
 
-void GraphicsEngine::StartProgress(Event* event)
-{
-  if (mEngineShutdown)
-    return;
-
-  Texture* loadingTexture = TextureManager::FindOrNull("ZeroLoading");
-  Texture* logoTexture = TextureManager::FindOrNull("ZeroLogoAnimated");
-  Texture* whiteTexture = TextureManager::FindOrNull("White");
-  Texture* splashTexture = TextureManager::FindOrNull("ZeroSplash");
-  if (loadingTexture == nullptr || logoTexture == nullptr || whiteTexture == nullptr || splashTexture == nullptr)
-    return;
-
-  mShowProgressJob->Lock();
-  mShowProgressJob->mLoadingTexture = loadingTexture->mRenderData;
-  mShowProgressJob->mLogoTexture = logoTexture->mRenderData;
-  mShowProgressJob->mWhiteTexture = whiteTexture->mRenderData;
-  mShowProgressJob->mSplashTexture = splashTexture->mRenderData;
-  mShowProgressJob->mLogoFrameSize = 128;
-  mShowProgressJob->mCurrentPercent = 0.0f;
-  mShowProgressJob->mTargetPercent = 0.0f;
-  mShowProgressJob->mProgressWidth = loadingTexture->mWidth;
-  mShowProgressJob->mProgressText.Clear();
-  mShowProgressJob->mPerJobTimer.Reset();
-  mShowProgressJob->Unlock();
-
-  mShowProgressJob->Start();
-  mRendererJobQueue->AddJob(mShowProgressJob);
-  
-  Shell::sInstance->SetProgress("", 0.0);
-}
-
-void GraphicsEngine::UpdateProgress(ProgressEvent* event)
-{
-  if (mEngineShutdown)
-    return;
-
-  Font* font = FontManager::FindOrNull("NotoSans-Regular");
-  if (font == nullptr)
-    return;
-
-  RenderFont* renderFont = font->GetRenderFont(16);
-
-  String progressText = BuildString(event->Operation, " ", event->CurrentTask, " ", event->ProgressLine);
-  FontProcessorVertexArray fontProcessor(Vec4(1.0f));
-  AddTextRange(fontProcessor,
-               renderFont,
-               progressText,
-               Vec2::cZero,
-               TextAlign::Left,
-               Vec2(1.0f),
-               Vec2((float)mShowProgressJob->mProgressWidth, (float)renderFont->mFontHeight),
-               true);
-
-  mShowProgressJob->Lock();
-  mShowProgressJob->mTargetPercent = event->Percentage;
-  mShowProgressJob->mFontTexture = renderFont->mTexture->mRenderData;
-  mShowProgressJob->mProgressText = fontProcessor.mVertices;
-  mShowProgressJob->Unlock();
-
-  Shell::sInstance->SetProgress(progressText.c_str(), event->Percentage);
-}
-
-void GraphicsEngine::EndProgress(Event* event)
-{
-  if (mEngineShutdown)
-    return;
-
-  mShowProgressJob->Terminate();
-
-  Shell::sInstance->SetProgress(nullptr, 1.0);
-}
-
 void GraphicsEngine::OnProjectLoaded(ObjectEvent* event)
 {
   if (mProjectCog.IsNotNull())
@@ -527,34 +443,6 @@ void GraphicsEngine::OnProjectLoaded(ObjectEvent* event)
   mProjectCog = (Cog*)event->GetSource();
   ConnectThisTo(*mProjectCog, Events::ObjectModified, OnProjectCogModified);
   OnProjectCogModified(event);
-
-  EndProgressDelayTerminate();
-}
-
-void GraphicsEngine::OnNoProjectLoaded(Event* event)
-{
-  EndProgressDelayTerminate();
-}
-
-void GraphicsEngine::EndProgressDelayTerminate()
-{
-  // Allows job to terminate after startup completes for the first time.
-  mShowProgressJob->Lock();
-  mShowProgressJob->mDelayTerminate = false;
-  mShowProgressJob->Unlock();
-
-  if (!ThreadingEnabled)
-    return;
-
-  // Block until job completes.
-  // Important for exports to not run engine update until job fully exits.
-  while (mShowProgressJob->IsRunning())
-    Os::Sleep(mShowProgressJob->mExecuteDelay);
-}
-
-void GraphicsEngine::SetSplashscreenLoading()
-{
-  mShowProgressJob->mSplashMode = true;
 }
 
 void GraphicsEngine::OnProjectCogModified(Event* event)

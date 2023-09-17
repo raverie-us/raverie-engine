@@ -43,7 +43,6 @@ protected:
   // The following options should be set by the user in UserInitialize.
   // The default options are all tailored for the Editor.
   bool mLoadContent = true;
-  bool mUseSplashScreen = false;
 
   // The order these are declared is the order they will be called.
   void UserInitializeConfig(Cog* configCog);

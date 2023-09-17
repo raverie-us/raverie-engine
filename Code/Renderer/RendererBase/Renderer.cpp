@@ -1103,10 +1103,6 @@ void BuildPerspectiveTransformDx(
   matrix.m32 = -1.0f;
 }
 
-ShowProgressInfo::ShowProgressInfo() : mSplashMode(false), mSplashFade(0.0f)
-{
-}
-
 Renderer::Renderer()
 {
 }

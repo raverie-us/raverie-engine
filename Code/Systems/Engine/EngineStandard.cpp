@@ -188,7 +188,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(CogReplaceEvent);
   ZilchInitializeType(TextEvent);
   ZilchInitializeType(TextErrorEvent);
-  ZilchInitializeType(ProgressEvent);
   ZilchInitializeType(OsFileSelection);
   ZilchInitializeType(ClipboardEvent);
   ZilchInitializeType(ZilchCompiledEvent);

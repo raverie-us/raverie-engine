@@ -198,9 +198,6 @@ void GameOrEditorStartup::Startup()
   // Pass window handle to initialize the graphics api
   auto graphics = engine->has(GraphicsEngine);
   graphics->CreateRenderer(mainWindow);
-
-  if (mUseSplashScreen)
-    graphics->SetSplashscreenLoading();
 }
 
 void GameOrEditorStartup::ProcessJobs()
@@ -373,7 +370,6 @@ void GameOrEditorStartup::UserInitialize()
   }
 
   mLoadContent = !playGame;
-  mUseSplashScreen = playGame;
 
   mPlayGame = playGame;
   mProjectCog = projectCog;

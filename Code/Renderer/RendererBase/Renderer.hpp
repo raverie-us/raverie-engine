@@ -420,27 +420,6 @@ public:
   byte* mImage;
 };
 
-class ShowProgressInfo
-{
-public:
-  ShowProgressInfo();
-
-  TextureRenderData* mLoadingTexture;
-  TextureRenderData* mLogoTexture;
-  TextureRenderData* mWhiteTexture;
-  TextureRenderData* mSplashTexture;
-  uint mLogoFrameSize;
-  float mCurrentPercent;
-  float mTargetPercent;
-  uint mProgressWidth;
-  TextureRenderData* mFontTexture;
-  Array<StreamedVertex> mProgressText;
-  bool mSplashMode;
-  float mSplashFade;
-  Timer mTimer;
-  Timer mPerJobTimer;
-};
-
 class Renderer
 {
 public:
@@ -474,10 +453,6 @@ public:
   virtual void RemoveShaders(Array<ShaderEntry>& entries) = 0;
 
   virtual void GetTextureData(GetTextureDataInfo* info) = 0;
-
-  virtual void ShowProgress(ShowProgressInfo* info)
-  {
-  }
 
   virtual void DoRenderTasks(RenderTasks* renderTasks, RenderQueues* renderQueues) = 0;
 

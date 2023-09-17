@@ -199,17 +199,4 @@ public:
   String mFilename;
 };
 
-class ShowProgressJob : public RepeatingJob, public ShowProgressInfo
-{
-public:
-  ShowProgressJob(RendererThreadJobQueue* jobQueue);
-
-  void OnExecute() override;
-  bool OnShouldRun() override;
-
-  // Capture the state of whatever our progress
-  // values are and give it to the renderer.
-  void ShowCurrentProgress();
-};
-
 } // namespace Zero

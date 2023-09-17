@@ -101,8 +101,6 @@ public:
 
   void GetTextureData(GetTextureDataInfo* info) override;
 
-  void ShowProgress(ShowProgressInfo* info) override;
-
   void DoRenderTasks(RenderTasks* renderTasks, RenderQueues* renderQueues) override;
 
   void DoRenderTaskRange(RenderTaskRange& taskRange);

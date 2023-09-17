@@ -66,8 +66,6 @@ public:
 
   void LoadIntoLibrary(Status& status, ResourceLibrary* resourceLibrary, ResourcePackage* resourcePackage, bool isNew);
 
-  void OnResourcesLoaded(ResourceEvent* event);
-
   ResourceLibrary* GetResourceLibraryFromCurrentType(BoundType* currentType);
 
   void SetupDefaults();

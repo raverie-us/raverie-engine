@@ -27,22 +27,11 @@ ZilchDefineType(ResourceSystem, builder, type)
 
 ResourceSystem::ResourceSystem()
 {
-  // Only need to listen for the resource package for 'Loading'
-  ConnectThisTo(this, Events::ResourcesLoaded, OnResourcesLoaded);
 }
 
 void ResourceSystem::Initialize()
 {
   Z::gResources = new ResourceSystem();
-}
-
-void ResourceSystem::OnResourcesLoaded(ResourceEvent* event)
-{
-  if (event->Name == "Loading")
-  {
-    Z::gEngine->mHaveLoadingResources = true;
-    GetDispatcher()->Disconnect(this);
-  }
 }
 
 ResourceLibrary* ResourceSystem::GetResourceLibraryFromCurrentType(BoundType* currentType)

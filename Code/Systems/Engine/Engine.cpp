@@ -10,7 +10,6 @@ DefineEvent(CurrentInputDeviceChanged);
 DefineEvent(DebuggerPause);
 DefineEvent(DebuggerResume);
 DefineEvent(DebuggerPauseUpdate);
-DefineEvent(LoadingStart);
 DefineEvent(LoadingProgress);
 DefineEvent(LoadingFinish);
 DefineEvent(BlockingTaskStart);
@@ -93,7 +92,6 @@ Engine::Engine()
   mTimeSystem = nullptr;
   mCurrentInputDevice = InputDevice::Mouse;
   mFrameCounter = 0;
-  mHaveLoadingResources = false;
   mTimePassed = 0.0f;
   mIsDebugging = false;
 }
@@ -288,14 +286,10 @@ void Engine::DestroyAllSpaces()
 
 void Engine::LoadingStart()
 {
-  if (!mHaveLoadingResources)
-    return;
-
   ++mLoadingCount;
   if (mLoadingCount == 1)
   {
-    Event toSend;
-    DispatchEvent(Events::LoadingStart, &toSend);
+    Shell::sInstance->SetProgress("", 0.0);
   }
 }
 
@@ -305,28 +299,15 @@ void Engine::LoadingUpdate(StringParam operation,
                            ProgressType::Enum progressType,
                            float percentage)
 {
-  if (!mHaveLoadingResources)
-    return;
-
-  ProgressEvent progressEvent;
-  progressEvent.ProgressType = progressType;
-  progressEvent.Operation = operation;
-  progressEvent.CurrentTask = currentTask;
-  progressEvent.ProgressLine = progress;
-  progressEvent.Percentage = percentage;
-
-  DispatchEvent(Events::LoadingProgress, &progressEvent);
+  String progressText = BuildString(operation, " ", currentTask, " ", progress);
+  Shell::sInstance->SetProgress(progressText.c_str(), percentage);
 }
 
 void Engine::LoadingFinish()
 {
-  if (!mHaveLoadingResources)
-    return;
-
   if (mLoadingCount == 1)
   {
-    Event toSend;
-    DispatchEvent(Events::LoadingFinish, &toSend);
+    Shell::sInstance->SetProgress(nullptr, 1.0);
   }
   --mLoadingCount;
 }

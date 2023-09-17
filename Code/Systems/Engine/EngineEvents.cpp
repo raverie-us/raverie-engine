@@ -18,18 +18,8 @@ ZilchDefineType(TextErrorEvent, builder, type)
 {
 }
 
-ZilchDefineType(ProgressEvent, builder, type)
-{
-}
-
 ZilchDefineType(BlockingTaskEvent, builder, type)
 {
-}
-
-ProgressEvent::ProgressEvent()
-{
-  ProgressType = ProgressType::Normal;
-  Percentage = 0.0f;
 }
 
 } // namespace Zero

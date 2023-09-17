@@ -70,7 +70,6 @@ class ScreenViewport;
 class SelectionIcon;
 class SetLazyShaderCompilationJob;
 class ShaderInputsEvent;
-class ShowProgressJob;
 class Skeleton;
 class Sprite;
 class SpriteSource;
