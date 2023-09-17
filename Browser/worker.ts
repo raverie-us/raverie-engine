@@ -9,7 +9,8 @@ import {
   ToMainMessageType,
   MessageCopyData,
   MessageOpenFileDialog,
-  MessageProgressUpdate
+  MessageProgressUpdate,
+  MessageProjectSave
 } from "./shared";
 
 const modulePromise = WebAssembly.compileStreaming(fetch(wasmUrl));
@@ -571,7 +572,16 @@ const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) =>
             : readNullTerminatedString(textCharPtr),
           percent
         });
-      }
+      },
+      ImportSaveProject: (nameCharPtr: number, projectBytePtr: number, projectLength: number, builtContentBytePtr: number, builtContentLength: number) => {
+        mainPostMessage<MessageProjectSave>({
+          type: "projectSave",
+          name: readNullTerminatedString(nameCharPtr),
+          projectArchive: readBuffer(projectBytePtr, projectLength),
+          builtContentArchive: readBuffer(builtContentBytePtr, builtContentLength)
+        });
+        
+      },
     }
   };
 

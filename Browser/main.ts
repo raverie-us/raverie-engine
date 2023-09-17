@@ -222,6 +222,9 @@ worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
           }
         }
         break;
+      case "projectSave":
+        console.log("Save", data);
+        break;
   }
 });
 

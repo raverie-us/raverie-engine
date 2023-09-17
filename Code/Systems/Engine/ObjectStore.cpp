@@ -143,7 +143,6 @@ StoreResult::Enum ObjectStore::Store(StringParam name, Cog* object)
     saver.SetSerializationContext(&savingContext);
     saver.SaveFullObject(object);
     saver.Close();
-    PersistFiles();
   }
   else
   {
@@ -214,7 +213,6 @@ void ObjectStore::Erase(StringParam name)
     MoveFile(fileDestination, storeFile);
 
     mEntries.EraseValue(name);
-    PersistFiles();
   }
 }
 
@@ -226,7 +224,6 @@ void ObjectStore::ClearStore()
   String trashDirectory = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "StoreTrash");
 
   MoveFolderContents(trashDirectory, mStorePath);
-  PersistFiles();
 }
 
 } // namespace Zero

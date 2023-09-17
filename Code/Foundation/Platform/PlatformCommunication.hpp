@@ -264,6 +264,7 @@ void ZeroImportNamed(ImportMouseSetCursor)(Zero::Cursor::Enum cursor);
 void ZeroImportNamed(ImportDownloadFile)(const char* fileName, const byte* data, size_t dataLength);
 void ZeroImportNamed(ImportOpenFileDialog)(void* dialog, bool multiple, const char* accept);
 uint64_t ZeroImportNamed(ImportRandomUnique)();
+void ZeroImportNamed(ImportSaveProject)(const char* name, const byte* projectData, size_t projectLength, const byte* builtContentData, size_t builtContentLength);
 
 void* ZeroExportNamed(ExportAllocate)(size_t size);
 void ZeroExportNamed(ExportFree)(void* pointer);

@@ -37,10 +37,6 @@ void CommonLibrary::Initialize()
 
 void CommonLibrary::Shutdown()
 {
-  // For certain platforms (Emscripten) make sure that any
-  // files saved in memory are persisted for the next run.
-  PersistFiles();
-
   WebRequest::Shutdown();
 
   // Uninitialize platform socket library

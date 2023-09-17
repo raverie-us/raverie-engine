@@ -173,8 +173,6 @@ void NewProject()
 void SaveProject()
 {
   Editor* editor = Z::gEditor;
-  editor->SaveAll(true);
-
   // Take a screen shot if it's enabled
   if (Cog* projectCog = editor->mProject)
   {
@@ -182,6 +180,8 @@ void SaveProject()
     if (project->AutoTakeProjectScreenshot)
       editor->TakeProjectScreenshot();
   }
+
+  editor->SaveAll(true, true);
 }
 
 void BindProjectCommands(Cog* config, CommandManager* commands)

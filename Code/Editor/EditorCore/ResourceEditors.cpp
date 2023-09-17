@@ -16,7 +16,7 @@ void EditLevel(Editor* editor, Resource* resource)
   // Editing a level
   Level* level = Type::DynamicCast<Level*>(resource);
 
-  editor->SaveAll(false);
+  editor->SaveAll(false, false);
 
   // Update the last edited level in the user configuration
   Cog* configCog = Z::gEngine->GetConfigCog();

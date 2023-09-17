@@ -378,7 +378,7 @@ void ShaderTranslationDebugHelper::OnRunTranslation(Event* e)
   ConnectThisTo(zilchManager, Events::ScriptCompilationFailed, OnScriptCompilationFailed);
 
   // Ideally we'd force compile all fragments but this can crash right now.
-  // Z::gEditor->SaveAll(false);
+  // Z::gEditor->SaveAll(false, false);
 
   // Disconnect all events for compilation
   EventDispatcher* dispatcher = zilchManager->GetDispatcher();

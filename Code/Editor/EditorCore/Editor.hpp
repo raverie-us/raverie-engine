@@ -188,7 +188,7 @@ public:
   void Redo();
 
   // Save all objects.
-  Status SaveAll(bool showNotify);
+  Status SaveAll(bool showNotify, bool externalSave);
 
   bool TakeProjectScreenshot();
 

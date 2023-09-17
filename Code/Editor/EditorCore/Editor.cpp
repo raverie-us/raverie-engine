@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
+#include "Foundation/Platform/PlatformCommunication.hpp"
 
 namespace Zero
 {
@@ -843,7 +844,7 @@ void BuildContent(ProjectSettings* project)
   DoNotifyStatus(status);
 }
 
-Status Editor::SaveAll(bool showNotify)
+Status Editor::SaveAll(bool showNotify, bool externalSave)
 {
   if (Z::gEngine->IsReadOnly())
   {
@@ -901,14 +902,36 @@ Status Editor::SaveAll(bool showNotify)
   Tweakables::Save();
 
   // Make sure content in the output directory is up to date.
-  BuildContent(Z::gEngine->GetProjectSettings());
+  ProjectSettings* projectSettings = Z::gEngine->GetProjectSettings();
+  BuildContent(projectSettings);
 
   if (showNotify)
     DoNotify("Saved", "Project and all scripts saved.", "Disk");
 
-  // On some platforms, to make files persist between runs we need to call this
-  // function.
-  PersistFiles();
+  if (externalSave) {
+    // Project archive
+    Archive projectArchive(ArchiveMode::Compressing);
+    Status projectStatus;
+    projectStatus.AssertOnFailure();
+    projectArchive.ArchiveDirectory(projectStatus, projectSettings->GetProjectFolder(), "");
+    ByteBufferBlock projectBlock(projectArchive.ComputeZipSize());
+    projectArchive.WriteBuffer(projectBlock);
+
+    // Content archive
+    Archive contentArchive(ArchiveMode::Compressing);
+    Status contentStatus;
+    contentStatus.AssertOnFailure();
+    contentArchive.ArchiveDirectory(contentStatus, projectSettings->GetContentFolder(), "");
+    ByteBufferBlock contentBlock(contentArchive.ComputeZipSize());
+    contentArchive.WriteBuffer(contentBlock);
+
+    ImportSaveProject(
+      projectSettings->ProjectName.c_str(),
+      projectBlock.GetBegin(),
+      projectBlock.Size(),
+      contentBlock.GetBegin(),
+      contentBlock.Size());
+  }
 
   return Status();
 }
@@ -1367,7 +1390,7 @@ GameSession* Editor::PlayGame(PlayGameOptions::Enum options, bool takeFocus, boo
   // Note: This should definitely come down here, before we close out of the
   // first game The reason is that if anything is 'in use' while the game is
   // running (eg the Zilch library) then it cannot be updated by saving
-  Status status = SaveAll(false);
+  Status status = SaveAll(false, true);
   if (status.Failed())
   {
     DoNotifyErrorNoAssert("Play Game", String::Format("Cannot run the game because: %s", status.Message.c_str()));
@@ -1578,7 +1601,7 @@ void Editor::OnSaveQuitMessageBox(MessageBoxEvent* event)
 {
   if (event->ButtonIndex == 0)
   {
-    SaveAll(false);
+    SaveAll(false, true);
     Z::gEngine->Terminate();
   }
 

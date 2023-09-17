@@ -270,14 +270,6 @@ void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, T
 #endif
 }
 
-bool PersistFiles()
-{
-  // The VFS has no way of perminantly persisting files, as they actual file
-  // system itself may be non-existant. In the future for platforms we could
-  // create a zip here and save it back out (or call a callback).
-  return false;
-}
-
 bool CopyFileInternal(StringParam dest, StringParam source)
 {
   SystemEntry* sourceEntry = FileSystem::GetInstance()->FindEntry(source);

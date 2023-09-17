@@ -289,6 +289,13 @@ export interface MessageProgressUpdate {
   percent: number;
 }
 
+export interface MessageProjectSave {
+  type: "projectSave";
+  name: string;
+  projectArchive: ArrayBuffer;
+  builtContentArchive: ArrayBuffer;
+}
+
 export type ToMainMessageType =
   MessageYieldDraw |
   MessageYieldComplete |
@@ -297,4 +304,5 @@ export type ToMainMessageType =
   MessageDownloadFile |
   MessageCopyData |
   MessageOpenFileDialog |
-  MessageProgressUpdate;
+  MessageProgressUpdate |
+  MessageProjectSave;

@@ -165,7 +165,7 @@ void CopyPrebuiltContent()
   // Save all resources and build them so the
   // output directory is up to date
   if (Z::gEditor)
-    Z::gEditor->SaveAll(true);
+    Z::gEditor->SaveAll(false, false);
   // We copy all libraries (including Fallback) because we only expect this to be run by the install steps
   const String outputDirectory = Z::gContentSystem->PrebuiltContentPath;
   forRange (ContentLibrary* library, Z::gContentSystem->Libraries.Values())
