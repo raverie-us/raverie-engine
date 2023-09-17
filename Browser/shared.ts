@@ -283,6 +283,12 @@ export interface MessageOpenFileDialog {
   accept: string;
 }
 
+export interface MessageProgressUpdate {
+  type: "progressUpdate";
+  text: string | null;
+  percent: number;
+}
+
 export type ToMainMessageType =
   MessageYieldDraw |
   MessageYieldComplete |
@@ -290,4 +296,5 @@ export type ToMainMessageType =
   MessageMouseSetCursor |
   MessageDownloadFile |
   MessageCopyData |
-  MessageOpenFileDialog;
+  MessageOpenFileDialog |
+  MessageProgressUpdate;

@@ -408,6 +408,14 @@ void GameOrEditorStartup::UserCreation()
   {
     CreateEditor(mProjectFile, mNewProject);
   }
+
+  // Update once to force things like shader compositing so we can still show a loading screen
+  Z::gEngine->Update();
+
+  // The loading system assumes we are always loading from initialization to this point
+  // rather than each time a content library begins and ends building (this batches everything)
+  Shell::sInstance->mInitialLoadingComplete = true;
+  Shell::sInstance->SetProgress(nullptr, 1.0f);
 }
 
 } // namespace Zero

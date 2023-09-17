@@ -8,7 +8,8 @@ import {
   MessageDownloadFile,
   ToMainMessageType,
   MessageCopyData,
-  MessageOpenFileDialog
+  MessageOpenFileDialog,
+  MessageProgressUpdate
 } from "./shared";
 
 const modulePromise = WebAssembly.compileStreaming(fetch(wasmUrl));
@@ -562,6 +563,15 @@ const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) =>
           accept: readNullTerminatedString(acceptCharPtr)
         });
       },
+      ImportProgressUpdate: (textCharPtr: number, percent: number) => {
+        mainPostMessage<MessageProgressUpdate>({
+          type: "progressUpdate",
+          text: textCharPtr === 0
+            ? null
+            : readNullTerminatedString(textCharPtr),
+          percent
+        });
+      }
     }
   };
 

@@ -114,4 +114,15 @@ void Shell::Close()
 {
 }
 
+void Shell::SetProgress(const char* textOrNull, float percent) {
+  // We batch all loading of multiple content libraries in the beginning under a single "loading" window
+  // If we finished initial loading, then let code hide and show loading screens
+  if (mInitialLoadingComplete) {
+    ImportProgressUpdate(textOrNull, percent);
+  } else {
+    // Otherwise we always show the loading screen and ignore if it's null
+    ImportProgressUpdate(textOrNull == nullptr ? "" : textOrNull, percent);
+  }
+}
+
 } // namespace Zero

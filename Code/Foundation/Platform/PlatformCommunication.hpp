@@ -258,6 +258,7 @@ void ZeroImportNamed(ImportGlViewport)(GLint x, GLint y, GLsizei width, GLsizei 
 void ZeroImportNamed(ImportPrintLine)(int32_t fd, const char* str, size_t length);
 double ZeroImportNamed(ImportClock)(int32_t clockId);
 void ZeroImportNamed(ImportYield)();
+void ZeroImportNamed(ImportProgressUpdate)(const char* text, float percent);
 void ZeroImportNamed(ImportMouseTrap)(bool value);
 void ZeroImportNamed(ImportMouseSetCursor)(Zero::Cursor::Enum cursor);
 void ZeroImportNamed(ImportDownloadFile)(const char* fileName, const byte* data, size_t dataLength);

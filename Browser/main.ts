@@ -51,6 +51,15 @@ yieldCanvas.height = canvas.height;
 parent.append(yieldCanvas);
 const yieldContext = yieldCanvas.getContext("2d")!;
 
+const loading = document.createElement("div");
+loading.style.position = "absolute";
+loading.style.width = "100%";
+loading.style.height = "100%";
+loading.style.backgroundColor = "#222";
+loading.style.display = "block";
+loading.style.pointerEvents = "none";
+parent.append(loading);
+
 const input = document.createElement("input");
 input.type = "file";
 parent.append(input);
@@ -152,6 +161,14 @@ worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
         input.multiple = data.multiple;
         currentDialog = data.dialog;
         input.click();
+        break;
+      case "progressUpdate":
+        if (data.text === null) {
+          loading.style.display = "none";
+        } else {
+          loading.style.display = "block";
+          loading.textContent = `${Math.round(data.percent * 100)}% - ${data.text}`;
+        }
         break;
   }
 });

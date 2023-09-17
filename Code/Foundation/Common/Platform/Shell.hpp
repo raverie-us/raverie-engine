@@ -333,6 +333,8 @@ public:
   /// Sends a message to close the window (the window is not destroyed).
   void Close();
 
+  void SetProgress(const char* textOrNull, float percent);
+
   /// Called when any hardware devices change.
   //void (*mOnDevicesChanged)();
 
@@ -356,6 +358,7 @@ public:
   bool mMouseTrapped = false;
 
   bool mHasFocus = false;
+  bool mInitialLoadingComplete = false;
 
   static Shell* sInstance;
   

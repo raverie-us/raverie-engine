@@ -459,8 +459,6 @@ void GraphicsEngine::StartProgress(Event* event)
   if (loadingTexture == nullptr || logoTexture == nullptr || whiteTexture == nullptr || splashTexture == nullptr)
     return;
 
-  mProgressCounter = 0;
-
   mShowProgressJob->Lock();
   mShowProgressJob->mLoadingTexture = loadingTexture->mRenderData;
   mShowProgressJob->mLogoTexture = logoTexture->mRenderData;
@@ -476,6 +474,8 @@ void GraphicsEngine::StartProgress(Event* event)
 
   mShowProgressJob->Start();
   mRendererJobQueue->AddJob(mShowProgressJob);
+  
+  Shell::sInstance->SetProgress("", 0.0);
 }
 
 void GraphicsEngine::UpdateProgress(ProgressEvent* event)
@@ -506,20 +506,7 @@ void GraphicsEngine::UpdateProgress(ProgressEvent* event)
   mShowProgressJob->mProgressText = fontProcessor.mVertices;
   mShowProgressJob->Unlock();
 
-  // When not threaded, we want to update the progress, but we don't
-  // want to do a full render for every single resource that is loaded.
-  if (!ThreadingEnabled)
-  {
-    // This prevents us from drawing for every single update, but also delays
-    // showing the loading screen which can prevent a flicker for fast loads
-    static const size_t cProgressUpdateInterval = 5;
-    if (mProgressCounter % cProgressUpdateInterval == (cProgressUpdateInterval - 1))
-    {
-      ExecuteRendererJob(mShowProgressJob);
-      ImportYield();
-    }
-    ++mProgressCounter;
-  }
+  Shell::sInstance->SetProgress(progressText.c_str(), event->Percentage);
 }
 
 void GraphicsEngine::EndProgress(Event* event)
@@ -528,6 +515,8 @@ void GraphicsEngine::EndProgress(Event* event)
     return;
 
   mShowProgressJob->Terminate();
+
+  Shell::sInstance->SetProgress(nullptr, 1.0);
 }
 
 void GraphicsEngine::OnProjectLoaded(ObjectEvent* event)
