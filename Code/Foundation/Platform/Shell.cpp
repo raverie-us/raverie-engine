@@ -105,11 +105,6 @@ void Shell::SetMouseTrap(bool mouseTrapped)
   ImportMouseTrap(mouseTrapped);
 }
 
-bool Shell::GetImage(Image* image)
-{
-  return false;
-}
-
 void Shell::Close()
 {
 }

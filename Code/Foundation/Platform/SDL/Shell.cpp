@@ -82,12 +82,6 @@ bool Shell::HasFocus()
   return SDL_GetKeyboardFocus() == mHandle;
 }
 
-bool Shell::GetImage(Image* image)
-{
-  Error("Not implemented");
-  return false;
-}
-
 void Shell::Close()
 {
   SDL_Event e;

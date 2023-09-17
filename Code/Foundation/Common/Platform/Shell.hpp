@@ -327,9 +327,6 @@ public:
   bool GetMouseTrap();
   void SetMouseTrap(bool trapped);
 
-  /// Get an image from window.
-  bool GetImage(Image* image);
-
   /// Sends a message to close the window (the window is not destroyed).
   void Close();
 
