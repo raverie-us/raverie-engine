@@ -1,4 +1,5 @@
 import RaverieEngineWorker from "./worker.ts?worker";
+import Logo from "./logo.png?url"
 import {
   Cursor,
   KeyState,
@@ -58,7 +59,37 @@ loading.style.height = "100%";
 loading.style.backgroundColor = "#222";
 loading.style.display = "block";
 loading.style.pointerEvents = "none";
+loading.style.opacity = "0";
+loading.style.transition = "opacity 1s ease-in-out";
 parent.append(loading);
+
+const loadingCenter = document.createElement("div");
+loadingCenter.style.position = "absolute";
+loadingCenter.style.width = "100%";
+loadingCenter.style.top = "50%";
+loadingCenter.style.transform = "translateY(-50%)";
+loadingCenter.style.display = "flex";
+loadingCenter.style.flexDirection = "column";
+loadingCenter.style.alignItems = "center";
+loading.append(loadingCenter);
+
+const logo = document.createElement("img");
+logo.src = Logo;
+loadingCenter.append(logo);
+
+const loadingText = document.createElement("div");
+loadingText.style.height = "1em";
+loadingText.style.fontSize = "1em";
+loadingText.style.color = "#fff";
+loadingText.style.fontFamily = "monospace";
+loadingCenter.append(loadingText);
+
+// Force layout and set the opacity to 1 so it transitions
+loading.getBoundingClientRect();
+loading.style.opacity = "1";
+
+// Don't bring up the transition until a minimum amount of time has passed
+loading.style.transitionDelay = "0.1";
 
 const input = document.createElement("input");
 input.type = "file";
@@ -165,9 +196,13 @@ worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
       case "progressUpdate":
         if (data.text === null) {
           loading.style.display = "none";
+          loading.style.opacity = "0";
         } else {
           loading.style.display = "block";
-          loading.textContent = `${Math.round(data.percent * 100)}% - ${data.text}`;
+          loading.style.opacity = "1";
+          if (data.text !== "") {
+            loadingText.textContent = data.text;
+          }
         }
         break;
   }
