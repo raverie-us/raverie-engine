@@ -463,10 +463,13 @@ GameWidget::GameWidget(Composite* composite) : Composite(composite)
 {
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
   ConnectThisTo(GetRootWidget(), Events::WidgetUpdate, OnUpdate);
+  RootWidget::sMouseTrapFocusWidgets.PushBack(this);
 }
 
 GameWidget::~GameWidget()
 {
+  bool erased = RootWidget::sMouseTrapFocusWidgets.EraseValue(this);
+  ErrorIf(!erased, "Expected GameWidget to be in sMouseTrapFocusWidgets");
 }
 
 void GameWidget::OnDestroy()
@@ -482,6 +485,11 @@ bool GameWidget::TakeFocusOverride()
   CommandManager::GetInstance()->GetContext()->Remove(ZilchTypeId(Space));
 
   this->HardTakeFocus();
+
+  // Remove this widget from wherever it is in the list and add it to the back (most recent)
+  bool erased = RootWidget::sMouseTrapFocusWidgets.EraseValue(this);
+  ErrorIf(!erased, "Expected GameWidget to be in sMouseTrapFocusWidgets");
+  RootWidget::sMouseTrapFocusWidgets.PushBack(this);
   return true;
 }
 

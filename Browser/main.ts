@@ -93,14 +93,27 @@ loading.style.transitionDelay = "0.1";
 
 const input = document.createElement("input");
 input.type = "file";
+input.style.visibility = "hidden";
 parent.append(input);
+
+const checkFocus = () => document.hasFocus() && document.visibilityState == "visible" && document.activeElement === canvas;
+
 let currentDialog: number | null = null;
-
-const checkFocus = () => document.hasFocus() && document.visibilityState == "visible";
-let focused = checkFocus();
-
-
 let emulatedClipboardText: string | null = null;
+let focused = checkFocus();
+let mouseTrapped = false;
+
+const updateMouseTrapped = () => {
+  if (mouseTrapped) {
+    if (document.pointerLockElement === canvas) {
+      canvas.style.opacity = "1";
+    } else {
+      canvas.style.opacity = "0.8";
+    }
+  } else {
+    canvas.style.opacity = "1";
+  }
+}
 
 const downloadFile = (filename: string, buffer: ArrayBuffer) => {
   const blob = new Blob([buffer]);
@@ -129,10 +142,14 @@ worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
       yieldCanvas.style.display = "none";
       break;
     case "mouseTrap":
+      mouseTrapped = data.value;
       if (data.value) {
         canvas.requestPointerLock();
-      } else if (document.pointerLockElement === canvas) {
-        document.exitPointerLock();
+      } else {
+        if (document.pointerLockElement === canvas) {
+          document.exitPointerLock();
+        }
+        updateMouseTrapped();
       }
       break;
     case "mouseSetCursor":
@@ -528,6 +545,8 @@ const updateFocus = () => {
 
 window.addEventListener("focus", updateFocus);
 window.addEventListener("blur", updateFocus);
+canvas.addEventListener("focus", updateFocus);
+canvas.addEventListener("blur", updateFocus);
 document.addEventListener("visibilitychange", updateFocus);
 
 const resizeObserver = new ResizeObserver((entries) => {
@@ -542,3 +561,15 @@ const resizeObserver = new ResizeObserver((entries) => {
 
 resizeObserver.observe(parent);
 
+document.addEventListener("pointerlockchange", updateMouseTrapped);
+
+const recaptureTrappedMouse = () => {
+  if (mouseTrapped && document.pointerLockElement !== canvas) {
+    canvas.requestPointerLock();
+  }
+
+  updateMouseTrapped();
+};
+
+canvas.addEventListener("focus", recaptureTrappedMouse);
+canvas.addEventListener("click", recaptureTrappedMouse);

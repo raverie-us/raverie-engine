@@ -98,6 +98,8 @@ private:
   float mHoverTime;
   float mHoldTime;
   float mTimeSinceLastClick;
+
+  static Array<Widget*> sMouseTrapFocusWidgets;
 };
 
 // Get the previous sibling in the tree

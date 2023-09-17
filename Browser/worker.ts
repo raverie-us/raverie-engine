@@ -528,10 +528,10 @@ const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) =>
         // https://github.com/WebAssembly/js-promise-integration/blob/main/proposals/js-promise-integration/Overview.md
         // https://v8.dev/blog/jspi
       },
-      ImportMouseTrap: (value: boolean) => {
+      ImportMouseTrap: (valueBool: number) => {
         mainPostMessage<MessageMouseTrap>({
           type: "mouseTrap",
-          value
+          value: Boolean(valueBool)
         });
       },
       ImportMouseSetCursor: (cursor: number) => {
@@ -555,11 +555,11 @@ const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) =>
         const view = new DataView(buffer.buffer);
         return view.getBigUint64(0);
       },
-      ImportOpenFileDialog: (dialog: number, multiple: boolean, acceptCharPtr: number) => {
+      ImportOpenFileDialog: (dialog: number, multipleBool: number, acceptCharPtr: number) => {
         mainPostMessage<MessageOpenFileDialog>({
           type: "openFileDialog",
           dialog,
-          multiple,
+          multiple: Boolean(multipleBool),
           accept: readNullTerminatedString(acceptCharPtr)
         });
       },
@@ -581,7 +581,7 @@ const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) =>
 
   const ExportAllocate = instance.exports.ExportAllocate as (size: number) => number;
   const ExportFree = instance.exports.ExportFree as (pointer: number) => void;
-  const ExportInitialize = instance.exports.ExportInitialize as (argumentsCharPtr: number, clientWidth: number, clientHeight: number, focused: boolean) => void;
+  const ExportInitialize = instance.exports.ExportInitialize as (argumentsCharPtr: number, clientWidth: number, clientHeight: number, focusedBool: number) => void;
   const ExportRunIteration = instance.exports.ExportRunIteration as () => void;
   const ExportHandleCrash = instance.exports.ExportHandleCrash as () => void;
   const ExportMouseMove = instance.exports.ExportMouseMove as (clientX: number, clientY: number, dx: number, dy: number) => void;
@@ -590,7 +590,7 @@ const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) =>
   const ExportTextTyped = instance.exports.ExportTextTyped as (rune: number) => void;
   const ExportKeyboardButtonChanged = instance.exports.ExportKeyboardButtonChanged as (key: number, state: number) => void;
   const ExportQuit = instance.exports.ExportQuit as () => void;
-  const ExportCopy = instance.exports.ExportCopy as (isCut: boolean) => number;
+  const ExportCopy = instance.exports.ExportCopy as (isCutBool: number) => number;
   const ExportPaste = instance.exports.ExportPaste as (charPtr: number) => void;
   const ExportFileCreate = instance.exports.ExportFileCreate as (filePathCharPtr: number, dataBytePtr: number, dataLength: number) => void;
   const ExportFileDelete = instance.exports.ExportFileDelete as (filePathCharPtr: number) => void;
@@ -599,7 +599,7 @@ const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) =>
   const ExportOpenFileDialogAdd = instance.exports.ExportOpenFileDialogAdd as (dialog: number, filePathCharPtr: number) => void;
   const ExportOpenFileDialogFinish = instance.exports.ExportOpenFileDialogFinish as (dialog: number) => void;
   const ExportSizeChanged = instance.exports.ExportSizeChanged as (clientWidth: number, clientHeight: number) => void;
-  const ExportFocusChanged = instance.exports.ExportFocusChanged as (focused: boolean) => void;
+  const ExportFocusChanged = instance.exports.ExportFocusChanged as (focusedBool: number) => void;
 
   const allocateAndCopy = (buffer: Uint8Array) => {
     const pointer = ExportAllocate(buffer.byteLength);
@@ -631,7 +631,7 @@ const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) =>
       case "copy":
         mainPostMessage<MessageCopyData>({
           type: "copyData",
-          text: readNullTerminatedString(ExportCopy(data.isCut))
+          text: readNullTerminatedString(ExportCopy(Number(data.isCut)))
         });
         break;
       case "paste": {
@@ -677,7 +677,7 @@ const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) =>
         ExportRunIteration();
         break;
       case "focusChanged":
-        ExportFocusChanged(data.focused);
+        ExportFocusChanged(Number(data.focused));
         break;
     }
   };
@@ -748,7 +748,7 @@ const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) =>
   }
 
   const commandLineCharPtr = allocateNullTerminatedString(args);
-  ExportInitialize(commandLineCharPtr, canvas.width, canvas.height, focused);
+  ExportInitialize(commandLineCharPtr, canvas.width, canvas.height, Number(focused));
   ExportFree(commandLineCharPtr);
 
   let mustSendYieldComplete = false;

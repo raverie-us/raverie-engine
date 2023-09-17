@@ -103,6 +103,7 @@ public:
   bool AltPressed;
   bool CtrlPressed;
   IntVec2 ClientPosition;
+  IntVec2 Movement;
   Vec2 ScrollMovement;
 
   // Button For this Event

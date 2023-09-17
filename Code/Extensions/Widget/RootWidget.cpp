@@ -2,6 +2,7 @@
 #include "Precompiled.hpp"
 namespace Zero
 {
+Array<Widget*> RootWidget::sMouseTrapFocusWidgets;
 
 namespace Interaction
 {
@@ -621,6 +622,11 @@ void RootWidget::BuildMouseEvent(MouseEvent& event, OsMouseEvent* mouseEvent)
 
 Widget* RootWidget::UpdateMousePosition(OsMouseEvent* osmouseEvent)
 {
+  // If the mouse is trapped, return the main viewport here
+  if (Shell::sInstance->GetMouseTrap() && !sMouseTrapFocusWidgets.Empty()) {
+    return sMouseTrapFocusWidgets.Back();
+  }
+
   Widget* captureObject = mCaptured;
   if (captureObject)
     return captureObject;
@@ -804,7 +810,7 @@ void RootWidget::OnOsMouseMoved(OsMouseEvent* osMouseEvent)
 
   UpdateMouseButtons(osMouseEvent);
 
-  Vec2 mouseMovement = ToVec2(osMouseEvent->ClientPosition) - Z::gMouse->mClientPosition;
+  Vec2 mouseMovement = ToVec2(osMouseEvent->Movement);
 
   Z::gMouse->mClientPosition = ToVec2(osMouseEvent->ClientPosition);
   Z::gMouse->mCursorMovement = mouseMovement;

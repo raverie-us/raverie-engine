@@ -208,6 +208,7 @@ void ZeroExportNamed(ExportMouseMove)(int32_t clientX, int32_t clientY, int32_t 
   IntVec2 clientPosition(clientX, clientY);
   OsMouseEvent mouseEvent;
   OsWindow::sInstance->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
+  mouseEvent.Movement = IntVec2(dx, dy);
   mouseEvent.EventId = Events::OsMouseMove;
 
   OsWindow::sInstance->SendMouseEvent(mouseEvent);
@@ -296,8 +297,9 @@ OsMouseEvent::OsMouseEvent()
 
 void OsMouseEvent::Clear()
 {
-  ClientPosition = IntVec2(0, 0);
-  ScrollMovement = Vec2(0, 0);
+  ClientPosition = IntVec2::cZero;
+  Movement = IntVec2::cZero;
+  ScrollMovement = Vec2::cZero;
   ShiftPressed = false;
   AltPressed = false;
   CtrlPressed = false;
