@@ -26,6 +26,7 @@ const parent = document.createElement("div");
 parent.style.position = "relative";
 parent.style.width = "100%";
 parent.style.height = "100%";
+document.body.append(parent);
 
 const canvas = document.createElement("canvas");
 canvas.style.position = "absolute";
@@ -34,8 +35,10 @@ canvas.style.height = "100%";
 canvas.style.backgroundColor = "#000";
 canvas.style.outline = "none";
 canvas.tabIndex = 1;
-canvas.width = 1024;
-canvas.height = 768;
+const initialRect = parent.getBoundingClientRect();
+canvas.width = initialRect.width;
+canvas.height = initialRect.height;
+parent.append(canvas);
 const offscreenCanvas = canvas.transferControlToOffscreen();
 
 const yieldCanvas = document.createElement("canvas");
@@ -45,20 +48,17 @@ yieldCanvas.style.display = "none";
 yieldCanvas.style.pointerEvents = "none";
 yieldCanvas.width = canvas.width;
 yieldCanvas.height = canvas.height;
-canvas.append(yieldCanvas);
+parent.append(yieldCanvas);
 const yieldContext = yieldCanvas.getContext("2d")!;
 
 const input = document.createElement("input");
 input.type = "file";
+parent.append(input);
 let currentDialog: number | null = null;
 
 const checkFocus = () => document.hasFocus() && document.visibilityState == "visible";
 let focused = checkFocus();
 
-parent.append(canvas);
-parent.append(yieldCanvas);
-parent.append(input);
-document.body.append(parent);
 
 let emulatedClipboardText: string | null = null;
 

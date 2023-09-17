@@ -408,10 +408,6 @@ void GameOrEditorStartup::UserCreation()
   {
     CreateEditor(mProjectFile, mNewProject);
   }
-
-  // It's possible that the resize event occurred while loading but we hadn't set up listeners yet
-  // Pretend we completed a resize after loading everything
-  OsWindow::sInstance->SendSizeChanged(Shell::sInstance->mClientSize);
 }
 
 } // namespace Zero

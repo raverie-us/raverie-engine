@@ -70,7 +70,6 @@ public:
 
   void FillKeyboardEvent(Keys::Enum key, KeyState::Enum keyState, KeyboardEvent& keyEvent);
   void FillMouseEvent(IntVec2Param clientPosition, MouseButtons::Enum mouseButton, OsMouseEvent& mouseEvent);
-  void SendSizeChanged(IntVec2Param clientSize);
 
   static void ShellWOnDevicesChanged();
   static void ShellWOnInputDeviceChanged(
