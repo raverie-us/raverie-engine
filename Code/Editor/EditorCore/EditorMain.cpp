@@ -943,7 +943,7 @@ void CreateEditor(StringParam projectFile, StringParam newProjectName)
     // ContentPackageImporter)
     editorMain->mLibrary = editorMain->CreateLibraryView(true, false);
     editorMain->mLibrary->SetHideOnClose(true);
-    editorMain->AddManagedWidget(editorMain->mLibrary, DockArea::Bottom, true);
+    editorMain->AddManagedWidget(editorMain->mLibrary, DockArea::Right, true);
   }
 
   {
@@ -951,7 +951,7 @@ void CreateEditor(StringParam projectFile, StringParam newProjectName)
     objects->SetName("Objects");
     objects->SetHideOnClose(true);
     objects->SetSize(Pixels(dockWidth, 280));
-    editorMain->AddManagedWidget(objects, DockArea::Left, true);
+    editorMain->AddManagedWidget(objects, DockArea::Right, true);
     editorMain->mObjectView = objects;
   }
 
@@ -1052,16 +1052,15 @@ void CreateEditor(StringParam projectFile, StringParam newProjectName)
   MetaSelection* selection = editorMain->GetSelection();
 
   // Tool Area
-  editorMain->Tools->SetSize(Pixels(dockWidth, 280));
+  editorMain->Tools->SetSize(Pixels(dockWidth, 420));
 
   MainPropertyView* propertyViewArea = new MainPropertyView(editorMain, selection, editorMain->mQueue);
 
   propertyViewArea->SetHideOnClose(true);
   editorMain->mMainPropertyView = propertyViewArea;
 
-  Window* sideBar = editorMain->AddManagedWidget(propertyViewArea, DockArea::Right, true);
-
-  sideBar->AttachAsTab(editorMain->Tools, false);
+  editorMain->AddManagedWidget(editorMain->Tools, DockArea::Left, true);
+  editorMain->AddManagedWidget(propertyViewArea, DockArea::Left, true);
 
   editorMain->Tools->SelectToolIndex(0);
 
