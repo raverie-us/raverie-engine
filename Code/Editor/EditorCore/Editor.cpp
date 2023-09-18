@@ -844,6 +844,47 @@ void BuildContent(ProjectSettings* project)
   DoNotifyStatus(status);
 }
 
+void ArchiveLibraryOutput(Archive& archive, ContentLibrary* library)
+{
+  ResourceListing listing;
+  library->BuildListing(listing);
+
+  // Add every file in the package to the archive
+  String outputPath = library->GetOutputPath();
+  String archivePath = library->Name;
+
+  int itemsDone = 0;
+  float librarySize = (float)listing.Size();
+
+  forRange (ResourceEntry resource, listing.All())
+  {
+    ++itemsDone;
+    String fullPath = FilePath::Combine(outputPath, resource.Location);
+    String relativePath = FilePath::Combine(archivePath, resource.Location);
+
+    // Don't export resources that are marked as template files.
+    if (resource.GetResourceTemplate() && resource.Type.Contains("Zilch"))
+      continue;
+
+    archive.AddFile(fullPath, relativePath);
+    Z::gEngine->LoadingUpdate(
+        "Archive Library", library->Name, resource.Name, ProgressType::Normal, float(itemsDone) / librarySize);
+  }
+
+  // Finally add the pack file
+  String packFile = BuildString(library->Name, ".pack");
+  String packFilePath = FilePath::Combine(outputPath, packFile);
+
+  archive.AddFile(packFilePath, FilePath::Combine(archivePath, packFile));
+}
+
+void ArchiveLibraryOutput(Archive& archive, StringParam libraryName)
+{
+  ContentLibrary* library = Z::gContentSystem->Libraries.FindValue(libraryName, nullptr);
+  if (library)
+    ArchiveLibraryOutput(archive, library);
+}
+
 Status Editor::SaveAll(bool showNotify, bool externalSave)
 {
   if (Z::gEngine->IsReadOnly())
@@ -852,6 +893,7 @@ Status Editor::SaveAll(bool showNotify, bool externalSave)
     DoNotifyWarning("Resource", cMessage);
     return Status(StatusState::Failure, cMessage);
   }
+  Z::gEngine->LoadingStart();
 
   // Reset the focus to save any changes in progress (setting text, etc)
   GetRootWidget()->FocusReset();
@@ -919,9 +961,20 @@ Status Editor::SaveAll(bool showNotify, bool externalSave)
 
     // Content archive
     Archive contentArchive(ArchiveMode::Compressing);
-    Status contentStatus;
-    contentStatus.AssertOnFailure();
-    contentArchive.ArchiveDirectory(contentStatus, projectSettings->GetContentFolder(), "");
+
+    if (SharedContent* sharedConent = projectSettings->GetOwner()->has(SharedContent))
+    {
+      forRange (ContentLibraryReference libraryRef, sharedConent->ExtraContentLibraries.All())
+      {
+        String libraryName = libraryRef.mContentLibraryName;
+        ArchiveLibraryOutput(contentArchive, libraryName);
+      }
+    }
+
+    ArchiveLibraryOutput(contentArchive, projectSettings->ProjectContentLibrary);
+
+    contentArchive.AddFile(projectSettings->ProjectFile, "Project.zeroproj");
+
     ByteBufferBlock contentBlock(contentArchive.ComputeZipSize());
     contentArchive.WriteBuffer(contentBlock);
 
@@ -933,6 +986,7 @@ Status Editor::SaveAll(bool showNotify, bool externalSave)
       contentBlock.Size());
   }
 
+  Z::gEngine->LoadingFinish();
   return Status();
 }
 
