@@ -1822,7 +1822,7 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
   if (mClipMode && frameNode.mClip != mCurrentClip)
   {
     mStreamedVertexBuffer.FlushBuffer(false);
-    mCurrentClip = frameNode.mClip;
+    mCurrentClip = Math::Max(frameNode.mClip, Vec4::cZero);
     ImportGlScissor((int)mCurrentClip.x,
               mViewportSize.y - (int)mCurrentClip.y - (int)mCurrentClip.w,
               (int)mCurrentClip.z,
