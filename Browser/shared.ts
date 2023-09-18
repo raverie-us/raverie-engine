@@ -298,6 +298,11 @@ export interface MessageProjectSave {
   builtContentArchive: ArrayBuffer;
 }
 
+export interface MessageOpenUrl {
+  type: "openUrl";
+  url: string;
+}
+
 export type ToMainMessageType =
   MessageYieldDraw |
   MessageYieldComplete |
@@ -307,4 +312,5 @@ export type ToMainMessageType =
   MessageCopyData |
   MessageOpenFileDialog |
   MessageProgressUpdate |
-  MessageProjectSave;
+  MessageProjectSave |
+  MessageOpenUrl;

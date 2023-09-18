@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
+#include "Foundation/Platform/PlatformCommunication.hpp"
 
 namespace Zero
 {
@@ -152,7 +153,7 @@ bool OpenProjectFile(StringParam filename)
 
 void OpenProject()
 {
-  Os::OpenUrl(Urls::cOpenProject);
+  ImportOpenUrl(Urls::cOpenProject);
 }
 
 void ReloadProject()
@@ -167,7 +168,7 @@ void ReloadProject()
 
 void NewProject()
 {
-  Os::OpenUrl(Urls::cNewProject);
+  ImportOpenUrl(Urls::cNewProject);
 }
 
 void SaveProject()

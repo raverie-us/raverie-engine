@@ -11,7 +11,8 @@ import {
   MessageOpenFileDialog,
   MessageProgressUpdate,
   MessageProjectSave,
-  MessageInitialize
+  MessageInitialize,
+  MessageOpenUrl
 } from "./shared";
 
 const modulePromise = WebAssembly.compileStreaming(fetch(wasmUrl));
@@ -581,7 +582,12 @@ const start = async (message: MessageInitialize) => {
           projectArchive: readBuffer(projectBytePtr, projectLength),
           builtContentArchive: readBuffer(builtContentBytePtr, builtContentLength)
         });
-        
+      },
+      ImportOpenUrl: (urlCharPtr: number) => {
+        mainPostMessage<MessageOpenUrl>({
+          type: "openUrl",
+          url: readNullTerminatedString(urlCharPtr)
+        });
       },
     }
   };

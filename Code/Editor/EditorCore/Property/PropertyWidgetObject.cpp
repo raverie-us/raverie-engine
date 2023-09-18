@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
+#include "Foundation/Platform/PlatformCommunication.hpp"
 
 namespace Zero
 {
@@ -876,7 +877,7 @@ void PropertyWidgetObject::OnViewOnlineDocs(ObjectEvent* event)
   String url = builder.ToString();
 
   // Open browser with URL
-  Os::OpenUrl(url.c_str());
+  ImportOpenUrl(url.c_str());
 }
 
 void PropertyWidgetObject::OnRemove(ObjectEvent* event)

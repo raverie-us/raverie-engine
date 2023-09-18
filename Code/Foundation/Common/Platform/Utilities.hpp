@@ -20,9 +20,6 @@ void Sleep(uint ms);
 // When a diagnostic error occurs, this is the default response
 bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData);
 
-// Open's a url in a browser or tab.
-void OpenUrl(cstr url);
-
 // Get the time in milliseconds for a double click.
 unsigned int GetDoubleClickTimeMs();
 

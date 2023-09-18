@@ -38,10 +38,6 @@ void WebRequest(Status& status,
   status.SetFailed("WebRequest not implemented");
 }
 
-void OpenUrl(cstr url)
-{
-}
-
 unsigned int GetDoubleClickTimeMs()
 {
   return 500;

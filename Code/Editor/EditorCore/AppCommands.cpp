@@ -1,12 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
+#include "Foundation/Platform/PlatformCommunication.hpp"
 
 namespace Zero
 {
 
 void OpenDocumentation()
 {
-  Os::OpenUrl(Urls::cUserOnlineDocs);
+  ImportOpenUrl(Urls::cUserOnlineDocs);
 }
 
 void ExitEditor()

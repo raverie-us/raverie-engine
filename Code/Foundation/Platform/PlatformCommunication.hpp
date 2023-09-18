@@ -265,6 +265,7 @@ void ZeroImportNamed(ImportDownloadFile)(const char* fileName, const byte* data,
 void ZeroImportNamed(ImportOpenFileDialog)(void* dialog, bool multiple, const char* accept);
 uint64_t ZeroImportNamed(ImportRandomUnique)();
 void ZeroImportNamed(ImportSaveProject)(const char* name, const byte* projectData, size_t projectLength, const byte* builtContentData, size_t builtContentLength);
+void ZeroImportNamed(ImportOpenUrl)(const char* url);
 
 void* ZeroExportNamed(ExportAllocate)(size_t size);
 void ZeroExportNamed(ExportFree)(void* pointer);

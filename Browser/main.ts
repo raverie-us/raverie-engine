@@ -257,6 +257,9 @@ export class RaverieEngine extends EventTarget {
           case "projectSave":
             this.dispatchEvent(new ProjectSaveEvent(data.name, data.projectArchive, data.builtContentArchive));
             break;
+          case "openUrl":
+            window.open(data.url, "_blank", "noopener,noreferrer")
+            break;
       }
     });
     

@@ -1,5 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
+#include "Foundation/Platform/PlatformCommunication.hpp"
 
 namespace Zero
 {
@@ -14,7 +15,7 @@ HyperLinkHotspot::HyperLinkHotspot() : TextEditorHotspot(HyperLinkRegex)
 void HyperLinkHotspot::OnClick(Matches& matches)
 {
   String url = matches.Front();
-  Os::OpenUrl(url.c_str());
+  ImportOpenUrl(url.c_str());
 }
 
 // Command : any number of letters
