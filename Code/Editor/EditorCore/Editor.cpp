@@ -962,6 +962,13 @@ Status Editor::SaveAll(bool showNotify, bool externalSave)
     // Content archive
     Archive contentArchive(ArchiveMode::Compressing);
 
+    ArchiveLibraryOutput(contentArchive, "FragmentCore");
+    ArchiveLibraryOutput(contentArchive, "Loading");
+    ArchiveLibraryOutput(contentArchive, "ZeroCore");
+    ArchiveLibraryOutput(contentArchive, "UiWidget");
+    ArchiveLibraryOutput(contentArchive, "EditorUi");
+    ArchiveLibraryOutput(contentArchive, "Editor");
+
     if (SharedContent* sharedConent = projectSettings->GetOwner()->has(SharedContent))
     {
       forRange (ContentLibraryReference libraryRef, sharedConent->ExtraContentLibraries.All())
@@ -1444,7 +1451,7 @@ GameSession* Editor::PlayGame(PlayGameOptions::Enum options, bool takeFocus, boo
   // Note: This should definitely come down here, before we close out of the
   // first game The reason is that if anything is 'in use' while the game is
   // running (eg the Zilch library) then it cannot be updated by saving
-  Status status = SaveAll(false, true);
+  Status status = SaveAll(false, false);
   if (status.Failed())
   {
     DoNotifyErrorNoAssert("Play Game", String::Format("Cannot run the game because: %s", status.Message.c_str()));

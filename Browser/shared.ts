@@ -154,6 +154,8 @@ export interface MessageInitialize {
   canvas: OffscreenCanvas;
   args: string;
   focused: boolean;
+  projectArchive: Uint8Array | null;
+  builtContentArchive: Uint8Array | null;
 }
 
 export interface MessageMouseMove {

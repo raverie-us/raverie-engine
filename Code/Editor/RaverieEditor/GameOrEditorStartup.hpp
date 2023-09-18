@@ -39,6 +39,9 @@ public:
   // Run a single iteration and return the new phase that we reached
   StartupPhase::Enum RunIteration();
 
+  ByteBufferBlock mProjectArchive;
+  ByteBufferBlock mBuiltContentArchive;
+
 protected:
   // The following options should be set by the user in UserInitialize.
   // The default options are all tailored for the Editor.
@@ -66,7 +69,6 @@ private:
   bool mPlayGame = false;
   Cog* mProjectCog = nullptr;
   String mProjectFile;
-  String mNewProject;
 
   ExecutableState* mState = nullptr;
   ZilchSetup* mZilchSetup = nullptr;

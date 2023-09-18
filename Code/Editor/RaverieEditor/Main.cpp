@@ -17,11 +17,21 @@ void ZeroExportNamed(ExportFree)(void* pointer) {
   free(pointer);
 }
 
-void ZeroExportNamed(ExportInitialize)(const char* arguments, int32_t clientWidth, int32_t clientHeight, bool focused) {
+void ZeroExportNamed(ExportInitialize)(
+  const char* arguments,
+  int32_t clientWidth,
+  int32_t clientHeight,
+  bool focused,
+  byte* projectDataSteal,
+  size_t projectLength,
+  byte* builtContentDataSteal,
+  size_t builtContentLength) {
   __wasm_call_ctors();
   Shell::sInitialClientSize = IntVec2(clientWidth, clientHeight);
   Shell::sInitialFocused = focused;
   startup = new GameOrEditorStartup();
+  startup->mProjectArchive.SetData(projectDataSteal, projectLength, true);
+  startup->mBuiltContentArchive.SetData(builtContentDataSteal, builtContentLength, true);
   gCommandLine = arguments;
 }
 

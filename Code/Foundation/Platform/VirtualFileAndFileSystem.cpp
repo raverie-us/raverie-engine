@@ -408,22 +408,22 @@ void SetWorkingDirectory(StringParam path)
 
 String GetUserLocalDirectory()
 {
-  return "/home/root/.config/";
+  return "/Local/";
 }
 
 String GetUserDocumentsDirectory()
 {
-  return "/home/root/";
+  return "/User/";
 }
 
 String GetApplication()
 {
-  return "/main";
+  return "/App/Main";
 }
 
 String GetTemporaryDirectory()
 {
-  return "/tmp/";
+  return "/Temp/";
 }
 
 String UniqueFileId(StringParam fullpath)
@@ -685,10 +685,10 @@ void File::Duplicate(Status& status, File& destinationFile)
   self->mEntry->CopyTo(other->mEntry);
 }
 
-void ZeroExportNamed(ExportFileCreate)(const char* filePath, const byte* data, size_t dataLength) {
+void ZeroExportNamed(ExportFileCreate)(const char* filePath, byte* dataSteal, size_t dataLength) {
+  // The data will be "stolen" by AddVirtualFileSystemEntry (no need to de-allocate)
   DataBlock block;
-  block.Data = (byte*)zAllocate(dataLength);
-  memcpy(block.Data, data, dataLength);
+  block.Data = dataSteal;
   block.Size = dataLength;
   AddVirtualFileSystemEntry(filePath, &block, time(0));
 }

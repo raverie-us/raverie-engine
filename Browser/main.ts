@@ -1,5 +1,5 @@
 import RaverieEngineWorker from "./worker.ts?worker";
-import Logo from "./logo.png?url"
+import Logo from "./logo.png?data-url";
 import {
   Cursor,
   KeyState,
@@ -56,7 +56,7 @@ const loading = document.createElement("div");
 loading.style.position = "absolute";
 loading.style.width = "100%";
 loading.style.height = "100%";
-loading.style.backgroundColor = "#222";
+loading.style.backgroundColor = "#000";
 loading.style.visibility = "visible";
 loading.style.pointerEvents = "none";
 loading.style.opacity = "0";
@@ -75,6 +75,7 @@ loading.append(loadingCenter);
 
 const logo = document.createElement("img");
 logo.src = Logo;
+logo.style.maxWidth = "80%";
 loadingCenter.append(logo);
 
 const loadingText = document.createElement("div");
@@ -87,9 +88,6 @@ loadingCenter.append(loadingText);
 // Force layout and set the opacity to 1 so it transitions
 loading.getBoundingClientRect();
 loading.style.opacity = "1";
-
-// Don't bring up the transition until a minimum amount of time has passed
-loading.style.transitionDelay = "0.1";
 
 const input = document.createElement("input");
 input.type = "file";
@@ -215,6 +213,7 @@ worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
           loading.style.visibility = "hidden";
           loading.style.opacity = "0";
         } else {
+          loading.style.transition = "opacity 0.1s ease-in-out 0.1s";
           loading.style.visibility = "visible";
           loading.style.opacity = "1";
           if (data.text !== "") {
@@ -224,6 +223,7 @@ worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
         break;
       case "projectSave":
         console.log("Save", data);
+        localStorage.setItem(projectArchiveKey, new Uint8Array(data.projectArchive).toString());
         break;
   }
 });
@@ -258,11 +258,19 @@ input.addEventListener("change", async (event) => {
   }
 });
 
+const projectArchiveKey = "tempProjectArchive";
+const projectArchiveStr = localStorage.getItem(projectArchiveKey);
+const projectArchive = projectArchiveStr
+  ? new Uint8Array(projectArchiveStr.split(",") as any as number[])
+  : null;
+
 workerPostMessage<MessageInitialize>({
   type: "initialize",
   canvas: offscreenCanvas,
   args: new URL(location.href).searchParams.get("args") || "",
   focused,
+  projectArchive,
+  builtContentArchive: null,
 }, [offscreenCanvas]);
 
 canvas.addEventListener("mousemove", (event) => {

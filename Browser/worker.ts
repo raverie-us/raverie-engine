@@ -10,7 +10,8 @@ import {
   MessageCopyData,
   MessageOpenFileDialog,
   MessageProgressUpdate,
-  MessageProjectSave
+  MessageProjectSave,
+  MessageInitialize
 } from "./shared";
 
 const modulePromise = WebAssembly.compileStreaming(fetch(wasmUrl));
@@ -42,10 +43,10 @@ const mainPostMessage = <T extends ToMainMessageType>(message: T) => {
   postMessage(message);
 };
 
-const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) => {
+const start = async (message: MessageInitialize) => {
   const module = await modulePromise;
 
-  const gl = canvas.getContext("webgl2", {
+  const gl = message.canvas.getContext("webgl2", {
     antialias: false,
     alpha: false,
     preserveDrawingBuffer: false
@@ -591,7 +592,7 @@ const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) =>
 
   const ExportAllocate = instance.exports.ExportAllocate as (size: number) => number;
   const ExportFree = instance.exports.ExportFree as (pointer: number) => void;
-  const ExportInitialize = instance.exports.ExportInitialize as (argumentsCharPtr: number, clientWidth: number, clientHeight: number, focusedBool: number) => void;
+  const ExportInitialize = instance.exports.ExportInitialize as (argumentsCharPtr: number, clientWidth: number, clientHeight: number, focusedBool: number, projectBytePtrSteal: number, projectLength: number, builtContentBytePtrSteal: number, builtContentLength: number) => void;
   const ExportRunIteration = instance.exports.ExportRunIteration as () => void;
   const ExportHandleCrash = instance.exports.ExportHandleCrash as () => void;
   const ExportMouseMove = instance.exports.ExportMouseMove as (clientX: number, clientY: number, dx: number, dy: number) => void;
@@ -611,7 +612,10 @@ const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) =>
   const ExportSizeChanged = instance.exports.ExportSizeChanged as (clientWidth: number, clientHeight: number) => void;
   const ExportFocusChanged = instance.exports.ExportFocusChanged as (focusedBool: number) => void;
 
-  const allocateAndCopy = (buffer: Uint8Array) => {
+  const allocateAndCopy = (buffer: Uint8Array | null) => {
+    if (!buffer) {
+      return 0;
+    }
     const pointer = ExportAllocate(buffer.byteLength);
     new Uint8Array(memory.buffer).set(buffer, pointer);
     return pointer;
@@ -679,8 +683,8 @@ const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) =>
         break;
       }
       case "sizeChanged":
-        canvas.width = data.clientWidth;
-        canvas.height = data.clientHeight;
+        message.canvas.width = data.clientWidth;
+        message.canvas.height = data.clientHeight;
         ExportSizeChanged(data.clientWidth, data.clientHeight);
         // Since the OffscreenCanvas clears the back buffer to black/transparent upon any resize
         // we run another engine iteration immediately to render out a frame to avoid resize flicker
@@ -757,8 +761,18 @@ const start = async (canvas: OffscreenCanvas, args: string, focused: boolean) =>
     }
   }
 
-  const commandLineCharPtr = allocateNullTerminatedString(args);
-  ExportInitialize(commandLineCharPtr, canvas.width, canvas.height, Number(focused));
+  const commandLineCharPtr = allocateNullTerminatedString(message.args);
+  const projectArchiveBytePtr = allocateAndCopy(message.projectArchive);
+  const builtContentArchiveBytePtr = allocateAndCopy(message.builtContentArchive);
+  ExportInitialize(
+    commandLineCharPtr,
+    message.canvas.width,
+    message.canvas.height,
+    Number(message.focused),
+    projectArchiveBytePtr,
+    message.projectArchive?.byteLength || 0,
+    builtContentArchiveBytePtr,
+    message.builtContentArchive?.byteLength || 0);
   ExportFree(commandLineCharPtr);
 
   let mustSendYieldComplete = false;
@@ -785,7 +799,7 @@ const onCanvasMessage = (event: MessageEvent<ToWorkerMessageType>) => {
   const data = event.data;
   if (data.type === "initialize") {
     removeEventListener("message", onCanvasMessage);
-    start(data.canvas, data.args, data.focused);
+    start(data);
   }
 };
 addEventListener("message", onCanvasMessage);

@@ -6,5 +6,6 @@
     "types": [
       "vite/client"
     ]
-  }
+  },
+  "references": [{ "path": "./tsconfig.vite.json" }]
 }

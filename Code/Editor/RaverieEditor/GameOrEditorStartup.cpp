@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-void CreateEditor(StringParam projectFile, StringParam newProjectName);
+void CreateEditor(StringParam projectFile);
 void CreateGame(StringParam projectFile, Cog* projectCog);
 void LoadGamePackages(StringParam projectFile, Cog* projectCog);
 
@@ -327,20 +327,18 @@ void GameOrEditorStartup::UserInitializeConfig(Cog* configCog)
   HasOrAdd<TextEditorConfig>(configCog);
 }
 
+void ExtractArchiveTo(ByteBufferBlock& buffer, StringParam basePath) {
+  Archive archive(ArchiveMode::Decompressing);
+  archive.ReadBuffer(ArchiveReadFlags::All, buffer);
+  forRange (ArchiveEntry& archiveEntry, archive.GetEntries())
+  {
+    String absolutePath = FilePath::Combine(basePath, archiveEntry.Name);
+    AddVirtualFileSystemEntry(absolutePath, &archiveEntry.Full, archiveEntry.ModifiedTime);
+  }
+}
+
 void GameOrEditorStartup::UserInitialize()
 {
-  String projectFile = Environment::GetValue<String>("file");
-  bool playGame = Environment::GetValue<bool>("play", false);
-  String newProject = Environment::GetValue<String>("newProject");
-
-  // Check to see if there was a project file in the same directory.
-  static const String cDefaultProjectFile("Project.zeroproj");
-  if (FileExists(cDefaultProjectFile))
-  {
-    projectFile = cDefaultProjectFile;
-    playGame = true;
-  }
-
   // If there was no specified project file (or it doesn't exist) and we're not
   // creating a new project, then use a fall-back project that we open from our
   // data directory. This project should be read-only, but is useful for testing
@@ -348,18 +346,25 @@ void GameOrEditorStartup::UserInitialize()
   // 'projectFile' does not exist, but is specified, we will not use the fall-back.
   Cog* configCog = Z::gEngine->GetConfigCog();
   MainConfig* mainConfig = configCog->has(MainConfig);
-  EditorConfig* editorConfig = configCog->has(EditorConfig);
-  if (mainConfig && projectFile.Empty() && newProject.Empty() &&
-      (editorConfig == nullptr || editorConfig->EditingProject.Empty()))
-  {
-    projectFile = FilePath::Combine(mainConfig->DataDirectory, "Fallback", "Fallback.zeroproj");
+
+  const String basePath = FilePath::Combine(GetUserDocumentsDirectory(), "Project");
+  String projectFile;
+  if (mProjectArchive.GetBegin()) {
+    ExtractArchiveTo(mProjectArchive, basePath);
+    projectFile = FilePath::Combine(basePath, "Project.zeroproj");
+  } else if (mBuiltContentArchive.GetBegin()) {
+    ExtractArchiveTo(mBuiltContentArchive, basePath);
+    projectFile = FilePath::Combine(basePath, "Project.zeroproj");
+    mPlayGame = true;
+  } else {
+    projectFile = FilePath::Combine(mainConfig->DataDirectory, "Fallback", "Project.zeroproj");
   }
 
   // The options defaults are already tailored to the Editor.
   // If we're playing the game, we need to load the project Cog.
   // We'll also potentially derive some window settings from the project.
   Cog* projectCog = nullptr;
-  if (playGame)
+  if (mPlayGame)
   {
     projectCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), projectFile, 0, nullptr);
     if (projectCog == nullptr)
@@ -369,12 +374,10 @@ void GameOrEditorStartup::UserInitialize()
     }
   }
 
-  mLoadContent = !playGame;
+  mLoadContent = !mPlayGame;
 
-  mPlayGame = playGame;
   mProjectCog = projectCog;
   mProjectFile = projectFile;
-  mNewProject = newProject;
 }
 
 void GameOrEditorStartup::UserStartup()
@@ -402,7 +405,7 @@ void GameOrEditorStartup::UserCreation()
   }
   else
   {
-    CreateEditor(mProjectFile, mNewProject);
+    CreateEditor(mProjectFile);
   }
 
   // Update once to force things like shader compositing so we can still show a loading screen

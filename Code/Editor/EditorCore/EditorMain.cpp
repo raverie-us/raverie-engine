@@ -878,7 +878,7 @@ void SetupTools(Editor* editor);
 #define BindCommand(commandName, memberFunction)                                                                       \
   Connect(commands->GetCommand(commandName), Events::CommandExecute, editorMain, &EditorMain::memberFunction);
 
-void CreateEditor(StringParam projectFile, StringParam newProjectName)
+void CreateEditor(StringParam projectFile)
 {
   ProfileScopeFunction();
 
@@ -1156,23 +1156,10 @@ void CreateEditor(StringParam projectFile, StringParam newProjectName)
   }
   else
   {
-    bool projectSuccessfullyLoaded = false;
-    // Open cached project in user config
-    String startingProject = HasOrAdd<EditorConfig>(Z::gEditor->mConfig)->EditingProject;
-    // if the user has requested to create a new project then don't open the
-    // last edited project
-    if (newProjectName.Empty() && FileExists(startingProject))
-      projectSuccessfullyLoaded = OpenProjectFile(startingProject);
-
-    // If loading failed for some reason (either it didn't exist, the project
-    // was corrupted, etc...) then send out the failure event so we stop blocking
-    if (!projectSuccessfullyLoaded)
-    {
-      Event event;
-      Z::gEngine->DispatchEvent(Events::NoProjectLoaded, &event);
-      DoNotifyWarning("No project found", "No project file found");
-      NewProject();
-    }
+    Event event;
+    Z::gEngine->DispatchEvent(Events::NoProjectLoaded, &event);
+    DoNotifyWarning("No project found", "No project file found");
+    NewProject();
   }
 
   HasOrAdd<TextEditorConfig>(Z::gEditor->mConfig);

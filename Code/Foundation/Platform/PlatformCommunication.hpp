@@ -268,7 +268,7 @@ void ZeroImportNamed(ImportSaveProject)(const char* name, const byte* projectDat
 
 void* ZeroExportNamed(ExportAllocate)(size_t size);
 void ZeroExportNamed(ExportFree)(void* pointer);
-void ZeroExportNamed(ExportInitialize)(const char* arguments, int32_t clientWidth, int32_t clientHeight, bool focused);
+void ZeroExportNamed(ExportInitialize)(const char* arguments, int32_t clientWidth, int32_t clientHeight, bool focused, byte* projectDataSteal, size_t projectLength, byte* builtContentDataSteal, size_t builtContentLength);
 void ZeroExportNamed(ExportSizeChanged)(int32_t clientWidth, int32_t clientHeight);
 void ZeroExportNamed(ExportFocusChanged)(bool focused);
 void ZeroExportNamed(ExportRunIteration)();
@@ -280,7 +280,7 @@ void ZeroExportNamed(ExportKeyboardButtonChanged)(Zero::Keys::Enum key, Zero::Ke
 void ZeroExportNamed(ExportTextTyped)(uint32_t rune);
 const char* ZeroExportNamed(ExportCopy)(bool isCut);
 void ZeroExportNamed(ExportPaste)(const char* text);
-void ZeroExportNamed(ExportFileCreate)(const char* filePath, const byte* data, size_t dataLength);
+void ZeroExportNamed(ExportFileCreate)(const char* filePath, byte* dataSteal, size_t dataLength);
 void ZeroExportNamed(ExportFileDelete)(const char* filePath);
 void ZeroExportNamed(ExportFileDropAdd)(const char* filePath);
 void ZeroExportNamed(ExportFileDropFinish)(int32_t clientX, int32_t clientY);
