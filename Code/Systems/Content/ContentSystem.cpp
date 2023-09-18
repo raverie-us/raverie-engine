@@ -578,16 +578,6 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status, AddContentIt
     // Save new meta file
     newContentItem->SaveMetaFile();
 
-    // Add to source control
-    SourceControl* sourceControl = GetSourceControl(library->SourceControlType);
-
-    Status sourceControlStatus;
-    sourceControl->Add(sourceControlStatus, newContentItem->GetFullPath());
-    DoNotifyStatus(sourceControlStatus);
-
-    sourceControl->Add(sourceControlStatus, newContentItem->GetMetaFilePath());
-    DoNotifyStatus(sourceControlStatus);
-
     info.AddedContentItem = newContentItem;
 
     cleanUp.Success();
@@ -611,16 +601,6 @@ bool ContentSystem::RemoveContentItemFromLibray(ContentItem* contentItem)
     BackUpFile(backUpPath, contentFile);
     BackUpFile(backUpPath, contentMetaFile);
   }
-
-  // Update source control
-  SourceControl* sourceControl = GetSourceControl(library->SourceControlType);
-
-  Status status;
-  sourceControl->Remove(status, contentFile);
-  DoNotifyStatus(status);
-
-  sourceControl->Remove(status, contentMetaFile);
-  DoNotifyStatus(status);
 
   // Remove from content library
   library->ContentItems.Erase(contentItem->UniqueFileId);
@@ -655,16 +635,6 @@ bool ContentSystem::RenameContentItemFile(ContentItem* contentItem, StringParam 
     // Do not rename the file
     return false;
   }
-
-  SourceControl* sourceControl = GetSourceControl(library->SourceControlType);
-
-  // Rename using source control this will also change the files
-  Status status;
-  sourceControl->Rename(status, contentFile, newFullPath);
-  DoNotifyStatus(status);
-
-  sourceControl->Rename(status, contentMetaFile, newMetaFile);
-  DoNotifyStatus(status);
 
   // Update the content item's data
   contentItem->Filename = newFileName;

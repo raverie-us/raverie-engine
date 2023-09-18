@@ -6,7 +6,6 @@ namespace Zero
 
 class ContentComposition;
 class ImportOptions;
-class SourceControl;
 
 struct ContentInitializer
 {

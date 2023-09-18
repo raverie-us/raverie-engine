@@ -13,7 +13,6 @@ target_sources(Meta
     ${CMAKE_CURRENT_LIST_DIR}/HandleManagers.hpp
     ${CMAKE_CURRENT_LIST_DIR}/LocalModifications.cpp
     ${CMAKE_CURRENT_LIST_DIR}/LocalModifications.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/MercurialSourceControl.cpp
     ${CMAKE_CURRENT_LIST_DIR}/MetaArray.cpp
     ${CMAKE_CURRENT_LIST_DIR}/MetaArray.hpp
     ${CMAKE_CURRENT_LIST_DIR}/MetaBindingExtensions.cpp
@@ -45,9 +44,6 @@ target_sources(Meta
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/PropertyHandle.cpp
     ${CMAKE_CURRENT_LIST_DIR}/PropertyHandle.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/SourceControl.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/SourceControl.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/SvnSourceControl.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Tags.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ThreadSafeReferenceCounted.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ThreadSafeReferenceCounted.hpp

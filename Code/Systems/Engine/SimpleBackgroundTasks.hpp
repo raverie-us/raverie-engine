@@ -25,19 +25,4 @@ public:
   u32 mUpdateCounter;
 };
 
-// Executes any process and writes the output to a specified text saver
-class ExecuteProcessTaskJob : public BackgroundTaskJob
-{
-public:
-  typedef DirectorySizeJob ZilchSelf;
-
-  ExecuteProcessTaskJob(StringParam process);
-
-  /// Job Interface.
-  void Execute() override;
-
-  String mProcess;
-  int mExitCode;
-};
-
 } // namespace Zero

@@ -15,7 +15,6 @@ ZilchDeclareExternalType(Members::Enum);
 ZilchDeclareExternalType(FileMode::Enum);
 ZilchDeclareExternalType(StreamCapabilities::Enum);
 ZilchDeclareExternalType(StreamOrigin::Enum);
-ZilchDeclareExternalType(Zero::ProcessStartInfo);
 
 ZilchDefineRange(ParameterArray::range);
 ZilchDefineRange(MemberRange<Member>);
@@ -5357,7 +5356,6 @@ void Core::SetupBinding(LibraryBuilder& builder)
   ZilchInitializeExternalTypeAs(FileMode::Enum, "FileMode");
   ZilchInitializeExternalTypeAs(StreamCapabilities::Enum, "StreamCapabilities");
   ZilchInitializeExternalTypeAs(StreamOrigin::Enum, "StreamOrigin");
-  ZilchInitializeExternalType(ProcessStartInfo);
 
   ZilchInitializeType(Console);
   ZilchInitializeType(Exception);
@@ -5444,9 +5442,6 @@ void Core::SetupBinding(LibraryBuilder& builder)
   ZilchInitializeRangeAs(MemberRange<GetterSetter>, "GetterSetterRange");
   ZilchInitializeRangeAs(MemberRange<Field>, "FieldRange");
   ZilchInitializeRangeAs(MemberRange<Function>, "FunctionRange");
-
-  ZilchInitializeType(Zero::ProcessStartInfo);
-  ZilchInitializeType(ProcessClass);
 
   forRange (BoundType* boundType, builder.BoundTypes.Values())
     boundType->AddAttribute(ExportDocumentation);

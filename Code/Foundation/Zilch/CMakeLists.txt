@@ -83,8 +83,6 @@ target_sources(Zilch
     ${CMAKE_CURRENT_LIST_DIR}/Parser.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ProcessClass.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ProcessClass.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Project.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Project.hpp
     ${CMAKE_CURRENT_LIST_DIR}/RandomClass.cpp

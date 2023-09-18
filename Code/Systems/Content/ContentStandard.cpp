@@ -96,7 +96,6 @@ ZilchDefineStaticLibrary(ContentMetaLibrary)
   ZilchInitializeType(ZilchScriptBuilder);
   ZilchInitializeType(ZilchFragmentBuilder);
   ZilchInitializeType(ContentCopyright);
-  ZilchInitializeType(ContentHistory);
   ZilchInitializeType(ContentNotes);
   ZilchInitializeType(ContentEditorOptions);
   ZilchInitializeType(ResourceTemplate);

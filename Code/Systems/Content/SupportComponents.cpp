@@ -18,29 +18,6 @@ void ContentCopyright::Serialize(Serializer& stream)
   SerializeName(Date);
 }
 
-ZilchDefineType(ContentHistory, builder, type)
-{
-  // ZilchBindFieldProperty(mRevisions); // METAREFACTOR array
-
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
-
-  ZilchBindFieldProperty(mRevisions);
-}
-
-void ContentHistory::Initialize(ContentComposition* item)
-{
-  mOwner = item;
-
-  SourceControl* sourceControl = GetSourceControl(mOwner->mLibrary->SourceControlType);
-
-  // get the path to the meta file
-  String path = mOwner->GetMetaFilePath();
-
-  Status status;
-  sourceControl->GetRevisions(status, path, mRevisions);
-}
-
 ZilchDefineType(ContentNotes, builder, type)
 {
   ZeroBindComponent();
@@ -97,7 +74,6 @@ void ResourceTemplate::Serialize(Serializer& stream)
 void CreateSupportContent(ContentSystem* system)
 {
   AddContentComponent<ContentCopyright>(system);
-  AddContentComponent<ContentHistory>(system);
   AddContentComponent<ContentNotes>(system);
   AddContentComponent<ContentEditorOptions>(system);
   AddContentComponent<ResourceTemplate>(system);

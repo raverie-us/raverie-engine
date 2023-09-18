@@ -44,6 +44,5 @@ const Guid cInvalidUniqueId = (Guid)(u64)-1;
 #include "ZeroMetaArray.hpp"
 #include "MetaMath.hpp"
 #include "MetaEditorExtensions.hpp"
-#include "SourceControl.hpp"
 #include "MetaLibraryExtensions.hpp"
 #include "AttributeExtension.hpp"

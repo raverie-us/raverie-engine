@@ -151,8 +151,6 @@ set(Common_Platform_Sources
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Peripherals.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Platform.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/PrivateImplementation.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Platform/Process.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Platform/Process.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Shell.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Shell.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Socket.cpp

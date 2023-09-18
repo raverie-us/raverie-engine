@@ -15,17 +15,6 @@ public:
   void Serialize(Serializer& stream);
 };
 
-/// Stores the history in mercurial of this content item.
-class ContentHistory : public ContentComponent
-{
-public:
-  ZilchDeclareType(ContentHistory, TypeCopyMode::ReferenceType);
-
-  Array<Revision> mRevisions;
-
-  void Initialize(ContentComposition* item);
-};
-
 /// Stores any user notes about the content item.
 class ContentNotes : public ContentComponent
 {

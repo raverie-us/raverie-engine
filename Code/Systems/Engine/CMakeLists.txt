@@ -83,8 +83,6 @@ target_sources(Engine
     ${CMAKE_CURRENT_LIST_DIR}/ArchetypeRebuilder.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Area.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Area.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/AsyncProcess.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/AsyncProcess.hpp
     ${CMAKE_CURRENT_LIST_DIR}/BackgroundTask.cpp
     ${CMAKE_CURRENT_LIST_DIR}/BackgroundTask.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Cog.cpp

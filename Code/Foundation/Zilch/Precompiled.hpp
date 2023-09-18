@@ -39,7 +39,6 @@ using Zero::OwnedArray;
 using Zero::Pair;
 using Zero::PodArray;
 using Zero::PodBlockArray;
-using Zero::ProcessStartInfo;
 using Zero::Semaphore;
 using Zero::Socket;
 using Zero::SocketAddress;
@@ -306,7 +305,6 @@ String GetDocumentationCStringOrEmpty(cstr string);
 #  include "Base64.hpp"
 #  include "DataDrivenLexer.hpp"
 #  include "Wrapper.hpp"
-#  include "ProcessClass.hpp"
 #  include "Color.hpp"
 
 #endif

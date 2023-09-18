@@ -50,8 +50,6 @@ ZilchDefineExternalBaseType(IpAddress, TypeCopyMode::ReferenceType, builder, typ
 ZilchDefineEnum(SendsEvents);
 ZilchDefineEnum(InternetProtocol);
 
-ZeroDefineArrayType(Array<Revision>);
-
 ZilchDefineStaticLibrary(MetaLibrary)
 {
   builder.CreatableInScriptDefault = false;
@@ -146,9 +144,6 @@ ZilchDefineStaticLibrary(MetaLibrary)
   ZilchInitializeExternalType(IpAddress);
 
   ZilchInitializeType(PropertyPath);
-  ZilchInitializeType(Revision);
-
-  ZeroInitializeArrayTypeAs(Array<Revision>, "Revisions");
 
   MetaLibraryExtensions::AddNativeExtensions(builder);
 }

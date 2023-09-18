@@ -48,23 +48,4 @@ void DirectorySizeJob::ComputeSizeRecursive(StringParam dir)
   }
 }
 
-ExecuteProcessTaskJob::ExecuteProcessTaskJob(StringParam process)
-{
-  mProcess = process;
-}
-
-void ExecuteProcessTaskJob::Execute()
-{
-  TextStreamDebugPrint debugPrint;
-  SimpleProcess process;
-
-  String name = GetName();
-  process.ExecProcess(name.c_str(), mProcess.c_str(), &debugPrint, false);
-  mExitCode = process.WaitForClose();
-  ZPrintFilter(Filter::DefaultFilter, "\n*** Finished %s ***\n", name.c_str());
-
-  mState = BackgroundTaskState::Completed;
-  UpdateProgress(name, 1.0f);
-}
-
 } // namespace Zero
