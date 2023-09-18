@@ -938,8 +938,10 @@ Status Editor::SaveAll(bool showNotify, bool externalSave)
   // Scripts need to be fully compiling before we run
   ZilchManager* zilchManager = ZilchManager::GetInstance();
   zilchManager->TriggerCompileExternally();
-  if (zilchManager->mLastCompileResult == CompileResult::CompilationFailed)
+  if (zilchManager->mLastCompileResult == CompileResult::CompilationFailed) {
+    Z::gEngine->LoadingFinish();
     return Status(StatusState::Failure, "Failed to compile Zilch Scripts");
+  }
 
   Tweakables::Save();
 
