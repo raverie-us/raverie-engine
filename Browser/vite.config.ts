@@ -34,7 +34,7 @@ export default defineConfig({
     port: 8080,
   },
   build: {
-    outDir: "../Page/"
+    outDir: "../docs/"
   },
   plugins: [dataUrlLoader, rawBufferLoader]
 });
