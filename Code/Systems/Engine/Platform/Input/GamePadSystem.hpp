@@ -98,8 +98,6 @@ public:
   Vec2 mLeftStickDelta;
   /// Change in the right stick this frame.
   Vec2 mRightStickDelta;
-  /// Is this gamepad currently vibrating.
-  bool mIsVibrating;
 
   /// Value of how much the Left Trigger is down. Range [0,1].
   float GetLeftTrigger();
@@ -118,9 +116,9 @@ public:
   /// How long has this button been held down.
   float TimeButtonHeld(int index);
 
-  /// Vibrate this controller for a given time.
-  /// Speed is a value between zero and one.
-  void Vibrate(float time, float LeftSpeed, float RightSpeed);
+  /// Vibrate this controller for a given time up to one second max.
+  /// Intensity is a value between zero and one.
+  void Vibrate(float duration, float intensity);
 
   Button Buttons[Buttons::Size];
 
@@ -140,17 +138,13 @@ private:
   // This is used for dpad filtering
   bool mWasAnyDpadDown;
 
-  float mVibrationTime;
-  float mLeftSpeed;
-  float mRightSpeed;
   void Clear();
-  void Initialize(Gamepads* gamepads, uint index);
+  void Initialize(uint index);
   void Update(float elasped);
-  Gamepads* mGamePads;
   friend class Gamepads;
 };
 
-const uint cMaxUsers = 4;
+const uint cMaxGamepads = 4;
 
 /// Gamepads is a collection of gamepads.
 class Gamepads : public ExplicitSingleton<Gamepads, EventObject>
@@ -161,10 +155,6 @@ public:
   Gamepads();
   ~Gamepads();
 
-  /// Pause Vibration on all gamepads.
-  void PauseVibration();
-  /// Resume vibration on all gamepads.
-  void ResumeVibration();
   /// Get the gamepad for a given index from [0, GamepadCount]
   Gamepad* GetGamePad(uint gamepadIndex);
   /// Gets the maximum number of supported gamepads
@@ -175,11 +165,8 @@ public:
   void UpdateGamepadsActiveState();
 
   void OnUpdate(UpdateEvent* event);
-  void OnDeviceChanged(Event* event);
-
 private:
   Gamepad* mGamePads[4];
-  bool mVibrationIsPaused;
 };
 
 namespace Z

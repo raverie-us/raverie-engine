@@ -12,7 +12,8 @@ import {
   MessageProgressUpdate,
   MessageProjectSave,
   MessageInitialize,
-  MessageOpenUrl
+  MessageOpenUrl,
+  MessageGamepadVibrate
 } from "./shared";
 
 const modulePromise = WebAssembly.compileStreaming(fetch(wasmUrl));
@@ -589,6 +590,14 @@ const start = async (message: MessageInitialize) => {
           url: readNullTerminatedString(urlCharPtr)
         });
       },
+      ImportGamepadVibrate: (gamepadIndex: number, duration: number, intensity: number) => {
+        mainPostMessage<MessageGamepadVibrate>({
+          type: "gamepadVibrate",
+          gamepadIndex,
+          duration,
+          intensity
+        });
+      },
     }
   };
 
@@ -617,6 +626,10 @@ const start = async (message: MessageInitialize) => {
   const ExportOpenFileDialogFinish = instance.exports.ExportOpenFileDialogFinish as (dialog: number) => void;
   const ExportSizeChanged = instance.exports.ExportSizeChanged as (clientWidth: number, clientHeight: number) => void;
   const ExportFocusChanged = instance.exports.ExportFocusChanged as (focusedBool: number) => void;
+
+  const ExportGamepadConnectionChanged = instance.exports.ExportGamepadConnectionChanged as (gamepadIndex: number, idCharPtr: number, connectedBool: number) => void;
+  const ExportGamepadButtonChanged = instance.exports.ExportGamepadButtonChanged as (gamepadIndex: number, buttonIndex: number, pressedBool: number, touchedBool: number, value: number) => void;
+  const ExportGamepadAxisChanged = instance.exports.ExportGamepadAxisChanged as (gamepadIndex: number, axisIndex: number, value: number) => void;
 
   const allocateAndCopy = (buffer: Uint8Array | null) => {
     if (!buffer) {
@@ -698,6 +711,18 @@ const start = async (message: MessageInitialize) => {
         break;
       case "focusChanged":
         ExportFocusChanged(Number(data.focused));
+        break;
+      case "gamepadConnectionChanged": {
+        const idCharPtr = allocateNullTerminatedString(data.id);
+        ExportGamepadConnectionChanged(data.gamepadIndex, idCharPtr, Number(data.connected));
+        ExportFree(idCharPtr);
+        break;
+      }
+      case "gamepadButtonChanged":
+        ExportGamepadButtonChanged(data.gamepadIndex, data.buttonIndex, Number(data.pressed), Number(data.touched), data.value);
+        break;
+      case "gamepadAxisChanged":
+        ExportGamepadAxisChanged(data.gamepadIndex, data.axisIndex, data.value);
         break;
     }
   };

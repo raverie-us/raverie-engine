@@ -5,7 +5,6 @@ namespace Zero
 {
 namespace Events
 {
-DeclareEvent(CurrentInputDeviceChanged);
 DeclareEvent(DebuggerPause);
 DeclareEvent(DebuggerResume);
 DeclareEvent(DebuggerPauseUpdate);
@@ -14,8 +13,6 @@ DeclareEvent(LoadingFinish);
 DeclareEvent(BlockingTaskStart);
 DeclareEvent(BlockingTaskFinish);
 } // namespace Events
-
-DeclareEnum4(InputDevice, Keyboard, Mouse, Gamepad, Joystick);
 
 /// The engine Contains all the systems in the game. The engine is used to
 /// update all system and query for other services.
@@ -82,11 +79,6 @@ public:
                      float percentage = 0.0f);
   void LoadingFinish();
 
-  /// The input device that the user last used (pressed buttons, moved sticks or
-  /// triggers, etc...)
-  InputDevice::Enum GetCurrentInputDevice();
-  void SetCurrentInputDevice(InputDevice::Enum device);
-
   /// Should normally not be manually called.
   void Shutdown();
 
@@ -119,7 +111,6 @@ private:
   float mTimePassed;
   Space* mEngineSpace;
   SpaceListType mSpaceList;
-  InputDevice::Enum mCurrentInputDevice;
   size_t mLoadingCount = 0;
 
   /// Systems to be updated every game loop.
@@ -150,16 +141,6 @@ type* Engine::Has()
 {
   return static_cast<type*>(QueryComponentId(ZilchTypeId(type)));
 }
-
-/// An event to inform which input device is being used by the user.
-class InputDeviceEvent : public Event
-{
-public:
-  ZilchDeclareType(InputDeviceEvent, TypeCopyMode::ReferenceType);
-
-  InputDevice::Enum mDevice;
-  InputDevice::Enum mLastDevice;
-};
 
 /// A core element of the engine has encountered a unrecoverable error.
 /// the engine will display a message box and terminate.

@@ -18,7 +18,6 @@ ZilchDefineType(ZeroStatic, builder, type)
   ZilchBindGetter(Engine);
   ZilchBindGetter(Environment);
   ZilchBindGetter(Gamepads);
-  ZilchBindGetter(Joysticks);
   ZilchBindGetter(ObjectStore);
   ZilchBindGetter(ResourceSystem);
   ZilchBindGetter(OsShell);
@@ -171,11 +170,6 @@ Environment* ZeroStatic::GetEnvironment()
 Gamepads* ZeroStatic::GetGamepads()
 {
   return Z::gGamepads;
-}
-
-Zero::Joysticks* ZeroStatic::GetJoysticks()
-{
-  return Z::gJoysticks;
 }
 
 ObjectStore* ZeroStatic::GetObjectStore()

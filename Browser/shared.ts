@@ -232,6 +232,29 @@ export interface MessageFocusChanged {
   focused: boolean;
 }
 
+export interface MessageGamepadConnectionChanged {
+  type: "gamepadConnectionChanged";
+  gamepadIndex: number;
+  id: string;
+  connected: boolean;
+}
+
+export interface MessageGamepadButtonChanged {
+  type: "gamepadButtonChanged";
+  gamepadIndex: number;
+  buttonIndex: number;
+  pressed: boolean;
+  touched: boolean;
+  value: number;
+}
+
+export interface MessageGamepadAxisChanged {
+  type: "gamepadAxisChanged";
+  gamepadIndex: number;
+  axisIndex: number;
+  value: number;
+}
+
 export type ToWorkerMessageType =
   MessageInitialize |
   MessageMouseMove |
@@ -244,7 +267,10 @@ export type ToWorkerMessageType =
   MessageFilesDropped |
   MessageOpenFileDialogFinish |
   MessageSizeChanged |
-  MessageFocusChanged;
+  MessageFocusChanged |
+  MessageGamepadConnectionChanged |
+  MessageGamepadButtonChanged |
+  MessageGamepadAxisChanged;
 
 export interface MessageYieldDraw {
   type: "yieldDraw";
@@ -303,6 +329,13 @@ export interface MessageOpenUrl {
   url: string;
 }
 
+export interface MessageGamepadVibrate {
+  type: "gamepadVibrate";
+  gamepadIndex: number;
+  duration: number;
+  intensity: number;
+}
+
 export type ToMainMessageType =
   MessageYieldDraw |
   MessageYieldComplete |
@@ -313,4 +346,5 @@ export type ToMainMessageType =
   MessageOpenFileDialog |
   MessageProgressUpdate |
   MessageProjectSave |
-  MessageOpenUrl;
+  MessageOpenUrl |
+  MessageGamepadVibrate;

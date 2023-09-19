@@ -40,9 +40,6 @@ OsWindow::OsWindow()
 {
   ErrorIf(sInstance != nullptr, "We should only have one instance");
   sInstance = this;
-
-  //Shell::sInstance->mOnDevicesChanged = &ShellWOnDevicesChanged;
-  //Shell::sInstance->mOnInputDeviceChanged = &ShellWOnInputDeviceChanged;
 }
 
 OsWindow::~OsWindow()
@@ -227,50 +224,34 @@ void ZeroExportNamed(ExportMouseScroll)(int32_t clientX, int32_t clientY, float 
   OsWindow::sInstance->SendMouseEvent(mouseEvent);
 }
 
-void OsWindow::ShellWOnDevicesChanged()
-{
-  // DeactivateAll because joysticks may have been removed in device changed
-  Z::gJoysticks->DeactivateAll();
+void ZeroExportNamed(ExportGamepadConnectionChanged)(uint32_t gamepadIndex, const char* id, bool connected) {
+  auto& gamepad = Shell::sInstance->GetOrCreateGamepad(gamepadIndex);
+  gamepad.mConnected = connected;
 
-  const Array<PlatformInputDevice>& devices = Shell::sInstance->ScanInputDevices();
-  forRange (PlatformInputDevice& device, devices)
-  {
-    // Tell the Joysticks system that a Joystick is present
-    Z::gJoysticks->AddJoystickDevice(device);
+  if (connected) {
+    gamepad.mId = id;
+  } else {
+    gamepad.mId.Clear();
+    gamepad.mButtons.Clear();
+    gamepad.mAxes.Clear();
   }
 
-  Z::gJoysticks->JoysticksChanged();
+  Event event;
+  OsWindow::sInstance->DispatchEvent(Events::OsDeviceChanged, &event);
 }
 
-void OsWindow::ShellWOnInputDeviceChanged(
-    PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data)
-{
-  Joystick* joystick = Z::gJoysticks->GetJoystickByDevice(device.mDeviceHandle);
-  ReturnIf(joystick == nullptr,
-           ,
-           "Unable to find a joystick by the device handle "
-           "(should have been found in ShellWOnDevicesChanged)");
+void ZeroExportNamed(ExportGamepadButtonChanged)(uint32_t gamepadIndex, uint32_t buttonIndex, bool pressed, bool touched, float value) {
+  auto& gamepad = Shell::sInstance->GetOrCreateGamepad(gamepadIndex);
+  auto& button = gamepad.GetOrCreateButton(buttonIndex);
 
-  joystick->RawSetButtons(buttons);
+  button.mPressed = pressed;
+  button.mTouched = touched;
+  button.mValue = value;
+}
 
-  for (size_t i = 0; i < axes.Size(); ++i)
-  {
-    if (i >= device.mAxes.Size())
-    {
-      Error("We should be getting the same number of axes as was registered "
-            "with the device, unless an error occurred");
-      break;
-    }
-
-    uint value = axes[i];
-    if (device.mAxes[i].mCanBeDisabled && value == 0)
-      joystick->RawSetAxisDisabled(i);
-    else
-      joystick->RawSetAxis(i, axes[i]);
-  }
-
-  // Tell everyone we updated this joystick
-  joystick->SignalUpdated();
+void ZeroExportNamed(ExportGamepadAxisChanged)(uint32_t gamepadIndex, uint32_t axisIndex, float value) {
+  auto& gamepad = Shell::sInstance->GetOrCreateGamepad(gamepadIndex);
+  gamepad.GetOrCreateAxis(axisIndex).mValue = value;
 }
 
 ZilchDefineType(OsWindowEvent, builder, type)

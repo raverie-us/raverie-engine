@@ -15,7 +15,6 @@ ZilchDefineRange(HierarchyList::reverse_range);
 ZilchDefineRange(Space::range);
 ZilchDefineRange(SpaceMap::valueRange);
 ZilchDefineRange(ObjectLinkRange);
-ZilchDefineRange(JoystickDeviceRange);
 ZilchDefineRange(CogHashSetRange);
 ZilchDefineRange(ResourceTableEntryList::range);
 ZilchDefineRange(OperationListRange);
@@ -32,7 +31,6 @@ ZilchDefineEnum(CogPathPreference);
 ZilchDefineEnum(Cursor);
 ZilchDefineEnum(EaseType);
 ZilchDefineEnum(FlickedStick);
-ZilchDefineEnum(InputDevice);
 ZilchDefineEnum(KeyState);
 ZilchDefineEnum(Math::CurveType);
 ZilchDefineEnum(MouseButtons);
@@ -96,7 +94,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeRangeAs(Space::range, "SpaceRange");
   ZilchInitializeRangeAs(SpaceMap::valueRange, "SpaceMapValueRange");
   ZilchInitializeRange(ObjectLinkRange);
-  ZilchInitializeRangeAs(JoystickDeviceRange, "JoystickRange");
   ZilchInitializeRange(CogHashSetRange);
   ZilchInitializeRangeAs(ResourceTableEntryList::range, "ResourceTableEntryRange");
   ZilchInitializeRange(OperationListRange);
@@ -113,7 +110,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeEnum(Cursor);
   ZilchInitializeEnumAs(EaseType, "Ease");
   ZilchInitializeEnum(FlickedStick);
-  ZilchInitializeEnum(InputDevice);
   ZilchInitializeEnum(Keys);
   ZilchInitializeEnum(KeyState);
   ZilchInitializeEnum(Location);
@@ -160,7 +156,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(CogPathEvent);
   ZilchInitializeType(UpdateEvent);
   ZilchInitializeType(ResourceEvent);
-  ZilchInitializeType(InputDeviceEvent);
   ZilchInitializeType(GameEvent);
   ZilchInitializeType(AnimationGraphEvent);
   ZilchInitializeType(KeyboardEvent);
@@ -168,7 +163,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(KeyboardTextEvent);
   ZilchInitializeType(OsMouseEvent);
   ZilchInitializeType(HierarchyEvent);
-  ZilchInitializeType(JoystickEvent);
   ZilchInitializeType(CogInitializerEvent);
   ZilchInitializeType(ObjectLinkEvent);
   ZilchInitializeType(ObjectLinkPointChangedEvent);
@@ -336,10 +330,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
 
   ZilchInitializeType(Tweakables);
 
-  ZilchInitializeType(RawControlMapping);
-  ZilchInitializeType(Joystick);
-  ZilchInitializeType(Joysticks);
-
   ZilchInitializeType(EventDirectoryWatcher);
   ZilchInitializeType(Job);
   ZilchInitializeType(DocumentationLibrary);
@@ -418,7 +408,6 @@ bool EngineLibrary::Initialize()
   Keyboard::Initialize();
   Mouse::Initialize();
   Gamepads::Initialize();
-  Joysticks::Initialize();
   LocalModifications::Initialize();
   ObjectStore::Initialize();
   // Need to initialize zilch here as it can be used in the factory below.
@@ -465,7 +454,6 @@ void EngineLibrary::Shutdown()
 
   ObjectStore::Destroy();
   LocalModifications::Destroy();
-  Joysticks::Destroy();
   Gamepads::Destroy();
   Mouse::Destroy();
   Keyboard::Destroy();

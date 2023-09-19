@@ -17871,11 +17871,6 @@ DocumentationLibrary
 				}
 				Method
 				{
-					var Name = "GetCurrentInputDevice"
-					var ReturnType = "InputDevice"
-				}
-				Method
-				{
 					var Name = "RebuildArchetypes"
 					var Parameters = "(Archetype p0)"
 					var ParameterList = Array
@@ -19947,16 +19942,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 							var Type = "Integer"
 						}
 					}
-				}
-				Method
-				{
-					var Name = "PauseVibration"
-					var Description = "Pause Vibration on all gamepads."
-				}
-				Method
-				{
-					var Name = "ResumeVibration"
-					var Description = "Resume vibration on all gamepads."
 				}
 			}
 		}
@@ -23493,30 +23478,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 			var Name = "InPlaceTextEditor"
 			var BaseClass = "Composite"
 			var Library = "EditorLibrary"
-		}
-		Object
-		{
-			var Name = "InputDeviceEvent"
-			var BaseClass = "Event"
-			var Library = "EngineLibrary"
-			var Description = "An event to inform which input device is being used by the user."
-			var Tags = Array
-			{
-				"Event"
-			}
-			var Properties = Array
-			{
-				Property
-				{
-					var Name = "Device"
-					var Type = "InputDevice"
-				}
-				Property
-				{
-					var Name = "LastDevice"
-					var Type = "InputDevice"
-				}
-			}
 		}
 		Object
 		{
@@ -27871,271 +27832,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Method
 				{
 					var Name = "JointTool"
-				}
-			}
-		}
-		Object
-		{
-			var Name = "Joystick"
-			var BaseClass = "EventObject"
-			var Library = "EngineLibrary"
-			var Description = "A Joystick is associated with a hardware joystick, and provides the ability to query axes and buttons."
-			var Properties = Array
-			{
-				Property
-				{
-					var Name = "AxisCount"
-					var Type = "Integer"
-					var ReadOnly = true
-				}
-				Property
-				{
-					var Name = "ButtonCount"
-					var Type = "Integer"
-					var Description = "Get the number of buttons or axes."
-					var ReadOnly = true
-				}
-				Property
-				{
-					var Name = "DisabledValue"
-					var Type = "Real"
-					var Description = "A value that means a joystick axis is invalid. For example when a HAT-switch is not pressed down, it will return this value."
-					var ReadOnly = true
-					var Static = true
-				}
-				Property
-				{
-					var Name = "IsActive"
-					var Type = "Boolean"
-					var Description = "Gets whether or not the joystick is active."
-					var ReadOnly = true
-				}
-				Property
-				{
-					var Name = "Name"
-					var Type = "String"
-					var Description = "Get the name of the Joystick."
-					var ReadOnly = true
-				}
-			}
-			var Methods = Array
-			{
-				Method
-				{
-					var Name = "Calibrating"
-					var ReturnType = "Boolean"
-				}
-				Method
-				{
-					var Name = "EndCalibration"
-				}
-				Method
-				{
-					var Name = "GetAxisIndex"
-					var ReturnType = "Integer"
-					var Parameters = "(String name)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "name"
-							var Type = "String"
-						}
-					}
-				}
-				Method
-				{
-					var Name = "GetAxisName"
-					var ReturnType = "String"
-					var Parameters = "(Integer index)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "index"
-							var Type = "Integer"
-						}
-					}
-				}
-				Method
-				{
-					var Name = "GetAxisValue"
-					var Description = "Queries an axes and returns a value between [-1, 1]. The valid range of axes is between 0 and 'GetMaxAxes'. If the axis is not valid, then the value returned is 0. If the axis is disabled, then the value returned is Joystick.DisabledValue."
-					var ReturnType = "Real"
-					var Parameters = "(Integer index)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "index"
-							var Type = "Integer"
-						}
-					}
-				}
-				Method
-				{
-					var Name = "GetAxisValueByName"
-					var ReturnType = "Real"
-					var Parameters = "(String name)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "name"
-							var Type = "String"
-						}
-					}
-				}
-				Method
-				{
-					var Name = "GetButtonValue"
-					var Description = "Queries a button and returns true if it is down, false if it is up The valid range of buttons is between 0 and 'GetMaxButtons' If the button is not valid, then the value returned is false."
-					var ReturnType = "Boolean"
-					var Parameters = "(Integer index)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "index"
-							var Type = "Integer"
-						}
-					}
-				}
-				Method
-				{
-					var Name = "LoadInputMapping"
-					var Description = "Load an input mapping."
-					var Parameters = "(String name)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "name"
-							var Type = "String"
-						}
-					}
-				}
-				Method
-				{
-					var Name = "SaveInputMapping"
-					var Parameters = "(String name)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "name"
-							var Type = "String"
-						}
-					}
-				}
-				Method
-				{
-					var Name = "StartCalibration"
-				}
-			}
-		}
-		Object
-		{
-			var Name = "JoystickEvent"
-			var BaseClass = "Event"
-			var Library = "EngineLibrary"
-			var Description = "Joystick events are sent when a game pad button state is changed."
-			var Tags = Array
-			{
-				"Event"
-			}
-			var Properties = Array
-			{
-				Property
-				{
-					var Name = "Button"
-					var Type = "Integer"
-					var Description = "The button that was just pressed or released."
-				}
-				Property
-				{
-					var Name = "Joystick"
-					var Type = "Joystick"
-					var Description = "The joystick that generated this event."
-				}
-			}
-		}
-		Object
-		{
-			var Name = "JoystickRange"
-			var Library = "EngineLibrary"
-			var Properties = Array
-			{
-				Property
-				{
-					var Name = "All"
-					var Type = "JoystickRange"
-					var ReadOnly = true
-				}
-				Property
-				{
-					var Name = "Current"
-					var Type = "Joystick"
-					var ReadOnly = true
-				}
-				Property
-				{
-					var Name = "IsEmpty"
-					var Type = "Boolean"
-					var ReadOnly = true
-				}
-				Property
-				{
-					var Name = "IsNotEmpty"
-					var Type = "Boolean"
-					var ReadOnly = true
-				}
-			}
-			var Methods = Array
-			{
-				Method
-				{
-					var Name = "JoystickRange"
-				}
-				Method
-				{
-					var Name = "JoystickRange"
-					var Parameters = "(JoystickRange p0)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "p0"
-							var Type = "JoystickRange"
-						}
-					}
-				}
-				Method
-				{
-					var Name = "MoveNext"
-				}
-			}
-		}
-		Object
-		{
-			var Name = "Joysticks"
-			var BaseClass = "EventObject"
-			var Library = "EngineLibrary"
-			var Description = "Joysticks is a collection of all joysticks available."
-			var Properties = Array
-			{
-				Property
-				{
-					var Name = "JoystickCount"
-					var Type = "Integer"
-					var Description = "Get the number of joysticks."
-					var ReadOnly = true
-				}
-				Property
-				{
-					var Name = "Joysticks"
-					var Type = "JoystickRange"
-					var ReadOnly = true
 				}
 			}
 		}
@@ -78126,13 +77822,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Property
 				{
-					var Name = "Joysticks"
-					var Type = "Joysticks"
-					var ReadOnly = true
-					var Static = true
-				}
-				Property
-				{
 					var Name = "Keyboard"
 					var Type = "Keyboard"
 					var ReadOnly = true
@@ -80266,29 +79955,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Object
 				{
 					var key = "Top"
-				}
-			}
-		}
-		Object
-		{
-			var Name = "InputDevice"
-			var EnumValues = Map
-			{
-				Object
-				{
-					var key = "Gamepad"
-				}
-				Object
-				{
-					var key = "Joystick"
-				}
-				Object
-				{
-					var key = "Keyboard"
-				}
-				Object
-				{
-					var key = "Mouse"
 				}
 			}
 		}

@@ -74,21 +74,6 @@ void OsShell::SetMouseCursor(Cursor::Enum cursorId)
   return mShell.SetMouseCursor(cursorId);
 }
 
-void OsShell::ScanInputDevices()
-{
-  // DeactivateAll because joysticks may have been removed in device changed
-  Z::gJoysticks->DeactivateAll();
-
-  const Array<PlatformInputDevice>& devices = mShell.ScanInputDevices();
-  forRange (PlatformInputDevice& device, devices)
-  {
-    // Tell the Joysticks system that a Joystick is present
-    Z::gJoysticks->AddJoystickDevice(device);
-  }
-
-  Z::gJoysticks->JoysticksChanged();
-}
-
 ZilchDefineType(ClipboardEvent, builder, type)
 {
   ZilchBindMethodProperty(Clear);

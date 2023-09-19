@@ -8,7 +8,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/Audio.cpp
     ${CMAKE_CURRENT_LIST_DIR}/DirectoryWatcher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Intrinsics.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Peripherals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Shell.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Socket.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Thread.cpp

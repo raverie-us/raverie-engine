@@ -33,14 +33,10 @@ public:
   static Engine* GetEngine();
   static Environment* GetEnvironment();
   static Gamepads* GetGamepads();
-  static Joysticks* GetJoysticks();
   static ObjectStore* GetObjectStore();
   static ResourceSystem* GetResourceSystem();
   static OsShell* GetOsShell();
   static SoundSystem* GetAudio();
-
-  // static Joysticks* GetJoysticks();
-  // static MultiTouch* GetMultiTouch();
 };
 
 // ZilchScriptConnection

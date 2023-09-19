@@ -6,7 +6,6 @@ namespace Zero
 
 namespace Events
 {
-DefineEvent(CurrentInputDeviceChanged);
 DefineEvent(DebuggerPause);
 DefineEvent(DebuggerResume);
 DefineEvent(DebuggerPauseUpdate);
@@ -68,13 +67,11 @@ ZilchDefineType(Engine, builder, type)
   type->HandleManager = ZilchManagerId(PointerManager);
 
   ZeroBindEvent(Events::EngineUpdate, UpdateEvent);
-  ZeroBindEvent(Events::CurrentInputDeviceChanged, UpdateEvent);
 
   ZilchBindMethod(Terminate);
   ZilchBindMethod(CreateGameSession);
   ZilchBindMethod(CreateGameSessionFromArchetype);
 
-  ZilchBindMethod(GetCurrentInputDevice);
   ZilchBindMethod(RebuildArchetypes);
   ZilchBindGetter(GameSessions);
 
@@ -90,7 +87,6 @@ Engine::Engine()
   mConfigCog = nullptr;
   mEngineSpace = nullptr;
   mTimeSystem = nullptr;
-  mCurrentInputDevice = InputDevice::Mouse;
   mFrameCounter = 0;
   mTimePassed = 0.0f;
   mIsDebugging = false;
@@ -312,27 +308,6 @@ void Engine::LoadingFinish()
   --mLoadingCount;
 }
 
-InputDevice::Enum Engine::GetCurrentInputDevice()
-{
-  return mCurrentInputDevice;
-}
-
-void Engine::SetCurrentInputDevice(InputDevice::Enum device)
-{
-  if (device == mCurrentInputDevice)
-    return;
-
-  InputDevice::Enum oldDevice = mCurrentInputDevice;
-  mCurrentInputDevice = (InputDevice::Enum)device;
-
-  // Send an event to let everyone know the input device that the user is using
-  // has changed
-  InputDeviceEvent toSend;
-  toSend.mDevice = device;
-  toSend.mLastDevice = oldDevice;
-  DispatchEvent(Events::CurrentInputDeviceChanged, &toSend);
-}
-
 void Engine::Shutdown()
 {
   Event event;
@@ -384,13 +359,6 @@ Handle EngineMetaComposition::GetComponentAt(HandleParam owner, uint index)
 {
   Engine* engine = owner.Get<Engine*>(GetOptions::AssertOnNull);
   return engine->mSystems[index];
-}
-
-ZilchDefineType(InputDeviceEvent, builder, type)
-{
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(mDevice);
-  ZilchBindFieldProperty(mLastDevice);
 }
 
 void FatalEngineError(cstr format, ...)

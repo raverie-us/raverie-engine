@@ -75,11 +75,6 @@ void ZeroExportNamed(ExportOpenFileDialogFinish)(void* dialog) {
   config.mCallback(config.mFiles, config.mUserData);
 }
 
-const Array<PlatformInputDevice>& Shell::ScanInputDevices()
-{
-  return mInputDevices;
-}
-
 IntVec2 Shell::GetClientSize()
 {
   return mClientSize;
@@ -118,6 +113,30 @@ void Shell::SetProgress(const char* textOrNull, float percent) {
     // Otherwise we always show the loading screen and ignore if it's null
     ImportProgressUpdate(textOrNull == nullptr ? "" : textOrNull, percent);
   }
+}
+
+GamepadRawState& Shell::GetOrCreateGamepad(uint32_t gamepadIndex) {
+  if (mGamepads.Size() <= gamepadIndex) {
+    mGamepads.Resize(gamepadIndex + 1);
+  }
+
+  return mGamepads[gamepadIndex];
+}
+
+GamepadRawButtonState& GamepadRawState::GetOrCreateButton(uint32_t buttonIndex) {
+  if (mButtons.Size() < buttonIndex) {
+    mButtons.Resize(buttonIndex + 1);
+  }
+
+  return mButtons[buttonIndex];
+}
+
+GamepadRawAxisState& GamepadRawState::GetOrCreateAxis(uint32_t axisIndex) {
+  if (mAxes.Size() < axisIndex) {
+    mAxes.Resize(axisIndex + 1);
+  }
+
+  return mAxes[axisIndex];
 }
 
 } // namespace Zero

@@ -266,6 +266,7 @@ void ZeroImportNamed(ImportOpenFileDialog)(void* dialog, bool multiple, const ch
 uint64_t ZeroImportNamed(ImportRandomUnique)();
 void ZeroImportNamed(ImportSaveProject)(const char* name, const byte* projectData, size_t projectLength, const byte* builtContentData, size_t builtContentLength);
 void ZeroImportNamed(ImportOpenUrl)(const char* url);
+void ZeroImportNamed(ImportGamepadVibrate)(uint32_t gamepadIndex, float duration, float intensity);
 
 void* ZeroExportNamed(ExportAllocate)(size_t size);
 void ZeroExportNamed(ExportFree)(void* pointer);
@@ -278,6 +279,9 @@ void ZeroExportNamed(ExportMouseMove)(int32_t clientX, int32_t clientY, int32_t 
 void ZeroExportNamed(ExportMouseScroll)(int32_t clientX, int32_t clientY, float scrollX, float scrollY);
 void ZeroExportNamed(ExportMouseButtonChanged)(int32_t clientX, int32_t clientY, Zero::MouseButtons::Enum button, Zero::MouseState::Enum state);
 void ZeroExportNamed(ExportKeyboardButtonChanged)(Zero::Keys::Enum key, Zero::KeyState::Enum state);
+void ZeroExportNamed(ExportGamepadConnectionChanged)(uint32_t gamepadIndex, const char* id, bool connected);
+void ZeroExportNamed(ExportGamepadButtonChanged)(uint32_t gamepadIndex, uint32_t buttonIndex, bool pressed, bool touched, float value);
+void ZeroExportNamed(ExportGamepadAxisChanged)(uint32_t gamepadIndex, uint32_t axisIndex, float value);
 void ZeroExportNamed(ExportTextTyped)(uint32_t rune);
 const char* ZeroExportNamed(ExportCopy)(bool isCut);
 void ZeroExportNamed(ExportPaste)(const char* text);

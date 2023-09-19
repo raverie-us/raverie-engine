@@ -7,6 +7,9 @@ import {
   MessageCopy,
   MessageFilesDropped,
   MessageFocusChanged,
+  MessageGamepadAxisChanged,
+  MessageGamepadButtonChanged,
+  MessageGamepadConnectionChanged,
   MessageInitialize,
   MessageKeyboardButtonChanged,
   MessageMouseButtonChanged,
@@ -260,6 +263,28 @@ export class RaverieEngine extends EventTarget {
           case "openUrl":
             window.open(data.url, "_blank", "noopener,noreferrer")
             break;
+          case "gamepadVibrate": {
+            if (navigator.getGamepads) {
+              const gamepad = navigator.getGamepads()[data.gamepadIndex];
+              if (gamepad) {
+                if (gamepad.vibrationActuator) {
+                  if (gamepad.vibrationActuator.playEffect) {
+                    gamepad.vibrationActuator.playEffect("dual-rumble", {
+                      duration: data.duration * 1000,
+                      weakMagnitude: data.intensity,
+                      strongMagnitude: data.intensity
+                    });
+                  }
+                } else if (gamepad.hapticActuators) {
+                  const actuator = gamepad.hapticActuators[0];
+                  if (actuator && "pulse" in actuator) {
+                    (actuator.pulse as Function)(data.intensity, data.duration * 1000);
+                  }
+                }
+              }
+            }
+            break;
+          }
       }
     });
     
@@ -282,7 +307,6 @@ export class RaverieEngine extends EventTarget {
             });
           }
         }
-        console.log(files);
     
         workerPostMessage<MessageOpenFileDialogFinish>({
           type: "openFileDialogFinish",
@@ -611,6 +635,79 @@ export class RaverieEngine extends EventTarget {
     };
     
     canvas.addEventListener("focus", recaptureTrappedMouse);
-    canvas.addEventListener("click", recaptureTrappedMouse);    
+    canvas.addEventListener("click", recaptureTrappedMouse);
+
+    const onGamepadChanged = (event: GamepadEvent) => {
+      workerPostMessage<MessageGamepadConnectionChanged>({
+        type: "gamepadConnectionChanged",
+        gamepadIndex: event.gamepad.index,
+        id: event.gamepad.id,
+        connected: event.type === "gamepadconnected"
+      });
+    }
+    window.addEventListener("gamepadconnected", onGamepadChanged);
+    window.addEventListener("gamepaddisconnected", onGamepadChanged);
+
+    if (navigator.getGamepads) {
+      for (const gamepad of navigator.getGamepads()) {
+        if (gamepad) {
+          workerPostMessage<MessageGamepadConnectionChanged>({
+            type: "gamepadConnectionChanged",
+            gamepadIndex: gamepad.index,
+            id: gamepad.id,
+            connected: true
+          });
+        }
+      }
+      
+      let prevGamepads: (Gamepad | null)[] = [];
+      const doGamepadUpdate = () => {
+        const gamepads = navigator.getGamepads();
+        for (let i = 0; i < gamepads.length; ++i) {
+          const gamepad = gamepads[i];
+
+          if (gamepad) {
+            const prevGamepad = prevGamepads[i];
+
+            // Scan button changes
+            for (let j = 0; j < gamepad.buttons.length; ++j) {
+              const button = gamepad.buttons[j];
+              const prevButton = prevGamepad?.buttons[j];
+              
+              if (!prevButton || button.pressed !== prevButton.pressed || button.touched !== prevButton.touched || button.value !== prevButton.value) {
+                workerPostMessage<MessageGamepadButtonChanged>({
+                  type: "gamepadButtonChanged",
+                  gamepadIndex: gamepad.index,
+                  buttonIndex: j,
+                  pressed: button.pressed,
+                  touched: button.touched,
+                  value: button.value
+                });
+              }
+            }
+
+            // Scan axis changes
+            for (let j = 0; j < gamepad.axes.length; ++j) {
+              const axis = gamepad.axes[j];
+              const prevAxis = prevGamepad?.axes[j];
+              
+              if (axis !== prevAxis) {
+                workerPostMessage<MessageGamepadAxisChanged>({
+                  type: "gamepadAxisChanged",
+                  gamepadIndex: gamepad.index,
+                  axisIndex: j,
+                  value: axis
+                });
+              }
+            }
+          }
+        }
+
+        prevGamepads = gamepads;
+        requestAnimationFrame(doGamepadUpdate);
+      }
+
+      doGamepadUpdate();
+    };
   }
 }

@@ -33,9 +33,6 @@ public:
   /// Set the cursor for the mouse.
   void SetMouseCursor(Cursor::Enum cursorId);
 
-  /// Scan for new input devices and register them with Zero.
-  void ScanInputDevices();
-
   // Internal
 
   /// Platform specific shell

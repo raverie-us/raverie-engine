@@ -71,10 +71,6 @@ public:
   void FillKeyboardEvent(Keys::Enum key, KeyState::Enum keyState, KeyboardEvent& keyEvent);
   void FillMouseEvent(IntVec2Param clientPosition, MouseButtons::Enum mouseButton, OsMouseEvent& mouseEvent);
 
-  static void ShellWOnDevicesChanged();
-  static void ShellWOnInputDeviceChanged(
-      PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data);
-
   static OsWindow* sInstance;
 };
 

@@ -34,8 +34,6 @@ set(Engine_Animation_Sources
 set(Engine_Platform_Sources
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Input/GamePadSystem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Input/GamePadSystem.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Platform/Input/JoystickSystem.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Platform/Input/JoystickSystem.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Input/Keyboard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Input/Keyboard.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Input/Mouse.cpp

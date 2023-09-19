@@ -132,7 +132,6 @@ private:
 #include "RaycastProvider.hpp"
 #include "SimpleResourceFactory.hpp"
 #include "Platform/Input/GamePadSystem.hpp"
-#include "Platform/Input/JoystickSystem.hpp"
 #include "EventDirectoryWatcher.hpp"
 #include "CogRange.hpp"
 #include "CogHelpers.hpp"
