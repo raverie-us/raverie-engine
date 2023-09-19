@@ -556,6 +556,7 @@ export class RaverieEngine extends EventTarget {
     
     // These two event handlers don't work on the canvas (only on document) so we must check focus
     document.addEventListener("copy", copyCutHandler);
+    document.addEventListener("cut", copyCutHandler);
     document.addEventListener("paste", (event) => {
       if (document.activeElement === canvas) {
         let dataTransfer = event.clipboardData;
