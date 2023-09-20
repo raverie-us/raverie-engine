@@ -415,7 +415,6 @@ const runRaverieFormat = async (options, sourceFiles) => {
 
 const determineCmakeCombo = (options) => ({
   config: options.config || "Release",
-  vfs: true
 });
 
 const activateBuildDir = (combo) => {
@@ -494,12 +493,9 @@ const buildvfs = async (cmakeVariablesOptional, buildDir, combo) => {
   mkdirp.sync(libraryDir);
 
   const makeFsBuffer = async () => {
-    if (combo.vfs) {
-      const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
-      await makeExecutableZip(cmakeVariablesOptional, executable, fileSystemZip);
-      return fs.readFileSync(fileSystemZip);
-    }
-    return Buffer.alloc(1);
+    const fileSystemZip = path.join(libraryDir, "FileSystem.zip");
+    await makeExecutableZip(cmakeVariablesOptional, executable, fileSystemZip);
+    return fs.readFileSync(fileSystemZip);
   };
 
   const vfsCppContents = generateBinaryCArray("VirtualFileSystem", await makeFsBuffer());
@@ -801,7 +797,7 @@ const all = async (options) => {
 const main = async () => {
   const empty = {
   };
-  const comboOptions = "[--config] [--vfs=true|false]";
+  const comboOptions = "[--config]";
 
   await yargs(process.argv.slice(2)).
     command("disk", "Print the approximate size of every directory on disk", empty, disk).
