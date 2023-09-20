@@ -269,17 +269,13 @@ const runEslint = async (options) => {
       "pipe"
     ]
   };
-  const eslintPath = path.normalize(path.join(require.resolve("eslint"), "..", "..", "bin", "eslint.js"));
-  const args = [
-    eslintPath,
-    "."
-  ];
 
+  const args: string[] = ["run", "lint", "--"];
   if (!options.validate) {
     args.push("--fix");
   }
 
-  await exec("node", args, eslintOptions);
+  await exec("npm", args, eslintOptions);
 };
 
 const runClangTidy = async (options, sourceFiles) => {
@@ -620,7 +616,8 @@ const preventNoOutputTimeout = () => {
 
 const format = async (options) => {
   console.log("Formatting");
-  await runEslint(options);
+  // TODO(trevor): Fix eslint and make it work with typescript
+  //await runEslint(options);
   const sourceFiles = gatherSourceFiles(dirs.libraries, "c|cc|cxx|cpp|h|hxx|hpp|inl");
   if (options.tidy) {
     await runClangTidy(options, sourceFiles);

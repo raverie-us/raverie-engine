@@ -9,7 +9,8 @@
     "browser-dev": "cd Browser && npm run dev",
     "browser-build": "cd Browser && npm run build",
     "browser-preview": "cd Browser && npm run preview",
-    "start": "ts-node-esm index.ts"
+    "start": "ts-node-esm index.ts",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",

@@ -9,7 +9,9 @@ RUN apt-get install -y --no-install-recommends \
     doxygen \
     dumb-init \
     git \
-    gnupg2
+    gnupg2 \
+    clang-format \
+    clang-tidy
 
 RUN mkdir -p /etc/apt/keyrings
 RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg

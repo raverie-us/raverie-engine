@@ -9,7 +9,7 @@ BreakBeforeBraces: Allman
 BreakConstructorInitializers: AfterColon
 BreakConstructorInitializersBeforeComma: 'true'
 ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
-ColumnLimit: '120'
+ColumnLimit: '200'
 ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
 DerivePointerAlignment: 'false'
 ExperimentalAutoDetectBinPacking: 'false'
